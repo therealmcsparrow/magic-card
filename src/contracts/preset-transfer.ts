@@ -6,25 +6,18 @@ import type { ImageBinding, ImageSummary } from './mcu-library-images';
 import type { SanitizeOptions, SvgImageApi } from './svg-image';
 
 /*
- * Contract: preset files (export / import) and the transfer chunk. Version 1.3.0.
- * 1.3.0 (additive): where the panel accepts images only, a .svg file or pasted <svg text is one image item (section
- * "SVG files as images"); ImageReader.readImage takes options ({ file: true } for that item; IMAGE_TRANSFER_REVISION
- * 2); the panel reads files through svg-intake 1.0.0 (section "Safe parsing", step 1). The file format is unchanged.
- * 1.2.0 (1.1.0 was never released): the image code of the transfer chunk lives in its own child chunk, image-transfer
- * (below); parseTransfer's opts.images is that chunk's reader (ImageReader) instead of the sanitiser. The file format
- * is unchanged.
- * 1.1.0 (additive): kind 'image' (below), HOST_KINDS['mcu-panel'] gains it, LibrarySource.isSaved knows 'images',
- * LibraryOpenDetail.kind gains 'image', parseTransfer takes opts.images, TRANSFER_CHUNK_CEILING is 65 KiB.
- * The view reads and writes images through the images_* commands (in the image-transfer chunk; a host's `source` is
- * not asked for images).
+ * Contract: preset files (export / import) and the transfer chunk. Version 1.3.0 (TRANSFER_CONTRACT_VERSION).
+ * Kinds: animation, theme, shape, icon and image. The image code of the transfer chunk lives in its own child chunk,
+ * image-transfer (below); parseTransfer's opts.images is that chunk's reader (ImageReader). The view reads and writes
+ * images through the images_* commands (in the image-transfer chunk; a host's `source` is not asked for images).
  * Host 'mcu-panel' (the Magic Card Utils panel's Library tab, mcu-library 1.0.0) for <mc-library-view>,
  * with New / Edit actions that fire `mc-library-open`.
  * <mc-library-view> reads saved icons and shapes
  * through `LibrarySource` (property `source`; without one it calls the mcu-library commands itself, so
- * it never imports a feature Module). resolveClashes gains opts `reserved` (ids another library holds:
+ * it never imports a feature Module). resolveClashes takes opts `reserved` (ids another library holds:
  * renamed whatever the choice, so in 'replace' mode an id the target does not hold is still renamed when
  * reserved) and `takenName` (a new item whose name the target already shows gets a number; a replaced
- * item keeps its name); <mc-transfer-panel> gains properties `reserved(kind, id)` and
+ * item keeps its name); <mc-transfer-panel> has properties `reserved(kind, id)` and
  * `takenName(kind, name)` passed through to it. External-host detection (contactsOtherHost) decodes CSS
  * escapes, removes tab/CR/LF, flags any value with a backslash or a comment opener, and checks every
  * argument of image-set() and similar functions.
@@ -80,7 +73,7 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  *   the custom-shape normaliser's (invalid values dropped one by one and listed).
  * - icon: { svg, path?, secondary_path?, view_box? }. svg goes through sanitizeSvg; everything it
  *   removes (script, <use>, external href, event attributes, unknown elements) is listed as a
- *   warning (the PM rule: icons are stripped, unlike themes). svg <= ICON_MAX_BYTES after
+ *   warning (icons are stripped, unlike themes). svg <= ICON_MAX_BYTES after
  *   sanitising. path / secondary_path must match the mcu-library path pattern, else dropped and
  *   listed; view_box four finite numbers, else taken from the sanitised svg. A missing or dropped
  *   path is saved as '' with the note "Open it in the SVG editor and save to show it in Home
@@ -127,20 +120,24 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  *   - the file control's accept attribute is ".json,.svg"; an .svg file passes the file gate up to
  *     MAX_IMAGE_IMPORT_BYTES (8 MB, checked on File.size before reading, step 1 below); pasted text that looksLikeSvg
  *     is read up to MAX_IMAGE_IMPORT_BYTES characters;
- *   - text that looksLikeSvg (svg-intake 1.0.0: an .svg file name, or text whose first element is <svg) becomes one
- *     image item, source 'svg': id = slug(stem, 'image') (the slug icons use), name = the file name (or "image") cut
- *     to 80 characters, data { svg: text }. The YAML and JSON parsers never see it;
+ *   - a file named .svg (it must hold SVG, section "File names"), or pasted text that looksLikeSvg (its first element
+ *     is <svg after optional whitespace, a byte order mark, an XML declaration, a doctype and comments, however long
+ *     that prolog is), becomes one image item, source 'svg': id = slug(stem, 'image') (the slug icons use), name = the
+ *     file name (or "image") cut to 80 characters, data { svg: text }. The YAML and JSON parsers never see it. The
+ *     panel loads the image-transfer chunk on the same test, so every such text reaches the image checker;
  *   - it is read by opts.images.readImage(0, { svg: text }, { file: true }), which calls
  *     api.sanitizeImage(text, { file: true }): svg-image file mode (BOM, XML declaration, comments and a DOCTYPE
  *     without "[" removed; a DOCTYPE with an internal subset refused), then IMAGE_MAX_BYTES and the rest of the image
  *     sanitiser. view_box comes from the sanitised drawing. An item the sanitiser refuses (too_large, unsafe_markup,
  *     not_svg, too_complex, empty, bad_viewbox) is refused with readImage's messages; stripped parts are listed as
  *     svg_removed notes. Without opts.images the item is refused with "checker did not load";
- *   - the result for a file equals the image editor's import of the same file (same sanitised markup, same stripped
- *     list, same refusal), which a test checks on the hostile corpus;
+ *   - for an SVG file the result equals the image editor's import of the same file (same sanitised markup, same
+ *     stripped list, same refusal), which a test checks on the hostile corpus. A file named .svg that holds JSON is
+ *     refused by both and imports in neither: here with the name message (section "File names"), in the image editor
+ *     by its sanitiser, with the image editor's own words;
  *   - clashes, Replace / Keep both and images_save are as for envelope items.
  * The transfer chunk neither parses nor rewrites the markup and never value-imports src/svg-image/**. In every other
- * host an .svg stays kind icon exactly as before (sanitizeSvg, ICON_MAX_BYTES), and image envelopes stay JSON only.
+ * host an .svg stays kind icon (sanitizeSvg, ICON_MAX_BYTES), and image envelopes stay JSON only.
  *
  * ── Other inputs read (C5) ──
  * Detection order on the parsed value: (1) object with `magic_card_export` -> envelope; (2) the
@@ -155,12 +152,21 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  * A host passes the kinds it accepts (HOST_KINDS); another kind is refused with where to import it
  * ("Theme files are imported in Magic Card Utils > Themes").
  *
+ * ── File names ──
+ * A file's name decides what its text must be: a file named .svg must hold SVG, and a file named .json must hold
+ * JSON. Only pasted text, which has no file name, is detected by its content (the order above). Checked on the read
+ * text (parseTransfer's fileName), in every host, after the size bounds and before detection:
+ *   - a .svg file whose trimmed text starts with `{` or `[` -> refused 'not_a_preset_file', "This file is named .svg
+ *     but holds JSON, not SVG.";
+ *   - a .json file whose text looksLikeSvg -> refused 'not_a_preset_file', "This file is named .json but holds SVG,
+ *     not JSON.".
+ * A refused file saves nothing and is never read as the other kind. Files with any other name (.yaml, .yml) are
+ * detected by content like pasted text.
+ *
  * ── Safe parsing (untrusted input, C6) ──
- * 1. Files go through svg-intake 1.0.0 readFile with the transfer chunk's transferIntake(accept) policy, so they are
- *    refused before reading (File.size): .json up to MAX_IMAGE_IMPORT_BYTES; .yaml / .yml up to MAX_IMPORT_BYTES; .svg
- *    up to MAX_IMAGE_IMPORT_BYTES where the accepted kinds are exactly ['image'], else MAX_IMPORT_BYTES; any other
- *    file as kind 'other' up to MAX_IMPORT_BYTES (the parser decides what it is). Extension first, then MIME type.
- *    The refusal words are the existing ones ("larger than 1 MB", the 8 MB refusal). Pasted text over
+ * 1. A chosen file is refused before it is read (File.size, by its name): .json up to MAX_IMAGE_IMPORT_BYTES; .svg up
+ *    to MAX_IMAGE_IMPORT_BYTES where the accepted kinds are exactly ['image']; every other file up to
+ *    MAX_IMPORT_BYTES. The refusal words are "larger than 1 MB" and the 8 MB refusal. Pasted text over
  *    MAX_IMPORT_CHARS is refused before parsing, except the large image texts above.
  * 2. Trimmed text starting with { or [ -> JSON.parse first; on a JSON error, YAML below.
  * 3. YAML: js-yaml load (one document; a second document is an error) with SAFE_YAML_SCHEMA =
@@ -176,7 +182,7 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  *    first limit hit (it never builds the expanded value).
  * 5. Only the copy reaches the per-kind validators. Budget: steps 1-4 refuse a 2 MB file or a
  *    10,000-alias bomb in under IMPORT_REFUSE_MS on desktop Chrome with 4x CPU throttle, and a
- *    valid 1 MB file parses without a long task over 200 ms on the same setup .
+ *    valid 1 MB file parses without a long task over 200 ms on the same setup.
  *
  * ── Clashes and targets ──
  * Target per host: with Magic Card Utils, the library store of the kind (mcu-library 1.0.0;
@@ -234,8 +240,8 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  * next call retries. A sync getter returns the loaded ImageTransfer or undefined (used for invalidate()).
  * Who loads it, and when:
  *   - <mc-transfer-panel> before parseTransfer when the text says kind image, or is SVG where the panel accepts images
- *     only, and the host accepts images, passing the result as opts.images; when it resolves undefined the read is
- *     refused with "checker did not load";
+ *     only (the same looksLikeSvg test parseTransfer uses), and the host accepts images, passing the result as
+ *     opts.images; when it resolves undefined the read is refused with "checker did not load";
  *   - <mc-library-view> when it lists kind image (before images_list); when it resolves undefined the view shows its
  *     error state with Try again. Other kinds never load it; a dashboard never fetches it.
  * Boundary (what the chunk may import): src/contracts/** (types, and constants the transfer chunk already used, so

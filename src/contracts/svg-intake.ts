@@ -1,15 +1,15 @@
 import { MAX_IMAGE_IMPORT_BYTES } from './image-editor';
 
 /*
- * Contract: SVG and preset file intake. Version 1.0.0.
+ * Contract: SVG and preset file intake. Version 1.0.0 (SVG_INTAKE_CONTRACT).
  * One front door for files and pasted text that end up in an SVG sanitiser or the preset parser. It checks type and
  * size before anything is read, reads the text, and returns codes. It never sanitises, never parses markup and never
- * words a message: every caller sends the text on to its own sanitiser and words the codes in its own i18n namespace
- * (the same words as before, unless the designer changes them).
+ * words a message: every caller sends the text on to its own sanitiser and words the codes in its own i18n namespace,
+ * with the words that caller already uses.
  *
  * ── Module ──
  * src/svg-io/intake.ts. Stateless (no module-level `let`, no cache, policies frozen), so its copies in several chunks
- * hold no state (proj.M16). No DOM access, no element, no SVG sink. Imports src/contracts/** only.
+ * hold no state. No DOM access, no element, no SVG sink. Imports src/contracts/** only.
  * Callers and their policy:
  *   - <mc-svg-editor> start window, Open file (icon profile)        ICON_SVG_INTAKE, then sanitizeSvg
  *   - <mc-svg-editor> image start window, Open file (image profile) IMAGE_SVG_INTAKE, then the image-svg source
@@ -36,15 +36,24 @@ import { MAX_IMAGE_IMPORT_BYTES } from './image-editor';
  * Pasted text: '' after trim -> 'empty'; text.length over maxChars -> 'too_large' (a cheap bound before any encode or
  * parse; the sanitiser's own byte cap follows).
  *
+ * ── File names decide ──
+ * A file's name decides what its text must be: a file named .svg must hold SVG, and a file named .json must hold JSON.
+ * Only pasted text, which has no file name, is detected by its content. A .svg file whose trimmed text starts with
+ * `{` or `[` holds JSON, and a .json file whose text looksLikeSvg holds SVG: the caller refuses either one with its own
+ * words ("This file is named .svg but holds JSON, not SVG.", "This file is named .json but holds SVG, not JSON."),
+ * saves nothing, and never reads the text as the other kind. The check runs on the read text, before any parser or
+ * sanitiser sees it. A .svg file that holds neither goes to the sanitiser, which refuses it as not SVG.
+ *
  * ── looksLikeSvg(text, fileName?) ──
- * Moved unchanged from src/transfer/detect.ts with its tests: a .svg file name, or text whose first element is <svg
- * after optional whitespace, a byte order mark, an XML declaration and comments. The text decides for a .json or
- * .yaml file too: `<svg` text in a .json file is read as SVG and goes to the sanitiser.
+ * True for a .svg file name (case-insensitive). Otherwise true when the text's first element is <svg after optional
+ * whitespace, a byte order mark, an XML declaration, a doctype and comments; the scan is linear in the text length.
+ * Callers apply "File names decide" first, so a .json file never reaches a sanitiser through this test.
  *
  * ── Hostile tests (first) ──
- * A .svg file of policy maxBytes + 1 is refused without file.text() being called; a renamed file (svg text named
- * .json, JSON named .svg) reaches the same sanitiser or parser as its content says; an unreadable file gives
- * 'unreadable'; a refused file leaves the caller's document unchanged.
+ * A .svg file of policy maxBytes + 1 is refused without file.text() being called; JSON in a file named .svg and SVG
+ * in a file named .json are refused with the name message and reach no parser and no sanitiser; pasted SVG text and
+ * pasted JSON text are read as their content says; an unreadable file gives 'unreadable'; a refused file leaves the
+ * caller's document unchanged.
  */
 
 export const SVG_INTAKE_CONTRACT = '1.0.0';

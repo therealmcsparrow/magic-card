@@ -1,15 +1,15 @@
 /*
- * Contract: SVG value rules shared by the two sanitisers. Version 1.0.0.
+ * Contract: SVG value rules shared by the two sanitisers. Version 1.0.0 (SVG_SAFETY_CONTRACT).
  * One set of value rules behind src/icons/svg-sanitize.ts (own icons) and src/svg-image/sanitize.ts (library images).
- * The allow-lists stay two (ADR 0054): each sanitiser passes its own policy, and the rules only read it. A rule fixed
- * here is fixed for both sanitisers at once, and one hostile corpus covers both.
+ * The allow-lists stay two: each sanitiser passes its own policy, and the rules only read it. A rule fixed here is
+ * fixed for both sanitisers at once, and one hostile corpus covers both.
  *
  * ── Module ──
  * Folder src/svg-safety/ (entry src/svg-safety/index.ts). Value-imported only by the two sanitisers and by other
- * src/svg-safety/ modules (proj.M11, checked by tools/check-svg-sinks.mjs on the sources and on the built graph).
+ * src/svg-safety/ modules (checked by tools/check-svg-sinks.mjs on the sources and on the built graph).
  * src/svg-safety/ value-imports nothing outside itself except constants from src/contracts/**. It is pure:
  *   - no module-level `let`, no mutated `const`; policies and sets are frozen (Object.freeze, ReadonlySet built once
- *     and never written), so the copies webpack places in several chunks hold no state (proj.M16);
+ *     and never written), so the copies webpack places in several chunks hold no state;
  *   - no DOM or window access at load; DOMParser is reached only inside parseLenient, at call time;
  *   - no element definitions, no templates, no unsafeSVG, no Blob of any type: it is never an SVG sink;
  *   - no regular expression with the g or y flag in a policy or at module level (lastIndex is state).
