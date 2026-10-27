@@ -227,6 +227,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   private startAuto = false;
   /** Counts start actions: an answer that finds another number was meant for a window that has moved on. */
   private seq = 0;
+  private readTimer?: ReturnType<typeof setTimeout>;
   liveShape?: Live;
   coarse = false;
   nudgeBig = false;
@@ -308,7 +309,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     for (const [d, f] of this.dialogs) d.removeEventListener('cancel', f);
     this.dialogs = [];
     cancelAnimationFrame(this.raf);
-    for (const t of [this.outTimer, this.liveTimer, this.movingTimer]) clearTimeout(t);
+    for (const t of [this.outTimer, this.liveTimer, this.movingTimer, this.readTimer]) clearTimeout(t);
     this.img?.dispose();
     if (this.deleted) void this.flushDelete();
     const o = this.opener;
@@ -519,8 +520,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     return true;
   }
 
+  /** A start action that was answered another way while the icon resolved (`seq`) is dropped. */
   async openIcon(ref: string, first = false): Promise<boolean> {
+    const n = first ? this.seq : ++this.seq;
     const g = await svgIconApi()!.resolveIconGeometry(ref.trim());
+    if (n !== this.seq) return false;
     if (!g) {
       this.startError = t('Could not find "{name}". Check the name, or wait for the icon packs to load.', { name: ref.trim() });
       this.startMode = 'icon';
@@ -1966,9 +1970,16 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.startAt = at;
     this.startError = undefined;
     this.startBusy = busy;
-    if (busy) setTimeout(() => n === this.seq && this.say(t('Reading {name}…', { name: busy })), 200);
-    const r = await go(n);
+    clearTimeout(this.readTimer);
+    if (busy) this.readTimer = setTimeout(() => n === this.seq && this.say(t('Reading {name}…', { name: busy })), 200);
+    let r: string | { doc: Doc } | undefined;
+    try {
+      r = await go(n);
+    } catch {
+      r = busy ? t('Could not read that file.') : t('This is not valid SVG. Check that it starts with <svg and is closed.');
+    }
     if (n !== this.seq) return;
+    clearTimeout(this.readTimer);
     this.startBusy = undefined;
     if (typeof r === 'object') return this.take(r.doc);
     if (r) this.startError = r;

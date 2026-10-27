@@ -349,7 +349,12 @@ function startPanel(ed: McSvgEditor): TemplateResult {
       ${img || ed.libraryMissing ? nothing : tile('', 'bookshelf', t('My icons'), t('Library'), () => ed.startLibrary())}
     </div>
     ${img ? nothing : html`<div class="acts">${button({ label: t('Import file'), glyph: 'folderOpenOutline', variant: 'secondary', size: 'sm', onClick: (e) => ((ed.startOpen = false), void ed.openTransfer('import', e.currentTarget as HTMLElement)) })}</div>`}
-    <input id="start-file" type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => void ed.startFile((e.target as HTMLInputElement).files?.[0])} />
+    <input id="start-file" type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => {
+      const input = e.target as HTMLInputElement;
+      const file = input.files?.[0];
+      input.value = '';
+      void ed.startFile(file);
+    }} />
     <div id="start-panel">
     ${mode === 'icon'
       ? html`<form class="startform" @submit=${(e: Event) => {
@@ -974,7 +979,7 @@ function leaveWin(ed: McSvgEditor): TemplateResult {
 function newWin(ed: McSvgEditor): TemplateResult {
   return confirm(
     t('Start over?'),
-    html`<p>${t('Unsaved changes are lost.')}</p>`,
+    html`<p>${t('Undo brings the old drawing back.')}</p>`,
     html`${btn(t('Keep editing'), undefined, () => ed.closeNew(), { text: true, size: 'md' })}${btn(t('Start over'), undefined, () => ed.confirmNew(), { text: true, size: 'md', variant: 'danger' })}`,
     () => ed.newAsk && ed.closeNew(),
   );

@@ -13,6 +13,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ### Changed
 -   **One top bar and one start window for icons and images.** The icon editor and the image editor now draw the same bar and the same start window, so Undo, Redo, Save, the name box and the buttons behave and read alike. In narrow windows the image bar buttons keep their symbol and drop the word. A button that cannot act yet, such as Save with nothing drawn, stays on the Tab path and says why. Both name boxes have a visible label, and Save is read out once as Ctrl+S instead of twice.
 -   **The start window of a new image.** Blank canvas, Paste SVG and Open file are tiles in one row. Blank canvas starts open, with Shape, Width, Height, Keep ratio and **Create**. The window has no Cancel button: Close or Esc closes it, and closing it before the first drawing closes the editor.
+-   **Start from… in the icon editor is one undo step.** Choosing a blank drawing, an icon, pasted SVG or a file from Start from… now replaces the drawing as one step that Undo brings back, and the icon keeps its name. Before, it reset the history. The "Start over?" question says so: "Undo brings the old drawing back."
 -   **Start window messages.** A refused file or text shows its reason in one line under the tiles, and the focus goes back to the button that started it. A file that takes a moment to read says "Reading name…".
 -   **Files are checked by type before size.** The icon editor start window, the animation studio Draw import and icon effects now refuse a file that is not an .svg file before they read it, and the file size is checked after the type. Icon effects used to take any file name.
 -   **A file that cannot be read says so.** The image editor Import window and icon effects show a message when the browser cannot read a chosen file, instead of failing without a word.
@@ -21,7 +22,8 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Library import help.** The help line under Choose a file in the Library import now says an .svg file can be up to 32 KB.
 
 ### Fixed
--   **Tab stays inside a window.** In an editor window, pressing Tab on the last control used to leave the window for a moment (the focus went to the page behind it) before it came back to the first control. Tab now goes straight from the last control to the first, and Shift+Tab from the first to the last, in every window of the kit.
+-   **Tab stays inside a window.** In an editor window, pressing Tab on the last control used to leave the window for a moment (the focus went to the page behind it) before it came back to the first control. Tab now goes straight from the last control to the first, and Shift+Tab from the first to the last, in every window of the kit, including windows whose content sits in a shadow root, such as the Library, Export / Import and the icon picker.
+-   **Start window fixes.** A file or text that is refused no longer says "Reading name…" a moment later. After a refusal you can choose the same file again once you have fixed it. Use this icon, when its answer comes after you closed the window or chose something else, no longer replaces the drawing. A read that fails unexpectedly now shows a message and the window stops saying "Reading…".
 
 ## 2026.10.12-beta.10 (2026-10-27)
 
