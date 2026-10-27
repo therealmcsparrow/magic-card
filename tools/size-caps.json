@@ -109,9 +109,9 @@
       "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-editor.js": {
-      "raw": 171008,
-      "ceiling": 171008,
-      "note": "SVG editor. 167 KiB, measured 170,023 (Linux build, docker node 24.22.0)."
+      "raw": 175104,
+      "ceiling": 175104,
+      "note": "SVG editor with the shared top bar and start window. 171 KiB, measured 174,656 (Linux build, docker node 24.22.0)."
     },
     "magic-card-shape-editor.js": {
       "raw": 109568,
@@ -900,6 +900,18 @@
       "field": "/files/magic-card-editor.js/ceiling",
       "from": 1005568,
       "to": 1006592
+    },
+    {
+      "id": "svg-editor-raw-171008-to-175104",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 171008,
+      "to": 175104
+    },
+    {
+      "id": "svg-editor-ceiling-171008-to-175104",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 171008,
+      "to": 175104
     }
   ]
 }
