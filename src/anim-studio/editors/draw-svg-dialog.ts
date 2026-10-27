@@ -4,6 +4,8 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editorSystem } from '../../css/editor-stack';
 import type { SvgCssResolve } from '../../contracts/svg-safety';
 import type { UiWindowElement } from '../../contracts/ui-kit';
+import { ICON_SVG_INTAKE } from '../../contracts/svg-intake';
+import { readFile } from '../../svg-io/intake';
 import { loadSvgCss } from '../../svg-safety/css-loader';
 import { seg } from '../../ui-kit/templates/choice';
 import { deepActive, studioWindow } from '../window';
@@ -71,15 +73,11 @@ export function downloadText(text: string, filename: string, type = 'image/svg+x
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Read an .svg File (size checked first). */
+/** Read an .svg File (type and size checked first). */
 export async function readSvgFile(file: File): Promise<{ text: string } | { error: string }> {
-  if (file.size > SVG_MAX_BYTES) return { error: t('The SVG is larger than 32 KB.') };
-  if (!/\.svg$/i.test(file.name) && file.type && file.type !== 'image/svg+xml') return { error: t('Choose an .svg file.') };
-  try {
-    return { text: await file.text() };
-  } catch {
-    return { error: t('The file could not be read.') };
-  }
+  const r = await readFile(file, ICON_SVG_INTAKE);
+  if (r.ok) return { text: r.text };
+  return { error: r.code === 'too_large' ? t('The SVG is larger than 32 KB.') : r.code === 'wrong_type' ? t('Choose an .svg file.') : t('The file could not be read.') };
 }
 
 @customElement('mc-anim-svg-dialog')

@@ -157,6 +157,7 @@
   "{n} did not fit: the library is full.": "{n} pasten er niet meer in: de bibliotheek is vol.",
   "{source} holds {items}.": "{source} bevat {items}.",
   "{types}, up to 1 MB": "{types}, tot 1 MB",
+  "{types}, up to 1 MB; SVG up to 32 KB": "{types}, tot 1 MB; SVG tot 32 KB",
   "Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor's IP address.": "Elke browser die een dashboard met dit thema toont, vraagt bestanden op bij {hosts}, en die sites kunnen het IP-adres van de bezoeker zien.",
   "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.": "\"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
   "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.": "Modus {mode}: \"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",

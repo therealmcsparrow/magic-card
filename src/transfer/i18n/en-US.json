@@ -176,5 +176,6 @@
   "{n} could not be saved.": "{n} could not be saved.",
   "{n} did not fit: the library is full.": "{n} did not fit: the library is full.",
   "{source} holds {items}.": "{source} holds {items}.",
-  "{types}, up to 1 MB": "{types}, up to 1 MB"
+  "{types}, up to 1 MB": "{types}, up to 1 MB",
+  "{types}, up to 1 MB; SVG up to 32 KB": "{types}, up to 1 MB; SVG up to 32 KB"
 }

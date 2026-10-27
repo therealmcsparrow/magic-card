@@ -2,7 +2,7 @@ import { html, nothing, svg, type TemplateResult } from 'lit';
 import { IMAGE_CANVAS_MIN, IMAGE_CANVAS_PRESETS } from '../contracts/image-editor';
 import { IMAGE_MAX_BYTES, MAX_IMAGE_BOX } from '../contracts/mcu-library-images';
 import { glyph } from '../ui-kit/glyphs';
-import { button, chip, field, notice, switchRow, tiles } from '../ui-kit/templates';
+import { button, field, notice, switchRow, tiles } from '../ui-kit/templates';
 import type { McSvgEditor } from '../svg-editor/mc-svg-editor';
 import type { Doc, Shape } from '../svg-editor/model';
 import { K } from './kit';
@@ -16,8 +16,6 @@ import { ACCENT, MAIN, cssOf, gradGeo, paintOf, stopsOf, type Box, type Grad } f
 
 /* The image editor's templates: functions of the ImageExt (state lives there). */
 
-const mac = (): boolean => typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform ?? '');
-const saveKey = (): string => (mac() ? 'Meta+S' : 'Control+S');
 const aria = (b: boolean): string => (b ? 'true' : 'false');
 
 function meter(x: ImageExt): TemplateResult {
@@ -36,48 +34,28 @@ function meter(x: ImageExt): TemplateResult {
   </div>`;
 }
 
-export function topBar(x: ImageExt): TemplateResult {
-  const s = x.shell;
-  const edit = s.stage === 'edit';
-  const ro = x.readOnly;
-  const sm = s.layout === 'stacked';
-  const tight = s.layout === 'compact' || sm;
-  const z = sm ? 'sm' : 'md';
-  const empty = s.out.error === 'empty';
-  return html`<header class="topbar">
-      ${button({ label: t('Close'), glyph: 'arrowLeft', variant: 'secondary', size: z, iconOnly: tight, onClick: () => s.back() })}
-      <h1 class=${tight ? 'title sr' : 'title'}>${t('Image editor')}</h1>
-      ${edit && !ro
-        ? html`<div class="nm-field">
-            <label class=${tight ? 'sr' : 'nm-label'} for="img-title-name">${t('Image name')}</label>
-            <div class="name"><input id="img-title-name" class="input" type="text" maxlength="80" .value=${s.doc.name} @change=${(e: Event) => s.apply({ ...s.doc, name: (e.target as HTMLInputElement).value }, 'Rename image', 'name')} /></div>
-            ${x.id ? chip({ label: s.dirty ? t('Changed since saved') : t('Saved'), tone: s.dirty ? 'warn' : undefined }) : nothing}
-          </div>`
-        : edit
-          ? html`<strong class="title">${s.doc.name}</strong>`
-          : nothing}
-      <span class="spacer"></span>
-      ${edit && !ro
-        ? html`${s.layout === 'compact' ? button({ label: t('Layers'), variant: 'secondary', size: z, pressed: s.overlay, onClick: () => (s.overlay = !s.overlay) }) : nothing}${button({ label: t('Undo'), glyph: 'undo', iconOnly: true, size: z, variant: 'secondary', keys: 'Control+Z', disabledReason: s.hist?.canUndo ? undefined : t('Undo'), onClick: () => s.undo() })}${button({ label: t('Redo'), glyph: 'redo', iconOnly: true, size: z, variant: 'secondary', keys: 'Control+Shift+Z', disabledReason: s.hist?.canRedo ? undefined : t('Redo'), onClick: () => s.redo() })}
-          ${button({ label: t('Canvas size'), variant: 'secondary', size: z, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) })}
-          ${refButton(x, sm)}
-          ${button({ label: t('Export file'), variant: 'secondary', size: z, disabledReason: s.out.svg ? undefined : t('Nothing to export yet.'), onClick: () => x.download() })}
-          ${button({ label: t('More'), variant: 'secondary', size: z, haspopup: 'menu', onClick: (e) => x.openMenu(e.currentTarget as HTMLElement) })}
-          ${button({ label: t('Save'), glyph: 'check', variant: 'primary', size: z, keys: saveKey(), disabledReason: empty ? t('Draw something first') : x.busy ? t('Saving…') : undefined, onClick: () => x.save() })}
-          <span class="sr">${mac() ? t('Save, Command+S') : t('Save, Control+S')}</span>`
-        : edit
-          ? button({ label: t('Export file'), variant: 'secondary', size: z, disabledReason: s.out.svg ? undefined : t('Nothing to export yet.'), onClick: () => x.download() })
-          : nothing}
-    </header>
-    ${edit && !ro ? meter(x) : nothing}
-    ${edit && !ro
-      ? html`<input id="img-import" type="file" hidden accept=".svg,image/svg+xml" @change=${(e: Event) => {
-          const i = e.target as HTMLInputElement;
-          const f = i.files?.[0];
-          i.value = '';
-          if (f) void importFile(x, f);
-        }} />${refPill(x)}${refPanel(x)}`
-      : nothing}
+/** The image profile's own slots of the shell's top bar (the Save button and the rest are the shell's). */
+export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult {
+  switch (slot) {
+    case 'canvas':
+      return button({ label: t('Canvas size'), glyph: 'resizeCorner', variant: 'secondary', size, iconOnly: tight, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) });
+    case 'reference':
+      return refButton(x, size === 'sm', tight);
+    case 'transfer':
+      return button({ label: t('Export file'), glyph: 'swapVertical', variant: 'secondary', size, iconOnly: tight, disabledReason: x.shell.out.svg ? undefined : t('Nothing to export yet.'), onClick: () => x.download() });
+    default:
+      return button({ label: t('More'), glyph: 'dotsHorizontal', variant: 'secondary', size, iconOnly: tight, haspopup: 'menu', onClick: (e) => x.openMenu(e.currentTarget as HTMLElement) });
+  }
+}
+
+/** What follows the bar: the size meter, the file input of Import, the reference picture's pill and panel, and the conflict notice. */
+export function barTail(x: ImageExt): TemplateResult {
+  return html`${meter(x)}<input id="img-import" type="file" hidden accept=".svg,image/svg+xml" @change=${(e: Event) => {
+      const i = e.target as HTMLInputElement;
+      const f = i.files?.[0];
+      i.value = '';
+      if (f) void importFile(x, f);
+    }} />${refPill(x)}${refPanel(x)}
     ${x.conflict
       ? html`<div class="img-notice notice warn" role="alert">${glyph('alertCircle', 20)}<div class="body"><p>${t('This image was changed somewhere else.')}</p><div class="actions">${button({ label: t('Save as a copy'), variant: 'text', size: 'sm', onClick: () => x.openDetails('copy') })}${button({ label: t('Reload'), variant: 'text', size: 'sm', onClick: () => void x.reload() })}</div></div></div>`
       : nothing}`;
@@ -92,28 +70,11 @@ const enter = (ok: () => void) => (e: KeyboardEvent) => {
   ok();
 };
 
-/** Open file in the start window: a button in front of a hidden file input, and the reason a file was refused. */
-function startFile(x: ImageExt): TemplateResult {
-  return html`<div class="open-file">
-    ${button({ label: t('Open file'), variant: 'secondary', size: 'sm', onClick: (e) => (e.currentTarget as HTMLElement).parentElement!.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
-    <span class="help">${t('Start from an SVG file instead of a blank canvas.')}</span>
-    <input id="img-start-file" type="file" hidden accept=".svg,image/svg+xml" @change=${(e: Event) => {
-      const i = e.target as HTMLInputElement;
-      const f = i.files?.[0];
-      i.value = '';
-      if (f) void x.startFile(f);
-    }} />
-    ${x.startError ? html`<p class="open-error" role="alert">${x.startError}</p>` : nothing}
-  </div>`;
-}
-
-export function sizeWin(x: ImageExt): TemplateResult {
+/** Shape, Width, Height and Keep ratio: the fields of the Canvas size window and of the start window's Blank canvas. */
+function sizeFields(x: ImageExt): TemplateResult {
   const s = x.size!;
-  const sh = x.shell;
-  const create = s.mode === 'create';
   const r = readSize(s.w, s.h);
   const bad = r.ok ? [] : r.bad;
-  const outside = r.ok && !create ? outsideCount(sh.doc, r.w, r.h) : 0;
   const msg = t('Use a number from {min} to {max}.', { min: String(IMAGE_CANVAS_MIN), max: String(MAX_IMAGE_BOX) });
   const side = (id: 'w' | 'h', label: string): TemplateResult =>
     field({
@@ -122,30 +83,43 @@ export function sizeWin(x: ImageExt): TemplateResult {
       error: bad.includes(id) ? msg : undefined,
       control: html`<input id=${`size-${id}`} class="input" type="text" inputmode="numeric" autocomplete="off" aria-invalid=${aria(bad.includes(id))} aria-describedby=${bad.includes(id) ? `size-${id}-error` : nothing} .value=${s[id]} @input=${(e: Event) => x.setSize({ [id]: (e.target as HTMLInputElement).value, preset: 'custom' }, id)} />`,
     });
+  return html`<p class="help">${t('Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.')}</p>
+    ${tiles({
+      label: t('Shape'),
+      value: s.preset,
+      items: [
+        ...IMAGE_CANVAS_PRESETS.map((p) => ({ value: p.ratio, label: `${p.ratio} · ${p.width} x ${p.height}`, preview: html`<span class="ratio" style=${`width:${p.width >= p.height ? 36 : Math.round((36 * p.width) / p.height)}px;height:${p.height >= p.width ? 36 : Math.round((36 * p.height) / p.width)}px`}></span>` })),
+        { value: 'custom', label: t('Custom') },
+      ],
+      onPick: (v) => x.setSize({ preset: v }),
+    })}
+    <div class="sizes">${side('w', t('Width'))}${side('h', t('Height'))}</div>
+    ${switchRow({ id: 'size-keep', label: t('Keep ratio'), checked: s.keep, onChange: (v) => x.setSize({ keep: v }) })}
+    <p class="help">${t('{min} to {max} pixels per side.', { min: String(IMAGE_CANVAS_MIN), max: String(MAX_IMAGE_BOX) })}</p>`;
+}
+
+/** The start window's Blank canvas fields; Enter in a number field presses its Create button. */
+export function sizeForm(x: ImageExt): TemplateResult {
+  return html`<div class="dlg" @keydown=${enter(() => x.shell.renderRoot.querySelector<HTMLElement>('#start-create')?.click())}>${sizeFields(x)}</div>`;
+}
+
+export function sizeWin(x: ImageExt): TemplateResult {
+  const s = x.size!;
+  const sh = x.shell;
+  const r = readSize(s.w, s.h);
+  const outside = r.ok ? outsideCount(sh.doc, r.w, r.h) : 0;
+  const msg = t('Use a number from {min} to {max}.', { min: String(IMAGE_CANVAS_MIN), max: String(MAX_IMAGE_BOX) });
   const go = (): void => (r.ok ? x.commitSize() : undefined);
   return html`<mc-ui-window variant="dialog" size="m" heading=${t('Canvas size')} closeLabel=${t('Close')} @mc-window-close=${() => x.closeSize()}>
     <div class="dlg" @keydown=${enter(go)}>
-      <p class="help">${t('Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.')}</p>
-      ${create ? startFile(x) : nothing}
-      ${tiles({
-        label: t('Shape'),
-        value: s.preset,
-        items: [
-          ...IMAGE_CANVAS_PRESETS.map((p) => ({ value: p.ratio, label: `${p.ratio} · ${p.width} x ${p.height}`, preview: html`<span class="ratio" style=${`width:${p.width >= p.height ? 36 : Math.round((36 * p.width) / p.height)}px;height:${p.height >= p.width ? 36 : Math.round((36 * p.height) / p.width)}px`}></span>` })),
-          { value: 'custom', label: t('Custom') },
-        ],
-        onPick: (v) => x.setSize({ preset: v }),
-      })}
-      <div class="sizes">${side('w', t('Width'))}${side('h', t('Height'))}</div>
-      ${switchRow({ id: 'size-keep', label: t('Keep ratio'), checked: s.keep, onChange: (v) => x.setSize({ keep: v }) })}
-      <p class="help">${t('{min} to {max} pixels per side.', { min: String(IMAGE_CANVAS_MIN), max: String(MAX_IMAGE_BOX) })}</p>
+      ${sizeFields(x)}
       ${x.ref ? button({ label: t('Match reference picture'), variant: 'secondary', size: 'sm', onClick: () => x.matchSize() }) : nothing}
-      ${create ? nothing : html`<p class="help">${t("Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.")}</p>`}
+      <p class="help">${t("Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.")}</p>
       ${s.warned && outside ? notice({ tone: 'warn', text: t('{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.', { c: outside }) }) : nothing}
     </div>
     <div slot="footer" class="foot">
       ${button({ label: s.warned ? t('Back') : t('Cancel'), variant: 'text', size: 'md', onClick: () => (s.warned ? x.setSize({}) : x.closeSize()) })}
-      ${button({ label: create ? t('Create') : s.warned ? t('Apply anyway') : t('Apply'), variant: 'primary', size: 'md', disabledReason: r.ok ? undefined : msg, onClick: go })}
+      ${button({ label: s.warned ? t('Apply anyway') : t('Apply'), variant: 'primary', size: 'md', disabledReason: r.ok ? undefined : msg, onClick: go })}
     </div>
   </mc-ui-window>`;
 }

@@ -11,6 +11,8 @@ This is a pre-release. HACS shows it only when you turn on Show beta versions.
 1.  Open Magic Card Utils in the sidebar and go to the Library tab.
 2.  Choose New icon, then pick a starting point: Blank, an icon that Home Assistant knows (Material Design Icons and any installed icon pack), or an SVG that you paste or upload. For an icon, the same icon picker as in the card editor opens: search, choose an icon, then choose Use this icon.
 
+The start window has one row of tiles: Blank, An icon, Paste SVG, Open file and (when the library answers) My icons. The image editor uses the same window and the same top bar, with Blank canvas in place of Blank and An icon. In both, the window has no footer: Close or Esc closes it, and Tab and Shift+Tab stay inside it.
+
 The editor opens full-screen in the panel. To change a saved icon, choose Edit on it in the library. Your changes are saved only when you choose Save.
 
 No card or entity is needed. You can make an icon before you add it to any dashboard.

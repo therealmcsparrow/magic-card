@@ -176,7 +176,27 @@ export class UiWindow extends LitElement {
     if (!this._abort()) this.close('escape');
   };
 
+  /** Tab from the last stop goes to the first and Shift+Tab from the first to the last: a modal window left by Tab would hand the focus to the browser's own bar (and BODY). The stops come in the order a browser walks them, through open shadow roots and slots. */
+  private _tab(e: KeyboardEvent): void {
+    if (e.defaultPrevented) return;
+    const list: HTMLElement[] = [];
+    const walk = (n: Node): void => {
+      if (!(n instanceof HTMLElement) || n.hasAttribute('hidden')) return;
+      if (n instanceof HTMLSlotElement) return n.assignedNodes({ flatten: true }).forEach(walk);
+      if (n.matches(FOCUSABLE)) list.push(n);
+      (n.shadowRoot ?? n).childNodes.forEach(walk);
+    };
+    this.renderRoot.childNodes.forEach(walk);
+    const at = list.indexOf(e.composedPath()[0] as HTMLElement);
+    const to = e.shiftKey ? (at === 0 ? list[list.length - 1] : undefined) : at === list.length - 1 ? list[0] : undefined;
+    if (to) {
+      e.preventDefault();
+      to.focus({ preventScroll: true });
+    }
+  }
+
   private _key = (e: KeyboardEvent): void => {
+    if (e.key === 'Tab') return this._tab(e);
     if (e.key !== 'Escape') return;
     e.preventDefault();
     e.stopPropagation();

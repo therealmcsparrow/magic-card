@@ -8,7 +8,9 @@ import { hasIconFx } from '../../icons/render-icon';
 import { autoDeviceAnim, autoDeviceRule } from '../../icons/device-anim';
 import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
 import { svgIconApi } from '../../utils/svg-icon-loader';
-import { sanitizeSvg, SVG_MAX_BYTES } from '../../icons/svg-sanitize';
+import { ICON_SVG_INTAKE } from '../../contracts/svg-intake';
+import { NO_SVG_ELEMENT, sanitizeSvg } from '../../icons/svg-sanitize';
+import { readFile } from '../../svg-io/intake';
 import { fieldReset } from './field-reset';
 import { getFullPath, hasTemplate, isNotSynced, type SyncContext } from '../../utils/sync-path';
 import { cardStateOf as cardState } from '../custom/bridge';
@@ -494,6 +496,13 @@ export class IconFxEditor extends LitElement {
   // ── custom SVG ──
 
   private _applySvg(text: string, fromUpload = false): void {
+    const err = text.trim() ? customSvgError(text) : fromUpload ? NO_SVG_ELEMENT : undefined;
+    // A refused upload leaves the markup box as it was; typed text stays so it can be corrected.
+    if (err && fromUpload) {
+      this._svgError = err;
+      this._svgAlert = true;
+      return;
+    }
     this._svgDraft = text;
     this._svgAlert = fromUpload;
     if (!text.trim()) {
@@ -501,7 +510,6 @@ export class IconFxEditor extends LitElement {
       this.onChange?.({ svg: undefined });
       return;
     }
-    const err = customSvgError(text);
     this._svgError = err;
     if (err) return;
     // The first valid SVG switches the icon over, together with the markup (never a blank icon).
@@ -529,11 +537,11 @@ export class IconFxEditor extends LitElement {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-    if (file.size > SVG_MAX_BYTES) {
-      this._svgError = t('The SVG is larger than 32 KB.');
+    const r = await readFile(file, ICON_SVG_INTAKE);
+    if (r.ok) this._applySvg(r.text, true);
+    else {
+      this._svgError = r.code === 'too_large' ? t('The SVG is larger than 32 KB.') : NO_SVG_ELEMENT;
       this._svgAlert = true;
-    } else {
-      this._applySvg(await file.text(), true);
     }
     try {
       input.value = '';

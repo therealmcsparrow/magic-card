@@ -28,6 +28,18 @@ export interface ImageUi extends ImageEditorExt {
   readonly canvasLabel: string;
   /** Why open() gave no document, in words. */
   readonly problem?: string;
+  /** The library id once the image is stored, else undefined (the Saved chip). */
+  readonly id?: string;
+  /** Label of the name field. */
+  readonly nameLabel: string;
+  /** First line of the Shortcuts popover. */
+  readonly keys: string;
+  /** Why Save cannot act yet, else undefined. */
+  readonly saveWhy?: string;
+  /** The source gave no canvas size: the start window opens first and the editor waits for its first drawing. */
+  readonly asks: boolean;
+  /** Words for a pasted text over IMAGE_SVG_MAX_FILE_BYTES. */
+  readonly tooBig: string;
   /** Escape: close the open window, true when there was one. */
   close(): boolean;
   /** The first document is showing. */
@@ -35,6 +47,18 @@ export interface ImageUi extends ImageEditorExt {
   download(): void;
   /** The document to begin with, or undefined when the source could not be opened (the shell shows the start dialog's error state). */
   open(src: SvgEditorSource): Promise<Doc | undefined>;
+  /** A fresh Blank canvas form (the start window opened). */
+  reset(): void;
+  /** The Blank canvas panel's fields: Shape, Width, Height, Keep ratio. */
+  form(): TemplateResult;
+  /** The numbers in the form are not a size yet. */
+  readonly formBad: boolean;
+  /** Create: the document of the form's size, or undefined while the numbers are wrong. */
+  create(): Doc | undefined;
+  /** Start window, Open file: the document of the file, or the reason it was refused. The document shows after ready(). */
+  openFile(file: File): Promise<{ doc: Doc } | string>;
+  /** Start window, Paste SVG: the document of the text, or the reason it was refused. */
+  openText(text: string, name?: string): Promise<{ doc: Doc } | string>;
   buildOut(doc: Doc, decimals: number): Out;
   /** CSS of one layer's fill, stroke, opacity and dashes on the canvas. */
   style(s: Shape): string;
@@ -76,7 +100,10 @@ export interface ImageUi extends ImageEditorExt {
   artColours(): string | undefined;
   /** The toolbar's "As on a card" toggle. */
   previewButton(): TemplateResult;
-  topBar(): TemplateResult;
+  /** One slot of the shell's top bar that only the image profile has (or draws its own way). */
+  slot(slot: 'canvas' | 'reference' | 'transfer' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult;
+  /** What follows the bar: the size meter, the file input of Import, the reference picture's pill and panel, the conflict notice. */
+  barTail(): TemplateResult;
   dialogs(): TemplateResult | undefined;
   viewer(): TemplateResult;
   /** Control+S, Done. */

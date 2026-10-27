@@ -10,6 +10,8 @@ import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_TAG, type SvgAlignEdge
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { svgIconApi } from '../utils/svg-icon-loader';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
+import { readFile, refuseText } from '../svg-io/intake';
+import { ICON_SVG_INTAKE, ICON_SVG_MAX_FILE_BYTES, IMAGE_SVG_MAX_FILE_BYTES } from '../contracts/svg-intake';
 import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
 import type { BooleanOp } from '../contracts/path-booleans';
@@ -124,7 +126,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -135,7 +137,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
   host: SvgEditorHost = 'card';
   /** The element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
-  static contractRevision = 6;
+  static contractRevision = 7;
   /** Set when the editor was opened on an image source: everything image-only goes through it. */
   img?: ImageUi;
   /** Layers being dragged, moved by handles or nudged: they carry will-change until the gesture ends. */
@@ -208,7 +210,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     for (let n = this.renderRoot.querySelector<HTMLElement>('.tree'); n; n = n.parentElement) if (/auto|scroll/.test(getComputedStyle(n).overflowY)) return n;
     return null;
   };
-  startMode?: 'icon' | 'paste';
+  startMode?: 'icon' | 'paste' | 'canvas-size';
   /** What is typed in the icon name field of the start window; empty until the user types. */
   startIcon = '';
   /** The start dialog is open (over a blank editor first, or from New). */
@@ -217,6 +219,15 @@ export class McSvgEditor extends LitElement implements StageHost {
   newAsk = false;
   private startReturn?: HTMLElement;
   startError?: string;
+  /** The file being read for the start window. */
+  startBusy?: string;
+  /** The id of the control that began the last start action (a refusal puts the focus back there). */
+  startAt = '';
+  /** The shell opened the start window itself (a first open), not the user. */
+  private startAuto = false;
+  /** Counts start actions: an answer that finds another number was meant for a window that has moved on. */
+  private seq = 0;
+  private readTimer?: ReturnType<typeof setTimeout>;
   liveShape?: Live;
   coarse = false;
   nudgeBig = false;
@@ -298,7 +309,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     for (const [d, f] of this.dialogs) d.removeEventListener('cancel', f);
     this.dialogs = [];
     cancelAnimationFrame(this.raf);
-    for (const t of [this.outTimer, this.liveTimer, this.movingTimer]) clearTimeout(t);
+    for (const t of [this.outTimer, this.liveTimer, this.movingTimer, this.readTimer]) clearTimeout(t);
     this.img?.dispose();
     if (this.deleted) void this.flushDelete();
     const o = this.opener;
@@ -358,12 +369,23 @@ export class McSvgEditor extends LitElement implements StageHost {
       return;
     }
     this.begin(doc);
-    img.ready();
+    if (img.asks) this.showStart();
+    else img.ready();
   }
 
   /** First open without a start: a blank editor with the start dialog over it. */
   showStart(): void {
     if (!this.hist) this.begin(this.blankStart());
+    this.startAuto = true;
+    this.armStart();
+  }
+
+  private armStart(): void {
+    this.seq++;
+    if (this.img) {
+      this.startMode = 'canvas-size';
+      this.img.reset();
+    }
     this.startOpen = true;
   }
 
@@ -375,7 +397,9 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     this.startError = undefined;
     this.startMode = undefined;
-    this.startOpen = true;
+    this.startBusy = undefined;
+    this.startAuto = false;
+    this.armStart();
   }
 
   closeNew(): void {
@@ -391,9 +415,12 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   closeStart(): void {
+    this.seq++;
     this.startOpen = false;
     this.startError = undefined;
     this.startMode = undefined;
+    this.startBusy = undefined;
+    if (this.img?.asks) return this.fire('mc-svg-close', { dirty: false });
     const back = this.startReturn;
     this.startReturn = undefined;
     void this.updateComplete.then(() => (back?.isConnected ? back : this.canvas())?.focus({ preventScroll: true }));
@@ -419,6 +446,34 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.updateComplete.then(() => this.canvas()?.fit());
   }
 
+  /**
+   * A start entry gave a drawing. The first drawing begins the editor; later the new drawing replaces the old one as one
+   * history step (Undo brings it back) and keeps its name.
+   */
+  take(doc: Doc, notes?: ImportNotes): void {
+    this.seq++;
+    const auto = this.startAuto;
+    if (auto || !this.hist) this.begin(doc, notes);
+    else {
+      this.apply({ ...doc, name: this.doc.name }, 'Start from');
+      this.select([]);
+      this.notes = notes;
+      if (notes) this.noteBanners(notes);
+      else this.banners = [];
+      void this.updateComplete.then(() => this.canvas()?.fit());
+    }
+    this.startOpen = false;
+    this.startAuto = false;
+    this.startError = undefined;
+    this.startMode = undefined;
+    this.startBusy = undefined;
+    this.img?.ready();
+    if (auto) this.say(t('Drawing opened.'));
+    const back = this.startReturn;
+    this.startReturn = undefined;
+    void this.updateComplete.then(() => (back?.isConnected ? back : this.canvas())?.focus({ preventScroll: true }));
+  }
+
   /** A sanitiser or importer reason as text in the user's language. */
   errorText(error: string | undefined): string {
     switch (svgErrorKind(error)) {
@@ -442,10 +497,10 @@ export class McSvgEditor extends LitElement implements StageHost {
     }));
   }
 
-  /** Opens SVG text a user brought in (a pasted text or a chosen file), after the CSS resolver has loaded. */
-  async importText(text: string, name: string): Promise<boolean> {
+  /** Opens SVG text a user brought in (a pasted text or a chosen file), after the CSS resolver has loaded. A start action that was answered another way meanwhile (`seq`) is dropped. */
+  async importText(text: string, name: string, seq?: number): Promise<boolean> {
     await this.needCss();
-    return this.openSvg(text, name);
+    return seq === undefined || seq === this.seq ? this.openSvg(text, name) : false;
   }
 
   /** `stored`: the text is a saved library icon (already clean), so it is read without the CSS resolver. */
@@ -458,13 +513,22 @@ export class McSvgEditor extends LitElement implements StageHost {
       return false;
     }
     this.startError = undefined;
-    this.begin(r.doc, first ? undefined : r.notes);
-    if (first) this.notes = r.notes;
+    if (first) {
+      this.begin(r.doc);
+      this.notes = r.notes;
+    } else this.take(r.doc, r.notes);
     return true;
   }
 
+  /** A start action that was answered another way while the icon resolved (`seq`) is dropped. */
   async openIcon(ref: string, first = false): Promise<boolean> {
+    const n = first ? this.seq : ++this.seq;
+    if (!first) {
+      this.startBusy = undefined;
+      clearTimeout(this.readTimer);
+    }
     const g = await svgIconApi()!.resolveIconGeometry(ref.trim());
+    if (n !== this.seq) return false;
     if (!g) {
       this.startError = t('Could not find "{name}". Check the name, or wait for the icon packs to load.', { name: ref.trim() });
       this.startMode = 'icon';
@@ -473,7 +537,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     const name = ref.includes(':') ? ref.split(':')[1].replace(/[-_]/g, ' ') : ref;
     this.startError = undefined;
-    this.begin(fromGeometry(g, t('{name} copy', { name })));
+    this.take(fromGeometry(g, t('{name} copy', { name })));
     return true;
   }
 
@@ -1564,6 +1628,14 @@ export class McSvgEditor extends LitElement implements StageHost {
     return !this.libraryAvailable || this.lib.state === 'missing';
   }
 
+  private chipSaid?: string;
+
+  /** The words of the Saved chip, else undefined (nothing is stored yet). */
+  get savedLabel(): string | undefined {
+    const current = this.img ? !this.dirty : this.savedCurrent;
+    return (this.img ? this.img.id : this.saved) ? (current ? t('Saved') : t('Changed since saved')) : undefined;
+  }
+
   get savedCurrent(): boolean {
     return !!this.saved && !!this.out.svg && this.saved.svg === this.out.svg;
   }
@@ -1859,23 +1931,63 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   startLibrary(): void {
-    this.begin(this.blankStart());
+    this.take(this.blankStart());
     this.openPanel('library');
     void this.lips.reveal('side');
   }
 
-  async startFile(file?: File): Promise<void> {
-    if (!file) return;
-    if (file.size > SVG_MAX_BYTES) {
-      this.startError = this.errorText('The SVG is larger than 32 KB.');
-      return;
-    }
+  /** Open file in the start window. */
+  startFile(file?: File): Promise<void> {
+    return file
+      ? this.startRun('start-open', file.name, async (n) => {
+          if (this.img) return this.img.openFile(file);
+          const r = await readFile(file, ICON_SVG_INTAKE);
+          if (!r.ok) return r.code === 'unreadable' ? t('Could not read that file.') : this.errorText(r.code === 'too_large' ? 'The SVG is larger than 32 KB.' : 'No <svg> element found.');
+          try {
+            await this.importText(r.text, file.name.replace(/\.svg$/i, '') || t('My icon'), n);
+          } catch {
+            return t('Could not read that file.');
+          }
+          return undefined;
+        })
+      : Promise.resolve();
+  }
+
+  /** Use this SVG in the start window. */
+  usePaste(text: string): Promise<void> {
+    return this.startRun('start-paste-go', undefined, async (n) => {
+      const bad = refuseText(text, this.img ? IMAGE_SVG_MAX_FILE_BYTES : ICON_SVG_MAX_FILE_BYTES);
+      if (bad) return bad === 'empty' ? t('Paste some SVG first.') : this.img ? this.img.tooBig : this.errorText('The SVG is larger than 32 KB.');
+      if (this.img) return this.img.openText(text);
+      await this.importText(text, t('My icon'), n);
+      return undefined;
+    });
+  }
+
+  /**
+   * Runs one start action. Its answer counts only while the window still waits for it; a refusal goes to the status line
+   * and the focus returns to the control that began it. `go` returns the refusal, a drawing, or nothing when it took the
+   * drawing itself.
+   */
+  private async startRun(at: string, busy: string | undefined, go: (n: number) => Promise<string | { doc: Doc } | undefined>): Promise<void> {
+    const n = ++this.seq;
+    this.startAt = at;
+    this.startError = undefined;
+    this.startBusy = busy;
+    clearTimeout(this.readTimer);
+    if (busy) this.readTimer = setTimeout(() => n === this.seq && this.say(t('Reading {name}…', { name: busy })), 200);
+    let r: string | { doc: Doc } | undefined;
     try {
-      const text = await file.text();
-      await this.importText(text, file.name.replace(/.svg$/i, '') || t('My icon'));
+      r = await go(n);
     } catch {
-      this.startError = t('Could not read that file.');
+      r = busy ? t('Could not read that file.') : t('This is not valid SVG. Check that it starts with <svg and is closed.');
     }
+    if (n !== this.seq) return;
+    clearTimeout(this.readTimer);
+    this.startBusy = undefined;
+    if (typeof r === 'object') return this.take(r.doc);
+    if (r) this.startError = r;
+    if (this.startError) void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>(`#${at}`)?.focus({ preventScroll: true }));
   }
 
   replaceOne(s: Shape, patch: Partial<Shape>): Doc {
@@ -1987,6 +2099,12 @@ export class McSvgEditor extends LitElement implements StageHost {
   private dlgReturn?: HTMLElement;
 
   protected updated(changed: PropertyValues): void {
+    // the Saved chip takes no focus: a change of it is said once
+    const chip = this.savedLabel;
+    if (chip !== this.chipSaid) {
+      if (this.chipSaid && chip) this.say(chip);
+      this.chipSaid = chip;
+    }
     if (changed.has('dlg') && changed.get('dlg') && !this.dlg) {
       // the window left the page by state, not through its own close(): nothing else puts focus back
       const a = deepActive();

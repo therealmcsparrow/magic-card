@@ -91,7 +91,7 @@ describe('image editor: opening', () => {
     expect(loader.loadImageEditor).not.toHaveBeenCalled();
   });
 
-  it('a blank image without a size opens the canvas size window; Cancel closes the editor', async () => {
+  it('a blank image without a size opens the start window on Blank canvas; Close closes the editor', async () => {
     const { hass } = wire();
     const closed: any[] = [];
     const el = document.createElement('mc-svg-editor') as Ed;
@@ -102,10 +102,10 @@ describe('image editor: opening', () => {
     mounted.push(el);
     await until(() => el.stage === 'edit');
     await settle(el);
-    expect(text(el)).toContain('Canvas size');
+    expect(text(el)).toContain('Blank canvas');
     expect(qa(el, 'mc-ui-window').length).toBe(1);
     expect(qa(el, 'mc-ui-window [role=radio][aria-checked=true]')[0].textContent).toContain('16:9');
-    win(el, 'Cancel')!.click();
+    (qa(el, 'mc-ui-window')[0] as unknown as { close(reason: string): void }).close('close-button');
     expect(closed).toEqual([{ dirty: false }]);
   });
 

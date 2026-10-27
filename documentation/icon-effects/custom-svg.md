@@ -42,7 +42,7 @@ The card cleans the markup each time it draws it; `svg` keeps what you pasted. O
 - Attributes: geometry, `fill`, `stroke` and their width, cap, join and opacity attributes, `opacity`, `transform`, `viewBox`, `id`, `class`, gradient stop attributes, `clip-path`, `mask`, `fill-rule`, `clip-rule`.
 - `url(#id)` references inside the SVG are kept; external ones are not.
 
-The editor refuses an SVG that contains a script, event handlers, a `javascript:` link, `foreignObject` or external references, and says what it found, for example "This SVG contains a script. Remove it and try again." It also refuses `<use>` and `<image>`, because their shapes would go missing: "<use> and <image> aren't supported. Draw the shapes as paths and try again." An upload larger than 32 KB is refused with "The SVG is larger than 32 KB."
+The editor refuses an SVG that contains a script, event handlers, a `javascript:` link, `foreignObject` or external references, and says what it found, for example "This SVG contains a script. Remove it and try again." It also refuses `<use>` and `<image>`, because their shapes would go missing: "<use> and <image> aren't supported. Draw the shapes as paths and try again." An upload larger than 32 KB is refused with "The SVG is larger than 32 KB." A file that is not an .svg file, or that cannot be read, is refused with "No <svg> element found." A refused upload changes nothing: the SVG markup box keeps what it held.
 
 Styles (`<style>` blocks and `style="..."` attributes) are removed. The editor accepts such an SVG with a warning: "Styles are removed; use fill attributes (for example fill="#f44336") for colors." Classes styled in a `<style>` block, as Illustrator exports them, lose their colours. Set `fill` attributes instead.
 

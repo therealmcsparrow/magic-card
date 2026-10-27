@@ -11,7 +11,7 @@ Library images need two parts:
 
 - Draw a picture with shapes, paths, text, gradients and opacity, on a canvas of any size. See [The image editor](editor.md).
 - Trace over a photo or a floor plan with a reference picture. The picture is never saved. See [The image editor](editor.md#reference-picture).
-- Open an SVG file as a new image from the first window of the image editor, or import one into the open drawing, and keep what the editor can use. See [The image editor](editor.md#start-from-an-svg-file).
+- Open an SVG file, or paste SVG markup, as a new image from the first window of the image editor, or import one into the open drawing, and keep what the editor can use. See [The image editor](editor.md#start-from-an-svg-file).
 - Add an SVG file straight to the library from the Images tab of the Magic Card Utils panel. See [Export and import](../presets/export-and-import.md#add-an-svg-file-as-an-image).
 - Show a library image in an image module, or as a background behind the content. See [Use images in a card](using-images.md).
 - Refer to a library image in YAML with `mcu-image:<id>`. See [Use images in a card](using-images.md#yaml).
