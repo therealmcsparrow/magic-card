@@ -15,7 +15,7 @@ import {
   SCRIM_DEFAULT, SCRIM_PRESETS, axisKind, clampStrength, effectiveClickThrough, frontNumber, hasModuleAction, isAnchor, isAutomatic,
   layerOf, layerYaml, offsetError, offsetSide, patchLayer, patchScrim, placementOf, scrimLabel, setPlacement, type LayerEditorContext, type MoveTo, type OffsetAxis,
 } from './placement-model';
-import { blendTiles, chevron, lyrSlider, lyrSwitch } from './controls';
+import { blendTiles, cancelSliderFrames, chevron, lyrSlider, lyrSwitch } from './controls';
 import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
 
@@ -93,6 +93,7 @@ export class McLayerGroups extends LitElement {
     super.disconnectedCallback();
     this._stopMeasure?.();
     clearTimeout(this._undoTimer);
+    cancelSliderFrames(this.renderRoot);
   }
 
   static styles = [

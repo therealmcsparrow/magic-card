@@ -26,33 +26,65 @@ export function lyrSwitch(id: string, label: string, checked: boolean, on: (v: b
   </div>`;
 }
 
-/** A range with a number field beside it, clamped to min..max. */
+/** Slider writes waiting for the next animation frame, by slider; the latest value wins. */
+const pending = new Map<Element, { frame: number; v: number; on: (v: number) => void }>();
+
+/** Drops every frame still waiting for a slider inside `root`; a host calls this when it leaves the page. */
+export function cancelSliderFrames(root: ParentNode | null | undefined): void {
+  for (const [slider, p] of pending) {
+    if (!root?.contains(slider)) continue;
+    cancelAnimationFrame(p.frame);
+    pending.delete(slider);
+  }
+}
+
+/** A range with a number field beside it, clamped to min..max. Home Assistant's slider when the page has defined it, else the browser range; moving the thumb writes at most once per frame. */
 export function lyrSlider(id: string, label: string, value: number, min: number, max: number, unit: string, on: (v: number) => void): TemplateResult {
-  const clamp = (n: number): number => Math.max(min, Math.min(max, Math.round(n)));
-  /** Shows one value in the range, its spoken text and the number field of the row the event came from. */
-  const mirror = (e: Event, n: number, typing = false): void => {
-    const row = (e.target as HTMLElement).closest('.inline');
-    const r = row?.querySelector<HTMLInputElement>('input[type="range"]');
+  /** Shows the value of the control that fired in the range, its spoken text and the number field; undefined when it holds no number. */
+  const show = (e: Event, typing = false): number | undefined => {
+    const target = e.target as HTMLInputElement;
+    const n = Number(target.value);
+    if (target.value === '' || !Number.isFinite(n)) return undefined;
+    const v = Math.max(min, Math.min(max, Math.round(n)));
+    const row = target.closest('.inline');
+    const r = row?.querySelector<HTMLInputElement>('.lyr-range');
     const f = row?.querySelector<HTMLInputElement>('input[type="number"]');
-    if (r) r.value = String(n);
-    if (f && !typing) f.value = String(n);
-    r?.setAttribute('aria-valuetext', `${n}${unit}`);
+    if (r) r.value = String(v);
+    if (f && !typing) f.value = String(v);
+    r?.setAttribute('aria-valuetext', `${v}${unit}`);
+    return v;
   };
-  const preview = (e: Event): void => {
-    const raw = (e.target as HTMLInputElement).value;
-    if (raw !== '' && Number.isFinite(Number(raw))) mirror(e, clamp(Number(raw)), (e.target as HTMLInputElement).type === 'number');
+  const preview = (e: Event): void => void show(e, (e.target as HTMLInputElement).type === 'number');
+  /** The thumb moved: write on the next frame. */
+  const move = (e: Event): void => {
+    const v = show(e);
+    if (v === undefined) return;
+    const slider = e.target as Element;
+    const p = pending.get(slider);
+    if (p) {
+      p.v = v;
+      p.on = on;
+      return;
+    }
+    const w = { v, on, frame: requestAnimationFrame(() => (pending.delete(slider), w.on(w.v))) };
+    pending.set(slider, w);
   };
+  /** Release or a typed number: write the final value once, in place of a pending frame. */
   const set = (e: Event): void => {
-    const n = Number((e.target as HTMLInputElement).value);
-    if (!Number.isFinite(n)) return;
-    const v = clamp(n);
-    mirror(e, v);
+    const v = show(e);
+    if (v === undefined) return;
+    const p = pending.get(e.target as Element);
+    if (p) cancelAnimationFrame(p.frame);
+    pending.delete(e.target as Element);
     on(v);
   };
+  const slider = customElements.get('ha-slider')
+    ? html`<ha-slider class="lyr-range" id=${id} label=${label} min=${min} max=${max} step="1" .value=${value} aria-label=${label} aria-valuetext=${shownValue(`${value}${unit}`)} @input=${move} @change=${set}></ha-slider>`
+    : html`<input class="lyr-range" id=${id} type="range" min=${min} max=${max} step="1" .value=${shownValue(String(value))} aria-label=${label} aria-valuetext=${shownValue(`${value}${unit}`)} @input=${move} @change=${set} />`;
   return html`<div>
     <label for=${id}>${label}</label>
     <div class="inline">
-      <input class="lyr-range" id=${id} type="range" min=${min} max=${max} step="1" .value=${shownValue(String(value))} aria-valuetext=${shownValue(`${value}${unit}`)} @input=${preview} @change=${set} />
+      ${slider}
       <input class="lyr-input input" type="number" min=${min} max=${max} step="1" aria-label=${t('{label} value', { label })} .value=${shownValue(String(value))} @input=${preview} @change=${set} />
       <span aria-hidden="true">${unit}</span>
     </div>
