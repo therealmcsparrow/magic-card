@@ -149,9 +149,9 @@
       "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
-      "raw": 67584,
-      "ceiling": 67584,
-      "note": "Preset transfer. 66 KiB, measured 66,690 (Linux build, docker node 24.22.0) with the image code in the image-transfer chunk; equals TRANSFER_CHUNK_CEILING (67,584 B)."
+      "raw": 68608,
+      "ceiling": 69632,
+      "note": "Preset transfer. 67 KiB, measured 68,349 (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-icon.js": {
       "raw": 47104,
@@ -876,6 +876,18 @@
       "field": "/entry/stages/3/cap",
       "from": 84741,
       "to": 85000
+    },
+    {
+      "id": "transfer-raw-67584-to-68608",
+      "field": "/files/magic-card-transfer.js/raw",
+      "from": 67584,
+      "to": 68608
+    },
+    {
+      "id": "transfer-ceiling-67584-to-69632",
+      "field": "/files/magic-card-transfer.js/ceiling",
+      "from": 67584,
+      "to": 69632
     }
   ]
 }
