@@ -16,10 +16,16 @@
  *             max: the longest text the place can hold, in characters (required). en-GB, en-US and nl must fit.
  *             vars: one description per ICU argument; its names equal the message's arguments (required when the
  *             text has arguments, absent otherwise).
+ *             The length of a text is counted on its longest rendering: each plural or select is replaced by its
+ *             longest branch, arguments as written.
  * en-US.json  TranslationCatalogue, generated from en-GB by the word list and tools/i18n/en-US-exceptions.json;
  *             every hash is the current en-GB hash. Never edited by hand. The exceptions stay keyed by the en-GB
  *             text they were reviewed for, so an English edit orphans its exception and the check fails (D4).
  * nl.json     TranslationCatalogue, written by the localizer.
+ * A message in these files is the runtime's ICU subset: at most three brace levels (TOP in src/i18n/runtime.ts), so a select over a
+ * plural with an argument in a branch is written as one key per select value; every plural and select has an
+ * `other` branch; a plural branch is `=N` or one of the CLDR cardinal categories of its locale (Node's
+ * Intl.PluralRules); no apostrophe stands before `{`, `}` or `#` (the runtime has no quoting, an ICU tool would).
  * Every file is sorted by key, two-space JSON, LF, final newline (stable diffs; English stays visible in PRs).
  *
  * ── Source hash and stale translations ──
@@ -50,8 +56,9 @@
  *
  * ── Two phases ──
  * Phase 1 (i18n 1.1.0, additive): tools accept keys beside British-text ids; the runtime is unchanged.
- * tools/i18n/legacy-count.json holds the number of text-id calls per namespace; check-i18n --ci fails a count above
- * it (a new legacy call). A namespace that has an en-GB.json allows no text-id call at all, whatever the file says.
+ * tools/i18n/legacy-count.json holds the number of text-id calls per namespace (a call of t, tx, m, lm or an alias
+ * whose first argument is a string literal outside KEY_PATTERN, and every tc call); check-i18n --ci fails a count
+ * that differs from it. A namespace that has an en-GB.json allows no text-id call at all, whatever the file says.
  * Phase 2 (i18n 2.0.0, breaking): the text-id path, tc() and the legacy count are removed. The runtime takes table
  * indices only; vitest runs the same rewrite as webpack (tools/i18n/vite-plugin.mjs). Magic Card Utils has no
  * build step: its generated mc-i18n-panel.js holds the key -> index map and exports t, tx and locale already bound,
@@ -76,7 +83,9 @@
  * matching the arguments -> check error (D8) | any locale text longer than max -> check error (D8) | stale entry
  * without a waiver -> release check error (D9) | waiver for an unknown key, an old hash or with an empty reason
  * -> check error (D9) | rename onto an existing key -> the rename tool refuses and writes nothing | legacy count
- * above tools/i18n/legacy-count.json, or any text-id call in a migrated namespace -> check error (D10) | exchange
+ * differing from tools/i18n/legacy-count.json, or any text-id call in a migrated namespace -> check error (D10) |
+ * message nested deeper than three brace levels, with an apostrophe before `{`, `}` or `#`, or with a plural
+ * branch its locale does not have -> check error (D6) | exchange
  * file stale -> i18n-flat --check exit 1 | import of an unknown key or of a text that breaks D6 -> import refuses
  * and writes nothing.
  */
@@ -144,7 +153,7 @@ export interface ExchangeMeta {
 export type KeyArgs = Readonly<Record<string, string | number>>;
 
 /** What a namespace's index.ts exports over its generated Keys interface. */
-export interface KeyedI18n<Keys extends Record<string, KeyArgs>> {
+export interface KeyedI18n<Keys extends { [K in keyof Keys]: KeyArgs }> {
   t<K extends keyof Keys & string>(key: K, ...args: keyof Keys[K] extends never ? [] : [Keys[K]]): string;
   tx<K extends keyof Keys & string>(key: K, args: Record<keyof Keys[K], unknown>): unknown[];
   m<K extends keyof Keys & string>(key: K): K;

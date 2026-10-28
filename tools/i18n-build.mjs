@@ -1,5 +1,6 @@
 // npm run i18n: en-US.json (tools/i18n-us.mjs) then messages.gen.ts of every active namespace
-// (src/<folder>/i18n, git-ignored, three newline-joined tables en-GB / en-US / nl).
+// (src/<folder>/i18n, git-ignored, three '|' joined tables en-GB / en-US / nl). A namespace with an en-GB.json
+// also gets keys.gen.ts (git-ignored): the types of its keys and their arguments.
 // Also the prebuild step and the vitest global setup. `npm run i18n -- --check` runs the drift check.
 import { createRequire } from 'node:module';
 import { run as writeUS } from './i18n-us.mjs';

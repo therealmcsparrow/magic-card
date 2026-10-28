@@ -1,0 +1,23 @@
+{
+  "anim-studio": 1565,
+  "card": 83,
+  "card-editor": 1954,
+  "controls": 10,
+  "icon-animator": 26,
+  "icon-library": 796,
+  "image-editor": 296,
+  "image-tools": 76,
+  "image-transfer": 19,
+  "labels": 743,
+  "layer-editor": 287,
+  "look-editor": 313,
+  "modules-extra": 14,
+  "path-canvas": 43,
+  "path-tools": 34,
+  "preset-catalogue": 46,
+  "shape-editor": 430,
+  "svg-editor": 564,
+  "theme-editor": 812,
+  "theme-presets": 154,
+  "transfer": 198
+}

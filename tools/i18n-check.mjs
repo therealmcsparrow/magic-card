@@ -1,11 +1,16 @@
-// Drift check D1-D7 (contract src/contracts/i18n.ts 1.0.0). Run as `npm run i18n -- --check` or
-// `node tools/check-i18n.mjs [--ci] [--strict] [--verbose] [--update-baseline] [--placement]`.
-//   D1 every id is a string literal      D2 every id has en-US and nl entries with the same arguments
+// Drift check D1-D10 (contracts src/contracts/i18n.ts 1.1.0 and i18n-keys.ts). Run as `npm run i18n -- --check` or
+// `node tools/check-i18n.mjs [--ci] [--strict] [--verbose] [--update-baseline] [--update-legacy-count] [--placement]`.
+//   D1 every id is a string literal; a key matches the key pattern, starts with its namespace and is in en-GB.json
+//   D2 every id has en-US and nl entries with the same arguments
 //   D3 en-GB spelling                    D4 en-US.json equals the generator output
 //   D5 no hard-coded user text (ratchet) D6 every message parses     D7 runtime size, import scan and
 //   placement (which bundle holds the runtime, the tables and each namespace's call sites; reads the
 //   production build's module list, node_modules/.cache/magic-card/i18n-stats.json, written by webpack.config.js;
 //   --placement requires it and runs after `npm run build`, without it the placement part is skipped)
+//   D8 every en-GB.json entry has a note, a max and the vars its text needs; no text is over max; the files are sorted
+//   D9 a translation made from other English is stale unless i18n/waivers.json holds a waiver for the key and the
+//   current hash; waivers for an unknown key, an old hash or with no reason fail
+//   D10 the text-id calls of a namespace equal tools/i18n/legacy-count.json; a namespace with an en-GB.json has none
 // Namespaces whose status in I18N_MODULES is 'pending' report D2 as warnings. --strict (or
 // I18N_RELEASE_STRICT in the contract) makes them errors, requires every namespace to be
 // 'complete' and every D5 baseline to be 0. --ci adds GitHub annotations. Exit 1 on any error.
@@ -16,6 +21,7 @@ import { run as checkUS } from './i18n-us.mjs';
 import { placement, STATS_FILE } from './i18n/placement.mjs';
 const require = createRequire(import.meta.url);
 const lib = require('./i18n/lib.cjs');
+const keys = require('./i18n/keys.cjs');
 const ts = require('typescript');
 
 const BASELINE = path.join(lib.ROOT, 'tools/i18n/baseline.json');
@@ -59,7 +65,7 @@ export async function main(argv = process.argv.slice(2)) {
   const err = (rule, msg) => errors.push(`${rule} ${msg}`);
   const warn = (rule, msg) => warnings.push(`${rule} ${msg}`);
 
-  const { ids, ctxIds, violations, nsList } = lib.extractAll();
+  const { ids, ctxIds, keys: keyUses, textSites, violations, nsList } = lib.extractAll();
   const modules = contract.I18N_MODULES;
   if (placementOnly) {
     const out = placement(contract, nsList, { required: true });
@@ -81,9 +87,25 @@ export async function main(argv = process.argv.slice(2)) {
     }
   }
 
+  const keyCatalogues = new Map();
+  const waivers = keys.readWaivers();
+  for (const p of waivers.problems) err('D9', p);
   for (const n of nsList) {
     const pending = modules[n.ns]?.status !== 'complete' && !strict;
     const report = pending ? warn : err;
+    let cat;
+    try {
+      cat = keys.loadCatalogues(n.dir);
+    } catch (e) {
+      err('D8', `${n.ns}: ${e.message}`);
+      continue;
+    }
+    if (cat.has) {
+      keyCatalogues.set(n.ns, cat);
+      for (const r of keys.checkNamespace({ ns: n.ns, cat, uses: keyUses.get(n.ns), textSites: textSites.get(n.ns), waivers: waivers.waivers, pending, strict, spelling: (t) => spellingErrors(contract, t) })) (r.level === 'warn' ? warn : err)(r.rule, r.msg);
+      continue;
+    }
+    for (const [key, sites] of keyUses.get(n.ns)) err('D1', `${n.ns} "${key}" is a key but the namespace has no en-GB.json (${sites[0].file}:${sites[0].line})`);
     const set = ids.get(n.ns);
     const us = lib.catalogue(n, 'en-US.json');
     const nl = lib.catalogue(n, 'nl.json');
@@ -91,7 +113,7 @@ export async function main(argv = process.argv.slice(2)) {
     const text = (id) => (ctx.has(id) ? id.slice(ctx.get(id).length + 1) : id);
 
     for (const id of lib.sortedIds(set)) {
-      const base = lib.parseMessage(text(id));
+      const base = lib.parseMessage(text(id), false, new Map(), { locale: 'en-GB' });
       if (base.error) err('D6', `${n.ns} "${id}" (en-GB): ${base.error}`);
       for (const [loc, table] of [['en-US', us], ['nl', nl]]) {
         const v = table[id];
@@ -99,7 +121,7 @@ export async function main(argv = process.argv.slice(2)) {
           report('D2', `${n.ns} "${id}": no ${loc} entry`);
           continue;
         }
-        const p = lib.parseMessage(v);
+        const p = lib.parseMessage(v, false, new Map(), { locale: loc });
         if (p.error) err('D6', `${n.ns} "${id}" (${loc}): ${p.error}`);
         else if (!base.error && lib.argSig(p.args) !== lib.argSig(base.args)) report('D2', `${n.ns} "${id}" (${loc}): arguments differ (${lib.argNames(p.args)} vs ${lib.argNames(base.args)})`);
       }
@@ -114,10 +136,20 @@ export async function main(argv = process.argv.slice(2)) {
   for (const r of checkUS({ check: true })) if (!r.ok) err('D4', `${r.ns}: out of date, run npm run i18n and review the diff`);
   const exceptions = lib.readJson(path.join(lib.ROOT, 'tools/i18n/en-US-exceptions.json'), {});
   const all = new Set([...ids.values()].flatMap((s) => [...s]));
+  for (const cat of keyCatalogues.values()) for (const e of cat.gb.values()) if (typeof e?.text === 'string') all.add(e.text);
   for (const k of Object.keys(exceptions)) {
     if (!all.has(k)) err('D4', `en-US-exceptions.json: "${k}" is not an extracted id`);
     else if (lib.usText(k, contract.EN_US_WORDS, {}) === exceptions[k]) err('D4', `en-US-exceptions.json: "${k}" equals the word-list result, remove the exception`);
   }
+
+  // D9 waivers, D10 legacy count
+  for (const m of keys.checkWaivers(waivers.waivers, keyCatalogues.values())) err('D9', m.replace(/^D9 /, ''));
+  const legacy = keys.legacyCounts(textSites);
+  const legacyFile = path.join(lib.ROOT, lib.loadKeysContract().LEGACY_COUNT_FILE);
+  if (flags.has('--update-legacy-count')) {
+    fs.writeFileSync(legacyFile, lib.stableJson(legacy));
+    console.log('i18n: legacy count written');
+  } else for (const m of keys.compareLegacy(legacy, lib.readJson(legacyFile, {}), new Set(keyCatalogues.keys()))) err('D10', m.replace(/^D10 /, ''));
 
   // D5
   const counts = scanHardCoded(contract, nsList, verbose);
@@ -148,7 +180,7 @@ export async function main(argv = process.argv.slice(2)) {
     for (const st of sf.statements) {
       if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue;
       const spec = st.moduleSpecifier.text;
-      if (/contracts\/i18n$/.test(spec) && !st.importClause?.isTypeOnly) err('D7', `${r}: imports a value from the i18n contract (tools only; use import type)`);
+      if (/contracts\/i18n(-keys)?$/.test(spec) && !st.importClause?.isTypeOnly) err('D7', `${r}: imports a value from the i18n contract (tools only; use import type)`);
       if (/\.gen$/.test(spec) && !/\/i18n\/index\.ts$/.test(r)) err('D7', `${r}: imports a messages.gen table (only src/<folder>/i18n/index.ts may)`);
     }
   }

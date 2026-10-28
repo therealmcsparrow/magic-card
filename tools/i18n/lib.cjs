@@ -1,7 +1,8 @@
 /*
- * Shared code of the i18n tools (contract src/contracts/i18n.ts 1.0.0): contract loading,
- * source scan (t / tc / tx / m calls found through the imports of a namespace's i18n folder), catalogues,
- * messages.gen.ts writer, en-US generator, message validator. CommonJS so the webpack pre-loader
+ * Shared code of the i18n tools (contracts src/contracts/i18n.ts 1.1.0 and i18n-keys.ts): contract loading,
+ * source scan (t / tc / tx / m calls found through the imports of a namespace's i18n folder; a call is a key
+ * call or a text-id call), catalogues, messages.gen.ts writer, en-US generator, message validator. The key
+ * catalogues, hashes, tables and types are in tools/i18n/keys.cjs. CommonJS so the webpack pre-loader
  * (tools/i18n-loader.cjs) and the .mjs tools use the same code.
  */
 const fs = require('fs');
@@ -13,17 +14,18 @@ const SRC = path.join(ROOT, 'src');
 
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
 
-/** The contract's constants (the file is TypeScript with no imports: transpile and run it). */
-let contractCache;
-function loadContract() {
-  if (contractCache) return contractCache;
-  const src = fs.readFileSync(path.join(SRC, 'contracts/i18n.ts'), 'utf8');
+/** The constants of a contract file (TypeScript with no imports: transpile and run it). */
+function loadContractFile(name) {
+  const src = fs.readFileSync(path.join(SRC, 'contracts', name), 'utf8');
   const out = ts.transpileModule(src, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021 } }).outputText;
   const mod = { exports: {} };
   new Function('module', 'exports', out)(mod, mod.exports);
-  contractCache = mod.exports;
-  return contractCache;
+  return mod.exports;
 }
+let contractCache;
+const loadContract = () => (contractCache ||= loadContractFile('i18n.ts'));
+let keysContractCache;
+const loadKeysContract = () => (keysContractCache ||= loadContractFile('i18n-keys.ts'));
 
 const readJson = (p, fallback) => {
   try {
@@ -72,7 +74,8 @@ function resolveSpec(file, spec) {
 
 /**
  * Finds the i18n calls of one file. Returns { calls, violations }.
- * call: { ns, fn, argNode (the id literal), ctx, text, id, start, end, callStart, callEnd }
+ * call: { ns, fn, kind ('key' | 'text'), ctx, text, id, start, end, callStart, callEnd, line }
+ * kind 'key': the first argument is a string literal that matches KEY_PATTERN (never for tc). Every other literal is a text id.
  * violation (D1): { line, fn, reason }
  */
 function scanSource(file, source, nsList = activeNamespaces()) {
@@ -98,6 +101,7 @@ function scanSource(file, source, nsList = activeNamespaces()) {
   const calls = [];
   const violations = [];
   if (!local.size) return { calls, violations, sf };
+  const { KEY_PATTERN } = loadKeysContract();
   const lit = (n) => (n && (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n)) ? n.text : undefined);
   const visit = (n) => {
     if (ts.isCallExpression(n) && ts.isIdentifier(n.expression) && local.has(n.expression.text)) {
@@ -115,7 +119,7 @@ function scanSource(file, source, nsList = activeNamespaces()) {
       }
       if (text === undefined || (fn === 'tc' && ctx === undefined)) violations.push({ line, fn, ns, reason: 'the id is not a string literal (D1)' });
       else
-        calls.push({ ns, fn, ctx, text, id: fn === 'tc' ? `${ctx}|${text}` : text, start: idNode.getStart(sf), end: idNode.getEnd(), callStart: n.getStart(sf), callEnd: n.getEnd(), line });
+        calls.push({ ns, fn, kind: fn !== 'tc' && KEY_PATTERN.test(text) ? 'key' : 'text', ctx, text, id: fn === 'tc' ? `${ctx}|${text}` : text, start: idNode.getStart(sf), end: idNode.getEnd(), callStart: n.getStart(sf), callEnd: n.getEnd(), line });
     }
     ts.forEachChild(n, visit);
   };
@@ -123,25 +127,37 @@ function scanSource(file, source, nsList = activeNamespaces()) {
   return { calls, violations, sf };
 }
 
-/** Scans every source file once: { ids: Map ns -> Set, violations: [{file,...}] }. */
+/**
+ * Scans every source file once. ids: ns -> Set of text ids; ctxIds: ns -> id -> context; keys: ns -> Map key -> [{file, line, fn}];
+ * textSites: ns -> [{file, line, fn, id}] (one per text-id call); violations: [{file, ...}].
+ */
 function extractAll() {
   const nsList = activeNamespaces();
   const ids = new Map(nsList.map((n) => [n.ns, new Set()]));
   const ctxIds = new Map(nsList.map((n) => [n.ns, new Map()])); // ns -> id -> context
+  const keys = new Map(nsList.map((n) => [n.ns, new Map()]));
+  const textSites = new Map(nsList.map((n) => [n.ns, []]));
   const violations = [];
-  if (!nsList.length) return { ids, ctxIds, violations, nsList };
+  if (!nsList.length) return { ids, ctxIds, keys, textSites, violations, nsList };
   for (const file of listSourceFiles()) {
     if (!isScanned(file)) continue;
     const source = fs.readFileSync(file, 'utf8');
     if (!/i18n/.test(source)) continue;
     const r = scanSource(file, source, nsList);
     for (const c of r.calls) {
+      if (c.kind === 'key') {
+        const uses = keys.get(c.ns);
+        if (!uses.has(c.id)) uses.set(c.id, []);
+        uses.get(c.id).push({ file: rel(file), line: c.line, fn: c.fn });
+        continue;
+      }
       ids.get(c.ns).add(c.id);
+      textSites.get(c.ns).push({ file: rel(file), line: c.line, fn: c.fn, id: c.id });
       if (c.ctx !== undefined) ctxIds.get(c.ns).set(c.id, c.ctx);
     }
     for (const v of r.violations) violations.push({ file: rel(file), ...v });
   }
-  return { ids, ctxIds, violations, nsList };
+  return { ids, ctxIds, keys, textSites, violations, nsList };
 }
 
 const sortedIds = (set) => [...set].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
@@ -186,14 +202,39 @@ const closeAt = (s, i) => {
   return -1;
 };
 
+/** Deepest nesting of braces in a text; the run-time parser (TOP in src/i18n/runtime.ts) reads three levels. */
+const MAX_BRACE_DEPTH = 3;
+function braceDepth(text) {
+  let d = 0;
+  let max = 0;
+  for (const c of text) {
+    if (c === '{') max = Math.max(max, ++d);
+    else if (c === '}') d--;
+  }
+  return max;
+}
+
+/** Plural categories of a locale, from Node's own Intl.PluralRules; undefined when no locale is given. */
+const categoryCache = new Map();
+function pluralCategories(locale) {
+  if (!locale) return undefined;
+  if (!categoryCache.has(locale)) categoryCache.set(locale, new Set(new Intl.PluralRules(locale).resolvedOptions().pluralCategories));
+  return categoryCache.get(locale);
+}
+
 /**
  * Parses one message. Returns { args: Map name -> 'plain' | 'plural' | 'select', error }.
- * Rules (D6): no newline, braces only for {name} / plural / select, `other` required, no nesting of
- * plural or select inside a branch.
+ * Rules (D6): no newline, no '|', braces only for {name} / plural / select, at most three brace levels, no
+ * apostrophe before { } or # when opts.quotes is set (messages of key catalogues; the run time has no quoting),
+ * `other` required, no nesting of plural or select inside a branch. With opts.locale, plural branch keywords are
+ * that locale's CLDR categories or =N.
  */
-function parseMessage(text, inBranch = false, args = new Map()) {
+function parseMessage(text, inBranch = false, args = new Map(), opts = {}) {
+  const { locale } = opts;
   if (/\n/.test(text)) return { args, error: 'contains a newline' };
   if (!inBranch && text.includes(SEP)) return { args, error: `contains '${SEP}' (the table separator)` };
+  if (!inBranch && opts.quotes && /'[{}#]/.test(text)) return { args, error: 'has an apostrophe before { } or # (the run time has no quoting)' };
+  if (!inBranch && braceDepth(text) > MAX_BRACE_DEPTH) return { args, error: 'nests deeper than three brace levels (write one key per select value)' };
   for (let i = 0; i < text.length; i++) {
     const c = text[i];
     if (c === '}') return { args, error: 'unmatched }' };
@@ -217,7 +258,9 @@ function parseMessage(text, inBranch = false, args = new Map()) {
         const e = closeAt(r, open);
         if (e < 0) return { args, error: 'unmatched { in a branch' };
         keys.push(q[1]);
-        const sub = parseMessage(r.slice(open + 1, e), true, args);
+        const known = m[2] === 'plural' ? pluralCategories(locale) : undefined;
+        if (known && !/^=\d+$/.test(q[1]) && !known.has(q[1])) return { args, error: `plural branch "${q[1]}" is not a ${locale} category (${[...known].join(', ')}) or =N` };
+        const sub = parseMessage(r.slice(open + 1, e), true, args, opts);
         if (sub.error) return sub;
         k = e + 1;
       }
@@ -275,6 +318,13 @@ function usText(text, words, exceptions) {
   return walk(text);
 }
 
+/** Function en-GB text -> en-US text: a reviewed exception for that exact text, else the word list. */
+function usConverter() {
+  const { EN_US_WORDS } = loadContract();
+  const exceptions = new Map(Object.entries(readJson(path.join(__dirname, 'en-US-exceptions.json'), {})));
+  return (text) => (exceptions.has(text) ? exceptions.get(text) : usText(text, EN_US_WORDS, exceptions));
+}
+
 /** en-US table for the extracted ids: { id: american text }; a context id loses its prefix. */
 function generateUS(ids, ctxIds = new Map()) {
   const { EN_US_WORDS } = loadContract();
@@ -289,11 +339,23 @@ function generateUS(ids, ctxIds = new Map()) {
 
 const stableJson = (o) => JSON.stringify(o, null, 2) + '\n';
 
-/** Writes messages.gen.ts of every active namespace; returns { ns, count, changed }[]. */
+/**
+ * Writes messages.gen.ts of every active namespace (and keys.gen.ts of a key namespace);
+ * returns { res: [{ ns, count, changed }], violations }.
+ */
 function buildAll() {
+  const keys = require('./keys.cjs');
   const { ids, violations, nsList } = extractAll();
   const res = [];
   for (const n of nsList) {
+    if (keys.hasKeys(n.dir)) {
+      const cat = keys.loadCatalogues(n.dir);
+      const t = keys.tablesForKeys(cat);
+      const changed = writeIfChanged(path.join(n.dir, 'messages.gen.ts'), genSource(t.rows));
+      writeIfChanged(path.join(n.dir, 'keys.gen.ts'), keys.typesSource(cat));
+      res.push({ ns: n.ns, count: t.count, changed });
+      continue;
+    }
     const { list, rows } = tablesFor(n, ids.get(n.ns));
     res.push({ ns: n.ns, count: list.length, changed: writeIfChanged(path.join(n.dir, 'messages.gen.ts'), genSource(rows)) });
   }
@@ -301,7 +363,7 @@ function buildAll() {
 }
 
 module.exports = {
-  ROOT, SRC, rel, loadContract, readJson, activeNamespaces, listSourceFiles, isScanned, scanSource, extractAll,
-  sortedIds, catalogue, tablesFor, genSource, writeIfChanged, readGenIds, parseMessage, argSig, argNames,
-  usText, generateUS, stableJson, buildAll, closeAt,
+  ROOT, SRC, rel, loadContract, loadKeysContract, readJson, activeNamespaces, listSourceFiles, isScanned, scanSource, extractAll,
+  sortedIds, catalogue, tablesFor, genSource, writeIfChanged, readGenIds, parseMessage, braceDepth, pluralCategories, argSig, argNames,
+  usText, usConverter, generateUS, stableJson, buildAll, closeAt,
 };

@@ -1,5 +1,5 @@
 /*
- * Contract: i18n. Version 1.0.0.
+ * Contract: i18n. Version 1.1.0.
  * en-US is a FULL shipped table (generated at dev time from en-GB, EN_US_WORDS and reviewed
  * exceptions, then committed); no separate locale files: en-GB, en-US and nl are bundled into each
  * screen's own file; every message must exist in all three locales; compact tables (one string per
@@ -66,6 +66,13 @@
  * Call sites in the runtime lazy chunks (slider, seasonal, markdown, modules-extra) use the 'card'
  * namespace, whose tables live in magic-card.js.
  *
+ * Domain keys (contract i18n-keys.ts): a namespace whose i18n folder holds an en-GB.json takes keys only.
+ * t / tx / m accept a literal key ('card-editor.design.background.label') beside the British text; the loader
+ * rewrites it to the index of the namespace's tables, which tools/i18n/keys.cjs builds from en-GB.json,
+ * en-US.json and nl.json (the runtime is unchanged, no key reaches dist). tc() has no key form.
+ * `npm run i18n` also writes the git-ignored src/<folder>/i18n/keys.gen.ts (types of the keys and their
+ * arguments); `npm run typecheck` runs it first, then tsc --noEmit.
+ *
  * ── Where tables live ──
  * Rule 1, by renderer: a message goes to 'card' only when a dashboard can render it (card content,
  *   config errors on the card, empty states, screen-reader labels). Text only an editor, the studio or
@@ -98,7 +105,8 @@
  * bundle boundary. ui-kit 1.0.0 holds no strings: every label comes from the caller.
  *
  * ── Drift check (tools/check-i18n.mjs, `npm run i18n -- --check`, release.yml after the size step) ──
- * D1 Extraction: the first argument of t / tc / tx / m / lm is a string literal (no variables, no ${}).
+ * D1 Extraction: the first argument of t / tc / tx / m / lm is a string literal (no variables, no ${}); a key
+ *    matches KEY_PATTERN, starts with its namespace and is in en-GB.json.
  * D2 Completeness: every extracted id of a namespace has a non-empty entry in en-US.json and nl.json with
  *    the same argument names and valid plural/select branches; no stale entries. A namespace with
  *    status 'pending' is skipped; the release gate needs every namespace 'complete'
@@ -122,6 +130,16 @@
  *    - Every call site of a namespace is in a bundle that holds or import()s its tables.
  *    - runtime.ts is in magic-card.js, the studio entry and the theme-editor entry, nowhere else.
  *    - The contract's constants are imported by tools only (src/ imports types).
+ * D8 Catalogue (namespaces with an en-GB.json): every entry has a note of NOTE_MIN_CHARS or more, a max, and vars
+ *    naming exactly its ICU arguments; no text in any locale is longer than max; the files are sorted and
+ *    formatted as i18n-keys.ts says.
+ * D9 Stale: an en-US or nl entry whose hash differs from the hash of the current en-GB text fails the release
+ *    check unless i18n/waivers.json holds a waiver for that key and hash; a waiver for an unknown key, an old
+ *    hash or with an empty reason fails.
+ * D10 Legacy count: the number of text-id calls of each namespace (t, tx, m, lm or an alias with a literal first
+ *    argument outside KEY_PATTERN, and every tc call) differs from tools/i18n/legacy-count.json -> fail; a
+ *    namespace with an en-GB.json has none. D6 also refuses an apostrophe before { } or # in a key catalogue and
+ *    messages nested deeper than three brace levels, and limits plural branches to the locale's CLDR categories.
  * Characterization (local vitest; tests/ is not committed): per screen, a text snapshot (text nodes,
  * aria-label, title, placeholder, alt) in en-GB and en-US before extraction, unchanged after extraction,
  * changed only by the reviewed spelling list after the British pass; YAML of the 60 gallery cards unchanged.
@@ -144,8 +162,8 @@
  * off screen) | table chunk fails to load -> ready() resolves false, never rejects.
  */
 
-export const I18N_CONTRACT_VERSION = '1.0.0';
-export const I18N_CONTRACT_REVISION = 3;
+export const I18N_CONTRACT_VERSION = '1.1.0';
+export const I18N_CONTRACT_REVISION = 4;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
