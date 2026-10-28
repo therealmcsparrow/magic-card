@@ -13,9 +13,12 @@
 // Namespaces whose status in I18N_MODULES is 'pending' report D2 as warnings. --strict (or
 // I18N_RELEASE_STRICT in the contract) makes them errors, requires every namespace to be
 // 'complete' and every D5 baseline to be 0. --ci adds GitHub annotations. Exit 1 on any error.
+// --base <commit>: a key is touched when it is new against that commit or its en-GB text differs from it; D2 and D9 on touched keys
+// are errors even where they would be warnings. Untouched keys keep their level. Without --base the output is unchanged.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
 import { run as checkUS } from './i18n-us.mjs';
 import { placement, STATS_FILE } from './i18n/placement.mjs';
 const require = createRequire(import.meta.url);
@@ -52,6 +55,50 @@ export function spellingErrors(contract, text) {
   return out;
 }
 
+/** The keys of a catalogue that are new against the base catalogue (a Map, or null when the base has none) or whose en-GB text differs. */
+export function touchedKeys(gb, baseGb) {
+  const out = new Set();
+  for (const [key, e] of gb) {
+    const was = baseGb?.get(key);
+    if (was === undefined || was?.text !== e?.text) out.add(key);
+  }
+  return out;
+}
+
+/** Turns the D2 and D9 warnings about a touched key into errors. */
+export function escalateTouched(results, ns, touched) {
+  const head = `${ns} "`;
+  return results.map((r) => {
+    if (r.level !== 'warn' || (r.rule !== 'D2' && r.rule !== 'D9') || !r.msg.startsWith(head)) return r;
+    return touched.has(r.msg.slice(head.length, r.msg.indexOf('"', head.length))) ? { ...r, level: 'error' } : r;
+  });
+}
+
+function git(args) {
+  return execFileSync('git', args, { cwd: lib.ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 });
+}
+
+/** The commit a --base value names, or '' when it is not a commit. */
+function resolveBase(value) {
+  if (!value || value.startsWith('-')) return '';
+  try {
+    return git(['rev-parse', '--verify', '--quiet', `${value}^{commit}`]).trim();
+  } catch {
+    return '';
+  }
+}
+
+/** The en-GB catalogue of a namespace folder at the base commit as a Map, or null when the commit has none. */
+function baseCatalogue(commit, dir) {
+  let raw;
+  try {
+    raw = git(['show', `${commit}:${lib.rel(path.join(dir, 'en-GB.json'))}`]);
+  } catch {
+    return null;
+  }
+  return new Map(Object.entries(JSON.parse(raw)));
+}
+
 export async function main(argv = process.argv.slice(2)) {
   const flags = new Set(argv);
   const placementOnly = flags.has('--placement');
@@ -59,6 +106,17 @@ export async function main(argv = process.argv.slice(2)) {
   const strict = flags.has('--strict') || contract.I18N_RELEASE_STRICT === true || process.env.I18N_RELEASE_STRICT === '1';
   const ci = flags.has('--ci') || process.env.CI === 'true';
   const verbose = flags.has('--verbose');
+  let baseCommit = '';
+  const baseAt = argv.findIndex((a) => a === '--base' || a.startsWith('--base='));
+  if (baseAt >= 0) {
+    const value = argv[baseAt].startsWith('--base=') ? argv[baseAt].slice(7) : argv[baseAt + 1];
+    baseCommit = resolveBase(value);
+    if (!baseCommit) {
+      console.error(`${ci ? '::error::' : 'FAIL '}base ${value ?? ''} does not resolve to a commit (shallow checkout or wrong ref)`);
+      return 1;
+    }
+  }
+  let touchedCount = 0;
   const errors = [];
   const warnings = [];
   const err = (rule, msg) => errors.push(`${rule} ${msg}`);
@@ -103,7 +161,13 @@ export async function main(argv = process.argv.slice(2)) {
       continue;
     }
     keyCatalogues.set(n.ns, cat);
-    for (const r of keys.checkNamespace({ ns: n.ns, cat, uses: keyUses.get(n.ns), waivers: waivers.waivers, pending, strict, spelling: (t) => spellingErrors(contract, t) })) (r.level === 'warn' ? warn : err)(r.rule, r.msg);
+    let results = keys.checkNamespace({ ns: n.ns, cat, uses: keyUses.get(n.ns), waivers: waivers.waivers, pending, strict, spelling: (t) => spellingErrors(contract, t) });
+    if (baseCommit) {
+      const touched = touchedKeys(cat.gb, baseCatalogue(baseCommit, n.dir));
+      touchedCount += touched.size;
+      results = escalateTouched(results, n.ns, touched);
+    }
+    for (const r of results) (r.level === 'warn' ? warn : err)(r.rule, r.msg);
   }
 
   // D4
@@ -160,6 +224,7 @@ export async function main(argv = process.argv.slice(2)) {
 
   for (const w of warnings) console.warn(`${ci ? '::warning::' : 'warn '}${w}`);
   for (const e of errors) console.error(`${ci ? '::error::' : 'FAIL '}${e}`);
+  if (baseCommit) console.log(`i18n check: base ${baseCommit.slice(0, 8)}, ${touchedCount} touched keys`);
   console.log(`i18n check: ${nsList.length} namespaces, ${errors.length} errors, ${warnings.length} warnings${strict ? ' (strict)' : ' (non-strict)'}`);
   return errors.length ? 1 : 0;
 }

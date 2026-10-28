@@ -27,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0 # the translation check reads the en-GB catalogues of the base commit
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -36,8 +37,25 @@ jobs:
       - run: npm run lint
       - name: Type check (generated message keys included)
         run: npm run typecheck
-      - name: Translations and message keys (drift, stale hashes, legacy ratchet)
-        run: node tools/check-i18n.mjs --ci
+      - name: Translations and message keys (drift, stale hashes on touched keys)
+        # Keys that are new or whose en-GB text changed against the base need a current nl text. Base: the commit before the push, or the
+        # PR base branch, the same as the size-caps job. A base that does not resolve fails; only a new branch (no commit before) has none.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): touched keys not compared"
+            node tools/check-i18n.mjs --ci
+          else
+            node tools/check-i18n.mjs --ci --base "$base"
+          fi
 
   build:
     name: Build and size budget
