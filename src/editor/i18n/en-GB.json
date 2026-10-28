@@ -66,7 +66,7 @@
   },
   "card-editor.action-editor.opens-the-magic-card-pop-up-with-this-id": {
     "text": "Opens the Magic Card pop-up with this ID (navigates to {path}).",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Helper text under the pop-up ID field. {path} is the URL path the card navigates to, for example #popup-id; keep it unchanged.",
     "max": 105,
     "vars": {
       "path": "The value that replaces path in the text."
@@ -104,7 +104,7 @@
   },
   "card-editor.action-editor.toggles-entity-the-module-entity": {
     "text": "Toggles {entity} (the module entity).",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Helper text for the Toggle action. {entity} is the entity ID the module controls, for example light.kitchen; do not translate it.",
     "max": 60,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -212,7 +212,7 @@
   },
   "card-editor.animation-list.animation-n": {
     "text": "Animation {n}",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Default name of an animation in the list. {n} is its position, counting from 1.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -245,7 +245,7 @@
   },
   "card-editor.animation-list.delete-animation-n": {
     "text": "Delete animation {n}",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Accessible label of the delete button on one animation row. {n} is the position of that animation, counting from 1.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -298,7 +298,7 @@
   },
   "card-editor.animation-list.id-not-found": {
     "text": "{id} (not found)",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Dropdown option for an animation that is set but no longer exists. {id} is the saved animation ID. Differs from the next key: not found means missing from your saved animations.",
     "max": 30,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -306,7 +306,7 @@
   },
   "card-editor.animation-list.id-unknown": {
     "text": "{id} (unknown)",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Dropdown option for an animation ID the editor does not recognise. {id} is the saved animation ID. Differs from the previous key, which is for an ID missing from your saved animations.",
     "max": 25,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -319,7 +319,7 @@
   },
   "card-editor.animation-list.keep-a-copy-in-this-card-adds-size": {
     "text": "Keep a copy in this card (adds {size})",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Checkbox label, shown while the copy is not yet kept. {size} is the extra config size with its unit, for example 2 KB. Pairs with the key that shows the size already used.",
     "max": 65,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -327,7 +327,7 @@
   },
   "card-editor.animation-list.keep-a-copy-in-this-card-size": {
     "text": "Keep a copy in this card ({size})",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Checkbox label, shown while the copy is already kept. {size} is the size it takes in the config, with its unit, for example 2 KB. Pairs with the key that says it adds a size.",
     "max": 55,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -355,7 +355,7 @@
   },
   "card-editor.animation-list.module-entity-entity": {
     "text": "Module entity ({entity})",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Dropdown option meaning use the entity of the module itself. {entity} is that entity ID, for example light.kitchen; do not translate it.",
     "max": 40,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -368,7 +368,7 @@
   },
   "card-editor.animation-list.n-b": {
     "text": "{n} B",
-    "note": "Shown in animation list (card-editor).",
+    "note": "File size in bytes (B = bytes), shown beside an animation. {n} is the number of bytes. Used for sizes under 1 KB.",
     "max": 10,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -376,7 +376,7 @@
   },
   "card-editor.animation-list.name-id": {
     "text": "{name} ({id})",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Animation dropdown option. {name} is the animation's display name, {id} its technical ID shown in brackets; neither is translated.",
     "max": 25,
     "vars": {
       "id": "The value that replaces id in the text.",
@@ -385,7 +385,7 @@
   },
   "card-editor.animation-list.name-not-played-on-tabs": {
     "text": "{name} (not played on tabs)",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Animation dropdown option. {name} is the animation's display name. The bracket warns that tab buttons cannot play this animation.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -453,7 +453,7 @@
   },
   "card-editor.animation-list.size-kb": {
     "text": "{size} KB",
-    "note": "Shown in animation list (card-editor).",
+    "note": "File size in kilobytes, shown beside an animation. {size} is the number of KB, possibly with a decimal. Used for sizes of 1 KB or more.",
     "max": 15,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -661,7 +661,7 @@
   },
   "card-editor.box-field.inherit-value": {
     "text": "Inherit ({value})",
-    "note": "Shown in box field (card-editor).",
+    "note": "Option in a box field (padding, margin) meaning take the value from the parent. {value} is the value that would be inherited, for example 8px. Same English as the design panel key.",
     "max": 30,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -829,7 +829,7 @@
   },
   "card-editor.canvas-layers.selected-name-n-from-the-front-here": {
     "text": "Selected {name}, {n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here",
-    "note": "Shown in canvas layers (card-editor).",
+    "note": "Screen-reader announcement. {name} is the layer name, {n} its place counted from the front (1 is topmost). The select block gives an ordinal: adapt 1st, 2nd, 3rd and the other form to your language.",
     "max": 70,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -1513,7 +1513,7 @@
   },
   "card-editor.card-settings.n": {
     "text": "{n, plural, one {# tile follows it.} other {# tiles follow it.}}",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Hint sentence. {n} is the number of tiles that follow this card's device setting. Needs plural forms; 'it' is the card's device.",
     "max": 30,
     "vars": {
       "n": "The count the text is about."
@@ -1521,7 +1521,7 @@
   },
   "card-editor.card-settings.n-2": {
     "text": "{n, plural, one {# tile needs another device.} other {# tiles need another device.}}",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Warning sentence. {n} is the number of tiles whose entity type does not fit the card's chosen device. Needs plural forms.",
     "max": 45,
     "vars": {
       "n": "The count the text is about."
@@ -1529,7 +1529,7 @@
   },
   "card-editor.card-settings.n-3": {
     "text": "+ {n, plural, one {# design field} other {# design fields}}",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Short summary badge. {n} is the number of extra design fields that are set. Needs plural forms; keep the leading plus sign.",
     "max": 30,
     "vars": {
       "n": "The count the text is about."
@@ -1537,7 +1537,7 @@
   },
   "card-editor.card-settings.n-cond": {
     "text": "{n} cond.",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Compact badge. {n} is the number of conditions; cond. abbreviates conditions. Keep it very short.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -1545,7 +1545,7 @@
   },
   "card-editor.card-settings.n-same-rules-as-the-conditions-tab-rules": {
     "text": "{n, plural, one {# conditional rule} other {# conditional rules}}. Same rules as the Conditions tab. Rules override Default only while their conditions match. A later rule wins over an earlier one.",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Helper paragraph in card settings. {n} is the number of conditional rules. Conditions tab and Default are UI names; use the same wording as those labels.",
     "max": 245,
     "vars": {
       "n": "The count the text is about."
@@ -1553,7 +1553,7 @@
   },
   "card-editor.card-settings.n-set": {
     "text": "{n} set",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Badge on a collapsed section. {n} is how many of its fields have a value set (set = filled in, not the verb to set).",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -1656,7 +1656,7 @@
   },
   "card-editor.card-settings.rule-n": {
     "text": "Rule {n}",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Fallback title of an unnamed conditional rule. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -1664,7 +1664,7 @@
   },
   "card-editor.card-settings.rule-name": {
     "text": "Rule: {name}",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Title of a named conditional rule. {name} is the name the user gave the rule; do not translate it.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1772,7 +1772,7 @@
   },
   "card-editor.clock-editor.automatic-format-from-your-profile": {
     "text": "Automatic ({format}, from your profile)",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Option for the clock's hour format. {format} is the format taken from the user's Home Assistant profile, for example 24-hour.",
     "max": 65,
     "vars": {
       "format": "The value that replaces format in the text."
@@ -1795,7 +1795,7 @@
   },
   "card-editor.clock-editor.iso-example": {
     "text": "ISO ({example})",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Date format option. {example} is a sample date in this format, for example 2026-10-28. ISO is the international standard date format.",
     "max": 25,
     "vars": {
       "example": "The value that replaces example in the text."
@@ -1803,7 +1803,7 @@
   },
   "card-editor.clock-editor.long-example": {
     "text": "Long ({example})",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Date format option (long form). {example} is a sample date written in this format; it is already formatted for the user's language.",
     "max": 30,
     "vars": {
       "example": "The value that replaces example in the text."
@@ -1811,7 +1811,7 @@
   },
   "card-editor.clock-editor.medium-example": {
     "text": "Medium ({example})",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Date format option (medium length, between Long and Short). {example} is a sample date written in this format.",
     "max": 30,
     "vars": {
       "example": "The value that replaces example in the text."
@@ -1819,7 +1819,7 @@
   },
   "card-editor.clock-editor.numeric-example": {
     "text": "Numeric ({example})",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Date format option (digits only). {example} is a sample date written in this format.",
     "max": 35,
     "vars": {
       "example": "The value that replaces example in the text."
@@ -1827,7 +1827,7 @@
   },
   "card-editor.clock-editor.short-example": {
     "text": "Short ({example})",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Date format option (shortest words form). {example} is a sample date written in this format.",
     "max": 30,
     "vars": {
       "example": "The value that replaces example in the text."
@@ -1885,7 +1885,7 @@
   },
   "card-editor.color-picker.entity-colour-for-name": {
     "text": "Entity colour for {name}",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Accessible label of a colour option. {name} is the label of the colour field, for example Icon colour.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1913,7 +1913,7 @@
   },
   "card-editor.color-picker.name-colour-from": {
     "text": "{name}: colour from",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Label of a dropdown choosing where a colour comes from. {name} is the colour field's label; the choice follows the colon.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1921,7 +1921,7 @@
   },
   "card-editor.color-picker.name-mode": {
     "text": "{name} mode",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Accessible label of the mode switch of a colour field. {name} is the field's label, for example Icon colour.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1929,7 +1929,7 @@
   },
   "card-editor.color-picker.name-opacity": {
     "text": "{name} opacity",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Label of an opacity slider. {name} is the label of the colour field it belongs to.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1957,7 +1957,7 @@
   },
   "card-editor.color-picker.pick-name": {
     "text": "Pick {name}",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Button label that opens the picker for a colour. {name} is the colour field's label.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1970,7 +1970,7 @@
   },
   "card-editor.color-picker.remove-value": {
     "text": "Remove {value}",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Accessible label of a button that removes a saved colour. {value} is that colour, for example #ff8800.",
     "max": 25,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2023,7 +2023,7 @@
   },
   "card-editor.color-picker.use-value": {
     "text": "Use {value}",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Accessible label of a button that applies a saved or suggested colour. {value} is that colour, for example #ff8800.",
     "max": 20,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2046,7 +2046,7 @@
   },
   "card-editor.color-ranges-field.delete-range-n": {
     "text": "Delete range {n}",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Accessible label of a delete button on one colour range. {n} is the range's position, counting from 1.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2054,7 +2054,7 @@
   },
   "card-editor.color-ranges-field.ends-at-value-set-in-yaml": {
     "text": "Ends at {value} (set in YAML).",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Helper text for a range whose end was written in YAML. {value} is that end value, a number.",
     "max": 50,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2067,7 +2067,7 @@
   },
   "card-editor.color-ranges-field.from-value": {
     "text": "from {value}",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Short summary of where a colour range starts. {value} is the start value, a number. Lower case on purpose.",
     "max": 20,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2075,7 +2075,7 @@
   },
   "card-editor.color-ranges-field.range-n": {
     "text": "Range {n}",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Heading of one colour range. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2208,7 +2208,7 @@
   },
   "card-editor.conditions-list.condition-n": {
     "text": "Condition {n}",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Heading of one condition row. {n} is its position, counting from 1.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2246,7 +2246,7 @@
   },
   "card-editor.conditions-list.remove-condition-n": {
     "text": "Remove condition {n}",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Accessible label of the remove button on one condition. {n} is that condition's position, counting from 1.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2319,7 +2319,7 @@
   },
   "card-editor.container-settings.column-n": {
     "text": "Column {n}",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Name of one column in container settings. {n} is its position, counting from 1. The same English appears in other places; this one labels the column itself.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2327,7 +2327,7 @@
   },
   "card-editor.container-settings.column-n-width": {
     "text": "Column {n} width",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of a field that sets the width of one column. {n} is the column's position, counting from 1.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2380,7 +2380,7 @@
   },
   "card-editor.container-settings.n-custom-widths": {
     "text": "{n, plural, one {# column} other {# columns}}, custom widths",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Summary line. {n} is the number of columns; the widths were set by hand instead of equal. Needs plural forms.",
     "max": 40,
     "vars": {
       "n": "The count the text is about."
@@ -2443,7 +2443,7 @@
   },
   "card-editor.creation-defaults.tab-n": {
     "text": "Tab {n}",
-    "note": "Shown in creation defaults (card-editor).",
+    "note": "Default title given to a new tab. {n} is its position, counting from 1. Same English as other Tab {n} keys, which label existing tabs.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2496,7 +2496,7 @@
   },
   "card-editor.custom-card-editor.the-key-key-is-set-automatically-from": {
     "text": "The {key} key is set automatically from Card Type. Do not include it here.",
-    "note": "Shown in custom card editor (card-editor).",
+    "note": "Helper text for a YAML box. {key} is a YAML key name, usually type; do not translate it. Card Type is the label of the field above.",
     "max": 120,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -2504,7 +2504,7 @@
   },
   "card-editor.custom-card-editor.the-visual-editor-does-not-support-this": {
     "text": "The visual editor does not support this configuration: {error}",
-    "note": "Shown in custom card editor (card-editor).",
+    "note": "Error message. {error} is a technical message from the card, in English, and is not translated.",
     "max": 100,
     "vars": {
       "error": "The value that replaces error in the text."
@@ -2557,7 +2557,7 @@
   },
   "card-editor.design-panel.applied-to-thing-only": {
     "text": "Applied to {thing} only",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Placeholder of a design field. {thing} names what the setting targets, a translated phrase such as this card or this module.",
     "max": 40,
     "vars": {
       "thing": "The value that replaces thing in the text."
@@ -2565,7 +2565,7 @@
   },
   "card-editor.design-panel.applied-while-the-pointer-is-over-thing": {
     "text": "Applied while the pointer is over {thing}, on top of Default and matching rules.",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Helper text of the hover state. {thing} names what the pointer is over, a translated phrase such as this card or this module. Default is a UI label.",
     "max": 130,
     "vars": {
       "thing": "The value that replaces thing in the text."
@@ -2583,7 +2583,7 @@
   },
   "card-editor.design-panel.built-in-value": {
     "text": "Built-in: {value}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Hint under a field showing the factory default. {value} is that default value, for example 16px.",
     "max": 30,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2686,7 +2686,7 @@
   },
   "card-editor.design-panel.inherit-value": {
     "text": "Inherit ({value})",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Dropdown option meaning take the value from the parent. {value} is the value that would be inherited. Same English as the box field key.",
     "max": 30,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2694,7 +2694,7 @@
   },
   "card-editor.design-panel.inherited-from-default-value": {
     "text": "Inherited from Default: {value}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Hint under a field in a state or rule. {value} is the value taken from the Default design. Default is a UI label.",
     "max": 50,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -2722,7 +2722,7 @@
   },
   "card-editor.design-panel.n-rules-override-default-only-while": {
     "text": "{n, plural, one {# conditional rule} other {# conditional rules}}. Rules override Default only while their conditions match.",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Helper sentence. {n} is the number of conditional rules. Needs plural forms. Shorter than the card settings version.",
     "max": 125,
     "vars": {
       "n": "The count the text is about."
@@ -2730,7 +2730,7 @@
   },
   "card-editor.design-panel.n-set": {
     "text": "{n} set",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Badge on a design section. {n} is how many fields have a value set (set = filled in, not the verb).",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2738,7 +2738,7 @@
   },
   "card-editor.design-panel.name-n-set": {
     "text": "{name} ({n} set)",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Section title with a count. {name} is the section name, {n} how many of its fields have a value set.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -2752,7 +2752,7 @@
   },
   "card-editor.design-panel.no-css-property-matches-query": {
     "text": "No CSS property matches \"{query}\".",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Empty-search message. {query} is the text the user typed in the property search; keep it between the quotation marks.",
     "max": 55,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -2805,7 +2805,7 @@
   },
   "card-editor.design-panel.reset-group-in-state": {
     "text": "Reset {group} in {state}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button label. {group} is a design group name such as Typography; {state} is the state being edited, such as Hover. Both are translated labels.",
     "max": 40,
     "vars": {
       "group": "The value that replaces group in the text.",
@@ -2819,7 +2819,7 @@
   },
   "card-editor.design-panel.reset-section-name": {
     "text": "Reset section {name}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button label that clears all fields of one section. {name} is the section's title.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2827,7 +2827,7 @@
   },
   "card-editor.design-panel.reset-state": {
     "text": "Reset {state}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button label that clears a whole state's design. {state} is the state's name, such as Hover. Past tense counterpart: the state reset key.",
     "max": 25,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -2845,7 +2845,7 @@
   },
   "card-editor.design-panel.rule-n": {
     "text": "Rule {n}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Fallback title of an unnamed conditional rule. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2853,7 +2853,7 @@
   },
   "card-editor.design-panel.rule-name": {
     "text": "Rule: {name}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Title of a named conditional rule. {name} is the name the user gave it; do not translate it.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2866,7 +2866,7 @@
   },
   "card-editor.design-panel.rule-name-active-tab": {
     "text": "Rule: {name}, active tab",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Title of a rule that styles the currently selected tab. {name} is the rule's name; do not translate it.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2874,7 +2874,7 @@
   },
   "card-editor.design-panel.rule-name-disabled-tab": {
     "text": "Rule: {name}, disabled tab",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Title of a rule that styles a tab that cannot be selected. {name} is the rule's name; do not translate it.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2902,7 +2902,7 @@
   },
   "card-editor.design-panel.state-reset": {
     "text": "{state} reset",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Confirmation toast after a reset. {state} is the state's name, such as Hover. Past tense of the Reset button.",
     "max": 25,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -2915,7 +2915,7 @@
   },
   "card-editor.design-panel.tab-n": {
     "text": "Tab {n}",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Name of an existing tab in a target picker. {n} is the tab's position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
