@@ -37,7 +37,7 @@ export function whenDefined(tag: string): Promise<unknown> {
   return Promise.race([
     customElements.whenDefined(tag),
     new Promise<void>((_, reject) => {
-      timer = setTimeout(() => reject(new Error(t('Timeout waiting for {tag}', { tag }))), WAIT_MS);
+      timer = setTimeout(() => reject(new Error(t('card.card-helpers.timeout-waiting-for-tag', { tag }))), WAIT_MS);
     }),
   ]).finally(() => clearTimeout(timer));
 }

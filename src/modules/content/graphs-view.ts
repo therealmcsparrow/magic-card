@@ -72,7 +72,7 @@ export class GraphsView implements ModuleView {
       const last = pts[pts.length - 1];
       const area = `${line} L${last.x.toFixed(1)},${SVG_H} L${first.x.toFixed(1)},${SVG_H} Z`;
       body = html`<svg viewBox="0 0 ${SVG_W} ${SVG_H}" preserveAspectRatio="none" style="height: 60px" role="img"
-        aria-label=${t('{name}: last {hours, plural, one {# hour} other {# hours}}', { name: entity ? entityDisplayName(hass, entity) : (c.entity ?? ''), hours })}>
+        aria-label=${t('modules-extra.graphs-view.name-last-hours', { name: entity ? entityDisplayName(hass, entity) : (c.entity ?? ''), hours })}>
         ${c.fill !== false ? svg`<path class="mc-graphs-fill" d=${area} fill=${fillColor} opacity="0.15" />` : nothing}
         <path class="mc-graphs-line" d=${line} fill="none" stroke=${color} stroke-width=${c.line_width || 2}
           vector-effect="non-scaling-stroke" stroke-linejoin="round" />
@@ -80,10 +80,10 @@ export class GraphsView implements ModuleView {
       </svg>`;
     } else {
       const text = {
-        none: cardT('No entity'),
-        loading: t('Loading history…'),
-        error: t('History unavailable'),
-        empty: t('No numeric history'),
+        none: cardT('card.graphs-view.no-entity'),
+        loading: t('modules-extra.graphs-view.loading-history'),
+        error: t('modules-extra.graphs-view.history-unavailable'),
+        empty: t('modules-extra.graphs-view.no-numeric-history'),
       }[series.status];
       body = html`<div class="mc-graphs-empty" data-status=${series.status} style="height: 60px">${text}</div>`;
     }
@@ -95,7 +95,7 @@ export class GraphsView implements ModuleView {
         ${body}
         ${c.show_labels !== false
           ? html`<div class="mc-graphs-label">
-              <span class="mc-graphs-name">${entity ? entityDisplayName(hass, entity) : c.entity || cardT('No entity')}${c.attribute ? ` · ${(entity && hass?.formatEntityAttributeName?.(entity, c.attribute)) || c.attribute}` : ''}</span>
+              <span class="mc-graphs-name">${entity ? entityDisplayName(hass, entity) : c.entity || cardT('card.graphs-view.no-entity')}${c.attribute ? ` · ${(entity && hass?.formatEntityAttributeName?.(entity, c.attribute)) || c.attribute}` : ''}</span>
               <span class="mc-graphs-meta">${value ? `${value} · ` : ''}${hours}h</span>
             </div>`
           : nothing}

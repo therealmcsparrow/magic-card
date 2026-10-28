@@ -1,0 +1,482 @@
+{
+  "card.bar-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Shown in bar module (card).",
+    "max": 45
+  },
+  "card.bar-module.unavailable": {
+    "text": "Unavailable",
+    "note": "Shown in bar module (card).",
+    "max": 20
+  },
+  "card.button-module.button": {
+    "text": "Button",
+    "note": "Shown in button module (card).",
+    "max": 10
+  },
+  "card.card-helpers.timeout-waiting-for-tag": {
+    "text": "Timeout waiting for {tag}",
+    "note": "Shown in card helpers (card).",
+    "max": 40,
+    "vars": {
+      "tag": "The value that replaces tag in the text."
+    }
+  },
+  "card.card-pause.pause-motion": {
+    "text": "Pause motion",
+    "note": "Shown in card pause (card).",
+    "max": 20
+  },
+  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
+    "text": "Magic Card was updated. Reload the page to see this part. The rest of this card works.",
+    "note": "Shown in chunk notice (card).",
+    "max": 140
+  },
+  "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
+    "text": "{part} did not load. The rest of this card works.",
+    "note": "Shown in chunk notice (card).",
+    "max": 80,
+    "vars": {
+      "part": "The value that replaces part in the text."
+    }
+  },
+  "card.chunk-notice.part-loaded": {
+    "text": "{part} loaded.",
+    "note": "Shown in chunk notice (card).",
+    "max": 25,
+    "vars": {
+      "part": "The value that replaces part in the text."
+    }
+  },
+  "card.chunk-notice.part-of-this-card": {
+    "text": "Part of this card",
+    "note": "Shown in chunk notice (card).",
+    "max": 30
+  },
+  "card.chunk-notice.reload-page": {
+    "text": "Reload page",
+    "note": "Shown in chunk notice (card).",
+    "max": 20
+  },
+  "card.chunk-notice.still-not-loading-try-again-in-a-moment": {
+    "text": "Still not loading. Try again in a moment, or reload the page.",
+    "note": "Shown in chunk notice (card).",
+    "max": 100
+  },
+  "card.chunk-notice.the-animation": {
+    "text": "The animation",
+    "note": "Shown in chunk notice (card).",
+    "max": 25
+  },
+  "card.chunk-notice.the-background": {
+    "text": "The background",
+    "note": "Shown in chunk notice (card).",
+    "max": 25
+  },
+  "card.chunk-notice.the-custom-shape": {
+    "text": "The custom shape",
+    "note": "Shown in chunk notice (card).",
+    "max": 30
+  },
+  "card.chunk-notice.the-flow-style": {
+    "text": "The flow style",
+    "note": "Shown in chunk notice (card).",
+    "max": 25
+  },
+  "card.chunk-notice.the-icon": {
+    "text": "The icon",
+    "note": "Shown in chunk notice (card).",
+    "max": 15
+  },
+  "card.chunk-notice.the-seasonal-effect": {
+    "text": "The seasonal effect",
+    "note": "Shown in chunk notice (card).",
+    "max": 35
+  },
+  "card.chunk-notice.the-slider": {
+    "text": "The slider",
+    "note": "Shown in chunk notice (card).",
+    "max": 20
+  },
+  "card.chunk-notice.the-text-block": {
+    "text": "The text block",
+    "note": "Shown in chunk notice (card).",
+    "max": 25
+  },
+  "card.chunk-notice.try-again": {
+    "text": "Try again",
+    "note": "Shown in chunk notice (card).",
+    "max": 20
+  },
+  "card.config-validator.background-layers-index-unknown-layer": {
+    "text": "background_layers {index}: unknown layer type",
+    "note": "Shown in config validator (card).",
+    "max": 75,
+    "vars": {
+      "index": "The value that replaces index in the text."
+    }
+  },
+  "card.config-validator.background-layers-must-be-a-list": {
+    "text": "background_layers must be a list",
+    "note": "Shown in config validator (card).",
+    "max": 55
+  },
+  "card.config-validator.background-layers-only-the-first-max": {
+    "text": "background_layers: only the first {max} layers are used",
+    "note": "Shown in config validator (card).",
+    "max": 90,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "card.config-validator.config-must-be-an-object": {
+    "text": "Config must be an object",
+    "note": "Shown in config validator (card).",
+    "max": 40
+  },
+  "card.config-validator.config-must-have-a-rows-array": {
+    "text": "Config must have a rows array",
+    "note": "Shown in config validator (card).",
+    "max": 60
+  },
+  "card.config-validator.config-must-have-a-type": {
+    "text": "Config must have a type",
+    "note": "Shown in config validator (card).",
+    "max": 40
+  },
+  "card.config-validator.layers-low-power-must-be-true-or-false": {
+    "text": "layers_low_power must be true or false",
+    "note": "Shown in config validator (card).",
+    "max": 65
+  },
+  "card.config-validator.pause-button-corner-is-not-a-corner": {
+    "text": "pause_button_corner is not a corner",
+    "note": "Shown in config validator (card).",
+    "max": 60
+  },
+  "card.config-validator.pause-button-must-be-auto-always-or": {
+    "text": "pause_button must be auto, always or hidden",
+    "note": "Shown in config validator (card).",
+    "max": 70
+  },
+  "card.config-validator.row-row-col-col-module-module-layer-must": {
+    "text": "Row {row}, Col {col}, Module {module}: layer must be an object",
+    "note": "Shown in config validator (card).",
+    "max": 100,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-missing": {
+    "text": "Row {row}, Col {col}, Module {module}: missing type",
+    "note": "Shown in config validator (card).",
+    "max": 85,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-must-be-an": {
+    "text": "Row {row}, Col {col}, Module {module}: must be an object",
+    "note": "Shown in config validator (card).",
+    "max": 90,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-type-error": {
+    "text": "Row {row}, Col {col}, Module {module} ({type}): {error}",
+    "note": "Shown in config validator (card).",
+    "max": 90,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "error": "The value that replaces error in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text.",
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-unknown": {
+    "text": "Row {row}, Col {col}, Module {module}: unknown placement",
+    "note": "Shown in config validator (card).",
+    "max": 90,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-unknown-2": {
+    "text": "Row {row}, Col {col}, Module {module}: unknown type \"{type}\"",
+    "note": "Shown in config validator (card).",
+    "max": 100,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text.",
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.config-validator.row-row-column-col-must-have-a-modules": {
+    "text": "Row {row}, Column {col} must have a modules array",
+    "note": "Shown in config validator (card).",
+    "max": 80,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-must-have-a-columns-array": {
+    "text": "Row {row} must have a columns array",
+    "note": "Shown in config validator (card).",
+    "max": 60,
+    "vars": {
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.custom-card-module.card-config-must-be-a-mapping": {
+    "text": "Card config must be a mapping",
+    "note": "Shown in custom card module (card).",
+    "max": 50
+  },
+  "card.custom-card-module.loading-card": {
+    "text": "Loading card...",
+    "note": "Shown in custom card module (card).",
+    "max": 25
+  },
+  "card.custom-card-module.no-card-type-set": {
+    "text": "No card type set",
+    "note": "Shown in custom card module (card).",
+    "max": 30
+  },
+  "card.custom-card-view.loading-card": {
+    "text": "Loading card...",
+    "note": "Shown in custom card view (card).",
+    "max": 25
+  },
+  "card.forecast-module.day-n": {
+    "text": "Day {n}",
+    "note": "Shown in forecast module (card).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "card.forecast-view.unavailable": {
+    "text": "Unavailable",
+    "note": "Shown in forecast view (card).",
+    "max": 20
+  },
+  "card.gauge-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Shown in gauge module (card).",
+    "max": 45
+  },
+  "card.gauge-view.unavailable": {
+    "text": "Unavailable",
+    "note": "Shown in gauge view (card).",
+    "max": 20
+  },
+  "card.graphs-view.no-entity": {
+    "text": "No entity",
+    "note": "Shown in graphs view (card).",
+    "max": 15
+  },
+  "card.horizontal-module.empty-row": {
+    "text": "Empty row",
+    "note": "Shown in horizontal module (card).",
+    "max": 15
+  },
+  "card.image-module.entity-is-required-when-using-entity": {
+    "text": "Entity is required when using entity picture",
+    "note": "Shown in image module (card).",
+    "max": 75
+  },
+  "card.info-module.no-entity": {
+    "text": "No entity",
+    "note": "Shown in info module (card).",
+    "max": 15
+  },
+  "card.magic-card.activate-name": {
+    "text": "Activate {name}",
+    "note": "Shown in magic card (card).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.magic-card.activate-type-module": {
+    "text": "Activate {type} module",
+    "note": "Shown in magic card (card).",
+    "max": 40,
+    "vars": {
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.magic-card.invalid-configuration-errors": {
+    "text": "Invalid configuration: {errors}",
+    "note": "Shown in magic card (card).",
+    "max": 50,
+    "vars": {
+      "errors": "The value that replaces errors in the text."
+    }
+  },
+  "card.magic-card.magic-card-the-visual-editor-could-not": {
+    "text": "Magic Card: the visual editor could not be loaded.",
+    "note": "Shown in magic card (card).",
+    "max": 80
+  },
+  "card.magic-card.needs-another-device": {
+    "text": "Needs another device",
+    "note": "Shown in magic card (card).",
+    "max": 35
+  },
+  "card.magic-card.no-configuration": {
+    "text": "No configuration",
+    "note": "Shown in magic card (card).",
+    "max": 30
+  },
+  "card.magic-card.no-configuration-provided": {
+    "text": "No configuration provided",
+    "note": "Shown in magic card (card).",
+    "max": 40
+  },
+  "card.magic-card.pop-up": {
+    "text": "Pop-up",
+    "note": "Shown in magic card (card).",
+    "max": 10
+  },
+  "card.magic-card.template-name-couldn-t-be-loaded-showing": {
+    "text": "Template \"{name}\" couldn't be loaded. Showing this card's own settings.",
+    "note": "Shown in magic card (card).",
+    "max": 115,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.magic-card.template-name-wasn-t-found-showing-this": {
+    "text": "Template \"{name}\" wasn't found. Showing this card's own settings.",
+    "note": "Shown in magic card (card).",
+    "max": 105,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.markdown-module.markdown-content-is-required": {
+    "text": "Markdown content is required",
+    "note": "Shown in markdown module (card).",
+    "max": 45
+  },
+  "card.popup-controller.close": {
+    "text": "Close",
+    "note": "Shown in popup controller (card).",
+    "max": 10
+  },
+  "card.render-module.unknown-module-type": {
+    "text": "Unknown module: {type}",
+    "note": "Shown in render module (card).",
+    "max": 40,
+    "vars": {
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.slider-layout-module.empty-slider": {
+    "text": "Empty slider",
+    "note": "Shown in slider layout module (card).",
+    "max": 20
+  },
+  "card.slider-layout-module.next-slide": {
+    "text": "Next slide",
+    "note": "Shown in slider layout module (card).",
+    "max": 20
+  },
+  "card.slider-layout-module.previous-slide": {
+    "text": "Previous slide",
+    "note": "Shown in slider layout module (card).",
+    "max": 25
+  },
+  "card.slider-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Shown in slider module (card).",
+    "max": 45
+  },
+  "card.slider-module.step-must-be-greater-than-0": {
+    "text": "Step must be greater than 0",
+    "note": "Shown in slider module (card).",
+    "max": 45
+  },
+  "card.slider-view.slider": {
+    "text": "Slider",
+    "note": "Shown in slider view (card).",
+    "max": 15
+  },
+  "card.spinbox-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Shown in spinbox module (card).",
+    "max": 45
+  },
+  "card.spinbox-module.step-must-be-greater-than-0": {
+    "text": "Step must be greater than 0",
+    "note": "Shown in spinbox module (card).",
+    "max": 45
+  },
+  "card.stack-host.not-updated-n-min": {
+    "text": "Not updated {n} min",
+    "note": "Shown in stack host (card).",
+    "max": 35,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "card.text-module.entity-is-required": {
+    "text": "Entity is required",
+    "note": "Shown in text module (card).",
+    "max": 30
+  },
+  "card.text-module.template-error-error": {
+    "text": "Template error: {error}",
+    "note": "Shown in text module (card).",
+    "max": 40,
+    "vars": {
+      "error": "The value that replaces error in the text."
+    }
+  },
+  "card.text-module.template-is-required": {
+    "text": "Template is required",
+    "note": "Shown in text module (card).",
+    "max": 35
+  },
+  "card.text-module.text-content-is-required": {
+    "text": "Text content is required",
+    "note": "Shown in text module (card).",
+    "max": 40
+  },
+  "card.text-module.unavailable": {
+    "text": "unavailable",
+    "note": "Shown in text module (card).",
+    "max": 20
+  },
+  "card.vertical-module.empty-column": {
+    "text": "Empty column",
+    "note": "Shown in vertical module (card).",
+    "max": 20
+  },
+  "card.view.couldn-t-set-name": {
+    "text": "Couldn't set {name}",
+    "note": "Shown in view (card).",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.view.slider": {
+    "text": "Slider",
+    "note": "Shown in view (card).",
+    "max": 15
+  }
+}

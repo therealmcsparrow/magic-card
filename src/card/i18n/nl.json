@@ -1,72 +1,318 @@
 {
-  "Activate {name}": "{name} activeren",
-  "Activate {type} module": "Module {type} activeren",
-  "Button": "Knop",
-  "Card config must be a mapping": "De kaartconfiguratie moet een mapping zijn",
-  "Close": "Sluiten",
-  "Config must be an object": "De configuratie moet een object zijn",
-  "Config must have a rows array": "De configuratie moet een lijst met rijen (rows) bevatten",
-  "Config must have a type": "De configuratie moet een type bevatten",
-  "Couldn't set {name}": "Kon {name} niet instellen",
-  "Day {n}": "Dag {n}",
-  "Empty column": "Lege kolom",
-  "Empty row": "Lege rij",
-  "Empty slider": "Lege schuifreeks",
-  "Entity is required": "Een entiteit is verplicht",
-  "Entity is required when using entity picture": "Een entiteit is verplicht bij een entiteitsafbeelding",
-  "Invalid configuration: {errors}": "Ongeldige configuratie: {errors}",
-  "Loading card...": "Kaart laden...",
-  "Magic Card was updated. Reload the page to see this part. The rest of this card works.": "Magic Card is bijgewerkt. Laad de pagina opnieuw om dit onderdeel te zien. De rest van deze kaart werkt.",
-  "Magic Card: the visual editor could not be loaded.": "Magic Card: de visuele editor kon niet worden geladen.",
-  "Markdown content is required": "Markdown-inhoud is verplicht",
-  "Min must be less than max": "Het minimum moet kleiner zijn dan het maximum",
-  "Needs another device": "Heeft een ander apparaat nodig",
-  "Next slide": "Volgende dia",
-  "No card type set": "Geen kaarttype ingesteld",
-  "No configuration": "Geen configuratie",
-  "No configuration provided": "Geen configuratie opgegeven",
-  "No entity": "Geen entiteit",
-  "Not updated {n} min": "{n} min niet bijgewerkt",
-  "Part of this card": "Een onderdeel van deze kaart",
-  "Pause motion": "Beweging pauzeren",
-  "Pop-up": "Pop-up",
-  "Previous slide": "Vorige dia",
-  "Reload page": "Pagina opnieuw laden",
-  "Row {row} must have a columns array": "Rij {row} moet een lijst met kolommen (columns) bevatten",
-  "Row {row}, Col {col}, Module {module} ({type}): {error}": "Rij {row}, kolom {col}, module {module} ({type}): {error}",
-  "Row {row}, Col {col}, Module {module}: layer must be an object": "Rij {row}, kolom {col}, module {module}: laag moet een object zijn",
-  "Row {row}, Col {col}, Module {module}: missing type": "Rij {row}, kolom {col}, module {module}: type ontbreekt",
-  "Row {row}, Col {col}, Module {module}: must be an object": "Rij {row}, kolom {col}, module {module}: moet een object zijn",
-  "Row {row}, Col {col}, Module {module}: unknown placement": "Rij {row}, kolom {col}, module {module}: onbekende plaatsing",
-  "Row {row}, Col {col}, Module {module}: unknown type \"{type}\"": "Rij {row}, kolom {col}, module {module}: onbekend type \"{type}\"",
-  "Row {row}, Column {col} must have a modules array": "Rij {row}, kolom {col} moet een lijst met modules (modules) bevatten",
-  "Slider": "Schuifregelaar",
-  "Step must be greater than 0": "De stapgrootte moet groter zijn dan 0",
-  "Still not loading. Try again in a moment, or reload the page.": "Laden lukt nog niet. Probeer het zo opnieuw, of laad de pagina opnieuw.",
-  "Template \"{name}\" couldn't be loaded. Showing this card's own settings.": "Sjabloon \"{name}\" kon niet worden geladen. De eigen instellingen van deze kaart worden getoond.",
-  "Template \"{name}\" wasn't found. Showing this card's own settings.": "Sjabloon \"{name}\" is niet gevonden. De eigen instellingen van deze kaart worden getoond.",
-  "Template error: {error}": "Templatefout: {error}",
-  "Template is required": "Een template is verplicht",
-  "Text content is required": "Tekstinhoud is verplicht",
-  "The animation": "De animatie",
-  "The background": "De achtergrond",
-  "The custom shape": "De aangepaste vorm",
-  "The flow style": "De stroomstijl",
-  "The icon": "Het pictogram",
-  "The seasonal effect": "Het seizoenseffect",
-  "The slider": "De schuifregelaar",
-  "The text block": "Het tekstblok",
-  "Timeout waiting for {tag}": "Time-out bij het wachten op {tag}",
-  "Try again": "Opnieuw proberen",
-  "Unavailable": "Niet beschikbaar",
-  "Unknown module: {type}": "Onbekende module: {type}",
-  "background_layers must be a list": "background_layers moet een lijst zijn",
-  "background_layers {index}: unknown layer type": "background_layers {index}: onbekend lagetype",
-  "background_layers: only the first {max} layers are used": "background_layers: alleen de eerste {max} lagen worden gebruikt",
-  "layers_low_power must be true or false": "layers_low_power moet true of false zijn",
-  "pause_button must be auto, always or hidden": "pause_button moet auto, always of hidden zijn",
-  "pause_button_corner is not a corner": "pause_button_corner is geen hoek",
-  "unavailable": "niet beschikbaar",
-  "{part} did not load. The rest of this card works.": "{part} is niet geladen. De rest van deze kaart werkt.",
-  "{part} loaded.": "{part} is geladen."
+  "card.bar-module.min-must-be-less-than-max": {
+    "text": "Het minimum moet kleiner zijn dan het maximum",
+    "hash": "f452fce8"
+  },
+  "card.bar-module.unavailable": {
+    "text": "Niet beschikbaar",
+    "hash": "ca184496"
+  },
+  "card.button-module.button": {
+    "text": "Knop",
+    "hash": "707eab0c"
+  },
+  "card.card-helpers.timeout-waiting-for-tag": {
+    "text": "Time-out bij het wachten op {tag}",
+    "hash": "44b3f340"
+  },
+  "card.card-pause.pause-motion": {
+    "text": "Beweging pauzeren",
+    "hash": "126cf1b7"
+  },
+  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
+    "text": "Magic Card is bijgewerkt. Laad de pagina opnieuw om dit onderdeel te zien. De rest van deze kaart werkt.",
+    "hash": "af7bdfe0"
+  },
+  "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
+    "text": "{part} is niet geladen. De rest van deze kaart werkt.",
+    "hash": "09fb68de"
+  },
+  "card.chunk-notice.part-loaded": {
+    "text": "{part} is geladen.",
+    "hash": "3c81fd02"
+  },
+  "card.chunk-notice.part-of-this-card": {
+    "text": "Een onderdeel van deze kaart",
+    "hash": "77964f2c"
+  },
+  "card.chunk-notice.reload-page": {
+    "text": "Pagina opnieuw laden",
+    "hash": "437d0d63"
+  },
+  "card.chunk-notice.still-not-loading-try-again-in-a-moment": {
+    "text": "Laden lukt nog niet. Probeer het zo opnieuw, of laad de pagina opnieuw.",
+    "hash": "fe7252fe"
+  },
+  "card.chunk-notice.the-animation": {
+    "text": "De animatie",
+    "hash": "adad9986"
+  },
+  "card.chunk-notice.the-background": {
+    "text": "De achtergrond",
+    "hash": "b545a902"
+  },
+  "card.chunk-notice.the-custom-shape": {
+    "text": "De aangepaste vorm",
+    "hash": "95861a48"
+  },
+  "card.chunk-notice.the-flow-style": {
+    "text": "De stroomstijl",
+    "hash": "8b27e707"
+  },
+  "card.chunk-notice.the-icon": {
+    "text": "Het pictogram",
+    "hash": "4ef317cc"
+  },
+  "card.chunk-notice.the-seasonal-effect": {
+    "text": "Het seizoenseffect",
+    "hash": "69dcd8f0"
+  },
+  "card.chunk-notice.the-slider": {
+    "text": "De schuifregelaar",
+    "hash": "61f8adc5"
+  },
+  "card.chunk-notice.the-text-block": {
+    "text": "Het tekstblok",
+    "hash": "7034ba8b"
+  },
+  "card.chunk-notice.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "card.config-validator.background-layers-index-unknown-layer": {
+    "text": "background_layers {index}: onbekend lagetype",
+    "hash": "0def550a"
+  },
+  "card.config-validator.background-layers-must-be-a-list": {
+    "text": "background_layers moet een lijst zijn",
+    "hash": "c78e17d1"
+  },
+  "card.config-validator.background-layers-only-the-first-max": {
+    "text": "background_layers: alleen de eerste {max} lagen worden gebruikt",
+    "hash": "aec4e6cd"
+  },
+  "card.config-validator.config-must-be-an-object": {
+    "text": "De configuratie moet een object zijn",
+    "hash": "6a89daa7"
+  },
+  "card.config-validator.config-must-have-a-rows-array": {
+    "text": "De configuratie moet een lijst met rijen (rows) bevatten",
+    "hash": "6620e7c1"
+  },
+  "card.config-validator.config-must-have-a-type": {
+    "text": "De configuratie moet een type bevatten",
+    "hash": "d8edb71f"
+  },
+  "card.config-validator.layers-low-power-must-be-true-or-false": {
+    "text": "layers_low_power moet true of false zijn",
+    "hash": "4bad9e34"
+  },
+  "card.config-validator.pause-button-corner-is-not-a-corner": {
+    "text": "pause_button_corner is geen hoek",
+    "hash": "6af60886"
+  },
+  "card.config-validator.pause-button-must-be-auto-always-or": {
+    "text": "pause_button moet auto, always of hidden zijn",
+    "hash": "5cf5bba8"
+  },
+  "card.config-validator.row-row-col-col-module-module-layer-must": {
+    "text": "Rij {row}, kolom {col}, module {module}: laag moet een object zijn",
+    "hash": "f43c1f6a"
+  },
+  "card.config-validator.row-row-col-col-module-module-missing": {
+    "text": "Rij {row}, kolom {col}, module {module}: type ontbreekt",
+    "hash": "54af56ad"
+  },
+  "card.config-validator.row-row-col-col-module-module-must-be-an": {
+    "text": "Rij {row}, kolom {col}, module {module}: moet een object zijn",
+    "hash": "40c8264d"
+  },
+  "card.config-validator.row-row-col-col-module-module-type-error": {
+    "text": "Rij {row}, kolom {col}, module {module} ({type}): {error}",
+    "hash": "58b54fae"
+  },
+  "card.config-validator.row-row-col-col-module-module-unknown": {
+    "text": "Rij {row}, kolom {col}, module {module}: onbekende plaatsing",
+    "hash": "e02c5c77"
+  },
+  "card.config-validator.row-row-col-col-module-module-unknown-2": {
+    "text": "Rij {row}, kolom {col}, module {module}: onbekend type \"{type}\"",
+    "hash": "d62629ee"
+  },
+  "card.config-validator.row-row-column-col-must-have-a-modules": {
+    "text": "Rij {row}, kolom {col} moet een lijst met modules (modules) bevatten",
+    "hash": "3399b5ab"
+  },
+  "card.config-validator.row-row-must-have-a-columns-array": {
+    "text": "Rij {row} moet een lijst met kolommen (columns) bevatten",
+    "hash": "1dd20435"
+  },
+  "card.custom-card-module.card-config-must-be-a-mapping": {
+    "text": "De kaartconfiguratie moet een mapping zijn",
+    "hash": "922afc7c"
+  },
+  "card.custom-card-module.loading-card": {
+    "text": "Kaart laden...",
+    "hash": "838af343"
+  },
+  "card.custom-card-module.no-card-type-set": {
+    "text": "Geen kaarttype ingesteld",
+    "hash": "422894d1"
+  },
+  "card.custom-card-view.loading-card": {
+    "text": "Kaart laden...",
+    "hash": "838af343"
+  },
+  "card.forecast-module.day-n": {
+    "text": "Dag {n}",
+    "hash": "192106af"
+  },
+  "card.forecast-view.unavailable": {
+    "text": "Niet beschikbaar",
+    "hash": "ca184496"
+  },
+  "card.gauge-module.min-must-be-less-than-max": {
+    "text": "Het minimum moet kleiner zijn dan het maximum",
+    "hash": "f452fce8"
+  },
+  "card.gauge-view.unavailable": {
+    "text": "Niet beschikbaar",
+    "hash": "ca184496"
+  },
+  "card.graphs-view.no-entity": {
+    "text": "Geen entiteit",
+    "hash": "f9ccb90a"
+  },
+  "card.horizontal-module.empty-row": {
+    "text": "Lege rij",
+    "hash": "65f8a0a6"
+  },
+  "card.image-module.entity-is-required-when-using-entity": {
+    "text": "Een entiteit is verplicht bij een entiteitsafbeelding",
+    "hash": "14f6e5a2"
+  },
+  "card.info-module.no-entity": {
+    "text": "Geen entiteit",
+    "hash": "f9ccb90a"
+  },
+  "card.magic-card.activate-name": {
+    "text": "{name} activeren",
+    "hash": "c6089f4f"
+  },
+  "card.magic-card.activate-type-module": {
+    "text": "Module {type} activeren",
+    "hash": "b69a0f1e"
+  },
+  "card.magic-card.invalid-configuration-errors": {
+    "text": "Ongeldige configuratie: {errors}",
+    "hash": "9854e291"
+  },
+  "card.magic-card.magic-card-the-visual-editor-could-not": {
+    "text": "Magic Card: de visuele editor kon niet worden geladen.",
+    "hash": "6aa579cb"
+  },
+  "card.magic-card.needs-another-device": {
+    "text": "Heeft een ander apparaat nodig",
+    "hash": "267b1891"
+  },
+  "card.magic-card.no-configuration": {
+    "text": "Geen configuratie",
+    "hash": "d87b2ee7"
+  },
+  "card.magic-card.no-configuration-provided": {
+    "text": "Geen configuratie opgegeven",
+    "hash": "a76bec87"
+  },
+  "card.magic-card.pop-up": {
+    "text": "Pop-up",
+    "hash": "ca695f1e"
+  },
+  "card.magic-card.template-name-couldn-t-be-loaded-showing": {
+    "text": "Sjabloon \"{name}\" kon niet worden geladen. De eigen instellingen van deze kaart worden getoond.",
+    "hash": "8f1767a0"
+  },
+  "card.magic-card.template-name-wasn-t-found-showing-this": {
+    "text": "Sjabloon \"{name}\" is niet gevonden. De eigen instellingen van deze kaart worden getoond.",
+    "hash": "f3534e8e"
+  },
+  "card.markdown-module.markdown-content-is-required": {
+    "text": "Markdown-inhoud is verplicht",
+    "hash": "fb4420be"
+  },
+  "card.popup-controller.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "card.render-module.unknown-module-type": {
+    "text": "Onbekende module: {type}",
+    "hash": "da0feeb1"
+  },
+  "card.slider-layout-module.empty-slider": {
+    "text": "Lege schuifreeks",
+    "hash": "89e324b8"
+  },
+  "card.slider-layout-module.next-slide": {
+    "text": "Volgende dia",
+    "hash": "cdc93d1c"
+  },
+  "card.slider-layout-module.previous-slide": {
+    "text": "Vorige dia",
+    "hash": "bfb54922"
+  },
+  "card.slider-module.min-must-be-less-than-max": {
+    "text": "Het minimum moet kleiner zijn dan het maximum",
+    "hash": "f452fce8"
+  },
+  "card.slider-module.step-must-be-greater-than-0": {
+    "text": "De stapgrootte moet groter zijn dan 0",
+    "hash": "61da24d5"
+  },
+  "card.slider-view.slider": {
+    "text": "Schuifregelaar",
+    "hash": "14f34284"
+  },
+  "card.spinbox-module.min-must-be-less-than-max": {
+    "text": "Het minimum moet kleiner zijn dan het maximum",
+    "hash": "f452fce8"
+  },
+  "card.spinbox-module.step-must-be-greater-than-0": {
+    "text": "De stapgrootte moet groter zijn dan 0",
+    "hash": "61da24d5"
+  },
+  "card.stack-host.not-updated-n-min": {
+    "text": "{n} min niet bijgewerkt",
+    "hash": "bc146dc3"
+  },
+  "card.text-module.entity-is-required": {
+    "text": "Een entiteit is verplicht",
+    "hash": "2aed30df"
+  },
+  "card.text-module.template-error-error": {
+    "text": "Templatefout: {error}",
+    "hash": "3dcf33da"
+  },
+  "card.text-module.template-is-required": {
+    "text": "Een template is verplicht",
+    "hash": "07f7a1b8"
+  },
+  "card.text-module.text-content-is-required": {
+    "text": "Tekstinhoud is verplicht",
+    "hash": "263cbaa8"
+  },
+  "card.text-module.unavailable": {
+    "text": "niet beschikbaar",
+    "hash": "ba691ba0"
+  },
+  "card.vertical-module.empty-column": {
+    "text": "Lege kolom",
+    "hash": "6be6472c"
+  },
+  "card.view.couldn-t-set-name": {
+    "text": "Kon {name} niet instellen",
+    "hash": "63a83310"
+  },
+  "card.view.slider": {
+    "text": "Schuifregelaar",
+    "hash": "14f34284"
+  }
 }

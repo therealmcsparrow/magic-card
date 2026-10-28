@@ -36,7 +36,7 @@ class HorizontalModule extends BaseMagicModule {
     return html`
       <div class="mc-module mc-horizontal" data-mc-layers=${laid?.layered ? '' : nothing}
         style="gap:${c.gap || '8px'}; align-items:${c.align || 'center'}; justify-content:${c.justify || 'start'}">
-        ${laid ? laid.content : renderEmptySlot(t('Empty row'))}
+        ${laid ? laid.content : renderEmptySlot(t('card.horizontal-module.empty-row'))}
       </div>
     `;
   }

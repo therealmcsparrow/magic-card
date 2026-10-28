@@ -1,16 +1,58 @@
 {
-  "Day": "Day",
-  "Empty tab": "Empty tab",
-  "Failed to load \"{type}\": {error}": "Failed to load \"{type}\": {error}",
-  "Forecast not available: {error}": "Forecast not available: {error}",
-  "History unavailable": "History unavailable",
-  "Home Assistant card helpers are not available": "Home Assistant card helpers are not available",
-  "Loading history…": "Loading history…",
-  "Night": "Night",
-  "No camera": "No camera",
-  "No forecast data": "No forecast data",
-  "No numeric history": "No numeric history",
-  "Picture not available": "Picture not available",
-  "This entity has no forecast": "This entity has no forecast",
-  "{name}: last {hours, plural, one {# hour} other {# hours}}": "{name}: last {hours, plural, one {# hour} other {# hours}}"
+  "modules-extra.camera-view.no-camera": {
+    "text": "No camera",
+    "hash": "42a456cf"
+  },
+  "modules-extra.custom-card-view.failed-to-load-type-error": {
+    "text": "Failed to load \"{type}\": {error}",
+    "hash": "9619858c"
+  },
+  "modules-extra.custom-card-view.home-assistant-card-helpers-are-not": {
+    "text": "Home Assistant card helpers are not available",
+    "hash": "f76bac10"
+  },
+  "modules-extra.forecast-view.day": {
+    "text": "Day",
+    "hash": "8f2364e1"
+  },
+  "modules-extra.forecast-view.forecast-not-available-error": {
+    "text": "Forecast not available: {error}",
+    "hash": "d40ff3c8"
+  },
+  "modules-extra.forecast-view.night": {
+    "text": "Night",
+    "hash": "4e9f8db8"
+  },
+  "modules-extra.forecast-view.no-forecast-data": {
+    "text": "No forecast data",
+    "hash": "2d44cf3c"
+  },
+  "modules-extra.forecast-view.this-entity-has-no-forecast": {
+    "text": "This entity has no forecast",
+    "hash": "2cffeac5"
+  },
+  "modules-extra.graphs-view.history-unavailable": {
+    "text": "History unavailable",
+    "hash": "cf319f4d"
+  },
+  "modules-extra.graphs-view.loading-history": {
+    "text": "Loading history…",
+    "hash": "a960c435"
+  },
+  "modules-extra.graphs-view.name-last-hours": {
+    "text": "{name}: last {hours, plural, one {# hour} other {# hours}}",
+    "hash": "cb7bd057"
+  },
+  "modules-extra.graphs-view.no-numeric-history": {
+    "text": "No numeric history",
+    "hash": "53a44fd4"
+  },
+  "modules-extra.image-view.picture-not-available": {
+    "text": "Picture not available",
+    "hash": "ddeb75ef"
+  },
+  "modules-extra.tabs-view.empty-tab": {
+    "text": "Empty tab",
+    "hash": "c5d4f9be"
+  }
 }

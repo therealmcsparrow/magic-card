@@ -37,7 +37,7 @@ class ButtonModule extends BaseMagicModule {
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
     // the attribute (formatted by HA, with its unit) or the state
     const state = entity && c.show_state ? formatEntityValue(hass, entity, c.attribute || undefined).text : undefined;
-    const label = c.label || t('Button');
+    const label = c.label || t('card.button-module.button');
     const isIconOnly = c.button_style === 'icon-only';
     const icon = c.icon || '';
     const iconFx = { hass, className: 'mc-anim-icon', part: 'icon', fx: c.icon_fx, iconOn: c.icon_on, iconOff: c.icon_off, svg: c.svg, fallbackIcon: 'mdi:gesture-tap' };

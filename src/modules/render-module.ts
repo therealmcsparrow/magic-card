@@ -28,7 +28,7 @@ export function renderModuleHint(messages: string[]): TemplateResult {
  */
 export function renderModuleContent(config: CardModule, hass?: HomeAssistant): TemplateResult {
   const module = ModuleRegistry.get(config?.type as ModuleType);
-  if (!module) return renderModuleError([t('Unknown module: {type}', { type: String(config?.type) })]);
+  if (!module) return renderModuleError([t('card.render-module.unknown-module-type', { type: String(config?.type) })]);
   try {
     const errors = module.validate(config);
     if (errors.length) return renderModuleError(errors);

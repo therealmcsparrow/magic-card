@@ -342,7 +342,7 @@ export class PopupController implements ReactiveController, PopupHandle {
         ${sheet ? html`<div class="mc-popup-handle" aria-hidden="true"></div>` : nothing}
         ${title ? html`<h2 class="mc-popup-title" id=${titleId}>${title}</h2>` : html`<span class="mc-popup-title"></span>`}
         ${showClose
-          ? html`<button type="button" class="mc-popup-close" aria-label=${t('Close')} title=${t('Close')} @click=${this._onCloseClick}>
+          ? html`<button type="button" class="mc-popup-close" aria-label=${t('card.popup-controller.close')} title=${t('card.popup-controller.close')} @click=${this._onCloseClick}>
               <ha-icon icon="mdi:close"></ha-icon>
             </button>`
           : nothing}

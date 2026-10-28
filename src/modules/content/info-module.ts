@@ -49,7 +49,7 @@ class InfoModule extends BaseMagicModule {
     if (!showName && !showState && !c.secondary_info) showState = true;
     if (!showName && !showState && !entity) showName = true;
 
-    const name = entity ? entityDisplayName(hass, entity) : c.entity || t('No entity');
+    const name = entity ? entityDisplayName(hass, entity) : c.entity || t('card.info-module.no-entity');
     let state: string | ReturnType<typeof countdown> = '—';
     if (entity && !c.attribute && timerCountdown(entity) !== undefined) {
       // an active / paused timer: its remaining time, counting down live
