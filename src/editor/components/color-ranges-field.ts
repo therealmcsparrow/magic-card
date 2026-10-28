@@ -35,28 +35,28 @@ export function renderColorRangesField(
           (r, i) => html`
             <div class="cond">
               <div class="cond-head">
-                <span class="n">${t('Range {n}', { n: i + 1 })} <span class="sub">· ${t('from {value}', { value: r.from })}</span></span>
+                <span class="n">${t('card-editor.color-ranges-field.range-n', { n: i + 1 })} <span class="sub">· ${t('card-editor.color-ranges-field.from-value', { value: r.from })}</span></span>
                 <button
                   type="button"
                   class="icon-btn sm danger"
-                  aria-label=${t('Delete range {n}', { n: i + 1 })}
-                  title=${t('Delete range')}
+                  aria-label=${t('card-editor.color-ranges-field.delete-range-n', { n: i + 1 })}
+                  title=${t('card-editor.color-ranges-field.delete-range')}
                   @click=${() => write(list.filter((_r, j) => j !== i))}
                 >
                   <ha-icon icon="mdi:delete-outline"></ha-icon>
                 </button>
               </div>
-              ${r.to !== undefined && r.to !== null ? html`<p class="help">${t('Ends at {value} (set in YAML).', { value: r.to })}</p>` : nothing}
+              ${r.to !== undefined && r.to !== null ? html`<p class="help">${t('card-editor.color-ranges-field.ends-at-value-set-in-yaml', { value: r.to })}</p>` : nothing}
               <div class="two">
-                ${renderNumberField(t('From'), r.from, (v) => update(i, { from: v }))}
-                ${renderColorField(t('Colour'), r.color, (v) => update(i, { color: v }))}
+                ${renderNumberField(t('card-editor.color-ranges-field.from'), r.from, (v) => update(i, { from: v }))}
+                ${renderColorField(t('card-editor.color-ranges-field.colour'), r.color, (v) => update(i, { color: v }))}
               </div>
             </div>
           `,
         )}
         <div>
           <button type="button" class="btn btn-text btn-sm" @click=${add}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add range')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.color-ranges-field.add-range')}
           </button>
         </div>
       </div>

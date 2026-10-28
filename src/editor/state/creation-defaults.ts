@@ -19,11 +19,11 @@ export function localiseCreationDefaults<M extends CardModule>(mod: M): M {
   if (SHARING_LAYOUTS.includes(mod.type)) o.share_entity = true;
   // the columns of a new row module share too (entity-scope 1.1.0)
   if (mod.type === 'row' && Array.isArray(o.columns)) for (const c of o.columns as Loose[]) c.share_entity = true;
-  if (mod.type === 'text' && o.text === 'Hello World') o.text = t('Hello World');
-  else if (mod.type === 'button' && o.label === 'Button') o.label = t('Button');
+  if (mod.type === 'text' && o.text === 'Hello World') o.text = t('card-editor.creation-defaults.hello-world');
+  else if (mod.type === 'button' && o.label === 'Button') o.label = t('card-editor.creation-defaults.button');
   else if (mod.type === 'tabs' && Array.isArray(o.tabs)) {
     (o.tabs as Array<{ label?: string }>).forEach((tab, i) => {
-      if (tab.label === `Tab ${i + 1}`) tab.label = t('Tab {n}', { n: i + 1 });
+      if (tab.label === `Tab ${i + 1}`) tab.label = t('card-editor.creation-defaults.tab-n', { n: i + 1 });
     });
   }
   return mod;

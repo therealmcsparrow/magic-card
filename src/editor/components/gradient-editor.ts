@@ -221,18 +221,18 @@ export class GradientEditor extends LitElement {
   private _renderStop(s: string, i: number, n: number): TemplateResult {
     const num = i + 1;
     const atMin = n <= MIN_STOPS;
-    return html`<div class="stop" role="group" aria-label=${t('Stop {num} of {n}', { num, n })}>
+    return html`<div class="stop" role="group" aria-label=${t('card-editor.gradient-editor.stop-num-of-n', { num, n })}>
       <mc-color-picker
         .value=${s}
-        .label=${t('Stop {num} colour', { num })}
+        .label=${t('card-editor.gradient-editor.stop-num-colour', { num })}
         ?aria-invalid=${this._badStop === i}
         @value-changed=${(e: CustomEvent) => this._setStop(i, String(e.detail.value), e)}
       ></mc-color-picker>
       <button
         type="button"
         class="icon-btn"
-        aria-label=${t('Remove stop {num}', { num })}
-        title=${atMin ? t('A gradient needs at least 2 stops') : t('Remove stop {num}', { num })}
+        aria-label=${t('card-editor.gradient-editor.remove-stop-num', { num })}
+        title=${atMin ? t('card-editor.gradient-editor.a-gradient-needs-at-least-2-stops') : t('card-editor.gradient-editor.remove-stop-num', { num })}
         ?disabled=${atMin || this.disabled}
         @click=${() => this._remove(i)}
       >
@@ -246,19 +246,19 @@ export class GradientEditor extends LitElement {
     const angle = this._draft ?? g.angle;
     const paint = gradientToString({ ...g, angle });
     const n = g.stops.length;
-    const name = this.label || t('colour');
+    const name = this.label || t('card-editor.gradient-editor.colour');
     return html`
       <div class="grad">
-        <div class="preview" role="img" aria-label=${t('Gradient preview')}><span style=${`background: ${paint}`}></span></div>
+        <div class="preview" role="img" aria-label=${t('card-editor.gradient-editor.gradient-preview')}><span style=${`background: ${paint}`}></span></div>
         ${this.allowRadial
           ? html`<div class="row">
-              <span class="lbl">${t('Type')}</span>
+              <span class="lbl">${t('card-editor.gradient-editor.type')}</span>
               ${renderSeg(
-                t('{name} gradient type', { name }),
+                t('card-editor.gradient-editor.name-gradient-type', { name }),
                 g.radial ? 'radial' : 'linear',
                 [
-                  { value: 'linear', label: t('Linear') },
-                  { value: 'radial', label: t('Radial') },
+                  { value: 'linear', label: t('card-editor.gradient-editor.linear') },
+                  { value: 'radial', label: t('card-editor.gradient-editor.radial') },
                 ],
                 (v) => v !== (g.radial ? 'radial' : 'linear') && this._emit({ ...g, radial: v === 'radial' }),
                 this.disabled,
@@ -269,32 +269,32 @@ export class GradientEditor extends LitElement {
           ? nothing
           : slider({
               id: 'angle',
-              label: t('Angle'),
+              label: t('card-editor.gradient-editor.angle'),
               min: 0,
               max: 360,
               step: 1,
               value: angle,
               unit: 'deg',
-              valueText: t('{angle} degrees', { angle }),
-              numberLabel: t('Angle in degrees'),
+              valueText: t('card-editor.gradient-editor.angle-degrees', { angle }),
+              numberLabel: t('card-editor.gradient-editor.angle-in-degrees'),
               disabled: this.disabled,
               onInput: (v) => (this._draft = this._angle(String(v))),
               onChange: (v) => this._emit({ ...g, angle: this._angle(String(v)) }),
             })}
         <div class="stops">${g.stops.map((s, i) => this._renderStop(s, i, n))}</div>
-        ${this._badStop >= 0 ? html`<div class="help error" role="alert">${t('Use a hex colour, rgb(a) or var(--name).')}</div>` : nothing}
+        ${this._badStop >= 0 ? html`<div class="help error" role="alert">${t('card-editor.gradient-editor.use-a-hex-colour-rgb-a-or-var-name')}</div>` : nothing}
         <div class="actions">
           <button
             type="button"
             class="btn btn-text btn-sm"
-            title=${n >= MAX_STOPS ? t('Up to {max} stops', { max: MAX_STOPS }) : t('Add stop')}
+            title=${n >= MAX_STOPS ? t('card-editor.gradient-editor.up-to-max-stops', { max: MAX_STOPS }) : t('card-editor.gradient-editor.add-stop')}
             ?disabled=${n >= MAX_STOPS || this.disabled}
             @click=${this._add}
           >
-            <ha-icon icon="mdi:plus"></ha-icon> ${t('Add stop')}
+            <ha-icon icon="mdi:plus"></ha-icon> ${t('card-editor.gradient-editor.add-stop')}
           </button>
           <button type="button" class="btn btn-text btn-sm" ?disabled=${this.disabled} @click=${() => this._emit({ ...g, stops: [...g.stops].reverse() })}>
-            <ha-icon icon="mdi:swap-horizontal"></ha-icon> ${t('Reverse')}
+            <ha-icon icon="mdi:swap-horizontal"></ha-icon> ${t('card-editor.gradient-editor.reverse')}
           </button>
         </div>
       </div>

@@ -65,7 +65,7 @@ interface Entry {
 }
 
 /** "Row 2 · Column 1": where a pasted or moved module goes. */
-const rowColumn = (row: number, col: number): string => `${t('Row {n}', { n: row + 1 })} · ${t('Column {n}', { n: col + 1 })}`;
+const rowColumn = (row: number, col: number): string => `${t('card-editor.item-menu.row-n', { n: row + 1 })} · ${t('card-editor.item-menu.column-n', { n: col + 1 })}`;
 
 const KBD = {
   rename: ['F2', 'F2'],
@@ -268,9 +268,9 @@ export class ItemMenu implements ReactiveController {
   private _name(config: MagicCardConfig, sel: Selection): string {
     if (sel.kind === 'module') {
       const mod = moduleAt(config, sel);
-      return mod ? moduleTitle(mod) : t('Module');
+      return mod ? moduleTitle(mod) : t('card-editor.item-menu.module');
     }
-    return sel.kind === 'card' ? config.name?.trim() || t('Card') : describeSelection(config, sel).title;
+    return sel.kind === 'card' ? config.name?.trim() || t('card-editor.item-menu.card') : describeSelection(config, sel).title;
   }
 
   // ── shortcuts shared by both surfaces ──
@@ -384,9 +384,9 @@ export class ItemMenu implements ReactiveController {
     const item = sel.kind === 'card' ? orderedYamlConfig(config) : cleanItem(itemAt(config, sel));
     // undefined keys (no name / template) are left out like the YAML editor does
     const text = toYaml(JSON.parse(JSON.stringify(item ?? {})));
-    const label = t('{name} YAML', { name });
+    const label = t('card-editor.item-menu.name-yaml', { name });
     if (await copyText(text, this.host.shadowRoot ?? this.host)) {
-      this.opts.status(t('{name} YAML copied', { name }));
+      this.opts.status(t('card-editor.item-menu.name-yaml-copied', { name }));
       return;
     }
     this._copy = { text, title: label };
@@ -403,7 +403,7 @@ export class ItemMenu implements ReactiveController {
     const sm = this._sm;
     const clip = readModuleClipboard();
     if (!sm || !clip || !sm.pasteModule(sel)) return;
-    this.opts.status(t('{module} pasted into {where}', { module: moduleTitle(clip), where }));
+    this.opts.status(t('card-editor.item-menu.module-pasted-into-where', { module: moduleTitle(clip), where }));
   }
 
   private _run(e: Entry): void {
@@ -437,7 +437,7 @@ export class ItemMenu implements ReactiveController {
       const slots = parent ? childSlots(parent) : undefined;
       const current = child[child.length - 1].slot;
       if (!parent || !slots) return [];
-      near.push(...slots.flatMap((_, slot) => (slot === current ? [] : [go(slotLabel(parent, slot) ?? t('Slot {n}', { n: slot + 1 }),
+      near.push(...slots.flatMap((_, slot) => (slot === current ? [] : [go(slotLabel(parent, slot) ?? t('card-editor.item-menu.slot-n', { n: slot + 1 }),
         () => sm.moveChildToSlot(sel.row, sel.col, sel.module, child, slot))])));
     } else {
       near.push(...config.rows.flatMap((row, r) => row.columns.flatMap((_, c) => (r === sel.row && c === sel.col ? [] : [go(
@@ -448,7 +448,7 @@ export class ItemMenu implements ReactiveController {
       if (!r) return;
       sm.updateConfig(r.config);
       sm.setSelectedPath(r.path);
-      this.opts.status(t('Moved {name} to {where}', { name: moduleTitle(moduleAt(config, sel)!), where }));
+      this.opts.status(t('card-editor.item-menu.moved-name-to-where', { name: moduleTitle(moduleAt(config, sel)!), where }));
     };
     const into: Entry[] = [];
     const ownerSteps = child?.slice(0, -1) ?? [];
@@ -463,7 +463,7 @@ export class ItemMenu implements ReactiveController {
           const place: DropPlace = { row: r, col: c, module: topIndex, ...(steps.length ? { child: steps.map((x) => ({ ...x })) } : {}), slot, index: list.length };
           const here = hasSlotNodes(mod) ? `${label} > ${slotLabel(mod, slot) ?? ''}` : label;
           const sameOwner = r === sel.row && c === sel.col && topIndex === sel.module && sameSteps(steps, ownerSteps);
-          if (!sameOwner && !insideSource(sel, place)) into.push(go(t('Into {container}', { container: here }), () => move(place, here)));
+          if (!sameOwner && !insideSource(sel, place)) into.push(go(t('card-editor.item-menu.into-container', { container: here }), () => move(place, here)));
           list.forEach((kid, index) => visit(kid, topIndex, [...steps, { slot, index }], here));
         });
       };
@@ -474,7 +474,7 @@ export class ItemMenu implements ReactiveController {
       const owner = { kind: 'module' as const, row: sel.row, col: sel.col, module: sel.module, ...(ownerSteps.length ? { child: ownerSteps } : {}) };
       const place = placeFor(config, owner, 'after');
       const ownerMod = moduleAt(config, owner);
-      if (place && ownerMod) out.push(go(t('Out to {parent}', { parent: moduleTitle(ownerMod) }), () => move(place, moduleTitle(ownerMod))));
+      if (place && ownerMod) out.push(go(t('card-editor.item-menu.out-to-parent', { parent: moduleTitle(ownerMod) }), () => move(place, moduleTitle(ownerMod))));
     }
     return [...near, ...into, ...out];
   }
@@ -484,43 +484,43 @@ export class ItemMenu implements ReactiveController {
     const sm = this._sm!;
     const linked = !!config.template;
     const name = this._name(config, sel);
-    const back: Entry = { icon: 'mdi:arrow-left', label: t('Back'), run: () => undefined, back: true };
-    const cancel: Entry = { icon: 'mdi:arrow-left', label: t('Cancel'), run: () => undefined, back: true };
+    const back: Entry = { icon: 'mdi:arrow-left', label: t('card-editor.item-menu.back'), run: () => undefined, back: true };
+    const cancel: Entry = { icon: 'mdi:arrow-left', label: t('card-editor.item-menu.cancel'), run: () => undefined, back: true };
     const submenu = (icon: string, label: string, view: ItemMenuView, disabled = false, why?: string): Entry => ({
       icon, label, run: () => undefined, view, sub: true, disabled, why,
     });
-    const sub = (title: string, ...groups: Entry[][]) => ({ label: `${t('{name} actions', { name })}, ${title}`, groups: [[back], ...groups] });
-    const rename: Entry = { icon: 'mdi:rename-box', label: t('Rename'), run: () => this.opts.rename(sel), kbd: KBD.rename, focus: 'none' };
-    const yaml: Entry = { icon: 'mdi:code-braces', label: t('Copy YAML'), run: () => void this._copyYaml(sel, name) };
+    const sub = (title: string, ...groups: Entry[][]) => ({ label: `${t('card-editor.item-menu.name-actions', { name })}, ${title}`, groups: [[back], ...groups] });
+    const rename: Entry = { icon: 'mdi:rename-box', label: t('card-editor.item-menu.rename'), run: () => this.opts.rename(sel), kbd: KBD.rename, focus: 'none' };
+    const yaml: Entry = { icon: 'mdi:code-braces', label: t('card-editor.item-menu.copy-yaml'), run: () => void this._copyYaml(sel, name) };
     const noDesign = !readDesignClipboard();
     const noModule = !readModuleClipboard();
     const designItems = (target: DesignTarget): Entry[] => {
-      const why = noDesign ? t('Copy a design first') : undefined;
+      const why = noDesign ? t('card-editor.item-menu.copy-a-design-first') : undefined;
       return [
-        { icon: 'mdi:content-copy', label: t('Copy design'), run: () => { sm.copyDesign(target); this.opts.status(t('{name} design copied', { name })); } },
-        { icon: 'mdi:content-paste', label: t('Paste design'), run: () => sm.pasteDesign(target, 'replace'), disabled: noDesign, why },
-        { icon: 'mdi:set-merge', label: t('Merge pasted design'), run: () => sm.pasteDesign(target, 'merge'), disabled: noDesign, why },
+        { icon: 'mdi:content-copy', label: t('card-editor.item-menu.copy-design'), run: () => { sm.copyDesign(target); this.opts.status(t('card-editor.item-menu.name-design-copied', { name })); } },
+        { icon: 'mdi:content-paste', label: t('card-editor.item-menu.paste-design'), run: () => sm.pasteDesign(target, 'replace'), disabled: noDesign, why },
+        { icon: 'mdi:set-merge', label: t('card-editor.item-menu.merge-pasted-design'), run: () => sm.pasteDesign(target, 'merge'), disabled: noDesign, why },
       ];
     };
     const paste = (label: string, where: string): Entry => ({
-      icon: 'mdi:content-paste', label, run: () => this._paste(sel, where), disabled: noModule, why: noModule ? t('Copy a module first') : undefined, focus: 'selection',
+      icon: 'mdi:content-paste', label, run: () => this._paste(sel, where), disabled: noModule, why: noModule ? t('card-editor.item-menu.copy-a-module-first') : undefined, focus: 'selection',
     });
     const item = itemAt(config, sel);
     const hidden = isHiddenItem(item);
     const hide = (tab = false): Entry => ({
       icon: hidden ? 'mdi:eye-outline' : 'mdi:eye-off-outline',
-      label: tab ? (hidden ? t('Show tab on dashboard') : t('Hide tab on dashboard')) : hidden ? t('Show on dashboard') : t('Hide on dashboard'),
+      label: tab ? (hidden ? t('card-editor.item-menu.show-tab-on-dashboard') : t('card-editor.item-menu.hide-tab-on-dashboard')) : hidden ? t('card-editor.item-menu.show-on-dashboard') : t('card-editor.item-menu.hide-on-dashboard'),
       run: () => sm.setHidden(sel, !hidden),
     });
     const overrides = sm.hasOverrides(sel);
     const reset = (label: string): Entry[] => (linked ? [{
-      icon: 'mdi:backup-restore', label, run: () => undefined, view: 'reset', disabled: !overrides, why: overrides ? undefined : t('Nothing differs from the template'),
+      icon: 'mdi:backup-restore', label, run: () => undefined, view: 'reset', disabled: !overrides, why: overrides ? undefined : t('card-editor.item-menu.nothing-differs-from-the-template'),
     }] : []);
-    const actionsLabel = t('{name} actions', { name });
+    const actionsLabel = t('card-editor.item-menu.name-actions', { name });
     const resetView = (note: string) => ({
       label: actionsLabel,
       note,
-      groups: [[cancel, { icon: 'mdi:backup-restore', label: t('Reset'), danger: true, focus: 'selection', run: () => {
+      groups: [[cancel, { icon: 'mdi:backup-restore', label: t('card-editor.item-menu.reset'), danger: true, focus: 'selection', run: () => {
         if (sel.kind === 'card') this._fire('template-resync');
         // a column owning its module list resets only after the editor fetched the template
         else if (sm.ownsModuleList(sel)) this._fire('mc-template-reapply', { resetColumn: sel });
@@ -529,17 +529,17 @@ export class ItemMenu implements ReactiveController {
     });
 
     if (sel.kind === 'card') {
-      if (this.view === 'reset') return resetView(t('Reset the whole card to the template? All your changes are lost.'));
+      if (this.view === 'reset') return resetView(t('card-editor.item-menu.reset-the-whole-card-to-the-template-all'));
       const changed = countNotSynced(config) > 0;
       return {
         label: actionsLabel,
         groups: [
           [
-            { icon: 'mdi:card-outline', label: t('Edit card settings'), run: () => this._edit(sel), focus: 'none' },
-            { icon: 'mdi:plus', label: t('Add row'), run: () => this._fire('request-add-row'), focus: 'none' },
+            { icon: 'mdi:card-outline', label: t('card-editor.item-menu.edit-card-settings'), run: () => this._edit(sel), focus: 'none' },
+            { icon: 'mdi:plus', label: t('card-editor.item-menu.add-row'), run: () => this._fire('request-add-row'), focus: 'none' },
           ],
           [rename, yaml],
-          linked ? [{ icon: 'mdi:backup-restore', label: t('Reset card to template…'), run: () => undefined, view: 'reset', disabled: !changed, why: changed ? undefined : t('Nothing differs from the template') }] : [],
+          linked ? [{ icon: 'mdi:backup-restore', label: t('card-editor.item-menu.reset-card-to-template'), run: () => undefined, view: 'reset', disabled: !changed, why: changed ? undefined : t('card-editor.item-menu.nothing-differs-from-the-template') }] : [],
         ],
       };
     }
@@ -548,44 +548,44 @@ export class ItemMenu implements ReactiveController {
     if (!row) return null;
 
     if (sel.kind === 'row') {
-      if (this.view === 'reset') return resetView(t('Reset {name} to the template? Your changes to it are lost.', { name }));
+      if (this.view === 'reset') return resetView(t('card-editor.item-menu.reset-name-to-the-template-your-changes', { name }));
       const r = sel.row;
-      if (this.view === 'design') return sub(t('Design'), designItems({ row: r }), [hide(), yaml], reset(t('Reset row to template…')));
+      if (this.view === 'design') return sub(t('card-editor.item-menu.design'), designItems({ row: r }), [hide(), yaml], reset(t('card-editor.item-menu.reset-row-to-template')));
       return {
         label: actionsLabel,
         groups: [
           [
-            { icon: 'mdi:table-column-plus-after', label: t('Add column'), run: () => { sm.addColumn(r); this._select({ kind: 'column', row: r, col: sm.getConfig().rows[r].columns.length - 1 }); }, focus: 'selection' },
-            { icon: 'mdi:content-duplicate', label: t('Duplicate row'), run: () => sm.duplicateRow(r), kbd: KBD.dup, focus: 'selection' },
+            { icon: 'mdi:table-column-plus-after', label: t('card-editor.item-menu.add-column'), run: () => { sm.addColumn(r); this._select({ kind: 'column', row: r, col: sm.getConfig().rows[r].columns.length - 1 }); }, focus: 'selection' },
+            { icon: 'mdi:content-duplicate', label: t('card-editor.item-menu.duplicate-row'), run: () => sm.duplicateRow(r), kbd: KBD.dup, focus: 'selection' },
             rename,
-            { icon: 'mdi:arrow-up', label: t('Move up'), run: () => this._moveRow(r, r - 1), disabled: r === 0, kbd: KBD.up, focus: 'none' },
-            { icon: 'mdi:arrow-down', label: t('Move down'), run: () => this._moveRow(r, r + 1), disabled: r >= config.rows.length - 1, kbd: KBD.down, focus: 'none' },
+            { icon: 'mdi:arrow-up', label: t('card-editor.item-menu.move-up'), run: () => this._moveRow(r, r - 1), disabled: r === 0, kbd: KBD.up, focus: 'none' },
+            { icon: 'mdi:arrow-down', label: t('card-editor.item-menu.move-down'), run: () => this._moveRow(r, r + 1), disabled: r >= config.rows.length - 1, kbd: KBD.down, focus: 'none' },
           ],
-          [submenu('mdi:palette-outline', t('Design'), 'design')],
-          [{ icon: 'mdi:delete-outline', label: t('Delete row'), run: () => this._deleteRow(r), danger: true, kbd: KBD.del, focus: 'none' }],
+          [submenu('mdi:palette-outline', t('card-editor.item-menu.design'), 'design')],
+          [{ icon: 'mdi:delete-outline', label: t('card-editor.item-menu.delete-row'), run: () => this._deleteRow(r), danger: true, kbd: KBD.del, focus: 'none' }],
         ],
       };
     }
 
     if (sel.kind === 'column') {
-      if (this.view === 'reset') return resetView(t('Reset {name} to the template? Your changes to it are lost.', { name }));
+      if (this.view === 'reset') return resetView(t('card-editor.item-menu.reset-name-to-the-template-your-changes', { name }));
       const only = row.columns.length <= 1;
-      const colLabel = t('Row {row} column {column} actions', { row: sel.row + 1, column: sel.col + 1 });
+      const colLabel = t('card-editor.item-menu.row-row-column-column-actions', { row: sel.row + 1, column: sel.col + 1 });
       if (this.view === 'design') {
-        return { label: `${colLabel}, ${t('Design')}`, groups: [[back], designItems({ row: sel.row, col: sel.col }), [hide(), yaml], reset(t('Reset column to template…'))] };
+        return { label: `${colLabel}, ${t('card-editor.item-menu.design')}`, groups: [[back], designItems({ row: sel.row, col: sel.col }), [hide(), yaml], reset(t('card-editor.item-menu.reset-column-to-template'))] };
       }
       return {
         label: colLabel,
         groups: [
           [
-            { icon: 'mdi:plus', label: t('Add module'), run: () => this._fire('add-module', { rowIndex: sel.row, colIndex: sel.col }), focus: 'none' },
-            paste(t('Paste module'), rowColumn(sel.row, sel.col)),
+            { icon: 'mdi:plus', label: t('card-editor.item-menu.add-module'), run: () => this._fire('add-module', { rowIndex: sel.row, colIndex: sel.col }), focus: 'none' },
+            paste(t('card-editor.item-menu.paste-module'), rowColumn(sel.row, sel.col)),
             rename,
           ],
-          [submenu('mdi:palette-outline', t('Design'), 'design')],
+          [submenu('mdi:palette-outline', t('card-editor.item-menu.design'), 'design')],
           [{
-            icon: 'mdi:delete-outline', label: t('Delete column'), danger: true, kbd: KBD.del, focus: 'selection',
-            run: () => sm.deleteColumn(sel.row, sel.col), disabled: only, why: only ? t('A row needs one column') : undefined,
+            icon: 'mdi:delete-outline', label: t('card-editor.item-menu.delete-column'), danger: true, kbd: KBD.del, focus: 'selection',
+            run: () => sm.deleteColumn(sel.row, sel.col), disabled: only, why: only ? t('card-editor.item-menu.a-row-needs-one-column') : undefined,
           }],
         ],
       };
@@ -604,28 +604,28 @@ export class ItemMenu implements ReactiveController {
         return {
           label: actionsLabel,
           note: isTabs
-            ? t('Delete tab "{name}" and its {n, plural, one {# module} other {# modules}}?', { name, n })
-            : t('Delete column "{name}" and its {n, plural, one {# module} other {# modules}}?', { name, n }),
-          groups: [[cancel, { icon: 'mdi:delete-outline', label: isTabs ? t('Delete tab') : t('Delete column'), run: del, danger: true, focus: 'none' }]],
+            ? t('card-editor.item-menu.delete-tab-name-and-its-n', { name, n })
+            : t('card-editor.item-menu.delete-column-name-and-its-n', { name, n }),
+          groups: [[cancel, { icon: 'mdi:delete-outline', label: isTabs ? t('card-editor.item-menu.delete-tab') : t('card-editor.item-menu.delete-column'), run: del, danger: true, focus: 'none' }]],
         };
       }
       const target = { row: sel.row, col: sel.col, module: sel.module, child: sel.child, slot: sel.slot };
-      if (this.view === 'design') return sub(t('Design'), ...(isTabs ? [] : [designItems(target)]), [hide(isTabs), yaml]);
+      if (this.view === 'design') return sub(t('card-editor.item-menu.design'), ...(isTabs ? [] : [designItems(target)]), [hide(isTabs), yaml]);
       return {
         label: actionsLabel,
         groups: [
           [
-            { icon: 'mdi:plus', label: t('Add module'), run: () => this._addChild(ownerSel, sel.slot), focus: 'none' },
-            paste(t('Paste module'), `${moduleTitle(owner)} · ${name}`),
+            { icon: 'mdi:plus', label: t('card-editor.item-menu.add-module'), run: () => this._addChild(ownerSel, sel.slot), focus: 'none' },
+            paste(t('card-editor.item-menu.paste-module'), `${moduleTitle(owner)} · ${name}`),
             rename,
-            { icon: 'mdi:arrow-up', label: t('Move up'), run: () => this._moveSlot(sel, -1), disabled: sel.slot <= 0, kbd: KBD.up, focus: 'selection' },
-            { icon: 'mdi:arrow-down', label: t('Move down'), run: () => this._moveSlot(sel, 1), disabled: sel.slot >= slots.length - 1, kbd: KBD.down, focus: 'selection' },
+            { icon: 'mdi:arrow-up', label: t('card-editor.item-menu.move-up'), run: () => this._moveSlot(sel, -1), disabled: sel.slot <= 0, kbd: KBD.up, focus: 'selection' },
+            { icon: 'mdi:arrow-down', label: t('card-editor.item-menu.move-down'), run: () => this._moveSlot(sel, 1), disabled: sel.slot >= slots.length - 1, kbd: KBD.down, focus: 'selection' },
           ],
-          [submenu('mdi:palette-outline', t('Design'), 'design')],
+          [submenu('mdi:palette-outline', t('card-editor.item-menu.design'), 'design')],
           [{
-            icon: 'mdi:delete-outline', label: isTabs ? t('Delete tab') : t('Delete column'), danger: true, kbd: KBD.del,
+            icon: 'mdi:delete-outline', label: isTabs ? t('card-editor.item-menu.delete-tab') : t('card-editor.item-menu.delete-column'), danger: true, kbd: KBD.del,
             run: del, view: n && !only ? 'delete' : undefined, focus: 'none',
-            disabled: only, why: only ? (isTabs ? t('A tabs module needs one tab') : t('A row needs one column')) : undefined,
+            disabled: only, why: only ? (isTabs ? t('card-editor.item-menu.a-tabs-module-needs-one-tab') : t('card-editor.item-menu.a-row-needs-one-column')) : undefined,
           }],
         ],
       };
@@ -638,21 +638,21 @@ export class ItemMenu implements ReactiveController {
     const top = config.rows[sel.row]?.columns[sel.col]?.modules?.[sel.module];
     if (this.view === 'reset') {
       return resetView(nested && top
-        ? t('Reset {name} to the template? Changes to all its modules are lost.', { name: moduleTitle(top) })
-        : t('Reset {name} to the template? Your changes to it are lost.', { name }));
+        ? t('card-editor.item-menu.reset-name-to-the-template-changes-to', { name: moduleTitle(top) })
+        : t('card-editor.item-menu.reset-name-to-the-template-your-changes', { name }));
     }
     const targets = this._moveTargets(config, sel);
     // layer placement (layer-placement 1.0.0): the choices that apply to this module right now
     const at = placementOf(mod);
     const place: Entry[] = [
-      ...(at !== 'background' ? [{ icon: 'mdi:arrange-send-to-back', label: t('Put behind others'), run: () => void applyPlacement(sm, sel, 'background'), focus: 'selection' as const }] : []),
-      ...(at !== 'overlay' ? [{ icon: 'mdi:arrange-bring-to-front', label: t('Put on top'), run: () => void applyPlacement(sm, sel, 'overlay'), focus: 'selection' as const }] : []),
-      ...(at !== 'flow' ? [{ icon: 'mdi:view-sequential-outline', label: t('Back to normal'), run: () => void applyPlacement(sm, sel, 'flow'), focus: 'selection' as const }] : []),
+      ...(at !== 'background' ? [{ icon: 'mdi:arrange-send-to-back', label: t('card-editor.item-menu.put-behind-others'), run: () => void applyPlacement(sm, sel, 'background'), focus: 'selection' as const }] : []),
+      ...(at !== 'overlay' ? [{ icon: 'mdi:arrange-bring-to-front', label: t('card-editor.item-menu.put-on-top'), run: () => void applyPlacement(sm, sel, 'overlay'), focus: 'selection' as const }] : []),
+      ...(at !== 'flow' ? [{ icon: 'mdi:view-sequential-outline', label: t('card-editor.item-menu.back-to-normal'), run: () => void applyPlacement(sm, sel, 'flow'), focus: 'selection' as const }] : []),
     ];
     if (this.view === 'placement') return { label: actionsLabel, groups: [[cancel], place] };
-    if (this.view === 'move') return sub(t('Move to…'), targets);
+    if (this.view === 'move') return sub(t('card-editor.item-menu.move-to'), targets);
     if (this.view === 'wrap') {
-      return sub(t('Wrap in layout'), WRAP_TYPES.map((type) => {
+      return sub(t('card-editor.item-menu.wrap-in-layout'), WRAP_TYPES.map((type) => {
         const meta = ModuleRegistry.get(type)?.metadata;
         return { icon: meta?.icon || 'mdi:view-grid-outline', label: moduleDisplayName({ type } as CardModule), run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
       }));
@@ -664,41 +664,41 @@ export class ItemMenu implements ReactiveController {
     const count = list?.length ?? 0;
     const add: Entry[] = mod.type === 'tabs' || mod.type === 'row'
       ? [{
-          icon: mod.type === 'tabs' ? 'mdi:tab-plus' : 'mdi:table-column-plus-after', label: mod.type === 'tabs' ? t('Add tab') : t('Add column'), focus: 'selection',
+          icon: mod.type === 'tabs' ? 'mdi:tab-plus' : 'mdi:table-column-plus-after', label: mod.type === 'tabs' ? t('card-editor.item-menu.add-tab') : t('card-editor.item-menu.add-column'), focus: 'selection',
           run: () => (mod.type === 'tabs' ? sm.addTab(sel.row, sel.col, sel.module, sel.child?.map((s) => ({ ...s }))) : sm.addNestedColumn(sel.row, sel.col, sel.module, sel.child?.map((s) => ({ ...s })))),
         }]
-      : hasSlotNodes(mod) || !childSlots(mod) ? [] : [{ icon: 'mdi:plus', label: t('Add module'), run: () => this._addChild(sel, 0), focus: 'none' }];
+      : hasSlotNodes(mod) || !childSlots(mod) ? [] : [{ icon: 'mdi:plus', label: t('card-editor.item-menu.add-module'), run: () => this._addChild(sel, 0), focus: 'none' }];
     const locked = templateIdMissing(config, sel);
     const connect: Entry[] = this.opts.surface === 'canvas' && this.opts.connect ? [{
-      icon: 'mdi:transit-connection-variant', label: t('Add flow from here'), run: () => this.opts.connect!(sel), focus: 'none',
+      icon: 'mdi:transit-connection-variant', label: t('card-editor.item-menu.add-flow-from-here'), run: () => this.opts.connect!(sel), focus: 'none',
       disabled: locked, why: locked ? t(TEMPLATE_ID_HINT) : undefined,
     }] : [];
     const swap = replaceTypes(mod).length > 0;
     const replace: Entry = {
-      icon: 'mdi:swap-horizontal', label: t('Replace with…'), focus: 'none',
+      icon: 'mdi:swap-horizontal', label: t('card-editor.item-menu.replace-with'), focus: 'none',
       run: () => this._fire('replace-module', { sel, status: this.opts.status, focus: () => this.opts.focusSelection() }),
-      disabled: locked || !swap, why: locked ? t(TEMPLATE_ID_HINT) : swap ? undefined : t('No other module type to replace with'),
+      disabled: locked || !swap, why: locked ? t(TEMPLATE_ID_HINT) : swap ? undefined : t('card-editor.item-menu.no-other-module-type-to-replace-with'),
     };
     const where = nested ? describeSelection(config, parentSelection(sel, config)).title : rowColumn(sel.row, sel.col);
     const adds = [...add, ...connect];
-    if (this.view === 'add') return sub(t('Add'), adds);
+    if (this.view === 'add') return sub(t('card-editor.item-menu.add'), adds);
     if (this.view === 'arrange') {
-      return sub(t('Arrange'),
+      return sub(t('card-editor.item-menu.arrange'),
         [
-          { icon: 'mdi:folder-move-outline', label: t('Move to…'), run: () => undefined, view: 'move', sub: true, disabled: !targets.length, why: targets.length ? undefined : t('No other column to move to') },
-          { icon: 'mdi:group', label: t('Wrap in layout'), run: () => undefined, view: 'wrap', sub: true },
+          { icon: 'mdi:folder-move-outline', label: t('card-editor.item-menu.move-to'), run: () => undefined, view: 'move', sub: true, disabled: !targets.length, why: targets.length ? undefined : t('card-editor.item-menu.no-other-column-to-move-to') },
+          { icon: 'mdi:group', label: t('card-editor.item-menu.wrap-in-layout'), run: () => undefined, view: 'wrap', sub: true },
         ],
         place);
     }
     if (this.view === 'design') {
-      return sub(t('Design'),
+      return sub(t('card-editor.item-menu.design'),
         designItems({ row: sel.row, col: sel.col, module: sel.module, child: sel.child }),
-        [hide(), ...reset(nested ? t('Reset layout to template…') : t('Reset to template…'))]);
+        [hide(), ...reset(nested ? t('card-editor.item-menu.reset-layout-to-template') : t('card-editor.item-menu.reset-to-template'))]);
     }
     if (this.view === 'clipboard') {
-      return sub(t('Copy and paste'), [
-        { icon: 'mdi:content-copy', label: t('Copy module'), run: () => { if (sm.copyModule(sel)) this.opts.status(t('{name} copied', { name })); } },
-        paste(t('Paste module after'), where),
+      return sub(t('card-editor.item-menu.copy-and-paste'), [
+        { icon: 'mdi:content-copy', label: t('card-editor.item-menu.copy-module'), run: () => { if (sm.copyModule(sel)) this.opts.status(t('card-editor.item-menu.name-copied', { name })); } },
+        paste(t('card-editor.item-menu.paste-module-after'), where),
         yaml,
       ]);
     }
@@ -706,20 +706,20 @@ export class ItemMenu implements ReactiveController {
       label: actionsLabel,
       groups: [
         [
-          { icon: 'mdi:pencil-outline', label: t('Edit'), run: () => this._edit(sel), focus: 'none' },
+          { icon: 'mdi:pencil-outline', label: t('card-editor.item-menu.edit'), run: () => this._edit(sel), focus: 'none' },
           rename,
-          { icon: 'mdi:content-duplicate', label: t('Duplicate'), run: () => sm.duplicateModule(sel.row, sel.col, sel.module, sel.child), kbd: KBD.dup, focus: 'selection' },
+          { icon: 'mdi:content-duplicate', label: t('card-editor.item-menu.duplicate'), run: () => sm.duplicateModule(sel.row, sel.col, sel.module, sel.child), kbd: KBD.dup, focus: 'selection' },
           replace,
-          { icon: 'mdi:arrow-up', label: t('Move up'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, -1, sel.child), disabled: index <= 0, kbd: KBD.up, focus: 'selection' },
-          { icon: 'mdi:arrow-down', label: t('Move down'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, 1, sel.child), disabled: index >= count - 1, kbd: KBD.down, focus: 'selection' },
+          { icon: 'mdi:arrow-up', label: t('card-editor.item-menu.move-up'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, -1, sel.child), disabled: index <= 0, kbd: KBD.up, focus: 'selection' },
+          { icon: 'mdi:arrow-down', label: t('card-editor.item-menu.move-down'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, 1, sel.child), disabled: index >= count - 1, kbd: KBD.down, focus: 'selection' },
         ],
         [
-          ...(adds.length ? [submenu('mdi:plus', t('Add'), 'add')] : []),
-          submenu('mdi:arrange-bring-forward', t('Arrange'), 'arrange'),
-          submenu('mdi:palette-outline', t('Design'), 'design'),
-          submenu('mdi:content-copy', t('Copy and paste'), 'clipboard'),
+          ...(adds.length ? [submenu('mdi:plus', t('card-editor.item-menu.add'), 'add')] : []),
+          submenu('mdi:arrange-bring-forward', t('card-editor.item-menu.arrange'), 'arrange'),
+          submenu('mdi:palette-outline', t('card-editor.item-menu.design'), 'design'),
+          submenu('mdi:content-copy', t('card-editor.item-menu.copy-and-paste'), 'clipboard'),
         ],
-        [{ icon: 'mdi:delete-outline', label: t('Delete'), run: () => this._deleteModule(sel), danger: true, kbd: KBD.del, focus: 'none' }],
+        [{ icon: 'mdi:delete-outline', label: t('card-editor.item-menu.delete'), run: () => this._deleteModule(sel), danger: true, kbd: KBD.del, focus: 'none' }],
       ],
     };
   }
@@ -736,7 +736,7 @@ export class ItemMenu implements ReactiveController {
       aria-haspopup=${e.sub ? 'menu' : nothing}
       aria-keyshortcuts=${e.kbd?.[1] ?? nothing}
       data-kbd=${e.kbd?.[0] ?? nothing}
-      data-back=${e.back && e.label === t('Back') ? '' : nothing}
+      data-back=${e.back && e.label === t('card-editor.item-menu.back') ? '' : nothing}
       ?disabled=${e.disabled}
       @click=${() => this._run(e)}
     ><ha-icon icon=${e.icon}></ha-icon>${e.label}</button>`;
@@ -759,11 +759,11 @@ export class ItemMenu implements ReactiveController {
       ? html`<dialog class="copy-dlg" aria-labelledby="copy-dlg-title" aria-describedby="copy-dlg-hint"
           @close=${this._closeCopy}
           @keydown=${(e: KeyboardEvent) => { if (e.key === 'Escape') e.stopPropagation(); }}>
-          <h2 id="copy-dlg-title">${t('Copy this YAML')}</h2>
-          <p id="copy-dlg-hint">${t('{title}. Press Ctrl+C (⌘C on a Mac) to copy.', { title: c.title })}</p>
+          <h2 id="copy-dlg-title">${t('card-editor.item-menu.copy-this-yaml')}</h2>
+          <p id="copy-dlg-hint">${t('card-editor.item-menu.title-press-ctrl-c-c-on-a-mac-to-copy', { title: c.title })}</p>
           <textarea readonly rows="12" aria-labelledby="copy-dlg-title" .value=${c.text}></textarea>
           <div class="actions">
-            <button type="button" class="btn btn-secondary" @click=${(e: Event) => (e.currentTarget as HTMLElement).closest('dialog')?.close()}>${t('Close')}</button>
+            <button type="button" class="btn btn-secondary" @click=${(e: Event) => (e.currentTarget as HTMLElement).closest('dialog')?.close()}>${t('card-editor.item-menu.close')}</button>
           </div>
         </dialog>`
       : nothing;

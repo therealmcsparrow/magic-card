@@ -10,14 +10,14 @@ import { getStatus } from './bg-status';
  */
 
 export const LAYER_TYPES: ReadonlyArray<{ value: BgLayerType; label: ReturnType<typeof m>; icon: string }> = [
-  { value: 'image', label: m('Image'), icon: 'mdi:image-outline' },
-  { value: 'gradient', label: m('Gradient'), icon: 'mdi:gradient-vertical' },
-  { value: 'pattern', label: m('Pattern'), icon: 'mdi:dots-grid' },
-  { value: 'color', label: m('Colour'), icon: 'mdi:palette-outline' },
+  { value: 'image', label: m('card-editor.bg-layers-model.image'), icon: 'mdi:image-outline' },
+  { value: 'gradient', label: m('card-editor.bg-layers-model.gradient'), icon: 'mdi:gradient-vertical' },
+  { value: 'pattern', label: m('card-editor.bg-layers-model.pattern'), icon: 'mdi:dots-grid' },
+  { value: 'color', label: m('card-editor.bg-layers-model.colour'), icon: 'mdi:palette-outline' },
 ];
 
 export function layerSummary(layer: BackgroundLayerConfig): { type: ReturnType<typeof m>; detail?: string } {
-  const type = LAYER_TYPES.find((x) => x.value === layer.type)?.label ?? m('Image');
+  const type = LAYER_TYPES.find((x) => x.value === layer.type)?.label ?? m('card-editor.bg-layers-model.image');
   let detail: string | undefined;
   if (layer.type === 'image') {
     detail = layer.entity || (layer.image ? layer.image.split('/').pop() : undefined) || undefined;

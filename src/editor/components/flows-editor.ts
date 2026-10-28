@@ -13,14 +13,14 @@ import { deepClone } from '../../utils/deep-merge';
 import { entityStateColor } from '../../utils/entity-color';
 import { FlowModuleOption, TEMPLATE_ID_HINT, flowModuleOptions, newFlow, resolveFlowEndpoint } from '../state/flows';
 import { fieldReset } from './field-reset';
-import { t, m, tl, type MessageId } from '../i18n';
+import { t, m, tl, type MessageIndex } from '../i18n';
 
 import './color-picker';
 import './entity-picker';
 import './attribute-picker';
 
 type Opt = { value: string; label: string };
-type OptMark = { value: string; label: MessageId };
+type OptMark = { value: string; label: MessageIndex };
 type SelectOpt = Opt & { disabled?: boolean; title?: string };
 type Key = keyof FlowConfig;
 
@@ -31,39 +31,39 @@ const resetName = (label: string) => {
 };
 
 const ROUTES: OptMark[] = [
-  { value: 'curve', label: m('Curve') },
-  { value: 'straight', label: m('Straight') },
-  { value: 'elbow', label: m('Elbow') },
+  { value: 'curve', label: m('card-editor.flows-editor.curve') },
+  { value: 'straight', label: m('card-editor.flows-editor.straight') },
+  { value: 'elbow', label: m('card-editor.flows-editor.elbow') },
 ];
 const SIDES: OptMark[] = [
-  { value: 'auto', label: m('Auto') },
-  { value: 'top', label: m('Top') },
-  { value: 'right', label: m('Right') },
-  { value: 'bottom', label: m('Bottom') },
-  { value: 'left', label: m('Left') },
+  { value: 'auto', label: m('card-editor.flows-editor.auto') },
+  { value: 'top', label: m('card-editor.flows-editor.top') },
+  { value: 'right', label: m('card-editor.flows-editor.right') },
+  { value: 'bottom', label: m('card-editor.flows-editor.bottom') },
+  { value: 'left', label: m('card-editor.flows-editor.left') },
 ];
 const ANCHORS: OptMark[] = [
-  { value: 'icon', label: m('Icon or picture') },
-  { value: 'box', label: m('Module box') },
+  { value: 'icon', label: m('card-editor.flows-editor.icon-or-picture') },
+  { value: 'box', label: m('card-editor.flows-editor.module-box') },
 ];
 const LABELS: OptMark[] = [
-  { value: 'none', label: m('None') },
-  { value: 'value', label: m('Value') },
-  { value: 'template', label: m('Template') },
+  { value: 'none', label: m('card-editor.flows-editor.none') },
+  { value: 'value', label: m('card-editor.flows-editor.value') },
+  { value: 'template', label: m('card-editor.flows-editor.template') },
 ];
 const LABEL_POSITIONS: OptMark[] = [
-  { value: 'auto', label: m('Auto') },
-  { value: 'line', label: m('On the line') },
-  { value: 'side', label: m('Beside the line') },
-  { value: 'hidden', label: m('Hidden') },
+  { value: 'auto', label: m('card-editor.flows-editor.auto') },
+  { value: 'line', label: m('card-editor.flows-editor.on-the-line') },
+  { value: 'side', label: m('card-editor.flows-editor.beside-the-line') },
+  { value: 'hidden', label: m('card-editor.flows-editor.hidden') },
 ];
 const SHOW: OptMark[] = [
-  { value: 'always', label: m('Always') },
-  { value: 'flowing', label: m('While flowing') },
+  { value: 'always', label: m('card-editor.flows-editor.always') },
+  { value: 'flowing', label: m('card-editor.flows-editor.while-flowing') },
 ];
 const LAYERS: OptMark[] = [
-  { value: 'back', label: m('Back') },
-  { value: 'front', label: m('Front') },
+  { value: 'back', label: m('card-editor.flows-editor.back') },
+  { value: 'front', label: m('card-editor.flows-editor.front') },
 ];
 
 /**
@@ -398,17 +398,17 @@ export class FlowsEditor extends LitElement {
   /** From / To: every module except the other end; an unknown id stays listed as not found. */
   private _endpoint(index: number, f: FlowConfig, which: 'from' | 'to', modules: FlowModuleOption[]): TemplateResult {
     const id = `flow-${index}-${which}`;
-    const label = which === 'from' ? t('From') : t('To');
+    const label = which === 'from' ? t('card-editor.flows-editor.from') : t('card-editor.flows-editor.to');
     const value = typeof f[which] === 'string' ? (f[which] as string) : '';
     const other = which === 'from' ? f.to : f.from;
     const known = !value || modules.some((m) => m.id === value);
     const listed = modules.filter((m) => !other || m.id !== other);
     const locked = listed.some((m) => m.locked);
     const options: SelectOpt[] = [
-      ...(value ? [] : [{ value: '', label: t('Pick a module'), disabled: true }]),
-      ...(known ? [] : [{ value, label: t('Module not found ({id})', { id: value }) }]),
+      ...(value ? [] : [{ value: '', label: t('card-editor.flows-editor.pick-a-module'), disabled: true }]),
+      ...(known ? [] : [{ value, label: t('card-editor.flows-editor.module-not-found-id', { id: value }) }]),
       ...listed.map((m) =>
-        m.locked ? { value: m.value, label: t('{label} (no id)', { label: m.label }), disabled: true, title: t(TEMPLATE_ID_HINT) } : { value: m.value, label: m.label },
+        m.locked ? { value: m.value, label: t('card-editor.flows-editor.label-no-id', { label: m.label }), disabled: true, title: t(TEMPLATE_ID_HINT) } : { value: m.value, label: m.label },
       ),
     ];
     const onPick = (v: string) => {
@@ -421,11 +421,11 @@ export class FlowsEditor extends LitElement {
     return html`
       ${this._field(label, false, undefined, this._select(id, value, options, onPick, describedBy), id)}
       ${!value
-        ? html`<p class="help" id=${hintId}>${which === 'from' ? t('Pick the start module') : t('Pick the end module')}</p>`
+        ? html`<p class="help" id=${hintId}>${which === 'from' ? t('card-editor.flows-editor.pick-the-start-module') : t('card-editor.flows-editor.pick-the-end-module')}</p>`
         : known
           ? nothing
-          : html`<p class="help error" id=${hintId}>${t('Module not found')}</p>`}
-      ${locked ? html`<p class="help" id=${lockedId}>${t('Modules marked (no id) come from the template. {hint} to connect it.', { hint: t(TEMPLATE_ID_HINT) })}</p>` : nothing}
+          : html`<p class="help error" id=${hintId}>${t('card-editor.flows-editor.module-not-found')}</p>`}
+      ${locked ? html`<p class="help" id=${lockedId}>${t('card-editor.flows-editor.modules-marked-no-id-come-from-the', { hint: t(TEMPLATE_ID_HINT) })}</p>` : nothing}
       ${this._anchorField(index, f, which, modules)}
     `;
   }
@@ -449,8 +449,8 @@ export class FlowsEditor extends LitElement {
       index,
       f,
       key,
-      t('Attach to'),
-      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === dflt ? undefined : v }), `flow-${index}-anchor-help`, which === 'from' ? t('Start: attach to') : t('End: attach to')),
+      t('card-editor.flows-editor.attach-to'),
+      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === dflt ? undefined : v }), `flow-${index}-anchor-help`, which === 'from' ? t('card-editor.flows-editor.start-attach-to') : t('card-editor.flows-editor.end-attach-to')),
       id,
     );
   }
@@ -459,17 +459,17 @@ export class FlowsEditor extends LitElement {
   private _lookFallback(index: number, f: FlowConfig): TemplateResult {
     const id = (k: string) => `flow-${index}-${k}`;
     return html`
-      ${this._color(index, f, 'color', t('Colour'))} ${this._color(index, f, 'idle_color', t('Idle colour'))}
+      ${this._color(index, f, 'color', t('card-editor.flows-editor.colour'))} ${this._color(index, f, 'idle_color', t('card-editor.flows-editor.idle-colour'))}
       <div class="two">
-        ${this._keyField(index, f, 'width', t('Width (px)'), this._number(index, f, 'width', id('width'), FLOW_DEFAULTS.width, 0.5, 40, 0.5), id('width'))}
-        ${this._keyField(index, f, 'glow', t('Glow (px)'), this._number(index, f, 'glow', id('glow'), FLOW_DEFAULTS.glow, 0, 30), id('glow'))}
+        ${this._keyField(index, f, 'width', t('card-editor.flows-editor.width-px'), this._number(index, f, 'width', id('width'), FLOW_DEFAULTS.width, 0.5, 40, 0.5), id('width'))}
+        ${this._keyField(index, f, 'glow', t('card-editor.flows-editor.glow-px'), this._number(index, f, 'glow', id('glow'), FLOW_DEFAULTS.glow, 0, 30), id('glow'))}
       </div>
-      ${this._switch(index, f, 'scale_width', t('Scale width'), FLOW_DEFAULTS.scale_width, t('Up to twice the width at Max.'))}
+      ${this._switch(index, f, 'scale_width', t('card-editor.flows-editor.scale-width'), FLOW_DEFAULTS.scale_width, t('card-editor.flows-editor.up-to-twice-the-width-at-max'))}
       <div class="two">
-        ${this._keyField(index, f, 'dots', t('Dots'), this._number(index, f, 'dots', id('dots'), FLOW_DEFAULTS.dots, 0, 8, 1, f.dots === 0 ? id('dots-help') : undefined), id('dots'))}
-        ${this._keyField(index, f, 'dot_size', t('Dot size (px)'), this._number(index, f, 'dot_size', id('dot-size'), FLOW_DEFAULTS.dot_size, 1, 40), id('dot-size'))}
+        ${this._keyField(index, f, 'dots', t('card-editor.flows-editor.dots'), this._number(index, f, 'dots', id('dots'), FLOW_DEFAULTS.dots, 0, 8, 1, f.dots === 0 ? id('dots-help') : undefined), id('dots'))}
+        ${this._keyField(index, f, 'dot_size', t('card-editor.flows-editor.dot-size-px'), this._number(index, f, 'dot_size', id('dot-size'), FLOW_DEFAULTS.dot_size, 1, 40), id('dot-size'))}
       </div>
-      ${f.dots === 0 ? html`<p class="help" id=${id('dots-help')}>${t('0 dots: moving dashes instead.')}</p>` : nothing}
+      ${f.dots === 0 ? html`<p class="help" id=${id('dots-help')}>${t('card-editor.flows-editor.0-dots-moving-dashes-instead')}</p>` : nothing}
     `;
   }
 
@@ -493,12 +493,12 @@ export class FlowsEditor extends LitElement {
     if (this._look === 'ready') return this._lookFallback(index, f);
     if (this._look === 'failed') {
       return html`
-        ${notice({ tone: 'warn', text: t("Couldn't load the line styles."), action: { label: t('Try again'), onClick: () => this._loadLook(true) } })}
+        ${notice({ tone: 'warn', text: t("card-editor.flows-editor.couldn-t-load-the-line-styles"), action: { label: t('card-editor.flows-editor.try-again'), onClick: () => this._loadLook(true) } })}
         ${this._lookFallback(index, f)}
       `;
     }
     return html`<div class="skeleton" role="status" aria-busy="true" tabindex="-1">
-      <span>${t('Loading line styles...')}</span>
+      <span>${t('card-editor.flows-editor.loading-line-styles')}</span>
       <div class="bar"></div>
     </div>`;
   }
@@ -528,37 +528,37 @@ export class FlowsEditor extends LitElement {
     return html`
       <div class="body">
         <section class="grp" aria-labelledby=${id('h-conn')}>
-          <h4 class="grp-h" id=${id('h-conn')}>${t('Connection')}</h4>
+          <h4 class="grp-h" id=${id('h-conn')}>${t('card-editor.flows-editor.connection')}</h4>
           <div class="two">
             <div>${this._endpoint(index, f, 'from', modules)}</div>
             <div>${this._endpoint(index, f, 'to', modules)}</div>
           </div>
           ${this._anchorable(f, 'from', modules) || this._anchorable(f, 'to', modules)
-            ? html`<p class="help" id=${id('anchor-help')}>${t("Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the module's edge.")}${isWideFlowLook(f) ? ' ' + t('This line look is wide, so it attaches to the module box until you pick Icon or picture.') : ''}</p>`
+            ? html`<p class="help" id=${id('anchor-help')}>${t("card-editor.flows-editor.icon-or-picture-ends-the-line-at-the")}${isWideFlowLook(f) ? ' ' + t('card-editor.flows-editor.this-line-look-is-wide-so-it-attaches-to') : ''}</p>`
             : nothing}
           ${this._keyField(
             index,
             f,
             'entity',
-            t('Entity'),
+            t('card-editor.flows-editor.entity'),
             html`<mc-entity-picker
               .hass=${this.hass}
               .value=${entity}
-              .label=${t('Entity')}
+              .label=${t('card-editor.flows-editor.entity')}
               @value-changed=${(e: CustomEvent) => this._patch(index, { entity: e.detail.value })}
             ></mc-entity-picker>`,
           )}
-          ${entity ? nothing : html`<p class="help">${t('No entity: the line always flows at its speed.')}</p>`}
+          ${entity ? nothing : html`<p class="help">${t('card-editor.flows-editor.no-entity-the-line-always-flows-at-its')}</p>`}
         </section>
         <section class="grp" aria-labelledby=${id('h-look')}>
-          <h4 class="grp-h" id=${id('h-look')}>${t('Look')}</h4>
+          <h4 class="grp-h" id=${id('h-look')}>${t('card-editor.flows-editor.look')}</h4>
           ${this._lookGroup(index, f, key)}
         </section>
         ${this._fold(
           key,
           'value-route',
-          t('Value and route'),
-          `${labelOf(ROUTES, route)} · ${t('{min} to {max}', { min: String(f.min ?? FLOW_DEFAULTS.min), max: String(f.max ?? FLOW_DEFAULTS.max) })}`,
+          t('card-editor.flows-editor.value-and-route'),
+          `${labelOf(ROUTES, route)} · ${t('card-editor.flows-editor.min-to-max', { min: String(f.min ?? FLOW_DEFAULTS.min), max: String(f.max ?? FLOW_DEFAULTS.max) })}`,
           routeSet,
           html`
             ${attrs.length
@@ -566,7 +566,7 @@ export class FlowsEditor extends LitElement {
                   index,
                   f,
                   'attribute',
-                  t('Attribute'),
+                  t('card-editor.flows-editor.attribute'),
                   html`<mc-attribute-picker
                     .hass=${this.hass}
                     .entityId=${entity}
@@ -576,37 +576,37 @@ export class FlowsEditor extends LitElement {
                 )
               : nothing}
             <div class="two">
-              ${this._keyField(index, f, 'min', t('Min'), this._number(index, f, 'min', id('min'), FLOW_DEFAULTS.min, 0, undefined, 'any'), id('min'))}
-              ${this._keyField(index, f, 'max', t('Max'), this._number(index, f, 'max', id('max'), FLOW_DEFAULTS.max, undefined, undefined, 'any'), id('max'))}
+              ${this._keyField(index, f, 'min', t('card-editor.flows-editor.min'), this._number(index, f, 'min', id('min'), FLOW_DEFAULTS.min, 0, undefined, 'any'), id('min'))}
+              ${this._keyField(index, f, 'max', t('card-editor.flows-editor.max'), this._number(index, f, 'max', id('max'), FLOW_DEFAULTS.max, undefined, undefined, 'any'), id('max'))}
             </div>
-            ${this._switch(index, f, 'reverse_negative', t('Reverse when negative'), FLOW_DEFAULTS.reverse_negative, t('A negative value runs the dots from the end to the start.'))}
-            ${this._keyField(index, f, 'route', t('Route'), this._seg(t('Route'), route, tl(ROUTES), (v) => this._patch(index, { route: v })))}
+            ${this._switch(index, f, 'reverse_negative', t('card-editor.flows-editor.reverse-when-negative'), FLOW_DEFAULTS.reverse_negative, t('card-editor.flows-editor.a-negative-value-runs-the-dots-from-the'))}
+            ${this._keyField(index, f, 'route', t('card-editor.flows-editor.route'), this._seg(t('card-editor.flows-editor.route'), route, tl(ROUTES), (v) => this._patch(index, { route: v })))}
             <div class="two">
-              ${this._keyField(index, f, 'from_side', t('From side'), this._select(id('from-side'), f.from_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { from_side: v === 'auto' ? undefined : v })), id('from-side'))}
-              ${this._keyField(index, f, 'to_side', t('To side'), this._select(id('to-side'), f.to_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { to_side: v === 'auto' ? undefined : v })), id('to-side'))}
+              ${this._keyField(index, f, 'from_side', t('card-editor.flows-editor.from-side'), this._select(id('from-side'), f.from_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { from_side: v === 'auto' ? undefined : v })), id('from-side'))}
+              ${this._keyField(index, f, 'to_side', t('card-editor.flows-editor.to-side'), this._select(id('to-side'), f.to_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { to_side: v === 'auto' ? undefined : v })), id('to-side'))}
             </div>
             <div class="two">
-              ${this._keyField(index, f, 'speed', t('Speed (s)'), this._number(index, f, 'speed', id('speed'), FLOW_DEFAULTS.speed, 0.2, undefined, 0.1, id('speed-help')), id('speed'))}
-              ${this._keyField(index, f, 'min_speed', t('Min speed (s)'), this._number(index, f, 'min_speed', id('min-speed'), FLOW_DEFAULTS.min_speed, 0.2, undefined, 0.1, id('speed-help')), id('min-speed'))}
+              ${this._keyField(index, f, 'speed', t('card-editor.flows-editor.speed-s'), this._number(index, f, 'speed', id('speed'), FLOW_DEFAULTS.speed, 0.2, undefined, 0.1, id('speed-help')), id('speed'))}
+              ${this._keyField(index, f, 'min_speed', t('card-editor.flows-editor.min-speed-s'), this._number(index, f, 'min_speed', id('min-speed'), FLOW_DEFAULTS.min_speed, 0.2, undefined, 0.1, id('speed-help')), id('min-speed'))}
             </div>
-            <p class="help" id=${id('speed-help')}>${t('Seconds for a dot to travel the line: Speed at Max, Min speed just above Min.')}</p>
+            <p class="help" id=${id('speed-help')}>${t('card-editor.flows-editor.seconds-for-a-dot-to-travel-the-line')}</p>
           `,
         )}
         ${this._fold(
           key,
           'label',
-          t('Label'),
+          t('card-editor.flows-editor.label'),
           labelOf(LABELS, label),
           f.label !== undefined,
           html`
-            ${this._keyField(index, f, 'label', t('Label'), this._seg(t('Label'), label, tl(LABELS), (v) => this._patch(index, { label: v === 'none' ? undefined : v }), label === 'value' && !entity ? id('label-help') : undefined))}
-            ${label === 'value' && !entity ? html`<p class="help" id=${id('label-help')}>${t('Pick an entity: a value label needs one.')}</p>` : nothing}
+            ${this._keyField(index, f, 'label', t('card-editor.flows-editor.label'), this._seg(t('card-editor.flows-editor.label'), label, tl(LABELS), (v) => this._patch(index, { label: v === 'none' ? undefined : v }), label === 'value' && !entity ? id('label-help') : undefined))}
+            ${label === 'value' && !entity ? html`<p class="help" id=${id('label-help')}>${t('card-editor.flows-editor.pick-an-entity-a-value-label-needs-one')}</p>` : nothing}
             ${label === 'template'
               ? this._keyField(
                   index,
                   f,
                   'label_template',
-                  t('Label template'),
+                  t('card-editor.flows-editor.label-template'),
                   html`<textarea
                     class="input"
                     id=${id('tpl')}
@@ -623,7 +623,7 @@ export class FlowsEditor extends LitElement {
                   index,
                   f,
                   'label_position',
-                  t('Label position'),
+                  t('card-editor.flows-editor.label-position'),
                   this._select(id('label-pos'), f.label_position ?? FLOW_DEFAULTS.label_position, tl(LABEL_POSITIONS), (v) =>
                     this._patch(index, { label_position: v === 'auto' ? undefined : v }),
                   ),
@@ -635,12 +635,12 @@ export class FlowsEditor extends LitElement {
         ${this._fold(
           key,
           'visibility',
-          t('Visibility'),
+          t('card-editor.flows-editor.visibility'),
           `${labelOf(SHOW, f.show_when ?? FLOW_DEFAULTS.show_when)} · ${labelOf(LAYERS, f.layer ?? FLOW_DEFAULTS.layer)}`,
           f.show_when !== undefined || f.layer !== undefined,
           html`
-            ${this._keyField(index, f, 'show_when', t('Show'), this._seg(t('Show'), f.show_when ?? FLOW_DEFAULTS.show_when, tl(SHOW), (v) => this._patch(index, { show_when: v === 'always' ? undefined : v })))}
-            ${this._keyField(index, f, 'layer', t('Layer'), this._seg(t('Layer'), f.layer ?? FLOW_DEFAULTS.layer, tl(LAYERS), (v) => this._patch(index, { layer: v === 'back' ? undefined : v })))}
+            ${this._keyField(index, f, 'show_when', t('card-editor.flows-editor.show'), this._seg(t('card-editor.flows-editor.show'), f.show_when ?? FLOW_DEFAULTS.show_when, tl(SHOW), (v) => this._patch(index, { show_when: v === 'always' ? undefined : v })))}
+            ${this._keyField(index, f, 'layer', t('card-editor.flows-editor.layer'), this._seg(t('card-editor.flows-editor.layer'), f.layer ?? FLOW_DEFAULTS.layer, tl(LAYERS), (v) => this._patch(index, { layer: v === 'back' ? undefined : v })))}
           `,
         )}
       </div>
@@ -655,7 +655,7 @@ export class FlowsEditor extends LitElement {
     const same = !!found(f.from) && found(f.from)?.name === found(f.to)?.name;
     const name = (v: unknown) => {
       const m = found(v);
-      return m ? (same ? m.label : m.name) : typeof v === 'string' && v ? t('Module not found') : '…';
+      return m ? (same ? m.label : m.name) : typeof v === 'string' && v ? t('card-editor.flows-editor.module-not-found') : '…';
     };
     const missing = [f.from, f.to].some((v) => typeof v === 'string' && v && !modules.some((m) => m.id === v));
     return html`
@@ -666,17 +666,17 @@ export class FlowsEditor extends LitElement {
             class="icon-btn sm toggle"
             aria-expanded=${open ? 'true' : 'false'}
             aria-controls=${open ? bodyId : nothing}
-            aria-label=${open ? t('Collapse flow {n}', { n: index + 1 }) : t('Expand flow {n}', { n: index + 1 })}
+            aria-label=${open ? t('card-editor.flows-editor.collapse-flow-n', { n: index + 1 }) : t('card-editor.flows-editor.expand-flow-n', { n: index + 1 })}
             @click=${() => this.onToggle?.(key)}
           >
             <ha-icon icon=${open ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
           </button>
-          <span class="n">${t('Flow {n}', { n: index + 1 })}${f.from || f.to ? html` <span class="sub">· ${name(f.from)} → ${name(f.to)}</span>` : nothing}</span>
+          <span class="n">${t('card-editor.flows-editor.flow-n', { n: index + 1 })}${f.from || f.to ? html` <span class="sub">· ${name(f.from)} → ${name(f.to)}</span>` : nothing}</span>
           <button
             type="button"
             class="icon-btn sm danger"
-            aria-label=${t('Delete flow {n}', { n: index + 1 })}
-            title=${t('Delete flow')}
+            aria-label=${t('card-editor.flows-editor.delete-flow-n', { n: index + 1 })}
+            title=${t('card-editor.flows-editor.delete-flow')}
             @click=${() => this._remove(index)}
           >
             <ha-icon icon="mdi:delete-outline"></ha-icon>
@@ -686,9 +686,9 @@ export class FlowsEditor extends LitElement {
           ? html`<div id=${bodyId}>${this._body(index, f, modules, key)}</div>`
           : !f.from || !f.to || missing
             ? html`<div class="hints">
-                ${!f.from ? html`<p class="help">${t('Pick the start module')}</p>` : nothing}
-                ${!f.to ? html`<p class="help">${t('Pick the end module')}</p>` : nothing}
-                ${missing ? html`<p class="help error">${t('Module not found')}</p>` : nothing}
+                ${!f.from ? html`<p class="help">${t('card-editor.flows-editor.pick-the-start-module')}</p>` : nothing}
+                ${!f.to ? html`<p class="help">${t('card-editor.flows-editor.pick-the-end-module')}</p>` : nothing}
+                ${missing ? html`<p class="help error">${t('card-editor.flows-editor.module-not-found')}</p>` : nothing}
               </div>`
             : nothing}
       </div>
@@ -703,11 +703,11 @@ export class FlowsEditor extends LitElement {
       <div class="list">
         ${flows.length
           ? nothing
-          : html`<p class="help">${t('Animated lines between two modules, like solar to house. Speed, width and direction can follow an entity value.')}</p>`}
+          : html`<p class="help">${t('card-editor.flows-editor.animated-lines-between-two-modules-like')}</p>`}
         ${flows.map((f, i) => (f && typeof f === 'object' ? this._block(f, i, keys[i], modules) : nothing))}
         <div>
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._add()}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add flow')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.flows-editor.add-flow')}
           </button>
         </div>
       </div>

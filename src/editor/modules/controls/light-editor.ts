@@ -19,30 +19,30 @@ export const lightEditor: ModuleEditor = {
     const eid = entityFor(c, scope);
     const stateObj = eid ? hass?.states[eid] : undefined;
     const lacks = (on: boolean | undefined, ok: boolean, what: string) =>
-      on && stateObj && !ok ? renderFieldHint(t('This light has no {what}; the control is hidden.', { what })) : nothing;
+      on && stateObj && !ok ? renderFieldHint(t('card-editor.light-editor.this-light-has-no-what-the-control-is', { what })) : nothing;
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { domain: 'light', syncCtx })}
-        ${renderToggleField(t('Show brightness'), c.show_brightness !== false, (v) =>
+        ${renderEntitySourceField(t('card-editor.light-editor.entity'), c, onChange, hass, scope, { domain: 'light', syncCtx })}
+        ${renderToggleField(t('card-editor.light-editor.show-brightness'), c.show_brightness !== false, (v) =>
           onChange({ ...c, show_brightness: v }),
         'show_brightness', syncCtx)}
-        ${lacks(c.show_brightness !== false, !stateObj || lightSupportsBrightness(stateObj), t('brightness'))}
-        ${renderToggleField(t('Show colour temp'), c.show_color_temp, (v) =>
+        ${lacks(c.show_brightness !== false, !stateObj || lightSupportsBrightness(stateObj), t('card-editor.light-editor.brightness'))}
+        ${renderToggleField(t('card-editor.light-editor.show-colour-temp'), c.show_color_temp, (v) =>
           onChange({ ...c, show_color_temp: v }),
         'show_color_temp', syncCtx)}
-        ${lacks(c.show_color_temp, !stateObj || lightSupportsColorTemp(stateObj), t('colour temperature'))}
-        ${renderToggleField(t('Show colour picker'), c.show_color, (v) =>
+        ${lacks(c.show_color_temp, !stateObj || lightSupportsColorTemp(stateObj), t('card-editor.light-editor.colour-temperature'))}
+        ${renderToggleField(t('card-editor.light-editor.show-colour-picker'), c.show_color, (v) =>
           onChange({ ...c, show_color: v }),
         'show_color', syncCtx)}
-        ${lacks(c.show_color, !stateObj || lightSupportsColor(stateObj), t('colours'))}
-        ${renderToggleField(t('Show effects'), c.show_effect, (v) =>
+        ${lacks(c.show_color, !stateObj || lightSupportsColor(stateObj), t('card-editor.light-editor.colours'))}
+        ${renderToggleField(t('card-editor.light-editor.show-effects'), c.show_effect, (v) =>
           onChange({ ...c, show_effect: v }),
         'show_effect', syncCtx)}
-        ${lacks(c.show_effect, !stateObj || supportsEffect(stateObj), t('effects'))}
-        ${renderToggleField(t('Compact mode'), c.compact, (v) => onChange({ ...c, compact: v }), 'compact', syncCtx)}
-        ${renderFieldHint(t("Tap the icon to turn the light on or off. Leave Icon empty to show the light's own icon."))}
+        ${lacks(c.show_effect, !stateObj || supportsEffect(stateObj), t('card-editor.light-editor.effects'))}
+        ${renderToggleField(t('card-editor.light-editor.compact-mode'), c.compact, (v) => onChange({ ...c, compact: v }), 'compact', syncCtx)}
+        ${renderFieldHint(t("card-editor.light-editor.tap-the-icon-to-turn-the-light-on-or-off"))}
         ${c.icon !== 'svg'
-          ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
+          ? renderIconField(t('card-editor.light-editor.icon'), c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: eid,

@@ -100,7 +100,7 @@ export async function openShapeEditor(o: ShapeEditorOpen): Promise<'opened' | 'f
   });
   el.addEventListener('mc-shape-close', (e) => {
     close();
-    if ((e as CustomEvent<{ done: boolean }>).detail?.done) toast(t('Shape applied.'));
+    if ((e as CustomEvent<{ done: boolean }>).detail?.done) toast(t('card-editor.shape-host.shape-applied'));
   });
   close = openLayer(el, { from: o.from, key: 'shape-entry' });
   return 'opened';

@@ -25,17 +25,17 @@ export const infoEditor: ModuleEditor = {
     // A toggle writes both keys, so switching one off never switches the other (a missing key) off.
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
-        ${renderToggleField(t('Show name'), shown.name, (v) => onChange({ ...c, show_name: v, show_state: shown.state }), 'show_name', syncCtx)}
-        ${renderToggleField(t('Show state'), shown.state, (v) => onChange({ ...c, show_name: shown.name, show_state: v }), 'show_state', syncCtx,
-          !shown.name && !shown.state && !c.secondary_info ? t('With nothing else shown, the state is shown anyway.') : undefined)}
+        ${renderEntitySourceField(t('card-editor.info-editor.entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('card-editor.info-editor.attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
+        ${renderToggleField(t('card-editor.info-editor.show-name'), shown.name, (v) => onChange({ ...c, show_name: v, show_state: shown.state }), 'show_name', syncCtx)}
+        ${renderToggleField(t('card-editor.info-editor.show-state'), shown.state, (v) => onChange({ ...c, show_name: shown.name, show_state: v }), 'show_state', syncCtx,
+          !shown.name && !shown.state && !c.secondary_info ? t('card-editor.info-editor.with-nothing-else-shown-the-state-is') : undefined)}
         ${shown.state
-          ? renderToggleField(t('Show unit'), c.show_unit !== false, (v) => onChange({ ...c, show_unit: v }), 'show_unit', syncCtx)
+          ? renderToggleField(t('card-editor.info-editor.show-unit'), c.show_unit !== false, (v) => onChange({ ...c, show_unit: v }), 'show_unit', syncCtx)
           : nothing}
-        ${renderToggleField(t('Show icon'), c.show_icon, (v) => onChange({ ...c, show_icon: v }), 'show_icon', syncCtx)}
+        ${renderToggleField(t('card-editor.info-editor.show-icon'), c.show_icon, (v) => onChange({ ...c, show_icon: v }), 'show_icon', syncCtx)}
         ${c.show_icon && c.icon !== 'svg'
-          ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
+          ? renderIconField(t('card-editor.info-editor.icon'), c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${c.show_icon
           ? renderIconFxEditor(c, hass, onChange, {
@@ -46,9 +46,9 @@ export const infoEditor: ModuleEditor = {
               syncCtx,
             })
           : nothing}
-        ${renderTextField(t('Prefix'), c.prefix, (v) => onChange({ ...c, prefix: v }), 'prefix', syncCtx)}
-        ${renderTextField(t('Suffix'), c.suffix, (v) => onChange({ ...c, suffix: v }), 'suffix', syncCtx)}
-        ${renderAttributeField(t('Secondary info'), c.secondary_info, (v) =>
+        ${renderTextField(t('card-editor.info-editor.prefix'), c.prefix, (v) => onChange({ ...c, prefix: v }), 'prefix', syncCtx)}
+        ${renderTextField(t('card-editor.info-editor.suffix'), c.suffix, (v) => onChange({ ...c, suffix: v }), 'suffix', syncCtx)}
+        ${renderAttributeField(t('card-editor.info-editor.secondary-info'), c.secondary_info, (v) =>
           onChange({ ...c, secondary_info: v }), hass, eid, 'secondary_info', syncCtx, attributeCaption(scope))}
       </div>
     `;

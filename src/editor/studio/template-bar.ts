@@ -57,7 +57,7 @@ export class TemplateBar extends LitElement {
       return html`
         <div class="tpl-bar">
           <div class="tpl-text">
-            ${this.compact ? nothing : html`<span class="tpl-label">${t('Not linked to a template')}</span>`}
+            ${this.compact ? nothing : html`<span class="tpl-label">${t('card-editor.template-bar.not-linked-to-a-template')}</span>`}
             <button
               type="button"
               class="chip manage"
@@ -66,17 +66,17 @@ export class TemplateBar extends LitElement {
               aria-expanded=${this._menuOpen ? 'true' : 'false'}
               @click=${this._toggleMenu}
             >
-              <ha-icon icon="mdi:link-variant-off"></ha-icon>${t('No template')}<ha-icon icon="mdi:chevron-down"></ha-icon>
+              <ha-icon icon="mdi:link-variant-off"></ha-icon>${t('card-editor.template-bar.no-template')}<ha-icon icon="mdi:chevron-down"></ha-icon>
             </button>
           </div>
           ${this._menuOpen
             ? html`
-                <div class="menu" role="menu" aria-label=${t('Template actions')} @keydown=${this._menu.onKeydown}>
+                <div class="menu" role="menu" aria-label=${t('card-editor.template-bar.template-actions')} @keydown=${this._menu.onKeydown}>
                   <button type="button" role="menuitem" @click=${() => this._act('template-load')}>
-                    <ha-icon icon="mdi:folder-open-outline"></ha-icon>${t('Load template…')}
+                    <ha-icon icon="mdi:folder-open-outline"></ha-icon>${t('card-editor.template-bar.load-template')}
                   </button>
                   <button type="button" role="menuitem" @click=${() => this._act('template-create')}>
-                    <ha-icon icon="mdi:plus"></ha-icon>${t('Create template from this card')}
+                    <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.template-bar.create-template-from-this-card')}
                   </button>
                 </div>
               `
@@ -86,16 +86,16 @@ export class TemplateBar extends LitElement {
     }
     const entries = this.config ? collectNotSynced(this.config) : [];
     const count = entries.reduce((n, e) => n + e.paths.length, 0);
-    const overrides = t('{n, plural, one {# override} other {# overrides}}', { n: count });
+    const overrides = t('card-editor.template-bar.n', { n: count });
     return html`
       <div class="tpl-bar linked">
         <div class="tpl-text">
-          ${this.compact ? nothing : html`<span class="tpl-label">${t('Template')}</span>`}
+          ${this.compact ? nothing : html`<span class="tpl-label">${t('card-editor.template-bar.template')}</span>`}
           <span class="chips">
             <button
               type="button"
               class="chip is-accent manage"
-              title=${t('Template actions')}
+              title=${t('card-editor.template-bar.template-actions')}
               aria-haspopup="menu"
               ?disabled=${this.disabled}
               aria-expanded=${this._menuOpen ? 'true' : 'false'}
@@ -103,14 +103,14 @@ export class TemplateBar extends LitElement {
             >
               <ha-icon icon="mdi:link-variant"></ha-icon><span class="nm">${name}</span><ha-icon icon="mdi:chevron-down"></ha-icon>
             </button>
-            ${count > 0 ? html`<span class="chip is-warn">${overrides}</span>` : html`<span class="chip">${t('In sync')}</span>`}
+            ${count > 0 ? html`<span class="chip is-warn">${overrides}</span>` : html`<span class="chip">${t('card-editor.template-bar.in-sync')}</span>`}
           </span>
         </div>
         ${!this.compact && count > 0
           ? html`
               <div class="tpl-actions">
                 <button type="button" class="btn btn-text btn-sm" @click=${() => this._fire('template-resync')}>
-                  <ha-icon icon="mdi:sync"></ha-icon>${t('Re-sync {overrides}', { overrides })}
+                  <ha-icon icon="mdi:sync"></ha-icon>${t('card-editor.template-bar.re-sync-overrides', { overrides })}
                 </button>
               </div>
             `
@@ -122,10 +122,10 @@ export class TemplateBar extends LitElement {
 
   private _renderMenu(name: string, entries: Array<{ location: string; paths: string[] }>, count: number): TemplateResult {
     return html`
-      <div class="menu" role="menu" aria-label=${t('Template actions')} @keydown=${this._menu.onKeydown}>
+      <div class="menu" role="menu" aria-label=${t('card-editor.template-bar.template-actions')} @keydown=${this._menu.onKeydown}>
         <p class="menu-note">
-          ${tx('Linked to template {name}.', { name: html`<span class="mono">${name}</span>` })}
-          ${count ? t('{n, plural, one {# field differs} other {# fields differ}} locally.', { n: count }) : t('Fully in sync.')}
+          ${tx('card-editor.template-bar.linked-to-template-name', { name: html`<span class="mono">${name}</span>` })}
+          ${count ? t('card-editor.template-bar.n-locally', { n: count }) : t('card-editor.template-bar.fully-in-sync')}
         </p>
         ${entries.length
           ? html`
@@ -137,14 +137,14 @@ export class TemplateBar extends LitElement {
             `
           : nothing}
         <button type="button" role="menuitem" ?disabled=${count === 0} @click=${() => this._act('template-resync')}>
-          <ha-icon icon="mdi:sync"></ha-icon>${t('Re-sync {overrides}', { overrides: t('{n, plural, one {# override} other {# overrides}}', { n: count }) })}
+          <ha-icon icon="mdi:sync"></ha-icon>${t('card-editor.template-bar.re-sync-overrides', { overrides: t('card-editor.template-bar.n', { n: count }) })}
         </button>
         <button type="button" role="menuitem" @click=${() => this._act('template-save')}>
-          <ha-icon icon="mdi:content-save-outline"></ha-icon>${t('Save to template')}
+          <ha-icon icon="mdi:content-save-outline"></ha-icon>${t('card-editor.template-bar.save-to-template')}
         </button>
         <hr />
         <button type="button" role="menuitem" class="danger" @click=${() => this._act('template-unlink')}>
-          <ha-icon icon="mdi:link-variant-off"></ha-icon>${t('Unlink from template')}
+          <ha-icon icon="mdi:link-variant-off"></ha-icon>${t('card-editor.template-bar.unlink-from-template')}
         </button>
       </div>
     `;

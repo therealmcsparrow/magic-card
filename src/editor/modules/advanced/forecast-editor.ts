@@ -5,10 +5,10 @@ import { renderToggleField, renderNumberField, renderSelectField, renderFieldHin
 import { type ForecastType, supportedForecastTypes } from '../../../utils/weather';
 import { animatedIconsNote, renderIconFxEditor } from '../../components/icon-fx-editor';
 import { entityFor, buildSyncContext } from '../base-editor';
-import { t, m, type MessageId } from '../../i18n';
+import { t, m, type MessageIndex } from '../../i18n';
 import { renderEntitySourceField } from '../../components/entity-source';
 
-const TYPE_LABELS: Record<ForecastType, MessageId> = { daily: m('Daily'), hourly: m('Hourly'), twice_daily: m('Twice daily') };
+const TYPE_LABELS: Record<ForecastType, MessageIndex> = { daily: m('card-editor.forecast-editor.daily'), hourly: m('card-editor.forecast-editor.hourly'), twice_daily: m('card-editor.forecast-editor.twice-daily') };
 
 export const forecastEditor: ModuleEditor = {
   type: 'forecast',
@@ -23,20 +23,20 @@ export const forecastEditor: ModuleEditor = {
     const fallback = entity && supported.length && !supported.includes(current) ? supported[0] : undefined;
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Weather entity'), c, onChange, hass, scope, { domain: 'weather', syncCtx })}
-        ${renderSelectField(t('Forecast type'), current, (['daily', 'hourly', 'twice_daily'] as ForecastType[]).map((ft) => ({
-          label: entity && supported.length && !supported.includes(ft) ? t('{type} (not provided by this entity)', { type: t(TYPE_LABELS[ft]) }) : t(TYPE_LABELS[ft]),
+        ${renderEntitySourceField(t('card-editor.forecast-editor.weather-entity'), c, onChange, hass, scope, { domain: 'weather', syncCtx })}
+        ${renderSelectField(t('card-editor.forecast-editor.forecast-type'), current, (['daily', 'hourly', 'twice_daily'] as ForecastType[]).map((ft) => ({
+          label: entity && supported.length && !supported.includes(ft) ? t('card-editor.forecast-editor.type-not-provided-by-this-entity', { type: t(TYPE_LABELS[ft]) }) : t(TYPE_LABELS[ft]),
           value: ft,
         })), (v) => onChange({ ...c, forecast_type: v as ForecastType }), 'forecast_type', syncCtx)}
         ${fallback
-          ? renderFieldHint(t('This entity has no {type} forecast; {fallback} is shown.', { type: t(TYPE_LABELS[current]).toLowerCase(), fallback: t(TYPE_LABELS[fallback]).toLowerCase() }))
+          ? renderFieldHint(t('card-editor.forecast-editor.this-entity-has-no-type-forecast', { type: t(TYPE_LABELS[current]).toLowerCase(), fallback: t(TYPE_LABELS[fallback]).toLowerCase() }))
           : nothing}
-        ${renderNumberField(t('Number of forecasts'), c.num_forecasts, (v) => onChange({ ...c, num_forecasts: v }), { min: 1, max: 48 }, 'num_forecasts', syncCtx)}
-        ${renderToggleField(t('Animated icons'), c.animated_icons !== false, (v) => onChange({ ...c, animated_icons: v }), 'animated_icons', syncCtx, t('Animated weather icons instead of static ones'))}
+        ${renderNumberField(t('card-editor.forecast-editor.number-of-forecasts'), c.num_forecasts, (v) => onChange({ ...c, num_forecasts: v }), { min: 1, max: 48 }, 'num_forecasts', syncCtx)}
+        ${renderToggleField(t('card-editor.forecast-editor.animated-icons'), c.animated_icons !== false, (v) => onChange({ ...c, animated_icons: v }), 'animated_icons', syncCtx, t('card-editor.forecast-editor.animated-weather-icons-instead-of-static'))}
         ${c.animated_icons !== false ? renderFieldHint(animatedIconsNote(c.icon_fx)) : renderIconFxEditor(c, hass, onChange, { entity: eid, icon: '', syncCtx })}
-        ${renderToggleField(t('Show temperature'), c.show_temperature !== false, (v) => onChange({ ...c, show_temperature: v }), 'show_temperature', syncCtx)}
-        ${renderToggleField(t('Show precipitation'), c.show_precipitation !== false, (v) => onChange({ ...c, show_precipitation: v }), 'show_precipitation', syncCtx)}
-        ${renderToggleField(t('Show wind'), c.show_wind, (v) => onChange({ ...c, show_wind: v }), 'show_wind', syncCtx)}
+        ${renderToggleField(t('card-editor.forecast-editor.show-temperature'), c.show_temperature !== false, (v) => onChange({ ...c, show_temperature: v }), 'show_temperature', syncCtx)}
+        ${renderToggleField(t('card-editor.forecast-editor.show-precipitation'), c.show_precipitation !== false, (v) => onChange({ ...c, show_precipitation: v }), 'show_precipitation', syncCtx)}
+        ${renderToggleField(t('card-editor.forecast-editor.show-wind'), c.show_wind, (v) => onChange({ ...c, show_wind: v }), 'show_wind', syncCtx)}
       </div>
     `;
   },

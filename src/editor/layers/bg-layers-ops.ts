@@ -13,7 +13,7 @@ import { m, t } from './i18n';
  * backdropHasProblem) stays in bg-layers-model.ts.
  */
 
-export const LIMIT_TEXT = m('Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.');
+export const LIMIT_TEXT = m('layer-editor.bg-layers-ops.limit-of-max-layers-reached-more-layers');
 
 const MAX_STATE_ROWS = 32;
 const BLOCKED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
@@ -166,16 +166,16 @@ export const staleMinutes = (seconds: number): number => Math.max(1, Math.ceil(s
 export function statusSentence(s: BgLayerStatus, layer: BackgroundLayerConfig | undefined): string | undefined {
   const detail = s.detail === undefined ? '' : String(s.detail);
   switch (s.reason) {
-    case 'entity-missing': return t('Entity not found: {id}. The next layer is shown instead.', { id: detail });
-    case 'no-picture': return t('{id} has no picture attribute. Try another attribute.', { id: detail });
+    case 'entity-missing': return t('layer-editor.bg-layers-ops.entity-not-found-id-the-next-layer-is', { id: detail });
+    case 'no-picture': return t('layer-editor.bg-layers-ops.id-has-no-picture-attribute-try-another', { id: detail });
     case 'no-state-image':
       return layer?.image
-        ? t('No picture for state {state}. The Any other state picture is used.', { state: detail })
-        : t('No picture for state {state}. No "Any other state" picture is set, so the next layer is shown.', { state: detail });
-    case 'image-missing': return t('This image is no longer in the library.');
-    case 'load-failed': return t('The picture could not be loaded. The next layer is shown.');
-    case 'snapshot-failed': return t('Snapshot failed. The last good frame stays visible.');
-    case 'stale': return t('Not updated {n} min', { n: staleMinutes(Number(s.detail) || 0) });
+        ? t('layer-editor.bg-layers-ops.no-picture-for-state-state-the-any-other', { state: detail })
+        : t('layer-editor.bg-layers-ops.no-picture-for-state-state-no-any-other', { state: detail });
+    case 'image-missing': return t('layer-editor.bg-layers-ops.this-image-is-no-longer-in-the-library');
+    case 'load-failed': return t('layer-editor.bg-layers-ops.the-picture-could-not-be-loaded-the-next');
+    case 'snapshot-failed': return t('layer-editor.bg-layers-ops.snapshot-failed-the-last-good-frame');
+    case 'stale': return t('layer-editor.bg-layers-ops.not-updated-n-min', { n: staleMinutes(Number(s.detail) || 0) });
     default: return undefined;
   }
 }

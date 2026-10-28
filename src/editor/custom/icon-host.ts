@@ -138,7 +138,7 @@ export async function openIconEditor(o: IconEditorOpen): Promise<'opened' | 'fai
   el.addEventListener('mc-svg-save', (e) => {
     applySave(o, sm, (e as CustomEvent<SvgSaveDetail>).detail);
     close();
-    toast(t('Icon applied.'));
+    toast(t('card-editor.icon-host.icon-applied'));
   });
   el.addEventListener('mc-svg-close', () => close());
   close = openLayer(el, { from: o.from, key: 'icon-entry' });

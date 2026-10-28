@@ -156,9 +156,9 @@ export class McLayersSheet extends LitElement {
     const left = Math.max(8, Math.min(this.x, (globalThis.innerWidth || 1024) - 328));
     const top = Math.max(8, Math.min(this.y, (globalThis.innerHeight || 768) - 120));
     return html`<div class="backdrop" @click=${this._close} aria-hidden="true"></div>
-      <div class="sheet" role="dialog" aria-label=${t('Layers here')} style=${`left:${left}px;top:${top}px`} @keydown=${this._onKey}>
-        <h2>${t('Layers here')}</h2>
-        <p>${t('Front first. Tap one to select it.')}</p>
+      <div class="sheet" role="dialog" aria-label=${t('layer-editor.layers-sheet.layers-here')} style=${`left:${left}px;top:${top}px`} @keydown=${this._onKey}>
+        <h2>${t('layer-editor.layers-sheet.layers-here')}</h2>
+        <p>${t('layer-editor.layers-sheet.front-first-tap-one-to-select-it')}</p>
         <ul>
           ${this.items.map(
             (it, i) => html`<li><button
@@ -169,10 +169,10 @@ export class McLayersSheet extends LitElement {
               @click=${() => {
                 if (!this._guard) this.dispatchEvent(new CustomEvent('pick', { detail: { key: it.key }, bubbles: true, composed: true }));
               }}
-            ><span><span class="nm">${it.current ? '✓ ' : ''}${it.name}</span><span class="sub">${it.detail}, ${t('{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here', { n: i + 1 })}</span></span></button></li>`,
+            ><span><span class="nm">${it.current ? '✓ ' : ''}${it.name}</span><span class="sub">${it.detail}, ${t('layer-editor.layers-sheet.n-from-the-front-here', { n: i + 1 })}</span></span></button></li>`,
           )}
         </ul>
-        ${this.items.length ? nothing : html`<p>${t('Nothing here.')}</p>`}
+        ${this.items.length ? nothing : html`<p>${t('layer-editor.layers-sheet.nothing-here')}</p>`}
       </div>`;
   }
 }

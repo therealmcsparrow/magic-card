@@ -31,27 +31,27 @@ import { DEVICES, DEVICE_LABEL, DRAWS, type Opt } from './icon-fx-options';
 export type IconFxPatch = Partial<Pick<IconFxKeys, 'icon_fx' | 'icon_on' | 'icon_off' | 'svg'>> & { icon?: string };
 
 const DIRECTIONS: Opt[] = [
-  { value: 'up', label: m('Up') },
-  { value: 'down', label: m('Down') },
-  { value: 'left', label: m('Left') },
-  { value: 'right', label: m('Right') },
+  { value: 'up', label: m('card-editor.icon-fx-editor.up') },
+  { value: 'down', label: m('card-editor.icon-fx-editor.down') },
+  { value: 'left', label: m('card-editor.icon-fx-editor.left') },
+  { value: 'right', label: m('card-editor.icon-fx-editor.right') },
 ];
 const STYLES: Opt[] = [
-  { value: 'solid', label: m('Solid') },
-  { value: 'duotone', label: m('Duotone') },
-  { value: 'gradient', label: m('Gradient') },
-  { value: 'value', label: m('Value') },
+  { value: 'solid', label: m('card-editor.icon-fx-editor.solid') },
+  { value: 'duotone', label: m('card-editor.icon-fx-editor.duotone') },
+  { value: 'gradient', label: m('card-editor.icon-fx-editor.gradient') },
+  { value: 'value', label: m('card-editor.icon-fx-editor.value') },
 ];
 
 /** Markup the sanitiser would strip silently but that must never be pasted: say what and refuse it. */
 function hostileParts(svg: string): string[] {
   const found: string[] = [];
-  if (/<\s*script/i.test(svg)) found.push(t('a script'));
-  if (/\son[a-z]+\s*=/i.test(svg)) found.push(t('event handlers'));
-  if (/javascript:|vbscript:/i.test(svg)) found.push(t('a javascript: link'));
+  if (/<\s*script/i.test(svg)) found.push(t('card-editor.icon-fx-editor.a-script'));
+  if (/\son[a-z]+\s*=/i.test(svg)) found.push(t('card-editor.icon-fx-editor.event-handlers'));
+  if (/javascript:|vbscript:/i.test(svg)) found.push(t('card-editor.icon-fx-editor.a-javascript-link'));
   if (/<\s*foreignObject/i.test(svg)) found.push('foreignObject');
-  if (/<\s*(?:iframe|embed|object)\b/i.test(svg) || /href\s*=\s*(?!["']?\s*#)/i.test(svg)) found.push(t('external references'));
-  if (/url\(\s*(?!["']?\s*#)/i.test(svg) || /@import|data:/i.test(svg)) found.push(t('external references'));
+  if (/<\s*(?:iframe|embed|object)\b/i.test(svg) || /href\s*=\s*(?!["']?\s*#)/i.test(svg)) found.push(t('card-editor.icon-fx-editor.external-references'));
+  if (/url\(\s*(?!["']?\s*#)/i.test(svg) || /@import|data:/i.test(svg)) found.push(t('card-editor.icon-fx-editor.external-references'));
   return [...new Set(found)];
 }
 
@@ -59,19 +59,19 @@ function hostileParts(svg: string): string[] {
 export function customSvgError(svg: string): string | undefined {
   const bad = hostileParts(svg);
   if (bad.length) {
-    const list = bad.length > 1 ? t('{list} and {last}', { list: bad.slice(0, -1).join(', '), last: bad[bad.length - 1] }) : bad[0];
+    const list = bad.length > 1 ? t('card-editor.icon-fx-editor.list-and-last', { list: bad.slice(0, -1).join(', '), last: bad[bad.length - 1] }) : bad[0];
     return bad.length > 1
-      ? t('This SVG contains {list}. Remove them and try again.', { list })
-      : t('This SVG contains {list}. Remove it and try again.', { list });
+      ? t('card-editor.icon-fx-editor.this-svg-contains-list-remove-them-and', { list })
+      : t('card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try', { list });
   }
   // Not unsafe, but dropped by the sanitiser: the shapes they draw would silently go missing.
-  if (/<\s*(?:use|image)\b/i.test(svg)) return t("<use> and <image> aren't supported. Draw the shapes as paths and try again.");
+  if (/<\s*(?:use|image)\b/i.test(svg)) return t("card-editor.icon-fx-editor.use-and-image-aren-t-supported-draw-the");
   return sanitizeSvg(svg).error;
 }
 
 /** What the sanitiser removes from an accepted SVG that changes its look; undefined when nothing. */
 export function customSvgWarning(svg: string): string | undefined {
-  if (/<\s*style\b/i.test(svg) || /\sstyle\s*=/i.test(svg)) return t('Styles are removed; use fill attributes (for example fill="#f44336") for colours.');
+  if (/<\s*style\b/i.test(svg) || /\sstyle\s*=/i.test(svg)) return t('card-editor.icon-fx-editor.styles-are-removed-use-fill-attributes');
   return undefined;
 }
 
@@ -314,23 +314,23 @@ export class IconFxEditor extends LitElement {
   private _renderIconEditor(): TemplateResult {
     const icon = this.moduleIcon;
     const kind = icon === 'svg' || icon.startsWith('mcu:') ? 'edit' : icon.includes(':') ? 'customise' : 'draw';
-    const label = { edit: t('Edit icon'), customise: t('Customise this icon'), draw: t('Draw an icon') }[kind];
+    const label = { edit: t('card-editor.icon-fx-editor.edit-icon'), customise: t('card-editor.icon-fx-editor.customise-this-icon'), draw: t('card-editor.icon-fx-editor.draw-an-icon') }[kind];
     const loading = this._editorState === 'loading';
     const pack = icon.slice(0, icon.indexOf(':'));
     return html`
       <div class="icon-editor">
         <div class="svg-actions">
           <button type="button" class="btn btn-secondary btn-sm" data-focus-key="icon-entry" aria-busy=${loading ? 'true' : 'false'} @click=${() => void this._openEditor(kind)}>
-            <ha-icon icon="mdi:pencil-ruler"></ha-icon>${label}${loading ? html`<span class="sr-only"> ${t('Loading')}</span>` : nothing}
+            <ha-icon icon="mdi:pencil-ruler"></ha-icon>${label}${loading ? html`<span class="sr-only"> ${t('card-editor.icon-fx-editor.loading')}</span>` : nothing}
           </button>
         </div>
         ${kind === 'customise'
-          ? html`<p class="help">${t('Makes your own copy. The original stays in {pack}.', { pack: pack === 'mdi' ? t('Material Design Icons') : pack })}</p>`
+          ? html`<p class="help">${t('card-editor.icon-fx-editor.makes-your-own-copy-the-original-stays', { pack: pack === 'mdi' ? t('card-editor.icon-fx-editor.material-design-icons') : pack })}</p>`
           : nothing}
         ${this._editorState === 'failed'
-          ? html`<p class="help error" role="alert">${t('The icon editor could not load. Check your connection and try again.')}</p>`
+          ? html`<p class="help error" role="alert">${t('card-editor.icon-fx-editor.the-icon-editor-could-not-load-check')}</p>`
           : nothing}
-        ${this._savedMissing() ? html`<p class="help warn" role="status">${t('Saved icon "{name}" was not found. The card shows the default icon.', { name: icon.slice(4) })}</p>` : nothing}
+        ${this._savedMissing() ? html`<p class="help warn" role="status">${t('card-editor.icon-fx-editor.saved-icon-name-was-not-found-the-card', { name: icon.slice(4) })}</p>` : nothing}
       </div>
     `;
   }
@@ -540,7 +540,7 @@ export class IconFxEditor extends LitElement {
     const r = await readFile(file, ICON_SVG_INTAKE);
     if (r.ok) this._applySvg(r.text, true);
     else {
-      this._svgError = r.code === 'too_large' ? t('The SVG is larger than 32 KB.') : NO_SVG_ELEMENT;
+      this._svgError = r.code === 'too_large' ? t('card-editor.icon-fx-editor.the-svg-is-larger-than-32-kb') : NO_SVG_ELEMENT;
       this._svgAlert = true;
     }
     try {
@@ -557,10 +557,10 @@ export class IconFxEditor extends LitElement {
     const warning = this._svgError ? undefined : customSvgWarning(draft);
     return html`
       ${this._renderIconEditor()}
-      ${this._switch(t('Custom SVG'), on, () => this._toggleSvg(), on ? undefined : t('Draw your own SVG icon instead of one from the icon list.'))}
+      ${this._switch(t('card-editor.icon-fx-editor.custom-svg'), on, () => this._toggleSvg(), on ? undefined : t('card-editor.icon-fx-editor.draw-your-own-svg-icon-instead-of-one'))}
       ${on
         ? html`${this._field(
-            t('SVG markup'),
+            t('card-editor.icon-fx-editor.svg-markup'),
             !!this.svg,
             () => {
               this._svgDraft = undefined;
@@ -571,7 +571,7 @@ export class IconFxEditor extends LitElement {
                 class="input mono"
                 id="fx-svg"
                 spellcheck="false"
-                placeholder=${t('<svg viewBox="0 0 24 24">…</svg>')}
+                placeholder=${t('card-editor.icon-fx-editor.svg-viewbox-0-0-24-24-svg')}
                 aria-invalid=${this._svgError ? 'true' : 'false'}
                 aria-describedby=${this._svgError ? 'fx-svg-error' : warning ? 'fx-svg-help fx-svg-warning' : 'fx-svg-help'}
                 .value=${draft}
@@ -581,14 +581,14 @@ export class IconFxEditor extends LitElement {
                 ${this._svgError
                   ? html`<p class="help error" id="fx-svg-error" role=${this._svgAlert ? 'alert' : nothing}>${this._svgError}</p>`
                   : html`<p class="help" id="fx-svg-help">
-                      ${t('Up to 32 KB. Parts with fill="currentColor" take the icon colour, parts with class="mc-accent" the accent colour.')}
+                      ${t('card-editor.icon-fx-editor.up-to-32-kb-parts-with-fill-currentcolor')}
                     </p>`}
                 ${warning ? html`<p class="help warn" id="fx-svg-warning">${warning}</p>` : nothing}
               </div>
               <div class="svg-actions">
                 <input type="file" accept=".svg,image/svg+xml" id="fx-svg-file" @change=${(e: Event) => void this._upload(e)} />
                 <button type="button" class="btn btn-secondary btn-sm" @click=${() => this.renderRoot.querySelector<HTMLInputElement>('#fx-svg-file')?.click()}>
-                  <ha-icon icon="mdi:upload"></ha-icon>${t('Upload SVG')}
+                  <ha-icon icon="mdi:upload"></ha-icon>${t('card-editor.icon-fx-editor.upload-svg')}
                 </button>
               </div>`,
             'fx-svg',
@@ -608,28 +608,28 @@ export class IconFxEditor extends LitElement {
     const emptyPct = f ? pctOf(f.empty_color) : undefined;
     const emptyIsColor = !!f?.empty_color && emptyPct === undefined;
     return html`
-      ${this._switch(t('Liquid fill'), on, () => this._setFx({ fill: on ? undefined : {} }), t('Fills the icon like a liquid with a value, e.g. a battery level.'))}
+      ${this._switch(t('card-editor.icon-fx-editor.liquid-fill'), on, () => this._setFx({ fill: on ? undefined : {} }), t('card-editor.icon-fx-editor.fills-the-icon-like-a-liquid-with-a'))}
       ${on
         ? html`
             ${this._field(
-              t('Entity'),
+              t('card-editor.icon-fx-editor.entity'),
               !!f!.entity,
               () => this._setFill({ entity: undefined, attribute: undefined }),
               html`<mc-entity-picker
                 .hass=${this.hass}
                 .value=${f!.entity || ''}
-                .label=${this.entity ? t('Module entity ({entity})', { entity: this.entity }) : t('Entity')}
+                .label=${this.entity ? t('card-editor.icon-fx-editor.module-entity-entity', { entity: this.entity }) : t('card-editor.icon-fx-editor.entity')}
                 @value-changed=${(e: CustomEvent) => this._setFill({ entity: e.detail.value || undefined, attribute: undefined })}
               ></mc-entity-picker>`,
             )}
             ${!entity
-              ? html`<p class="help">${t('Pick an entity: a fill without a value stays empty.')}</p>`
+              ? html`<p class="help">${t('card-editor.icon-fx-editor.pick-an-entity-a-fill-without-a-value')}</p>`
               : !f!.entity
-                ? html`<p class="help">${t("Empty: the module's entity ({entity}).", { entity: this.entity })}</p>`
+                ? html`<p class="help">${t("card-editor.icon-fx-editor.empty-the-module-s-entity-entity", { entity: this.entity })}</p>`
                 : nothing}
             ${attrs.length
               ? this._field(
-                  t('Attribute'),
+                  t('card-editor.icon-fx-editor.attribute'),
                   !!f!.attribute,
                   () => this._setFill({ attribute: undefined }),
                   html`<mc-attribute-picker
@@ -641,20 +641,20 @@ export class IconFxEditor extends LitElement {
                 )
               : nothing}
             <div class="two">
-              ${this._field(t('Min'), f!.min !== undefined, () => this._setFill({ min: undefined }), this._number('fx-fill-min', f!.min, ICON_FX_DEFAULTS.min, (n) => this._setFill({ min: n })), 'fx-fill-min')}
-              ${this._field(t('Max'), f!.max !== undefined, () => this._setFill({ max: undefined }), this._number('fx-fill-max', f!.max, ICON_FX_DEFAULTS.max, (n) => this._setFill({ max: n })), 'fx-fill-max')}
+              ${this._field(t('card-editor.icon-fx-editor.min'), f!.min !== undefined, () => this._setFill({ min: undefined }), this._number('fx-fill-min', f!.min, ICON_FX_DEFAULTS.min, (n) => this._setFill({ min: n })), 'fx-fill-min')}
+              ${this._field(t('card-editor.icon-fx-editor.max'), f!.max !== undefined, () => this._setFill({ max: undefined }), this._number('fx-fill-max', f!.max, ICON_FX_DEFAULTS.max, (n) => this._setFill({ max: n })), 'fx-fill-max')}
             </div>
-            ${this._field(t('Colour'), !!f!.color, () => this._setFill({ color: undefined }), this._color('fill-color', t('Fill colour'), f!.color, (v) => this._setFill({ color: v })))}
+            ${this._field(t('card-editor.icon-fx-editor.colour'), !!f!.color, () => this._setFill({ color: undefined }), this._color('fill-color', t('card-editor.icon-fx-editor.fill-colour'), f!.color, (v) => this._setFill({ color: v })))}
             ${this._field(
-              t('Empty opacity (%)'),
+              t('card-editor.icon-fx-editor.empty-opacity'),
               f!.empty_color !== undefined,
               () => this._setFill({ empty_color: undefined }),
               html`${this._number('fx-fill-empty', emptyPct, ICON_FX_DEFAULTS.emptyOpacity * 100, (n) => this._setFill({ empty_color: n === undefined ? undefined : `${Math.min(100, Math.max(0, n))}%` }), 0, 100, 5)}
-                ${emptyIsColor ? html`<p class="help">${t('The empty part uses the colour {colour} (set in YAML); a value here replaces it.', { colour: String(f!.empty_color) })}</p>` : nothing}`,
+                ${emptyIsColor ? html`<p class="help">${t('card-editor.icon-fx-editor.the-empty-part-uses-the-colour-colour', { colour: String(f!.empty_color) })}</p>` : nothing}`,
               'fx-fill-empty',
             )}
-            ${this._switch(t('Wave'), f!.wave !== false, () => this._setFill({ wave: f!.wave === false ? undefined : false }))}
-            ${this._field(t('Direction'), !!f!.direction, () => this._setFill({ direction: undefined }), this._seg(t('Direction'), f!.direction ?? 'up', DIRECTIONS, (v) => this._setFill({ direction: v === 'up' ? undefined : (v as IconFillConfig['direction']) })))}
+            ${this._switch(t('card-editor.icon-fx-editor.wave'), f!.wave !== false, () => this._setFill({ wave: f!.wave === false ? undefined : false }))}
+            ${this._field(t('card-editor.icon-fx-editor.direction'), !!f!.direction, () => this._setFill({ direction: undefined }), this._seg(t('card-editor.icon-fx-editor.direction'), f!.direction ?? 'up', DIRECTIONS, (v) => this._setFill({ direction: v === 'up' ? undefined : (v as IconFillConfig['direction']) })))}
           `
         : nothing}
     `;
@@ -662,19 +662,19 @@ export class IconFxEditor extends LitElement {
 
   private _deviceHelp(device: string): string {
     if (device !== 'auto') {
-      return device === 'off' ? t('Animates the icon like the device it shows.') : t('Pauses while the entity is off or unavailable.');
+      return device === 'off' ? t('card-editor.icon-fx-editor.animates-the-icon-like-the-device-it') : t('card-editor.icon-fx-editor.pauses-while-the-entity-is-off-or');
     }
-    if (!this.entity) return t('Pick an entity: Auto animates the icon from its state.');
+    if (!this.entity) return t('card-editor.icon-fx-editor.pick-an-entity-auto-animates-the-icon');
     const rule = autoDeviceRule(this._stateObj, this.entity);
-    if (!rule) return t('Auto has no animation for this entity; pick one.');
+    if (!rule) return t('card-editor.icon-fx-editor.auto-has-no-animation-for-this-entity');
     const now = autoDeviceAnim(this._stateObj);
-    return t('Auto for this entity: {rule}.', { rule: lt(rule) }) + (now ? ` ${t('Now: {device}.', { device: t(DEVICE_LABEL[now.anim]) })}` : '');
+    return t('card-editor.icon-fx-editor.auto-for-this-entity-rule', { rule: lt(rule) }) + (now ? ` ${t('card-editor.icon-fx-editor.now-device', { device: t(DEVICE_LABEL[now.anim]) })}` : '');
   }
 
   private _renderDevice(): TemplateResult {
     const device = typeof this._fx.device === 'string' ? this._fx.device : 'off';
     return this._field(
-      t('Device animation'),
+      t('card-editor.icon-fx-editor.device-animation'),
       device !== 'off',
       () => this._setFx({ device: undefined }),
       html`${this._select('fx-device', device, this.entity || device === 'auto' ? DEVICES : DEVICES.filter((o) => o.value !== 'auto'), (v) => this._setFx({ device: v as IconFxConfig['device'] }), 'fx-device-help')}
@@ -686,15 +686,15 @@ export class IconFxEditor extends LitElement {
   private _renderDraw(): TemplateResult {
     const draw = this._fx.draw ?? 'off';
     return html`
-      ${this._field(t('Line draw'), draw !== 'off', () => this._setFx({ draw: undefined }), this._select('fx-draw', draw, DRAWS, (v) => this._setFx({ draw: v as IconFxConfig['draw'] })), 'fx-draw')}
+      ${this._field(t('card-editor.icon-fx-editor.line-draw'), draw !== 'off', () => this._setFx({ draw: undefined }), this._select('fx-draw', draw, DRAWS, (v) => this._setFx({ draw: v as IconFxConfig['draw'] })), 'fx-draw')}
       ${draw !== 'off'
         ? this._field(
-            t('Draw duration'),
+            t('card-editor.icon-fx-editor.draw-duration'),
             !!this._fx.draw_duration,
             () => this._setFx({ draw_duration: undefined }),
             html`<mc-unit-field
               .value=${this._fx.draw_duration || ''}
-              .label=${t('Draw duration')}
+              .label=${t('card-editor.icon-fx-editor.draw-duration')}
               .units=${['s', 'ms']}
               .placeholder=${String(ICON_FX_DEFAULTS.drawDuration)}
               @value-changed=${(e: CustomEvent) => this._setFx({ draw_duration: e.detail.value || undefined })}
@@ -722,9 +722,9 @@ export class IconFxEditor extends LitElement {
         undefined,
         key,
       );
-    return html`<div class="state-icons" role="group" aria-label=${t('State icons')} aria-describedby="fx-state-help">
-      <div class="two">${iconField(t('Icon when on'), 'icon_on', this.iconOn)} ${iconField(t('Icon when off'), 'icon_off', this.iconOff)}</div>
-      <p class="help" id="fx-state-help">${t("State icons: the icon while the entity is on or off. Empty: the module's icon.")}</p>
+    return html`<div class="state-icons" role="group" aria-label=${t('card-editor.icon-fx-editor.state-icons')} aria-describedby="fx-state-help">
+      <div class="two">${iconField(t('card-editor.icon-fx-editor.icon-when-on'), 'icon_on', this.iconOn)} ${iconField(t('card-editor.icon-fx-editor.icon-when-off'), 'icon_off', this.iconOff)}</div>
+      <p class="help" id="fx-state-help">${t("card-editor.icon-fx-editor.state-icons-the-icon-while-the-entity-is")}</p>
     </div>`;
   }
 
@@ -732,8 +732,8 @@ export class IconFxEditor extends LitElement {
     if (!this.allowStateIcons) return nothing;
     const on = this._fx.morph === true;
     return html`
-      ${this._switch(t('Morph'), on, () => this._setFx({ morph: on ? undefined : true }), t('Morphs between the state icons when the entity turns on or off.'))}
-      ${on && !this.iconOn && !this.iconOff ? html`<p class="help">${t("Pick the state icons (Icon when on / off) to morph between; unset sides use the module's icon.")}</p>` : nothing}
+      ${this._switch(t('card-editor.icon-fx-editor.morph'), on, () => this._setFx({ morph: on ? undefined : true }), t('card-editor.icon-fx-editor.morphs-between-the-state-icons-when-the'))}
+      ${on && !this.iconOn && !this.iconOff ? html`<p class="help">${t("card-editor.icon-fx-editor.pick-the-state-icons-icon-when-on-off-to")}</p>` : nothing}
     `;
   }
 
@@ -752,44 +752,44 @@ export class IconFxEditor extends LitElement {
         ? setStops(stops.map((x, j) => (j === i ? v : x)))
         : setStops(stops.length > 2 ? stops.filter((_, j) => j !== i) : stops.map((x, j) => (j === i ? defaults[j] ?? defaults[defaults.length - 1] : x)));
     return html`
-      ${this._field(t('Colour style'), !!c.style, () => this._setColors({ style: undefined }), this._seg(t('Colour style'), style, STYLES, (v) => this._setColors({ style: v as IconColorsConfig['style'] })))}
+      ${this._field(t('card-editor.icon-fx-editor.colour-style'), !!c.style, () => this._setColors({ style: undefined }), this._seg(t('card-editor.icon-fx-editor.colour-style'), style, STYLES, (v) => this._setColors({ style: v as IconColorsConfig['style'] })))}
       ${style === 'gradient' || style === 'value'
         ? nothing
-        : this._field(style === 'solid' ? t('Colour') : t('Primary colour'), !!c.primary, () => this._setColors({ primary: undefined }), this._color('primary', t('Primary colour'), c.primary, (v) => this._setColors({ primary: v })))}
+        : this._field(style === 'solid' ? t('card-editor.icon-fx-editor.colour') : t('card-editor.icon-fx-editor.primary-colour'), !!c.primary, () => this._setColors({ primary: undefined }), this._color('primary', t('card-editor.icon-fx-editor.primary-colour'), c.primary, (v) => this._setColors({ primary: v })))}
       ${style === 'duotone'
-        ? this._field(t('Secondary colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
-            html`${this._color('secondary', t('Secondary colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
-              <p class="help">${t('Empty: the primary colour at {pct}%.', { pct: ICON_FX_DEFAULTS.secondaryPct })}</p>`)
+        ? this._field(t('card-editor.icon-fx-editor.secondary-colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
+            html`${this._color('secondary', t('card-editor.icon-fx-editor.secondary-colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
+              <p class="help">${t('card-editor.icon-fx-editor.empty-the-primary-colour-at-pct', { pct: ICON_FX_DEFAULTS.secondaryPct })}</p>`)
         : this._hasAccent
-          ? this._field(t('Accent colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
-              html`${this._color('secondary', t('Accent colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
-                <p class="help">${this._isSvg ? t('Parts of the SVG with class="mc-accent".') : t('Parts of the icon drawn in Accent in the icon editor.')}</p>`)
+          ? this._field(t('card-editor.icon-fx-editor.accent-colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
+              html`${this._color('secondary', t('card-editor.icon-fx-editor.accent-colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
+                <p class="help">${this._isSvg ? t('card-editor.icon-fx-editor.parts-of-the-svg-with-class-mc-accent') : t('card-editor.icon-fx-editor.parts-of-the-icon-drawn-in-accent-in-the')}</p>`)
           : nothing}
       ${style === 'gradient' || style === 'value'
         ? html`
             ${this._field(
-              t('Gradient colours'),
+              t('card-editor.icon-fx-editor.gradient-colours'),
               Array.isArray(c.gradient) && c.gradient.length > 0,
               () => this._setColors({ gradient: undefined }),
               html`<div class="stops">
                 ${stops.map(
                   (s, i) => html`<div class="stop">
-                    ${this._color(`stop-${i}`, t('Colour {n}', { n: i + 1 }), s, (v) => setStop(i, v))}
+                    ${this._color(`stop-${i}`, t('card-editor.icon-fx-editor.colour-n', { n: i + 1 }), s, (v) => setStop(i, v))}
                     ${stops.length > 2
-                      ? html`<button type="button" class="icon-btn sm danger" aria-label=${t('Remove colour {n}', { n: i + 1 })} title=${t('Remove colour')} @click=${() => setStops(stops.filter((_, j) => j !== i))}>
+                      ? html`<button type="button" class="icon-btn sm danger" aria-label=${t('card-editor.icon-fx-editor.remove-colour-n', { n: i + 1 })} title=${t('card-editor.icon-fx-editor.remove-colour')} @click=${() => setStops(stops.filter((_, j) => j !== i))}>
                           <ha-icon icon="mdi:delete-outline"></ha-icon>
                         </button>`
                       : nothing}
                   </div>`,
                 )}
-                <div><button type="button" class="btn btn-text btn-sm" @click=${() => setStops([...stops, stops[stops.length - 1]])}><ha-icon icon="mdi:plus"></ha-icon>${t('Add colour')}</button></div>
+                <div><button type="button" class="btn btn-text btn-sm" @click=${() => setStops([...stops, stops[stops.length - 1]])}><ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.icon-fx-editor.add-colour')}</button></div>
               </div>
               ${style === 'value'
-                ? html`<p class="help">${t("The colour along these stops follows the value: Liquid fill's entity, min and max, else the module's entity from 0 to 100.")}</p>`
+                ? html`<p class="help">${t("card-editor.icon-fx-editor.the-colour-along-these-stops-follows-the")}</p>`
                 : nothing}`,
             )}
             ${style === 'gradient'
-              ? this._field(t('Angle (deg)'), c.angle !== undefined, () => this._setColors({ angle: undefined }), this._number('fx-angle', c.angle, ICON_FX_DEFAULTS.angle, (n) => this._setColors({ angle: n }), 0, 360, 15), 'fx-angle')
+              ? this._field(t('card-editor.icon-fx-editor.angle-deg'), c.angle !== undefined, () => this._setColors({ angle: undefined }), this._number('fx-angle', c.angle, ICON_FX_DEFAULTS.angle, (n) => this._setColors({ angle: n }), 0, 360, 15), 'fx-angle')
               : nothing}
           `
         : nothing}
@@ -816,8 +816,8 @@ export class IconFxEditor extends LitElement {
           <div class="sector-head">
             <button type="button" class="sector-btn" aria-expanded=${this._open ? 'true' : 'false'} aria-controls=${this._open ? 'fx-body' : nothing} @click=${() => (this._open = !this._open)}>
               <ha-icon icon="mdi:creation-outline"></ha-icon>
-              <span class="nm">${t('Icon effects')}</span>
-              ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+              <span class="nm">${t('card-editor.icon-fx-editor.icon-effects')}</span>
+              ${count > 0 ? html`<span class="chip is-count">${t('card-editor.icon-fx-editor.n-set', { n: count })}</span>` : nothing}
               <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
             </button>
             ${this._sync('icon_fx')}
@@ -826,14 +826,14 @@ export class IconFxEditor extends LitElement {
             ? html`<div class="sector-body" id="fx-body">
                 ${count > 0
                   ? html`<div class="sector-reset-row">
-                      <button type="button" class="btn btn-text btn-sm sector-reset" aria-label=${t('Reset section Icon effects')} title=${t('Clear every icon effect')} @click=${() => this._resetAll()}>
-                        <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset section')}
+                      <button type="button" class="btn btn-text btn-sm sector-reset" aria-label=${t('card-editor.icon-fx-editor.reset-section-icon-effects')} title=${t('card-editor.icon-fx-editor.clear-every-icon-effect')} @click=${() => this._resetAll()}>
+                        <ha-icon icon="mdi:backup-restore"></ha-icon>${t('card-editor.icon-fx-editor.reset-section')}
                       </button>
                     </div>`
                   : nothing}
                 ${this._noShape
                   ? html`<p class="help" id="fx-shape-hint" role="status">
-                      ${t('Effects need the icon shape; this icon could not be loaded (or is a multi-colour logo), so it is shown as is.')}
+                      ${t('card-editor.icon-fx-editor.effects-need-the-icon-shape-this-icon')}
                     </p>`
                   : nothing}
                 ${this._renderFill()} ${this._renderDevice()} ${this._renderDraw()} ${this._renderMorph()} ${this._renderColors()}
@@ -848,8 +848,8 @@ export class IconFxEditor extends LitElement {
 /** Weather / Forecast note while Animated icons is on: set icon effects are kept, only paused. */
 export function animatedIconsNote(fx?: IconFxConfig): string {
   return hasIconFx(fx)
-    ? t('Animated weather icons replace icon effects. Your icon effects are paused and come back when Animated icons is off.')
-    : t('Animated weather icons replace icon effects.');
+    ? t('card-editor.icon-fx-editor.animated-weather-icons-replace-icon')
+    : t('card-editor.icon-fx-editor.animated-weather-icons-replace-icon-2');
 }
 
 /**

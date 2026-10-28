@@ -69,7 +69,7 @@ export class CanvasLayers {
     if (entry.kind === 'module' && entry.sel) this.host.select(entry.sel);
     else if (entry.kind === 'backdrop' && entry.index !== undefined) this.host.openBackdrop(entry.index);
     const n = list.indexOf(entry) + 1;
-    this.host.announce(t('Selected {name}, {n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here', { name: entry.name, n: Math.max(1, n) }));
+    this.host.announce(t('card-editor.canvas-layers.selected-name-n-from-the-front-here', { name: entry.name, n: Math.max(1, n) }));
   }
 
   /** Alt-click: the next layer beneath the selection at the pointer, wrapping. False when nothing is there. */

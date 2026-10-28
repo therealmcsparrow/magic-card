@@ -130,7 +130,7 @@ export class McAnchorGrid extends LitElement {
   protected render(): TemplateResult {
     const current = this.value ? LAYER_ANCHORS.indexOf(this.value) : -1;
     const stop = current >= 0 ? current : 0;
-    return html`<div class="grid" role="radiogroup" aria-label=${this.label || t('Position')} @keydown=${this._onKey}>
+    return html`<div class="grid" role="radiogroup" aria-label=${this.label || t('layer-editor.mc-anchor-grid.position')} @keydown=${this._onKey}>
         ${LAYER_ANCHORS.map((a, i) => {
           const on = i === current;
           return html`<button

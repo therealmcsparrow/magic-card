@@ -68,7 +68,7 @@ export class LibrarySheet extends LitElement {
   };
 
   render() {
-    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading=${t('Library')} closeLabel=${t('Close')} movable resizable maximizable moveLabel=${t('Move window')} resizeLabel=${t('Resize window')} maximizeLabel=${t('Maximise')} restoreLabel=${t('Restore size')} @mc-window-close=${() => this.onClose?.()}>
+    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading=${t('card-editor.library-sheet.library')} closeLabel=${t('card-editor.library-sheet.close')} movable resizable maximizable moveLabel=${t('card-editor.library-sheet.move-window')} resizeLabel=${t('card-editor.library-sheet.resize-window')} maximizeLabel=${t('card-editor.library-sheet.maximise')} restoreLabel=${t('card-editor.library-sheet.restore-size')} @mc-window-close=${() => this.onClose?.()}>
       <mc-library-view .hass=${this.hass} .source=${librarySource} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
     </mc-ui-window>`;
   }
@@ -82,7 +82,7 @@ export async function openLibrary(opener: HTMLElement, hass: HomeAssistant | und
   try {
     await loadTransfer();
   } catch {
-    toast(t('The library could not load. Check your connection and try again.'));
+    toast(t('card-editor.library-sheet.the-library-could-not-load-check-your'));
     return;
   }
   const sheet = document.createElement('mc-library-sheet') as LibrarySheet;
@@ -90,7 +90,7 @@ export async function openLibrary(opener: HTMLElement, hass: HomeAssistant | und
   sheet.kind = kind;
   sheet.sm = cardStateOf(opener);
   const close = openLayer(sheet, undefined, () => sheet.onClose?.());
-  sheet.parentElement?.setAttribute('aria-label', t('Library'));
+  sheet.parentElement?.setAttribute('aria-label', t('card-editor.library-sheet.library'));
   sheet.onClose = () => {
     close();
     opener.focus();

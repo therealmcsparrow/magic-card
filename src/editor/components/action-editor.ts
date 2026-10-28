@@ -12,25 +12,25 @@ import {
 import { fromYaml, toYaml } from '../../utils/yaml-utils';
 import { normalizePopupHash, popupHashError } from '../../utils/popup';
 import { popupIfLoaded } from '../../card/popup-seam';
-import { t, tx, m, tl, type MessageId } from '../i18n';
+import { t, tx, m, tl, type MessageIndex } from '../i18n';
 
 /** The gestures of an Actions tab, in order. */
-export const ACTION_GESTURES: Array<{ key: keyof ActionsConfig; title: MessageId; icon: string }> = [
-  { key: 'tap_action', title: m('Tap'), icon: 'mdi:gesture-tap' },
-  { key: 'hold_action', title: m('Hold'), icon: 'mdi:gesture-tap-hold' },
-  { key: 'double_tap_action', title: m('Double tap'), icon: 'mdi:gesture-double-tap' },
+export const ACTION_GESTURES: Array<{ key: keyof ActionsConfig; title: MessageIndex; icon: string }> = [
+  { key: 'tap_action', title: m('card-editor.action-editor.tap'), icon: 'mdi:gesture-tap' },
+  { key: 'hold_action', title: m('card-editor.action-editor.hold'), icon: 'mdi:gesture-tap-hold' },
+  { key: 'double_tap_action', title: m('card-editor.action-editor.double-tap'), icon: 'mdi:gesture-double-tap' },
 ];
 
-const ACTION_OPTIONS: Array<{ label: MessageId; value: ActionType }> = [
-  { label: m('None'), value: 'none' },
-  { label: m('Toggle'), value: 'toggle' },
-  { label: m('More info'), value: 'more-info' },
-  { label: m('Navigate'), value: 'navigate' },
-  { label: m('Call service'), value: 'perform-action' },
-  { label: m('URL'), value: 'url' },
-  { label: m('Assist'), value: 'assist' },
-  { label: m('Open pop-up'), value: 'popup' },
-  { label: m('Close pop-up'), value: 'close-popup' },
+const ACTION_OPTIONS: Array<{ label: MessageIndex; value: ActionType }> = [
+  { label: m('card-editor.action-editor.none'), value: 'none' },
+  { label: m('card-editor.action-editor.toggle'), value: 'toggle' },
+  { label: m('card-editor.action-editor.more-info'), value: 'more-info' },
+  { label: m('card-editor.action-editor.navigate'), value: 'navigate' },
+  { label: m('card-editor.action-editor.call-service'), value: 'perform-action' },
+  { label: m('card-editor.action-editor.url'), value: 'url' },
+  { label: m('card-editor.action-editor.assist'), value: 'assist' },
+  { label: m('card-editor.action-editor.open-pop-up'), value: 'popup' },
+  { label: m('card-editor.action-editor.close-pop-up'), value: 'close-popup' },
 ];
 
 /**
@@ -62,7 +62,7 @@ export function renderActionConfig(
   return html`
     <div class="mc-action-config">
       ${renderSelectField(
-        t('Action'),
+        t('card-editor.action-editor.action'),
         currentAction.action,
         tl(ACTION_OPTIONS),
         (v) => onChange({ ...currentAction, action: v as ActionType }),
@@ -71,7 +71,7 @@ export function renderActionConfig(
       )}
       ${needsEntity && ownerEntity
         ? renderToggleField(
-            t('Use module entity'),
+            t('card-editor.action-editor.use-module-entity'),
             useModuleEntity,
             (v) => onChange({
               ...currentAction,
@@ -83,16 +83,16 @@ export function renderActionConfig(
           )
         : nothing}
       ${needsEntity && (!ownerEntity || !useModuleEntity)
-        ? renderEntityField(t('Entity'), currentAction.entity, (v) =>
+        ? renderEntityField(t('card-editor.action-editor.entity'), currentAction.entity, (v) =>
             onChange({ ...currentAction, entity: v }), hass, undefined,
             'entity', syncCtx,
           )
         : nothing}
       ${currentAction.action === 'toggle' && ownerEntity && useModuleEntity
-        ? html`<p class="help">${tx('Toggles {entity} (the module entity).', { entity: html`<span class="mono">${ownerEntity}</span>` })}</p>`
+        ? html`<p class="help">${tx('card-editor.action-editor.toggles-entity-the-module-entity', { entity: html`<span class="mono">${ownerEntity}</span>` })}</p>`
         : nothing}
       ${currentAction.action === 'navigate'
-        ? renderTextField(t('Navigation path'), currentAction.navigation_path, (v) =>
+        ? renderTextField(t('card-editor.action-editor.navigation-path'), currentAction.navigation_path, (v) =>
             onChange({ ...currentAction, navigation_path: v }),
             'navigation_path', syncCtx,
           )
@@ -100,7 +100,7 @@ export function renderActionConfig(
       ${currentAction.action === 'popup'
         ? html`
             <div class="mc-field">
-              ${renderFieldHead(t('Pop-up ID'), 'hash', syncCtx)}
+              ${renderFieldHead(t('card-editor.action-editor.pop-up-id'), 'hash', syncCtx)}
               <input
                 class="input mono"
                 type="text"
@@ -108,7 +108,7 @@ export function renderActionConfig(
                 autocomplete="off"
                 list=${listId}
                 placeholder="kitchen"
-                aria-label=${t('Pop-up ID')}
+                aria-label=${t('card-editor.action-editor.pop-up-id')}
                 .value=${popupId}
                 @input=${(e: InputEvent) => onChange({ ...currentAction, hash: normalizePopupHash((e.target as HTMLInputElement).value) || undefined })}
               />
@@ -117,33 +117,33 @@ export function renderActionConfig(
               </datalist>
               ${popupError
                 ? html`<p class="help error" role="alert">${popupError}</p>`
-                : html`<p class="help">${tx('Opens the Magic Card pop-up with this ID (navigates to {path}).', { path: html`<span class="mono">#${popupId || 'id'}</span>` })}</p>`}
+                : html`<p class="help">${tx('card-editor.action-editor.opens-the-magic-card-pop-up-with-this-id', { path: html`<span class="mono">#${popupId || 'id'}</span>` })}</p>`}
             </div>
           `
         : nothing}
       ${currentAction.action === 'close-popup'
-        ? html`<p class="help">${t('Closes the Magic Card pop-up that is open (also from inside it).')}</p>`
+        ? html`<p class="help">${t('card-editor.action-editor.closes-the-magic-card-pop-up-that-is')}</p>`
         : nothing}
       ${currentAction.action === 'url'
-        ? renderTextField(t('URL'), currentAction.url_path, (v) =>
+        ? renderTextField(t('card-editor.action-editor.url'), currentAction.url_path, (v) =>
             onChange({ ...currentAction, url_path: v }),
             'url_path', syncCtx,
           )
         : nothing}
       ${currentAction.action === 'perform-action'
         ? html`
-            ${renderServiceField(t('Service'), currentAction.service, (v) =>
+            ${renderServiceField(t('card-editor.action-editor.service'), currentAction.service, (v) =>
               onChange({ ...currentAction, service: v }), hass,
               'service', syncCtx,
             )}
-            ${renderTextField(t('Target entity'), target, (v) => {
+            ${renderTextField(t('card-editor.action-editor.target-entity'), target, (v) => {
               const next = { ...(currentAction.data || {}) } as Record<string, unknown>;
               if (v.trim()) next.entity_id = v.trim();
               else delete next.entity_id;
               writeData(next);
             }, 'data', syncCtx, { placeholder: 'entity_id', mono: true })}
             <div class="mc-field">
-              ${renderFieldHead(t('Service data'), 'data', syncCtx)}
+              ${renderFieldHead(t('card-editor.action-editor.service-data'), 'data', syncCtx)}
               <textarea
                 class="input"
                 rows="3"
@@ -156,7 +156,7 @@ export function renderActionConfig(
                   writeData(target ? { ...parsed, entity_id: target } : { ...parsed });
                 }}
               ></textarea>
-              <p class="help">${t('YAML. Leave empty to call the service without data.')}</p>
+              <p class="help">${t('card-editor.action-editor.yaml-leave-empty-to-call-the-service')}</p>
             </div>
           `
         : nothing}

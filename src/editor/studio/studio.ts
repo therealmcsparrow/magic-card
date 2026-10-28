@@ -22,11 +22,11 @@ import './structure-outline';
 import './template-bar';
 import '../inspector/inspector';
 import '../modes/yaml-editor';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
-const MODES: Array<{ id: EditorMode; label: MessageId }> = [
-  { id: 'form', label: m('Form') },
-  { id: 'yaml', label: m('YAML') },
+const MODES: Array<{ id: EditorMode; label: MessageIndex }> = [
+  { id: 'form', label: m('card-editor.studio.form') },
+  { id: 'yaml', label: m('card-editor.studio.yaml') },
 ];
 
 /** Ctrl+\ on most systems, the command key on Apple ones. */
@@ -38,24 +38,24 @@ function shortcutKeys(): string {
 function lipSpecs(): PanelLipSpec[] {
   const keys = shortcutKeys();
   return [
-    { id: 'layers', side: 'start', controls: 'layers', name: t('Layers panel'), noun: t('layers'),
-      hideLabel: t('Hide {noun} ({keys})', { noun: t('layers'), keys }), showLabel: t('Show {noun} ({keys})', { noun: t('layers'), keys }) },
-    { id: 'inspector', side: 'end', controls: 'inspector', name: t('Inspector panel'), noun: t('inspector'),
-      hideLabel: t('Hide {noun} ({keys})', { noun: t('inspector'), keys }), showLabel: t('Show {noun} ({keys})', { noun: t('inspector'), keys }) },
+    { id: 'layers', side: 'start', controls: 'layers', name: t('card-editor.studio.layers-panel'), noun: t('card-editor.studio.layers'),
+      hideLabel: t('card-editor.studio.hide-noun-keys', { noun: t('card-editor.studio.layers'), keys }), showLabel: t('card-editor.studio.show-noun-keys', { noun: t('card-editor.studio.layers'), keys }) },
+    { id: 'inspector', side: 'end', controls: 'inspector', name: t('card-editor.studio.inspector-panel'), noun: t('card-editor.studio.inspector'),
+      hideLabel: t('card-editor.studio.hide-noun-keys', { noun: t('card-editor.studio.inspector'), keys }), showLabel: t('card-editor.studio.show-noun-keys', { noun: t('card-editor.studio.inspector'), keys }) },
   ];
 }
 
 function lipStrings(locale: string): PanelLipStrings {
-  const hintOne = t('The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' });
+  const hintOne = t('card-editor.studio.the-noun-panel-is-hidden-as-you-left-it', { noun: '{noun}' });
   return {
     locale,
-    hidden: t('{panels} hidden', { panels: '{panels}' }),
-    shown: t('{panels} shown', { panels: '{panels}' }),
+    hidden: t('card-editor.studio.panels-hidden', { panels: '{panels}' }),
+    shown: t('card-editor.studio.panels-shown', { panels: '{panels}' }),
     hintOne,
-    hintMany: t('Some panels are hidden, as you left them. Use the arrows on the edges to show them.'),
+    hintMany: t('card-editor.studio.some-panels-are-hidden-as-you-left-them'),
     hintMigrated: hintOne,
-    hintShortcut: t('Shortcut: {keys}', { keys: shortcutKeys() }),
-    gotIt: t('Got it'),
+    hintShortcut: t('card-editor.studio.shortcut-keys', { keys: shortcutKeys() }),
+    gotIt: t('card-editor.studio.got-it'),
   };
 }
 
@@ -393,13 +393,13 @@ export class Studio extends LitElement {
       <header class="topbar">
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm" @click=${this._close}>
-            <ha-icon icon="mdi:arrow-left"></ha-icon>${t('Back to dialog')}
+            <ha-icon icon="mdi:arrow-left"></ha-icon>${t('card-editor.studio.back-to-dialog')}
           </button>
           <button
             type="button"
             class="icon-btn layers-toggle"
-            aria-label=${t('Layers')}
-            title=${t('Layers')}
+            aria-label=${t('card-editor.studio.layers-2')}
+            title=${t('card-editor.studio.layers-2')}
             aria-controls="layers"
             aria-expanded=${this._showLayers ? 'true' : 'false'}
             data-open=${this._showLayers ? 'true' : 'false'}
@@ -411,13 +411,13 @@ export class Studio extends LitElement {
           </button>
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
-            <strong>${s.config.name?.trim() || t('Untitled card')}</strong>
+            <strong>${s.config.name?.trim() || t('card-editor.studio.untitled-card')}</strong>
             <mc-template-bar compact .config=${s.config} .hass=${this.hass} .disabled=${live} class=${live ? 'dim' : ''}></mc-template-bar>
           </div>
         </div>
         <span class="spacer"></span>
         <div class="grp">
-          <div class="seg mode" role="tablist" aria-label=${t('Editor mode')}>
+          <div class="seg mode" role="tablist" aria-label=${t('card-editor.studio.editor-mode')}>
             ${MODES.map((m) => {
               const on = m.id === mode;
               return html`<button
@@ -431,7 +431,7 @@ export class Studio extends LitElement {
               >${t(m.label)}</button>`;
             })}
           </div>
-          <div class="seg devices" role="radiogroup" aria-label=${t('Canvas width')} ?hidden=${mode !== 'form' && !live}>
+          <div class="seg devices" role="radiogroup" aria-label=${t('card-editor.studio.canvas-width')} ?hidden=${mode !== 'form' && !live}>
             ${OPTION_IDS.map((id) => {
               const on = id === this._width.option;
               return html`<button
@@ -450,20 +450,20 @@ export class Studio extends LitElement {
         <span class="spacer"></span>
         <div class="grp end">
           <button type="button" class="btn btn-secondary btn-sm preview-toggle" aria-pressed=${live ? 'true' : 'false'}
-            title=${live ? t('Preview (Esc to return)') : t('Preview the card with live actions')}
+            title=${live ? t('card-editor.studio.preview-esc-to-return') : t('card-editor.studio.preview-the-card-with-live-actions')}
             @click=${() => this._setLive(!live)}>
-            <ha-icon icon=${live ? 'mdi:play-circle' : 'mdi:play-circle-outline'}></ha-icon><span class="lbl">${t('Preview')}</span>
+            <ha-icon icon=${live ? 'mdi:play-circle' : 'mdi:play-circle-outline'}></ha-icon><span class="lbl">${t('card-editor.studio.preview')}</span>
           </button>
           <span class="live-chip" aria-hidden="true" ?hidden=${!live}>
-            <ha-icon icon="mdi:flash-outline"></ha-icon>${t('Preview: actions are live')}
+            <ha-icon icon="mdi:flash-outline"></ha-icon>${t('card-editor.studio.preview-actions-are-live')}
           </span>
-          <span class="sr-only" role="status" aria-live="polite">${live ? t('Preview: actions are live') : ''}</span>
-          <button type="button" class="icon-btn" aria-label=${t('Undo (Ctrl+Z)')} title=${t('Undo (Ctrl+Z)')}
+          <span class="sr-only" role="status" aria-live="polite">${live ? t('card-editor.studio.preview-actions-are-live') : ''}</span>
+          <button type="button" class="icon-btn" aria-label=${t('card-editor.studio.undo-ctrl-z')} title=${t('card-editor.studio.undo-ctrl-z')}
             ?disabled=${live || !sm.canUndo()} @click=${() => sm.undo()}><ha-icon icon="mdi:undo"></ha-icon></button>
-          <button type="button" class="icon-btn" aria-label=${t('Redo (Ctrl+Y)')} title=${t('Redo (Ctrl+Y)')}
+          <button type="button" class="icon-btn" aria-label=${t('card-editor.studio.redo-ctrl-y')} title=${t('card-editor.studio.redo-ctrl-y')}
             ?disabled=${live || !sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
           <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
-            <ha-icon icon="mdi:check"></ha-icon>${t('Done')}
+            <ha-icon icon="mdi:check"></ha-icon>${t('card-editor.studio.done')}
           </button>
         </div>
       </header>
@@ -484,7 +484,7 @@ export class Studio extends LitElement {
     return html`
       <dialog
         class="studio ${this._showLayers ? 'show-layers' : ''}"
-        aria-label=${t('Magic Card studio')}
+        aria-label=${t('card-editor.studio.magic-card-studio')}
         @cancel=${this._onCancel}
         @close=${this._onNativeClose}
         @keydown=${this._onKeydown}
@@ -495,11 +495,11 @@ export class Studio extends LitElement {
               ${this._renderTopbar(s, mode)}
               <div class="workspace ${live ? 'live' : ''} ${lips.isHidden('layers') ? 'no-layers' : ''} ${lips.isHidden('inspector') ? 'no-inspector' : ''}"
                 style=${this._lipTokens()}>
-                <nav class="panel layers" id="layers" aria-label=${t('Layers panel')} ?hidden=${live} ?inert=${live || lips.isHidden('layers')}
+                <nav class="panel layers" id="layers" aria-label=${t('card-editor.studio.layers-panel')} ?hidden=${live} ?inert=${live || lips.isHidden('layers')}
                   data-lip=${lips.state('layers')} data-dir=${lips.dir}>
                   <div class="panel-title">
-                    <h2>${t('Layers')}</h2>
-                    <span class="chip is-count">${t('{mods, plural, one {# module} other {# modules}}', { mods })}</span>
+                    <h2>${t('card-editor.studio.layers-2')}</h2>
+                    <span class="chip is-count">${t('card-editor.studio.mods', { mods })}</span>
                   </div>
                   <mc-structure-outline .stateManager=${sm} variant="layers" @mc-edit-module=${this._onEditModule}
                     @mc-status=${this._onStatus} @mc-rename-done=${this._onRenameDone}></mc-structure-outline>
@@ -520,7 +520,7 @@ export class Studio extends LitElement {
                     : nothing}
                 </div>
                 ${lips.lip('inspector')}
-                <aside class="panel inspector" id="inspector" aria-label=${t('Inspector panel')} ?hidden=${live} ?inert=${live || lips.isHidden('inspector')}
+                <aside class="panel inspector" id="inspector" aria-label=${t('card-editor.studio.inspector-panel')} ?hidden=${live} ?inert=${live || lips.isHidden('inspector')}
                   data-lip=${lips.state('inspector')} data-dir=${lips.dir}>
                   <mc-inspector .stateManager=${sm} .hass=${this.hass} variant="studio"></mc-inspector>
                 </aside>

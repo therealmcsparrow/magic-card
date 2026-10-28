@@ -25,8 +25,8 @@ const NOTE = 'margin:0 0 8px;color:var(--secondary-text-color)';
  */
 export function layerEditorNote(): TemplateResult | typeof nothing {
   if (layerEditorChunk.ready()) return nothing;
-  const failed = html`<p role="alert" style=${NOTE}>${t('Layer settings could not load. Reload the page.')}</p>`;
+  const failed = html`<p role="alert" style=${NOTE}>${t('card-editor.layer-editor-loader.layer-settings-could-not-load-reload-the')}</p>`;
   if (layerEditorChunk.failed()) return failed;
-  const loading = html`<p role="status" style=${NOTE}>${t('Loading layer settings…')}</p>`;
+  const loading = html`<p role="status" style=${NOTE}>${t('card-editor.layer-editor-loader.loading-layer-settings')}</p>`;
   return html`${until(loadLayerEditor().then((ok) => (ok ? nothing : failed)), loading)}`;
 }

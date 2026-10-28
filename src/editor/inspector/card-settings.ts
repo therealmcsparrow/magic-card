@@ -78,7 +78,7 @@ export function cardThemeOptions(hass?: HomeAssistant): ThemeOption[] {
   const names = Object.keys(hass?.themes?.themes || {}).sort((a, b) =>
     a.localeCompare(b, undefined, { sensitivity: 'base' }),
   );
-  return [{ label: t('Dashboard default'), value: '__default__' }, ...names.map((n) => ({ label: n, value: n }))];
+  return [{ label: t('card-editor.card-settings.dashboard-default'), value: '__default__' }, ...names.map((n) => ({ label: n, value: n }))];
 }
 
 const newCondition = (): DisplayCondition => ({ id: generateId('cond'), type: 'state', entity: '', state: '' });
@@ -98,23 +98,23 @@ export interface CardEntityField {
 function renderCardEntity(config: MagicCardConfig, hass: HomeAssistant | undefined, field: CardEntityField): TemplateResult {
   return html`
     <div class="mc-field">
-      <div class="field-head"><label>${t('Card entity')}</label><span class="help">${t('Optional')}</span></div>
+      <div class="field-head"><label>${t('card-editor.card-settings.card-entity')}</label><span class="help">${t('card-editor.card-settings.optional')}</span></div>
       <mc-entity-picker
         data-card-entity
         .hass=${hass}
         .value=${typeof config.entity === 'string' ? config.entity : ''}
-        .label=${t('Card entity')}
-        .placeholder=${t('Pick a device')}
+        .label=${t('card-editor.card-settings.card-entity')}
+        .placeholder=${t('card-editor.card-settings.pick-a-device')}
         .strict=${true}
         .preferred=${field.preferred}
-        .help=${`${t('The device this card is for. Tiles follow it unless you set one for them.')} ${t("Magic Card Utils templates never include it. Applying one keeps this card's entity.")}`}
+        .help=${`${t('card-editor.card-settings.the-device-this-card-is-for-tiles-follow')} ${t("card-editor.card-settings.magic-card-utils-templates-never-include")}`}
         @value-changed=${(e: CustomEvent<{ value: string }>) => field.onChange(e.detail.value === '' ? undefined : e.detail.value)}
       ></mc-entity-picker>
       ${field.following > 0
-        ? html`<p class="help follow">${t('{n, plural, one {# tile follows it.} other {# tiles follow it.}}', { n: field.following })}</p>`
+        ? html`<p class="help follow">${t('card-editor.card-settings.n', { n: field.following })}</p>`
         : nothing}
       ${field.needing > 0
-        ? html`<p class="help follow needs">${t('{n, plural, one {# tile needs another device.} other {# tiles need another device.}}', { n: field.needing })}</p>`
+        ? html`<p class="help follow needs">${t('card-editor.card-settings.n-2', { n: field.needing })}</p>`
         : nothing}
     </div>
   `;
@@ -133,18 +133,18 @@ export function renderCardGeneral(
   const popupOn = popup?.enabled === true;
   return html`
     <div class="group">
-      ${renderTextField(t('Name'), config.name, (v) => update('name', v), 'name', syncCtx)}
+      ${renderTextField(t('card-editor.card-settings.name'), config.name, (v) => update('name', v), 'name', syncCtx)}
       ${entityField ? renderCardEntity(config, hass, entityField) : nothing}
       ${renderToggleField(
-        t('Use dashboard theme'),
+        t('card-editor.card-settings.use-dashboard-theme'),
         usePageTheme,
         (v) => update('use_page_theme', v),
         'use_page_theme',
         syncCtx,
-        t('Turn off to pick a theme for this card only.'),
+        t('card-editor.card-settings.turn-off-to-pick-a-theme-for-this-card'),
       )}
       ${renderSelectField(
-        t('Card theme'),
+        t('card-editor.card-settings.card-theme'),
         usePageTheme ? '__default__' : config.theme || '__default__',
         cardThemeOptions(hass),
         (v) => update('theme', v === '__default__' ? undefined : v),
@@ -156,15 +156,15 @@ export function renderCardGeneral(
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:dock-window"></ha-icon>
-        <h3>${t('Pop-up')}</h3>
+        <h3>${t('card-editor.card-settings.pop-up')}</h3>
       </div>
       ${renderToggleField(
-        t('Show as pop-up'),
+        t('card-editor.card-settings.show-as-pop-up'),
         popupOn,
         (v) => update('popup', v ? { ...popup, enabled: true } : popup && Object.keys(popup).length > 1 ? { ...popup, enabled: false } : undefined),
         'popup',
         syncCtx,
-        t('Hidden on the dashboard; opens over it from its #ID, a trigger or an Open pop-up action.'),
+        t('card-editor.card-settings.hidden-on-the-dashboard-opens-over-it'),
       )}
       ${popupOn
         ? html`<mc-popup-settings
@@ -223,7 +223,7 @@ export function renderCardDesign(
   const writeRules = (next: ConditionalCardAppearance[]) => update('conditional_appearance', next);
   const addRule = () => {
     const id = generateId('appr');
-    writeRules([...rules, { id, name: t('Rule {n}', { n: rules.length + 1 }), conditions: [], mode: 'every', overrides: {} }]);
+    writeRules([...rules, { id, name: t('card-editor.card-settings.rule-n', { n: rules.length + 1 }), conditions: [], mode: 'every', overrides: {} }]);
     design.set(id);
   };
   const updateRule = (patchRule: Partial<ConditionalCardAppearance>) =>
@@ -254,31 +254,31 @@ export function renderCardDesign(
   const lbl = (label: string, key: string, forId?: string) =>
     renderFieldHead(label, key, sc, { forId, reset: src.rule ? fieldReset(label, key in ov, () => src.set(key, undefined)) : undefined });
   const unset = (key: string) =>
-    src.rule && !(key in ov) ? html`<p class="help">${t('Not set in this rule: Default applies.')}</p>` : nothing;
+    src.rule && !(key in ov) ? html`<p class="help">${t('card-editor.card-settings.not-set-in-this-rule-default-applies')}</p>` : nothing;
 
   const str = (k: string) => src.get(k) as string | undefined;
   const fields: Record<string, () => TemplateResult | typeof nothing> = {
-    card_height: () => html`${renderUnitField(t('Card height'), str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
-    padding: () => html`${renderBoxField(t('Padding'), str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
+    card_height: () => html`${renderUnitField(t('card-editor.card-settings.card-height'), str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
+    padding: () => html`${renderBoxField(t('card-editor.card-settings.padding'), str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
     margin: () => html`${renderBoxField(lt('Margin'), str('margin'), (v) => src.set('margin', v), 'margin', 'margin', sc)}${unset('margin')}`,
-    border_width: () => html`${renderUnitField(lt('Border width'), str('border_width'), (v) => src.set('border_width', v), 'border_width', sc, t('Theme default'), BORDER_UNITS)}${unset('border_width')}`,
+    border_width: () => html`${renderUnitField(lt('Border width'), str('border_width'), (v) => src.set('border_width', v), 'border_width', sc, t('card-editor.card-settings.theme-default'), BORDER_UNITS)}${unset('border_width')}`,
     border_style: () =>
-      html`${renderSelectField(lt('Border style'), str('border_style') ?? '', [{ label: t('Theme default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => src.set('border_style', v || undefined), 'border_style', sc)}${unset('border_style')}`,
+      html`${renderSelectField(lt('Border style'), str('border_style') ?? '', [{ label: t('card-editor.card-settings.theme-default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => src.set('border_style', v || undefined), 'border_style', sc)}${unset('border_style')}`,
     border_color: () => html`${renderColorField(lt('Border colour'), str('border_color'), (v) => src.set('border_color', v), 'border_color', sc)}${unset('border_color')}`,
     opacity: () =>
-      html`${renderNumberField(t('Opacity'), src.get('opacity') as number | undefined, (v) => src.set('opacity', Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : undefined), { min: 0, max: 1, step: 0.05, placeholder: '1', optional: true }, 'opacity', sc)}
-        <p class="help">${t('Below 1 the whole card fades, text included, which lowers contrast.')}</p>${unset('opacity')}`,
+      html`${renderNumberField(t('card-editor.card-settings.opacity'), src.get('opacity') as number | undefined, (v) => src.set('opacity', Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : undefined), { min: 0, max: 1, step: 0.05, placeholder: '1', optional: true }, 'opacity', sc)}
+        <p class="help">${t('card-editor.card-settings.below-1-the-whole-card-fades-text')}</p>${unset('opacity')}`,
     backdrop_filter: () =>
       html`${renderTextField(lt('Backdrop filter'), str('backdrop_filter'), (v) => src.set('backdrop_filter', v), 'backdrop_filter', sc, { placeholder: 'blur(8px)', mono: true })}
-        <p class="help">${t('Blurs what is behind the card. It only shows through a see-through background, for example rgba(0, 0, 0, 0.3).')}</p>${unset('backdrop_filter')}`,
-    background: () => html`${renderColorField(t('Background colour'), str('background'), (v) => src.set('background', v), 'background', sc, 'css')}${unset('background')}`,
+        <p class="help">${t('card-editor.card-settings.blurs-what-is-behind-the-card-it-only')}</p>${unset('backdrop_filter')}`,
+    background: () => html`${renderColorField(t('card-editor.card-settings.background-colour'), str('background'), (v) => src.set('background', v), 'background', sc, 'css')}${unset('background')}`,
     background_image: () =>
-      html`${renderMediaField(t('Background image'), str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc)}${unset('background_image')}`,
-    border_radius: () => html`${renderUnitField(t('Border radius'), str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc)}${unset('border_radius')}`,
+      html`${renderMediaField(t('card-editor.card-settings.background-image'), str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc)}${unset('background_image')}`,
+    border_radius: () => html`${renderUnitField(t('card-editor.card-settings.border-radius'), str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc)}${unset('border_radius')}`,
     box_shadow: () =>
-      html`${renderTextField(t('Box shadow'), str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: t('Theme default'), mono: true })}${unset('box_shadow')}`,
+      html`${renderTextField(t('card-editor.card-settings.box-shadow'), str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: t('card-editor.card-settings.theme-default'), mono: true })}${unset('box_shadow')}`,
     shape: () => html`<div class="field">
-      ${lbl(t('Shape'), 'shape')}
+      ${lbl(t('card-editor.card-settings.shape'), 'shape')}
       <mc-shape-editor
         .shape=${src.get('shape') as never}
         .options=${src.get('shape_options') as never}
@@ -293,7 +293,7 @@ export function renderCardDesign(
       ${unset('shape')}
     </div>`,
     value_background: () => html`<div class="field">
-      ${lbl(t('Value background'), 'value_background')}
+      ${lbl(t('card-editor.card-settings.value-background'), 'value_background')}
       <mc-value-bg-editor
         .value=${src.get('value_background') as ValueBackgroundConfig | undefined}
         .hass=${hass}
@@ -305,7 +305,7 @@ export function renderCardDesign(
     // Card backdrop (bg-stack 1.0.0): a rule that sets background_layers replaces the whole list; Hover never carries it
     style_hint: () =>
       !src.rule && (config.background_layers?.length ?? 0) > 0
-        ? html`<p class="help" data-hint="backdrop">${t('Card backdrop layers sit on top of this colour and image.')}</p>`
+        ? html`<p class="help" data-hint="backdrop">${t('card-editor.card-settings.card-backdrop-layers-sit-on-top-of-this')}</p>`
         : nothing,
     backdrop: () => {
       const own = src.rule ? 'background_layers' in ov : true;
@@ -315,7 +315,7 @@ export function renderCardDesign(
         else update('background_layers', list.length ? list : undefined);
       };
       return html`<div class="field">
-        ${lbl(t('Layers'), 'background_layers')}
+        ${lbl(t('card-editor.card-settings.layers'), 'background_layers')}
         ${layerEditorNote()}
         <mc-bg-layers
           .layers=${layers}
@@ -337,7 +337,7 @@ export function renderCardDesign(
       </div>`;
     },
     ring: () => html`<div class="field">
-      ${lbl(t('Ring'), 'ring')}
+      ${lbl(t('card-editor.card-settings.ring'), 'ring')}
       <mc-ring-editor
         .ring=${src.get('ring') as RingConfig | undefined}
         .hass=${hass}
@@ -348,7 +348,7 @@ export function renderCardDesign(
       ${unset('ring')}
     </div>`,
     seasonal: () => html`<div class="field">
-      ${lbl(t('Seasonal'), 'seasonal')}
+      ${lbl(t('card-editor.card-settings.seasonal'), 'seasonal')}
       <mc-seasonal-editor
         .value=${src.get('seasonal') as SeasonalSetting | undefined}
         .hass=${hass}
@@ -361,7 +361,7 @@ export function renderCardDesign(
       src.rule
         ? nothing
         : html`<div class="field">
-            ${renderFieldHead(t('Animations'), 'animations', syncCtx)}
+            ${renderFieldHead(t('card-editor.card-settings.animations'), 'animations', syncCtx)}
             <mc-animation-list
               .animations=${readAnimations({ animations: config.animations })}
               .hass=${hass}
@@ -374,7 +374,7 @@ export function renderCardDesign(
     pause_button: () => {
       if (src.rule) return nothing;
       const cur = config.pause_button === 'always' || config.pause_button === 'auto' ? config.pause_button : 'hidden';
-      const modes: Array<[PauseButtonMode, string]> = [['auto', t('Automatic')], ['always', t('Always')], ['hidden', t('Hidden')]];
+      const modes: Array<[PauseButtonMode, string]> = [['auto', t('card-editor.card-settings.automatic')], ['always', t('card-editor.card-settings.always')], ['hidden', t('card-editor.card-settings.hidden')]];
       const pick = (m: PauseButtonMode) => update('pause_button', m === 'hidden' ? undefined : m);
       // roving tabindex and arrow keys, as the segmented control of the flows editor
       const onKey = (e: KeyboardEvent) => {
@@ -393,19 +393,19 @@ export function renderCardDesign(
         requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
       };
       return html`<div class="field" data-field="pause_button">
-        ${renderFieldHead(t('Pause button'), 'pause_button', syncCtx)}
-        <div class="seg full" role="radiogroup" aria-label=${t('Pause button')} aria-describedby="pause-button-help" @keydown=${onKey}>
+        ${renderFieldHead(t('card-editor.card-settings.pause-button'), 'pause_button', syncCtx)}
+        <div class="seg full" role="radiogroup" aria-label=${t('card-editor.card-settings.pause-button')} aria-describedby="pause-button-help" @keydown=${onKey}>
           ${modes.map(([m, label]) => html`<button type="button" role="radio" data-val=${m} tabindex=${cur === m ? '0' : '-1'} aria-checked=${cur === m ? 'true' : 'false'} @click=${() => pick(m)}>${label}</button>`)}
         </div>
-        <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t("Viewers can't pause the motion on this card. Turn the button on if anything moves for more than 5 seconds.") : t('Shown while the card has motion. Viewers can pause it.')}</p>
+        <p class="help" id="pause-button-help">${cur === 'always' ? t('card-editor.card-settings.always-shown-even-when-nothing-moves') : cur === 'hidden' ? t("card-editor.card-settings.viewers-can-t-pause-the-motion-on-this") : t('card-editor.card-settings.shown-while-the-card-has-motion-viewers')}</p>
       </div>`;
     },
     pause_button_corner: () => {
       if (src.rule || (config.pause_button !== 'auto' && config.pause_button !== 'always')) return nothing; // unset counts as hidden
       const cur = config.pause_button_corner ?? 'bottom-left';
-      const corners: Array<[PauseButtonCorner, string]> = [['bottom-left', t('Bottom left')], ['bottom-right', t('Bottom right')], ['top-left', t('Top left')], ['top-right', t('Top right')]];
+      const corners: Array<[PauseButtonCorner, string]> = [['bottom-left', t('card-editor.card-settings.bottom-left')], ['bottom-right', t('card-editor.card-settings.bottom-right')], ['top-left', t('card-editor.card-settings.top-left')], ['top-right', t('card-editor.card-settings.top-right')]];
       return html`<div class="field" data-field="pause_button_corner">
-        <div class="field-head"><label for="pause-corner">${t('Corner')}</label></div>
+        <div class="field-head"><label for="pause-corner">${t('card-editor.card-settings.corner')}</label></div>
         <div class="select">
           <select class="input" id="pause-corner" @change=${(e: Event) => update('pause_button_corner', ((e.target as HTMLSelectElement).value as PauseButtonCorner) === 'bottom-left' ? undefined : ((e.target as HTMLSelectElement).value as PauseButtonCorner))}>
             ${corners.map(([c, label]) => html`<option value=${c} ?selected=${cur === c}>${label}</option>`)}
@@ -418,16 +418,16 @@ export function renderCardDesign(
       src.rule
         ? nothing
         : html`<div class="field">
-            ${renderFieldHead(t('Custom CSS'), 'css', syncCtx, {
+            ${renderFieldHead(t('card-editor.card-settings.custom-css'), 'css', syncCtx, {
               forId: 'card-css',
-              reset: fieldReset(t('Custom CSS'), !!config.css, () => update('css', undefined)),
+              reset: fieldReset(t('card-editor.card-settings.custom-css'), !!config.css, () => update('css', undefined)),
             })}
             <textarea
               class="input mono"
               id="card-css"
               rows="4"
               spellcheck="false"
-              placeholder=${t("Applied to the card's content, e.g. letter-spacing: 0.5px")}
+              placeholder=${t("card-editor.card-settings.applied-to-the-card-s-content-e-g-letter")}
               .value=${config.css || ''}
               @input=${(e: InputEvent) => update('css', (e.target as HTMLTextAreaElement).value || undefined)}
             ></textarea>
@@ -435,17 +435,17 @@ export function renderCardDesign(
   };
   // [group id, name, open by default, [field, counted key][]]
   const groups: Array<[string, string, boolean, Array<[string, string?]>]> = [
-    ['layout', t('Layout'), true, [['card_height', 'card_height'], ['padding', 'padding'], ['margin', 'margin']]],
-    ['motion', t('Motion'), true, [['pause_button', 'pause_button'], ['pause_button_corner']]],
+    ['layout', t('card-editor.card-settings.layout'), true, [['card_height', 'card_height'], ['padding', 'padding'], ['margin', 'margin']]],
+    ['motion', t('card-editor.card-settings.motion'), true, [['pause_button', 'pause_button'], ['pause_button_corner']]],
     [
       'style',
-      t('Style'),
+      t('card-editor.card-settings.style'),
       true,
       [['background', 'background'], ['background_image', 'background_image'], ['style_hint'], ['border_radius', 'border_radius'], ['border_width', 'border_width'], ['border_style', 'border_style'], ['border_color', 'border_color'], ['box_shadow', 'box_shadow'], ['opacity', 'opacity'], ['backdrop_filter', 'backdrop_filter'], ['shape', 'shape'], ['value_background', 'value_background']],
     ],
-    ['backdrop', t('Card backdrop'), false, [['backdrop', 'background_layers']]],
-    ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
-    ['advanced', t('Advanced'), false, [['css', 'css']]],
+    ['backdrop', t('card-editor.card-settings.card-backdrop'), false, [['backdrop', 'background_layers']]],
+    ['effects', t('card-editor.card-settings.effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
+    ['advanced', t('card-editor.card-settings.advanced'), false, [['css', 'css']]],
   ];
   const renderGroup = ([id, name, defaultOpen, entries]: (typeof groups)[number]) => {
     const body = entries.map(([f]) => fields[f]()).filter((t) => t !== nothing);
@@ -457,8 +457,8 @@ export function renderCardDesign(
       <button type="button" class="dgroup-btn" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`dg-${id}`} @click=${() => design.toggle(id, !open)}>
         <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
         <span class="nm">${name}</span>
-        ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
-        ${id === 'backdrop' && !src.rule && backdropHasProblem(config.background_layers) ? html`<span class="chip is-warn" data-warn="backdrop">⚠ ${t('Problem')}</span>` : nothing}
+        ${count > 0 ? html`<span class="chip is-count">${t('card-editor.card-settings.n-set', { n: count })}</span>` : nothing}
+        ${id === 'backdrop' && !src.rule && backdropHasProblem(config.background_layers) ? html`<span class="chip is-warn" data-warn="backdrop">⚠ ${t('card-editor.card-settings.problem')}</span>` : nothing}
       </button>
       <div class="dgroup-body" id=${`dg-${id}`} ?hidden=${!open}>${body}</div>
     </section>`;
@@ -466,29 +466,29 @@ export function renderCardDesign(
 
   const n = rules.length;
   const help = hover
-    ? t('Applied while the pointer is over this card, on top of Default and matching rules.')
+    ? t('card-editor.card-settings.applied-while-the-pointer-is-over-this')
     : n
-      ? t('{n, plural, one {# conditional rule} other {# conditional rules}}. Same rules as the Conditions tab. Rules override Default only while their conditions match. A later rule wins over an earlier one.', { n })
-      : t('Add a rule to change the look when conditions match.');
+      ? t('card-editor.card-settings.n-same-rules-as-the-conditions-tab-rules', { n })
+      : t('card-editor.card-settings.add-a-rule-to-change-the-look-when');
   const mode = rule?.mode === 'any' ? 'any' : 'every';
   const conditions = rule?.conditions || [];
   const picker = html`<div class="rule-pick">
     <div class="field">
-      <div class="field-head"><label for="design-view">${t('Editing design for')}</label></div>
+      <div class="field-head"><label for="design-view">${t('card-editor.card-settings.editing-design-for')}</label></div>
       <div class="select">
         <select class="input" id="design-view" aria-describedby="design-view-help" @change=${(e: Event) => design.set((e.target as HTMLSelectElement).value)}>
-          <option value="default" ?selected=${!hover && !rule}>${t('Default')}</option>
-          <option value=${HOVER_VIEW} ?selected=${hover}>${t('Hover')}</option>
-          ${rules.map((r, i) => html`<option value=${r.id} ?selected=${r === rule}>${t('Rule: {name}', { name: r.name || t('Rule {n}', { n: i + 1 }) })}</option>`)}
+          <option value="default" ?selected=${!hover && !rule}>${t('card-editor.card-settings.default')}</option>
+          <option value=${HOVER_VIEW} ?selected=${hover}>${t('card-editor.card-settings.hover')}</option>
+          ${rules.map((r, i) => html`<option value=${r.id} ?selected=${r === rule}>${t('card-editor.card-settings.rule-name', { name: r.name || t('card-editor.card-settings.rule-n', { n: i + 1 }) })}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
       <p class="help" id="design-view-help">${help}</p>
     </div>
     <div class="rule-actions">
-      <button type="button" class="btn btn-text btn-sm" @click=${addRule}><ha-icon icon="mdi:plus"></ha-icon>${t('Add conditional rule')}</button>
+      <button type="button" class="btn btn-text btn-sm" @click=${addRule}><ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.card-settings.add-conditional-rule')}</button>
       ${n && openTab
-        ? html`<button type="button" class="btn btn-text btn-sm" data-open-tab="conditions" @click=${() => openTab('conditions')}>${t('Open Conditions')}</button>`
+        ? html`<button type="button" class="btn btn-text btn-sm" data-open-tab="conditions" @click=${() => openTab('conditions')}>${t('card-editor.card-settings.open-conditions')}</button>`
         : nothing}
     </div>
   </div>`;
@@ -496,7 +496,7 @@ export function renderCardDesign(
   const ruleBox = rule
     ? html`<div class="rule">
         <div class="rule-head">
-          <h3>${t('Rule')}</h3>
+          <h3>${t('card-editor.card-settings.rule')}</h3>
           <button
             type="button"
             class="btn btn-text btn-sm danger-text"
@@ -504,17 +504,17 @@ export function renderCardDesign(
               writeRules(rules.filter((r) => r !== rule));
               design.set('default');
             }}
-          ><ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete rule')}</button>
+          ><ha-icon icon="mdi:delete-outline"></ha-icon>${t('card-editor.card-settings.delete-rule')}</button>
         </div>
         <div class="field">
-          <div class="field-head"><label for="rule-name">${t('Rule name')}</label></div>
-          <input class="input" id="rule-name" type="text" placeholder=${t('Rule name')} .value=${rule.name || ''} @input=${(e: InputEvent) => updateRule({ name: (e.target as HTMLInputElement).value })} />
+          <div class="field-head"><label for="rule-name">${t('card-editor.card-settings.rule-name-2')}</label></div>
+          <input class="input" id="rule-name" type="text" placeholder=${t('card-editor.card-settings.rule-name-2')} .value=${rule.name || ''} @input=${(e: InputEvent) => updateRule({ name: (e.target as HTMLInputElement).value })} />
         </div>
         <div class="field">
-          <div class="field-head"><span class="lbl">${t('Match')}</span></div>
-          <div class="seg full" role="radiogroup" aria-label=${t('Condition match')}>
+          <div class="field-head"><span class="lbl">${t('card-editor.card-settings.match')}</span></div>
+          <div class="seg full" role="radiogroup" aria-label=${t('card-editor.card-settings.condition-match')}>
             ${(['every', 'any'] as const).map(
-              (m) => html`<button type="button" role="radio" aria-checked=${mode === m ? 'true' : 'false'} @click=${() => updateRule({ mode: m })}>${m === 'every' ? t('All match (AND)') : t('Any matches (OR)')}</button>`,
+              (m) => html`<button type="button" role="radio" aria-checked=${mode === m ? 'true' : 'false'} @click=${() => updateRule({ mode: m })}>${m === 'every' ? t('card-editor.card-settings.all-match-and') : t('card-editor.card-settings.any-matches-or')}</button>`,
             )}
           </div>
         </div>
@@ -528,10 +528,10 @@ export function renderCardDesign(
                   .onRemove=${() => updateRule({ conditions: conditions.filter((_c, j) => j !== i) })}
                 ></mc-condition-row>`,
               )
-            : html`<p class="help">${t('No conditions yet. The rule applies once a condition is added and matches.')}</p>`}
+            : html`<p class="help">${t('card-editor.card-settings.no-conditions-yet-the-rule-applies-once')}</p>`}
           <div>
             <button type="button" class="btn btn-secondary btn-sm" @click=${() => updateRule({ conditions: [...conditions, newCondition()] })}>
-              <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
+              <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.card-settings.add-condition')}
             </button>
           </div>
         </div>
@@ -544,11 +544,11 @@ export function renderCardDesign(
       ${hover
         ? html`<section class="group">
             <div class="field">
-              ${renderFieldHead(t('Hover'), 'hover', syncCtx, { reset: fieldReset(t('Hover'), !!config.hover, () => update('hover', undefined)) })}
+              ${renderFieldHead(t('card-editor.card-settings.hover'), 'hover', syncCtx, { reset: fieldReset(t('card-editor.card-settings.hover'), !!config.hover, () => update('hover', undefined)) })}
             </div>
             <div class="field" data-hover-backdrop>
-              <span class="lbl">${t('Card backdrop')}</span>
-              <p class="help">${t('Backgrounds do not change on hover.')}</p>
+              <span class="lbl">${t('card-editor.card-settings.card-backdrop')}</span>
+              <p class="help">${t('card-editor.card-settings.backgrounds-do-not-change-on-hover')}</p>
             </div>
             <mc-design-panel
               class="card-hover"
@@ -581,16 +581,16 @@ function renderTemplateAnimations(
   const btn = (label: string, act: () => void) => html`<button type="button" class="btn btn-text btn-sm" @click=${act}>${label}</button>`;
   // compact markup: Lit keeps a template's whitespace in the bundle
   return html`<section class="group tpl-anims"><div class="field">
-${renderFieldHead(t('Template animations'), 'custom_animations', syncCtx)}
+${renderFieldHead(t('card-editor.card-settings.template-animations'), 'custom_animations', syncCtx)}
 ${config.not_synced?.includes('custom_animations')
-  ? html`<p class="help">${t('This card uses only its own custom_animations.')}</p>`
+  ? html`<p class="help">${t('card-editor.card-settings.this-card-uses-only-its-own-custom')}</p>`
   : docs.map((d) => {
       const id = String(d.id);
       const mine = own.has(id);
       const off = !mine && hidden.has(id);
       return html`<div class="cond-head" data-id=${id}><span class="n">${d.name ?? id}
-<span class="chip">${mine ? t('Changed on this card') : off ? t('Hidden') : t('From template')}</span></span>
-${mine ? btn(t('Use template'), () => write(dropOwnAnimation(config, id))) : btn(off ? t('Show') : t('Hide'), () => write(setAnimationHidden(config, id, !off)))}</div>`;
+<span class="chip">${mine ? t('card-editor.card-settings.changed-on-this-card') : off ? t('card-editor.card-settings.hidden') : t('card-editor.card-settings.from-template')}</span></span>
+${mine ? btn(t('card-editor.card-settings.use-template'), () => write(dropOwnAnimation(config, id))) : btn(off ? t('card-editor.card-settings.show') : t('card-editor.card-settings.hide'), () => write(setAnimationHidden(config, id, !off)))}</div>`;
     })}</div></section>`;
 }
 
@@ -608,7 +608,7 @@ function renderConditionalAppearance(
   const addRule = () => {
     const id = generateId('appr');
     rulesState.expand(id);
-    writeRules([...rules, { id, name: t('Rule {n}', { n: rules.length + 1 }), conditions: [], mode: 'every', overrides: {} }]);
+    writeRules([...rules, { id, name: t('card-editor.card-settings.rule-n', { n: rules.length + 1 }), conditions: [], mode: 'every', overrides: {} }]);
   };
   const removeRule = (id: string) => {
     rulesState.collapse(id);
@@ -618,33 +618,33 @@ function renderConditionalAppearance(
     writeRules(rules.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
   const designLink = openTab
-    ? html`<div><button type="button" class="btn btn-text btn-sm" data-open-tab="design" @click=${() => openTab('design')}>${t('Open Design')}</button></div>`
+    ? html`<div><button type="button" class="btn btn-text btn-sm" data-open-tab="design" @click=${() => openTab('design')}>${t('card-editor.card-settings.open-design')}</button></div>`
     : nothing;
   return html`
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:palette-swatch-outline"></ha-icon>
-        <h3>${t('Conditional appearance')}</h3>
+        <h3>${t('card-editor.card-settings.conditional-appearance')}</h3>
       </div>
       ${rules.length
         ? html`
-            <p class="help">${t('Override appearance fields while conditions match. Rules apply in order; later rules win.')}</p>
+            <p class="help">${t('card-editor.card-settings.override-appearance-fields-while')}</p>
             ${designLink}
             ${rules.map((rule) => renderAppearanceRule(rule, hass, themeOptions, rulesState, updateRule, removeRule))}
             <div>
               <button type="button" class="btn btn-secondary btn-sm" @click=${addRule}>
-                <ha-icon icon="mdi:plus"></ha-icon>${t('Add appearance rule')}
+                <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.card-settings.add-appearance-rule')}
               </button>
             </div>
           `
         : html`
             <div class="empty">
               <ha-icon icon="mdi:palette-swatch-outline"></ha-icon>
-              <strong>${t('No appearance rules')}</strong>
-              <p>${t('Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.')}</p>
+              <strong>${t('card-editor.card-settings.no-appearance-rules')}</strong>
+              <p>${t('card-editor.card-settings.change-card-fields-like-background')}</p>
               ${designLink}
               <button type="button" class="btn btn-secondary btn-sm" @click=${addRule}>
-                <ha-icon icon="mdi:plus"></ha-icon>${t('Add appearance rule')}
+                <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.card-settings.add-appearance-rule')}
               </button>
             </div>
           `}
@@ -682,7 +682,7 @@ function renderAppearanceRule(
           class="icon-btn sm"
           aria-expanded=${expanded ? 'true' : 'false'}
           aria-controls=${bodyId}
-          aria-label=${expanded ? t('Collapse rule') : t('Expand rule')}
+          aria-label=${expanded ? t('card-editor.card-settings.collapse-rule') : t('card-editor.card-settings.expand-rule')}
           @click=${() => rulesState.toggle(rule.id)}
         >
           <ha-icon icon=${expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
@@ -690,18 +690,18 @@ function renderAppearanceRule(
         <input
           class="input rule-name"
           type="text"
-          aria-label=${t('Rule name')}
-          placeholder=${t('Rule name')}
+          aria-label=${t('card-editor.card-settings.rule-name-2')}
+          placeholder=${t('card-editor.card-settings.rule-name-2')}
           .value=${rule.name || ''}
           @input=${(e: InputEvent) => updateRule(rule.id, { name: (e.target as HTMLInputElement).value })}
         />
-        <span class="chip is-count">${t('{n} cond.', { n: conditions.length })}</span>
-        ${designCount ? html`<span class="chip">${t('+ {n, plural, one {# design field} other {# design fields}}', { n: designCount })}</span>` : nothing}
+        <span class="chip is-count">${t('card-editor.card-settings.n-cond', { n: conditions.length })}</span>
+        ${designCount ? html`<span class="chip">${t('card-editor.card-settings.n-3', { n: designCount })}</span>` : nothing}
         <button
           type="button"
           class="icon-btn sm danger"
-          aria-label=${t('Remove rule')}
-          title=${t('Remove rule')}
+          aria-label=${t('card-editor.card-settings.remove-rule')}
+          title=${t('card-editor.card-settings.remove-rule')}
           @click=${() => removeRule(rule.id)}
         >
           <ha-icon icon="mdi:delete-outline"></ha-icon>
@@ -710,7 +710,7 @@ function renderAppearanceRule(
       ${expanded
         ? html`
             <div class="rule-body" id=${bodyId}>
-              <div class="sub-head">${t('Conditions')}</div>
+              <div class="sub-head">${t('card-editor.card-settings.conditions')}</div>
               ${renderConditionsList(
                 conditions,
                 rule.mode || 'every',
@@ -725,26 +725,26 @@ function renderAppearanceRule(
                 undefined,
                 'rule',
               )}
-              <div class="sub-head">${t('Appearance overrides')}</div>
-              <p class="help">${t('Only fields you set override. Leave blank to fall through to the base settings.')}</p>
-              ${renderColorField(t('Background colour'), overrides.background, (v) => updateOverride('background', v), undefined, undefined, 'css')}
-              ${renderMediaField(t('Background image'), overrides.background_image, (v) => updateOverride('background_image', v), hass, 'image')}
-              ${renderToggleField(t('Override dashboard theme'), usePageTheme === false, (v) => updateOverride('use_page_theme', v ? false : undefined))}
+              <div class="sub-head">${t('card-editor.card-settings.appearance-overrides')}</div>
+              <p class="help">${t('card-editor.card-settings.only-fields-you-set-override-leave-blank')}</p>
+              ${renderColorField(t('card-editor.card-settings.background-colour'), overrides.background, (v) => updateOverride('background', v), undefined, undefined, 'css')}
+              ${renderMediaField(t('card-editor.card-settings.background-image'), overrides.background_image, (v) => updateOverride('background_image', v), hass, 'image')}
+              ${renderToggleField(t('card-editor.card-settings.override-dashboard-theme'), usePageTheme === false, (v) => updateOverride('use_page_theme', v ? false : undefined))}
               ${usePageTheme === false
-                ? renderSelectField(t('Card theme'), overrides.theme || '__default__', themeOptions, (v) =>
+                ? renderSelectField(t('card-editor.card-settings.card-theme'), overrides.theme || '__default__', themeOptions, (v) =>
                     updateOverride('theme', v === '__default__' ? undefined : v),
                   )
                 : nothing}
-              ${renderUnitField(t('Border radius'), overrides.border_radius, (v) => updateOverride('border_radius', v))}
-              ${renderBoxField(t('Padding'), overrides.padding, (v) => updateOverride('padding', v), 'padding')}
+              ${renderUnitField(t('card-editor.card-settings.border-radius'), overrides.border_radius, (v) => updateOverride('border_radius', v))}
+              ${renderBoxField(t('card-editor.card-settings.padding'), overrides.padding, (v) => updateOverride('padding', v), 'padding')}
               ${renderBoxField(lt('Margin'), overrides.margin as string | undefined, (v) => updateOverride('margin', v), 'margin')}
               ${renderUnitField(lt('Border width'), overrides.border_width as string | undefined, (v) => updateOverride('border_width', v), undefined, undefined, undefined, BORDER_UNITS)}
-              ${renderSelectField(lt('Border style'), overrides.border_style ?? '', [{ label: t('Theme default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => updateOverride('border_style', v || undefined))}
+              ${renderSelectField(lt('Border style'), overrides.border_style ?? '', [{ label: t('card-editor.card-settings.theme-default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => updateOverride('border_style', v || undefined))}
               ${renderColorField(lt('Border colour'), overrides.border_color, (v) => updateOverride('border_color', v))}
-              ${renderTextField(t('Box shadow'), overrides.box_shadow, (v) => updateOverride('box_shadow', v))}
-              ${renderNumberField(t('Opacity'), overrides.opacity as number | undefined, (v) => updateOverride('opacity', Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : undefined), { min: 0, max: 1, step: 0.05, placeholder: '1', optional: true })}
+              ${renderTextField(t('card-editor.card-settings.box-shadow'), overrides.box_shadow, (v) => updateOverride('box_shadow', v))}
+              ${renderNumberField(t('card-editor.card-settings.opacity'), overrides.opacity as number | undefined, (v) => updateOverride('opacity', Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : undefined), { min: 0, max: 1, step: 0.05, placeholder: '1', optional: true })}
               ${renderTextField(lt('Backdrop filter'), overrides.backdrop_filter, (v) => updateOverride('backdrop_filter', v), undefined, undefined, { placeholder: 'blur(8px)', mono: true })}
-              ${renderUnitField(t('Card height'), overrides.card_height, (v) => updateOverride('card_height', v))}
+              ${renderUnitField(t('card-editor.card-settings.card-height'), overrides.card_height, (v) => updateOverride('card_height', v))}
             </div>
           `
         : nothing}
@@ -782,7 +782,7 @@ export function renderCardFlows(
   return html`
     <section class="group">
       <div class="field">
-        ${renderFieldHead(t('Flows'), 'flows', syncCtx)}
+        ${renderFieldHead(t('card-editor.card-settings.flows'), 'flows', syncCtx)}
         <mc-flows-editor
           .config=${config}
           .hass=${hass}
@@ -821,7 +821,7 @@ export function renderCardConditions(
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:eye-outline"></ha-icon>
-        <h3>${t('Display conditions')}</h3>
+        <h3>${t('card-editor.card-settings.display-conditions')}</h3>
       </div>
       ${renderConditionsList(
         conditions,

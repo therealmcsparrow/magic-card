@@ -243,7 +243,7 @@ export class McBgLayers extends LitElement {
     if (!u) return;
     this._undo = undefined;
     this._write(u.list);
-    this._live = t('Undone.');
+    this._live = t('layer-editor.bg-layers.undone');
   }
 
   private _add(type: BgLayerType): void {
@@ -256,7 +256,7 @@ export class McBgLayers extends LitElement {
     this._write(next);
     this._open = 0;
     this._focus = { sel: '.rhead', index: 0 };
-    this._live = t('Layer added. {n} of {max}.', { n: next.length, max: MAX_BACKGROUND_LAYERS });
+    this._live = t('layer-editor.bg-layers.layer-added-n-of-max', { n: next.length, max: MAX_BACKGROUND_LAYERS });
   }
 
   private _move(i: number, dir: 'forward' | 'backward'): void {
@@ -266,7 +266,7 @@ export class McBgLayers extends LitElement {
     this._write(next);
     if (this._open === i) this._open = to;
     this._focus = { sel: `[data-act=${dir}]`, index: to };
-    this._live = t('Moved to layer {n} of {count}.', { n: to + 1, count: next.length });
+    this._live = t('layer-editor.bg-layers.moved-to-layer-n-of-count', { n: to + 1, count: next.length });
   }
 
   private _delete(i: number): void {
@@ -277,7 +277,7 @@ export class McBgLayers extends LitElement {
     this._open = -1;
     this._write(r.list);
     this._focus = { sel: '[data-act=undo-delete]' };
-    this._live = t('{name} deleted. Undo is the next button.', { name });
+    this._live = t('layer-editor.bg-layers.name-deleted-undo-is-the-next-button', { name });
     this._armDelete();
   }
 
@@ -296,7 +296,7 @@ export class McBgLayers extends LitElement {
     clearTimeout(this._timer);
     this._write(restoreLayer(this._list, d.layer, d.index));
     this._focus = { sel: '.rhead', index: Math.min(d.index, MAX_BACKGROUND_LAYERS - 1) };
-    this._live = t('{name} restored.', { name: d.name });
+    this._live = t('layer-editor.bg-layers.name-restored', { name: d.name });
   }
 
   private _patch(i: number, p: Partial<BackgroundLayerConfig>): void {
@@ -315,7 +315,7 @@ export class McBgLayers extends LitElement {
   private _applyLook(look: BackdropLook): void {
     const next = addBackdropLook(this._list, look, this.hass);
     if (!next) return;
-    this._offerUndo(t('Added {name}.', { name: t(look.name) }));
+    this._offerUndo(t('layer-editor.bg-layers.added-name', { name: t(look.name) }));
     this._write(next);
     this._open = 0;
   }
@@ -333,7 +333,7 @@ export class McBgLayers extends LitElement {
 
   private _name(layer: BackgroundLayerConfig, i: number): string {
     const s = layerSummary(layer);
-    return t('{type}, layer {n}', { type: te(s.type), n: i + 1 });
+    return t('layer-editor.bg-layers.type-layer-n', { type: te(s.type), n: i + 1 });
   }
 
   protected updated(): void {
@@ -396,14 +396,14 @@ export class McBgLayers extends LitElement {
           <span><span class="title">${te(s.type)}</span><span class="sum">${s.detail ?? ''}</span></span>
           ${chevron()}
         </button>
-        ${hidden ? html`<span class="chip" data-chip="hidden">${t('Hidden')}</span>` : nothing}
+        ${hidden ? html`<span class="chip" data-chip="hidden">${t('layer-editor.bg-layers.hidden')}</span>` : nothing}
         ${st.chip ? html`<span class="chip ${st.stale ? 'stale' : 'is-warn'}" data-chip=${st.stale ? 'stale' : 'problem'}>${st.stale ? '' : '⚠ '}${st.chip}</span>` : nothing}
       </div>
       <div class="r2">
-        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="hide" aria-label=${hidden ? t('Show {name}', { name }) : t('Hide {name}', { name })} @click=${() => this._patch(i, { hidden: hidden ? undefined : true })}>${hidden ? t('Show') : t('Hide')}</button>
-        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="forward" aria-label=${t('Move {name} forward', { name })} aria-disabled=${i === 0 ? 'true' : 'false'} @click=${() => this._move(i, 'forward')}>↑ ${t('Forward')}</button>
-        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="backward" aria-label=${t('Move {name} backward', { name })} aria-disabled=${i === count - 1 ? 'true' : 'false'} @click=${() => this._move(i, 'backward')}>↓ ${t('Backward')}</button>
-        <button type="button" class="lyr-btn btn btn-secondary btn-sm del" data-act="delete" aria-label=${t('Delete {name}', { name })} @click=${() => this._delete(i)}>${t('Delete')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="hide" aria-label=${hidden ? t('layer-editor.bg-layers.show-name', { name }) : t('layer-editor.bg-layers.hide-name', { name })} @click=${() => this._patch(i, { hidden: hidden ? undefined : true })}>${hidden ? t('layer-editor.bg-layers.show') : t('layer-editor.bg-layers.hide')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="forward" aria-label=${t('layer-editor.bg-layers.move-name-forward', { name })} aria-disabled=${i === 0 ? 'true' : 'false'} @click=${() => this._move(i, 'forward')}>↑ ${t('layer-editor.bg-layers.forward')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="backward" aria-label=${t('layer-editor.bg-layers.move-name-backward', { name })} aria-disabled=${i === count - 1 ? 'true' : 'false'} @click=${() => this._move(i, 'backward')}>↓ ${t('layer-editor.bg-layers.backward')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm del" data-act="delete" aria-label=${t('layer-editor.bg-layers.delete-name', { name })} @click=${() => this._delete(i)}>${t('layer-editor.bg-layers.delete')}</button>
       </div>
       ${st.sentence ? html`<p class="warnrow" data-status role="status">${st.sentence}</p>` : nothing}
       <div id=${`${this._id}-${i}-ed`} ?hidden=${!open}>${open ? renderLayerEditor(host, layer, i) : nothing}</div>
@@ -413,8 +413,8 @@ export class McBgLayers extends LitElement {
   private _renderGone(): TemplateResult {
     const d = this._deleted!;
     return html`<li class="gone" data-gone @mouseenter=${() => this._hold(true)} @mouseleave=${() => this._hold(false)} @focusin=${() => this._hold(true)} @focusout=${() => this._hold(false)}>
-      <span>${t('{name} deleted.', { name: d.name })}</span>
-      <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo-delete" @click=${() => this._restore()}>${t('Undo')}</button>
+      <span>${t('layer-editor.bg-layers.name-deleted', { name: d.name })}</span>
+      <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo-delete" @click=${() => this._restore()}>${t('layer-editor.bg-layers.undo')}</button>
     </li>`;
   }
 
@@ -429,11 +429,11 @@ export class McBgLayers extends LitElement {
     const list = this._list;
     if (!list.length) return nothing;
     const cost = costFromBackdrop(list, this.lowPower);
-    const reason = (r: CostReason): string => (r.code === 'blur' ? t('blur {px} px', { px: r.px }) : r.code === 'blend' ? t('blend') : r.code === 'panzoom' ? t('pan and zoom') : t('live camera'));
-    const word = cost.level === 'heavy' ? t('heavy') : cost.level === 'medium' ? t('medium') : t('light');
+    const reason = (r: CostReason): string => (r.code === 'blur' ? t('layer-editor.bg-layers.blur-px-px', { px: r.px }) : r.code === 'blend' ? t('layer-editor.bg-layers.blend') : r.code === 'panzoom' ? t('layer-editor.bg-layers.pan-and-zoom') : t('layer-editor.bg-layers.live-camera'));
+    const word = cost.level === 'heavy' ? t('layer-editor.bg-layers.heavy') : cost.level === 'medium' ? t('layer-editor.bg-layers.medium') : t('layer-editor.bg-layers.light');
     return html`<div class="costbox">
-      <p class="cost" data-cost data-level=${cost.level}>${t('Cost on older tablets:')} <b>${word}</b>${cost.reasons.length ? ` (${cost.reasons.map(reason).join(', ')})` : ''}.</p>
-      ${lyrSwitch(`${this._id}-lp`, t('Low-power mode'), this.lowPower, () => this.onLowPower?.(), t('Drops blur, blend and pan and zoom for this card and keeps the pictures.'))}
+      <p class="cost" data-cost data-level=${cost.level}>${t('layer-editor.bg-layers.cost-on-older-tablets')} <b>${word}</b>${cost.reasons.length ? ` (${cost.reasons.map(reason).join(', ')})` : ''}.</p>
+      ${lyrSwitch(`${this._id}-lp`, t('layer-editor.bg-layers.low-power-mode'), this.lowPower, () => this.onLowPower?.(), t('layer-editor.bg-layers.drops-blur-blend-and-pan-and-zoom-for'))}
     </div>`;
   }
 
@@ -441,8 +441,8 @@ export class McBgLayers extends LitElement {
     const rule = this.rule;
     if (rule && !rule.own) {
       return html`<div class="bgl">
-        <p class="help" data-rule="none">${t('This rule does not change the backgrounds.')}</p>
-        <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('Change backgrounds in this rule')}</button></div>
+        <p class="help" data-rule="none">${t('layer-editor.bg-layers.this-rule-does-not-change-the')}</p>
+        <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('layer-editor.bg-layers.change-backgrounds-in-this-rule')}</button></div>
       </div>`;
     }
     const list = this._list;
@@ -453,36 +453,36 @@ export class McBgLayers extends LitElement {
     return html`<div class="bgl">
       ${rule
         ? html`<div class="field">
-            <span class="chip is-accent" data-rule="own">${t('This rule uses its own backgrounds instead of the normal ones.')}</span>
+            <span class="chip is-accent" data-rule="own">${t('layer-editor.bg-layers.this-rule-uses-its-own-backgrounds')}</span>
             <div class="acts">
-              <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('Start again from the normal ones')}</button>
-              <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-reset" @click=${() => this.onRule?.('reset')}>${t('Use the normal backgrounds')}</button>
+              <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('layer-editor.bg-layers.start-again-from-the-normal-ones')}</button>
+              <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-reset" @click=${() => this.onRule?.('reset')}>${t('layer-editor.bg-layers.use-the-normal-backgrounds')}</button>
             </div>
           </div>`
-        : html`<p class="help">${t('To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.')}</p>`}
-      <div class="head2"><span class="chip is-count" data-count>${t('{n} of {max}', { n: list.length, max: MAX_BACKGROUND_LAYERS })}</span></div>
-      ${list.length || this._deleted ? html`<ol aria-label=${t('Card backdrop layers, front first')}>${rows}</ol>` : html`<p class="help" data-empty>${t('No layers yet. Add an image, gradient, pattern or colour behind the card content.')}</p>`}
-      ${this._undo ? html`<p class="undo"><span>${this._undo.message}</span> <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo" @click=${() => this._runUndo()}>${t('Undo')}</button></p>` : nothing}
+        : html`<p class="help">${t('layer-editor.bg-layers.to-put-a-module-behind-others-use')}</p>`}
+      <div class="head2"><span class="chip is-count" data-count>${t('layer-editor.bg-layers.n-of-max', { n: list.length, max: MAX_BACKGROUND_LAYERS })}</span></div>
+      ${list.length || this._deleted ? html`<ol aria-label=${t('layer-editor.bg-layers.card-backdrop-layers-front-first')}>${rows}</ol>` : html`<p class="help" data-empty>${t('layer-editor.bg-layers.no-layers-yet-add-an-image-gradient')}</p>`}
+      ${this._undo ? html`<p class="undo"><span>${this._undo.message}</span> <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo" @click=${() => this._runUndo()}>${t('layer-editor.bg-layers.undo')}</button></p>` : nothing}
       <div class="add">
-        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })) : (this._adding = !this._adding))}>${full ? t('Add layer') : t('Add layer ({n} left)', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })) : (this._adding = !this._adding))}>${full ? t('layer-editor.bg-layers.add-layer') : t('layer-editor.bg-layers.add-layer-n-left', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
         ${full ? html`<p class="warnrow" id=${`${this._id}-limit`} data-limit>${t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })}</p>` : nothing}
         ${this._adding && !full
-          ? html`<div class="lseg" role="group" aria-label=${t('Layer type')}>${ADD_ITEMS.map((it) => html`<button type="button" data-add=${it.value} aria-pressed="false" @click=${() => this._add(it.value)}>${te(it.label)}</button>`)}</div>`
+          ? html`<div class="lseg" role="group" aria-label=${t('layer-editor.bg-layers.layer-type')}>${ADD_ITEMS.map((it) => html`<button type="button" data-add=${it.value} aria-pressed="false" @click=${() => this._add(it.value)}>${te(it.label)}</button>`)}</div>`
           : nothing}
       </div>
       <div class="looks">
-        <span class="lbl" id=${`${this._id}-looks`}>${t('Looks')}</span>
+        <span class="lbl" id=${`${this._id}-looks`}>${t('layer-editor.bg-layers.looks')}</span>
         <div class="tiles2" role="group" aria-labelledby=${`${this._id}-looks`}>
           ${BACKDROP_LOOKS.map((look) => {
             const fits = list.length + look.count <= MAX_BACKGROUND_LAYERS;
-            return html`<button type="button" class="lyr-tile" data-look=${look.id} aria-disabled=${fits ? 'false' : 'true'} title=${fits ? '' : t('Needs {n} free layers.', { n: look.count })} @click=${() => fits && this._applyLook(look)}>
-              <span class="pv" style=${`background:${look.preview}`}></span><span class="nm">${t(look.name)}</span>${fits ? nothing : html`<span class="sub">${t('Needs {n} free layers.', { n: look.count })}</span>`}
+            return html`<button type="button" class="lyr-tile" data-look=${look.id} aria-disabled=${fits ? 'false' : 'true'} title=${fits ? '' : t('layer-editor.bg-layers.needs-n-free-layers', { n: look.count })} @click=${() => fits && this._applyLook(look)}>
+              <span class="pv" style=${`background:${look.preview}`}></span><span class="nm">${t(look.name)}</span>${fits ? nothing : html`<span class="sub">${t('layer-editor.bg-layers.needs-n-free-layers', { n: look.count })}</span>`}
             </button>`;
           })}
         </div>
       </div>
       ${this._renderCost()}
-      <p class="help">${t("Can't reach it? Pick it in the structure list.")}</p>
+      <p class="help">${t("layer-editor.bg-layers.can-t-reach-it-pick-it-in-the-structure")}</p>
       <p class="sr-only" role="status" aria-live="polite" data-live>${this._live}</p>
     </div>`;
   }
@@ -494,9 +494,9 @@ function rowStatus(i: number, layer: BackgroundLayerConfig): { chip?: string; se
   if (!s || layer.hidden) return {};
   if (s.status === 'loading') return { loading: true };
   const sentence = statusSentence(s, layer);
-  if (s.status === 'empty') return { chip: t('No picture yet'), sentence: layer.type === 'image' ? t('Choose a picture or a device.') : undefined };
+  if (s.status === 'empty') return { chip: t('layer-editor.bg-layers.no-picture-yet'), sentence: layer.type === 'image' ? t('layer-editor.bg-layers.choose-a-picture-or-a-device') : undefined };
   if (s.reason === 'stale') return { chip: sentence, stale: true };
-  if (s.status === 'error') return { chip: t('Problem'), sentence };
+  if (s.status === 'error') return { chip: t('layer-editor.bg-layers.problem'), sentence };
   return {};
 }
 

@@ -235,9 +235,9 @@ export class UnitField extends LitElement {
               @keydown=${onKey}
             />`}
         <div class="select ${custom ? 'is-custom' : ''}">
-          <select class="input" aria-label=${this.label ? t('{label} unit', { label: this.label }) : t('Unit')} ?disabled=${this.disabled} @change=${(e: Event) => this._pickUnit(e.target as HTMLSelectElement)}>
+          <select class="input" aria-label=${this.label ? t('card-editor.unit-field.label-unit', { label: this.label }) : t('card-editor.unit-field.unit')} ?disabled=${this.disabled} @change=${(e: Event) => this._pickUnit(e.target as HTMLSelectElement)}>
             ${units.map((u) => html`<option value=${u} ?selected=${!custom && unit === u}>${u}</option>`)}
-            ${this.noCustom && !custom ? nothing : html`<option value=${CUSTOM_UNIT} ?selected=${custom}>${t('Custom')}</option>`}
+            ${this.noCustom && !custom ? nothing : html`<option value=${CUSTOM_UNIT} ?selected=${custom}>${t('card-editor.unit-field.custom')}</option>`}
           </select>
           <ha-icon icon="mdi:chevron-down"></ha-icon>
         </div>

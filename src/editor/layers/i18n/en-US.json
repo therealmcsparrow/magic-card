@@ -1,245 +1,1082 @@
 {
-  "A live camera behind other modules keeps video running all day, which is heavy for a wall tablet. For a quiet backdrop, use a still picture in Card backdrop.": "A live camera behind other modules keeps video running all day, which is heavy for a wall tablet. For a quiet backdrop, use a still picture in Card backdrop.",
-  "Add a colour at the back to blend with.": "Add a color at the back to blend with.",
-  "Add layer": "Add layer",
-  "Add layer ({n} left)": "Add layer ({n} left)",
-  "Add state": "Add state",
-  "Added {name}.": "Added {name}.",
-  "Adds a dark fade over this picture so text stays readable. Also called a scrim.": "Adds a dark fade over this picture so text stays readable. Also called a scrim.",
-  "Another attribute…": "Another attribute…",
-  "Any other state": "Any other state",
-  "Applied {name}.": "Applied {name}.",
-  "Automatic": "Automatic",
-  "Back": "Back",
-  "Back and forth": "Back and forth",
-  "Backward": "Backward",
-  "Behind others": "Behind others",
-  "Black": "Black",
-  "Blend": "Blend",
-  "Blur": "Blur",
-  "Camera still picture": "Camera still picture",
-  "Can't reach it? Pick it in the structure list.": "Can't reach it? Pick it in the structure list.",
-  "Card backdrop layers, front first": "Card backdrop layers, front first",
-  "Card colour": "Card color",
-  "Change backgrounds in this rule": "Change backgrounds in this rule",
-  "Change position": "Change position",
-  "Changes with state": "Changes with state",
-  "Check the text yourself.": "Check the text yourself.",
-  "Checks": "Checks",
-  "Choose a picture or a device.": "Choose a picture or a device.",
-  "Clicks and taps go through": "Clicks and taps go through",
-  "Clicks go to whatever is under this module.": "Clicks go to whatever is under this module.",
-  "Clicks reach the modules in front. This module's own action is off while this is on.": "Clicks reach the modules in front. This module's own action is off while this is on.",
-  "Colour": "Color",
-  "Colour wash": "Color wash",
-  "Copied": "Copied",
-  "Copy YAML": "Copy YAML",
-  "Corner badge": "Corner badge",
-  "Cost on older tablets:": "Cost on older tablets:",
-  "Covers {name} at this width. Taps on the overlap go to this module.": "Covers {name} at this width. Taps on the overlap go to this module.",
-  "Custom": "Custom",
-  "Custom colour": "Custom color",
-  "Custom size": "Custom size",
-  "Darken": "Darken",
-  "Darken behind text": "Darken behind text",
-  "Darker where layers overlap": "Darker where layers overlap",
-  "Delete": "Delete",
-  "Delete {name}": "Delete {name}",
-  "Device": "Device",
-  "Diagonal lines": "Diagonal lines",
-  "Dim from bottom": "Dim from bottom",
-  "Dim from top": "Dim from top",
-  "Dimmed backdrop": "Dimmed backdrop",
-  "Dims the frame and shows how long ago the last good picture arrived.": "Dims the frame and shows how long ago the last good picture arrived.",
-  "Distance from the centre. Negative values move it left or up.": "Distance from the center. Negative values move it left or up.",
-  "Distance from the {anchor} position. Enter 0 or more: the module stays inside the card.": "Distance from the {anchor} position. Enter 0 or more: the module stays inside the card.",
-  "Do not repeat": "Do not repeat",
-  "Dot size": "Dot size",
-  "Dots": "Dots",
-  "Dotted texture": "Dotted texture",
-  "Drops blur, blend and pan and zoom for this card and keeps the pictures.": "Drops blur, blend and pan and zoom for this card and keeps the pictures.",
-  "Duration": "Duration",
-  "Effects and darkening": "Effects and darkening",
-  "End": "End",
-  "Enter 0 or more: the module stays inside the card.": "Enter 0 or more: the module stays inside the card.",
-  "Enter a distance in px or %.": "Enter a distance in px or %.",
-  "Entity not found: {id}. The next layer is shown instead.": "Entity not found: {id}. The next layer is shown instead.",
-  "Even": "Even",
-  "Fill the card": "Fill the card",
-  "Fills": "Fills",
-  "Fills the whole container behind the other modules and takes no space. To put a picture behind the whole card, use Card backdrop on the card's Design tab.": "Fills the whole container behind the other modules and takes no space. To put a picture behind the whole card, use Card backdrop on the card's Design tab.",
-  "Fit inside": "Fit inside",
-  "Floats over the container at a fixed spot and takes no space.": "Floats over the container at a fixed spot and takes no space.",
-  "Focus point": "Focus point",
-  "Follows a device": "Follows a device",
-  "Forward": "Forward",
-  "From bottom": "From bottom",
-  "From left": "From left",
-  "From right": "From right",
-  "From the bottom": "From the bottom",
-  "From the centre": "From the center",
-  "From the left": "From the left",
-  "From the right": "From the right",
-  "From the top": "From the top",
-  "From top": "From top",
-  "Front": "Front",
-  "Front first. Tap one to select it.": "Front first. Tap one to select it.",
-  "Frosted": "Frosted",
-  "Gentle contrast": "Gentle contrast",
-  "Gradient": "Gradient",
-  "Gradient (CSS)": "Gradient (CSS)",
-  "Grid": "Grid",
-  "Hidden": "Hidden",
-  "Hide": "Hide",
-  "Hide {name}": "Hide {name}",
-  "If this browser cannot blend, the layer shows normally.": "If this browser cannot blend, the layer shows normally.",
-  "Its container": "Its container",
-  "Its row": "Its row",
-  "Keeps the darker colour": "Keeps the darker color",
-  "Keeps the lighter colour": "Keeps the lighter color",
-  "Keyboard order: top positions come first, bottom positions after the normal modules. For touch, aim for 44 px or more.": "Keyboard order: top positions come first, bottom positions after the normal modules. For touch, aim for 44 px or more.",
-  "Large text only (3:1).": "Large text only (3:1).",
-  "Layer": "Layer",
-  "Layer added. {n} of {max}.": "Layer added. {n} of {max}.",
-  "Layer type": "Layer type",
-  "Layer type changed.": "Layer type changed.",
-  "Layers here": "Layers here",
-  "Leave empty to use the card's device": "Leave empty to use the card's device",
-  "Let clicks and taps go through": "Let clicks and taps go through",
-  "Light": "Light",
-  "Lighten": "Lighten",
-  "Lighter, like projected light": "Lighter, like projected light",
-  "Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.": "Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.",
-  "Lines": "Lines",
-  "Looks": "Looks",
-  "Low-power mode": "Low-power mode",
-  "Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.": "Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.",
-  "Medium": "Medium",
-  "More contrast": "More contrast",
-  "Motion stops 2 minutes after the last touch, which saves power on a wall tablet.": "Motion stops 2 minutes after the last touch, which saves power on a wall tablet.",
-  "Move {name} backward": "Move {name} backward",
-  "Move {name} forward": "Move {name} forward",
-  "Move {name} to the back": "Move {name} to the back",
-  "Move {name} to the front": "Move {name} to the front",
-  "Moved to layer {n} of {count}.": "Moved to layer {n} of {count}.",
-  "Moves slowly, pauses when the card is off screen and stays still when the device asks for reduced motion.": "Moves slowly, pauses when the card is off screen and stays still when the device asks for reduced motion.",
-  "Multiply": "Multiply",
-  "Needs {n} free layers.": "Needs {n} free layers.",
-  "No blending": "No blending",
-  "No layers yet. Add an image, gradient, pattern or colour behind the card content.": "No layers yet. Add an image, gradient, pattern or color behind the card content.",
-  "No picture for state {state}. No \"Any other state\" picture is set, so the next layer is shown.": "No picture for state {state}. No \"Any other state\" picture is set, so the next layer is shown.",
-  "No picture for state {state}. The Any other state picture is used.": "No picture for state {state}. The Any other state picture is used.",
-  "No picture yet": "No picture yet",
-  "Normal": "Normal",
-  "Not updated {n} min": "Not updated {n} min",
-  "Nothing else is in this container, so this module shows in the normal place until you add one.": "Nothing else is in this container, so this module shows in the normal place until you add one.",
-  "Nothing here.": "Nothing here.",
-  "Off": "Off",
-  "On": "On",
-  "On top": "On top",
-  "One picture": "One picture",
-  "Opacity": "Opacity",
-  "Order": "Order",
-  "Original size": "Original size",
-  "Overlay": "Overlay",
-  "Pan and zoom": "Pan and zoom",
-  "Pan and zoom work on a still picture from a camera, not on live video.": "Pan and zoom work on a still picture from a camera, not on live video.",
-  "Pattern": "Pattern",
-  "Pattern colour": "Pattern color",
-  "Photo, dark at the bottom": "Photo, dark at the bottom",
-  "Picture behind buttons": "Picture behind buttons",
-  "Pictures change but text stays. Darken behind text works for all of them. On a wall tablet seen from across the room, use large text.": "Pictures change but text stays. Darken behind text works for all of them. On a wall tablet seen from across the room, use large text.",
-  "Placement": "Placement",
-  "Play": "Play",
-  "Position": "Position",
-  "Position of the picture": "Position of the picture",
-  "Preview": "Preview",
-  "Preview (not saved)": "Preview (not saved)",
-  "Problem": "Problem",
-  "Quick gradients": "Quick gradients",
-  "Refresh every": "Refresh every",
-  "Remove": "Remove",
-  "Remove state {state}": "Remove state {state}",
-  "Repeat": "Repeat",
-  "Repeat both": "Repeat both",
-  "Repeat downwards": "Repeat downwards",
-  "Repeat sideways": "Repeat sideways",
-  "Rest when nobody is there": "Rest when nobody is there",
-  "Screen": "Screen",
-  "Show": "Show",
-  "Show \"Not updated\" when snapshots fail": "Show \"Not updated\" when snapshots fail",
-  "Show YAML": "Show YAML",
-  "Show {name}": "Show {name}",
-  "Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.": "Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.",
-  "Size": "Size",
-  "Size in %": "Size in %",
-  "Smaller than a fingertip (44 px). Add padding in Design.": "Smaller than a fingertip (44 px). Add padding in Design.",
-  "Snapshot failed. The last good frame stays visible.": "Snapshot failed. The last good frame stays visible.",
-  "Soft glow": "Soft glow",
-  "Soft light": "Soft light",
-  "Soft vignette": "Soft vignette",
-  "Source": "Source",
-  "Source changed.": "Source changed.",
-  "Start": "Start",
-  "Start again from the normal ones": "Start again from the normal ones",
-  "State renamed.": "State renamed.",
-  "Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.": "Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.",
-  "Stop preview": "Stop preview",
-  "Strength": "Strength",
-  "Strong": "Strong",
-  "Strong blur can make older tablets slow.": "Strong blur can make older tablets slow.",
-  "Style": "Style",
-  "Takes its normal place in the column.": "Takes its normal place in the column.",
-  "Tapping {name} will do nothing while this is on.": "Tapping {name} will do nothing while this is on.",
-  "Text hard to read? Darken behind text": "Text hard to read? Darken behind text",
-  "Text is readable.": "Text is readable.",
-  "The device's own picture": "The device's own picture",
-  "The picture could not be loaded. The next layer is shown.": "The picture could not be loaded. The next layer is shown.",
-  "The whole card": "The whole card",
-  "Thickness": "Thickness",
-  "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).": "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).",
-  "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.": "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.",
-  "This image is no longer in the library.": "This image is no longer in the library.",
-  "This layer has no action, so it only blocks taps.": "This layer has no action, so it only blocks taps.",
-  "This module keeps its own action.": "This module keeps its own action.",
-  "This rule does not change the backgrounds.": "This rule does not change the backgrounds.",
-  "This rule uses its own backgrounds instead of the normal ones.": "This rule uses its own backgrounds instead of the normal ones.",
-  "This video background sits behind its siblings on its own, as before. Choose an option to set it.": "This video background sits behind its siblings on its own, as before. Choose an option to set it.",
-  "Tint only. Not for text.": "Tint only. Not for text.",
-  "To back": "To back",
-  "To front": "To front",
-  "To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.": "To put a module behind others, use Placement on that module. Layers here sit on top of the color and image in Style.",
-  "Top banner": "Top banner",
-  "Turn on Low-power mode": "Turn on Low-power mode",
-  "Undo": "Undo",
-  "Undone.": "Undone.",
-  "Use the normal backgrounds": "Use the normal backgrounds",
-  "Very strong": "Very strong",
-  "Weather backdrop": "Weather backdrop",
-  "When state is": "When state is",
-  "Where the framing ends": "Where the framing ends",
-  "Which picture?": "Which picture?",
-  "White": "White",
-  "With a black darkening of 60 % or more, white text stays readable on any picture. This holds for the fully dark part. With a fade, text must sit in the strongest third from that edge.": "With a black darkening of 60 % or more, white text stays readable on any picture. This holds for the fully dark part. With a fade, text must sit in the strongest third from that edge.",
-  "Zoom from": "Zoom from",
-  "Zoom to": "Zoom to",
-  "blend": "blend",
-  "blur {px} px": "blur {px} px",
-  "heavy": "heavy",
-  "light": "light",
-  "live camera": "live camera",
-  "medium": "medium",
-  "pan and zoom": "pan and zoom",
-  "seconds": "seconds",
-  "this module": "this module",
-  "{id} has no picture attribute. Try another attribute.": "{id} has no picture attribute. Try another attribute.",
-  "{label} value": "{label} value",
-  "{n, select, 1 {1st from the front, of {count}} 2 {2nd from the front, of {count}} 3 {3rd from the front, of {count}} other {{n}th from the front, of {count}}}": "{n, select, 1 {1st from the front, of {count}} 2 {2nd from the front, of {count}} 3 {3rd from the front, of {count}} other {{n}th from the front, of {count}}}",
-  "{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here": "{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here",
-  "{name} deleted.": "{name} deleted.",
-  "{name} deleted. Undo is the next button.": "{name} deleted. Undo is the next button.",
-  "{name} restored.": "{name} restored.",
-  "{n} of {max}": "{n} of {max}",
-  "{n} set": "{n} set",
-  "{type}, layer {n}": "{type}, layer {n}"
+  "layer-editor.bg-layer-editor.add-state": {
+    "text": "Add state",
+    "hash": "d4871096"
+  },
+  "layer-editor.bg-layer-editor.another-attribute": {
+    "text": "Another attribute…",
+    "hash": "2db88cc0"
+  },
+  "layer-editor.bg-layer-editor.any-other-state": {
+    "text": "Any other state",
+    "hash": "87beb720"
+  },
+  "layer-editor.bg-layer-editor.back-and-forth": {
+    "text": "Back and forth",
+    "hash": "c1c1cc53"
+  },
+  "layer-editor.bg-layer-editor.blur": {
+    "text": "Blur",
+    "hash": "cd83e673"
+  },
+  "layer-editor.bg-layer-editor.changes-with-state": {
+    "text": "Changes with state",
+    "hash": "f5f28b40"
+  },
+  "layer-editor.bg-layer-editor.checks": {
+    "text": "Checks",
+    "hash": "de07d072"
+  },
+  "layer-editor.bg-layer-editor.colour": {
+    "text": "Color",
+    "hash": "3a9dfa58"
+  },
+  "layer-editor.bg-layer-editor.copied": {
+    "text": "Copied",
+    "hash": "8d525e5f"
+  },
+  "layer-editor.bg-layer-editor.copy-yaml": {
+    "text": "Copy YAML",
+    "hash": "e5a88d42"
+  },
+  "layer-editor.bg-layer-editor.custom-size": {
+    "text": "Custom size",
+    "hash": "d432bb2b"
+  },
+  "layer-editor.bg-layer-editor.device": {
+    "text": "Device",
+    "hash": "6ba0bdec"
+  },
+  "layer-editor.bg-layer-editor.diagonal-lines": {
+    "text": "Diagonal lines",
+    "hash": "5e6e8699"
+  },
+  "layer-editor.bg-layer-editor.dim-from-bottom": {
+    "text": "Dim from bottom",
+    "hash": "e5365c53"
+  },
+  "layer-editor.bg-layer-editor.dim-from-top": {
+    "text": "Dim from top",
+    "hash": "87d6ec7e"
+  },
+  "layer-editor.bg-layer-editor.dims-the-frame-and-shows-how-long-ago": {
+    "text": "Dims the frame and shows how long ago the last good picture arrived.",
+    "hash": "31eb04f1"
+  },
+  "layer-editor.bg-layer-editor.do-not-repeat": {
+    "text": "Do not repeat",
+    "hash": "5e3eb65f"
+  },
+  "layer-editor.bg-layer-editor.dot-size": {
+    "text": "Dot size",
+    "hash": "97c5bc43"
+  },
+  "layer-editor.bg-layer-editor.dots": {
+    "text": "Dots",
+    "hash": "6de335fa"
+  },
+  "layer-editor.bg-layer-editor.duration": {
+    "text": "Duration",
+    "hash": "4fc52a3c"
+  },
+  "layer-editor.bg-layer-editor.end": {
+    "text": "End",
+    "hash": "f4db1e48"
+  },
+  "layer-editor.bg-layer-editor.fill-the-card": {
+    "text": "Fill the card",
+    "hash": "c289861f"
+  },
+  "layer-editor.bg-layer-editor.fit-inside": {
+    "text": "Fit inside",
+    "hash": "9114cc92"
+  },
+  "layer-editor.bg-layer-editor.focus-point": {
+    "text": "Focus point",
+    "hash": "82b819ec"
+  },
+  "layer-editor.bg-layer-editor.follows-a-device": {
+    "text": "Follows a device",
+    "hash": "4dab3ea9"
+  },
+  "layer-editor.bg-layer-editor.gradient": {
+    "text": "Gradient",
+    "hash": "2523561c"
+  },
+  "layer-editor.bg-layer-editor.gradient-css": {
+    "text": "Gradient (CSS)",
+    "hash": "441f5d46"
+  },
+  "layer-editor.bg-layer-editor.grid": {
+    "text": "Grid",
+    "hash": "0d7d12ac"
+  },
+  "layer-editor.bg-layer-editor.layer-type": {
+    "text": "Layer type",
+    "hash": "5493a0d9"
+  },
+  "layer-editor.bg-layer-editor.layer-type-changed": {
+    "text": "Layer type changed.",
+    "hash": "e043fd41"
+  },
+  "layer-editor.bg-layer-editor.leave-empty-to-use-the-card-s-device": {
+    "text": "Leave empty to use the card's device",
+    "hash": "654e15c4"
+  },
+  "layer-editor.bg-layer-editor.lines": {
+    "text": "Lines",
+    "hash": "3b26a542"
+  },
+  "layer-editor.bg-layer-editor.motion-stops-2-minutes-after-the-last": {
+    "text": "Motion stops 2 minutes after the last touch, which saves power on a wall tablet.",
+    "hash": "2e354fec"
+  },
+  "layer-editor.bg-layer-editor.moves-slowly-pauses-when-the-card-is-off": {
+    "text": "Moves slowly, pauses when the card is off screen and stays still when the device asks for reduced motion.",
+    "hash": "f6556c51"
+  },
+  "layer-editor.bg-layer-editor.on": {
+    "text": "On",
+    "hash": "13001175"
+  },
+  "layer-editor.bg-layer-editor.one-picture": {
+    "text": "One picture",
+    "hash": "4f7aca5f"
+  },
+  "layer-editor.bg-layer-editor.opacity": {
+    "text": "Opacity",
+    "hash": "6062652e"
+  },
+  "layer-editor.bg-layer-editor.original-size": {
+    "text": "Original size",
+    "hash": "097c5b76"
+  },
+  "layer-editor.bg-layer-editor.pan-and-zoom": {
+    "text": "Pan and zoom",
+    "hash": "0803a4fe"
+  },
+  "layer-editor.bg-layer-editor.pan-and-zoom-work-on-a-still-picture": {
+    "text": "Pan and zoom work on a still picture from a camera, not on live video.",
+    "hash": "77ace550"
+  },
+  "layer-editor.bg-layer-editor.pattern": {
+    "text": "Pattern",
+    "hash": "4288ade7"
+  },
+  "layer-editor.bg-layer-editor.pattern-colour": {
+    "text": "Pattern color",
+    "hash": "db9a36f6"
+  },
+  "layer-editor.bg-layer-editor.pictures-change-but-text-stays-darken": {
+    "text": "Pictures change but text stays. Darken behind text works for all of them. On a wall tablet seen from across the room, use large text.",
+    "hash": "e5602285"
+  },
+  "layer-editor.bg-layer-editor.play": {
+    "text": "Play",
+    "hash": "436e6101"
+  },
+  "layer-editor.bg-layer-editor.position": {
+    "text": "Position",
+    "hash": "6d031af1"
+  },
+  "layer-editor.bg-layer-editor.position-of-the-picture": {
+    "text": "Position of the picture",
+    "hash": "1ce1a581"
+  },
+  "layer-editor.bg-layer-editor.preview": {
+    "text": "Preview",
+    "hash": "324b134f"
+  },
+  "layer-editor.bg-layer-editor.preview-not-saved": {
+    "text": "Preview (not saved)",
+    "hash": "cf58ef7f"
+  },
+  "layer-editor.bg-layer-editor.quick-gradients": {
+    "text": "Quick gradients",
+    "hash": "c87a5d72"
+  },
+  "layer-editor.bg-layer-editor.refresh-every": {
+    "text": "Refresh every",
+    "hash": "8ac11280"
+  },
+  "layer-editor.bg-layer-editor.remove": {
+    "text": "Remove",
+    "hash": "c3812fc4"
+  },
+  "layer-editor.bg-layer-editor.remove-state-state": {
+    "text": "Remove state {state}",
+    "hash": "40e1dd78"
+  },
+  "layer-editor.bg-layer-editor.repeat": {
+    "text": "Repeat",
+    "hash": "b6b7a006"
+  },
+  "layer-editor.bg-layer-editor.repeat-both": {
+    "text": "Repeat both",
+    "hash": "d7528318"
+  },
+  "layer-editor.bg-layer-editor.repeat-downwards": {
+    "text": "Repeat downwards",
+    "hash": "49943b93"
+  },
+  "layer-editor.bg-layer-editor.repeat-sideways": {
+    "text": "Repeat sideways",
+    "hash": "d740d050"
+  },
+  "layer-editor.bg-layer-editor.rest-when-nobody-is-there": {
+    "text": "Rest when nobody is there",
+    "hash": "77e8038c"
+  },
+  "layer-editor.bg-layer-editor.seconds": {
+    "text": "seconds",
+    "hash": "59f006d6"
+  },
+  "layer-editor.bg-layer-editor.show-not-updated-when-snapshots-fail": {
+    "text": "Show \"Not updated\" when snapshots fail",
+    "hash": "55783830"
+  },
+  "layer-editor.bg-layer-editor.show-yaml": {
+    "text": "Show YAML",
+    "hash": "97bd3a2f"
+  },
+  "layer-editor.bg-layer-editor.shows-the-framing-in-the-preview-it": {
+    "text": "Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.",
+    "hash": "529452d4"
+  },
+  "layer-editor.bg-layer-editor.size": {
+    "text": "Size",
+    "hash": "1af85190"
+  },
+  "layer-editor.bg-layer-editor.size-in": {
+    "text": "Size in %",
+    "hash": "e07304d1"
+  },
+  "layer-editor.bg-layer-editor.source": {
+    "text": "Source",
+    "hash": "0e570ca6"
+  },
+  "layer-editor.bg-layer-editor.source-changed": {
+    "text": "Source changed.",
+    "hash": "401e787f"
+  },
+  "layer-editor.bg-layer-editor.start": {
+    "text": "Start",
+    "hash": "e4bb9f1e"
+  },
+  "layer-editor.bg-layer-editor.state-renamed": {
+    "text": "State renamed.",
+    "hash": "e23231eb"
+  },
+  "layer-editor.bg-layer-editor.still-picture-refreshed-every-n-s-the": {
+    "text": "Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.",
+    "hash": "f98cbe58"
+  },
+  "layer-editor.bg-layer-editor.stop-preview": {
+    "text": "Stop preview",
+    "hash": "178940d0"
+  },
+  "layer-editor.bg-layer-editor.strong-blur-can-make-older-tablets-slow": {
+    "text": "Strong blur can make older tablets slow.",
+    "hash": "31ccfea6"
+  },
+  "layer-editor.bg-layer-editor.the-device-s-own-picture": {
+    "text": "The device's own picture",
+    "hash": "b6e8ef44"
+  },
+  "layer-editor.bg-layer-editor.thickness": {
+    "text": "Thickness",
+    "hash": "7b594414"
+  },
+  "layer-editor.bg-layer-editor.this-gradient-cannot-be-shown-use-linear": {
+    "text": "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).",
+    "hash": "a9cb907d"
+  },
+  "layer-editor.bg-layer-editor.this-gradient-has-css-the-editor-cannot": {
+    "text": "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.",
+    "hash": "e0d32fae"
+  },
+  "layer-editor.bg-layer-editor.when-state-is": {
+    "text": "When state is",
+    "hash": "cc9d5c7c"
+  },
+  "layer-editor.bg-layer-editor.where-the-framing-ends": {
+    "text": "Where the framing ends",
+    "hash": "505c029e"
+  },
+  "layer-editor.bg-layer-editor.which-picture": {
+    "text": "Which picture?",
+    "hash": "b00db570"
+  },
+  "layer-editor.bg-layer-editor.zoom-from": {
+    "text": "Zoom from",
+    "hash": "dc3222ab"
+  },
+  "layer-editor.bg-layer-editor.zoom-to": {
+    "text": "Zoom to",
+    "hash": "d4a13c81"
+  },
+  "layer-editor.bg-layers-ops.entity-not-found-id-the-next-layer-is": {
+    "text": "Entity not found: {id}. The next layer is shown instead.",
+    "hash": "500c7947"
+  },
+  "layer-editor.bg-layers-ops.id-has-no-picture-attribute-try-another": {
+    "text": "{id} has no picture attribute. Try another attribute.",
+    "hash": "07096aea"
+  },
+  "layer-editor.bg-layers-ops.limit-of-max-layers-reached-more-layers": {
+    "text": "Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.",
+    "hash": "fd294c32"
+  },
+  "layer-editor.bg-layers-ops.no-picture-for-state-state-no-any-other": {
+    "text": "No picture for state {state}. No \"Any other state\" picture is set, so the next layer is shown.",
+    "hash": "66f6d855"
+  },
+  "layer-editor.bg-layers-ops.no-picture-for-state-state-the-any-other": {
+    "text": "No picture for state {state}. The Any other state picture is used.",
+    "hash": "821e3f9e"
+  },
+  "layer-editor.bg-layers-ops.not-updated-n-min": {
+    "text": "Not updated {n} min",
+    "hash": "bc146dc3"
+  },
+  "layer-editor.bg-layers-ops.snapshot-failed-the-last-good-frame": {
+    "text": "Snapshot failed. The last good frame stays visible.",
+    "hash": "6251ab69"
+  },
+  "layer-editor.bg-layers-ops.the-picture-could-not-be-loaded-the-next": {
+    "text": "The picture could not be loaded. The next layer is shown.",
+    "hash": "6b026c63"
+  },
+  "layer-editor.bg-layers-ops.this-image-is-no-longer-in-the-library": {
+    "text": "This image is no longer in the library.",
+    "hash": "ba95db40"
+  },
+  "layer-editor.bg-layers.add-layer": {
+    "text": "Add layer",
+    "hash": "3fc8b134"
+  },
+  "layer-editor.bg-layers.add-layer-n-left": {
+    "text": "Add layer ({n} left)",
+    "hash": "197d76f7"
+  },
+  "layer-editor.bg-layers.added-name": {
+    "text": "Added {name}.",
+    "hash": "a73d8b5a"
+  },
+  "layer-editor.bg-layers.backward": {
+    "text": "Backward",
+    "hash": "21132d57"
+  },
+  "layer-editor.bg-layers.blend": {
+    "text": "blend",
+    "hash": "727c1e41"
+  },
+  "layer-editor.bg-layers.blur-px-px": {
+    "text": "blur {px} px",
+    "hash": "005f8394"
+  },
+  "layer-editor.bg-layers.can-t-reach-it-pick-it-in-the-structure": {
+    "text": "Can't reach it? Pick it in the structure list.",
+    "hash": "53a36450"
+  },
+  "layer-editor.bg-layers.card-backdrop-layers-front-first": {
+    "text": "Card backdrop layers, front first",
+    "hash": "b0c0574b"
+  },
+  "layer-editor.bg-layers.change-backgrounds-in-this-rule": {
+    "text": "Change backgrounds in this rule",
+    "hash": "56b8e0aa"
+  },
+  "layer-editor.bg-layers.choose-a-picture-or-a-device": {
+    "text": "Choose a picture or a device.",
+    "hash": "cfd300e5"
+  },
+  "layer-editor.bg-layers.cost-on-older-tablets": {
+    "text": "Cost on older tablets:",
+    "hash": "cf92b3ab"
+  },
+  "layer-editor.bg-layers.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "layer-editor.bg-layers.delete-name": {
+    "text": "Delete {name}",
+    "hash": "3cf8146e"
+  },
+  "layer-editor.bg-layers.drops-blur-blend-and-pan-and-zoom-for": {
+    "text": "Drops blur, blend and pan and zoom for this card and keeps the pictures.",
+    "hash": "29fcb910"
+  },
+  "layer-editor.bg-layers.forward": {
+    "text": "Forward",
+    "hash": "f1c65e14"
+  },
+  "layer-editor.bg-layers.heavy": {
+    "text": "heavy",
+    "hash": "22d5925e"
+  },
+  "layer-editor.bg-layers.hidden": {
+    "text": "Hidden",
+    "hash": "7e6fefff"
+  },
+  "layer-editor.bg-layers.hide": {
+    "text": "Hide",
+    "hash": "ac20a57b"
+  },
+  "layer-editor.bg-layers.hide-name": {
+    "text": "Hide {name}",
+    "hash": "9d8adcdc"
+  },
+  "layer-editor.bg-layers.layer-added-n-of-max": {
+    "text": "Layer added. {n} of {max}.",
+    "hash": "f76736a7"
+  },
+  "layer-editor.bg-layers.layer-type": {
+    "text": "Layer type",
+    "hash": "5493a0d9"
+  },
+  "layer-editor.bg-layers.light": {
+    "text": "light",
+    "hash": "99a70261"
+  },
+  "layer-editor.bg-layers.live-camera": {
+    "text": "live camera",
+    "hash": "3ae6e4d2"
+  },
+  "layer-editor.bg-layers.looks": {
+    "text": "Looks",
+    "hash": "c64fb087"
+  },
+  "layer-editor.bg-layers.low-power-mode": {
+    "text": "Low-power mode",
+    "hash": "a53d2c7e"
+  },
+  "layer-editor.bg-layers.medium": {
+    "text": "medium",
+    "hash": "c082456a"
+  },
+  "layer-editor.bg-layers.move-name-backward": {
+    "text": "Move {name} backward",
+    "hash": "e1542499"
+  },
+  "layer-editor.bg-layers.move-name-forward": {
+    "text": "Move {name} forward",
+    "hash": "1105dd4b"
+  },
+  "layer-editor.bg-layers.moved-to-layer-n-of-count": {
+    "text": "Moved to layer {n} of {count}.",
+    "hash": "d068118f"
+  },
+  "layer-editor.bg-layers.n-of-max": {
+    "text": "{n} of {max}",
+    "hash": "318b15d8"
+  },
+  "layer-editor.bg-layers.name-deleted": {
+    "text": "{name} deleted.",
+    "hash": "ad6f2978"
+  },
+  "layer-editor.bg-layers.name-deleted-undo-is-the-next-button": {
+    "text": "{name} deleted. Undo is the next button.",
+    "hash": "1a65b00d"
+  },
+  "layer-editor.bg-layers.name-restored": {
+    "text": "{name} restored.",
+    "hash": "13aa2a07"
+  },
+  "layer-editor.bg-layers.needs-n-free-layers": {
+    "text": "Needs {n} free layers.",
+    "hash": "6314153b"
+  },
+  "layer-editor.bg-layers.no-layers-yet-add-an-image-gradient": {
+    "text": "No layers yet. Add an image, gradient, pattern or color behind the card content.",
+    "hash": "d3de939c"
+  },
+  "layer-editor.bg-layers.no-picture-yet": {
+    "text": "No picture yet",
+    "hash": "e83dfa18"
+  },
+  "layer-editor.bg-layers.pan-and-zoom": {
+    "text": "pan and zoom",
+    "hash": "4f9cd30b"
+  },
+  "layer-editor.bg-layers.problem": {
+    "text": "Problem",
+    "hash": "a1c5ae7b"
+  },
+  "layer-editor.bg-layers.show": {
+    "text": "Show",
+    "hash": "0df6f1ca"
+  },
+  "layer-editor.bg-layers.show-name": {
+    "text": "Show {name}",
+    "hash": "94cf7a93"
+  },
+  "layer-editor.bg-layers.start-again-from-the-normal-ones": {
+    "text": "Start again from the normal ones",
+    "hash": "352f2713"
+  },
+  "layer-editor.bg-layers.this-rule-does-not-change-the": {
+    "text": "This rule does not change the backgrounds.",
+    "hash": "f6687d92"
+  },
+  "layer-editor.bg-layers.this-rule-uses-its-own-backgrounds": {
+    "text": "This rule uses its own backgrounds instead of the normal ones.",
+    "hash": "ab8ff8cd"
+  },
+  "layer-editor.bg-layers.to-put-a-module-behind-others-use": {
+    "text": "To put a module behind others, use Placement on that module. Layers here sit on top of the color and image in Style.",
+    "hash": "3cb78a11"
+  },
+  "layer-editor.bg-layers.type-layer-n": {
+    "text": "{type}, layer {n}",
+    "hash": "33336567"
+  },
+  "layer-editor.bg-layers.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "layer-editor.bg-layers.undone": {
+    "text": "Undone.",
+    "hash": "dc166766"
+  },
+  "layer-editor.bg-layers.use-the-normal-backgrounds": {
+    "text": "Use the normal backgrounds",
+    "hash": "8242721e"
+  },
+  "layer-editor.controls.add-a-colour-at-the-back-to-blend-with": {
+    "text": "Add a color at the back to blend with.",
+    "hash": "77a6a2a2"
+  },
+  "layer-editor.controls.blend": {
+    "text": "Blend",
+    "hash": "ee6cfb23"
+  },
+  "layer-editor.controls.darken": {
+    "text": "Darken",
+    "hash": "d540e534"
+  },
+  "layer-editor.controls.darker-where-layers-overlap": {
+    "text": "Darker where layers overlap",
+    "hash": "e293cabe"
+  },
+  "layer-editor.controls.gentle-contrast": {
+    "text": "Gentle contrast",
+    "hash": "6e3756e0"
+  },
+  "layer-editor.controls.if-this-browser-cannot-blend-the-layer": {
+    "text": "If this browser cannot blend, the layer shows normally.",
+    "hash": "c90c6878"
+  },
+  "layer-editor.controls.keeps-the-darker-colour": {
+    "text": "Keeps the darker color",
+    "hash": "a61fb524"
+  },
+  "layer-editor.controls.keeps-the-lighter-colour": {
+    "text": "Keeps the lighter color",
+    "hash": "4d8e0c3f"
+  },
+  "layer-editor.controls.label-value": {
+    "text": "{label} value",
+    "hash": "34dffb96"
+  },
+  "layer-editor.controls.lighten": {
+    "text": "Lighten",
+    "hash": "c1d5c40b"
+  },
+  "layer-editor.controls.lighter-like-projected-light": {
+    "text": "Lighter, like projected light",
+    "hash": "ce7b997b"
+  },
+  "layer-editor.controls.more-contrast": {
+    "text": "More contrast",
+    "hash": "0e20f694"
+  },
+  "layer-editor.controls.multiply": {
+    "text": "Multiply",
+    "hash": "33bcea63"
+  },
+  "layer-editor.controls.no-blending": {
+    "text": "No blending",
+    "hash": "aebd033e"
+  },
+  "layer-editor.controls.normal": {
+    "text": "Normal",
+    "hash": "a7248eeb"
+  },
+  "layer-editor.controls.off": {
+    "text": "Off",
+    "hash": "ca7981b4"
+  },
+  "layer-editor.controls.on": {
+    "text": "On",
+    "hash": "13001175"
+  },
+  "layer-editor.controls.overlay": {
+    "text": "Overlay",
+    "hash": "2af93aeb"
+  },
+  "layer-editor.controls.screen": {
+    "text": "Screen",
+    "hash": "6e56137e"
+  },
+  "layer-editor.controls.soft-light": {
+    "text": "Soft light",
+    "hash": "5d4a886d"
+  },
+  "layer-editor.layer-groups.a-live-camera-behind-other-modules-keeps": {
+    "text": "A live camera behind other modules keeps video running all day, which is heavy for a wall tablet. For a quiet backdrop, use a still picture in Card backdrop.",
+    "hash": "152ef435"
+  },
+  "layer-editor.layer-groups.adds-a-dark-fade-over-this-picture-so": {
+    "text": "Adds a dark fade over this picture so text stays readable. Also called a scrim.",
+    "hash": "f08ca9a4"
+  },
+  "layer-editor.layer-groups.applied-name": {
+    "text": "Applied {name}.",
+    "hash": "db564166"
+  },
+  "layer-editor.layer-groups.automatic": {
+    "text": "Automatic",
+    "hash": "d461a493"
+  },
+  "layer-editor.layer-groups.back": {
+    "text": "Back",
+    "hash": "76900f1b"
+  },
+  "layer-editor.layer-groups.backward": {
+    "text": "Backward",
+    "hash": "21132d57"
+  },
+  "layer-editor.layer-groups.behind-others": {
+    "text": "Behind others",
+    "hash": "a221bc3f"
+  },
+  "layer-editor.layer-groups.black": {
+    "text": "Black",
+    "hash": "c6cfe6e4"
+  },
+  "layer-editor.layer-groups.blend": {
+    "text": "blend",
+    "hash": "727c1e41"
+  },
+  "layer-editor.layer-groups.blur": {
+    "text": "Blur",
+    "hash": "cd83e673"
+  },
+  "layer-editor.layer-groups.blur-px-px": {
+    "text": "blur {px} px",
+    "hash": "005f8394"
+  },
+  "layer-editor.layer-groups.can-t-reach-it-pick-it-in-the-structure": {
+    "text": "Can't reach it? Pick it in the structure list.",
+    "hash": "53a36450"
+  },
+  "layer-editor.layer-groups.card-colour": {
+    "text": "Card color",
+    "hash": "32fcd150"
+  },
+  "layer-editor.layer-groups.change-position": {
+    "text": "Change position",
+    "hash": "979b9615"
+  },
+  "layer-editor.layer-groups.check-the-text-yourself": {
+    "text": "Check the text yourself.",
+    "hash": "4963a778"
+  },
+  "layer-editor.layer-groups.clicks-and-taps-go-through": {
+    "text": "Clicks and taps go through",
+    "hash": "d4c162b9"
+  },
+  "layer-editor.layer-groups.clicks-go-to-whatever-is-under-this": {
+    "text": "Clicks go to whatever is under this module.",
+    "hash": "e99e7844"
+  },
+  "layer-editor.layer-groups.clicks-reach-the-modules-in-front-this": {
+    "text": "Clicks reach the modules in front. This module's own action is off while this is on.",
+    "hash": "0db088e7"
+  },
+  "layer-editor.layer-groups.colour": {
+    "text": "Color",
+    "hash": "3a9dfa58"
+  },
+  "layer-editor.layer-groups.copied": {
+    "text": "Copied",
+    "hash": "8d525e5f"
+  },
+  "layer-editor.layer-groups.copy-yaml": {
+    "text": "Copy YAML",
+    "hash": "e5a88d42"
+  },
+  "layer-editor.layer-groups.cost-on-older-tablets": {
+    "text": "Cost on older tablets:",
+    "hash": "cf92b3ab"
+  },
+  "layer-editor.layer-groups.covers-name-at-this-width-taps-on-the": {
+    "text": "Covers {name} at this width. Taps on the overlap go to this module.",
+    "hash": "484b6c78"
+  },
+  "layer-editor.layer-groups.custom": {
+    "text": "Custom",
+    "hash": "494ca78f"
+  },
+  "layer-editor.layer-groups.custom-colour": {
+    "text": "Custom color",
+    "hash": "c31a3f15"
+  },
+  "layer-editor.layer-groups.darken-behind-text": {
+    "text": "Darken behind text",
+    "hash": "2fa4c5c6"
+  },
+  "layer-editor.layer-groups.distance-from-the-anchor-position-enter": {
+    "text": "Distance from the {anchor} position. Enter 0 or more: the module stays inside the card.",
+    "hash": "c3c00371"
+  },
+  "layer-editor.layer-groups.distance-from-the-centre-negative-values": {
+    "text": "Distance from the center. Negative values move it left or up.",
+    "hash": "408924ad"
+  },
+  "layer-editor.layer-groups.effects-and-darkening": {
+    "text": "Effects and darkening",
+    "hash": "a5a41cf1"
+  },
+  "layer-editor.layer-groups.enter-0-or-more-the-module-stays-inside": {
+    "text": "Enter 0 or more: the module stays inside the card.",
+    "hash": "e85eea22"
+  },
+  "layer-editor.layer-groups.enter-a-distance-in-px-or": {
+    "text": "Enter a distance in px or %.",
+    "hash": "188003b7"
+  },
+  "layer-editor.layer-groups.even": {
+    "text": "Even",
+    "hash": "8c29bf34"
+  },
+  "layer-editor.layer-groups.fills": {
+    "text": "Fills",
+    "hash": "72e34eed"
+  },
+  "layer-editor.layer-groups.fills-the-whole-container-behind-the": {
+    "text": "Fills the whole container behind the other modules and takes no space. To put a picture behind the whole card, use Card backdrop on the card's Design tab.",
+    "hash": "4966b43d"
+  },
+  "layer-editor.layer-groups.floats-over-the-container-at-a-fixed": {
+    "text": "Floats over the container at a fixed spot and takes no space.",
+    "hash": "929e80e7"
+  },
+  "layer-editor.layer-groups.forward": {
+    "text": "Forward",
+    "hash": "f1c65e14"
+  },
+  "layer-editor.layer-groups.from-bottom": {
+    "text": "From bottom",
+    "hash": "9104dda2"
+  },
+  "layer-editor.layer-groups.from-left": {
+    "text": "From left",
+    "hash": "e1880352"
+  },
+  "layer-editor.layer-groups.from-right": {
+    "text": "From right",
+    "hash": "52993346"
+  },
+  "layer-editor.layer-groups.from-the-bottom": {
+    "text": "From the bottom",
+    "hash": "74814072"
+  },
+  "layer-editor.layer-groups.from-the-centre": {
+    "text": "From the center",
+    "hash": "1e213233"
+  },
+  "layer-editor.layer-groups.from-the-left": {
+    "text": "From the left",
+    "hash": "b248f7ae"
+  },
+  "layer-editor.layer-groups.from-the-right": {
+    "text": "From the right",
+    "hash": "9d8480c0"
+  },
+  "layer-editor.layer-groups.from-the-top": {
+    "text": "From the top",
+    "hash": "7932ab67"
+  },
+  "layer-editor.layer-groups.from-top": {
+    "text": "From top",
+    "hash": "f8d1a767"
+  },
+  "layer-editor.layer-groups.front": {
+    "text": "Front",
+    "hash": "a6175902"
+  },
+  "layer-editor.layer-groups.heavy": {
+    "text": "heavy",
+    "hash": "22d5925e"
+  },
+  "layer-editor.layer-groups.its-container": {
+    "text": "Its container",
+    "hash": "46af4912"
+  },
+  "layer-editor.layer-groups.its-row": {
+    "text": "Its row",
+    "hash": "42b21f06"
+  },
+  "layer-editor.layer-groups.keyboard-order-top-positions-come-first": {
+    "text": "Keyboard order: top positions come first, bottom positions after the normal modules. For touch, aim for 44 px or more.",
+    "hash": "893728f3"
+  },
+  "layer-editor.layer-groups.large-text-only-3-1": {
+    "text": "Large text only (3:1).",
+    "hash": "4ea56bd7"
+  },
+  "layer-editor.layer-groups.layer": {
+    "text": "Layer",
+    "hash": "ac9ffcb2"
+  },
+  "layer-editor.layer-groups.let-clicks-and-taps-go-through": {
+    "text": "Let clicks and taps go through",
+    "hash": "5e7be45f"
+  },
+  "layer-editor.layer-groups.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "layer-editor.layer-groups.light-2": {
+    "text": "light",
+    "hash": "99a70261"
+  },
+  "layer-editor.layer-groups.live-camera": {
+    "text": "live camera",
+    "hash": "3ae6e4d2"
+  },
+  "layer-editor.layer-groups.looks": {
+    "text": "Looks",
+    "hash": "c64fb087"
+  },
+  "layer-editor.layer-groups.low-power-mode-drops-blur-blend-and-pan": {
+    "text": "Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.",
+    "hash": "e01078fc"
+  },
+  "layer-editor.layer-groups.medium": {
+    "text": "Medium",
+    "hash": "8e588cd1"
+  },
+  "layer-editor.layer-groups.medium-2": {
+    "text": "medium",
+    "hash": "c082456a"
+  },
+  "layer-editor.layer-groups.move-name-backward": {
+    "text": "Move {name} backward",
+    "hash": "e1542499"
+  },
+  "layer-editor.layer-groups.move-name-forward": {
+    "text": "Move {name} forward",
+    "hash": "1105dd4b"
+  },
+  "layer-editor.layer-groups.move-name-to-the-back": {
+    "text": "Move {name} to the back",
+    "hash": "3a98c7ca"
+  },
+  "layer-editor.layer-groups.move-name-to-the-front": {
+    "text": "Move {name} to the front",
+    "hash": "3415ab93"
+  },
+  "layer-editor.layer-groups.n": {
+    "text": "{n, select, 1 {1st from the front, of {count}} 2 {2nd from the front, of {count}} 3 {3rd from the front, of {count}} other {{n}th from the front, of {count}}}",
+    "hash": "6a04e13c"
+  },
+  "layer-editor.layer-groups.n-set": {
+    "text": "{n} set",
+    "hash": "1f3be422"
+  },
+  "layer-editor.layer-groups.normal": {
+    "text": "Normal",
+    "hash": "a7248eeb"
+  },
+  "layer-editor.layer-groups.nothing-else-is-in-this-container-so": {
+    "text": "Nothing else is in this container, so this module shows in the normal place until you add one.",
+    "hash": "a1176004"
+  },
+  "layer-editor.layer-groups.on-top": {
+    "text": "On top",
+    "hash": "287c3e34"
+  },
+  "layer-editor.layer-groups.opacity": {
+    "text": "Opacity",
+    "hash": "6062652e"
+  },
+  "layer-editor.layer-groups.order": {
+    "text": "Order",
+    "hash": "6be09082"
+  },
+  "layer-editor.layer-groups.pan-and-zoom": {
+    "text": "pan and zoom",
+    "hash": "4f9cd30b"
+  },
+  "layer-editor.layer-groups.placement": {
+    "text": "Placement",
+    "hash": "4df99399"
+  },
+  "layer-editor.layer-groups.position": {
+    "text": "Position",
+    "hash": "6d031af1"
+  },
+  "layer-editor.layer-groups.show-yaml": {
+    "text": "Show YAML",
+    "hash": "97bd3a2f"
+  },
+  "layer-editor.layer-groups.smaller-than-a-fingertip-44-px-add": {
+    "text": "Smaller than a fingertip (44 px). Add padding in Design.",
+    "hash": "df2a2013"
+  },
+  "layer-editor.layer-groups.strength": {
+    "text": "Strength",
+    "hash": "63ee3a1b"
+  },
+  "layer-editor.layer-groups.strong": {
+    "text": "Strong",
+    "hash": "30a04fdc"
+  },
+  "layer-editor.layer-groups.strong-blur-can-make-older-tablets-slow": {
+    "text": "Strong blur can make older tablets slow.",
+    "hash": "31ccfea6"
+  },
+  "layer-editor.layer-groups.style": {
+    "text": "Style",
+    "hash": "7e744141"
+  },
+  "layer-editor.layer-groups.takes-its-normal-place-in-the-column": {
+    "text": "Takes its normal place in the column.",
+    "hash": "49b69bb0"
+  },
+  "layer-editor.layer-groups.tapping-name-will-do-nothing-while-this": {
+    "text": "Tapping {name} will do nothing while this is on.",
+    "hash": "7c982dfb"
+  },
+  "layer-editor.layer-groups.text-hard-to-read-darken-behind-text": {
+    "text": "Text hard to read? Darken behind text",
+    "hash": "15d3ce73"
+  },
+  "layer-editor.layer-groups.text-is-readable": {
+    "text": "Text is readable.",
+    "hash": "a6376926"
+  },
+  "layer-editor.layer-groups.the-whole-card": {
+    "text": "The whole card",
+    "hash": "ce911af7"
+  },
+  "layer-editor.layer-groups.this-layer-has-no-action-so-it-only": {
+    "text": "This layer has no action, so it only blocks taps.",
+    "hash": "9c8a6cb9"
+  },
+  "layer-editor.layer-groups.this-module": {
+    "text": "this module",
+    "hash": "3ea86d89"
+  },
+  "layer-editor.layer-groups.this-module-keeps-its-own-action": {
+    "text": "This module keeps its own action.",
+    "hash": "06cb12e8"
+  },
+  "layer-editor.layer-groups.this-video-background-sits-behind-its": {
+    "text": "This video background sits behind its siblings on its own, as before. Choose an option to set it.",
+    "hash": "f835b86f"
+  },
+  "layer-editor.layer-groups.tint-only-not-for-text": {
+    "text": "Tint only. Not for text.",
+    "hash": "1245002c"
+  },
+  "layer-editor.layer-groups.to-back": {
+    "text": "To back",
+    "hash": "03be3bf5"
+  },
+  "layer-editor.layer-groups.to-front": {
+    "text": "To front",
+    "hash": "2cc7f0ea"
+  },
+  "layer-editor.layer-groups.turn-on-low-power-mode": {
+    "text": "Turn on Low-power mode",
+    "hash": "b19ee92b"
+  },
+  "layer-editor.layer-groups.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "layer-editor.layer-groups.very-strong": {
+    "text": "Very strong",
+    "hash": "79d9108c"
+  },
+  "layer-editor.layer-groups.white": {
+    "text": "White",
+    "hash": "3495e757"
+  },
+  "layer-editor.layer-groups.with-a-black-darkening-of-60-or-more": {
+    "text": "With a black darkening of 60 % or more, white text stays readable on any picture. This holds for the fully dark part. With a fade, text must sit in the strongest third from that edge.",
+    "hash": "3685519f"
+  },
+  "layer-editor.layers-sheet.front-first-tap-one-to-select-it": {
+    "text": "Front first. Tap one to select it.",
+    "hash": "ddce2d1b"
+  },
+  "layer-editor.layers-sheet.layers-here": {
+    "text": "Layers here",
+    "hash": "dfee078f"
+  },
+  "layer-editor.layers-sheet.n-from-the-front-here": {
+    "text": "{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here",
+    "hash": "b9092530"
+  },
+  "layer-editor.layers-sheet.nothing-here": {
+    "text": "Nothing here.",
+    "hash": "eb38ca40"
+  },
+  "layer-editor.looks.camera-still-picture": {
+    "text": "Camera still picture",
+    "hash": "e93dc411"
+  },
+  "layer-editor.looks.colour-wash": {
+    "text": "Color wash",
+    "hash": "43937611"
+  },
+  "layer-editor.looks.corner-badge": {
+    "text": "Corner badge",
+    "hash": "db117955"
+  },
+  "layer-editor.looks.dimmed-backdrop": {
+    "text": "Dimmed backdrop",
+    "hash": "0845af1a"
+  },
+  "layer-editor.looks.dotted-texture": {
+    "text": "Dotted texture",
+    "hash": "d2cc9b08"
+  },
+  "layer-editor.looks.frosted": {
+    "text": "Frosted",
+    "hash": "fd018148"
+  },
+  "layer-editor.looks.photo-dark-at-the-bottom": {
+    "text": "Photo, dark at the bottom",
+    "hash": "0d8d2bf9"
+  },
+  "layer-editor.looks.picture-behind-buttons": {
+    "text": "Picture behind buttons",
+    "hash": "c9ec338e"
+  },
+  "layer-editor.looks.soft-glow": {
+    "text": "Soft glow",
+    "hash": "6c353e37"
+  },
+  "layer-editor.looks.soft-vignette": {
+    "text": "Soft vignette",
+    "hash": "5bdc8361"
+  },
+  "layer-editor.looks.top-banner": {
+    "text": "Top banner",
+    "hash": "f4774a5d"
+  },
+  "layer-editor.looks.weather-backdrop": {
+    "text": "Weather backdrop",
+    "hash": "cc4bc56f"
+  },
+  "layer-editor.mc-anchor-grid.position": {
+    "text": "Position",
+    "hash": "6d031af1"
+  }
 }

@@ -966,7 +966,7 @@ export class EditorStateManager {
 
   addTab(row: number, col: number, module: number, child?: ChildStep[]): void {
     this._tabsEdit([row, col, module, child], (tabs) => {
-      tabs.push({ label: t('Tab {n}', { n: tabs.length + 1 }), modules: [] });
+      tabs.push({ label: t('card-editor.editor-state.tab-n', { n: tabs.length + 1 }), modules: [] });
     }, (l) => this._slotPath(row, col, module, child, l.tabs!.length - 1));
   }
 
@@ -979,7 +979,7 @@ export class EditorStateManager {
     this._tabsEdit([row, col, module, child], (tabs) => {
       if (!tabs[slot]) return false;
       if ('label' in patch && !patch.label?.trim()) {
-        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('Tab {n}', { n: slot + 1 });
+        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('card-editor.editor-state.tab-n', { n: slot + 1 });
         if (label === tabs[slot].label && Object.keys(patch).length === 1) return false;
         patch = { ...patch, label };
       }

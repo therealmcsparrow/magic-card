@@ -26,12 +26,12 @@ export function renderLayerChip(mod: CardModule): TemplateResult | typeof nothin
   const p = placementOf(mod);
   if (p === 'flow') return nothing;
   if (p === 'background') {
-    return html`<span class="lchip" data-layer="background" title=${t('Behind others')}><ha-icon icon="mdi:arrange-send-to-back" aria-hidden="true"></ha-icon>${t('Behind others')}</span>`;
+    return html`<span class="lchip" data-layer="background" title=${t('card-editor.tree-chip.behind-others')}><ha-icon icon="mdi:arrange-send-to-back" aria-hidden="true"></ha-icon>${t('card-editor.tree-chip.behind-others')}</span>`;
   }
   const raw = layerOf(mod).anchor;
   const anchor: LayerAnchor = isAnchor(raw) ? raw : 'top-left';
   const where = anchorName(anchor).toLowerCase();
-  return html`<span class="lchip" data-layer="overlay" title=${t('On top, {anchor}', { anchor: where })}><ha-icon icon="mdi:arrange-bring-to-front" aria-hidden="true"></ha-icon>${t('On top')}${miniGlyph(anchor)}<span class="sr-only">, ${where}</span></span>`;
+  return html`<span class="lchip" data-layer="overlay" title=${t('card-editor.tree-chip.on-top-anchor', { anchor: where })}><ha-icon icon="mdi:arrange-bring-to-front" aria-hidden="true"></ha-icon>${t('card-editor.tree-chip.on-top')}${miniGlyph(anchor)}<span class="sr-only">, ${where}</span></span>`;
 }
 
 /** Layered modules among a list (one level) or, for a layout module, among all its slots. */
@@ -47,7 +47,7 @@ export function countLayers(mods: readonly CardModule[] | undefined, deep = fals
 /** "{n} layers" beside a container's module count; nothing when it holds none. */
 export function renderLayerCount(n: number): TemplateResult | typeof nothing {
   if (n <= 0) return nothing;
-  return html`<span class="chip is-count lcount">${t('{n, plural, one {# layer} other {# layers}}', { n })}</span>`;
+  return html`<span class="chip is-count lcount">${t('card-editor.tree-chip.n', { n })}</span>`;
 }
 
 export const layerChipCss = css`

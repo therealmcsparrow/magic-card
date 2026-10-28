@@ -123,16 +123,16 @@ export class SliderLookHost extends LitElement {
         }}
       ></mc-slider-look-editor>`;
     } else if (this._look === 'failed') {
-      body = notice({ tone: 'warn', text: t("Couldn't load the slider looks."), action: { label: t('Try again'), onClick: () => this._load(true) } });
+      body = notice({ tone: 'warn', text: t("card-editor.slider-look-host.couldn-t-load-the-slider-looks"), action: { label: t('card-editor.slider-look-host.try-again'), onClick: () => this._load(true) } });
     } else if (this._look === 'loading') {
       body = html`<div class="skeleton" role="status" aria-busy="true" tabindex="-1">
-        <span>${t('Loading slider looks...')}</span>
+        <span>${t('card-editor.slider-look-host.loading-slider-looks')}</span>
         <div class="bar"></div>
       </div>`;
     }
     // chunk in but the element not defined (a stub build): nothing to show, the General fields are all there is
     return html`<section class="grp" aria-labelledby="look-h">
-      <h4 class="grp-h" id="look-h">${t('Look')}</h4>
+      <h4 class="grp-h" id="look-h">${t('card-editor.slider-look-host.look')}</h4>
       ${body}
     </section>`;
   }
