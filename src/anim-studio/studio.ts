@@ -24,7 +24,7 @@ import {
 import type { TransferChunk, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import type { AnimationStage } from './studio-stage';
 import { studioStyles } from './studio-styles';
-import { KIND_EDITORS, PATH_OVERLAY_TAG, editorDefined } from './editor-slots';
+import { KIND_EDITORS, PATH_HOST_TAG, editorDefined } from './editor-slots';
 import { NO_SELECTION, PANELS, panelsFor, type PanelSpec, type PreviewChangeDetail, type StageInfo, type StudioSelection } from './slots';
 import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
@@ -130,7 +130,7 @@ const ICON_START = 'mc-anim-icon-start';
 /** The layers panel that splits the icon (also offered in the Icon target's inspector). */
 const PARTS_LAYERS = 'mc-anim-parts-layers';
 /** Panels that show the playhead (they get .time; the others never re-render while it plays). */
-const TIME_TAGS = new Set(['mc-anim-keyframes-editor', 'mc-anim-sequence-editor', PATH_OVERLAY_TAG]);
+const TIME_TAGS = new Set(['mc-anim-keyframes-editor', 'mc-anim-sequence-editor', PATH_HOST_TAG]);
 
 /** What the preview's animation colour is (no entity there: the theme accent, like a card). */
 const ENTITY_COLOR = 'var(--primary-color, #03a9f4)';
@@ -479,7 +479,8 @@ export class AnimationStudio extends LitElement {
     // a dialog is a kit window; it opens once it is rendered and hands focus back to whatever had it
     const win = this.shadowRoot?.querySelector<UiWindowElement>('mc-ui-window');
     if (win && !win.open) {
-      this._opener = deepActive() ?? this._opener;
+      const active = deepActive();
+      if (active?.isConnected && active !== document.body) this._opener = active;
       win.opener = this._opener;
       win.show();
       // the transfer panel is the window's content: a screen reader user is best served by its heading
@@ -545,7 +546,7 @@ export class AnimationStudio extends LitElement {
       void window.MagicCard.loadEditor();
     }
     // kind editors and panels defined later (their own files) replace the placeholders
-    for (const tag of [...Object.values(KIND_EDITORS).map((x) => x.tag), PATH_OVERLAY_TAG, ...PANELS.map((p) => p.tag)]) {
+    for (const tag of [...Object.values(KIND_EDITORS).map((x) => x.tag), PATH_HOST_TAG, ...PANELS.map((p) => p.tag)]) {
       if (!editorDefined(tag)) void customElements.whenDefined(tag).then(() => this.requestUpdate());
     }
     if (typeof ResizeObserver !== 'undefined' && !this._ro) {
@@ -1130,6 +1131,8 @@ export class AnimationStudio extends LitElement {
         e.stopPropagation();
         const id = e.detail.id;
         this._menu = false;
+        // the menu goes with the pick: a window it opens hands focus back to the button that opened the menu
+        this._opener = this.shadowRoot?.querySelector<HTMLElement>('.new-btn') ?? undefined;
         if (id === 'preset') this._openPresets();
         else if (id === 'icon') this._openIconStart();
         else this._new(id.slice(5) as AnimationKind);
@@ -1619,7 +1622,7 @@ export class AnimationStudio extends LitElement {
       .hass=${this.hass}
       .library=${this._libraryObj}
       .time=${TIME_TAGS.has(tag) ? this._time : 0}
-      .disabled=${this._busy || (tag === PATH_OVERLAY_TAG && this._viewOf(d).locked.includes('path'))}
+      .disabled=${this._busy || (tag === PATH_HOST_TAG && this._viewOf(d).locked.includes('path'))}
       .studioSelection=${this._selection}
       .layerView=${this._viewOf(d)}
       .emitter=${this._emitter.index}
@@ -1705,12 +1708,13 @@ export class AnimationStudio extends LitElement {
     if (!Number.isFinite(width) || !Number.isFinite(height)) return;
     if (!this._stageRect || this._stageRect.width !== width || this._stageRect.height !== height) this._stageRect = { width, height };
     if (JSON.stringify(subject) !== JSON.stringify(this._subjectRect)) this._subjectRect = subject;
-    const { scale, viewBox } = (e as CustomEvent).detail ?? {};
+    const { scale, viewBox, screen } = (e as CustomEvent).detail ?? {};
     const info: StageInfo = {
       rect: { width, height },
       scale: Number.isFinite(scale) && scale > 0 ? scale : 1,
       ...(subject ? { subject } : {}),
       ...(Array.isArray(viewBox) && viewBox.length === 4 ? { viewBox: viewBox as [number, number, number, number] } : {}),
+      ...(screen && [screen.left, screen.top, screen.width, screen.height].every(Number.isFinite) ? { screen: { left: screen.left, top: screen.top, width: screen.width, height: screen.height } } : {}),
     };
     if (JSON.stringify(info) !== JSON.stringify(this._stageInfo)) this._stageInfo = info;
   };
@@ -2098,7 +2102,7 @@ export class AnimationStudio extends LitElement {
             @stage-time=${(e: CustomEvent) => (this._time = e.detail.time)}
             @stage-rect=${this._onStageRect}
           >
-            ${d.kind === 'path' && editorDefined(PATH_OVERLAY_TAG) ? this._editorEl(PATH_OVERLAY_TAG, d, { slot: 'overlay', stageRect: this._stageRect, subjectRect: this._subjectRect }) : nothing}
+            ${d.kind === 'path' && editorDefined(PATH_HOST_TAG) ? this._editorEl(PATH_HOST_TAG, d, { slot: 'canvas', stageRect: this._stageRect, subjectRect: this._subjectRect }) : nothing}
             ${this._panels('stage-tool', d, { slot: 'overlay', stageRect: this._stageRect, subjectRect: this._subjectRect })}
           </mcas-stage>
           ${

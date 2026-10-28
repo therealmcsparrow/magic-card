@@ -51,7 +51,7 @@ export function activeTool(sel: StudioSelection): DrawTool {
 
 export const TOOL_INFO: Record<DrawTool, { label: MessageId; icon: string; base: string; hint: MessageId }> = {
   select: { label: m('Select'), icon: 'mdi:cursor-default-outline', base: 'shape', hint: m('Click a shape to select it, drag to move it.') },
-  pen: { label: m('Pen'), icon: 'mdi:fountain-pen-tip', base: 'path', hint: m('Click to add points, drag for curves. Click the first point to close, Enter to finish.') },
+  pen: { label: m('Pen'), icon: 'mdi:fountain-pen-tip', base: 'path', hint: m('Click to add points, drag for curves. Click the first point to close, or choose Finish path.') },
   line: { label: m('Line'), icon: 'mdi:vector-line', base: 'line', hint: m('Drag to draw a line.') },
   rect: { label: m('Rectangle'), icon: 'mdi:square-rounded-outline', base: 'rect', hint: m('Drag to draw. Shift: square, Alt: from the centre.') },
   ellipse: { label: m('Ellipse'), icon: 'mdi:ellipse-outline', base: 'ellipse', hint: m('Drag to draw. Shift: circle, Alt: from the centre.') },

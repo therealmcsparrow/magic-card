@@ -23,7 +23,8 @@ import { t, m, type MessageId } from './i18n';
  * the stage zooms to the card's icon instead: the icon's box, with some room around it, fills the
  * canvas (up to ICON_ZOOM) and the rest of the card is cut off. The overlay slot (path overlay,
  * stage tools) is scaled and moved with the card: overlays draw in unscaled card px, and
- * `stage-rect` reports unscaled sizes plus the scale.
+ * `stage-rect` reports unscaled sizes, the scale and the card's on-screen box (`screen`). The canvas slot
+ * covers the card area outside the scale, for tools that need unscaled pixels.
  *
  * A document with states or bindings (or a panel's `preview-change`, `.preview`) plays from a
  * simulated entity: the animation entry gets `entity: PREVIEW_ENTITY` and the preview hass carries
@@ -258,6 +259,13 @@ export class AnimationStage extends LitElement {
     this.dispatchEvent(new CustomEvent('stage-time', { detail: { time } }));
   }
 
+  /** A tool in the canvas slot: the area stops panning the page under a touch drag. */
+  @state() private _canvasOn = false;
+
+  private _onCanvasSlot = (e: Event): void => {
+    this._canvasOn = (e.target as HTMLSlotElement).assignedElements().length > 0;
+  };
+
   private _observeFrame(): void {
     const frame = this.shadowRoot?.querySelector<HTMLElement>('.frame');
     const canvas = this.shadowRoot?.querySelector<HTMLElement>('.area');
@@ -306,8 +314,10 @@ export class AnimationStage extends LitElement {
     scale: number;
     subject?: StageInfo['subject'];
     viewBox?: StageInfo['viewBox'];
+    screen?: StageInfo['screen'];
   } {
     const subject = this._subjectRect(frame);
+    const screen = this._screenRect(frame);
     const viewBox = this._iconViewBox();
     return {
       width: frame.offsetWidth,
@@ -315,7 +325,18 @@ export class AnimationStage extends LitElement {
       scale: this._k,
       ...(subject ? { subject } : {}),
       ...(viewBox ? { viewBox } : {}),
+      ...(screen ? { screen } : {}),
     };
+  }
+
+  /** Where the scaled, moved card is drawn, in CSS px from the card area's top-left (the origin of the canvas slot). */
+  private _screenRect(frame: HTMLElement): StageInfo['screen'] | undefined {
+    const area = this.shadowRoot?.querySelector<HTMLElement>('.area');
+    if (!area) return undefined;
+    const a = area.getBoundingClientRect();
+    const f = frame.getBoundingClientRect();
+    const r = (n: number): number => Math.round(n * 100) / 100;
+    return { left: r(f.left - a.left), top: r(f.top - a.top), width: r(f.width), height: r(f.height) };
   }
 
   /** The viewBox of the preview's icon when it is drawn as an SVG (mc-svg-icon, as icon rigs are). */
@@ -563,13 +584,14 @@ export class AnimationStage extends LitElement {
             : nothing}
           <slot name="top"></slot>
         </div>
-        <div class="area">
+        <div class="area ${this._canvasOn ? 'canvas-on' : ''}">
         <div class="fit ${off ? 'zoomed' : ''}" style=${fit}>
           <div class="frame" style="${THEME_VARS[this.theme]};width:${FRAME_WIDTH}px;transform:${move}scale(${k})" data-theme=${this.theme}>
             ${defined && this._card ? this._card : this._missing()}
             <div class="overlay"><slot name="overlay"></slot></div>
           </div>
         </div>
+        <div class="canvas-layer"><slot name="canvas" @slotchange=${this._onCanvasSlot}></slot></div>
         ${this.reduced && defined ? html`<p class="note">${t('With reduced motion the card shows its still state: this animation does not play.')}</p>` : nothing}
         ${off
           ? html`<span class="zoom-tag" title=${t('Zoomed to the icon while you edit its parts or draw')}>${t('Icon {percent}%', { percent: Math.round(k * 100) })}</span>`
@@ -804,6 +826,21 @@ export class AnimationStage extends LitElement {
         position: absolute;
         inset: 0;
         pointer-events: auto;
+      }
+      /* tools that edit over the card but cannot sit inside its scale: the card area's box, unscaled */
+      /* a canvas tool is in the slot: a drag on the area is the tool's, not a page pan or zoom */
+      .area.canvas-on {
+        touch-action: none;
+      }
+      .canvas-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .canvas-layer ::slotted(*) {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
       }
       .frame magic-card {
         display: block;

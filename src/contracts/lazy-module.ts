@@ -3,7 +3,7 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.7.0 (LAZY_MODULE_CONTRACT).
+ * Contract: lazy modules and lazy card chunks. Version 1.8.0 (LAZY_MODULE_CONTRACT).
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
@@ -111,6 +111,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon
  *   geometry, read by the editor through svgIconApi()) and seasonal (CardSeasonal, SeasonalBudget,
  *   sceneDecorations, sceneFlashes, seasonalSeed, seasonalPreviewDate, setSeasonalPreviewDate).
+ * - Section "path-canvas from the animation studio" (from 1.8.0, revision 22): the studio bundle loads the path-canvas
+ *   chunk through its one loader and draws with <mc-path-canvas> (path-canvas 1.1.0).
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -336,13 +338,61 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   icon-library, path-canvas, path-tools, svg-booleans, svg-editor, shape-editor, theme-presets,
  *   i18n tables) are registered sites, and so is src/svg-safety/css-loader.ts, the one import() of 'svg-css'.
  *   path-canvas is reached from the svg-editor and shape-editor chunks, both
- *   through src/path-canvas/loader.ts. The ESLint rule (no-restricted-syntax
+ *   through src/path-canvas/loader.ts; section "path-canvas from the animation studio" adds the animation studio
+ *   bundle through the same loader. The ESLint rule (no-restricted-syntax
  *   ImportExpression with an override for the registered files) fails any other import(). Moving editor loaders onto
  *   lazyChunk() is debt.
+ *
+ * ── path-canvas from the animation studio (from version 1.8.0, revision 22) ──
+ * Goes with path-canvas 1.1.0 (section "Overlay mode").
+ * - One loader: the studio bundle value-imports src/path-canvas/loader.ts and nothing else from src/path-canvas/ (type
+ *   imports from src/contracts/path-canvas.ts are free). It adds no import() site and no second import() of the chunk,
+ *   so the ESLint override list does not change. An import scan test over src/anim-studio/** checks both.
+ * - One copy of the path maths: the studio's Draw and motion path code takes pathEdit, pathDraw and pathTidy from the
+ *   loaded PathCanvasChunk and does not value-import src/path/edit.ts, src/path/draw.ts or src/path/tidy.ts; code that
+ *   must run before the chunk has loaded uses src/path/core.ts. Reason, measured: the chunk's `import * as pathEdit`
+ *   and its `pathDraw` object mark every export of edit and draw as used, so while any studio file still imports one of
+ *   them the studio entry keeps all of both (+7.9 KB raw from the import site alone). The studio files that may keep
+ *   importing them are size debt: src/anim-studio/editors/path-utils.ts and src/anim-studio/editors/parts-overlay.ts
+ *   (the parts tools; the part inspector reaches them through path-utils.ts). The scan test lists exactly these, and
+ *   the list only shrinks.
+ * - One chunk file, two runtimes: the card runtime (svg-editor and shape-editor chunks) and the studio runtime each
+ *   evaluate their own instance of the chunk's modules. The chunk stays self-contained (the same 15 modules with or
+ *   without the studio as a parent); nothing is copied into it. A module both the chunk and the studio entry hold (today
+ *   src/path/draw.ts and src/path/edit.ts) must hold no module state: no top-level let or var, no mutated Map or Set,
+ *   no define. tools/check-chunk-dups.mjs counts only magic-card.js and its descendants, so the import scan above checks
+ *   this rule for the studio. The i18n runtime (src/i18n/runtime.ts) is one module id in both entries; the chunk's
+ *   tables register with the runtime of the bundle that loaded it.
+ * - The first define wins: the define stays guarded by customElements.get, so whichever runtime defines PATH_CANVAS_TAG
+ *   first serves the whole page. The studio draws with the canvas only when customElements.get(PATH_CANVAS_TAG)
+ *   .contractRevision >= PATH_CANVAS_OVERLAY_REVISION. Otherwise (another Magic Card release defined the element first
+ *   on this page) the studio keeps no drawing code of its own: Draw and the motion path stage show "The drawing tools
+ *   on this page are from another Magic Card version. Reload the page to draw here." with a "Reload page" button. The
+ *   button asks first ("Reloading the page discards changes that are not saved. Reload anyway?", confirm()) and only
+ *   then calls location.reload(): the host cannot see whether the document has unsaved changes. The panels, fields,
+ *   layer lists and the timeline stay usable, and the document is unchanged.
+ * - Public path: the chunk URL resolves through src/anim-studio/public-path.ts, so magic-card-path-canvas.<hash>.js and
+ *   magic-card-path-core.<hash>.js are requested from the folder the studio file came from. Every place that serves the
+ *   studio (the Magic Card Utils panel's copy list too) carries both files next to it.
+ * - When: the studio starts the load when a Draw tool or the motion path editor first shows, never at studio open. The
+ *   stage, the panels and the timeline stay usable while it loads.
+ * - Failure: loadPathCanvas() resolving undefined shows "Couldn't load the drawing tools." with a "Try again" button;
+ *   the document is unchanged. Browsers keep a failed import() per URL until a reload, so Try again asks under a URL
+ *   not used before on the page: the studio host (src/anim-studio/editors/canvas-host.ts) wraps the studio runtime's
+ *   chunk URL function (`__webpack_require__.u`, as src/utils/lazy-chunk.ts and the theme-presets loader do) for the
+ *   one synchronous loadPathCanvas() call, so every chunk file that call requests (path-canvas, and path-core when it is
+ *   not loaded yet) gets `r=<n>` appended, then restores it. n starts from Date.now() and only grows. The first load
+ *   uses the plain URL. src/path-canvas/loader.ts stays stateless and is not changed for this; the card runtime's
+ *   svg-editor and shape-editor sites are not affected. A request that never settles is still waited on (section
+ *   "Failure, retry and timeout"). After a Try again that loads, focus goes to the drawing area (the canvas, for the
+ *   motion path) and "The drawing tools are ready." is announced.
+ * - Sizes: this contract sets no ceiling for the studio entry or the path-canvas chunk; both are tools/size-caps.json
+ *   entries, measured on a Linux build. The studio entry never holds the import site and its own old Draw and motion
+ *   path overlays at the same time: the import alone is larger than the studio's headroom.
  */
 
-export const LAZY_MODULE_CONTRACT = '1.7.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 21;
+export const LAZY_MODULE_CONTRACT = '1.8.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 22;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';

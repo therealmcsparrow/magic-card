@@ -7,6 +7,7 @@ To move one part of an icon, or a drawn shape, along a path inside a keyframes a
 -   [Drawing on the stage](#drawing-on-the-stage)
 -   [Path settings](#path-settings)
 -   [Motion](#motion)
+-   [When the drawing tools do not load](#when-the-drawing-tools-do-not-load)
 -   [Particles along the path](#particles-along-the-path)
 -   [Keyboard](#keyboard)
 -   [On the card](#on-the-card)
@@ -15,11 +16,12 @@ To move one part of an icon, or a drawn shape, along a path inside a keyframes a
 
 While a path animation is open, the stage shows the path over the preview card, with a grid and a Start label at the first point.
 
--   Click the stage to add a point at the end of the path. While the first point is selected, a click adds the point before it.
+-   Click the stage to add a point at the end of the path.
 -   Click the line to insert a point there.
+-   Press an arrow key to move a crosshair, then Enter to place a point there. This works without a pointer.
 -   Drag a point to move it. Drag a handle to curve the line. A smooth point keeps its two handles mirrored; hold Alt to move one handle alone.
 -   Double-click (or double-tap) a point to switch it between smooth and corner.
--   Click the first point while the last one is selected, or the other way round, to close the path.
+-   Click the first point to close the path. A path closes once it has three points.
 -   Points snap to a grid of 5% (or 10 px for a pixel path). Hold Shift while dragging to place them freely.
 
 For the element and the icon, the point (0, 0) is where they rest, so the path is an offset from their normal place.
@@ -40,6 +42,10 @@ For the element and the icon, the point (0, 0) is where they rest, so the path i
 | Units | % of size (points are a share of the moving element's size, so the path scales with it) or Pixels (the same at every size) |
 | Follow rotation | Turns the subject to face the direction of travel |
 
+## When the drawing tools do not load
+
+The path is drawn on a canvas that loads when the stage opens. If it cannot load, the stage says "Couldn't load the drawing tools." with a **Try again** button. If the page holds an older Magic Card version, it says "The drawing tools on this page are from another Magic Card version. Reload the page to draw here." with a **Reload page** button.
+
 ## Particles along the path
 
 With What moves set to Particles, a Particles group appears:
@@ -55,9 +61,10 @@ The particles are round dots unless the YAML gives them a shape (`path.particles
 | Key | Action |
 | --- | --- |
 | Tab | Move to a point |
-| Arrows | Nudge the selected point by 1 (% or px), or by one grid step with Shift |
-| Enter or Space | Switch the point between smooth and corner |
-| Delete or Backspace | Remove the point |
+| Arrows | With a point selected: move it by 1 (% or px), by one grid step with Shift, or by 0.1 with Alt. With no point selected on an open path: move the crosshair for the next point |
+| Enter | Open path: place a point at the crosshair. On the first point: close the path |
+| C | Switch the point between smooth and corner |
+| Delete or Backspace | Remove the selected point |
 | Escape | Deselect the point |
 
 ## On the card

@@ -2,10 +2,16 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
 import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-kit';
 
 /*
- * Contract: path canvas. Version 1.0.0 (PATH_CANVAS_CONTRACT_VERSION).
+ * Contract: path canvas. Version 1.1.0 (PATH_CANVAS_CONTRACT_VERSION).
  * Hit sizes 24 / 44 px, touch drag loupe and grab offset, keyboard (`[` / `]`, H, fine step, Enter to
  * fields, C and double-click for the kind), Esc cancels a drag, imports over MAX_ANCHORS stay
  * editable, drag performance with large paths.
+ * - Section "Overlay mode" (from 1.1.0, revision 8): editing over a picture the host draws (see-through ground with
+ *   pointer pass-through that leaves the host's controls and dialogs alone, host-given placement, per-axis scale, units,
+ *   no grid at gridStep 0).
+ * - From 1.1.0 (revision 8), in every host: the 'add' mode rules (bullet "'add' mode": a press on a point selects and
+ *   drags it, the keyboard cursor, Enter on the first point closes) and the keys of the mode as aria-description
+ *   (bullet "Accessibility").
  *
  * One editing surface for anchors and handles, used by the SVG editor (many subpaths in a fixed
  * viewBox) and the shape editor (one closed subpath in a resizable box with anchored coordinates).
@@ -94,7 +100,8 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   `opener`; after a pick the host moves focus. Esc that closed the menu is stopped there (editor Esc
  *   order: gesture, then overlay). No motion under reduced motion. No strings of its own: the host passes
  *   every label. The host places the element inside its own layer (shadow root), so focus stays inside.
- * - Size: the chunk measures about 15.1 KB minified (menu 6.0 KB, canvas 9.1 KB). Ceiling 62 KiB = 63,488 B.
+ * - Size: the ceiling is the tools/size-caps.json entry for PATH_CANVAS_CHUNK_FILE (measured + 5 %, rounded up to
+ *   1 KiB); the number lives there only. With overlay mode the chunk stays at or under 70 KiB = 71,680 B.
  *
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
@@ -124,6 +131,24 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * - Drag an anchor or handle; Alt+click on a segment, double-click on a segment (Node mode), or the
  *   "Add point" mode then tap, inserts. Double-click on an anchor, or C, toggles corner <-> smooth
  *   (symmetric through the host's kind control, within `kinds`).
+ * - 'add' mode (from 1.1.0, every host, overlay or not):
+ *   Pointer: a press on an anchor of the active path selects it; moved past DRAG_SLOP_PX it drags that anchor as a
+ *   point drag in 'nodes' does (touch keeps the grab offset), and a tap only selects. The one exception is the first
+ *   anchor of an open path with 3 or more anchors: a tap there closes the path (one commit, label "Close path",
+ *   announced "Path closed."). A press on the active path's segment band inserts a point there (label "Add point").
+ *   Any other press (empty ground, another path, a handle) appends a point to the active open path, or starts a new
+ *   path while `maxPaths` allows, snapped as a drag is (Shift suspends the snap). Handles move by H and the arrows in
+ *   this mode, not by pointer. Adds over MAX_ANCHORS stay refused (bullet "Large paths").
+ *   Keyboard cursor: a crosshair in frame units, drawn while it is in use. The arrows move the selected anchor or
+ *   handle when one is selected and the crosshair is not in use; otherwise they move the crosshair (by `nudge`,
+ *   `bigNudge`, `fineNudge`, snapped unless Alt) and announce "Cursor at x 12, y 4. Press Enter to place a point."
+ *   (250 ms after the last key). The crosshair starts at the last anchor of the active open path, else at the frame
+ *   centre. Enter places a point at the crosshair (at its start when it is not in use) and the crosshair stays in use,
+ *   so arrows and Enter go on drawing. Tab, Shift+Tab, `[`, `]`, H, focusAnchor(), Esc, a press the canvas takes and
+ *   leaving 'add' end its use.
+ *   Enter closes instead when the crosshair is not in use and the selection is the first anchor of an open path with 3
+ *   or more anchors, alone and without a handle: one commit "Close path", no duplicate point, "Path closed.". Not with
+ *   two anchors and not on another anchor. In 'add' Enter never emits `mc-path-fields`.
  * - Keyboard (focus on the canvas, never inside a text field; keys by event.code where the
  *   character needs Shift or Option on some layouts):
  *   Tab / Shift+Tab walk anchors, then the handles of the focused anchor (there is no trap: the
@@ -133,7 +158,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   by `bigNudge`, Alt+arrows by `fineNudge` (fine steps are never snapped). Delete / Backspace
  *   removes. Ctrl/Cmd+A selects all anchors of the active subpath. Enter on a focused anchor emits
  *   `mc-path-fields` (the host moves focus to that point's X field; Esc there returns focus to the
- *   same anchor). =, + and - zoom, 0 fits.
+ *   same anchor; 'add' mode: see its bullet). =, + and - zoom, 0 fits.
  * - Esc: during a drag it cancels the drag (one `mc-path-change` with the start paths, commit false,
  *   label "Cancel", and no commit follows, so no history step); else it clears the selection; with
  *   nothing selected the canvas does nothing and lets the event bubble. The canvas never closes
@@ -156,7 +181,125 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   that announces selection changes, adds and deletes, and moves 250 ms after the last key (at
  *   most one message per 500 ms; snaps are not announced). The canvas element has role group,
  *   aria-roledescription "drawing canvas" and the host's aria-label / aria-describedby.
+ *   From 1.1.0 the canvas also sets aria-description to the keys of its mode: in 'add' "Arrow keys move the cursor or
+ *   the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C
+ *   switches smooth and corner. Delete removes a point.", in 'nodes' "Tab steps through points. Arrow keys move the
+ *   selected point. C switches smooth and corner. Delete removes a point. Escape deselects."; in 'select' and 'view'
+ *   it removes its own value. Canvas strings, translated by the canvas's i18n tables (en-US, nl). A value the host set
+ *   itself (anything other than the canvas's own last value) is left alone in every mode; the host then owns it.
  * - Visuals follow DESIGN.md editor tokens (src/css/editor-system); focus is always visible.
+ *
+ * ── Overlay mode (from version 1.1.0, revision 8) ──
+ * The element class has `static contractRevision` = PATH_CANVAS_CONTRACT_REVISION. A host that needs overlay mode
+ * checks customElements.get(PATH_CANVAS_TAG).contractRevision >= PATH_CANVAS_OVERLAY_REVISION first (absent = an
+ * element older than 1.1.0, which has no overlay mode). Everything outside this section applies unless a bullet here
+ * says otherwise.
+ * Overlay mode lets a host edit paths over a live picture it draws itself (the animation studio's stage). It is on while
+ * the boolean property / attribute `overlay` is set.
+ * - Ground: `overlay` implies `underlay`. No ground, frame fill or frame outline is painted (a host that wants a board
+ *   draws it under the canvas). PathPaint fill and stroke are not drawn either, because the host's picture shows the
+ *   artwork: the canvas draws a 1 px outline of each visible path, its anchors and handles, the transform box, snap
+ *   guides, the readout and the loupe, in editor tokens. The focus ring is drawn inside the element's box.
+ * - Pointer pass-through: the drawing surface takes a press only on its own targets: anchor and handle hit areas, the
+ *   segment band of a visible unlocked path, a path body in 'select' only (its fill area when PathPaint.fill is set and
+ *   not 'none', else its segment band) and the transform box handles. In 'nodes' and 'add' no fill is a target, with or
+ *   without `paint`, so a press inside a closed motion path reaches the picture. Every other press, wheel or context
+ *   gesture reaches whatever is under the canvas and is not prevented (the svg root has pointer-events none; the canvas
+ *   watches presses on its document and decides by geometry). Hidden and locked paths have no targets. 'add' mode is
+ *   the one exception: the whole element box takes presses, because a motion path may leave the frame. There is no
+ *   marquee; Ctrl/Cmd+A still selects all anchors of the active subpath.
+ * - Host UI over the canvas: in every mode a press is never taken, and never prevented, when its composed path holds,
+ *   before it reaches the canvas or one of the canvas's ancestors (shadow hosts included):
+ *   (a) a top-layer element anywhere on the page: `dialog`, role dialog, alertdialog or menu, or an element matching
+ *       :popover-open; or
+ *   (b) a control the host draws: `button`, `input`, `select`, `textarea`, `a[href]`, `summary`, a contenteditable
+ *       element, or role button, slider, checkbox, radio, switch, tab, textbox, combobox, listbox or menuitem, whose
+ *       tree scope is the canvas's own (the root node that holds the canvas) or a shadow tree nested under it.
+ *   So the pen's Finish path button and the Draw import dialog keep their click while the pen is on. Controls of the
+ *   picture under the canvas are in another tree scope (the studio's preview card is inside the stage's shadow tree) and
+ *   do not count: with the pen on, a press on a card module that has a tap action (role button) adds a point, and in
+ *   'nodes' an anchor drawn over such a module still drags. A host control under a custom tag without one of the roles
+ *   above is not recognised; the host gives it the role. The walk stops at the canvas's ancestors, so a focusable stage
+ *   or tool layer around the canvas does not block a press.
+ * - Placement, never under a scale: the host owns the view. No zoom or pan by pinch, two fingers, wheel, Space or middle
+ *   drag; =, +, - and 0 are not handled and bubble; no `mc-path-view`; fit() and setView() do nothing. The host mounts
+ *   the element outside every ancestor with a CSS transform other than a translation or with CSS zoom (the canvas
+ *   reads the pointer from getBoundingClientRect() and draws in unscaled CSS px: inside a frame scaled 4 times every
+ *   pointer and key move came out as 0, measured). It sizes the element over the area where editing is allowed and
+ *   sets `placement` (CanvasPlacement): the on-screen rectangle of `frame` in CSS px, relative to the element's own
+ *   top-left corner. The host passes a new object on every change of its picture (resize, stage zoom, scroll, subject
+ *   move); the canvas renders from it and never measures the picture. Without `placement` an overlay canvas draws
+ *   nothing and takes no press.
+ * - Per-axis scale: sx = placement.width / frame.w and sy = placement.height / frame.h; screen x = placement.left +
+ *   (x - frame.x) * sx, y in the same way, so a percent frame on a box that is not square maps both axes exactly.
+ *   Hit sizes, slop, segment bands, snap reach, handle glyphs and stems stay CSS px on both axes. Grid thinning
+ *   (GRID_MIN_PX) and the 256-line cap apply per axis. While sx and sy differ by more than 1 % the rotate handle and
+ *   the Rotation slider are not rendered (a rotation would shear); scale handles work per axis. Points and handles
+ *   outside the frame are drawn and editable anywhere inside the element's box; any clamping is the host's.
+ * - Units: property `units` (CanvasUnits) names the unit of frame coordinates; absent = plain numbers as before. The
+ *   canvas writes it after each number in the loupe label, the anchor listbox, the live region and the transform
+ *   readout: "x 62.5%, y 31.25%", "Point 3 of 8, corner, x 12 px, y 0 px", "W 12% H 8%". Numbers in those texts are
+ *   rounded to 2 decimals with trailing zeros dropped. "%" and "px" are not translated. `nudge`, `bigNudge` and
+ *   `fineNudge` stay frame units, so a percent frame steps in percent.
+ *   Absent is right for a frame whose numbers have no unit a listener could use, such as an icon's viewBox (the
+ *   studio's Draw, the SVG and shape editors): the canvas reads them bare ("x 13, y 12"), as the host's fields show
+ *   them. There is no third CanvasUnits value: viewBox units are not CSS px, and "units" after every number adds
+ *   speech without meaning. A host that wants to say what the numbers measure says it once, in its own label or
+ *   description, never per number.
+ * - Grid: no grid is drawn when `pixelGrid` is false or `gridStep` is 0, in every mode (before 1.1.0 a gridStep of 0
+ *   fell back to 1; no host passes 0). snap.grid 0 stays the switch that turns grid snapping off.
+ * - Keys: in overlay mode every key the canvas acts on is stopped at the canvas (stopPropagation and preventDefault),
+ *   so a host shortcut on the same key never runs as well (Delete, Backspace, arrows, Enter, H, C, Esc that cancelled
+ *   a drag or cleared a selection). Keys it does not act on bubble, and so does Esc with nothing selected.
+ * - Menu: a host sets `contextMenu` only when the page defines UI_MENU_TAG; the animation studio does not.
+ * - Host pace: the host passes every transient `mc-path-change` (and the geometry from a transient
+ *   `mc-path-transform`) back as `paths` at once, but updates its own model and picture only on the commit (commit
+ *   true): never per move and never on a timer. During a drag the picture shows the last committed path while the
+ *   canvas outline shows the live one. The Esc cancel (commit false, label "Cancel") restores `paths` and changes
+ *   nothing else. Keyboard edits are one commit per key; history merges them by label within 1 s. Measured on the
+ *   live studio stage at 4x and 64 anchors: commit only gave a p95 frame of 20.9 ms, a model update every 100 ms
+ *   55.5 ms, one per move 194 ms.
+ * - Speed: during a point drag of a path with OVERLAY_DRAG_BUDGET.anchors anchors on the 4x throttled profile, with
+ *   the host pace above, the frame interval has a median of at most OVERLAY_DRAG_BUDGET.medianMs and a p95 of at most
+ *   OVERLAY_DRAG_BUDGET.p95Ms, after dropping the first OVERLAY_DRAG_BUDGET.warmFrames frames. The canvas re-renders
+ *   only the changed segments and the selection layer per frame and never on the host's clock (a playing picture costs
+ *   it nothing). The numbers are confirmed on the Linux CI profile before a test pins them.
+ * - Loading: the animation studio bundle is the third loader of the chunk, through src/path-canvas/loader.ts only
+ *   (lazy-module, section "path-canvas from the animation studio"). The chunk still imports nothing from
+ *   src/anim-studio/. The studio takes pathEdit, pathDraw and pathTidy from PathCanvasChunk, like the editor chunks.
+ * - The studio as a host:
+ *   Draw: `frame` = the icon's viewBox, `placement` = the icon box on screen, `units` absent, gridStep 1, snap to the
+ *   grid and to anchors (`snap.extra` carries the icon's own anchors). The pen is 'add' mode. The creation tools (line,
+ *   rectangle, ellipse, freehand, erase) stay the studio's: a creation layer under the canvas takes the presses the
+ *   canvas passes through, builds the outline with pathDraw and sends one doc-change. Each creation tool keeps a way
+ *   in without a drag (WCAG 2.5.7): line, rectangle, ellipse and freehand draw from the keyboard on the creation layer,
+ *   one focus stop (role application) whose label names the tool and its keys. The arrows move a cursor (1 unit, Shift
+ *   5, Alt 0.1; snapped to the grid unless Alt, never to anchors; kept inside the viewBox; the first key starts it at
+ *   the centre), drawn as a crosshair. Enter sets the start and Enter again draws through the same pathDraw outline as
+ *   a drag. Freehand: each Enter places a point, and Enter on the last point or Finish path ends it; the samples
+ *   between the points go through the same freehand fit and smoothing as a drag. Escape drops it. Every step is
+ *   announced. Keys from a button inside the layer are not drawing keys. Erase works without a drag by Delete on a
+ *   selected shape. While the canvas is not loaded and current, a press or key that would start a creation tool is
+ *   refused with a message, never dropped without a word.
+ *   Motion path: `frame` = the box the path's units refer to, with (0, 0) where the studio puts it today (the subject's
+ *   rest centre; the fx layer's top left for particles), in the path's own units: '%' or 'px' (unscaled stage px).
+ *   gridStep and snap.grid 5 for '%' and 10 for 'px'; nudge 1, bigNudge the grid step, fineNudge 0.1.
+ * - Overlay tests (tests/path-canvas-overlay.test.ts): `overlay` without `placement` draws nothing; placement and
+ *   per-axis mapping (a 100 x 100 percent frame on a 200 x 100 px placement: a 20 px pointer move is 10 % in x and 20 %
+ *   in y); a press on the ground and outside the frame is not prevented and reaches an element under the canvas; a
+ *   press on an anchor is taken; 'add' takes a press outside the frame; no zoom, pan or mc-path-view; =, + and 0
+ *   bubble; the rotate handle and slider hidden at sx / sy 1.02 and shown at 1.005; units text in the listbox, live
+ *   region, loupe and readout for '%', 'px' and absent; no grid at gridStep 0 in overlay and in normal mode; handled
+ *   keys stopped and Esc with nothing selected bubbling; contractRevision equals PATH_CANVAS_CONTRACT_REVISION; the
+ *   OVERLAY_DRAG_BUDGET numbers. A drag speed test (browser, 4x profile) checks OVERLAY_DRAG_BUDGET once the Linux
+ *   profile confirms it (bullet "Speed").
+ *   Press tests (tests/path-canvas-overlay-press.test.ts), with real pointerdown sequences: a press on a host button
+ *   and on a dialog over the canvas is neither taken nor prevented and keeps its click, in 'add' and 'nodes'; a press
+ *   on a role button element of the picture in another tree scope is taken in 'add'; a tool layer and a focusable
+ *   ancestor do not block a press; no fill target in 'nodes' and 'add', with and without paint; the 'add' rules
+ *   (press on an anchor selects and drags, tap selects, first-anchor tap and Enter close at 3 or more anchors, not at
+ *   two, arrows move the selection or the crosshair, Enter keeps the crosshair, a press ends it); aria-description per
+ *   mode and a host value kept.
  *
  * Events (bubbling, composed):
  * - `mc-path-change` detail PathChange. `commit` false while dragging, true on pointer up / key up /
@@ -189,9 +332,11 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * item, viewport clamp at 320 px, focus return to the opener; the import scan.
  */
 
-export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
+export const PATH_CANVAS_CONTRACT_VERSION = '1.1.0';
 /** Revision number of this contract. */
-export const PATH_CANVAS_CONTRACT_REVISION = 7;
+export const PATH_CANVAS_CONTRACT_REVISION = 8;
+/** The first element contractRevision with overlay mode (section "Overlay mode"). */
+export const PATH_CANVAS_OVERLAY_REVISION = 8;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';
@@ -221,8 +366,24 @@ export const LONG_PRESS_MS = 500;
 export const LONG_PRESS_SLOP_PX = 8;
 /** A contextmenu event this soon after an emitted context gesture is ignored. */
 export const CONTEXT_DEDUPE_MS = 500;
+/**
+ * Overlay drag speed on the 4x throttled profile (section "Overlay mode"): frame interval in ms during a point drag
+ * of a path with `anchors` anchors, the first `warmFrames` frames dropped. p95 21 ms = three 7 ms display steps.
+ */
+export const OVERLAY_DRAG_BUDGET = { anchors: 64, medianMs: 16.7, p95Ms: 21, warmFrames: 3 } as const;
 /** What may be edited. 'view' = render only (thumbnails, previews). */
 export type CanvasMode = 'view' | 'select' | 'nodes' | 'add';
+
+/** Unit of frame coordinates in overlay mode texts (section "Overlay mode"). */
+export type CanvasUnits = 'px' | '%';
+
+/** Where `frame` sits on screen in overlay mode: CSS px relative to the canvas element's top-left corner. */
+export interface CanvasPlacement {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
 
 export interface SnapConfig {
   enabled: boolean;
@@ -340,10 +501,16 @@ export interface PathCanvasElement extends HTMLElement {
   safeArea?: number;
   /** Show the grid (lines every `gridStep`, thinned below GRID_MIN_PX). */
   pixelGrid: boolean;
-  /** Grid line spacing in frame units, default 1. */
+  /** Grid line spacing in frame units, default 1 (0 = no grid, from 1.1.0). */
   gridStep?: number;
   /** Boolean attribute; ground and frame are transparent, the host draws underneath. */
   underlay?: boolean;
+  /** Boolean attribute, from 1.1.0 (section "Overlay mode"): edit over the host's picture; implies `underlay`. */
+  overlay?: boolean;
+  /** Overlay mode only: the on-screen rectangle of `frame`; the host sets a new object on every picture change. */
+  placement?: CanvasPlacement;
+  /** Overlay mode only: unit written after the numbers in the loupe, listbox, live region and readout. */
+  units?: CanvasUnits;
   /** At most this many subpaths (shape editor: 1; 2 while a boolean operand or a pen outline is pending). */
   maxPaths: number;
   /** Anchor kinds offered. */
@@ -355,7 +522,7 @@ export interface PathCanvasElement extends HTMLElement {
   rotateLabel?: string;
   /** Emit `mc-path-context` and prevent the browser menu on the drawing surface. Default false. */
   contextMenu?: boolean;
-  /** Fit the frame into the element. */
+  /** Fit the frame into the element (does nothing in overlay mode). */
   fit(): void;
   /** Move keyboard focus to an anchor (the host's Points list, Esc from a field). */
   focusAnchor(path: number, anchor: number): void;

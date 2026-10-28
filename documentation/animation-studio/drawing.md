@@ -10,6 +10,7 @@ The drawing tools add your own shapes to a keyframes animation: a spark next to 
 -   [The Shapes list](#the-shapes-list)
 -   [Animating a shape](#animating-a-shape)
 -   [Motion paths](#motion-paths)
+-   [When the drawing tools do not load](#when-the-drawing-tools-do-not-load)
 -   [Tablet](#tablet)
 -   [Shapes in YAML](#shapes-in-yaml)
 
@@ -25,16 +26,25 @@ Shapes live in the icon's viewBox: 0 to 24 for Material Design Icons, or the vie
 
 | Tool | How it works |
 | --- | --- |
-| Select | Click a shape to select it, drag to move it. A shape made of one path also shows its points and handles: drag them to reshape it. Arrow keys nudge the shape by 0.1 units, or 1 unit with Shift. Delete removes it. |
-| Pen | Click to add points, drag to pull out curve handles. Hold Alt for a sharp corner. Click the first point to close the shape. Click the last point or press Enter to finish an open line. Backspace or Delete removes the last point. Escape finishes the line, or drops it when it has fewer than two points. |
-| Line | Drag to draw a straight line |
-| Rectangle | Drag to draw. Shift draws a square, Alt draws from the centre. Corner radius is in the tool options (2 units by default). |
-| Ellipse | Drag to draw. Shift draws a circle, Alt draws from the centre. |
-| Freehand | Draw freely. The stroke is smoothed into curves when you let go. |
+| Select | Click a shape to select it, drag to move it. A shape made of one path also shows its points and handles: drag them to reshape it. With a point selected, the arrow keys move that point by 1 unit (Shift 5, Alt 0.1) and Delete removes it. With no point selected, the arrow keys nudge the whole shape by 0.1 units (Shift 1) and Delete removes the shape. A locked shape ignores both. |
+| Pen | Click to add points, drag to pull out curve handles. Click the first point, or select it and press Enter, to close the shape; a path closes once it has three points. **Finish path**, which shows from two points, or a second Escape finishes an open line; both say "Path 1 added, 3 points." and leave focus on the drawing area. The first Escape clears the selected point. Drag an existing point to move it. With a point selected the arrow keys move it; with none selected they move a crosshair, and Enter places a point there, so the pen works without a pointer. Delete or Backspace removes the selected point. |
+| Line | Drag to draw a straight line, or draw it with the keyboard (see below) |
+| Rectangle | Drag to draw, or use the keyboard (see below). Shift draws a square, Alt draws from the centre. Corner radius is in the tool options (2 units by default). |
+| Ellipse | Drag to draw, or use the keyboard (see below). Shift draws a circle, Alt draws from the centre. |
+| Freehand | Draw freely. The stroke is smoothed into curves when you let go. With the keyboard you place the points and the stroke is smoothed through them (see below). |
 | Erase | Click a shape, or drag across shapes, to delete them. One drag is one undo step. |
 | Motion path | Draw the path the selected part, group or shape travels, starting where it rests. Only available with a part, group or shape selected. |
 
 A drag is one undo step. Escape, or the browser cancelling the pointer, drops the gesture in progress and leaves the animation as it was.
+
+### Drawing with the keyboard
+
+Line, Rectangle, Ellipse and Freehand work without a pointer. Tab to the drawing area on the stage; the screen reader names the tool and the keys.
+
+-   The arrow keys move a cursor over the icon. One press moves 1 unit (Shift 5, Alt 0.1). With Grid on, the cursor sits on the grid.
+-   Enter sets the start. Move the cursor, then press Enter again to draw the line, rectangle or ellipse between the two points.
+-   For Freehand, Enter places a point each time. Press Enter again on the last point (or choose **Finish path**) to end the stroke; it is smoothed into curves like a drawn one.
+-   Escape drops the drawing in progress. Each step is announced, for example "Cursor at x 13, y 12. Press Enter to start."
 
 New shapes take the options of the active tool:
 
@@ -96,7 +106,13 @@ A selected shape is a target on the timeline like a part: `shape:<id>`. It has t
 
 The Motion path tool draws the path of the selected part, group or shape by hand. The path starts where the target rests. Follow rotation in the tool options turns the target along the path.
 
+The path is drawn on the same canvas as the Pen. Click the first point, or select it and press Enter, to close it, once it has three points. Drag a point to move it. With a point selected, the arrow keys move it by 1 unit (Shift 5, Alt 0.1) and Delete removes it; with none selected they move a crosshair and Enter places a point there.
+
 The path is stored on the target's track (`path: { d, follow_rotation }`) relative to its first point, in icon units. A new path needs a free track: with 24 tracks in use, the tool says "At most 24 animated targets."
+
+## When the drawing tools do not load
+
+The Pen, the shape points and the motion path run on a canvas that loads the first time you draw. If it cannot load, the stage says "Couldn't load the drawing tools." with a **Try again** button. Try again asks the browser for a fresh copy, so it works after a dropped connection without reloading the page. When the tools come in, focus returns to the drawing area and the studio says "The drawing tools are ready." If the page still holds an older Magic Card version, the stage says "The drawing tools on this page are from another Magic Card version. Reload the page to draw here." with a **Reload page** button. Reload page asks first, because reloading discards changes that are not saved. Nothing else in the studio changes.
 
 ## Tablet
 

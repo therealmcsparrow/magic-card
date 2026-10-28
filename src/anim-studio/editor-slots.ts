@@ -26,8 +26,8 @@ export const KIND_EDITORS: Record<AnimationKind, KindEditorSlot> = {
   sequence: { tag: 'mc-anim-sequence-editor', place: 'inspector', title: m('Steps') },
 };
 
-/** Drawn over the preview stage while a path document is open (gets .stageRect). */
-export const PATH_OVERLAY_TAG = 'mc-anim-path-overlay';
+/** The motion path editor in the stage's canvas slot while a path document is open (gets .stage). */
+export const PATH_HOST_TAG = 'mc-anim-path-host';
 
 /** Studio v2: the panel registry (layers, contextual inspector, stage tools, timeline). */
 export * from './slots';

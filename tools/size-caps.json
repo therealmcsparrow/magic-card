@@ -104,9 +104,9 @@
       "note": "40 KiB, measured 38,670 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-path-canvas.js": {
-      "raw": 67584,
-      "ceiling": 67584,
-      "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
+      "raw": 69632,
+      "ceiling": 69632,
+      "note": "Path canvas with the studio overlay mode. 68 KiB, measured 69,034 (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-editor.js": {
       "raw": 175104,
@@ -912,6 +912,18 @@
       "field": "/files/magic-card-svg-editor.js/ceiling",
       "from": 171008,
       "to": 175104
+    },
+    {
+      "id": "path-canvas-raw-67584-to-69632",
+      "field": "/files/magic-card-path-canvas.js/raw",
+      "from": 67584,
+      "to": 69632
+    },
+    {
+      "id": "path-canvas-ceiling-67584-to-69632",
+      "field": "/files/magic-card-path-canvas.js/ceiling",
+      "from": 67584,
+      "to": 69632
     }
   ]
 }
