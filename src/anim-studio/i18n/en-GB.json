@@ -6135,37 +6135,37 @@
   },
   "anim-studio.stage-sim.preview-entity": {
     "text": "Preview entity",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Accessible label of the control that shows which entity the stage preview simulates.",
     "max": 25
   },
   "anim-studio.stage-sim.preview-state": {
     "text": "Preview state",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Accessible label of the menu that picks the simulated entity state on the stage.",
     "max": 25
   },
   "anim-studio.stage-sim.preview-value": {
     "text": "Preview value",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Accessible label of the slider that sets the simulated numeric value on the stage.",
     "max": 25
   },
   "anim-studio.stage-sim.state": {
     "text": "State",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Label in the stage preview bar for the simulated entity state.",
     "max": 10
   },
   "anim-studio.stage-sim.unavailable": {
     "text": "Unavailable",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Simulated entity state in the stage preview: the entity cannot be reached.",
     "max": 20
   },
   "anim-studio.stage-sim.value": {
     "text": "Value",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Label in the stage preview bar for the simulated numeric value.",
     "max": 10
   },
   "anim-studio.states-panel.add-state": {
     "text": "Add state",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Button in the states panel that adds a new state rule.",
     "max": 20
   },
   "anim-studio.states-panel.at-most-clips-max-states": {
@@ -6178,7 +6178,7 @@
   },
   "anim-studio.states-panel.delete-state": {
     "text": "Delete state",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Tooltip on the button that removes one state rule from the states panel.",
     "max": 20
   },
   "anim-studio.states-panel.delete-state-i": {
@@ -6191,7 +6191,7 @@
   },
   "anim-studio.states-panel.move-down": {
     "text": "Move down",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Tooltip on the button that moves a state rule lower in the states panel.",
     "max": 15
   },
   "anim-studio.states-panel.move-state-i-down": {
@@ -6212,17 +6212,17 @@
   },
   "anim-studio.states-panel.move-up": {
     "text": "Move up",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Tooltip on the button that moves a state rule higher in the states panel.",
     "max": 15
   },
   "anim-studio.states-panel.number": {
     "text": "Number",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Group heading in the state value menu for numeric comparisons such as above or below.",
     "max": 10
   },
   "anim-studio.states-panel.on": {
     "text": "on",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Lower-case state word used inside a condition sentence, such as when the entity is on.",
     "max": 5
   },
   "anim-studio.states-panel.on-means-active-for-its-domain-open-home": {
@@ -6232,7 +6232,7 @@
   },
   "anim-studio.states-panel.play": {
     "text": "Play",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Field label in a state rule for the animation that plays when the rule matches.",
     "max": 10
   },
   "anim-studio.states-panel.play-something-else-per-entity-state-a": {
@@ -6242,7 +6242,7 @@
   },
   "anim-studio.states-panel.state": {
     "text": "State",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Option in the state condition menu to match the entity's text state, such as on or off.",
     "max": 10
   },
   "anim-studio.states-panel.state-count-added-when": {
@@ -6280,7 +6280,7 @@
   },
   "anim-studio.states-panel.states": {
     "text": "States",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Heading of the states panel, which lists the state rules.",
     "max": 10
   },
   "anim-studio.states-panel.the-first-state-that-matches-plays-with": {
@@ -6290,32 +6290,32 @@
   },
   "anim-studio.states-panel.transition": {
     "text": "Transition",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Field label in a state rule for how long the change into this state takes.",
     "max": 20
   },
   "anim-studio.states-panel.value": {
     "text": "Value",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Field label in a state rule for the number or text the entity state is compared with.",
     "max": 10
   },
   "anim-studio.states-panel.when": {
     "text": "When",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Field label in a state rule for the condition that makes the rule match.",
     "max": 10
   },
   "anim-studio.states-sim.entity-is-off": {
     "text": "Entity is off",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Label in the state simulator for the quick button that previews the off state.",
     "max": 25
   },
   "anim-studio.states-sim.entity-is-on": {
     "text": "Entity is on",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Label in the state simulator for the quick button that previews the on state.",
     "max": 20
   },
   "anim-studio.states-sim.preview": {
     "text": "Preview",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Label in the state simulator naming the state currently being previewed.",
     "max": 15
   },
   "anim-studio.states-sim.state-is-not-state-not": {
@@ -6360,12 +6360,12 @@
   },
   "anim-studio.states-utils.crossfade": {
     "text": "Crossfade",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Transition option: the old state fades out while the new one fades in.",
     "max": 15
   },
   "anim-studio.states-utils.cut": {
     "text": "Cut",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Transition option: switch to the new state instantly, with no fade.",
     "max": 10
   },
   "anim-studio.states-utils.effect-presets-cannot-play-as-a-state": {
@@ -6375,22 +6375,22 @@
   },
   "anim-studio.states-utils.entity-is-off": {
     "text": "Entity is off",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Preset condition in the state rule menu that matches when the entity is off.",
     "max": 25
   },
   "anim-studio.states-utils.entity-is-on": {
     "text": "Entity is on",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Preset condition in the state rule menu that matches when the entity is on.",
     "max": 20
   },
   "anim-studio.states-utils.fade-out-and-back-in-0-2-s": {
     "text": "Fade out and back in (0.2 s)",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Transition option description: the card dips to transparent and returns, taking 0.2 seconds.",
     "max": 45
   },
   "anim-studio.states-utils.finish-cycle": {
     "text": "Finish cycle",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Transition option: wait until the current animation cycle ends, then switch state.",
     "max": 20
   },
   "anim-studio.states-utils.id-not-found": {
@@ -6403,12 +6403,12 @@
   },
   "anim-studio.states-utils.let-the-current-cycle-end-first": {
     "text": "Let the current cycle end first",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Description under the Finish cycle transition option.",
     "max": 50
   },
   "anim-studio.states-utils.my-animations": {
     "text": "My animations",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Group heading in the state animation menu for the user's saved custom animations.",
     "max": 25
   },
   "anim-studio.states-utils.not-in-your-animations-plays-nothing": {
@@ -6418,17 +6418,17 @@
   },
   "anim-studio.states-utils.nothing": {
     "text": "Nothing",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Option in the state animation menu: this state plays no animation.",
     "max": 15
   },
   "anim-studio.states-utils.nothing-stop": {
     "text": "Nothing (stop)",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Longer form of the Nothing option that tells the user the running animation stops in this state.",
     "max": 25
   },
   "anim-studio.states-utils.own-timeline": {
     "text": "Own timeline",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Option in the state animation menu: play the animation's own keyframes, not another animation.",
     "max": 20
   },
   "anim-studio.states-utils.particle-and-sequence-animations-cannot": {
@@ -6438,17 +6438,17 @@
   },
   "anim-studio.states-utils.state-is": {
     "text": "State is",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Condition type in the state rule menu; the user then types the state value to match.",
     "max": 15
   },
   "anim-studio.states-utils.state-is-not": {
     "text": "State is not",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Condition type in the state rule menu; the rule matches any state except the value typed.",
     "max": 20
   },
   "anim-studio.states-utils.switch-at-once": {
     "text": "Switch at once",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Description under the Cut transition option: the new state starts immediately.",
     "max": 25
   },
   "anim-studio.states-utils.that-animation-has-states-of-its-own-the": {
@@ -6458,7 +6458,7 @@
   },
   "anim-studio.states-utils.this-animation": {
     "text": "This animation",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Option in the state animation menu that refers to the animation currently being edited.",
     "max": 25
   },
   "anim-studio.states-utils.unknown-preset-plays-nothing": {
@@ -6473,12 +6473,12 @@
   },
   "anim-studio.states-utils.value-above": {
     "text": "Value above",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Condition type in the state rule menu; matches when the number is greater than the one typed.",
     "max": 20
   },
   "anim-studio.states-utils.value-below": {
     "text": "Value below",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Condition type in the state rule menu; matches when the number is less than the one typed.",
     "max": 20
   },
   "anim-studio.studio-model.id-the-library-is-full": {
@@ -6491,7 +6491,7 @@
   },
   "anim-studio.studio-model.keyframes": {
     "text": "Keyframes",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Animation kind label in the library list for animations built from keyframes.",
     "max": 15
   },
   "anim-studio.studio-model.name-copy": {
@@ -6518,17 +6518,17 @@
   },
   "anim-studio.studio-model.not-valid": {
     "text": "not valid",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Lower-case word used inside an import message to say that an item failed validation.",
     "max": 15
   },
   "anim-studio.studio-model.not-valid-yaml": {
     "text": "Not valid YAML.",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Import error when the pasted or loaded text cannot be parsed as YAML.",
     "max": 25
   },
   "anim-studio.studio-model.particles": {
     "text": "Particles",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Animation kind label in the library list for particle effects.",
     "max": 15
   },
   "anim-studio.studio-model.paste-or-load-some-yaml-first": {
@@ -6538,12 +6538,12 @@
   },
   "anim-studio.studio-model.path": {
     "text": "Path",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Animation kind label in the library list for motion path animations.",
     "max": 10
   },
   "anim-studio.studio-model.sequence": {
     "text": "Sequence",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Animation kind label in the library list for sequences of other animations.",
     "max": 15
   },
   "anim-studio.studio-model.the-library-holds-at-most-cap-animations": {
@@ -6571,7 +6571,7 @@
   },
   "anim-studio.studio-stage.all-layers-shown": {
     "text": "All layers shown",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Status message after Show all, when the preview has no hidden layers left.",
     "max": 30
   },
   "anim-studio.studio-stage.all-layers-shown-locks-kept": {
@@ -6581,12 +6581,12 @@
   },
   "anim-studio.studio-stage.card-theme": {
     "text": "Card theme",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Accessible label of the control that switches the stage preview between light and dark.",
     "max": 20
   },
   "anim-studio.studio-stage.dark-card": {
     "text": "Dark card",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Option that previews the animation on a dark card background.",
     "max": 15
   },
   "anim-studio.studio-stage.icon-percent": {
@@ -6604,7 +6604,7 @@
   },
   "anim-studio.studio-stage.light-card": {
     "text": "Light card",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Option that previews the animation on a light card background.",
     "max": 20
   },
   "anim-studio.studio-stage.magic-card-is-not-loaded-on-this-page": {
@@ -6623,17 +6623,17 @@
   },
   "anim-studio.studio-stage.pause-space": {
     "text": "Pause (Space)",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip on the stage button that pauses the preview; Space is the keyboard shortcut.",
     "max": 25
   },
   "anim-studio.studio-stage.play-space": {
     "text": "Play (Space)",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip on the stage button that starts the preview; Space is the keyboard shortcut.",
     "max": 20
   },
   "anim-studio.studio-stage.position-in-the-cycle": {
     "text": "Position in the cycle",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Accessible label of the scrubber that moves through one animation cycle.",
     "max": 35
   },
   "anim-studio.studio-stage.preview-hides-count": {
@@ -6646,37 +6646,37 @@
   },
   "anim-studio.studio-stage.preview-tile": {
     "text": "Preview tile",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Accessible label of the stage area that shows the animation on a card tile.",
     "max": 20
   },
   "anim-studio.studio-stage.preview-with-reduced-motion": {
     "text": "Preview with reduced motion",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip on the toggle that previews how the card looks when the system asks for less motion.",
     "max": 45
   },
   "anim-studio.studio-stage.reduced-motion": {
     "text": "Reduced motion",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Visible label of the stage toggle that previews the reduced-motion setting.",
     "max": 25
   },
   "anim-studio.studio-stage.show-all": {
     "text": "Show all",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Short button on the stage that makes every hidden layer visible again in the preview.",
     "max": 15
   },
   "anim-studio.studio-stage.show-all-hidden-layers": {
     "text": "Show all hidden layers",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip of the Show all button, spelling out that it unhides every hidden layer.",
     "max": 40
   },
   "anim-studio.studio-stage.solo-on": {
     "text": "Solo on",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Badge on the stage showing that solo is active, so only the soloed layer plays.",
     "max": 15
   },
   "anim-studio.studio-stage.speed": {
     "text": "Speed",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Label of the stage control that sets the preview playback speed.",
     "max": 10
   },
   "anim-studio.studio-stage.the-preview-is-scaled-to-fit-the-stage": {
@@ -6706,17 +6706,17 @@
   },
   "anim-studio.studio.all": {
     "text": "All",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Filter option in the studio animation list that shows every kind of animation.",
     "max": 5
   },
   "anim-studio.studio.alternate": {
     "text": "Alternate",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Direction option: each cycle runs the opposite way from the one before, starting forwards.",
     "max": 15
   },
   "anim-studio.studio.alternate-reverse": {
     "text": "Alternate reverse",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Direction option: like Alternate, but the first cycle runs backwards.",
     "max": 30
   },
   "anim-studio.studio.animate-an-icon-s-parts": {
@@ -6726,37 +6726,37 @@
   },
   "anim-studio.studio.animation": {
     "text": "Animation",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Label in the studio header or form for the animation being edited, as a noun.",
     "max": 15
   },
   "anim-studio.studio.animation-settings-esc": {
     "text": "Animation settings (Esc)",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip of the button that opens the animation settings; Esc is the keyboard shortcut.",
     "max": 40
   },
   "anim-studio.studio.animation-studio": {
     "text": "Animation studio",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Title of the whole animation studio dialogue.",
     "max": 30
   },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Start option in the new-animation menu: an empty keyframe animation.",
     "max": 25
   },
   "anim-studio.studio.blank-particles": {
     "text": "Blank particles",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Start option in the new-animation menu: an empty particle effect.",
     "max": 25
   },
   "anim-studio.studio.blank-path": {
     "text": "Blank path",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Start option in the new-animation menu: an empty motion path to draw.",
     "max": 20
   },
   "anim-studio.studio.blank-sequence": {
     "text": "Blank sequence",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Start option in the new-animation menu: an empty sequence of steps.",
     "max": 25
   },
   "anim-studio.studio.build-one-from-scratch-or-customise-one": {
@@ -6766,7 +6766,7 @@
   },
   "anim-studio.studio.cancel": {
     "text": "Cancel",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button in the studio dialogues (delete, import, discard) that closes them without changes.",
     "max": 10
   },
   "anim-studio.studio.cards-that-use-it-stop-playing-it-unless": {
@@ -6776,12 +6776,12 @@
   },
   "anim-studio.studio.cards-use-it-as": {
     "text": "Cards use it as",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Label before the technical identifier cards must use to pick this animation.",
     "max": 25
   },
   "anim-studio.studio.count": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Number of keyframes in an animation, with singular and plural forms.",
     "max": 20,
     "vars": {
       "count": "The count the text is about."
@@ -6789,7 +6789,7 @@
   },
   "anim-studio.studio.count-selected": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}} selected.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Screen reader announcement of how many keyframes are selected, with plural forms.",
     "max": 35,
     "vars": {
       "count": "The count the text is about."
@@ -6805,7 +6805,7 @@
   },
   "anim-studio.studio.custom": {
     "text": "Custom",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Badge or filter in the studio list for animations the user made, as opposed to built-in presets.",
     "max": 10
   },
   "anim-studio.studio.custom-id": {
@@ -6818,12 +6818,12 @@
   },
   "anim-studio.studio.customise-a-preset": {
     "text": "Customise a preset…",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Menu item with an ellipsis that opens the list of presets to copy and edit.",
     "max": 35
   },
   "anim-studio.studio.customise-a-preset-2": {
     "text": "Customise a preset",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Heading of the preset list, without an ellipsis because it is a title, not a menu item.",
     "max": 30
   },
   "anim-studio.studio.customise-one-of-count": {
@@ -6836,7 +6836,7 @@
   },
   "anim-studio.studio.delete": {
     "text": "Delete",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Confirm button in the studio dialogue that deletes a custom animation for good.",
     "max": 15
   },
   "anim-studio.studio.delete-name": {
@@ -6873,12 +6873,12 @@
   },
   "anim-studio.studio.direction": {
     "text": "Direction",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Field label for whether the animation runs forwards, backwards or alternates.",
     "max": 15
   },
   "anim-studio.studio.discard": {
     "text": "Discard",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button in the unsaved changes dialogue that closes the studio and drops the edits.",
     "max": 15
   },
   "anim-studio.studio.drag-to-resize-the-stage-double-click": {
@@ -6888,7 +6888,7 @@
   },
   "anim-studio.studio.duplicate": {
     "text": "Duplicate",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button in the studio list that makes a copy of an animation.",
     "max": 15
   },
   "anim-studio.studio.duplicate-name": {
@@ -6917,32 +6917,32 @@
   },
   "anim-studio.studio.duration": {
     "text": "Duration",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Field label in the studio settings for how long one animation cycle lasts.",
     "max": 15
   },
   "anim-studio.studio.easing": {
     "text": "Easing",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Field label for the speed curve of the animation, such as ease in or linear.",
     "max": 15
   },
   "anim-studio.studio.element": {
     "text": "Element",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Target option in the studio: the whole module element rather than only its icon.",
     "max": 15
   },
   "anim-studio.studio.export": {
     "text": "Export",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Short button label that saves animations to a file; opens the export dialogue.",
     "max": 10
   },
   "anim-studio.studio.export-all": {
     "text": "Export all",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button that saves every custom animation into one file.",
     "max": 20
   },
   "anim-studio.studio.export-animations": {
     "text": "Export animations",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip and heading of the export action in the studio library toolbar.",
     "max": 30
   },
   "anim-studio.studio.export-name": {
@@ -6960,22 +6960,22 @@
   },
   "anim-studio.studio.follow-a-drawn-path": {
     "text": "Follow a drawn path",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Description of the motion path start option: the icon travels along a line the user draws.",
     "max": 35
   },
   "anim-studio.studio.from-a-preset": {
     "text": "From a preset",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Heading of the new-animation group that starts from a built-in preset.",
     "max": 25
   },
   "anim-studio.studio.got-it": {
     "text": "Got it",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button that dismisses a one-time hint in the studio.",
     "max": 10
   },
   "anim-studio.studio.has-errors": {
     "text": "Has errors",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Badge on an animation whose fields contain invalid values, so it cannot be saved.",
     "max": 20
   },
   "anim-studio.studio.hide-noun-keys": {
@@ -6994,17 +6994,17 @@
   },
   "anim-studio.studio.icon": {
     "text": "Icon",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Target option in the studio: only the module's icon moves.",
     "max": 10
   },
   "anim-studio.studio.icon-animation": {
     "text": "Icon animation…",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Menu item with an ellipsis that opens the icon parts animator.",
     "max": 25
   },
   "anim-studio.studio.icon-animation-2": {
     "text": "Icon animation",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Title of the icon parts animator, without an ellipsis because it is a heading.",
     "max": 25
   },
   "anim-studio.studio.icon-moves-only-the-module-s-icon-cards": {
@@ -7014,7 +7014,7 @@
   },
   "anim-studio.studio.icon-parts": {
     "text": "Icon parts",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Name of the start option and tab for animating the separate parts of one icon.",
     "max": 20
   },
   "anim-studio.studio.icons-emoji-or-shapes-that-fall-rise-or": {
@@ -7024,17 +7024,17 @@
   },
   "anim-studio.studio.import": {
     "text": "Import",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Short button label that loads animations from a file or pasted YAML.",
     "max": 10
   },
   "anim-studio.studio.import-animations": {
     "text": "Import animations",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Title of the import dialogue and tooltip of the import button.",
     "max": 30
   },
   "anim-studio.studio.imported-count": {
     "text": "Imported {count, plural, one {# animation} other {# animations}}.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Confirmation after an import, with singular and plural forms for the number of animations.",
     "max": 40,
     "vars": {
       "count": "The count the text is about."
@@ -7042,22 +7042,22 @@
   },
   "anim-studio.studio.infinite": {
     "text": "Infinite",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Option for the repeat count: the animation repeats forever.",
     "max": 15
   },
   "anim-studio.studio.inspector": {
     "text": "inspector",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Lower-case panel name inserted into the Hide and Show panel tooltips.",
     "max": 15
   },
   "anim-studio.studio.inspector-2": {
     "text": "Inspector",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Capitalised heading of the right-hand inspector panel.",
     "max": 15
   },
   "anim-studio.studio.inspector-panel": {
     "text": "Inspector panel",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Accessible name of the inspector region for screen readers.",
     "max": 25
   },
   "anim-studio.studio.it-is-used-by-count-they-stop-playing-it": {
@@ -7070,12 +7070,12 @@
   },
   "anim-studio.studio.keep-editing": {
     "text": "Keep editing",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button in the unsaved changes dialogue that returns to the studio.",
     "max": 20
   },
   "anim-studio.studio.kind": {
     "text": "Kind",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Field label for the animation type: keyframes, particles, path or sequence.",
     "max": 10
   },
   "anim-studio.studio.label-not-on-the-tile-tile": {

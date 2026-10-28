@@ -396,7 +396,7 @@
   },
   "theme-editor.editor-view.add-modes": {
     "text": "Add modes",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that adds light and dark mode sections to a theme that has only shared values. Mode means light or dark.",
     "max": 15
   },
   "theme-editor.editor-view.add-name-as-a-variable": {
@@ -422,7 +422,7 @@
   },
   "theme-editor.editor-view.button": {
     "text": "Button",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Name of a sample button used as a preview example in the editor. Noun, not an action.",
     "max": 10
   },
   "theme-editor.editor-view.c": {
@@ -443,12 +443,12 @@
   },
   "theme-editor.editor-view.cancel": {
     "text": "Cancel",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button in an editor confirmation that keeps the theme as it is. Same English as the start view and preset dialog.",
     "max": 10
   },
   "theme-editor.editor-view.check-again": {
     "text": "Check again",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button in the editor banner that re-runs the include check. Same English as the include notice button.",
     "max": 20
   },
   "theme-editor.editor-view.choose-another-name": {
@@ -458,7 +458,7 @@
   },
   "theme-editor.editor-view.close": {
     "text": "Close",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button in the editor view that closes the open theme or panel. Same English as the dialog buttons.",
     "max": 10
   },
   "theme-editor.editor-view.contacts-another-website": {
@@ -509,7 +509,7 @@
   },
   "theme-editor.editor-view.copied-yaml": {
     "text": "Copied YAML",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Brief button label after the theme YAML went to the clipboard. Past tense; YAML is the file format.",
     "max": 20
   },
   "theme-editor.editor-view.copy-dark-to-light": {
@@ -524,7 +524,7 @@
   },
   "theme-editor.editor-view.copy-yaml": {
     "text": "Copy YAML",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that copies the theme as YAML text to the clipboard. YAML is the file format.",
     "max": 15
   },
   "theme-editor.editor-view.could-not-delete-name-reason": {
@@ -554,7 +554,7 @@
   },
   "theme-editor.editor-view.delete": {
     "text": "Delete",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Confirm button that permanently deletes the open theme. Same English as the start view and preset dialog.",
     "max": 15
   },
   "theme-editor.editor-view.delete-name": {
@@ -567,12 +567,12 @@
   },
   "theme-editor.editor-view.delete-theme": {
     "text": "Delete theme",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Menu item that starts deleting the open theme; a confirmation follows.",
     "max": 20
   },
   "theme-editor.editor-view.discard": {
     "text": "Discard",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that throws away unsaved edits when leaving the editor.",
     "max": 15
   },
   "theme-editor.editor-view.discard-changes-to-name": {
@@ -585,7 +585,7 @@
   },
   "theme-editor.editor-view.dismiss": {
     "text": "Dismiss",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that hides a notice banner without acting on it.",
     "max": 15
   },
   "theme-editor.editor-view.edit-variables-for": {
@@ -595,7 +595,7 @@
   },
   "theme-editor.editor-view.editing": {
     "text": "Editing",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Small label before the name of the theme that is open for editing.",
     "max": 15
   },
   "theme-editor.editor-view.editing-scope-created-from-from": {
@@ -618,12 +618,12 @@
   },
   "theme-editor.editor-view.editor-panels": {
     "text": "Editor panels",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Accessible name of the group of buttons that show or hide the editor's side panels.",
     "max": 25
   },
   "theme-editor.editor-view.export-theme": {
     "text": "Export theme",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Menu item in the editor that saves the open theme as a file. Same English as the preset dialog title.",
     "max": 20
   },
   "theme-editor.editor-view.fix-c-to-save": {
@@ -655,7 +655,7 @@
   },
   "theme-editor.editor-view.living-room": {
     "text": "Living room",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Sample room name in the preview, standing in for the user's own area names.",
     "max": 20
   },
   "theme-editor.editor-view.lowercase-letters-numbers-hyphens-and": {
@@ -670,7 +670,7 @@
   },
   "theme-editor.editor-view.more-actions": {
     "text": "More actions",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Accessible label of the three-dot button that opens the editor's overflow menu.",
     "max": 20
   },
   "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
@@ -730,7 +730,7 @@
   },
   "theme-editor.editor-view.on": {
     "text": "On",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "State shown for the sample switch in the preview. Means switched on, not the preposition.",
     "max": 5
   },
   "theme-editor.editor-view.only-administrators-can-edit-themes": {
@@ -740,12 +740,12 @@
   },
   "theme-editor.editor-view.only-changed": {
     "text": "Only changed",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Filter toggle that lists only variables whose value differs from the default.",
     "max": 20
   },
   "theme-editor.editor-view.open-preview": {
     "text": "Open preview",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that opens the live preview panel on narrow screens where it is hidden.",
     "max": 20
   },
   "theme-editor.editor-view.open-your-profile": {
@@ -772,17 +772,17 @@
   },
   "theme-editor.editor-view.preview": {
     "text": "Preview",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Heading and tab name of the panel that shows sample cards in the open theme. Noun.",
     "max": 15
   },
   "theme-editor.editor-view.read-only": {
     "text": "Read only",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Badge on a theme file that cannot be changed from here. Same English as the start view badge.",
     "max": 15
   },
   "theme-editor.editor-view.reload": {
     "text": "Reload",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that reloads the theme from disk, replacing what is in the editor.",
     "max": 15
   },
   "theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or": {
@@ -806,7 +806,7 @@
   },
   "theme-editor.editor-view.save": {
     "text": "Save",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button in the editor that writes the theme to its file. Verb. Same English as the save bar button.",
     "max": 10
   },
   "theme-editor.editor-view.save-and-rewrite-this-file": {
@@ -816,7 +816,7 @@
   },
   "theme-editor.editor-view.save-anyway": {
     "text": "Save anyway",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that saves the theme although validation found problems.",
     "max": 20
   },
   "theme-editor.editor-view.save-as-my-preset": {
@@ -882,7 +882,7 @@
   },
   "theme-editor.editor-view.search-variables": {
     "text": "Search variables",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Placeholder of the search box that filters the theme variables list.",
     "max": 30
   },
   "theme-editor.editor-view.set-in-modes": {
@@ -910,7 +910,7 @@
   },
   "theme-editor.editor-view.show-yaml": {
     "text": "Show YAML",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toggle that reveals the raw YAML source of the open theme.",
     "max": 15
   },
   "theme-editor.editor-view.some-values-load-files-from-another": {
@@ -928,7 +928,7 @@
   },
   "theme-editor.editor-view.stop-trying": {
     "text": "Stop trying",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that ends a temporary trial of the theme in this browser tab.",
     "max": 20
   },
   "theme-editor.editor-view.the-add-any-variable-row-still-holds": {
@@ -948,7 +948,7 @@
   },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Breadcrumb link in the editor that goes back to the list of themes. Same English as the start view heading.",
     "max": 10
   },
   "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
@@ -979,7 +979,7 @@
   },
   "theme-editor.editor-view.try-again": {
     "text": "Try again",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that repeats a failed save or load in the editor. Same English as the start view and preset dialog.",
     "max": 20
   },
   "theme-editor.editor-view.try-on-dashboard": {
@@ -994,12 +994,12 @@
   },
   "theme-editor.editor-view.undo": {
     "text": "Undo",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button that reverses the last variable edit in the theme.",
     "max": 15
   },
   "theme-editor.editor-view.unsaved-changes": {
     "text": "Unsaved changes",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Status label beside the Save button while edits are not yet written to the file.",
     "max": 30
   },
   "theme-editor.editor-view.use-lowercase-letters-numbers-hyphens": {
@@ -1019,12 +1019,12 @@
   },
   "theme-editor.editor-view.variables": {
     "text": "Variables",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Heading of the list of CSS theme variables. Variables are named style values, not programming variables.",
     "max": 15
   },
   "theme-editor.editor-view.variables-panel": {
     "text": "Variables panel",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Accessible name of the editor panel that holds the variable list. Same English as the side tab tooltip.",
     "max": 25
   },
   "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
@@ -1071,12 +1071,12 @@
   },
   "theme-editor.field-group.custom": {
     "text": "Custom",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Option on a variable that lets the user type their own value instead of a preset one.",
     "max": 10
   },
   "theme-editor.field-group.default": {
     "text": "Default",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Option or badge for a variable that uses the built-in value. Adjective, not the verb.",
     "max": 15
   },
   "theme-editor.field-group.default-value": {
@@ -1131,7 +1131,7 @@
   },
   "theme-editor.field-group.not-set": {
     "text": "Not set",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Status of a variable that has no value in this theme. 'Set' means configured.",
     "max": 15
   },
   "theme-editor.field-group.only-in-mode": {
@@ -1170,7 +1170,7 @@
   },
   "theme-editor.field-group.set-here": {
     "text": "Set here",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Status of a variable that has its own value in the current tab, rather than the Shared one.",
     "max": 15
   },
   "theme-editor.field-group.set-in-both": {
@@ -1188,7 +1188,7 @@
   },
   "theme-editor.field-group.shared": {
     "text": "Shared",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Status of a variable that takes its value from the Shared tab, used by both light and dark modes.",
     "max": 10
   },
   "theme-editor.field-group.shared-value": {
@@ -1231,7 +1231,7 @@
   },
   "theme-editor.ha.accent-colour": {
     "text": "Accent colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the accent colour used on highlights.",
     "max": 25
   },
   "theme-editor.ha.active-state-colour": {
@@ -1266,12 +1266,12 @@
   },
   "theme-editor.ha.body-font": {
     "text": "Body font",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the font of ordinary text.",
     "max": 30
   },
   "theme-editor.ha.body-text": {
     "text": "Body text.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Short description under a Home Assistant variable that affects ordinary paragraph text.",
     "max": 20
   },
   "theme-editor.ha.buttons-toggles-active-icons-and-links": {
@@ -1296,7 +1296,7 @@
   },
   "theme-editor.ha.card-background": {
     "text": "Card background",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the background of every dashboard card.",
     "max": 25
   },
   "theme-editor.ha.card-background-override": {
@@ -1321,7 +1321,7 @@
   },
   "theme-editor.ha.card-shadow": {
     "text": "Card shadow",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the drop shadow under dashboard cards.",
     "max": 20
   },
   "theme-editor.ha.card-title-colour": {
@@ -1341,7 +1341,7 @@
   },
   "theme-editor.ha.card-titles": {
     "text": "Card titles.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Short description under a Home Assistant variable that affects the heading at the top of a card.",
     "max": 20
   },
   "theme-editor.ha.cards-dialogs-and-menus-takes-a-gradient": {
@@ -1371,7 +1371,7 @@
   },
   "theme-editor.ha.cooling-colour": {
     "text": "Cooling colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the climate colour shown while cooling.",
     "max": 25
   },
   "theme-editor.ha.cover-open-colour": {
@@ -1386,12 +1386,12 @@
   },
   "theme-editor.ha.dashboard-background": {
     "text": "Dashboard background",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the background behind all dashboard cards.",
     "max": 35
   },
   "theme-editor.ha.disabled-colour": {
     "text": "Disabled colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for controls that cannot be used. Same English as the Magic Card variable.",
     "max": 25
   },
   "theme-editor.ha.disabled-controls-and-empty-slider": {
@@ -1401,12 +1401,12 @@
   },
   "theme-editor.ha.disabled-text": {
     "text": "Disabled text",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the text colour of unusable controls.",
     "max": 25
   },
   "theme-editor.ha.divider-colour": {
     "text": "Divider colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for thin separator lines. Same English as the Magic Card variable.",
     "max": 25
   },
   "theme-editor.ha.entity-icons-that-have-no-state-colour": {
@@ -1416,7 +1416,7 @@
   },
   "theme-editor.ha.error-colour": {
     "text": "Error colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for error states. Same English as the Magic Card and Ultra Card ones.",
     "max": 20
   },
   "theme-editor.ha.errors-delete-buttons-and-critical": {
@@ -1476,7 +1476,7 @@
   },
   "theme-editor.ha.header-background": {
     "text": "Header background",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the top app bar background.",
     "max": 30
   },
   "theme-editor.ha.header-background-while-editing": {
@@ -1491,12 +1491,12 @@
   },
   "theme-editor.ha.header-height": {
     "text": "Header height",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for how tall the top app bar is.",
     "max": 25
   },
   "theme-editor.ha.header-text": {
     "text": "Header text",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for text and icons in the top app bar.",
     "max": 20
   },
   "theme-editor.ha.header-text-while-editing": {
@@ -1506,7 +1506,7 @@
   },
   "theme-editor.ha.heading-font": {
     "text": "Heading font",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the font of headings and titles.",
     "max": 25
   },
   "theme-editor.ha.heading-font-size": {
@@ -1516,7 +1516,7 @@
   },
   "theme-editor.ha.heating-colour": {
     "text": "Heating colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the climate colour shown while heating.",
     "max": 25
   },
   "theme-editor.ha.height-of-the-top-bar": {
@@ -1526,7 +1526,7 @@
   },
   "theme-editor.ha.icon-colour": {
     "text": "Icon colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the default colour of icons.",
     "max": 20
   },
   "theme-editor.ha.icons-in-the-sidebar": {
@@ -1591,7 +1591,7 @@
   },
   "theme-editor.ha.info-colour": {
     "text": "Info colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for informational messages, usually blue.",
     "max": 20
   },
   "theme-editor.ha.information-banners-and-notes": {
@@ -1611,7 +1611,7 @@
   },
   "theme-editor.ha.large-radius": {
     "text": "Large radius",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the biggest corner rounding. Radius means corner size.",
     "max": 20
   },
   "theme-editor.ha.larger-body-text": {
@@ -1636,7 +1636,7 @@
   },
   "theme-editor.ha.locked-colour": {
     "text": "Locked colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for a lock in the locked state.",
     "max": 25
   },
   "theme-editor.ha.main-text-and-icons": {
@@ -1656,7 +1656,7 @@
   },
   "theme-editor.ha.medium-radius": {
     "text": "Medium radius",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for mid-sized corner rounding. Radius means corner size.",
     "max": 25
   },
   "theme-editor.ha.multiplies-every-ha-font-size-1-keeps": {
@@ -1666,7 +1666,7 @@
   },
   "theme-editor.ha.outline-colour": {
     "text": "Outline colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for outlines drawn around inputs and buttons.",
     "max": 25
   },
   "theme-editor.ha.outlines-of-buttons-and-chips": {
@@ -1676,7 +1676,7 @@
   },
   "theme-editor.ha.page-background": {
     "text": "Page background",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the background of settings and other full pages.",
     "max": 25
   },
   "theme-editor.ha.person-at-home-colour": {
@@ -1696,7 +1696,7 @@
   },
   "theme-editor.ha.primary-colour": {
     "text": "Primary colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the main brand colour. Same English as the Magic Card and Ultra Card ones.",
     "max": 25
   },
   "theme-editor.ha.primary-colour-dark-shade": {
@@ -1711,7 +1711,7 @@
   },
   "theme-editor.ha.primary-text": {
     "text": "Primary text",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the main text colour. Same English as the Magic Card variable.",
     "max": 20
   },
   "theme-editor.ha.quiet-panels-input-fills-and-list": {
@@ -1731,22 +1731,22 @@
   },
   "theme-editor.ha.secondary-background": {
     "text": "Secondary background",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the second background used behind grouped areas.",
     "max": 35
   },
   "theme-editor.ha.secondary-text": {
     "text": "Secondary text",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for dimmer supporting text. Same English as the Magic Card variable.",
     "max": 25
   },
   "theme-editor.ha.section-titles": {
     "text": "Section titles.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Short description under a Home Assistant variable that affects headings that start a section.",
     "max": 25
   },
   "theme-editor.ha.shadow-colour": {
     "text": "Shadow colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the colour of drop shadows.",
     "max": 25
   },
   "theme-editor.ha.shadow-under-every-card": {
@@ -1756,12 +1756,12 @@
   },
   "theme-editor.ha.sidebar-background": {
     "text": "Sidebar background",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the side menu background.",
     "max": 30
   },
   "theme-editor.ha.sidebar-icons": {
     "text": "Sidebar icons",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for icon colour in the side menu.",
     "max": 25
   },
   "theme-editor.ha.sidebar-selected-icon": {
@@ -1776,7 +1776,7 @@
   },
   "theme-editor.ha.sidebar-text": {
     "text": "Sidebar text",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for text colour in the side menu.",
     "max": 20
   },
   "theme-editor.ha.small-font-size": {
@@ -1786,12 +1786,12 @@
   },
   "theme-editor.ha.small-radius": {
     "text": "Small radius",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for the smallest corner rounding. Radius means corner size.",
     "max": 20
   },
   "theme-editor.ha.success-colour": {
     "text": "Success colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for success states, usually green. Same English as the Magic Card one.",
     "max": 25
   },
   "theme-editor.ha.success-messages-and-confirmed-states": {
@@ -1866,7 +1866,7 @@
   },
   "theme-editor.ha.the-sidebar": {
     "text": "The sidebar.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Short description of the group of variables that style the side menu.",
     "max": 20
   },
   "theme-editor.ha.the-top-bar-in-dashboard-edit-mode": {
@@ -1886,12 +1886,12 @@
   },
   "theme-editor.ha.unlocked-colour": {
     "text": "Unlocked colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for a lock in the unlocked state.",
     "max": 25
   },
   "theme-editor.ha.warning-colour": {
     "text": "Warning colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant theme variable for warnings, usually orange or amber.",
     "max": 25
   },
   "theme-editor.ha.warnings-and-caution-states": {
@@ -1911,22 +1911,22 @@
   },
   "theme-editor.include-notice.check-again": {
     "text": "Check again",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Button in the include notice that re-runs the check of the themes include line. Same English as the editor banner.",
     "max": 20
   },
   "theme-editor.include-notice.checking": {
     "text": "Checking...",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Busy label on the include notice button while the check runs. Keep the three dots.",
     "max": 20
   },
   "theme-editor.include-notice.copied": {
     "text": "Copied",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Brief button label after the configuration lines went to the clipboard. Past tense.",
     "max": 10
   },
   "theme-editor.include-notice.copy-lines": {
     "text": "Copy lines",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Button that copies the configuration lines the user must add to Home Assistant. Lines means lines of text.",
     "max": 20
   },
   "theme-editor.include-notice.home-assistant-only-loads-themes-from": {
@@ -1981,7 +1981,7 @@
   },
   "theme-editor.lips.got-it": {
     "text": "Got it",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Button that dismisses the one-time hint about the side panel tabs. Means understood.",
     "max": 10
   },
   "theme-editor.lips.hide-noun-keys": {
@@ -2036,12 +2036,12 @@
   },
   "theme-editor.lips.variables": {
     "text": "variables",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Lower-case panel name inside a sentence such as 'variables hidden'. Same English as the Variables heading.",
     "max": 15
   },
   "theme-editor.lips.variables-panel": {
     "text": "Variables panel",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Tooltip on the side tab that shows or hides the variables panel. Same English as the editor view label.",
     "max": 25
   },
   "theme-editor.magic-card.borders-and-bar-tracks": {
@@ -2051,7 +2051,7 @@
   },
   "theme-editor.magic-card.button-text": {
     "text": "Button text.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Short description under a Magic Card variable that sets the text colour on buttons.",
     "max": 20
   },
   "theme-editor.magic-card.buttons-bars-and-accents": {
@@ -2076,7 +2076,7 @@
   },
   "theme-editor.magic-card.card-background": {
     "text": "Card background",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for the card background.",
     "max": 25
   },
   "theme-editor.magic-card.card-background-override": {
@@ -2086,7 +2086,7 @@
   },
   "theme-editor.magic-card.card-border": {
     "text": "Card border.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Short description under a Magic Card variable that sets the line around the card.",
     "max": 20
   },
   "theme-editor.magic-card.card-border-colour": {
@@ -2106,7 +2106,7 @@
   },
   "theme-editor.magic-card.card-shadow": {
     "text": "Card shadow",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for the drop shadow under the card.",
     "max": 20
   },
   "theme-editor.magic-card.card-surface-and-flow-labels": {
@@ -2116,12 +2116,12 @@
   },
   "theme-editor.magic-card.disabled-colour": {
     "text": "Disabled colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for controls that cannot be used.",
     "max": 25
   },
   "theme-editor.magic-card.divider-colour": {
     "text": "Divider colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for thin separator lines.",
     "max": 25
   },
   "theme-editor.magic-card.empty-slider-track": {
@@ -2131,7 +2131,7 @@
   },
   "theme-editor.magic-card.error-colour": {
     "text": "Error colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for error states.",
     "max": 20
   },
   "theme-editor.magic-card.light-on-colour": {
@@ -2141,22 +2141,22 @@
   },
   "theme-editor.magic-card.main-text": {
     "text": "Main text.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Short description under a Magic Card variable that sets the main text colour.",
     "max": 20
   },
   "theme-editor.magic-card.primary-colour": {
     "text": "Primary colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for the main brand colour.",
     "max": 25
   },
   "theme-editor.magic-card.primary-text": {
     "text": "Primary text",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for the main text colour.",
     "max": 20
   },
   "theme-editor.magic-card.secondary-text": {
     "text": "Secondary text",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for dimmer supporting text.",
     "max": 25
   },
   "theme-editor.magic-card.shadow-under-the-card": {
@@ -2166,12 +2166,12 @@
   },
   "theme-editor.magic-card.slider-track": {
     "text": "Slider track",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for the unfilled rail of a slider.",
     "max": 25
   },
   "theme-editor.magic-card.success-colour": {
     "text": "Success colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card theme variable for success states, usually green.",
     "max": 25
   },
   "theme-editor.magic-card.text-on-primary-colour": {
@@ -2870,22 +2870,22 @@
   },
   "theme-editor.preset-dialog.author-optional": {
     "text": "Author (optional)",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Field label for who made the preset when saving or exporting it. The field may stay empty.",
     "max": 30
   },
   "theme-editor.preset-dialog.cancel": {
     "text": "Cancel",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Button that closes a preset dialog without doing anything. Same English as the editor and start view.",
     "max": 10
   },
   "theme-editor.preset-dialog.close": {
     "text": "Close",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Button that closes the preset dialog after an import or export report. Same English as other Close buttons.",
     "max": 10
   },
   "theme-editor.preset-dialog.delete": {
     "text": "Delete",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Confirm button that permanently deletes a saved preset. Same English as the editor and start view.",
     "max": 15
   },
   "theme-editor.preset-dialog.delete-name": {
@@ -2906,7 +2906,7 @@
   },
   "theme-editor.preset-dialog.description-optional": {
     "text": "Description (optional)",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Field label for a short note describing the preset. The field may stay empty.",
     "max": 40
   },
   "theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters": {
@@ -2916,12 +2916,12 @@
   },
   "theme-editor.preset-dialog.export-theme": {
     "text": "Export theme",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Title of the dialog that saves a theme as a preset file. Same English as the editor menu item.",
     "max": 20
   },
   "theme-editor.preset-dialog.import-theme": {
     "text": "Import theme",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Title of the dialog that brings in themes from a preset file.",
     "max": 20
   },
   "theme-editor.preset-dialog.it-did-not-work": {
@@ -2931,7 +2931,7 @@
   },
   "theme-editor.preset-dialog.loading": {
     "text": "Loading...",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Busy text in the preset dialog while the saved presets load. Keep the three dots.",
     "max": 20
   },
   "theme-editor.preset-dialog.magic-card-utils-did-not-accept-this": {
@@ -2941,7 +2941,7 @@
   },
   "theme-editor.preset-dialog.name": {
     "text": "Name",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Field label for the preset name. Same English as the Name column of the raw rows.",
     "max": 10
   },
   "theme-editor.preset-dialog.name-reason": {
@@ -2970,12 +2970,12 @@
   },
   "theme-editor.preset-dialog.rename": {
     "text": "Rename",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Confirm button that applies a new name to a saved preset.",
     "max": 10
   },
   "theme-editor.preset-dialog.rename-preset": {
     "text": "Rename preset",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Title of the dialog for renaming a saved preset.",
     "max": 25
   },
   "theme-editor.preset-dialog.renamed-to-name": {
@@ -2993,7 +2993,7 @@
   },
   "theme-editor.preset-dialog.save-preset": {
     "text": "Save preset",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Title and button of the dialog that stores the open theme as a reusable preset.",
     "max": 25
   },
   "theme-editor.preset-dialog.saved-name-under-my-presets": {
@@ -3036,7 +3036,7 @@
   },
   "theme-editor.preset-dialog.try-again": {
     "text": "Try again",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Button that repeats a failed preset action. Same English as the editor and start view.",
     "max": 20
   },
   "theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme": {
@@ -3051,7 +3051,7 @@
   },
   "theme-editor.preview-cards.button": {
     "text": "Button",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Name of the sample button card in the preview. Noun, not an action.",
     "max": 10
   },
   "theme-editor.preview-cards.could-not-load-label-reason": {
@@ -3065,7 +3065,7 @@
   },
   "theme-editor.preview-cards.entities": {
     "text": "Entities",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Name of the sample Entities card in the preview. Entities are Home Assistant devices and sensors.",
     "max": 15
   },
   "theme-editor.preview-cards.home-assistant-card-helpers-are-not": {
@@ -3136,7 +3136,7 @@
   },
   "theme-editor.preview-cards.loading": {
     "text": "Loading...",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Placeholder inside a sample card while it is being prepared. Keep the three dots.",
     "max": 20
   },
   "theme-editor.preview-cards.loading-label": {
@@ -3164,12 +3164,12 @@
   },
   "theme-editor.preview.a-link": {
     "text": "a link",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample link text inside a preview sentence, shown in the link colour. Lower case on purpose.",
     "max": 10
   },
   "theme-editor.preview.accent": {
     "text": "Accent",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Label of a sample colour swatch in the preview that shows the accent colour.",
     "max": 10
   },
   "theme-editor.preview.add-a-light-or-a-switch-to-home": {
@@ -3187,32 +3187,32 @@
   },
   "theme-editor.preview.controls": {
     "text": "Controls",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Heading of the preview group with sample switches, sliders and buttons.",
     "max": 15
   },
   "theme-editor.preview.entities-card": {
     "text": "entities card",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Lower-case name of the Home Assistant Entities card, used inside a sentence in the preview.",
     "max": 25
   },
   "theme-editor.preview.error-message": {
     "text": "Error message",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample alert in the preview that uses the error colour.",
     "max": 25
   },
   "theme-editor.preview.heading": {
     "text": "Heading",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample heading text in the preview, showing the heading font. Noun.",
     "max": 15
   },
   "theme-editor.preview.info-message": {
     "text": "Info message",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample alert in the preview that uses the info colour.",
     "max": 20
   },
   "theme-editor.preview.map": {
     "text": "Map",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Name of a sample sidebar entry in the preview. Noun; the Home Assistant Map page.",
     "max": 5
   },
   "theme-editor.preview.nothing-set-yet-the-preview-shows-home": {
@@ -3222,12 +3222,12 @@
   },
   "theme-editor.preview.overview": {
     "text": "Overview",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Name of a sample sidebar entry in the preview; the Home Assistant Overview dashboard.",
     "max": 15
   },
   "theme-editor.preview.preview-mode": {
     "text": "Preview mode",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Accessible name of the Light/Dark switch for the preview. Mode means light or dark appearance.",
     "max": 20
   },
   "theme-editor.preview.preview-of-count-sample-cards-using-the": {
@@ -3257,7 +3257,7 @@
   },
   "theme-editor.preview.primary": {
     "text": "Primary",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Label of a sample colour swatch in the preview that shows the primary colour.",
     "max": 15
   },
   "theme-editor.preview.secondary": {

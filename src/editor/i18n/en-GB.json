@@ -7435,7 +7435,7 @@
   },
   "card-editor.slider-editor.min": {
     "text": "Min",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Field label for the lowest value the slider can reach. Short for minimum.",
     "max": 5
   },
   "card-editor.slider-editor.same-as-where-in-look": {
@@ -7445,17 +7445,17 @@
   },
   "card-editor.slider-editor.show-value": {
     "text": "Show value",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Switch label: show the current number on the slider. Show is a verb.",
     "max": 20
   },
   "card-editor.slider-editor.slider-colour": {
     "text": "Slider colour",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Colour picker label for the filled part and handle of the slider. Not the track behind it.",
     "max": 30
   },
   "card-editor.slider-editor.step": {
     "text": "Step",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Field label for the increment between slider values, for example 5. Not a step in a process.",
     "max": 10
   },
   "card-editor.slider-editor.this-value-can-only-be-shown-the-entity": {
@@ -7465,7 +7465,7 @@
   },
   "card-editor.slider-editor.track-colour": {
     "text": "Track colour",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Colour picker label for the empty groove the slider handle moves along.",
     "max": 20
   },
   "card-editor.slider-editor.use-own-colour": {
@@ -7475,7 +7475,7 @@
   },
   "card-editor.slider-editor.vertical": {
     "text": "Vertical",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Switch label: draw the slider upright instead of horizontal. Adjective, not a button.",
     "max": 15
   },
   "card-editor.slider-layout-editor.after-the-last-slide-go-back-to-the": {
@@ -7485,7 +7485,7 @@
   },
   "card-editor.slider-layout-editor.autoplay": {
     "text": "Autoplay",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Switch label: the carousel moves to the next slide by itself. One word in English.",
     "max": 20
   },
   "card-editor.slider-layout-editor.autoplay-delay-ms": {
@@ -7495,17 +7495,17 @@
   },
   "card-editor.slider-layout-editor.loop": {
     "text": "Loop",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Switch label: after the last slide the carousel wraps round to the first. Not a repeat button.",
     "max": 10
   },
   "card-editor.slider-layout-editor.navigation": {
     "text": "Navigation",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Switch label: show previous and next arrows on the carousel. Not site navigation.",
     "max": 20
   },
   "card-editor.slider-layout-editor.pagination": {
     "text": "Pagination",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Switch label: show the row of dots that marks which carousel slide is current.",
     "max": 20
   },
   "card-editor.slider-layout-editor.slides-per-view": {
@@ -7530,12 +7530,12 @@
   },
   "card-editor.slider-look-host.look": {
     "text": "Look",
-    "note": "Shown in slider look host (card-editor).",
+    "note": "Label for choosing the visual style of the slider, such as a preset design. Noun, not a verb.",
     "max": 10
   },
   "card-editor.slider-look-host.try-again": {
     "text": "Try again",
-    "note": "Shown in slider look host (card-editor).",
+    "note": "Button shown after the slider look failed to load. Pressing it loads the look a second time.",
     "max": 15
   },
   "card-editor.slot-label.column-n": {
@@ -7556,7 +7556,7 @@
   },
   "card-editor.spinbox-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Field label for the entity attribute the spinbox reads and writes, such as brightness.",
     "max": 15
   },
   "card-editor.spinbox-editor.empty-the-entity-s-own-range-and-step": {
@@ -7566,22 +7566,22 @@
   },
   "card-editor.spinbox-editor.entity": {
     "text": "Entity",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Field label for the Home Assistant entity the spinbox controls. Use the Home Assistant term.",
     "max": 10
   },
   "card-editor.spinbox-editor.max": {
     "text": "Max",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Field label for the highest value the spinbox allows. Short for maximum.",
     "max": 5
   },
   "card-editor.spinbox-editor.min": {
     "text": "Min",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Field label for the lowest value the spinbox allows. Short for minimum.",
     "max": 5
   },
   "card-editor.spinbox-editor.step": {
     "text": "Step",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Field label for how much one plus or minus press changes the spinbox value.",
     "max": 10
   },
   "card-editor.spinbox-editor.the-thermostat-keeps-a-range-low-high": {
@@ -7596,7 +7596,7 @@
   },
   "card-editor.structure-outline.add-column": {
     "text": "Add column",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Button in the structure tree that adds a new empty column to the card. Add is a verb.",
     "max": 20
   },
   "card-editor.structure-outline.add-column-to-name": {
@@ -7617,7 +7617,7 @@
   },
   "card-editor.structure-outline.add-module": {
     "text": "Add module",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Button in the structure tree that adds a module, such as a button or text, to a column.",
     "max": 20
   },
   "card-editor.structure-outline.add-module-to-row-row-column-column": {
@@ -7639,12 +7639,12 @@
   },
   "card-editor.structure-outline.add-row": {
     "text": "Add row",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Button in the structure tree that adds a new horizontal row to the card. Add is a verb.",
     "max": 15
   },
   "card-editor.structure-outline.add-tab": {
     "text": "Add tab",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Button in the structure tree that adds a tab to the card's tab bar. Add is a verb.",
     "max": 20
   },
   "card-editor.structure-outline.add-tab-to-name": {
@@ -7657,17 +7657,17 @@
   },
   "card-editor.structure-outline.card": {
     "text": "Card",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Name of the top node in the structure tree, which stands for the whole card. Noun.",
     "max": 10
   },
   "card-editor.structure-outline.card-name": {
     "text": "Card name",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Label of the text box where the user renames the whole card in the structure tree.",
     "max": 15
   },
   "card-editor.structure-outline.card-structure": {
     "text": "Card structure",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Heading above the tree of rows, columns and modules that makes up the card.",
     "max": 25
   },
   "card-editor.structure-outline.collapse-row-n": {
@@ -7688,12 +7688,12 @@
   },
   "card-editor.structure-outline.column-name": {
     "text": "Column name",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Label of the text box where the user renames a column in the structure tree.",
     "max": 20
   },
   "card-editor.structure-outline.empty-column": {
     "text": "Empty column",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Placeholder name for a column that holds no modules yet. Adjective plus noun.",
     "max": 20
   },
   "card-editor.structure-outline.entity-does-not-fit-this-module": {
@@ -7721,12 +7721,12 @@
   },
   "card-editor.structure-outline.inherited-entity": {
     "text": "Inherited entity",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Label for an entity a module takes from its parent row or card instead of having its own.",
     "max": 30
   },
   "card-editor.structure-outline.module-name": {
     "text": "Module name",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Label of the text box where the user renames a module in the structure tree.",
     "max": 20
   },
   "card-editor.structure-outline.module-options-for-name": {
@@ -7781,7 +7781,7 @@
   },
   "card-editor.structure-outline.no-entity": {
     "text": "No entity",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Shown beside a tree node that has no entity set and inherits none either.",
     "max": 15
   },
   "card-editor.structure-outline.no-rows-yet": {
@@ -7809,7 +7809,7 @@
   },
   "card-editor.structure-outline.row-name": {
     "text": "Row name",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Label of the text box where the user renames a row in the structure tree.",
     "max": 15
   },
   "card-editor.structure-outline.row-row-column-column": {
@@ -7850,12 +7850,12 @@
   },
   "card-editor.structure-outline.tab-name": {
     "text": "Tab name",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Label of the text box where the user renames a tab in the structure tree.",
     "max": 20
   },
   "card-editor.studio-canvas.active-tab": {
     "text": "Active tab",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Label for the tab currently selected and previewed on the studio canvas.",
     "max": 20
   },
   "card-editor.studio-canvas.add-flow-from-here": {
@@ -7873,7 +7873,7 @@
   },
   "card-editor.studio-canvas.cancel": {
     "text": "Cancel",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Button on the studio canvas that abandons the current action without saving. Verb.",
     "max": 10
   },
   "card-editor.studio-canvas.canvas-label-selected": {
@@ -7925,27 +7925,27 @@
   },
   "card-editor.studio-canvas.del": {
     "text": "Del",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Short keyboard key hint for the Delete key, in a small badge. Keep it as short as the key cap.",
     "max": 15
   },
   "card-editor.studio-canvas.delete": {
     "text": "Delete",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Button on the studio canvas that removes the selected item. Verb, not the keyboard hint Del.",
     "max": 15
   },
   "card-editor.studio-canvas.delete-del": {
     "text": "Delete (Del)",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip on the delete button. The key name in brackets is the keyboard shortcut; keep Del.",
     "max": 20
   },
   "card-editor.studio-canvas.disabled-tab": {
     "text": "Disabled tab",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Label for a tab in the preview that is switched off and cannot be selected.",
     "max": 25
   },
   "card-editor.studio-canvas.down": {
     "text": "Down",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Short label for the down arrow button that nudges the selected item downwards. Direction, not a state.",
     "max": 10
   },
   "card-editor.studio-canvas.drag-to-resize-double-click-for-equal": {
@@ -7955,22 +7955,22 @@
   },
   "card-editor.studio-canvas.duplicate": {
     "text": "Duplicate",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Button that makes a copy of the selected item. Verb, not the adjective.",
     "max": 15
   },
   "card-editor.studio-canvas.duplicate-ctrl-d": {
     "text": "Duplicate (Ctrl+D)",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip on the duplicate button. The brackets hold the keyboard shortcut; keep Ctrl+D as it is.",
     "max": 30
   },
   "card-editor.studio-canvas.hidden": {
     "text": "hidden",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Lower-case tag appended to an item name when it is hidden on the card. Adjective.",
     "max": 10
   },
   "card-editor.studio-canvas.hover": {
     "text": "Hover",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Preview state option: show the card as it looks while the pointer is over it.",
     "max": 10
   },
   "card-editor.studio-canvas.layers-here-n": {
@@ -7983,22 +7983,22 @@
   },
   "card-editor.studio-canvas.live-data": {
     "text": "Live data",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Switch label: preview with real entity values instead of sample values.",
     "max": 15
   },
   "card-editor.studio-canvas.match-view": {
     "text": "Match view",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Button that sizes the canvas to the dashboard view width the card sits in. Match is a verb.",
     "max": 20
   },
   "card-editor.studio-canvas.module-actions": {
     "text": "Module actions",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible name for the small toolbar of actions (move, duplicate, delete) on a selected module.",
     "max": 25
   },
   "card-editor.studio-canvas.move-down": {
     "text": "Move down",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip for the button that moves the selected item one place later. Verb plus direction.",
     "max": 15
   },
   "card-editor.studio-canvas.move-down-alt-down": {
@@ -8008,7 +8008,7 @@
   },
   "card-editor.studio-canvas.move-up": {
     "text": "Move up",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip for the button that moves the selected item one place earlier. Verb plus direction.",
     "max": 15
   },
   "card-editor.studio-canvas.move-up-alt-up": {
@@ -8061,7 +8061,7 @@
   },
   "card-editor.studio-canvas.placement": {
     "text": "Placement",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Heading for the controls that set where a module sits inside its column or row.",
     "max": 15
   },
   "card-editor.studio-canvas.placement-put-behind-others-put-on-top": {
@@ -8128,7 +8128,7 @@
   },
   "card-editor.studio-canvas.up": {
     "text": "Up",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Short label for the up arrow button that nudges the selected item upwards. Direction, not a state.",
     "max": 10
   },
   "card-editor.studio.back-to-dialog": {
@@ -8138,27 +8138,27 @@
   },
   "card-editor.studio.canvas-width": {
     "text": "Canvas width",
-    "note": "Shown in studio (card-editor).",
+    "note": "Label for the control that sets how wide the studio preview area is.",
     "max": 20
   },
   "card-editor.studio.done": {
     "text": "Done",
-    "note": "Shown in studio (card-editor).",
+    "note": "Button that closes the studio and returns to the normal editor. Means finished, not completed.",
     "max": 10
   },
   "card-editor.studio.editor-mode": {
     "text": "Editor mode",
-    "note": "Shown in studio (card-editor).",
+    "note": "Accessible name for the switch between the Form and YAML views of the editor.",
     "max": 20
   },
   "card-editor.studio.form": {
     "text": "Form",
-    "note": "Shown in studio (card-editor).",
+    "note": "Option in the editor mode switch: edit with fields and controls. Counterpart of YAML.",
     "max": 10
   },
   "card-editor.studio.got-it": {
     "text": "Got it",
-    "note": "Shown in studio (card-editor).",
+    "note": "Button that dismisses a hint or tip in the studio. Informal acknowledgement.",
     "max": 10
   },
   "card-editor.studio.hide-noun-keys": {
@@ -8172,27 +8172,27 @@
   },
   "card-editor.studio.inspector": {
     "text": "inspector",
-    "note": "Shown in studio (card-editor).",
+    "note": "Lower-case word for the settings pane, used inside a sentence. Capitalised twin is the panel title.",
     "max": 15
   },
   "card-editor.studio.inspector-panel": {
     "text": "Inspector panel",
-    "note": "Shown in studio (card-editor).",
+    "note": "Accessible name and toggle label for the side panel holding the selected item's settings.",
     "max": 25
   },
   "card-editor.studio.layers": {
     "text": "layers",
-    "note": "Shown in studio (card-editor).",
+    "note": "Lower-case word for the layers pane, used inside a sentence. Capitalised twin is layers-2.",
     "max": 10
   },
   "card-editor.studio.layers-2": {
     "text": "Layers",
-    "note": "Shown in studio (card-editor).",
+    "note": "Capitalised heading or tab label for the stack of items on the card. Lower-case twin is layers.",
     "max": 10
   },
   "card-editor.studio.layers-panel": {
     "text": "Layers panel",
-    "note": "Shown in studio (card-editor).",
+    "note": "Accessible name and toggle label for the side panel listing the card's layers.",
     "max": 20
   },
   "card-editor.studio.magic-card-studio": {
@@ -8226,7 +8226,7 @@
   },
   "card-editor.studio.preview": {
     "text": "Preview",
-    "note": "Shown in studio (card-editor).",
+    "note": "Button or heading for the live view of the card while editing. Noun, not the verb.",
     "max": 15
   },
   "card-editor.studio.preview-actions-are-live": {
@@ -8246,7 +8246,7 @@
   },
   "card-editor.studio.redo-ctrl-y": {
     "text": "Redo (Ctrl+Y)",
-    "note": "Shown in studio (card-editor).",
+    "note": "Tooltip on the redo button. The brackets hold the keyboard shortcut; keep Ctrl+Y as it is.",
     "max": 25
   },
   "card-editor.studio.shortcut-keys": {
@@ -8281,22 +8281,22 @@
   },
   "card-editor.studio.undo-ctrl-z": {
     "text": "Undo (Ctrl+Z)",
-    "note": "Shown in studio (card-editor).",
+    "note": "Tooltip on the undo button. The brackets hold the keyboard shortcut; keep Ctrl+Z as it is.",
     "max": 25
   },
   "card-editor.studio.untitled-card": {
     "text": "Untitled card",
-    "note": "Shown in studio (card-editor).",
+    "note": "Placeholder title shown when the card has no name yet.",
     "max": 25
   },
   "card-editor.studio.yaml": {
     "text": "YAML",
-    "note": "Shown in studio (card-editor).",
+    "note": "Option in the editor mode switch: edit the card as YAML code. Keep the acronym; counterpart of Form.",
     "max": 10
   },
   "card-editor.sync-indicator.overridden": {
     "text": "Overridden",
-    "note": "Shown in sync indicator (card-editor).",
+    "note": "Badge on a setting that was changed locally and no longer follows its template. Adjective.",
     "max": 20
   },
   "card-editor.sync-indicator.overridden-locally-click-to-re-sync-from": {
@@ -8321,17 +8321,17 @@
   },
   "card-editor.tabs-editor.default": {
     "text": "Default",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Tab style option meaning the standard look, with no extra styling. Adjective.",
     "max": 15
   },
   "card-editor.tabs-editor.default-tab": {
     "text": "Default tab",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Field label for the tab that is open when the card first loads.",
     "max": 20
   },
   "card-editor.tabs-editor.pills": {
     "text": "Pills",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Tab style option: tabs drawn as rounded capsule buttons. Plural noun, a design term.",
     "max": 10
   },
   "card-editor.tabs-editor.tab-n": {
@@ -8344,32 +8344,32 @@
   },
   "card-editor.tabs-editor.tab-style": {
     "text": "Tab style",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Field label for choosing how the tabs look: default, pills or underline.",
     "max": 15
   },
   "card-editor.tabs-editor.underline": {
     "text": "Underline",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Tab style option: the active tab is marked with a line beneath it. Noun, not the verb.",
     "max": 15
   },
   "card-editor.target-name.this-card": {
     "text": "this card",
-    "note": "Shown in target name (card-editor).",
+    "note": "Lower-case phrase inserted into a sentence to name the card as the target of an action.",
     "max": 15
   },
   "card-editor.target-name.this-column": {
     "text": "this column",
-    "note": "Shown in target name (card-editor).",
+    "note": "Lower-case phrase inserted into a sentence to name the column as the target of an action.",
     "max": 20
   },
   "card-editor.target-name.this-module": {
     "text": "this module",
-    "note": "Shown in target name (card-editor).",
+    "note": "Lower-case phrase inserted into a sentence to name the module as the target of an action.",
     "max": 20
   },
   "card-editor.target-name.this-row": {
     "text": "this row",
-    "note": "Shown in target name (card-editor).",
+    "note": "Lower-case phrase inserted into a sentence to name the row as the target of an action.",
     "max": 15
   },
   "card-editor.template-bar.create-template-from-this-card": {
@@ -8384,7 +8384,7 @@
   },
   "card-editor.template-bar.in-sync": {
     "text": "In sync",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Status in the template bar: the card matches its saved template exactly.",
     "max": 20
   },
   "card-editor.template-bar.linked-to-template-name": {
@@ -8397,7 +8397,7 @@
   },
   "card-editor.template-bar.load-template": {
     "text": "Load template…",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Menu item that opens the template picker. The ellipsis means a dialogue follows.",
     "max": 25
   },
   "card-editor.template-bar.n": {
@@ -8418,7 +8418,7 @@
   },
   "card-editor.template-bar.no-template": {
     "text": "No template",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Status in the template bar when the card is not linked to any saved template.",
     "max": 20
   },
   "card-editor.template-bar.not-linked-to-a-template": {
@@ -8441,12 +8441,12 @@
   },
   "card-editor.template-bar.template": {
     "text": "Template",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Label at the start of the template bar naming the saved design the card uses. Noun.",
     "max": 15
   },
   "card-editor.template-bar.template-actions": {
     "text": "Template actions",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Accessible name for the menu button that lists load, save and unlink actions for templates.",
     "max": 30
   },
   "card-editor.template-bar.unlink-from-template": {
@@ -8472,17 +8472,17 @@
   },
   "card-editor.template-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Button that closes the template picker without loading or saving anything. Verb.",
     "max": 10
   },
   "card-editor.template-picker.create-template": {
     "text": "Create template",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Button or heading for saving the current card as a new template. Create is a verb.",
     "max": 25
   },
   "card-editor.template-picker.delete-template": {
     "text": "Delete template",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Button that permanently removes the chosen saved template. Delete is a verb.",
     "max": 25
   },
   "card-editor.template-picker.delete-template-name": {
@@ -8495,12 +8495,12 @@
   },
   "card-editor.template-picker.description-optional": {
     "text": "Description (optional)",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Label of the text box for a short template description. The user may leave it empty.",
     "max": 40
   },
   "card-editor.template-picker.edit-template": {
     "text": "Edit template",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Button that opens the chosen template's name and description for changes. Edit is a verb.",
     "max": 25
   },
   "card-editor.template-picker.edit-template-name": {
@@ -8528,7 +8528,7 @@
   },
   "card-editor.template-picker.load": {
     "text": "Load",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Short button on a template row that applies the template to the card. Verb.",
     "max": 10
   },
   "card-editor.template-picker.load-name-this-will-replace-your-current": {
@@ -8541,12 +8541,12 @@
   },
   "card-editor.template-picker.load-template": {
     "text": "Load template",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Title of the template picker dialogue. Unlike Load, it names the whole dialogue.",
     "max": 25
   },
   "card-editor.template-picker.loading-templates": {
     "text": "Loading templates...",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Progress message shown while the list of saved templates is being fetched.",
     "max": 35
   },
   "card-editor.template-picker.magic-card-integration-not-found-please": {
@@ -8566,7 +8566,7 @@
   },
   "card-editor.template-picker.overwrite": {
     "text": "Overwrite",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Button that replaces an existing template of the same name with the current card. Verb.",
     "max": 15
   },
   "card-editor.template-picker.pick-a-device": {
@@ -8576,17 +8576,17 @@
   },
   "card-editor.template-picker.save": {
     "text": "Save",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Button that stores the template name and description in the picker. Verb.",
     "max": 10
   },
   "card-editor.template-picker.search-templates": {
     "text": "Search templates",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Placeholder and accessible name of the search box that filters the template list.",
     "max": 30
   },
   "card-editor.template-picker.template-name": {
     "text": "Template name",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Label of the text box where the user names a template before saving it.",
     "max": 25
   },
   "card-editor.template-picker.template-name-is-required": {
@@ -8606,7 +8606,7 @@
   },
   "card-editor.template-sync.card": {
     "text": "Card",
-    "note": "Shown in template sync (card-editor).",
+    "note": "Name of the whole card in the template sync list, beside rows, columns and modules.",
     "max": 10
   },
   "card-editor.template-sync.row-n": {
