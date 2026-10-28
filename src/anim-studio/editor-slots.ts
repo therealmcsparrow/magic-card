@@ -20,10 +20,10 @@ export interface KindEditorSlot {
 }
 
 export const KIND_EDITORS: Record<AnimationKind, KindEditorSlot> = {
-  keyframes: { tag: 'mc-anim-keyframes-editor', place: 'panel', title: m('Timeline') },
-  particles: { tag: 'mc-anim-particles-editor', place: 'inspector', title: m('Particles') },
-  path: { tag: 'mc-anim-path-editor', place: 'inspector', title: m('Path') },
-  sequence: { tag: 'mc-anim-sequence-editor', place: 'inspector', title: m('Steps') },
+  keyframes: { tag: 'mc-anim-keyframes-editor', place: 'panel', title: m('anim-studio.editor-slots.timeline') },
+  particles: { tag: 'mc-anim-particles-editor', place: 'inspector', title: m('anim-studio.editor-slots.particles') },
+  path: { tag: 'mc-anim-path-editor', place: 'inspector', title: m('anim-studio.editor-slots.path') },
+  sequence: { tag: 'mc-anim-sequence-editor', place: 'inspector', title: m('anim-studio.editor-slots.steps') },
 };
 
 /** The motion path editor in the stage's canvas slot while a path document is open (gets .stage). */

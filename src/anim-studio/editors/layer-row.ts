@@ -78,16 +78,16 @@ export interface LayerHost extends ReactiveControllerHost, HTMLElement {
 }
 
 const TOGGLE_TEXT: Record<LayerToggle, { name: MessageId; tip: [MessageId, MessageId]; key: string; icon: [string, string] }> = {
-  hide: { name: m('Hide in preview'), tip: [m('Hide in preview (not saved)'), m('Show in preview')], key: 'H', icon: ['mdi:eye-outline', 'mdi:eye-off-outline'] },
-  solo: { name: m('Solo in preview'), tip: [m('Solo in preview (hides the others, not saved)'), m('End solo')], key: 'S', icon: ['mdi:radiobox-blank', 'mdi:radiobox-marked'] },
-  lock: { name: m('Lock'), tip: [m('Lock'), m('Unlock')], key: 'L', icon: ['mdi:lock-open-variant-outline', 'mdi:lock-outline'] },
+  hide: { name: m('anim-studio.layer-row.hide-in-preview'), tip: [m('anim-studio.layer-row.hide-in-preview-not-saved'), m('anim-studio.layer-row.show-in-preview')], key: 'H', icon: ['mdi:eye-outline', 'mdi:eye-off-outline'] },
+  solo: { name: m('anim-studio.layer-row.solo-in-preview'), tip: [m('anim-studio.layer-row.solo-in-preview-hides-the-others-not'), m('anim-studio.layer-row.end-solo')], key: 'S', icon: ['mdi:radiobox-blank', 'mdi:radiobox-marked'] },
+  lock: { name: m('anim-studio.layer-row.lock'), tip: [m('anim-studio.layer-row.lock'), m('anim-studio.layer-row.unlock')], key: 'L', icon: ['mdi:lock-open-variant-outline', 'mdi:lock-outline'] },
 };
 const TOGGLES: LayerToggle[] = ['hide', 'solo', 'lock'];
 /** What the live region says after a toggle, with the row's name. */
 const SAYS: Record<LayerToggle, [MessageId, MessageId]> = {
-  hide: [m('{name} hidden in the preview'), m('{name} shown in the preview')],
-  solo: [m('{name} soloed in the preview'), m('{name} no longer soloed')],
-  lock: [m('{name} locked'), m('{name} unlocked')],
+  hide: [m('anim-studio.layer-row.name-hidden-in-the-preview'), m('anim-studio.layer-row.name-shown-in-the-preview')],
+  solo: [m('anim-studio.layer-row.name-soloed-in-the-preview'), m('anim-studio.layer-row.name-no-longer-soloed')],
+  lock: [m('anim-studio.layer-row.name-locked'), m('anim-studio.layer-row.name-unlocked')],
 };
 
 // ── the column: one tab stop, arrows across the lists ──
@@ -162,7 +162,7 @@ export class LayerRows implements ReactiveController {
   /** Say "X is locked" when it is; true then. */
   refuseLocked(key: LayerKey, name: string): boolean {
     if (!this.locked(key)) return false;
-    this.announce(t('{name} is locked. Unlock it in Layers.', { name }));
+    this.announce(t('anim-studio.layer-row.name-is-locked-unlock-it-in-layers', { name }));
     return true;
   }
 
@@ -292,11 +292,11 @@ export class LayerRows implements ReactiveController {
         const m = dir === 'up' ? r.up : r.down;
         if (!m) continue;
         const base = m.menu ?? m.label;
-        const reason = lock ? t('Locked') : !m.ok ? (dir === 'up' ? t('Already at the top') : t('Already at the bottom')) : undefined;
-        out.push({ id: `move-${dir}`, icon: dir === 'up' ? 'mdi:arrow-up' : 'mdi:arrow-down', label: lock ? base.replace(/ \(.*\)$/, '') : base, reason, keys: dir === 'up' ? t('Alt+Up') : t('Alt+Down'), run: () => this._move(r, dir, 'menu') });
+        const reason = lock ? t('anim-studio.layer-row.locked') : !m.ok ? (dir === 'up' ? t('anim-studio.layer-row.already-at-the-top') : t('anim-studio.layer-row.already-at-the-bottom')) : undefined;
+        out.push({ id: `move-${dir}`, icon: dir === 'up' ? 'mdi:arrow-up' : 'mdi:arrow-down', label: lock ? base.replace(/ \(.*\)$/, '') : base, reason, keys: dir === 'up' ? t('anim-studio.layer-row.alt-up') : t('anim-studio.layer-row.alt-down'), run: () => this._move(r, dir, 'menu') });
       }
     }
-    if (r.renamable && this.actions.rename) out.push({ id: 'rename', icon: 'mdi:rename-outline', label: t('Rename'), reason: lock ? t('Locked') : undefined, keys: 'F2', run: () => this._rename(r) });
+    if (r.renamable && this.actions.rename) out.push({ id: 'rename', icon: 'mdi:rename-outline', label: t('anim-studio.layer-row.rename'), reason: lock ? t('anim-studio.layer-row.locked') : undefined, keys: 'F2', run: () => this._rename(r) });
     const view = this.view;
     TOGGLES.filter((k) => this._toggles(r).includes(k)).forEach((k, i) => {
       const on = view[k === 'hide' ? 'hidden' : k === 'solo' ? 'solo' : 'locked'].includes(r.key);
@@ -310,7 +310,7 @@ export class LayerRows implements ReactiveController {
     return html`<mc-ui-menu
       .items=${entries}
       .align=${'end' as const}
-      label=${t('Layer actions, {name}', { name: r.name })}
+      label=${t('anim-studio.layer-row.layer-actions-name', { name: r.name })}
       @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
         e.stopPropagation();
         const hit = entries.find((x) => x.id === e.detail.id);
@@ -343,13 +343,13 @@ export class LayerRows implements ReactiveController {
     const below = doc && r.expanded === false ? markedBelow(doc, view, r.key) : 0;
     const said = [
       r.describe,
-      why?.kind === 'self' && t('hidden in the preview'),
-      why?.kind === 'solo' && t('hidden because another layer is soloed'),
-      why?.kind === 'parent' && t('hidden because {name} is hidden', { name: name(why.by) }),
+      why?.kind === 'self' && t('anim-studio.layer-row.hidden-in-the-preview'),
+      why?.kind === 'solo' && t('anim-studio.layer-row.hidden-because-another-layer-is-soloed'),
+      why?.kind === 'parent' && t('anim-studio.layer-row.hidden-because-name-is-hidden', { name: name(why.by) }),
       soloed && 'solo',
       lockedSelf && 'locked',
-      lockedVia && t('locked because the layer it belongs to is locked'),
-      below > 0 && t('{below} hidden below', { below }),
+      lockedVia && t('anim-studio.layer-row.locked-because-the-layer-it-belongs-to'),
+      below > 0 && t('anim-studio.layer-row.below-hidden-below', { below }),
     ].filter(Boolean);
     const id = `ld${this._n++}`;
     const locked = lockedSelf || lockedVia;
@@ -357,7 +357,7 @@ export class LayerRows implements ReactiveController {
       const on = (k === 'hide' ? why?.kind === 'self' : k === 'solo' ? soloed : lockedSelf) as boolean;
       const soft = !on && (k === 'hide' ? !!why : k === 'lock' ? lockedVia : false);
       const tt = TOGGLE_TEXT[k];
-      return html`<button type="button" class="icon-btn xs lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t(tt.name)} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? t('Hide in preview: the layer rests at its normal value') : t(tt.tip[on ? 1 : 0])} @click=${() => this.toggle(r.key, r.name, k)}>
+      return html`<button type="button" class="icon-btn xs lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t(tt.name)} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? t('anim-studio.layer-row.hide-in-preview-the-layer-rests-at-its') : t(tt.tip[on ? 1 : 0])} @click=${() => this.toggle(r.key, r.name, k)}>
         <ha-icon icon=${tt.icon[on || soft ? 1 : 0]}></ha-icon>
       </button>`;
     };
@@ -376,14 +376,14 @@ export class LayerRows implements ReactiveController {
       <div class="lr-in">
         ${r.expanded === undefined
           ? html`<span class="lcaret-space"></span>`
-          : html`<button type="button" class="icon-btn xs lt lcaret" tabindex="-1" aria-label=${r.expanded ? t('Collapse {name}', { name: r.name }) : t('Expand {name}', { name: r.name })} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
+          : html`<button type="button" class="icon-btn xs lt lcaret" tabindex="-1" aria-label=${r.expanded ? t('anim-studio.layer-row.collapse-name', { name: r.name }) : t('anim-studio.layer-row.expand-name', { name: r.name })} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
               <ha-icon icon=${r.expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
             </button>`}
         <button type="button" class="lr-main" data-lk=${r.key} tabindex="-1" aria-pressed=${r.selected ? 'true' : 'false'} aria-expanded=${r.expanded === undefined ? nothing : r.expanded ? 'true' : 'false'} aria-describedby=${said.length ? id : nothing} aria-keyshortcuts="H S L Alt+ArrowUp Alt+ArrowDown" title=${(r.title ?? r.name) + (r.badge && !r.title ? ` (${r.badge})` : '')} @focus=${(e: Event) => ((active = (e.currentTarget as HTMLElement).dataset.lk!), syncTabStops(h))} @click=${(e: MouseEvent) => this.actions.select(r.key, e)}>
           ${r.thumb ?? (r.bare ? nothing : html`<ha-icon class="kind" icon=${r.icon ?? 'mdi:layers-outline'}></ha-icon>`)}
           ${r.renaming ? nothing : html`<span class="nm"><span class="nm-t">${r.name}</span>${r.note ? html`<small>${r.note}</small>` : nothing}</span>`}
           ${r.badge ? html`<span class="lbadge">${r.badge}</span>` : nothing}
-          ${below > 0 ? html`<span class="lbadge warn" aria-hidden="true">${t('{below} hidden', { below })}</span>` : nothing}
+          ${below > 0 ? html`<span class="lbadge warn" aria-hidden="true">${t('anim-studio.layer-row.below-hidden', { below })}</span>` : nothing}
         </button>
         ${r.renaming ? html`<div class="lrename">${r.renaming}</div>` : nothing}
         <span class="lst" aria-hidden="true">
@@ -391,7 +391,7 @@ export class LayerRows implements ReactiveController {
         </span>
         ${full}
         ${hasMenu
-          ? html`<button type="button" class="icon-btn xs lt lm" data-ctl="menu" tabindex="-1" aria-haspopup="menu" aria-expanded=${this._menu?.key === r.key ? 'true' : 'false'} aria-label=${t('Layer actions, {name}', { name: r.name })} title=${t('Layer actions')} @click=${() => this._toggleMenu(r.key)} @keydown=${(e: KeyboardEvent) => {
+          ? html`<button type="button" class="icon-btn xs lt lm" data-ctl="menu" tabindex="-1" aria-haspopup="menu" aria-expanded=${this._menu?.key === r.key ? 'true' : 'false'} aria-label=${t('anim-studio.layer-row.layer-actions-name', { name: r.name })} title=${t('anim-studio.layer-row.layer-actions')} @click=${() => this._toggleMenu(r.key)} @keydown=${(e: KeyboardEvent) => {
               if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 this._openMenu(r.key);

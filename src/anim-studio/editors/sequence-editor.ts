@@ -127,13 +127,13 @@ export class AnimSequenceEditor extends LitElement {
     this._open = steps.length - 1;
     this._focusAfter = { index: steps.length - 1, part: 'toggle' };
     this._writeSteps(steps, 'Add step');
-    this._announce = t('Step {count} added: {name}.', { count: steps.length, name: stepInfo(animation, this.library, this.doc?.id).name });
+    this._announce = t('anim-studio.sequence-editor.step-count-added-name', { count: steps.length, name: stepInfo(animation, this.library, this.doc?.id).name });
   }
 
   /** A locked step cannot be moved, deleted or edited; says so in the live region. */
   private _locked(i: number, say = false): boolean {
     const on = !!this.layerView?.locked.includes(`step:${i}`);
-    if (on && say) this._announce = t('Step {i} is locked. Unlock it in Layers.', { i: i + 1 });
+    if (on && say) this._announce = t('anim-studio.sequence-editor.step-i-is-locked-unlock-it-in-layers', { i: i + 1 });
     return on;
   }
 
@@ -145,7 +145,7 @@ export class AnimSequenceEditor extends LitElement {
     this._focusAfter = steps.length ? { index: Math.min(index, steps.length - 1), part: 'toggle' } : undefined;
     this._writeSteps(steps, 'Delete step');
     this._remap((v) => dropStepKey(v, index));
-    this._announce = t('Step {index} deleted.', { index: index + 1 });
+    this._announce = t('anim-studio.sequence-editor.step-index-deleted', { index: index + 1 });
   }
 
   /** Move step `from` to `to` (keyboard or a finished drag): one edit. */
@@ -156,7 +156,7 @@ export class AnimSequenceEditor extends LitElement {
     this._focusAfter = { index: to, part: focus };
     this._writeSteps(moveItem(this._steps, from, to), 'Move step');
     this._remap((v) => remapStepKeys(v, from, to));
-    this._announce = t('Step moved to position {to} of {n}.', { to: to + 1, n });
+    this._announce = t('anim-studio.sequence-editor.step-moved-to-position-to-of-n', { to: to + 1, n });
   }
 
   /** Where row `i` ends up when the row at `from` moves to `to`. */
@@ -235,7 +235,7 @@ export class AnimSequenceEditor extends LitElement {
       this._focusAfter = { index: d.to, part: 'handle' };
       if (this.doc) this._emit({ ...this.doc, steps: moveItem(d.steps, d.from, d.to) }, 'Move step');
       this._remap((v) => remapStepKeys(v, d.from, d.to));
-      this._announce = t('Step moved to position {to} of {count}.', { to: d.to + 1, count: d.steps.length });
+      this._announce = t('anim-studio.sequence-editor.step-moved-to-position-to-of-count', { to: d.to + 1, count: d.steps.length });
     }
   }
 
@@ -313,7 +313,7 @@ export class AnimSequenceEditor extends LitElement {
     const target = this._pick;
     const current = target?.mode === 'step' ? this._steps[target.index]?.animation : undefined;
     const groups = stepPickerGroups(this.library, this.doc?.id, this._query);
-    const name = target?.mode === 'add' ? t('Add step') : t('Step animation');
+    const name = target?.mode === 'add' ? t('anim-studio.sequence-editor.add-step') : t('anim-studio.sequence-editor.step-animation');
     return html`
       <mc-ui-popover
         class="pick-pop"
@@ -331,8 +331,8 @@ export class AnimSequenceEditor extends LitElement {
             <input
               class="input"
               type="search"
-              placeholder=${t('Search animations')}
-              aria-label=${t('Search animations')}
+              placeholder=${t('anim-studio.sequence-editor.search-animations')}
+              aria-label=${t('anim-studio.sequence-editor.search-animations')}
               autocomplete="off"
               .value=${this._query}
               @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
@@ -361,7 +361,7 @@ export class AnimSequenceEditor extends LitElement {
                     </div>
                   `,
                 )
-              : html`<p class="menu-note">${t('No animation matches “{query}”.', { query: this._query })}</p>`}
+              : html`<p class="menu-note">${t('anim-studio.sequence-editor.no-animation-matches-query', { query: this._query })}</p>`}
           </div>
         </div>
       </mc-ui-popover>
@@ -389,13 +389,13 @@ export class AnimSequenceEditor extends LitElement {
     // skipped steps at the same spot sit side by side
     const marks = new Map<number, number>();
     const summary = total
-      ? t('{steps}, {total} per cycle, {loop}{skipped}.', {
-          steps: t('{count, plural, one {# step} other {# steps}}', { count: n }),
+      ? t('anim-studio.sequence-editor.steps-total-per-cycle-loop-skipped', {
+          steps: t('anim-studio.sequence-editor.count', { count: n }),
           total: formatSeconds(total),
-          loop: loop ? t('loops') : t('plays once'),
-          skipped: skipped ? t(', {count} skipped', { count: skipped }) : '',
+          loop: loop ? t('anim-studio.sequence-editor.loops') : t('anim-studio.sequence-editor.plays-once'),
+          skipped: skipped ? t('anim-studio.sequence-editor.count-skipped', { count: skipped }) : '',
         })
-      : t('Nothing plays yet.');
+      : t('anim-studio.sequence-editor.nothing-plays-yet');
     return html`
       <div class="sched">
         <div class="bar" aria-hidden="true">
@@ -403,14 +403,14 @@ export class AnimSequenceEditor extends LitElement {
             if (e.status !== 'ok') {
               const k = marks.get(e.start) ?? 0;
               marks.set(e.start, k + 1);
-              return html`<span class="mark" style="left:calc(${pct(e.start)}% + ${k * 8}px)" title=${t('Step {index} is skipped', { index: e.index + 1 })} @click=${() => this._reveal(e.index)}></span>`;
+              return html`<span class="mark" style="left:calc(${pct(e.start)}% + ${k * 8}px)" title=${t('anim-studio.sequence-editor.step-index-is-skipped', { index: e.index + 1 })} @click=${() => this._reveal(e.index)}></span>`;
             }
             const cls = ['blk', e.index === open ? 'is-open' : '', e.index === live ? 'is-live' : ''].join(' ');
             const w = pct(e.end - e.start);
             return html`<span
               class=${cls}
               style="left:${pct(e.start)}%;width:${w}%;--plays:${e.repeat}"
-              title=${t('Step {index}: {from} to {to}', { index: e.index + 1, from: formatSeconds(e.start), to: formatSeconds(e.end) })}
+              title=${t('anim-studio.sequence-editor.step-index-from-to-to', { index: e.index + 1, from: formatSeconds(e.start), to: formatSeconds(e.end) })}
               @click=${() => this._reveal(e.index)}
               >${w >= 6 ? e.index + 1 : ''}</span
             >`;
@@ -419,7 +419,7 @@ export class AnimSequenceEditor extends LitElement {
         </div>
         <div class="ruler" aria-hidden="true">
           <span>0 s</span>
-          ${loop ? html`<span class="loop"><ha-icon icon="mdi:repeat"></ha-icon>${t('Loops')}</span>` : nothing}
+          ${loop ? html`<span class="loop"><ha-icon icon="mdi:repeat"></ha-icon>${t('anim-studio.sequence-editor.loops-2')}</span>` : nothing}
           <span>${formatSeconds(total)}</span>
         </div>
         <p class="sr-only">${summary}</p>
@@ -438,7 +438,7 @@ export class AnimSequenceEditor extends LitElement {
     const open = this._open === i;
     const bad = info.status !== 'ok';
     const id = (k: string) => `seq-${i}-${k}`;
-    const summary = bad ? (info.status === 'missing' ? t('Not found') : t('Cannot play')) : stepSummary(step, info);
+    const summary = bad ? (info.status === 'missing' ? t('anim-studio.sequence-editor.not-found') : t('anim-studio.sequence-editor.cannot-play')) : stepSummary(step, info);
     const dragging = this._drag?.from === i;
     const off = this._dragOffset(i);
     const placeholder = info.defaultDuration !== undefined ? String(round3(info.defaultDuration)) : '';
@@ -454,9 +454,9 @@ export class AnimSequenceEditor extends LitElement {
           <button
             type="button"
             class="icon-btn sm handle"
-            aria-label=${t('Move step {i}', { i: i + 1 })}
+            aria-label=${t('anim-studio.sequence-editor.move-step-i', { i: i + 1 })}
             aria-describedby="seq-move-hint"
-            title=${t('Drag to reorder (Alt+Up / Alt+Down)')}
+            title=${t('anim-studio.sequence-editor.drag-to-reorder-alt-up-alt-down')}
             ?disabled=${this.disabled || lock || n < 2}
             @pointerdown=${(e: PointerEvent) => this._onHandleDown(e, i)}
             @pointermove=${(e: PointerEvent) => this._onHandleMove(e)}
@@ -483,8 +483,8 @@ export class AnimSequenceEditor extends LitElement {
           <button
             type="button"
             class="icon-btn sm danger"
-            aria-label=${t('Delete step {i}', { i: i + 1 })}
-            title=${n <= 1 ? t('A sequence needs at least one step') : t('Delete step')}
+            aria-label=${t('anim-studio.sequence-editor.delete-step-i', { i: i + 1 })}
+            title=${n <= 1 ? t('anim-studio.sequence-editor.a-sequence-needs-at-least-one-step') : t('anim-studio.sequence-editor.delete-step')}
             ?disabled=${this.disabled || lock || n <= 1}
             @click=${() => this._deleteStep(i)}
           >
@@ -496,7 +496,7 @@ export class AnimSequenceEditor extends LitElement {
               ${lock ? lockBanner(this.doc!, this.layerView!, [`step:${i}`]) : nothing}
               ${bad ? html`<p class="help error problem" role="note">${info.problem}</p>` : nothing}
               ${this._field(
-                t('Animation'),
+                t('anim-studio.sequence-editor.animation'),
                 html`<button
                   type="button"
                   class="input pick-btn"
@@ -506,17 +506,17 @@ export class AnimSequenceEditor extends LitElement {
                   ?disabled=${this.disabled || lock}
                   @click=${(e: Event) => this._openPicker(e, { mode: 'step', index: i })}
                 >
-                  <span class="pick-val">${info.name}${info.kind && info.kind !== t('Preset') ? html`<span class="pick-kind"> · ${info.kind}</span>` : nothing}</span>
+                  <span class="pick-val">${info.name}${info.kind && info.kind !== t('anim-studio.sequence-editor.preset') ? html`<span class="pick-kind"> · ${info.kind}</span>` : nothing}</span>
                   <ha-icon icon="mdi:chevron-down"></ha-icon>
                 </button>`,
                 id('anim'),
               )}
               <div class="fields">
                 ${this._field(
-                  t('Delay'),
+                  t('anim-studio.sequence-editor.delay'),
                   html`<mc-unit-field
                     .value=${step.delay ? `${round3(step.delay)}s` : ''}
-                    .label=${t('Delay')}
+                    .label=${t('anim-studio.sequence-editor.delay')}
                     .units=${['s']}
                     .noCustom=${true}
                     .placeholder=${'0'}
@@ -528,10 +528,10 @@ export class AnimSequenceEditor extends LitElement {
                   ></mc-unit-field>`,
                 )}
                 ${this._field(
-                  t('Duration'),
+                  t('anim-studio.sequence-editor.duration'),
                   html`<mc-unit-field
                     .value=${step.duration !== undefined ? `${round3(step.duration)}s` : ''}
-                    .label=${t('Duration')}
+                    .label=${t('anim-studio.sequence-editor.duration')}
                     .units=${['s']}
                     .noCustom=${true}
                     .placeholder=${placeholder}
@@ -544,7 +544,7 @@ export class AnimSequenceEditor extends LitElement {
                   ></mc-unit-field>`,
                 )}
                 ${this._field(
-                  t('Plays'),
+                  t('anim-studio.sequence-editor.plays'),
                   html`<input
                     class="input"
                     id=${id('plays')}
@@ -570,7 +570,7 @@ export class AnimSequenceEditor extends LitElement {
                   id('plays'),
                 )}
               </div>
-              <p class="help">${placeholder ? t("Delay counts from the end of the previous step. Empty duration uses the animation's own ({seconds} s).", { seconds: placeholder }) : t("Delay counts from the end of the previous step. Empty duration uses the animation's own.")}</p>
+              <p class="help">${placeholder ? t("anim-studio.sequence-editor.delay-counts-from-the-end-of-the", { seconds: placeholder }) : t("anim-studio.sequence-editor.delay-counts-from-the-end-of-the-2")}</p>
             </div>`
           : nothing}
       </li>
@@ -587,20 +587,20 @@ export class AnimSequenceEditor extends LitElement {
     const full = !canAddStep(steps);
     return html`
       <div class="wrap">
-        <section class="group" aria-label=${t('Schedule')}>${this._renderSchedule(tl)}</section>
+        <section class="group" aria-label=${t('anim-studio.sequence-editor.schedule')}>${this._renderSchedule(tl)}</section>
 
         <section class="group" aria-labelledby="seq-steps-h">
           <div class="group-head">
-            <h3 id="seq-steps-h">${t('Play order')}</h3>
-            <span class="chip is-count" title=${t('At most {steps} steps', { steps: ANIMATION_CAPS.steps })}>${steps.length} / ${ANIMATION_CAPS.steps}</span>
+            <h3 id="seq-steps-h">${t('anim-studio.sequence-editor.play-order')}</h3>
+            <span class="chip is-count" title=${t('anim-studio.sequence-editor.at-most-steps-steps', { steps: ANIMATION_CAPS.steps })}>${steps.length} / ${ANIMATION_CAPS.steps}</span>
           </div>
-          <p class="sr-only" id="seq-move-hint">${t('Drag, or press Alt+Up or Alt+Down, to move the step.')}</p>
+          <p class="sr-only" id="seq-move-hint">${t('anim-studio.sequence-editor.drag-or-press-alt-up-or-alt-down-to-move')}</p>
           ${steps.length
             ? html`<ol class="steps ${this._drag ? 'is-sorting' : ''}">${steps.map((s, i) => this._renderStep(s, i, steps.length))}</ol>`
             : html`<div class="empty">
                 <ha-icon icon="mdi:playlist-play"></ha-icon>
-                <strong>${t('No steps yet')}</strong>
-                <p>${t('Add the animations to play one after another.')}</p>
+                <strong>${t('anim-studio.sequence-editor.no-steps-yet')}</strong>
+                <p>${t('anim-studio.sequence-editor.add-the-animations-to-play-one-after')}</p>
               </div>`}
           <div class="foot">
             <button
@@ -611,51 +611,51 @@ export class AnimSequenceEditor extends LitElement {
               ?disabled=${this.disabled || full}
               @click=${(e: Event) => this._openPicker(e, { mode: 'add' })}
             >
-              <ha-icon icon="mdi:plus"></ha-icon>${t('Add step')}
+              <ha-icon icon="mdi:plus"></ha-icon>${t('anim-studio.sequence-editor.add-step')}
             </button>
-            ${full ? html`<span class="help">${t('A sequence has at most {steps} steps.', { steps: ANIMATION_CAPS.steps })}</span>` : nothing}
+            ${full ? html`<span class="help">${t('anim-studio.sequence-editor.a-sequence-has-at-most-steps-steps', { steps: ANIMATION_CAPS.steps })}</span>` : nothing}
           </div>
         </section>
 
         <section class="group" aria-labelledby="seq-play-h">
-          <div class="group-head"><h3 id="seq-play-h">${t('Playback')}</h3></div>
+          <div class="group-head"><h3 id="seq-play-h">${t('anim-studio.sequence-editor.playback')}</h3></div>
           <div class="switch-row">
             <div class="txt">
-              ${t('Loop')}
-              <p class="help">${t('Start again after the last step.')}</p>
+              ${t('anim-studio.sequence-editor.loop')}
+              <p class="help">${t('anim-studio.sequence-editor.start-again-after-the-last-step')}</p>
             </div>
             <button
               type="button"
               class="switch"
               role="switch"
               aria-checked=${loop ? 'true' : 'false'}
-              aria-label=${t('Loop')}
+              aria-label=${t('anim-studio.sequence-editor.loop')}
               ?disabled=${this.disabled}
-              @click=${() => this._emit({ ...doc, loop: !loop }, loop ? t('Loop off') : t('Loop on'))}
+              @click=${() => this._emit({ ...doc, loop: !loop }, loop ? t('anim-studio.sequence-editor.loop-off') : t('anim-studio.sequence-editor.loop-on'))}
             ></button>
           </div>
           <div class="switch-row">
             <div class="txt">
-              ${t('Stagger children')}
-              <p class="help">${t("Play on a row's columns or a column's modules one after another.")}</p>
+              ${t('anim-studio.sequence-editor.stagger-children')}
+              <p class="help">${t("anim-studio.sequence-editor.play-on-a-row-s-columns-or-a-column-s")}</p>
             </div>
             <button
               type="button"
               class="switch stagger"
               role="switch"
               aria-checked=${stagger.children ? 'true' : 'false'}
-              aria-label=${t('Stagger children')}
+              aria-label=${t('anim-studio.sequence-editor.stagger-children')}
               ?disabled=${this.disabled}
-              @click=${() => this._emit({ ...doc, stagger: { ...stagger, children: !stagger.children } }, stagger.children ? t('Stagger off') : t('Stagger on'))}
+              @click=${() => this._emit({ ...doc, stagger: { ...stagger, children: !stagger.children } }, stagger.children ? t('anim-studio.sequence-editor.stagger-off') : t('anim-studio.sequence-editor.stagger-on'))}
             ></button>
           </div>
           ${stagger.children
             ? this._field(
-                t('Delay between children'),
+                t('anim-studio.sequence-editor.delay-between-children'),
                 html`<mc-unit-field
                   class="stagger-delay"
                   .value=${`${round3(stagger.delay)}s`}
-                  .label=${t('Delay between children')}
+                  .label=${t('anim-studio.sequence-editor.delay-between-children')}
                   .units=${['s']}
                   .noCustom=${true}
                   .placeholder=${'0'}

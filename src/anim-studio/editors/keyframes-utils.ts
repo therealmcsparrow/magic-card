@@ -1,6 +1,7 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, TargetRef, Track } from '../model';
 import { safeCssValue } from '../model';
 import { EASINGS } from '../../utils/animation-presets';
+import type { MessageId as LabelId } from '../../contracts/i18n';
 import { t as tl } from '../../i18n/labels';
 import { m, t, type MessageId } from '../i18n';
 
@@ -76,32 +77,32 @@ export const ANIM_COLOR = 'var(--mc-anim-c)';
 
 /** The card lanes (every target has them). */
 export const LANES: LaneDef[] = [
-  { id: 'x', label: m('Move X'), group: 'Transform', icon: 'mdi:arrow-left-right', kind: 'number', def: { transform: { x: 0 } } },
-  { id: 'y', label: m('Move Y'), group: 'Transform', icon: 'mdi:arrow-up-down', kind: 'number', def: { transform: { y: 0 } } },
-  { id: 'scale', label: m('Scale'), group: 'Transform', icon: 'mdi:resize', kind: 'number', def: { transform: { scale: 1 } } },
-  { id: 'scale_x', label: m('Scale X'), group: 'Transform', icon: 'mdi:arrow-expand-horizontal', kind: 'number', def: { transform: { scale_x: 1 } } },
-  { id: 'scale_y', label: m('Scale Y'), group: 'Transform', icon: 'mdi:arrow-expand-vertical', kind: 'number', def: { transform: { scale_y: 1 } } },
-  { id: 'rotate', label: m('Rotate'), group: 'Transform', icon: 'mdi:rotate-right', kind: 'number', def: { transform: { rotate: 0 } } },
-  { id: 'skew', label: m('Skew'), group: 'Transform', icon: 'mdi:vector-polygon', kind: 'number', def: { transform: { skew_x: 0, skew_y: 0 } } },
-  { id: 'opacity', label: m('Opacity'), group: 'Appearance', icon: 'mdi:circle-opacity', kind: 'number', def: { opacity: 1 } },
-  { id: 'color', label: m('Colour'), group: 'Appearance', icon: 'mdi:format-color-text', kind: 'css', def: { color: ANIM_COLOR } },
+  { id: 'x', label: m('anim-studio.keyframes-utils.move-x'), group: 'Transform', icon: 'mdi:arrow-left-right', kind: 'number', def: { transform: { x: 0 } } },
+  { id: 'y', label: m('anim-studio.keyframes-utils.move-y'), group: 'Transform', icon: 'mdi:arrow-up-down', kind: 'number', def: { transform: { y: 0 } } },
+  { id: 'scale', label: m('anim-studio.keyframes-utils.scale'), group: 'Transform', icon: 'mdi:resize', kind: 'number', def: { transform: { scale: 1 } } },
+  { id: 'scale_x', label: m('anim-studio.keyframes-utils.scale-x'), group: 'Transform', icon: 'mdi:arrow-expand-horizontal', kind: 'number', def: { transform: { scale_x: 1 } } },
+  { id: 'scale_y', label: m('anim-studio.keyframes-utils.scale-y'), group: 'Transform', icon: 'mdi:arrow-expand-vertical', kind: 'number', def: { transform: { scale_y: 1 } } },
+  { id: 'rotate', label: m('anim-studio.keyframes-utils.rotate'), group: 'Transform', icon: 'mdi:rotate-right', kind: 'number', def: { transform: { rotate: 0 } } },
+  { id: 'skew', label: m('anim-studio.keyframes-utils.skew'), group: 'Transform', icon: 'mdi:vector-polygon', kind: 'number', def: { transform: { skew_x: 0, skew_y: 0 } } },
+  { id: 'opacity', label: m('anim-studio.keyframes-utils.opacity'), group: 'Appearance', icon: 'mdi:circle-opacity', kind: 'number', def: { opacity: 1 } },
+  { id: 'color', label: m('anim-studio.keyframes-utils.colour'), group: 'Appearance', icon: 'mdi:format-color-text', kind: 'css', def: { color: ANIM_COLOR } },
   {
     id: 'background',
-    label: m('Background'),
+    label: m('anim-studio.keyframes-utils.background'),
     group: 'Appearance',
     icon: 'mdi:format-color-fill',
     kind: 'css',
     def: { background: `color-mix(in srgb, ${ANIM_COLOR} 20%, transparent)` },
   },
-  { id: 'shadow', label: m('Shadow and glow'), group: 'Appearance', icon: 'mdi:box-shadow', kind: 'css', def: { shadow: `0 0 16px 2px ${ANIM_COLOR}` } },
-  { id: 'blur', label: m('Blur'), group: 'Appearance', icon: 'mdi:blur', kind: 'number', def: { blur: 0 } },
-  { id: 'radius', label: m('Corner radius'), group: 'Appearance', icon: 'mdi:rounded-corner', kind: 'number', def: { radius: 0 } },
-  { id: 'filter', label: m('Filter'), group: 'Appearance', icon: 'mdi:auto-fix', kind: 'css', def: { filter: 'brightness(1.2)' } },
+  { id: 'shadow', label: m('anim-studio.keyframes-utils.shadow-and-glow'), group: 'Appearance', icon: 'mdi:box-shadow', kind: 'css', def: { shadow: `0 0 16px 2px ${ANIM_COLOR}` } },
+  { id: 'blur', label: m('anim-studio.keyframes-utils.blur'), group: 'Appearance', icon: 'mdi:blur', kind: 'number', def: { blur: 0 } },
+  { id: 'radius', label: m('anim-studio.keyframes-utils.corner-radius'), group: 'Appearance', icon: 'mdi:rounded-corner', kind: 'number', def: { radius: 0 } },
+  { id: 'filter', label: m('anim-studio.keyframes-utils.filter'), group: 'Appearance', icon: 'mdi:auto-fix', kind: 'css', def: { filter: 'brightness(1.2)' } },
 ];
 /** Lanes of icon parts, groups and drawn shapes only (LANES stay the card lanes). */
 export const RIG_LANES: LaneDef[] = [
-  { id: 'draw', label: m('Draw on'), group: 'Appearance', icon: 'mdi:draw', kind: 'number', def: { draw: 1 }, rig: true },
-  { id: 'stroke', label: m('Stroke colour'), group: 'Appearance', icon: 'mdi:border-color', kind: 'css', def: { stroke: ANIM_COLOR }, rig: true },
+  { id: 'draw', label: m('anim-studio.keyframes-utils.draw-on'), group: 'Appearance', icon: 'mdi:draw', kind: 'number', def: { draw: 1 }, rig: true },
+  { id: 'stroke', label: m('anim-studio.keyframes-utils.stroke-colour'), group: 'Appearance', icon: 'mdi:border-color', kind: 'css', def: { stroke: ANIM_COLOR }, rig: true },
 ];
 /** Every lane a keyframe may hold. */
 export const ALL_LANES: LaneDef[] = [...LANES, ...RIG_LANES];
@@ -608,11 +609,11 @@ export function retargetFragment(from: LaneId, to: LaneId, f: Fragment): Fragmen
 
 /** Card-part targets by name (rig pieces are named in the rig). */
 const TARGET_INFO: Record<string, { label: MessageId; icon: string }> = {
-  element: { label: m('Element'), icon: 'mdi:card-outline' },
-  icon: { label: m('Icon'), icon: 'mdi:emoticon-outline' },
-  name: { label: m('Name'), icon: 'mdi:format-text' },
-  state: { label: m('State'), icon: 'mdi:information-outline' },
-  background: { label: m('Background'), icon: 'mdi:texture-box' },
+  element: { label: m('anim-studio.keyframes-utils.element'), icon: 'mdi:card-outline' },
+  icon: { label: m('anim-studio.keyframes-utils.icon'), icon: 'mdi:emoticon-outline' },
+  name: { label: m('anim-studio.keyframes-utils.name'), icon: 'mdi:format-text' },
+  state: { label: m('anim-studio.keyframes-utils.state'), icon: 'mdi:information-outline' },
+  background: { label: m('anim-studio.keyframes-utils.background'), icon: 'mdi:texture-box' },
 };
 
 /** A target's name: card parts by label, rig pieces by their rig name (else the id). */
@@ -793,10 +794,10 @@ export function pasteTargetKeys(doc: AnimationDoc, clip: KeyClip, at: number, de
 
 export type SnapGrid = 'pct1' | 'pct5' | 's01' | 'fps30';
 export const SNAP_GRIDS: Array<{ id: SnapGrid; label: MessageId }> = [
-  { id: 'pct1', label: '1%' },
-  { id: 'pct5', label: '5%' },
-  { id: 's01', label: '0.1 s' },
-  { id: 'fps30', label: m('30 fps') },
+  { id: 'pct1', label: '1%' as unknown as MessageId },
+  { id: 'pct5', label: '5%' as unknown as MessageId },
+  { id: 's01', label: '0.1 s' as unknown as MessageId },
+  { id: 'fps30', label: m('anim-studio.keyframes-utils.30-fps') },
 ];
 
 /** The grid step in % of a `duration` s cycle. */
@@ -912,7 +913,7 @@ export function bezierOf(easing: string | undefined): Bezier | undefined {
 }
 
 /** Easing presets of the curve editor: the EASINGS ids with their curves. */
-export const BEZIER_PRESETS: Array<{ id: string; label: MessageId; bezier: Bezier }> = EASINGS.map((e) => ({ id: e.id, label: e.label, bezier: bezierOf(e.id)! }));
+export const BEZIER_PRESETS: Array<{ id: string; label: LabelId; bezier: Bezier }> = EASINGS.map((e) => ({ id: e.id, label: e.label, bezier: bezierOf(e.id)! }));
 
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 /** x is kept within 0-1 (CSS requires it), y within -1..2. */
@@ -1004,17 +1005,17 @@ export function parseShadow(v: string | undefined): ShadowParts | undefined {
 export const formatShadow = (p: ShadowParts): string => `${p.x}px ${p.y}px ${p.blur}px ${p.spread}px ${p.color}`;
 
 export const SHADOW_PRESETS = [
-  { id: 'glow', label: m('Glow'), value: `0px 0px 16px 2px ${ANIM_COLOR}` },
-  { id: 'drop', label: m('Drop shadow'), value: '0px 6px 16px 0px rgba(0, 0, 0, 0.3)' },
-  { id: 'lift', label: m('Lift'), value: '0px 14px 28px -6px rgba(0, 0, 0, 0.35)' },
-  { id: 'none', label: m('None'), value: 'none' },
+  { id: 'glow', label: m('anim-studio.keyframes-utils.glow'), value: `0px 0px 16px 2px ${ANIM_COLOR}` },
+  { id: 'drop', label: m('anim-studio.keyframes-utils.drop-shadow'), value: '0px 6px 16px 0px rgba(0, 0, 0, 0.3)' },
+  { id: 'lift', label: m('anim-studio.keyframes-utils.lift'), value: '0px 14px 28px -6px rgba(0, 0, 0, 0.35)' },
+  { id: 'none', label: m('anim-studio.keyframes-utils.none'), value: 'none' },
 ];
 export const FILTER_PRESETS = [
-  { id: 'bright', label: m('Brighten'), value: 'brightness(1.3)' },
-  { id: 'hue', label: m('Hue shift'), value: 'hue-rotate(90deg)' },
-  { id: 'gray', label: m('Greyscale'), value: 'grayscale(1)' },
-  { id: 'glow', label: m('Glow'), value: `drop-shadow(0 0 6px ${ANIM_COLOR})` },
-  { id: 'none', label: m('None'), value: 'none' },
+  { id: 'bright', label: m('anim-studio.keyframes-utils.brighten'), value: 'brightness(1.3)' },
+  { id: 'hue', label: m('anim-studio.keyframes-utils.hue-shift'), value: 'hue-rotate(90deg)' },
+  { id: 'gray', label: m('anim-studio.keyframes-utils.greyscale'), value: 'grayscale(1)' },
+  { id: 'glow', label: m('anim-studio.keyframes-utils.glow'), value: `drop-shadow(0 0 6px ${ANIM_COLOR})` },
+  { id: 'none', label: m('anim-studio.keyframes-utils.none'), value: 'none' },
 ];
 
 export const validCss = (v: string, kind: 'color' | 'background' | 'shadow' | 'filter'): boolean =>
@@ -1025,7 +1026,7 @@ export const validCss = (v: string, kind: 'color' | 'background' | 'shadow' | 'f
 export const ORIGIN_RE = /^(?:(?:left|right|top|bottom|center|-?\d*\.?\d+(?:px|%|em|rem)?)\s*){1,3}$/;
 export const ORIGIN_GRID = ['top left', 'top', 'top right', 'left', 'center', 'right', 'bottom left', 'bottom', 'bottom right'];
 /** What each origin cell is called (aria-label and title), in ORIGIN_GRID order. */
-export const ORIGIN_NAMES: MessageId[] = [m('Top left'), m('Top'), m('Top right'), m('Left'), m('Centre'), m('Right'), m('Bottom left'), m('Bottom'), m('Bottom right')];
+export const ORIGIN_NAMES: MessageId[] = [m('anim-studio.keyframes-utils.top-left'), m('anim-studio.keyframes-utils.top'), m('anim-studio.keyframes-utils.top-right'), m('anim-studio.keyframes-utils.left'), m('anim-studio.keyframes-utils.centre'), m('anim-studio.keyframes-utils.right'), m('anim-studio.keyframes-utils.bottom-left'), m('anim-studio.keyframes-utils.bottom'), m('anim-studio.keyframes-utils.bottom-right')];
 
 /** The 3x3 grid cell (0-8) of an origin keyword value; -1 for anything else (lengths, 3D). */
 export function originCell(v: string | undefined): number {
@@ -1079,12 +1080,12 @@ export function fragmentText(lane: LaneId, f: Fragment | undefined): string {
     default: {
       const v = f[lane];
       if (v === undefined) return '';
-      return colorToPicker(v).startsWith('entity') ? t('Animation colour') : v;
+      return colorToPicker(v).startsWith('entity') ? t('anim-studio.keyframes-utils.animation-colour') : v;
     }
   }
 }
 
 export const easingLabel = (e: string | undefined): string => {
   const known = e ? EASINGS.find((x) => x.id === e)?.label : undefined;
-  return known !== undefined ? tl(known) : e ? (e.startsWith('steps') ? t('Steps') : t('Custom curve')) : t('Default');
+  return known !== undefined ? tl(known) : e ? (e.startsWith('steps') ? t('anim-studio.keyframes-utils.steps') : t('anim-studio.keyframes-utils.custom-curve')) : t('anim-studio.keyframes-utils.default');
 };

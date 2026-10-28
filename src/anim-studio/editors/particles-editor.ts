@@ -92,6 +92,7 @@ import {
 import './draw-svg-dialog';
 import type { AnimSvgDialog } from './draw-svg-dialog';
 import { t, m } from '../i18n';
+import type { MessageId as LabelId } from '../../contracts/i18n';
 
 /**
  * The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx). The
@@ -143,7 +144,7 @@ const NEW_COLORS = ['#ef4444', '#eab308', '#22c55e', '#3b82f6', '#ec4899', '#fff
 
 /** The verbatim Live simulation warning (P2-1). */
 export const LIVE_WARNING =
-  m('Live simulation runs on every dashboard that shows this card and uses more CPU, especially on wall tablets. Animated SVG export plays the baked loop instead.');
+  m('anim-studio.particles-editor.live-simulation-runs-on-every-dashboard');
 
 /** A bake slower than this shows "Baking…" while the next one runs. */
 const SLOW_BAKE_MS = 150;
@@ -998,7 +999,7 @@ export class AnimParticlesEditor extends LitElement {
   }
 
   private _name(i: number): string {
-    return this._multi ? emitterLabel(this.doc!, this._seed, i) : t('Particles');
+    return this._multi ? emitterLabel(this.doc!, this._seed, i) : t('anim-studio.particles-editor.particles');
   }
 
   protected willUpdate(changed: PropertyValues<this>): void {
@@ -1113,7 +1114,7 @@ export class AnimParticlesEditor extends LitElement {
       this._release();
       return;
     }
-    const reducedMotion = typeof matchMedia === 'function' && matchMedia(t('(prefers-reduced-motion: reduce)')).matches;
+    const reducedMotion = typeof matchMedia === 'function' && matchMedia(t('anim-studio.particles-editor.prefers-reduced-motion-reduce')).matches;
     try {
       layers.forEach((layer, i) => {
         m.apply(layer, {
@@ -1150,26 +1151,26 @@ export class AnimParticlesEditor extends LitElement {
     const sum = !sim
       ? `${preset ? tl(preset.name) : p.preset} · ${this.doc!.duration} s`
       : this._baking
-        ? t('Baking…')
-        : `${this._multi ? t('{particles} particles · {emitters} emitters', { particles: emitterParents(this.doc!), emitters: emitterCount(this.doc!) }) : t('{count, plural, one {# particle} other {# particles}} · {flow}', { count: p.count, flow: t(FLOW_LABELS[sim.flow]).toLowerCase() })} · ${sim.mode === 'live' ? t('live') : t('{seconds} s loop', { seconds: +periodOf(this.doc!).toFixed(2) })}`;
+        ? t('anim-studio.particles-editor.baking')
+        : `${this._multi ? t('anim-studio.particles-editor.particles-particles-emitters-emitters', { particles: emitterParents(this.doc!), emitters: emitterCount(this.doc!) }) : t('anim-studio.particles-editor.count-flow', { count: p.count, flow: t(FLOW_LABELS[sim.flow]).toLowerCase() })} · ${sim.mode === 'live' ? t('anim-studio.particles-editor.live') : t('anim-studio.particles-editor.seconds-s-loop', { seconds: +periodOf(this.doc!).toFixed(2) })}`;
     const capped = !!sim && !!this._stats?.capped;
     const warn = !!sim && !capped && !!this._stats?.warn;
     const canExport = !!sim && !!getStudioParticles();
     return html`<div class="preview">
       <div class="stage" data-mc-anim-fx ?data-paused=${this._paused} aria-hidden="true">
-        <div class="stage-module"><ha-icon icon="mdi:lightbulb-outline"></ha-icon><span>${t('Living room')}</span></div>
+        <div class="stage-module"><ha-icon icon="mdi:lightbulb-outline"></ha-icon><span>${t('anim-studio.particles-editor.living-room')}</span></div>
         ${anim ? renderFx(anim) : nothing}
       </div>
       <div class="preview-foot">
         <span class="sum">${sum}</span>
-        ${capped ? html`<span class="chip is-warn trimmed">${t('Trimmed')}</span>` : nothing}
+        ${capped ? html`<span class="chip is-warn trimmed">${t('anim-studio.particles-editor.trimmed')}</span>` : nothing}
         ${canExport
-          ? html`<button type="button" class="icon-btn sm export" aria-label=${t('Animated SVG')} title=${t('Save as animated SVG')} ?disabled=${this.disabled} @click=${this._openExport}>
+          ? html`<button type="button" class="icon-btn sm export" aria-label=${t('anim-studio.particles-editor.animated-svg')} title=${t('anim-studio.particles-editor.save-as-animated-svg')} ?disabled=${this.disabled} @click=${this._openExport}>
               <ha-icon icon="mdi:motion-play-outline"></ha-icon>
             </button>`
           : nothing}
         ${sim
-          ? html`<button type="button" class="icon-btn sm shuffle" aria-label=${t('Shuffle')} title=${t('Shuffle: new random paths')} ?disabled=${this.disabled} @click=${this._shuffle}>
+          ? html`<button type="button" class="icon-btn sm shuffle" aria-label=${t('anim-studio.particles-editor.shuffle')} title=${t('anim-studio.particles-editor.shuffle-new-random-paths')} ?disabled=${this.disabled} @click=${this._shuffle}>
               <ha-icon icon="mdi:dice-5-outline"></ha-icon>
             </button>`
           : nothing}
@@ -1177,16 +1178,16 @@ export class AnimParticlesEditor extends LitElement {
           type="button"
           class="icon-btn sm pause"
           aria-pressed=${this._paused ? 'true' : 'false'}
-          aria-label=${t('Pause preview')}
-          title=${this._paused ? t('Play preview') : t('Pause preview')}
+          aria-label=${t('anim-studio.particles-editor.pause-preview')}
+          title=${this._paused ? t('anim-studio.particles-editor.play-preview') : t('anim-studio.particles-editor.pause-preview')}
           @click=${() => (this._paused = !this._paused)}
         >
           <ha-icon icon=${this._paused ? 'mdi:play' : 'mdi:pause'}></ha-icon>
         </button>
       </div>
-      ${capped ? html`<p class="help cap-note">${t('This loop hit the size limit, so it shows fewer particles. Lower the count or the child particles.')}</p>` : nothing}
-      ${warn ? html`<p class="help cap-note">${t('This loop is large, so it takes longer to load on wall tablets. Lower the count or the child particles.')}</p>` : nothing}
-      <p class="help reduced-note">${t('Reduced motion is on, so the preview stays still.')}</p>
+      ${capped ? html`<p class="help cap-note">${t('anim-studio.particles-editor.this-loop-hit-the-size-limit-so-it-shows')}</p>` : nothing}
+      ${warn ? html`<p class="help cap-note">${t('anim-studio.particles-editor.this-loop-is-large-so-it-takes-longer-to')}</p>` : nothing}
+      <p class="help reduced-note">${t('anim-studio.particles-editor.reduced-motion-is-on-so-the-preview')}</p>
       ${canExport ? html`<mc-anim-svg-dialog .doc=${this.doc}></mc-anim-svg-dialog>` : nothing}
     </div>`;
   }
@@ -1238,21 +1239,21 @@ export class AnimParticlesEditor extends LitElement {
   // ── mode ──
 
   private _pickMode(mode: ParticleMode, focus = false): void {
-    if (this.doc) this._emit(setMode(this.doc, this._seed, mode), mode === 'live' ? t('Use live simulation') : t('Use baked loop'));
+    if (this.doc) this._emit(setMode(this.doc, this._seed, mode), mode === 'live' ? t('anim-studio.particles-editor.use-live-simulation') : t('anim-studio.particles-editor.use-baked-loop'));
     if (focus) this._focus(`.mode-seg [data-mode="${mode}"]`);
   }
 
   private _renderMode(sim: ParticlesSim): TemplateResult {
     const modes: Array<[ParticleMode, string, string]> = [
-      ['baked', t('Baked loop'), 'mdi:repeat'],
-      ['live', t('Live simulation'), 'mdi:pulse'],
+      ['baked', t('anim-studio.particles-editor.baked-loop'), 'mdi:repeat'],
+      ['live', t('anim-studio.particles-editor.live-simulation'), 'mdi:pulse'],
     ];
     return html`<section class="group" aria-labelledby="h-mode">
-      <div class="group-head"><h3 id="h-mode">${t('Mode')}</h3></div>
+      <div class="group-head"><h3 id="h-mode">${t('anim-studio.particles-editor.mode')}</h3></div>
       <div
         class="seg full mode-seg"
         role="radiogroup"
-        aria-label=${t('Simulation')}
+        aria-label=${t('anim-studio.particles-editor.simulation')}
         @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ['baked', 'live'], sim.mode, (id) => this._pickMode(id as ParticleMode, true))}
       >
         ${modes.map(
@@ -1270,8 +1271,8 @@ export class AnimParticlesEditor extends LitElement {
       </div>
       <div class="mode-status" role="status">
         ${sim.mode === 'live'
-          ? html`<p class="note is-warn live-warning"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon><span>${LIVE_WARNING}</span></p>`
-          : html`<p class="help">${t("The studio works out every particle's path once and plays it as a loop. Light on dashboards.")}</p>`}
+          ? html`<p class="note is-warn live-warning"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon><span>${t(LIVE_WARNING)}</span></p>`
+          : html`<p class="help">${t("anim-studio.particles-editor.the-studio-works-out-every-particle-s")}</p>`}
       </div>
     </section>`;
   }
@@ -1312,7 +1313,7 @@ export class AnimParticlesEditor extends LitElement {
     const chips = this._chips();
     if (chips.length >= MAX_SHAPES) return;
     this._chip = chips.length;
-    this._setShapes([...chips, { shape: nextShape(chips), weight: 1 }], t('Add shape'));
+    this._setShapes([...chips, { shape: nextShape(chips), weight: 1 }], t('anim-studio.particles-editor.add-shape'));
   }
 
   private _removeShape(i: number): void {
@@ -1321,7 +1322,7 @@ export class AnimParticlesEditor extends LitElement {
     this._chip = Math.max(0, Math.min(i, chips.length - 2));
     this._setShapes(
       chips.filter((_, j) => j !== i),
-      t('Remove shape'),
+      t('anim-studio.particles-editor.remove-shape'),
     );
     this._focus(`.schip[data-i="${this._chip}"]`);
   }
@@ -1359,15 +1360,15 @@ export class AnimParticlesEditor extends LitElement {
     const mixed = chips.length > 1;
     const full = chips.length >= MAX_SHAPES;
     return html`<section class="group" aria-labelledby="h-shape">
-      <div class="group-head"><h3 id="h-shape">${t('Shape')}</h3></div>
-      <div class="schips" role="group" aria-label=${t('Shape mix')}>
+      <div class="group-head"><h3 id="h-shape">${t('anim-studio.particles-editor.shape')}</h3></div>
+      <div class="schips" role="group" aria-label=${t('anim-studio.particles-editor.shape-mix')}>
         ${chips.map(
           (w, i) => html`<button
             type="button"
             class="schip"
             data-i=${i}
             aria-pressed=${i === sel ? 'true' : 'false'}
-            aria-label=${mixed ? t('Shape {n}: {shape}, weight {weight}', { n: i + 1, shape: shapeLabel(w.shape), weight: w.weight }) : t('Shape {n}: {shape}', { n: i + 1, shape: shapeLabel(w.shape) })}
+            aria-label=${mixed ? t('anim-studio.particles-editor.shape-n-shape-weight-weight', { n: i + 1, shape: shapeLabel(w.shape), weight: w.weight }) : t('anim-studio.particles-editor.shape-n-shape', { n: i + 1, shape: shapeLabel(w.shape) })}
             title=${shapeLabel(w.shape)}
             @click=${() => (this._chip = i)}
             @keydown=${(e: KeyboardEvent) => {
@@ -1380,31 +1381,31 @@ export class AnimParticlesEditor extends LitElement {
             ${chipFace(w.shape)}${mixed ? html`<span>${w.weight}</span>` : nothing}
           </button>`,
         )}
-        <button type="button" class="schip add" aria-label=${t('Add shape')} title=${full ? t('At most {mAX_SHAPES} shapes', { mAX_SHAPES: MAX_SHAPES }) : t('Add shape')} ?disabled=${full} @click=${() => this._addShape()}>
+        <button type="button" class="schip add" aria-label=${t('anim-studio.particles-editor.add-shape')} title=${full ? t('anim-studio.particles-editor.at-most-max-shapes-shapes', { mAX_SHAPES: MAX_SHAPES }) : t('anim-studio.particles-editor.add-shape')} ?disabled=${full} @click=${() => this._addShape()}>
           <ha-icon icon="mdi:plus"></ha-icon>
         </button>
       </div>
       <div class="chip-edit">
         <div class="chip-edit-head">
-          <span>${t('Shape {n}', { n: sel + 1 })}</span>
+          <span>${t('anim-studio.particles-editor.shape-n', { n: sel + 1 })}</span>
           ${mixed
-            ? html`<button type="button" class="icon-btn sm danger remove-shape" aria-label=${t('Remove shape {n}', { n: sel + 1 })} title=${t('Remove shape')} @click=${() => this._removeShape(sel)}>
+            ? html`<button type="button" class="icon-btn sm danger remove-shape" aria-label=${t('anim-studio.particles-editor.remove-shape-n', { n: sel + 1 })} title=${t('anim-studio.particles-editor.remove-shape')} @click=${() => this._removeShape(sel)}>
                 <ha-icon icon="mdi:delete-outline"></ha-icon>
               </button>`
             : nothing}
         </div>
-        ${this._shapeGrid(kind, 'main', t('Shape {n}', { n: sel + 1 }), (k, focus) => this._pickKind(k, focus))}
+        ${this._shapeGrid(kind, 'main', t('anim-studio.particles-editor.shape-n', { n: sel + 1 }), (k, focus) => this._pickKind(k, focus))}
         ${kind === 'icon' ? this._renderIcon(cur.shape) : kind === 'emoji' ? this._renderEmoji(cur.shape) : kind === 'svg' ? this._renderSvg(cur.shape) : nothing}
         ${mixed ? this._renderWeight(chips, sel) : nothing}
       </div>
-      ${mixed ? nothing : html`<p class="help">${t('Add a shape to mix shapes. Each one gets a weight.')}</p>`}
+      ${mixed ? nothing : html`<p class="help">${t('anim-studio.particles-editor.add-a-shape-to-mix-shapes-each-one-gets')}</p>`}
     </section>`;
   }
 
   private _renderWeight(chips: WeightedShape[], i: number): TemplateResult {
     const w = chips[i].weight;
     return html`<div class="field">
-      <div class="field-head"><label for="f-weight">${t('Weight')}</label></div>
+      <div class="field-head"><label for="f-weight">${t('anim-studio.particles-editor.weight')}</label></div>
       <input
         id="f-weight"
         class="input"
@@ -1425,22 +1426,22 @@ export class AnimParticlesEditor extends LitElement {
           input.value = String(n);
           this._setShapes(
             chips.map((c, j) => (j === i ? { shape: c.shape, weight: n } : c)),
-            t('Change weight'),
+            t('anim-studio.particles-editor.change-weight'),
           );
         }}
       />
-      <p class="help" id="h-weight">${t('About {percent}% of particles', { percent: shapeShare(chips, i) })}</p>
+      <p class="help" id="h-weight">${t('anim-studio.particles-editor.about-percent-of-particles', { percent: shapeShare(chips, i) })}</p>
     </div>`;
   }
 
   private _renderIcon(shape: WeightedShape['shape']): TemplateResult {
     const value = 'icon' in shape ? shape.icon : '';
     return html`<div class="field">
-      <div class="field-head"><span class="lbl" id="l-icon">${t('Icon')}</span></div>
+      <div class="field-head"><span class="lbl" id="l-icon">${t('anim-studio.particles-editor.icon')}</span></div>
       <mc-icon-picker
         .hass=${this.hass}
         .value=${value}
-        label=${t('Particle icon')}
+        label=${t('anim-studio.particles-editor.particle-icon')}
         aria-labelledby="l-icon"
         @value-changed=${(e: CustomEvent) => {
           e.stopPropagation();
@@ -1459,7 +1460,7 @@ export class AnimParticlesEditor extends LitElement {
       if (!emojiError(v) && v.trim() !== this._lastEmoji()) this._setChip(this._chip, { emoji: v.trim() }, label, transient);
     };
     return html`<div class="field">
-      <div class="field-head"><label for="f-emoji">${t('Emoji or symbol')}</label></div>
+      <div class="field-head"><label for="f-emoji">${t('anim-studio.particles-editor.emoji-or-symbol')}</label></div>
       <div class="emoji-row">
         <span class="emoji-big" aria-hidden="true">${value}</span>
         <input
@@ -1483,12 +1484,12 @@ export class AnimParticlesEditor extends LitElement {
         />
       </div>
       ${err ? html`<p class="help error" id="e-emoji" role="alert">${err}</p>` : nothing}
-      <div class="emoji-grid" role="group" aria-label=${t('Common emoji')}>
+      <div class="emoji-grid" role="group" aria-label=${t('anim-studio.particles-editor.common-emoji')}>
         ${COMMON_EMOJI.map(
           (em) => html`<button
             type="button"
             aria-pressed=${em === value ? 'true' : 'false'}
-            aria-label=${t('Use {emoji}', { emoji: em })}
+            aria-label=${t('anim-studio.particles-editor.use-emoji', { emoji: em })}
             @click=${() => {
               this._emojiDraft = undefined;
               if (em !== value) this._setChip(this._chip, { emoji: em }, 'Change emoji');
@@ -1514,7 +1515,7 @@ export class AnimParticlesEditor extends LitElement {
     const c = compileAnimationDoc({ ...this.doc!, particles: { ...this._p!, sim: undefined, shape: { svg: value } } });
     const mask = /mask: (url\("[^"]*"\))/.exec(c.css)?.[1];
     return html`<div class="field">
-      <div class="field-head"><label for="f-svg">${t('Own SVG')}</label></div>
+      <div class="field-head"><label for="f-svg">${t('anim-studio.particles-editor.own-svg')}</label></div>
       <div class="svg-row">
         <textarea
           id="f-svg"
@@ -1534,12 +1535,12 @@ export class AnimParticlesEditor extends LitElement {
             this._settle();
           }}
         ></textarea>
-        <span class="svg-thumb" aria-hidden="true" title=${t('The shape as a mask')}>
+        <span class="svg-thumb" aria-hidden="true" title=${t('anim-studio.particles-editor.the-shape-as-a-mask')}>
           ${mask ? html`<span style=${`-webkit-mask: ${mask} center / contain no-repeat; mask: ${mask} center / contain no-repeat;`}></span>` : nothing}
         </span>
       </div>
       ${err ? html`<p class="help error" id="e-svg" role="alert">${err}</p>` : nothing}
-      <p class="help" id="h-svg">${t('Paths and shapes only: scripts, styles and links are removed. The shape is filled with the particle colour.')}</p>
+      <p class="help" id="h-svg">${t('anim-studio.particles-editor.paths-and-shapes-only-scripts-styles-and')}</p>
     </div>`;
   }
 
@@ -1612,7 +1613,7 @@ export class AnimParticlesEditor extends LitElement {
       <div class="pair" role="group" aria-labelledby=${`l-${id}`}>
         ${([0, 1] as const).map(
           (end) => html`<div>
-            <label class="sub-lbl" for=${`f-${id}-${end}`}>${end === 0 ? t('From') : t('To')}</label>
+            <label class="sub-lbl" for=${`f-${id}-${end}`}>${end === 0 ? t('anim-studio.particles-editor.from') : t('anim-studio.particles-editor.to')}</label>
             <input
               id=${`f-${id}-${end}`}
               class="input"
@@ -1621,7 +1622,7 @@ export class AnimParticlesEditor extends LitElement {
               min=${V2_LIMITS[key].min}
               max=${V2_LIMITS[key].max}
               step=${step}
-              aria-label=${end === 0 ? t('Lowest {noun}', { noun }) : t('Highest {noun}', { noun })}
+              aria-label=${end === 0 ? t('anim-studio.particles-editor.lowest-noun', { noun }) : t('anim-studio.particles-editor.highest-noun', { noun })}
               .value=${live(String(shown[end]))}
               @change=${(e: Event) => {
                 const input = e.target as HTMLInputElement;
@@ -1673,19 +1674,19 @@ export class AnimParticlesEditor extends LitElement {
   /** The loop speed: one for the whole document (the period every emitter shares). */
   private _renderTiming(p: ParticlesSpec): TemplateResult {
     return html`<section class="group" aria-labelledby="h-timing">
-      <div class="group-head"><h3 id="h-timing">${t('Timing')}</h3></div>
+      <div class="group-head"><h3 id="h-timing">${t('anim-studio.particles-editor.timing')}</h3></div>
       <div class="field">
-        <div class="field-head"><label for="f-speed">${t('Loop speed (×)')}</label></div>
-        ${this._number('speed', 'f-speed', p.speed, t('Change speed'))}
+        <div class="field-head"><label for="f-speed">${t('anim-studio.particles-editor.loop-speed')}</label></div>
+        ${this._number('speed', 'f-speed', p.speed, t('anim-studio.particles-editor.change-speed'))}
       </div>
     </section>`;
   }
 
   private _renderMovement(p: ParticlesSpec, sim: ParticlesSim, withSpeed = true): TemplateResult {
     return html`<section class="group" aria-labelledby="h-move">
-      <div class="group-head"><h3 id="h-move">${t('Movement')}</h3></div>
+      <div class="group-head"><h3 id="h-move">${t('anim-studio.particles-editor.movement')}</h3></div>
       <div class="field">
-        <div class="field-head"><span class="lbl" id="l-dir">${t('Flow')}</span></div>
+        <div class="field-head"><span class="lbl" id="l-dir">${t('anim-studio.particles-editor.flow')}</span></div>
         <div
           class="dirs"
           role="radiogroup"
@@ -1712,18 +1713,18 @@ export class AnimParticlesEditor extends LitElement {
       <div class=${withSpeed ? 'pair' : ''}>
         ${withSpeed
           ? html`<div class="field">
-              <div class="field-head"><label for="f-speed">${t('Loop speed (×)')}</label></div>
-              ${this._number('speed', 'f-speed', p.speed, t('Change speed'))}
+              <div class="field-head"><label for="f-speed">${t('anim-studio.particles-editor.loop-speed')}</label></div>
+              ${this._number('speed', 'f-speed', p.speed, t('anim-studio.particles-editor.change-speed'))}
             </div>`
           : nothing}
         <div class="field">
           <div class="field-head"><label for="f-spread">${flowSpreadLabel(sim.flow)}</label></div>
-          ${this._unit('spread', 'f-spread', p.spread, '%', t('Change spread'), 100)}
+          ${this._unit('spread', 'f-spread', p.spread, '%', t('anim-studio.particles-editor.change-spread'), 100)}
         </div>
       </div>
       ${sim.flow === 'rain' ? this._renderWind(sim) : nothing}
-      ${this._range('pspeed', t('Particle speed (% of short side/s)'), t('speed'), sim.ranges.speed, 'pspeed', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, speed: r } }), 'Change particle speed'), {
-        help: t("Each particle picks a speed in this range, measured in % of the card's shorter side per second. At 100, a particle crosses a square card in one second."),
+      ${this._range('pspeed', t('anim-studio.particles-editor.particle-speed-of-short-side-s'), t('anim-studio.particles-editor.speed'), sim.ranges.speed, 'pspeed', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, speed: r } }), 'Change particle speed'), {
+        help: t("anim-studio.particles-editor.each-particle-picks-a-speed-in-this"),
       })}
     </section>`;
   }
@@ -1732,7 +1733,7 @@ export class AnimParticlesEditor extends LitElement {
   private _renderWind(sim: ParticlesSim): TemplateResult {
     const w = windOf(sim.physics.gravity.angle);
     return html`<div class="field">
-      <div class="field-head"><label for="f-wind">${t('Wind angle (deg)')}</label></div>
+      <div class="field-head"><label for="f-wind">${t('anim-studio.particles-editor.wind-angle-deg')}</label></div>
       <input
         id="f-wind"
         class="input"
@@ -1754,7 +1755,7 @@ export class AnimParticlesEditor extends LitElement {
           this._emit(this._on((d) => setWind(d, this._seed, n)), 'Change wind angle');
         }}
       />
-      <p class="help" id="h-wind">${t('Negative blows the rain to the left, positive to the right. It sets the gravity direction.')}</p>
+      <p class="help" id="h-wind">${t('anim-studio.particles-editor.negative-blows-the-rain-to-the-left')}</p>
     </div>`;
   }
 
@@ -1774,25 +1775,25 @@ export class AnimParticlesEditor extends LitElement {
 
   private _renderLook(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
     return html`<section class="group" aria-labelledby="h-look">
-      <div class="group-head"><h3 id="h-look">${t('Look')}</h3></div>
+      <div class="group-head"><h3 id="h-look">${t('anim-studio.particles-editor.look')}</h3></div>
       <div class="field">
-        <div class="field-head"><label for="f-count">${t('Count')}</label></div>
-        ${this._number('count', 'f-count', p.count, t('Change count'))}
-        ${this._multi ? html`<p class="help count-help">${t('Up to {parentsLeft} for this emitter. All emitters share {parents} particles.', { parentsLeft: p.count + parentsLeft(this.doc!), parents: PARTICLES_V2_CAPS.parents })}</p>` : nothing}
+        <div class="field-head"><label for="f-count">${t('anim-studio.particles-editor.count')}</label></div>
+        ${this._number('count', 'f-count', p.count, t('anim-studio.particles-editor.change-count'))}
+        ${this._multi ? html`<p class="help count-help">${t('anim-studio.particles-editor.up-to-parentsleft-for-this-emitter-all', { parentsLeft: p.count + parentsLeft(this.doc!), parents: PARTICLES_V2_CAPS.parents })}</p>` : nothing}
       </div>
       <div class="field">
-        <div class="field-head"><span class="lbl" id="l-size">${t('Size')}</span></div>
+        <div class="field-head"><span class="lbl" id="l-size">${t('anim-studio.particles-editor.size')}</span></div>
         <div class="pair" role="group" aria-labelledby="l-size">
           ${([0, 1] as const).map(
             (end) => html`<div>
-              <label class="sub-lbl" for=${`f-size-${end}`}>${end === 0 ? t('From') : t('To')}</label>
+              <label class="sub-lbl" for=${`f-size-${end}`}>${end === 0 ? t('anim-studio.particles-editor.from') : t('anim-studio.particles-editor.to')}</label>
               <mc-unit-field
                 compact
                 .inputId=${`f-size-${end}`}
                 .value=${`${p.size[end]}px`}
                 .units=${['px']}
                 noCustom
-                .label=${end === 0 ? t('Smallest size') : t('Largest size')}
+                .label=${end === 0 ? t('anim-studio.particles-editor.smallest-size') : t('anim-studio.particles-editor.largest-size')}
                 ?disabled=${this.disabled}
                 @value-changed=${(e: CustomEvent) => {
                   e.stopPropagation();
@@ -1803,17 +1804,17 @@ export class AnimParticlesEditor extends LitElement {
           )}
         </div>
       </div>
-      ${this._range('opacity', t('Opacity (%)'), t('opacity'), sim.ranges.opacity, 'opacity', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, opacity: r } }), 'Change opacity'), { scale: 100 })}
+      ${this._range('opacity', t('anim-studio.particles-editor.opacity'), t('anim-studio.particles-editor.opacity-2'), sim.ranges.opacity, 'opacity', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, opacity: r } }), 'Change opacity'), { scale: 100 })}
       ${this._renderColors(p)}
       <div class="switch-row">
-        <span class="txt" id="l-fade">${t('Fade in and out')}<p class="help">${t('Particles appear and vanish softly.')}</p></span>
+        <span class="txt" id="l-fade">${t('anim-studio.particles-editor.fade-in-and-out')}<p class="help">${t('anim-studio.particles-editor.particles-appear-and-vanish-softly')}</p></span>
         <button
           type="button"
           class="switch fade"
           role="switch"
           aria-labelledby="l-fade"
           aria-checked=${p.fade ? 'true' : 'false'}
-          @click=${() => this._patch({ fade: !p.fade }, p.fade ? t('Turn fade off') : t('Turn fade on'))}
+          @click=${() => this._patch({ fade: !p.fade }, p.fade ? t('anim-studio.particles-editor.turn-fade-off') : t('anim-studio.particles-editor.turn-fade-on'))}
         ></button>
       </div>
     </section>`;
@@ -1822,8 +1823,8 @@ export class AnimParticlesEditor extends LitElement {
   private _pickLayer(l: ParticlesSpec['layer'], focus = false): void {
     if (this.doc && emitterPlacement(this.doc, this._em) !== l) {
       const name = this._name(this._em);
-      const where = l === 'front' ? t('in front of the content') : t('behind the content');
-      this._live = t('{name} is now {where}.', { name, where });
+      const where = l === 'front' ? t('anim-studio.particles-editor.in-front-of-the-content') : t('anim-studio.particles-editor.behind-the-content');
+      this._live = t('anim-studio.particles-editor.name-is-now-where', { name, where });
       this._emit(setEmitterPlacement(this.doc, this._seed, this._em, l), `${name} ${where}`);
     }
     if (focus) this._focus(`.layer-seg [data-layer="${l}"]`);
@@ -1833,20 +1834,20 @@ export class AnimParticlesEditor extends LitElement {
   private _renderPlacement(): TemplateResult {
     const side = emitterPlacement(this.doc!, this._em);
     return html`<div class="field placement">
-      <div class="field-head"><span class="lbl" id="l-place">${t('Placement')}</span></div>
+      <div class="field-head"><span class="lbl" id="l-place">${t('anim-studio.particles-editor.placement')}</span></div>
       <div
         class="seg full layer-seg"
         role="radiogroup"
-        aria-label=${t('Placement')}
+        aria-label=${t('anim-studio.particles-editor.placement')}
         @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ['back', 'front'], side, (id) => this._pickLayer(id as ParticlesSpec['layer'], true))}
       >
         ${(['back', 'front'] as const).map(
           (l) => html`<button type="button" role="radio" data-layer=${l} aria-checked=${side === l ? 'true' : 'false'} tabindex=${side === l ? 0 : -1} aria-describedby="h-place" @click=${() => this._pickLayer(l)}>
-            ${l === 'back' ? t('Behind the content') : t('In front of the content')}
+            ${l === 'back' ? t('anim-studio.particles-editor.behind-the-content-2') : t('anim-studio.particles-editor.in-front-of-the-content-2')}
           </button>`,
         )}
       </div>
-      <p class="help placement-help" id="h-place">${t('In front: particles draw over text and icons. They never block clicks.')}</p>
+      <p class="help placement-help" id="h-place">${t('anim-studio.particles-editor.in-front-particles-draw-over-text-and')}</p>
       <p class="em-live" role="status">${this._live}</p>
     </div>`;
   }
@@ -1874,8 +1875,8 @@ export class AnimParticlesEditor extends LitElement {
     const full = p.colors.length >= ANIMATION_CAPS.colors;
     return html`<div class="field">
       <div class="field-head">
-        <span class="lbl" id="l-colors">${t('Colours')}</span>
-        ${p.colors.length ? html`<span class="val">${t('{count} of {colours}', { count: p.colors.length, colours: ANIMATION_CAPS.colors })}</span>` : nothing}
+        <span class="lbl" id="l-colors">${t('anim-studio.particles-editor.colours')}</span>
+        ${p.colors.length ? html`<span class="val">${t('anim-studio.particles-editor.count-of-colours', { count: p.colors.length, colours: ANIMATION_CAPS.colors })}</span>` : nothing}
       </div>
       <div class="chips" role="group" aria-labelledby="l-colors">
         ${p.colors.map((c, i) => {
@@ -1885,8 +1886,8 @@ export class AnimParticlesEditor extends LitElement {
             class="cchip"
             data-i=${i}
             aria-pressed=${i === sel ? 'true' : 'false'}
-            aria-label=${entity ? t('Colour {n}: entity colour', { n: i + 1 }) : t('Colour {n}: {colour}', { n: i + 1, colour: c })}
-            title=${entity ? t('Entity colour') : c}
+            aria-label=${entity ? t('anim-studio.particles-editor.colour-n-entity-colour', { n: i + 1 }) : t('anim-studio.particles-editor.colour-n-colour', { n: i + 1, colour: c })}
+            title=${entity ? t('anim-studio.particles-editor.entity-colour') : c}
             @click=${() => (this._color = i === sel ? -1 : i)}
             @keydown=${(e: KeyboardEvent) => {
               if (e.key === 'Delete' || e.key === 'Backspace') {
@@ -1899,19 +1900,19 @@ export class AnimParticlesEditor extends LitElement {
             ${entity ? html`<ha-icon class="ent" icon="mdi:palette-swatch-variant"></ha-icon>` : nothing}
           </button>`;
         })}
-        <button type="button" class="cchip add" aria-label=${t('Add colour')} title=${full ? t('At most {colours} colours', { colours: ANIMATION_CAPS.colors }) : t('Add colour')} ?disabled=${full} @click=${() => this._addColor()}>
+        <button type="button" class="cchip add" aria-label=${t('anim-studio.particles-editor.add-colour')} title=${full ? t('anim-studio.particles-editor.at-most-colours-colours', { colours: ANIMATION_CAPS.colors }) : t('anim-studio.particles-editor.add-colour')} ?disabled=${full} @click=${() => this._addColor()}>
           <ha-icon icon="mdi:plus"></ha-icon>
         </button>
       </div>
       ${sel >= 0
         ? html`<div class="color-edit">
             <div class="color-edit-head">
-              <span>${t('Colour {n}', { n: sel + 1 })}</span>
+              <span>${t('anim-studio.particles-editor.colour-n', { n: sel + 1 })}</span>
               <button
                 type="button"
                 class="icon-btn sm danger remove-color"
-                aria-label=${t('Remove colour {n}', { n: sel + 1 })}
-                title=${t('Remove colour')}
+                aria-label=${t('anim-studio.particles-editor.remove-colour-n', { n: sel + 1 })}
+                title=${t('anim-studio.particles-editor.remove-colour')}
                 @click=${() => this._removeColor(sel)}
               >
                 <ha-icon icon="mdi:delete-outline"></ha-icon>
@@ -1919,7 +1920,7 @@ export class AnimParticlesEditor extends LitElement {
             </div>
             <mc-color-picker
               allowEntity
-              .label=${t('Colour {n}', { n: sel + 1 })}
+              .label=${t('anim-studio.particles-editor.colour-n', { n: sel + 1 })}
               .value=${fromDocColor(p.colors[sel])}
               @value-changed=${(e: CustomEvent) => {
                 e.stopPropagation();
@@ -1931,7 +1932,7 @@ export class AnimParticlesEditor extends LitElement {
               }}
             ></mc-color-picker>
           </div>`
-        : html`<p class="help">${p.colors.length ? t('Particles take the colours in turn. Pick one to change it.') : t('No colours: particles use the animation colour.')}</p>`}
+        : html`<p class="help">${p.colors.length ? t('anim-studio.particles-editor.particles-take-the-colours-in-turn-pick') : t('anim-studio.particles-editor.no-colours-particles-use-the-animation')}</p>`}
     </div>`;
   }
 
@@ -1958,7 +1959,7 @@ export class AnimParticlesEditor extends LitElement {
   private _renderVariation(sim: ParticlesSim): TemplateResult {
     const doc = this._vdoc;
     return html`<div class="field">
-        <div class="field-head"><label for="f-seed">${t('Seed')}</label></div>
+        <div class="field-head"><label for="f-seed">${t('anim-studio.particles-editor.seed')}</label></div>
         <div class="seed-row">
           <input
             id="f-seed"
@@ -1980,16 +1981,16 @@ export class AnimParticlesEditor extends LitElement {
               this._editSim((s) => ({ ...s, seed: n }), 'Change seed');
             }}
           />
-          <button type="button" class="btn btn-secondary btn-sm shuffle-seed" @click=${this._shuffle}><ha-icon icon="mdi:dice-5-outline"></ha-icon>${t('Shuffle')}</button>
+          <button type="button" class="btn btn-secondary btn-sm shuffle-seed" @click=${this._shuffle}><ha-icon icon="mdi:dice-5-outline"></ha-icon>${t('anim-studio.particles-editor.shuffle')}</button>
         </div>
-        <p class="help" id="h-seed">${t('The same seed gives the same loop every time.')}</p>
+        <p class="help" id="h-seed">${t('anim-studio.particles-editor.the-same-seed-gives-the-same-loop-every')}</p>
       </div>
-      ${this._range('spin', t('Spin per loop (deg)'), t('spin'), spinPerLoop(doc, sim), 'spin', (r) => this._emit(this._on((d) => setSpin(d, this._seed, r)), 'Change spin'), {
-        help: t('Each particle turns the way it picks, left or right.'),
+      ${this._range('spin', t('anim-studio.particles-editor.spin-per-loop-deg'), t('anim-studio.particles-editor.spin'), spinPerLoop(doc, sim), 'spin', (r) => this._emit(this._on((d) => setSpin(d, this._seed, r)), 'Change spin'), {
+        help: t('anim-studio.particles-editor.each-particle-turns-the-way-it-picks'),
       })}
-      ${this._range('delay', t('Start delay (s)'), t('start delay'), sim.ranges.delay, 'delay', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, delay: r } }), 'Change start delay'))}
-      ${this._range('life', t('Lifetime (s)'), t('lifetime'), sim.ranges.lifetime, 'lifetime', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, lifetime: r } }), 'Change lifetime'), {
-        help: t('A baked loop keeps lifetimes inside one loop.'),
+      ${this._range('delay', t('anim-studio.particles-editor.start-delay-s'), t('anim-studio.particles-editor.start-delay'), sim.ranges.delay, 'delay', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, delay: r } }), 'Change start delay'))}
+      ${this._range('life', t('anim-studio.particles-editor.lifetime-s'), t('anim-studio.particles-editor.lifetime'), sim.ranges.lifetime, 'lifetime', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, lifetime: r } }), 'Change lifetime'), {
+        help: t('anim-studio.particles-editor.a-baked-loop-keeps-lifetimes-inside-one'),
       })}`;
   }
 
@@ -2007,9 +2008,9 @@ export class AnimParticlesEditor extends LitElement {
     const turbUnit = +(sim.physics.turbulence.strength / PHYSICS_SCALE.turbulence).toFixed(2);
     const angles = COMPASS.map((c) => String(c.angle));
     const onCompass = COMPASS.some((c) => c.angle === g.angle);
-    return html`${this._slider('f-grav', t('Gravity'), gUnit, gUnit ? gUnit.toFixed(2) : t('None'), (n, tr) => this._emit(this._on((d) => setGravity(d, this._seed, g.angle, n)), 'Change gravity', tr))}
+    return html`${this._slider('f-grav', t('anim-studio.particles-editor.gravity'), gUnit, gUnit ? gUnit.toFixed(2) : t('anim-studio.particles-editor.none'), (n, tr) => this._emit(this._on((d) => setGravity(d, this._seed, g.angle, n)), 'Change gravity', tr))}
       <div class="field">
-        <div class="field-head"><span class="lbl" id="l-gdir">${t('Gravity direction')}</span></div>
+        <div class="field-head"><span class="lbl" id="l-gdir">${t('anim-studio.particles-editor.gravity-direction')}</span></div>
         <div
           class="seg full compass"
           role="radiogroup"
@@ -2033,7 +2034,7 @@ export class AnimParticlesEditor extends LitElement {
         </div>
       </div>
       <div class="field">
-        <div class="field-head"><label for="f-gangle">${t('Angle (deg)')}</label></div>
+        <div class="field-head"><label for="f-gangle">${t('anim-studio.particles-editor.angle-deg')}</label></div>
         <input
           id="f-gangle"
           class="input"
@@ -2054,34 +2055,34 @@ export class AnimParticlesEditor extends LitElement {
             this._emit(this._on((d) => setGravity(d, this._seed, n, gUnit)), 'Change gravity direction');
           }}
         />
-        <p class="help" id="h-gangle">${t('0 pulls down, 90 left, 180 up, 270 right.')}</p>
+        <p class="help" id="h-gangle">${t('anim-studio.particles-editor.0-pulls-down-90-left-180-up-270-right')}</p>
       </div>
       ${this._slider(
         'f-drag',
-        t('Drag'),
+        t('anim-studio.particles-editor.drag'),
         dragUnit,
         dragUnit.toFixed(2),
         (n, tr) => this._editSim((s) => ({ ...s, physics: { ...s.physics, drag: +(n * PHYSICS_SCALE.drag).toFixed(2) } }), 'Change drag', tr),
-        { help: t('Slows particles down over time.') },
+        { help: t('anim-studio.particles-editor.slows-particles-down-over-time') },
       )}
       ${this._slider(
         'f-turb',
-        t('Turbulence'),
+        t('anim-studio.particles-editor.turbulence'),
         turbUnit,
         turbUnit.toFixed(2),
         (n, tr) => this._editSim((s) => ({ ...s, physics: { ...s.physics, turbulence: { ...s.physics.turbulence, strength: +(n * PHYSICS_SCALE.turbulence).toFixed(2) } } }), 'Change turbulence', tr),
-        { help: t('Adds random swirls to the motion.') },
+        { help: t('anim-studio.particles-editor.adds-random-swirls-to-the-motion') },
       )}`;
   }
 
   private _setCollider(id: ColliderId, on: boolean): void {
-    this._editSim((s) => ({ ...s, colliders: { ...s.colliders, ...(id === 'content' ? { content: on ? 'icon' : 'none' } : { [id]: on }) } }), on ? t('Turn collider on') : t('Turn collider off'));
+    this._editSim((s) => ({ ...s, colliders: { ...s.colliders, ...(id === 'content' ? { content: on ? 'icon' : 'none' } : { [id]: on }) } }), on ? t('anim-studio.particles-editor.turn-collider-on') : t('anim-studio.particles-editor.turn-collider-off'));
   }
 
   private _renderCollisions(sim: ParticlesSim): TemplateResult {
     const c = sim.colliders;
     const any = anyCollider(c);
-    return html`<div class="checks" role="group" aria-label=${t('Collide with')}>
+    return html`<div class="checks" role="group" aria-label=${t('anim-studio.particles-editor.collide-with')}>
         ${COLLIDERS.map(
           (k) => html`<label class="check">
             <input type="checkbox" data-collider=${k.id} .checked=${colliderOn(c, k.id)} @change=${(e: Event) => this._setCollider(k.id, (e.target as HTMLInputElement).checked)} />
@@ -2091,11 +2092,11 @@ export class AnimParticlesEditor extends LitElement {
       </div>
       ${c.content !== 'none'
         ? html`<div class="field">
-            <div class="field-head"><span class="lbl">${t('Content box')}</span></div>
+            <div class="field-head"><span class="lbl">${t('anim-studio.particles-editor.content-box')}</span></div>
             <div
               class="seg full content-seg"
               role="radiogroup"
-              aria-label=${t('Content box')}
+              aria-label=${t('anim-studio.particles-editor.content-box')}
               @keydown=${(e: KeyboardEvent) =>
                 this._radioKeys(e, ['icon', 'text'], c.content, (id) => {
                   if (id !== c.content) this._editSim((s) => ({ ...s, colliders: { ...s.colliders, content: id as 'icon' | 'text' } }), 'Change content box');
@@ -2111,20 +2112,20 @@ export class AnimParticlesEditor extends LitElement {
                   tabindex=${c.content === k ? 0 : -1}
                   @click=${() => c.content !== k && this._editSim((s) => ({ ...s, colliders: { ...s.colliders, content: k } }), 'Change content box')}
                 >
-                  ${k === 'icon' ? t('Icon') : t('Text')}
+                  ${k === 'icon' ? t('anim-studio.particles-editor.icon') : t('anim-studio.particles-editor.text')}
                 </button>`,
               )}
             </div>
-            <p class="help">${t("The box of the card's icon or of its text.")}</p>
+            <p class="help">${t("anim-studio.particles-editor.the-box-of-the-card-s-icon-or-of-its")}</p>
           </div>`
         : nothing}
       ${this._slider(
         'f-bounce',
-        t('Bounce'),
+        t('anim-studio.particles-editor.bounce'),
         sim.physics.bounce,
         sim.physics.bounce.toFixed(2),
         (n, tr) => this._editAll((s) => ({ ...s, physics: { ...s.physics, bounce: n } }), 'Change bounce', tr),
-        { help: t('0 stops on impact, 1 bounces back at full speed.'), disabled: !any },
+        { help: t('anim-studio.particles-editor.0-stops-on-impact-1-bounces-back-at-full'), disabled: !any },
       )}`;
   }
 
@@ -2136,7 +2137,7 @@ export class AnimParticlesEditor extends LitElement {
     const ch = sim.children;
     const any = anyCollider(sim.colliders);
     const sw = html`<div class="switch-row">
-      <span class="txt" id="l-children">${t('Spawn child particles')}<p class="help">${t('Children burst out from the point where they spawn.')}</p></span>
+      <span class="txt" id="l-children">${t('anim-studio.particles-editor.spawn-child-particles')}<p class="help">${t('anim-studio.particles-editor.children-burst-out-from-the-point-where')}</p></span>
       <button
         type="button"
         class="switch children"
@@ -2156,8 +2157,8 @@ export class AnimParticlesEditor extends LitElement {
     </div>`;
     if (!ch) return sw;
     const triggers: Array<[SubEmitter['trigger'], string]> = [
-      ['collision', t('On collision')],
-      ['death', t('At end of life')],
+      ['collision', t('anim-studio.particles-editor.on-collision')],
+      ['death', t('anim-studio.particles-editor.at-end-of-life')],
     ];
     const pickTrigger = (trg: SubEmitter['trigger'], focus = false) => {
       if (trg === 'collision' && !any) return;
@@ -2168,7 +2169,7 @@ export class AnimParticlesEditor extends LitElement {
     const parentColours = !ch.colors.length;
     return html`${sw}
       <div class="field">
-        <div class="field-head"><span class="lbl" id="l-trigger">${t('Spawn')}</span></div>
+        <div class="field-head"><span class="lbl" id="l-trigger">${t('anim-studio.particles-editor.spawn')}</span></div>
         <div
           class="seg full trigger-seg"
           role="radiogroup"
@@ -2189,11 +2190,11 @@ export class AnimParticlesEditor extends LitElement {
             </button>`,
           )}
         </div>
-        ${!any ? html`<p class="help">${t('Turn on a collider first.')}</p>` : nothing}
-        ${ch.trigger === 'time' ? html`<p class="help">${t('Spawns {seconds} s after birth (set in YAML).', { seconds: ch.at ?? 0 })}</p>` : nothing}
+        ${!any ? html`<p class="help">${t('anim-studio.particles-editor.turn-on-a-collider-first')}</p>` : nothing}
+        ${ch.trigger === 'time' ? html`<p class="help">${t('anim-studio.particles-editor.spawns-seconds-s-after-birth-set-in-yaml', { seconds: ch.at ?? 0 })}</p>` : nothing}
       </div>
       <div class="field">
-        <div class="field-head"><label for="f-ccount">${t('Count per spawn')}</label></div>
+        <div class="field-head"><label for="f-ccount">${t('anim-studio.particles-editor.count-per-spawn')}</label></div>
         <input
           id="f-ccount"
           class="input"
@@ -2216,8 +2217,8 @@ export class AnimParticlesEditor extends LitElement {
         />
       </div>
       <div class="field">
-        <div class="field-head"><span class="lbl">${t('Child shape')}</span></div>
-        ${this._shapeGrid(kind, 'child', t('Child shape'), (k, focus) => {
+        <div class="field-head"><span class="lbl">${t('anim-studio.particles-editor.child-shape')}</span></div>
+        ${this._shapeGrid(kind, 'child', t('anim-studio.particles-editor.child-shape'), (k, focus) => {
           if (k !== kind) {
             const own = this._sim.shapes.find((w) => shapeKind(w.shape) === k)?.shape;
             this._child({ shapes: [{ shape: own ?? this._shapeFor(k), weight: 1 }] }, 'Change child shape');
@@ -2225,10 +2226,10 @@ export class AnimParticlesEditor extends LitElement {
           if (focus) this._focus(`.shapes.child [data-kind="${k}"]`);
         })}
       </div>
-      ${this._range('csize', t('Size (px)'), t('child size'), ch.size, 'childSize', (r) => this._child({ size: r }, 'Change child size'))}
-      ${this._range('cspeed', t('Speed (% of short side/s)'), t('child speed'), ch.ranges.speed, 'pspeed', (r) => this._child({ ranges: { ...ch.ranges, speed: r } }, 'Change child speed'))}
+      ${this._range('csize', t('anim-studio.particles-editor.size-px'), t('anim-studio.particles-editor.child-size'), ch.size, 'childSize', (r) => this._child({ size: r }, 'Change child size'))}
+      ${this._range('cspeed', t('anim-studio.particles-editor.speed-of-short-side-s'), t('anim-studio.particles-editor.child-speed'), ch.ranges.speed, 'pspeed', (r) => this._child({ ranges: { ...ch.ranges, speed: r } }, 'Change child speed'))}
       <div class="field">
-        <div class="field-head"><label for="f-clife">${t('Lifetime (s)')}</label></div>
+        <div class="field-head"><label for="f-clife">${t('anim-studio.particles-editor.lifetime-s')}</label></div>
         <input
           id="f-clife"
           class="input"
@@ -2250,21 +2251,21 @@ export class AnimParticlesEditor extends LitElement {
         />
       </div>
       <div class="switch-row">
-        <span class="txt" id="l-ccolors">${t("Use the parent's colours")}</span>
+        <span class="txt" id="l-ccolors">${t("anim-studio.particles-editor.use-the-parent-s-colours")}</span>
         <button
           type="button"
           class="switch child-colors"
           role="switch"
           aria-labelledby="l-ccolors"
           aria-checked=${parentColours ? 'true' : 'false'}
-          @click=${() => this._child({ colors: parentColours ? [this._p?.colors[0] ?? '#ffffff'] : [] }, parentColours ? t('Own child colour') : t("Use the parent's colours"))}
+          @click=${() => this._child({ colors: parentColours ? [this._p?.colors[0] ?? '#ffffff'] : [] }, parentColours ? t('anim-studio.particles-editor.own-child-colour') : t("anim-studio.particles-editor.use-the-parent-s-colours"))}
         ></button>
       </div>
       ${parentColours
         ? nothing
         : html`<mc-color-picker
             allowEntity
-            label=${t('Child colour')}
+            label=${t('anim-studio.particles-editor.child-colour')}
             .value=${fromDocColor(ch.colors[0])}
             @value-changed=${(e: CustomEvent) => {
               e.stopPropagation();
@@ -2276,10 +2277,10 @@ export class AnimParticlesEditor extends LitElement {
 
   private _renderSectors(sim: ParticlesSim, only?: 'emitter' | 'all'): TemplateResult {
     return html`<div class="sectors">
-      ${only === 'all' ? nothing : this._sector('variation', 'mdi:dice-multiple-outline', t('Variation'), variationSummary(this._vdoc, sim), () => this._renderVariation(sim))}
-      ${only === 'all' ? nothing : this._sector('physics', 'mdi:weight', t('Physics'), physicsSummary(sim), () => this._renderPhysics(sim))}
-      ${only === 'emitter' ? nothing : this._sector('collisions', 'mdi:arrow-collapse-down', t('Collisions'), collisionsSummary(sim), () => this._renderCollisions(sim))}
-      ${only === 'all' ? nothing : this._sector('children', 'mdi:creation-outline', t('Child particles'), childrenSummary(sim), () => html`<div class="sector-body-lk" ?inert=${this._locks.kids.length > 0}>${this._renderChildren(sim)}</div>`)}
+      ${only === 'all' ? nothing : this._sector('variation', 'mdi:dice-multiple-outline', t('anim-studio.particles-editor.variation'), variationSummary(this._vdoc, sim), () => this._renderVariation(sim))}
+      ${only === 'all' ? nothing : this._sector('physics', 'mdi:weight', t('anim-studio.particles-editor.physics'), physicsSummary(sim), () => this._renderPhysics(sim))}
+      ${only === 'emitter' ? nothing : this._sector('collisions', 'mdi:arrow-collapse-down', t('anim-studio.particles-editor.collisions'), collisionsSummary(sim), () => this._renderCollisions(sim))}
+      ${only === 'all' ? nothing : this._sector('children', 'mdi:creation-outline', t('anim-studio.particles-editor.child-particles'), childrenSummary(sim), () => html`<div class="sector-body-lk" ?inert=${this._locks.kids.length > 0}>${this._renderChildren(sim)}</div>`)}
     </div>`;
   }
 
@@ -2293,12 +2294,12 @@ export class AnimParticlesEditor extends LitElement {
         <span class="tile" aria-hidden="true"><ha-icon icon="mdi:shimmer"></ha-icon></span>
         <span class="txt">
           <strong id="h-preset">${preset ? tl(preset.name) : p.preset}</strong>
-          <span class="kind">${preset ? t('Based on a built-in {kind}', { kind: presetKind(preset).toLowerCase() }) : t('Unknown preset')}</span>
+          <span class="kind">${preset ? t('anim-studio.particles-editor.based-on-a-built-in-kind', { kind: presetKind(preset).toLowerCase() }) : t('anim-studio.particles-editor.unknown-preset')}</span>
         </span>
       </div>
       ${preset
         ? html`<div class="field">
-            <div class="field-head"><label for="f-intensity">${intensityLabel(preset, t)}</label></div>
+            <div class="field-head"><label for="f-intensity">${intensityLabel(preset, t as unknown as (id: LabelId) => string)}</label></div>
             <input
               id="f-intensity"
               class="input"
@@ -2316,15 +2317,15 @@ export class AnimParticlesEditor extends LitElement {
                 else (e.target as HTMLInputElement).value = p.intensity === undefined ? '' : String(p.intensity);
               }}
             />
-            <p class="help">${t('Between {min} and {max}; empty uses {intensity}. Timing and colour come from the animation settings.', { min: preset.intensity.min, max: preset.intensity.max, intensity: preset.defaults.intensity })}</p>
+            <p class="help">${t('anim-studio.particles-editor.between-min-and-max-empty-uses-intensity', { min: preset.intensity.min, max: preset.intensity.max, intensity: preset.defaults.intensity })}</p>
           </div>`
-        : html`<p class="help error">${t('This preset is not available in this version of Magic Card.')}</p>`}
+        : html`<p class="help error">${t('anim-studio.particles-editor.this-preset-is-not-available-in-this')}</p>`}
       <button type="button" class="btn btn-secondary btn-sm convert" @click=${this._convert}>
-        <ha-icon icon="mdi:creation-outline"></ha-icon>${t('Convert to custom particles')}
+        <ha-icon icon="mdi:creation-outline"></ha-icon>${t('anim-studio.particles-editor.convert-to-custom-particles')}
       </button>
       <p class="help">
-        ${t('Swaps the preset for your own particles: shape, movement, size and colours become editable.')}
-        ${preset && preset.particles === 'count' && !preset.ring && !preset.seasonal ? t('The look changes a little.') : t("They replace the preset's look.")}
+        ${t('anim-studio.particles-editor.swaps-the-preset-for-your-own-particles')}
+        ${preset && preset.particles === 'count' && !preset.ring && !preset.seasonal ? t('anim-studio.particles-editor.the-look-changes-a-little') : t("anim-studio.particles-editor.they-replace-the-preset-s-look")}
       </p>
     </section>`;
   }
@@ -2353,7 +2354,7 @@ export class AnimParticlesEditor extends LitElement {
   protected render(): TemplateResult {
     const p = this._p;
     if (!this.doc || !p) {
-      return html`<div class="empty"><ha-icon icon="mdi:shimmer"></ha-icon><p>${t('Open a particles animation to design its particles.')}</p></div>`;
+      return html`<div class="empty"><ha-icon icon="mdi:shimmer"></ha-icon><p>${t('anim-studio.particles-editor.open-a-particles-animation-to-design-its')}</p></div>`;
     }
     const sim = p.preset ? undefined : this._sim;
     return html`<style data-pv></style>
@@ -2375,7 +2376,7 @@ export class AnimParticlesEditor extends LitElement {
     return html`${this._renderBar()}
       <div class="lk" ?inert=${this._locks.own.length > 0}>
       ${all
-        ? html`<p class="help all-note">${t('These apply to every emitter. Placement is set per emitter.')}</p>
+        ? html`<p class="help all-note">${t('anim-studio.particles-editor.these-apply-to-every-emitter-placement')}</p>
             ${this._renderMode(sim)}${this._renderTiming(p)}${this._renderSectors(sim, 'all')}`
         : html`${multi ? this._renderEmitterHead() : nothing}${this._renderPlacement()}
             ${multi ? nothing : this._renderMode(sim)}${this._renderShape()}${this._renderMovement(p, sim, !multi)}${this._renderLook(p, sim)}${this._renderSectors(sim, multi ? 'emitter' : undefined)}`}
@@ -2396,12 +2397,12 @@ export class AnimParticlesEditor extends LitElement {
     };
     return html`<div class="em-bar">
       ${n > 1
-        ? html`<div class="em-tabs">${seg({ role: 'tablist', label: t('Emitters'), value: cur, items: ids.map((id) => ({ value: id, label: id === 'all' ? t('All particles') : this._name(+id) })), onChange: pick })}</div>`
+        ? html`<div class="em-tabs">${seg({ role: 'tablist', label: t('anim-studio.particles-editor.emitters'), value: cur, items: ids.map((id) => ({ value: id, label: id === 'all' ? t('anim-studio.particles-editor.all-particles') : this._name(+id) })), onChange: pick })}</div>`
         : nothing}
       <button type="button" class="btn btn-secondary btn-sm em-add" ?disabled=${!can || this.disabled} aria-describedby=${can ? nothing : 'h-em-cap'} @click=${this._addEmitter}>
-        <ha-icon icon="mdi:plus"></ha-icon>${t('Add emitter')}
+        <ha-icon icon="mdi:plus"></ha-icon>${t('anim-studio.particles-editor.add-emitter')}
       </button>
-      ${can ? nothing : html`<p class="help em-cap" id="h-em-cap">${n >= PARTICLES_V2_CAPS.emitters ? t('At most {emitters} emitters.', { emitters: PARTICLES_V2_CAPS.emitters }) : t('No free particles left. Lower a count to add an emitter.')}</p>`}
+      ${can ? nothing : html`<p class="help em-cap" id="h-em-cap">${n >= PARTICLES_V2_CAPS.emitters ? t('anim-studio.particles-editor.at-most-emitters-emitters', { emitters: PARTICLES_V2_CAPS.emitters }) : t('anim-studio.particles-editor.no-free-particles-left-lower-a-count-to')}</p>`}
     </div>`;
   }
 
@@ -2411,7 +2412,7 @@ export class AnimParticlesEditor extends LitElement {
     const own = (i === 0 ? sim.name : sim.emitters?.[i - 1]?.name) ?? '';
     return html`<div class="em-head">
       <div class="field em-name-field">
-        <div class="field-head"><label for="f-em-name">${t('Emitter name')}</label></div>
+        <div class="field-head"><label for="f-em-name">${t('anim-studio.particles-editor.emitter-name')}</label></div>
         <input
           id="f-em-name"
           class="input em-name"
@@ -2427,10 +2428,10 @@ export class AnimParticlesEditor extends LitElement {
           }}
         />
       </div>
-      <button type="button" class="icon-btn sm em-dup" aria-label=${t('Duplicate emitter')} title=${t('Duplicate emitter')} ?disabled=${!canAddEmitter(this.doc!) || this.disabled} @click=${this._dupEmitter}>
+      <button type="button" class="icon-btn sm em-dup" aria-label=${t('anim-studio.particles-editor.duplicate-emitter')} title=${t('anim-studio.particles-editor.duplicate-emitter')} ?disabled=${!canAddEmitter(this.doc!) || this.disabled} @click=${this._dupEmitter}>
         <ha-icon icon="mdi:content-copy"></ha-icon>
       </button>
-      <button type="button" class="icon-btn sm danger em-remove" aria-label=${t('Remove emitter')} title=${t('Remove emitter')} ?disabled=${this.disabled} @click=${this._removeEmitter}>
+      <button type="button" class="icon-btn sm danger em-remove" aria-label=${t('anim-studio.particles-editor.remove-emitter')} title=${t('anim-studio.particles-editor.remove-emitter')} ?disabled=${this.disabled} @click=${this._removeEmitter}>
         <ha-icon icon="mdi:delete-outline"></ha-icon>
       </button>
     </div>`;

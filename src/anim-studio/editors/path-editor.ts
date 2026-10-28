@@ -30,14 +30,14 @@ type Look = NonNullable<PathSpec['particles']>;
 type Subject = PathSpec['subject'];
 
 const SUBJECTS: Array<{ value: Subject; label: MessageId; icon: string }> = [
-  { value: 'element', label: m('Element'), icon: 'mdi:square-rounded-outline' },
-  { value: 'icon', label: m('Icon'), icon: 'mdi:star-outline' },
-  { value: 'particles', label: m('Particles'), icon: 'mdi:scatter-plot-outline' },
+  { value: 'element', label: m('anim-studio.path-editor.element'), icon: 'mdi:square-rounded-outline' },
+  { value: 'icon', label: m('anim-studio.path-editor.icon'), icon: 'mdi:star-outline' },
+  { value: 'particles', label: m('anim-studio.path-editor.particles'), icon: 'mdi:scatter-plot-outline' },
 ];
 
 const UNITS: Array<{ value: PathSpec['units']; label: MessageId }> = [
-  { value: 'percent', label: m('% of size') },
-  { value: 'px', label: m('Pixels') },
+  { value: 'percent', label: m('anim-studio.path-editor.of-size') },
+  { value: 'px', label: m('anim-studio.path-editor.pixels') },
 ];
 
 const DEFAULT_LOOK: Look = { count: 3, size: [6, 12], colors: [] };
@@ -337,7 +337,7 @@ export class AnimPathEditor extends LitElement {
           type="button"
           class="tile"
           data-template=${tpl.id}
-          title=${t('Replace the path with a {name}', { name: t(tpl.label).toLowerCase() })}
+          title=${t('anim-studio.path-editor.replace-the-path-with-a-name', { name: t(tpl.label).toLowerCase() })}
           ?disabled=${this.disabled}
           @click=${() => this._template(tpl.id, t(tpl.label))}
         >
@@ -355,46 +355,46 @@ export class AnimPathEditor extends LitElement {
     const n = edit.anchors.length;
     const curved = edit.anchors.filter((a) => a.in || a.out).length;
     const canEdit = n > 1 && !this.disabled;
-    return html`<section class="sec" aria-label=${t('Path')}><div class="lk-path" ?inert=${this._locked('path')}>
+    return html`<section class="sec" aria-label=${t('anim-studio.path-editor.path')}><div class="lk-path" ?inert=${this._locked('path')}>
       <div class="field">
-        <div class="field-head"><span class="lbl">${t('Start from a template')}</span></div>
+        <div class="field-head"><span class="lbl">${t('anim-studio.path-editor.start-from-a-template')}</span></div>
         ${this._templates()}
       </div>
       <div class="stats" aria-live="polite">
-        <span class="chip">${t('{count, plural, one {# point} other {# points}}', { count: n })}</span>
-        <span class="chip">${edit.closed ? t('Closed') : t('Open')}</span>
-        ${n > 1 ? html`<span class="chip">${curved === 0 ? t('Straight') : curved === n ? t('Curved') : t('Mixed')}</span>` : nothing}
+        <span class="chip">${t('anim-studio.path-editor.count', { count: n })}</span>
+        <span class="chip">${edit.closed ? t('anim-studio.path-editor.closed') : t('anim-studio.path-editor.open')}</span>
+        ${n > 1 ? html`<span class="chip">${curved === 0 ? t('anim-studio.path-editor.straight') : curved === n ? t('anim-studio.path-editor.curved') : t('anim-studio.path-editor.mixed')}</span>` : nothing}
       </div>
       <div class="actions">
         <button type="button" class="btn btn-secondary btn-sm smooth-all" ?disabled=${!canEdit} @click=${() => this._edit(smoothAll, 'Smooth all points')}>
-          <ha-icon icon="mdi:vector-curve"></ha-icon>${t('Smooth all')}
+          <ha-icon icon="mdi:vector-curve"></ha-icon>${t('anim-studio.path-editor.smooth-all')}
         </button>
         <button type="button" class="btn btn-secondary btn-sm straighten-all" ?disabled=${!canEdit} @click=${() => this._edit(straightenAll, 'Straighten all points')}>
-          <ha-icon icon="mdi:vector-polyline"></ha-icon>${t('Straighten all')}
+          <ha-icon icon="mdi:vector-polyline"></ha-icon>${t('anim-studio.path-editor.straighten-all')}
         </button>
         <button type="button" class="btn btn-secondary btn-sm reverse" ?disabled=${!canEdit} @click=${() => this._edit(reversePath, 'Reverse direction')}>
-          <ha-icon icon="mdi:swap-horizontal"></ha-icon>${t('Reverse direction')}
+          <ha-icon icon="mdi:swap-horizontal"></ha-icon>${t('anim-studio.path-editor.reverse-direction')}
         </button>
       </div>
       ${this._switch(
-        t('Closed path'),
-        t('The motion runs back to the start along the path.'),
+        t('anim-studio.path-editor.closed-path'),
+        t('anim-studio.path-editor.the-motion-runs-back-to-the-start-along'),
         edit.closed,
         () => {
-          if (n > 1) this._edit((p) => setClosed(p, !edit.closed), edit.closed ? t('Open path') : t('Close path'));
+          if (n > 1) this._edit((p) => setClosed(p, !edit.closed), edit.closed ? t('anim-studio.path-editor.open-path') : t('anim-studio.path-editor.close-path'));
         },
         'closed-switch',
         n < 2,
       )}
       <ul class="tips help">
-        <li>${t('Click the stage to add a point, click the line to insert one.')}</li>
-        <li>${t('Drag points and handles.')} ${tx('{key} moves one handle alone.', { key: html`<kbd>Alt</kbd>` })}</li>
-        <li>${t('Double-click a point to make it smooth or a corner.')} ${tx('{key} removes it.', { key: html`<kbd>${t('Delete')}</kbd>` })}</li>
-        <li>${this._spec.units === 'px' ? tx('Points snap to a 10 px grid. Hold {key} to place freely.', { key: html`<kbd>Shift</kbd>` }) : tx('Points snap to a 5% grid. Hold {key} to place freely.', { key: html`<kbd>Shift</kbd>` })}</li>
+        <li>${t('anim-studio.path-editor.click-the-stage-to-add-a-point-click-the')}</li>
+        <li>${t('anim-studio.path-editor.drag-points-and-handles')} ${tx('anim-studio.path-editor.key-moves-one-handle-alone', { key: html`<kbd>Alt</kbd>` })}</li>
+        <li>${t('anim-studio.path-editor.double-click-a-point-to-make-it-smooth')} ${tx('anim-studio.path-editor.key-removes-it', { key: html`<kbd>${t('anim-studio.path-editor.delete')}</kbd>` })}</li>
+        <li>${this._spec.units === 'px' ? tx('anim-studio.path-editor.points-snap-to-a-10-px-grid-hold-key-to', { key: html`<kbd>Shift</kbd>` }) : tx('anim-studio.path-editor.points-snap-to-a-5-grid-hold-key-to', { key: html`<kbd>Shift</kbd>` })}</li>
       </ul>
       <div class="foot">
         <button type="button" class="btn btn-text btn-sm btn-danger clear" ?disabled=${n === 0 || this.disabled} @click=${() => this._set({ d: '' }, 'Clear path')}>
-          <ha-icon icon="mdi:eraser"></ha-icon>${t('Clear path')}
+          <ha-icon icon="mdi:eraser"></ha-icon>${t('anim-studio.path-editor.clear-path')}
         </button>
       </div>
     </div></section>`;
@@ -403,27 +403,27 @@ export class AnimPathEditor extends LitElement {
   private _motionSection(): TemplateResult {
     const spec = this._spec;
     return html`<section class="sec" aria-labelledby="pe-motion">
-      <h3 id="pe-motion">${t('Motion')}</h3>
+      <h3 id="pe-motion">${t('anim-studio.path-editor.motion')}</h3>
       <div class="lk-subject" ?inert=${this._locked('subject')}>
       <div class="field">
-        <div class="field-head"><span class="lbl">${t('What moves')}</span></div>
-        ${this._seg(t('What moves'), SUBJECTS, spec.subject, (v) => this._subject(v))}
+        <div class="field-head"><span class="lbl">${t('anim-studio.path-editor.what-moves')}</span></div>
+        ${this._seg(t('anim-studio.path-editor.what-moves'), SUBJECTS, spec.subject, (v) => this._subject(v))}
         <p class="help">
           ${spec.subject === 'particles'
-            ? t('Particles travel the path one after another, over the whole element.')
+            ? t('anim-studio.path-editor.particles-travel-the-path-one-after')
             : spec.subject === 'icon'
-              ? t("The module's icon moves along the path.")
-              : t('The whole element moves along the path from where it rests.')}
+              ? t("anim-studio.path-editor.the-module-s-icon-moves-along-the-path")
+              : t('anim-studio.path-editor.the-whole-element-moves-along-the-path')}
         </p>
       </div>
       </div>
       <div class="lk-path" ?inert=${this._locked('path')}>
       <div class="field">
-        <div class="field-head"><span class="lbl">${t('Units')}</span></div>
-        ${this._seg(t('Units'), UNITS, spec.units, (v) => this._set({ units: v }, 'Units'))}
-        <p class="help">${spec.units === 'percent' ? t('Points are in % of the moving element, so the path scales with it.') : t('Points are in pixels, the same at every size.')}</p>
+        <div class="field-head"><span class="lbl">${t('anim-studio.path-editor.units')}</span></div>
+        ${this._seg(t('anim-studio.path-editor.units'), UNITS, spec.units, (v) => this._set({ units: v }, 'Units'))}
+        <p class="help">${spec.units === 'percent' ? t('anim-studio.path-editor.points-are-in-of-the-moving-element-so') : t('anim-studio.path-editor.points-are-in-pixels-the-same-at-every')}</p>
       </div>
-      ${this._switch(t('Follow rotation'), t('Turn the subject to face the direction of travel.'), spec.follow_rotation, () => this._set({ follow_rotation: !spec.follow_rotation }, 'Follow rotation'), 'follow-switch')}
+      ${this._switch(t('anim-studio.path-editor.follow-rotation'), t('anim-studio.path-editor.turn-the-subject-to-face-the-direction'), spec.follow_rotation, () => this._set({ follow_rotation: !spec.follow_rotation }, 'Follow rotation'), 'follow-switch')}
       </div>
     </section>`;
   }
@@ -451,9 +451,9 @@ export class AnimPathEditor extends LitElement {
       ></mc-unit-field>
     </div>`;
     return html`<section class="sec particles" aria-labelledby="pe-particles">
-      <h3 id="pe-particles">${t('Particles')}</h3>
+      <h3 id="pe-particles">${t('anim-studio.path-editor.particles')}</h3>
       <div class="field">
-        <div class="field-head"><label for="pe-count">${t('Count')}</label></div>
+        <div class="field-head"><label for="pe-count">${t('anim-studio.path-editor.count-2')}</label></div>
         <input
           class="input"
           id="pe-count"
@@ -470,17 +470,17 @@ export class AnimPathEditor extends LitElement {
             if (s.trim() !== '' && Number.isInteger(n) && n >= 1 && n <= ANIMATION_CAPS.particles) this._look({ count: n }, 'Particle count');
           }}
         />
-        <p class="help">${t('Spaced evenly along the path, 1 to {particles}.', { particles: ANIMATION_CAPS.particles })}</p>
+        <p class="help">${t('anim-studio.path-editor.spaced-evenly-along-the-path-1-to', { particles: ANIMATION_CAPS.particles })}</p>
       </div>
-      <div class="pair">${sizeField(0, t('Smallest'), 'pe-size-min')} ${sizeField(1, t('Largest'), 'pe-size-max')}</div>
+      <div class="pair">${sizeField(0, t('anim-studio.path-editor.smallest'), 'pe-size-min')} ${sizeField(1, t('anim-studio.path-editor.largest'), 'pe-size-max')}</div>
       <div class="field">
-        <div class="field-head"><span class="lbl">${t('Colours')}</span></div>
+        <div class="field-head"><span class="lbl">${t('anim-studio.path-editor.colours')}</span></div>
         <div class="colors">
           ${look.colors.map(
             (c, i) => html`<div class="color-row">
               <mc-color-picker
                 .value=${c}
-                .label=${t('Colour {i}', { i: i + 1 })}
+                .label=${t('anim-studio.path-editor.colour-i', { i: i + 1 })}
                 @value-changed=${(e: CustomEvent) => {
                   e.stopPropagation();
                   const v = String(e.detail.value ?? '').trim();
@@ -493,8 +493,8 @@ export class AnimPathEditor extends LitElement {
               <button
                 type="button"
                 class="icon-btn sm danger remove-color"
-                aria-label=${t('Remove colour {i}', { i: i + 1 })}
-                title=${t('Remove colour')}
+                aria-label=${t('anim-studio.path-editor.remove-colour-i', { i: i + 1 })}
+                title=${t('anim-studio.path-editor.remove-colour')}
                 ?disabled=${this.disabled}
                 @click=${() => this._look({ colors: look.colors.filter((_, j) => j !== i) }, 'Remove particle colour')}
               >
@@ -503,7 +503,7 @@ export class AnimPathEditor extends LitElement {
             </div>`,
           )}
         </div>
-        ${look.colors.length ? nothing : html`<p class="help">${t('None set: the particles take the animation colour.')}</p>`}
+        ${look.colors.length ? nothing : html`<p class="help">${t('anim-studio.path-editor.none-set-the-particles-take-the')}</p>`}
         ${look.colors.length < ANIMATION_CAPS.colors
           ? html`<div>
               <button
@@ -512,7 +512,7 @@ export class AnimPathEditor extends LitElement {
                 ?disabled=${this.disabled}
                 @click=${() => this._look({ colors: [...look.colors, look.colors[look.colors.length - 1] ?? '#ffc107'] }, 'Add particle colour')}
               >
-                <ha-icon icon="mdi:plus"></ha-icon>${t('Add colour')}
+                <ha-icon icon="mdi:plus"></ha-icon>${t('anim-studio.path-editor.add-colour')}
               </button>
             </div>`
           : nothing}

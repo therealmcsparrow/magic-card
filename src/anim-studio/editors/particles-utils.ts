@@ -31,10 +31,10 @@ import { validationText } from '../validation-text';
 
 export type ShapeSource = 'dot' | 'icon' | 'emoji' | 'svg';
 export const SHAPE_SOURCES: Array<{ id: ShapeSource; label: MessageId; icon: string }> = [
-  { id: 'dot', label: m('Dot'), icon: 'mdi:circle-medium' },
-  { id: 'icon', label: m('Icon'), icon: 'mdi:star-outline' },
-  { id: 'emoji', label: m('Emoji'), icon: 'mdi:emoticon-outline' },
-  { id: 'svg', label: m('SVG'), icon: 'mdi:svg' },
+  { id: 'dot', label: m('anim-studio.particles-utils.dot'), icon: 'mdi:circle-medium' },
+  { id: 'icon', label: m('anim-studio.particles-utils.icon'), icon: 'mdi:star-outline' },
+  { id: 'emoji', label: m('anim-studio.particles-utils.emoji'), icon: 'mdi:emoticon-outline' },
+  { id: 'svg', label: m('anim-studio.particles-utils.svg'), icon: 'mdi:svg' },
 ];
 
 export const shapeSource = (shape: ParticleShape | undefined): ShapeSource =>
@@ -54,16 +54,16 @@ export const SHAPE_DEFAULTS: Record<Exclude<ShapeSource, 'dot'>, ParticleShape> 
 };
 
 export const DIRECTION_LABELS: Record<ParticleDirection, MessageId> = {
-  fall: m('Fall'),
-  rise: m('Rise'),
-  drift: m('Drift'),
-  burst: m('Burst'),
-  orbit: m('Orbit'),
-  spiral: m('Spiral'),
+  fall: m('anim-studio.particles-utils.fall'),
+  rise: m('anim-studio.particles-utils.rise'),
+  drift: m('anim-studio.particles-utils.drift'),
+  burst: m('anim-studio.particles-utils.burst'),
+  orbit: m('anim-studio.particles-utils.orbit'),
+  spiral: m('anim-studio.particles-utils.spiral'),
 };
 
 /** What Spread means for a direction (a width across, or a radius). */
-export const spreadLabel = (d: ParticleDirection): string => (d === 'fall' || d === 'rise' ? t('Spread across') : d === 'drift' ? t('Spread down') : t('Radius'));
+export const spreadLabel = (d: ParticleDirection): string => (d === 'fall' || d === 'rise' ? t('anim-studio.particles-utils.spread-across') : d === 'drift' ? t('anim-studio.particles-utils.spread-down') : t('anim-studio.particles-utils.radius'));
 
 const ICON_RE = /^[a-z0-9_-]+:[a-z0-9_-]+$/i;
 export const validIcon = (v: string): boolean => ICON_RE.test(v.trim());
@@ -71,19 +71,19 @@ export const validIcon = (v: string): boolean => ICON_RE.test(v.trim());
 /** An emoji field value the model accepts (up to 8 characters, no markup characters). */
 export function emojiError(v: string): string | undefined {
   const s = v.trim();
-  if (!s) return t('Enter an emoji or a symbol.');
-  if ([...s].length > 8) return t('Use up to 8 characters.');
+  if (!s) return t('anim-studio.particles-utils.enter-an-emoji-or-a-symbol');
+  if ([...s].length > 8) return t('anim-studio.particles-utils.use-up-to-8-characters');
   if (/[<>&"'\\{};]/.test(s)) return 'These characters are not allowed: < > & " \' \\ { } ;';
   return undefined;
 }
 
 /** The sanitiser's verdict on an own SVG (undefined when it can be used). */
 export function svgError(v: string): string | undefined {
-  if (!v.trim()) return t('Paste the markup of an <svg>.');
-  if (!/<svg[\s>]/i.test(v)) return t('No <svg> element found.');
+  if (!v.trim()) return t('anim-studio.particles-utils.paste-the-markup-of-an-svg');
+  if (!/<svg[\s>]/i.test(v)) return t('anim-studio.particles-utils.no-svg-element-found');
   const r = sanitizeSvg(v);
   if (r.error) return validationText(r.error);
-  if (!r.paths.length && !r.strokes.length && !r.accentPaths.length) return t('The SVG draws nothing.');
+  if (!r.paths.length && !r.strokes.length && !r.accentPaths.length) return t('anim-studio.particles-utils.the-svg-draws-nothing');
   return undefined;
 }
 
@@ -162,9 +162,9 @@ export const basePreset = (doc: AnimationDoc): AnimationPreset | undefined => (d
 
 /** What a preset's kind of layer is called (for the preset view's chip). */
 export function presetKind(p: AnimationPreset): string {
-  if (p.ring) return t('Ring preset');
-  if (p.seasonal) return t('Seasonal scene');
-  return p.particles === 'count' ? t('Particle preset') : t('Scene preset');
+  if (p.ring) return t('anim-studio.particles-utils.ring-preset');
+  if (p.seasonal) return t('anim-studio.particles-utils.seasonal-scene');
+  return p.particles === 'count' ? t('anim-studio.particles-utils.particle-preset') : t('anim-studio.particles-utils.scene-preset');
 }
 
 /** The closest custom look of the built-in particle presets (the rest fall back to dots that fall). */
@@ -221,13 +221,13 @@ export function withPresetIntensity(doc: AnimationDoc, p: AnimationPreset, value
 /** A short summary of a custom particles document ("12 dots fall, 6-12 px"). */
 export function particlesSummary(p: ParticlesSpec): string {
   const what = !p.shape
-    ? t('{count, plural, one {# dot} other {# dots}}', { count: p.count })
+    ? t('anim-studio.particles-utils.count', { count: p.count })
     : 'icon' in p.shape
-      ? t('{count, plural, one {# icon} other {# icons}}', { count: p.count })
+      ? t('anim-studio.particles-utils.count-2', { count: p.count })
       : 'emoji' in p.shape
         ? `${p.count} ${p.shape.emoji}`
-        : t('{count, plural, one {# shape} other {# shapes}}', { count: p.count });
-  const size = p.size[0] === p.size[1] ? `${p.size[0]} px` : t('{min}–{max} px', { min: p.size[0], max: p.size[1] });
+        : t('anim-studio.particles-utils.count-3', { count: p.count });
+  const size = p.size[0] === p.size[1] ? `${p.size[0]} px` : t('anim-studio.particles-utils.min-max-px', { min: p.size[0], max: p.size[1] });
   return `${what} · ${t(DIRECTION_LABELS[p.direction]).toLowerCase()} · ${size}`;
 }
 
@@ -247,13 +247,13 @@ export const FLOWS: ParticleFlow[] = ['fall', 'rise', 'drift', 'burst', 'orbit',
 
 export const FLOW_LABELS: Record<ParticleFlow, MessageId> = {
   ...DIRECTION_LABELS,
-  fountain: m('Fountain'),
-  explode: m('Explode and fall'),
-  wave: m('Wave'),
-  vortex: m('Swirl'),
-  zigzag: m('Zigzag'),
-  rain: m('Rain'),
-  wander: m('Fireflies'),
+  fountain: m('anim-studio.particles-utils.fountain'),
+  explode: m('anim-studio.particles-utils.explode-and-fall'),
+  wave: m('anim-studio.particles-utils.wave'),
+  vortex: m('anim-studio.particles-utils.swirl'),
+  zigzag: m('anim-studio.particles-utils.zigzag'),
+  rain: m('anim-studio.particles-utils.rain'),
+  wander: m('anim-studio.particles-utils.fireflies'),
 };
 
 const V1_FLOWS = new Set<string>(PARTICLE_DIRECTIONS);
@@ -262,29 +262,29 @@ const isV1Flow = (f: ParticleFlow): f is ParticleDirection => V1_FLOWS.has(f);
 const RADIAL = new Set<ParticleFlow>(['burst', 'orbit', 'spiral', 'explode', 'vortex']);
 
 /** What Spread means for a flow. */
-export const flowSpreadLabel = (f: ParticleFlow): string => (RADIAL.has(f) ? t('Radius') : f === 'drift' || f === 'wave' || f === 'wander' ? t('Spread down') : t('Spread across'));
+export const flowSpreadLabel = (f: ParticleFlow): string => (RADIAL.has(f) ? t('anim-studio.particles-utils.radius') : f === 'drift' || f === 'wave' || f === 'wander' ? t('anim-studio.particles-utils.spread-down') : t('anim-studio.particles-utils.spread-across'));
 
 export type ShapeKind = BuiltinShape | Exclude<ShapeSource, 'dot'>;
 /** The 11 tiles of the shape grid (built-ins first; Streak is the contract's `line`). */
 export const SHAPE_KINDS: Array<{ id: ShapeKind; label: MessageId; icon?: string }> = [
-  { id: 'circle', label: m('Circle') },
-  { id: 'square', label: m('Square') },
-  { id: 'triangle', label: m('Triangle') },
-  { id: 'star', label: m('Star') },
-  { id: 'heart', label: m('Heart') },
-  { id: 'ring', label: m('Ring') },
-  { id: 'line', label: m('Streak') },
-  { id: 'spark', label: m('Spark') },
-  { id: 'icon', label: m('Icon'), icon: 'mdi:star-outline' },
-  { id: 'emoji', label: m('Emoji'), icon: 'mdi:emoticon-outline' },
-  { id: 'svg', label: 'SVG', icon: 'mdi:svg' },
+  { id: 'circle', label: m('anim-studio.particles-utils.circle') },
+  { id: 'square', label: m('anim-studio.particles-utils.square') },
+  { id: 'triangle', label: m('anim-studio.particles-utils.triangle') },
+  { id: 'star', label: m('anim-studio.particles-utils.star') },
+  { id: 'heart', label: m('anim-studio.particles-utils.heart') },
+  { id: 'ring', label: m('anim-studio.particles-utils.ring') },
+  { id: 'line', label: m('anim-studio.particles-utils.streak') },
+  { id: 'spark', label: m('anim-studio.particles-utils.spark') },
+  { id: 'icon', label: m('anim-studio.particles-utils.icon'), icon: 'mdi:star-outline' },
+  { id: 'emoji', label: m('anim-studio.particles-utils.emoji'), icon: 'mdi:emoticon-outline' },
+  { id: 'svg', label: 'SVG' as unknown as MessageId, icon: 'mdi:svg' },
 ];
 const BUILTIN = new Set<string>(BUILTIN_SHAPES);
 export const isBuiltinKind = (k: ShapeKind): k is BuiltinShape => BUILTIN.has(k);
 export const shapeKind = (s: WeightedShape['shape']): ShapeKind => ('builtin' in s ? s.builtin : (shapeSource(s) as Exclude<ShapeSource, 'dot'>));
 export const shapeLabel = (s: WeightedShape['shape']): string => {
   const found = SHAPE_KINDS.find((k) => k.id === shapeKind(s));
-  return found ? t(found.label) : t('Shape');
+  return found ? t(found.label) : t('anim-studio.particles-utils.shape');
 };
 
 /** Shapes per mix in the editor (the contract allows PARTICLES_V2_CAPS.shapes). */
@@ -492,60 +492,60 @@ export function defaultChildren(sim: ParticlesSim): SubEmitter {
 // ── summaries ──
 
 export const COMPASS: Array<{ angle: number; name: MessageId; icon: string }> = [
-  { angle: 0, name: m('down'), icon: 'mdi:arrow-down' },
-  { angle: 45, name: m('down left'), icon: 'mdi:arrow-bottom-left' },
-  { angle: 90, name: m('left'), icon: 'mdi:arrow-left' },
-  { angle: 135, name: m('up left'), icon: 'mdi:arrow-top-left' },
-  { angle: 180, name: m('up'), icon: 'mdi:arrow-up' },
-  { angle: 225, name: m('up right'), icon: 'mdi:arrow-top-right' },
-  { angle: 270, name: m('right'), icon: 'mdi:arrow-right' },
-  { angle: 315, name: m('down right'), icon: 'mdi:arrow-bottom-right' },
+  { angle: 0, name: m('anim-studio.particles-utils.down'), icon: 'mdi:arrow-down' },
+  { angle: 45, name: m('anim-studio.particles-utils.down-left'), icon: 'mdi:arrow-bottom-left' },
+  { angle: 90, name: m('anim-studio.particles-utils.left'), icon: 'mdi:arrow-left' },
+  { angle: 135, name: m('anim-studio.particles-utils.up-left'), icon: 'mdi:arrow-top-left' },
+  { angle: 180, name: m('anim-studio.particles-utils.up'), icon: 'mdi:arrow-up' },
+  { angle: 225, name: m('anim-studio.particles-utils.up-right'), icon: 'mdi:arrow-top-right' },
+  { angle: 270, name: m('anim-studio.particles-utils.right'), icon: 'mdi:arrow-right' },
+  { angle: 315, name: m('anim-studio.particles-utils.down-right'), icon: 'mdi:arrow-bottom-right' },
 ];
 export const compassName = (angle: number): string => {
   const c = COMPASS.find((x) => x.angle === angle);
-  return c ? t(c.name) : t('at {angle}°', { angle });
+  return c ? t(c.name) : t('anim-studio.particles-utils.at-angle', { angle });
 };
 
 const fmt = (n: number): string => String(+n.toFixed(2));
-const span = (r: Range, unit = ''): string => (r[0] === r[1] ? `${fmt(r[0])}${unit}` : t('{from} to {to}{unit}', { from: fmt(r[0]), to: fmt(r[1]), unit }));
+const span = (r: Range, unit = ''): string => (r[0] === r[1] ? `${fmt(r[0])}${unit}` : t('anim-studio.particles-utils.from-to-to-unit', { from: fmt(r[0]), to: fmt(r[1]), unit }));
 
 export function variationSummary(doc: AnimationDoc, sim: ParticlesSim): string {
-  return t('Seed {seed} · spin {span}', { seed: String(sim.seed), span: span(spinPerLoop(doc, sim), '°') });
+  return t('anim-studio.particles-utils.seed-seed-spin-span', { seed: String(sim.seed), span: span(spinPerLoop(doc, sim), '°') });
 }
 
 export function physicsSummary(sim: ParticlesSim): string {
   const { gravity, drag, turbulence } = sim.physics;
   const g = gravity.strength / PHYSICS_SCALE.gravity;
-  const parts = [g > 0 ? t('Gravity {strength} {direction}', { strength: g.toFixed(1), direction: compassName(gravity.angle) }) : t('No gravity')];
-  if (drag > 0) parts.push(t('drag {value}', { value: fmt(drag / PHYSICS_SCALE.drag) }));
-  if (turbulence.strength > 0) parts.push(t('turbulence {value}', { value: fmt(turbulence.strength / PHYSICS_SCALE.turbulence) }));
+  const parts = [g > 0 ? t('anim-studio.particles-utils.gravity-strength-direction', { strength: g.toFixed(1), direction: compassName(gravity.angle) }) : t('anim-studio.particles-utils.no-gravity')];
+  if (drag > 0) parts.push(t('anim-studio.particles-utils.drag-value', { value: fmt(drag / PHYSICS_SCALE.drag) }));
+  if (turbulence.strength > 0) parts.push(t('anim-studio.particles-utils.turbulence-value', { value: fmt(turbulence.strength / PHYSICS_SCALE.turbulence) }));
   return parts.join(', ');
 }
 
 export type ColliderId = Exclude<keyof ParticleColliders, 'content'> | 'content';
 export const COLLIDERS: Array<{ id: ColliderId; label: MessageId }> = [
-  { id: 'floor', label: m('Floor') },
-  { id: 'ceiling', label: m('Ceiling') },
-  { id: 'left', label: m('Left edge') },
-  { id: 'right', label: m('Right edge') },
-  { id: 'content', label: m('Content box') },
+  { id: 'floor', label: m('anim-studio.particles-utils.floor') },
+  { id: 'ceiling', label: m('anim-studio.particles-utils.ceiling') },
+  { id: 'left', label: m('anim-studio.particles-utils.left-edge') },
+  { id: 'right', label: m('anim-studio.particles-utils.right-edge') },
+  { id: 'content', label: m('anim-studio.particles-utils.content-box') },
 ];
 export const colliderOn = (c: ParticleColliders, id: ColliderId): boolean => (id === 'content' ? c.content !== 'none' : c[id]);
 
 export function collisionsSummary(sim: ParticlesSim): string {
   const on = COLLIDERS.filter((k) => colliderOn(sim.colliders, k.id)).map((k) => t(k.label));
-  return on.length ? t('{list}, bounce {bounce}', { list: on.join(', '), bounce: fmt(sim.physics.bounce) }) : t('Off');
+  return on.length ? t('anim-studio.particles-utils.list-bounce-bounce', { list: on.join(', '), bounce: fmt(sim.physics.bounce) }) : t('anim-studio.particles-utils.off');
 }
 
-const triggerText = (s: SubEmitter): string => (s.trigger === 'collision' ? t('on collision') : s.trigger === 'death' ? t('at end of life') : t('after {seconds} s', { seconds: fmt(s.at ?? 0) }));
+const triggerText = (s: SubEmitter): string => (s.trigger === 'collision' ? t('anim-studio.particles-utils.on-collision') : s.trigger === 'death' ? t('anim-studio.particles-utils.at-end-of-life') : t('anim-studio.particles-utils.after-seconds-s', { seconds: fmt(s.at ?? 0) }));
 
 export function childrenSummary(sim: ParticlesSim): string {
   const c = sim.children;
-  if (!c) return t('Off');
+  if (!c) return t('anim-studio.particles-utils.off');
   const first = c.shapes[0]?.shape ?? { builtin: 'circle' as const };
   const k = shapeKind(first);
-  const shape = k === 'svg' ? t('SVG shape') : k === 'emoji' ? t('emoji') : shapeLabel(first).toLowerCase();
-  return t('{count, plural, one {# {shape}} other {# {shape}s}} {trigger}', { count: c.count, shape, trigger: triggerText(c) });
+  const shape = k === 'svg' ? t('anim-studio.particles-utils.svg-shape') : k === 'emoji' ? t('anim-studio.particles-utils.emoji-2') : shapeLabel(first).toLowerCase();
+  return t('anim-studio.particles-utils.count-trigger', { count: c.count, shape, trigger: triggerText(c) });
 }
 
 // ── the particles module in the studio ──
@@ -572,14 +572,14 @@ export function bakeSpec(doc: AnimationDoc, seed = 0): ParticlesSpecV2 | undefin
 /** The animated SVG export of a particles document: its baked loop (Live documents export their bake, P2-6). */
 export function bakedParticlesSvg(doc: AnimationDoc): { svg: string; warnings: string[] } {
   const m = studioParticles;
-  if (!m) return { svg: '', warnings: [t('The particle engine is not loaded yet.')] };
+  if (!m) return { svg: '', warnings: [t('anim-studio.particles-utils.the-particle-engine-is-not-loaded-yet')] };
   const spec = bakeSpec(doc);
-  if (!spec) return { svg: '', warnings: [t('Convert the preset to custom particles to export it.')] };
+  if (!spec) return { svg: '', warnings: [t('anim-studio.particles-utils.convert-the-preset-to-custom-particles')] };
   const loop = m.bake({ spec, period: periodOf(doc), geometry: DEFAULT_GEOMETRY });
   const warnings: string[] = [];
-  if (spec.sim.mode === 'live') warnings.push(t('Live simulation exports as its baked loop.'));
-  if (loop.elements.some((e) => 'icon' in e.shape || 'emoji' in e.shape)) warnings.push(t('Icon and emoji particles export as dots.'));
-  if (loop.stats.capped) warnings.push(t('The loop hit the size limit, so the file shows fewer particles.'));
+  if (spec.sim.mode === 'live') warnings.push(t('anim-studio.particles-utils.live-simulation-exports-as-its-baked'));
+  if (loop.elements.some((e) => 'icon' in e.shape || 'emoji' in e.shape)) warnings.push(t('anim-studio.particles-utils.icon-and-emoji-particles-export-as-dots'));
+  if (loop.stats.capped) warnings.push(t('anim-studio.particles-utils.the-loop-hit-the-size-limit-so-the-file'));
   const w = 200;
   return { svg: m.bakedSvg(loop, { width: w, height: Math.round(w / DEFAULT_GEOMETRY.aspect) }), warnings };
 }
@@ -692,7 +692,7 @@ export function duplicateEmitter(doc: AnimationDoc, seed: number, i: number, ran
   copy.id = '';
   copy.seed = newSeed(list[i].seed, rand);
   copy.count = Math.min(list[i].count, parentsLeft(doc));
-  if (copy.name) copy.name = t('{name} copy', { name: copy.name }).slice(0, EMITTER_NAME_MAX).trim();
+  if (copy.name) copy.name = t('anim-studio.particles-utils.name-copy', { name: copy.name }).slice(0, EMITTER_NAME_MAX).trim();
   list.splice(i + 1, 0, copy);
   return fromList(doc, seed, list);
 }
@@ -803,10 +803,10 @@ export function emitterLabel(doc: AnimationDoc, seed: number, i: number): string
   const list = toList(doc, seed);
   const e = list[i];
   if (e?.name) return e.name;
-  if (list.length < 2) return t('Particles');
+  if (list.length < 2) return t('anim-studio.particles-utils.particles');
   const m = /^e(\d+)$/.exec(e?.id ?? '');
   const n = m ? Number(m[1]) : i + 1;
-  return n > 1 ? t('Particles {n}', { n }) : t('Particles');
+  return n > 1 ? t('anim-studio.particles-utils.particles-n', { n }) : t('anim-studio.particles-utils.particles');
 }
 
 /**

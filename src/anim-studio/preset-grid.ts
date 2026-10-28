@@ -143,7 +143,7 @@ export function previewMs(doc: AnimationDoc | undefined): number {
   return Math.min(8000, Math.max(2500, Math.round(secs * 1000)));
 }
 
-const reducedQuery = (): MediaQueryList | undefined => (typeof window.matchMedia === 'function' ? window.matchMedia(t('(prefers-reduced-motion: reduce)')) : undefined);
+const reducedQuery = (): MediaQueryList | undefined => (typeof window.matchMedia === 'function' ? window.matchMedia(t('anim-studio.preset-grid.prefers-reduced-motion-reduce')) : undefined);
 
 /** A config id from a tile key (`cat:candle-glow` -> `pt-cat-candle-glow`). */
 const previewId = (key: string): string => `pt-${key.toLowerCase().replace(/[^a-z0-9_-]/g, '-')}`.slice(0, 64);
@@ -326,7 +326,7 @@ export class PresetGrid extends LitElement {
         class="pt"
         data-preset=${key}
         title=${name}
-        aria-description=${tap ? t('Plays on tap') : nothing}
+        aria-description=${tap ? t('anim-studio.preset-grid.plays-on-tap') : nothing}
         @click=${() => this._pick(s)}
         @pointerenter=${() => this._set('_active', key, true)}
         @pointerleave=${() => this._set('_active', key, false)}
@@ -335,10 +335,10 @@ export class PresetGrid extends LitElement {
       >
         <mc-preset-thumb aria-hidden="true" .source=${s} .play=${play} .hass=${this.hass} .lookup=${this.lookup}></mc-preset-thumb>
         <span class="nm">${name}</span>
-        ${tap ? html`<span class="chip is-count" aria-hidden="true">${t('Tap')}</span>` : nothing}
+        ${tap ? html`<span class="chip is-count" aria-hidden="true">${t('anim-studio.preset-grid.tap')}</span>` : nothing}
       </button>
       ${still && !this._reduced
-        ? html`<button type="button" class="pt-play" tabindex="-1" aria-hidden="true" title=${t('Preview')} @click=${() => this._preview(s, key)}>
+        ? html`<button type="button" class="pt-play" tabindex="-1" aria-hidden="true" title=${t('anim-studio.preset-grid.preview')} @click=${() => this._preview(s, key)}>
             <ha-icon icon="mdi:play"></ha-icon>
           </button>`
         : nothing}
@@ -358,9 +358,9 @@ export class PresetGrid extends LitElement {
             </section>`,
           )
         : html`<div class="no-results">
-            <p>${t('No presets match "{query}".', { query: this.query })}</p>
+            <p>${t('anim-studio.preset-grid.no-presets-match-query', { query: this.query })}</p>
             <button type="button" class="btn btn-text btn-sm no-results-clear" @click=${() => this.dispatchEvent(new CustomEvent('preset-clear-search', { bubbles: true, composed: true }))}>
-              ${t('Clear search')}
+              ${t('anim-studio.preset-grid.clear-search')}
             </button>
           </div>`}
       <p class="notice" role="status" ?hidden=${!this.notice}>${this.notice}</p>

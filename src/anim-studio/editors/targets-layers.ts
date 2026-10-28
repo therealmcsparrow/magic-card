@@ -30,11 +30,11 @@ const rowName = (target: string): string | undefined => {
 };
 
 export const CARD_PART_ROWS: TargetRow[] = [
-  { target: 'element', label: m('Element'), icon: 'mdi:square-rounded-outline' },
-  { target: 'icon', label: m('Icon'), icon: 'mdi:star-outline' },
-  { target: 'name', label: m('Name'), icon: 'mdi:format-title' },
-  { target: 'state', label: m('State'), icon: 'mdi:numeric' },
-  { target: 'background', label: m('Background'), icon: 'mdi:rectangle-outline' },
+  { target: 'element', label: m('anim-studio.targets-layers.element'), icon: 'mdi:square-rounded-outline' },
+  { target: 'icon', label: m('anim-studio.targets-layers.icon'), icon: 'mdi:star-outline' },
+  { target: 'name', label: m('anim-studio.targets-layers.name'), icon: 'mdi:format-title' },
+  { target: 'state', label: m('anim-studio.targets-layers.state'), icon: 'mdi:numeric' },
+  { target: 'background', label: m('anim-studio.targets-layers.background'), icon: 'mdi:rectangle-outline' },
 ];
 
 /** The document animates this target: a track for it, or (element / icon) the main keyframes on it. */
@@ -110,14 +110,14 @@ export class AnimTargetsLayers extends LitElement {
       expanded: open,
       name: t(r.label),
       icon: r.icon,
-      note: onTile ? undefined : t('Not on this tile'),
-      badge: n ? t('{count, plural, one {# key} other {# keys}}', { count: n }) : undefined,
-      describe: [animatesTarget(doc, r.target) ? t('animated') : '', onTile ? '' : t('not on the {tile} tile', { tile: t(tileDef(this.tile).label) })].filter(Boolean).join(', '),
+      note: onTile ? undefined : t('anim-studio.targets-layers.not-on-this-tile'),
+      badge: n ? t('anim-studio.targets-layers.count', { count: n }) : undefined,
+      describe: [animatesTarget(doc, r.target) ? t('anim-studio.targets-layers.animated') : '', onTile ? '' : t('anim-studio.targets-layers.not-on-the-tile-tile', { tile: t(tileDef(this.tile).label) })].filter(Boolean).join(', '),
       // an open track list shows the picked track instead of its target
       selected: selected === r.target && !(open && this.selection.kind === 'keys'),
       // the whole card cannot be hidden
       toggles: r.target === 'element' ? ['lock'] : undefined,
-      title: onTile ? t(r.label) : t('{label} is not on the {tile} tile', { label: t(r.label), tile: t(tileDef(this.tile).label) }),
+      title: onTile ? t(r.label) : t('anim-studio.targets-layers.label-is-not-on-the-tile-tile', { label: t(r.label), tile: t(tileDef(this.tile).label) }),
     });
     return open ? [row, ...trackRows(this._list, doc, this.selection, r.target, 2)] : [row];
   }
@@ -132,12 +132,12 @@ export class AnimTargetsLayers extends LitElement {
     const shown = CARD_PART_ROWS.filter((r) => onTile(r.target) || animatesTarget(doc, r.target) || selected === r.target);
     const notOn = CARD_PART_ROWS.filter((r) => !onTile(r.target));
     return html`
-      <ul aria-label=${t('Card parts')}>
+      <ul aria-label=${t('anim-studio.targets-layers.card-parts')}>
         ${shown.map((r) => this._row(r, onTile(r.target), selected))}
       </ul>
       ${notOn.length
         ? html`<p class="hint">
-            ${t('{count, plural, one {{names} is not on the {tile} tile. Switch the preview tile to Card to see it.} other {{names} are not on the {tile} tile. Switch the preview tile to Card to see them.}}', { count: notOn.length, names: listText(notOn.map((r) => t(r.label))), tile: t(def.label) })}
+            ${t('anim-studio.targets-layers.count-2', { count: notOn.length, names: listText(notOn.map((r) => t(r.label))), tile: t(def.label) })}
           </p>`
         : nothing}
     `;
@@ -149,7 +149,7 @@ registerPanel({
   place: 'layers',
   // tracks (card parts) belong to keyframes documents
   when: (doc) => doc.kind === 'keyframes',
-  title: m('Card parts'),
+  title: m('anim-studio.targets-layers.card-parts'),
   order: 40,
 });
 

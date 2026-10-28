@@ -50,14 +50,14 @@ export function activeTool(sel: StudioSelection): DrawTool {
 }
 
 export const TOOL_INFO: Record<DrawTool, { label: MessageId; icon: string; base: string; hint: MessageId }> = {
-  select: { label: m('Select'), icon: 'mdi:cursor-default-outline', base: 'shape', hint: m('Click a shape to select it, drag to move it.') },
-  pen: { label: m('Pen'), icon: 'mdi:fountain-pen-tip', base: 'path', hint: m('Click to add points, drag for curves. Click the first point to close, or choose Finish path.') },
-  line: { label: m('Line'), icon: 'mdi:vector-line', base: 'line', hint: m('Drag to draw a line.') },
-  rect: { label: m('Rectangle'), icon: 'mdi:square-rounded-outline', base: 'rect', hint: m('Drag to draw. Shift: square, Alt: from the centre.') },
-  ellipse: { label: m('Ellipse'), icon: 'mdi:ellipse-outline', base: 'ellipse', hint: m('Drag to draw. Shift: circle, Alt: from the centre.') },
-  freehand: { label: m('Freehand'), icon: 'mdi:draw', base: 'stroke', hint: m('Draw freely; the stroke is smoothed when you let go.') },
-  erase: { label: m('Erase'), icon: 'mdi:eraser', base: 'shape', hint: m('Click or drag over shapes to delete them.') },
-  motion: { label: m('Motion path'), icon: 'mdi:map-marker-path', base: 'path', hint: m('Draw the path the selected part travels, starting where it rests.') },
+  select: { label: m('anim-studio.draw-store.select'), icon: 'mdi:cursor-default-outline', base: 'shape', hint: m('anim-studio.draw-store.click-a-shape-to-select-it-drag-to-move') },
+  pen: { label: m('anim-studio.draw-store.pen'), icon: 'mdi:fountain-pen-tip', base: 'path', hint: m('anim-studio.draw-store.click-to-add-points-drag-for-curves') },
+  line: { label: m('anim-studio.draw-store.line'), icon: 'mdi:vector-line', base: 'line', hint: m('anim-studio.draw-store.drag-to-draw-a-line') },
+  rect: { label: m('anim-studio.draw-store.rectangle'), icon: 'mdi:square-rounded-outline', base: 'rect', hint: m('anim-studio.draw-store.drag-to-draw-shift-square-alt-from-the') },
+  ellipse: { label: m('anim-studio.draw-store.ellipse'), icon: 'mdi:ellipse-outline', base: 'ellipse', hint: m('anim-studio.draw-store.drag-to-draw-shift-circle-alt-from-the') },
+  freehand: { label: m('anim-studio.draw-store.freehand'), icon: 'mdi:draw', base: 'stroke', hint: m('anim-studio.draw-store.draw-freely-the-stroke-is-smoothed-when') },
+  erase: { label: m('anim-studio.draw-store.erase'), icon: 'mdi:eraser', base: 'shape', hint: m('anim-studio.draw-store.click-or-drag-over-shapes-to-delete-them') },
+  motion: { label: m('anim-studio.draw-store.motion-path'), icon: 'mdi:map-marker-path', base: 'path', hint: m('anim-studio.draw-store.draw-the-path-the-selected-part-travels') },
 };
 
 export interface DrawOptions {

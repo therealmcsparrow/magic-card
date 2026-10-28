@@ -33,14 +33,14 @@ export function studioWindow(o: StudioWindow, body: unknown, footer?: unknown): 
     variant=${o.variant ?? 'sheet'}
     size=${o.size ?? nothing}
     heading=${o.heading}
-    closeLabel=${t('Close')}
+    closeLabel=${t('anim-studio.window.close')}
     ?movable=${!alert}
     ?resizable=${!alert}
     ?maximizable=${!alert}
-    moveLabel=${t('Move window')}
-    resizeLabel=${t('Resize window')}
-    maximizeLabel=${t('Maximise')}
-    restoreLabel=${t('Restore size')}
+    moveLabel=${t('anim-studio.window.move-window')}
+    resizeLabel=${t('anim-studio.window.resize-window')}
+    maximizeLabel=${t('anim-studio.window.maximise')}
+    restoreLabel=${t('anim-studio.window.restore-size')}
     initialFocus=${o.initialFocus ?? nothing}
     .dismissible=${o.dismissible ?? !alert}
     @mc-window-close=${(e: Event) => {

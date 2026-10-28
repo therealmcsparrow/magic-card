@@ -176,12 +176,12 @@ export class AnimDrawToolbar extends LitElement {
     ></mc-anim-svg-dialog>`;
     if (!active) {
       return html`<button type="button" class="btn btn-secondary btn-sm open" ?disabled=${this.disabled} @click=${() => this._choose('select')}>
-          <ha-icon icon="mdi:draw-pen"></ha-icon>${t('Draw')}
+          <ha-icon icon="mdi:draw-pen"></ha-icon>${t('anim-studio.draw-tools.draw')}
         </button>
         ${dialog}`;
     }
     const canMotion = isRigRef(this.selection.target);
-    return html`<div class="bar" role="toolbar" aria-label=${t('Drawing tools')}>
+    return html`<div class="bar" role="toolbar" aria-label=${t('anim-studio.draw-tools.drawing-tools')}>
         ${TOOLBAR_TOOLS.map((id) => {
           const info = TOOL_INFO[id];
           const off = this.disabled || (id === 'motion' && !canMotion);
@@ -191,7 +191,7 @@ export class AnimDrawToolbar extends LitElement {
             data-tool=${id}
             aria-pressed=${tool === id ? 'true' : 'false'}
             aria-label=${t(info.label)}
-            title=${id === 'motion' && !canMotion ? t('Motion path: select a part or shape first') : t(info.label)}
+            title=${id === 'motion' && !canMotion ? t('anim-studio.draw-tools.motion-path-select-a-part-or-shape-first') : t(info.label)}
             ?disabled=${off}
             @click=${() => this._choose(id)}
           >
@@ -199,13 +199,13 @@ export class AnimDrawToolbar extends LitElement {
           </button>`;
         })}
         <span class="sep" aria-hidden="true"></span>
-        <button type="button" class="icon-btn import" aria-label=${t('Import SVG')} title=${t('Import SVG')} ?disabled=${this.disabled} @click=${() => this.openImport()}>
+        <button type="button" class="icon-btn import" aria-label=${t('anim-studio.draw-tools.import-svg')} title=${t('anim-studio.draw-tools.import-svg')} ?disabled=${this.disabled} @click=${() => this.openImport()}>
           <ha-icon icon="mdi:file-import-outline"></ha-icon>
         </button>
-        <button type="button" class="icon-btn export" aria-label=${t('Save as icon')} title=${t('Save as icon')} ?disabled=${this.disabled} @click=${() => this.openExport()}>
+        <button type="button" class="icon-btn export" aria-label=${t('anim-studio.draw-tools.save-as-icon')} title=${t('anim-studio.draw-tools.save-as-icon')} ?disabled=${this.disabled} @click=${() => this.openExport()}>
           <ha-icon icon="mdi:content-save-outline"></ha-icon>
         </button>
-        <button type="button" class="icon-btn done" aria-label=${t('Stop drawing')} title=${t('Stop drawing')} @click=${() => emitSelection(this, { kind: 'none' })}>
+        <button type="button" class="icon-btn done" aria-label=${t('anim-studio.draw-tools.stop-drawing')} title=${t('anim-studio.draw-tools.stop-drawing')} @click=${() => emitSelection(this, { kind: 'none' })}>
           <ha-icon icon="mdi:close"></ha-icon>
         </button>
       </div>
@@ -216,7 +216,7 @@ export class AnimDrawToolbar extends LitElement {
 
 // ── panels ──
 
-registerPanel({ tag: 'mc-anim-draw-toolbar', place: 'stage-tool', when: (doc) => doc.kind === 'keyframes', title: m('Draw'), order: 90, dock: 'top' });
+registerPanel({ tag: 'mc-anim-draw-toolbar', place: 'stage-tool', when: (doc) => doc.kind === 'keyframes', title: m('anim-studio.draw-tools.draw'), order: 90, dock: 'top' });
 
 export { isDrawTool };
 

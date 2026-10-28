@@ -40,16 +40,16 @@ function loadAgain(): ReturnType<typeof loadPathCanvas> {
 
 /** The canvas names its steps in English; they are looked up here so the undo list reads in the user's language. */
 const STEPS: Record<string, MessageId> = {
-  'Add point': m('Add point'),
-  'Move point': m('Move point'),
-  'Move points': m('Move points'),
-  'Move path': m('Move path'),
-  'Move handle': m('Move handle'),
-  'Delete point': m('Delete point'),
-  'Delete points': m('Delete points'),
-  'Delete handle': m('Delete handle'),
-  'Close path': m('Close path'),
-  'Change point type': m('Change point type'),
+  'Add point': m('anim-studio.canvas-host.add-point'),
+  'Move point': m('anim-studio.canvas-host.move-point'),
+  'Move points': m('anim-studio.canvas-host.move-points'),
+  'Move path': m('anim-studio.canvas-host.move-path'),
+  'Move handle': m('anim-studio.canvas-host.move-handle'),
+  'Delete point': m('anim-studio.canvas-host.delete-point'),
+  'Delete points': m('anim-studio.canvas-host.delete-points'),
+  'Delete handle': m('anim-studio.canvas-host.delete-handle'),
+  'Close path': m('anim-studio.canvas-host.close-path'),
+  'Change point type': m('anim-studio.canvas-host.change-point-type'),
 };
 
 /** A step name from the canvas in the user's language (an unknown one keeps its English text). */
@@ -176,16 +176,16 @@ export abstract class CanvasHost extends LitElement {
 
   /** Reload the page once the user has agreed to lose what is not saved. */
   private _reload(): void {
-    if (confirm(t('Reloading the page discards changes that are not saved. Reload anyway?'))) location.reload();
+    if (confirm(t('anim-studio.canvas-host.reloading-the-page-discards-changes-that'))) location.reload();
   }
 
   /** The notice for a failed load or an older canvas element; nothing while loading or ready. */
   protected renderNotice(): TemplateResult | typeof nothing {
     if (this.canvasState === 'failed')
-      return html`<p class="host-notice" role="alert">${t("Couldn't load the drawing tools.")}<button type="button" @click=${() => this.retry()}>${t('Try again')}</button></p>`;
+      return html`<p class="host-notice" role="alert">${t("anim-studio.canvas-host.couldn-t-load-the-drawing-tools")}<button type="button" @click=${() => this.retry()}>${t('anim-studio.canvas-host.try-again')}</button></p>`;
     if (this.canvasState === 'old')
       return html`<p class="host-notice" role="alert">
-        ${t('The drawing tools on this page are from another Magic Card version. Reload the page to draw here.')}<button type="button" @click=${() => this._reload()}>${t('Reload page')}</button>
+        ${t('anim-studio.canvas-host.the-drawing-tools-on-this-page-are-from')}<button type="button" @click=${() => this._reload()}>${t('anim-studio.canvas-host.reload-page')}</button>
       </p>`;
     return nothing;
   }

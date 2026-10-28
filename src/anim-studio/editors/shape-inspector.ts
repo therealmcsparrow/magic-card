@@ -30,13 +30,13 @@ import { t, tx, m, type MessageId } from '../i18n';
  */
 
 const CAPS: Array<{ value: NonNullable<RigShape['linecap']>; label: MessageId }> = [
-  { value: 'round', label: m('Round') },
-  { value: 'butt', label: m('Flat') },
-  { value: 'square', label: m('Square') },
+  { value: 'round', label: m('anim-studio.shape-inspector.round') },
+  { value: 'butt', label: m('anim-studio.shape-inspector.flat') },
+  { value: 'square', label: m('anim-studio.shape-inspector.square') },
 ];
 const LAYERS: Array<{ value: RigShape['layer']; label: MessageId; icon: string }> = [
-  { value: 'over', label: m('Over the icon'), icon: 'mdi:arrange-bring-forward' },
-  { value: 'under', label: m('Under the icon'), icon: 'mdi:arrange-send-backward' },
+  { value: 'over', label: m('anim-studio.shape-inspector.over-the-icon'), icon: 'mdi:arrange-bring-forward' },
+  { value: 'under', label: m('anim-studio.shape-inspector.under-the-icon'), icon: 'mdi:arrange-send-backward' },
 ];
 
 /** A colour picker value as a shape colour (entity colours stay `entity` / `entity N%`). */
@@ -259,21 +259,21 @@ export class AnimShapeInspector extends LitElement {
     set: { fill: (v: string | undefined) => void; stroke: (v: string | undefined) => void; width: (n: number) => void; cap: (c: NonNullable<RigShape['linecap']>) => void },
   ): TemplateResult {
     return html`<section class="group" aria-labelledby="h-paint">
-      <div class="group-head"><h3 id="h-paint">${t('Paint')}</h3></div>
+      <div class="group-head"><h3 id="h-paint">${t('anim-studio.shape-inspector.paint')}</h3></div>
       ${p.closed
         ? html`<div class="paint">
-            ${this._switch(t('Fill'), '', p.fill !== undefined, () => set.fill(p.fill !== undefined ? undefined : 'currentColor'), 'fill-on', p.fill !== undefined && p.stroke === undefined)}
-            ${p.fill !== undefined ? this._color(t('Fill colour'), p.fill, (v) => set.fill(v), 'fill-color') : nothing}
+            ${this._switch(t('anim-studio.shape-inspector.fill'), '', p.fill !== undefined, () => set.fill(p.fill !== undefined ? undefined : 'currentColor'), 'fill-on', p.fill !== undefined && p.stroke === undefined)}
+            ${p.fill !== undefined ? this._color(t('anim-studio.shape-inspector.fill-colour'), p.fill, (v) => set.fill(v), 'fill-color') : nothing}
           </div>`
         : nothing}
       <div class="paint">
-        ${this._switch(t('Stroke'), p.closed ? '' : t('An open line is drawn by its stroke.'), p.stroke !== undefined, () => set.stroke(p.stroke !== undefined ? undefined : 'currentColor'), 'stroke-on', !p.closed || (p.stroke !== undefined && p.fill === undefined))}
+        ${this._switch(t('anim-studio.shape-inspector.stroke'), p.closed ? '' : t('anim-studio.shape-inspector.an-open-line-is-drawn-by-its-stroke'), p.stroke !== undefined, () => set.stroke(p.stroke !== undefined ? undefined : 'currentColor'), 'stroke-on', !p.closed || (p.stroke !== undefined && p.fill === undefined))}
         ${p.stroke !== undefined
-          ? html`${this._color(t('Stroke colour'), p.stroke, (v) => set.stroke(v), 'stroke-color')}
+          ? html`${this._color(t('anim-studio.shape-inspector.stroke-colour'), p.stroke, (v) => set.stroke(v), 'stroke-color')}
               <div class="two">
-                ${this._number('f-width', t('Stroke width (icon units)'), p.width, 0.25, 100, set.width)}
+                ${this._number('f-width', t('anim-studio.shape-inspector.stroke-width-icon-units'), p.width, 0.25, 100, set.width)}
               </div>
-              ${this._seg(t('Line ends'), CAPS, p.cap, set.cap, 'caps')}`
+              ${this._seg(t('anim-studio.shape-inspector.line-ends'), CAPS, p.cap, set.cap, 'caps')}`
           : nothing}
       </div>
     </section>`;
@@ -283,9 +283,9 @@ export class AnimShapeInspector extends LitElement {
   private _smoothing(onChange: (tol: number, final: boolean) => void, help: string, waiting = false): TemplateResult {
     const tol = drawStore.options.tolerance;
     return html`<div class="field">
-      <div class="field-head"><label for="f-tol">${t('Smoothing')}</label><span class="val">${tol.toFixed(2)}</span></div>
+      <div class="field-head"><label for="f-tol">${t('anim-studio.shape-inspector.smoothing')}</label><span class="val">${tol.toFixed(2)}</span></div>
       <div class="slider">
-        <span aria-hidden="true">${t('Detail')}</span>
+        <span aria-hidden="true">${t('anim-studio.shape-inspector.detail')}</span>
         <input
           id="f-tol"
           type="range"
@@ -293,12 +293,12 @@ export class AnimShapeInspector extends LitElement {
           max=${TOLERANCE_RANGE.max}
           step=${TOLERANCE_RANGE.step}
           .value=${String(tol)}
-          aria-valuetext=${t('{size} icon units', { size: tol.toFixed(2) })}
+          aria-valuetext=${t('anim-studio.shape-inspector.size-icon-units', { size: tol.toFixed(2) })}
           ?disabled=${this.disabled || waiting}
           @input=${(e: Event) => onChange(Number((e.target as HTMLInputElement).value), false)}
           @change=${(e: Event) => onChange(Number((e.target as HTMLInputElement).value), true)}
         />
-        <span aria-hidden="true">${t('Smooth')}</span>
+        <span aria-hidden="true">${t('anim-studio.shape-inspector.smooth')}</span>
       </div>
       <p class="help">${help}</p>
     </div>`;
@@ -341,9 +341,9 @@ export class AnimShapeInspector extends LitElement {
     const freehand = drawStore.lastFreehand?.id === s.id;
     return html`
       <section class="group" aria-labelledby="h-shape">
-        <div class="group-head"><h3 id="h-shape">${t('Shape')}</h3><span class="id" title=${t('Target')}>${target}</span></div>
+        <div class="group-head"><h3 id="h-shape">${t('anim-studio.shape-inspector.shape')}</h3><span class="id" title=${t('anim-studio.shape-inspector.target')}>${target}</span></div>
         <div class="field">
-          <div class="field-head"><label for="f-name">${t('Name')}</label></div>
+          <div class="field-head"><label for="f-name">${t('anim-studio.shape-inspector.name')}</label></div>
           <input
             id="f-name"
             class="input"
@@ -358,58 +358,58 @@ export class AnimShapeInspector extends LitElement {
             }}
           />
         </div>
-        ${this._seg(t('Layer'), LAYERS, s.layer, (layer) => this._patch(s, { layer }, layer === 'under' ? t('Shape under the icon') : t('Shape over the icon')), 'layer')}
+        ${this._seg(t('anim-studio.shape-inspector.layer'), LAYERS, s.layer, (layer) => this._patch(s, { layer }, layer === 'under' ? t('anim-studio.shape-inspector.shape-under-the-icon') : t('anim-studio.shape-inspector.shape-over-the-icon')), 'layer')}
         <div class="row">
           <button type="button" class="btn btn-text btn-sm forward" ?disabled=${this.disabled || idx >= list.length - 1} @click=${() => this._emit(moveShape(doc, s.id, idx + 1), 'Bring shape forward')}>
-            <ha-icon icon="mdi:arrange-bring-forward"></ha-icon>${t('Bring forward')}
+            <ha-icon icon="mdi:arrange-bring-forward"></ha-icon>${t('anim-studio.shape-inspector.bring-forward')}
           </button>
           <button type="button" class="btn btn-text btn-sm backward" ?disabled=${this.disabled || idx <= 0} @click=${() => this._emit(moveShape(doc, s.id, idx - 1), 'Send shape backward')}>
-            <ha-icon icon="mdi:arrange-send-backward"></ha-icon>${t('Send backward')}
+            <ha-icon icon="mdi:arrange-send-backward"></ha-icon>${t('anim-studio.shape-inspector.send-backward')}
           </button>
         </div>
       </section>
       ${this._paint(
         { fill: isFilled(s) ? (s.fill ?? 'currentColor') : undefined, stroke: isStroked(s) ? s.stroke : undefined, width: s.stroke_width ?? 1, cap: s.linecap ?? 'butt', closed },
         {
-          fill: (v) => this._patch(s, { fill: v }, v ? t('Change fill') : t('Remove fill')),
-          stroke: (v) => this._patch(s, v ? { stroke: v, stroke_width: s.stroke_width ?? 1 } : { stroke: undefined, stroke_width: undefined, linecap: undefined }, v ? t('Change stroke') : t('Remove stroke')),
+          fill: (v) => this._patch(s, { fill: v }, v ? t('anim-studio.shape-inspector.change-fill') : t('anim-studio.shape-inspector.remove-fill')),
+          stroke: (v) => this._patch(s, v ? { stroke: v, stroke_width: s.stroke_width ?? 1 } : { stroke: undefined, stroke_width: undefined, linecap: undefined }, v ? t('anim-studio.shape-inspector.change-stroke') : t('anim-studio.shape-inspector.remove-stroke')),
           width: (n) => this._patch(s, { stroke_width: clampWidth(n) }, 'Change stroke width'),
           cap: (c) => this._patch(s, { linecap: c }, 'Change line ends'),
         },
       )}
       ${freehand
         ? html`<section class="group" aria-labelledby="h-smooth">
-            <div class="group-head"><h3 id="h-smooth">${t('Freehand')}</h3></div>
-            ${this._smoothing((t, f) => this._refit(t, f), t('More smoothing: fewer points and a calmer line. The dotted line is what you drew.'), !this._draw)}
+            <div class="group-head"><h3 id="h-smooth">${t('anim-studio.shape-inspector.freehand')}</h3></div>
+            ${this._smoothing((t, f) => this._refit(t, f), t('anim-studio.shape-inspector.more-smoothing-fewer-points-and-a-calmer'), !this._draw)}
           </section>`
         : nothing}
       <section class="group" aria-labelledby="h-anim">
-        <div class="group-head"><h3 id="h-anim">${t('Animation')}</h3></div>
+        <div class="group-head"><h3 id="h-anim">${t('anim-studio.shape-inspector.animation')}</h3></div>
         ${this._switch(
-          t('Draw on'),
-          isFilled(s) ? t('The outline draws in over the cycle, then the shape fills.') : t('The line draws in over the cycle.'),
+          t('anim-studio.shape-inspector.draw-on'),
+          isFilled(s) ? t('anim-studio.shape-inspector.the-outline-draws-in-over-the-cycle-then') : t('anim-studio.shape-inspector.the-line-draws-in-over-the-cycle'),
           hasDrawOn(doc, target),
           () => (hasDrawOn(doc, target) ? this._emit(removeDrawOn(doc, target), 'Remove draw on') : this._emit(addDrawOnTrack(doc, target), 'Draw on')),
           'draw-on',
         )}
         <div class="field">
-          <div class="field-head"><span class="lbl">${t('Motion path')}</span></div>
+          <div class="field-head"><span class="lbl">${t('anim-studio.shape-inspector.motion-path')}</span></div>
           <div class="row">
             <button type="button" class="btn btn-secondary btn-sm draw-motion" ?disabled=${this.disabled} @click=${() => this._select({ kind: 'tool', tool: 'motion', target })}>
-              <ha-icon icon="mdi:map-marker-path"></ha-icon>${track?.path ? t('Redraw') : t('Draw motion path')}
+              <ha-icon icon="mdi:map-marker-path"></ha-icon>${track?.path ? t('anim-studio.shape-inspector.redraw') : t('anim-studio.shape-inspector.draw-motion-path')}
             </button>
             ${track?.path
               ? html`<button type="button" class="btn btn-text btn-sm remove-motion" ?disabled=${this.disabled} @click=${() => this._emit(setTrackPath(doc, target, undefined, false), 'Remove motion path')}>
-                  ${t('Remove')}
+                  ${t('anim-studio.shape-inspector.remove')}
                 </button>`
               : nothing}
           </div>
           ${track?.path
-            ? this._switch(t('Follow the path'), t('The shape turns with the direction it travels.'), !!track.path.follow_rotation, () => {
+            ? this._switch(t('anim-studio.shape-inspector.follow-the-path'), t('anim-studio.shape-inspector.the-shape-turns-with-the-direction-it'), !!track.path.follow_rotation, () => {
                 const tracks = (doc.tracks ?? []).map((t) => (t === track ? { ...t, path: { ...t.path!, follow_rotation: !t.path!.follow_rotation } } : t));
                 this._emit({ ...doc, tracks }, 'Follow the path');
               }, 'follow')
-            : html`<p class="help">${t('Draw on the stage where the shape travels, starting where it rests.')}</p>`}
+            : html`<p class="help">${t('anim-studio.shape-inspector.draw-on-the-stage-where-the-shape')}</p>`}
         </div>
       </section>
       <section class="group">
@@ -417,7 +417,7 @@ export class AnimShapeInspector extends LitElement {
           this._emit(removeShape(doc, s.id), 'Delete shape');
           this._select({ kind: 'tool', tool: 'select' });
         }}>
-          <ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete shape')}
+          <ha-icon icon="mdi:delete-outline"></ha-icon>${t('anim-studio.shape-inspector.delete-shape')}
         </button>
       </section>
     `;
@@ -441,15 +441,15 @@ export class AnimShapeInspector extends LitElement {
         <p class="help lead">${t(info.hint)}</p>
         ${tool === 'motion'
           ? isRigRef(target)
-            ? html`<p class="help">${tx('Moving {target}.', { target: html`<span class="id">${target}</span>` })}</p>
-                ${this._switch(t('Follow the path'), t('It turns with the direction it travels.'), o.follow, () => this._opt({ follow: !o.follow }), 'follow-opt')}`
-            : html`<p class="help">${t('Select a part or shape first.')}</p>`
+            ? html`<p class="help">${tx('anim-studio.shape-inspector.moving-target', { target: html`<span class="id">${target}</span>` })}</p>
+                ${this._switch(t('anim-studio.shape-inspector.follow-the-path'), t('anim-studio.shape-inspector.it-turns-with-the-direction-it-travels'), o.follow, () => this._opt({ follow: !o.follow }), 'follow-opt')}`
+            : html`<p class="help">${t('anim-studio.shape-inspector.select-a-part-or-shape-first')}</p>`
           : nothing}
-        ${tool === 'rect' ? this._number('f-radius', t('Corner radius (icon units)'), o.radius, 0.5, 12, (n) => this._opt({ radius: n })) : nothing}
+        ${tool === 'rect' ? this._number('f-radius', t('anim-studio.shape-inspector.corner-radius-icon-units'), o.radius, 0.5, 12, (n) => this._opt({ radius: n })) : nothing}
         ${tool === 'freehand' || tool === 'motion'
           ? this._smoothing(
               (t, f) => (tool === 'freehand' ? this._refit(t, f) : this._opt({ tolerance: t })),
-              tool === 'freehand' && drawStore.lastFreehand ? t('Changes the last stroke too. The dotted line is what you drew.') : t('More smoothing: fewer points and a calmer line.'),
+              tool === 'freehand' && drawStore.lastFreehand ? t('anim-studio.shape-inspector.changes-the-last-stroke-too-the-dotted') : t('anim-studio.shape-inspector.more-smoothing-fewer-points-and-a-calmer-2'),
               tool === 'freehand' && !this._draw,
             )
           : nothing}
@@ -465,15 +465,15 @@ export class AnimShapeInspector extends LitElement {
               },
             )}
             <section class="group" aria-labelledby="h-new">
-              <div class="group-head"><h3 id="h-new">${t('New shapes')}</h3></div>
-              ${this._seg(t('Layer'), LAYERS, o.layer, (layer) => this._opt({ layer }), 'layer')}
+              <div class="group-head"><h3 id="h-new">${t('anim-studio.shape-inspector.new-shapes')}</h3></div>
+              ${this._seg(t('anim-studio.shape-inspector.layer'), LAYERS, o.layer, (layer) => this._opt({ layer }), 'layer')}
             </section>`
         : nothing}
       ${tool !== 'erase' && tool !== 'select'
         ? html`<section class="group" aria-labelledby="h-snap">
-            <div class="group-head"><h3 id="h-snap">${t('Snapping')}</h3></div>
-            ${this._switch(t('Grid'), t('Points land on whole icon units. Hold Shift to place freely.'), o.grid, () => this._opt({ grid: !o.grid }), 'snap-grid')}
-            ${this._switch(t('Anchor points'), t('Points jump to the icon’s and other shapes’ points nearby.'), o.anchors, () => this._opt({ anchors: !o.anchors }), 'snap-anchors')}
+            <div class="group-head"><h3 id="h-snap">${t('anim-studio.shape-inspector.snapping')}</h3></div>
+            ${this._switch(t('anim-studio.shape-inspector.grid'), t('anim-studio.shape-inspector.points-land-on-whole-icon-units-hold'), o.grid, () => this._opt({ grid: !o.grid }), 'snap-grid')}
+            ${this._switch(t('anim-studio.shape-inspector.anchor-points'), t('anim-studio.shape-inspector.points-jump-to-the-icon-s-and-other'), o.anchors, () => this._opt({ anchors: !o.anchors }), 'snap-anchors')}
           </section>`
         : nothing}
     `;
@@ -488,7 +488,7 @@ export class AnimShapeInspector extends LitElement {
   }
 }
 
-registerPanel({ tag: 'mc-anim-shape-inspector', place: 'inspector', when: drawActive, title: m('Drawing'), order: 30 });
+registerPanel({ tag: 'mc-anim-shape-inspector', place: 'inspector', when: drawActive, title: m('anim-studio.shape-inspector.drawing'), order: 30 });
 
 declare global {
   interface HTMLElementTagNameMap {

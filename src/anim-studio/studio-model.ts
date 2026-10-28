@@ -18,10 +18,10 @@ export type { PreviewTile } from './tiles';
  */
 
 export const KIND_LABEL: Record<AnimationKind, MessageId> = {
-  keyframes: m('Keyframes'),
-  particles: m('Particles'),
-  path: m('Path'),
-  sequence: m('Sequence'),
+  keyframes: m('anim-studio.studio-model.keyframes'),
+  particles: m('anim-studio.studio-model.particles'),
+  path: m('anim-studio.studio-model.path'),
+  sequence: m('anim-studio.studio-model.sequence'),
 };
 
 export const KIND_ICON: Record<AnimationKind, string> = {
@@ -137,10 +137,10 @@ export function uniqueId(base: string, taken: (id: string) => boolean): string {
 
 /** `name`, or `name (copy)`, `name (copy 2)`... : a name not in `names`. */
 export function copyName(name: string, names: Set<string>): string {
-  const base = t('{name} (copy)', { name });
+  const base = t('anim-studio.studio-model.name-copy', { name });
   if (!names.has(base)) return base.slice(0, ANIMATION_CAPS.name);
   for (let n = 2; ; n++) {
-    const next = t('{name} (copy {n})', { name, n });
+    const next = t('anim-studio.studio-model.name-copy-n', { name, n });
     if (!names.has(next)) return next.slice(0, ANIMATION_CAPS.name);
   }
 }
@@ -189,10 +189,10 @@ export const IMPORT_MAX_CHARS = 1024 * 1024;
  * `room` documents come back (the space left in the library); the rest is an error.
  */
 export function parseImport(text: string, taken: (id: string) => boolean, room: number = ANIMATION_CAPS.docs): ImportResult {
-  if (text.length > IMPORT_MAX_CHARS) return { docs: [], errors: [{ path: '', message: t('The YAML is too large to import (over 1 MB).') }], renamed: [] };
+  if (text.length > IMPORT_MAX_CHARS) return { docs: [], errors: [{ path: '', message: t('anim-studio.studio-model.the-yaml-is-too-large-to-import-over-1') }], renamed: [] };
   const raw = fromYaml<unknown>(text);
   if (raw === null || raw === undefined || typeof raw !== 'object') {
-    return { docs: [], errors: [{ path: '', message: text.trim() ? t('Not valid YAML.') : t('Paste or load some YAML first.') }], renamed: [] };
+    return { docs: [], errors: [{ path: '', message: text.trim() ? t('anim-studio.studio-model.not-valid-yaml') : t('anim-studio.studio-model.paste-or-load-some-yaml-first') }], renamed: [] };
   }
   let items: unknown[];
   const obj = raw as Record<string, unknown>;
@@ -200,7 +200,7 @@ export function parseImport(text: string, taken: (id: string) => boolean, room: 
   else if ('custom_animations' in obj) items = listOf(obj.custom_animations);
   else if ('kind' in obj || 'keyframes' in obj) items = [raw];
   else items = listOf(raw);
-  if (!items.length) return { docs: [], errors: [{ path: '', message: t('No animations found.') }], renamed: [] };
+  if (!items.length) return { docs: [], errors: [{ path: '', message: t('anim-studio.studio-model.no-animations-found') }], renamed: [] };
 
   const errors: FieldError[] = [];
   const valid: AnimationDoc[] = [];
@@ -215,8 +215,8 @@ export function parseImport(text: string, taken: (id: string) => boolean, room: 
     errors.push({
       path: '',
       message: fit
-        ? t('The library holds at most {cap} animations: only {fit} more fit, {skipped} were not imported.', { cap, fit, skipped: valid.length - fit })
-        : t('The library is full ({cap} animations): nothing was imported.', { cap }),
+        ? t('anim-studio.studio-model.the-library-holds-at-most-cap-animations', { cap, fit, skipped: valid.length - fit })
+        : t('anim-studio.studio-model.the-library-is-full-cap-animations', { cap }),
     });
     valid.length = fit;
   }
@@ -350,8 +350,8 @@ export function importDocs(items: TransferItem<'animation'>[], room: number): { 
   const errors: string[] = [];
   for (const it of items) {
     const r = validateAnimationDoc({ ...it.data, id: it.id, name: it.name });
-    if (!r.ok) errors.push(`${it.id}: ${r.errors[0] ? validationText(r.errors[0].message) : t('not valid')}`);
-    else if (docs.length >= Math.max(0, room)) errors.push(t('{id}: the library is full', { id: it.id }));
+    if (!r.ok) errors.push(`${it.id}: ${r.errors[0] ? validationText(r.errors[0].message) : t('anim-studio.studio-model.not-valid')}`);
+    else if (docs.length >= Math.max(0, room)) errors.push(t('anim-studio.studio-model.id-the-library-is-full', { id: it.id }));
     else docs.push(r.doc);
   }
   return { docs, errors };
