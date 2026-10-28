@@ -181,7 +181,7 @@ export async function main(argv = process.argv.slice(2)) {
       if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue;
       const spec = st.moduleSpecifier.text;
       if (/contracts\/i18n(-keys)?$/.test(spec) && !st.importClause?.isTypeOnly) err('D7', `${r}: imports a value from the i18n contract (tools only; use import type)`);
-      if (/\.gen$/.test(spec) && !/\/i18n\/index\.ts$/.test(r)) err('D7', `${r}: imports a messages.gen table (only src/<folder>/i18n/index.ts may)`);
+      if (/\.gen$/.test(spec) && !/\/i18n\/index\.ts$|^src\/i18n\/labels\/(index|mark)\.ts$/.test(r)) err('D7', `${r}: imports a messages.gen table (only src/<folder>/i18n/index.ts and src/i18n/labels/{index,mark}.ts may)`);
     }
   }
 

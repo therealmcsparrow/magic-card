@@ -17,7 +17,7 @@ import {
 } from '../../utils/css-properties';
 import { BOX_LONGHANDS, propertyKeys } from '../../utils/css-design-map';
 import { t as lt } from '../../i18n/labels';
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-stack';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
@@ -75,7 +75,7 @@ const isRec = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 
 const isStr = (v: unknown): v is string => typeof v === 'string' && v !== '';
 
 /** Label text of an optional message (labels namespace). */
-const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : lt(id));
+const lbl = (id: MessageIndex | undefined): string | undefined => (id === undefined ? undefined : lt(id));
 
 /** Field types a hover rule cannot apply (the card draws them itself, not through CSS). */
 const NO_HOVER_TYPES = new Set(['animations', 'icon_anim', 'ring', 'shape', 'value_bg']);

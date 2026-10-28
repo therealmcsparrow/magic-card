@@ -12,8 +12,8 @@ import { lm } from '../../i18n/labels/mark';
 class BarModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'bar',
-    name: lm('Bar'),
-    description: lm('Display a progress bar based on entity state'),
+    name: lm('labels.bar-module.bar'),
+    description: lm('labels.bar-module.display-a-progress-bar-based-on-entity'),
     category: 'content',
     icon: 'mdi:chart-bar',
   };

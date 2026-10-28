@@ -854,7 +854,7 @@ export class AnimationList extends LitElement {
 
   protected render(): TemplateResult {
     const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon }).map((n) =>
-      n ? lt('Overrides {name}: both animate the {what}', { name: lt(n.name), what: lt(n.what) }) : undefined,
+      n ? lt('labels.animation-list.overrides-name-both-animate-the-what', { name: lt(n.name), what: lt(n.what) }) : undefined,
     );
     return html`
       <div class="list">

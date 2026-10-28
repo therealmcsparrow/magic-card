@@ -213,7 +213,7 @@ const stringOf = (map, id) => {
 
 /**
  * Moves a namespace to keys. Returns
- * { ns, keys: Map id -> key, files: [{ file, calls }], reworded: [{ locale, from, to }], missingNl, orphans: { us, nl },
+ * { ns, keys: Map id -> key, files: [{ file, calls }], reworded: [{ key, locale, from, to }], missingNl, orphans: { us, nl },
  *   problems, skipped, written }.
  */
 export function migrateNamespace({ ns, nsList = lib.activeNamespaces(), files, root = lib.ROOT, write = false }) {
@@ -293,13 +293,13 @@ export function migrateNamespace({ ns, nsList = lib.activeNamespaces(), files, r
           if (parsed.error) problems.push(`${key}: ${parsed.error}`);
           if (vars) entryOut.vars = vars;
           entryOut.note = noteFor(placeWords, ns, c.ctx);
-          if (gbText !== c.text) reworded.push({ locale: 'en-GB', from: c.text, to: gbText });
+          if (gbText !== c.text) reworded.push({ key, locale: 'en-GB', from: c.text, to: gbText });
           const us = toUS(gbText);
           const legacyUs = stringOf(legacy?.us, c.id);
-          if (legacyUs !== undefined && legacyUs !== us) reworded.push({ locale: 'en-US', from: legacyUs, to: us });
+          if (legacyUs !== undefined && legacyUs !== us) reworded.push({ key, locale: 'en-US', from: legacyUs, to: us });
           const legacyNl = stringOf(legacy?.nl, c.id);
           const nl = legacyNl === undefined ? undefined : reword(legacyNl);
-          if (legacyNl !== undefined && nl !== legacyNl) reworded.push({ locale: 'nl', from: legacyNl, to: nl });
+          if (legacyNl !== undefined && nl !== legacyNl) reworded.push({ key, locale: 'nl', from: legacyNl, to: nl });
           const grown = Math.ceil(longest(gbText, !parsed.error) * MAX_GROWTH);
           entryOut.max = roundUp(Math.max(grown, longest(us, true), nl === undefined ? 0 : longest(nl, true)), MAX_STEP);
           gbOut.set(key, entryOut);
@@ -402,7 +402,7 @@ function printReport(r, write) {
   const out = [];
   out.push(`${write ? '' : 'dry run, nothing written: '}${r.ns}: ${r.keys.size} keys in ${r.files.length} files${r.written ? ' (written)' : ''}`);
   for (const f of r.files) out.push(`  ${f.file}: ${f.calls} calls`);
-  if (r.reworded.length) out.push(`reworded (the snapshot compare needs these):\n${r.reworded.map((x) => `  ${x.locale}: ${JSON.stringify(x.from)} -> ${JSON.stringify(x.to)}`).join('\n')}`);
+  if (r.reworded.length) out.push(`reworded (the snapshot compare needs these):\n${r.reworded.map((x) => `  ${x.key} ${x.locale}: ${JSON.stringify(x.from)} -> ${JSON.stringify(x.to)}`).join('\n')}`);
   if (r.missingNl.length) out.push(`no nl text yet (${r.missingNl.length}):\n${r.missingNl.map((k) => `  ${k}`).join('\n')}`);
   const orphans = [...r.orphans.nl.map((id) => `nl ${JSON.stringify(id)}`), ...r.orphans.us.map((id) => `en-US ${JSON.stringify(id)}`)];
   if (orphans.length) out.push(`catalogue entries no call uses (dropped):\n${orphans.slice(0, 20).map((x) => `  ${x}`).join('\n')}${orphans.length > 20 ? `\n  and ${orphans.length - 20} more` : ''}`);

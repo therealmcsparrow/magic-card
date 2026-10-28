@@ -1,0 +1,3152 @@
+{
+  "labels.animation-conflicts.filter": {
+    "text": "filter",
+    "note": "Shown in animation conflicts (labels).",
+    "max": 10
+  },
+  "labels.animation-conflicts.glow": {
+    "text": "glow",
+    "note": "Shown in animation conflicts (labels).",
+    "max": 10
+  },
+  "labels.animation-conflicts.opacity": {
+    "text": "opacity",
+    "note": "Shown in animation conflicts (labels).",
+    "max": 15
+  },
+  "labels.animation-conflicts.position": {
+    "text": "position",
+    "note": "Shown in animation conflicts (labels).",
+    "max": 15
+  },
+  "labels.animation-conflicts.rotation": {
+    "text": "rotation",
+    "note": "Shown in animation conflicts (labels).",
+    "max": 15
+  },
+  "labels.animation-conflicts.scale": {
+    "text": "scale",
+    "note": "Shown in animation conflicts (labels).",
+    "max": 10
+  },
+  "labels.animation-list.overrides-name-both-animate-the-what": {
+    "text": "Overrides {name}: both animate the {what}",
+    "note": "Shown in animation list (labels).",
+    "max": 70,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "what": "The value that replaces what in the text."
+    }
+  },
+  "labels.animation-presets.3d-rotate": {
+    "text": "3D rotate",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.angle": {
+    "text": "Angle",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.aura": {
+    "text": "Aura",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.aurora": {
+    "text": "Aurora",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.autumn": {
+    "text": "Autumn",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.backgrounds": {
+    "text": "Backgrounds",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.bars": {
+    "text": "Bars",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.beam-width": {
+    "text": "Beam width",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.blink": {
+    "text": "Blink",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.bokeh": {
+    "text": "Bokeh",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.border-snake": {
+    "text": "Border snake",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.border-width": {
+    "text": "Border width",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.borders": {
+    "text": "Borders",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.bounce": {
+    "text": "Bounce",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.breathe": {
+    "text": "Breathe",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.breathing-border": {
+    "text": "Breathing border",
+    "note": "Shown in animation presets (labels).",
+    "max": 30
+  },
+  "labels.animation-presets.brightness": {
+    "text": "Brightness",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.bubbles": {
+    "text": "Bubbles",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.charging-stripes": {
+    "text": "Charging stripes",
+    "note": "Shown in animation presets (labels).",
+    "max": 30
+  },
+  "labels.animation-presets.christmas": {
+    "text": "Christmas",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.clouds": {
+    "text": "Clouds",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.clouds-drift": {
+    "text": "Clouds drift",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.cloudy": {
+    "text": "Cloudy",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.coin-spin": {
+    "text": "Coin spin",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.colour-cycle-background": {
+    "text": "Colour cycle background",
+    "note": "Shown in animation presets (labels).",
+    "max": 40
+  },
+  "labels.animation-presets.confetti": {
+    "text": "Confetti",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.conic-border-spin": {
+    "text": "Conic border spin",
+    "note": "Shown in animation presets (labels).",
+    "max": 30
+  },
+  "labels.animation-presets.day-and-night": {
+    "text": "Day and night",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.density": {
+    "text": "Density",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.depth": {
+    "text": "Depth",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.dim": {
+    "text": "Dim",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.distance": {
+    "text": "Distance",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.dot-size": {
+    "text": "Dot size",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.dots": {
+    "text": "Dots",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.drip": {
+    "text": "Drip",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.dusk-glow": {
+    "text": "Dusk glow",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.ease": {
+    "text": "Ease",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.ease-in": {
+    "text": "Ease in",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.ease-in-out": {
+    "text": "Ease in-out",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.ease-out": {
+    "text": "Ease out",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.easter": {
+    "text": "Easter",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.equalizer-bars": {
+    "text": "Equalizer bars",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.fade": {
+    "text": "Fade",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.fade-pulse": {
+    "text": "Fade pulse",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.falling-leaves": {
+    "text": "Falling leaves",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.fast-spin": {
+    "text": "Fast spin",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.fill-level": {
+    "text": "Fill level",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.fireflies": {
+    "text": "Fireflies",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.fireworks": {
+    "text": "Fireworks",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.flame-flicker": {
+    "text": "Flame flicker",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.flicker": {
+    "text": "Flicker",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.flip": {
+    "text": "Flip",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.float": {
+    "text": "Float",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.foggy": {
+    "text": "Foggy",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.glitch": {
+    "text": "Glitch",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.glow": {
+    "text": "Glow",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.glow-pulse": {
+    "text": "Glow pulse",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.glow-pulse-2": {
+    "text": "Glow & pulse",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.glow-size": {
+    "text": "Glow size",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.gradient-flow": {
+    "text": "Gradient flow",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.halloween": {
+    "text": "Halloween",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.halo-ripple": {
+    "text": "Halo ripple",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.head-shake": {
+    "text": "Head shake",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.heartbeat": {
+    "text": "Heartbeat",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.heat-shimmer": {
+    "text": "Heat shimmer",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.height": {
+    "text": "Height",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.holographic-shimmer": {
+    "text": "Holographic shimmer",
+    "note": "Shown in animation presets (labels).",
+    "max": 35
+  },
+  "labels.animation-presets.hue-range": {
+    "text": "Hue range",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.interaction": {
+    "text": "Interaction",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.jello": {
+    "text": "Jello",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.lava-lamp": {
+    "text": "Lava lamp",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.lift": {
+    "text": "Lift",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.light-colour": {
+    "text": "Light & colour",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.lightning": {
+    "text": "Lightning",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.linear": {
+    "text": "Linear",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.liquid-wave": {
+    "text": "Liquid wave",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.live-weather": {
+    "text": "Live weather",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.marching-ants": {
+    "text": "Marching ants",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.matrix-rain": {
+    "text": "Matrix rain",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.meteor-shower": {
+    "text": "Meteor shower",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.motion": {
+    "text": "Motion",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.neon-border": {
+    "text": "Neon border",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.neon-flicker": {
+    "text": "Neon flicker",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.new-year": {
+    "text": "New Year",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.night-sky": {
+    "text": "Night sky",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.ocean-waves": {
+    "text": "Ocean waves",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.offset": {
+    "text": "Offset",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.orbit": {
+    "text": "Orbit",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.orbit-dots": {
+    "text": "Orbit dots",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.particles": {
+    "text": "Particles",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.pendulum": {
+    "text": "Pendulum",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.ping": {
+    "text": "Ping",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.plasma-gradient": {
+    "text": "Plasma gradient",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.playful": {
+    "text": "Playful",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.pop": {
+    "text": "Pop",
+    "note": "Shown in animation presets (labels).",
+    "max": 5
+  },
+  "labels.animation-presets.power-flow-dots": {
+    "text": "Power flow dots",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.press": {
+    "text": "Press",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.radar-sweep": {
+    "text": "Radar sweep",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.radius": {
+    "text": "Radius",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.rain-fall": {
+    "text": "Rain fall",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.rainbow-hue": {
+    "text": "Rainbow hue",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.rainy": {
+    "text": "Rainy",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.ray-width": {
+    "text": "Ray width",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.ring-size": {
+    "text": "Ring size",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.rings": {
+    "text": "Rings",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.rings-sweeps": {
+    "text": "Rings & sweeps",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.ripple-rings": {
+    "text": "Ripple rings",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.ripples": {
+    "text": "Ripples",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.rotation": {
+    "text": "Rotation",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.rubber-band": {
+    "text": "Rubber band",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.rumble": {
+    "text": "Rumble",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.scale": {
+    "text": "Scale",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.scanline": {
+    "text": "Scanline",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.scenes": {
+    "text": "Scenes",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.seasonal": {
+    "text": "Seasonal",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.shadow-lift": {
+    "text": "Shadow lift",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.shake-alert": {
+    "text": "Shake alert",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.shine": {
+    "text": "Shine",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.shine-sweep": {
+    "text": "Shine sweep",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.smoke": {
+    "text": "Smoke",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.smooth": {
+    "text": "Smooth",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.snap": {
+    "text": "Snap",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.snow-fall": {
+    "text": "Snow fall",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.snowy": {
+    "text": "Snowy",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.sparks": {
+    "text": "Sparks",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.spin": {
+    "text": "Spin",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.spotlight": {
+    "text": "Spotlight",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.spring": {
+    "text": "Spring",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.squash": {
+    "text": "Squash",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.squash-stretch": {
+    "text": "Squash & stretch",
+    "note": "Shown in animation presets (labels).",
+    "max": 30
+  },
+  "labels.animation-presets.starfield": {
+    "text": "Starfield",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.steam-rise": {
+    "text": "Steam rise",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.storm-flash": {
+    "text": "Storm flash",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.streams": {
+    "text": "Streams",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.strength": {
+    "text": "Strength",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.stretch": {
+    "text": "Stretch",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.stripe-strength": {
+    "text": "Stripe strength",
+    "note": "Shown in animation presets (labels).",
+    "max": 25
+  },
+  "labels.animation-presets.summer": {
+    "text": "Summer",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.sun-rays": {
+    "text": "Sun rays",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.sunny": {
+    "text": "Sunny",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.sway": {
+    "text": "Sway",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.swing": {
+    "text": "Swing",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.tada": {
+    "text": "Tada",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.tap-ripple": {
+    "text": "Tap ripple",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.thunderstorm": {
+    "text": "Thunderstorm",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.tilt": {
+    "text": "Tilt",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.twinkle": {
+    "text": "Twinkle",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.typing-dots": {
+    "text": "Typing dots",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.valentine": {
+    "text": "Valentine",
+    "note": "Shown in animation presets (labels).",
+    "max": 15
+  },
+  "labels.animation-presets.water-ripple": {
+    "text": "Water ripple",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.wave-height": {
+    "text": "Wave height",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.weather-device": {
+    "text": "Weather & device",
+    "note": "Shown in animation presets (labels).",
+    "max": 30
+  },
+  "labels.animation-presets.width": {
+    "text": "Width",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.wiggle": {
+    "text": "Wiggle",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.wind-lines": {
+    "text": "Wind lines",
+    "note": "Shown in animation presets (labels).",
+    "max": 20
+  },
+  "labels.animation-presets.windy": {
+    "text": "Windy",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.winter": {
+    "text": "Winter",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.animation-presets.wobble": {
+    "text": "Wobble",
+    "note": "Shown in animation presets (labels).",
+    "max": 10
+  },
+  "labels.bar-module.bar": {
+    "text": "Bar",
+    "note": "Shown in bar module (labels).",
+    "max": 5
+  },
+  "labels.bar-module.display-a-progress-bar-based-on-entity": {
+    "text": "Display a progress bar based on entity state",
+    "note": "Shown in bar module (labels).",
+    "max": 75
+  },
+  "labels.button-module.button": {
+    "text": "Button",
+    "note": "Shown in button module (labels).",
+    "max": 10
+  },
+  "labels.button-module.interactive-button-with-icon-label-and": {
+    "text": "Interactive button with icon, label, and optional state display",
+    "note": "Shown in button module (labels).",
+    "max": 105
+  },
+  "labels.card-settings.backdrop-filter": {
+    "text": "Backdrop filter",
+    "note": "Shown in card settings (labels).",
+    "max": 25
+  },
+  "labels.card-settings.border-colour": {
+    "text": "Border colour",
+    "note": "Shown in card settings (labels).",
+    "max": 25
+  },
+  "labels.card-settings.border-style": {
+    "text": "Border style",
+    "note": "Shown in card settings (labels).",
+    "max": 20
+  },
+  "labels.card-settings.border-width": {
+    "text": "Border width",
+    "note": "Shown in card settings (labels).",
+    "max": 20
+  },
+  "labels.card-settings.margin": {
+    "text": "Margin",
+    "note": "Shown in card settings (labels).",
+    "max": 10
+  },
+  "labels.css-properties.a-truncated-label-ends-in-an-ellipsis": {
+    "text": "A truncated label ends in an ellipsis and shows in full as a tooltip.",
+    "note": "Shown in css properties (labels).",
+    "max": 115
+  },
+  "labels.css-properties.above": {
+    "text": "Above",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.advanced": {
+    "text": "Advanced",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.align-content": {
+    "text": "Align content",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.align-items": {
+    "text": "Align items",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.align-self": {
+    "text": "Align self",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.alignment": {
+    "text": "Alignment",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.all": {
+    "text": "All",
+    "note": "Shown in css properties (labels).",
+    "max": 5
+  },
+  "labels.css-properties.animation-delay": {
+    "text": "Animation delay",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.animation-direction": {
+    "text": "Animation direction",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.animation-duration": {
+    "text": "Animation duration",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.animation-name": {
+    "text": "Animation name",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.animation-timing": {
+    "text": "Animation timing",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.animations": {
+    "text": "Animations",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.area": {
+    "text": "Area",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.auto": {
+    "text": "Auto",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.auto-columns": {
+    "text": "Auto columns",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.auto-flow": {
+    "text": "Auto flow",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.auto-rows": {
+    "text": "Auto rows",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.backdrop-filter": {
+    "text": "Backdrop filter",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.background": {
+    "text": "Background",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.background-attachment": {
+    "text": "Background attachment",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.background-clip": {
+    "text": "Background clip",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.background-colour": {
+    "text": "Background colour",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.background-image": {
+    "text": "Background image",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.background-origin": {
+    "text": "Background origin",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.background-position": {
+    "text": "Background position",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.background-repeat": {
+    "text": "Background repeat",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.background-size": {
+    "text": "Background size",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.backgrounds": {
+    "text": "Backgrounds",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.bar": {
+    "text": "Bar",
+    "note": "Shown in css properties (labels).",
+    "max": 5
+  },
+  "labels.css-properties.bar-background": {
+    "text": "Bar background",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.bar-border-colour": {
+    "text": "Bar border colour",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.bar-border-style": {
+    "text": "Bar border style",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.bar-border-width": {
+    "text": "Bar border width",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.bar-padding": {
+    "text": "Bar padding",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.bar-position": {
+    "text": "Bar position",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.below": {
+    "text": "Below",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.beside": {
+    "text": "Beside",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.border": {
+    "text": "Border",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.border-bottom": {
+    "text": "Border bottom",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.border-collapse": {
+    "text": "Border collapse",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.border-colour": {
+    "text": "Border colour",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.border-left": {
+    "text": "Border left",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.border-length": {
+    "text": "Border length",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.border-radius": {
+    "text": "Border radius",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.border-right": {
+    "text": "Border right",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.border-spacing": {
+    "text": "Border spacing",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.border-style": {
+    "text": "Border style",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.border-top": {
+    "text": "Border top",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.border-width": {
+    "text": "Border width",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.borders-outlines": {
+    "text": "Borders & outlines",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.both": {
+    "text": "Both",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.bottom": {
+    "text": "Bottom",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.box-shadow": {
+    "text": "Box shadow",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.box-sizing": {
+    "text": "Box sizing",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.caption-side": {
+    "text": "Caption side",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.centre": {
+    "text": "Centre",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.circle": {
+    "text": "Circle",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.clear": {
+    "text": "Clear",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.colour": {
+    "text": "Colour",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.column": {
+    "text": "Column",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.column-gap": {
+    "text": "Column gap",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.content-alignment": {
+    "text": "Content alignment",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.css-grid": {
+    "text": "CSS grid",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.cursor": {
+    "text": "Cursor",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.direction": {
+    "text": "Direction",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.disabled-tabs": {
+    "text": "Disabled tabs",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.display": {
+    "text": "Display",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.effects": {
+    "text": "Effects",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.end": {
+    "text": "End",
+    "note": "Shown in css properties (labels).",
+    "max": 5
+  },
+  "labels.css-properties.fade": {
+    "text": "Fade",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.fill-mode": {
+    "text": "Fill mode",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.filter": {
+    "text": "Filter",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.flex": {
+    "text": "Flex",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.flex-basis": {
+    "text": "Flex basis",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.flex-grow": {
+    "text": "Flex grow",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.flex-shrink": {
+    "text": "Flex shrink",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.flexbox": {
+    "text": "Flexbox",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.float": {
+    "text": "Float",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.font-family": {
+    "text": "Font family",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.font-size": {
+    "text": "Font size",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.font-style": {
+    "text": "Font style",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.font-variant": {
+    "text": "Font variant",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.font-weight": {
+    "text": "Font weight",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.gap": {
+    "text": "Gap",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.gap-between-tabs": {
+    "text": "Gap between tabs",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.height": {
+    "text": "Height",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.hidden": {
+    "text": "Hidden",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.icon": {
+    "text": "Icon",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.icon-background": {
+    "text": "Icon background",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.icon-background-shape": {
+    "text": "Icon background shape",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.icon-colour": {
+    "text": "Icon colour",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.icon-gap": {
+    "text": "Icon gap",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.icon-position": {
+    "text": "Icon position",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.icon-size": {
+    "text": "Icon size",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.icon-text": {
+    "text": "Icon & text",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.ignored-when-the-viewer-prefers-reduced": {
+    "text": "Ignored when the viewer prefers reduced motion.",
+    "note": "Shown in css properties (labels).",
+    "max": 80
+  },
+  "labels.css-properties.inset": {
+    "text": "Inset",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.iteration-count": {
+    "text": "Iteration count",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.justify-content": {
+    "text": "Justify content",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.label-colour": {
+    "text": "Label colour",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.label-font-family": {
+    "text": "Label font family",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.label-font-size": {
+    "text": "Label font size",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.label-font-weight": {
+    "text": "Label font weight",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.label-overflow": {
+    "text": "Label overflow",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.label-text-transform": {
+    "text": "Label text transform",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.layout": {
+    "text": "Layout",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.left": {
+    "text": "Left",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.left-and-right-follow-the-text-direction": {
+    "text": "Left and right follow the text direction.",
+    "note": "Shown in css properties (labels).",
+    "max": 70
+  },
+  "labels.css-properties.letter-spacing": {
+    "text": "Letter spacing",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.line-height": {
+    "text": "Line height",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.list-style": {
+    "text": "List style",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.list-style-image": {
+    "text": "List style image",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.list-style-position": {
+    "text": "List style position",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.list-style-type": {
+    "text": "List style type",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.lists-tables": {
+    "text": "Lists & tables",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.margin": {
+    "text": "Margin",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.max-height": {
+    "text": "Max height",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.max-width": {
+    "text": "Max width",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.min-height": {
+    "text": "Min height",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.min-width": {
+    "text": "Min width",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.none": {
+    "text": "None",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.none-or-up-to-two-shadows-for-example-0": {
+    "text": "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).",
+    "note": "Shown in css properties (labels).",
+    "max": 115
+  },
+  "labels.css-properties.normal-or-one-length-for-example-0-05em": {
+    "text": "normal, or one length, for example 0.05em.",
+    "note": "Shown in css properties (labels).",
+    "max": 70
+  },
+  "labels.css-properties.offsets": {
+    "text": "Offsets",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.one-to-four-lengths-for-example-4px-8px": {
+    "text": "One to four lengths, for example 4px 8px.",
+    "note": "Shown in css properties (labels).",
+    "max": 70
+  },
+  "labels.css-properties.opacity": {
+    "text": "Opacity",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.order": {
+    "text": "Order",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.outline": {
+    "text": "Outline",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.outline-colour": {
+    "text": "Outline colour",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.outline-offset": {
+    "text": "Outline offset",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.outline-style": {
+    "text": "Outline style",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.outline-width": {
+    "text": "Outline width",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.overflow": {
+    "text": "Overflow",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.overflow-wrap": {
+    "text": "Overflow wrap",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.overflow-x": {
+    "text": "Overflow X",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.overflow-y": {
+    "text": "Overflow Y",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.padding": {
+    "text": "Padding",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.play-state": {
+    "text": "Play state",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.plays-on-the-tab-button-the-content-fade": {
+    "text": "Plays on the tab button. The content fade or slide is set under Bar.",
+    "note": "Shown in css properties (labels).",
+    "max": 110
+  },
+  "labels.css-properties.pointer-events": {
+    "text": "Pointer events",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.position": {
+    "text": "Position",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.positioning-layout": {
+    "text": "Positioning & layout",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.right": {
+    "text": "Right",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.ring": {
+    "text": "Ring",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.rounded": {
+    "text": "Rounded",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.row": {
+    "text": "Row",
+    "note": "Shown in css properties (labels).",
+    "max": 5
+  },
+  "labels.css-properties.row-gap": {
+    "text": "Row gap",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.shape": {
+    "text": "Shape",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.shorten-the-border-line-e-g-40-for-a": {
+    "text": "Shorten the border line, e.g. 40% for a short accent line.",
+    "note": "Shown in css properties (labels).",
+    "max": 95
+  },
+  "labels.css-properties.sides": {
+    "text": "Sides",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.slide": {
+    "text": "Slide",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.spacing-box-model": {
+    "text": "Spacing & box model",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.start": {
+    "text": "Start",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.state-colour": {
+    "text": "State colour",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.state-font-size": {
+    "text": "State font size",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.state-position": {
+    "text": "State position",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.stretch": {
+    "text": "Stretch",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.style": {
+    "text": "Style",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.tab-alignment": {
+    "text": "Tab alignment",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-animations": {
+    "text": "Tab animations",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-background": {
+    "text": "Tab background",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-bar": {
+    "text": "Tab bar",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.tab-border-colour": {
+    "text": "Tab border colour",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-border-style": {
+    "text": "Tab border style",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-border-width": {
+    "text": "Tab border width",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-corner-radius": {
+    "text": "Tab corner radius",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-font-family": {
+    "text": "Tab font family",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-font-size": {
+    "text": "Tab font size",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-font-weight": {
+    "text": "Tab font weight",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-icon-animation": {
+    "text": "Tab icon animation",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-icon-colour": {
+    "text": "Tab icon colour",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-icon-position": {
+    "text": "Tab icon position",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-icon-size": {
+    "text": "Tab icon size",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-letter-spacing": {
+    "text": "Tab letter spacing",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.tab-opacity": {
+    "text": "Tab opacity",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.tab-padding": {
+    "text": "Tab padding",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.tab-shadow": {
+    "text": "Tab shadow",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.tab-switch-animation": {
+    "text": "Tab switch animation",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.tab-text-colour": {
+    "text": "Tab text colour",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tab-text-transform": {
+    "text": "Tab text transform",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.table-layout": {
+    "text": "Table layout",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.template-areas": {
+    "text": "Template areas",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.template-columns": {
+    "text": "Template columns",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.template-rows": {
+    "text": "Template rows",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.text": {
+    "text": "Text",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.text-align": {
+    "text": "Text align",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.text-decoration": {
+    "text": "Text decoration",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.text-indent": {
+    "text": "Text indent",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.text-overflow": {
+    "text": "Text overflow",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.text-shadow": {
+    "text": "Text shadow",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.text-transform": {
+    "text": "Text transform",
+    "note": "Shown in css properties (labels).",
+    "max": 25
+  },
+  "labels.css-properties.tick-the-tabs-that-cannot-be-opened": {
+    "text": "Tick the tabs that cannot be opened.",
+    "note": "Shown in css properties (labels).",
+    "max": 60
+  },
+  "labels.css-properties.top": {
+    "text": "Top",
+    "note": "Shown in css properties (labels).",
+    "max": 5
+  },
+  "labels.css-properties.transform": {
+    "text": "Transform",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.transform-origin": {
+    "text": "Transform origin",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.transition": {
+    "text": "Transition",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.transition-delay": {
+    "text": "Transition delay",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.transition-duration": {
+    "text": "Transition duration",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.transition-property": {
+    "text": "Transition property",
+    "note": "Shown in css properties (labels).",
+    "max": 35
+  },
+  "labels.css-properties.transition-timing": {
+    "text": "Transition timing",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.transitions-animations": {
+    "text": "Transitions & animations",
+    "note": "Shown in css properties (labels).",
+    "max": 40
+  },
+  "labels.css-properties.truncate": {
+    "text": "Truncate",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-properties.typography": {
+    "text": "Typography",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.value-background": {
+    "text": "Value background",
+    "note": "Shown in css properties (labels).",
+    "max": 30
+  },
+  "labels.css-properties.vertical-content-alignment": {
+    "text": "Vertical content alignment",
+    "note": "Shown in css properties (labels).",
+    "max": 45
+  },
+  "labels.css-properties.visibility": {
+    "text": "Visibility",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.white-space": {
+    "text": "White space",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.width": {
+    "text": "Width",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.word-break": {
+    "text": "Word break",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.word-spacing": {
+    "text": "Word spacing",
+    "note": "Shown in css properties (labels).",
+    "max": 20
+  },
+  "labels.css-properties.wrap": {
+    "text": "Wrap",
+    "note": "Shown in css properties (labels).",
+    "max": 10
+  },
+  "labels.css-properties.z-index": {
+    "text": "Z-index",
+    "note": "Shown in css properties (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.100": {
+    "text": "100",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.200": {
+    "text": "200",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.300": {
+    "text": "300",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.400": {
+    "text": "400",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.500": {
+    "text": "500",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.600": {
+    "text": "600",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.700": {
+    "text": "700",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.800": {
+    "text": "800",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.900": {
+    "text": "900",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.absolute": {
+    "text": "Absolute",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.alternate": {
+    "text": "Alternate",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.alternate-reverse": {
+    "text": "Alternate-reverse",
+    "note": "Shown in css property options (labels).",
+    "max": 30
+  },
+  "labels.css-property-options.anywhere": {
+    "text": "Anywhere",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.auto": {
+    "text": "Auto",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.backwards": {
+    "text": "Backwards",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.baseline": {
+    "text": "Baseline",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.block": {
+    "text": "Block",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.bold": {
+    "text": "Bold",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.border-box": {
+    "text": "Border-box",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.both": {
+    "text": "Both",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.bottom": {
+    "text": "Bottom",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.break-all": {
+    "text": "Break-all",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.break-spaces": {
+    "text": "Break-spaces",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.break-word": {
+    "text": "Break-word",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.capitalize": {
+    "text": "Capitalize",
+    "note": "Shown in css property options (labels).",
+    "max": 25
+  },
+  "labels.css-property-options.centre": {
+    "text": "Centre",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.circle": {
+    "text": "Circle",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.clip": {
+    "text": "Clip",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.collapse": {
+    "text": "Collapse",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.column": {
+    "text": "Column",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.column-dense": {
+    "text": "Column dense",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.column-reverse": {
+    "text": "Column-reverse",
+    "note": "Shown in css property options (labels).",
+    "max": 25
+  },
+  "labels.css-property-options.contain": {
+    "text": "Contain",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.content-box": {
+    "text": "Content-box",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.contents": {
+    "text": "Contents",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.cover": {
+    "text": "Cover",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.crosshair": {
+    "text": "Crosshair",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.dashed": {
+    "text": "Dashed",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.decimal": {
+    "text": "Decimal",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.default": {
+    "text": "Default",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.dense": {
+    "text": "Dense",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.disc": {
+    "text": "Disc",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.dotted": {
+    "text": "Dotted",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.double": {
+    "text": "Double",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.ellipsis": {
+    "text": "Ellipsis",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.fixed": {
+    "text": "Fixed",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.flex": {
+    "text": "Flex",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.flex-end": {
+    "text": "Flex-end",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.flex-start": {
+    "text": "Flex-start",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.forwards": {
+    "text": "Forwards",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.grab": {
+    "text": "Grab",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.grid": {
+    "text": "Grid",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.groove": {
+    "text": "Groove",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.hidden": {
+    "text": "Hidden",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.inline": {
+    "text": "Inline",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.inline-block": {
+    "text": "Inline-block",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.inline-flex": {
+    "text": "Inline-flex",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.inline-grid": {
+    "text": "Inline-grid",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.inset": {
+    "text": "Inset",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.inside": {
+    "text": "Inside",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.italic": {
+    "text": "Italic",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.justify": {
+    "text": "Justify",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.keep-all": {
+    "text": "Keep-all",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.left": {
+    "text": "Left",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.line-through": {
+    "text": "Line-through",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.local": {
+    "text": "Local",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.lower-alpha": {
+    "text": "Lower-alpha",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.lower-roman": {
+    "text": "Lower-roman",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.lowercase": {
+    "text": "Lowercase",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.move": {
+    "text": "Move",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.no-repeat": {
+    "text": "No-repeat",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.none": {
+    "text": "None",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.normal": {
+    "text": "Normal",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.not-allowed": {
+    "text": "Not-allowed",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.nowrap": {
+    "text": "Nowrap",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.oblique": {
+    "text": "Oblique",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.outset": {
+    "text": "Outset",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.outside": {
+    "text": "Outside",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.overline": {
+    "text": "Overline",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.padding-box": {
+    "text": "Padding-box",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.paused": {
+    "text": "Paused",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.pointer": {
+    "text": "Pointer",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.pre": {
+    "text": "Pre",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.pre-line": {
+    "text": "Pre-line",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.pre-wrap": {
+    "text": "Pre-wrap",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.relative": {
+    "text": "Relative",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.repeat": {
+    "text": "Repeat",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.repeat-x": {
+    "text": "Repeat-x",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.repeat-y": {
+    "text": "Repeat-y",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.reverse": {
+    "text": "Reverse",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.ridge": {
+    "text": "Ridge",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.right": {
+    "text": "Right",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.round": {
+    "text": "Round",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.row": {
+    "text": "Row",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.row-dense": {
+    "text": "Row dense",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.row-reverse": {
+    "text": "Row-reverse",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.running": {
+    "text": "Running",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.scroll": {
+    "text": "Scroll",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.separate": {
+    "text": "Separate",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.solid": {
+    "text": "Solid",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.space": {
+    "text": "Space",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.space-around": {
+    "text": "Space-around",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.space-between": {
+    "text": "Space-between",
+    "note": "Shown in css property options (labels).",
+    "max": 25
+  },
+  "labels.css-property-options.space-evenly": {
+    "text": "Space-evenly",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.square": {
+    "text": "Square",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.static": {
+    "text": "Static",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.sticky": {
+    "text": "Sticky",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.stretch": {
+    "text": "Stretch",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.text": {
+    "text": "Text",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.top": {
+    "text": "Top",
+    "note": "Shown in css property options (labels).",
+    "max": 5
+  },
+  "labels.css-property-options.underline": {
+    "text": "Underline",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.upper-alpha": {
+    "text": "Upper-alpha",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.upper-roman": {
+    "text": "Upper-roman",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.css-property-options.uppercase": {
+    "text": "Uppercase",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.visible": {
+    "text": "Visible",
+    "note": "Shown in css property options (labels).",
+    "max": 15
+  },
+  "labels.css-property-options.wait": {
+    "text": "Wait",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.wrap": {
+    "text": "Wrap",
+    "note": "Shown in css property options (labels).",
+    "max": 10
+  },
+  "labels.css-property-options.wrap-reverse": {
+    "text": "Wrap-reverse",
+    "note": "Shown in css property options (labels).",
+    "max": 20
+  },
+  "labels.device-anim.drum-while-cleaning": {
+    "text": "Drum while cleaning",
+    "note": "Shown in device anim (labels).",
+    "max": 35
+  },
+  "labels.device-anim.drum-while-running": {
+    "text": "Drum while running",
+    "note": "Shown in device anim (labels).",
+    "max": 30
+  },
+  "labels.device-anim.drum-while-the-state-is-running-washing": {
+    "text": "Drum while the state is running, washing or drying",
+    "note": "Shown in device anim (labels).",
+    "max": 80
+  },
+  "labels.device-anim.equalizer-while-playing": {
+    "text": "Equalizer while playing",
+    "note": "Shown in device anim (labels).",
+    "max": 40
+  },
+  "labels.device-anim.flame-while-heating-snow-while-cooling": {
+    "text": "Flame while heating, Snow while cooling, Spin while only the fan runs",
+    "note": "Shown in device anim (labels).",
+    "max": 115
+  },
+  "labels.device-anim.glow-while-on-in-the-light-s-colour-and": {
+    "text": "Glow while on, in the light's colour and brightness",
+    "note": "Shown in device anim (labels).",
+    "max": 85
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while": {
+    "text": "Pulse in the alert colour while triggered",
+    "note": "Shown in device anim (labels).",
+    "max": 70
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while-on": {
+    "text": "Pulse in the alert colour while on",
+    "note": "Shown in device anim (labels).",
+    "max": 55
+  },
+  "labels.device-anim.shake-while-jammed-pulse-while-locking": {
+    "text": "Shake while jammed, Pulse while locking or unlocking",
+    "note": "Shown in device anim (labels).",
+    "max": 85
+  },
+  "labels.device-anim.spin-while-on-faster-at-a-higher-speed": {
+    "text": "Spin while on, faster at a higher speed",
+    "note": "Shown in device anim (labels).",
+    "max": 65
+  },
+  "labels.device-anim.swing-a-slightly-opened-pose-while-open": {
+    "text": "Swing: a slightly opened pose while open",
+    "note": "Shown in device anim (labels).",
+    "max": 65
+  },
+  "labels.device-anim.swing-while-opening-or-closing-a": {
+    "text": "Swing while opening or closing, a slightly opened pose while open",
+    "note": "Shown in device anim (labels).",
+    "max": 105
+  },
+  "labels.field-reset.reset-label": {
+    "text": "Reset {label}",
+    "note": "Shown in field reset (labels).",
+    "max": 25,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "labels.field-reset.reset-to-default": {
+    "text": "Reset to default",
+    "note": "Shown in field reset (labels).",
+    "max": 30
+  },
+  "labels.horizontal-module.arrange-child-modules-in-a-row": {
+    "text": "Arrange child modules in a row",
+    "note": "Shown in horizontal module (labels).",
+    "max": 50
+  },
+  "labels.horizontal-module.horizontal": {
+    "text": "Horizontal",
+    "note": "Shown in horizontal module (labels).",
+    "max": 20
+  },
+  "labels.icon-doc.part-n": {
+    "text": "Part {n}",
+    "note": "Shown in icon doc (labels).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "labels.icon-module.display-an-icon-from-mdi-or-entity": {
+    "text": "Display an icon from MDI or entity",
+    "note": "Shown in icon module (labels).",
+    "max": 60
+  },
+  "labels.icon-module.icon": {
+    "text": "Icon",
+    "note": "Shown in icon module (labels).",
+    "max": 10
+  },
+  "labels.info-module.display-entity-name-state-and-attributes": {
+    "text": "Display entity name, state, and attributes",
+    "note": "Shown in info module (labels).",
+    "max": 70
+  },
+  "labels.info-module.info": {
+    "text": "Info",
+    "note": "Shown in info module (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.arc-gauge-for-displaying-numeric-sensor": {
+    "text": "Arc gauge for displaying numeric sensor values",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 75
+  },
+  "labels.lazy-metadata.arrange-child-modules-in-a-slider": {
+    "text": "Arrange child modules in a slider",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 55
+  },
+  "labels.lazy-metadata.camera": {
+    "text": "Camera",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.clock": {
+    "text": "Clock",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.custom-card": {
+    "text": "Custom card",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 20
+  },
+  "labels.lazy-metadata.display-a-camera-entity-stream": {
+    "text": "Display a camera entity stream",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 50
+  },
+  "labels.lazy-metadata.display-a-static-image-or-entity-picture": {
+    "text": "Display a static image or entity picture",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 65
+  },
+  "labels.lazy-metadata.display-current-time-and-date": {
+    "text": "Display current time and date",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 50
+  },
+  "labels.lazy-metadata.display-entity-history-as-a-line-graph": {
+    "text": "Display entity history as a line graph",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 65
+  },
+  "labels.lazy-metadata.display-weather-entity-information": {
+    "text": "Display weather entity information",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 55
+  },
+  "labels.lazy-metadata.display-weather-forecast-data": {
+    "text": "Display weather forecast data",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 50
+  },
+  "labels.lazy-metadata.dropdown": {
+    "text": "Dropdown",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 15
+  },
+  "labels.lazy-metadata.embed-any-3rd-party-lovelace-card": {
+    "text": "Embed any 3rd party Lovelace card",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 55
+  },
+  "labels.lazy-metadata.forecast": {
+    "text": "Forecast",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 20
+  },
+  "labels.lazy-metadata.gauge": {
+    "text": "Gauge",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.graph": {
+    "text": "Graph",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.image": {
+    "text": "Image",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.light": {
+    "text": "Light",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.light-control-with-brightness-colour": {
+    "text": "Light control with brightness, colour temperature, and colour options",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 115
+  },
+  "labels.lazy-metadata.markdown": {
+    "text": "Markdown",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 15
+  },
+  "labels.lazy-metadata.numeric-input-with-increment-and": {
+    "text": "Numeric input with increment and decrement buttons",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 80
+  },
+  "labels.lazy-metadata.range-slider-for-controlling-numeric": {
+    "text": "Range slider for controlling numeric values",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 70
+  },
+  "labels.lazy-metadata.render-markdown-formatted-content": {
+    "text": "Render markdown-formatted content",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 55
+  },
+  "labels.lazy-metadata.select-dropdown-for-choosing-from-a-list": {
+    "text": "Select dropdown for choosing from a list of options",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 85
+  },
+  "labels.lazy-metadata.slider": {
+    "text": "Slider",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 15
+  },
+  "labels.lazy-metadata.slider-layout": {
+    "text": "Slider layout",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 25
+  },
+  "labels.lazy-metadata.spinbox": {
+    "text": "Spinbox",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 15
+  },
+  "labels.lazy-metadata.tabbed-container-for-groups-of-modules": {
+    "text": "Tabbed container for groups of modules",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 65
+  },
+  "labels.lazy-metadata.tabs": {
+    "text": "Tabs",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 10
+  },
+  "labels.lazy-metadata.video-background": {
+    "text": "Video background",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 30
+  },
+  "labels.lazy-metadata.video-playing-behind-the-other-modules": {
+    "text": "Video playing behind the other modules of its column or layout",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 100
+  },
+  "labels.lazy-metadata.weather": {
+    "text": "Weather",
+    "note": "Shown in lazy metadata (labels).",
+    "max": 15
+  },
+  "labels.part-presets.blink": {
+    "text": "Blink",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.blinks-twice": {
+    "text": "Blinks twice",
+    "note": "Shown in part presets (labels).",
+    "max": 20
+  },
+  "labels.part-presets.bounce": {
+    "text": "Bounce",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.delay": {
+    "text": "Delay",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.direction": {
+    "text": "Direction",
+    "note": "Shown in part presets (labels).",
+    "max": 15
+  },
+  "labels.part-presets.draw-loop": {
+    "text": "Draw loop",
+    "note": "Shown in part presets (labels).",
+    "max": 15
+  },
+  "labels.part-presets.draw-on": {
+    "text": "Draw on",
+    "note": "Shown in part presets (labels).",
+    "max": 15
+  },
+  "labels.part-presets.draws-its-outline-then-fills-direction-1": {
+    "text": "Draws its outline, then fills (direction -1 draws it off)",
+    "note": "Shown in part presets (labels).",
+    "max": 95
+  },
+  "labels.part-presets.draws-on-holds-and-draws-off-again": {
+    "text": "Draws on, holds, and draws off again",
+    "note": "Shown in part presets (labels).",
+    "max": 60
+  },
+  "labels.part-presets.drifts-up-and-down": {
+    "text": "Drifts up and down",
+    "note": "Shown in part presets (labels).",
+    "max": 30
+  },
+  "labels.part-presets.duration-share": {
+    "text": "Duration share",
+    "note": "Shown in part presets (labels).",
+    "max": 25
+  },
+  "labels.part-presets.fade": {
+    "text": "Fade",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.fades-out-and-back-in": {
+    "text": "Fades out and back in",
+    "note": "Shown in part presets (labels).",
+    "max": 35
+  },
+  "labels.part-presets.flicker": {
+    "text": "Flicker",
+    "note": "Shown in part presets (labels).",
+    "max": 15
+  },
+  "labels.part-presets.flickers-like-a-flame": {
+    "text": "Flickers like a flame",
+    "note": "Shown in part presets (labels).",
+    "max": 35
+  },
+  "labels.part-presets.float": {
+    "text": "Float",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.grows-and-shrinks-back-direction-1": {
+    "text": "Grows and shrinks back (direction -1 shrinks)",
+    "note": "Shown in part presets (labels).",
+    "max": 75
+  },
+  "labels.part-presets.intensity": {
+    "text": "Intensity",
+    "note": "Shown in part presets (labels).",
+    "max": 15
+  },
+  "labels.part-presets.lights-up-one-part-after-another-on-a": {
+    "text": "Lights up one part after another (on a group or several parts)",
+    "note": "Shown in part presets (labels).",
+    "max": 100
+  },
+  "labels.part-presets.moves-down-and-back": {
+    "text": "Moves down and back",
+    "note": "Shown in part presets (labels).",
+    "max": 35
+  },
+  "labels.part-presets.moves-left-and-back": {
+    "text": "Moves left and back",
+    "note": "Shown in part presets (labels).",
+    "max": 35
+  },
+  "labels.part-presets.moves-right-and-back": {
+    "text": "Moves right and back",
+    "note": "Shown in part presets (labels).",
+    "max": 35
+  },
+  "labels.part-presets.moves-up-and-back": {
+    "text": "Moves up and back",
+    "note": "Shown in part presets (labels).",
+    "max": 30
+  },
+  "labels.part-presets.pop": {
+    "text": "Pop",
+    "note": "Shown in part presets (labels).",
+    "max": 5
+  },
+  "labels.part-presets.pops-in-from-nothing-with-an-overshoot": {
+    "text": "Pops in from nothing with an overshoot",
+    "note": "Shown in part presets (labels).",
+    "max": 65
+  },
+  "labels.part-presets.pulse": {
+    "text": "Pulse",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.ring": {
+    "text": "Ring",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.rings-like-a-bell-quick-swings-that-die": {
+    "text": "Rings like a bell: quick swings that die down",
+    "note": "Shown in part presets (labels).",
+    "max": 75
+  },
+  "labels.part-presets.rocks-on-its-base": {
+    "text": "Rocks on its base",
+    "note": "Shown in part presets (labels).",
+    "max": 30
+  },
+  "labels.part-presets.shake": {
+    "text": "Shake",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.shakes-from-side-to-side": {
+    "text": "Shakes from side to side",
+    "note": "Shown in part presets (labels).",
+    "max": 40
+  },
+  "labels.part-presets.slide-down": {
+    "text": "Slide down",
+    "note": "Shown in part presets (labels).",
+    "max": 25
+  },
+  "labels.part-presets.slide-left": {
+    "text": "Slide left",
+    "note": "Shown in part presets (labels).",
+    "max": 20
+  },
+  "labels.part-presets.slide-right": {
+    "text": "Slide right",
+    "note": "Shown in part presets (labels).",
+    "max": 20
+  },
+  "labels.part-presets.slide-up": {
+    "text": "Slide up",
+    "note": "Shown in part presets (labels).",
+    "max": 20
+  },
+  "labels.part-presets.spin": {
+    "text": "Spin",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.squashes-jumps-and-lands": {
+    "text": "Squashes, jumps and lands",
+    "note": "Shown in part presets (labels).",
+    "max": 40
+  },
+  "labels.part-presets.swing": {
+    "text": "Swing",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.swings-from-its-top-settling-back": {
+    "text": "Swings from its top, settling back",
+    "note": "Shown in part presets (labels).",
+    "max": 55
+  },
+  "labels.part-presets.turns": {
+    "text": "Turns",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.turns-round-at-a-steady-speed-whole": {
+    "text": "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)",
+    "note": "Shown in part presets (labels).",
+    "max": 125
+  },
+  "labels.part-presets.wave": {
+    "text": "Wave",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.part-presets.wobble": {
+    "text": "Wobble",
+    "note": "Shown in part presets (labels).",
+    "max": 10
+  },
+  "labels.row-module.grid-row-with-columns-nestable-inside": {
+    "text": "Grid row with columns, nestable inside any column",
+    "note": "Shown in row module (labels).",
+    "max": 80
+  },
+  "labels.row-module.row": {
+    "text": "Row",
+    "note": "Shown in row module (labels).",
+    "max": 5
+  },
+  "labels.seasonal-labels.autumn": {
+    "text": "Autumn",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.christmas": {
+    "text": "Christmas",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 15
+  },
+  "labels.seasonal-labels.cloudy": {
+    "text": "Cloudy",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.dusk": {
+    "text": "Dusk",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.easter": {
+    "text": "Easter",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.fog": {
+    "text": "Fog",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 5
+  },
+  "labels.seasonal-labels.halloween": {
+    "text": "Halloween",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 15
+  },
+  "labels.seasonal-labels.new-year": {
+    "text": "New Year",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 15
+  },
+  "labels.seasonal-labels.night": {
+    "text": "Night",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.rain": {
+    "text": "Rain",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.snow": {
+    "text": "Snow",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.spring": {
+    "text": "Spring",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.summer": {
+    "text": "Summer",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.sunny": {
+    "text": "Sunny",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.thunderstorm": {
+    "text": "Thunderstorm",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 20
+  },
+  "labels.seasonal-labels.valentine": {
+    "text": "Valentine",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 15
+  },
+  "labels.seasonal-labels.windy": {
+    "text": "Windy",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.seasonal-labels.winter": {
+    "text": "Winter",
+    "note": "Shown in seasonal labels (labels).",
+    "max": 10
+  },
+  "labels.separator-module.separator": {
+    "text": "Separator",
+    "note": "Shown in separator module (labels).",
+    "max": 15
+  },
+  "labels.separator-module.visual-divider-between-modules": {
+    "text": "Visual divider between modules",
+    "note": "Shown in separator module (labels).",
+    "max": 50
+  },
+  "labels.text-module.display-static-or-template-text": {
+    "text": "Display static or template text",
+    "note": "Shown in text module (labels).",
+    "max": 50
+  },
+  "labels.text-module.text": {
+    "text": "Text",
+    "note": "Shown in text module (labels).",
+    "max": 10
+  },
+  "labels.vertical-module.arrange-child-modules-in-a-column": {
+    "text": "Arrange child modules in a column",
+    "note": "Shown in vertical module (labels).",
+    "max": 55
+  },
+  "labels.vertical-module.vertical": {
+    "text": "Vertical",
+    "note": "Shown in vertical module (labels).",
+    "max": 15
+  }
+}

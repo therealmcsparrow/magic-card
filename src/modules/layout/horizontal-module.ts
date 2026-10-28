@@ -11,8 +11,8 @@ import { lm } from '../../i18n/labels/mark';
 class HorizontalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'horizontal',
-    name: lm('Horizontal'),
-    description: lm('Arrange child modules in a row'),
+    name: lm('labels.horizontal-module.horizontal'),
+    description: lm('labels.horizontal-module.arrange-child-modules-in-a-row'),
     category: 'layout',
     icon: 'mdi:arrow-split-vertical',
   };

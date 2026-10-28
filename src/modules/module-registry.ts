@@ -2,7 +2,7 @@ import { MagicModule, MagicModuleMetadata } from './module-types';
 import { CardModule, HomeAssistant, ModuleCategory, ModuleType } from '../types';
 import { html } from 'lit';
 import type { LazyModuleStub, ModuleView, RetryableLazyChunk } from '../contracts/lazy-module';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { currentRenderContext } from '../services/render-context';
 import { chunkNotice } from '../card/chunk-notice';
 
@@ -81,7 +81,7 @@ class ModuleRegistryImpl {
   }
 
   /** `text` turns a name or description into the words the user sees (the labels namespace, which magic-card.js does not carry). */
-  search(query: string, text: (id: MessageId) => string = String): MagicModule[] {
+  search(query: string, text: (id: MessageIndex) => string = String): MagicModule[] {
     const lower = query.toLowerCase();
     return this.getAll().filter(
       (m) =>

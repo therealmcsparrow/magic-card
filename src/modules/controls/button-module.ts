@@ -15,8 +15,8 @@ import { truncates } from '../../utils/button-parts';
 class ButtonModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'button',
-    name: lm('Button'),
-    description: lm('Interactive button with icon, label, and optional state display'),
+    name: lm('labels.button-module.button'),
+    description: lm('labels.button-module.interactive-button-with-icon-label-and'),
     category: 'controls',
     icon: 'mdi:gesture-tap',
   };

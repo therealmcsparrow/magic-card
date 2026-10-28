@@ -1,573 +1,2514 @@
 {
-  "100": "100",
-  "200": "200",
-  "300": "300",
-  "400": "400",
-  "500": "500",
-  "600": "600",
-  "700": "700",
-  "800": "800",
-  "900": "900",
-  "3D rotate": "3D rotate",
-  "A truncated label ends in an ellipsis and shows in full as a tooltip.": "A truncated label ends in an ellipsis and shows in full as a tooltip.",
-  "Above": "Above",
-  "Absolute": "Absolute",
-  "Advanced": "Advanced",
-  "Align content": "Align content",
-  "Align items": "Align items",
-  "Align self": "Align self",
-  "Alignment": "Alignment",
-  "All": "All",
-  "Alternate": "Alternate",
-  "Alternate-reverse": "Alternate-reverse",
-  "Angle": "Angle",
-  "Animation delay": "Animation delay",
-  "Animation direction": "Animation direction",
-  "Animation duration": "Animation duration",
-  "Animation name": "Animation name",
-  "Animation timing": "Animation timing",
-  "Animations": "Animations",
-  "Anywhere": "Anywhere",
-  "Arc gauge for displaying numeric sensor values": "Arc gauge for displaying numeric sensor values",
-  "Area": "Area",
-  "Arrange child modules in a column": "Arrange child modules in a column",
-  "Arrange child modules in a row": "Arrange child modules in a row",
-  "Arrange child modules in a slider": "Arrange child modules in a slider",
-  "Aura": "Aura",
-  "Aurora": "Aurora",
-  "Auto": "Auto",
-  "Auto columns": "Auto columns",
-  "Auto flow": "Auto flow",
-  "Auto rows": "Auto rows",
-  "Autumn": "Autumn",
-  "Backdrop filter": "Backdrop filter",
-  "Background": "Background",
-  "Background attachment": "Background attachment",
-  "Background clip": "Background clip",
-  "Background colour": "Background color",
-  "Background image": "Background image",
-  "Background origin": "Background origin",
-  "Background position": "Background position",
-  "Background repeat": "Background repeat",
-  "Background size": "Background size",
-  "Backgrounds": "Backgrounds",
-  "Backwards": "Backwards",
-  "Bar": "Bar",
-  "Bar background": "Bar background",
-  "Bar border colour": "Bar border color",
-  "Bar border style": "Bar border style",
-  "Bar border width": "Bar border width",
-  "Bar padding": "Bar padding",
-  "Bar position": "Bar position",
-  "Bars": "Bars",
-  "Baseline": "Baseline",
-  "Beam width": "Beam width",
-  "Below": "Below",
-  "Beside": "Beside",
-  "Blink": "Blink",
-  "Blinks twice": "Blinks twice",
-  "Block": "Block",
-  "Bokeh": "Bokeh",
-  "Bold": "Bold",
-  "Border": "Border",
-  "Border bottom": "Border bottom",
-  "Border collapse": "Border collapse",
-  "Border colour": "Border color",
-  "Border left": "Border left",
-  "Border length": "Border length",
-  "Border radius": "Border radius",
-  "Border right": "Border right",
-  "Border snake": "Border snake",
-  "Border spacing": "Border spacing",
-  "Border style": "Border style",
-  "Border top": "Border top",
-  "Border width": "Border width",
-  "Border-box": "Border-box",
-  "Borders": "Borders",
-  "Borders & outlines": "Borders & outlines",
-  "Both": "Both",
-  "Bottom": "Bottom",
-  "Bounce": "Bounce",
-  "Box shadow": "Box shadow",
-  "Box sizing": "Box sizing",
-  "Break-all": "Break-all",
-  "Break-spaces": "Break-spaces",
-  "Break-word": "Break-word",
-  "Breathe": "Breathe",
-  "Breathing border": "Breathing border",
-  "Brightness": "Brightness",
-  "Bubbles": "Bubbles",
-  "Button": "Button",
-  "CSS grid": "CSS grid",
-  "Camera": "Camera",
-  "Capitalize": "Capitalize",
-  "Caption side": "Caption side",
-  "Centre": "Center",
-  "Charging stripes": "Charging stripes",
-  "Christmas": "Christmas",
-  "Circle": "Circle",
-  "Clear": "Clear",
-  "Clip": "Clip",
-  "Clock": "Clock",
-  "Clouds": "Clouds",
-  "Clouds drift": "Clouds drift",
-  "Cloudy": "Cloudy",
-  "Coin spin": "Coin spin",
-  "Collapse": "Collapse",
-  "Colour": "Color",
-  "Colour cycle background": "Color cycle background",
-  "Column": "Column",
-  "Column dense": "Column dense",
-  "Column gap": "Column gap",
-  "Column-reverse": "Column-reverse",
-  "Confetti": "Confetti",
-  "Conic border spin": "Conic border spin",
-  "Contain": "Contain",
-  "Content alignment": "Content alignment",
-  "Content-box": "Content-box",
-  "Contents": "Contents",
-  "Cover": "Cover",
-  "Crosshair": "Crosshair",
-  "Cursor": "Cursor",
-  "Custom card": "Custom card",
-  "Dashed": "Dashed",
-  "Day and night": "Day and night",
-  "Decimal": "Decimal",
-  "Default": "Default",
-  "Delay": "Delay",
-  "Dense": "Dense",
-  "Density": "Density",
-  "Depth": "Depth",
-  "Dim": "Dim",
-  "Direction": "Direction",
-  "Disabled tabs": "Disabled tabs",
-  "Disc": "Disc",
-  "Display": "Display",
-  "Display a camera entity stream": "Display a camera entity stream",
-  "Display a progress bar based on entity state": "Display a progress bar based on entity state",
-  "Display a static image or entity picture": "Display a static image or entity picture",
-  "Display an icon from MDI or entity": "Display an icon from MDI or entity",
-  "Display current time and date": "Display current time and date",
-  "Display entity history as a line graph": "Display entity history as a line graph",
-  "Display entity name, state, and attributes": "Display entity name, state, and attributes",
-  "Display static or template text": "Display static or template text",
-  "Display weather entity information": "Display weather entity information",
-  "Display weather forecast data": "Display weather forecast data",
-  "Distance": "Distance",
-  "Dot size": "Dot size",
-  "Dots": "Dots",
-  "Dotted": "Dotted",
-  "Double": "Double",
-  "Draw loop": "Draw loop",
-  "Draw on": "Draw on",
-  "Draws its outline, then fills (direction -1 draws it off)": "Draws its outline, then fills (direction -1 draws it off)",
-  "Draws on, holds, and draws off again": "Draws on, holds, and draws off again",
-  "Drifts up and down": "Drifts up and down",
-  "Drip": "Drip",
-  "Dropdown": "Dropdown",
-  "Drum while cleaning": "Drum while cleaning",
-  "Drum while running": "Drum while running",
-  "Drum while the state is running, washing or drying": "Drum while the state is running, washing or drying",
-  "Duration share": "Duration share",
-  "Dusk": "Dusk",
-  "Dusk glow": "Dusk glow",
-  "Ease": "Ease",
-  "Ease in": "Ease in",
-  "Ease in-out": "Ease in-out",
-  "Ease out": "Ease out",
-  "Easter": "Easter",
-  "Effects": "Effects",
-  "Ellipsis": "Ellipsis",
-  "Embed any 3rd party Lovelace card": "Embed any 3rd party Lovelace card",
-  "End": "End",
-  "Equalizer bars": "Equalizer bars",
-  "Equalizer while playing": "Equalizer while playing",
-  "Fade": "Fade",
-  "Fade pulse": "Fade pulse",
-  "Fades out and back in": "Fades out and back in",
-  "Falling leaves": "Falling leaves",
-  "Fast spin": "Fast spin",
-  "Fill level": "Fill level",
-  "Fill mode": "Fill mode",
-  "Filter": "Filter",
-  "Fireflies": "Fireflies",
-  "Fireworks": "Fireworks",
-  "Fixed": "Fixed",
-  "Flame flicker": "Flame flicker",
-  "Flame while heating, Snow while cooling, Spin while only the fan runs": "Flame while heating, Snow while cooling, Spin while only the fan runs",
-  "Flex": "Flex",
-  "Flex basis": "Flex basis",
-  "Flex grow": "Flex grow",
-  "Flex shrink": "Flex shrink",
-  "Flex-end": "Flex-end",
-  "Flex-start": "Flex-start",
-  "Flexbox": "Flexbox",
-  "Flicker": "Flicker",
-  "Flickers like a flame": "Flickers like a flame",
-  "Flip": "Flip",
-  "Float": "Float",
-  "Fog": "Fog",
-  "Foggy": "Foggy",
-  "Font family": "Font family",
-  "Font size": "Font size",
-  "Font style": "Font style",
-  "Font variant": "Font variant",
-  "Font weight": "Font weight",
-  "Forecast": "Forecast",
-  "Forwards": "Forwards",
-  "Gap": "Gap",
-  "Gap between tabs": "Gap between tabs",
-  "Gauge": "Gauge",
-  "Glitch": "Glitch",
-  "Glow": "Glow",
-  "Glow & pulse": "Glow & pulse",
-  "Glow pulse": "Glow pulse",
-  "Glow size": "Glow size",
-  "Glow while on, in the light's colour and brightness": "Glow while on, in the light's color and brightness",
-  "Grab": "Grab",
-  "Gradient flow": "Gradient flow",
-  "Graph": "Graph",
-  "Grid": "Grid",
-  "Grid row with columns, nestable inside any column": "Grid row with columns, nestable inside any column",
-  "Groove": "Groove",
-  "Grows and shrinks back (direction -1 shrinks)": "Grows and shrinks back (direction -1 shrinks)",
-  "Halloween": "Halloween",
-  "Halo ripple": "Halo ripple",
-  "Head shake": "Head shake",
-  "Heartbeat": "Heartbeat",
-  "Heat shimmer": "Heat shimmer",
-  "Height": "Height",
-  "Hidden": "Hidden",
-  "Holographic shimmer": "Holographic shimmer",
-  "Horizontal": "Horizontal",
-  "Hue range": "Hue range",
-  "Icon": "Icon",
-  "Icon & text": "Icon & text",
-  "Icon background": "Icon background",
-  "Icon background shape": "Icon background shape",
-  "Icon colour": "Icon color",
-  "Icon gap": "Icon gap",
-  "Icon position": "Icon position",
-  "Icon size": "Icon size",
-  "Ignored when the viewer prefers reduced motion.": "Ignored when the viewer prefers reduced motion.",
-  "Image": "Image",
-  "Info": "Info",
-  "Inline": "Inline",
-  "Inline-block": "Inline-block",
-  "Inline-flex": "Inline-flex",
-  "Inline-grid": "Inline-grid",
-  "Inset": "Inset",
-  "Inside": "Inside",
-  "Intensity": "Intensity",
-  "Interaction": "Interaction",
-  "Interactive button with icon, label, and optional state display": "Interactive button with icon, label, and optional state display",
-  "Italic": "Italic",
-  "Iteration count": "Iteration count",
-  "Jello": "Jello",
-  "Justify": "Justify",
-  "Justify content": "Justify content",
-  "Keep-all": "Keep-all",
-  "Label colour": "Label color",
-  "Label font family": "Label font family",
-  "Label font size": "Label font size",
-  "Label font weight": "Label font weight",
-  "Label overflow": "Label overflow",
-  "Label text transform": "Label text transform",
-  "Lava lamp": "Lava lamp",
-  "Layout": "Layout",
-  "Left": "Left",
-  "Left and right follow the text direction.": "Left and right follow the text direction.",
-  "Letter spacing": "Letter spacing",
-  "Lift": "Lift",
-  "Light": "Light",
-  "Light & colour": "Light & color",
-  "Light control with brightness, colour temperature, and colour options": "Light control with brightness, color temperature, and color options",
-  "Lightning": "Lightning",
-  "Lights up one part after another (on a group or several parts)": "Lights up one part after another (on a group or several parts)",
-  "Line height": "Line height",
-  "Line-through": "Line-through",
-  "Linear": "Linear",
-  "Liquid wave": "Liquid wave",
-  "List style": "List style",
-  "List style image": "List style image",
-  "List style position": "List style position",
-  "List style type": "List style type",
-  "Lists & tables": "Lists & tables",
-  "Live weather": "Live weather",
-  "Local": "Local",
-  "Lower-alpha": "Lower-alpha",
-  "Lower-roman": "Lower-roman",
-  "Lowercase": "Lowercase",
-  "Marching ants": "Marching ants",
-  "Margin": "Margin",
-  "Markdown": "Markdown",
-  "Matrix rain": "Matrix rain",
-  "Max height": "Max height",
-  "Max width": "Max width",
-  "Meteor shower": "Meteor shower",
-  "Min height": "Min height",
-  "Min width": "Min width",
-  "Motion": "Motion",
-  "Move": "Move",
-  "Moves down and back": "Moves down and back",
-  "Moves left and back": "Moves left and back",
-  "Moves right and back": "Moves right and back",
-  "Moves up and back": "Moves up and back",
-  "Neon border": "Neon border",
-  "Neon flicker": "Neon flicker",
-  "New Year": "New Year",
-  "Night": "Night",
-  "Night sky": "Night sky",
-  "No-repeat": "No-repeat",
-  "None": "None",
-  "Normal": "Normal",
-  "Not-allowed": "Not-allowed",
-  "Nowrap": "Nowrap",
-  "Numeric input with increment and decrement buttons": "Numeric input with increment and decrement buttons",
-  "Oblique": "Oblique",
-  "Ocean waves": "Ocean waves",
-  "Offset": "Offset",
-  "Offsets": "Offsets",
-  "One to four lengths, for example 4px 8px.": "One to four lengths, for example 4px 8px.",
-  "Opacity": "Opacity",
-  "Orbit": "Orbit",
-  "Orbit dots": "Orbit dots",
-  "Order": "Order",
-  "Outline": "Outline",
-  "Outline colour": "Outline color",
-  "Outline offset": "Outline offset",
-  "Outline style": "Outline style",
-  "Outline width": "Outline width",
-  "Outset": "Outset",
-  "Outside": "Outside",
-  "Overflow": "Overflow",
-  "Overflow X": "Overflow X",
-  "Overflow Y": "Overflow Y",
-  "Overflow wrap": "Overflow wrap",
-  "Overline": "Overline",
-  "Overrides {name}: both animate the {what}": "Overrides {name}: both animate the {what}",
-  "Padding": "Padding",
-  "Padding-box": "Padding-box",
-  "Part {n}": "Part {n}",
-  "Particles": "Particles",
-  "Paused": "Paused",
-  "Pendulum": "Pendulum",
-  "Ping": "Ping",
-  "Plasma gradient": "Plasma gradient",
-  "Play state": "Play state",
-  "Playful": "Playful",
-  "Plays on the tab button. The content fade or slide is set under Bar.": "Plays on the tab button. The content fade or slide is set under Bar.",
-  "Pointer": "Pointer",
-  "Pointer events": "Pointer events",
-  "Pop": "Pop",
-  "Pops in from nothing with an overshoot": "Pops in from nothing with an overshoot",
-  "Position": "Position",
-  "Positioning & layout": "Positioning & layout",
-  "Power flow dots": "Power flow dots",
-  "Pre": "Pre",
-  "Pre-line": "Pre-line",
-  "Pre-wrap": "Pre-wrap",
-  "Press": "Press",
-  "Pulse": "Pulse",
-  "Pulse in the alert colour while on": "Pulse in the alert color while on",
-  "Pulse in the alert colour while triggered": "Pulse in the alert color while triggered",
-  "Radar sweep": "Radar sweep",
-  "Radius": "Radius",
-  "Rain": "Rain",
-  "Rain fall": "Rain fall",
-  "Rainbow hue": "Rainbow hue",
-  "Rainy": "Rainy",
-  "Range slider for controlling numeric values": "Range slider for controlling numeric values",
-  "Ray width": "Ray width",
-  "Relative": "Relative",
-  "Render markdown-formatted content": "Render markdown-formatted content",
-  "Repeat": "Repeat",
-  "Repeat-x": "Repeat-x",
-  "Repeat-y": "Repeat-y",
-  "Reset to default": "Reset to default",
-  "Reset {label}": "Reset {label}",
-  "Reverse": "Reverse",
-  "Ridge": "Ridge",
-  "Right": "Right",
-  "Ring": "Ring",
-  "Ring size": "Ring size",
-  "Rings": "Rings",
-  "Rings & sweeps": "Rings & sweeps",
-  "Rings like a bell: quick swings that die down": "Rings like a bell: quick swings that die down",
-  "Ripple rings": "Ripple rings",
-  "Ripples": "Ripples",
-  "Rocks on its base": "Rocks on its base",
-  "Rotation": "Rotation",
-  "Round": "Round",
-  "Rounded": "Rounded",
-  "Row": "Row",
-  "Row dense": "Row dense",
-  "Row gap": "Row gap",
-  "Row-reverse": "Row-reverse",
-  "Rubber band": "Rubber band",
-  "Rumble": "Rumble",
-  "Running": "Running",
-  "Scale": "Scale",
-  "Scanline": "Scanline",
-  "Scenes": "Scenes",
-  "Scroll": "Scroll",
-  "Seasonal": "Seasonal",
-  "Select dropdown for choosing from a list of options": "Select dropdown for choosing from a list of options",
-  "Separate": "Separate",
-  "Separator": "Separator",
-  "Shadow lift": "Shadow lift",
-  "Shake": "Shake",
-  "Shake alert": "Shake alert",
-  "Shake while jammed, Pulse while locking or unlocking": "Shake while jammed, Pulse while locking or unlocking",
-  "Shakes from side to side": "Shakes from side to side",
-  "Shape": "Shape",
-  "Shine": "Shine",
-  "Shine sweep": "Shine sweep",
-  "Shorten the border line, e.g. 40% for a short accent line.": "Shorten the border line, e.g. 40% for a short accent line.",
-  "Sides": "Sides",
-  "Slide": "Slide",
-  "Slide down": "Slide down",
-  "Slide left": "Slide left",
-  "Slide right": "Slide right",
-  "Slide up": "Slide up",
-  "Slider": "Slider",
-  "Slider layout": "Slider layout",
-  "Smoke": "Smoke",
-  "Smooth": "Smooth",
-  "Snap": "Snap",
-  "Snow": "Snow",
-  "Snow fall": "Snow fall",
-  "Snowy": "Snowy",
-  "Solid": "Solid",
-  "Space": "Space",
-  "Space-around": "Space-around",
-  "Space-between": "Space-between",
-  "Space-evenly": "Space-evenly",
-  "Spacing & box model": "Spacing & box model",
-  "Sparks": "Sparks",
-  "Spin": "Spin",
-  "Spin while on, faster at a higher speed": "Spin while on, faster at a higher speed",
-  "Spinbox": "Spinbox",
-  "Spotlight": "Spotlight",
-  "Spring": "Spring",
-  "Square": "Square",
-  "Squash": "Squash",
-  "Squash & stretch": "Squash & stretch",
-  "Squashes, jumps and lands": "Squashes, jumps and lands",
-  "Starfield": "Starfield",
-  "Start": "Start",
-  "State colour": "State color",
-  "State font size": "State font size",
-  "State position": "State position",
-  "Static": "Static",
-  "Steam rise": "Steam rise",
-  "Sticky": "Sticky",
-  "Storm flash": "Storm flash",
-  "Streams": "Streams",
-  "Strength": "Strength",
-  "Stretch": "Stretch",
-  "Stripe strength": "Stripe strength",
-  "Style": "Style",
-  "Summer": "Summer",
-  "Sun rays": "Sun rays",
-  "Sunny": "Sunny",
-  "Sway": "Sway",
-  "Swing": "Swing",
-  "Swing while opening or closing, a slightly opened pose while open": "Swing while opening or closing, a slightly opened pose while open",
-  "Swing: a slightly opened pose while open": "Swing: a slightly opened pose while open",
-  "Swings from its top, settling back": "Swings from its top, settling back",
-  "Tab alignment": "Tab alignment",
-  "Tab animations": "Tab animations",
-  "Tab background": "Tab background",
-  "Tab bar": "Tab bar",
-  "Tab border colour": "Tab border color",
-  "Tab border style": "Tab border style",
-  "Tab border width": "Tab border width",
-  "Tab corner radius": "Tab corner radius",
-  "Tab font family": "Tab font family",
-  "Tab font size": "Tab font size",
-  "Tab font weight": "Tab font weight",
-  "Tab icon animation": "Tab icon animation",
-  "Tab icon colour": "Tab icon color",
-  "Tab icon position": "Tab icon position",
-  "Tab icon size": "Tab icon size",
-  "Tab letter spacing": "Tab letter spacing",
-  "Tab opacity": "Tab opacity",
-  "Tab padding": "Tab padding",
-  "Tab shadow": "Tab shadow",
-  "Tab switch animation": "Tab switch animation",
-  "Tab text colour": "Tab text color",
-  "Tab text transform": "Tab text transform",
-  "Tabbed container for groups of modules": "Tabbed container for groups of modules",
-  "Table layout": "Table layout",
-  "Tabs": "Tabs",
-  "Tada": "Tada",
-  "Tap ripple": "Tap ripple",
-  "Template areas": "Template areas",
-  "Template columns": "Template columns",
-  "Template rows": "Template rows",
-  "Text": "Text",
-  "Text align": "Text align",
-  "Text decoration": "Text decoration",
-  "Text indent": "Text indent",
-  "Text overflow": "Text overflow",
-  "Text shadow": "Text shadow",
-  "Text transform": "Text transform",
-  "Thunderstorm": "Thunderstorm",
-  "Tick the tabs that cannot be opened.": "Tick the tabs that cannot be opened.",
-  "Tilt": "Tilt",
-  "Top": "Top",
-  "Transform": "Transform",
-  "Transform origin": "Transform origin",
-  "Transition": "Transition",
-  "Transition delay": "Transition delay",
-  "Transition duration": "Transition duration",
-  "Transition property": "Transition property",
-  "Transition timing": "Transition timing",
-  "Transitions & animations": "Transitions & animations",
-  "Truncate": "Truncate",
-  "Turns": "Turns",
-  "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)": "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)",
-  "Twinkle": "Twinkle",
-  "Typing dots": "Typing dots",
-  "Typography": "Typography",
-  "Underline": "Underline",
-  "Upper-alpha": "Upper-alpha",
-  "Upper-roman": "Upper-roman",
-  "Uppercase": "Uppercase",
-  "Valentine": "Valentine",
-  "Value background": "Value background",
-  "Vertical": "Vertical",
-  "Vertical content alignment": "Vertical content alignment",
-  "Video background": "Video background",
-  "Video playing behind the other modules of its column or layout": "Video playing behind the other modules of its column or layout",
-  "Visibility": "Visibility",
-  "Visible": "Visible",
-  "Visual divider between modules": "Visual divider between modules",
-  "Wait": "Wait",
-  "Water ripple": "Water ripple",
-  "Wave": "Wave",
-  "Wave height": "Wave height",
-  "Weather": "Weather",
-  "Weather & device": "Weather & device",
-  "White space": "White space",
-  "Width": "Width",
-  "Wiggle": "Wiggle",
-  "Wind lines": "Wind lines",
-  "Windy": "Windy",
-  "Winter": "Winter",
-  "Wobble": "Wobble",
-  "Word break": "Word break",
-  "Word spacing": "Word spacing",
-  "Wrap": "Wrap",
-  "Wrap-reverse": "Wrap-reverse",
-  "Z-index": "Z-index",
-  "filter": "filter",
-  "glow": "glow",
-  "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).": "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).",
-  "normal, or one length, for example 0.05em.": "normal, or one length, for example 0.05em.",
-  "opacity": "opacity",
-  "position": "position",
-  "rotation": "rotation",
-  "scale": "scale"
+  "labels.animation-conflicts.filter": {
+    "text": "filter",
+    "hash": "dfc3376b"
+  },
+  "labels.animation-conflicts.glow": {
+    "text": "glow",
+    "hash": "d27608cc"
+  },
+  "labels.animation-conflicts.opacity": {
+    "text": "opacity",
+    "hash": "ad9a0b2e"
+  },
+  "labels.animation-conflicts.position": {
+    "text": "position",
+    "hash": "5a452459"
+  },
+  "labels.animation-conflicts.rotation": {
+    "text": "rotation",
+    "hash": "224610f1"
+  },
+  "labels.animation-conflicts.scale": {
+    "text": "scale",
+    "hash": "f469802a"
+  },
+  "labels.animation-list.overrides-name-both-animate-the-what": {
+    "text": "Overrides {name}: both animate the {what}",
+    "hash": "474f9007"
+  },
+  "labels.animation-presets.3d-rotate": {
+    "text": "3D rotate",
+    "hash": "48f85358"
+  },
+  "labels.animation-presets.angle": {
+    "text": "Angle",
+    "hash": "1968034b"
+  },
+  "labels.animation-presets.aura": {
+    "text": "Aura",
+    "hash": "224ea01e"
+  },
+  "labels.animation-presets.aurora": {
+    "text": "Aurora",
+    "hash": "e9de098c"
+  },
+  "labels.animation-presets.autumn": {
+    "text": "Autumn",
+    "hash": "e0906c2d"
+  },
+  "labels.animation-presets.backgrounds": {
+    "text": "Backgrounds",
+    "hash": "16a0b5fa"
+  },
+  "labels.animation-presets.bars": {
+    "text": "Bars",
+    "hash": "f2c35269"
+  },
+  "labels.animation-presets.beam-width": {
+    "text": "Beam width",
+    "hash": "5d37caea"
+  },
+  "labels.animation-presets.blink": {
+    "text": "Blink",
+    "hash": "a37430e2"
+  },
+  "labels.animation-presets.bokeh": {
+    "text": "Bokeh",
+    "hash": "6b70f7a0"
+  },
+  "labels.animation-presets.border-snake": {
+    "text": "Border snake",
+    "hash": "04a8bbe1"
+  },
+  "labels.animation-presets.border-width": {
+    "text": "Border width",
+    "hash": "182ee0a2"
+  },
+  "labels.animation-presets.borders": {
+    "text": "Borders",
+    "hash": "0de9f358"
+  },
+  "labels.animation-presets.bounce": {
+    "text": "Bounce",
+    "hash": "24b6ed11"
+  },
+  "labels.animation-presets.breathe": {
+    "text": "Breathe",
+    "hash": "f761a83f"
+  },
+  "labels.animation-presets.breathing-border": {
+    "text": "Breathing border",
+    "hash": "6a404b36"
+  },
+  "labels.animation-presets.brightness": {
+    "text": "Brightness",
+    "hash": "ec811d30"
+  },
+  "labels.animation-presets.bubbles": {
+    "text": "Bubbles",
+    "hash": "d0bba2c5"
+  },
+  "labels.animation-presets.charging-stripes": {
+    "text": "Charging stripes",
+    "hash": "f50bdd64"
+  },
+  "labels.animation-presets.christmas": {
+    "text": "Christmas",
+    "hash": "a09948e8"
+  },
+  "labels.animation-presets.clouds": {
+    "text": "Clouds",
+    "hash": "e45347b0"
+  },
+  "labels.animation-presets.clouds-drift": {
+    "text": "Clouds drift",
+    "hash": "7df8f8d4"
+  },
+  "labels.animation-presets.cloudy": {
+    "text": "Cloudy",
+    "hash": "c63401ab"
+  },
+  "labels.animation-presets.coin-spin": {
+    "text": "Coin spin",
+    "hash": "09dc12f6"
+  },
+  "labels.animation-presets.colour-cycle-background": {
+    "text": "Color cycle background",
+    "hash": "05a7053d"
+  },
+  "labels.animation-presets.confetti": {
+    "text": "Confetti",
+    "hash": "2b54343f"
+  },
+  "labels.animation-presets.conic-border-spin": {
+    "text": "Conic border spin",
+    "hash": "7f9ab043"
+  },
+  "labels.animation-presets.day-and-night": {
+    "text": "Day and night",
+    "hash": "8b1a00de"
+  },
+  "labels.animation-presets.density": {
+    "text": "Density",
+    "hash": "77a283d6"
+  },
+  "labels.animation-presets.depth": {
+    "text": "Depth",
+    "hash": "f1dbc339"
+  },
+  "labels.animation-presets.dim": {
+    "text": "Dim",
+    "hash": "ea53b1cb"
+  },
+  "labels.animation-presets.distance": {
+    "text": "Distance",
+    "hash": "b7bdf7a2"
+  },
+  "labels.animation-presets.dot-size": {
+    "text": "Dot size",
+    "hash": "97c5bc43"
+  },
+  "labels.animation-presets.dots": {
+    "text": "Dots",
+    "hash": "6de335fa"
+  },
+  "labels.animation-presets.drip": {
+    "text": "Drip",
+    "hash": "4b841ee3"
+  },
+  "labels.animation-presets.dusk-glow": {
+    "text": "Dusk glow",
+    "hash": "b34edf71"
+  },
+  "labels.animation-presets.ease": {
+    "text": "Ease",
+    "hash": "9da61502"
+  },
+  "labels.animation-presets.ease-in": {
+    "text": "Ease in",
+    "hash": "4980c07a"
+  },
+  "labels.animation-presets.ease-in-out": {
+    "text": "Ease in-out",
+    "hash": "035db650"
+  },
+  "labels.animation-presets.ease-out": {
+    "text": "Ease out",
+    "hash": "c0eb732d"
+  },
+  "labels.animation-presets.easter": {
+    "text": "Easter",
+    "hash": "56277ffc"
+  },
+  "labels.animation-presets.equalizer-bars": {
+    "text": "Equalizer bars",
+    "hash": "4bf0dfae"
+  },
+  "labels.animation-presets.fade": {
+    "text": "Fade",
+    "hash": "9efb597c"
+  },
+  "labels.animation-presets.fade-pulse": {
+    "text": "Fade pulse",
+    "hash": "04dcdc05"
+  },
+  "labels.animation-presets.falling-leaves": {
+    "text": "Falling leaves",
+    "hash": "c813430d"
+  },
+  "labels.animation-presets.fast-spin": {
+    "text": "Fast spin",
+    "hash": "6d36dd34"
+  },
+  "labels.animation-presets.fill-level": {
+    "text": "Fill level",
+    "hash": "3075e8a1"
+  },
+  "labels.animation-presets.fireflies": {
+    "text": "Fireflies",
+    "hash": "b553e429"
+  },
+  "labels.animation-presets.fireworks": {
+    "text": "Fireworks",
+    "hash": "f9896d55"
+  },
+  "labels.animation-presets.flame-flicker": {
+    "text": "Flame flicker",
+    "hash": "119f42b3"
+  },
+  "labels.animation-presets.flicker": {
+    "text": "Flicker",
+    "hash": "ba3baf3d"
+  },
+  "labels.animation-presets.flip": {
+    "text": "Flip",
+    "hash": "2449d137"
+  },
+  "labels.animation-presets.float": {
+    "text": "Float",
+    "hash": "1a693c00"
+  },
+  "labels.animation-presets.foggy": {
+    "text": "Foggy",
+    "hash": "fa5abf9d"
+  },
+  "labels.animation-presets.glitch": {
+    "text": "Glitch",
+    "hash": "14980158"
+  },
+  "labels.animation-presets.glow": {
+    "text": "Glow",
+    "hash": "f534ed97"
+  },
+  "labels.animation-presets.glow-pulse": {
+    "text": "Glow pulse",
+    "hash": "b00ea7bf"
+  },
+  "labels.animation-presets.glow-pulse-2": {
+    "text": "Glow & pulse",
+    "hash": "928d47d5"
+  },
+  "labels.animation-presets.glow-size": {
+    "text": "Glow size",
+    "hash": "9ddd0e70"
+  },
+  "labels.animation-presets.gradient-flow": {
+    "text": "Gradient flow",
+    "hash": "cf0acd5f"
+  },
+  "labels.animation-presets.halloween": {
+    "text": "Halloween",
+    "hash": "049566b6"
+  },
+  "labels.animation-presets.halo-ripple": {
+    "text": "Halo ripple",
+    "hash": "666805c0"
+  },
+  "labels.animation-presets.head-shake": {
+    "text": "Head shake",
+    "hash": "f7cb7ed5"
+  },
+  "labels.animation-presets.heartbeat": {
+    "text": "Heartbeat",
+    "hash": "9df89427"
+  },
+  "labels.animation-presets.heat-shimmer": {
+    "text": "Heat shimmer",
+    "hash": "cf56cc06"
+  },
+  "labels.animation-presets.height": {
+    "text": "Height",
+    "hash": "bfe2eca4"
+  },
+  "labels.animation-presets.holographic-shimmer": {
+    "text": "Holographic shimmer",
+    "hash": "cd507b40"
+  },
+  "labels.animation-presets.hue-range": {
+    "text": "Hue range",
+    "hash": "3cda0f66"
+  },
+  "labels.animation-presets.interaction": {
+    "text": "Interaction",
+    "hash": "b7d28632"
+  },
+  "labels.animation-presets.jello": {
+    "text": "Jello",
+    "hash": "2c5cccf6"
+  },
+  "labels.animation-presets.lava-lamp": {
+    "text": "Lava lamp",
+    "hash": "b6146f1b"
+  },
+  "labels.animation-presets.lift": {
+    "text": "Lift",
+    "hash": "871eee33"
+  },
+  "labels.animation-presets.light-colour": {
+    "text": "Light & color",
+    "hash": "8026d9d7"
+  },
+  "labels.animation-presets.lightning": {
+    "text": "Lightning",
+    "hash": "41e68f2c"
+  },
+  "labels.animation-presets.linear": {
+    "text": "Linear",
+    "hash": "e6950b45"
+  },
+  "labels.animation-presets.liquid-wave": {
+    "text": "Liquid wave",
+    "hash": "4161e5a2"
+  },
+  "labels.animation-presets.live-weather": {
+    "text": "Live weather",
+    "hash": "3bc3a9ab"
+  },
+  "labels.animation-presets.marching-ants": {
+    "text": "Marching ants",
+    "hash": "61457667"
+  },
+  "labels.animation-presets.matrix-rain": {
+    "text": "Matrix rain",
+    "hash": "98d87c8c"
+  },
+  "labels.animation-presets.meteor-shower": {
+    "text": "Meteor shower",
+    "hash": "5a17e573"
+  },
+  "labels.animation-presets.motion": {
+    "text": "Motion",
+    "hash": "8ca34424"
+  },
+  "labels.animation-presets.neon-border": {
+    "text": "Neon border",
+    "hash": "aa89604c"
+  },
+  "labels.animation-presets.neon-flicker": {
+    "text": "Neon flicker",
+    "hash": "8f57fb07"
+  },
+  "labels.animation-presets.new-year": {
+    "text": "New Year",
+    "hash": "1353c72b"
+  },
+  "labels.animation-presets.night-sky": {
+    "text": "Night sky",
+    "hash": "14deec23"
+  },
+  "labels.animation-presets.ocean-waves": {
+    "text": "Ocean waves",
+    "hash": "48652ee0"
+  },
+  "labels.animation-presets.offset": {
+    "text": "Offset",
+    "hash": "b1a1e8e3"
+  },
+  "labels.animation-presets.orbit": {
+    "text": "Orbit",
+    "hash": "29ac7e56"
+  },
+  "labels.animation-presets.orbit-dots": {
+    "text": "Orbit dots",
+    "hash": "dd0c7e8c"
+  },
+  "labels.animation-presets.particles": {
+    "text": "Particles",
+    "hash": "e73735cf"
+  },
+  "labels.animation-presets.pendulum": {
+    "text": "Pendulum",
+    "hash": "0ea95b82"
+  },
+  "labels.animation-presets.ping": {
+    "text": "Ping",
+    "hash": "6a4c3a44"
+  },
+  "labels.animation-presets.plasma-gradient": {
+    "text": "Plasma gradient",
+    "hash": "3d0f137a"
+  },
+  "labels.animation-presets.playful": {
+    "text": "Playful",
+    "hash": "dde9ac29"
+  },
+  "labels.animation-presets.pop": {
+    "text": "Pop",
+    "hash": "4d616d53"
+  },
+  "labels.animation-presets.power-flow-dots": {
+    "text": "Power flow dots",
+    "hash": "806dfbfb"
+  },
+  "labels.animation-presets.press": {
+    "text": "Press",
+    "hash": "9ed1273e"
+  },
+  "labels.animation-presets.radar-sweep": {
+    "text": "Radar sweep",
+    "hash": "f97797a8"
+  },
+  "labels.animation-presets.radius": {
+    "text": "Radius",
+    "hash": "6fe0661c"
+  },
+  "labels.animation-presets.rain-fall": {
+    "text": "Rain fall",
+    "hash": "215e6d1e"
+  },
+  "labels.animation-presets.rainbow-hue": {
+    "text": "Rainbow hue",
+    "hash": "be5dc907"
+  },
+  "labels.animation-presets.rainy": {
+    "text": "Rainy",
+    "hash": "8f98c959"
+  },
+  "labels.animation-presets.ray-width": {
+    "text": "Ray width",
+    "hash": "18488f63"
+  },
+  "labels.animation-presets.ring-size": {
+    "text": "Ring size",
+    "hash": "bd3eef41"
+  },
+  "labels.animation-presets.rings": {
+    "text": "Rings",
+    "hash": "bab4c75d"
+  },
+  "labels.animation-presets.rings-sweeps": {
+    "text": "Rings & sweeps",
+    "hash": "506737c7"
+  },
+  "labels.animation-presets.ripple-rings": {
+    "text": "Ripple rings",
+    "hash": "42fb77d3"
+  },
+  "labels.animation-presets.ripples": {
+    "text": "Ripples",
+    "hash": "6f0d79ac"
+  },
+  "labels.animation-presets.rotation": {
+    "text": "Rotation",
+    "hash": "57b5e2fc"
+  },
+  "labels.animation-presets.rubber-band": {
+    "text": "Rubber band",
+    "hash": "0dfe3ea3"
+  },
+  "labels.animation-presets.rumble": {
+    "text": "Rumble",
+    "hash": "78b3cc36"
+  },
+  "labels.animation-presets.scale": {
+    "text": "Scale",
+    "hash": "f102986b"
+  },
+  "labels.animation-presets.scanline": {
+    "text": "Scanline",
+    "hash": "a7c2ae1a"
+  },
+  "labels.animation-presets.scenes": {
+    "text": "Scenes",
+    "hash": "160c0535"
+  },
+  "labels.animation-presets.seasonal": {
+    "text": "Seasonal",
+    "hash": "7237db5b"
+  },
+  "labels.animation-presets.shadow-lift": {
+    "text": "Shadow lift",
+    "hash": "aca41ccb"
+  },
+  "labels.animation-presets.shake-alert": {
+    "text": "Shake alert",
+    "hash": "2de78168"
+  },
+  "labels.animation-presets.shine": {
+    "text": "Shine",
+    "hash": "fcdb859f"
+  },
+  "labels.animation-presets.shine-sweep": {
+    "text": "Shine sweep",
+    "hash": "adec8af9"
+  },
+  "labels.animation-presets.smoke": {
+    "text": "Smoke",
+    "hash": "29b52bfc"
+  },
+  "labels.animation-presets.smooth": {
+    "text": "Smooth",
+    "hash": "da519387"
+  },
+  "labels.animation-presets.snap": {
+    "text": "Snap",
+    "hash": "98df9a59"
+  },
+  "labels.animation-presets.snow-fall": {
+    "text": "Snow fall",
+    "hash": "92177330"
+  },
+  "labels.animation-presets.snowy": {
+    "text": "Snowy",
+    "hash": "2a3fb91a"
+  },
+  "labels.animation-presets.sparks": {
+    "text": "Sparks",
+    "hash": "6905661c"
+  },
+  "labels.animation-presets.spin": {
+    "text": "Spin",
+    "hash": "b9e96ae5"
+  },
+  "labels.animation-presets.spotlight": {
+    "text": "Spotlight",
+    "hash": "fca7aa83"
+  },
+  "labels.animation-presets.spring": {
+    "text": "Spring",
+    "hash": "db29e82a"
+  },
+  "labels.animation-presets.squash": {
+    "text": "Squash",
+    "hash": "9f9a8456"
+  },
+  "labels.animation-presets.squash-stretch": {
+    "text": "Squash & stretch",
+    "hash": "c2f66f23"
+  },
+  "labels.animation-presets.starfield": {
+    "text": "Starfield",
+    "hash": "daad7f70"
+  },
+  "labels.animation-presets.steam-rise": {
+    "text": "Steam rise",
+    "hash": "f38c5a74"
+  },
+  "labels.animation-presets.storm-flash": {
+    "text": "Storm flash",
+    "hash": "2b7eca08"
+  },
+  "labels.animation-presets.streams": {
+    "text": "Streams",
+    "hash": "bfd297af"
+  },
+  "labels.animation-presets.strength": {
+    "text": "Strength",
+    "hash": "63ee3a1b"
+  },
+  "labels.animation-presets.stretch": {
+    "text": "Stretch",
+    "hash": "a33fbcf8"
+  },
+  "labels.animation-presets.stripe-strength": {
+    "text": "Stripe strength",
+    "hash": "d1ef97d5"
+  },
+  "labels.animation-presets.summer": {
+    "text": "Summer",
+    "hash": "c0de243c"
+  },
+  "labels.animation-presets.sun-rays": {
+    "text": "Sun rays",
+    "hash": "2f39e8c8"
+  },
+  "labels.animation-presets.sunny": {
+    "text": "Sunny",
+    "hash": "adf259f6"
+  },
+  "labels.animation-presets.sway": {
+    "text": "Sway",
+    "hash": "b1af92ac"
+  },
+  "labels.animation-presets.swing": {
+    "text": "Swing",
+    "hash": "816f0656"
+  },
+  "labels.animation-presets.tada": {
+    "text": "Tada",
+    "hash": "a16d4658"
+  },
+  "labels.animation-presets.tap-ripple": {
+    "text": "Tap ripple",
+    "hash": "acb97c65"
+  },
+  "labels.animation-presets.thunderstorm": {
+    "text": "Thunderstorm",
+    "hash": "31a9beb9"
+  },
+  "labels.animation-presets.tilt": {
+    "text": "Tilt",
+    "hash": "9498a187"
+  },
+  "labels.animation-presets.twinkle": {
+    "text": "Twinkle",
+    "hash": "114fcc55"
+  },
+  "labels.animation-presets.typing-dots": {
+    "text": "Typing dots",
+    "hash": "2e4376d7"
+  },
+  "labels.animation-presets.valentine": {
+    "text": "Valentine",
+    "hash": "cef5c43e"
+  },
+  "labels.animation-presets.water-ripple": {
+    "text": "Water ripple",
+    "hash": "8572d5f7"
+  },
+  "labels.animation-presets.wave-height": {
+    "text": "Wave height",
+    "hash": "b639122e"
+  },
+  "labels.animation-presets.weather-device": {
+    "text": "Weather & device",
+    "hash": "66e7b772"
+  },
+  "labels.animation-presets.width": {
+    "text": "Width",
+    "hash": "3019947b"
+  },
+  "labels.animation-presets.wiggle": {
+    "text": "Wiggle",
+    "hash": "715c1476"
+  },
+  "labels.animation-presets.wind-lines": {
+    "text": "Wind lines",
+    "hash": "eb860878"
+  },
+  "labels.animation-presets.windy": {
+    "text": "Windy",
+    "hash": "cdcaccab"
+  },
+  "labels.animation-presets.winter": {
+    "text": "Winter",
+    "hash": "1b17869e"
+  },
+  "labels.animation-presets.wobble": {
+    "text": "Wobble",
+    "hash": "d1c4fb8a"
+  },
+  "labels.bar-module.bar": {
+    "text": "Bar",
+    "hash": "95d64cac"
+  },
+  "labels.bar-module.display-a-progress-bar-based-on-entity": {
+    "text": "Display a progress bar based on entity state",
+    "hash": "f68c51ac"
+  },
+  "labels.button-module.button": {
+    "text": "Button",
+    "hash": "707eab0c"
+  },
+  "labels.button-module.interactive-button-with-icon-label-and": {
+    "text": "Interactive button with icon, label, and optional state display",
+    "hash": "33d7bc6b"
+  },
+  "labels.card-settings.backdrop-filter": {
+    "text": "Backdrop filter",
+    "hash": "5e830d43"
+  },
+  "labels.card-settings.border-colour": {
+    "text": "Border color",
+    "hash": "6c9e0b99"
+  },
+  "labels.card-settings.border-style": {
+    "text": "Border style",
+    "hash": "911cb22e"
+  },
+  "labels.card-settings.border-width": {
+    "text": "Border width",
+    "hash": "182ee0a2"
+  },
+  "labels.card-settings.margin": {
+    "text": "Margin",
+    "hash": "2bf63d81"
+  },
+  "labels.css-properties.a-truncated-label-ends-in-an-ellipsis": {
+    "text": "A truncated label ends in an ellipsis and shows in full as a tooltip.",
+    "hash": "63ccd7c9"
+  },
+  "labels.css-properties.above": {
+    "text": "Above",
+    "hash": "80792346"
+  },
+  "labels.css-properties.advanced": {
+    "text": "Advanced",
+    "hash": "9f088dbe"
+  },
+  "labels.css-properties.align-content": {
+    "text": "Align content",
+    "hash": "3e17da4a"
+  },
+  "labels.css-properties.align-items": {
+    "text": "Align items",
+    "hash": "6cfac96d"
+  },
+  "labels.css-properties.align-self": {
+    "text": "Align self",
+    "hash": "5eaf5d54"
+  },
+  "labels.css-properties.alignment": {
+    "text": "Alignment",
+    "hash": "9d597870"
+  },
+  "labels.css-properties.all": {
+    "text": "All",
+    "hash": "a52ace42"
+  },
+  "labels.css-properties.animation-delay": {
+    "text": "Animation delay",
+    "hash": "ba603cce"
+  },
+  "labels.css-properties.animation-direction": {
+    "text": "Animation direction",
+    "hash": "668cd430"
+  },
+  "labels.css-properties.animation-duration": {
+    "text": "Animation duration",
+    "hash": "78e85e85"
+  },
+  "labels.css-properties.animation-name": {
+    "text": "Animation name",
+    "hash": "89425e25"
+  },
+  "labels.css-properties.animation-timing": {
+    "text": "Animation timing",
+    "hash": "7c950144"
+  },
+  "labels.css-properties.animations": {
+    "text": "Animations",
+    "hash": "7f7c3306"
+  },
+  "labels.css-properties.area": {
+    "text": "Area",
+    "hash": "024dc204"
+  },
+  "labels.css-properties.auto": {
+    "text": "Auto",
+    "hash": "02862497"
+  },
+  "labels.css-properties.auto-columns": {
+    "text": "Auto columns",
+    "hash": "553c4186"
+  },
+  "labels.css-properties.auto-flow": {
+    "text": "Auto flow",
+    "hash": "98c3b26e"
+  },
+  "labels.css-properties.auto-rows": {
+    "text": "Auto rows",
+    "hash": "6985b4f9"
+  },
+  "labels.css-properties.backdrop-filter": {
+    "text": "Backdrop filter",
+    "hash": "5e830d43"
+  },
+  "labels.css-properties.background": {
+    "text": "Background",
+    "hash": "ea2b8a87"
+  },
+  "labels.css-properties.background-attachment": {
+    "text": "Background attachment",
+    "hash": "a50771e5"
+  },
+  "labels.css-properties.background-clip": {
+    "text": "Background clip",
+    "hash": "6bb6f3ef"
+  },
+  "labels.css-properties.background-colour": {
+    "text": "Background color",
+    "hash": "743baa30"
+  },
+  "labels.css-properties.background-image": {
+    "text": "Background image",
+    "hash": "f52a6826"
+  },
+  "labels.css-properties.background-origin": {
+    "text": "Background origin",
+    "hash": "ffa3b6d6"
+  },
+  "labels.css-properties.background-position": {
+    "text": "Background position",
+    "hash": "4358be6e"
+  },
+  "labels.css-properties.background-repeat": {
+    "text": "Background repeat",
+    "hash": "ace01eab"
+  },
+  "labels.css-properties.background-size": {
+    "text": "Background size",
+    "hash": "5560a58b"
+  },
+  "labels.css-properties.backgrounds": {
+    "text": "Backgrounds",
+    "hash": "16a0b5fa"
+  },
+  "labels.css-properties.bar": {
+    "text": "Bar",
+    "hash": "95d64cac"
+  },
+  "labels.css-properties.bar-background": {
+    "text": "Bar background",
+    "hash": "b4efb545"
+  },
+  "labels.css-properties.bar-border-colour": {
+    "text": "Bar border color",
+    "hash": "b546abdd"
+  },
+  "labels.css-properties.bar-border-style": {
+    "text": "Bar border style",
+    "hash": "028260a4"
+  },
+  "labels.css-properties.bar-border-width": {
+    "text": "Bar border width",
+    "hash": "a3767c23"
+  },
+  "labels.css-properties.bar-padding": {
+    "text": "Bar padding",
+    "hash": "b5f34049"
+  },
+  "labels.css-properties.bar-position": {
+    "text": "Bar position",
+    "hash": "512d0de6"
+  },
+  "labels.css-properties.below": {
+    "text": "Below",
+    "hash": "a53dffff"
+  },
+  "labels.css-properties.beside": {
+    "text": "Beside",
+    "hash": "52a9786e"
+  },
+  "labels.css-properties.border": {
+    "text": "Border",
+    "hash": "3b4bdff3"
+  },
+  "labels.css-properties.border-bottom": {
+    "text": "Border bottom",
+    "hash": "a81db178"
+  },
+  "labels.css-properties.border-collapse": {
+    "text": "Border collapse",
+    "hash": "0ff48517"
+  },
+  "labels.css-properties.border-colour": {
+    "text": "Border color",
+    "hash": "6c9e0b99"
+  },
+  "labels.css-properties.border-left": {
+    "text": "Border left",
+    "hash": "f84e8fa0"
+  },
+  "labels.css-properties.border-length": {
+    "text": "Border length",
+    "hash": "2b46f521"
+  },
+  "labels.css-properties.border-radius": {
+    "text": "Border radius",
+    "hash": "110e5e72"
+  },
+  "labels.css-properties.border-right": {
+    "text": "Border right",
+    "hash": "02d8b109"
+  },
+  "labels.css-properties.border-spacing": {
+    "text": "Border spacing",
+    "hash": "a247534e"
+  },
+  "labels.css-properties.border-style": {
+    "text": "Border style",
+    "hash": "911cb22e"
+  },
+  "labels.css-properties.border-top": {
+    "text": "Border top",
+    "hash": "cb0a6251"
+  },
+  "labels.css-properties.border-width": {
+    "text": "Border width",
+    "hash": "182ee0a2"
+  },
+  "labels.css-properties.borders-outlines": {
+    "text": "Borders & outlines",
+    "hash": "935e29dc"
+  },
+  "labels.css-properties.both": {
+    "text": "Both",
+    "hash": "b6c1d862"
+  },
+  "labels.css-properties.bottom": {
+    "text": "Bottom",
+    "hash": "479ad21a"
+  },
+  "labels.css-properties.box-shadow": {
+    "text": "Box shadow",
+    "hash": "e9bee6de"
+  },
+  "labels.css-properties.box-sizing": {
+    "text": "Box sizing",
+    "hash": "5bf8dae7"
+  },
+  "labels.css-properties.caption-side": {
+    "text": "Caption side",
+    "hash": "80f97592"
+  },
+  "labels.css-properties.centre": {
+    "text": "Center",
+    "hash": "45c19322"
+  },
+  "labels.css-properties.circle": {
+    "text": "Circle",
+    "hash": "b93d3bce"
+  },
+  "labels.css-properties.clear": {
+    "text": "Clear",
+    "hash": "83b12c22"
+  },
+  "labels.css-properties.colour": {
+    "text": "Color",
+    "hash": "3a9dfa58"
+  },
+  "labels.css-properties.column": {
+    "text": "Column",
+    "hash": "3fdc9a58"
+  },
+  "labels.css-properties.column-gap": {
+    "text": "Column gap",
+    "hash": "7713e65e"
+  },
+  "labels.css-properties.content-alignment": {
+    "text": "Content alignment",
+    "hash": "fc3e3104"
+  },
+  "labels.css-properties.css-grid": {
+    "text": "CSS grid",
+    "hash": "e4b6210a"
+  },
+  "labels.css-properties.cursor": {
+    "text": "Cursor",
+    "hash": "2c014f8f"
+  },
+  "labels.css-properties.direction": {
+    "text": "Direction",
+    "hash": "9c8a9579"
+  },
+  "labels.css-properties.disabled-tabs": {
+    "text": "Disabled tabs",
+    "hash": "10c57209"
+  },
+  "labels.css-properties.display": {
+    "text": "Display",
+    "hash": "34e108c0"
+  },
+  "labels.css-properties.effects": {
+    "text": "Effects",
+    "hash": "358511c8"
+  },
+  "labels.css-properties.end": {
+    "text": "End",
+    "hash": "f4db1e48"
+  },
+  "labels.css-properties.fade": {
+    "text": "Fade",
+    "hash": "9efb597c"
+  },
+  "labels.css-properties.fill-mode": {
+    "text": "Fill mode",
+    "hash": "be564fc1"
+  },
+  "labels.css-properties.filter": {
+    "text": "Filter",
+    "hash": "638e249f"
+  },
+  "labels.css-properties.flex": {
+    "text": "Flex",
+    "hash": "c2a520b8"
+  },
+  "labels.css-properties.flex-basis": {
+    "text": "Flex basis",
+    "hash": "8427d580"
+  },
+  "labels.css-properties.flex-grow": {
+    "text": "Flex grow",
+    "hash": "b96b1dc5"
+  },
+  "labels.css-properties.flex-shrink": {
+    "text": "Flex shrink",
+    "hash": "74d77194"
+  },
+  "labels.css-properties.flexbox": {
+    "text": "Flexbox",
+    "hash": "d3572031"
+  },
+  "labels.css-properties.float": {
+    "text": "Float",
+    "hash": "1a693c00"
+  },
+  "labels.css-properties.font-family": {
+    "text": "Font family",
+    "hash": "119ef3fa"
+  },
+  "labels.css-properties.font-size": {
+    "text": "Font size",
+    "hash": "6d784d95"
+  },
+  "labels.css-properties.font-style": {
+    "text": "Font style",
+    "hash": "bf9a32d3"
+  },
+  "labels.css-properties.font-variant": {
+    "text": "Font variant",
+    "hash": "537b0688"
+  },
+  "labels.css-properties.font-weight": {
+    "text": "Font weight",
+    "hash": "d05ad818"
+  },
+  "labels.css-properties.gap": {
+    "text": "Gap",
+    "hash": "cb129306"
+  },
+  "labels.css-properties.gap-between-tabs": {
+    "text": "Gap between tabs",
+    "hash": "a1584632"
+  },
+  "labels.css-properties.height": {
+    "text": "Height",
+    "hash": "bfe2eca4"
+  },
+  "labels.css-properties.hidden": {
+    "text": "Hidden",
+    "hash": "7e6fefff"
+  },
+  "labels.css-properties.icon": {
+    "text": "Icon",
+    "hash": "a35abcd6"
+  },
+  "labels.css-properties.icon-background": {
+    "text": "Icon background",
+    "hash": "49eeaa4e"
+  },
+  "labels.css-properties.icon-background-shape": {
+    "text": "Icon background shape",
+    "hash": "add8f90d"
+  },
+  "labels.css-properties.icon-colour": {
+    "text": "Icon color",
+    "hash": "691d6a25"
+  },
+  "labels.css-properties.icon-gap": {
+    "text": "Icon gap",
+    "hash": "b52cac7a"
+  },
+  "labels.css-properties.icon-position": {
+    "text": "Icon position",
+    "hash": "aa62e053"
+  },
+  "labels.css-properties.icon-size": {
+    "text": "Icon size",
+    "hash": "a86cafc7"
+  },
+  "labels.css-properties.icon-text": {
+    "text": "Icon & text",
+    "hash": "6616e10b"
+  },
+  "labels.css-properties.ignored-when-the-viewer-prefers-reduced": {
+    "text": "Ignored when the viewer prefers reduced motion.",
+    "hash": "c33a7772"
+  },
+  "labels.css-properties.inset": {
+    "text": "Inset",
+    "hash": "145824df"
+  },
+  "labels.css-properties.iteration-count": {
+    "text": "Iteration count",
+    "hash": "6342efeb"
+  },
+  "labels.css-properties.justify-content": {
+    "text": "Justify content",
+    "hash": "ee02c355"
+  },
+  "labels.css-properties.label-colour": {
+    "text": "Label color",
+    "hash": "b6bd2daa"
+  },
+  "labels.css-properties.label-font-family": {
+    "text": "Label font family",
+    "hash": "c92bf8d1"
+  },
+  "labels.css-properties.label-font-size": {
+    "text": "Label font size",
+    "hash": "ff0fa039"
+  },
+  "labels.css-properties.label-font-weight": {
+    "text": "Label font weight",
+    "hash": "9ff4e927"
+  },
+  "labels.css-properties.label-overflow": {
+    "text": "Label overflow",
+    "hash": "fc5e3042"
+  },
+  "labels.css-properties.label-text-transform": {
+    "text": "Label text transform",
+    "hash": "49bbd871"
+  },
+  "labels.css-properties.layout": {
+    "text": "Layout",
+    "hash": "a5119091"
+  },
+  "labels.css-properties.left": {
+    "text": "Left",
+    "hash": "58eb9032"
+  },
+  "labels.css-properties.left-and-right-follow-the-text-direction": {
+    "text": "Left and right follow the text direction.",
+    "hash": "478ca3d6"
+  },
+  "labels.css-properties.letter-spacing": {
+    "text": "Letter spacing",
+    "hash": "4b2eb7f7"
+  },
+  "labels.css-properties.line-height": {
+    "text": "Line height",
+    "hash": "127166f7"
+  },
+  "labels.css-properties.list-style": {
+    "text": "List style",
+    "hash": "42fe9016"
+  },
+  "labels.css-properties.list-style-image": {
+    "text": "List style image",
+    "hash": "789a9f3e"
+  },
+  "labels.css-properties.list-style-position": {
+    "text": "List style position",
+    "hash": "d4ebb3cf"
+  },
+  "labels.css-properties.list-style-type": {
+    "text": "List style type",
+    "hash": "2742a094"
+  },
+  "labels.css-properties.lists-tables": {
+    "text": "Lists & tables",
+    "hash": "ae0f38c0"
+  },
+  "labels.css-properties.margin": {
+    "text": "Margin",
+    "hash": "2bf63d81"
+  },
+  "labels.css-properties.max-height": {
+    "text": "Max height",
+    "hash": "dd81ce67"
+  },
+  "labels.css-properties.max-width": {
+    "text": "Max width",
+    "hash": "361239d8"
+  },
+  "labels.css-properties.min-height": {
+    "text": "Min height",
+    "hash": "bf5066be"
+  },
+  "labels.css-properties.min-width": {
+    "text": "Min width",
+    "hash": "97c4bc49"
+  },
+  "labels.css-properties.none": {
+    "text": "None",
+    "hash": "dc937b59"
+  },
+  "labels.css-properties.none-or-up-to-two-shadows-for-example-0": {
+    "text": "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).",
+    "hash": "455e8cf2"
+  },
+  "labels.css-properties.normal-or-one-length-for-example-0-05em": {
+    "text": "normal, or one length, for example 0.05em.",
+    "hash": "463e6515"
+  },
+  "labels.css-properties.offsets": {
+    "text": "Offsets",
+    "hash": "8807635f"
+  },
+  "labels.css-properties.one-to-four-lengths-for-example-4px-8px": {
+    "text": "One to four lengths, for example 4px 8px.",
+    "hash": "6cf9b98c"
+  },
+  "labels.css-properties.opacity": {
+    "text": "Opacity",
+    "hash": "6062652e"
+  },
+  "labels.css-properties.order": {
+    "text": "Order",
+    "hash": "6be09082"
+  },
+  "labels.css-properties.outline": {
+    "text": "Outline",
+    "hash": "eabbf3ab"
+  },
+  "labels.css-properties.outline-colour": {
+    "text": "Outline color",
+    "hash": "6dd4dd03"
+  },
+  "labels.css-properties.outline-offset": {
+    "text": "Outline offset",
+    "hash": "9794d3a0"
+  },
+  "labels.css-properties.outline-style": {
+    "text": "Outline style",
+    "hash": "956b8781"
+  },
+  "labels.css-properties.outline-width": {
+    "text": "Outline width",
+    "hash": "ce044329"
+  },
+  "labels.css-properties.overflow": {
+    "text": "Overflow",
+    "hash": "17b8dcf5"
+  },
+  "labels.css-properties.overflow-wrap": {
+    "text": "Overflow wrap",
+    "hash": "06ee970f"
+  },
+  "labels.css-properties.overflow-x": {
+    "text": "Overflow X",
+    "hash": "090ecd03"
+  },
+  "labels.css-properties.overflow-y": {
+    "text": "Overflow Y",
+    "hash": "6ba9dc15"
+  },
+  "labels.css-properties.padding": {
+    "text": "Padding",
+    "hash": "ee0d7af0"
+  },
+  "labels.css-properties.play-state": {
+    "text": "Play state",
+    "hash": "6f423d16"
+  },
+  "labels.css-properties.plays-on-the-tab-button-the-content-fade": {
+    "text": "Plays on the tab button. The content fade or slide is set under Bar.",
+    "hash": "b014bee3"
+  },
+  "labels.css-properties.pointer-events": {
+    "text": "Pointer events",
+    "hash": "14236fdd"
+  },
+  "labels.css-properties.position": {
+    "text": "Position",
+    "hash": "6d031af1"
+  },
+  "labels.css-properties.positioning-layout": {
+    "text": "Positioning & layout",
+    "hash": "bcb70809"
+  },
+  "labels.css-properties.right": {
+    "text": "Right",
+    "hash": "883361d5"
+  },
+  "labels.css-properties.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "labels.css-properties.rounded": {
+    "text": "Rounded",
+    "hash": "0a62cd80"
+  },
+  "labels.css-properties.row": {
+    "text": "Row",
+    "hash": "95110d74"
+  },
+  "labels.css-properties.row-gap": {
+    "text": "Row gap",
+    "hash": "7af40c9c"
+  },
+  "labels.css-properties.shape": {
+    "text": "Shape",
+    "hash": "e0e49270"
+  },
+  "labels.css-properties.shorten-the-border-line-e-g-40-for-a": {
+    "text": "Shorten the border line, e.g. 40% for a short accent line.",
+    "hash": "67828dee"
+  },
+  "labels.css-properties.sides": {
+    "text": "Sides",
+    "hash": "1c3607d5"
+  },
+  "labels.css-properties.slide": {
+    "text": "Slide",
+    "hash": "6bb4c117"
+  },
+  "labels.css-properties.spacing-box-model": {
+    "text": "Spacing & box model",
+    "hash": "99227ea4"
+  },
+  "labels.css-properties.start": {
+    "text": "Start",
+    "hash": "e4bb9f1e"
+  },
+  "labels.css-properties.state-colour": {
+    "text": "State color",
+    "hash": "960d659e"
+  },
+  "labels.css-properties.state-font-size": {
+    "text": "State font size",
+    "hash": "e76f8350"
+  },
+  "labels.css-properties.state-position": {
+    "text": "State position",
+    "hash": "1bed3e48"
+  },
+  "labels.css-properties.stretch": {
+    "text": "Stretch",
+    "hash": "a33fbcf8"
+  },
+  "labels.css-properties.style": {
+    "text": "Style",
+    "hash": "7e744141"
+  },
+  "labels.css-properties.tab-alignment": {
+    "text": "Tab alignment",
+    "hash": "290d9231"
+  },
+  "labels.css-properties.tab-animations": {
+    "text": "Tab animations",
+    "hash": "479d5f48"
+  },
+  "labels.css-properties.tab-background": {
+    "text": "Tab background",
+    "hash": "5800bafa"
+  },
+  "labels.css-properties.tab-bar": {
+    "text": "Tab bar",
+    "hash": "a5f4ef8a"
+  },
+  "labels.css-properties.tab-border-colour": {
+    "text": "Tab border color",
+    "hash": "2d33ee09"
+  },
+  "labels.css-properties.tab-border-style": {
+    "text": "Tab border style",
+    "hash": "527a8e2f"
+  },
+  "labels.css-properties.tab-border-width": {
+    "text": "Tab border width",
+    "hash": "ee78d066"
+  },
+  "labels.css-properties.tab-corner-radius": {
+    "text": "Tab corner radius",
+    "hash": "db7eb9d1"
+  },
+  "labels.css-properties.tab-font-family": {
+    "text": "Tab font family",
+    "hash": "fbe7c291"
+  },
+  "labels.css-properties.tab-font-size": {
+    "text": "Tab font size",
+    "hash": "0ae57927"
+  },
+  "labels.css-properties.tab-font-weight": {
+    "text": "Tab font weight",
+    "hash": "2a8ac8bd"
+  },
+  "labels.css-properties.tab-icon-animation": {
+    "text": "Tab icon animation",
+    "hash": "840d3803"
+  },
+  "labels.css-properties.tab-icon-colour": {
+    "text": "Tab icon color",
+    "hash": "7dadce30"
+  },
+  "labels.css-properties.tab-icon-position": {
+    "text": "Tab icon position",
+    "hash": "bdd8a2f6"
+  },
+  "labels.css-properties.tab-icon-size": {
+    "text": "Tab icon size",
+    "hash": "93bb710c"
+  },
+  "labels.css-properties.tab-letter-spacing": {
+    "text": "Tab letter spacing",
+    "hash": "2bb26daa"
+  },
+  "labels.css-properties.tab-opacity": {
+    "text": "Tab opacity",
+    "hash": "76c3e738"
+  },
+  "labels.css-properties.tab-padding": {
+    "text": "Tab padding",
+    "hash": "1033946a"
+  },
+  "labels.css-properties.tab-shadow": {
+    "text": "Tab shadow",
+    "hash": "02b3c1cc"
+  },
+  "labels.css-properties.tab-switch-animation": {
+    "text": "Tab switch animation",
+    "hash": "ba987516"
+  },
+  "labels.css-properties.tab-text-colour": {
+    "text": "Tab text color",
+    "hash": "f99e41fa"
+  },
+  "labels.css-properties.tab-text-transform": {
+    "text": "Tab text transform",
+    "hash": "3861ceb5"
+  },
+  "labels.css-properties.table-layout": {
+    "text": "Table layout",
+    "hash": "b7e83409"
+  },
+  "labels.css-properties.template-areas": {
+    "text": "Template areas",
+    "hash": "85d812c0"
+  },
+  "labels.css-properties.template-columns": {
+    "text": "Template columns",
+    "hash": "251981a5"
+  },
+  "labels.css-properties.template-rows": {
+    "text": "Template rows",
+    "hash": "d60889c0"
+  },
+  "labels.css-properties.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "labels.css-properties.text-align": {
+    "text": "Text align",
+    "hash": "013ca441"
+  },
+  "labels.css-properties.text-decoration": {
+    "text": "Text decoration",
+    "hash": "fb53f5cf"
+  },
+  "labels.css-properties.text-indent": {
+    "text": "Text indent",
+    "hash": "a1281f40"
+  },
+  "labels.css-properties.text-overflow": {
+    "text": "Text overflow",
+    "hash": "934a11cd"
+  },
+  "labels.css-properties.text-shadow": {
+    "text": "Text shadow",
+    "hash": "ced1d885"
+  },
+  "labels.css-properties.text-transform": {
+    "text": "Text transform",
+    "hash": "1ab8834e"
+  },
+  "labels.css-properties.tick-the-tabs-that-cannot-be-opened": {
+    "text": "Tick the tabs that cannot be opened.",
+    "hash": "2210b765"
+  },
+  "labels.css-properties.top": {
+    "text": "Top",
+    "hash": "d5cdfcf7"
+  },
+  "labels.css-properties.transform": {
+    "text": "Transform",
+    "hash": "d2d68041"
+  },
+  "labels.css-properties.transform-origin": {
+    "text": "Transform origin",
+    "hash": "e2151196"
+  },
+  "labels.css-properties.transition": {
+    "text": "Transition",
+    "hash": "2fe70464"
+  },
+  "labels.css-properties.transition-delay": {
+    "text": "Transition delay",
+    "hash": "0baf9d7e"
+  },
+  "labels.css-properties.transition-duration": {
+    "text": "Transition duration",
+    "hash": "e17611b0"
+  },
+  "labels.css-properties.transition-property": {
+    "text": "Transition property",
+    "hash": "d17ffe99"
+  },
+  "labels.css-properties.transition-timing": {
+    "text": "Transition timing",
+    "hash": "3fb97430"
+  },
+  "labels.css-properties.transitions-animations": {
+    "text": "Transitions & animations",
+    "hash": "42cb3ced"
+  },
+  "labels.css-properties.truncate": {
+    "text": "Truncate",
+    "hash": "a24ba93b"
+  },
+  "labels.css-properties.typography": {
+    "text": "Typography",
+    "hash": "cab94aba"
+  },
+  "labels.css-properties.value-background": {
+    "text": "Value background",
+    "hash": "82d87c4c"
+  },
+  "labels.css-properties.vertical-content-alignment": {
+    "text": "Vertical content alignment",
+    "hash": "fef8fde3"
+  },
+  "labels.css-properties.visibility": {
+    "text": "Visibility",
+    "hash": "7448611d"
+  },
+  "labels.css-properties.white-space": {
+    "text": "White space",
+    "hash": "9d01e595"
+  },
+  "labels.css-properties.width": {
+    "text": "Width",
+    "hash": "3019947b"
+  },
+  "labels.css-properties.word-break": {
+    "text": "Word break",
+    "hash": "18e37c1e"
+  },
+  "labels.css-properties.word-spacing": {
+    "text": "Word spacing",
+    "hash": "dd832835"
+  },
+  "labels.css-properties.wrap": {
+    "text": "Wrap",
+    "hash": "70bfd7fb"
+  },
+  "labels.css-properties.z-index": {
+    "text": "Z-index",
+    "hash": "7ad9ae63"
+  },
+  "labels.css-property-options.100": {
+    "text": "100",
+    "hash": "ad573668"
+  },
+  "labels.css-property-options.200": {
+    "text": "200",
+    "hash": "27badc98"
+  },
+  "labels.css-property-options.300": {
+    "text": "300",
+    "hash": "983bd614"
+  },
+  "labels.css-property-options.400": {
+    "text": "400",
+    "hash": "26d22866"
+  },
+  "labels.css-property-options.500": {
+    "text": "500",
+    "hash": "0604cd31"
+  },
+  "labels.css-property-options.600": {
+    "text": "600",
+    "hash": "284b7e6d"
+  },
+  "labels.css-property-options.700": {
+    "text": "700",
+    "hash": "99ee5022"
+  },
+  "labels.css-property-options.800": {
+    "text": "800",
+    "hash": "1a1cf797"
+  },
+  "labels.css-property-options.900": {
+    "text": "900",
+    "hash": "bdc5d8a4"
+  },
+  "labels.css-property-options.absolute": {
+    "text": "Absolute",
+    "hash": "f288738f"
+  },
+  "labels.css-property-options.alternate": {
+    "text": "Alternate",
+    "hash": "1b99710f"
+  },
+  "labels.css-property-options.alternate-reverse": {
+    "text": "Alternate-reverse",
+    "hash": "75574a19"
+  },
+  "labels.css-property-options.anywhere": {
+    "text": "Anywhere",
+    "hash": "911b14a9"
+  },
+  "labels.css-property-options.auto": {
+    "text": "Auto",
+    "hash": "02862497"
+  },
+  "labels.css-property-options.backwards": {
+    "text": "Backwards",
+    "hash": "19483bcb"
+  },
+  "labels.css-property-options.baseline": {
+    "text": "Baseline",
+    "hash": "cc9ea7f7"
+  },
+  "labels.css-property-options.block": {
+    "text": "Block",
+    "hash": "211d0bb8"
+  },
+  "labels.css-property-options.bold": {
+    "text": "Bold",
+    "hash": "94fee62e"
+  },
+  "labels.css-property-options.border-box": {
+    "text": "Border-box",
+    "hash": "c9bdade6"
+  },
+  "labels.css-property-options.both": {
+    "text": "Both",
+    "hash": "b6c1d862"
+  },
+  "labels.css-property-options.bottom": {
+    "text": "Bottom",
+    "hash": "479ad21a"
+  },
+  "labels.css-property-options.break-all": {
+    "text": "Break-all",
+    "hash": "9b7d8c6a"
+  },
+  "labels.css-property-options.break-spaces": {
+    "text": "Break-spaces",
+    "hash": "aed763ff"
+  },
+  "labels.css-property-options.break-word": {
+    "text": "Break-word",
+    "hash": "38d922e8"
+  },
+  "labels.css-property-options.capitalize": {
+    "text": "Capitalize",
+    "hash": "c27a7a58"
+  },
+  "labels.css-property-options.centre": {
+    "text": "Center",
+    "hash": "45c19322"
+  },
+  "labels.css-property-options.circle": {
+    "text": "Circle",
+    "hash": "b93d3bce"
+  },
+  "labels.css-property-options.clip": {
+    "text": "Clip",
+    "hash": "82337888"
+  },
+  "labels.css-property-options.collapse": {
+    "text": "Collapse",
+    "hash": "be6eb1fc"
+  },
+  "labels.css-property-options.column": {
+    "text": "Column",
+    "hash": "3fdc9a58"
+  },
+  "labels.css-property-options.column-dense": {
+    "text": "Column dense",
+    "hash": "15a1e341"
+  },
+  "labels.css-property-options.column-reverse": {
+    "text": "Column-reverse",
+    "hash": "d56d7b71"
+  },
+  "labels.css-property-options.contain": {
+    "text": "Contain",
+    "hash": "e534a2c2"
+  },
+  "labels.css-property-options.content-box": {
+    "text": "Content-box",
+    "hash": "cfaea05b"
+  },
+  "labels.css-property-options.contents": {
+    "text": "Contents",
+    "hash": "437aea62"
+  },
+  "labels.css-property-options.cover": {
+    "text": "Cover",
+    "hash": "fa8d8456"
+  },
+  "labels.css-property-options.crosshair": {
+    "text": "Crosshair",
+    "hash": "8b3214b0"
+  },
+  "labels.css-property-options.dashed": {
+    "text": "Dashed",
+    "hash": "2fe14ade"
+  },
+  "labels.css-property-options.decimal": {
+    "text": "Decimal",
+    "hash": "18517d33"
+  },
+  "labels.css-property-options.default": {
+    "text": "Default",
+    "hash": "21b111cb"
+  },
+  "labels.css-property-options.dense": {
+    "text": "Dense",
+    "hash": "0710262c"
+  },
+  "labels.css-property-options.disc": {
+    "text": "Disc",
+    "hash": "0c3ae2c7"
+  },
+  "labels.css-property-options.dotted": {
+    "text": "Dotted",
+    "hash": "be454f3c"
+  },
+  "labels.css-property-options.double": {
+    "text": "Double",
+    "hash": "52944152"
+  },
+  "labels.css-property-options.ellipsis": {
+    "text": "Ellipsis",
+    "hash": "4637e99b"
+  },
+  "labels.css-property-options.fixed": {
+    "text": "Fixed",
+    "hash": "1246fc93"
+  },
+  "labels.css-property-options.flex": {
+    "text": "Flex",
+    "hash": "c2a520b8"
+  },
+  "labels.css-property-options.flex-end": {
+    "text": "Flex-end",
+    "hash": "c1617b22"
+  },
+  "labels.css-property-options.flex-start": {
+    "text": "Flex-start",
+    "hash": "9cf84432"
+  },
+  "labels.css-property-options.forwards": {
+    "text": "Forwards",
+    "hash": "e0786044"
+  },
+  "labels.css-property-options.grab": {
+    "text": "Grab",
+    "hash": "7d935f25"
+  },
+  "labels.css-property-options.grid": {
+    "text": "Grid",
+    "hash": "0d7d12ac"
+  },
+  "labels.css-property-options.groove": {
+    "text": "Groove",
+    "hash": "e1701d4f"
+  },
+  "labels.css-property-options.hidden": {
+    "text": "Hidden",
+    "hash": "7e6fefff"
+  },
+  "labels.css-property-options.inline": {
+    "text": "Inline",
+    "hash": "99ed40ac"
+  },
+  "labels.css-property-options.inline-block": {
+    "text": "Inline-block",
+    "hash": "deadbe6c"
+  },
+  "labels.css-property-options.inline-flex": {
+    "text": "Inline-flex",
+    "hash": "456cdb05"
+  },
+  "labels.css-property-options.inline-grid": {
+    "text": "Inline-grid",
+    "hash": "7020bad0"
+  },
+  "labels.css-property-options.inset": {
+    "text": "Inset",
+    "hash": "145824df"
+  },
+  "labels.css-property-options.inside": {
+    "text": "Inside",
+    "hash": "123a3ebc"
+  },
+  "labels.css-property-options.italic": {
+    "text": "Italic",
+    "hash": "9bf37cb5"
+  },
+  "labels.css-property-options.justify": {
+    "text": "Justify",
+    "hash": "f3bd3473"
+  },
+  "labels.css-property-options.keep-all": {
+    "text": "Keep-all",
+    "hash": "e3d7857f"
+  },
+  "labels.css-property-options.left": {
+    "text": "Left",
+    "hash": "58eb9032"
+  },
+  "labels.css-property-options.line-through": {
+    "text": "Line-through",
+    "hash": "d1dc7735"
+  },
+  "labels.css-property-options.local": {
+    "text": "Local",
+    "hash": "8c31e6e7"
+  },
+  "labels.css-property-options.lower-alpha": {
+    "text": "Lower-alpha",
+    "hash": "a76f574b"
+  },
+  "labels.css-property-options.lower-roman": {
+    "text": "Lower-roman",
+    "hash": "ccd3324d"
+  },
+  "labels.css-property-options.lowercase": {
+    "text": "Lowercase",
+    "hash": "3b677a18"
+  },
+  "labels.css-property-options.move": {
+    "text": "Move",
+    "hash": "6ecc3df6"
+  },
+  "labels.css-property-options.no-repeat": {
+    "text": "No-repeat",
+    "hash": "10cf2c77"
+  },
+  "labels.css-property-options.none": {
+    "text": "None",
+    "hash": "dc937b59"
+  },
+  "labels.css-property-options.normal": {
+    "text": "Normal",
+    "hash": "a7248eeb"
+  },
+  "labels.css-property-options.not-allowed": {
+    "text": "Not-allowed",
+    "hash": "bcf84a00"
+  },
+  "labels.css-property-options.nowrap": {
+    "text": "Nowrap",
+    "hash": "b45cb76a"
+  },
+  "labels.css-property-options.oblique": {
+    "text": "Oblique",
+    "hash": "a8ee6b4d"
+  },
+  "labels.css-property-options.outset": {
+    "text": "Outset",
+    "hash": "a6920036"
+  },
+  "labels.css-property-options.outside": {
+    "text": "Outside",
+    "hash": "dacf1516"
+  },
+  "labels.css-property-options.overline": {
+    "text": "Overline",
+    "hash": "cca38a8f"
+  },
+  "labels.css-property-options.padding-box": {
+    "text": "Padding-box",
+    "hash": "08983c0c"
+  },
+  "labels.css-property-options.paused": {
+    "text": "Paused",
+    "hash": "e159b061"
+  },
+  "labels.css-property-options.pointer": {
+    "text": "Pointer",
+    "hash": "d00f1e4d"
+  },
+  "labels.css-property-options.pre": {
+    "text": "Pre",
+    "hash": "ec5fdb2c"
+  },
+  "labels.css-property-options.pre-line": {
+    "text": "Pre-line",
+    "hash": "9aad493d"
+  },
+  "labels.css-property-options.pre-wrap": {
+    "text": "Pre-wrap",
+    "hash": "49cf0e4c"
+  },
+  "labels.css-property-options.relative": {
+    "text": "Relative",
+    "hash": "8e99cd98"
+  },
+  "labels.css-property-options.repeat": {
+    "text": "Repeat",
+    "hash": "b6b7a006"
+  },
+  "labels.css-property-options.repeat-x": {
+    "text": "Repeat-x",
+    "hash": "abe6e080"
+  },
+  "labels.css-property-options.repeat-y": {
+    "text": "Repeat-y",
+    "hash": "0264755d"
+  },
+  "labels.css-property-options.reverse": {
+    "text": "Reverse",
+    "hash": "fae1c6f1"
+  },
+  "labels.css-property-options.ridge": {
+    "text": "Ridge",
+    "hash": "8f5db5c7"
+  },
+  "labels.css-property-options.right": {
+    "text": "Right",
+    "hash": "883361d5"
+  },
+  "labels.css-property-options.round": {
+    "text": "Round",
+    "hash": "cd9558ac"
+  },
+  "labels.css-property-options.row": {
+    "text": "Row",
+    "hash": "95110d74"
+  },
+  "labels.css-property-options.row-dense": {
+    "text": "Row dense",
+    "hash": "be385f20"
+  },
+  "labels.css-property-options.row-reverse": {
+    "text": "Row-reverse",
+    "hash": "b4f83346"
+  },
+  "labels.css-property-options.running": {
+    "text": "Running",
+    "hash": "f4ccae29"
+  },
+  "labels.css-property-options.scroll": {
+    "text": "Scroll",
+    "hash": "291873e3"
+  },
+  "labels.css-property-options.separate": {
+    "text": "Separate",
+    "hash": "726c1269"
+  },
+  "labels.css-property-options.solid": {
+    "text": "Solid",
+    "hash": "b8b311b0"
+  },
+  "labels.css-property-options.space": {
+    "text": "Space",
+    "hash": "20eac5aa"
+  },
+  "labels.css-property-options.space-around": {
+    "text": "Space-around",
+    "hash": "93662eb2"
+  },
+  "labels.css-property-options.space-between": {
+    "text": "Space-between",
+    "hash": "8fd30542"
+  },
+  "labels.css-property-options.space-evenly": {
+    "text": "Space-evenly",
+    "hash": "cda68f3c"
+  },
+  "labels.css-property-options.square": {
+    "text": "Square",
+    "hash": "c11092bc"
+  },
+  "labels.css-property-options.static": {
+    "text": "Static",
+    "hash": "1d2c73dc"
+  },
+  "labels.css-property-options.sticky": {
+    "text": "Sticky",
+    "hash": "87471768"
+  },
+  "labels.css-property-options.stretch": {
+    "text": "Stretch",
+    "hash": "a33fbcf8"
+  },
+  "labels.css-property-options.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "labels.css-property-options.top": {
+    "text": "Top",
+    "hash": "d5cdfcf7"
+  },
+  "labels.css-property-options.underline": {
+    "text": "Underline",
+    "hash": "02f84326"
+  },
+  "labels.css-property-options.upper-alpha": {
+    "text": "Upper-alpha",
+    "hash": "23ac17f9"
+  },
+  "labels.css-property-options.upper-roman": {
+    "text": "Upper-roman",
+    "hash": "7b204001"
+  },
+  "labels.css-property-options.uppercase": {
+    "text": "Uppercase",
+    "hash": "b463d690"
+  },
+  "labels.css-property-options.visible": {
+    "text": "Visible",
+    "hash": "8411f5ab"
+  },
+  "labels.css-property-options.wait": {
+    "text": "Wait",
+    "hash": "26b83994"
+  },
+  "labels.css-property-options.wrap": {
+    "text": "Wrap",
+    "hash": "70bfd7fb"
+  },
+  "labels.css-property-options.wrap-reverse": {
+    "text": "Wrap-reverse",
+    "hash": "e309d109"
+  },
+  "labels.device-anim.drum-while-cleaning": {
+    "text": "Drum while cleaning",
+    "hash": "9d8e10cc"
+  },
+  "labels.device-anim.drum-while-running": {
+    "text": "Drum while running",
+    "hash": "2145701e"
+  },
+  "labels.device-anim.drum-while-the-state-is-running-washing": {
+    "text": "Drum while the state is running, washing or drying",
+    "hash": "ca219718"
+  },
+  "labels.device-anim.equalizer-while-playing": {
+    "text": "Equalizer while playing",
+    "hash": "1cf4a2d0"
+  },
+  "labels.device-anim.flame-while-heating-snow-while-cooling": {
+    "text": "Flame while heating, Snow while cooling, Spin while only the fan runs",
+    "hash": "29f5707f"
+  },
+  "labels.device-anim.glow-while-on-in-the-light-s-colour-and": {
+    "text": "Glow while on, in the light's color and brightness",
+    "hash": "1cf4fbe5"
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while": {
+    "text": "Pulse in the alert color while triggered",
+    "hash": "b7571561"
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while-on": {
+    "text": "Pulse in the alert color while on",
+    "hash": "c05331c1"
+  },
+  "labels.device-anim.shake-while-jammed-pulse-while-locking": {
+    "text": "Shake while jammed, Pulse while locking or unlocking",
+    "hash": "420cacfb"
+  },
+  "labels.device-anim.spin-while-on-faster-at-a-higher-speed": {
+    "text": "Spin while on, faster at a higher speed",
+    "hash": "970e0027"
+  },
+  "labels.device-anim.swing-a-slightly-opened-pose-while-open": {
+    "text": "Swing: a slightly opened pose while open",
+    "hash": "2d88a379"
+  },
+  "labels.device-anim.swing-while-opening-or-closing-a": {
+    "text": "Swing while opening or closing, a slightly opened pose while open",
+    "hash": "dce1618e"
+  },
+  "labels.field-reset.reset-label": {
+    "text": "Reset {label}",
+    "hash": "3a375ef7"
+  },
+  "labels.field-reset.reset-to-default": {
+    "text": "Reset to default",
+    "hash": "bc5b45ae"
+  },
+  "labels.horizontal-module.arrange-child-modules-in-a-row": {
+    "text": "Arrange child modules in a row",
+    "hash": "2ee49795"
+  },
+  "labels.horizontal-module.horizontal": {
+    "text": "Horizontal",
+    "hash": "0abba441"
+  },
+  "labels.icon-doc.part-n": {
+    "text": "Part {n}",
+    "hash": "173073e6"
+  },
+  "labels.icon-module.display-an-icon-from-mdi-or-entity": {
+    "text": "Display an icon from MDI or entity",
+    "hash": "b9991e17"
+  },
+  "labels.icon-module.icon": {
+    "text": "Icon",
+    "hash": "a35abcd6"
+  },
+  "labels.info-module.display-entity-name-state-and-attributes": {
+    "text": "Display entity name, state, and attributes",
+    "hash": "654b8a05"
+  },
+  "labels.info-module.info": {
+    "text": "Info",
+    "hash": "170322a3"
+  },
+  "labels.lazy-metadata.arc-gauge-for-displaying-numeric-sensor": {
+    "text": "Arc gauge for displaying numeric sensor values",
+    "hash": "e11b766c"
+  },
+  "labels.lazy-metadata.arrange-child-modules-in-a-slider": {
+    "text": "Arrange child modules in a slider",
+    "hash": "44652a90"
+  },
+  "labels.lazy-metadata.camera": {
+    "text": "Camera",
+    "hash": "03494b0d"
+  },
+  "labels.lazy-metadata.clock": {
+    "text": "Clock",
+    "hash": "93ff9273"
+  },
+  "labels.lazy-metadata.custom-card": {
+    "text": "Custom card",
+    "hash": "9ec14117"
+  },
+  "labels.lazy-metadata.display-a-camera-entity-stream": {
+    "text": "Display a camera entity stream",
+    "hash": "f2d8bc07"
+  },
+  "labels.lazy-metadata.display-a-static-image-or-entity-picture": {
+    "text": "Display a static image or entity picture",
+    "hash": "cb97c355"
+  },
+  "labels.lazy-metadata.display-current-time-and-date": {
+    "text": "Display current time and date",
+    "hash": "5fe916f2"
+  },
+  "labels.lazy-metadata.display-entity-history-as-a-line-graph": {
+    "text": "Display entity history as a line graph",
+    "hash": "691ef58f"
+  },
+  "labels.lazy-metadata.display-weather-entity-information": {
+    "text": "Display weather entity information",
+    "hash": "a6b43b11"
+  },
+  "labels.lazy-metadata.display-weather-forecast-data": {
+    "text": "Display weather forecast data",
+    "hash": "fcf83a99"
+  },
+  "labels.lazy-metadata.dropdown": {
+    "text": "Dropdown",
+    "hash": "2c84dd8d"
+  },
+  "labels.lazy-metadata.embed-any-3rd-party-lovelace-card": {
+    "text": "Embed any 3rd party Lovelace card",
+    "hash": "0ad30fbc"
+  },
+  "labels.lazy-metadata.forecast": {
+    "text": "Forecast",
+    "hash": "75205de8"
+  },
+  "labels.lazy-metadata.gauge": {
+    "text": "Gauge",
+    "hash": "f6d8f4c8"
+  },
+  "labels.lazy-metadata.graph": {
+    "text": "Graph",
+    "hash": "32ab018f"
+  },
+  "labels.lazy-metadata.image": {
+    "text": "Image",
+    "hash": "1aa4cb0b"
+  },
+  "labels.lazy-metadata.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "labels.lazy-metadata.light-control-with-brightness-colour": {
+    "text": "Light control with brightness, color temperature, and color options",
+    "hash": "0f80ba40"
+  },
+  "labels.lazy-metadata.markdown": {
+    "text": "Markdown",
+    "hash": "0e52f6b9"
+  },
+  "labels.lazy-metadata.numeric-input-with-increment-and": {
+    "text": "Numeric input with increment and decrement buttons",
+    "hash": "ebb1ee56"
+  },
+  "labels.lazy-metadata.range-slider-for-controlling-numeric": {
+    "text": "Range slider for controlling numeric values",
+    "hash": "e1b4bfa7"
+  },
+  "labels.lazy-metadata.render-markdown-formatted-content": {
+    "text": "Render markdown-formatted content",
+    "hash": "64af3f87"
+  },
+  "labels.lazy-metadata.select-dropdown-for-choosing-from-a-list": {
+    "text": "Select dropdown for choosing from a list of options",
+    "hash": "1791f066"
+  },
+  "labels.lazy-metadata.slider": {
+    "text": "Slider",
+    "hash": "14f34284"
+  },
+  "labels.lazy-metadata.slider-layout": {
+    "text": "Slider layout",
+    "hash": "1fd9d8ff"
+  },
+  "labels.lazy-metadata.spinbox": {
+    "text": "Spinbox",
+    "hash": "d539f275"
+  },
+  "labels.lazy-metadata.tabbed-container-for-groups-of-modules": {
+    "text": "Tabbed container for groups of modules",
+    "hash": "ff20ae46"
+  },
+  "labels.lazy-metadata.tabs": {
+    "text": "Tabs",
+    "hash": "8e5ea509"
+  },
+  "labels.lazy-metadata.video-background": {
+    "text": "Video background",
+    "hash": "e5427ebc"
+  },
+  "labels.lazy-metadata.video-playing-behind-the-other-modules": {
+    "text": "Video playing behind the other modules of its column or layout",
+    "hash": "f088e661"
+  },
+  "labels.lazy-metadata.weather": {
+    "text": "Weather",
+    "hash": "a0bba638"
+  },
+  "labels.part-presets.blink": {
+    "text": "Blink",
+    "hash": "a37430e2"
+  },
+  "labels.part-presets.blinks-twice": {
+    "text": "Blinks twice",
+    "hash": "e67d0856"
+  },
+  "labels.part-presets.bounce": {
+    "text": "Bounce",
+    "hash": "24b6ed11"
+  },
+  "labels.part-presets.delay": {
+    "text": "Delay",
+    "hash": "fd9b6df3"
+  },
+  "labels.part-presets.direction": {
+    "text": "Direction",
+    "hash": "9c8a9579"
+  },
+  "labels.part-presets.draw-loop": {
+    "text": "Draw loop",
+    "hash": "b55f179c"
+  },
+  "labels.part-presets.draw-on": {
+    "text": "Draw on",
+    "hash": "62766a9c"
+  },
+  "labels.part-presets.draws-its-outline-then-fills-direction-1": {
+    "text": "Draws its outline, then fills (direction -1 draws it off)",
+    "hash": "106901f0"
+  },
+  "labels.part-presets.draws-on-holds-and-draws-off-again": {
+    "text": "Draws on, holds, and draws off again",
+    "hash": "7c231c43"
+  },
+  "labels.part-presets.drifts-up-and-down": {
+    "text": "Drifts up and down",
+    "hash": "f8d343f8"
+  },
+  "labels.part-presets.duration-share": {
+    "text": "Duration share",
+    "hash": "cbcfa77c"
+  },
+  "labels.part-presets.fade": {
+    "text": "Fade",
+    "hash": "9efb597c"
+  },
+  "labels.part-presets.fades-out-and-back-in": {
+    "text": "Fades out and back in",
+    "hash": "c295689c"
+  },
+  "labels.part-presets.flicker": {
+    "text": "Flicker",
+    "hash": "ba3baf3d"
+  },
+  "labels.part-presets.flickers-like-a-flame": {
+    "text": "Flickers like a flame",
+    "hash": "56280c44"
+  },
+  "labels.part-presets.float": {
+    "text": "Float",
+    "hash": "1a693c00"
+  },
+  "labels.part-presets.grows-and-shrinks-back-direction-1": {
+    "text": "Grows and shrinks back (direction -1 shrinks)",
+    "hash": "0af46f09"
+  },
+  "labels.part-presets.intensity": {
+    "text": "Intensity",
+    "hash": "a6d01dcf"
+  },
+  "labels.part-presets.lights-up-one-part-after-another-on-a": {
+    "text": "Lights up one part after another (on a group or several parts)",
+    "hash": "40f44ef1"
+  },
+  "labels.part-presets.moves-down-and-back": {
+    "text": "Moves down and back",
+    "hash": "eb32e347"
+  },
+  "labels.part-presets.moves-left-and-back": {
+    "text": "Moves left and back",
+    "hash": "dd218747"
+  },
+  "labels.part-presets.moves-right-and-back": {
+    "text": "Moves right and back",
+    "hash": "1aa7596b"
+  },
+  "labels.part-presets.moves-up-and-back": {
+    "text": "Moves up and back",
+    "hash": "17a78261"
+  },
+  "labels.part-presets.pop": {
+    "text": "Pop",
+    "hash": "4d616d53"
+  },
+  "labels.part-presets.pops-in-from-nothing-with-an-overshoot": {
+    "text": "Pops in from nothing with an overshoot",
+    "hash": "bf74448f"
+  },
+  "labels.part-presets.pulse": {
+    "text": "Pulse",
+    "hash": "f7a403c6"
+  },
+  "labels.part-presets.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "labels.part-presets.rings-like-a-bell-quick-swings-that-die": {
+    "text": "Rings like a bell: quick swings that die down",
+    "hash": "4841358b"
+  },
+  "labels.part-presets.rocks-on-its-base": {
+    "text": "Rocks on its base",
+    "hash": "f5c085d9"
+  },
+  "labels.part-presets.shake": {
+    "text": "Shake",
+    "hash": "c2a6ed6c"
+  },
+  "labels.part-presets.shakes-from-side-to-side": {
+    "text": "Shakes from side to side",
+    "hash": "4915061f"
+  },
+  "labels.part-presets.slide-down": {
+    "text": "Slide down",
+    "hash": "9a92bf81"
+  },
+  "labels.part-presets.slide-left": {
+    "text": "Slide left",
+    "hash": "667e27d7"
+  },
+  "labels.part-presets.slide-right": {
+    "text": "Slide right",
+    "hash": "c21b5129"
+  },
+  "labels.part-presets.slide-up": {
+    "text": "Slide up",
+    "hash": "d081156f"
+  },
+  "labels.part-presets.spin": {
+    "text": "Spin",
+    "hash": "b9e96ae5"
+  },
+  "labels.part-presets.squashes-jumps-and-lands": {
+    "text": "Squashes, jumps and lands",
+    "hash": "c98b9684"
+  },
+  "labels.part-presets.swing": {
+    "text": "Swing",
+    "hash": "816f0656"
+  },
+  "labels.part-presets.swings-from-its-top-settling-back": {
+    "text": "Swings from its top, settling back",
+    "hash": "0dd9206a"
+  },
+  "labels.part-presets.turns": {
+    "text": "Turns",
+    "hash": "53cf0c9b"
+  },
+  "labels.part-presets.turns-round-at-a-steady-speed-whole": {
+    "text": "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)",
+    "hash": "5e6ad3c9"
+  },
+  "labels.part-presets.wave": {
+    "text": "Wave",
+    "hash": "43eb1b14"
+  },
+  "labels.part-presets.wobble": {
+    "text": "Wobble",
+    "hash": "d1c4fb8a"
+  },
+  "labels.row-module.grid-row-with-columns-nestable-inside": {
+    "text": "Grid row with columns, nestable inside any column",
+    "hash": "a321e886"
+  },
+  "labels.row-module.row": {
+    "text": "Row",
+    "hash": "95110d74"
+  },
+  "labels.seasonal-labels.autumn": {
+    "text": "Autumn",
+    "hash": "e0906c2d"
+  },
+  "labels.seasonal-labels.christmas": {
+    "text": "Christmas",
+    "hash": "a09948e8"
+  },
+  "labels.seasonal-labels.cloudy": {
+    "text": "Cloudy",
+    "hash": "c63401ab"
+  },
+  "labels.seasonal-labels.dusk": {
+    "text": "Dusk",
+    "hash": "abd7160c"
+  },
+  "labels.seasonal-labels.easter": {
+    "text": "Easter",
+    "hash": "56277ffc"
+  },
+  "labels.seasonal-labels.fog": {
+    "text": "Fog",
+    "hash": "14394e97"
+  },
+  "labels.seasonal-labels.halloween": {
+    "text": "Halloween",
+    "hash": "049566b6"
+  },
+  "labels.seasonal-labels.new-year": {
+    "text": "New Year",
+    "hash": "1353c72b"
+  },
+  "labels.seasonal-labels.night": {
+    "text": "Night",
+    "hash": "4e9f8db8"
+  },
+  "labels.seasonal-labels.rain": {
+    "text": "Rain",
+    "hash": "a6d20aa6"
+  },
+  "labels.seasonal-labels.snow": {
+    "text": "Snow",
+    "hash": "4f946da9"
+  },
+  "labels.seasonal-labels.spring": {
+    "text": "Spring",
+    "hash": "db29e82a"
+  },
+  "labels.seasonal-labels.summer": {
+    "text": "Summer",
+    "hash": "c0de243c"
+  },
+  "labels.seasonal-labels.sunny": {
+    "text": "Sunny",
+    "hash": "adf259f6"
+  },
+  "labels.seasonal-labels.thunderstorm": {
+    "text": "Thunderstorm",
+    "hash": "31a9beb9"
+  },
+  "labels.seasonal-labels.valentine": {
+    "text": "Valentine",
+    "hash": "cef5c43e"
+  },
+  "labels.seasonal-labels.windy": {
+    "text": "Windy",
+    "hash": "cdcaccab"
+  },
+  "labels.seasonal-labels.winter": {
+    "text": "Winter",
+    "hash": "1b17869e"
+  },
+  "labels.separator-module.separator": {
+    "text": "Separator",
+    "hash": "be237eda"
+  },
+  "labels.separator-module.visual-divider-between-modules": {
+    "text": "Visual divider between modules",
+    "hash": "babd9e27"
+  },
+  "labels.text-module.display-static-or-template-text": {
+    "text": "Display static or template text",
+    "hash": "c14b69e1"
+  },
+  "labels.text-module.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "labels.vertical-module.arrange-child-modules-in-a-column": {
+    "text": "Arrange child modules in a column",
+    "hash": "e2308ee8"
+  },
+  "labels.vertical-module.vertical": {
+    "text": "Vertical",
+    "hash": "727cd3a6"
+  }
 }

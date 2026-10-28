@@ -11,8 +11,8 @@ import { lm } from '../../i18n/labels/mark';
 class VerticalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'vertical',
-    name: lm('Vertical'),
-    description: lm('Arrange child modules in a column'),
+    name: lm('labels.vertical-module.vertical'),
+    description: lm('labels.vertical-module.arrange-child-modules-in-a-column'),
     category: 'layout',
     icon: 'mdi:arrow-split-horizontal',
   };

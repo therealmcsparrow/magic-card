@@ -92,7 +92,7 @@ import {
 import './draw-svg-dialog';
 import type { AnimSvgDialog } from './draw-svg-dialog';
 import { t, m } from '../i18n';
-import type { MessageId as LabelId } from '../../contracts/i18n';
+import type { MessageIndex as LabelId } from '../../contracts/i18n';
 
 /**
  * The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx). The

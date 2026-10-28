@@ -11,8 +11,8 @@ export function fieldReset(label: string, visible: boolean, onReset: () => void,
   return html`<button
     type="button"
     class="icon-btn sm field-reset"
-    aria-label=${t('Reset {label}', { label })}
-    title=${title ?? t('Reset to default')}
+    aria-label=${t('labels.field-reset.reset-label', { label })}
+    title=${title ?? t('labels.field-reset.reset-to-default')}
     @click=${(e: Event) => {
       e.stopPropagation();
       onReset();

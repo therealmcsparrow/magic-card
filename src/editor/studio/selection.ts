@@ -1,3 +1,4 @@
+import type { MessageIndex } from '../../contracts/i18n';
 import { t as lt } from '../../i18n/labels';
 import { html, TemplateResult } from 'lit';
 import { CardModule, EditorPath, MagicCardConfig } from '../../types';
@@ -234,7 +235,7 @@ export function countModules(config: MagicCardConfig): number {
 }
 
 export function moduleDisplayName(mod: CardModule): string {
-  const name = ModuleRegistry.get(mod.type)?.metadata.name;
+  const name = ModuleRegistry.get(mod.type)?.metadata.name as MessageIndex | '' | undefined;
   return name === undefined || name === '' ? mod.type : lt(name);
 }
 

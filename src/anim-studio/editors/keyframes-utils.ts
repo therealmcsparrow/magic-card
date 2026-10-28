@@ -1,7 +1,7 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, TargetRef, Track } from '../model';
 import { safeCssValue } from '../model';
 import { EASINGS } from '../../utils/animation-presets';
-import type { MessageId as LabelId } from '../../contracts/i18n';
+import type { MessageIndex as LabelId } from '../../contracts/i18n';
 import { t as tl } from '../../i18n/labels';
 import { m, t, type MessageId } from '../i18n';
 

@@ -1,7 +1,7 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, Rig, TargetRef, Track } from '../anim-studio/model';
 import { pathBox, type SplitPiece } from '../icons/icon-split';
 import { anchorOf, piecesBox, type Anchor, type Box } from './icon-doc';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { lm } from '../i18n/labels/mark';
 
 /*
@@ -18,7 +18,7 @@ import { lm } from '../i18n/labels/mark';
 export interface PartPresetParam {
   id: string;
   /** An lm() mark; read it with t() from the labels namespace. */
-  label: MessageId;
+  label: MessageIndex;
   min: number;
   max: number;
   step: number;
@@ -30,7 +30,7 @@ export interface PartPresetParam {
 export interface PartPreset {
   id: string;
   /** An lm() mark. */
-  name: MessageId;
+  name: MessageIndex;
   params: PartPresetParam[];
   /** mdi icon of the preset's button. */
   icon?: string;
@@ -39,7 +39,7 @@ export interface PartPreset {
   /** Draws the target (icon parts, groups and shapes only). */
   draws?: boolean;
   /** One line for the button's tooltip (an lm() mark). */
-  help?: MessageId;
+  help?: MessageIndex;
 }
 
 type Values = Omit<AnimationKeyframe, 'at'>;
@@ -53,11 +53,11 @@ interface Ctx {
   direction: 1 | -1;
 }
 
-const param = (id: string, label: MessageId, min: number, max: number, step: number, def: number): PartPresetParam => ({ id, label, min, max, step, default: def });
-const share = (def = 100): PartPresetParam => ({ ...param('share', lm('Duration share'), 10, 100, 5, def), unit: '%' });
-const delay = (): PartPresetParam => ({ ...param('delay', lm('Delay'), 0, 90, 5, 0), unit: '%' });
-const intensity = () => param('intensity', lm('Intensity'), 0.25, 3, 0.25, 1);
-const direction = () => param('direction', lm('Direction'), -1, 1, 2, 1);
+const param = (id: string, label: MessageIndex, min: number, max: number, step: number, def: number): PartPresetParam => ({ id, label, min, max, step, default: def });
+const share = (def = 100): PartPresetParam => ({ ...param('share', lm('labels.part-presets.duration-share'), 10, 100, 5, def), unit: '%' });
+const delay = (): PartPresetParam => ({ ...param('delay', lm('labels.part-presets.delay'), 0, 90, 5, 0), unit: '%' });
+const intensity = () => param('intensity', lm('labels.part-presets.intensity'), 0.25, 3, 0.25, 1);
+const direction = () => param('direction', lm('labels.part-presets.direction'), -1, 1, 2, 1);
 const MOTION = (def = 100) => [share(def), delay(), intensity(), direction()];
 
 const r3 = (n: number): number => Math.round(n * 1000) / 1000 || 0;
@@ -78,10 +78,10 @@ const damped = (steps: Array<[number, number]>, amp: number): GenKey[] => steps.
 const DEFS: Def[] = [
   {
     id: 'swing',
-    name: lm('Swing'),
+    name: lm('labels.part-presets.swing'),
     icon: 'mdi:metronome',
     pivot: 'top',
-    help: lm('Swings from its top, settling back'),
+    help: lm('labels.part-presets.swings-from-its-top-settling-back'),
     params: MOTION(),
     gen: ({ intensity: i, direction: d }) =>
       damped(
@@ -98,10 +98,10 @@ const DEFS: Def[] = [
   },
   {
     id: 'ring',
-    name: lm('Ring'),
+    name: lm('labels.part-presets.ring'),
     icon: 'mdi:bell-ring-outline',
     pivot: 'top',
-    help: lm('Rings like a bell: quick swings that die down'),
+    help: lm('labels.part-presets.rings-like-a-bell-quick-swings-that-die'),
     params: MOTION(70),
     gen: ({ intensity: i, direction: d }) =>
       damped(
@@ -123,28 +123,28 @@ const DEFS: Def[] = [
   },
   {
     id: 'spin',
-    name: lm('Spin'),
+    name: lm('labels.part-presets.spin'),
     icon: 'mdi:rotate-right',
     pivot: 'center',
-    help: lm('Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)'),
-    params: [share(), delay(), param('intensity', lm('Turns'), 1, 5, 1, 1), direction()],
+    help: lm('labels.part-presets.turns-round-at-a-steady-speed-whole'),
+    params: [share(), delay(), param('intensity', lm('labels.part-presets.turns'), 1, 5, 1, 1), direction()],
     gen: ({ intensity: i, direction: d }) => [rot(0, 0, 'linear'), rot(1, 360 * Math.max(1, Math.round(i)) * d, 'linear')],
   },
   {
     id: 'pulse',
-    name: lm('Pulse'),
+    name: lm('labels.part-presets.pulse'),
     icon: 'mdi:heart-pulse',
     pivot: 'center',
-    help: lm('Grows and shrinks back (direction -1 shrinks)'),
+    help: lm('labels.part-presets.grows-and-shrinks-back-direction-1'),
     params: MOTION(),
     gen: ({ intensity: i, direction: d }) => [tf(0, { scale: 1 }), tf(0.5, { scale: 1 + 0.15 * i * d }), tf(1, { scale: 1 })],
   },
   {
     id: 'bounce',
-    name: lm('Bounce'),
+    name: lm('labels.part-presets.bounce'),
     icon: 'mdi:debug-step-over',
     pivot: 'bottom',
-    help: lm('Squashes, jumps and lands'),
+    help: lm('labels.part-presets.squashes-jumps-and-lands'),
     params: MOTION(),
     gen: ({ intensity: i, direction: d }) => {
       const h = -3 * i * d;
@@ -160,9 +160,9 @@ const DEFS: Def[] = [
   },
   {
     id: 'shake',
-    name: lm('Shake'),
+    name: lm('labels.part-presets.shake'),
     icon: 'mdi:vibrate',
-    help: lm('Shakes from side to side'),
+    help: lm('labels.part-presets.shakes-from-side-to-side'),
     params: MOTION(60),
     gen: ({ intensity: i, direction: d }) => {
       const a = 1.2 * i * d;
@@ -171,10 +171,10 @@ const DEFS: Def[] = [
   },
   {
     id: 'wobble',
-    name: lm('Wobble'),
+    name: lm('labels.part-presets.wobble'),
     icon: 'mdi:rotate-3d-variant',
     pivot: 'bottom',
-    help: lm('Rocks on its base'),
+    help: lm('labels.part-presets.rocks-on-its-base'),
     params: MOTION(),
     gen: ({ intensity: i, direction: d }) =>
       damped(
@@ -192,9 +192,9 @@ const DEFS: Def[] = [
   },
   {
     id: 'blink',
-    name: lm('Blink'),
+    name: lm('labels.part-presets.blink'),
     icon: 'mdi:eye-outline',
-    help: lm('Blinks twice'),
+    help: lm('labels.part-presets.blinks-twice'),
     params: [share(), delay(), intensity()],
     gen: ({ intensity: i }) => {
       const lo = r3(Math.max(0, 1 - 0.9 * i));
@@ -203,9 +203,9 @@ const DEFS: Def[] = [
   },
   {
     id: 'fade',
-    name: lm('Fade'),
+    name: lm('labels.part-presets.fade'),
     icon: 'mdi:circle-opacity',
-    help: lm('Fades out and back in'),
+    help: lm('labels.part-presets.fades-out-and-back-in'),
     params: [share(), delay(), intensity()],
     gen: ({ intensity: i }) => {
       const lo = r3(Math.max(0, 1 - 0.8 * i));
@@ -218,10 +218,10 @@ const DEFS: Def[] = [
   },
   ...(
     [
-      ['slide-up', lm('Slide up'), lm('Moves up and back'), 'mdi:arrow-up', 'y', -1],
-      ['slide-down', lm('Slide down'), lm('Moves down and back'), 'mdi:arrow-down', 'y', 1],
-      ['slide-left', lm('Slide left'), lm('Moves left and back'), 'mdi:arrow-left', 'x', -1],
-      ['slide-right', lm('Slide right'), lm('Moves right and back'), 'mdi:arrow-right', 'x', 1],
+      ['slide-up', lm('labels.part-presets.slide-up'), lm('labels.part-presets.moves-up-and-back'), 'mdi:arrow-up', 'y', -1],
+      ['slide-down', lm('labels.part-presets.slide-down'), lm('labels.part-presets.moves-down-and-back'), 'mdi:arrow-down', 'y', 1],
+      ['slide-left', lm('labels.part-presets.slide-left'), lm('labels.part-presets.moves-left-and-back'), 'mdi:arrow-left', 'x', -1],
+      ['slide-right', lm('labels.part-presets.slide-right'), lm('labels.part-presets.moves-right-and-back'), 'mdi:arrow-right', 'x', 1],
     ] as const
   ).map(
     ([id, name, help, icon, axis, sign]): Def => ({
@@ -238,10 +238,10 @@ const DEFS: Def[] = [
   ),
   {
     id: 'draw-on',
-    name: lm('Draw on'),
+    name: lm('labels.part-presets.draw-on'),
     icon: 'mdi:draw',
     draws: true,
-    help: lm('Draws its outline, then fills (direction -1 draws it off)'),
+    help: lm('labels.part-presets.draws-its-outline-then-fills-direction-1'),
     params: [share(60), delay(), direction()],
     gen: ({ direction: d }) => [
       { t: 0, k: { draw: d > 0 ? 0 : 1, easing: 'ease-in-out' } },
@@ -250,10 +250,10 @@ const DEFS: Def[] = [
   },
   {
     id: 'draw-loop',
-    name: lm('Draw loop'),
+    name: lm('labels.part-presets.draw-loop'),
     icon: 'mdi:draw-pen',
     draws: true,
-    help: lm('Draws on, holds, and draws off again'),
+    help: lm('labels.part-presets.draws-on-holds-and-draws-off-again'),
     params: [share(), delay()],
     gen: () => [
       { t: 0, k: { draw: 0, easing: 'ease-in-out' } },
@@ -264,10 +264,10 @@ const DEFS: Def[] = [
   },
   {
     id: 'pop',
-    name: lm('Pop'),
+    name: lm('labels.part-presets.pop'),
     icon: 'mdi:star-four-points-outline',
     pivot: 'center',
-    help: lm('Pops in from nothing with an overshoot'),
+    help: lm('labels.part-presets.pops-in-from-nothing-with-an-overshoot'),
     params: [share(50), delay(), intensity()],
     gen: ({ intensity: i }) => [
       tf(0, { scale: 0 }, { opacity: 0 }, 'ease-out'),
@@ -277,18 +277,18 @@ const DEFS: Def[] = [
   },
   {
     id: 'float',
-    name: lm('Float'),
+    name: lm('labels.part-presets.float'),
     icon: 'mdi:waves-arrow-up',
-    help: lm('Drifts up and down'),
+    help: lm('labels.part-presets.drifts-up-and-down'),
     params: MOTION(),
     gen: ({ intensity: i, direction: d }) => [tf(0, { y: 0 }), tf(0.5, { y: -1.5 * i * d }), tf(1, { y: 0 })],
   },
   {
     id: 'flicker',
-    name: lm('Flicker'),
+    name: lm('labels.part-presets.flicker'),
     icon: 'mdi:fire',
     pivot: 'bottom',
-    help: lm('Flickers like a flame'),
+    help: lm('labels.part-presets.flickers-like-a-flame'),
     params: [share(), delay(), intensity()],
     gen: ({ intensity: i }) =>
       (
@@ -306,10 +306,10 @@ const DEFS: Def[] = [
   },
   {
     id: 'wave',
-    name: lm('Wave'),
+    name: lm('labels.part-presets.wave'),
     icon: 'mdi:wifi',
     pivot: 'center',
-    help: lm('Lights up one part after another (on a group or several parts)'),
+    help: lm('labels.part-presets.lights-up-one-part-after-another-on-a'),
     params: MOTION(),
     gen: ({ intensity: i }) => {
       const lo = r3(Math.max(0, 1 - 0.7 * Math.min(i, 1.4)));
