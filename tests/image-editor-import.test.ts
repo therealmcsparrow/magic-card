@@ -85,7 +85,7 @@ describe('Import an SVG file', () => {
     expect(el.doc.shapes).toHaveLength(2);
     expect(el.doc.vb).toMatchObject({ w: 800, h: 600 });
     const w = $<HTMLElement>(el, 'mc-ui-window')!;
-    expect(w.getAttribute('heading')).toBe("Imported 'floor.svg'");
+    expect(w.getAttribute('heading')).toBe("Imported ‘floor.svg’");
     expect(w.textContent).toContain('Removed scripts, event handlers.');
     win(el, 'Continue')!.click();
     await settle(el);

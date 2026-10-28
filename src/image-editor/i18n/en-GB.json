@@ -1,0 +1,1423 @@
+{
+  "image-editor.chunk.as-on-a-card": {
+    "text": "As on a card",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.canvas-size-set-to-w-by-h": {
+    "text": "Canvas size set to {w} by {h}.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 50,
+    "vars": {
+      "h": "The value that replaces h in the text.",
+      "w": "The value that replaces w in the text."
+    }
+  },
+  "image-editor.chunk.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 85
+  },
+  "image-editor.chunk.ctrl-z-undo-ctrl-shift-z-redo-ctrl-s": {
+    "text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text",
+    "note": "Shown in chunk (image-editor).",
+    "max": 85
+  },
+  "image-editor.chunk.draw-something-first": {
+    "text": "Draw something first",
+    "note": "Shown in chunk (image-editor).",
+    "max": 35
+  },
+  "image-editor.chunk.duplicate": {
+    "text": "Duplicate…",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.fine": {
+    "text": "fine",
+    "note": "Shown in chunk (image-editor).",
+    "max": 10
+  },
+  "image-editor.chunk.getting-big": {
+    "text": "getting big",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.give-it-a-name": {
+    "text": "Give it a name.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 25
+  },
+  "image-editor.chunk.image-canvas": {
+    "text": "Image canvas",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.image-editor": {
+    "text": "Image editor",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.image-name": {
+    "text": "Image name",
+    "note": "Shown in chunk (image-editor).",
+    "max": 25
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
+    "text": "Image size: {used} KiB of 256 KiB. Fine.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 65,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
+    "text": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 145,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
+    "text": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 120,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
+    "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 85,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "image-editor.chunk.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 125
+  },
+  "image-editor.chunk.import-an-svg-file": {
+    "text": "Import an SVG file…",
+    "note": "Shown in chunk (image-editor).",
+    "max": 35
+  },
+  "image-editor.chunk.imported-name": {
+    "text": "Imported ‘{name}’.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.chunk.magic-card-utils-reported-an-error-and": {
+    "text": "Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 170
+  },
+  "image-editor.chunk.my-image": {
+    "text": "My image",
+    "note": "Shown in chunk (image-editor).",
+    "max": 15
+  },
+  "image-editor.chunk.name-copy": {
+    "text": "{name} copy",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.chunk.name-stays-locked-imported-parts-cannot": {
+    "text": "{name} stays locked: imported parts cannot be edited.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 85,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.chunk.nearly-full": {
+    "text": "nearly full",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.opacity-set-to-pct-so-the-reference": {
+    "text": "Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 135,
+    "vars": {
+      "pct": "The value that replaces pct in the text."
+    }
+  },
+  "image-editor.chunk.save-as-a-copy": {
+    "text": "Save as a copy…",
+    "note": "Shown in chunk (image-editor).",
+    "max": 25
+  },
+  "image-editor.chunk.save-the-image-first": {
+    "text": "Save the image first.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 35
+  },
+  "image-editor.chunk.save-your-changes-first": {
+    "text": "Save your changes first.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 40
+  },
+  "image-editor.chunk.saved": {
+    "text": "Saved",
+    "note": "Shown in chunk (image-editor).",
+    "max": 10
+  },
+  "image-editor.chunk.saved-as-name-the-original-is-unchanged": {
+    "text": "Saved as ‘{name}’. The original is unchanged.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 75,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.chunk.saved-name": {
+    "text": "Saved ‘{name}’.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.chunk.saving": {
+    "text": "Saving…",
+    "note": "Shown in chunk (image-editor).",
+    "max": 20
+  },
+  "image-editor.chunk.showing-the-drawing-as-on-a-card-with": {
+    "text": "Showing the drawing as on a card, with the entity off.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 90
+  },
+  "image-editor.chunk.showing-the-drawing-in-the-editor": {
+    "text": "Showing the drawing in the editor colours.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 70
+  },
+  "image-editor.chunk.text": {
+    "text": "Text",
+    "note": "Shown in chunk (image-editor).",
+    "max": 10
+  },
+  "image-editor.chunk.text-tool-click-or-tap-where-the-text": {
+    "text": "Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 185
+  },
+  "image-editor.chunk.that-drawing-is-over-256-kib": {
+    "text": "That drawing is over 256 KiB.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 50
+  },
+  "image-editor.chunk.that-file-cannot-be-used-as-an-image": {
+    "text": "That file cannot be used as an image.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 60
+  },
+  "image-editor.chunk.that-file-has-no-shapes-an-image-can-use": {
+    "text": "That file has no shapes an image can use.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 70
+  },
+  "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
+    "text": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 100
+  },
+  "image-editor.chunk.the-library-does-not-accept-the-text": {
+    "text": "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 160,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "word": "The value that replaces word in the text."
+    }
+  },
+  "image-editor.chunk.the-library-does-not-accept-the-text-2": {
+    "text": "The library does not accept the text \"{word}\". Change it, then save again.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 120,
+    "vars": {
+      "word": "The value that replaces word in the text."
+    }
+  },
+  "image-editor.chunk.the-library-is-full-200-images-delete": {
+    "text": "The library is full (200 images). Delete one to add another.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 100
+  },
+  "image-editor.chunk.the-library-refused-this-image-reason": {
+    "text": "The library refused this image: {reason}",
+    "note": "Shown in chunk (image-editor).",
+    "max": 65,
+    "vars": {
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "image-editor.chunk.the-library-refused-this-image-use": {
+    "text": "The library refused this image. Use Export file to keep a copy.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 105
+  },
+  "image-editor.chunk.the-reference-picture-was-not-saved": {
+    "text": "The reference picture was not saved.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 60
+  },
+  "image-editor.chunk.this-drawing-cannot-be-saved-as-an-image": {
+    "text": "This drawing cannot be saved as an image.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 70
+  },
+  "image-editor.chunk.this-image-has-parts-that-this-editor": {
+    "text": "This image has parts that this editor cannot change yet, so it opens for viewing only.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 140
+  },
+  "image-editor.chunk.this-image-is-no-longer-in-the-library": {
+    "text": "This image is no longer in the library.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 65
+  },
+  "image-editor.chunk.this-image-was-changed-somewhere-else": {
+    "text": "This image was changed somewhere else.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 65
+  },
+  "image-editor.chunk.this-is-not-valid-svg-check-that-it": {
+    "text": "This is not valid SVG. Check that it starts with <svg and is closed.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 110
+  },
+  "image-editor.chunk.too-big": {
+    "text": "too big",
+    "note": "Shown in chunk (image-editor).",
+    "max": 15
+  },
+  "image-editor.chunk.too-big-to-save": {
+    "text": "Too big to save",
+    "note": "Shown in chunk (image-editor).",
+    "max": 25
+  },
+  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
+    "text": "Too big to save: {used} KiB of 256 KiB.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 65,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "image-editor.chunk.undo": {
+    "text": "Undo",
+    "note": "Shown in chunk (image-editor).",
+    "max": 15
+  },
+  "image-editor.chunk.use-80-characters-or-fewer": {
+    "text": "Use 80 characters or fewer.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 45
+  },
+  "image-editor.chunk.you-can-look-at-this-image-but-not": {
+    "text": "You can look at this image but not change it. Ask an administrator.",
+    "note": "Shown in chunk (image-editor).",
+    "max": 110
+  },
+  "image-editor.importer.choose-an-svg-file": {
+    "text": "Choose an SVG file.",
+    "note": "Shown in importer (image-editor).",
+    "max": 35
+  },
+  "image-editor.importer.choose-another-file": {
+    "text": "Choose another file",
+    "note": "Shown in importer (image-editor).",
+    "max": 35
+  },
+  "image-editor.importer.close": {
+    "text": "Close",
+    "note": "Shown in importer (image-editor).",
+    "max": 10
+  },
+  "image-editor.importer.continue": {
+    "text": "Continue",
+    "note": "Shown in importer (image-editor).",
+    "max": 15
+  },
+  "image-editor.importer.could-not-import-the-file": {
+    "text": "Could not import the file",
+    "note": "Shown in importer (image-editor).",
+    "max": 40
+  },
+  "image-editor.importer.embedded-pictures": {
+    "text": "embedded pictures",
+    "note": "Shown in importer (image-editor).",
+    "max": 30
+  },
+  "image-editor.importer.event-handlers": {
+    "text": "event handlers",
+    "note": "Shown in importer (image-editor).",
+    "max": 25
+  },
+  "image-editor.importer.imported-file": {
+    "text": "Imported file",
+    "note": "Shown in importer (image-editor).",
+    "max": 25
+  },
+  "image-editor.importer.imported-name": {
+    "text": "Imported ‘{name}’",
+    "note": "Shown in importer (image-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.importer.importing-name-replaces-everything-on": {
+    "text": "Importing ‘{name}’ replaces everything on the canvas. You can undo it.",
+    "note": "Shown in importer (image-editor).",
+    "max": 115,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.importer.keep-my-drawing": {
+    "text": "Keep my drawing",
+    "note": "Shown in importer (image-editor).",
+    "max": 25
+  },
+  "image-editor.importer.links-to-another-site": {
+    "text": "links to another site",
+    "note": "Shown in importer (image-editor).",
+    "max": 35
+  },
+  "image-editor.importer.nothing-was-removed": {
+    "text": "Nothing was removed.",
+    "note": "Shown in importer (image-editor).",
+    "max": 35
+  },
+  "image-editor.importer.other-parts-an-image-cannot-use": {
+    "text": "other parts an image cannot use",
+    "note": "Shown in importer (image-editor).",
+    "max": 55
+  },
+  "image-editor.importer.removed-list": {
+    "text": "Removed {list}.",
+    "note": "Shown in importer (image-editor).",
+    "max": 25,
+    "vars": {
+      "list": "The value that replaces list in the text."
+    }
+  },
+  "image-editor.importer.replace": {
+    "text": "Replace",
+    "note": "Shown in importer (image-editor).",
+    "max": 15
+  },
+  "image-editor.importer.replace-your-drawing": {
+    "text": "Replace your drawing?",
+    "note": "Shown in importer (image-editor).",
+    "max": 35
+  },
+  "image-editor.importer.scripts": {
+    "text": "scripts",
+    "note": "Shown in importer (image-editor).",
+    "max": 15
+  },
+  "image-editor.importer.some-parts-cannot-be-edited-such-as": {
+    "text": "Some parts cannot be edited, such as clipped ones. They are kept as locked layers.",
+    "note": "Shown in importer (image-editor).",
+    "max": 135
+  },
+  "image-editor.importer.that-file-is-too-big-to-open-over-8-mb": {
+    "text": "That file is too big to open (over 8 MB). Try a smaller copy.",
+    "note": "Shown in importer (image-editor).",
+    "max": 100
+  },
+  "image-editor.importer.the-file-could-not-be-read": {
+    "text": "The file could not be read.",
+    "note": "Shown in importer (image-editor).",
+    "max": 45
+  },
+  "image-editor.paint-ui.a-gradient-needs-at-least-2-stops": {
+    "text": "A gradient needs at least 2 stops.",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 55
+  },
+  "image-editor.paint-ui.accent": {
+    "text": "Accent",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.add-stop": {
+    "text": "Add stop",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.paint-ui.angle-degrees": {
+    "text": "Angle (degrees)",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.at-most-8-stops": {
+    "text": "At most 8 stops.",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.paint-ui.centre-x": {
+    "text": "Centre X (%)",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.paint-ui.centre-y": {
+    "text": "Centre Y (%)",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.paint-ui.custom": {
+    "text": "Custom",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.custom-colour": {
+    "text": "Custom colour",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.dash-list": {
+    "text": "Dash list",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.paint-ui.dash-offset": {
+    "text": "Dash offset",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.dashed": {
+    "text": "Dashed",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.dashes": {
+    "text": "Dashes",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.dotted": {
+    "text": "Dotted",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.fill": {
+    "text": "Fill",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.gradient-centre": {
+    "text": "Gradient centre",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.gradient-end": {
+    "text": "Gradient end",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.gradient-radius": {
+    "text": "Gradient radius",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.gradient-start": {
+    "text": "Gradient start",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.gradient-stop-n-of-count": {
+    "text": "Gradient stop {n} of {count}",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 45,
+    "vars": {
+      "count": "The value that replaces count in the text.",
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.paint-ui.label-x-x-y-y": {
+    "text": "{label}: x {x}, y {y}",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 35,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "x": "The value that replaces x in the text.",
+      "y": "The value that replaces y in the text."
+    }
+  },
+  "image-editor.paint-ui.linear-gradient": {
+    "text": "Linear gradient",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.main": {
+    "text": "Main",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.more-style-options": {
+    "text": "More style options",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.paint-ui.name-colour": {
+    "text": "{name} colour",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-editor.paint-ui.none": {
+    "text": "None",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.opacity": {
+    "text": "Opacity",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.paint-ui.opacity-fades-the-whole-layer": {
+    "text": "Opacity fades the whole layer.",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 50
+  },
+  "image-editor.paint-ui.or-type-a-name": {
+    "text": "Or type a name",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.paint-colour": {
+    "text": "{paint} colour",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25,
+    "vars": {
+      "paint": "The value that replaces paint in the text."
+    }
+  },
+  "image-editor.paint-ui.radial-gradient": {
+    "text": "Radial gradient",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.paint-ui.radius": {
+    "text": "Radius (%)",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.paint-ui.remove-stop-n": {
+    "text": "Remove stop {n}",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.paint-ui.solid": {
+    "text": "Solid",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.stop-n": {
+    "text": "Stop {n}",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.paint-ui.stop-n-colour": {
+    "text": "Stop {n} colour",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 25,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.paint-ui.stop-n-position": {
+    "text": "Stop {n} position (%)",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 35,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.paint-ui.stroke": {
+    "text": "Stroke",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.paint-ui.theme-colour": {
+    "text": "Theme colour",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.paint-ui.use-a-colour-like-3f6fb5": {
+    "text": "Use a colour like #3f6fb5.",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 45
+  },
+  "image-editor.paint-ui.use-a-name-that-starts-with-two-dashes": {
+    "text": "Use a name that starts with two dashes, like --my-colour.",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 95
+  },
+  "image-editor.paint-ui.use-up-to-8-numbers-separated-by-spaces": {
+    "text": "Use up to 8 numbers separated by spaces, like 8 4.",
+    "note": "Shown in paint ui (image-editor).",
+    "max": 80
+  },
+  "image-editor.part.imported-part": {
+    "text": "Imported part",
+    "note": "Shown in part (image-editor).",
+    "max": 25
+  },
+  "image-editor.part.rename-reorder-hide-or-delete-it": {
+    "text": "Rename, reorder, hide or delete it.",
+    "note": "Shown in part (image-editor).",
+    "max": 60
+  },
+  "image-editor.part.this-part-keeps-its-own-colours": {
+    "text": "This part keeps its own colours.",
+    "note": "Shown in part (image-editor).",
+    "max": 55
+  },
+  "image-editor.reference-ui.alignment-is-remembered-on-this-device": {
+    "text": "Alignment is remembered on this device for this image. The picture is not.",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 120
+  },
+  "image-editor.reference-ui.choose-a-picture": {
+    "text": "Choose a picture…",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.choose-another-picture": {
+    "text": "Choose another picture…",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 40
+  },
+  "image-editor.reference-ui.close": {
+    "text": "Close",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.reference-ui.fit-to-canvas": {
+    "text": "Fit to canvas",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.reference-ui.for-tracing-only-the-picture-is-never": {
+    "text": "For tracing only. The picture is never saved.",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 75
+  },
+  "image-editor.reference-ui.hide": {
+    "text": "Hide",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.reference-ui.match-canvas-shape-to-this-picture": {
+    "text": "Match canvas shape to this picture",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 55
+  },
+  "image-editor.reference-ui.move-picture-down": {
+    "text": "Move picture down",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.move-picture-left": {
+    "text": "Move picture left",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.move-picture-right": {
+    "text": "Move picture right",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.move-picture-up": {
+    "text": "Move picture up",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.reference-ui.move-the-picture": {
+    "text": "Move the picture",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.opacity": {
+    "text": "Opacity",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.reference-ui.png-jpeg-webp-gif-avif-or-bmp": {
+    "text": "PNG, JPEG, WebP, GIF, AVIF or BMP.",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 55
+  },
+  "image-editor.reference-ui.reference-picture": {
+    "text": "Reference picture",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.reference-picture-on-not-saved": {
+    "text": "Reference picture on. Not saved.",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 55
+  },
+  "image-editor.reference-ui.reference-pictures-are-not-kept-pick-it": {
+    "text": "Reference pictures are not kept. Pick it again if you reopen the image.",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 115
+  },
+  "image-editor.reference-ui.remove-picture": {
+    "text": "Remove picture",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.reference-ui.reset-alignment": {
+    "text": "Reset alignment",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.reference-ui.rotate-degrees": {
+    "text": "Rotate (degrees)",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.reference-ui.scale": {
+    "text": "Scale (%)",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.reference-ui.scale-and-rotate-are-around-the-middle": {
+    "text": "Scale and rotate are around the middle of the picture.",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 90
+  },
+  "image-editor.reference-ui.show": {
+    "text": "Show",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.reference-ui.turn-left-90": {
+    "text": "Turn left 90",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.reference-ui.turn-right-90": {
+    "text": "Turn right 90",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.reference-ui.x": {
+    "text": "X",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 5
+  },
+  "image-editor.reference-ui.y": {
+    "text": "Y",
+    "note": "Shown in reference ui (image-editor).",
+    "max": 5
+  },
+  "image-editor.reference.choose-a-png-jpeg-webp-gif-avif-or-bmp": {
+    "text": "Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.",
+    "note": "Shown in reference (image-editor).",
+    "max": 85
+  },
+  "image-editor.reference.reference-picture-on-not-saved": {
+    "text": "Reference picture on. Not saved.",
+    "note": "Shown in reference (image-editor).",
+    "max": 55
+  },
+  "image-editor.reference.that-file-is-too-big-to-open-over-64-mb": {
+    "text": "That file is too big to open (over 64 MB). Try a smaller copy.",
+    "note": "Shown in reference (image-editor).",
+    "max": 100
+  },
+  "image-editor.reference.this-browser-cannot-open-that-picture": {
+    "text": "This browser cannot open that picture. Save it as a JPEG and try again.",
+    "note": "Shown in reference (image-editor).",
+    "max": 115
+  },
+  "image-editor.reference.your-last-alignment-for-this-image-was": {
+    "text": "Your last alignment for this image was applied.",
+    "note": "Shown in reference (image-editor).",
+    "max": 80
+  },
+  "image-editor.text-tool.cancel": {
+    "text": "Cancel",
+    "note": "Shown in text tool (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-tool.done": {
+    "text": "Done",
+    "note": "Shown in text tool (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-tool.enter-adds-the-text-shift-enter-starts-a": {
+    "text": "Enter adds the text. Shift+Enter starts a new line. Esc cancels.",
+    "note": "Shown in text tool (image-editor).",
+    "max": 105
+  },
+  "image-editor.text-tool.n-left": {
+    "text": "{n} left",
+    "note": "Shown in text tool (image-editor).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.text-tool.no-text-was-added": {
+    "text": "No text was added.",
+    "note": "Shown in text tool (image-editor).",
+    "max": 30
+  },
+  "image-editor.text-tool.text-cancelled": {
+    "text": "Text cancelled.",
+    "note": "Shown in text tool (image-editor).",
+    "max": 25
+  },
+  "image-editor.text-tool.text-on-the-canvas": {
+    "text": "Text on the canvas",
+    "note": "Shown in text tool (image-editor).",
+    "max": 30
+  },
+  "image-editor.text-tool.that-is-the-longest-text-2048-characters": {
+    "text": "That is the longest text (2048 characters).",
+    "note": "Shown in text tool (image-editor).",
+    "max": 70
+  },
+  "image-editor.text-ui.add-text": {
+    "text": "Add text",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.text-ui.alignment": {
+    "text": "Alignment",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.text-ui.bold": {
+    "text": "Bold",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.centre": {
+    "text": "Centre",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.clean-no-feet": {
+    "text": "Clean, no feet.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.text-ui.content": {
+    "text": "Content",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.text-ui.end": {
+    "text": "End",
+    "note": "Shown in text ui (image-editor).",
+    "max": 5
+  },
+  "image-editor.text-ui.enter-adds-a-line": {
+    "text": "Enter adds a line.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 30
+  },
+  "image-editor.text-ui.every-letter-the-same-width": {
+    "text": "Every letter the same width.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 45
+  },
+  "image-editor.text-ui.extra-bold": {
+    "text": "Extra bold",
+    "note": "Shown in text ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.text-ui.font": {
+    "text": "Font",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.italic": {
+    "text": "Italic",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.letter-spacing-units": {
+    "text": "Letter spacing (units)",
+    "note": "Shown in text ui (image-editor).",
+    "max": 40
+  },
+  "image-editor.text-ui.light": {
+    "text": "Light",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.medium": {
+    "text": "Medium",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.monospace": {
+    "text": "Monospace",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.text-ui.n-left": {
+    "text": "{n} left",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-editor.text-ui.regular": {
+    "text": "Regular",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.text-ui.sans-serif": {
+    "text": "Sans-serif",
+    "note": "Shown in text ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.text-ui.semi-bold": {
+    "text": "Semi-bold",
+    "note": "Shown in text ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.text-ui.serif": {
+    "text": "Serif",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.size-units": {
+    "text": "Size (units)",
+    "note": "Shown in text ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.text-ui.start": {
+    "text": "Start",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.style": {
+    "text": "Style",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.system": {
+    "text": "System",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.text": {
+    "text": "Text",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.text-uses-fonts-already-on-the-device": {
+    "text": "Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 185
+  },
+  "image-editor.text-ui.that-is-the-longest-text-2048-characters": {
+    "text": "That is the longest text (2048 characters).",
+    "note": "Shown in text ui (image-editor).",
+    "max": 70
+  },
+  "image-editor.text-ui.the-empty-text-layer-was-removed": {
+    "text": "The empty text layer was removed.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 55
+  },
+  "image-editor.text-ui.weight": {
+    "text": "Weight",
+    "note": "Shown in text ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.text-ui.whatever-this-device-uses-for-its-own": {
+    "text": "Whatever this device uses for its own screens.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 75
+  },
+  "image-editor.text-ui.with-small-feet-like-print": {
+    "text": "With small feet, like print.",
+    "note": "Shown in text ui (image-editor).",
+    "max": 45
+  },
+  "image-editor.ui.accent": {
+    "text": "Accent",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.apply": {
+    "text": "Apply",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.apply-anyway": {
+    "text": "Apply anyway",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.author": {
+    "text": "Author",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.back": {
+    "text": "Back",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.c": {
+    "text": "{c, plural, one {Delete # hidden layer} other {Delete # hidden layers}}",
+    "note": "Shown in ui (image-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "image-editor.ui.c-2": {
+    "text": "{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}",
+    "note": "Shown in ui (image-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "image-editor.ui.c-outside-the-new-canvas-they-are-kept": {
+    "text": "{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.",
+    "note": "Shown in ui (image-editor).",
+    "max": 115,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "image-editor.ui.cancel": {
+    "text": "Cancel",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.canvas": {
+    "text": "Canvas",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.canvas-size": {
+    "text": "Canvas size",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.cards-that-set-their-own-shape-keep-it": {
+    "text": "Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.",
+    "note": "Shown in ui (image-editor).",
+    "max": 200
+  },
+  "image-editor.ui.close": {
+    "text": "Close",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.custom": {
+    "text": "Custom",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.description": {
+    "text": "Description",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.duplicate": {
+    "text": "Duplicate",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.ui.export-file": {
+    "text": "Export file",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.fill-paint": {
+    "text": "Fill: {paint}",
+    "note": "Shown in ui (image-editor).",
+    "max": 25,
+    "vars": {
+      "paint": "The value that replaces paint in the text."
+    }
+  },
+  "image-editor.ui.fit-to-view": {
+    "text": "Fit to view",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.height": {
+    "text": "Height",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.image": {
+    "text": "Image",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.image-canvas": {
+    "text": "Image canvas",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.image-size": {
+    "text": "Image size",
+    "note": "Shown in ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
+    "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "note": "Shown in ui (image-editor).",
+    "max": 85,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "image-editor.ui.includes-connections": {
+    "text": "Includes connections.",
+    "note": "Shown in ui (image-editor).",
+    "max": 35
+  },
+  "image-editor.ui.inspector": {
+    "text": "Inspector",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.ui.keep-ratio": {
+    "text": "Keep ratio",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.keywords": {
+    "text": "Keywords",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
+    "text": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
+    "note": "Shown in ui (image-editor).",
+    "max": 160
+  },
+  "image-editor.ui.layers": {
+    "text": "Layers",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.linear-gradient": {
+    "text": "Linear gradient",
+    "note": "Shown in ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.ui.main": {
+    "text": "Main",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.match-reference-picture": {
+    "text": "Match reference picture",
+    "note": "Shown in ui (image-editor).",
+    "max": 40
+  },
+  "image-editor.ui.min-to-max-pixels-per-side": {
+    "text": "{min} to {max} pixels per side.",
+    "note": "Shown in ui (image-editor).",
+    "max": 50,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "image-editor.ui.more": {
+    "text": "More",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.more-details": {
+    "text": "More details",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.name": {
+    "text": "Name",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.name-is-the-only-thing-you-need": {
+    "text": "Name is the only thing you need.",
+    "note": "Shown in ui (image-editor).",
+    "max": 55
+  },
+  "image-editor.ui.no-layers-yet": {
+    "text": "No layers yet.",
+    "note": "Shown in ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.ui.none": {
+    "text": "None",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.nothing-to-export-yet": {
+    "text": "Nothing to export yet.",
+    "note": "Shown in ui (image-editor).",
+    "max": 40
+  },
+  "image-editor.ui.outline-paint": {
+    "text": "Outline: {paint}",
+    "note": "Shown in ui (image-editor).",
+    "max": 30,
+    "vars": {
+      "paint": "The value that replaces paint in the text."
+    }
+  },
+  "image-editor.ui.pick-a-shape-pixel-numbers-only-set-the": {
+    "text": "Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.",
+    "note": "Shown in ui (image-editor).",
+    "max": 135
+  },
+  "image-editor.ui.radial-gradient": {
+    "text": "Radial gradient",
+    "note": "Shown in ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.ui.reload": {
+    "text": "Reload",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.ui.save": {
+    "text": "Save",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.save-as-a-copy": {
+    "text": "Save as a copy",
+    "note": "Shown in ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.ui.save-image": {
+    "text": "Save image",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.saving": {
+    "text": "Saving…",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.select-the-biggest-layer": {
+    "text": "Select the biggest layer",
+    "note": "Shown in ui (image-editor).",
+    "max": 40
+  },
+  "image-editor.ui.select-the-biggest-layer-and-simplify-it": {
+    "text": "Select the biggest layer and simplify it, or delete layers you do not need.",
+    "note": "Shown in ui (image-editor).",
+    "max": 120
+  },
+  "image-editor.ui.shape": {
+    "text": "Shape",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.the-address-is-mcu-image-id-it-cannot-be": {
+    "text": "The address is mcu-image:{id}. It cannot be changed later.",
+    "note": "Shown in ui (image-editor).",
+    "max": 95,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "image-editor.ui.this-image-was-changed-somewhere-else": {
+    "text": "This image was changed somewhere else.",
+    "note": "Shown in ui (image-editor).",
+    "max": 65
+  },
+  "image-editor.ui.too-big-to-save": {
+    "text": "Too big to save",
+    "note": "Shown in ui (image-editor).",
+    "max": 25
+  },
+  "image-editor.ui.undo": {
+    "text": "Undo",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.ui.use-a-number-from-min-to-max": {
+    "text": "Use a number from {min} to {max}.",
+    "note": "Shown in ui (image-editor).",
+    "max": 55,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "image-editor.ui.used-of-256-kib-word": {
+    "text": "{used} of 256 KiB, {word}",
+    "note": "Shown in ui (image-editor).",
+    "max": 40,
+    "vars": {
+      "used": "The value that replaces used in the text.",
+      "word": "The value that replaces word in the text."
+    }
+  },
+  "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
+    "text": "{w} x {h} units. Pick a layer to read its details.",
+    "note": "Shown in ui (image-editor).",
+    "max": 80,
+    "vars": {
+      "h": "The value that replaces h in the text.",
+      "w": "The value that replaces w in the text."
+    }
+  },
+  "image-editor.ui.what-is-kib": {
+    "text": "What is KiB?",
+    "note": "Shown in ui (image-editor).",
+    "max": 20
+  },
+  "image-editor.ui.width": {
+    "text": "Width",
+    "note": "Shown in ui (image-editor).",
+    "max": 10
+  },
+  "image-editor.ui.zoom-in": {
+    "text": "Zoom in",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  },
+  "image-editor.ui.zoom-out": {
+    "text": "Zoom out",
+    "note": "Shown in ui (image-editor).",
+    "max": 15
+  }
+}

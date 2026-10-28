@@ -1,241 +1,1038 @@
 {
-  "A gradient needs at least 2 stops.": "A gradient needs at least 2 stops.",
-  "Accent": "Accent",
-  "Add stop": "Add stop",
-  "Add text": "Add text",
-  "Alignment": "Alignment",
-  "Alignment is remembered on this device for this image. The picture is not.": "Alignment is remembered on this device for this image. The picture is not.",
-  "Angle (degrees)": "Angle (degrees)",
-  "Apply": "Apply",
-  "Apply anyway": "Apply anyway",
-  "As on a card": "As on a card",
-  "At most 8 stops.": "At most 8 stops.",
-  "Author": "Author",
-  "Back": "Back",
-  "Bold": "Bold",
-  "Cancel": "Cancel",
-  "Canvas": "Canvas",
-  "Canvas size": "Canvas size",
-  "Canvas size set to {w} by {h}.": "Canvas size set to {w} by {h}.",
-  "Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.": "Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.",
-  "Centre": "Center",
-  "Centre X (%)": "Center X (%)",
-  "Centre Y (%)": "Center Y (%)",
-  "Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.": "Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.",
-  "Choose a picture…": "Choose a picture…",
-  "Choose an SVG file.": "Choose an SVG file.",
-  "Choose another file": "Choose another file",
-  "Choose another picture…": "Choose another picture…",
-  "Clean, no feet.": "Clean, no feet.",
-  "Close": "Close",
-  "Content": "Content",
-  "Continue": "Continue",
-  "Could not import the file": "Could not import the file",
-  "Could not reach Magic Card Utils. Your work is safe.": "Could not reach Magic Card Utils. Your work is safe.",
-  "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text",
-  "Custom": "Custom",
-  "Custom colour": "Custom color",
-  "Dash list": "Dash list",
-  "Dash offset": "Dash offset",
-  "Dashed": "Dashed",
-  "Dashes": "Dashes",
-  "Description": "Description",
-  "Done": "Done",
-  "Dotted": "Dotted",
-  "Draw something first": "Draw something first",
-  "Duplicate": "Duplicate",
-  "Duplicate…": "Duplicate…",
-  "End": "End",
-  "Enter adds a line.": "Enter adds a line.",
-  "Enter adds the text. Shift+Enter starts a new line. Esc cancels.": "Enter adds the text. Shift+Enter starts a new line. Esc cancels.",
-  "Every letter the same width.": "Every letter the same width.",
-  "Export file": "Export file",
-  "Extra bold": "Extra bold",
-  "Fill": "Fill",
-  "Fill: {paint}": "Fill: {paint}",
-  "Fit to canvas": "Fit to canvas",
-  "Fit to view": "Fit to view",
-  "Font": "Font",
-  "For tracing only. The picture is never saved.": "For tracing only. The picture is never saved.",
-  "Give it a name.": "Give it a name.",
-  "Gradient centre": "Gradient center",
-  "Gradient end": "Gradient end",
-  "Gradient radius": "Gradient radius",
-  "Gradient start": "Gradient start",
-  "Gradient stop {n} of {count}": "Gradient stop {n} of {count}",
-  "Height": "Height",
-  "Hide": "Hide",
-  "Image": "Image",
-  "Image canvas": "Image canvas",
-  "Image editor": "Image editor",
-  "Image name": "Image name",
-  "Image size": "Image size",
-  "Image size: {used} KiB of 256 KiB. Fine.": "Image size: {used} KiB of 256 KiB. Fine.",
-  "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
-  "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
-  "Image size: {used} KiB of 256 KiB. Too big to save.": "Image size: {used} KiB of 256 KiB. Too big to save.",
-  "Images need Magic Card Utils. It is installed through HACS, like Magic Card.": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-  "Import an SVG file…": "Import an SVG file…",
-  "Imported '{name}'": "Imported '{name}'",
-  "Imported '{name}'.": "Imported '{name}'.",
-  "Imported file": "Imported file",
-  "Imported part": "Imported part",
-  "Importing '{name}' replaces everything on the canvas. You can undo it.": "Importing '{name}' replaces everything on the canvas. You can undo it.",
-  "Includes connections.": "Includes connections.",
-  "Inspector": "Inspector",
-  "Italic": "Italic",
-  "Keep my drawing": "Keep my drawing",
-  "Keep ratio": "Keep ratio",
-  "Keywords": "Keywords",
-  "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
-  "Layers": "Layers",
-  "Letter spacing (units)": "Letter spacing (units)",
-  "Light": "Light",
-  "Linear gradient": "Linear gradient",
-  "Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.": "Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.",
-  "Main": "Main",
-  "Match canvas shape to this picture": "Match canvas shape to this picture",
-  "Match reference picture": "Match reference picture",
-  "Medium": "Medium",
-  "Monospace": "Monospace",
-  "More": "More",
-  "More details": "More details",
-  "More style options": "More style options",
-  "Move picture down": "Move picture down",
-  "Move picture left": "Move picture left",
-  "Move picture right": "Move picture right",
-  "Move picture up": "Move picture up",
-  "Move the picture": "Move the picture",
-  "My image": "My image",
-  "Name": "Name",
-  "Name is the only thing you need.": "Name is the only thing you need.",
-  "No layers yet.": "No layers yet.",
-  "No text was added.": "No text was added.",
-  "None": "None",
-  "Nothing to export yet.": "Nothing to export yet.",
-  "Nothing was removed.": "Nothing was removed.",
-  "Opacity": "Opacity",
-  "Opacity fades the whole layer.": "Opacity fades the whole layer.",
-  "Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.": "Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.",
-  "Or type a name": "Or type a name",
-  "Outline: {paint}": "Outline: {paint}",
-  "PNG, JPEG, WebP, GIF, AVIF or BMP.": "PNG, JPEG, WebP, GIF, AVIF or BMP.",
-  "Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.": "Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.",
-  "Radial gradient": "Radial gradient",
-  "Radius (%)": "Radius (%)",
-  "Reference picture": "Reference picture",
-  "Reference picture on. Not saved.": "Reference picture on. Not saved.",
-  "Reference pictures are not kept. Pick it again if you reopen the image.": "Reference pictures are not kept. Pick it again if you reopen the image.",
-  "Regular": "Regular",
-  "Reload": "Reload",
-  "Remove picture": "Remove picture",
-  "Remove stop {n}": "Remove stop {n}",
-  "Removed {list}.": "Removed {list}.",
-  "Rename, reorder, hide or delete it.": "Rename, reorder, hide or delete it.",
-  "Replace": "Replace",
-  "Replace your drawing?": "Replace your drawing?",
-  "Reset alignment": "Reset alignment",
-  "Rotate (degrees)": "Rotate (degrees)",
-  "Sans-serif": "Sans-serif",
-  "Save": "Save",
-  "Save as a copy": "Save as a copy",
-  "Save as a copy…": "Save as a copy…",
-  "Save image": "Save image",
-  "Save the image first.": "Save the image first.",
-  "Save your changes first.": "Save your changes first.",
-  "Saved": "Saved",
-  "Saved '{name}'.": "Saved '{name}'.",
-  "Saved as '{name}'. The original is unchanged.": "Saved as '{name}'. The original is unchanged.",
-  "Saving…": "Saving…",
-  "Scale (%)": "Scale (%)",
-  "Scale and rotate are around the middle of the picture.": "Scale and rotate are around the middle of the picture.",
-  "Select the biggest layer": "Select the biggest layer",
-  "Select the biggest layer and simplify it, or delete layers you do not need.": "Select the biggest layer and simplify it, or delete layers you do not need.",
-  "Semi-bold": "Semi-bold",
-  "Serif": "Serif",
-  "Shape": "Shape",
-  "Show": "Show",
-  "Showing the drawing as on a card, with the entity off.": "Showing the drawing as on a card, with the entity off.",
-  "Showing the drawing in the editor colours.": "Showing the drawing in the editor colors.",
-  "Size (units)": "Size (units)",
-  "Solid": "Solid",
-  "Some parts cannot be edited, such as clipped ones. They are kept as locked layers.": "Some parts cannot be edited, such as clipped ones. They are kept as locked layers.",
-  "Start": "Start",
-  "Stop {n}": "Stop {n}",
-  "Stop {n} colour": "Stop {n} color",
-  "Stop {n} position (%)": "Stop {n} position (%)",
-  "Stroke": "Stroke",
-  "Style": "Style",
-  "System": "System",
-  "Text": "Text",
-  "Text cancelled.": "Text canceled.",
-  "Text on the canvas": "Text on the canvas",
-  "Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.": "Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.",
-  "Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.": "Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.",
-  "That SVG is too big to open (over 8 MB). Try a smaller copy.": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
-  "That drawing is over 256 KiB.": "That drawing is over 256 KiB.",
-  "That file cannot be used as an image.": "That file cannot be used as an image.",
-  "That file has no shapes an image can use.": "That file has no shapes an image can use.",
-  "That file is too big to open (over 64 MB). Try a smaller copy.": "That file is too big to open (over 64 MB). Try a smaller copy.",
-  "That file is too big to open (over 8 MB). Try a smaller copy.": "That file is too big to open (over 8 MB). Try a smaller copy.",
-  "That is the longest text (2048 characters).": "That is the longest text (2048 characters).",
-  "The address is mcu-image:{id}. It cannot be changed later.": "The address is mcu-image:{id}. It cannot be changed later.",
-  "The empty text layer was removed.": "The empty text layer was removed.",
-  "The file could not be read.": "The file could not be read.",
-  "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.": "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.",
-  "The library does not accept the text \"{word}\". Change it, then save again.": "The library does not accept the text \"{word}\". Change it, then save again.",
-  "The library is full (200 images). Delete one to add another.": "The library is full (200 images). Delete one to add another.",
-  "The library refused this image. Use Export file to keep a copy.": "The library refused this image. Use Export file to keep a copy.",
-  "The library refused this image: {reason}": "The library refused this image: {reason}",
-  "The reference picture was not saved.": "The reference picture was not saved.",
-  "Theme colour": "Theme color",
-  "This browser cannot open that picture. Save it as a JPEG and try again.": "This browser cannot open that picture. Save it as a JPEG and try again.",
-  "This drawing cannot be saved as an image.": "This drawing cannot be saved as an image.",
-  "This image has parts that this editor cannot change yet, so it opens for viewing only.": "This image has parts that this editor cannot change yet, so it opens for viewing only.",
-  "This image is no longer in the library.": "This image is no longer in the library.",
-  "This image was changed somewhere else.": "This image was changed somewhere else.",
-  "This is not valid SVG. Check that it starts with <svg and is closed.": "This is not valid SVG. Check that it starts with <svg and is closed.",
-  "This part keeps its own colours.": "This part keeps its own colors.",
-  "Too big to save": "Too big to save",
-  "Too big to save: {used} KiB of 256 KiB.": "Too big to save: {used} KiB of 256 KiB.",
-  "Turn left 90": "Turn left 90",
-  "Turn right 90": "Turn right 90",
-  "Undo": "Undo",
-  "Use 80 characters or fewer.": "Use 80 characters or fewer.",
-  "Use a colour like #3f6fb5.": "Use a color like #3f6fb5.",
-  "Use a name that starts with two dashes, like --my-colour.": "Use a name that starts with two dashes, like --my-color.",
-  "Use a number from {min} to {max}.": "Use a number from {min} to {max}.",
-  "Use up to 8 numbers separated by spaces, like 8 4.": "Use up to 8 numbers separated by spaces, like 8 4.",
-  "Weight": "Weight",
-  "What is KiB?": "What is KiB?",
-  "Whatever this device uses for its own screens.": "Whatever this device uses for its own screens.",
-  "Width": "Width",
-  "With small feet, like print.": "With small feet, like print.",
-  "X": "X",
-  "Y": "Y",
-  "You can look at this image but not change it. Ask an administrator.": "You can look at this image but not change it. Ask an administrator.",
-  "Your last alignment for this image was applied.": "Your last alignment for this image was applied.",
-  "Zoom in": "Zoom in",
-  "Zoom out": "Zoom out",
-  "embedded pictures": "embedded pictures",
-  "event handlers": "event handlers",
-  "fine": "fine",
-  "getting big": "getting big",
-  "links to another site": "links to another site",
-  "nearly full": "nearly full",
-  "other parts an image cannot use": "other parts an image cannot use",
-  "scripts": "scripts",
-  "too big": "too big",
-  "{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.": "{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.",
-  "{c, plural, one {Delete # hidden layer} other {Delete # hidden layers}}": "{c, plural, one {Delete # hidden layer} other {Delete # hidden layers}}",
-  "{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}": "{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}",
-  "{label}: x {x}, y {y}": "{label}: x {x}, y {y}",
-  "{min} to {max} pixels per side.": "{min} to {max} pixels per side.",
-  "{name} colour": "{name} color",
-  "{name} copy": "{name} copy",
-  "{name} stays locked: imported parts cannot be edited.": "{name} stays locked: imported parts cannot be edited.",
-  "{n} left": "{n} left",
-  "{paint} colour": "{paint} color",
-  "{used} of 256 KiB, {word}": "{used} of 256 KiB, {word}",
-  "{w} x {h} units. Pick a layer to read its details.": "{w} x {h} units. Pick a layer to read its details."
+  "image-editor.chunk.as-on-a-card": {
+    "text": "As on a card",
+    "hash": "07d4854b"
+  },
+  "image-editor.chunk.canvas-size-set-to-w-by-h": {
+    "text": "Canvas size set to {w} by {h}.",
+    "hash": "d03c9b14"
+  },
+  "image-editor.chunk.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "hash": "3ba3f12b"
+  },
+  "image-editor.chunk.ctrl-z-undo-ctrl-shift-z-redo-ctrl-s": {
+    "text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text",
+    "hash": "1dd9480b"
+  },
+  "image-editor.chunk.draw-something-first": {
+    "text": "Draw something first",
+    "hash": "f2d3da60"
+  },
+  "image-editor.chunk.duplicate": {
+    "text": "Duplicate…",
+    "hash": "5d202208"
+  },
+  "image-editor.chunk.fine": {
+    "text": "fine",
+    "hash": "d14a58ba"
+  },
+  "image-editor.chunk.getting-big": {
+    "text": "getting big",
+    "hash": "f158db27"
+  },
+  "image-editor.chunk.give-it-a-name": {
+    "text": "Give it a name.",
+    "hash": "9d63f7c9"
+  },
+  "image-editor.chunk.image-canvas": {
+    "text": "Image canvas",
+    "hash": "73d6fc07"
+  },
+  "image-editor.chunk.image-editor": {
+    "text": "Image editor",
+    "hash": "52945574"
+  },
+  "image-editor.chunk.image-name": {
+    "text": "Image name",
+    "hash": "52493eca"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
+    "text": "Image size: {used} KiB of 256 KiB. Fine.",
+    "hash": "205cd2fd"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
+    "text": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
+    "hash": "3ae3152e"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
+    "text": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
+    "hash": "49e0cbaf"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
+    "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "hash": "7871f325"
+  },
+  "image-editor.chunk.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "hash": "62625dad"
+  },
+  "image-editor.chunk.import-an-svg-file": {
+    "text": "Import an SVG file…",
+    "hash": "431df358"
+  },
+  "image-editor.chunk.imported-name": {
+    "text": "Imported ‘{name}’.",
+    "hash": "517bd976"
+  },
+  "image-editor.chunk.magic-card-utils-reported-an-error-and": {
+    "text": "Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.",
+    "hash": "328bbdeb"
+  },
+  "image-editor.chunk.my-image": {
+    "text": "My image",
+    "hash": "93fd11c1"
+  },
+  "image-editor.chunk.name-copy": {
+    "text": "{name} copy",
+    "hash": "938a6418"
+  },
+  "image-editor.chunk.name-stays-locked-imported-parts-cannot": {
+    "text": "{name} stays locked: imported parts cannot be edited.",
+    "hash": "d4e4f981"
+  },
+  "image-editor.chunk.nearly-full": {
+    "text": "nearly full",
+    "hash": "f90348aa"
+  },
+  "image-editor.chunk.opacity-set-to-pct-so-the-reference": {
+    "text": "Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.",
+    "hash": "4e03c366"
+  },
+  "image-editor.chunk.save-as-a-copy": {
+    "text": "Save as a copy…",
+    "hash": "32e26365"
+  },
+  "image-editor.chunk.save-the-image-first": {
+    "text": "Save the image first.",
+    "hash": "28b25b23"
+  },
+  "image-editor.chunk.save-your-changes-first": {
+    "text": "Save your changes first.",
+    "hash": "7bed9d58"
+  },
+  "image-editor.chunk.saved": {
+    "text": "Saved",
+    "hash": "b5c120b3"
+  },
+  "image-editor.chunk.saved-as-name-the-original-is-unchanged": {
+    "text": "Saved as ‘{name}’. The original is unchanged.",
+    "hash": "3122232e"
+  },
+  "image-editor.chunk.saved-name": {
+    "text": "Saved ‘{name}’.",
+    "hash": "95ebf977"
+  },
+  "image-editor.chunk.saving": {
+    "text": "Saving…",
+    "hash": "23e39291"
+  },
+  "image-editor.chunk.showing-the-drawing-as-on-a-card-with": {
+    "text": "Showing the drawing as on a card, with the entity off.",
+    "hash": "231ae4ab"
+  },
+  "image-editor.chunk.showing-the-drawing-in-the-editor": {
+    "text": "Showing the drawing in the editor colors.",
+    "hash": "16fff2b6"
+  },
+  "image-editor.chunk.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "image-editor.chunk.text-tool-click-or-tap-where-the-text": {
+    "text": "Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.",
+    "hash": "408538c8"
+  },
+  "image-editor.chunk.that-drawing-is-over-256-kib": {
+    "text": "That drawing is over 256 KiB.",
+    "hash": "f4b05d33"
+  },
+  "image-editor.chunk.that-file-cannot-be-used-as-an-image": {
+    "text": "That file cannot be used as an image.",
+    "hash": "3b52f1c0"
+  },
+  "image-editor.chunk.that-file-has-no-shapes-an-image-can-use": {
+    "text": "That file has no shapes an image can use.",
+    "hash": "4ed1efc8"
+  },
+  "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
+    "text": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
+    "hash": "a4b2ade8"
+  },
+  "image-editor.chunk.the-library-does-not-accept-the-text": {
+    "text": "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.",
+    "hash": "1621feb4"
+  },
+  "image-editor.chunk.the-library-does-not-accept-the-text-2": {
+    "text": "The library does not accept the text \"{word}\". Change it, then save again.",
+    "hash": "d6d78369"
+  },
+  "image-editor.chunk.the-library-is-full-200-images-delete": {
+    "text": "The library is full (200 images). Delete one to add another.",
+    "hash": "70a99846"
+  },
+  "image-editor.chunk.the-library-refused-this-image-reason": {
+    "text": "The library refused this image: {reason}",
+    "hash": "0814e83b"
+  },
+  "image-editor.chunk.the-library-refused-this-image-use": {
+    "text": "The library refused this image. Use Export file to keep a copy.",
+    "hash": "5fa5f176"
+  },
+  "image-editor.chunk.the-reference-picture-was-not-saved": {
+    "text": "The reference picture was not saved.",
+    "hash": "d7e29a42"
+  },
+  "image-editor.chunk.this-drawing-cannot-be-saved-as-an-image": {
+    "text": "This drawing cannot be saved as an image.",
+    "hash": "90a602b4"
+  },
+  "image-editor.chunk.this-image-has-parts-that-this-editor": {
+    "text": "This image has parts that this editor cannot change yet, so it opens for viewing only.",
+    "hash": "bb4468d8"
+  },
+  "image-editor.chunk.this-image-is-no-longer-in-the-library": {
+    "text": "This image is no longer in the library.",
+    "hash": "ba95db40"
+  },
+  "image-editor.chunk.this-image-was-changed-somewhere-else": {
+    "text": "This image was changed somewhere else.",
+    "hash": "b1bcbf44"
+  },
+  "image-editor.chunk.this-is-not-valid-svg-check-that-it": {
+    "text": "This is not valid SVG. Check that it starts with <svg and is closed.",
+    "hash": "c93f2341"
+  },
+  "image-editor.chunk.too-big": {
+    "text": "too big",
+    "hash": "fd21d949"
+  },
+  "image-editor.chunk.too-big-to-save": {
+    "text": "Too big to save",
+    "hash": "4202b72f"
+  },
+  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
+    "text": "Too big to save: {used} KiB of 256 KiB.",
+    "hash": "d734caad"
+  },
+  "image-editor.chunk.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "image-editor.chunk.use-80-characters-or-fewer": {
+    "text": "Use 80 characters or fewer.",
+    "hash": "89f38a1c"
+  },
+  "image-editor.chunk.you-can-look-at-this-image-but-not": {
+    "text": "You can look at this image but not change it. Ask an administrator.",
+    "hash": "0968b746"
+  },
+  "image-editor.importer.choose-an-svg-file": {
+    "text": "Choose an SVG file.",
+    "hash": "1b0adb40"
+  },
+  "image-editor.importer.choose-another-file": {
+    "text": "Choose another file",
+    "hash": "26eac8f8"
+  },
+  "image-editor.importer.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "image-editor.importer.continue": {
+    "text": "Continue",
+    "hash": "31fbef16"
+  },
+  "image-editor.importer.could-not-import-the-file": {
+    "text": "Could not import the file",
+    "hash": "5bd9e64c"
+  },
+  "image-editor.importer.embedded-pictures": {
+    "text": "embedded pictures",
+    "hash": "7a12f493"
+  },
+  "image-editor.importer.event-handlers": {
+    "text": "event handlers",
+    "hash": "a41b55f6"
+  },
+  "image-editor.importer.imported-file": {
+    "text": "Imported file",
+    "hash": "16b2a5e6"
+  },
+  "image-editor.importer.imported-name": {
+    "text": "Imported ‘{name}’",
+    "hash": "01bc6c56"
+  },
+  "image-editor.importer.importing-name-replaces-everything-on": {
+    "text": "Importing ‘{name}’ replaces everything on the canvas. You can undo it.",
+    "hash": "60736c29"
+  },
+  "image-editor.importer.keep-my-drawing": {
+    "text": "Keep my drawing",
+    "hash": "5660c427"
+  },
+  "image-editor.importer.links-to-another-site": {
+    "text": "links to another site",
+    "hash": "b48e5171"
+  },
+  "image-editor.importer.nothing-was-removed": {
+    "text": "Nothing was removed.",
+    "hash": "57fc553d"
+  },
+  "image-editor.importer.other-parts-an-image-cannot-use": {
+    "text": "other parts an image cannot use",
+    "hash": "cf4e238e"
+  },
+  "image-editor.importer.removed-list": {
+    "text": "Removed {list}.",
+    "hash": "a76bda11"
+  },
+  "image-editor.importer.replace": {
+    "text": "Replace",
+    "hash": "95e15439"
+  },
+  "image-editor.importer.replace-your-drawing": {
+    "text": "Replace your drawing?",
+    "hash": "acaf7eb9"
+  },
+  "image-editor.importer.scripts": {
+    "text": "scripts",
+    "hash": "8c5967fd"
+  },
+  "image-editor.importer.some-parts-cannot-be-edited-such-as": {
+    "text": "Some parts cannot be edited, such as clipped ones. They are kept as locked layers.",
+    "hash": "ae005345"
+  },
+  "image-editor.importer.that-file-is-too-big-to-open-over-8-mb": {
+    "text": "That file is too big to open (over 8 MB). Try a smaller copy.",
+    "hash": "8f6622ea"
+  },
+  "image-editor.importer.the-file-could-not-be-read": {
+    "text": "The file could not be read.",
+    "hash": "f60f4735"
+  },
+  "image-editor.paint-ui.a-gradient-needs-at-least-2-stops": {
+    "text": "A gradient needs at least 2 stops.",
+    "hash": "fe1dd01e"
+  },
+  "image-editor.paint-ui.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "image-editor.paint-ui.add-stop": {
+    "text": "Add stop",
+    "hash": "5dec20de"
+  },
+  "image-editor.paint-ui.angle-degrees": {
+    "text": "Angle (degrees)",
+    "hash": "84cca765"
+  },
+  "image-editor.paint-ui.at-most-8-stops": {
+    "text": "At most 8 stops.",
+    "hash": "74c92b06"
+  },
+  "image-editor.paint-ui.centre-x": {
+    "text": "Center X (%)",
+    "hash": "f2d4d411"
+  },
+  "image-editor.paint-ui.centre-y": {
+    "text": "Center Y (%)",
+    "hash": "62de9db2"
+  },
+  "image-editor.paint-ui.custom": {
+    "text": "Custom",
+    "hash": "494ca78f"
+  },
+  "image-editor.paint-ui.custom-colour": {
+    "text": "Custom color",
+    "hash": "c31a3f15"
+  },
+  "image-editor.paint-ui.dash-list": {
+    "text": "Dash list",
+    "hash": "1539f015"
+  },
+  "image-editor.paint-ui.dash-offset": {
+    "text": "Dash offset",
+    "hash": "8b6abc09"
+  },
+  "image-editor.paint-ui.dashed": {
+    "text": "Dashed",
+    "hash": "2fe14ade"
+  },
+  "image-editor.paint-ui.dashes": {
+    "text": "Dashes",
+    "hash": "0f8b9321"
+  },
+  "image-editor.paint-ui.dotted": {
+    "text": "Dotted",
+    "hash": "be454f3c"
+  },
+  "image-editor.paint-ui.fill": {
+    "text": "Fill",
+    "hash": "033955d4"
+  },
+  "image-editor.paint-ui.gradient-centre": {
+    "text": "Gradient center",
+    "hash": "502b4371"
+  },
+  "image-editor.paint-ui.gradient-end": {
+    "text": "Gradient end",
+    "hash": "36670c89"
+  },
+  "image-editor.paint-ui.gradient-radius": {
+    "text": "Gradient radius",
+    "hash": "69cd18cd"
+  },
+  "image-editor.paint-ui.gradient-start": {
+    "text": "Gradient start",
+    "hash": "8a4567f1"
+  },
+  "image-editor.paint-ui.gradient-stop-n-of-count": {
+    "text": "Gradient stop {n} of {count}",
+    "hash": "65eca2dd"
+  },
+  "image-editor.paint-ui.label-x-x-y-y": {
+    "text": "{label}: x {x}, y {y}",
+    "hash": "8369e720"
+  },
+  "image-editor.paint-ui.linear-gradient": {
+    "text": "Linear gradient",
+    "hash": "535819b2"
+  },
+  "image-editor.paint-ui.main": {
+    "text": "Main",
+    "hash": "eb814be3"
+  },
+  "image-editor.paint-ui.more-style-options": {
+    "text": "More style options",
+    "hash": "80f7d066"
+  },
+  "image-editor.paint-ui.name-colour": {
+    "text": "{name} color",
+    "hash": "5b55cbe0"
+  },
+  "image-editor.paint-ui.none": {
+    "text": "None",
+    "hash": "dc937b59"
+  },
+  "image-editor.paint-ui.opacity": {
+    "text": "Opacity",
+    "hash": "6062652e"
+  },
+  "image-editor.paint-ui.opacity-fades-the-whole-layer": {
+    "text": "Opacity fades the whole layer.",
+    "hash": "0c510d37"
+  },
+  "image-editor.paint-ui.or-type-a-name": {
+    "text": "Or type a name",
+    "hash": "0e5fa8fc"
+  },
+  "image-editor.paint-ui.paint-colour": {
+    "text": "{paint} color",
+    "hash": "ea440407"
+  },
+  "image-editor.paint-ui.radial-gradient": {
+    "text": "Radial gradient",
+    "hash": "36695a75"
+  },
+  "image-editor.paint-ui.radius": {
+    "text": "Radius (%)",
+    "hash": "6da0f63a"
+  },
+  "image-editor.paint-ui.remove-stop-n": {
+    "text": "Remove stop {n}",
+    "hash": "faaf1eb3"
+  },
+  "image-editor.paint-ui.solid": {
+    "text": "Solid",
+    "hash": "b8b311b0"
+  },
+  "image-editor.paint-ui.stop-n": {
+    "text": "Stop {n}",
+    "hash": "ef6e0584"
+  },
+  "image-editor.paint-ui.stop-n-colour": {
+    "text": "Stop {n} color",
+    "hash": "ad242e24"
+  },
+  "image-editor.paint-ui.stop-n-position": {
+    "text": "Stop {n} position (%)",
+    "hash": "115e9043"
+  },
+  "image-editor.paint-ui.stroke": {
+    "text": "Stroke",
+    "hash": "1582a13f"
+  },
+  "image-editor.paint-ui.theme-colour": {
+    "text": "Theme color",
+    "hash": "41988af8"
+  },
+  "image-editor.paint-ui.use-a-colour-like-3f6fb5": {
+    "text": "Use a color like #3f6fb5.",
+    "hash": "ee1e635f"
+  },
+  "image-editor.paint-ui.use-a-name-that-starts-with-two-dashes": {
+    "text": "Use a name that starts with two dashes, like --my-color.",
+    "hash": "267cdb31"
+  },
+  "image-editor.paint-ui.use-up-to-8-numbers-separated-by-spaces": {
+    "text": "Use up to 8 numbers separated by spaces, like 8 4.",
+    "hash": "0d9e5e6a"
+  },
+  "image-editor.part.imported-part": {
+    "text": "Imported part",
+    "hash": "82228bf8"
+  },
+  "image-editor.part.rename-reorder-hide-or-delete-it": {
+    "text": "Rename, reorder, hide or delete it.",
+    "hash": "2fbc8d0b"
+  },
+  "image-editor.part.this-part-keeps-its-own-colours": {
+    "text": "This part keeps its own colors.",
+    "hash": "2f1a0106"
+  },
+  "image-editor.reference-ui.alignment-is-remembered-on-this-device": {
+    "text": "Alignment is remembered on this device for this image. The picture is not.",
+    "hash": "089b194b"
+  },
+  "image-editor.reference-ui.choose-a-picture": {
+    "text": "Choose a picture…",
+    "hash": "10e54e0c"
+  },
+  "image-editor.reference-ui.choose-another-picture": {
+    "text": "Choose another picture…",
+    "hash": "2f04ca01"
+  },
+  "image-editor.reference-ui.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "image-editor.reference-ui.fit-to-canvas": {
+    "text": "Fit to canvas",
+    "hash": "f69feb29"
+  },
+  "image-editor.reference-ui.for-tracing-only-the-picture-is-never": {
+    "text": "For tracing only. The picture is never saved.",
+    "hash": "1d8d09bd"
+  },
+  "image-editor.reference-ui.hide": {
+    "text": "Hide",
+    "hash": "ac20a57b"
+  },
+  "image-editor.reference-ui.match-canvas-shape-to-this-picture": {
+    "text": "Match canvas shape to this picture",
+    "hash": "39f5dce8"
+  },
+  "image-editor.reference-ui.move-picture-down": {
+    "text": "Move picture down",
+    "hash": "d4692449"
+  },
+  "image-editor.reference-ui.move-picture-left": {
+    "text": "Move picture left",
+    "hash": "0dca899f"
+  },
+  "image-editor.reference-ui.move-picture-right": {
+    "text": "Move picture right",
+    "hash": "704e66a3"
+  },
+  "image-editor.reference-ui.move-picture-up": {
+    "text": "Move picture up",
+    "hash": "fee6e8e4"
+  },
+  "image-editor.reference-ui.move-the-picture": {
+    "text": "Move the picture",
+    "hash": "ac8b221b"
+  },
+  "image-editor.reference-ui.opacity": {
+    "text": "Opacity",
+    "hash": "6062652e"
+  },
+  "image-editor.reference-ui.png-jpeg-webp-gif-avif-or-bmp": {
+    "text": "PNG, JPEG, WebP, GIF, AVIF or BMP.",
+    "hash": "de789d2e"
+  },
+  "image-editor.reference-ui.reference-picture": {
+    "text": "Reference picture",
+    "hash": "d2a88daa"
+  },
+  "image-editor.reference-ui.reference-picture-on-not-saved": {
+    "text": "Reference picture on. Not saved.",
+    "hash": "79ad8ec0"
+  },
+  "image-editor.reference-ui.reference-pictures-are-not-kept-pick-it": {
+    "text": "Reference pictures are not kept. Pick it again if you reopen the image.",
+    "hash": "06396185"
+  },
+  "image-editor.reference-ui.remove-picture": {
+    "text": "Remove picture",
+    "hash": "1bc6f23b"
+  },
+  "image-editor.reference-ui.reset-alignment": {
+    "text": "Reset alignment",
+    "hash": "3179e262"
+  },
+  "image-editor.reference-ui.rotate-degrees": {
+    "text": "Rotate (degrees)",
+    "hash": "f598a0a8"
+  },
+  "image-editor.reference-ui.scale": {
+    "text": "Scale (%)",
+    "hash": "6f4e7c47"
+  },
+  "image-editor.reference-ui.scale-and-rotate-are-around-the-middle": {
+    "text": "Scale and rotate are around the middle of the picture.",
+    "hash": "2ea5000d"
+  },
+  "image-editor.reference-ui.show": {
+    "text": "Show",
+    "hash": "0df6f1ca"
+  },
+  "image-editor.reference-ui.turn-left-90": {
+    "text": "Turn left 90",
+    "hash": "4adaff42"
+  },
+  "image-editor.reference-ui.turn-right-90": {
+    "text": "Turn right 90",
+    "hash": "9b38d4fa"
+  },
+  "image-editor.reference-ui.x": {
+    "text": "X",
+    "hash": "4b68ab38"
+  },
+  "image-editor.reference-ui.y": {
+    "text": "Y",
+    "hash": "18f5384d"
+  },
+  "image-editor.reference.choose-a-png-jpeg-webp-gif-avif-or-bmp": {
+    "text": "Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.",
+    "hash": "2f6aff1c"
+  },
+  "image-editor.reference.reference-picture-on-not-saved": {
+    "text": "Reference picture on. Not saved.",
+    "hash": "79ad8ec0"
+  },
+  "image-editor.reference.that-file-is-too-big-to-open-over-64-mb": {
+    "text": "That file is too big to open (over 64 MB). Try a smaller copy.",
+    "hash": "5187c96a"
+  },
+  "image-editor.reference.this-browser-cannot-open-that-picture": {
+    "text": "This browser cannot open that picture. Save it as a JPEG and try again.",
+    "hash": "99073950"
+  },
+  "image-editor.reference.your-last-alignment-for-this-image-was": {
+    "text": "Your last alignment for this image was applied.",
+    "hash": "1f0dd4ba"
+  },
+  "image-editor.text-tool.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "image-editor.text-tool.done": {
+    "text": "Done",
+    "hash": "11a6767d"
+  },
+  "image-editor.text-tool.enter-adds-the-text-shift-enter-starts-a": {
+    "text": "Enter adds the text. Shift+Enter starts a new line. Esc cancels.",
+    "hash": "27315c22"
+  },
+  "image-editor.text-tool.n-left": {
+    "text": "{n} left",
+    "hash": "19816380"
+  },
+  "image-editor.text-tool.no-text-was-added": {
+    "text": "No text was added.",
+    "hash": "52fb0997"
+  },
+  "image-editor.text-tool.text-cancelled": {
+    "text": "Text canceled.",
+    "hash": "0b222b17"
+  },
+  "image-editor.text-tool.text-on-the-canvas": {
+    "text": "Text on the canvas",
+    "hash": "127c4162"
+  },
+  "image-editor.text-tool.that-is-the-longest-text-2048-characters": {
+    "text": "That is the longest text (2048 characters).",
+    "hash": "86e6fa93"
+  },
+  "image-editor.text-ui.add-text": {
+    "text": "Add text",
+    "hash": "1b4d1003"
+  },
+  "image-editor.text-ui.alignment": {
+    "text": "Alignment",
+    "hash": "9d597870"
+  },
+  "image-editor.text-ui.bold": {
+    "text": "Bold",
+    "hash": "94fee62e"
+  },
+  "image-editor.text-ui.centre": {
+    "text": "Center",
+    "hash": "45c19322"
+  },
+  "image-editor.text-ui.clean-no-feet": {
+    "text": "Clean, no feet.",
+    "hash": "9a6103ba"
+  },
+  "image-editor.text-ui.content": {
+    "text": "Content",
+    "hash": "47bd2907"
+  },
+  "image-editor.text-ui.end": {
+    "text": "End",
+    "hash": "f4db1e48"
+  },
+  "image-editor.text-ui.enter-adds-a-line": {
+    "text": "Enter adds a line.",
+    "hash": "be18e792"
+  },
+  "image-editor.text-ui.every-letter-the-same-width": {
+    "text": "Every letter the same width.",
+    "hash": "196b0777"
+  },
+  "image-editor.text-ui.extra-bold": {
+    "text": "Extra bold",
+    "hash": "c5afae1f"
+  },
+  "image-editor.text-ui.font": {
+    "text": "Font",
+    "hash": "64d0b3ad"
+  },
+  "image-editor.text-ui.italic": {
+    "text": "Italic",
+    "hash": "9bf37cb5"
+  },
+  "image-editor.text-ui.letter-spacing-units": {
+    "text": "Letter spacing (units)",
+    "hash": "2574ba96"
+  },
+  "image-editor.text-ui.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "image-editor.text-ui.medium": {
+    "text": "Medium",
+    "hash": "8e588cd1"
+  },
+  "image-editor.text-ui.monospace": {
+    "text": "Monospace",
+    "hash": "64c223c2"
+  },
+  "image-editor.text-ui.n-left": {
+    "text": "{n} left",
+    "hash": "19816380"
+  },
+  "image-editor.text-ui.regular": {
+    "text": "Regular",
+    "hash": "b455784a"
+  },
+  "image-editor.text-ui.sans-serif": {
+    "text": "Sans-serif",
+    "hash": "07e77255"
+  },
+  "image-editor.text-ui.semi-bold": {
+    "text": "Semi-bold",
+    "hash": "1a8285cf"
+  },
+  "image-editor.text-ui.serif": {
+    "text": "Serif",
+    "hash": "1b5e747e"
+  },
+  "image-editor.text-ui.size-units": {
+    "text": "Size (units)",
+    "hash": "5d866ca5"
+  },
+  "image-editor.text-ui.start": {
+    "text": "Start",
+    "hash": "e4bb9f1e"
+  },
+  "image-editor.text-ui.style": {
+    "text": "Style",
+    "hash": "7e744141"
+  },
+  "image-editor.text-ui.system": {
+    "text": "System",
+    "hash": "6725e7bb"
+  },
+  "image-editor.text-ui.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "image-editor.text-ui.text-uses-fonts-already-on-the-device": {
+    "text": "Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.",
+    "hash": "be899982"
+  },
+  "image-editor.text-ui.that-is-the-longest-text-2048-characters": {
+    "text": "That is the longest text (2048 characters).",
+    "hash": "86e6fa93"
+  },
+  "image-editor.text-ui.the-empty-text-layer-was-removed": {
+    "text": "The empty text layer was removed.",
+    "hash": "ea9bd966"
+  },
+  "image-editor.text-ui.weight": {
+    "text": "Weight",
+    "hash": "81d27ef6"
+  },
+  "image-editor.text-ui.whatever-this-device-uses-for-its-own": {
+    "text": "Whatever this device uses for its own screens.",
+    "hash": "cf8d1aa2"
+  },
+  "image-editor.text-ui.with-small-feet-like-print": {
+    "text": "With small feet, like print.",
+    "hash": "c4f38354"
+  },
+  "image-editor.ui.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "image-editor.ui.apply": {
+    "text": "Apply",
+    "hash": "31e392d1"
+  },
+  "image-editor.ui.apply-anyway": {
+    "text": "Apply anyway",
+    "hash": "4f608c03"
+  },
+  "image-editor.ui.author": {
+    "text": "Author",
+    "hash": "d95082a2"
+  },
+  "image-editor.ui.back": {
+    "text": "Back",
+    "hash": "76900f1b"
+  },
+  "image-editor.ui.c": {
+    "text": "{c, plural, one {Delete # hidden layer} other {Delete # hidden layers}}",
+    "hash": "04cc9bd0"
+  },
+  "image-editor.ui.c-2": {
+    "text": "{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}",
+    "hash": "2efbce7f"
+  },
+  "image-editor.ui.c-outside-the-new-canvas-they-are-kept": {
+    "text": "{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.",
+    "hash": "43da61e6"
+  },
+  "image-editor.ui.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "image-editor.ui.canvas": {
+    "text": "Canvas",
+    "hash": "3824a9f4"
+  },
+  "image-editor.ui.canvas-size": {
+    "text": "Canvas size",
+    "hash": "30460e40"
+  },
+  "image-editor.ui.cards-that-set-their-own-shape-keep-it": {
+    "text": "Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.",
+    "hash": "5f27592f"
+  },
+  "image-editor.ui.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "image-editor.ui.custom": {
+    "text": "Custom",
+    "hash": "494ca78f"
+  },
+  "image-editor.ui.description": {
+    "text": "Description",
+    "hash": "526e0087"
+  },
+  "image-editor.ui.duplicate": {
+    "text": "Duplicate",
+    "hash": "02cdaabf"
+  },
+  "image-editor.ui.export-file": {
+    "text": "Export file",
+    "hash": "d9d979c6"
+  },
+  "image-editor.ui.fill-paint": {
+    "text": "Fill: {paint}",
+    "hash": "7f3421ec"
+  },
+  "image-editor.ui.fit-to-view": {
+    "text": "Fit to view",
+    "hash": "a36cb149"
+  },
+  "image-editor.ui.height": {
+    "text": "Height",
+    "hash": "bfe2eca4"
+  },
+  "image-editor.ui.image": {
+    "text": "Image",
+    "hash": "1aa4cb0b"
+  },
+  "image-editor.ui.image-canvas": {
+    "text": "Image canvas",
+    "hash": "73d6fc07"
+  },
+  "image-editor.ui.image-size": {
+    "text": "Image size",
+    "hash": "80bb38dc"
+  },
+  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
+    "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "hash": "7871f325"
+  },
+  "image-editor.ui.includes-connections": {
+    "text": "Includes connections.",
+    "hash": "4bb76d77"
+  },
+  "image-editor.ui.inspector": {
+    "text": "Inspector",
+    "hash": "da188e3b"
+  },
+  "image-editor.ui.keep-ratio": {
+    "text": "Keep ratio",
+    "hash": "b69028ef"
+  },
+  "image-editor.ui.keywords": {
+    "text": "Keywords",
+    "hash": "8bfdb93c"
+  },
+  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
+    "text": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
+    "hash": "f4bce566"
+  },
+  "image-editor.ui.layers": {
+    "text": "Layers",
+    "hash": "0bcd66e6"
+  },
+  "image-editor.ui.linear-gradient": {
+    "text": "Linear gradient",
+    "hash": "535819b2"
+  },
+  "image-editor.ui.main": {
+    "text": "Main",
+    "hash": "eb814be3"
+  },
+  "image-editor.ui.match-reference-picture": {
+    "text": "Match reference picture",
+    "hash": "b10fb9b5"
+  },
+  "image-editor.ui.min-to-max-pixels-per-side": {
+    "text": "{min} to {max} pixels per side.",
+    "hash": "cd3d29c1"
+  },
+  "image-editor.ui.more": {
+    "text": "More",
+    "hash": "d47d7cb0"
+  },
+  "image-editor.ui.more-details": {
+    "text": "More details",
+    "hash": "b5eff1db"
+  },
+  "image-editor.ui.name": {
+    "text": "Name",
+    "hash": "dcd1d522"
+  },
+  "image-editor.ui.name-is-the-only-thing-you-need": {
+    "text": "Name is the only thing you need.",
+    "hash": "4d573955"
+  },
+  "image-editor.ui.no-layers-yet": {
+    "text": "No layers yet.",
+    "hash": "251c7a99"
+  },
+  "image-editor.ui.none": {
+    "text": "None",
+    "hash": "dc937b59"
+  },
+  "image-editor.ui.nothing-to-export-yet": {
+    "text": "Nothing to export yet.",
+    "hash": "f88a199e"
+  },
+  "image-editor.ui.outline-paint": {
+    "text": "Outline: {paint}",
+    "hash": "fd4d7ff6"
+  },
+  "image-editor.ui.pick-a-shape-pixel-numbers-only-set-the": {
+    "text": "Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.",
+    "hash": "4a9b3da2"
+  },
+  "image-editor.ui.radial-gradient": {
+    "text": "Radial gradient",
+    "hash": "36695a75"
+  },
+  "image-editor.ui.reload": {
+    "text": "Reload",
+    "hash": "bdc090ec"
+  },
+  "image-editor.ui.save": {
+    "text": "Save",
+    "hash": "1509f561"
+  },
+  "image-editor.ui.save-as-a-copy": {
+    "text": "Save as a copy",
+    "hash": "0ed28074"
+  },
+  "image-editor.ui.save-image": {
+    "text": "Save image",
+    "hash": "58e909c0"
+  },
+  "image-editor.ui.saving": {
+    "text": "Saving…",
+    "hash": "23e39291"
+  },
+  "image-editor.ui.select-the-biggest-layer": {
+    "text": "Select the biggest layer",
+    "hash": "1fe9ff1a"
+  },
+  "image-editor.ui.select-the-biggest-layer-and-simplify-it": {
+    "text": "Select the biggest layer and simplify it, or delete layers you do not need.",
+    "hash": "e965d83c"
+  },
+  "image-editor.ui.shape": {
+    "text": "Shape",
+    "hash": "e0e49270"
+  },
+  "image-editor.ui.the-address-is-mcu-image-id-it-cannot-be": {
+    "text": "The address is mcu-image:{id}. It cannot be changed later.",
+    "hash": "096fcf15"
+  },
+  "image-editor.ui.this-image-was-changed-somewhere-else": {
+    "text": "This image was changed somewhere else.",
+    "hash": "b1bcbf44"
+  },
+  "image-editor.ui.too-big-to-save": {
+    "text": "Too big to save",
+    "hash": "4202b72f"
+  },
+  "image-editor.ui.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "image-editor.ui.use-a-number-from-min-to-max": {
+    "text": "Use a number from {min} to {max}.",
+    "hash": "b84c37eb"
+  },
+  "image-editor.ui.used-of-256-kib-word": {
+    "text": "{used} of 256 KiB, {word}",
+    "hash": "77e49990"
+  },
+  "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
+    "text": "{w} x {h} units. Pick a layer to read its details.",
+    "hash": "30fd7d76"
+  },
+  "image-editor.ui.what-is-kib": {
+    "text": "What is KiB?",
+    "hash": "1e40e4fd"
+  },
+  "image-editor.ui.width": {
+    "text": "Width",
+    "hash": "3019947b"
+  },
+  "image-editor.ui.zoom-in": {
+    "text": "Zoom in",
+    "hash": "0e47f09a"
+  },
+  "image-editor.ui.zoom-out": {
+    "text": "Zoom out",
+    "hash": "bc7b631a"
+  }
 }

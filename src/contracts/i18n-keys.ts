@@ -1,7 +1,8 @@
 /*
  * Contract: i18n-keys. Version 1.0.0. Extends i18n (src/contracts/i18n.ts) with domain keys; i18n moves to 2.0.0
  * once the text-id path is gone (see "Two phases" below). Types and tool constants only: src/ imports types,
- * tools read the constants (the file has no imports, so tools transpile and run it like the i18n contract).
+ * tools read the constants (the file has only type imports, which transpiling drops, so tools transpile and run
+ * it like the i18n contract).
  *
  * ── Keys ──
  * A message is named by its place in the UI: t('card-editor.design.background.label'), not by its English.
@@ -90,6 +91,8 @@
  * and writes nothing.
  */
 
+import type { MessageIndex, RichArgs } from './i18n';
+
 export const I18N_KEYS_CONTRACT_VERSION = '1.0.0';
 
 /** Namespace, then two to five kebab segments. The prefix check against the namespace is separate. */
@@ -159,3 +162,16 @@ export interface KeyedI18n<Keys extends { [K in keyof Keys]: KeyArgs }> {
   m<K extends keyof Keys & string>(key: K): K;
   locale(): 'en-GB' | 'en-US' | 'nl';
 }
+
+/**
+ * What a namespace's index.ts exports while the build still hands table indices to the bound functions:
+ * KeyedI18n with the MessageIndex overloads the loader's output needs, an m() that checks its key and is typed as
+ * the table index the build turns the call into, and tc until i18n 2.0.0.
+ * Write `i18nFor('<ns>', tables) as unknown as KeyedNamespace<Keys>`.
+ */
+export type KeyedNamespace<Keys extends { [K in keyof Keys]: KeyArgs }> = Pick<KeyedI18n<Keys>, 'locale'> & {
+  t: KeyedI18n<Keys>['t'] & ((id: MessageIndex, args?: RichArgs) => string);
+  tx: KeyedI18n<Keys>['tx'] & ((id: MessageIndex, args: RichArgs) => unknown[]);
+  m: <K extends keyof Keys & string>(key: K) => MessageIndex;
+  tc: (context: string, id: MessageIndex, args?: RichArgs) => string;
+};

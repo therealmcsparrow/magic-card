@@ -1,0 +1,175 @@
+{
+  "path-tools.names.draw-a-line-across-the-shapes-to-cut": {
+    "text": "Draw a line across the shapes to cut them in two.",
+    "note": "Shown in names (path-tools).",
+    "max": 80
+  },
+  "path-tools.names.draw-a-longer-cut-line": {
+    "text": "Draw a longer cut line.",
+    "note": "Shown in names (path-tools).",
+    "max": 40
+  },
+  "path-tools.names.fits-the-shape-again-with-fewer-points": {
+    "text": "Fits the shape again with fewer points.",
+    "note": "Shown in names (path-tools).",
+    "max": 65
+  },
+  "path-tools.names.grows-or-shrinks-the-shape-by-the-amount": {
+    "text": "Grows or shrinks the shape by the amount you set.",
+    "note": "Shown in names (path-tools).",
+    "max": 80
+  },
+  "path-tools.names.join": {
+    "text": "Join",
+    "note": "Shown in names (path-tools).",
+    "max": 10
+  },
+  "path-tools.names.join-works-on-open-paths-use-split-first": {
+    "text": "Join works on open paths. Use Split first to open a closed one.",
+    "note": "Shown in names (path-tools).",
+    "max": 105
+  },
+  "path-tools.names.joins-the-two-nearest-ends-of-the": {
+    "text": "Joins the two nearest ends of the selected open paths. With one path selected, it closes it.",
+    "note": "Shown in names (path-tools).",
+    "max": 150
+  },
+  "path-tools.names.knife": {
+    "text": "Knife",
+    "note": "Shown in names (path-tools).",
+    "max": 10
+  },
+  "path-tools.names.nothing-would-be-left-of-this-shape": {
+    "text": "Nothing would be left of this shape.",
+    "note": "Shown in names (path-tools).",
+    "max": 60
+  },
+  "path-tools.names.offset-path": {
+    "text": "Offset path",
+    "note": "Shown in names (path-tools).",
+    "max": 20
+  },
+  "path-tools.names.outline-stroke": {
+    "text": "Outline stroke",
+    "note": "Shown in names (path-tools).",
+    "max": 25
+  },
+  "path-tools.names.pick-a-point-between-the-ends-to-split": {
+    "text": "Pick a point between the ends to split here.",
+    "note": "Shown in names (path-tools).",
+    "max": 75
+  },
+  "path-tools.names.select-a-closed-shape-open-lines-have-no": {
+    "text": "Select a closed shape. Open lines have no area.",
+    "note": "Shown in names (path-tools).",
+    "max": 80
+  },
+  "path-tools.names.simplify": {
+    "text": "Simplify",
+    "note": "Shown in names (path-tools).",
+    "max": 15
+  },
+  "path-tools.names.split": {
+    "text": "Split",
+    "note": "Shown in names (path-tools).",
+    "max": 10
+  },
+  "path-tools.names.splits-the-path-at-the-selected-point": {
+    "text": "Splits the path at the selected point.",
+    "note": "Shown in names (path-tools).",
+    "max": 65
+  },
+  "path-tools.names.this-shape-has-no-stroke-to-outline": {
+    "text": "This shape has no stroke to outline.",
+    "note": "Shown in names (path-tools).",
+    "max": 60
+  },
+  "path-tools.names.this-shape-has-too-many-points-for-this": {
+    "text": "This shape has too many points for this tool.",
+    "note": "Shown in names (path-tools).",
+    "max": 75
+  },
+  "path-tools.names.this-shape-is-already-as-simple-as-this": {
+    "text": "This shape is already as simple as this setting allows.",
+    "note": "Shown in names (path-tools).",
+    "max": 90
+  },
+  "path-tools.names.turns-the-stroke-into-a-filled-shape-you": {
+    "text": "Turns the stroke into a filled shape you can edit point by point.",
+    "note": "Shown in names (path-tools).",
+    "max": 105
+  },
+  "path-tools.panel.a-higher-value-drops-more-points": {
+    "text": "A higher value drops more points.",
+    "note": "Shown in panel (path-tools).",
+    "max": 55
+  },
+  "path-tools.panel.amount": {
+    "text": "Amount",
+    "note": "Shown in panel (path-tools).",
+    "max": 15
+  },
+  "path-tools.panel.apply": {
+    "text": "Apply",
+    "note": "Shown in panel (path-tools).",
+    "max": 10
+  },
+  "path-tools.panel.before-now-after-after": {
+    "text": "{before, plural, one {# point} other {# points}} now, {after, plural, one {# point} other {# points}} after",
+    "note": "Shown in panel (path-tools).",
+    "max": 45,
+    "vars": {
+      "after": "The count the text is about.",
+      "before": "The count the text is about."
+    }
+  },
+  "path-tools.panel.cancel": {
+    "text": "Cancel",
+    "note": "Shown in panel (path-tools).",
+    "max": 10
+  },
+  "path-tools.panel.corners": {
+    "text": "Corners",
+    "note": "Shown in panel (path-tools).",
+    "max": 15
+  },
+  "path-tools.panel.detail-kept": {
+    "text": "Detail kept",
+    "note": "Shown in panel (path-tools).",
+    "max": 20
+  },
+  "path-tools.panel.nothing-to-preview-yet": {
+    "text": "Nothing to preview yet.",
+    "note": "Shown in panel (path-tools).",
+    "max": 40
+  },
+  "path-tools.panel.positive-grows-the-shape-negative": {
+    "text": "Positive grows the shape, negative shrinks it. From {min} to {max}.",
+    "note": "Shown in panel (path-tools).",
+    "max": 110,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "path-tools.panel.round": {
+    "text": "Round",
+    "note": "Shown in panel (path-tools).",
+    "max": 10
+  },
+  "path-tools.panel.sharp": {
+    "text": "Sharp",
+    "note": "Shown in panel (path-tools).",
+    "max": 10
+  },
+  "path-tools.panel.smooth-corners": {
+    "text": "Smooth corners",
+    "note": "Shown in panel (path-tools).",
+    "max": 25
+  },
+  "path-tools.panel.working-on-it": {
+    "text": "Working on it",
+    "note": "Shown in panel (path-tools).",
+    "max": 25
+  }
+}

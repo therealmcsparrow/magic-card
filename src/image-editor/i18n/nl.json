@@ -1,241 +1,1038 @@
 {
-  "A gradient needs at least 2 stops.": "Een kleurverloop heeft minstens 2 kleurpunten nodig.",
-  "Accent": "Accent",
-  "Add stop": "Kleurpunt toevoegen",
-  "Add text": "Tekst toevoegen",
-  "Alignment": "Uitlijning",
-  "Alignment is remembered on this device for this image. The picture is not.": "De uitlijning wordt op dit apparaat onthouden voor deze afbeelding. De foto zelf niet.",
-  "Angle (degrees)": "Hoek (graden)",
-  "Apply": "Toepassen",
-  "Apply anyway": "Toch toepassen",
-  "As on a card": "Zoals op een kaart",
-  "At most 8 stops.": "Maximaal 8 kleurpunten.",
-  "Author": "Maker",
-  "Back": "Terug",
-  "Bold": "Vet",
-  "Cancel": "Annuleren",
-  "Canvas": "Tekenvlak",
-  "Canvas size": "Formaat tekenvlak",
-  "Canvas size set to {w} by {h}.": "Tekenvlak ingesteld op {w} bij {h}.",
-  "Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.": "Kaarten met een eigen vorm houden die. Kies in het afbeeldingsveld van een kaart 'Vorm van de tekening gebruiken' om de nieuwe te volgen.",
-  "Centre": "Midden",
-  "Centre X (%)": "Midden X (%)",
-  "Centre Y (%)": "Midden Y (%)",
-  "Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.": "Kies een PNG-, JPEG-, WebP-, GIF-, AVIF- of BMP-afbeelding.",
-  "Choose a picture…": "Kies een afbeelding…",
-  "Choose an SVG file.": "Kies een SVG-bestand.",
-  "Choose another file": "Kies een ander bestand",
-  "Choose another picture…": "Kies een andere afbeelding…",
-  "Clean, no feet.": "Strak, zonder voetjes.",
-  "Close": "Sluiten",
-  "Content": "Inhoud",
-  "Continue": "Doorgaan",
-  "Could not import the file": "Het bestand kon niet worden geïmporteerd",
-  "Could not reach Magic Card Utils. Your work is safe.": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
-  "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text": "Ctrl+Z ongedaan maken, Ctrl+Shift+Z opnieuw, Ctrl+S opslaan, T tekst",
-  "Custom": "Eigen",
-  "Custom colour": "Eigen kleur",
-  "Dash list": "Lijst met streepjes",
-  "Dash offset": "Start van de streepjes",
-  "Dashed": "Gestreept",
-  "Dashes": "Streepjes",
-  "Description": "Beschrijving",
-  "Done": "Klaar",
-  "Dotted": "Gestippeld",
-  "Draw something first": "Teken eerst iets",
-  "Duplicate": "Dupliceren",
-  "Duplicate…": "Dupliceren…",
-  "End": "Einde",
-  "Enter adds a line.": "Enter voegt een regel toe.",
-  "Enter adds the text. Shift+Enter starts a new line. Esc cancels.": "Enter voegt de tekst toe. Shift+Enter begint een nieuwe regel. Esc annuleert.",
-  "Every letter the same width.": "Elke letter even breed.",
-  "Export file": "Bestand exporteren",
-  "Extra bold": "Extra vet",
-  "Fill": "Vulling",
-  "Fill: {paint}": "Vulling: {paint}",
-  "Fit to canvas": "Passend op tekenvlak",
-  "Fit to view": "Passend in beeld",
-  "Font": "Lettertype",
-  "For tracing only. The picture is never saved.": "Alleen om over te trekken. De afbeelding wordt nooit opgeslagen.",
-  "Give it a name.": "Geef het een naam.",
-  "Gradient centre": "Midden van het verloop",
-  "Gradient end": "Einde van het verloop",
-  "Gradient radius": "Straal van het verloop",
-  "Gradient start": "Begin van het verloop",
-  "Gradient stop {n} of {count}": "Kleurpunt {n} van {count}",
-  "Height": "Hoogte",
-  "Hide": "Verbergen",
-  "Image": "Afbeelding",
-  "Image canvas": "Afbeeldingstekenvlak",
-  "Image editor": "Afbeeldingseditor",
-  "Image name": "Naam van de afbeelding",
-  "Image size": "Grootte van de afbeelding",
-  "Image size: {used} KiB of 256 KiB. Fine.": "Grootte van de afbeelding: {used} KiB van 256 KiB. Prima.",
-  "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.": "Grootte van de afbeelding: {used} KiB van 256 KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
-  "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.": "Grootte van de afbeelding: {used} KiB van 256 KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
-  "Image size: {used} KiB of 256 KiB. Too big to save.": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
-  "Images need Magic Card Utils. It is installed through HACS, like Magic Card.": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt geïnstalleerd via HACS, net als Magic Card.",
-  "Import an SVG file…": "SVG-bestand importeren…",
-  "Imported '{name}'": "'{name}' geïmporteerd",
-  "Imported '{name}'.": "'{name}' geïmporteerd.",
-  "Imported file": "Bestand geïmporteerd",
-  "Imported part": "Geïmporteerd onderdeel",
-  "Importing '{name}' replaces everything on the canvas. You can undo it.": "Door '{name}' te importeren wordt alles op het canvas vervangen. Je kunt dit ongedaan maken.",
-  "Includes connections.": "Inclusief koppelingen.",
-  "Inspector": "Inspecteur",
-  "Italic": "Cursief",
-  "Keep my drawing": "Mijn tekening houden",
-  "Keep ratio": "Verhouding behouden",
-  "Keywords": "Trefwoorden",
-  "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.": "KiB is een kibibyte, iets meer dan duizend tekens. 256 KiB is ongeveer een kwart megabyte.",
-  "Layers": "Lagen",
-  "Letter spacing (units)": "Letterafstand (eenheden)",
-  "Light": "Licht",
-  "Linear gradient": "Lineair kleurverloop",
-  "Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.": "Magic Card Utils meldde een fout en maakte het niet af. Je werk is veilig. Bewaar met Bestand exporteren een kopie.",
-  "Main": "Hoofd",
-  "Match canvas shape to this picture": "Tekenvlak aanpassen aan deze afbeelding",
-  "Match reference picture": "Aanpassen aan referentieafbeelding",
-  "Medium": "Middel",
-  "Monospace": "Monospace",
-  "More": "Meer",
-  "More details": "Meer details",
-  "More style options": "Meer stijlopties",
-  "Move picture down": "Afbeelding omlaag",
-  "Move picture left": "Afbeelding naar links",
-  "Move picture right": "Afbeelding naar rechts",
-  "Move picture up": "Afbeelding omhoog",
-  "Move the picture": "Afbeelding verplaatsen",
-  "My image": "Mijn afbeelding",
-  "Name": "Naam",
-  "Name is the only thing you need.": "Een naam is het enige wat je nodig hebt.",
-  "No layers yet.": "Nog geen lagen.",
-  "No text was added.": "Er is geen tekst toegevoegd.",
-  "None": "Geen",
-  "Nothing to export yet.": "Nog niets om te exporteren.",
-  "Nothing was removed.": "Er is niets verwijderd.",
-  "Opacity": "Dekking",
-  "Opacity fades the whole layer.": "Dekking maakt de hele laag doorzichtiger.",
-  "Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.": "Dekking ingesteld op {pct} % zodat de referentieafbeelding doorschijnt. Pas het aan bij Dekking.",
-  "Or type a name": "Of typ een naam",
-  "Outline: {paint}": "Omtrek: {paint}",
-  "PNG, JPEG, WebP, GIF, AVIF or BMP.": "PNG, JPEG, WebP, GIF, AVIF of BMP.",
-  "Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.": "Kies een vorm. De pixelgetallen bepalen alleen het tekenraster. De afbeelding schaalt mee met elke kaart.",
-  "Radial gradient": "Radiaal kleurverloop",
-  "Radius (%)": "Straal (%)",
-  "Reference picture": "Referentieafbeelding",
-  "Reference picture on. Not saved.": "Referentieafbeelding staat aan. Wordt niet opgeslagen.",
-  "Reference pictures are not kept. Pick it again if you reopen the image.": "Referentieafbeeldingen worden niet bewaard. Kies hem opnieuw als je de afbeelding weer opent.",
-  "Regular": "Normaal",
-  "Reload": "Opnieuw laden",
-  "Remove picture": "Afbeelding verwijderen",
-  "Remove stop {n}": "Kleurpunt {n} verwijderen",
-  "Removed {list}.": "Verwijderd: {list}.",
-  "Rename, reorder, hide or delete it.": "Hernoem, herorden, verberg of verwijder het.",
-  "Replace": "Vervangen",
-  "Replace your drawing?": "Je tekening vervangen?",
-  "Reset alignment": "Uitlijning herstellen",
-  "Rotate (degrees)": "Draaien (graden)",
-  "Sans-serif": "Sans-serif",
-  "Save": "Opslaan",
-  "Save as a copy": "Opslaan als kopie",
-  "Save as a copy…": "Opslaan als kopie…",
-  "Save image": "Afbeelding opslaan",
-  "Save the image first.": "Sla de afbeelding eerst op.",
-  "Save your changes first.": "Sla eerst je wijzigingen op.",
-  "Saved": "Opgeslagen",
-  "Saved '{name}'.": "'{name}' opgeslagen.",
-  "Saved as '{name}'. The original is unchanged.": "Opgeslagen als '{name}'. Het origineel is niet veranderd.",
-  "Saving…": "Bezig met opslaan…",
-  "Scale (%)": "Schaal (%)",
-  "Scale and rotate are around the middle of the picture.": "Schalen en draaien gebeurt rond het midden van de afbeelding.",
-  "Select the biggest layer": "De grootste laag selecteren",
-  "Select the biggest layer and simplify it, or delete layers you do not need.": "Selecteer de grootste laag en vereenvoudig hem, of verwijder lagen die je niet nodig hebt.",
-  "Semi-bold": "Halfvet",
-  "Serif": "Serif",
-  "Shape": "Vorm",
-  "Show": "Tonen",
-  "Showing the drawing as on a card, with the entity off.": "De tekening wordt getoond zoals op een kaart, met de entiteit uit.",
-  "Showing the drawing in the editor colours.": "De tekening wordt getoond in de kleuren van de editor.",
-  "Size (units)": "Grootte (eenheden)",
-  "Solid": "Doorlopend",
-  "Some parts cannot be edited, such as clipped ones. They are kept as locked layers.": "Sommige onderdelen zijn niet te bewerken, zoals uitgesneden delen. Ze blijven bewaard als vergrendelde lagen.",
-  "Start": "Begin",
-  "Stop {n}": "Kleurpunt {n}",
-  "Stop {n} colour": "Kleur van kleurpunt {n}",
-  "Stop {n} position (%)": "Plaats van kleurpunt {n} (%)",
-  "Stroke": "Lijn",
-  "Style": "Stijl",
-  "System": "Systeem",
-  "Text": "Tekst",
-  "Text cancelled.": "Tekst geannuleerd.",
-  "Text on the canvas": "Tekst op het canvas",
-  "Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.": "Teksttool. Klik of tik waar de tekst moet komen, of druk op Enter om in het midden te beginnen. Typ en druk dan op Enter of Klaar.",
-  "Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.": "Tekst gebruikt lettertypen die al op het apparaat staan. Er wordt niets gedownload, dus het kan op een ander apparaat iets anders uitzien.",
-  "That SVG is too big to open (over 8 MB). Try a smaller copy.": "Die SVG is te groot om te openen (meer dan 8 MB). Probeer een kleinere kopie.",
-  "That drawing is over 256 KiB.": "Die tekening is groter dan 256 KiB.",
-  "That file cannot be used as an image.": "Dat bestand kan niet als afbeelding worden gebruikt.",
-  "That file has no shapes an image can use.": "Dat bestand heeft geen vormen die een afbeelding kan gebruiken.",
-  "That file is too big to open (over 64 MB). Try a smaller copy.": "Dat bestand is te groot om te openen (meer dan 64 MB). Probeer een kleinere kopie.",
-  "That file is too big to open (over 8 MB). Try a smaller copy.": "Dat bestand is te groot om te openen (meer dan 8 MB). Probeer een kleinere kopie.",
-  "That is the longest text (2048 characters).": "Dit is de langste tekst (2048 tekens).",
-  "The address is mcu-image:{id}. It cannot be changed later.": "Het adres is mcu-image:{id}. Het kan later niet meer worden gewijzigd.",
-  "The empty text layer was removed.": "De lege tekstlaag is verwijderd.",
-  "The file could not be read.": "Het bestand kon niet worden gelezen.",
-  "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.": "De bibliotheek accepteert de tekst \"{word}\" niet, in de laag \"{name}\". Pas die aan en sla daarna opnieuw op.",
-  "The library does not accept the text \"{word}\". Change it, then save again.": "De bibliotheek accepteert de tekst \"{word}\" niet. Pas die aan en sla daarna opnieuw op.",
-  "The library is full (200 images). Delete one to add another.": "De bibliotheek is vol (200 afbeeldingen). Verwijder er een om een nieuwe toe te voegen.",
-  "The library refused this image. Use Export file to keep a copy.": "De bibliotheek weigerde deze afbeelding. Bewaar een kopie met Bestand exporteren.",
-  "The library refused this image: {reason}": "De bibliotheek weigerde deze afbeelding: {reason}",
-  "The reference picture was not saved.": "De referentieafbeelding is niet opgeslagen.",
-  "Theme colour": "Themakleur",
-  "This browser cannot open that picture. Save it as a JPEG and try again.": "Deze browser kan die afbeelding niet openen. Sla hem op als JPEG en probeer het opnieuw.",
-  "This drawing cannot be saved as an image.": "Deze tekening kan niet als afbeelding worden opgeslagen.",
-  "This image has parts that this editor cannot change yet, so it opens for viewing only.": "Deze afbeelding heeft onderdelen die deze editor nog niet kan wijzigen, dus hij opent alleen om te bekijken.",
-  "This image is no longer in the library.": "Deze afbeelding staat niet meer in de bibliotheek.",
-  "This image was changed somewhere else.": "Deze afbeelding is ergens anders gewijzigd.",
-  "This is not valid SVG. Check that it starts with <svg and is closed.": "Dit is geen geldige SVG. Controleer of het begint met <svg en is afgesloten.",
-  "This part keeps its own colours.": "Dit onderdeel behoudt zijn eigen kleuren.",
-  "Too big to save": "Te groot om op te slaan",
-  "Too big to save: {used} KiB of 256 KiB.": "Te groot om op te slaan: {used} KiB van 256 KiB.",
-  "Turn left 90": "90 graden naar links",
-  "Turn right 90": "90 graden naar rechts",
-  "Undo": "Ongedaan maken",
-  "Use 80 characters or fewer.": "Gebruik maximaal 80 tekens.",
-  "Use a colour like #3f6fb5.": "Gebruik een kleur zoals #3f6fb5.",
-  "Use a name that starts with two dashes, like --my-colour.": "Gebruik een naam die met twee streepjes begint, zoals --mijn-kleur.",
-  "Use a number from {min} to {max}.": "Gebruik een getal van {min} tot {max}.",
-  "Use up to 8 numbers separated by spaces, like 8 4.": "Gebruik maximaal 8 getallen met spaties ertussen, zoals 8 4.",
-  "Weight": "Gewicht",
-  "What is KiB?": "Wat is KiB?",
-  "Whatever this device uses for its own screens.": "Wat dit apparaat voor zijn eigen schermen gebruikt.",
-  "Width": "Breedte",
-  "With small feet, like print.": "Met kleine voetjes, zoals in drukwerk.",
-  "X": "X",
-  "Y": "Y",
-  "You can look at this image but not change it. Ask an administrator.": "Je kunt deze afbeelding bekijken maar niet wijzigen. Vraag het een beheerder.",
-  "Your last alignment for this image was applied.": "Je laatste uitlijning voor deze afbeelding is toegepast.",
-  "Zoom in": "Inzoomen",
-  "Zoom out": "Uitzoomen",
-  "embedded pictures": "ingesloten afbeeldingen",
-  "event handlers": "gebeurtenisafhandelaars",
-  "fine": "prima",
-  "getting big": "wordt groot",
-  "links to another site": "links naar een andere site",
-  "nearly full": "bijna vol",
-  "other parts an image cannot use": "andere onderdelen die een afbeelding niet kan gebruiken",
-  "scripts": "scripts",
-  "too big": "te groot",
-  "{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.": "{c, plural, one {# laag valt} other {# lagen vallen}} buiten het nieuwe tekenvlak. Ze blijven bewaard maar worden afgesneden.",
-  "{c, plural, one {Delete # hidden layer} other {Delete # hidden layers}}": "{c, plural, one {# verborgen laag verwijderen} other {# verborgen lagen verwijderen}}",
-  "{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}": "{c, plural, one {# verborgen laag verwijderd.} other {# verborgen lagen verwijderd.}}",
-  "{label}: x {x}, y {y}": "{label}: x {x}, y {y}",
-  "{min} to {max} pixels per side.": "{min} tot {max} pixels per zijde.",
-  "{name} colour": "{name}kleur",
-  "{name} copy": "{name} kopie",
-  "{name} stays locked: imported parts cannot be edited.": "{name} blijft vergrendeld: geïmporteerde onderdelen kunnen niet worden bewerkt.",
-  "{n} left": "nog {n}",
-  "{paint} colour": "Kleur van {paint}",
-  "{used} of 256 KiB, {word}": "{used} van 256 KiB, {word}",
-  "{w} x {h} units. Pick a layer to read its details.": "{w} x {h} eenheden. Kies een laag om de details te lezen."
+  "image-editor.chunk.as-on-a-card": {
+    "text": "Zoals op een kaart",
+    "hash": "07d4854b"
+  },
+  "image-editor.chunk.canvas-size-set-to-w-by-h": {
+    "text": "Tekenvlak ingesteld op {w} bij {h}.",
+    "hash": "d03c9b14"
+  },
+  "image-editor.chunk.could-not-reach-magic-card-utils-your": {
+    "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
+    "hash": "3ba3f12b"
+  },
+  "image-editor.chunk.ctrl-z-undo-ctrl-shift-z-redo-ctrl-s": {
+    "text": "Ctrl+Z ongedaan maken, Ctrl+Shift+Z opnieuw, Ctrl+S opslaan, T tekst",
+    "hash": "1dd9480b"
+  },
+  "image-editor.chunk.draw-something-first": {
+    "text": "Teken eerst iets",
+    "hash": "f2d3da60"
+  },
+  "image-editor.chunk.duplicate": {
+    "text": "Dupliceren…",
+    "hash": "5d202208"
+  },
+  "image-editor.chunk.fine": {
+    "text": "prima",
+    "hash": "d14a58ba"
+  },
+  "image-editor.chunk.getting-big": {
+    "text": "wordt groot",
+    "hash": "f158db27"
+  },
+  "image-editor.chunk.give-it-a-name": {
+    "text": "Geef het een naam.",
+    "hash": "9d63f7c9"
+  },
+  "image-editor.chunk.image-canvas": {
+    "text": "Afbeeldingstekenvlak",
+    "hash": "73d6fc07"
+  },
+  "image-editor.chunk.image-editor": {
+    "text": "Afbeeldingseditor",
+    "hash": "52945574"
+  },
+  "image-editor.chunk.image-name": {
+    "text": "Naam van de afbeelding",
+    "hash": "52493eca"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
+    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Prima.",
+    "hash": "205cd2fd"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
+    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
+    "hash": "3ae3152e"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
+    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
+    "hash": "49e0cbaf"
+  },
+  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
+    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
+    "hash": "7871f325"
+  },
+  "image-editor.chunk.images-need-magic-card-utils-it-is": {
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt geïnstalleerd via HACS, net als Magic Card.",
+    "hash": "62625dad"
+  },
+  "image-editor.chunk.import-an-svg-file": {
+    "text": "SVG-bestand importeren…",
+    "hash": "431df358"
+  },
+  "image-editor.chunk.imported-name": {
+    "text": "‘{name}’ geïmporteerd.",
+    "hash": "517bd976"
+  },
+  "image-editor.chunk.magic-card-utils-reported-an-error-and": {
+    "text": "Magic Card Utils meldde een fout en maakte het niet af. Je werk is veilig. Bewaar met Bestand exporteren een kopie.",
+    "hash": "328bbdeb"
+  },
+  "image-editor.chunk.my-image": {
+    "text": "Mijn afbeelding",
+    "hash": "93fd11c1"
+  },
+  "image-editor.chunk.name-copy": {
+    "text": "{name} kopie",
+    "hash": "938a6418"
+  },
+  "image-editor.chunk.name-stays-locked-imported-parts-cannot": {
+    "text": "{name} blijft vergrendeld: geïmporteerde onderdelen kunnen niet worden bewerkt.",
+    "hash": "d4e4f981"
+  },
+  "image-editor.chunk.nearly-full": {
+    "text": "bijna vol",
+    "hash": "f90348aa"
+  },
+  "image-editor.chunk.opacity-set-to-pct-so-the-reference": {
+    "text": "Dekking ingesteld op {pct} % zodat de referentieafbeelding doorschijnt. Pas het aan bij Dekking.",
+    "hash": "4e03c366"
+  },
+  "image-editor.chunk.save-as-a-copy": {
+    "text": "Opslaan als kopie…",
+    "hash": "32e26365"
+  },
+  "image-editor.chunk.save-the-image-first": {
+    "text": "Sla de afbeelding eerst op.",
+    "hash": "28b25b23"
+  },
+  "image-editor.chunk.save-your-changes-first": {
+    "text": "Sla eerst je wijzigingen op.",
+    "hash": "7bed9d58"
+  },
+  "image-editor.chunk.saved": {
+    "text": "Opgeslagen",
+    "hash": "b5c120b3"
+  },
+  "image-editor.chunk.saved-as-name-the-original-is-unchanged": {
+    "text": "Opgeslagen als ‘{name}’. Het origineel is niet veranderd.",
+    "hash": "3122232e"
+  },
+  "image-editor.chunk.saved-name": {
+    "text": "‘{name}’ opgeslagen.",
+    "hash": "95ebf977"
+  },
+  "image-editor.chunk.saving": {
+    "text": "Bezig met opslaan…",
+    "hash": "23e39291"
+  },
+  "image-editor.chunk.showing-the-drawing-as-on-a-card-with": {
+    "text": "De tekening wordt getoond zoals op een kaart, met de entiteit uit.",
+    "hash": "231ae4ab"
+  },
+  "image-editor.chunk.showing-the-drawing-in-the-editor": {
+    "text": "De tekening wordt getoond in de kleuren van de editor.",
+    "hash": "16fff2b6"
+  },
+  "image-editor.chunk.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "image-editor.chunk.text-tool-click-or-tap-where-the-text": {
+    "text": "Teksttool. Klik of tik waar de tekst moet komen, of druk op Enter om in het midden te beginnen. Typ en druk dan op Enter of Klaar.",
+    "hash": "408538c8"
+  },
+  "image-editor.chunk.that-drawing-is-over-256-kib": {
+    "text": "Die tekening is groter dan 256 KiB.",
+    "hash": "f4b05d33"
+  },
+  "image-editor.chunk.that-file-cannot-be-used-as-an-image": {
+    "text": "Dat bestand kan niet als afbeelding worden gebruikt.",
+    "hash": "3b52f1c0"
+  },
+  "image-editor.chunk.that-file-has-no-shapes-an-image-can-use": {
+    "text": "Dat bestand heeft geen vormen die een afbeelding kan gebruiken.",
+    "hash": "4ed1efc8"
+  },
+  "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
+    "text": "Die SVG is te groot om te openen (meer dan 8 MB). Probeer een kleinere kopie.",
+    "hash": "a4b2ade8"
+  },
+  "image-editor.chunk.the-library-does-not-accept-the-text": {
+    "text": "De bibliotheek accepteert de tekst \"{word}\" niet, in de laag \"{name}\". Pas die aan en sla daarna opnieuw op.",
+    "hash": "1621feb4"
+  },
+  "image-editor.chunk.the-library-does-not-accept-the-text-2": {
+    "text": "De bibliotheek accepteert de tekst \"{word}\" niet. Pas die aan en sla daarna opnieuw op.",
+    "hash": "d6d78369"
+  },
+  "image-editor.chunk.the-library-is-full-200-images-delete": {
+    "text": "De bibliotheek is vol (200 afbeeldingen). Verwijder er een om een nieuwe toe te voegen.",
+    "hash": "70a99846"
+  },
+  "image-editor.chunk.the-library-refused-this-image-reason": {
+    "text": "De bibliotheek weigerde deze afbeelding: {reason}",
+    "hash": "0814e83b"
+  },
+  "image-editor.chunk.the-library-refused-this-image-use": {
+    "text": "De bibliotheek weigerde deze afbeelding. Bewaar een kopie met Bestand exporteren.",
+    "hash": "5fa5f176"
+  },
+  "image-editor.chunk.the-reference-picture-was-not-saved": {
+    "text": "De referentieafbeelding is niet opgeslagen.",
+    "hash": "d7e29a42"
+  },
+  "image-editor.chunk.this-drawing-cannot-be-saved-as-an-image": {
+    "text": "Deze tekening kan niet als afbeelding worden opgeslagen.",
+    "hash": "90a602b4"
+  },
+  "image-editor.chunk.this-image-has-parts-that-this-editor": {
+    "text": "Deze afbeelding heeft onderdelen die deze editor nog niet kan wijzigen, dus hij opent alleen om te bekijken.",
+    "hash": "bb4468d8"
+  },
+  "image-editor.chunk.this-image-is-no-longer-in-the-library": {
+    "text": "Deze afbeelding staat niet meer in de bibliotheek.",
+    "hash": "ba95db40"
+  },
+  "image-editor.chunk.this-image-was-changed-somewhere-else": {
+    "text": "Deze afbeelding is ergens anders gewijzigd.",
+    "hash": "b1bcbf44"
+  },
+  "image-editor.chunk.this-is-not-valid-svg-check-that-it": {
+    "text": "Dit is geen geldige SVG. Controleer of het begint met <svg en is afgesloten.",
+    "hash": "c93f2341"
+  },
+  "image-editor.chunk.too-big": {
+    "text": "te groot",
+    "hash": "fd21d949"
+  },
+  "image-editor.chunk.too-big-to-save": {
+    "text": "Te groot om op te slaan",
+    "hash": "4202b72f"
+  },
+  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
+    "text": "Te groot om op te slaan: {used} KiB van 256 KiB.",
+    "hash": "d734caad"
+  },
+  "image-editor.chunk.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "image-editor.chunk.use-80-characters-or-fewer": {
+    "text": "Gebruik maximaal 80 tekens.",
+    "hash": "89f38a1c"
+  },
+  "image-editor.chunk.you-can-look-at-this-image-but-not": {
+    "text": "Je kunt deze afbeelding bekijken maar niet wijzigen. Vraag het een beheerder.",
+    "hash": "0968b746"
+  },
+  "image-editor.importer.choose-an-svg-file": {
+    "text": "Kies een SVG-bestand.",
+    "hash": "1b0adb40"
+  },
+  "image-editor.importer.choose-another-file": {
+    "text": "Kies een ander bestand",
+    "hash": "26eac8f8"
+  },
+  "image-editor.importer.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "image-editor.importer.continue": {
+    "text": "Doorgaan",
+    "hash": "31fbef16"
+  },
+  "image-editor.importer.could-not-import-the-file": {
+    "text": "Het bestand kon niet worden geïmporteerd",
+    "hash": "5bd9e64c"
+  },
+  "image-editor.importer.embedded-pictures": {
+    "text": "ingesloten afbeeldingen",
+    "hash": "7a12f493"
+  },
+  "image-editor.importer.event-handlers": {
+    "text": "gebeurtenisafhandelaars",
+    "hash": "a41b55f6"
+  },
+  "image-editor.importer.imported-file": {
+    "text": "Bestand geïmporteerd",
+    "hash": "16b2a5e6"
+  },
+  "image-editor.importer.imported-name": {
+    "text": "‘{name}’ geïmporteerd",
+    "hash": "01bc6c56"
+  },
+  "image-editor.importer.importing-name-replaces-everything-on": {
+    "text": "Door ‘{name}’ te importeren wordt alles op het canvas vervangen. Je kunt dit ongedaan maken.",
+    "hash": "60736c29"
+  },
+  "image-editor.importer.keep-my-drawing": {
+    "text": "Mijn tekening houden",
+    "hash": "5660c427"
+  },
+  "image-editor.importer.links-to-another-site": {
+    "text": "links naar een andere site",
+    "hash": "b48e5171"
+  },
+  "image-editor.importer.nothing-was-removed": {
+    "text": "Er is niets verwijderd.",
+    "hash": "57fc553d"
+  },
+  "image-editor.importer.other-parts-an-image-cannot-use": {
+    "text": "andere onderdelen die een afbeelding niet kan gebruiken",
+    "hash": "cf4e238e"
+  },
+  "image-editor.importer.removed-list": {
+    "text": "Verwijderd: {list}.",
+    "hash": "a76bda11"
+  },
+  "image-editor.importer.replace": {
+    "text": "Vervangen",
+    "hash": "95e15439"
+  },
+  "image-editor.importer.replace-your-drawing": {
+    "text": "Je tekening vervangen?",
+    "hash": "acaf7eb9"
+  },
+  "image-editor.importer.scripts": {
+    "text": "scripts",
+    "hash": "8c5967fd"
+  },
+  "image-editor.importer.some-parts-cannot-be-edited-such-as": {
+    "text": "Sommige onderdelen zijn niet te bewerken, zoals uitgesneden delen. Ze blijven bewaard als vergrendelde lagen.",
+    "hash": "ae005345"
+  },
+  "image-editor.importer.that-file-is-too-big-to-open-over-8-mb": {
+    "text": "Dat bestand is te groot om te openen (meer dan 8 MB). Probeer een kleinere kopie.",
+    "hash": "8f6622ea"
+  },
+  "image-editor.importer.the-file-could-not-be-read": {
+    "text": "Het bestand kon niet worden gelezen.",
+    "hash": "f60f4735"
+  },
+  "image-editor.paint-ui.a-gradient-needs-at-least-2-stops": {
+    "text": "Een kleurverloop heeft minstens 2 kleurpunten nodig.",
+    "hash": "fe1dd01e"
+  },
+  "image-editor.paint-ui.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "image-editor.paint-ui.add-stop": {
+    "text": "Kleurpunt toevoegen",
+    "hash": "5dec20de"
+  },
+  "image-editor.paint-ui.angle-degrees": {
+    "text": "Hoek (graden)",
+    "hash": "84cca765"
+  },
+  "image-editor.paint-ui.at-most-8-stops": {
+    "text": "Maximaal 8 kleurpunten.",
+    "hash": "74c92b06"
+  },
+  "image-editor.paint-ui.centre-x": {
+    "text": "Midden X (%)",
+    "hash": "f2d4d411"
+  },
+  "image-editor.paint-ui.centre-y": {
+    "text": "Midden Y (%)",
+    "hash": "62de9db2"
+  },
+  "image-editor.paint-ui.custom": {
+    "text": "Eigen",
+    "hash": "494ca78f"
+  },
+  "image-editor.paint-ui.custom-colour": {
+    "text": "Eigen kleur",
+    "hash": "c31a3f15"
+  },
+  "image-editor.paint-ui.dash-list": {
+    "text": "Lijst met streepjes",
+    "hash": "1539f015"
+  },
+  "image-editor.paint-ui.dash-offset": {
+    "text": "Start van de streepjes",
+    "hash": "8b6abc09"
+  },
+  "image-editor.paint-ui.dashed": {
+    "text": "Gestreept",
+    "hash": "2fe14ade"
+  },
+  "image-editor.paint-ui.dashes": {
+    "text": "Streepjes",
+    "hash": "0f8b9321"
+  },
+  "image-editor.paint-ui.dotted": {
+    "text": "Gestippeld",
+    "hash": "be454f3c"
+  },
+  "image-editor.paint-ui.fill": {
+    "text": "Vulling",
+    "hash": "033955d4"
+  },
+  "image-editor.paint-ui.gradient-centre": {
+    "text": "Midden van het verloop",
+    "hash": "502b4371"
+  },
+  "image-editor.paint-ui.gradient-end": {
+    "text": "Einde van het verloop",
+    "hash": "36670c89"
+  },
+  "image-editor.paint-ui.gradient-radius": {
+    "text": "Straal van het verloop",
+    "hash": "69cd18cd"
+  },
+  "image-editor.paint-ui.gradient-start": {
+    "text": "Begin van het verloop",
+    "hash": "8a4567f1"
+  },
+  "image-editor.paint-ui.gradient-stop-n-of-count": {
+    "text": "Kleurpunt {n} van {count}",
+    "hash": "65eca2dd"
+  },
+  "image-editor.paint-ui.label-x-x-y-y": {
+    "text": "{label}: x {x}, y {y}",
+    "hash": "8369e720"
+  },
+  "image-editor.paint-ui.linear-gradient": {
+    "text": "Lineair kleurverloop",
+    "hash": "535819b2"
+  },
+  "image-editor.paint-ui.main": {
+    "text": "Hoofd",
+    "hash": "eb814be3"
+  },
+  "image-editor.paint-ui.more-style-options": {
+    "text": "Meer stijlopties",
+    "hash": "80f7d066"
+  },
+  "image-editor.paint-ui.name-colour": {
+    "text": "{name}kleur",
+    "hash": "5b55cbe0"
+  },
+  "image-editor.paint-ui.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "image-editor.paint-ui.opacity": {
+    "text": "Dekking",
+    "hash": "6062652e"
+  },
+  "image-editor.paint-ui.opacity-fades-the-whole-layer": {
+    "text": "Dekking maakt de hele laag doorzichtiger.",
+    "hash": "0c510d37"
+  },
+  "image-editor.paint-ui.or-type-a-name": {
+    "text": "Of typ een naam",
+    "hash": "0e5fa8fc"
+  },
+  "image-editor.paint-ui.paint-colour": {
+    "text": "Kleur van {paint}",
+    "hash": "ea440407"
+  },
+  "image-editor.paint-ui.radial-gradient": {
+    "text": "Radiaal kleurverloop",
+    "hash": "36695a75"
+  },
+  "image-editor.paint-ui.radius": {
+    "text": "Straal (%)",
+    "hash": "6da0f63a"
+  },
+  "image-editor.paint-ui.remove-stop-n": {
+    "text": "Kleurpunt {n} verwijderen",
+    "hash": "faaf1eb3"
+  },
+  "image-editor.paint-ui.solid": {
+    "text": "Doorlopend",
+    "hash": "b8b311b0"
+  },
+  "image-editor.paint-ui.stop-n": {
+    "text": "Kleurpunt {n}",
+    "hash": "ef6e0584"
+  },
+  "image-editor.paint-ui.stop-n-colour": {
+    "text": "Kleur van kleurpunt {n}",
+    "hash": "ad242e24"
+  },
+  "image-editor.paint-ui.stop-n-position": {
+    "text": "Plaats van kleurpunt {n} (%)",
+    "hash": "115e9043"
+  },
+  "image-editor.paint-ui.stroke": {
+    "text": "Lijn",
+    "hash": "1582a13f"
+  },
+  "image-editor.paint-ui.theme-colour": {
+    "text": "Themakleur",
+    "hash": "41988af8"
+  },
+  "image-editor.paint-ui.use-a-colour-like-3f6fb5": {
+    "text": "Gebruik een kleur zoals #3f6fb5.",
+    "hash": "ee1e635f"
+  },
+  "image-editor.paint-ui.use-a-name-that-starts-with-two-dashes": {
+    "text": "Gebruik een naam die met twee streepjes begint, zoals --mijn-kleur.",
+    "hash": "267cdb31"
+  },
+  "image-editor.paint-ui.use-up-to-8-numbers-separated-by-spaces": {
+    "text": "Gebruik maximaal 8 getallen met spaties ertussen, zoals 8 4.",
+    "hash": "0d9e5e6a"
+  },
+  "image-editor.part.imported-part": {
+    "text": "Geïmporteerd onderdeel",
+    "hash": "82228bf8"
+  },
+  "image-editor.part.rename-reorder-hide-or-delete-it": {
+    "text": "Hernoem, herorden, verberg of verwijder het.",
+    "hash": "2fbc8d0b"
+  },
+  "image-editor.part.this-part-keeps-its-own-colours": {
+    "text": "Dit onderdeel behoudt zijn eigen kleuren.",
+    "hash": "2f1a0106"
+  },
+  "image-editor.reference-ui.alignment-is-remembered-on-this-device": {
+    "text": "De uitlijning wordt op dit apparaat onthouden voor deze afbeelding. De foto zelf niet.",
+    "hash": "089b194b"
+  },
+  "image-editor.reference-ui.choose-a-picture": {
+    "text": "Kies een afbeelding…",
+    "hash": "10e54e0c"
+  },
+  "image-editor.reference-ui.choose-another-picture": {
+    "text": "Kies een andere afbeelding…",
+    "hash": "2f04ca01"
+  },
+  "image-editor.reference-ui.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "image-editor.reference-ui.fit-to-canvas": {
+    "text": "Passend op tekenvlak",
+    "hash": "f69feb29"
+  },
+  "image-editor.reference-ui.for-tracing-only-the-picture-is-never": {
+    "text": "Alleen om over te trekken. De afbeelding wordt nooit opgeslagen.",
+    "hash": "1d8d09bd"
+  },
+  "image-editor.reference-ui.hide": {
+    "text": "Verbergen",
+    "hash": "ac20a57b"
+  },
+  "image-editor.reference-ui.match-canvas-shape-to-this-picture": {
+    "text": "Tekenvlak aanpassen aan deze afbeelding",
+    "hash": "39f5dce8"
+  },
+  "image-editor.reference-ui.move-picture-down": {
+    "text": "Afbeelding omlaag",
+    "hash": "d4692449"
+  },
+  "image-editor.reference-ui.move-picture-left": {
+    "text": "Afbeelding naar links",
+    "hash": "0dca899f"
+  },
+  "image-editor.reference-ui.move-picture-right": {
+    "text": "Afbeelding naar rechts",
+    "hash": "704e66a3"
+  },
+  "image-editor.reference-ui.move-picture-up": {
+    "text": "Afbeelding omhoog",
+    "hash": "fee6e8e4"
+  },
+  "image-editor.reference-ui.move-the-picture": {
+    "text": "Afbeelding verplaatsen",
+    "hash": "ac8b221b"
+  },
+  "image-editor.reference-ui.opacity": {
+    "text": "Dekking",
+    "hash": "6062652e"
+  },
+  "image-editor.reference-ui.png-jpeg-webp-gif-avif-or-bmp": {
+    "text": "PNG, JPEG, WebP, GIF, AVIF of BMP.",
+    "hash": "de789d2e"
+  },
+  "image-editor.reference-ui.reference-picture": {
+    "text": "Referentieafbeelding",
+    "hash": "d2a88daa"
+  },
+  "image-editor.reference-ui.reference-picture-on-not-saved": {
+    "text": "Referentieafbeelding staat aan. Wordt niet opgeslagen.",
+    "hash": "79ad8ec0"
+  },
+  "image-editor.reference-ui.reference-pictures-are-not-kept-pick-it": {
+    "text": "Referentieafbeeldingen worden niet bewaard. Kies hem opnieuw als je de afbeelding weer opent.",
+    "hash": "06396185"
+  },
+  "image-editor.reference-ui.remove-picture": {
+    "text": "Afbeelding verwijderen",
+    "hash": "1bc6f23b"
+  },
+  "image-editor.reference-ui.reset-alignment": {
+    "text": "Uitlijning herstellen",
+    "hash": "3179e262"
+  },
+  "image-editor.reference-ui.rotate-degrees": {
+    "text": "Draaien (graden)",
+    "hash": "f598a0a8"
+  },
+  "image-editor.reference-ui.scale": {
+    "text": "Schaal (%)",
+    "hash": "6f4e7c47"
+  },
+  "image-editor.reference-ui.scale-and-rotate-are-around-the-middle": {
+    "text": "Schalen en draaien gebeurt rond het midden van de afbeelding.",
+    "hash": "2ea5000d"
+  },
+  "image-editor.reference-ui.show": {
+    "text": "Tonen",
+    "hash": "0df6f1ca"
+  },
+  "image-editor.reference-ui.turn-left-90": {
+    "text": "90 graden naar links",
+    "hash": "4adaff42"
+  },
+  "image-editor.reference-ui.turn-right-90": {
+    "text": "90 graden naar rechts",
+    "hash": "9b38d4fa"
+  },
+  "image-editor.reference-ui.x": {
+    "text": "X",
+    "hash": "4b68ab38"
+  },
+  "image-editor.reference-ui.y": {
+    "text": "Y",
+    "hash": "18f5384d"
+  },
+  "image-editor.reference.choose-a-png-jpeg-webp-gif-avif-or-bmp": {
+    "text": "Kies een PNG-, JPEG-, WebP-, GIF-, AVIF- of BMP-afbeelding.",
+    "hash": "2f6aff1c"
+  },
+  "image-editor.reference.reference-picture-on-not-saved": {
+    "text": "Referentieafbeelding staat aan. Wordt niet opgeslagen.",
+    "hash": "79ad8ec0"
+  },
+  "image-editor.reference.that-file-is-too-big-to-open-over-64-mb": {
+    "text": "Dat bestand is te groot om te openen (meer dan 64 MB). Probeer een kleinere kopie.",
+    "hash": "5187c96a"
+  },
+  "image-editor.reference.this-browser-cannot-open-that-picture": {
+    "text": "Deze browser kan die afbeelding niet openen. Sla hem op als JPEG en probeer het opnieuw.",
+    "hash": "99073950"
+  },
+  "image-editor.reference.your-last-alignment-for-this-image-was": {
+    "text": "Je laatste uitlijning voor deze afbeelding is toegepast.",
+    "hash": "1f0dd4ba"
+  },
+  "image-editor.text-tool.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "image-editor.text-tool.done": {
+    "text": "Klaar",
+    "hash": "11a6767d"
+  },
+  "image-editor.text-tool.enter-adds-the-text-shift-enter-starts-a": {
+    "text": "Enter voegt de tekst toe. Shift+Enter begint een nieuwe regel. Esc annuleert.",
+    "hash": "27315c22"
+  },
+  "image-editor.text-tool.n-left": {
+    "text": "nog {n}",
+    "hash": "19816380"
+  },
+  "image-editor.text-tool.no-text-was-added": {
+    "text": "Er is geen tekst toegevoegd.",
+    "hash": "52fb0997"
+  },
+  "image-editor.text-tool.text-cancelled": {
+    "text": "Tekst geannuleerd.",
+    "hash": "0b222b17"
+  },
+  "image-editor.text-tool.text-on-the-canvas": {
+    "text": "Tekst op het canvas",
+    "hash": "127c4162"
+  },
+  "image-editor.text-tool.that-is-the-longest-text-2048-characters": {
+    "text": "Dit is de langste tekst (2048 tekens).",
+    "hash": "86e6fa93"
+  },
+  "image-editor.text-ui.add-text": {
+    "text": "Tekst toevoegen",
+    "hash": "1b4d1003"
+  },
+  "image-editor.text-ui.alignment": {
+    "text": "Uitlijning",
+    "hash": "9d597870"
+  },
+  "image-editor.text-ui.bold": {
+    "text": "Vet",
+    "hash": "94fee62e"
+  },
+  "image-editor.text-ui.centre": {
+    "text": "Midden",
+    "hash": "45c19322"
+  },
+  "image-editor.text-ui.clean-no-feet": {
+    "text": "Strak, zonder voetjes.",
+    "hash": "9a6103ba"
+  },
+  "image-editor.text-ui.content": {
+    "text": "Inhoud",
+    "hash": "47bd2907"
+  },
+  "image-editor.text-ui.end": {
+    "text": "Einde",
+    "hash": "f4db1e48"
+  },
+  "image-editor.text-ui.enter-adds-a-line": {
+    "text": "Enter voegt een regel toe.",
+    "hash": "be18e792"
+  },
+  "image-editor.text-ui.every-letter-the-same-width": {
+    "text": "Elke letter even breed.",
+    "hash": "196b0777"
+  },
+  "image-editor.text-ui.extra-bold": {
+    "text": "Extra vet",
+    "hash": "c5afae1f"
+  },
+  "image-editor.text-ui.font": {
+    "text": "Lettertype",
+    "hash": "64d0b3ad"
+  },
+  "image-editor.text-ui.italic": {
+    "text": "Cursief",
+    "hash": "9bf37cb5"
+  },
+  "image-editor.text-ui.letter-spacing-units": {
+    "text": "Letterafstand (eenheden)",
+    "hash": "2574ba96"
+  },
+  "image-editor.text-ui.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "image-editor.text-ui.medium": {
+    "text": "Middel",
+    "hash": "8e588cd1"
+  },
+  "image-editor.text-ui.monospace": {
+    "text": "Monospace",
+    "hash": "64c223c2"
+  },
+  "image-editor.text-ui.n-left": {
+    "text": "nog {n}",
+    "hash": "19816380"
+  },
+  "image-editor.text-ui.regular": {
+    "text": "Normaal",
+    "hash": "b455784a"
+  },
+  "image-editor.text-ui.sans-serif": {
+    "text": "Sans-serif",
+    "hash": "07e77255"
+  },
+  "image-editor.text-ui.semi-bold": {
+    "text": "Halfvet",
+    "hash": "1a8285cf"
+  },
+  "image-editor.text-ui.serif": {
+    "text": "Serif",
+    "hash": "1b5e747e"
+  },
+  "image-editor.text-ui.size-units": {
+    "text": "Grootte (eenheden)",
+    "hash": "5d866ca5"
+  },
+  "image-editor.text-ui.start": {
+    "text": "Begin",
+    "hash": "e4bb9f1e"
+  },
+  "image-editor.text-ui.style": {
+    "text": "Stijl",
+    "hash": "7e744141"
+  },
+  "image-editor.text-ui.system": {
+    "text": "Systeem",
+    "hash": "6725e7bb"
+  },
+  "image-editor.text-ui.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "image-editor.text-ui.text-uses-fonts-already-on-the-device": {
+    "text": "Tekst gebruikt lettertypen die al op het apparaat staan. Er wordt niets gedownload, dus het kan op een ander apparaat iets anders uitzien.",
+    "hash": "be899982"
+  },
+  "image-editor.text-ui.that-is-the-longest-text-2048-characters": {
+    "text": "Dit is de langste tekst (2048 tekens).",
+    "hash": "86e6fa93"
+  },
+  "image-editor.text-ui.the-empty-text-layer-was-removed": {
+    "text": "De lege tekstlaag is verwijderd.",
+    "hash": "ea9bd966"
+  },
+  "image-editor.text-ui.weight": {
+    "text": "Gewicht",
+    "hash": "81d27ef6"
+  },
+  "image-editor.text-ui.whatever-this-device-uses-for-its-own": {
+    "text": "Wat dit apparaat voor zijn eigen schermen gebruikt.",
+    "hash": "cf8d1aa2"
+  },
+  "image-editor.text-ui.with-small-feet-like-print": {
+    "text": "Met kleine voetjes, zoals in drukwerk.",
+    "hash": "c4f38354"
+  },
+  "image-editor.ui.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "image-editor.ui.apply": {
+    "text": "Toepassen",
+    "hash": "31e392d1"
+  },
+  "image-editor.ui.apply-anyway": {
+    "text": "Toch toepassen",
+    "hash": "4f608c03"
+  },
+  "image-editor.ui.author": {
+    "text": "Maker",
+    "hash": "d95082a2"
+  },
+  "image-editor.ui.back": {
+    "text": "Terug",
+    "hash": "76900f1b"
+  },
+  "image-editor.ui.c": {
+    "text": "{c, plural, one {# verborgen laag verwijderen} other {# verborgen lagen verwijderen}}",
+    "hash": "04cc9bd0"
+  },
+  "image-editor.ui.c-2": {
+    "text": "{c, plural, one {# verborgen laag verwijderd.} other {# verborgen lagen verwijderd.}}",
+    "hash": "2efbce7f"
+  },
+  "image-editor.ui.c-outside-the-new-canvas-they-are-kept": {
+    "text": "{c, plural, one {# laag valt} other {# lagen vallen}} buiten het nieuwe tekenvlak. Ze blijven bewaard maar worden afgesneden.",
+    "hash": "43da61e6"
+  },
+  "image-editor.ui.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "image-editor.ui.canvas": {
+    "text": "Tekenvlak",
+    "hash": "3824a9f4"
+  },
+  "image-editor.ui.canvas-size": {
+    "text": "Formaat tekenvlak",
+    "hash": "30460e40"
+  },
+  "image-editor.ui.cards-that-set-their-own-shape-keep-it": {
+    "text": "Kaarten met een eigen vorm houden die. Kies in het afbeeldingsveld van een kaart 'Vorm van de tekening gebruiken' om de nieuwe te volgen.",
+    "hash": "5f27592f"
+  },
+  "image-editor.ui.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "image-editor.ui.custom": {
+    "text": "Eigen",
+    "hash": "494ca78f"
+  },
+  "image-editor.ui.description": {
+    "text": "Beschrijving",
+    "hash": "526e0087"
+  },
+  "image-editor.ui.duplicate": {
+    "text": "Dupliceren",
+    "hash": "02cdaabf"
+  },
+  "image-editor.ui.export-file": {
+    "text": "Bestand exporteren",
+    "hash": "d9d979c6"
+  },
+  "image-editor.ui.fill-paint": {
+    "text": "Vulling: {paint}",
+    "hash": "7f3421ec"
+  },
+  "image-editor.ui.fit-to-view": {
+    "text": "Passend in beeld",
+    "hash": "a36cb149"
+  },
+  "image-editor.ui.height": {
+    "text": "Hoogte",
+    "hash": "bfe2eca4"
+  },
+  "image-editor.ui.image": {
+    "text": "Afbeelding",
+    "hash": "1aa4cb0b"
+  },
+  "image-editor.ui.image-canvas": {
+    "text": "Afbeeldingstekenvlak",
+    "hash": "73d6fc07"
+  },
+  "image-editor.ui.image-size": {
+    "text": "Grootte van de afbeelding",
+    "hash": "80bb38dc"
+  },
+  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
+    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
+    "hash": "7871f325"
+  },
+  "image-editor.ui.includes-connections": {
+    "text": "Inclusief koppelingen.",
+    "hash": "4bb76d77"
+  },
+  "image-editor.ui.inspector": {
+    "text": "Inspecteur",
+    "hash": "da188e3b"
+  },
+  "image-editor.ui.keep-ratio": {
+    "text": "Verhouding behouden",
+    "hash": "b69028ef"
+  },
+  "image-editor.ui.keywords": {
+    "text": "Trefwoorden",
+    "hash": "8bfdb93c"
+  },
+  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
+    "text": "KiB is een kibibyte, iets meer dan duizend tekens. 256 KiB is ongeveer een kwart megabyte.",
+    "hash": "f4bce566"
+  },
+  "image-editor.ui.layers": {
+    "text": "Lagen",
+    "hash": "0bcd66e6"
+  },
+  "image-editor.ui.linear-gradient": {
+    "text": "Lineair kleurverloop",
+    "hash": "535819b2"
+  },
+  "image-editor.ui.main": {
+    "text": "Hoofd",
+    "hash": "eb814be3"
+  },
+  "image-editor.ui.match-reference-picture": {
+    "text": "Aanpassen aan referentieafbeelding",
+    "hash": "b10fb9b5"
+  },
+  "image-editor.ui.min-to-max-pixels-per-side": {
+    "text": "{min} tot {max} pixels per zijde.",
+    "hash": "cd3d29c1"
+  },
+  "image-editor.ui.more": {
+    "text": "Meer",
+    "hash": "d47d7cb0"
+  },
+  "image-editor.ui.more-details": {
+    "text": "Meer details",
+    "hash": "b5eff1db"
+  },
+  "image-editor.ui.name": {
+    "text": "Naam",
+    "hash": "dcd1d522"
+  },
+  "image-editor.ui.name-is-the-only-thing-you-need": {
+    "text": "Een naam is het enige wat je nodig hebt.",
+    "hash": "4d573955"
+  },
+  "image-editor.ui.no-layers-yet": {
+    "text": "Nog geen lagen.",
+    "hash": "251c7a99"
+  },
+  "image-editor.ui.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "image-editor.ui.nothing-to-export-yet": {
+    "text": "Nog niets om te exporteren.",
+    "hash": "f88a199e"
+  },
+  "image-editor.ui.outline-paint": {
+    "text": "Omtrek: {paint}",
+    "hash": "fd4d7ff6"
+  },
+  "image-editor.ui.pick-a-shape-pixel-numbers-only-set-the": {
+    "text": "Kies een vorm. De pixelgetallen bepalen alleen het tekenraster. De afbeelding schaalt mee met elke kaart.",
+    "hash": "4a9b3da2"
+  },
+  "image-editor.ui.radial-gradient": {
+    "text": "Radiaal kleurverloop",
+    "hash": "36695a75"
+  },
+  "image-editor.ui.reload": {
+    "text": "Opnieuw laden",
+    "hash": "bdc090ec"
+  },
+  "image-editor.ui.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "image-editor.ui.save-as-a-copy": {
+    "text": "Opslaan als kopie",
+    "hash": "0ed28074"
+  },
+  "image-editor.ui.save-image": {
+    "text": "Afbeelding opslaan",
+    "hash": "58e909c0"
+  },
+  "image-editor.ui.saving": {
+    "text": "Bezig met opslaan…",
+    "hash": "23e39291"
+  },
+  "image-editor.ui.select-the-biggest-layer": {
+    "text": "De grootste laag selecteren",
+    "hash": "1fe9ff1a"
+  },
+  "image-editor.ui.select-the-biggest-layer-and-simplify-it": {
+    "text": "Selecteer de grootste laag en vereenvoudig hem, of verwijder lagen die je niet nodig hebt.",
+    "hash": "e965d83c"
+  },
+  "image-editor.ui.shape": {
+    "text": "Vorm",
+    "hash": "e0e49270"
+  },
+  "image-editor.ui.the-address-is-mcu-image-id-it-cannot-be": {
+    "text": "Het adres is mcu-image:{id}. Het kan later niet meer worden gewijzigd.",
+    "hash": "096fcf15"
+  },
+  "image-editor.ui.this-image-was-changed-somewhere-else": {
+    "text": "Deze afbeelding is ergens anders gewijzigd.",
+    "hash": "b1bcbf44"
+  },
+  "image-editor.ui.too-big-to-save": {
+    "text": "Te groot om op te slaan",
+    "hash": "4202b72f"
+  },
+  "image-editor.ui.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "image-editor.ui.use-a-number-from-min-to-max": {
+    "text": "Gebruik een getal van {min} tot {max}.",
+    "hash": "b84c37eb"
+  },
+  "image-editor.ui.used-of-256-kib-word": {
+    "text": "{used} van 256 KiB, {word}",
+    "hash": "77e49990"
+  },
+  "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
+    "text": "{w} x {h} eenheden. Kies een laag om de details te lezen.",
+    "hash": "30fd7d76"
+  },
+  "image-editor.ui.what-is-kib": {
+    "text": "Wat is KiB?",
+    "hash": "1e40e4fd"
+  },
+  "image-editor.ui.width": {
+    "text": "Breedte",
+    "hash": "3019947b"
+  },
+  "image-editor.ui.zoom-in": {
+    "text": "Inzoomen",
+    "hash": "0e47f09a"
+  },
+  "image-editor.ui.zoom-out": {
+    "text": "Uitzoomen",
+    "hash": "bc7b631a"
+  }
 }

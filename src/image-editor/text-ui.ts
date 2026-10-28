@@ -21,8 +21,8 @@ export function retext(s: Shape, patch: Partial<TextData>): Shape {
   const cur = s.look?.text;
   if (!cur) return s;
   const r = changed(cur, K.shapeBox(s), patch);
-  const auto = !s.name || s.name === nameOf(cur.s, t('Text'));
-  return { ...s, name: auto ? nameOf(r.t.s, t('Text')) : s.name, paths: boxPaths(r.box), look: { ...s.look, text: r.t } };
+  const auto = !s.name || s.name === nameOf(cur.s, t('image-editor.text-ui.text'));
+  return { ...s, name: auto ? nameOf(r.t.s, t('image-editor.text-ui.text')) : s.name, paths: boxPaths(r.box), look: { ...s.look, text: r.t } };
 }
 
 /** The middle of what the editor shows (the middle of the drawing when the view is elsewhere). */
@@ -37,12 +37,12 @@ export function middle(x: ImageExt): Pt {
 /** A new text layer: centred on the middle of the view, or with its top left corner at `at`. */
 export function newText(x: ImageExt, at?: Pt, words?: string): Shape {
   const vb = x.shell.doc.vb;
-  const td: TextData = { s: words ?? t('Text'), z: defaultSize(vb.w, vb.h), w: 400, a: 'start', f: 'sans-serif' };
+  const td: TextData = { s: words ?? t('image-editor.text-ui.text'), z: defaultSize(vb.w, vb.h), w: 400, a: 'start', f: 'sans-serif' };
   const b = boxFor([0, 0], td);
   const p = at ?? middle(x);
   const box = at ? { ...b, x: r2(p[0]), y: r2(p[1]) } : { ...b, x: r2(p[0] - b.w / 2), y: r2(p[1] - b.h / 2) };
   // white words with a dark outline stay readable on the default Main fill, on a bare board and on a card background
-  return K.newShape('path', boxPaths(box), { name: nameOf(td.s, t('Text')), stroke: 'main', width: r2(td.z / 24), look: { text: td, fill: TEXT_FILL, stroke: TEXT_OUTLINE } });
+  return K.newShape('path', boxPaths(box), { name: nameOf(td.s, t('image-editor.text-ui.text')), stroke: 'main', width: r2(td.z / 24), look: { text: td, fill: TEXT_FILL, stroke: TEXT_OUTLINE } });
 }
 
 /** Add a text layer and put the cursor in its Content field, selected, so typing replaces the placeholder words. */
@@ -58,7 +58,7 @@ export function addText(x: ImageExt): void {
 }
 
 export function addTextButton(x: ImageExt): TemplateResult {
-  return button({ label: t('Add text'), glyph: 'add', size: 'sm', onClick: () => addText(x) });
+  return button({ label: t('image-editor.text-ui.add-text'), glyph: 'add', size: 'sm', onClick: () => addText(x) });
 }
 
 /** The layer on the canvas: <text> with the same attributes the saved file holds, so both draw alike. */
@@ -83,29 +83,29 @@ export function textNode(x: ImageExt, s: Shape): TemplateResult | undefined {
 }
 
 const weightItems = (): Array<[string, string]> => [
-  ['300', t('Light')],
-  ['400', t('Regular')],
-  ['500', t('Medium')],
-  ['600', t('Semi-bold')],
-  ['700', t('Bold')],
-  ['800', t('Extra bold')],
+  ['300', t('image-editor.text-ui.light')],
+  ['400', t('image-editor.text-ui.regular')],
+  ['500', t('image-editor.text-ui.medium')],
+  ['600', t('image-editor.text-ui.semi-bold')],
+  ['700', t('image-editor.text-ui.bold')],
+  ['800', t('image-editor.text-ui.extra-bold')],
 ];
 
 const fontItems = (): Array<[string, string]> => [
-  ['sans-serif', t('Sans-serif')],
-  ['serif', t('Serif')],
-  ['monospace', t('Monospace')],
-  ['system-ui', t('System')],
+  ['sans-serif', t('image-editor.text-ui.sans-serif')],
+  ['serif', t('image-editor.text-ui.serif')],
+  ['monospace', t('image-editor.text-ui.monospace')],
+  ['system-ui', t('image-editor.text-ui.system')],
 ];
 
 const fontHint = (f: string): string =>
   f === 'serif'
-    ? t('With small feet, like print.')
+    ? t('image-editor.text-ui.with-small-feet-like-print')
     : f === 'monospace'
-      ? t('Every letter the same width.')
+      ? t('image-editor.text-ui.every-letter-the-same-width')
       : f === 'system-ui'
-        ? t('Whatever this device uses for its own screens.')
-        : t('Clean, no feet.');
+        ? t('image-editor.text-ui.whatever-this-device-uses-for-its-own')
+        : t('image-editor.text-ui.clean-no-feet');
 
 /** The Text section of the inspector for a text layer (undefined for any other layer). */
 export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
@@ -120,15 +120,15 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
     if (!cur?.look?.text || !blank(cur.look.text)) return;
     sh.apply(K.removeShapes(sh.doc, [s.id]), 'Delete');
     sh.select([]);
-    sh.say(t('The empty text layer was removed.'));
+    sh.say(t('image-editor.text-ui.the-empty-text-layer-was-removed'));
     sh.canvas()?.focus({ preventScroll: true });
   };
-  return html`<section class="group" aria-label=${t('Text')}>
-    ${sectionHead({ title: t('Text'), level: 4 })}
+  return html`<section class="group" aria-label=${t('image-editor.text-ui.text')}>
+    ${sectionHead({ title: t('image-editor.text-ui.text'), level: 4 })}
     ${field({
       id: 'tx-content',
-      label: t('Content'),
-      help: t('Enter adds a line.'),
+      label: t('image-editor.text-ui.content'),
+      help: t('image-editor.text-ui.enter-adds-a-line'),
       control: html`<textarea
         id="tx-content"
         class="input"
@@ -146,34 +146,34 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
       ></textarea>`,
     })}
     ${left <= IMAGE_MAX_TEXT_CHARS - COUNT_FROM
-      ? html`<p id=${countId} class="help" role="status">${left > 0 ? t('{n} left', { n: left }) : t('That is the longest text (2048 characters).')}</p>`
+      ? html`<p id=${countId} class="help" role="status">${left > 0 ? t('image-editor.text-ui.n-left', { n: left }) : t('image-editor.text-ui.that-is-the-longest-text-2048-characters')}</p>`
       : nothing}
     <div class="grid2">
-      ${num('tx-size', t('Size (units)'), td.z, (n) => set({ z: n }, 'Text size', 'text-size'), { min: 1, max: 1000, step: 1 })}
-      ${pick('tx-weight', t('Weight'), String(td.w), weightItems(), (v) => set({ w: Number(v) }, 'Text weight'))}
+      ${num('tx-size', t('image-editor.text-ui.size-units'), td.z, (n) => set({ z: n }, 'Text size', 'text-size'), { min: 1, max: 1000, step: 1 })}
+      ${pick('tx-weight', t('image-editor.text-ui.weight'), String(td.w), weightItems(), (v) => set({ w: Number(v) }, 'Text weight'))}
     </div>
     <div class="field">
-      <div class="field-head"><span class="lbl">${t('Style')}</span></div>
-      ${button({ label: t('Italic'), size: 'sm', pressed: !!td.i, onClick: () => set({ i: td.i ? undefined : true }, 'Text style') })}
+      <div class="field-head"><span class="lbl">${t('image-editor.text-ui.style')}</span></div>
+      ${button({ label: t('image-editor.text-ui.italic'), size: 'sm', pressed: !!td.i, onClick: () => set({ i: td.i ? undefined : true }, 'Text style') })}
     </div>
     <div class="field">
-      <div class="field-head"><span class="lbl">${t('Alignment')}</span></div>
+      <div class="field-head"><span class="lbl">${t('image-editor.text-ui.alignment')}</span></div>
       ${seg({
         role: 'radiogroup',
-        label: t('Alignment'),
+        label: t('image-editor.text-ui.alignment'),
         full: true,
         value: td.a,
         items: [
-          { value: 'start', label: t('Start') },
-          { value: 'middle', label: t('Centre') },
-          { value: 'end', label: t('End') },
+          { value: 'start', label: t('image-editor.text-ui.start') },
+          { value: 'middle', label: t('image-editor.text-ui.centre') },
+          { value: 'end', label: t('image-editor.text-ui.end') },
         ],
         onChange: (a) => set({ a }, 'Text alignment'),
       })}
     </div>
-    ${num('tx-spacing', t('Letter spacing (units)'), td.l ?? 0, (n) => set({ l: n }, 'Letter spacing', 'text-spacing'), { min: -100, max: 1000, step: 1 })}
-    ${pick('tx-font', t('Font'), td.f, fontItems().filter(([v]) => FONTS.includes(v)), (f) => set({ f }, 'Text font'))}
+    ${num('tx-spacing', t('image-editor.text-ui.letter-spacing-units'), td.l ?? 0, (n) => set({ l: n }, 'Letter spacing', 'text-spacing'), { min: -100, max: 1000, step: 1 })}
+    ${pick('tx-font', t('image-editor.text-ui.font'), td.f, fontItems().filter(([v]) => FONTS.includes(v)), (f) => set({ f }, 'Text font'))}
     <p class="help">${fontHint(td.f)}</p>
-    <p class="help">${t('Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.')}</p>
+    <p class="help">${t('image-editor.text-ui.text-uses-fonts-already-on-the-device')}</p>
   </section>`;
 }

@@ -1,0 +1,2656 @@
+{
+  "svg-editor.combine.c": {
+    "text": "{c, plural, one {1 open line was left out.} other {# open lines were left out.}}",
+    "note": "Shown in combine (svg-editor).",
+    "max": 45,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.combine.merged-c-parts-into-one-path": {
+    "text": "Merged {c} parts into one path.",
+    "note": "Shown in combine (svg-editor).",
+    "max": 50,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.combine.select-a-second-shape": {
+    "text": "Select a second shape.",
+    "note": "Shown in combine (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.combine.select-closed-shapes-open-lines-have-no": {
+    "text": "Select closed shapes. Open lines have no area.",
+    "note": "Shown in combine (svg-editor).",
+    "max": 75
+  },
+  "svg-editor.combine.select-two-or-more-closed-shapes": {
+    "text": "Select two or more closed shapes.",
+    "note": "Shown in combine (svg-editor).",
+    "max": 55
+  },
+  "svg-editor.combine.text-cannot-be-combined-with-other": {
+    "text": "Text cannot be combined with other layers.",
+    "note": "Shown in combine (svg-editor).",
+    "max": 70
+  },
+  "svg-editor.layers.collapse-name": {
+    "text": "Collapse {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.drag-to-move-name": {
+    "text": "Drag to move {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.expand-name": {
+    "text": "Expand {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.groups-can-be-4-levels-deep": {
+    "text": "Groups can be 4 levels deep.",
+    "note": "Shown in layers (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.layers.hide-name": {
+    "text": "Hide {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.into-name": {
+    "text": "Into {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.it-cannot-move-further": {
+    "text": "It cannot move further.",
+    "note": "Shown in layers (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.layers.it-is-already-at-the-top-level": {
+    "text": "It is already at the top level.",
+    "note": "Shown in layers (svg-editor).",
+    "max": 50
+  },
+  "svg-editor.layers.layers": {
+    "text": "Layers",
+    "note": "Shown in layers (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.layers.lock-name": {
+    "text": "Lock {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.move-down": {
+    "text": "Move down",
+    "note": "Shown in layers (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.layers.move-into-group-above": {
+    "text": "Move into group above",
+    "note": "Shown in layers (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.layers.move-out-of-group": {
+    "text": "Move out of group",
+    "note": "Shown in layers (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.layers.move-to": {
+    "text": "Move to…",
+    "note": "Shown in layers (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.layers.move-up": {
+    "text": "Move up",
+    "note": "Shown in layers (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.layers.name-is-locked": {
+    "text": "{name} is locked.",
+    "note": "Shown in layers (svg-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.name-moved-into-group-position-pos-of": {
+    "text": "{name} moved into {group}, position {pos} of {total}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 85,
+    "vars": {
+      "group": "The value that replaces group in the text.",
+      "name": "The value that replaces name in the text.",
+      "pos": "The value that replaces pos in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "svg-editor.layers.name-moved-position-pos-of-total": {
+    "text": "{name} moved, position {pos} of {total}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 65,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "pos": "The value that replaces pos in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "svg-editor.layers.name-moved-to-the-top-level-position-pos": {
+    "text": "{name} moved to the top level, position {pos} of {total}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 90,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "pos": "The value that replaces pos in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "svg-editor.layers.name-selected": {
+    "text": "{name} selected.",
+    "note": "Shown in layers (svg-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.reaches-outside-the-20-x-20-safe-area": {
+    "text": "Reaches outside the 20 x 20 safe area",
+    "note": "Shown in layers (svg-editor).",
+    "max": 60
+  },
+  "svg-editor.layers.show-name": {
+    "text": "Show {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.there-is-no-group-above": {
+    "text": "There is no group above.",
+    "note": "Shown in layers (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.layers.top-level": {
+    "text": "Top level",
+    "note": "Shown in layers (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.layers.ungroup-name": {
+    "text": "Ungroup {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.unlock-name": {
+    "text": "Unlock {name}",
+    "note": "Shown in layers (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.lips.got-it": {
+    "text": "Got it",
+    "note": "Shown in lips (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "note": "Shown in lips (svg-editor).",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "svg-editor.lips.inspector": {
+    "text": "inspector",
+    "note": "Shown in lips (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.lips.inspector-panel": {
+    "text": "Inspector panel",
+    "note": "Shown in lips (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.lips.layers-and-library": {
+    "text": "layers and library",
+    "note": "Shown in lips (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.lips.layers-and-library-panel": {
+    "text": "Layers and library panel",
+    "note": "Shown in lips (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "note": "Shown in lips (svg-editor).",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "svg-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "note": "Shown in lips (svg-editor).",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "svg-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "note": "Shown in lips (svg-editor).",
+    "max": 30,
+    "vars": {
+      "keys": "The value that replaces keys in the text."
+    }
+  },
+  "svg-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "note": "Shown in lips (svg-editor).",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "svg-editor.lips.some-panels-are-hidden-as-you-left-them": {
+    "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
+    "note": "Shown in lips (svg-editor).",
+    "max": 135
+  },
+  "svg-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "note": "Shown in lips (svg-editor).",
+    "max": 130,
+    "vars": {
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.aligned-c-to-the-edge": {
+    "text": "Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 50,
+    "vars": {
+      "c": "The count the text is about.",
+      "edge": "The value that replaces edge in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.c": {
+    "text": "{c, plural, one {# script} other {# scripts}}",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-2": {
+    "text": "{c, plural, one {# image} other {# images}}",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-3": {
+    "text": "{c, plural, one {# external link} other {# external links}}",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 30,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-4": {
+    "text": "{c, plural, one {# other item} other {# other items}}",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-outside-the-20-x-20-safe-area-home": {
+    "text": "{c, plural, one {# layer reaches} other {# layers reach}} outside the 20 x 20 safe area. Home Assistant may clip the edges.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 130,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-shapes-selected": {
+    "text": "{c} shapes selected",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.centre-on-canvas": {
+    "text": "Centre on canvas",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.mc-svg-editor.changed-since-saved": {
+    "text": "Changed since saved",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.colours-were-replaced-by-the-card-s": {
+    "text": "Colours were replaced by the card's colours: Main and Accent.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 100
+  },
+  "svg-editor.mc-svg-editor.copied-the-accent-path": {
+    "text": "Copied the accent path.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.copied-the-path-and-viewbox-for-home": {
+    "text": "Copied the path and viewBox, for Home Assistant custom icon sets. See the docs.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 130
+  },
+  "svg-editor.mc-svg-editor.copied-the-svg": {
+    "text": "Copied the SVG.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.could-not-copy-select-the-markup-and": {
+    "text": "Could not copy. Select the markup and copy it yourself.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 90
+  },
+  "svg-editor.mc-svg-editor.could-not-find-name-check-the-name-or": {
+    "text": "Could not find \"{name}\". Check the name, or wait for the icon packs to load.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 125,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.could-not-load-that-icon": {
+    "text": "Could not load that icon.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.could-not-load-the-export-and-import": {
+    "text": "Could not load the export and import tool. Try again.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 85
+  },
+  "svg-editor.mc-svg-editor.could-not-read-that-file": {
+    "text": "Could not read that file.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.could-not-save-name-try-again": {
+    "text": "Could not save {name}. Try again.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.couldn-t-load-the-shape-tools-try-again": {
+    "text": "Couldn't load the shape tools. Try again.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 70
+  },
+  "svg-editor.mc-svg-editor.draw-something-first": {
+    "text": "Draw something first",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.drawing-opened": {
+    "text": "Drawing opened.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.edit-points": {
+    "text": "Edit points",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.ellipse": {
+    "text": "Ellipse",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.esc-doesn-t-close-the-editor-use-done-or": {
+    "text": "Esc doesn't close the editor. Use Done or Back to card editor.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 100
+  },
+  "svg-editor.mc-svg-editor.everything-else-was-kept": {
+    "text": "Everything else was kept.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.finish-path": {
+    "text": "Finish path",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.fit-to-20": {
+    "text": "Fit to 20",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.fit-to-safe-area": {
+    "text": "Fit to safe area",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.mc-svg-editor.freehand": {
+    "text": "Freehand",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.give-it-a-name": {
+    "text": "Give it a name.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.give-the-icon-a-name": {
+    "text": "Give the icon a name.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.grid-size-set-to-size-the-nearest": {
+    "text": "Grid size set to {size}, the nearest allowed size.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 80,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.groups-can-be-4-levels-deep": {
+    "text": "Groups can be 4 levels deep.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.mc-svg-editor.groups-deeper-than-4-levels-were-merged": {
+    "text": "Groups deeper than 4 levels were merged.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 65
+  },
+  "svg-editor.mc-svg-editor.hand": {
+    "text": "Hand",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.keep-your-own-icons-for-every-dashboard": {
+    "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 215
+  },
+  "svg-editor.mc-svg-editor.line": {
+    "text": "Line",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.match-safe-area-edges": {
+    "text": "Match safe-area edges",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.my-icon": {
+    "text": "My icon",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.name-added": {
+    "text": "{name} added.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-changed-while-you-were-editing-save": {
+    "text": "{name} changed while you were editing. Save as new, or reload it.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 105,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-copy": {
+    "text": "{name} copy",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-deleted": {
+    "text": "{name} deleted.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-selected": {
+    "text": "{name} selected.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.nothing-is-left-of-these-shapes": {
+    "text": "Nothing is left of these shapes.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 55
+  },
+  "svg-editor.mc-svg-editor.nothing-was-changed": {
+    "text": "Nothing was changed.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.opacity-is-not-kept-icons-are-one-solid": {
+    "text": "Opacity is not kept. Icons are one solid colour.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.mc-svg-editor.opened-name-as-the-drawing-undo-brings": {
+    "text": "Opened {name} as the drawing. Undo brings your last drawing back.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 105,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.opened-name-the-first-of-count-icons-in": {
+    "text": "Opened {name}, the first of {count} icons in the file. The others were not used.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 130,
+    "vars": {
+      "count": "The value that replaces count in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.over-the-32-kb-limit": {
+    "text": "Over the 32 KB limit",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.paste-some-svg-first": {
+    "text": "Paste some SVG first.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.pen": {
+    "text": "Pen",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 5
+  },
+  "svg-editor.mc-svg-editor.polygon-or-star": {
+    "text": "Polygon or star",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.reading-name": {
+    "text": "Reading {name}…",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.rectangle": {
+    "text": "Rectangle",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.redo": {
+    "text": "Redo",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.removed-c-icons-cannot-use": {
+    "text": "Removed {c, plural, one {# thing} other {# things}} icons cannot use",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 65,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.saved": {
+    "text": "Saved",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.saved-to-library-as-name-press-done-to": {
+    "text": "Saved to library as {name}. Press Done to use it on this card.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 100,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.select": {
+    "text": "Select",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.select-closed-shapes-open-lines-have-no": {
+    "text": "Select closed shapes. Open lines have no area.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 75
+  },
+  "svg-editor.mc-svg-editor.select-three-or-more-shapes-to-space": {
+    "text": "Select three or more shapes to space them evenly.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.mc-svg-editor.shapes": {
+    "text": "Shapes",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.spaced-c-shapes-evenly": {
+    "text": "Spaced {c} shapes evenly.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.that-file-has-no-shapes-an-icon-can-use": {
+    "text": "That file has no shapes an icon can use.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 65
+  },
+  "svg-editor.mc-svg-editor.the-library-could-not-accept-this-icon": {
+    "text": "The library could not accept this icon. Tidy it and try again.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 100
+  },
+  "svg-editor.mc-svg-editor.the-library-is-full-delete-an-icon-you": {
+    "text": "The library is full. Delete an icon you no longer use.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 90
+  },
+  "svg-editor.mc-svg-editor.the-safe-area-is-hidden": {
+    "text": "The safe area is hidden.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.the-svg-is-larger-than-32-kb": {
+    "text": "The SVG is larger than 32 KB.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 50
+  },
+  "svg-editor.mc-svg-editor.the-svg-is-too-complex": {
+    "text": "The SVG is too complex.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.these-shapes-have-too-many-points-to": {
+    "text": "These shapes have too many points to combine.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 75
+  },
+  "svg-editor.mc-svg-editor.this-icon-has-c-points-you-can-edit-and": {
+    "text": "This icon has {c} points. You can edit and move them, but not add points until it has fewer than 100.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 165,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.this-icon-is-used-kb-and-the-limit-is-32": {
+    "text": "This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 155,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.this-icon-was-changed-somewhere-else": {
+    "text": "This icon was changed somewhere else.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 60
+  },
+  "svg-editor.mc-svg-editor.this-is-not-valid-svg-check-that-it": {
+    "text": "This is not valid SVG. Check that it starts with <svg and is closed.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 110
+  },
+  "svg-editor.mc-svg-editor.tidy-now": {
+    "text": "Tidy now",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.transforms-were-applied-to-the-paths-the": {
+    "text": "Transforms were applied to the paths. The drawing looks the same, the markup is different.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 145
+  },
+  "svg-editor.mc-svg-editor.try-again": {
+    "text": "Try again",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.undo": {
+    "text": "Undo",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.undone": {
+    "text": "Undone.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.use-40-characters-or-fewer": {
+    "text": "Use 40 characters or fewer.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.mc-svg-editor.use-min-to-max": {
+    "text": "Use {min} to {max}.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 35,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.use-on-this-card": {
+    "text": "Use on this card",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.mc-svg-editor.your-account-can-use-the-library-but-not": {
+    "text": "Your account can use the library but not change it. Ask an admin, or keep this icon in the card only.",
+    "note": "Shown in mc svg editor (svg-editor).",
+    "max": 165
+  },
+  "svg-editor.menu.add-point-after": {
+    "text": "Add point after",
+    "note": "Shown in menu (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.menu.align": {
+    "text": "Align",
+    "note": "Shown in menu (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.menu.arrange": {
+    "text": "Arrange",
+    "note": "Shown in menu (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.menu.centre-on-canvas": {
+    "text": "Centre on canvas",
+    "note": "Shown in menu (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.menu.copy-accent-path": {
+    "text": "Copy accent path",
+    "note": "Shown in menu (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.menu.copy-as-ha-path": {
+    "text": "Copy as HA path",
+    "note": "Shown in menu (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.menu.copy-svg": {
+    "text": "Copy SVG",
+    "note": "Shown in menu (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.menu.corner": {
+    "text": "Corner",
+    "note": "Shown in menu (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.menu.delete": {
+    "text": "Delete",
+    "note": "Shown in menu (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.menu.delete-point": {
+    "text": "Delete point",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.distribute-horizontally": {
+    "text": "Distribute horizontally",
+    "note": "Shown in menu (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.menu.distribute-vertically": {
+    "text": "Distribute vertically",
+    "note": "Shown in menu (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.menu.download-svg": {
+    "text": "Download .svg",
+    "note": "Shown in menu (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.menu.duplicate": {
+    "text": "Duplicate",
+    "note": "Shown in menu (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.menu.export-file": {
+    "text": "Export file",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.fit-to-safe-area": {
+    "text": "Fit to safe area",
+    "note": "Shown in menu (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.menu.flip-horizontally": {
+    "text": "Flip horizontally",
+    "note": "Shown in menu (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.menu.flip-vertically": {
+    "text": "Flip vertically",
+    "note": "Shown in menu (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.menu.import-file": {
+    "text": "Import file",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.it-is-already-there": {
+    "text": "It is already there.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.menu.make-accent": {
+    "text": "Make Accent",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.make-main": {
+    "text": "Make Main",
+    "note": "Shown in menu (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.menu.match-safe-area-edges": {
+    "text": "Match safe-area edges",
+    "note": "Shown in menu (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.menu.nothing-selected-pick-a-layer-or-click-a": {
+    "text": "Nothing selected. Pick a layer, or click a shape.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.menu.nothing-to-export-yet": {
+    "text": "Nothing to export yet.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.menu.path": {
+    "text": "Path",
+    "note": "Shown in menu (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.menu.relative-to": {
+    "text": "Relative to",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.rotate-90-degrees-anticlockwise": {
+    "text": "Rotate 90 degrees anticlockwise",
+    "note": "Shown in menu (svg-editor).",
+    "max": 50
+  },
+  "svg-editor.menu.rotate-90-degrees-clockwise": {
+    "text": "Rotate 90 degrees clockwise",
+    "note": "Shown in menu (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.menu.select-all": {
+    "text": "Select all",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.select-three-or-more-shapes-to-space": {
+    "text": "Select three or more shapes to space them evenly.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.menu.select-two-or-more-shapes-to-align-them": {
+    "text": "Select two or more shapes to align them to each other.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 90
+  },
+  "svg-editor.menu.smooth": {
+    "text": "Smooth",
+    "note": "Shown in menu (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.menu.split-here": {
+    "text": "Split here",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.menu.the-safe-area-is-hidden": {
+    "text": "The safe area is hidden.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.menu.this-is-the-last-point-of-an-open-line": {
+    "text": "This is the last point of an open line.",
+    "note": "Shown in menu (svg-editor).",
+    "max": 65
+  },
+  "svg-editor.menu.zoom-to-fit": {
+    "text": "Zoom to fit",
+    "note": "Shown in menu (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.model.ellipse": {
+    "text": "Ellipse",
+    "note": "Shown in model (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.model.line": {
+    "text": "Line",
+    "note": "Shown in model (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.model.path": {
+    "text": "Path",
+    "note": "Shown in model (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.model.polygon": {
+    "text": "Polygon",
+    "note": "Shown in model (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.model.rectangle": {
+    "text": "Rectangle",
+    "note": "Shown in model (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.model.star": {
+    "text": "Star",
+    "note": "Shown in model (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.a-group-can-t-go-inside-itself": {
+    "text": "A group can't go inside itself.",
+    "note": "Shown in names (svg-editor).",
+    "max": 50
+  },
+  "svg-editor.names.accent": {
+    "text": "Accent",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.align-bottom": {
+    "text": "Align bottom",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.align-centre": {
+    "text": "Align centre",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.align-left": {
+    "text": "Align left",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.align-middle": {
+    "text": "Align middle",
+    "note": "Shown in names (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.names.align-right": {
+    "text": "Align right",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.align-top": {
+    "text": "Align top",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.and-previous-and-next-point-c-corner-or": {
+    "text": "[ and ] previous and next point, C corner or smooth, H handle, Delete removes",
+    "note": "Shown in names (svg-editor).",
+    "max": 125
+  },
+  "svg-editor.names.arrow": {
+    "text": "Arrow",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.arrows-move-shift-arrows-move-far-alt": {
+    "text": "Arrows move, Shift+arrows move far, Alt+arrows move 0.1",
+    "note": "Shown in names (svg-editor).",
+    "max": 90
+  },
+  "svg-editor.names.backward": {
+    "text": "Backward",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.bring-to-front": {
+    "text": "Bring to front",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.canvas": {
+    "text": "Canvas",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.chevron": {
+    "text": "Chevron",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.circle": {
+    "text": "Circle",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.cloud": {
+    "text": "Cloud",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.combine": {
+    "text": "Combine",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.combined-c-shapes": {
+    "text": "Combined {c} shapes.",
+    "note": "Shown in names (svg-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.names.combined-shape": {
+    "text": "Combined shape",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.ctrl-d-duplicate-ctrl-g-group-shift-h": {
+    "text": "Ctrl+D duplicate, Ctrl+G group, Shift+H and Shift+V flip",
+    "note": "Shown in names (svg-editor).",
+    "max": 90
+  },
+  "svg-editor.names.ctrl-z-undo-ctrl-shift-z-redo-ctrl-enter": {
+    "text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library",
+    "note": "Shown in names (svg-editor).",
+    "max": 115
+  },
+  "svg-editor.names.drop": {
+    "text": "Drop",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.ellipse": {
+    "text": "Ellipse",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.exclude": {
+    "text": "Exclude",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.excluded-c-shapes": {
+    "text": "Excluded {c} shapes.",
+    "note": "Shown in names (svg-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.names.excluded-shape": {
+    "text": "Excluded shape",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.forward": {
+    "text": "Forward",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.heart": {
+    "text": "Heart",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.hexagon": {
+    "text": "Hexagon",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.in-a-number-field-ctrl-z-undoes-the": {
+    "text": "In a number field Ctrl+Z undoes the field. Press Enter first to undo the editor.",
+    "note": "Shown in names (svg-editor).",
+    "max": 130
+  },
+  "svg-editor.names.intersect": {
+    "text": "Intersect",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.intersected-c-shapes": {
+    "text": "Intersected {c} shapes.",
+    "note": "Shown in names (svg-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.names.intersected-shape": {
+    "text": "Intersected shape",
+    "note": "Shown in names (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.names.it-can-t-go-there": {
+    "text": "It can't go there.",
+    "note": "Shown in names (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.names.join": {
+    "text": "Join",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.knife": {
+    "text": "Knife",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.leaf": {
+    "text": "Leaf",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.main": {
+    "text": "Main",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.main-accent": {
+    "text": "Main + Accent",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.offset-path": {
+    "text": "Offset path",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.on-a-mac-tab-reaches-buttons-only-when": {
+    "text": "On a Mac, Tab reaches buttons only when full keyboard access is on.",
+    "note": "Shown in names (svg-editor).",
+    "max": 110
+  },
+  "svg-editor.names.outline-stroke": {
+    "text": "Outline stroke",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.plus": {
+    "text": "Plus",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.rounded-rectangle": {
+    "text": "Rounded rectangle",
+    "note": "Shown in names (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.names.safe-area": {
+    "text": "Safe area",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.selection": {
+    "text": "Selection",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.semicircle": {
+    "text": "Semicircle",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.send-to-back": {
+    "text": "Send to back",
+    "note": "Shown in names (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.names.shield": {
+    "text": "Shield",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.show-or-hide-panels-ctrl-or": {
+    "text": "Show or hide panels: Ctrl+\\ or ⌘\\",
+    "note": "Shown in names (svg-editor).",
+    "max": 55
+  },
+  "svg-editor.names.simplify": {
+    "text": "Simplify",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.speech-bubble": {
+    "text": "Speech bubble",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.split-at-point": {
+    "text": "Split at point",
+    "note": "Shown in names (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.names.star": {
+    "text": "Star",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.subtract": {
+    "text": "Subtract",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.subtracted-n-from-from": {
+    "text": "Subtracted {n, plural, one {# shape} other {# shapes}} from {from}.",
+    "note": "Shown in names (svg-editor).",
+    "max": 55,
+    "vars": {
+      "from": "The value that replaces from in the text.",
+      "n": "The count the text is about."
+    }
+  },
+  "svg-editor.names.subtracted-shape": {
+    "text": "Subtracted shape",
+    "note": "Shown in names (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.names.tab": {
+    "text": "Tab",
+    "note": "Shown in names (svg-editor).",
+    "max": 5
+  },
+  "svg-editor.names.tag": {
+    "text": "Tag",
+    "note": "Shown in names (svg-editor).",
+    "max": 5
+  },
+  "svg-editor.names.ticket": {
+    "text": "Ticket",
+    "note": "Shown in names (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.names.tools-v-select-a-points-p-pen-r": {
+    "text": "Tools: V select, A points, P pen, R rectangle, E ellipse, L line, G polygon, S shapes, B freehand",
+    "note": "Shown in names (svg-editor).",
+    "max": 160
+  },
+  "svg-editor.names.triangle": {
+    "text": "Triangle",
+    "note": "Shown in names (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.names.zoom-and-fit-0-grid-ctrl-snap-ctrl": {
+    "text": "Zoom: = and -, fit: 0, grid: Ctrl+', snap: Ctrl+;",
+    "note": "Shown in names (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.pathtools.couldn-t-load-the-path-tools-try-again": {
+    "text": "Couldn't load the path tools. Try again.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 70
+  },
+  "svg-editor.pathtools.join-works-on-open-paths-use-split-first": {
+    "text": "Join works on open paths. Use Split first to open a closed one.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 105
+  },
+  "svg-editor.pathtools.name-applied-before-points-before-after": {
+    "text": "{name} applied: {before} points before, {after} after.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 90,
+    "vars": {
+      "after": "The value that replaces after in the text.",
+      "before": "The value that replaces before in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.pathtools.select-a-closed-shape-open-lines-have-no": {
+    "text": "Select a closed shape. Open lines have no area.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.pathtools.select-a-shape-first": {
+    "text": "Select a shape first.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.pathtools.select-one-point-between-the-ends-with": {
+    "text": "Select one point between the ends with the Node tool.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 85
+  },
+  "svg-editor.pathtools.this-shape-has-no-stroke-to-outline": {
+    "text": "This shape has no stroke to outline.",
+    "note": "Shown in pathtools (svg-editor).",
+    "max": 60
+  },
+  "svg-editor.tools.first-corner-set-move-then-press-enter": {
+    "text": "First corner set. Move, then press Enter for the opposite corner.",
+    "note": "Shown in tools (svg-editor).",
+    "max": 105
+  },
+  "svg-editor.views.24-x-24": {
+    "text": "24 x 24",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.accent": {
+    "text": "Accent",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.accent-preview-colour": {
+    "text": "Accent preview colour",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.add-group": {
+    "text": "Add group",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.add-point-after": {
+    "text": "Add point after",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.adds-name-as-new-layers-your-drawing-is": {
+    "text": "Adds {name} as new layers. Your drawing is kept.",
+    "note": "Shown in views (svg-editor).",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.adds-size-kb": {
+    "text": "adds {size} KB",
+    "note": "Shown in views (svg-editor).",
+    "max": 25,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.align": {
+    "text": "Align",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.an-icon": {
+    "text": "An icon",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.an-icon-named-name-exists": {
+    "text": "An icon named {name} exists.",
+    "note": "Shown in views (svg-editor).",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.angle": {
+    "text": "Angle",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.arrow-keys-move-by-0-5-turn-on-snap-to": {
+    "text": "Arrow keys move by 0.5. Turn on Snap to use the grid size.",
+    "note": "Shown in views (svg-editor).",
+    "max": 105
+  },
+  "svg-editor.views.back-to-card-editor": {
+    "text": "Back to card editor",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.bevel": {
+    "text": "Bevel",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.blank": {
+    "text": "Blank",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.blank-canvas": {
+    "text": "Blank canvas",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.c-shapes-selected": {
+    "text": "{c} shapes selected",
+    "note": "Shown in views (svg-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "svg-editor.views.cancel": {
+    "text": "Cancel",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.cap": {
+    "text": "Cap",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.changes-every-card-that-uses-name": {
+    "text": "Changes every card that uses {name}.",
+    "note": "Shown in views (svg-editor).",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.changes-you-have-not-saved-are-lost": {
+    "text": "Changes you have not saved are lost.",
+    "note": "Shown in views (svg-editor).",
+    "max": 60
+  },
+  "svg-editor.views.click-and-drag-on-the-canvas-or-click": {
+    "text": "Click and drag on the canvas, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets each corner.",
+    "note": "Shown in views (svg-editor).",
+    "max": 235
+  },
+  "svg-editor.views.click-and-drag-or-click-two-corners-hold": {
+    "text": "Click and drag, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets a corner. Press S to pick another shape.",
+    "note": "Shown in views (svg-editor).",
+    "max": 255
+  },
+  "svg-editor.views.click-to-place-a-point-click-the-first": {
+    "text": "Click to place a point. Click the first point to close. Esc ends the path.",
+    "note": "Shown in views (svg-editor).",
+    "max": 120
+  },
+  "svg-editor.views.close": {
+    "text": "Close",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.close-path": {
+    "text": "Close path",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.copy-as-svg": {
+    "text": "Copy as SVG",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.corner": {
+    "text": "Corner",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.corner-radius": {
+    "text": "Corner radius",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.corners": {
+    "text": "Corners",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Shown in views (svg-editor).",
+    "max": 85
+  },
+  "svg-editor.views.create": {
+    "text": "Create",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.custom": {
+    "text": "Custom",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.custom-grid-size": {
+    "text": "Custom grid size",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.dark": {
+    "text": "Dark",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.decimals": {
+    "text": "Decimals",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.delete": {
+    "text": "Delete",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.delete-name": {
+    "text": "Delete {name}",
+    "note": "Shown in views (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.delete-point": {
+    "text": "Delete point",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.deleted-name-cards-that-use-it-show-the": {
+    "text": "Deleted {name}. Cards that use it show the default icon unless they keep a copy.",
+    "note": "Shown in views (svg-editor).",
+    "max": 130,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.details": {
+    "text": "Details",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.dismiss": {
+    "text": "Dismiss",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.document": {
+    "text": "Document",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.done": {
+    "text": "Done",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.down": {
+    "text": "Down",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.drag-a-box-or-click-two-corners-without": {
+    "text": "Drag a box, or click two corners. Without a mouse: arrows move the crosshair, Enter sets a corner.",
+    "note": "Shown in views (svg-editor).",
+    "max": 160
+  },
+  "svg-editor.views.drag-across-shapes-to-cut-them-along-the": {
+    "text": "Drag across shapes to cut them along the whole line. Arrows move the crosshair, Enter sets an end.",
+    "note": "Shown in views (svg-editor).",
+    "max": 160
+  },
+  "svg-editor.views.drag-to-draw-the-line-is-smoothed-when": {
+    "text": "Drag to draw. The line is smoothed when you let go.",
+    "note": "Shown in views (svg-editor).",
+    "max": 85
+  },
+  "svg-editor.views.drag-to-move-the-view-scroll-to-move": {
+    "text": "Drag to move the view. Scroll to move, Ctrl and scroll to zoom.",
+    "note": "Shown in views (svg-editor).",
+    "max": 105
+  },
+  "svg-editor.views.dual-tone": {
+    "text": "Dual-tone",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.duplicate": {
+    "text": "Duplicate",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.entity-off": {
+    "text": "Entity off",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.entity-on": {
+    "text": "Entity on",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.everything-painted-accent-is-painted": {
+    "text": "Everything painted Accent is painted Main instead. You can undo this.",
+    "note": "Shown in views (svg-editor).",
+    "max": 115
+  },
+  "svg-editor.views.export-file": {
+    "text": "Export file",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.export-import": {
+    "text": "Export / Import",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.fewer-decimals-make-a-smaller-icon": {
+    "text": "Fewer decimals make a smaller icon. Hidden layers are not saved.",
+    "note": "Shown in views (svg-editor).",
+    "max": 105
+  },
+  "svg-editor.views.fill": {
+    "text": "Fill",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.fill-and-stroke": {
+    "text": "Fill and stroke",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.fill-rule": {
+    "text": "Fill rule",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.finish-path": {
+    "text": "Finish path",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.fit-to-view": {
+    "text": "Fit to view",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.flat": {
+    "text": "Flat",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.flip-horizontally": {
+    "text": "Flip horizontally",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.flip-vertically": {
+    "text": "Flip vertically",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.for-example-mdi-lightbulb-home-assistant": {
+    "text": "For example mdi:lightbulb. Home Assistant icons and installed icon packs work.",
+    "note": "Shown in views (svg-editor).",
+    "max": 125
+  },
+  "svg-editor.views.getting-big-tidy-reduces-precision-and": {
+    "text": "Getting big. Tidy reduces precision and drops hidden layers.",
+    "note": "Shown in views (svg-editor).",
+    "max": 100
+  },
+  "svg-editor.views.give-the-icon-a-name": {
+    "text": "Give the icon a name.",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.grid-size": {
+    "text": "Grid {size}",
+    "note": "Shown in views (svg-editor).",
+    "max": 20,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.grid-size-2": {
+    "text": "Grid size",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.groups-can-be-4-levels-deep": {
+    "text": "Groups can be 4 levels deep.",
+    "note": "Shown in views (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.views.heavy-for-wall-tablets": {
+    "text": "Heavy for wall tablets",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.height": {
+    "text": "Height",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.hidden": {
+    "text": "Hidden",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.holes-where-shapes-overlap": {
+    "text": "Holes where shapes overlap",
+    "note": "Shown in views (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.views.home-assistant-would-show-little-of-this": {
+    "text": "Home Assistant would show little of this drawing. It draws one filled shape without strokes.",
+    "note": "Shown in views (svg-editor).",
+    "max": 150
+  },
+  "svg-editor.views.home-assistant-would-show-nothing-for": {
+    "text": "Home Assistant would show nothing for this drawing. It draws filled shapes only.",
+    "note": "Shown in views (svg-editor).",
+    "max": 130
+  },
+  "svg-editor.views.how-home-assistant-draws-a-saved-icon-in": {
+    "text": "How Home Assistant draws a saved icon in its own cards: one colour, filled shapes only.",
+    "note": "Shown in views (svg-editor).",
+    "max": 140
+  },
+  "svg-editor.views.how-to-install": {
+    "text": "How to install",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.icon-canvas": {
+    "text": "Icon canvas",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.icon-editor": {
+    "text": "Icon editor",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.icon-name": {
+    "text": "Icon name",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.image-editor": {
+    "text": "Image editor",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.import-file": {
+    "text": "Import file",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.in-handle-angle": {
+    "text": "In handle angle",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.in-handle-length": {
+    "text": "In handle length",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.in-home-assistant": {
+    "text": "In Home Assistant",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.in-home-assistant-at-px-pixels": {
+    "text": "In Home Assistant at {px} pixels",
+    "note": "Shown in views (svg-editor).",
+    "max": 55,
+    "vars": {
+      "px": "The value that replaces px in the text."
+    }
+  },
+  "svg-editor.views.in-magic-card": {
+    "text": "In Magic Card",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.inner-size": {
+    "text": "Inner size",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.insert": {
+    "text": "Insert",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.inspector-panel": {
+    "text": "Inspector panel",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.it-is-saved-in-the-library": {
+    "text": "It is saved in the library.",
+    "note": "Shown in views (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.views.join": {
+    "text": "Join",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.keep-a-copy-in-this-card": {
+    "text": "Keep a copy in this card",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.keep-accent": {
+    "text": "Keep Accent",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.keep-editing": {
+    "text": "Keep editing",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
+    "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
+    "note": "Shown in views (svg-editor).",
+    "max": 215
+  },
+  "svg-editor.views.layer": {
+    "text": "Layer",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.layers": {
+    "text": "Layers",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.layers-and-library-panel": {
+    "text": "Layers and library panel",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.leave": {
+    "text": "Leave",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.leave-without-saving": {
+    "text": "Leave without saving?",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.leave-without-using": {
+    "text": "Leave without using",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.left": {
+    "text": "Left",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.library": {
+    "text": "Library",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.light": {
+    "text": "Light",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.loading-the-icon-editor": {
+    "text": "Loading the icon editor",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.loading-the-image-editor": {
+    "text": "Loading the image editor",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.loading-your-icons": {
+    "text": "Loading your icons…",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.lock-ratio": {
+    "text": "Lock ratio",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.locked": {
+    "text": "Locked",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.main": {
+    "text": "Main",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.main-follows-the-entity-colour-accent": {
+    "text": "Main follows the entity colour. Accent follows the card's secondary colour. Colours come from the card, so the icon can change with state.",
+    "note": "Shown in views (svg-editor).",
+    "max": 225
+  },
+  "svg-editor.views.main-preview-colour": {
+    "text": "Main preview colour",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.make-c-main": {
+    "text": "Make {c, plural, one {# Accent layer} other {# Accent layers}} Main?",
+    "note": "Shown in views (svg-editor).",
+    "max": 45,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.views.make-main": {
+    "text": "Make Main",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.markup": {
+    "text": "markup",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.maximise": {
+    "text": "Maximise",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
+    "text": "Move: Alt+Up / Down. In or out of a group: Alt+Shift+Right / Left.",
+    "note": "Shown in views (svg-editor).",
+    "max": 110
+  },
+  "svg-editor.views.move-down": {
+    "text": "Move down",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.move-in-steps-of-4": {
+    "text": "Move in steps of 4",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.move-to": {
+    "text": "Move to…",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.move-up": {
+    "text": "Move up",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.move-window": {
+    "text": "Move window",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.my-icons": {
+    "text": "My icons",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.name": {
+    "text": "Name",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.name-used-in-the-library": {
+    "text": "Name used in the library",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.next": {
+    "text": "Next",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.no-layers-yet": {
+    "text": "No layers yet.",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.no-matches-for-query-clear-the-search": {
+    "text": "No matches for \"{query}\". Clear the search.",
+    "note": "Shown in views (svg-editor).",
+    "max": 70,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "svg-editor.views.no-saved-icons-yet-save-an-icon-here-and": {
+    "text": "No saved icons yet. Save an icon here and use it on any dashboard.",
+    "note": "Shown in views (svg-editor).",
+    "max": 110
+  },
+  "svg-editor.views.none": {
+    "text": "None",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.nothing-here-yet": {
+    "text": "Nothing here yet",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
+    "text": "Nothing selected. Pick a layer, or click a shape.",
+    "note": "Shown in views (svg-editor).",
+    "max": 80
+  },
+  "svg-editor.views.nudge": {
+    "text": "Nudge",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.ok": {
+    "text": "OK",
+    "note": "Shown in views (svg-editor).",
+    "max": 5
+  },
+  "svg-editor.views.open-file": {
+    "text": "Open file",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.open-path": {
+    "text": "Open path",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.out-handle-angle": {
+    "text": "Out handle angle",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.out-handle-length": {
+    "text": "Out handle length",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.panel": {
+    "text": "Panel",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.paste-some-svg-first": {
+    "text": "Paste some SVG first.",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.paste-svg": {
+    "text": "Paste SVG",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.pasted-and-opened-files-are-cleaned": {
+    "text": "Pasted and opened files are cleaned first. Scripts, images and links are removed.",
+    "note": "Shown in views (svg-editor).",
+    "max": 130
+  },
+  "svg-editor.views.path": {
+    "text": "Path",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.pick-a-shape": {
+    "text": "Pick a shape",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.pick-a-tool-on-the-left-or-press-p-to": {
+    "text": "Pick a tool on the left, or press P to draw.",
+    "note": "Shown in views (svg-editor).",
+    "max": 75
+  },
+  "svg-editor.views.pick-mdi-or-a-pack": {
+    "text": "Pick MDI or a pack",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.point-index-of-count": {
+    "text": "Point {index} of {count}",
+    "note": "Shown in views (svg-editor).",
+    "max": 40,
+    "vars": {
+      "count": "The value that replaces count in the text.",
+      "index": "The value that replaces index in the text."
+    }
+  },
+  "svg-editor.views.polygon-or-star": {
+    "text": "Polygon or star",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.position-and-size": {
+    "text": "Position and size",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.preview": {
+    "text": "Preview",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.preview-at-px-pixels": {
+    "text": "Preview at {px} pixels",
+    "note": "Shown in views (svg-editor).",
+    "max": 40,
+    "vars": {
+      "px": "The value that replaces px in the text."
+    }
+  },
+  "svg-editor.views.previous": {
+    "text": "Previous",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.reading": {
+    "text": "Reading…",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.redo": {
+    "text": "Redo",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.reload": {
+    "text": "Reload",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.rename": {
+    "text": "Rename",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.resize-window": {
+    "text": "Resize window",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.restore-size": {
+    "text": "Restore size",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.reverse-direction": {
+    "text": "Reverse direction",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.right": {
+    "text": "Right",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.rotate-15": {
+    "text": "Rotate -15",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.rotate-15-2": {
+    "text": "Rotate +15",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.rotate-90-degrees-anticlockwise": {
+    "text": "Rotate 90 degrees anticlockwise",
+    "note": "Shown in views (svg-editor).",
+    "max": 50
+  },
+  "svg-editor.views.rotate-90-degrees-clockwise": {
+    "text": "Rotate 90 degrees clockwise",
+    "note": "Shown in views (svg-editor).",
+    "max": 45
+  },
+  "svg-editor.views.round": {
+    "text": "Round",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.save": {
+    "text": "Save",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.save-as-a-copy": {
+    "text": "Save as a copy",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.save-as-new": {
+    "text": "Save as new",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.save-current-icon": {
+    "text": "Save current icon",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.save-to-library": {
+    "text": "Save to library",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.saved": {
+    "text": "Saved",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.search-my-icons": {
+    "text": "Search my icons",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.search-the-home-assistant-icons-and": {
+    "text": "Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.",
+    "note": "Shown in views (svg-editor).",
+    "max": 150
+  },
+  "svg-editor.views.select-all": {
+    "text": "Select all",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.selected-point": {
+    "text": "Selected point",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.shape-actions": {
+    "text": "Shape actions",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.shape-options": {
+    "text": "Shape options",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.shapes": {
+    "text": "Shapes",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.sharp": {
+    "text": "Sharp",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.short-no-slashes-shown-in-the-list": {
+    "text": "Short, no slashes. Shown in the list.",
+    "note": "Shown in views (svg-editor).",
+    "max": 60
+  },
+  "svg-editor.views.shortcuts": {
+    "text": "Shortcuts",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.show-20-x-20-safe-area": {
+    "text": "Show 20 x 20 safe area",
+    "note": "Shown in views (svg-editor).",
+    "max": 40
+  },
+  "svg-editor.views.show-nudge-pad": {
+    "text": "Show nudge pad",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.size-32-kb-c": {
+    "text": "{size} / 32 KB · {c, plural, one {# point} other {# points}}",
+    "note": "Shown in views (svg-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The count the text is about.",
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.size-kb": {
+    "text": "{size} KB",
+    "note": "Shown in views (svg-editor).",
+    "max": 15,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.size-of-the-icon-markup-in-your": {
+    "text": "Size of the icon markup in your dashboard",
+    "note": "Shown in views (svg-editor).",
+    "max": 70
+  },
+  "svg-editor.views.skip-to-canvas": {
+    "text": "Skip to canvas",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.skip-to-inspector": {
+    "text": "Skip to inspector",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.skip-to-point-fields": {
+    "text": "Skip to point fields",
+    "note": "Shown in views (svg-editor).",
+    "max": 35
+  },
+  "svg-editor.views.smooth": {
+    "text": "Smooth",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.snap-to-grid": {
+    "text": "Snap to grid",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.snapping-and-the-arrow-keys-move-by-this": {
+    "text": "Snapping and the arrow keys move by this size.",
+    "note": "Shown in views (svg-editor).",
+    "max": 75
+  },
+  "svg-editor.views.solid": {
+    "text": "Solid",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.square": {
+    "text": "Square",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.star": {
+    "text": "Star",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.start-from": {
+    "text": "Start from…",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.start-over": {
+    "text": "Start over?",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.start-over-2": {
+    "text": "Start over",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.state-icons-win-over-your-drawing-remove": {
+    "text": "State icons win over your drawing. Remove them to see your drawing.",
+    "note": "Shown in views (svg-editor).",
+    "max": 110
+  },
+  "svg-editor.views.stored-in-magic-card-utils-also": {
+    "text": "Stored in Magic Card Utils. Also available in Home Assistant as mcu:<name>.",
+    "note": "Shown in views (svg-editor).",
+    "max": 120
+  },
+  "svg-editor.views.stroke": {
+    "text": "Stroke",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.svg": {
+    "text": ".svg",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.svg-markup": {
+    "text": "SVG markup",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.tab-walks-the-points-and-jump-to-the": {
+    "text": "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.",
+    "note": "Shown in views (svg-editor).",
+    "max": 170
+  },
+  "svg-editor.views.the-animated-icon-you-picked-is-removed": {
+    "text": "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.",
+    "note": "Shown in views (svg-editor).",
+    "max": 160
+  },
+  "svg-editor.views.the-animation-you-set-on-this-icon": {
+    "text": "The animation you set on This icon follows your drawing.",
+    "note": "Shown in views (svg-editor).",
+    "max": 90
+  },
+  "svg-editor.views.the-icon-editor-could-not-load-check": {
+    "text": "The icon editor could not load. Check your connection and try again.",
+    "note": "Shown in views (svg-editor).",
+    "max": 110
+  },
+  "svg-editor.views.the-image-editor-could-not-load-check": {
+    "text": "The image editor could not load. Check your connection and try again.",
+    "note": "Shown in views (svg-editor).",
+    "max": 115
+  },
+  "svg-editor.views.this-card-is-linked-to-a-template-your": {
+    "text": "This card is linked to a template. Your drawing is used on this card only.",
+    "note": "Shown in views (svg-editor).",
+    "max": 120
+  },
+  "svg-editor.views.this-icon-was-changed-somewhere-else": {
+    "text": "This icon was changed somewhere else.",
+    "note": "Shown in views (svg-editor).",
+    "max": 60
+  },
+  "svg-editor.views.this-is-not-used-on-the-card-yet": {
+    "text": "This is not used on the card yet.",
+    "note": "Shown in views (svg-editor).",
+    "max": 55
+  },
+  "svg-editor.views.this-module-will-use-your-drawing": {
+    "text": "This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.",
+    "note": "Shown in views (svg-editor).",
+    "max": 170,
+    "vars": {
+      "icon": "The value that replaces icon in the text."
+    }
+  },
+  "svg-editor.views.this-module-will-use-your-drawing-2": {
+    "text": "This module will use your drawing. Colours, Draw and Morph effects keep working on it.",
+    "note": "Shown in views (svg-editor).",
+    "max": 140
+  },
+  "svg-editor.views.tidy": {
+    "text": "Tidy",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.tidy-now": {
+    "text": "Tidy now",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.tools": {
+    "text": "Tools",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.try-again": {
+    "text": "Try again",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.type": {
+    "text": "Type",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.undo": {
+    "text": "Undo",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.undo-brings-the-old-drawing-back": {
+    "text": "Undo brings the old drawing back.",
+    "note": "Shown in views (svg-editor).",
+    "max": 55
+  },
+  "svg-editor.views.units": {
+    "text": "units",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.up": {
+    "text": "Up",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.update-name": {
+    "text": "Update \"{name}\"",
+    "note": "Shown in views (svg-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.use-follows-the-library-change-lamp-and": {
+    "text": "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.",
+    "note": "Shown in views (svg-editor).",
+    "max": 185
+  },
+  "svg-editor.views.use-holes-when-overlapping-parts-should": {
+    "text": "Use holes when overlapping parts should cut each other out.",
+    "note": "Shown in views (svg-editor).",
+    "max": 95
+  },
+  "svg-editor.views.use-it-on-this-card-to-keep-your-work-or": {
+    "text": "Use it on this card to keep your work, or leave without using it.",
+    "note": "Shown in views (svg-editor).",
+    "max": 105
+  },
+  "svg-editor.views.use-on-this-card": {
+    "text": "Use on this card",
+    "note": "Shown in views (svg-editor).",
+    "max": 30
+  },
+  "svg-editor.views.use-this-icon": {
+    "text": "Use this icon",
+    "note": "Shown in views (svg-editor).",
+    "max": 25
+  },
+  "svg-editor.views.use-this-svg": {
+    "text": "Use this SVG",
+    "note": "Shown in views (svg-editor).",
+    "max": 20
+  },
+  "svg-editor.views.use-two-colours-main-and-accent": {
+    "text": "Use two colours: Main and Accent.",
+    "note": "Shown in views (svg-editor).",
+    "max": 55
+  },
+  "svg-editor.views.used-as-mcu-id": {
+    "text": "Used as mcu:{id}",
+    "note": "Shown in views (svg-editor).",
+    "max": 30,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "svg-editor.views.what-do-you-want-to-start-from": {
+    "text": "What do you want to start from?",
+    "note": "Shown in views (svg-editor).",
+    "max": 50
+  },
+  "svg-editor.views.width": {
+    "text": "Width",
+    "note": "Shown in views (svg-editor).",
+    "max": 10
+  },
+  "svg-editor.views.without-a-copy-the-card-shows-the": {
+    "text": "Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.",
+    "note": "Shown in views (svg-editor).",
+    "max": 150
+  },
+  "svg-editor.views.working": {
+    "text": "Working…",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.x": {
+    "text": "X",
+    "note": "Shown in views (svg-editor).",
+    "max": 5
+  },
+  "svg-editor.views.y": {
+    "text": "Y",
+    "note": "Shown in views (svg-editor).",
+    "max": 5
+  },
+  "svg-editor.views.zoom-in": {
+    "text": "Zoom in",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  },
+  "svg-editor.views.zoom-out": {
+    "text": "Zoom out",
+    "note": "Shown in views (svg-editor).",
+    "max": 15
+  }
+}

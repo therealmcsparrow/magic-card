@@ -81,13 +81,13 @@ function toKind(s: Shape, k: Which, kind: Kind): Shape {
 }
 
 const kindItems = (): Array<[Kind, string]> => [
-  ['none', t('None')],
-  ['main', t('Main')],
-  ['accent', t('Accent')],
-  ['colour', t('Custom colour')],
-  ['theme', t('Theme colour')],
-  ['linear', t('Linear gradient')],
-  ['radial', t('Radial gradient')],
+  ['none', t('image-editor.paint-ui.none')],
+  ['main', t('image-editor.paint-ui.main')],
+  ['accent', t('image-editor.paint-ui.accent')],
+  ['colour', t('image-editor.paint-ui.custom-colour')],
+  ['theme', t('image-editor.paint-ui.theme-colour')],
+  ['linear', t('image-editor.paint-ui.linear-gradient')],
+  ['radial', t('image-editor.paint-ui.radial-gradient')],
 ];
 
 // ── small controls ──
@@ -166,7 +166,7 @@ function colour(x: ImageExt, id: string, label: string, value: string, set: (v: 
       }}
     ></mc-color-picker>`;
   x.needColours();
-  return textField(x, id, label, value, t('Use a colour like #3f6fb5.'), (raw) => {
+  return textField(x, id, label, value, t('image-editor.paint-ui.use-a-colour-like-3f6fb5'), (raw) => {
     const v = solidOf(raw);
     if (!v) return undefined;
     if (v !== value) set(v);
@@ -177,14 +177,14 @@ function colour(x: ImageExt, id: string, label: string, value: string, set: (v: 
 /** Humanised name of a theme variable: --primary-text-color is "Primary text colour". */
 const themeLabel = (n: string): string => {
   const w = n.slice(2).replace(/-color$/, '').replace(/-/g, ' ');
-  return t('{name} colour', { name: w.charAt(0).toUpperCase() + w.slice(1) });
+  return t('image-editor.paint-ui.name-colour', { name: w.charAt(0).toUpperCase() + w.slice(1) });
 };
 
 function theme(x: ImageExt, id: string, value: string, set: (v: string) => void): TemplateResult {
   const cur = themeOf(value) ?? '--primary-color';
   const names = IMAGE_THEME_COLOURS.includes(cur) ? [...IMAGE_THEME_COLOURS] : [...IMAGE_THEME_COLOURS, cur];
-  return html`${pick(`${id}-theme`, t('Theme colour'), cur, names.map((n) => [n, `${themeLabel(n)} (${n})`]), (n) => set(`var(${n})`))}
-    ${textField(x, `${id}-theme-name`, t('Or type a name'), '', t('Use a name that starts with two dashes, like --my-colour.'), (raw) => {
+  return html`${pick(`${id}-theme`, t('image-editor.paint-ui.theme-colour'), cur, names.map((n) => [n, `${themeLabel(n)} (${n})`]), (n) => set(`var(${n})`))}
+    ${textField(x, `${id}-theme-name`, t('image-editor.paint-ui.or-type-a-name'), '', t('image-editor.paint-ui.use-a-name-that-starts-with-two-dashes'), (raw) => {
       const n = raw.trim();
       if (!n) return '';
       if (!THEME_VAR_NAME_RE.test(n)) return undefined;
@@ -218,10 +218,10 @@ function stopRow(x: ImageExt, k: Which, g: Grad, i: number): TemplateResult {
   const kind = kindOfValue(st.c);
   const setStop = (patch: Partial<Grad['s'][number]>, label: string, merge?: string): void => editGrad(x, k, (q) => ({ ...q, s: q.s.map((s, j) => (j === i ? { ...s, ...patch } : s)) }), label, merge);
   const set = (c: string): void => setStop({ c }, 'Stop colour');
-  return html`<div class="stop" role="group" aria-label=${t('Stop {n}', { n })}>
-    ${num(`${id}-pos`, t('Stop {n} position (%)', { n }), st.o * 100, (v) => setStop({ o: Math.min(1, Math.max(0, Math.round(v * 10) / 1000)) }, 'Stop position', `stop${i}`), { min: 0, max: 100, step: 1 })}
-    ${pick(`${id}-kind`, t('Stop {n} colour', { n }), kind, stopColourItems(), (v) => set(v === 'main' ? MAIN : v === 'accent' ? ACCENT : v === 'colour' ? (kind === 'colour' ? st.c : BLUE) : kind === 'theme' ? st.c : 'var(--primary-color)'))}
-    ${solidBody(x, id, t('Stop {n} colour', { n }), kind, st.c, set)}
+  return html`<div class="stop" role="group" aria-label=${t('image-editor.paint-ui.stop-n', { n })}>
+    ${num(`${id}-pos`, t('image-editor.paint-ui.stop-n-position', { n }), st.o * 100, (v) => setStop({ o: Math.min(1, Math.max(0, Math.round(v * 10) / 1000)) }, 'Stop position', `stop${i}`), { min: 0, max: 100, step: 1 })}
+    ${pick(`${id}-kind`, t('image-editor.paint-ui.stop-n-colour', { n }), kind, stopColourItems(), (v) => set(v === 'main' ? MAIN : v === 'accent' ? ACCENT : v === 'colour' ? (kind === 'colour' ? st.c : BLUE) : kind === 'theme' ? st.c : 'var(--primary-color)'))}
+    ${solidBody(x, id, t('image-editor.paint-ui.stop-n-colour', { n }), kind, st.c, set)}
     ${removeStop(x, k, g, i)}
   </div>`;
 }
@@ -229,8 +229,8 @@ function stopRow(x: ImageExt, k: Which, g: Grad, i: number): TemplateResult {
 /** The remove button of a stop; when it cannot be used the reason is its description, not only a tooltip. */
 function removeStop(x: ImageExt, k: Which, g: Grad, i: number): TemplateResult {
   const n = i + 1;
-  const label = t('Remove stop {n}', { n });
-  const why = g.s.length <= 2 ? t('A gradient needs at least 2 stops.') : undefined;
+  const label = t('image-editor.paint-ui.remove-stop-n', { n });
+  const why = g.s.length <= 2 ? t('image-editor.paint-ui.a-gradient-needs-at-least-2-stops') : undefined;
   const id = `rm-${k}-${i}`;
   return html`<button type="button" class="icon-btn sm" aria-label=${label} title=${why ? `${label}. ${why}` : label} aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? `${id}-why` : nothing} @click=${() => {
     if (!why) editGrad(x, k, (q) => ({ ...q, s: q.s.filter((_, j) => j !== i) }), 'Remove stop');
@@ -246,20 +246,20 @@ function gradientBody(x: ImageExt, k: Which, s: Shape, g: Grad): TemplateResult 
   const more = g.s.length < MAX_STOPS;
   return html`<div class="grad">
     ${lin
-      ? num(`${k}-angle`, t('Angle (degrees)'), angleOf(g.p, b.w, b.h), (d) => editGrad(x, k, (q, bx) => ({ ...q, p: linearPts(((d % 360) + 360) % 360, bx.w, bx.h) }), 'Gradient angle', `angle-${k}`), { step: 1 })
+      ? num(`${k}-angle`, t('image-editor.paint-ui.angle-degrees'), angleOf(g.p, b.w, b.h), (d) => editGrad(x, k, (q, bx) => ({ ...q, p: linearPts(((d % 360) + 360) % 360, bx.w, bx.h) }), 'Gradient angle', `angle-${k}`), { step: 1 })
       : html`<div class="grid2">
-          ${num(`${k}-cx`, t('Centre X (%)'), g.p[0] * 100, (v) => editGrad(x, k, (q) => ({ ...q, p: [v / 100, q.p[1], q.p[2]] }), 'Gradient centre', `cx-${k}`), { step: 1 })}
-          ${num(`${k}-cy`, t('Centre Y (%)'), g.p[1] * 100, (v) => editGrad(x, k, (q) => ({ ...q, p: [q.p[0], v / 100, q.p[2]] }), 'Gradient centre', `cy-${k}`), { step: 1 })}
-          ${num(`${k}-r`, t('Radius (%)'), g.p[2] * 100, (v) => editGrad(x, k, (q) => ({ ...q, p: [q.p[0], q.p[1], Math.max(0.01, v / 100)] }), 'Gradient radius', `r-${k}`), { min: 1, step: 1 })}
+          ${num(`${k}-cx`, t('image-editor.paint-ui.centre-x'), g.p[0] * 100, (v) => editGrad(x, k, (q) => ({ ...q, p: [v / 100, q.p[1], q.p[2]] }), 'Gradient centre', `cx-${k}`), { step: 1 })}
+          ${num(`${k}-cy`, t('image-editor.paint-ui.centre-y'), g.p[1] * 100, (v) => editGrad(x, k, (q) => ({ ...q, p: [q.p[0], v / 100, q.p[2]] }), 'Gradient centre', `cy-${k}`), { step: 1 })}
+          ${num(`${k}-r`, t('image-editor.paint-ui.radius'), g.p[2] * 100, (v) => editGrad(x, k, (q) => ({ ...q, p: [q.p[0], q.p[1], Math.max(0.01, v / 100)] }), 'Gradient radius', `r-${k}`), { min: 1, step: 1 })}
         </div>`}
     <div class="grad-strip" aria-hidden="true" style=${`background:${strip(g)}`}></div>
     <div class="stops">${g.s.map((_, i) => stopRow(x, k, g, i))}</div>
     ${button({
-      label: t('Add stop'),
+      label: t('image-editor.paint-ui.add-stop'),
       glyph: 'add',
       variant: 'secondary',
       size: 'sm',
-      disabledReason: more ? undefined : t('At most 8 stops.'),
+      disabledReason: more ? undefined : t('image-editor.paint-ui.at-most-8-stops'),
       onClick: () =>
         editGrad(x, k, (q) => {
           const ss = stopsOf(q);
@@ -279,7 +279,7 @@ function gradientBody(x: ImageExt, k: Which, s: Shape, g: Grad): TemplateResult 
 export function paintRow(x: ImageExt, s: Shape, k: Which): TemplateResult {
   const kind = kindOf(s, k);
   const v = paintOf(s, k);
-  const label = k === 'fill' ? t('Fill') : t('Stroke');
+  const label = k === 'fill' ? t('image-editor.paint-ui.fill') : t('image-editor.paint-ui.stroke');
   const set = (c: string): void => {
     x.which = k;
     x.edit((q) => (q[k] === 'none' ? q : withLook(q, { [k]: c })), `Change ${k}`);
@@ -290,15 +290,15 @@ export function paintRow(x: ImageExt, s: Shape, k: Which): TemplateResult {
       x.problemAt = undefined;
       x.edit((q) => toKind(q, k, nk as Kind), `Change ${k}`);
     })}
-    ${typeof v === 'string' ? solidBody(x, k, t('{paint} colour', { paint: label }), kind, v, set) : gradientBody(x, k, s, v)}
+    ${typeof v === 'string' ? solidBody(x, k, t('image-editor.paint-ui.paint-colour', { paint: label }), kind, v, set) : gradientBody(x, k, s, v)}
   </div>`;
 }
 
 const dashKinds = (): Array<[string, string]> => [
-  ['solid', t('Solid')],
-  ['dashed', t('Dashed')],
-  ['dotted', t('Dotted')],
-  ['custom', t('Custom')],
+  ['solid', t('image-editor.paint-ui.solid')],
+  ['dashed', t('image-editor.paint-ui.dashed')],
+  ['dotted', t('image-editor.paint-ui.dotted')],
+  ['custom', t('image-editor.paint-ui.custom')],
 ];
 const presets = (w: number): Record<string, number[]> => ({ dashed: [Math.round(w * 300) / 100, Math.round(w * 200) / 100], dotted: [Math.round(w * 100) / 100, Math.round(w * 200) / 100] });
 
@@ -311,25 +311,25 @@ export function lookRows(x: ImageExt, s: Shape): TemplateResult {
   const pre = presets(s.width);
   const dk = !d.length ? 'solid' : dashText(d) === dashText(pre.dashed) ? 'dashed' : dashText(d) === dashText(pre.dotted) ? 'dotted' : 'custom';
   const showList = dk === 'custom' || (x.dashList === s.id && d.length > 0);
-  return html`${slider({ id: 'look-opacity', label: t('Opacity'), min: 0, max: 100, step: 1, value: op, unit: '%', onInput: setOpacity, onChange: setOpacity })}
-    <p class="help">${t('Opacity fades the whole layer.')}</p>
+  return html`${slider({ id: 'look-opacity', label: t('image-editor.paint-ui.opacity'), min: 0, max: 100, step: 1, value: op, unit: '%', onInput: setOpacity, onChange: setOpacity })}
+    <p class="help">${t('image-editor.paint-ui.opacity-fades-the-whole-layer')}</p>
     ${on
       ? html`<details class="more" ?open=${d.length > 0}>
-          <summary>${t('More style options')}</summary>
-          ${pick('look-dash', t('Dashes'), showList ? 'custom' : dk, dashKinds(), (v) => {
+          <summary>${t('image-editor.paint-ui.more-style-options')}</summary>
+          ${pick('look-dash', t('image-editor.paint-ui.dashes'), showList ? 'custom' : dk, dashKinds(), (v) => {
             x.dashList = v === 'custom' ? s.id : undefined;
             x.problemAt = undefined;
             x.edit((q) => withLook(q, v === 'solid' ? { dash: undefined, offset: undefined } : v === 'custom' ? { dash: q.look?.dash?.length ? q.look.dash : [8, 4] } : { dash: presets(q.width)[v] }), 'Dashes');
           })}
           ${showList
-            ? textField(x, 'look-dash-list', t('Dash list'), dashText(d), t('Use up to 8 numbers separated by spaces, like 8 4.'), (raw) => {
+            ? textField(x, 'look-dash-list', t('image-editor.paint-ui.dash-list'), dashText(d), t('image-editor.paint-ui.use-up-to-8-numbers-separated-by-spaces'), (raw) => {
                 const l = parseDash(raw);
                 if (l === 'bad' || !l.length) return undefined;
                 x.edit((q) => withLook(q, { dash: l }), 'Dashes', 'dash-list');
                 return dashText(l);
               })
             : nothing}
-          ${d.length ? num('look-dash-offset', t('Dash offset'), s.look?.offset ?? 0, (n) => x.edit((q) => withLook(q, { offset: n }), 'Dash offset', 'dash-offset'), { step: 1 }) : nothing}
+          ${d.length ? num('look-dash-offset', t('image-editor.paint-ui.dash-offset'), s.look?.offset ?? 0, (n) => x.edit((q) => withLook(q, { offset: n }), 'Dash offset', 'dash-offset'), { step: 1 }) : nothing}
         </details>`
       : nothing}`;
 }
@@ -346,11 +346,11 @@ interface Pt {
 function handlePoints(g: Grad, b: Box): Pt[] {
   const lin = g.t === 'linear';
   const out: Pt[] = [
-    { key: 'a', h: 'a', label: lin ? t('Gradient start') : t('Gradient centre'), at: handleAt(g, b, 'a') },
-    { key: 'b', h: 'b', label: lin ? t('Gradient end') : t('Gradient radius'), at: handleAt(g, b, 'b') },
+    { key: 'a', h: 'a', label: lin ? t('image-editor.paint-ui.gradient-start') : t('image-editor.paint-ui.gradient-centre'), at: handleAt(g, b, 'a') },
+    { key: 'b', h: 'b', label: lin ? t('image-editor.paint-ui.gradient-end') : t('image-editor.paint-ui.gradient-radius'), at: handleAt(g, b, 'b') },
   ];
   g.s.forEach((s, i) => {
-    if (s.o > 0 && s.o < 1) out.push({ key: `s${i}`, h: i, label: t('Gradient stop {n} of {count}', { n: i + 1, count: g.s.length }), at: handleAt(g, b, i) });
+    if (s.o > 0 && s.o < 1) out.push({ key: `s${i}`, h: i, label: t('image-editor.paint-ui.gradient-stop-n-of-count', { n: i + 1, count: g.s.length }), at: handleAt(g, b, i) });
   });
   return out;
 }
@@ -423,7 +423,7 @@ export function handles(x: ImageExt): TemplateResult | typeof nothing {
           const step = e.shiftKey ? 10 : 1;
           const to: [number, number] = [p.at[0] + dx * step, p.at[1] + dy * step];
           move(p, to, false, `handle-${p.key}`);
-          sh.say(t('{label}: x {x}, y {y}', { label: p.label, x: Math.round(to[0]), y: Math.round(to[1]) }));
+          sh.say(t('image-editor.paint-ui.label-x-x-y-y', { label: p.label, x: Math.round(to[0]), y: Math.round(to[1]) }));
         }}
       ></button>`,
     )}

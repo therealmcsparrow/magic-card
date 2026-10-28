@@ -10,9 +10,9 @@ import { REPO, sourceHash } from './harness';
 const read = (rel: string) => fs.readFileSync(path.join(REPO, rel), 'utf8');
 
 describe('i18n-keys contract, constants', () => {
-  it('AC1 has no import, so the tools can transpile and run the file alone', () => {
+  it('AC1 has only type imports, so the tools can transpile and run the file alone', () => {
     const code = read('src/contracts/i18n-keys.ts').replace(/\/\*[\s\S]*?\*\//g, '');
-    expect(code).not.toMatch(/^\s*import\b/m);
+    expect(code).not.toMatch(/^\s*import\b(?!\s+type\b)/m);
     expect(code).not.toMatch(/\brequire\(/);
   });
 

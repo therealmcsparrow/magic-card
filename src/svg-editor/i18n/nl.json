@@ -1,432 +1,1946 @@
 {
-  ".svg": ".svg",
-  "24 x 24": "24 x 24",
-  "A group can't go inside itself.": "Een groep kan niet in zichzelf.",
-  "Accent": "Accent",
-  "Accent preview colour": "Voorbeeldkleur Accent",
-  "Add group": "Groep toevoegen",
-  "Add point after": "Punt toevoegen erna",
-  "Adds {name} as new layers. Your drawing is kept.": "Voegt {name} toe als nieuwe lagen. Je tekening blijft behouden.",
-  "Align": "Uitlijnen",
-  "Align bottom": "Onderkant uitlijnen",
-  "Align centre": "Midden uitlijnen",
-  "Align left": "Links uitlijnen",
-  "Align middle": "Verticaal midden uitlijnen",
-  "Align right": "Rechts uitlijnen",
-  "Align top": "Bovenkant uitlijnen",
-  "Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.": "{c, plural, one {# vorm} other {# vormen}} uitgelijnd op {edge, select, left {links} centre {het midden} right {rechts} top {boven} middle {het verticale midden} other {onder}}.",
-  "An icon": "Een pictogram",
-  "An icon named {name} exists.": "Er bestaat al een pictogram met de naam {name}.",
-  "Angle": "Hoek",
-  "Arrange": "Volgorde",
-  "Arrow": "Pijl",
-  "Arrow keys move by 0.5. Turn on Snap to use the grid size.": "De pijltjestoetsen verplaatsen met 0,5. Zet Uitlijnen op raster aan om de rastergrootte te gebruiken.",
-  "Arrows move, Shift+arrows move far, Alt+arrows move 0.1": "Pijltjes verplaatsen, Shift+pijltjes ver, Alt+pijltjes met 0,1",
-  "Back to card editor": "Terug naar kaarteditor",
-  "Backward": "Eén naar achteren",
-  "Bevel": "Afgeschuind",
-  "Blank": "Leeg",
-  "Blank canvas": "Leeg tekenvlak",
-  "Bring to front": "Naar voren",
-  "Cancel": "Annuleren",
-  "Canvas": "Canvas",
-  "Cap": "Uiteinde",
-  "Centre on canvas": "Centreren op canvas",
-  "Changed since saved": "Gewijzigd sinds opslaan",
-  "Changes every card that uses {name}.": "Wijzigt elke kaart die {name} gebruikt.",
-  "Changes you have not saved are lost.": "Wijzigingen die je niet hebt opgeslagen, gaan verloren.",
-  "Chevron": "Punthaak",
-  "Circle": "Cirkel",
-  "Click and drag on the canvas, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets each corner.": "Klik en sleep op het canvas, of klik twee hoeken aan. Houd Shift ingedrukt voor een vierkant. Zonder muis: pijltjes verplaatsen het richtkruis, Enter zet elke hoek vast.",
-  "Click and drag, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets a corner. Press S to pick another shape.": "Klik en sleep, of klik twee hoeken aan. Houd Shift ingedrukt voor een vierkant. Zonder muis: pijltjes verplaatsen het richtkruis, Enter zet een hoek vast. Druk op S om een andere vorm te kiezen.",
-  "Click to place a point. Click the first point to close. Esc ends the path.": "Klik om een punt te plaatsen. Klik op het eerste punt om te sluiten. Esc beëindigt het pad.",
-  "Close": "Sluiten",
-  "Close path": "Pad sluiten",
-  "Cloud": "Wolk",
-  "Collapse {name}": "{name} inklappen",
-  "Colours were replaced by the card's colours: Main and Accent.": "Kleuren zijn vervangen door de kleuren van de kaart: Hoofd en Accent.",
-  "Combine": "Samenvoegen",
-  "Combined shape": "Samengevoegde vorm",
-  "Combined {c} shapes.": "{c} vormen samengevoegd.",
-  "Copied the SVG.": "De SVG is gekopieerd.",
-  "Copied the accent path.": "Het accentpad is gekopieerd.",
-  "Copied the path and viewBox, for Home Assistant custom icon sets. See the docs.": "Het pad en de viewBox zijn gekopieerd, voor eigen pictogramsets in Home Assistant. Zie de documentatie.",
-  "Copy SVG": "SVG kopiëren",
-  "Copy accent path": "Accentpad kopiëren",
-  "Copy as HA path": "Kopiëren als HA-pad",
-  "Copy as SVG": "Kopiëren als SVG",
-  "Corner": "Hoek",
-  "Corner radius": "Hoekstraal",
-  "Corners": "Hoeken",
-  "Could not copy. Select the markup and copy it yourself.": "Kopiëren is niet gelukt. Selecteer de opmaak en kopieer die zelf.",
-  "Could not find \"{name}\". Check the name, or wait for the icon packs to load.": "\"{name}\" is niet gevonden. Controleer de naam, of wacht tot de pictogrampakketten geladen zijn.",
-  "Could not load that icon.": "Dat pictogram kon niet worden geladen.",
-  "Could not load the export and import tool. Try again.": "De exporteer- en importeertool kon niet worden geladen. Probeer het opnieuw.",
-  "Could not reach Magic Card Utils. Your work is safe.": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
-  "Could not read that file.": "Dat bestand kon niet worden gelezen.",
-  "Could not save {name}. Try again.": "{name} kon niet worden opgeslagen. Probeer het opnieuw.",
-  "Couldn't load the path tools. Try again.": "De padgereedschappen konden niet worden geladen. Probeer het opnieuw.",
-  "Couldn't load the shape tools. Try again.": "De vormgereedschappen konden niet worden geladen. Probeer het opnieuw.",
-  "Create": "Maken",
-  "Ctrl+D duplicate, Ctrl+G group, Shift+H and Shift+V flip": "Ctrl+D dupliceren, Ctrl+G groeperen, Shift+H en Shift+V spiegelen",
-  "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library": "Ctrl+Z ongedaan maken, Ctrl+Shift+Z opnieuw, Ctrl+Enter Klaar, Ctrl+S Opslaan in bibliotheek",
-  "Custom": "Aangepast",
-  "Custom grid size": "Eigen rastergrootte",
-  "Dark": "Donker",
-  "Decimals": "Decimalen",
-  "Delete": "Verwijderen",
-  "Delete point": "Punt verwijderen",
-  "Delete {name}": "{name} verwijderen",
-  "Deleted {name}. Cards that use it show the default icon unless they keep a copy.": "{name} is verwijderd. Kaarten die het gebruiken tonen het standaardpictogram, tenzij ze een kopie bewaren.",
-  "Details": "Details",
-  "Dismiss": "Sluiten",
-  "Distribute horizontally": "Horizontaal verdelen",
-  "Distribute vertically": "Verticaal verdelen",
-  "Document": "Document",
-  "Done": "Klaar",
-  "Down": "Omlaag",
-  "Download .svg": ".svg downloaden",
-  "Drag a box, or click two corners. Without a mouse: arrows move the crosshair, Enter sets a corner.": "Sleep een kader, of klik twee hoeken aan. Zonder muis: pijltjes verplaatsen het richtkruis, Enter zet een hoek vast.",
-  "Drag across shapes to cut them along the whole line. Arrows move the crosshair, Enter sets an end.": "Sleep over vormen om ze langs de hele lijn door te snijden. Pijltjes verplaatsen het richtkruis, Enter zet een uiteinde vast.",
-  "Drag to draw. The line is smoothed when you let go.": "Sleep om te tekenen. De lijn wordt afgevlakt als je loslaat.",
-  "Drag to move the view. Scroll to move, Ctrl and scroll to zoom.": "Sleep om de weergave te verschuiven. Scroll om te verschuiven, Ctrl en scroll om te zoomen.",
-  "Drag to move {name}": "Sleep om {name} te verplaatsen",
-  "Draw something first": "Teken eerst iets",
-  "Drawing opened.": "Tekening geopend.",
-  "Drop": "Druppel",
-  "Dual-tone": "Tweekleurig",
-  "Duplicate": "Dupliceren",
-  "Edit points": "Punten bewerken",
-  "Ellipse": "Ellips",
-  "Entity off": "Entiteit uit",
-  "Entity on": "Entiteit aan",
-  "Esc doesn't close the editor. Use Done or Back to card editor.": "Esc sluit de editor niet. Gebruik Klaar of Terug naar kaarteditor.",
-  "Everything else was kept.": "Al het overige is behouden.",
-  "Everything painted Accent is painted Main instead. You can undo this.": "Alles wat Accent heeft, krijgt nu Hoofd. Je kunt dit ongedaan maken.",
-  "Exclude": "Uitsluiten",
-  "Excluded shape": "Uitgesloten vorm",
-  "Excluded {c} shapes.": "{c} vormen uitgesloten.",
-  "Expand {name}": "{name} uitklappen",
-  "Export / Import": "Exporteren / importeren",
-  "Export file": "Bestand exporteren",
-  "Fewer decimals make a smaller icon. Hidden layers are not saved.": "Minder decimalen maken een kleiner pictogram. Verborgen lagen worden niet opgeslagen.",
-  "Fill": "Vulling",
-  "Fill and stroke": "Vulling en lijn",
-  "Fill rule": "Vulregel",
-  "Finish path": "Pad afronden",
-  "First corner set. Move, then press Enter for the opposite corner.": "Eerste hoek gezet. Verplaats en druk op Enter voor de tegenoverliggende hoek.",
-  "Fit to 20": "Passend maken op 20",
-  "Fit to safe area": "Passend maken in veilig gebied",
-  "Fit to view": "Passend in beeld",
-  "Flat": "Plat",
-  "Flip horizontally": "Horizontaal spiegelen",
-  "Flip vertically": "Verticaal spiegelen",
-  "For example mdi:lightbulb. Home Assistant icons and installed icon packs work.": "Bijvoorbeeld mdi:lightbulb. Pictogrammen van Home Assistant en geïnstalleerde pictogrampakketten werken.",
-  "Forward": "Eén naar voren",
-  "Freehand": "Uit de vrije hand",
-  "Getting big. Tidy reduces precision and drops hidden layers.": "Het wordt groot. Opruimen verlaagt de precisie en laat verborgen lagen vallen.",
-  "Give it a name.": "Geef het een naam.",
-  "Give the icon a name.": "Geef het pictogram een naam.",
-  "Got it": "Begrepen",
-  "Grid size": "Rastergrootte",
-  "Grid size set to {size}, the nearest allowed size.": "Rastergrootte ingesteld op {size}, de dichtstbijzijnde toegestane grootte.",
-  "Grid {size}": "Raster {size}",
-  "Groups can be 4 levels deep.": "Groepen kunnen 4 niveaus diep zijn.",
-  "Groups deeper than 4 levels were merged.": "Groepen dieper dan 4 niveaus zijn samengevoegd.",
-  "Hand": "Hand",
-  "Heart": "Hart",
-  "Heavy for wall tablets": "Zwaar voor wandtablets",
-  "Height": "Hoogte",
-  "Hexagon": "Zeshoek",
-  "Hidden": "Verborgen",
-  "Hide {name}": "{name} verbergen",
-  "Hide {noun} ({keys})": "Verberg {noun} ({keys})",
-  "Holes where shapes overlap": "Gaten waar vormen overlappen",
-  "Home Assistant would show little of this drawing. It draws one filled shape without strokes.": "Home Assistant zou weinig van deze tekening tonen. Het tekent één gevulde vorm zonder lijnen.",
-  "Home Assistant would show nothing for this drawing. It draws filled shapes only.": "Home Assistant zou niets van deze tekening tonen. Het tekent alleen gevulde vormen.",
-  "How Home Assistant draws a saved icon in its own cards: one colour, filled shapes only.": "Hoe Home Assistant een opgeslagen pictogram in zijn eigen kaarten tekent: één kleur, alleen gevulde vormen.",
-  "How to install": "Zo installeer je het",
-  "Icon canvas": "Pictogramcanvas",
-  "Icon editor": "Pictogrameditor",
-  "Icon name": "Pictogramnaam",
-  "Image editor": "Afbeeldingseditor",
-  "Import file": "Bestand importeren",
-  "In Home Assistant": "In Home Assistant",
-  "In Home Assistant at {px} pixels": "In Home Assistant op {px} pixels",
-  "In Magic Card": "In Magic Card",
-  "In a number field Ctrl+Z undoes the field. Press Enter first to undo the editor.": "In een getalveld maakt Ctrl+Z het veld ongedaan. Druk eerst op Enter om de editor ongedaan te maken.",
-  "In handle angle": "Hoek van binnenhandvat",
-  "In handle length": "Lengte van binnenhandvat",
-  "Inner size": "Binnenmaat",
-  "Insert": "Invoegen",
-  "Inspector panel": "Inspectorpaneel",
-  "Intersect": "Doorsnede",
-  "Intersected shape": "Doorsnedevorm",
-  "Intersected {c} shapes.": "Doorsnede van {c} vormen gemaakt.",
-  "Into {name}": "In {name}",
-  "It can't go there.": "Het kan daar niet naartoe.",
-  "It cannot move further.": "Het kan niet verder.",
-  "It is already at the top level.": "Het staat al op het hoogste niveau.",
-  "It is already there.": "Het staat er al.",
-  "It is saved in the library.": "Het is opgeslagen in de bibliotheek.",
-  "Join": "Verbinden",
-  "Join works on open paths. Use Split first to open a closed one.": "Verbinden werkt op open paden. Gebruik eerst Splitsen om een gesloten pad te openen.",
-  "Keep Accent": "Accent behouden",
-  "Keep a copy in this card": "Bewaar een kopie in deze kaart",
-  "Keep editing": "Verder bewerken",
-  "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.": "Bewaar je eigen pictogrammen voor elk dashboard met de gratis Magic Card Utils-add-on. Tot dan wordt wat je tekent alleen in deze kaart opgeslagen.",
-  "Knife": "Mes",
-  "Layer": "Laag",
-  "Layers": "Lagen",
-  "Layers and library panel": "Lagen- en bibliotheekpaneel",
-  "Leaf": "Blad",
-  "Leave": "Verlaten",
-  "Leave without saving?": "Verlaten zonder op te slaan?",
-  "Leave without using": "Verlaten zonder te gebruiken",
-  "Left": "Links",
-  "Library": "Bibliotheek",
-  "Light": "Licht",
-  "Line": "Lijn",
-  "Loading the icon editor": "De pictogrameditor wordt geladen",
-  "Loading the image editor": "De afbeeldingseditor wordt geladen",
-  "Loading your icons…": "Je pictogrammen worden geladen…",
-  "Lock ratio": "Verhouding vergrendelen",
-  "Lock {name}": "{name} vergrendelen",
-  "Locked": "Vergrendeld",
-  "Main": "Hoofd",
-  "Main + Accent": "Hoofd + Accent",
-  "Main follows the entity colour. Accent follows the card's secondary colour. Colours come from the card, so the icon can change with state.": "Hoofd volgt de kleur van de entiteit. Accent volgt de secundaire kleur van de kaart. De kleuren komen van de kaart, dus het pictogram kan met de status meeveranderen.",
-  "Main preview colour": "Voorbeeldkleur Hoofd",
-  "Make Accent": "Accent maken",
-  "Make Main": "Hoofd maken",
-  "Make {c, plural, one {# Accent layer} other {# Accent layers}} Main?": "{c, plural, one {# Accent-laag} other {# Accent-lagen}} Hoofd maken?",
-  "Match safe-area edges": "Randen van veilig gebied aanhouden",
-  "Maximise": "Maximaliseren",
-  "Merged {c} parts into one path.": "{c} delen samengevoegd tot één pad.",
-  "Move down": "Omlaag",
-  "Move in steps of 4": "Verplaatsen in stappen van 4",
-  "Move into group above": "Naar de groep erboven",
-  "Move out of group": "Uit de groep",
-  "Move to…": "Verplaatsen naar…",
-  "Move up": "Omhoog",
-  "Move window": "Venster verplaatsen",
-  "Move: Alt+Up / Down. In or out of a group: Alt+Shift+Right / Left.": "Verplaatsen: Alt+Omhoog / Omlaag. In of uit een groep: Alt+Shift+Rechts / Links.",
-  "My icon": "Mijn pictogram",
-  "My icons": "Mijn pictogrammen",
-  "Name": "Naam",
-  "Name used in the library": "Naam in de bibliotheek",
-  "Next": "Volgende",
-  "No layers yet.": "Nog geen lagen.",
-  "No matches for \"{query}\". Clear the search.": "Geen resultaten voor \"{query}\". Wis de zoekopdracht.",
-  "No saved icons yet. Save an icon here and use it on any dashboard.": "Nog geen opgeslagen pictogrammen. Sla hier een pictogram op en gebruik het op elk dashboard.",
-  "None": "Geen",
-  "Nothing here yet": "Hier staat nog niets",
-  "Nothing is left of these shapes.": "Er blijft niets over van deze vormen.",
-  "Nothing selected. Pick a layer, or click a shape.": "Niets geselecteerd. Kies een laag, of klik op een vorm.",
-  "Nothing to export yet.": "Er is nog niets om te exporteren.",
-  "Nothing was changed.": "Er is niets gewijzigd.",
-  "Nudge": "Verschuiven",
-  "OK": "OK",
-  "Offset path": "Pad verschuiven",
-  "On a Mac, Tab reaches buttons only when full keyboard access is on.": "Op een Mac bereikt Tab alleen knoppen als volledige toetsenbordtoegang aanstaat.",
-  "Opacity is not kept. Icons are one solid colour.": "Dekking blijft niet behouden. Pictogrammen hebben één effen kleur.",
-  "Open file": "Bestand openen",
-  "Open path": "Pad openen",
-  "Opened {name} as the drawing. Undo brings your last drawing back.": "{name} is geopend als tekening. Met Ongedaan maken krijg je je vorige tekening terug.",
-  "Opened {name}, the first of {count} icons in the file. The others were not used.": "{name} is geopend, het eerste van {count} pictogrammen in het bestand. De andere zijn niet gebruikt.",
-  "Out handle angle": "Hoek van buitenhandvat",
-  "Out handle length": "Lengte van buitenhandvat",
-  "Outline stroke": "Lijn omzetten naar vorm",
-  "Over the 32 KB limit": "Boven de limiet van 32 KB",
-  "Panel": "Paneel",
-  "Paste SVG": "SVG plakken",
-  "Paste some SVG first.": "Plak eerst wat SVG.",
-  "Pasted and opened files are cleaned first. Scripts, images and links are removed.": "Geplakte en geopende bestanden worden eerst opgeschoond. Scripts, afbeeldingen en links worden verwijderd.",
-  "Path": "Pad",
-  "Pen": "Pen",
-  "Pick MDI or a pack": "Kies MDI of een pakket",
-  "Pick a shape": "Kies een vorm",
-  "Pick a tool on the left, or press P to draw.": "Kies links een gereedschap, of druk op P om te tekenen.",
-  "Plus": "Plus",
-  "Point {index} of {count}": "Punt {index} van {count}",
-  "Polygon": "Veelhoek",
-  "Polygon or star": "Veelhoek of ster",
-  "Position and size": "Positie en grootte",
-  "Preview": "Voorbeeld",
-  "Preview at {px} pixels": "Voorbeeld op {px} pixels",
-  "Previous": "Vorige",
-  "Reaches outside the 20 x 20 safe area": "Valt buiten het veilige gebied van 20 x 20",
-  "Reading {name}…": "{name} wordt gelezen…",
-  "Reading…": "Lezen…",
-  "Rectangle": "Rechthoek",
-  "Redo": "Opnieuw",
-  "Relative to": "Ten opzichte van",
-  "Reload": "Opnieuw laden",
-  "Removed {c, plural, one {# thing} other {# things}} icons cannot use": "{c, plural, one {# onderdeel} other {# onderdelen}} verwijderd die pictogrammen niet kunnen gebruiken",
-  "Rename": "Hernoemen",
-  "Resize window": "Venstergrootte aanpassen",
-  "Restore size": "Oorspronkelijke grootte",
-  "Reverse direction": "Richting omkeren",
-  "Right": "Rechts",
-  "Rotate +15": "+15 draaien",
-  "Rotate -15": "-15 draaien",
-  "Rotate 90 degrees anticlockwise": "90 graden tegen de klok in draaien",
-  "Rotate 90 degrees clockwise": "90 graden met de klok mee draaien",
-  "Round": "Rond",
-  "Rounded rectangle": "Afgeronde rechthoek",
-  "SVG markup": "SVG-opmaak",
-  "Safe area": "Veilig gebied",
-  "Save": "Opslaan",
-  "Save as a copy": "Opslaan als kopie",
-  "Save as new": "Opslaan als nieuw",
-  "Save current icon": "Huidig pictogram opslaan",
-  "Save to library": "Opslaan in bibliotheek",
-  "Saved": "Opgeslagen",
-  "Saved to library as {name}. Press Done to use it on this card.": "Opgeslagen in de bibliotheek als {name}. Druk op Klaar om het op deze kaart te gebruiken.",
-  "Search my icons": "Mijn pictogrammen zoeken",
-  "Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.": "Zoek in de pictogrammen van Home Assistant en de geïnstalleerde pictogrampakketten, of typ een naam zoals mdi:lightbulb.",
-  "Select": "Selecteren",
-  "Select a closed shape. Open lines have no area.": "Selecteer een gesloten vorm. Open lijnen hebben geen oppervlak.",
-  "Select a second shape.": "Selecteer een tweede vorm.",
-  "Select a shape first.": "Selecteer eerst een vorm.",
-  "Select all": "Alles selecteren",
-  "Select closed shapes. Open lines have no area.": "Selecteer gesloten vormen. Open lijnen hebben geen oppervlak.",
-  "Select one point between the ends with the Node tool.": "Selecteer met het knooppuntgereedschap één punt tussen de uiteinden.",
-  "Select three or more shapes to space them evenly.": "Selecteer drie of meer vormen om ze gelijkmatig te verdelen.",
-  "Select two or more closed shapes.": "Selecteer twee of meer gesloten vormen.",
-  "Select two or more shapes to align them to each other.": "Selecteer twee of meer vormen om ze op elkaar uit te lijnen.",
-  "Selected point": "Geselecteerd punt",
-  "Selection": "Selectie",
-  "Semicircle": "Halve cirkel",
-  "Send to back": "Naar achteren",
-  "Shape actions": "Vormacties",
-  "Shape options": "Vormopties",
-  "Shapes": "Vormen",
-  "Sharp": "Scherp",
-  "Shield": "Schild",
-  "Short, no slashes. Shown in the list.": "Kort, zonder schuine strepen. Getoond in de lijst.",
-  "Shortcut: {keys}": "Sneltoets: {keys}",
-  "Shortcuts": "Sneltoetsen",
-  "Show 20 x 20 safe area": "Veilig gebied van 20 x 20 tonen",
-  "Show nudge pad": "Verschuifpaneel tonen",
-  "Show or hide panels: Ctrl+\\ or ⌘\\": "Panelen tonen of verbergen: Ctrl+\\ of ⌘\\",
-  "Show {name}": "{name} tonen",
-  "Show {noun} ({keys})": "Toon {noun} ({keys})",
-  "Simplify": "Vereenvoudigen",
-  "Size of the icon markup in your dashboard": "Grootte van de pictogramopmaak in je dashboard",
-  "Skip to canvas": "Naar het canvas",
-  "Skip to inspector": "Naar de inspecteur",
-  "Skip to point fields": "Naar de puntvelden",
-  "Smooth": "Vloeiend",
-  "Snap to grid": "Uitlijnen op raster",
-  "Snapping and the arrow keys move by this size.": "Uitlijnen op het raster en de pijltjestoetsen verplaatsen met deze grootte.",
-  "Solid": "Effen",
-  "Some panels are hidden, as you left them. Use the arrows on the edges to show them.": "Een paar panelen zijn verborgen, zoals je ze had achtergelaten. Gebruik de pijlen aan de randen om ze te tonen.",
-  "Spaced {c} shapes evenly.": "{c} vormen gelijkmatig verdeeld.",
-  "Speech bubble": "Tekstballon",
-  "Split at point": "Splitsen bij punt",
-  "Split here": "Hier splitsen",
-  "Square": "Vierkant",
-  "Star": "Ster",
-  "Start from…": "Beginnen met…",
-  "Start over": "Opnieuw beginnen",
-  "Start over?": "Opnieuw beginnen?",
-  "State icons win over your drawing. Remove them to see your drawing.": "Statuspictogrammen gaan voor op je tekening. Verwijder ze om je tekening te zien.",
-  "Stored in Magic Card Utils. Also available in Home Assistant as mcu:<name>.": "Opgeslagen in Magic Card Utils. Ook beschikbaar in Home Assistant als mcu:<naam>.",
-  "Stroke": "Lijn",
-  "Subtract": "Aftrekken",
-  "Subtracted shape": "Afgetrokken vorm",
-  "Subtracted {n, plural, one {# shape} other {# shapes}} from {from}.": "{n, plural, one {# vorm} other {# vormen}} van {from} afgetrokken.",
-  "Tab": "Tab",
-  "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.": "Tab loopt langs de punten. [ en ] springen naar het vorige of volgende punt. Pijltjes verplaatsen het. Enter bewerkt de X en Y.",
-  "Tag": "Label",
-  "Text cannot be combined with other layers.": "Tekst kan niet met andere lagen worden gecombineerd.",
-  "That file has no shapes an icon can use.": "Dat bestand bevat geen vormen die een pictogram kan gebruiken.",
-  "The SVG is larger than 32 KB.": "De SVG is groter dan 32 KB.",
-  "The SVG is too complex.": "De SVG is te complex.",
-  "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.": "Het geanimeerde pictogram dat je koos, is verwijderd: het tekent het oude pictogram. Animeer je tekening met Dit pictogram.",
-  "The animation you set on This icon follows your drawing.": "De animatie die je bij Dit pictogram instelde, volgt je tekening.",
-  "The icon editor could not load. Check your connection and try again.": "De pictogrameditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
-  "The image editor could not load. Check your connection and try again.": "De afbeeldingseditor kon niet laden. Controleer je verbinding en probeer het opnieuw.",
-  "The library could not accept this icon. Tidy it and try again.": "De bibliotheek kon dit pictogram niet accepteren. Ruim het op en probeer het opnieuw.",
-  "The library is full. Delete an icon you no longer use.": "De bibliotheek is vol. Verwijder een pictogram dat je niet meer gebruikt.",
-  "The safe area is hidden.": "Het veilige gebied is verborgen.",
-  "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de pijl aan de rand om het te tonen.",
-  "There is no group above.": "Er is geen groep erboven.",
-  "These shapes have too many points to combine.": "Deze vormen hebben te veel punten om samen te voegen.",
-  "This card is linked to a template. Your drawing is used on this card only.": "Deze kaart is gekoppeld aan een sjabloon. Je tekening wordt alleen op deze kaart gebruikt.",
-  "This icon has {c} points. You can edit and move them, but not add points until it has fewer than 100.": "Dit pictogram heeft {c} punten. Je kunt ze bewerken en verplaatsen, maar pas punten toevoegen als het er minder dan 100 heeft.",
-  "This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.": "Dit pictogram is {used} KB en de limiet is 32 KB. Ruim het op, verwijder verborgen lagen of vereenvoudig paden.",
-  "This icon was changed somewhere else.": "Dit pictogram is elders gewijzigd.",
-  "This is not used on the card yet.": "Dit wordt nog niet op de kaart gebruikt.",
-  "This is not valid SVG. Check that it starts with <svg and is closed.": "Dit is geen geldige SVG. Controleer of het begint met <svg en is afgesloten.",
-  "This is the last point of an open line.": "Dit is het laatste punt van een open lijn.",
-  "This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.": "Deze module gebruikt je tekening in plaats van {icon}. Kleuren, Tekenen en Morphen blijven erop werken.",
-  "This module will use your drawing. Colours, Draw and Morph effects keep working on it.": "Deze module gebruikt je tekening. Kleuren, Tekenen en Morphen blijven erop werken.",
-  "This shape has no stroke to outline.": "Deze vorm heeft geen lijn om om te zetten.",
-  "Ticket": "Kaartje",
-  "Tidy": "Opruimen",
-  "Tidy now": "Nu opruimen",
-  "Tools": "Gereedschap",
-  "Tools: V select, A points, P pen, R rectangle, E ellipse, L line, G polygon, S shapes, B freehand": "Gereedschap: V selecteren, A punten, P pen, R rechthoek, E ellips, L lijn, G veelhoek, S vormen, B vrije hand",
-  "Top level": "Hoogste niveau",
-  "Transforms were applied to the paths. The drawing looks the same, the markup is different.": "Transformaties zijn op de paden toegepast. De tekening ziet er hetzelfde uit, de opmaak is anders.",
-  "Triangle": "Driehoek",
-  "Try again": "Opnieuw proberen",
-  "Type": "Type",
-  "Undo": "Ongedaan maken",
-  "Undone.": "Ongedaan gemaakt.",
-  "Ungroup {name}": "{name} opheffen",
-  "Unlock {name}": "{name} ontgrendelen",
-  "Undo brings the old drawing back.": "Met Ongedaan maken haal je de oude tekening terug.",
-  "Up": "Omhoog",
-  "Update \"{name}\"": "\"{name}\" bijwerken",
-  "Use 40 characters or fewer.": "Gebruik maximaal 40 tekens.",
-  "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.": "Gebruiken volgt de bibliotheek: wijzig \"Lamp\" en elke kaart die het gebruikt, verandert mee. Gebruiken als kopie maakt de kaart onafhankelijk.",
-  "Use holes when overlapping parts should cut each other out.": "Gebruik gaten als overlappende delen elkaar moeten uitsnijden.",
-  "Use it on this card to keep your work, or leave without using it.": "Gebruik het op deze kaart om je werk te bewaren, of verlaat de editor zonder het te gebruiken.",
-  "Use on this card": "Gebruiken op deze kaart",
-  "Use this SVG": "Deze SVG gebruiken",
-  "Use this icon": "Dit pictogram gebruiken",
-  "Use two colours: Main and Accent.": "Gebruik twee kleuren: Hoofd en Accent.",
-  "Use {min} to {max}.": "Gebruik {min} tot {max}.",
-  "Used as mcu:{id}": "Gebruikt als mcu:{id}",
-  "What do you want to start from?": "Waarmee wil je beginnen?",
-  "Width": "Breedte",
-  "Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.": "Zonder kopie toont de kaart het standaardpictogram als Magic Card Utils of dit pictogram wordt verwijderd.",
-  "Working…": "Bezig…",
-  "X": "X",
-  "Y": "Y",
-  "Your account can use the library but not change it. Ask an admin, or keep this icon in the card only.": "Je account kan de bibliotheek gebruiken maar niet wijzigen. Vraag het een beheerder, of bewaar dit pictogram alleen in de kaart.",
-  "Zoom in": "Inzoomen",
-  "Zoom out": "Uitzoomen",
-  "Zoom to fit": "Zoomen tot passend",
-  "Zoom: = and -, fit: 0, grid: Ctrl+', snap: Ctrl+;": "Zoom: = en -, passend: 0, raster: Ctrl+', uitlijnen: Ctrl+;",
-  "[ and ] previous and next point, C corner or smooth, H handle, Delete removes": "[ en ] vorig en volgend punt, C hoek of vloeiend, H handvat, Delete verwijdert",
-  "adds {size} KB": "voegt {size} KB toe",
-  "inspector": "inspector",
-  "layers and library": "lagen en bibliotheek",
-  "markup": "opmaak",
-  "units": "eenheden",
-  "{c, plural, one {# external link} other {# external links}}": "{c, plural, one {# externe link} other {# externe links}}",
-  "{c, plural, one {# image} other {# images}}": "{c, plural, one {# afbeelding} other {# afbeeldingen}}",
-  "{c, plural, one {# layer reaches} other {# layers reach}} outside the 20 x 20 safe area. Home Assistant may clip the edges.": "{c, plural, one {# laag valt} other {# lagen vallen}} buiten het veilige gebied van 20 x 20. Home Assistant kan de randen afsnijden.",
-  "{c, plural, one {# other item} other {# other items}}": "{c, plural, one {# ander onderdeel} other {# andere onderdelen}}",
-  "{c, plural, one {# script} other {# scripts}}": "{c, plural, one {# script} other {# scripts}}",
-  "{c, plural, one {1 open line was left out.} other {# open lines were left out.}}": "{c, plural, one {1 open lijn is weggelaten.} other {# open lijnen zijn weggelaten.}}",
-  "{c} shapes selected": "{c} vormen geselecteerd",
-  "{name} added.": "{name} toegevoegd.",
-  "{name} applied: {before} points before, {after} after.": "{name} toegepast: {before} punten ervoor, {after} erna.",
-  "{name} changed while you were editing. Save as new, or reload it.": "{name} is gewijzigd terwijl je bezig was. Sla op als nieuw, of laad het opnieuw.",
-  "{name} copy": "{name} kopie",
-  "{name} deleted.": "{name} verwijderd.",
-  "{name} is locked.": "{name} is vergrendeld.",
-  "{name} moved into {group}, position {pos} of {total}": "{name} verplaatst naar {group}, positie {pos} van {total}",
-  "{name} moved to the top level, position {pos} of {total}": "{name} verplaatst naar het hoogste niveau, positie {pos} van {total}",
-  "{name} moved, position {pos} of {total}": "{name} verplaatst, positie {pos} van {total}",
-  "{name} selected.": "{name} geselecteerd.",
-  "{panels} hidden": "{panels} verborgen",
-  "{panels} shown": "{panels} getoond",
-  "{size} / 32 KB · {c, plural, one {# point} other {# points}}": "{size} / 32 KB · {c, plural, one {# punt} other {# punten}}",
-  "{size} KB": "{size} KB"
+  "svg-editor.combine.c": {
+    "text": "{c, plural, one {1 open lijn is weggelaten.} other {# open lijnen zijn weggelaten.}}",
+    "hash": "857ca759"
+  },
+  "svg-editor.combine.merged-c-parts-into-one-path": {
+    "text": "{c} delen samengevoegd tot één pad.",
+    "hash": "d35d8328"
+  },
+  "svg-editor.combine.select-a-second-shape": {
+    "text": "Selecteer een tweede vorm.",
+    "hash": "24c9aec3"
+  },
+  "svg-editor.combine.select-closed-shapes-open-lines-have-no": {
+    "text": "Selecteer gesloten vormen. Open lijnen hebben geen oppervlak.",
+    "hash": "3ccbb5ce"
+  },
+  "svg-editor.combine.select-two-or-more-closed-shapes": {
+    "text": "Selecteer twee of meer gesloten vormen.",
+    "hash": "bbd7b1d2"
+  },
+  "svg-editor.combine.text-cannot-be-combined-with-other": {
+    "text": "Tekst kan niet met andere lagen worden gecombineerd.",
+    "hash": "0e1be519"
+  },
+  "svg-editor.layers.collapse-name": {
+    "text": "{name} inklappen",
+    "hash": "19f25826"
+  },
+  "svg-editor.layers.drag-to-move-name": {
+    "text": "Sleep om {name} te verplaatsen",
+    "hash": "55f4d746"
+  },
+  "svg-editor.layers.expand-name": {
+    "text": "{name} uitklappen",
+    "hash": "d386e941"
+  },
+  "svg-editor.layers.groups-can-be-4-levels-deep": {
+    "text": "Groepen kunnen 4 niveaus diep zijn.",
+    "hash": "1afb0182"
+  },
+  "svg-editor.layers.hide-name": {
+    "text": "{name} verbergen",
+    "hash": "9d8adcdc"
+  },
+  "svg-editor.layers.into-name": {
+    "text": "In {name}",
+    "hash": "ddfd34c5"
+  },
+  "svg-editor.layers.it-cannot-move-further": {
+    "text": "Het kan niet verder.",
+    "hash": "2a5a2d8e"
+  },
+  "svg-editor.layers.it-is-already-at-the-top-level": {
+    "text": "Het staat al op het hoogste niveau.",
+    "hash": "dc13cccb"
+  },
+  "svg-editor.layers.layers": {
+    "text": "Lagen",
+    "hash": "0bcd66e6"
+  },
+  "svg-editor.layers.lock-name": {
+    "text": "{name} vergrendelen",
+    "hash": "d8f71586"
+  },
+  "svg-editor.layers.move-down": {
+    "text": "Omlaag",
+    "hash": "40bb50da"
+  },
+  "svg-editor.layers.move-into-group-above": {
+    "text": "Naar de groep erboven",
+    "hash": "6b52d720"
+  },
+  "svg-editor.layers.move-out-of-group": {
+    "text": "Uit de groep",
+    "hash": "f22dd54b"
+  },
+  "svg-editor.layers.move-to": {
+    "text": "Verplaatsen naar…",
+    "hash": "5af2f53c"
+  },
+  "svg-editor.layers.move-up": {
+    "text": "Omhoog",
+    "hash": "c66feb5e"
+  },
+  "svg-editor.layers.name-is-locked": {
+    "text": "{name} is vergrendeld.",
+    "hash": "950aa02b"
+  },
+  "svg-editor.layers.name-moved-into-group-position-pos-of": {
+    "text": "{name} verplaatst naar {group}, positie {pos} van {total}",
+    "hash": "21ea6b8f"
+  },
+  "svg-editor.layers.name-moved-position-pos-of-total": {
+    "text": "{name} verplaatst, positie {pos} van {total}",
+    "hash": "c00a8c4d"
+  },
+  "svg-editor.layers.name-moved-to-the-top-level-position-pos": {
+    "text": "{name} verplaatst naar het hoogste niveau, positie {pos} van {total}",
+    "hash": "4388a061"
+  },
+  "svg-editor.layers.name-selected": {
+    "text": "{name} geselecteerd.",
+    "hash": "ed8b5242"
+  },
+  "svg-editor.layers.reaches-outside-the-20-x-20-safe-area": {
+    "text": "Valt buiten het veilige gebied van 20 x 20",
+    "hash": "86663b65"
+  },
+  "svg-editor.layers.show-name": {
+    "text": "{name} tonen",
+    "hash": "94cf7a93"
+  },
+  "svg-editor.layers.there-is-no-group-above": {
+    "text": "Er is geen groep erboven.",
+    "hash": "89005b6a"
+  },
+  "svg-editor.layers.top-level": {
+    "text": "Hoogste niveau",
+    "hash": "f61dd254"
+  },
+  "svg-editor.layers.ungroup-name": {
+    "text": "{name} opheffen",
+    "hash": "0a763f74"
+  },
+  "svg-editor.layers.unlock-name": {
+    "text": "{name} ontgrendelen",
+    "hash": "cf2aac84"
+  },
+  "svg-editor.lips.got-it": {
+    "text": "Begrepen",
+    "hash": "5ad3dbd1"
+  },
+  "svg-editor.lips.hide-noun-keys": {
+    "text": "Verberg {noun} ({keys})",
+    "hash": "62432946"
+  },
+  "svg-editor.lips.inspector": {
+    "text": "inspector",
+    "hash": "98fe4422"
+  },
+  "svg-editor.lips.inspector-panel": {
+    "text": "Inspectorpaneel",
+    "hash": "20f92072"
+  },
+  "svg-editor.lips.layers-and-library": {
+    "text": "lagen en bibliotheek",
+    "hash": "4191a6cf"
+  },
+  "svg-editor.lips.layers-and-library-panel": {
+    "text": "Lagen- en bibliotheekpaneel",
+    "hash": "8c1a60b1"
+  },
+  "svg-editor.lips.panels-hidden": {
+    "text": "{panels} verborgen",
+    "hash": "8048104c"
+  },
+  "svg-editor.lips.panels-shown": {
+    "text": "{panels} getoond",
+    "hash": "755f1a3b"
+  },
+  "svg-editor.lips.shortcut-keys": {
+    "text": "Sneltoets: {keys}",
+    "hash": "2fc10998"
+  },
+  "svg-editor.lips.show-noun-keys": {
+    "text": "Toon {noun} ({keys})",
+    "hash": "7a362b14"
+  },
+  "svg-editor.lips.some-panels-are-hidden-as-you-left-them": {
+    "text": "Een paar panelen zijn verborgen, zoals je ze had achtergelaten. Gebruik de pijlen aan de randen om ze te tonen.",
+    "hash": "dab30b27"
+  },
+  "svg-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de pijl aan de rand om het te tonen.",
+    "hash": "cca8a786"
+  },
+  "svg-editor.mc-svg-editor.aligned-c-to-the-edge": {
+    "text": "{c, plural, one {# vorm} other {# vormen}} uitgelijnd op {edge, select, left {links} centre {het midden} right {rechts} top {boven} middle {het verticale midden} other {onder}}.",
+    "hash": "c9c21193"
+  },
+  "svg-editor.mc-svg-editor.c": {
+    "text": "{c, plural, one {# script} other {# scripts}}",
+    "hash": "97b441d7"
+  },
+  "svg-editor.mc-svg-editor.c-2": {
+    "text": "{c, plural, one {# afbeelding} other {# afbeeldingen}}",
+    "hash": "66758416"
+  },
+  "svg-editor.mc-svg-editor.c-3": {
+    "text": "{c, plural, one {# externe link} other {# externe links}}",
+    "hash": "622a9d00"
+  },
+  "svg-editor.mc-svg-editor.c-4": {
+    "text": "{c, plural, one {# ander onderdeel} other {# andere onderdelen}}",
+    "hash": "113e96c3"
+  },
+  "svg-editor.mc-svg-editor.c-outside-the-20-x-20-safe-area-home": {
+    "text": "{c, plural, one {# laag valt} other {# lagen vallen}} buiten het veilige gebied van 20 x 20. Home Assistant kan de randen afsnijden.",
+    "hash": "54972ecd"
+  },
+  "svg-editor.mc-svg-editor.c-shapes-selected": {
+    "text": "{c} vormen geselecteerd",
+    "hash": "13a26b3d"
+  },
+  "svg-editor.mc-svg-editor.centre-on-canvas": {
+    "text": "Centreren op canvas",
+    "hash": "3b8fd5d2"
+  },
+  "svg-editor.mc-svg-editor.changed-since-saved": {
+    "text": "Gewijzigd sinds opslaan",
+    "hash": "a05dd6e9"
+  },
+  "svg-editor.mc-svg-editor.colours-were-replaced-by-the-card-s": {
+    "text": "Kleuren zijn vervangen door de kleuren van de kaart: Hoofd en Accent.",
+    "hash": "3de7d24d"
+  },
+  "svg-editor.mc-svg-editor.copied-the-accent-path": {
+    "text": "Het accentpad is gekopieerd.",
+    "hash": "1b4a8339"
+  },
+  "svg-editor.mc-svg-editor.copied-the-path-and-viewbox-for-home": {
+    "text": "Het pad en de viewBox zijn gekopieerd, voor eigen pictogramsets in Home Assistant. Zie de documentatie.",
+    "hash": "83bba706"
+  },
+  "svg-editor.mc-svg-editor.copied-the-svg": {
+    "text": "De SVG is gekopieerd.",
+    "hash": "e1c9e150"
+  },
+  "svg-editor.mc-svg-editor.could-not-copy-select-the-markup-and": {
+    "text": "Kopiëren is niet gelukt. Selecteer de opmaak en kopieer die zelf.",
+    "hash": "3a213737"
+  },
+  "svg-editor.mc-svg-editor.could-not-find-name-check-the-name-or": {
+    "text": "\"{name}\" is niet gevonden. Controleer de naam, of wacht tot de pictogrampakketten geladen zijn.",
+    "hash": "81687d26"
+  },
+  "svg-editor.mc-svg-editor.could-not-load-that-icon": {
+    "text": "Dat pictogram kon niet worden geladen.",
+    "hash": "730a9ccb"
+  },
+  "svg-editor.mc-svg-editor.could-not-load-the-export-and-import": {
+    "text": "De exporteer- en importeertool kon niet worden geladen. Probeer het opnieuw.",
+    "hash": "5631f7b6"
+  },
+  "svg-editor.mc-svg-editor.could-not-read-that-file": {
+    "text": "Dat bestand kon niet worden gelezen.",
+    "hash": "66cc390c"
+  },
+  "svg-editor.mc-svg-editor.could-not-save-name-try-again": {
+    "text": "{name} kon niet worden opgeslagen. Probeer het opnieuw.",
+    "hash": "60224a78"
+  },
+  "svg-editor.mc-svg-editor.couldn-t-load-the-shape-tools-try-again": {
+    "text": "De vormgereedschappen konden niet worden geladen. Probeer het opnieuw.",
+    "hash": "a596e591"
+  },
+  "svg-editor.mc-svg-editor.draw-something-first": {
+    "text": "Teken eerst iets",
+    "hash": "f2d3da60"
+  },
+  "svg-editor.mc-svg-editor.drawing-opened": {
+    "text": "Tekening geopend.",
+    "hash": "b662a714"
+  },
+  "svg-editor.mc-svg-editor.edit-points": {
+    "text": "Punten bewerken",
+    "hash": "cccbdfef"
+  },
+  "svg-editor.mc-svg-editor.ellipse": {
+    "text": "Ellips",
+    "hash": "cb1ee8cb"
+  },
+  "svg-editor.mc-svg-editor.esc-doesn-t-close-the-editor-use-done-or": {
+    "text": "Esc sluit de editor niet. Gebruik Klaar of Terug naar kaarteditor.",
+    "hash": "17988495"
+  },
+  "svg-editor.mc-svg-editor.everything-else-was-kept": {
+    "text": "Al het overige is behouden.",
+    "hash": "bd6acbd8"
+  },
+  "svg-editor.mc-svg-editor.finish-path": {
+    "text": "Pad afronden",
+    "hash": "7a83f70b"
+  },
+  "svg-editor.mc-svg-editor.fit-to-20": {
+    "text": "Passend maken op 20",
+    "hash": "7f5c6f9d"
+  },
+  "svg-editor.mc-svg-editor.fit-to-safe-area": {
+    "text": "Passend maken in veilig gebied",
+    "hash": "e67d7efe"
+  },
+  "svg-editor.mc-svg-editor.freehand": {
+    "text": "Uit de vrije hand",
+    "hash": "dbf41ae1"
+  },
+  "svg-editor.mc-svg-editor.give-it-a-name": {
+    "text": "Geef het een naam.",
+    "hash": "9d63f7c9"
+  },
+  "svg-editor.mc-svg-editor.give-the-icon-a-name": {
+    "text": "Geef het pictogram een naam.",
+    "hash": "45697b59"
+  },
+  "svg-editor.mc-svg-editor.grid-size-set-to-size-the-nearest": {
+    "text": "Rastergrootte ingesteld op {size}, de dichtstbijzijnde toegestane grootte.",
+    "hash": "04011ae1"
+  },
+  "svg-editor.mc-svg-editor.groups-can-be-4-levels-deep": {
+    "text": "Groepen kunnen 4 niveaus diep zijn.",
+    "hash": "1afb0182"
+  },
+  "svg-editor.mc-svg-editor.groups-deeper-than-4-levels-were-merged": {
+    "text": "Groepen dieper dan 4 niveaus zijn samengevoegd.",
+    "hash": "9be180ce"
+  },
+  "svg-editor.mc-svg-editor.hand": {
+    "text": "Hand",
+    "hash": "fa18c067"
+  },
+  "svg-editor.mc-svg-editor.keep-your-own-icons-for-every-dashboard": {
+    "text": "Bewaar je eigen pictogrammen voor elk dashboard met de gratis Magic Card Utils-add-on. Tot dan wordt wat je tekent alleen in deze kaart opgeslagen.",
+    "hash": "6a73445a"
+  },
+  "svg-editor.mc-svg-editor.line": {
+    "text": "Lijn",
+    "hash": "d7852cd0"
+  },
+  "svg-editor.mc-svg-editor.match-safe-area-edges": {
+    "text": "Randen van veilig gebied aanhouden",
+    "hash": "3eccb10e"
+  },
+  "svg-editor.mc-svg-editor.my-icon": {
+    "text": "Mijn pictogram",
+    "hash": "aba944f1"
+  },
+  "svg-editor.mc-svg-editor.name-added": {
+    "text": "{name} toegevoegd.",
+    "hash": "a5f571df"
+  },
+  "svg-editor.mc-svg-editor.name-changed-while-you-were-editing-save": {
+    "text": "{name} is gewijzigd terwijl je bezig was. Sla op als nieuw, of laad het opnieuw.",
+    "hash": "fd074648"
+  },
+  "svg-editor.mc-svg-editor.name-copy": {
+    "text": "{name} kopie",
+    "hash": "938a6418"
+  },
+  "svg-editor.mc-svg-editor.name-deleted": {
+    "text": "{name} verwijderd.",
+    "hash": "ad6f2978"
+  },
+  "svg-editor.mc-svg-editor.name-selected": {
+    "text": "{name} geselecteerd.",
+    "hash": "ed8b5242"
+  },
+  "svg-editor.mc-svg-editor.nothing-is-left-of-these-shapes": {
+    "text": "Er blijft niets over van deze vormen.",
+    "hash": "88572b99"
+  },
+  "svg-editor.mc-svg-editor.nothing-was-changed": {
+    "text": "Er is niets gewijzigd.",
+    "hash": "54ca5460"
+  },
+  "svg-editor.mc-svg-editor.opacity-is-not-kept-icons-are-one-solid": {
+    "text": "Dekking blijft niet behouden. Pictogrammen hebben één effen kleur.",
+    "hash": "48e02d37"
+  },
+  "svg-editor.mc-svg-editor.opened-name-as-the-drawing-undo-brings": {
+    "text": "{name} is geopend als tekening. Met Ongedaan maken krijg je je vorige tekening terug.",
+    "hash": "485053e8"
+  },
+  "svg-editor.mc-svg-editor.opened-name-the-first-of-count-icons-in": {
+    "text": "{name} is geopend, het eerste van {count} pictogrammen in het bestand. De andere zijn niet gebruikt.",
+    "hash": "4627b0c6"
+  },
+  "svg-editor.mc-svg-editor.over-the-32-kb-limit": {
+    "text": "Boven de limiet van 32 KB",
+    "hash": "4a54c5ae"
+  },
+  "svg-editor.mc-svg-editor.paste-some-svg-first": {
+    "text": "Plak eerst wat SVG.",
+    "hash": "ca5910bc"
+  },
+  "svg-editor.mc-svg-editor.pen": {
+    "text": "Pen",
+    "hash": "a04bd35b"
+  },
+  "svg-editor.mc-svg-editor.polygon-or-star": {
+    "text": "Veelhoek of ster",
+    "hash": "8c62c059"
+  },
+  "svg-editor.mc-svg-editor.reading-name": {
+    "text": "{name} wordt gelezen…",
+    "hash": "bfe1b1e8"
+  },
+  "svg-editor.mc-svg-editor.rectangle": {
+    "text": "Rechthoek",
+    "hash": "03069962"
+  },
+  "svg-editor.mc-svg-editor.redo": {
+    "text": "Opnieuw",
+    "hash": "74273989"
+  },
+  "svg-editor.mc-svg-editor.removed-c-icons-cannot-use": {
+    "text": "{c, plural, one {# onderdeel} other {# onderdelen}} verwijderd die pictogrammen niet kunnen gebruiken",
+    "hash": "d45a452c"
+  },
+  "svg-editor.mc-svg-editor.saved": {
+    "text": "Opgeslagen",
+    "hash": "b5c120b3"
+  },
+  "svg-editor.mc-svg-editor.saved-to-library-as-name-press-done-to": {
+    "text": "Opgeslagen in de bibliotheek als {name}. Druk op Klaar om het op deze kaart te gebruiken.",
+    "hash": "408a284c"
+  },
+  "svg-editor.mc-svg-editor.select": {
+    "text": "Selecteren",
+    "hash": "2a78025d"
+  },
+  "svg-editor.mc-svg-editor.select-closed-shapes-open-lines-have-no": {
+    "text": "Selecteer gesloten vormen. Open lijnen hebben geen oppervlak.",
+    "hash": "3ccbb5ce"
+  },
+  "svg-editor.mc-svg-editor.select-three-or-more-shapes-to-space": {
+    "text": "Selecteer drie of meer vormen om ze gelijkmatig te verdelen.",
+    "hash": "803308e7"
+  },
+  "svg-editor.mc-svg-editor.shapes": {
+    "text": "Vormen",
+    "hash": "75e8028a"
+  },
+  "svg-editor.mc-svg-editor.spaced-c-shapes-evenly": {
+    "text": "{c} vormen gelijkmatig verdeeld.",
+    "hash": "581fea2b"
+  },
+  "svg-editor.mc-svg-editor.that-file-has-no-shapes-an-icon-can-use": {
+    "text": "Dat bestand bevat geen vormen die een pictogram kan gebruiken.",
+    "hash": "f0fa78cb"
+  },
+  "svg-editor.mc-svg-editor.the-library-could-not-accept-this-icon": {
+    "text": "De bibliotheek kon dit pictogram niet accepteren. Ruim het op en probeer het opnieuw.",
+    "hash": "3300495a"
+  },
+  "svg-editor.mc-svg-editor.the-library-is-full-delete-an-icon-you": {
+    "text": "De bibliotheek is vol. Verwijder een pictogram dat je niet meer gebruikt.",
+    "hash": "dd6f6dd9"
+  },
+  "svg-editor.mc-svg-editor.the-safe-area-is-hidden": {
+    "text": "Het veilige gebied is verborgen.",
+    "hash": "9839005a"
+  },
+  "svg-editor.mc-svg-editor.the-svg-is-larger-than-32-kb": {
+    "text": "De SVG is groter dan 32 KB.",
+    "hash": "b52d3ae6"
+  },
+  "svg-editor.mc-svg-editor.the-svg-is-too-complex": {
+    "text": "De SVG is te complex.",
+    "hash": "0a5777fd"
+  },
+  "svg-editor.mc-svg-editor.these-shapes-have-too-many-points-to": {
+    "text": "Deze vormen hebben te veel punten om samen te voegen.",
+    "hash": "df59af1b"
+  },
+  "svg-editor.mc-svg-editor.this-icon-has-c-points-you-can-edit-and": {
+    "text": "Dit pictogram heeft {c} punten. Je kunt ze bewerken en verplaatsen, maar pas punten toevoegen als het er minder dan 100 heeft.",
+    "hash": "b562040d"
+  },
+  "svg-editor.mc-svg-editor.this-icon-is-used-kb-and-the-limit-is-32": {
+    "text": "Dit pictogram is {used} KB en de limiet is 32 KB. Ruim het op, verwijder verborgen lagen of vereenvoudig paden.",
+    "hash": "8334095f"
+  },
+  "svg-editor.mc-svg-editor.this-icon-was-changed-somewhere-else": {
+    "text": "Dit pictogram is elders gewijzigd.",
+    "hash": "edec8f84"
+  },
+  "svg-editor.mc-svg-editor.this-is-not-valid-svg-check-that-it": {
+    "text": "Dit is geen geldige SVG. Controleer of het begint met <svg en is afgesloten.",
+    "hash": "c93f2341"
+  },
+  "svg-editor.mc-svg-editor.tidy-now": {
+    "text": "Nu opruimen",
+    "hash": "6242ede4"
+  },
+  "svg-editor.mc-svg-editor.transforms-were-applied-to-the-paths-the": {
+    "text": "Transformaties zijn op de paden toegepast. De tekening ziet er hetzelfde uit, de opmaak is anders.",
+    "hash": "38be208c"
+  },
+  "svg-editor.mc-svg-editor.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "svg-editor.mc-svg-editor.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "svg-editor.mc-svg-editor.undone": {
+    "text": "Ongedaan gemaakt.",
+    "hash": "dc166766"
+  },
+  "svg-editor.mc-svg-editor.use-40-characters-or-fewer": {
+    "text": "Gebruik maximaal 40 tekens.",
+    "hash": "c292db95"
+  },
+  "svg-editor.mc-svg-editor.use-min-to-max": {
+    "text": "Gebruik {min} tot {max}.",
+    "hash": "bfcf82d1"
+  },
+  "svg-editor.mc-svg-editor.use-on-this-card": {
+    "text": "Gebruiken op deze kaart",
+    "hash": "2537d498"
+  },
+  "svg-editor.mc-svg-editor.your-account-can-use-the-library-but-not": {
+    "text": "Je account kan de bibliotheek gebruiken maar niet wijzigen. Vraag het een beheerder, of bewaar dit pictogram alleen in de kaart.",
+    "hash": "fd15aa1d"
+  },
+  "svg-editor.menu.add-point-after": {
+    "text": "Punt toevoegen erna",
+    "hash": "11381b50"
+  },
+  "svg-editor.menu.align": {
+    "text": "Uitlijnen",
+    "hash": "b1b1b4e5"
+  },
+  "svg-editor.menu.arrange": {
+    "text": "Volgorde",
+    "hash": "d557a972"
+  },
+  "svg-editor.menu.centre-on-canvas": {
+    "text": "Centreren op canvas",
+    "hash": "3b8fd5d2"
+  },
+  "svg-editor.menu.copy-accent-path": {
+    "text": "Accentpad kopiëren",
+    "hash": "3c29edbe"
+  },
+  "svg-editor.menu.copy-as-ha-path": {
+    "text": "Kopiëren als HA-pad",
+    "hash": "3c3a4741"
+  },
+  "svg-editor.menu.copy-svg": {
+    "text": "SVG kopiëren",
+    "hash": "fde90b75"
+  },
+  "svg-editor.menu.corner": {
+    "text": "Hoek",
+    "hash": "adfde70b"
+  },
+  "svg-editor.menu.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "svg-editor.menu.delete-point": {
+    "text": "Punt verwijderen",
+    "hash": "9ff3439e"
+  },
+  "svg-editor.menu.distribute-horizontally": {
+    "text": "Horizontaal verdelen",
+    "hash": "e31f99b3"
+  },
+  "svg-editor.menu.distribute-vertically": {
+    "text": "Verticaal verdelen",
+    "hash": "d59ca99c"
+  },
+  "svg-editor.menu.download-svg": {
+    "text": ".svg downloaden",
+    "hash": "1a67c1ff"
+  },
+  "svg-editor.menu.duplicate": {
+    "text": "Dupliceren",
+    "hash": "02cdaabf"
+  },
+  "svg-editor.menu.export-file": {
+    "text": "Bestand exporteren",
+    "hash": "d9d979c6"
+  },
+  "svg-editor.menu.fit-to-safe-area": {
+    "text": "Passend maken in veilig gebied",
+    "hash": "e67d7efe"
+  },
+  "svg-editor.menu.flip-horizontally": {
+    "text": "Horizontaal spiegelen",
+    "hash": "7edc03ef"
+  },
+  "svg-editor.menu.flip-vertically": {
+    "text": "Verticaal spiegelen",
+    "hash": "6282842c"
+  },
+  "svg-editor.menu.import-file": {
+    "text": "Bestand importeren",
+    "hash": "6a9e73cf"
+  },
+  "svg-editor.menu.it-is-already-there": {
+    "text": "Het staat er al.",
+    "hash": "e8c31d02"
+  },
+  "svg-editor.menu.make-accent": {
+    "text": "Accent maken",
+    "hash": "cdd5ba28"
+  },
+  "svg-editor.menu.make-main": {
+    "text": "Hoofd maken",
+    "hash": "874d0af6"
+  },
+  "svg-editor.menu.match-safe-area-edges": {
+    "text": "Randen van veilig gebied aanhouden",
+    "hash": "3eccb10e"
+  },
+  "svg-editor.menu.nothing-selected-pick-a-layer-or-click-a": {
+    "text": "Niets geselecteerd. Kies een laag, of klik op een vorm.",
+    "hash": "d0b03414"
+  },
+  "svg-editor.menu.nothing-to-export-yet": {
+    "text": "Er is nog niets om te exporteren.",
+    "hash": "f88a199e"
+  },
+  "svg-editor.menu.path": {
+    "text": "Pad",
+    "hash": "62fa5a5b"
+  },
+  "svg-editor.menu.relative-to": {
+    "text": "Ten opzichte van",
+    "hash": "0c9af847"
+  },
+  "svg-editor.menu.rotate-90-degrees-anticlockwise": {
+    "text": "90 graden tegen de klok in draaien",
+    "hash": "84aeaf36"
+  },
+  "svg-editor.menu.rotate-90-degrees-clockwise": {
+    "text": "90 graden met de klok mee draaien",
+    "hash": "51e8fc30"
+  },
+  "svg-editor.menu.select-all": {
+    "text": "Alles selecteren",
+    "hash": "1fc9a387"
+  },
+  "svg-editor.menu.select-three-or-more-shapes-to-space": {
+    "text": "Selecteer drie of meer vormen om ze gelijkmatig te verdelen.",
+    "hash": "803308e7"
+  },
+  "svg-editor.menu.select-two-or-more-shapes-to-align-them": {
+    "text": "Selecteer twee of meer vormen om ze op elkaar uit te lijnen.",
+    "hash": "332026dd"
+  },
+  "svg-editor.menu.smooth": {
+    "text": "Vloeiend",
+    "hash": "da519387"
+  },
+  "svg-editor.menu.split-here": {
+    "text": "Hier splitsen",
+    "hash": "f418f3a5"
+  },
+  "svg-editor.menu.the-safe-area-is-hidden": {
+    "text": "Het veilige gebied is verborgen.",
+    "hash": "9839005a"
+  },
+  "svg-editor.menu.this-is-the-last-point-of-an-open-line": {
+    "text": "Dit is het laatste punt van een open lijn.",
+    "hash": "62653983"
+  },
+  "svg-editor.menu.zoom-to-fit": {
+    "text": "Zoomen tot passend",
+    "hash": "543f1a82"
+  },
+  "svg-editor.model.ellipse": {
+    "text": "Ellips",
+    "hash": "cb1ee8cb"
+  },
+  "svg-editor.model.line": {
+    "text": "Lijn",
+    "hash": "d7852cd0"
+  },
+  "svg-editor.model.path": {
+    "text": "Pad",
+    "hash": "62fa5a5b"
+  },
+  "svg-editor.model.polygon": {
+    "text": "Veelhoek",
+    "hash": "0ef705dd"
+  },
+  "svg-editor.model.rectangle": {
+    "text": "Rechthoek",
+    "hash": "03069962"
+  },
+  "svg-editor.model.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "svg-editor.names.a-group-can-t-go-inside-itself": {
+    "text": "Een groep kan niet in zichzelf.",
+    "hash": "ddf950f5"
+  },
+  "svg-editor.names.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "svg-editor.names.align-bottom": {
+    "text": "Onderkant uitlijnen",
+    "hash": "7ba097da"
+  },
+  "svg-editor.names.align-centre": {
+    "text": "Midden uitlijnen",
+    "hash": "55dabe03"
+  },
+  "svg-editor.names.align-left": {
+    "text": "Links uitlijnen",
+    "hash": "eac0f9c3"
+  },
+  "svg-editor.names.align-middle": {
+    "text": "Verticaal midden uitlijnen",
+    "hash": "2cce0b3a"
+  },
+  "svg-editor.names.align-right": {
+    "text": "Rechts uitlijnen",
+    "hash": "8f4f8efc"
+  },
+  "svg-editor.names.align-top": {
+    "text": "Bovenkant uitlijnen",
+    "hash": "4868688f"
+  },
+  "svg-editor.names.and-previous-and-next-point-c-corner-or": {
+    "text": "[ en ] vorig en volgend punt, C hoek of vloeiend, H handvat, Delete verwijdert",
+    "hash": "3510b008"
+  },
+  "svg-editor.names.arrow": {
+    "text": "Pijl",
+    "hash": "05800e70"
+  },
+  "svg-editor.names.arrows-move-shift-arrows-move-far-alt": {
+    "text": "Pijltjes verplaatsen, Shift+pijltjes ver, Alt+pijltjes met 0,1",
+    "hash": "a1d9d376"
+  },
+  "svg-editor.names.backward": {
+    "text": "Eén naar achteren",
+    "hash": "21132d57"
+  },
+  "svg-editor.names.bring-to-front": {
+    "text": "Naar voren",
+    "hash": "520cdb7e"
+  },
+  "svg-editor.names.canvas": {
+    "text": "Canvas",
+    "hash": "3824a9f4"
+  },
+  "svg-editor.names.chevron": {
+    "text": "Punthaak",
+    "hash": "c9143fa6"
+  },
+  "svg-editor.names.circle": {
+    "text": "Cirkel",
+    "hash": "b93d3bce"
+  },
+  "svg-editor.names.cloud": {
+    "text": "Wolk",
+    "hash": "b977b950"
+  },
+  "svg-editor.names.combine": {
+    "text": "Samenvoegen",
+    "hash": "35843e7a"
+  },
+  "svg-editor.names.combined-c-shapes": {
+    "text": "{c} vormen samengevoegd.",
+    "hash": "f2d6d2a6"
+  },
+  "svg-editor.names.combined-shape": {
+    "text": "Samengevoegde vorm",
+    "hash": "e6192f7b"
+  },
+  "svg-editor.names.ctrl-d-duplicate-ctrl-g-group-shift-h": {
+    "text": "Ctrl+D dupliceren, Ctrl+G groeperen, Shift+H en Shift+V spiegelen",
+    "hash": "d30c1055"
+  },
+  "svg-editor.names.ctrl-z-undo-ctrl-shift-z-redo-ctrl-enter": {
+    "text": "Ctrl+Z ongedaan maken, Ctrl+Shift+Z opnieuw, Ctrl+Enter Klaar, Ctrl+S Opslaan in bibliotheek",
+    "hash": "fa5e1c4b"
+  },
+  "svg-editor.names.drop": {
+    "text": "Druppel",
+    "hash": "c8af9ae3"
+  },
+  "svg-editor.names.ellipse": {
+    "text": "Ellips",
+    "hash": "cb1ee8cb"
+  },
+  "svg-editor.names.exclude": {
+    "text": "Uitsluiten",
+    "hash": "5b76f62e"
+  },
+  "svg-editor.names.excluded-c-shapes": {
+    "text": "{c} vormen uitgesloten.",
+    "hash": "92a06abd"
+  },
+  "svg-editor.names.excluded-shape": {
+    "text": "Uitgesloten vorm",
+    "hash": "30b4d57e"
+  },
+  "svg-editor.names.forward": {
+    "text": "Eén naar voren",
+    "hash": "f1c65e14"
+  },
+  "svg-editor.names.heart": {
+    "text": "Hart",
+    "hash": "770af9d1"
+  },
+  "svg-editor.names.hexagon": {
+    "text": "Zeshoek",
+    "hash": "ddcc1ac4"
+  },
+  "svg-editor.names.in-a-number-field-ctrl-z-undoes-the": {
+    "text": "In een getalveld maakt Ctrl+Z het veld ongedaan. Druk eerst op Enter om de editor ongedaan te maken.",
+    "hash": "2d2e3d34"
+  },
+  "svg-editor.names.intersect": {
+    "text": "Doorsnede",
+    "hash": "a069db5b"
+  },
+  "svg-editor.names.intersected-c-shapes": {
+    "text": "Doorsnede van {c} vormen gemaakt.",
+    "hash": "4fc7d3d1"
+  },
+  "svg-editor.names.intersected-shape": {
+    "text": "Doorsnedevorm",
+    "hash": "06bcaa47"
+  },
+  "svg-editor.names.it-can-t-go-there": {
+    "text": "Het kan daar niet naartoe.",
+    "hash": "b97edb5e"
+  },
+  "svg-editor.names.join": {
+    "text": "Verbinden",
+    "hash": "fd30fe68"
+  },
+  "svg-editor.names.knife": {
+    "text": "Mes",
+    "hash": "846e26d1"
+  },
+  "svg-editor.names.leaf": {
+    "text": "Blad",
+    "hash": "b83382a9"
+  },
+  "svg-editor.names.main": {
+    "text": "Hoofd",
+    "hash": "eb814be3"
+  },
+  "svg-editor.names.main-accent": {
+    "text": "Hoofd + Accent",
+    "hash": "b0a39005"
+  },
+  "svg-editor.names.offset-path": {
+    "text": "Pad verschuiven",
+    "hash": "151f6b5e"
+  },
+  "svg-editor.names.on-a-mac-tab-reaches-buttons-only-when": {
+    "text": "Op een Mac bereikt Tab alleen knoppen als volledige toetsenbordtoegang aanstaat.",
+    "hash": "678add8b"
+  },
+  "svg-editor.names.outline-stroke": {
+    "text": "Lijn omzetten naar vorm",
+    "hash": "6d8364b6"
+  },
+  "svg-editor.names.plus": {
+    "text": "Plus",
+    "hash": "8a784378"
+  },
+  "svg-editor.names.rounded-rectangle": {
+    "text": "Afgeronde rechthoek",
+    "hash": "c93421a7"
+  },
+  "svg-editor.names.safe-area": {
+    "text": "Veilig gebied",
+    "hash": "ac1f55ec"
+  },
+  "svg-editor.names.selection": {
+    "text": "Selectie",
+    "hash": "ca406707"
+  },
+  "svg-editor.names.semicircle": {
+    "text": "Halve cirkel",
+    "hash": "9b449f0f"
+  },
+  "svg-editor.names.send-to-back": {
+    "text": "Naar achteren",
+    "hash": "e3daa79e"
+  },
+  "svg-editor.names.shield": {
+    "text": "Schild",
+    "hash": "480d4be7"
+  },
+  "svg-editor.names.show-or-hide-panels-ctrl-or": {
+    "text": "Panelen tonen of verbergen: Ctrl+\\ of ⌘\\",
+    "hash": "0d82d33d"
+  },
+  "svg-editor.names.simplify": {
+    "text": "Vereenvoudigen",
+    "hash": "7102ac34"
+  },
+  "svg-editor.names.speech-bubble": {
+    "text": "Tekstballon",
+    "hash": "21056362"
+  },
+  "svg-editor.names.split-at-point": {
+    "text": "Splitsen bij punt",
+    "hash": "8a5d46b9"
+  },
+  "svg-editor.names.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "svg-editor.names.subtract": {
+    "text": "Aftrekken",
+    "hash": "63df016f"
+  },
+  "svg-editor.names.subtracted-n-from-from": {
+    "text": "{n, plural, one {# vorm} other {# vormen}} van {from} afgetrokken.",
+    "hash": "16b00d1e"
+  },
+  "svg-editor.names.subtracted-shape": {
+    "text": "Afgetrokken vorm",
+    "hash": "bc8866b0"
+  },
+  "svg-editor.names.tab": {
+    "text": "Tab",
+    "hash": "90ddf196"
+  },
+  "svg-editor.names.tag": {
+    "text": "Label",
+    "hash": "1503916a"
+  },
+  "svg-editor.names.ticket": {
+    "text": "Kaartje",
+    "hash": "567a8b5f"
+  },
+  "svg-editor.names.tools-v-select-a-points-p-pen-r": {
+    "text": "Gereedschap: V selecteren, A punten, P pen, R rechthoek, E ellips, L lijn, G veelhoek, S vormen, B vrije hand",
+    "hash": "b4ef9624"
+  },
+  "svg-editor.names.triangle": {
+    "text": "Driehoek",
+    "hash": "a0252691"
+  },
+  "svg-editor.names.zoom-and-fit-0-grid-ctrl-snap-ctrl": {
+    "text": "Zoom: = en -, passend: 0, raster: Ctrl+', uitlijnen: Ctrl+;",
+    "hash": "4d661a98"
+  },
+  "svg-editor.pathtools.couldn-t-load-the-path-tools-try-again": {
+    "text": "De padgereedschappen konden niet worden geladen. Probeer het opnieuw.",
+    "hash": "3b458c6c"
+  },
+  "svg-editor.pathtools.join-works-on-open-paths-use-split-first": {
+    "text": "Verbinden werkt op open paden. Gebruik eerst Splitsen om een gesloten pad te openen.",
+    "hash": "73d913ee"
+  },
+  "svg-editor.pathtools.name-applied-before-points-before-after": {
+    "text": "{name} toegepast: {before} punten ervoor, {after} erna.",
+    "hash": "3b3c41bd"
+  },
+  "svg-editor.pathtools.select-a-closed-shape-open-lines-have-no": {
+    "text": "Selecteer een gesloten vorm. Open lijnen hebben geen oppervlak.",
+    "hash": "2ac45b73"
+  },
+  "svg-editor.pathtools.select-a-shape-first": {
+    "text": "Selecteer eerst een vorm.",
+    "hash": "237f12ae"
+  },
+  "svg-editor.pathtools.select-one-point-between-the-ends-with": {
+    "text": "Selecteer met het knooppuntgereedschap één punt tussen de uiteinden.",
+    "hash": "3c243a93"
+  },
+  "svg-editor.pathtools.this-shape-has-no-stroke-to-outline": {
+    "text": "Deze vorm heeft geen lijn om om te zetten.",
+    "hash": "c4c3db8e"
+  },
+  "svg-editor.tools.first-corner-set-move-then-press-enter": {
+    "text": "Eerste hoek gezet. Verplaats en druk op Enter voor de tegenoverliggende hoek.",
+    "hash": "d52d80cd"
+  },
+  "svg-editor.views.24-x-24": {
+    "text": "24 x 24",
+    "hash": "14ba2453"
+  },
+  "svg-editor.views.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "svg-editor.views.accent-preview-colour": {
+    "text": "Voorbeeldkleur Accent",
+    "hash": "a22d67a7"
+  },
+  "svg-editor.views.add-group": {
+    "text": "Groep toevoegen",
+    "hash": "94901258"
+  },
+  "svg-editor.views.add-point-after": {
+    "text": "Punt toevoegen erna",
+    "hash": "11381b50"
+  },
+  "svg-editor.views.adds-name-as-new-layers-your-drawing-is": {
+    "text": "Voegt {name} toe als nieuwe lagen. Je tekening blijft behouden.",
+    "hash": "30a4b72a"
+  },
+  "svg-editor.views.adds-size-kb": {
+    "text": "voegt {size} KB toe",
+    "hash": "091560e0"
+  },
+  "svg-editor.views.align": {
+    "text": "Uitlijnen",
+    "hash": "b1b1b4e5"
+  },
+  "svg-editor.views.an-icon": {
+    "text": "Een pictogram",
+    "hash": "c1e3cfcd"
+  },
+  "svg-editor.views.an-icon-named-name-exists": {
+    "text": "Er bestaat al een pictogram met de naam {name}.",
+    "hash": "3947de82"
+  },
+  "svg-editor.views.angle": {
+    "text": "Hoek",
+    "hash": "1968034b"
+  },
+  "svg-editor.views.arrow-keys-move-by-0-5-turn-on-snap-to": {
+    "text": "De pijltjestoetsen verplaatsen met 0,5. Zet Uitlijnen op raster aan om de rastergrootte te gebruiken.",
+    "hash": "27ec574a"
+  },
+  "svg-editor.views.back-to-card-editor": {
+    "text": "Terug naar kaarteditor",
+    "hash": "89f5c8f1"
+  },
+  "svg-editor.views.bevel": {
+    "text": "Afgeschuind",
+    "hash": "72c3bce2"
+  },
+  "svg-editor.views.blank": {
+    "text": "Leeg",
+    "hash": "2c3d371c"
+  },
+  "svg-editor.views.blank-canvas": {
+    "text": "Leeg tekenvlak",
+    "hash": "d719689d"
+  },
+  "svg-editor.views.c-shapes-selected": {
+    "text": "{c} vormen geselecteerd",
+    "hash": "13a26b3d"
+  },
+  "svg-editor.views.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "svg-editor.views.cap": {
+    "text": "Uiteinde",
+    "hash": "1257ac04"
+  },
+  "svg-editor.views.changes-every-card-that-uses-name": {
+    "text": "Wijzigt elke kaart die {name} gebruikt.",
+    "hash": "9206e781"
+  },
+  "svg-editor.views.changes-you-have-not-saved-are-lost": {
+    "text": "Wijzigingen die je niet hebt opgeslagen, gaan verloren.",
+    "hash": "04c86c5c"
+  },
+  "svg-editor.views.click-and-drag-on-the-canvas-or-click": {
+    "text": "Klik en sleep op het canvas, of klik twee hoeken aan. Houd Shift ingedrukt voor een vierkant. Zonder muis: pijltjes verplaatsen het richtkruis, Enter zet elke hoek vast.",
+    "hash": "3c289825"
+  },
+  "svg-editor.views.click-and-drag-or-click-two-corners-hold": {
+    "text": "Klik en sleep, of klik twee hoeken aan. Houd Shift ingedrukt voor een vierkant. Zonder muis: pijltjes verplaatsen het richtkruis, Enter zet een hoek vast. Druk op S om een andere vorm te kiezen.",
+    "hash": "8b7d8620"
+  },
+  "svg-editor.views.click-to-place-a-point-click-the-first": {
+    "text": "Klik om een punt te plaatsen. Klik op het eerste punt om te sluiten. Esc beëindigt het pad.",
+    "hash": "552f806b"
+  },
+  "svg-editor.views.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "svg-editor.views.close-path": {
+    "text": "Pad sluiten",
+    "hash": "292a1597"
+  },
+  "svg-editor.views.copy-as-svg": {
+    "text": "Kopiëren als SVG",
+    "hash": "e9078c39"
+  },
+  "svg-editor.views.corner": {
+    "text": "Hoek",
+    "hash": "adfde70b"
+  },
+  "svg-editor.views.corner-radius": {
+    "text": "Hoekstraal",
+    "hash": "76a6d9f3"
+  },
+  "svg-editor.views.corners": {
+    "text": "Hoeken",
+    "hash": "1d3cc47e"
+  },
+  "svg-editor.views.could-not-reach-magic-card-utils-your": {
+    "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
+    "hash": "3ba3f12b"
+  },
+  "svg-editor.views.create": {
+    "text": "Maken",
+    "hash": "4759498a"
+  },
+  "svg-editor.views.custom": {
+    "text": "Aangepast",
+    "hash": "494ca78f"
+  },
+  "svg-editor.views.custom-grid-size": {
+    "text": "Eigen rastergrootte",
+    "hash": "ae1466d5"
+  },
+  "svg-editor.views.dark": {
+    "text": "Donker",
+    "hash": "60acc53f"
+  },
+  "svg-editor.views.decimals": {
+    "text": "Decimalen",
+    "hash": "74672912"
+  },
+  "svg-editor.views.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "svg-editor.views.delete-name": {
+    "text": "{name} verwijderen",
+    "hash": "3cf8146e"
+  },
+  "svg-editor.views.delete-point": {
+    "text": "Punt verwijderen",
+    "hash": "9ff3439e"
+  },
+  "svg-editor.views.deleted-name-cards-that-use-it-show-the": {
+    "text": "{name} is verwijderd. Kaarten die het gebruiken tonen het standaardpictogram, tenzij ze een kopie bewaren.",
+    "hash": "5022aa71"
+  },
+  "svg-editor.views.details": {
+    "text": "Details",
+    "hash": "45989de4"
+  },
+  "svg-editor.views.dismiss": {
+    "text": "Sluiten",
+    "hash": "48845bff"
+  },
+  "svg-editor.views.document": {
+    "text": "Document",
+    "hash": "d6bd8c0a"
+  },
+  "svg-editor.views.done": {
+    "text": "Klaar",
+    "hash": "11a6767d"
+  },
+  "svg-editor.views.down": {
+    "text": "Omlaag",
+    "hash": "b86d11af"
+  },
+  "svg-editor.views.drag-a-box-or-click-two-corners-without": {
+    "text": "Sleep een kader, of klik twee hoeken aan. Zonder muis: pijltjes verplaatsen het richtkruis, Enter zet een hoek vast.",
+    "hash": "2583acf8"
+  },
+  "svg-editor.views.drag-across-shapes-to-cut-them-along-the": {
+    "text": "Sleep over vormen om ze langs de hele lijn door te snijden. Pijltjes verplaatsen het richtkruis, Enter zet een uiteinde vast.",
+    "hash": "ca8db0cb"
+  },
+  "svg-editor.views.drag-to-draw-the-line-is-smoothed-when": {
+    "text": "Sleep om te tekenen. De lijn wordt afgevlakt als je loslaat.",
+    "hash": "2a194c18"
+  },
+  "svg-editor.views.drag-to-move-the-view-scroll-to-move": {
+    "text": "Sleep om de weergave te verschuiven. Scroll om te verschuiven, Ctrl en scroll om te zoomen.",
+    "hash": "4ab110f0"
+  },
+  "svg-editor.views.dual-tone": {
+    "text": "Tweekleurig",
+    "hash": "a4b1e00c"
+  },
+  "svg-editor.views.duplicate": {
+    "text": "Dupliceren",
+    "hash": "02cdaabf"
+  },
+  "svg-editor.views.entity-off": {
+    "text": "Entiteit uit",
+    "hash": "dd29a2f5"
+  },
+  "svg-editor.views.entity-on": {
+    "text": "Entiteit aan",
+    "hash": "64ac54c9"
+  },
+  "svg-editor.views.everything-painted-accent-is-painted": {
+    "text": "Alles wat Accent heeft, krijgt nu Hoofd. Je kunt dit ongedaan maken.",
+    "hash": "439b87ca"
+  },
+  "svg-editor.views.export-file": {
+    "text": "Bestand exporteren",
+    "hash": "d9d979c6"
+  },
+  "svg-editor.views.export-import": {
+    "text": "Exporteren / importeren",
+    "hash": "566eef18"
+  },
+  "svg-editor.views.fewer-decimals-make-a-smaller-icon": {
+    "text": "Minder decimalen maken een kleiner pictogram. Verborgen lagen worden niet opgeslagen.",
+    "hash": "e39f9271"
+  },
+  "svg-editor.views.fill": {
+    "text": "Vulling",
+    "hash": "033955d4"
+  },
+  "svg-editor.views.fill-and-stroke": {
+    "text": "Vulling en lijn",
+    "hash": "b47b04bb"
+  },
+  "svg-editor.views.fill-rule": {
+    "text": "Vulregel",
+    "hash": "7c163731"
+  },
+  "svg-editor.views.finish-path": {
+    "text": "Pad afronden",
+    "hash": "7a83f70b"
+  },
+  "svg-editor.views.fit-to-view": {
+    "text": "Passend in beeld",
+    "hash": "a36cb149"
+  },
+  "svg-editor.views.flat": {
+    "text": "Plat",
+    "hash": "9285cedc"
+  },
+  "svg-editor.views.flip-horizontally": {
+    "text": "Horizontaal spiegelen",
+    "hash": "7edc03ef"
+  },
+  "svg-editor.views.flip-vertically": {
+    "text": "Verticaal spiegelen",
+    "hash": "6282842c"
+  },
+  "svg-editor.views.for-example-mdi-lightbulb-home-assistant": {
+    "text": "Bijvoorbeeld mdi:lightbulb. Pictogrammen van Home Assistant en geïnstalleerde pictogrampakketten werken.",
+    "hash": "0f42affd"
+  },
+  "svg-editor.views.getting-big-tidy-reduces-precision-and": {
+    "text": "Het wordt groot. Opruimen verlaagt de precisie en laat verborgen lagen vallen.",
+    "hash": "a4433342"
+  },
+  "svg-editor.views.give-the-icon-a-name": {
+    "text": "Geef het pictogram een naam.",
+    "hash": "45697b59"
+  },
+  "svg-editor.views.grid-size": {
+    "text": "Raster {size}",
+    "hash": "cbea921c"
+  },
+  "svg-editor.views.grid-size-2": {
+    "text": "Rastergrootte",
+    "hash": "3fd344ff"
+  },
+  "svg-editor.views.groups-can-be-4-levels-deep": {
+    "text": "Groepen kunnen 4 niveaus diep zijn.",
+    "hash": "1afb0182"
+  },
+  "svg-editor.views.heavy-for-wall-tablets": {
+    "text": "Zwaar voor wandtablets",
+    "hash": "1a8d94b2"
+  },
+  "svg-editor.views.height": {
+    "text": "Hoogte",
+    "hash": "bfe2eca4"
+  },
+  "svg-editor.views.hidden": {
+    "text": "Verborgen",
+    "hash": "7e6fefff"
+  },
+  "svg-editor.views.holes-where-shapes-overlap": {
+    "text": "Gaten waar vormen overlappen",
+    "hash": "483aaf2b"
+  },
+  "svg-editor.views.home-assistant-would-show-little-of-this": {
+    "text": "Home Assistant zou weinig van deze tekening tonen. Het tekent één gevulde vorm zonder lijnen.",
+    "hash": "4f16f25b"
+  },
+  "svg-editor.views.home-assistant-would-show-nothing-for": {
+    "text": "Home Assistant zou niets van deze tekening tonen. Het tekent alleen gevulde vormen.",
+    "hash": "94efdb7b"
+  },
+  "svg-editor.views.how-home-assistant-draws-a-saved-icon-in": {
+    "text": "Hoe Home Assistant een opgeslagen pictogram in zijn eigen kaarten tekent: één kleur, alleen gevulde vormen.",
+    "hash": "b8d69cd9"
+  },
+  "svg-editor.views.how-to-install": {
+    "text": "Zo installeer je het",
+    "hash": "d77b0cba"
+  },
+  "svg-editor.views.icon-canvas": {
+    "text": "Pictogramcanvas",
+    "hash": "27ab4436"
+  },
+  "svg-editor.views.icon-editor": {
+    "text": "Pictogrameditor",
+    "hash": "f4db4813"
+  },
+  "svg-editor.views.icon-name": {
+    "text": "Pictogramnaam",
+    "hash": "a3362ff0"
+  },
+  "svg-editor.views.image-editor": {
+    "text": "Afbeeldingseditor",
+    "hash": "52945574"
+  },
+  "svg-editor.views.import-file": {
+    "text": "Bestand importeren",
+    "hash": "6a9e73cf"
+  },
+  "svg-editor.views.in-handle-angle": {
+    "text": "Hoek van binnenhandvat",
+    "hash": "e034a3dc"
+  },
+  "svg-editor.views.in-handle-length": {
+    "text": "Lengte van binnenhandvat",
+    "hash": "07b49ce0"
+  },
+  "svg-editor.views.in-home-assistant": {
+    "text": "In Home Assistant",
+    "hash": "afb87701"
+  },
+  "svg-editor.views.in-home-assistant-at-px-pixels": {
+    "text": "In Home Assistant op {px} pixels",
+    "hash": "1daf8144"
+  },
+  "svg-editor.views.in-magic-card": {
+    "text": "In Magic Card",
+    "hash": "62528640"
+  },
+  "svg-editor.views.inner-size": {
+    "text": "Binnenmaat",
+    "hash": "146e9018"
+  },
+  "svg-editor.views.insert": {
+    "text": "Invoegen",
+    "hash": "8aa318eb"
+  },
+  "svg-editor.views.inspector-panel": {
+    "text": "Inspectorpaneel",
+    "hash": "20f92072"
+  },
+  "svg-editor.views.it-is-saved-in-the-library": {
+    "text": "Het is opgeslagen in de bibliotheek.",
+    "hash": "8a196b4d"
+  },
+  "svg-editor.views.join": {
+    "text": "Verbinden",
+    "hash": "fd30fe68"
+  },
+  "svg-editor.views.keep-a-copy-in-this-card": {
+    "text": "Bewaar een kopie in deze kaart",
+    "hash": "6f74483b"
+  },
+  "svg-editor.views.keep-accent": {
+    "text": "Accent behouden",
+    "hash": "7bc1539e"
+  },
+  "svg-editor.views.keep-editing": {
+    "text": "Verder bewerken",
+    "hash": "e76fd2ad"
+  },
+  "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
+    "text": "Bewaar je eigen pictogrammen voor elk dashboard met de gratis Magic Card Utils-add-on. Tot dan wordt wat je tekent alleen in deze kaart opgeslagen.",
+    "hash": "6a73445a"
+  },
+  "svg-editor.views.layer": {
+    "text": "Laag",
+    "hash": "ac9ffcb2"
+  },
+  "svg-editor.views.layers": {
+    "text": "Lagen",
+    "hash": "0bcd66e6"
+  },
+  "svg-editor.views.layers-and-library-panel": {
+    "text": "Lagen- en bibliotheekpaneel",
+    "hash": "8c1a60b1"
+  },
+  "svg-editor.views.leave": {
+    "text": "Verlaten",
+    "hash": "fc6e4a40"
+  },
+  "svg-editor.views.leave-without-saving": {
+    "text": "Verlaten zonder op te slaan?",
+    "hash": "2190d03a"
+  },
+  "svg-editor.views.leave-without-using": {
+    "text": "Verlaten zonder te gebruiken",
+    "hash": "5eeaeb55"
+  },
+  "svg-editor.views.left": {
+    "text": "Links",
+    "hash": "58eb9032"
+  },
+  "svg-editor.views.library": {
+    "text": "Bibliotheek",
+    "hash": "dc20b3d5"
+  },
+  "svg-editor.views.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "svg-editor.views.loading-the-icon-editor": {
+    "text": "De pictogrameditor wordt geladen",
+    "hash": "41e77c57"
+  },
+  "svg-editor.views.loading-the-image-editor": {
+    "text": "De afbeeldingseditor wordt geladen",
+    "hash": "8980a32f"
+  },
+  "svg-editor.views.loading-your-icons": {
+    "text": "Je pictogrammen worden geladen…",
+    "hash": "7c783bdc"
+  },
+  "svg-editor.views.lock-ratio": {
+    "text": "Verhouding vergrendelen",
+    "hash": "2cfec090"
+  },
+  "svg-editor.views.locked": {
+    "text": "Vergrendeld",
+    "hash": "a424e33d"
+  },
+  "svg-editor.views.main": {
+    "text": "Hoofd",
+    "hash": "eb814be3"
+  },
+  "svg-editor.views.main-follows-the-entity-colour-accent": {
+    "text": "Hoofd volgt de kleur van de entiteit. Accent volgt de secundaire kleur van de kaart. De kleuren komen van de kaart, dus het pictogram kan met de status meeveranderen.",
+    "hash": "6f742d11"
+  },
+  "svg-editor.views.main-preview-colour": {
+    "text": "Voorbeeldkleur Hoofd",
+    "hash": "37efbc41"
+  },
+  "svg-editor.views.make-c-main": {
+    "text": "{c, plural, one {# Accent-laag} other {# Accent-lagen}} Hoofd maken?",
+    "hash": "a47c54f1"
+  },
+  "svg-editor.views.make-main": {
+    "text": "Hoofd maken",
+    "hash": "874d0af6"
+  },
+  "svg-editor.views.markup": {
+    "text": "opmaak",
+    "hash": "299da800"
+  },
+  "svg-editor.views.maximise": {
+    "text": "Maximaliseren",
+    "hash": "1c9fcada"
+  },
+  "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
+    "text": "Verplaatsen: Alt+Omhoog / Omlaag. In of uit een groep: Alt+Shift+Rechts / Links.",
+    "hash": "32dfcfab"
+  },
+  "svg-editor.views.move-down": {
+    "text": "Omlaag",
+    "hash": "40bb50da"
+  },
+  "svg-editor.views.move-in-steps-of-4": {
+    "text": "Verplaatsen in stappen van 4",
+    "hash": "3eeee20d"
+  },
+  "svg-editor.views.move-to": {
+    "text": "Verplaatsen naar…",
+    "hash": "5af2f53c"
+  },
+  "svg-editor.views.move-up": {
+    "text": "Omhoog",
+    "hash": "c66feb5e"
+  },
+  "svg-editor.views.move-window": {
+    "text": "Venster verplaatsen",
+    "hash": "50bb7be2"
+  },
+  "svg-editor.views.my-icons": {
+    "text": "Mijn pictogrammen",
+    "hash": "b44fff99"
+  },
+  "svg-editor.views.name": {
+    "text": "Naam",
+    "hash": "dcd1d522"
+  },
+  "svg-editor.views.name-used-in-the-library": {
+    "text": "Naam in de bibliotheek",
+    "hash": "91c7a6bb"
+  },
+  "svg-editor.views.next": {
+    "text": "Volgende",
+    "hash": "1ff57a29"
+  },
+  "svg-editor.views.no-layers-yet": {
+    "text": "Nog geen lagen.",
+    "hash": "251c7a99"
+  },
+  "svg-editor.views.no-matches-for-query-clear-the-search": {
+    "text": "Geen resultaten voor \"{query}\". Wis de zoekopdracht.",
+    "hash": "42341834"
+  },
+  "svg-editor.views.no-saved-icons-yet-save-an-icon-here-and": {
+    "text": "Nog geen opgeslagen pictogrammen. Sla hier een pictogram op en gebruik het op elk dashboard.",
+    "hash": "1dbeed41"
+  },
+  "svg-editor.views.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "svg-editor.views.nothing-here-yet": {
+    "text": "Hier staat nog niets",
+    "hash": "49abaf80"
+  },
+  "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
+    "text": "Niets geselecteerd. Kies een laag, of klik op een vorm.",
+    "hash": "d0b03414"
+  },
+  "svg-editor.views.nudge": {
+    "text": "Verschuiven",
+    "hash": "a5239b85"
+  },
+  "svg-editor.views.ok": {
+    "text": "OK",
+    "hash": "565339bc"
+  },
+  "svg-editor.views.open-file": {
+    "text": "Bestand openen",
+    "hash": "4190c0c7"
+  },
+  "svg-editor.views.open-path": {
+    "text": "Pad openen",
+    "hash": "01ecb696"
+  },
+  "svg-editor.views.out-handle-angle": {
+    "text": "Hoek van buitenhandvat",
+    "hash": "deb939d7"
+  },
+  "svg-editor.views.out-handle-length": {
+    "text": "Lengte van buitenhandvat",
+    "hash": "20f2d707"
+  },
+  "svg-editor.views.panel": {
+    "text": "Paneel",
+    "hash": "d0d91173"
+  },
+  "svg-editor.views.paste-some-svg-first": {
+    "text": "Plak eerst wat SVG.",
+    "hash": "ca5910bc"
+  },
+  "svg-editor.views.paste-svg": {
+    "text": "SVG plakken",
+    "hash": "684cfe4e"
+  },
+  "svg-editor.views.pasted-and-opened-files-are-cleaned": {
+    "text": "Geplakte en geopende bestanden worden eerst opgeschoond. Scripts, afbeeldingen en links worden verwijderd.",
+    "hash": "d41e8407"
+  },
+  "svg-editor.views.path": {
+    "text": "Pad",
+    "hash": "62fa5a5b"
+  },
+  "svg-editor.views.pick-a-shape": {
+    "text": "Kies een vorm",
+    "hash": "2680fa81"
+  },
+  "svg-editor.views.pick-a-tool-on-the-left-or-press-p-to": {
+    "text": "Kies links een gereedschap, of druk op P om te tekenen.",
+    "hash": "1cf264ad"
+  },
+  "svg-editor.views.pick-mdi-or-a-pack": {
+    "text": "Kies MDI of een pakket",
+    "hash": "4d39f087"
+  },
+  "svg-editor.views.point-index-of-count": {
+    "text": "Punt {index} van {count}",
+    "hash": "47acaa6b"
+  },
+  "svg-editor.views.polygon-or-star": {
+    "text": "Veelhoek of ster",
+    "hash": "8c62c059"
+  },
+  "svg-editor.views.position-and-size": {
+    "text": "Positie en grootte",
+    "hash": "274bbcde"
+  },
+  "svg-editor.views.preview": {
+    "text": "Voorbeeld",
+    "hash": "324b134f"
+  },
+  "svg-editor.views.preview-at-px-pixels": {
+    "text": "Voorbeeld op {px} pixels",
+    "hash": "319409af"
+  },
+  "svg-editor.views.previous": {
+    "text": "Vorige",
+    "hash": "a57b08a4"
+  },
+  "svg-editor.views.reading": {
+    "text": "Lezen…",
+    "hash": "874bfa5b"
+  },
+  "svg-editor.views.redo": {
+    "text": "Opnieuw",
+    "hash": "74273989"
+  },
+  "svg-editor.views.reload": {
+    "text": "Opnieuw laden",
+    "hash": "bdc090ec"
+  },
+  "svg-editor.views.rename": {
+    "text": "Hernoemen",
+    "hash": "3064d79a"
+  },
+  "svg-editor.views.resize-window": {
+    "text": "Venstergrootte aanpassen",
+    "hash": "c82ca135"
+  },
+  "svg-editor.views.restore-size": {
+    "text": "Oorspronkelijke grootte",
+    "hash": "b0a8b5c8"
+  },
+  "svg-editor.views.reverse-direction": {
+    "text": "Richting omkeren",
+    "hash": "f8123301"
+  },
+  "svg-editor.views.right": {
+    "text": "Rechts",
+    "hash": "883361d5"
+  },
+  "svg-editor.views.rotate-15": {
+    "text": "-15 draaien",
+    "hash": "164c8565"
+  },
+  "svg-editor.views.rotate-15-2": {
+    "text": "+15 draaien",
+    "hash": "70d59f01"
+  },
+  "svg-editor.views.rotate-90-degrees-anticlockwise": {
+    "text": "90 graden tegen de klok in draaien",
+    "hash": "84aeaf36"
+  },
+  "svg-editor.views.rotate-90-degrees-clockwise": {
+    "text": "90 graden met de klok mee draaien",
+    "hash": "51e8fc30"
+  },
+  "svg-editor.views.round": {
+    "text": "Rond",
+    "hash": "cd9558ac"
+  },
+  "svg-editor.views.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "svg-editor.views.save-as-a-copy": {
+    "text": "Opslaan als kopie",
+    "hash": "0ed28074"
+  },
+  "svg-editor.views.save-as-new": {
+    "text": "Opslaan als nieuw",
+    "hash": "84b113d1"
+  },
+  "svg-editor.views.save-current-icon": {
+    "text": "Huidig pictogram opslaan",
+    "hash": "11b3790e"
+  },
+  "svg-editor.views.save-to-library": {
+    "text": "Opslaan in bibliotheek",
+    "hash": "c2a5bbbd"
+  },
+  "svg-editor.views.saved": {
+    "text": "Opgeslagen",
+    "hash": "b5c120b3"
+  },
+  "svg-editor.views.search-my-icons": {
+    "text": "Mijn pictogrammen zoeken",
+    "hash": "1942baa1"
+  },
+  "svg-editor.views.search-the-home-assistant-icons-and": {
+    "text": "Zoek in de pictogrammen van Home Assistant en de geïnstalleerde pictogrampakketten, of typ een naam zoals mdi:lightbulb.",
+    "hash": "a37616fc"
+  },
+  "svg-editor.views.select-all": {
+    "text": "Alles selecteren",
+    "hash": "1fc9a387"
+  },
+  "svg-editor.views.selected-point": {
+    "text": "Geselecteerd punt",
+    "hash": "53f29419"
+  },
+  "svg-editor.views.shape-actions": {
+    "text": "Vormacties",
+    "hash": "adce761a"
+  },
+  "svg-editor.views.shape-options": {
+    "text": "Vormopties",
+    "hash": "f804661f"
+  },
+  "svg-editor.views.shapes": {
+    "text": "Vormen",
+    "hash": "75e8028a"
+  },
+  "svg-editor.views.sharp": {
+    "text": "Scherp",
+    "hash": "1a3c4b30"
+  },
+  "svg-editor.views.short-no-slashes-shown-in-the-list": {
+    "text": "Kort, zonder schuine strepen. Getoond in de lijst.",
+    "hash": "33a8c650"
+  },
+  "svg-editor.views.shortcuts": {
+    "text": "Sneltoetsen",
+    "hash": "46e978d0"
+  },
+  "svg-editor.views.show-20-x-20-safe-area": {
+    "text": "Veilig gebied van 20 x 20 tonen",
+    "hash": "9fef681a"
+  },
+  "svg-editor.views.show-nudge-pad": {
+    "text": "Verschuifpaneel tonen",
+    "hash": "ee755ca1"
+  },
+  "svg-editor.views.size-32-kb-c": {
+    "text": "{size} / 32 KB · {c, plural, one {# punt} other {# punten}}",
+    "hash": "bb8b691f"
+  },
+  "svg-editor.views.size-kb": {
+    "text": "{size} KB",
+    "hash": "9d5d72c6"
+  },
+  "svg-editor.views.size-of-the-icon-markup-in-your": {
+    "text": "Grootte van de pictogramopmaak in je dashboard",
+    "hash": "1bdd9866"
+  },
+  "svg-editor.views.skip-to-canvas": {
+    "text": "Naar het canvas",
+    "hash": "10a92c72"
+  },
+  "svg-editor.views.skip-to-inspector": {
+    "text": "Naar de inspecteur",
+    "hash": "fe11bbd8"
+  },
+  "svg-editor.views.skip-to-point-fields": {
+    "text": "Naar de puntvelden",
+    "hash": "71cb500a"
+  },
+  "svg-editor.views.smooth": {
+    "text": "Vloeiend",
+    "hash": "da519387"
+  },
+  "svg-editor.views.snap-to-grid": {
+    "text": "Uitlijnen op raster",
+    "hash": "ce43cef9"
+  },
+  "svg-editor.views.snapping-and-the-arrow-keys-move-by-this": {
+    "text": "Uitlijnen op het raster en de pijltjestoetsen verplaatsen met deze grootte.",
+    "hash": "c2d1eac5"
+  },
+  "svg-editor.views.solid": {
+    "text": "Effen",
+    "hash": "b8b311b0"
+  },
+  "svg-editor.views.square": {
+    "text": "Vierkant",
+    "hash": "c11092bc"
+  },
+  "svg-editor.views.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "svg-editor.views.start-from": {
+    "text": "Beginnen met…",
+    "hash": "d7021736"
+  },
+  "svg-editor.views.start-over": {
+    "text": "Opnieuw beginnen?",
+    "hash": "d48f39d2"
+  },
+  "svg-editor.views.start-over-2": {
+    "text": "Opnieuw beginnen",
+    "hash": "5eed7e9f"
+  },
+  "svg-editor.views.state-icons-win-over-your-drawing-remove": {
+    "text": "Statuspictogrammen gaan voor op je tekening. Verwijder ze om je tekening te zien.",
+    "hash": "af386f0b"
+  },
+  "svg-editor.views.stored-in-magic-card-utils-also": {
+    "text": "Opgeslagen in Magic Card Utils. Ook beschikbaar in Home Assistant als mcu:<naam>.",
+    "hash": "c9a4239d"
+  },
+  "svg-editor.views.stroke": {
+    "text": "Lijn",
+    "hash": "1582a13f"
+  },
+  "svg-editor.views.svg": {
+    "text": ".svg",
+    "hash": "51b0eb38"
+  },
+  "svg-editor.views.svg-markup": {
+    "text": "SVG-opmaak",
+    "hash": "2f035834"
+  },
+  "svg-editor.views.tab-walks-the-points-and-jump-to-the": {
+    "text": "Tab loopt langs de punten. [ en ] springen naar het vorige of volgende punt. Pijltjes verplaatsen het. Enter bewerkt de X en Y.",
+    "hash": "37382cda"
+  },
+  "svg-editor.views.the-animated-icon-you-picked-is-removed": {
+    "text": "Het geanimeerde pictogram dat je koos, is verwijderd: het tekent het oude pictogram. Animeer je tekening met Dit pictogram.",
+    "hash": "b3451b02"
+  },
+  "svg-editor.views.the-animation-you-set-on-this-icon": {
+    "text": "De animatie die je bij Dit pictogram instelde, volgt je tekening.",
+    "hash": "5866b8fe"
+  },
+  "svg-editor.views.the-icon-editor-could-not-load-check": {
+    "text": "De pictogrameditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "43fbb66a"
+  },
+  "svg-editor.views.the-image-editor-could-not-load-check": {
+    "text": "De afbeeldingseditor kon niet laden. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "95747c52"
+  },
+  "svg-editor.views.this-card-is-linked-to-a-template-your": {
+    "text": "Deze kaart is gekoppeld aan een sjabloon. Je tekening wordt alleen op deze kaart gebruikt.",
+    "hash": "24307738"
+  },
+  "svg-editor.views.this-icon-was-changed-somewhere-else": {
+    "text": "Dit pictogram is elders gewijzigd.",
+    "hash": "edec8f84"
+  },
+  "svg-editor.views.this-is-not-used-on-the-card-yet": {
+    "text": "Dit wordt nog niet op de kaart gebruikt.",
+    "hash": "8e684a4c"
+  },
+  "svg-editor.views.this-module-will-use-your-drawing": {
+    "text": "Deze module gebruikt je tekening in plaats van {icon}. Kleuren, Tekenen en Morphen blijven erop werken.",
+    "hash": "984dec96"
+  },
+  "svg-editor.views.this-module-will-use-your-drawing-2": {
+    "text": "Deze module gebruikt je tekening. Kleuren, Tekenen en Morphen blijven erop werken.",
+    "hash": "c68b3194"
+  },
+  "svg-editor.views.tidy": {
+    "text": "Opruimen",
+    "hash": "a27b4181"
+  },
+  "svg-editor.views.tidy-now": {
+    "text": "Nu opruimen",
+    "hash": "6242ede4"
+  },
+  "svg-editor.views.tools": {
+    "text": "Gereedschap",
+    "hash": "ea93d6a2"
+  },
+  "svg-editor.views.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "svg-editor.views.type": {
+    "text": "Type",
+    "hash": "baaddf70"
+  },
+  "svg-editor.views.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "svg-editor.views.undo-brings-the-old-drawing-back": {
+    "text": "Met Ongedaan maken haal je de oude tekening terug.",
+    "hash": "e6788b72"
+  },
+  "svg-editor.views.units": {
+    "text": "eenheden",
+    "hash": "c981a30c"
+  },
+  "svg-editor.views.up": {
+    "text": "Omhoog",
+    "hash": "55490a4b"
+  },
+  "svg-editor.views.update-name": {
+    "text": "\"{name}\" bijwerken",
+    "hash": "25e29e20"
+  },
+  "svg-editor.views.use-follows-the-library-change-lamp-and": {
+    "text": "Gebruiken volgt de bibliotheek: wijzig \"Lamp\" en elke kaart die het gebruikt, verandert mee. Gebruiken als kopie maakt de kaart onafhankelijk.",
+    "hash": "383eaa11"
+  },
+  "svg-editor.views.use-holes-when-overlapping-parts-should": {
+    "text": "Gebruik gaten als overlappende delen elkaar moeten uitsnijden.",
+    "hash": "cd4477c6"
+  },
+  "svg-editor.views.use-it-on-this-card-to-keep-your-work-or": {
+    "text": "Gebruik het op deze kaart om je werk te bewaren, of verlaat de editor zonder het te gebruiken.",
+    "hash": "8d51f992"
+  },
+  "svg-editor.views.use-on-this-card": {
+    "text": "Gebruiken op deze kaart",
+    "hash": "2537d498"
+  },
+  "svg-editor.views.use-this-icon": {
+    "text": "Dit pictogram gebruiken",
+    "hash": "5825ebcd"
+  },
+  "svg-editor.views.use-this-svg": {
+    "text": "Deze SVG gebruiken",
+    "hash": "5faa1dad"
+  },
+  "svg-editor.views.use-two-colours-main-and-accent": {
+    "text": "Gebruik twee kleuren: Hoofd en Accent.",
+    "hash": "a816f57b"
+  },
+  "svg-editor.views.used-as-mcu-id": {
+    "text": "Gebruikt als mcu:{id}",
+    "hash": "68edf118"
+  },
+  "svg-editor.views.what-do-you-want-to-start-from": {
+    "text": "Waarmee wil je beginnen?",
+    "hash": "39da86e9"
+  },
+  "svg-editor.views.width": {
+    "text": "Breedte",
+    "hash": "3019947b"
+  },
+  "svg-editor.views.without-a-copy-the-card-shows-the": {
+    "text": "Zonder kopie toont de kaart het standaardpictogram als Magic Card Utils of dit pictogram wordt verwijderd.",
+    "hash": "f0fd4c8a"
+  },
+  "svg-editor.views.working": {
+    "text": "Bezig…",
+    "hash": "5474eef8"
+  },
+  "svg-editor.views.x": {
+    "text": "X",
+    "hash": "4b68ab38"
+  },
+  "svg-editor.views.y": {
+    "text": "Y",
+    "hash": "18f5384d"
+  },
+  "svg-editor.views.zoom-in": {
+    "text": "Inzoomen",
+    "hash": "0e47f09a"
+  },
+  "svg-editor.views.zoom-out": {
+    "text": "Uitzoomen",
+    "hash": "bc7b631a"
+  }
 }

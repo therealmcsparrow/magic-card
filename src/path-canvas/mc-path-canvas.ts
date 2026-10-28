@@ -245,7 +245,7 @@ export class PathCanvas extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     if (!this.hasAttribute('role')) this.setAttribute('role', 'group');
-    if (!this.hasAttribute('aria-roledescription')) this.setAttribute('aria-roledescription', t('drawing canvas'));
+    if (!this.hasAttribute('aria-roledescription')) this.setAttribute('aria-roledescription', t('path-canvas.mc-path-canvas.drawing-canvas'));
     for (const [n, f, c] of this.listeners()) this.addEventListener(n, f as EventListener, c);
     this.pageListen();
   }
@@ -267,9 +267,9 @@ export class PathCanvas extends LitElement {
     if (own && own !== this._keyHelp) return;
     this._keyHelp =
       this.mode === 'add'
-        ? t('Arrow keys move the cursor or the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C switches smooth and corner. Delete removes a point.')
+        ? t('path-canvas.mc-path-canvas.arrow-keys-move-the-cursor-or-the')
         : this.mode === 'nodes'
-          ? t('Tab steps through points. Arrow keys move the selected point. C switches smooth and corner. Delete removes a point. Escape deselects.')
+          ? t('path-canvas.mc-path-canvas.tab-steps-through-points-arrow-keys-move')
           : '';
     if (this._keyHelp) this.setAttribute('aria-description', this._keyHelp);
     else this.removeAttribute('aria-description');
@@ -400,7 +400,7 @@ export class PathCanvas extends LitElement {
   private emitLimit(path: number): void {
     this._lastLimit = Date.now();
     this.emit('mc-path-limit', { path, max: MAX_ANCHORS });
-    this.announce(t('This path has {max} points, the most you can add. Move, delete or change them instead.', { max: MAX_ANCHORS }));
+    this.announce(t('path-canvas.mc-path-canvas.this-path-has-max-points-the-most-you', { max: MAX_ANCHORS }));
   }
 
   /** The path that keys and taps act on. */
@@ -430,22 +430,22 @@ export class PathCanvas extends LitElement {
     const p = this.paths[path];
     const a = p?.anchors[i];
     if (!a) return '';
-    return t('Point {n} of {total}, {kind}, x {x}, y {y}', { n: i + 1, total: p.anchors.length, kind: kindWord(a, isSmooth(a)), x: this.n(a.x), y: this.n(a.y) });
+    return t('path-canvas.mc-path-canvas.point-n-of-total-kind-x-x-y-y', { n: i + 1, total: p.anchors.length, kind: kindWord(a, isSmooth(a)), x: this.n(a.x), y: this.n(a.y) });
   }
 
   private describeSel(sel: PathSelection | undefined, prev?: PathSelection): string {
-    if (!sel) return prev ? t('Selection cleared.') : '';
+    if (!sel) return prev ? t('path-canvas.mc-path-canvas.selection-cleared') : '';
     const p = this.paths[sel.path];
     if (!p) return '';
     if (sel.handle) {
       const h = p.anchors[sel.handle.anchor]?.[sel.handle.which];
       return h
-        ? t('{which, select, in {In handle of point {n}, x {x}, y {y}.} other {Out handle of point {n}, x {x}, y {y}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1, x: this.n(h[0]), y: this.n(h[1]) })
-        : t('{which, select, in {In handle of point {n}.} other {Out handle of point {n}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1 });
+        ? t('path-canvas.mc-path-canvas.which', { which: sel.handle.which, n: sel.handle.anchor + 1, x: this.n(h[0]), y: this.n(h[1]) })
+        : t('path-canvas.mc-path-canvas.which-2', { which: sel.handle.which, n: sel.handle.anchor + 1 });
     }
     if (sel.anchors.length === 1) return `${this.describeAnchor(sel.path, sel.anchors[0])}.`;
-    if (sel.anchors.length > 1) return t('{n} points selected.', { n: sel.anchors.length });
-    return p.closed ? t('Path, {points}, closed.', { points: pointsWord(p.anchors.length) }) : t('Path, {points}, open.', { points: pointsWord(p.anchors.length) });
+    if (sel.anchors.length > 1) return t('path-canvas.mc-path-canvas.n-points-selected', { n: sel.anchors.length });
+    return p.closed ? t('path-canvas.mc-path-canvas.path-points-closed', { points: pointsWord(p.anchors.length) }) : t('path-canvas.mc-path-canvas.path-points-open', { points: pointsWord(p.anchors.length) });
   }
 
   private announce(text: string, delay = 0): void {
@@ -840,7 +840,7 @@ export class PathCanvas extends LitElement {
       'Add point',
     );
     this.setSel({ path, anchors: [r.index] }, false);
-    this.announce(t('Point added, {points}.', { points: pointsWord(r.path.anchors.length) }));
+    this.announce(t('path-canvas.mc-path-canvas.point-added-points', { points: pointsWord(r.path.anchors.length) }));
   }
 
   // ── pointer: move ──
@@ -1014,7 +1014,7 @@ export class PathCanvas extends LitElement {
         }
       }
       nb = scaleBox(b, h.sx, h.sy, edge, { ratio: tf.keepRatio !== e.shiftKey, centre: e.altKey, bounds: tf.bounds });
-      text = t('W {w} H {h}', { w: this.n(nb.w), h: this.n(nb.h) });
+      text = t('path-canvas.mc-path-canvas.w-w-h-h', { w: this.n(nb.w), h: this.n(nb.h) });
       tr = { kind: 'scale', matrix: boxMatrix(b, nb), size: { w: nb.w, h: nb.h }, commit: false, label: STEP.scale, source: 'pointer' };
     } else return;
     g.tr = tr;
@@ -1092,7 +1092,7 @@ export class PathCanvas extends LitElement {
   private afterAdd(path: number, index: number, list: EditPath[], closed?: boolean): void {
     const n = list[path]?.anchors.length ?? 0;
     this.setSel({ path, anchors: [closed ? 0 : index] }, false);
-    this.announce(closed ? t('Path closed.') : t('Point added, {points}.', { points: pointsWord(n) }));
+    this.announce(closed ? t('path-canvas.mc-path-canvas.path-closed') : t('path-canvas.mc-path-canvas.point-added-points', { points: pointsWord(n) }));
   }
 
   private finishMarquee(g: Gesture, s: Pt): void {
@@ -1155,7 +1155,7 @@ export class PathCanvas extends LitElement {
       'Change point type',
     );
     const a = p.anchors[set[0]];
-    if (a) this.announce(t('Point {n} is now {kind}.', { n: set[0] + 1, kind: kindWord(a, isSmooth(a)) }));
+    if (a) this.announce(t('path-canvas.mc-path-canvas.point-n-is-now-kind', { n: set[0] + 1, kind: kindWord(a, isSmooth(a)) }));
   }
 
   // ── view: pinch, wheel ──
@@ -1257,7 +1257,7 @@ export class PathCanvas extends LitElement {
         eat(e);
         const nb = resizeBy(tb.box, DIRS[e.key][0], DIRS[e.key][1], e.altKey ? this.fineNudge : this.nudge, tb.bounds);
         this.emit<PathTransform>('mc-path-transform', { kind: 'scale', matrix: boxMatrix(tb.box, nb), size: { w: nb.w, h: nb.h }, commit: true, label: STEP.scale, source: 'keyboard' });
-        this.announce(t('W {w} H {h}', { w: this.n(nb.w), h: this.n(nb.h) }), 250);
+        this.announce(t('path-canvas.mc-path-canvas.w-w-h-h', { w: this.n(nb.w), h: this.n(nb.h) }), 250);
         return;
       }
       if ((e.key === 'a' || e.key === 'A') && this.active() >= 0 && this.mode !== 'select') {
@@ -1265,7 +1265,7 @@ export class PathCanvas extends LitElement {
         const ap = this.active();
         const n = this.paths[ap].anchors.length;
         this.setSel({ path: ap, anchors: Array.from({ length: n }, (_, i) => i) }, false);
-        this.announce(t('All {points} selected.', { points: pointsWord(n) }));
+        this.announce(t('path-canvas.mc-path-canvas.all-points-selected', { points: pointsWord(n) }));
       }
       return;
     }
@@ -1371,7 +1371,7 @@ export class PathCanvas extends LitElement {
     if (a.in) order.push('in');
     if (a.out) order.push('out');
     if (order.length === 1) {
-      this.announce(t('This point has no handles. Press C to make it smooth.'));
+      this.announce(t('path-canvas.mc-path-canvas.this-point-has-no-handles-press-c-to'));
       return;
     }
     const cur = sel.handle ? order.indexOf(sel.handle.which) : 0;
@@ -1379,7 +1379,7 @@ export class PathCanvas extends LitElement {
     this._sel = { path: sel.path, anchors: [i], handle: which ? { anchor: i, which } : undefined };
     this._cross = undefined;
     this.emit('mc-path-select', this._sel);
-    this.announce(which === 'in' ? t('Arrow keys move the in handle.') : which ? t('Arrow keys move the out handle.') : t('Arrow keys move the point.'));
+    this.announce(which === 'in' ? t('path-canvas.mc-path-canvas.arrow-keys-move-the-in-handle') : which ? t('path-canvas.mc-path-canvas.arrow-keys-move-the-out-handle') : t('path-canvas.mc-path-canvas.arrow-keys-move-the-point'));
   }
 
   private arrow(e: KeyboardEvent): void {
@@ -1393,7 +1393,7 @@ export class PathCanvas extends LitElement {
       eat(e);
       const a = this._cross ?? this.crossStart();
       this._cross = [step(a[0], 0), step(a[1], 1)];
-      this.announce(t('Cursor at x {x}, y {y}. Press Enter to place a point.', { x: this.n(this._cross[0]), y: this.n(this._cross[1]) }), 250);
+      this.announce(t('path-canvas.mc-path-canvas.cursor-at-x-x-y-y-press-enter-to-place-a', { x: this.n(this._cross[0]), y: this.n(this._cross[1]) }), 250);
       return;
     }
     const p = this.paths[ap];
@@ -1418,7 +1418,7 @@ export class PathCanvas extends LitElement {
     this.emitChange(list, false, label);
     clearTimeout(this._commitTimer);
     this._commitTimer = setTimeout(() => this.flushPending(), 800);
-    if (sel.anchors.length) this.announce(t('x {x}, y {y}', { x: this.n(q[0]), y: this.n(q[1]) }), 250);
+    if (sel.anchors.length) this.announce(t('path-canvas.mc-path-canvas.x-x-y-y', { x: this.n(q[0]), y: this.n(q[1]) }), 250);
   }
 
   private panBy(dx: number, dy: number, e?: Event): void {
@@ -1449,7 +1449,7 @@ export class PathCanvas extends LitElement {
       );
       this._sel = { path: ap, anchors: [h.anchor] };
       this.emit('mc-path-select', this._sel);
-      this.announce(t('Handle deleted.'));
+      this.announce(t('path-canvas.mc-path-canvas.handle-deleted'));
       return;
     }
     if (!sel.anchors.length) return;
@@ -1457,7 +1457,7 @@ export class PathCanvas extends LitElement {
     const n = np.anchors.length;
     this.emitChange(n ? this.paths.map((x, i) => (i === ap ? np : x)) : this.paths.filter((_, i) => i !== ap), true, sel.anchors.length > 1 ? 'Delete points' : 'Delete point');
     this.setSel(n ? { path: ap, anchors: [Math.min(n - 1, Math.max(0, Math.min(...sel.anchors) - 1))] } : undefined, false);
-    this.announce(n ? (sel.anchors.length > 1 ? t('Points deleted, {points}.', { points: pointsWord(n) }) : t('Point deleted, {points}.', { points: pointsWord(n) })) : t('Path deleted.'));
+    this.announce(n ? (sel.anchors.length > 1 ? t('path-canvas.mc-path-canvas.points-deleted-points', { points: pointsWord(n) }) : t('path-canvas.mc-path-canvas.point-deleted-points', { points: pointsWord(n) })) : t('path-canvas.mc-path-canvas.path-deleted'));
   }
 
   private insertAfter(): void {
@@ -1680,7 +1680,7 @@ export class PathCanvas extends LitElement {
     if (!q || !tb) return nothing;
     const hit = this.coarse() ? HIT_MIN_COARSE : HIT_MIN_FINE;
     const a = tb.angle ?? 0;
-    return html`<div class="rot" role="slider" tabindex="0" aria-label=${this.rotateLabel ?? t('Rotation')} aria-valuemin="-360" aria-valuemax="360" aria-valuenow=${a} aria-valuetext=${degrees(a)} style="left:${q[0] - hit / 2}px;top:${q[1] - hit / 2}px;width:${hit}px;height:${hit}px" @keydown=${this._rotKey}></div>`;
+    return html`<div class="rot" role="slider" tabindex="0" aria-label=${this.rotateLabel ?? t('path-canvas.mc-path-canvas.rotation')} aria-valuemin="-360" aria-valuemax="360" aria-valuenow=${a} aria-valuetext=${degrees(a)} style="left:${q[0] - hit / 2}px;top:${q[1] - hit / 2}px;width:${hit}px;height:${hit}px" @keydown=${this._rotKey}></div>`;
   }
 
   private renderLoupe(): TemplateResult | typeof nothing {
@@ -1688,7 +1688,7 @@ export class PathCanvas extends LitElement {
     if (!L || !this._loupeOn) return nothing;
     const c = loupeCentre(L.contact, this._size[0]);
     const r = LOUPE_SIZE_PX / 2;
-    const label = `${t('x {x}, y {y}', { x: this.n(L.at[0]), y: this.n(L.at[1]) })}${this.loupeLabel ? ` ${this.loupeLabel}` : ''}`;
+    const label = `${t('path-canvas.mc-path-canvas.x-x-y-y', { x: this.n(L.at[0]), y: this.n(L.at[1]) })}${this.loupeLabel ? ` ${this.loupeLabel}` : ''}`;
     return html`<div class="loupe" aria-hidden="true" style="left:${c[0] - r}px;top:${c[1] - r}px"><div class="lens"><svg viewBox="0 0 ${r * 2} ${r * 2}"><g transform="translate(${r} ${r}) scale(${this._view.zoom * LOUPE_ZOOM} ${(this._view.zy ?? this._view.zoom) * LOUPE_ZOOM}) translate(${-L.at[0]} ${-L.at[1]})">${this.paths.map((_, i) => this.drawPath(i, 'outline'))}</g><rect class="pt sel" x=${r - 5.5} y=${r - 5.5} width="11" height="11"></rect></svg></div><span class="lbl">${label}</span></div>`;
   }
 
@@ -1697,7 +1697,7 @@ export class PathCanvas extends LitElement {
     if (this._g?.started && this._list) return this._list;
     const ap = this.active();
     const sel = this._sel;
-    this._list = html`<ul class="sr" role="listbox" aria-label=${t('Points')}>${(this.paths[ap]?.anchors ?? []).map((_, i) => html`<li role="option" aria-selected=${sel?.path === ap && sel.anchors.includes(i)}>${this.describeAnchor(ap, i)}</li>`)}</ul>`;
+    this._list = html`<ul class="sr" role="listbox" aria-label=${t('path-canvas.mc-path-canvas.points')}>${(this.paths[ap]?.anchors ?? []).map((_, i) => html`<li role="option" aria-selected=${sel?.path === ap && sel.anchors.includes(i)}>${this.describeAnchor(ap, i)}</li>`)}</ul>`;
     return this._list;
   }
 

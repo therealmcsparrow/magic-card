@@ -88,17 +88,17 @@ export function newShape(type: ShapeType, paths: EditPath[], over: Partial<Shape
 const baseName = (type: ShapeType): string => {
   switch (type) {
     case 'rect':
-      return t('Rectangle');
+      return t('svg-editor.model.rectangle');
     case 'ellipse':
-      return t('Ellipse');
+      return t('svg-editor.model.ellipse');
     case 'line':
-      return t('Line');
+      return t('svg-editor.model.line');
     case 'polygon':
-      return t('Polygon');
+      return t('svg-editor.model.polygon');
     case 'star':
-      return t('Star');
+      return t('svg-editor.model.star');
     default:
-      return t('Path');
+      return t('svg-editor.model.path');
   }
 };
 export function nameFor(d: Doc, type: ShapeType, plain?: string): string {
