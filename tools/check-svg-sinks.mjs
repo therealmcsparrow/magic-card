@@ -68,9 +68,26 @@ export const parseSharedChunkFiles = (text, file = CONTRACT_REL) => {
   return files;
 };
 
-// The modules each shared chunk may hold (the cacheGroup in webpack.config.js matches the same file). A listed module
-// must contain no import(): then the chunk has no chunk group of its own that loads anything, and is never a loader.
-export const SHARED_CHUNK_MODULES = { 'magic-card-path-core.js': ['./src/path/core.ts'] };
+/**
+ * The modules each shared chunk holds, by file name, read from the contract: the doc comment of its
+ * LAZY_SHARED_CHUNK_CEILINGS entry names them ("src/path/core.ts only."). A listed module must contain no import(): then
+ * the chunk has no chunk group of its own that loads anything, and is never a loader.
+ */
+export const sharedChunkModules = (file = path.join(root, CONTRACT_REL)) => parseSharedChunkModules(readFileSync(file, 'utf8'), file);
+
+export const parseSharedChunkModules = (text, file = CONTRACT_REL) => {
+  const filesBlock = /^export const LAZY_SHARED_CHUNK_FILES\b[^=]*=\s*\{([^}]*)\}/m.exec(text);
+  const ceilings = /^export const LAZY_SHARED_CHUNK_CEILINGS\b[^=]*=\s*\{([^}]*)\}/m.exec(text);
+  if (!filesBlock || !ceilings) throw new Error(`no LAZY_SHARED_CHUNK_FILES or LAZY_SHARED_CHUNK_CEILINGS in ${file}`);
+  const out = {};
+  for (const m of filesBlock[1].matchAll(/(?:'([^']+)'|([\w$]+))\s*:\s*'([^']+\.js)'/g)) {
+    const key = (m[1] ?? m[2]).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const doc = new RegExp(`/\\*\\*\\s*((?:src/[^\\s,]+\\.ts)(?:\\s*(?:,|and)\\s*(?:src/[^\\s,]+\\.ts))*)\\s+only\\b[^*]*\\*/\\s*(?:'${key}'|${key})\\s*:`).exec(ceilings[1]);
+    if (!doc) throw new Error(`the LAZY_SHARED_CHUNK_CEILINGS entry for ${m[3]} in ${file} has no "src/… only." doc comment naming its modules`);
+    out[m[3]] = [...doc[1].matchAll(/src\/[^\s,]+\.ts/g)].map((x) => `./${x[0]}`);
+  }
+  return out;
+};
 export const hasDynamicImport = (text) => /(^|[^.\w$])import\s*\(/.test(text);
 
 const readJson = (file, what) => {
@@ -252,12 +269,13 @@ const isShared = (c, shared) => (c.files ?? []).some((f) => shared.includes(unha
 const loaders = (chunk, byId, shared) => (chunk.parents ?? []).filter((id) => !(byId.get(id) && isShared(byId.get(id), shared)));
 
 /** Problems with the shared chunks of a build: each holds exactly its listed modules, is not initial, and its modules have no import(). */
-export const sharedChunkProblems = ({ chunks, shared = sharedChunkFiles(), modules = SHARED_CHUNK_MODULES, read = (m) => readFileSync(path.join(root, m), 'utf8') }) => {
+export const sharedChunkProblems = ({ chunks, shared = sharedChunkFiles(), modules = sharedChunkModules(), read = (m) => readFileSync(path.join(root, m), 'utf8') }) => {
   const problems = [];
+  const byId = new Map(chunks.map((c) => [c.id, c]));
   for (const f of shared) {
     const listed = modules[f];
     if (!listed) {
-      problems.push(`shared chunk ${f} has no module list in SHARED_CHUNK_MODULES (tools/check-svg-sinks.mjs)`);
+      problems.push(`shared chunk ${f} has no module list in the lazy-module contract`);
       continue;
     }
     for (const m of listed) if (hasDynamicImport(read(m))) problems.push(`${m} (shared chunk ${f}) contains an import(): a shared chunk must not load anything`);
@@ -265,6 +283,7 @@ export const sharedChunkProblems = ({ chunks, shared = sharedChunkFiles(), modul
       const held = c.modules ?? [];
       if (held.length !== listed.length || !listed.every((m) => held.includes(m))) problems.push(`shared chunk ${f} holds ${held.join(', ') || 'no modules'}, not exactly ${listed.join(', ')}`);
       if (c.entry || c.initial) problems.push(`shared chunk ${f} is an initial chunk (it must load beside its user, never with the page)`);
+      if (!(c.parents ?? []).some((id) => byId.get(id) && !isShared(byId.get(id), shared))) problems.push(`shared chunk ${f} forms a chunk group of its own: no chunk besides shared chunks loads it (it must load beside its user)`);
     }
   }
   return problems;
@@ -411,6 +430,8 @@ const selfTest = () => {
     ['an initial shared chunk fails', { chunks: [entry, { id: 8, parents: [0], initial: true, files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 1],
     ['a shared module with an import() fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => "const x = import('./x');" }, 1],
     ['a shared chunk with exactly its module and no import() passes', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE.replace('.js', '.cb8d4820.js')], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => 'export const a = 1;' }, 0],
+    ['a shared chunk that no other chunk loads (a group of only the shared chunk) fails', { chunks: [entry, { id: 8, parents: [], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 1],
+    ['a shared chunk whose only parent is another shared chunk fails', { chunks: [entry, { id: 8, parents: [], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, { id: 11, parents: [8], files: ['magic-card-lit.js'], names: ['lit'], modules: ['./src/lit.ts'] }, icon, particles], sinks, shared: [PATH_CORE, 'magic-card-lit.js'], modules: { [PATH_CORE]: ['./src/path/core.ts'], 'magic-card-lit.js': ['./src/lit.ts'] }, read: () => '' }, 2],
     ['sanitiser two chunks up passes', { chunks: [{ ...entry, modules: ['./src/index.ts', S] }, { id: 5, parents: [0], files: ['magic-card-editor.js'], names: ['editor'], modules: [] }, { ...icon, parents: [5], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
     ['an image sink beside the image sanitiser in its chunk passes', { chunks: [entry, icon, particles, imageChunk], sinks: [...sinks, imageSink] }, 0],
     ['an image sink behind the icon sanitiser only fails (pairing)', { chunks: [entry, icon, particles, { ...imageChunk, modules: ['./src/svg-image/export.ts', S] }], sinks: [...sinks, imageSink] }, 1],
@@ -436,6 +457,9 @@ const selfTest = () => {
     ['the real contract lists path-core only', JSON.stringify(sharedChunkFiles()) === JSON.stringify(['magic-card-path-core.js'])],
     ['a comment naming the table above another `= {` is skipped', JSON.stringify(parseSharedChunkFiles(`// see LAZY_SHARED_CHUNK_FILES = {\nconst Z = { a: 'magic-card-z.js' };\n${decl}`)) === JSON.stringify(['magic-card-path-core.js'])],
     ['import( is found, a method call .import( is not', hasDynamicImport("x = import('./a')") && hasDynamicImport('await import (y)') && !hasDynamicImport('obj.import(y)') && !hasDynamicImport('// import statement')],
+    ['the shared modules are read from the contract doc comments', JSON.stringify(parseSharedChunkModules("export const LAZY_SHARED_CHUNK_FILES: R = {\n  'path-core': 'magic-card-path-core.js',\n  lit: 'magic-card-lit.js',\n};\nexport const LAZY_SHARED_CHUNK_CEILINGS: R = {\n  /** src/path/core.ts only. */\n  'path-core': 10_240,\n  /** src/a/b.ts and src/a/c.ts only. */\n  lit: 8_192,\n};")) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-lit.js': ['./src/a/b.ts', './src/a/c.ts'] })],
+    ['a shared chunk without a module line in the contract throws', (() => { try { parseSharedChunkModules("export const LAZY_SHARED_CHUNK_FILES: R = {\n  x: 'magic-card-x.js',\n};\nexport const LAZY_SHARED_CHUNK_CEILINGS: R = {\n  x: 1,\n};"); return false; } catch { return true; } })()],
+    ['the real contract gives path-core its module', JSON.stringify(sharedChunkModules()) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'] })],
     ['the real shared modules have no import()', sharedChunkProblems({ chunks: [] }).length === 0],
   ];
   for (const [name, ok] of parseCases) {
