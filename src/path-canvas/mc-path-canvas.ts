@@ -66,7 +66,8 @@ import { IDENTITY, angleOf, boxMatrix, placeHandles, resizeBy, rotateMatrix, rot
 
 /** History step names the hosts merge and compare on (for example 'Cancel'). They are keys, never shown: hosts say "Undo" in the language. */
 /** What a press lands on when the host drew a control or dialog over the canvas. */
-const CONTROLS = 'button,input,select,textarea,a[href],summary,dialog,[role=button],[role=dialog],[role=alertdialog],[role=menu],[role=menuitem],[role=slider],[role=checkbox],[role=radio],[role=switch],[role=tab],[role=textbox],[role=combobox],[role=listbox],[contenteditable=""],[contenteditable=true]';
+const TOP_LAYER = 'dialog,[role=dialog],[role=alertdialog],[role=menu]';
+const CONTROLS = 'button,input,select,textarea,a[href],summary,[role=button],[role=menuitem],[role=slider],[role=checkbox],[role=radio],[role=switch],[role=tab],[role=textbox],[role=combobox],[role=listbox],[contenteditable=""],[contenteditable=true]';
 
 const STEP = { close: 'Close path', add: 'Add point', rotate: 'Rotate', scale: 'Scale', cancel: 'Cancel' } as const;
 
@@ -572,13 +573,35 @@ export class PathCanvas extends LitElement {
     if (on) this.ownerDocument.addEventListener('pointerdown', this._pageDown, true);
   }
 
-  /** Whether a control or dialog the host drew over the canvas is what the press landed on (the nodes above this element are not looked at). */
+  /** Whether the press landed on host UI: a dialog, menu or open popover anywhere, or a control in the canvas's own tree scope or a shadow tree reached through the canvas. Nodes from the canvas upward are not looked at. */
   private overControl(path: EventTarget[]): boolean {
     const mine = new Set<Node>();
     for (let n: Node | null = this as Node; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) mine.add(n);
+    const home = this.getRootNode();
     for (const n of path) {
       if (mine.has(n as Node)) return false;
-      if ((n as Element).matches?.(CONTROLS)) return true;
+      const el = n as Element;
+      if (typeof el.matches !== 'function') continue;
+      if (el.matches(TOP_LAYER) || this.popoverOpen(el)) return true;
+      if (el.matches(CONTROLS) && this.ownScope(el, home)) return true;
+    }
+    return false;
+  }
+
+  private popoverOpen(el: Element): boolean {
+    try {
+      return el.matches(':popover-open');
+    } catch {
+      return false;
+    }
+  }
+
+  /** Whether the element sits in the canvas's own root node, or in a shadow tree whose chain of hosts leads to the canvas. */
+  private ownScope(el: Element, home: Node): boolean {
+    const r: Node = el.getRootNode();
+    if (r === home) return true;
+    for (let host = (r as ShadowRoot).host as Element | undefined; host; host = (host.getRootNode() as ShadowRoot).host) {
+      if (host === this) return true;
     }
     return false;
   }
@@ -594,6 +617,7 @@ export class PathCanvas extends LitElement {
     if (this.hitTest(s, this.coarse(e)).t === 'none' && this.mode !== 'add') return;
     e.stopPropagation();
     e.preventDefault();
+    this._cross = undefined;
     this._down(e);
   };
 
