@@ -2,8 +2,12 @@
  * Production-only webpack loader for the TypeScript files webpack.config.js lists: shrinks the static text of css``
  * and html`` template literals. Terser never touches template text. Only the literal parts are edited, found with the
  * TypeScript parser, so expression code inside ${} is never changed.
- *   css`...`  with no ${}: comments dropped, whitespace collapsed, no space around { } ; , > or after :
+ *   css`...`  comments dropped, whitespace collapsed, no space around { } ; , > or after :
  *   css also drops the leading zero of decimals (0.5 becomes .5).
+ *   css`...` with ${}: each ${} is swapped for a placeholder that ends in a digit (so no decimal after it loses
+ *             its zero), the text is shrunk as above, and the placeholders are put back. Whitespace next to a
+ *             placeholder collapses to one space like anywhere else. A template whose placeholders do not all come
+ *             back once, in order, or whose text already holds the marker, is left as written.
  *   html`...` parts: any run of two or more whitespace characters becomes one space (HTML collapses
  *             them the same way), and whitespace between two tags goes when one of them is a block
  *             element, and so does whitespace between a block tag and a ${} (leading and trailing
@@ -55,6 +59,23 @@ const minHtml = (t) =>
         .replace(edgeClose, '')
         .replace(/(<\/?([a-z][a-z0-9-]*)[^<>]*>)\s+(?=<\/?([a-z][a-z0-9-]*))/gi, (all, tag, a, b) => (BLOCK.has(a.toLowerCase()) || BLOCK.has(b.toLowerCase()) ? tag : all));
 
+const PH_MARK = 'mcph';
+const PH_RE = /mcph(\d{4})/;
+// Shrinks the literal parts of a css`` template that has ${}; null when it has to stay as written.
+function minCssParts(texts) {
+  if (texts.some((t) => t.includes(PH_MARK))) return null;
+  const joined = texts.map((t, i) => (i ? PH_MARK + String(i - 1).padStart(4, '0') : '') + t).join('');
+  // split with one capture group alternates text and placeholder index
+  const pieces = minCss(joined).split(PH_RE);
+  if (pieces.length !== texts.length * 2 - 1) return null;
+  const out = [];
+  for (let i = 0; i < pieces.length; i++) {
+    if (i % 2 === 0) out.push(pieces[i]);
+    else if (Number(pieces[i]) !== (i - 1) / 2) return null;
+  }
+  return out;
+}
+
 function minify(source, fileName = 'x.ts') {
   const isTable = TABLE_FILES.test(fileName.replace(/\\/g, '/'));
   if (!isTable && !/\b(?:css|html)`/.test(source)) return source;
@@ -80,7 +101,12 @@ function minify(source, fileName = 'x.ts') {
       const isCss = node.tag.text === 'css';
       const t = node.template;
       const parts = ts.isNoSubstitutionTemplateLiteral(t) ? [t] : [t.head, ...t.templateSpans.map((s) => s.literal)];
-      if (!isCss || parts.length === 1) {
+      if (isCss && parts.length > 1) {
+        const ranges = parts.map(partRange);
+        const texts = ranges.map(([a, b]) => source.slice(a, b));
+        const outs = minCssParts(texts);
+        if (outs) ranges.forEach(([a, b], i) => outs[i] !== texts[i] && edits.push([a, b, outs[i]]));
+      } else {
         for (const p of parts) {
           const [start, end] = partRange(p);
           const text = source.slice(start, end);
