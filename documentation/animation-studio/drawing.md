@@ -27,7 +27,7 @@ Shapes live in the icon's viewBox: 0 to 24 for Material Design Icons, or the vie
 | Tool | How it works |
 | --- | --- |
 | Select | Click a shape to select it, drag to move it. A shape made of one path also shows its points and handles: drag them to reshape it. With a point selected, the arrow keys move that point by 1 unit (Shift 5, Alt 0.1) and Delete removes it. With no point selected, the arrow keys nudge the whole shape by 0.1 units (Shift 1) and Delete removes the shape. A locked shape ignores both. |
-| Pen | Click to add points, drag to pull out curve handles. Click the first point to close the shape; a path closes once it has three points. **Finish path**, which shows from two points, or a second Escape finishes an open line; both say "Path 1 added, 3 points." and leave focus on the drawing area. The first Escape clears the selected point. The arrow keys move a crosshair and Enter places a point there, so the pen works without a pointer. Delete or Backspace removes the selected point. |
+| Pen | Click to add points, drag to pull out curve handles. Click the first point, or select it and press Enter, to close the shape; a path closes once it has three points. **Finish path**, which shows from two points, or a second Escape finishes an open line; both say "Path 1 added, 3 points." and leave focus on the drawing area. The first Escape clears the selected point. Drag an existing point to move it. With a point selected the arrow keys move it; with none selected they move a crosshair, and Enter places a point there, so the pen works without a pointer. Delete or Backspace removes the selected point. |
 | Line | Drag to draw a straight line, or draw it with the keyboard (see below) |
 | Rectangle | Drag to draw, or use the keyboard (see below). Shift draws a square, Alt draws from the centre. Corner radius is in the tool options (2 units by default). |
 | Ellipse | Drag to draw, or use the keyboard (see below). Shift draws a circle, Alt draws from the centre. |
@@ -106,7 +106,7 @@ A selected shape is a target on the timeline like a part: `shape:<id>`. It has t
 
 The Motion path tool draws the path of the selected part, group or shape by hand. The path starts where the target rests. Follow rotation in the tool options turns the target along the path.
 
-The path is drawn on the same canvas as the Pen. Click the first point to close it, once it has three points. Arrow keys move a crosshair and Enter places a point there. With a point selected, the arrow keys move it by 1 unit (Shift 5, Alt 0.1) and Delete removes it.
+The path is drawn on the same canvas as the Pen. Click the first point, or select it and press Enter, to close it, once it has three points. Drag a point to move it. With a point selected, the arrow keys move it by 1 unit (Shift 5, Alt 0.1) and Delete removes it; with none selected they move a crosshair and Enter places a point there.
 
 The path is stored on the target's track (`path: { d, follow_rotation }`) relative to its first point, in icon units. A new path needs a free track: with 24 tracks in use, the tool says "At most 24 animated targets."
 

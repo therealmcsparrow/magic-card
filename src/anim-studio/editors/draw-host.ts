@@ -797,7 +797,15 @@ export class AnimDrawHost extends CanvasHost {
   private _finishButton(): void {
     if (this._kb) this._finishStroke();
     else this._finishPen(false);
-    this.focus({ preventScroll: true });
+    this._focusArea();
+  }
+
+  /** Focus goes to the path canvas while it takes the keys (pen, shape points), else to the host. */
+  private _focusArea(): void {
+    void this.updateComplete.then(() => {
+      const canvas = this._canvasPaths().mode !== 'view' ? this.renderRoot.querySelector<HTMLElement>('mc-path-canvas') : null;
+      (canvas ?? this).focus({ preventScroll: true });
+    });
   }
 
   /** The points placed with the keyboard as one smoothed stroke (samples between the points feed the same fit as a drag). */
@@ -886,7 +894,7 @@ export class AnimDrawHost extends CanvasHost {
 
   protected toolsReady(): void {
     this._announce = t('The drawing tools are ready.');
-    this.focus({ preventScroll: true });
+    this._focusArea();
   }
 
   /**
