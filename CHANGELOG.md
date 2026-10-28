@@ -7,10 +7,12 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## Unreleased
 
 ### Added
+-   **Draw Line, Rectangle, Ellipse and Freehand with the keyboard.** Tab to the drawing area, move a cursor with the arrow keys (Shift 5 units, Alt a tenth), and press Enter to set the start and then the end. Freehand places a point on each Enter and ends when you press Enter again on the last one. Escape drops the drawing and every step is announced.
 -   **Paste SVG in the image editor.** The first window of a new image now has **Paste SVG**, next to Blank canvas and Open file. Paste the markup, then choose **Use this SVG**. The text is cleaned and read the same way as an opened file, and the same summary says what was removed. Text over 8 MB is refused before it is read. A refusal changes nothing and keeps your text in the box. Paste works over http:// too, because it uses a text box and not the clipboard.
 -   **Start from… and Shortcuts in the image editor.** The image editor top bar now has **Start from…**, which opens the same window as a new image, and **Shortcuts**, which lists the editor's keys. A drawing started from there replaces the old one as one step that Undo brings back, and the image keeps its name.
 
 ### Changed
+-   **Motion paths and Draw points, details.** A motion path can no longer add a point before the first one. C, not Enter or Space, now switches a point between smooth and corner. The limit of 100 anchors on a Draw path is gone.
 -   **Pen, shape points and motion path share one canvas.** In the animation studio, the Pen tool, the points of a selected shape and the Motion path tool now run on the same canvas that the shape editor uses. A path closes when you click its first point, and only once it has three points (the Pen closed at two before). **Finish path**, which shows from two points, or a second Escape finishes an open line; the first Escape clears the selected point.
 -   **Keys on points in the animation studio.** Enter now places a point at the crosshair, which you move with the arrow keys, so the Pen and the Motion path work without a pointer. Enter no longer finishes a Pen line. With a point selected, Delete removes it and the arrow keys move it by 1 unit (Shift 5, Alt 0.1). With no point selected, Delete removes the shape and the arrow keys nudge it by 0.1 units (Shift 1). A locked shape ignores them. The Pen hint now says "or choose Finish path".
 -   **Drawing tools that do not load.** If the drawing canvas cannot load, the stage says "Couldn't load the drawing tools." with **Try again**. If the page holds an older Magic Card version, it says to reload the page and offers **Reload page**. The rest of the studio keeps working.
@@ -25,6 +27,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Library import help.** The help line under Choose a file in the Library import now says an .svg file can be up to 32 KB.
 
 ### Fixed
+-   **Try again in the drawing tools.** After the drawing canvas failed to load, Try again now asks the browser for a fresh copy instead of reusing the failed answer. Focus goes back to the drawing area and the studio says the tools are ready. Reload page asks before it discards changes that are not saved.
+-   **Dragging a point shows at once.** A point of a selected Draw shape now follows the pointer while you drag it.
+-   **Drawing messages.** "Too many shapes" when importing an SVG is translated. Finish path and Try again have more contrast, Finish path and a second Escape in the Pen say "Path 1 added, 3 points.", and the Icon animation window returns focus to New animation when it closes.
 -   **Tab stays inside a window.** In an editor window, pressing Tab on the last control used to leave the window for a moment (the focus went to the page behind it) before it came back to the first control. Tab now goes straight from the last control to the first, and Shift+Tab from the first to the last, in every window of the kit, including windows whose content sits in a shadow root, such as the Library, Export / Import and the icon picker.
 -   **Start window fixes.** A file or text that is refused no longer says "Reading name…" a moment later. After a refusal you can choose the same file again once you have fixed it. Use this icon, when its answer comes after you closed the window or chose something else, no longer replaces the drawing. A read that fails unexpectedly now shows a message and the window stops saying "Reading…".
 

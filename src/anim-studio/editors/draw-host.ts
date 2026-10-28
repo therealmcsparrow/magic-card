@@ -71,6 +71,15 @@ type Drag =
   | { kind: 'move'; pointerId: number; id: string; base: AnimationDoc; d: string; start: Pt; startPx: Pt; moved: boolean; delta: Pt }
   | { kind: 'erase'; pointerId: number; base: AnimationDoc; ids: string[] };
 
+/** The tools that can also be drawn by placing points with the keyboard. */
+type KbTool = 'line' | 'rect' | 'ellipse' | 'freehand';
+const KB_TOOLS = new Set<DrawTool>(['line', 'rect', 'ellipse', 'freehand']);
+/** Keyboard step in icon units: arrows, with Shift, with Alt. */
+const KB_ARROWS: Record<string, Pt | undefined> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+const KB_STEP = { plain: 1, shift: 5, alt: 0.1 };
+/** Spacing of the samples between two placed freehand points, icon units. */
+const KB_SAMPLE = 0.5;
+
 /** The tools whose presses the studio's own layer under the canvas takes. */
 const OWN_TOOLS = new Set<DrawTool>(['select', 'line', 'rect', 'ellipse', 'freehand', 'erase', 'motion']);
 const NO_PATHS: EditPath[] = [];
@@ -197,6 +206,18 @@ export class AnimDrawHost extends CanvasHost {
         stroke: var(--ch-accent);
         stroke-width: 1.5;
       }
+      .cross {
+        fill: none;
+        stroke: var(--ch-ink);
+        stroke-width: 1.5;
+        stroke-linecap: round;
+      }
+      .cross-casing {
+        fill: none;
+        stroke: var(--ch-surface);
+        stroke-width: 4;
+        stroke-linecap: round;
+      }
       .dots circle {
         fill: color-mix(in srgb, var(--ch-ink) 50%, transparent);
       }
@@ -209,7 +230,7 @@ export class AnimDrawHost extends CanvasHost {
         padding: 0 14px;
         border: 0;
         border-radius: 9999px;
-        background: var(--ch-accent);
+        background: var(--ch-action);
         color: var(--text-primary-color, #fff);
         font: inherit;
         font-size: 0.8125rem;
@@ -248,6 +269,7 @@ export class AnimDrawHost extends CanvasHost {
   set selection(v: StudioSelection) {
     const next = v ?? { kind: 'none' };
     if (this._pen && activeTool(next) !== 'pen') this._finishPen(false);
+    if (activeTool(next) !== activeTool(this._selection)) this._kb = this._cross = undefined;
     this._selection = next;
   }
 
@@ -276,6 +298,10 @@ export class AnimDrawHost extends CanvasHost {
   @state() private _snapAt?: Pt;
   @state() private _dropping = false;
   @state() private _announce = '';
+  /** The keyboard cursor, in viewBox units; undefined until an arrow key has moved it. */
+  @state() private _cross?: Pt;
+  /** A shape being drawn with the keyboard: the points set so far (one for a box tool, any number for freehand). */
+  @state() private _kb?: { tool: KbTool; pts: Pt[] };
   /** The selected shape as the canvas shows it: the committed path, then the live one during a drag. */
   private _live?: { id: string; d: string; list: EditPath[] };
 
@@ -489,6 +515,7 @@ export class AnimDrawHost extends CanvasHost {
     const doc = addShape(this.doc, shape);
     if (!doc) return undefined;
     this._emitDoc(doc, `Draw ${tool}`);
+    this._announce = tool === 'pen' ? t('{name} added, {count} points.', { name: shape.name, count: anchorsOf(d).length }) : t('{name} added.', { name: shape.name });
     return id;
   }
 
@@ -516,6 +543,7 @@ export class AnimDrawHost extends CanvasHost {
     if (!live || !s || !this.doc) return;
     // transient: the canvas outline is live, the card shows the committed shape
     this._live = { ...live, list: detail.paths };
+    this.requestUpdate();
     if (!detail.commit) return;
     if (detail.label === 'Cancel') return;
     if (!next || !next.anchors.length) {
@@ -553,6 +581,10 @@ export class AnimDrawHost extends CanvasHost {
     const local = this._local(e);
     const raw = this._toVB(v, local);
     const tool = activeTool(this.selection);
+    if ((KB_TOOLS.has(tool) || tool === 'motion') && !this.chunk) {
+      this._announce = t('The drawing tools are not loaded yet.');
+      return;
+    }
     switch (tool) {
       case 'select': {
         // a locked shape is passed over; when only locked ones are there, say so and select nothing
@@ -598,6 +630,22 @@ export class AnimDrawHost extends CanvasHost {
         return;
       }
     }
+  }
+
+  /** The outline of a line, rectangle or ellipse dragged from a to b; undefined while it is too small to draw. */
+  private _boxPath(tool: 'line' | 'rect' | 'ellipse', a: Pt, b: Pt, shift: boolean, alt: boolean): string | undefined {
+    const draw = this.chunk?.pathDraw;
+    if (!draw || Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.2) return undefined;
+    if (tool === 'line') return draw.linePath(a, b);
+    const box = dragBox(a, b, shift, alt);
+    if (box.w < 0.2 || box.h < 0.2) return undefined;
+    return tool === 'rect' ? draw.rectPath(box.x, box.y, box.w, box.h, drawStore.options.radius) : draw.ellipsePath(box.x + box.w / 2, box.y + box.h / 2, box.w / 2, box.h / 2);
+  }
+
+  private _commitBox(tool: 'line' | 'rect' | 'ellipse', a: Pt, b: Pt, shift: boolean, alt: boolean): boolean {
+    const path = this._boxPath(tool, a, b, shift, alt);
+    if (path) this._commitShape(tool, path, tool !== 'line');
+    return !!path;
   }
 
   private _eraseAt(p: Pt, v: View): void {
@@ -688,15 +736,7 @@ export class AnimDrawHost extends CanvasHost {
     const draw = this.chunk?.pathDraw;
     switch (d.kind) {
       case 'box': {
-        const { tool, a, b } = d;
-        if (!draw || Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.2) break;
-        if (tool === 'line') this._commitShape('line', draw.linePath(a, b), false);
-        else {
-          const box = dragBox(a, b, d.shift, d.alt);
-          if (box.w < 0.2 || box.h < 0.2) break;
-          const path = tool === 'rect' ? draw.rectPath(box.x, box.y, box.w, box.h, drawStore.options.radius) : draw.ellipsePath(box.x + box.w / 2, box.y + box.h / 2, box.w / 2, box.h / 2);
-          this._commitShape(tool, path, true);
-        }
+        this._commitBox(d.tool, d.a, d.b, d.shift, d.alt);
         break;
       }
       case 'free': {
@@ -753,6 +793,102 @@ export class AnimDrawHost extends CanvasHost {
     if (/^Arrow/.test(e.key)) this._endNudge();
   };
 
+  /** The Finish button: ends the pen path or the keyboard stroke, then focus goes to the drawing area (the button is gone). */
+  private _finishButton(): void {
+    if (this._kb) this._finishStroke();
+    else this._finishPen(false);
+    this.focus({ preventScroll: true });
+  }
+
+  /** The points placed with the keyboard as one smoothed stroke (samples between the points feed the same fit as a drag). */
+  private _finishStroke(): void {
+    const kb = this._kb;
+    this._kb = undefined;
+    const draw = this.chunk?.pathDraw;
+    if (!kb || !draw || kb.pts.length < 2) return;
+    const raw: Pt[] = [kb.pts[0]];
+    for (let i = 1; i < kb.pts.length; i++) {
+      const a = kb.pts[i - 1];
+      const b = kb.pts[i];
+      const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / KB_SAMPLE));
+      for (let k = 1; k <= n; k++) raw.push([a[0] + ((b[0] - a[0]) * k) / n, a[1] + ((b[1] - a[1]) * k) / n]);
+    }
+    const fit = draw.fitFreehand(raw, drawStore.options.tolerance);
+    if (!fit?.d) return;
+    const id = this._commitShape('freehand', fit.d, fit.closed);
+    if (id) drawStore.setLastFreehand({ id, raw });
+  }
+
+  /**
+   * Line, rectangle, ellipse and freehand without a pointer: arrows move a cursor (Shift: 5 units, Alt: a tenth), Enter sets
+   * the start and then the end (freehand: Enter places a point, Enter again on the last one finishes), Escape drops it.
+   * Only keys pressed on the drawing area itself; a button inside keeps its own Enter.
+   */
+  private _kbKey(e: KeyboardEvent): boolean {
+    const tool = activeTool(this.selection);
+    if (!KB_TOOLS.has(tool) || this._selectedId || this._pen || e.composedPath()[0] !== this || e.ctrlKey || e.metaKey) return false;
+    if (e.key === 'Escape') {
+      if (!this._kb) return false;
+      e.preventDefault();
+      e.stopPropagation();
+      this._kb = undefined;
+      this._announce = t('Drawing cancelled.');
+      return true;
+    }
+    const dir = KB_ARROWS[e.key];
+    if (!dir && e.key !== 'Enter') return false;
+    e.preventDefault();
+    e.stopPropagation();
+    const v = this._view();
+    if (!v) return true;
+    if (!this.chunk) {
+      this._announce = t('The drawing tools are not loaded yet.');
+      return true;
+    }
+    const kbTool = tool as KbTool;
+    const at: Pt = this._cross ?? [v.vb[0] + v.vb[2] / 2, v.vb[1] + v.vb[3] / 2];
+    const fmt = (n: number): string => String(Math.round(n * 100) / 100);
+    if (dir) {
+      const k = e.altKey ? KB_STEP.alt : e.shiftKey ? KB_STEP.shift : KB_STEP.plain;
+      const snap = drawStore.options.grid && !e.altKey;
+      const to = (n: number, lo: number, size: number): number => {
+        const c = Math.min(lo + size, Math.max(lo, n));
+        return snap ? Math.round(c) : Math.round(c * 100) / 100;
+      };
+      const p: Pt = [to(at[0] + dir[0] * k, v.vb[0], v.vb[2]), to(at[1] + dir[1] * k, v.vb[1], v.vb[3])];
+      this._cross = p;
+      const ends = kbTool !== 'freehand' && !!this._kb;
+      const args = { x: fmt(p[0]), y: fmt(p[1]) };
+      this._announce = kbTool === 'freehand' ? t('Cursor at x {x}, y {y}. Press Enter to add a point.', args) : ends ? t('Cursor at x {x}, y {y}. Press Enter to finish.', args) : t('Cursor at x {x}, y {y}. Press Enter to start.', args);
+      return true;
+    }
+    this._cross = at;
+    const kb = this._kb;
+    if (kbTool === 'freehand') {
+      const last = kb?.pts[kb.pts.length - 1];
+      if (kb && last && last[0] === at[0] && last[1] === at[1]) {
+        if (kb.pts.length > 1) this._finishStroke();
+        else this._announce = t('Move away from the start first.');
+        return true;
+      }
+      const pts = [...(kb?.pts ?? []), at];
+      this._kb = { tool: kbTool, pts };
+      this._announce = t('Point {count} placed. Enter again on the same spot finishes the stroke.', { count: pts.length });
+      return true;
+    }
+    if (!kb) {
+      this._kb = { tool: kbTool, pts: [at] };
+      this._announce = t('Started at x {x}, y {y}. Move the cursor and press Enter to finish. Escape cancels.', { x: fmt(at[0]), y: fmt(at[1]) });
+    } else if (this._commitBox(kbTool, kb.pts[0], at, false, false)) this._kb = undefined;
+    else this._announce = t('Move away from the start first.');
+    return true;
+  }
+
+  protected toolsReady(): void {
+    this._announce = t('The drawing tools are ready.');
+    this.focus({ preventScroll: true });
+  }
+
   /**
    * Before the canvas sees a key: with no points selected, Delete and Backspace remove the whole selected shape (the canvas
    * would otherwise take them for a point), and a locked shape refuses its keys.
@@ -785,6 +921,7 @@ export class AnimDrawHost extends CanvasHost {
       this._end(false);
       return;
     }
+    if (this._kbKey(e)) return;
     if (!/^Arrow/.test(e.key)) this._endNudge();
     if (this._pen) {
       if (e.key === 'Escape') {
@@ -892,15 +1029,15 @@ export class AnimDrawHost extends CanvasHost {
 
   private _dragLayer(v: View): SVGTemplateResult | typeof nothing {
     const d = this._drag;
-    const draw = this.chunk?.pathDraw;
+    const kb = this._kb;
+    if (kb && this._cross) {
+      if (kb.tool === 'freehand') return svg`<polyline class="draft" points=${[...kb.pts, this._cross].map((p) => this._toPx(v, p).map((n) => n.toFixed(1)).join(',')).join(' ')}></polyline>`;
+      const path = this._boxPath(kb.tool, kb.pts[0], this._cross, false, false);
+      return path ? svg`<path class="draft ${kb.tool === 'line' ? '' : 'fillable'}" d=${this._pxD(v, path)}></path>` : nothing;
+    }
     if (!d) return nothing;
-    if (d.kind === 'box' && draw) {
-      let path = '';
-      if (d.tool === 'line') path = draw.linePath(d.a, d.b);
-      else {
-        const b = dragBox(d.a, d.b, d.shift, d.alt);
-        if (b.w > 0 && b.h > 0) path = d.tool === 'rect' ? draw.rectPath(b.x, b.y, b.w, b.h, drawStore.options.radius) : draw.ellipsePath(b.x + b.w / 2, b.y + b.h / 2, b.w / 2, b.h / 2);
-      }
+    if (d.kind === 'box') {
+      const path = this._boxPath(d.tool, d.a, d.b, d.shift, d.alt);
       return path ? svg`<path class="draft ${d.tool === 'line' ? '' : 'fillable'}" d=${this._pxD(v, path)}></path>` : nothing;
     }
     if (d.kind === 'free') return svg`<polyline class="draft" points=${d.poly}></polyline>`;
@@ -950,6 +1087,14 @@ export class AnimDrawHost extends CanvasHost {
     return [vb[0] + vb[2] / 2, vb[1] + vb[3] / 2];
   }
 
+  /** The keyboard cursor. */
+  private _crossMark(v: View): SVGTemplateResult | typeof nothing {
+    if (!this._cross || !KB_TOOLS.has(activeTool(this.selection))) return nothing;
+    const [x, y] = this._toPx(v, this._cross);
+    const d = `M${x - 9} ${y}h18M${x} ${y - 9}v18`;
+    return svg`<path class="cross-casing" d=${d}></path><path class="cross" d=${d}></path>`;
+  }
+
   private _dots(v: View): SVGTemplateResult | typeof nothing {
     const drawing = this._drag?.kind === 'box' || !!this._pen;
     if (!drawing || !drawStore.options.anchors) return nothing;
@@ -970,7 +1115,21 @@ export class AnimDrawHost extends CanvasHost {
     return t(TOOL_INFO[tool].hint);
   }
 
+  /** The drawing area is the host itself: one focus stop that names the tool and the keys. */
+  private _labelArea(): void {
+    const tool = activeTool(this.selection);
+    if (this.disabled || !OWN_TOOLS.has(tool)) {
+      for (const a of ['role', 'aria-roledescription', 'aria-label']) this.removeAttribute(a);
+      return;
+    }
+    this.setAttribute('role', 'application');
+    this.setAttribute('aria-roledescription', t('drawing area'));
+    const keys = KB_TOOLS.has(tool) ? ` ${t('Arrow keys move the cursor, Enter places points, Escape cancels.')}` : '';
+    this.setAttribute('aria-label', t('{label} tool. {hint}', { label: t(TOOL_INFO[tool].label), hint: t(TOOL_INFO[tool].hint) }) + keys);
+  }
+
   protected updated(): void {
+    this._labelArea();
     // the hint shows in the toolbar (top dock), off the card
     drawStore.setHint(this.disabled ? '' : this._hint());
   }
@@ -1002,15 +1161,13 @@ export class AnimDrawHost extends CanvasHost {
       <svg class="layer" aria-hidden="true">
         ${this._grid(v)}
         <rect class="board" x=${v.place.left} y=${v.place.top} width=${v.place.width} height=${v.place.height} rx="2"></rect>
-        ${this._shapesLayer(v)} ${this._ghost(v)} ${this._motion(v)} ${this._dots(v)} ${this._selectionBox(v)} ${this._dragLayer(v)}
+        ${this._shapesLayer(v)} ${this._ghost(v)} ${this._motion(v)} ${this._dots(v)} ${this._selectionBox(v)} ${this._dragLayer(v)} ${this._crossMark(v)}
         ${this._snapAt ? svg`<circle class="snap" cx=${this._toPx(v, this._snapAt)[0]} cy=${this._toPx(v, this._snapAt)[1]} r="7"></circle>` : nothing}
       </svg>
       ${ownLayer
         ? html`<svg
             class="tool t-${tool}"
-            role="application"
-            aria-roledescription=${t('drawing area')}
-            aria-label=${t('{label} tool. {hint}', { label: t(TOOL_INFO[tool].label), hint: t(TOOL_INFO[tool].hint) })}
+            aria-hidden="true"
             @pointerdown=${(e: PointerEvent) => this._onDown(e)}
             @pointermove=${(e: PointerEvent) => this._onMove(e)}
             @pointerup=${(e: PointerEvent) => this._onUp(e)}
@@ -1042,7 +1199,7 @@ export class AnimDrawHost extends CanvasHost {
             @mc-path-limit=${() => (this._announce = t('The path has the most points it can hold.'))}
           ></mc-path-canvas>`
         : nothing}
-      ${this._pen && this._pen.anchors.length >= 2 ? html`<button type="button" class="finish" @click=${() => this._finishPen(false)}>${t('Finish path')}</button>` : nothing}
+      ${(this._pen && this._pen.anchors.length >= 2) || (this._kb?.tool === 'freehand' && this._kb.pts.length >= 2) ? html`<button type="button" class="finish" @click=${() => this._finishButton()}>${t('Finish path')}</button>` : nothing}
       ${this._dropping ? html`<div class="drop">${t('Drop the .svg to import it')}</div>` : nothing} ${this.renderNotice()}
       <span class="sr-only" aria-live="polite">${this._announce}</span>
       <mc-anim-svg-dialog .doc=${this.doc} .pieces=${this._pieceList} .viewBox=${this._viewBox}></mc-anim-svg-dialog>

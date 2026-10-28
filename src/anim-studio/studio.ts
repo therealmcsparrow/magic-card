@@ -479,7 +479,8 @@ export class AnimationStudio extends LitElement {
     // a dialog is a kit window; it opens once it is rendered and hands focus back to whatever had it
     const win = this.shadowRoot?.querySelector<UiWindowElement>('mc-ui-window');
     if (win && !win.open) {
-      this._opener = deepActive() ?? this._opener;
+      const active = deepActive();
+      if (active?.isConnected && active !== document.body) this._opener = active;
       win.opener = this._opener;
       win.show();
       // the transfer panel is the window's content: a screen reader user is best served by its heading
@@ -1130,6 +1131,8 @@ export class AnimationStudio extends LitElement {
         e.stopPropagation();
         const id = e.detail.id;
         this._menu = false;
+        // the menu goes with the pick: a window it opens hands focus back to the button that opened the menu
+        this._opener = this.shadowRoot?.querySelector<HTMLElement>('.new-btn') ?? undefined;
         if (id === 'preset') this._openPresets();
         else if (id === 'icon') this._openIconStart();
         else this._new(id.slice(5) as AnimationKind);

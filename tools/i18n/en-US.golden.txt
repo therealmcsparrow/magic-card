@@ -149,6 +149,7 @@ anim-studio	Customise a preset…	Customize a preset…
 anim-studio	Customise one of {count}	Customize one of {count}
 anim-studio	Drag to draw. Shift: circle, Alt: from the centre.	Drag to draw. Shift: circle, Alt: from the center.
 anim-studio	Drag to draw. Shift: square, Alt: from the centre.	Drag to draw. Shift: square, Alt: from the center.
+anim-studio	Drawing cancelled.	Drawing canceled.
 anim-studio	Entity colour	Entity color
 anim-studio	Fill colour	Fill color
 anim-studio	From colour	From color

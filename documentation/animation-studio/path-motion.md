@@ -62,7 +62,7 @@ The particles are round dots unless the YAML gives them a shape (`path.particles
 | --- | --- |
 | Tab | Move to a point |
 | Arrows | While the path is open: move the crosshair for the next point. With a point selected on a closed path: nudge the point by 1 (% or px), by one grid step with Shift, or by 0.1 with Alt |
-| Enter | Open path: place a point at the crosshair. Selected point: open its fields |
+| Enter | Open path: place a point at the crosshair |
 | C | Switch the point between smooth and corner |
 | Delete or Backspace | Remove the selected point |
 | Escape | Deselect the point |

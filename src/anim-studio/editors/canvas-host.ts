@@ -14,6 +14,30 @@ export const overlayRevisionOk = (): boolean => {
   return (ctor?.contractRevision ?? 0) >= PATH_CANVAS_OVERLAY_REVISION;
 };
 
+declare const __webpack_require__: { u: (id: unknown) => string } | undefined;
+let attempts = Date.now();
+
+/**
+ * loadPathCanvas() for a second try. Chrome and Safari remember a failed import() per URL, so the chunk is asked for under a
+ * number not used before on this page. webpack reads the chunk URL inside the import() call, so the number only needs to live
+ * for that one synchronous call.
+ */
+function loadAgain(): ReturnType<typeof loadPathCanvas> {
+  if (typeof __webpack_require__ === 'undefined') return loadPathCanvas();
+  const w = __webpack_require__;
+  const u = w.u;
+  const n = ++attempts;
+  w.u = (id) => {
+    const url = u(id);
+    return `${url}${url.includes('?') ? '&' : '?'}r=${n}`;
+  };
+  try {
+    return loadPathCanvas();
+  } finally {
+    w.u = u;
+  }
+}
+
 /** The canvas names its steps in English; they are looked up here so the undo list reads in the user's language. */
 const STEPS: Record<string, MessageId> = {
   'Add point': m('Add point'),
@@ -53,6 +77,7 @@ export abstract class CanvasHost extends LitElement {
       user-select: none;
       -webkit-user-select: none;
       --ch-accent: var(--primary-color, #03a9f4);
+      --ch-action: color-mix(in srgb, var(--ch-accent) 70%, #000);
       --ch-ink: var(--primary-text-color, #212121);
       --ch-surface: var(--card-background-color, #fff);
     }
@@ -96,7 +121,7 @@ export abstract class CanvasHost extends LitElement {
       padding: 0 12px;
       border: 0;
       border-radius: 9999px;
-      background: var(--ch-accent);
+      background: var(--ch-action);
       color: var(--text-primary-color, #fff);
       font: inherit;
       font-weight: 600;
@@ -120,25 +145,38 @@ export abstract class CanvasHost extends LitElement {
   protected chunk?: PathCanvasChunk;
   @state() protected canvasState: CanvasState = 'idle';
   private _loading?: Promise<void>;
+  private _again = false;
 
   /** Load the canvas chunk (once at a time) and check the page's element; a failure leaves a notice with a retry. */
   protected ensureCanvas(): void {
     if (this.canvasState !== 'idle' || this._loading) return;
     this.canvasState = 'loading';
-    this._loading = loadPathCanvas().then((chunk) => {
+    const again = this._again;
+    this._again = false;
+    this._loading = (again ? loadAgain() : loadPathCanvas()).then((chunk) => {
       this._loading = undefined;
       if (!chunk) this.canvasState = 'failed';
       else if (!overlayRevisionOk()) this.canvasState = 'old';
       else {
         this.chunk = chunk;
         this.canvasState = 'ready';
+        if (again) void this.updateComplete.then(() => this.toolsReady());
       }
     });
   }
 
   protected retry(): void {
+    this._again = true;
     this.canvasState = 'idle';
     this.ensureCanvas();
+  }
+
+  /** The tools came in after Try again: the button that had focus is gone, so a subclass moves focus and says so. */
+  protected toolsReady(): void {}
+
+  /** Reload the page once the user has agreed to lose what is not saved. */
+  private _reload(): void {
+    if (confirm(t('Reloading the page discards changes that are not saved. Reload anyway?'))) location.reload();
   }
 
   /** The notice for a failed load or an older canvas element; nothing while loading or ready. */
@@ -147,7 +185,7 @@ export abstract class CanvasHost extends LitElement {
       return html`<p class="host-notice" role="alert">${t("Couldn't load the drawing tools.")}<button type="button" @click=${() => this.retry()}>${t('Try again')}</button></p>`;
     if (this.canvasState === 'old')
       return html`<p class="host-notice" role="alert">
-        ${t('The drawing tools on this page are from another Magic Card version. Reload the page to draw here.')}<button type="button" @click=${() => location.reload()}>${t('Reload page')}</button>
+        ${t('The drawing tools on this page are from another Magic Card version. Reload the page to draw here.')}<button type="button" @click=${() => this._reload()}>${t('Reload page')}</button>
       </p>`;
     return nothing;
   }

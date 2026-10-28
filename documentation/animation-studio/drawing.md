@@ -27,15 +27,24 @@ Shapes live in the icon's viewBox: 0 to 24 for Material Design Icons, or the vie
 | Tool | How it works |
 | --- | --- |
 | Select | Click a shape to select it, drag to move it. A shape made of one path also shows its points and handles: drag them to reshape it. With a point selected, the arrow keys move that point by 1 unit (Shift 5, Alt 0.1) and Delete removes it. With no point selected, the arrow keys nudge the whole shape by 0.1 units (Shift 1) and Delete removes the shape. A locked shape ignores both. |
-| Pen | Click to add points, drag to pull out curve handles. Click the first point to close the shape; a path closes once it has three points. **Finish path**, which shows from two points, or a second Escape finishes an open line. The first Escape clears the selected point. The arrow keys move a crosshair and Enter places a point there, so the pen works without a pointer. Delete or Backspace removes the selected point. |
-| Line | Drag to draw a straight line |
-| Rectangle | Drag to draw. Shift draws a square, Alt draws from the centre. Corner radius is in the tool options (2 units by default). |
-| Ellipse | Drag to draw. Shift draws a circle, Alt draws from the centre. |
-| Freehand | Draw freely. The stroke is smoothed into curves when you let go. |
+| Pen | Click to add points, drag to pull out curve handles. Click the first point to close the shape; a path closes once it has three points. **Finish path**, which shows from two points, or a second Escape finishes an open line; both say "Path 1 added, 3 points." and leave focus on the drawing area. The first Escape clears the selected point. The arrow keys move a crosshair and Enter places a point there, so the pen works without a pointer. Delete or Backspace removes the selected point. |
+| Line | Drag to draw a straight line, or draw it with the keyboard (see below) |
+| Rectangle | Drag to draw, or use the keyboard (see below). Shift draws a square, Alt draws from the centre. Corner radius is in the tool options (2 units by default). |
+| Ellipse | Drag to draw, or use the keyboard (see below). Shift draws a circle, Alt draws from the centre. |
+| Freehand | Draw freely. The stroke is smoothed into curves when you let go. With the keyboard you place the points and the stroke is smoothed through them (see below). |
 | Erase | Click a shape, or drag across shapes, to delete them. One drag is one undo step. |
 | Motion path | Draw the path the selected part, group or shape travels, starting where it rests. Only available with a part, group or shape selected. |
 
 A drag is one undo step. Escape, or the browser cancelling the pointer, drops the gesture in progress and leaves the animation as it was.
+
+### Drawing with the keyboard
+
+Line, Rectangle, Ellipse and Freehand work without a pointer. Tab to the drawing area on the stage; the screen reader names the tool and the keys.
+
+-   The arrow keys move a cursor over the icon. One press moves 1 unit (Shift 5, Alt 0.1). With Grid on, the cursor sits on the grid.
+-   Enter sets the start. Move the cursor, then press Enter again to draw the line, rectangle or ellipse between the two points.
+-   For Freehand, Enter places a point each time. Press Enter again on the last point (or choose **Finish path**) to end the stroke; it is smoothed into curves like a drawn one.
+-   Escape drops the drawing in progress. Each step is announced, for example "Cursor at x 13, y 12. Press Enter to start."
 
 New shapes take the options of the active tool:
 
@@ -103,7 +112,7 @@ The path is stored on the target's track (`path: { d, follow_rotation }`) relati
 
 ## When the drawing tools do not load
 
-The Pen, the shape points and the motion path run on a canvas that loads the first time you draw. If it cannot load, the stage says "Couldn't load the drawing tools." with a **Try again** button. If the page still holds an older Magic Card version, the stage says "The drawing tools on this page are from another Magic Card version. Reload the page to draw here." with a **Reload page** button. Nothing else in the studio changes.
+The Pen, the shape points and the motion path run on a canvas that loads the first time you draw. If it cannot load, the stage says "Couldn't load the drawing tools." with a **Try again** button. Try again asks the browser for a fresh copy, so it works after a dropped connection without reloading the page. When the tools come in, focus returns to the drawing area and the studio says "The drawing tools are ready." If the page still holds an older Magic Card version, the stage says "The drawing tools on this page are from another Magic Card version. Reload the page to draw here." with a **Reload page** button. Reload page asks first, because reloading discards changes that are not saved. Nothing else in the studio changes.
 
 ## Tablet
 

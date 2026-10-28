@@ -175,6 +175,11 @@ export class AnimPathHost extends CanvasHost {
     return [g.place.left + ((p[0] - g.frame.x) * g.place.width) / g.frame.w, g.place.top + ((p[1] - g.frame.y) * g.place.height) / g.frame.h];
   }
 
+  protected toolsReady(): void {
+    this._announce = t('The drawing tools are ready.');
+    this.renderRoot.querySelector<HTMLElement>('mc-path-canvas')?.focus({ preventScroll: true });
+  }
+
   // ── writing ──
 
   private _onChange = (e: Event): void => {

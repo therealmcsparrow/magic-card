@@ -81,6 +81,7 @@ const SHAPED: Array<[RegExp, (m: RegExpExecArray) => string]> = [
   [/^No (\w+) "(.*)" in the rig\.$/, (m) => t('No {kind} "{id}" in the rig.', { kind: m[1], id: m[2] })],
   [/^Not an allowed (\w+) value\.$/, (m) => t('Not an allowed {kind} value.', { kind: m[1] })],
   [/^The animation is larger than (\d+) KB\.$/, (m) => t('The animation is larger than {size} KB.', { size: +m[1] })],
+  [/^The SVG has too many shapes; at most (\d+) fit\.$/, (m) => t('The SVG has too many shapes; at most {room} fit.', { room: +m[1] })],
   [/^This card plays engine (\d+); update Magic Card to play this animation\.$/, (m) => t('This card plays engine {engine}; update Magic Card to play this animation.', { engine: +m[1] })],
 ];
 
