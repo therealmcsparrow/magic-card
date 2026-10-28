@@ -56,6 +56,12 @@
  *   available in a parent chunk (the same rule that keeps lit, js-yaml and model.ts out of the transfer
  *   and path-tools chunks today). The stats.json of a build shows it.
  *   Rule: a child chunk may import only src/ui-kit/ files that src/ui-kit/index.ts reaches.
+ * - The path-canvas chunk also loads under magic-card-animation-studio.js (lazy-module 1.8.0, section "path-canvas
+ *   from the animation studio"), so it has two parents. webpack leaves a module out of a child chunk only when every
+ *   parent holds it, and the chunk stays one self-contained file for both. The chunk imports nothing from src/ui-kit/
+ *   today (its styles read the --mc-* tokens directly; <mc-ui-menu> comes from the editor family's define). If it ever
+ *   imports a kit file, that file must be reached by src/ui-kit/index.ts and held by the studio entry as well, or the
+ *   file is copied into the chunk.
  * - magic-card-animation-studio.js and magic-card-theme-editor.js (own entries, own lit) compile their
  *   own copy of the parts they import. Same source, same release.
  * - magic-card.js: never. Import scan: nothing reachable from src/index.ts imports src/ui-kit/ (+0 B).

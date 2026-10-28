@@ -367,16 +367,25 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   first serves the whole page. The studio draws with the canvas only when customElements.get(PATH_CANVAS_TAG)
  *   .contractRevision >= PATH_CANVAS_OVERLAY_REVISION. Otherwise (another Magic Card release defined the element first
  *   on this page) the studio keeps no drawing code of its own: Draw and the motion path stage show "The drawing tools
- *   on this page are from another Magic Card version. Reload the page to draw here." with a "Reload page" button
- *   (location.reload()). The panels, fields, layer lists and the timeline stay usable, and the document is unchanged.
+ *   on this page are from another Magic Card version. Reload the page to draw here." with a "Reload page" button. The
+ *   button asks first ("Reloading the page discards changes that are not saved. Reload anyway?", confirm()) and only
+ *   then calls location.reload(): the host cannot see whether the document has unsaved changes. The panels, fields,
+ *   layer lists and the timeline stay usable, and the document is unchanged.
  * - Public path: the chunk URL resolves through src/anim-studio/public-path.ts, so magic-card-path-canvas.<hash>.js and
  *   magic-card-path-core.<hash>.js are requested from the folder the studio file came from. Every place that serves the
  *   studio (the Magic Card Utils panel's copy list too) carries both files next to it.
  * - When: the studio starts the load when a Draw tool or the motion path editor first shows, never at studio open. The
  *   stage, the panels and the timeline stay usable while it loads.
- * - Failure: loadPathCanvas() resolving undefined shows "Couldn't load the drawing tools." with a "Try again" button
- *   that calls loadPathCanvas() again; the document is unchanged. A failed import() stays cached per URL until a
- *   reload (the editor-loader debt in "import() sites").
+ * - Failure: loadPathCanvas() resolving undefined shows "Couldn't load the drawing tools." with a "Try again" button;
+ *   the document is unchanged. Browsers keep a failed import() per URL until a reload, so Try again asks under a URL
+ *   not used before on the page: the studio host (src/anim-studio/editors/canvas-host.ts) wraps the studio runtime's
+ *   chunk URL function (`__webpack_require__.u`, as src/utils/lazy-chunk.ts and the theme-presets loader do) for the
+ *   one synchronous loadPathCanvas() call, so every chunk file that call requests (path-canvas, and path-core when it is
+ *   not loaded yet) gets `r=<n>` appended, then restores it. n starts from Date.now() and only grows. The first load
+ *   uses the plain URL. src/path-canvas/loader.ts stays stateless and is not changed for this; the card runtime's
+ *   svg-editor and shape-editor sites are not affected. A request that never settles is still waited on (section
+ *   "Failure, retry and timeout"). After a Try again that loads, focus goes to the drawing area (the canvas, for the
+ *   motion path) and "The drawing tools are ready." is announced.
  * - Sizes: this contract sets no ceiling for the studio entry or the path-canvas chunk; both are tools/size-caps.json
  *   entries, measured on a Linux build. The studio entry never holds the import site and its own old Draw and motion
  *   path overlays at the same time: the import alone is larger than the studio's headroom.
