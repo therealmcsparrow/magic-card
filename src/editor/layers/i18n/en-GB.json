@@ -671,11 +671,11 @@
     }
   },
   "layer-editor.bg-layers.needs-n-free-layers": {
-    "text": "Needs {n} free layers.",
+    "text": "{n, plural, one {Needs # free layer.} other {Needs # free layers.}}",
     "note": "Shown on a layer preset that cannot be added because too few layers are free. {n} is how many free layers the preset needs.",
     "max": 40,
     "vars": {
-      "n": "The value that replaces n in the text."
+      "n": "The count the text is about."
     }
   },
   "layer-editor.bg-layers.no-layers-yet-add-an-image-gradient": {

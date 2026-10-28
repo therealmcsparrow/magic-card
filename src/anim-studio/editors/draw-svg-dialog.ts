@@ -468,7 +468,7 @@ export class AnimSvgDialog extends LitElement {
       this._error = big;
       return;
     }
-    this._emit(doc, shapes.length === 1 ? t('anim-studio.draw-svg-dialog.import-shape') : t('anim-studio.draw-svg-dialog.import-shapes'));
+    this._emit(doc, t('anim-studio.draw-svg-dialog.import-shapes', { count: shapes.length }));
     this.close();
   }
 
@@ -594,7 +594,7 @@ export class AnimSvgDialog extends LitElement {
         <div class="top">
           <div class="preview">${clean ? unsafeSVG(clean) : html`<ha-icon icon="mdi:image-off-outline"></ha-icon>`}</div>
           <div class="facts">
-            <span>${parts} ${parts === 1 ? 'part' : 'parts'}, ${shapes} ${shapes === 1 ? 'shape' : 'shapes'}${this.pieces.length ? '' : t('anim-studio.draw-svg-dialog.no-icon')}</span>
+            <span>${this.pieces.length ? t('anim-studio.draw-svg-dialog.parts-shapes', { parts, shapes }) : t('anim-studio.draw-svg-dialog.parts-shapes-no-icon', { parts, shapes })}</span>
             <span class="muted">${t('anim-studio.draw-svg-dialog.kb-of-32-kb', { kb: kb(size) })}</span>
             <div class="meter ${size > SVG_MAX_BYTES ? 'over' : ''}" role="meter" aria-label=${t('anim-studio.draw-svg-dialog.size')} aria-valuemin="0" aria-valuemax=${SVG_MAX_BYTES} aria-valuenow=${size}>
               <i style="width:${pct}%"></i>

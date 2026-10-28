@@ -249,7 +249,7 @@ export class MctePresetDialog extends LitElement {
     const setup = !!this.include && this.include.state !== 'ok';
     return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? t('theme-editor.preset-dialog.added-c-to-my-presets', { c: saved.length }) : t('theme-editor.preset-dialog.nothing-was-saved')}</h3>
       ${saved.length
-        ? html`<p>${one ? t('theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your') : t('theme-editor.preset-dialog.these-are-presets-not-themes-on-your')}</p>
+        ? html`<p>${t('theme-editor.preset-dialog.these-are-presets-not-themes-on-your', { count: saved.length })}</p>
             ${setup ? html`<p class="help">${t('theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in')}</p>` : nothing}`
         : nothing}
       ${failed.map((f) => html`<p role="alert">${f}</p>`)}

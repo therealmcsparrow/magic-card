@@ -532,8 +532,8 @@
     "hash": "cae96945"
   },
   "shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file": {
-    "text": "Alleen de eerste van de {c} vormen in het bestand is gebruikt.",
-    "hash": "86f9057e"
+    "text": "{c, plural, one {Alleen de eerste van de # vorm in het bestand is gebruikt.} other {Alleen de eerste van de # vormen in het bestand is gebruikt.}}",
+    "hash": "1c1826fe"
   },
   "shape-editor.mc-shape-studio.op-the-outline-has-c": {
     "text": "{op, select, union {Samengevoegd} subtract {Afgetrokken} other {Doorsnede genomen}}. De omtrek heeft {c, plural, one {# punt} other {# punten}}.",
@@ -876,8 +876,8 @@
     "hash": "2f4eddc0"
   },
   "shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape": {
-    "text": "Het resultaat heeft {c} punten nodig. Een kaartvorm kan er {max} hebben. Er is niets gewijzigd. Probeer een kleinere of eenvoudigere vorm.",
-    "hash": "6ee3a28c"
+    "text": "{c, plural, one {Het resultaat heeft # punt nodig. Een kaartvorm kan er {max} hebben. Er is niets gewijzigd. Probeer een kleinere of eenvoudigere vorm.} other {Het resultaat heeft # punten nodig. Een kaartvorm kan er {max} hebben. Er is niets gewijzigd. Probeer een kleinere of eenvoudigere vorm.}}",
+    "hash": "9f984b5b"
   },
   "shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check": {
     "text": "De vormeditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",

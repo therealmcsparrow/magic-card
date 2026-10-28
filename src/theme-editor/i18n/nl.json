@@ -2252,12 +2252,8 @@
     "hash": "297e50fa"
   },
   "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
-    "text": "Dit zijn voorinstellingen, nog geen thema's op je dashboard. Kies Nieuw thema en kies er een onder Mijn voorinstellingen.",
-    "hash": "3788cc99"
-  },
-  "theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your": {
-    "text": "Dit is een voorinstelling, nog geen thema op je dashboard. Open het als nieuw thema om het te proberen en op te slaan.",
-    "hash": "1509cb6f"
+    "text": "{count, plural, one {Dit is een voorinstelling, nog geen thema op je dashboard. Open het als nieuw thema om het te proberen en op te slaan.} other {Dit zijn voorinstellingen, nog geen thema's op je dashboard. Kies Nieuw thema en kies er een onder Mijn voorinstellingen.}}",
+    "hash": "c6681e63"
   },
   "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
     "text": "Deze voorinstelling is elders gewijzigd. Open de lijst opnieuw.",

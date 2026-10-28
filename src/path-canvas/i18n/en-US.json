@@ -15,9 +15,9 @@
     "text": "{n, plural, one {# point} other {# points}}",
     "hash": "0dbf0152"
   },
-  "path-canvas.geometry.one": {
-    "text": "{one, select, yes {{n} degree} other {{n} degrees}}",
-    "hash": "21b7e88e"
+  "path-canvas.geometry.n-degrees": {
+    "text": "{n, plural, one {# degree} other {# degrees}}",
+    "hash": "5af54564"
   },
   "path-canvas.geometry.safe-area-edge": {
     "text": "Safe area edge",
@@ -88,8 +88,8 @@
     "hash": "e14a9e5d"
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
-    "text": "Point deleted, {points}.",
-    "hash": "6f943d59"
+    "text": "{deleted, plural, one {Point deleted} other {Points deleted}}, {points}.",
+    "hash": "2a103eac"
   },
   "path-canvas.mc-path-canvas.point-n-is-now-kind": {
     "text": "Point {n} is now {kind}.",
@@ -102,10 +102,6 @@
   "path-canvas.mc-path-canvas.points": {
     "text": "Points",
     "hash": "77deabe2"
-  },
-  "path-canvas.mc-path-canvas.points-deleted-points": {
-    "text": "Points deleted, {points}.",
-    "hash": "a9821a4a"
   },
   "path-canvas.mc-path-canvas.rotation": {
     "text": "Rotation",

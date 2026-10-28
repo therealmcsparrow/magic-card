@@ -847,33 +847,17 @@
     "max": 40
   },
   "look-editor.mc-slider-look-editor.look-reset-count": {
-    "text": "Look reset. {count}.",
-    "note": "Toast after the slider look is reset, followed by an Undo button. {count} is a finished phrase such as '3 settings removed' (see the plural key ending in .n).",
-    "max": 35,
+    "text": "{count, plural, one {Look reset. # setting removed.} other {Look reset. # settings removed.}}",
+    "note": "Toast after the slider look is reset, followed by an Undo button. {count} is the number of settings removed.",
+    "max": 50,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "look-editor.mc-slider-look-editor.min-and-max-labels": {
     "text": "Min and max labels",
     "note": "Shown in mc slider look editor (look-editor).",
     "max": 30
-  },
-  "look-editor.mc-slider-look-editor.n": {
-    "text": "{n, plural, one {# setting removed} other {# settings removed}}",
-    "note": "Fragment inserted into 'Look reset. {count}.' as {count}. {n} is the number of settings removed. Must work as a sentence ending in a full stop.",
-    "max": 30,
-    "vars": {
-      "n": "The count the text is about."
-    }
-  },
-  "look-editor.mc-slider-look-editor.n-2": {
-    "text": "{n, plural, one {# setting changed} other {# settings changed}}",
-    "note": "Fragment inserted into '{name} look applied. {count}.' as {count}. {n} is the number of settings changed. Must work as a sentence ending in a full stop.",
-    "max": 30,
-    "vars": {
-      "n": "The count the text is about."
-    }
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
@@ -908,11 +892,11 @@
     }
   },
   "look-editor.mc-slider-look-editor.name-look-applied-count": {
-    "text": "{name} look applied. {count}.",
-    "note": "Toast after a slider preset look is applied, followed by an Undo button. {name} is the look name; {count} is a finished phrase such as '4 settings changed'.",
-    "max": 50,
+    "text": "{count, plural, one {{name} look applied. # setting changed.} other {{name} look applied. # settings changed.}}",
+    "note": "Toast after a slider preset look is applied, followed by an Undo button. {name} is the look name; {count} is the number of settings changed.",
+    "max": 65,
     "vars": {
-      "count": "The value that replaces count in the text.",
+      "count": "The count the text is about.",
       "name": "The value that replaces name in the text."
     }
   },

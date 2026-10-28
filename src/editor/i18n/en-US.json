@@ -3436,12 +3436,8 @@
     "hash": "b52d3ae6"
   },
   "card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try": {
-    "text": "This SVG contains {list}. Remove it and try again.",
-    "hash": "cb910f27"
-  },
-  "card-editor.icon-fx-editor.this-svg-contains-list-remove-them-and": {
-    "text": "This SVG contains {list}. Remove them and try again.",
-    "hash": "e9554118"
+    "text": "{count, plural, one {This SVG contains {list}. Remove it and try again.} other {This SVG contains {list}. Remove them and try again.}}",
+    "hash": "5f6fcb26"
   },
   "card-editor.icon-fx-editor.up": {
     "text": "Up",

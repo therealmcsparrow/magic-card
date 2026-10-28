@@ -652,20 +652,12 @@
     "hash": "2a3ab621"
   },
   "look-editor.mc-slider-look-editor.look-reset-count": {
-    "text": "Uiterlijk hersteld. {count}.",
-    "hash": "43aa40c1"
+    "text": "{count, plural, one {Uiterlijk hersteld. # instelling verwijderd.} other {Uiterlijk hersteld. # instellingen verwijderd.}}",
+    "hash": "0e5079f4"
   },
   "look-editor.mc-slider-look-editor.min-and-max-labels": {
     "text": "Min- en maxlabels",
     "hash": "297de253"
-  },
-  "look-editor.mc-slider-look-editor.n": {
-    "text": "{n, plural, one {# instelling verwijderd} other {# instellingen verwijderd}}",
-    "hash": "32de1fb8"
-  },
-  "look-editor.mc-slider-look-editor.n-2": {
-    "text": "{n, plural, one {# instelling gewijzigd} other {# instellingen gewijzigd}}",
-    "hash": "4b4ba721"
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
@@ -684,8 +676,8 @@
     "hash": "21cf5aec"
   },
   "look-editor.mc-slider-look-editor.name-look-applied-count": {
-    "text": "Uiterlijk {name} toegepast. {count}.",
-    "hash": "4c4dcf2e"
+    "text": "{count, plural, one {Uiterlijk {name} toegepast. # instelling gewijzigd.} other {Uiterlijk {name} toegepast. # instellingen gewijzigd.}}",
+    "hash": "881e0002"
   },
   "look-editor.mc-slider-look-editor.name-look-is-already-applied": {
     "text": "Uiterlijk {name} is al toegepast.",

@@ -447,13 +447,9 @@
     "text": "Drop the .svg to import it",
     "hash": "46b77ff9"
   },
-  "anim-studio.draw-host.erase-shape": {
-    "text": "Erase shape",
-    "hash": "bb4d1be1"
-  },
   "anim-studio.draw-host.erase-shapes": {
-    "text": "Erase shapes",
-    "hash": "c8e60cce"
+    "text": "{count, plural, one {Erase shape} other {Erase shapes}}",
+    "hash": "44716f7f"
   },
   "anim-studio.draw-host.finish-path": {
     "text": "Finish path",
@@ -791,13 +787,9 @@
     "text": "Icon",
     "hash": "a35abcd6"
   },
-  "anim-studio.draw-svg-dialog.import-shape": {
-    "text": "Import shape",
-    "hash": "49c8dab5"
-  },
   "anim-studio.draw-svg-dialog.import-shapes": {
-    "text": "Import shapes",
-    "hash": "6c4594a6"
+    "text": "{count, plural, one {Import shape} other {Import shapes}}",
+    "hash": "4149b9de"
   },
   "anim-studio.draw-svg-dialog.import-svg": {
     "text": "Import SVG",
@@ -811,13 +803,17 @@
     "text": ", large",
     "hash": "b4861913"
   },
-  "anim-studio.draw-svg-dialog.no-icon": {
-    "text": ", no icon",
-    "hash": "a62c26fe"
-  },
   "anim-studio.draw-svg-dialog.nothing-to-export-yet": {
     "text": "Nothing to export yet.",
     "hash": "f88a199e"
+  },
+  "anim-studio.draw-svg-dialog.parts-shapes": {
+    "text": "{parts, plural, one {# part} other {# parts}}, {shapes, plural, one {# shape} other {# shapes}}",
+    "hash": "a07f9936"
+  },
+  "anim-studio.draw-svg-dialog.parts-shapes-no-icon": {
+    "text": "{parts, plural, one {# part} other {# parts}}, {shapes, plural, one {# shape} other {# shapes}}, no icon",
+    "hash": "3f24224b"
   },
   "anim-studio.draw-svg-dialog.save-as-icon": {
     "text": "Save as icon",
@@ -1120,20 +1116,20 @@
     "hash": "e21f935f"
   },
   "anim-studio.key-inspector.count-keyframes": {
-    "text": "{count} keyframes",
-    "hash": "6aae8440"
+    "text": "{count, plural, one {# keyframe} other {# keyframes}}",
+    "hash": "bb6b3c12"
   },
   "anim-studio.key-inspector.count-targets": {
-    "text": "{count} targets",
-    "hash": "4628d8d6"
+    "text": "{count, plural, one {# target} other {# targets}}",
+    "hash": "66494c50"
   },
   "anim-studio.key-inspector.custom-axis-axis": {
     "text": "Custom axis ({axis})",
     "hash": "fc5abe27"
   },
   "anim-studio.key-inspector.delete-count-keyframes": {
-    "text": "Delete {count} keyframes",
-    "hash": "1b787c3e"
+    "text": "{count, plural, one {Delete # keyframe} other {Delete # keyframes}}",
+    "hash": "3b13456c"
   },
   "anim-studio.key-inspector.delete-keyframe": {
     "text": "Delete keyframe",
@@ -2036,8 +2032,8 @@
     "hash": "8570a2e1"
   },
   "anim-studio.part-inspector.part-of-pieces-shapes": {
-    "text": "Part of {pieces} shapes",
-    "hash": "07fde253"
+    "text": "{pieces, plural, one {Part of # shape} other {Part of # shapes}}",
+    "hash": "05517dd1"
   },
   "anim-studio.part-inspector.part-pivot": {
     "text": "Part pivot",
@@ -2164,12 +2160,12 @@
     "hash": "2f311e68"
   },
   "anim-studio.part-presets-panel.count-parts": {
-    "text": "{count} parts",
-    "hash": "729f8153"
+    "text": "{count, plural, one {# part} other {# parts}}",
+    "hash": "85e36d46"
   },
   "anim-studio.part-presets-panel.count-targets-selected-a-preset-plays-on": {
-    "text": "{count} targets selected: a preset plays on each (Wave: one after another).",
-    "hash": "4f948df4"
+    "text": "{count, plural, one {# target selected: a preset plays on each (Wave: one after another).} other {# targets selected: a preset plays on each (Wave: one after another).}}",
+    "hash": "8cac2f3e"
   },
   "anim-studio.part-presets-panel.direction": {
     "text": "Direction",
@@ -3300,8 +3296,8 @@
     "hash": "b70ac34b"
   },
   "anim-studio.parts-layers.count-shapes": {
-    "text": "{count} shapes",
-    "hash": "e0ec1b9d"
+    "text": "{count, plural, one {# shape} other {# shapes}}",
+    "hash": "c03a3b48"
   },
   "anim-studio.parts-layers.ctrl-g": {
     "text": "Ctrl+G",
@@ -3319,17 +3315,13 @@
     "text": "Group",
     "hash": "34ca0e76"
   },
-  "anim-studio.parts-layers.group-removed": {
-    "text": "Group removed",
-    "hash": "acf99b88"
-  },
   "anim-studio.parts-layers.grouped-count-parts": {
     "text": "Grouped {count} parts",
     "hash": "1274b765"
   },
   "anim-studio.parts-layers.groups-removed": {
-    "text": "Groups removed",
-    "hash": "c533c5a7"
+    "text": "{count, plural, one {Group removed} other {Groups removed}}",
+    "hash": "2cbf19d4"
   },
   "anim-studio.parts-layers.icon-parts": {
     "text": "Icon parts",

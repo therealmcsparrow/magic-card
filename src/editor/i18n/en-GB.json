@@ -4639,18 +4639,11 @@
     "max": 50
   },
   "card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try": {
-    "text": "This SVG contains {list}. Remove it and try again.",
-    "note": "Error for an unsafe SVG file. {list} is one disallowed item, such as a script. Singular: it. The next key is the plural form (them), used when several items are found.",
-    "max": 80,
-    "vars": {
-      "list": "The value that replaces list in the text."
-    }
-  },
-  "card-editor.icon-fx-editor.this-svg-contains-list-remove-them-and": {
-    "text": "This SVG contains {list}. Remove them and try again.",
-    "note": "Error for an unsafe SVG file. {list} is several disallowed items joined with the list-and-last key. Plural: them. The previous key is the singular form (it).",
+    "text": "{count, plural, one {This SVG contains {list}. Remove it and try again.} other {This SVG contains {list}. Remove them and try again.}}",
+    "note": "Error for an unsafe SVG file. {count} is how many disallowed items were found; {list} names them, such as a script, joined with the list-and-last key. The wording refers to the item (it) or the items (them).",
     "max": 85,
     "vars": {
+      "count": "The count the text is about.",
       "list": "The value that replaces list in the text."
     }
   },

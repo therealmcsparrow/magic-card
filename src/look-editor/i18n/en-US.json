@@ -652,20 +652,12 @@
     "hash": "2a3ab621"
   },
   "look-editor.mc-slider-look-editor.look-reset-count": {
-    "text": "Look reset. {count}.",
-    "hash": "43aa40c1"
+    "text": "{count, plural, one {Look reset. # setting removed.} other {Look reset. # settings removed.}}",
+    "hash": "0e5079f4"
   },
   "look-editor.mc-slider-look-editor.min-and-max-labels": {
     "text": "Min and max labels",
     "hash": "297de253"
-  },
-  "look-editor.mc-slider-look-editor.n": {
-    "text": "{n, plural, one {# setting removed} other {# settings removed}}",
-    "hash": "32de1fb8"
-  },
-  "look-editor.mc-slider-look-editor.n-2": {
-    "text": "{n, plural, one {# setting changed} other {# settings changed}}",
-    "hash": "4b4ba721"
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
@@ -684,8 +676,8 @@
     "hash": "21cf5aec"
   },
   "look-editor.mc-slider-look-editor.name-look-applied-count": {
-    "text": "{name} look applied. {count}.",
-    "hash": "4c4dcf2e"
+    "text": "{count, plural, one {{name} look applied. # setting changed.} other {{name} look applied. # settings changed.}}",
+    "hash": "881e0002"
   },
   "look-editor.mc-slider-look-editor.name-look-is-already-applied": {
     "text": "{name} look is already applied.",

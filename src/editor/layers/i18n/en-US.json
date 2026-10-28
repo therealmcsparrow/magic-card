@@ -484,8 +484,8 @@
     "hash": "13aa2a07"
   },
   "layer-editor.bg-layers.needs-n-free-layers": {
-    "text": "Needs {n} free layers.",
-    "hash": "6314153b"
+    "text": "{n, plural, one {Needs # free layer.} other {Needs # free layers.}}",
+    "hash": "8e2b9d8e"
   },
   "layer-editor.bg-layers.no-layers-yet-add-an-image-gradient": {
     "text": "No layers yet. Add an image, gradient, pattern or color behind the card content.",

@@ -447,13 +447,9 @@
     "text": "Laat de .svg los om te importeren",
     "hash": "46b77ff9"
   },
-  "anim-studio.draw-host.erase-shape": {
-    "text": "Vorm wissen",
-    "hash": "bb4d1be1"
-  },
   "anim-studio.draw-host.erase-shapes": {
-    "text": "Vormen wissen",
-    "hash": "c8e60cce"
+    "text": "{count, plural, one {Vorm wissen} other {Vormen wissen}}",
+    "hash": "44716f7f"
   },
   "anim-studio.draw-host.finish-path": {
     "text": "Pad afronden",
@@ -791,13 +787,9 @@
     "text": "Pictogram",
     "hash": "a35abcd6"
   },
-  "anim-studio.draw-svg-dialog.import-shape": {
-    "text": "Vorm importeren",
-    "hash": "49c8dab5"
-  },
   "anim-studio.draw-svg-dialog.import-shapes": {
-    "text": "Vormen importeren",
-    "hash": "6c4594a6"
+    "text": "{count, plural, one {Vorm importeren} other {Vormen importeren}}",
+    "hash": "4149b9de"
   },
   "anim-studio.draw-svg-dialog.import-svg": {
     "text": "SVG importeren",
@@ -811,13 +803,17 @@
     "text": ", groot",
     "hash": "b4861913"
   },
-  "anim-studio.draw-svg-dialog.no-icon": {
-    "text": ", geen pictogram",
-    "hash": "a62c26fe"
-  },
   "anim-studio.draw-svg-dialog.nothing-to-export-yet": {
     "text": "Er is nog niets om te exporteren.",
     "hash": "f88a199e"
+  },
+  "anim-studio.draw-svg-dialog.parts-shapes": {
+    "text": "{parts, plural, one {# onderdeel} other {# onderdelen}}, {shapes, plural, one {# vorm} other {# vormen}}",
+    "hash": "a07f9936"
+  },
+  "anim-studio.draw-svg-dialog.parts-shapes-no-icon": {
+    "text": "{parts, plural, one {# onderdeel} other {# onderdelen}}, {shapes, plural, one {# vorm} other {# vormen}}, geen pictogram",
+    "hash": "3f24224b"
   },
   "anim-studio.draw-svg-dialog.save-as-icon": {
     "text": "Opslaan als pictogram",
@@ -1120,20 +1116,20 @@
     "hash": "e21f935f"
   },
   "anim-studio.key-inspector.count-keyframes": {
-    "text": "{count} keyframes",
-    "hash": "6aae8440"
+    "text": "{count, plural, one {# keyframe} other {# keyframes}}",
+    "hash": "bb6b3c12"
   },
   "anim-studio.key-inspector.count-targets": {
-    "text": "{count} doelen",
-    "hash": "4628d8d6"
+    "text": "{count, plural, one {# doel} other {# doelen}}",
+    "hash": "66494c50"
   },
   "anim-studio.key-inspector.custom-axis-axis": {
     "text": "Eigen as ({axis})",
     "hash": "fc5abe27"
   },
   "anim-studio.key-inspector.delete-count-keyframes": {
-    "text": "{count} keyframes verwijderen",
-    "hash": "1b787c3e"
+    "text": "{count, plural, one {# keyframe verwijderen} other {# keyframes verwijderen}}",
+    "hash": "3b13456c"
   },
   "anim-studio.key-inspector.delete-keyframe": {
     "text": "Keyframe verwijderen",
@@ -2036,8 +2032,8 @@
     "hash": "8570a2e1"
   },
   "anim-studio.part-inspector.part-of-pieces-shapes": {
-    "text": "Deel van {pieces} vormen",
-    "hash": "07fde253"
+    "text": "{pieces, plural, one {Deel van # vorm} other {Deel van # vormen}}",
+    "hash": "05517dd1"
   },
   "anim-studio.part-inspector.part-pivot": {
     "text": "Draaipunt van onderdeel",
@@ -2164,12 +2160,12 @@
     "hash": "2f311e68"
   },
   "anim-studio.part-presets-panel.count-parts": {
-    "text": "{count} onderdelen",
-    "hash": "729f8153"
+    "text": "{count, plural, one {# onderdeel} other {# onderdelen}}",
+    "hash": "85e36d46"
   },
   "anim-studio.part-presets-panel.count-targets-selected-a-preset-plays-on": {
-    "text": "{count} doelen geselecteerd: op elk speelt een voorinstelling (Golf: na elkaar).",
-    "hash": "4f948df4"
+    "text": "{count, plural, one {# doel geselecteerd: op elk speelt een voorinstelling (Golf: na elkaar).} other {# doelen geselecteerd: op elk speelt een voorinstelling (Golf: na elkaar).}}",
+    "hash": "8cac2f3e"
   },
   "anim-studio.part-presets-panel.direction": {
     "text": "Richting",
@@ -3300,8 +3296,8 @@
     "hash": "b70ac34b"
   },
   "anim-studio.parts-layers.count-shapes": {
-    "text": "{count} vormen",
-    "hash": "e0ec1b9d"
+    "text": "{count, plural, one {# vorm} other {# vormen}}",
+    "hash": "c03a3b48"
   },
   "anim-studio.parts-layers.ctrl-g": {
     "text": "Ctrl+G",
@@ -3319,17 +3315,13 @@
     "text": "Groep",
     "hash": "34ca0e76"
   },
-  "anim-studio.parts-layers.group-removed": {
-    "text": "Groep verwijderd",
-    "hash": "acf99b88"
-  },
   "anim-studio.parts-layers.grouped-count-parts": {
     "text": "{count} onderdelen gegroepeerd",
     "hash": "1274b765"
   },
   "anim-studio.parts-layers.groups-removed": {
-    "text": "Groepen verwijderd",
-    "hash": "c533c5a7"
+    "text": "{count, plural, one {Groep verwijderd} other {Groepen verwijderd}}",
+    "hash": "2cbf19d4"
   },
   "anim-studio.parts-layers.icon-parts": {
     "text": "Pictogramonderdelen",

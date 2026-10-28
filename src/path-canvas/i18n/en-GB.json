@@ -22,13 +22,12 @@
       "n": "The count the text is about."
     }
   },
-  "path-canvas.geometry.one": {
-    "text": "{one, select, yes {{n} degree} other {{n} degrees}}",
-    "note": "An angle. {one} is the keyword yes when the angle is exactly 1 and no otherwise; do not translate the keywords yes and other. {n} is the angle number.",
+  "path-canvas.geometry.n-degrees": {
+    "text": "{n, plural, one {# degree} other {# degrees}}",
+    "note": "An angle. {n} is the angle in degrees, rounded as it is shown.",
     "max": 20,
     "vars": {
-      "n": "The value that replaces n in the text.",
-      "one": "The value that replaces one in the text."
+      "n": "The count the text is about."
     }
   },
   "path-canvas.geometry.safe-area-edge": {
@@ -136,10 +135,11 @@
     }
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
-    "text": "Point deleted, {points}.",
-    "note": "Screen reader announcement after one point was removed. {points} is the new total as a count with its noun, such as 3 points.",
+    "text": "{deleted, plural, one {Point deleted} other {Points deleted}}, {points}.",
+    "note": "Screen reader announcement after points were removed. {deleted} is how many points were removed; {points} is the new total as a count with its noun, such as 3 points.",
     "max": 40,
     "vars": {
+      "deleted": "The count the text is about.",
       "points": "The value that replaces points in the text."
     }
   },
@@ -168,14 +168,6 @@
     "text": "Points",
     "note": "Label of the list or toolbar group of points of the selected path. A plural noun.",
     "max": 10
-  },
-  "path-canvas.mc-path-canvas.points-deleted-points": {
-    "text": "Points deleted, {points}.",
-    "note": "Screen reader announcement after several points were removed. {points} is the new total as a count with its noun, such as 3 points.",
-    "max": 40,
-    "vars": {
-      "points": "The value that replaces points in the text."
-    }
   },
   "path-canvas.mc-path-canvas.rotation": {
     "text": "Rotation",

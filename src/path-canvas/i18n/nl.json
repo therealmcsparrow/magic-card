@@ -15,9 +15,9 @@
     "text": "{n, plural, one {# punt} other {# punten}}",
     "hash": "0dbf0152"
   },
-  "path-canvas.geometry.one": {
-    "text": "{one, select, yes {{n} graad} other {{n} graden}}",
-    "hash": "21b7e88e"
+  "path-canvas.geometry.n-degrees": {
+    "text": "{n, plural, one {# graad} other {# graden}}",
+    "hash": "5af54564"
   },
   "path-canvas.geometry.safe-area-edge": {
     "text": "Rand veilig gebied",
@@ -88,8 +88,8 @@
     "hash": "e14a9e5d"
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
-    "text": "Punt verwijderd, {points}.",
-    "hash": "6f943d59"
+    "text": "{deleted, plural, one {Punt verwijderd} other {Punten verwijderd}}, {points}.",
+    "hash": "2a103eac"
   },
   "path-canvas.mc-path-canvas.point-n-is-now-kind": {
     "text": "Punt {n} is nu {kind}.",
@@ -102,10 +102,6 @@
   "path-canvas.mc-path-canvas.points": {
     "text": "Punten",
     "hash": "77deabe2"
-  },
-  "path-canvas.mc-path-canvas.points-deleted-points": {
-    "text": "Punten verwijderd, {points}.",
-    "hash": "a9821a4a"
   },
   "path-canvas.mc-path-canvas.rotation": {
     "text": "Rotatie",

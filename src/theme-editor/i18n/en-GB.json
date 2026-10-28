@@ -3015,14 +3015,12 @@
     "max": 80
   },
   "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
-    "text": "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.",
-    "note": "Shown in preset dialog (theme-editor).",
-    "max": 160
-  },
-  "theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your": {
-    "text": "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.",
-    "note": "Shown in preset dialog (theme-editor).",
-    "max": 165
+    "text": "{count, plural, one {This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.} other {These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.}}",
+    "note": "Shown in the dialog after presets were saved. {count} is how many presets were saved; one preset is opened as a new theme, several are picked under My presets.",
+    "max": 165,
+    "vars": {
+      "count": "The count the text is about."
+    }
   },
   "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
     "text": "This preset changed elsewhere. Reopen the list.",

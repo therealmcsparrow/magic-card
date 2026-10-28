@@ -2252,12 +2252,8 @@
     "hash": "297e50fa"
   },
   "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
-    "text": "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.",
-    "hash": "3788cc99"
-  },
-  "theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your": {
-    "text": "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.",
-    "hash": "1509cb6f"
+    "text": "{count, plural, one {This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.} other {These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.}}",
+    "hash": "c6681e63"
   },
   "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
     "text": "This preset changed elsewhere. Reopen the list.",

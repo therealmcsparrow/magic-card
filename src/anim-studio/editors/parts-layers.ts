@@ -240,7 +240,7 @@ export class AnimPartsLayers extends LitElement {
       members.push(...(d.rig?.groups?.find((x) => `group:${x.id}` === g)?.parts ?? []).map(partRef));
       next = ungroup(next, g.slice(6));
     }
-    this._change(next, 'Ungroup', groups.length > 1 ? t('anim-studio.parts-layers.groups-removed') : t('anim-studio.parts-layers.group-removed'));
+    this._change(next, 'Ungroup', t('anim-studio.parts-layers.groups-removed', { count: groups.length }));
     this._select(members);
   }
 

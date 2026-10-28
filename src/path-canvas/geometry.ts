@@ -180,7 +180,8 @@ export const num = (v: number): string => String(Math.round(v * 100) / 100 || 0)
 
 const formats: Record<string, Intl.NumberFormat> = {};
 /** A coordinate or size rounded to two decimals, with the decimal separator of the active language (the messages take it as text). */
-export const rnd = (v: number): string => (formats[locale()] ||= new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 })).format(Math.round(v * 100) / 100 || 0);
+const shown = (v: number): number => Math.round(v * 100) / 100 || 0;
+export const rnd = (v: number): string => (formats[locale()] ||= new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 })).format(shown(v));
 
 export function kindWord(a: EditPath['anchors'][number], smooth: boolean): string {
   const k = a.kind ?? (smooth ? 'smooth' : 'corner');
@@ -190,4 +191,4 @@ export function kindWord(a: EditPath['anchors'][number], smooth: boolean): strin
 export const pointsWord = (n: number): string => t('path-canvas.geometry.n', { n });
 
 /** An angle in degrees, said in the language. */
-export const degrees = (v: number): string => t('path-canvas.geometry.one', { one: v === 1 ? 'yes' : 'no', n: rnd(v) });
+export const degrees = (v: number): string => t('path-canvas.geometry.n-degrees', { n: shown(v) });

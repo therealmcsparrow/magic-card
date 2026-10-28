@@ -484,8 +484,8 @@
     "hash": "13aa2a07"
   },
   "layer-editor.bg-layers.needs-n-free-layers": {
-    "text": "Heeft {n} vrije lagen nodig.",
-    "hash": "6314153b"
+    "text": "{n, plural, one {Heeft # vrije laag nodig.} other {Heeft # vrije lagen nodig.}}",
+    "hash": "8e2b9d8e"
   },
   "layer-editor.bg-layers.no-layers-yet-add-an-image-gradient": {
     "text": "Nog geen lagen. Voeg een afbeelding, kleurverloop, patroon of kleur toe achter de inhoud van de kaart.",

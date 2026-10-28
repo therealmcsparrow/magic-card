@@ -60,9 +60,7 @@ export function customSvgError(svg: string): string | undefined {
   const bad = hostileParts(svg);
   if (bad.length) {
     const list = bad.length > 1 ? t('card-editor.icon-fx-editor.list-and-last', { list: bad.slice(0, -1).join(', '), last: bad[bad.length - 1] }) : bad[0];
-    return bad.length > 1
-      ? t('card-editor.icon-fx-editor.this-svg-contains-list-remove-them-and', { list })
-      : t('card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try', { list });
+    return t('card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try', { count: bad.length, list });
   }
   // Not unsafe, but dropped by the sanitiser: the shapes they draw would silently go missing.
   if (/<\s*(?:use|image)\b/i.test(svg)) return t("card-editor.icon-fx-editor.use-and-image-aren-t-supported-draw-the");

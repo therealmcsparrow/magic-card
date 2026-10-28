@@ -619,15 +619,13 @@
     "note": "Shown in draw host (anim-studio).",
     "max": 45
   },
-  "anim-studio.draw-host.erase-shape": {
-    "text": "Erase shape",
-    "note": "Undo-history label for erasing one shape with the eraser tool. Singular form.",
-    "max": 20
-  },
   "anim-studio.draw-host.erase-shapes": {
-    "text": "Erase shapes",
-    "note": "Undo-history label for erasing several shapes in one eraser stroke. Plural form.",
-    "max": 20
+    "text": "{count, plural, one {Erase shape} other {Erase shapes}}",
+    "note": "Undo-history label for one eraser stroke. {count} is how many shapes the stroke erased; the label is singular for one shape.",
+    "max": 20,
+    "vars": {
+      "count": "The count the text is about."
+    }
   },
   "anim-studio.draw-host.finish-path": {
     "text": "Finish path",
@@ -1095,15 +1093,13 @@
     "note": "Name of a choice under What to save in the SVG dialog: the icon at rest, without animation. Not the icon picker.",
     "max": 10
   },
-  "anim-studio.draw-svg-dialog.import-shape": {
-    "text": "Import shape",
-    "note": "Confirm button in the SVG import dialog when the file holds exactly one shape (singular form).",
-    "max": 20
-  },
   "anim-studio.draw-svg-dialog.import-shapes": {
-    "text": "Import shapes",
-    "note": "Confirm button in the SVG import dialog when the file holds several shapes (plural form).",
-    "max": 25
+    "text": "{count, plural, one {Import shape} other {Import shapes}}",
+    "note": "Confirm button in the SVG import dialog. {count} is how many shapes the file holds.",
+    "max": 25,
+    "vars": {
+      "count": "The count the text is about."
+    }
   },
   "anim-studio.draw-svg-dialog.import-svg": {
     "text": "Import SVG",
@@ -1123,15 +1119,28 @@
     "note": "Fragment appended after a size summary in the SVG dialog when the file is big. Starts with a comma; keep it.",
     "max": 15
   },
-  "anim-studio.draw-svg-dialog.no-icon": {
-    "text": ", no icon",
-    "note": "Fragment appended after a summary in the SVG dialog when the saved file would not include the icon. Starts with a comma.",
-    "max": 20
-  },
   "anim-studio.draw-svg-dialog.nothing-to-export-yet": {
     "text": "Nothing to export yet.",
     "note": "Shown in draw svg dialog (anim-studio).",
     "max": 40
+  },
+  "anim-studio.draw-svg-dialog.parts-shapes": {
+    "text": "{parts, plural, one {# part} other {# parts}}, {shapes, plural, one {# shape} other {# shapes}}",
+    "note": "Summary line in the SVG import dialog. {parts} is the number of parts the icon makes and {shapes} the number of shapes; each has its own plural forms. Compare the same line with no icon.",
+    "max": 40,
+    "vars": {
+      "parts": "The count the text is about.",
+      "shapes": "The count the text is about."
+    }
+  },
+  "anim-studio.draw-svg-dialog.parts-shapes-no-icon": {
+    "text": "{parts, plural, one {# part} other {# parts}}, {shapes, plural, one {# shape} other {# shapes}}, no icon",
+    "note": "Summary line in the SVG import dialog when the saved file would not include the icon. {parts} is the number of parts and {shapes} the number of shapes; each has its own plural forms.",
+    "max": 55,
+    "vars": {
+      "parts": "The count the text is about.",
+      "shapes": "The count the text is about."
+    }
   },
   "anim-studio.draw-svg-dialog.save-as-icon": {
     "text": "Save as icon",
@@ -1529,19 +1538,19 @@
     "max": 10
   },
   "anim-studio.key-inspector.count-keyframes": {
-    "text": "{count} keyframes",
-    "note": "Heading of the key inspector when several keyframes are selected. {count} is how many, always 2 or more.",
+    "text": "{count, plural, one {# keyframe} other {# keyframes}}",
+    "note": "Heading of the key inspector when keyframes are selected. {count} is how many are selected.",
     "max": 30,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.key-inspector.count-targets": {
-    "text": "{count} targets",
-    "note": "Names the animated parts when the selected keyframes belong to several. {count} is how many parts, 2 or more.",
+    "text": "{count, plural, one {# target} other {# targets}}",
+    "note": "Names the animated parts when the selected keyframes belong to several. {count} is how many parts.",
     "max": 25,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.key-inspector.custom-axis-axis": {
@@ -1553,11 +1562,11 @@
     }
   },
   "anim-studio.key-inspector.delete-count-keyframes": {
-    "text": "Delete {count} keyframes",
-    "note": "Button that deletes all selected keyframes. {count} is how many are selected, 2 or more.",
+    "text": "{count, plural, one {Delete # keyframe} other {Delete # keyframes}}",
+    "note": "Button that deletes all selected keyframes. {count} is how many are selected.",
     "max": 40,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.key-inspector.delete-keyframe": {
@@ -2851,11 +2860,11 @@
     "max": 10
   },
   "anim-studio.part-inspector.part-of-pieces-shapes": {
-    "text": "Part of {pieces} shapes",
-    "note": "Subtitle in the part inspector for a part made of several shapes. {pieces} is the number of shapes, always 2 or more.",
+    "text": "{pieces, plural, one {Part of # shape} other {Part of # shapes}}",
+    "note": "Subtitle in the part inspector for a part made of shapes. {pieces} is the number of shapes.",
     "max": 40,
     "vars": {
-      "pieces": "The value that replaces pieces in the text."
+      "pieces": "The count the text is about."
     }
   },
   "anim-studio.part-inspector.part-pivot": {
@@ -3017,19 +3026,19 @@
     "max": 25
   },
   "anim-studio.part-presets-panel.count-parts": {
-    "text": "{count} parts",
+    "text": "{count, plural, one {# part} other {# parts}}",
     "note": "Used inside the status line after applying a preset to more than two parts, in place of listing their names. {count} is the number of parts.",
     "max": 25,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.part-presets-panel.count-targets-selected-a-preset-plays-on": {
-    "text": "{count} targets selected: a preset plays on each (Wave: one after another).",
-    "note": "Help text in the part presets panel when two or more targets are selected. {count} is the number of targets; Wave is the name of a stagger option, so keep it matching that label.",
+    "text": "{count, plural, one {# target selected: a preset plays on each (Wave: one after another).} other {# targets selected: a preset plays on each (Wave: one after another).}}",
+    "note": "Help text in the part presets panel when targets are selected. {count} is the number of targets; Wave is the name of a stagger option, so keep it matching that label.",
     "max": 120,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.part-presets-panel.direction": {
@@ -4623,11 +4632,11 @@
     }
   },
   "anim-studio.parts-layers.count-shapes": {
-    "text": "{count} shapes",
-    "note": "Count of shapes in a part, shown in the parts list. Plural forms may be needed.",
+    "text": "{count, plural, one {# shape} other {# shapes}}",
+    "note": "Count of shapes in a part, shown in the parts list. {count} is the number of shapes.",
     "max": 25,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.parts-layers.ctrl-g": {
@@ -4650,11 +4659,6 @@
     "note": "Button and menu item in the parts list that puts the selected parts into one group. Verb.",
     "max": 10
   },
-  "anim-studio.parts-layers.group-removed": {
-    "text": "Group removed",
-    "note": "Confirmation message after one group is dissolved in the parts list; its parts stay.",
-    "max": 25
-  },
   "anim-studio.parts-layers.grouped-count-parts": {
     "text": "Grouped {count} parts",
     "note": "Confirmation after merging several parts into one group. Count is the number of parts.",
@@ -4664,9 +4668,12 @@
     }
   },
   "anim-studio.parts-layers.groups-removed": {
-    "text": "Groups removed",
-    "note": "Confirmation message after several groups are dissolved at once in the parts list; their parts stay.",
-    "max": 25
+    "text": "{count, plural, one {Group removed} other {Groups removed}}",
+    "note": "Confirmation message after groups are dissolved in the parts list; their parts stay. {count} is how many groups were dissolved.",
+    "max": 25,
+    "vars": {
+      "count": "The count the text is about."
+    }
   },
   "anim-studio.parts-layers.icon-parts": {
     "text": "Icon parts",

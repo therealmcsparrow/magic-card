@@ -763,7 +763,7 @@ export class AnimDrawHost extends CanvasHost {
         if (!d.ids.length) break;
         let doc = d.base;
         for (const id of d.ids) doc = removeShape(doc, id);
-        this._emitDoc(doc, d.ids.length === 1 ? t('anim-studio.draw-host.erase-shape') : t('anim-studio.draw-host.erase-shapes'));
+        this._emitDoc(doc, t('anim-studio.draw-host.erase-shapes', { count: d.ids.length }));
         break;
       }
     }

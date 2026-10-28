@@ -1457,7 +1457,7 @@ export class PathCanvas extends LitElement {
     const n = np.anchors.length;
     this.emitChange(n ? this.paths.map((x, i) => (i === ap ? np : x)) : this.paths.filter((_, i) => i !== ap), true, sel.anchors.length > 1 ? 'Delete points' : 'Delete point');
     this.setSel(n ? { path: ap, anchors: [Math.min(n - 1, Math.max(0, Math.min(...sel.anchors) - 1))] } : undefined, false);
-    this.announce(n ? (sel.anchors.length > 1 ? t('path-canvas.mc-path-canvas.points-deleted-points', { points: pointsWord(n) }) : t('path-canvas.mc-path-canvas.point-deleted-points', { points: pointsWord(n) })) : t('path-canvas.mc-path-canvas.path-deleted'));
+    this.announce(n ? t('path-canvas.mc-path-canvas.point-deleted-points', { deleted: sel.anchors.length, points: pointsWord(n) }) : t('path-canvas.mc-path-canvas.path-deleted'));
   }
 
   private insertAfter(): void {

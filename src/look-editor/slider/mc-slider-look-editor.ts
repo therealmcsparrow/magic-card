@@ -199,7 +199,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this.onUndoChange?.(prev);
     this.onChange?.(next);
     this._watchChunk();
-    this._toast(t('look-editor.mc-slider-look-editor.name-look-applied-count', { name, count: this._countText(n) }), true);
+    this._toast(t('look-editor.mc-slider-look-editor.name-look-applied-count', { name, count: n }), true);
   }
 
   private _reset(): void {
@@ -211,13 +211,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this._undoLabel = t('look-editor.mc-slider-look-editor.undo-reset');
     this.onUndoChange?.(prev);
     this.onChange?.(next);
-    this._toast(t('look-editor.mc-slider-look-editor.look-reset-count', { count: this._countText(n, true) }), true);
-  }
-
-  private _countText(n: number, removed = false): string {
-    return removed
-      ? t('look-editor.mc-slider-look-editor.n', { n })
-      : t('look-editor.mc-slider-look-editor.n-2', { n });
+    this._toast(t('look-editor.mc-slider-look-editor.look-reset-count', { count: n }), true);
   }
 
   private _undo(): void {

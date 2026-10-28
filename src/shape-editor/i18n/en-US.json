@@ -532,8 +532,8 @@
     "hash": "cae96945"
   },
   "shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file": {
-    "text": "Only the first of {c} shapes in the file was used.",
-    "hash": "86f9057e"
+    "text": "{c, plural, one {Only the first of # shape in the file was used.} other {Only the first of # shapes in the file was used.}}",
+    "hash": "1c1826fe"
   },
   "shape-editor.mc-shape-studio.op-the-outline-has-c": {
     "text": "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.",
@@ -876,8 +876,8 @@
     "hash": "2f4eddc0"
   },
   "shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape": {
-    "text": "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.",
-    "hash": "6ee3a28c"
+    "text": "{c, plural, one {The result needs # point. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.} other {The result needs # points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.}}",
+    "hash": "9f984b5b"
   },
   "shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check": {
     "text": "The shape editor could not load. Check your connection and try again.",
