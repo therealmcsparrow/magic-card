@@ -47,6 +47,10 @@ export const canvasStyles: CSSResult[] = [
       outline: 2px solid var(--mc-accent);
       outline-offset: 2px;
     }
+    /* The stage clips the canvas box: the ring sits inside it. */
+    :host([overlay]:focus-visible) {
+      outline-offset: -2px;
+    }
     svg.surface {
       display: block;
       width: 100%;

@@ -1,5 +1,6 @@
 {
   "All {points} selected.": "All {points} selected.",
+  "Arrow keys move the cursor or the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C switches smooth and corner. Delete removes a point.": "Arrow keys move the cursor or the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C switches smooth and corner. Delete removes a point.",
   "Arrow keys move the in handle.": "Arrow keys move the in handle.",
   "Arrow keys move the out handle.": "Arrow keys move the out handle.",
   "Arrow keys move the point.": "Arrow keys move the point.",
@@ -20,6 +21,7 @@
   "Rotation": "Rotation",
   "Safe area edge": "Safe area edge",
   "Selection cleared.": "Selection cleared.",
+  "Tab steps through points. Arrow keys move the selected point. C switches smooth and corner. Delete removes a point. Escape deselects.": "Tab steps through points. Arrow keys move the selected point. C switches smooth and corner. Delete removes a point. Escape deselects.",
   "This path has {max} points, the most you can add. Move, delete or change them instead.": "This path has {max} points, the most you can add. Move, delete or change them instead.",
   "This point has no handles. Press C to make it smooth.": "This point has no handles. Press C to make it smooth.",
   "W {w} H {h}": "W {w} H {h}",

@@ -65,6 +65,9 @@ import {
 import { IDENTITY, angleOf, boxMatrix, placeHandles, resizeBy, rotateMatrix, rotateSpot, scaleBox, wrap180 } from './transform';
 
 /** History step names the hosts merge and compare on (for example 'Cancel'). They are keys, never shown: hosts say "Undo" in the language. */
+/** What a press lands on when the host drew a control or dialog over the canvas. */
+const CONTROLS = 'button,input,select,textarea,a[href],summary,dialog,[role=button],[role=dialog],[role=alertdialog],[role=menu],[role=menuitem],[role=slider],[role=checkbox],[role=radio],[role=switch],[role=tab],[role=textbox],[role=combobox],[role=listbox],[contenteditable=""],[contenteditable=true]';
+
 const STEP = { close: 'Close path', add: 'Add point', rotate: 'Rotate', scale: 'Scale', cancel: 'Cancel' } as const;
 
 import { anchorsInRect, effectiveKind, moveAll, moveSet, removeSet, stopIndex, stops, toggleKind } from './ops';
@@ -234,6 +237,7 @@ export class PathCanvas extends LitElement {
   private _ctxAt = -Infinity;
   /** A long-press opened the menu and the finger has not lifted yet: the compatibility mousedown after the lift must not take focus from it. */
   private _lpDone = false;
+  private _keyHelp = '';
 
   // ── lifecycle ──
 
@@ -256,12 +260,27 @@ export class PathCanvas extends LitElement {
     this.clearLp();
   }
 
+  /** The keys of the current mode as the canvas's description, unless the host set its own. */
+  private describeKeys(): void {
+    const own = this.getAttribute('aria-description');
+    if (own && own !== this._keyHelp) return;
+    this._keyHelp =
+      this.mode === 'add'
+        ? t('Arrow keys move the cursor or the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C switches smooth and corner. Delete removes a point.')
+        : this.mode === 'nodes'
+          ? t('Tab steps through points. Arrow keys move the selected point. C switches smooth and corner. Delete removes a point. Escape deselects.')
+          : '';
+    if (this._keyHelp) this.setAttribute('aria-description', this._keyHelp);
+    else this.removeAttribute('aria-description');
+  }
+
   private listeners(): Array<[string, unknown, boolean?]> {
     return [['keydown', this._onKey], ['keyup', this._onKeyUp], ['focus', this._onFocus], ['blur', this._onBlur], ['dblclick', this._onDblClick], ['pointerdown', this._onHostDown, true], ['mousedown', this._onLiftMouse], ['contextmenu', this._onContext]];
   }
 
   protected willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('mode')) this.tabIndex = this.mode === 'view' ? -1 : 0;
+    if (changed.has('mode')) this.describeKeys();
     if (changed.has('mode') && this.mode !== 'add') this._cross = undefined;
     const pl = this.placement;
     if (this.overlay && pl && this.frame.w > 0 && this.frame.h > 0 && (changed.has('overlay') || changed.has('placement') || changed.has('frame'))) {
@@ -394,6 +413,7 @@ export class PathCanvas extends LitElement {
   private setSel(sel: PathSelection | undefined, say = true): void {
     const prev = this._sel;
     this._sel = sel;
+    if (say) this._cross = undefined;
     this.emit('mc-path-select', sel);
     if (say) this.announce(this.describeSel(sel, prev));
   }
@@ -538,7 +558,9 @@ export class PathCanvas extends LitElement {
   private inside(pi: number, s: Pt): boolean {
     const p = this.paths[pi];
     if (!p?.closed || p.anchors.length < 3) return false;
-    if (this.paint[pi]?.fill === 'none') return false;
+    const fill = this.paint[pi]?.fill;
+    if (this.overlay && (this.mode !== 'select' || !fill || fill === 'none')) return false;
+    if (fill === 'none') return false;
     return insidePolygon(toFrame(this._view, s), flatten(fromEdit(p), 8));
   }
 
@@ -550,8 +572,21 @@ export class PathCanvas extends LitElement {
     if (on) this.ownerDocument.addEventListener('pointerdown', this._pageDown, true);
   }
 
+  /** Whether a control or dialog the host drew over the canvas is what the press landed on (the nodes above this element are not looked at). */
+  private overControl(path: EventTarget[]): boolean {
+    const mine = new Set<Node>();
+    for (let n: Node | null = this as Node; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) mine.add(n);
+    for (const n of path) {
+      if (mine.has(n as Node)) return false;
+      if ((n as Element).matches?.(CONTROLS)) return true;
+    }
+    return false;
+  }
+
   private _pageDown = (e: PointerEvent): void => {
-    if (!this.overlay || this.blind() || this.mode === 'view' || e.button !== 0 || e.composedPath().includes(this)) return;
+    if (!this.overlay || this.blind() || this.mode === 'view' || e.button !== 0) return;
+    const path = e.composedPath();
+    if (path.includes(this) || this.overControl(path)) return;
     const box = this.surface()?.getBoundingClientRect();
     if (!box) return;
     const s = this.screenOf(e);
@@ -694,7 +729,13 @@ export class PathCanvas extends LitElement {
         g.add = { paths: this.paths.map((x, i) => (i === ap ? setClosed(x, true) : x)), path: ap, index: 0, label: STEP.close, close: true };
       } else {
         this.setSel({ path: h.path, anchors: [h.i] });
-        g.kind = 'none';
+        g.kind = 'anchor';
+        g.set = [h.i];
+        if (g.type === 'touch') {
+          const a = this.paths[h.path].anchors[h.i];
+          const sp = toScreen(this._view, [a.x, a.y]);
+          g.offset = [sp[0] - s[0], sp[1] - s[1]];
+        }
       }
       return;
     }
@@ -1306,6 +1347,7 @@ export class PathCanvas extends LitElement {
     const cur = sel.handle ? order.indexOf(sel.handle.which) : 0;
     const which = order[(cur + 1) % order.length];
     this._sel = { path: sel.path, anchors: [i], handle: which ? { anchor: i, which } : undefined };
+    this._cross = undefined;
     this.emit('mc-path-select', this._sel);
     this.announce(which === 'in' ? t('Arrow keys move the in handle.') : which ? t('Arrow keys move the out handle.') : t('Arrow keys move the point.'));
   }
@@ -1317,7 +1359,7 @@ export class PathCanvas extends LitElement {
     const sel = this._sel;
     const ap = this.active();
     const step = (v: number, k: number): number => stepValue(v, d[k] * amount, snapped);
-    if (this.mode === 'add') {
+    if (this.mode === 'add' && (this._cross || !(sel && (sel.anchors.length || sel.handle)))) {
       eat(e);
       const a = this._cross ?? this.crossStart();
       this._cross = [step(a[0], 0), step(a[1], 1)];
@@ -1403,6 +1445,13 @@ export class PathCanvas extends LitElement {
     const sel = this._sel;
     const ap = this.active();
     if (this.mode === 'add') {
+      const p = this.paths[ap];
+      if (!this._cross && p && !p.closed && p.anchors.length >= 3 && this.editable(ap) && sel?.path === ap && !sel.handle && sel.anchors.length === 1 && sel.anchors[0] === 0) {
+        const list = this.paths.map((x, i) => (i === ap ? setClosed(x, true) : x));
+        this.emitChange(list, true, STEP.close);
+        this.afterAdd(ap, 0, list, true);
+        return;
+      }
       const at = this._cross ?? this.crossStart();
       const res = this.appendPoint(this.place(at, false));
       if (!res) return;
