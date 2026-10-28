@@ -1,22 +1,22 @@
 {
   "card-editor.action-editor.action": {
     "text": "Action",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the dropdown that picks what happens on this gesture, such as toggle or navigate.",
     "max": 10
   },
   "card-editor.action-editor.assist": {
     "text": "Assist",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that opens Home Assistant's Assist voice and chat dialogue when the gesture happens.",
     "max": 10
   },
   "card-editor.action-editor.call-service": {
     "text": "Call service",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that runs a Home Assistant service (an action such as light.turn_on) on this gesture.",
     "max": 20
   },
   "card-editor.action-editor.close-pop-up": {
     "text": "Close pop-up",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that closes the Magic Card pop-up that is currently open.",
     "max": 20
   },
   "card-editor.action-editor.closes-the-magic-card-pop-up-that-is": {
@@ -26,42 +26,42 @@
   },
   "card-editor.action-editor.double-tap": {
     "text": "Double tap",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Heading of the action group that runs when the user taps the element twice quickly.",
     "max": 20
   },
   "card-editor.action-editor.entity": {
     "text": "Entity",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the entity picker inside an action, for actions that act on a chosen entity.",
     "max": 10
   },
   "card-editor.action-editor.hold": {
     "text": "Hold",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Heading of the action group that runs when the user presses and holds the element.",
     "max": 10
   },
   "card-editor.action-editor.more-info": {
     "text": "More info",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that opens the Home Assistant more-info dialogue for the entity.",
     "max": 15
   },
   "card-editor.action-editor.navigate": {
     "text": "Navigate",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that moves to another dashboard view or page when the gesture happens.",
     "max": 15
   },
   "card-editor.action-editor.navigation-path": {
     "text": "Navigation path",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the text field for the dashboard path to open, for example /lovelace/home.",
     "max": 25
   },
   "card-editor.action-editor.none": {
     "text": "None",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option meaning this gesture does nothing.",
     "max": 10
   },
   "card-editor.action-editor.open-pop-up": {
     "text": "Open pop-up",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that opens a Magic Card pop-up, chosen by its ID, on this gesture.",
     "max": 20
   },
   "card-editor.action-editor.opens-the-magic-card-pop-up-with-this-id": {
@@ -74,32 +74,32 @@
   },
   "card-editor.action-editor.pop-up-id": {
     "text": "Pop-up ID",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the text field for the ID of the pop-up to open; it must match the ID set on the pop-up.",
     "max": 15
   },
   "card-editor.action-editor.service": {
     "text": "Service",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the field for the service to call, written as domain.service, for example light.turn_on.",
     "max": 15
   },
   "card-editor.action-editor.service-data": {
     "text": "Service data",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the YAML box holding the extra data sent with the service call.",
     "max": 20
   },
   "card-editor.action-editor.tap": {
     "text": "Tap",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Heading of the action group that runs on a single tap or click of the element.",
     "max": 10
   },
   "card-editor.action-editor.target-entity": {
     "text": "Target entity",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the entity picker for the entity a service call acts on.",
     "max": 25
   },
   "card-editor.action-editor.toggle": {
     "text": "Toggle",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Dropdown option that switches the entity on if it is off, and off if it is on.",
     "max": 10
   },
   "card-editor.action-editor.toggles-entity-the-module-entity": {
@@ -112,12 +112,12 @@
   },
   "card-editor.action-editor.url": {
     "text": "URL",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Label of the text field for a web address, also the dropdown option that opens a link.",
     "max": 5
   },
   "card-editor.action-editor.use-module-entity": {
     "text": "Use module entity",
-    "note": "Shown in action editor (card-editor).",
+    "note": "Toggle that makes the action act on the entity of this module instead of a separately chosen one.",
     "max": 35
   },
   "card-editor.action-editor.yaml-leave-empty-to-call-the-service": {
@@ -127,47 +127,47 @@
   },
   "card-editor.anchor-names.bottom": {
     "text": "Bottom",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the bottom edge-centre anchor point in anchor pickers and tree chips.",
     "max": 10
   },
   "card-editor.anchor-names.bottom-left": {
     "text": "Bottom left",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the bottom-left corner anchor point in anchor pickers and tree chips.",
     "max": 20
   },
   "card-editor.anchor-names.bottom-right": {
     "text": "Bottom right",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the bottom-right corner anchor point in anchor pickers and tree chips.",
     "max": 20
   },
   "card-editor.anchor-names.centre": {
     "text": "Centre",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the middle anchor point of the card in anchor pickers and tree chips.",
     "max": 10
   },
   "card-editor.anchor-names.left": {
     "text": "Left",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the left edge-centre anchor point in anchor pickers and tree chips.",
     "max": 10
   },
   "card-editor.anchor-names.right": {
     "text": "Right",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the right edge-centre anchor point in anchor pickers and tree chips.",
     "max": 10
   },
   "card-editor.anchor-names.top": {
     "text": "Top",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the top edge-centre anchor point in anchor pickers and tree chips.",
     "max": 5
   },
   "card-editor.anchor-names.top-left": {
     "text": "Top left",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the top-left corner anchor point in anchor pickers and tree chips.",
     "max": 15
   },
   "card-editor.anchor-names.top-right": {
     "text": "Top right",
-    "note": "Shown in anchor names (card-editor).",
+    "note": "Name of the top-right corner anchor point in anchor pickers and tree chips.",
     "max": 15
   },
   "card-editor.animation-list.a-preset-stored-in-this-card": {
@@ -177,27 +177,27 @@
   },
   "card-editor.animation-list.add-animation": {
     "text": "Add animation",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Button below the animation list that adds a new animation row.",
     "max": 25
   },
   "card-editor.animation-list.alternate": {
     "text": "Alternate",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Direction dropdown option: the animation plays forwards, then backwards, on each repeat.",
     "max": 15
   },
   "card-editor.animation-list.alternate-reverse": {
     "text": "Alternate reverse",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Direction dropdown option: like Alternate, but the first run plays backwards.",
     "max": 30
   },
   "card-editor.animation-list.always": {
     "text": "Always",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Play-condition dropdown option: the animation runs all the time, whatever the entity state.",
     "max": 10
   },
   "card-editor.animation-list.amplitude": {
     "text": "Amplitude (%)",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the number field for how strong the movement is, as a percentage.",
     "max": 25
   },
   "card-editor.animation-list.an-animated-icon-stored-in-this-card": {
@@ -207,7 +207,7 @@
   },
   "card-editor.animation-list.animation-colour": {
     "text": "Animation colour",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the colour picker for the colour this animation draws with.",
     "max": 30
   },
   "card-editor.animation-list.animation-n": {
@@ -220,27 +220,27 @@
   },
   "card-editor.animation-list.border-decorations": {
     "text": "Border decorations",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Section heading for animations drawn along the card border, such as sparks or lights.",
     "max": 30
   },
   "card-editor.animation-list.colour": {
     "text": "Colour",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Short label of the colour picker on an animation row.",
     "max": 10
   },
   "card-editor.animation-list.custom": {
     "text": "Custom",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Dropdown option for a user-written animation instead of a built-in one.",
     "max": 10
   },
   "card-editor.animation-list.delay": {
     "text": "Delay",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the field for how long to wait before the animation starts.",
     "max": 10
   },
   "card-editor.animation-list.delete-animation": {
     "text": "Delete animation",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Tooltip of the delete button on an animation row; the generic form without the row number.",
     "max": 30
   },
   "card-editor.animation-list.delete-animation-n": {
@@ -253,12 +253,12 @@
   },
   "card-editor.animation-list.density": {
     "text": "Density (%)",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the number field for how many particles or decorations appear, as a percentage.",
     "max": 20
   },
   "card-editor.animation-list.direction": {
     "text": "Direction",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the dropdown for whether the animation plays forwards, backwards or alternating.",
     "max": 15
   },
   "card-editor.animation-list.drawn-along-the-border-the-content-keeps": {
@@ -268,12 +268,12 @@
   },
   "card-editor.animation-list.duration": {
     "text": "Duration",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the field for how long one run of the animation takes.",
     "max": 15
   },
   "card-editor.animation-list.easing": {
     "text": "Easing",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the dropdown for the speed curve of the animation, such as ease-in or linear.",
     "max": 15
   },
   "card-editor.animation-list.entity-for-play-condition": {
@@ -293,7 +293,7 @@
   },
   "card-editor.animation-list.icon": {
     "text": "Icon",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Dropdown option or group name for animated icons in the animation list.",
     "max": 10
   },
   "card-editor.animation-list.id-not-found": {
@@ -314,7 +314,7 @@
   },
   "card-editor.animation-list.infinite": {
     "text": "Infinite",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Repeat dropdown option: the animation loops without ever stopping.",
     "max": 15
   },
   "card-editor.animation-list.keep-a-copy-in-this-card-adds-size": {
@@ -335,22 +335,22 @@
   },
   "card-editor.animation-list.label": {
     "text": "Label",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the text field for the name shown for an animation in lists.",
     "max": 10
   },
   "card-editor.animation-list.library": {
     "text": "Library",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Group heading in the animation dropdown for the ready-made animations that ship with Magic Card.",
     "max": 15
   },
   "card-editor.animation-list.loading-my-animations": {
     "text": "Loading My animations…",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Status line while the user's saved animations load; My animations is a group name used elsewhere.",
     "max": 40
   },
   "card-editor.animation-list.module": {
     "text": "Module",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Group heading in the animation dropdown for animations defined on this module.",
     "max": 10
   },
   "card-editor.animation-list.module-entity-entity": {
@@ -363,7 +363,7 @@
   },
   "card-editor.animation-list.my-animations": {
     "text": "My animations",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Group heading in the animation dropdown for animations the user saved in their own library.",
     "max": 25
   },
   "card-editor.animation-list.n-b": {
@@ -393,7 +393,7 @@
   },
   "card-editor.animation-list.normal": {
     "text": "Normal",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Direction dropdown option: the animation always plays forwards, from start to end.",
     "max": 10
   },
   "card-editor.animation-list.not-found-in-my-animations-the-card": {
@@ -408,7 +408,7 @@
   },
   "card-editor.animation-list.on-tap": {
     "text": "On tap",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Play-condition dropdown option: the animation runs only when the user taps the element.",
     "max": 10
   },
   "card-editor.animation-list.pick-an-entity-this-condition-never": {
@@ -418,22 +418,22 @@
   },
   "card-editor.animation-list.play": {
     "text": "Play",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the dropdown that sets when the animation plays, for example always or on tap.",
     "max": 10
   },
   "card-editor.animation-list.preset": {
     "text": "Preset",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the dropdown where the user picks a ready-made animation for this row.",
     "max": 15
   },
   "card-editor.animation-list.repeat": {
     "text": "Repeat",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the dropdown for how often the animation repeats, such as once, a set count or infinite.",
     "max": 10
   },
   "card-editor.animation-list.repeat-count": {
     "text": "Repeat count",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the number field for how many times the animation repeats.",
     "max": 20
   },
   "card-editor.animation-list.reset-to-animation": {
@@ -448,7 +448,7 @@
   },
   "card-editor.animation-list.reverse": {
     "text": "Reverse",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Direction dropdown option: the animation always plays backwards, from end to start.",
     "max": 15
   },
   "card-editor.animation-list.size-kb": {
@@ -466,22 +466,22 @@
   },
   "card-editor.animation-list.state-value": {
     "text": "State value",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the text field for the entity state, such as on, that makes the animation play.",
     "max": 20
   },
   "card-editor.animation-list.strength": {
     "text": "Strength (%)",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the number field for how strong the effect is, as a percentage.",
     "max": 20
   },
   "card-editor.animation-list.target": {
     "text": "Target",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Label of the dropdown for which part of the card the animation is applied to.",
     "max": 10
   },
   "card-editor.animation-list.this-card": {
     "text": "This card",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Group heading in the animation dropdown for animations stored in this card's own config.",
     "max": 15
   },
   "card-editor.animation-list.while-entity-is-on": {
@@ -501,22 +501,22 @@
   },
   "card-editor.attribute-picker.attribute": {
     "text": "attribute",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Lower-case noun used inside a sentence, for example the attribute to show. Differs from Attribute, which is a label.",
     "max": 15
   },
   "card-editor.attribute-picker.attribute-2": {
     "text": "Attribute",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Capitalised label of the attribute field in the picker. Differs from the lower-case form used inside sentences.",
     "max": 15
   },
   "card-editor.attribute-picker.attributes": {
     "text": "Attributes",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Heading above the list of attributes the chosen entity offers.",
     "max": 20
   },
   "card-editor.attribute-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Button that closes the attribute picker dialogue without changing the choice.",
     "max": 10
   },
   "card-editor.attribute-picker.no-attributes-found": {
@@ -526,17 +526,17 @@
   },
   "card-editor.attribute-picker.save": {
     "text": "Save",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Button that confirms the chosen attribute and closes the picker dialogue.",
     "max": 10
   },
   "card-editor.attribute-picker.search-attributes": {
     "text": "Search attributes",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Placeholder of the search box that filters the attribute list as the user types.",
     "max": 30
   },
   "card-editor.attribute-picker.select-attribute": {
     "text": "Select attribute",
-    "note": "Shown in attribute picker (card-editor).",
+    "note": "Title of the attribute picker dialogue and the button that opens it.",
     "max": 30
   },
   "card-editor.attribute-picker.state-no-attribute": {
@@ -546,67 +546,67 @@
   },
   "card-editor.bar-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the field for the entity attribute the bar measures instead of the main state.",
     "max": 15
   },
   "card-editor.bar-editor.automatic": {
     "text": "Automatic",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Dropdown option meaning the bar picks its colour or range by itself from the entity.",
     "max": 15
   },
   "card-editor.bar-editor.bar-background": {
     "text": "Bar background",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the colour picker for the empty track behind the filled part of the bar.",
     "max": 25
   },
   "card-editor.bar-editor.bar-colour": {
     "text": "Bar colour",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the colour picker for the filled part of the bar.",
     "max": 20
   },
   "card-editor.bar-editor.bar-height": {
     "text": "Bar height",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the number field for how thick the bar is.",
     "max": 20
   },
   "card-editor.bar-editor.colour-ranges": {
     "text": "Colour ranges",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Section heading for the list that sets the bar colour by value range, such as red above 80.",
     "max": 25
   },
   "card-editor.bar-editor.decimals": {
     "text": "Decimals",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the number field for how many digits after the decimal point the value shows.",
     "max": 15
   },
   "card-editor.bar-editor.direction": {
     "text": "Direction",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the choice between a horizontal and a vertical bar.",
     "max": 15
   },
   "card-editor.bar-editor.entity": {
     "text": "Entity",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the entity picker for the entity whose value the bar shows.",
     "max": 10
   },
   "card-editor.bar-editor.horizontal": {
     "text": "Horizontal",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Direction option: the bar fills from left to right.",
     "max": 20
   },
   "card-editor.bar-editor.max": {
     "text": "Max",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the number field for the value at which the bar is full. Short for maximum.",
     "max": 5
   },
   "card-editor.bar-editor.min": {
     "text": "Min",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Label of the number field for the value at which the bar is empty. Short for minimum.",
     "max": 5
   },
   "card-editor.bar-editor.show-value": {
     "text": "Show value",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Toggle that shows the number next to the bar.",
     "max": 20
   },
   "card-editor.bar-editor.the-bar-takes-the-colour-of-the-highest": {
@@ -616,7 +616,7 @@
   },
   "card-editor.bar-editor.vertical": {
     "text": "Vertical",
-    "note": "Shown in bar editor (card-editor).",
+    "note": "Direction option: the bar fills from bottom to top.",
     "max": 15
   },
   "card-editor.base-editor.no-settings-for-this-module": {
@@ -626,37 +626,37 @@
   },
   "card-editor.bg-layers-model.colour": {
     "text": "Colour",
-    "note": "Shown in bg layers model (card-editor).",
+    "note": "Name of the plain-colour background layer type in the add-layer list.",
     "max": 10
   },
   "card-editor.bg-layers-model.gradient": {
     "text": "Gradient",
-    "note": "Shown in bg layers model (card-editor).",
+    "note": "Name of the gradient background layer type in the add-layer list.",
     "max": 15
   },
   "card-editor.bg-layers-model.image": {
     "text": "Image",
-    "note": "Shown in bg layers model (card-editor).",
+    "note": "Name of the image background layer type in the add-layer list.",
     "max": 10
   },
   "card-editor.bg-layers-model.pattern": {
     "text": "Pattern",
-    "note": "Shown in bg layers model (card-editor).",
+    "note": "Name of the repeating-pattern background layer type, such as stripes or dots, in the add-layer list.",
     "max": 15
   },
   "card-editor.box-field.bottom": {
     "text": "Bottom",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the bottom value in a four-sided box field such as padding or margin.",
     "max": 10
   },
   "card-editor.box-field.bottom-left": {
     "text": "Bottom left",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the bottom-left corner value in a box field, used for corner radius.",
     "max": 20
   },
   "card-editor.box-field.bottom-right": {
     "text": "Bottom right",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the bottom-right corner value in a box field, used for corner radius.",
     "max": 20
   },
   "card-editor.box-field.inherit-value": {
@@ -669,17 +669,17 @@
   },
   "card-editor.box-field.left": {
     "text": "Left",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the left value in a four-sided box field such as padding or margin.",
     "max": 10
   },
   "card-editor.box-field.not-set": {
     "text": "Not set",
-    "note": "Shown in box field (card-editor).",
+    "note": "Placeholder shown in a box field side that has no value, so the default applies.",
     "max": 15
   },
   "card-editor.box-field.right": {
     "text": "Right",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the right value in a four-sided box field such as padding or margin.",
     "max": 10
   },
   "card-editor.box-field.same-on-all-sides": {
@@ -689,27 +689,27 @@
   },
   "card-editor.box-field.top": {
     "text": "Top",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the top value in a four-sided box field such as padding or margin.",
     "max": 5
   },
   "card-editor.box-field.top-left": {
     "text": "Top left",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the top-left corner value in a box field, used for corner radius.",
     "max": 15
   },
   "card-editor.box-field.top-right": {
     "text": "Top right",
-    "note": "Shown in box field (card-editor).",
+    "note": "Label of the top-right corner value in a box field, used for corner radius.",
     "max": 15
   },
   "card-editor.button-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Label of the field for the entity attribute shown on the button instead of the state.",
     "max": 15
   },
   "card-editor.button-editor.button-style": {
     "text": "Button style",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Label of the dropdown that picks the button look: default, flat or outline.",
     "max": 20
   },
   "card-editor.button-editor.colours-the-icon-like-home-assistant": {
@@ -719,42 +719,42 @@
   },
   "card-editor.button-editor.default": {
     "text": "Default",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Button style option: the standard filled look.",
     "max": 15
   },
   "card-editor.button-editor.entity": {
     "text": "Entity",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Label of the entity picker for the entity the button controls or shows.",
     "max": 10
   },
   "card-editor.button-editor.flat": {
     "text": "Flat",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Button style option: no fill or shadow, so the button blends into the card.",
     "max": 10
   },
   "card-editor.button-editor.icon": {
     "text": "Icon",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Label of the icon picker for the icon shown on the button.",
     "max": 10
   },
   "card-editor.button-editor.icon-only": {
     "text": "Icon only",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Toggle or option that hides the button text and shows just the icon.",
     "max": 20
   },
   "card-editor.button-editor.label": {
     "text": "Label",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Label of the text field for the words shown on the button.",
     "max": 10
   },
   "card-editor.button-editor.outline": {
     "text": "Outline",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Button style option: a border with no fill.",
     "max": 15
   },
   "card-editor.button-editor.show-state": {
     "text": "Show state",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Toggle that shows the entity state, such as on or off, on the button.",
     "max": 20
   },
   "card-editor.button-editor.shows-the-entity-s-state-or-the": {
@@ -774,17 +774,17 @@
   },
   "card-editor.camera-editor.aspect-ratio": {
     "text": "Aspect ratio",
-    "note": "Shown in camera editor (card-editor).",
+    "note": "Label of the field for the width-to-height shape of the camera picture, for example 16:9.",
     "max": 20
   },
   "card-editor.camera-editor.camera-entity": {
     "text": "Camera entity",
-    "note": "Shown in camera editor (card-editor).",
+    "note": "Label of the entity picker for the camera whose picture is shown.",
     "max": 25
   },
   "card-editor.camera-editor.live": {
     "text": "Live",
-    "note": "Shown in camera editor (card-editor).",
+    "note": "View option: show the moving live video stream from the camera.",
     "max": 10
   },
   "card-editor.camera-editor.play-pause-sound-and-full-screen-on-the": {
@@ -799,12 +799,12 @@
   },
   "card-editor.camera-editor.show-controls": {
     "text": "Show controls",
-    "note": "Shown in camera editor (card-editor).",
+    "note": "Toggle that shows the play and pause controls on the camera picture.",
     "max": 25
   },
   "card-editor.camera-editor.snapshot": {
     "text": "Snapshot",
-    "note": "Shown in camera editor (card-editor).",
+    "note": "View option: show a still picture from the camera that refreshes now and then.",
     "max": 15
   },
   "card-editor.camera-editor.snapshot-refresh-seconds": {
@@ -824,7 +824,7 @@
   },
   "card-editor.camera-editor.view": {
     "text": "View",
-    "note": "Shown in camera editor (card-editor).",
+    "note": "Label of the dropdown that chooses between a live stream and a snapshot.",
     "max": 10
   },
   "card-editor.canvas-layers.selected-name-n-from-the-front-here": {
@@ -848,52 +848,52 @@
   },
   "card-editor.card-picker.alarm-panel": {
     "text": "Alarm panel",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's alarm panel card.",
     "max": 20
   },
   "card-editor.card-picker.area": {
     "text": "Area",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's area card, which summarises a room.",
     "max": 10
   },
   "card-editor.card-picker.built-in": {
     "text": "Built-in",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Short tab or filter name in the card picker for cards that ship with Home Assistant.",
     "max": 15
   },
   "card-editor.card-picker.built-in-cards": {
     "text": "Built-in cards",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Group heading above the list of cards that ship with Home Assistant. Longer form of the Built-in tab.",
     "max": 25
   },
   "card-editor.card-picker.button": {
     "text": "Button",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's button card.",
     "max": 10
   },
   "card-editor.card-picker.calendar": {
     "text": "Calendar",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's calendar card.",
     "max": 15
   },
   "card-editor.card-picker.calendar-display": {
     "text": "Calendar display",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Short description line under the Calendar card in the picker, saying it shows calendar events.",
     "max": 30
   },
   "card-editor.card-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Button that closes the card picker dialogue without choosing a card.",
     "max": 10
   },
   "card-editor.card-picker.card-type": {
     "text": "Card type",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Label of the field that shows or sets which kind of card is embedded, such as tile or gauge.",
     "max": 15
   },
   "card-editor.card-picker.cards": {
     "text": "Cards",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Plural heading of the card picker, naming the list of cards to choose from.",
     "max": 10
   },
   "card-editor.card-picker.climate-control-card": {
@@ -908,17 +908,17 @@
   },
   "card-editor.card-picker.conditional": {
     "text": "Conditional",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's conditional card, shown only when conditions match.",
     "max": 20
   },
   "card-editor.card-picker.custom": {
     "text": "Custom",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Short tab or filter name in the card picker for cards installed from outside Home Assistant.",
     "max": 10
   },
   "card-editor.card-picker.custom-card": {
     "text": "Custom card",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Option for entering the type of a custom card by hand when it is not in the list.",
     "max": 20
   },
   "card-editor.card-picker.custom-cards-hacs": {
@@ -938,17 +938,17 @@
   },
   "card-editor.card-picker.entities": {
     "text": "Entities",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's entities card, a list of entities.",
     "max": 15
   },
   "card-editor.card-picker.entity": {
     "text": "Entity",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's single entity card.",
     "max": 10
   },
   "card-editor.card-picker.entity-filter": {
     "text": "Entity filter",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's entity filter card, which lists entities matching a state.",
     "max": 25
   },
   "card-editor.card-picker.entity-history-graph": {
@@ -973,22 +973,22 @@
   },
   "card-editor.card-picker.gauge": {
     "text": "Gauge",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's gauge card, a dial for one value.",
     "max": 10
   },
   "card-editor.card-picker.gauge-visualization": {
     "text": "Gauge visualization",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Short description line under the Gauge card in the picker, saying it draws a value as a dial.",
     "max": 35
   },
   "card-editor.card-picker.glance": {
     "text": "Glance",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's glance card, a compact row of entity states.",
     "max": 10
   },
   "card-editor.card-picker.grid": {
     "text": "Grid",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's grid card, which lays cards out in columns.",
     "max": 10
   },
   "card-editor.card-picker.grid-layout-of-cards": {
@@ -998,27 +998,27 @@
   },
   "card-editor.card-picker.heading": {
     "text": "Heading",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's heading card, a title line with optional badges.",
     "max": 15
   },
   "card-editor.card-picker.history-graph": {
     "text": "History graph",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's history graph card, a chart of past states.",
     "max": 25
   },
   "card-editor.card-picker.horizontal-stack": {
     "text": "Horizontal stack",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's card that places cards side by side.",
     "max": 30
   },
   "card-editor.card-picker.humidifier": {
     "text": "Humidifier",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's humidifier card.",
     "max": 20
   },
   "card-editor.card-picker.humidifier-control": {
     "text": "Humidifier control",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Short description line under the Humidifier card in the picker, saying it controls a humidifier.",
     "max": 30
   },
   "card-editor.card-picker.image-with-entity-icons": {
@@ -1033,7 +1033,7 @@
   },
   "card-editor.card-picker.light": {
     "text": "Light",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's light card, with brightness control.",
     "max": 10
   },
   "card-editor.card-picker.light-control-card": {
@@ -1048,17 +1048,17 @@
   },
   "card-editor.card-picker.logbook": {
     "text": "Logbook",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's logbook card, a list of recent events.",
     "max": 15
   },
   "card-editor.card-picker.long-term-statistic": {
     "text": "Long-term statistic",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Short description line in the picker for the Statistic card, which reads long-term recorded statistics.",
     "max": 35
   },
   "card-editor.card-picker.map": {
     "text": "Map",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's map card.",
     "max": 5
   },
   "card-editor.card-picker.map-with-entity-locations": {
@@ -1068,12 +1068,12 @@
   },
   "card-editor.card-picker.markdown": {
     "text": "Markdown",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's markdown card for formatted text. Markdown is a format name.",
     "max": 15
   },
   "card-editor.card-picker.media-control": {
     "text": "Media control",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's media control card for players.",
     "max": 25
   },
   "card-editor.card-picker.media-player-controls": {
@@ -1088,22 +1088,22 @@
   },
   "card-editor.card-picker.picture": {
     "text": "Picture",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's picture card, which shows an image.",
     "max": 15
   },
   "card-editor.card-picker.picture-elements": {
     "text": "Picture elements",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's card that places elements over an image.",
     "max": 30
   },
   "card-editor.card-picker.picture-entity": {
     "text": "Picture entity",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's card that shows an entity's picture.",
     "max": 25
   },
   "card-editor.card-picker.picture-glance": {
     "text": "Picture glance",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's card that shows a picture with entity states on it.",
     "max": 25
   },
   "card-editor.card-picker.plant-monitor-display": {
@@ -1113,7 +1113,7 @@
   },
   "card-editor.card-picker.plant-status": {
     "text": "Plant status",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's plant status card.",
     "max": 20
   },
   "card-editor.card-picker.quick-overview-of-entities": {
@@ -1128,32 +1128,32 @@
   },
   "card-editor.card-picker.save": {
     "text": "Save",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Button that confirms the chosen card and closes the card picker dialogue.",
     "max": 10
   },
   "card-editor.card-picker.search-cards": {
     "text": "Search cards",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Placeholder of the search box that filters the card list as the user types.",
     "max": 20
   },
   "card-editor.card-picker.section-heading": {
     "text": "Section heading",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: the heading card used to title a dashboard section.",
     "max": 25
   },
   "card-editor.card-picker.select": {
     "text": "Select",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Button on a card row in the picker that chooses that card.",
     "max": 10
   },
   "card-editor.card-picker.select-card": {
     "text": "Select card",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Title of the card picker dialogue and the button that opens it.",
     "max": 20
   },
   "card-editor.card-picker.sensor": {
     "text": "Sensor",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's sensor card, with a small history graph.",
     "max": 10
   },
   "card-editor.card-picker.sensor-with-graph": {
@@ -1163,7 +1163,7 @@
   },
   "card-editor.card-picker.shopping-list": {
     "text": "Shopping list",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's shopping list card.",
     "max": 25
   },
   "card-editor.card-picker.shopping-list-card": {
@@ -1198,27 +1198,27 @@
   },
   "card-editor.card-picker.statistic": {
     "text": "Statistic",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's statistic card, one recorded statistic.",
     "max": 15
   },
   "card-editor.card-picker.statistics-graph": {
     "text": "Statistics graph",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's statistics graph card, a chart of recorded statistics.",
     "max": 30
   },
   "card-editor.card-picker.thermostat": {
     "text": "Thermostat",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's thermostat card.",
     "max": 20
   },
   "card-editor.card-picker.tile": {
     "text": "Tile",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's tile card, a compact entity control.",
     "max": 10
   },
   "card-editor.card-picker.to-do-list": {
     "text": "To-Do List",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's to-do list card. Match Home Assistant's own wording.",
     "max": 20
   },
   "card-editor.card-picker.to-do-list-card": {
@@ -1228,12 +1228,12 @@
   },
   "card-editor.card-picker.vertical-stack": {
     "text": "Vertical stack",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's card that places cards one above another.",
     "max": 25
   },
   "card-editor.card-picker.weather-forecast": {
     "text": "Weather forecast",
-    "note": "Shown in card picker (card-editor).",
+    "note": "Card type name in the card picker list: Home Assistant's weather forecast card.",
     "max": 30
   },
   "card-editor.card-picker.weather-forecast-card": {
@@ -1253,7 +1253,7 @@
   },
   "card-editor.card-settings.add-condition": {
     "text": "Add condition",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Button that adds a new row to the list of conditions for the conditional appearance.",
     "max": 25
   },
   "card-editor.card-settings.add-conditional-rule": {
@@ -1263,7 +1263,7 @@
   },
   "card-editor.card-settings.advanced": {
     "text": "Advanced",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Heading of the collapsible section holding less common card settings.",
     "max": 15
   },
   "card-editor.card-settings.all-match-and": {
@@ -1273,7 +1273,7 @@
   },
   "card-editor.card-settings.always": {
     "text": "Always",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Dropdown option meaning the setting applies at all times, with no condition.",
     "max": 10
   },
   "card-editor.card-settings.always-shown-even-when-nothing-moves": {
@@ -1283,7 +1283,7 @@
   },
   "card-editor.card-settings.animations": {
     "text": "Animations",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Heading of the card settings section that lists the animations on the card.",
     "max": 20
   },
   "card-editor.card-settings.any-matches-or": {
@@ -1293,7 +1293,7 @@
   },
   "card-editor.card-settings.appearance-overrides": {
     "text": "Appearance overrides",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Heading of the section where look settings replace the defaults when conditions match.",
     "max": 35
   },
   "card-editor.card-settings.applied-to-the-card-s-content-e-g-letter": {
@@ -1308,17 +1308,17 @@
   },
   "card-editor.card-settings.automatic": {
     "text": "Automatic",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Dropdown option meaning the card works the value out by itself instead of using a fixed one.",
     "max": 15
   },
   "card-editor.card-settings.background-colour": {
     "text": "Background colour",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the colour picker for the card's background colour.",
     "max": 30
   },
   "card-editor.card-settings.background-image": {
     "text": "Background image",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the field for the image shown behind the card content.",
     "max": 30
   },
   "card-editor.card-settings.backgrounds-do-not-change-on-hover": {
@@ -1338,27 +1338,27 @@
   },
   "card-editor.card-settings.border-radius": {
     "text": "Border radius",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the field for how rounded the card corners are.",
     "max": 25
   },
   "card-editor.card-settings.bottom-left": {
     "text": "Bottom left",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the bottom-left corner value in the card's border radius setting.",
     "max": 20
   },
   "card-editor.card-settings.bottom-right": {
     "text": "Bottom right",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the bottom-right corner value in the card's border radius setting.",
     "max": 20
   },
   "card-editor.card-settings.box-shadow": {
     "text": "Box shadow",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the field for the shadow drawn around the card, written as a CSS box-shadow value.",
     "max": 20
   },
   "card-editor.card-settings.card-backdrop": {
     "text": "Card backdrop",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Heading of the section for the layer drawn behind the whole card, such as blur or tint.",
     "max": 25
   },
   "card-editor.card-settings.card-backdrop-layers-sit-on-top-of-this": {
@@ -1368,17 +1368,17 @@
   },
   "card-editor.card-settings.card-entity": {
     "text": "Card entity",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the entity picker for the main entity of the whole card, used by conditions and animations.",
     "max": 20
   },
   "card-editor.card-settings.card-height": {
     "text": "Card height",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the field for a fixed height of the card, or automatic.",
     "max": 20
   },
   "card-editor.card-settings.card-theme": {
     "text": "Card theme",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the dropdown that picks a Home Assistant theme for this card only.",
     "max": 20
   },
   "card-editor.card-settings.change-card-fields-like-background": {
@@ -1393,27 +1393,27 @@
   },
   "card-editor.card-settings.collapse-rule": {
     "text": "Collapse rule",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the dropdown for when the card collapses to its heading, for example always or on a condition.",
     "max": 25
   },
   "card-editor.card-settings.condition-match": {
     "text": "Condition match",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the choice between all conditions having to match or any one of them.",
     "max": 30
   },
   "card-editor.card-settings.conditional-appearance": {
     "text": "Conditional appearance",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Heading of the section where the card look changes depending on entity conditions.",
     "max": 40
   },
   "card-editor.card-settings.conditions": {
     "text": "Conditions",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Heading above the list of conditions, each testing an entity state.",
     "max": 20
   },
   "card-editor.card-settings.corner": {
     "text": "Corner",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of a single corner value, used where one number sets all card corners alike.",
     "max": 10
   },
   "card-editor.card-settings.custom-css": {

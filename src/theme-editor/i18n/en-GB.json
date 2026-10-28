@@ -1112,7 +1112,7 @@
   },
   "theme-editor.field-group.mode-uses-its-own-value-this-only": {
     "text": "{mode} uses its own value. This only changes {covered}.",
-    "note": "Hint on a Shared variable. {mode} is 'Light' or 'Dark', the mode that overrides it; {covered} is the other mode or modes this edit still applies to.",
+    "note": "Hint on a Shared variable. {mode} is 'Light' or 'Dark', the mode that has its own value; {covered} is the single mode label ('Light' or 'Dark') that this edit still changes. Both are mode names, so keep them capitalised.",
     "max": 90,
     "vars": {
       "covered": "The value that replaces covered in the text.",

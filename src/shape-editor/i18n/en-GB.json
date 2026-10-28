@@ -1,12 +1,12 @@
 {
   "shape-editor.lips.got-it": {
     "text": "Got it",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Button that dismisses the hint about hidden editor panels.",
     "max": 10
   },
   "shape-editor.lips.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Tooltip on a lip button. {noun} is the panel name (Inspector panel or Side panel), {keys} is its keyboard shortcut.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -15,17 +15,17 @@
   },
   "shape-editor.lips.inspector": {
     "text": "inspector",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Lower-case word for the inspector panel, used inside a sentence as {noun}. Keep it lower case.",
     "max": 15
   },
   "shape-editor.lips.inspector-panel": {
     "text": "Inspector panel",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Name of the panel with the point and corner fields, used as {noun} or in {panels}. Same English as the studio label.",
     "max": 25
   },
   "shape-editor.lips.panels-hidden": {
     "text": "{panels} hidden",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Screen reader message after hiding panels. {panels} is the panel name or names, for example Side panel.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -33,7 +33,7 @@
   },
   "shape-editor.lips.panels-shown": {
     "text": "{panels} shown",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Screen reader message after showing panels. {panels} is the panel name or names, for example Side panel.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -41,7 +41,7 @@
   },
   "shape-editor.lips.shortcut-keys": {
     "text": "Shortcut: {keys}",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Tooltip line naming a keyboard shortcut. {keys} is the key combination, for example Ctrl+B. Keep key names as shown.",
     "max": 30,
     "vars": {
       "keys": "The value that replaces keys in the text."
@@ -49,7 +49,7 @@
   },
   "shape-editor.lips.show-noun-keys": {
     "text": "Show {noun} ({keys})",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Tooltip on a lip button. {noun} is the panel name (Inspector panel or Side panel), {keys} is its keyboard shortcut.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -58,12 +58,12 @@
   },
   "shape-editor.lips.side-panel": {
     "text": "Side panel",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Name of the panel beside the canvas, with a capital S. Used as {noun} or in {panels}. Same English as the studio label.",
     "max": 20
   },
   "shape-editor.lips.side-panel-2": {
     "text": "side panel",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Lower-case word for the side panel, used inside a sentence as {noun}. Keep it lower case.",
     "max": 20
   },
   "shape-editor.lips.some-panels-are-hidden-as-you-left-them": {
@@ -73,7 +73,7 @@
   },
   "shape-editor.lips.the-noun-is-hidden-as-you-left-it-use": {
     "text": "The {noun} is hidden, as you left it. Use the arrow on the edge to show it.",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Hint when one panel is hidden. {noun} is the lower-case panel name (inspector or side panel). Singular counterpart of the plural hint.",
     "max": 120,
     "vars": {
       "noun": "The value that replaces noun in the text."
@@ -81,7 +81,7 @@
   },
   "shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points": {
     "text": "A shape holds up to {max} points.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Message when the point limit is reached. {max} is the largest allowed number of points, a plain number.",
     "max": 55,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -89,7 +89,7 @@
   },
   "shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes": {
     "text": "A shape named {name} exists. Saving changes every card that uses it.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Warning before overwriting a library shape. {name} is the name the user typed for the shape.",
     "max": 110,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -107,22 +107,22 @@
   },
   "shape-editor.mc-shape-studio.add-point": {
     "text": "Add point",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that adds a new point to the outline (imperative verb).",
     "max": 15
   },
   "shape-editor.mc-shape-studio.add-point-after": {
     "text": "Add point after",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button in the inspector that inserts a new point after the selected one on the outline.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.add-point-here": {
     "text": "Add point here",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Right-click menu item that adds a point at the clicked place on the canvas outline.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.add-shape": {
     "text": "Add shape...",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Menu button that opens the list of shapes to combine with the outline. The dots mean a further choice follows.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the": {
@@ -132,12 +132,12 @@
   },
   "shape-editor.mc-shape-studio.all-corners-together": {
     "text": "All corners together",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Option that edits all four corners as one value. Opposite of the per-corner option.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.all-four-corners": {
     "text": "All four corners",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for the corner field that applies to every corner of the card at once.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one": {
@@ -147,17 +147,17 @@
   },
   "shape-editor.mc-shape-studio.angle": {
     "text": "Angle",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for the angle of a straight cut corner, in degrees.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.applied-top-left-to-all-corners": {
     "text": "Applied Top left to all corners.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after copying the top left corner style to the others. Top left is a fixed corner name, translate it like the corner label.",
     "max": 55
   },
   "shape-editor.mc-shape-studio.at-name": {
     "text": "at {name}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Short suffix after a size label. {name} is the preview size name, for example Small or Custom size.",
     "max": 15,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -165,7 +165,7 @@
   },
   "shape-editor.mc-shape-studio.at-name-w-x-h": {
     "text": "at {name}, {w} x {h}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Preview size suffix. {name} is the size name, {w} the width and {h} the height in pixels, plain numbers.",
     "max": 35,
     "vars": {
       "h": "The value that replaces h in the text.",
@@ -175,7 +175,7 @@
   },
   "shape-editor.mc-shape-studio.back": {
     "text": "Back",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that leaves the current step or picker and returns to the previous view of the studio.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.back-to-card-editor": {
@@ -185,12 +185,12 @@
   },
   "shape-editor.mc-shape-studio.bottom": {
     "text": "Bottom",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for the bottom side of the card, used for the text space and anchor fields. Same English as the names key.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.c": {
     "text": "{c, plural, one {# point} other {# points}}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Count of outline points on its own, for example 4 points. {c} is the number of points, plural rules apply.",
     "max": 15,
     "vars": {
       "c": "The count the text is about."
@@ -198,7 +198,7 @@
   },
   "shape-editor.mc-shape-studio.c-of-max-points": {
     "text": "{c} of {max} points",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Point counter against the limit. {c} is the points used, {max} the most allowed, both plain numbers.",
     "max": 35,
     "vars": {
       "c": "The value that replaces c in the text.",
@@ -212,7 +212,7 @@
   },
   "shape-editor.mc-shape-studio.cancel": {
     "text": "Cancel",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that closes a dialog or the Combine step without making a change.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.canvas-tools": {
@@ -227,7 +227,7 @@
   },
   "shape-editor.mc-shape-studio.centre": {
     "text": "Centre",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Anchor option that places the point or content in the middle of the card (British spelling).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.changed-since-saved": {
@@ -257,17 +257,17 @@
   },
   "shape-editor.mc-shape-studio.close": {
     "text": "Close",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that closes the shape editor window without applying the shape. The verb, not the adjective.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.combine": {
     "text": "Combine...",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that opens the Combine step, where a second shape is added, subtracted or intersected. Dots mean more choices follow.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.combine-2": {
     "text": "Combine",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Option and confirm button that adds the second shape to the outline (union). Same English as the names key and the menu item without dots.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.combine-adds-it-to-the-outline-subtract": {
@@ -282,7 +282,7 @@
   },
   "shape-editor.mc-shape-studio.copied": {
     "text": "Copied",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button label shown briefly after the YAML was copied to the clipboard. Past tense.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.copy-to-all-corners": {
@@ -292,17 +292,17 @@
   },
   "shape-editor.mc-shape-studio.copy-yaml": {
     "text": "Copy YAML",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that copies the shape as YAML text to the clipboard. YAML is a file format name, do not translate.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.corner": {
     "text": "Corner",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for a single card corner in the corner editor, singular. Plural is a separate key.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.corner-is-smaller-on-small-cards-v-px-on": {
     "text": "Corner is smaller on small cards: {v} px on {size}.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hint under a corner size. {v} is the corner size in pixels, a plain number. {size} is the size name, for example Small.",
     "max": 85,
     "vars": {
       "size": "The value that replaces size in the text.",
@@ -316,12 +316,12 @@
   },
   "shape-editor.mc-shape-studio.corners": {
     "text": "Corners",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Name of the shape type made from four styled corners (plural noun). Also the heading for the corner section.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.corners-2": {
     "text": "Corners.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Screen reader description of the shape type, with a full stop, read after the shape name. Not the same as the heading Corners.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings": {
@@ -331,7 +331,7 @@
   },
   "shape-editor.mc-shape-studio.corners-use-up-to-v-px-per-side": {
     "text": "Corners use up to {v} px per side.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hint on the largest corner size. {v} is a number of pixels, a plain number.",
     "max": 55,
     "vars": {
       "v": "The value that replaces v in the text."
@@ -354,7 +354,7 @@
   },
   "shape-editor.mc-shape-studio.could-not-save-name-try-again": {
     "text": "Could not save {name}. Try again.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Error after saving to the library failed. {name} is the shape name the user typed.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -372,12 +372,12 @@
   },
   "shape-editor.mc-shape-studio.delete": {
     "text": "Delete",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that deletes the selected library shape. A confirmation follows.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.delete-name": {
     "text": "Delete {name}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the delete button on a library row. {name} is the saved shape name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -385,7 +385,7 @@
   },
   "shape-editor.mc-shape-studio.deleted-name-cards-that-use-it-keep": {
     "text": "Deleted {name}. Cards that use it keep their inline copy.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after deleting a library shape. {name} is the shape name. Inline copy means the shape stored inside the card itself.",
     "max": 95,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -393,7 +393,7 @@
   },
   "shape-editor.mc-shape-studio.done": {
     "text": "Done",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that applies the shape to the card and closes the editor.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list": {
@@ -403,7 +403,7 @@
   },
   "shape-editor.mc-shape-studio.draw": {
     "text": "Draw",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toolbar button that starts drawing a new outline on the canvas with the pen (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your": {
@@ -413,17 +413,17 @@
   },
   "shape-editor.mc-shape-studio.each-corner": {
     "text": "Each corner",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Option that lets the four corners have different styles. Opposite of All corners together.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.edit-at": {
     "text": "Edit at",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the dropdown that picks the card size the user edits the shape at. The size name follows.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.edit-corners": {
     "text": "Edit corners",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that opens the corner editor for a Corners shape (imperative verb).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.edit-corners-separately": {
@@ -433,37 +433,37 @@
   },
   "shape-editor.mc-shape-studio.error": {
     "text": "Error",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Severity label before a message in the Messages list. Noun, not a verb.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-close": {
     "text": "Esc doesn't close the editor. Use Close.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hint shown when Esc is pressed in the studio opened without a Done button. Esc is the key name; Close is the button label.",
     "max": 65
   },
   "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
     "text": "Esc doesn't close the editor. Use Done or Back to card editor.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hint shown when Esc is pressed in the full-page studio. Esc is the key name; Done and Back to card editor are button labels.",
     "max": 100
   },
   "shape-editor.mc-shape-studio.export-file": {
     "text": "Export file",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that downloads the shape as a file (verb plus noun).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.export-import": {
     "text": "Export / Import",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the section with the export and import buttons. Two verbs separated by a slash.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.extra-space": {
     "text": "Extra space",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for added padding inside the outline that keeps text clear of cut edges. Noun phrase.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.finish": {
     "text": "Finish",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that ends drawing with the pen and closes the outline (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.focus-rings-and-hover-scale-of-content": {
@@ -478,12 +478,12 @@
   },
   "shape-editor.mc-shape-studio.free-shape": {
     "text": "Free shape",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Name of the shape type where every point is edited by hand. Also a segmented option label.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.free-shape-c": {
     "text": "Free shape. {c, plural, one {# point} other {# points}}.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Screen reader description of the canvas. {c} is the number of points, plural rules apply.",
     "max": 35,
     "vars": {
       "c": "The count the text is about."
@@ -496,7 +496,7 @@
   },
   "shape-editor.mc-shape-studio.give-it-a-name": {
     "text": "Give it a name.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Short validation hint under the name field, shorter variant of the longer name prompt.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.give-the-shape-a-name": {
@@ -511,17 +511,17 @@
   },
   "shape-editor.mc-shape-studio.grid": {
     "text": "Grid",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toggle that shows or hides the alignment grid on the canvas. Noun.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.height": {
     "text": "Height",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for the height of the custom preview size, in pixels.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.horizontal-anchor": {
     "text": "Horizontal anchor",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for which side a point stays attached to when the card resizes sideways (Left, Centre, Right).",
     "max": 30
   },
   "shape-editor.mc-shape-studio.how-to-install": {
@@ -531,12 +531,12 @@
   },
   "shape-editor.mc-shape-studio.import-file": {
     "text": "Import file",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that opens a file picker to load a shape from a file (verb plus noun).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.imported-name": {
     "text": "Imported {name}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after a shape file loaded. {name} is the name stored in the file.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -544,12 +544,12 @@
   },
   "shape-editor.mc-shape-studio.inspector-panel": {
     "text": "Inspector panel",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the panel with point and corner fields. Same English as the lips key.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.k-not-applied-yet": {
     "text": "{k} (not applied yet)",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Option label for a combine shape that is chosen but not yet merged. {k} is a shape name such as Circle.",
     "max": 35,
     "vars": {
       "k": "The value that replaces k in the text."
@@ -557,7 +557,7 @@
   },
   "shape-editor.mc-shape-studio.k-ready-to-combine-use-the-arrows-or": {
     "text": "{k} ready to combine. Use the arrows or fields to place it.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Screen reader message after picking a second shape. {k} is the shape name, for example Circle.",
     "max": 95,
     "vars": {
       "k": "The value that replaces k in the text."
@@ -585,7 +585,7 @@
   },
   "shape-editor.mc-shape-studio.kept-the-largest-piece-c-removed": {
     "text": "Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Result of a combine that split the outline. {c} is the number of small pieces dropped, plural rules apply.",
     "max": 90,
     "vars": {
       "c": "The count the text is about."
@@ -593,7 +593,7 @@
   },
   "shape-editor.mc-shape-studio.leave": {
     "text": "Leave",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirm button in the unsaved changes dialog that discards edits and exits (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.leave-without-saving": {
@@ -603,22 +603,22 @@
   },
   "shape-editor.mc-shape-studio.left": {
     "text": "Left",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for the left side of the card, or the left anchor option. Not a verb form.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.length": {
     "text": "Length",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for how long a cut corner is along each card edge.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.library": {
     "text": "Library",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Tab name for the user's saved shapes. Noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.linked-to-the-saved-shape-id-your-edits": {
     "text": "Linked to the saved shape \"{id}\". Your edits make it this card's own shape.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Info about a card using a library shape. {id} is the saved shape's identifier, shown in straight quotes.",
     "max": 120,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -636,7 +636,7 @@
   },
   "shape-editor.mc-shape-studio.maximise": {
     "text": "Maximise",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Window button that makes the editor fill the screen (British spelling). Opposite of Restore size.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.measured-inside-the-outline-at-the-size": {
@@ -646,12 +646,12 @@
   },
   "shape-editor.mc-shape-studio.messages": {
     "text": "Messages",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the list of notices, warnings and errors about the shape. Plural noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.move-dir": {
     "text": "Move {dir, select, left {left} up {up} down {down} other {right}}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of an arrow button that nudges the shape. {dir} is a code: left, up, down or right (the fallback). Keep the codes.",
     "max": 25,
     "vars": {
       "dir": "The value that replaces dir in the text."
@@ -664,22 +664,22 @@
   },
   "shape-editor.mc-shape-studio.move-point": {
     "text": "Move point",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toolbar tool for selecting and dragging points on the canvas (verb plus noun).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.move-window": {
     "text": "Move window",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the title bar handle that drags the editor window around.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.name": {
     "text": "Name",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for the name of a shape being saved to the library.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.name-copy": {
     "text": "{name} copy",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Suggested name for a duplicated shape. {name} is the original shape name, followed by the word copy.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -687,12 +687,12 @@
   },
   "shape-editor.mc-shape-studio.new-outline": {
     "text": "New outline",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that clears the canvas and starts a fresh outline. It replaces the shape once finished.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.next": {
     "text": "Next",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that selects the next point on the outline. Pair of Previous.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.no-messages": {
@@ -707,7 +707,7 @@
   },
   "shape-editor.mc-shape-studio.no-shapes-match-q": {
     "text": "No shapes match \"{q}\".",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Empty search result in the library. {q} is the text the user typed in the search box, shown in straight quotes.",
     "max": 40,
     "vars": {
       "q": "The value that replaces q in the text."
@@ -715,7 +715,7 @@
   },
   "shape-editor.mc-shape-studio.note": {
     "text": "Note",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Severity label before an informational message in the Messages list. Noun, not a verb.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.nothing-to-redo": {
@@ -735,7 +735,7 @@
   },
   "shape-editor.mc-shape-studio.nudge": {
     "text": "Nudge",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Group label for the four arrow buttons that move the shape a small step (verb).",
     "max": 15
   },
   "shape-editor.mc-shape-studio.older-browsers-draw-the-curved-corners": {
@@ -745,12 +745,12 @@
   },
   "shape-editor.mc-shape-studio.on-card": {
     "text": "On card",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Badge marking the library shape the current card is using.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file": {
     "text": "Only the first of {c} shapes in the file was used.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Import notice. {c} is how many shapes the file held, a plain number of two or more.",
     "max": 80,
     "vars": {
       "c": "The value that replaces c in the text."
@@ -758,7 +758,7 @@
   },
   "shape-editor.mc-shape-studio.op-the-outline-has-c": {
     "text": "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Result after combining shapes. {op} is a code: union, subtract or intersect (the fallback). {c} is the point count, plural rules apply.",
     "max": 65,
     "vars": {
       "c": "The count the text is about.",
@@ -767,12 +767,12 @@
   },
   "shape-editor.mc-shape-studio.open": {
     "text": "Open",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that opens a saved library shape in the editor (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.open-name": {
     "text": "Open {name}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the open button on a library row. {name} is the saved shape name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -780,7 +780,7 @@
   },
   "shape-editor.mc-shape-studio.outline": {
     "text": "Outline",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Name for the edge line of the shape. Noun, singular. Plural is a separate key.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.outline-actions": {
@@ -790,12 +790,12 @@
   },
   "shape-editor.mc-shape-studio.outlines": {
     "text": "Outlines",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the list of starter outlines in the Start from picker. Plural noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.pen": {
     "text": "Pen",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toolbar tool name for drawing an outline by clicking points. Noun, like a drawing pen.",
     "max": 5
   },
   "shape-editor.mc-shape-studio.pen-cancelled": {
@@ -805,7 +805,7 @@
   },
   "shape-editor.mc-shape-studio.point-i": {
     "text": "Point {i}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Name of a point in the list. {i} is its position number starting at 1.",
     "max": 15,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -813,7 +813,7 @@
   },
   "shape-editor.mc-shape-studio.point-i-of-c": {
     "text": "Point {i} of {c}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Screen reader position. {i} is the selected point number starting at 1, {c} the total number of points.",
     "max": 30,
     "vars": {
       "c": "The value that replaces c in the text.",
@@ -822,7 +822,7 @@
   },
   "shape-editor.mc-shape-studio.point-removed-c": {
     "text": "Point removed, {c, plural, one {# point} other {# points}}.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Screen reader message after removing a point. {c} is the number of points left, plural rules apply.",
     "max": 40,
     "vars": {
       "c": "The count the text is about."
@@ -830,12 +830,12 @@
   },
   "shape-editor.mc-shape-studio.point-type": {
     "text": "Point type",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for whether the selected point is a sharp corner or a smooth curve.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.points": {
     "text": "Points",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the list of points on the outline. Plural noun.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.position-across-the-width": {
@@ -850,12 +850,12 @@
   },
   "shape-editor.mc-shape-studio.preview": {
     "text": "Preview",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the area showing the shape on a sample card. Noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.preview-at-name-size-w-by-h": {
     "text": "Preview at {name} size, {w} by {h}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the preview. {name} is the size name, {w} and {h} are width and height in pixels.",
     "max": 55,
     "vars": {
       "h": "The value that replaces h in the text.",
@@ -865,17 +865,17 @@
   },
   "shape-editor.mc-shape-studio.previous": {
     "text": "Previous",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that selects the previous point on the outline. Pair of Next.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.redo": {
     "text": "Redo",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toolbar button that reapplies the change that was just undone (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.reload": {
     "text": "Reload",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that loads the changed library shape again after it was edited elsewhere (verb).",
     "max": 15
   },
   "shape-editor.mc-shape-studio.remove-point": {
@@ -895,32 +895,32 @@
   },
   "shape-editor.mc-shape-studio.reset": {
     "text": "Reset",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Short button that returns a field or the corner values to their defaults (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.reset-shape": {
     "text": "Reset shape",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that returns the whole outline to the shape it started from (verb plus noun).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.resize-window": {
     "text": "Resize window",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the corner handle that drags the editor window to a new size.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.restore-size": {
     "text": "Restore size",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Window button that returns the maximised editor to its normal size. Opposite of Maximise.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.reverse-direction": {
     "text": "Reverse direction",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that flips the order of the points, so the outline runs the other way round.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.right": {
     "text": "Right",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for the right side of the card, or the right anchor option. Not the word for correct.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.ring-border-shadow-and-value-background": {
@@ -930,7 +930,7 @@
   },
   "shape-editor.mc-shape-studio.save": {
     "text": "Save",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that saves the shape to the library under the typed name (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.save-a-shape-here-and-use-it-on-any": {
@@ -940,12 +940,12 @@
   },
   "shape-editor.mc-shape-studio.save-as-a-copy": {
     "text": "Save as a copy",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that saves the edited shape as a new library entry and leaves the original untouched.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.save-as-new": {
     "text": "Save as new",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Shorter button that saves under a new name instead of overwriting the opened library shape.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.save-current-shape": {
@@ -960,12 +960,12 @@
   },
   "shape-editor.mc-shape-studio.saved": {
     "text": "Saved",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Status label meaning the shape matches the library copy. Past participle.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.saved-shape-id-was-not-found-this-card": {
     "text": "Saved shape \"{id}\" was not found. This card uses its own copy.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Warning when a library shape is missing. {id} is the saved shape's identifier, shown in straight quotes.",
     "max": 100,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -973,7 +973,7 @@
   },
   "shape-editor.mc-shape-studio.saved-to-library-as-name-press-done-to": {
     "text": "Saved to library as {name}. Press Done to use it on this card.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after saving. {name} is the saved shape name. Done is the button label.",
     "max": 100,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -986,7 +986,7 @@
   },
   "shape-editor.mc-shape-studio.select": {
     "text": "Select",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toolbar tool for selecting points without moving them (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.selected-point": {
@@ -996,12 +996,12 @@
   },
   "shape-editor.mc-shape-studio.shape": {
     "text": "Shape",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Title word for a single shape, used in headings and tabs. Noun, singular.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.shape-applied-to-target": {
     "text": "Shape applied to {target}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after Done. {target} names what got the shape, for example the card or a button.",
     "max": 40,
     "vars": {
       "target": "The value that replaces target in the text."
@@ -1014,7 +1014,7 @@
   },
   "shape-editor.mc-shape-studio.shape-for-target": {
     "text": "Shape for {target}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Window title. {target} names what the shape belongs to, for example the card or a button.",
     "max": 30,
     "vars": {
       "target": "The value that replaces target in the text."
@@ -1027,17 +1027,17 @@
   },
   "shape-editor.mc-shape-studio.shape-to-combine": {
     "text": "Shape to combine",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the dropdown that picks the second shape to merge with the outline.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.shape-type": {
     "text": "Shape type",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the choice between Corners and Free shape.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.shapes": {
     "text": "Shapes",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading or tab name for the list of shapes. Plural noun.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.short-no-slashes-shown-in-the-list": {
@@ -1047,27 +1047,27 @@
   },
   "shape-editor.mc-shape-studio.shortcuts": {
     "text": "Shortcuts",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the list of keyboard shortcuts. Plural noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.show-full-message": {
     "text": "Show full message",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Link that expands a long message that was cut short in the Messages list.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.show-older-browser-look": {
     "text": "Show older browser look",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toggle that previews the shape the way older browsers draw it, with straight facets instead of curves.",
     "max": 40
   },
   "shape-editor.mc-shape-studio.show-text-area": {
     "text": "Show text area",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toggle that overlays the area where card text can sit inside the outline.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.shown-at-pct": {
     "text": "shown at {pct}%",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Lower-case suffix on the preview. {pct} is the zoom percentage, a plain number without the percent sign.",
     "max": 25,
     "vars": {
       "pct": "The value that replaces pct in the text."
@@ -1075,57 +1075,57 @@
   },
   "shape-editor.mc-shape-studio.side-panel": {
     "text": "Side panel",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the panel beside the canvas. Same English as the lips key.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.sidebar": {
     "text": "Sidebar",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the sidebar landmark that holds the shape list and library tabs.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.size": {
     "text": "Size",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the dropdown for the preview card size (Small, Medium, Large or Custom).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.skip-to-canvas": {
     "text": "Skip to canvas",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hidden link for keyboard users that jumps focus to the drawing canvas.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.skip-to-inspector": {
     "text": "Skip to inspector",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hidden link for keyboard users that jumps focus to the inspector panel.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.skip-to-point-fields": {
     "text": "Skip to point fields",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hidden link for keyboard users that jumps focus to the fields of the selected point.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.smooth": {
     "text": "Smooth",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Point type option that makes the outline curve through the point. Adjective. Opposite of a sharp corner.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.smoothing": {
     "text": "Smoothing",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the slider for how strongly the pen rounds the corners of a drawn outline. Noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.snap": {
     "text": "Snap",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toggle that makes dragged points jump to the grid (verb).",
     "max": 10
   },
   "shape-editor.mc-shape-studio.space-for-text": {
     "text": "Space for text",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the section about padding that keeps text away from cut edges.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.space-for-text-top-right-bottom-left": {
     "text": "Space for text: top, right, bottom, left",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the four padding fields. The order top, right, bottom, left is the order of the fields.",
     "max": 65
   },
   "shape-editor.mc-shape-studio.square-corners-have-no-size": {
@@ -1135,17 +1135,17 @@
   },
   "shape-editor.mc-shape-studio.start-from": {
     "text": "Start from...",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Short menu button that opens a list of starter shapes. Dots mean a further choice follows. Same idea as the longer variants.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.start-from-a-shape": {
     "text": "Start from a shape...",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Menu button that opens the list of starter shapes. Dots mean a further choice follows. Variant without dots is a separate key.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.start-from-a-shape-2": {
     "text": "Start from a shape",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading or accessible name of the starter shape picker, without dots. Variant with dots is a separate key.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.started-from-circle-on-a-wide-card-the": {
@@ -1155,7 +1155,7 @@
   },
   "shape-editor.mc-shape-studio.started-from-k": {
     "text": "Started from {k}.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after picking a starter. {k} is the starter shape name, for example Circle.",
     "max": 30,
     "vars": {
       "k": "The value that replaces k in the text."
@@ -1163,7 +1163,7 @@
   },
   "shape-editor.mc-shape-studio.started-from-k-switched-to-free-shape": {
     "text": "Started from {k}. Switched to Free shape.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after picking a starter that needs hand-edited points. {k} is the starter name. Free shape is a type name.",
     "max": 70,
     "vars": {
       "k": "The value that replaces k in the text."
@@ -1171,7 +1171,7 @@
   },
   "shape-editor.mc-shape-studio.started-from-name-it-opens-as-a-path-so": {
     "text": "Started from {name}. It opens as a path, so you can move every point.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after picking a starter. {name} is the starter shape name, for example Cloud.",
     "max": 115,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1179,7 +1179,7 @@
   },
   "shape-editor.mc-shape-studio.started-from-name-your-changes-make-this": {
     "text": "Started from {name}. Your changes make this shape custom.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Confirmation after picking a starter that stays a corner shape. {name} is the starter shape name.",
     "max": 95,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1192,7 +1192,7 @@
   },
   "shape-editor.mc-shape-studio.starters": {
     "text": "Starters",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the group of ready-made shapes to begin from. Plural noun.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.stays-the-same-on-every-card-size": {
@@ -1202,7 +1202,7 @@
   },
   "shape-editor.mc-shape-studio.stretch": {
     "text": "Stretch",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Anchor option where the point moves in proportion to the card size, so it stretches with the card.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.tab-into-the-canvas-and-choose-a-point": {
@@ -1217,7 +1217,7 @@
   },
   "shape-editor.mc-shape-studio.the-outline-crosses-itself-at-where": {
     "text": "The outline crosses itself at {where}.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Warning about a self-crossing outline. {where} is a position such as a point number or coordinates.",
     "max": 65,
     "vars": {
       "where": "The value that replaces where in the text."
@@ -1225,7 +1225,7 @@
   },
   "shape-editor.mc-shape-studio.the-outline-cuts-into-the-text-area-at": {
     "text": "The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Warning. {where} is a position such as a point number or coordinates. Extra space is a field label.",
     "max": 165,
     "vars": {
       "where": "The value that replaces where in the text."
@@ -1238,7 +1238,7 @@
   },
   "shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape": {
     "text": "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Combine error. {c} is the points the result would need, {max} the largest allowed, both plain numbers.",
     "max": 180,
     "vars": {
       "c": "The value that replaces c in the text.",
@@ -1272,32 +1272,32 @@
   },
   "shape-editor.mc-shape-studio.top": {
     "text": "Top",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for the top side of the card, or the top anchor option. Same English as the names key.",
     "max": 5
   },
   "shape-editor.mc-shape-studio.try-again": {
     "text": "Try again",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that repeats a failed load of the editor tools (verb phrase).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.type": {
     "text": "Type",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Short field label for the kind of corner style (Round, Bevel, Cut and so on). Noun.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.undo": {
     "text": "Undo",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Toolbar button that reverses the last change (verb).",
     "max": 15
   },
   "shape-editor.mc-shape-studio.unit": {
     "text": "Unit",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the choice between pixels and percent for a corner size or position.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.update-name": {
     "text": "Update \"{name}\"",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that overwrites the opened library shape. {name} is that shape's name, shown in straight quotes.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1310,37 +1310,37 @@
   },
   "shape-editor.mc-shape-studio.use-on-this-card": {
     "text": "Use on this card",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button on a library row that applies the saved shape to the card being edited.",
     "max": 30
   },
   "shape-editor.mc-shape-studio.vertical-anchor": {
     "text": "Vertical anchor",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for which edge a point stays attached to when the card resizes in height (Top, Centre, Bottom).",
     "max": 25
   },
   "shape-editor.mc-shape-studio.warning": {
     "text": "Warning",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Severity label before a warning in the Messages list. Noun, not a verb.",
     "max": 15
   },
   "shape-editor.mc-shape-studio.width": {
     "text": "Width",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Field label for the width of the custom preview size, in pixels.",
     "max": 10
   },
   "shape-editor.mc-shape-studio.working": {
     "text": "Working...",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Busy label on a button while a combine or import runs. The dots show it is still in progress.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.x-from-the-left-edge": {
     "text": "X, from the left edge",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the X coordinate field. X is the axis letter; the distance is measured from the left edge.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.x-y": {
     "text": "{x}, {y}",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Coordinate pair of a point. {x} is the horizontal and {y} the vertical position, plain numbers.",
     "max": 15,
     "vars": {
       "x": "The value that replaces x in the text.",
@@ -1349,7 +1349,7 @@
   },
   "shape-editor.mc-shape-studio.y-from-the-top-edge": {
     "text": "Y, from the top edge",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible name of the Y coordinate field. Y is the axis letter; the distance is measured from the top edge.",
     "max": 35
   },
   "shape-editor.names.a-quarter-circle": {
@@ -1379,7 +1379,7 @@
   },
   "shape-editor.names.arrow": {
     "text": "Arrow",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like an arrow. A shape name.",
     "max": 10
   },
   "shape-editor.names.arrow-keys-move-the-point-shift-moves-it": {
@@ -1389,12 +1389,12 @@
   },
   "shape-editor.names.bevel": {
     "text": "Bevel",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a corner style with a straight diagonal cut.",
     "max": 15
   },
   "shape-editor.names.bottom": {
     "text": "Bottom",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label for the bottom side of the card. Same English as the studio key.",
     "max": 10
   },
   "shape-editor.names.bottom-left-corner": {
@@ -1424,7 +1424,7 @@
   },
   "shape-editor.names.combine": {
     "text": "Combine",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of the Combine tool in the shortcut and menu list. Same English as the studio key.",
     "max": 15
   },
   "shape-editor.names.ctrl-z-undoes-ctrl-shift-z-redoes-ctrl-s": {
@@ -1434,12 +1434,12 @@
   },
   "shape-editor.names.custom": {
     "text": "Custom",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label for a shape the user has changed, no longer a plain starter. Adjective.",
     "max": 10
   },
   "shape-editor.names.custom-size": {
     "text": "Custom size",
-    "note": "Shown in names (shape-editor).",
+    "note": "Preview size option that lets the user type their own width and height.",
     "max": 20
   },
   "shape-editor.names.cut-corners": {
@@ -1474,7 +1474,7 @@
   },
   "shape-editor.names.drop": {
     "text": "Drop",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a water drop. A shape name, not the verb.",
     "max": 10
   },
   "shape-editor.names.ellipse": {
@@ -1484,12 +1484,12 @@
   },
   "shape-editor.names.esc-closes-a-window-then-ends-a-drawing": {
     "text": "Esc closes a window, then ends a drawing.",
-    "note": "Shown in names (shape-editor).",
+    "note": "Line in the shortcut list. Esc is the key name. Describes the order Esc acts in.",
     "max": 70
   },
   "shape-editor.names.h": {
     "text": "H",
-    "note": "Shown in names (shape-editor).",
+    "note": "Single-letter column label for the height field of a point or size. Stands for height.",
     "max": 5
   },
   "shape-editor.names.heart": {
@@ -1504,12 +1504,12 @@
   },
   "shape-editor.names.in-handle": {
     "text": "In handle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label of the curve control handle that shapes the line arriving at a smooth point.",
     "max": 20
   },
   "shape-editor.names.intersect": {
     "text": "Intersect",
-    "note": "Shown in names (shape-editor).",
+    "note": "Combine option that keeps only the overlap of the two shapes (verb).",
     "max": 15
   },
   "shape-editor.names.keep-your-own-shapes-for-every-dashboard": {
@@ -1519,7 +1519,7 @@
   },
   "shape-editor.names.lamp-on": {
     "text": "Lamp on",
-    "note": "Shown in names (shape-editor).",
+    "note": "Example shape name used as sample text in the name field hint. A lamp that is switched on.",
     "max": 15
   },
   "shape-editor.names.leaf": {
@@ -1529,12 +1529,12 @@
   },
   "shape-editor.names.left": {
     "text": "Left",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label for the left side of the card. Same English as the studio key.",
     "max": 10
   },
   "shape-editor.names.living-room": {
     "text": "Living room",
-    "note": "Shown in names (shape-editor).",
+    "note": "Example shape name used as sample text in the name field hint. A room in a home.",
     "max": 20
   },
   "shape-editor.names.no-change-a-sharp-corner": {
@@ -1544,12 +1544,12 @@
   },
   "shape-editor.names.notch": {
     "text": "Notch",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with square steps cut into its corners. A shape name.",
     "max": 10
   },
   "shape-editor.names.notched": {
     "text": "Notched",
-    "note": "Shown in names (shape-editor).",
+    "note": "Corner style option: a square step cut into the corner. Adjective form of the Notch shape.",
     "max": 15
   },
   "shape-editor.names.octagon": {
@@ -1559,37 +1559,37 @@
   },
   "shape-editor.names.out-handle": {
     "text": "Out handle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label of the curve control handle that shapes the line leaving a smooth point.",
     "max": 20
   },
   "shape-editor.names.pill": {
     "text": "Pill",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with fully rounded short ends, like a capsule. A shape name.",
     "max": 10
   },
   "shape-editor.names.plus": {
     "text": "Plus",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a plus sign. A shape name.",
     "max": 10
   },
   "shape-editor.names.right": {
     "text": "Right",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label for the right side of the card. Same English as the studio key.",
     "max": 10
   },
   "shape-editor.names.right-click-long-press-the-menu-key-or": {
     "text": "Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.",
-    "note": "Shown in names (shape-editor).",
+    "note": "Line in the shortcut list. Menu and Shift+F10 are key names; Outline actions is a menu name.",
     "max": 120
   },
   "shape-editor.names.round": {
     "text": "Round",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a corner style with a plain circular arc. Adjective, not the verb.",
     "max": 10
   },
   "shape-editor.names.rounded": {
     "text": "Rounded",
-    "note": "Shown in names (shape-editor).",
+    "note": "Corner style option for rounded corners. Adjective form of Round.",
     "max": 15
   },
   "shape-editor.names.rounded-rectangle": {
@@ -1599,22 +1599,22 @@
   },
   "shape-editor.names.row": {
     "text": "Row",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of the preview size for a wide, short card. A card size, not a table row.",
     "max": 5
   },
   "shape-editor.names.row-wide-360-x-120": {
     "text": "Row, wide 360 x 120",
-    "note": "Shown in names (shape-editor).",
+    "note": "Preview size option with its pixel size, width 360 by height 120. Keep the numbers.",
     "max": 35
   },
   "shape-editor.names.scoop": {
     "text": "Scoop",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with quarter circles cut into its corners. A shape name.",
     "max": 10
   },
   "shape-editor.names.scooped": {
     "text": "Scooped",
-    "note": "Shown in names (shape-editor).",
+    "note": "Corner style option: a quarter circle cut into the card. Adjective form of the Scoop shape.",
     "max": 15
   },
   "shape-editor.names.semicircle": {
@@ -1629,7 +1629,7 @@
   },
   "shape-editor.names.show-or-hide-panels-ctrl-or": {
     "text": "Show or hide panels: Ctrl+\\ or ⌘\\",
-    "note": "Shown in names (shape-editor).",
+    "note": "Line in the shortcut list. The key combinations (Ctrl plus backslash, or Command plus backslash) stay as written.",
     "max": 55
   },
   "shape-editor.names.speech-bubble": {
@@ -1644,7 +1644,7 @@
   },
   "shape-editor.names.squircle": {
     "text": "Squircle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a corner style between a circle and a square. A made-up design word (square plus circle).",
     "max": 15
   },
   "shape-editor.names.star": {
@@ -1654,22 +1654,22 @@
   },
   "shape-editor.names.subtract": {
     "text": "Subtract",
-    "note": "Shown in names (shape-editor).",
+    "note": "Combine option that cuts the second shape out of the outline (verb).",
     "max": 15
   },
   "shape-editor.names.tab": {
     "text": "Tab",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a folder tab. A shape name, not the Tab key.",
     "max": 5
   },
   "shape-editor.names.tab-into-the-canvas-then-and-choose-a": {
     "text": "Tab into the canvas, then [ and ] choose a point.",
-    "note": "Shown in names (shape-editor).",
+    "note": "Line in the shortcut list. Tab is the key, [ and ] are the bracket keys. Shorter variant of the studio hint.",
     "max": 80
   },
   "shape-editor.names.tag": {
     "text": "Tag",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a price tag. A shape name.",
     "max": 5
   },
   "shape-editor.names.the-library-is-full-delete-a-shape-first": {
@@ -1684,7 +1684,7 @@
   },
   "shape-editor.names.this-shape-is-too-big-for-the-library-8": {
     "text": "This shape is too big for the library (8 KB).",
-    "note": "Shown in names (shape-editor).",
+    "note": "Save error. The 8 KB limit is fixed text. Same English as the studio key.",
     "max": 75
   },
   "shape-editor.names.ticket": {
@@ -1694,22 +1694,22 @@
   },
   "shape-editor.names.tile": {
     "text": "Tile",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of the preview size for a small square card. A card size.",
     "max": 10
   },
   "shape-editor.names.tile-square-120-x-120": {
     "text": "Tile, square 120 x 120",
-    "note": "Shown in names (shape-editor).",
+    "note": "Preview size option with its pixel size, 120 by 120. Keep the numbers.",
     "max": 40
   },
   "shape-editor.names.top": {
     "text": "Top",
-    "note": "Shown in names (shape-editor).",
+    "note": "Label for the top side of the card. Same English as the studio key.",
     "max": 5
   },
   "shape-editor.names.top-left-corner": {
     "text": "Top left corner",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of the first corner in the corner editor. Used with the other three corner names.",
     "max": 25
   },
   "shape-editor.names.top-right-corner": {
@@ -1729,37 +1729,37 @@
   },
   "shape-editor.names.v-is-select-p-is-pen": {
     "text": "V is Select. P is Pen.",
-    "note": "Shown in names (shape-editor).",
+    "note": "Line in the shortcut list. V and P are the keys; Select and Pen are the tool names, translate them like the tool labels.",
     "max": 40
   },
   "shape-editor.names.w": {
     "text": "W",
-    "note": "Shown in names (shape-editor).",
+    "note": "Single-letter column label for the width field of a point or size. Stands for width.",
     "max": 5
   },
   "shape-editor.names.wide": {
     "text": "Wide",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a preview size for a wide card. A card size, adjective.",
     "max": 10
   },
   "shape-editor.names.wide-banner": {
     "text": "Wide banner",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of the preview size for a very wide card. Same wording as the sized variant, without numbers.",
     "max": 20
   },
   "shape-editor.names.wide-banner-720-x-200": {
     "text": "Wide banner 720 x 200",
-    "note": "Shown in names (shape-editor).",
+    "note": "Preview size option with its pixel size, 720 by 200. Keep the numbers.",
     "max": 35
   },
   "shape-editor.names.x": {
     "text": "X",
-    "note": "Shown in names (shape-editor).",
+    "note": "Single-letter label for the horizontal coordinate field of a point. The axis letter, keep as X.",
     "max": 5
   },
   "shape-editor.names.y": {
     "text": "Y",
-    "note": "Shown in names (shape-editor).",
+    "note": "Single-letter label for the vertical coordinate field of a point. The axis letter, keep as Y.",
     "max": 5
   },
   "shape-editor.names.your-account-can-use-the-library-but-not": {

@@ -1,32 +1,32 @@
 {
   "labels.animation-conflicts.filter": {
     "text": "filter",
-    "note": "Shown in animation conflicts (labels).",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names the CSS filter property (blur, brightness). Keep it lower case and a noun.",
     "max": 10
   },
   "labels.animation-conflicts.glow": {
     "text": "glow",
-    "note": "Shown in animation conflicts (labels).",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names the soft light around an element. Keep it lower case.",
     "max": 10
   },
   "labels.animation-conflicts.opacity": {
     "text": "opacity",
-    "note": "Shown in animation conflicts (labels).",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names how see-through an element is. Keep it lower case.",
     "max": 15
   },
   "labels.animation-conflicts.position": {
     "text": "position",
-    "note": "Shown in animation conflicts (labels).",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names where an element sits (it moves). Keep it lower case.",
     "max": 15
   },
   "labels.animation-conflicts.rotation": {
     "text": "rotation",
-    "note": "Shown in animation conflicts (labels).",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names turning an element around its centre. Keep it lower case.",
     "max": 15
   },
   "labels.animation-conflicts.scale": {
     "text": "scale",
-    "note": "Shown in animation conflicts (labels).",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names making an element bigger or smaller, not a measuring scale.",
     "max": 10
   },
   "labels.animation-list.overrides-name-both-animate-the-what": {
@@ -40,792 +40,792 @@
   },
   "labels.animation-presets.3d-rotate": {
     "text": "3D rotate",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset in the picker: the element turns in three dimensions. Keep it short.",
     "max": 15
   },
   "labels.animation-presets.angle": {
     "text": "Angle",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: the angle in degrees the effect turns or tilts by.",
     "max": 10
   },
   "labels.animation-presets.aura": {
     "text": "Aura",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset in the picker: a soft coloured halo around the element.",
     "max": 10
   },
   "labels.animation-presets.aurora": {
     "text": "Aurora",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background animation preset: slow shifting bands of colour like the northern lights.",
     "max": 15
   },
   "labels.animation-presets.autumn": {
     "text": "Autumn",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset (season, not the verb): warm autumn colours and falling leaves.",
     "max": 10
   },
   "labels.animation-presets.backgrounds": {
     "text": "Backgrounds",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the animation preset picker, plural: presets that animate the card or module background.",
     "max": 20
   },
   "labels.animation-presets.bars": {
     "text": "Bars",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset in the picker, plural: vertical bars that rise and fall like a level meter.",
     "max": 10
   },
   "labels.animation-presets.beam-width": {
     "text": "Beam width",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how wide the light beam is (for example in the spotlight or radar sweep).",
     "max": 20
   },
   "labels.animation-presets.blink": {
     "text": "Blink",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset in the picker: the element switches on and off sharply.",
     "max": 10
   },
   "labels.animation-presets.bokeh": {
     "text": "Bokeh",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background animation preset: soft out-of-focus discs of light drifting about (photography term).",
     "max": 10
   },
   "labels.animation-presets.border-snake": {
     "text": "Border snake",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a border animation preset: a short bright line that travels around the border.",
     "max": 20
   },
   "labels.animation-presets.border-width": {
     "text": "Border width",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: thickness of the animated border line.",
     "max": 20
   },
   "labels.animation-presets.borders": {
     "text": "Borders",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the animation preset picker, plural: presets that animate the border.",
     "max": 15
   },
   "labels.animation-presets.bounce": {
     "text": "Bounce",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset in the picker: the element hops up and down like a ball.",
     "max": 10
   },
   "labels.animation-presets.breathe": {
     "text": "Breathe",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset in the picker (verb): the element slowly grows and shrinks like breathing.",
     "max": 15
   },
   "labels.animation-presets.breathing-border": {
     "text": "Breathing border",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a border animation preset: the border slowly brightens and fades in a steady rhythm.",
     "max": 30
   },
   "labels.animation-presets.brightness": {
     "text": "Brightness",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how much brighter the element gets at the peak of the effect.",
     "max": 20
   },
   "labels.animation-presets.bubbles": {
     "text": "Bubbles",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background animation preset, plural: bubbles rising through the background.",
     "max": 15
   },
   "labels.animation-presets.charging-stripes": {
     "text": "Charging stripes",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a bar animation preset: diagonal stripes move along a bar like a battery charging.",
     "max": 30
   },
   "labels.animation-presets.christmas": {
     "text": "Christmas",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset: festive Christmas decoration. Use the usual local name of the holiday.",
     "max": 15
   },
   "labels.animation-presets.clouds": {
     "text": "Clouds",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather-style animation preset, plural: clouds float across the background.",
     "max": 10
   },
   "labels.animation-presets.clouds-drift": {
     "text": "Clouds drift",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background animation preset: clouds drifting slowly sideways ('drift' is a verb here).",
     "max": 20
   },
   "labels.animation-presets.cloudy": {
     "text": "Cloudy",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset (adjective): an overcast sky. Matches the weather condition of the same name.",
     "max": 10
   },
   "labels.animation-presets.coin-spin": {
     "text": "Coin spin",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element spins on its vertical axis like a coin.",
     "max": 15
   },
   "labels.animation-presets.colour-cycle-background": {
     "text": "Colour cycle background",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: the background fades through a cycle of colours.",
     "max": 40
   },
   "labels.animation-presets.confetti": {
     "text": "Confetti",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a celebration particle preset: coloured paper pieces falling.",
     "max": 15
   },
   "labels.animation-presets.conic-border-spin": {
     "text": "Conic border spin",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a border preset: a cone-shaped colour sweep (conic gradient) rotates around the border.",
     "max": 30
   },
   "labels.animation-presets.day-and-night": {
     "text": "Day and night",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a scene preset: the background shifts between a day sky and a night sky.",
     "max": 25
   },
   "labels.animation-presets.density": {
     "text": "Density",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how many particles or drops are on screen at once.",
     "max": 15
   },
   "labels.animation-presets.depth": {
     "text": "Depth",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how far the effect appears to move in or out (3D depth).",
     "max": 10
   },
   "labels.animation-presets.dim": {
     "text": "Dim",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element fades to a darker level and back.",
     "max": 10
   },
   "labels.animation-presets.distance": {
     "text": "Distance",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how far the element moves, in pixels.",
     "max": 15
   },
   "labels.animation-presets.dot-size": {
     "text": "Dot size",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: the diameter of each dot.",
     "max": 15
   },
   "labels.animation-presets.dots": {
     "text": "Dots",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset, plural: small dots that move or pulse.",
     "max": 10
   },
   "labels.animation-presets.drip": {
     "text": "Drip",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: drops run down from the top edge.",
     "max": 10
   },
   "labels.animation-presets.dusk-glow": {
     "text": "Dusk glow",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a scene preset: a warm evening glow at twilight.",
     "max": 15
   },
   "labels.animation-presets.ease": {
     "text": "Ease",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option in the timing (easing) list: the default CSS ease curve. Keep the CSS term.",
     "max": 10
   },
   "labels.animation-presets.ease-in": {
     "text": "Ease in",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option in the timing (easing) list: starts slowly, then speeds up. Not an instruction to the user.",
     "max": 15
   },
   "labels.animation-presets.ease-in-out": {
     "text": "Ease in-out",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option in the timing (easing) list: slow at both start and end, faster in the middle.",
     "max": 20
   },
   "labels.animation-presets.ease-out": {
     "text": "Ease out",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option in the timing (easing) list: starts fast, then slows down at the end.",
     "max": 15
   },
   "labels.animation-presets.easter": {
     "text": "Easter",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset for the Easter holiday.",
     "max": 10
   },
   "labels.animation-presets.equalizer-bars": {
     "text": "Equalizer bars",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: bars jump up and down like an audio equaliser.",
     "max": 25
   },
   "labels.animation-presets.fade": {
     "text": "Fade",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element fades in and out. Also appears as a tab content option.",
     "max": 10
   },
   "labels.animation-presets.fade-pulse": {
     "text": "Fade pulse",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: opacity pulses gently up and down.",
     "max": 20
   },
   "labels.animation-presets.falling-leaves": {
     "text": "Falling leaves",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset: leaves drifting down the background.",
     "max": 25
   },
   "labels.animation-presets.fast-spin": {
     "text": "Fast spin",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element rotates quickly, for example an icon on a fan.",
     "max": 15
   },
   "labels.animation-presets.fill-level": {
     "text": "Fill level",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a bar preset: a liquid-like fill that follows the bar value (noun).",
     "max": 20
   },
   "labels.animation-presets.fireflies": {
     "text": "Fireflies",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset, plural: tiny glowing lights drifting and blinking (the insects).",
     "max": 15
   },
   "labels.animation-presets.fireworks": {
     "text": "Fireworks",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a celebration particle preset: bursts of light in the background.",
     "max": 15
   },
   "labels.animation-presets.flame-flicker": {
     "text": "Flame flicker",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: warm light that flickers like a candle flame.",
     "max": 25
   },
   "labels.animation-presets.flicker": {
     "text": "Flicker",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: brightness flickers irregularly, like a failing bulb.",
     "max": 15
   },
   "labels.animation-presets.flip": {
     "text": "Flip",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element flips over like a card.",
     "max": 10
   },
   "labels.animation-presets.float": {
     "text": "Float",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element bobs gently up and down. Not the CSS float property.",
     "max": 10
   },
   "labels.animation-presets.foggy": {
     "text": "Foggy",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset (adjective): drifting fog. Matches the weather condition.",
     "max": 10
   },
   "labels.animation-presets.glitch": {
     "text": "Glitch",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element jitters and splits like a faulty digital signal.",
     "max": 10
   },
   "labels.animation-presets.glow": {
     "text": "Glow",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (noun): a soft light that brightens around the element.",
     "max": 10
   },
   "labels.animation-presets.glow-pulse": {
     "text": "Glow pulse",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the glow pulses stronger and weaker. Differs from 'Glow & pulse'.",
     "max": 20
   },
   "labels.animation-presets.glow-pulse-2": {
     "text": "Glow & pulse",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker for glow and pulse effects. Differs from the preset 'Glow pulse'.",
     "max": 20
   },
   "labels.animation-presets.glow-size": {
     "text": "Glow size",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how far the glow spreads, in pixels.",
     "max": 15
   },
   "labels.animation-presets.gradient-flow": {
     "text": "Gradient flow",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: a colour gradient that slides slowly across the background.",
     "max": 25
   },
   "labels.animation-presets.halloween": {
     "text": "Halloween",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset for the Halloween holiday.",
     "max": 15
   },
   "labels.animation-presets.halo-ripple": {
     "text": "Halo ripple",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: rings of light spread outwards from the element like a halo.",
     "max": 20
   },
   "labels.animation-presets.head-shake": {
     "text": "Head shake",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a quick side-to-side shake, like shaking the head for 'no'.",
     "max": 20
   },
   "labels.animation-presets.heartbeat": {
     "text": "Heartbeat",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: two quick pulses then a pause, like a heart beating.",
     "max": 15
   },
   "labels.animation-presets.heat-shimmer": {
     "text": "Heat shimmer",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a wavy haze like hot air rising.",
     "max": 20
   },
   "labels.animation-presets.height": {
     "text": "Height",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how tall the effect is, in pixels.",
     "max": 10
   },
   "labels.animation-presets.holographic-shimmer": {
     "text": "Holographic shimmer",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a rainbow sheen that shifts across the surface like a hologram.",
     "max": 35
   },
   "labels.animation-presets.hue-range": {
     "text": "Hue range",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how many degrees of the colour wheel the hue shifts across.",
     "max": 15
   },
   "labels.animation-presets.interaction": {
     "text": "Interaction",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker: effects that play when the user taps, presses or hovers.",
     "max": 20
   },
   "labels.animation-presets.jello": {
     "text": "Jello",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element wobbles like jelly (dessert). Any playful word is fine.",
     "max": 10
   },
   "labels.animation-presets.lava-lamp": {
     "text": "Lava lamp",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: slow blobs of colour rise and merge like in a lava lamp.",
     "max": 15
   },
   "labels.animation-presets.lift": {
     "text": "Lift",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an interaction preset (verb): the element rises slightly on hover or press.",
     "max": 10
   },
   "labels.animation-presets.light-colour": {
     "text": "Light & colour",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker for effects that change light and colour.",
     "max": 25
   },
   "labels.animation-presets.lightning": {
     "text": "Lightning",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather preset: sudden flashes of lightning.",
     "max": 15
   },
   "labels.animation-presets.linear": {
     "text": "Linear",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option in the timing (easing) list: constant speed from start to end.",
     "max": 10
   },
   "labels.animation-presets.liquid-wave": {
     "text": "Liquid wave",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a bar or background preset: a wavy liquid surface that moves.",
     "max": 20
   },
   "labels.animation-presets.live-weather": {
     "text": "Live weather",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a preset that follows the current weather entity and shows matching conditions.",
     "max": 20
   },
   "labels.animation-presets.marching-ants": {
     "text": "Marching ants",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a border preset: a dashed outline whose dashes crawl around the edge (selection-box style).",
     "max": 25
   },
   "labels.animation-presets.matrix-rain": {
     "text": "Matrix rain",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: columns of green characters falling, in the style of a hacker film.",
     "max": 20
   },
   "labels.animation-presets.meteor-shower": {
     "text": "Meteor shower",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a night-sky preset: streaks of light cross the background.",
     "max": 25
   },
   "labels.animation-presets.motion": {
     "text": "Motion",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker for effects that move or shake the element.",
     "max": 10
   },
   "labels.animation-presets.neon-border": {
     "text": "Neon border",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a border preset: a glowing neon-tube outline.",
     "max": 20
   },
   "labels.animation-presets.neon-flicker": {
     "text": "Neon flicker",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a neon sign that flickers on and off.",
     "max": 20
   },
   "labels.animation-presets.new-year": {
     "text": "New Year",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset for New Year celebrations.",
     "max": 15
   },
   "labels.animation-presets.night-sky": {
     "text": "Night sky",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a scene preset: a dark sky with twinkling stars.",
     "max": 20
   },
   "labels.animation-presets.ocean-waves": {
     "text": "Ocean waves",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: layered sea waves rolling along the bottom.",
     "max": 20
   },
   "labels.animation-presets.offset": {
     "text": "Offset",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how far the effect is shifted from its normal position, in pixels.",
     "max": 15
   },
   "labels.animation-presets.orbit": {
     "text": "Orbit",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (noun or verb): a light circles the element.",
     "max": 10
   },
   "labels.animation-presets.orbit-dots": {
     "text": "Orbit dots",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: small dots circle around the element.",
     "max": 20
   },
   "labels.animation-presets.particles": {
     "text": "Particles",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker, plural: effects made of many tiny moving shapes.",
     "max": 15
   },
   "labels.animation-presets.pendulum": {
     "text": "Pendulum",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element swings back and forth like a clock pendulum.",
     "max": 15
   },
   "labels.animation-presets.ping": {
     "text": "Ping",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a ring expands and fades like a sonar ping. Not a network ping.",
     "max": 10
   },
   "labels.animation-presets.plasma-gradient": {
     "text": "Plasma gradient",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: swirling, shifting colour blends like a plasma effect.",
     "max": 25
   },
   "labels.animation-presets.playful": {
     "text": "Playful",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker (adjective): lively, bouncy effects.",
     "max": 15
   },
   "labels.animation-presets.pop": {
     "text": "Pop",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element quickly grows and settles back.",
     "max": 5
   },
   "labels.animation-presets.power-flow-dots": {
     "text": "Power flow dots",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a preset: dots travel along a line to show energy flowing (power as in electricity).",
     "max": 25
   },
   "labels.animation-presets.press": {
     "text": "Press",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an interaction preset (verb): the element sinks slightly when pressed.",
     "max": 10
   },
   "labels.animation-presets.radar-sweep": {
     "text": "Radar sweep",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a beam rotates like a radar screen.",
     "max": 20
   },
   "labels.animation-presets.radius": {
     "text": "Radius",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: the radius of the effect circle, in pixels.",
     "max": 10
   },
   "labels.animation-presets.rain-fall": {
     "text": "Rain fall",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset: raindrops falling (noun phrase, 'rain' plus 'fall').",
     "max": 15
   },
   "labels.animation-presets.rainbow-hue": {
     "text": "Rainbow hue",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: colours cycle through the rainbow.",
     "max": 20
   },
   "labels.animation-presets.rainy": {
     "text": "Rainy",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
     "max": 15
   },
   "labels.animation-presets.ray-width": {
     "text": "Ray width",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how wide each sun ray is.",
     "max": 15
   },
   "labels.animation-presets.ring-size": {
     "text": "Ring size",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: the diameter of each ring, in pixels.",
     "max": 15
   },
   "labels.animation-presets.rings": {
     "text": "Rings",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset, plural: circles that expand outwards.",
     "max": 10
   },
   "labels.animation-presets.rings-sweeps": {
     "text": "Rings & sweeps",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker for ring and sweeping-beam effects.",
     "max": 25
   },
   "labels.animation-presets.ripple-rings": {
     "text": "Ripple rings",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: rings spread like ripples on water.",
     "max": 20
   },
   "labels.animation-presets.ripples": {
     "text": "Ripples",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker, plural: ripple-style effects.",
     "max": 15
   },
   "labels.animation-presets.rotation": {
     "text": "Rotation",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker for turning effects. Different from the lower-case 'rotation' in conflict warnings.",
     "max": 15
   },
   "labels.animation-presets.rubber-band": {
     "text": "Rubber band",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element stretches and snaps back like an elastic band.",
     "max": 20
   },
   "labels.animation-presets.rumble": {
     "text": "Rumble",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a low, rapid vibration of the element.",
     "max": 10
   },
   "labels.animation-presets.scale": {
     "text": "Scale",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how much bigger the element gets (a factor, such as 1.2). Not a measuring scale.",
     "max": 10
   },
   "labels.animation-presets.scanline": {
     "text": "Scanline",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a thin bright line sweeps over the element like an old monitor.",
     "max": 15
   },
   "labels.animation-presets.scenes": {
     "text": "Scenes",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker, plural: full background scenes such as night sky or dusk.",
     "max": 10
   },
   "labels.animation-presets.seasonal": {
     "text": "Seasonal",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker (adjective): effects for seasons and holidays.",
     "max": 15
   },
   "labels.animation-presets.shadow-lift": {
     "text": "Shadow lift",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an interaction preset: the shadow deepens so the element seems to lift off the card.",
     "max": 20
   },
   "labels.animation-presets.shake-alert": {
     "text": "Shake alert",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element shakes to draw attention to an alert.",
     "max": 20
   },
   "labels.animation-presets.shine": {
     "text": "Shine",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (noun): a glossy highlight on the element.",
     "max": 10
   },
   "labels.animation-presets.shine-sweep": {
     "text": "Shine sweep",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a glossy highlight sweeps across the element.",
     "max": 20
   },
   "labels.animation-presets.smoke": {
     "text": "Smoke",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset: wisps of smoke rising.",
     "max": 10
   },
   "labels.animation-presets.smooth": {
     "text": "Smooth",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option for the character of a motion (adjective): gentle, flowing movement.",
     "max": 10
   },
   "labels.animation-presets.snap": {
     "text": "Snap",
-    "note": "Shown in animation presets (labels).",
+    "note": "Option for the character of a motion: quick, abrupt movement with no easing.",
     "max": 10
   },
   "labels.animation-presets.snow-fall": {
     "text": "Snow fall",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset: snowflakes falling (noun phrase).",
     "max": 15
   },
   "labels.animation-presets.snowy": {
     "text": "Snowy",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
     "max": 15
   },
   "labels.animation-presets.sparks": {
     "text": "Sparks",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset, plural: bright sparks flying off the element.",
     "max": 10
   },
   "labels.animation-presets.spin": {
     "text": "Spin",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element rotates continuously.",
     "max": 10
   },
   "labels.animation-presets.spotlight": {
     "text": "Spotlight",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a pool of light follows or sweeps across the element.",
     "max": 15
   },
   "labels.animation-presets.spring": {
     "text": "Spring",
-    "note": "Shown in animation presets (labels).",
+    "note": "Ambiguous: either the season (seasonal preset) or a springy easing; here it is the season, like Autumn and Winter.",
     "max": 10
   },
   "labels.animation-presets.squash": {
     "text": "Squash",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element flattens briefly, then recovers.",
     "max": 15
   },
   "labels.animation-presets.squash-stretch": {
     "text": "Squash & stretch",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: the element alternately flattens and elongates like a cartoon ball.",
     "max": 30
   },
   "labels.animation-presets.starfield": {
     "text": "Starfield",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: stars streaming past as if flying through space.",
     "max": 15
   },
   "labels.animation-presets.steam-rise": {
     "text": "Steam rise",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a particle preset: steam rising upwards (noun phrase).",
     "max": 20
   },
   "labels.animation-presets.storm-flash": {
     "text": "Storm flash",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather preset: a brief flash of light, as in a thunderstorm.",
     "max": 20
   },
   "labels.animation-presets.streams": {
     "text": "Streams",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker, plural: flowing lines or dots moving along a path.",
     "max": 15
   },
   "labels.animation-presets.strength": {
     "text": "Strength",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how strong or visible the effect is.",
     "max": 15
   },
   "labels.animation-presets.stretch": {
     "text": "Stretch",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element elongates briefly. Differs from the CSS align option 'Stretch'.",
     "max": 15
   },
   "labels.animation-presets.stripe-strength": {
     "text": "Stripe strength",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how visible the moving stripes are.",
     "max": 25
   },
   "labels.animation-presets.summer": {
     "text": "Summer",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset (season): bright, warm summer look.",
     "max": 10
   },
   "labels.animation-presets.sun-rays": {
     "text": "Sun rays",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset: rays of sunlight turning slowly.",
     "max": 15
   },
   "labels.animation-presets.sunny": {
     "text": "Sunny",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
     "max": 10
   },
   "labels.animation-presets.sway": {
     "text": "Sway",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element leans gently from side to side.",
     "max": 10
   },
   "labels.animation-presets.swing": {
     "text": "Swing",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element swings from its top edge like a sign.",
     "max": 10
   },
   "labels.animation-presets.tada": {
     "text": "Tada",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: a celebratory shake and zoom, like 'ta-da!'. An informal word is fine.",
     "max": 10
   },
   "labels.animation-presets.tap-ripple": {
     "text": "Tap ripple",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an interaction preset: a ripple spreads from the point where the user taps.",
     "max": 20
   },
   "labels.animation-presets.thunderstorm": {
     "text": "Thunderstorm",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset: dark clouds, rain and lightning. Matches the weather condition.",
     "max": 20
   },
   "labels.animation-presets.tilt": {
     "text": "Tilt",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an interaction preset (verb): the element leans in 3D, following the pointer.",
     "max": 10
   },
   "labels.animation-presets.twinkle": {
     "text": "Twinkle",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): small lights flicker softly like stars.",
     "max": 15
   },
   "labels.animation-presets.typing-dots": {
     "text": "Typing dots",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset: three dots that pulse in turn, like a chat 'typing' indicator.",
     "max": 20
   },
   "labels.animation-presets.valentine": {
     "text": "Valentine",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset for Valentine's Day, with hearts.",
     "max": 15
   },
   "labels.animation-presets.water-ripple": {
     "text": "Water ripple",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a background preset: ripples spread over a water surface.",
     "max": 20
   },
   "labels.animation-presets.wave-height": {
     "text": "Wave height",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how tall the waves are, in pixels.",
     "max": 20
   },
   "labels.animation-presets.weather-device": {
     "text": "Weather & device",
-    "note": "Shown in animation presets (labels).",
+    "note": "Group heading in the preset picker for weather scenes and device-state effects.",
     "max": 30
   },
   "labels.animation-presets.width": {
     "text": "Width",
-    "note": "Shown in animation presets (labels).",
+    "note": "Field label for a preset setting: how wide the effect is, in pixels.",
     "max": 10
   },
   "labels.animation-presets.wiggle": {
     "text": "Wiggle",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element wiggles from side to side.",
     "max": 10
   },
   "labels.animation-presets.wind-lines": {
     "text": "Wind lines",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather preset: thin streaks blowing across the background.",
     "max": 20
   },
   "labels.animation-presets.windy": {
     "text": "Windy",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
     "max": 10
   },
   "labels.animation-presets.winter": {
     "text": "Winter",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of a seasonal animation preset (season): a cold, snowy look.",
     "max": 10
   },
   "labels.animation-presets.wobble": {
     "text": "Wobble",
-    "note": "Shown in animation presets (labels).",
+    "note": "Name of an animation preset (verb): the element wobbles unsteadily.",
     "max": 10
   },
   "labels.bar-module.bar": {
