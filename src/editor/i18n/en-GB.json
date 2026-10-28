@@ -1418,27 +1418,27 @@
   },
   "card-editor.card-settings.custom-css": {
     "text": "Custom CSS",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the card settings text area for extra CSS applied to this card only.",
     "max": 20
   },
   "card-editor.card-settings.dashboard-default": {
     "text": "Dashboard default",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Dropdown option: use whatever the dashboard sets, instead of a choice made on this card.",
     "max": 30
   },
   "card-editor.card-settings.default": {
     "text": "Default",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Dropdown option in card settings meaning no override: the card's built-in behaviour is kept.",
     "max": 15
   },
   "card-editor.card-settings.delete-rule": {
     "text": "Delete rule",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Button or tooltip that deletes one design or display rule from the card's rule list.",
     "max": 20
   },
   "card-editor.card-settings.display-conditions": {
     "text": "Display conditions",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Section heading for the conditions that decide whether the card is shown at all.",
     "max": 30
   },
   "card-editor.card-settings.editing-design-for": {
@@ -1448,27 +1448,27 @@
   },
   "card-editor.card-settings.effects": {
     "text": "Effects",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Section heading for visual effects (glow, particles and similar) added to the card.",
     "max": 15
   },
   "card-editor.card-settings.expand-rule": {
     "text": "Expand rule",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Tooltip on a collapsed rule row; opens it to show its settings.",
     "max": 20
   },
   "card-editor.card-settings.flows": {
     "text": "Flows",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Section heading for animated flow lines (moving dots along a path) on the card.",
     "max": 10
   },
   "card-editor.card-settings.from-template": {
     "text": "From template",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Option meaning the value is computed by a Jinja template instead of being typed in.",
     "max": 25
   },
   "card-editor.card-settings.hidden": {
     "text": "Hidden",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Status word or option saying the element is currently not shown on the card.",
     "max": 10
   },
   "card-editor.card-settings.hidden-on-the-dashboard-opens-over-it": {
@@ -1478,22 +1478,22 @@
   },
   "card-editor.card-settings.hide": {
     "text": "Hide",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Verb on a button or option that stops the element being shown; the opposite of Show.",
     "max": 10
   },
   "card-editor.card-settings.hover": {
     "text": "Hover",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label for the look the card takes while the pointer is over it (mouse hover state).",
     "max": 10
   },
   "card-editor.card-settings.layers": {
     "text": "Layers",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Section heading for the stacked background layers drawn behind the card content.",
     "max": 10
   },
   "card-editor.card-settings.layout": {
     "text": "Layout",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Section heading for how the card's content is arranged (direction, spacing, alignment).",
     "max": 10
   },
   "card-editor.card-settings.magic-card-utils-templates-never-include": {
@@ -1503,12 +1503,12 @@
   },
   "card-editor.card-settings.match": {
     "text": "Match",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label for choosing whether all or any of the rule's conditions must be true (verb, not a noun).",
     "max": 15
   },
   "card-editor.card-settings.motion": {
     "text": "Motion",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Section heading for animation and movement settings on the card.",
     "max": 10
   },
   "card-editor.card-settings.n": {
@@ -1561,7 +1561,7 @@
   },
   "card-editor.card-settings.name": {
     "text": "Name",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the text field for a name you give to an item in card settings, such as a layer or rule.",
     "max": 10
   },
   "card-editor.card-settings.no-appearance-rules": {
@@ -1586,22 +1586,22 @@
   },
   "card-editor.card-settings.opacity": {
     "text": "Opacity",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of a slider for how see-through an element is; low values are more transparent.",
     "max": 15
   },
   "card-editor.card-settings.open-conditions": {
     "text": "Open Conditions",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Button that jumps to the Conditions tab of the editor to edit this rule's conditions.",
     "max": 25
   },
   "card-editor.card-settings.open-design": {
     "text": "Open Design",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Button that jumps to the Design tab of the editor to edit this rule's look.",
     "max": 20
   },
   "card-editor.card-settings.optional": {
     "text": "Optional",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Small hint beside a field label saying it can be left empty.",
     "max": 15
   },
   "card-editor.card-settings.override-appearance-fields-while": {
@@ -1616,12 +1616,12 @@
   },
   "card-editor.card-settings.padding": {
     "text": "Padding",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the field for the space between the card edge and its content.",
     "max": 15
   },
   "card-editor.card-settings.pause-button": {
     "text": "Pause button",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the setting for the small button on the card that pauses its animations.",
     "max": 20
   },
   "card-editor.card-settings.pick-a-device": {
@@ -1631,27 +1631,27 @@
   },
   "card-editor.card-settings.pop-up": {
     "text": "Pop-up",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label or option for a card action that opens content in a pop-up dialog.",
     "max": 10
   },
   "card-editor.card-settings.problem": {
     "text": "Problem",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label for the problem state, such as a device reporting a fault, used in state options.",
     "max": 15
   },
   "card-editor.card-settings.remove-rule": {
     "text": "Remove rule",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Button or tooltip that takes one rule out of the list; same action as Delete rule in another place.",
     "max": 20
   },
   "card-editor.card-settings.ring": {
     "text": "Ring",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label for the ring shape or ring-style element (a circular outline or progress ring).",
     "max": 10
   },
   "card-editor.card-settings.rule": {
     "text": "Rule",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Noun naming one conditional rule (when X, then this look); also used as a row heading.",
     "max": 10
   },
   "card-editor.card-settings.rule-n": {
@@ -1672,22 +1672,22 @@
   },
   "card-editor.card-settings.rule-name-2": {
     "text": "Rule name",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the text field for a rule's name; a second copy of the text used in another rule list.",
     "max": 20
   },
   "card-editor.card-settings.seasonal": {
     "text": "Seasonal",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Group or option for looks tied to a time of year, such as winter or Halloween.",
     "max": 15
   },
   "card-editor.card-settings.shape": {
     "text": "Shape",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the picker for the outline shape of the card or element.",
     "max": 10
   },
   "card-editor.card-settings.show": {
     "text": "Show",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Verb on a button or option that makes the element visible; the opposite of Hide.",
     "max": 10
   },
   "card-editor.card-settings.show-as-pop-up": {
@@ -1702,12 +1702,12 @@
   },
   "card-editor.card-settings.style": {
     "text": "Style",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the picker for the visual style variant of an element (noun, not CSS).",
     "max": 10
   },
   "card-editor.card-settings.template-animations": {
     "text": "Template animations",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the field where a template returns the animation names to play on the card.",
     "max": 35
   },
   "card-editor.card-settings.the-device-this-card-is-for-tiles-follow": {
@@ -1717,7 +1717,7 @@
   },
   "card-editor.card-settings.theme-default": {
     "text": "Theme default",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Dropdown option: use the value from the active Home Assistant theme, with no override.",
     "max": 25
   },
   "card-editor.card-settings.this-card-uses-only-its-own-custom": {
@@ -1727,12 +1727,12 @@
   },
   "card-editor.card-settings.top-left": {
     "text": "Top left",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Position option placing an element in the top left corner of the card.",
     "max": 15
   },
   "card-editor.card-settings.top-right": {
     "text": "Top right",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Position option placing an element in the top right corner of the card.",
     "max": 15
   },
   "card-editor.card-settings.turn-off-to-pick-a-theme-for-this-card": {
@@ -1747,12 +1747,12 @@
   },
   "card-editor.card-settings.use-template": {
     "text": "Use template",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Switch that makes a field take its value from a template instead of a fixed entry.",
     "max": 20
   },
   "card-editor.card-settings.value-background": {
     "text": "Value background",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label of the colour behind the value text (the number or state) on the card.",
     "max": 30
   },
   "card-editor.card-settings.viewers-can-t-pause-the-motion-on-this": {
@@ -1762,12 +1762,12 @@
   },
   "card-editor.clock-editor.12-hour": {
     "text": "12-hour",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Time format option showing the clock with AM and PM, for example 3:45 PM.",
     "max": 15
   },
   "card-editor.clock-editor.24-hour": {
     "text": "24-hour",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Time format option showing the clock from 00:00 to 23:59, for example 15:45.",
     "max": 15
   },
   "card-editor.clock-editor.automatic-format-from-your-profile": {
@@ -1780,17 +1780,17 @@
   },
   "card-editor.clock-editor.custom-pattern": {
     "text": "Custom pattern",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Option in the clock's time format list that lets you type your own time pattern.",
     "max": 25
   },
   "card-editor.clock-editor.date-format": {
     "text": "Date format",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Label of the dropdown choosing how the clock shows the date, such as short or long.",
     "max": 20
   },
   "card-editor.clock-editor.date-pattern": {
     "text": "Date pattern",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Label of the text field for a custom date pattern, used when the date format is custom.",
     "max": 20
   },
   "card-editor.clock-editor.iso-example": {
@@ -1835,17 +1835,17 @@
   },
   "card-editor.clock-editor.show-date": {
     "text": "Show date",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Switch that adds the current date below the time on the clock card.",
     "max": 15
   },
   "card-editor.clock-editor.show-seconds": {
     "text": "Show seconds",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Switch that adds a seconds count to the time on the clock card.",
     "max": 20
   },
   "card-editor.clock-editor.time-format": {
     "text": "Time format",
-    "note": "Shown in clock editor (card-editor).",
+    "note": "Label of the dropdown choosing 12-hour, 24-hour or a custom pattern for the clock time.",
     "max": 20
   },
   "card-editor.clock-editor.yyyy-year-mmmm-mmm-month-name-mm-m-month": {
@@ -1855,32 +1855,32 @@
   },
   "card-editor.color-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Button that closes the colour picker and throws away the colour change.",
     "max": 10
   },
   "card-editor.color-picker.colour": {
     "text": "colour",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Lower-case noun used inside a longer phrase, such as a screen reader label for the colour.",
     "max": 10
   },
   "card-editor.color-picker.colour-format": {
     "text": "Colour format",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Label of the switch between colour notations in the picker, such as hex, RGB and HSL.",
     "max": 25
   },
   "card-editor.color-picker.colour-from": {
     "text": "Colour from",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Label of the choice for where the colour comes from: a fixed colour, the entity or its state.",
     "max": 20
   },
   "card-editor.color-picker.colour-picker": {
     "text": "Colour picker",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Accessible name and title of the colour picker dialog and its opening swatch button.",
     "max": 25
   },
   "card-editor.color-picker.entity-colour": {
     "text": "Entity colour",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Option that uses the colour the entity itself reports, such as a light's current colour.",
     "max": 25
   },
   "card-editor.color-picker.entity-colour-for-name": {
@@ -1893,7 +1893,7 @@
   },
   "card-editor.color-picker.gradient": {
     "text": "Gradient",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Tab or mode in the colour picker that blends two or more colours instead of one.",
     "max": 15
   },
   "card-editor.color-picker.gradient-created-from-your-colour": {
@@ -1908,7 +1908,7 @@
   },
   "card-editor.color-picker.hue": {
     "text": "Hue",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Label of the slider that picks the base colour around the colour wheel.",
     "max": 5
   },
   "card-editor.color-picker.name-colour-from": {
@@ -1937,12 +1937,12 @@
   },
   "card-editor.color-picker.opacity": {
     "text": "Opacity",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Label of the picker's alpha slider; low values make the chosen colour more transparent.",
     "max": 15
   },
   "card-editor.color-picker.opacity-percent": {
     "text": "Opacity percent",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Accessible name of the number box next to the opacity slider; the value is 0 to 100 per cent.",
     "max": 25
   },
   "card-editor.color-picker.open-colour-picker": {
@@ -1965,7 +1965,7 @@
   },
   "card-editor.color-picker.presets": {
     "text": "Presets",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Heading above the ready-made colour swatches in the picker.",
     "max": 20
   },
   "card-editor.color-picker.remove-value": {
@@ -1978,7 +1978,7 @@
   },
   "card-editor.color-picker.save": {
     "text": "Save",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Button that adds the current colour to the user's saved colours list in the picker.",
     "max": 10
   },
   "card-editor.color-picker.save-current-colour": {
@@ -1988,17 +1988,17 @@
   },
   "card-editor.color-picker.saved-colours": {
     "text": "Saved colours",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Heading above the swatches of colours the user saved earlier from the picker.",
     "max": 25
   },
   "card-editor.color-picker.solid": {
     "text": "Solid",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Tab or mode in the colour picker for a single flat colour; the counterpart of Gradient.",
     "max": 10
   },
   "card-editor.color-picker.state-colour": {
     "text": "State colour",
-    "note": "Shown in color picker (card-editor).",
+    "note": "Option that picks the colour from the entity's state, such as on or off, using the theme colours.",
     "max": 20
   },
   "card-editor.color-picker.switched-to-solid-undo-brings-the": {
@@ -2031,17 +2031,17 @@
   },
   "card-editor.color-ranges-field.add-range": {
     "text": "Add range",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Button that adds a new numeric range, each with its own colour, to the colour ranges list.",
     "max": 20
   },
   "card-editor.color-ranges-field.colour": {
     "text": "Colour",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Column label for the colour used when the value falls inside this range.",
     "max": 10
   },
   "card-editor.color-ranges-field.delete-range": {
     "text": "Delete range",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Button or tooltip that removes one range row from the colour ranges list.",
     "max": 20
   },
   "card-editor.color-ranges-field.delete-range-n": {
@@ -2062,7 +2062,7 @@
   },
   "card-editor.color-ranges-field.from": {
     "text": "From",
-    "note": "Shown in color ranges field (card-editor).",
+    "note": "Label of the number field for the lowest value where this colour range starts.",
     "max": 10
   },
   "card-editor.color-ranges-field.from-value": {
@@ -2083,57 +2083,57 @@
   },
   "card-editor.condition-row.after": {
     "text": "After",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Label of the time field in a single condition row: true only after this time of day.",
     "max": 10
   },
   "card-editor.condition-row.attribute": {
     "text": "Attribute",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Label of the field in a condition row for an entity attribute to test instead of its state.",
     "max": 15
   },
   "card-editor.condition-row.before": {
     "text": "Before",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Label of the time field in a single condition row: true only before this time of day.",
     "max": 10
   },
   "card-editor.condition-row.condition-type": {
     "text": "Condition type",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Label of the dropdown choosing the kind of condition: state, time or template.",
     "max": 25
   },
   "card-editor.condition-row.entity": {
     "text": "Entity",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Label of the entity picker in a single condition row: the entity whose state is tested.",
     "max": 10
   },
   "card-editor.condition-row.equals": {
     "text": "Equals",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Capitalised dropdown option in a condition row: the value must be the same as the one entered.",
     "max": 15
   },
   "card-editor.condition-row.not-equals": {
     "text": "Not equals",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Capitalised dropdown option in a condition row: the value must differ from the one entered.",
     "max": 20
   },
   "card-editor.condition-row.remove-condition": {
     "text": "Remove condition",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Tooltip on the delete button at the end of one condition row (single-row editor).",
     "max": 30
   },
   "card-editor.condition-row.state": {
     "text": "State",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Condition type option in a condition row: compare the entity's current state.",
     "max": 10
   },
   "card-editor.condition-row.template": {
     "text": "Template",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Condition type option in a condition row: a Jinja template that must return true.",
     "max": 15
   },
   "card-editor.condition-row.time": {
     "text": "Time",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Condition type option in a condition row: true during a time-of-day window.",
     "max": 10
   },
   "card-editor.condition-row.use-module-entity": {
@@ -2168,12 +2168,12 @@
   },
   "card-editor.conditions-list.add-condition": {
     "text": "Add condition",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Button under the conditions list that appends a new empty condition.",
     "max": 25
   },
   "card-editor.conditions-list.after": {
     "text": "After",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the time field for a time condition inside the conditions list (list version of the row's After).",
     "max": 10
   },
   "card-editor.conditions-list.all-match-and": {
@@ -2183,7 +2183,7 @@
   },
   "card-editor.conditions-list.always-visible": {
     "text": "Always visible",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Empty-state text shown when the list has no conditions, so the card is always displayed.",
     "max": 25
   },
   "card-editor.conditions-list.any-matches-or": {
@@ -2193,17 +2193,17 @@
   },
   "card-editor.conditions-list.attribute": {
     "text": "Attribute",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the attribute field in the conditions list (list version of the row's Attribute).",
     "max": 15
   },
   "card-editor.conditions-list.before": {
     "text": "Before",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the time field for a time condition inside the conditions list (list version of the row's Before).",
     "max": 10
   },
   "card-editor.conditions-list.condition-match": {
     "text": "Condition match",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the choice for whether all or any of the listed conditions must be true.",
     "max": 30
   },
   "card-editor.conditions-list.condition-n": {
@@ -2216,32 +2216,32 @@
   },
   "card-editor.conditions-list.entity": {
     "text": "Entity",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the entity picker in the conditions list (list version of the row's Entity).",
     "max": 10
   },
   "card-editor.conditions-list.equals": {
     "text": "equals",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Lower-case operator option in the conditions list; reads as a phrase with the entity before it.",
     "max": 15
   },
   "card-editor.conditions-list.match": {
     "text": "Match",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Short label (verb) for the all-or-any choice above the conditions list.",
     "max": 15
   },
   "card-editor.conditions-list.not-equals": {
     "text": "not equals",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Lower-case operator option in the conditions list; reads as a phrase with the entity before it.",
     "max": 20
   },
   "card-editor.conditions-list.operator": {
     "text": "Operator",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the dropdown for how the state is compared, such as equals or not equals.",
     "max": 15
   },
   "card-editor.conditions-list.remove-condition": {
     "text": "Remove condition",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Tooltip on the delete button of a condition in the conditions list (list editor).",
     "max": 30
   },
   "card-editor.conditions-list.remove-condition-n": {
@@ -2279,42 +2279,42 @@
   },
   "card-editor.conditions-list.state": {
     "text": "State",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Condition type option in the conditions list: compare the entity's current state.",
     "max": 10
   },
   "card-editor.conditions-list.template": {
     "text": "Template",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Condition type option in the conditions list: a Jinja template that must return true.",
     "max": 15
   },
   "card-editor.conditions-list.time": {
     "text": "Time",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Condition type option in the conditions list: true during a time-of-day window.",
     "max": 10
   },
   "card-editor.conditions-list.type": {
     "text": "Type",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the dropdown choosing the kind of condition (state, time or template) for a list item.",
     "max": 10
   },
   "card-editor.conditions-list.value": {
     "text": "Value",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Label of the field for the state or attribute value the condition is compared with.",
     "max": 10
   },
   "card-editor.container-settings.bottom": {
     "text": "Bottom",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Vertical alignment option that places the container's children at the bottom edge.",
     "max": 10
   },
   "card-editor.container-settings.centre": {
     "text": "Centre",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Alignment option that centres the container's children; the spelling is British.",
     "max": 10
   },
   "card-editor.container-settings.column-layout": {
     "text": "Column layout",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the picker for how many columns a container has and how they are split.",
     "max": 25
   },
   "card-editor.container-settings.column-n": {
@@ -2335,12 +2335,12 @@
   },
   "card-editor.container-settings.column-widths": {
     "text": "Column widths",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the field where you type the relative width of each column.",
     "max": 25
   },
   "card-editor.container-settings.equal-widths": {
     "text": "Equal widths",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Option that gives every column of the container the same width.",
     "max": 20
   },
   "card-editor.container-settings.fr-shares-the-free-space-use-custom-for": {
@@ -2350,7 +2350,7 @@
   },
   "card-editor.container-settings.gap": {
     "text": "Gap",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the field for the space between the container's children.",
     "max": 15
   },
   "card-editor.container-settings.gap-between-columns": {
@@ -2360,7 +2360,7 @@
   },
   "card-editor.container-settings.icon": {
     "text": "Icon",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the icon picker for a container, such as the icon on a tab or group header.",
     "max": 10
   },
   "card-editor.container-settings.icon-when-active": {
@@ -2370,7 +2370,7 @@
   },
   "card-editor.container-settings.label": {
     "text": "Label",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the text field for the visible title of a container, such as a tab name.",
     "max": 10
   },
   "card-editor.container-settings.leave-empty-to-keep-the-tab-icon": {
@@ -2393,7 +2393,7 @@
   },
   "card-editor.container-settings.padding": {
     "text": "Padding",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the field for the space between a container's edge and its children.",
     "max": 15
   },
   "card-editor.container-settings.removing-a-column-moves-its-modules-into": {
@@ -2408,22 +2408,22 @@
   },
   "card-editor.container-settings.stretch": {
     "text": "Stretch",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Vertical alignment option that makes children grow to fill the container's full height.",
     "max": 15
   },
   "card-editor.container-settings.top": {
     "text": "Top",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Vertical alignment option that places the container's children at the top edge.",
     "max": 5
   },
   "card-editor.container-settings.vertical-alignment": {
     "text": "Vertical alignment",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the picker for top, centre, bottom or stretch placement of the container's children.",
     "max": 30
   },
   "card-editor.container-settings.width": {
     "text": "Width",
-    "note": "Shown in container settings (card-editor).",
+    "note": "Label of the field for the width of a single container or column.",
     "max": 10
   },
   "card-editor.container-settings.with-no-entity-of-its-own-the-row-uses": {
@@ -2433,12 +2433,12 @@
   },
   "card-editor.creation-defaults.button": {
     "text": "Button",
-    "note": "Shown in creation defaults (card-editor).",
+    "note": "Default label given to a newly created button element; the user can change it afterwards.",
     "max": 10
   },
   "card-editor.creation-defaults.hello-world": {
     "text": "Hello World",
-    "note": "Shown in creation defaults (card-editor).",
+    "note": "Sample text placed in a newly created text element; the user is expected to overwrite it.",
     "max": 20
   },
   "card-editor.creation-defaults.tab-n": {
@@ -2456,12 +2456,12 @@
   },
   "card-editor.custom-card-editor.card-configuration": {
     "text": "Card configuration",
-    "note": "Shown in custom card editor (card-editor).",
+    "note": "Heading above the embedded editor of a third-party custom card placed inside this card.",
     "max": 30
   },
   "card-editor.custom-card-editor.card-type": {
     "text": "Card type",
-    "note": "Shown in custom card editor (card-editor).",
+    "note": "Label of the field for the custom card's type, for example custom:my-card.",
     "max": 15
   },
   "card-editor.custom-card-editor.invalid-yaml-card-will-use-last-valid": {
@@ -2471,12 +2471,12 @@
   },
   "card-editor.custom-card-editor.loading-editor": {
     "text": "Loading editor...",
-    "note": "Shown in custom card editor (card-editor).",
+    "note": "Status text shown while the custom card's own editor is still being loaded.",
     "max": 30
   },
   "card-editor.custom-card-editor.name": {
     "text": "Name",
-    "note": "Shown in custom card editor (card-editor).",
+    "note": "Label of the field for the name of the embedded custom card, shown in the editor tree.",
     "max": 10
   },
   "card-editor.custom-card-editor.no-visual-editor-available-for-this-card": {
@@ -2517,7 +2517,7 @@
   },
   "card-editor.design-panel.active-tab": {
     "text": "Active tab",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Name of the design section styling the tab that is currently selected in a tab bar.",
     "max": 20
   },
   "card-editor.design-panel.add-a-rule-to-change-the-look-when": {
@@ -2527,7 +2527,7 @@
   },
   "card-editor.design-panel.add-condition": {
     "text": "Add condition",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button in a design rule that adds a condition deciding when the rule applies.",
     "max": 25
   },
   "card-editor.design-panel.add-conditional-rule": {
@@ -2596,7 +2596,7 @@
   },
   "card-editor.design-panel.condition-match": {
     "text": "Condition match",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Label of the all-or-any choice for the conditions of a design rule.",
     "max": 30
   },
   "card-editor.design-panel.copy-a-design-first": {
@@ -2606,17 +2606,17 @@
   },
   "card-editor.design-panel.copy-design": {
     "text": "Copy design",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button that copies the current design settings so they can be pasted onto another element.",
     "max": 20
   },
   "card-editor.design-panel.custom-css": {
     "text": "Custom CSS",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Label of the CSS text area in the design panel; applies to the selected element, not the whole card.",
     "max": 20
   },
   "card-editor.design-panel.default": {
     "text": "Default",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Name of the base design rule that applies when no other rule matches.",
     "max": 15
   },
   "card-editor.design-panel.default-sets-a-solid-colour-so-a-rule": {
@@ -2626,32 +2626,32 @@
   },
   "card-editor.design-panel.delete-rule": {
     "text": "Delete rule",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button or tooltip that deletes one design rule from the design panel's rule list.",
     "max": 20
   },
   "card-editor.design-panel.design-copied": {
     "text": "Design copied",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Short toast confirming the design settings were copied to the clipboard.",
     "max": 25
   },
   "card-editor.design-panel.design-pasted": {
     "text": "Design pasted",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Short toast confirming the copied design settings were applied to the selected element.",
     "max": 25
   },
   "card-editor.design-panel.device-animation": {
     "text": "Device animation",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Label of the picker for an animation that depicts the device itself, such as a spinning fan.",
     "max": 30
   },
   "card-editor.design-panel.disabled-tab": {
     "text": "Disabled tab",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Name of the design section styling a tab that cannot be selected.",
     "max": 25
   },
   "card-editor.design-panel.draw-duration": {
     "text": "Draw duration",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Label of the field for how long the line-draw animation takes to trace the outline, in seconds.",
     "max": 25
   },
   "card-editor.design-panel.editing-design-for": {
@@ -2676,7 +2676,7 @@
   },
   "card-editor.design-panel.hover": {
     "text": "Hover",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Name of the design section for the look while the pointer is over the element.",
     "max": 10
   },
   "card-editor.design-panel.icon-when-active-is-set-per-tab-in-the": {
@@ -2707,12 +2707,12 @@
   },
   "card-editor.design-panel.line-draw": {
     "text": "Line draw",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Animation option where the element's outline is drawn stroke by stroke.",
     "max": 15
   },
   "card-editor.design-panel.match": {
     "text": "Match",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Short verb label for the all-or-any choice on a design rule's conditions.",
     "max": 15
   },
   "card-editor.design-panel.merge-into-design": {
@@ -2765,12 +2765,12 @@
   },
   "card-editor.design-panel.none": {
     "text": "none",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Lower-case word shown inside a sentence or summary when nothing is set, such as no animation.",
     "max": 10
   },
   "card-editor.design-panel.not-set": {
     "text": "Not set",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Placeholder shown on a design field that has no value, so the inherited look is used.",
     "max": 15
   },
   "card-editor.design-panel.nothing-set-this-state-looks-like": {
@@ -2780,12 +2780,12 @@
   },
   "card-editor.design-panel.off": {
     "text": "Off",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Option that turns a design feature off, such as an animation or effect.",
     "max": 5
   },
   "card-editor.design-panel.paste-design": {
     "text": "Paste design",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button that applies previously copied design settings to the selected element.",
     "max": 20
   },
   "card-editor.design-panel.paste-the-copied-design": {
@@ -2795,12 +2795,12 @@
   },
   "card-editor.design-panel.replace-design": {
     "text": "Replace design",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button that swaps the element's current design for the copied one, rather than merging them.",
     "max": 25
   },
   "card-editor.design-panel.reset": {
     "text": "Reset",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button that clears a single design field back to its default.",
     "max": 15
   },
   "card-editor.design-panel.reset-group-in-state": {
@@ -2814,7 +2814,7 @@
   },
   "card-editor.design-panel.reset-section": {
     "text": "Reset section",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button that clears every field of one design section back to its defaults.",
     "max": 25
   },
   "card-editor.design-panel.reset-section-name": {
@@ -2840,7 +2840,7 @@
   },
   "card-editor.design-panel.rule": {
     "text": "Rule",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Noun naming a conditional design rule in the design panel's rule selector.",
     "max": 10
   },
   "card-editor.design-panel.rule-n": {
@@ -2861,7 +2861,7 @@
   },
   "card-editor.design-panel.rule-name-2": {
     "text": "Rule name",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Label of the text field for a design rule's name; the design panel's copy of the same text.",
     "max": 20
   },
   "card-editor.design-panel.rule-name-active-tab": {
@@ -2910,7 +2910,7 @@
   },
   "card-editor.design-panel.tab": {
     "text": "Tab",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Singular noun for one tab of a tab bar, used in the design panel's tab sections.",
     "max": 10
   },
   "card-editor.design-panel.tab-n": {
@@ -2923,7 +2923,7 @@
   },
   "card-editor.design-panel.tabs": {
     "text": "Tabs",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Heading of the design panel group that styles all tabs of a tab bar together.",
     "max": 10
   },
   "card-editor.design-panel.text-uses-this-gradient-as-its-fill": {
@@ -2933,12 +2933,12 @@
   },
   "card-editor.design-panel.theme-accent": {
     "text": "theme accent",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Lower-case colour name for the active theme's accent colour, used inside a longer phrase.",
     "max": 20
   },
   "card-editor.design-panel.theme-default": {
     "text": "Theme default",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Option in the design panel that uses the active theme's value; same text as in card settings.",
     "max": 25
   },
   "card-editor.design-panel.use-default-value": {
@@ -2948,27 +2948,27 @@
   },
   "card-editor.dropdown-editor.add-option": {
     "text": "Add option",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Button that adds one more entry to the custom list of a dropdown element.",
     "max": 20
   },
   "card-editor.dropdown-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Label of the field for the entity attribute that the dropdown reads and sets.",
     "max": 15
   },
   "card-editor.dropdown-editor.custom-options": {
     "text": "Custom options",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Heading of the list where you define your own dropdown entries instead of using the entity's.",
     "max": 25
   },
   "card-editor.dropdown-editor.entity": {
     "text": "Entity",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Label of the entity picker for the entity the dropdown controls.",
     "max": 10
   },
   "card-editor.dropdown-editor.label": {
     "text": "Label",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Label of the text field for what the user sees for one custom dropdown option.",
     "max": 10
   },
   "card-editor.dropdown-editor.leave-empty-to-offer-the-entity-s-own": {
@@ -2986,7 +2986,7 @@
   },
   "card-editor.dropdown-editor.remove-option": {
     "text": "Remove option",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Tooltip on the button that deletes one custom option from the dropdown list.",
     "max": 25
   },
   "card-editor.dropdown-editor.sets-attributes-empty-fallback": {
@@ -3010,7 +3010,7 @@
   },
   "card-editor.dropdown-editor.value": {
     "text": "Value",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Label of the field for the value sent to the entity when this dropdown option is chosen.",
     "max": 10
   },
   "card-editor.dropdown-editor.value-is-not-one-of-the-entity-s-options": {
@@ -3031,22 +3031,22 @@
   },
   "card-editor.entity-picker.browse-entities": {
     "text": "Browse entities",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Button that opens a searchable list of all entities to choose one from.",
     "max": 25
   },
   "card-editor.entity-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Button that closes the entity browser without choosing an entity.",
     "max": 10
   },
   "card-editor.entity-picker.entities": {
     "text": "Entities",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Heading of the entity browser's list of matching entities.",
     "max": 15
   },
   "card-editor.entity-picker.entity": {
     "text": "Entity",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Label of the entity picker field, naming the single entity being chosen.",
     "max": 10
   },
   "card-editor.entity-picker.no-entities-found": {
@@ -3056,27 +3056,27 @@
   },
   "card-editor.entity-picker.save": {
     "text": "Save",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Button that confirms the chosen entity and closes the entity browser.",
     "max": 10
   },
   "card-editor.entity-picker.search-entities": {
     "text": "Search entities",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Placeholder of the search box in the entity browser; filters by name or entity id.",
     "max": 25
   },
   "card-editor.entity-picker.select-entity": {
     "text": "Select entity",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Placeholder of the entity picker field before any entity has been chosen.",
     "max": 25
   },
   "card-editor.entity-source.a-camera": {
     "text": "a camera",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case example noun phrase for a camera entity, used inside a longer hint sentence.",
     "max": 15
   },
   "card-editor.entity-source.a-device": {
     "text": "a device",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case example noun phrase for a device, used inside a longer hint sentence.",
     "max": 15
   },
   "card-editor.entity-source.a-different-kind-of-device": {
@@ -3086,7 +3086,7 @@
   },
   "card-editor.entity-source.a-light": {
     "text": "a light",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case example noun phrase for a light entity, used inside a longer hint sentence.",
     "max": 15
   },
   "card-editor.entity-source.a-list-of-options": {
@@ -3101,12 +3101,12 @@
   },
   "card-editor.entity-source.a-sensor": {
     "text": "a sensor",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case example noun phrase for a sensor entity, used inside a longer hint sentence.",
     "max": 15
   },
   "card-editor.entity-source.a-switch": {
     "text": "a switch",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case example noun phrase for a switch entity, used inside a longer hint sentence.",
     "max": 15
   },
   "card-editor.entity-source.a-weather-source": {
@@ -3125,7 +3125,7 @@
   },
   "card-editor.entity-source.card": {
     "text": "card",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case noun naming the card level that supplies the entity, used inside a longer phrase.",
     "max": 10
   },
   "card-editor.entity-source.card-modules-do-not-follow-the-card-s": {
@@ -3140,7 +3140,7 @@
   },
   "card-editor.entity-source.column": {
     "text": "column",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case noun naming the column level that supplies the entity, used inside a longer phrase.",
     "max": 10
   },
   "card-editor.entity-source.did-you-mean-no-entity": {
@@ -3150,12 +3150,12 @@
   },
   "card-editor.entity-source.entity": {
     "text": "Entity",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Option or label meaning an entity picked for this element only, as opposed to an inherited one.",
     "max": 10
   },
   "card-editor.entity-source.entity-source": {
     "text": "Entity source",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Label of the picker for where an element gets its entity: its own or one inherited from a parent.",
     "max": 25
   },
   "card-editor.entity-source.from-source-name": {
@@ -3177,12 +3177,12 @@
   },
   "card-editor.entity-source.no-entity": {
     "text": "No entity.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Full-stop sentence variant shown as a status line when no entity is available; see No entity without a full stop.",
     "max": 20
   },
   "card-editor.entity-source.no-entity-2": {
     "text": "No entity",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Short option or value label with no full stop, meaning nothing is chosen in the entity source picker.",
     "max": 15
   },
   "card-editor.entity-source.nothing-chosen-yet-to-use-the-card-s": {
@@ -3212,7 +3212,7 @@
   },
   "card-editor.entity-source.own-entity": {
     "text": "Own entity",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Option meaning the element uses its own entity instead of the one from its parent.",
     "max": 20
   },
   "card-editor.entity-source.pick-a-device": {
@@ -3230,12 +3230,12 @@
   },
   "card-editor.entity-source.pick-one": {
     "text": "Pick one",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Placeholder option asking the user to choose an entry from the entity source list.",
     "max": 15
   },
   "card-editor.entity-source.row": {
     "text": "row",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case noun naming the row level that supplies the entity, used inside a longer phrase.",
     "max": 5
   },
   "card-editor.entity-source.same-as-source": {
@@ -3253,12 +3253,12 @@
   },
   "card-editor.entity-source.slides": {
     "text": "slides",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case plural noun for a slideshow container's slides, used inside a longer phrase.",
     "max": 10
   },
   "card-editor.entity-source.tabs": {
     "text": "tabs",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Lower-case plural noun for a tab bar's tabs, used inside a longer phrase.",
     "max": 10
   },
   "card-editor.entity-source.that-is-not-an-entity-id-it-needs-a-dot": {
@@ -3308,12 +3308,12 @@
   },
   "card-editor.flows-editor.add-flow": {
     "text": "Add flow",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Button that adds a new flow line between two points to the flows list.",
     "max": 20
   },
   "card-editor.flows-editor.always": {
     "text": "Always",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option meaning the flow animates all the time, whatever the entity state.",
     "max": 10
   },
   "card-editor.flows-editor.animated-lines-between-two-modules-like": {
@@ -3323,22 +3323,22 @@
   },
   "card-editor.flows-editor.attach-to": {
     "text": "Attach to",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for which element or module box an end of the flow is attached to.",
     "max": 15
   },
   "card-editor.flows-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the field for the entity attribute that drives the flow's speed or direction.",
     "max": 15
   },
   "card-editor.flows-editor.auto": {
     "text": "Auto",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option that lets the editor choose the side or route of the flow automatically.",
     "max": 10
   },
   "card-editor.flows-editor.back": {
     "text": "Back",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Layer option drawing the flow behind the card content; also the name of the stacking position, opposite of Front.",
     "max": 10
   },
   "card-editor.flows-editor.beside-the-line": {
@@ -3348,7 +3348,7 @@
   },
   "card-editor.flows-editor.bottom": {
     "text": "Bottom",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Side option: the flow leaves or enters through the bottom edge of the element.",
     "max": 10
   },
   "card-editor.flows-editor.collapse-flow-n": {
@@ -3361,12 +3361,12 @@
   },
   "card-editor.flows-editor.colour": {
     "text": "Colour",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the colour picker for the flow's dots and line while it is active.",
     "max": 10
   },
   "card-editor.flows-editor.connection": {
     "text": "Connection",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Heading of the section choosing the two ends a flow connects.",
     "max": 20
   },
   "card-editor.flows-editor.couldn-t-load-the-line-styles": {
@@ -3376,12 +3376,12 @@
   },
   "card-editor.flows-editor.curve": {
     "text": "Curve",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Route option drawing the flow as a smooth curve between its ends.",
     "max": 10
   },
   "card-editor.flows-editor.delete-flow": {
     "text": "Delete flow",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Button or tooltip that deletes one flow from the flows list.",
     "max": 20
   },
   "card-editor.flows-editor.delete-flow-n": {
@@ -3399,12 +3399,12 @@
   },
   "card-editor.flows-editor.dots": {
     "text": "Dots",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Look option drawing the flow as moving dots rather than a solid line.",
     "max": 10
   },
   "card-editor.flows-editor.elbow": {
     "text": "Elbow",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Route option drawing the flow with right-angle bends between its ends.",
     "max": 10
   },
   "card-editor.flows-editor.end-attach-to": {
@@ -3414,7 +3414,7 @@
   },
   "card-editor.flows-editor.entity": {
     "text": "Entity",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the entity picker for the entity whose state turns the flow on and sets its speed.",
     "max": 10
   },
   "card-editor.flows-editor.expand-flow-n": {
@@ -3435,27 +3435,27 @@
   },
   "card-editor.flows-editor.from": {
     "text": "From",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for the element where the flow starts.",
     "max": 10
   },
   "card-editor.flows-editor.from-side": {
     "text": "From side",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for which edge of the start element the flow leaves from.",
     "max": 15
   },
   "card-editor.flows-editor.front": {
     "text": "Front",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Layer option drawing the flow in front of the card content; opposite of Back.",
     "max": 10
   },
   "card-editor.flows-editor.glow-px": {
     "text": "Glow (px)",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the number field for the flow's glow radius, measured in pixels.",
     "max": 15
   },
   "card-editor.flows-editor.hidden": {
     "text": "Hidden",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option that hides the flow's label so only the animated line is shown.",
     "max": 10
   },
   "card-editor.flows-editor.icon-or-picture": {
@@ -3470,12 +3470,12 @@
   },
   "card-editor.flows-editor.idle-colour": {
     "text": "Idle colour",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the colour picker for the flow line while it is not active.",
     "max": 25
   },
   "card-editor.flows-editor.label": {
     "text": "Label",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the choice for what text, if any, is written along the flow.",
     "max": 10
   },
   "card-editor.flows-editor.label-no-id": {
@@ -3488,22 +3488,22 @@
   },
   "card-editor.flows-editor.label-position": {
     "text": "Label position",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for where along the flow its label text sits.",
     "max": 25
   },
   "card-editor.flows-editor.label-template": {
     "text": "Label template",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the template field whose result is written along the flow as its label.",
     "max": 25
   },
   "card-editor.flows-editor.layer": {
     "text": "Layer",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the choice between Back and Front for where the flow is drawn.",
     "max": 10
   },
   "card-editor.flows-editor.left": {
     "text": "Left",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Side option: the flow leaves or enters through the left edge of the element.",
     "max": 10
   },
   "card-editor.flows-editor.loading-line-styles": {
@@ -3513,17 +3513,17 @@
   },
   "card-editor.flows-editor.look": {
     "text": "Look",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for how the flow is drawn, such as dots or a line.",
     "max": 10
   },
   "card-editor.flows-editor.max": {
     "text": "Max",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the number field for the highest entity value, where the flow reaches full speed.",
     "max": 5
   },
   "card-editor.flows-editor.min": {
     "text": "Min",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the number field for the lowest entity value, where the flow runs at its slowest.",
     "max": 5
   },
   "card-editor.flows-editor.min-speed-s": {
@@ -3542,7 +3542,7 @@
   },
   "card-editor.flows-editor.module-box": {
     "text": "Module box",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option that attaches the flow end to a module's bounding box instead of a card element.",
     "max": 20
   },
   "card-editor.flows-editor.module-not-found": {
@@ -3573,7 +3573,7 @@
   },
   "card-editor.flows-editor.none": {
     "text": "None",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option meaning the flow has no label text or no particular setting chosen.",
     "max": 10
   },
   "card-editor.flows-editor.on-the-line": {
@@ -3608,17 +3608,17 @@
   },
   "card-editor.flows-editor.right": {
     "text": "Right",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Side option: the flow leaves or enters through the right edge of the element.",
     "max": 10
   },
   "card-editor.flows-editor.route": {
     "text": "Route",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for the path shape between the flow's ends: straight, curve or elbow.",
     "max": 10
   },
   "card-editor.flows-editor.scale-width": {
     "text": "Scale width",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Switch that makes the flow line thicker as the entity value rises.",
     "max": 20
   },
   "card-editor.flows-editor.seconds-for-a-dot-to-travel-the-line": {
@@ -3628,12 +3628,12 @@
   },
   "card-editor.flows-editor.show": {
     "text": "Show",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the choice for when the flow is visible, such as always or only while flowing.",
     "max": 10
   },
   "card-editor.flows-editor.speed-s": {
     "text": "Speed (s)",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the number field for how many seconds one flow cycle takes; shorter is faster.",
     "max": 15
   },
   "card-editor.flows-editor.start-attach-to": {

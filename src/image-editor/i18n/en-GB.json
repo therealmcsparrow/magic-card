@@ -1,12 +1,12 @@
 {
   "image-editor.chunk.as-on-a-card": {
     "text": "As on a card",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Button that previews the drawing as it looks on a card.",
     "max": 20
   },
   "image-editor.chunk.canvas-size-set-to-w-by-h": {
     "text": "Canvas size set to {w} by {h}.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message after the canvas size changes. {w} is the new width and {h} the new height, as plain numbers in drawing units.",
     "max": 50,
     "vars": {
       "h": "The value that replaces h in the text.",
@@ -20,7 +20,7 @@
   },
   "image-editor.chunk.ctrl-z-undo-ctrl-shift-z-redo-ctrl-s": {
     "text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Keyboard shortcut hint for the drawing area. Key names stay as written; only the action words are translated.",
     "max": 85
   },
   "image-editor.chunk.draw-something-first": {
@@ -30,17 +30,17 @@
   },
   "image-editor.chunk.duplicate": {
     "text": "Duplicate…",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Menu item that copies this image under a new name. The dots mean a name dialog follows.",
     "max": 20
   },
   "image-editor.chunk.fine": {
     "text": "fine",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Lower-case size status word for a small image. It fills the word slot in the size line, not a sentence of its own.",
     "max": 10
   },
   "image-editor.chunk.getting-big": {
     "text": "getting big",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Lower-case size status word for an image nearing the size limit. It fills the word slot in the size line.",
     "max": 20
   },
   "image-editor.chunk.give-it-a-name": {
@@ -50,22 +50,22 @@
   },
   "image-editor.chunk.image-canvas": {
     "text": "Image canvas",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Accessible name of the drawing area, read by screen readers. Same English as the canvas section title in the inspector.",
     "max": 20
   },
   "image-editor.chunk.image-editor": {
     "text": "Image editor",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Title of the whole image editor window, also its accessible name.",
     "max": 20
   },
   "image-editor.chunk.image-name": {
     "text": "Image name",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Label of the text box where the user names the image in the save dialog.",
     "max": 25
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
     "text": "Image size: {used} KiB of 256 KiB. Fine.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Size message for a small image. {used} is the size so far in KiB, a number. Same wording family as the getting big, nearly full and too big variants.",
     "max": 65,
     "vars": {
       "used": "The value that replaces used in the text."
@@ -73,7 +73,7 @@
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
     "text": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Size message when the image nears the limit. {used} is the size so far in KiB, a number.",
     "max": 145,
     "vars": {
       "used": "The value that replaces used in the text."
@@ -81,7 +81,7 @@
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
     "text": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Size message when the image is close to the limit but still saves. {used} is the size so far in KiB, a number.",
     "max": 120,
     "vars": {
       "used": "The value that replaces used in the text."
@@ -89,7 +89,7 @@
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
     "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Size message when the image is over the limit and cannot be saved. {used} is the size so far in KiB, a number.",
     "max": 85,
     "vars": {
       "used": "The value that replaces used in the text."
@@ -102,12 +102,12 @@
   },
   "image-editor.chunk.import-an-svg-file": {
     "text": "Import an SVG file…",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Menu item that opens a file picker to bring an SVG drawing into the editor. The dots mean a dialog follows.",
     "max": 35
   },
   "image-editor.chunk.imported-name": {
     "text": "Imported ‘{name}’.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message after an SVG file is imported. {name} is the file name. Keep the single quotes around it.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -120,12 +120,12 @@
   },
   "image-editor.chunk.my-image": {
     "text": "My image",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Default name suggested for a new image before the user types their own.",
     "max": 15
   },
   "image-editor.chunk.name-copy": {
     "text": "{name} copy",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Suggested name for a duplicate. {name} is the name of the original image.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -133,7 +133,7 @@
   },
   "image-editor.chunk.name-stays-locked-imported-parts-cannot": {
     "text": "{name} stays locked: imported parts cannot be edited.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message when the user tries to edit an imported layer. {name} is the layer name.",
     "max": 85,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -141,12 +141,12 @@
   },
   "image-editor.chunk.nearly-full": {
     "text": "nearly full",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Lower-case size status word for an image close to the limit. It fills the word slot in the size line.",
     "max": 20
   },
   "image-editor.chunk.opacity-set-to-pct-so-the-reference": {
     "text": "Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message after the layer opacity is lowered automatically. {pct} is a whole number from 0 to 100. Opacity at the end is the name of the field.",
     "max": 135,
     "vars": {
       "pct": "The value that replaces pct in the text."
@@ -154,7 +154,7 @@
   },
   "image-editor.chunk.save-as-a-copy": {
     "text": "Save as a copy…",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Menu item that saves the image under a new name and leaves the original unchanged. Dots mean a dialog follows.",
     "max": 25
   },
   "image-editor.chunk.save-the-image-first": {
@@ -169,12 +169,12 @@
   },
   "image-editor.chunk.saved": {
     "text": "Saved",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Short status shown after the image has been saved, past tense.",
     "max": 10
   },
   "image-editor.chunk.saved-as-name-the-original-is-unchanged": {
     "text": "Saved as ‘{name}’. The original is unchanged.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message after saving a copy. {name} is the name of the new copy. Keep the single quotes around it.",
     "max": 75,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -182,7 +182,7 @@
   },
   "image-editor.chunk.saved-name": {
     "text": "Saved ‘{name}’.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message after saving an image. {name} is the image name. Keep the single quotes around it.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -190,7 +190,7 @@
   },
   "image-editor.chunk.saving": {
     "text": "Saving…",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Status shown while the image is being saved. Same English as the save button busy label.",
     "max": 20
   },
   "image-editor.chunk.showing-the-drawing-as-on-a-card-with": {
@@ -205,7 +205,7 @@
   },
   "image-editor.chunk.text": {
     "text": "Text",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Name of the text tool in the toolbar. A noun, not a verb.",
     "max": 10
   },
   "image-editor.chunk.text-tool-click-or-tap-where-the-text": {
@@ -235,7 +235,7 @@
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": {
     "text": "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when a text layer holds a blocked word. {word} is the rejected word and {name} is the layer name. Keep the quote marks.",
     "max": 160,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -244,7 +244,7 @@
   },
   "image-editor.chunk.the-library-does-not-accept-the-text-2": {
     "text": "The library does not accept the text \"{word}\". Change it, then save again.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when some text in the image is blocked and no layer is named. {word} is the rejected word. Keep the quote marks.",
     "max": 120,
     "vars": {
       "word": "The value that replaces word in the text."
@@ -257,7 +257,7 @@
   },
   "image-editor.chunk.the-library-refused-this-image-reason": {
     "text": "The library refused this image: {reason}",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error after the image library rejects a save. {reason} is a reason text from the library, inserted after the colon.",
     "max": 65,
     "vars": {
       "reason": "The value that replaces reason in the text."
@@ -290,7 +290,7 @@
   },
   "image-editor.chunk.this-image-was-changed-somewhere-else": {
     "text": "This image was changed somewhere else.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message when a save finds a newer version in the library. Same English as the notice in the inspector, which comes with a Reload button.",
     "max": 65
   },
   "image-editor.chunk.this-is-not-valid-svg-check-that-it": {
@@ -300,17 +300,17 @@
   },
   "image-editor.chunk.too-big": {
     "text": "too big",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Lower-case size status word for an image over the limit. It fills the word slot in the size line.",
     "max": 15
   },
   "image-editor.chunk.too-big-to-save": {
     "text": "Too big to save",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Short label on the disabled save button when the image is over the size limit.",
     "max": 25
   },
   "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
     "text": "Too big to save: {used} KiB of 256 KiB.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error message when saving is refused for size. {used} is the current size in KiB, a number.",
     "max": 65,
     "vars": {
       "used": "The value that replaces used in the text."
@@ -318,7 +318,7 @@
   },
   "image-editor.chunk.undo": {
     "text": "Undo",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Name of the undo action as a short toolbar label or tooltip. A verb.",
     "max": 15
   },
   "image-editor.chunk.use-80-characters-or-fewer": {
@@ -338,42 +338,42 @@
   },
   "image-editor.importer.choose-another-file": {
     "text": "Choose another file",
-    "note": "Shown in importer (image-editor).",
+    "note": "Button in the import dialog that goes back to the file picker.",
     "max": 35
   },
   "image-editor.importer.close": {
     "text": "Close",
-    "note": "Shown in importer (image-editor).",
+    "note": "Button that closes the import dialog without importing.",
     "max": 10
   },
   "image-editor.importer.continue": {
     "text": "Continue",
-    "note": "Shown in importer (image-editor).",
+    "note": "Button in the import dialog that goes ahead and opens the cleaned file.",
     "max": 15
   },
   "image-editor.importer.could-not-import-the-file": {
     "text": "Could not import the file",
-    "note": "Shown in importer (image-editor).",
+    "note": "Title of the import dialog when the file failed. The reason is shown below it.",
     "max": 40
   },
   "image-editor.importer.embedded-pictures": {
     "text": "embedded pictures",
-    "note": "Shown in importer (image-editor).",
+    "note": "Lower-case item in the list of removed parts, joined into the Removed sentence. Means bitmap pictures stored inside the SVG.",
     "max": 30
   },
   "image-editor.importer.event-handlers": {
     "text": "event handlers",
-    "note": "Shown in importer (image-editor).",
+    "note": "Lower-case item in the list of removed parts. Means code attributes such as onclick that run scripts when the SVG is used.",
     "max": 25
   },
   "image-editor.importer.imported-file": {
     "text": "Imported file",
-    "note": "Shown in importer (image-editor).",
+    "note": "Fallback image name used when an imported SVG file has no name of its own.",
     "max": 25
   },
   "image-editor.importer.imported-name": {
     "text": "Imported ‘{name}’",
-    "note": "Shown in importer (image-editor).",
+    "note": "Title of the import dialog after a successful import. {name} is the file name. Keep the single quotes.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -381,7 +381,7 @@
   },
   "image-editor.importer.importing-name-replaces-everything-on": {
     "text": "Importing ‘{name}’ replaces everything on the canvas. You can undo it.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Warning in the replace dialog. {name} is the file name. Keep the single quotes.",
     "max": 115,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -389,12 +389,12 @@
   },
   "image-editor.importer.keep-my-drawing": {
     "text": "Keep my drawing",
-    "note": "Shown in importer (image-editor).",
+    "note": "Button in the replace dialog that cancels the import and keeps the current drawing.",
     "max": 25
   },
   "image-editor.importer.links-to-another-site": {
     "text": "links to another site",
-    "note": "Shown in importer (image-editor).",
+    "note": "Lower-case item in the list of removed parts. Means references that would load something from an outside web address.",
     "max": 35
   },
   "image-editor.importer.nothing-was-removed": {
@@ -404,12 +404,12 @@
   },
   "image-editor.importer.other-parts-an-image-cannot-use": {
     "text": "other parts an image cannot use",
-    "note": "Shown in importer (image-editor).",
+    "note": "Lower-case catch-all item in the list of removed parts, joined into the Removed sentence.",
     "max": 55
   },
   "image-editor.importer.removed-list": {
     "text": "Removed {list}.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Summary after import. {list} is a comma-separated list of lower-case items, such as scripts and embedded pictures.",
     "max": 25,
     "vars": {
       "list": "The value that replaces list in the text."
@@ -417,17 +417,17 @@
   },
   "image-editor.importer.replace": {
     "text": "Replace",
-    "note": "Shown in importer (image-editor).",
+    "note": "Button in the replace dialog that swaps the current drawing for the imported file. A verb.",
     "max": 15
   },
   "image-editor.importer.replace-your-drawing": {
     "text": "Replace your drawing?",
-    "note": "Shown in importer (image-editor).",
+    "note": "Title of the dialog that asks before an import overwrites the current drawing.",
     "max": 35
   },
   "image-editor.importer.scripts": {
     "text": "scripts",
-    "note": "Shown in importer (image-editor).",
+    "note": "Lower-case item in the list of removed parts. Means embedded program code, not film scripts.",
     "max": 15
   },
   "image-editor.importer.some-parts-cannot-be-edited-such-as": {
@@ -452,17 +452,17 @@
   },
   "image-editor.paint-ui.accent": {
     "text": "Accent",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Colour choice that follows the Home Assistant accent (primary) colour of the theme. Same English as the Accent entry in the inspector.",
     "max": 10
   },
   "image-editor.paint-ui.add-stop": {
     "text": "Add stop",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Button that adds a colour stop to a gradient. A stop is one colour point along the gradient.",
     "max": 20
   },
   "image-editor.paint-ui.angle-degrees": {
     "text": "Angle (degrees)",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for the direction of a linear gradient, as a number of degrees.",
     "max": 25
   },
   "image-editor.paint-ui.at-most-8-stops": {
@@ -472,77 +472,77 @@
   },
   "image-editor.paint-ui.centre-x": {
     "text": "Centre X (%)",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for the horizontal centre of a radial gradient, as a percentage of the width.",
     "max": 20
   },
   "image-editor.paint-ui.centre-y": {
     "text": "Centre Y (%)",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for the vertical centre of a radial gradient, as a percentage of the height.",
     "max": 20
   },
   "image-editor.paint-ui.custom": {
     "text": "Custom",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Option in the colour source list for a colour the user picks or types. Same English as the canvas size option Custom.",
     "max": 10
   },
   "image-editor.paint-ui.custom-colour": {
     "text": "Custom colour",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Label of the colour picker for a freely chosen colour.",
     "max": 25
   },
   "image-editor.paint-ui.dash-list": {
     "text": "Dash list",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for the numbers that set dash and gap lengths of a dashed outline.",
     "max": 20
   },
   "image-editor.paint-ui.dash-offset": {
     "text": "Dash offset",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for how far along the outline the dash pattern starts, as a number.",
     "max": 25
   },
   "image-editor.paint-ui.dashed": {
     "text": "Dashed",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Outline style option: a line made of dashes. An adjective, one of Solid, Dashed and Dotted.",
     "max": 10
   },
   "image-editor.paint-ui.dashes": {
     "text": "Dashes",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Group heading above the dash settings of an outline. A plural noun.",
     "max": 10
   },
   "image-editor.paint-ui.dotted": {
     "text": "Dotted",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Outline style option: a line made of dots. An adjective, one of Solid, Dashed and Dotted.",
     "max": 10
   },
   "image-editor.paint-ui.fill": {
     "text": "Fill",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Label for the colour inside a shape, as opposed to its outline. A noun.",
     "max": 10
   },
   "image-editor.paint-ui.gradient-centre": {
     "text": "Gradient centre",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of the draggable handle that sets the centre of a radial gradient.",
     "max": 25
   },
   "image-editor.paint-ui.gradient-end": {
     "text": "Gradient end",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of the draggable handle at the end point of a linear gradient.",
     "max": 25
   },
   "image-editor.paint-ui.gradient-radius": {
     "text": "Gradient radius",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of the draggable handle that sets the size of a radial gradient.",
     "max": 25
   },
   "image-editor.paint-ui.gradient-start": {
     "text": "Gradient start",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of the draggable handle at the start point of a linear gradient.",
     "max": 25
   },
   "image-editor.paint-ui.gradient-stop-n-of-count": {
     "text": "Gradient stop {n} of {count}",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of a gradient stop handle. {n} is its number and {count} the total number of stops.",
     "max": 45,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -551,7 +551,7 @@
   },
   "image-editor.paint-ui.label-x-x-y-y": {
     "text": "{label}: x {x}, y {y}",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of a gradient handle with its position. {label} is the handle name, {x} and {y} are coordinates as numbers.",
     "max": 35,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -561,22 +561,22 @@
   },
   "image-editor.paint-ui.linear-gradient": {
     "text": "Linear gradient",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Fill type option: colours blend along a straight line. Same English as the entry in the inspector.",
     "max": 25
   },
   "image-editor.paint-ui.main": {
     "text": "Main",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Colour choice that follows the main text colour of the theme. Not the primary action. Same English as the entry in the inspector.",
     "max": 10
   },
   "image-editor.paint-ui.more-style-options": {
     "text": "More style options",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Label of the expander that reveals extra outline settings such as dashes.",
     "max": 30
   },
   "image-editor.paint-ui.name-colour": {
     "text": "{name} colour",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of a colour field. {name} is the field it belongs to, for example Fill or Outline.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -584,12 +584,12 @@
   },
   "image-editor.paint-ui.none": {
     "text": "None",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Option meaning no paint at all, so the fill or outline is transparent. Same English as the entry in the inspector.",
     "max": 10
   },
   "image-editor.paint-ui.opacity": {
     "text": "Opacity",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Slider label for how see-through the paint is. Same English as the reference picture opacity.",
     "max": 15
   },
   "image-editor.paint-ui.opacity-fades-the-whole-layer": {
@@ -599,12 +599,12 @@
   },
   "image-editor.paint-ui.or-type-a-name": {
     "text": "Or type a name",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Label of a text box where the user types a CSS variable name instead of picking a colour.",
     "max": 25
   },
   "image-editor.paint-ui.paint-colour": {
     "text": "{paint} colour",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of a colour control. {paint} is the paint role, for example Fill or Outline.",
     "max": 25,
     "vars": {
       "paint": "The value that replaces paint in the text."
@@ -612,17 +612,17 @@
   },
   "image-editor.paint-ui.radial-gradient": {
     "text": "Radial gradient",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Fill type option: colours blend outwards from a centre point. Same English as the entry in the inspector.",
     "max": 25
   },
   "image-editor.paint-ui.radius": {
     "text": "Radius (%)",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for the size of a radial gradient, as a percentage of the image.",
     "max": 20
   },
   "image-editor.paint-ui.remove-stop-n": {
     "text": "Remove stop {n}",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Button that removes one gradient stop. {n} is the stop number, counting from 1.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -630,12 +630,12 @@
   },
   "image-editor.paint-ui.solid": {
     "text": "Solid",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Option for one flat colour without a gradient, and the plain unbroken outline style.",
     "max": 10
   },
   "image-editor.paint-ui.stop-n": {
     "text": "Stop {n}",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Label of one gradient colour stop. {n} is its number, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -643,7 +643,7 @@
   },
   "image-editor.paint-ui.stop-n-colour": {
     "text": "Stop {n} colour",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Accessible name of the colour of one gradient stop. {n} is the stop number, counting from 1.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -651,7 +651,7 @@
   },
   "image-editor.paint-ui.stop-n-position": {
     "text": "Stop {n} position (%)",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Field label for where one gradient stop sits along the gradient. {n} is the stop number; the value is a percentage.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -659,12 +659,12 @@
   },
   "image-editor.paint-ui.stroke": {
     "text": "Stroke",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Label for the outline line of a shape, as opposed to its fill. A noun, not a gesture.",
     "max": 10
   },
   "image-editor.paint-ui.theme-colour": {
     "text": "Theme colour",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Heading of the group of colours that come from the Home Assistant theme and change with it.",
     "max": 20
   },
   "image-editor.paint-ui.use-a-colour-like-3f6fb5": {
@@ -684,7 +684,7 @@
   },
   "image-editor.part.imported-part": {
     "text": "Imported part",
-    "note": "Shown in part (image-editor).",
+    "note": "Name of a locked layer that came from an imported SVG and cannot be edited.",
     "max": 25
   },
   "image-editor.part.rename-reorder-hide-or-delete-it": {
@@ -704,22 +704,22 @@
   },
   "image-editor.reference-ui.choose-a-picture": {
     "text": "Choose a picture…",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that opens a file picker for a reference picture to trace. Dots mean a picker follows.",
     "max": 30
   },
   "image-editor.reference-ui.choose-another-picture": {
     "text": "Choose another picture…",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that replaces the current reference picture with another one. Dots mean a picker follows.",
     "max": 40
   },
   "image-editor.reference-ui.close": {
     "text": "Close",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that closes the reference picture panel. The picture stays as it is.",
     "max": 10
   },
   "image-editor.reference-ui.fit-to-canvas": {
     "text": "Fit to canvas",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that scales and centres the reference picture so it fits inside the canvas.",
     "max": 25
   },
   "image-editor.reference-ui.for-tracing-only-the-picture-is-never": {
@@ -729,57 +729,57 @@
   },
   "image-editor.reference-ui.hide": {
     "text": "Hide",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that hides the reference picture without removing it. A verb, paired with Show.",
     "max": 10
   },
   "image-editor.reference-ui.match-canvas-shape-to-this-picture": {
     "text": "Match canvas shape to this picture",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that resizes the canvas to the same proportions as the reference picture.",
     "max": 55
   },
   "image-editor.reference-ui.move-picture-down": {
     "text": "Move picture down",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Arrow button that nudges the reference picture downwards. Accessible name.",
     "max": 30
   },
   "image-editor.reference-ui.move-picture-left": {
     "text": "Move picture left",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Arrow button that nudges the reference picture to the left. Accessible name.",
     "max": 30
   },
   "image-editor.reference-ui.move-picture-right": {
     "text": "Move picture right",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Arrow button that nudges the reference picture to the right. Accessible name.",
     "max": 30
   },
   "image-editor.reference-ui.move-picture-up": {
     "text": "Move picture up",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Arrow button that nudges the reference picture upwards. Accessible name.",
     "max": 25
   },
   "image-editor.reference-ui.move-the-picture": {
     "text": "Move the picture",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Heading of the group of arrow buttons that move the reference picture.",
     "max": 30
   },
   "image-editor.reference-ui.opacity": {
     "text": "Opacity",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Slider label for how see-through the reference picture is. Same English as the paint opacity label.",
     "max": 15
   },
   "image-editor.reference-ui.png-jpeg-webp-gif-avif-or-bmp": {
     "text": "PNG, JPEG, WebP, GIF, AVIF or BMP.",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Hint listing the accepted picture file types. Format names stay as written.",
     "max": 55
   },
   "image-editor.reference-ui.reference-picture": {
     "text": "Reference picture",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Panel title for a faint picture shown under the canvas to trace over. It is never saved with the image.",
     "max": 30
   },
   "image-editor.reference-ui.reference-picture-on-not-saved": {
     "text": "Reference picture on. Not saved.",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Status line in the reference picture panel. Same English as the toast with the same wording.",
     "max": 55
   },
   "image-editor.reference-ui.reference-pictures-are-not-kept-pick-it": {
@@ -789,22 +789,22 @@
   },
   "image-editor.reference-ui.remove-picture": {
     "text": "Remove picture",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that removes the reference picture from the editor.",
     "max": 25
   },
   "image-editor.reference-ui.reset-alignment": {
     "text": "Reset alignment",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that puts the reference picture back to its default position, scale and rotation.",
     "max": 25
   },
   "image-editor.reference-ui.rotate-degrees": {
     "text": "Rotate (degrees)",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Field label for turning the reference picture by a number of degrees.",
     "max": 30
   },
   "image-editor.reference-ui.scale": {
     "text": "Scale (%)",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Field label for the size of the reference picture as a percentage of its original size.",
     "max": 15
   },
   "image-editor.reference-ui.scale-and-rotate-are-around-the-middle": {
@@ -814,37 +814,37 @@
   },
   "image-editor.reference-ui.show": {
     "text": "Show",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that shows a hidden reference picture again. A verb, paired with Hide.",
     "max": 10
   },
   "image-editor.reference-ui.turn-left-90": {
     "text": "Turn left 90",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that turns the reference picture 90 degrees anticlockwise. The degree sign is left out on purpose.",
     "max": 20
   },
   "image-editor.reference-ui.turn-right-90": {
     "text": "Turn right 90",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Button that turns the reference picture 90 degrees clockwise. The degree sign is left out on purpose.",
     "max": 25
   },
   "image-editor.reference-ui.x": {
     "text": "X",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Field label for the horizontal position of the reference picture. Single letter, the x axis.",
     "max": 5
   },
   "image-editor.reference-ui.y": {
     "text": "Y",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Field label for the vertical position of the reference picture. Single letter, the y axis.",
     "max": 5
   },
   "image-editor.reference.choose-a-png-jpeg-webp-gif-avif-or-bmp": {
     "text": "Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.",
-    "note": "Shown in reference (image-editor).",
+    "note": "Error when the chosen file is not a supported picture type. Format names stay as written.",
     "max": 85
   },
   "image-editor.reference.reference-picture-on-not-saved": {
     "text": "Reference picture on. Not saved.",
-    "note": "Shown in reference (image-editor).",
+    "note": "Toast shown when a reference picture is loaded. Same English as the status line in the panel.",
     "max": 55
   },
   "image-editor.reference.that-file-is-too-big-to-open-over-64-mb": {
@@ -864,12 +864,12 @@
   },
   "image-editor.text-tool.cancel": {
     "text": "Cancel",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Button that closes the text entry box and throws away what was typed.",
     "max": 10
   },
   "image-editor.text-tool.done": {
     "text": "Done",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Button that adds the typed text to the canvas and closes the text entry box.",
     "max": 10
   },
   "image-editor.text-tool.enter-adds-the-text-shift-enter-starts-a": {
@@ -879,7 +879,7 @@
   },
   "image-editor.text-tool.n-left": {
     "text": "{n} left",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Counter under the text entry box. {n} is how many characters can still be typed. Same English as the counter in the text panel.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -897,7 +897,7 @@
   },
   "image-editor.text-tool.text-on-the-canvas": {
     "text": "Text on the canvas",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Accessible name of the text entry box that appears over the drawing area.",
     "max": 30
   },
   "image-editor.text-tool.that-is-the-longest-text-2048-characters": {
@@ -907,37 +907,37 @@
   },
   "image-editor.text-ui.add-text": {
     "text": "Add text",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Button that starts the text tool to place new text on the canvas. A verb and its object.",
     "max": 15
   },
   "image-editor.text-ui.alignment": {
     "text": "Alignment",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Label of the text alignment choice: start, centre or end of the line. Not the reference picture alignment.",
     "max": 15
   },
   "image-editor.text-ui.bold": {
     "text": "Bold",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font weight option, a heavier weight than Medium and Semi-bold.",
     "max": 10
   },
   "image-editor.text-ui.centre": {
     "text": "Centre",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Text alignment option: lines sit in the middle. Paired with Start and End.",
     "max": 10
   },
   "image-editor.text-ui.clean-no-feet": {
     "text": "Clean, no feet.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Short hint under the Sans-serif font option. Feet means the small strokes at letter ends.",
     "max": 25
   },
   "image-editor.text-ui.content": {
     "text": "Content",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Label of the field that holds the words of the text layer. A noun.",
     "max": 15
   },
   "image-editor.text-ui.end": {
     "text": "End",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Text alignment option: lines end at the edge, which is right in left-to-right languages. Paired with Start and Centre.",
     "max": 5
   },
   "image-editor.text-ui.enter-adds-a-line": {
@@ -947,47 +947,47 @@
   },
   "image-editor.text-ui.every-letter-the-same-width": {
     "text": "Every letter the same width.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Short hint under the Monospace font option.",
     "max": 45
   },
   "image-editor.text-ui.extra-bold": {
     "text": "Extra bold",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font weight option, heavier than Bold.",
     "max": 20
   },
   "image-editor.text-ui.font": {
     "text": "Font",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Label of the font family choice, such as Sans-serif or Serif.",
     "max": 10
   },
   "image-editor.text-ui.italic": {
     "text": "Italic",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Option for slanted letters in the text style choice.",
     "max": 10
   },
   "image-editor.text-ui.letter-spacing-units": {
     "text": "Letter spacing (units)",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Field label for the extra gap between letters, in drawing units.",
     "max": 40
   },
   "image-editor.text-ui.light": {
     "text": "Light",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font weight option with thin strokes. Not the light theme and not lighting.",
     "max": 10
   },
   "image-editor.text-ui.medium": {
     "text": "Medium",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font weight option between Regular and Semi-bold. Not a size.",
     "max": 10
   },
   "image-editor.text-ui.monospace": {
     "text": "Monospace",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font family option where every letter has the same width, like code.",
     "max": 15
   },
   "image-editor.text-ui.n-left": {
     "text": "{n} left",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Counter under the text content field. {n} is how many characters can still be typed. Same English as the counter in the text entry box.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -995,47 +995,47 @@
   },
   "image-editor.text-ui.regular": {
     "text": "Regular",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font weight option for normal strokes, the default.",
     "max": 15
   },
   "image-editor.text-ui.sans-serif": {
     "text": "Sans-serif",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font family option for letters without small end strokes. Keep the typographic term.",
     "max": 20
   },
   "image-editor.text-ui.semi-bold": {
     "text": "Semi-bold",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font weight option between Medium and Bold.",
     "max": 15
   },
   "image-editor.text-ui.serif": {
     "text": "Serif",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font family option for letters with small end strokes. Keep the typographic term.",
     "max": 10
   },
   "image-editor.text-ui.size-units": {
     "text": "Size (units)",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Field label for the text height, in drawing units.",
     "max": 20
   },
   "image-editor.text-ui.start": {
     "text": "Start",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Text alignment option: lines begin at the edge, which is left in left-to-right languages. Paired with Centre and End.",
     "max": 10
   },
   "image-editor.text-ui.style": {
     "text": "Style",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Label of the choice between upright and italic letters.",
     "max": 10
   },
   "image-editor.text-ui.system": {
     "text": "System",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Font family option that uses the device's own interface font.",
     "max": 10
   },
   "image-editor.text-ui.text": {
     "text": "Text",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Heading of the text layer settings panel. A noun. Same English as the text tool name.",
     "max": 10
   },
   "image-editor.text-ui.text-uses-fonts-already-on-the-device": {
@@ -1055,47 +1055,47 @@
   },
   "image-editor.text-ui.weight": {
     "text": "Weight",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Label of the font weight choice, how heavy the letters look. Not a physical weight.",
     "max": 10
   },
   "image-editor.text-ui.whatever-this-device-uses-for-its-own": {
     "text": "Whatever this device uses for its own screens.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Short hint under the System font option.",
     "max": 75
   },
   "image-editor.text-ui.with-small-feet-like-print": {
     "text": "With small feet, like print.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Short hint under the Serif font option. Feet means the small strokes at letter ends.",
     "max": 45
   },
   "image-editor.ui.accent": {
     "text": "Accent",
-    "note": "Shown in ui (image-editor).",
+    "note": "Name of the theme accent colour, used as a colour swatch label in the inspector. Same English as the paint option.",
     "max": 10
   },
   "image-editor.ui.apply": {
     "text": "Apply",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button in the canvas size dialog that confirms the new size. A verb.",
     "max": 10
   },
   "image-editor.ui.apply-anyway": {
     "text": "Apply anyway",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that confirms the new canvas size even though some layers will be cut off.",
     "max": 20
   },
   "image-editor.ui.author": {
     "text": "Author",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the field for the person who made the image, shown in its details. A noun.",
     "max": 10
   },
   "image-editor.ui.back": {
     "text": "Back",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that leaves the image editor and returns to the image library.",
     "max": 10
   },
   "image-editor.ui.c": {
     "text": "{c, plural, one {Delete # hidden layer} other {Delete # hidden layers}}",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that deletes all hidden layers to save space. {c} is the number of hidden layers; the text has singular and plural forms.",
     "max": 40,
     "vars": {
       "c": "The count the text is about."
@@ -1103,7 +1103,7 @@
   },
   "image-editor.ui.c-2": {
     "text": "{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}",
-    "note": "Shown in ui (image-editor).",
+    "note": "Message after hidden layers were deleted. {c} is how many were deleted; the text has singular and plural forms.",
     "max": 40,
     "vars": {
       "c": "The count the text is about."
@@ -1111,7 +1111,7 @@
   },
   "image-editor.ui.c-outside-the-new-canvas-they-are-kept": {
     "text": "{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Warning in the canvas size dialog. {c} is the number of layers outside the new size; the verb must agree with the plural form.",
     "max": 115,
     "vars": {
       "c": "The count the text is about."
@@ -1119,17 +1119,17 @@
   },
   "image-editor.ui.cancel": {
     "text": "Cancel",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that closes the canvas size dialog without changing anything.",
     "max": 10
   },
   "image-editor.ui.canvas": {
     "text": "Canvas",
-    "note": "Shown in ui (image-editor).",
+    "note": "Short heading for the drawing area settings in the inspector. A noun, not cloth.",
     "max": 10
   },
   "image-editor.ui.canvas-size": {
     "text": "Canvas size",
-    "note": "Shown in ui (image-editor).",
+    "note": "Title of the dialog where the width and height of the drawing area are set.",
     "max": 20
   },
   "image-editor.ui.cards-that-set-their-own-shape-keep-it": {
@@ -1139,32 +1139,32 @@
   },
   "image-editor.ui.close": {
     "text": "Close",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that closes a notice or panel in the editor without any other action.",
     "max": 10
   },
   "image-editor.ui.custom": {
     "text": "Custom",
-    "note": "Shown in ui (image-editor).",
+    "note": "Canvas size option for a width and height typed by the user. Same English as the colour option Custom.",
     "max": 10
   },
   "image-editor.ui.description": {
     "text": "Description",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the field for a short text about what the image shows. A noun.",
     "max": 20
   },
   "image-editor.ui.duplicate": {
     "text": "Duplicate",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that copies the selected layer or image. A verb, without the dots of the menu item.",
     "max": 15
   },
   "image-editor.ui.export-file": {
     "text": "Export file",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that downloads the image as an SVG file, used to keep a copy outside the library.",
     "max": 20
   },
   "image-editor.ui.fill-paint": {
     "text": "Fill: {paint}",
-    "note": "Shown in ui (image-editor).",
+    "note": "Summary line of a layer fill. {paint} is a colour name or value, or a word such as None.",
     "max": 25,
     "vars": {
       "paint": "The value that replaces paint in the text."
@@ -1172,32 +1172,32 @@
   },
   "image-editor.ui.fit-to-view": {
     "text": "Fit to view",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that zooms the drawing area so the whole canvas is visible.",
     "max": 20
   },
   "image-editor.ui.height": {
     "text": "Height",
-    "note": "Shown in ui (image-editor).",
+    "note": "Field label for the canvas height, as a number in drawing units.",
     "max": 10
   },
   "image-editor.ui.image": {
     "text": "Image",
-    "note": "Shown in ui (image-editor).",
+    "note": "Heading of the inspector section for the whole image, such as its name and details. A noun.",
     "max": 10
   },
   "image-editor.ui.image-canvas": {
     "text": "Image canvas",
-    "note": "Shown in ui (image-editor).",
+    "note": "Title of the canvas section in the inspector. Same English as the accessible name of the drawing area.",
     "max": 20
   },
   "image-editor.ui.image-size": {
     "text": "Image size",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the file size meter, meaning data size in KiB, not width and height.",
     "max": 25
   },
   "image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
     "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Accessible description of the size meter when the image is over the limit. {used} is the size in KiB, a number.",
     "max": 85,
     "vars": {
       "used": "The value that replaces used in the text."
@@ -1205,22 +1205,22 @@
   },
   "image-editor.ui.includes-connections": {
     "text": "Includes connections.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Hint under the delete hidden layers button: layers that other layers depend on are counted too.",
     "max": 35
   },
   "image-editor.ui.inspector": {
     "text": "Inspector",
-    "note": "Shown in ui (image-editor).",
+    "note": "Title of the side panel that shows settings for the selected layer or the image.",
     "max": 15
   },
   "image-editor.ui.keep-ratio": {
     "text": "Keep ratio",
-    "note": "Shown in ui (image-editor).",
+    "note": "Checkbox label: changing the width also changes the height so the proportions stay the same.",
     "max": 20
   },
   "image-editor.ui.keywords": {
     "text": "Keywords",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the field for search words that help find the image in the library. A plural noun.",
     "max": 15
   },
   "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
@@ -1230,27 +1230,27 @@
   },
   "image-editor.ui.layers": {
     "text": "Layers",
-    "note": "Shown in ui (image-editor).",
+    "note": "Heading of the list of drawing layers, the stacked parts of the image.",
     "max": 10
   },
   "image-editor.ui.linear-gradient": {
     "text": "Linear gradient",
-    "note": "Shown in ui (image-editor).",
+    "note": "Name of the linear gradient fill type, shown in the inspector. Same English as the paint option.",
     "max": 25
   },
   "image-editor.ui.main": {
     "text": "Main",
-    "note": "Shown in ui (image-editor).",
+    "note": "Name of the main text colour of the theme, shown as a colour label in the inspector. Same English as the paint option.",
     "max": 10
   },
   "image-editor.ui.match-reference-picture": {
     "text": "Match reference picture",
-    "note": "Shown in ui (image-editor).",
+    "note": "Canvas size option that takes the proportions of the reference picture.",
     "max": 40
   },
   "image-editor.ui.min-to-max-pixels-per-side": {
     "text": "{min} to {max} pixels per side.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Hint for the allowed canvas size. {min} and {max} are whole numbers, the smallest and largest side length.",
     "max": 50,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -1259,22 +1259,22 @@
   },
   "image-editor.ui.more": {
     "text": "More",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the button that opens extra actions for the image. Short for more actions.",
     "max": 10
   },
   "image-editor.ui.more-details": {
     "text": "More details",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the expander that reveals the optional image fields: description, author and keywords.",
     "max": 20
   },
   "image-editor.ui.name": {
     "text": "Name",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the field for the image name. A noun.",
     "max": 10
   },
   "image-editor.ui.name-is-the-only-thing-you-need": {
     "text": "Name is the only thing you need.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Hint above the optional fields. Name is the field label, so keep it matching the Name label.",
     "max": 55
   },
   "image-editor.ui.no-layers-yet": {
@@ -1284,7 +1284,7 @@
   },
   "image-editor.ui.none": {
     "text": "None",
-    "note": "Shown in ui (image-editor).",
+    "note": "Word shown when a fill or outline has no paint. Same English as the paint option None.",
     "max": 10
   },
   "image-editor.ui.nothing-to-export-yet": {
@@ -1294,7 +1294,7 @@
   },
   "image-editor.ui.outline-paint": {
     "text": "Outline: {paint}",
-    "note": "Shown in ui (image-editor).",
+    "note": "Summary line of a layer outline. {paint} is a colour name or value, or a word such as None.",
     "max": 30,
     "vars": {
       "paint": "The value that replaces paint in the text."
@@ -1307,37 +1307,37 @@
   },
   "image-editor.ui.radial-gradient": {
     "text": "Radial gradient",
-    "note": "Shown in ui (image-editor).",
+    "note": "Name of the radial gradient fill type, shown in the inspector. Same English as the paint option.",
     "max": 25
   },
   "image-editor.ui.reload": {
     "text": "Reload",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button next to the changed-elsewhere notice that loads the newer saved version, dropping local edits.",
     "max": 15
   },
   "image-editor.ui.save": {
     "text": "Save",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that saves the image in the library. A verb. Differs from Save image and Save as a copy.",
     "max": 10
   },
   "image-editor.ui.save-as-a-copy": {
     "text": "Save as a copy",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that saves under a new name and leaves the original as it was. No dots here, unlike the menu item.",
     "max": 25
   },
   "image-editor.ui.save-image": {
     "text": "Save image",
-    "note": "Shown in ui (image-editor).",
+    "note": "Accessible name and tooltip of the main save button, saving the whole image.",
     "max": 20
   },
   "image-editor.ui.saving": {
     "text": "Saving…",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the save button while saving is in progress. Same English as the status message.",
     "max": 20
   },
   "image-editor.ui.select-the-biggest-layer": {
     "text": "Select the biggest layer",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that selects the layer using the most data, so the user can simplify or delete it.",
     "max": 40
   },
   "image-editor.ui.select-the-biggest-layer-and-simplify-it": {
@@ -1347,12 +1347,12 @@
   },
   "image-editor.ui.shape": {
     "text": "Shape",
-    "note": "Shown in ui (image-editor).",
+    "note": "Label of the canvas shape choice, such as square or wide. A noun.",
     "max": 10
   },
   "image-editor.ui.the-address-is-mcu-image-id-it-cannot-be": {
     "text": "The address is mcu-image:{id}. It cannot be changed later.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Hint under the name field. {id} is the generated identifier of the image. Keep mcu-image: as written.",
     "max": 95,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -1360,22 +1360,22 @@
   },
   "image-editor.ui.this-image-was-changed-somewhere-else": {
     "text": "This image was changed somewhere else.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Notice in the inspector with a Reload button. Same English as the save message.",
     "max": 65
   },
   "image-editor.ui.too-big-to-save": {
     "text": "Too big to save",
-    "note": "Shown in ui (image-editor).",
+    "note": "Short warning label on the size meter when the image is over the limit.",
     "max": 25
   },
   "image-editor.ui.undo": {
     "text": "Undo",
-    "note": "Shown in ui (image-editor).",
+    "note": "Toolbar button that reverts the last change. A verb.",
     "max": 15
   },
   "image-editor.ui.use-a-number-from-min-to-max": {
     "text": "Use a number from {min} to {max}.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Validation message for a number field. {min} and {max} are the lowest and highest allowed numbers.",
     "max": 55,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -1384,7 +1384,7 @@
   },
   "image-editor.ui.used-of-256-kib-word": {
     "text": "{used} of 256 KiB, {word}",
-    "note": "Shown in ui (image-editor).",
+    "note": "Size meter caption. {used} is the size in KiB, a number. {word} is a lower-case status word such as fine or nearly full.",
     "max": 40,
     "vars": {
       "used": "The value that replaces used in the text.",
@@ -1393,7 +1393,7 @@
   },
   "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
     "text": "{w} x {h} units. Pick a layer to read its details.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Inspector hint when no layer is selected. {w} is the canvas width and {h} the height, as numbers in drawing units.",
     "max": 80,
     "vars": {
       "h": "The value that replaces h in the text.",
@@ -1402,22 +1402,22 @@
   },
   "image-editor.ui.what-is-kib": {
     "text": "What is KiB?",
-    "note": "Shown in ui (image-editor).",
+    "note": "Link or toggle that opens a short explanation of the KiB unit.",
     "max": 20
   },
   "image-editor.ui.width": {
     "text": "Width",
-    "note": "Shown in ui (image-editor).",
+    "note": "Field label for the canvas width, as a number in drawing units.",
     "max": 10
   },
   "image-editor.ui.zoom-in": {
     "text": "Zoom in",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that makes the drawing area larger. A verb, paired with Zoom out.",
     "max": 15
   },
   "image-editor.ui.zoom-out": {
     "text": "Zoom out",
-    "note": "Shown in ui (image-editor).",
+    "note": "Button that makes the drawing area smaller. A verb, paired with Zoom in.",
     "max": 15
   }
 }

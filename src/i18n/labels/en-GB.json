@@ -830,1117 +830,1117 @@
   },
   "labels.bar-module.bar": {
     "text": "Bar",
-    "note": "Shown in bar module (labels).",
+    "note": "Name of the progress bar module in the module picker.",
     "max": 5
   },
   "labels.bar-module.display-a-progress-bar-based-on-entity": {
     "text": "Display a progress bar based on entity state",
-    "note": "Shown in bar module (labels).",
+    "note": "One-line description of the progress bar module in the module picker.",
     "max": 75
   },
   "labels.button-module.button": {
     "text": "Button",
-    "note": "Shown in button module (labels).",
+    "note": "Name of the button module in the module picker.",
     "max": 10
   },
   "labels.button-module.interactive-button-with-icon-label-and": {
     "text": "Interactive button with icon, label, and optional state display",
-    "note": "Shown in button module (labels).",
+    "note": "One-line description of the button module in the module picker.",
     "max": 105
   },
   "labels.card-settings.backdrop-filter": {
     "text": "Backdrop filter",
-    "note": "Shown in card settings (labels).",
+    "note": "Card settings field label for the blur or tint behind the card (CSS backdrop-filter).",
     "max": 25
   },
   "labels.card-settings.border-colour": {
     "text": "Border colour",
-    "note": "Shown in card settings (labels).",
+    "note": "Card settings field label for the colour of the whole card's border.",
     "max": 25
   },
   "labels.card-settings.border-style": {
     "text": "Border style",
-    "note": "Shown in card settings (labels).",
+    "note": "Card settings field label for the line style (solid, dashed) of the card's border.",
     "max": 20
   },
   "labels.card-settings.border-width": {
     "text": "Border width",
-    "note": "Shown in card settings (labels).",
+    "note": "Card settings field label for the thickness of the card's border.",
     "max": 20
   },
   "labels.card-settings.margin": {
     "text": "Margin",
-    "note": "Shown in card settings (labels).",
+    "note": "Card settings field label for the space outside the card's edge (CSS margin).",
     "max": 10
   },
   "labels.css-properties.a-truncated-label-ends-in-an-ellipsis": {
     "text": "A truncated label ends in an ellipsis and shows in full as a tooltip.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under the Label overflow option in the CSS panel; a full sentence, keep the word ellipsis.",
     "max": 115
   },
   "labels.css-properties.above": {
     "text": "Above",
-    "note": "Shown in css properties (labels).",
+    "note": "Position option: the element sits above the other part (icon above text, state above label).",
     "max": 10
   },
   "labels.css-properties.advanced": {
     "text": "Advanced",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for rarely used CSS fields; collapsed by default.",
     "max": 15
   },
   "labels.css-properties.align-content": {
     "text": "Align content",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS property name (align-content): how several rows or lines share spare space across the cross axis.",
     "max": 25
   },
   "labels.css-properties.align-items": {
     "text": "Align items",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS property name (align-items): how children line up across the cross axis of a flex or grid container.",
     "max": 20
   },
   "labels.css-properties.align-self": {
     "text": "Align self",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS property name (align-self): cross-axis alignment for this one element, overriding its container.",
     "max": 20
   },
   "labels.css-properties.alignment": {
     "text": "Alignment",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the alignment fields (align, justify) in the CSS panel.",
     "max": 15
   },
   "labels.css-properties.all": {
     "text": "All",
-    "note": "Shown in css properties (labels).",
+    "note": "Option that applies a value to every side or every property at once.",
     "max": 5
   },
   "labels.css-properties.animation-delay": {
     "text": "Animation delay",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-delay): wait before a CSS animation starts.",
     "max": 25
   },
   "labels.css-properties.animation-direction": {
     "text": "Animation direction",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-direction): forwards, reverse or alternating playback.",
     "max": 35
   },
   "labels.css-properties.animation-duration": {
     "text": "Animation duration",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-duration): how long one animation cycle lasts.",
     "max": 30
   },
   "labels.css-properties.animation-name": {
     "text": "Animation name",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-name): which keyframes animation to play.",
     "max": 25
   },
   "labels.css-properties.animation-timing": {
     "text": "Animation timing",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-timing-function): the easing curve of a CSS animation.",
     "max": 30
   },
   "labels.css-properties.animations": {
     "text": "Animations",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the CSS animation fields in the CSS panel.",
     "max": 20
   },
   "labels.css-properties.area": {
     "text": "Area",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-area): the named region or cell span an element occupies.",
     "max": 10
   },
   "labels.css-properties.auto": {
     "text": "Auto",
-    "note": "Shown in css properties (labels).",
+    "note": "Option meaning the browser decides the value (CSS auto).",
     "max": 15
   },
   "labels.css-properties.auto-columns": {
     "text": "Auto columns",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-auto-columns): width of columns created automatically.",
     "max": 25
   },
   "labels.css-properties.auto-flow": {
     "text": "Auto flow",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-auto-flow): whether items fill the grid by row or by column.",
     "max": 20
   },
   "labels.css-properties.auto-rows": {
     "text": "Auto rows",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-auto-rows): height of rows created automatically.",
     "max": 20
   },
   "labels.css-properties.backdrop-filter": {
     "text": "Backdrop filter",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (backdrop-filter): blur or tint applied behind an element.",
     "max": 25
   },
   "labels.css-properties.background": {
     "text": "Background",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label for the background shorthand (colour, image and more in one value).",
     "max": 20
   },
   "labels.css-properties.background-attachment": {
     "text": "Background attachment",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-attachment): whether the background scrolls with the page or stays fixed.",
     "max": 35
   },
   "labels.css-properties.background-clip": {
     "text": "Background clip",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-clip): how far the background paints (border, padding or content box).",
     "max": 25
   },
   "labels.css-properties.background-colour": {
     "text": "Background colour",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-color): fill colour behind the element's content.",
     "max": 30
   },
   "labels.css-properties.background-image": {
     "text": "Background image",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-image): an image or gradient painted behind the element.",
     "max": 30
   },
   "labels.css-properties.background-origin": {
     "text": "Background origin",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-origin): the box the background position is measured from.",
     "max": 30
   },
   "labels.css-properties.background-position": {
     "text": "Background position",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-position): where the background image sits in the element.",
     "max": 35
   },
   "labels.css-properties.background-repeat": {
     "text": "Background repeat",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-repeat): whether the background image tiles.",
     "max": 30
   },
   "labels.css-properties.background-size": {
     "text": "Background size",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (background-size): how large the background image is drawn.",
     "max": 25
   },
   "labels.css-properties.backgrounds": {
     "text": "Backgrounds",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading (plural) for the background fields in the CSS panel.",
     "max": 20
   },
   "labels.css-properties.bar": {
     "text": "Bar",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the fields that style the tab bar's bar part (content area), not the progress bar module.",
     "max": 5
   },
   "labels.css-properties.bar-background": {
     "text": "Bar background",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the background of the whole tab bar strip, not a single tab.",
     "max": 25
   },
   "labels.css-properties.bar-border-colour": {
     "text": "Bar border colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the border colour of the whole tab bar strip; single tabs use Tab border colour.",
     "max": 30
   },
   "labels.css-properties.bar-border-style": {
     "text": "Bar border style",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the border line style of the whole tab bar strip.",
     "max": 30
   },
   "labels.css-properties.bar-border-width": {
     "text": "Bar border width",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the border thickness of the whole tab bar strip.",
     "max": 30
   },
   "labels.css-properties.bar-padding": {
     "text": "Bar padding",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the space inside the tab bar strip around the tabs.",
     "max": 20
   },
   "labels.css-properties.bar-position": {
     "text": "Bar position",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for which edge of the card the tab bar sits on (top, bottom, left, right).",
     "max": 20
   },
   "labels.css-properties.below": {
     "text": "Below",
-    "note": "Shown in css properties (labels).",
+    "note": "Position option: the element sits below the other part (icon below text, state below label).",
     "max": 10
   },
   "labels.css-properties.beside": {
     "text": "Beside",
-    "note": "Shown in css properties (labels).",
+    "note": "Position option: the element sits next to the other part on the same line.",
     "max": 10
   },
   "labels.css-properties.border": {
     "text": "Border",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label for the border shorthand (width, style and colour in one value).",
     "max": 10
   },
   "labels.css-properties.border-bottom": {
     "text": "Border bottom",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-bottom): border on the bottom edge only.",
     "max": 25
   },
   "labels.css-properties.border-collapse": {
     "text": "Border collapse",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-collapse): whether table cell borders merge into one line.",
     "max": 25
   },
   "labels.css-properties.border-colour": {
     "text": "Border colour",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-color): colour of an element's border; differs from Bar border colour and Tab border colour.",
     "max": 25
   },
   "labels.css-properties.border-left": {
     "text": "Border left",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-left): border on the left edge only; follows the page, not text direction.",
     "max": 20
   },
   "labels.css-properties.border-length": {
     "text": "Border length",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how much of the edge the border line covers, such as 40% for a short accent line.",
     "max": 25
   },
   "labels.css-properties.border-radius": {
     "text": "Border radius",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-radius): how round the corners are.",
     "max": 25
   },
   "labels.css-properties.border-right": {
     "text": "Border right",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-right): border on the right edge only.",
     "max": 20
   },
   "labels.css-properties.border-spacing": {
     "text": "Border spacing",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-spacing): gap between table cell borders.",
     "max": 25
   },
   "labels.css-properties.border-style": {
     "text": "Border style",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-style): line style of a border, such as solid or dashed.",
     "max": 20
   },
   "labels.css-properties.border-top": {
     "text": "Border top",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-top): border on the top edge only.",
     "max": 20
   },
   "labels.css-properties.border-width": {
     "text": "Border width",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (border-width): thickness of an element's border.",
     "max": 20
   },
   "labels.css-properties.borders-outlines": {
     "text": "Borders & outlines",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for border and outline fields in the CSS panel.",
     "max": 30
   },
   "labels.css-properties.both": {
     "text": "Both",
-    "note": "Shown in css properties (labels).",
+    "note": "Option applying to both directions or both sides (for example clear left and right).",
     "max": 10
   },
   "labels.css-properties.bottom": {
     "text": "Bottom",
-    "note": "Shown in css properties (labels).",
+    "note": "Option or field label for the bottom edge (position offset or placement).",
     "max": 10
   },
   "labels.css-properties.box-shadow": {
     "text": "Box shadow",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (box-shadow): drop shadow around an element.",
     "max": 20
   },
   "labels.css-properties.box-sizing": {
     "text": "Box sizing",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (box-sizing): whether width and height include padding and border.",
     "max": 20
   },
   "labels.css-properties.caption-side": {
     "text": "Caption side",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (caption-side): whether a table caption sits above or below the table.",
     "max": 20
   },
   "labels.css-properties.centre": {
     "text": "Centre",
-    "note": "Shown in css properties (labels).",
+    "note": "Alignment option: centred in the available space (not the text-align word centre of a sentence).",
     "max": 10
   },
   "labels.css-properties.circle": {
     "text": "Circle",
-    "note": "Shown in css properties (labels).",
+    "note": "Shape option: a round shape, used for the icon background or list marker.",
     "max": 10
   },
   "labels.css-properties.clear": {
     "text": "Clear",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (clear): which side an element must not sit next to a floated element; not a clear-value button.",
     "max": 10
   },
   "labels.css-properties.colour": {
     "text": "Colour",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (color): the text colour of an element.",
     "max": 10
   },
   "labels.css-properties.column": {
     "text": "Column",
-    "note": "Shown in css properties (labels).",
+    "note": "Option for a vertical direction (flex-direction column), items stack top to bottom.",
     "max": 10
   },
   "labels.css-properties.column-gap": {
     "text": "Column gap",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (column-gap): horizontal space between columns.",
     "max": 20
   },
   "labels.css-properties.content-alignment": {
     "text": "Content alignment",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how the content inside a button or tab is aligned.",
     "max": 30
   },
   "labels.css-properties.css-grid": {
     "text": "CSS grid",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the CSS grid layout fields; keep the term CSS grid.",
     "max": 15
   },
   "labels.css-properties.cursor": {
     "text": "Cursor",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (cursor): the mouse pointer shape shown over the element.",
     "max": 10
   },
   "labels.css-properties.direction": {
     "text": "Direction",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (flex-direction): whether children flow in a row or a column.",
     "max": 15
   },
   "labels.css-properties.disabled-tabs": {
     "text": "Disabled tabs",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the look of tabs that cannot be selected.",
     "max": 25
   },
   "labels.css-properties.display": {
     "text": "Display",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (display): how the element lays out, such as block, flex or grid.",
     "max": 15
   },
   "labels.css-properties.effects": {
     "text": "Effects",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for visual effect fields (shadow, opacity, filter) in the CSS panel.",
     "max": 15
   },
   "labels.css-properties.end": {
     "text": "End",
-    "note": "Shown in css properties (labels).",
+    "note": "Alignment option: items sit at the end of the axis (right in left-to-right text).",
     "max": 5
   },
   "labels.css-properties.fade": {
     "text": "Fade",
-    "note": "Shown in css properties (labels).",
+    "note": "Tab content switch animation option: the old content fades out as the new fades in.",
     "max": 10
   },
   "labels.css-properties.fill-mode": {
     "text": "Fill mode",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-fill-mode): which animation styles stay before and after it plays.",
     "max": 15
   },
   "labels.css-properties.filter": {
     "text": "Filter",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (filter): visual filters such as blur or brightness on the element itself.",
     "max": 10
   },
   "labels.css-properties.flex": {
     "text": "Flex",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label for the flex shorthand (grow, shrink and basis in one value).",
     "max": 10
   },
   "labels.css-properties.flex-basis": {
     "text": "Flex basis",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (flex-basis): starting size of a flex item before it grows or shrinks.",
     "max": 20
   },
   "labels.css-properties.flex-grow": {
     "text": "Flex grow",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (flex-grow): how much of the spare space a flex item takes.",
     "max": 15
   },
   "labels.css-properties.flex-shrink": {
     "text": "Flex shrink",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (flex-shrink): how much a flex item gives up when space runs short.",
     "max": 20
   },
   "labels.css-properties.flexbox": {
     "text": "Flexbox",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the CSS flexbox layout fields; keep the term Flexbox.",
     "max": 15
   },
   "labels.css-properties.float": {
     "text": "Float",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (float): push the element to one side so text wraps around it; not the animation preset Float.",
     "max": 10
   },
   "labels.css-properties.font-family": {
     "text": "Font family",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (font-family): the typeface used for text.",
     "max": 20
   },
   "labels.css-properties.font-size": {
     "text": "Font size",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (font-size): the size of text.",
     "max": 15
   },
   "labels.css-properties.font-style": {
     "text": "Font style",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (font-style): normal or italic text.",
     "max": 20
   },
   "labels.css-properties.font-variant": {
     "text": "Font variant",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (font-variant): small caps and similar letter variants.",
     "max": 20
   },
   "labels.css-properties.font-weight": {
     "text": "Font weight",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (font-weight): how bold the text is.",
     "max": 20
   },
   "labels.css-properties.gap": {
     "text": "Gap",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (gap): space between children of a flex or grid container.",
     "max": 15
   },
   "labels.css-properties.gap-between-tabs": {
     "text": "Gap between tabs",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the space between neighbouring tab buttons in the tab bar.",
     "max": 30
   },
   "labels.css-properties.height": {
     "text": "Height",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (height): how tall the element is.",
     "max": 10
   },
   "labels.css-properties.hidden": {
     "text": "Hidden",
-    "note": "Shown in css properties (labels).",
+    "note": "Option that hides the element or clips overflowing content (CSS hidden).",
     "max": 10
   },
   "labels.css-properties.icon": {
     "text": "Icon",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the icon fields of a button or tab in the CSS panel.",
     "max": 10
   },
   "labels.css-properties.icon-background": {
     "text": "Icon background",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the fill colour of the shape behind a button's icon.",
     "max": 25
   },
   "labels.css-properties.icon-background-shape": {
     "text": "Icon background shape",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the shape behind a button's icon, such as circle or rounded.",
     "max": 35
   },
   "labels.css-properties.icon-colour": {
     "text": "Icon colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the colour of a button's icon.",
     "max": 20
   },
   "labels.css-properties.icon-gap": {
     "text": "Icon gap",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the space between a button's icon and its text.",
     "max": 20
   },
   "labels.css-properties.icon-position": {
     "text": "Icon position",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for where a button's icon sits relative to its text (above, beside, below).",
     "max": 25
   },
   "labels.css-properties.icon-size": {
     "text": "Icon size",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the size of a button's icon.",
     "max": 25
   },
   "labels.css-properties.icon-text": {
     "text": "Icon & text",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the fields that style a button's icon and its text together.",
     "max": 20
   },
   "labels.css-properties.ignored-when-the-viewer-prefers-reduced": {
     "text": "Ignored when the viewer prefers reduced motion.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under animation fields: the animation is skipped for viewers with a reduced-motion setting.",
     "max": 80
   },
   "labels.css-properties.inset": {
     "text": "Inset",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (inset): top, right, bottom and left offsets of a positioned element in one value.",
     "max": 10
   },
   "labels.css-properties.iteration-count": {
     "text": "Iteration count",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-iteration-count): how many times the animation repeats.",
     "max": 25
   },
   "labels.css-properties.justify-content": {
     "text": "Justify content",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (justify-content): how children share spare space along the main axis.",
     "max": 25
   },
   "labels.css-properties.label-colour": {
     "text": "Label colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the text colour of a button's label.",
     "max": 20
   },
   "labels.css-properties.label-font-family": {
     "text": "Label font family",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the typeface of a button's label.",
     "max": 30
   },
   "labels.css-properties.label-font-size": {
     "text": "Label font size",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the text size of a button's label.",
     "max": 25
   },
   "labels.css-properties.label-font-weight": {
     "text": "Label font weight",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how bold a button's label is.",
     "max": 30
   },
   "labels.css-properties.label-overflow": {
     "text": "Label overflow",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for what happens when a button's label is too long: wrap, clip or truncate.",
     "max": 25
   },
   "labels.css-properties.label-text-transform": {
     "text": "Label text transform",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for upper-case, lower-case or capitalised display of a button's label.",
     "max": 35
   },
   "labels.css-properties.layout": {
     "text": "Layout",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for layout fields (display, direction, gap) in the CSS panel.",
     "max": 10
   },
   "labels.css-properties.left": {
     "text": "Left",
-    "note": "Shown in css properties (labels).",
+    "note": "Option for the left side; it follows the text direction, so it flips in right-to-left languages.",
     "max": 10
   },
   "labels.css-properties.left-and-right-follow-the-text-direction": {
     "text": "Left and right follow the text direction.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under a position field: left and right swap in right-to-left languages.",
     "max": 70
   },
   "labels.css-properties.letter-spacing": {
     "text": "Letter spacing",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (letter-spacing): extra space between letters.",
     "max": 25
   },
   "labels.css-properties.line-height": {
     "text": "Line height",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (line-height): height of each line of text.",
     "max": 20
   },
   "labels.css-properties.list-style": {
     "text": "List style",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label for the list-style shorthand (marker type, position and image).",
     "max": 20
   },
   "labels.css-properties.list-style-image": {
     "text": "List style image",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (list-style-image): an image used as the list marker.",
     "max": 30
   },
   "labels.css-properties.list-style-position": {
     "text": "List style position",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (list-style-position): whether the marker sits inside or outside the text.",
     "max": 35
   },
   "labels.css-properties.list-style-type": {
     "text": "List style type",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (list-style-type): the marker shape or numbering, such as disc or decimal.",
     "max": 25
   },
   "labels.css-properties.lists-tables": {
     "text": "Lists & tables",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for list and table fields in the CSS panel.",
     "max": 25
   },
   "labels.css-properties.margin": {
     "text": "Margin",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (margin): space outside the element's border.",
     "max": 10
   },
   "labels.css-properties.max-height": {
     "text": "Max height",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (max-height): the tallest the element may grow.",
     "max": 20
   },
   "labels.css-properties.max-width": {
     "text": "Max width",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (max-width): the widest the element may grow.",
     "max": 20
   },
   "labels.css-properties.min-height": {
     "text": "Min height",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (min-height): the shortest the element may shrink.",
     "max": 20
   },
   "labels.css-properties.min-width": {
     "text": "Min width",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (min-width): the narrowest the element may shrink.",
     "max": 20
   },
   "labels.css-properties.none": {
     "text": "None",
-    "note": "Shown in css properties (labels).",
+    "note": "Option meaning the property is switched off (CSS none), such as no border or no shadow.",
     "max": 10
   },
   "labels.css-properties.none-or-up-to-two-shadows-for-example-0": {
     "text": "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under the Tab shadow field; keep none and the CSS example exactly as written.",
     "max": 115
   },
   "labels.css-properties.normal-or-one-length-for-example-0-05em": {
     "text": "normal, or one length, for example 0.05em.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under the Tab letter spacing field; keep normal and the CSS example exactly as written.",
     "max": 70
   },
   "labels.css-properties.offsets": {
     "text": "Offsets",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the top, right, bottom and left offset fields of a positioned element.",
     "max": 15
   },
   "labels.css-properties.one-to-four-lengths-for-example-4px-8px": {
     "text": "One to four lengths, for example 4px 8px.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under the Tab padding field; keep the CSS example exactly as written.",
     "max": 70
   },
   "labels.css-properties.opacity": {
     "text": "Opacity",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (opacity): how see-through the element is.",
     "max": 15
   },
   "labels.css-properties.order": {
     "text": "Order",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (order): the position of a flex or grid item in its container.",
     "max": 10
   },
   "labels.css-properties.outline": {
     "text": "Outline",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label for the outline shorthand: a line drawn outside the border that takes no space.",
     "max": 15
   },
   "labels.css-properties.outline-colour": {
     "text": "Outline colour",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (outline-color): colour of the outline.",
     "max": 25
   },
   "labels.css-properties.outline-offset": {
     "text": "Outline offset",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (outline-offset): gap between the border and the outline.",
     "max": 25
   },
   "labels.css-properties.outline-style": {
     "text": "Outline style",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (outline-style): line style of the outline, such as solid or dashed.",
     "max": 25
   },
   "labels.css-properties.outline-width": {
     "text": "Outline width",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (outline-width): thickness of the outline.",
     "max": 25
   },
   "labels.css-properties.overflow": {
     "text": "Overflow",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (overflow): what happens to content that is larger than its box.",
     "max": 15
   },
   "labels.css-properties.overflow-wrap": {
     "text": "Overflow wrap",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (overflow-wrap): whether long words may break to fit the box.",
     "max": 25
   },
   "labels.css-properties.overflow-x": {
     "text": "Overflow X",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (overflow-x): overflow handling on the horizontal axis; X is the axis name.",
     "max": 20
   },
   "labels.css-properties.overflow-y": {
     "text": "Overflow Y",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (overflow-y): overflow handling on the vertical axis; Y is the axis name.",
     "max": 20
   },
   "labels.css-properties.padding": {
     "text": "Padding",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (padding): space between the element's border and its content.",
     "max": 15
   },
   "labels.css-properties.play-state": {
     "text": "Play state",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (animation-play-state): whether the animation is running or paused.",
     "max": 20
   },
   "labels.css-properties.plays-on-the-tab-button-the-content-fade": {
     "text": "Plays on the tab button. The content fade or slide is set under Bar.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under the tab animation fields; Bar here is the group heading named Bar.",
     "max": 110
   },
   "labels.css-properties.pointer-events": {
     "text": "Pointer events",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (pointer-events): whether the element reacts to mouse and touch.",
     "max": 25
   },
   "labels.css-properties.position": {
     "text": "Position",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (position): static, relative, absolute or fixed placement.",
     "max": 15
   },
   "labels.css-properties.positioning-layout": {
     "text": "Positioning & layout",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for position, size and layout fields in the CSS panel.",
     "max": 35
   },
   "labels.css-properties.right": {
     "text": "Right",
-    "note": "Shown in css properties (labels).",
+    "note": "Option for the right side; it follows the text direction, so it flips in right-to-left languages.",
     "max": 10
   },
   "labels.css-properties.ring": {
     "text": "Ring",
-    "note": "Shown in css properties (labels).",
+    "note": "Icon background shape option: a hollow circle outline with no fill.",
     "max": 10
   },
   "labels.css-properties.rounded": {
     "text": "Rounded",
-    "note": "Shown in css properties (labels).",
+    "note": "Icon background shape option: a square with rounded corners.",
     "max": 15
   },
   "labels.css-properties.row": {
     "text": "Row",
-    "note": "Shown in css properties (labels).",
+    "note": "Option for a horizontal direction (flex-direction row), items sit side by side.",
     "max": 5
   },
   "labels.css-properties.row-gap": {
     "text": "Row gap",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (row-gap): vertical space between rows.",
     "max": 15
   },
   "labels.css-properties.shape": {
     "text": "Shape",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the outline shape of an element, such as circle or rounded.",
     "max": 10
   },
   "labels.css-properties.shorten-the-border-line-e-g-40-for-a": {
     "text": "Shorten the border line, e.g. 40% for a short accent line.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint under the Border length field; keep the 40% example as written.",
     "max": 95
   },
   "labels.css-properties.sides": {
     "text": "Sides",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for which sides of the element a border applies to (top, right, bottom, left).",
     "max": 10
   },
   "labels.css-properties.slide": {
     "text": "Slide",
-    "note": "Shown in css properties (labels).",
+    "note": "Tab content switch animation option: the new content slides in from the side.",
     "max": 10
   },
   "labels.css-properties.spacing-box-model": {
     "text": "Spacing & box model",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for margin, padding, size and box-sizing fields in the CSS panel.",
     "max": 35
   },
   "labels.css-properties.start": {
     "text": "Start",
-    "note": "Shown in css properties (labels).",
+    "note": "Alignment option: items sit at the start of the axis (left in left-to-right text).",
     "max": 10
   },
   "labels.css-properties.state-colour": {
     "text": "State colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the text colour of the entity state shown on a button.",
     "max": 20
   },
   "labels.css-properties.state-font-size": {
     "text": "State font size",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the text size of the entity state shown on a button.",
     "max": 25
   },
   "labels.css-properties.state-position": {
     "text": "State position",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for where the entity state sits relative to the button label (above, beside, below).",
     "max": 25
   },
   "labels.css-properties.stretch": {
     "text": "Stretch",
-    "note": "Shown in css properties (labels).",
+    "note": "Alignment option: items grow to fill the cross axis; not the animation preset Stretch.",
     "max": 15
   },
   "labels.css-properties.style": {
     "text": "Style",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the line style of a border or outline (solid, dashed, dotted).",
     "max": 10
   },
   "labels.css-properties.tab-alignment": {
     "text": "Tab alignment",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how the tab buttons line up along the tab bar (start, centre, end, stretch).",
     "max": 25
   },
   "labels.css-properties.tab-animations": {
     "text": "Tab animations",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the animations that play on tab buttons.",
     "max": 25
   },
   "labels.css-properties.tab-background": {
     "text": "Tab background",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the background colour of a single tab button, not the whole bar.",
     "max": 25
   },
   "labels.css-properties.tab-bar": {
     "text": "Tab bar",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the fields that style the strip holding the tab buttons.",
     "max": 15
   },
   "labels.css-properties.tab-border-colour": {
     "text": "Tab border colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the border colour of a single tab button; the bar has Bar border colour.",
     "max": 30
   },
   "labels.css-properties.tab-border-style": {
     "text": "Tab border style",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the border line style of a single tab button.",
     "max": 30
   },
   "labels.css-properties.tab-border-width": {
     "text": "Tab border width",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the border thickness of a single tab button.",
     "max": 30
   },
   "labels.css-properties.tab-corner-radius": {
     "text": "Tab corner radius",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how round the corners of a tab button are.",
     "max": 30
   },
   "labels.css-properties.tab-font-family": {
     "text": "Tab font family",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the typeface of the text on tab buttons.",
     "max": 25
   },
   "labels.css-properties.tab-font-size": {
     "text": "Tab font size",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the text size on tab buttons.",
     "max": 25
   },
   "labels.css-properties.tab-font-weight": {
     "text": "Tab font weight",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how bold the text on tab buttons is.",
     "max": 25
   },
   "labels.css-properties.tab-icon-animation": {
     "text": "Tab icon animation",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the animation that plays on the icon of a tab button.",
     "max": 30
   },
   "labels.css-properties.tab-icon-colour": {
     "text": "Tab icon colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the colour of the icon on a tab button.",
     "max": 25
   },
   "labels.css-properties.tab-icon-position": {
     "text": "Tab icon position",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for where the icon sits relative to the text on a tab button.",
     "max": 30
   },
   "labels.css-properties.tab-icon-size": {
     "text": "Tab icon size",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the size of the icon on a tab button.",
     "max": 25
   },
   "labels.css-properties.tab-letter-spacing": {
     "text": "Tab letter spacing",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for extra space between letters on tab buttons.",
     "max": 30
   },
   "labels.css-properties.tab-opacity": {
     "text": "Tab opacity",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how see-through a tab button is.",
     "max": 20
   },
   "labels.css-properties.tab-padding": {
     "text": "Tab padding",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the space inside a tab button around its content.",
     "max": 20
   },
   "labels.css-properties.tab-shadow": {
     "text": "Tab shadow",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the drop shadow of a tab button.",
     "max": 20
   },
   "labels.css-properties.tab-switch-animation": {
     "text": "Tab switch animation",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the animation that plays when the active tab changes.",
     "max": 35
   },
   "labels.css-properties.tab-text-colour": {
     "text": "Tab text colour",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the text colour on tab buttons.",
     "max": 25
   },
   "labels.css-properties.tab-text-transform": {
     "text": "Tab text transform",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for upper-case, lower-case or capitalised text on tab buttons.",
     "max": 30
   },
   "labels.css-properties.table-layout": {
     "text": "Table layout",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (table-layout): whether table columns size to content or stay fixed.",
     "max": 20
   },
   "labels.css-properties.template-areas": {
     "text": "Template areas",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-template-areas): named regions that make up the grid layout.",
     "max": 25
   },
   "labels.css-properties.template-columns": {
     "text": "Template columns",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-template-columns): the widths of the grid columns.",
     "max": 30
   },
   "labels.css-properties.template-rows": {
     "text": "Template rows",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS grid field label (grid-template-rows): the heights of the grid rows.",
     "max": 25
   },
   "labels.css-properties.text": {
     "text": "Text",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for the text fields (align, indent, decoration) in the CSS panel.",
     "max": 10
   },
   "labels.css-properties.text-align": {
     "text": "Text align",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (text-align): horizontal alignment of text inside its box.",
     "max": 20
   },
   "labels.css-properties.text-decoration": {
     "text": "Text decoration",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (text-decoration): underline, overline or strike-through on text.",
     "max": 25
   },
   "labels.css-properties.text-indent": {
     "text": "Text indent",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (text-indent): indentation of the first line of text.",
     "max": 20
   },
   "labels.css-properties.text-overflow": {
     "text": "Text overflow",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (text-overflow): how text that does not fit is shown, such as an ellipsis.",
     "max": 25
   },
   "labels.css-properties.text-shadow": {
     "text": "Text shadow",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (text-shadow): drop shadow behind the letters.",
     "max": 20
   },
   "labels.css-properties.text-transform": {
     "text": "Text transform",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (text-transform): upper-case, lower-case or capitalised display of text.",
     "max": 25
   },
   "labels.css-properties.tick-the-tabs-that-cannot-be-opened": {
     "text": "Tick the tabs that cannot be opened.",
-    "note": "Shown in css properties (labels).",
+    "note": "Hint above the checklist of tabs under Disabled tabs; a full sentence.",
     "max": 60
   },
   "labels.css-properties.top": {
     "text": "Top",
-    "note": "Shown in css properties (labels).",
+    "note": "Option or field label for the top edge (position offset or placement).",
     "max": 5
   },
   "labels.css-properties.transform": {
     "text": "Transform",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (transform): rotate, scale, skew or move the element.",
     "max": 15
   },
   "labels.css-properties.transform-origin": {
     "text": "Transform origin",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (transform-origin): the pivot point for rotating and scaling.",
     "max": 30
   },
   "labels.css-properties.transition": {
     "text": "Transition",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label for the transition shorthand: smooth change between two style values.",
     "max": 20
   },
   "labels.css-properties.transition-delay": {
     "text": "Transition delay",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (transition-delay): wait before a transition starts.",
     "max": 30
   },
   "labels.css-properties.transition-duration": {
     "text": "Transition duration",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (transition-duration): how long a transition lasts.",
     "max": 35
   },
   "labels.css-properties.transition-property": {
     "text": "Transition property",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (transition-property): which style property a transition animates.",
     "max": 35
   },
   "labels.css-properties.transition-timing": {
     "text": "Transition timing",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (transition-timing-function): the easing curve of a transition.",
     "max": 30
   },
   "labels.css-properties.transitions-animations": {
     "text": "Transitions & animations",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for transition, transform and animation fields in the CSS panel.",
     "max": 40
   },
   "labels.css-properties.truncate": {
     "text": "Truncate",
-    "note": "Shown in css properties (labels).",
+    "note": "Label overflow option: cut a long label with an ellipsis (see the hint about tooltips).",
     "max": 15
   },
   "labels.css-properties.typography": {
     "text": "Typography",
-    "note": "Shown in css properties (labels).",
+    "note": "Group heading for font and text style fields in the CSS panel.",
     "max": 20
   },
   "labels.css-properties.value-background": {
     "text": "Value background",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for the background behind the entity value shown on a bar or button.",
     "max": 30
   },
   "labels.css-properties.vertical-content-alignment": {
     "text": "Vertical content alignment",
-    "note": "Shown in css properties (labels).",
+    "note": "Field label for how content is aligned top to bottom inside a button or tab.",
     "max": 45
   },
   "labels.css-properties.visibility": {
     "text": "Visibility",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (visibility): hide the element but keep its space.",
     "max": 20
   },
   "labels.css-properties.white-space": {
     "text": "White space",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (white-space): how spaces and line breaks in text are handled.",
     "max": 20
   },
   "labels.css-properties.width": {
     "text": "Width",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (width): how wide the element is.",
     "max": 10
   },
   "labels.css-properties.word-break": {
     "text": "Word break",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (word-break): where words may break when a line is full.",
     "max": 20
   },
   "labels.css-properties.word-spacing": {
     "text": "Word spacing",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (word-spacing): extra space between words.",
     "max": 20
   },
   "labels.css-properties.wrap": {
     "text": "Wrap",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (flex-wrap): whether flex children move to a new line when space runs out.",
     "max": 10
   },
   "labels.css-properties.z-index": {
     "text": "Z-index",
-    "note": "Shown in css properties (labels).",
+    "note": "CSS field label (z-index): stacking order, higher numbers sit in front.",
     "max": 15
   },
   "labels.css-property-options.100": {

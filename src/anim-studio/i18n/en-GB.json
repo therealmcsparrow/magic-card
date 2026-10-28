@@ -976,7 +976,7 @@
   },
   "anim-studio.draw-svg-dialog.add-as-shapes": {
     "text": "Add as shapes",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG import dialog. Adds the imported drawing as editable shapes over the current icon.",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.add-the-drawing-as-shapes-over-the-icon": {
@@ -986,12 +986,12 @@
   },
   "anim-studio.draw-svg-dialog.animated-svg": {
     "text": "Animated SVG",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Name of an export choice in the SVG dialog: a looping SVG file that carries the animation itself.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.animated-svg-copied": {
     "text": "Animated SVG copied",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Short confirmation message after the animated SVG was copied to the clipboard from the SVG dialog.",
     "max": 35
   },
   "anim-studio.draw-svg-dialog.at-most-shapes-shapes-fit-in-a-rig": {
@@ -1034,22 +1034,22 @@
   },
   "anim-studio.draw-svg-dialog.choose-another": {
     "text": "Choose another",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG import dialog, shown after a file is loaded, to pick a different .svg file instead.",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.choose-file": {
     "text": "Choose file",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the empty SVG import dialog that opens the file picker. Sits beside the drop-a-file hint.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.colour": {
     "text": "Colour",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Row label in the SVG dialog for how colours are written out. The choice beside it is currentColor or fixed colours.",
     "max": 10
   },
   "anim-studio.draw-svg-dialog.colour-currentcolor": {
     "text": "Colour: currentColor",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Summary line in the SVG dialog stating the colour mode is currentColor. Keep the CSS word currentColor as written.",
     "max": 35
   },
   "anim-studio.draw-svg-dialog.copies-icon-svg-and-the-svg-as-card-yaml": {
@@ -1064,7 +1064,7 @@
   },
   "anim-studio.draw-svg-dialog.copy-svg": {
     "text": "Copy SVG",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG export dialog that copies the SVG markup to the clipboard as text.",
     "max": 15
   },
   "anim-studio.draw-svg-dialog.count-scaled-into-the-icon": {
@@ -1077,12 +1077,12 @@
   },
   "anim-studio.draw-svg-dialog.download-started": {
     "text": "Download started",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Short confirmation after the user chose to download the .svg file from the SVG dialog.",
     "max": 30
   },
   "anim-studio.draw-svg-dialog.download-svg": {
     "text": "Download .svg",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG export dialog that saves the SVG as a file on the device. Keep the .svg extension.",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.drop-an-svg-file-here": {
@@ -1092,22 +1092,22 @@
   },
   "anim-studio.draw-svg-dialog.icon": {
     "text": "Icon",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Name of a choice under What to save in the SVG dialog: the icon at rest, without animation. Not the icon picker.",
     "max": 10
   },
   "anim-studio.draw-svg-dialog.import-shape": {
     "text": "Import shape",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Confirm button in the SVG import dialog when the file holds exactly one shape (singular form).",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.import-shapes": {
     "text": "Import shapes",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Confirm button in the SVG import dialog when the file holds several shapes (plural form).",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.import-svg": {
     "text": "Import SVG",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Title of the SVG import dialog, opened from the drawing tools to bring in an .svg file.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.kb-of-32-kb": {
@@ -1120,12 +1120,12 @@
   },
   "anim-studio.draw-svg-dialog.large": {
     "text": ", large",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Fragment appended after a size summary in the SVG dialog when the file is big. Starts with a comma; keep it.",
     "max": 15
   },
   "anim-studio.draw-svg-dialog.no-icon": {
     "text": ", no icon",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Fragment appended after a summary in the SVG dialog when the saved file would not include the icon. Starts with a comma.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.nothing-to-export-yet": {
@@ -1135,12 +1135,12 @@
   },
   "anim-studio.draw-svg-dialog.save-as-icon": {
     "text": "Save as icon",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG export dialog that stores the result as a reusable icon in the user's icon library.",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.size": {
     "text": "Size",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Label in the SVG dialog for the file size of the SVG, shown with the size meter. Not the icon's size on the card.",
     "max": 10
   },
   "anim-studio.draw-svg-dialog.size-kb": {
@@ -1153,17 +1153,17 @@
   },
   "anim-studio.draw-svg-dialog.smil-fallback": {
     "text": "SMIL fallback",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Checkbox label in the SVG dialog: also write a SMIL animation copy for viewers that lack CSS animation. SMIL is a technical term.",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.svg-copied": {
     "text": "SVG copied",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Short confirmation after the plain SVG markup was copied to the clipboard from the SVG dialog.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.svg-to-copy": {
     "text": "SVG to copy",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Accessible label of the text box holding the SVG markup, so it can be selected and copied by hand.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.the-file-could-not-be-read": {
@@ -1183,37 +1183,37 @@
   },
   "anim-studio.draw-svg-dialog.use-as-icon": {
     "text": "Use as icon",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG import dialog that replaces the current icon with the imported drawing.",
     "max": 25
   },
   "anim-studio.draw-svg-dialog.use-currentcolor": {
     "text": "Use currentColor",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Checkbox label in the SVG dialog: colour the SVG with the surrounding text colour. Keep the CSS word currentColor.",
     "max": 30
   },
   "anim-studio.draw-svg-dialog.use-in-card": {
     "text": "Use in card",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Button in the SVG export dialog that copies card YAML so the animated icon can be pasted into a card.",
     "max": 20
   },
   "anim-studio.draw-svg-dialog.what-to-save": {
     "text": "What to save",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Heading above the export choices in the SVG dialog (Animated SVG, Icon and so on).",
     "max": 20
   },
   "anim-studio.draw-tools.draw": {
     "text": "Draw",
-    "note": "Shown in draw tools (anim-studio).",
+    "note": "Button that switches on the drawing tools in the studio toolbar. Verb, not a noun; it changes to Stop drawing while active.",
     "max": 10
   },
   "anim-studio.draw-tools.drawing-tools": {
     "text": "Drawing tools",
-    "note": "Shown in draw tools (anim-studio).",
+    "note": "Accessible label of the group of drawing tool buttons (pen, line, shapes and so on) in the studio toolbar.",
     "max": 25
   },
   "anim-studio.draw-tools.import-svg": {
     "text": "Import SVG",
-    "note": "Shown in draw tools (anim-studio).",
+    "note": "Toolbar button that opens the SVG import dialog. The dialog itself has the same title under another key.",
     "max": 20
   },
   "anim-studio.draw-tools.motion-path-select-a-part-or-shape-first": {
@@ -1223,12 +1223,12 @@
   },
   "anim-studio.draw-tools.save-as-icon": {
     "text": "Save as icon",
-    "note": "Shown in draw tools (anim-studio).",
+    "note": "Toolbar button that opens the export dialog to save the drawing as an icon. The dialog button has the same text.",
     "max": 25
   },
   "anim-studio.draw-tools.stop-drawing": {
     "text": "Stop drawing",
-    "note": "Shown in draw tools (anim-studio).",
+    "note": "Toolbar button label while drawing mode is on; pressing it leaves drawing mode and returns to the normal studio.",
     "max": 20
   },
   "anim-studio.draw-utils.the-animation-would-be-larger-than-max": {
@@ -1242,117 +1242,117 @@
   },
   "anim-studio.editor-slots.particles": {
     "text": "Particles",
-    "note": "Shown in editor slots (anim-studio).",
+    "note": "Tab name in the studio editor area for the particle effects (sparks, rain and so on).",
     "max": 15
   },
   "anim-studio.editor-slots.path": {
     "text": "Path",
-    "note": "Shown in editor slots (anim-studio).",
+    "note": "Tab name in the studio editor area for the motion path a part follows. Not a shape name from the drawing tools.",
     "max": 10
   },
   "anim-studio.editor-slots.steps": {
     "text": "Steps",
-    "note": "Shown in editor slots (anim-studio).",
+    "note": "Tab name in the studio editor area for the simple step-by-step view of an animation, as opposed to the Timeline.",
     "max": 10
   },
   "anim-studio.editor-slots.timeline": {
     "text": "Timeline",
-    "note": "Shown in editor slots (anim-studio).",
+    "note": "Tab name in the studio editor area for the keyframe timeline, where each animated part has its own lanes.",
     "max": 15
   },
   "anim-studio.icon-start.alarm-panel": {
     "text": "Alarm panel",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (alarm_control_panel) used as a filter on the icon start screen.",
     "max": 20
   },
   "anim-studio.icon-start.all-domains": {
     "text": "All domains",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Option that removes the domain filter on the icon start screen, so icons for every kind of entity are listed.",
     "max": 20
   },
   "anim-studio.icon-start.binary-sensor": {
     "text": "Binary sensor",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (binary_sensor), an on/off sensor, used as a filter on the icon start screen.",
     "max": 25
   },
   "anim-studio.icon-start.button": {
     "text": "Button",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (button entities that fire an action) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.calendar": {
     "text": "Calendar",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (calendar entities) used as a filter on the icon start screen.",
     "max": 15
   },
   "anim-studio.icon-start.camera": {
     "text": "Camera",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (camera entities) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.climate": {
     "text": "Climate",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (heating and cooling devices) used as a filter on the icon start screen.",
     "max": 15
   },
   "anim-studio.icon-start.cover": {
     "text": "Cover",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (blinds, garage doors, shutters) used as a filter on the icon start screen. Noun.",
     "max": 10
   },
   "anim-studio.icon-start.device-tracker": {
     "text": "Device tracker",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (device_tracker, presence of a phone or device) used as a filter on the icon start screen.",
     "max": 25
   },
   "anim-studio.icon-start.domain": {
     "text": "Domain",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Label of the filter on the icon start screen that narrows icons by Home Assistant domain (light, fan, lock and so on).",
     "max": 10
   },
   "anim-studio.icon-start.event": {
     "text": "Event",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (event entities) used as a filter on the icon start screen.",
     "max": 15
   },
   "anim-studio.icon-start.fan": {
     "text": "Fan",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (a ventilation fan, not a person who admires) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.humidifier": {
     "text": "Humidifier",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (humidifiers and dehumidifiers) used as a filter on the icon start screen.",
     "max": 20
   },
   "anim-studio.icon-start.icon": {
     "text": "Icon",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Label of the icon field on the icon start screen, where an icon is picked or its id typed in.",
     "max": 10
   },
   "anim-studio.icon-start.lawn-mower": {
     "text": "Lawn mower",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (lawn_mower, robot mowers) used as a filter on the icon start screen.",
     "max": 20
   },
   "anim-studio.icon-start.light": {
     "text": "Light",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (lamps and bulbs, a noun, not the opposite of dark) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.loading-icon-library": {
     "text": "Loading icon library…",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Progress message on the icon start screen while the list of library icons is being fetched.",
     "max": 35
   },
   "anim-studio.icon-start.lock": {
     "text": "Lock",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (door locks, a noun) used as a filter on the icon start screen.",
     "max": 15
   },
   "anim-studio.icon-start.media-player": {
     "text": "Media player",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (speakers, TVs and other players) used as a filter on the icon start screen.",
     "max": 20
   },
   "anim-studio.icon-start.name-animation": {
@@ -1378,7 +1378,7 @@
   },
   "anim-studio.icon-start.person": {
     "text": "Person",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (person entities, a household member) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.pick-an-icon-or-type-an-id-like-mdi-bell": {
@@ -1388,12 +1388,12 @@
   },
   "anim-studio.icon-start.plant": {
     "text": "Plant",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (plant monitoring entities, a houseplant) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.search-icons": {
     "text": "Search icons",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Accessible label of the search box on the icon start screen. A longer hint sits under another key.",
     "max": 20
   },
   "anim-studio.icon-start.search-the-icon-library": {
@@ -1403,22 +1403,22 @@
   },
   "anim-studio.icon-start.sensor": {
     "text": "Sensor",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (sensors that report a value) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.siren": {
     "text": "Siren",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (alarm sirens) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.split-and-start": {
     "text": "Split and start",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Button that splits the chosen icon into separate parts and opens it in the studio, ready to animate.",
     "max": 25
   },
   "anim-studio.icon-start.splitting": {
     "text": "Splitting…",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Busy label that replaces Split and start while the icon is being split into parts.",
     "max": 20
   },
   "anim-studio.icon-start.start-from-an-icon": {
@@ -1428,12 +1428,12 @@
   },
   "anim-studio.icon-start.sun": {
     "text": "Sun",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (the sun entity with sunrise and sunset) used as a filter on the icon start screen.",
     "max": 5
   },
   "anim-studio.icon-start.switch": {
     "text": "Switch",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (on/off switches and plugs, a noun) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.the-icon-is-split-into-its-parts-select": {
@@ -1458,32 +1458,32 @@
   },
   "anim-studio.icon-start.timer": {
     "text": "Timer",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (countdown timer helpers) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.try-again": {
     "text": "Try again",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Button next to the icon start screen's load error messages; it repeats the failed loading of the icon or library.",
     "max": 20
   },
   "anim-studio.icon-start.vacuum": {
     "text": "Vacuum",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (robot vacuum cleaners, a noun) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.valve": {
     "text": "Valve",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (water and gas valves) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.icon-start.weather": {
     "text": "Weather",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (weather entities with conditions such as rain) used as a filter on the icon start screen.",
     "max": 15
   },
   "anim-studio.icon-start.zone": {
     "text": "Zone",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Home Assistant domain name (named map areas such as Home) used as a filter on the icon start screen.",
     "max": 10
   },
   "anim-studio.key-inspector.also-at-at": {
@@ -1496,7 +1496,7 @@
   },
   "anim-studio.key-inspector.angle": {
     "text": "Angle",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Field label in the keyframe inspector for a rotation angle in degrees, used by the 3D turn settings.",
     "max": 10
   },
   "anim-studio.key-inspector.at-at-secs-s": {
@@ -1510,12 +1510,12 @@
   },
   "anim-studio.key-inspector.background": {
     "text": "Background",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for the card background colour that a keyframe can animate.",
     "max": 20
   },
   "anim-studio.key-inspector.blur": {
     "text": "Blur",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for how blurred the part is, in pixels. Also a lane name on the timeline.",
     "max": 10
   },
   "anim-studio.key-inspector.blur-has-its-own-lane-and-is-added-to": {
@@ -1525,7 +1525,7 @@
   },
   "anim-studio.key-inspector.copy": {
     "text": "Copy",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Button in the keyframe inspector that copies the selected keyframe so it can be pasted at the playhead. Verb.",
     "max": 10
   },
   "anim-studio.key-inspector.count-keyframes": {
@@ -1562,7 +1562,7 @@
   },
   "anim-studio.key-inspector.delete-keyframe": {
     "text": "Delete keyframe",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Button in the keyframe inspector that removes the one selected keyframe. The several-keyframes button has its own key.",
     "max": 25
   },
   "anim-studio.key-inspector.drag-any-of-them-on-the-timeline-or-use": {
@@ -1572,7 +1572,7 @@
   },
   "anim-studio.key-inspector.drawn": {
     "text": "Drawn",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for how much of a stroke is drawn (the draw-on effect), as a percentage.",
     "max": 10
   },
   "anim-studio.key-inspector.easing-to-the-next-keyframe": {
@@ -1587,37 +1587,37 @@
   },
   "anim-studio.key-inspector.filter": {
     "text": "Filter",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for a CSS filter effect (brightness, hue and so on). Not a search filter.",
     "max": 10
   },
   "anim-studio.key-inspector.filter-presets": {
     "text": "Filter presets",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Accessible label of the group of ready-made CSS filter buttons in the keyframe inspector.",
     "max": 25
   },
   "anim-studio.key-inspector.flat-z": {
     "text": "Flat (Z)",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Choice for the 3D turn axis: spin flat on the page, around the Z axis. Keep the letter Z.",
     "max": 15
   },
   "anim-studio.key-inspector.flip-over-x": {
     "text": "Flip over (X)",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Choice for the 3D turn axis: tip forwards or backwards like a coin, around the X axis. Keep the letter X.",
     "max": 25
   },
   "anim-studio.key-inspector.flip-sideways-y": {
     "text": "Flip sideways (Y)",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Choice for the 3D turn axis: swing like a door, around the Y axis. Keep the letter Y.",
     "max": 30
   },
   "anim-studio.key-inspector.keyframe": {
     "text": "Keyframe",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Heading of the keyframe inspector when one keyframe is selected. A keyframe is a saved value at one moment of the timeline.",
     "max": 15
   },
   "anim-studio.key-inspector.keyframe-inspector": {
     "text": "Keyframe inspector",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Accessible name of the whole side panel that edits the selected keyframes. Read by screen readers only.",
     "max": 30
   },
   "anim-studio.key-inspector.label-easing-to-the-next-key": {
@@ -1673,12 +1673,12 @@
   },
   "anim-studio.key-inspector.opacity": {
     "text": "Opacity",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for how see-through the part is, as a percentage (100% is solid).",
     "max": 15
   },
   "anim-studio.key-inspector.position": {
     "text": "Position",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for where the part sits (moves along X and Y).",
     "max": 15
   },
   "anim-studio.key-inspector.property-keys-get-their-own-easing-whole": {
@@ -1688,7 +1688,7 @@
   },
   "anim-studio.key-inspector.radius": {
     "text": "Radius",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for the corner rounding of a shape or part.",
     "max": 10
   },
   "anim-studio.key-inspector.remove-from-this-keyframe": {
@@ -1706,27 +1706,27 @@
   },
   "anim-studio.key-inspector.scale": {
     "text": "Scale",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for resizing the part evenly in both directions (one number).",
     "max": 10
   },
   "anim-studio.key-inspector.scale-x": {
     "text": "Scale X",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for stretching the part sideways only (width). Keep the letter X.",
     "max": 15
   },
   "anim-studio.key-inspector.scale-y": {
     "text": "Scale Y",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for stretching the part up and down only (height). Keep the letter Y.",
     "max": 15
   },
   "anim-studio.key-inspector.shadow": {
     "text": "Shadow",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for a drop shadow behind the part (offset, blur, spread and colour).",
     "max": 10
   },
   "anim-studio.key-inspector.shadow-colour": {
     "text": "Shadow colour",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Label of the colour picker for the shadow property in the keyframe inspector.",
     "max": 25
   },
   "anim-studio.key-inspector.shadow-name": {
@@ -1739,27 +1739,27 @@
   },
   "anim-studio.key-inspector.shadow-presets": {
     "text": "Shadow presets",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Accessible label of the group of ready-made shadow buttons in the keyframe inspector.",
     "max": 25
   },
   "anim-studio.key-inspector.skew-x": {
     "text": "Skew X",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for slanting the part sideways, in degrees. Keep the letter X.",
     "max": 15
   },
   "anim-studio.key-inspector.skew-y": {
     "text": "Skew Y",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for slanting the part up or down, in degrees. Keep the letter Y.",
     "max": 15
   },
   "anim-studio.key-inspector.spread": {
     "text": "Spread",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Label of the shadow sub-field for how far the shadow grows beyond the part, in pixels.",
     "max": 10
   },
   "anim-studio.key-inspector.stroke-colour": {
     "text": "Stroke colour",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for the outline colour of a shape or part.",
     "max": 25
   },
   "anim-studio.key-inspector.target-at-at-secs-s": {
@@ -1804,7 +1804,7 @@
   },
   "anim-studio.key-inspector.turn": {
     "text": "Turn",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Property label in the keyframe inspector for a 3D turn of the part around a chosen axis. Noun, not a verb.",
     "max": 10
   },
   "anim-studio.key-inspector.use-a-colour-or-a-gradient": {
@@ -1829,17 +1829,17 @@
   },
   "anim-studio.key-inspector.whole-keyframe": {
     "text": "Whole keyframe",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Easing choice that applies one curve to every property of the keyframe, instead of a single property.",
     "max": 25
   },
   "anim-studio.key-inspector.x": {
     "text": "X",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Single-letter label of the sideways (horizontal) value in a pair of position fields. Keep the letter X.",
     "max": 5
   },
   "anim-studio.key-inspector.y": {
     "text": "Y",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Single-letter label of the up-and-down (vertical) value in a pair of position fields. Keep the letter Y.",
     "max": 5
   },
   "anim-studio.keyframes-editor.add-a-keyframe-at-the-playhead": {
@@ -1865,7 +1865,7 @@
   },
   "anim-studio.keyframes-editor.add-keyframe": {
     "text": "Add keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Timeline toolbar button that adds a keyframe to the selected part at the playhead position.",
     "max": 20
   },
   "anim-studio.keyframes-editor.add-lane-keyframe": {
@@ -1886,7 +1886,7 @@
   },
   "anim-studio.keyframes-editor.add-property": {
     "text": "Add property",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Button on the timeline that lists properties (rotation, opacity and so on) to add as a new lane for the selected part.",
     "max": 20
   },
   "anim-studio.keyframes-editor.add-property-to-target-at-the-playhead": {
@@ -1921,7 +1921,7 @@
   },
   "anim-studio.keyframes-editor.collapse": {
     "text": "Collapse",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the fold button on a timeline track row that hides its property lanes. Verb; the named version has its own key.",
     "max": 15
   },
   "anim-studio.keyframes-editor.collapse-name": {
@@ -1934,17 +1934,17 @@
   },
   "anim-studio.keyframes-editor.copy-ctrl-c": {
     "text": "Copy (Ctrl+C)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the copy button on the timeline toolbar, with its keyboard shortcut. Keep Ctrl+C as written.",
     "max": 25
   },
   "anim-studio.keyframes-editor.copy-keyframes": {
     "text": "Copy keyframes",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the copy button on the timeline toolbar when keyframes are selected and can be copied.",
     "max": 25
   },
   "anim-studio.keyframes-editor.copy-keyframes-first": {
     "text": "Copy keyframes first",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the paste button while it is disabled, because nothing has been copied yet. Tells the user the next step.",
     "max": 35
   },
   "anim-studio.keyframes-editor.count-copied": {
@@ -1980,17 +1980,17 @@
   },
   "anim-studio.keyframes-editor.cycle": {
     "text": "Cycle",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Label of the timeline control for the length of one animation loop, in seconds. Noun, not a verb.",
     "max": 10
   },
   "anim-studio.keyframes-editor.delete-del": {
     "text": "Delete (Del)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the delete button on the timeline toolbar, with its keyboard shortcut. Keep Del as written.",
     "max": 20
   },
   "anim-studio.keyframes-editor.delete-keyframes": {
     "text": "Delete keyframes",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the delete button on the timeline toolbar. Also the name of the undo step after deleting.",
     "max": 30
   },
   "anim-studio.keyframes-editor.drag-to-move-snaps-shift-free-alt": {
@@ -2008,12 +2008,12 @@
   },
   "anim-studio.keyframes-editor.empty-keyframe": {
     "text": "Empty keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Name of a keyframe marker on the timeline that does not set any property yet.",
     "max": 25
   },
   "anim-studio.keyframes-editor.expand": {
     "text": "Expand",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the fold button on a timeline track row that shows its property lanes. Verb; the named version has its own key.",
     "max": 10
   },
   "anim-studio.keyframes-editor.expand-name": {
@@ -2026,32 +2026,32 @@
   },
   "anim-studio.keyframes-editor.fit-the-cycle": {
     "text": "Fit the cycle",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Short label of the zoom button that scales the timeline so one full loop fills the width. Shown on the button itself.",
     "max": 25
   },
   "anim-studio.keyframes-editor.fit-the-whole-cycle": {
     "text": "Fit the whole cycle",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Longer tooltip of the same zoom-to-fit button as Fit the cycle; explains it shows one full loop.",
     "max": 35
   },
   "anim-studio.keyframes-editor.keyframe": {
     "text": "keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Lowercase noun used inside a longer label, such as a marker name. Not a heading; the capitalised word has other keys.",
     "max": 15
   },
   "anim-studio.keyframes-editor.keyframe-timeline": {
     "text": "Keyframe timeline",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the timeline region that holds the lanes and keyframe markers. Read by screen readers only.",
     "max": 30
   },
   "anim-studio.keyframes-editor.keyframe-tools": {
     "text": "Keyframe tools",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the timeline toolbar with the add, copy, paste and delete buttons.",
     "max": 25
   },
   "anim-studio.keyframes-editor.keyframes": {
     "text": "Keyframes",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Heading of the timeline panel. Plural noun; each keyframe is a saved value at one moment of the loop.",
     "max": 15
   },
   "anim-studio.keyframes-editor.label-at-at": {
@@ -2091,7 +2091,7 @@
   },
   "anim-studio.keyframes-editor.locked": {
     "text": "locked",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Lowercase word appended to a layer name in a timeline label to say the layer is locked and cannot be edited.",
     "max": 15
   },
   "anim-studio.keyframes-editor.move-count": {
@@ -2104,7 +2104,7 @@
   },
   "anim-studio.keyframes-editor.move-keyframe": {
     "text": "Move keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of a keyframe marker that can be dragged or moved with the arrow keys along the timeline.",
     "max": 25
   },
   "anim-studio.keyframes-editor.name-is-locked-unlock-it-in-layers": {
@@ -2125,7 +2125,7 @@
   },
   "anim-studio.keyframes-editor.next-keyframe": {
     "text": "Next keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Button on the timeline toolbar that moves the playhead to the next keyframe.",
     "max": 25
   },
   "anim-studio.keyframes-editor.no-keyframes-yet-use-add-property-or": {
@@ -2145,7 +2145,7 @@
   },
   "anim-studio.keyframes-editor.onion-skin": {
     "text": "Onion skin",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Label of the timeline toggle that marks the keyframes around the playhead. Animation term; keep it as the standard name.",
     "max": 20
   },
   "anim-studio.keyframes-editor.onion-skin-mark-the-keyframes-around-the": {
@@ -2177,17 +2177,17 @@
   },
   "anim-studio.keyframes-editor.playhead": {
     "text": "Playhead",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the draggable marker on the timeline ruler that shows the current moment of the loop.",
     "max": 15
   },
   "anim-studio.keyframes-editor.previous-keyframe": {
     "text": "Previous keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Button on the timeline toolbar that moves the playhead to the previous keyframe.",
     "max": 30
   },
   "anim-studio.keyframes-editor.property": {
     "text": "Property",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Column heading on the timeline for the animated property (rotation, opacity and so on) of each lane.",
     "max": 15
   },
   "anim-studio.keyframes-editor.ruler-in-percent-of-the-cycle-or-in": {
@@ -2207,7 +2207,7 @@
   },
   "anim-studio.keyframes-editor.seconds": {
     "text": "Seconds",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Name of the seconds choice for the timeline ruler unit, as opposed to percent of the cycle.",
     "max": 15
   },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
@@ -2220,7 +2220,7 @@
   },
   "anim-studio.keyframes-editor.selected": {
     "text": "selected",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Lowercase word appended to a keyframe marker's description to say it is part of the current selection.",
     "max": 15
   },
   "anim-studio.keyframes-editor.skipped-skipped-not-for-this-target-or": {
@@ -2233,7 +2233,7 @@
   },
   "anim-studio.keyframes-editor.snap-grid": {
     "text": "Snap grid",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Label of the timeline control that sets the grid step keyframes snap to while dragging.",
     "max": 20
   },
   "anim-studio.keyframes-editor.snap-to-keyframes-the-playhead-and-the": {
@@ -2243,7 +2243,7 @@
   },
   "anim-studio.keyframes-editor.snapping": {
     "text": "Snapping",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Label of the timeline toggle that makes dragged keyframes snap to other keyframes, the playhead and the grid.",
     "max": 15
   },
   "anim-studio.keyframes-editor.target-keyframe": {
@@ -2265,27 +2265,27 @@
   },
   "anim-studio.keyframes-editor.timeline-view": {
     "text": "Timeline view",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the group of zoom and ruler-unit controls that change how the timeline is displayed.",
     "max": 25
   },
   "anim-studio.keyframes-editor.zoom-in": {
     "text": "Zoom in",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the timeline zoom-in button. The tooltip with the shortcut is a separate key.",
     "max": 15
   },
   "anim-studio.keyframes-editor.zoom-in-ctrl": {
     "text": "Zoom in (Ctrl +)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the timeline zoom-in button with its keyboard shortcut Ctrl and plus. Keep the shortcut.",
     "max": 30
   },
   "anim-studio.keyframes-editor.zoom-out": {
     "text": "Zoom out",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the timeline zoom-out button. The tooltip with the shortcut is a separate key.",
     "max": 15
   },
   "anim-studio.keyframes-editor.zoom-out-ctrl": {
     "text": "Zoom out (Ctrl -)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the timeline zoom-out button with its keyboard shortcut Ctrl and minus. Keep the shortcut.",
     "max": 30
   },
   "anim-studio.keyframes-utils.30-fps": {
@@ -2310,17 +2310,17 @@
   },
   "anim-studio.keyframes-utils.bottom": {
     "text": "Bottom",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the bottom-centre cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 10
   },
   "anim-studio.keyframes-utils.bottom-left": {
     "text": "Bottom left",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the bottom-left cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 20
   },
   "anim-studio.keyframes-utils.bottom-right": {
     "text": "Bottom right",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the bottom-right cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 20
   },
   "anim-studio.keyframes-utils.brighten": {
@@ -2330,7 +2330,7 @@
   },
   "anim-studio.keyframes-utils.centre": {
     "text": "Centre",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the middle cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 10
   },
   "anim-studio.keyframes-utils.colour": {
@@ -2395,7 +2395,7 @@
   },
   "anim-studio.keyframes-utils.left": {
     "text": "Left",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the middle-left cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 10
   },
   "anim-studio.keyframes-utils.lift": {
@@ -2430,7 +2430,7 @@
   },
   "anim-studio.keyframes-utils.right": {
     "text": "Right",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the middle-right cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 10
   },
   "anim-studio.keyframes-utils.rotate": {
@@ -2480,17 +2480,17 @@
   },
   "anim-studio.keyframes-utils.top": {
     "text": "Top",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the top-centre cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 5
   },
   "anim-studio.keyframes-utils.top-left": {
     "text": "Top left",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the top-left cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 15
   },
   "anim-studio.keyframes-utils.top-right": {
     "text": "Top right",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of the top-right cell in the 3 by 3 pivot (origin) grid; used as its tooltip and accessible label.",
     "max": 15
   },
   "anim-studio.lane-rows.count": {
