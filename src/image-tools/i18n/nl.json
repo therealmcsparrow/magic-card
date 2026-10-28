@@ -1,71 +1,286 @@
 {
-  "(not found)": "(niet gevonden)",
-  "Accent colour": "Accentkleur",
-  "Add an image module behind the content": "Voeg een afbeeldingsmodule achter de inhoud toe",
-  "Address or media": "Adres of media",
-  "Adds a hidden list after the picture, for example \"Kitchen light: on\". It updates when a device changes.": "Voegt na de afbeelding een verborgen lijst toe, bijvoorbeeld \"Keukenlamp: aan\". De lijst wordt bijgewerkt als een apparaat verandert.",
-  "Ask an administrator to add one.": "Vraag een beheerder om er een toe te voegen.",
-  "Cancel": "Annuleren",
-  "Card shape set to {shape}.": "Kaartvorm ingesteld op {shape}.",
-  "Choose": "Kiezen",
-  "Choose an image": "Kies een afbeelding",
-  "Clear": "Wissen",
-  "Colours": "Kleuren",
-  "Copy reference": "Verwijzing kopiëren",
-  "Description for screen readers": "Beschrijving voor schermlezers",
-  "Draw a new image": "Een nieuwe afbeelding tekenen",
-  "Edit image": "Afbeelding bewerken",
-  "Hide list": "Lijst verbergen",
-  "Image": "Afbeelding",
-  "Image editor": "Afbeeldingseditor",
-  "Image module added behind the content. Remove the background layer if you no longer need it.": "Afbeeldingsmodule achter de inhoud toegevoegd. Verwijder de achtergrondlaag als je die niet meer nodig hebt.",
-  "Image set: {name}.": "Afbeelding ingesteld: {name}.",
-  "Images": "Afbeeldingen",
-  "Images need Magic Card Utils. It is installed through HACS, like Magic Card.": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
-  "In use": "In gebruik",
-  "Library image": "Afbeelding uit de bibliotheek",
-  "List connected devices and their states for screen readers": "Toon gekoppelde apparaten en hun status voor schermlezers",
-  "Live": "Live",
-  "Live: parts of this picture follow their devices, here too.": "Live: delen van deze afbeelding volgen hun apparaten, ook hier.",
-  "Loading images…": "Afbeeldingen laden…",
-  "Main and Accent follow the colours you set for this card.": "Hoofd- en accentkleur volgen de kleuren die je voor deze kaart instelt.",
-  "Main colour": "Hoofdkleur",
-  "Need buttons or a description?": "Knoppen of een beschrijving nodig?",
-  "No image chosen": "Geen afbeelding gekozen",
-  "No image matches “{query}”.": "Geen afbeelding past bij “{query}”.",
-  "No images yet.": "Nog geen afbeeldingen.",
-  "Not set (screen readers skip this picture)": "Niet ingesteld (schermlezers slaan deze afbeelding over)",
-  "Off": "Uit",
-  "On": "Aan",
-  "Optional. Describe what the picture shows. Without it, screen readers skip the picture.": "Optioneel. Beschrijf wat de afbeelding laat zien. Zonder beschrijving slaan schermlezers de afbeelding over.",
-  "Pick an image": "Kies een afbeelding",
-  "Pick another": "Kies een andere",
-  "Reference copied.": "Verwijzing gekopieerd.",
-  "Rename a device in Home Assistant to change what is read.": "Hernoem een apparaat in Home Assistant om te wijzigen wat er wordt voorgelezen.",
-  "Search images": "Afbeeldingen zoeken",
-  "Set (screen readers read it)": "Ingesteld (schermlezers lezen het voor)",
-  "Show list": "Lijst tonen",
-  "That is the longest description (500 characters).": "Dit is de maximale lengte van een beschrijving (500 tekens).",
-  "The card shape ({card}) differs from the drawing ({drawing}).": "De kaartvorm ({card}) wijkt af van de tekening ({drawing}).",
-  "The drawing editor could not load. Try again.": "De tekeneditor kon niet laden. Probeer het opnieuw.",
-  "The images could not be loaded.": "De afbeeldingen konden niet worden geladen.",
-  "The reference could not be copied. Select it and copy it by hand.": "De verwijzing kon niet worden gekopieerd. Selecteer en kopieer die met de hand.",
-  "This image is no longer in the library.": "Deze afbeelding staat niet meer in de bibliotheek.",
-  "This is a background. Screen readers skip it, and it cannot hold buttons.": "Dit is een achtergrond. Schermlezers slaan die over en er kunnen geen knoppen op staan.",
-  "This is the address cards use. It stays the same when you rename the image.": "Dit is het adres dat kaarten gebruiken. Het blijft gelijk als je de afbeelding hernoemt.",
-  "This picture shows live devices. Add a description or switch on the list so everyone can follow it.": "Deze afbeelding toont live apparaten. Voeg een beschrijving toe of zet de lijst aan, zodat iedereen het kan volgen.",
-  "Thumbnails show the saved colours. On the card the live parts change with their devices.": "Miniaturen tonen de opgeslagen kleuren. Op de kaart veranderen de live delen mee met hun apparaten.",
-  "To change colours, use live parts in one picture. To swap pictures, use states.": "Gebruik live onderdelen in één afbeelding om kleuren te veranderen. Gebruik statussen om afbeeldingen te wisselen.",
-  "Try again": "Probeer opnieuw",
-  "Use the drawing's shape": "Vorm van de tekening gebruiken",
-  "Use this image": "Deze afbeelding gebruiken",
-  "View image": "Afbeelding bekijken",
-  "Will read now:": "Wordt nu voorgelezen:",
-  "and {n} more": "en nog {n}",
-  "{id} (not found)": "{id} (niet gevonden)",
-  "{n, plural, one {# live connection} other {# live connections}}": "{n, plural, one {# live koppeling} other {# live koppelingen}}",
-  "{n, plural, one {Live: # connection} other {Live: # connections}}": "{n, plural, one {Live: # koppeling} other {Live: # koppelingen}}",
-  "{n, plural, one {Uses # device} other {Uses # devices}}": "{n, plural, one {Gebruikt # apparaat} other {Gebruikt # apparaten}}",
-  "{n} KiB": "{n} KiB",
-  "{n} left": "nog {n}"
+  "image-tools.editor-host.image-editor": {
+    "text": "Afbeeldingseditor",
+    "hash": "52945574"
+  },
+  "image-tools.mc-image-picker.ask-an-administrator-to-add-one": {
+    "text": "Vraag een beheerder om er een toe te voegen.",
+    "hash": "daf22937"
+  },
+  "image-tools.mc-image-picker.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "image-tools.mc-image-picker.draw-a-new-image": {
+    "text": "Een nieuwe afbeelding tekenen",
+    "hash": "d6b72d9a"
+  },
+  "image-tools.mc-image-picker.images": {
+    "text": "Afbeeldingen",
+    "hash": "be7e2f20"
+  },
+  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
+    "hash": "62625dad"
+  },
+  "image-tools.mc-image-picker.in-use": {
+    "text": "In gebruik",
+    "hash": "750af77a"
+  },
+  "image-tools.mc-image-picker.loading-images": {
+    "text": "Afbeeldingen laden…",
+    "hash": "746e71d4"
+  },
+  "image-tools.mc-image-picker.n": {
+    "text": "{n, plural, one {# live koppeling} other {# live koppelingen}}",
+    "hash": "b5a88066"
+  },
+  "image-tools.mc-image-picker.n-2": {
+    "text": "{n, plural, one {Live: # koppeling} other {Live: # koppelingen}}",
+    "hash": "11d042d2"
+  },
+  "image-tools.mc-image-picker.n-kib": {
+    "text": "{n} KiB",
+    "hash": "b41f8b57"
+  },
+  "image-tools.mc-image-picker.no-image-matches-query": {
+    "text": "Geen afbeelding past bij “{query}”.",
+    "hash": "3d6cad37"
+  },
+  "image-tools.mc-image-picker.no-images-yet": {
+    "text": "Nog geen afbeeldingen.",
+    "hash": "c397a5b4"
+  },
+  "image-tools.mc-image-picker.pick-an-image": {
+    "text": "Kies een afbeelding",
+    "hash": "a723faca"
+  },
+  "image-tools.mc-image-picker.search-images": {
+    "text": "Afbeeldingen zoeken",
+    "hash": "9e13d826"
+  },
+  "image-tools.mc-image-picker.the-images-could-not-be-loaded": {
+    "text": "De afbeeldingen konden niet worden geladen.",
+    "hash": "2c18f1c2"
+  },
+  "image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the": {
+    "text": "Miniaturen tonen de opgeslagen kleuren. Op de kaart veranderen de live delen mee met hun apparaten.",
+    "hash": "d1c7ab7d"
+  },
+  "image-tools.mc-image-picker.try-again": {
+    "text": "Probeer opnieuw",
+    "hash": "d8b8392e"
+  },
+  "image-tools.mc-image-picker.use-this-image": {
+    "text": "Deze afbeelding gebruiken",
+    "hash": "b2f8cf0a"
+  },
+  "image-tools.mc-library-image-field.accent-colour": {
+    "text": "Accentkleur",
+    "hash": "12376f4c"
+  },
+  "image-tools.mc-library-image-field.add-an-image-module-behind-the-content": {
+    "text": "Voeg een afbeeldingsmodule achter de inhoud toe",
+    "hash": "50bd61aa"
+  },
+  "image-tools.mc-library-image-field.address-or-media": {
+    "text": "Adres of media",
+    "hash": "787cf952"
+  },
+  "image-tools.mc-library-image-field.adds-a-hidden-list-after-the-picture-for": {
+    "text": "Voegt na de afbeelding een verborgen lijst toe, bijvoorbeeld \"Keukenlamp: aan\". De lijst wordt bijgewerkt als een apparaat verandert.",
+    "hash": "13d76816"
+  },
+  "image-tools.mc-library-image-field.and-n-more": {
+    "text": "en nog {n}",
+    "hash": "827ab950"
+  },
+  "image-tools.mc-library-image-field.card-shape-set-to-shape": {
+    "text": "Kaartvorm ingesteld op {shape}.",
+    "hash": "fc40aefb"
+  },
+  "image-tools.mc-library-image-field.choose": {
+    "text": "Kiezen",
+    "hash": "c7f93783"
+  },
+  "image-tools.mc-library-image-field.choose-an-image": {
+    "text": "Kies een afbeelding",
+    "hash": "ceed9fd5"
+  },
+  "image-tools.mc-library-image-field.clear": {
+    "text": "Wissen",
+    "hash": "83b12c22"
+  },
+  "image-tools.mc-library-image-field.colours": {
+    "text": "Kleuren",
+    "hash": "88f20221"
+  },
+  "image-tools.mc-library-image-field.copy-reference": {
+    "text": "Verwijzing kopiëren",
+    "hash": "141ae3df"
+  },
+  "image-tools.mc-library-image-field.description-for-screen-readers": {
+    "text": "Beschrijving voor schermlezers",
+    "hash": "c4a2966a"
+  },
+  "image-tools.mc-library-image-field.draw-a-new-image": {
+    "text": "Een nieuwe afbeelding tekenen",
+    "hash": "d6b72d9a"
+  },
+  "image-tools.mc-library-image-field.edit-image": {
+    "text": "Afbeelding bewerken",
+    "hash": "d9d12b04"
+  },
+  "image-tools.mc-library-image-field.hide-list": {
+    "text": "Lijst verbergen",
+    "hash": "08cd45a3"
+  },
+  "image-tools.mc-library-image-field.id-not-found": {
+    "text": "{id} (niet gevonden)",
+    "hash": "2e91ab0b"
+  },
+  "image-tools.mc-library-image-field.image": {
+    "text": "Afbeelding",
+    "hash": "1aa4cb0b"
+  },
+  "image-tools.mc-library-image-field.image-module-added-behind-the-content": {
+    "text": "Afbeeldingsmodule achter de inhoud toegevoegd. Verwijder de achtergrondlaag als je die niet meer nodig hebt.",
+    "hash": "d477a087"
+  },
+  "image-tools.mc-library-image-field.image-set-name": {
+    "text": "Afbeelding ingesteld: {name}.",
+    "hash": "d8f48be1"
+  },
+  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
+    "hash": "62625dad"
+  },
+  "image-tools.mc-library-image-field.library-image": {
+    "text": "Afbeelding uit de bibliotheek",
+    "hash": "624441fd"
+  },
+  "image-tools.mc-library-image-field.list-connected-devices-and-their-states": {
+    "text": "Toon gekoppelde apparaten en hun status voor schermlezers",
+    "hash": "9f9e8750"
+  },
+  "image-tools.mc-library-image-field.live": {
+    "text": "Live",
+    "hash": "b64ac05f"
+  },
+  "image-tools.mc-library-image-field.live-parts-of-this-picture-follow-their": {
+    "text": "Live: delen van deze afbeelding volgen hun apparaten, ook hier.",
+    "hash": "39a4cbd1"
+  },
+  "image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you": {
+    "text": "Hoofd- en accentkleur volgen de kleuren die je voor deze kaart instelt.",
+    "hash": "57dab719"
+  },
+  "image-tools.mc-library-image-field.main-colour": {
+    "text": "Hoofdkleur",
+    "hash": "d21426ea"
+  },
+  "image-tools.mc-library-image-field.n": {
+    "text": "{n, plural, one {Gebruikt # apparaat} other {Gebruikt # apparaten}}",
+    "hash": "de60f4b0"
+  },
+  "image-tools.mc-library-image-field.n-left": {
+    "text": "nog {n}",
+    "hash": "19816380"
+  },
+  "image-tools.mc-library-image-field.need-buttons-or-a-description": {
+    "text": "Knoppen of een beschrijving nodig?",
+    "hash": "ca254217"
+  },
+  "image-tools.mc-library-image-field.no-image-chosen": {
+    "text": "Geen afbeelding gekozen",
+    "hash": "90d4c150"
+  },
+  "image-tools.mc-library-image-field.not-found": {
+    "text": "(niet gevonden)",
+    "hash": "f5047624"
+  },
+  "image-tools.mc-library-image-field.not-set-screen-readers-skip-this-picture": {
+    "text": "Niet ingesteld (schermlezers slaan deze afbeelding over)",
+    "hash": "65fe8610"
+  },
+  "image-tools.mc-library-image-field.off": {
+    "text": "Uit",
+    "hash": "ca7981b4"
+  },
+  "image-tools.mc-library-image-field.on": {
+    "text": "Aan",
+    "hash": "13001175"
+  },
+  "image-tools.mc-library-image-field.optional-describe-what-the-picture-shows": {
+    "text": "Optioneel. Beschrijf wat de afbeelding laat zien. Zonder beschrijving slaan schermlezers de afbeelding over.",
+    "hash": "3a178011"
+  },
+  "image-tools.mc-library-image-field.pick-another": {
+    "text": "Kies een andere",
+    "hash": "ee5c1855"
+  },
+  "image-tools.mc-library-image-field.reference-copied": {
+    "text": "Verwijzing gekopieerd.",
+    "hash": "c5ffea6b"
+  },
+  "image-tools.mc-library-image-field.rename-a-device-in-home-assistant-to": {
+    "text": "Hernoem een apparaat in Home Assistant om te wijzigen wat er wordt voorgelezen.",
+    "hash": "9adeac02"
+  },
+  "image-tools.mc-library-image-field.set-screen-readers-read-it": {
+    "text": "Ingesteld (schermlezers lezen het voor)",
+    "hash": "1d81a1be"
+  },
+  "image-tools.mc-library-image-field.show-list": {
+    "text": "Lijst tonen",
+    "hash": "28cd43f8"
+  },
+  "image-tools.mc-library-image-field.that-is-the-longest-description-500": {
+    "text": "Dit is de maximale lengte van een beschrijving (500 tekens).",
+    "hash": "51019adf"
+  },
+  "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
+    "text": "De kaartvorm ({card}) wijkt af van de tekening ({drawing}).",
+    "hash": "6a4ef02f"
+  },
+  "image-tools.mc-library-image-field.the-drawing-editor-could-not-load-try": {
+    "text": "De tekeneditor kon niet laden. Probeer het opnieuw.",
+    "hash": "a9a4c88b"
+  },
+  "image-tools.mc-library-image-field.the-reference-could-not-be-copied-select": {
+    "text": "De verwijzing kon niet worden gekopieerd. Selecteer en kopieer die met de hand.",
+    "hash": "19726340"
+  },
+  "image-tools.mc-library-image-field.this-image-is-no-longer-in-the-library": {
+    "text": "Deze afbeelding staat niet meer in de bibliotheek.",
+    "hash": "ba95db40"
+  },
+  "image-tools.mc-library-image-field.this-is-a-background-screen-readers-skip": {
+    "text": "Dit is een achtergrond. Schermlezers slaan die over en er kunnen geen knoppen op staan.",
+    "hash": "42ea06a4"
+  },
+  "image-tools.mc-library-image-field.this-is-the-address-cards-use-it-stays": {
+    "text": "Dit is het adres dat kaarten gebruiken. Het blijft gelijk als je de afbeelding hernoemt.",
+    "hash": "e6f4c73b"
+  },
+  "image-tools.mc-library-image-field.this-picture-shows-live-devices-add-a": {
+    "text": "Deze afbeelding toont live apparaten. Voeg een beschrijving toe of zet de lijst aan, zodat iedereen het kan volgen.",
+    "hash": "e24edd12"
+  },
+  "image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one": {
+    "text": "Gebruik live onderdelen in één afbeelding om kleuren te veranderen. Gebruik statussen om afbeeldingen te wisselen.",
+    "hash": "7684e26b"
+  },
+  "image-tools.mc-library-image-field.use-the-drawing-s-shape": {
+    "text": "Vorm van de tekening gebruiken",
+    "hash": "a2e705e0"
+  },
+  "image-tools.mc-library-image-field.view-image": {
+    "text": "Afbeelding bekijken",
+    "hash": "5bb55a4b"
+  },
+  "image-tools.mc-library-image-field.will-read-now": {
+    "text": "Wordt nu voorgelezen:",
+    "hash": "06a7870c"
+  }
 }

@@ -12,32 +12,34 @@ import { readImage } from './reader';
  * and the image-only words. It holds no SVG sink; thumbnails come from the svg-image api it is given.
  */
 
+type NameArgs = { name: string | number };
+
 const text: ImageTransfer['text'] = (key, args) => {
   switch (key) {
     case 'export_all':
-      return t('Export all images');
+      return t('image-transfer.chunk.export-all-images');
     case 'new':
-      return t('New image');
+      return t('image-transfer.chunk.new-image');
     case 'view':
-      return t('View {name}', args);
+      return t('image-transfer.chunk.view-name', args as NameArgs);
     case 'duplicate':
-      return t('Duplicate {name}', args);
+      return t('image-transfer.chunk.duplicate-name', args as NameArgs);
     case 'copy_label':
-      return t('Name for the copy of {name}', args);
+      return t('image-transfer.chunk.name-for-the-copy-of-name', args as NameArgs);
     case 'copy_name':
-      return t('{name} copy', args);
+      return t('image-transfer.chunk.name-copy', args as NameArgs);
     case 'create_copy':
-      return t('Create copy');
+      return t('image-transfer.chunk.create-copy');
     case 'delete_confirm':
-      return t('Delete {name}? Cards that use it show that the image is missing. This cannot be undone.', args);
+      return t('image-transfer.chunk.delete-name-cards-that-use-it-show-that', args as NameArgs);
     default:
-      return t('Duplicated as {name}.', args);
+      return t('image-transfer.chunk.duplicated-as-name', args as NameArgs);
   }
 };
 
 const row = (s: ImageSummary): { thumb?: string; meta: string } => ({
   ...(s.thumb && THUMB_RE.test(s.thumb) ? { thumb: s.thumb } : {}),
-  meta: [t('{n} KB', { n: Math.max(1, Math.round(s.bytes / 1024)) }), s.bindings ? t('{n, plural, one {# connection} other {# connections}}', { n: s.bindings }) : ''].filter(Boolean).join(' · '),
+  meta: [t('image-transfer.chunk.n-kb', { n: Math.max(1, Math.round(s.bytes / 1024)) }), s.bindings ? t('image-transfer.chunk.n', { n: s.bindings }) : ''].filter(Boolean).join(' · '),
 });
 
 export const createImageTransfer: CreateImageTransfer = (api, kit) => ({

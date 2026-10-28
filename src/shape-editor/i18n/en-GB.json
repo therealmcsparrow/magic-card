@@ -1,0 +1,1770 @@
+{
+  "shape-editor.lips.got-it": {
+    "text": "Got it",
+    "note": "Shown in lips (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "note": "Shown in lips (shape-editor).",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "shape-editor.lips.inspector": {
+    "text": "inspector",
+    "note": "Shown in lips (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.lips.inspector-panel": {
+    "text": "Inspector panel",
+    "note": "Shown in lips (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "note": "Shown in lips (shape-editor).",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "shape-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "note": "Shown in lips (shape-editor).",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "shape-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "note": "Shown in lips (shape-editor).",
+    "max": 30,
+    "vars": {
+      "keys": "The value that replaces keys in the text."
+    }
+  },
+  "shape-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "note": "Shown in lips (shape-editor).",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "shape-editor.lips.side-panel": {
+    "text": "Side panel",
+    "note": "Shown in lips (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.lips.side-panel-2": {
+    "text": "side panel",
+    "note": "Shown in lips (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.lips.some-panels-are-hidden-as-you-left-them": {
+    "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
+    "note": "Shown in lips (shape-editor).",
+    "max": 135
+  },
+  "shape-editor.lips.the-noun-is-hidden-as-you-left-it-use": {
+    "text": "The {noun} is hidden, as you left it. Use the arrow on the edge to show it.",
+    "note": "Shown in lips (shape-editor).",
+    "max": 120,
+    "vars": {
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points": {
+    "text": "A shape holds up to {max} points.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes": {
+    "text": "A shape named {name} exists. Saving changes every card that uses it.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 110,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points": {
+    "text": "A shape needs at least 3 points.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.mc-shape-studio.add-3-points-to-finish": {
+    "text": "Add 3 points to finish.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.add-point": {
+    "text": "Add point",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.add-point-after": {
+    "text": "Add point after",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.add-point-here": {
+    "text": "Add point here",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.add-shape": {
+    "text": "Add shape...",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the": {
+    "text": "Advanced: how this point moves when the card resizes",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 85
+  },
+  "shape-editor.mc-shape-studio.all-corners-together": {
+    "text": "All corners together",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.all-four-corners": {
+    "text": "All four corners",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one": {
+    "text": "All four corners changed. Change just one?",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 70
+  },
+  "shape-editor.mc-shape-studio.angle": {
+    "text": "Angle",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.applied-top-left-to-all-corners": {
+    "text": "Applied Top left to all corners.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.mc-shape-studio.at-name": {
+    "text": "at {name}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.at-name-w-x-h": {
+    "text": "at {name}, {w} x {h}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35,
+    "vars": {
+      "h": "The value that replaces h in the text.",
+      "name": "The value that replaces name in the text.",
+      "w": "The value that replaces w in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.back": {
+    "text": "Back",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.back-to-card-editor": {
+    "text": "Back to card editor",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.bottom": {
+    "text": "Bottom",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.c": {
+    "text": "{c, plural, one {# point} other {# points}}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "shape-editor.mc-shape-studio.c-of-max-points": {
+    "text": "{c} of {max} points",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The value that replaces c in the text.",
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it": {
+    "text": "Can raise the space, not lower it.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.mc-shape-studio.cancel": {
+    "text": "Cancel",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.canvas-tools": {
+    "text": "Canvas tools",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.card-shapes-have-one-outline-so-the-hole": {
+    "text": "Card shapes have one outline, so the hole was filled.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 85
+  },
+  "shape-editor.mc-shape-studio.centre": {
+    "text": "Centre",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.changed-since-saved": {
+    "text": "Changed since saved",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.changes-since-the-last-save-are-lost": {
+    "text": "Changes since the last save are lost.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 60
+  },
+  "shape-editor.mc-shape-studio.click-a-point-to-remove-it": {
+    "text": "Click a point to remove it.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 45
+  },
+  "shape-editor.mc-shape-studio.click-on-the-outline-to-add-a-point": {
+    "text": "Click on the outline to add a point.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 60
+  },
+  "shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve": {
+    "text": "Click or tap to add points. Drag to curve.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 70
+  },
+  "shape-editor.mc-shape-studio.close": {
+    "text": "Close",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.combine": {
+    "text": "Combine...",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.combine-2": {
+    "text": "Combine",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.combine-adds-it-to-the-outline-subtract": {
+    "text": "Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 140
+  },
+  "shape-editor.mc-shape-studio.combine-with": {
+    "text": "Combine with",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.copied": {
+    "text": "Copied",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.copy-to-all-corners": {
+    "text": "Copy to all corners",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.copy-yaml": {
+    "text": "Copy YAML",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.corner": {
+    "text": "Corner",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.corner-is-smaller-on-small-cards-v-px-on": {
+    "text": "Corner is smaller on small cards: {v} px on {size}.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 85,
+    "vars": {
+      "size": "The value that replaces size in the text.",
+      "v": "The value that replaces v in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.corner-styles": {
+    "text": "Corner styles",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.corners": {
+    "text": "Corners",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.corners-2": {
+    "text": "Corners.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings": {
+    "text": "Corners turned into points. Undo brings them back.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 80
+  },
+  "shape-editor.mc-shape-studio.corners-use-up-to-v-px-per-side": {
+    "text": "Corners use up to {v} px per side.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55,
+    "vars": {
+      "v": "The value that replaces v in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.corners-will-be-square": {
+    "text": "Corners will be square.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.could-not-load-the-export-and-import": {
+    "text": "Could not load the export and import tool. Try again.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 85
+  },
+  "shape-editor.mc-shape-studio.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe in this card.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 105
+  },
+  "shape-editor.mc-shape-studio.could-not-save-name-try-again": {
+    "text": "Could not save {name}. Try again.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.couldn-t-load-the-shape-tools-try-again": {
+    "text": "Couldn't load the shape tools. Try again.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 70
+  },
+  "shape-editor.mc-shape-studio.custom-shape": {
+    "text": "Custom shape",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.delete": {
+    "text": "Delete",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.delete-name": {
+    "text": "Delete {name}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.deleted-name-cards-that-use-it-keep": {
+    "text": "Deleted {name}. Cards that use it keep their inline copy.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 95,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.done": {
+    "text": "Done",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list": {
+    "text": "Drag points, or pick one in the list.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 60
+  },
+  "shape-editor.mc-shape-studio.draw": {
+    "text": "Draw",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your": {
+    "text": "Drawing a new outline. This replaces your shape when you finish.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 105
+  },
+  "shape-editor.mc-shape-studio.each-corner": {
+    "text": "Each corner",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.edit-at": {
+    "text": "Edit at",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.edit-corners": {
+    "text": "Edit corners",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.edit-corners-separately": {
+    "text": "Edit corners separately",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.error": {
+    "text": "Error",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-close": {
+    "text": "Esc doesn't close the editor. Use Close.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 65
+  },
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
+    "text": "Esc doesn't close the editor. Use Done or Back to card editor.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 100
+  },
+  "shape-editor.mc-shape-studio.export-file": {
+    "text": "Export file",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.export-import": {
+    "text": "Export / Import",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.extra-space": {
+    "text": "Extra space",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.finish": {
+    "text": "Finish",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.focus-rings-and-hover-scale-of-content": {
+    "text": "Focus rings and hover scale of content that touches a cut edge are clipped by the shape.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 145
+  },
+  "shape-editor.mc-shape-studio.follows-the-card-s-shorter-side": {
+    "text": "Follows the card's shorter side.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.mc-shape-studio.free-shape": {
+    "text": "Free shape",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.free-shape-c": {
+    "text": "Free shape. {c, plural, one {# point} other {# points}}.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "shape-editor.mc-shape-studio.free-shape-tools": {
+    "text": "Free shape tools",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.give-it-a-name": {
+    "text": "Give it a name.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.give-the-shape-a-name": {
+    "text": "Give the shape a name.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.going-back-to-corners-drops-your-edited": {
+    "text": "Going back to Corners drops your edited points. Undo brings them back.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 115
+  },
+  "shape-editor.mc-shape-studio.grid": {
+    "text": "Grid",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.height": {
+    "text": "Height",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.horizontal-anchor": {
+    "text": "Horizontal anchor",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.how-to-install": {
+    "text": "How to install",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.import-file": {
+    "text": "Import file",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.imported-name": {
+    "text": "Imported {name}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.inspector-panel": {
+    "text": "Inspector panel",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.k-not-applied-yet": {
+    "text": "{k} (not applied yet)",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35,
+    "vars": {
+      "k": "The value that replaces k in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.k-ready-to-combine-use-the-arrows-or": {
+    "text": "{k} ready to combine. Use the arrows or fields to place it.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 95,
+    "vars": {
+      "k": "The value that replaces k in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.keep-editing": {
+    "text": "Keep editing",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.keep-your-own-shapes": {
+    "text": "Keep your own shapes",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.keep-your-own-shapes-for-every-dashboard": {
+    "text": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, what you build is saved in this card only.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 215
+  },
+  "shape-editor.mc-shape-studio.keeps-text-away-from-the-corners-the": {
+    "text": "Keeps text away from the corners. The card works it out for you.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 105
+  },
+  "shape-editor.mc-shape-studio.kept-the-largest-piece-c-removed": {
+    "text": "Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 90,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "shape-editor.mc-shape-studio.leave": {
+    "text": "Leave",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.leave-without-saving": {
+    "text": "Leave without saving?",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.left": {
+    "text": "Left",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.length": {
+    "text": "Length",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.library": {
+    "text": "Library",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.linked-to-the-saved-shape-id-your-edits": {
+    "text": "Linked to the saved shape \"{id}\". Your edits make it this card's own shape.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 120,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.loading-the-shape-editor": {
+    "text": "Loading the shape editor",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.loading-your-shapes": {
+    "text": "Loading your shapes",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.maximise": {
+    "text": "Maximise",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.measured-inside-the-outline-at-the-size": {
+    "text": "Measured inside the outline at the size you edit at. Raise a side if you need more.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 135
+  },
+  "shape-editor.mc-shape-studio.messages": {
+    "text": "Messages",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.move-dir": {
+    "text": "Move {dir, select, left {left} up {up} down {down} other {right}}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25,
+    "vars": {
+      "dir": "The value that replaces dir in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.move-it-with-the-arrow-keys-or-drag-it": {
+    "text": "Move it with the arrow keys or drag it on the canvas.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 85
+  },
+  "shape-editor.mc-shape-studio.move-point": {
+    "text": "Move point",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.move-window": {
+    "text": "Move window",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.name": {
+    "text": "Name",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.name-copy": {
+    "text": "{name} copy",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.new-outline": {
+    "text": "New outline",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.next": {
+    "text": "Next",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.no-messages": {
+    "text": "No messages.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.no-saved-shapes-yet": {
+    "text": "No saved shapes yet",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.no-shapes-match-q": {
+    "text": "No shapes match \"{q}\".",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40,
+    "vars": {
+      "q": "The value that replaces q in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.note": {
+    "text": "Note",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.nothing-to-redo": {
+    "text": "Nothing to redo",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.nothing-to-undo": {
+    "text": "Nothing to undo",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.nothing-would-be-left-of-the-shape": {
+    "text": "Nothing would be left of the shape. Nothing was changed.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 90
+  },
+  "shape-editor.mc-shape-studio.nudge": {
+    "text": "Nudge",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.older-browsers-draw-the-curved-corners": {
+    "text": "Older browsers draw the curved corners as straight facets. Border, ring and shadow stay.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 145
+  },
+  "shape-editor.mc-shape-studio.on-card": {
+    "text": "On card",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file": {
+    "text": "Only the first of {c} shapes in the file was used.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 80,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.op-the-outline-has-c": {
+    "text": "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 65,
+    "vars": {
+      "c": "The count the text is about.",
+      "op": "The value that replaces op in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.open": {
+    "text": "Open",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.open-name": {
+    "text": "Open {name}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.outline": {
+    "text": "Outline",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.outline-actions": {
+    "text": "Outline actions",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.outlines": {
+    "text": "Outlines",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.pen": {
+    "text": "Pen",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.mc-shape-studio.pen-cancelled": {
+    "text": "Pen cancelled.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.point-i": {
+    "text": "Point {i}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15,
+    "vars": {
+      "i": "The value that replaces i in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.point-i-of-c": {
+    "text": "Point {i} of {c}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30,
+    "vars": {
+      "c": "The value that replaces c in the text.",
+      "i": "The value that replaces i in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.point-removed-c": {
+    "text": "Point removed, {c, plural, one {# point} other {# points}}.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "shape-editor.mc-shape-studio.point-type": {
+    "text": "Point type",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.points": {
+    "text": "Points",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.position-across-the-width": {
+    "text": "Position across the width",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.position-down-the-height": {
+    "text": "Position down the height",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.preview": {
+    "text": "Preview",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.preview-at-name-size-w-by-h": {
+    "text": "Preview at {name} size, {w} by {h}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55,
+    "vars": {
+      "h": "The value that replaces h in the text.",
+      "name": "The value that replaces name in the text.",
+      "w": "The value that replaces w in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.previous": {
+    "text": "Previous",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.redo": {
+    "text": "Redo",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.reload": {
+    "text": "Reload",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.remove-point": {
+    "text": "Remove point",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.replaced-your-outline": {
+    "text": "Replaced your outline.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.replaces-your-current-outline-undo": {
+    "text": "Replaces your current outline. Undo brings it back.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 85
+  },
+  "shape-editor.mc-shape-studio.reset": {
+    "text": "Reset",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.reset-shape": {
+    "text": "Reset shape",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.resize-window": {
+    "text": "Resize window",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.restore-size": {
+    "text": "Restore size",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.reverse-direction": {
+    "text": "Reverse direction",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.right": {
+    "text": "Right",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.ring-border-shadow-and-value-background": {
+    "text": "Ring, border, shadow and value background follow the outline.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 100
+  },
+  "shape-editor.mc-shape-studio.save": {
+    "text": "Save",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.save-a-shape-here-and-use-it-on-any": {
+    "text": "Save a shape here and use it on any dashboard.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 75
+  },
+  "shape-editor.mc-shape-studio.save-as-a-copy": {
+    "text": "Save as a copy",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.save-as-new": {
+    "text": "Save as new",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.save-current-shape": {
+    "text": "Save current shape",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.save-to-library": {
+    "text": "Save to library",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.saved": {
+    "text": "Saved",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.saved-shape-id-was-not-found-this-card": {
+    "text": "Saved shape \"{id}\" was not found. This card uses its own copy.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 100,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.saved-to-library-as-name-press-done-to": {
+    "text": "Saved to library as {name}. Press Done to use it on this card.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 100,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.search-my-shapes": {
+    "text": "Search my shapes",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.select": {
+    "text": "Select",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.selected-point": {
+    "text": "Selected point",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.shape": {
+    "text": "Shape",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.shape-applied-to-target": {
+    "text": "Shape applied to {target}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40,
+    "vars": {
+      "target": "The value that replaces target in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.shape-editor": {
+    "text": "Shape editor",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.shape-for-target": {
+    "text": "Shape for {target}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30,
+    "vars": {
+      "target": "The value that replaces target in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.shape-name": {
+    "text": "Shape name",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.shape-to-combine": {
+    "text": "Shape to combine",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.shape-type": {
+    "text": "Shape type",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.shapes": {
+    "text": "Shapes",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.short-no-slashes-shown-in-the-list": {
+    "text": "Short, no slashes. Shown in the list.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 60
+  },
+  "shape-editor.mc-shape-studio.shortcuts": {
+    "text": "Shortcuts",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.show-full-message": {
+    "text": "Show full message",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.show-older-browser-look": {
+    "text": "Show older browser look",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.mc-shape-studio.show-text-area": {
+    "text": "Show text area",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.shown-at-pct": {
+    "text": "shown at {pct}%",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25,
+    "vars": {
+      "pct": "The value that replaces pct in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.side-panel": {
+    "text": "Side panel",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.sidebar": {
+    "text": "Sidebar",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.size": {
+    "text": "Size",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.skip-to-canvas": {
+    "text": "Skip to canvas",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.skip-to-inspector": {
+    "text": "Skip to inspector",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.skip-to-point-fields": {
+    "text": "Skip to point fields",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.smooth": {
+    "text": "Smooth",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.smoothing": {
+    "text": "Smoothing",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.snap": {
+    "text": "Snap",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.space-for-text": {
+    "text": "Space for text",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.space-for-text-top-right-bottom-left": {
+    "text": "Space for text: top, right, bottom, left",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 65
+  },
+  "shape-editor.mc-shape-studio.square-corners-have-no-size": {
+    "text": "Square corners have no size.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 45
+  },
+  "shape-editor.mc-shape-studio.start-from": {
+    "text": "Start from...",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.start-from-a-shape": {
+    "text": "Start from a shape...",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.start-from-a-shape-2": {
+    "text": "Start from a shape",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.started-from-circle-on-a-wide-card-the": {
+    "text": "Started from Circle. On a wide card the custom shape is a pill, not an ellipse.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 130
+  },
+  "shape-editor.mc-shape-studio.started-from-k": {
+    "text": "Started from {k}.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30,
+    "vars": {
+      "k": "The value that replaces k in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.started-from-k-switched-to-free-shape": {
+    "text": "Started from {k}. Switched to Free shape.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 70,
+    "vars": {
+      "k": "The value that replaces k in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.started-from-name-it-opens-as-a-path-so": {
+    "text": "Started from {name}. It opens as a path, so you can move every point.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 115,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.started-from-name-your-changes-make-this": {
+    "text": "Started from {name}. Your changes make this shape custom.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 95,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.started-from-notch-its-corners-are-cut": {
+    "text": "Started from Notch. Its corners are cut straight, so they start as Bevel.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 120
+  },
+  "shape-editor.mc-shape-studio.starters": {
+    "text": "Starters",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.stays-the-same-on-every-card-size": {
+    "text": "Stays the same on every card size.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.mc-shape-studio.stretch": {
+    "text": "Stretch",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.tab-into-the-canvas-and-choose-a-point": {
+    "text": "Tab into the canvas. [ and ] choose a point. Arrows move it.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 100
+  },
+  "shape-editor.mc-shape-studio.the-corners-cut-into-the-text-area-raise": {
+    "text": "The corners cut into the text area. Raise the extra space or make corners smaller.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 135
+  },
+  "shape-editor.mc-shape-studio.the-outline-crosses-itself-at-where": {
+    "text": "The outline crosses itself at {where}.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 65,
+    "vars": {
+      "where": "The value that replaces where in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.the-outline-cuts-into-the-text-area-at": {
+    "text": "The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 165,
+    "vars": {
+      "where": "The value that replaces where in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.the-path-editor-could-not-load-check": {
+    "text": "The path editor could not load. Check your connection and try again.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 110
+  },
+  "shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape": {
+    "text": "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 180,
+    "vars": {
+      "c": "The value that replaces c in the text.",
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check": {
+    "text": "The shape editor could not load. Check your connection and try again.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 115
+  },
+  "shape-editor.mc-shape-studio.these-shapes-have-too-many-points-to": {
+    "text": "These shapes have too many points to combine. Nothing was changed.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 110
+  },
+  "shape-editor.mc-shape-studio.this-shape-is-too-big-for-the-library-8": {
+    "text": "This shape is too big for the library (8 KB).",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 75
+  },
+  "shape-editor.mc-shape-studio.this-shape-was-changed-somewhere-else": {
+    "text": "This shape was changed somewhere else.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 65
+  },
+  "shape-editor.mc-shape-studio.ticket-wave-and-blob-can-t-be-edited-yet": {
+    "text": "Ticket, Wave and Blob can't be edited yet. Use the preset as it is.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 110
+  },
+  "shape-editor.mc-shape-studio.top": {
+    "text": "Top",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.mc-shape-studio.try-again": {
+    "text": "Try again",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.type": {
+    "text": "Type",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.undo": {
+    "text": "Undo",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.unit": {
+    "text": "Unit",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.update-name": {
+    "text": "Update \"{name}\"",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.use-follows-the-library-change-lamp-and": {
+    "text": "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 185
+  },
+  "shape-editor.mc-shape-studio.use-on-this-card": {
+    "text": "Use on this card",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.vertical-anchor": {
+    "text": "Vertical anchor",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.mc-shape-studio.warning": {
+    "text": "Warning",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.mc-shape-studio.width": {
+    "text": "Width",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.working": {
+    "text": "Working...",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.x-from-the-left-edge": {
+    "text": "X, from the left edge",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.mc-shape-studio.x-y": {
+    "text": "{x}, {y}",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 15,
+    "vars": {
+      "x": "The value that replaces x in the text.",
+      "y": "The value that replaces y in the text."
+    }
+  },
+  "shape-editor.mc-shape-studio.y-from-the-top-edge": {
+    "text": "Y, from the top edge",
+    "note": "Shown in mc shape studio (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.names.a-quarter-circle": {
+    "text": "A quarter circle.",
+    "note": "Shown in names (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.names.a-quarter-circle-cut-into-the-card": {
+    "text": "A quarter circle cut into the card.",
+    "note": "Shown in names (shape-editor).",
+    "max": 60
+  },
+  "shape-editor.names.a-softer-round-between-a-circle-and-a": {
+    "text": "A softer round, between a circle and a square.",
+    "note": "Shown in names (shape-editor).",
+    "max": 75
+  },
+  "shape-editor.names.a-square-step-cut-into-the-corner": {
+    "text": "A square step cut into the corner.",
+    "note": "Shown in names (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.names.a-straight-diagonal-cut": {
+    "text": "A straight diagonal cut.",
+    "note": "Shown in names (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.names.arrow": {
+    "text": "Arrow",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.arrow-keys-move-the-point-shift-moves-it": {
+    "text": "Arrow keys move the point. Shift moves it further, Alt moves it less.",
+    "note": "Shown in names (shape-editor).",
+    "max": 115
+  },
+  "shape-editor.names.bevel": {
+    "text": "Bevel",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.bottom": {
+    "text": "Bottom",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.bottom-left-corner": {
+    "text": "Bottom left corner",
+    "note": "Shown in names (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.names.bottom-right-corner": {
+    "text": "Bottom right corner",
+    "note": "Shown in names (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.names.chevron": {
+    "text": "Chevron",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.circle": {
+    "text": "Circle",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.cloud": {
+    "text": "Cloud",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.combine": {
+    "text": "Combine",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.ctrl-z-undoes-ctrl-shift-z-redoes-ctrl-s": {
+    "text": "Ctrl+Z undoes, Ctrl+Shift+Z redoes, Ctrl+S saves.",
+    "note": "Shown in names (shape-editor).",
+    "max": 80
+  },
+  "shape-editor.names.custom": {
+    "text": "Custom",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.custom-size": {
+    "text": "Custom size",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.cut-corners": {
+    "text": "Cut corners",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.delete-removes-the-point": {
+    "text": "Delete removes the point.",
+    "note": "Shown in names (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.names.distance-from-the-bottom-edge": {
+    "text": "Distance from the bottom edge",
+    "note": "Shown in names (shape-editor).",
+    "max": 50
+  },
+  "shape-editor.names.distance-from-the-left-edge": {
+    "text": "Distance from the left edge",
+    "note": "Shown in names (shape-editor).",
+    "max": 45
+  },
+  "shape-editor.names.distance-from-the-right-edge": {
+    "text": "Distance from the right edge",
+    "note": "Shown in names (shape-editor).",
+    "max": 45
+  },
+  "shape-editor.names.distance-from-the-top-edge": {
+    "text": "Distance from the top edge",
+    "note": "Shown in names (shape-editor).",
+    "max": 45
+  },
+  "shape-editor.names.drop": {
+    "text": "Drop",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.ellipse": {
+    "text": "Ellipse",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.esc-closes-a-window-then-ends-a-drawing": {
+    "text": "Esc closes a window, then ends a drawing.",
+    "note": "Shown in names (shape-editor).",
+    "max": 70
+  },
+  "shape-editor.names.h": {
+    "text": "H",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.heart": {
+    "text": "Heart",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.hexagon": {
+    "text": "Hexagon",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.in-handle": {
+    "text": "In handle",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.intersect": {
+    "text": "Intersect",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.keep-your-own-shapes-for-every-dashboard": {
+    "text": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on.",
+    "note": "Shown in names (shape-editor).",
+    "max": 130
+  },
+  "shape-editor.names.lamp-on": {
+    "text": "Lamp on",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.leaf": {
+    "text": "Leaf",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.left": {
+    "text": "Left",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.living-room": {
+    "text": "Living room",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.no-change-a-sharp-corner": {
+    "text": "No change, a sharp corner.",
+    "note": "Shown in names (shape-editor).",
+    "max": 45
+  },
+  "shape-editor.names.notch": {
+    "text": "Notch",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.notched": {
+    "text": "Notched",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.octagon": {
+    "text": "Octagon",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.out-handle": {
+    "text": "Out handle",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.pill": {
+    "text": "Pill",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.plus": {
+    "text": "Plus",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.right": {
+    "text": "Right",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.right-click-long-press-the-menu-key-or": {
+    "text": "Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.",
+    "note": "Shown in names (shape-editor).",
+    "max": 120
+  },
+  "shape-editor.names.round": {
+    "text": "Round",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.rounded": {
+    "text": "Rounded",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.rounded-rectangle": {
+    "text": "Rounded rectangle",
+    "note": "Shown in names (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.names.row": {
+    "text": "Row",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.row-wide-360-x-120": {
+    "text": "Row, wide 360 x 120",
+    "note": "Shown in names (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.names.scoop": {
+    "text": "Scoop",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.scooped": {
+    "text": "Scooped",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.semicircle": {
+    "text": "Semicircle",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.shield": {
+    "text": "Shield",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.show-or-hide-panels-ctrl-or": {
+    "text": "Show or hide panels: Ctrl+\\ or ⌘\\",
+    "note": "Shown in names (shape-editor).",
+    "max": 55
+  },
+  "shape-editor.names.speech-bubble": {
+    "text": "Speech bubble",
+    "note": "Shown in names (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.names.square": {
+    "text": "Square",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.squircle": {
+    "text": "Squircle",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.star": {
+    "text": "Star",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.subtract": {
+    "text": "Subtract",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.tab": {
+    "text": "Tab",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.tab-into-the-canvas-then-and-choose-a": {
+    "text": "Tab into the canvas, then [ and ] choose a point.",
+    "note": "Shown in names (shape-editor).",
+    "max": 80
+  },
+  "shape-editor.names.tag": {
+    "text": "Tag",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.the-library-is-full-delete-a-shape-first": {
+    "text": "The library is full. Delete a shape first.",
+    "note": "Shown in names (shape-editor).",
+    "max": 70
+  },
+  "shape-editor.names.this-shape-changed-while-you-were": {
+    "text": "This shape changed while you were editing. Save as new, or reload it.",
+    "note": "Shown in names (shape-editor).",
+    "max": 115
+  },
+  "shape-editor.names.this-shape-is-too-big-for-the-library-8": {
+    "text": "This shape is too big for the library (8 KB).",
+    "note": "Shown in names (shape-editor).",
+    "max": 75
+  },
+  "shape-editor.names.ticket": {
+    "text": "Ticket",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.tile": {
+    "text": "Tile",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.tile-square-120-x-120": {
+    "text": "Tile, square 120 x 120",
+    "note": "Shown in names (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.names.top": {
+    "text": "Top",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.top-left-corner": {
+    "text": "Top left corner",
+    "note": "Shown in names (shape-editor).",
+    "max": 25
+  },
+  "shape-editor.names.top-right-corner": {
+    "text": "Top right corner",
+    "note": "Shown in names (shape-editor).",
+    "max": 30
+  },
+  "shape-editor.names.triangle": {
+    "text": "Triangle",
+    "note": "Shown in names (shape-editor).",
+    "max": 15
+  },
+  "shape-editor.names.two-notched-corners": {
+    "text": "Two notched corners",
+    "note": "Shown in names (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.names.v-is-select-p-is-pen": {
+    "text": "V is Select. P is Pen.",
+    "note": "Shown in names (shape-editor).",
+    "max": 40
+  },
+  "shape-editor.names.w": {
+    "text": "W",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.wide": {
+    "text": "Wide",
+    "note": "Shown in names (shape-editor).",
+    "max": 10
+  },
+  "shape-editor.names.wide-banner": {
+    "text": "Wide banner",
+    "note": "Shown in names (shape-editor).",
+    "max": 20
+  },
+  "shape-editor.names.wide-banner-720-x-200": {
+    "text": "Wide banner 720 x 200",
+    "note": "Shown in names (shape-editor).",
+    "max": 35
+  },
+  "shape-editor.names.x": {
+    "text": "X",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.y": {
+    "text": "Y",
+    "note": "Shown in names (shape-editor).",
+    "max": 5
+  },
+  "shape-editor.names.your-account-can-use-the-library-but-not": {
+    "text": "Your account can use the library but not change it. Ask an admin, or keep this shape in the card only.",
+    "note": "Shown in names (shape-editor).",
+    "max": 165
+  }
+}

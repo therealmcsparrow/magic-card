@@ -1,317 +1,1294 @@
 {
-  "A quarter circle cut into the card.": "A quarter circle cut into the card.",
-  "A quarter circle.": "A quarter circle.",
-  "A shape holds up to {max} points.": "A shape holds up to {max} points.",
-  "A shape named {name} exists. Saving changes every card that uses it.": "A shape named {name} exists. Saving changes every card that uses it.",
-  "A shape needs at least 3 points.": "A shape needs at least 3 points.",
-  "A softer round, between a circle and a square.": "A softer round, between a circle and a square.",
-  "A square step cut into the corner.": "A square step cut into the corner.",
-  "A straight diagonal cut.": "A straight diagonal cut.",
-  "Add 3 points to finish.": "Add 3 points to finish.",
-  "Add point": "Add point",
-  "Add point after": "Add point after",
-  "Add point here": "Add point here",
-  "Add shape...": "Add shape...",
-  "Advanced: how this point moves when the card resizes": "Advanced: how this point moves when the card resizes",
-  "All corners together": "All corners together",
-  "All four corners": "All four corners",
-  "All four corners changed. Change just one?": "All four corners changed. Change just one?",
-  "Angle": "Angle",
-  "Applied Top left to all corners.": "Applied Top left to all corners.",
-  "Arrow": "Arrow",
-  "Arrow keys move the point. Shift moves it further, Alt moves it less.": "Arrow keys move the point. Shift moves it further, Alt moves it less.",
-  "Back": "Back",
-  "Back to card editor": "Back to card editor",
-  "Bevel": "Bevel",
-  "Bottom": "Bottom",
-  "Bottom left corner": "Bottom left corner",
-  "Bottom right corner": "Bottom right corner",
-  "Can raise the space, not lower it.": "Can raise the space, not lower it.",
-  "Cancel": "Cancel",
-  "Canvas tools": "Canvas tools",
-  "Card shapes have one outline, so the hole was filled.": "Card shapes have one outline, so the hole was filled.",
-  "Centre": "Center",
-  "Changed since saved": "Changed since saved",
-  "Changes since the last save are lost.": "Changes since the last save are lost.",
-  "Chevron": "Chevron",
-  "Circle": "Circle",
-  "Click a point to remove it.": "Click a point to remove it.",
-  "Click on the outline to add a point.": "Click on the outline to add a point.",
-  "Click or tap to add points. Drag to curve.": "Click or tap to add points. Drag to curve.",
-  "Close": "Close",
-  "Cloud": "Cloud",
-  "Combine": "Combine",
-  "Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.": "Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.",
-  "Combine with": "Combine with",
-  "Combine...": "Combine...",
-  "Copied": "Copied",
-  "Copy YAML": "Copy YAML",
-  "Copy to all corners": "Copy to all corners",
-  "Corner": "Corner",
-  "Corner is smaller on small cards: {v} px on {size}.": "Corner is smaller on small cards: {v} px on {size}.",
-  "Corner styles": "Corner styles",
-  "Corners": "Corners",
-  "Corners turned into points. Undo brings them back.": "Corners turned into points. Undo brings them back.",
-  "Corners use up to {v} px per side.": "Corners use up to {v} px per side.",
-  "Corners will be square.": "Corners will be square.",
-  "Corners.": "Corners.",
-  "Could not load the export and import tool. Try again.": "Could not load the export and import tool. Try again.",
-  "Could not reach Magic Card Utils. Your work is safe in this card.": "Could not reach Magic Card Utils. Your work is safe in this card.",
-  "Could not save {name}. Try again.": "Could not save {name}. Try again.",
-  "Couldn't load the shape tools. Try again.": "Couldn't load the shape tools. Try again.",
-  "Ctrl+Z undoes, Ctrl+Shift+Z redoes, Ctrl+S saves.": "Ctrl+Z undoes, Ctrl+Shift+Z redoes, Ctrl+S saves.",
-  "Custom": "Custom",
-  "Custom shape": "Custom shape",
-  "Custom size": "Custom size",
-  "Cut corners": "Cut corners",
-  "Delete": "Delete",
-  "Delete removes the point.": "Delete removes the point.",
-  "Delete {name}": "Delete {name}",
-  "Deleted {name}. Cards that use it keep their inline copy.": "Deleted {name}. Cards that use it keep their inline copy.",
-  "Distance from the bottom edge": "Distance from the bottom edge",
-  "Distance from the left edge": "Distance from the left edge",
-  "Distance from the right edge": "Distance from the right edge",
-  "Distance from the top edge": "Distance from the top edge",
-  "Done": "Done",
-  "Drag points, or pick one in the list.": "Drag points, or pick one in the list.",
-  "Draw": "Draw",
-  "Drawing a new outline. This replaces your shape when you finish.": "Drawing a new outline. This replaces your shape when you finish.",
-  "Drop": "Drop",
-  "Each corner": "Each corner",
-  "Edit at": "Edit at",
-  "Edit corners": "Edit corners",
-  "Edit corners separately": "Edit corners separately",
-  "Ellipse": "Ellipse",
-  "Error": "Error",
-  "Esc closes a window, then ends a drawing.": "Esc closes a window, then ends a drawing.",
-  "Esc doesn't close the editor. Use Close.": "Esc doesn't close the editor. Use Close.",
-  "Esc doesn't close the editor. Use Done or Back to card editor.": "Esc doesn't close the editor. Use Done or Back to card editor.",
-  "Export / Import": "Export / Import",
-  "Export file": "Export file",
-  "Extra space": "Extra space",
-  "Finish": "Finish",
-  "Focus rings and hover scale of content that touches a cut edge are clipped by the shape.": "Focus rings and hover scale of content that touches a cut edge are clipped by the shape.",
-  "Follows the card's shorter side.": "Follows the card's shorter side.",
-  "Free shape": "Free shape",
-  "Free shape tools": "Free shape tools",
-  "Free shape. {c, plural, one {# point} other {# points}}.": "Free shape. {c, plural, one {# point} other {# points}}.",
-  "Give it a name.": "Give it a name.",
-  "Give the shape a name.": "Give the shape a name.",
-  "Going back to Corners drops your edited points. Undo brings them back.": "Going back to Corners drops your edited points. Undo brings them back.",
-  "Got it": "Got it",
-  "Grid": "Grid",
-  "H": "H",
-  "Heart": "Heart",
-  "Height": "Height",
-  "Hexagon": "Hexagon",
-  "Hide {noun} ({keys})": "Hide {noun} ({keys})",
-  "Horizontal anchor": "Horizontal anchor",
-  "How to install": "How to install",
-  "Import file": "Import file",
-  "Imported {name}": "Imported {name}",
-  "In handle": "In handle",
-  "Inspector panel": "Inspector panel",
-  "Intersect": "Intersect",
-  "Keep editing": "Keep editing",
-  "Keep your own shapes": "Keep your own shapes",
-  "Keep your own shapes for every dashboard with the free Magic Card Utils add-on.": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on.",
-  "Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, what you build is saved in this card only.": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, what you build is saved in this card only.",
-  "Keeps text away from the corners. The card works it out for you.": "Keeps text away from the corners. The card works it out for you.",
-  "Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.": "Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.",
-  "Lamp on": "Lamp on",
-  "Leaf": "Leaf",
-  "Leave": "Leave",
-  "Leave without saving?": "Leave without saving?",
-  "Left": "Left",
-  "Length": "Length",
-  "Library": "Library",
-  "Linked to the saved shape \"{id}\". Your edits make it this card's own shape.": "Linked to the saved shape \"{id}\". Your edits make it this card's own shape.",
-  "Living room": "Living room",
-  "Loading the shape editor": "Loading the shape editor",
-  "Loading your shapes": "Loading your shapes",
-  "Maximise": "Maximize",
-  "Measured inside the outline at the size you edit at. Raise a side if you need more.": "Measured inside the outline at the size you edit at. Raise a side if you need more.",
-  "Messages": "Messages",
-  "Move it with the arrow keys or drag it on the canvas.": "Move it with the arrow keys or drag it on the canvas.",
-  "Move point": "Move point",
-  "Move window": "Move window",
-  "Move {dir, select, left {left} up {up} down {down} other {right}}": "Move {dir, select, left {left} up {up} down {down} other {right}}",
-  "Name": "Name",
-  "New outline": "New outline",
-  "Next": "Next",
-  "No change, a sharp corner.": "No change, a sharp corner.",
-  "No messages.": "No messages.",
-  "No saved shapes yet": "No saved shapes yet",
-  "No shapes match \"{q}\".": "No shapes match \"{q}\".",
-  "Notch": "Notch",
-  "Notched": "Notched",
-  "Note": "Note",
-  "Nothing to redo": "Nothing to redo",
-  "Nothing to undo": "Nothing to undo",
-  "Nothing would be left of the shape. Nothing was changed.": "Nothing would be left of the shape. Nothing was changed.",
-  "Nudge": "Nudge",
-  "Octagon": "Octagon",
-  "Older browsers draw the curved corners as straight facets. Border, ring and shadow stay.": "Older browsers draw the curved corners as straight facets. Border, ring and shadow stay.",
-  "On card": "On card",
-  "Only the first of {c} shapes in the file was used.": "Only the first of {c} shapes in the file was used.",
-  "Open": "Open",
-  "Open {name}": "Open {name}",
-  "Out handle": "Out handle",
-  "Outline": "Outline",
-  "Outline actions": "Outline actions",
-  "Outlines": "Outlines",
-  "Pen": "Pen",
-  "Pen cancelled.": "Pen canceled.",
-  "Pill": "Pill",
-  "Plus": "Plus",
-  "Point removed, {c, plural, one {# point} other {# points}}.": "Point removed, {c, plural, one {# point} other {# points}}.",
-  "Point type": "Point type",
-  "Point {i}": "Point {i}",
-  "Point {i} of {c}": "Point {i} of {c}",
-  "Points": "Points",
-  "Position across the width": "Position across the width",
-  "Position down the height": "Position down the height",
-  "Preview": "Preview",
-  "Preview at {name} size, {w} by {h}": "Preview at {name} size, {w} by {h}",
-  "Previous": "Previous",
-  "Redo": "Redo",
-  "Reload": "Reload",
-  "Remove point": "Remove point",
-  "Replaced your outline.": "Replaced your outline.",
-  "Replaces your current outline. Undo brings it back.": "Replaces your current outline. Undo brings it back.",
-  "Reset": "Reset",
-  "Reset shape": "Reset shape",
-  "Resize window": "Resize window",
-  "Restore size": "Restore size",
-  "Reverse direction": "Reverse direction",
-  "Right": "Right",
-  "Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.": "Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.",
-  "Ring, border, shadow and value background follow the outline.": "Ring, border, shadow and value background follow the outline.",
-  "Round": "Round",
-  "Rounded": "Rounded",
-  "Rounded rectangle": "Rounded rectangle",
-  "Row": "Row",
-  "Row, wide 360 x 120": "Row, wide 360 x 120",
-  "Save": "Save",
-  "Save a shape here and use it on any dashboard.": "Save a shape here and use it on any dashboard.",
-  "Save as a copy": "Save as a copy",
-  "Save as new": "Save as new",
-  "Save current shape": "Save current shape",
-  "Save to library": "Save to library",
-  "Saved": "Saved",
-  "Saved shape \"{id}\" was not found. This card uses its own copy.": "Saved shape \"{id}\" was not found. This card uses its own copy.",
-  "Saved to library as {name}. Press Done to use it on this card.": "Saved to library as {name}. Press Done to use it on this card.",
-  "Scoop": "Scoop",
-  "Scooped": "Scooped",
-  "Search my shapes": "Search my shapes",
-  "Select": "Select",
-  "Selected point": "Selected point",
-  "Semicircle": "Semicircle",
-  "Shape": "Shape",
-  "Shape applied to {target}": "Shape applied to {target}",
-  "Shape editor": "Shape editor",
-  "Shape for {target}": "Shape for {target}",
-  "Shape name": "Shape name",
-  "Shape to combine": "Shape to combine",
-  "Shape type": "Shape type",
-  "Shapes": "Shapes",
-  "Shield": "Shield",
-  "Short, no slashes. Shown in the list.": "Short, no slashes. Shown in the list.",
-  "Shortcut: {keys}": "Shortcut: {keys}",
-  "Shortcuts": "Shortcuts",
-  "Show full message": "Show full message",
-  "Show older browser look": "Show older browser look",
-  "Show or hide panels: Ctrl+\\ or ⌘\\": "Show or hide panels: Ctrl+\\ or ⌘\\",
-  "Show text area": "Show text area",
-  "Show {noun} ({keys})": "Show {noun} ({keys})",
-  "Side panel": "Side panel",
-  "Sidebar": "Sidebar",
-  "Size": "Size",
-  "Skip to canvas": "Skip to canvas",
-  "Skip to inspector": "Skip to inspector",
-  "Skip to point fields": "Skip to point fields",
-  "Smooth": "Smooth",
-  "Smoothing": "Smoothing",
-  "Snap": "Snap",
-  "Some panels are hidden, as you left them. Use the arrows on the edges to show them.": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
-  "Space for text": "Space for text",
-  "Space for text: top, right, bottom, left": "Space for text: top, right, bottom, left",
-  "Speech bubble": "Speech bubble",
-  "Square": "Square",
-  "Square corners have no size.": "Square corners have no size.",
-  "Squircle": "Squircle",
-  "Star": "Star",
-  "Start from a shape": "Start from a shape",
-  "Start from a shape...": "Start from a shape...",
-  "Start from...": "Start from...",
-  "Started from Circle. On a wide card the custom shape is a pill, not an ellipse.": "Started from Circle. On a wide card the custom shape is a pill, not an ellipse.",
-  "Started from Notch. Its corners are cut straight, so they start as Bevel.": "Started from Notch. Its corners are cut straight, so they start as Bevel.",
-  "Started from {k}.": "Started from {k}.",
-  "Started from {k}. Switched to Free shape.": "Started from {k}. Switched to Free shape.",
-  "Started from {name}. It opens as a path, so you can move every point.": "Started from {name}. It opens as a path, so you can move every point.",
-  "Started from {name}. Your changes make this shape custom.": "Started from {name}. Your changes make this shape custom.",
-  "Starters": "Starters",
-  "Stays the same on every card size.": "Stays the same on every card size.",
-  "Stretch": "Stretch",
-  "Subtract": "Subtract",
-  "Tab": "Tab",
-  "Tab into the canvas, then [ and ] choose a point.": "Tab into the canvas, then [ and ] choose a point.",
-  "Tab into the canvas. [ and ] choose a point. Arrows move it.": "Tab into the canvas. [ and ] choose a point. Arrows move it.",
-  "Tag": "Tag",
-  "The corners cut into the text area. Raise the extra space or make corners smaller.": "The corners cut into the text area. Raise the extra space or make corners smaller.",
-  "The library is full. Delete a shape first.": "The library is full. Delete a shape first.",
-  "The outline crosses itself at {where}.": "The outline crosses itself at {where}.",
-  "The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.": "The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.",
-  "The path editor could not load. Check your connection and try again.": "The path editor could not load. Check your connection and try again.",
-  "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.": "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.",
-  "The shape editor could not load. Check your connection and try again.": "The shape editor could not load. Check your connection and try again.",
-  "The {noun} is hidden, as you left it. Use the arrow on the edge to show it.": "The {noun} is hidden, as you left it. Use the arrow on the edge to show it.",
-  "These shapes have too many points to combine. Nothing was changed.": "These shapes have too many points to combine. Nothing was changed.",
-  "This shape changed while you were editing. Save as new, or reload it.": "This shape changed while you were editing. Save as new, or reload it.",
-  "This shape is too big for the library (8 KB).": "This shape is too big for the library (8 KB).",
-  "This shape was changed somewhere else.": "This shape was changed somewhere else.",
-  "Ticket": "Ticket",
-  "Ticket, Wave and Blob can't be edited yet. Use the preset as it is.": "Ticket, Wave and Blob can't be edited yet. Use the preset as it is.",
-  "Tile": "Tile",
-  "Tile, square 120 x 120": "Tile, square 120 x 120",
-  "Top": "Top",
-  "Top left corner": "Top left corner",
-  "Top right corner": "Top right corner",
-  "Triangle": "Triangle",
-  "Try again": "Try again",
-  "Two notched corners": "Two notched corners",
-  "Type": "Type",
-  "Undo": "Undo",
-  "Unit": "Unit",
-  "Update \"{name}\"": "Update \"{name}\"",
-  "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.": "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.",
-  "Use on this card": "Use on this card",
-  "V is Select. P is Pen.": "V is Select. P is Pen.",
-  "Vertical anchor": "Vertical anchor",
-  "W": "W",
-  "Warning": "Warning",
-  "Wide": "Wide",
-  "Wide banner": "Wide banner",
-  "Wide banner 720 x 200": "Wide banner 720 x 200",
-  "Width": "Width",
-  "Working...": "Working...",
-  "X": "X",
-  "X, from the left edge": "X, from the left edge",
-  "Y": "Y",
-  "Y, from the top edge": "Y, from the top edge",
-  "Your account can use the library but not change it. Ask an admin, or keep this shape in the card only.": "Your account can use the library but not change it. Ask an admin, or keep this shape in the card only.",
-  "at {name}": "at {name}",
-  "at {name}, {w} x {h}": "at {name}, {w} x {h}",
-  "inspector": "inspector",
-  "shown at {pct}%": "shown at {pct}%",
-  "side panel": "side panel",
-  "{c, plural, one {# point} other {# points}}": "{c, plural, one {# point} other {# points}}",
-  "{c} of {max} points": "{c} of {max} points",
-  "{k} (not applied yet)": "{k} (not applied yet)",
-  "{k} ready to combine. Use the arrows or fields to place it.": "{k} ready to combine. Use the arrows or fields to place it.",
-  "{name} copy": "{name} copy",
-  "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.": "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.",
-  "{panels} hidden": "{panels} hidden",
-  "{panels} shown": "{panels} shown",
-  "{x}, {y}": "{x}, {y}"
+  "shape-editor.lips.got-it": {
+    "text": "Got it",
+    "hash": "5ad3dbd1"
+  },
+  "shape-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "hash": "62432946"
+  },
+  "shape-editor.lips.inspector": {
+    "text": "inspector",
+    "hash": "98fe4422"
+  },
+  "shape-editor.lips.inspector-panel": {
+    "text": "Inspector panel",
+    "hash": "20f92072"
+  },
+  "shape-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "hash": "8048104c"
+  },
+  "shape-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "hash": "755f1a3b"
+  },
+  "shape-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "hash": "2fc10998"
+  },
+  "shape-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "hash": "7a362b14"
+  },
+  "shape-editor.lips.side-panel": {
+    "text": "Side panel",
+    "hash": "c28cdd98"
+  },
+  "shape-editor.lips.side-panel-2": {
+    "text": "side panel",
+    "hash": "faaafb22"
+  },
+  "shape-editor.lips.some-panels-are-hidden-as-you-left-them": {
+    "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
+    "hash": "dab30b27"
+  },
+  "shape-editor.lips.the-noun-is-hidden-as-you-left-it-use": {
+    "text": "The {noun} is hidden, as you left it. Use the arrow on the edge to show it.",
+    "hash": "16ec095c"
+  },
+  "shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points": {
+    "text": "A shape holds up to {max} points.",
+    "hash": "9b8297e2"
+  },
+  "shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes": {
+    "text": "A shape named {name} exists. Saving changes every card that uses it.",
+    "hash": "7e135f33"
+  },
+  "shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points": {
+    "text": "A shape needs at least 3 points.",
+    "hash": "ad184e00"
+  },
+  "shape-editor.mc-shape-studio.add-3-points-to-finish": {
+    "text": "Add 3 points to finish.",
+    "hash": "e1183510"
+  },
+  "shape-editor.mc-shape-studio.add-point": {
+    "text": "Add point",
+    "hash": "71c21386"
+  },
+  "shape-editor.mc-shape-studio.add-point-after": {
+    "text": "Add point after",
+    "hash": "11381b50"
+  },
+  "shape-editor.mc-shape-studio.add-point-here": {
+    "text": "Add point here",
+    "hash": "d1828848"
+  },
+  "shape-editor.mc-shape-studio.add-shape": {
+    "text": "Add shape...",
+    "hash": "06cbf75d"
+  },
+  "shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the": {
+    "text": "Advanced: how this point moves when the card resizes",
+    "hash": "67ab3a5b"
+  },
+  "shape-editor.mc-shape-studio.all-corners-together": {
+    "text": "All corners together",
+    "hash": "9bb57ad4"
+  },
+  "shape-editor.mc-shape-studio.all-four-corners": {
+    "text": "All four corners",
+    "hash": "6fba1376"
+  },
+  "shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one": {
+    "text": "All four corners changed. Change just one?",
+    "hash": "018e6685"
+  },
+  "shape-editor.mc-shape-studio.angle": {
+    "text": "Angle",
+    "hash": "1968034b"
+  },
+  "shape-editor.mc-shape-studio.applied-top-left-to-all-corners": {
+    "text": "Applied Top left to all corners.",
+    "hash": "2d932dce"
+  },
+  "shape-editor.mc-shape-studio.at-name": {
+    "text": "at {name}",
+    "hash": "f85524b4"
+  },
+  "shape-editor.mc-shape-studio.at-name-w-x-h": {
+    "text": "at {name}, {w} x {h}",
+    "hash": "56d77cd3"
+  },
+  "shape-editor.mc-shape-studio.back": {
+    "text": "Back",
+    "hash": "76900f1b"
+  },
+  "shape-editor.mc-shape-studio.back-to-card-editor": {
+    "text": "Back to card editor",
+    "hash": "89f5c8f1"
+  },
+  "shape-editor.mc-shape-studio.bottom": {
+    "text": "Bottom",
+    "hash": "479ad21a"
+  },
+  "shape-editor.mc-shape-studio.c": {
+    "text": "{c, plural, one {# point} other {# points}}",
+    "hash": "0372c574"
+  },
+  "shape-editor.mc-shape-studio.c-of-max-points": {
+    "text": "{c} of {max} points",
+    "hash": "0b60a2bf"
+  },
+  "shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it": {
+    "text": "Can raise the space, not lower it.",
+    "hash": "a2955351"
+  },
+  "shape-editor.mc-shape-studio.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "shape-editor.mc-shape-studio.canvas-tools": {
+    "text": "Canvas tools",
+    "hash": "65f9ce20"
+  },
+  "shape-editor.mc-shape-studio.card-shapes-have-one-outline-so-the-hole": {
+    "text": "Card shapes have one outline, so the hole was filled.",
+    "hash": "c18dc8e0"
+  },
+  "shape-editor.mc-shape-studio.centre": {
+    "text": "Center",
+    "hash": "45c19322"
+  },
+  "shape-editor.mc-shape-studio.changed-since-saved": {
+    "text": "Changed since saved",
+    "hash": "a05dd6e9"
+  },
+  "shape-editor.mc-shape-studio.changes-since-the-last-save-are-lost": {
+    "text": "Changes since the last save are lost.",
+    "hash": "339c1c86"
+  },
+  "shape-editor.mc-shape-studio.click-a-point-to-remove-it": {
+    "text": "Click a point to remove it.",
+    "hash": "e25292d4"
+  },
+  "shape-editor.mc-shape-studio.click-on-the-outline-to-add-a-point": {
+    "text": "Click on the outline to add a point.",
+    "hash": "ccc916c2"
+  },
+  "shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve": {
+    "text": "Click or tap to add points. Drag to curve.",
+    "hash": "bc5354f0"
+  },
+  "shape-editor.mc-shape-studio.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "shape-editor.mc-shape-studio.combine": {
+    "text": "Combine...",
+    "hash": "b4c40284"
+  },
+  "shape-editor.mc-shape-studio.combine-2": {
+    "text": "Combine",
+    "hash": "35843e7a"
+  },
+  "shape-editor.mc-shape-studio.combine-adds-it-to-the-outline-subtract": {
+    "text": "Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.",
+    "hash": "ffd983db"
+  },
+  "shape-editor.mc-shape-studio.combine-with": {
+    "text": "Combine with",
+    "hash": "173e64a1"
+  },
+  "shape-editor.mc-shape-studio.copied": {
+    "text": "Copied",
+    "hash": "8d525e5f"
+  },
+  "shape-editor.mc-shape-studio.copy-to-all-corners": {
+    "text": "Copy to all corners",
+    "hash": "d5269f6f"
+  },
+  "shape-editor.mc-shape-studio.copy-yaml": {
+    "text": "Copy YAML",
+    "hash": "e5a88d42"
+  },
+  "shape-editor.mc-shape-studio.corner": {
+    "text": "Corner",
+    "hash": "adfde70b"
+  },
+  "shape-editor.mc-shape-studio.corner-is-smaller-on-small-cards-v-px-on": {
+    "text": "Corner is smaller on small cards: {v} px on {size}.",
+    "hash": "5501f217"
+  },
+  "shape-editor.mc-shape-studio.corner-styles": {
+    "text": "Corner styles",
+    "hash": "a8a41791"
+  },
+  "shape-editor.mc-shape-studio.corners": {
+    "text": "Corners",
+    "hash": "1d3cc47e"
+  },
+  "shape-editor.mc-shape-studio.corners-2": {
+    "text": "Corners.",
+    "hash": "1024157f"
+  },
+  "shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings": {
+    "text": "Corners turned into points. Undo brings them back.",
+    "hash": "9a5e19a4"
+  },
+  "shape-editor.mc-shape-studio.corners-use-up-to-v-px-per-side": {
+    "text": "Corners use up to {v} px per side.",
+    "hash": "098634ef"
+  },
+  "shape-editor.mc-shape-studio.corners-will-be-square": {
+    "text": "Corners will be square.",
+    "hash": "6a686952"
+  },
+  "shape-editor.mc-shape-studio.could-not-load-the-export-and-import": {
+    "text": "Could not load the export and import tool. Try again.",
+    "hash": "5631f7b6"
+  },
+  "shape-editor.mc-shape-studio.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe in this card.",
+    "hash": "6d444f4d"
+  },
+  "shape-editor.mc-shape-studio.could-not-save-name-try-again": {
+    "text": "Could not save {name}. Try again.",
+    "hash": "60224a78"
+  },
+  "shape-editor.mc-shape-studio.couldn-t-load-the-shape-tools-try-again": {
+    "text": "Couldn't load the shape tools. Try again.",
+    "hash": "a596e591"
+  },
+  "shape-editor.mc-shape-studio.custom-shape": {
+    "text": "Custom shape",
+    "hash": "c8f64a9b"
+  },
+  "shape-editor.mc-shape-studio.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "shape-editor.mc-shape-studio.delete-name": {
+    "text": "Delete {name}",
+    "hash": "3cf8146e"
+  },
+  "shape-editor.mc-shape-studio.deleted-name-cards-that-use-it-keep": {
+    "text": "Deleted {name}. Cards that use it keep their inline copy.",
+    "hash": "93e7e595"
+  },
+  "shape-editor.mc-shape-studio.done": {
+    "text": "Done",
+    "hash": "11a6767d"
+  },
+  "shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list": {
+    "text": "Drag points, or pick one in the list.",
+    "hash": "ec0bcade"
+  },
+  "shape-editor.mc-shape-studio.draw": {
+    "text": "Draw",
+    "hash": "61517c08"
+  },
+  "shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your": {
+    "text": "Drawing a new outline. This replaces your shape when you finish.",
+    "hash": "321d66c6"
+  },
+  "shape-editor.mc-shape-studio.each-corner": {
+    "text": "Each corner",
+    "hash": "2c21f04c"
+  },
+  "shape-editor.mc-shape-studio.edit-at": {
+    "text": "Edit at",
+    "hash": "040c6ce6"
+  },
+  "shape-editor.mc-shape-studio.edit-corners": {
+    "text": "Edit corners",
+    "hash": "74dc6151"
+  },
+  "shape-editor.mc-shape-studio.edit-corners-separately": {
+    "text": "Edit corners separately",
+    "hash": "855a4525"
+  },
+  "shape-editor.mc-shape-studio.error": {
+    "text": "Error",
+    "hash": "54a0e8c1"
+  },
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-close": {
+    "text": "Esc doesn't close the editor. Use Close.",
+    "hash": "54ca21d3"
+  },
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
+    "text": "Esc doesn't close the editor. Use Done or Back to card editor.",
+    "hash": "17988495"
+  },
+  "shape-editor.mc-shape-studio.export-file": {
+    "text": "Export file",
+    "hash": "d9d979c6"
+  },
+  "shape-editor.mc-shape-studio.export-import": {
+    "text": "Export / Import",
+    "hash": "566eef18"
+  },
+  "shape-editor.mc-shape-studio.extra-space": {
+    "text": "Extra space",
+    "hash": "6b42654a"
+  },
+  "shape-editor.mc-shape-studio.finish": {
+    "text": "Finish",
+    "hash": "a6c7a84b"
+  },
+  "shape-editor.mc-shape-studio.focus-rings-and-hover-scale-of-content": {
+    "text": "Focus rings and hover scale of content that touches a cut edge are clipped by the shape.",
+    "hash": "708fc6a9"
+  },
+  "shape-editor.mc-shape-studio.follows-the-card-s-shorter-side": {
+    "text": "Follows the card's shorter side.",
+    "hash": "9cb6d703"
+  },
+  "shape-editor.mc-shape-studio.free-shape": {
+    "text": "Free shape",
+    "hash": "9361c422"
+  },
+  "shape-editor.mc-shape-studio.free-shape-c": {
+    "text": "Free shape. {c, plural, one {# point} other {# points}}.",
+    "hash": "69d9994d"
+  },
+  "shape-editor.mc-shape-studio.free-shape-tools": {
+    "text": "Free shape tools",
+    "hash": "80ba8dc8"
+  },
+  "shape-editor.mc-shape-studio.give-it-a-name": {
+    "text": "Give it a name.",
+    "hash": "9d63f7c9"
+  },
+  "shape-editor.mc-shape-studio.give-the-shape-a-name": {
+    "text": "Give the shape a name.",
+    "hash": "7f29c1cb"
+  },
+  "shape-editor.mc-shape-studio.going-back-to-corners-drops-your-edited": {
+    "text": "Going back to Corners drops your edited points. Undo brings them back.",
+    "hash": "d348787b"
+  },
+  "shape-editor.mc-shape-studio.grid": {
+    "text": "Grid",
+    "hash": "0d7d12ac"
+  },
+  "shape-editor.mc-shape-studio.height": {
+    "text": "Height",
+    "hash": "bfe2eca4"
+  },
+  "shape-editor.mc-shape-studio.horizontal-anchor": {
+    "text": "Horizontal anchor",
+    "hash": "9a6f6886"
+  },
+  "shape-editor.mc-shape-studio.how-to-install": {
+    "text": "How to install",
+    "hash": "d77b0cba"
+  },
+  "shape-editor.mc-shape-studio.import-file": {
+    "text": "Import file",
+    "hash": "6a9e73cf"
+  },
+  "shape-editor.mc-shape-studio.imported-name": {
+    "text": "Imported {name}",
+    "hash": "dc946d49"
+  },
+  "shape-editor.mc-shape-studio.inspector-panel": {
+    "text": "Inspector panel",
+    "hash": "20f92072"
+  },
+  "shape-editor.mc-shape-studio.k-not-applied-yet": {
+    "text": "{k} (not applied yet)",
+    "hash": "c62e3873"
+  },
+  "shape-editor.mc-shape-studio.k-ready-to-combine-use-the-arrows-or": {
+    "text": "{k} ready to combine. Use the arrows or fields to place it.",
+    "hash": "3d324e1a"
+  },
+  "shape-editor.mc-shape-studio.keep-editing": {
+    "text": "Keep editing",
+    "hash": "e76fd2ad"
+  },
+  "shape-editor.mc-shape-studio.keep-your-own-shapes": {
+    "text": "Keep your own shapes",
+    "hash": "8cff7457"
+  },
+  "shape-editor.mc-shape-studio.keep-your-own-shapes-for-every-dashboard": {
+    "text": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, what you build is saved in this card only.",
+    "hash": "49056b08"
+  },
+  "shape-editor.mc-shape-studio.keeps-text-away-from-the-corners-the": {
+    "text": "Keeps text away from the corners. The card works it out for you.",
+    "hash": "9a65e243"
+  },
+  "shape-editor.mc-shape-studio.kept-the-largest-piece-c-removed": {
+    "text": "Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.",
+    "hash": "e6de8627"
+  },
+  "shape-editor.mc-shape-studio.leave": {
+    "text": "Leave",
+    "hash": "fc6e4a40"
+  },
+  "shape-editor.mc-shape-studio.leave-without-saving": {
+    "text": "Leave without saving?",
+    "hash": "2190d03a"
+  },
+  "shape-editor.mc-shape-studio.left": {
+    "text": "Left",
+    "hash": "58eb9032"
+  },
+  "shape-editor.mc-shape-studio.length": {
+    "text": "Length",
+    "hash": "adc95605"
+  },
+  "shape-editor.mc-shape-studio.library": {
+    "text": "Library",
+    "hash": "dc20b3d5"
+  },
+  "shape-editor.mc-shape-studio.linked-to-the-saved-shape-id-your-edits": {
+    "text": "Linked to the saved shape \"{id}\". Your edits make it this card's own shape.",
+    "hash": "cb82d3ce"
+  },
+  "shape-editor.mc-shape-studio.loading-the-shape-editor": {
+    "text": "Loading the shape editor",
+    "hash": "5920c611"
+  },
+  "shape-editor.mc-shape-studio.loading-your-shapes": {
+    "text": "Loading your shapes",
+    "hash": "332b964f"
+  },
+  "shape-editor.mc-shape-studio.maximise": {
+    "text": "Maximize",
+    "hash": "1c9fcada"
+  },
+  "shape-editor.mc-shape-studio.measured-inside-the-outline-at-the-size": {
+    "text": "Measured inside the outline at the size you edit at. Raise a side if you need more.",
+    "hash": "af6ee445"
+  },
+  "shape-editor.mc-shape-studio.messages": {
+    "text": "Messages",
+    "hash": "04d7b483"
+  },
+  "shape-editor.mc-shape-studio.move-dir": {
+    "text": "Move {dir, select, left {left} up {up} down {down} other {right}}",
+    "hash": "a8c88ea0"
+  },
+  "shape-editor.mc-shape-studio.move-it-with-the-arrow-keys-or-drag-it": {
+    "text": "Move it with the arrow keys or drag it on the canvas.",
+    "hash": "a6bb10f0"
+  },
+  "shape-editor.mc-shape-studio.move-point": {
+    "text": "Move point",
+    "hash": "4f53ff4e"
+  },
+  "shape-editor.mc-shape-studio.move-window": {
+    "text": "Move window",
+    "hash": "50bb7be2"
+  },
+  "shape-editor.mc-shape-studio.name": {
+    "text": "Name",
+    "hash": "dcd1d522"
+  },
+  "shape-editor.mc-shape-studio.name-copy": {
+    "text": "{name} copy",
+    "hash": "938a6418"
+  },
+  "shape-editor.mc-shape-studio.new-outline": {
+    "text": "New outline",
+    "hash": "56c73417"
+  },
+  "shape-editor.mc-shape-studio.next": {
+    "text": "Next",
+    "hash": "1ff57a29"
+  },
+  "shape-editor.mc-shape-studio.no-messages": {
+    "text": "No messages.",
+    "hash": "4b2f6153"
+  },
+  "shape-editor.mc-shape-studio.no-saved-shapes-yet": {
+    "text": "No saved shapes yet",
+    "hash": "7565f7e3"
+  },
+  "shape-editor.mc-shape-studio.no-shapes-match-q": {
+    "text": "No shapes match \"{q}\".",
+    "hash": "317b60c8"
+  },
+  "shape-editor.mc-shape-studio.note": {
+    "text": "Note",
+    "hash": "d8da2c49"
+  },
+  "shape-editor.mc-shape-studio.nothing-to-redo": {
+    "text": "Nothing to redo",
+    "hash": "4aaf2710"
+  },
+  "shape-editor.mc-shape-studio.nothing-to-undo": {
+    "text": "Nothing to undo",
+    "hash": "83290078"
+  },
+  "shape-editor.mc-shape-studio.nothing-would-be-left-of-the-shape": {
+    "text": "Nothing would be left of the shape. Nothing was changed.",
+    "hash": "32ed27d1"
+  },
+  "shape-editor.mc-shape-studio.nudge": {
+    "text": "Nudge",
+    "hash": "a5239b85"
+  },
+  "shape-editor.mc-shape-studio.older-browsers-draw-the-curved-corners": {
+    "text": "Older browsers draw the curved corners as straight facets. Border, ring and shadow stay.",
+    "hash": "d735b011"
+  },
+  "shape-editor.mc-shape-studio.on-card": {
+    "text": "On card",
+    "hash": "cae96945"
+  },
+  "shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file": {
+    "text": "Only the first of {c} shapes in the file was used.",
+    "hash": "86f9057e"
+  },
+  "shape-editor.mc-shape-studio.op-the-outline-has-c": {
+    "text": "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.",
+    "hash": "10decab6"
+  },
+  "shape-editor.mc-shape-studio.open": {
+    "text": "Open",
+    "hash": "ed077f3d"
+  },
+  "shape-editor.mc-shape-studio.open-name": {
+    "text": "Open {name}",
+    "hash": "f687d181"
+  },
+  "shape-editor.mc-shape-studio.outline": {
+    "text": "Outline",
+    "hash": "eabbf3ab"
+  },
+  "shape-editor.mc-shape-studio.outline-actions": {
+    "text": "Outline actions",
+    "hash": "a4cc74f2"
+  },
+  "shape-editor.mc-shape-studio.outlines": {
+    "text": "Outlines",
+    "hash": "aee1b414"
+  },
+  "shape-editor.mc-shape-studio.pen": {
+    "text": "Pen",
+    "hash": "a04bd35b"
+  },
+  "shape-editor.mc-shape-studio.pen-cancelled": {
+    "text": "Pen canceled.",
+    "hash": "fd6f2ef1"
+  },
+  "shape-editor.mc-shape-studio.point-i": {
+    "text": "Point {i}",
+    "hash": "ae6dbb11"
+  },
+  "shape-editor.mc-shape-studio.point-i-of-c": {
+    "text": "Point {i} of {c}",
+    "hash": "d818c5f9"
+  },
+  "shape-editor.mc-shape-studio.point-removed-c": {
+    "text": "Point removed, {c, plural, one {# point} other {# points}}.",
+    "hash": "0035b1fc"
+  },
+  "shape-editor.mc-shape-studio.point-type": {
+    "text": "Point type",
+    "hash": "ba894ba7"
+  },
+  "shape-editor.mc-shape-studio.points": {
+    "text": "Points",
+    "hash": "77deabe2"
+  },
+  "shape-editor.mc-shape-studio.position-across-the-width": {
+    "text": "Position across the width",
+    "hash": "bfe4e12a"
+  },
+  "shape-editor.mc-shape-studio.position-down-the-height": {
+    "text": "Position down the height",
+    "hash": "00deef36"
+  },
+  "shape-editor.mc-shape-studio.preview": {
+    "text": "Preview",
+    "hash": "324b134f"
+  },
+  "shape-editor.mc-shape-studio.preview-at-name-size-w-by-h": {
+    "text": "Preview at {name} size, {w} by {h}",
+    "hash": "97358d6b"
+  },
+  "shape-editor.mc-shape-studio.previous": {
+    "text": "Previous",
+    "hash": "a57b08a4"
+  },
+  "shape-editor.mc-shape-studio.redo": {
+    "text": "Redo",
+    "hash": "74273989"
+  },
+  "shape-editor.mc-shape-studio.reload": {
+    "text": "Reload",
+    "hash": "bdc090ec"
+  },
+  "shape-editor.mc-shape-studio.remove-point": {
+    "text": "Remove point",
+    "hash": "272eeda3"
+  },
+  "shape-editor.mc-shape-studio.replaced-your-outline": {
+    "text": "Replaced your outline.",
+    "hash": "81e97882"
+  },
+  "shape-editor.mc-shape-studio.replaces-your-current-outline-undo": {
+    "text": "Replaces your current outline. Undo brings it back.",
+    "hash": "0a5ea167"
+  },
+  "shape-editor.mc-shape-studio.reset": {
+    "text": "Reset",
+    "hash": "daee7606"
+  },
+  "shape-editor.mc-shape-studio.reset-shape": {
+    "text": "Reset shape",
+    "hash": "5076bad9"
+  },
+  "shape-editor.mc-shape-studio.resize-window": {
+    "text": "Resize window",
+    "hash": "c82ca135"
+  },
+  "shape-editor.mc-shape-studio.restore-size": {
+    "text": "Restore size",
+    "hash": "b0a8b5c8"
+  },
+  "shape-editor.mc-shape-studio.reverse-direction": {
+    "text": "Reverse direction",
+    "hash": "f8123301"
+  },
+  "shape-editor.mc-shape-studio.right": {
+    "text": "Right",
+    "hash": "883361d5"
+  },
+  "shape-editor.mc-shape-studio.ring-border-shadow-and-value-background": {
+    "text": "Ring, border, shadow and value background follow the outline.",
+    "hash": "33297534"
+  },
+  "shape-editor.mc-shape-studio.save": {
+    "text": "Save",
+    "hash": "1509f561"
+  },
+  "shape-editor.mc-shape-studio.save-a-shape-here-and-use-it-on-any": {
+    "text": "Save a shape here and use it on any dashboard.",
+    "hash": "14426c46"
+  },
+  "shape-editor.mc-shape-studio.save-as-a-copy": {
+    "text": "Save as a copy",
+    "hash": "0ed28074"
+  },
+  "shape-editor.mc-shape-studio.save-as-new": {
+    "text": "Save as new",
+    "hash": "84b113d1"
+  },
+  "shape-editor.mc-shape-studio.save-current-shape": {
+    "text": "Save current shape",
+    "hash": "2ac6f73e"
+  },
+  "shape-editor.mc-shape-studio.save-to-library": {
+    "text": "Save to library",
+    "hash": "c2a5bbbd"
+  },
+  "shape-editor.mc-shape-studio.saved": {
+    "text": "Saved",
+    "hash": "b5c120b3"
+  },
+  "shape-editor.mc-shape-studio.saved-shape-id-was-not-found-this-card": {
+    "text": "Saved shape \"{id}\" was not found. This card uses its own copy.",
+    "hash": "8630edbc"
+  },
+  "shape-editor.mc-shape-studio.saved-to-library-as-name-press-done-to": {
+    "text": "Saved to library as {name}. Press Done to use it on this card.",
+    "hash": "408a284c"
+  },
+  "shape-editor.mc-shape-studio.search-my-shapes": {
+    "text": "Search my shapes",
+    "hash": "0d98a640"
+  },
+  "shape-editor.mc-shape-studio.select": {
+    "text": "Select",
+    "hash": "2a78025d"
+  },
+  "shape-editor.mc-shape-studio.selected-point": {
+    "text": "Selected point",
+    "hash": "53f29419"
+  },
+  "shape-editor.mc-shape-studio.shape": {
+    "text": "Shape",
+    "hash": "e0e49270"
+  },
+  "shape-editor.mc-shape-studio.shape-applied-to-target": {
+    "text": "Shape applied to {target}",
+    "hash": "8a00a636"
+  },
+  "shape-editor.mc-shape-studio.shape-editor": {
+    "text": "Shape editor",
+    "hash": "3bc2119f"
+  },
+  "shape-editor.mc-shape-studio.shape-for-target": {
+    "text": "Shape for {target}",
+    "hash": "0249f157"
+  },
+  "shape-editor.mc-shape-studio.shape-name": {
+    "text": "Shape name",
+    "hash": "b410af75"
+  },
+  "shape-editor.mc-shape-studio.shape-to-combine": {
+    "text": "Shape to combine",
+    "hash": "3cf7eed8"
+  },
+  "shape-editor.mc-shape-studio.shape-type": {
+    "text": "Shape type",
+    "hash": "78d36bc8"
+  },
+  "shape-editor.mc-shape-studio.shapes": {
+    "text": "Shapes",
+    "hash": "75e8028a"
+  },
+  "shape-editor.mc-shape-studio.short-no-slashes-shown-in-the-list": {
+    "text": "Short, no slashes. Shown in the list.",
+    "hash": "33a8c650"
+  },
+  "shape-editor.mc-shape-studio.shortcuts": {
+    "text": "Shortcuts",
+    "hash": "46e978d0"
+  },
+  "shape-editor.mc-shape-studio.show-full-message": {
+    "text": "Show full message",
+    "hash": "95bdb276"
+  },
+  "shape-editor.mc-shape-studio.show-older-browser-look": {
+    "text": "Show older browser look",
+    "hash": "cb209997"
+  },
+  "shape-editor.mc-shape-studio.show-text-area": {
+    "text": "Show text area",
+    "hash": "a7870589"
+  },
+  "shape-editor.mc-shape-studio.shown-at-pct": {
+    "text": "shown at {pct}%",
+    "hash": "055643c5"
+  },
+  "shape-editor.mc-shape-studio.side-panel": {
+    "text": "Side panel",
+    "hash": "c28cdd98"
+  },
+  "shape-editor.mc-shape-studio.sidebar": {
+    "text": "Sidebar",
+    "hash": "f7efa7bc"
+  },
+  "shape-editor.mc-shape-studio.size": {
+    "text": "Size",
+    "hash": "1af85190"
+  },
+  "shape-editor.mc-shape-studio.skip-to-canvas": {
+    "text": "Skip to canvas",
+    "hash": "10a92c72"
+  },
+  "shape-editor.mc-shape-studio.skip-to-inspector": {
+    "text": "Skip to inspector",
+    "hash": "fe11bbd8"
+  },
+  "shape-editor.mc-shape-studio.skip-to-point-fields": {
+    "text": "Skip to point fields",
+    "hash": "71cb500a"
+  },
+  "shape-editor.mc-shape-studio.smooth": {
+    "text": "Smooth",
+    "hash": "da519387"
+  },
+  "shape-editor.mc-shape-studio.smoothing": {
+    "text": "Smoothing",
+    "hash": "fcae13f0"
+  },
+  "shape-editor.mc-shape-studio.snap": {
+    "text": "Snap",
+    "hash": "98df9a59"
+  },
+  "shape-editor.mc-shape-studio.space-for-text": {
+    "text": "Space for text",
+    "hash": "93d660a2"
+  },
+  "shape-editor.mc-shape-studio.space-for-text-top-right-bottom-left": {
+    "text": "Space for text: top, right, bottom, left",
+    "hash": "3d264e4e"
+  },
+  "shape-editor.mc-shape-studio.square-corners-have-no-size": {
+    "text": "Square corners have no size.",
+    "hash": "512d1c82"
+  },
+  "shape-editor.mc-shape-studio.start-from": {
+    "text": "Start from...",
+    "hash": "70adf727"
+  },
+  "shape-editor.mc-shape-studio.start-from-a-shape": {
+    "text": "Start from a shape...",
+    "hash": "b82679a3"
+  },
+  "shape-editor.mc-shape-studio.start-from-a-shape-2": {
+    "text": "Start from a shape",
+    "hash": "681c3923"
+  },
+  "shape-editor.mc-shape-studio.started-from-circle-on-a-wide-card-the": {
+    "text": "Started from Circle. On a wide card the custom shape is a pill, not an ellipse.",
+    "hash": "5dfd5462"
+  },
+  "shape-editor.mc-shape-studio.started-from-k": {
+    "text": "Started from {k}.",
+    "hash": "a54d2042"
+  },
+  "shape-editor.mc-shape-studio.started-from-k-switched-to-free-shape": {
+    "text": "Started from {k}. Switched to Free shape.",
+    "hash": "476cfcc2"
+  },
+  "shape-editor.mc-shape-studio.started-from-name-it-opens-as-a-path-so": {
+    "text": "Started from {name}. It opens as a path, so you can move every point.",
+    "hash": "025a2eea"
+  },
+  "shape-editor.mc-shape-studio.started-from-name-your-changes-make-this": {
+    "text": "Started from {name}. Your changes make this shape custom.",
+    "hash": "aa2f8ca7"
+  },
+  "shape-editor.mc-shape-studio.started-from-notch-its-corners-are-cut": {
+    "text": "Started from Notch. Its corners are cut straight, so they start as Bevel.",
+    "hash": "1e5f8a46"
+  },
+  "shape-editor.mc-shape-studio.starters": {
+    "text": "Starters",
+    "hash": "15f2172d"
+  },
+  "shape-editor.mc-shape-studio.stays-the-same-on-every-card-size": {
+    "text": "Stays the same on every card size.",
+    "hash": "13243b54"
+  },
+  "shape-editor.mc-shape-studio.stretch": {
+    "text": "Stretch",
+    "hash": "a33fbcf8"
+  },
+  "shape-editor.mc-shape-studio.tab-into-the-canvas-and-choose-a-point": {
+    "text": "Tab into the canvas. [ and ] choose a point. Arrows move it.",
+    "hash": "3f3b175d"
+  },
+  "shape-editor.mc-shape-studio.the-corners-cut-into-the-text-area-raise": {
+    "text": "The corners cut into the text area. Raise the extra space or make corners smaller.",
+    "hash": "5783d6fd"
+  },
+  "shape-editor.mc-shape-studio.the-outline-crosses-itself-at-where": {
+    "text": "The outline crosses itself at {where}.",
+    "hash": "d8ecd099"
+  },
+  "shape-editor.mc-shape-studio.the-outline-cuts-into-the-text-area-at": {
+    "text": "The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.",
+    "hash": "abfb4376"
+  },
+  "shape-editor.mc-shape-studio.the-path-editor-could-not-load-check": {
+    "text": "The path editor could not load. Check your connection and try again.",
+    "hash": "2f4eddc0"
+  },
+  "shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape": {
+    "text": "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.",
+    "hash": "6ee3a28c"
+  },
+  "shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check": {
+    "text": "The shape editor could not load. Check your connection and try again.",
+    "hash": "433d9c4b"
+  },
+  "shape-editor.mc-shape-studio.these-shapes-have-too-many-points-to": {
+    "text": "These shapes have too many points to combine. Nothing was changed.",
+    "hash": "54e66ea9"
+  },
+  "shape-editor.mc-shape-studio.this-shape-is-too-big-for-the-library-8": {
+    "text": "This shape is too big for the library (8 KB).",
+    "hash": "3c95c8e1"
+  },
+  "shape-editor.mc-shape-studio.this-shape-was-changed-somewhere-else": {
+    "text": "This shape was changed somewhere else.",
+    "hash": "cb73166b"
+  },
+  "shape-editor.mc-shape-studio.ticket-wave-and-blob-can-t-be-edited-yet": {
+    "text": "Ticket, Wave and Blob can't be edited yet. Use the preset as it is.",
+    "hash": "c3e75d36"
+  },
+  "shape-editor.mc-shape-studio.top": {
+    "text": "Top",
+    "hash": "d5cdfcf7"
+  },
+  "shape-editor.mc-shape-studio.try-again": {
+    "text": "Try again",
+    "hash": "d8b8392e"
+  },
+  "shape-editor.mc-shape-studio.type": {
+    "text": "Type",
+    "hash": "baaddf70"
+  },
+  "shape-editor.mc-shape-studio.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "shape-editor.mc-shape-studio.unit": {
+    "text": "Unit",
+    "hash": "4e545960"
+  },
+  "shape-editor.mc-shape-studio.update-name": {
+    "text": "Update \"{name}\"",
+    "hash": "25e29e20"
+  },
+  "shape-editor.mc-shape-studio.use-follows-the-library-change-lamp-and": {
+    "text": "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.",
+    "hash": "383eaa11"
+  },
+  "shape-editor.mc-shape-studio.use-on-this-card": {
+    "text": "Use on this card",
+    "hash": "2537d498"
+  },
+  "shape-editor.mc-shape-studio.vertical-anchor": {
+    "text": "Vertical anchor",
+    "hash": "ad14ed12"
+  },
+  "shape-editor.mc-shape-studio.warning": {
+    "text": "Warning",
+    "hash": "e981ddae"
+  },
+  "shape-editor.mc-shape-studio.width": {
+    "text": "Width",
+    "hash": "3019947b"
+  },
+  "shape-editor.mc-shape-studio.working": {
+    "text": "Working...",
+    "hash": "b93900bd"
+  },
+  "shape-editor.mc-shape-studio.x-from-the-left-edge": {
+    "text": "X, from the left edge",
+    "hash": "ad284a53"
+  },
+  "shape-editor.mc-shape-studio.x-y": {
+    "text": "{x}, {y}",
+    "hash": "8ec3092c"
+  },
+  "shape-editor.mc-shape-studio.y-from-the-top-edge": {
+    "text": "Y, from the top edge",
+    "hash": "76233527"
+  },
+  "shape-editor.names.a-quarter-circle": {
+    "text": "A quarter circle.",
+    "hash": "b1018945"
+  },
+  "shape-editor.names.a-quarter-circle-cut-into-the-card": {
+    "text": "A quarter circle cut into the card.",
+    "hash": "4a8ed575"
+  },
+  "shape-editor.names.a-softer-round-between-a-circle-and-a": {
+    "text": "A softer round, between a circle and a square.",
+    "hash": "87e3ee76"
+  },
+  "shape-editor.names.a-square-step-cut-into-the-corner": {
+    "text": "A square step cut into the corner.",
+    "hash": "42893173"
+  },
+  "shape-editor.names.a-straight-diagonal-cut": {
+    "text": "A straight diagonal cut.",
+    "hash": "a389b055"
+  },
+  "shape-editor.names.arrow": {
+    "text": "Arrow",
+    "hash": "05800e70"
+  },
+  "shape-editor.names.arrow-keys-move-the-point-shift-moves-it": {
+    "text": "Arrow keys move the point. Shift moves it further, Alt moves it less.",
+    "hash": "b10e29d7"
+  },
+  "shape-editor.names.bevel": {
+    "text": "Bevel",
+    "hash": "72c3bce2"
+  },
+  "shape-editor.names.bottom": {
+    "text": "Bottom",
+    "hash": "479ad21a"
+  },
+  "shape-editor.names.bottom-left-corner": {
+    "text": "Bottom left corner",
+    "hash": "4fd7d6ec"
+  },
+  "shape-editor.names.bottom-right-corner": {
+    "text": "Bottom right corner",
+    "hash": "85004d7a"
+  },
+  "shape-editor.names.chevron": {
+    "text": "Chevron",
+    "hash": "c9143fa6"
+  },
+  "shape-editor.names.circle": {
+    "text": "Circle",
+    "hash": "b93d3bce"
+  },
+  "shape-editor.names.cloud": {
+    "text": "Cloud",
+    "hash": "b977b950"
+  },
+  "shape-editor.names.combine": {
+    "text": "Combine",
+    "hash": "35843e7a"
+  },
+  "shape-editor.names.ctrl-z-undoes-ctrl-shift-z-redoes-ctrl-s": {
+    "text": "Ctrl+Z undoes, Ctrl+Shift+Z redoes, Ctrl+S saves.",
+    "hash": "caa1eb9c"
+  },
+  "shape-editor.names.custom": {
+    "text": "Custom",
+    "hash": "494ca78f"
+  },
+  "shape-editor.names.custom-size": {
+    "text": "Custom size",
+    "hash": "d432bb2b"
+  },
+  "shape-editor.names.cut-corners": {
+    "text": "Cut corners",
+    "hash": "07b488c7"
+  },
+  "shape-editor.names.delete-removes-the-point": {
+    "text": "Delete removes the point.",
+    "hash": "21bdd743"
+  },
+  "shape-editor.names.distance-from-the-bottom-edge": {
+    "text": "Distance from the bottom edge",
+    "hash": "27f44a85"
+  },
+  "shape-editor.names.distance-from-the-left-edge": {
+    "text": "Distance from the left edge",
+    "hash": "1d3dc583"
+  },
+  "shape-editor.names.distance-from-the-right-edge": {
+    "text": "Distance from the right edge",
+    "hash": "2dd0ceaa"
+  },
+  "shape-editor.names.distance-from-the-top-edge": {
+    "text": "Distance from the top edge",
+    "hash": "52c9413d"
+  },
+  "shape-editor.names.drop": {
+    "text": "Drop",
+    "hash": "c8af9ae3"
+  },
+  "shape-editor.names.ellipse": {
+    "text": "Ellipse",
+    "hash": "cb1ee8cb"
+  },
+  "shape-editor.names.esc-closes-a-window-then-ends-a-drawing": {
+    "text": "Esc closes a window, then ends a drawing.",
+    "hash": "58a8115d"
+  },
+  "shape-editor.names.h": {
+    "text": "H",
+    "hash": "44bd7ae6"
+  },
+  "shape-editor.names.heart": {
+    "text": "Heart",
+    "hash": "770af9d1"
+  },
+  "shape-editor.names.hexagon": {
+    "text": "Hexagon",
+    "hash": "ddcc1ac4"
+  },
+  "shape-editor.names.in-handle": {
+    "text": "In handle",
+    "hash": "543fe7c6"
+  },
+  "shape-editor.names.intersect": {
+    "text": "Intersect",
+    "hash": "a069db5b"
+  },
+  "shape-editor.names.keep-your-own-shapes-for-every-dashboard": {
+    "text": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on.",
+    "hash": "dce834e3"
+  },
+  "shape-editor.names.lamp-on": {
+    "text": "Lamp on",
+    "hash": "a91d3d2e"
+  },
+  "shape-editor.names.leaf": {
+    "text": "Leaf",
+    "hash": "b83382a9"
+  },
+  "shape-editor.names.left": {
+    "text": "Left",
+    "hash": "58eb9032"
+  },
+  "shape-editor.names.living-room": {
+    "text": "Living room",
+    "hash": "268d40ee"
+  },
+  "shape-editor.names.no-change-a-sharp-corner": {
+    "text": "No change, a sharp corner.",
+    "hash": "d5f8bc1f"
+  },
+  "shape-editor.names.notch": {
+    "text": "Notch",
+    "hash": "ff4af744"
+  },
+  "shape-editor.names.notched": {
+    "text": "Notched",
+    "hash": "6cbb79ed"
+  },
+  "shape-editor.names.octagon": {
+    "text": "Octagon",
+    "hash": "5935d200"
+  },
+  "shape-editor.names.out-handle": {
+    "text": "Out handle",
+    "hash": "0709db79"
+  },
+  "shape-editor.names.pill": {
+    "text": "Pill",
+    "hash": "9945c78b"
+  },
+  "shape-editor.names.plus": {
+    "text": "Plus",
+    "hash": "8a784378"
+  },
+  "shape-editor.names.right": {
+    "text": "Right",
+    "hash": "883361d5"
+  },
+  "shape-editor.names.right-click-long-press-the-menu-key-or": {
+    "text": "Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.",
+    "hash": "95b3fb5d"
+  },
+  "shape-editor.names.round": {
+    "text": "Round",
+    "hash": "cd9558ac"
+  },
+  "shape-editor.names.rounded": {
+    "text": "Rounded",
+    "hash": "0a62cd80"
+  },
+  "shape-editor.names.rounded-rectangle": {
+    "text": "Rounded rectangle",
+    "hash": "c93421a7"
+  },
+  "shape-editor.names.row": {
+    "text": "Row",
+    "hash": "95110d74"
+  },
+  "shape-editor.names.row-wide-360-x-120": {
+    "text": "Row, wide 360 x 120",
+    "hash": "c24961e5"
+  },
+  "shape-editor.names.scoop": {
+    "text": "Scoop",
+    "hash": "f1a13c3a"
+  },
+  "shape-editor.names.scooped": {
+    "text": "Scooped",
+    "hash": "9ba6da6f"
+  },
+  "shape-editor.names.semicircle": {
+    "text": "Semicircle",
+    "hash": "9b449f0f"
+  },
+  "shape-editor.names.shield": {
+    "text": "Shield",
+    "hash": "480d4be7"
+  },
+  "shape-editor.names.show-or-hide-panels-ctrl-or": {
+    "text": "Show or hide panels: Ctrl+\\ or ⌘\\",
+    "hash": "0d82d33d"
+  },
+  "shape-editor.names.speech-bubble": {
+    "text": "Speech bubble",
+    "hash": "21056362"
+  },
+  "shape-editor.names.square": {
+    "text": "Square",
+    "hash": "c11092bc"
+  },
+  "shape-editor.names.squircle": {
+    "text": "Squircle",
+    "hash": "7c243a9e"
+  },
+  "shape-editor.names.star": {
+    "text": "Star",
+    "hash": "e357d396"
+  },
+  "shape-editor.names.subtract": {
+    "text": "Subtract",
+    "hash": "63df016f"
+  },
+  "shape-editor.names.tab": {
+    "text": "Tab",
+    "hash": "90ddf196"
+  },
+  "shape-editor.names.tab-into-the-canvas-then-and-choose-a": {
+    "text": "Tab into the canvas, then [ and ] choose a point.",
+    "hash": "6addebe6"
+  },
+  "shape-editor.names.tag": {
+    "text": "Tag",
+    "hash": "1503916a"
+  },
+  "shape-editor.names.the-library-is-full-delete-a-shape-first": {
+    "text": "The library is full. Delete a shape first.",
+    "hash": "8149cd33"
+  },
+  "shape-editor.names.this-shape-changed-while-you-were": {
+    "text": "This shape changed while you were editing. Save as new, or reload it.",
+    "hash": "b99d7188"
+  },
+  "shape-editor.names.this-shape-is-too-big-for-the-library-8": {
+    "text": "This shape is too big for the library (8 KB).",
+    "hash": "3c95c8e1"
+  },
+  "shape-editor.names.ticket": {
+    "text": "Ticket",
+    "hash": "567a8b5f"
+  },
+  "shape-editor.names.tile": {
+    "text": "Tile",
+    "hash": "6ea3c194"
+  },
+  "shape-editor.names.tile-square-120-x-120": {
+    "text": "Tile, square 120 x 120",
+    "hash": "367d4ee8"
+  },
+  "shape-editor.names.top": {
+    "text": "Top",
+    "hash": "d5cdfcf7"
+  },
+  "shape-editor.names.top-left-corner": {
+    "text": "Top left corner",
+    "hash": "6d3e61ad"
+  },
+  "shape-editor.names.top-right-corner": {
+    "text": "Top right corner",
+    "hash": "596a26ae"
+  },
+  "shape-editor.names.triangle": {
+    "text": "Triangle",
+    "hash": "a0252691"
+  },
+  "shape-editor.names.two-notched-corners": {
+    "text": "Two notched corners",
+    "hash": "6e9bf7c3"
+  },
+  "shape-editor.names.v-is-select-p-is-pen": {
+    "text": "V is Select. P is Pen.",
+    "hash": "04561623"
+  },
+  "shape-editor.names.w": {
+    "text": "W",
+    "hash": "fcb5f40d"
+  },
+  "shape-editor.names.wide": {
+    "text": "Wide",
+    "hash": "147170e7"
+  },
+  "shape-editor.names.wide-banner": {
+    "text": "Wide banner",
+    "hash": "46a04851"
+  },
+  "shape-editor.names.wide-banner-720-x-200": {
+    "text": "Wide banner 720 x 200",
+    "hash": "4cb7112d"
+  },
+  "shape-editor.names.x": {
+    "text": "X",
+    "hash": "4b68ab38"
+  },
+  "shape-editor.names.y": {
+    "text": "Y",
+    "hash": "18f5384d"
+  },
+  "shape-editor.names.your-account-can-use-the-library-but-not": {
+    "text": "Your account can use the library but not change it. Ask an admin, or keep this shape in the card only.",
+    "hash": "9a720207"
+  }
 }

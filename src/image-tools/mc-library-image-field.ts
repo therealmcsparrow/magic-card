@@ -252,7 +252,7 @@ export class McLibraryImageField extends LitElement {
     this._emit(keys);
     this._mode = 'library';
     this._picking = false;
-    const said = t('Image set: {name}.', { name }) + (shapeSet ? ' ' + t('Card shape set to {shape}.', { shape: String(keys.aspect_ratio) }) : '');
+    const said = t('image-tools.mc-library-image-field.image-set-name', { name }) + (shapeSet ? ' ' + t('image-tools.mc-library-image-field.card-shape-set-to-shape', { shape: String(keys.aspect_ratio) }) : '');
     this._say(said);
     carry = { id, context: this.context, msg: said, until: Date.now() + CARRY_MS };
     this._focusChoose();
@@ -277,11 +277,11 @@ export class McLibraryImageField extends LitElement {
 
   private async _copy(): Promise<void> {
     const ok = await copyText(this.value, this.shadowRoot!);
-    this._say(ok ? t('Reference copied.') : t('The reference could not be copied. Select it and copy it by hand.'));
+    this._say(ok ? t('image-tools.mc-library-image-field.reference-copied') : t('image-tools.mc-library-image-field.the-reference-could-not-be-copied-select'));
   }
 
   private _addModule(): void {
-    if (addImageModuleBehind(this, this.value, this._shape?.label)) this._say(t('Image module added behind the content. Remove the background layer if you no longer need it.'));
+    if (addImageModuleBehind(this, this.value, this._shape?.label)) this._say(t('image-tools.mc-library-image-field.image-module-added-behind-the-content'));
   }
 
   private _colours(patch: { main?: string; accent?: string }): void {
@@ -298,7 +298,7 @@ export class McLibraryImageField extends LitElement {
 
   private _stateText(eid: string): string {
     const st = this.hass?.states?.[eid];
-    if (!st) return t('(not found)');
+    if (!st) return t('image-tools.mc-library-image-field.not-found');
     const fmt = (this.hass as unknown as { formatEntityState?: (s: unknown) => string })?.formatEntityState;
     return typeof fmt === 'function' ? fmt.call(this.hass, st) : st.state;
   }
@@ -329,21 +329,21 @@ export class McLibraryImageField extends LitElement {
     const missing = lib && listed && !s;
     const bindings = s?.bindings ?? 0;
     if (!lib) {
-      return html`<div class="acts"><span class="line">${t('No image chosen')}</span>${this._chooseButton(this.compact ? t('Library image') : t('Choose an image'))}</div>`;
+      return html`<div class="acts"><span class="line">${t('image-tools.mc-library-image-field.no-image-chosen')}</span>${this._chooseButton(this.compact ? t('image-tools.mc-library-image-field.library-image') : t('image-tools.mc-library-image-field.choose-an-image'))}</div>`;
     }
     return html`<div class="acts">
         ${this._thumb(s)}
         ${missing
-          ? html`<span class="warn">${t('This image is no longer in the library.')}</span>`
-          : html`<span class="name">${s?.name ?? ''}</span>${this._shape ? html`<span class="chip">${this._shape.label}</span>` : nothing}${this.compact && bindings > 0 ? html`<span class="chip">◆ ${t('Live')}</span>` : nothing}`}
-        ${this._chooseButton(missing ? t('Pick another') : t('Choose'))}
-        ${this.compact ? html`<button type="button" class="btn btn-text btn-sm" data-act="clear" @click=${() => this._emit({ image: '' })}>${t('Clear')}</button>` : nothing}
+          ? html`<span class="warn">${t('image-tools.mc-library-image-field.this-image-is-no-longer-in-the-library')}</span>`
+          : html`<span class="name">${s?.name ?? ''}</span>${this._shape ? html`<span class="chip">${this._shape.label}</span>` : nothing}${this.compact && bindings > 0 ? html`<span class="chip">◆ ${t('image-tools.mc-library-image-field.live')}</span>` : nothing}`}
+        ${this._chooseButton(missing ? t('image-tools.mc-library-image-field.pick-another') : t('image-tools.mc-library-image-field.choose'))}
+        ${this.compact ? html`<button type="button" class="btn btn-text btn-sm" data-act="clear" @click=${() => this._emit({ image: '' })}>${t('image-tools.mc-library-image-field.clear')}</button>` : nothing}
         ${!this.compact && !missing && this._id
-          ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="edit" @click=${() => void this._openEditor({ kind: 'image', id: this._id! })}>${this._canWrite ? t('Edit image') : t('View image')}</button>`
+          ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="edit" @click=${() => void this._openEditor({ kind: 'image', id: this._id! })}>${this._canWrite ? t('image-tools.mc-library-image-field.edit-image') : t('image-tools.mc-library-image-field.view-image')}</button>`
           : nothing}
-        ${!this.compact && this._id ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="copy" @click=${() => void this._copy()}>${t('Copy reference')}</button>` : nothing}
+        ${!this.compact && this._id ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="copy" @click=${() => void this._copy()}>${t('image-tools.mc-library-image-field.copy-reference')}</button>` : nothing}
       </div>
-      ${this.compact ? nothing : html`<p class="line"><code>${this.value}</code></p><p class="help">${t('This is the address cards use. It stays the same when you rename the image.')}</p>`}
+      ${this.compact ? nothing : html`<p class="line"><code>${this.value}</code></p><p class="help">${t('image-tools.mc-library-image-field.this-is-the-address-cards-use-it-stays')}</p>`}
       ${bindings > 0 && !this.compact ? this._usesBlock() : nothing}`;
   }
 
@@ -352,10 +352,10 @@ export class McLibraryImageField extends LitElement {
     const n = list.length || 0;
     if (!n) return html``;
     return html`<div class="line">
-      ${t('{n, plural, one {Uses # device} other {Uses # devices}}', { n })}
-      <button type="button" class="btn btn-text btn-sm" data-act="uses" aria-expanded=${this._uses ? 'true' : 'false'} @click=${() => (this._uses = !this._uses)}>${this._uses ? t('Hide list') : t('Show list')}</button>
+      ${t('image-tools.mc-library-image-field.n', { n })}
+      <button type="button" class="btn btn-text btn-sm" data-act="uses" aria-expanded=${this._uses ? 'true' : 'false'} @click=${() => (this._uses = !this._uses)}>${this._uses ? t('image-tools.mc-library-image-field.hide-list') : t('image-tools.mc-library-image-field.show-list')}</button>
       ${this._uses
-        ? html`<ul class="uses-list">${list.map((e) => html`<li>${this.hass?.states?.[e] ? this._friendly(e) : t('{id} (not found)', { id: e })}</li>`)}</ul>`
+        ? html`<ul class="uses-list">${list.map((e) => html`<li>${this.hass?.states?.[e] ? this._friendly(e) : t('image-tools.mc-library-image-field.id-not-found', { id: e })}</li>`)}</ul>`
         : nothing}
     </div>`;
   }
@@ -365,15 +365,15 @@ export class McLibraryImageField extends LitElement {
     const missingMcu = this._list?.state === 'missing';
     const mode = this._mode ?? (isLibraryValue(this.value) ? 'library' : this.value ? 'url' : missingMcu ? 'url' : 'library');
     return html`<div class="choice">
-        <label><input type="radio" name="src" value="library" ?disabled=${missingMcu && !isLibraryValue(this.value)} .checked=${mode === 'library'} @change=${() => (this._mode = 'library')} />${t('Library image')}</label>
-        <label><input type="radio" name="src" value="url" .checked=${mode === 'url'} @change=${() => (this._mode = 'url')} />${t('Address or media')}</label>
+        <label><input type="radio" name="src" value="library" ?disabled=${missingMcu && !isLibraryValue(this.value)} .checked=${mode === 'library'} @change=${() => (this._mode = 'library')} />${t('image-tools.mc-library-image-field.library-image')}</label>
+        <label><input type="radio" name="src" value="url" .checked=${mode === 'url'} @change=${() => (this._mode = 'url')} />${t('image-tools.mc-library-image-field.address-or-media')}</label>
       </div>
-      ${missingMcu ? html`<p class="help">${t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.')}</p>` : nothing}
+      ${missingMcu ? html`<p class="help">${t('image-tools.mc-library-image-field.images-need-magic-card-utils-it-is')}</p>` : nothing}
       ${mode === 'library'
         ? html`${this._chosen()}
-            ${this._canWrite ? html`<div class="acts"><button type="button" class="btn btn-secondary btn-sm" data-act="draw" @click=${() => void this._openEditor({ kind: 'image-blank' })}>${t('Draw a new image')}</button></div>` : nothing}`
+            ${this._canWrite ? html`<div class="acts"><button type="button" class="btn btn-secondary btn-sm" data-act="draw" @click=${() => void this._openEditor({ kind: 'image-blank' })}>${t('image-tools.mc-library-image-field.draw-a-new-image')}</button></div>` : nothing}`
         : this._media()}
-      ${this._failed ? html`<p class="warn" role="alert">${t('The drawing editor could not load. Try again.')}</p>` : nothing}`;
+      ${this._failed ? html`<p class="warn" role="alert">${t('image-tools.mc-library-image-field.the-drawing-editor-could-not-load-try')}</p>` : nothing}`;
   }
 
   private _shapeBlock(): TemplateResult | typeof nothing {
@@ -381,19 +381,19 @@ export class McLibraryImageField extends LitElement {
     const aspect = this.module.aspect_ratio;
     const set = aspect !== undefined && aspect !== null && String(aspect).trim() !== '';
     if (!shape || !set || sameShape(aspect, shape)) return nothing;
-    return html`<div class="acts"><span class="line">${t('The card shape ({card}) differs from the drawing ({drawing}).', { card: String(aspect), drawing: shape.label })}</span>
-      <button type="button" class="btn btn-secondary btn-sm" data-act="use-shape" @click=${() => this._emit(shapeKeys(shape))}>${t("Use the drawing's shape")}</button></div>`;
+    return html`<div class="acts"><span class="line">${t('image-tools.mc-library-image-field.the-card-shape-card-differs-from-the', { card: String(aspect), drawing: shape.label })}</span>
+      <button type="button" class="btn btn-secondary btn-sm" data-act="use-shape" @click=${() => this._emit(shapeKeys(shape))}>${t("image-tools.mc-library-image-field.use-the-drawing-s-shape")}</button></div>`;
   }
 
   private _coloursBlock(): TemplateResult {
     const c = this.module.colors ?? {};
     return html`<div class="block">
-      <div class="colours" role="group" aria-label=${t('Colours')}>
-        <div><span class="line">${t('Main colour')}</span><mc-color-picker .value=${c.main ?? ''} .label=${t('Main colour')} @value-changed=${(e: CustomEvent) => { e.stopPropagation(); this._colours({ main: String(e.detail.value) }); }}></mc-color-picker></div>
-        <div><span class="line">${t('Accent colour')}</span><mc-color-picker .value=${c.accent ?? ''} .label=${t('Accent colour')} @value-changed=${(e: CustomEvent) => { e.stopPropagation(); this._colours({ accent: String(e.detail.value) }); }}></mc-color-picker></div>
+      <div class="colours" role="group" aria-label=${t('image-tools.mc-library-image-field.colours')}>
+        <div><span class="line">${t('image-tools.mc-library-image-field.main-colour')}</span><mc-color-picker .value=${c.main ?? ''} .label=${t('image-tools.mc-library-image-field.main-colour')} @value-changed=${(e: CustomEvent) => { e.stopPropagation(); this._colours({ main: String(e.detail.value) }); }}></mc-color-picker></div>
+        <div><span class="line">${t('image-tools.mc-library-image-field.accent-colour')}</span><mc-color-picker .value=${c.accent ?? ''} .label=${t('image-tools.mc-library-image-field.accent-colour')} @value-changed=${(e: CustomEvent) => { e.stopPropagation(); this._colours({ accent: String(e.detail.value) }); }}></mc-color-picker></div>
         <mc-svg-image class="strip" .ref=${this.value} .hass=${this.hass} .colors=${c} .fit=${'contain'}></mc-svg-image>
       </div>
-      <p class="help">${t('Main and Accent follow the colours you set for this card.')}</p>
+      <p class="help">${t('image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you')}</p>
     </div>`;
   }
 
@@ -404,26 +404,26 @@ export class McLibraryImageField extends LitElement {
     const lib = !!this._summary;
     const summaryOn = this.module.state_summary === true;
     const entities = entitiesOf(this._img?.bindings);
-    const shown = entities.slice(0, LIST_SHOWN).map((e) => (this.hass?.states?.[e] ? `${this._friendly(e)}: ${this._stateText(e)}` : `${e}: ${t('(not found)')}`));
+    const shown = entities.slice(0, LIST_SHOWN).map((e) => (this.hass?.states?.[e] ? `${this._friendly(e)}: ${this._stateText(e)}` : `${e}: ${t('image-tools.mc-library-image-field.not-found')}`));
     return html`<div class="block">
-      <label for="desc" class="name">${t('Description for screen readers')}</label>
+      <label for="desc" class="name">${t('image-tools.mc-library-image-field.description-for-screen-readers')}</label>
       <textarea id="desc" maxlength=${DESCRIPTION_MAX} aria-describedby="desc-h desc-s" .value=${d} @input=${(e: Event) => this._emit({ description: (e.target as HTMLTextAreaElement).value || undefined })}></textarea>
-      ${d.length >= COUNT_FROM ? html`<div class="count">${t('{n} left', { n: left })}</div>` : nothing}
-      ${d.length >= DESCRIPTION_MAX ? html`<p class="warn" role="status">${t('That is the longest description (500 characters).')}</p>` : nothing}
-      <p class="help" id="desc-h">${t('Optional. Describe what the picture shows. Without it, screen readers skip the picture.')}</p>
-      <p class="help" id="desc-s">${d ? t('Set (screen readers read it)') : t('Not set (screen readers skip this picture)')}</p>
+      ${d.length >= COUNT_FROM ? html`<div class="count">${t('image-tools.mc-library-image-field.n-left', { n: left })}</div>` : nothing}
+      ${d.length >= DESCRIPTION_MAX ? html`<p class="warn" role="status">${t('image-tools.mc-library-image-field.that-is-the-longest-description-500')}</p>` : nothing}
+      <p class="help" id="desc-h">${t('image-tools.mc-library-image-field.optional-describe-what-the-picture-shows')}</p>
+      <p class="help" id="desc-s">${d ? t('image-tools.mc-library-image-field.set-screen-readers-read-it') : t('image-tools.mc-library-image-field.not-set-screen-readers-skip-this-picture')}</p>
       ${lib && bindings > 0
         ? html`<div class="switch-row">
-              <div class="txt"><label id="sum-l" for="sum">${t('List connected devices and their states for screen readers')}</label>
-                <p class="help" id="sum-h">${t('Adds a hidden list after the picture, for example "Kitchen light: on". It updates when a device changes.')}</p></div>
-              <span class="state" aria-hidden="true">${summaryOn ? t('On') : t('Off')}</span>
+              <div class="txt"><label id="sum-l" for="sum">${t('image-tools.mc-library-image-field.list-connected-devices-and-their-states')}</label>
+                <p class="help" id="sum-h">${t('image-tools.mc-library-image-field.adds-a-hidden-list-after-the-picture-for')}</p></div>
+              <span class="state" aria-hidden="true">${summaryOn ? t('image-tools.mc-library-image-field.on') : t('image-tools.mc-library-image-field.off')}</span>
               <button type="button" class="switch" role="switch" id="sum" aria-checked=${summaryOn ? 'true' : 'false'} aria-labelledby="sum-l" aria-describedby="sum-h" @click=${() => this._emit({ state_summary: summaryOn ? undefined : true })}></button>
             </div>
             ${summaryOn
-              ? html`<p class="line will-read">${t('Will read now:')} ${shown.join(', ')}${entities.length > LIST_SHOWN ? ` ${t('and {n} more', { n: entities.length - LIST_SHOWN })}` : ''}</p>
-                  <p class="help">${t('Rename a device in Home Assistant to change what is read.')}</p>`
+              ? html`<p class="line will-read">${t('image-tools.mc-library-image-field.will-read-now')} ${shown.join(', ')}${entities.length > LIST_SHOWN ? ` ${t('image-tools.mc-library-image-field.and-n-more', { n: entities.length - LIST_SHOWN })}` : ''}</p>
+                  <p class="help">${t('image-tools.mc-library-image-field.rename-a-device-in-home-assistant-to')}</p>`
               : nothing}
-            ${!d && !summaryOn ? html`<p class="line">${t('This picture shows live devices. Add a description or switch on the list so everyone can follow it.')}</p>` : nothing}`
+            ${!d && !summaryOn ? html`<p class="line">${t('image-tools.mc-library-image-field.this-picture-shows-live-devices-add-a')}</p>` : nothing}`
         : nothing}
     </div>`;
   }
@@ -432,11 +432,11 @@ export class McLibraryImageField extends LitElement {
     if (this.compact || !isLibraryValue(this.value)) return nothing;
     const live = (this._summary?.bindings ?? 0) > 0;
     const canAdd = !!this._id && !!cardStateOf(this);
-    return html`${live ? html`<p class="help">${t('Live: parts of this picture follow their devices, here too.')}</p>` : nothing}
-      <p class="help">${t('This is a background. Screen readers skip it, and it cannot hold buttons.')}</p>
+    return html`${live ? html`<p class="help">${t('image-tools.mc-library-image-field.live-parts-of-this-picture-follow-their')}</p>` : nothing}
+      <p class="help">${t('image-tools.mc-library-image-field.this-is-a-background-screen-readers-skip')}</p>
       ${canAdd
-        ? html`<div class="acts"><span class="line">${t('Need buttons or a description?')}</span>
-            <button type="button" class="btn btn-secondary btn-sm" data-act="add-module" @click=${() => this._addModule()}>${t('Add an image module behind the content')}</button></div>`
+        ? html`<div class="acts"><span class="line">${t('image-tools.mc-library-image-field.need-buttons-or-a-description')}</span>
+            <button type="button" class="btn btn-secondary btn-sm" data-act="add-module" @click=${() => this._addModule()}>${t('image-tools.mc-library-image-field.add-an-image-module-behind-the-content')}</button></div>`
         : nothing}`;
   }
 
@@ -444,9 +444,9 @@ export class McLibraryImageField extends LitElement {
     const lib = isLibraryValue(this.value);
     const module = this.context === 'module' && !this.compact;
     return html`<fieldset>
-        <legend>${this.label || t('Image')}</legend>
+        <legend>${this.label || t('image-tools.mc-library-image-field.image')}</legend>
         <p class="result" role="status">${this._msg}</p>
-        ${this.statesHint ? html`<p class="help" data-hint="states">${t('To change colours, use live parts in one picture. To swap pictures, use states.')}</p>` : nothing}
+        ${this.statesHint ? html`<p class="help" data-hint="states">${t('image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one')}</p>` : nothing}
         ${this.hideSource ? nothing : this._source()}
         ${this.hideSource ? nothing : this.context === 'background' ? this._backgroundBlock() : nothing}
         ${module && !this.hideSource && lib ? this._shapeBlock() : nothing}

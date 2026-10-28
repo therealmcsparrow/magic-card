@@ -1,19 +1,70 @@
 {
-  "Connection {n} is not valid, so it was left out.": "Koppeling {n} is niet geldig, dus is weggelaten.",
-  "Create copy": "Kopie maken",
-  "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.": "{name} verwijderen? Kaarten die de afbeelding gebruiken tonen dat ze ontbreekt. Dit kan niet ongedaan worden gemaakt.",
-  "Duplicate {name}": "{name} dupliceren",
-  "Duplicated as {name}.": "Gedupliceerd als {name}.",
-  "Export all images": "Alle afbeeldingen exporteren",
-  "Name for the copy of {name}": "Naam voor de kopie van {name}",
-  "New image": "Nieuwe afbeelding",
-  "Only the first {max} connections were kept.": "Alleen de eerste {max} koppelingen zijn bewaard.",
-  "The image could not be read.": "De afbeelding kon niet worden gelezen.",
-  "The image holds markup that is not allowed.": "De afbeelding bevat markup die niet is toegestaan.",
-  "The image is larger than {kb} KB.": "De afbeelding is groter dan {kb} KB.",
-  "View {name}": "{name} bekijken",
-  "{n, plural, one {# connection} other {# connections}}": "{n, plural, one {# koppeling} other {# koppelingen}}",
-  "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}": "{n, plural, one {# andere koppeling is niet geldig, dus is weggelaten.} other {# andere koppelingen zijn niet geldig, dus zijn weggelaten.}}",
-  "{name} copy": "{name} kopie",
-  "{n} KB": "{n} KB"
+  "image-transfer.chunk.create-copy": {
+    "text": "Kopie maken",
+    "hash": "982a7984"
+  },
+  "image-transfer.chunk.delete-name-cards-that-use-it-show-that": {
+    "text": "{name} verwijderen? Kaarten die de afbeelding gebruiken tonen dat ze ontbreekt. Dit kan niet ongedaan worden gemaakt.",
+    "hash": "58b92eb1"
+  },
+  "image-transfer.chunk.duplicate-name": {
+    "text": "{name} dupliceren",
+    "hash": "fe06d16b"
+  },
+  "image-transfer.chunk.duplicated-as-name": {
+    "text": "Gedupliceerd als {name}.",
+    "hash": "a0799a8a"
+  },
+  "image-transfer.chunk.export-all-images": {
+    "text": "Alle afbeeldingen exporteren",
+    "hash": "5e584b06"
+  },
+  "image-transfer.chunk.n": {
+    "text": "{n, plural, one {# koppeling} other {# koppelingen}}",
+    "hash": "53710e8c"
+  },
+  "image-transfer.chunk.n-kb": {
+    "text": "{n} KB",
+    "hash": "eb236725"
+  },
+  "image-transfer.chunk.name-copy": {
+    "text": "{name} kopie",
+    "hash": "938a6418"
+  },
+  "image-transfer.chunk.name-for-the-copy-of-name": {
+    "text": "Naam voor de kopie van {name}",
+    "hash": "0c03740d"
+  },
+  "image-transfer.chunk.new-image": {
+    "text": "Nieuwe afbeelding",
+    "hash": "1699c319"
+  },
+  "image-transfer.chunk.view-name": {
+    "text": "{name} bekijken",
+    "hash": "4998bc27"
+  },
+  "image-transfer.reader.connection-n-is-not-valid-so-it-was-left": {
+    "text": "Koppeling {n} is niet geldig, dus is weggelaten.",
+    "hash": "9c9b580c"
+  },
+  "image-transfer.reader.n": {
+    "text": "{n, plural, one {# andere koppeling is niet geldig, dus is weggelaten.} other {# andere koppelingen zijn niet geldig, dus zijn weggelaten.}}",
+    "hash": "3e1302d5"
+  },
+  "image-transfer.reader.only-the-first-max-connections-were-kept": {
+    "text": "Alleen de eerste {max} koppelingen zijn bewaard.",
+    "hash": "d5184c17"
+  },
+  "image-transfer.reader.the-image-could-not-be-read": {
+    "text": "De afbeelding kon niet worden gelezen.",
+    "hash": "da2bff33"
+  },
+  "image-transfer.reader.the-image-holds-markup-that-is-not": {
+    "text": "De afbeelding bevat markup die niet is toegestaan.",
+    "hash": "ea75c7fb"
+  },
+  "image-transfer.reader.the-image-is-larger-than-kb-kb": {
+    "text": "De afbeelding is groter dan {kb} KB.",
+    "hash": "bd2f98a0"
+  }
 }

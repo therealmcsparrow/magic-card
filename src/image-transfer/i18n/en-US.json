@@ -1,19 +1,70 @@
 {
-  "Connection {n} is not valid, so it was left out.": "Connection {n} is not valid, so it was left out.",
-  "Create copy": "Create copy",
-  "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.": "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.",
-  "Duplicate {name}": "Duplicate {name}",
-  "Duplicated as {name}.": "Duplicated as {name}.",
-  "Export all images": "Export all images",
-  "Name for the copy of {name}": "Name for the copy of {name}",
-  "New image": "New image",
-  "Only the first {max} connections were kept.": "Only the first {max} connections were kept.",
-  "The image could not be read.": "The image could not be read.",
-  "The image holds markup that is not allowed.": "The image holds markup that is not allowed.",
-  "The image is larger than {kb} KB.": "The image is larger than {kb} KB.",
-  "View {name}": "View {name}",
-  "{n, plural, one {# connection} other {# connections}}": "{n, plural, one {# connection} other {# connections}}",
-  "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}": "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}",
-  "{name} copy": "{name} copy",
-  "{n} KB": "{n} KB"
+  "image-transfer.chunk.create-copy": {
+    "text": "Create copy",
+    "hash": "982a7984"
+  },
+  "image-transfer.chunk.delete-name-cards-that-use-it-show-that": {
+    "text": "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.",
+    "hash": "58b92eb1"
+  },
+  "image-transfer.chunk.duplicate-name": {
+    "text": "Duplicate {name}",
+    "hash": "fe06d16b"
+  },
+  "image-transfer.chunk.duplicated-as-name": {
+    "text": "Duplicated as {name}.",
+    "hash": "a0799a8a"
+  },
+  "image-transfer.chunk.export-all-images": {
+    "text": "Export all images",
+    "hash": "5e584b06"
+  },
+  "image-transfer.chunk.n": {
+    "text": "{n, plural, one {# connection} other {# connections}}",
+    "hash": "53710e8c"
+  },
+  "image-transfer.chunk.n-kb": {
+    "text": "{n} KB",
+    "hash": "eb236725"
+  },
+  "image-transfer.chunk.name-copy": {
+    "text": "{name} copy",
+    "hash": "938a6418"
+  },
+  "image-transfer.chunk.name-for-the-copy-of-name": {
+    "text": "Name for the copy of {name}",
+    "hash": "0c03740d"
+  },
+  "image-transfer.chunk.new-image": {
+    "text": "New image",
+    "hash": "1699c319"
+  },
+  "image-transfer.chunk.view-name": {
+    "text": "View {name}",
+    "hash": "4998bc27"
+  },
+  "image-transfer.reader.connection-n-is-not-valid-so-it-was-left": {
+    "text": "Connection {n} is not valid, so it was left out.",
+    "hash": "9c9b580c"
+  },
+  "image-transfer.reader.n": {
+    "text": "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}",
+    "hash": "3e1302d5"
+  },
+  "image-transfer.reader.only-the-first-max-connections-were-kept": {
+    "text": "Only the first {max} connections were kept.",
+    "hash": "d5184c17"
+  },
+  "image-transfer.reader.the-image-could-not-be-read": {
+    "text": "The image could not be read.",
+    "hash": "da2bff33"
+  },
+  "image-transfer.reader.the-image-holds-markup-that-is-not": {
+    "text": "The image holds markup that is not allowed.",
+    "hash": "ea75c7fb"
+  },
+  "image-transfer.reader.the-image-is-larger-than-kb-kb": {
+    "text": "The image is larger than {kb} KB.",
+    "hash": "bd2f98a0"
+  }
 }

@@ -45,7 +45,7 @@ type Status = 'loading' | 'ok' | 'missing' | 'error';
 
 const SAVE_ANIM = 'magic_card_utils/save_animation';
 const DEL_ANIM = 'magic_card_utils/delete_animation';
-const LABEL = (kind: TransferKind): string => (kind === 'animation' ? t('Animations') : kind === 'shape' ? t('Shapes') : kind === 'icon' ? t('Icons') : kind === 'image' ? t('Images') : t('Theme presets'));
+const LABEL = (kind: TransferKind): string => (kind === 'animation' ? t('transfer.library-view.animations') : kind === 'shape' ? t('transfer.library-view.shapes') : kind === 'icon' ? t('transfer.library-view.icons') : kind === 'image' ? t('transfer.library-view.images') : t('transfer.library-view.theme-presets'));
 const rest = (o: object): Record<string, unknown> => {
   const { id: _i, name: _n, created_at: _c, updated_at: _u, ...r } = o as Record<string, unknown>;
   void [_i, _n, _c, _u];
@@ -317,12 +317,12 @@ export class LibraryView extends LitElement {
     this._bad = true;
     this._msg =
       c === 'unauthorized'
-        ? t('Your account can use the library but not change it. Ask an admin.')
+        ? t('transfer.library-view.your-account-can-use-the-library-but-not')
         : c === 'conflict'
-          ? t('It changed while you were looking. The list is reloaded; try again.')
+          ? t('transfer.library-view.it-changed-while-you-were-looking-the')
           : c === 'library_full'
-            ? t('The library is full.')
-            : t('Could not reach Magic Card Utils. Nothing was changed.');
+            ? t('transfer.library-view.the-library-is-full')
+            : t('transfer.library-view.could-not-reach-magic-card-utils-nothing');
   }
 
   private async _after(done: string): Promise<void> {
@@ -342,7 +342,7 @@ export class LibraryView extends LitElement {
     const name = raw.trim();
     if (!name || name.length > 80) {
       this._bad = true;
-      this._msg = t('The name must be 1 to 80 characters.');
+      this._msg = t('transfer.library-view.the-name-must-be-1-to-80-characters');
       return;
     }
     try {
@@ -357,7 +357,7 @@ export class LibraryView extends LitElement {
         const key = k === 'icon' ? 'icon' : 'shape';
         await this._call({ type: k === 'icon' ? CMD.iconsSave : CMD.shapesSave, [key]: { ...rest(full as never), id: r.id, name }, base_updated_at: (full as SavedIcon).updated_at });
       }
-      await this._after(t('Renamed to {name}.', { name }));
+      await this._after(t('transfer.library-view.renamed-to-name', { name }));
       this._fr(r.id, '.acts button:nth-last-child(2)');
     } catch (e) {
       this._fail(e);
@@ -369,7 +369,7 @@ export class LibraryView extends LitElement {
     const name = raw.trim();
     if (!name || name.length > 80) {
       this._bad = true;
-      this._msg = t('The name must be 1 to 80 characters.');
+      this._msg = t('transfer.library-view.the-name-must-be-1-to-80-characters');
       return;
     }
     try {
@@ -388,7 +388,7 @@ export class LibraryView extends LitElement {
       else if (k === 'theme') await this.presets!.remove(r.id);
       else if (k === 'image') await this._ix!.remove(this.hass as never, r.id);
       else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
-      await this._after(t('Deleted {name}.', { name: r.name }));
+      await this._after(t('transfer.library-view.deleted-name', { name: r.name }));
       // the row is gone: focus goes to the search field
       void this.updateComplete.then(() => (this.renderRoot as ShadowRoot).getElementById('q')?.focus());
     } catch (e) {
@@ -433,7 +433,7 @@ export class LibraryView extends LitElement {
       // the host writes the inline copies
       this._panel = undefined;
       this._bad = false;
-      this._msg = t('Added {n} to this card.', { n: items.length });
+      this._msg = t('transfer.library-view.added-n-to-this-card', { n: items.length });
       return;
     }
     e.stopPropagation();
@@ -460,7 +460,7 @@ export class LibraryView extends LitElement {
     }
     this._panel = undefined;
     if (kind === 'image') this._ix?.invalidate(items.map((i) => i.id));
-    await this._after([t('Imported {ok} of {total}.', { ok, total: items.length }), full ? t('{n} did not fit: the library is full.', { n: full }) : '', bad ? t('{n} could not be saved.', { n: bad }) : ''].filter(Boolean).join(' '));
+    await this._after([t('transfer.library-view.imported-ok-of-total', { ok, total: items.length }), full ? t('transfer.library-view.n-did-not-fit-the-library-is-full', { n: full }) : '', bad ? t('transfer.library-view.n-could-not-be-saved', { n: bad }) : ''].filter(Boolean).join(' '));
   }
 
   private _closePanel = (e?: Event): void => {
@@ -480,32 +480,32 @@ export class LibraryView extends LitElement {
     };
     return html`
       <div class="wrap" lang=${locale()}>
-        ${this._kinds.length > 1 ? seg({ role: 'tablist', label: t('Kind'), value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL(k) })), onChange: (k) => this._go(k, this._source) }) : nothing}
+        ${this._kinds.length > 1 ? seg({ role: 'tablist', label: t('transfer.library-view.kind'), value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL(k) })), onChange: (k) => this._go(k, this._source) }) : nothing}
         ${this._kind === 'theme' || this._kind === 'image' || this._panelCtx
           ? nothing
           : seg({
               role: 'radiogroup',
-              label: t('Source'),
+              label: t('transfer.library-view.source'),
               value: this._source,
               items: [
-                { value: 'mcu' as const, label: t('Magic Card Utils') },
-                { value: 'card' as const, label: t('This card') },
+                { value: 'mcu' as const, label: t('transfer.library-view.magic-card-utils') },
+                { value: 'card' as const, label: t('transfer.library-view.this-card') },
               ],
               onChange: (s) => this._go(this._kind, s),
             })}
         ${field({
           id: 'q',
-          label: t('{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} image {Search images} other {Search theme presets}}', { kind: this._kind }),
+          label: t('transfer.library-view.kind-2', { kind: this._kind }),
           control: html`<div class="with-icon"><ha-icon icon="mdi:magnify"></ha-icon><input id="q" class="input" type="search" .value=${this._q} @input=${(e: Event) => (this._q = (e.target as HTMLInputElement).value)} /></div>`,
         })}
         <div class="bar">
-          ${button({ label: this._sel.size ? t('Export {n} selected', { n: this._sel.size }) : this._kind === 'image' && this._ix ? this._word('export_all') : t('Export all'), icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
-          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? button({ label: this._kind === 'icon' ? t('New icon') : t('New shape'), variant: 'primary', icon: 'mdi:plus', onClick: () => this._open(this._kind as 'icon' | 'shape') }) : nothing}
+          ${button({ label: this._sel.size ? t('transfer.library-view.export-n-selected', { n: this._sel.size }) : this._kind === 'image' && this._ix ? this._word('export_all') : t('transfer.library-view.export-all'), icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
+          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? button({ label: this._kind === 'icon' ? t('transfer.library-view.new-icon') : t('transfer.library-view.new-shape'), variant: 'primary', icon: 'mdi:plus', onClick: () => this._open(this._kind as 'icon' | 'shape') }) : nothing}
           ${this._panelCtx && this._kind === 'image' && can ? button({ label: this._word('new'), variant: 'primary', icon: 'mdi:plus', onClick: () => this._open('image') }) : nothing}
-          ${can || (this.inline && this._kind !== 'image') ? button({ label: t('Import'), icon: 'mdi:import', onClick: ask('import') }) : nothing}
+          ${can || (this.inline && this._kind !== 'image') ? button({ label: t('transfer.library-view.import'), icon: 'mdi:import', onClick: ask('import') }) : nothing}
         </div>
-        ${this.inline && this._source === 'card' ? html`<p class="help">${t('Imported items are saved in this card.')}</p>` : nothing}
-        ${this._kind === 'image' && this._status === 'ok' && this._rows.length >= MAX_IMAGES ? html`<p class="help">${t('The library is full.')}</p>` : nothing}
+        ${this.inline && this._source === 'card' ? html`<p class="help">${t('transfer.library-view.imported-items-are-saved-in-this-card')}</p>` : nothing}
+        ${this._kind === 'image' && this._status === 'ok' && this._rows.length >= MAX_IMAGES ? html`<p class="help">${t('transfer.library-view.the-library-is-full')}</p>` : nothing}
         ${this._msg ? notice({ tone: this._bad ? 'error' : 'success', text: this._msg, transient: true }) : nothing}
         <div role="status" aria-live="polite" class="help">${this._msg ? '' : this._status === 'ok' ? count(shown.length, this._kind) : ''}</div>
         ${this._body(shown, can)}
@@ -513,15 +513,15 @@ export class LibraryView extends LitElement {
       ${p
         ? html`<mc-ui-window
             variant="sheet"
-            heading=${p.mode === 'import' ? t('Import') : t('Export')}
-            closeLabel=${t('Close')}
+            heading=${p.mode === 'import' ? t('transfer.library-view.import') : t('transfer.library-view.export')}
+            closeLabel=${t('transfer.library-view.close')}
             movable
             resizable
             maximizable
-            moveLabel=${t('Move window')}
-            resizeLabel=${t('Resize window')}
-            maximizeLabel=${t('Maximise')}
-            restoreLabel=${t('Restore size')}
+            moveLabel=${t('transfer.library-view.move-window')}
+            resizeLabel=${t('transfer.library-view.resize-window')}
+            maximizeLabel=${t('transfer.library-view.maximise')}
+            restoreLabel=${t('transfer.library-view.restore-size')}
             .dismissible=${false}
             .opener=${this._opener}
             @mc-window-close=${this._closePanel}
@@ -545,16 +545,16 @@ export class LibraryView extends LitElement {
 
   private _body(shown: Row[], can: boolean): TemplateResult {
     const s = this._status;
-    if (s === 'loading') return html`<p class="help">${t('Loading...')}</p>`;
+    if (s === 'loading') return html`<p class="help">${t('transfer.library-view.loading')}</p>`;
     if (s === 'missing' || s === 'error') {
-      const older = this._kind === 'theme' ? t('Update Magic Card Utils to keep theme presets.') : this._kind === 'image' ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.') : t('Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.');
+      const older = this._kind === 'theme' ? t('transfer.library-view.update-magic-card-utils-to-keep-theme') : this._kind === 'image' ? t('transfer.library-view.images-need-magic-card-utils-it-is') : t('transfer.library-view.keep-your-own-items-on-every-dashboard');
       return empty({
         icon: 'mdi:cloud-off-outline',
-        title: s === 'error' ? t('Could not reach Magic Card Utils. Your work is safe.') : older,
-        action: s === 'error' ? { label: t('Try again'), onClick: () => { this._src.reset(); void this._load(); } } : undefined,
+        title: s === 'error' ? t('transfer.library-view.could-not-reach-magic-card-utils-your') : older,
+        action: s === 'error' ? { label: t('transfer.library-view.try-again'), onClick: () => { this._src.reset(); void this._load(); } } : undefined,
       });
     }
-    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? t('{kind, select, animation {No animations match "{q}".} shape {No shapes match "{q}".} icon {No icons match "{q}".} image {No images match "{q}".} other {No theme presets match "{q}".}}', { kind: this._kind, q: this._q }) : t('{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} image {No images here yet.} other {No theme presets here yet.}}', { kind: this._kind }) });
+    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? t('transfer.library-view.kind-3', { kind: this._kind, q: this._q }) : t('transfer.library-view.kind-4', { kind: this._kind }) });
     return html`<div class="rows" role="list">${shown.map((r) => this._item(r, can))}</div>`;
   }
 
@@ -576,7 +576,7 @@ export class LibraryView extends LitElement {
     };
 
     const check = {
-      label: t('Select {name}', { name: r.name }),
+      label: t('transfer.library-view.select-name', { name: r.name }),
       checked: this._sel.has(r.id),
       onChange: (on: boolean) => {
         const n = new Set(this._sel);
@@ -605,21 +605,21 @@ export class LibraryView extends LitElement {
       check,
       content:
         e === 'rename'
-          ? input(t('New name for {name}', { name: r.name }), r.name, (v) => void this._rename(r, v))
+          ? input(t('transfer.library-view.new-name-for-name', { name: r.name }), r.name, (v) => void this._rename(r, v))
           : e === 'duplicate'
             ? input(this._word('copy_label', { name: r.name }), this._word('copy_name', { name: r.name }), (v) => void this._duplicate(r, v))
             : undefined,
       actions: [
-        ...(edit ? [act(image && !this._admin ? this._word('view', { name: r.name }) : t('Edit {name}', { name: r.name }), image && !this._admin ? 'mdi:eye-outline' : 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape' | 'image', r.id))] : []),
+        ...(edit ? [act(image && !this._admin ? this._word('view', { name: r.name }) : t('transfer.library-view.edit-name', { name: r.name }), image && !this._admin ? 'mdi:eye-outline' : 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape' | 'image', r.id))] : []),
         ...(can && !e && image ? [{ ...act(this._word('duplicate', { name: r.name }), 'mdi:content-copy', set('duplicate')), disabled: full }] : []),
-        ...(can && !e ? [act(t('Rename {name}', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('Delete {name}', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : []),
+        ...(can && !e ? [act(t('transfer.library-view.rename-name', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('transfer.library-view.delete-name', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : []),
       ],
       trail:
         e === 'rename' || e === 'duplicate'
-          ? html`${button({ label: e === 'rename' ? t('Save') : this._word('create_copy'), size: 'sm', onClick: (ev) => void (e === 'rename' ? this._rename(r, typed(ev)) : this._duplicate(r, typed(ev))) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
+          ? html`${button({ label: e === 'rename' ? t('transfer.library-view.save') : this._word('create_copy'), size: 'sm', onClick: (ev) => void (e === 'rename' ? this._rename(r, typed(ev)) : this._duplicate(r, typed(ev))) })}${button({ label: t('transfer.library-view.cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
           : e === 'delete'
-            ? html`<span class="help" role="alert">${this._kind === 'theme' ? t('Delete {name}? Themes you applied stay.', { name: r.name }) : this._kind === 'image' ? this._word('delete_confirm', { name: r.name }) : t('Delete {name}? Cards that use it keep their own copy, or show the default.', { name: r.name })}</span>
-                ${button({ label: t('Delete'), variant: 'danger', size: 'sm', onClick: () => void this._delete(r) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
+            ? html`<span class="help" role="alert">${this._kind === 'theme' ? t('transfer.library-view.delete-name-themes-you-applied-stay', { name: r.name }) : this._kind === 'image' ? this._word('delete_confirm', { name: r.name }) : t('transfer.library-view.delete-name-cards-that-use-it-keep-their', { name: r.name })}</span>
+                ${button({ label: t('transfer.library-view.delete'), variant: 'danger', size: 'sm', onClick: () => void this._delete(r) })}${button({ label: t('transfer.library-view.cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
             : undefined,
     });
   }

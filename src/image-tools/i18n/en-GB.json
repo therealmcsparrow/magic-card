@@ -1,0 +1,391 @@
+{
+  "image-tools.editor-host.image-editor": {
+    "text": "Image editor",
+    "note": "Shown in editor host (image-tools).",
+    "max": 20
+  },
+  "image-tools.mc-image-picker.ask-an-administrator-to-add-one": {
+    "text": "Ask an administrator to add one.",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 55
+  },
+  "image-tools.mc-image-picker.cancel": {
+    "text": "Cancel",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 10
+  },
+  "image-tools.mc-image-picker.draw-a-new-image": {
+    "text": "Draw a new image",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 30
+  },
+  "image-tools.mc-image-picker.images": {
+    "text": "Images",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 15
+  },
+  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 125
+  },
+  "image-tools.mc-image-picker.in-use": {
+    "text": "In use",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 10
+  },
+  "image-tools.mc-image-picker.loading-images": {
+    "text": "Loading images…",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-image-picker.n": {
+    "text": "{n, plural, one {# live connection} other {# live connections}}",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 30,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "image-tools.mc-image-picker.n-2": {
+    "text": "{n, plural, one {Live: # connection} other {Live: # connections}}",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 35,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "image-tools.mc-image-picker.n-kib": {
+    "text": "{n} KiB",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-tools.mc-image-picker.no-image-matches-query": {
+    "text": "No image matches “{query}”.",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 45,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "image-tools.mc-image-picker.no-images-yet": {
+    "text": "No images yet.",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-image-picker.pick-an-image": {
+    "text": "Pick an image",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-image-picker.search-images": {
+    "text": "Search images",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-image-picker.the-images-could-not-be-loaded": {
+    "text": "The images could not be loaded.",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 50
+  },
+  "image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the": {
+    "text": "Thumbnails show the saved colours. On the card the live parts change with their devices.",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 145
+  },
+  "image-tools.mc-image-picker.try-again": {
+    "text": "Try again",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 15
+  },
+  "image-tools.mc-image-picker.use-this-image": {
+    "text": "Use this image",
+    "note": "Shown in mc image picker (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-library-image-field.accent-colour": {
+    "text": "Accent colour",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-library-image-field.add-an-image-module-behind-the-content": {
+    "text": "Add an image module behind the content",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 65
+  },
+  "image-tools.mc-library-image-field.address-or-media": {
+    "text": "Address or media",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 30
+  },
+  "image-tools.mc-library-image-field.adds-a-hidden-list-after-the-picture-for": {
+    "text": "Adds a hidden list after the picture, for example \"Kitchen light: on\". It updates when a device changes.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 170
+  },
+  "image-tools.mc-library-image-field.and-n-more": {
+    "text": "and {n} more",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 20,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-tools.mc-library-image-field.card-shape-set-to-shape": {
+    "text": "Card shape set to {shape}.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 45,
+    "vars": {
+      "shape": "The value that replaces shape in the text."
+    }
+  },
+  "image-tools.mc-library-image-field.choose": {
+    "text": "Choose",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 10
+  },
+  "image-tools.mc-library-image-field.choose-an-image": {
+    "text": "Choose an image",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-library-image-field.clear": {
+    "text": "Clear",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 10
+  },
+  "image-tools.mc-library-image-field.colours": {
+    "text": "Colours",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 15
+  },
+  "image-tools.mc-library-image-field.copy-reference": {
+    "text": "Copy reference",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-library-image-field.description-for-screen-readers": {
+    "text": "Description for screen readers",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 50
+  },
+  "image-tools.mc-library-image-field.draw-a-new-image": {
+    "text": "Draw a new image",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 30
+  },
+  "image-tools.mc-library-image-field.edit-image": {
+    "text": "Edit image",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 20
+  },
+  "image-tools.mc-library-image-field.hide-list": {
+    "text": "Hide list",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 15
+  },
+  "image-tools.mc-library-image-field.id-not-found": {
+    "text": "{id} (not found)",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 30,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "image-tools.mc-library-image-field.image": {
+    "text": "Image",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 10
+  },
+  "image-tools.mc-library-image-field.image-module-added-behind-the-content": {
+    "text": "Image module added behind the content. Remove the background layer if you no longer need it.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 150
+  },
+  "image-tools.mc-library-image-field.image-set-name": {
+    "text": "Image set: {name}.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 125
+  },
+  "image-tools.mc-library-image-field.library-image": {
+    "text": "Library image",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 30
+  },
+  "image-tools.mc-library-image-field.list-connected-devices-and-their-states": {
+    "text": "List connected devices and their states for screen readers",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 95
+  },
+  "image-tools.mc-library-image-field.live": {
+    "text": "Live",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 10
+  },
+  "image-tools.mc-library-image-field.live-parts-of-this-picture-follow-their": {
+    "text": "Live: parts of this picture follow their devices, here too.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 95
+  },
+  "image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you": {
+    "text": "Main and Accent follow the colours you set for this card.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 95
+  },
+  "image-tools.mc-library-image-field.main-colour": {
+    "text": "Main colour",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 20
+  },
+  "image-tools.mc-library-image-field.n": {
+    "text": "{n, plural, one {Uses # device} other {Uses # devices}}",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "image-tools.mc-library-image-field.n-left": {
+    "text": "{n} left",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-tools.mc-library-image-field.need-buttons-or-a-description": {
+    "text": "Need buttons or a description?",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 50
+  },
+  "image-tools.mc-library-image-field.no-image-chosen": {
+    "text": "No image chosen",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 25
+  },
+  "image-tools.mc-library-image-field.not-found": {
+    "text": "(not found)",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 20
+  },
+  "image-tools.mc-library-image-field.not-set-screen-readers-skip-this-picture": {
+    "text": "Not set (screen readers skip this picture)",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 70
+  },
+  "image-tools.mc-library-image-field.off": {
+    "text": "Off",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 5
+  },
+  "image-tools.mc-library-image-field.on": {
+    "text": "On",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 5
+  },
+  "image-tools.mc-library-image-field.optional-describe-what-the-picture-shows": {
+    "text": "Optional. Describe what the picture shows. Without it, screen readers skip the picture.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 140
+  },
+  "image-tools.mc-library-image-field.pick-another": {
+    "text": "Pick another",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 20
+  },
+  "image-tools.mc-library-image-field.reference-copied": {
+    "text": "Reference copied.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 30
+  },
+  "image-tools.mc-library-image-field.rename-a-device-in-home-assistant-to": {
+    "text": "Rename a device in Home Assistant to change what is read.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 95
+  },
+  "image-tools.mc-library-image-field.set-screen-readers-read-it": {
+    "text": "Set (screen readers read it)",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 45
+  },
+  "image-tools.mc-library-image-field.show-list": {
+    "text": "Show list",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 15
+  },
+  "image-tools.mc-library-image-field.that-is-the-longest-description-500": {
+    "text": "That is the longest description (500 characters).",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 80
+  },
+  "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
+    "text": "The card shape ({card}) differs from the drawing ({drawing}).",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 100,
+    "vars": {
+      "card": "The value that replaces card in the text.",
+      "drawing": "The value that replaces drawing in the text."
+    }
+  },
+  "image-tools.mc-library-image-field.the-drawing-editor-could-not-load-try": {
+    "text": "The drawing editor could not load. Try again.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 75
+  },
+  "image-tools.mc-library-image-field.the-reference-could-not-be-copied-select": {
+    "text": "The reference could not be copied. Select it and copy it by hand.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 105
+  },
+  "image-tools.mc-library-image-field.this-image-is-no-longer-in-the-library": {
+    "text": "This image is no longer in the library.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 65
+  },
+  "image-tools.mc-library-image-field.this-is-a-background-screen-readers-skip": {
+    "text": "This is a background. Screen readers skip it, and it cannot hold buttons.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 120
+  },
+  "image-tools.mc-library-image-field.this-is-the-address-cards-use-it-stays": {
+    "text": "This is the address cards use. It stays the same when you rename the image.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 120
+  },
+  "image-tools.mc-library-image-field.this-picture-shows-live-devices-add-a": {
+    "text": "This picture shows live devices. Add a description or switch on the list so everyone can follow it.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 160
+  },
+  "image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one": {
+    "text": "To change colours, use live parts in one picture. To swap pictures, use states.",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 130
+  },
+  "image-tools.mc-library-image-field.use-the-drawing-s-shape": {
+    "text": "Use the drawing's shape",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 40
+  },
+  "image-tools.mc-library-image-field.view-image": {
+    "text": "View image",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 20
+  },
+  "image-tools.mc-library-image-field.will-read-now": {
+    "text": "Will read now:",
+    "note": "Shown in mc library image field (image-tools).",
+    "max": 25
+  }
+}

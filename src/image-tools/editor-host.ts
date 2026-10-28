@@ -34,6 +34,6 @@ export async function openImageEditor(o: ImageEditorOpen): Promise<'opened' | 'f
     close();
   });
   el.addEventListener('mc-svg-close', () => close());
-  close = openLayer(el, { from: o.from, key: 'image-field' }, undefined, t('Image editor'));
+  close = openLayer(el, { from: o.from, key: 'image-field' }, undefined, t('image-tools.editor-host.image-editor'));
   return 'opened';
 }

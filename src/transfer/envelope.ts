@@ -48,14 +48,14 @@ const HEADER_KEYS = [TRANSFER_MARKER_KEY, 'kind', 'generator', 'items', 'item'];
 
 const WHERE = (kind: TransferKind): string =>
   kind === 'animation'
-    ? t('Animation files are imported in the card editor (My animations) or the animation studio.')
+    ? t('transfer.envelope.animation-files-are-imported-in-the-card')
     : kind === 'theme'
-      ? t('Theme files are imported in Magic Card Utils > Themes.')
+      ? t('transfer.envelope.theme-files-are-imported-in-magic-card')
       : kind === 'shape'
-        ? t('Shape files are imported in the card editor (My shapes) or the shape editor.')
+        ? t('transfer.envelope.shape-files-are-imported-in-the-card')
         : kind === 'image'
-          ? t('Image files are imported in Magic Card Utils > Images.')
-          : t('Icon files are imported in the card editor (My icons) or the SVG editor.');
+          ? t('transfer.envelope.image-files-are-imported-in-magic-card')
+          : t('transfer.envelope.icon-files-are-imported-in-the-card');
 
 const refuse = (refusal: TransferRefusal, message: string): ParseResult => ({ ok: false, refusal, message });
 
@@ -74,7 +74,7 @@ function readKind(kind: TransferKind, index: number, id: string, name: string, d
     case 'shape':
       return readShape(index, data);
     case 'image':
-      return images ? images.readImage(index, data, file ? { file: true, css } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The checker for images did not load, so this image was not read.'))] };
+      return images ? images.readImage(index, data, file ? { file: true, css } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('transfer.envelope.the-checker-for-images-did-not-load-so'))] };
     default:
       return readIcon(index, data, css);
   }
@@ -87,46 +87,46 @@ function buildItems(found: Detected, images?: ImageReader, css?: SvgCssResolve):
   const ids = new Set<string>();
   found.items.forEach((raw, i) => {
     if (!isObj(raw)) {
-      notes.push(note('invalid_item', i, '', t('This entry is not an object.')));
+      notes.push(note('invalid_item', i, '', t('transfer.envelope.this-entry-is-not-an-object')));
       return;
     }
     const id = typeof raw.id === 'string' ? raw.id.trim() : '';
     if (!LIBRARY_ID_RE.test(id)) {
-      notes.push(note('invalid_item', i, 'id', t('The id must be 1-64 lowercase letters, digits, - or _.')));
+      notes.push(note('invalid_item', i, 'id', t('transfer.envelope.the-id-must-be-1-64-lowercase-letters')));
       return;
     }
     const name = typeof raw.name === 'string' ? raw.name.trim() : '';
     if (!name || name.length > 80) {
-      notes.push(note('invalid_item', i, 'name', t('The name must be 1-80 characters.')));
+      notes.push(note('invalid_item', i, 'name', t('transfer.envelope.the-name-must-be-1-80-characters')));
       return;
     }
     if (ids.has(id)) {
-      notes.push(note('invalid_item', i, 'id', t('The id "{id}" appears twice in this file; the first one was used.', { id })));
+      notes.push(note('invalid_item', i, 'id', t('transfer.envelope.the-id-id-appears-twice-in-this-file-the', { id })));
       return;
     }
     const itemNotes: TransferNote[] = [];
-    for (const k of Object.keys(raw)) if (!ITEM_KEYS.includes(k)) itemNotes.push(note('dropped_key', i, k, t('"{key}" is not a preset field, so it was left out.', { key: k })));
+    for (const k of Object.keys(raw)) if (!ITEM_KEYS.includes(k)) itemNotes.push(note('dropped_key', i, k, t('transfer.envelope.key-is-not-a-preset-field-so-it-was-left', { key: k })));
 
     const item: TransferItem = { id, name, data: undefined as never };
     const text = (key: 'author' | 'description', max: number) => {
       const v = raw[key];
       if (v === undefined) return;
       if (kind === 'animation') {
-        itemNotes.push(note('not_stored', i, key, key === 'author' ? t('Animations do not store an author, so it was not kept.') : t('Animations do not store a description, so it was not kept.')));
+        itemNotes.push(note('not_stored', i, key, key === 'author' ? t('transfer.envelope.animations-do-not-store-an-author-so-it') : t('transfer.envelope.animations-do-not-store-a-description-so')));
         return;
       }
       const val = typeof v === 'string' ? v.trim() : '';
       if (val && val.length <= max) item[key] = val;
-      else itemNotes.push(note('dropped_value', i, key, key === 'author' ? t('The author must be 1-{max} characters, so it was left out.', { max }) : t('The description must be 1-{max} characters, so it was left out.', { max })));
+      else itemNotes.push(note('dropped_value', i, key, key === 'author' ? t('transfer.envelope.the-author-must-be-1-max-characters-so', { max }) : t('transfer.envelope.the-description-must-be-1-max-characters', { max })));
     };
     text('author', AUTHOR_MAX_CHARS);
     text('description', DESCRIPTION_MAX_CHARS);
     if (raw.keywords !== undefined) {
-      if (kind !== 'icon' && kind !== 'image') itemNotes.push(note('dropped_key', i, 'keywords', t('Only icons and images have keywords, so they were left out.')));
+      if (kind !== 'icon' && kind !== 'image') itemNotes.push(note('dropped_key', i, 'keywords', t('transfer.envelope.only-icons-and-images-have-keywords-so')));
       else {
         const list = Array.isArray(raw.keywords) ? raw.keywords : [];
         const keep = list.filter((w): w is string => typeof w === 'string' && w.trim().length >= 1 && w.trim().length <= 32).map((w) => w.trim()).slice(0, 10);
-        if (keep.length !== list.length || !Array.isArray(raw.keywords)) itemNotes.push(note('dropped_value', i, 'keywords', t('Some keywords were not valid (at most 10 words of 1-32 characters), so they were left out.')));
+        if (keep.length !== list.length || !Array.isArray(raw.keywords)) itemNotes.push(note('dropped_value', i, 'keywords', t('transfer.envelope.some-keywords-were-not-valid-at-most-10')));
         if (keep.length) item.keywords = keep;
       }
     }
@@ -151,7 +151,7 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
     const steps = (it.data as { steps?: { animation: string }[] }).steps;
     steps?.forEach((s, n) => {
       if (s.animation.startsWith(CUSTOM_PREFIX) && !have.has(s.animation.slice(CUSTOM_PREFIX.length))) {
-        out.push(note('missing_step_ref', i, `data.steps[${n}].animation`, t('Step {n} plays "{name}", which is not in this file. It works if you already have it.', { n: n + 1, name: s.animation })));
+        out.push(note('missing_step_ref', i, `data.steps[${n}].animation`, t('transfer.envelope.step-n-plays-name-which-is-not-in-this', { n: n + 1, name: s.animation })));
       }
     });
   });
@@ -162,17 +162,17 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
 export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader; css?: SvgCssResolve }): ParseResult {
   // images only (the Images tab): an svg text is one image, read by the image checker in file mode
   const imagesOnly = opts.accept.length === 1 && opts.accept[0] === 'image';
-  if (typeof text === 'string' && imagesOnly && text.length > MAX_IMAGE_IMPORT_BYTES) return refuse('too_large', t('This file is larger than 8 MB, so it was not read.'));
+  if (typeof text === 'string' && imagesOnly && text.length > MAX_IMAGE_IMPORT_BYTES) return refuse('too_large', t('transfer.envelope.this-file-is-larger-than-8-mb-so-it-was'));
   // the file name decides: .svg holds SVG and .json holds JSON; pasted text has no name, so its content decides
   const name = opts.fileName ?? '';
   const svgName = /\.svg$/i.test(name);
   if (svgName ? /^\s*[{[]/.test(text) : /\.json$/i.test(name) && looksLikeSvg(text)) {
     const want = svgName ? 'SVG' : 'JSON';
-    return refuse('not_a_preset_file', t('The name says {want}, but the file holds {found}.', { found: svgName ? 'JSON' : 'SVG', want }));
+    return refuse('not_a_preset_file', t('transfer.envelope.the-name-says-want-but-the-file-holds', { found: svgName ? 'JSON' : 'SVG', want }));
   }
   const asImage = imagesOnly && typeof text === 'string' && looksLikeSvg(text, opts.fileName);
   // over 1 MB only a JSON text (an image envelope) or an svg image is looked at; safeParse decides the rest
-  if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !asImage && !/^\s*\{/.test(text)) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
+  if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !asImage && !/^\s*\{/.test(text)) return refuse('too_large', t('transfer.envelope.this-text-is-larger-than-1-mb-so-it-was'));
   const notes: TransferNote[] = [];
   let found: Detected | undefined;
   let marker: Raw | undefined;
@@ -188,27 +188,27 @@ export function parseTransfer(text: string, opts: { accept: readonly TransferKin
 
   if (marker) {
     const fmt = formatOf(marker[TRANSFER_MARKER_KEY]);
-    if (!fmt) return refuse('not_a_preset_file', t('This is not a Magic Card preset file.'));
-    if (fmt.major > TRANSFER_MAJOR) return refuse('newer_format', t('This file needs a newer Magic Card (format {major}.x).', { major: fmt.major }));
+    if (!fmt) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
+    if (fmt.major > TRANSFER_MAJOR) return refuse('newer_format', t('transfer.envelope.this-file-needs-a-newer-magic-card', { major: fmt.major }));
     const kind = marker.kind;
     if (typeof kind !== 'string' || !(KINDS as readonly string[]).includes(kind)) {
-      return refuse('unknown_kind', t('This file holds "{kind}" presets, which this version of Magic Card does not know.', { kind: String(kind) }));
+      return refuse('unknown_kind', t('transfer.envelope.this-file-holds-kind-presets-which-this', { kind: String(kind) }));
     }
     const list = Array.isArray(marker.items) ? marker.items : isObj(marker.item) ? [marker.item] : undefined;
-    if (!list) return refuse('not_a_preset_file', t('This is not a Magic Card preset file.'));
-    for (const k of Object.keys(marker)) if (!HEADER_KEYS.includes(k)) notes.push(note('dropped_key', -1, k, t('"{key}" is not a preset field, so it was left out.', { key: k })));
+    if (!list) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
+    for (const k of Object.keys(marker)) if (!HEADER_KEYS.includes(k)) notes.push(note('dropped_key', -1, k, t('transfer.envelope.key-is-not-a-preset-field-so-it-was-left', { key: k })));
     found = { kind: kind as TransferKind, source: 'envelope', items: list };
   }
-  if (!found) return refuse('not_a_preset_file', t('This is not a Magic Card preset file.'));
+  if (!found) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
 
   if (!opts.accept.includes(found.kind)) return refuse('wrong_kind', WHERE(found.kind));
-  if (found.items.length > MAX_IMPORT_ITEMS) return refuse('too_many_items', t('This file holds more than {max} items, so it was not read.', { max: MAX_IMPORT_ITEMS }));
+  if (found.items.length > MAX_IMPORT_ITEMS) return refuse('too_many_items', t('transfer.envelope.this-file-holds-more-than-max-items-so', { max: MAX_IMPORT_ITEMS }));
 
   const built = buildItems(found, opts.images, opts.css);
   notes.push(...built.notes);
   if (!built.items.length) {
     const why = notes.filter((n) => n.code === 'invalid_item').slice(0, 3).map((n) => n.message).join(' ');
-    return refuse('no_valid_items', `${t('Nothing in this file could be imported.')} ${why}`.trim());
+    return refuse('no_valid_items', `${t('transfer.envelope.nothing-in-this-file-could-be-imported')} ${why}`.trim());
   }
   if (found.kind === 'animation') notes.push(...missingStepRefs(built.items));
   return { ok: true, kind: found.kind, source: found.source as TransferSource, items: built.items, notes };

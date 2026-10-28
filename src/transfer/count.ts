@@ -5,14 +5,14 @@ import { t } from './i18n';
 export function count(n: number, kind: TransferKind): string {
   switch (kind) {
     case 'animation':
-      return t('{n, plural, one {# animation} other {# animations}}', { n });
+      return t('transfer.count.n', { n });
     case 'theme':
-      return t('{n, plural, one {# theme} other {# themes}}', { n });
+      return t('transfer.count.n-2', { n });
     case 'shape':
-      return t('{n, plural, one {# shape} other {# shapes}}', { n });
+      return t('transfer.count.n-3', { n });
     case 'image':
-      return t('{n, plural, one {# image} other {# images}}', { n });
+      return t('transfer.count.n-4', { n });
     default:
-      return t('{n, plural, one {# icon} other {# icons}}', { n });
+      return t('transfer.count.n-5', { n });
   }
 }

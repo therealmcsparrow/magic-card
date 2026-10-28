@@ -1,0 +1,1153 @@
+{
+  "transfer.animation.the-animation-data-is-missing": {
+    "text": "The animation data is missing.",
+    "note": "Shown in animation (transfer).",
+    "max": 50
+  },
+  "transfer.count.n": {
+    "text": "{n, plural, one {# animation} other {# animations}}",
+    "note": "Shown in count (transfer).",
+    "max": 20,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-2": {
+    "text": "{n, plural, one {# theme} other {# themes}}",
+    "note": "Shown in count (transfer).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-3": {
+    "text": "{n, plural, one {# shape} other {# shapes}}",
+    "note": "Shown in count (transfer).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-4": {
+    "text": "{n, plural, one {# image} other {# images}}",
+    "note": "Shown in count (transfer).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-5": {
+    "text": "{n, plural, one {# icon} other {# icons}}",
+    "note": "Shown in count (transfer).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.envelope.animation-files-are-imported-in-the-card": {
+    "text": "Animation files are imported in the card editor (My animations) or the animation studio.",
+    "note": "Shown in envelope (transfer).",
+    "max": 145
+  },
+  "transfer.envelope.animations-do-not-store-a-description-so": {
+    "text": "Animations do not store a description, so it was not kept.",
+    "note": "Shown in envelope (transfer).",
+    "max": 95
+  },
+  "transfer.envelope.animations-do-not-store-an-author-so-it": {
+    "text": "Animations do not store an author, so it was not kept.",
+    "note": "Shown in envelope (transfer).",
+    "max": 90
+  },
+  "transfer.envelope.icon-files-are-imported-in-the-card": {
+    "text": "Icon files are imported in the card editor (My icons) or the SVG editor.",
+    "note": "Shown in envelope (transfer).",
+    "max": 120
+  },
+  "transfer.envelope.image-files-are-imported-in-magic-card": {
+    "text": "Image files are imported in Magic Card Utils > Images.",
+    "note": "Shown in envelope (transfer).",
+    "max": 90
+  },
+  "transfer.envelope.key-is-not-a-preset-field-so-it-was-left": {
+    "text": "\"{key}\" is not a preset field, so it was left out.",
+    "note": "Shown in envelope (transfer).",
+    "max": 80,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.envelope.nothing-in-this-file-could-be-imported": {
+    "text": "Nothing in this file could be imported.",
+    "note": "Shown in envelope (transfer).",
+    "max": 65
+  },
+  "transfer.envelope.only-icons-and-images-have-keywords-so": {
+    "text": "Only icons and images have keywords, so they were left out.",
+    "note": "Shown in envelope (transfer).",
+    "max": 95
+  },
+  "transfer.envelope.shape-files-are-imported-in-the-card": {
+    "text": "Shape files are imported in the card editor (My shapes) or the shape editor.",
+    "note": "Shown in envelope (transfer).",
+    "max": 125
+  },
+  "transfer.envelope.some-keywords-were-not-valid-at-most-10": {
+    "text": "Some keywords were not valid (at most 10 words of 1-32 characters), so they were left out.",
+    "note": "Shown in envelope (transfer).",
+    "max": 145
+  },
+  "transfer.envelope.step-n-plays-name-which-is-not-in-this": {
+    "text": "Step {n} plays \"{name}\", which is not in this file. It works if you already have it.",
+    "note": "Shown in envelope (transfer).",
+    "max": 135,
+    "vars": {
+      "n": "The value that replaces n in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.envelope.the-author-must-be-1-max-characters-so": {
+    "text": "The author must be 1-{max} characters, so it was left out.",
+    "note": "Shown in envelope (transfer).",
+    "max": 95,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "transfer.envelope.the-checker-for-images-did-not-load-so": {
+    "text": "The checker for images did not load, so this image was not read.",
+    "note": "Shown in envelope (transfer).",
+    "max": 105
+  },
+  "transfer.envelope.the-description-must-be-1-max-characters": {
+    "text": "The description must be 1-{max} characters, so it was left out.",
+    "note": "Shown in envelope (transfer).",
+    "max": 105,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
+    "text": "The id \"{id}\" appears twice in this file; the first one was used.",
+    "note": "Shown in envelope (transfer).",
+    "max": 105,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "transfer.envelope.the-id-must-be-1-64-lowercase-letters": {
+    "text": "The id must be 1-64 lowercase letters, digits, - or _.",
+    "note": "Shown in envelope (transfer).",
+    "max": 90
+  },
+  "transfer.envelope.the-name-must-be-1-80-characters": {
+    "text": "The name must be 1-80 characters.",
+    "note": "Shown in envelope (transfer).",
+    "max": 55
+  },
+  "transfer.envelope.the-name-says-want-but-the-file-holds": {
+    "text": "The name says {want}, but the file holds {found}.",
+    "note": "Shown in envelope (transfer).",
+    "max": 80,
+    "vars": {
+      "found": "The value that replaces found in the text.",
+      "want": "The value that replaces want in the text."
+    }
+  },
+  "transfer.envelope.theme-files-are-imported-in-magic-card": {
+    "text": "Theme files are imported in Magic Card Utils > Themes.",
+    "note": "Shown in envelope (transfer).",
+    "max": 90
+  },
+  "transfer.envelope.this-entry-is-not-an-object": {
+    "text": "This entry is not an object.",
+    "note": "Shown in envelope (transfer).",
+    "max": 45
+  },
+  "transfer.envelope.this-file-holds-kind-presets-which-this": {
+    "text": "This file holds \"{kind}\" presets, which this version of Magic Card does not know.",
+    "note": "Shown in envelope (transfer).",
+    "max": 130,
+    "vars": {
+      "kind": "The value that replaces kind in the text."
+    }
+  },
+  "transfer.envelope.this-file-holds-more-than-max-items-so": {
+    "text": "This file holds more than {max} items, so it was not read.",
+    "note": "Shown in envelope (transfer).",
+    "max": 95,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "transfer.envelope.this-file-is-larger-than-8-mb-so-it-was": {
+    "text": "This file is larger than 8 MB, so it was not read.",
+    "note": "Shown in envelope (transfer).",
+    "max": 80
+  },
+  "transfer.envelope.this-file-needs-a-newer-magic-card": {
+    "text": "This file needs a newer Magic Card (format {major}.x).",
+    "note": "Shown in envelope (transfer).",
+    "max": 90,
+    "vars": {
+      "major": "The value that replaces major in the text."
+    }
+  },
+  "transfer.envelope.this-is-not-a-magic-card-preset-file": {
+    "text": "This is not a Magic Card preset file.",
+    "note": "Shown in envelope (transfer).",
+    "max": 60
+  },
+  "transfer.envelope.this-text-is-larger-than-1-mb-so-it-was": {
+    "text": "This text is larger than 1 MB, so it was not read.",
+    "note": "Shown in envelope (transfer).",
+    "max": 80
+  },
+  "transfer.icon.a-link-name": {
+    "text": "a link ({name})",
+    "note": "Shown in icon (transfer).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.icon.a-script": {
+    "text": "a script",
+    "note": "Shown in icon (transfer).",
+    "max": 15
+  },
+  "transfer.icon.a-style-attribute": {
+    "text": "a style attribute",
+    "note": "Shown in icon (transfer).",
+    "max": 30
+  },
+  "transfer.icon.a-use-reference": {
+    "text": "a <use> reference",
+    "note": "Shown in icon (transfer).",
+    "max": 30
+  },
+  "transfer.icon.count": {
+    "text": "{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}",
+    "note": "Shown in icon (transfer).",
+    "max": 50,
+    "vars": {
+      "count": "The count the text is about.",
+      "what": "The value that replaces what in the text."
+    }
+  },
+  "transfer.icon.key-is-not-valid-path-data-so-it-was": {
+    "text": "\"{key}\" is not valid path data, so it was left out.",
+    "note": "Shown in icon (transfer).",
+    "max": 85,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.icon.no-svg-element-found": {
+    "text": "No <svg> element found.",
+    "note": "Shown in icon (transfer).",
+    "max": 40
+  },
+  "transfer.icon.open-it-in-the-svg-editor-and-save-to": {
+    "text": "Open it in the SVG editor and save to show it in Home Assistant's own cards.",
+    "note": "Shown in icon (transfer).",
+    "max": 125
+  },
+  "transfer.icon.the-attribute-name": {
+    "text": "the attribute {name}",
+    "note": "Shown in icon (transfer).",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.icon.the-event-handler-name": {
+    "text": "the event handler {name}",
+    "note": "Shown in icon (transfer).",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.icon.the-icon-has-no-svg": {
+    "text": "The icon has no SVG.",
+    "note": "Shown in icon (transfer).",
+    "max": 35
+  },
+  "transfer.icon.the-icon-is-larger-than-kb-kb": {
+    "text": "The icon is larger than {kb} KB.",
+    "note": "Shown in icon (transfer).",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.icon.the-icon-is-too-large": {
+    "text": "The icon is too large.",
+    "note": "Shown in icon (transfer).",
+    "max": 40
+  },
+  "transfer.icon.the-svg-could-not-be-read": {
+    "text": "The SVG could not be read.",
+    "note": "Shown in icon (transfer).",
+    "max": 45
+  },
+  "transfer.icon.the-svg-has-no-shapes-to-draw": {
+    "text": "The SVG has no shapes to draw.",
+    "note": "Shown in icon (transfer).",
+    "max": 50
+  },
+  "transfer.icon.the-svg-is-larger-than-32-kb": {
+    "text": "The SVG is larger than 32 KB.",
+    "note": "Shown in icon (transfer).",
+    "max": 50
+  },
+  "transfer.icon.the-svg-is-too-complex": {
+    "text": "The SVG is too complex.",
+    "note": "Shown in icon (transfer).",
+    "max": 40
+  },
+  "transfer.icon.the-view-box-is-not-four-numbers-so-it": {
+    "text": "The view box is not four numbers, so it was taken from the SVG.",
+    "note": "Shown in icon (transfer).",
+    "max": 105
+  },
+  "transfer.image-transfer-loader.key-is-not-a-preset-field-so-it-was-left": {
+    "text": "\"{key}\" is not a preset field, so it was left out.",
+    "note": "Shown in image transfer loader (transfer).",
+    "max": 80,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.library-view.added-n-to-this-card": {
+    "text": "Added {n} to this card.",
+    "note": "Shown in library view (transfer).",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.animations": {
+    "text": "Animations",
+    "note": "Shown in library view (transfer).",
+    "max": 20
+  },
+  "transfer.library-view.cancel": {
+    "text": "Cancel",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.close": {
+    "text": "Close",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.could-not-reach-magic-card-utils-nothing": {
+    "text": "Could not reach Magic Card Utils. Nothing was changed.",
+    "note": "Shown in library view (transfer).",
+    "max": 90
+  },
+  "transfer.library-view.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Shown in library view (transfer).",
+    "max": 85
+  },
+  "transfer.library-view.delete": {
+    "text": "Delete",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.delete-name": {
+    "text": "Delete {name}",
+    "note": "Shown in library view (transfer).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.delete-name-cards-that-use-it-keep-their": {
+    "text": "Delete {name}? Cards that use it keep their own copy, or show the default.",
+    "note": "Shown in library view (transfer).",
+    "max": 120,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.delete-name-themes-you-applied-stay": {
+    "text": "Delete {name}? Themes you applied stay.",
+    "note": "Shown in library view (transfer).",
+    "max": 70,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.deleted-name": {
+    "text": "Deleted {name}.",
+    "note": "Shown in library view (transfer).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.edit-name": {
+    "text": "Edit {name}",
+    "note": "Shown in library view (transfer).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.export": {
+    "text": "Export",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.export-all": {
+    "text": "Export all",
+    "note": "Shown in library view (transfer).",
+    "max": 20
+  },
+  "transfer.library-view.export-n-selected": {
+    "text": "Export {n} selected",
+    "note": "Shown in library view (transfer).",
+    "max": 35,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.icons": {
+    "text": "Icons",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.images": {
+    "text": "Images",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Shown in library view (transfer).",
+    "max": 125
+  },
+  "transfer.library-view.import": {
+    "text": "Import",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.imported-items-are-saved-in-this-card": {
+    "text": "Imported items are saved in this card.",
+    "note": "Shown in library view (transfer).",
+    "max": 65
+  },
+  "transfer.library-view.imported-ok-of-total": {
+    "text": "Imported {ok} of {total}.",
+    "note": "Shown in library view (transfer).",
+    "max": 40,
+    "vars": {
+      "ok": "The value that replaces ok in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "transfer.library-view.it-changed-while-you-were-looking-the": {
+    "text": "It changed while you were looking. The list is reloaded; try again.",
+    "note": "Shown in library view (transfer).",
+    "max": 110
+  },
+  "transfer.library-view.keep-your-own-items-on-every-dashboard": {
+    "text": "Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.",
+    "note": "Shown in library view (transfer).",
+    "max": 180
+  },
+  "transfer.library-view.kind": {
+    "text": "Kind",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.kind-2": {
+    "text": "{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} image {Search images} other {Search theme presets}}",
+    "note": "Shown in library view (transfer).",
+    "max": 35,
+    "vars": {
+      "kind": "The value that replaces kind in the text."
+    }
+  },
+  "transfer.library-view.kind-3": {
+    "text": "{kind, select, animation {No animations match \"{q}\".} shape {No shapes match \"{q}\".} icon {No icons match \"{q}\".} image {No images match \"{q}\".} other {No theme presets match \"{q}\".}}",
+    "note": "Shown in library view (transfer).",
+    "max": 50,
+    "vars": {
+      "kind": "The value that replaces kind in the text.",
+      "q": "The value that replaces q in the text."
+    }
+  },
+  "transfer.library-view.kind-4": {
+    "text": "{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} image {No images here yet.} other {No theme presets here yet.}}",
+    "note": "Shown in library view (transfer).",
+    "max": 45,
+    "vars": {
+      "kind": "The value that replaces kind in the text."
+    }
+  },
+  "transfer.library-view.loading": {
+    "text": "Loading...",
+    "note": "Shown in library view (transfer).",
+    "max": 20
+  },
+  "transfer.library-view.magic-card-utils": {
+    "text": "Magic Card Utils",
+    "note": "Shown in library view (transfer).",
+    "max": 30
+  },
+  "transfer.library-view.maximise": {
+    "text": "Maximise",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.move-window": {
+    "text": "Move window",
+    "note": "Shown in library view (transfer).",
+    "max": 20
+  },
+  "transfer.library-view.n-could-not-be-saved": {
+    "text": "{n} could not be saved.",
+    "note": "Shown in library view (transfer).",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.n-did-not-fit-the-library-is-full": {
+    "text": "{n} did not fit: the library is full.",
+    "note": "Shown in library view (transfer).",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.new-icon": {
+    "text": "New icon",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.new-name-for-name": {
+    "text": "New name for {name}",
+    "note": "Shown in library view (transfer).",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.new-shape": {
+    "text": "New shape",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.rename-name": {
+    "text": "Rename {name}",
+    "note": "Shown in library view (transfer).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.renamed-to-name": {
+    "text": "Renamed to {name}.",
+    "note": "Shown in library view (transfer).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.resize-window": {
+    "text": "Resize window",
+    "note": "Shown in library view (transfer).",
+    "max": 25
+  },
+  "transfer.library-view.restore-size": {
+    "text": "Restore size",
+    "note": "Shown in library view (transfer).",
+    "max": 25
+  },
+  "transfer.library-view.save": {
+    "text": "Save",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.select-name": {
+    "text": "Select {name}",
+    "note": "Shown in library view (transfer).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.shapes": {
+    "text": "Shapes",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.source": {
+    "text": "Source",
+    "note": "Shown in library view (transfer).",
+    "max": 10
+  },
+  "transfer.library-view.the-library-is-full": {
+    "text": "The library is full.",
+    "note": "Shown in library view (transfer).",
+    "max": 35
+  },
+  "transfer.library-view.the-name-must-be-1-to-80-characters": {
+    "text": "The name must be 1 to 80 characters.",
+    "note": "Shown in library view (transfer).",
+    "max": 60
+  },
+  "transfer.library-view.theme-presets": {
+    "text": "Theme presets",
+    "note": "Shown in library view (transfer).",
+    "max": 25
+  },
+  "transfer.library-view.this-card": {
+    "text": "This card",
+    "note": "Shown in library view (transfer).",
+    "max": 15
+  },
+  "transfer.library-view.try-again": {
+    "text": "Try again",
+    "note": "Shown in library view (transfer).",
+    "max": 20
+  },
+  "transfer.library-view.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets.",
+    "note": "Shown in library view (transfer).",
+    "max": 75
+  },
+  "transfer.library-view.your-account-can-use-the-library-but-not": {
+    "text": "Your account can use the library but not change it. Ask an admin.",
+    "note": "Shown in library view (transfer).",
+    "max": 105
+  },
+  "transfer.panel.cancel": {
+    "text": "Cancel",
+    "note": "Shown in panel (transfer).",
+    "max": 10
+  },
+  "transfer.panel.choose-a-file": {
+    "text": "Choose a file",
+    "note": "Shown in panel (transfer).",
+    "max": 25
+  },
+  "transfer.panel.close": {
+    "text": "Close",
+    "note": "Shown in panel (transfer).",
+    "max": 10
+  },
+  "transfer.panel.copied": {
+    "text": "Copied.",
+    "note": "Shown in panel (transfer).",
+    "max": 15
+  },
+  "transfer.panel.copy": {
+    "text": "Copy",
+    "note": "Shown in panel (transfer).",
+    "max": 10
+  },
+  "transfer.panel.copy-as-ha-theme": {
+    "text": "Copy as HA theme",
+    "note": "Shown in panel (transfer).",
+    "max": 30
+  },
+  "transfer.panel.could-not-copy-the-text-is-selected": {
+    "text": "Could not copy. The text is selected: press Ctrl+C.",
+    "note": "Shown in panel (transfer).",
+    "max": 85
+  },
+  "transfer.panel.download": {
+    "text": "Download",
+    "note": "Shown in panel (transfer).",
+    "max": 15
+  },
+  "transfer.panel.downloaded-name": {
+    "text": "Downloaded {name}.",
+    "note": "Shown in panel (transfer).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.panel.every-browser-that-shows-a-dashboard": {
+    "text": "Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor's IP address.",
+    "note": "Shown in panel (transfer).",
+    "max": 205,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "transfer.panel.export-items": {
+    "text": "Export {items}",
+    "note": "Shown in panel (transfer).",
+    "max": 25,
+    "vars": {
+      "items": "The value that replaces items in the text."
+    }
+  },
+  "transfer.panel.export-text": {
+    "text": "Export text",
+    "note": "Shown in panel (transfer).",
+    "max": 20
+  },
+  "transfer.panel.file-format": {
+    "text": "File format",
+    "note": "Shown in panel (transfer).",
+    "max": 20
+  },
+  "transfer.panel.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Shown in panel (transfer).",
+    "max": 125
+  },
+  "transfer.panel.import-anyway": {
+    "text": "Import anyway",
+    "note": "Shown in panel (transfer).",
+    "max": 25
+  },
+  "transfer.panel.import-items": {
+    "text": "Import {items}",
+    "note": "Shown in panel (transfer).",
+    "max": 25,
+    "vars": {
+      "items": "The value that replaces items in the text."
+    }
+  },
+  "transfer.panel.import-presets": {
+    "text": "Import presets",
+    "note": "Shown in panel (transfer).",
+    "max": 25
+  },
+  "transfer.panel.json-or-svg-up-to-8-mb": {
+    "text": "JSON or SVG, up to 8 MB",
+    "note": "Shown in panel (transfer).",
+    "max": 40
+  },
+  "transfer.panel.keep-both": {
+    "text": "Keep both",
+    "note": "Shown in panel (transfer).",
+    "max": 15
+  },
+  "transfer.panel.lines-that-start-with-card-mod-only-work": {
+    "text": "Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.",
+    "note": "Shown in panel (transfer).",
+    "max": 160
+  },
+  "transfer.panel.magic-card-utils-is-not-installed-so": {
+    "text": "Magic Card Utils is not installed, so these are saved as copies inside this card.",
+    "note": "Shown in panel (transfer).",
+    "max": 130
+  },
+  "transfer.panel.n": {
+    "text": "{n, plural, one {# value is kept as written. Check the list below.} other {# values are kept as written. Check the list below.}}",
+    "note": "Shown in panel (transfer).",
+    "max": 85,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-2": {
+    "text": "{n, plural, one {# note.} other {# notes.}}",
+    "note": "Shown in panel (transfer).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-3": {
+    "text": "{n, plural, one {# value is kept as written} other {# values are kept as written}}",
+    "note": "Shown in panel (transfer).",
+    "max": 45,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-4": {
+    "text": "{n, plural, one {# value points to a file on the sharer's Home Assistant (url(/local/...)). It may not exist on your system.} other {# values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.}}",
+    "note": "Shown in panel (transfer).",
+    "max": 175,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-5": {
+    "text": "{n, plural, one {# note} other {# notes}}",
+    "note": "Shown in panel (transfer).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-6": {
+    "text": "{n, plural, one {{items} already exists} other {{items} already exist}}",
+    "note": "Shown in panel (transfer).",
+    "max": 40,
+    "vars": {
+      "items": "The value that replaces items in the text.",
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.nothing-to-export": {
+    "text": "Nothing to export.",
+    "note": "Shown in panel (transfer).",
+    "max": 30
+  },
+  "transfer.panel.or-paste-the-text": {
+    "text": "Or paste the text",
+    "note": "Shown in panel (transfer).",
+    "max": 30
+  },
+  "transfer.panel.read": {
+    "text": "Read",
+    "note": "Shown in panel (transfer).",
+    "max": 10
+  },
+  "transfer.panel.replace-them": {
+    "text": "Replace them",
+    "note": "Shown in panel (transfer).",
+    "max": 20
+  },
+  "transfer.panel.source-holds-items": {
+    "text": "{source} holds {items}.",
+    "note": "Shown in panel (transfer).",
+    "max": 40,
+    "vars": {
+      "items": "The value that replaces items in the text.",
+      "source": "The value that replaces source in the text."
+    }
+  },
+  "transfer.panel.the-author-name-is-saved-in-the-file": {
+    "text": "The author name is saved in the file. Check it before you share the file.",
+    "note": "Shown in panel (transfer).",
+    "max": 120
+  },
+  "transfer.panel.the-checker-for-images-did-not-load-so": {
+    "text": "The checker for images did not load, so this image was not read.",
+    "note": "Shown in panel (transfer).",
+    "max": 105
+  },
+  "transfer.panel.the-checker-for-these-animations-did-not": {
+    "text": "The checker for these animations did not load, so the file was not read. Check your connection and try again.",
+    "note": "Shown in panel (transfer).",
+    "max": 175
+  },
+  "transfer.panel.the-new-ones-get-a-number": {
+    "text": "The new ones get a number.",
+    "note": "Shown in panel (transfer).",
+    "max": 45
+  },
+  "transfer.panel.the-saved-ones-are-overwritten": {
+    "text": "The saved ones are overwritten.",
+    "note": "Shown in panel (transfer).",
+    "max": 50
+  },
+  "transfer.panel.the-text": {
+    "text": "The text",
+    "note": "Shown in panel (transfer).",
+    "max": 15
+  },
+  "transfer.panel.this-file-was-not-imported": {
+    "text": "This file was not imported",
+    "note": "Shown in panel (transfer).",
+    "max": 45
+  },
+  "transfer.panel.types-up-to-1-mb": {
+    "text": "{types}, up to 1 MB",
+    "note": "Shown in panel (transfer).",
+    "max": 35,
+    "vars": {
+      "types": "The value that replaces types in the text."
+    }
+  },
+  "transfer.panel.types-up-to-1-mb-svg-up-to-32-kb": {
+    "text": "{types}, up to 1 MB; SVG up to 32 KB",
+    "note": "Shown in panel (transfer).",
+    "max": 60,
+    "vars": {
+      "types": "The value that replaces types in the text."
+    }
+  },
+  "transfer.panel.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets.",
+    "note": "Shown in panel (transfer).",
+    "max": 75
+  },
+  "transfer.panel.what-to-do-with-them": {
+    "text": "What to do with them",
+    "note": "Shown in panel (transfer).",
+    "max": 35
+  },
+  "transfer.panel.you-have-this-one": {
+    "text": "(you have this one)",
+    "note": "Shown in panel (transfer).",
+    "max": 35
+  },
+  "transfer.safe-parse.image-files-are-json-not-yaml-export": {
+    "text": "Image files are JSON, not YAML. Export them as JSON.",
+    "note": "Shown in safe parse (transfer).",
+    "max": 85
+  },
+  "transfer.safe-parse.merge-keys-are-not-allowed-in-preset": {
+    "text": "Merge keys (<<) are not allowed in preset files.",
+    "note": "Shown in safe parse (transfer).",
+    "max": 80
+  },
+  "transfer.safe-parse.not-valid-yaml-or-json": {
+    "text": "Not valid YAML or JSON.",
+    "note": "Shown in safe parse (transfer).",
+    "max": 40
+  },
+  "transfer.safe-parse.numbers-must-be-finite-no-inf-or-nan": {
+    "text": "Numbers must be finite (no .inf or .nan).",
+    "note": "Shown in safe parse (transfer).",
+    "max": 70
+  },
+  "transfer.safe-parse.paste-or-choose-a-file-first": {
+    "text": "Paste or choose a file first.",
+    "note": "Shown in safe parse (transfer).",
+    "max": 50
+  },
+  "transfer.safe-parse.this-file-is-larger-than-1-mb-so-it-was": {
+    "text": "This file is larger than 1 MB, so it was not read.",
+    "note": "Shown in safe parse (transfer).",
+    "max": 80
+  },
+  "transfer.safe-parse.this-file-is-larger-than-8-mb-so-it-was": {
+    "text": "This file is larger than 8 MB, so it was not read.",
+    "note": "Shown in safe parse (transfer).",
+    "max": 80
+  },
+  "transfer.safe-parse.this-file-is-too-complex-to-read-safely": {
+    "text": "This file is too complex to read safely (too many nested or repeated values).",
+    "note": "Shown in safe parse (transfer).",
+    "max": 125
+  },
+  "transfer.shape.a-shape-holds-at-most-max-points-this": {
+    "text": "A shape holds at most {max} points (this one has {n}).",
+    "note": "Shown in shape (transfer).",
+    "max": 90,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.shape.corner-name-is-not-valid-so-it-was-left": {
+    "text": "Corner {name} is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.shape.key-is-not-a-corner-so-it-was-left-out": {
+    "text": "\"{key}\" is not a corner, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 75,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.shape.key-is-not-a-shape-setting-so-it-was": {
+    "text": "\"{key}\" is not a shape setting, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 85,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.shape.padding-name-is-not-valid-so-it-was-left": {
+    "text": "Padding \"{name}\" is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.shape.point-n-is-not-valid-so-it-was-left-out": {
+    "text": "Point {n} is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 70,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.shape.the-corner-size-is-not-valid-so-it-was": {
+    "text": "The corner size is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 80
+  },
+  "transfer.shape.the-corner-type-is-not-valid-so-it-was": {
+    "text": "The corner type is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 80
+  },
+  "transfer.shape.the-corners-setting-is-not-valid-so-it": {
+    "text": "The corners setting is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 85
+  },
+  "transfer.shape.the-padding-is-not-valid-so-it-was-left": {
+    "text": "The padding is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 75
+  },
+  "transfer.shape.the-points-list-is-not-valid-so-it-was": {
+    "text": "The points list is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 80
+  },
+  "transfer.shape.the-shape-data-is-missing": {
+    "text": "The shape data is missing.",
+    "note": "Shown in shape (transfer).",
+    "max": 45
+  },
+  "transfer.shape.the-shape-has-no-valid-settings": {
+    "text": "The shape has no valid settings.",
+    "note": "Shown in shape (transfer).",
+    "max": 55
+  },
+  "transfer.shape.the-shape-is-larger-than-kb-kb": {
+    "text": "The shape is larger than {kb} KB.",
+    "note": "Shown in shape (transfer).",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.shape.the-smoothing-is-not-valid-so-it-was": {
+    "text": "The smoothing is not valid, so it was left out.",
+    "note": "Shown in shape (transfer).",
+    "max": 80
+  },
+  "transfer.theme.another-website": {
+    "text": "another website",
+    "note": "Shown in theme (transfer).",
+    "max": 25
+  },
+  "transfer.theme.dark": {
+    "text": "Dark",
+    "note": "Shown in theme (transfer).",
+    "max": 10
+  },
+  "transfer.theme.key-is-a-card-mod-style-it-was-kept-with": {
+    "text": "\"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.",
+    "note": "Shown in theme (transfer).",
+    "max": 155,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-is-not-a-theme-variable-name-so-it": {
+    "text": "\"{key}\" is not a theme variable name, so it was left out.",
+    "note": "Shown in theme (transfer).",
+    "max": 95,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
+    "text": "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "note": "Shown in theme (transfer).",
+    "max": 150,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text.",
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
+    "text": "\"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "note": "Shown in theme (transfer).",
+    "max": 135,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.light": {
+    "text": "Light",
+    "note": "Shown in theme (transfer).",
+    "max": 10
+  },
+  "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
+    "text": "{mode} mode: \"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.",
+    "note": "Shown in theme (transfer).",
+    "max": 175,
+    "vars": {
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
+    "text": "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "note": "Shown in theme (transfer).",
+    "max": 170,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text.",
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
+    "text": "{mode} mode: \"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "note": "Shown in theme (transfer).",
+    "max": 160,
+    "vars": {
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.modes-key-is-not-light-or-dark-so-it-was": {
+    "text": "\"modes.{key}\" is not light or dark, so it was left out.",
+    "note": "Shown in theme (transfer).",
+    "max": 90,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.modes-must-hold-light-and-dark-so-it-was": {
+    "text": "\"modes\" must hold light and dark, so it was left out.",
+    "note": "Shown in theme (transfer).",
+    "max": 85
+  },
+  "transfer.theme.the-theme-data-is-missing": {
+    "text": "The theme data is missing.",
+    "note": "Shown in theme (transfer).",
+    "max": 45
+  },
+  "transfer.theme.the-theme-has-no-variables": {
+    "text": "The theme has no variables.",
+    "note": "Shown in theme (transfer).",
+    "max": 45
+  },
+  "transfer.theme.the-theme-is-larger-than-kb-kb": {
+    "text": "The theme is larger than {kb} KB.",
+    "note": "Shown in theme (transfer).",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.theme.the-value-of-key-is-longer-than-max": {
+    "text": "The value of \"{key}\" is longer than {max} characters, so it was left out.",
+    "note": "Shown in theme (transfer).",
+    "max": 120,
+    "vars": {
+      "key": "The value that replaces key in the text.",
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "transfer.theme.the-value-of-key-is-not-text-or-a-number": {
+    "text": "The value of \"{key}\" is not text or a number, so it was left out.",
+    "note": "Shown in theme (transfer).",
+    "max": 105,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  }
+}

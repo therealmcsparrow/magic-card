@@ -94,39 +94,41 @@ layer-editor	Keeps the lighter colour	Keeps the lighter color
 layer-editor	No layers yet. Add an image, gradient, pattern or colour behind the card content.	No layers yet. Add an image, gradient, pattern or color behind the card content.
 layer-editor	Pattern colour	Pattern color
 layer-editor	To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.	To put a module behind others, use Placement on that module. Layers here sit on top of the color and image in Style.
-path-canvas	Centre	Center
-svg-editor	Accent preview colour	Accent preview color
-svg-editor	Align centre	Align center
-svg-editor	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {center} right {right} top {top} middle {middle} other {bottom}}.
-svg-editor	Centre on canvas	Center on canvas
-svg-editor	Colours were replaced by the card's colours: Main and Accent.	Colors were replaced by the card's colors: Main and Accent.
-svg-editor	How Home Assistant draws a saved icon in its own cards: one colour, filled shapes only.	How Home Assistant draws a saved icon in its own cards: one color, filled shapes only.
-svg-editor	Main follows the entity colour. Accent follows the card's secondary colour. Colours come from the card, so the icon can change with state.	Main follows the entity color. Accent follows the card's secondary color. Colors come from the card, so the icon can change with state.
-svg-editor	Main preview colour	Main preview color
-svg-editor	Maximise	Maximize
-svg-editor	Opacity is not kept. Icons are one solid colour.	Opacity is not kept. Icons are one solid color.
-svg-editor	Rotate 90 degrees anticlockwise	Rotate 90 degrees counterclockwise
-svg-editor	This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.	This module will use your drawing instead of {icon}. Colors, Draw and Morph effects keep working on it.
-svg-editor	This module will use your drawing. Colours, Draw and Morph effects keep working on it.	This module will use your drawing. Colors, Draw and Morph effects keep working on it.
-svg-editor	Use two colours: Main and Accent.	Use two colors: Main and Accent.
-image-editor	Centre	Center
-image-editor	Centre X (%)	Center X (%)
-image-editor	Centre Y (%)	Center Y (%)
-image-editor	Custom colour	Custom color
-image-editor	Gradient centre	Gradient center
-image-editor	Showing the drawing in the editor colours.	Showing the drawing in the editor colors.
-image-editor	Stop {n} colour	Stop {n} color
-image-editor	Text cancelled.	Text canceled.
-image-editor	Theme colour	Theme color
-image-editor	This part keeps its own colours.	This part keeps its own colors.
-image-editor	Use a colour like #3f6fb5.	Use a color like #3f6fb5.
-image-editor	Use a name that starts with two dashes, like --my-colour.	Use a name that starts with two dashes, like --my-color.
-image-editor	{name} colour	{name} color
-image-editor	{paint} colour	{paint} color
-shape-editor	Centre	Center
-shape-editor	Maximise	Maximize
-shape-editor	Pen cancelled.	Pen canceled.
-transfer	Maximise	Maximize
+path-canvas	path-canvas.geometry.centre	Center
+svg-editor	svg-editor.mc-svg-editor.aligned-c-to-the-edge	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {center} right {right} top {top} middle {middle} other {bottom}}.
+svg-editor	svg-editor.mc-svg-editor.centre-on-canvas	Center on canvas
+svg-editor	svg-editor.mc-svg-editor.colours-were-replaced-by-the-card-s	Colors were replaced by the card's colors: Main and Accent.
+svg-editor	svg-editor.mc-svg-editor.opacity-is-not-kept-icons-are-one-solid	Opacity is not kept. Icons are one solid color.
+svg-editor	svg-editor.menu.centre-on-canvas	Center on canvas
+svg-editor	svg-editor.menu.rotate-90-degrees-anticlockwise	Rotate 90 degrees counterclockwise
+svg-editor	svg-editor.names.align-centre	Align center
+svg-editor	svg-editor.views.accent-preview-colour	Accent preview color
+svg-editor	svg-editor.views.how-home-assistant-draws-a-saved-icon-in	How Home Assistant draws a saved icon in its own cards: one color, filled shapes only.
+svg-editor	svg-editor.views.main-follows-the-entity-colour-accent	Main follows the entity color. Accent follows the card's secondary color. Colors come from the card, so the icon can change with state.
+svg-editor	svg-editor.views.main-preview-colour	Main preview color
+svg-editor	svg-editor.views.maximise	Maximize
+svg-editor	svg-editor.views.rotate-90-degrees-anticlockwise	Rotate 90 degrees counterclockwise
+svg-editor	svg-editor.views.this-module-will-use-your-drawing	This module will use your drawing instead of {icon}. Colors, Draw and Morph effects keep working on it.
+svg-editor	svg-editor.views.this-module-will-use-your-drawing-2	This module will use your drawing. Colors, Draw and Morph effects keep working on it.
+svg-editor	svg-editor.views.use-two-colours-main-and-accent	Use two colors: Main and Accent.
+image-editor	image-editor.chunk.showing-the-drawing-in-the-editor	Showing the drawing in the editor colors.
+image-editor	image-editor.paint-ui.centre-x	Center X (%)
+image-editor	image-editor.paint-ui.centre-y	Center Y (%)
+image-editor	image-editor.paint-ui.custom-colour	Custom color
+image-editor	image-editor.paint-ui.gradient-centre	Gradient center
+image-editor	image-editor.paint-ui.name-colour	{name} color
+image-editor	image-editor.paint-ui.paint-colour	{paint} color
+image-editor	image-editor.paint-ui.stop-n-colour	Stop {n} color
+image-editor	image-editor.paint-ui.theme-colour	Theme color
+image-editor	image-editor.paint-ui.use-a-colour-like-3f6fb5	Use a color like #3f6fb5.
+image-editor	image-editor.paint-ui.use-a-name-that-starts-with-two-dashes	Use a name that starts with two dashes, like --my-color.
+image-editor	image-editor.part.this-part-keeps-its-own-colours	This part keeps its own colors.
+image-editor	image-editor.text-tool.text-cancelled	Text canceled.
+image-editor	image-editor.text-ui.centre	Center
+shape-editor	shape-editor.mc-shape-studio.centre	Center
+shape-editor	shape-editor.mc-shape-studio.maximise	Maximize
+shape-editor	shape-editor.mc-shape-studio.pen-cancelled	Pen canceled.
+transfer	transfer.library-view.maximise	Maximize
 anim-studio	Add colour	Add color
 anim-studio	Animation colour	Animation color
 anim-studio	At most {colours} colours	At most {colours} colors
@@ -250,12 +252,12 @@ icon-library	Centre	Center
 icon-library	Centre bulb	Center bulb
 icon-library	LED strip colour chase	LED strip color chase
 controls	controls.light-view.name-colour	{name} color
-image-tools	Accent colour	Accent color
-image-tools	Colours	Colors
-image-tools	Main and Accent follow the colours you set for this card.	Main and Accent follow the colors you set for this card.
-image-tools	Main colour	Main color
-image-tools	Thumbnails show the saved colours. On the card the live parts change with their devices.	Thumbnails show the saved colors. On the card the live parts change with their devices.
-image-tools	To change colours, use live parts in one picture. To swap pictures, use states.	To change colors, use live parts in one picture. To swap pictures, use states.
+image-tools	image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the	Thumbnails show the saved colors. On the card the live parts change with their devices.
+image-tools	image-tools.mc-library-image-field.accent-colour	Accent color
+image-tools	image-tools.mc-library-image-field.colours	Colors
+image-tools	image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you	Main and Accent follow the colors you set for this card.
+image-tools	image-tools.mc-library-image-field.main-colour	Main color
+image-tools	image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one	To change colors, use live parts in one picture. To swap pictures, use states.
 look-editor	Auto works with brightness and colour temperature sliders.	Auto works with brightness and color temperature sliders.
 look-editor	Auto, from the light's colour	Auto, from the light's color
 look-editor	Border colour	Border color

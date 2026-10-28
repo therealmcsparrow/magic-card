@@ -1,181 +1,746 @@
 {
-  "\"modes\" must hold light and dark, so it was left out.": "\"modes\" moet light en dark bevatten, dus is weggelaten.",
-  "\"modes.{key}\" is not light or dark, so it was left out.": "\"modes.{key}\" is geen light of dark, dus is weggelaten.",
-  "\"{key}\" is not a corner, so it was left out.": "\"{key}\" is geen hoek, dus is weggelaten.",
-  "\"{key}\" is not a preset field, so it was left out.": "\"{key}\" is geen preset-veld, dus is weggelaten.",
-  "\"{key}\" is not a shape setting, so it was left out.": "\"{key}\" is geen vorminstelling, dus is weggelaten.",
-  "\"{key}\" is not a theme variable name, so it was left out.": "\"{key}\" is geen naam van een themavariabele, dus is weggelaten.",
-  "\"{key}\" is not valid path data, so it was left out.": "\"{key}\" is geen geldige padgegevens, dus is weggelaten.",
-  "\"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.": "\"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
-  "(you have this one)": "(je hebt deze al)",
-  "A shape holds at most {max} points (this one has {n}).": "Een vorm bevat maximaal {max} punten (deze heeft er {n}).",
-  "Added {n} to this card.": "{n} toegevoegd aan deze kaart.",
-  "Animation files are imported in the card editor (My animations) or the animation studio.": "Animatiebestanden importeer je in de kaarteditor (Mijn animaties) of in de animatiestudio.",
-  "Animations": "Animaties",
-  "Animations do not store a description, so it was not kept.": "Animaties bewaren geen beschrijving, dus die is niet bewaard.",
-  "Animations do not store an author, so it was not kept.": "Animaties bewaren geen auteur, dus die is niet bewaard.",
-  "Cancel": "Annuleren",
-  "Choose a file": "Kies een bestand",
-  "Close": "Sluiten",
-  "Copied.": "Gekopieerd.",
-  "Copy": "Kopiëren",
-  "Copy as HA theme": "Kopiëren als HA-thema",
-  "Corner {name} is not valid, so it was left out.": "Hoek {name} is niet geldig, dus is weggelaten.",
-  "Could not copy. The text is selected: press Ctrl+C.": "Kopiëren is niet gelukt. De tekst is geselecteerd: druk op Ctrl+C.",
-  "Could not reach Magic Card Utils. Nothing was changed.": "Magic Card Utils is niet bereikbaar. Er is niets gewijzigd.",
-  "Could not reach Magic Card Utils. Your work is safe.": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
-  "Dark": "Donker",
-  "Delete": "Verwijderen",
-  "Delete {name}": "{name} verwijderen",
-  "Delete {name}? Cards that use it keep their own copy, or show the default.": "{name} verwijderen? Kaarten die het gebruiken houden hun eigen kopie of tonen de standaard.",
-  "Delete {name}? Themes you applied stay.": "{name} verwijderen? Thema's die je al hebt toegepast blijven staan.",
-  "Deleted {name}.": "{name} verwijderd.",
-  "Download": "Downloaden",
-  "Downloaded {name}.": "{name} gedownload.",
-  "Edit {name}": "{name} bewerken",
-  "Export": "Exporteren",
-  "Export all": "Alles exporteren",
-  "Export text": "Exporttekst",
-  "Export {items}": "{items} exporteren",
-  "Export {n} selected": "{n} geselecteerde exporteren",
-  "File format": "Bestandsindeling",
-  "Icon files are imported in the card editor (My icons) or the SVG editor.": "Pictogrambestanden importeer je in de kaarteditor (Mijn pictogrammen) of in de SVG-editor.",
-  "Icons": "Pictogrammen",
-  "Import": "Importeren",
-  "Import anyway": "Toch importeren",
-  "Import presets": "Presets importeren",
-  "Import {items}": "{items} importeren",
-  "Imported items are saved in this card.": "Geïmporteerde items worden in deze kaart bewaard.",
-  "Imported {ok} of {total}.": "{ok} van {total} geïmporteerd.",
-  "It changed while you were looking. The list is reloaded; try again.": "Het is gewijzigd terwijl je keek. De lijst is opnieuw geladen; probeer het nog eens.",
-  "Keep both": "Beide bewaren",
-  "Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.": "Bewaar je eigen items op elk dashboard met de gratis Magic Card Utils-add-on. Tot dan blijven ze in deze kaart.",
-  "Kind": "Soort",
-  "Light": "Licht",
-  "Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.": "Regels die met card-mod- beginnen werken alleen als card-mod is geïnstalleerd, en ze kunnen elke kaart een andere stijl geven.",
-  "Loading...": "Laden...",
-  "Magic Card Utils": "Magic Card Utils",
-  "Magic Card Utils is not installed, so these are saved as copies inside this card.": "Magic Card Utils is niet geïnstalleerd, dus deze worden als kopieën in deze kaart bewaard.",
-  "Maximise": "Maximaliseren",
-  "Merge keys (<<) are not allowed in preset files.": "Samenvoegsleutels (<<) zijn niet toegestaan in presetbestanden.",
-  "Move window": "Venster verplaatsen",
-  "New icon": "Nieuw pictogram",
-  "New name for {name}": "Nieuwe naam voor {name}",
-  "New shape": "Nieuwe vorm",
-  "No <svg> element found.": "Geen <svg>-element gevonden.",
-  "Not valid YAML or JSON.": "Geen geldige YAML of JSON.",
-  "Nothing in this file could be imported.": "Niets in dit bestand kon worden geïmporteerd.",
-  "Nothing to export.": "Er is niets om te exporteren.",
-  "Numbers must be finite (no .inf or .nan).": "Getallen moeten eindig zijn (geen .inf of .nan).",
-  "Open it in the SVG editor and save to show it in Home Assistant's own cards.": "Open het in de SVG-editor en bewaar het om het in de eigen kaarten van Home Assistant te tonen.",
-  "Or paste the text": "Of plak de tekst",
-  "Padding \"{name}\" is not valid, so it was left out.": "Opvulling \"{name}\" is niet geldig, dus is weggelaten.",
-  "Paste or choose a file first.": "Plak eerst tekst of kies een bestand.",
-  "Point {n} is not valid, so it was left out.": "Punt {n} is niet geldig, dus is weggelaten.",
-  "Read": "Inlezen",
-  "Rename {name}": "{name} hernoemen",
-  "Renamed to {name}.": "Hernoemd naar {name}.",
-  "Replace them": "Vervang ze",
-  "Resize window": "Venstergrootte aanpassen",
-  "Restore size": "Oorspronkelijke grootte",
-  "Save": "Opslaan",
-  "Select {name}": "{name} selecteren",
-  "Shape files are imported in the card editor (My shapes) or the shape editor.": "Vormbestanden importeer je in de kaarteditor (Mijn vormen) of in de vormeditor.",
-  "Shapes": "Vormen",
-  "Some keywords were not valid (at most 10 words of 1-32 characters), so they were left out.": "Sommige trefwoorden waren niet geldig (maximaal 10 woorden van 1-32 tekens), dus ze zijn weggelaten.",
-  "Source": "Bron",
-  "Step {n} plays \"{name}\", which is not in this file. It works if you already have it.": "Stap {n} speelt \"{name}\" af, die niet in dit bestand staat. Het werkt als je die al hebt.",
-  "The SVG could not be read.": "De SVG kon niet worden gelezen.",
-  "The SVG has no shapes to draw.": "De SVG heeft geen vormen om te tekenen.",
-  "The SVG is larger than 32 KB.": "De SVG is groter dan 32 KB.",
-  "The SVG is too complex.": "De SVG is te complex.",
-  "The animation data is missing.": "De animatiegegevens ontbreken.",
-  "The author must be 1-{max} characters, so it was left out.": "De auteur moet 1-{max} tekens lang zijn, dus is weggelaten.",
-  "The checker for these animations did not load, so the file was not read. Check your connection and try again.": "De controle voor deze animaties is niet geladen, dus het bestand is niet gelezen. Controleer je verbinding en probeer het opnieuw.",
-  "The corner size is not valid, so it was left out.": "De hoekgrootte is niet geldig, dus is weggelaten.",
-  "The corner type is not valid, so it was left out.": "Het hoektype is niet geldig, dus is weggelaten.",
-  "The corners setting is not valid, so it was left out.": "De hoekeninstelling is niet geldig, dus is weggelaten.",
-  "The description must be 1-{max} characters, so it was left out.": "De beschrijving moet 1-{max} tekens lang zijn, dus is weggelaten.",
-  "The icon has no SVG.": "Het pictogram heeft geen SVG.",
-  "The icon is larger than {kb} KB.": "Het pictogram is groter dan {kb} KB.",
-  "The icon is too large.": "Het pictogram is te groot.",
-  "The id \"{id}\" appears twice in this file; the first one was used.": "De id \"{id}\" komt twee keer voor in dit bestand; de eerste is gebruikt.",
-  "The id must be 1-64 lowercase letters, digits, - or _.": "De id moet bestaan uit 1-64 kleine letters, cijfers, - of _.",
-  "The library is full.": "De bibliotheek is vol.",
-  "The name must be 1 to 80 characters.": "De naam moet 1 tot 80 tekens lang zijn.",
-  "The name must be 1-80 characters.": "De naam moet 1-80 tekens lang zijn.",
-  "The new ones get a number.": "De nieuwe krijgen een nummer.",
-  "The padding is not valid, so it was left out.": "De opvulling is niet geldig, dus is weggelaten.",
-  "The points list is not valid, so it was left out.": "De puntenlijst is niet geldig, dus is weggelaten.",
-  "The saved ones are overwritten.": "De opgeslagen items worden overschreven.",
-  "The shape data is missing.": "De vormgegevens ontbreken.",
-  "The shape has no valid settings.": "De vorm heeft geen geldige instellingen.",
-  "The shape is larger than {kb} KB.": "De vorm is groter dan {kb} KB.",
-  "The smoothing is not valid, so it was left out.": "De afronding is niet geldig, dus is weggelaten.",
-  "The text": "De tekst",
-  "The theme data is missing.": "De themagegevens ontbreken.",
-  "The theme has no variables.": "Het thema heeft geen variabelen.",
-  "The theme is larger than {kb} KB.": "Het thema is groter dan {kb} KB.",
-  "The value of \"{key}\" is longer than {max} characters, so it was left out.": "De waarde van \"{key}\" is langer dan {max} tekens, dus is weggelaten.",
-  "The value of \"{key}\" is not text or a number, so it was left out.": "De waarde van \"{key}\" is geen tekst of getal, dus is weggelaten.",
-  "The view box is not four numbers, so it was taken from the SVG.": "De viewBox bestaat niet uit vier getallen, dus is overgenomen uit de SVG.",
-  "Theme files are imported in Magic Card Utils > Themes.": "Themabestanden importeer je in Magic Card Utils > Thema's.",
-  "Theme presets": "Themapresets",
-  "This card": "Deze kaart",
-  "This entry is not an object.": "Dit item is geen object.",
-  "This file holds \"{kind}\" presets, which this version of Magic Card does not know.": "Dit bestand bevat \"{kind}\"-presets, die deze versie van Magic Card niet kent.",
-  "This file holds more than {max} items, so it was not read.": "Dit bestand bevat meer dan {max} items, dus het is niet gelezen.",
-  "This file is larger than 1 MB, so it was not read.": "Dit bestand is groter dan 1 MB, dus het is niet gelezen.",
-  "This file is too complex to read safely (too many nested or repeated values).": "Dit bestand is te complex om veilig te lezen (te veel geneste of herhaalde waarden).",
-  "This file needs a newer Magic Card (format {major}.x).": "Dit bestand heeft een nieuwere Magic Card nodig (indeling {major}.x).",
-  "This file was not imported": "Dit bestand is niet geïmporteerd",
-  "This is not a Magic Card preset file.": "Dit is geen Magic Card-presetbestand.",
-  "This text is larger than 1 MB, so it was not read.": "Deze tekst is groter dan 1 MB, dus hij is niet gelezen.",
-  "Try again": "Opnieuw proberen",
-  "Update Magic Card Utils to keep theme presets.": "Werk Magic Card Utils bij om themapresets te bewaren.",
-  "What to do with them": "Wat moet er met ze gebeuren",
-  "Your account can use the library but not change it. Ask an admin.": "Je account kan de bibliotheek gebruiken maar niet wijzigen. Vraag het een beheerder.",
-  "a <use> reference": "een <use>-verwijzing",
-  "a link ({name})": "een link ({name})",
-  "a script": "een script",
-  "a style attribute": "een stijlattribuut",
-  "the attribute {name}": "het attribuut {name}",
-  "the event handler {name}": "de gebeurtenishandler {name}",
-  "{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}": "{count, plural, one {{what} verwijderd.} other {{what} verwijderd ({count} keer).}}",
-  "{mode} mode: \"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.": "Modus {mode}: \"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
-  "{n, plural, one {# animation} other {# animations}}": "{n, plural, one {# animatie} other {# animaties}}",
-  "{n, plural, one {# icon} other {# icons}}": "{n, plural, one {# pictogram} other {# pictogrammen}}",
-  "{n, plural, one {# note.} other {# notes.}}": "{n, plural, one {# opmerking.} other {# opmerkingen.}}",
-  "{n, plural, one {# note} other {# notes}}": "{n, plural, one {# opmerking} other {# opmerkingen}}",
-  "{n, plural, one {# shape} other {# shapes}}": "{n, plural, one {# vorm} other {# vormen}}",
-  "{n, plural, one {# theme} other {# themes}}": "{n, plural, one {# thema} other {# thema's}}",
-  "{n, plural, one {# value is kept as written. Check the list below.} other {# values are kept as written. Check the list below.}}": "{n, plural, one {# waarde is bewaard zoals die er staat. Bekijk de lijst hieronder.} other {# waarden zijn bewaard zoals ze er staan. Bekijk de lijst hieronder.}}",
-  "{n, plural, one {# value is kept as written} other {# values are kept as written}}": "{n, plural, one {# waarde is bewaard zoals die er staat} other {# waarden zijn bewaard zoals ze er staan}}",
-  "{n, plural, one {# value points to a file on the sharer's Home Assistant (url(/local/...)). It may not exist on your system.} other {# values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.}}": "{n, plural, one {# waarde verwijst naar een bestand op de Home Assistant van de deler (url(/local/...)). Het bestaat misschien niet op jouw systeem.} other {# waarden verwijzen naar bestanden op de Home Assistant van de deler (url(/local/...)). Ze bestaan misschien niet op jouw systeem.}}",
-  "{n, plural, one {{items} already exists} other {{items} already exist}}": "{n, plural, one {{items} bestaat al} other {{items} bestaan al}}",
-  "{n} could not be saved.": "{n} konden niet worden opgeslagen.",
-  "{n} did not fit: the library is full.": "{n} pasten er niet meer in: de bibliotheek is vol.",
-  "{source} holds {items}.": "{source} bevat {items}.",
-  "{types}, up to 1 MB": "{types}, tot 1 MB",
-  "{types}, up to 1 MB; SVG up to 32 KB": "{types}, tot 1 MB; SVG tot 32 KB",
-  "Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor's IP address.": "Elke browser die een dashboard met dit thema toont, vraagt bestanden op bij {hosts}, en die sites kunnen het IP-adres van de bezoeker zien.",
-  "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.": "\"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
-  "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.": "Modus {mode}: \"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
-  "\"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.": "\"{key}\" is een card-mod-stijl. Hij is bewaard; met card-mod geïnstalleerd voert hij CSS uit op je dashboard.",
-  "{mode} mode: \"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.": "Modus {mode}: \"{key}\" is een card-mod-stijl. Hij is bewaard; met card-mod geïnstalleerd voert hij CSS uit op je dashboard.",
-  "another website": "een andere website",
-  "The author name is saved in the file. Check it before you share the file.": "De naam van de auteur komt in het bestand. Controleer hem voordat je het bestand deelt.",
-  "Image files are JSON, not YAML. Export them as JSON.": "Afbeeldingsbestanden zijn JSON, geen YAML. Exporteer ze als JSON.",
-  "Image files are imported in Magic Card Utils > Images.": "Afbeeldingsbestanden importeer je in Magic Card Utils > Afbeeldingen.",
-  "Images": "Afbeeldingen",
-  "Images need Magic Card Utils. It is installed through HACS, like Magic Card.": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
-  "JSON or SVG, up to 8 MB": "JSON of SVG, tot 8 MB",
-  "Only icons and images have keywords, so they were left out.": "Alleen pictogrammen en afbeeldingen hebben trefwoorden, dus ze zijn weggelaten.",
-  "The checker for images did not load, so this image was not read.": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
-  "This file is larger than 8 MB, so it was not read.": "Dit bestand is groter dan 8 MB, dus het is niet gelezen.",
-  "The name says {want}, but the file holds {found}.": "De naam zegt {want}, maar het bestand bevat {found}.",
-  "{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} image {No images here yet.} other {No theme presets here yet.}}": "{kind, select, animation {Nog geen animaties.} shape {Nog geen vormen.} icon {Nog geen pictogrammen.} image {Nog geen afbeeldingen.} other {Nog geen themapresets.}}",
-  "{kind, select, animation {No animations match \"{q}\".} shape {No shapes match \"{q}\".} icon {No icons match \"{q}\".} image {No images match \"{q}\".} other {No theme presets match \"{q}\".}}": "{kind, select, animation {Geen animaties gevonden voor \"{q}\".} shape {Geen vormen gevonden voor \"{q}\".} icon {Geen pictogrammen gevonden voor \"{q}\".} image {Geen afbeeldingen gevonden voor \"{q}\".} other {Geen themapresets gevonden voor \"{q}\".}}",
-  "{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} image {Search images} other {Search theme presets}}": "{kind, select, animation {Animaties zoeken} shape {Vormen zoeken} icon {Pictogrammen zoeken} image {Afbeeldingen zoeken} other {Themapresets zoeken}}",
-  "{n, plural, one {# image} other {# images}}": "{n, plural, one {# afbeelding} other {# afbeeldingen}}"
+  "transfer.animation.the-animation-data-is-missing": {
+    "text": "De animatiegegevens ontbreken.",
+    "hash": "a2d35b9a"
+  },
+  "transfer.count.n": {
+    "text": "{n, plural, one {# animatie} other {# animaties}}",
+    "hash": "626cefeb"
+  },
+  "transfer.count.n-2": {
+    "text": "{n, plural, one {# thema} other {# thema's}}",
+    "hash": "ded85d0d"
+  },
+  "transfer.count.n-3": {
+    "text": "{n, plural, one {# vorm} other {# vormen}}",
+    "hash": "dd03bacf"
+  },
+  "transfer.count.n-4": {
+    "text": "{n, plural, one {# afbeelding} other {# afbeeldingen}}",
+    "hash": "87c5bf12"
+  },
+  "transfer.count.n-5": {
+    "text": "{n, plural, one {# pictogram} other {# pictogrammen}}",
+    "hash": "35adb446"
+  },
+  "transfer.envelope.animation-files-are-imported-in-the-card": {
+    "text": "Animatiebestanden importeer je in de kaarteditor (Mijn animaties) of in de animatiestudio.",
+    "hash": "278bdedb"
+  },
+  "transfer.envelope.animations-do-not-store-a-description-so": {
+    "text": "Animaties bewaren geen beschrijving, dus die is niet bewaard.",
+    "hash": "6c2c25e5"
+  },
+  "transfer.envelope.animations-do-not-store-an-author-so-it": {
+    "text": "Animaties bewaren geen auteur, dus die is niet bewaard.",
+    "hash": "497e83e0"
+  },
+  "transfer.envelope.icon-files-are-imported-in-the-card": {
+    "text": "Pictogrambestanden importeer je in de kaarteditor (Mijn pictogrammen) of in de SVG-editor.",
+    "hash": "49bd2338"
+  },
+  "transfer.envelope.image-files-are-imported-in-magic-card": {
+    "text": "Afbeeldingsbestanden importeer je in Magic Card Utils > Afbeeldingen.",
+    "hash": "ce9506b0"
+  },
+  "transfer.envelope.key-is-not-a-preset-field-so-it-was-left": {
+    "text": "\"{key}\" is geen preset-veld, dus is weggelaten.",
+    "hash": "df0ade5b"
+  },
+  "transfer.envelope.nothing-in-this-file-could-be-imported": {
+    "text": "Niets in dit bestand kon worden geïmporteerd.",
+    "hash": "01368c08"
+  },
+  "transfer.envelope.only-icons-and-images-have-keywords-so": {
+    "text": "Alleen pictogrammen en afbeeldingen hebben trefwoorden, dus ze zijn weggelaten.",
+    "hash": "313548e1"
+  },
+  "transfer.envelope.shape-files-are-imported-in-the-card": {
+    "text": "Vormbestanden importeer je in de kaarteditor (Mijn vormen) of in de vormeditor.",
+    "hash": "c3518148"
+  },
+  "transfer.envelope.some-keywords-were-not-valid-at-most-10": {
+    "text": "Sommige trefwoorden waren niet geldig (maximaal 10 woorden van 1-32 tekens), dus ze zijn weggelaten.",
+    "hash": "035fc77c"
+  },
+  "transfer.envelope.step-n-plays-name-which-is-not-in-this": {
+    "text": "Stap {n} speelt \"{name}\" af, die niet in dit bestand staat. Het werkt als je die al hebt.",
+    "hash": "1d8ce038"
+  },
+  "transfer.envelope.the-author-must-be-1-max-characters-so": {
+    "text": "De auteur moet 1-{max} tekens lang zijn, dus is weggelaten.",
+    "hash": "75811817"
+  },
+  "transfer.envelope.the-checker-for-images-did-not-load-so": {
+    "text": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
+    "hash": "f1d22ef2"
+  },
+  "transfer.envelope.the-description-must-be-1-max-characters": {
+    "text": "De beschrijving moet 1-{max} tekens lang zijn, dus is weggelaten.",
+    "hash": "54caf9c4"
+  },
+  "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
+    "text": "De id \"{id}\" komt twee keer voor in dit bestand; de eerste is gebruikt.",
+    "hash": "6eeaf713"
+  },
+  "transfer.envelope.the-id-must-be-1-64-lowercase-letters": {
+    "text": "De id moet bestaan uit 1-64 kleine letters, cijfers, - of _.",
+    "hash": "f1c96aa3"
+  },
+  "transfer.envelope.the-name-must-be-1-80-characters": {
+    "text": "De naam moet 1-80 tekens lang zijn.",
+    "hash": "c3e63a6f"
+  },
+  "transfer.envelope.the-name-says-want-but-the-file-holds": {
+    "text": "De naam zegt {want}, maar het bestand bevat {found}.",
+    "hash": "abe20f16"
+  },
+  "transfer.envelope.theme-files-are-imported-in-magic-card": {
+    "text": "Themabestanden importeer je in Magic Card Utils > Thema's.",
+    "hash": "4fb698aa"
+  },
+  "transfer.envelope.this-entry-is-not-an-object": {
+    "text": "Dit item is geen object.",
+    "hash": "f9d6082d"
+  },
+  "transfer.envelope.this-file-holds-kind-presets-which-this": {
+    "text": "Dit bestand bevat \"{kind}\"-presets, die deze versie van Magic Card niet kent.",
+    "hash": "ff5de08c"
+  },
+  "transfer.envelope.this-file-holds-more-than-max-items-so": {
+    "text": "Dit bestand bevat meer dan {max} items, dus het is niet gelezen.",
+    "hash": "bd852bdf"
+  },
+  "transfer.envelope.this-file-is-larger-than-8-mb-so-it-was": {
+    "text": "Dit bestand is groter dan 8 MB, dus het is niet gelezen.",
+    "hash": "b8a18190"
+  },
+  "transfer.envelope.this-file-needs-a-newer-magic-card": {
+    "text": "Dit bestand heeft een nieuwere Magic Card nodig (indeling {major}.x).",
+    "hash": "8ef392f3"
+  },
+  "transfer.envelope.this-is-not-a-magic-card-preset-file": {
+    "text": "Dit is geen Magic Card-presetbestand.",
+    "hash": "0e6922be"
+  },
+  "transfer.envelope.this-text-is-larger-than-1-mb-so-it-was": {
+    "text": "Deze tekst is groter dan 1 MB, dus hij is niet gelezen.",
+    "hash": "5ae4265e"
+  },
+  "transfer.icon.a-link-name": {
+    "text": "een link ({name})",
+    "hash": "d748a8e2"
+  },
+  "transfer.icon.a-script": {
+    "text": "een script",
+    "hash": "82d91bef"
+  },
+  "transfer.icon.a-style-attribute": {
+    "text": "een stijlattribuut",
+    "hash": "43b2a651"
+  },
+  "transfer.icon.a-use-reference": {
+    "text": "een <use>-verwijzing",
+    "hash": "37d9a4ff"
+  },
+  "transfer.icon.count": {
+    "text": "{count, plural, one {{what} verwijderd.} other {{what} verwijderd ({count} keer).}}",
+    "hash": "b96f38ec"
+  },
+  "transfer.icon.key-is-not-valid-path-data-so-it-was": {
+    "text": "\"{key}\" is geen geldige padgegevens, dus is weggelaten.",
+    "hash": "39f7e0bc"
+  },
+  "transfer.icon.no-svg-element-found": {
+    "text": "Geen <svg>-element gevonden.",
+    "hash": "588248bf"
+  },
+  "transfer.icon.open-it-in-the-svg-editor-and-save-to": {
+    "text": "Open het in de SVG-editor en bewaar het om het in de eigen kaarten van Home Assistant te tonen.",
+    "hash": "e56d01e0"
+  },
+  "transfer.icon.the-attribute-name": {
+    "text": "het attribuut {name}",
+    "hash": "b5171eb4"
+  },
+  "transfer.icon.the-event-handler-name": {
+    "text": "de gebeurtenishandler {name}",
+    "hash": "a6cc5438"
+  },
+  "transfer.icon.the-icon-has-no-svg": {
+    "text": "Het pictogram heeft geen SVG.",
+    "hash": "af6d7a11"
+  },
+  "transfer.icon.the-icon-is-larger-than-kb-kb": {
+    "text": "Het pictogram is groter dan {kb} KB.",
+    "hash": "e1358da9"
+  },
+  "transfer.icon.the-icon-is-too-large": {
+    "text": "Het pictogram is te groot.",
+    "hash": "cfa61853"
+  },
+  "transfer.icon.the-svg-could-not-be-read": {
+    "text": "De SVG kon niet worden gelezen.",
+    "hash": "aed5ccaa"
+  },
+  "transfer.icon.the-svg-has-no-shapes-to-draw": {
+    "text": "De SVG heeft geen vormen om te tekenen.",
+    "hash": "cf1f4072"
+  },
+  "transfer.icon.the-svg-is-larger-than-32-kb": {
+    "text": "De SVG is groter dan 32 KB.",
+    "hash": "b52d3ae6"
+  },
+  "transfer.icon.the-svg-is-too-complex": {
+    "text": "De SVG is te complex.",
+    "hash": "0a5777fd"
+  },
+  "transfer.icon.the-view-box-is-not-four-numbers-so-it": {
+    "text": "De viewBox bestaat niet uit vier getallen, dus is overgenomen uit de SVG.",
+    "hash": "8d4c147b"
+  },
+  "transfer.image-transfer-loader.key-is-not-a-preset-field-so-it-was-left": {
+    "text": "\"{key}\" is geen preset-veld, dus is weggelaten.",
+    "hash": "df0ade5b"
+  },
+  "transfer.library-view.added-n-to-this-card": {
+    "text": "{n} toegevoegd aan deze kaart.",
+    "hash": "54d82490"
+  },
+  "transfer.library-view.animations": {
+    "text": "Animaties",
+    "hash": "7f7c3306"
+  },
+  "transfer.library-view.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "transfer.library-view.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "transfer.library-view.could-not-reach-magic-card-utils-nothing": {
+    "text": "Magic Card Utils is niet bereikbaar. Er is niets gewijzigd.",
+    "hash": "b66a83ec"
+  },
+  "transfer.library-view.could-not-reach-magic-card-utils-your": {
+    "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
+    "hash": "3ba3f12b"
+  },
+  "transfer.library-view.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "transfer.library-view.delete-name": {
+    "text": "{name} verwijderen",
+    "hash": "3cf8146e"
+  },
+  "transfer.library-view.delete-name-cards-that-use-it-keep-their": {
+    "text": "{name} verwijderen? Kaarten die het gebruiken houden hun eigen kopie of tonen de standaard.",
+    "hash": "3d0295ed"
+  },
+  "transfer.library-view.delete-name-themes-you-applied-stay": {
+    "text": "{name} verwijderen? Thema's die je al hebt toegepast blijven staan.",
+    "hash": "9d725eb0"
+  },
+  "transfer.library-view.deleted-name": {
+    "text": "{name} verwijderd.",
+    "hash": "1f9ebcfd"
+  },
+  "transfer.library-view.edit-name": {
+    "text": "{name} bewerken",
+    "hash": "2313fe21"
+  },
+  "transfer.library-view.export": {
+    "text": "Exporteren",
+    "hash": "36648955"
+  },
+  "transfer.library-view.export-all": {
+    "text": "Alles exporteren",
+    "hash": "51427688"
+  },
+  "transfer.library-view.export-n-selected": {
+    "text": "{n} geselecteerde exporteren",
+    "hash": "32abc6cb"
+  },
+  "transfer.library-view.icons": {
+    "text": "Pictogrammen",
+    "hash": "eae96e02"
+  },
+  "transfer.library-view.images": {
+    "text": "Afbeeldingen",
+    "hash": "be7e2f20"
+  },
+  "transfer.library-view.images-need-magic-card-utils-it-is": {
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
+    "hash": "62625dad"
+  },
+  "transfer.library-view.import": {
+    "text": "Importeren",
+    "hash": "2cff9baa"
+  },
+  "transfer.library-view.imported-items-are-saved-in-this-card": {
+    "text": "Geïmporteerde items worden in deze kaart bewaard.",
+    "hash": "1098f558"
+  },
+  "transfer.library-view.imported-ok-of-total": {
+    "text": "{ok} van {total} geïmporteerd.",
+    "hash": "f9fa6ef7"
+  },
+  "transfer.library-view.it-changed-while-you-were-looking-the": {
+    "text": "Het is gewijzigd terwijl je keek. De lijst is opnieuw geladen; probeer het nog eens.",
+    "hash": "405eea10"
+  },
+  "transfer.library-view.keep-your-own-items-on-every-dashboard": {
+    "text": "Bewaar je eigen items op elk dashboard met de gratis Magic Card Utils-add-on. Tot dan blijven ze in deze kaart.",
+    "hash": "ef7672ed"
+  },
+  "transfer.library-view.kind": {
+    "text": "Soort",
+    "hash": "f5387f9b"
+  },
+  "transfer.library-view.kind-2": {
+    "text": "{kind, select, animation {Animaties zoeken} shape {Vormen zoeken} icon {Pictogrammen zoeken} image {Afbeeldingen zoeken} other {Themapresets zoeken}}",
+    "hash": "382d696d"
+  },
+  "transfer.library-view.kind-3": {
+    "text": "{kind, select, animation {Geen animaties gevonden voor \"{q}\".} shape {Geen vormen gevonden voor \"{q}\".} icon {Geen pictogrammen gevonden voor \"{q}\".} image {Geen afbeeldingen gevonden voor \"{q}\".} other {Geen themapresets gevonden voor \"{q}\".}}",
+    "hash": "0e08ba3a"
+  },
+  "transfer.library-view.kind-4": {
+    "text": "{kind, select, animation {Nog geen animaties.} shape {Nog geen vormen.} icon {Nog geen pictogrammen.} image {Nog geen afbeeldingen.} other {Nog geen themapresets.}}",
+    "hash": "abefdab9"
+  },
+  "transfer.library-view.loading": {
+    "text": "Laden...",
+    "hash": "47d2a515"
+  },
+  "transfer.library-view.magic-card-utils": {
+    "text": "Magic Card Utils",
+    "hash": "b19971b3"
+  },
+  "transfer.library-view.maximise": {
+    "text": "Maximaliseren",
+    "hash": "1c9fcada"
+  },
+  "transfer.library-view.move-window": {
+    "text": "Venster verplaatsen",
+    "hash": "50bb7be2"
+  },
+  "transfer.library-view.n-could-not-be-saved": {
+    "text": "{n} konden niet worden opgeslagen.",
+    "hash": "30a218a5"
+  },
+  "transfer.library-view.n-did-not-fit-the-library-is-full": {
+    "text": "{n} pasten er niet meer in: de bibliotheek is vol.",
+    "hash": "76e2db72"
+  },
+  "transfer.library-view.new-icon": {
+    "text": "Nieuw pictogram",
+    "hash": "01e1cc9d"
+  },
+  "transfer.library-view.new-name-for-name": {
+    "text": "Nieuwe naam voor {name}",
+    "hash": "862a5b73"
+  },
+  "transfer.library-view.new-shape": {
+    "text": "Nieuwe vorm",
+    "hash": "02601748"
+  },
+  "transfer.library-view.rename-name": {
+    "text": "{name} hernoemen",
+    "hash": "e84e258e"
+  },
+  "transfer.library-view.renamed-to-name": {
+    "text": "Hernoemd naar {name}.",
+    "hash": "b93f484a"
+  },
+  "transfer.library-view.resize-window": {
+    "text": "Venstergrootte aanpassen",
+    "hash": "c82ca135"
+  },
+  "transfer.library-view.restore-size": {
+    "text": "Oorspronkelijke grootte",
+    "hash": "b0a8b5c8"
+  },
+  "transfer.library-view.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "transfer.library-view.select-name": {
+    "text": "{name} selecteren",
+    "hash": "cbe2f067"
+  },
+  "transfer.library-view.shapes": {
+    "text": "Vormen",
+    "hash": "75e8028a"
+  },
+  "transfer.library-view.source": {
+    "text": "Bron",
+    "hash": "0e570ca6"
+  },
+  "transfer.library-view.the-library-is-full": {
+    "text": "De bibliotheek is vol.",
+    "hash": "fe5de597"
+  },
+  "transfer.library-view.the-name-must-be-1-to-80-characters": {
+    "text": "De naam moet 1 tot 80 tekens lang zijn.",
+    "hash": "3e367a82"
+  },
+  "transfer.library-view.theme-presets": {
+    "text": "Themapresets",
+    "hash": "d14702fe"
+  },
+  "transfer.library-view.this-card": {
+    "text": "Deze kaart",
+    "hash": "27968b2a"
+  },
+  "transfer.library-view.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "transfer.library-view.update-magic-card-utils-to-keep-theme": {
+    "text": "Werk Magic Card Utils bij om themapresets te bewaren.",
+    "hash": "d832ef2b"
+  },
+  "transfer.library-view.your-account-can-use-the-library-but-not": {
+    "text": "Je account kan de bibliotheek gebruiken maar niet wijzigen. Vraag het een beheerder.",
+    "hash": "058d4abc"
+  },
+  "transfer.panel.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "transfer.panel.choose-a-file": {
+    "text": "Kies een bestand",
+    "hash": "3e10c3cd"
+  },
+  "transfer.panel.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "transfer.panel.copied": {
+    "text": "Gekopieerd.",
+    "hash": "d249818e"
+  },
+  "transfer.panel.copy": {
+    "text": "Kopiëren",
+    "hash": "e21f935f"
+  },
+  "transfer.panel.copy-as-ha-theme": {
+    "text": "Kopiëren als HA-thema",
+    "hash": "ca4cb9fe"
+  },
+  "transfer.panel.could-not-copy-the-text-is-selected": {
+    "text": "Kopiëren is niet gelukt. De tekst is geselecteerd: druk op Ctrl+C.",
+    "hash": "af91aa1b"
+  },
+  "transfer.panel.download": {
+    "text": "Downloaden",
+    "hash": "d6eafe82"
+  },
+  "transfer.panel.downloaded-name": {
+    "text": "{name} gedownload.",
+    "hash": "bb30dd59"
+  },
+  "transfer.panel.every-browser-that-shows-a-dashboard": {
+    "text": "Elke browser die een dashboard met dit thema toont, vraagt bestanden op bij {hosts}, en die sites kunnen het IP-adres van de bezoeker zien.",
+    "hash": "dd585584"
+  },
+  "transfer.panel.export-items": {
+    "text": "{items} exporteren",
+    "hash": "3dc6c213"
+  },
+  "transfer.panel.export-text": {
+    "text": "Exporttekst",
+    "hash": "e4c3120f"
+  },
+  "transfer.panel.file-format": {
+    "text": "Bestandsindeling",
+    "hash": "d63b2b69"
+  },
+  "transfer.panel.images-need-magic-card-utils-it-is": {
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
+    "hash": "62625dad"
+  },
+  "transfer.panel.import-anyway": {
+    "text": "Toch importeren",
+    "hash": "e06eac7e"
+  },
+  "transfer.panel.import-items": {
+    "text": "{items} importeren",
+    "hash": "c903551f"
+  },
+  "transfer.panel.import-presets": {
+    "text": "Presets importeren",
+    "hash": "0d44eca1"
+  },
+  "transfer.panel.json-or-svg-up-to-8-mb": {
+    "text": "JSON of SVG, tot 8 MB",
+    "hash": "0cb82acb"
+  },
+  "transfer.panel.keep-both": {
+    "text": "Beide bewaren",
+    "hash": "93672212"
+  },
+  "transfer.panel.lines-that-start-with-card-mod-only-work": {
+    "text": "Regels die met card-mod- beginnen werken alleen als card-mod is geïnstalleerd, en ze kunnen elke kaart een andere stijl geven.",
+    "hash": "995bf30c"
+  },
+  "transfer.panel.magic-card-utils-is-not-installed-so": {
+    "text": "Magic Card Utils is niet geïnstalleerd, dus deze worden als kopieën in deze kaart bewaard.",
+    "hash": "eaac0a59"
+  },
+  "transfer.panel.n": {
+    "text": "{n, plural, one {# waarde is bewaard zoals die er staat. Bekijk de lijst hieronder.} other {# waarden zijn bewaard zoals ze er staan. Bekijk de lijst hieronder.}}",
+    "hash": "b0c6e9ba"
+  },
+  "transfer.panel.n-2": {
+    "text": "{n, plural, one {# opmerking.} other {# opmerkingen.}}",
+    "hash": "c6e67d69"
+  },
+  "transfer.panel.n-3": {
+    "text": "{n, plural, one {# waarde is bewaard zoals die er staat} other {# waarden zijn bewaard zoals ze er staan}}",
+    "hash": "06e664e8"
+  },
+  "transfer.panel.n-4": {
+    "text": "{n, plural, one {# waarde verwijst naar een bestand op de Home Assistant van de deler (url(/local/...)). Het bestaat misschien niet op jouw systeem.} other {# waarden verwijzen naar bestanden op de Home Assistant van de deler (url(/local/...)). Ze bestaan misschien niet op jouw systeem.}}",
+    "hash": "c2db2f09"
+  },
+  "transfer.panel.n-5": {
+    "text": "{n, plural, one {# opmerking} other {# opmerkingen}}",
+    "hash": "4a231359"
+  },
+  "transfer.panel.n-6": {
+    "text": "{n, plural, one {{items} bestaat al} other {{items} bestaan al}}",
+    "hash": "aaf2a1fd"
+  },
+  "transfer.panel.nothing-to-export": {
+    "text": "Er is niets om te exporteren.",
+    "hash": "354b0fbd"
+  },
+  "transfer.panel.or-paste-the-text": {
+    "text": "Of plak de tekst",
+    "hash": "ea38d3ca"
+  },
+  "transfer.panel.read": {
+    "text": "Inlezen",
+    "hash": "9b9a8d05"
+  },
+  "transfer.panel.replace-them": {
+    "text": "Vervang ze",
+    "hash": "f199ad2e"
+  },
+  "transfer.panel.source-holds-items": {
+    "text": "{source} bevat {items}.",
+    "hash": "a039162e"
+  },
+  "transfer.panel.the-author-name-is-saved-in-the-file": {
+    "text": "De naam van de auteur komt in het bestand. Controleer hem voordat je het bestand deelt.",
+    "hash": "767f7f3b"
+  },
+  "transfer.panel.the-checker-for-images-did-not-load-so": {
+    "text": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
+    "hash": "f1d22ef2"
+  },
+  "transfer.panel.the-checker-for-these-animations-did-not": {
+    "text": "De controle voor deze animaties is niet geladen, dus het bestand is niet gelezen. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "f975a0c4"
+  },
+  "transfer.panel.the-new-ones-get-a-number": {
+    "text": "De nieuwe krijgen een nummer.",
+    "hash": "1baacf55"
+  },
+  "transfer.panel.the-saved-ones-are-overwritten": {
+    "text": "De opgeslagen items worden overschreven.",
+    "hash": "2fcc92e0"
+  },
+  "transfer.panel.the-text": {
+    "text": "De tekst",
+    "hash": "27364d4e"
+  },
+  "transfer.panel.this-file-was-not-imported": {
+    "text": "Dit bestand is niet geïmporteerd",
+    "hash": "2c036c6f"
+  },
+  "transfer.panel.types-up-to-1-mb": {
+    "text": "{types}, tot 1 MB",
+    "hash": "7d412ce8"
+  },
+  "transfer.panel.types-up-to-1-mb-svg-up-to-32-kb": {
+    "text": "{types}, tot 1 MB; SVG tot 32 KB",
+    "hash": "df168e43"
+  },
+  "transfer.panel.update-magic-card-utils-to-keep-theme": {
+    "text": "Werk Magic Card Utils bij om themapresets te bewaren.",
+    "hash": "d832ef2b"
+  },
+  "transfer.panel.what-to-do-with-them": {
+    "text": "Wat moet er met ze gebeuren",
+    "hash": "522cbf38"
+  },
+  "transfer.panel.you-have-this-one": {
+    "text": "(je hebt deze al)",
+    "hash": "3874880b"
+  },
+  "transfer.safe-parse.image-files-are-json-not-yaml-export": {
+    "text": "Afbeeldingsbestanden zijn JSON, geen YAML. Exporteer ze als JSON.",
+    "hash": "8a03597a"
+  },
+  "transfer.safe-parse.merge-keys-are-not-allowed-in-preset": {
+    "text": "Samenvoegsleutels (<<) zijn niet toegestaan in presetbestanden.",
+    "hash": "844dbc2b"
+  },
+  "transfer.safe-parse.not-valid-yaml-or-json": {
+    "text": "Geen geldige YAML of JSON.",
+    "hash": "dc59eda4"
+  },
+  "transfer.safe-parse.numbers-must-be-finite-no-inf-or-nan": {
+    "text": "Getallen moeten eindig zijn (geen .inf of .nan).",
+    "hash": "d2bfc47e"
+  },
+  "transfer.safe-parse.paste-or-choose-a-file-first": {
+    "text": "Plak eerst tekst of kies een bestand.",
+    "hash": "f6597fb6"
+  },
+  "transfer.safe-parse.this-file-is-larger-than-1-mb-so-it-was": {
+    "text": "Dit bestand is groter dan 1 MB, dus het is niet gelezen.",
+    "hash": "6d4001eb"
+  },
+  "transfer.safe-parse.this-file-is-larger-than-8-mb-so-it-was": {
+    "text": "Dit bestand is groter dan 8 MB, dus het is niet gelezen.",
+    "hash": "b8a18190"
+  },
+  "transfer.safe-parse.this-file-is-too-complex-to-read-safely": {
+    "text": "Dit bestand is te complex om veilig te lezen (te veel geneste of herhaalde waarden).",
+    "hash": "0eca0c64"
+  },
+  "transfer.shape.a-shape-holds-at-most-max-points-this": {
+    "text": "Een vorm bevat maximaal {max} punten (deze heeft er {n}).",
+    "hash": "1da1b920"
+  },
+  "transfer.shape.corner-name-is-not-valid-so-it-was-left": {
+    "text": "Hoek {name} is niet geldig, dus is weggelaten.",
+    "hash": "0be44cf3"
+  },
+  "transfer.shape.key-is-not-a-corner-so-it-was-left-out": {
+    "text": "\"{key}\" is geen hoek, dus is weggelaten.",
+    "hash": "d9b951a0"
+  },
+  "transfer.shape.key-is-not-a-shape-setting-so-it-was": {
+    "text": "\"{key}\" is geen vorminstelling, dus is weggelaten.",
+    "hash": "41456b7f"
+  },
+  "transfer.shape.padding-name-is-not-valid-so-it-was-left": {
+    "text": "Opvulling \"{name}\" is niet geldig, dus is weggelaten.",
+    "hash": "6d50f7fc"
+  },
+  "transfer.shape.point-n-is-not-valid-so-it-was-left-out": {
+    "text": "Punt {n} is niet geldig, dus is weggelaten.",
+    "hash": "cbd9e1cd"
+  },
+  "transfer.shape.the-corner-size-is-not-valid-so-it-was": {
+    "text": "De hoekgrootte is niet geldig, dus is weggelaten.",
+    "hash": "6a2cc8d8"
+  },
+  "transfer.shape.the-corner-type-is-not-valid-so-it-was": {
+    "text": "Het hoektype is niet geldig, dus is weggelaten.",
+    "hash": "b21e24c5"
+  },
+  "transfer.shape.the-corners-setting-is-not-valid-so-it": {
+    "text": "De hoekeninstelling is niet geldig, dus is weggelaten.",
+    "hash": "b420bcef"
+  },
+  "transfer.shape.the-padding-is-not-valid-so-it-was-left": {
+    "text": "De opvulling is niet geldig, dus is weggelaten.",
+    "hash": "604b84e9"
+  },
+  "transfer.shape.the-points-list-is-not-valid-so-it-was": {
+    "text": "De puntenlijst is niet geldig, dus is weggelaten.",
+    "hash": "53343347"
+  },
+  "transfer.shape.the-shape-data-is-missing": {
+    "text": "De vormgegevens ontbreken.",
+    "hash": "b62be10d"
+  },
+  "transfer.shape.the-shape-has-no-valid-settings": {
+    "text": "De vorm heeft geen geldige instellingen.",
+    "hash": "887c48bb"
+  },
+  "transfer.shape.the-shape-is-larger-than-kb-kb": {
+    "text": "De vorm is groter dan {kb} KB.",
+    "hash": "34a004f2"
+  },
+  "transfer.shape.the-smoothing-is-not-valid-so-it-was": {
+    "text": "De afronding is niet geldig, dus is weggelaten.",
+    "hash": "2f933801"
+  },
+  "transfer.theme.another-website": {
+    "text": "een andere website",
+    "hash": "f55dea2b"
+  },
+  "transfer.theme.dark": {
+    "text": "Donker",
+    "hash": "60acc53f"
+  },
+  "transfer.theme.key-is-a-card-mod-style-it-was-kept-with": {
+    "text": "\"{key}\" is een card-mod-stijl. Hij is bewaard; met card-mod geïnstalleerd voert hij CSS uit op je dashboard.",
+    "hash": "cf5a9b51"
+  },
+  "transfer.theme.key-is-not-a-theme-variable-name-so-it": {
+    "text": "\"{key}\" is geen naam van een themavariabele, dus is weggelaten.",
+    "hash": "7be0630e"
+  },
+  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
+    "text": "\"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
+    "hash": "e60639fa"
+  },
+  "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
+    "text": "\"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
+    "hash": "e7700a33"
+  },
+  "transfer.theme.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
+    "text": "Modus {mode}: \"{key}\" is een card-mod-stijl. Hij is bewaard; met card-mod geïnstalleerd voert hij CSS uit op je dashboard.",
+    "hash": "ada05ea7"
+  },
+  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
+    "text": "Modus {mode}: \"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
+    "hash": "7f6dadd9"
+  },
+  "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
+    "text": "Modus {mode}: \"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
+    "hash": "07730a9f"
+  },
+  "transfer.theme.modes-key-is-not-light-or-dark-so-it-was": {
+    "text": "\"modes.{key}\" is geen light of dark, dus is weggelaten.",
+    "hash": "3c1af7d3"
+  },
+  "transfer.theme.modes-must-hold-light-and-dark-so-it-was": {
+    "text": "\"modes\" moet light en dark bevatten, dus is weggelaten.",
+    "hash": "ffef1cbf"
+  },
+  "transfer.theme.the-theme-data-is-missing": {
+    "text": "De themagegevens ontbreken.",
+    "hash": "a76664df"
+  },
+  "transfer.theme.the-theme-has-no-variables": {
+    "text": "Het thema heeft geen variabelen.",
+    "hash": "b4449724"
+  },
+  "transfer.theme.the-theme-is-larger-than-kb-kb": {
+    "text": "Het thema is groter dan {kb} KB.",
+    "hash": "121ee242"
+  },
+  "transfer.theme.the-value-of-key-is-longer-than-max": {
+    "text": "De waarde van \"{key}\" is langer dan {max} tekens, dus is weggelaten.",
+    "hash": "dcc64e48"
+  },
+  "transfer.theme.the-value-of-key-is-not-text-or-a-number": {
+    "text": "De waarde van \"{key}\" is geen tekst of getal, dus is weggelaten.",
+    "hash": "83dde325"
+  }
 }
