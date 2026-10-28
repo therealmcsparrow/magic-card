@@ -31,32 +31,32 @@
   },
   "look-editor.element.alternate-with": {
     "text": "Alternate with",
-    "note": "Shown in element (look-editor).",
+    "note": "Field label in the flow line look. Picks a second moving shape that takes turns with the first. Read as 'Alternate with: [shape]'.",
     "max": 25
   },
   "look-editor.element.arrival": {
     "text": "Arrival",
-    "note": "Shown in element (look-editor).",
+    "note": "Section heading in the flow line look for what happens where moving shapes reach the end of the line (for example Splash). A noun.",
     "max": 15
   },
   "look-editor.element.arrow": {
     "text": "Arrow",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for an end marker or moving shape: an arrow. Choice in a button group, not a verb.",
     "max": 10
   },
   "look-editor.element.arrowhead": {
     "text": "Arrowhead",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a line end marker: the pointed tip of an arrow. Choice in a button group.",
     "max": 15
   },
   "look-editor.element.bubble": {
     "text": "Bubble",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a moving shape style (singular), beside Comet, Spark and Drop. Plural 'Bubbles' is a separate key.",
     "max": 10
   },
   "look-editor.element.bubble-count": {
     "text": "Bubble count",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: how many bubbles are on the line at once.",
     "max": 20
   },
   "look-editor.element.bubbles": {
@@ -66,12 +66,12 @@
   },
   "look-editor.element.by-value": {
     "text": "By value",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the colour mode button group (with Single and Gradient): the colour follows the entity's value. Not a price or payment term.",
     "max": 15
   },
   "look-editor.element.cable": {
     "text": "Cable",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a line style that looks like a twisted cable, beside Tube. Choice in a button group.",
     "max": 10
   },
   "look-editor.element.chevron": {
@@ -81,12 +81,12 @@
   },
   "look-editor.element.colour": {
     "text": "Colour",
-    "note": "Shown in element (look-editor).",
+    "note": "Field label for a colour picker in the flow line look. A noun.",
     "max": 10
   },
   "look-editor.element.colour-mode": {
     "text": "Colour mode",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the button group that chooses how the line gets its colour: Single, Gradient or By value.",
     "max": 20
   },
   "look-editor.element.colour-ranges": {
@@ -101,7 +101,7 @@
   },
   "look-editor.element.core-colour": {
     "text": "Core colour",
-    "note": "Shown in element (look-editor).",
+    "note": "Colour picker label: the colour of the bright centre of a glowing line, as opposed to its outer glow.",
     "max": 20
   },
   "look-editor.element.count-follows-spacing": {
@@ -121,7 +121,7 @@
   },
   "look-editor.element.default-look": {
     "text": "Default look",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of the look used when no preset is chosen, for flow lines. Shown as a tile in the preset list. The slider editor has its own key.",
     "max": 20
   },
   "look-editor.element.diamond": {
@@ -136,12 +136,12 @@
   },
   "look-editor.element.dismiss": {
     "text": "Dismiss",
-    "note": "Shown in element (look-editor).",
+    "note": "Button on a warning notice that hides the notice. Also the close label of the undo toast.",
     "max": 15
   },
   "look-editor.element.dot": {
     "text": "Dot",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a moving shape: a round dot (singular). The plural 'Dots' is a number field label.",
     "max": 5
   },
   "look-editor.element.dot-size-px": {
@@ -151,12 +151,12 @@
   },
   "look-editor.element.dots": {
     "text": "Dots",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: how many dots move along the line at once. Plural of the 'Dot' option.",
     "max": 10
   },
   "look-editor.element.dotted": {
     "text": "Dotted",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a line style made of dots, beside Solid and Dashed. An adjective.",
     "max": 10
   },
   "look-editor.element.double-rail": {
@@ -166,12 +166,12 @@
   },
   "look-editor.element.drop": {
     "text": "Drop",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a moving shape shaped like a water drop, beside Comet, Spark and Bubble. A noun, not the verb.",
     "max": 10
   },
   "look-editor.element.electric": {
     "text": "Electric",
-    "note": "Shown in element (look-editor).",
+    "note": "Switch label for a zigzag line: makes it flicker like an electric arc. An adjective.",
     "max": 15
   },
   "look-editor.element.end-marker": {
@@ -181,17 +181,17 @@
   },
   "look-editor.element.ends": {
     "text": "Ends",
-    "note": "Shown in element (look-editor).",
+    "note": "Section heading in the flow line look for the start and end markers of the line. A plural noun, not the verb.",
     "max": 10
   },
   "look-editor.element.even": {
     "text": "Even",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the spacing button group (with In pixels and Random): shapes are spread evenly along the line. Not 'even number'.",
     "max": 15
   },
   "look-editor.element.fields-added": {
     "text": "{fields} added.",
-    "note": "Shown in element (look-editor).",
+    "note": "Status line under a look. {fields} is a comma-separated list of the names of the extra settings the look adds, for example 'Sheath colour, Twisted'. Keep the list intact.",
     "max": 25,
     "vars": {
       "fields": "The value that replaces fields in the text."
@@ -199,42 +199,42 @@
   },
   "look-editor.element.flicker": {
     "text": "Flicker",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the button group (Off, Subtle, Strong) that sets how much the glow flickers. A noun.",
     "max": 15
   },
   "look-editor.element.gap-px": {
     "text": "Gap (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: space between dashes or dots along the flow line, in pixels (px).",
     "max": 20
   },
   "look-editor.element.glass-tint": {
     "text": "Glass tint",
-    "note": "Shown in element (look-editor).",
+    "note": "Colour picker label: the tint of the glass-style tube. 'Glass' is the material and 'tint' the colour wash.",
     "max": 20
   },
   "look-editor.element.glow-px": {
     "text": "Glow (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: radius of the soft glow around the flow line, in pixels (px).",
     "max": 15
   },
   "look-editor.element.gradient": {
     "text": "Gradient",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the colour mode button group (Single, Gradient, By value): the line blends from one colour to another.",
     "max": 15
   },
   "look-editor.element.icon": {
     "text": "Icon",
-    "note": "Shown in element (look-editor).",
+    "note": "Label for the icon shown on the flow line (picker or heading). A noun.",
     "max": 10
   },
   "look-editor.element.idle-colour": {
     "text": "Idle colour",
-    "note": "Shown in element (look-editor).",
+    "note": "Colour picker label: the colour of the line when nothing is flowing (the entity is idle or off).",
     "max": 25
   },
   "look-editor.element.in-pixels": {
     "text": "In pixels",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the spacing button group (with Even and Random): shapes are placed a fixed number of pixels apart.",
     "max": 15
   },
   "look-editor.element.level-follows-value": {
@@ -244,7 +244,7 @@
   },
   "look-editor.element.line": {
     "text": "Line",
-    "note": "Shown in element (look-editor).",
+    "note": "Heading of the flow line section (the path itself, not a text line). A noun. Distinct from 'Line style'.",
     "max": 10
   },
   "look-editor.element.line-end-colour": {
@@ -254,7 +254,7 @@
   },
   "look-editor.element.line-style": {
     "text": "Line style",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the button group that picks how the line is drawn: Solid, Dashed or Dotted.",
     "max": 20
   },
   "look-editor.element.look-change-undone": {
@@ -264,7 +264,7 @@
   },
   "look-editor.element.look-reset-n-removed": {
     "text": "Look reset. {n, plural, one {# setting} other {# settings}} removed.",
-    "note": "Shown in element (look-editor).",
+    "note": "Toast shown after the look is reset, followed by an Undo button. {n} is the number of settings removed from the card configuration.",
     "max": 50,
     "vars": {
       "n": "The count the text is about."
@@ -277,12 +277,12 @@
   },
   "look-editor.element.motion": {
     "text": "Motion",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the button group choosing how the shapes move: Travel along the line or Pulse in place. A noun.",
     "max": 10
   },
   "look-editor.element.n-px": {
     "text": "{n} px",
-    "note": "Shown in element (look-editor).",
+    "note": "Pixel value shown beside a size control. {n} is a number; px stands for pixels.",
     "max": 10,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -290,7 +290,7 @@
   },
   "look-editor.element.name-look": {
     "text": "{name} look",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of a look in the Look header. {name} is the name of a preset look, such as Neon or Wave. Same English as the slider key, which has its own context.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -298,7 +298,7 @@
   },
   "look-editor.element.name-look-applied-n-changed": {
     "text": "{name} look applied. {n, plural, one {# setting} other {# settings}} changed.",
-    "note": "Shown in element (look-editor).",
+    "note": "Toast shown after a preset look is applied, followed by an Undo button. {name} is the look name; {n} is the number of settings changed.",
     "max": 65,
     "vars": {
       "n": "The count the text is about.",
@@ -312,7 +312,7 @@
   },
   "look-editor.element.none": {
     "text": "None",
-    "note": "Shown in element (look-editor).",
+    "note": "Option meaning 'no end marker' or 'no extra effect' in a button group; also the value shown when nothing is set.",
     "max": 10
   },
   "look-editor.element.nothing-arrives-while-motion-is-pulse": {
@@ -322,7 +322,7 @@
   },
   "look-editor.element.off": {
     "text": "Off",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Flicker button group (Off, Subtle, Strong): no flicker. Not a switch state of an entity.",
     "max": 5
   },
   "look-editor.element.pick-a-sensor-or-device-first-the-colour": {
@@ -342,12 +342,12 @@
   },
   "look-editor.element.presets": {
     "text": "Presets",
-    "note": "Shown in element (look-editor).",
+    "note": "Section heading above the ready-made look tiles for the flow line. A plural noun.",
     "max": 20
   },
   "look-editor.element.pulse": {
     "text": "Pulse",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Motion button group: shapes swell and fade in place instead of travelling. Also used as part of a summary. A noun or verb of the effect, not a heartbeat.",
     "max": 10
   },
   "look-editor.element.rail-gap-px": {
@@ -357,12 +357,12 @@
   },
   "look-editor.element.random": {
     "text": "Random",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the spacing button group (with Even and In pixels): shapes are placed at random positions.",
     "max": 15
   },
   "look-editor.element.reset-look": {
     "text": "Reset look",
-    "note": "Shown in element (look-editor).",
+    "note": "Button in the flow line Look header that removes every look setting. An Undo toast follows.",
     "max": 20
   },
   "look-editor.element.ring": {
@@ -382,12 +382,12 @@
   },
   "look-editor.element.scale-width": {
     "text": "Scale width",
-    "note": "Shown in element (look-editor).",
+    "note": "Switch label: the line gets thicker as the value rises, up to twice its width at Max. Verb phrase, not a measuring scale.",
     "max": 20
   },
   "look-editor.element.shape": {
     "text": "Shape",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the button group that picks the moving shape (Dot, Comet, Arrow and so on). Singular; 'Shapes' is a number field.",
     "max": 10
   },
   "look-editor.element.shape-colour": {
@@ -402,7 +402,7 @@
   },
   "look-editor.element.shapes": {
     "text": "Shapes",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: how many shapes move along the line at once. Plural of 'Shape'.",
     "max": 10
   },
   "look-editor.element.shapes-stay-in-place-and-pulse-the-pulse": {
@@ -412,12 +412,12 @@
   },
   "look-editor.element.sheath-colour": {
     "text": "Sheath colour",
-    "note": "Shown in element (look-editor).",
+    "note": "Colour picker label: the colour of the outer covering of a cable-style line, like the plastic jacket of a wire.",
     "max": 25
   },
   "look-editor.element.single": {
     "text": "Single",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the colour mode button group (Single, Gradient, By value): one fixed colour.",
     "max": 10
   },
   "look-editor.element.size-variation": {
@@ -427,12 +427,12 @@
   },
   "look-editor.element.solid": {
     "text": "Solid",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Line style button group (Solid, Dashed, Dotted): an unbroken line. An adjective.",
     "max": 10
   },
   "look-editor.element.spacing": {
     "text": "Spacing",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the button group choosing how shapes are spread along the line: Even, In pixels or Random.",
     "max": 15
   },
   "look-editor.element.spacing-is-ignored-while-motion-is-pulse": {
@@ -442,22 +442,22 @@
   },
   "look-editor.element.spacing-px": {
     "text": "Spacing (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: distance between shapes along the line, in pixels (px). Shown when spacing is In pixels.",
     "max": 20
   },
   "look-editor.element.spark": {
     "text": "Spark",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a moving shape that looks like a spark, beside Comet, Bubble and Drop. A noun.",
     "max": 10
   },
   "look-editor.element.spin": {
     "text": "Spin",
-    "note": "Shown in element (look-editor).",
+    "note": "Switch label: the shape turns once every 3 seconds. Verb, not a washing-machine cycle.",
     "max": 10
   },
   "look-editor.element.splash": {
     "text": "Splash",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Arrival button group: a small splash effect where shapes reach the end of the line. A noun.",
     "max": 10
   },
   "look-editor.element.splash-on-arrival": {
@@ -492,12 +492,12 @@
   },
   "look-editor.element.strong": {
     "text": "Strong",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Flicker button group (Off, Subtle, Strong): a pronounced flicker. An adjective.",
     "max": 10
   },
   "look-editor.element.subtle": {
     "text": "Subtle",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Flicker button group (Off, Subtle, Strong): a barely noticeable flicker. An adjective.",
     "max": 10
   },
   "look-editor.element.the-flow-look-could-not-be-loaded-so-the": {
@@ -522,12 +522,12 @@
   },
   "look-editor.element.travel": {
     "text": "Travel",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the Motion button group (Travel, Pulse): shapes move along the line from start to end. A verb.",
     "max": 10
   },
   "look-editor.element.tube": {
     "text": "Tube",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a line style that looks like a glass tube, beside Cable. Choice in a button group.",
     "max": 10
   },
   "look-editor.element.turns-the-shape-once-every-3-seconds": {
@@ -537,17 +537,17 @@
   },
   "look-editor.element.twisted": {
     "text": "Twisted",
-    "note": "Shown in element (look-editor).",
+    "note": "Switch label for a cable-style line: draws the strands twisted around each other. An adjective.",
     "max": 15
   },
   "look-editor.element.undo": {
     "text": "Undo",
-    "note": "Shown in element (look-editor).",
+    "note": "Button and toast action that reverts the last look change. The longer 'Undo reset' and 'Undo {name} look' are separate keys.",
     "max": 15
   },
   "look-editor.element.undo-name-look": {
     "text": "Undo {name} look",
-    "note": "Shown in element (look-editor).",
+    "note": "Button that reverts a preset look just applied. {name} is the look name, such as Neon.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -555,7 +555,7 @@
   },
   "look-editor.element.undo-reset": {
     "text": "Undo reset",
-    "note": "Shown in element (look-editor).",
+    "note": "Button in the flow line Look header that restores the settings removed by Reset look.",
     "max": 25
   },
   "look-editor.element.up-to-twice-the-width-at-max": {
@@ -565,7 +565,7 @@
   },
   "look-editor.element.used-is-used-kept-but-not-used-kept": {
     "text": "{used} is used. Kept but not used: {kept}.",
-    "note": "Shown in element (look-editor).",
+    "note": "Help text when a look switches a setting on. {used} is the name of the colour setting now in effect; {kept} is a comma-separated list of settings still stored but ignored.",
     "max": 70,
     "vars": {
       "kept": "The value that replaces kept in the text.",
@@ -574,7 +574,7 @@
   },
   "look-editor.element.wave": {
     "text": "Wave",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a line shape that follows a smooth wave, beside Zigzag. Choice in a button group, not a greeting.",
     "max": 10
   },
   "look-editor.element.wave-height-px": {
@@ -584,12 +584,12 @@
   },
   "look-editor.element.wavelength-px": {
     "text": "Wavelength (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: the distance between two peaks of the wave or zigzag, in pixels (px).",
     "max": 25
   },
   "look-editor.element.width-px": {
     "text": "Width (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Number field label: thickness of the flow line, in pixels (px). Not the card width.",
     "max": 20
   },
   "look-editor.element.your-own-look": {
@@ -599,7 +599,7 @@
   },
   "look-editor.element.your-own-look-started-from-name": {
     "text": "Your own look, started from {name}",
-    "note": "Shown in element (look-editor).",
+    "note": "Description of a customised look. {name} is the name of the preset look it started from.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -612,7 +612,7 @@
   },
   "look-editor.element.zigzag": {
     "text": "Zigzag",
-    "note": "Shown in element (look-editor).",
+    "note": "Option name for a line shape with sharp angled bends, beside Wave. Choice in a button group.",
     "max": 10
   },
   "look-editor.element.zigzag-height-px": {
@@ -622,27 +622,27 @@
   },
   "look-editor.mc-slider-look-editor.add-evenly": {
     "text": "Add evenly",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button that replaces the gradient stops with a chosen number of stops spread evenly across the slider's range.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.add-stop": {
     "text": "Add stop",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button that adds one colour stop (a colour point) to the slider gradient. 'Stop' is a noun, not 'stop an action'.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.apply": {
     "text": "Apply",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button next to the stop-count field that applies the Add evenly settings.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.auto": {
     "text": "Auto",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the slider colour mode button group: the fill colour is chosen automatically from the entity. Capitalised; the lower-case 'auto' key is a separate string.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.auto-2": {
     "text": "auto",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Lower-case word used inside a sentence or summary, meaning the colour is chosen automatically. Not a button label.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.auto-from-the-light-s-colour": {
@@ -662,12 +662,12 @@
   },
   "look-editor.mc-slider-look-editor.big-fill": {
     "text": "Big fill",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Name of a slider preset look: a large, bold filled bar. Shown as a tile in the preset list.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.blur-behind": {
     "text": "Blur behind",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Number field or switch label: blurs whatever is behind the slider track, the frosted-glass effect.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives": {
@@ -692,7 +692,7 @@
   },
   "look-editor.mc-slider-look-editor.centre": {
     "text": "Centre",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in a position button group (such as Icon position): placed in the middle of the slider.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider": {
@@ -702,17 +702,17 @@
   },
   "look-editor.mc-slider-look-editor.circle": {
     "text": "Circle",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the handle shape button group (with Square): a round handle.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.close": {
     "text": "Close",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button that closes the slider look editor panel. A verb, not 'near'.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.colour-source-source": {
     "text": "Colour source: {source}.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Help text under the fill colour mode. {source} is where the slider fill colour comes from, for example the light's colour or a fixed colour.",
     "max": 40,
     "vars": {
       "source": "The value that replaces source in the text."
@@ -720,12 +720,12 @@
   },
   "look-editor.mc-slider-look-editor.default-look": {
     "text": "Default look",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Name of the slider look used when no preset is chosen. Shown as a tile in the preset list. The flow line editor has its own key.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.delete-stop-n": {
     "text": "Delete stop {n}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button label (also read by screen readers) that removes one colour stop of the slider gradient. {n} is the stop's position, starting at 1.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -733,12 +733,12 @@
   },
   "look-editor.mc-slider-look-editor.end-colour": {
     "text": "End colour",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Colour picker label: the last colour of the slider gradient, at the maximum end. Pairs with a start colour.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.entity-icon": {
     "text": "Entity icon",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the icon source button group: use the icon of the Home Assistant entity the slider controls.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the": {
@@ -748,7 +748,7 @@
   },
   "look-editor.mc-slider-look-editor.fill": {
     "text": "Fill",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Section heading for the filled part of the slider track (the coloured bar showing the current value). A noun.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.following-the-light": {
@@ -758,22 +758,22 @@
   },
   "look-editor.mc-slider-look-editor.gap-px": {
     "text": "Gap (px)",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Number field label: space between the segments of a segmented slider, in pixels (px).",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.glass": {
     "text": "Glass",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Name of a slider preset look: frosted, see-through glass. Shown as a tile in the preset list; not a drinking glass.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.glow-px": {
     "text": "Glow (px)",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Number field label: radius of the soft glow around the slider, in pixels (px).",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.gradient": {
     "text": "Gradient",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the slider fill colour mode button group: the fill blends through the colour stops.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.gradient-light-s-colour-to-end-colour": {
@@ -783,12 +783,12 @@
   },
   "look-editor.mc-slider-look-editor.handle": {
     "text": "Handle",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Section heading for the draggable knob of the slider. A noun, not a verb.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.hidden": {
     "text": "Hidden",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in a button group (for example the label or handle): the element is not shown. An adjective.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.hidden-is-the-same-as-turning-show-value": {
@@ -803,7 +803,7 @@
   },
   "look-editor.mc-slider-look-editor.icon": {
     "text": "Icon",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Section heading for the icon shown on the slider. A noun.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.icon-position": {
@@ -828,17 +828,17 @@
   },
   "look-editor.mc-slider-look-editor.label": {
     "text": "Label",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Section heading for the text labels at the slider ends (for example min and max). A noun.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.light-s-colour": {
     "text": "Light's colour",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Value shown after 'Colour source:' when the fill takes the actual colour of the light entity. 'Light' is a Home Assistant light.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.line": {
     "text": "Line",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the handle shape button group: a thin line handle. A noun.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.look-change-undone": {
@@ -848,7 +848,7 @@
   },
   "look-editor.mc-slider-look-editor.look-reset-count": {
     "text": "Look reset. {count}.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Toast after the slider look is reset, followed by an Undo button. {count} is a finished phrase such as '3 settings removed' (see the plural key ending in .n).",
     "max": 35,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -861,7 +861,7 @@
   },
   "look-editor.mc-slider-look-editor.n": {
     "text": "{n, plural, one {# setting removed} other {# settings removed}}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Fragment inserted into 'Look reset. {count}.' as {count}. {n} is the number of settings removed. Must work as a sentence ending in a full stop.",
     "max": 30,
     "vars": {
       "n": "The count the text is about."
@@ -869,7 +869,7 @@
   },
   "look-editor.mc-slider-look-editor.n-2": {
     "text": "{n, plural, one {# setting changed} other {# settings changed}}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Fragment inserted into '{name} look applied. {count}.' as {count}. {n} is the number of settings changed. Must work as a sentence ending in a full stop.",
     "max": 30,
     "vars": {
       "n": "The count the text is about."
@@ -877,7 +877,7 @@
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Summary beside the Stops heading. {n} is the number of colour stops in the slider gradient. A stop is one colour point along the gradient.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -885,7 +885,7 @@
   },
   "look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the": {
     "text": "{n} characters of each label show on the card. Screen readers get the full label.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Help text for the label length setting. {n} is a number, the maximum characters shown. 'Label' is the min and max text at the ends of the slider.",
     "max": 130,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -893,7 +893,7 @@
   },
   "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
     "text": "{n} stops is the most.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Hint shown when the stop limit is reached. {n} is the maximum number of colour stops allowed (a number, always plural in practice).",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -901,7 +901,7 @@
   },
   "look-editor.mc-slider-look-editor.name-look": {
     "text": "{name} look",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of a slider look in the Look header. {name} is the name of a slider preset look.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -909,7 +909,7 @@
   },
   "look-editor.mc-slider-look-editor.name-look-applied-count": {
     "text": "{name} look applied. {count}.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Toast after a slider preset look is applied, followed by an Undo button. {name} is the look name; {count} is a finished phrase such as '4 settings changed'.",
     "max": 50,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -918,7 +918,7 @@
   },
   "look-editor.mc-slider-look-editor.name-look-is-already-applied": {
     "text": "{name} look is already applied.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Toast shown when the chosen preset changes nothing. {name} is the look name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -926,7 +926,7 @@
   },
   "look-editor.mc-slider-look-editor.none": {
     "text": "None",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Summary value shown when the slider has no colour stops, and an option meaning 'no effect' in button groups.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
@@ -951,17 +951,17 @@
   },
   "look-editor.mc-slider-look-editor.pill": {
     "text": "Pill",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the slider shape button group: a fully rounded, capsule-shaped bar. Not a medicine.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.presets": {
     "text": "Presets",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Section heading above the ready-made look tiles for the slider. A plural noun.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.replaces-the-stops-with-this-many-spread": {
     "text": "Replaces the stops with this many, spread from {min} to {max}.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Help text for a stop-count field. 'this many' refers to the number typed in that field. {min} and {max} are the slider's lowest and highest values (numbers).",
     "max": 100,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -970,7 +970,7 @@
   },
   "look-editor.mc-slider-look-editor.reset-label": {
     "text": "Reset {label}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Small button that sets one field back to its default. {label} is that field's name in lower case, for example 'reset thickness'.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -978,17 +978,17 @@
   },
   "look-editor.mc-slider-look-editor.reset-look": {
     "text": "Reset look",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button in the slider Look header that removes every look setting. An Undo toast follows.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.segmented": {
     "text": "Segmented",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the slider style button group: the track is split into separate blocks. An adjective.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.segments": {
     "text": "Segments",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Number field label: how many blocks a segmented slider is split into.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the": {
@@ -998,7 +998,7 @@
   },
   "look-editor.mc-slider-look-editor.shape": {
     "text": "Shape",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the button group choosing the handle shape (Circle, Square, Line). Singular noun.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.size-px": {
@@ -1023,7 +1023,7 @@
   },
   "look-editor.mc-slider-look-editor.solid": {
     "text": "Solid",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the slider fill colour mode button group: one flat colour with no gradient. An adjective.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.sort-by-value": {
@@ -1033,22 +1033,22 @@
   },
   "look-editor.mc-slider-look-editor.square": {
     "text": "Square",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the handle shape button group (with Circle): a square handle. An adjective or noun, not a town square.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.standard": {
     "text": "Standard",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in the slider style button group: the normal continuous track, as opposed to Segmented. An adjective.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.start": {
     "text": "Start",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option in a position button group: placed at the minimum end of the slider. Not a command to begin.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.stop-n": {
     "text": "Stop {n}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of one colour stop in the gradient list. {n} is its position, starting at 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -1061,7 +1061,7 @@
   },
   "look-editor.mc-slider-look-editor.stops": {
     "text": "Stops",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Section heading for the list of gradient colour stops (colour points). A plural noun, not the verb.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or": {
@@ -1106,12 +1106,12 @@
   },
   "look-editor.mc-slider-look-editor.thin": {
     "text": "Thin",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Name of a slider preset look: a slim, narrow bar. Shown as a tile in the preset list. An adjective.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.tick-every": {
     "text": "Tick every",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Number field label: draw a tick mark on the slider every this many units. Read as 'Tick every [number]'. A tick is a small scale mark.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.ticks": {
@@ -1151,7 +1151,7 @@
   },
   "look-editor.mc-slider-look-editor.undo-name-look": {
     "text": "Undo {name} look",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button that reverts a slider preset look just applied. {name} is the look name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1209,7 +1209,7 @@
   },
   "look-editor.mc-slider-look-editor.your-own-look-started-from-name": {
     "text": "Your own look, started from {name}",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Description of a customised slider look. {name} is the name of the preset look it started from.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text."

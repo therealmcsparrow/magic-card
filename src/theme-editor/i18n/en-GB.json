@@ -401,7 +401,7 @@
   },
   "theme-editor.editor-view.add-name-as-a-variable": {
     "text": "Add {name} as a variable",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button shown after a search finds no match. {name} is the CSS variable name the user typed, such as --primary-color; do not translate it.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -414,7 +414,7 @@
   },
   "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
     "text": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Help text for trying a theme without saving. {mode} is 'dark' or 'light': the colour mode of the current Home Assistant profile.",
     "max": 150,
     "vars": {
       "mode": "The value that replaces mode in the text."
@@ -427,7 +427,7 @@
   },
   "theme-editor.editor-view.c": {
     "text": "{c, plural, one {# variable matches} other {# variables match}}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Result count under the variable search box. {c} is the number of theme variables matching the search.",
     "max": 30,
     "vars": {
       "c": "The count the text is about."
@@ -435,7 +435,7 @@
   },
   "theme-editor.editor-view.c-a-fix": {
     "text": "{c, plural, one {# value needs} other {# values need}} a fix",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Validation summary next to the Save button. {c} is the number of variable values that are not valid CSS.",
     "max": 35,
     "vars": {
       "c": "The count the text is about."
@@ -473,7 +473,7 @@
   },
   "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-easy-to": {
     "text": "Contrast on card, {mode}: {ratio} to 1, easy to read",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Accessible description of a colour contrast check on a preview card. {mode} is 'Light' or 'Dark'; {ratio} is the contrast ratio, such as 7.2. Passing case, see the 'hard to read' key.",
     "max": 85,
     "vars": {
       "mode": "The value that replaces mode in the text.",
@@ -482,7 +482,7 @@
   },
   "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-hard-to": {
     "text": "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Accessible description of a failing colour contrast check. {mode} is 'Light' or 'Dark'; {ratio} is the contrast ratio, such as 3.1. 4.5 to 1 is the fixed accessibility threshold.",
     "max": 110,
     "vars": {
       "mode": "The value that replaces mode in the text.",
@@ -491,7 +491,7 @@
   },
   "theme-editor.editor-view.copied-c-from-from-to-to": {
     "text": "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toast after copying values between modes. {c} is the number of variables; {from} and {to} are the mode names 'Light', 'Dark' or 'Shared'.",
     "max": 65,
     "vars": {
       "c": "The count the text is about.",
@@ -501,7 +501,7 @@
   },
   "theme-editor.editor-view.copied-key-text": {
     "text": "Copied key {text}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toast after copying a variable name to the clipboard. {text} is the CSS variable name, such as --card-background-color; do not translate it.",
     "max": 30,
     "vars": {
       "text": "The value that replaces text in the text."
@@ -529,7 +529,7 @@
   },
   "theme-editor.editor-view.could-not-delete-name-reason": {
     "text": "Could not delete {name}. {reason}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Error toast in the editor after a failed delete. {name} is the theme name; {reason} is a full sentence explaining why, supplied separately.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -538,7 +538,7 @@
   },
   "theme-editor.editor-view.could-not-read-name": {
     "text": "Could not read {name}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Error toast when a theme's values cannot be loaded. {name} is the theme name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -546,7 +546,7 @@
   },
   "theme-editor.editor-view.could-not-save-name": {
     "text": "Could not save {name}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Error toast when writing a theme file fails. {name} is the theme name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -559,7 +559,7 @@
   },
   "theme-editor.editor-view.delete-name": {
     "text": "Delete {name}?",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Confirmation dialog title for deleting the open theme. {name} is the theme name. Same English as the start view and preset dialog, which delete other things.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -577,7 +577,7 @@
   },
   "theme-editor.editor-view.discard-changes-to-name": {
     "text": "Discard changes to {name}?",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Confirmation dialog title when leaving a theme with unsaved edits. {name} is the theme name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -600,7 +600,7 @@
   },
   "theme-editor.editor-view.editing-scope-created-from-from": {
     "text": "Editing {scope}. Created from {from}.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Status line above the variables. {scope} is the part being edited: 'Shared', 'Light' or 'Dark'; {from} is the name of the theme or preset this one was copied from.",
     "max": 60,
     "vars": {
       "from": "The value that replaces from in the text.",
@@ -609,7 +609,7 @@
   },
   "theme-editor.editor-view.editing-scope-previewing-mode": {
     "text": "Editing {scope}. Previewing {mode}.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Status line above the variables. {scope} is the part being edited: 'Shared', 'Light' or 'Dark'; {mode} is the preview mode, 'light' or 'dark'.",
     "max": 60,
     "vars": {
       "mode": "The value that replaces mode in the text.",
@@ -628,7 +628,7 @@
   },
   "theme-editor.editor-view.fix-c-to-save": {
     "text": "Fix {c, plural, one {# value} other {# values}} to save",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Tooltip on the disabled Save button. {c} is the number of invalid variable values blocking the save.",
     "max": 35,
     "vars": {
       "c": "The count the text is about."
@@ -636,7 +636,7 @@
   },
   "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
     "text": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Help text for trying a theme. {help} is a full sentence from another string, placed first; {other} is the opposite mode to the current one, 'dark' or 'light'. Revert is a button label.",
     "max": 165,
     "vars": {
       "help": "The value that replaces help in the text.",
@@ -675,7 +675,7 @@
   },
   "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
     "text": "Moved {label} to Shared. Light and Dark both use it.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toast after a variable is moved into the Shared set. {label} is the variable's display label, for example 'Primary colour'. Shared, Light and Dark are tab names.",
     "max": 85,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -683,7 +683,7 @@
   },
   "theme-editor.editor-view.name-yaml-changed-on-disk": {
     "text": "{name}.yaml changed on disk",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Warning title when the theme file was edited outside the editor. {name} is the file name without extension; '.yaml' stays as written.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -696,7 +696,7 @@
   },
   "theme-editor.editor-view.named-the-theme-name-press-save-to-write": {
     "text": "Named the theme {name}. Press Save to write it.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toast after the theme name is filled in automatically. {name} is the new theme name. Save is the button label.",
     "max": 80,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -714,7 +714,7 @@
   },
   "theme-editor.editor-view.no-variable-called-query-in-the-lists": {
     "text": "No variable called {query} in the lists.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Empty search result. {query} is the text the user typed in the variable search box; do not translate it.",
     "max": 65,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -722,7 +722,7 @@
   },
   "theme-editor.editor-view.now-using-name-for-your-user": {
     "text": "Now using {name} for your user.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toast after the theme is set in the user's Home Assistant profile. {name} is the theme name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -755,7 +755,7 @@
   },
   "theme-editor.editor-view.path-message": {
     "text": "{path}: {message}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "One validation problem in a list. {path} is where it was found, such as a variable name or file path (do not translate); {message} is the problem description.",
     "max": 30,
     "vars": {
       "message": "The value that replaces message in the text.",
@@ -764,7 +764,7 @@
   },
   "theme-editor.editor-view.pick-name-in-your-profile-to-use-it": {
     "text": "Pick {name} in your profile to use it.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Hint after saving. {name} is the theme name; 'profile' is the user's Home Assistant profile page.",
     "max": 65,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -797,7 +797,7 @@
   },
   "theme-editor.editor-view.removed-label-from-scope": {
     "text": "Removed {label} from {scope}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Toast after a variable is removed. {label} is the variable's display label; {scope} is 'Shared', 'Light' or 'Dark'.",
     "max": 45,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -831,7 +831,7 @@
   },
   "theme-editor.editor-view.saved-file-but-home-assistant-does-not": {
     "text": "Saved {file}, but Home Assistant does not list {name} yet",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Warning after saving. {file} is the file name such as my_theme.yaml (do not translate); {name} is the theme name.",
     "max": 95,
     "vars": {
       "file": "The value that replaces file in the text.",
@@ -840,7 +840,7 @@
   },
   "theme-editor.editor-view.saved-name": {
     "text": "Saved {name}.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Success toast after saving a theme. {name} is the theme name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -848,7 +848,7 @@
   },
   "theme-editor.editor-view.saved-name-and-reloaded-themes-screens": {
     "text": "Saved {name} and reloaded themes. Screens that use this theme update now.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Success toast after saving and reloading. {name} is the theme name.",
     "max": 120,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -856,7 +856,7 @@
   },
   "theme-editor.editor-view.saved-time": {
     "text": "Saved {time}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Status text beside the Save button. {time} is a relative time such as 'just now' or '2 min ago', already localised.",
     "max": 20,
     "vars": {
       "time": "The value that replaces time in the text."
@@ -869,7 +869,7 @@
   },
   "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
     "text": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Notice shown before saving. {name} is the theme file name without extension; '.yaml' stays as written.",
     "max": 210,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -887,7 +887,7 @@
   },
   "theme-editor.editor-view.set-in-modes": {
     "text": "Set in {modes}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Badge on a variable. {modes} is the mode name or names that already hold a value, such as 'Light' or 'Light and Dark'.",
     "max": 25,
     "vars": {
       "modes": "The value that replaces modes in the text."
@@ -920,7 +920,7 @@
   },
   "theme-editor.editor-view.some-values-load-files-from-hosts-the": {
     "text": "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Privacy warning. {hosts} is a comma-separated list of external host names, such as fonts.example.com; do not translate. 'Try on dashboard' is a button label.",
     "max": 230,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
@@ -958,7 +958,7 @@
   },
   "theme-editor.editor-view.this-removes-config-file-screens-that": {
     "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Body of the delete confirmation in the editor. {file} is the theme file name, such as my_theme.yaml; the path stays untranslated.",
     "max": 160,
     "vars": {
       "file": "The value that replaces file in the text."
@@ -971,7 +971,7 @@
   },
   "theme-editor.editor-view.this-theme-is-read-only-reason-copy-it": {
     "text": "This theme is read only. {reason} Copy it to edit.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Banner on a theme that cannot be changed. {reason} is a finished sentence explaining why, ending in a full stop. 'Copy' refers to the Copy action.",
     "max": 80,
     "vars": {
       "reason": "The value that replaces reason in the text."
@@ -1034,7 +1034,7 @@
   },
   "theme-editor.editor-view.yaml-of-name": {
     "text": "YAML of {name}",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Accessible name of the raw YAML text area. {name} is the theme name. YAML is the file format; do not translate.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1047,7 +1047,7 @@
   },
   "theme-editor.field-group.also-set-in-modes": {
     "text": "Also set in {modes}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Hint on a variable row. {modes} is the other mode or modes that hold their own value, such as 'Dark'.",
     "max": 35,
     "vars": {
       "modes": "The value that replaces modes in the text."
@@ -1055,7 +1055,7 @@
   },
   "theme-editor.field-group.c-set": {
     "text": "{c} set",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Badge on a variable group heading. {c} is the number of its variables that have a value. 'Set' means configured, not the verb to place.",
     "max": 15,
     "vars": {
       "c": "The value that replaces c in the text."
@@ -1063,7 +1063,7 @@
   },
   "theme-editor.field-group.copy-key-name": {
     "text": "Copy key {name}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Tooltip of the copy icon on a variable row. {name} is the CSS variable name, such as --primary-color; do not translate it.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1081,7 +1081,7 @@
   },
   "theme-editor.field-group.default-value": {
     "text": "Default: {value}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Hint under a variable. {value} is the built-in default, such as a CSS colour or length (e.g. #03a9f4, 12px); do not translate it.",
     "max": 30,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -1094,7 +1094,7 @@
   },
   "theme-editor.field-group.keep-in-mode-only": {
     "text": "Keep in {mode} only",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Button on a shared variable that turns it into a single-mode value. {mode} is 'Light' or 'Dark'.",
     "max": 35,
     "vars": {
       "mode": "The value that replaces mode in the text."
@@ -1112,7 +1112,7 @@
   },
   "theme-editor.field-group.mode-uses-its-own-value-this-only": {
     "text": "{mode} uses its own value. This only changes {covered}.",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Hint on a Shared variable. {mode} is 'Light' or 'Dark', the mode that overrides it; {covered} is the other mode or modes this edit still applies to.",
     "max": 90,
     "vars": {
       "covered": "The value that replaces covered in the text.",
@@ -1136,7 +1136,7 @@
   },
   "theme-editor.field-group.only-in-mode": {
     "text": "Only in {mode}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Badge on a variable that has a value in one mode only. {mode} is 'Light' or 'Dark'.",
     "max": 25,
     "vars": {
       "mode": "The value that replaces mode in the text."
@@ -1144,7 +1144,7 @@
   },
   "theme-editor.field-group.only-mode-gets-this-value-other-keeps": {
     "text": "Only {mode} gets this value. {other} keeps the default.",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Hint on a variable. {mode} is the mode that has the value and {other} the opposite mode; both are 'Light' or 'Dark'.",
     "max": 90,
     "vars": {
       "mode": "The value that replaces mode in the text.",
@@ -1153,7 +1153,7 @@
   },
   "theme-editor.field-group.remove-from-scope": {
     "text": "Remove from {scope}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Button label that clears a variable's value. {scope} is 'Shared', 'Light' or 'Dark'.",
     "max": 35,
     "vars": {
       "scope": "The value that replaces scope in the text."
@@ -1161,7 +1161,7 @@
   },
   "theme-editor.field-group.remove-label-from-scope": {
     "text": "Remove {label} from {scope}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Accessible name of the remove icon on a variable. {label} is the variable's display label; {scope} is 'Shared', 'Light' or 'Dark'.",
     "max": 45,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -1180,7 +1180,7 @@
   },
   "theme-editor.field-group.set-in-mode-too": {
     "text": "Set in {mode} too",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Button that copies a variable's value into the other mode. {mode} is 'Light' or 'Dark', the mode that receives it.",
     "max": 30,
     "vars": {
       "mode": "The value that replaces mode in the text."
@@ -1193,7 +1193,7 @@
   },
   "theme-editor.field-group.shared-value": {
     "text": "Shared: {value}",
-    "note": "Shown in field group (theme-editor).",
+    "note": "Hint showing the value both modes use. {value} is a CSS value such as #ffffff or 8px; do not translate it. 'Shared' is a tab name.",
     "max": 25,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -1986,7 +1986,7 @@
   },
   "theme-editor.lips.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Tooltip on a side panel edge tab. {noun} is the panel name, such as 'variables' or 'preview'; {keys} is the keyboard shortcut, such as Ctrl+B; do not translate it.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -1995,7 +1995,7 @@
   },
   "theme-editor.lips.panels-hidden": {
     "text": "{panels} hidden",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Screen-reader announcement after hiding panels. {panels} is the name of the panel or panels hidden, such as 'Preview'.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -2003,7 +2003,7 @@
   },
   "theme-editor.lips.panels-shown": {
     "text": "{panels} shown",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Screen-reader announcement after showing panels. {panels} is the name of the panel or panels shown, such as 'Preview'.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -2011,7 +2011,7 @@
   },
   "theme-editor.lips.shortcut-keys": {
     "text": "Shortcut: {keys}",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Tooltip text. {keys} is a keyboard shortcut, such as Ctrl+B; do not translate it.",
     "max": 30,
     "vars": {
       "keys": "The value that replaces keys in the text."
@@ -2019,7 +2019,7 @@
   },
   "theme-editor.lips.show-noun-keys": {
     "text": "Show {noun} ({keys})",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Tooltip on a side panel edge tab when the panel is hidden. {noun} is the panel name, such as 'variables'; {keys} is the keyboard shortcut; do not translate it.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -2028,7 +2028,7 @@
   },
   "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
     "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
-    "note": "Shown in lips (theme-editor).",
+    "note": "Hint at the screen edge. {noun} is the panel name, such as 'variables' or 'preview'.",
     "max": 130,
     "vars": {
       "noun": "The value that replaces noun in the text."
@@ -2256,7 +2256,7 @@
   },
   "theme-editor.model.remove-chars-and-unmatched-brackets-from": {
     "text": "Remove {chars} and unmatched brackets from the value.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error on a variable value. {chars} is a list of forbidden characters, such as ; and {}, shown as symbols; do not translate.",
     "max": 85,
     "vars": {
       "chars": "The value that replaces chars in the text."
@@ -2274,7 +2274,7 @@
   },
   "theme-editor.model.this-value-is-longer-than-max-characters": {
     "text": "This value is longer than {max} characters.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error on a variable value. {max} is the character limit (a number).",
     "max": 70,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -2862,7 +2862,7 @@
   },
   "theme-editor.preset-dialog.added-c-to-my-presets": {
     "text": "Added {c} to My presets",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Toast after importing presets. {c} is a finished phrase with the count, such as '3 presets'. My presets is a section name.",
     "max": 40,
     "vars": {
       "c": "The value that replaces c in the text."
@@ -2890,7 +2890,7 @@
   },
   "theme-editor.preset-dialog.delete-name": {
     "text": "Delete {name}?",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Confirmation title for deleting a saved preset from My presets. {name} is the preset name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2898,7 +2898,7 @@
   },
   "theme-editor.preset-dialog.deleted-name": {
     "text": "Deleted {name}.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Toast after a saved preset is deleted. {name} is the preset name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2946,7 +2946,7 @@
   },
   "theme-editor.preset-dialog.name-reason": {
     "text": "{name}: {reason}",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "One failed item in an import report. {name} is the preset name; {reason} is why it was skipped.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -2980,7 +2980,7 @@
   },
   "theme-editor.preset-dialog.renamed-to-name": {
     "text": "Renamed to {name}.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Toast after renaming a saved preset. {name} is the new preset name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2998,7 +2998,7 @@
   },
   "theme-editor.preset-dialog.saved-name-under-my-presets": {
     "text": "Saved {name} under My presets.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Toast after saving the current look as a preset. {name} is the preset name. My presets is a section name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3056,7 +3056,7 @@
   },
   "theme-editor.preview-cards.could-not-load-label-reason": {
     "text": "Could not load {label}. {reason}",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Error under a sample card. {label} is the card's display name, such as a custom card type; {reason} is a finished sentence saying why.",
     "max": 55,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -3080,7 +3080,7 @@
   },
   "theme-editor.preview-cards.label-could-not-be-loaded": {
     "text": "{label} could not be loaded.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Error under a sample card, without a reason. {label} is the card's display name.",
     "max": 45,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3088,7 +3088,7 @@
   },
   "theme-editor.preview-cards.label-did-not-start-in-time": {
     "text": "{label} did not start in time.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Error under a sample card when it times out while loading. {label} is the card's display name.",
     "max": 50,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3096,7 +3096,7 @@
   },
   "theme-editor.preview-cards.label-has-a-resource-address-the-editor": {
     "text": "{label} has a resource address the editor will not load.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Security notice under a sample card. {label} is the card's display name; 'resource address' is the URL of its script file.",
     "max": 90,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3104,7 +3104,7 @@
   },
   "theme-editor.preview-cards.label-is-loaded-for-the-preview": {
     "text": "{label} is loaded for the preview.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Status under a sample card. {label} is the card's display name.",
     "max": 55,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3112,7 +3112,7 @@
   },
   "theme-editor.preview-cards.label-is-not-in-the-dashboard-resources": {
     "text": "{label} is not in the dashboard resources.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Status under a sample card. {label} is the card's display name; 'dashboard resources' is the Home Assistant list of loaded JavaScript files.",
     "max": 70,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3120,7 +3120,7 @@
   },
   "theme-editor.preview-cards.label-is-not-loaded-in-this-editor-so": {
     "text": "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Status under a sample card. {label} is the card's display name.",
     "max": 195,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3128,7 +3128,7 @@
   },
   "theme-editor.preview-cards.load-label-for-preview": {
     "text": "Load {label} for preview",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Button under a sample card. {label} is the card's display name.",
     "max": 40,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3141,7 +3141,7 @@
   },
   "theme-editor.preview-cards.loading-label": {
     "text": "Loading {label}...",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Progress text under a sample card. {label} is the card's display name.",
     "max": 30,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3174,7 +3174,7 @@
   },
   "theme-editor.preview.add-a-light-or-a-switch-to-home": {
     "text": "Add a light or a switch to Home Assistant to see the {name} sample.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Empty state in the preview. {name} is the name of the sample card, such as 'Light' or 'Switch'.",
     "max": 110,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3232,7 +3232,7 @@
   },
   "theme-editor.preview.preview-of-count-sample-cards-using-the": {
     "text": "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Accessible description of the preview area. {count} is the number of sample cards; {mode} is 'dark' or 'light'.",
     "max": 150,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -3241,7 +3241,7 @@
   },
   "theme-editor.preview.preview-of-name-could-not-load": {
     "text": "Preview of {name} could not load.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Error in the preview area. {name} is the name of the sample card that failed.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3249,7 +3249,7 @@
   },
   "theme-editor.preview.previewing-mode": {
     "text": "Previewing {mode, select, dark {dark} other {light}}",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Short label above the preview. {mode} is 'dark' or 'light', the mode being previewed.",
     "max": 30,
     "vars": {
       "mode": "The value that replaces mode in the text."
@@ -3267,7 +3267,7 @@
   },
   "theme-editor.preview.secondary-text-and-link": {
     "text": "Secondary text and {link}.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample text in the preview. {link} is a styled link whose words come from another string, so it shows the link colour.",
     "max": 45,
     "vars": {
       "link": "The value that replaces link in the text."
@@ -3280,7 +3280,7 @@
   },
   "theme-editor.preview.showing-the-last-valid-value-for-c": {
     "text": "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Notice in the preview. {c} is the number of variables whose current value is invalid, so the preview keeps their previous value.",
     "max": 75,
     "vars": {
       "c": "The count the text is about."
@@ -3308,7 +3308,7 @@
   },
   "theme-editor.preview.theme-preview-mode": {
     "text": "Theme preview, {mode, select, dark {dark} other {light}}",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Accessible name of the preview region. {mode} is 'dark' or 'light'.",
     "max": 35,
     "vars": {
       "mode": "The value that replaces mode in the text."
@@ -3341,7 +3341,7 @@
   },
   "theme-editor.raw-rows.added-c-to-scope": {
     "text": "Added {c, plural, one {# variable} other {# variables}} to {scope}",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Toast after pasting several variables in the raw editor. {c} is the number added; {scope} is 'Shared', 'Light' or 'Dark'.",
     "max": 45,
     "vars": {
       "c": "The count the text is about.",
@@ -3350,7 +3350,7 @@
   },
   "theme-editor.raw-rows.added-name-to-scope": {
     "text": "Added {name} to {scope}",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Toast after adding one variable in the raw editor. {name} is the CSS variable name (do not translate); {scope} is 'Shared', 'Light' or 'Dark'.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3359,7 +3359,7 @@
   },
   "theme-editor.raw-rows.could-not-read-lines": {
     "text": "Could not read: {lines}",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Error after pasting text. {lines} is the pasted lines that were not valid 'name: value' pairs; do not translate them.",
     "max": 40,
     "vars": {
       "lines": "The value that replaces lines in the text."
@@ -3387,7 +3387,7 @@
   },
   "theme-editor.raw-rows.remove-chars-from-the-value": {
     "text": "Remove {chars} from the value.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Validation error in the raw editor. {chars} is a list of forbidden characters shown as symbols; do not translate. Compare the model key that also mentions brackets.",
     "max": 50,
     "vars": {
       "chars": "The value that replaces chars in the text."
@@ -3395,7 +3395,7 @@
   },
   "theme-editor.raw-rows.this-variable-already-exists-in-scope": {
     "text": "This variable already exists in {scope}. Add will replace its value.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Warning in the raw editor's add row. {scope} is 'Shared', 'Light' or 'Dark'. Add is the button label.",
     "max": 110,
     "vars": {
       "scope": "The value that replaces scope in the text."
@@ -3468,7 +3468,7 @@
   },
   "theme-editor.start-view.c": {
     "text": "{c, plural, one {# variable} other {# variables}}",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Count on a theme card in the start view. {c} is the number of variables the theme defines.",
     "max": 20,
     "vars": {
       "c": "The count the text is about."
@@ -3496,7 +3496,7 @@
   },
   "theme-editor.start-view.could-not-delete-name-reason": {
     "text": "Could not delete {name}. {reason}",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Error toast in the start view after a failed delete. {name} is the theme name; {reason} is a finished sentence saying why.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3505,7 +3505,7 @@
   },
   "theme-editor.start-view.could-not-read-name-neither-its-file-nor": {
     "text": "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Error toast when opening a theme from the start view. {name} is the theme name.",
     "max": 175,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3513,7 +3513,7 @@
   },
   "theme-editor.start-view.could-not-read-name-reason": {
     "text": "Could not read {name}. {reason}",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Error toast when opening a theme from the start view. {name} is the theme name; {reason} is a finished sentence saying why.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3527,7 +3527,7 @@
   },
   "theme-editor.start-view.create-from-name": {
     "text": "Create from {name}",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button on a preset card that makes a new theme from it. {name} is the preset name, such as Amber Console.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3545,7 +3545,7 @@
   },
   "theme-editor.start-view.delete-name": {
     "text": "Delete {name}?",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Confirmation title in the start view for deleting a theme. {name} is the theme name. Same English as in the editor view and preset dialog.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3558,7 +3558,7 @@
   },
   "theme-editor.start-view.file-file": {
     "text": "File {file}.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Caption on a theme card. {file} is the YAML file name, such as my_theme.yaml; do not translate it. 'File' is the noun.",
     "max": 20,
     "vars": {
       "file": "The value that replaces file in the text."
@@ -3621,7 +3621,7 @@
   },
   "theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is": {
     "text": "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Empty-state help. {n} is the number of saved presets. My presets and New theme are a section name and a button label; match them.",
     "max": 180,
     "vars": {
       "n": "The count the text is about."
@@ -3644,7 +3644,7 @@
   },
   "theme-editor.start-view.no-theme-called-query": {
     "text": "No theme called {query}.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Empty search result. {query} is the text typed in the theme search box; do not translate it.",
     "max": 40,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -3742,7 +3742,7 @@
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
     "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Delete confirmation body when the file holds several themes. {file} is the file name, such as themes.yaml (path stays untranslated); {c} is the number of other themes in it.",
     "max": 220,
     "vars": {
       "c": "The count the text is about.",
@@ -3751,7 +3751,7 @@
   },
   "theme-editor.start-view.this-removes-config-file-screens-that": {
     "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Delete confirmation body in the start view when the file holds one theme. {file} is the file name; the path stays untranslated.",
     "max": 160,
     "vars": {
       "file": "The value that replaces file in the text."
@@ -3769,7 +3769,7 @@
   },
   "theme-editor.theme-editor.could-not-open-name-reason": {
     "text": "Could not open {name}. {reason}",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Error toast when opening a theme. {name} is the theme name; {reason} is a finished sentence saying why.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3778,7 +3778,7 @@
   },
   "theme-editor.theme-editor.deleted-name": {
     "text": "Deleted {name}.",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Toast after a theme is deleted. {name} is the theme name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3811,7 +3811,7 @@
   },
   "theme-editor.theme-editor.the-check-failed-reason": {
     "text": "The check failed. {reason}",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Error after the pre-save check. {reason} is a finished sentence saying why.",
     "max": 45,
     "vars": {
       "reason": "The value that replaces reason in the text."
@@ -3989,7 +3989,7 @@
   },
   "theme-editor.trial-bar.n-not-valid-left-out": {
     "text": "{n} not valid, left out",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Note in the trial bar while trying a theme. {n} is the number of variables skipped because their values are invalid.",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4017,7 +4017,7 @@
   },
   "theme-editor.trial-bar.trying-name": {
     "text": "Trying {name}",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Trial bar title while a theme is applied to this tab only. {name} is the theme name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4025,7 +4025,7 @@
   },
   "theme-editor.trial-bar.trying-name-on-this-tab-mode": {
     "text": "Trying {name} on this tab ({mode, select, dark {dark} other {light}})",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Trial bar title. {name} is the theme name; {mode} is 'dark' or 'light'. 'This tab' means this browser tab.",
     "max": 55,
     "vars": {
       "mode": "The value that replaces mode in the text.",
@@ -4144,7 +4144,7 @@
   },
   "theme-editor.util.a-and-b": {
     "text": "{a} and {b}",
-    "note": "Shown in util (theme-editor).",
+    "note": "Joins two items in a list. {a} and {b} are mode or panel names such as 'Light' and 'Dark'; do not add a comma.",
     "max": 20,
     "vars": {
       "a": "The value that replaces a in the text.",
@@ -4153,7 +4153,7 @@
   },
   "theme-editor.util.a-theme-called-name-already-exists": {
     "text": "A theme called {name} already exists.",
-    "note": "Shown in util (theme-editor).",
+    "note": "Validation error on the theme name field. {name} is the name the user typed.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text."

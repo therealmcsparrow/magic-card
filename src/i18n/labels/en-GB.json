@@ -31,7 +31,7 @@
   },
   "labels.animation-list.overrides-name-both-animate-the-what": {
     "text": "Overrides {name}: both animate the {what}",
-    "note": "Shown in animation list (labels).",
+    "note": "Warning under an animation in the list. {name} is the name of an earlier animation, such as Pulse; {what} is the visual property both animate, such as scale, glow or rotation.",
     "max": 70,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -2595,7 +2595,7 @@
   },
   "labels.field-reset.reset-label": {
     "text": "Reset {label}",
-    "note": "Shown in field reset (labels).",
+    "note": "Tooltip and accessible name of the reset icon beside a field. {label} is the field's label, for example 'Border radius'.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -2618,7 +2618,7 @@
   },
   "labels.icon-doc.part-n": {
     "text": "Part {n}",
-    "note": "Shown in icon doc (labels).",
+    "note": "Default name of one piece of an icon drawing. {n} is its position, starting at 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."

@@ -256,7 +256,7 @@
   },
   "layer-editor.bg-layer-editor.remove-state-state": {
     "text": "Remove state {state}",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button (and accessible name) that removes one state-to-picture row. {state} is a Home Assistant entity state, such as 'on' or 'playing'; do not translate it.",
     "max": 35,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -339,7 +339,7 @@
   },
   "layer-editor.bg-layer-editor.still-picture-refreshed-every-n-s-the": {
     "text": "Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Help text for a camera background set to still pictures. {n} is the refresh interval in seconds (a number); 's' stands for seconds.",
     "max": 250,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -402,7 +402,7 @@
   },
   "layer-editor.bg-layers-ops.entity-not-found-id-the-next-layer-is": {
     "text": "Entity not found: {id}. The next layer is shown instead.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Warning on a background layer. {id} is a Home Assistant entity ID such as camera.front_door; do not translate it.",
     "max": 90,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -410,7 +410,7 @@
   },
   "layer-editor.bg-layers-ops.id-has-no-picture-attribute-try-another": {
     "text": "{id} has no picture attribute. Try another attribute.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Warning on a background layer. {id} is a Home Assistant entity ID such as media_player.tv; do not translate it. 'Attribute' is the Home Assistant entity attribute.",
     "max": 85,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -418,7 +418,7 @@
   },
   "layer-editor.bg-layers-ops.limit-of-max-layers-reached-more-layers": {
     "text": "Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Message when the background layer limit is reached. {max} is the largest number of layers allowed (a number).",
     "max": 160,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -426,7 +426,7 @@
   },
   "layer-editor.bg-layers-ops.no-picture-for-state-state-no-any-other": {
     "text": "No picture for state {state}. No \"Any other state\" picture is set, so the next layer is shown.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Warning on a state-driven background layer. {state} is the entity's current state, such as 'off'; do not translate it. \"Any other state\" is the label of the fallback row, keep it identical to that label.",
     "max": 155,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -434,7 +434,7 @@
   },
   "layer-editor.bg-layers-ops.no-picture-for-state-state-the-any-other": {
     "text": "No picture for state {state}. The Any other state picture is used.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Info on a state-driven background layer. {state} is the entity's current state, such as 'off'; do not translate it. 'Any other state' is the label of the fallback row; keep it identical to that label.",
     "max": 110,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -442,7 +442,7 @@
   },
   "layer-editor.bg-layers-ops.not-updated-n-min": {
     "text": "Not updated {n} min",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Staleness badge on a camera layer. {n} is the number of minutes since the last picture update; 'min' stands for minutes.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -470,7 +470,7 @@
   },
   "layer-editor.bg-layers.add-layer-n-left": {
     "text": "Add layer ({n} left)",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button that adds a background layer. {n} is how many more layers can still be added.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -478,7 +478,7 @@
   },
   "layer-editor.bg-layers.added-name": {
     "text": "Added {name}.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Screen-reader announcement after adding a background layer. {name} is the layer's name, such as 'Image 2'.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -496,7 +496,7 @@
   },
   "layer-editor.bg-layers.blur-px-px": {
     "text": "blur {px} px",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Short summary tag on a background layer row. {px} is the blur radius in pixels (a number). Keep it lower case.",
     "max": 20,
     "vars": {
       "px": "The value that replaces px in the text."
@@ -534,7 +534,7 @@
   },
   "layer-editor.bg-layers.delete-name": {
     "text": "Delete {name}",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Icon button label (tooltip and accessible name) on a background layer row. {name} is the layer's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -567,7 +567,7 @@
   },
   "layer-editor.bg-layers.hide-name": {
     "text": "Hide {name}",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Icon button label (tooltip and accessible name) that hides a background layer without deleting it. {name} is the layer's name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -575,7 +575,7 @@
   },
   "layer-editor.bg-layers.layer-added-n-of-max": {
     "text": "Layer added. {n} of {max}.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Screen-reader announcement after adding a layer. {n} is how many layers exist now; {max} is the largest number allowed.",
     "max": 45,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -614,7 +614,7 @@
   },
   "layer-editor.bg-layers.move-name-backward": {
     "text": "Move {name} backward",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Icon button label on a background layer row; moves the layer one step towards the back of the stack. {name} is the layer's name. Pairs with 'Move {name} forward'.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -622,7 +622,7 @@
   },
   "layer-editor.bg-layers.move-name-forward": {
     "text": "Move {name} forward",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Icon button label on a background layer row; moves the layer one step towards the front of the stack. {name} is the layer's name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -630,7 +630,7 @@
   },
   "layer-editor.bg-layers.moved-to-layer-n-of-count": {
     "text": "Moved to layer {n} of {count}.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Screen-reader announcement after reordering. {n} is the layer's new position; {count} is the total number of layers.",
     "max": 50,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -639,7 +639,7 @@
   },
   "layer-editor.bg-layers.n-of-max": {
     "text": "{n} of {max}",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Layer counter in the background layers header. {n} is the number of layers in use; {max} is the most allowed.",
     "max": 20,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -648,7 +648,7 @@
   },
   "layer-editor.bg-layers.name-deleted": {
     "text": "{name} deleted.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Screen-reader announcement after deleting a layer. {name} is the layer's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -656,7 +656,7 @@
   },
   "layer-editor.bg-layers.name-deleted-undo-is-the-next-button": {
     "text": "{name} deleted. Undo is the next button.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Screen-reader announcement after deleting a layer, when an Undo button follows. {name} is the layer's name.",
     "max": 65,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -664,7 +664,7 @@
   },
   "layer-editor.bg-layers.name-restored": {
     "text": "{name} restored.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Screen-reader announcement after Undo brings a deleted layer back. {name} is the layer's name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -672,7 +672,7 @@
   },
   "layer-editor.bg-layers.needs-n-free-layers": {
     "text": "Needs {n} free layers.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Shown on a layer preset that cannot be added because too few layers are free. {n} is how many free layers the preset needs.",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -705,7 +705,7 @@
   },
   "layer-editor.bg-layers.show-name": {
     "text": "Show {name}",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Icon button label (tooltip and accessible name) that shows a hidden background layer again. {name} is the layer's name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -733,7 +733,7 @@
   },
   "layer-editor.bg-layers.type-layer-n": {
     "text": "{type}, layer {n}",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Accessible name of a layer row. {type} is the layer type, such as Image or Gradient; {n} is its position in the stack.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -797,7 +797,7 @@
   },
   "layer-editor.controls.label-value": {
     "text": "{label} value",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Accessible name of the number input next to a slider. {label} is the slider's label, such as 'Opacity'.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -870,7 +870,7 @@
   },
   "layer-editor.layer-groups.applied-name": {
     "text": "Applied {name}.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Screen-reader announcement after a preset is applied to a module layer. {name} is the preset's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -913,7 +913,7 @@
   },
   "layer-editor.layer-groups.blur-px-px": {
     "text": "blur {px} px",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Short summary tag on a module layer row. {px} is the blur radius in pixels (a number). Keep it lower case.",
     "max": 20,
     "vars": {
       "px": "The value that replaces px in the text."
@@ -976,7 +976,7 @@
   },
   "layer-editor.layer-groups.covers-name-at-this-width-taps-on-the": {
     "text": "Covers {name} at this width. Taps on the overlap go to this module.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Overlap warning. {name} is the name of another module this module sits on top of at the current card width.",
     "max": 110,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -999,7 +999,7 @@
   },
   "layer-editor.layer-groups.distance-from-the-anchor-position-enter": {
     "text": "Distance from the {anchor} position. Enter 0 or more: the module stays inside the card.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text for an offset field. {anchor} is the chosen anchor edge or corner, such as 'top left' or 'bottom'. It is lower case and sits mid-sentence.",
     "max": 140,
     "vars": {
       "anchor": "The value that replaces anchor in the text."
@@ -1172,7 +1172,7 @@
   },
   "layer-editor.layer-groups.move-name-backward": {
     "text": "Move {name} backward",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Icon button label on a module layer row; moves it one step towards the back. {name} is the module's name. Pairs with 'Move {name} to the back', which jumps all the way.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1180,7 +1180,7 @@
   },
   "layer-editor.layer-groups.move-name-forward": {
     "text": "Move {name} forward",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Icon button label on a module layer row; moves it one step towards the front. {name} is the module's name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1188,7 +1188,7 @@
   },
   "layer-editor.layer-groups.move-name-to-the-back": {
     "text": "Move {name} to the back",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Menu or button action that sends a module behind all others in one go. {name} is the module's name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1196,7 +1196,7 @@
   },
   "layer-editor.layer-groups.move-name-to-the-front": {
     "text": "Move {name} to the front",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Menu or button action that brings a module in front of all others in one go. {name} is the module's name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1204,7 +1204,7 @@
   },
   "layer-editor.layer-groups.n": {
     "text": "{n, select, 1 {1st from the front, of {count}} 2 {2nd from the front, of {count}} 3 {3rd from the front, of {count}} other {{n}th from the front, of {count}}}",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Accessible position of a module in the stacking order. {n} is the position counted from the front (1 is topmost); {count} is the number of modules. The select form only picks ordinals in English; adapt freely.",
     "max": 55,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -1213,7 +1213,7 @@
   },
   "layer-editor.layer-groups.n-set": {
     "text": "{n} set",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Badge on a collapsed section. {n} is the number of options in it that have a value. 'Set' means configured, not the verb to place.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -1296,7 +1296,7 @@
   },
   "layer-editor.layer-groups.tapping-name-will-do-nothing-while-this": {
     "text": "Tapping {name} will do nothing while this is on.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text for a switch that makes a module ignore taps. {name} is the name of the module that is covered; 'this' is the switch.",
     "max": 80,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1389,7 +1389,7 @@
   },
   "layer-editor.layers-sheet.n-from-the-front-here": {
     "text": "{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here",
-    "note": "Shown in layers sheet (layer-editor).",
+    "note": "Position of a module in the layers sheet. {n} is the position counted from the front (1 is topmost). 'Here' means in this sheet.",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text."

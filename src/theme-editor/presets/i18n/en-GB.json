@@ -1,7 +1,7 @@
 {
   "theme-presets.library.amber-console": {
     "text": "Amber Console",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: amber text on dark, like an old terminal, shown as a card title. Console means a text terminal.",
     "max": 25
   },
   "theme-presets.library.amber-on-blue-grey-mirage": {
@@ -11,7 +11,7 @@
   },
   "theme-presets.library.arcade": {
     "text": "Arcade",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a bright theme styled after arcade cabinets. Name of a colour theme, shown as a card title; not the place.",
     "max": 10
   },
   "theme-presets.library.ashen-keep": {
@@ -21,7 +21,7 @@
   },
   "theme-presets.library.autumn": {
     "text": "Autumn",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a seasonal colour theme in warm autumn colours, shown as a card title. Pairs with Spring, Summer and Winter.",
     "max": 10
   },
   "theme-presets.library.ayu-mirage": {
@@ -46,7 +46,7 @@
   },
   "theme-presets.library.cassette": {
     "text": "Cassette",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a retro theme in faded tape-deck red and cream, shown as a card title.",
     "max": 15
   },
   "theme-presets.library.catppuccin-latte-mocha": {
@@ -66,7 +66,7 @@
   },
   "theme-presets.library.clean-primer-blues-and-neutral-greys": {
     "text": "Clean Primer blues and neutral greys.",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset description. 'Primer' is the name of GitHub's design system; keep it unchanged.",
     "max": 60
   },
   "theme-presets.library.cobalt-blue-with-a-gold-primary": {
@@ -86,7 +86,7 @@
   },
   "theme-presets.library.contrast": {
     "text": "Contrast",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a high-contrast theme with strong edges, shown as a card title. A noun, not the verb.",
     "max": 15
   },
   "theme-presets.library.cool-arctic-blues-on-polar-night": {
@@ -121,7 +121,7 @@
   },
   "theme-presets.library.desert": {
     "text": "Desert",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a theme in sand and sun colours, shown as a card title. Capitalised; the lower-case 'desert' key is a search word.",
     "max": 10
   },
   "theme-presets.library.dracula-night": {
@@ -141,7 +141,7 @@
   },
   "theme-presets.library.ember": {
     "text": "Ember",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a glowing orange-red theme, like embers, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.everforest-moss": {
@@ -161,7 +161,7 @@
   },
   "theme-presets.library.forest": {
     "text": "Forest",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a theme in soft green forest tones, shown as a card title. Capitalised; the lower-case 'forest' key is a search word.",
     "max": 10
   },
   "theme-presets.library.fresh-leaf-green-and-blossom-pink": {
@@ -176,7 +176,7 @@
   },
   "theme-presets.library.frost": {
     "text": "Frost",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a cool icy-blue theme, shown as a card title. Different from 'Nord Frost', which is named after a colour scheme.",
     "max": 10
   },
   "theme-presets.library.frosted-cards-over-a-graphite-gradient": {
@@ -206,7 +206,7 @@
   },
   "theme-presets.library.glass-blurred-translucent-cards-on-a": {
     "text": "Glass: blurred, translucent cards on a soft gradient.",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset description. 'Glass' names the frosted-glass style (blur and transparency) shared by the Glass presets; it is not a drinking glass.",
     "max": 85
   },
   "theme-presets.library.glass-graphite": {
@@ -226,7 +226,7 @@
   },
   "theme-presets.library.hi-vis": {
     "text": "Hi-Vis",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: short for high-visibility, like safety clothing; a very bright, high-contrast theme. Shown as a card title.",
     "max": 10
   },
   "theme-presets.library.high-contrast-green-on-black-strong": {
@@ -256,7 +256,7 @@
   },
   "theme-presets.library.ink": {
     "text": "Ink",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a dark theme in deep ink colours, shown as a card title. Very short, so keep it brief (limit 5 characters).",
     "max": 5
   },
   "theme-presets.library.kanagawa-wave": {
@@ -286,7 +286,7 @@
   },
   "theme-presets.library.material-baseline-purple-with-teal": {
     "text": "Material baseline purple with teal.",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset description. 'Material' is Google's Material Design; 'baseline' is its default colour set. Keep Material unchanged.",
     "max": 60
   },
   "theme-presets.library.material-violet": {
@@ -351,7 +351,7 @@
   },
   "theme-presets.library.ocean": {
     "text": "Ocean",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a theme in sea blues and teals, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.ochre-basin": {
@@ -391,7 +391,7 @@
   },
   "theme-presets.library.paper": {
     "text": "Paper",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a soft off-white theme that looks like paper, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.pastel-lilac-and-rose": {
@@ -461,7 +461,7 @@
   },
   "theme-presets.library.sand": {
     "text": "Sand",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a warm neutral theme in sandy colours, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.silvered-jade-leaves-and-gold-touches-by": {
@@ -481,7 +481,7 @@
   },
   "theme-presets.library.slate": {
     "text": "Slate",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a neutral blue-grey theme, named after slate stone, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.soft-green-forest-tones-easy-on-the-eyes": {
@@ -501,17 +501,17 @@
   },
   "theme-presets.library.sorbet": {
     "text": "Sorbet",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a theme in soft pastel fruit colours, like the frozen dessert, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.spring": {
     "text": "Spring",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a seasonal colour theme in fresh spring colours, shown as a card title. The season, not the coil.",
     "max": 10
   },
   "theme-presets.library.summer": {
     "text": "Summer",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a seasonal colour theme in bright summer colours, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.sun-baked-ochre-olive-header-at-night-an": {
@@ -571,7 +571,7 @@
   },
   "theme-presets.library.winter": {
     "text": "Winter",
-    "note": "Shown in library (theme-presets).",
+    "note": "Preset name: a seasonal colour theme in cold winter colours, shown as a card title.",
     "max": 10
   },
   "theme-presets.library.zenburn-calm": {
@@ -581,72 +581,72 @@
   },
   "theme-presets.picker.all": {
     "text": "All",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Option in the 'Show' filter switch that lists every preset. A count follows the word.",
     "max": 5
   },
   "theme-presets.picker.clear-search": {
     "text": "Clear search",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Text button shown when no preset matches; empties the search box and shows all presets.",
     "max": 20
   },
   "theme-presets.picker.contacts-another-website": {
     "text": "Contacts another website",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Small privacy tag on a preset card: this preset loads a font or image from an external site.",
     "max": 40
   },
   "theme-presets.picker.delete": {
     "text": "Delete",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Button on a saved preset in My presets; removes the preset after confirmation.",
     "max": 15
   },
   "theme-presets.picker.desert": {
     "text": "desert",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Suggested search word, lower case, shown on a button after a failed search. Clicking it searches for this word.",
     "max": 10
   },
   "theme-presets.picker.export": {
     "text": "Export",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Button on a saved preset; downloads it as a file so it can be shared or imported elsewhere.",
     "max": 10
   },
   "theme-presets.picker.fantasy": {
     "text": "fantasy",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Suggested search word, lower case, on a button after a failed search; also a hidden keyword for fantasy presets. Not the heading, which is 'Fantasy'.",
     "max": 15
   },
   "theme-presets.picker.fantasy-2": {
     "text": "Fantasy",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Sub-heading above the fantasy presets in the Sci-fi & fantasy group. The lower-case 'fantasy' key is a search word instead.",
     "max": 15
   },
   "theme-presets.picker.forest": {
     "text": "forest",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Suggested search word, lower case, shown on a button after a failed search. Clicking it searches for this word.",
     "max": 10
   },
   "theme-presets.picker.genre": {
     "text": "genre",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the Sci-fi & fantasy presets.",
     "max": 10
   },
   "theme-presets.picker.independent-colour-schemes-made-for": {
     "text": "Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Legal-style disclaimer above the Sci-fi & fantasy presets. Keep the meaning exactly; Magic Card is the product name and stays untranslated.",
     "max": 190
   },
   "theme-presets.picker.inspired-by": {
     "text": "Inspired by",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Option in the 'Show' filter switch for presets that take after a known colour scheme. A count follows. Capitalised; the lower-case key is a hidden search word.",
     "max": 20
   },
   "theme-presets.picker.inspired-by-2": {
     "text": "inspired by",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the presets in the 'Inspired by' group.",
     "max": 20
   },
   "theme-presets.picker.inspired-by-name": {
     "text": "Inspired by {name}",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Caption on a preset card. {name} is the name of the real colour scheme it takes after, such as Nord; keep it unchanged.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -654,17 +654,17 @@
   },
   "theme-presets.picker.my": {
     "text": "my",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the user's own saved presets. Use the word a user would type for 'my'.",
     "max": 5
   },
   "theme-presets.picker.my-presets": {
     "text": "My presets",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Option in the 'Show' filter switch and group heading for presets the user saved. A count follows.",
     "max": 25
   },
   "theme-presets.picker.n-shown": {
     "text": "{n, plural, one {# preset} other {# presets}} shown",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Screen-reader status after filtering the preset list. {n} is the number of presets now visible.",
     "max": 30,
     "vars": {
       "n": "The count the text is about."
@@ -672,7 +672,7 @@
   },
   "theme-presets.picker.n-shown-try-a-b-c-d-or-e": {
     "text": "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Screen-reader status when a search finds nothing. {n} is the number shown (0 here). {a} to {e} are five suggested search words, the translations of sci-fi, fantasy, neon, desert and forest.",
     "max": 80,
     "vars": {
       "a": "The value that replaces a in the text.",
@@ -685,17 +685,17 @@
   },
   "theme-presets.picker.name-palette-or-style": {
     "text": "Name, palette or style",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Placeholder text in the preset search box. 'Palette' means colour palette.",
     "max": 40
   },
   "theme-presets.picker.neon": {
     "text": "neon",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Suggested search word, lower case, shown on a button after a failed search. Clicking it searches for this word.",
     "max": 10
   },
   "theme-presets.picker.no-preset-matches-query": {
     "text": "No preset matches \"{query}\".",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Empty search result. {query} is the text typed in the preset search box; do not translate it.",
     "max": 50,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -703,52 +703,52 @@
   },
   "theme-presets.picker.original": {
     "text": "Original",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Option in the 'Show' filter switch for presets made for Magic Card, not based on another scheme. A count follows. Not 'initial'.",
     "max": 15
   },
   "theme-presets.picker.original-2": {
     "text": "original",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the presets in the 'Original' group.",
     "max": 15
   },
   "theme-presets.picker.preset": {
     "text": "Preset",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Accessible name (not visible) of the radio group that lists presets. A preset is a ready-made set of theme colours.",
     "max": 15
   },
   "theme-presets.picker.presets-use-genre-and-colour-words-not": {
     "text": "Presets use genre and colour words, not titles. Try one of these:",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Help text above the suggestion buttons, which are the words sci-fi, fantasy, neon, desert and forest. Ends with a colon.",
     "max": 105
   },
   "theme-presets.picker.rename": {
     "text": "Rename",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Button on a saved preset in My presets; lets the user change the preset's name.",
     "max": 10
   },
   "theme-presets.picker.sci-fi": {
     "text": "sci-fi",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Suggested search word, lower case, on a button after a failed search; also a hidden keyword for sci-fi presets. Not the heading, which is 'Sci-fi'.",
     "max": 15
   },
   "theme-presets.picker.sci-fi-2": {
     "text": "Sci-fi",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Sub-heading above the sci-fi presets in the Sci-fi & fantasy group. The lower-case 'sci-fi' key is a search word instead.",
     "max": 15
   },
   "theme-presets.picker.sci-fi-fantasy": {
     "text": "Sci-fi & fantasy",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Option in the 'Show' filter switch and group heading for genre-themed presets. A count follows.",
     "max": 30
   },
   "theme-presets.picker.search-presets": {
     "text": "Search presets",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Accessible name (not visible) of the preset search box.",
     "max": 25
   },
   "theme-presets.picker.show": {
     "text": "Show",
-    "note": "Shown in picker (theme-presets).",
+    "note": "Label of the filter switch (All, Original, Inspired by, ...). It is a verb: 'Show: All'.",
     "max": 10
   }
 }
