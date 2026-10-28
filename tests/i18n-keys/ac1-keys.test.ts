@@ -1,8 +1,8 @@
-// AC1: every call is t('<ns>.<place>.<item>') with a literal dotted key whose prefix is its namespace; a new
-// text-id call fails check-i18n (legacy ratchet, D10); the loader rewrites keys to table indices.
-// Contract: src/contracts/i18n-keys.ts "Keys", "Two phases", "Error cases"; src/contracts/i18n.ts D1, D10.
+// Every call is t('<ns>.<place>.<item>') with a literal dotted key whose prefix is its namespace; a text-id call and a
+// tc() call fail check-i18n and the build (D1); the loader rewrites keys to table indices.
+// Contract: src/contracts/i18n-keys.ts "Keys", "Text ids", "Error cases"; src/contracts/i18n.ts D1.
 import { afterAll, describe, expect, it } from 'vitest';
-import { callerSource, cleanupProjects, importLine, keyedProject, Project, writeKeyed, writeLegacy, type KeyedEntry } from './harness';
+import { callerSource, cleanupProjects, importLine, keyedProject, Project, writeKeyed, type KeyedEntry } from './harness';
 
 afterAll(cleanupProjects);
 
@@ -27,12 +27,9 @@ describe('AC1 keyed namespace passes', () => {
     expect(r.code).toBe(0);
   });
 
-  it('lets a keyed namespace and a text-id namespace live side by side during the migration', () => {
+  it('ignores a leftover tools/i18n/legacy-count.json', () => {
     const p = built();
-    writeLegacy(p, 'other', { Save: 'Opslaan' });
-    p.write('src/other/panel.ts', callerSource('other', ['Save']));
-    p.writeJson('tools/i18n/legacy-count.json', { demo: 0, other: 1 });
-    expect(p.build().code).toBe(0);
+    p.writeJson('tools/i18n/legacy-count.json', { demo: 5, other: 0 });
     const r = p.check('--ci');
     expect(r.all).toContain('0 errors');
     expect(r.code).toBe(0);
@@ -61,12 +58,12 @@ describe('AC1 key rules (D1)', () => {
     ['one segment after the namespace', 'demo.title'],
     ['an upper-case segment', 'demo.Panel.title'],
     ['British text', 'Background colour'],
-  ])('fails the check for a text-id call (%s) in a migrated namespace (D10)', (_why, id) => {
+  ])('fails the check for a text-id call (%s) (D1)', (_why, id) => {
     const p = built();
     p.write('src/demo/bad.ts', importLine('demo') + `export const x = t('${id}');\n`);
     const r = p.check('--ci');
     expect(r.code).toBe(1);
-    expect(r.all).toMatch(/D10|D1/);
+    expect(r.all).toMatch(/D1 .*is not a key/);
   });
 
   it('fails the check for tc(), which has no key form', () => {
@@ -74,7 +71,7 @@ describe('AC1 key rules (D1)', () => {
     p.write('src/demo/bad.ts', importLine('demo', 'tc') + "export const x = tc('verb', 'Clear');\n");
     const r = p.check('--ci');
     expect(r.code).toBe(1);
-    expect(r.all).toMatch(/D10|D1/);
+    expect(r.all).toMatch(/D1 .*tc\(\) is removed/);
   });
 });
 
@@ -97,51 +94,27 @@ describe('AC1 data literals', () => {
   });
 });
 
-describe('AC1 legacy ratchet (D10)', () => {
-  function legacyProject(count: number | undefined, calls = ['Save', 'Cancel']): Project {
+describe('AC1 text ids are gone', () => {
+  it('fails the check and the build for a text-id call in a namespace that has no en-GB.json', () => {
     const p = new Project();
-    writeLegacy(p, 'demo', { Save: 'Opslaan', Cancel: 'Annuleren' });
-    p.write('src/demo/panel.ts', callerSource('demo', calls));
-    if (count !== undefined) p.writeJson('tools/i18n/legacy-count.json', { demo: count, other: 0 });
-    expect(p.build().code).toBe(0);
-    return p;
-  }
-
-  it('passes when the count equals the text-id calls of the namespace', () => {
-    const r = legacyProject(2).check('--ci');
-    expect(r.all).toContain('0 errors');
-    expect(r.code).toBe(0);
-  });
-  it('fails when a new text-id call pushes the count above the file', () => {
-    const r = legacyProject(1).check('--ci');
+    p.write('src/other/panel.ts', callerSource('other', ['Save']));
+    expect(p.build().code).toBe(1);
+    const r = p.check('--ci');
     expect(r.code).toBe(1);
-    expect(r.all).toMatch(/D10[^\n]*demo/);
+    expect(r.all).toMatch(/D1 .*"Save" is not a key/);
   });
-  it('fails when calls were removed and the file still holds the higher count (the ratchet is lowered in the same change)', () => {
-    const r = legacyProject(3).check('--ci');
-    expect(r.code).toBe(1);
-    expect(r.all).toMatch(/D10[^\n]*demo/);
-  });
-  it('counts every call of t, tx and m and every tc call', () => {
-    const p = new Project();
-    writeLegacy(p, 'demo', { Save: 'Opslaan', 'verb|Clear': 'Wissen', 'Hi {name}': 'Hoi {name}', Flame: 'Vlam' });
-    p.write(
-      'src/demo/panel.ts',
-      importLine('demo', 't, tc, tx, m') + "export const a = [t('Save'), tc('verb', 'Clear'), tx('Hi {name}', { name: 1 }), m('Flame')];\n",
-    );
-    p.writeJson('tools/i18n/legacy-count.json', { demo: 4, other: 0 });
-    p.build();
-    expect(p.check('--ci').code).toBe(0);
-    p.writeJson('tools/i18n/legacy-count.json', { demo: 3, other: 0 });
-    expect(p.check('--ci').code).toBe(1);
-  });
-  it('allows no text-id call in a namespace that has an en-GB.json, whatever the count file says', () => {
+  it('fails the check for a text-id call whatever a count file says', () => {
     const p = built();
     p.write('src/demo/legacy.ts', importLine('demo') + "export const x = t('Hello');\n");
     p.writeJson('tools/i18n/legacy-count.json', { demo: 1, other: 0 });
     const r = p.check('--ci');
     expect(r.code).toBe(1);
-    expect(r.all).toMatch(/D10/);
+    expect(r.all).toMatch(/D1 /);
+  });
+  it('fails the loader for a text id, so no text id reaches a bundle', () => {
+    const p = built();
+    const out = p.loader('src/demo/panel.ts', importLine('demo') + "export const x = t('Hello');\n");
+    expect(out.errors.join('\n')).toMatch(/is not a key/);
   });
 });
 

@@ -9,7 +9,7 @@ import tables from './messages.gen';
  * parts show (tree chips, float bar, canvas announcements, status sentences) stays in 'card-editor'; an m()
  * label made in a card-editor file is rendered with the card-editor t(), never with this one.
  */
-export const { t, tc, tx, m, locale } = i18nFor(
+export const { t, tx, m, locale } = i18nFor(
   'layer-editor',
   tables,
 ) as unknown as KeyedNamespace<Keys>;

@@ -1623,9 +1623,17 @@
     "text": "Zoom out (Ctrl -)",
     "hash": "b8f7b0a4"
   },
+  "anim-studio.keyframes-utils.1-percent": {
+    "text": "1%",
+    "hash": "0b410286"
+  },
   "anim-studio.keyframes-utils.30-fps": {
     "text": "30 fps",
     "hash": "5e119b23"
+  },
+  "anim-studio.keyframes-utils.5-percent": {
+    "text": "5%",
+    "hash": "d1ce334b"
   },
   "anim-studio.keyframes-utils.animation-colour": {
     "text": "Animation color",
@@ -1774,6 +1782,10 @@
   "anim-studio.keyframes-utils.stroke-colour": {
     "text": "Stroke color",
     "hash": "9a16bd34"
+  },
+  "anim-studio.keyframes-utils.tenth-of-a-second": {
+    "text": "0.1 s",
+    "hash": "9eaa3bb4"
   },
   "anim-studio.keyframes-utils.top": {
     "text": "Top",

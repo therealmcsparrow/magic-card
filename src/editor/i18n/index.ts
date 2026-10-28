@@ -11,7 +11,7 @@ export type { MessageIndex };
  * magic-card-editor.js). Write t('card-editor.<file>.<text>'); the build replaces each key with its table index. A module-level table of labels holds m('card-editor.<file>.<text>')
  * and is read through tl() / t(item.label) where it is rendered.
  */
-export const { t, tc, tx, m, locale } = i18nFor(
+export const { t, tx, m, locale } = i18nFor(
   'card-editor',
   tables,
 ) as unknown as KeyedNamespace<Keys>;

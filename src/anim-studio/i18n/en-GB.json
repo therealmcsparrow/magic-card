@@ -2297,10 +2297,20 @@
     "note": "Tooltip of the timeline zoom-out button with its keyboard shortcut Ctrl and minus. Keep the shortcut.",
     "max": 30
   },
+  "anim-studio.keyframes-utils.1-percent": {
+    "text": "1%",
+    "note": "Option in the keyframe editor snap menu: snap to steps of one percent of the clip.",
+    "max": 12
+  },
   "anim-studio.keyframes-utils.30-fps": {
     "text": "30 fps",
     "note": "Frame-rate choice of 30 frames per second in the keyframes helper lists; keep the number and the unit abbreviation.",
     "max": 10
+  },
+  "anim-studio.keyframes-utils.5-percent": {
+    "text": "5%",
+    "note": "Option in the keyframe editor snap menu: snap to steps of five percent of the clip.",
+    "max": 12
   },
   "anim-studio.keyframes-utils.animation-colour": {
     "text": "Animation colour",
@@ -2486,6 +2496,11 @@
     "text": "Stroke colour",
     "note": "Name of a lane in the keyframes helper lists: the colour of the icon's outline. A lane name, not a field label.",
     "max": 25
+  },
+  "anim-studio.keyframes-utils.tenth-of-a-second": {
+    "text": "0.1 s",
+    "note": "Option in the keyframe editor snap menu: snap to steps of a tenth of a second. Keep the unit s.",
+    "max": 12
   },
   "anim-studio.keyframes-utils.top": {
     "text": "Top",
@@ -4532,8 +4547,8 @@
   },
   "anim-studio.particles-utils.svg": {
     "text": "SVG",
-    "note": "Name of the particle shape that uses a pasted SVG drawing. Keep SVG untranslated.",
-    "max": 5
+    "note": "Name of the particle shape that draws an SVG picture. SVG is the file format name.",
+    "max": 12
   },
   "anim-studio.particles-utils.svg-shape": {
     "text": "SVG shape",

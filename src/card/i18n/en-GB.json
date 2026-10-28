@@ -122,7 +122,7 @@
     "max": 55
   },
   "card.config-validator.background-layers-only-the-first-max": {
-    "text": "background_layers: only the first {max} layers are used",
+    "text": "background_layers: only the first {max, plural, one {# layer is} other {# layers are}} used",
     "note": "Configuration warning. Keep background_layers exactly as written; it is a setting name. {max} is the largest number of layers that is used.",
     "max": 90,
     "vars": {

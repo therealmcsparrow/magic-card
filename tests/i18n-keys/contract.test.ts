@@ -1,4 +1,4 @@
-// Contract suite: src/contracts/i18n-keys.ts (1.0.0) and src/contracts/i18n.ts (1.1.0 -> 2.0.0), constants and
+// Contract suite: src/contracts/i18n-keys.ts (1.0.0) and src/contracts/i18n.ts (2.0.0), constants and
 // shapes only. Covers the parts of AC1, AC3, AC4 and AC25 that are plain facts of the contract.
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
@@ -26,7 +26,7 @@ describe('i18n-keys contract, constants', () => {
     expect(keys.EXCHANGE_MAX_BYTES).toBe(4_194_304);
     expect(keys.WAIVERS_FILE).toBe('i18n/waivers.json');
     expect(keys.RENAMES_FILE).toBe('i18n/renames.json');
-    expect(keys.LEGACY_COUNT_FILE).toBe('tools/i18n/legacy-count.json');
+    expect('LEGACY_COUNT_FILE' in keys).toBe(false);
   });
 
   it.each([
@@ -72,8 +72,8 @@ describe('source hash reference', () => {
 });
 
 describe('i18n contract', () => {
-  it('AC1 is at 1.1.0 or 2.0.0 (the keys sit beside text ids, then replace them)', () => {
-    expect(['1.1.0', '2.0.0']).toContain(i18n.I18N_CONTRACT_VERSION);
+  it('AC1 is at 2.0.0 (keys replace text ids)', () => {
+    expect(i18n.I18N_CONTRACT_VERSION).toBe('2.0.0');
   });
   it('AC1 lists the namespaces of tools/i18n/config.json plus mcu-panel, nothing else', () => {
     const cfg = JSON.parse(read('tools/i18n/config.json')).namespaces as Record<string, unknown>;

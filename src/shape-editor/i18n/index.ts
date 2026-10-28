@@ -14,4 +14,4 @@ type ShapeEditorMessages = Omit<Bound, 't'> & { t: Bound['t'] & ((id: NameKey, a
  * Messages of the shape editor (namespace 'shape-editor', tables in magic-card-shape-editor.js). Write
  * t('shape-editor.<file>.<text>'); the build replaces each key with its table index, which the second signature accepts.
  */
-export const { t, tc, tx, m, locale } = i18nFor('shape-editor', tables) as unknown as ShapeEditorMessages;
+export const { t, tx, m, locale } = i18nFor('shape-editor', tables) as unknown as ShapeEditorMessages;

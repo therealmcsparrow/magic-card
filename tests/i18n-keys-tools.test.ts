@@ -74,13 +74,13 @@ describe('tablesForKeys', () => {
     expect(t.indexOf.get('a.b.c')).not.toBe(t.indexOf.get('a.b.e'));
     expect(t.count).toBe(3);
   });
-  it('writes the full cells until i18n 2.0.0', () => {
-    expect(t.rows[1]).toEqual(['Alpha', 'Color', 'Colour']);
+  it('writes an en-US or nl cell equal to its en-GB cell empty', () => {
+    expect(t.rows[1]).toEqual(['', 'Color', '']);
     expect(t.rows[2]).toEqual(['Alfa', 'Kleur', 'Kleur']);
   });
   it('falls back to en-GB for a missing translation, so it ships the English', () => {
     const only = keys.tablesForKeys(cat({ 'a.b.c': gbEntry('Colour') }));
-    expect(only.rows).toEqual([['Colour'], ['Colour'], ['Colour']]);
+    expect(only.rows).toEqual([['Colour'], [''], ['']]);
   });
 });
 
@@ -183,10 +183,6 @@ describe('checkNamespace', () => {
     expect(rules(check(c))).toEqual(['D2']);
     expect(rules(check(c, { pending: true }), 'warn')).toEqual(['D2']);
   });
-  it('D10: a text id in a namespace that has an en-GB.json', () => {
-    const r = check(ok(), { textSites: [{ file: 'src/x.ts', line: 3, fn: 't', id: 'Colour' }] });
-    expect(r.map((x) => x.rule)).toEqual(['D10']);
-  });
   it('D2: an en-GB entry no call uses', () => {
     const r = keys.checkNamespace({ ns: 'demo', cat: ok(), uses: new Map() }) as { msg: string }[];
     expect(r[0].msg).toMatch(/used by no call/);
@@ -217,23 +213,19 @@ describe('waivers', () => {
   });
 });
 
-describe('legacy count (D10)', () => {
-  it('fails a count that differs from the file in either direction', () => {
-    expect(keys.compareLegacy({ card: 5 }, { card: 5 })).toEqual([]);
-    expect(keys.compareLegacy({ card: 6 }, { card: 5 })[0]).toMatch(/6 text-id calls.*holds 5.*use a key/);
-    expect(keys.compareLegacy({ card: 4 }, { card: 5 })[0]).toMatch(/lower the count/);
-    expect(keys.compareLegacy({ card: 1 }, {})[0]).toMatch(/holds 0/);
-    expect(keys.compareLegacy({ card: 0 }, { card: 1, gone: 2 })).toHaveLength(2);
-  });
-  it('leaves a migrated namespace to the no-text-id rule', () => {
-    expect(keys.compareLegacy({ card: 3 }, { card: 0 }, new Set(['card']))).toEqual([]);
-  });
-});
-
 describe('scanSource', () => {
   const file = path.resolve('src/modules/advanced/forecast-view.ts');
   const nsList = [{ ns: 'card', dir: path.resolve('src/card/i18n'), roots: [] }];
-  const scan = (body: string) => lib.scanSource(file, "import { t, tc, tx, m } from '../../card/i18n';\n" + body, nsList).calls as { kind: string; fn: string; id: string }[];
+  const run = (body: string) =>
+    lib.scanSource(file, "import { t, tc, tx, m } from '../../card/i18n';\n" + body, nsList) as { calls: { kind: string; fn: string; id: string }[]; violations: { fn: string; reason: string }[] };
+  const scan = (body: string) => run(body).calls;
+  it('reports a text id and every tc call as a violation, and a key call as none', () => {
+    expect(run("t('card.panel.title'); m('card.flame.name');").violations).toEqual([]);
+    const v = run("t('Background colour'); tc('verb', 'Clear'); tc('card.a.b', 'card.c.d');").violations;
+    expect(v.map((x) => x.fn)).toEqual(['t', 'tc', 'tc']);
+    expect(v[0].reason).toMatch(/not a key/);
+    expect(v[1].reason).toMatch(/tc\(\) is removed/);
+  });
   it('tells a key call from a text-id call by the key pattern', () => {
     const calls = scan("t('card.panel.title'); t('Background colour'); m('card.flame.name'); tc('verb', 'Clear'); tc('card.a.b', 'card.c.d');");
     expect(calls.map((c) => [c.fn, c.kind])).toEqual([['t', 'key'], ['t', 'text'], ['m', 'key'], ['tc', 'text'], ['tc', 'text']]);
@@ -274,7 +266,7 @@ describe('loader with a key namespace', () => {
       return errors.map((e) => e.message).join('\n');
     };
     expect(msgs("t('demo.a.nope');")).toMatch(/"demo\.a\.nope" is not in demo\/en-GB\.json/);
-    expect(msgs("t('Colour');")).toMatch(/is a text id; demo takes keys only/);
+    expect(msgs("t('Colour');")).toMatch(/"Colour" is not a key/);
     expect(msgs("t('card.a.one');")).toMatch(/must start with "demo\."/);
   });
 });

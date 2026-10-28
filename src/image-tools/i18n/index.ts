@@ -7,4 +7,4 @@ import tables from './messages.gen';
  * Messages of the library image field (namespace 'image-tools', tables in magic-card-image-tools.js). Write
  * t('image-tools.<file>.<text>'); the build replaces each key with its table index, which the second signature accepts.
  */
-export const { t, tc, tx, m, locale } = i18nFor('image-tools', tables) as unknown as KeyedNamespace<Keys>;
+export const { t, tx, m, locale } = i18nFor('image-tools', tables) as unknown as KeyedNamespace<Keys>;

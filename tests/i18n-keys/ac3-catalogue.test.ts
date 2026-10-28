@@ -199,12 +199,16 @@ describe('AC3 completeness of the locale files', () => {
 });
 
 describe('AC3 namespaces without an en-GB.json', () => {
-  it('stay on text ids and need no note (the legacy namespaces of the migration)', () => {
+  it('need no note while no call uses them', () => {
     const p = new Project();
-    p.writeJson(`${NAMESPACES.other}/nl.json`, { Save: 'Opslaan' });
-    p.write('src/other/panel.ts', "import { t } from './i18n';\nexport const a = t('Save');\n");
-    p.writeJson('tools/i18n/legacy-count.json', { demo: 0, other: 1 });
     p.build();
     expect(p.check('--ci').code).toBe(0);
+  });
+  it('fail the check for a key call, which has no catalogue to name it', () => {
+    const p = new Project();
+    p.write('src/other/panel.ts', "import { t } from './i18n';\nexport const a = t('other.panel.save');\n");
+    const r = p.check('--ci');
+    expect(r.code).toBe(1);
+    expect(r.all).toMatch(/D1 .*other.panel.save/);
   });
 });

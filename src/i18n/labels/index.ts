@@ -9,5 +9,5 @@ import type { Keys } from './keys.gen';
  * carries: the editor chunk and the studio entry import it and await ready() before they render.
  * Write t('labels.<file>.<text>'); the build replaces each key with its table index.
  */
-export const { t, tc, tx, m, locale, ready } = i18nForLazy('labels', () => import(/* webpackChunkName: "i18n-labels" */ './messages.gen')) as unknown as KeyedNamespace<Keys> &
+export const { t, tx, m, locale, ready } = i18nForLazy('labels', () => import(/* webpackChunkName: "i18n-labels" */ './messages.gen')) as unknown as KeyedNamespace<Keys> &
   Pick<ReturnType<typeof i18nForLazy>, 'ready'>;

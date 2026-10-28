@@ -13,6 +13,8 @@ export type PreviewTile = 'icon' | 'button' | 'text' | 'card';
 /** A simulated entity the tile's module reads (the stage adds it to the preview's hass, see tileHass). */
 export interface TileEntity {
   state: string;
+  /** The entity's friendly name, an m() mark. */
+  name: MessageId;
   attributes: Record<string, unknown>;
 }
 
@@ -43,7 +45,8 @@ export const TILES: TileDef[] = [
     entities: {
       [CARD_TILE_ENTITY]: {
         state: '21.5',
-        attributes: { friendly_name: m('anim-studio.tiles.living-room'), unit_of_measurement: '°C', device_class: 'temperature', state_class: 'measurement' },
+        name: m('anim-studio.tiles.living-room'),
+        attributes: { unit_of_measurement: '°C', device_class: 'temperature', state_class: 'measurement' },
       },
     },
   },
@@ -97,8 +100,7 @@ export function tileHass<T extends { states?: Record<string, unknown> }>(tile: P
   if (hit) return hit as T;
   const states: Record<string, unknown> = {};
   for (const [id, e] of Object.entries(ents)) {
-    const name = e.attributes.friendly_name as MessageId | undefined;
-    states[id] = { entity_id: id, state: e.state, attributes: name === undefined ? e.attributes : { ...e.attributes, friendly_name: t(name) }, last_changed: '', last_updated: '', context: { id: '' } };
+    states[id] = { entity_id: id, state: e.state, attributes: { ...e.attributes, friendly_name: t(e.name) }, last_changed: '', last_updated: '', context: { id: '' } };
   }
   const out = { ...hass, states: { ...states, ...(hass.states ?? {}) } };
   byTile.set(tile, out);

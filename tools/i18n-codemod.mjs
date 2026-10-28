@@ -249,7 +249,7 @@ export function migrateNamespace({ ns, nsList = lib.activeNamespaces(), files, r
     const source = fs.readFileSync(file, 'utf8');
     if (!/i18n/.test(source)) continue;
     const scan = lib.scanSource(file, source, nsList);
-    for (const v of scan.violations) if (v.ns === ns) problems.push(`${rf}:${v.line} ${v.fn}(): ${v.reason}`);
+    for (const v of scan.violations) if (v.ns === ns && !v.text) problems.push(`${rf}:${v.line} ${v.fn}(): ${v.reason}`);
     const calls = scan.calls.filter((c) => c.ns === ns && c.kind === 'text');
     if (!calls.length) continue;
 

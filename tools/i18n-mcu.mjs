@@ -201,8 +201,8 @@ function buildKeyed(mcuRoot, dir) {
   cat.us = usCatalogue(cat.gb);
   cat.raw.us = null;
   const waivers = keys.readWaivers(path.join(mcuRoot, lib.loadKeysContract().WAIVERS_FILE));
-  const textSites = [...ids].map((id) => ({ file: PANEL_REL, line: 0, fn: 't', id }));
-  for (const r of keys.checkNamespace({ ns: NS, cat, uses: used, textSites, waivers: waivers.waivers, spelling: (t) => spellingErrors(contract, t) })) {
+  for (const id of ids) errors.push(`D1 ${NS} ${PANEL_REL}: "${id.slice(0, 40)}" is not a key; the panel takes keys only`);
+  for (const r of keys.checkNamespace({ ns: NS, cat, uses: used, waivers: waivers.waivers, spelling: (t) => spellingErrors(contract, t) })) {
     if (r.level === 'error') errors.push(`${r.rule} ${r.msg}`);
   }
   for (const p of waivers.problems) errors.push(p);

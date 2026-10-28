@@ -277,7 +277,7 @@ export const SHAPE_KINDS: Array<{ id: ShapeKind; label: MessageId; icon?: string
   { id: 'spark', label: m('anim-studio.particles-utils.spark') },
   { id: 'icon', label: m('anim-studio.particles-utils.icon'), icon: 'mdi:star-outline' },
   { id: 'emoji', label: m('anim-studio.particles-utils.emoji'), icon: 'mdi:emoticon-outline' },
-  { id: 'svg', label: 'SVG' as unknown as MessageId, icon: 'mdi:svg' },
+  { id: 'svg', label: m('anim-studio.particles-utils.svg'), icon: 'mdi:svg' },
 ];
 const BUILTIN = new Set<string>(BUILTIN_SHAPES);
 export const isBuiltinKind = (k: ShapeKind): k is BuiltinShape => BUILTIN.has(k);

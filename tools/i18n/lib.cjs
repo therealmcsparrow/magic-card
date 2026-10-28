@@ -1,7 +1,7 @@
 /*
- * Shared code of the i18n tools (contracts src/contracts/i18n.ts 1.1.0 and i18n-keys.ts): contract loading,
- * source scan (t / tc / tx / m calls found through the imports of a namespace's i18n folder; a call is a key
- * call or a text-id call), catalogues, messages.gen.ts writer, en-US generator, message validator. The key
+ * Shared code of the i18n tools (contracts src/contracts/i18n.ts 2.0.0 and i18n-keys.ts): contract loading,
+ * source scan (t / tx / m calls found through the imports of a namespace's i18n folder; a call whose first argument
+ * is not a key is a D1 violation), messages.gen.ts writer, en-US generator, message validator. The key
  * catalogues, hashes, tables and types are in tools/i18n/keys.cjs. CommonJS so the webpack pre-loader
  * (tools/i18n-loader.cjs) and the .mjs tools use the same code.
  */
@@ -56,12 +56,12 @@ function listSourceFiles(dir = SRC, out = []) {
 const SKIP_DIRS = ['src/i18n/', 'src/contracts/'];
 const isScanned = (file) => !SKIP_DIRS.some((d) => rel(file).startsWith(d));
 
+/** tc is no longer exported by any namespace; a call of it is still found so that it is reported (D1). */
 const FNS = new Set(['t', 'tc', 'tx', 'm']);
 /** lm() (src/i18n/labels/mark.ts) is m() for the 'labels' namespace in files magic-card.js carries. */
 const LABEL_MARK = 'i18n/labels/mark';
-/** Joins the entries of a table (contract TABLE_SEPARATOR). A tc() id is 'context|text' in the tools; the en-GB table keeps the context apart with CTX. */
+/** Joins the entries of a table (contract TABLE_SEPARATOR). */
 const SEP = '|';
-const CTX = '\u0001';
 
 /** Absolute path (no extension, no /index) an import specifier points at, or null for packages. */
 function resolveSpec(file, spec) {
@@ -75,8 +75,9 @@ function resolveSpec(file, spec) {
 /**
  * Finds the i18n calls of one file. Returns { calls, violations }.
  * call: { ns, fn, kind ('key' | 'text'), ctx, text, id, start, end, callStart, callEnd, line }
- * kind 'key': the first argument is a string literal that matches KEY_PATTERN (never for tc). Every other literal is a text id.
- * violation (D1): { line, fn, reason }
+ * kind 'key': the first argument is a string literal that matches KEY_PATTERN (never for tc). Every other literal is a text id,
+ * which is also a violation.
+ * violation (D1): { line, fn, ns, reason, text? } (text: the id is a literal that is not a key, or a tc call)
  */
 function scanSource(file, source, nsList = activeNamespaces()) {
   const sf = ts.createSourceFile(file, source, ts.ScriptTarget.ES2021, false, ts.ScriptKind.TS);
@@ -118,8 +119,11 @@ function scanSource(file, source, nsList = activeNamespaces()) {
         return;
       }
       if (text === undefined || (fn === 'tc' && ctx === undefined)) violations.push({ line, fn, ns, reason: 'the id is not a string literal (D1)' });
-      else
-        calls.push({ ns, fn, kind: fn !== 'tc' && KEY_PATTERN.test(text) ? 'key' : 'text', ctx, text, id: fn === 'tc' ? `${ctx}|${text}` : text, start: idNode.getStart(sf), end: idNode.getEnd(), callStart: n.getStart(sf), callEnd: n.getEnd(), line });
+      else {
+        const kind = fn !== 'tc' && KEY_PATTERN.test(text) ? 'key' : 'text';
+        if (kind === 'text') violations.push({ line, fn, ns, text: true, reason: fn === 'tc' ? 'tc() is removed; write one key per meaning (D1)' : `"${text.slice(0, 40)}" is not a key; use a key of ${ns}/en-GB.json (D1)` });
+        calls.push({ ns, fn, kind, ctx, text, id: fn === 'tc' ? `${ctx}|${text}` : text, start: idNode.getStart(sf), end: idNode.getEnd(), callStart: n.getStart(sf), callEnd: n.getEnd(), line });
+      }
     }
     ts.forEachChild(n, visit);
   };
@@ -128,52 +132,33 @@ function scanSource(file, source, nsList = activeNamespaces()) {
 }
 
 /**
- * Scans every source file once. ids: ns -> Set of text ids; ctxIds: ns -> id -> context; keys: ns -> Map key -> [{file, line, fn}];
- * textSites: ns -> [{file, line, fn, id}] (one per text-id call); violations: [{file, ...}].
+ * Scans every source file once. keys: ns -> Map key -> [{file, line, fn}]; violations: [{file, ...}] (a non-literal id, a text id).
  */
 function extractAll() {
   const nsList = activeNamespaces();
-  const ids = new Map(nsList.map((n) => [n.ns, new Set()]));
-  const ctxIds = new Map(nsList.map((n) => [n.ns, new Map()])); // ns -> id -> context
   const keys = new Map(nsList.map((n) => [n.ns, new Map()]));
-  const textSites = new Map(nsList.map((n) => [n.ns, []]));
   const violations = [];
-  if (!nsList.length) return { ids, ctxIds, keys, textSites, violations, nsList };
+  if (!nsList.length) return { keys, violations, nsList };
   for (const file of listSourceFiles()) {
     if (!isScanned(file)) continue;
     const source = fs.readFileSync(file, 'utf8');
     if (!/i18n/.test(source)) continue;
     const r = scanSource(file, source, nsList);
     for (const c of r.calls) {
-      if (c.kind === 'key') {
-        const uses = keys.get(c.ns);
-        if (!uses.has(c.id)) uses.set(c.id, []);
-        uses.get(c.id).push({ file: rel(file), line: c.line, fn: c.fn });
-        continue;
-      }
-      ids.get(c.ns).add(c.id);
-      textSites.get(c.ns).push({ file: rel(file), line: c.line, fn: c.fn, id: c.id });
-      if (c.ctx !== undefined) ctxIds.get(c.ns).set(c.id, c.ctx);
+      if (c.kind !== 'key') continue;
+      const uses = keys.get(c.ns);
+      if (!uses.has(c.id)) uses.set(c.id, []);
+      uses.get(c.id).push({ file: rel(file), line: c.line, fn: c.fn });
     }
     for (const v of r.violations) violations.push({ file: rel(file), ...v });
   }
-  return { ids, ctxIds, keys, textSites, violations, nsList };
+  return { keys, violations, nsList };
 }
 
 const sortedIds = (set) => [...set].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 
-const catalogue = (n, name) => readJson(path.join(n.dir, name), {});
-
-/** Table text of an en-US / nl entry: the catalogue value; a context id stores the text without the prefix. */
-function tablesFor(n, ids) {
-  const us = catalogue(n, 'en-US.json');
-  const nl = catalogue(n, 'nl.json');
-  const list = sortedIds(ids);
-  return { list, rows: [list, list.map((i) => us[i] ?? ''), list.map((i) => nl[i] ?? '')] };
-}
-
 function genSource(rows) {
-  const lit = (r, i) => '  ' + JSON.stringify((i === 0 ? r.map((x) => x.replace(SEP, CTX)) : r).join(SEP)) + ',';
+  const lit = (r) => '  ' + JSON.stringify(r.join(SEP)) + ',';
   return `// generated by tools/i18n-build.mjs (npm run i18n); git-ignored, do not edit\nconst tables: readonly [string, string, string] = [\n${rows.map(lit).join('\n')}\n];\nexport default tables;\n`;
 }
 
@@ -183,13 +168,13 @@ function writeIfChanged(file, content) {
   return true;
 }
 
-/** Reads the id list (the en-GB table) back from a messages.gen.ts. */
+/** Reads the en-GB texts (the first table) back from a messages.gen.ts. */
 function readGenIds(genFile) {
   const lines = fs.readFileSync(genFile, 'utf8').split('\n');
   const first = lines.find((l) => l.startsWith('  "'));
   if (first === undefined) return [];
   const s = JSON.parse(first.trim().replace(/,$/, ''));
-  return s === '' ? [] : s.split(SEP).map((x) => x.replace(CTX, SEP));
+  return s === '' ? [] : s.split(SEP);
 }
 
 // ---- messages (ICU subset, validator for the tools; the run-time parser is src/i18n/runtime.ts) ----
@@ -333,14 +318,13 @@ function usConverter() {
   return (text) => (exceptions.has(text) ? exceptions.get(text) : usText(text, EN_US_WORDS, exceptions));
 }
 
-/** en-US table for the extracted ids: { id: american text }; a context id loses its prefix. */
-function generateUS(ids, ctxIds = new Map()) {
+/** en-US table for a set of English texts: { text: american text }. */
+function generateUS(ids) {
   const { EN_US_WORDS } = loadContract();
   const exceptions = readJson(path.join(__dirname, 'en-US-exceptions.json'), {});
   const out = {};
   for (const id of sortedIds(ids)) {
-    const plain = ctxIds.has(id) ? id.slice(ctxIds.get(id).length + 1) : id;
-    out[id] = Object.prototype.hasOwnProperty.call(exceptions, id) ? exceptions[id] : usText(plain, EN_US_WORDS, exceptions);
+    out[id] = Object.prototype.hasOwnProperty.call(exceptions, id) ? exceptions[id] : usText(id, EN_US_WORDS, exceptions);
   }
   return out;
 }
@@ -353,25 +337,20 @@ const stableJson = (o) => JSON.stringify(o, null, 2) + '\n';
  */
 function buildAll() {
   const keys = require('./keys.cjs');
-  const { ids, violations, nsList } = extractAll();
+  const { violations, nsList } = extractAll();
   const res = [];
   for (const n of nsList) {
-    if (keys.hasKeys(n.dir)) {
-      const cat = keys.loadCatalogues(n.dir);
-      const t = keys.tablesForKeys(cat);
-      const changed = writeIfChanged(path.join(n.dir, 'messages.gen.ts'), genSource(t.rows));
-      writeIfChanged(path.join(n.dir, 'keys.gen.ts'), keys.typesSource(cat));
-      res.push({ ns: n.ns, count: t.count, changed });
-      continue;
-    }
-    const { list, rows } = tablesFor(n, ids.get(n.ns));
-    res.push({ ns: n.ns, count: list.length, changed: writeIfChanged(path.join(n.dir, 'messages.gen.ts'), genSource(rows)) });
+    const cat = keys.loadCatalogues(n.dir);
+    const t = keys.tablesForKeys(cat);
+    const changed = writeIfChanged(path.join(n.dir, 'messages.gen.ts'), genSource(t.rows));
+    writeIfChanged(path.join(n.dir, 'keys.gen.ts'), keys.typesSource(cat));
+    res.push({ ns: n.ns, count: t.count, changed });
   }
   return { res, violations };
 }
 
 module.exports = {
   ROOT, SRC, rel, loadContract, loadKeysContract, readJson, activeNamespaces, listSourceFiles, isScanned, scanSource, extractAll,
-  sortedIds, catalogue, tablesFor, genSource, writeIfChanged, readGenIds, parseMessage, braceDepth, pluralCategories, argSig, argNames,
+  sortedIds, genSource, writeIfChanged, readGenIds, parseMessage, braceDepth, pluralCategories, argSig, argNames,
   usText, usConverter, generateUS, stableJson, buildAll, closeAt,
 };

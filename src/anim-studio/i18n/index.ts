@@ -14,7 +14,7 @@ export type MessageId = MessageIndex;
  * tr() where it is rendered. Files the card editor or the card also compile use the 'labels' namespace
  * (src/i18n/labels) instead.
  */
-export const { t, tc, tx, m, locale } = i18nFor('anim-studio', tables) as unknown as KeyedNamespace<Keys>;
+export const { t, tx, m, locale } = i18nFor('anim-studio', tables) as unknown as KeyedNamespace<Keys>;
 
 /** Option rows (`{ label, value, ... }`) of a module-level table, with each m() label resolved for the current language. */
 export const tr = <R extends { label: MessageId }>(rows: readonly R[]): Array<Omit<R, 'label'> & { label: string }> =>

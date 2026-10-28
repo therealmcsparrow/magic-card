@@ -4,6 +4,7 @@ import '../src/shape-editor/index';
 import { loadCustomShapes } from '../src/utils/shape-custom-loader';
 import { studioStyles } from '../src/shape-editor/styles';
 import { SHORTCUTS } from '../src/shape-editor/names';
+import { msgIndex } from '../tools/i18n/test-msg';
 import type { McShapeStudio } from '../src/shape-editor/mc-shape-studio';
 import { LIP_HOST_ATTR } from '../src/contracts/ui-kit';
 
@@ -140,7 +141,7 @@ describe('Shape studio panel lips', () => {
   });
 
   it('the shortcut list names Ctrl and Command', () => {
-    expect(SHORTCUTS).toContain('Show or hide panels: Ctrl+\\ or ⌘\\');
+    expect(SHORTCUTS).toContain(msgIndex('shape-editor.names.show-or-hide-panels-ctrl-or'));
   });
 
   it('takes the Dutch names in a Dutch interface', async () => {

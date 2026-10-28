@@ -88,8 +88,8 @@
     "hash": "c78e17d1"
   },
   "card.config-validator.background-layers-only-the-first-max": {
-    "text": "background_layers: alleen de eerste {max} lagen worden gebruikt",
-    "hash": "aec4e6cd"
+    "text": "background_layers: alleen de eerste {max, plural, one {# laag wordt} other {# lagen worden}} gebruikt",
+    "hash": "056cb1af"
   },
   "card.config-validator.config-must-be-an-object": {
     "text": "De configuratie moet een object zijn",

@@ -9,5 +9,5 @@ import type { Keys } from './keys.gen';
  * Whoever shows a name awaits ready() where it already awaits the library (loadIconLibrary,
  * loadIconAnimator). Write t('icon-library.<file>.<text>'); the build replaces each key with its table index.
  */
-export const { t, tc, tx, m, ready } = i18nForLazy('icon-library', () => import(/* webpackChunkName: "i18n-icons" */ './messages.gen')) as unknown as KeyedNamespace<Keys> &
+export const { t, tx, m, ready } = i18nForLazy('icon-library', () => import(/* webpackChunkName: "i18n-icons" */ './messages.gen')) as unknown as KeyedNamespace<Keys> &
   Pick<ReturnType<typeof i18nForLazy>, 'ready'>;

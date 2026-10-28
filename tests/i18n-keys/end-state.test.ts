@@ -23,9 +23,8 @@ const run = (args: string[], cwd = REPO) => {
 };
 
 describe('AC1 end state: literal dotted keys everywhere, text-id path gone', () => {
-  it('[T17 T22] has a legacy count of 0 in every namespace', () => {
-    const counts = json<Record<string, number>>('tools/i18n/legacy-count.json');
-    expect(Object.fromEntries(Object.entries(counts).filter(([, n]) => n !== 0))).toEqual({});
+  it('[T17 T22] has no legacy count file left', () => {
+    expect(fs.existsSync(path.join(REPO, 'tools/i18n/legacy-count.json'))).toBe(false);
   });
   it('[T9-T17] gives every card namespace an en-GB.json', () => {
     const missing = namespaces().filter(([, dir]) => !fs.existsSync(path.join(REPO, dir, 'en-GB.json'))).map(([ns]) => ns);

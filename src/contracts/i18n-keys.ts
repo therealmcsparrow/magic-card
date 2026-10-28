@@ -1,6 +1,6 @@
 /*
- * Contract: i18n-keys. Version 1.0.0. Extends i18n (src/contracts/i18n.ts) with domain keys; i18n moves to 2.0.0
- * once the text-id path is gone (see "Two phases" below). Types and tool constants only: src/ imports types,
+ * Contract: i18n-keys. Version 1.0.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; the text-id path is gone
+ * (see "Text ids" below). Types and tool constants only: src/ imports types,
  * tools read the constants (the file has only type imports, which transpiling drops, so tools transpile and run
  * it like the i18n contract).
  *
@@ -26,7 +26,7 @@
  * A message in these files is the runtime's ICU subset: at most three brace levels (TOP in src/i18n/runtime.ts), so a select over a
  * plural with an argument in a branch is written as one key per select value; every plural and select has an
  * `other` branch; a plural branch is `=N` or one of the CLDR cardinal categories of its locale (Node's
- * Intl.PluralRules); no apostrophe stands before `{`, `}` or `#` (the runtime has no quoting, an ICU tool would).
+ * Intl.PluralRules); no apostrophe stands before `{`, `}` or `#` (the runtime has no quoting; deviation from icu.S3).
  * Every file is sorted by key, two-space JSON, LF, final newline (stable diffs; English stays visible in PRs).
  *
  * ── Source hash and stale translations ──
@@ -55,15 +55,12 @@
  * missing or extra argument fails tsc (npm run typecheck, on the source before the loader). The loader's numeric
  * ids type-check through the MessageIndex overload, which check-i18n allows only in loader output (D1).
  *
- * ── Two phases ──
- * Phase 1 (i18n 1.1.0, additive): tools accept keys beside British-text ids; the runtime is unchanged.
- * tools/i18n/legacy-count.json holds the number of text-id calls per namespace (a call of t, tx, m, lm or an alias
- * whose first argument is a string literal outside KEY_PATTERN, and every tc call); check-i18n --ci fails a count
- * that differs from it. A namespace that has an en-GB.json allows no text-id call at all, whatever the file says.
- * Phase 2 (i18n 2.0.0, breaking): the text-id path, tc() and the legacy count are removed. The runtime takes table
- * indices only; vitest runs the same rewrite as webpack (tools/i18n/vite-plugin.mjs). Magic Card Utils has no
- * build step: its generated mc-i18n-panel.js holds the key -> index map and exports t, tx and locale already bound,
- * so the panel calls tr('mcu-panel.place.item') and the shared runtime stays index-only.
+ * ── Text ids ──
+ * From i18n 2.0.0 the text-id path, tc() and the legacy count are gone. The runtime takes table indices only; vitest
+ * runs the same rewrite as webpack (tools/i18n/vite-plugin.mjs) and tests render a key through tools/i18n/test-msg.ts.
+ * A call whose first argument is not a literal key of its namespace is a check error (D1) and a build error.
+ * Magic Card Utils has no build step: its generated mc-i18n-panel.js holds the key -> index map and exports t, tx and
+ * locale already bound, so the panel calls tr('mcu-panel.place.item') and the shared runtime stays index-only.
  *
  * ── Exchange files (tools/i18n-flat.mjs, Weblate and Crowdin) ──
  * One flat file per locale under i18n/flat/ (card and Magic Card Utils namespaces together), ARB JSON (EXCHANGE_FORMAT):
@@ -83,9 +80,8 @@
  * | key not in en-GB.json -> build error (loader) and tsc error | en-GB entry without note or max, or vars not
  * matching the arguments -> check error (D8) | any locale text longer than max -> check error (D8) | stale entry
  * without a waiver -> release check error (D9) | waiver for an unknown key, an old hash or with an empty reason
- * -> check error (D9) | rename onto an existing key -> the rename tool refuses and writes nothing | legacy count
- * differing from tools/i18n/legacy-count.json, or any text-id call in a migrated namespace -> check error (D10) |
- * message nested deeper than three brace levels, with an apostrophe before `{`, `}` or `#`, or with a plural
+ * -> check error (D9) | rename onto an existing key -> the rename tool refuses and writes nothing | a text-id
+ * call -> check error (D1) and build error | message nested deeper than three brace levels, with an apostrophe before `{`, `}` or `#`, or with a plural
  * branch its locale does not have -> check error (D6) | exchange
  * file stale -> i18n-flat --check exit 1 | import of an unknown key or of a text that breaks D6 -> import refuses
  * and writes nothing.
@@ -105,7 +101,6 @@ export const EXCHANGE_DIR = 'i18n/flat';
 export const EXCHANGE_MAX_BYTES = 4_194_304;
 export const WAIVERS_FILE = 'i18n/waivers.json';
 export const RENAMES_FILE = 'i18n/renames.json';
-export const LEGACY_COUNT_FILE = 'tools/i18n/legacy-count.json';
 
 /** 'card-editor.design.background.label' */
 export type MessageKey = string;
@@ -137,8 +132,6 @@ export interface Rename {
   from: MessageKey;
   to: MessageKey;
 }
-/** tools/i18n/legacy-count.json: namespace -> text-id calls left (phase 1 only). */
-export type LegacyCount = Readonly<Record<string, number>>;
 
 /** The "@<key>" attributes of an exchange entry. */
 export interface ExchangeMeta {
@@ -164,14 +157,12 @@ export interface KeyedI18n<Keys extends { [K in keyof Keys]: KeyArgs }> {
 }
 
 /**
- * What a namespace's index.ts exports while the build still hands table indices to the bound functions:
- * KeyedI18n with the MessageIndex overloads the loader's output needs, an m() that checks its key and is typed as
- * the table index the build turns the call into, and tc until i18n 2.0.0.
+ * What a namespace's index.ts exports: KeyedI18n with the MessageIndex overloads the loader's output needs, and an
+ * m() that checks its key and is typed as the table index the build turns the call into.
  * Write `i18nFor('<ns>', tables) as unknown as KeyedNamespace<Keys>`.
  */
 export type KeyedNamespace<Keys extends { [K in keyof Keys]: KeyArgs }> = Pick<KeyedI18n<Keys>, 'locale'> & {
   t: KeyedI18n<Keys>['t'] & ((id: MessageIndex, args?: RichArgs) => string);
   tx: KeyedI18n<Keys>['tx'] & ((id: MessageIndex, args: RichArgs) => unknown[]);
   m: <K extends keyof Keys & string>(key: K) => MessageIndex;
-  tc: (context: string, id: MessageIndex, args?: RichArgs) => string;
 };

@@ -1,7 +1,6 @@
-// Writes src/<folder>/i18n/en-US.json of every active namespace from the en-GB ids in the source (or, for a
-// namespace with an en-GB.json, from its entries: text and the hash of the English), the EN_US_WORDS list of
-// the contract and tools/i18n/en-US-exceptions.json (dev time only; the file is committed and shipped as a
-// full table). The exceptions are keyed by the en-GB text. --check compares instead of writing (D4).
+// Writes src/<folder>/i18n/en-US.json of every namespace that has an en-GB.json: text and the hash of the English per
+// entry, from the EN_US_WORDS list of the contract and tools/i18n/en-US-exceptions.json (dev time only; the file is
+// committed and shipped as a full table). The exceptions are keyed by the en-GB text. --check compares instead of writing (D4).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,20 +26,12 @@ function keyCatalogue(n, golden) {
 }
 
 export function run({ check = false } = {}) {
-  const { ids, ctxIds, nsList } = lib.extractAll();
+  const { nsList } = lib.extractAll();
   const result = [];
   const golden = [];
   for (const n of nsList) {
-    let want;
-    if (keys.hasKeys(n.dir)) want = keyCatalogue(n, golden);
-    else {
-      const us = lib.generateUS(ids.get(n.ns), ctxIds.get(n.ns));
-      for (const [id, text] of Object.entries(us)) {
-        const gb = ctxIds.get(n.ns).has(id) ? id.slice(ctxIds.get(n.ns).get(id).length + 1) : id;
-        if (text !== gb) golden.push(`${n.ns}\t${id}\t${text}`);
-      }
-      want = lib.stableJson(us);
-    }
+    if (!keys.hasKeys(n.dir)) continue;
+    const want = keyCatalogue(n, golden);
     const file = path.join(n.dir, 'en-US.json');
     const have = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
     if (check) result.push({ ns: n.ns, ok: have === want });

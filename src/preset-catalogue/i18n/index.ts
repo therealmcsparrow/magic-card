@@ -8,4 +8,4 @@ import tables from './messages.gen';
  * magic-card-preset-catalogue.js, which no dashboard loads). Preset names are m() marks in the
  * entry files and read with t() where the entry is built. Write t('preset-catalogue.<file>.<text>'); the build replaces each key with its table index.
  */
-export const { t, tc, tx, m, locale } = i18nFor('preset-catalogue', tables) as unknown as KeyedNamespace<Keys>;
+export const { t, tx, m, locale } = i18nFor('preset-catalogue', tables) as unknown as KeyedNamespace<Keys>;

@@ -7,4 +7,4 @@ import tables from './messages.gen';
  * Messages of the controls chunk views (namespace 'controls', tables in magic-card-controls.js). Write
  * t('controls.<file>.<text>'); the build replaces each key with its table index, which the second signature accepts.
  */
-export const { t, tc, tx, m } = i18nFor('controls', tables) as unknown as KeyedNamespace<Keys>;
+export const { t, tx, m } = i18nFor('controls', tables) as unknown as KeyedNamespace<Keys>;

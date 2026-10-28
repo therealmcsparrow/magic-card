@@ -8,4 +8,4 @@ import tables from './messages.gen';
  * Write t('modules-extra.<file>.<text>'); the build replaces each key with its table index, which the second
  * signature accepts.
  */
-export const { t, tc, tx, m } = i18nFor('modules-extra', tables) as unknown as KeyedNamespace<Keys>;
+export const { t, tx, m } = i18nFor('modules-extra', tables) as unknown as KeyedNamespace<Keys>;

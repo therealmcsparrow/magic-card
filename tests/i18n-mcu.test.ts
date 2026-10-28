@@ -124,7 +124,7 @@ describe('tools/i18n-mcu.mjs', () => {
     gb['mcu-panel.panel.save'].text = 'Store';
     fs.writeFileSync(gbFile, JSON.stringify(gb, null, 2) + '\n');
     const errors = buildPanel(root).errors.join('\n');
-    expect(errors).toContain('D10');
+    expect(errors).toContain('D1 mcu-panel');
     expect(errors).toContain('is stale');
   });
 });

@@ -794,9 +794,9 @@ export function pasteTargetKeys(doc: AnimationDoc, clip: KeyClip, at: number, de
 
 export type SnapGrid = 'pct1' | 'pct5' | 's01' | 'fps30';
 export const SNAP_GRIDS: Array<{ id: SnapGrid; label: MessageId }> = [
-  { id: 'pct1', label: '1%' as unknown as MessageId },
-  { id: 'pct5', label: '5%' as unknown as MessageId },
-  { id: 's01', label: '0.1 s' as unknown as MessageId },
+  { id: 'pct1', label: m('anim-studio.keyframes-utils.1-percent') },
+  { id: 'pct5', label: m('anim-studio.keyframes-utils.5-percent') },
+  { id: 's01', label: m('anim-studio.keyframes-utils.tenth-of-a-second') },
   { id: 'fps30', label: m('anim-studio.keyframes-utils.30-fps') },
 ];
 

@@ -43,13 +43,13 @@
         "cap": 85000,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 84754
+        "measured": 84587
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 72704,
-      "measured": 72451
+      "cap": 72257,
+      "measured": 72257
     }
   },
   "files": {

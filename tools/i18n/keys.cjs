@@ -1,7 +1,7 @@
 /*
  * Domain keys (contract src/contracts/i18n-keys.ts): the key catalogues of a namespace (en-GB.json, en-US.json,
  * nl.json), source hashes, the compiled tables and their key -> index map, the generated key types, the
- * waivers and the legacy count. A namespace is a key namespace when its i18n folder holds an en-GB.json.
+ * waivers. A namespace is a key namespace when its i18n folder holds an en-GB.json.
  * Catalogue and waiver files are read into Maps, never merged into plain objects.
  */
 const fs = require('fs');
@@ -71,13 +71,10 @@ function sortedEntries(cat) {
     .sort((a, b) => byCode(a.gb, b.gb) || byCode(a.key, b.key));
 }
 
-/** Whether a shipped en-US or nl cell equal to its en-GB cell is written empty; on from i18n 2.0.0. */
-const EMPTY_CELLS = false;
-
 /**
  * Compiled tables of a key namespace: rows (en-GB, en-US, nl strings, as lib.genSource takes them) and the
- * key -> index map. Keys whose three texts are all equal share one entry; from i18n 2.0.0 (EMPTY_CELLS) a
- * shipped en-US or nl cell equal to its en-GB cell is written empty (the run time shows en-GB for an empty cell).
+ * key -> index map. Keys whose three texts are all equal share one entry; a shipped en-US or nl cell equal to its
+ * en-GB cell is written empty (the run time shows en-GB for an empty cell).
  */
 function tablesForKeys(cat) {
   const gb = [];
@@ -90,8 +87,8 @@ function tablesForKeys(cat) {
     if (!shared.has(sig)) {
       shared.set(sig, gb.length);
       gb.push(e.gb);
-      us.push(EMPTY_CELLS && e.us === e.gb ? '' : e.us);
-      nl.push(EMPTY_CELLS && e.nl === e.gb ? '' : e.nl);
+      us.push(e.us === e.gb ? '' : e.us);
+      nl.push(e.nl === e.gb ? '' : e.nl);
     }
     indexOf.set(e.key, shared.get(sig));
   }
@@ -189,10 +186,10 @@ function readWaivers(file = path.join(lib.ROOT, contract().WAIVERS_FILE)) {
 
 /**
  * Checks one key namespace. Returns [{ rule, level: 'error' | 'warn', msg }].
- *   cat: loadCatalogues result; uses: Map key -> call sites; textSites: text-id calls of the namespace.
+ *   cat: loadCatalogues result; uses: Map key -> call sites.
  *   spelling: text -> messages (D3). pending: the namespace's translations may be incomplete (D2 reports warnings). strict: stale is an error (D9).
  */
-function checkNamespace({ ns, cat, uses = new Map(), textSites = [], waivers = new Map(), pending = false, strict = true, spelling = () => [] }) {
+function checkNamespace({ ns, cat, uses = new Map(), waivers = new Map(), pending = false, strict = true, spelling = () => [] }) {
   const { KEY_PATTERN, KEY_MAX_CHARS, NOTE_MIN_CHARS } = contract();
   const out = [];
   const add = (rule, level, msg) => out.push({ rule, level, msg: `${ns} ${msg}` });
@@ -210,7 +207,6 @@ function checkNamespace({ ns, cat, uses = new Map(), textSites = [], waivers = n
     if (bad) add('D1', 'error', `"${key}" ${bad} (${sites[0].file}:${sites[0].line})`);
     else if (!cat.gb.has(key)) add('D1', 'error', `"${key}" is not in en-GB.json (${sites[0].file}:${sites[0].line})`);
   }
-  for (const s of textSites) add('D10', 'error', `${s.file}:${s.line} ${s.fn}("${s.id.slice(0, 40)}"): a text id in a namespace that has an en-GB.json; use a key`);
 
   const fileProblems = [
     ['gb', 'en-GB.json'],
@@ -275,23 +271,7 @@ function checkWaivers(waivers, catalogues) {
   return out;
 }
 
-/** Legacy count (D10): text-id calls per namespace against tools/i18n/legacy-count.json. */
-function legacyCounts(textSites) {
-  return Object.fromEntries([...textSites].map(([ns, sites]) => [ns, sites.length]).sort((a, b) => byCode(a[0], b[0])));
-}
-
-function compareLegacy(counts, recorded, migrated = new Set()) {
-  const out = [];
-  for (const [ns, n] of Object.entries(counts)) {
-    if (migrated.has(ns)) continue;
-    const want = Object.prototype.hasOwnProperty.call(recorded, ns) ? recorded[ns] : 0;
-    if (n !== want) out.push(`D10 ${ns}: ${n} text-id calls, ${contract().LEGACY_COUNT_FILE} holds ${want}; ${n > want ? 'use a key for new text' : 'lower the count (--update-legacy-count)'}`);
-  }
-  for (const ns of Object.keys(recorded)) if (!Object.prototype.hasOwnProperty.call(counts, ns)) out.push(`D10 ${ns}: in ${contract().LEGACY_COUNT_FILE} but not a namespace`);
-  return out;
-}
-
 module.exports = {
   sourceHash, readMap, loadCatalogues, hasKeys, sortedEntries, tablesForKeys, typesSource, canonicalJson, longestText,
-  readWaivers, checkNamespace, checkWaivers, legacyCounts, compareLegacy,
+  readWaivers, checkNamespace, checkWaivers,
 };
