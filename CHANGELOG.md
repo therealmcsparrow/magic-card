@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.11 (2026-10-28)
 
 ### Added
 -   **Draw Line, Rectangle, Ellipse and Freehand with the keyboard.** Tab to the drawing area, move a cursor with the arrow keys (Shift 5 units, Alt a tenth), and press Enter to set the start and then the end. Freehand places a point on each Enter and ends when you press Enter again on the last one. Escape drops the drawing and every step is announced.
