@@ -136,117 +136,117 @@
   },
   "layer-editor.bg-layer-editor.grid": {
     "text": "Grid",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Pattern choice for a pattern layer: crossing horizontal and vertical lines. Not the CSS grid display option.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.layer-type": {
     "text": "Layer type",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for the dropdown that picks what the background layer is (colour, gradient, image, pattern, camera).",
     "max": 20
   },
   "layer-editor.bg-layer-editor.layer-type-changed": {
     "text": "Layer type changed.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Confirmation read out to screen readers after the layer type is switched. A full sentence with a full stop.",
     "max": 35
   },
   "layer-editor.bg-layer-editor.leave-empty-to-use-the-card-s-device": {
     "text": "Leave empty to use the card's device",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Hint under the Device field: with no device chosen, the device of the card itself is used.",
     "max": 60
   },
   "layer-editor.bg-layer-editor.lines": {
     "text": "Lines",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Pattern choice for a pattern layer: straight parallel stripes. Different from Diagonal lines.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.motion-stops-2-minutes-after-the-last": {
     "text": "Motion stops 2 minutes after the last touch, which saves power on a wall tablet.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Hint under the pan and zoom setting. Keep the 2 minutes as written; it is a fixed value.",
     "max": 130
   },
   "layer-editor.bg-layer-editor.moves-slowly-pauses-when-the-card-is-off": {
     "text": "Moves slowly, pauses when the card is off screen and stays still when the device asks for reduced motion.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Hint under the pan and zoom setting. Reduced motion is the operating-system accessibility preference.",
     "max": 170
   },
   "layer-editor.bg-layer-editor.on": {
     "text": "On",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "State name or switch value in the background layer editor: the entity state 'on'. Not a preposition.",
     "max": 5
   },
   "layer-editor.bg-layer-editor.one-picture": {
     "text": "One picture",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Option in the background layer editor: a single image is used, not a changing set.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.opacity": {
     "text": "Opacity",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label in the background layer editor: how see-through the whole layer is.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.original-size": {
     "text": "Original size",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Picture sizing option: the picture keeps its own pixel size, neither stretched nor shrunk.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.pan-and-zoom": {
     "text": "Pan and zoom",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Setting name: the picture slowly drifts and zooms, like a documentary camera move.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.pan-and-zoom-work-on-a-still-picture": {
     "text": "Pan and zoom work on a still picture from a camera, not on live video.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Hint under the camera layer settings: pan and zoom need snapshot mode, not a live stream.",
     "max": 115
   },
   "layer-editor.bg-layer-editor.pattern": {
     "text": "Pattern",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Layer type and field label: a repeating decoration such as dots, lines, grid or checks.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.pattern-colour": {
     "text": "Pattern colour",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for a pattern layer: the colour of its dots, lines or squares.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.pictures-change-but-text-stays-darken": {
     "text": "Pictures change but text stays. Darken behind text works for all of them. On a wall tablet seen from across the room, use large text.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Hint about a slideshow of changing pictures. Darken behind text is the name of a setting; keep it in line with that label.",
     "max": 215
   },
   "layer-editor.bg-layer-editor.play": {
     "text": "Play",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button label in the background layer editor: starts the preview animation. A verb.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.position": {
     "text": "Position",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label in the background layer editor: where the layer sits in the card. Not the CSS position property.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.position-of-the-picture": {
     "text": "Position of the picture",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Group heading: controls where the picture is placed inside the layer (focus point, alignment).",
     "max": 40
   },
   "layer-editor.bg-layer-editor.preview": {
     "text": "Preview",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Heading of the small live preview of the layer in the editor. A noun.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.preview-not-saved": {
     "text": "Preview (not saved)",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Label on a preview showing changes that are not yet saved to the card.",
     "max": 35
   },
   "layer-editor.bg-layer-editor.quick-gradients": {
     "text": "Quick gradients",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Heading above ready-made gradient swatches that can be applied with one click.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.refresh-every": {
     "text": "Refresh every",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label before a time value: how often a camera snapshot is reloaded, such as 'Refresh every 10 s'.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.remove": {

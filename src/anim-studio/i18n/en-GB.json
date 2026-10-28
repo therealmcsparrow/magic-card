@@ -3734,27 +3734,27 @@
   },
   "anim-studio.particles-editor.shuffle": {
     "text": "Shuffle",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Button label in the particles editor that rolls a new random seed so the particles take different paths.",
     "max": 15
   },
   "anim-studio.particles-editor.shuffle-new-random-paths": {
     "text": "Shuffle: new random paths",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of the Shuffle button in the particles editor; explains that it gives the particles new random paths.",
     "max": 40
   },
   "anim-studio.particles-editor.simulation": {
     "text": "Simulation",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Section heading in the particles editor for choosing between the baked loop and the live simulation.",
     "max": 20
   },
   "anim-studio.particles-editor.size": {
     "text": "Size",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Heading or label for how large each particle is, in the particles editor. Not the size of the whole card.",
     "max": 10
   },
   "anim-studio.particles-editor.size-px": {
     "text": "Size (px)",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Number field label in the particles editor for the size of one particle in pixels; px is the pixel unit.",
     "max": 15
   },
   "anim-studio.particles-editor.slows-particles-down-over-time": {
@@ -3764,17 +3764,17 @@
   },
   "anim-studio.particles-editor.smallest-size": {
     "text": "Smallest size",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Slider label in the particles editor for the smallest size a particle shrinks to over its life.",
     "max": 25
   },
   "anim-studio.particles-editor.spawn": {
     "text": "Spawn",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Section heading in the particles editor for how and where new particles appear. Verb used as a noun.",
     "max": 10
   },
   "anim-studio.particles-editor.spawn-child-particles": {
     "text": "Spawn child particles",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of a switch in the particles editor; when on, each particle releases smaller particles of its own.",
     "max": 35
   },
   "anim-studio.particles-editor.spawns-seconds-s-after-birth-set-in-yaml": {
@@ -3787,32 +3787,32 @@
   },
   "anim-studio.particles-editor.speed": {
     "text": "speed",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Lowercase word for how fast particles move, used inside a longer sentence or a change label in the particles editor.",
     "max": 10
   },
   "anim-studio.particles-editor.speed-of-short-side-s": {
     "text": "Speed (% of short side/s)",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Number field label in the particles editor; particle speed as a percentage of the shorter side of the box per second.",
     "max": 40
   },
   "anim-studio.particles-editor.spin": {
     "text": "spin",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Lowercase word for how much particles rotate, used inside a longer sentence or a change label in the particles editor.",
     "max": 10
   },
   "anim-studio.particles-editor.spin-per-loop-deg": {
     "text": "Spin per loop (deg)",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Number field label in the particles editor; how many degrees a particle rotates during one loop.",
     "max": 35
   },
   "anim-studio.particles-editor.start-delay": {
     "text": "start delay",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Lowercase label for the wait before an emitter starts, used in a change label in the particles editor.",
     "max": 20
   },
   "anim-studio.particles-editor.start-delay-s": {
     "text": "Start delay (s)",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Number field label in the particles editor; seconds to wait before the emitter starts. s is the seconds symbol.",
     "max": 25
   },
   "anim-studio.particles-editor.swaps-the-preset-for-your-own-particles": {
@@ -3822,7 +3822,7 @@
   },
   "anim-studio.particles-editor.text": {
     "text": "Text",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Option in the particles editor for placing the emitter on the card's text. Not a text input field.",
     "max": 10
   },
   "anim-studio.particles-editor.the-box-of-the-card-s-icon-or-of-its": {
@@ -3877,7 +3877,7 @@
   },
   "anim-studio.particles-editor.timing": {
     "text": "Timing",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Section heading in the particles editor for start delay and loop length settings.",
     "max": 10
   },
   "anim-studio.particles-editor.to": {

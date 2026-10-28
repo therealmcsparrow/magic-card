@@ -5372,22 +5372,22 @@
   },
   "card-editor.item-menu.design": {
     "text": "Design",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu heading for copy and paste of the item's look.",
     "max": 10
   },
   "card-editor.item-menu.duplicate": {
     "text": "Duplicate",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that makes a copy of the selected item right after it.",
     "max": 15
   },
   "card-editor.item-menu.duplicate-row": {
     "text": "Duplicate row",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that copies the selected row, with its content, below itself.",
     "max": 25
   },
   "card-editor.item-menu.edit": {
     "text": "Edit",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that selects the item and opens its settings in the inspector.",
     "max": 10
   },
   "card-editor.item-menu.edit-card-settings": {
@@ -5420,7 +5420,7 @@
   },
   "card-editor.item-menu.module": {
     "text": "Module",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu heading for module actions such as copy, paste and replace.",
     "max": 10
   },
   "card-editor.item-menu.module-pasted-into-where": {
@@ -5434,17 +5434,17 @@
   },
   "card-editor.item-menu.move-down": {
     "text": "Move down",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that moves the item one place later in its list.",
     "max": 15
   },
   "card-editor.item-menu.move-to": {
     "text": "Move to…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that opens a list of other containers to move the item into; the ellipsis means more choices follow.",
     "max": 20
   },
   "card-editor.item-menu.move-up": {
     "text": "Move up",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that moves the item one place earlier in its list.",
     "max": 15
   },
   "card-editor.item-menu.moved-name-to-where": {
@@ -5521,12 +5521,12 @@
   },
   "card-editor.item-menu.paste-design": {
     "text": "Paste design",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that applies a previously copied look to the selected item.",
     "max": 20
   },
   "card-editor.item-menu.paste-module": {
     "text": "Paste module",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that inserts a previously copied module at this position.",
     "max": 20
   },
   "card-editor.item-menu.paste-module-after": {
@@ -5546,17 +5546,17 @@
   },
   "card-editor.item-menu.rename": {
     "text": "Rename",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that lets you type a new name for the item in the tree.",
     "max": 10
   },
   "card-editor.item-menu.replace-with": {
     "text": "Replace with…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that swaps the module for another type; the ellipsis means a list of types follows.",
     "max": 25
   },
   "card-editor.item-menu.reset": {
     "text": "Reset",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that returns the item's design to its defaults.",
     "max": 15
   },
   "card-editor.item-menu.reset-card-to-template": {
@@ -5665,7 +5665,7 @@
   },
   "card-editor.layers-here.behind-others": {
     "text": "Behind others",
-    "note": "Shown in layers here (card-editor).",
+    "note": "Layer option: the item is drawn underneath its neighbours.",
     "max": 25
   },
   "card-editor.layers-here.card-backdrop-layer-n": {
@@ -5678,17 +5678,17 @@
   },
   "card-editor.layers-here.normal": {
     "text": "Normal",
-    "note": "Shown in layers here (card-editor).",
+    "note": "Layer option: the item keeps its natural stacking order.",
     "max": 10
   },
   "card-editor.layers-here.on-top": {
     "text": "On top",
-    "note": "Shown in layers here (card-editor).",
+    "note": "Layer option: the item is drawn above its neighbours.",
     "max": 10
   },
   "card-editor.layout-glyph.1-column": {
     "text": "1 column",
-    "note": "Shown in layout glyph (card-editor).",
+    "note": "Accessible name of the small layout picture showing a single full-width column.",
     "max": 15
   },
   "card-editor.layout-glyph.from-to-to": {
@@ -5711,32 +5711,32 @@
   },
   "card-editor.library-sheet.close": {
     "text": "Close",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Accessible name of the button that closes the floating library window.",
     "max": 10
   },
   "card-editor.library-sheet.library": {
     "text": "Library",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Title bar of the floating window that lists ready-made modules and designs.",
     "max": 15
   },
   "card-editor.library-sheet.maximise": {
     "text": "Maximise",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Accessible name of the button that enlarges the floating library window to full size.",
     "max": 15
   },
   "card-editor.library-sheet.move-window": {
     "text": "Move window",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Accessible name of the drag handle that moves the floating library window.",
     "max": 20
   },
   "card-editor.library-sheet.resize-window": {
     "text": "Resize window",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Accessible name of the corner handle that resizes the floating library window.",
     "max": 25
   },
   "card-editor.library-sheet.restore-size": {
     "text": "Restore size",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Accessible name of the button that returns a maximised library window to its earlier size.",
     "max": 25
   },
   "card-editor.library-sheet.the-library-could-not-load-check-your": {
@@ -5746,42 +5746,42 @@
   },
   "card-editor.light-editor.brightness": {
     "text": "brightness",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Lower-case word in a list of light features, such as brightness, colours and effects.",
     "max": 20
   },
   "card-editor.light-editor.colour-temperature": {
     "text": "colour temperature",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Lower-case item in a list of light features: warm to cool white control.",
     "max": 30
   },
   "card-editor.light-editor.colours": {
     "text": "colours",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Lower-case item in a list of light features: full colour selection.",
     "max": 15
   },
   "card-editor.light-editor.compact-mode": {
     "text": "Compact mode",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Toggle label: show the light control in a smaller, denser layout.",
     "max": 20
   },
   "card-editor.light-editor.effects": {
     "text": "effects",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Lower-case item in a list of light features: built-in light effects such as colour loop.",
     "max": 15
   },
   "card-editor.light-editor.entity": {
     "text": "Entity",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Label of the picker for the light entity this control switches and dims.",
     "max": 10
   },
   "card-editor.light-editor.icon": {
     "text": "Icon",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Label of the picker for the icon shown on the light control.",
     "max": 10
   },
   "card-editor.light-editor.show-brightness": {
     "text": "Show brightness",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Toggle label: display the brightness slider on the light control.",
     "max": 25
   },
   "card-editor.light-editor.show-colour-picker": {
@@ -5796,7 +5796,7 @@
   },
   "card-editor.light-editor.show-effects": {
     "text": "Show effects",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Toggle label: display the effect picker on the light control.",
     "max": 20
   },
   "card-editor.light-editor.tap-the-icon-to-turn-the-light-on-or-off": {
@@ -5819,7 +5819,7 @@
   },
   "card-editor.magic-card-editor.loading-editor": {
     "text": "Loading editor",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Busy text shown while the card editor code downloads after it is opened.",
     "max": 25
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
@@ -5883,7 +5883,7 @@
   },
   "card-editor.markdown-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in markdown editor (card-editor).",
+    "note": "Label of the field for an entity attribute whose text is rendered as markdown.",
     "max": 15
   },
   "card-editor.markdown-editor.bold-italic-code": {
@@ -5893,7 +5893,7 @@
   },
   "card-editor.markdown-editor.content": {
     "text": "Content",
-    "note": "Shown in markdown editor (card-editor).",
+    "note": "Label of the text area where the markdown text is typed.",
     "max": 15
   },
   "card-editor.markdown-editor.entity-for-templates": {
@@ -5912,27 +5912,27 @@
   },
   "card-editor.media-picker.browse-media": {
     "text": "Browse media",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Button that opens the Home Assistant media browser to choose a file.",
     "max": 20
   },
   "card-editor.media-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Button that closes the media browser without choosing a file.",
     "max": 10
   },
   "card-editor.media-picker.filter-items": {
     "text": "Filter items",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Placeholder of the box that narrows the folder listing by name.",
     "max": 20
   },
   "card-editor.media-picker.loading": {
     "text": "Loading...",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Busy text shown while a media folder listing is fetched.",
     "max": 20
   },
   "card-editor.media-picker.media": {
     "text": "Media",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Label of the field that holds the chosen media file path.",
     "max": 10
   },
   "card-editor.media-picker.media-folders": {

@@ -1225,7 +1225,7 @@
   },
   "svg-editor.names.on-a-mac-tab-reaches-buttons-only-when": {
     "text": "On a Mac, Tab reaches buttons only when full keyboard access is on.",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help hint for macOS users. Mac and Tab stay as written; full keyboard access is a macOS system setting name.",
     "max": 110
   },
   "svg-editor.names.outline-stroke": {
@@ -1270,7 +1270,7 @@
   },
   "svg-editor.names.show-or-hide-panels-ctrl-or": {
     "text": "Show or hide panels: Ctrl+\\ or ⌘\\",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line for toggling the side panels. Ctrl, the backslash and the command symbol are keys and stay as written.",
     "max": 55
   },
   "svg-editor.names.simplify": {
@@ -1329,7 +1329,7 @@
   },
   "svg-editor.names.tools-v-select-a-points-p-pen-r": {
     "text": "Tools: V select, A points, P pen, R rectangle, E ellipse, L line, G polygon, S shapes, B freehand",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line listing one-letter tool shortcuts. The letters are keys and stay as written; translate only the tool names.",
     "max": 160
   },
   "svg-editor.names.triangle": {
@@ -1339,7 +1339,7 @@
   },
   "svg-editor.names.zoom-and-fit-0-grid-ctrl-snap-ctrl": {
     "text": "Zoom: = and -, fit: 0, grid: Ctrl+', snap: Ctrl+;",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line for view shortcuts. The symbols and Ctrl are keys and stay as written; translate only zoom, fit, grid and snap.",
     "max": 80
   },
   "svg-editor.pathtools.couldn-t-load-the-path-tools-try-again": {
@@ -1354,7 +1354,7 @@
   },
   "svg-editor.pathtools.name-applied-before-points-before-after": {
     "text": "{name} applied: {before} points before, {after} after.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Result message after a path tool runs. {name} is the tool name; {before} and {after} are point counts.",
     "max": 90,
     "vars": {
       "after": "The value that replaces after in the text.",
@@ -1384,37 +1384,37 @@
   },
   "svg-editor.tools.first-corner-set-move-then-press-enter": {
     "text": "First corner set. Move, then press Enter for the opposite corner.",
-    "note": "Shown in tools (svg-editor).",
+    "note": "Keyboard drawing status after the first corner of a box is set. Enter is a key name and stays as written.",
     "max": 105
   },
   "svg-editor.views.24-x-24": {
     "text": "24 x 24",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of the canvas size option: 24 by 24 units. Keep the numbers; the x is a multiplication sign.",
     "max": 15
   },
   "svg-editor.views.accent": {
     "text": "Accent",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of the second paint role of an icon, the colour that follows the card accent. Pairs with Main.",
     "max": 10
   },
   "svg-editor.views.accent-preview-colour": {
     "text": "Accent preview colour",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a colour picker that sets which colour the Accent paint shows while editing. Preview only; it is not saved in the icon.",
     "max": 35
   },
   "svg-editor.views.add-group": {
     "text": "Add group",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button in the layers panel that creates a new empty group. Verb phrase.",
     "max": 15
   },
   "svg-editor.views.add-point-after": {
     "text": "Add point after",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that inserts a new path point after the selected one. Same English as the menu entry; keep the translations equal.",
     "max": 25
   },
   "svg-editor.views.adds-name-as-new-layers-your-drawing-is": {
     "text": "Adds {name} as new layers. Your drawing is kept.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint under the import choice for a library icon. {name} is the icon name; the existing drawing is not replaced.",
     "max": 80,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1422,7 +1422,7 @@
   },
   "svg-editor.views.adds-size-kb": {
     "text": "adds {size} KB",
-    "note": "Shown in views (svg-editor).",
+    "note": "Lower-case fragment shown next to an option to tell how much it grows the file. {size} is a number; KB stays as written.",
     "max": 25,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -1430,17 +1430,17 @@
   },
   "svg-editor.views.align": {
     "text": "Align",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the section with buttons that align selected shapes to each other or the canvas.",
     "max": 10
   },
   "svg-editor.views.an-icon": {
     "text": "An icon",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option name in the new-drawing chooser: start from a single icon. Contrast with Blank canvas.",
     "max": 15
   },
   "svg-editor.views.an-icon-named-name-exists": {
     "text": "An icon named {name} exists.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Error under the name field when saving to the library. {name} is the name the person typed.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1448,37 +1448,37 @@
   },
   "svg-editor.views.angle": {
     "text": "Angle",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a number field for a rotation angle in degrees.",
     "max": 10
   },
   "svg-editor.views.arrow-keys-move-by-0-5-turn-on-snap-to": {
     "text": "Arrow keys move by 0.5. Turn on Snap to use the grid size.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint under the grid settings about nudging with arrow keys. 0.5 is a distance in units; Snap is the toggle label.",
     "max": 105
   },
   "svg-editor.views.back-to-card-editor": {
     "text": "Back to card editor",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that leaves the SVG editor and returns to the card editor.",
     "max": 35
   },
   "svg-editor.views.bevel": {
     "text": "Bevel",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter.",
     "max": 15
   },
   "svg-editor.views.blank": {
     "text": "Blank",
-    "note": "Shown in views (svg-editor).",
+    "note": "Short option label for an empty starting point, with no content. Shorter form of Blank canvas.",
     "max": 10
   },
   "svg-editor.views.blank-canvas": {
     "text": "Blank canvas",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option name in the new-drawing chooser: start with an empty drawing area.",
     "max": 20
   },
   "svg-editor.views.c-shapes-selected": {
     "text": "{c} shapes selected",
-    "note": "Shown in views (svg-editor).",
+    "note": "Status line when several shapes are selected. {c} is the count, always two or more.",
     "max": 35,
     "vars": {
       "c": "The value that replaces c in the text."
@@ -1486,17 +1486,17 @@
   },
   "svg-editor.views.cancel": {
     "text": "Cancel",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that closes a dialog without making any change.",
     "max": 10
   },
   "svg-editor.views.cap": {
     "text": "Cap",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the stroke line-end style (butt, round or square) of open lines. Not a hat or a limit.",
     "max": 10
   },
   "svg-editor.views.changes-every-card-that-uses-name": {
     "text": "Changes every card that uses {name}.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning under Save when editing a library icon. {name} is the icon name.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1509,87 +1509,87 @@
   },
   "svg-editor.views.click-and-drag-on-the-canvas-or-click": {
     "text": "Click and drag on the canvas, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets each corner.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tool hint for drawing a rectangle. Shift and Enter are key names and stay as written.",
     "max": 235
   },
   "svg-editor.views.click-and-drag-or-click-two-corners-hold": {
     "text": "Click and drag, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets a corner. Press S to pick another shape.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tool hint for the shapes tool. Shift, Enter and the letter S are keys and stay as written.",
     "max": 255
   },
   "svg-editor.views.click-to-place-a-point-click-the-first": {
     "text": "Click to place a point. Click the first point to close. Esc ends the path.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tool hint for the pen tool. Esc is a key name and stays as written.",
     "max": 120
   },
   "svg-editor.views.close": {
     "text": "Close",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that closes a panel or dialog. Not the verb for joining a path end to its start.",
     "max": 10
   },
   "svg-editor.views.close-path": {
     "text": "Close path",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that joins the last point of an open path back to the first, making a closed shape.",
     "max": 20
   },
   "svg-editor.views.copy-as-svg": {
     "text": "Copy as SVG",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that copies the drawing to the clipboard as SVG code. SVG stays as written.",
     "max": 20
   },
   "svg-editor.views.corner": {
     "text": "Corner",
-    "note": "Shown in views (svg-editor).",
+    "note": "Point type with a sharp angle, as opposed to Smooth. Same English as the menu entry; keep the translations equal.",
     "max": 10
   },
   "svg-editor.views.corner-radius": {
     "text": "Corner radius",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a number field for how round the corners of a rectangle are.",
     "max": 25
   },
   "svg-editor.views.corners": {
     "text": "Corners",
-    "note": "Shown in views (svg-editor).",
+    "note": "Plural heading for the rounded-corner settings of a shape. Related to Corner radius.",
     "max": 15
   },
   "svg-editor.views.could-not-reach-magic-card-utils-your": {
     "text": "Could not reach Magic Card Utils. Your work is safe.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Error when saving to the library fails to connect. Magic Card Utils is a product name and stays as written.",
     "max": 85
   },
   "svg-editor.views.create": {
     "text": "Create",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that starts a new drawing from the chosen option.",
     "max": 10
   },
   "svg-editor.views.custom": {
     "text": "Custom",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option that lets the person type their own value instead of a preset, such as a canvas or grid size.",
     "max": 10
   },
   "svg-editor.views.custom-grid-size": {
     "text": "Custom grid size",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible label of the number field for a self-chosen grid spacing.",
     "max": 30
   },
   "svg-editor.views.dark": {
     "text": "Dark",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for previewing the drawing on a dark background. Pairs with Light.",
     "max": 10
   },
   "svg-editor.views.decimals": {
     "text": "Decimals",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for how many decimal places the exported SVG numbers keep.",
     "max": 15
   },
   "svg-editor.views.delete": {
     "text": "Delete",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that removes the selected item. Same English as the menu entry; keep the translations equal.",
     "max": 15
   },
   "svg-editor.views.delete-name": {
     "text": "Delete {name}",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button or dialog title for deleting a library icon. {name} is the icon name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1597,7 +1597,7 @@
   },
   "svg-editor.views.delete-point": {
     "text": "Delete point",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that removes the selected path point.",
     "max": 20
   },
   "svg-editor.views.deleted-name-cards-that-use-it-show-the": {
@@ -1610,7 +1610,7 @@
   },
   "svg-editor.views.details": {
     "text": "Details",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a button that expands extra information about a message or setting.",
     "max": 15
   },
   "svg-editor.views.dismiss": {
