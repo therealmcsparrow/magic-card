@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 85000,
+        "cap": 84549,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 84587
+        "measured": 84549
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 72257,
-      "measured": 72257
+      "cap": 72127,
+      "measured": 72127
     }
   },
   "files": {

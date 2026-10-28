@@ -1,12 +1,12 @@
 // DOM-diff gate. Renders every gallery fixture (tools/fixtures/gallery/NNN.yaml) through the
 // real MagicCard.setConfig in happy-dom, with a fixed hass mock, once with the current build and once with the
-// reference build (git archive edc5d05, built in .cache/dom-diff/), serialises the shadow trees and compares them.
+// reference build (git archive 01540cd2, built in .cache/dom-diff/), serialises the shadow trees and compares them.
 //
 // Usage:
-//   node tools/dom-diff.mjs                       current = ./dist, reference = edc5d05 (built once, cached)
+//   node tools/dom-diff.mjs                       current = ./dist, reference = 01540cd2 (built once, cached)
 //   node tools/dom-diff.mjs --dist <dir>          current = <dir> (a webpack output directory)
 //   node tools/dom-diff.mjs --build-head          current = a fresh build of `git archive HEAD` (clean-tree proof)
-//   node tools/dom-diff.mjs --ref <rev>           reference revision (default edc5d05)
+//   node tools/dom-diff.mjs --ref <rev>           reference revision (default 01540cd2)
 //   node tools/dom-diff.mjs --only 001,063        limit to fixture ids
 //   node tools/dom-diff.mjs --dump <dir>          also write both serialisations as <dir>/{current,reference}/NNN.txt
 //   node tools/dom-diff.mjs --selftest            normaliser and comparison rules, no browser, no build
@@ -32,7 +32,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURES = path.join(ROOT, 'tools', 'fixtures', 'gallery');
 const CACHE = path.join(ROOT, '.cache', 'dom-diff'); // .cache/ is git-ignored
-const DEFAULT_REF = 'edc5d05';
+const DEFAULT_REF = '01540cd2';
 const MAX_FIXTURE_BYTES = 262144;
 const MAX_ALIASES = 1000;
 

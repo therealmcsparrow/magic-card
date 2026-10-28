@@ -10,7 +10,8 @@
 //   base figure that went up (or a number that was removed) fails unless approved_raises carries a matching entry (field, from, to).
 //   Entries already in the base file must keep their field, from and to, in place.
 // - final cap: the last stage cap may sit above 61,440 B (a warning, 61,440 B stays the target) only when the latest approved_raises
-//   entry with field /entry/stages/3/cap has "to" equal to that cap. Later entries supersede earlier ones.
+//   entry with field /entry/stages/3/cap has a "to" at or above that cap (a cap stepped down below the approved figure stays
+//   allowed; a cap above the base-branch cap still needs its own entry, see raises). Later entries supersede earlier ones.
 // - siblings: every dist .js has a .js.br and a .js.gz next to it (tools/compress-dist.mjs writes them), each unpacks to that
 //   .js byte for byte, and a .br or .gz with no .js fails (an orphan, or a stale copy HA would keep serving). Siblings have no size cap of
 //   their own, except magic-card.js.br: <= entry.br.cap when set, and always <= the active stage gzip cap.
@@ -158,9 +159,9 @@ function checkLadder(c) {
   const last = eff[3];
   if (last !== null && last > FINAL_CAP) {
     const latest = c.approved_raises.filter((d) => d.field === FINAL_CAP_EXEMPTION.field).at(-1);
-    const hit = latest && latest.to === last ? latest : undefined;
+    const hit = latest && last <= latest.to ? latest : undefined;
     if (hit) console.warn(`WARN ${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B (+${last - FINAL_CAP} B), allowed by approved_raises "${hit.id}"; ${FINAL_CAP} B stays the target`);
-    else fail(`${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B. Only the latest approved_raises entry with field "${FINAL_CAP_EXEMPTION.field}" and to ${last} allows it`);
+    else fail(`${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B. Only the latest approved_raises entry with field "${FINAL_CAP_EXEMPTION.field}" and a to of at least ${last} allows it`);
   }
   const active = STAGES.indexOf(c.entry.current_stage);
   if (eff[active] === null) fail(`current_stage ${c.entry.current_stage} has no cap: set its cap in the stage-close change first`);

@@ -133,12 +133,13 @@ module.exports = (env, argv) => {
         ? [
             new TerserPlugin({
               // `minimizerOptions` and `format`, not the deprecated `terserOptions` and `output` aliases.
-              // No `unsafe*` flag and no `mangle.properties`. `module` and `toplevel` are
+              // No `unsafe*` flag and no `mangle.properties`; `pure_funcs` stays off. `module` and `toplevel` are
               // left to the plugin, which sets `module` from the asset's javascriptModule info. `pure_getters` stays at its default.
               minimizerOptions: {
                 // the ES ceiling of the floor, at the top level so it covers compress and format; the plugin would derive 2020
                 ecma: 2021,
-                compress: { passes: 2 },
+                // keep_fargs: false drops unused trailing parameters (README: needed only by code that reads Function.length; no source or bundled dependency reads a function's arity)
+                compress: { passes: 3, keep_fargs: false },
                 format: {
                   // only the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0)
                   comments: (_node, comment) => /^!\s*Material Design Icons/.test(comment.value),
