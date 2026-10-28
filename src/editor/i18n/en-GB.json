@@ -2978,7 +2978,7 @@
   },
   "card-editor.dropdown-editor.option-n": {
     "text": "Option {n}",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Default label of one option row in the dropdown editor. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -2991,7 +2991,7 @@
   },
   "card-editor.dropdown-editor.sets-attributes-empty-fallback": {
     "text": "Sets {attributes}; empty: {fallback}.",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Helper text in the dropdown editor. {attributes} is the entity attribute name(s) the dropdown writes; {fallback} describes what is used when it is empty. Keep both unchanged.",
     "max": 60,
     "vars": {
       "attributes": "The value that replaces attributes in the text.",
@@ -3015,7 +3015,7 @@
   },
   "card-editor.dropdown-editor.value-is-not-one-of-the-entity-s-options": {
     "text": "\"{value}\" is not one of the entity's options.",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Warning in the dropdown editor. {value} is the saved value, shown in quotes; the entity is the select or input_select being controlled.",
     "max": 75,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -3023,7 +3023,7 @@
   },
   "card-editor.editor-state.tab-n": {
     "text": "Tab {n}",
-    "note": "Shown in editor state (card-editor).",
+    "note": "Fallback name of an unnamed tab in the editor state. {n} is the tab position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3116,7 +3116,7 @@
   },
   "card-editor.entity-source.attributes-of-id-source": {
     "text": "Attributes of {id} ({source})",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Group heading above an attribute list. {id} is an entity ID such as light.kitchen (do not translate); {source} names where the entity comes from, for example the card or module.",
     "max": 50,
     "vars": {
       "id": "The value that replaces id in the text.",
@@ -3160,7 +3160,7 @@
   },
   "card-editor.entity-source.from-source-name": {
     "text": "From {source}: {name}",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Dropdown option for an entity taken from another place. {source} names that place (a translated word); {name} is the entity's name, which is not translated.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3169,7 +3169,7 @@
   },
   "card-editor.entity-source.name-not-found": {
     "text": "{name} (not found)",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Option for a saved entity that no longer exists. {name} is the saved entity name or ID; do not translate it.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3187,7 +3187,7 @@
   },
   "card-editor.entity-source.nothing-chosen-yet-to-use-the-card-s": {
     "text": "Nothing chosen yet. To use the card's device, set it in {link}.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Helper text. {link} is a clickable link to the card's settings section, with its own translated label; keep the placeholder where the link should appear.",
     "max": 105,
     "vars": {
       "link": "The value that replaces link in the text."
@@ -3195,7 +3195,7 @@
   },
   "card-editor.entity-source.now-using-name": {
     "text": "Now using {name}.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Status line naming the entity in use. {name} is the entity name; do not translate it. The next key adds where it comes from.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3203,7 +3203,7 @@
   },
   "card-editor.entity-source.now-using-name-from-the-source": {
     "text": "Now using {name} from the {source}.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Status line like the previous key, with an origin. {name} is the entity name (not translated); {source} is a translated noun for the origin, such as the card or the module.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3222,7 +3222,7 @@
   },
   "card-editor.entity-source.pick-kind": {
     "text": "Pick {kind}",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Button or placeholder asking the user to choose something. {kind} is a translated noun with its article, such as an entity, a device or an area.",
     "max": 20,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -3240,7 +3240,7 @@
   },
   "card-editor.entity-source.same-as-source": {
     "text": "Same as {source}",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Dropdown option meaning use the same entity as another place. {source} is a translated noun for that place, such as the card or the module. Also used in the structure outline.",
     "max": 30,
     "vars": {
       "source": "The value that replaces source in the text."
@@ -3268,7 +3268,7 @@
   },
   "card-editor.entity-source.this-tile-needs-kind-the-source-s-device": {
     "text": "This tile needs {kind}. The {source}'s device is {thing}, so the tile stays empty.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Warning on a tile. {kind} is what the tile needs (an entity, an area...); {source} is a translated noun such as card or module; {thing} is what the device actually is (a device, an area...). All three are translated nouns.",
     "max": 135,
     "vars": {
       "kind": "The value that replaces kind in the text.",
@@ -3353,7 +3353,7 @@
   },
   "card-editor.flows-editor.collapse-flow-n": {
     "text": "Collapse flow {n}",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Accessible label of a button that folds one flow closed. {n} is the flow position, counting from 1. Opposite of the expand key.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3386,7 +3386,7 @@
   },
   "card-editor.flows-editor.delete-flow-n": {
     "text": "Delete flow {n}",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Accessible label of the button that deletes one flow. {n} is the flow position, counting from 1.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3419,7 +3419,7 @@
   },
   "card-editor.flows-editor.expand-flow-n": {
     "text": "Expand flow {n}",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Accessible label of a button that opens one folded flow. {n} is the flow position, counting from 1. Opposite of the collapse key.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3427,7 +3427,7 @@
   },
   "card-editor.flows-editor.flow-n": {
     "text": "Flow {n}",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Heading of one flow (an animated connection between modules) in the flows editor. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3480,7 +3480,7 @@
   },
   "card-editor.flows-editor.label-no-id": {
     "text": "{label} (no id)",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option for a module that has no ID, so it cannot be linked by ID. {label} is the module's display name; keep it unchanged. Translate only the words no id.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -3533,7 +3533,7 @@
   },
   "card-editor.flows-editor.min-to-max": {
     "text": "{min} to {max}",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "A numeric range readout. {min} and {max} are numbers, possibly with a unit, already formatted for the locale.",
     "max": 25,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -3552,7 +3552,7 @@
   },
   "card-editor.flows-editor.module-not-found-id": {
     "text": "Module not found ({id})",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option for a flow end that points to a module that no longer exists. {id} is the saved module ID; do not translate it.",
     "max": 40,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -3560,7 +3560,7 @@
   },
   "card-editor.flows-editor.modules-marked-no-id-come-from-the": {
     "text": "Modules marked (no id) come from the template. {hint} to connect it.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Helper text. (no id) matches the label-no-id key and should be translated the same way. {hint} is a translated sentence start that tells the user what to do, for example how to give the module an ID; it begins the second sentence.",
     "max": 110,
     "vars": {
       "hint": "The value that replaces hint in the text."
@@ -3708,7 +3708,7 @@
   },
   "card-editor.flows.column-n": {
     "text": "Column {n}",
-    "note": "Shown in flows (card-editor).",
+    "note": "Name of a column in the flows view. {n} is its position, counting from 1. Same English as the inspector, item menu and outline keys, which are shown elsewhere.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3721,7 +3721,7 @@
   },
   "card-editor.flows.module-n": {
     "text": "Module {n}",
-    "note": "Shown in flows (card-editor).",
+    "note": "Fallback name of a module in the flows view. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3729,7 +3729,7 @@
   },
   "card-editor.flows.row-n": {
     "text": "Row {n}",
-    "note": "Shown in flows (card-editor).",
+    "note": "Name of a row in the flows view. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3852,7 +3852,7 @@
   },
   "card-editor.forecast-editor.this-entity-has-no-type-forecast": {
     "text": "This entity has no {type} forecast; {fallback} is shown.",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Warning in the weather forecast editor. {type} and {fallback} are forecast kinds such as daily, hourly or twice daily, already translated; they sit in the middle of the sentence.",
     "max": 90,
     "vars": {
       "fallback": "The value that replaces fallback in the text.",
@@ -3866,7 +3866,7 @@
   },
   "card-editor.forecast-editor.type-not-provided-by-this-entity": {
     "text": "{type} (not provided by this entity)",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Dropdown option for a forecast kind the weather entity does not offer. {type} is a translated kind such as daily or hourly.",
     "max": 60,
     "vars": {
       "type": "The value that replaces type in the text."
@@ -3969,7 +3969,7 @@
   },
   "card-editor.gradient-editor.angle-degrees": {
     "text": "{angle} degrees",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Accessible value text of the gradient angle slider. {angle} is a whole number from 0 to 360.",
     "max": 25,
     "vars": {
       "angle": "The value that replaces angle in the text."
@@ -3997,7 +3997,7 @@
   },
   "card-editor.gradient-editor.name-gradient-type": {
     "text": "{name} gradient type",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Accessible label of one gradient type choice. {name} is the translated type name, such as Linear or Radial.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4010,7 +4010,7 @@
   },
   "card-editor.gradient-editor.remove-stop-num": {
     "text": "Remove stop {num}",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Accessible label of the button that removes one colour stop of a gradient. {num} is the stop position, counting from 1.",
     "max": 30,
     "vars": {
       "num": "The value that replaces num in the text."
@@ -4023,7 +4023,7 @@
   },
   "card-editor.gradient-editor.stop-num-colour": {
     "text": "Stop {num} colour",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Accessible label of the colour picker of one gradient stop. {num} is the stop position, counting from 1.",
     "max": 30,
     "vars": {
       "num": "The value that replaces num in the text."
@@ -4031,7 +4031,7 @@
   },
   "card-editor.gradient-editor.stop-num-of-n": {
     "text": "Stop {num} of {n}",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Accessible label of a gradient stop handle. {num} is its position, counting from 1; {n} is the total number of stops.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -4045,7 +4045,7 @@
   },
   "card-editor.gradient-editor.up-to-max-stops": {
     "text": "Up to {max} stops",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Hint of the most colour stops a gradient can have. {max} is a whole number, always 2 or more, so no singular form is needed.",
     "max": 30,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -4263,7 +4263,7 @@
   },
   "card-editor.icon-fx-editor.auto-for-this-entity-rule": {
     "text": "Auto for this entity: {rule}.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Helper text for the Auto choice. {rule} is a translated short description of what Auto picks for the current entity.",
     "max": 50,
     "vars": {
       "rule": "The value that replaces rule in the text."
@@ -4286,7 +4286,7 @@
   },
   "card-editor.icon-fx-editor.colour-n": {
     "text": "Colour {n}",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of one colour field of an icon effect. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4359,7 +4359,7 @@
   },
   "card-editor.icon-fx-editor.empty-the-module-s-entity-entity": {
     "text": "Empty: the module's entity ({entity}).",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Helper text for an empty entity field. {entity} is the module's entity ID, for example light.kitchen; do not translate it.",
     "max": 65,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -4367,7 +4367,7 @@
   },
   "card-editor.icon-fx-editor.empty-the-primary-colour-at-pct": {
     "text": "Empty: the primary colour at {pct}%.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Helper text for an empty colour field. {pct} is a whole number from 0 to 100, the opacity of the primary colour; the percent sign is part of the text.",
     "max": 60,
     "vars": {
       "pct": "The value that replaces pct in the text."
@@ -4440,7 +4440,7 @@
   },
   "card-editor.icon-fx-editor.list-and-last": {
     "text": "{list} and {last}",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Joins a list of items into a phrase. {list} is the earlier items already separated by commas; {last} is the final item. Used in the SVG-contains messages. Adapt the conjunction and commas to the locale.",
     "max": 30,
     "vars": {
       "last": "The value that replaces last in the text.",
@@ -4454,7 +4454,7 @@
   },
   "card-editor.icon-fx-editor.makes-your-own-copy-the-original-stays": {
     "text": "Makes your own copy. The original stays in {pack}.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Helper text next to a copy button. {pack} is the name of the icon pack the original belongs to; do not translate it.",
     "max": 80,
     "vars": {
       "pack": "The value that replaces pack in the text."
@@ -4477,7 +4477,7 @@
   },
   "card-editor.icon-fx-editor.module-entity-entity": {
     "text": "Module entity ({entity})",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Dropdown option meaning use the entity of this module. {entity} is its entity ID; do not translate it. Same English as the ring and value background editors.",
     "max": 40,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -4495,7 +4495,7 @@
   },
   "card-editor.icon-fx-editor.n-set": {
     "text": "{n} set",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Short badge counting how many options are set (filled in). {n} is a number, 1 or more. Set is the adjective, not the noun.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4503,7 +4503,7 @@
   },
   "card-editor.icon-fx-editor.now-device": {
     "text": "Now: {device}.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Status line showing the current value. {device} is the name of the current device, which is not translated.",
     "max": 25,
     "vars": {
       "device": "The value that replaces device in the text."
@@ -4551,7 +4551,7 @@
   },
   "card-editor.icon-fx-editor.remove-colour-n": {
     "text": "Remove colour {n}",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Accessible label of the button that removes one colour of an icon effect. {n} is its position, counting from 1.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4574,7 +4574,7 @@
   },
   "card-editor.icon-fx-editor.saved-icon-name-was-not-found-the-card": {
     "text": "Saved icon \"{name}\" was not found. The card shows the default icon.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Warning when a saved icon is missing. {name} is the saved icon name, shown in quotes; do not translate it.",
     "max": 110,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4622,7 +4622,7 @@
   },
   "card-editor.icon-fx-editor.the-empty-part-uses-the-colour-colour": {
     "text": "The empty part uses the colour {colour} (set in YAML); a value here replaces it.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Helper text. {colour} is the colour value written in the YAML, such as #ff8800 or a CSS name; do not translate it. YAML stays in English.",
     "max": 130,
     "vars": {
       "colour": "The value that replaces colour in the text."
@@ -4640,7 +4640,7 @@
   },
   "card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try": {
     "text": "This SVG contains {list}. Remove it and try again.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Error for an unsafe SVG file. {list} is one disallowed item, such as a script. Singular: it. The next key is the plural form (them), used when several items are found.",
     "max": 80,
     "vars": {
       "list": "The value that replaces list in the text."
@@ -4648,7 +4648,7 @@
   },
   "card-editor.icon-fx-editor.this-svg-contains-list-remove-them-and": {
     "text": "This SVG contains {list}. Remove them and try again.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Error for an unsafe SVG file. {list} is several disallowed items joined with the list-and-last key. Plural: them. The previous key is the singular form (it).",
     "max": 85,
     "vars": {
       "list": "The value that replaces list in the text."
@@ -4826,7 +4826,7 @@
   },
   "card-editor.icon-picker.keep-a-copy-in-this-card-adds-size": {
     "text": "Keep a copy in this card (adds {size})",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Checkbox label. {size} is a formatted size such as 800 B or 2 KB, built from the n-b and size-kb keys; it is not a plain number.",
     "max": 65,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -4864,7 +4864,7 @@
   },
   "card-editor.icon-picker.my-icons-n": {
     "text": "My icons ({n})",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Tab or heading for the user's own saved icons. {n} is how many there are, 0 or more.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4872,7 +4872,7 @@
   },
   "card-editor.icon-picker.n": {
     "text": "{n, plural, one {# icon found} other {# icons found}}",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Search result count under the icon picker. {n} is the number of matches, 0 or more; give every plural form your language needs.",
     "max": 25,
     "vars": {
       "n": "The count the text is about."
@@ -4880,7 +4880,7 @@
   },
   "card-editor.icon-picker.n-b": {
     "text": "{n} B",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "File size in bytes. {n} is a whole number; B is the unit symbol for bytes, not a letter to translate unless the locale uses a different symbol. Larger sizes use the size-kb key.",
     "max": 10,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4928,7 +4928,7 @@
   },
   "card-editor.icon-picker.showing-shown-of-total-refine-the-search": {
     "text": "Showing {shown} of {total}. Refine the search to see more.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Message under a capped icon list. {shown} is how many icons are listed; {total} is how many match the search. Both are whole numbers.",
     "max": 95,
     "vars": {
       "shown": "The value that replaces shown in the text.",
@@ -4937,7 +4937,7 @@
   },
   "card-editor.icon-picker.size-kb": {
     "text": "{size} KB",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "File size in kilobytes. {size} is a number that may have one decimal place, already formatted for the locale; KB is the unit symbol. Smaller sizes use the n-b key.",
     "max": 15,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -5100,7 +5100,7 @@
   },
   "card-editor.inspector.column-n": {
     "text": "Column {n}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Name of a column in the inspector header. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -5138,7 +5138,7 @@
   },
   "card-editor.inspector.layout-layout": {
     "text": "layout {layout}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Lower-case caption in the inspector, shown mid-line after other details. {layout} is the layout name, such as a column ratio; do not translate it. The selection key is the capitalised twin.",
     "max": 25,
     "vars": {
       "layout": "The value that replaces layout in the text."
@@ -5146,7 +5146,7 @@
   },
   "card-editor.inspector.n": {
     "text": "{n, plural, one {# row} other {# rows}}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Count of rows in the inspector summary. {n} is 0 or more. The next two keys count columns and modules.",
     "max": 10,
     "vars": {
       "n": "The count the text is about."
@@ -5154,7 +5154,7 @@
   },
   "card-editor.inspector.n-2": {
     "text": "{n, plural, one {# column} other {# columns}}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Count of columns in the inspector summary. {n} is 0 or more. Sits next to the row and module counts.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -5162,7 +5162,7 @@
   },
   "card-editor.inspector.n-3": {
     "text": "{n, plural, one {# module} other {# modules}}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Count of modules in the inspector summary. {n} is 0 or more. Same English as the selection and studio counts, which appear elsewhere.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -5175,7 +5175,7 @@
   },
   "card-editor.inspector.row-n": {
     "text": "Row {n}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Name of a row in the inspector header. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -5183,7 +5183,7 @@
   },
   "card-editor.inspector.select-label": {
     "text": "Select {label}",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Accessible label of a button that selects an item. {label} is that item's name, such as Row 2 or a module name; it is already translated.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -5291,7 +5291,7 @@
   },
   "card-editor.item-menu.column-n": {
     "text": "Column {n}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Name of a column in the item menu, for example as a move target. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -5344,7 +5344,7 @@
   },
   "card-editor.item-menu.delete-column-name-and-its-n": {
     "text": "Delete column \"{name}\" and its {n, plural, one {# module} other {# modules}}?",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Confirmation question before deleting a column. {name} is the column name, shown in quotes; {n} is how many modules it holds, 1 or more. The delete-tab key is the same question for a tab.",
     "max": 70,
     "vars": {
       "n": "The count the text is about.",
@@ -5363,7 +5363,7 @@
   },
   "card-editor.item-menu.delete-tab-name-and-its-n": {
     "text": "Delete tab \"{name}\" and its {n, plural, one {# module} other {# modules}}?",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Confirmation question before deleting a tab. {name} is the tab name, shown in quotes; {n} is how many modules it holds, 1 or more. The delete-column key is the same question for a column.",
     "max": 65,
     "vars": {
       "n": "The count the text is about.",
@@ -5407,7 +5407,7 @@
   },
   "card-editor.item-menu.into-container": {
     "text": "Into {container}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu item that moves the selected item inside another. {container} is the name of the target row, column or tab. The out-to-parent key is the opposite.",
     "max": 30,
     "vars": {
       "container": "The value that replaces container in the text."
@@ -5425,7 +5425,7 @@
   },
   "card-editor.item-menu.module-pasted-into-where": {
     "text": "{module} pasted into {where}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Toast after pasting. {module} is the pasted module's name; {where} is the target location, such as Row 1 Column 2.",
     "max": 45,
     "vars": {
       "module": "The value that replaces module in the text.",
@@ -5449,7 +5449,7 @@
   },
   "card-editor.item-menu.moved-name-to-where": {
     "text": "Moved {name} to {where}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Toast after moving an item. {name} is the moved item's name; {where} is the target location. Same English as the structure outline key.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -5458,7 +5458,7 @@
   },
   "card-editor.item-menu.name-actions": {
     "text": "{name} actions",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Accessible label of the button that opens the actions menu of one item. {name} is the item's name. Actions here means a menu of commands, not Home Assistant tap actions.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5466,7 +5466,7 @@
   },
   "card-editor.item-menu.name-copied": {
     "text": "{name} copied",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Toast after copying an item. {name} is its name. Differs from the next keys: this copies the whole item, not its design or YAML.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5474,7 +5474,7 @@
   },
   "card-editor.item-menu.name-design-copied": {
     "text": "{name} design copied",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Toast after copying only the visual design of an item, so it can be pasted onto another. {name} is the item's name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5482,7 +5482,7 @@
   },
   "card-editor.item-menu.name-yaml": {
     "text": "{name} YAML",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Title of the YAML view of one item. {name} is the item's name. YAML is a format name and stays as it is.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5490,7 +5490,7 @@
   },
   "card-editor.item-menu.name-yaml-copied": {
     "text": "{name} YAML copied",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Toast after copying the YAML of an item to the clipboard. {name} is the item's name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5513,7 +5513,7 @@
   },
   "card-editor.item-menu.out-to-parent": {
     "text": "Out to {parent}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu item that moves the selected item out of its container. {parent} is the name of the container one level up. Opposite of the into-container key.",
     "max": 25,
     "vars": {
       "parent": "The value that replaces parent in the text."
@@ -5576,7 +5576,7 @@
   },
   "card-editor.item-menu.reset-name-to-the-template-changes-to": {
     "text": "Reset {name} to the template? Changes to all its modules are lost.",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Confirmation for resetting a container (row, column or tab) with several modules. {name} is its name. The next key is the single-item version.",
     "max": 110,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5584,7 +5584,7 @@
   },
   "card-editor.item-menu.reset-name-to-the-template-your-changes": {
     "text": "Reset {name} to the template? Your changes to it are lost.",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Confirmation for resetting one item to its linked template. {name} is its name. The previous key covers a container with several modules.",
     "max": 95,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5607,7 +5607,7 @@
   },
   "card-editor.item-menu.row-n": {
     "text": "Row {n}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Name of a row in the item menu, for example as a move target. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -5615,7 +5615,7 @@
   },
   "card-editor.item-menu.row-row-column-column-actions": {
     "text": "Row {row} column {column} actions",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Accessible label of the actions menu button of one cell. {row} and {column} are positions, counting from 1.",
     "max": 55,
     "vars": {
       "column": "The value that replaces column in the text.",
@@ -5634,7 +5634,7 @@
   },
   "card-editor.item-menu.slot-n": {
     "text": "Slot {n}",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Name of a slot (a position inside a module) in the item menu. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -5642,7 +5642,7 @@
   },
   "card-editor.item-menu.title-press-ctrl-c-c-on-a-mac-to-copy": {
     "text": "{title}. Press Ctrl+C (⌘C on a Mac) to copy.",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Fallback dialog shown when the browser blocks copying. {title} is a translated heading such as the item YAML title. Keep the key names Ctrl+C and ⌘C as they are.",
     "max": 75,
     "vars": {
       "title": "The value that replaces title in the text."
@@ -5670,7 +5670,7 @@
   },
   "card-editor.layers-here.card-backdrop-layer-n": {
     "text": "Card backdrop, layer {n}",
-    "note": "Shown in layers here (card-editor).",
+    "note": "Name of one backdrop layer of the whole card in the layers list. {n} is its position, counting from 1.",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -5693,7 +5693,7 @@
   },
   "card-editor.layout-glyph.from-to-to": {
     "text": "{from} to {to}",
-    "note": "Shown in layout glyph (card-editor).",
+    "note": "Accessible description of a layout glyph that goes between two values. {from} and {to} are numbers or ratios, such as column widths.",
     "max": 25,
     "vars": {
       "from": "The value that replaces from in the text.",
@@ -5702,7 +5702,7 @@
   },
   "card-editor.layout-glyph.n-columns-ratio": {
     "text": "{n} columns, {ratio}",
-    "note": "Shown in layout glyph (card-editor).",
+    "note": "Accessible description of a layout preview. {n} is the column count, 2 or more, so always plural; {ratio} is the width ratio, such as 1:2.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -5806,7 +5806,7 @@
   },
   "card-editor.light-editor.this-light-has-no-what-the-control-is": {
     "text": "This light has no {what}; the control is hidden.",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Hint in the light editor. {what} is a light feature such as brightness, colour or colour temperature, already translated, with no article.",
     "max": 80,
     "vars": {
       "what": "The value that replaces what in the text."
@@ -5824,7 +5824,7 @@
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
     "text": "{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Toast after switching a module to a type that supports fewer settings. {n} is how many settings were dropped, 1 or more; the verb was/were agrees with the plural. it refers to the new module type.",
     "max": 110,
     "vars": {
       "n": "The count the text is about."
@@ -5837,7 +5837,7 @@
   },
   "card-editor.magic-card-editor.replaced-old-with-new": {
     "text": "Replaced {old} with {new}.",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Toast after Replace with. {old} and {new} are module type names, already translated. The next two keys add a sentence about tabs.",
     "max": 45,
     "vars": {
       "new": "The value that replaces new in the text.",
@@ -5846,7 +5846,7 @@
   },
   "card-editor.magic-card-editor.replaced-old-with-new-all-modules-are-in": {
     "text": "Replaced {old} with {new}. All modules are in the first tab.",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Toast after replacing a tabs module with one that has no tabs. {old} and {new} are translated module type names. Variant of the plain replaced key.",
     "max": 100,
     "vars": {
       "new": "The value that replaces new in the text.",
@@ -5855,7 +5855,7 @@
   },
   "card-editor.magic-card-editor.replaced-old-with-new-the-modules-of-all": {
     "text": "Replaced {old} with {new}. The modules of all {n} tabs are kept in tab order.",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Toast after replacing a tabs module. {old} and {new} are translated module type names; {n} is the number of tabs, always 2 or more, so no singular form.",
     "max": 125,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -5865,7 +5865,7 @@
   },
   "card-editor.magic-card-editor.this-card-is-linked-to-template-name-do": {
     "text": "This card is linked to template {name}. Do you want to update all linked cards with this structural change?",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Confirmation dialog after changing the layout of a card that uses a template. {name} is the template name; do not translate it.",
     "max": 175,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5903,7 +5903,7 @@
   },
   "card-editor.markdown-editor.markdown-with-home-assistant-templates-e": {
     "text": "Markdown with Home Assistant templates, e.g. {example}. With an entity set, {entity} shows its state.",
-    "note": "Shown in markdown editor (card-editor).",
+    "note": "Helper text. {example} is a Jinja template snippet and {entity} is a template token that stands for the module's entity; both are code and must not be translated.",
     "max": 165,
     "vars": {
       "entity": "The value that replaces entity in the text.",
@@ -5972,7 +5972,7 @@
   },
   "card-editor.module-selector.add-name-module": {
     "text": "Add {name} module",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Accessible label of a button that adds one module. {name} is the module type name, already translated, such as Button or Gauge.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6015,7 +6015,7 @@
   },
   "card-editor.module-selector.no-modules-match-query": {
     "text": "No modules match \"{query}\".",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Empty state of the module search. {query} is exactly what the user typed, shown in quotes; do not translate it.",
     "max": 45,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -6028,7 +6028,7 @@
   },
   "card-editor.module-selector.replace-with-name": {
     "text": "Replace with {name}",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Button that swaps the selected module for another type. {name} is the new module type name, already translated.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6066,7 +6066,7 @@
   },
   "card-editor.pane-editor.rows-mods-build-visually-with-layers": {
     "text": "{rows, plural, one {# row} other {# rows}} · {mods, plural, one {# module} other {# modules}}. Build visually with layers, canvas and the full inspector.",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Summary in the side pane. {rows} and {mods} are counts, 0 or more, each needing its own plural forms. The dot between them is a separator; the second sentence names the Studio's layers, canvas and inspector panels.",
     "max": 125,
     "vars": {
       "mods": "The count the text is about.",
@@ -6165,7 +6165,7 @@
   },
   "card-editor.popup-settings.label-state": {
     "text": "{label}: state",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Accessible label of a pop-up setting for one state. {label} is the setting name, already translated; state is the noun for a state of the pop-up, such as open.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -6203,7 +6203,7 @@
   },
   "card-editor.popup-settings.open-it-from-any-button-tap-action": {
     "text": "Open it from any button: tap action Navigate to {path}, or Open pop-up.",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Helper text. {path} is the pop-up's URL path, such as #popup-id; do not translate it. Navigate to and Open pop-up are names of existing action options, so match their translations.",
     "max": 115,
     "vars": {
       "path": "The value that replaces path in the text."
@@ -6386,7 +6386,7 @@
   },
   "card-editor.ring-editor.label-entity": {
     "text": "{label} entity",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field label for the entity of one ring. {label} is the ring name, already translated, such as Inner ring. Entity is the Home Assistant term.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -6394,7 +6394,7 @@
   },
   "card-editor.ring-editor.label-source": {
     "text": "{label} source",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field label for where one ring gets its entity from. {label} is the ring name, already translated. Source here means the origin, not source code.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -6437,7 +6437,7 @@
   },
   "card-editor.ring-editor.module-entity-entity": {
     "text": "Module entity ({entity})",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Dropdown option meaning use the entity of this module. {entity} is its entity ID; do not translate it. Same English as the icon effect and value background editors.",
     "max": 40,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -6615,7 +6615,7 @@
   },
   "card-editor.seasonal-editor.auto-when-scene": {
     "text": "Auto ({when}: {scene})",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Option that follows the calendar. {when} is the current season or date range; {scene} is the name of the seasonal scene it selects. Both are already translated.",
     "max": 40,
     "vars": {
       "scene": "The value that replaces scene in the text.",
@@ -6719,7 +6719,7 @@
   },
   "card-editor.seasonal-editor.n-changed": {
     "text": "{n} changed",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Short badge counting settings changed from their defaults. {n} is a number, 1 or more. Changed is the adjective.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -6847,7 +6847,7 @@
   },
   "card-editor.selection.column-n": {
     "text": "Column {n}",
-    "note": "Shown in selection (card-editor).",
+    "note": "Name of the selected column in the selection summary. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -6860,7 +6860,7 @@
   },
   "card-editor.selection.layout-layout": {
     "text": "Layout {layout}",
-    "note": "Shown in selection (card-editor).",
+    "note": "Selection summary line. {layout} is the layout name, such as a column ratio; do not translate it. The inspector key is the lower-case twin.",
     "max": 25,
     "vars": {
       "layout": "The value that replaces layout in the text."
@@ -6873,7 +6873,7 @@
   },
   "card-editor.selection.n": {
     "text": "{n, plural, one {# module} other {# modules}}",
-    "note": "Shown in selection (card-editor).",
+    "note": "Count of selected modules in the selection summary. {n} is 1 or more.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -6881,7 +6881,7 @@
   },
   "card-editor.selection.row-n": {
     "text": "Row {n}",
-    "note": "Shown in selection (card-editor).",
+    "note": "Name of the selected row in the selection summary. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7109,7 +7109,7 @@
   },
   "card-editor.shape-editor.linked-to-the-saved-shape-name-change-it": {
     "text": "Linked to the saved shape {name}. Change it there and every card that uses it changes.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text when a shape is linked rather than copied. {name} is the saved shape's name; do not translate it.",
     "max": 140,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7132,7 +7132,7 @@
   },
   "card-editor.shape-editor.my-shapes-n": {
     "text": "My shapes ({n})",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Heading for the user's saved shapes. {n} is how many there are, 0 or more. Keep My shapes matching the name used in the saved-as key.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7210,7 +7210,7 @@
   },
   "card-editor.shape-editor.saved-as-name-find-it-under-my-shapes": {
     "text": "Saved as {name}. Find it under My shapes.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Toast after saving a shape. {name} is the name given to it. My shapes must match the my-shapes-n heading.",
     "max": 70,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7313,7 +7313,7 @@
   },
   "card-editor.shape-editor.use-a-copy-of-name": {
     "text": "Use a copy of {name}",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that copies a saved shape into this card, so later edits to the saved one do not reach it. {name} is the shape name. Compare use-name, which links instead.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7336,7 +7336,7 @@
   },
   "card-editor.shape-editor.use-name": {
     "text": "Use {name}",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that links a saved shape, so changes to it reach every card using it. {name} is the shape name. Compare use-a-copy-of-name, which copies instead.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7344,7 +7344,7 @@
   },
   "card-editor.shape-editor.using-a-copy-of-name": {
     "text": "Using a copy of {name}.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Status line when the shape was copied from a saved one. {name} is the saved shape's name. The next key is the linked version.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7352,7 +7352,7 @@
   },
   "card-editor.shape-editor.using-name-changes-to-it-reach-every": {
     "text": "Using {name}. Changes to it reach every card that uses it.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Status line when the shape is linked to a saved one. {name} is the saved shape's name. The previous key is the copied version.",
     "max": 95,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7540,7 +7540,7 @@
   },
   "card-editor.slot-label.column-n": {
     "text": "Column {n}",
-    "note": "Shown in slot label (card-editor).",
+    "note": "Slot label naming a column. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7548,7 +7548,7 @@
   },
   "card-editor.slot-label.tab-n": {
     "text": "Tab {n}",
-    "note": "Shown in slot label (card-editor).",
+    "note": "Slot label naming a tab. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7601,7 +7601,7 @@
   },
   "card-editor.structure-outline.add-column-to-name": {
     "text": "Add column to {name}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of an add-column button. {name} is the name of the row or module that gets the column.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7609,7 +7609,7 @@
   },
   "card-editor.structure-outline.add-column-to-row-row": {
     "text": "Add column to Row {row}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of an add-column button on a row. {row} is the row position, counting from 1. Row stays capitalised as a name.",
     "max": 40,
     "vars": {
       "row": "The value that replaces row in the text."
@@ -7622,7 +7622,7 @@
   },
   "card-editor.structure-outline.add-module-to-row-row-column-column": {
     "text": "Add module to Row {row} Column {column}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of an add-module button in one cell. {row} and {column} are positions, counting from 1. Row and Column stay capitalised as names.",
     "max": 65,
     "vars": {
       "column": "The value that replaces column in the text.",
@@ -7631,7 +7631,7 @@
   },
   "card-editor.structure-outline.add-module-to-where": {
     "text": "Add module to {where}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of an add-module button. {where} is the target location, such as a tab or a named container, already translated.",
     "max": 35,
     "vars": {
       "where": "The value that replaces where in the text."
@@ -7649,7 +7649,7 @@
   },
   "card-editor.structure-outline.add-tab-to-name": {
     "text": "Add tab to {name}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of an add-tab button. {name} is the name of the tabs module that gets the tab.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7672,7 +7672,7 @@
   },
   "card-editor.structure-outline.collapse-row-n": {
     "text": "Collapse row {n}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of a button that folds one row closed in the outline. {n} is the row position, counting from 1. Opposite of expand-row-n.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7680,7 +7680,7 @@
   },
   "card-editor.structure-outline.column-n": {
     "text": "Column {n}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Name of a column in the outline tree. {n} is its position, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7703,7 +7703,7 @@
   },
   "card-editor.structure-outline.expand-row-n": {
     "text": "Expand row {n}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of a button that opens one folded row in the outline. {n} is the row position, counting from 1. Opposite of collapse-row-n.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7731,7 +7731,7 @@
   },
   "card-editor.structure-outline.module-options-for-name": {
     "text": "Module options for {name}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of the options menu button of one module. {name} is the module's name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7739,7 +7739,7 @@
   },
   "card-editor.structure-outline.moved-name-to-where": {
     "text": "Moved {name} to {where}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Screen-reader announcement after a drag in the outline. {name} is the moved item; {where} is the target location. Same English as the item menu toast.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -7748,7 +7748,7 @@
   },
   "card-editor.structure-outline.n": {
     "text": "{n, plural, one {module} other {modules}}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "The noun alone, without the number, which the outline shows separately. {n} is 0 or more; give every plural form your language needs.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -7756,7 +7756,7 @@
   },
   "card-editor.structure-outline.name-actions": {
     "text": "{name} actions",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of the actions menu button of one outline item. {name} is its name. Actions means a menu of commands, not tap actions.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7764,7 +7764,7 @@
   },
   "card-editor.structure-outline.name-slot": {
     "text": "{name} {slot}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Outline name of a slot inside a module. {name} is the module name; {slot} is the slot label, such as Column 2. Only join them; word order may change.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -7773,7 +7773,7 @@
   },
   "card-editor.structure-outline.needs-kind": {
     "text": "Needs {kind}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Short badge on a tile that lacks something. {kind} is a translated noun such as an entity or an area.",
     "max": 20,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -7801,7 +7801,7 @@
   },
   "card-editor.structure-outline.row-n": {
     "text": "Row {n}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Name of a row in the outline tree. {n} is its position, counting from 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -7814,7 +7814,7 @@
   },
   "card-editor.structure-outline.row-row-column-column": {
     "text": "Row {row} Column {column}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Name of one cell in the outline. {row} and {column} are positions, counting from 1. Capitalised as a name, unlike the actions key below.",
     "max": 40,
     "vars": {
       "column": "The value that replaces column in the text.",
@@ -7823,7 +7823,7 @@
   },
   "card-editor.structure-outline.row-row-column-column-actions": {
     "text": "Row {row} column {column} actions",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Accessible label of the actions menu button of one cell. {row} and {column} are positions, counting from 1. Same English as the item menu key.",
     "max": 55,
     "vars": {
       "column": "The value that replaces column in the text.",
@@ -7837,7 +7837,7 @@
   },
   "card-editor.structure-outline.same-as-source": {
     "text": "Same as {source}",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Outline badge meaning this tile uses the same entity as another place. {source} is a translated noun for that place, such as the card or the module. Same English as the entity source key.",
     "max": 30,
     "vars": {
       "source": "The value that replaces source in the text."
@@ -7865,7 +7865,7 @@
   },
   "card-editor.studio-canvas.add-flow-from-here-hint": {
     "text": "Add flow from here. {hint}",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip of a button that starts a new flow from a module. {hint} is a translated sentence about what happens next, such as clicking the target module.",
     "max": 45,
     "vars": {
       "hint": "The value that replaces hint in the text."
@@ -7878,7 +7878,7 @@
   },
   "card-editor.studio-canvas.canvas-label-selected": {
     "text": "Canvas, {label} selected",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible label of the canvas area. {label} is the name of the selected item, already translated.",
     "max": 40,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -7891,7 +7891,7 @@
   },
   "card-editor.studio-canvas.click-a-module-to-select-it-move-moves": {
     "text": "Click a module to select it. {move} moves it, {remove} removes it, {menu} opens its menu.",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Keyboard help for the canvas. {move}, {remove} and {menu} are key names or key groups, such as the arrow keys, Delete and Enter; do not translate the placeholders, and keep each key next to its verb.",
     "max": 145,
     "vars": {
       "menu": "The value that replaces menu in the text.",
@@ -7906,7 +7906,7 @@
   },
   "card-editor.studio-canvas.click-the-module-to-connect-to-key": {
     "text": "Click the module to connect to. {key} cancels.",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Prompt while drawing a flow. {key} is a key name such as Esc; do not translate it. The note-or-pick-another keys are the same cancel hint after a selection.",
     "max": 75,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -7914,7 +7914,7 @@
   },
   "card-editor.studio-canvas.column-a-wa-column-b-wb": {
     "text": "Column {a} {wa}, Column {b} {wb}",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible value text of a column divider. {a} and {b} are the two column positions, counting from 1; {wa} and {wb} are their widths, with unit (for example 40%).",
     "max": 55,
     "vars": {
       "a": "The value that replaces a in the text.",
@@ -7975,7 +7975,7 @@
   },
   "card-editor.studio-canvas.layers-here-n": {
     "text": "Layers here ({n})",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Button or heading listing the layers stacked at the clicked point. {n} is how many layers, 2 or more.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -8018,7 +8018,7 @@
   },
   "card-editor.studio-canvas.name-behind-others": {
     "text": "{name}, Behind others",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible description of a layer drawn under the others. {name} is the layer name. Opposite of the on-top key.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8026,7 +8026,7 @@
   },
   "card-editor.studio-canvas.name-on-top": {
     "text": "{name}, On top",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible description of a layer drawn above the others. {name} is the layer name. Opposite of the behind-others key.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8039,7 +8039,7 @@
   },
   "card-editor.studio-canvas.note-or-pick-another-escape-cancels": {
     "text": "{note}, or pick another. Escape cancels.",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Prompt while picking a target. {note} is a translated sentence fragment about the current choice. Escape is the key name, written out in full; the next key uses a {key} placeholder instead.",
     "max": 65,
     "vars": {
       "note": "The value that replaces note in the text."
@@ -8047,7 +8047,7 @@
   },
   "card-editor.studio-canvas.note-or-pick-another-key-cancels": {
     "text": "{note}, or pick another. {key} cancels.",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Prompt while picking a target. {note} is a translated sentence fragment about the current choice; {key} is a key name such as Esc and is not translated. The previous key spells out Escape.",
     "max": 65,
     "vars": {
       "key": "The value that replaces key in the text.",
@@ -8071,7 +8071,7 @@
   },
   "card-editor.studio-canvas.preview-not-updated-error": {
     "text": "Preview not updated: {error}",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Error under the canvas when the preview fails to render. {error} is the technical error message, in English; do not translate it.",
     "max": 45,
     "vars": {
       "error": "The value that replaces error in the text."
@@ -8079,7 +8079,7 @@
   },
   "card-editor.studio-canvas.resize-between-column-a-and-column-b": {
     "text": "Resize between Column {a} and Column {b}",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible label of the draggable divider between two columns. {a} and {b} are the column positions, counting from 1.",
     "max": 65,
     "vars": {
       "a": "The value that replaces a in the text.",
@@ -8103,7 +8103,7 @@
   },
   "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": {
     "text": "Show or hide panels: {ctrl} or {cmd}.",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Keyboard help. {ctrl} and {cmd} are complete shortcuts for Windows or Linux and for a Mac, such as Ctrl+B and ⌘B; do not translate them.",
     "max": 60,
     "vars": {
       "cmd": "The value that replaces cmd in the text.",
@@ -8112,7 +8112,7 @@
   },
   "card-editor.studio-canvas.showing-state": {
     "text": "Showing: {state}",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Label above the preview naming which state of the card it displays. {state} is a translated state name, such as Hover or Active.",
     "max": 30,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -8120,7 +8120,7 @@
   },
   "card-editor.studio-canvas.shown-at-px-px": {
     "text": ", shown at {px} px",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Suffix appended to another label, so it starts with a comma. {px} is a whole number of pixels, the preview width; px is the unit.",
     "max": 30,
     "vars": {
       "px": "The value that replaces px in the text."
