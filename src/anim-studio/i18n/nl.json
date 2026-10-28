@@ -2164,7 +2164,7 @@
     "hash": "85e36d46"
   },
   "anim-studio.part-presets-panel.count-targets-selected-a-preset-plays-on": {
-    "text": "{count, plural, one {# doel geselecteerd: op elk speelt een voorinstelling (Golf: na elkaar).} other {# doelen geselecteerd: op elk speelt een voorinstelling (Golf: na elkaar).}}",
+    "text": "{count, plural, one {# doel geselecteerd: op elk speelt een voorinstelling af (Golf: na elkaar).} other {# doelen geselecteerd: op elk speelt een voorinstelling af (Golf: na elkaar).}}",
     "hash": "8cac2f3e"
   },
   "anim-studio.part-presets-panel.direction": {
