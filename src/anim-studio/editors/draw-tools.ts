@@ -86,6 +86,10 @@ export class AnimDrawToolbar extends LitElement {
         margin: 4px 3px;
         background: var(--divider-color, rgba(0, 0, 0, 0.12));
       }
+      /* the dialog's window sits under this host, so it takes presses itself instead of passing them to the canvas */
+      mc-anim-svg-dialog {
+        pointer-events: auto;
+      }
       .open {
         pointer-events: auto;
         height: 36px;
