@@ -1,6 +1,5 @@
-import type { MessageIndex } from '../contracts/i18n';
 import { THEME_VAR_RE } from '../contracts/theme-catalogue';
-import type { CatalogueEntry, CatalogueGroup, FieldKind } from '../contracts/theme-catalogue';
+import type { FieldKind } from '../contracts/theme-catalogue';
 import type { ThemeDoc, ThemeMode, ThemeValue } from '../contracts/theme-editor';
 import { t } from './i18n';
 
@@ -10,11 +9,6 @@ import { t } from './i18n';
  * block) and every key it did not touch, so a save changes only what the user changed.
  */
 
-/** A catalogue entry whose label and hint are m() marks of this namespace, so t() accepts them. */
-export type MarkedEntry = CatalogueEntry & { label: MessageIndex; hint?: MessageIndex };
-
-/** A catalogue group whose label is an m() mark of this namespace. */
-export type MarkedGroup = CatalogueGroup & { label: MessageIndex };
 
 export interface DocError {
   /** Backend path form: "theme.primary-color", "theme.modes.dark.x". */

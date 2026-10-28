@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /** Mushroom v5.2.3 (commit d8a90ff): every name is read with var() in src/utils/theme.ts. */
 const REF = 'https://github.com/piitaya/lovelace-mushroom/blob/v5.2.3/src/utils/theme.ts';
@@ -125,9 +125,9 @@ const RGB: Array<[suffix: string, label: MessageIndex]> = [
   ['update-installing', m('theme-editor.mushroom.update-installing-rgb')],
 ];
 
-export const MUSHROOM_ENTRIES: MarkedEntry[] = [
+export const MUSHROOM_ENTRIES: CatalogueEntry[] = [
   ...OWN.map(
-    ([name, kind, label, def, hint]): MarkedEntry => ({
+    ([name, kind, label, def, hint]): CatalogueEntry => ({
       name,
       group: 'mushroom',
       source: 'mushroom',
@@ -141,7 +141,7 @@ export const MUSHROOM_ENTRIES: MarkedEntry[] = [
     }),
   ),
   ...RGB.map(
-    ([s, text]): MarkedEntry => ({
+    ([s, text]): CatalogueEntry => ({
       name: `mush-rgb-${s}`,
       group: 'mushroom',
       source: 'mushroom',

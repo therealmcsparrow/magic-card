@@ -1,5 +1,5 @@
 /*
- * Contract: theme variable catalogue. Version 1.1.0.
+ * Contract: theme variable catalogue. Version 1.2.0.
  *
  * Implementation: src/theme-editor/catalogue/ (one file per source: ha.ts, magic-card.ts, tile.ts,
  * mushroom.ts, bubble-card.ts, ultra-card.ts, button-card.ts; index.ts exports CATALOGUE).
@@ -19,15 +19,15 @@
  *    variables it reads (kind 'follows'), each verified like rule 2.
  * 5. Variables a theme sets that are not in the catalogue are kept and shown in "Other" (raw row).
  *
- * Text: `label` and `hint` of an entry and the `label` of a group are MessageId, not string. The catalogue marks each text with m() (namespace 'theme-editor',
+ * Text: `label` and `hint` of an entry and the `label` of a group are MessageIndex, not string (1.2.0: built-in marks are MessageIndex). The catalogue marks each text with m() (namespace 'theme-editor',
  * src/theme-editor/i18n); the editor renders it with t(). In a test or a plain build m() returns the British
  * text, so `entry.label` is still that string there. A custom variable (group Other) has no catalogue entry and
  * is shown by its name.
  */
 
-import type { MessageId } from './i18n';
+import type { MessageIndex } from './i18n';
 
-export const THEME_CATALOGUE_CONTRACT_VERSION = '1.1.0';
+export const THEME_CATALOGUE_CONTRACT_VERSION = '1.2.0';
 
 export type CatalogueSource = 'ha' | 'magic-card' | 'tile' | 'mushroom' | 'bubble-card' | 'ultra-card' | 'button-card';
 
@@ -69,9 +69,9 @@ export interface CatalogueEntry {
   source: CatalogueSource;
   kind: FieldKind;
   /** Sentence-case label, e.g. 'Primary colour' (an m() id; render with t()). */
-  label: MessageId;
+  label: MessageIndex;
   /** One short line: what it changes (an m() id; render with t()). */
-  hint?: MessageId;
+  hint?: MessageIndex;
   /** HA's (or the card's) default, for placeholders and the Reset button; '' when it has none. */
   default?: string;
   /** 'own': the source defines it. 'follows': an HA variable this card reads (rule 4). */
@@ -86,7 +86,7 @@ export interface CatalogueEntry {
 
 export interface CatalogueGroup {
   id: CatalogueGroupId;
-  label: MessageId;
+  label: MessageIndex;
   /** For card groups: the custom element that must be defined for a live preview (else "preview not available"). */
   previewTag?: string;
   /** For card groups: dashboard resource URL pattern the preview may load on request. */

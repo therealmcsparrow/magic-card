@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * button-card v7.0.1 (commit dfa304f). Its README documents no theme variables, so the own names are the
@@ -28,8 +28,8 @@ const ROWS: Row[] = [
   ['state-icon-color', 'color', m('theme-editor.button-card.state-icon-colour'), m('theme-editor.button-card.icon-colour-when-an-entity-is-inactive'), 'follows'],
 ];
 
-export const BUTTON_CARD_ENTRIES: MarkedEntry[] = ROWS.map(
-  ([name, kind, label, hint, role]): MarkedEntry => ({
+export const BUTTON_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(
+  ([name, kind, label, hint, role]): CatalogueEntry => ({
     name,
     group: 'button-card',
     source: 'button-card',

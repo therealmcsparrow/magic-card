@@ -3,7 +3,7 @@ import type { CSSResultOrNative } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import type { SavedThemePreset } from '../contracts/mcu-library';
-import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, ThemeFileEntry, ThemePreset } from '../contracts/theme-editor';
+import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, OwnThemePreset, ThemeFileEntry, ThemePreset } from '../contracts/theme-editor';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import { glyph } from '../ui-kit/glyphs';
 import { cloneDoc } from './model';
@@ -211,7 +211,7 @@ export class McteStartView extends LitElement {
     this._prefill();
   }
 
-  private get _mineCards(): ThemePreset[] {
+  private get _mineCards(): OwnThemePreset[] {
     return (this.mine ?? []).map((m) => ({ id: MINE + m.id, name: m.name, blurb: m.description ?? '', group: 'mine', doc: m.doc }));
   }
 

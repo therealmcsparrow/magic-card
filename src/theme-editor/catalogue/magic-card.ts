@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * What a theme can change on a Magic Card. The card sets its own --mc-* tokens on :host
@@ -35,8 +35,8 @@ const ROWS: Row[] = [
   ['ha-card-box-shadow', 'shadow', m('theme-editor.magic-card.card-shadow'), m('theme-editor.magic-card.shadow-under-the-card'), 'follows'],
 ];
 
-export const MAGIC_CARD_ENTRIES: MarkedEntry[] = ROWS.map(
-  ([name, kind, label, hint, role]): MarkedEntry => ({
+export const MAGIC_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(
+  ([name, kind, label, hint, role]): CatalogueEntry => ({
     name,
     group: 'magic-card',
     source: 'magic-card',

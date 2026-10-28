@@ -1,7 +1,6 @@
 import { THEME_CATALOGUE_CONTRACT_VERSION } from '../../contracts/theme-catalogue';
-import type { CatalogueGroupId, CatalogueSource, FieldKind, ThemeCatalogue } from '../../contracts/theme-catalogue';
+import type { CatalogueEntry, CatalogueGroup, CatalogueGroupId, CatalogueSource, FieldKind, ThemeCatalogue } from '../../contracts/theme-catalogue';
 import { m } from '../i18n';
-import type { MarkedEntry, MarkedGroup } from '../model';
 import { HA_ENTRIES } from './ha';
 import { MAGIC_CARD_ENTRIES } from './magic-card';
 import { TILE_ENTRIES } from './tile';
@@ -18,7 +17,7 @@ import { BUTTON_CARD_ENTRIES } from './button-card';
  * through groupEntries().
  */
 
-export const CATALOGUE_GROUPS: MarkedGroup[] = [
+export const CATALOGUE_GROUPS: CatalogueGroup[] = [
   { id: 'primary', label: m('theme-editor.catalogue.primary-and-accent') },
   { id: 'backgrounds', label: m('theme-editor.catalogue.backgrounds-and-cards') },
   { id: 'text', label: m('theme-editor.catalogue.text') },
@@ -34,7 +33,7 @@ export const CATALOGUE_GROUPS: MarkedGroup[] = [
   { id: 'other', label: m('theme-editor.catalogue.other') },
 ];
 
-const RAW: MarkedEntry[] = [
+const RAW: CatalogueEntry[] = [
   ...HA_ENTRIES,
   ...MAGIC_CARD_ENTRIES,
   ...TILE_ENTRIES,
@@ -45,8 +44,8 @@ const RAW: MarkedEntry[] = [
 ];
 
 /** Merge 'follows' rows into their owners (see the header). The inputs are not changed. */
-export function mergeEntries(raw: readonly MarkedEntry[]): MarkedEntry[] {
-  const owners: MarkedEntry[] = raw.filter((e) => e.role !== 'follows').map((e) => ({ ...e }));
+export function mergeEntries(raw: readonly CatalogueEntry[]): CatalogueEntry[] {
+  const owners: CatalogueEntry[] = raw.filter((e) => e.role !== 'follows').map((e) => ({ ...e }));
   for (const f of raw) {
     if (f.role !== 'follows') continue;
     let owner = owners.find((e) => e.name === f.name);
@@ -60,7 +59,7 @@ export function mergeEntries(raw: readonly MarkedEntry[]): MarkedEntry[] {
   return owners;
 }
 
-export const CATALOGUE: Omit<ThemeCatalogue, 'entries'> & { entries: MarkedEntry[] } = {
+export const CATALOGUE: ThemeCatalogue = {
   version: THEME_CATALOGUE_CONTRACT_VERSION,
   groups: CATALOGUE_GROUPS,
   entries: mergeEntries(RAW),
@@ -68,7 +67,7 @@ export const CATALOGUE: Omit<ThemeCatalogue, 'entries'> & { entries: MarkedEntry
 
 const BY_NAME = new Map(CATALOGUE.entries.map((e) => [e.name, e]));
 
-export const entryByName = (name: string): MarkedEntry | undefined => BY_NAME.get(name);
+export const entryByName = (name: string): CatalogueEntry | undefined => BY_NAME.get(name);
 
 /** The field kind of a variable name; undefined for names the catalogue does not know (they are "Other"). */
 export const kindOf = (name: string): FieldKind | undefined => BY_NAME.get(name)?.kind;
@@ -84,7 +83,7 @@ const SOURCE_OF_GROUP: Partial<Record<CatalogueGroupId, CatalogueSource>> = {
 };
 
 export interface GroupRow {
-  entry: MarkedEntry;
+  entry: CatalogueEntry;
   /** True when the group's card reads a variable another group owns (shown after the card's own). */
   follows: boolean;
 }

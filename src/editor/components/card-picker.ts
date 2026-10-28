@@ -13,9 +13,9 @@ interface CardInfo {
   category: 'built-in' | 'custom';
 }
 
-/** A built-in card: its name and description are m() marks, resolved when the list is built. */
+/** A built-in card: its name and description are m() marks, resolved when the list is built. A name that is the same in every language (iFrame) is plain text. */
 interface BuiltinCard extends Omit<CardInfo, 'name' | 'description'> {
-  name: MessageIndex;
+  name: MessageIndex | string;
   description: MessageIndex;
 }
 
@@ -35,7 +35,7 @@ const BUILTIN_CARDS: BuiltinCard[] = [
   { type: 'history-graph', name: m('card-editor.card-picker.history-graph'), description: m('card-editor.card-picker.entity-history-graph'), icon: 'mdi:chart-line', category: 'built-in' },
   { type: 'horizontal-stack', name: m('card-editor.card-picker.horizontal-stack'), description: m('card-editor.card-picker.stack-cards-horizontally'), icon: 'mdi:arrow-split-vertical', category: 'built-in' },
   { type: 'humidifier', name: m('card-editor.card-picker.humidifier'), description: m('card-editor.card-picker.humidifier-control'), icon: 'mdi:air-humidifier', category: 'built-in' },
-  { type: 'iframe', name: 'iFrame' as unknown as MessageIndex, description: m('card-editor.card-picker.embed-a-webpage'), icon: 'mdi:web', category: 'built-in' },
+  { type: 'iframe', name: 'iFrame', description: m('card-editor.card-picker.embed-a-webpage'), icon: 'mdi:web', category: 'built-in' },
   { type: 'light', name: m('card-editor.card-picker.light'), description: m('card-editor.card-picker.light-control-card'), icon: 'mdi:lightbulb', category: 'built-in' },
   { type: 'logbook', name: m('card-editor.card-picker.logbook'), description: m('card-editor.card-picker.entity-logbook-entries'), icon: 'mdi:book-open-variant', category: 'built-in' },
   { type: 'map', name: m('card-editor.card-picker.map'), description: m('card-editor.card-picker.map-with-entity-locations'), icon: 'mdi:map', category: 'built-in' },
@@ -127,7 +127,7 @@ export class CardPicker extends LitElement {
         fold(card.description).includes(q);
     };
 
-    const builtIn = BUILTIN_CARDS.map((c): CardInfo => ({ ...c, name: t(c.name), description: t(c.description) })).filter(filterFn);
+    const builtIn = BUILTIN_CARDS.map((c): CardInfo => ({ ...c, name: typeof c.name === 'string' ? c.name : t(c.name), description: t(c.description) })).filter(filterFn);
     const custom = this._getCustomCards().filter(filterFn);
 
     return { builtIn, custom };

@@ -1,12 +1,8 @@
-import type { MessageIndex } from '../contracts/i18n';
 import type { FlowPreset } from '../contracts/look-editor';
 import { m } from './i18n';
 
-/** A preset whose label and description are m() marks of this namespace, so t() accepts them. */
-export type MarkedPreset<P extends { label: unknown; description: unknown }> = P & { label: MessageIndex; description: MessageIndex };
-
 /*
- * Preset data of the look editors (contract look-editor 1.0.0). Every `preview` is a chunk-constant, static SVG
+ * Preset data of the look editors (contract look-editor 1.1.0). Every `preview` is a chunk-constant, static SVG
  * (72 x 56, the preset's own colours): <mc-ui-chip-group> draws it with unsafeHTML, so it must never be built from
  * config text. Labels and descriptions are m() marks, read with t() where the chips are built. A preset removes every
  * look key plus the existing keys it lists, then writes `values` (flows: tube_fill_value only for a flow with an entity).
@@ -14,7 +10,7 @@ export type MarkedPreset<P extends { label: unknown; description: unknown }> = P
  */
 const pv = (inner: string): string => `<svg viewBox="0 0 72 56" width="72" height="56" fill="none" stroke-linecap="round">${inner}</svg>`;
 
-export const FLOW_PRESETS: readonly MarkedPreset<FlowPreset>[] = [
+export const FLOW_PRESETS: readonly FlowPreset[] = [
   {
     id: 'energy',
     label: m('look-editor.presets.energy'),

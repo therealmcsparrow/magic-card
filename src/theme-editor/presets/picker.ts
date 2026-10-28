@@ -46,10 +46,10 @@ const GROUPS = [
 const SUGGESTIONS: MessageIndex[] = [m('theme-presets.picker.sci-fi'), m('theme-presets.picker.fantasy'), m('theme-presets.picker.neon'), m('theme-presets.picker.desert'), m('theme-presets.picker.forest')];
 const suggestions = (): string[] => SUGGESTIONS.map((w) => t(w));
 
-/** A preset's text in the language: a built-in preset holds an m() id, a My preset the user's own words. */
-const own = (p: ThemePreset, v: MessageIndex | undefined): string => (v === undefined ? '' : p.group === 'mine' ? String(v) : t(v));
-export const presetTitle = (p: ThemePreset): string => own(p, p.name as MessageIndex);
-export const presetBlurb = (p: ThemePreset): string => own(p, p.blurb as MessageIndex);
+/** A preset's text in the language: a built-in preset holds an m() mark, a My preset the user's own words. */
+export const presetTitle = (p: ThemePreset): string => (p.group === 'mine' ? p.name : t(p.name));
+export const presetBlurb = (p: ThemePreset): string => (p.group === 'mine' ? p.blurb : t(p.blurb));
+const presetNote = (p: ThemePreset): string => (p.group === 'mine' || p.note === undefined ? '' : t(p.note));
 const flat = (s: string): string => s.replace(/[\s-]/g, '');
 
 // A swatch value that names another website (preset-transfer EXTERNAL_REF_RE, kept here as a copy) or that could
@@ -81,7 +81,7 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
     <span class="pn">${presetTitle(p)}${on ? glyph('check') : nothing}</span>
     <span class="help">${presetBlurb(p)}</span>
     ${outsideOf(p.doc).any ? html`<span class="host">${glyph('information', 14)} ${t('theme-presets.picker.contacts-another-website')}</span>` : nothing}
-    ${p.inspiredBy ? html`<span class="help">${t('theme-presets.picker.inspired-by-name', { name: p.inspiredBy.name })}</span>` : nothing} ${on && p.note ? html`<span class="help">${own(p, p.note as MessageIndex | undefined)}</span>` : nothing}
+    ${p.inspiredBy ? html`<span class="help">${t('theme-presets.picker.inspired-by-name', { name: p.inspiredBy.name })}</span>` : nothing} ${on && presetNote(p) ? html`<span class="help">${presetNote(p)}</span>` : nothing}
   </label>`;
 }
 

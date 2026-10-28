@@ -4,7 +4,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
-import type { MessageIndex } from '../contracts/i18n';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
 import { kitLip } from '../ui-kit/css/lip';
@@ -549,9 +548,9 @@ export class McteEditorView extends LitElement {
       rows = allKeys(this._doc)
         .filter((k) => !entryByName(k))
         .map((k) => ({
-          entry: { name: k, group: 'other' as const, source: 'ha' as const, kind: 'text' as const, label: k as unknown as MessageIndex },
+          entry: { name: k, group: 'other' as const, source: 'ha' as const, kind: 'text' as const },
           follows: false,
-          custom: true,
+          custom: true as const,
         }));
     } else {
       rows = groupEntries(id).map((r) => ({ entry: r.entry, follows: r.follows }));

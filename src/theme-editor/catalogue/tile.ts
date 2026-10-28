@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * Tile card: home-assistant/frontend tag 20260930.4 (commit 26690e0). The `--ha-tile-*` names are documented
@@ -30,8 +30,8 @@ const ROWS: Row[] = [
   ['ha-tile-info.ts', 'ha-tile-info-secondary-color', 'color', m('theme-editor.tile.secondary-text-colour'), 'var(--primary-text-color)', m('theme-editor.tile.colour-of-the-secondary-text')],
 ];
 
-export const TILE_ENTRIES: MarkedEntry[] = ROWS.map(
-  ([file, name, kind, label, def, hint]): MarkedEntry => ({
+export const TILE_ENTRIES: CatalogueEntry[] = ROWS.map(
+  ([file, name, kind, label, def, hint]): CatalogueEntry => ({
     name,
     group: 'tile',
     source: 'tile',

@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { CatalogueGroupId, FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * Home Assistant's own theme variables: the ones a theme commonly sets, checked against
@@ -93,8 +93,8 @@ const ROWS: Row[] = [
   ['sidebar-selected-icon-color', 'chrome', 'color', m('theme-editor.ha.sidebar-selected-icon'), 'var(--primary-color)', m('theme-editor.ha.the-active-sidebar-item-icon'), CG],
 ];
 
-export const HA_ENTRIES: MarkedEntry[] = ROWS.map(
-  ([name, group, kind, label, def, hint, file]): MarkedEntry => ({
+export const HA_ENTRIES: CatalogueEntry[] = ROWS.map(
+  ([name, group, kind, label, def, hint, file]): CatalogueEntry => ({
     name,
     group,
     source: 'ha',

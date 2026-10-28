@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * Ultra Card v3.13.3 (commit 4cb4a6c). It documents no HA theme variables (its own `--uc-*` values are
@@ -25,8 +25,8 @@ const ROWS: Row[] = [
   ['error-color', 'color', m('theme-editor.ultra-card.error-colour'), m('theme-editor.ultra-card.error-messages')],
 ];
 
-export const ULTRA_CARD_ENTRIES: MarkedEntry[] = ROWS.map(
-  ([name, kind, label, hint]): MarkedEntry => ({
+export const ULTRA_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(
+  ([name, kind, label, hint]): CatalogueEntry => ({
     name,
     group: 'ultra-card',
     source: 'ultra-card',

@@ -1,7 +1,6 @@
 import type { SliderPreset, SliderPresetId } from '../../contracts/look-editor';
 import type { SliderTrackStyle } from '../../contracts/slider-look';
 import { m } from '../i18n';
-import type { MarkedPreset } from '../presets';
 
 /*
  * The five slider presets and the static previews of presets and track styles.
@@ -28,7 +27,7 @@ const preview = (id: SliderPresetId): string => {
   }
 };
 
-export const SLIDER_PRESETS: readonly MarkedPreset<SliderPreset>[] = [
+export const SLIDER_PRESETS: readonly SliderPreset[] = [
   {
     id: 'minimal',
     label: m('look-editor.presets.minimal'),

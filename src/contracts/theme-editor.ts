@@ -1,13 +1,14 @@
 import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
-import type { MessageId } from './i18n';
+import type { MessageIndex } from './i18n';
 
 /*
- * Contract: theme editor host. Version 1.2.0.
+ * Contract: theme editor host. Version 1.3.0.
  *
  * The chunk rule below allows `src/i18n/` (the runtime copy of this entry and the search fold; i18n contract 1.0.0). The editor speaks en-GB, en-US
  * and nl: namespace 'theme-editor' (tables in the entry) and 'theme-presets' (tables in the preset chunk), the language
- * comes from `hass` (`lang` on the host follows it). `ThemePreset.name` / `blurb` / `note` are MessageId (see below) and
- * theme-catalogue labels are MessageId too. The element API, the events and the backend adapter do not change.
+ * comes from `hass` (`lang` on the host follows it). (1.3.0: built-in marks are MessageIndex) the `name` / `blurb` / `note` of a
+ * built-in preset are MessageIndex (see below) and theme-catalogue labels are MessageIndex too; a My preset holds the user's own
+ * text as strings. The element API, the events and the backend adapter do not change.
  *
  * The editor is built on the ui-kit Module (ui-kit 1.0.0). The chunk rule below allows exactly two further sources:
  * `src/ui-kit/` and, from Core, `editorTokens` of `src/css/editor-system.ts` (tokens only). The entry compiles its own
@@ -70,7 +71,7 @@ import type { MessageId } from './i18n';
  * - "Copy as HA theme" (Export menu): haThemeYaml(name, doc) to the clipboard.
  */
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.2.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.3.0';
 export const THEME_EDITOR_FILE = 'magic-card-theme-editor.js';
 export const THEME_EDITOR_TAG = 'magic-card-theme-editor';
 export const THEME_TRIAL_BAR_TAG = 'mc-theme-trial-bar';
@@ -368,23 +369,37 @@ export interface ThemePresetCredit {
   url?: string;
 }
 
-export interface ThemePreset {
+export interface BuiltInThemePreset {
   id: string;
-  /** Display name and the seed of the new theme's file name. A built-in preset holds an m() id (namespace 'theme-presets): render it with t() (the chunk's presetTitle()). A My preset (group 'mine') holds the user's own text. */
-  name: MessageId;
-  /** One short line under the name (an m() id for a built-in preset, the user's text for a My preset). */
-  blurb: MessageId;
-  /** Optional extra line (cost or behaviour to know before picking it); an m() id. */
-  note?: MessageId;
-  group: ThemePresetGroup;
+  /** Display name and the seed of the new theme's file name: an m() mark (namespace 'theme-presets'); render it with t() (the chunk's presetTitle()). */
+  name: MessageIndex;
+  /** One short line under the name (an m() mark). */
+  blurb: MessageIndex;
+  /** Optional extra line (cost or behaviour to know before picking it); an m() mark. */
+  note?: MessageIndex;
+  group: Exclude<ThemePresetGroup, 'mine'>;
   inspiredBy?: ThemePresetCredit;
   /** 1.1.0: extra search words, lowercase, space separated. Required for 'genre' (first word sci-fi or fantasy). Never shown, never a franchise term. */
   tags?: string;
   doc: ThemeDoc;
 }
 
+/** 1.3.0: a My preset as a picker item. `name` and `blurb` are the user's own text, never a message mark: do not pass them to t(). */
+export interface OwnThemePreset {
+  id: string;
+  name: string;
+  blurb: string;
+  group: 'mine';
+  note?: undefined;
+  inspiredBy?: undefined;
+  tags?: undefined;
+  doc: ThemeDoc;
+}
+
+export type ThemePreset = BuiltInThemePreset | OwnThemePreset;
+
 export interface ThemePresetLibrary {
   /** THEME_PRESETS_VERSION of the chunk that was built. */
   version: string;
-  presets: readonly ThemePreset[];
+  presets: readonly BuiltInThemePreset[];
 }

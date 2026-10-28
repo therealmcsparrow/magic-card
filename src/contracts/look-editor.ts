@@ -1,12 +1,12 @@
 import type { HomeAssistant, FlowConfig, SliderModuleConfig } from '../types';
 import type { FlowBudget, FlowLookConfig } from './flow-look';
 import type { SliderLookConfig } from './slider-look';
-import type { MessageId } from './i18n';
+import type { MessageIndex } from './i18n';
 
 /*
- * Contract: look editors. Version 1.0.0.
+ * Contract: look editors. Version 1.1.0.
  * Covers manual activation, picture chips, 20 s toast, inline Undo, undoable Reset look, settings
- * count, tier notices from the budget. LookPreset label / description are typed MessageId; optional
+ * count, tier notices from the budget. LookPreset label / description are typed MessageIndex (1.1.0: built-in marks are MessageIndex); optional
  * element props entityColor (flow) and entity (slider); `-name` entries in `open`; Reset look scope
  * includes the existing Look-group keys.
  *
@@ -74,7 +74,7 @@ import type { MessageId } from './i18n';
  *    Small segmented controls (_seg) keep select-on-arrow.
  * 7. i18n: namespace 'look-editor' (i18n 1.0.0, additive namespace): en-GB ids, en-US and nl
  *    tables inside this chunk; I18N_RELEASE_STRICT applies. Preset label and description are
- *    MessageId marks (m()), read with t().
+ *    MessageIndex marks (m()), read with t().
  * 8. Notices from `budget` (FlowBudget, flows): the 40-element notice when drawn < requested; the
  *    tier notices when its quality is lite ("4 or more glowing or tube lines...") or minimal
  *    ("7 or more..."). No budget, no notice.
@@ -84,8 +84,8 @@ import type { MessageId } from './i18n';
  *    the inspector stores the matching entry and drops the opposite one.
  */
 
-export const LOOK_EDITOR_CONTRACT = '1.0.0';
-export const LOOK_EDITOR_CONTRACT_REVISION = 4;
+export const LOOK_EDITOR_CONTRACT = '1.1.0';
+export const LOOK_EDITOR_CONTRACT_REVISION = 5;
 
 export const FLOW_LOOK_EDITOR_TAG = 'mc-flow-look-editor';
 export const SLIDER_LOOK_EDITOR_TAG = 'mc-slider-look-editor';
@@ -106,9 +106,9 @@ export type SliderPresetId = 'minimal' | 'material' | 'neon' | 'glass' | 'big-fi
 export interface LookPreset<Id extends string, Keys> {
   id: Id;
   /** en-GB message id (look-editor namespace): an m() mark, read with t(). */
-  label: MessageId;
+  label: MessageIndex;
   /** en-GB message id of the one-line description ("Blue tube with drops and a rising level."), an m() mark. */
-  description: MessageId;
+  description: MessageIndex;
   /** Static 72 x 56 preview SVG markup in the preset's own colours (aria-hidden). */
   preview: string;
   values: Keys;

@@ -15,7 +15,7 @@ import { renderColorRangesField } from '../../editor/components/color-ranges-fie
 import '../../editor/components/color-picker';
 import '../../editor/components/icon-picker';
 import { t } from '../i18n';
-import { FLOW_PRESETS, type MarkedPreset } from '../presets';
+import { FLOW_PRESETS } from '../presets';
 import { LINE_TILES, SHAPE_TILES } from '../tiles';
 import { applyPreset, appliedPreset, changeCount, colourMode, lookStatus, resetLook, spacingMode, unusedColourKeys, withKeys } from './model';
 
@@ -131,7 +131,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     this._still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  private _apply(p: MarkedPreset<FlowPreset>): void {
+  private _apply(p: FlowPreset): void {
     const next = applyPreset(this.flow, p);
     const n = changeCount(this.flow, next);
     if (!n) return;

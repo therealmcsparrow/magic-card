@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
-import type { MarkedEntry } from '../model';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * Bubble Card v3.4.2 (commit 91a5c77). The first ten names are the "Global CSS variables" table in README.md;
@@ -32,8 +32,8 @@ const ROWS: Row[] = [
   ['bubble-backdrop-background-color', 'color', m('theme-editor.bubble-card.pop-up-backdrop-colour'), m('theme-editor.bubble-card.colour-of-the-dimmed-area-behind-a-pop'), `${BASE}src/cards/pop-up/backdrop.css`],
 ];
 
-export const BUBBLE_CARD_ENTRIES: MarkedEntry[] = ROWS.map(
-  ([name, kind, label, hint, ref]): MarkedEntry => ({
+export const BUBBLE_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(
+  ([name, kind, label, hint, ref]): CatalogueEntry => ({
     name,
     group: 'bubble-card',
     source: 'bubble-card',

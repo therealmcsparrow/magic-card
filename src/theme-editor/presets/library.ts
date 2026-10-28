@@ -1,5 +1,5 @@
-import type { MessageId } from '../../contracts/i18n';
-import type { ThemeDoc, ThemePreset, ThemePresetGroup, ThemePresetLibrary } from '../../contracts/theme-editor';
+import type { MessageIndex } from '../../contracts/i18n';
+import type { BuiltInThemePreset, ThemeDoc, ThemePresetLibrary } from '../../contracts/theme-editor';
 import { m } from './i18n';
 
 /*
@@ -57,12 +57,12 @@ const doc = (light: Mode, dark: Mode, root: Mode = {}): ThemeDoc => ({
  * 6-digit hex, unpacked here into the same resolved objects the long form gives. The `more` argument adds note,
  * inspiredBy or tags; `dark` overrides state colours in the dark mode only.
  */
-const P = (id: string, name: MessageId, group: ThemePresetGroup, blurb: MessageId, hex: string, more: Partial<ThemePreset> = {}, dark: Mode = {}): ThemePreset => {
+const P = (id: string, name: MessageIndex, group: BuiltInThemePreset['group'], blurb: MessageIndex, hex: string, more: Partial<BuiltInThemePreset> = {}, dark: Mode = {}): BuiltInThemePreset => {
   const c = (hex.match(/.{6}/g) as string[]).map((h) => '#' + h);
   return { id, name, group, blurb, ...more, doc: doc(mode(c.slice(0, 7)), mode(c.slice(7), true, dark)) };
 };
 
-const PRESETS: ThemePreset[] = [
+const PRESETS: BuiltInThemePreset[] = [
   P('paper', m('theme-presets.library.paper'), 'original', m('theme-presets.library.clean-light-with-a-calm-blue'), '1d5fd1c2410cf5f6f8ffffff1b1f245a626ce1e4e87aa7ffff9d6614171c1d2128eceff3a2a9b32c323b'),
   P('midnight-oled', m('theme-presets.library.midnight-oled'), 'original', m('theme-presets.library.pure-black-for-wall-tablets'), '0a6fb5b45309f4f4f6ffffff11111155555ddcdce04cc2ffffb4540000000b0b0df2f2f29a9aa21f1f24', { note: m('theme-presets.library.pure-black-in-dark-mode-only-keep-the') }),
   P('ember', m('theme-presets.library.ember'), 'original', m('theme-presets.library.warm-paper-and-terracotta'), 'b93a0b0f766efaf5eefffdf92b21186b5a4aeadfcefb923c5eead41c1511261d17f6ebddbfa98f3a2d23'),

@@ -9,17 +9,21 @@ import { groupPreview, previewCardsEvents } from './preview-cards';
 import { base } from './styles';
 import { t } from './i18n';
 import { isColourMsg, isGradientMsg } from './model';
-import type { MarkedEntry, MarkedGroup } from './model';
+import type { CatalogueEntry, CatalogueGroup } from '../contracts/theme-catalogue';
 import { fire, modeList, ownValue, overriddenIn, scopeLabel } from './util';
 import type { Scope } from './util';
 
-export interface FieldRow {
-  entry: MarkedEntry;
-  /** True when the group's card reads a variable another group owns. */
-  follows: boolean;
-  /** A variable in the file the catalogue does not know (group "Other"). */
-  custom?: boolean;
-}
+/** A variable in the file the catalogue does not know (group "Other"): it has no label or hint, the row shows its name. */
+export type CustomEntry = Pick<CatalogueEntry, 'name' | 'group' | 'source' | 'kind' | 'default'> & { hint?: undefined };
+
+export type FieldRow =
+  | {
+      entry: CatalogueEntry;
+      /** True when the group's card reads a variable another group owns. */
+      follows: boolean;
+      custom?: false;
+    }
+  | { entry: CustomEntry; follows: boolean; custom: true };
 
 export interface FieldHint {
   text: string;
@@ -40,10 +44,10 @@ export interface FieldCtx {
 }
 
 const modeLabel = (m: ThemeMode): string => scopeLabel(m);
-const isColour = (entry: MarkedEntry): boolean => entry.kind === 'color' || entry.kind === 'background';
+const isColour = (entry: Pick<CatalogueEntry, 'kind'>): boolean => entry.kind === 'color' || entry.kind === 'background';
 
 /** The text under a field for an error from model.validateValue (colour fields lead with the picker). */
-export const fieldErrorText = (entry: MarkedEntry, message: string): string => {
+export const fieldErrorText = (entry: Pick<CatalogueEntry, 'kind'>, message: string): string => {
   if (entry.kind === 'color') {
     if (isGradientMsg(message)) return t('theme-editor.field-group.this-variable-takes-a-single-colour');
     if (isColourMsg(message)) return t('theme-editor.field-group.this-is-not-a-colour-pick-one-with-the');
@@ -68,7 +72,7 @@ export class McteFieldGroup extends LitElement {
     _kept: { state: true },
   };
 
-  group!: MarkedGroup;
+  group!: CatalogueGroup;
   rows: FieldRow[] = [];
   ctx!: FieldCtx;
   open = false;

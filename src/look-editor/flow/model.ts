@@ -1,7 +1,7 @@
 import type { FlowConfig } from '../../types';
 import { FLOW_LOOK_KEYS, hasFlowLook } from '../../contracts/flow-look.needs';
 import { FLOW_LOOK_EXISTING_KEYS, type FlowPreset } from '../../contracts/look-editor';
-import { FLOW_PRESETS, type MarkedPreset } from '../presets';
+import { FLOW_PRESETS } from '../presets';
 
 /*
  * Pure logic of <mc-flow-look-editor>: which keys it owns, the colour and spacing modes (the contract's precedence),
@@ -69,7 +69,7 @@ export function resetLook(f: FlowConfig): FlowConfig {
   return next as unknown as FlowConfig;
 }
 
-export type LookStatus = { kind: 'default' } | { kind: 'preset'; preset: MarkedPreset<FlowPreset> } | { kind: 'started'; preset: MarkedPreset<FlowPreset> } | { kind: 'own' };
+export type LookStatus = { kind: 'default' } | { kind: 'preset'; preset: FlowPreset } | { kind: 'started'; preset: FlowPreset } | { kind: 'own' };
 
 /** The preset's keys that apply to this flow (the Water level needs an entity). */
 const keysOf = (f: FlowConfig, p: FlowPreset): string[] => Object.keys(p.values).filter((k) => k !== 'tube_fill_value' || !!f.entity);
@@ -77,7 +77,7 @@ const keysOf = (f: FlowConfig, p: FlowPreset): string[] => Object.keys(p.values)
 /** No look keys: default; all keys of a preset equal and no other look key: that preset; at least half equal: started from it. */
 export function lookStatus(f: FlowConfig): LookStatus {
   if (!hasFlowLook(f)) return { kind: 'default' };
-  let best: MarkedPreset<FlowPreset> | undefined;
+  let best: FlowPreset | undefined;
   let bestN = 0;
   for (const p of FLOW_PRESETS) {
     const keys = keysOf(f, p);
