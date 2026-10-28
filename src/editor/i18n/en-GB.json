@@ -2138,7 +2138,7 @@
   },
   "card-editor.condition-row.use-module-entity": {
     "text": "Use module entity",
-    "note": "Shown in condition row (card-editor).",
+    "note": "Option in a condition row to test the entity of the module being edited. The action editor has a key with the same English for its own toggle.",
     "max": 35
   },
   "card-editor.conditions-list.add-a-condition-to-show-this-card-only": {

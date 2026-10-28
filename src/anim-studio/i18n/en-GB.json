@@ -1069,7 +1069,7 @@
   },
   "anim-studio.draw-svg-dialog.count-scaled-into-the-icon": {
     "text": "{count, plural, one {# shape} other {# shapes}}, scaled into the icon",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Summary in the draw SVG dialog after a drawing is imported. {count} is the number of shapes that were fitted into the icon.",
     "max": 50,
     "vars": {
       "count": "The count the text is about."
@@ -1949,7 +1949,7 @@
   },
   "anim-studio.keyframes-editor.count-copied": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}} copied",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Confirmation in the keyframes editor after copying. {count} is the number of keyframes copied.",
     "max": 30,
     "vars": {
       "count": "The count the text is about."
@@ -1957,7 +1957,7 @@
   },
   "anim-studio.keyframes-editor.count-deleted": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}} deleted",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Confirmation in the keyframes editor after deleting. {count} is the number of keyframes deleted.",
     "max": 35,
     "vars": {
       "count": "The count the text is about."
@@ -2766,7 +2766,7 @@
   },
   "anim-studio.part-inspector.count-on-the-timeline-rotate-move-scale": {
     "text": "{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and colour this part there.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Hint in the part inspector for a part that is animated. {count} is the number of keyframes the part has on the timeline.",
     "max": 125,
     "vars": {
       "count": "The count the text is about."
@@ -6638,7 +6638,7 @@
   },
   "anim-studio.studio-stage.preview-hides-count": {
     "text": "Preview hides {count, plural, one {# layer} other {# layers}}",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Label on the studio stage while preview is on. {count} is the number of layers hidden from the preview.",
     "max": 40,
     "vars": {
       "count": "The count the text is about."
@@ -7062,7 +7062,7 @@
   },
   "anim-studio.studio.it-is-used-by-count-they-stop-playing-it": {
     "text": "It is used by {count, plural, one {# card} other {# cards}}; they stop playing it, unless they embed a copy.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Warning in the studio when deleting an animation. {count} is the number of cards that use that animation.",
     "max": 115,
     "vars": {
       "count": "The count the text is about."

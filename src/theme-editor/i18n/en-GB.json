@@ -201,7 +201,7 @@
   },
   "theme-editor.button-card.primary-text-colour": {
     "text": "Primary text colour",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the colour field for the main text of Button Card. The Mushroom, Tile and Ultra Card groups have fields with the same English.",
     "max": 35
   },
   "theme-editor.button-card.radius-of-the-ripple-on-the-icon": {
@@ -660,7 +660,7 @@
   },
   "theme-editor.editor-view.lowercase-letters-numbers-hyphens-and": {
     "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Helper text under the theme name field in the editor. The start view has a key with the same English for the new-theme form.",
     "max": 120
   },
   "theme-editor.editor-view.magic-card-and-integrations": {
@@ -691,7 +691,7 @@
   },
   "theme-editor.editor-view.name-your-theme": {
     "text": "Name your theme",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Prompt label for the theme name field in the editor. The start view has a key with the same English.",
     "max": 25
   },
   "theme-editor.editor-view.named-the-theme-name-press-save-to-write": {
@@ -735,7 +735,7 @@
   },
   "theme-editor.editor-view.only-administrators-can-edit-themes": {
     "text": "Only administrators can edit themes.",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Notice in the editor view for users who are not Home Assistant administrators. The main theme editor shows the same English on its own screen.",
     "max": 60
   },
   "theme-editor.editor-view.only-changed": {
@@ -821,7 +821,7 @@
   },
   "theme-editor.editor-view.save-as-my-preset": {
     "text": "Save as my preset",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Button in the editor view that stores the open theme as a personal preset. The preset dialog has a key with the same English as its confirm button.",
     "max": 35
   },
   "theme-editor.editor-view.save-without-it": {
@@ -1004,7 +1004,7 @@
   },
   "theme-editor.editor-view.use-lowercase-letters-numbers-hyphens": {
     "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
-    "note": "Shown in editor view (theme-editor).",
+    "note": "Validation error in the editor view for an invalid theme name. The util key with the same English is the shared check used elsewhere.",
     "max": 185
   },
   "theme-editor.editor-view.use-this-name": {
@@ -1301,22 +1301,22 @@
   },
   "theme-editor.ha.card-background-override": {
     "text": "Card background override",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the field in the Home Assistant variables group that overrides every card background. The Magic Card and Ultra Card groups have the same English.",
     "max": 40
   },
   "theme-editor.ha.card-border-colour": {
     "text": "Card border colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variables field for the colour of card borders. The Magic Card group has the same English.",
     "max": 30
   },
   "theme-editor.ha.card-border-width": {
     "text": "Card border width",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variables field for the thickness of card borders. The Magic Card group has the same English.",
     "max": 30
   },
   "theme-editor.ha.card-corner-radius": {
     "text": "Card corner radius",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variables field for how rounded card corners are. The Magic Card group has the same English.",
     "max": 30
   },
   "theme-editor.ha.card-shadow": {
@@ -1621,7 +1621,7 @@
   },
   "theme-editor.ha.light-on-colour": {
     "text": "Light on colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variables field for the colour of a light that is switched on. The Magic Card group has the same English.",
     "max": 25
   },
   "theme-editor.ha.light-tints-of-the-primary-colour": {
@@ -1831,7 +1831,7 @@
   },
   "theme-editor.ha.text-on-primary-colour": {
     "text": "Text on primary colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variables field for text drawn on the primary colour. The Magic Card group has the same English.",
     "max": 40
   },
   "theme-editor.ha.the-active-sidebar-item-icon": {
@@ -2081,7 +2081,7 @@
   },
   "theme-editor.magic-card.card-background-override": {
     "text": "Card background override",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card variables field that overrides the background of Magic Card cards. The Home Assistant and Ultra Card groups have the same English.",
     "max": 40
   },
   "theme-editor.magic-card.card-border": {
@@ -2091,17 +2091,17 @@
   },
   "theme-editor.magic-card.card-border-colour": {
     "text": "Card border colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card variables field for the border colour of Magic Card cards. The Home Assistant group has the same English.",
     "max": 30
   },
   "theme-editor.magic-card.card-border-width": {
     "text": "Card border width",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card variables field for the border thickness of Magic Card cards. The Home Assistant group has the same English.",
     "max": 30
   },
   "theme-editor.magic-card.card-corner-radius": {
     "text": "Card corner radius",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card variables field for the corner rounding of Magic Card cards. The Home Assistant group has the same English.",
     "max": 30
   },
   "theme-editor.magic-card.card-shadow": {
@@ -2136,7 +2136,7 @@
   },
   "theme-editor.magic-card.light-on-colour": {
     "text": "Light on colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card variables field for the colour of a light that is switched on. The Home Assistant group has the same English.",
     "max": 25
   },
   "theme-editor.magic-card.main-text": {
@@ -2176,7 +2176,7 @@
   },
   "theme-editor.magic-card.text-on-primary-colour": {
     "text": "Text on primary colour",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Label of the Magic Card variables field for text drawn on the primary colour. The Home Assistant group has the same English.",
     "max": 40
   },
   "theme-editor.magic-card.the-light-slider": {
@@ -2241,7 +2241,7 @@
   },
   "theme-editor.model.enter-a-value": {
     "text": "Enter a value.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error from the theme model when a variable has no value. The raw rows key with the same English is shown beside the raw row field.",
     "max": 25
   },
   "theme-editor.model.enter-three-numbers-from-0-to-255-like": {
@@ -2687,27 +2687,27 @@
   },
   "theme-editor.mushroom.primary-letter-spacing": {
     "text": "Primary letter spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the spacing between letters of the main text. The Tile group has the same English.",
     "max": 40
   },
   "theme-editor.mushroom.primary-line-height": {
     "text": "Primary line height",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the line height of the main text. The Tile group has the same English.",
     "max": 35
   },
   "theme-editor.mushroom.primary-text-colour": {
     "text": "Primary text colour",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the colour of the main text. The Tile, Button Card and Ultra Card groups have the same English.",
     "max": 35
   },
   "theme-editor.mushroom.primary-text-size": {
     "text": "Primary text size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the font size of the main text. The Tile group has the same English.",
     "max": 30
   },
   "theme-editor.mushroom.primary-text-weight": {
     "text": "Primary text weight",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how bold the main text is. The Tile group has the same English.",
     "max": 35
   },
   "theme-editor.mushroom.purple-rgb": {
@@ -2722,27 +2722,27 @@
   },
   "theme-editor.mushroom.secondary-letter-spacing": {
     "text": "Secondary letter spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the spacing between letters of the secondary text. The Tile group has the same English.",
     "max": 40
   },
   "theme-editor.mushroom.secondary-line-height": {
     "text": "Secondary line height",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the line height of the secondary text. The Tile group has the same English.",
     "max": 35
   },
   "theme-editor.mushroom.secondary-text-colour": {
     "text": "Secondary text colour",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the colour of the secondary text. The Tile and Ultra Card groups have the same English.",
     "max": 35
   },
   "theme-editor.mushroom.secondary-text-size": {
     "text": "Secondary text size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the font size of the secondary text. The Tile group has the same English.",
     "max": 35
   },
   "theme-editor.mushroom.secondary-text-weight": {
     "text": "Secondary text weight",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how bold the secondary text is. The Tile group has the same English.",
     "max": 35
   },
   "theme-editor.mushroom.slider-threshold": {
@@ -2988,7 +2988,7 @@
   },
   "theme-editor.preset-dialog.save-as-my-preset": {
     "text": "Save as my preset",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Confirm button of the preset dialog that saves the theme as a personal preset. The editor view has a key with the same English for its opening button.",
     "max": 35
   },
   "theme-editor.preset-dialog.save-preset": {
@@ -3367,12 +3367,12 @@
   },
   "theme-editor.raw-rows.enter-a-name": {
     "text": "Enter a name.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Error under the name field of a raw variable row when it is left empty. The util key with the same English is the shared check.",
     "max": 25
   },
   "theme-editor.raw-rows.enter-a-value": {
     "text": "Enter a value.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Error under the value field of a raw variable row when it is left empty. The model key with the same English is the validation result.",
     "max": 25
   },
   "theme-editor.raw-rows.name": {
@@ -3616,7 +3616,7 @@
   },
   "theme-editor.start-view.lowercase-letters-numbers-hyphens-and": {
     "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Helper text under the name field of the new-theme form on the start view. The editor view has a key with the same English.",
     "max": 120
   },
   "theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is": {
@@ -3629,7 +3629,7 @@
   },
   "theme-editor.start-view.name-your-theme": {
     "text": "Name your theme",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Prompt label for the theme name field on the start view when creating a theme. The editor view has a key with the same English.",
     "max": 25
   },
   "theme-editor.start-view.new-theme": {
@@ -3801,7 +3801,7 @@
   },
   "theme-editor.theme-editor.only-administrators-can-edit-themes": {
     "text": "Only administrators can edit themes.",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Notice on the main theme editor screen for users who are not Home Assistant administrators. The editor view shows the same English inside an open theme.",
     "max": 60
   },
   "theme-editor.theme-editor.still-not-found-restart-home-assistant": {
@@ -3899,17 +3899,17 @@
   },
   "theme-editor.tile.primary-letter-spacing": {
     "text": "Primary letter spacing",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the spacing between letters of the main text. The Mushroom group has the same English.",
     "max": 40
   },
   "theme-editor.tile.primary-line-height": {
     "text": "Primary line height",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the line height of the main text. The Mushroom group has the same English.",
     "max": 35
   },
   "theme-editor.tile.primary-text-colour": {
     "text": "Primary text colour",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the colour of the main text. The Mushroom, Button Card and Ultra Card groups have the same English.",
     "max": 35
   },
   "theme-editor.tile.primary-text-minimum-height": {
@@ -3919,12 +3919,12 @@
   },
   "theme-editor.tile.primary-text-size": {
     "text": "Primary text size",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the font size of the main text. The Mushroom group has the same English.",
     "max": 30
   },
   "theme-editor.tile.primary-text-weight": {
     "text": "Primary text weight",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for how bold the main text is. The Mushroom group has the same English.",
     "max": 35
   },
   "theme-editor.tile.reserves-room-for-a-missing-secondary": {
@@ -3934,27 +3934,27 @@
   },
   "theme-editor.tile.secondary-letter-spacing": {
     "text": "Secondary letter spacing",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the spacing between letters of the secondary text. The Mushroom group has the same English.",
     "max": 40
   },
   "theme-editor.tile.secondary-line-height": {
     "text": "Secondary line height",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the line height of the secondary text. The Mushroom group has the same English.",
     "max": 35
   },
   "theme-editor.tile.secondary-text-colour": {
     "text": "Secondary text colour",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the colour of the secondary text. The Mushroom and Ultra Card groups have the same English.",
     "max": 35
   },
   "theme-editor.tile.secondary-text-size": {
     "text": "Secondary text size",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for the font size of the secondary text. The Mushroom group has the same English.",
     "max": 35
   },
   "theme-editor.tile.secondary-text-weight": {
     "text": "Secondary text weight",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile variable for how bold the secondary text is. The Mushroom group has the same English.",
     "max": 35
   },
   "theme-editor.tile.text-block-minimum-height": {
@@ -4069,7 +4069,7 @@
   },
   "theme-editor.ultra-card.card-background-override": {
     "text": "Card background override",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card variable that overrides the card background. The Home Assistant and Magic Card groups have the same English.",
     "max": 40
   },
   "theme-editor.ultra-card.card-radius": {
@@ -4124,12 +4124,12 @@
   },
   "theme-editor.ultra-card.primary-text-colour": {
     "text": "Primary text colour",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card variable for the colour of the main text. The Mushroom, Tile and Button Card groups have the same English.",
     "max": 35
   },
   "theme-editor.ultra-card.secondary-text-colour": {
     "text": "Secondary text colour",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card variable for the colour of the secondary text. The Mushroom and Tile groups have the same English.",
     "max": 35
   },
   "theme-editor.ultra-card.shadow-of-the-card": {
@@ -4166,7 +4166,7 @@
   },
   "theme-editor.util.enter-a-name": {
     "text": "Enter a name.",
-    "note": "Shown in util (theme-editor).",
+    "note": "Validation error from the shared name check when a theme name is empty. The raw rows key with the same English is for variable names.",
     "max": 25
   },
   "theme-editor.util.light": {
@@ -4186,7 +4186,7 @@
   },
   "theme-editor.util.use-lowercase-letters-numbers-hyphens": {
     "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
-    "note": "Shown in util (theme-editor).",
+    "note": "Validation error returned by the shared name check for an invalid theme name. The editor view has a key with the same English.",
     "max": 185
   }
 }

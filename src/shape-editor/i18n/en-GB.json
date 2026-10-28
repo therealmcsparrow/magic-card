@@ -217,7 +217,7 @@
   },
   "shape-editor.mc-shape-studio.canvas-tools": {
     "text": "Canvas tools",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible label for the toolbar of drawing tools beside the shape canvas.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.card-shapes-have-one-outline-so-the-hole": {
@@ -277,7 +277,7 @@
   },
   "shape-editor.mc-shape-studio.combine-with": {
     "text": "Combine with",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the group of options for combining the selected shape with another one.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.copied": {
@@ -311,7 +311,7 @@
   },
   "shape-editor.mc-shape-studio.corner-styles": {
     "text": "Corner styles",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the group of buttons that pick how a corner is cut, such as round or bevel.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.corners": {
@@ -367,7 +367,7 @@
   },
   "shape-editor.mc-shape-studio.custom-shape": {
     "text": "Custom shape",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label for a shape the user drew or edited, shown where a starter shape name would be.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.delete": {
@@ -565,7 +565,7 @@
   },
   "shape-editor.mc-shape-studio.keep-editing": {
     "text": "Keep editing",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button in the close confirmation that dismisses it and returns to the shape editor.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.keep-your-own-shapes": {
@@ -697,7 +697,7 @@
   },
   "shape-editor.mc-shape-studio.no-messages": {
     "text": "No messages.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Empty state of the shape editor message area when there is nothing to report.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.no-saved-shapes-yet": {
@@ -785,7 +785,7 @@
   },
   "shape-editor.mc-shape-studio.outline-actions": {
     "text": "Outline actions",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Accessible label for the group of buttons that act on the outline of the selected shape.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.outlines": {
@@ -800,7 +800,7 @@
   },
   "shape-editor.mc-shape-studio.pen-cancelled": {
     "text": "Pen cancelled.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Status message after the user abandons drawing a path with the pen tool.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.point-i": {
@@ -880,7 +880,7 @@
   },
   "shape-editor.mc-shape-studio.remove-point": {
     "text": "Remove point",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button that deletes the selected point from the outline (verb).",
     "max": 20
   },
   "shape-editor.mc-shape-studio.replaced-your-outline": {
@@ -991,7 +991,7 @@
   },
   "shape-editor.mc-shape-studio.selected-point": {
     "text": "Selected point",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Heading of the panel that shows the position and type of the currently selected point.",
     "max": 25
   },
   "shape-editor.mc-shape-studio.shape": {
@@ -1009,7 +1009,7 @@
   },
   "shape-editor.mc-shape-studio.shape-editor": {
     "text": "Shape editor",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Title of the shape editor window.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.shape-for-target": {
@@ -1022,7 +1022,7 @@
   },
   "shape-editor.mc-shape-studio.shape-name": {
     "text": "Shape name",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Label of the text field where the user names the shape before saving it to the library.",
     "max": 20
   },
   "shape-editor.mc-shape-studio.shape-to-combine": {
@@ -1257,7 +1257,7 @@
   },
   "shape-editor.mc-shape-studio.this-shape-is-too-big-for-the-library-8": {
     "text": "This shape is too big for the library (8 KB).",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Save error shown in the studio window. The 8 KB limit is fixed text. Same English as the names key used by the save path.",
     "max": 75
   },
   "shape-editor.mc-shape-studio.this-shape-was-changed-somewhere-else": {
@@ -1409,17 +1409,17 @@
   },
   "shape-editor.names.chevron": {
     "text": "Chevron",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a chevron, a V-shaped arrowhead.",
     "max": 15
   },
   "shape-editor.names.circle": {
     "text": "Circle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that is a perfect circle.",
     "max": 10
   },
   "shape-editor.names.cloud": {
     "text": "Cloud",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a cloud.",
     "max": 10
   },
   "shape-editor.names.combine": {
@@ -1444,7 +1444,7 @@
   },
   "shape-editor.names.cut-corners": {
     "text": "Cut corners",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape, a rectangle with diagonally cut corners.",
     "max": 20
   },
   "shape-editor.names.delete-removes-the-point": {
@@ -1479,7 +1479,7 @@
   },
   "shape-editor.names.ellipse": {
     "text": "Ellipse",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that is a stretched circle, an oval.",
     "max": 15
   },
   "shape-editor.names.esc-closes-a-window-then-ends-a-drawing": {
@@ -1494,12 +1494,12 @@
   },
   "shape-editor.names.heart": {
     "text": "Heart",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a heart.",
     "max": 10
   },
   "shape-editor.names.hexagon": {
     "text": "Hexagon",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with six equal sides.",
     "max": 15
   },
   "shape-editor.names.in-handle": {
@@ -1524,7 +1524,7 @@
   },
   "shape-editor.names.leaf": {
     "text": "Leaf",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a leaf, pointed at both ends.",
     "max": 10
   },
   "shape-editor.names.left": {
@@ -1554,7 +1554,7 @@
   },
   "shape-editor.names.octagon": {
     "text": "Octagon",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with eight equal sides.",
     "max": 15
   },
   "shape-editor.names.out-handle": {
@@ -1594,7 +1594,7 @@
   },
   "shape-editor.names.rounded-rectangle": {
     "text": "Rounded rectangle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape, a rectangle with rounded corners.",
     "max": 30
   },
   "shape-editor.names.row": {
@@ -1619,12 +1619,12 @@
   },
   "shape-editor.names.semicircle": {
     "text": "Semicircle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that is half a circle.",
     "max": 20
   },
   "shape-editor.names.shield": {
     "text": "Shield",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a heraldic shield.",
     "max": 10
   },
   "shape-editor.names.show-or-hide-panels-ctrl-or": {
@@ -1634,12 +1634,12 @@
   },
   "shape-editor.names.speech-bubble": {
     "text": "Speech bubble",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a comic speech bubble with a tail.",
     "max": 25
   },
   "shape-editor.names.square": {
     "text": "Square",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with four equal sides.",
     "max": 10
   },
   "shape-editor.names.squircle": {
@@ -1649,7 +1649,7 @@
   },
   "shape-editor.names.star": {
     "text": "Star",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that is a five-pointed star.",
     "max": 10
   },
   "shape-editor.names.subtract": {
@@ -1689,7 +1689,7 @@
   },
   "shape-editor.names.ticket": {
     "text": "Ticket",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape that looks like a ticket, with notches in its sides.",
     "max": 10
   },
   "shape-editor.names.tile": {
@@ -1719,7 +1719,7 @@
   },
   "shape-editor.names.triangle": {
     "text": "Triangle",
-    "note": "Shown in names (shape-editor).",
+    "note": "Name of a starter shape with three sides.",
     "max": 15
   },
   "shape-editor.names.two-notched-corners": {

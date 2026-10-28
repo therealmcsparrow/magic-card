@@ -429,7 +429,7 @@
   },
   "svg-editor.mc-svg-editor.drawing-opened": {
     "text": "Drawing opened.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Status message after an existing drawing has been loaded into the SVG editor.",
     "max": 25
   },
   "svg-editor.mc-svg-editor.edit-points": {
@@ -507,7 +507,7 @@
   },
   "svg-editor.mc-svg-editor.keep-your-own-icons-for-every-dashboard": {
     "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Hint in the editor window about where icons are stored. Keep the product name Magic Card Utils unchanged. The views key with the same English is the hint in the library views.",
     "max": 215
   },
   "svg-editor.mc-svg-editor.line": {
@@ -604,7 +604,7 @@
   },
   "svg-editor.mc-svg-editor.paste-some-svg-first": {
     "text": "Paste some SVG first.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Message in the editor window when the user confirms an empty paste box. The views key with the same English is shown by the paste dialog itself.",
     "max": 35
   },
   "svg-editor.mc-svg-editor.pen": {
@@ -668,7 +668,7 @@
   },
   "svg-editor.mc-svg-editor.select-three-or-more-shapes-to-space": {
     "text": "Select three or more shapes to space them evenly.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Status message in the editor window when Space evenly is used with fewer than three shapes. The menu key with the same English is the tooltip in the menu.",
     "max": 80
   },
   "svg-editor.mc-svg-editor.shapes": {
@@ -701,7 +701,7 @@
   },
   "svg-editor.mc-svg-editor.the-safe-area-is-hidden": {
     "text": "The safe area is hidden.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Status message in the editor window after the safe area guide is switched off. The menu key with the same English is shown in the menu.",
     "max": 40
   },
   "svg-editor.mc-svg-editor.the-svg-is-larger-than-32-kb": {
@@ -737,7 +737,7 @@
   },
   "svg-editor.mc-svg-editor.this-icon-was-changed-somewhere-else": {
     "text": "This icon was changed somewhere else.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Warning in the editor window when the open icon was edited elsewhere. The views key with the same English is shown in the icon list.",
     "max": 60
   },
   "svg-editor.mc-svg-editor.this-is-not-valid-svg-check-that-it": {
@@ -911,7 +911,7 @@
   },
   "svg-editor.menu.nothing-selected-pick-a-layer-or-click-a": {
     "text": "Nothing selected. Pick a layer, or click a shape.",
-    "note": "Shown in menu (svg-editor).",
+    "note": "Hint in the menu when no layer or shape is selected. The views key with the same English is the empty state of the properties panel.",
     "max": 80
   },
   "svg-editor.menu.nothing-to-export-yet": {
@@ -946,7 +946,7 @@
   },
   "svg-editor.menu.select-three-or-more-shapes-to-space": {
     "text": "Select three or more shapes to space them evenly.",
-    "note": "Shown in menu (svg-editor).",
+    "note": "Tooltip in the menu on the disabled Space evenly entry. The editor window key with the same English reports it as a status message.",
     "max": 80
   },
   "svg-editor.menu.select-two-or-more-shapes-to-align-them": {
@@ -966,7 +966,7 @@
   },
   "svg-editor.menu.the-safe-area-is-hidden": {
     "text": "The safe area is hidden.",
-    "note": "Shown in menu (svg-editor).",
+    "note": "Menu text shown while the safe area guide is off. The editor window key with the same English is the status message after toggling.",
     "max": 40
   },
   "svg-editor.menu.this-is-the-last-point-of-an-open-line": {
@@ -1602,7 +1602,7 @@
   },
   "svg-editor.views.deleted-name-cards-that-use-it-show-the": {
     "text": "Deleted {name}. Cards that use it show the default icon unless they keep a copy.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Confirmation after an icon is deleted from the library. {name} is the name of the deleted icon.",
     "max": 130,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2092,7 +2092,7 @@
   },
   "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
     "text": "Nothing selected. Pick a layer, or click a shape.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Empty state of the properties panel when nothing is selected. The menu key with the same English is the hint in the menu.",
     "max": 80
   },
   "svg-editor.views.nudge": {
@@ -2132,7 +2132,7 @@
   },
   "svg-editor.views.paste-some-svg-first": {
     "text": "Paste some SVG first.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Message in the paste dialog when it is confirmed with an empty box. The editor window key with the same English reports it elsewhere.",
     "max": 35
   },
   "svg-editor.views.paste-svg": {
@@ -2496,7 +2496,7 @@
   },
   "svg-editor.views.this-icon-was-changed-somewhere-else": {
     "text": "This icon was changed somewhere else.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning on an icon in the library list that was edited elsewhere. The editor window key with the same English warns inside the open editor.",
     "max": 60
   },
   "svg-editor.views.this-is-not-used-on-the-card-yet": {

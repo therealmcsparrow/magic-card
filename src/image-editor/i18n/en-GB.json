@@ -892,7 +892,7 @@
   },
   "image-editor.text-tool.text-cancelled": {
     "text": "Text cancelled.",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Status message in the image editor after the user abandons adding text to the canvas.",
     "max": 25
   },
   "image-editor.text-tool.text-on-the-canvas": {
@@ -902,7 +902,7 @@
   },
   "image-editor.text-tool.that-is-the-longest-text-2048-characters": {
     "text": "That is the longest text (2048 characters).",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Status message from the text tool when typed text hits the 2048 character limit. The text-ui key with the same English is the one shown by the text panel.",
     "max": 70
   },
   "image-editor.text-ui.add-text": {
@@ -1045,7 +1045,7 @@
   },
   "image-editor.text-ui.that-is-the-longest-text-2048-characters": {
     "text": "That is the longest text (2048 characters).",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Message in the text panel when the text field reaches the 2048 character limit. The text-tool key with the same English is shown by the canvas tool.",
     "max": 70
   },
   "image-editor.text-ui.the-empty-text-layer-was-removed": {

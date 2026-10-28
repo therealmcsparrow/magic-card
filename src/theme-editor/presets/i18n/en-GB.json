@@ -16,7 +16,7 @@
   },
   "theme-presets.library.ashen-keep": {
     "text": "Ashen Keep",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in dark theme preset with ash-grey tones. A proper name, keep it short.",
     "max": 20
   },
   "theme-presets.library.autumn": {
@@ -26,7 +26,7 @@
   },
   "theme-presets.library.ayu-mirage": {
     "text": "Ayu Mirage",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Ayu Mirage editor colour scheme. A proper name.",
     "max": 20
   },
   "theme-presets.library.balanced-low-glare-cream-and-teal": {
@@ -41,7 +41,7 @@
   },
   "theme-presets.library.candlelit-cloister": {
     "text": "Candlelit Cloister",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with warm candlelight colours. A proper name.",
     "max": 30
   },
   "theme-presets.library.cassette": {
@@ -76,12 +76,12 @@
   },
   "theme-presets.library.cobalt-gold": {
     "text": "Cobalt Gold",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset that pairs cobalt blue with gold. A proper name.",
     "max": 20
   },
   "theme-presets.library.cobalt-prism": {
     "text": "Cobalt Prism",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset built on cobalt blue with prismatic accents. A proper name.",
     "max": 20
   },
   "theme-presets.library.contrast": {
@@ -96,7 +96,7 @@
   },
   "theme-presets.library.crimson-pines": {
     "text": "Crimson Pines",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset that pairs crimson with forest green. A proper name.",
     "max": 25
   },
   "theme-presets.library.deep-greens-with-an-amber-spark": {
@@ -116,7 +116,7 @@
   },
   "theme-presets.library.deep-survey": {
     "text": "Deep Survey",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with deep, dark survey-instrument colours. A proper name.",
     "max": 20
   },
   "theme-presets.library.desert": {
@@ -126,7 +126,7 @@
   },
   "theme-presets.library.dracula-night": {
     "text": "Dracula Night",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in dark theme preset in the style of the Dracula editor colour scheme. A proper name.",
     "max": 25
   },
   "theme-presets.library.dusky-blue-night-warm-fox-white-day": {
@@ -136,7 +136,7 @@
   },
   "theme-presets.library.dust-duel": {
     "text": "Dust Duel",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with dusty desert tones. A proper name.",
     "max": 15
   },
   "theme-presets.library.ember": {
@@ -146,7 +146,7 @@
   },
   "theme-presets.library.everforest-moss": {
     "text": "Everforest Moss",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Everforest editor colour scheme, with mossy greens. A proper name.",
     "max": 25
   },
   "theme-presets.library.faded-tape-deck-red-and-cream": {
@@ -171,7 +171,7 @@
   },
   "theme-presets.library.frontier-freighter": {
     "text": "Frontier Freighter",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in sci-fi theme preset styled like a worn cargo ship. A proper name.",
     "max": 30
   },
   "theme-presets.library.frost": {
@@ -201,7 +201,7 @@
   },
   "theme-presets.library.glass-aqua": {
     "text": "Glass Aqua",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in frosted-glass theme preset with aqua accents. A proper name.",
     "max": 20
   },
   "theme-presets.library.glass-blurred-translucent-cards-on-a": {
@@ -211,17 +211,17 @@
   },
   "theme-presets.library.glass-graphite": {
     "text": "Glass Graphite",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in frosted-glass theme preset in graphite grey. A proper name.",
     "max": 25
   },
   "theme-presets.library.glass-rose": {
     "text": "Glass Rose",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in frosted-glass theme preset with rose-pink accents. A proper name.",
     "max": 20
   },
   "theme-presets.library.gruvbox-retro": {
     "text": "Gruvbox Retro",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Gruvbox editor colour scheme, with warm retro colours. A proper name.",
     "max": 25
   },
   "theme-presets.library.hi-vis": {
@@ -261,12 +261,12 @@
   },
   "theme-presets.library.kanagawa-wave": {
     "text": "Kanagawa Wave",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Kanagawa editor colour scheme. A proper name.",
     "max": 25
   },
   "theme-presets.library.lavender-mist": {
     "text": "Lavender Mist",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with soft lavender tones. A proper name.",
     "max": 25
   },
   "theme-presets.library.lilac-and-amber-on-near-black-like-a": {
@@ -291,12 +291,12 @@
   },
   "theme-presets.library.material-violet": {
     "text": "Material Violet",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with a Material-style violet primary colour. A proper name.",
     "max": 25
   },
   "theme-presets.library.midnight-oled": {
     "text": "Midnight OLED",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with a true-black background for OLED screens. OLED stays untranslated.",
     "max": 25
   },
   "theme-presets.library.mint-and-sky-on-ink": {
@@ -306,7 +306,7 @@
   },
   "theme-presets.library.monokai-lime": {
     "text": "Monokai Lime",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Monokai editor colour scheme, with lime accents. A proper name.",
     "max": 20
   },
   "theme-presets.library.muted-rose-and-iris-calm-and-low": {
@@ -326,7 +326,7 @@
   },
   "theme-presets.library.neon-rain": {
     "text": "Neon Rain",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in dark theme preset with neon accents, like lights on wet streets. A proper name.",
     "max": 15
   },
   "theme-presets.library.neutral-blue-grey-for-any-room": {
@@ -346,7 +346,7 @@
   },
   "theme-presets.library.nord-frost": {
     "text": "Nord Frost",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Nord colour palette, with icy blues. A proper name.",
     "max": 20
   },
   "theme-presets.library.ocean": {
@@ -356,7 +356,7 @@
   },
   "theme-presets.library.ochre-basin": {
     "text": "Ochre Basin",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with ochre and earthy desert colours. A proper name.",
     "max": 20
   },
   "theme-presets.library.off-white-panels-burnt-orange-accent": {
@@ -366,12 +366,12 @@
   },
   "theme-presets.library.oled-amber": {
     "text": "OLED Amber",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with a true-black background and amber accents. OLED stays untranslated.",
     "max": 20
   },
   "theme-presets.library.oled-green": {
     "text": "OLED Green",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with a true-black background and green accents. OLED stays untranslated.",
     "max": 20
   },
   "theme-presets.library.one-dark-pro": {
@@ -381,7 +381,7 @@
   },
   "theme-presets.library.orbital-smelter": {
     "text": "Orbital Smelter",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in sci-fi theme preset styled like an industrial smelter in orbit. A proper name.",
     "max": 25
   },
   "theme-presets.library.oxblood-red-over-a-dark-pine-forest-moss": {
@@ -411,7 +411,7 @@
   },
   "theme-presets.library.poimandres-mint": {
     "text": "Poimandres Mint",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Poimandres editor colour scheme, with mint accents. A proper name.",
     "max": 25
   },
   "theme-presets.library.pure-black-for-wall-tablets": {
@@ -471,7 +471,7 @@
   },
   "theme-presets.library.silverleaf-glade": {
     "text": "Silverleaf Glade",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in fantasy theme preset with silver and woodland greens. A proper name.",
     "max": 30
   },
   "theme-presets.library.sky-blue-and-sun-yellow": {
@@ -496,7 +496,7 @@
   },
   "theme-presets.library.solarized-glow": {
     "text": "Solarized Glow",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Solarized colour palette. A proper name.",
     "max": 25
   },
   "theme-presets.library.sorbet": {
@@ -521,7 +521,7 @@
   },
   "theme-presets.library.synthwave-sunset": {
     "text": "Synthwave Sunset",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset with 1980s synthwave sunset colours, pink and purple. A proper name.",
     "max": 30
   },
   "theme-presets.library.teal-depths-and-coral": {
@@ -576,7 +576,7 @@
   },
   "theme-presets.library.zenburn-calm": {
     "text": "Zenburn Calm",
-    "note": "Shown in library (theme-presets).",
+    "note": "Name of a built-in theme preset in the style of the Zenburn editor colour scheme, with low-contrast calm tones. A proper name.",
     "max": 20
   },
   "theme-presets.picker.all": {

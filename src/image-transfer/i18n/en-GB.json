@@ -1,7 +1,7 @@
 {
   "image-transfer.chunk.create-copy": {
     "text": "Create copy",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Button in the image transfer dialog that saves a duplicate of the image as a new one.",
     "max": 20
   },
   "image-transfer.chunk.delete-name-cards-that-use-it-show-that": {
@@ -67,7 +67,7 @@
   },
   "image-transfer.chunk.new-image": {
     "text": "New image",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Button in the image transfer dialog that starts a blank image in the image editor.",
     "max": 20
   },
   "image-transfer.chunk.view-name": {
