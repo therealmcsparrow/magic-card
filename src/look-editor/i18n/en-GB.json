@@ -61,7 +61,7 @@
   },
   "look-editor.element.bubbles": {
     "text": "Bubbles",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the flow line look list: round bubbles that travel along the line.",
     "max": 15
   },
   "look-editor.element.by-value": {
@@ -76,7 +76,7 @@
   },
   "look-editor.element.chevron": {
     "text": "Chevron",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of a travelling shape on a flow line: a V-shaped arrow mark, like a greater-than sign.",
     "max": 15
   },
   "look-editor.element.colour": {
@@ -91,12 +91,12 @@
   },
   "look-editor.element.colour-ranges": {
     "text": "Colour ranges",
-    "note": "Shown in element (look-editor).",
+    "note": "Option and heading for colouring the flow line by value bands, such as blue below 10 and red above 30.",
     "max": 25
   },
   "look-editor.element.comet": {
     "text": "Comet",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of a travelling shape on a flow line: a bright head with a fading tail.",
     "max": 10
   },
   "look-editor.element.core-colour": {
@@ -116,7 +116,7 @@
   },
   "look-editor.element.dashed": {
     "text": "Dashed",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the flow line look list: a line drawn as short dashes. Adjective.",
     "max": 10
   },
   "look-editor.element.default-look": {
@@ -126,7 +126,7 @@
   },
   "look-editor.element.diamond": {
     "text": "Diamond",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of a travelling shape on a flow line: a square turned on its corner.",
     "max": 15
   },
   "look-editor.element.different-start-marker": {
@@ -161,7 +161,7 @@
   },
   "look-editor.element.double-rail": {
     "text": "Double rail",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the flow line look list: two parallel lines, like a railway track.",
     "max": 20
   },
   "look-editor.element.drop": {
@@ -176,7 +176,7 @@
   },
   "look-editor.element.end-marker": {
     "text": "End marker",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the mark drawn where a flow line ends, such as an arrowhead or dot.",
     "max": 20
   },
   "look-editor.element.ends": {
@@ -259,7 +259,7 @@
   },
   "look-editor.element.look-change-undone": {
     "text": "Look change undone.",
-    "note": "Shown in element (look-editor).",
+    "note": "Toast after undoing a change to a flow line look. Same English as the slider look editor toast.",
     "max": 40
   },
   "look-editor.element.look-reset-n-removed": {
@@ -307,7 +307,7 @@
   },
   "look-editor.element.neon": {
     "text": "Neon",
-    "note": "Shown in element (look-editor).",
+    "note": "Option in the flow line look list for a glowing neon line. Same English as the two presets.",
     "max": 10
   },
   "look-editor.element.none": {
@@ -367,7 +367,7 @@
   },
   "look-editor.element.ring": {
     "text": "Ring",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of a travelling shape on a flow line: an open circle.",
     "max": 10
   },
   "look-editor.element.rotate-with-the-line": {
@@ -377,7 +377,7 @@
   },
   "look-editor.element.round-node": {
     "text": "Round node",
-    "note": "Shown in element (look-editor).",
+    "note": "Marker option for a flow line end: a filled round dot, as at a junction.",
     "max": 20
   },
   "look-editor.element.scale-width": {
@@ -392,7 +392,7 @@
   },
   "look-editor.element.shape-colour": {
     "text": "Shape colour",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the colour of the shapes travelling along a flow line.",
     "max": 20
   },
   "look-editor.element.shape-size-px": {
@@ -477,17 +477,17 @@
   },
   "look-editor.element.square": {
     "text": "Square",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of a travelling shape on a flow line: a square with straight sides.",
     "max": 10
   },
   "look-editor.element.star": {
     "text": "Star",
-    "note": "Shown in element (look-editor).",
+    "note": "Name of a travelling shape on a flow line: a five-pointed star.",
     "max": 10
   },
   "look-editor.element.start-marker": {
     "text": "Start marker",
-    "note": "Shown in element (look-editor).",
+    "note": "Label of the mark drawn where a flow line begins, such as a dot.",
     "max": 20
   },
   "look-editor.element.strong": {
@@ -594,7 +594,7 @@
   },
   "look-editor.element.your-own-look": {
     "text": "Your own look",
-    "note": "Shown in element (look-editor).",
+    "note": "Heading for the flow line look the user built, not a preset. Same English as the slider look editor.",
     "max": 25
   },
   "look-editor.element.your-own-look-started-from-name": {
@@ -677,12 +677,12 @@
   },
   "look-editor.mc-slider-look-editor.border-colour": {
     "text": "Border colour",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the colour of the line drawn around the slider track.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.border-px": {
     "text": "Border (px)",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the width of the slider track border, in pixels. Keep (px).",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider": {
@@ -808,7 +808,7 @@
   },
   "look-editor.mc-slider-look-editor.icon-position": {
     "text": "Icon position",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the choice for where the slider icon sits, such as in the track or beside it.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.in-a-bubble-while-dragging": {
@@ -843,7 +843,7 @@
   },
   "look-editor.mc-slider-look-editor.look-change-undone": {
     "text": "Look change undone.",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Toast after undoing a change to a slider look. Same English as the flow line toast.",
     "max": 40
   },
   "look-editor.mc-slider-look-editor.look-reset-count": {
@@ -1003,17 +1003,17 @@
   },
   "look-editor.mc-slider-look-editor.size-px": {
     "text": "Size (px)",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the size of the slider handle or icon, in pixels. Keep (px).",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.slider-colour": {
     "text": "Slider colour",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the main colour of the slider fill, used when it does not follow the light.",
     "max": 30
   },
   "look-editor.mc-slider-look-editor.slider-shape": {
     "text": "Slider shape",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the choice for the outline the slider follows, such as straight, arc or wave.",
     "max": 30
   },
   "look-editor.mc-slider-look-editor.snap-to-stops": {
@@ -1101,7 +1101,7 @@
   },
   "look-editor.mc-slider-look-editor.thickness-px": {
     "text": "Thickness (px)",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of how thick the slider track is, in pixels. Keep (px).",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.thin": {
@@ -1116,7 +1116,7 @@
   },
   "look-editor.mc-slider-look-editor.ticks": {
     "text": "Ticks",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the small scale marks drawn along the slider track. Noun, not the verb.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.touch-screens-have-no-hover-so-the-value": {
@@ -1141,7 +1141,7 @@
   },
   "look-editor.mc-slider-look-editor.undo": {
     "text": "Undo",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button that reverses the last change to the slider look. Verb.",
     "max": 15
   },
   "look-editor.mc-slider-look-editor.undo-look-change": {
@@ -1159,7 +1159,7 @@
   },
   "look-editor.mc-slider-look-editor.undo-reset": {
     "text": "Undo reset",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Button that brings back the slider look as it was before the reset.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.update-while-dragging": {
@@ -1169,7 +1169,7 @@
   },
   "look-editor.mc-slider-look-editor.use-own-colour": {
     "text": "Use own colour",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Option to colour the slider with a colour picked here instead of the light's colour.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.use-the-light-s-colour": {
@@ -1179,7 +1179,7 @@
   },
   "look-editor.mc-slider-look-editor.value": {
     "text": "Value",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the number the slider currently holds, shown on the slider. Noun.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.value-display": {
@@ -1194,7 +1194,7 @@
   },
   "look-editor.mc-slider-look-editor.where": {
     "text": "Where",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Short label of the choice for the position of the value display relative to the slider.",
     "max": 10
   },
   "look-editor.mc-slider-look-editor.with-no-handle-and-no-value-shown-the": {
@@ -1204,7 +1204,7 @@
   },
   "look-editor.mc-slider-look-editor.your-own-look": {
     "text": "Your own look",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Heading for the slider look the user built, not a preset. Same English as the flow line editor.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.your-own-look-started-from-name": {
@@ -1222,7 +1222,7 @@
   },
   "look-editor.presets.big-fill": {
     "text": "Big fill",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a slider preset with a large filled track.",
     "max": 15
   },
   "look-editor.presets.blue-tube-with-drops-and-a-rising-level": {
@@ -1237,17 +1237,17 @@
   },
   "look-editor.presets.data": {
     "text": "Data",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a flow line preset with a data-transfer look, as for network traffic.",
     "max": 10
   },
   "look-editor.presets.energy": {
     "text": "Energy",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a flow line preset with a glowing yellow-orange look, with sparks.",
     "max": 10
   },
   "look-editor.presets.glass": {
     "text": "Glass",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a slider preset with a see-through, glass-like track.",
     "max": 10
   },
   "look-editor.presets.glowing-line-round-glowing-handle": {
@@ -1262,7 +1262,7 @@
   },
   "look-editor.presets.heat": {
     "text": "Heat",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a flow line preset with a warm look, with comets. Noun, not temperature.",
     "max": 10
   },
   "look-editor.presets.large-fill-with-icon-and-value-updates": {
@@ -1272,22 +1272,22 @@
   },
   "look-editor.presets.material": {
     "text": "Material",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a slider preset in the Material Design style: standard bar, round handle.",
     "max": 15
   },
   "look-editor.presets.minimal": {
     "text": "Minimal",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a slider preset with a thin, plain look. Adjective.",
     "max": 15
   },
   "look-editor.presets.neon": {
     "text": "Neon",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of the flow line preset with a glowing neon look. Same English as the slider preset and the flow look.",
     "max": 10
   },
   "look-editor.presets.neon-2": {
     "text": "Neon",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of the slider preset with a glowing neon line and handle. Same English as the flow preset.",
     "max": 10
   },
   "look-editor.presets.pink-glowing-line-with-dots": {
@@ -1317,7 +1317,7 @@
   },
   "look-editor.presets.water": {
     "text": "Water",
-    "note": "Shown in presets (look-editor).",
+    "note": "Name of a flow line preset with a blue tube, drops and a rising level.",
     "max": 10
   }
 }

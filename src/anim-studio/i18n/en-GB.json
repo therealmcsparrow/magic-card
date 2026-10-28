@@ -21,7 +21,7 @@
   },
   "anim-studio.animated-svg.nothing-is-drawn": {
     "text": "Nothing is drawn.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error in the animated SVG tool when the pasted markup has no visible shapes.",
     "max": 30
   },
   "anim-studio.animated-svg.only-keyframe-animations-export-as-an": {
@@ -85,7 +85,7 @@
   },
   "anim-studio.animated-svg.unknown-error": {
     "text": "unknown error",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Lower-case fallback reason inserted into an error message when the SVG tool gives no detail.",
     "max": 25
   },
   "anim-studio.animated-svg.value-bindings-are-not-exported-the-file": {
@@ -159,7 +159,7 @@
   },
   "anim-studio.bindings-panel.add-value-binding": {
     "text": "Add value binding",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Button in the bindings panel that links an animation property to an entity value.",
     "max": 30
   },
   "anim-studio.bindings-panel.at-most-max-bindings-per-animation": {
@@ -195,7 +195,7 @@
   },
   "anim-studio.bindings-panel.binding-deleted": {
     "text": "Binding deleted.",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Confirmation announced after the user removes a binding from the bindings panel.",
     "max": 30
   },
   "anim-studio.bindings-panel.binding-n": {
@@ -208,7 +208,7 @@
   },
   "anim-studio.bindings-panel.delete-binding": {
     "text": "Delete binding",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Button label and tooltip that removes the selected binding from the bindings panel.",
     "max": 25
   },
   "anim-studio.bindings-panel.delete-binding-n": {
@@ -403,7 +403,7 @@
   },
   "anim-studio.bindings-utils.moves-sideways": {
     "text": "Moves sideways.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Short description of a binding that changes the horizontal position of the target.",
     "max": 25
   },
   "anim-studio.bindings-utils.moves-up-or-down": {
@@ -569,7 +569,7 @@
   },
   "anim-studio.draw-host.click-to-add-the-next-point": {
     "text": "Click to add the next point",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Status hint while drawing a freeform shape on the stage; the path editor has its own copy.",
     "max": 45
   },
   "anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-add-a": {
@@ -611,7 +611,7 @@
   },
   "anim-studio.draw-host.drawing-cancelled": {
     "text": "Drawing cancelled.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message shown when the user abandons a shape they were drawing on the stage.",
     "max": 30
   },
   "anim-studio.draw-host.drop-the-svg-to-import-it": {
@@ -698,7 +698,7 @@
   },
   "anim-studio.draw-host.select-a-part-or-shape-first": {
     "text": "Select a part or shape first.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Hint shown when the user picks a drawing tool on the stage without a selection.",
     "max": 50
   },
   "anim-studio.draw-host.select-a-part-or-shape-then-draw-its": {
@@ -742,7 +742,7 @@
   },
   "anim-studio.draw-host.the-drawing-tools-are-ready": {
     "text": "The drawing tools are ready.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen reader announcement once the shape drawing tools have loaded on the stage.",
     "max": 45
   },
   "anim-studio.draw-host.the-path-has-the-most-points-it-can-hold": {
@@ -1178,7 +1178,7 @@
   },
   "anim-studio.draw-svg-dialog.the-svg-is-larger-than-32-kb": {
     "text": "The SVG is larger than 32 KB.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Error in the SVG import dialogue when the chosen file exceeds the size limit.",
     "max": 50
   },
   "anim-studio.draw-svg-dialog.use-as-icon": {
@@ -1653,7 +1653,7 @@
   },
   "anim-studio.key-inspector.not-a-valid-colour": {
     "text": "Not a valid colour.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Error under a colour field in the keyframe inspector when the typed value cannot be parsed.",
     "max": 35
   },
   "anim-studio.key-inspector.not-an-allowed-shadow-x-y-blur-spread": {
@@ -1975,7 +1975,7 @@
   },
   "anim-studio.keyframes-editor.ctrl-wheel-zooms": {
     "text": "Ctrl + wheel zooms",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Hint under the keyframes timeline explaining how to zoom with the mouse wheel.",
     "max": 30
   },
   "anim-studio.keyframes-editor.cycle": {
@@ -2716,7 +2716,7 @@
   },
   "anim-studio.lock-banner.locked-unlock-to-edit": {
     "text": "Locked. Unlock to edit.",
-    "note": "Shown in lock banner (anim-studio).",
+    "note": "Banner over a read-only built-in animation; the user must unlock or copy it before editing.",
     "max": 40
   },
   "anim-studio.lock-banner.unlock": {
@@ -3124,17 +3124,17 @@
   },
   "anim-studio.particles-editor.add-colour": {
     "text": "Add colour",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Button in the particles editor that appends another colour to the particle colour list.",
     "max": 20
   },
   "anim-studio.particles-editor.add-emitter": {
     "text": "Add emitter",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Button in the particles editor that adds a new particle emitter to the animation.",
     "max": 20
   },
   "anim-studio.particles-editor.add-shape": {
     "text": "Add shape",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Button in the particles editor that adds another particle shape to an emitter.",
     "max": 15
   },
   "anim-studio.particles-editor.adds-random-swirls-to-the-motion": {
@@ -3144,17 +3144,17 @@
   },
   "anim-studio.particles-editor.all-particles": {
     "text": "All particles",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Option that applies a change to every particle instead of one emitter.",
     "max": 25
   },
   "anim-studio.particles-editor.angle-deg": {
     "text": "Angle (deg)",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Field label for an emitter's launch angle; deg is short for degrees.",
     "max": 20
   },
   "anim-studio.particles-editor.animated-svg": {
     "text": "Animated SVG",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Particle shape option that uses an animated SVG image for each particle.",
     "max": 20
   },
   "anim-studio.particles-editor.at-end-of-life": {
@@ -4386,7 +4386,7 @@
   },
   "anim-studio.particles-utils.no-svg-element-found": {
     "text": "No <svg> element found.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Error under the pasted SVG field for a particle shape; keep the <svg> tag as is.",
     "max": 40
   },
   "anim-studio.particles-utils.off": {
@@ -4548,7 +4548,7 @@
   },
   "anim-studio.particles-utils.the-svg-draws-nothing": {
     "text": "The SVG draws nothing.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Error under the pasted SVG field for a particle shape when the markup has no visible shapes.",
     "max": 40
   },
   "anim-studio.particles-utils.triangle": {
@@ -5220,7 +5220,7 @@
   },
   "anim-studio.path-host.click-to-add-the-next-point": {
     "text": "Click to add the next point",
-    "note": "Shown in path host (anim-studio).",
+    "note": "Status hint while drawing a motion path in the path editor, after the first point is placed.",
     "max": 45
   },
   "anim-studio.path-host.click-to-place-the-first-point": {
@@ -5240,7 +5240,7 @@
   },
   "anim-studio.path-host.the-drawing-tools-are-ready": {
     "text": "The drawing tools are ready.",
-    "note": "Shown in path host (anim-studio).",
+    "note": "Screen reader announcement once the path drawing tools have loaded in the path editor.",
     "max": 45
   },
   "anim-studio.path-layers.element": {
@@ -5735,7 +5735,7 @@
   },
   "anim-studio.sequence-utils.a-sequence-cannot-play-itself": {
     "text": "A sequence cannot play itself.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Error beside a sequence step picker when the step would point back to the open sequence.",
     "max": 50
   },
   "anim-studio.sequence-utils.after-seconds": {
@@ -6014,7 +6014,7 @@
   },
   "anim-studio.shape-inspector.select-a-part-or-shape-first": {
     "text": "Select a part or shape first.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Empty state of the shape inspector when nothing is selected to edit.",
     "max": 50
   },
   "anim-studio.shape-inspector.send-backward": {
@@ -7688,7 +7688,7 @@
   },
   "anim-studio.validation-text.a-sequence-cannot-play-itself": {
     "text": "A sequence cannot play itself.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when a stored sequence lists its own id as a step.",
     "max": 50
   },
   "anim-studio.validation-text.another-track-already-animates-this": {
@@ -7808,12 +7808,12 @@
   },
   "anim-studio.validation-text.must-be-an-icon-id-like-mdi-bell": {
     "text": "Must be an icon id like mdi:bell.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for an icon field in a state rule; the example id is code and stays as is.",
     "max": 55
   },
   "anim-studio.validation-text.must-be-an-icon-id-like-mdi-star": {
     "text": "Must be an icon id like mdi:star.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for an icon field in a particle emitter; the example id is code and stays as is.",
     "max": 55
   },
   "anim-studio.validation-text.must-be-an-object": {
@@ -7927,7 +7927,7 @@
   },
   "anim-studio.validation-text.no-svg-element-found": {
     "text": "No <svg> element found.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when stored SVG markup has no root svg tag; keep the <svg> tag as is.",
     "max": 40
   },
   "anim-studio.validation-text.not-a-part-of-this-rig": {
@@ -7947,7 +7947,7 @@
   },
   "anim-studio.validation-text.not-a-valid-colour": {
     "text": "Not a valid colour.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when a stored animation file contains an unparseable colour value.",
     "max": 35
   },
   "anim-studio.validation-text.not-a-valid-easing": {
@@ -7965,7 +7965,7 @@
   },
   "anim-studio.validation-text.not-serialisable": {
     "text": "Not serialisable.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when a value cannot be written to the animation file.",
     "max": 30
   },
   "anim-studio.validation-text.not-valid-path-data-it-must-start-with-m": {
@@ -8023,7 +8023,7 @@
   },
   "anim-studio.validation-text.the-svg-draws-nothing": {
     "text": "The SVG draws nothing.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when stored SVG markup contains no visible shapes.",
     "max": 40
   },
   "anim-studio.validation-text.the-svg-has-no-shapes-to-draw": {
@@ -8041,7 +8041,7 @@
   },
   "anim-studio.validation-text.the-svg-is-larger-than-32-kb": {
     "text": "The SVG is larger than 32 KB.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when stored SVG markup exceeds the size limit.",
     "max": 50
   },
   "anim-studio.validation-text.the-svg-is-too-complex": {
@@ -8084,22 +8084,22 @@
   },
   "anim-studio.window.maximise": {
     "text": "Maximise",
-    "note": "Shown in window (anim-studio).",
+    "note": "Tooltip of the button that enlarges the floating studio window to fill the screen.",
     "max": 15
   },
   "anim-studio.window.move-window": {
     "text": "Move window",
-    "note": "Shown in window (anim-studio).",
+    "note": "Accessible label of the title bar that the user drags to move the studio window.",
     "max": 20
   },
   "anim-studio.window.resize-window": {
     "text": "Resize window",
-    "note": "Shown in window (anim-studio).",
+    "note": "Accessible label of the corner handle that the user drags to resize the studio window.",
     "max": 25
   },
   "anim-studio.window.restore-size": {
     "text": "Restore size",
-    "note": "Shown in window (anim-studio).",
+    "note": "Tooltip of the button that returns a maximised studio window to its previous size.",
     "max": 25
   }
 }

@@ -486,12 +486,12 @@
   },
   "card-editor.animation-list.while-entity-is-on": {
     "text": "While entity is on",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Play condition choice in the animation list; the ring editor has the same wording for when the ring shows.",
     "max": 30
   },
   "card-editor.animation-list.while-state-equals": {
     "text": "While state equals…",
-    "note": "Shown in animation list (card-editor).",
+    "note": "Play condition choice in the animation list; the ring editor has the same wording for when the ring shows.",
     "max": 35
   },
   "card-editor.animation-list.without-a-copy-the-card-plays-nothing-if": {
@@ -714,7 +714,7 @@
   },
   "card-editor.button-editor.colours-the-icon-like-home-assistant": {
     "text": "Colours the icon like Home Assistant does for this entity's state.",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Help under the entity colour switch for a button's icon; the icon editor shows the same sentence for a module icon.",
     "max": 110
   },
   "card-editor.button-editor.default": {
@@ -764,12 +764,12 @@
   },
   "card-editor.button-editor.use-entity-colour": {
     "text": "Use entity colour",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Switch label in the button editor for the button icon; the icon editor has the same label for a module icon.",
     "max": 30
   },
   "card-editor.button-editor.use-entity-icon": {
     "text": "Use entity icon",
-    "note": "Shown in button editor (card-editor).",
+    "note": "Switch label in the button editor to show the entity's own icon; the icon editor has the same label for a module.",
     "max": 30
   },
   "card-editor.camera-editor.aspect-ratio": {
@@ -1243,7 +1243,7 @@
   },
   "card-editor.card-settings.add-a-rule-to-change-the-look-when": {
     "text": "Add a rule to change the look when conditions match.",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Empty-state hint in the card settings Appearance rules list; the design panel shows it for design rules.",
     "max": 90
   },
   "card-editor.card-settings.add-appearance-rule": {
@@ -1258,7 +1258,7 @@
   },
   "card-editor.card-settings.add-conditional-rule": {
     "text": "Add conditional rule",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Button in the card settings that adds an appearance rule; the design panel has the same button for design rules.",
     "max": 35
   },
   "card-editor.card-settings.advanced": {
@@ -1268,7 +1268,7 @@
   },
   "card-editor.card-settings.all-match-and": {
     "text": "All match (AND)",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Match-mode option for appearance rule conditions in the card settings; the design panel and conditions list repeat it.",
     "max": 25
   },
   "card-editor.card-settings.always": {
@@ -1288,7 +1288,7 @@
   },
   "card-editor.card-settings.any-matches-or": {
     "text": "Any matches (OR)",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Match-mode option for appearance rule conditions in the card settings; the design panel and conditions list repeat it.",
     "max": 30
   },
   "card-editor.card-settings.appearance-overrides": {
@@ -1443,7 +1443,7 @@
   },
   "card-editor.card-settings.editing-design-for": {
     "text": "Editing design for",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Label before the rule or state being edited in the card settings; the design panel has the same label.",
     "max": 30
   },
   "card-editor.card-settings.effects": {
@@ -1571,7 +1571,7 @@
   },
   "card-editor.card-settings.no-conditions-yet-the-rule-applies-once": {
     "text": "No conditions yet. The rule applies once a condition is added and matches.",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Hint under an empty appearance rule in the card settings; the design panel shows it for a design rule.",
     "max": 120
   },
   "card-editor.card-settings.not-set-in-this-rule-default-applies": {
@@ -1626,7 +1626,7 @@
   },
   "card-editor.card-settings.pick-a-device": {
     "text": "Pick a device",
-    "note": "Shown in card settings (card-editor).",
+    "note": "Device picker placeholder for the card's own device in the card settings; entity source and template picker repeat it.",
     "max": 25
   },
   "card-editor.card-settings.pop-up": {
@@ -2178,7 +2178,7 @@
   },
   "card-editor.conditions-list.all-match-and": {
     "text": "All match (AND)",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Match-mode option in the shared conditions list for show conditions; card settings and the design panel repeat it.",
     "max": 25
   },
   "card-editor.conditions-list.always-visible": {
@@ -2188,7 +2188,7 @@
   },
   "card-editor.conditions-list.any-matches-or": {
     "text": "Any matches (OR)",
-    "note": "Shown in conditions list (card-editor).",
+    "note": "Match-mode option in the shared conditions list for show conditions; card settings and the design panel repeat it.",
     "max": 30
   },
   "card-editor.conditions-list.attribute": {
@@ -2522,7 +2522,7 @@
   },
   "card-editor.design-panel.add-a-rule-to-change-the-look-when": {
     "text": "Add a rule to change the look when conditions match.",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Empty-state hint in the design panel's rule list; the card settings show it for appearance rules.",
     "max": 90
   },
   "card-editor.design-panel.add-condition": {
@@ -2532,17 +2532,17 @@
   },
   "card-editor.design-panel.add-conditional-rule": {
     "text": "Add conditional rule",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button in the design panel that adds a design rule; the card settings have the same button for appearance rules.",
     "max": 35
   },
   "card-editor.design-panel.all-match-and": {
     "text": "All match (AND)",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Match-mode option for design rule conditions in the design panel; card settings and the conditions list repeat it.",
     "max": 25
   },
   "card-editor.design-panel.any-matches-or": {
     "text": "Any matches (OR)",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Match-mode option for design rule conditions in the design panel; card settings and the conditions list repeat it.",
     "max": 30
   },
   "card-editor.design-panel.applied-to-the-active-tab-on-top-of": {
@@ -2601,7 +2601,7 @@
   },
   "card-editor.design-panel.copy-a-design-first": {
     "text": "Copy a design first",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Tooltip on the disabled paste button in the design panel; the item menu shows it on its paste design entry.",
     "max": 35
   },
   "card-editor.design-panel.copy-design": {
@@ -2656,7 +2656,7 @@
   },
   "card-editor.design-panel.editing-design-for": {
     "text": "Editing design for",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Label before the rule or state being edited in the design panel; the card settings have the same label.",
     "max": 30
   },
   "card-editor.design-panel.go-to-default": {
@@ -2747,7 +2747,7 @@
   },
   "card-editor.design-panel.no-conditions-yet-the-rule-applies-once": {
     "text": "No conditions yet. The rule applies once a condition is added and matches.",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Hint under an empty design rule in the design panel; the card settings show it for an appearance rule.",
     "max": 120
   },
   "card-editor.design-panel.no-css-property-matches-query": {
@@ -3217,7 +3217,7 @@
   },
   "card-editor.entity-source.pick-a-device": {
     "text": "Pick a device",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Device picker placeholder in the entity source field of a module; card settings and template picker repeat it.",
     "max": 25
   },
   "card-editor.entity-source.pick-kind": {
@@ -3812,7 +3812,7 @@
   },
   "card-editor.forecast-editor.animated-weather-icons-instead-of-static": {
     "text": "Animated weather icons instead of static ones",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Help under the animated icons switch of the Forecast module; the weather editor has the same help for the Weather module.",
     "max": 75
   },
   "card-editor.forecast-editor.daily": {
@@ -4173,7 +4173,7 @@
   },
   "card-editor.icon-editor.colours-the-icon-like-home-assistant": {
     "text": "Colours the icon like Home Assistant does for this entity's state.",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Help under the entity colour switch for a module icon; the button editor shows the same sentence for a button icon.",
     "max": 110
   },
   "card-editor.icon-editor.entity": {
@@ -4203,7 +4203,7 @@
   },
   "card-editor.icon-editor.use-entity-colour": {
     "text": "Use entity colour",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Switch label in the icon editor for a module icon; the button editor has the same label for a button icon.",
     "max": 30
   },
   "card-editor.icon-editor.use-entity-colour-wins-while-the-entity": {
@@ -4213,7 +4213,7 @@
   },
   "card-editor.icon-editor.use-entity-icon": {
     "text": "Use entity icon",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Switch label in the icon editor to show the entity's own icon on a module; the button editor has the same label.",
     "max": 30
   },
   "card-editor.icon-fx-editor.a-javascript-link": {
@@ -4324,7 +4324,7 @@
   },
   "card-editor.icon-fx-editor.draw-an-icon": {
     "text": "Draw an icon",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Button in the icon effects section that opens the SVG icon editor; the icon picker has the same button.",
     "max": 25
   },
   "card-editor.icon-fx-editor.draw-duration": {
@@ -4801,7 +4801,7 @@
   },
   "card-editor.icon-picker.draw-an-icon": {
     "text": "Draw an icon",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button in the icon picker dialog that opens the SVG icon editor; the icon effects section has the same button.",
     "max": 25
   },
   "card-editor.icon-picker.icon": {
@@ -4955,7 +4955,7 @@
   },
   "card-editor.icon-picker.use-as-copy": {
     "text": "Use as copy",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button that stores a library icon inside this card; the shape editor has the same button for shapes.",
     "max": 20
   },
   "card-editor.icon-picker.without-a-copy-the-card-shows-the": {
@@ -5133,7 +5133,7 @@
   },
   "card-editor.inspector.hidden-on-dashboard": {
     "text": "Hidden on dashboard",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Status badge in the inspector for the selected item; the structure outline shows it as a row badge.",
     "max": 35
   },
   "card-editor.inspector.layout-layout": {
@@ -5241,7 +5241,7 @@
   },
   "card-editor.item-menu.add-flow-from-here": {
     "text": "Add flow from here",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Entry in a module's context menu in the tree; the studio canvas has the same action on its toolbar.",
     "max": 30
   },
   "card-editor.item-menu.add-module": {
@@ -5299,7 +5299,7 @@
   },
   "card-editor.item-menu.copy-a-design-first": {
     "text": "Copy a design first",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Hint on the disabled paste design entry in the item menu; the design panel shows it on its paste button.",
     "max": 35
   },
   "card-editor.item-menu.copy-a-module-first": {
@@ -6585,12 +6585,12 @@
   },
   "card-editor.ring-editor.while-entity-is-on": {
     "text": "While entity is on",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Show condition choice in the ring editor; the animation list has the same wording for when an animation plays.",
     "max": 30
   },
   "card-editor.ring-editor.while-state-equals": {
     "text": "While state equals…",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Show condition choice in the ring editor; the animation list has the same wording for when an animation plays.",
     "max": 35
   },
   "card-editor.ring-editor.width-px": {
@@ -7321,7 +7321,7 @@
   },
   "card-editor.shape-editor.use-as-copy": {
     "text": "Use as copy",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that stores a library shape inside this card; the icon picker has the same button for icons.",
     "max": 20
   },
   "card-editor.shape-editor.use-at-most-80-characters": {
@@ -7716,7 +7716,7 @@
   },
   "card-editor.structure-outline.hidden-on-dashboard": {
     "text": "Hidden on dashboard",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Tooltip on a hidden row in the structure tree; the inspector shows it as a badge for the selected item.",
     "max": 35
   },
   "card-editor.structure-outline.inherited-entity": {
@@ -7860,7 +7860,7 @@
   },
   "card-editor.studio-canvas.add-flow-from-here": {
     "text": "Add flow from here",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Action on the studio canvas for the selected module; the item menu has the same entry in the tree.",
     "max": 30
   },
   "card-editor.studio-canvas.add-flow-from-here-hint": {
@@ -8571,7 +8571,7 @@
   },
   "card-editor.template-picker.pick-a-device": {
     "text": "Pick a device",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Device picker placeholder in the template picker, answering which device the card is for; the others are elsewhere.",
     "max": 25
   },
   "card-editor.template-picker.save": {
@@ -9085,7 +9085,7 @@
   },
   "card-editor.weather-editor.animated-weather-icons-instead-of-static": {
     "text": "Animated weather icons instead of static ones",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Help under the animated icons switch of the Weather module; the forecast editor has the same help for the Forecast module.",
     "max": 75
   },
   "card-editor.weather-editor.forecast-days": {
