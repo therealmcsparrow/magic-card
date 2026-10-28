@@ -1136,7 +1136,7 @@
   },
   "look-editor.mc-slider-look-editor.track-style": {
     "text": "Track style",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the choice for how the slider track looks, such as solid or see-through glass.",
     "max": 20
   },
   "look-editor.mc-slider-look-editor.undo": {
@@ -1184,7 +1184,7 @@
   },
   "look-editor.mc-slider-look-editor.value-display": {
     "text": "Value display",
-    "note": "Shown in mc slider look editor (look-editor).",
+    "note": "Label of the choice for how the slider's current number is shown, such as on hover or always.",
     "max": 25
   },
   "look-editor.mc-slider-look-editor.value-shown-beside-the-slider-because": {
