@@ -4,6 +4,7 @@
 
 [![HACS][hacs-badge]][hacs-url]
 [![GitHub Version][version-badge]][version-url]
+[![GitHub Downloads][github-downloads-badge]][github-downloads]
 [![GitHub License][license-badge]][license-url]
 [![GitHub Last Commit][last-commit-badge]][last-commit-url]
 [![GitHub Issues][issues-badge]][issues-url]
@@ -1183,6 +1184,8 @@ The release bundles third-party software under its own licences. See [THIRD-PART
 [hacs-url]: https://hacs.xyz/
 [version-badge]: https://img.shields.io/github/package-json/v/therealmcsparrow/magic-card
 [version-url]: https://github.com/therealmcsparrow/magic-card/releases
+[github-downloads-badge]: https://img.shields.io/github/downloads/therealmcsparrow/magic-card/total?style=for-the-badge
+[github-downloads]: https://github.com/therealmcsparrow/magic-card/releases
 [license-badge]: https://img.shields.io/github/license/therealmcsparrow/magic-card
 [license-url]: https://github.com/therealmcsparrow/magic-card/blob/main/LICENSE
 [last-commit-badge]: https://img.shields.io/github/last-commit/therealmcsparrow/magic-card
