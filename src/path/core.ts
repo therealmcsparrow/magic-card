@@ -408,7 +408,29 @@ export function bounds(p: PathData): Box | undefined {
   return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
 }
 
-const dist = (a: Pt, b: Pt): number => Math.hypot(a[0] - b[0], a[1] - b[1]);
+export const dist = (a: Pt, b: Pt): number => Math.hypot(a[0] - b[0], a[1] - b[1]);
+
+/** Tolerance of the draw geometry (zero-length tests in the freehand fit). */
+export const GEOM_EPS = 1e-9;
+
+/** Distance from `p` to the segment `a`-`b`. */
+export const segDist = (p: Pt, a: Pt, b: Pt): number => {
+  const abx = b[0] - a[0];
+  const aby = b[1] - a[1];
+  const l2 = abx * abx + aby * aby;
+  if (l2 < GEOM_EPS) return dist(p, a);
+  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * abx + (p[1] - a[1]) * aby) / l2));
+  return dist(p, [a[0] + abx * t, a[1] + aby * t]);
+};
+
+/** The point at `t` on a cubic. */
+export const bez = (c: Cubic, t: number): Pt => {
+  const u = 1 - t;
+  return [
+    u * u * u * c[0][0] + 3 * u * u * t * c[1][0] + 3 * u * t * t * c[2][0] + t * t * t * c[3][0],
+    u * u * u * c[0][1] + 3 * u * u * t * c[1][1] + 3 * u * t * t * c[2][1] + t * t * t * c[3][1],
+  ];
+};
 /** Approximate cubic length: mean of chord and control-net length. */
 const approxLength = (c: Cubic): number => (dist(c[0], c[3]) + dist(c[0], c[1]) + dist(c[1], c[2]) + dist(c[2], c[3])) / 2;
 

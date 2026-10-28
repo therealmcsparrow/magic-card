@@ -6,19 +6,18 @@
  * the animation studio. Coordinates are the document's own units.
  */
 import type { Cubic, Pt } from '../contracts/path-model';
+import { GEOM_EPS as EPS, bez, dist, segDist } from './core';
 import { fmtNum, serialize, smoothAll, type Anchor, type EditPath } from './edit';
 
 export type { Cubic, Pt };
 
 const fp = (p: Pt): string => `${fmtNum(p[0])} ${fmtNum(p[1])}`;
 
-export const EPS = 1e-9;
 const sub = (a: Pt, b: Pt): Pt => [a[0] - b[0], a[1] - b[1]];
 const add = (a: Pt, b: Pt): Pt => [a[0] + b[0], a[1] + b[1]];
 const mul = (a: Pt, k: number): Pt => [a[0] * k, a[1] * k];
 const dot = (a: Pt, b: Pt): number => a[0] * b[0] + a[1] * b[1];
 const len = (a: Pt): number => Math.hypot(a[0], a[1]);
-export const dist = (a: Pt, b: Pt): number => Math.hypot(a[0] - b[0], a[1] - b[1]);
 const norm = (a: Pt): Pt => {
   const l = len(a);
   return l < EPS ? [0, 0] : [a[0] / l, a[1] / l];
@@ -37,14 +36,6 @@ export function dedupePoints(points: Pt[], min: number): Pt[] {
   if (out.length > 1 && last && dist(out[out.length - 1], last) > EPS && Number.isFinite(last[0]) && Number.isFinite(last[1])) out[out.length - 1] = [last[0], last[1]];
   return out;
 }
-
-export const segDist = (p: Pt, a: Pt, b: Pt): number => {
-  const ab = sub(b, a);
-  const l2 = dot(ab, ab);
-  if (l2 < EPS) return dist(p, a);
-  const t = Math.max(0, Math.min(1, dot(sub(p, a), ab) / l2));
-  return dist(p, add(a, mul(ab, t)));
-};
 
 /** Ramer-Douglas-Peucker: indices of the points kept (ends always). */
 export function rdpIndices(points: Pt[], tolerance: number): number[] {
@@ -78,13 +69,6 @@ export function rdpIndices(points: Pt[], tolerance: number): number[] {
 /** Ramer-Douglas-Peucker: the points kept. */
 export const rdp = (points: Pt[], tolerance: number): Pt[] => rdpIndices(points, tolerance).map((i) => points[i]);
 
-export const bez = (c: Cubic, t: number): Pt => {
-  const u = 1 - t;
-  return [
-    u * u * u * c[0][0] + 3 * u * u * t * c[1][0] + 3 * u * t * t * c[2][0] + t * t * t * c[3][0],
-    u * u * u * c[0][1] + 3 * u * u * t * c[1][1] + 3 * u * t * t * c[2][1] + t * t * t * c[3][1],
-  ];
-};
 const bezD1 = (c: Cubic, t: number): Pt => {
   const u = 1 - t;
   return [

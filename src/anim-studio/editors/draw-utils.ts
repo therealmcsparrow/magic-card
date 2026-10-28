@@ -1,9 +1,9 @@
-import { toCubicSubpaths } from '../../path/core';
-import { EPS, bez, dist, segDist, type Cubic, type Pt } from '../../path/draw';
-import { fmtNum } from '../../path/edit';
+import type { Cubic, Pt } from '../../contracts/path-model';
+import { GEOM_EPS as EPS, bez, dist, segDist, toCubicSubpaths } from '../../path/core';
 import { ANIMATION_CAPS, type AnimationDoc, type AnimationKeyframe } from '../model';
 import { V2_CAPS, type RigShape, type TargetRef, type Track } from '../model-v2';
 import { t } from '../i18n';
+import { fmtNum } from './path-utils';
 
 /*
  * Drawing on the icon, pure: freehand simplification (Ramer-Douglas-Peucker for corners, then a
@@ -16,7 +16,6 @@ import { t } from '../i18n';
 
 export type { Pt, Cubic };
 
-export { MAX_FREEHAND_SAMPLES, MAX_FREEHAND_SEGMENTS, dedupePoints, ellipsePath, fitCubics, fitFreehand, linePath, rdp, rdpIndices, rectPath, type FreehandResult } from '../../path/draw';
 const r2 = (v: number): number => Math.round(v * 100) / 100;
 const fp = (p: Pt): string => `${fmtNum(p[0])} ${fmtNum(p[1])}`;
 

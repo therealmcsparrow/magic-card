@@ -70,7 +70,7 @@ export abstract class CanvasHost extends LitElement {
       pointer-events: none;
       overflow: visible;
     }
-    .notice {
+    .host-notice {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -91,7 +91,7 @@ export abstract class CanvasHost extends LitElement {
       font-size: 0.8125rem;
       pointer-events: auto;
     }
-    .notice button {
+    .host-notice button {
       min-height: 32px;
       padding: 0 12px;
       border: 0;
@@ -102,7 +102,7 @@ export abstract class CanvasHost extends LitElement {
       font-weight: 600;
       cursor: pointer;
     }
-    .notice button:focus-visible {
+    .host-notice button:focus-visible {
       outline: 2px solid var(--ch-ink);
       outline-offset: 2px;
     }
@@ -144,9 +144,9 @@ export abstract class CanvasHost extends LitElement {
   /** The notice for a failed load or an older canvas element; nothing while loading or ready. */
   protected renderNotice(): TemplateResult | typeof nothing {
     if (this.canvasState === 'failed')
-      return html`<p class="notice" role="alert">${t("Couldn't load the drawing tools.")}<button type="button" @click=${() => this.retry()}>${t('Try again')}</button></p>`;
+      return html`<p class="host-notice" role="alert">${t("Couldn't load the drawing tools.")}<button type="button" @click=${() => this.retry()}>${t('Try again')}</button></p>`;
     if (this.canvasState === 'old')
-      return html`<p class="notice" role="alert">
+      return html`<p class="host-notice" role="alert">
         ${t('The drawing tools on this page are from another Magic Card version. Reload the page to draw here.')}<button type="button" @click=${() => location.reload()}>${t('Reload page')}</button>
       </p>`;
     return nothing;

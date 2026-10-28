@@ -1,5 +1,5 @@
 import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-stack';
 import { safeCssValue, type AnimationDoc } from '../model';
 import type { RigShape, TargetRef } from '../model-v2';
@@ -16,7 +16,8 @@ import {
   type DrawOptions,
   type DrawTool,
 } from './draw-store';
-import { fitFreehand } from '../../path/draw';
+import type { PathDraw } from '../../contracts/path-model';
+import { loadPathCanvas } from '../../path-canvas/loader';
 import { addDrawOnTrack, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn, removeShape, setTrackPath, updateShape } from './draw-utils';
 import { t, tx, m, type MessageId } from '../i18n';
 
@@ -115,9 +116,23 @@ export class AnimShapeInspector extends LitElement {
 
   private _unsub?: () => void;
 
+  /** The chunk's freehand fit; the smoothing slider waits for it. */
+  @state() private _draw?: PathDraw;
+  private _drawLoading = false;
+
   connectedCallback(): void {
     super.connectedCallback();
     this._unsub = drawStore.subscribe(() => this.requestUpdate());
+  }
+
+  protected willUpdate(): void {
+    if (this._draw || this._drawLoading) return;
+    if (!drawStore.lastFreehand && activeTool(this.selection) !== 'freehand') return;
+    this._drawLoading = true;
+    void loadPathCanvas().then((chunk) => {
+      this._drawLoading = false;
+      if (chunk) this._draw = chunk.pathDraw;
+    });
   }
 
   disconnectedCallback(): void {
@@ -265,7 +280,7 @@ export class AnimShapeInspector extends LitElement {
   }
 
   /** `onChange(tol, final)`: dragging the slider sends transient values, letting go the final one. */
-  private _smoothing(onChange: (tol: number, final: boolean) => void, help: string): TemplateResult {
+  private _smoothing(onChange: (tol: number, final: boolean) => void, help: string, waiting = false): TemplateResult {
     const tol = drawStore.options.tolerance;
     return html`<div class="field">
       <div class="field-head"><label for="f-tol">${t('Smoothing')}</label><span class="val">${tol.toFixed(2)}</span></div>
@@ -279,7 +294,7 @@ export class AnimShapeInspector extends LitElement {
           step=${TOLERANCE_RANGE.step}
           .value=${String(tol)}
           aria-valuetext=${t('{size} icon units', { size: tol.toFixed(2) })}
-          ?disabled=${this.disabled}
+          ?disabled=${this.disabled || waiting}
           @input=${(e: Event) => onChange(Number((e.target as HTMLInputElement).value), false)}
           @change=${(e: Event) => onChange(Number((e.target as HTMLInputElement).value), true)}
         />
@@ -301,7 +316,8 @@ export class AnimShapeInspector extends LitElement {
     const last = drawStore.lastFreehand;
     const s = last && this.doc?.rig?.shapes?.find((x) => x.id === last.id);
     if (!s || !this.doc) return;
-    const fit = fitFreehand(last.raw, tol);
+    const fit = this._draw?.fitFreehand(last.raw, tol);
+    if (!fit) return;
     if (!fit.d) return;
     if (!final) {
       if (fit.d === s.d) return;
@@ -364,7 +380,7 @@ export class AnimShapeInspector extends LitElement {
       ${freehand
         ? html`<section class="group" aria-labelledby="h-smooth">
             <div class="group-head"><h3 id="h-smooth">${t('Freehand')}</h3></div>
-            ${this._smoothing((t, f) => this._refit(t, f), t('More smoothing: fewer points and a calmer line. The dotted line is what you drew.'))}
+            ${this._smoothing((t, f) => this._refit(t, f), t('More smoothing: fewer points and a calmer line. The dotted line is what you drew.'), !this._draw)}
           </section>`
         : nothing}
       <section class="group" aria-labelledby="h-anim">
@@ -434,6 +450,7 @@ export class AnimShapeInspector extends LitElement {
           ? this._smoothing(
               (t, f) => (tool === 'freehand' ? this._refit(t, f) : this._opt({ tolerance: t })),
               tool === 'freehand' && drawStore.lastFreehand ? t('Changes the last stroke too. The dotted line is what you drew.') : t('More smoothing: fewer points and a calmer line.'),
+              tool === 'freehand' && !this._draw,
             )
           : nothing}
       </section>
