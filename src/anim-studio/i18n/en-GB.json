@@ -4624,7 +4624,7 @@
   },
   "anim-studio.parts-layers.count-shapes": {
     "text": "{count} shapes",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Count of shapes in a part, shown in the parts list. Plural forms may be needed.",
     "max": 25,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -4657,7 +4657,7 @@
   },
   "anim-studio.parts-layers.grouped-count-parts": {
     "text": "Grouped {count} parts",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Confirmation after merging several parts into one group. Count is the number of parts.",
     "max": 35,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -4680,7 +4680,7 @@
   },
   "anim-studio.parts-layers.keyframe-tracks-of-name": {
     "text": "keyframe tracks of {name}",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Accessible label for the group of keyframe tracks belonging to one part. Name is the part name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4703,7 +4703,7 @@
   },
   "anim-studio.parts-layers.move-name-down-drawn-underneath": {
     "text": "Move {name} down (drawn underneath)",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button tooltip and label that moves a part lower in the stacking order. Name is the part name.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4711,7 +4711,7 @@
   },
   "anim-studio.parts-layers.move-name-up-drawn-on-top": {
     "text": "Move {name} up (drawn on top)",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button tooltip and label that moves a part higher in the stacking order. Name is the part name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4739,7 +4739,7 @@
   },
   "anim-studio.parts-layers.name-moved-direction": {
     "text": "{name} moved {direction}",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Screen reader announcement after a part is reordered. Direction is already translated (up or down).",
     "max": 40,
     "vars": {
       "direction": "The value that replaces direction in the text.",
@@ -4763,7 +4763,7 @@
   },
   "anim-studio.parts-layers.replace-count-parts": {
     "text": "Replace {count} parts",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button that replaces the current parts with the split result. Count is the number of parts.",
     "max": 35,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -4794,7 +4794,7 @@
   },
   "anim-studio.parts-layers.split-into-count-parts": {
     "text": "Split into {count} parts",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button that splits the icon into separate parts. Count is the number of parts it will make.",
     "max": 40,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -4802,7 +4802,7 @@
   },
   "anim-studio.parts-layers.split-into-count-the-first-parts": {
     "text": "Split into {count, plural, one {# part} other {# parts}} (the first {parts})",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Split button when the icon has more shapes than a rig can hold. Parts is the already-formatted limit.",
     "max": 65,
     "vars": {
       "count": "The count the text is about.",
@@ -4826,7 +4826,7 @@
   },
   "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": {
     "text": "The icon has {count} shapes: the first {parts} became parts (the most a rig holds), the rest stay at rest.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Notice after splitting a large icon. Count is the shape total; parts is the already-formatted number of parts made.",
     "max": 170,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -4870,7 +4870,7 @@
   },
   "anim-studio.parts-model.a-rig-has-at-most-groups-groups": {
     "text": "A rig has at most {groups} groups.",
-    "note": "Shown in parts model (anim-studio).",
+    "note": "Error shown when the group limit is reached. Groups is the maximum number allowed.",
     "max": 55,
     "vars": {
       "groups": "The value that replaces groups in the text."
@@ -4878,7 +4878,7 @@
   },
   "anim-studio.parts-model.part-i": {
     "text": "Part {i}",
-    "note": "Shown in parts model (anim-studio).",
+    "note": "Default name for an unnamed part. I is its position number, starting at 1.",
     "max": 15,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -4886,7 +4886,7 @@
   },
   "anim-studio.parts-model.part-n": {
     "text": "Part {n}",
-    "note": "Shown in parts model (anim-studio).",
+    "note": "Default name for a newly added part. N is a running number, starting at 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4899,7 +4899,7 @@
   },
   "anim-studio.parts-model.this-animation-has-tracks-animated": {
     "text": "This animation has {tracks} animated targets, the most it can hold. Remove one to animate this part.",
-    "note": "Shown in parts model (anim-studio).",
+    "note": "Error shown when the animation has no room for another animated target. Tracks is the maximum number.",
     "max": 160,
     "vars": {
       "tracks": "The value that replaces tracks in the text."
@@ -4927,7 +4927,7 @@
   },
   "anim-studio.parts-overlay.pivot-of-name": {
     "text": "Pivot of {name}",
-    "note": "Shown in parts overlay (anim-studio).",
+    "note": "Accessible label for the draggable pivot point on the stage. Name is the part name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4935,7 +4935,7 @@
   },
   "anim-studio.parts-overlay.preset-pivot-of-name": {
     "text": "Preset pivot of {name}",
-    "note": "Shown in parts overlay (anim-studio).",
+    "note": "Accessible label for the pivot point set by a preset, not by the user. Name is the part name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4973,7 +4973,7 @@
   },
   "anim-studio.path-editor.colour-i": {
     "text": "Colour {i}",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Label of one colour stop in the path editor. I is its position number, starting at 1.",
     "max": 20,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -5034,7 +5034,7 @@
   },
   "anim-studio.path-editor.key-moves-one-handle-alone": {
     "text": "{key} moves one handle alone.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint in the path editor. Key is a keyboard modifier name such as Alt, so keep it as a placeholder.",
     "max": 50,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -5042,7 +5042,7 @@
   },
   "anim-studio.path-editor.key-removes-it": {
     "text": "{key} removes it.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint in the path editor about deleting a point. Key is a keyboard key name, kept as a placeholder.",
     "max": 30,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -5115,7 +5115,7 @@
   },
   "anim-studio.path-editor.points-snap-to-a-10-px-grid-hold-key-to": {
     "text": "Points snap to a 10 px grid. Hold {key} to place freely.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint for pixel-based snapping in the path editor. Key is a modifier key name, kept as a placeholder.",
     "max": 90,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -5123,7 +5123,7 @@
   },
   "anim-studio.path-editor.points-snap-to-a-5-grid-hold-key-to": {
     "text": "Points snap to a 5% grid. Hold {key} to place freely.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint for percentage-based snapping in the path editor. Key is a modifier key name, kept as a placeholder.",
     "max": 85,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -5136,7 +5136,7 @@
   },
   "anim-studio.path-editor.remove-colour-i": {
     "text": "Remove colour {i}",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button label that deletes one colour stop. I is its position number, starting at 1.",
     "max": 30,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -5144,7 +5144,7 @@
   },
   "anim-studio.path-editor.replace-the-path-with-a-name": {
     "text": "Replace the path with a {name}",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button that swaps the drawn path for a ready-made shape. Name is the shape name, such as circle.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5167,7 +5167,7 @@
   },
   "anim-studio.path-editor.spaced-evenly-along-the-path-1-to": {
     "text": "Spaced evenly along the path, 1 to {particles}.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Help text for the particle count field. Particles is the largest allowed number.",
     "max": 80,
     "vars": {
       "particles": "The value that replaces particles in the text."
@@ -5260,7 +5260,7 @@
   },
   "anim-studio.path-layers.moves-along-subject": {
     "text": "Moves along: {subject}",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Summary of what follows a path in the layers list. Subject is the name of the moving item.",
     "max": 40,
     "vars": {
       "subject": "The value that replaces subject in the text."
@@ -5323,7 +5323,7 @@
   },
   "anim-studio.preset-grid.no-presets-match-query": {
     "text": "No presets match \"{query}\".",
-    "note": "Shown in preset grid (anim-studio).",
+    "note": "Empty state of the preset search. Query is the text the user typed.",
     "max": 50,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -5351,7 +5351,7 @@
   },
   "anim-studio.sequence-editor.a-sequence-has-at-most-steps-steps": {
     "text": "A sequence has at most {steps} steps.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Error shown when the step limit is reached. Steps is the maximum number allowed.",
     "max": 60,
     "vars": {
       "steps": "The value that replaces steps in the text."
@@ -5379,7 +5379,7 @@
   },
   "anim-studio.sequence-editor.at-most-steps-steps": {
     "text": "At most {steps} steps",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Short tooltip on the disabled add-step button. Steps is the maximum number allowed.",
     "max": 35,
     "vars": {
       "steps": "The value that replaces steps in the text."
@@ -5400,7 +5400,7 @@
   },
   "anim-studio.sequence-editor.count-skipped": {
     "text": ", {count} skipped",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Fragment appended to the sequence summary, so keep the leading comma. Count is the skipped steps.",
     "max": 30,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -5418,7 +5418,7 @@
   },
   "anim-studio.sequence-editor.delay-counts-from-the-end-of-the": {
     "text": "Delay counts from the end of the previous step. Empty duration uses the animation's own ({seconds} s).",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Help text under the step delay and duration fields. Seconds is the animation's own duration.",
     "max": 165,
     "vars": {
       "seconds": "The value that replaces seconds in the text."
@@ -5436,7 +5436,7 @@
   },
   "anim-studio.sequence-editor.delete-step-i": {
     "text": "Delete step {i}",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Button label that removes one step. I is the step's position number, starting at 1.",
     "max": 25,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -5484,7 +5484,7 @@
   },
   "anim-studio.sequence-editor.move-step-i": {
     "text": "Move step {i}",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Accessible label of the drag handle for one step. I is the step's position number, starting at 1.",
     "max": 25,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -5492,7 +5492,7 @@
   },
   "anim-studio.sequence-editor.no-animation-matches-query": {
     "text": "No animation matches “{query}”.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Empty state of the animation search in the step picker. Query is the text the user typed.",
     "max": 50,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -5580,7 +5580,7 @@
   },
   "anim-studio.sequence-editor.step-count-added-name": {
     "text": "Step {count} added: {name}.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Screen reader announcement after adding a step. Count is the new total; name is the animation added.",
     "max": 45,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -5589,7 +5589,7 @@
   },
   "anim-studio.sequence-editor.step-i-is-locked-unlock-it-in-layers": {
     "text": "Step {i} is locked. Unlock it in Layers.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on a locked step. I is the step number; Layers is the name of the layers panel.",
     "max": 65,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -5597,7 +5597,7 @@
   },
   "anim-studio.sequence-editor.step-index-deleted": {
     "text": "Step {index} deleted.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Screen reader announcement after a step is removed. Index is the step number, starting at 1.",
     "max": 35,
     "vars": {
       "index": "The value that replaces index in the text."
@@ -5605,7 +5605,7 @@
   },
   "anim-studio.sequence-editor.step-index-from-to-to": {
     "text": "Step {index}: {from} to {to}",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Label of a step's time span. From and to are already-formatted times; index is the step number.",
     "max": 45,
     "vars": {
       "from": "The value that replaces from in the text.",
@@ -5615,7 +5615,7 @@
   },
   "anim-studio.sequence-editor.step-index-is-skipped": {
     "text": "Step {index} is skipped",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on a step that cannot play. Index is the step number, starting at 1.",
     "max": 40,
     "vars": {
       "index": "The value that replaces index in the text."
@@ -5623,7 +5623,7 @@
   },
   "anim-studio.sequence-editor.step-moved-to-position-to-of-count": {
     "text": "Step moved to position {to} of {count}.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Screen reader announcement after a step is reordered by drag. To is the new place; count is the total.",
     "max": 65,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -5632,7 +5632,7 @@
   },
   "anim-studio.sequence-editor.step-moved-to-position-to-of-n": {
     "text": "Step moved to position {to} of {n}.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Screen reader announcement after a step is moved with the keyboard. To is the new place; n is the total.",
     "max": 60,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -5641,7 +5641,7 @@
   },
   "anim-studio.sequence-editor.steps-total-per-cycle-loop-skipped": {
     "text": "{steps}, {total} per cycle, {loop}{skipped}.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "One-line sequence summary. All four values are already-translated fragments, so only the order can change.",
     "max": 75,
     "vars": {
       "loop": "The value that replaces loop in the text.",
@@ -5657,7 +5657,7 @@
   },
   "anim-studio.sequence-layers.move-name-down-plays-later": {
     "text": "Move {name} down (plays later)",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Button label that moves a step later in the sequence. Name is the step's animation name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5665,7 +5665,7 @@
   },
   "anim-studio.sequence-layers.move-name-up-plays-earlier": {
     "text": "Move {name} up (plays earlier)",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Button label that moves a step earlier in the sequence. Name is the step's animation name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -5683,7 +5683,7 @@
   },
   "anim-studio.sequence-layers.name-is-now-step-to-of-count": {
     "text": "{name} is now step {to} of {count}",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Screen reader announcement after a step is reordered. To is the new place; count is the total.",
     "max": 55,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -5708,7 +5708,7 @@
   },
   "anim-studio.sequence-layers.step-i": {
     "text": "Step {i}",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Default label for a step row in the layers list. I is the step number, starting at 1.",
     "max": 15,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -5716,7 +5716,7 @@
   },
   "anim-studio.sequence-layers.step-i-of-count": {
     "text": "step {i} of {count}",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Lower-case position fragment used inside a longer label. I is the step number; count is the total.",
     "max": 35,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -5725,7 +5725,7 @@
   },
   "anim-studio.sequence-layers.step-i-of-count-problem": {
     "text": "step {i} of {count}, {problem}",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Position fragment for a step with a problem. Problem is an already-translated reason, such as skipped.",
     "max": 50,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -5740,7 +5740,7 @@
   },
   "anim-studio.sequence-utils.after-seconds": {
     "text": "after {seconds}",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Start time of a step relative to the previous one. Seconds is an already-formatted duration.",
     "max": 25,
     "vars": {
       "seconds": "The value that replaces seconds in the text."
@@ -5758,7 +5758,7 @@
   },
   "anim-studio.sequence-utils.kind-cannot-play-in-a-sequence-this-step": {
     "text": "{kind} cannot play in a sequence. This step is skipped.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Warning on a step whose animation cannot run in a sequence. Kind is the animation type, already translated.",
     "max": 90,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -5951,7 +5951,7 @@
   },
   "anim-studio.shape-inspector.moving-target": {
     "text": "Moving {target}.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Status line while dragging in the shape inspector. Target is the name of the shape or part being moved.",
     "max": 30,
     "vars": {
       "target": "The value that replaces target in the text."
@@ -6039,7 +6039,7 @@
   },
   "anim-studio.shape-inspector.size-icon-units": {
     "text": "{size} icon units",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Size readout in the icon's own coordinate units, not pixels. Size is a number.",
     "max": 30,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -6127,7 +6127,7 @@
   },
   "anim-studio.stage-sim.pct-of-the-input-range": {
     "text": "{pct} % of the input range",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Readout of the simulated input value on the stage slider. Pct is a number from 0 to 100.",
     "max": 45,
     "vars": {
       "pct": "The value that replaces pct in the text."
@@ -6170,7 +6170,7 @@
   },
   "anim-studio.states-panel.at-most-clips-max-states": {
     "text": "At most {cLIPS_MAX} states.",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Error shown when the state limit is reached. The placeholder is the maximum number of states.",
     "max": 45,
     "vars": {
       "cLIPS_MAX": "The value that replaces cLIPS_MAX in the text."
@@ -6183,7 +6183,7 @@
   },
   "anim-studio.states-panel.delete-state-i": {
     "text": "Delete state {i}",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Button label that removes one state rule. I is its position number, starting at 1.",
     "max": 30,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -6196,7 +6196,7 @@
   },
   "anim-studio.states-panel.move-state-i-down": {
     "text": "Move state {i} down",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Button label that moves a state rule lower in the list. I is its position number, starting at 1.",
     "max": 35,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -6204,7 +6204,7 @@
   },
   "anim-studio.states-panel.move-state-i-up": {
     "text": "Move state {i} up",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Button label that moves a state rule higher in the list. I is its position number, starting at 1.",
     "max": 30,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -6247,7 +6247,7 @@
   },
   "anim-studio.states-panel.state-count-added-when": {
     "text": "State {count} added: {when}.",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Screen reader announcement after adding a state. Count is the new total; when is the condition text.",
     "max": 45,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -6256,7 +6256,7 @@
   },
   "anim-studio.states-panel.state-i": {
     "text": "State {i}",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Heading of one state rule in the states panel. I is its position number, starting at 1.",
     "max": 15,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -6264,7 +6264,7 @@
   },
   "anim-studio.states-panel.state-i-deleted": {
     "text": "State {i} deleted.",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Screen reader announcement after a state rule is removed. I is its position number, starting at 1.",
     "max": 30,
     "vars": {
       "i": "The value that replaces i in the text."
@@ -6272,7 +6272,7 @@
   },
   "anim-studio.states-panel.state-moved-to-position-to": {
     "text": "State moved to position {to}.",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Screen reader announcement after a state rule is reordered. To is the new position, starting at 1.",
     "max": 50,
     "vars": {
       "to": "The value that replaces to in the text."
@@ -6320,7 +6320,7 @@
   },
   "anim-studio.states-sim.state-is-not-state-not": {
     "text": "State is not {state_not}",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Condition label in the state simulator. The placeholder is an entity state value, such as off.",
     "max": 40,
     "vars": {
       "state_not": "The value that replaces state_not in the text."
@@ -6328,7 +6328,7 @@
   },
   "anim-studio.states-sim.state-is-state": {
     "text": "State is {state}",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Condition label in the state simulator. State is an entity state value, such as on.",
     "max": 30,
     "vars": {
       "state": "The value that replaces state in the text."
@@ -6336,7 +6336,7 @@
   },
   "anim-studio.states-sim.value-above-above": {
     "text": "Value above {above}",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Condition label for a numeric threshold in the state simulator. Above is the number.",
     "max": 35,
     "vars": {
       "above": "The value that replaces above in the text."
@@ -6344,7 +6344,7 @@
   },
   "anim-studio.states-sim.value-below-below": {
     "text": "Value below {below}",
-    "note": "Shown in states sim (anim-studio).",
+    "note": "Condition label for a numeric threshold in the state simulator. Below is the number.",
     "max": 35,
     "vars": {
       "below": "The value that replaces below in the text."
@@ -6352,7 +6352,7 @@
   },
   "anim-studio.states-utils.animation-unknown": {
     "text": "{animation} (unknown)",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Option label for a state's animation that no longer exists. Animation is its stored name.",
     "max": 35,
     "vars": {
       "animation": "The value that replaces animation in the text."
@@ -6395,7 +6395,7 @@
   },
   "anim-studio.states-utils.id-not-found": {
     "text": "{id} (not found)",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Option label for a referenced item that is missing from the library. Id is its stored identifier.",
     "max": 30,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -6483,7 +6483,7 @@
   },
   "anim-studio.studio-model.id-the-library-is-full": {
     "text": "{id}: the library is full",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Error for one animation that could not be saved because the library is full. Id is its identifier.",
     "max": 40,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -6496,7 +6496,7 @@
   },
   "anim-studio.studio-model.name-copy": {
     "text": "{name} (copy)",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Name given to a duplicated animation. Name is the original's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6504,7 +6504,7 @@
   },
   "anim-studio.studio-model.name-copy-n": {
     "text": "{name} (copy {n})",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Name given to a further duplicate when a copy already exists. N is a running number from 2.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -6548,7 +6548,7 @@
   },
   "anim-studio.studio-model.the-library-holds-at-most-cap-animations": {
     "text": "The library holds at most {cap} animations: only {fit} more fit, {skipped} were not imported.",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Import result when only some animations fit. Cap is the library limit; fit and skipped are counts.",
     "max": 150,
     "vars": {
       "cap": "The value that replaces cap in the text.",
@@ -6558,7 +6558,7 @@
   },
   "anim-studio.studio-model.the-library-is-full-cap-animations": {
     "text": "The library is full ({cap} animations): nothing was imported.",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Import result when the library has no room at all. Cap is the library limit.",
     "max": 100,
     "vars": {
       "cap": "The value that replaces cap in the text."
@@ -6591,7 +6591,7 @@
   },
   "anim-studio.studio-stage.icon-percent": {
     "text": "Icon {percent}%",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Label of the icon size slider on the stage. Percent is a number; the sign stays attached.",
     "max": 25,
     "vars": {
       "percent": "The value that replaces percent in the text."
@@ -6614,7 +6614,7 @@
   },
   "anim-studio.studio-stage.now-of-total-seconds": {
     "text": "{now} of {total} seconds",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Accessible value text of the playback scrubber. Now and total are numbers of seconds.",
     "max": 40,
     "vars": {
       "now": "The value that replaces now in the text.",
@@ -6797,7 +6797,7 @@
   },
   "anim-studio.studio.count-targets": {
     "text": "{count} targets",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Number of animated targets in an animation, shown on its list entry. Plural forms may be needed.",
     "max": 25,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -6810,7 +6810,7 @@
   },
   "anim-studio.studio.custom-id": {
     "text": "custom:{id}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Technical identifier of a user-made animation. Do not translate the custom: prefix; id is the name.",
     "max": 20,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -6828,7 +6828,7 @@
   },
   "anim-studio.studio.customise-one-of-count": {
     "text": "Customise one of {count}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Heading above the list of built-in animations that can be copied and edited. Count is how many there are.",
     "max": 40,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -6841,7 +6841,7 @@
   },
   "anim-studio.studio.delete-name": {
     "text": "Delete {name}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button label that deletes a custom animation. Name is the animation's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6849,7 +6849,7 @@
   },
   "anim-studio.studio.delete-name-2": {
     "text": "Delete \"{name}\"?",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Question in the delete confirmation dialogue. Name is the animation's name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6857,7 +6857,7 @@
   },
   "anim-studio.studio.deleted-name": {
     "text": "Deleted \"{name}\".",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Confirmation message after an animation is deleted. Name is the animation's name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6865,7 +6865,7 @@
   },
   "anim-studio.studio.deleting-failed-message": {
     "text": "Deleting failed: {message}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Error after a failed delete. Message is the technical reason, which may be in English.",
     "max": 45,
     "vars": {
       "message": "The value that replaces message in the text."
@@ -6893,7 +6893,7 @@
   },
   "anim-studio.studio.duplicate-name": {
     "text": "Duplicate {name}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button label that makes a copy of an animation. Name is the animation's name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6901,7 +6901,7 @@
   },
   "anim-studio.studio.duplicated-as-name": {
     "text": "Duplicated as \"{name}\".",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Confirmation message after copying an animation. Name is the new copy's name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6909,7 +6909,7 @@
   },
   "anim-studio.studio.duplicating-failed-message": {
     "text": "Duplicating failed: {message}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Error after a failed copy. Message is the technical reason, which may be in English.",
     "max": 50,
     "vars": {
       "message": "The value that replaces message in the text."
@@ -6947,7 +6947,7 @@
   },
   "anim-studio.studio.export-name": {
     "text": "Export {name}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button label that saves an animation to a file. Name is the animation's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -6980,7 +6980,7 @@
   },
   "anim-studio.studio.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip of the panel collapse arrow. Noun is the panel name; keys is the keyboard shortcut.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -7080,7 +7080,7 @@
   },
   "anim-studio.studio.label-not-on-the-tile-tile": {
     "text": "{label} · not on the {tile} tile",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Target option label when the target is absent from the chosen tile. Label is the target; tile is the tile type.",
     "max": 55,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -7089,7 +7089,7 @@
   },
   "anim-studio.studio.label-the-animation-moves-it": {
     "text": "{label} (the animation moves it)",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Target option label for a target the animation itself moves. Label is the target name.",
     "max": 55,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -7097,7 +7097,7 @@
   },
   "anim-studio.studio.label-the-animation-moves-it-not-on-the": {
     "text": "{label} (the animation moves it) · not on the {tile} tile",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Combines two target warnings: moved by the animation and missing from the tile. Label and tile as before.",
     "max": 95,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -7131,7 +7131,7 @@
   },
   "anim-studio.studio.loading-the-kind-editor": {
     "text": "Loading the {kind} editor…",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Placeholder while an editor loads on demand. Kind is the animation type, already translated.",
     "max": 45,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -7174,7 +7174,7 @@
   },
   "anim-studio.studio.name-has-changes-that-are-not-saved-yet": {
     "text": "\"{name}\" has changes that are not saved yet.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Warning when leaving with unsaved edits. Name is the animation's name.",
     "max": 75,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7182,7 +7182,7 @@
   },
   "anim-studio.studio.name-has-changes-that-were-not-saved": {
     "text": "\"{name}\" has changes that were not saved last time.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Offer to restore a draft recovered from the previous session. Name is the animation's name.",
     "max": 85,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7190,7 +7190,7 @@
   },
   "anim-studio.studio.name-of-name": {
     "text": "Name of {name}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Accessible label of the rename text field. Name is the animation's current name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7233,7 +7233,7 @@
   },
   "anim-studio.studio.no-animations-match-query": {
     "text": "No animations match \"{query}\".",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Empty state of the animation list search. Query is the text the user typed.",
     "max": 50,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -7251,7 +7251,7 @@
   },
   "anim-studio.studio.not-changed-big": {
     "text": "Not changed: {big}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Part of a result message listing items left untouched. Big is an already-built list of names.",
     "max": 30,
     "vars": {
       "big": "The value that replaces big in the text."
@@ -7259,7 +7259,7 @@
   },
   "anim-studio.studio.not-imported-list": {
     "text": "Not imported: {list}.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Import result listing animations that were rejected. List is an already-joined list of names.",
     "max": 35,
     "vars": {
       "list": "The value that replaces list in the text."
@@ -7267,7 +7267,7 @@
   },
   "anim-studio.studio.not-renamed-message": {
     "text": "Not renamed: {message}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Message when a new name is refused, such as a name already in use. Message is the reason.",
     "max": 40,
     "vars": {
       "message": "The value that replaces message in the text."
@@ -7290,7 +7290,7 @@
   },
   "anim-studio.studio.panels-hidden": {
     "text": "{panels} hidden",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Screen reader announcement after hiding panels. Panels is an already-translated panel name or list.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -7298,7 +7298,7 @@
   },
   "anim-studio.studio.panels-shown": {
     "text": "{panels} shown",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Screen reader announcement after showing panels. Panels is an already-translated panel name or list.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -7326,7 +7326,7 @@
   },
   "anim-studio.studio.rename-name": {
     "text": "Rename {name}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Button label that starts renaming an animation. Name is the animation's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7334,7 +7334,7 @@
   },
   "anim-studio.studio.renamed-to-clean": {
     "text": "Renamed to \"{clean}\".",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Confirmation after renaming. Clean is the final name after unsupported characters were removed.",
     "max": 35,
     "vars": {
       "clean": "The value that replaces clean in the text."
@@ -7342,7 +7342,7 @@
   },
   "anim-studio.studio.renaming-failed-message": {
     "text": "Renaming failed: {message}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Error after a failed rename. Message is the technical reason, which may be in English.",
     "max": 45,
     "vars": {
       "message": "The value that replaces message in the text."
@@ -7390,7 +7390,7 @@
   },
   "anim-studio.studio.saved-name": {
     "text": "Saved \"{name}\".",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Confirmation message after saving an animation. Name is the animation's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7418,7 +7418,7 @@
   },
   "anim-studio.studio.sequences-that-play-it-skip-that-step": {
     "text": "Sequences that play it skip that step: {names}.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Warning about sequences affected by a change. Names is an already-joined list of sequence names.",
     "max": 80,
     "vars": {
       "names": "The value that replaces names in the text."
@@ -7426,7 +7426,7 @@
   },
   "anim-studio.studio.shortcut-keys": {
     "text": "Shortcut: {keys}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip line naming a keyboard shortcut. Keys is already formatted, such as Ctrl+S.",
     "max": 30,
     "vars": {
       "keys": "The value that replaces keys in the text."
@@ -7434,7 +7434,7 @@
   },
   "anim-studio.studio.show-noun-keys": {
     "text": "Show {noun} ({keys})",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip of the panel expand arrow. Noun is the panel name; keys is the keyboard shortcut.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -7493,7 +7493,7 @@
   },
   "anim-studio.studio.the-new-animation-name-was-not-saved": {
     "text": "The new animation \"{name}\" was not saved last time.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Offer to restore an unsaved new animation from the previous session. Name is its name.",
     "max": 85,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -7501,7 +7501,7 @@
   },
   "anim-studio.studio.the-noun-panel-is-hidden-as-you-left-it": {
     "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint shown when a panel starts hidden. Noun is the already-translated panel name.",
     "max": 130,
     "vars": {
       "noun": "The value that replaces noun in the text."
@@ -7524,7 +7524,7 @@
   },
   "anim-studio.studio.this-preset-could-not-be-opened-message": {
     "text": "This preset could not be opened: {message}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Error when a preset fails to load. Message is the technical reason, which may be in English.",
     "max": 70,
     "vars": {
       "message": "The value that replaces message in the text."
@@ -7537,7 +7537,7 @@
   },
   "anim-studio.studio.tool-tool": {
     "text": "Tool: {tool}",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Status line naming the active drawing tool. Tool is the already-translated tool name.",
     "max": 20,
     "vars": {
       "tool": "The value that replaces tool in the text."
@@ -7596,7 +7596,7 @@
   },
   "anim-studio.targets-layers.count-2": {
     "text": "{count, plural, one {{names} is not on the {tile} tile. Switch the preview tile to Card to see it.} other {{names} are not on the {tile} tile. Switch the preview tile to Card to see them.}}",
-    "note": "Shown in targets layers (anim-studio).",
+    "note": "Warning in the targets list. Names is a joined list of targets; tile is the preview tile type. Plural.",
     "max": 130,
     "vars": {
       "count": "The count the text is about.",
@@ -7616,7 +7616,7 @@
   },
   "anim-studio.targets-layers.label-is-not-on-the-tile-tile": {
     "text": "{label} is not on the {tile} tile",
-    "note": "Shown in targets layers (anim-studio).",
+    "note": "Tooltip on a target missing from the preview tile. Label is the target name; tile is the tile type.",
     "max": 55,
     "vars": {
       "label": "The value that replaces label in the text.",
@@ -7630,7 +7630,7 @@
   },
   "anim-studio.targets-layers.not-on-the-tile-tile": {
     "text": "not on the {tile} tile",
-    "note": "Shown in targets layers (anim-studio).",
+    "note": "Short lower-case tag on a target row. Tile is the tile type, such as Card.",
     "max": 40,
     "vars": {
       "tile": "The value that replaces tile in the text."
@@ -7698,7 +7698,7 @@
   },
   "anim-studio.validation-text.at-most-max-animations": {
     "text": "At most {max} animations.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for too many animations. Max is the limit.",
     "max": 40,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -7706,7 +7706,7 @@
   },
   "anim-studio.validation-text.at-most-max-characters": {
     "text": "At most {max} characters.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for text that is too long. Max is the character limit.",
     "max": 40,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -7714,7 +7714,7 @@
   },
   "anim-studio.validation-text.at-most-max-entries": {
     "text": "At most {max} entries.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for a list with too many items. Max is the limit.",
     "max": 40,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -7722,7 +7722,7 @@
   },
   "anim-studio.validation-text.at-most-max-particles-over-all-emitters": {
     "text": "At most {max} particles over all emitters.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when emitters together exceed the particle limit. Max is the combined limit.",
     "max": 70,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -7745,7 +7745,7 @@
   },
   "anim-studio.validation-text.duplicate-id-id": {
     "text": "Duplicate id \"{id}\".",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error when two items share an identifier. Id is the repeated value, kept as typed.",
     "max": 35,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -7823,7 +7823,7 @@
   },
   "anim-studio.validation-text.must-be-between-min-and-max": {
     "text": "Must be between {min} and {max}.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for a number out of range. Min and max are the inclusive bounds.",
     "max": 55,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -7847,7 +7847,7 @@
   },
   "anim-studio.validation-text.must-be-one-of-options": {
     "text": "Must be one of: {options}.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for a value outside a fixed set. Options is a comma-separated list of allowed values.",
     "max": 45,
     "vars": {
       "options": "The value that replaces options in the text."
@@ -7905,7 +7905,7 @@
   },
   "anim-studio.validation-text.needs-at-least-min-entries": {
     "text": "Needs at least {min} entries.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for a list with too few items. Min is the lowest allowed count.",
     "max": 50,
     "vars": {
       "min": "The value that replaces min in the text."
@@ -7918,7 +7918,7 @@
   },
   "anim-studio.validation-text.no-kind-id-in-the-rig": {
     "text": "No {kind} \"{id}\" in the rig.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for a reference to a missing item. Kind is the item type, such as part; id is its name.",
     "max": 45,
     "vars": {
       "id": "The value that replaces id in the text.",
@@ -7957,7 +7957,7 @@
   },
   "anim-studio.validation-text.not-an-allowed-kind-value": {
     "text": "Not an allowed {kind} value.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for an unsupported setting. Kind is the field name, such as easing.",
     "max": 45,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -8010,7 +8010,7 @@
   },
   "anim-studio.validation-text.the-animation-is-larger-than-size-kb": {
     "text": "The animation is larger than {size} KB.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation error for an oversized animation file. Size is the limit in kilobytes.",
     "max": 65,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -8033,7 +8033,7 @@
   },
   "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": {
     "text": "The SVG has too many shapes; at most {room} fit.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Error when an imported SVG exceeds the shape limit. Room is how many shapes still fit.",
     "max": 80,
     "vars": {
       "room": "The value that replaces room in the text."
@@ -8051,7 +8051,7 @@
   },
   "anim-studio.validation-text.this-card-plays-engine-engine-update": {
     "text": "This card plays engine {engine}; update Magic Card to play this animation.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Error when an animation needs a newer player. Engine is a version number; Magic Card is the product name.",
     "max": 120,
     "vars": {
       "engine": "The value that replaces engine in the text."
