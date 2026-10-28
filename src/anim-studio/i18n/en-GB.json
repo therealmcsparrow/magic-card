@@ -1926,7 +1926,7 @@
   },
   "anim-studio.keyframes-editor.collapse-name": {
     "text": "Collapse {name}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Button label in the keyframes editor that folds a layer's lanes. {name} is the layer or target name; do not translate it.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1965,7 +1965,7 @@
   },
   "anim-studio.keyframes-editor.count-pasted-at-at-skipped": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}} pasted at {at}{skipped}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Screen-reader announcement after pasting keyframes. {count} is the number pasted, {at} is the playhead position as a percentage, and {skipped} is empty or the separate 'skipped' sentence that starts with a semicolon.",
     "max": 60,
     "vars": {
       "at": "The value that replaces at in the text.",
@@ -2000,7 +2000,7 @@
   },
   "anim-studio.keyframes-editor.duplicate-count": {
     "text": "Duplicate {count, plural, one {keyframe} other {keyframes}}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Label of the undo step and drag status when Alt-dragging copies keyframes. {count} is how many keyframes are copied.",
     "max": 35,
     "vars": {
       "count": "The count the text is about."
@@ -2018,7 +2018,7 @@
   },
   "anim-studio.keyframes-editor.expand-name": {
     "text": "Expand {name}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Button label in the keyframes editor that unfolds a layer's lanes. {name} is the layer or target name; do not translate it.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2056,7 +2056,7 @@
   },
   "anim-studio.keyframes-editor.label-at-at": {
     "text": "{label} at {at}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of a keyframe marker with no value. {label} is a capitalised phrase such as 'Rotation keyframe' and {at} is its position as a percentage.",
     "max": 25,
     "vars": {
       "at": "The value that replaces at in the text.",
@@ -2065,7 +2065,7 @@
   },
   "anim-studio.keyframes-editor.label-at-at-value": {
     "text": "{label} at {at} · {value}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of a keyframe marker that has a value. {label} is a capitalised phrase such as 'Rotation keyframe', {at} is its position as a percentage and {value} is the keyframe's value.",
     "max": 40,
     "vars": {
       "at": "The value that replaces at in the text.",
@@ -2075,7 +2075,7 @@
   },
   "anim-studio.keyframes-editor.label-lane": {
     "text": "{label} lane",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of one property lane in the keyframes editor. {label} is the translated property name, such as Rotation; 'lane' is a row on the timeline.",
     "max": 20,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -2083,7 +2083,7 @@
   },
   "anim-studio.keyframes-editor.lane-keyframe": {
     "text": "{lane} keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Name of a keyframe marker on a single-target timeline. {lane} is the lowercase property name, such as rotation; the result is capitalised afterwards.",
     "max": 25,
     "vars": {
       "lane": "The value that replaces lane in the text."
@@ -2096,7 +2096,7 @@
   },
   "anim-studio.keyframes-editor.move-count": {
     "text": "Move {count, plural, one {keyframe} other {keyframes}}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Label of the undo step and drag status when dragging keyframes along the timeline. {count} is how many keyframes move.",
     "max": 25,
     "vars": {
       "count": "The count the text is about."
@@ -2109,7 +2109,7 @@
   },
   "anim-studio.keyframes-editor.name-is-locked-unlock-it-in-layers": {
     "text": "{name} is locked. Unlock it in Layers.",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Message when an edit is refused in the keyframes editor because the layer is locked. {name} is the layer name; 'Layers' is the layers panel.",
     "max": 65,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2117,7 +2117,7 @@
   },
   "anim-studio.keyframes-editor.name-keyframes": {
     "text": "{name} keyframes",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the group of lanes for one layer in the keyframes editor. {name} is the layer or target name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2155,7 +2155,7 @@
   },
   "anim-studio.keyframes-editor.paste-at-the-playhead-into-target-ctrl-v": {
     "text": "Paste at the playhead into {target} (Ctrl+V)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the Paste button when keyframes are copied. {target} is the name of the selected layer or target; keep the Ctrl+V shortcut.",
     "max": 75,
     "vars": {
       "target": "The value that replaces target in the text."
@@ -2168,7 +2168,7 @@
   },
   "anim-studio.keyframes-editor.pct-seconds-seconds": {
     "text": "{pct}, {seconds} seconds",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Spoken value of the playhead slider on the ruler. {pct} is the position as a percentage and {seconds} is the time in seconds with two decimals.",
     "max": 40,
     "vars": {
       "pct": "The value that replaces pct in the text.",
@@ -2212,7 +2212,7 @@
   },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
     "text": "Select every {name} keyframe (Shift adds)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of a lane header that selects all its keyframes. {name} is the lowercase property name; Shift adds to the current selection.",
     "max": 70,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2225,7 +2225,7 @@
   },
   "anim-studio.keyframes-editor.skipped-skipped-not-for-this-target-or": {
     "text": "; {skipped} skipped (not for this target or lane)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Appended to the paste announcement, so keep the leading semicolon. {skipped} is how many pasted keyframes did not fit the target layer or lane.",
     "max": 80,
     "vars": {
       "skipped": "The value that replaces skipped in the text."
@@ -2248,7 +2248,7 @@
   },
   "anim-studio.keyframes-editor.target-keyframe": {
     "text": "{target} keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Name of a keyframe marker on a lane that covers all properties of a layer. {target} is the layer name; the result is capitalised afterwards.",
     "max": 30,
     "vars": {
       "target": "The value that replaces target in the text."
@@ -2256,7 +2256,7 @@
   },
   "anim-studio.keyframes-editor.target-lane-keyframe": {
     "text": "{target} {lane} keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Name of a keyframe marker on one property lane of a layer. {target} is the layer name and {lane} is the lowercase property name; the result is capitalised afterwards.",
     "max": 40,
     "vars": {
       "lane": "The value that replaces lane in the text.",
@@ -2508,7 +2508,7 @@
   },
   "anim-studio.lane-rows.name-count": {
     "text": "{name}: {count, plural, one {# key} other {# keys}}",
-    "note": "Shown in lane rows (anim-studio).",
+    "note": "Tooltip of a lane row in the layers list. {name} is the property name and {count} is how many keyframes it has; 'key' is short for keyframe.",
     "max": 25,
     "vars": {
       "count": "The count the text is about.",
@@ -2537,7 +2537,7 @@
   },
   "anim-studio.layer-row.below-hidden": {
     "text": "{below} hidden",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Small warning badge on a collapsed layer row. {below} is the number of hidden layers nested beneath it. Keep it very short.",
     "max": 25,
     "vars": {
       "below": "The value that replaces below in the text."
@@ -2545,7 +2545,7 @@
   },
   "anim-studio.layer-row.below-hidden-below": {
     "text": "{below} hidden below",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader description of a layer row, matching the visual badge. {below} is the number of hidden layers nested beneath it.",
     "max": 35,
     "vars": {
       "below": "The value that replaces below in the text."
@@ -2553,7 +2553,7 @@
   },
   "anim-studio.layer-row.collapse-name": {
     "text": "Collapse {name}",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Label of the arrow button that folds a layer's children in the layers list. {name} is the layer name; do not translate it.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2566,7 +2566,7 @@
   },
   "anim-studio.layer-row.expand-name": {
     "text": "Expand {name}",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Label of the arrow button that unfolds a layer's children in the layers list. {name} is the layer name; do not translate it.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2579,7 +2579,7 @@
   },
   "anim-studio.layer-row.hidden-because-name-is-hidden": {
     "text": "hidden because {name} is hidden",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Reason in a layer row's description, in lowercase, joined with other reasons by commas. {name} is the parent layer that is hidden.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2612,7 +2612,7 @@
   },
   "anim-studio.layer-row.layer-actions-name": {
     "text": "Layer actions, {name}",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Accessible name of the three-dot menu button on a layer row. {name} is the layer name; the plain 'Layer actions' tooltip is a separate string.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2635,7 +2635,7 @@
   },
   "anim-studio.layer-row.name-hidden-in-the-preview": {
     "text": "{name} hidden in the preview",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader announcement after the eye toggle hides a layer. {name} is the layer name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2643,7 +2643,7 @@
   },
   "anim-studio.layer-row.name-is-locked-unlock-it-in-layers": {
     "text": "{name} is locked. Unlock it in Layers.",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Message when an edit is refused in the layers list because the layer is locked. {name} is the layer name; 'Layers' is the layers panel.",
     "max": 65,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2651,7 +2651,7 @@
   },
   "anim-studio.layer-row.name-locked": {
     "text": "{name} locked",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader announcement after the lock toggle locks a layer. {name} is the layer name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2659,7 +2659,7 @@
   },
   "anim-studio.layer-row.name-no-longer-soloed": {
     "text": "{name} no longer soloed",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader announcement after solo is switched off for a layer. {name} is the layer name; solo shows only that layer.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2667,7 +2667,7 @@
   },
   "anim-studio.layer-row.name-shown-in-the-preview": {
     "text": "{name} shown in the preview",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader announcement after the eye toggle shows a layer again. {name} is the layer name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2675,7 +2675,7 @@
   },
   "anim-studio.layer-row.name-soloed-in-the-preview": {
     "text": "{name} soloed in the preview",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader announcement after solo is switched on for a layer. {name} is the layer name; solo shows only that layer.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2683,7 +2683,7 @@
   },
   "anim-studio.layer-row.name-unlocked": {
     "text": "{name} unlocked",
-    "note": "Shown in layer row (anim-studio).",
+    "note": "Screen-reader announcement after the lock toggle unlocks a layer. {name} is the layer name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -2852,7 +2852,7 @@
   },
   "anim-studio.part-inspector.part-of-pieces-shapes": {
     "text": "Part of {pieces} shapes",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Subtitle in the part inspector for a part made of several shapes. {pieces} is the number of shapes, always 2 or more.",
     "max": 40,
     "vars": {
       "pieces": "The value that replaces pieces in the text."
@@ -2880,7 +2880,7 @@
   },
   "anim-studio.part-inspector.pivot-position": {
     "text": "Pivot: {position}",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Accessible name of a pivot-point button. {position} is a lowercase position name such as top left or centre; the pivot is the point a part rotates around.",
     "max": 30,
     "vars": {
       "position": "The value that replaces position in the text."
@@ -3018,7 +3018,7 @@
   },
   "anim-studio.part-presets-panel.count-parts": {
     "text": "{count} parts",
-    "note": "Shown in part presets panel (anim-studio).",
+    "note": "Used inside the status line after applying a preset to more than two parts, in place of listing their names. {count} is the number of parts.",
     "max": 25,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -3026,7 +3026,7 @@
   },
   "anim-studio.part-presets-panel.count-targets-selected-a-preset-plays-on": {
     "text": "{count} targets selected: a preset plays on each (Wave: one after another).",
-    "note": "Shown in part presets panel (anim-studio).",
+    "note": "Help text in the part presets panel when two or more targets are selected. {count} is the number of targets; Wave is the name of a stagger option, so keep it matching that label.",
     "max": 120,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -3049,7 +3049,7 @@
   },
   "anim-studio.part-presets-panel.name-settings": {
     "text": "{name} settings",
-    "note": "Shown in part presets panel (anim-studio).",
+    "note": "Accessible name of the group of options for the chosen preset. {name} is the translated preset name, such as Fan.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -3072,7 +3072,7 @@
   },
   "anim-studio.part-presets-panel.preset-on-targets": {
     "text": "{preset} on {targets}",
-    "note": "Shown in part presets panel (anim-studio).",
+    "note": "Status line after applying a preset. {preset} is the preset name and {targets} is a list of part names or a count such as '3 parts'.",
     "max": 35,
     "vars": {
       "preset": "The value that replaces preset in the text.",
@@ -3111,7 +3111,7 @@
   },
   "anim-studio.particles-editor.about-percent-of-particles": {
     "text": "About {percent}% of particles",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Help text under a shape's weight slider. {percent} is the share of particles using this shape, as a number without the percent sign.",
     "max": 50,
     "vars": {
       "percent": "The value that replaces percent in the text."
@@ -3164,7 +3164,7 @@
   },
   "anim-studio.particles-editor.at-most-colours-colours": {
     "text": "At most {colours} colours",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of the disabled Add colour button in the particles editor. {colours} is the maximum number of colours.",
     "max": 40,
     "vars": {
       "colours": "The value that replaces colours in the text."
@@ -3172,7 +3172,7 @@
   },
   "anim-studio.particles-editor.at-most-emitters-emitters": {
     "text": "At most {emitters} emitters.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Help text under the disabled Add emitter button. {emitters} is the maximum number of emitters a particle effect can have.",
     "max": 45,
     "vars": {
       "emitters": "The value that replaces emitters in the text."
@@ -3180,7 +3180,7 @@
   },
   "anim-studio.particles-editor.at-most-max-shapes-shapes": {
     "text": "At most {mAX_SHAPES} shapes",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of the disabled Add shape button in the particles editor. {mAX_SHAPES} is the maximum number of particle shapes.",
     "max": 45,
     "vars": {
       "mAX_SHAPES": "The value that replaces mAX_SHAPES in the text."
@@ -3198,7 +3198,7 @@
   },
   "anim-studio.particles-editor.based-on-a-built-in-kind": {
     "text": "Based on a built-in {kind}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Caption under the preset name in the particles editor. {kind} is a lowercase preset type such as effect; keep the article 'a' agreeing with it where your language needs that.",
     "max": 45,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -3216,7 +3216,7 @@
   },
   "anim-studio.particles-editor.between-min-and-max-empty-uses-intensity": {
     "text": "Between {min} and {max}; empty uses {intensity}. Timing and colour come from the animation settings.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Help text under the intensity field. {min} and {max} are the allowed range and {intensity} is the preset's default value, all numbers.",
     "max": 160,
     "vars": {
       "intensity": "The value that replaces intensity in the text.",
@@ -3291,7 +3291,7 @@
   },
   "anim-studio.particles-editor.colour-n": {
     "text": "Colour {n}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Accessible name of a colour chip in the particles editor. {n} is its position in the list, starting at 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3299,7 +3299,7 @@
   },
   "anim-studio.particles-editor.colour-n-colour": {
     "text": "Colour {n}: {colour}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of a colour chip with a fixed colour. {n} is its position in the list, starting at 1, and {colour} is the colour value such as #ff8800.",
     "max": 35,
     "vars": {
       "colour": "The value that replaces colour in the text.",
@@ -3308,7 +3308,7 @@
   },
   "anim-studio.particles-editor.colour-n-entity-colour": {
     "text": "Colour {n}: entity colour",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of a colour chip that follows the entity's own colour instead of a fixed value. {n} is its position in the list, starting at 1.",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3341,7 +3341,7 @@
   },
   "anim-studio.particles-editor.count-flow": {
     "text": "{count, plural, one {# particle} other {# particles}} · {flow}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Summary line for a single emitter. {count} is the number of particles and {flow} is a lowercase flow name such as burst or stream.",
     "max": 35,
     "vars": {
       "count": "The count the text is about.",
@@ -3350,7 +3350,7 @@
   },
   "anim-studio.particles-editor.count-of-colours": {
     "text": "{count} of {colours}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Counter beside the Colours label. {count} is how many colours are set and {colours} is the maximum allowed.",
     "max": 35,
     "vars": {
       "colours": "The value that replaces colours in the text.",
@@ -3429,7 +3429,7 @@
   },
   "anim-studio.particles-editor.highest-noun": {
     "text": "Highest {noun}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Accessible name of the upper input of a range pair. {noun} is the translated field name, such as speed.",
     "max": 25,
     "vars": {
       "noun": "The value that replaces noun in the text."
@@ -3502,7 +3502,7 @@
   },
   "anim-studio.particles-editor.lowest-noun": {
     "text": "Lowest {noun}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Accessible name of the lower input of a range pair. {noun} is the translated field name, such as speed.",
     "max": 25,
     "vars": {
       "noun": "The value that replaces noun in the text."
@@ -3520,7 +3520,7 @@
   },
   "anim-studio.particles-editor.name-is-now-where": {
     "text": "{name} is now {where}.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Screen-reader announcement after changing an emitter's layer order. {name} is the emitter name and {where} is either 'in front of the content' or 'behind the content'.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -3599,7 +3599,7 @@
   },
   "anim-studio.particles-editor.particles-particles-emitters-emitters": {
     "text": "{particles} particles · {emitters} emitters",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Summary line when an effect has several emitters. {particles} is the total number of particles and {emitters} is the number of emitters.",
     "max": 70,
     "vars": {
       "emitters": "The value that replaces emitters in the text.",
@@ -3653,7 +3653,7 @@
   },
   "anim-studio.particles-editor.remove-colour-n": {
     "text": "Remove colour {n}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of the remove button on a colour chip. {n} is the chip's position in the list, starting at 1.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3671,7 +3671,7 @@
   },
   "anim-studio.particles-editor.remove-shape-n": {
     "text": "Remove shape {n}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of the remove button on a shape chip. {n} is the chip's position in the list, starting at 1.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3684,7 +3684,7 @@
   },
   "anim-studio.particles-editor.seconds-s-loop": {
     "text": "{seconds} s loop",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Part of the summary line for an effect that repeats. {seconds} is the loop length in seconds, up to two decimals; s is the unit symbol.",
     "max": 30,
     "vars": {
       "seconds": "The value that replaces seconds in the text."
@@ -3707,7 +3707,7 @@
   },
   "anim-studio.particles-editor.shape-n": {
     "text": "Shape {n}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Accessible name of a shape chip in the particles editor. {n} is its position in the list, starting at 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -3715,7 +3715,7 @@
   },
   "anim-studio.particles-editor.shape-n-shape": {
     "text": "Shape {n}: {shape}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of a shape chip. {n} is its position in the list, starting at 1, and {shape} is the shape name, such as Star.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -3724,7 +3724,7 @@
   },
   "anim-studio.particles-editor.shape-n-shape-weight-weight": {
     "text": "Shape {n}: {shape}, weight {weight}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip of a shape chip that has a weight. {n} is its position, {shape} is the shape name and {weight} is how often it is picked relative to the others.",
     "max": 60,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -3779,7 +3779,7 @@
   },
   "anim-studio.particles-editor.spawns-seconds-s-after-birth-set-in-yaml": {
     "text": "Spawns {seconds} s after birth (set in YAML).",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Help text for a child-particle trigger set by time. {seconds} is the delay after the parent particle appears; s is the unit symbol and YAML is the card's text configuration.",
     "max": 75,
     "vars": {
       "seconds": "The value that replaces seconds in the text."
@@ -3927,7 +3927,7 @@
   },
   "anim-studio.particles-editor.up-to-parentsleft-for-this-emitter-all": {
     "text": "Up to {parentsLeft} for this emitter. All emitters share {parents} particles.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Help text under the particle count when an effect has several emitters. {parentsLeft} is the most this emitter can use and {parents} is the shared limit, both numbers.",
     "max": 125,
     "vars": {
       "parents": "The value that replaces parents in the text.",
@@ -3941,7 +3941,7 @@
   },
   "anim-studio.particles-editor.use-emoji": {
     "text": "Use {emoji}",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of a button that picks one emoji as a particle shape. {emoji} is the emoji character itself; do not translate it.",
     "max": 20,
     "vars": {
       "emoji": "The value that replaces emoji in the text."
@@ -3994,7 +3994,7 @@
   },
   "anim-studio.particles-layers.child-particles-of-name": {
     "text": "Child particles of {name}",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Name of the layer row for particles spawned by another emitter's particles. {name} is that emitter's name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4052,7 +4052,7 @@
   },
   "anim-studio.particles-layers.move-name-down": {
     "text": "Move {name} down",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Label of the button that moves an emitter one step down the stack. {name} is the emitter name; the menu item is the shorter 'Move down' string.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4060,7 +4060,7 @@
   },
   "anim-studio.particles-layers.move-name-up-drawn-on-top": {
     "text": "Move {name} up (drawn on top)",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Label of the button that moves an emitter one step up the stack, so it is drawn above the others. {name} is the emitter name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4068,7 +4068,7 @@
   },
   "anim-studio.particles-layers.move-name-where": {
     "text": "Move {name} {where}",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Label of the button that moves an emitter across the content. {name} is the emitter name and {where} is a phrase such as 'in front of the content' or 'behind the content'.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -4082,7 +4082,7 @@
   },
   "anim-studio.particles-layers.move-where": {
     "text": "Move {where}",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Menu item that moves the emitter across the content. {where} is a phrase such as 'in front of the content' or 'behind the content'.",
     "max": 20,
     "vars": {
       "where": "The value that replaces where in the text."
@@ -4090,7 +4090,7 @@
   },
   "anim-studio.particles-layers.name-behind-the-content": {
     "text": "{name}, behind the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip of an emitter row that is drawn behind the card content. {name} is the emitter name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4098,7 +4098,7 @@
   },
   "anim-studio.particles-layers.name-in-front-of-the-content": {
     "text": "{name}, in front of the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip of an emitter row that is drawn in front of the card content. {name} is the emitter name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4106,7 +4106,7 @@
   },
   "anim-studio.particles-layers.name-moved-behind-the-content": {
     "text": "{name} moved behind the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Screen-reader announcement after an emitter is sent behind the card content. {name} is the emitter name.",
     "max": 50,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4114,7 +4114,7 @@
   },
   "anim-studio.particles-layers.name-moved-direction-position-position": {
     "text": "{name} moved {direction}, position {position} of {count}",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Screen-reader announcement after an emitter changes place in the stack. {name} is the emitter, {direction} is 'up' or 'down', {position} is its new place and {count} is the number of emitters.",
     "max": 90,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -4125,7 +4125,7 @@
   },
   "anim-studio.particles-layers.name-moved-in-front-of-the-content": {
     "text": "{name} moved in front of the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Screen-reader announcement after an emitter is brought in front of the card content. {name} is the emitter name.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4153,7 +4153,7 @@
   },
   "anim-studio.particles-utils.after-seconds-s": {
     "text": "after {seconds} s",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Trigger description in the child-particle summary, filling {trigger} of the 'count shape trigger' sentence. {seconds} is the delay after birth; s is the unit symbol.",
     "max": 30,
     "vars": {
       "seconds": "The value that replaces seconds in the text."
@@ -4161,7 +4161,7 @@
   },
   "anim-studio.particles-utils.at-angle": {
     "text": "at {angle}°",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Direction of a particle effect when it is not a named compass point. {angle} is the angle in degrees.",
     "max": 20,
     "vars": {
       "angle": "The value that replaces angle in the text."
@@ -4223,7 +4223,7 @@
   },
   "anim-studio.particles-utils.count-trigger": {
     "text": "{count, plural, one {# {shape}} other {# {shape}s}} {trigger}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Summary of a child-particle rule, such as '3 sparks on collision'. {count} is the number spawned, {shape} is the shape name (the plural adds an s) and {trigger} is a phrase such as 'on collision', 'at end of life' or 'after 1 s'.",
     "max": 35,
     "vars": {
       "count": "The count the text is about.",
@@ -4253,7 +4253,7 @@
   },
   "anim-studio.particles-utils.drag-value": {
     "text": "drag {value}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Item in the physics summary, in lowercase, joined with other items by commas. {value} is the air-drag strength as a number.",
     "max": 20,
     "vars": {
       "value": "The value that replaces value in the text."
@@ -4306,7 +4306,7 @@
   },
   "anim-studio.particles-utils.from-to-to-unit": {
     "text": "{from} to {to}{unit}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Range of values in a summary. {from} and {to} are numbers and {unit} is a unit symbol such as ° with no space, or empty.",
     "max": 35,
     "vars": {
       "from": "The value that replaces from in the text.",
@@ -4316,7 +4316,7 @@
   },
   "anim-studio.particles-utils.gravity-strength-direction": {
     "text": "Gravity {strength} {direction}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "First item in the physics summary. {strength} is a number with one decimal and {direction} is a compass or angle phrase such as 'at 45°'.",
     "max": 50,
     "vars": {
       "direction": "The value that replaces direction in the text.",
@@ -4350,7 +4350,7 @@
   },
   "anim-studio.particles-utils.list-bounce-bounce": {
     "text": "{list}, bounce {bounce}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Collision summary. {list} is a comma-separated list of the surfaces particles bounce off and {bounce} is the bounciness as a number.",
     "max": 40,
     "vars": {
       "bounce": "The value that replaces bounce in the text.",
@@ -4364,7 +4364,7 @@
   },
   "anim-studio.particles-utils.min-max-px": {
     "text": "{min}–{max} px",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Particle size range in the summary. {min} and {max} are numbers in pixels; px is the unit symbol.",
     "max": 25,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -4373,7 +4373,7 @@
   },
   "anim-studio.particles-utils.name-copy": {
     "text": "{name} copy",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name given to a duplicated emitter. {name} is the original emitter's name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -4416,7 +4416,7 @@
   },
   "anim-studio.particles-utils.particles-n": {
     "text": "Particles {n}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Default name of a new emitter when there is more than one. {n} is a running number starting at 2; a single emitter is just called Particles.",
     "max": 25,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -4474,7 +4474,7 @@
   },
   "anim-studio.particles-utils.seed-seed-spin-span": {
     "text": "Seed {seed} · spin {span}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Summary of the random seed and rotation. {seed} is the seed number and {span} is the spin per loop as a degree range such as '0° to 90°'.",
     "max": 40,
     "vars": {
       "seed": "The value that replaces seed in the text.",
@@ -4558,7 +4558,7 @@
   },
   "anim-studio.particles-utils.turbulence-value": {
     "text": "turbulence {value}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Item in the physics summary, in lowercase, joined with other items by commas. {value} is the turbulence strength as a number.",
     "max": 30,
     "vars": {
       "value": "The value that replaces value in the text."
