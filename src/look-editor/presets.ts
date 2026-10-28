@@ -1,5 +1,9 @@
+import type { MessageIndex } from '../contracts/i18n';
 import type { FlowPreset } from '../contracts/look-editor';
 import { m } from './i18n';
+
+/** A preset whose label and description are m() marks of this namespace, so t() accepts them. */
+export type MarkedPreset<P extends { label: unknown; description: unknown }> = P & { label: MessageIndex; description: MessageIndex };
 
 /*
  * Preset data of the look editors (contract look-editor 1.0.0). Every `preview` is a chunk-constant, static SVG
@@ -10,11 +14,11 @@ import { m } from './i18n';
  */
 const pv = (inner: string): string => `<svg viewBox="0 0 72 56" width="72" height="56" fill="none" stroke-linecap="round">${inner}</svg>`;
 
-export const FLOW_PRESETS: readonly FlowPreset[] = [
+export const FLOW_PRESETS: readonly MarkedPreset<FlowPreset>[] = [
   {
     id: 'energy',
-    label: m('Energy'),
-    description: m('Glowing yellow-orange line with sparks.'),
+    label: m('look-editor.presets.energy'),
+    description: m('look-editor.presets.glowing-yellow-orange-line-with-sparks'),
     preview: pv(
       '<path d="M6 38C22 12 50 44 66 18" stroke="#ff9100" stroke-opacity=".35" stroke-width="9"/><path d="M6 38C22 12 50 44 66 18" stroke="#ffd54f" stroke-width="3"/><path d="M28 24l6-7-1 6 6-1-7 8 1-6z" fill="#fff59d" stroke="none"/>',
     ),
@@ -22,8 +26,8 @@ export const FLOW_PRESETS: readonly FlowPreset[] = [
   },
   {
     id: 'water',
-    label: m('Water'),
-    description: m('Blue tube with drops and a rising level.'),
+    label: m('look-editor.presets.water'),
+    description: m('look-editor.presets.blue-tube-with-drops-and-a-rising-level'),
     preview: pv(
       '<rect x="5" y="22" width="62" height="12" rx="6" stroke="currentColor" stroke-opacity=".55" stroke-width="1.5"/><rect x="7" y="24" width="40" height="8" rx="4" fill="#29b6f6" stroke="none"/><path d="M47 24v8" stroke="currentColor" stroke-opacity=".55" stroke-width="2"/><circle cx="20" cy="28" r="2" fill="#e1f5fe" stroke="none"/><circle cx="34" cy="27" r="1.5" fill="#e1f5fe" stroke="none"/>',
     ),
@@ -31,8 +35,8 @@ export const FLOW_PRESETS: readonly FlowPreset[] = [
   },
   {
     id: 'data',
-    label: m('Data'),
-    description: m('Cool dashed line with arrows.'),
+    label: m('look-editor.presets.data'),
+    description: m('look-editor.presets.cool-dashed-line-with-arrows'),
     preview: pv(
       '<path d="M6 28H66" stroke="#26c6da" stroke-width="2.5" stroke-dasharray="10 6" stroke-linecap="butt"/><path d="M28 21l7 7-7 7M46 21l7 7-7 7" stroke="#26c6da" stroke-width="2.5"/>',
     ),
@@ -40,8 +44,8 @@ export const FLOW_PRESETS: readonly FlowPreset[] = [
   },
   {
     id: 'heat',
-    label: m('Heat'),
-    description: m('Warm wavy line with comets.'),
+    label: m('look-editor.presets.heat'),
+    description: m('look-editor.presets.warm-wavy-line-with-comets'),
     preview: pv(
       '<path d="M6 28q7.5-14 15 0t15 0 15 0 15 0" stroke="#ff7043" stroke-width="3"/><path d="M40 28q4-7 8-7" stroke="#ffca28" stroke-width="3" stroke-opacity=".5"/><circle cx="52" cy="25" r="4" fill="#ffca28" stroke="none"/>',
     ),
@@ -49,8 +53,8 @@ export const FLOW_PRESETS: readonly FlowPreset[] = [
   },
   {
     id: 'neon',
-    label: m('Neon'),
-    description: m('Pink glowing line with dots.'),
+    label: m('look-editor.presets.neon'),
+    description: m('look-editor.presets.pink-glowing-line-with-dots'),
     preview: pv(
       '<path d="M6 40L30 20 44 34 66 14" stroke="#ff2fd6" stroke-opacity=".35" stroke-width="10" stroke-linejoin="round"/><path d="M6 40L30 20 44 34 66 14" stroke="#ff2fd6" stroke-width="3" stroke-linejoin="round"/><path d="M6 40L30 20 44 34 66 14" stroke="#fff" stroke-opacity=".8" stroke-width="1" stroke-linejoin="round"/><circle cx="30" cy="20" r="3" fill="#fff" stroke="none"/>',
     ),

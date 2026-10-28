@@ -1,0 +1,4192 @@
+{
+  "theme-editor.bubble-card.accent-colour": {
+    "text": "Accent colour",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.bubble-card.accent-for-active-states-and-sliders": {
+    "text": "Accent for active states and sliders.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.bubble-card.background-behind-icons": {
+    "text": "Background behind icons.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.background-of-pop-ups": {
+    "text": "Background of pop-ups.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.background-of-sub-buttons": {
+    "text": "Background of sub-buttons.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.bubble-card.border": {
+    "text": "Border",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.bubble-card.border-of-bubble-cards": {
+    "text": "Border of Bubble cards.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.box-shadow-of-bubble-cards": {
+    "text": "Box shadow of Bubble cards.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.bubble-card.button-card-background": {
+    "text": "Button card background",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.button-card-radius": {
+    "text": "Button card radius",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.bubble-card.colour-of-the-dimmed-area-behind-a-pop": {
+    "text": "Colour of the dimmed area behind a pop-up.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.bubble-card.corner-radius": {
+    "text": "Corner radius",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.bubble-card.corner-radius-of-button-cards": {
+    "text": "Corner radius of button cards.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.bubble-card.corner-radius-of-icons": {
+    "text": "Corner radius of icons.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.corner-radius-of-pop-ups": {
+    "text": "Corner radius of pop-ups.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.corner-radius-of-sub-buttons": {
+    "text": "Corner radius of sub-buttons.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.bubble-card.fill-colour-for-light-sliders": {
+    "text": "Fill colour for light sliders.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.bubble-card.icon-background": {
+    "text": "Icon background",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.bubble-card.icon-radius": {
+    "text": "Icon radius",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.bubble-card.light-colour": {
+    "text": "Light colour",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.bubble-card.main-background": {
+    "text": "Main background",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.bubble-card.main-background-of-button-cards": {
+    "text": "Main background of button cards.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.bubble-card.main-background-of-every-bubble-element": {
+    "text": "Main background of every Bubble element.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.bubble-card.pop-up-backdrop-colour": {
+    "text": "Pop-up backdrop colour",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.bubble-card.pop-up-background": {
+    "text": "Pop-up background",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.bubble-card.pop-up-radius": {
+    "text": "Pop-up radius",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.bubble-card.radius-for-every-bubble-element": {
+    "text": "Radius for every Bubble element.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.bubble-card.secondary-background": {
+    "text": "Secondary background",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.bubble-card.secondary-background-of-every-bubble": {
+    "text": "Secondary background of every Bubble element.",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.bubble-card.shadow": {
+    "text": "Shadow",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.bubble-card.sub-button-background": {
+    "text": "Sub-button background",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.bubble-card.sub-button-radius": {
+    "text": "Sub-button radius",
+    "note": "Shown in bubble card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.button-card.background-of-the-loading-spinner": {
+    "text": "Background of the loading spinner.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.button-card.background-of-tooltips": {
+    "text": "Background of tooltips.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.button-card.card-background": {
+    "text": "Card background",
+    "note": "Shown in button card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.button-card.card-radius": {
+    "text": "Card radius",
+    "note": "Shown in button card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.button-card.card-shadow": {
+    "text": "Card shadow",
+    "note": "Shown in button card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.button-card.corner-radius-of-tooltips": {
+    "text": "Corner radius of tooltips.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.button-card.font-size-of-tooltips": {
+    "text": "Font size of tooltips.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.button-card.icon-colour-when-an-entity-is-inactive": {
+    "text": "Icon colour when an entity is inactive.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.button-card.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Shown in button card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.button-card.radius-of-the-ripple-on-the-icon": {
+    "text": "Radius of the ripple on the icon.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.button-card.secondary-background": {
+    "text": "Secondary background",
+    "note": "Shown in button card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.button-card.shadow-of-tooltips": {
+    "text": "Shadow of tooltips.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.button-card.space-inside-tooltips": {
+    "text": "Space inside tooltips.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.button-card.state-icon-colour": {
+    "text": "State icon colour",
+    "note": "Shown in button card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.button-card.text-colour-of-tooltips": {
+    "text": "Text colour of tooltips.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.button-card.tooltip-background": {
+    "text": "Tooltip background",
+    "note": "Shown in button card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.button-card.tooltip-background-fallback": {
+    "text": "Tooltip background fallback.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.button-card.tooltip-maximum-width": {
+    "text": "Tooltip maximum width",
+    "note": "Shown in button card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.button-card.tooltip-padding": {
+    "text": "Tooltip padding",
+    "note": "Shown in button card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.button-card.tooltip-radius": {
+    "text": "Tooltip radius",
+    "note": "Shown in button card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.button-card.tooltip-text-colour": {
+    "text": "Tooltip text colour",
+    "note": "Shown in button card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.button-card.tooltip-text-colour-fallback": {
+    "text": "Tooltip text colour fallback.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.button-card.tooltip-text-size": {
+    "text": "Tooltip text size",
+    "note": "Shown in button card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.button-card.widest-a-tooltip-grows": {
+    "text": "Widest a tooltip grows.",
+    "note": "Shown in button card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.catalogue.backgrounds-and-cards": {
+    "text": "Backgrounds and cards",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.catalogue.bubble-card": {
+    "text": "Bubble Card",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.catalogue.button-card": {
+    "text": "button-card",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.catalogue.header-and-sidebar": {
+    "text": "Header and sidebar",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.catalogue.magic-card": {
+    "text": "Magic Card",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.catalogue.mushroom": {
+    "text": "Mushroom",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.catalogue.other": {
+    "text": "Other",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.catalogue.primary-and-accent": {
+    "text": "Primary and accent",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.catalogue.sizes-and-radii": {
+    "text": "Sizes and radii",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.catalogue.states-and-alerts": {
+    "text": "States and alerts",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.catalogue.text": {
+    "text": "Text",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.catalogue.tile-card": {
+    "text": "Tile card",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.catalogue.ultra-card": {
+    "text": "Ultra Card",
+    "note": "Shown in catalogue (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.dialogs.close": {
+    "text": "Close",
+    "note": "Shown in dialogs (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.dialogs.maximise": {
+    "text": "Maximise",
+    "note": "Shown in dialogs (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.dialogs.move-window": {
+    "text": "Move window",
+    "note": "Shown in dialogs (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.dialogs.resize-window": {
+    "text": "Resize window",
+    "note": "Shown in dialogs (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.dialogs.restore-size": {
+    "text": "Restore size",
+    "note": "Shown in dialogs (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.editor-view.a-theme-with-this-name-already-exists": {
+    "text": "A theme with this name already exists.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.editor-view.a-variable-is-typed-but-not-added": {
+    "text": "A variable is typed but not added",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.editor-view.add-it-and-save": {
+    "text": "Add it and save",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes": {
+    "text": "Add light and dark modes",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes-2": {
+    "text": "Add light and dark modes?",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.editor-view.add-modes": {
+    "text": "Add modes",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.add-name-as-a-variable": {
+    "text": "Add {name} as a variable",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.added-light-and-dark-modes-variables-you": {
+    "text": "Added light and dark modes. Variables you set before stay shared.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 105
+  },
+  "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
+    "text": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 150,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.editor-view.button": {
+    "text": "Button",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.editor-view.c": {
+    "text": "{c, plural, one {# variable matches} other {# variables match}}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.editor-view.c-a-fix": {
+    "text": "{c, plural, one {# value needs} other {# values need}} a fix",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.editor-view.cancel": {
+    "text": "Cancel",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.editor-view.check-again": {
+    "text": "Check again",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.choose-another-name": {
+    "text": "Choose another name",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.editor-view.close": {
+    "text": "Close",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.editor-view.contacts-another-website": {
+    "text": "Contacts another website",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.editor-view.contrast-not-checked-value-has": {
+    "text": "Contrast not checked: value has transparency.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-easy-to": {
+    "text": "Contrast on card, {mode}: {ratio} to 1, easy to read",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 85,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "ratio": "The value that replaces ratio in the text."
+    }
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-hard-to": {
+    "text": "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 110,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "ratio": "The value that replaces ratio in the text."
+    }
+  },
+  "theme-editor.editor-view.copied-c-from-from-to-to": {
+    "text": "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 65,
+    "vars": {
+      "c": "The count the text is about.",
+      "from": "The value that replaces from in the text.",
+      "to": "The value that replaces to in the text."
+    }
+  },
+  "theme-editor.editor-view.copied-key-text": {
+    "text": "Copied key {text}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30,
+    "vars": {
+      "text": "The value that replaces text in the text."
+    }
+  },
+  "theme-editor.editor-view.copied-yaml": {
+    "text": "Copied YAML",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.copy-dark-to-light": {
+    "text": "Copy Dark to Light",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.copy-light-to-dark": {
+    "text": "Copy Light to Dark",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.copy-yaml": {
+    "text": "Copy YAML",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.could-not-delete-name-reason": {
+    "text": "Could not delete {name}. {reason}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.editor-view.could-not-read-name": {
+    "text": "Could not read {name}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.could-not-save-name": {
+    "text": "Could not save {name}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.delete": {
+    "text": "Delete",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.delete-name": {
+    "text": "Delete {name}?",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.delete-theme": {
+    "text": "Delete theme",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.discard": {
+    "text": "Discard",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.discard-changes-to-name": {
+    "text": "Discard changes to {name}?",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 45,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.dismiss": {
+    "text": "Dismiss",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.edit-variables-for": {
+    "text": "Edit variables for",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.editing": {
+    "text": "Editing",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.editing-scope-created-from-from": {
+    "text": "Editing {scope}. Created from {from}.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 60,
+    "vars": {
+      "from": "The value that replaces from in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.editor-view.editing-scope-previewing-mode": {
+    "text": "Editing {scope}. Previewing {mode}.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 60,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.editor-view.editor-panels": {
+    "text": "Editor panels",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.export-theme": {
+    "text": "Export theme",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.fix-c-to-save": {
+    "text": "Fix {c, plural, one {# value} other {# values}} to save",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
+    "text": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 165,
+    "vars": {
+      "help": "The value that replaces help in the text.",
+      "other": "The value that replaces other in the text."
+    }
+  },
+  "theme-editor.editor-view.hide-live-strip": {
+    "text": "Hide live strip",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.home-assistant-does-not-load-config": {
+    "text": "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 175
+  },
+  "theme-editor.editor-view.living-room": {
+    "text": "Living room",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 120
+  },
+  "theme-editor.editor-view.magic-card-and-integrations": {
+    "text": "Magic Card and integrations",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.editor-view.more-actions": {
+    "text": "More actions",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
+    "text": "Moved {label} to Shared. Light and Dark both use it.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 85,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.editor-view.name-yaml-changed-on-disk": {
+    "text": "{name}.yaml changed on disk",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 45,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.name-your-theme": {
+    "text": "Name your theme",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.named-the-theme-name-press-save-to-write": {
+    "text": "Named the theme {name}. Press Save to write it.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.new-not-saved": {
+    "text": "New, not saved",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.no-changes-to-save": {
+    "text": "No changes to save",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.editor-view.no-variable-called-query-in-the-lists": {
+    "text": "No variable called {query} in the lists.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 65,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "theme-editor.editor-view.now-using-name-for-your-user": {
+    "text": "Now using {name} for your user.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.on": {
+    "text": "On",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 5
+  },
+  "theme-editor.editor-view.only-administrators-can-edit-themes": {
+    "text": "Only administrators can edit themes.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.editor-view.only-changed": {
+    "text": "Only changed",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.open-preview": {
+    "text": "Open preview",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.open-your-profile": {
+    "text": "Open your profile",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.path-message": {
+    "text": "{path}: {message}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30,
+    "vars": {
+      "message": "The value that replaces message in the text.",
+      "path": "The value that replaces path in the text."
+    }
+  },
+  "theme-editor.editor-view.pick-name-in-your-profile-to-use-it": {
+    "text": "Pick {name} in your profile to use it.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 65,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.preview": {
+    "text": "Preview",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.read-only": {
+    "text": "Read only",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.reload": {
+    "text": "Reload",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or": {
+    "text": "Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 140
+  },
+  "theme-editor.editor-view.reloaded-the-file-from-disk": {
+    "text": "Reloaded the file from disk.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.editor-view.removed-label-from-scope": {
+    "text": "Removed {label} from {scope}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 45,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.editor-view.save": {
+    "text": "Save",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.editor-view.save-and-rewrite-this-file": {
+    "text": "Save and rewrite this file?",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.editor-view.save-anyway": {
+    "text": "Save anyway",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.save-as-my-preset": {
+    "text": "Save as my preset",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.editor-view.save-without-it": {
+    "text": "Save without it",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.saved-file-but-home-assistant-does-not": {
+    "text": "Saved {file}, but Home Assistant does not list {name} yet",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 95,
+    "vars": {
+      "file": "The value that replaces file in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-name": {
+    "text": "Saved {name}.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-name-and-reloaded-themes-screens": {
+    "text": "Saved {name} and reloaded themes. Screens that use this theme update now.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 120,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-time": {
+    "text": "Saved {time}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20,
+    "vars": {
+      "time": "The value that replaces time in the text."
+    }
+  },
+  "theme-editor.editor-view.saving-is-off-until-themes-are-set-up": {
+    "text": "Saving is off until themes are set up",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
+    "text": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 210,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.search-by-name-or-value": {
+    "text": "Search by name or value",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.editor-view.search-variables": {
+    "text": "Search variables",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.set-in-modes": {
+    "text": "Set in {modes}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25,
+    "vars": {
+      "modes": "The value that replaces modes in the text."
+    }
+  },
+  "theme-editor.editor-view.shared-applies-to-light-and-dark-unless": {
+    "text": "Shared applies to light and dark unless a mode sets its own value (the top level of the file).",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 155
+  },
+  "theme-editor.editor-view.show-live-strip": {
+    "text": "Show live strip",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.show-the-first": {
+    "text": "Show the first",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.show-yaml": {
+    "text": "Show YAML",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.some-values-load-files-from-another": {
+    "text": "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 225
+  },
+  "theme-editor.editor-view.some-values-load-files-from-hosts-the": {
+    "text": "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 230,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "theme-editor.editor-view.stop-trying": {
+    "text": "Stop trying",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.the-add-any-variable-row-still-holds": {
+    "text": "The Add any variable row still holds text. Add it to the theme before saving, or save without it.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 160
+  },
+  "theme-editor.editor-view.the-connection-to-home-assistant-was": {
+    "text": "The connection to Home Assistant was lost. Your changes are still here.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 115
+  },
+  "theme-editor.editor-view.the-file-save-would-write-it-is-read": {
+    "text": "The file Save would write. It is read only here.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.editor-view.themes": {
+    "text": "Themes",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
+    "text": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 185
+  },
+  "theme-editor.editor-view.this-removes-config-file-screens-that": {
+    "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 160,
+    "vars": {
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
+    "text": "This theme is read only. Copy it to edit.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-reason-copy-it": {
+    "text": "This theme is read only. {reason} Copy it to edit.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 80,
+    "vars": {
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.editor-view.try-again": {
+    "text": "Try again",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.editor-view.try-on-dashboard": {
+    "text": "Try on dashboard",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.trying-on-this-tab": {
+    "text": "Trying on this tab",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.editor-view.undo": {
+    "text": "Undo",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.unsaved-changes": {
+    "text": "Unsaved changes",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.editor-view.use-lowercase-letters-numbers-hyphens": {
+    "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 185
+  },
+  "theme-editor.editor-view.use-this-name": {
+    "text": "Use this name",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.use-this-theme": {
+    "text": "Use this theme",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.variables": {
+    "text": "Variables",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.editor-view.variables-panel": {
+    "text": "Variables panel",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
+    "text": "Variables you set now stay shared. You can then override any of them for light or dark.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 140
+  },
+  "theme-editor.editor-view.yaml-of-name": {
+    "text": "YAML of {name}",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.you-have-changes-that-are-not-saved": {
+    "text": "You have changes that are not saved.",
+    "note": "Shown in editor view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.field-group.also-set-in-modes": {
+    "text": "Also set in {modes}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 35,
+    "vars": {
+      "modes": "The value that replaces modes in the text."
+    }
+  },
+  "theme-editor.field-group.c-set": {
+    "text": "{c} set",
+    "note": "Shown in field group (theme-editor).",
+    "max": 15,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "theme-editor.field-group.copy-key-name": {
+    "text": "Copy key {name}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.field-group.custom": {
+    "text": "Custom",
+    "note": "Shown in field group (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.field-group.default": {
+    "text": "Default",
+    "note": "Shown in field group (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.field-group.default-value": {
+    "text": "Default: {value}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 30,
+    "vars": {
+      "value": "The value that replaces value in the text."
+    }
+  },
+  "theme-editor.field-group.home-assistant-variable": {
+    "text": "Home Assistant variable",
+    "note": "Shown in field group (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.field-group.keep-in-mode-only": {
+    "text": "Keep in {mode} only",
+    "note": "Shown in field group (theme-editor).",
+    "max": 35,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.keep-in-shared-only": {
+    "text": "Keep in Shared only",
+    "note": "Shown in field group (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.field-group.light-and-dark-both-use-their-own-value": {
+    "text": "Light and Dark both use their own value, so this has no effect.",
+    "note": "Shown in field group (theme-editor).",
+    "max": 105
+  },
+  "theme-editor.field-group.mode-uses-its-own-value-this-only": {
+    "text": "{mode} uses its own value. This only changes {covered}.",
+    "note": "Shown in field group (theme-editor).",
+    "max": 90,
+    "vars": {
+      "covered": "The value that replaces covered in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.move-to-shared": {
+    "text": "Move to Shared",
+    "note": "Shown in field group (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.field-group.not-installed-here": {
+    "text": "Not installed here",
+    "note": "Shown in field group (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.field-group.not-set": {
+    "text": "Not set",
+    "note": "Shown in field group (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.field-group.only-in-mode": {
+    "text": "Only in {mode}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 25,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.only-mode-gets-this-value-other-keeps": {
+    "text": "Only {mode} gets this value. {other} keeps the default.",
+    "note": "Shown in field group (theme-editor).",
+    "max": 90,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "other": "The value that replaces other in the text."
+    }
+  },
+  "theme-editor.field-group.remove-from-scope": {
+    "text": "Remove from {scope}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 35,
+    "vars": {
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.field-group.remove-label-from-scope": {
+    "text": "Remove {label} from {scope}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 45,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.field-group.set-here": {
+    "text": "Set here",
+    "note": "Shown in field group (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.field-group.set-in-both": {
+    "text": "Set in both",
+    "note": "Shown in field group (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.field-group.set-in-mode-too": {
+    "text": "Set in {mode} too",
+    "note": "Shown in field group (theme-editor).",
+    "max": 30,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.shared": {
+    "text": "Shared",
+    "note": "Shown in field group (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.field-group.shared-value": {
+    "text": "Shared: {value}",
+    "note": "Shown in field group (theme-editor).",
+    "max": 25,
+    "vars": {
+      "value": "The value that replaces value in the text."
+    }
+  },
+  "theme-editor.field-group.shared-value-has-no-effect": {
+    "text": "Shared value has no effect",
+    "note": "Shown in field group (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.field-group.this-is-not-a-colour-pick-one-with-the": {
+    "text": "This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.",
+    "note": "Shown in field group (theme-editor).",
+    "max": 140
+  },
+  "theme-editor.field-group.this-variable-takes-a-single-colour": {
+    "text": "This variable takes a single colour. Gradients work in Card background and Dashboard background.",
+    "note": "Shown in field group (theme-editor).",
+    "max": 155
+  },
+  "theme-editor.field-group.value-set-in-one-mode-only": {
+    "text": "Value set in one mode only",
+    "note": "Shown in field group (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.a-blur-behind-translucent-cards-like": {
+    "text": "A blur behind translucent cards, like blur(10px).",
+    "note": "Shown in ha (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.ha.a-line-under-the-top-bar-like-1px-solid": {
+    "text": "A line under the top bar, like 1px solid #ccc.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.ha.accent-colour": {
+    "text": "Accent colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.active-state-colour": {
+    "text": "Active state colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.alarm-icons-while-triggered": {
+    "text": "Alarm icons while triggered.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.alarm-triggered-colour": {
+    "text": "Alarm triggered colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.behind-everything-including-the": {
+    "text": "Behind everything, including the dashboard.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.binary-sensor-active-colour": {
+    "text": "Binary sensor active colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.binary-sensors-that-are-on": {
+    "text": "Binary sensors that are on.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.body-font": {
+    "text": "Body font",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.body-text": {
+    "text": "Body text.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.buttons-toggles-active-icons-and-links": {
+    "text": "Buttons, toggles, active icons and links.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.captions-and-secondary-lines": {
+    "text": "Captions and secondary lines.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.captions-hints-and-secondary-lines": {
+    "text": "Captions, hints and secondary lines.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.ha.card-backdrop-filter": {
+    "text": "Card backdrop filter",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.card-background": {
+    "text": "Card background",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.card-background-override": {
+    "text": "Card background override",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.card-border-colour": {
+    "text": "Card border colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.card-border-width": {
+    "text": "Card border width",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.card-corner-radius": {
+    "text": "Card corner radius",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.card-shadow": {
+    "text": "Card shadow",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.card-title-colour": {
+    "text": "Card title colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.card-title-font": {
+    "text": "Card title font",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.card-title-size": {
+    "text": "Card title size",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.card-titles": {
+    "text": "Card titles.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.cards-dialogs-and-menus-takes-a-gradient": {
+    "text": "Cards, dialogs and menus. Takes a gradient.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.climate-icons-that-are-cooling": {
+    "text": "Climate icons that are cooling.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.climate-icons-that-are-heating": {
+    "text": "Climate icons that are heating.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.colour-of-card-titles": {
+    "text": "Colour of card titles.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.colour-of-the-card-border": {
+    "text": "Colour of the card border.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.cooling-colour": {
+    "text": "Cooling colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.cover-open-colour": {
+    "text": "Cover open colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.dark-text-used-where-the-surface-stays": {
+    "text": "Dark text used where the surface stays light.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.ha.dashboard-background": {
+    "text": "Dashboard background",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.disabled-colour": {
+    "text": "Disabled colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.disabled-controls-and-empty-slider": {
+    "text": "Disabled controls and empty slider tracks.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.disabled-text": {
+    "text": "Disabled text",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.divider-colour": {
+    "text": "Divider colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.entity-icons-that-have-no-state-colour": {
+    "text": "Entity icons that have no state colour.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ha.error-colour": {
+    "text": "Error colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.errors-delete-buttons-and-critical": {
+    "text": "Errors, delete buttons and critical states.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.extra-large-font-size": {
+    "text": "Extra large font size",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.extra-large-radius": {
+    "text": "Extra large radius",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.fan-on-colour": {
+    "text": "Fan on colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.font-family-of-card-titles": {
+    "text": "Font family of card titles.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.font-size-of-card-titles": {
+    "text": "Font size of card titles.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.font-size-scale": {
+    "text": "Font size scale",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.ha-extra-large-corner-radius": {
+    "text": "HA extra large corner radius.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.ha-large-corner-radius-cards-use-it-by": {
+    "text": "HA large corner radius. Cards use it by default.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.ha.ha-medium-corner-radius": {
+    "text": "HA medium corner radius.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.ha-small-corner-radius": {
+    "text": "HA small corner radius.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.header-background": {
+    "text": "Header background",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.header-background-while-editing": {
+    "text": "Header background while editing",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.header-bottom-border": {
+    "text": "Header bottom border",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.header-height": {
+    "text": "Header height",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.header-text": {
+    "text": "Header text",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.header-text-while-editing": {
+    "text": "Header text while editing",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.heading-font": {
+    "text": "Heading font",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.heading-font-size": {
+    "text": "Heading font size",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.heating-colour": {
+    "text": "Heating colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.height-of-the-top-bar": {
+    "text": "Height of the top bar.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.icon-colour": {
+    "text": "Icon colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.icons-in-the-sidebar": {
+    "text": "Icons in the sidebar.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.icons-of-covers-that-are-open": {
+    "text": "Icons of covers that are open.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.icons-of-fans-that-are-on": {
+    "text": "Icons of fans that are on.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.icons-of-lights-that-are-on": {
+    "text": "Icons of lights that are on.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.icons-of-locks-that-are-locked": {
+    "text": "Icons of locks that are locked.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.icons-of-locks-that-are-unlocked": {
+    "text": "Icons of locks that are unlocked.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.ha.icons-of-media-players-that-are-playing": {
+    "text": "Icons of media players that are playing.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ha.icons-of-switches-that-are-on": {
+    "text": "Icons of switches that are on.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.icons-of-things-that-are-off-or-closed": {
+    "text": "Icons of things that are off or closed.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ha.icons-of-things-that-are-on-or-open": {
+    "text": "Icons of things that are on or open.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.ha.icons-of-unavailable-entities": {
+    "text": "Icons of unavailable entities.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.inactive-state-colour": {
+    "text": "Inactive state colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.info-colour": {
+    "text": "Info colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.information-banners-and-notes": {
+    "text": "Information banners and notes.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.item-names-in-the-sidebar": {
+    "text": "Item names in the sidebar.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.large-font-size": {
+    "text": "Large font size",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.large-radius": {
+    "text": "Large radius",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.larger-body-text": {
+    "text": "Larger body text.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.light-on-colour": {
+    "text": "Light on colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.light-tints-of-the-primary-colour": {
+    "text": "Light tints of the primary colour.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.ha.lines-between-rows-and-around-inputs": {
+    "text": "Lines between rows and around inputs.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.ha.locked-colour": {
+    "text": "Locked colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.main-text-and-icons": {
+    "text": "Main text and icons.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.media-player-active-colour": {
+    "text": "Media player active colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.medium-font-size": {
+    "text": "Medium font size",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.medium-radius": {
+    "text": "Medium radius",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.multiplies-every-ha-font-size-1-keeps": {
+    "text": "Multiplies every HA font size. 1 keeps them.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.ha.outline-colour": {
+    "text": "Outline colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.outlines-of-buttons-and-chips": {
+    "text": "Outlines of buttons and chips.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.page-background": {
+    "text": "Page background",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.person-at-home-colour": {
+    "text": "Person at home colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.person-icons-while-home": {
+    "text": "Person icons while home.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.pressed-and-darker-primary-accents": {
+    "text": "Pressed and darker primary accents.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.ha.primary-colour": {
+    "text": "Primary colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.primary-colour-dark-shade": {
+    "text": "Primary colour, dark shade",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.primary-colour-light-shade": {
+    "text": "Primary colour, light shade",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.primary-text": {
+    "text": "Primary text",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.quiet-panels-input-fills-and-list": {
+    "text": "Quiet panels, input fills and list stripes.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.rounding-of-every-card": {
+    "text": "Rounding of every card.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.secondary-accent-used-by-a-few-controls": {
+    "text": "Secondary accent used by a few controls.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ha.secondary-background": {
+    "text": "Secondary background",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.secondary-text": {
+    "text": "Secondary text",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.section-titles": {
+    "text": "Section titles.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.shadow-colour": {
+    "text": "Shadow colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.shadow-under-every-card": {
+    "text": "Shadow under every card.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.sidebar-background": {
+    "text": "Sidebar background",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.sidebar-icons": {
+    "text": "Sidebar icons",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.sidebar-selected-icon": {
+    "text": "Sidebar selected icon",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.sidebar-selected-text": {
+    "text": "Sidebar selected text",
+    "note": "Shown in ha (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ha.sidebar-text": {
+    "text": "Sidebar text",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.small-font-size": {
+    "text": "Small font size",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.small-radius": {
+    "text": "Small radius",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.success-colour": {
+    "text": "Success colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.success-messages-and-confirmed-states": {
+    "text": "Success messages and confirmed states.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ha.switch-on-colour": {
+    "text": "Switch on colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.ha.text-and-icons-drawn-on-the-primary": {
+    "text": "Text and icons drawn on the primary colour.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.text-and-icons-in-the-top-bar": {
+    "text": "Text and icons in the top bar.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.text-in-the-top-bar-in-dashboard-edit": {
+    "text": "Text in the top bar in dashboard edit mode.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.ha.text-of-disabled-and-unavailable-things": {
+    "text": "Text of disabled and unavailable things.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ha.text-on-light-surfaces": {
+    "text": "Text on light surfaces",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.text-on-primary-colour": {
+    "text": "Text on primary colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.the-active-sidebar-item-icon": {
+    "text": "The active sidebar item icon.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.the-active-sidebar-item-name": {
+    "text": "The active sidebar item name.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.ha.the-background-of-a-dashboard-view-takes": {
+    "text": "The background of a dashboard view. Takes a gradient or an image.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 105
+  },
+  "theme-editor.ha.the-colour-ha-shades-shadows-with": {
+    "text": "The colour HA shades shadows with.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.ha.the-font-for-headings": {
+    "text": "The font for headings.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.the-font-for-most-text": {
+    "text": "The font for most text.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.the-sidebar": {
+    "text": "The sidebar.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ha.the-top-bar-in-dashboard-edit-mode": {
+    "text": "The top bar in dashboard edit mode.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.ha.the-top-bar-of-every-page": {
+    "text": "The top bar of every page.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.unavailable-state-colour": {
+    "text": "Unavailable state colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.unlocked-colour": {
+    "text": "Unlocked colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.warning-colour": {
+    "text": "Warning colour",
+    "note": "Shown in ha (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ha.warnings-and-caution-states": {
+    "text": "Warnings and caution states.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ha.width-of-the-card-border": {
+    "text": "Width of the card border.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ha.wins-over-the-card-background-for-cards": {
+    "text": "Wins over the card background for cards only. Takes a gradient.",
+    "note": "Shown in ha (theme-editor).",
+    "max": 105
+  },
+  "theme-editor.include-notice.check-again": {
+    "text": "Check again",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.include-notice.checking": {
+    "text": "Checking...",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.include-notice.copied": {
+    "text": "Copied",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.include-notice.copy-lines": {
+    "text": "Copy lines",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.include-notice.home-assistant-only-loads-themes-from": {
+    "text": "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 160
+  },
+  "theme-editor.include-notice.lines-to-add-to-configuration-yaml": {
+    "text": "Lines to add to configuration.yaml",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.include-notice.one-setup-step-before-you-can-save": {
+    "text": "One setup step before you can save",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.include-notice.open-configuration-yaml-with-the-file": {
+    "text": "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 330
+  },
+  "theme-editor.include-notice.show-me-how": {
+    "text": "Show me how",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.include-notice.the-editor-could-not-read-configuration": {
+    "text": "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 160
+  },
+  "theme-editor.include-notice.where-do-i-add-these-lines": {
+    "text": "Where do I add these lines?",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.include-notice.you-can-skip-this-for-now-try-on": {
+    "text": "You can skip this for now. Try on dashboard works without it.",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 100
+  },
+  "theme-editor.include-notice.your-configuration-yaml-lists-themes": {
+    "text": "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 235
+  },
+  "theme-editor.include-notice.your-configuration-yaml-loads-themes-in": {
+    "text": "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:",
+    "note": "Shown in include notice (theme-editor).",
+    "max": 215
+  },
+  "theme-editor.lips.got-it": {
+    "text": "Got it",
+    "note": "Shown in lips (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "note": "Shown in lips (theme-editor).",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "theme-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "note": "Shown in lips (theme-editor).",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "theme-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "note": "Shown in lips (theme-editor).",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "theme-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "note": "Shown in lips (theme-editor).",
+    "max": 30,
+    "vars": {
+      "keys": "The value that replaces keys in the text."
+    }
+  },
+  "theme-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "note": "Shown in lips (theme-editor).",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "note": "Shown in lips (theme-editor).",
+    "max": 130,
+    "vars": {
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "theme-editor.lips.variables": {
+    "text": "variables",
+    "note": "Shown in lips (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.lips.variables-panel": {
+    "text": "Variables panel",
+    "note": "Shown in lips (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.borders-and-bar-tracks": {
+    "text": "Borders and bar tracks.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.magic-card.button-text": {
+    "text": "Button text.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.magic-card.buttons-bars-and-accents": {
+    "text": "Buttons, bars and accents.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.magic-card.cancel-and-error-text-in-the-popup": {
+    "text": "Cancel and error text in the popup.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.magic-card.captions-and-hints": {
+    "text": "Captions and hints.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.magic-card.card-and-popup-rounding": {
+    "text": "Card and popup rounding.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.magic-card.card-background": {
+    "text": "Card background",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.card-background-override": {
+    "text": "Card background override",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.magic-card.card-border": {
+    "text": "Card border.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.magic-card.card-border-colour": {
+    "text": "Card border colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.magic-card.card-border-width": {
+    "text": "Card border width",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.magic-card.card-corner-radius": {
+    "text": "Card corner radius",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.magic-card.card-shadow": {
+    "text": "Card shadow",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.magic-card.card-surface-and-flow-labels": {
+    "text": "Card surface and flow labels.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.magic-card.disabled-colour": {
+    "text": "Disabled colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.divider-colour": {
+    "text": "Divider colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.empty-slider-track": {
+    "text": "Empty slider track.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.magic-card.error-colour": {
+    "text": "Error colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.magic-card.light-on-colour": {
+    "text": "Light on colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.main-text": {
+    "text": "Main text.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.magic-card.primary-colour": {
+    "text": "Primary colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.primary-text": {
+    "text": "Primary text",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.magic-card.secondary-text": {
+    "text": "Secondary text",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.shadow-under-the-card": {
+    "text": "Shadow under the card.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.magic-card.slider-track": {
+    "text": "Slider track",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.success-colour": {
+    "text": "Success colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.magic-card.text-on-primary-colour": {
+    "text": "Text on primary colour",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.magic-card.the-light-slider": {
+    "text": "The light slider.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.magic-card.the-save-button-in-the-popup": {
+    "text": "The save button in the popup.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.magic-card.track-behind-the-fill-a-slider-with-its": {
+    "text": "Track behind the fill. A slider with its own track colour keeps it.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 110
+  },
+  "theme-editor.magic-card.wins-over-the-card-background": {
+    "text": "Wins over the card background.",
+    "note": "Shown in magic card (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.model.a-mode-block-must-be-light-or-dark-and": {
+    "text": "A mode block must be light or dark and hold variables.",
+    "note": "Shown in model (theme-editor).",
+    "max": 90
+  },
+  "theme-editor.model.enter-a-border-like-1px-solid-ccc": {
+    "text": "Enter a border like 1px solid #ccc.",
+    "note": "Shown in model (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115": {
+    "text": "Enter a colour like #1a73e8 or rgb(26, 115, 232).",
+    "note": "Shown in model (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.model.enter-a-colour-or-a-gradient": {
+    "text": "Enter a colour or a gradient.",
+    "note": "Shown in model (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.model.enter-a-font-family": {
+    "text": "Enter a font family.",
+    "note": "Shown in model (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.model.enter-a-length-like-12px-or-1rem": {
+    "text": "Enter a length like 12px or 1rem.",
+    "note": "Shown in model (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.model.enter-a-number": {
+    "text": "Enter a number.",
+    "note": "Shown in model (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.model.enter-a-shadow-like-0-2px-6px-rgba-0-0-0": {
+    "text": "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).",
+    "note": "Shown in model (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.model.enter-a-value": {
+    "text": "Enter a value.",
+    "note": "Shown in model (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.model.enter-three-numbers-from-0-to-255-like": {
+    "text": "Enter three numbers from 0 to 255, like 255, 120, 0.",
+    "note": "Shown in model (theme-editor).",
+    "max": 85
+  },
+  "theme-editor.model.modes-must-hold-a-light-and-a-dark-block": {
+    "text": "Modes must hold a light and a dark block.",
+    "note": "Shown in model (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.model.remove-chars-and-unmatched-brackets-from": {
+    "text": "Remove {chars} and unmatched brackets from the value.",
+    "note": "Shown in model (theme-editor).",
+    "max": 85,
+    "vars": {
+      "chars": "The value that replaces chars in the text."
+    }
+  },
+  "theme-editor.model.this-field-takes-one-colour-not-a": {
+    "text": "This field takes one colour, not a gradient.",
+    "note": "Shown in model (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.model.this-value-has-a-control-character": {
+    "text": "This value has a control character. Remove it.",
+    "note": "Shown in model (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.model.this-value-is-longer-than-max-characters": {
+    "text": "This value is longer than {max} characters.",
+    "note": "Shown in model (theme-editor).",
+    "max": 70,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "theme-editor.model.this-value-must-be-text-or-a-number": {
+    "text": "This value must be text or a number.",
+    "note": "Shown in model (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.model.use-letters-numbers-dashes-and": {
+    "text": "Use letters, numbers, dashes and underscores for a variable name.",
+    "note": "Shown in model (theme-editor).",
+    "max": 105
+  },
+  "theme-editor.mushroom.alarm-armed-state-rgb": {
+    "text": "Alarm armed state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.alarm-disarmed-state-rgb": {
+    "text": "Alarm disarmed state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.mushroom.alarm-triggered-state-rgb": {
+    "text": "Alarm triggered state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.mushroom.amber-rgb": {
+    "text": "Amber (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.badge-icon-size": {
+    "text": "Badge icon size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.badge-radius": {
+    "text": "Badge radius",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.badge-size": {
+    "text": "Badge size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.black-rgb": {
+    "text": "Black (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.blue-grey-rgb": {
+    "text": "Blue grey (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.blue-rgb": {
+    "text": "Blue (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.brown-rgb": {
+    "text": "Brown (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.button-width-as-a-multiple-of-its-height": {
+    "text": "Button width as a multiple of its height.",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.mushroom.card-spacing": {
+    "text": "Card spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-avatar-padding": {
+    "text": "Chip avatar padding",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.chip-avatar-radius": {
+    "text": "Chip avatar radius",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.chip-background": {
+    "text": "Chip background",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.chip-border-colour": {
+    "text": "Chip border colour",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.chip-border-width": {
+    "text": "Chip border width",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.chip-height": {
+    "text": "Chip height",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-icon-size": {
+    "text": "Chip icon size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.chip-padding": {
+    "text": "Chip padding",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-radius": {
+    "text": "Chip radius",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-shadow": {
+    "text": "Chip shadow",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-spacing": {
+    "text": "Chip spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-text-size": {
+    "text": "Chip text size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.chip-text-weight": {
+    "text": "Chip text weight",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.climate-auto-state-rgb": {
+    "text": "Climate auto state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-cool-state-rgb": {
+    "text": "Climate cool state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-dry-state-rgb": {
+    "text": "Climate dry state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-fan-only-state-rgb": {
+    "text": "Climate fan only state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.mushroom.climate-heat-cool-state-rgb": {
+    "text": "Climate heat cool state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.mushroom.climate-heat-state-rgb": {
+    "text": "Climate heat state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-idle-state-rgb": {
+    "text": "Climate idle state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-off-state-rgb": {
+    "text": "Climate off state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.control-button-ratio": {
+    "text": "Control button ratio",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.control-height": {
+    "text": "Control height",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.control-icon-size": {
+    "text": "Control icon size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.control-radius": {
+    "text": "Control radius",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.control-spacing": {
+    "text": "Control spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.cover-closed-state-rgb": {
+    "text": "Cover closed state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.cover-open-state-rgb": {
+    "text": "Cover open state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.cyan-rgb": {
+    "text": "Cyan (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.danger-rgb": {
+    "text": "Danger (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.dark-grey-rgb": {
+    "text": "Dark grey (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.deep-orange-rgb": {
+    "text": "Deep orange (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.deep-purple-rgb": {
+    "text": "Deep purple (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.delay-in-milliseconds": {
+    "text": "Delay in milliseconds.",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.disabled-rgb": {
+    "text": "Disabled (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.entity-state-rgb": {
+    "text": "Entity state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.fan-state-rgb": {
+    "text": "Fan state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.gap-between-the-parts-of-a-card": {
+    "text": "Gap between the parts of a card.",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.mushroom.green-rgb": {
+    "text": "Green (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.grey-rgb": {
+    "text": "Grey (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.humidifier-state-rgb": {
+    "text": "Humidifier state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.icon-radius": {
+    "text": "Icon radius",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.icon-size": {
+    "text": "Icon size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.icon-symbol-size": {
+    "text": "Icon symbol size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.indigo-rgb": {
+    "text": "Indigo (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.info-rgb": {
+    "text": "Info (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.layout-alignment": {
+    "text": "Layout alignment",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-blue-rgb": {
+    "text": "Light blue (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-green-rgb": {
+    "text": "Light green (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-grey-rgb": {
+    "text": "Light grey (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-state-rgb": {
+    "text": "Light state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.lime-rgb": {
+    "text": "Lime (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.lock-locked-state-rgb": {
+    "text": "Lock locked state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.lock-pending-state-rgb": {
+    "text": "Lock pending state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.lock-state-rgb": {
+    "text": "Lock state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.lock-unlocked-state-rgb": {
+    "text": "Lock unlocked state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.media-player-state-rgb": {
+    "text": "Media player state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.movement-before-a-slider-reacts": {
+    "text": "Movement before a slider reacts.",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.mushroom.number-input-debounce": {
+    "text": "Number input debounce",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.number-state-rgb": {
+    "text": "Number state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.orange-rgb": {
+    "text": "Orange (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.person-home-state-rgb": {
+    "text": "Person home state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.person-not-home-state-rgb": {
+    "text": "Person not home state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.mushroom.person-unknown-state-rgb": {
+    "text": "Person unknown state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.mushroom.person-zone-state-rgb": {
+    "text": "Person zone state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.pink-rgb": {
+    "text": "Pink (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.primary-letter-spacing": {
+    "text": "Primary letter spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.primary-line-height": {
+    "text": "Primary line height",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.primary-text-size": {
+    "text": "Primary text size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.primary-text-weight": {
+    "text": "Primary text weight",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.purple-rgb": {
+    "text": "Purple (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.red-rgb": {
+    "text": "Red (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.mushroom.secondary-letter-spacing": {
+    "text": "Secondary letter spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.secondary-line-height": {
+    "text": "Secondary line height",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.secondary-text-colour": {
+    "text": "Secondary text colour",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.secondary-text-size": {
+    "text": "Secondary text size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.secondary-text-weight": {
+    "text": "Secondary text weight",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.slider-threshold": {
+    "text": "Slider threshold",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.subtitle-colour": {
+    "text": "Subtitle colour",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.subtitle-letter-spacing": {
+    "text": "Subtitle letter spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.subtitle-line-height": {
+    "text": "Subtitle line height",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.subtitle-size": {
+    "text": "Subtitle size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.subtitle-weight": {
+    "text": "Subtitle weight",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.success-rgb": {
+    "text": "Success (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.teal-rgb": {
+    "text": "Teal (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.three-numbers-0-to-255-like-244-67-54": {
+    "text": "Three numbers, 0 to 255, like 244, 67, 54.",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.mushroom.title-colour": {
+    "text": "Title colour",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.title-letter-spacing": {
+    "text": "Title letter spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.title-line-height": {
+    "text": "Title line height",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.title-padding": {
+    "text": "Title padding",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.title-size": {
+    "text": "Title size",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.title-spacing": {
+    "text": "Title spacing",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.title-weight": {
+    "text": "Title weight",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.update-installing-rgb": {
+    "text": "Update installing (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.mushroom.update-off-rgb": {
+    "text": "Update off (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.update-on-state-rgb": {
+    "text": "Update on state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.mushroom.vacuum-state-rgb": {
+    "text": "Vacuum state (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.mushroom.warning-rgb": {
+    "text": "Warning (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.mushroom.white-rgb": {
+    "text": "White (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.mushroom.yellow-rgb": {
+    "text": "Yellow (RGB)",
+    "note": "Shown in mushroom (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.added-c-to-my-presets": {
+    "text": "Added {c} to My presets",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 40,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "theme-editor.preset-dialog.author-optional": {
+    "text": "Author (optional)",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.cancel": {
+    "text": "Cancel",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.close": {
+    "text": "Close",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.delete": {
+    "text": "Delete",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preset-dialog.delete-name": {
+    "text": "Delete {name}?",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.deleted-name": {
+    "text": "Deleted {name}.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.description-optional": {
+    "text": "Description (optional)",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters": {
+    "text": "Enter a name of 1 to 80 characters.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.preset-dialog.export-theme": {
+    "text": "Export theme",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.import-theme": {
+    "text": "Import theme",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.it-did-not-work": {
+    "text": "It did not work.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.loading": {
+    "text": "Loading...",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.magic-card-utils-did-not-accept-this": {
+    "text": "Magic Card Utils did not accept this preset. Check the name and the values.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 120
+  },
+  "theme-editor.preset-dialog.name": {
+    "text": "Name",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.name-reason": {
+    "text": "{name}: {reason}",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.preset-dialog.nothing-was-saved": {
+    "text": "Nothing was saved",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.only-administrators-can-change-presets": {
+    "text": "Only administrators can change presets.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.preset-dialog.open-as-new-theme": {
+    "text": "Open as new theme",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.rename": {
+    "text": "Rename",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.rename-preset": {
+    "text": "Rename preset",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.preset-dialog.renamed-to-name": {
+    "text": "Renamed to {name}.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.save-as-my-preset": {
+    "text": "Save as my preset",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.preset-dialog.save-preset": {
+    "text": "Save preset",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.preset-dialog.saved-name-under-my-presets": {
+    "text": "Saved {name} under My presets.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in": {
+    "text": "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 200
+  },
+  "theme-editor.preset-dialog.the-tools-could-not-load-check-your": {
+    "text": "The tools could not load. Check your connection.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
+    "text": "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 160
+  },
+  "theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your": {
+    "text": "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 165
+  },
+  "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
+    "text": "This preset changed elsewhere. Reopen the list.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.preset-dialog.this-removes-it-from-my-presets-themes": {
+    "text": "This removes it from My presets. Themes made from it stay.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 95
+  },
+  "theme-editor.preset-dialog.try-again": {
+    "text": "Try again",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets. A file with one theme still opens.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 130
+  },
+  "theme-editor.preset-dialog.you-can-keep-100-presets-delete-one": {
+    "text": "You can keep 100 presets. Delete one first.",
+    "note": "Shown in preset dialog (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.preview-cards.button": {
+    "text": "Button",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preview-cards.could-not-load-label-reason": {
+    "text": "Could not load {label}. {reason}",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 55,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.preview-cards.entities": {
+    "text": "Entities",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview-cards.home-assistant-card-helpers-are-not": {
+    "text": "Home Assistant card helpers are not available",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.preview-cards.home-assistant-is-not-connected": {
+    "text": "Home Assistant is not connected.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.preview-cards.label-could-not-be-loaded": {
+    "text": "{label} could not be loaded.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 45,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-did-not-start-in-time": {
+    "text": "{label} did not start in time.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 50,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-has-a-resource-address-the-editor": {
+    "text": "{label} has a resource address the editor will not load.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 90,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-is-loaded-for-the-preview": {
+    "text": "{label} is loaded for the preview.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 55,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-is-not-in-the-dashboard-resources": {
+    "text": "{label} is not in the dashboard resources.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 70,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-is-not-loaded-in-this-editor-so": {
+    "text": "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 195,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.load-label-for-preview": {
+    "text": "Load {label} for preview",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 40,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.loading": {
+    "text": "Loading...",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preview-cards.loading-label": {
+    "text": "Loading {label}...",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 30,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.preview-not-available": {
+    "text": "Preview not available",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.preview-cards.the-card-is-loaded-for-the-preview": {
+    "text": "The card is loaded for the preview.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.preview-cards.this-card-cannot-be-loaded-for-the": {
+    "text": "This card cannot be loaded for the preview.",
+    "note": "Shown in preview cards (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.preview.a-link": {
+    "text": "a link",
+    "note": "Shown in preview (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preview.accent": {
+    "text": "Accent",
+    "note": "Shown in preview (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preview.add-a-light-or-a-switch-to-home": {
+    "text": "Add a light or a switch to Home Assistant to see the {name} sample.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 110,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preview.body-text-in-the-primary-text-colour": {
+    "text": "Body text in the primary text colour.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.preview.controls": {
+    "text": "Controls",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.entities-card": {
+    "text": "entities card",
+    "note": "Shown in preview (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.preview.error-message": {
+    "text": "Error message",
+    "note": "Shown in preview (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.preview.heading": {
+    "text": "Heading",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.info-message": {
+    "text": "Info message",
+    "note": "Shown in preview (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preview.map": {
+    "text": "Map",
+    "note": "Shown in preview (theme-editor).",
+    "max": 5
+  },
+  "theme-editor.preview.nothing-set-yet-the-preview-shows-home": {
+    "text": "Nothing set yet. The preview shows Home Assistant's default look.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 105
+  },
+  "theme-editor.preview.overview": {
+    "text": "Overview",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.preview-mode": {
+    "text": "Preview mode",
+    "note": "Shown in preview (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-using-the": {
+    "text": "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 150,
+    "vars": {
+      "count": "The value that replaces count in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.preview.preview-of-name-could-not-load": {
+    "text": "Preview of {name} could not load.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preview.previewing-mode": {
+    "text": "Previewing {mode, select, dark {dark} other {light}}",
+    "note": "Shown in preview (theme-editor).",
+    "max": 30,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.preview.primary": {
+    "text": "Primary",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.secondary": {
+    "text": "Secondary",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.secondary-text-and-link": {
+    "text": "Secondary text and {link}.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 45,
+    "vars": {
+      "link": "The value that replaces link in the text."
+    }
+  },
+  "theme-editor.preview.settings": {
+    "text": "Settings",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.showing-the-last-valid-value-for-c": {
+    "text": "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 75,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.preview.success-message": {
+    "text": "Success message",
+    "note": "Shown in preview (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.preview.text": {
+    "text": "Text",
+    "note": "Shown in preview (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.preview.text-field": {
+    "text": "Text field",
+    "note": "Shown in preview (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.preview.the-preview-is-drawn-with-real-home": {
+    "text": "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 295
+  },
+  "theme-editor.preview.theme-preview-mode": {
+    "text": "Theme preview, {mode, select, dark {dark} other {light}}",
+    "note": "Shown in preview (theme-editor).",
+    "max": 35,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.preview.this-theme-has-no-light-or-dark-modes": {
+    "text": "This theme has no light or dark modes.",
+    "note": "Shown in preview (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.preview.tile-card": {
+    "text": "tile card",
+    "note": "Shown in preview (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.preview.warning-message": {
+    "text": "Warning message",
+    "note": "Shown in preview (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.raw-rows.add": {
+    "text": "Add",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.raw-rows.add-any-variable": {
+    "text": "Add any variable",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.raw-rows.added-c-to-scope": {
+    "text": "Added {c, plural, one {# variable} other {# variables}} to {scope}",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 45,
+    "vars": {
+      "c": "The count the text is about.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.raw-rows.added-name-to-scope": {
+    "text": "Added {name} to {scope}",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.raw-rows.could-not-read-lines": {
+    "text": "Could not read: {lines}",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 40,
+    "vars": {
+      "lines": "The value that replaces lines in the text."
+    }
+  },
+  "theme-editor.raw-rows.enter-a-name": {
+    "text": "Enter a name.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.raw-rows.enter-a-value": {
+    "text": "Enter a value.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.raw-rows.name": {
+    "text": "Name",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.raw-rows.nothing-was-added": {
+    "text": "Nothing was added",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.raw-rows.remove-chars-from-the-value": {
+    "text": "Remove {chars} from the value.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 50,
+    "vars": {
+      "chars": "The value that replaces chars in the text."
+    }
+  },
+  "theme-editor.raw-rows.this-variable-already-exists-in-scope": {
+    "text": "This variable already exists in {scope}. Add will replace its value.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 110,
+    "vars": {
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.raw-rows.update": {
+    "text": "Update",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.raw-rows.use-a-single-line": {
+    "text": "Use a single line.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.raw-rows.use-letters-numbers-hyphens-and": {
+    "text": "Use letters, numbers, hyphens and underscores. This name is not allowed.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 120
+  },
+  "theme-editor.raw-rows.use-the-name-as-it-appears-in-the-theme": {
+    "text": "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 200
+  },
+  "theme-editor.raw-rows.value": {
+    "text": "Value",
+    "note": "Shown in raw rows (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.save-bar.save": {
+    "text": "Save",
+    "note": "Shown in save bar (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.save-bar.save-ctrl-s": {
+    "text": "Save (Ctrl+S)",
+    "note": "Shown in save bar (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.save-bar.saving": {
+    "text": "Saving...",
+    "note": "Shown in save bar (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.start-view.a-blank-theme": {
+    "text": "a blank theme",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.a-preset": {
+    "text": "A preset",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
+    "text": "An empty theme. Add only the variables you want to change.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 95
+  },
+  "theme-editor.start-view.an-installed-theme": {
+    "text": "An installed theme",
+    "note": "Shown in start view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.start-view.blank": {
+    "text": "Blank",
+    "note": "Shown in start view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.start-view.c": {
+    "text": "{c, plural, one {# variable} other {# variables}}",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.start-view.cancel": {
+    "text": "Cancel",
+    "note": "Shown in start view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.start-view.cannot-be-removed-later": {
+    "text": "Cannot be removed later.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.start-view.copies-the-variables-from-the-installed": {
+    "text": "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 205
+  },
+  "theme-editor.start-view.copy-to-edit": {
+    "text": "Copy to edit",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.could-not-delete-name-reason": {
+    "text": "Could not delete {name}. {reason}",
+    "note": "Shown in start view (theme-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.start-view.could-not-read-name-neither-its-file-nor": {
+    "text": "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 175,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.could-not-read-name-reason": {
+    "text": "Could not read {name}. {reason}",
+    "note": "Shown in start view (theme-editor).",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
+    "text": "Create a theme from a preset or copy one you have installed.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 100
+  },
+  "theme-editor.start-view.create-from-name": {
+    "text": "Create from {name}",
+    "note": "Shown in start view (theme-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.create-theme": {
+    "text": "Create theme",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.start-view.delete": {
+    "text": "Delete",
+    "note": "Shown in start view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.start-view.delete-name": {
+    "text": "Delete {name}?",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.duplicate": {
+    "text": "Duplicate",
+    "note": "Shown in start view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.start-view.file-file": {
+    "text": "File {file}.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20,
+    "vars": {
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.start-view.import": {
+    "text": "Import",
+    "note": "Shown in start view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.start-view.installed-theme": {
+    "text": "Installed theme",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.installed-themes": {
+    "text": "Installed themes",
+    "note": "Shown in start view (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.start-view.it-is-in-a-subfolder-of-config-themes": {
+    "text": "It is in a subfolder of /config/themes.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.start-view.it-uses-home-assistant-tags-such-as": {
+    "text": "It uses Home Assistant tags such as !secret.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.start-view.its-file-holds-several-themes-and-saving": {
+    "text": "Its file holds several themes, and saving would rewrite all of them.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 110
+  },
+  "theme-editor.start-view.light-and-dark-modes": {
+    "text": "Light and dark modes",
+    "note": "Shown in start view (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.start-view.light-dark": {
+    "text": "Light + dark",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.start-view.loading-presets": {
+    "text": "Loading presets",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.loading-themes": {
+    "text": "Loading themes",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 120
+  },
+  "theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is": {
+    "text": "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 180,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "theme-editor.start-view.name-your-theme": {
+    "text": "Name your theme",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.new-theme": {
+    "text": "New theme",
+    "note": "Shown in start view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.start-view.no-installed-theme-matches": {
+    "text": "No installed theme matches.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.start-view.no-theme-called-query": {
+    "text": "No theme called {query}.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 40,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "theme-editor.start-view.no-themes-yet": {
+    "text": "No themes yet",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.pick-a-preset-to-start-from": {
+    "text": "Pick a preset to start from",
+    "note": "Shown in start view (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.start-view.pick-a-theme-to-copy": {
+    "text": "Pick a theme to copy",
+    "note": "Shown in start view (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.start-view.presets-are-still-loading": {
+    "text": "Presets are still loading",
+    "note": "Shown in start view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.start-view.presets-could-not-load-check-your": {
+    "text": "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 160
+  },
+  "theme-editor.start-view.read-only": {
+    "text": "Read only",
+    "note": "Shown in start view (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.start-view.reading": {
+    "text": "Reading...",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.start-view.same-in-light-and-dark": {
+    "text": "Same in light and dark",
+    "note": "Shown in start view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.start-view.search-installed-themes": {
+    "text": "Search installed themes",
+    "note": "Shown in start view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.start-view.search-themes": {
+    "text": "Search themes",
+    "note": "Shown in start view (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.start-view.start-from": {
+    "text": "Start from",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.start-view.the-file-could-not-be-read-as-yaml": {
+    "text": "The file could not be read as YAML.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.start-view.the-file-is-a-link-to-somewhere-else": {
+    "text": "The file is a link to somewhere else.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.start-view.the-file-is-too-large-to-edit-here": {
+    "text": "The file is too large to edit here.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.start-view.the-file-name-is-not-a-name-this-editor": {
+    "text": "The file name is not a name this editor can write.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
+    "text": "The theme name does not match the file name.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.start-view.themes": {
+    "text": "Themes",
+    "note": "Shown in start view (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.start-view.themes-could-not-be-read": {
+    "text": "Themes could not be read",
+    "note": "Shown in start view (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
+    "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 220,
+    "vars": {
+      "c": "The count the text is about.",
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.start-view.this-removes-config-file-screens-that": {
+    "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 160,
+    "vars": {
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.start-view.try-again": {
+    "text": "Try again",
+    "note": "Shown in start view (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.start-view.your-themes-live-in-config-themes": {
+    "text": "Your themes live in /config/themes.",
+    "note": "Shown in start view (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.theme-editor.could-not-open-name-reason": {
+    "text": "Could not open {name}. {reason}",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.theme-editor.deleted-name": {
+    "text": "Deleted {name}.",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.theme-editor.details": {
+    "text": "Details",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.theme-editor.found-it-you-can-save-themes-now": {
+    "text": "Found it. You can save themes now.",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.theme-editor.loading-the-theme-editor": {
+    "text": "Loading the theme editor...",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.theme-editor.only-administrators-can-edit-themes": {
+    "text": "Only administrators can edit themes.",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.theme-editor.still-not-found-restart-home-assistant": {
+    "text": "Still not found. Restart Home Assistant if you have just added the lines.",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 120
+  },
+  "theme-editor.theme-editor.the-check-failed-reason": {
+    "text": "The check failed. {reason}",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 45,
+    "vars": {
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
+    "text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 290
+  },
+  "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
+    "text": "The theme editor could not load. Reload the page.",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.theme-editor.waiting-for-home-assistant-to-connect": {
+    "text": "Waiting for Home Assistant to connect...",
+    "note": "Shown in theme editor (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.tile.colour-of-the-primary-text": {
+    "text": "Colour of the primary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.tile.colour-of-the-secondary-text": {
+    "text": "Colour of the secondary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.tile.corner-radius-of-the-tile-icon": {
+    "text": "Corner radius of the tile icon.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.tile.font-size-of-the-primary-text": {
+    "text": "Font size of the primary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.tile.font-size-of-the-secondary-text": {
+    "text": "Font size of the secondary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.tile.font-weight-of-the-primary-text": {
+    "text": "Font weight of the primary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.tile.font-weight-of-the-secondary-text": {
+    "text": "Font weight of the secondary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.tile.icon-radius": {
+    "text": "Icon radius",
+    "note": "Shown in tile (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.tile.keeps-tiles-that-never-wrap-level-with": {
+    "text": "Keeps tiles that never wrap level with ones that do.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 85
+  },
+  "theme-editor.tile.letter-spacing-of-the-primary-text": {
+    "text": "Letter spacing of the primary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.tile.letter-spacing-of-the-secondary-text": {
+    "text": "Letter spacing of the secondary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 60
+  },
+  "theme-editor.tile.line-height-of-the-primary-text": {
+    "text": "Line height of the primary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.tile.line-height-of-the-secondary-text": {
+    "text": "Line height of the secondary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 55
+  },
+  "theme-editor.tile.primary-letter-spacing": {
+    "text": "Primary letter spacing",
+    "note": "Shown in tile (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.tile.primary-line-height": {
+    "text": "Primary line height",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.primary-text-minimum-height": {
+    "text": "Primary text minimum height",
+    "note": "Shown in tile (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.tile.primary-text-size": {
+    "text": "Primary text size",
+    "note": "Shown in tile (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.tile.primary-text-weight": {
+    "text": "Primary text weight",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.reserves-room-for-a-missing-secondary": {
+    "text": "Reserves room for a missing secondary line.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 70
+  },
+  "theme-editor.tile.secondary-letter-spacing": {
+    "text": "Secondary letter spacing",
+    "note": "Shown in tile (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.tile.secondary-line-height": {
+    "text": "Secondary line height",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.secondary-text-colour": {
+    "text": "Secondary text colour",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.secondary-text-size": {
+    "text": "Secondary text size",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.secondary-text-weight": {
+    "text": "Secondary text weight",
+    "note": "Shown in tile (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.tile.text-block-minimum-height": {
+    "text": "Text block minimum height",
+    "note": "Shown in tile (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.tile.text-gap": {
+    "text": "Text gap",
+    "note": "Shown in tile (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.tile.vertical-gap-between-primary-and": {
+    "text": "Vertical gap between primary and secondary text.",
+    "note": "Shown in tile (theme-editor).",
+    "max": 80
+  },
+  "theme-editor.trial-bar.editor": {
+    "text": "Editor",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.trial-bar.move-to-bottom": {
+    "text": "Move to bottom",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.trial-bar.move-to-top": {
+    "text": "Move to top",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.trial-bar.n-not-valid-left-out": {
+    "text": "{n} not valid, left out",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "theme-editor.trial-bar.open-editor": {
+    "text": "Open editor",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.trial-bar.revert": {
+    "text": "Revert",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 15
+  },
+  "theme-editor.trial-bar.revert-theme-trial": {
+    "text": "Revert theme trial",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 30
+  },
+  "theme-editor.trial-bar.theme-trial": {
+    "text": "Theme trial",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.trial-bar.trying-name": {
+    "text": "Trying {name}",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.trial-bar.trying-name-on-this-tab-mode": {
+    "text": "Trying {name} on this tab ({mode, select, dark {dark} other {light}})",
+    "note": "Shown in trial bar (theme-editor).",
+    "max": 55,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.trial.reverted-this-tab-shows-your-own-theme": {
+    "text": "Reverted. This tab shows your own theme again.",
+    "note": "Shown in trial (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.trial.saved-this-tab-now-uses-the-saved-theme": {
+    "text": "Saved. This tab now uses the saved theme file.",
+    "note": "Shown in trial (theme-editor).",
+    "max": 75
+  },
+  "theme-editor.trial.trial-ended-after-10-minutes": {
+    "text": "Trial ended after 10 minutes.",
+    "note": "Shown in trial (theme-editor).",
+    "max": 50
+  },
+  "theme-editor.trial.trial-ended-because-the-theme-changed": {
+    "text": "Trial ended because the theme changed.",
+    "note": "Shown in trial (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.ultra-card.accents-and-active-elements": {
+    "text": "Accents and active elements.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ultra-card.borders-and-separators": {
+    "text": "Borders and separators.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ultra-card.card-background": {
+    "text": "Card background",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ultra-card.card-background-override": {
+    "text": "Card background override",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.ultra-card.card-radius": {
+    "text": "Card radius",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ultra-card.card-shadow": {
+    "text": "Card shadow",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ultra-card.card-surface": {
+    "text": "Card surface.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ultra-card.corner-radius-of-the-card": {
+    "text": "Corner radius of the card.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 45
+  },
+  "theme-editor.ultra-card.divider-colour": {
+    "text": "Divider colour",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ultra-card.error-colour": {
+    "text": "Error colour",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ultra-card.error-messages": {
+    "text": "Error messages.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ultra-card.main-text": {
+    "text": "Main text.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ultra-card.muted-text": {
+    "text": "Muted text.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 20
+  },
+  "theme-editor.ultra-card.primary-colour": {
+    "text": "Primary colour",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.ultra-card.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ultra-card.secondary-text-colour": {
+    "text": "Secondary text colour",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ultra-card.shadow-of-the-card": {
+    "text": "Shadow of the card.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 35
+  },
+  "theme-editor.ultra-card.takes-priority-over-the-card-background": {
+    "text": "Takes priority over the card background.",
+    "note": "Shown in ultra card (theme-editor).",
+    "max": 65
+  },
+  "theme-editor.util.a-and-b": {
+    "text": "{a} and {b}",
+    "note": "Shown in util (theme-editor).",
+    "max": 20,
+    "vars": {
+      "a": "The value that replaces a in the text.",
+      "b": "The value that replaces b in the text."
+    }
+  },
+  "theme-editor.util.a-theme-called-name-already-exists": {
+    "text": "A theme called {name} already exists.",
+    "note": "Shown in util (theme-editor).",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.util.dark": {
+    "text": "Dark",
+    "note": "Shown in util (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.util.enter-a-name": {
+    "text": "Enter a name.",
+    "note": "Shown in util (theme-editor).",
+    "max": 25
+  },
+  "theme-editor.util.light": {
+    "text": "Light",
+    "note": "Shown in util (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.util.shared": {
+    "text": "Shared",
+    "note": "Shown in util (theme-editor).",
+    "max": 10
+  },
+  "theme-editor.util.this-name-is-reserved": {
+    "text": "This name is reserved.",
+    "note": "Shown in util (theme-editor).",
+    "max": 40
+  },
+  "theme-editor.util.use-lowercase-letters-numbers-hyphens": {
+    "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
+    "note": "Shown in util (theme-editor).",
+    "max": 185
+  }
+}

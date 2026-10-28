@@ -1,6 +1,7 @@
 import type { SliderPreset, SliderPresetId } from '../../contracts/look-editor';
 import type { SliderTrackStyle } from '../../contracts/slider-look';
 import { m } from '../i18n';
+import type { MarkedPreset } from '../presets';
 
 /*
  * The five slider presets and the static previews of presets and track styles.
@@ -27,40 +28,40 @@ const preview = (id: SliderPresetId): string => {
   }
 };
 
-export const SLIDER_PRESETS: readonly SliderPreset[] = [
+export const SLIDER_PRESETS: readonly MarkedPreset<SliderPreset>[] = [
   {
     id: 'minimal',
-    label: m('Minimal'),
-    description: m('Thin line, round handle, value beside it.'),
+    label: m('look-editor.presets.minimal'),
+    description: m('look-editor.presets.thin-line-round-handle-value-beside-it'),
     preview: preview('minimal'),
     values: { track_style: 'thin', track_thickness: 4, thumb: 'circle', thumb_size: 16, value_position: 'beside' },
   },
   {
     id: 'material',
-    label: m('Material'),
-    description: m('Standard bar with a round handle.'),
+    label: m('look-editor.presets.material'),
+    description: m('look-editor.presets.standard-bar-with-a-round-handle'),
     preview: preview('material'),
     values: { track_thickness: 6, track_radius: 3, thumb: 'circle', thumb_size: 20, thumb_border: 1 },
   },
   {
     id: 'neon',
-    label: m('Neon'),
-    description: m('Glowing line, round glowing handle.'),
+    label: m('look-editor.presets.neon-2'),
+    description: m('look-editor.presets.glowing-line-round-glowing-handle'),
     preview: preview('neon'),
     values: { track_style: 'thin', track_thickness: 6, thumb: 'circle', thumb_size: 18, thumb_border: 2, thumb_glow: 10, slider_color: '#ff4fd8', track_color: '#ff4fd840' },
   },
   {
     id: 'glass',
-    label: m('Glass'),
-    description: m('See-through track, pill handle.'),
+    label: m('look-editor.presets.glass'),
+    description: m('look-editor.presets.see-through-track-pill-handle'),
     preview: preview('glass'),
     // glass_blur stays off: the flat see-through fill is the default
     values: { track_style: 'glass', track_thickness: 28, thumb: 'pill', thumb_size: 28, value_position: 'track' },
   },
   {
     id: 'big-fill',
-    label: m('Big fill'),
-    description: m('Large fill with icon and value. Updates while you drag.'),
+    label: m('look-editor.presets.big-fill'),
+    description: m('look-editor.presets.large-fill-with-icon-and-value-updates'),
     preview: preview('big-fill'),
     // Big fill is the one preset that updates while dragging
     values: { track_style: 'big-fill', fill_mode: 'auto', thumb: 'none', value_position: 'track', live: true },

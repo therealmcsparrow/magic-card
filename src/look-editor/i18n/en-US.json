@@ -1,228 +1,998 @@
 {
-  "0 dots: moving dashes instead.": "0 dots: moving dashes instead.",
-  "0 shapes: nothing travels.": "0 shapes: nothing travels.",
-  "4 or more glowing or tube lines on one card. To keep wall tablets smooth, bubbles and flicker are reduced automatically.": "4 or more glowing or tube lines on one card. To keep wall tablets smooth, bubbles and flicker are reduced automatically.",
-  "7 or more glowing or tube lines. Moving highlights and splashes are switched off automatically.": "7 or more glowing or tube lines. Moving highlights and splashes are switched off automatically.",
-  "A small effect at the To module each time a shape arrives.": "A small effect at the To module each time a shape arrives.",
-  "A tube under 8 px is hard to read.": "A tube under 8 px is hard to read.",
-  "Add evenly": "Add evenly",
-  "Add stop": "Add stop",
-  "Alternate with": "Alternate with",
-  "Apply": "Apply",
-  "Arrival": "Arrival",
-  "Arrow": "Arrow",
-  "Arrowhead": "Arrowhead",
-  "Auto": "Auto",
-  "Auto works with brightness and colour temperature sliders.": "Auto works with brightness and color temperature sliders.",
-  "Auto, from the light's colour": "Auto, from the light's color",
-  "Beside the slider": "Beside the slider",
-  "Big fill": "Big fill",
-  "Blue tube with drops and a rising level.": "Blue tube with drops and a rising level.",
-  "Blur behind": "Blur behind",
-  "Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets.": "Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets.",
-  "Border (px)": "Border (px)",
-  "Border colour": "Border color",
-  "Brightness: dark to bright in the slider colour. Colour temperature: warm to cool.": "Brightness: dark to bright in the slider color. Color temperature: warm to cool.",
-  "Bubble": "Bubble",
-  "Bubble count": "Bubble count",
-  "Bubbles": "Bubbles",
-  "By value": "By value",
-  "Cable": "Cable",
-  "Centre": "Center",
-  "Centre needs a vertical slider.": "Center needs a vertical slider.",
-  "Chevron": "Chevron",
-  "Circle": "Circle",
-  "Close": "Close",
-  "Colour": "Color",
-  "Colour mode": "Color mode",
-  "Colour ranges": "Color ranges",
-  "Colour source: {source}.": "Color source: {source}.",
-  "Comet": "Comet",
-  "Cool dashed line with arrows.": "Cool dashed line with arrows.",
-  "Core colour": "Core color",
-  "Count follows spacing.": "Count follows spacing.",
-  "Dash length (px)": "Dash length (px)",
-  "Dashed": "Dashed",
-  "Data": "Data",
-  "Default look": "Default look",
-  "Delete stop {n}": "Delete stop {n}",
-  "Diamond": "Diamond",
-  "Different start marker": "Different start marker",
-  "Dismiss": "Dismiss",
-  "Dot": "Dot",
-  "Dot size (px)": "Dot size (px)",
-  "Dots": "Dots",
-  "Dotted": "Dotted",
-  "Double rail": "Double rail",
-  "Drop": "Drop",
-  "Electric": "Electric",
-  "End colour": "End color",
-  "End marker": "End marker",
-  "Ends": "Ends",
-  "Energy": "Energy",
-  "Entity icon": "Entity icon",
-  "Even": "Even",
-  "Falls back to Slider colour when the light has no colour.": "Falls back to Slider color when the light has no color.",
-  "Fill": "Fill",
-  "Flicker": "Flicker",
-  "Following the light": "Following the light",
-  "Gap (px)": "Gap (px)",
-  "Glass": "Glass",
-  "Glass tint": "Glass tint",
-  "Glow (px)": "Glow (px)",
-  "Glowing line, round glowing handle.": "Glowing line, round glowing handle.",
-  "Glowing yellow-orange line with sparks.": "Glowing yellow-orange line with sparks.",
-  "Gradient": "Gradient",
-  "Gradient, light's colour to end colour": "Gradient, light's color to end color",
-  "Handle": "Handle",
-  "Heat": "Heat",
-  "Hidden": "Hidden",
-  "Hidden is the same as turning Show value off.": "Hidden is the same as turning Show value off.",
-  "Hidden needs a handle.": "Hidden needs a handle.",
-  "Icon": "Icon",
-  "Icon position": "Icon position",
-  "Idle colour": "Idle color",
-  "In a bubble while dragging": "In a bubble while dragging",
-  "In pixels": "In pixels",
-  "In the track": "In the track",
-  "In your system settings, turn on reduced motion (Accessibility).": "In your system settings, turn on reduced motion (Accessibility).",
-  "Label": "Label",
-  "Large fill with icon and value. Updates while you drag.": "Large fill with icon and value. Updates while you drag.",
-  "Level follows value": "Level follows value",
-  "Light's colour": "Light's color",
-  "Line": "Line",
-  "Line end colour": "Line end color",
-  "Line style": "Line style",
-  "Look change undone.": "Look change undone.",
-  "Look reset. {count}.": "Look reset. {count}.",
-  "Look reset. {n, plural, one {# setting} other {# settings}} removed.": "Look reset. {n, plural, one {# setting} other {# settings}} removed.",
-  "Marker size (px)": "Marker size (px)",
-  "Material": "Material",
-  "Min and max labels": "Min and max labels",
-  "Minimal": "Minimal",
-  "Motion": "Motion",
-  "Neon": "Neon",
-  "None": "None",
-  "Nothing arrives while Motion is Pulse.": "Nothing arrives while Motion is Pulse.",
-  "Off": "Off",
-  "On a Mac: System Settings, Accessibility, Display.": "On a Mac: System Settings, Accessibility, Display.",
-  "On iPad: Settings, Accessibility, Motion.": "On iPad: Settings, Accessibility, Motion.",
-  "Only lights have a colour of their own.": "Only lights have a color of their own.",
-  "Pick a light first.": "Pick a light first.",
-  "Pick a sensor or device first: the colour follows its value.": "Pick a sensor or device first: the color follows its value.",
-  "Pick a sensor or device first: the level follows its value.": "Pick a sensor or device first: the level follows its value.",
-  "Pick an icon.": "Pick an icon.",
-  "Pill": "Pill",
-  "Pink glowing line with dots.": "Pink glowing line with dots.",
-  "Presets": "Presets",
-  "Pulse": "Pulse",
-  "Rail gap (px)": "Rail gap (px)",
-  "Random": "Random",
-  "Replaces the stops with this many, spread from {min} to {max}.": "Replaces the stops with this many, spread from {min} to {max}.",
-  "Reset look": "Reset look",
-  "Reset {label}": "Reset {label}",
-  "Ring": "Ring",
-  "Rotate with the line": "Rotate with the line",
-  "Round node": "Round node",
-  "Scale width": "Scale width",
-  "See-through track, pill handle.": "See-through track, pill handle.",
-  "Segmented": "Segmented",
-  "Segments": "Segments",
-  "Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.": "Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.",
-  "Shape": "Shape",
-  "Shape colour": "Shape color",
-  "Shape size (px)": "Shape size (px)",
-  "Shapes": "Shapes",
-  "Shapes stay in place and pulse. The pulse speed follows the value.": "Shapes stay in place and pulse. The pulse speed follows the value.",
-  "Sheath colour": "Sheath color",
-  "Single": "Single",
-  "Size (px)": "Size (px)",
-  "Size variation (%)": "Size variation (%)",
-  "Slider colour": "Slider color",
-  "Slider shape": "Slider shape",
-  "Snap to stops": "Snap to stops",
-  "Solid": "Solid",
-  "Sort by value": "Sort by value",
-  "Spacing": "Spacing",
-  "Spacing (px)": "Spacing (px)",
-  "Spacing is ignored while Motion is Pulse.": "Spacing is ignored while Motion is Pulse.",
-  "Spark": "Spark",
-  "Spin": "Spin",
-  "Splash": "Splash",
-  "Splash on arrival": "Splash on arrival",
-  "Splash size (px)": "Splash size (px)",
-  "Spread and motion": "Spread and motion",
-  "Square": "Square",
-  "Standard": "Standard",
-  "Standard bar with a round handle.": "Standard bar with a round handle.",
-  "Star": "Star",
-  "Start": "Start",
-  "Start marker": "Start marker",
-  "Stop outside the range": "Stop outside the range",
-  "Stop {n}": "Stop {n}",
-  "Stops": "Stops",
-  "Strong": "Strong",
-  "Subtle": "Subtle",
-  "The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.": "The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.",
-  "The light's colour, if that is on, or Slider colour is where the fill starts. Gradient and Auto build on it.": "The light's color, if that is on, or Slider color is where the fill starts. Gradient and Auto build on it.",
-  "The line takes the colour of the range the value falls in.": "The line takes the color of the range the value falls in.",
-  "The long side. The short side is 0.57 times that.": "The long side. The short side is 0.57 times that.",
-  "The module's own corners are in the Design tab.": "The module's own corners are in the Design tab.",
-  "The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.": "The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.",
-  "The touch area stays at least 40 px.": "The touch area stays at least 40 px.",
-  "The track and fill follow this shape. The handle stays on the track. Use a wide or tall shape for the clearest result.": "The track and fill follow this shape. The handle stays on the track. Use a wide or tall shape for the clearest result.",
-  "The track still moves and can be used with keyboard and touch. Add a value display so people can read the level.": "The track still moves and can be used with keyboard and touch. Add a value display so people can read the level.",
-  "The tube is empty until the value passes Min.": "The tube is empty until the value passes Min.",
-  "Thickness (px)": "Thickness (px)",
-  "Thin": "Thin",
-  "Thin line, round handle, value beside it.": "Thin line, round handle, value beside it.",
-  "This card shows at most 40 moving shapes. Some of this line's shapes are skipped.": "This card shows at most 40 moving shapes. Some of this line's shapes are skipped.",
-  "Tick every": "Tick every",
-  "Ticks": "Ticks",
-  "Touch screens have no hover, so the value is shown for 2 seconds after you let go.": "Touch screens have no hover, so the value is shown for 2 seconds after you let go.",
-  "Track and fill": "Track and fill",
-  "Track corners (px)": "Track corners (px)",
-  "Track style": "Track style",
-  "Travel": "Travel",
-  "Tube": "Tube",
-  "Turns the shape once every 3 seconds while it travels. Off by default.": "Turns the shape once every 3 seconds while it travels. Off by default.",
-  "Twisted": "Twisted",
-  "Undo": "Undo",
-  "Undo look change": "Undo look change",
-  "Undo reset": "Undo reset",
-  "Undo {name} look": "Undo {name} look",
-  "Up to twice the width at Max.": "Up to twice the width at Max.",
-  "Update while dragging": "Update while dragging",
-  "Use own colour": "Use own color",
-  "Use the light's colour": "Use the light's color",
-  "Value": "Value",
-  "Value display": "Value display",
-  "Value shown beside the slider, because there is no handle.": "Value shown beside the slider, because there is no handle.",
-  "Warm wavy line with comets.": "Warm wavy line with comets.",
-  "Water": "Water",
-  "Wave": "Wave",
-  "Wave height (px)": "Wave height (px)",
-  "Wavelength (px)": "Wavelength (px)",
-  "Where": "Where",
-  "Width (px)": "Width (px)",
-  "With no handle and no value shown, the level can only be read from the fill.": "With no handle and no value shown, the level can only be read from the fill.",
-  "Your own look": "Your own look",
-  "Your own look, started from {name}": "Your own look, started from {name}",
-  "Your system has reduced motion on, so this look stays still.": "Your system has reduced motion on, so this look stays still.",
-  "Your system has reduced motion on, so this look stays still. Turn it off in your system settings to see it move.": "Your system has reduced motion on, so this look stays still. Turn it off in your system settings to see it move.",
-  "Zigzag": "Zigzag",
-  "Zigzag height (px)": "Zigzag height (px)",
-  "auto": "auto",
-  "{fields} added.": "{fields} added.",
-  "{n, plural, one {# setting changed} other {# settings changed}}": "{n, plural, one {# setting changed} other {# settings changed}}",
-  "{n, plural, one {# setting removed} other {# settings removed}}": "{n, plural, one {# setting removed} other {# settings removed}}",
-  "{n, plural, one {# stop} other {# stops}}": "{n, plural, one {# stop} other {# stops}}",
-  "{name} look": "{name} look",
-  "{name} look applied. {count}.": "{name} look applied. {count}.",
-  "{name} look applied. {n, plural, one {# setting} other {# settings}} changed.": "{name} look applied. {n, plural, one {# setting} other {# settings}} changed.",
-  "{name} look is already applied.": "{name} look is already applied.",
-  "{n} characters of each label show on the card. Screen readers get the full label.": "{n} characters of each label show on the card. Screen readers get the full label.",
-  "{n} px": "{n} px",
-  "{n} stops is the most.": "{n} stops is the most.",
-  "{used} is used. Kept but not used: {kept}.": "{used} is used. Kept but not used: {kept}."
+  "look-editor.element.0-dots-moving-dashes-instead": {
+    "text": "0 dots: moving dashes instead.",
+    "hash": "2cd27b03"
+  },
+  "look-editor.element.0-shapes-nothing-travels": {
+    "text": "0 shapes: nothing travels.",
+    "hash": "5ecc1367"
+  },
+  "look-editor.element.4-or-more-glowing-or-tube-lines-on-one": {
+    "text": "4 or more glowing or tube lines on one card. To keep wall tablets smooth, bubbles and flicker are reduced automatically.",
+    "hash": "758a4fad"
+  },
+  "look-editor.element.7-or-more-glowing-or-tube-lines-moving": {
+    "text": "7 or more glowing or tube lines. Moving highlights and splashes are switched off automatically.",
+    "hash": "9481da47"
+  },
+  "look-editor.element.a-small-effect-at-the-to-module-each": {
+    "text": "A small effect at the To module each time a shape arrives.",
+    "hash": "feebfd59"
+  },
+  "look-editor.element.a-tube-under-8-px-is-hard-to-read": {
+    "text": "A tube under 8 px is hard to read.",
+    "hash": "6e567a66"
+  },
+  "look-editor.element.alternate-with": {
+    "text": "Alternate with",
+    "hash": "b536d93a"
+  },
+  "look-editor.element.arrival": {
+    "text": "Arrival",
+    "hash": "794adbbc"
+  },
+  "look-editor.element.arrow": {
+    "text": "Arrow",
+    "hash": "05800e70"
+  },
+  "look-editor.element.arrowhead": {
+    "text": "Arrowhead",
+    "hash": "5c85bdb0"
+  },
+  "look-editor.element.bubble": {
+    "text": "Bubble",
+    "hash": "77d87b00"
+  },
+  "look-editor.element.bubble-count": {
+    "text": "Bubble count",
+    "hash": "fb4705ab"
+  },
+  "look-editor.element.bubbles": {
+    "text": "Bubbles",
+    "hash": "d0bba2c5"
+  },
+  "look-editor.element.by-value": {
+    "text": "By value",
+    "hash": "7a290d34"
+  },
+  "look-editor.element.cable": {
+    "text": "Cable",
+    "hash": "eaf9795d"
+  },
+  "look-editor.element.chevron": {
+    "text": "Chevron",
+    "hash": "c9143fa6"
+  },
+  "look-editor.element.colour": {
+    "text": "Color",
+    "hash": "3a9dfa58"
+  },
+  "look-editor.element.colour-mode": {
+    "text": "Color mode",
+    "hash": "1f2f41fc"
+  },
+  "look-editor.element.colour-ranges": {
+    "text": "Color ranges",
+    "hash": "8de38687"
+  },
+  "look-editor.element.comet": {
+    "text": "Comet",
+    "hash": "b8cdd253"
+  },
+  "look-editor.element.core-colour": {
+    "text": "Core color",
+    "hash": "4de7fc2c"
+  },
+  "look-editor.element.count-follows-spacing": {
+    "text": "Count follows spacing.",
+    "hash": "3a88798c"
+  },
+  "look-editor.element.dash-length-px": {
+    "text": "Dash length (px)",
+    "hash": "97d123ac"
+  },
+  "look-editor.element.dashed": {
+    "text": "Dashed",
+    "hash": "2fe14ade"
+  },
+  "look-editor.element.default-look": {
+    "text": "Default look",
+    "hash": "55b59d75"
+  },
+  "look-editor.element.diamond": {
+    "text": "Diamond",
+    "hash": "b639c243"
+  },
+  "look-editor.element.different-start-marker": {
+    "text": "Different start marker",
+    "hash": "063b3d57"
+  },
+  "look-editor.element.dismiss": {
+    "text": "Dismiss",
+    "hash": "48845bff"
+  },
+  "look-editor.element.dot": {
+    "text": "Dot",
+    "hash": "599079bc"
+  },
+  "look-editor.element.dot-size-px": {
+    "text": "Dot size (px)",
+    "hash": "886a1312"
+  },
+  "look-editor.element.dots": {
+    "text": "Dots",
+    "hash": "6de335fa"
+  },
+  "look-editor.element.dotted": {
+    "text": "Dotted",
+    "hash": "be454f3c"
+  },
+  "look-editor.element.double-rail": {
+    "text": "Double rail",
+    "hash": "391641a1"
+  },
+  "look-editor.element.drop": {
+    "text": "Drop",
+    "hash": "c8af9ae3"
+  },
+  "look-editor.element.electric": {
+    "text": "Electric",
+    "hash": "a76dab2d"
+  },
+  "look-editor.element.end-marker": {
+    "text": "End marker",
+    "hash": "91c238cc"
+  },
+  "look-editor.element.ends": {
+    "text": "Ends",
+    "hash": "e98982c9"
+  },
+  "look-editor.element.even": {
+    "text": "Even",
+    "hash": "8c29bf34"
+  },
+  "look-editor.element.fields-added": {
+    "text": "{fields} added.",
+    "hash": "5976af51"
+  },
+  "look-editor.element.flicker": {
+    "text": "Flicker",
+    "hash": "ba3baf3d"
+  },
+  "look-editor.element.gap-px": {
+    "text": "Gap (px)",
+    "hash": "b80d9421"
+  },
+  "look-editor.element.glass-tint": {
+    "text": "Glass tint",
+    "hash": "fb8247d2"
+  },
+  "look-editor.element.glow-px": {
+    "text": "Glow (px)",
+    "hash": "d8c44a42"
+  },
+  "look-editor.element.gradient": {
+    "text": "Gradient",
+    "hash": "2523561c"
+  },
+  "look-editor.element.icon": {
+    "text": "Icon",
+    "hash": "a35abcd6"
+  },
+  "look-editor.element.idle-colour": {
+    "text": "Idle color",
+    "hash": "fb7ef9b4"
+  },
+  "look-editor.element.in-pixels": {
+    "text": "In pixels",
+    "hash": "ed6e9ee9"
+  },
+  "look-editor.element.level-follows-value": {
+    "text": "Level follows value",
+    "hash": "15405827"
+  },
+  "look-editor.element.line": {
+    "text": "Line",
+    "hash": "d7852cd0"
+  },
+  "look-editor.element.line-end-colour": {
+    "text": "Line end color",
+    "hash": "93d6e2aa"
+  },
+  "look-editor.element.line-style": {
+    "text": "Line style",
+    "hash": "2c4a93b5"
+  },
+  "look-editor.element.look-change-undone": {
+    "text": "Look change undone.",
+    "hash": "2a3ab621"
+  },
+  "look-editor.element.look-reset-n-removed": {
+    "text": "Look reset. {n, plural, one {# setting} other {# settings}} removed.",
+    "hash": "237a0f1a"
+  },
+  "look-editor.element.marker-size-px": {
+    "text": "Marker size (px)",
+    "hash": "1b9e6fc5"
+  },
+  "look-editor.element.motion": {
+    "text": "Motion",
+    "hash": "8ca34424"
+  },
+  "look-editor.element.n-px": {
+    "text": "{n} px",
+    "hash": "f7dd9964"
+  },
+  "look-editor.element.name-look": {
+    "text": "{name} look",
+    "hash": "21cf5aec"
+  },
+  "look-editor.element.name-look-applied-n-changed": {
+    "text": "{name} look applied. {n, plural, one {# setting} other {# settings}} changed.",
+    "hash": "4cbbfabe"
+  },
+  "look-editor.element.neon": {
+    "text": "Neon",
+    "hash": "618484e2"
+  },
+  "look-editor.element.none": {
+    "text": "None",
+    "hash": "dc937b59"
+  },
+  "look-editor.element.nothing-arrives-while-motion-is-pulse": {
+    "text": "Nothing arrives while Motion is Pulse.",
+    "hash": "f5a89d9a"
+  },
+  "look-editor.element.off": {
+    "text": "Off",
+    "hash": "ca7981b4"
+  },
+  "look-editor.element.pick-a-sensor-or-device-first-the-colour": {
+    "text": "Pick a sensor or device first: the color follows its value.",
+    "hash": "7626c46c"
+  },
+  "look-editor.element.pick-a-sensor-or-device-first-the-level": {
+    "text": "Pick a sensor or device first: the level follows its value.",
+    "hash": "dc6ed8f2"
+  },
+  "look-editor.element.pick-an-icon": {
+    "text": "Pick an icon.",
+    "hash": "c10ff123"
+  },
+  "look-editor.element.presets": {
+    "text": "Presets",
+    "hash": "954f93fe"
+  },
+  "look-editor.element.pulse": {
+    "text": "Pulse",
+    "hash": "f7a403c6"
+  },
+  "look-editor.element.rail-gap-px": {
+    "text": "Rail gap (px)",
+    "hash": "535be50a"
+  },
+  "look-editor.element.random": {
+    "text": "Random",
+    "hash": "67bc4844"
+  },
+  "look-editor.element.reset-look": {
+    "text": "Reset look",
+    "hash": "f03606d8"
+  },
+  "look-editor.element.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "look-editor.element.rotate-with-the-line": {
+    "text": "Rotate with the line",
+    "hash": "a45ea60e"
+  },
+  "look-editor.element.round-node": {
+    "text": "Round node",
+    "hash": "6fb0e2b8"
+  },
+  "look-editor.element.scale-width": {
+    "text": "Scale width",
+    "hash": "afd9d571"
+  },
+  "look-editor.element.shape": {
+    "text": "Shape",
+    "hash": "e0e49270"
+  },
+  "look-editor.element.shape-colour": {
+    "text": "Shape color",
+    "hash": "92993111"
+  },
+  "look-editor.element.shape-size-px": {
+    "text": "Shape size (px)",
+    "hash": "66cb75a9"
+  },
+  "look-editor.element.shapes": {
+    "text": "Shapes",
+    "hash": "75e8028a"
+  },
+  "look-editor.element.shapes-stay-in-place-and-pulse-the-pulse": {
+    "text": "Shapes stay in place and pulse. The pulse speed follows the value.",
+    "hash": "04e10615"
+  },
+  "look-editor.element.sheath-colour": {
+    "text": "Sheath color",
+    "hash": "ba7205c4"
+  },
+  "look-editor.element.single": {
+    "text": "Single",
+    "hash": "8888a029"
+  },
+  "look-editor.element.size-variation": {
+    "text": "Size variation (%)",
+    "hash": "0de1998a"
+  },
+  "look-editor.element.solid": {
+    "text": "Solid",
+    "hash": "b8b311b0"
+  },
+  "look-editor.element.spacing": {
+    "text": "Spacing",
+    "hash": "62a822a5"
+  },
+  "look-editor.element.spacing-is-ignored-while-motion-is-pulse": {
+    "text": "Spacing is ignored while Motion is Pulse.",
+    "hash": "f9a0a1de"
+  },
+  "look-editor.element.spacing-px": {
+    "text": "Spacing (px)",
+    "hash": "537aa730"
+  },
+  "look-editor.element.spark": {
+    "text": "Spark",
+    "hash": "529bc3b0"
+  },
+  "look-editor.element.spin": {
+    "text": "Spin",
+    "hash": "b9e96ae5"
+  },
+  "look-editor.element.splash": {
+    "text": "Splash",
+    "hash": "c3fa854c"
+  },
+  "look-editor.element.splash-on-arrival": {
+    "text": "Splash on arrival",
+    "hash": "e1669733"
+  },
+  "look-editor.element.splash-size-px": {
+    "text": "Splash size (px)",
+    "hash": "3a11fd6b"
+  },
+  "look-editor.element.spread-and-motion": {
+    "text": "Spread and motion",
+    "hash": "b5166371"
+  },
+  "look-editor.element.square": {
+    "text": "Square",
+    "hash": "c11092bc"
+  },
+  "look-editor.element.star": {
+    "text": "Star",
+    "hash": "e357d396"
+  },
+  "look-editor.element.start-marker": {
+    "text": "Start marker",
+    "hash": "1c16736f"
+  },
+  "look-editor.element.strong": {
+    "text": "Strong",
+    "hash": "30a04fdc"
+  },
+  "look-editor.element.subtle": {
+    "text": "Subtle",
+    "hash": "3eadecfb"
+  },
+  "look-editor.element.the-flow-look-could-not-be-loaded-so-the": {
+    "text": "The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.",
+    "hash": "ebad4d18"
+  },
+  "look-editor.element.the-line-takes-the-colour-of-the-range": {
+    "text": "The line takes the color of the range the value falls in.",
+    "hash": "9fae4a64"
+  },
+  "look-editor.element.the-tube-is-empty-until-the-value-passes": {
+    "text": "The tube is empty until the value passes Min.",
+    "hash": "9bc21fba"
+  },
+  "look-editor.element.this-card-shows-at-most-40-moving-shapes": {
+    "text": "This card shows at most 40 moving shapes. Some of this line's shapes are skipped.",
+    "hash": "ae3497a7"
+  },
+  "look-editor.element.travel": {
+    "text": "Travel",
+    "hash": "d2b98fb5"
+  },
+  "look-editor.element.tube": {
+    "text": "Tube",
+    "hash": "557ed347"
+  },
+  "look-editor.element.turns-the-shape-once-every-3-seconds": {
+    "text": "Turns the shape once every 3 seconds while it travels. Off by default.",
+    "hash": "e4c3a6a4"
+  },
+  "look-editor.element.twisted": {
+    "text": "Twisted",
+    "hash": "ad84d09a"
+  },
+  "look-editor.element.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "look-editor.element.undo-name-look": {
+    "text": "Undo {name} look",
+    "hash": "7e1b36be"
+  },
+  "look-editor.element.undo-reset": {
+    "text": "Undo reset",
+    "hash": "c4961cf5"
+  },
+  "look-editor.element.up-to-twice-the-width-at-max": {
+    "text": "Up to twice the width at Max.",
+    "hash": "71efcb13"
+  },
+  "look-editor.element.used-is-used-kept-but-not-used-kept": {
+    "text": "{used} is used. Kept but not used: {kept}.",
+    "hash": "79275e43"
+  },
+  "look-editor.element.wave": {
+    "text": "Wave",
+    "hash": "43eb1b14"
+  },
+  "look-editor.element.wave-height-px": {
+    "text": "Wave height (px)",
+    "hash": "d0523dc4"
+  },
+  "look-editor.element.wavelength-px": {
+    "text": "Wavelength (px)",
+    "hash": "30f58266"
+  },
+  "look-editor.element.width-px": {
+    "text": "Width (px)",
+    "hash": "bad5f0ee"
+  },
+  "look-editor.element.your-own-look": {
+    "text": "Your own look",
+    "hash": "2f9609c5"
+  },
+  "look-editor.element.your-own-look-started-from-name": {
+    "text": "Your own look, started from {name}",
+    "hash": "32176931"
+  },
+  "look-editor.element.your-system-has-reduced-motion-on-so": {
+    "text": "Your system has reduced motion on, so this look stays still. Turn it off in your system settings to see it move.",
+    "hash": "bedb38e4"
+  },
+  "look-editor.element.zigzag": {
+    "text": "Zigzag",
+    "hash": "cc4964d9"
+  },
+  "look-editor.element.zigzag-height-px": {
+    "text": "Zigzag height (px)",
+    "hash": "adcbd509"
+  },
+  "look-editor.mc-slider-look-editor.add-evenly": {
+    "text": "Add evenly",
+    "hash": "44e90e5e"
+  },
+  "look-editor.mc-slider-look-editor.add-stop": {
+    "text": "Add stop",
+    "hash": "5dec20de"
+  },
+  "look-editor.mc-slider-look-editor.apply": {
+    "text": "Apply",
+    "hash": "31e392d1"
+  },
+  "look-editor.mc-slider-look-editor.auto": {
+    "text": "Auto",
+    "hash": "02862497"
+  },
+  "look-editor.mc-slider-look-editor.auto-2": {
+    "text": "auto",
+    "hash": "929260ad"
+  },
+  "look-editor.mc-slider-look-editor.auto-from-the-light-s-colour": {
+    "text": "Auto, from the light's color",
+    "hash": "f6942fbf"
+  },
+  "look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour": {
+    "text": "Auto works with brightness and color temperature sliders.",
+    "hash": "7187134c"
+  },
+  "look-editor.mc-slider-look-editor.beside-the-slider": {
+    "text": "Beside the slider",
+    "hash": "8e5df5b5"
+  },
+  "look-editor.mc-slider-look-editor.big-fill": {
+    "text": "Big fill",
+    "hash": "a2d1ebd7"
+  },
+  "look-editor.mc-slider-look-editor.blur-behind": {
+    "text": "Blur behind",
+    "hash": "e6749d91"
+  },
+  "look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives": {
+    "text": "Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets.",
+    "hash": "689f6dfc"
+  },
+  "look-editor.mc-slider-look-editor.border-colour": {
+    "text": "Border color",
+    "hash": "6c9e0b99"
+  },
+  "look-editor.mc-slider-look-editor.border-px": {
+    "text": "Border (px)",
+    "hash": "0ae2d3f8"
+  },
+  "look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider": {
+    "text": "Brightness: dark to bright in the slider color. Color temperature: warm to cool.",
+    "hash": "cd9a9682"
+  },
+  "look-editor.mc-slider-look-editor.centre": {
+    "text": "Center",
+    "hash": "45c19322"
+  },
+  "look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider": {
+    "text": "Center needs a vertical slider.",
+    "hash": "00d3034f"
+  },
+  "look-editor.mc-slider-look-editor.circle": {
+    "text": "Circle",
+    "hash": "b93d3bce"
+  },
+  "look-editor.mc-slider-look-editor.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "look-editor.mc-slider-look-editor.colour-source-source": {
+    "text": "Color source: {source}.",
+    "hash": "7267e35b"
+  },
+  "look-editor.mc-slider-look-editor.default-look": {
+    "text": "Default look",
+    "hash": "55b59d75"
+  },
+  "look-editor.mc-slider-look-editor.delete-stop-n": {
+    "text": "Delete stop {n}",
+    "hash": "94de549b"
+  },
+  "look-editor.mc-slider-look-editor.end-colour": {
+    "text": "End color",
+    "hash": "1050f1b7"
+  },
+  "look-editor.mc-slider-look-editor.entity-icon": {
+    "text": "Entity icon",
+    "hash": "5fc2fad0"
+  },
+  "look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the": {
+    "text": "Falls back to Slider color when the light has no color.",
+    "hash": "cecf31a6"
+  },
+  "look-editor.mc-slider-look-editor.fill": {
+    "text": "Fill",
+    "hash": "033955d4"
+  },
+  "look-editor.mc-slider-look-editor.following-the-light": {
+    "text": "Following the light",
+    "hash": "ccb7e397"
+  },
+  "look-editor.mc-slider-look-editor.gap-px": {
+    "text": "Gap (px)",
+    "hash": "b80d9421"
+  },
+  "look-editor.mc-slider-look-editor.glass": {
+    "text": "Glass",
+    "hash": "82c26818"
+  },
+  "look-editor.mc-slider-look-editor.glow-px": {
+    "text": "Glow (px)",
+    "hash": "d8c44a42"
+  },
+  "look-editor.mc-slider-look-editor.gradient": {
+    "text": "Gradient",
+    "hash": "2523561c"
+  },
+  "look-editor.mc-slider-look-editor.gradient-light-s-colour-to-end-colour": {
+    "text": "Gradient, light's color to end color",
+    "hash": "257ab2f5"
+  },
+  "look-editor.mc-slider-look-editor.handle": {
+    "text": "Handle",
+    "hash": "fa04ae3d"
+  },
+  "look-editor.mc-slider-look-editor.hidden": {
+    "text": "Hidden",
+    "hash": "7e6fefff"
+  },
+  "look-editor.mc-slider-look-editor.hidden-is-the-same-as-turning-show-value": {
+    "text": "Hidden is the same as turning Show value off.",
+    "hash": "878b502a"
+  },
+  "look-editor.mc-slider-look-editor.hidden-needs-a-handle": {
+    "text": "Hidden needs a handle.",
+    "hash": "ea9cf2bf"
+  },
+  "look-editor.mc-slider-look-editor.icon": {
+    "text": "Icon",
+    "hash": "a35abcd6"
+  },
+  "look-editor.mc-slider-look-editor.icon-position": {
+    "text": "Icon position",
+    "hash": "aa62e053"
+  },
+  "look-editor.mc-slider-look-editor.in-a-bubble-while-dragging": {
+    "text": "In a bubble while dragging",
+    "hash": "b2f59e34"
+  },
+  "look-editor.mc-slider-look-editor.in-the-track": {
+    "text": "In the track",
+    "hash": "075742c7"
+  },
+  "look-editor.mc-slider-look-editor.in-your-system-settings-turn-on-reduced": {
+    "text": "In your system settings, turn on reduced motion (Accessibility).",
+    "hash": "d89cf4a3"
+  },
+  "look-editor.mc-slider-look-editor.label": {
+    "text": "Label",
+    "hash": "0e66373f"
+  },
+  "look-editor.mc-slider-look-editor.light-s-colour": {
+    "text": "Light's color",
+    "hash": "2fea08a3"
+  },
+  "look-editor.mc-slider-look-editor.line": {
+    "text": "Line",
+    "hash": "d7852cd0"
+  },
+  "look-editor.mc-slider-look-editor.look-change-undone": {
+    "text": "Look change undone.",
+    "hash": "2a3ab621"
+  },
+  "look-editor.mc-slider-look-editor.look-reset-count": {
+    "text": "Look reset. {count}.",
+    "hash": "43aa40c1"
+  },
+  "look-editor.mc-slider-look-editor.min-and-max-labels": {
+    "text": "Min and max labels",
+    "hash": "297de253"
+  },
+  "look-editor.mc-slider-look-editor.n": {
+    "text": "{n, plural, one {# setting removed} other {# settings removed}}",
+    "hash": "32de1fb8"
+  },
+  "look-editor.mc-slider-look-editor.n-2": {
+    "text": "{n, plural, one {# setting changed} other {# settings changed}}",
+    "hash": "4b4ba721"
+  },
+  "look-editor.mc-slider-look-editor.n-3": {
+    "text": "{n, plural, one {# stop} other {# stops}}",
+    "hash": "75d490e5"
+  },
+  "look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the": {
+    "text": "{n} characters of each label show on the card. Screen readers get the full label.",
+    "hash": "4f3e77b5"
+  },
+  "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
+    "text": "{n} stops is the most.",
+    "hash": "d4596f52"
+  },
+  "look-editor.mc-slider-look-editor.name-look": {
+    "text": "{name} look",
+    "hash": "21cf5aec"
+  },
+  "look-editor.mc-slider-look-editor.name-look-applied-count": {
+    "text": "{name} look applied. {count}.",
+    "hash": "4c4dcf2e"
+  },
+  "look-editor.mc-slider-look-editor.name-look-is-already-applied": {
+    "text": "{name} look is already applied.",
+    "hash": "1b039b87"
+  },
+  "look-editor.mc-slider-look-editor.none": {
+    "text": "None",
+    "hash": "dc937b59"
+  },
+  "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
+    "text": "On a Mac: System Settings, Accessibility, Display.",
+    "hash": "2f5cbeb8"
+  },
+  "look-editor.mc-slider-look-editor.on-ipad-settings-accessibility-motion": {
+    "text": "On iPad: Settings, Accessibility, Motion.",
+    "hash": "268e3d86"
+  },
+  "look-editor.mc-slider-look-editor.only-lights-have-a-colour-of-their-own": {
+    "text": "Only lights have a color of their own.",
+    "hash": "9e6189e7"
+  },
+  "look-editor.mc-slider-look-editor.pick-a-light-first": {
+    "text": "Pick a light first.",
+    "hash": "ffe624e6"
+  },
+  "look-editor.mc-slider-look-editor.pill": {
+    "text": "Pill",
+    "hash": "9945c78b"
+  },
+  "look-editor.mc-slider-look-editor.presets": {
+    "text": "Presets",
+    "hash": "954f93fe"
+  },
+  "look-editor.mc-slider-look-editor.replaces-the-stops-with-this-many-spread": {
+    "text": "Replaces the stops with this many, spread from {min} to {max}.",
+    "hash": "8d2490f2"
+  },
+  "look-editor.mc-slider-look-editor.reset-label": {
+    "text": "Reset {label}",
+    "hash": "3a375ef7"
+  },
+  "look-editor.mc-slider-look-editor.reset-look": {
+    "text": "Reset look",
+    "hash": "f03606d8"
+  },
+  "look-editor.mc-slider-look-editor.segmented": {
+    "text": "Segmented",
+    "hash": "d71a0c69"
+  },
+  "look-editor.mc-slider-look-editor.segments": {
+    "text": "Segments",
+    "hash": "48c64fe0"
+  },
+  "look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the": {
+    "text": "Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.",
+    "hash": "629d26d6"
+  },
+  "look-editor.mc-slider-look-editor.shape": {
+    "text": "Shape",
+    "hash": "e0e49270"
+  },
+  "look-editor.mc-slider-look-editor.size-px": {
+    "text": "Size (px)",
+    "hash": "2c1cb5c6"
+  },
+  "look-editor.mc-slider-look-editor.slider-colour": {
+    "text": "Slider color",
+    "hash": "fe395e28"
+  },
+  "look-editor.mc-slider-look-editor.slider-shape": {
+    "text": "Slider shape",
+    "hash": "c876b1f4"
+  },
+  "look-editor.mc-slider-look-editor.snap-to-stops": {
+    "text": "Snap to stops",
+    "hash": "0fdebf46"
+  },
+  "look-editor.mc-slider-look-editor.solid": {
+    "text": "Solid",
+    "hash": "b8b311b0"
+  },
+  "look-editor.mc-slider-look-editor.sort-by-value": {
+    "text": "Sort by value",
+    "hash": "b102d29b"
+  },
+  "look-editor.mc-slider-look-editor.square": {
+    "text": "Square",
+    "hash": "c11092bc"
+  },
+  "look-editor.mc-slider-look-editor.standard": {
+    "text": "Standard",
+    "hash": "ef669154"
+  },
+  "look-editor.mc-slider-look-editor.start": {
+    "text": "Start",
+    "hash": "e4bb9f1e"
+  },
+  "look-editor.mc-slider-look-editor.stop-n": {
+    "text": "Stop {n}",
+    "hash": "ef6e0584"
+  },
+  "look-editor.mc-slider-look-editor.stop-outside-the-range": {
+    "text": "Stop outside the range",
+    "hash": "5a043103"
+  },
+  "look-editor.mc-slider-look-editor.stops": {
+    "text": "Stops",
+    "hash": "877a8887"
+  },
+  "look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or": {
+    "text": "The light's color, if that is on, or Slider color is where the fill starts. Gradient and Auto build on it.",
+    "hash": "9db6a711"
+  },
+  "look-editor.mc-slider-look-editor.the-long-side-the-short-side-is-0-57": {
+    "text": "The long side. The short side is 0.57 times that.",
+    "hash": "f7fa8ba8"
+  },
+  "look-editor.mc-slider-look-editor.the-module-s-own-corners-are-in-the": {
+    "text": "The module's own corners are in the Design tab.",
+    "hash": "8f55ca01"
+  },
+  "look-editor.mc-slider-look-editor.the-slider-look-could-not-be-loaded-so": {
+    "text": "The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.",
+    "hash": "a1393fee"
+  },
+  "look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px": {
+    "text": "The touch area stays at least 40 px.",
+    "hash": "fc8e4de6"
+  },
+  "look-editor.mc-slider-look-editor.the-track-and-fill-follow-this-shape-the": {
+    "text": "The track and fill follow this shape. The handle stays on the track. Use a wide or tall shape for the clearest result.",
+    "hash": "39d13fbb"
+  },
+  "look-editor.mc-slider-look-editor.the-track-still-moves-and-can-be-used": {
+    "text": "The track still moves and can be used with keyboard and touch. Add a value display so people can read the level.",
+    "hash": "b234c72e"
+  },
+  "look-editor.mc-slider-look-editor.thickness-px": {
+    "text": "Thickness (px)",
+    "hash": "5a1ef935"
+  },
+  "look-editor.mc-slider-look-editor.thin": {
+    "text": "Thin",
+    "hash": "da68daae"
+  },
+  "look-editor.mc-slider-look-editor.tick-every": {
+    "text": "Tick every",
+    "hash": "54e86c5c"
+  },
+  "look-editor.mc-slider-look-editor.ticks": {
+    "text": "Ticks",
+    "hash": "5b50f27e"
+  },
+  "look-editor.mc-slider-look-editor.touch-screens-have-no-hover-so-the-value": {
+    "text": "Touch screens have no hover, so the value is shown for 2 seconds after you let go.",
+    "hash": "f3ba3cdd"
+  },
+  "look-editor.mc-slider-look-editor.track-and-fill": {
+    "text": "Track and fill",
+    "hash": "9bfc5544"
+  },
+  "look-editor.mc-slider-look-editor.track-corners-px": {
+    "text": "Track corners (px)",
+    "hash": "af6e77c0"
+  },
+  "look-editor.mc-slider-look-editor.track-style": {
+    "text": "Track style",
+    "hash": "592d2add"
+  },
+  "look-editor.mc-slider-look-editor.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "look-editor.mc-slider-look-editor.undo-look-change": {
+    "text": "Undo look change",
+    "hash": "4ab5bf2c"
+  },
+  "look-editor.mc-slider-look-editor.undo-name-look": {
+    "text": "Undo {name} look",
+    "hash": "7e1b36be"
+  },
+  "look-editor.mc-slider-look-editor.undo-reset": {
+    "text": "Undo reset",
+    "hash": "c4961cf5"
+  },
+  "look-editor.mc-slider-look-editor.update-while-dragging": {
+    "text": "Update while dragging",
+    "hash": "f7d07777"
+  },
+  "look-editor.mc-slider-look-editor.use-own-colour": {
+    "text": "Use own color",
+    "hash": "b93e3261"
+  },
+  "look-editor.mc-slider-look-editor.use-the-light-s-colour": {
+    "text": "Use the light's color",
+    "hash": "91199ad5"
+  },
+  "look-editor.mc-slider-look-editor.value": {
+    "text": "Value",
+    "hash": "8e37953d"
+  },
+  "look-editor.mc-slider-look-editor.value-display": {
+    "text": "Value display",
+    "hash": "e775cca2"
+  },
+  "look-editor.mc-slider-look-editor.value-shown-beside-the-slider-because": {
+    "text": "Value shown beside the slider, because there is no handle.",
+    "hash": "184e2c0b"
+  },
+  "look-editor.mc-slider-look-editor.where": {
+    "text": "Where",
+    "hash": "1daaa38f"
+  },
+  "look-editor.mc-slider-look-editor.with-no-handle-and-no-value-shown-the": {
+    "text": "With no handle and no value shown, the level can only be read from the fill.",
+    "hash": "709ad5f1"
+  },
+  "look-editor.mc-slider-look-editor.your-own-look": {
+    "text": "Your own look",
+    "hash": "2f9609c5"
+  },
+  "look-editor.mc-slider-look-editor.your-own-look-started-from-name": {
+    "text": "Your own look, started from {name}",
+    "hash": "32176931"
+  },
+  "look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so": {
+    "text": "Your system has reduced motion on, so this look stays still.",
+    "hash": "244c5d4f"
+  },
+  "look-editor.presets.big-fill": {
+    "text": "Big fill",
+    "hash": "a2d1ebd7"
+  },
+  "look-editor.presets.blue-tube-with-drops-and-a-rising-level": {
+    "text": "Blue tube with drops and a rising level.",
+    "hash": "e41f68f1"
+  },
+  "look-editor.presets.cool-dashed-line-with-arrows": {
+    "text": "Cool dashed line with arrows.",
+    "hash": "d9612e73"
+  },
+  "look-editor.presets.data": {
+    "text": "Data",
+    "hash": "cec3a9b8"
+  },
+  "look-editor.presets.energy": {
+    "text": "Energy",
+    "hash": "f2fcd3f7"
+  },
+  "look-editor.presets.glass": {
+    "text": "Glass",
+    "hash": "82c26818"
+  },
+  "look-editor.presets.glowing-line-round-glowing-handle": {
+    "text": "Glowing line, round glowing handle.",
+    "hash": "126233f7"
+  },
+  "look-editor.presets.glowing-yellow-orange-line-with-sparks": {
+    "text": "Glowing yellow-orange line with sparks.",
+    "hash": "0da2abb4"
+  },
+  "look-editor.presets.heat": {
+    "text": "Heat",
+    "hash": "ee255635"
+  },
+  "look-editor.presets.large-fill-with-icon-and-value-updates": {
+    "text": "Large fill with icon and value. Updates while you drag.",
+    "hash": "f3d550a2"
+  },
+  "look-editor.presets.material": {
+    "text": "Material",
+    "hash": "616cb218"
+  },
+  "look-editor.presets.minimal": {
+    "text": "Minimal",
+    "hash": "057b5de4"
+  },
+  "look-editor.presets.neon": {
+    "text": "Neon",
+    "hash": "618484e2"
+  },
+  "look-editor.presets.neon-2": {
+    "text": "Neon",
+    "hash": "618484e2"
+  },
+  "look-editor.presets.pink-glowing-line-with-dots": {
+    "text": "Pink glowing line with dots.",
+    "hash": "e8a115c6"
+  },
+  "look-editor.presets.see-through-track-pill-handle": {
+    "text": "See-through track, pill handle.",
+    "hash": "8ef10398"
+  },
+  "look-editor.presets.standard-bar-with-a-round-handle": {
+    "text": "Standard bar with a round handle.",
+    "hash": "c3dfad73"
+  },
+  "look-editor.presets.thin-line-round-handle-value-beside-it": {
+    "text": "Thin line, round handle, value beside it.",
+    "hash": "ede2da0b"
+  },
+  "look-editor.presets.warm-wavy-line-with-comets": {
+    "text": "Warm wavy line with comets.",
+    "hash": "07ef3dfe"
+  },
+  "look-editor.presets.water": {
+    "text": "Water",
+    "hash": "7ca7dea9"
+  }
 }

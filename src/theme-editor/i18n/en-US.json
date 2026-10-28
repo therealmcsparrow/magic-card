@@ -1,700 +1,3090 @@
 {
-  "A blur behind translucent cards, like blur(10px).": "A blur behind translucent cards, like blur(10px).",
-  "A line under the top bar, like 1px solid #ccc.": "A line under the top bar, like 1px solid #ccc.",
-  "A mode block must be light or dark and hold variables.": "A mode block must be light or dark and hold variables.",
-  "A preset": "A preset",
-  "A theme called {name} already exists.": "A theme called {name} already exists.",
-  "A theme with this name already exists.": "A theme with this name already exists.",
-  "A variable is typed but not added": "A variable is typed but not added",
-  "Accent": "Accent",
-  "Accent colour": "Accent color",
-  "Accent for active states and sliders.": "Accent for active states and sliders.",
-  "Accents and active elements.": "Accents and active elements.",
-  "Active state colour": "Active state color",
-  "Add": "Add",
-  "Add a light or a switch to Home Assistant to see the {name} sample.": "Add a light or a switch to Home Assistant to see the {name} sample.",
-  "Add any variable": "Add any variable",
-  "Add it and save": "Add it and save",
-  "Add light and dark modes": "Add light and dark modes",
-  "Add light and dark modes?": "Add light and dark modes?",
-  "Add modes": "Add modes",
-  "Add {name} as a variable": "Add {name} as a variable",
-  "Added light and dark modes. Variables you set before stay shared.": "Added light and dark modes. Variables you set before stay shared.",
-  "Added {c, plural, one {# variable} other {# variables}} to {scope}": "Added {c, plural, one {# variable} other {# variables}} to {scope}",
-  "Added {c} to My presets": "Added {c} to My presets",
-  "Added {name} to {scope}": "Added {name} to {scope}",
-  "Alarm armed state (RGB)": "Alarm armed state (RGB)",
-  "Alarm disarmed state (RGB)": "Alarm disarmed state (RGB)",
-  "Alarm icons while triggered.": "Alarm icons while triggered.",
-  "Alarm triggered colour": "Alarm triggered color",
-  "Alarm triggered state (RGB)": "Alarm triggered state (RGB)",
-  "Also set in {modes}": "Also set in {modes}",
-  "Amber (RGB)": "Amber (RGB)",
-  "An empty theme. Add only the variables you want to change.": "An empty theme. Add only the variables you want to change.",
-  "An installed theme": "An installed theme",
-  "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
-  "Author (optional)": "Author (optional)",
-  "Background behind icons.": "Background behind icons.",
-  "Background of pop-ups.": "Background of pop-ups.",
-  "Background of sub-buttons.": "Background of sub-buttons.",
-  "Background of the loading spinner.": "Background of the loading spinner.",
-  "Background of tooltips.": "Background of tooltips.",
-  "Backgrounds and cards": "Backgrounds and cards",
-  "Badge icon size": "Badge icon size",
-  "Badge radius": "Badge radius",
-  "Badge size": "Badge size",
-  "Behind everything, including the dashboard.": "Behind everything, including the dashboard.",
-  "Binary sensor active colour": "Binary sensor active color",
-  "Binary sensors that are on.": "Binary sensors that are on.",
-  "Black (RGB)": "Black (RGB)",
-  "Blank": "Blank",
-  "Blue (RGB)": "Blue (RGB)",
-  "Blue grey (RGB)": "Blue gray (RGB)",
-  "Body font": "Body font",
-  "Body text in the primary text colour.": "Body text in the primary text color.",
-  "Body text.": "Body text.",
-  "Border": "Border",
-  "Border of Bubble cards.": "Border of Bubble cards.",
-  "Borders and bar tracks.": "Borders and bar tracks.",
-  "Borders and separators.": "Borders and separators.",
-  "Box shadow of Bubble cards.": "Box shadow of Bubble cards.",
-  "Brown (RGB)": "Brown (RGB)",
-  "Bubble Card": "Bubble Card",
-  "Button": "Button",
-  "Button card background": "Button card background",
-  "Button card radius": "Button card radius",
-  "Button text.": "Button text.",
-  "Button width as a multiple of its height.": "Button width as a multiple of its height.",
-  "Buttons, bars and accents.": "Buttons, bars and accents.",
-  "Buttons, toggles, active icons and links.": "Buttons, toggles, active icons and links.",
-  "Cancel": "Cancel",
-  "Cancel and error text in the popup.": "Cancel and error text in the popup.",
-  "Cannot be removed later.": "Cannot be removed later.",
-  "Captions and hints.": "Captions and hints.",
-  "Captions and secondary lines.": "Captions and secondary lines.",
-  "Captions, hints and secondary lines.": "Captions, hints and secondary lines.",
-  "Card and popup rounding.": "Card and popup rounding.",
-  "Card backdrop filter": "Card backdrop filter",
-  "Card background": "Card background",
-  "Card background override": "Card background override",
-  "Card border colour": "Card border color",
-  "Card border width": "Card border width",
-  "Card border.": "Card border.",
-  "Card corner radius": "Card corner radius",
-  "Card radius": "Card radius",
-  "Card shadow": "Card shadow",
-  "Card spacing": "Card spacing",
-  "Card surface and flow labels.": "Card surface and flow labels.",
-  "Card surface.": "Card surface.",
-  "Card title colour": "Card title color",
-  "Card title font": "Card title font",
-  "Card title size": "Card title size",
-  "Card titles.": "Card titles.",
-  "Cards, dialogs and menus. Takes a gradient.": "Cards, dialogs and menus. Takes a gradient.",
-  "Check again": "Check again",
-  "Checking...": "Checking...",
-  "Chip avatar padding": "Chip avatar padding",
-  "Chip avatar radius": "Chip avatar radius",
-  "Chip background": "Chip background",
-  "Chip border colour": "Chip border color",
-  "Chip border width": "Chip border width",
-  "Chip height": "Chip height",
-  "Chip icon size": "Chip icon size",
-  "Chip padding": "Chip padding",
-  "Chip radius": "Chip radius",
-  "Chip shadow": "Chip shadow",
-  "Chip spacing": "Chip spacing",
-  "Chip text size": "Chip text size",
-  "Chip text weight": "Chip text weight",
-  "Choose another name": "Choose another name",
-  "Climate auto state (RGB)": "Climate auto state (RGB)",
-  "Climate cool state (RGB)": "Climate cool state (RGB)",
-  "Climate dry state (RGB)": "Climate dry state (RGB)",
-  "Climate fan only state (RGB)": "Climate fan only state (RGB)",
-  "Climate heat cool state (RGB)": "Climate heat cool state (RGB)",
-  "Climate heat state (RGB)": "Climate heat state (RGB)",
-  "Climate icons that are cooling.": "Climate icons that are cooling.",
-  "Climate icons that are heating.": "Climate icons that are heating.",
-  "Climate idle state (RGB)": "Climate idle state (RGB)",
-  "Climate off state (RGB)": "Climate off state (RGB)",
-  "Close": "Close",
-  "Colour of card titles.": "Color of card titles.",
-  "Colour of the card border.": "Color of the card border.",
-  "Colour of the dimmed area behind a pop-up.": "Color of the dimmed area behind a pop-up.",
-  "Colour of the primary text.": "Color of the primary text.",
-  "Colour of the secondary text.": "Color of the secondary text.",
-  "Contacts another website": "Contacts another website",
-  "Contrast not checked: value has transparency.": "Contrast not checked: value has transparency.",
-  "Contrast on card, {mode}: {ratio} to 1, easy to read": "Contrast on card, {mode}: {ratio} to 1, easy to read",
-  "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1": "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1",
-  "Control button ratio": "Control button ratio",
-  "Control height": "Control height",
-  "Control icon size": "Control icon size",
-  "Control radius": "Control radius",
-  "Control spacing": "Control spacing",
-  "Controls": "Controls",
-  "Cooling colour": "Cooling color",
-  "Copied": "Copied",
-  "Copied YAML": "Copied YAML",
-  "Copied key {text}": "Copied key {text}",
-  "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.": "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.",
-  "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.": "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.",
-  "Copy Dark to Light": "Copy Dark to Light",
-  "Copy Light to Dark": "Copy Light to Dark",
-  "Copy YAML": "Copy YAML",
-  "Copy key {name}": "Copy key {name}",
-  "Copy lines": "Copy lines",
-  "Copy to edit": "Copy to edit",
-  "Corner radius": "Corner radius",
-  "Corner radius of button cards.": "Corner radius of button cards.",
-  "Corner radius of icons.": "Corner radius of icons.",
-  "Corner radius of pop-ups.": "Corner radius of pop-ups.",
-  "Corner radius of sub-buttons.": "Corner radius of sub-buttons.",
-  "Corner radius of the card.": "Corner radius of the card.",
-  "Corner radius of the tile icon.": "Corner radius of the tile icon.",
-  "Corner radius of tooltips.": "Corner radius of tooltips.",
-  "Could not delete {name}. {reason}": "Could not delete {name}. {reason}",
-  "Could not load {label}. {reason}": "Could not load {label}. {reason}",
-  "Could not open {name}. {reason}": "Could not open {name}. {reason}",
-  "Could not read {name}": "Could not read {name}",
-  "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.": "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.",
-  "Could not read {name}. {reason}": "Could not read {name}. {reason}",
-  "Could not read: {lines}": "Could not read: {lines}",
-  "Could not save {name}": "Could not save {name}",
-  "Cover closed state (RGB)": "Cover closed state (RGB)",
-  "Cover open colour": "Cover open color",
-  "Cover open state (RGB)": "Cover open state (RGB)",
-  "Create a theme from a preset or copy one you have installed.": "Create a theme from a preset or copy one you have installed.",
-  "Create from {name}": "Create from {name}",
-  "Create theme": "Create theme",
-  "Custom": "Custom",
-  "Cyan (RGB)": "Cyan (RGB)",
-  "Danger (RGB)": "Danger (RGB)",
-  "Dark": "Dark",
-  "Dark grey (RGB)": "Dark gray (RGB)",
-  "Dark text used where the surface stays light.": "Dark text used where the surface stays light.",
-  "Dashboard background": "Dashboard background",
-  "Deep orange (RGB)": "Deep orange (RGB)",
-  "Deep purple (RGB)": "Deep purple (RGB)",
-  "Default": "Default",
-  "Default: {value}": "Default: {value}",
-  "Delay in milliseconds.": "Delay in milliseconds.",
-  "Delete": "Delete",
-  "Delete theme": "Delete theme",
-  "Delete {name}?": "Delete {name}?",
-  "Deleted {name}.": "Deleted {name}.",
-  "Description (optional)": "Description (optional)",
-  "Details": "Details",
-  "Disabled (RGB)": "Disabled (RGB)",
-  "Disabled colour": "Disabled color",
-  "Disabled controls and empty slider tracks.": "Disabled controls and empty slider tracks.",
-  "Disabled text": "Disabled text",
-  "Discard": "Discard",
-  "Discard changes to {name}?": "Discard changes to {name}?",
-  "Dismiss": "Dismiss",
-  "Divider colour": "Divider color",
-  "Duplicate": "Duplicate",
-  "Edit variables for": "Edit variables for",
-  "Editing": "Editing",
-  "Editing {scope}. Created from {from}.": "Editing {scope}. Created from {from}.",
-  "Editing {scope}. Previewing {mode}.": "Editing {scope}. Previewing {mode}.",
-  "Editor": "Editor",
-  "Editor panels": "Editor panels",
-  "Empty slider track.": "Empty slider track.",
-  "Enter a border like 1px solid #ccc.": "Enter a border like 1px solid #ccc.",
-  "Enter a colour like #1a73e8 or rgb(26, 115, 232).": "Enter a color like #1a73e8 or rgb(26, 115, 232).",
-  "Enter a colour or a gradient.": "Enter a color or a gradient.",
-  "Enter a font family.": "Enter a font family.",
-  "Enter a length like 12px or 1rem.": "Enter a length like 12px or 1rem.",
-  "Enter a name of 1 to 80 characters.": "Enter a name of 1 to 80 characters.",
-  "Enter a name.": "Enter a name.",
-  "Enter a number.": "Enter a number.",
-  "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).": "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).",
-  "Enter a value.": "Enter a value.",
-  "Enter three numbers from 0 to 255, like 255, 120, 0.": "Enter three numbers from 0 to 255, like 255, 120, 0.",
-  "Entities": "Entities",
-  "Entity icons that have no state colour.": "Entity icons that have no state color.",
-  "Entity state (RGB)": "Entity state (RGB)",
-  "Error colour": "Error color",
-  "Error message": "Error message",
-  "Error messages.": "Error messages.",
-  "Errors, delete buttons and critical states.": "Errors, delete buttons and critical states.",
-  "Export theme": "Export theme",
-  "Extra large font size": "Extra large font size",
-  "Extra large radius": "Extra large radius",
-  "Fan on colour": "Fan on color",
-  "Fan state (RGB)": "Fan state (RGB)",
-  "File {file}.": "File {file}.",
-  "Fill colour for light sliders.": "Fill color for light sliders.",
-  "Fix {c, plural, one {# value} other {# values}} to save": "Fix {c, plural, one {# value} other {# values}} to save",
-  "Font family of card titles.": "Font family of card titles.",
-  "Font size of card titles.": "Font size of card titles.",
-  "Font size of the primary text.": "Font size of the primary text.",
-  "Font size of the secondary text.": "Font size of the secondary text.",
-  "Font size of tooltips.": "Font size of tooltips.",
-  "Font size scale": "Font size scale",
-  "Font weight of the primary text.": "Font weight of the primary text.",
-  "Font weight of the secondary text.": "Font weight of the secondary text.",
-  "Found it. You can save themes now.": "Found it. You can save themes now.",
-  "Gap between the parts of a card.": "Gap between the parts of a card.",
-  "Got it": "Got it",
-  "Green (RGB)": "Green (RGB)",
-  "Grey (RGB)": "Gray (RGB)",
-  "HA extra large corner radius.": "HA extra large corner radius.",
-  "HA large corner radius. Cards use it by default.": "HA large corner radius. Cards use it by default.",
-  "HA medium corner radius.": "HA medium corner radius.",
-  "HA small corner radius.": "HA small corner radius.",
-  "Header and sidebar": "Header and sidebar",
-  "Header background": "Header background",
-  "Header background while editing": "Header background while editing",
-  "Header bottom border": "Header bottom border",
-  "Header height": "Header height",
-  "Header text": "Header text",
-  "Header text while editing": "Header text while editing",
-  "Heading": "Heading",
-  "Heading font": "Heading font",
-  "Heading font size": "Heading font size",
-  "Heating colour": "Heating color",
-  "Height of the top bar.": "Height of the top bar.",
-  "Hide live strip": "Hide live strip",
-  "Hide {noun} ({keys})": "Hide {noun} ({keys})",
-  "Home Assistant card helpers are not available": "Home Assistant card helpers are not available",
-  "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.": "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.",
-  "Home Assistant is not connected.": "Home Assistant is not connected.",
-  "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:": "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:",
-  "Home Assistant variable": "Home Assistant variable",
-  "Humidifier state (RGB)": "Humidifier state (RGB)",
-  "Icon background": "Icon background",
-  "Icon colour": "Icon color",
-  "Icon colour when an entity is inactive.": "Icon color when an entity is inactive.",
-  "Icon radius": "Icon radius",
-  "Icon size": "Icon size",
-  "Icon symbol size": "Icon symbol size",
-  "Icons in the sidebar.": "Icons in the sidebar.",
-  "Icons of covers that are open.": "Icons of covers that are open.",
-  "Icons of fans that are on.": "Icons of fans that are on.",
-  "Icons of lights that are on.": "Icons of lights that are on.",
-  "Icons of locks that are locked.": "Icons of locks that are locked.",
-  "Icons of locks that are unlocked.": "Icons of locks that are unlocked.",
-  "Icons of media players that are playing.": "Icons of media players that are playing.",
-  "Icons of switches that are on.": "Icons of switches that are on.",
-  "Icons of things that are off or closed.": "Icons of things that are off or closed.",
-  "Icons of things that are on or open.": "Icons of things that are on or open.",
-  "Icons of unavailable entities.": "Icons of unavailable entities.",
-  "Import": "Import",
-  "Import theme": "Import theme",
-  "Inactive state colour": "Inactive state color",
-  "Indigo (RGB)": "Indigo (RGB)",
-  "Info (RGB)": "Info (RGB)",
-  "Info colour": "Info color",
-  "Info message": "Info message",
-  "Information banners and notes.": "Information banners and notes.",
-  "Installed theme": "Installed theme",
-  "Installed themes": "Installed themes",
-  "It did not work.": "It did not work.",
-  "It is in a subfolder of /config/themes.": "It is in a subfolder of /config/themes.",
-  "It uses Home Assistant tags such as !secret.": "It uses Home Assistant tags such as !secret.",
-  "Item names in the sidebar.": "Item names in the sidebar.",
-  "Its file holds several themes, and saving would rewrite all of them.": "Its file holds several themes, and saving would rewrite all of them.",
-  "Keep in Shared only": "Keep in Shared only",
-  "Keep in {mode} only": "Keep in {mode} only",
-  "Keeps tiles that never wrap level with ones that do.": "Keeps tiles that never wrap level with ones that do.",
-  "Large font size": "Large font size",
-  "Large radius": "Large radius",
-  "Larger body text.": "Larger body text.",
-  "Layout alignment": "Layout alignment",
-  "Letter spacing of the primary text.": "Letter spacing of the primary text.",
-  "Letter spacing of the secondary text.": "Letter spacing of the secondary text.",
-  "Light": "Light",
-  "Light + dark": "Light + dark",
-  "Light and Dark both use their own value, so this has no effect.": "Light and Dark both use their own value, so this has no effect.",
-  "Light and dark modes": "Light and dark modes",
-  "Light blue (RGB)": "Light blue (RGB)",
-  "Light colour": "Light color",
-  "Light green (RGB)": "Light green (RGB)",
-  "Light grey (RGB)": "Light gray (RGB)",
-  "Light on colour": "Light on color",
-  "Light state (RGB)": "Light state (RGB)",
-  "Light tints of the primary colour.": "Light tints of the primary color.",
-  "Lime (RGB)": "Lime (RGB)",
-  "Line height of the primary text.": "Line height of the primary text.",
-  "Line height of the secondary text.": "Line height of the secondary text.",
-  "Lines between rows and around inputs.": "Lines between rows and around inputs.",
-  "Lines to add to configuration.yaml": "Lines to add to configuration.yaml",
-  "Living room": "Living room",
-  "Load {label} for preview": "Load {label} for preview",
-  "Loading presets": "Loading presets",
-  "Loading the theme editor...": "Loading the theme editor...",
-  "Loading themes": "Loading themes",
-  "Loading {label}...": "Loading {label}...",
-  "Loading...": "Loading...",
-  "Lock locked state (RGB)": "Lock locked state (RGB)",
-  "Lock pending state (RGB)": "Lock pending state (RGB)",
-  "Lock state (RGB)": "Lock state (RGB)",
-  "Lock unlocked state (RGB)": "Lock unlocked state (RGB)",
-  "Locked colour": "Locked color",
-  "Lowercase letters, numbers, hyphens and underscores. Used as the file name.": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
-  "Magic Card": "Magic Card",
-  "Magic Card Utils did not accept this preset. Check the name and the values.": "Magic Card Utils did not accept this preset. Check the name and the values.",
-  "Magic Card and integrations": "Magic Card and integrations",
-  "Main background": "Main background",
-  "Main background of button cards.": "Main background of button cards.",
-  "Main background of every Bubble element.": "Main background of every Bubble element.",
-  "Main text and icons.": "Main text and icons.",
-  "Main text.": "Main text.",
-  "Map": "Map",
-  "Maximise": "Maximize",
-  "Media player active colour": "Media player active color",
-  "Media player state (RGB)": "Media player state (RGB)",
-  "Medium font size": "Medium font size",
-  "Medium radius": "Medium radius",
-  "Modes must hold a light and a dark block.": "Modes must hold a light and a dark block.",
-  "More actions": "More actions",
-  "Move to Shared": "Move to Shared",
-  "Move to bottom": "Move to bottom",
-  "Move to top": "Move to top",
-  "Move window": "Move window",
-  "Moved {label} to Shared. Light and Dark both use it.": "Moved {label} to Shared. Light and Dark both use it.",
-  "Movement before a slider reacts.": "Movement before a slider reacts.",
-  "Multiplies every HA font size. 1 keeps them.": "Multiplies every HA font size. 1 keeps them.",
-  "Mushroom": "Mushroom",
-  "Muted text.": "Muted text.",
-  "Name": "Name",
-  "Name your theme": "Name your theme",
-  "Named the theme {name}. Press Save to write it.": "Named the theme {name}. Press Save to write it.",
-  "New theme": "New theme",
-  "New, not saved": "New, not saved",
-  "No changes to save": "No changes to save",
-  "No installed theme matches.": "No installed theme matches.",
-  "No theme called {query}.": "No theme called {query}.",
-  "No themes yet": "No themes yet",
-  "No variable called {query} in the lists.": "No variable called {query} in the lists.",
-  "Not installed here": "Not installed here",
-  "Not set": "Not set",
-  "Nothing set yet. The preview shows Home Assistant's default look.": "Nothing set yet. The preview shows Home Assistant's default look.",
-  "Nothing was added": "Nothing was added",
-  "Nothing was saved": "Nothing was saved",
-  "Now using {name} for your user.": "Now using {name} for your user.",
-  "Number input debounce": "Number input debounce",
-  "Number state (RGB)": "Number state (RGB)",
-  "On": "On",
-  "One setup step before you can save": "One setup step before you can save",
-  "Only administrators can change presets.": "Only administrators can change presets.",
-  "Only administrators can edit themes.": "Only administrators can edit themes.",
-  "Only changed": "Only changed",
-  "Only in {mode}": "Only in {mode}",
-  "Only {mode} gets this value. {other} keeps the default.": "Only {mode} gets this value. {other} keeps the default.",
-  "Open as new theme": "Open as new theme",
-  "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.": "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.",
-  "Open editor": "Open editor",
-  "Open preview": "Open preview",
-  "Open your profile": "Open your profile",
-  "Orange (RGB)": "Orange (RGB)",
-  "Other": "Other",
-  "Outline colour": "Outline color",
-  "Outlines of buttons and chips.": "Outlines of buttons and chips.",
-  "Overview": "Overview",
-  "Page background": "Page background",
-  "Person at home colour": "Person at home color",
-  "Person home state (RGB)": "Person home state (RGB)",
-  "Person icons while home.": "Person icons while home.",
-  "Person not home state (RGB)": "Person not home state (RGB)",
-  "Person unknown state (RGB)": "Person unknown state (RGB)",
-  "Person zone state (RGB)": "Person zone state (RGB)",
-  "Pick a preset to start from": "Pick a preset to start from",
-  "Pick a theme to copy": "Pick a theme to copy",
-  "Pick {name} in your profile to use it.": "Pick {name} in your profile to use it.",
-  "Pink (RGB)": "Pink (RGB)",
-  "Pop-up backdrop colour": "Pop-up backdrop color",
-  "Pop-up background": "Pop-up background",
-  "Pop-up radius": "Pop-up radius",
-  "Presets are still loading": "Presets are still loading",
-  "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.": "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.",
-  "Pressed and darker primary accents.": "Pressed and darker primary accents.",
-  "Preview": "Preview",
-  "Preview mode": "Preview mode",
-  "Preview not available": "Preview not available",
-  "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.": "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.",
-  "Preview of {name} could not load.": "Preview of {name} could not load.",
-  "Previewing {mode, select, dark {dark} other {light}}": "Previewing {mode, select, dark {dark} other {light}}",
-  "Primary": "Primary",
-  "Primary and accent": "Primary and accent",
-  "Primary colour": "Primary color",
-  "Primary colour, dark shade": "Primary color, dark shade",
-  "Primary colour, light shade": "Primary color, light shade",
-  "Primary letter spacing": "Primary letter spacing",
-  "Primary line height": "Primary line height",
-  "Primary text": "Primary text",
-  "Primary text colour": "Primary text color",
-  "Primary text minimum height": "Primary text minimum height",
-  "Primary text size": "Primary text size",
-  "Primary text weight": "Primary text weight",
-  "Purple (RGB)": "Purple (RGB)",
-  "Quiet panels, input fills and list stripes.": "Quiet panels, input fills and list stripes.",
-  "Radius for every Bubble element.": "Radius for every Bubble element.",
-  "Radius of the ripple on the icon.": "Radius of the ripple on the icon.",
-  "Read only": "Read only",
-  "Reading...": "Reading...",
-  "Red (RGB)": "Red (RGB)",
-  "Reload": "Reload",
-  "Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.": "Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.",
-  "Reloaded the file from disk.": "Reloaded the file from disk.",
-  "Remove from {scope}": "Remove from {scope}",
-  "Remove {chars} and unmatched brackets from the value.": "Remove {chars} and unmatched brackets from the value.",
-  "Remove {chars} from the value.": "Remove {chars} from the value.",
-  "Remove {label} from {scope}": "Remove {label} from {scope}",
-  "Removed {label} from {scope}": "Removed {label} from {scope}",
-  "Rename": "Rename",
-  "Rename preset": "Rename preset",
-  "Renamed to {name}.": "Renamed to {name}.",
-  "Reserves room for a missing secondary line.": "Reserves room for a missing secondary line.",
-  "Resize window": "Resize window",
-  "Restore size": "Restore size",
-  "Revert": "Revert",
-  "Revert theme trial": "Revert theme trial",
-  "Reverted. This tab shows your own theme again.": "Reverted. This tab shows your own theme again.",
-  "Rounding of every card.": "Rounding of every card.",
-  "Same in light and dark": "Same in light and dark",
-  "Save": "Save",
-  "Save (Ctrl+S)": "Save (Ctrl+S)",
-  "Save and rewrite this file?": "Save and rewrite this file?",
-  "Save anyway": "Save anyway",
-  "Save as my preset": "Save as my preset",
-  "Save preset": "Save preset",
-  "Save without it": "Save without it",
-  "Saved {file}, but Home Assistant does not list {name} yet": "Saved {file}, but Home Assistant does not list {name} yet",
-  "Saved {name} and reloaded themes. Screens that use this theme update now.": "Saved {name} and reloaded themes. Screens that use this theme update now.",
-  "Saved {name} under My presets.": "Saved {name} under My presets.",
-  "Saved {name}.": "Saved {name}.",
-  "Saved {time}": "Saved {time}",
-  "Saved. This tab now uses the saved theme file.": "Saved. This tab now uses the saved theme file.",
-  "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.": "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.",
-  "Saving is off until themes are set up": "Saving is off until themes are set up",
-  "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
-  "Saving...": "Saving...",
-  "Search by name or value": "Search by name or value",
-  "Search installed themes": "Search installed themes",
-  "Search themes": "Search themes",
-  "Search variables": "Search variables",
-  "Secondary": "Secondary",
-  "Secondary accent used by a few controls.": "Secondary accent used by a few controls.",
-  "Secondary background": "Secondary background",
-  "Secondary background of every Bubble element.": "Secondary background of every Bubble element.",
-  "Secondary letter spacing": "Secondary letter spacing",
-  "Secondary line height": "Secondary line height",
-  "Secondary text": "Secondary text",
-  "Secondary text and {link}.": "Secondary text and {link}.",
-  "Secondary text colour": "Secondary text color",
-  "Secondary text size": "Secondary text size",
-  "Secondary text weight": "Secondary text weight",
-  "Section titles.": "Section titles.",
-  "Set here": "Set here",
-  "Set in both": "Set in both",
-  "Set in {modes}": "Set in {modes}",
-  "Set in {mode} too": "Set in {mode} too",
-  "Settings": "Settings",
-  "Shadow": "Shadow",
-  "Shadow colour": "Shadow color",
-  "Shadow of the card.": "Shadow of the card.",
-  "Shadow of tooltips.": "Shadow of tooltips.",
-  "Shadow under every card.": "Shadow under every card.",
-  "Shadow under the card.": "Shadow under the card.",
-  "Shared": "Shared",
-  "Shared applies to light and dark unless a mode sets its own value (the top level of the file).": "Shared applies to light and dark unless a mode sets its own value (the top level of the file).",
-  "Shared value has no effect": "Shared value has no effect",
-  "Shared: {value}": "Shared: {value}",
-  "Shortcut: {keys}": "Shortcut: {keys}",
-  "Show YAML": "Show YAML",
-  "Show live strip": "Show live strip",
-  "Show me how": "Show me how",
-  "Show the first": "Show the first",
-  "Show {noun} ({keys})": "Show {noun} ({keys})",
-  "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.": "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.",
-  "Sidebar background": "Sidebar background",
-  "Sidebar icons": "Sidebar icons",
-  "Sidebar selected icon": "Sidebar selected icon",
-  "Sidebar selected text": "Sidebar selected text",
-  "Sidebar text": "Sidebar text",
-  "Sizes and radii": "Sizes and radii",
-  "Slider threshold": "Slider threshold",
-  "Slider track": "Slider track",
-  "Small font size": "Small font size",
-  "Small radius": "Small radius",
-  "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.": "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.",
-  "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.": "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.",
-  "Space inside tooltips.": "Space inside tooltips.",
-  "Start from": "Start from",
-  "State icon colour": "State icon color",
-  "States and alerts": "States and alerts",
-  "Still not found. Restart Home Assistant if you have just added the lines.": "Still not found. Restart Home Assistant if you have just added the lines.",
-  "Stop trying": "Stop trying",
-  "Sub-button background": "Sub-button background",
-  "Sub-button radius": "Sub-button radius",
-  "Subtitle colour": "Subtitle color",
-  "Subtitle letter spacing": "Subtitle letter spacing",
-  "Subtitle line height": "Subtitle line height",
-  "Subtitle size": "Subtitle size",
-  "Subtitle weight": "Subtitle weight",
-  "Success (RGB)": "Success (RGB)",
-  "Success colour": "Success color",
-  "Success message": "Success message",
-  "Success messages and confirmed states.": "Success messages and confirmed states.",
-  "Switch on colour": "Switch on color",
-  "Takes priority over the card background.": "Takes priority over the card background.",
-  "Teal (RGB)": "Teal (RGB)",
-  "Text": "Text",
-  "Text and icons drawn on the primary colour.": "Text and icons drawn on the primary color.",
-  "Text and icons in the top bar.": "Text and icons in the top bar.",
-  "Text block minimum height": "Text block minimum height",
-  "Text colour of tooltips.": "Text color of tooltips.",
-  "Text field": "Text field",
-  "Text gap": "Text gap",
-  "Text in the top bar in dashboard edit mode.": "Text in the top bar in dashboard edit mode.",
-  "Text of disabled and unavailable things.": "Text of disabled and unavailable things.",
-  "Text on light surfaces": "Text on light surfaces",
-  "Text on primary colour": "Text on primary color",
-  "The Add any variable row still holds text. Add it to the theme before saving, or save without it.": "The Add any variable row still holds text. Add it to the theme before saving, or save without it.",
-  "The active sidebar item icon.": "The active sidebar item icon.",
-  "The active sidebar item name.": "The active sidebar item name.",
-  "The background of a dashboard view. Takes a gradient or an image.": "The background of a dashboard view. Takes a gradient or an image.",
-  "The card is loaded for the preview.": "The card is loaded for the preview.",
-  "The check failed. {reason}": "The check failed. {reason}",
-  "The colour HA shades shadows with.": "The color HA shades shadows with.",
-  "The connection to Home Assistant was lost. Your changes are still here.": "The connection to Home Assistant was lost. Your changes are still here.",
-  "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:": "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:",
-  "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
-  "The file Save would write. It is read only here.": "The file Save would write. It is read only here.",
-  "The file could not be read as YAML.": "The file could not be read as YAML.",
-  "The file is a link to somewhere else.": "The file is a link to somewhere else.",
-  "The file is too large to edit here.": "The file is too large to edit here.",
-  "The file name is not a name this editor can write.": "The file name is not a name this editor can write.",
-  "The font for headings.": "The font for headings.",
-  "The font for most text.": "The font for most text.",
-  "The light slider.": "The light slider.",
-  "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.": "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.",
-  "The save button in the popup.": "The save button in the popup.",
-  "The sidebar.": "The sidebar.",
-  "The theme editor could not load. Reload the page.": "The theme editor could not load. Reload the page.",
-  "The theme name does not match the file name.": "The theme name does not match the file name.",
-  "The tools could not load. Check your connection.": "The tools could not load. Check your connection.",
-  "The top bar in dashboard edit mode.": "The top bar in dashboard edit mode.",
-  "The top bar of every page.": "The top bar of every page.",
-  "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
-  "Theme preview, {mode, select, dark {dark} other {light}}": "Theme preview, {mode, select, dark {dark} other {light}}",
-  "Theme trial": "Theme trial",
-  "Themes": "Themes",
-  "Themes could not be read": "Themes could not be read",
-  "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.": "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.",
-  "This card cannot be loaded for the preview.": "This card cannot be loaded for the preview.",
-  "This field takes one colour, not a gradient.": "This field takes one color, not a gradient.",
-  "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
-  "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.": "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.",
-  "This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.": "This is not a color. Pick one with the swatch, or type a value like #3b82f6 or teal.",
-  "This name is reserved.": "This name is reserved.",
-  "This preset changed elsewhere. Reopen the list.": "This preset changed elsewhere. Reopen the list.",
-  "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",
-  "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
-  "This removes it from My presets. Themes made from it stay.": "This removes it from My presets. Themes made from it stay.",
-  "This theme has no light or dark modes.": "This theme has no light or dark modes.",
-  "This theme is read only. Copy it to edit.": "This theme is read only. Copy it to edit.",
-  "This theme is read only. {reason} Copy it to edit.": "This theme is read only. {reason} Copy it to edit.",
-  "This value has a control character. Remove it.": "This value has a control character. Remove it.",
-  "This value is longer than {max} characters.": "This value is longer than {max} characters.",
-  "This value must be text or a number.": "This value must be text or a number.",
-  "This variable already exists in {scope}. Add will replace its value.": "This variable already exists in {scope}. Add will replace its value.",
-  "This variable takes a single colour. Gradients work in Card background and Dashboard background.": "This variable takes a single color. Gradients work in Card background and Dashboard background.",
-  "Three numbers, 0 to 255, like 244, 67, 54.": "Three numbers, 0 to 255, like 244, 67, 54.",
-  "Tile card": "Tile card",
-  "Title colour": "Title color",
-  "Title letter spacing": "Title letter spacing",
-  "Title line height": "Title line height",
-  "Title padding": "Title padding",
-  "Title size": "Title size",
-  "Title spacing": "Title spacing",
-  "Title weight": "Title weight",
-  "Tooltip background": "Tooltip background",
-  "Tooltip background fallback.": "Tooltip background fallback.",
-  "Tooltip maximum width": "Tooltip maximum width",
-  "Tooltip padding": "Tooltip padding",
-  "Tooltip radius": "Tooltip radius",
-  "Tooltip text colour": "Tooltip text color",
-  "Tooltip text colour fallback.": "Tooltip text color fallback.",
-  "Tooltip text size": "Tooltip text size",
-  "Track behind the fill. A slider with its own track colour keeps it.": "Track behind the fill. A slider with its own track color keeps it.",
-  "Trial ended after 10 minutes.": "Trial ended after 10 minutes.",
-  "Trial ended because the theme changed.": "Trial ended because the theme changed.",
-  "Try again": "Try again",
-  "Try on dashboard": "Try on dashboard",
-  "Trying on this tab": "Trying on this tab",
-  "Trying {name}": "Trying {name}",
-  "Trying {name} on this tab ({mode, select, dark {dark} other {light}})": "Trying {name} on this tab ({mode, select, dark {dark} other {light}})",
-  "Ultra Card": "Ultra Card",
-  "Unavailable state colour": "Unavailable state color",
-  "Undo": "Undo",
-  "Unlocked colour": "Unlocked color",
-  "Unsaved changes": "Unsaved changes",
-  "Update": "Update",
-  "Update Magic Card Utils to keep theme presets. A file with one theme still opens.": "Update Magic Card Utils to keep theme presets. A file with one theme still opens.",
-  "Update installing (RGB)": "Update installing (RGB)",
-  "Update off (RGB)": "Update off (RGB)",
-  "Update on state (RGB)": "Update on state (RGB)",
-  "Use a single line.": "Use a single line.",
-  "Use letters, numbers, dashes and underscores for a variable name.": "Use letters, numbers, dashes and underscores for a variable name.",
-  "Use letters, numbers, hyphens and underscores. This name is not allowed.": "Use letters, numbers, hyphens and underscores. This name is not allowed.",
-  "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
-  "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.": "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.",
-  "Use this name": "Use this name",
-  "Use this theme": "Use this theme",
-  "Vacuum state (RGB)": "Vacuum state (RGB)",
-  "Value": "Value",
-  "Value set in one mode only": "Value set in one mode only",
-  "Variables": "Variables",
-  "Variables panel": "Variables panel",
-  "Variables you set now stay shared. You can then override any of them for light or dark.": "Variables you set now stay shared. You can then override any of them for light or dark.",
-  "Vertical gap between primary and secondary text.": "Vertical gap between primary and secondary text.",
-  "Waiting for Home Assistant to connect...": "Waiting for Home Assistant to connect...",
-  "Warning (RGB)": "Warning (RGB)",
-  "Warning colour": "Warning color",
-  "Warning message": "Warning message",
-  "Warnings and caution states.": "Warnings and caution states.",
-  "Where do I add these lines?": "Where do I add these lines?",
-  "White (RGB)": "White (RGB)",
-  "Widest a tooltip grows.": "Widest a tooltip grows.",
-  "Width of the card border.": "Width of the card border.",
-  "Wins over the card background for cards only. Takes a gradient.": "Wins over the card background for cards only. Takes a gradient.",
-  "Wins over the card background.": "Wins over the card background.",
-  "YAML of {name}": "YAML of {name}",
-  "Yellow (RGB)": "Yellow (RGB)",
-  "You can keep 100 presets. Delete one first.": "You can keep 100 presets. Delete one first.",
-  "You can skip this for now. Try on dashboard works without it.": "You can skip this for now. Try on dashboard works without it.",
-  "You have changes that are not saved.": "You have changes that are not saved.",
-  "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:": "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:",
-  "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:": "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:",
-  "Your themes live in /config/themes.": "Your themes live in /config/themes.",
-  "a blank theme": "a blank theme",
-  "a link": "a link",
-  "button-card": "button-card",
-  "entities card": "entities card",
-  "tile card": "tile card",
-  "variables": "variables",
-  "{a} and {b}": "{a} and {b}",
-  "{c, plural, one {# value needs} other {# values need}} a fix": "{c, plural, one {# value needs} other {# values need}} a fix",
-  "{c, plural, one {# variable matches} other {# variables match}}": "{c, plural, one {# variable matches} other {# variables match}}",
-  "{c, plural, one {# variable} other {# variables}}": "{c, plural, one {# variable} other {# variables}}",
-  "{c} set": "{c} set",
-  "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
-  "{label} could not be loaded.": "{label} could not be loaded.",
-  "{label} did not start in time.": "{label} did not start in time.",
-  "{label} has a resource address the editor will not load.": "{label} has a resource address the editor will not load.",
-  "{label} is loaded for the preview.": "{label} is loaded for the preview.",
-  "{label} is not in the dashboard resources.": "{label} is not in the dashboard resources.",
-  "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.": "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.",
-  "{mode} uses its own value. This only changes {covered}.": "{mode} uses its own value. This only changes {covered}.",
-  "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.": "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.",
-  "{name}.yaml changed on disk": "{name}.yaml changed on disk",
-  "{name}: {reason}": "{name}: {reason}",
-  "{n} not valid, left out": "{n} not valid, left out",
-  "{panels} hidden": "{panels} hidden",
-  "{panels} shown": "{panels} shown",
-  "{path}: {message}": "{path}: {message}"
+  "theme-editor.bubble-card.accent-colour": {
+    "text": "Accent color",
+    "hash": "12376f4c"
+  },
+  "theme-editor.bubble-card.accent-for-active-states-and-sliders": {
+    "text": "Accent for active states and sliders.",
+    "hash": "7caf8390"
+  },
+  "theme-editor.bubble-card.background-behind-icons": {
+    "text": "Background behind icons.",
+    "hash": "03e893b1"
+  },
+  "theme-editor.bubble-card.background-of-pop-ups": {
+    "text": "Background of pop-ups.",
+    "hash": "7a806cf2"
+  },
+  "theme-editor.bubble-card.background-of-sub-buttons": {
+    "text": "Background of sub-buttons.",
+    "hash": "5a8dc047"
+  },
+  "theme-editor.bubble-card.border": {
+    "text": "Border",
+    "hash": "3b4bdff3"
+  },
+  "theme-editor.bubble-card.border-of-bubble-cards": {
+    "text": "Border of Bubble cards.",
+    "hash": "b12f4073"
+  },
+  "theme-editor.bubble-card.box-shadow-of-bubble-cards": {
+    "text": "Box shadow of Bubble cards.",
+    "hash": "ec78b5f4"
+  },
+  "theme-editor.bubble-card.button-card-background": {
+    "text": "Button card background",
+    "hash": "3bb6a4fc"
+  },
+  "theme-editor.bubble-card.button-card-radius": {
+    "text": "Button card radius",
+    "hash": "118233a1"
+  },
+  "theme-editor.bubble-card.colour-of-the-dimmed-area-behind-a-pop": {
+    "text": "Color of the dimmed area behind a pop-up.",
+    "hash": "eb85ee32"
+  },
+  "theme-editor.bubble-card.corner-radius": {
+    "text": "Corner radius",
+    "hash": "76a6d9f3"
+  },
+  "theme-editor.bubble-card.corner-radius-of-button-cards": {
+    "text": "Corner radius of button cards.",
+    "hash": "b2dbe39a"
+  },
+  "theme-editor.bubble-card.corner-radius-of-icons": {
+    "text": "Corner radius of icons.",
+    "hash": "b078b2fb"
+  },
+  "theme-editor.bubble-card.corner-radius-of-pop-ups": {
+    "text": "Corner radius of pop-ups.",
+    "hash": "f0c0205e"
+  },
+  "theme-editor.bubble-card.corner-radius-of-sub-buttons": {
+    "text": "Corner radius of sub-buttons.",
+    "hash": "2241146c"
+  },
+  "theme-editor.bubble-card.fill-colour-for-light-sliders": {
+    "text": "Fill color for light sliders.",
+    "hash": "9830e79a"
+  },
+  "theme-editor.bubble-card.icon-background": {
+    "text": "Icon background",
+    "hash": "49eeaa4e"
+  },
+  "theme-editor.bubble-card.icon-radius": {
+    "text": "Icon radius",
+    "hash": "8f95505e"
+  },
+  "theme-editor.bubble-card.light-colour": {
+    "text": "Light color",
+    "hash": "27956917"
+  },
+  "theme-editor.bubble-card.main-background": {
+    "text": "Main background",
+    "hash": "03fea198"
+  },
+  "theme-editor.bubble-card.main-background-of-button-cards": {
+    "text": "Main background of button cards.",
+    "hash": "67e69fb5"
+  },
+  "theme-editor.bubble-card.main-background-of-every-bubble-element": {
+    "text": "Main background of every Bubble element.",
+    "hash": "8d529c50"
+  },
+  "theme-editor.bubble-card.pop-up-backdrop-colour": {
+    "text": "Pop-up backdrop color",
+    "hash": "62e70ea2"
+  },
+  "theme-editor.bubble-card.pop-up-background": {
+    "text": "Pop-up background",
+    "hash": "a57c5486"
+  },
+  "theme-editor.bubble-card.pop-up-radius": {
+    "text": "Pop-up radius",
+    "hash": "75ca3bad"
+  },
+  "theme-editor.bubble-card.radius-for-every-bubble-element": {
+    "text": "Radius for every Bubble element.",
+    "hash": "e487221c"
+  },
+  "theme-editor.bubble-card.secondary-background": {
+    "text": "Secondary background",
+    "hash": "6f83c048"
+  },
+  "theme-editor.bubble-card.secondary-background-of-every-bubble": {
+    "text": "Secondary background of every Bubble element.",
+    "hash": "57a06db6"
+  },
+  "theme-editor.bubble-card.shadow": {
+    "text": "Shadow",
+    "hash": "4c764cb6"
+  },
+  "theme-editor.bubble-card.sub-button-background": {
+    "text": "Sub-button background",
+    "hash": "db308c6b"
+  },
+  "theme-editor.bubble-card.sub-button-radius": {
+    "text": "Sub-button radius",
+    "hash": "a5fe3ab4"
+  },
+  "theme-editor.button-card.background-of-the-loading-spinner": {
+    "text": "Background of the loading spinner.",
+    "hash": "3bd7c417"
+  },
+  "theme-editor.button-card.background-of-tooltips": {
+    "text": "Background of tooltips.",
+    "hash": "bc1535ff"
+  },
+  "theme-editor.button-card.card-background": {
+    "text": "Card background",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.button-card.card-radius": {
+    "text": "Card radius",
+    "hash": "8ba76469"
+  },
+  "theme-editor.button-card.card-shadow": {
+    "text": "Card shadow",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.button-card.corner-radius-of-tooltips": {
+    "text": "Corner radius of tooltips.",
+    "hash": "2e031b0d"
+  },
+  "theme-editor.button-card.font-size-of-tooltips": {
+    "text": "Font size of tooltips.",
+    "hash": "4d68e657"
+  },
+  "theme-editor.button-card.icon-colour-when-an-entity-is-inactive": {
+    "text": "Icon color when an entity is inactive.",
+    "hash": "3a7d469d"
+  },
+  "theme-editor.button-card.primary-text-colour": {
+    "text": "Primary text color",
+    "hash": "137442b2"
+  },
+  "theme-editor.button-card.radius-of-the-ripple-on-the-icon": {
+    "text": "Radius of the ripple on the icon.",
+    "hash": "79c01046"
+  },
+  "theme-editor.button-card.secondary-background": {
+    "text": "Secondary background",
+    "hash": "6f83c048"
+  },
+  "theme-editor.button-card.shadow-of-tooltips": {
+    "text": "Shadow of tooltips.",
+    "hash": "4cf06228"
+  },
+  "theme-editor.button-card.space-inside-tooltips": {
+    "text": "Space inside tooltips.",
+    "hash": "ee83e15a"
+  },
+  "theme-editor.button-card.state-icon-colour": {
+    "text": "State icon color",
+    "hash": "ad5234ce"
+  },
+  "theme-editor.button-card.text-colour-of-tooltips": {
+    "text": "Text color of tooltips.",
+    "hash": "ec1ee796"
+  },
+  "theme-editor.button-card.tooltip-background": {
+    "text": "Tooltip background",
+    "hash": "bf0bfcbc"
+  },
+  "theme-editor.button-card.tooltip-background-fallback": {
+    "text": "Tooltip background fallback.",
+    "hash": "2d84fdaa"
+  },
+  "theme-editor.button-card.tooltip-maximum-width": {
+    "text": "Tooltip maximum width",
+    "hash": "2b0307b8"
+  },
+  "theme-editor.button-card.tooltip-padding": {
+    "text": "Tooltip padding",
+    "hash": "ad08abd3"
+  },
+  "theme-editor.button-card.tooltip-radius": {
+    "text": "Tooltip radius",
+    "hash": "41c65dfb"
+  },
+  "theme-editor.button-card.tooltip-text-colour": {
+    "text": "Tooltip text color",
+    "hash": "9886799b"
+  },
+  "theme-editor.button-card.tooltip-text-colour-fallback": {
+    "text": "Tooltip text color fallback.",
+    "hash": "3025917d"
+  },
+  "theme-editor.button-card.tooltip-text-size": {
+    "text": "Tooltip text size",
+    "hash": "4c7bd4ef"
+  },
+  "theme-editor.button-card.widest-a-tooltip-grows": {
+    "text": "Widest a tooltip grows.",
+    "hash": "a707ff48"
+  },
+  "theme-editor.catalogue.backgrounds-and-cards": {
+    "text": "Backgrounds and cards",
+    "hash": "e21a846d"
+  },
+  "theme-editor.catalogue.bubble-card": {
+    "text": "Bubble Card",
+    "hash": "fe601bd6"
+  },
+  "theme-editor.catalogue.button-card": {
+    "text": "button-card",
+    "hash": "04302151"
+  },
+  "theme-editor.catalogue.header-and-sidebar": {
+    "text": "Header and sidebar",
+    "hash": "e77bb2c5"
+  },
+  "theme-editor.catalogue.magic-card": {
+    "text": "Magic Card",
+    "hash": "4789a1c5"
+  },
+  "theme-editor.catalogue.mushroom": {
+    "text": "Mushroom",
+    "hash": "f067a8ba"
+  },
+  "theme-editor.catalogue.other": {
+    "text": "Other",
+    "hash": "f97e9da0"
+  },
+  "theme-editor.catalogue.primary-and-accent": {
+    "text": "Primary and accent",
+    "hash": "fcd60ba1"
+  },
+  "theme-editor.catalogue.sizes-and-radii": {
+    "text": "Sizes and radii",
+    "hash": "4f898ede"
+  },
+  "theme-editor.catalogue.states-and-alerts": {
+    "text": "States and alerts",
+    "hash": "c8fd1d0d"
+  },
+  "theme-editor.catalogue.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "theme-editor.catalogue.tile-card": {
+    "text": "Tile card",
+    "hash": "37c39167"
+  },
+  "theme-editor.catalogue.ultra-card": {
+    "text": "Ultra Card",
+    "hash": "350752f1"
+  },
+  "theme-editor.dialogs.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "theme-editor.dialogs.maximise": {
+    "text": "Maximize",
+    "hash": "1c9fcada"
+  },
+  "theme-editor.dialogs.move-window": {
+    "text": "Move window",
+    "hash": "50bb7be2"
+  },
+  "theme-editor.dialogs.resize-window": {
+    "text": "Resize window",
+    "hash": "c82ca135"
+  },
+  "theme-editor.dialogs.restore-size": {
+    "text": "Restore size",
+    "hash": "b0a8b5c8"
+  },
+  "theme-editor.editor-view.a-theme-with-this-name-already-exists": {
+    "text": "A theme with this name already exists.",
+    "hash": "cbee0a24"
+  },
+  "theme-editor.editor-view.a-variable-is-typed-but-not-added": {
+    "text": "A variable is typed but not added",
+    "hash": "e9f61f47"
+  },
+  "theme-editor.editor-view.add-it-and-save": {
+    "text": "Add it and save",
+    "hash": "31f6804c"
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes": {
+    "text": "Add light and dark modes",
+    "hash": "fe2a470a"
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes-2": {
+    "text": "Add light and dark modes?",
+    "hash": "683cac14"
+  },
+  "theme-editor.editor-view.add-modes": {
+    "text": "Add modes",
+    "hash": "709a0c82"
+  },
+  "theme-editor.editor-view.add-name-as-a-variable": {
+    "text": "Add {name} as a variable",
+    "hash": "d13ce551"
+  },
+  "theme-editor.editor-view.added-light-and-dark-modes-variables-you": {
+    "text": "Added light and dark modes. Variables you set before stay shared.",
+    "hash": "d002c3e8"
+  },
+  "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
+    "text": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
+    "hash": "1444813f"
+  },
+  "theme-editor.editor-view.button": {
+    "text": "Button",
+    "hash": "707eab0c"
+  },
+  "theme-editor.editor-view.c": {
+    "text": "{c, plural, one {# variable matches} other {# variables match}}",
+    "hash": "f74b676d"
+  },
+  "theme-editor.editor-view.c-a-fix": {
+    "text": "{c, plural, one {# value needs} other {# values need}} a fix",
+    "hash": "3bed2314"
+  },
+  "theme-editor.editor-view.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "theme-editor.editor-view.check-again": {
+    "text": "Check again",
+    "hash": "fb7099ad"
+  },
+  "theme-editor.editor-view.choose-another-name": {
+    "text": "Choose another name",
+    "hash": "24532939"
+  },
+  "theme-editor.editor-view.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "theme-editor.editor-view.contacts-another-website": {
+    "text": "Contacts another website",
+    "hash": "56e74582"
+  },
+  "theme-editor.editor-view.contrast-not-checked-value-has": {
+    "text": "Contrast not checked: value has transparency.",
+    "hash": "def5436a"
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-easy-to": {
+    "text": "Contrast on card, {mode}: {ratio} to 1, easy to read",
+    "hash": "8cc49c9a"
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-hard-to": {
+    "text": "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1",
+    "hash": "63272251"
+  },
+  "theme-editor.editor-view.copied-c-from-from-to-to": {
+    "text": "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.",
+    "hash": "b6122c1a"
+  },
+  "theme-editor.editor-view.copied-key-text": {
+    "text": "Copied key {text}",
+    "hash": "35a10b05"
+  },
+  "theme-editor.editor-view.copied-yaml": {
+    "text": "Copied YAML",
+    "hash": "3554fd63"
+  },
+  "theme-editor.editor-view.copy-dark-to-light": {
+    "text": "Copy Dark to Light",
+    "hash": "fe1ecf53"
+  },
+  "theme-editor.editor-view.copy-light-to-dark": {
+    "text": "Copy Light to Dark",
+    "hash": "464ec804"
+  },
+  "theme-editor.editor-view.copy-yaml": {
+    "text": "Copy YAML",
+    "hash": "e5a88d42"
+  },
+  "theme-editor.editor-view.could-not-delete-name-reason": {
+    "text": "Could not delete {name}. {reason}",
+    "hash": "a4fbd926"
+  },
+  "theme-editor.editor-view.could-not-read-name": {
+    "text": "Could not read {name}",
+    "hash": "ebc96f41"
+  },
+  "theme-editor.editor-view.could-not-save-name": {
+    "text": "Could not save {name}",
+    "hash": "19149e58"
+  },
+  "theme-editor.editor-view.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "theme-editor.editor-view.delete-name": {
+    "text": "Delete {name}?",
+    "hash": "a4b982a9"
+  },
+  "theme-editor.editor-view.delete-theme": {
+    "text": "Delete theme",
+    "hash": "e29a2b87"
+  },
+  "theme-editor.editor-view.discard": {
+    "text": "Discard",
+    "hash": "eb1a70e3"
+  },
+  "theme-editor.editor-view.discard-changes-to-name": {
+    "text": "Discard changes to {name}?",
+    "hash": "de0b9f25"
+  },
+  "theme-editor.editor-view.dismiss": {
+    "text": "Dismiss",
+    "hash": "48845bff"
+  },
+  "theme-editor.editor-view.edit-variables-for": {
+    "text": "Edit variables for",
+    "hash": "abd22f47"
+  },
+  "theme-editor.editor-view.editing": {
+    "text": "Editing",
+    "hash": "fab4539d"
+  },
+  "theme-editor.editor-view.editing-scope-created-from-from": {
+    "text": "Editing {scope}. Created from {from}.",
+    "hash": "2939624f"
+  },
+  "theme-editor.editor-view.editing-scope-previewing-mode": {
+    "text": "Editing {scope}. Previewing {mode}.",
+    "hash": "d33e4b8e"
+  },
+  "theme-editor.editor-view.editor-panels": {
+    "text": "Editor panels",
+    "hash": "c7d9a2fc"
+  },
+  "theme-editor.editor-view.export-theme": {
+    "text": "Export theme",
+    "hash": "575ade1f"
+  },
+  "theme-editor.editor-view.fix-c-to-save": {
+    "text": "Fix {c, plural, one {# value} other {# values}} to save",
+    "hash": "ab19cd91"
+  },
+  "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
+    "text": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
+    "hash": "20a3300a"
+  },
+  "theme-editor.editor-view.hide-live-strip": {
+    "text": "Hide live strip",
+    "hash": "b8c143e8"
+  },
+  "theme-editor.editor-view.home-assistant-does-not-load-config": {
+    "text": "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.",
+    "hash": "5419e14f"
+  },
+  "theme-editor.editor-view.living-room": {
+    "text": "Living room",
+    "hash": "268d40ee"
+  },
+  "theme-editor.editor-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
+    "hash": "bb1fdbf1"
+  },
+  "theme-editor.editor-view.magic-card-and-integrations": {
+    "text": "Magic Card and integrations",
+    "hash": "56151480"
+  },
+  "theme-editor.editor-view.more-actions": {
+    "text": "More actions",
+    "hash": "f8d46c25"
+  },
+  "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
+    "text": "Moved {label} to Shared. Light and Dark both use it.",
+    "hash": "4a8e4025"
+  },
+  "theme-editor.editor-view.name-yaml-changed-on-disk": {
+    "text": "{name}.yaml changed on disk",
+    "hash": "ae3c269c"
+  },
+  "theme-editor.editor-view.name-your-theme": {
+    "text": "Name your theme",
+    "hash": "dddc578d"
+  },
+  "theme-editor.editor-view.named-the-theme-name-press-save-to-write": {
+    "text": "Named the theme {name}. Press Save to write it.",
+    "hash": "61c6b35c"
+  },
+  "theme-editor.editor-view.new-not-saved": {
+    "text": "New, not saved",
+    "hash": "ad2b2fc6"
+  },
+  "theme-editor.editor-view.no-changes-to-save": {
+    "text": "No changes to save",
+    "hash": "d608d0f6"
+  },
+  "theme-editor.editor-view.no-variable-called-query-in-the-lists": {
+    "text": "No variable called {query} in the lists.",
+    "hash": "ae112c86"
+  },
+  "theme-editor.editor-view.now-using-name-for-your-user": {
+    "text": "Now using {name} for your user.",
+    "hash": "601a10e9"
+  },
+  "theme-editor.editor-view.on": {
+    "text": "On",
+    "hash": "13001175"
+  },
+  "theme-editor.editor-view.only-administrators-can-edit-themes": {
+    "text": "Only administrators can edit themes.",
+    "hash": "aa35e075"
+  },
+  "theme-editor.editor-view.only-changed": {
+    "text": "Only changed",
+    "hash": "d836aea0"
+  },
+  "theme-editor.editor-view.open-preview": {
+    "text": "Open preview",
+    "hash": "f7afe3dd"
+  },
+  "theme-editor.editor-view.open-your-profile": {
+    "text": "Open your profile",
+    "hash": "c930598e"
+  },
+  "theme-editor.editor-view.path-message": {
+    "text": "{path}: {message}",
+    "hash": "c59315a4"
+  },
+  "theme-editor.editor-view.pick-name-in-your-profile-to-use-it": {
+    "text": "Pick {name} in your profile to use it.",
+    "hash": "29213c77"
+  },
+  "theme-editor.editor-view.preview": {
+    "text": "Preview",
+    "hash": "324b134f"
+  },
+  "theme-editor.editor-view.read-only": {
+    "text": "Read only",
+    "hash": "8ac76735"
+  },
+  "theme-editor.editor-view.reload": {
+    "text": "Reload",
+    "hash": "bdc090ec"
+  },
+  "theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or": {
+    "text": "Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.",
+    "hash": "fc0eebc9"
+  },
+  "theme-editor.editor-view.reloaded-the-file-from-disk": {
+    "text": "Reloaded the file from disk.",
+    "hash": "53924149"
+  },
+  "theme-editor.editor-view.removed-label-from-scope": {
+    "text": "Removed {label} from {scope}",
+    "hash": "829ea1f2"
+  },
+  "theme-editor.editor-view.save": {
+    "text": "Save",
+    "hash": "1509f561"
+  },
+  "theme-editor.editor-view.save-and-rewrite-this-file": {
+    "text": "Save and rewrite this file?",
+    "hash": "54bcce93"
+  },
+  "theme-editor.editor-view.save-anyway": {
+    "text": "Save anyway",
+    "hash": "ef4c87b5"
+  },
+  "theme-editor.editor-view.save-as-my-preset": {
+    "text": "Save as my preset",
+    "hash": "bd12a457"
+  },
+  "theme-editor.editor-view.save-without-it": {
+    "text": "Save without it",
+    "hash": "2f45b142"
+  },
+  "theme-editor.editor-view.saved-file-but-home-assistant-does-not": {
+    "text": "Saved {file}, but Home Assistant does not list {name} yet",
+    "hash": "ef681631"
+  },
+  "theme-editor.editor-view.saved-name": {
+    "text": "Saved {name}.",
+    "hash": "9148a257"
+  },
+  "theme-editor.editor-view.saved-name-and-reloaded-themes-screens": {
+    "text": "Saved {name} and reloaded themes. Screens that use this theme update now.",
+    "hash": "cad4ee18"
+  },
+  "theme-editor.editor-view.saved-time": {
+    "text": "Saved {time}",
+    "hash": "430aca4f"
+  },
+  "theme-editor.editor-view.saving-is-off-until-themes-are-set-up": {
+    "text": "Saving is off until themes are set up",
+    "hash": "853e5ced"
+  },
+  "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
+    "text": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
+    "hash": "f91fef09"
+  },
+  "theme-editor.editor-view.search-by-name-or-value": {
+    "text": "Search by name or value",
+    "hash": "d5c7e78d"
+  },
+  "theme-editor.editor-view.search-variables": {
+    "text": "Search variables",
+    "hash": "413b60a7"
+  },
+  "theme-editor.editor-view.set-in-modes": {
+    "text": "Set in {modes}",
+    "hash": "53cfccad"
+  },
+  "theme-editor.editor-view.shared-applies-to-light-and-dark-unless": {
+    "text": "Shared applies to light and dark unless a mode sets its own value (the top level of the file).",
+    "hash": "e53f039f"
+  },
+  "theme-editor.editor-view.show-live-strip": {
+    "text": "Show live strip",
+    "hash": "118623bc"
+  },
+  "theme-editor.editor-view.show-the-first": {
+    "text": "Show the first",
+    "hash": "d04033d7"
+  },
+  "theme-editor.editor-view.show-yaml": {
+    "text": "Show YAML",
+    "hash": "97bd3a2f"
+  },
+  "theme-editor.editor-view.some-values-load-files-from-another": {
+    "text": "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.",
+    "hash": "4fb11054"
+  },
+  "theme-editor.editor-view.some-values-load-files-from-hosts-the": {
+    "text": "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.",
+    "hash": "ccfa6991"
+  },
+  "theme-editor.editor-view.stop-trying": {
+    "text": "Stop trying",
+    "hash": "859edf64"
+  },
+  "theme-editor.editor-view.the-add-any-variable-row-still-holds": {
+    "text": "The Add any variable row still holds text. Add it to the theme before saving, or save without it.",
+    "hash": "43e9d403"
+  },
+  "theme-editor.editor-view.the-connection-to-home-assistant-was": {
+    "text": "The connection to Home Assistant was lost. Your changes are still here.",
+    "hash": "f34e7ea9"
+  },
+  "theme-editor.editor-view.the-file-save-would-write-it-is-read": {
+    "text": "The file Save would write. It is read only here.",
+    "hash": "de3e8bbb"
+  },
+  "theme-editor.editor-view.themes": {
+    "text": "Themes",
+    "hash": "43ae3265"
+  },
+  "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
+    "text": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
+    "hash": "d65da0d8"
+  },
+  "theme-editor.editor-view.this-removes-config-file-screens-that": {
+    "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
+    "hash": "728badac"
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
+    "text": "This theme is read only. Copy it to edit.",
+    "hash": "e03501d0"
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-reason-copy-it": {
+    "text": "This theme is read only. {reason} Copy it to edit.",
+    "hash": "9b3bbbb7"
+  },
+  "theme-editor.editor-view.try-again": {
+    "text": "Try again",
+    "hash": "d8b8392e"
+  },
+  "theme-editor.editor-view.try-on-dashboard": {
+    "text": "Try on dashboard",
+    "hash": "76c93ee8"
+  },
+  "theme-editor.editor-view.trying-on-this-tab": {
+    "text": "Trying on this tab",
+    "hash": "7bd16404"
+  },
+  "theme-editor.editor-view.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
+  },
+  "theme-editor.editor-view.unsaved-changes": {
+    "text": "Unsaved changes",
+    "hash": "a710c2b9"
+  },
+  "theme-editor.editor-view.use-lowercase-letters-numbers-hyphens": {
+    "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
+    "hash": "2ed797ed"
+  },
+  "theme-editor.editor-view.use-this-name": {
+    "text": "Use this name",
+    "hash": "bfc9ad16"
+  },
+  "theme-editor.editor-view.use-this-theme": {
+    "text": "Use this theme",
+    "hash": "9e11707e"
+  },
+  "theme-editor.editor-view.variables": {
+    "text": "Variables",
+    "hash": "02db55ba"
+  },
+  "theme-editor.editor-view.variables-panel": {
+    "text": "Variables panel",
+    "hash": "aeb81548"
+  },
+  "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
+    "text": "Variables you set now stay shared. You can then override any of them for light or dark.",
+    "hash": "c9bda1f8"
+  },
+  "theme-editor.editor-view.yaml-of-name": {
+    "text": "YAML of {name}",
+    "hash": "1c3cda30"
+  },
+  "theme-editor.editor-view.you-have-changes-that-are-not-saved": {
+    "text": "You have changes that are not saved.",
+    "hash": "4937afc2"
+  },
+  "theme-editor.field-group.also-set-in-modes": {
+    "text": "Also set in {modes}",
+    "hash": "5930a5eb"
+  },
+  "theme-editor.field-group.c-set": {
+    "text": "{c} set",
+    "hash": "f920a334"
+  },
+  "theme-editor.field-group.copy-key-name": {
+    "text": "Copy key {name}",
+    "hash": "26460880"
+  },
+  "theme-editor.field-group.custom": {
+    "text": "Custom",
+    "hash": "494ca78f"
+  },
+  "theme-editor.field-group.default": {
+    "text": "Default",
+    "hash": "21b111cb"
+  },
+  "theme-editor.field-group.default-value": {
+    "text": "Default: {value}",
+    "hash": "39bd0a11"
+  },
+  "theme-editor.field-group.home-assistant-variable": {
+    "text": "Home Assistant variable",
+    "hash": "cfbe6d00"
+  },
+  "theme-editor.field-group.keep-in-mode-only": {
+    "text": "Keep in {mode} only",
+    "hash": "813bfe3d"
+  },
+  "theme-editor.field-group.keep-in-shared-only": {
+    "text": "Keep in Shared only",
+    "hash": "ec46fd1b"
+  },
+  "theme-editor.field-group.light-and-dark-both-use-their-own-value": {
+    "text": "Light and Dark both use their own value, so this has no effect.",
+    "hash": "26673bc7"
+  },
+  "theme-editor.field-group.mode-uses-its-own-value-this-only": {
+    "text": "{mode} uses its own value. This only changes {covered}.",
+    "hash": "38530c6a"
+  },
+  "theme-editor.field-group.move-to-shared": {
+    "text": "Move to Shared",
+    "hash": "ca129b2b"
+  },
+  "theme-editor.field-group.not-installed-here": {
+    "text": "Not installed here",
+    "hash": "66b3e136"
+  },
+  "theme-editor.field-group.not-set": {
+    "text": "Not set",
+    "hash": "4895f731"
+  },
+  "theme-editor.field-group.only-in-mode": {
+    "text": "Only in {mode}",
+    "hash": "39b9db31"
+  },
+  "theme-editor.field-group.only-mode-gets-this-value-other-keeps": {
+    "text": "Only {mode} gets this value. {other} keeps the default.",
+    "hash": "698407e7"
+  },
+  "theme-editor.field-group.remove-from-scope": {
+    "text": "Remove from {scope}",
+    "hash": "6f4e712e"
+  },
+  "theme-editor.field-group.remove-label-from-scope": {
+    "text": "Remove {label} from {scope}",
+    "hash": "537d8e4f"
+  },
+  "theme-editor.field-group.set-here": {
+    "text": "Set here",
+    "hash": "f22f3ba1"
+  },
+  "theme-editor.field-group.set-in-both": {
+    "text": "Set in both",
+    "hash": "9e514726"
+  },
+  "theme-editor.field-group.set-in-mode-too": {
+    "text": "Set in {mode} too",
+    "hash": "6143403c"
+  },
+  "theme-editor.field-group.shared": {
+    "text": "Shared",
+    "hash": "e3c4b39d"
+  },
+  "theme-editor.field-group.shared-value": {
+    "text": "Shared: {value}",
+    "hash": "acca5567"
+  },
+  "theme-editor.field-group.shared-value-has-no-effect": {
+    "text": "Shared value has no effect",
+    "hash": "6f891cd1"
+  },
+  "theme-editor.field-group.this-is-not-a-colour-pick-one-with-the": {
+    "text": "This is not a color. Pick one with the swatch, or type a value like #3b82f6 or teal.",
+    "hash": "bc323797"
+  },
+  "theme-editor.field-group.this-variable-takes-a-single-colour": {
+    "text": "This variable takes a single color. Gradients work in Card background and Dashboard background.",
+    "hash": "d92cacf8"
+  },
+  "theme-editor.field-group.value-set-in-one-mode-only": {
+    "text": "Value set in one mode only",
+    "hash": "157aa1d9"
+  },
+  "theme-editor.ha.a-blur-behind-translucent-cards-like": {
+    "text": "A blur behind translucent cards, like blur(10px).",
+    "hash": "3ac29795"
+  },
+  "theme-editor.ha.a-line-under-the-top-bar-like-1px-solid": {
+    "text": "A line under the top bar, like 1px solid #ccc.",
+    "hash": "72154b7a"
+  },
+  "theme-editor.ha.accent-colour": {
+    "text": "Accent color",
+    "hash": "12376f4c"
+  },
+  "theme-editor.ha.active-state-colour": {
+    "text": "Active state color",
+    "hash": "7ee11e08"
+  },
+  "theme-editor.ha.alarm-icons-while-triggered": {
+    "text": "Alarm icons while triggered.",
+    "hash": "33a96195"
+  },
+  "theme-editor.ha.alarm-triggered-colour": {
+    "text": "Alarm triggered color",
+    "hash": "ea66f146"
+  },
+  "theme-editor.ha.behind-everything-including-the": {
+    "text": "Behind everything, including the dashboard.",
+    "hash": "18066465"
+  },
+  "theme-editor.ha.binary-sensor-active-colour": {
+    "text": "Binary sensor active color",
+    "hash": "55949eba"
+  },
+  "theme-editor.ha.binary-sensors-that-are-on": {
+    "text": "Binary sensors that are on.",
+    "hash": "c475d4c5"
+  },
+  "theme-editor.ha.body-font": {
+    "text": "Body font",
+    "hash": "2448d20d"
+  },
+  "theme-editor.ha.body-text": {
+    "text": "Body text.",
+    "hash": "4319bbb0"
+  },
+  "theme-editor.ha.buttons-toggles-active-icons-and-links": {
+    "text": "Buttons, toggles, active icons and links.",
+    "hash": "4e4f5504"
+  },
+  "theme-editor.ha.captions-and-secondary-lines": {
+    "text": "Captions and secondary lines.",
+    "hash": "4389b30e"
+  },
+  "theme-editor.ha.captions-hints-and-secondary-lines": {
+    "text": "Captions, hints and secondary lines.",
+    "hash": "893f5638"
+  },
+  "theme-editor.ha.card-backdrop-filter": {
+    "text": "Card backdrop filter",
+    "hash": "a499a03d"
+  },
+  "theme-editor.ha.card-background": {
+    "text": "Card background",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.ha.card-background-override": {
+    "text": "Card background override",
+    "hash": "cff0a4fe"
+  },
+  "theme-editor.ha.card-border-colour": {
+    "text": "Card border color",
+    "hash": "8256cea1"
+  },
+  "theme-editor.ha.card-border-width": {
+    "text": "Card border width",
+    "hash": "a775554c"
+  },
+  "theme-editor.ha.card-corner-radius": {
+    "text": "Card corner radius",
+    "hash": "f96a2fba"
+  },
+  "theme-editor.ha.card-shadow": {
+    "text": "Card shadow",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.ha.card-title-colour": {
+    "text": "Card title color",
+    "hash": "e48edaf2"
+  },
+  "theme-editor.ha.card-title-font": {
+    "text": "Card title font",
+    "hash": "38d28c1a"
+  },
+  "theme-editor.ha.card-title-size": {
+    "text": "Card title size",
+    "hash": "4df644ff"
+  },
+  "theme-editor.ha.card-titles": {
+    "text": "Card titles.",
+    "hash": "8a74ac90"
+  },
+  "theme-editor.ha.cards-dialogs-and-menus-takes-a-gradient": {
+    "text": "Cards, dialogs and menus. Takes a gradient.",
+    "hash": "daeb1baf"
+  },
+  "theme-editor.ha.climate-icons-that-are-cooling": {
+    "text": "Climate icons that are cooling.",
+    "hash": "831f66b6"
+  },
+  "theme-editor.ha.climate-icons-that-are-heating": {
+    "text": "Climate icons that are heating.",
+    "hash": "bbfb2474"
+  },
+  "theme-editor.ha.colour-of-card-titles": {
+    "text": "Color of card titles.",
+    "hash": "3db90f94"
+  },
+  "theme-editor.ha.colour-of-the-card-border": {
+    "text": "Color of the card border.",
+    "hash": "ffe6dc31"
+  },
+  "theme-editor.ha.cooling-colour": {
+    "text": "Cooling color",
+    "hash": "3924961e"
+  },
+  "theme-editor.ha.cover-open-colour": {
+    "text": "Cover open color",
+    "hash": "918841ee"
+  },
+  "theme-editor.ha.dark-text-used-where-the-surface-stays": {
+    "text": "Dark text used where the surface stays light.",
+    "hash": "07636b1c"
+  },
+  "theme-editor.ha.dashboard-background": {
+    "text": "Dashboard background",
+    "hash": "19cd358f"
+  },
+  "theme-editor.ha.disabled-colour": {
+    "text": "Disabled color",
+    "hash": "bc08355e"
+  },
+  "theme-editor.ha.disabled-controls-and-empty-slider": {
+    "text": "Disabled controls and empty slider tracks.",
+    "hash": "b933f415"
+  },
+  "theme-editor.ha.disabled-text": {
+    "text": "Disabled text",
+    "hash": "71ebb92b"
+  },
+  "theme-editor.ha.divider-colour": {
+    "text": "Divider color",
+    "hash": "20ac535f"
+  },
+  "theme-editor.ha.entity-icons-that-have-no-state-colour": {
+    "text": "Entity icons that have no state color.",
+    "hash": "6ea7f9f8"
+  },
+  "theme-editor.ha.error-colour": {
+    "text": "Error color",
+    "hash": "6b14a7aa"
+  },
+  "theme-editor.ha.errors-delete-buttons-and-critical": {
+    "text": "Errors, delete buttons and critical states.",
+    "hash": "50979a5c"
+  },
+  "theme-editor.ha.extra-large-font-size": {
+    "text": "Extra large font size",
+    "hash": "e92e41a0"
+  },
+  "theme-editor.ha.extra-large-radius": {
+    "text": "Extra large radius",
+    "hash": "58ccbd5c"
+  },
+  "theme-editor.ha.fan-on-colour": {
+    "text": "Fan on color",
+    "hash": "5a6236e4"
+  },
+  "theme-editor.ha.font-family-of-card-titles": {
+    "text": "Font family of card titles.",
+    "hash": "6450d23f"
+  },
+  "theme-editor.ha.font-size-of-card-titles": {
+    "text": "Font size of card titles.",
+    "hash": "16ba7051"
+  },
+  "theme-editor.ha.font-size-scale": {
+    "text": "Font size scale",
+    "hash": "b7c1988a"
+  },
+  "theme-editor.ha.ha-extra-large-corner-radius": {
+    "text": "HA extra large corner radius.",
+    "hash": "235057d3"
+  },
+  "theme-editor.ha.ha-large-corner-radius-cards-use-it-by": {
+    "text": "HA large corner radius. Cards use it by default.",
+    "hash": "b144d470"
+  },
+  "theme-editor.ha.ha-medium-corner-radius": {
+    "text": "HA medium corner radius.",
+    "hash": "c394e29b"
+  },
+  "theme-editor.ha.ha-small-corner-radius": {
+    "text": "HA small corner radius.",
+    "hash": "84f473fd"
+  },
+  "theme-editor.ha.header-background": {
+    "text": "Header background",
+    "hash": "488d5d16"
+  },
+  "theme-editor.ha.header-background-while-editing": {
+    "text": "Header background while editing",
+    "hash": "1f70c5fe"
+  },
+  "theme-editor.ha.header-bottom-border": {
+    "text": "Header bottom border",
+    "hash": "faf29ae8"
+  },
+  "theme-editor.ha.header-height": {
+    "text": "Header height",
+    "hash": "1fd980c1"
+  },
+  "theme-editor.ha.header-text": {
+    "text": "Header text",
+    "hash": "a16987ba"
+  },
+  "theme-editor.ha.header-text-while-editing": {
+    "text": "Header text while editing",
+    "hash": "6a1f8251"
+  },
+  "theme-editor.ha.heading-font": {
+    "text": "Heading font",
+    "hash": "20d26b0c"
+  },
+  "theme-editor.ha.heading-font-size": {
+    "text": "Heading font size",
+    "hash": "490f4db5"
+  },
+  "theme-editor.ha.heating-colour": {
+    "text": "Heating color",
+    "hash": "409ed308"
+  },
+  "theme-editor.ha.height-of-the-top-bar": {
+    "text": "Height of the top bar.",
+    "hash": "dfe3bef0"
+  },
+  "theme-editor.ha.icon-colour": {
+    "text": "Icon color",
+    "hash": "691d6a25"
+  },
+  "theme-editor.ha.icons-in-the-sidebar": {
+    "text": "Icons in the sidebar.",
+    "hash": "1abb7c0a"
+  },
+  "theme-editor.ha.icons-of-covers-that-are-open": {
+    "text": "Icons of covers that are open.",
+    "hash": "d3899ffc"
+  },
+  "theme-editor.ha.icons-of-fans-that-are-on": {
+    "text": "Icons of fans that are on.",
+    "hash": "2aaf759b"
+  },
+  "theme-editor.ha.icons-of-lights-that-are-on": {
+    "text": "Icons of lights that are on.",
+    "hash": "3871f31e"
+  },
+  "theme-editor.ha.icons-of-locks-that-are-locked": {
+    "text": "Icons of locks that are locked.",
+    "hash": "7931c422"
+  },
+  "theme-editor.ha.icons-of-locks-that-are-unlocked": {
+    "text": "Icons of locks that are unlocked.",
+    "hash": "e6586a02"
+  },
+  "theme-editor.ha.icons-of-media-players-that-are-playing": {
+    "text": "Icons of media players that are playing.",
+    "hash": "df08925d"
+  },
+  "theme-editor.ha.icons-of-switches-that-are-on": {
+    "text": "Icons of switches that are on.",
+    "hash": "d57a66c5"
+  },
+  "theme-editor.ha.icons-of-things-that-are-off-or-closed": {
+    "text": "Icons of things that are off or closed.",
+    "hash": "d89e614b"
+  },
+  "theme-editor.ha.icons-of-things-that-are-on-or-open": {
+    "text": "Icons of things that are on or open.",
+    "hash": "a0c3decd"
+  },
+  "theme-editor.ha.icons-of-unavailable-entities": {
+    "text": "Icons of unavailable entities.",
+    "hash": "286e7bbc"
+  },
+  "theme-editor.ha.inactive-state-colour": {
+    "text": "Inactive state color",
+    "hash": "f35e499f"
+  },
+  "theme-editor.ha.info-colour": {
+    "text": "Info color",
+    "hash": "0eb9fc9a"
+  },
+  "theme-editor.ha.information-banners-and-notes": {
+    "text": "Information banners and notes.",
+    "hash": "274b4b4f"
+  },
+  "theme-editor.ha.item-names-in-the-sidebar": {
+    "text": "Item names in the sidebar.",
+    "hash": "d86b3900"
+  },
+  "theme-editor.ha.large-font-size": {
+    "text": "Large font size",
+    "hash": "9cecbd0a"
+  },
+  "theme-editor.ha.large-radius": {
+    "text": "Large radius",
+    "hash": "4ae6a7dd"
+  },
+  "theme-editor.ha.larger-body-text": {
+    "text": "Larger body text.",
+    "hash": "2df535db"
+  },
+  "theme-editor.ha.light-on-colour": {
+    "text": "Light on color",
+    "hash": "0ba55375"
+  },
+  "theme-editor.ha.light-tints-of-the-primary-colour": {
+    "text": "Light tints of the primary color.",
+    "hash": "708d2f3c"
+  },
+  "theme-editor.ha.lines-between-rows-and-around-inputs": {
+    "text": "Lines between rows and around inputs.",
+    "hash": "ad95e6f4"
+  },
+  "theme-editor.ha.locked-colour": {
+    "text": "Locked color",
+    "hash": "40698ad2"
+  },
+  "theme-editor.ha.main-text-and-icons": {
+    "text": "Main text and icons.",
+    "hash": "4e3072a6"
+  },
+  "theme-editor.ha.media-player-active-colour": {
+    "text": "Media player active color",
+    "hash": "1b49517a"
+  },
+  "theme-editor.ha.medium-font-size": {
+    "text": "Medium font size",
+    "hash": "d1418cf1"
+  },
+  "theme-editor.ha.medium-radius": {
+    "text": "Medium radius",
+    "hash": "c5fee673"
+  },
+  "theme-editor.ha.multiplies-every-ha-font-size-1-keeps": {
+    "text": "Multiplies every HA font size. 1 keeps them.",
+    "hash": "855dc71c"
+  },
+  "theme-editor.ha.outline-colour": {
+    "text": "Outline color",
+    "hash": "6dd4dd03"
+  },
+  "theme-editor.ha.outlines-of-buttons-and-chips": {
+    "text": "Outlines of buttons and chips.",
+    "hash": "ce482a2a"
+  },
+  "theme-editor.ha.page-background": {
+    "text": "Page background",
+    "hash": "54962022"
+  },
+  "theme-editor.ha.person-at-home-colour": {
+    "text": "Person at home color",
+    "hash": "99e5226d"
+  },
+  "theme-editor.ha.person-icons-while-home": {
+    "text": "Person icons while home.",
+    "hash": "1cf1dbbe"
+  },
+  "theme-editor.ha.pressed-and-darker-primary-accents": {
+    "text": "Pressed and darker primary accents.",
+    "hash": "a4290d4f"
+  },
+  "theme-editor.ha.primary-colour": {
+    "text": "Primary color",
+    "hash": "2ccfbde3"
+  },
+  "theme-editor.ha.primary-colour-dark-shade": {
+    "text": "Primary color, dark shade",
+    "hash": "6bd39d28"
+  },
+  "theme-editor.ha.primary-colour-light-shade": {
+    "text": "Primary color, light shade",
+    "hash": "30cc8437"
+  },
+  "theme-editor.ha.primary-text": {
+    "text": "Primary text",
+    "hash": "ecf5b5b5"
+  },
+  "theme-editor.ha.quiet-panels-input-fills-and-list": {
+    "text": "Quiet panels, input fills and list stripes.",
+    "hash": "1c53eda4"
+  },
+  "theme-editor.ha.rounding-of-every-card": {
+    "text": "Rounding of every card.",
+    "hash": "d6781b33"
+  },
+  "theme-editor.ha.secondary-accent-used-by-a-few-controls": {
+    "text": "Secondary accent used by a few controls.",
+    "hash": "8d8f6fbf"
+  },
+  "theme-editor.ha.secondary-background": {
+    "text": "Secondary background",
+    "hash": "6f83c048"
+  },
+  "theme-editor.ha.secondary-text": {
+    "text": "Secondary text",
+    "hash": "2deea466"
+  },
+  "theme-editor.ha.section-titles": {
+    "text": "Section titles.",
+    "hash": "459f970a"
+  },
+  "theme-editor.ha.shadow-colour": {
+    "text": "Shadow color",
+    "hash": "66754751"
+  },
+  "theme-editor.ha.shadow-under-every-card": {
+    "text": "Shadow under every card.",
+    "hash": "aaaf03b1"
+  },
+  "theme-editor.ha.sidebar-background": {
+    "text": "Sidebar background",
+    "hash": "95e7992b"
+  },
+  "theme-editor.ha.sidebar-icons": {
+    "text": "Sidebar icons",
+    "hash": "0c1971b9"
+  },
+  "theme-editor.ha.sidebar-selected-icon": {
+    "text": "Sidebar selected icon",
+    "hash": "25803ca7"
+  },
+  "theme-editor.ha.sidebar-selected-text": {
+    "text": "Sidebar selected text",
+    "hash": "abfabe91"
+  },
+  "theme-editor.ha.sidebar-text": {
+    "text": "Sidebar text",
+    "hash": "33d56c1b"
+  },
+  "theme-editor.ha.small-font-size": {
+    "text": "Small font size",
+    "hash": "9f9af426"
+  },
+  "theme-editor.ha.small-radius": {
+    "text": "Small radius",
+    "hash": "c5ace22a"
+  },
+  "theme-editor.ha.success-colour": {
+    "text": "Success color",
+    "hash": "a0677e35"
+  },
+  "theme-editor.ha.success-messages-and-confirmed-states": {
+    "text": "Success messages and confirmed states.",
+    "hash": "e66ac6ec"
+  },
+  "theme-editor.ha.switch-on-colour": {
+    "text": "Switch on color",
+    "hash": "ca800fb5"
+  },
+  "theme-editor.ha.text-and-icons-drawn-on-the-primary": {
+    "text": "Text and icons drawn on the primary color.",
+    "hash": "e92c6d6e"
+  },
+  "theme-editor.ha.text-and-icons-in-the-top-bar": {
+    "text": "Text and icons in the top bar.",
+    "hash": "318031a8"
+  },
+  "theme-editor.ha.text-in-the-top-bar-in-dashboard-edit": {
+    "text": "Text in the top bar in dashboard edit mode.",
+    "hash": "1281f044"
+  },
+  "theme-editor.ha.text-of-disabled-and-unavailable-things": {
+    "text": "Text of disabled and unavailable things.",
+    "hash": "cc8ce308"
+  },
+  "theme-editor.ha.text-on-light-surfaces": {
+    "text": "Text on light surfaces",
+    "hash": "e58666bb"
+  },
+  "theme-editor.ha.text-on-primary-colour": {
+    "text": "Text on primary color",
+    "hash": "339c4c71"
+  },
+  "theme-editor.ha.the-active-sidebar-item-icon": {
+    "text": "The active sidebar item icon.",
+    "hash": "45c95f3f"
+  },
+  "theme-editor.ha.the-active-sidebar-item-name": {
+    "text": "The active sidebar item name.",
+    "hash": "b4c30646"
+  },
+  "theme-editor.ha.the-background-of-a-dashboard-view-takes": {
+    "text": "The background of a dashboard view. Takes a gradient or an image.",
+    "hash": "5304fb76"
+  },
+  "theme-editor.ha.the-colour-ha-shades-shadows-with": {
+    "text": "The color HA shades shadows with.",
+    "hash": "1872da60"
+  },
+  "theme-editor.ha.the-font-for-headings": {
+    "text": "The font for headings.",
+    "hash": "65280f41"
+  },
+  "theme-editor.ha.the-font-for-most-text": {
+    "text": "The font for most text.",
+    "hash": "06c3a3e9"
+  },
+  "theme-editor.ha.the-sidebar": {
+    "text": "The sidebar.",
+    "hash": "58d41c7f"
+  },
+  "theme-editor.ha.the-top-bar-in-dashboard-edit-mode": {
+    "text": "The top bar in dashboard edit mode.",
+    "hash": "b5dc5c71"
+  },
+  "theme-editor.ha.the-top-bar-of-every-page": {
+    "text": "The top bar of every page.",
+    "hash": "250e0b5b"
+  },
+  "theme-editor.ha.unavailable-state-colour": {
+    "text": "Unavailable state color",
+    "hash": "427d6cde"
+  },
+  "theme-editor.ha.unlocked-colour": {
+    "text": "Unlocked color",
+    "hash": "a472c34a"
+  },
+  "theme-editor.ha.warning-colour": {
+    "text": "Warning color",
+    "hash": "e0540a98"
+  },
+  "theme-editor.ha.warnings-and-caution-states": {
+    "text": "Warnings and caution states.",
+    "hash": "41b16f92"
+  },
+  "theme-editor.ha.width-of-the-card-border": {
+    "text": "Width of the card border.",
+    "hash": "4950ffbb"
+  },
+  "theme-editor.ha.wins-over-the-card-background-for-cards": {
+    "text": "Wins over the card background for cards only. Takes a gradient.",
+    "hash": "c4af6a90"
+  },
+  "theme-editor.include-notice.check-again": {
+    "text": "Check again",
+    "hash": "fb7099ad"
+  },
+  "theme-editor.include-notice.checking": {
+    "text": "Checking...",
+    "hash": "2e5f79bb"
+  },
+  "theme-editor.include-notice.copied": {
+    "text": "Copied",
+    "hash": "8d525e5f"
+  },
+  "theme-editor.include-notice.copy-lines": {
+    "text": "Copy lines",
+    "hash": "aa3cc38f"
+  },
+  "theme-editor.include-notice.home-assistant-only-loads-themes-from": {
+    "text": "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:",
+    "hash": "37fc8d8b"
+  },
+  "theme-editor.include-notice.lines-to-add-to-configuration-yaml": {
+    "text": "Lines to add to configuration.yaml",
+    "hash": "0a2c3fa6"
+  },
+  "theme-editor.include-notice.one-setup-step-before-you-can-save": {
+    "text": "One setup step before you can save",
+    "hash": "8d9e08af"
+  },
+  "theme-editor.include-notice.open-configuration-yaml-with-the-file": {
+    "text": "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.",
+    "hash": "10355538"
+  },
+  "theme-editor.include-notice.show-me-how": {
+    "text": "Show me how",
+    "hash": "5a519f35"
+  },
+  "theme-editor.include-notice.the-editor-could-not-read-configuration": {
+    "text": "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:",
+    "hash": "24192f2e"
+  },
+  "theme-editor.include-notice.where-do-i-add-these-lines": {
+    "text": "Where do I add these lines?",
+    "hash": "80321d63"
+  },
+  "theme-editor.include-notice.you-can-skip-this-for-now-try-on": {
+    "text": "You can skip this for now. Try on dashboard works without it.",
+    "hash": "6eb71c05"
+  },
+  "theme-editor.include-notice.your-configuration-yaml-lists-themes": {
+    "text": "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:",
+    "hash": "edbb9c20"
+  },
+  "theme-editor.include-notice.your-configuration-yaml-loads-themes-in": {
+    "text": "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:",
+    "hash": "287e051b"
+  },
+  "theme-editor.lips.got-it": {
+    "text": "Got it",
+    "hash": "5ad3dbd1"
+  },
+  "theme-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "hash": "62432946"
+  },
+  "theme-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "hash": "8048104c"
+  },
+  "theme-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "hash": "755f1a3b"
+  },
+  "theme-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "hash": "2fc10998"
+  },
+  "theme-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "hash": "7a362b14"
+  },
+  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "hash": "cca8a786"
+  },
+  "theme-editor.lips.variables": {
+    "text": "variables",
+    "hash": "7af0b3e4"
+  },
+  "theme-editor.lips.variables-panel": {
+    "text": "Variables panel",
+    "hash": "aeb81548"
+  },
+  "theme-editor.magic-card.borders-and-bar-tracks": {
+    "text": "Borders and bar tracks.",
+    "hash": "d2219f9e"
+  },
+  "theme-editor.magic-card.button-text": {
+    "text": "Button text.",
+    "hash": "d8201145"
+  },
+  "theme-editor.magic-card.buttons-bars-and-accents": {
+    "text": "Buttons, bars and accents.",
+    "hash": "96bbf78e"
+  },
+  "theme-editor.magic-card.cancel-and-error-text-in-the-popup": {
+    "text": "Cancel and error text in the popup.",
+    "hash": "9b591190"
+  },
+  "theme-editor.magic-card.captions-and-hints": {
+    "text": "Captions and hints.",
+    "hash": "cc379920"
+  },
+  "theme-editor.magic-card.card-and-popup-rounding": {
+    "text": "Card and popup rounding.",
+    "hash": "c162228f"
+  },
+  "theme-editor.magic-card.card-background": {
+    "text": "Card background",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.magic-card.card-background-override": {
+    "text": "Card background override",
+    "hash": "cff0a4fe"
+  },
+  "theme-editor.magic-card.card-border": {
+    "text": "Card border.",
+    "hash": "7bffeddd"
+  },
+  "theme-editor.magic-card.card-border-colour": {
+    "text": "Card border color",
+    "hash": "8256cea1"
+  },
+  "theme-editor.magic-card.card-border-width": {
+    "text": "Card border width",
+    "hash": "a775554c"
+  },
+  "theme-editor.magic-card.card-corner-radius": {
+    "text": "Card corner radius",
+    "hash": "f96a2fba"
+  },
+  "theme-editor.magic-card.card-shadow": {
+    "text": "Card shadow",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.magic-card.card-surface-and-flow-labels": {
+    "text": "Card surface and flow labels.",
+    "hash": "b82e508b"
+  },
+  "theme-editor.magic-card.disabled-colour": {
+    "text": "Disabled color",
+    "hash": "bc08355e"
+  },
+  "theme-editor.magic-card.divider-colour": {
+    "text": "Divider color",
+    "hash": "20ac535f"
+  },
+  "theme-editor.magic-card.empty-slider-track": {
+    "text": "Empty slider track.",
+    "hash": "e874d626"
+  },
+  "theme-editor.magic-card.error-colour": {
+    "text": "Error color",
+    "hash": "6b14a7aa"
+  },
+  "theme-editor.magic-card.light-on-colour": {
+    "text": "Light on color",
+    "hash": "0ba55375"
+  },
+  "theme-editor.magic-card.main-text": {
+    "text": "Main text.",
+    "hash": "f7c7ed58"
+  },
+  "theme-editor.magic-card.primary-colour": {
+    "text": "Primary color",
+    "hash": "2ccfbde3"
+  },
+  "theme-editor.magic-card.primary-text": {
+    "text": "Primary text",
+    "hash": "ecf5b5b5"
+  },
+  "theme-editor.magic-card.secondary-text": {
+    "text": "Secondary text",
+    "hash": "2deea466"
+  },
+  "theme-editor.magic-card.shadow-under-the-card": {
+    "text": "Shadow under the card.",
+    "hash": "e40053b9"
+  },
+  "theme-editor.magic-card.slider-track": {
+    "text": "Slider track",
+    "hash": "4a4914e0"
+  },
+  "theme-editor.magic-card.success-colour": {
+    "text": "Success color",
+    "hash": "a0677e35"
+  },
+  "theme-editor.magic-card.text-on-primary-colour": {
+    "text": "Text on primary color",
+    "hash": "339c4c71"
+  },
+  "theme-editor.magic-card.the-light-slider": {
+    "text": "The light slider.",
+    "hash": "63c59fb5"
+  },
+  "theme-editor.magic-card.the-save-button-in-the-popup": {
+    "text": "The save button in the popup.",
+    "hash": "5b98b328"
+  },
+  "theme-editor.magic-card.track-behind-the-fill-a-slider-with-its": {
+    "text": "Track behind the fill. A slider with its own track color keeps it.",
+    "hash": "1ed88d84"
+  },
+  "theme-editor.magic-card.wins-over-the-card-background": {
+    "text": "Wins over the card background.",
+    "hash": "ff59b558"
+  },
+  "theme-editor.model.a-mode-block-must-be-light-or-dark-and": {
+    "text": "A mode block must be light or dark and hold variables.",
+    "hash": "8b59d4c4"
+  },
+  "theme-editor.model.enter-a-border-like-1px-solid-ccc": {
+    "text": "Enter a border like 1px solid #ccc.",
+    "hash": "2d099567"
+  },
+  "theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115": {
+    "text": "Enter a color like #1a73e8 or rgb(26, 115, 232).",
+    "hash": "f94f7f14"
+  },
+  "theme-editor.model.enter-a-colour-or-a-gradient": {
+    "text": "Enter a color or a gradient.",
+    "hash": "f4672716"
+  },
+  "theme-editor.model.enter-a-font-family": {
+    "text": "Enter a font family.",
+    "hash": "b4dc2764"
+  },
+  "theme-editor.model.enter-a-length-like-12px-or-1rem": {
+    "text": "Enter a length like 12px or 1rem.",
+    "hash": "2459378f"
+  },
+  "theme-editor.model.enter-a-number": {
+    "text": "Enter a number.",
+    "hash": "7b2968fb"
+  },
+  "theme-editor.model.enter-a-shadow-like-0-2px-6px-rgba-0-0-0": {
+    "text": "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).",
+    "hash": "1266bf21"
+  },
+  "theme-editor.model.enter-a-value": {
+    "text": "Enter a value.",
+    "hash": "8b347a23"
+  },
+  "theme-editor.model.enter-three-numbers-from-0-to-255-like": {
+    "text": "Enter three numbers from 0 to 255, like 255, 120, 0.",
+    "hash": "7af98a9a"
+  },
+  "theme-editor.model.modes-must-hold-a-light-and-a-dark-block": {
+    "text": "Modes must hold a light and a dark block.",
+    "hash": "0ca8caf2"
+  },
+  "theme-editor.model.remove-chars-and-unmatched-brackets-from": {
+    "text": "Remove {chars} and unmatched brackets from the value.",
+    "hash": "dd451e60"
+  },
+  "theme-editor.model.this-field-takes-one-colour-not-a": {
+    "text": "This field takes one color, not a gradient.",
+    "hash": "2144b855"
+  },
+  "theme-editor.model.this-value-has-a-control-character": {
+    "text": "This value has a control character. Remove it.",
+    "hash": "649f9df1"
+  },
+  "theme-editor.model.this-value-is-longer-than-max-characters": {
+    "text": "This value is longer than {max} characters.",
+    "hash": "09b92633"
+  },
+  "theme-editor.model.this-value-must-be-text-or-a-number": {
+    "text": "This value must be text or a number.",
+    "hash": "62f93b7f"
+  },
+  "theme-editor.model.use-letters-numbers-dashes-and": {
+    "text": "Use letters, numbers, dashes and underscores for a variable name.",
+    "hash": "8a4e32df"
+  },
+  "theme-editor.mushroom.alarm-armed-state-rgb": {
+    "text": "Alarm armed state (RGB)",
+    "hash": "b1cc4832"
+  },
+  "theme-editor.mushroom.alarm-disarmed-state-rgb": {
+    "text": "Alarm disarmed state (RGB)",
+    "hash": "41481d68"
+  },
+  "theme-editor.mushroom.alarm-triggered-state-rgb": {
+    "text": "Alarm triggered state (RGB)",
+    "hash": "b50131cc"
+  },
+  "theme-editor.mushroom.amber-rgb": {
+    "text": "Amber (RGB)",
+    "hash": "b77c22d1"
+  },
+  "theme-editor.mushroom.badge-icon-size": {
+    "text": "Badge icon size",
+    "hash": "420bbc5f"
+  },
+  "theme-editor.mushroom.badge-radius": {
+    "text": "Badge radius",
+    "hash": "702058d3"
+  },
+  "theme-editor.mushroom.badge-size": {
+    "text": "Badge size",
+    "hash": "fa34f9dc"
+  },
+  "theme-editor.mushroom.black-rgb": {
+    "text": "Black (RGB)",
+    "hash": "c9dfc3e1"
+  },
+  "theme-editor.mushroom.blue-grey-rgb": {
+    "text": "Blue gray (RGB)",
+    "hash": "afb0643f"
+  },
+  "theme-editor.mushroom.blue-rgb": {
+    "text": "Blue (RGB)",
+    "hash": "be09d895"
+  },
+  "theme-editor.mushroom.brown-rgb": {
+    "text": "Brown (RGB)",
+    "hash": "62d6e023"
+  },
+  "theme-editor.mushroom.button-width-as-a-multiple-of-its-height": {
+    "text": "Button width as a multiple of its height.",
+    "hash": "d92ee713"
+  },
+  "theme-editor.mushroom.card-spacing": {
+    "text": "Card spacing",
+    "hash": "3d03a18f"
+  },
+  "theme-editor.mushroom.chip-avatar-padding": {
+    "text": "Chip avatar padding",
+    "hash": "8f22a4d9"
+  },
+  "theme-editor.mushroom.chip-avatar-radius": {
+    "text": "Chip avatar radius",
+    "hash": "b5220758"
+  },
+  "theme-editor.mushroom.chip-background": {
+    "text": "Chip background",
+    "hash": "b6656922"
+  },
+  "theme-editor.mushroom.chip-border-colour": {
+    "text": "Chip border color",
+    "hash": "08e15dc6"
+  },
+  "theme-editor.mushroom.chip-border-width": {
+    "text": "Chip border width",
+    "hash": "7d29594c"
+  },
+  "theme-editor.mushroom.chip-height": {
+    "text": "Chip height",
+    "hash": "0864182c"
+  },
+  "theme-editor.mushroom.chip-icon-size": {
+    "text": "Chip icon size",
+    "hash": "06c02c15"
+  },
+  "theme-editor.mushroom.chip-padding": {
+    "text": "Chip padding",
+    "hash": "21c39e4b"
+  },
+  "theme-editor.mushroom.chip-radius": {
+    "text": "Chip radius",
+    "hash": "50269e70"
+  },
+  "theme-editor.mushroom.chip-shadow": {
+    "text": "Chip shadow",
+    "hash": "93215529"
+  },
+  "theme-editor.mushroom.chip-spacing": {
+    "text": "Chip spacing",
+    "hash": "f6f9c99f"
+  },
+  "theme-editor.mushroom.chip-text-size": {
+    "text": "Chip text size",
+    "hash": "57ae16db"
+  },
+  "theme-editor.mushroom.chip-text-weight": {
+    "text": "Chip text weight",
+    "hash": "4a0de034"
+  },
+  "theme-editor.mushroom.climate-auto-state-rgb": {
+    "text": "Climate auto state (RGB)",
+    "hash": "55a5bea1"
+  },
+  "theme-editor.mushroom.climate-cool-state-rgb": {
+    "text": "Climate cool state (RGB)",
+    "hash": "bf5b9fe4"
+  },
+  "theme-editor.mushroom.climate-dry-state-rgb": {
+    "text": "Climate dry state (RGB)",
+    "hash": "2b402b44"
+  },
+  "theme-editor.mushroom.climate-fan-only-state-rgb": {
+    "text": "Climate fan only state (RGB)",
+    "hash": "4580eb2e"
+  },
+  "theme-editor.mushroom.climate-heat-cool-state-rgb": {
+    "text": "Climate heat cool state (RGB)",
+    "hash": "6d54a6fc"
+  },
+  "theme-editor.mushroom.climate-heat-state-rgb": {
+    "text": "Climate heat state (RGB)",
+    "hash": "4d4b9368"
+  },
+  "theme-editor.mushroom.climate-idle-state-rgb": {
+    "text": "Climate idle state (RGB)",
+    "hash": "372cc90b"
+  },
+  "theme-editor.mushroom.climate-off-state-rgb": {
+    "text": "Climate off state (RGB)",
+    "hash": "dde5c5c9"
+  },
+  "theme-editor.mushroom.control-button-ratio": {
+    "text": "Control button ratio",
+    "hash": "8891a10b"
+  },
+  "theme-editor.mushroom.control-height": {
+    "text": "Control height",
+    "hash": "b7ddb720"
+  },
+  "theme-editor.mushroom.control-icon-size": {
+    "text": "Control icon size",
+    "hash": "1794933f"
+  },
+  "theme-editor.mushroom.control-radius": {
+    "text": "Control radius",
+    "hash": "398a9072"
+  },
+  "theme-editor.mushroom.control-spacing": {
+    "text": "Control spacing",
+    "hash": "be5e03f1"
+  },
+  "theme-editor.mushroom.cover-closed-state-rgb": {
+    "text": "Cover closed state (RGB)",
+    "hash": "569f141b"
+  },
+  "theme-editor.mushroom.cover-open-state-rgb": {
+    "text": "Cover open state (RGB)",
+    "hash": "b1b5692d"
+  },
+  "theme-editor.mushroom.cyan-rgb": {
+    "text": "Cyan (RGB)",
+    "hash": "9eaeb0cd"
+  },
+  "theme-editor.mushroom.danger-rgb": {
+    "text": "Danger (RGB)",
+    "hash": "af9c0737"
+  },
+  "theme-editor.mushroom.dark-grey-rgb": {
+    "text": "Dark gray (RGB)",
+    "hash": "e98dabff"
+  },
+  "theme-editor.mushroom.deep-orange-rgb": {
+    "text": "Deep orange (RGB)",
+    "hash": "69bc4c59"
+  },
+  "theme-editor.mushroom.deep-purple-rgb": {
+    "text": "Deep purple (RGB)",
+    "hash": "53aa03d6"
+  },
+  "theme-editor.mushroom.delay-in-milliseconds": {
+    "text": "Delay in milliseconds.",
+    "hash": "7a216afc"
+  },
+  "theme-editor.mushroom.disabled-rgb": {
+    "text": "Disabled (RGB)",
+    "hash": "2cf73adb"
+  },
+  "theme-editor.mushroom.entity-state-rgb": {
+    "text": "Entity state (RGB)",
+    "hash": "b596ecc5"
+  },
+  "theme-editor.mushroom.fan-state-rgb": {
+    "text": "Fan state (RGB)",
+    "hash": "4fd28d6d"
+  },
+  "theme-editor.mushroom.gap-between-the-parts-of-a-card": {
+    "text": "Gap between the parts of a card.",
+    "hash": "971d0594"
+  },
+  "theme-editor.mushroom.green-rgb": {
+    "text": "Green (RGB)",
+    "hash": "0b153347"
+  },
+  "theme-editor.mushroom.grey-rgb": {
+    "text": "Gray (RGB)",
+    "hash": "634ad654"
+  },
+  "theme-editor.mushroom.humidifier-state-rgb": {
+    "text": "Humidifier state (RGB)",
+    "hash": "8b3e8457"
+  },
+  "theme-editor.mushroom.icon-radius": {
+    "text": "Icon radius",
+    "hash": "8f95505e"
+  },
+  "theme-editor.mushroom.icon-size": {
+    "text": "Icon size",
+    "hash": "a86cafc7"
+  },
+  "theme-editor.mushroom.icon-symbol-size": {
+    "text": "Icon symbol size",
+    "hash": "b70559bf"
+  },
+  "theme-editor.mushroom.indigo-rgb": {
+    "text": "Indigo (RGB)",
+    "hash": "6da3f8ec"
+  },
+  "theme-editor.mushroom.info-rgb": {
+    "text": "Info (RGB)",
+    "hash": "b4b544c9"
+  },
+  "theme-editor.mushroom.layout-alignment": {
+    "text": "Layout alignment",
+    "hash": "13a8487c"
+  },
+  "theme-editor.mushroom.light-blue-rgb": {
+    "text": "Light blue (RGB)",
+    "hash": "910da9e2"
+  },
+  "theme-editor.mushroom.light-green-rgb": {
+    "text": "Light green (RGB)",
+    "hash": "36dc1e4a"
+  },
+  "theme-editor.mushroom.light-grey-rgb": {
+    "text": "Light gray (RGB)",
+    "hash": "a34ec942"
+  },
+  "theme-editor.mushroom.light-state-rgb": {
+    "text": "Light state (RGB)",
+    "hash": "683b5c8d"
+  },
+  "theme-editor.mushroom.lime-rgb": {
+    "text": "Lime (RGB)",
+    "hash": "522db552"
+  },
+  "theme-editor.mushroom.lock-locked-state-rgb": {
+    "text": "Lock locked state (RGB)",
+    "hash": "c7f12828"
+  },
+  "theme-editor.mushroom.lock-pending-state-rgb": {
+    "text": "Lock pending state (RGB)",
+    "hash": "a1ab05f8"
+  },
+  "theme-editor.mushroom.lock-state-rgb": {
+    "text": "Lock state (RGB)",
+    "hash": "0fee547e"
+  },
+  "theme-editor.mushroom.lock-unlocked-state-rgb": {
+    "text": "Lock unlocked state (RGB)",
+    "hash": "b91c7a91"
+  },
+  "theme-editor.mushroom.media-player-state-rgb": {
+    "text": "Media player state (RGB)",
+    "hash": "27b79fcc"
+  },
+  "theme-editor.mushroom.movement-before-a-slider-reacts": {
+    "text": "Movement before a slider reacts.",
+    "hash": "e9bbc99b"
+  },
+  "theme-editor.mushroom.number-input-debounce": {
+    "text": "Number input debounce",
+    "hash": "dbf8a1de"
+  },
+  "theme-editor.mushroom.number-state-rgb": {
+    "text": "Number state (RGB)",
+    "hash": "f086182f"
+  },
+  "theme-editor.mushroom.orange-rgb": {
+    "text": "Orange (RGB)",
+    "hash": "356193af"
+  },
+  "theme-editor.mushroom.person-home-state-rgb": {
+    "text": "Person home state (RGB)",
+    "hash": "be8fad5d"
+  },
+  "theme-editor.mushroom.person-not-home-state-rgb": {
+    "text": "Person not home state (RGB)",
+    "hash": "5b3863b9"
+  },
+  "theme-editor.mushroom.person-unknown-state-rgb": {
+    "text": "Person unknown state (RGB)",
+    "hash": "f7e0d162"
+  },
+  "theme-editor.mushroom.person-zone-state-rgb": {
+    "text": "Person zone state (RGB)",
+    "hash": "a702d24e"
+  },
+  "theme-editor.mushroom.pink-rgb": {
+    "text": "Pink (RGB)",
+    "hash": "371d499a"
+  },
+  "theme-editor.mushroom.primary-letter-spacing": {
+    "text": "Primary letter spacing",
+    "hash": "534877cf"
+  },
+  "theme-editor.mushroom.primary-line-height": {
+    "text": "Primary line height",
+    "hash": "65b98881"
+  },
+  "theme-editor.mushroom.primary-text-colour": {
+    "text": "Primary text color",
+    "hash": "137442b2"
+  },
+  "theme-editor.mushroom.primary-text-size": {
+    "text": "Primary text size",
+    "hash": "9f2179a3"
+  },
+  "theme-editor.mushroom.primary-text-weight": {
+    "text": "Primary text weight",
+    "hash": "01bd3155"
+  },
+  "theme-editor.mushroom.purple-rgb": {
+    "text": "Purple (RGB)",
+    "hash": "dee2d0c0"
+  },
+  "theme-editor.mushroom.red-rgb": {
+    "text": "Red (RGB)",
+    "hash": "a5facd77"
+  },
+  "theme-editor.mushroom.secondary-letter-spacing": {
+    "text": "Secondary letter spacing",
+    "hash": "0e4ec9f6"
+  },
+  "theme-editor.mushroom.secondary-line-height": {
+    "text": "Secondary line height",
+    "hash": "e8873f04"
+  },
+  "theme-editor.mushroom.secondary-text-colour": {
+    "text": "Secondary text color",
+    "hash": "3f0c3d35"
+  },
+  "theme-editor.mushroom.secondary-text-size": {
+    "text": "Secondary text size",
+    "hash": "47e1b795"
+  },
+  "theme-editor.mushroom.secondary-text-weight": {
+    "text": "Secondary text weight",
+    "hash": "407984de"
+  },
+  "theme-editor.mushroom.slider-threshold": {
+    "text": "Slider threshold",
+    "hash": "fbb2a728"
+  },
+  "theme-editor.mushroom.subtitle-colour": {
+    "text": "Subtitle color",
+    "hash": "1a158789"
+  },
+  "theme-editor.mushroom.subtitle-letter-spacing": {
+    "text": "Subtitle letter spacing",
+    "hash": "c8d359ed"
+  },
+  "theme-editor.mushroom.subtitle-line-height": {
+    "text": "Subtitle line height",
+    "hash": "22d77c5c"
+  },
+  "theme-editor.mushroom.subtitle-size": {
+    "text": "Subtitle size",
+    "hash": "55a8a04a"
+  },
+  "theme-editor.mushroom.subtitle-weight": {
+    "text": "Subtitle weight",
+    "hash": "36fd3aab"
+  },
+  "theme-editor.mushroom.success-rgb": {
+    "text": "Success (RGB)",
+    "hash": "f8a295c2"
+  },
+  "theme-editor.mushroom.teal-rgb": {
+    "text": "Teal (RGB)",
+    "hash": "9d66bf31"
+  },
+  "theme-editor.mushroom.three-numbers-0-to-255-like-244-67-54": {
+    "text": "Three numbers, 0 to 255, like 244, 67, 54.",
+    "hash": "b899babf"
+  },
+  "theme-editor.mushroom.title-colour": {
+    "text": "Title color",
+    "hash": "fbe291da"
+  },
+  "theme-editor.mushroom.title-letter-spacing": {
+    "text": "Title letter spacing",
+    "hash": "566761d6"
+  },
+  "theme-editor.mushroom.title-line-height": {
+    "text": "Title line height",
+    "hash": "83d564bb"
+  },
+  "theme-editor.mushroom.title-padding": {
+    "text": "Title padding",
+    "hash": "ed127ba1"
+  },
+  "theme-editor.mushroom.title-size": {
+    "text": "Title size",
+    "hash": "8808ac4f"
+  },
+  "theme-editor.mushroom.title-spacing": {
+    "text": "Title spacing",
+    "hash": "cefcafa8"
+  },
+  "theme-editor.mushroom.title-weight": {
+    "text": "Title weight",
+    "hash": "1ac6c0a9"
+  },
+  "theme-editor.mushroom.update-installing-rgb": {
+    "text": "Update installing (RGB)",
+    "hash": "952f0804"
+  },
+  "theme-editor.mushroom.update-off-rgb": {
+    "text": "Update off (RGB)",
+    "hash": "8c9abcda"
+  },
+  "theme-editor.mushroom.update-on-state-rgb": {
+    "text": "Update on state (RGB)",
+    "hash": "68273109"
+  },
+  "theme-editor.mushroom.vacuum-state-rgb": {
+    "text": "Vacuum state (RGB)",
+    "hash": "8282c99b"
+  },
+  "theme-editor.mushroom.warning-rgb": {
+    "text": "Warning (RGB)",
+    "hash": "2804c9e1"
+  },
+  "theme-editor.mushroom.white-rgb": {
+    "text": "White (RGB)",
+    "hash": "80a153c3"
+  },
+  "theme-editor.mushroom.yellow-rgb": {
+    "text": "Yellow (RGB)",
+    "hash": "84a0c048"
+  },
+  "theme-editor.preset-dialog.added-c-to-my-presets": {
+    "text": "Added {c} to My presets",
+    "hash": "316df7d6"
+  },
+  "theme-editor.preset-dialog.author-optional": {
+    "text": "Author (optional)",
+    "hash": "2dc783e6"
+  },
+  "theme-editor.preset-dialog.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "theme-editor.preset-dialog.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "theme-editor.preset-dialog.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "theme-editor.preset-dialog.delete-name": {
+    "text": "Delete {name}?",
+    "hash": "a4b982a9"
+  },
+  "theme-editor.preset-dialog.deleted-name": {
+    "text": "Deleted {name}.",
+    "hash": "1f9ebcfd"
+  },
+  "theme-editor.preset-dialog.description-optional": {
+    "text": "Description (optional)",
+    "hash": "f6cbe2f0"
+  },
+  "theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters": {
+    "text": "Enter a name of 1 to 80 characters.",
+    "hash": "3cf7289f"
+  },
+  "theme-editor.preset-dialog.export-theme": {
+    "text": "Export theme",
+    "hash": "575ade1f"
+  },
+  "theme-editor.preset-dialog.import-theme": {
+    "text": "Import theme",
+    "hash": "f9cc6392"
+  },
+  "theme-editor.preset-dialog.it-did-not-work": {
+    "text": "It did not work.",
+    "hash": "7959b921"
+  },
+  "theme-editor.preset-dialog.loading": {
+    "text": "Loading...",
+    "hash": "47d2a515"
+  },
+  "theme-editor.preset-dialog.magic-card-utils-did-not-accept-this": {
+    "text": "Magic Card Utils did not accept this preset. Check the name and the values.",
+    "hash": "a01b8cc9"
+  },
+  "theme-editor.preset-dialog.name": {
+    "text": "Name",
+    "hash": "dcd1d522"
+  },
+  "theme-editor.preset-dialog.name-reason": {
+    "text": "{name}: {reason}",
+    "hash": "c1e15352"
+  },
+  "theme-editor.preset-dialog.nothing-was-saved": {
+    "text": "Nothing was saved",
+    "hash": "3df0c14a"
+  },
+  "theme-editor.preset-dialog.only-administrators-can-change-presets": {
+    "text": "Only administrators can change presets.",
+    "hash": "e2ba19d1"
+  },
+  "theme-editor.preset-dialog.open-as-new-theme": {
+    "text": "Open as new theme",
+    "hash": "138c95ab"
+  },
+  "theme-editor.preset-dialog.rename": {
+    "text": "Rename",
+    "hash": "3064d79a"
+  },
+  "theme-editor.preset-dialog.rename-preset": {
+    "text": "Rename preset",
+    "hash": "0e7392eb"
+  },
+  "theme-editor.preset-dialog.renamed-to-name": {
+    "text": "Renamed to {name}.",
+    "hash": "b93f484a"
+  },
+  "theme-editor.preset-dialog.save-as-my-preset": {
+    "text": "Save as my preset",
+    "hash": "bd12a457"
+  },
+  "theme-editor.preset-dialog.save-preset": {
+    "text": "Save preset",
+    "hash": "362a1376"
+  },
+  "theme-editor.preset-dialog.saved-name-under-my-presets": {
+    "text": "Saved {name} under My presets.",
+    "hash": "d00a4397"
+  },
+  "theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in": {
+    "text": "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.",
+    "hash": "77875996"
+  },
+  "theme-editor.preset-dialog.the-tools-could-not-load-check-your": {
+    "text": "The tools could not load. Check your connection.",
+    "hash": "297e50fa"
+  },
+  "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
+    "text": "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.",
+    "hash": "3788cc99"
+  },
+  "theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your": {
+    "text": "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.",
+    "hash": "1509cb6f"
+  },
+  "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
+    "text": "This preset changed elsewhere. Reopen the list.",
+    "hash": "3fb554d0"
+  },
+  "theme-editor.preset-dialog.this-removes-it-from-my-presets-themes": {
+    "text": "This removes it from My presets. Themes made from it stay.",
+    "hash": "889e3a34"
+  },
+  "theme-editor.preset-dialog.try-again": {
+    "text": "Try again",
+    "hash": "d8b8392e"
+  },
+  "theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets. A file with one theme still opens.",
+    "hash": "64d32a00"
+  },
+  "theme-editor.preset-dialog.you-can-keep-100-presets-delete-one": {
+    "text": "You can keep 100 presets. Delete one first.",
+    "hash": "f70a194b"
+  },
+  "theme-editor.preview-cards.button": {
+    "text": "Button",
+    "hash": "707eab0c"
+  },
+  "theme-editor.preview-cards.could-not-load-label-reason": {
+    "text": "Could not load {label}. {reason}",
+    "hash": "eb829ff5"
+  },
+  "theme-editor.preview-cards.entities": {
+    "text": "Entities",
+    "hash": "7fdb3cce"
+  },
+  "theme-editor.preview-cards.home-assistant-card-helpers-are-not": {
+    "text": "Home Assistant card helpers are not available",
+    "hash": "f76bac10"
+  },
+  "theme-editor.preview-cards.home-assistant-is-not-connected": {
+    "text": "Home Assistant is not connected.",
+    "hash": "0d802428"
+  },
+  "theme-editor.preview-cards.label-could-not-be-loaded": {
+    "text": "{label} could not be loaded.",
+    "hash": "77f44573"
+  },
+  "theme-editor.preview-cards.label-did-not-start-in-time": {
+    "text": "{label} did not start in time.",
+    "hash": "df440651"
+  },
+  "theme-editor.preview-cards.label-has-a-resource-address-the-editor": {
+    "text": "{label} has a resource address the editor will not load.",
+    "hash": "cb02e652"
+  },
+  "theme-editor.preview-cards.label-is-loaded-for-the-preview": {
+    "text": "{label} is loaded for the preview.",
+    "hash": "15e3dbce"
+  },
+  "theme-editor.preview-cards.label-is-not-in-the-dashboard-resources": {
+    "text": "{label} is not in the dashboard resources.",
+    "hash": "75db4b55"
+  },
+  "theme-editor.preview-cards.label-is-not-loaded-in-this-editor-so": {
+    "text": "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.",
+    "hash": "7ed8f869"
+  },
+  "theme-editor.preview-cards.load-label-for-preview": {
+    "text": "Load {label} for preview",
+    "hash": "a70efb13"
+  },
+  "theme-editor.preview-cards.loading": {
+    "text": "Loading...",
+    "hash": "47d2a515"
+  },
+  "theme-editor.preview-cards.loading-label": {
+    "text": "Loading {label}...",
+    "hash": "10405792"
+  },
+  "theme-editor.preview-cards.preview-not-available": {
+    "text": "Preview not available",
+    "hash": "bef26137"
+  },
+  "theme-editor.preview-cards.the-card-is-loaded-for-the-preview": {
+    "text": "The card is loaded for the preview.",
+    "hash": "746639da"
+  },
+  "theme-editor.preview-cards.this-card-cannot-be-loaded-for-the": {
+    "text": "This card cannot be loaded for the preview.",
+    "hash": "a4fc372b"
+  },
+  "theme-editor.preview.a-link": {
+    "text": "a link",
+    "hash": "5a346444"
+  },
+  "theme-editor.preview.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "theme-editor.preview.add-a-light-or-a-switch-to-home": {
+    "text": "Add a light or a switch to Home Assistant to see the {name} sample.",
+    "hash": "3c4f6be8"
+  },
+  "theme-editor.preview.body-text-in-the-primary-text-colour": {
+    "text": "Body text in the primary text color.",
+    "hash": "5b792903"
+  },
+  "theme-editor.preview.controls": {
+    "text": "Controls",
+    "hash": "799c2691"
+  },
+  "theme-editor.preview.entities-card": {
+    "text": "entities card",
+    "hash": "76a03bd9"
+  },
+  "theme-editor.preview.error-message": {
+    "text": "Error message",
+    "hash": "a5dc35f1"
+  },
+  "theme-editor.preview.heading": {
+    "text": "Heading",
+    "hash": "b34f17f0"
+  },
+  "theme-editor.preview.info-message": {
+    "text": "Info message",
+    "hash": "afd17ae0"
+  },
+  "theme-editor.preview.map": {
+    "text": "Map",
+    "hash": "be176b00"
+  },
+  "theme-editor.preview.nothing-set-yet-the-preview-shows-home": {
+    "text": "Nothing set yet. The preview shows Home Assistant's default look.",
+    "hash": "65da8228"
+  },
+  "theme-editor.preview.overview": {
+    "text": "Overview",
+    "hash": "d4b1ea57"
+  },
+  "theme-editor.preview.preview-mode": {
+    "text": "Preview mode",
+    "hash": "481bc90f"
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-using-the": {
+    "text": "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.",
+    "hash": "b12c54c0"
+  },
+  "theme-editor.preview.preview-of-name-could-not-load": {
+    "text": "Preview of {name} could not load.",
+    "hash": "64f9682a"
+  },
+  "theme-editor.preview.previewing-mode": {
+    "text": "Previewing {mode, select, dark {dark} other {light}}",
+    "hash": "175f0117"
+  },
+  "theme-editor.preview.primary": {
+    "text": "Primary",
+    "hash": "efe10c80"
+  },
+  "theme-editor.preview.secondary": {
+    "text": "Secondary",
+    "hash": "62f2ccff"
+  },
+  "theme-editor.preview.secondary-text-and-link": {
+    "text": "Secondary text and {link}.",
+    "hash": "5ad607f9"
+  },
+  "theme-editor.preview.settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
+  },
+  "theme-editor.preview.showing-the-last-valid-value-for-c": {
+    "text": "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.",
+    "hash": "26a68ea0"
+  },
+  "theme-editor.preview.success-message": {
+    "text": "Success message",
+    "hash": "306f66dc"
+  },
+  "theme-editor.preview.text": {
+    "text": "Text",
+    "hash": "71988c4d"
+  },
+  "theme-editor.preview.text-field": {
+    "text": "Text field",
+    "hash": "4610cad5"
+  },
+  "theme-editor.preview.the-preview-is-drawn-with-real-home": {
+    "text": "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.",
+    "hash": "cb87f82c"
+  },
+  "theme-editor.preview.theme-preview-mode": {
+    "text": "Theme preview, {mode, select, dark {dark} other {light}}",
+    "hash": "b85b6701"
+  },
+  "theme-editor.preview.this-theme-has-no-light-or-dark-modes": {
+    "text": "This theme has no light or dark modes.",
+    "hash": "aa189240"
+  },
+  "theme-editor.preview.tile-card": {
+    "text": "tile card",
+    "hash": "7af533e6"
+  },
+  "theme-editor.preview.warning-message": {
+    "text": "Warning message",
+    "hash": "d8ce812c"
+  },
+  "theme-editor.raw-rows.add": {
+    "text": "Add",
+    "hash": "9fd728c6"
+  },
+  "theme-editor.raw-rows.add-any-variable": {
+    "text": "Add any variable",
+    "hash": "ab9961ec"
+  },
+  "theme-editor.raw-rows.added-c-to-scope": {
+    "text": "Added {c, plural, one {# variable} other {# variables}} to {scope}",
+    "hash": "0a85100b"
+  },
+  "theme-editor.raw-rows.added-name-to-scope": {
+    "text": "Added {name} to {scope}",
+    "hash": "bb10ccda"
+  },
+  "theme-editor.raw-rows.could-not-read-lines": {
+    "text": "Could not read: {lines}",
+    "hash": "6b81138a"
+  },
+  "theme-editor.raw-rows.enter-a-name": {
+    "text": "Enter a name.",
+    "hash": "099f9079"
+  },
+  "theme-editor.raw-rows.enter-a-value": {
+    "text": "Enter a value.",
+    "hash": "8b347a23"
+  },
+  "theme-editor.raw-rows.name": {
+    "text": "Name",
+    "hash": "dcd1d522"
+  },
+  "theme-editor.raw-rows.nothing-was-added": {
+    "text": "Nothing was added",
+    "hash": "09025461"
+  },
+  "theme-editor.raw-rows.remove-chars-from-the-value": {
+    "text": "Remove {chars} from the value.",
+    "hash": "960558a4"
+  },
+  "theme-editor.raw-rows.this-variable-already-exists-in-scope": {
+    "text": "This variable already exists in {scope}. Add will replace its value.",
+    "hash": "44e4f3e9"
+  },
+  "theme-editor.raw-rows.update": {
+    "text": "Update",
+    "hash": "c1c1009d"
+  },
+  "theme-editor.raw-rows.use-a-single-line": {
+    "text": "Use a single line.",
+    "hash": "e347f9a4"
+  },
+  "theme-editor.raw-rows.use-letters-numbers-hyphens-and": {
+    "text": "Use letters, numbers, hyphens and underscores. This name is not allowed.",
+    "hash": "70bb7755"
+  },
+  "theme-editor.raw-rows.use-the-name-as-it-appears-in-the-theme": {
+    "text": "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.",
+    "hash": "d5ba1891"
+  },
+  "theme-editor.raw-rows.value": {
+    "text": "Value",
+    "hash": "8e37953d"
+  },
+  "theme-editor.save-bar.save": {
+    "text": "Save",
+    "hash": "1509f561"
+  },
+  "theme-editor.save-bar.save-ctrl-s": {
+    "text": "Save (Ctrl+S)",
+    "hash": "4be89ed5"
+  },
+  "theme-editor.save-bar.saving": {
+    "text": "Saving...",
+    "hash": "dc85af8f"
+  },
+  "theme-editor.start-view.a-blank-theme": {
+    "text": "a blank theme",
+    "hash": "00846ffb"
+  },
+  "theme-editor.start-view.a-preset": {
+    "text": "A preset",
+    "hash": "a9734a0f"
+  },
+  "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
+    "text": "An empty theme. Add only the variables you want to change.",
+    "hash": "37300aad"
+  },
+  "theme-editor.start-view.an-installed-theme": {
+    "text": "An installed theme",
+    "hash": "416ce064"
+  },
+  "theme-editor.start-view.blank": {
+    "text": "Blank",
+    "hash": "2c3d371c"
+  },
+  "theme-editor.start-view.c": {
+    "text": "{c, plural, one {# variable} other {# variables}}",
+    "hash": "ea6c10e7"
+  },
+  "theme-editor.start-view.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "theme-editor.start-view.cannot-be-removed-later": {
+    "text": "Cannot be removed later.",
+    "hash": "a0c60060"
+  },
+  "theme-editor.start-view.copies-the-variables-from-the-installed": {
+    "text": "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.",
+    "hash": "b55161db"
+  },
+  "theme-editor.start-view.copy-to-edit": {
+    "text": "Copy to edit",
+    "hash": "3bf53c98"
+  },
+  "theme-editor.start-view.could-not-delete-name-reason": {
+    "text": "Could not delete {name}. {reason}",
+    "hash": "a4fbd926"
+  },
+  "theme-editor.start-view.could-not-read-name-neither-its-file-nor": {
+    "text": "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.",
+    "hash": "6e1f7406"
+  },
+  "theme-editor.start-view.could-not-read-name-reason": {
+    "text": "Could not read {name}. {reason}",
+    "hash": "805b41a9"
+  },
+  "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
+    "text": "Create a theme from a preset or copy one you have installed.",
+    "hash": "d57906f4"
+  },
+  "theme-editor.start-view.create-from-name": {
+    "text": "Create from {name}",
+    "hash": "32b205cf"
+  },
+  "theme-editor.start-view.create-theme": {
+    "text": "Create theme",
+    "hash": "d7ed40ee"
+  },
+  "theme-editor.start-view.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "theme-editor.start-view.delete-name": {
+    "text": "Delete {name}?",
+    "hash": "a4b982a9"
+  },
+  "theme-editor.start-view.duplicate": {
+    "text": "Duplicate",
+    "hash": "02cdaabf"
+  },
+  "theme-editor.start-view.file-file": {
+    "text": "File {file}.",
+    "hash": "aee02cad"
+  },
+  "theme-editor.start-view.import": {
+    "text": "Import",
+    "hash": "2cff9baa"
+  },
+  "theme-editor.start-view.installed-theme": {
+    "text": "Installed theme",
+    "hash": "caa84d09"
+  },
+  "theme-editor.start-view.installed-themes": {
+    "text": "Installed themes",
+    "hash": "89faedd0"
+  },
+  "theme-editor.start-view.it-is-in-a-subfolder-of-config-themes": {
+    "text": "It is in a subfolder of /config/themes.",
+    "hash": "baff7cfc"
+  },
+  "theme-editor.start-view.it-uses-home-assistant-tags-such-as": {
+    "text": "It uses Home Assistant tags such as !secret.",
+    "hash": "92aa0b83"
+  },
+  "theme-editor.start-view.its-file-holds-several-themes-and-saving": {
+    "text": "Its file holds several themes, and saving would rewrite all of them.",
+    "hash": "801f748d"
+  },
+  "theme-editor.start-view.light-and-dark-modes": {
+    "text": "Light and dark modes",
+    "hash": "73c5d8b7"
+  },
+  "theme-editor.start-view.light-dark": {
+    "text": "Light + dark",
+    "hash": "a4cf6566"
+  },
+  "theme-editor.start-view.loading-presets": {
+    "text": "Loading presets",
+    "hash": "8120a27f"
+  },
+  "theme-editor.start-view.loading-themes": {
+    "text": "Loading themes",
+    "hash": "68dba03b"
+  },
+  "theme-editor.start-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
+    "hash": "bb1fdbf1"
+  },
+  "theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is": {
+    "text": "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.",
+    "hash": "ac8b706d"
+  },
+  "theme-editor.start-view.name-your-theme": {
+    "text": "Name your theme",
+    "hash": "dddc578d"
+  },
+  "theme-editor.start-view.new-theme": {
+    "text": "New theme",
+    "hash": "56ce19dd"
+  },
+  "theme-editor.start-view.no-installed-theme-matches": {
+    "text": "No installed theme matches.",
+    "hash": "d6902e96"
+  },
+  "theme-editor.start-view.no-theme-called-query": {
+    "text": "No theme called {query}.",
+    "hash": "28532025"
+  },
+  "theme-editor.start-view.no-themes-yet": {
+    "text": "No themes yet",
+    "hash": "dc3cdada"
+  },
+  "theme-editor.start-view.pick-a-preset-to-start-from": {
+    "text": "Pick a preset to start from",
+    "hash": "40d39ea0"
+  },
+  "theme-editor.start-view.pick-a-theme-to-copy": {
+    "text": "Pick a theme to copy",
+    "hash": "c3cfabe4"
+  },
+  "theme-editor.start-view.presets-are-still-loading": {
+    "text": "Presets are still loading",
+    "hash": "0f657057"
+  },
+  "theme-editor.start-view.presets-could-not-load-check-your": {
+    "text": "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.",
+    "hash": "345ad212"
+  },
+  "theme-editor.start-view.read-only": {
+    "text": "Read only",
+    "hash": "8ac76735"
+  },
+  "theme-editor.start-view.reading": {
+    "text": "Reading...",
+    "hash": "768f1f99"
+  },
+  "theme-editor.start-view.same-in-light-and-dark": {
+    "text": "Same in light and dark",
+    "hash": "c64dc7db"
+  },
+  "theme-editor.start-view.search-installed-themes": {
+    "text": "Search installed themes",
+    "hash": "8f4ed4ba"
+  },
+  "theme-editor.start-view.search-themes": {
+    "text": "Search themes",
+    "hash": "22da14c0"
+  },
+  "theme-editor.start-view.start-from": {
+    "text": "Start from",
+    "hash": "eb3f51dc"
+  },
+  "theme-editor.start-view.the-file-could-not-be-read-as-yaml": {
+    "text": "The file could not be read as YAML.",
+    "hash": "fb45332b"
+  },
+  "theme-editor.start-view.the-file-is-a-link-to-somewhere-else": {
+    "text": "The file is a link to somewhere else.",
+    "hash": "5d70f3ca"
+  },
+  "theme-editor.start-view.the-file-is-too-large-to-edit-here": {
+    "text": "The file is too large to edit here.",
+    "hash": "4b25b51b"
+  },
+  "theme-editor.start-view.the-file-name-is-not-a-name-this-editor": {
+    "text": "The file name is not a name this editor can write.",
+    "hash": "400dca2b"
+  },
+  "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
+    "text": "The theme name does not match the file name.",
+    "hash": "9106c5da"
+  },
+  "theme-editor.start-view.themes": {
+    "text": "Themes",
+    "hash": "43ae3265"
+  },
+  "theme-editor.start-view.themes-could-not-be-read": {
+    "text": "Themes could not be read",
+    "hash": "78a126fa"
+  },
+  "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
+    "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",
+    "hash": "1d67874e"
+  },
+  "theme-editor.start-view.this-removes-config-file-screens-that": {
+    "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
+    "hash": "728badac"
+  },
+  "theme-editor.start-view.try-again": {
+    "text": "Try again",
+    "hash": "d8b8392e"
+  },
+  "theme-editor.start-view.your-themes-live-in-config-themes": {
+    "text": "Your themes live in /config/themes.",
+    "hash": "d5aef6dc"
+  },
+  "theme-editor.theme-editor.could-not-open-name-reason": {
+    "text": "Could not open {name}. {reason}",
+    "hash": "4c166073"
+  },
+  "theme-editor.theme-editor.deleted-name": {
+    "text": "Deleted {name}.",
+    "hash": "1f9ebcfd"
+  },
+  "theme-editor.theme-editor.details": {
+    "text": "Details",
+    "hash": "45989de4"
+  },
+  "theme-editor.theme-editor.found-it-you-can-save-themes-now": {
+    "text": "Found it. You can save themes now.",
+    "hash": "d7fe1425"
+  },
+  "theme-editor.theme-editor.loading-the-theme-editor": {
+    "text": "Loading the theme editor...",
+    "hash": "b96e9362"
+  },
+  "theme-editor.theme-editor.only-administrators-can-edit-themes": {
+    "text": "Only administrators can edit themes.",
+    "hash": "aa35e075"
+  },
+  "theme-editor.theme-editor.still-not-found-restart-home-assistant": {
+    "text": "Still not found. Restart Home Assistant if you have just added the lines.",
+    "hash": "ac49a8c0"
+  },
+  "theme-editor.theme-editor.the-check-failed-reason": {
+    "text": "The check failed. {reason}",
+    "hash": "dd97c780"
+  },
+  "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
+    "text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
+    "hash": "e21f53cc"
+  },
+  "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
+    "text": "The theme editor could not load. Reload the page.",
+    "hash": "83047783"
+  },
+  "theme-editor.theme-editor.waiting-for-home-assistant-to-connect": {
+    "text": "Waiting for Home Assistant to connect...",
+    "hash": "76497e43"
+  },
+  "theme-editor.tile.colour-of-the-primary-text": {
+    "text": "Color of the primary text.",
+    "hash": "eb15f998"
+  },
+  "theme-editor.tile.colour-of-the-secondary-text": {
+    "text": "Color of the secondary text.",
+    "hash": "119c5332"
+  },
+  "theme-editor.tile.corner-radius-of-the-tile-icon": {
+    "text": "Corner radius of the tile icon.",
+    "hash": "9e41d950"
+  },
+  "theme-editor.tile.font-size-of-the-primary-text": {
+    "text": "Font size of the primary text.",
+    "hash": "319be86e"
+  },
+  "theme-editor.tile.font-size-of-the-secondary-text": {
+    "text": "Font size of the secondary text.",
+    "hash": "9ed3710b"
+  },
+  "theme-editor.tile.font-weight-of-the-primary-text": {
+    "text": "Font weight of the primary text.",
+    "hash": "2dd535ca"
+  },
+  "theme-editor.tile.font-weight-of-the-secondary-text": {
+    "text": "Font weight of the secondary text.",
+    "hash": "475efd6e"
+  },
+  "theme-editor.tile.icon-radius": {
+    "text": "Icon radius",
+    "hash": "8f95505e"
+  },
+  "theme-editor.tile.keeps-tiles-that-never-wrap-level-with": {
+    "text": "Keeps tiles that never wrap level with ones that do.",
+    "hash": "cd5bd29e"
+  },
+  "theme-editor.tile.letter-spacing-of-the-primary-text": {
+    "text": "Letter spacing of the primary text.",
+    "hash": "25dd9aec"
+  },
+  "theme-editor.tile.letter-spacing-of-the-secondary-text": {
+    "text": "Letter spacing of the secondary text.",
+    "hash": "2e92522b"
+  },
+  "theme-editor.tile.line-height-of-the-primary-text": {
+    "text": "Line height of the primary text.",
+    "hash": "7167f502"
+  },
+  "theme-editor.tile.line-height-of-the-secondary-text": {
+    "text": "Line height of the secondary text.",
+    "hash": "d3645c17"
+  },
+  "theme-editor.tile.primary-letter-spacing": {
+    "text": "Primary letter spacing",
+    "hash": "534877cf"
+  },
+  "theme-editor.tile.primary-line-height": {
+    "text": "Primary line height",
+    "hash": "65b98881"
+  },
+  "theme-editor.tile.primary-text-colour": {
+    "text": "Primary text color",
+    "hash": "137442b2"
+  },
+  "theme-editor.tile.primary-text-minimum-height": {
+    "text": "Primary text minimum height",
+    "hash": "5ea2ee4a"
+  },
+  "theme-editor.tile.primary-text-size": {
+    "text": "Primary text size",
+    "hash": "9f2179a3"
+  },
+  "theme-editor.tile.primary-text-weight": {
+    "text": "Primary text weight",
+    "hash": "01bd3155"
+  },
+  "theme-editor.tile.reserves-room-for-a-missing-secondary": {
+    "text": "Reserves room for a missing secondary line.",
+    "hash": "39764337"
+  },
+  "theme-editor.tile.secondary-letter-spacing": {
+    "text": "Secondary letter spacing",
+    "hash": "0e4ec9f6"
+  },
+  "theme-editor.tile.secondary-line-height": {
+    "text": "Secondary line height",
+    "hash": "e8873f04"
+  },
+  "theme-editor.tile.secondary-text-colour": {
+    "text": "Secondary text color",
+    "hash": "3f0c3d35"
+  },
+  "theme-editor.tile.secondary-text-size": {
+    "text": "Secondary text size",
+    "hash": "47e1b795"
+  },
+  "theme-editor.tile.secondary-text-weight": {
+    "text": "Secondary text weight",
+    "hash": "407984de"
+  },
+  "theme-editor.tile.text-block-minimum-height": {
+    "text": "Text block minimum height",
+    "hash": "c96fd39b"
+  },
+  "theme-editor.tile.text-gap": {
+    "text": "Text gap",
+    "hash": "4c1ed527"
+  },
+  "theme-editor.tile.vertical-gap-between-primary-and": {
+    "text": "Vertical gap between primary and secondary text.",
+    "hash": "ab4a7553"
+  },
+  "theme-editor.trial-bar.editor": {
+    "text": "Editor",
+    "hash": "936a161c"
+  },
+  "theme-editor.trial-bar.move-to-bottom": {
+    "text": "Move to bottom",
+    "hash": "df933761"
+  },
+  "theme-editor.trial-bar.move-to-top": {
+    "text": "Move to top",
+    "hash": "349d5d60"
+  },
+  "theme-editor.trial-bar.n-not-valid-left-out": {
+    "text": "{n} not valid, left out",
+    "hash": "10da5468"
+  },
+  "theme-editor.trial-bar.open-editor": {
+    "text": "Open editor",
+    "hash": "550697e0"
+  },
+  "theme-editor.trial-bar.revert": {
+    "text": "Revert",
+    "hash": "0026c505"
+  },
+  "theme-editor.trial-bar.revert-theme-trial": {
+    "text": "Revert theme trial",
+    "hash": "3586f1fa"
+  },
+  "theme-editor.trial-bar.theme-trial": {
+    "text": "Theme trial",
+    "hash": "98bcc0d8"
+  },
+  "theme-editor.trial-bar.trying-name": {
+    "text": "Trying {name}",
+    "hash": "6d6487e2"
+  },
+  "theme-editor.trial-bar.trying-name-on-this-tab-mode": {
+    "text": "Trying {name} on this tab ({mode, select, dark {dark} other {light}})",
+    "hash": "e9c4812c"
+  },
+  "theme-editor.trial.reverted-this-tab-shows-your-own-theme": {
+    "text": "Reverted. This tab shows your own theme again.",
+    "hash": "35c0d9e0"
+  },
+  "theme-editor.trial.saved-this-tab-now-uses-the-saved-theme": {
+    "text": "Saved. This tab now uses the saved theme file.",
+    "hash": "5fdde5f1"
+  },
+  "theme-editor.trial.trial-ended-after-10-minutes": {
+    "text": "Trial ended after 10 minutes.",
+    "hash": "7d8dee7d"
+  },
+  "theme-editor.trial.trial-ended-because-the-theme-changed": {
+    "text": "Trial ended because the theme changed.",
+    "hash": "b3f0b750"
+  },
+  "theme-editor.ultra-card.accents-and-active-elements": {
+    "text": "Accents and active elements.",
+    "hash": "f8a4b04a"
+  },
+  "theme-editor.ultra-card.borders-and-separators": {
+    "text": "Borders and separators.",
+    "hash": "634e2bc7"
+  },
+  "theme-editor.ultra-card.card-background": {
+    "text": "Card background",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.ultra-card.card-background-override": {
+    "text": "Card background override",
+    "hash": "cff0a4fe"
+  },
+  "theme-editor.ultra-card.card-radius": {
+    "text": "Card radius",
+    "hash": "8ba76469"
+  },
+  "theme-editor.ultra-card.card-shadow": {
+    "text": "Card shadow",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.ultra-card.card-surface": {
+    "text": "Card surface.",
+    "hash": "38351014"
+  },
+  "theme-editor.ultra-card.corner-radius-of-the-card": {
+    "text": "Corner radius of the card.",
+    "hash": "7be23f35"
+  },
+  "theme-editor.ultra-card.divider-colour": {
+    "text": "Divider color",
+    "hash": "20ac535f"
+  },
+  "theme-editor.ultra-card.error-colour": {
+    "text": "Error color",
+    "hash": "6b14a7aa"
+  },
+  "theme-editor.ultra-card.error-messages": {
+    "text": "Error messages.",
+    "hash": "782e2f7d"
+  },
+  "theme-editor.ultra-card.main-text": {
+    "text": "Main text.",
+    "hash": "f7c7ed58"
+  },
+  "theme-editor.ultra-card.muted-text": {
+    "text": "Muted text.",
+    "hash": "a05571ac"
+  },
+  "theme-editor.ultra-card.primary-colour": {
+    "text": "Primary color",
+    "hash": "2ccfbde3"
+  },
+  "theme-editor.ultra-card.primary-text-colour": {
+    "text": "Primary text color",
+    "hash": "137442b2"
+  },
+  "theme-editor.ultra-card.secondary-text-colour": {
+    "text": "Secondary text color",
+    "hash": "3f0c3d35"
+  },
+  "theme-editor.ultra-card.shadow-of-the-card": {
+    "text": "Shadow of the card.",
+    "hash": "58f56089"
+  },
+  "theme-editor.ultra-card.takes-priority-over-the-card-background": {
+    "text": "Takes priority over the card background.",
+    "hash": "65944041"
+  },
+  "theme-editor.util.a-and-b": {
+    "text": "{a} and {b}",
+    "hash": "04f767bd"
+  },
+  "theme-editor.util.a-theme-called-name-already-exists": {
+    "text": "A theme called {name} already exists.",
+    "hash": "7ae06a66"
+  },
+  "theme-editor.util.dark": {
+    "text": "Dark",
+    "hash": "60acc53f"
+  },
+  "theme-editor.util.enter-a-name": {
+    "text": "Enter a name.",
+    "hash": "099f9079"
+  },
+  "theme-editor.util.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "theme-editor.util.shared": {
+    "text": "Shared",
+    "hash": "e3c4b39d"
+  },
+  "theme-editor.util.this-name-is-reserved": {
+    "text": "This name is reserved.",
+    "hash": "6b930899"
+  },
+  "theme-editor.util.use-lowercase-letters-numbers-hyphens": {
+    "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
+    "hash": "2ed797ed"
+  }
 }

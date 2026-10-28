@@ -1,7 +1,7 @@
 import { html, css, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import type { ThemePreset, ThemePresetLibrary } from '../../contracts/theme-editor';
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { glyph } from '../../ui-kit/glyphs';
 import { fold } from '../../i18n/fold';
 import { outsideOf } from '../outside';
@@ -36,20 +36,20 @@ export interface PickerEvents {
 }
 
 /** Group order, Show labels, headings and search words (the contract's ThemePresetGroupInfo, kept here so the chunk imports nothing at run time). */
-const MINE = { id: 'mine', label: m('My presets'), search: m('my') } as const;
+const MINE = { id: 'mine', label: m('theme-presets.picker.my-presets'), search: m('theme-presets.picker.my') } as const;
 const GROUPS = [
-  { id: 'original', label: m('Original'), search: m('original') },
-  { id: 'inspired', label: m('Inspired by'), search: m('inspired by') },
-  { id: 'genre', label: m('Sci-fi & fantasy'), search: m('genre') },
+  { id: 'original', label: m('theme-presets.picker.original'), search: m('theme-presets.picker.original-2') },
+  { id: 'inspired', label: m('theme-presets.picker.inspired-by'), search: m('theme-presets.picker.inspired-by-2') },
+  { id: 'genre', label: m('theme-presets.picker.sci-fi-fantasy'), search: m('theme-presets.picker.genre') },
 ] as const;
 /** The words the "no match" help offers; each is a message, so the button searches in the user's language. */
-const SUGGESTIONS: MessageId[] = [m('sci-fi'), m('fantasy'), m('neon'), m('desert'), m('forest')];
+const SUGGESTIONS: MessageIndex[] = [m('theme-presets.picker.sci-fi'), m('theme-presets.picker.fantasy'), m('theme-presets.picker.neon'), m('theme-presets.picker.desert'), m('theme-presets.picker.forest')];
 const suggestions = (): string[] => SUGGESTIONS.map((w) => t(w));
 
 /** A preset's text in the language: a built-in preset holds an m() id, a My preset the user's own words. */
-const own = (p: ThemePreset, v: MessageId | undefined): string => (v === undefined ? '' : p.group === 'mine' ? String(v) : t(v));
-export const presetTitle = (p: ThemePreset): string => own(p, p.name);
-export const presetBlurb = (p: ThemePreset): string => own(p, p.blurb);
+const own = (p: ThemePreset, v: MessageIndex | undefined): string => (v === undefined ? '' : p.group === 'mine' ? String(v) : t(v));
+export const presetTitle = (p: ThemePreset): string => own(p, p.name as MessageIndex);
+export const presetBlurb = (p: ThemePreset): string => own(p, p.blurb as MessageIndex);
 const flat = (s: string): string => s.replace(/[\s-]/g, '');
 
 // A swatch value that names another website (preset-transfer EXTERNAL_REF_RE, kept here as a copy) or that could
@@ -80,8 +80,8 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
     ></span>
     <span class="pn">${presetTitle(p)}${on ? glyph('check') : nothing}</span>
     <span class="help">${presetBlurb(p)}</span>
-    ${outsideOf(p.doc).any ? html`<span class="host">${glyph('information', 14)} ${t('Contacts another website')}</span>` : nothing}
-    ${p.inspiredBy ? html`<span class="help">${t('Inspired by {name}', { name: p.inspiredBy.name })}</span>` : nothing} ${on && p.note ? html`<span class="help">${own(p, p.note)}</span>` : nothing}
+    ${outsideOf(p.doc).any ? html`<span class="host">${glyph('information', 14)} ${t('theme-presets.picker.contacts-another-website')}</span>` : nothing}
+    ${p.inspiredBy ? html`<span class="help">${t('theme-presets.picker.inspired-by-name', { name: p.inspiredBy.name })}</span>` : nothing} ${on && p.note ? html`<span class="help">${own(p, p.note as MessageIndex | undefined)}</span>` : nothing}
   </label>`;
 }
 
@@ -90,7 +90,7 @@ const search = (v: PickerView): ThemePreset[] => {
   const q = v.query.trim().toLowerCase();
   return everyone(v).filter((p) => {
     const g = p.group === 'mine' ? MINE : GROUPS.find((x) => x.id === p.group);
-    const hay = `${presetTitle(p)} ${presetBlurb(p)} ${p.inspiredBy?.name ?? ''} ${p.tags ?? ''} ${g ? t(g.search) : ''} ${p.tags?.startsWith('sci-fi') ? t('sci-fi') : p.tags?.startsWith('fantasy') ? t('fantasy') : ''}`.toLowerCase();
+    const hay = `${presetTitle(p)} ${presetBlurb(p)} ${p.inspiredBy?.name ?? ''} ${p.tags ?? ''} ${g ? t(g.search) : ''} ${p.tags?.startsWith('sci-fi') ? t('theme-presets.picker.sci-fi') : p.tags?.startsWith('fantasy') ? t('theme-presets.picker.fantasy') : ''}`.toLowerCase();
     return !q || fold(hay).includes(fold(q)) || flat(fold(hay)).includes(flat(fold(q)));
   });
 };
@@ -99,9 +99,9 @@ const shownOf = (v: PickerView): ThemePreset[] => search(v).filter((p) => v.filt
 /** The text of the dialog's live region ("12 presets shown"); the region itself lives in the start view. */
 export function pickerStatus(v: PickerView): string {
   const n = shownOf(v).length;
-  if (n) return t('{n, plural, one {# preset} other {# presets}} shown', { n });
+  if (n) return t('theme-presets.picker.n-shown', { n });
   const [a, b, c, d, e] = suggestions();
-  return t('{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.', { n, a, b, c, d, e });
+  return t('theme-presets.picker.n-shown-try-a-b-c-d-or-e', { n, a, b, c, d, e });
 }
 
 /** The id the dialog should have selected: the current one while it is in the list, else the first shown, else none. */
@@ -126,13 +126,13 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
   };
   return html`<div class="pl">
     <div class="pbar">
-      <label class="sr-only" for="pq">${t('Search presets')}</label>
+      <label class="sr-only" for="pq">${t('theme-presets.picker.search-presets')}</label>
       <input
         id="pq"
         class="input"
         type="search"
         autocomplete="off"
-        placeholder=${t('Name, palette or style')}
+        placeholder=${t('theme-presets.picker.name-palette-or-style')}
         .value=${v.query}
         @input=${(e: Event) => ev.query((e.target as HTMLInputElement).value)}
         @keydown=${(e: KeyboardEvent) => {
@@ -143,13 +143,13 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
         }}
       />
       <mcte-mode-switch
-        label=${t('Show')}
+        label=${t('theme-presets.picker.show')}
         .value=${v.filter}
-        .options=${[{ value: 'all', label: `${t('All')}${num(found.length)}` }, ...groups.map((g) => ({ value: g.id, label: `${t(g.label)}${num(count(g.id))}` }))]}
+        .options=${[{ value: 'all', label: `${t('theme-presets.picker.all')}${num(found.length)}` }, ...groups.map((g) => ({ value: g.id, label: `${t(g.label)}${num(count(g.id))}` }))]}
         @mcte-change=${(e: CustomEvent) => ev.filter(e.detail.value)}
       ></mcte-mode-switch>
     </div>
-    <div class="plist" role="radiogroup" aria-label=${t('Preset')}>
+    <div class="plist" role="radiogroup" aria-label=${t('theme-presets.picker.preset')}>
       ${shown.length
         ? groups.map((g) => {
             const items = shown.filter((p) => p.group === g.id);
@@ -158,19 +158,19 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
             return items.length
               ? html`<h3>${t(g.label)} <span class="help">${items.length}</span></h3>
                   ${g.id === 'genre'
-                    ? html`<p class="help dis">${t('Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.')}</p>
-                        ${part(t('Sci-fi'), items.filter((p) => p.tags?.startsWith('sci-fi')))} ${part(t('Fantasy'), items.filter((p) => p.tags?.startsWith('fantasy')))}`
+                    ? html`<p class="help dis">${t('theme-presets.picker.independent-colour-schemes-made-for')}</p>
+                        ${part(t('theme-presets.picker.sci-fi-2'), items.filter((p) => p.tags?.startsWith('sci-fi')))} ${part(t('theme-presets.picker.fantasy-2'), items.filter((p) => p.tags?.startsWith('fantasy')))}`
                     : html`<div class="presets">${items.map((p) => card(p, p === sel, ev))}</div>`}`
               : nothing;
           })
-        : html`<p class="help">${t('No preset matches "{query}".', { query: v.query })}</p>
-            <p class="help">${t('Presets use genre and colour words, not titles. Try one of these:')}</p>
+        : html`<p class="help">${t('theme-presets.picker.no-preset-matches-query', { query: v.query })}</p>
+            <p class="help">${t('theme-presets.picker.presets-use-genre-and-colour-words-not')}</p>
             <div class="sug">${suggestions().map((w) => html`<button type="button" class="btn btn-secondary btn-sm" @click=${(e: Event) => again(e, w)}>${w}</button>`)}</div>
-            <p><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => again(e, '')}>${t('Clear search')}</button></p>`}
+            <p><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => again(e, '')}>${t('theme-presets.picker.clear-search')}</button></p>`}
     </div>
     ${sel
       ? html`<div class="pacts">${(sel.group === 'mine' ? (['export', 'rename', 'delete'] as const) : (['export'] as const)).map(
-          (act) => html`<button type="button" class="btn btn-text btn-sm ${act === 'delete' ? 'danger' : ''}" @click=${() => ev.act(act, sel)}>${act === 'export' ? t('Export') : act === 'rename' ? t('Rename') : t('Delete')}<span class="sr-only"> ${presetTitle(sel)}</span></button>`,
+          (act) => html`<button type="button" class="btn btn-text btn-sm ${act === 'delete' ? 'danger' : ''}" @click=${() => ev.act(act, sel)}>${act === 'export' ? t('theme-presets.picker.export') : act === 'rename' ? t('theme-presets.picker.rename') : t('theme-presets.picker.delete')}<span class="sr-only"> ${presetTitle(sel)}</span></button>`,
         )}</div>`
       : nothing}
   </div>`;

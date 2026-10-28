@@ -1,700 +1,3090 @@
 {
-  "A blur behind translucent cards, like blur(10px).": "Een vervaging achter doorschijnende kaarten, zoals blur(10px).",
-  "A line under the top bar, like 1px solid #ccc.": "Een lijn onder de bovenbalk, zoals 1px solid #ccc.",
-  "A mode block must be light or dark and hold variables.": "Een modusblok moet light of dark zijn en variabelen bevatten.",
-  "A preset": "Een voorinstelling",
-  "A theme called {name} already exists.": "Er bestaat al een thema met de naam {name}.",
-  "A theme with this name already exists.": "Er bestaat al een thema met deze naam.",
-  "A variable is typed but not added": "Er is een variabele getypt maar niet toegevoegd",
-  "Accent": "Accent",
-  "Accent colour": "Accentkleur",
-  "Accent for active states and sliders.": "Accent voor actieve statussen en schuifregelaars.",
-  "Accents and active elements.": "Accenten en actieve elementen.",
-  "Active state colour": "Kleur van actieve status",
-  "Add": "Toevoegen",
-  "Add a light or a switch to Home Assistant to see the {name} sample.": "Voeg een lamp of een schakelaar toe aan Home Assistant om het voorbeeld van {name} te zien.",
-  "Add any variable": "Voeg een willekeurige variabele toe",
-  "Add it and save": "Toevoegen en opslaan",
-  "Add light and dark modes": "Lichte en donkere modus toevoegen",
-  "Add light and dark modes?": "Lichte en donkere modus toevoegen?",
-  "Add modes": "Modi toevoegen",
-  "Add {name} as a variable": "{name} toevoegen als variabele",
-  "Added light and dark modes. Variables you set before stay shared.": "Lichte en donkere modus toegevoegd. Variabelen die je eerder instelde, blijven gedeeld.",
-  "Added {c, plural, one {# variable} other {# variables}} to {scope}": "{c, plural, one {# variabele} other {# variabelen}} toegevoegd aan {scope}",
-  "Added {c} to My presets": "{c} toegevoegd aan Mijn voorinstellingen",
-  "Added {name} to {scope}": "{name} toegevoegd aan {scope}",
-  "Alarm armed state (RGB)": "Status alarm ingeschakeld (RGB)",
-  "Alarm disarmed state (RGB)": "Status alarm uitgeschakeld (RGB)",
-  "Alarm icons while triggered.": "Alarmpictogrammen terwijl het alarm afgaat.",
-  "Alarm triggered colour": "Kleur van alarm afgegaan",
-  "Alarm triggered state (RGB)": "Status alarm afgegaan (RGB)",
-  "Also set in {modes}": "Ook ingesteld in {modes}",
-  "Amber (RGB)": "Amber (RGB)",
-  "An empty theme. Add only the variables you want to change.": "Een leeg thema. Voeg alleen de variabelen toe die je wilt wijzigen.",
-  "An installed theme": "Een geïnstalleerd thema",
-  "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).": "Geldt alleen voor dit browsertabblad. Open een dashboard om het te zien. Gebruikt je huidige modus ({mode, select, dark {donker} other {licht}}).",
-  "Author (optional)": "Auteur (optioneel)",
-  "Background behind icons.": "Achtergrond achter pictogrammen.",
-  "Background of pop-ups.": "Achtergrond van pop-ups.",
-  "Background of sub-buttons.": "Achtergrond van subknoppen.",
-  "Background of the loading spinner.": "Achtergrond van de laadindicator.",
-  "Background of tooltips.": "Achtergrond van tooltips.",
-  "Backgrounds and cards": "Achtergronden en kaarten",
-  "Badge icon size": "Pictogramgrootte van badge",
-  "Badge radius": "Hoekradius van badge",
-  "Badge size": "Grootte van badge",
-  "Behind everything, including the dashboard.": "Achter alles, ook achter het dashboard.",
-  "Binary sensor active colour": "Kleur van actieve binaire sensor",
-  "Binary sensors that are on.": "Binaire sensoren die aan staan.",
-  "Black (RGB)": "Zwart (RGB)",
-  "Blank": "Leeg",
-  "Blue (RGB)": "Blauw (RGB)",
-  "Blue grey (RGB)": "Blauwgrijs (RGB)",
-  "Body font": "Lettertype van lopende tekst",
-  "Body text in the primary text colour.": "Lopende tekst in de primaire tekstkleur.",
-  "Body text.": "Lopende tekst.",
-  "Border": "Rand",
-  "Border of Bubble cards.": "Rand van Bubble-kaarten.",
-  "Borders and bar tracks.": "Randen en balksporen.",
-  "Borders and separators.": "Randen en scheidingslijnen.",
-  "Box shadow of Bubble cards.": "Kaderschaduw van Bubble-kaarten.",
-  "Brown (RGB)": "Bruin (RGB)",
-  "Bubble Card": "Bubble Card",
-  "Button": "Knop",
-  "Button card background": "Achtergrond van knopkaart",
-  "Button card radius": "Hoekradius van knopkaart",
-  "Button text.": "Knoptekst.",
-  "Button width as a multiple of its height.": "Breedte van de knop als veelvoud van de hoogte.",
-  "Buttons, bars and accents.": "Knoppen, balken en accenten.",
-  "Buttons, toggles, active icons and links.": "Knoppen, schakelaars, actieve pictogrammen en links.",
-  "Cancel": "Annuleren",
-  "Cancel and error text in the popup.": "Annuleren en foutmeldingen in de pop-up.",
-  "Cannot be removed later.": "Kan later niet worden verwijderd.",
-  "Captions and hints.": "Bijschriften en hints.",
-  "Captions and secondary lines.": "Bijschriften en secundaire regels.",
-  "Captions, hints and secondary lines.": "Bijschriften, hints en secundaire regels.",
-  "Card and popup rounding.": "Afronding van kaart en pop-up.",
-  "Card backdrop filter": "Achtergrondfilter van kaart",
-  "Card background": "Kaartachtergrond",
-  "Card background override": "Overschrijving van kaartachtergrond",
-  "Card border colour": "Randkleur van kaart",
-  "Card border width": "Randbreedte van kaart",
-  "Card border.": "Rand van de kaart.",
-  "Card corner radius": "Hoekradius van kaart",
-  "Card radius": "Hoekradius van kaart",
-  "Card shadow": "Kaartschaduw",
-  "Card spacing": "Kaartafstand",
-  "Card surface and flow labels.": "Kaartvlak en stroomlabels.",
-  "Card surface.": "Kaartvlak.",
-  "Card title colour": "Kleur van kaarttitel",
-  "Card title font": "Lettertype van kaarttitel",
-  "Card title size": "Grootte van kaarttitel",
-  "Card titles.": "Kaarttitels.",
-  "Cards, dialogs and menus. Takes a gradient.": "Kaarten, dialogen en menu's. Accepteert een kleurverloop.",
-  "Check again": "Opnieuw controleren",
-  "Checking...": "Controleren...",
-  "Chip avatar padding": "Binnenmarge van chip-avatar",
-  "Chip avatar radius": "Hoekradius van chip-avatar",
-  "Chip background": "Chipachtergrond",
-  "Chip border colour": "Randkleur van chip",
-  "Chip border width": "Randbreedte van chip",
-  "Chip height": "Chiphoogte",
-  "Chip icon size": "Pictogramgrootte van chip",
-  "Chip padding": "Binnenmarge van chip",
-  "Chip radius": "Hoekradius van chip",
-  "Chip shadow": "Chipschaduw",
-  "Chip spacing": "Chipafstand",
-  "Chip text size": "Tekstgrootte van chip",
-  "Chip text weight": "Tekstdikte van chip",
-  "Choose another name": "Kies een andere naam",
-  "Climate auto state (RGB)": "Status klimaat automatisch (RGB)",
-  "Climate cool state (RGB)": "Status klimaat koelen (RGB)",
-  "Climate dry state (RGB)": "Status klimaat drogen (RGB)",
-  "Climate fan only state (RGB)": "Status klimaat alleen ventilator (RGB)",
-  "Climate heat cool state (RGB)": "Status klimaat verwarmen en koelen (RGB)",
-  "Climate heat state (RGB)": "Status klimaat verwarmen (RGB)",
-  "Climate icons that are cooling.": "Klimaatpictogrammen die koelen.",
-  "Climate icons that are heating.": "Klimaatpictogrammen die verwarmen.",
-  "Climate idle state (RGB)": "Status klimaat inactief (RGB)",
-  "Climate off state (RGB)": "Status klimaat uit (RGB)",
-  "Close": "Sluiten",
-  "Colour of card titles.": "Kleur van kaarttitels.",
-  "Colour of the card border.": "Kleur van de kaartrand.",
-  "Colour of the dimmed area behind a pop-up.": "Kleur van het gedimde gebied achter een pop-up.",
-  "Colour of the primary text.": "Kleur van de primaire tekst.",
-  "Colour of the secondary text.": "Kleur van de secundaire tekst.",
-  "Contrast not checked: value has transparency.": "Contrast niet gecontroleerd: de waarde is transparant.",
-  "Contrast on card, {mode}: {ratio} to 1, easy to read": "Contrast op kaart, {mode}: {ratio} op 1, goed leesbaar",
-  "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1": "Contrast op kaart, {mode}: {ratio} op 1, slecht leesbaar, onder 4,5 op 1",
-  "Control button ratio": "Verhouding van bedieningsknop",
-  "Control height": "Hoogte van bediening",
-  "Control icon size": "Pictogramgrootte van bediening",
-  "Control radius": "Hoekradius van bediening",
-  "Control spacing": "Afstand van bediening",
-  "Controls": "Bediening",
-  "Cooling colour": "Kleur van koelen",
-  "Copied": "Gekopieerd",
-  "Copied YAML": "YAML gekopieerd",
-  "Copied key {text}": "Sleutel {text} gekopieerd",
-  "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.": "{c, plural, one {# variabele} other {# variabelen}} gekopieerd van {from} naar {to}.",
-  "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.": "Kopieert de variabelen van het geïnstalleerde thema. Het origineel verandert niet. Ingebouwde thema's tonen slechts een deel van hun variabelen.",
-  "Copy Dark to Light": "Donker naar Licht kopiëren",
-  "Copy Light to Dark": "Licht naar Donker kopiëren",
-  "Copy YAML": "YAML kopiëren",
-  "Copy key {name}": "Sleutel {name} kopiëren",
-  "Copy lines": "Regels kopiëren",
-  "Copy to edit": "Kopiëren om te bewerken",
-  "Corner radius": "Hoekradius",
-  "Corner radius of button cards.": "Hoekradius van knopkaarten.",
-  "Corner radius of icons.": "Hoekradius van pictogrammen.",
-  "Corner radius of pop-ups.": "Hoekradius van pop-ups.",
-  "Corner radius of sub-buttons.": "Hoekradius van subknoppen.",
-  "Corner radius of the card.": "Hoekradius van de kaart.",
-  "Corner radius of the tile icon.": "Hoekradius van het tegelpictogram.",
-  "Corner radius of tooltips.": "Hoekradius van tooltips.",
-  "Could not delete {name}. {reason}": "Kon {name} niet verwijderen. {reason}",
-  "Could not load {label}. {reason}": "Kon {label} niet laden. {reason}",
-  "Could not open {name}. {reason}": "Kon {name} niet openen. {reason}",
-  "Could not read {name}": "Kon {name} niet lezen",
-  "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.": "Kon {name} niet lezen. Noch het bestand, noch Home Assistant heeft de waarden. Laad de thema's opnieuw en probeer het nog eens.",
-  "Could not read {name}. {reason}": "Kon {name} niet lezen. {reason}",
-  "Could not read: {lines}": "Kon niet lezen: {lines}",
-  "Could not save {name}": "Kon {name} niet opslaan",
-  "Cover closed state (RGB)": "Status afdekking gesloten (RGB)",
-  "Cover open colour": "Kleur van afdekking open",
-  "Cover open state (RGB)": "Status afdekking open (RGB)",
-  "Create a theme from a preset or copy one you have installed.": "Maak een thema vanuit een voorinstelling of kopieer een thema dat je hebt geïnstalleerd.",
-  "Create from {name}": "Maken vanuit {name}",
-  "Create theme": "Thema maken",
-  "Custom": "Aangepast",
-  "Cyan (RGB)": "Cyaan (RGB)",
-  "Danger (RGB)": "Gevaar (RGB)",
-  "Dark": "Donker",
-  "Dark grey (RGB)": "Donkergrijs (RGB)",
-  "Dark text used where the surface stays light.": "Donkere tekst die wordt gebruikt waar het vlak licht blijft.",
-  "Dashboard background": "Dashboardachtergrond",
-  "Deep orange (RGB)": "Dieporanje (RGB)",
-  "Deep purple (RGB)": "Diep paars (RGB)",
-  "Default": "Standaard",
-  "Default: {value}": "Standaard: {value}",
-  "Delay in milliseconds.": "Vertraging in milliseconden.",
-  "Delete": "Verwijderen",
-  "Delete theme": "Thema verwijderen",
-  "Delete {name}?": "{name} verwijderen?",
-  "Deleted {name}.": "{name} verwijderd.",
-  "Description (optional)": "Beschrijving (optioneel)",
-  "Details": "Details",
-  "Disabled (RGB)": "Uitgeschakeld (RGB)",
-  "Disabled colour": "Kleur van uitgeschakeld",
-  "Disabled controls and empty slider tracks.": "Uitgeschakelde bedieningselementen en lege schuifregelaarsporen.",
-  "Disabled text": "Uitgeschakelde tekst",
-  "Discard": "Verwerpen",
-  "Discard changes to {name}?": "Wijzigingen in {name} verwerpen?",
-  "Dismiss": "Sluiten",
-  "Divider colour": "Scheidingskleur",
-  "Duplicate": "Dupliceren",
-  "Edit variables for": "Variabelen bewerken voor",
-  "Editing": "Bewerken",
-  "Editing {scope}. Created from {from}.": "Je bewerkt {scope}. Gemaakt vanuit {from}.",
-  "Editing {scope}. Previewing {mode}.": "Je bewerkt {scope}. Voorbeeld van {mode}.",
-  "Editor": "Editor",
-  "Editor panels": "Editorpanelen",
-  "Empty slider track.": "Leeg schuifregelaarspoor.",
-  "Enter a border like 1px solid #ccc.": "Voer een rand in zoals 1px solid #ccc.",
-  "Enter a colour like #1a73e8 or rgb(26, 115, 232).": "Voer een kleur in zoals #1a73e8 of rgb(26, 115, 232).",
-  "Enter a colour or a gradient.": "Voer een kleur of een kleurverloop in.",
-  "Enter a font family.": "Voer een lettertypefamilie in.",
-  "Enter a length like 12px or 1rem.": "Voer een lengte in zoals 12px of 1rem.",
-  "Enter a name of 1 to 80 characters.": "Voer een naam van 1 tot 80 tekens in.",
-  "Enter a name.": "Voer een naam in.",
-  "Enter a number.": "Voer een getal in.",
-  "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).": "Voer een schaduw in zoals 0 2px 6px rgba(0, 0, 0, 0.3).",
-  "Enter a value.": "Voer een waarde in.",
-  "Enter three numbers from 0 to 255, like 255, 120, 0.": "Voer drie getallen van 0 tot 255 in, zoals 255, 120, 0.",
-  "Entities": "Entiteiten",
-  "Entity icons that have no state colour.": "Entiteitspictogrammen zonder statuskleur.",
-  "Entity state (RGB)": "Entiteitsstatus (RGB)",
-  "Error colour": "Foutkleur",
-  "Error message": "Foutmelding",
-  "Error messages.": "Foutmeldingen.",
-  "Errors, delete buttons and critical states.": "Fouten, verwijderknoppen en kritieke statussen.",
-  "Export theme": "Thema exporteren",
-  "Extra large font size": "Extra grote lettergrootte",
-  "Extra large radius": "Extra grote hoekradius",
-  "Fan on colour": "Kleur van ventilator aan",
-  "Fan state (RGB)": "Ventilatorstatus (RGB)",
-  "File {file}.": "Bestand {file}.",
-  "Fill colour for light sliders.": "Vulkleur voor lampschuifregelaars.",
-  "Fix {c, plural, one {# value} other {# values}} to save": "Herstel {c, plural, one {# waarde} other {# waarden}} om op te slaan",
-  "Font family of card titles.": "Lettertypefamilie van kaarttitels.",
-  "Font size of card titles.": "Lettergrootte van kaarttitels.",
-  "Font size of the primary text.": "Lettergrootte van de primaire tekst.",
-  "Font size of the secondary text.": "Lettergrootte van de secundaire tekst.",
-  "Font size of tooltips.": "Lettergrootte van tooltips.",
-  "Font size scale": "Schaal van lettergrootte",
-  "Font weight of the primary text.": "Letterdikte van de primaire tekst.",
-  "Font weight of the secondary text.": "Letterdikte van de secundaire tekst.",
-  "Found it. You can save themes now.": "Gevonden. Je kunt nu thema's opslaan.",
-  "Gap between the parts of a card.": "Ruimte tussen de onderdelen van een kaart.",
-  "Got it": "Begrepen",
-  "Green (RGB)": "Groen (RGB)",
-  "Grey (RGB)": "Grijs (RGB)",
-  "HA extra large corner radius.": "Extra grote hoekradius van HA.",
-  "HA large corner radius. Cards use it by default.": "Grote hoekradius van HA. Kaarten gebruiken die standaard.",
-  "HA medium corner radius.": "Gemiddelde hoekradius van HA.",
-  "HA small corner radius.": "Kleine hoekradius van HA.",
-  "Header and sidebar": "Kop en zijbalk",
-  "Header background": "Achtergrond van kop",
-  "Header background while editing": "Achtergrond van kop tijdens bewerken",
-  "Header bottom border": "Onderrand van kop",
-  "Header height": "Hoogte van kop",
-  "Header text": "Tekst van kop",
-  "Header text while editing": "Tekst van kop tijdens bewerken",
-  "Heading": "Kop",
-  "Heading font": "Lettertype van koppen",
-  "Heading font size": "Lettergrootte van koppen",
-  "Heating colour": "Kleur van verwarmen",
-  "Height of the top bar.": "Hoogte van de bovenbalk.",
-  "Hide live strip": "Live-strook verbergen",
-  "Hide {noun} ({keys})": "Verberg {noun} ({keys})",
-  "Home Assistant card helpers are not available": "De kaarthulpfuncties van Home Assistant zijn niet beschikbaar",
-  "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.": "Home Assistant laadt /config/themes nog niet. Voeg de regels hierboven toe, start opnieuw op en kies dan Opnieuw controleren.",
-  "Home Assistant is not connected.": "Home Assistant is niet verbonden.",
-  "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:": "Home Assistant laadt alleen thema's uit /config/themes als je configuration.yaml deze regels bevat:",
-  "Home Assistant variable": "Home Assistant-variabele",
-  "Humidifier state (RGB)": "Status luchtbevochtiger (RGB)",
-  "Icon background": "Pictogramachtergrond",
-  "Icon colour": "Pictogramkleur",
-  "Icon colour when an entity is inactive.": "Pictogramkleur wanneer een entiteit inactief is.",
-  "Icon radius": "Hoekradius van pictogram",
-  "Icon size": "Pictogramgrootte",
-  "Icon symbol size": "Grootte van pictogramsymbool",
-  "Icons in the sidebar.": "Pictogrammen in de zijbalk.",
-  "Icons of covers that are open.": "Pictogrammen van afdekkingen die open zijn.",
-  "Icons of fans that are on.": "Pictogrammen van ventilatoren die aan staan.",
-  "Icons of lights that are on.": "Pictogrammen van lampen die aan staan.",
-  "Icons of locks that are locked.": "Pictogrammen van sloten die op slot zitten.",
-  "Icons of locks that are unlocked.": "Pictogrammen van sloten die open zijn.",
-  "Icons of media players that are playing.": "Pictogrammen van mediaspelers die afspelen.",
-  "Icons of switches that are on.": "Pictogrammen van schakelaars die aan staan.",
-  "Icons of things that are off or closed.": "Pictogrammen van dingen die uit of gesloten zijn.",
-  "Icons of things that are on or open.": "Pictogrammen van dingen die aan of open zijn.",
-  "Icons of unavailable entities.": "Pictogrammen van niet-beschikbare entiteiten.",
-  "Import": "Importeren",
-  "Import theme": "Thema importeren",
-  "Inactive state colour": "Kleur van inactieve status",
-  "Indigo (RGB)": "Indigo (RGB)",
-  "Info (RGB)": "Info (RGB)",
-  "Info colour": "Infokleur",
-  "Info message": "Infobericht",
-  "Information banners and notes.": "Informatiebanners en notities.",
-  "Installed theme": "Geïnstalleerd thema",
-  "Installed themes": "Geïnstalleerde thema's",
-  "It did not work.": "Het is niet gelukt.",
-  "It is in a subfolder of /config/themes.": "Het staat in een submap van /config/themes.",
-  "It uses Home Assistant tags such as !secret.": "Het gebruikt Home Assistant-tags zoals !secret.",
-  "Item names in the sidebar.": "Namen van items in de zijbalk.",
-  "Its file holds several themes, and saving would rewrite all of them.": "Het bestand bevat meerdere thema's en opslaan zou ze allemaal herschrijven.",
-  "Keep in Shared only": "Alleen in Gedeeld houden",
-  "Keep in {mode} only": "Alleen in {mode} houden",
-  "Keeps tiles that never wrap level with ones that do.": "Houdt tegels die nooit afbreken gelijk met tegels die dat wel doen.",
-  "Large font size": "Grote lettergrootte",
-  "Large radius": "Grote hoekradius",
-  "Larger body text.": "Grotere lopende tekst.",
-  "Layout alignment": "Uitlijning van opmaak",
-  "Letter spacing of the primary text.": "Letterafstand van de primaire tekst.",
-  "Letter spacing of the secondary text.": "Letterafstand van de secundaire tekst.",
-  "Light": "Licht",
-  "Light + dark": "Licht + donker",
-  "Light and Dark both use their own value, so this has no effect.": "Licht en Donker gebruiken beide hun eigen waarde, dus dit heeft geen effect.",
-  "Light and dark modes": "Lichte en donkere modus",
-  "Light blue (RGB)": "Lichtblauw (RGB)",
-  "Light colour": "Lampkleur",
-  "Light green (RGB)": "Lichtgroen (RGB)",
-  "Light grey (RGB)": "Lichtgrijs (RGB)",
-  "Light on colour": "Kleur van lamp aan",
-  "Light state (RGB)": "Lampstatus (RGB)",
-  "Light tints of the primary colour.": "Lichte tinten van de primaire kleur.",
-  "Lime (RGB)": "Limoen (RGB)",
-  "Line height of the primary text.": "Regelhoogte van de primaire tekst.",
-  "Line height of the secondary text.": "Regelhoogte van de secundaire tekst.",
-  "Lines between rows and around inputs.": "Lijnen tussen rijen en rond invoervelden.",
-  "Lines to add to configuration.yaml": "Regels om toe te voegen aan configuration.yaml",
-  "Living room": "Woonkamer",
-  "Load {label} for preview": "{label} laden voor voorbeeld",
-  "Loading presets": "Voorinstellingen laden",
-  "Loading the theme editor...": "Thema-editor laden...",
-  "Loading themes": "Thema's laden",
-  "Loading {label}...": "{label} laden...",
-  "Loading...": "Laden...",
-  "Lock locked state (RGB)": "Status slot vergrendeld (RGB)",
-  "Lock pending state (RGB)": "Status slot in behandeling (RGB)",
-  "Lock state (RGB)": "Slotstatus (RGB)",
-  "Lock unlocked state (RGB)": "Status slot ontgrendeld (RGB)",
-  "Locked colour": "Kleur van vergrendeld",
-  "Lowercase letters, numbers, hyphens and underscores. Used as the file name.": "Kleine letters, cijfers, koppeltekens en underscores. Wordt gebruikt als bestandsnaam.",
-  "Magic Card": "Magic Card",
-  "Magic Card Utils did not accept this preset. Check the name and the values.": "Magic Card Utils heeft dit preset niet geaccepteerd. Controleer de naam en de waarden.",
-  "Magic Card and integrations": "Magic Card en integraties",
-  "Main background": "Hoofdachtergrond",
-  "Main background of button cards.": "Hoofdachtergrond van knopkaarten.",
-  "Main background of every Bubble element.": "Hoofdachtergrond van elk Bubble-element.",
-  "Main text and icons.": "Hoofdtekst en pictogrammen.",
-  "Main text.": "Hoofdtekst.",
-  "Map": "Kaart",
-  "Maximise": "Maximaliseren",
-  "Media player active colour": "Kleur van actieve mediaspeler",
-  "Media player state (RGB)": "Mediaspelerstatus (RGB)",
-  "Medium font size": "Gemiddelde lettergrootte",
-  "Medium radius": "Gemiddelde hoekradius",
-  "Modes must hold a light and a dark block.": "Modi moeten een licht en een donker blok bevatten.",
-  "More actions": "Meer acties",
-  "Move to Shared": "Verplaatsen naar Gedeeld",
-  "Move to bottom": "Naar beneden verplaatsen",
-  "Move to top": "Naar boven verplaatsen",
-  "Move window": "Venster verplaatsen",
-  "Moved {label} to Shared. Light and Dark both use it.": "{label} verplaatst naar Gedeeld. Licht en Donker gebruiken het allebei.",
-  "Movement before a slider reacts.": "Beweging voordat een schuifregelaar reageert.",
-  "Multiplies every HA font size. 1 keeps them.": "Vermenigvuldigt elke lettergrootte van HA. Bij 1 blijven ze gelijk.",
-  "Mushroom": "Mushroom",
-  "Muted text.": "Gedempte tekst.",
-  "Name": "Naam",
-  "Name your theme": "Geef je thema een naam",
-  "Named the theme {name}. Press Save to write it.": "Het thema heet nu {name}. Kies Opslaan om het weg te schrijven.",
-  "New theme": "Nieuw thema",
-  "New, not saved": "Nieuw, niet opgeslagen",
-  "No changes to save": "Geen wijzigingen om op te slaan",
-  "No installed theme matches.": "Geen geïnstalleerd thema komt overeen.",
-  "No theme called {query}.": "Geen thema met de naam {query}.",
-  "No themes yet": "Nog geen thema's",
-  "No variable called {query} in the lists.": "Geen variabele met de naam {query} in de lijsten.",
-  "Not installed here": "Hier niet geïnstalleerd",
-  "Not set": "Niet ingesteld",
-  "Nothing set yet. The preview shows Home Assistant's default look.": "Nog niets ingesteld. Het voorbeeld toont de standaardweergave van Home Assistant.",
-  "Nothing was added": "Er is niets toegevoegd",
-  "Nothing was saved": "Er is niets opgeslagen",
-  "Now using {name} for your user.": "Je gebruiker gebruikt nu {name}.",
-  "Number input debounce": "Vertraging van getalinvoer",
-  "Number state (RGB)": "Getalstatus (RGB)",
-  "On": "Aan",
-  "One setup step before you can save": "Nog één instelling voordat je kunt opslaan",
-  "Only administrators can change presets.": "Alleen beheerders kunnen presets wijzigen.",
-  "Only administrators can edit themes.": "Alleen beheerders kunnen thema's bewerken.",
-  "Only changed": "Alleen gewijzigd",
-  "Only in {mode}": "Alleen in {mode}",
-  "Only {mode} gets this value. {other} keeps the default.": "Alleen {mode} krijgt deze waarde. {other} behoudt de standaardwaarde.",
-  "Open as new theme": "Openen als nieuw thema",
-  "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.": "Open configuration.yaml met de bestandseditor of Studio Code Server, voeg de regels toe, controleer je configuratie en start Home Assistant daarna opnieuw op. Heb je al een frontend:-sectie? Voeg dan alleen de themes-regel eronder toe.",
-  "Open editor": "Editor openen",
-  "Open preview": "Voorbeeld openen",
-  "Open your profile": "Open je profiel",
-  "Orange (RGB)": "Oranje (RGB)",
-  "Other": "Overig",
-  "Outline colour": "Contourkleur",
-  "Outlines of buttons and chips.": "Contouren van knoppen en chips.",
-  "Overview": "Overzicht",
-  "Page background": "Paginaachtergrond",
-  "Person at home colour": "Kleur van persoon thuis",
-  "Person home state (RGB)": "Status persoon thuis (RGB)",
-  "Person icons while home.": "Persoonspictogrammen terwijl iemand thuis is.",
-  "Person not home state (RGB)": "Status persoon niet thuis (RGB)",
-  "Person unknown state (RGB)": "Status persoon onbekend (RGB)",
-  "Person zone state (RGB)": "Status persoon in zone (RGB)",
-  "Pick a preset to start from": "Kies een voorinstelling om mee te beginnen",
-  "Pick a theme to copy": "Kies een thema om te kopiëren",
-  "Pick {name} in your profile to use it.": "Kies {name} in je profiel om het te gebruiken.",
-  "Pink (RGB)": "Roze (RGB)",
-  "Pop-up backdrop colour": "Achtergrondkleur van pop-up",
-  "Pop-up background": "Pop-upachtergrond",
-  "Pop-up radius": "Hoekradius van pop-up",
-  "Presets are still loading": "Voorinstellingen worden nog geladen",
-  "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.": "Voorinstellingen konden niet worden geladen. Controleer je verbinding en probeer het opnieuw. Blijft het mislukken, laad dan de pagina opnieuw.",
-  "Pressed and darker primary accents.": "Ingedrukte en donkerdere primaire accenten.",
-  "Preview": "Voorbeeld",
-  "Preview mode": "Voorbeeldmodus",
-  "Preview not available": "Voorbeeld niet beschikbaar",
-  "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.": "Voorbeeld van {count} voorbeeldkaarten met de {mode, select, dark {donkere} other {lichte}} variabelen. De voorbeelden zijn niet interactief.",
-  "Preview of {name} could not load.": "Het voorbeeld van {name} kon niet worden geladen.",
-  "Previewing {mode, select, dark {dark} other {light}}": "Voorbeeld van {mode, select, dark {donker} other {licht}}",
-  "Primary": "Primair",
-  "Primary and accent": "Primair en accent",
-  "Primary colour": "Primaire kleur",
-  "Primary colour, dark shade": "Primaire kleur, donkere tint",
-  "Primary colour, light shade": "Primaire kleur, lichte tint",
-  "Primary letter spacing": "Letterafstand van primaire tekst",
-  "Primary line height": "Regelhoogte van primaire tekst",
-  "Primary text": "Primaire tekst",
-  "Primary text colour": "Kleur van primaire tekst",
-  "Primary text minimum height": "Minimale hoogte van primaire tekst",
-  "Primary text size": "Grootte van primaire tekst",
-  "Primary text weight": "Dikte van primaire tekst",
-  "Purple (RGB)": "Paars (RGB)",
-  "Quiet panels, input fills and list stripes.": "Rustige panelen, invoervullingen en lijststrepen.",
-  "Radius for every Bubble element.": "Hoekradius voor elk Bubble-element.",
-  "Radius of the ripple on the icon.": "Radius van de rimpel op het pictogram.",
-  "Read only": "Alleen-lezen",
-  "Reading...": "Lezen...",
-  "Red (RGB)": "Rood (RGB)",
-  "Reload": "Opnieuw laden",
-  "Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.": "Laad thema's opnieuw via Ontwikkelaarstools, YAML, of start Home Assistant opnieuw op. Het bestand is geschreven.",
-  "Reloaded the file from disk.": "Het bestand is opnieuw van schijf geladen.",
-  "Remove from {scope}": "Verwijderen uit {scope}",
-  "Remove {chars} and unmatched brackets from the value.": "Verwijder {chars} en haakjes zonder tegenhanger uit de waarde.",
-  "Remove {chars} from the value.": "Verwijder {chars} uit de waarde.",
-  "Remove {label} from {scope}": "{label} verwijderen uit {scope}",
-  "Removed {label} from {scope}": "{label} verwijderd uit {scope}",
-  "Rename": "Hernoemen",
-  "Rename preset": "Voorinstelling hernoemen",
-  "Renamed to {name}.": "Hernoemd naar {name}.",
-  "Reserves room for a missing secondary line.": "Houdt ruimte vrij voor een ontbrekende secundaire regel.",
-  "Resize window": "Venstergrootte wijzigen",
-  "Restore size": "Oorspronkelijke grootte herstellen",
-  "Revert": "Terugzetten",
-  "Revert theme trial": "Thema-proef terugzetten",
-  "Reverted. This tab shows your own theme again.": "Teruggezet. Dit tabblad toont weer je eigen thema.",
-  "Rounding of every card.": "Afronding van elke kaart.",
-  "Same in light and dark": "Hetzelfde in licht en donker",
-  "Save": "Opslaan",
-  "Save (Ctrl+S)": "Opslaan (Ctrl+S)",
-  "Save and rewrite this file?": "Dit bestand opslaan en herschrijven?",
-  "Save anyway": "Toch opslaan",
-  "Save as my preset": "Opslaan als mijn voorinstelling",
-  "Save preset": "Voorinstelling opslaan",
-  "Save without it": "Opslaan zonder",
-  "Saved {file}, but Home Assistant does not list {name} yet": "{file} opgeslagen, maar Home Assistant toont {name} nog niet",
-  "Saved {name} and reloaded themes. Screens that use this theme update now.": "{name} opgeslagen en thema's opnieuw geladen. Schermen die dit thema gebruiken, worden nu bijgewerkt.",
-  "Saved {name} under My presets.": "{name} opgeslagen onder Mijn voorinstellingen.",
-  "Saved {name}.": "{name} opgeslagen.",
-  "Saved {time}": "Opgeslagen om {time}",
-  "Saved. This tab now uses the saved theme file.": "Opgeslagen. Dit tabblad gebruikt nu het opgeslagen themabestand.",
-  "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.": "Een thema opslaan vraagt om één instelling in Home Assistant. Op dashboard proberen werkt ook zonder; de editor laat de regels zien die je moet toevoegen.",
-  "Saving is off until themes are set up": "Opslaan staat uit totdat thema's zijn ingesteld",
-  "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.": "Opslaan herschrijft {name}.yaml. Opmerkingen in het bestand worden verwijderd. Alle variabelen blijven behouden, ook die deze editor niet kent.",
-  "Saving...": "Opslaan...",
-  "Search by name or value": "Zoeken op naam of waarde",
-  "Search installed themes": "Geïnstalleerde thema's zoeken",
-  "Search themes": "Thema's zoeken",
-  "Search variables": "Variabelen zoeken",
-  "Secondary": "Secundair",
-  "Secondary accent used by a few controls.": "Secundair accent dat een paar bedieningselementen gebruiken.",
-  "Secondary background": "Secundaire achtergrond",
-  "Secondary background of every Bubble element.": "Secundaire achtergrond van elk Bubble-element.",
-  "Secondary letter spacing": "Letterafstand van secundaire tekst",
-  "Secondary line height": "Regelhoogte van secundaire tekst",
-  "Secondary text": "Secundaire tekst",
-  "Secondary text and {link}.": "Secundaire tekst en {link}.",
-  "Secondary text colour": "Kleur van secundaire tekst",
-  "Secondary text size": "Grootte van secundaire tekst",
-  "Secondary text weight": "Dikte van secundaire tekst",
-  "Section titles.": "Sectietitels.",
-  "Set here": "Hier ingesteld",
-  "Set in both": "In beide instellen",
-  "Set in {modes}": "Ingesteld in {modes}",
-  "Set in {mode} too": "Ook in {mode} instellen",
-  "Settings": "Instellingen",
-  "Shadow": "Schaduw",
-  "Shadow colour": "Schaduwkleur",
-  "Shadow of the card.": "Schaduw van de kaart.",
-  "Shadow of tooltips.": "Schaduw van tooltips.",
-  "Shadow under every card.": "Schaduw onder elke kaart.",
-  "Shadow under the card.": "Schaduw onder de kaart.",
-  "Shared": "Gedeeld",
-  "Shared applies to light and dark unless a mode sets its own value (the top level of the file).": "Gedeeld geldt voor licht en donker, tenzij een modus een eigen waarde instelt (het hoogste niveau van het bestand).",
-  "Shared value has no effect": "Gedeelde waarde heeft geen effect",
-  "Shared: {value}": "Gedeeld: {value}",
-  "Shortcut: {keys}": "Sneltoets: {keys}",
-  "Show YAML": "YAML tonen",
-  "Show live strip": "Live-strook tonen",
-  "Show me how": "Laat zien hoe",
-  "Show the first": "Toon de eerste",
-  "Show {noun} ({keys})": "Toon {noun} ({keys})",
-  "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.": "Toont de laatste geldige waarde voor {c, plural, one {# variabele} other {# variabelen}}.",
-  "Sidebar background": "Achtergrond van zijbalk",
-  "Sidebar icons": "Pictogrammen van zijbalk",
-  "Sidebar selected icon": "Geselecteerd pictogram van zijbalk",
-  "Sidebar selected text": "Geselecteerde tekst van zijbalk",
-  "Sidebar text": "Tekst van zijbalk",
-  "Sizes and radii": "Groottes en hoekradii",
-  "Slider threshold": "Drempel van schuifregelaar",
-  "Slider track": "Spoor van schuifregelaar",
-  "Small font size": "Kleine lettergrootte",
-  "Small radius": "Kleine hoekradius",
-  "Space inside tooltips.": "Ruimte binnen tooltips.",
-  "Start from": "Beginnen met",
-  "State icon colour": "Kleur van statuspictogram",
-  "States and alerts": "Statussen en meldingen",
-  "Still not found. Restart Home Assistant if you have just added the lines.": "Nog steeds niet gevonden. Start Home Assistant opnieuw op als je de regels net hebt toegevoegd.",
-  "Stop trying": "Proef stoppen",
-  "Sub-button background": "Achtergrond van subknop",
-  "Sub-button radius": "Hoekradius van subknop",
-  "Subtitle colour": "Kleur van ondertitel",
-  "Subtitle letter spacing": "Letterafstand van ondertitel",
-  "Subtitle line height": "Regelhoogte van ondertitel",
-  "Subtitle size": "Grootte van ondertitel",
-  "Subtitle weight": "Dikte van ondertitel",
-  "Success (RGB)": "Succes (RGB)",
-  "Success colour": "Succeskleur",
-  "Success message": "Succesbericht",
-  "Success messages and confirmed states.": "Succesberichten en bevestigde statussen.",
-  "Switch on colour": "Kleur van schakelaar aan",
-  "Takes priority over the card background.": "Heeft voorrang op de kaartachtergrond.",
-  "Teal (RGB)": "Groenblauw (RGB)",
-  "Text": "Tekst",
-  "Text and icons drawn on the primary colour.": "Tekst en pictogrammen op de primaire kleur.",
-  "Text and icons in the top bar.": "Tekst en pictogrammen in de bovenbalk.",
-  "Text block minimum height": "Minimale hoogte van tekstblok",
-  "Text colour of tooltips.": "Tekstkleur van tooltips.",
-  "Text field": "Tekstveld",
-  "Text gap": "Tekstafstand",
-  "Text in the top bar in dashboard edit mode.": "Tekst in de bovenbalk in de bewerkmodus van het dashboard.",
-  "Text of disabled and unavailable things.": "Tekst van uitgeschakelde en niet-beschikbare dingen.",
-  "Text on light surfaces": "Tekst op lichte vlakken",
-  "Text on primary colour": "Tekst op primaire kleur",
-  "The Add any variable row still holds text. Add it to the theme before saving, or save without it.": "De rij Voeg een willekeurige variabele toe bevat nog tekst. Voeg die toe aan het thema voordat je opslaat, of sla op zonder.",
-  "The active sidebar item icon.": "Het pictogram van het actieve item in de zijbalk.",
-  "The active sidebar item name.": "De naam van het actieve item in de zijbalk.",
-  "The background of a dashboard view. Takes a gradient or an image.": "De achtergrond van een dashboardweergave. Accepteert een kleurverloop of een afbeelding.",
-  "The card is loaded for the preview.": "De kaart is geladen voor het voorbeeld.",
-  "The check failed. {reason}": "De controle is mislukt. {reason}",
-  "The colour HA shades shadows with.": "De kleur waarmee HA schaduwen inkleurt.",
-  "The connection to Home Assistant was lost. Your changes are still here.": "De verbinding met Home Assistant is verbroken. Je wijzigingen staan er nog.",
-  "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:": "De editor kon configuration.yaml niet lezen om te controleren. Als thema's niet zijn ingesteld, doen deze regels dat:",
-  "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.": "De editoronderdelen van Magic Card konden niet worden geladen. De editor wordt met Magic Card meegeleverd als magic-card-theme-editor.js: werk Magic Card bij naar 2026.10.06 of nieuwer als dit blijft gebeuren.",
-  "The file Save would write. It is read only here.": "Het bestand dat Opslaan zou schrijven. Het is hier alleen-lezen.",
-  "The file could not be read as YAML.": "Het bestand kon niet als YAML worden gelezen.",
-  "The file is a link to somewhere else.": "Het bestand is een koppeling naar een andere plek.",
-  "The file is too large to edit here.": "Het bestand is te groot om hier te bewerken.",
-  "The file name is not a name this editor can write.": "De bestandsnaam is geen naam die deze editor kan schrijven.",
-  "The font for headings.": "Het lettertype voor koppen.",
-  "The font for most text.": "Het lettertype voor de meeste tekst.",
-  "The light slider.": "De lampschuifregelaar.",
-  "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.": "Het voorbeeld is getekend met echte Home Assistant-elementen en je variabelen. Een paar dingen kunnen op het dashboard anders zijn: thema's die afhangen van aangepaste kaart-CSS, en de zijbalk en de kop.",
-  "The save button in the popup.": "De opslaanknop in de pop-up.",
-  "The sidebar.": "De zijbalk.",
-  "The theme editor could not load. Reload the page.": "De thema-editor kon niet worden geladen. Laad de pagina opnieuw.",
-  "The theme name does not match the file name.": "De themanaam komt niet overeen met de bestandsnaam.",
-  "The tools could not load. Check your connection.": "De hulpmiddelen konden niet worden geladen. Controleer je verbinding.",
-  "The top bar in dashboard edit mode.": "De bovenbalk in de bewerkmodus van het dashboard.",
-  "The top bar of every page.": "De bovenbalk van elke pagina.",
-  "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de pijl aan de rand om het te tonen.",
-  "Theme preview, {mode, select, dark {dark} other {light}}": "Themavoorbeeld, {mode, select, dark {donker} other {licht}}",
-  "Theme trial": "Thema-proef",
-  "Themes": "Thema's",
-  "Themes could not be read": "Thema's konden niet worden gelezen",
-  "These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.": "Dit zijn voorinstellingen, nog geen thema's op je dashboard. Kies Nieuw thema en kies er een onder Mijn voorinstellingen.",
-  "This card cannot be loaded for the preview.": "Deze kaart kan niet worden geladen voor het voorbeeld.",
-  "This field takes one colour, not a gradient.": "Dit veld accepteert één kleur, geen kleurverloop.",
-  "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.": "Dit bestand is veranderd sinds je het opende. Laad het opnieuw om de nieuwe versie te zien, of sla toch op om het te vervangen door jouw versie.",
-  "This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.": "Dit is een voorinstelling, nog geen thema op je dashboard. Open het als nieuw thema om het te proberen en op te slaan.",
-  "This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.": "Dit is geen kleur. Kies er een met het kleurvlak, of typ een waarde zoals #3b82f6 of teal.",
-  "This name is reserved.": "Deze naam is gereserveerd.",
-  "This preset changed elsewhere. Reopen the list.": "Deze voorinstelling is elders gewijzigd. Open de lijst opnieuw.",
-  "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.": "Dit verwijdert /config/{file} en {c, plural, one {het andere thema} other {de andere # thema's}} in dat bestand. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
-  "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.": "Dit verwijdert /config/{file}. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
-  "This removes it from My presets. Themes made from it stay.": "Dit verwijdert het uit Mijn voorinstellingen. Thema's die ermee zijn gemaakt, blijven bestaan.",
-  "This theme has no light or dark modes.": "Dit thema heeft geen lichte of donkere modus.",
-  "This theme is read only. Copy it to edit.": "Dit thema is alleen-lezen. Kopieer het om te bewerken.",
-  "This theme is read only. {reason} Copy it to edit.": "Dit thema is alleen-lezen. {reason} Kopieer het om te bewerken.",
-  "This value has a control character. Remove it.": "Deze waarde bevat een besturingsteken. Verwijder het.",
-  "This value is longer than {max} characters.": "Deze waarde is langer dan {max} tekens.",
-  "This value must be text or a number.": "Deze waarde moet tekst of een getal zijn.",
-  "This variable already exists in {scope}. Add will replace its value.": "Deze variabele bestaat al in {scope}. Toevoegen vervangt de waarde.",
-  "This variable takes a single colour. Gradients work in Card background and Dashboard background.": "Deze variabele accepteert één kleur. Kleurverlopen werken bij Kaartachtergrond en Dashboardachtergrond.",
-  "Three numbers, 0 to 255, like 244, 67, 54.": "Drie getallen van 0 tot 255, zoals 244, 67, 54.",
-  "Tile card": "Tegelkaart",
-  "Title colour": "Kleur van titel",
-  "Title letter spacing": "Letterafstand van titel",
-  "Title line height": "Regelhoogte van titel",
-  "Title padding": "Binnenmarge van titel",
-  "Title size": "Grootte van titel",
-  "Title spacing": "Afstand van titel",
-  "Title weight": "Dikte van titel",
-  "Tooltip background": "Achtergrond van tooltip",
-  "Tooltip background fallback.": "Terugvalachtergrond van tooltip.",
-  "Tooltip maximum width": "Maximale breedte van tooltip",
-  "Tooltip padding": "Binnenmarge van tooltip",
-  "Tooltip radius": "Hoekradius van tooltip",
-  "Tooltip text colour": "Tekstkleur van tooltip",
-  "Tooltip text colour fallback.": "Terugvaltekstkleur van tooltip.",
-  "Tooltip text size": "Tekstgrootte van tooltip",
-  "Track behind the fill. A slider with its own track colour keeps it.": "Spoor achter de vulling. Een schuifregelaar met een eigen sporkleur behoudt die.",
-  "Trial ended after 10 minutes.": "De proef is na 10 minuten beëindigd.",
-  "Trial ended because the theme changed.": "De proef is beëindigd omdat het thema veranderde.",
-  "Try again": "Opnieuw proberen",
-  "Try on dashboard": "Op dashboard proberen",
-  "Trying on this tab": "Wordt geprobeerd op dit tabblad",
-  "Trying {name}": "{name} proberen",
-  "Trying {name} on this tab ({mode, select, dark {dark} other {light}})": "{name} proberen op dit tabblad ({mode, select, dark {donker} other {licht}})",
-  "Ultra Card": "Ultra Card",
-  "Unavailable state colour": "Kleur van niet-beschikbare status",
-  "Undo": "Ongedaan maken",
-  "Unlocked colour": "Kleur van ontgrendeld",
-  "Unsaved changes": "Niet-opgeslagen wijzigingen",
-  "Update": "Bijwerken",
-  "Update Magic Card Utils to keep theme presets. A file with one theme still opens.": "Werk Magic Card Utils bij om themavoorinstellingen te bewaren. Een bestand met één thema opent nog steeds.",
-  "Update installing (RGB)": "Status update wordt geïnstalleerd (RGB)",
-  "Update off (RGB)": "Status update uit (RGB)",
-  "Update on state (RGB)": "Status update aan (RGB)",
-  "Use a single line.": "Gebruik één regel.",
-  "Use letters, numbers, dashes and underscores for a variable name.": "Gebruik letters, cijfers, streepjes en underscores voor een variabelenaam.",
-  "Use letters, numbers, hyphens and underscores. This name is not allowed.": "Gebruik letters, cijfers, koppeltekens en underscores. Deze naam is niet toegestaan.",
-  "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).": "Gebruik kleine letters, cijfers, koppeltekens en underscores, beginnend met een letter of cijfer (maximaal 64 tekens).",
-  "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.": "Gebruik de naam zoals die in het themabestand staat, zonder de streepjes ervoor. Je kunt ook meerdere regels van naam: waarde plakken.",
-  "Use this name": "Deze naam gebruiken",
-  "Use this theme": "Dit thema gebruiken",
-  "Vacuum state (RGB)": "Stofzuigerstatus (RGB)",
-  "Value": "Waarde",
-  "Value set in one mode only": "Waarde in één modus ingesteld",
-  "Variables": "Variabelen",
-  "Variables panel": "Variabelenpaneel",
-  "Variables you set now stay shared. You can then override any of them for light or dark.": "Variabelen die je nu instelt, blijven gedeeld. Je kunt ze daarna voor licht of donker overschrijven.",
-  "Vertical gap between primary and secondary text.": "Verticale ruimte tussen primaire en secundaire tekst.",
-  "Waiting for Home Assistant to connect...": "Wachten tot Home Assistant verbinding maakt...",
-  "Warning (RGB)": "Waarschuwing (RGB)",
-  "Warning colour": "Waarschuwingskleur",
-  "Warning message": "Waarschuwingsbericht",
-  "Warnings and caution states.": "Waarschuwingen en voorzichtigheidsstatussen.",
-  "Where do I add these lines?": "Waar voeg ik deze regels toe?",
-  "White (RGB)": "Wit (RGB)",
-  "Widest a tooltip grows.": "Hoe breed een tooltip maximaal wordt.",
-  "Width of the card border.": "Breedte van de kaartrand.",
-  "Wins over the card background for cards only. Takes a gradient.": "Wint van de kaartachtergrond, alleen voor kaarten. Accepteert een kleurverloop.",
-  "Wins over the card background.": "Wint van de kaartachtergrond.",
-  "YAML of {name}": "YAML van {name}",
-  "Yellow (RGB)": "Geel (RGB)",
-  "You can keep 100 presets. Delete one first.": "Je kunt 100 voorinstellingen bewaren. Verwijder er eerst een.",
-  "You can skip this for now. Try on dashboard works without it.": "Je kunt dit nu overslaan. Op dashboard proberen werkt ook zonder.",
-  "You have changes that are not saved.": "Je hebt wijzigingen die niet zijn opgeslagen.",
-  "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:": "Je configuration.yaml somt thema's inline op, dus Home Assistant leest /config/themes niet. Gebruik deze regels om de bestanden te gebruiken die deze editor schrijft:",
-  "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:": "Je configuration.yaml laadt thema's op een andere manier, dus de editor kan niet zeker weten of hij zijn bestanden kan zien. Met deze regels weet je dat zeker:",
-  "Your themes live in /config/themes.": "Je thema's staan in /config/themes.",
-  "a blank theme": "een leeg thema",
-  "a link": "een link",
-  "button-card": "button-card",
-  "entities card": "entiteitenkaart",
-  "tile card": "tegelkaart",
-  "variables": "variabelen",
-  "{a} and {b}": "{a} en {b}",
-  "{c, plural, one {# value needs} other {# values need}} a fix": "{c, plural, one {# waarde moet} other {# waarden moeten}} worden hersteld",
-  "{c, plural, one {# variable matches} other {# variables match}}": "{c, plural, one {# variabele komt overeen} other {# variabelen komen overeen}}",
-  "{c, plural, one {# variable} other {# variables}}": "{c, plural, one {# variabele} other {# variabelen}}",
-  "{c} set": "{c} ingesteld",
-  "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.": "{help} De knop Terugzetten blijft aan de rand van het scherm. Om {other, select, dark {donker} other {licht}} te proberen, zet je je profiel op {other, select, dark {donker} other {licht}}.",
-  "{label} could not be loaded.": "{label} kon niet worden geladen.",
-  "{label} did not start in time.": "{label} is niet op tijd gestart.",
-  "{label} has a resource address the editor will not load.": "{label} heeft een bronadres dat de editor niet laadt.",
-  "{label} is loaded for the preview.": "{label} is geladen voor het voorbeeld.",
-  "{label} is not in the dashboard resources.": "{label} staat niet in de dashboardbronnen.",
-  "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.": "{label} is niet geladen in deze editor, dus het voorbeeld kan het niet tonen. De variabelen hieronder kun je nog steeds bewerken en opslaan.",
-  "{mode} uses its own value. This only changes {covered}.": "{mode} gebruikt een eigen waarde. Dit verandert alleen {covered}.",
-  "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.": "{n, plural, one {# voorinstelling staat} other {# voorinstellingen staan}} onder Mijn voorinstellingen, maar een voorinstelling is nog geen thema. Kies Nieuw thema en kies de voorinstelling om er een te maken.",
-  "{name}.yaml changed on disk": "{name}.yaml is gewijzigd op schijf",
-  "{name}: {reason}": "{name}: {reason}",
-  "{n} not valid, left out": "{n} ongeldig, weggelaten",
-  "{panels} hidden": "{panels} verborgen",
-  "{panels} shown": "{panels} getoond",
-  "{path}: {message}": "{path}: {message}",
-  "Contacts another website": "Neemt contact op met een andere website",
-  "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.": "Sommige waarden laden bestanden van een andere website. Het voorbeeld en Op dashboard proberen vragen die bestanden op, dus die website kan je IP-adres zien.",
-  "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.": "Sommige waarden laden bestanden van {hosts}. Het voorbeeld en Op dashboard proberen vragen die bestanden op, dus de sites waarnaar ze verwijzen kunnen je IP-adres zien."
+  "theme-editor.bubble-card.accent-colour": {
+    "text": "Accentkleur",
+    "hash": "12376f4c"
+  },
+  "theme-editor.bubble-card.accent-for-active-states-and-sliders": {
+    "text": "Accent voor actieve statussen en schuifregelaars.",
+    "hash": "7caf8390"
+  },
+  "theme-editor.bubble-card.background-behind-icons": {
+    "text": "Achtergrond achter pictogrammen.",
+    "hash": "03e893b1"
+  },
+  "theme-editor.bubble-card.background-of-pop-ups": {
+    "text": "Achtergrond van pop-ups.",
+    "hash": "7a806cf2"
+  },
+  "theme-editor.bubble-card.background-of-sub-buttons": {
+    "text": "Achtergrond van subknoppen.",
+    "hash": "5a8dc047"
+  },
+  "theme-editor.bubble-card.border": {
+    "text": "Rand",
+    "hash": "3b4bdff3"
+  },
+  "theme-editor.bubble-card.border-of-bubble-cards": {
+    "text": "Rand van Bubble-kaarten.",
+    "hash": "b12f4073"
+  },
+  "theme-editor.bubble-card.box-shadow-of-bubble-cards": {
+    "text": "Kaderschaduw van Bubble-kaarten.",
+    "hash": "ec78b5f4"
+  },
+  "theme-editor.bubble-card.button-card-background": {
+    "text": "Achtergrond van knopkaart",
+    "hash": "3bb6a4fc"
+  },
+  "theme-editor.bubble-card.button-card-radius": {
+    "text": "Hoekradius van knopkaart",
+    "hash": "118233a1"
+  },
+  "theme-editor.bubble-card.colour-of-the-dimmed-area-behind-a-pop": {
+    "text": "Kleur van het gedimde gebied achter een pop-up.",
+    "hash": "eb85ee32"
+  },
+  "theme-editor.bubble-card.corner-radius": {
+    "text": "Hoekradius",
+    "hash": "76a6d9f3"
+  },
+  "theme-editor.bubble-card.corner-radius-of-button-cards": {
+    "text": "Hoekradius van knopkaarten.",
+    "hash": "b2dbe39a"
+  },
+  "theme-editor.bubble-card.corner-radius-of-icons": {
+    "text": "Hoekradius van pictogrammen.",
+    "hash": "b078b2fb"
+  },
+  "theme-editor.bubble-card.corner-radius-of-pop-ups": {
+    "text": "Hoekradius van pop-ups.",
+    "hash": "f0c0205e"
+  },
+  "theme-editor.bubble-card.corner-radius-of-sub-buttons": {
+    "text": "Hoekradius van subknoppen.",
+    "hash": "2241146c"
+  },
+  "theme-editor.bubble-card.fill-colour-for-light-sliders": {
+    "text": "Vulkleur voor lampschuifregelaars.",
+    "hash": "9830e79a"
+  },
+  "theme-editor.bubble-card.icon-background": {
+    "text": "Pictogramachtergrond",
+    "hash": "49eeaa4e"
+  },
+  "theme-editor.bubble-card.icon-radius": {
+    "text": "Hoekradius van pictogram",
+    "hash": "8f95505e"
+  },
+  "theme-editor.bubble-card.light-colour": {
+    "text": "Lampkleur",
+    "hash": "27956917"
+  },
+  "theme-editor.bubble-card.main-background": {
+    "text": "Hoofdachtergrond",
+    "hash": "03fea198"
+  },
+  "theme-editor.bubble-card.main-background-of-button-cards": {
+    "text": "Hoofdachtergrond van knopkaarten.",
+    "hash": "67e69fb5"
+  },
+  "theme-editor.bubble-card.main-background-of-every-bubble-element": {
+    "text": "Hoofdachtergrond van elk Bubble-element.",
+    "hash": "8d529c50"
+  },
+  "theme-editor.bubble-card.pop-up-backdrop-colour": {
+    "text": "Achtergrondkleur van pop-up",
+    "hash": "62e70ea2"
+  },
+  "theme-editor.bubble-card.pop-up-background": {
+    "text": "Pop-upachtergrond",
+    "hash": "a57c5486"
+  },
+  "theme-editor.bubble-card.pop-up-radius": {
+    "text": "Hoekradius van pop-up",
+    "hash": "75ca3bad"
+  },
+  "theme-editor.bubble-card.radius-for-every-bubble-element": {
+    "text": "Hoekradius voor elk Bubble-element.",
+    "hash": "e487221c"
+  },
+  "theme-editor.bubble-card.secondary-background": {
+    "text": "Secundaire achtergrond",
+    "hash": "6f83c048"
+  },
+  "theme-editor.bubble-card.secondary-background-of-every-bubble": {
+    "text": "Secundaire achtergrond van elk Bubble-element.",
+    "hash": "57a06db6"
+  },
+  "theme-editor.bubble-card.shadow": {
+    "text": "Schaduw",
+    "hash": "4c764cb6"
+  },
+  "theme-editor.bubble-card.sub-button-background": {
+    "text": "Achtergrond van subknop",
+    "hash": "db308c6b"
+  },
+  "theme-editor.bubble-card.sub-button-radius": {
+    "text": "Hoekradius van subknop",
+    "hash": "a5fe3ab4"
+  },
+  "theme-editor.button-card.background-of-the-loading-spinner": {
+    "text": "Achtergrond van de laadindicator.",
+    "hash": "3bd7c417"
+  },
+  "theme-editor.button-card.background-of-tooltips": {
+    "text": "Achtergrond van tooltips.",
+    "hash": "bc1535ff"
+  },
+  "theme-editor.button-card.card-background": {
+    "text": "Kaartachtergrond",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.button-card.card-radius": {
+    "text": "Hoekradius van kaart",
+    "hash": "8ba76469"
+  },
+  "theme-editor.button-card.card-shadow": {
+    "text": "Kaartschaduw",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.button-card.corner-radius-of-tooltips": {
+    "text": "Hoekradius van tooltips.",
+    "hash": "2e031b0d"
+  },
+  "theme-editor.button-card.font-size-of-tooltips": {
+    "text": "Lettergrootte van tooltips.",
+    "hash": "4d68e657"
+  },
+  "theme-editor.button-card.icon-colour-when-an-entity-is-inactive": {
+    "text": "Pictogramkleur wanneer een entiteit inactief is.",
+    "hash": "3a7d469d"
+  },
+  "theme-editor.button-card.primary-text-colour": {
+    "text": "Kleur van primaire tekst",
+    "hash": "137442b2"
+  },
+  "theme-editor.button-card.radius-of-the-ripple-on-the-icon": {
+    "text": "Radius van de rimpel op het pictogram.",
+    "hash": "79c01046"
+  },
+  "theme-editor.button-card.secondary-background": {
+    "text": "Secundaire achtergrond",
+    "hash": "6f83c048"
+  },
+  "theme-editor.button-card.shadow-of-tooltips": {
+    "text": "Schaduw van tooltips.",
+    "hash": "4cf06228"
+  },
+  "theme-editor.button-card.space-inside-tooltips": {
+    "text": "Ruimte binnen tooltips.",
+    "hash": "ee83e15a"
+  },
+  "theme-editor.button-card.state-icon-colour": {
+    "text": "Kleur van statuspictogram",
+    "hash": "ad5234ce"
+  },
+  "theme-editor.button-card.text-colour-of-tooltips": {
+    "text": "Tekstkleur van tooltips.",
+    "hash": "ec1ee796"
+  },
+  "theme-editor.button-card.tooltip-background": {
+    "text": "Achtergrond van tooltip",
+    "hash": "bf0bfcbc"
+  },
+  "theme-editor.button-card.tooltip-background-fallback": {
+    "text": "Terugvalachtergrond van tooltip.",
+    "hash": "2d84fdaa"
+  },
+  "theme-editor.button-card.tooltip-maximum-width": {
+    "text": "Maximale breedte van tooltip",
+    "hash": "2b0307b8"
+  },
+  "theme-editor.button-card.tooltip-padding": {
+    "text": "Binnenmarge van tooltip",
+    "hash": "ad08abd3"
+  },
+  "theme-editor.button-card.tooltip-radius": {
+    "text": "Hoekradius van tooltip",
+    "hash": "41c65dfb"
+  },
+  "theme-editor.button-card.tooltip-text-colour": {
+    "text": "Tekstkleur van tooltip",
+    "hash": "9886799b"
+  },
+  "theme-editor.button-card.tooltip-text-colour-fallback": {
+    "text": "Terugvaltekstkleur van tooltip.",
+    "hash": "3025917d"
+  },
+  "theme-editor.button-card.tooltip-text-size": {
+    "text": "Tekstgrootte van tooltip",
+    "hash": "4c7bd4ef"
+  },
+  "theme-editor.button-card.widest-a-tooltip-grows": {
+    "text": "Hoe breed een tooltip maximaal wordt.",
+    "hash": "a707ff48"
+  },
+  "theme-editor.catalogue.backgrounds-and-cards": {
+    "text": "Achtergronden en kaarten",
+    "hash": "e21a846d"
+  },
+  "theme-editor.catalogue.bubble-card": {
+    "text": "Bubble Card",
+    "hash": "fe601bd6"
+  },
+  "theme-editor.catalogue.button-card": {
+    "text": "button-card",
+    "hash": "04302151"
+  },
+  "theme-editor.catalogue.header-and-sidebar": {
+    "text": "Kop en zijbalk",
+    "hash": "e77bb2c5"
+  },
+  "theme-editor.catalogue.magic-card": {
+    "text": "Magic Card",
+    "hash": "4789a1c5"
+  },
+  "theme-editor.catalogue.mushroom": {
+    "text": "Mushroom",
+    "hash": "f067a8ba"
+  },
+  "theme-editor.catalogue.other": {
+    "text": "Overig",
+    "hash": "f97e9da0"
+  },
+  "theme-editor.catalogue.primary-and-accent": {
+    "text": "Primair en accent",
+    "hash": "fcd60ba1"
+  },
+  "theme-editor.catalogue.sizes-and-radii": {
+    "text": "Groottes en hoekradii",
+    "hash": "4f898ede"
+  },
+  "theme-editor.catalogue.states-and-alerts": {
+    "text": "Statussen en meldingen",
+    "hash": "c8fd1d0d"
+  },
+  "theme-editor.catalogue.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "theme-editor.catalogue.tile-card": {
+    "text": "Tegelkaart",
+    "hash": "37c39167"
+  },
+  "theme-editor.catalogue.ultra-card": {
+    "text": "Ultra Card",
+    "hash": "350752f1"
+  },
+  "theme-editor.dialogs.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "theme-editor.dialogs.maximise": {
+    "text": "Maximaliseren",
+    "hash": "1c9fcada"
+  },
+  "theme-editor.dialogs.move-window": {
+    "text": "Venster verplaatsen",
+    "hash": "50bb7be2"
+  },
+  "theme-editor.dialogs.resize-window": {
+    "text": "Venstergrootte wijzigen",
+    "hash": "c82ca135"
+  },
+  "theme-editor.dialogs.restore-size": {
+    "text": "Oorspronkelijke grootte herstellen",
+    "hash": "b0a8b5c8"
+  },
+  "theme-editor.editor-view.a-theme-with-this-name-already-exists": {
+    "text": "Er bestaat al een thema met deze naam.",
+    "hash": "cbee0a24"
+  },
+  "theme-editor.editor-view.a-variable-is-typed-but-not-added": {
+    "text": "Er is een variabele getypt maar niet toegevoegd",
+    "hash": "e9f61f47"
+  },
+  "theme-editor.editor-view.add-it-and-save": {
+    "text": "Toevoegen en opslaan",
+    "hash": "31f6804c"
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes": {
+    "text": "Lichte en donkere modus toevoegen",
+    "hash": "fe2a470a"
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes-2": {
+    "text": "Lichte en donkere modus toevoegen?",
+    "hash": "683cac14"
+  },
+  "theme-editor.editor-view.add-modes": {
+    "text": "Modi toevoegen",
+    "hash": "709a0c82"
+  },
+  "theme-editor.editor-view.add-name-as-a-variable": {
+    "text": "{name} toevoegen als variabele",
+    "hash": "d13ce551"
+  },
+  "theme-editor.editor-view.added-light-and-dark-modes-variables-you": {
+    "text": "Lichte en donkere modus toegevoegd. Variabelen die je eerder instelde, blijven gedeeld.",
+    "hash": "d002c3e8"
+  },
+  "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
+    "text": "Geldt alleen voor dit browsertabblad. Open een dashboard om het te zien. Gebruikt je huidige modus ({mode, select, dark {donker} other {licht}}).",
+    "hash": "1444813f"
+  },
+  "theme-editor.editor-view.button": {
+    "text": "Knop",
+    "hash": "707eab0c"
+  },
+  "theme-editor.editor-view.c": {
+    "text": "{c, plural, one {# variabele komt overeen} other {# variabelen komen overeen}}",
+    "hash": "f74b676d"
+  },
+  "theme-editor.editor-view.c-a-fix": {
+    "text": "{c, plural, one {# waarde moet} other {# waarden moeten}} worden hersteld",
+    "hash": "3bed2314"
+  },
+  "theme-editor.editor-view.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "theme-editor.editor-view.check-again": {
+    "text": "Opnieuw controleren",
+    "hash": "fb7099ad"
+  },
+  "theme-editor.editor-view.choose-another-name": {
+    "text": "Kies een andere naam",
+    "hash": "24532939"
+  },
+  "theme-editor.editor-view.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "theme-editor.editor-view.contacts-another-website": {
+    "text": "Neemt contact op met een andere website",
+    "hash": "56e74582"
+  },
+  "theme-editor.editor-view.contrast-not-checked-value-has": {
+    "text": "Contrast niet gecontroleerd: de waarde is transparant.",
+    "hash": "def5436a"
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-easy-to": {
+    "text": "Contrast op kaart, {mode}: {ratio} op 1, goed leesbaar",
+    "hash": "8cc49c9a"
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-hard-to": {
+    "text": "Contrast op kaart, {mode}: {ratio} op 1, slecht leesbaar, onder 4,5 op 1",
+    "hash": "63272251"
+  },
+  "theme-editor.editor-view.copied-c-from-from-to-to": {
+    "text": "{c, plural, one {# variabele} other {# variabelen}} gekopieerd van {from} naar {to}.",
+    "hash": "b6122c1a"
+  },
+  "theme-editor.editor-view.copied-key-text": {
+    "text": "Sleutel {text} gekopieerd",
+    "hash": "35a10b05"
+  },
+  "theme-editor.editor-view.copied-yaml": {
+    "text": "YAML gekopieerd",
+    "hash": "3554fd63"
+  },
+  "theme-editor.editor-view.copy-dark-to-light": {
+    "text": "Donker naar Licht kopiëren",
+    "hash": "fe1ecf53"
+  },
+  "theme-editor.editor-view.copy-light-to-dark": {
+    "text": "Licht naar Donker kopiëren",
+    "hash": "464ec804"
+  },
+  "theme-editor.editor-view.copy-yaml": {
+    "text": "YAML kopiëren",
+    "hash": "e5a88d42"
+  },
+  "theme-editor.editor-view.could-not-delete-name-reason": {
+    "text": "Kon {name} niet verwijderen. {reason}",
+    "hash": "a4fbd926"
+  },
+  "theme-editor.editor-view.could-not-read-name": {
+    "text": "Kon {name} niet lezen",
+    "hash": "ebc96f41"
+  },
+  "theme-editor.editor-view.could-not-save-name": {
+    "text": "Kon {name} niet opslaan",
+    "hash": "19149e58"
+  },
+  "theme-editor.editor-view.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "theme-editor.editor-view.delete-name": {
+    "text": "{name} verwijderen?",
+    "hash": "a4b982a9"
+  },
+  "theme-editor.editor-view.delete-theme": {
+    "text": "Thema verwijderen",
+    "hash": "e29a2b87"
+  },
+  "theme-editor.editor-view.discard": {
+    "text": "Verwerpen",
+    "hash": "eb1a70e3"
+  },
+  "theme-editor.editor-view.discard-changes-to-name": {
+    "text": "Wijzigingen in {name} verwerpen?",
+    "hash": "de0b9f25"
+  },
+  "theme-editor.editor-view.dismiss": {
+    "text": "Sluiten",
+    "hash": "48845bff"
+  },
+  "theme-editor.editor-view.edit-variables-for": {
+    "text": "Variabelen bewerken voor",
+    "hash": "abd22f47"
+  },
+  "theme-editor.editor-view.editing": {
+    "text": "Bewerken",
+    "hash": "fab4539d"
+  },
+  "theme-editor.editor-view.editing-scope-created-from-from": {
+    "text": "Je bewerkt {scope}. Gemaakt vanuit {from}.",
+    "hash": "2939624f"
+  },
+  "theme-editor.editor-view.editing-scope-previewing-mode": {
+    "text": "Je bewerkt {scope}. Voorbeeld van {mode}.",
+    "hash": "d33e4b8e"
+  },
+  "theme-editor.editor-view.editor-panels": {
+    "text": "Editorpanelen",
+    "hash": "c7d9a2fc"
+  },
+  "theme-editor.editor-view.export-theme": {
+    "text": "Thema exporteren",
+    "hash": "575ade1f"
+  },
+  "theme-editor.editor-view.fix-c-to-save": {
+    "text": "Herstel {c, plural, one {# waarde} other {# waarden}} om op te slaan",
+    "hash": "ab19cd91"
+  },
+  "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
+    "text": "{help} De knop Terugzetten blijft aan de rand van het scherm. Om {other, select, dark {donker} other {licht}} te proberen, zet je je profiel op {other, select, dark {donker} other {licht}}.",
+    "hash": "20a3300a"
+  },
+  "theme-editor.editor-view.hide-live-strip": {
+    "text": "Live-strook verbergen",
+    "hash": "b8c143e8"
+  },
+  "theme-editor.editor-view.home-assistant-does-not-load-config": {
+    "text": "Home Assistant laadt /config/themes nog niet. Voeg de regels hierboven toe, start opnieuw op en kies dan Opnieuw controleren.",
+    "hash": "5419e14f"
+  },
+  "theme-editor.editor-view.living-room": {
+    "text": "Woonkamer",
+    "hash": "268d40ee"
+  },
+  "theme-editor.editor-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Kleine letters, cijfers, koppeltekens en underscores. Wordt gebruikt als bestandsnaam.",
+    "hash": "bb1fdbf1"
+  },
+  "theme-editor.editor-view.magic-card-and-integrations": {
+    "text": "Magic Card en integraties",
+    "hash": "56151480"
+  },
+  "theme-editor.editor-view.more-actions": {
+    "text": "Meer acties",
+    "hash": "f8d46c25"
+  },
+  "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
+    "text": "{label} verplaatst naar Gedeeld. Licht en Donker gebruiken het allebei.",
+    "hash": "4a8e4025"
+  },
+  "theme-editor.editor-view.name-yaml-changed-on-disk": {
+    "text": "{name}.yaml is gewijzigd op schijf",
+    "hash": "ae3c269c"
+  },
+  "theme-editor.editor-view.name-your-theme": {
+    "text": "Geef je thema een naam",
+    "hash": "dddc578d"
+  },
+  "theme-editor.editor-view.named-the-theme-name-press-save-to-write": {
+    "text": "Het thema heet nu {name}. Kies Opslaan om het weg te schrijven.",
+    "hash": "61c6b35c"
+  },
+  "theme-editor.editor-view.new-not-saved": {
+    "text": "Nieuw, niet opgeslagen",
+    "hash": "ad2b2fc6"
+  },
+  "theme-editor.editor-view.no-changes-to-save": {
+    "text": "Geen wijzigingen om op te slaan",
+    "hash": "d608d0f6"
+  },
+  "theme-editor.editor-view.no-variable-called-query-in-the-lists": {
+    "text": "Geen variabele met de naam {query} in de lijsten.",
+    "hash": "ae112c86"
+  },
+  "theme-editor.editor-view.now-using-name-for-your-user": {
+    "text": "Je gebruiker gebruikt nu {name}.",
+    "hash": "601a10e9"
+  },
+  "theme-editor.editor-view.on": {
+    "text": "Aan",
+    "hash": "13001175"
+  },
+  "theme-editor.editor-view.only-administrators-can-edit-themes": {
+    "text": "Alleen beheerders kunnen thema's bewerken.",
+    "hash": "aa35e075"
+  },
+  "theme-editor.editor-view.only-changed": {
+    "text": "Alleen gewijzigd",
+    "hash": "d836aea0"
+  },
+  "theme-editor.editor-view.open-preview": {
+    "text": "Voorbeeld openen",
+    "hash": "f7afe3dd"
+  },
+  "theme-editor.editor-view.open-your-profile": {
+    "text": "Open je profiel",
+    "hash": "c930598e"
+  },
+  "theme-editor.editor-view.path-message": {
+    "text": "{path}: {message}",
+    "hash": "c59315a4"
+  },
+  "theme-editor.editor-view.pick-name-in-your-profile-to-use-it": {
+    "text": "Kies {name} in je profiel om het te gebruiken.",
+    "hash": "29213c77"
+  },
+  "theme-editor.editor-view.preview": {
+    "text": "Voorbeeld",
+    "hash": "324b134f"
+  },
+  "theme-editor.editor-view.read-only": {
+    "text": "Alleen-lezen",
+    "hash": "8ac76735"
+  },
+  "theme-editor.editor-view.reload": {
+    "text": "Opnieuw laden",
+    "hash": "bdc090ec"
+  },
+  "theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or": {
+    "text": "Laad thema's opnieuw via Ontwikkelaarstools, YAML, of start Home Assistant opnieuw op. Het bestand is geschreven.",
+    "hash": "fc0eebc9"
+  },
+  "theme-editor.editor-view.reloaded-the-file-from-disk": {
+    "text": "Het bestand is opnieuw van schijf geladen.",
+    "hash": "53924149"
+  },
+  "theme-editor.editor-view.removed-label-from-scope": {
+    "text": "{label} verwijderd uit {scope}",
+    "hash": "829ea1f2"
+  },
+  "theme-editor.editor-view.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "theme-editor.editor-view.save-and-rewrite-this-file": {
+    "text": "Dit bestand opslaan en herschrijven?",
+    "hash": "54bcce93"
+  },
+  "theme-editor.editor-view.save-anyway": {
+    "text": "Toch opslaan",
+    "hash": "ef4c87b5"
+  },
+  "theme-editor.editor-view.save-as-my-preset": {
+    "text": "Opslaan als mijn voorinstelling",
+    "hash": "bd12a457"
+  },
+  "theme-editor.editor-view.save-without-it": {
+    "text": "Opslaan zonder",
+    "hash": "2f45b142"
+  },
+  "theme-editor.editor-view.saved-file-but-home-assistant-does-not": {
+    "text": "{file} opgeslagen, maar Home Assistant toont {name} nog niet",
+    "hash": "ef681631"
+  },
+  "theme-editor.editor-view.saved-name": {
+    "text": "{name} opgeslagen.",
+    "hash": "9148a257"
+  },
+  "theme-editor.editor-view.saved-name-and-reloaded-themes-screens": {
+    "text": "{name} opgeslagen en thema's opnieuw geladen. Schermen die dit thema gebruiken, worden nu bijgewerkt.",
+    "hash": "cad4ee18"
+  },
+  "theme-editor.editor-view.saved-time": {
+    "text": "Opgeslagen om {time}",
+    "hash": "430aca4f"
+  },
+  "theme-editor.editor-view.saving-is-off-until-themes-are-set-up": {
+    "text": "Opslaan staat uit totdat thema's zijn ingesteld",
+    "hash": "853e5ced"
+  },
+  "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
+    "text": "Opslaan herschrijft {name}.yaml. Opmerkingen in het bestand worden verwijderd. Alle variabelen blijven behouden, ook die deze editor niet kent.",
+    "hash": "f91fef09"
+  },
+  "theme-editor.editor-view.search-by-name-or-value": {
+    "text": "Zoeken op naam of waarde",
+    "hash": "d5c7e78d"
+  },
+  "theme-editor.editor-view.search-variables": {
+    "text": "Variabelen zoeken",
+    "hash": "413b60a7"
+  },
+  "theme-editor.editor-view.set-in-modes": {
+    "text": "Ingesteld in {modes}",
+    "hash": "53cfccad"
+  },
+  "theme-editor.editor-view.shared-applies-to-light-and-dark-unless": {
+    "text": "Gedeeld geldt voor licht en donker, tenzij een modus een eigen waarde instelt (het hoogste niveau van het bestand).",
+    "hash": "e53f039f"
+  },
+  "theme-editor.editor-view.show-live-strip": {
+    "text": "Live-strook tonen",
+    "hash": "118623bc"
+  },
+  "theme-editor.editor-view.show-the-first": {
+    "text": "Toon de eerste",
+    "hash": "d04033d7"
+  },
+  "theme-editor.editor-view.show-yaml": {
+    "text": "YAML tonen",
+    "hash": "97bd3a2f"
+  },
+  "theme-editor.editor-view.some-values-load-files-from-another": {
+    "text": "Sommige waarden laden bestanden van een andere website. Het voorbeeld en Op dashboard proberen vragen die bestanden op, dus die website kan je IP-adres zien.",
+    "hash": "4fb11054"
+  },
+  "theme-editor.editor-view.some-values-load-files-from-hosts-the": {
+    "text": "Sommige waarden laden bestanden van {hosts}. Het voorbeeld en Op dashboard proberen vragen die bestanden op, dus de sites waarnaar ze verwijzen kunnen je IP-adres zien.",
+    "hash": "ccfa6991"
+  },
+  "theme-editor.editor-view.stop-trying": {
+    "text": "Proef stoppen",
+    "hash": "859edf64"
+  },
+  "theme-editor.editor-view.the-add-any-variable-row-still-holds": {
+    "text": "De rij Voeg een willekeurige variabele toe bevat nog tekst. Voeg die toe aan het thema voordat je opslaat, of sla op zonder.",
+    "hash": "43e9d403"
+  },
+  "theme-editor.editor-view.the-connection-to-home-assistant-was": {
+    "text": "De verbinding met Home Assistant is verbroken. Je wijzigingen staan er nog.",
+    "hash": "f34e7ea9"
+  },
+  "theme-editor.editor-view.the-file-save-would-write-it-is-read": {
+    "text": "Het bestand dat Opslaan zou schrijven. Het is hier alleen-lezen.",
+    "hash": "de3e8bbb"
+  },
+  "theme-editor.editor-view.themes": {
+    "text": "Thema's",
+    "hash": "43ae3265"
+  },
+  "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
+    "text": "Dit bestand is veranderd sinds je het opende. Laad het opnieuw om de nieuwe versie te zien, of sla toch op om het te vervangen door jouw versie.",
+    "hash": "d65da0d8"
+  },
+  "theme-editor.editor-view.this-removes-config-file-screens-that": {
+    "text": "Dit verwijdert /config/{file}. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
+    "hash": "728badac"
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
+    "text": "Dit thema is alleen-lezen. Kopieer het om te bewerken.",
+    "hash": "e03501d0"
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-reason-copy-it": {
+    "text": "Dit thema is alleen-lezen. {reason} Kopieer het om te bewerken.",
+    "hash": "9b3bbbb7"
+  },
+  "theme-editor.editor-view.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "theme-editor.editor-view.try-on-dashboard": {
+    "text": "Op dashboard proberen",
+    "hash": "76c93ee8"
+  },
+  "theme-editor.editor-view.trying-on-this-tab": {
+    "text": "Wordt geprobeerd op dit tabblad",
+    "hash": "7bd16404"
+  },
+  "theme-editor.editor-view.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "theme-editor.editor-view.unsaved-changes": {
+    "text": "Niet-opgeslagen wijzigingen",
+    "hash": "a710c2b9"
+  },
+  "theme-editor.editor-view.use-lowercase-letters-numbers-hyphens": {
+    "text": "Gebruik kleine letters, cijfers, koppeltekens en underscores, beginnend met een letter of cijfer (maximaal 64 tekens).",
+    "hash": "2ed797ed"
+  },
+  "theme-editor.editor-view.use-this-name": {
+    "text": "Deze naam gebruiken",
+    "hash": "bfc9ad16"
+  },
+  "theme-editor.editor-view.use-this-theme": {
+    "text": "Dit thema gebruiken",
+    "hash": "9e11707e"
+  },
+  "theme-editor.editor-view.variables": {
+    "text": "Variabelen",
+    "hash": "02db55ba"
+  },
+  "theme-editor.editor-view.variables-panel": {
+    "text": "Variabelenpaneel",
+    "hash": "aeb81548"
+  },
+  "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
+    "text": "Variabelen die je nu instelt, blijven gedeeld. Je kunt ze daarna voor licht of donker overschrijven.",
+    "hash": "c9bda1f8"
+  },
+  "theme-editor.editor-view.yaml-of-name": {
+    "text": "YAML van {name}",
+    "hash": "1c3cda30"
+  },
+  "theme-editor.editor-view.you-have-changes-that-are-not-saved": {
+    "text": "Je hebt wijzigingen die niet zijn opgeslagen.",
+    "hash": "4937afc2"
+  },
+  "theme-editor.field-group.also-set-in-modes": {
+    "text": "Ook ingesteld in {modes}",
+    "hash": "5930a5eb"
+  },
+  "theme-editor.field-group.c-set": {
+    "text": "{c} ingesteld",
+    "hash": "f920a334"
+  },
+  "theme-editor.field-group.copy-key-name": {
+    "text": "Sleutel {name} kopiëren",
+    "hash": "26460880"
+  },
+  "theme-editor.field-group.custom": {
+    "text": "Aangepast",
+    "hash": "494ca78f"
+  },
+  "theme-editor.field-group.default": {
+    "text": "Standaard",
+    "hash": "21b111cb"
+  },
+  "theme-editor.field-group.default-value": {
+    "text": "Standaard: {value}",
+    "hash": "39bd0a11"
+  },
+  "theme-editor.field-group.home-assistant-variable": {
+    "text": "Home Assistant-variabele",
+    "hash": "cfbe6d00"
+  },
+  "theme-editor.field-group.keep-in-mode-only": {
+    "text": "Alleen in {mode} houden",
+    "hash": "813bfe3d"
+  },
+  "theme-editor.field-group.keep-in-shared-only": {
+    "text": "Alleen in Gedeeld houden",
+    "hash": "ec46fd1b"
+  },
+  "theme-editor.field-group.light-and-dark-both-use-their-own-value": {
+    "text": "Licht en Donker gebruiken beide hun eigen waarde, dus dit heeft geen effect.",
+    "hash": "26673bc7"
+  },
+  "theme-editor.field-group.mode-uses-its-own-value-this-only": {
+    "text": "{mode} gebruikt een eigen waarde. Dit verandert alleen {covered}.",
+    "hash": "38530c6a"
+  },
+  "theme-editor.field-group.move-to-shared": {
+    "text": "Verplaatsen naar Gedeeld",
+    "hash": "ca129b2b"
+  },
+  "theme-editor.field-group.not-installed-here": {
+    "text": "Hier niet geïnstalleerd",
+    "hash": "66b3e136"
+  },
+  "theme-editor.field-group.not-set": {
+    "text": "Niet ingesteld",
+    "hash": "4895f731"
+  },
+  "theme-editor.field-group.only-in-mode": {
+    "text": "Alleen in {mode}",
+    "hash": "39b9db31"
+  },
+  "theme-editor.field-group.only-mode-gets-this-value-other-keeps": {
+    "text": "Alleen {mode} krijgt deze waarde. {other} behoudt de standaardwaarde.",
+    "hash": "698407e7"
+  },
+  "theme-editor.field-group.remove-from-scope": {
+    "text": "Verwijderen uit {scope}",
+    "hash": "6f4e712e"
+  },
+  "theme-editor.field-group.remove-label-from-scope": {
+    "text": "{label} verwijderen uit {scope}",
+    "hash": "537d8e4f"
+  },
+  "theme-editor.field-group.set-here": {
+    "text": "Hier ingesteld",
+    "hash": "f22f3ba1"
+  },
+  "theme-editor.field-group.set-in-both": {
+    "text": "In beide instellen",
+    "hash": "9e514726"
+  },
+  "theme-editor.field-group.set-in-mode-too": {
+    "text": "Ook in {mode} instellen",
+    "hash": "6143403c"
+  },
+  "theme-editor.field-group.shared": {
+    "text": "Gedeeld",
+    "hash": "e3c4b39d"
+  },
+  "theme-editor.field-group.shared-value": {
+    "text": "Gedeeld: {value}",
+    "hash": "acca5567"
+  },
+  "theme-editor.field-group.shared-value-has-no-effect": {
+    "text": "Gedeelde waarde heeft geen effect",
+    "hash": "6f891cd1"
+  },
+  "theme-editor.field-group.this-is-not-a-colour-pick-one-with-the": {
+    "text": "Dit is geen kleur. Kies er een met het kleurvlak, of typ een waarde zoals #3b82f6 of teal.",
+    "hash": "bc323797"
+  },
+  "theme-editor.field-group.this-variable-takes-a-single-colour": {
+    "text": "Deze variabele accepteert één kleur. Kleurverlopen werken bij Kaartachtergrond en Dashboardachtergrond.",
+    "hash": "d92cacf8"
+  },
+  "theme-editor.field-group.value-set-in-one-mode-only": {
+    "text": "Waarde in één modus ingesteld",
+    "hash": "157aa1d9"
+  },
+  "theme-editor.ha.a-blur-behind-translucent-cards-like": {
+    "text": "Een vervaging achter doorschijnende kaarten, zoals blur(10px).",
+    "hash": "3ac29795"
+  },
+  "theme-editor.ha.a-line-under-the-top-bar-like-1px-solid": {
+    "text": "Een lijn onder de bovenbalk, zoals 1px solid #ccc.",
+    "hash": "72154b7a"
+  },
+  "theme-editor.ha.accent-colour": {
+    "text": "Accentkleur",
+    "hash": "12376f4c"
+  },
+  "theme-editor.ha.active-state-colour": {
+    "text": "Kleur van actieve status",
+    "hash": "7ee11e08"
+  },
+  "theme-editor.ha.alarm-icons-while-triggered": {
+    "text": "Alarmpictogrammen terwijl het alarm afgaat.",
+    "hash": "33a96195"
+  },
+  "theme-editor.ha.alarm-triggered-colour": {
+    "text": "Kleur van alarm afgegaan",
+    "hash": "ea66f146"
+  },
+  "theme-editor.ha.behind-everything-including-the": {
+    "text": "Achter alles, ook achter het dashboard.",
+    "hash": "18066465"
+  },
+  "theme-editor.ha.binary-sensor-active-colour": {
+    "text": "Kleur van actieve binaire sensor",
+    "hash": "55949eba"
+  },
+  "theme-editor.ha.binary-sensors-that-are-on": {
+    "text": "Binaire sensoren die aan staan.",
+    "hash": "c475d4c5"
+  },
+  "theme-editor.ha.body-font": {
+    "text": "Lettertype van lopende tekst",
+    "hash": "2448d20d"
+  },
+  "theme-editor.ha.body-text": {
+    "text": "Lopende tekst.",
+    "hash": "4319bbb0"
+  },
+  "theme-editor.ha.buttons-toggles-active-icons-and-links": {
+    "text": "Knoppen, schakelaars, actieve pictogrammen en links.",
+    "hash": "4e4f5504"
+  },
+  "theme-editor.ha.captions-and-secondary-lines": {
+    "text": "Bijschriften en secundaire regels.",
+    "hash": "4389b30e"
+  },
+  "theme-editor.ha.captions-hints-and-secondary-lines": {
+    "text": "Bijschriften, hints en secundaire regels.",
+    "hash": "893f5638"
+  },
+  "theme-editor.ha.card-backdrop-filter": {
+    "text": "Achtergrondfilter van kaart",
+    "hash": "a499a03d"
+  },
+  "theme-editor.ha.card-background": {
+    "text": "Kaartachtergrond",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.ha.card-background-override": {
+    "text": "Overschrijving van kaartachtergrond",
+    "hash": "cff0a4fe"
+  },
+  "theme-editor.ha.card-border-colour": {
+    "text": "Randkleur van kaart",
+    "hash": "8256cea1"
+  },
+  "theme-editor.ha.card-border-width": {
+    "text": "Randbreedte van kaart",
+    "hash": "a775554c"
+  },
+  "theme-editor.ha.card-corner-radius": {
+    "text": "Hoekradius van kaart",
+    "hash": "f96a2fba"
+  },
+  "theme-editor.ha.card-shadow": {
+    "text": "Kaartschaduw",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.ha.card-title-colour": {
+    "text": "Kleur van kaarttitel",
+    "hash": "e48edaf2"
+  },
+  "theme-editor.ha.card-title-font": {
+    "text": "Lettertype van kaarttitel",
+    "hash": "38d28c1a"
+  },
+  "theme-editor.ha.card-title-size": {
+    "text": "Grootte van kaarttitel",
+    "hash": "4df644ff"
+  },
+  "theme-editor.ha.card-titles": {
+    "text": "Kaarttitels.",
+    "hash": "8a74ac90"
+  },
+  "theme-editor.ha.cards-dialogs-and-menus-takes-a-gradient": {
+    "text": "Kaarten, dialogen en menu's. Accepteert een kleurverloop.",
+    "hash": "daeb1baf"
+  },
+  "theme-editor.ha.climate-icons-that-are-cooling": {
+    "text": "Klimaatpictogrammen die koelen.",
+    "hash": "831f66b6"
+  },
+  "theme-editor.ha.climate-icons-that-are-heating": {
+    "text": "Klimaatpictogrammen die verwarmen.",
+    "hash": "bbfb2474"
+  },
+  "theme-editor.ha.colour-of-card-titles": {
+    "text": "Kleur van kaarttitels.",
+    "hash": "3db90f94"
+  },
+  "theme-editor.ha.colour-of-the-card-border": {
+    "text": "Kleur van de kaartrand.",
+    "hash": "ffe6dc31"
+  },
+  "theme-editor.ha.cooling-colour": {
+    "text": "Kleur van koelen",
+    "hash": "3924961e"
+  },
+  "theme-editor.ha.cover-open-colour": {
+    "text": "Kleur van afdekking open",
+    "hash": "918841ee"
+  },
+  "theme-editor.ha.dark-text-used-where-the-surface-stays": {
+    "text": "Donkere tekst die wordt gebruikt waar het vlak licht blijft.",
+    "hash": "07636b1c"
+  },
+  "theme-editor.ha.dashboard-background": {
+    "text": "Dashboardachtergrond",
+    "hash": "19cd358f"
+  },
+  "theme-editor.ha.disabled-colour": {
+    "text": "Kleur van uitgeschakeld",
+    "hash": "bc08355e"
+  },
+  "theme-editor.ha.disabled-controls-and-empty-slider": {
+    "text": "Uitgeschakelde bedieningselementen en lege schuifregelaarsporen.",
+    "hash": "b933f415"
+  },
+  "theme-editor.ha.disabled-text": {
+    "text": "Uitgeschakelde tekst",
+    "hash": "71ebb92b"
+  },
+  "theme-editor.ha.divider-colour": {
+    "text": "Scheidingskleur",
+    "hash": "20ac535f"
+  },
+  "theme-editor.ha.entity-icons-that-have-no-state-colour": {
+    "text": "Entiteitspictogrammen zonder statuskleur.",
+    "hash": "6ea7f9f8"
+  },
+  "theme-editor.ha.error-colour": {
+    "text": "Foutkleur",
+    "hash": "6b14a7aa"
+  },
+  "theme-editor.ha.errors-delete-buttons-and-critical": {
+    "text": "Fouten, verwijderknoppen en kritieke statussen.",
+    "hash": "50979a5c"
+  },
+  "theme-editor.ha.extra-large-font-size": {
+    "text": "Extra grote lettergrootte",
+    "hash": "e92e41a0"
+  },
+  "theme-editor.ha.extra-large-radius": {
+    "text": "Extra grote hoekradius",
+    "hash": "58ccbd5c"
+  },
+  "theme-editor.ha.fan-on-colour": {
+    "text": "Kleur van ventilator aan",
+    "hash": "5a6236e4"
+  },
+  "theme-editor.ha.font-family-of-card-titles": {
+    "text": "Lettertypefamilie van kaarttitels.",
+    "hash": "6450d23f"
+  },
+  "theme-editor.ha.font-size-of-card-titles": {
+    "text": "Lettergrootte van kaarttitels.",
+    "hash": "16ba7051"
+  },
+  "theme-editor.ha.font-size-scale": {
+    "text": "Schaal van lettergrootte",
+    "hash": "b7c1988a"
+  },
+  "theme-editor.ha.ha-extra-large-corner-radius": {
+    "text": "Extra grote hoekradius van HA.",
+    "hash": "235057d3"
+  },
+  "theme-editor.ha.ha-large-corner-radius-cards-use-it-by": {
+    "text": "Grote hoekradius van HA. Kaarten gebruiken die standaard.",
+    "hash": "b144d470"
+  },
+  "theme-editor.ha.ha-medium-corner-radius": {
+    "text": "Gemiddelde hoekradius van HA.",
+    "hash": "c394e29b"
+  },
+  "theme-editor.ha.ha-small-corner-radius": {
+    "text": "Kleine hoekradius van HA.",
+    "hash": "84f473fd"
+  },
+  "theme-editor.ha.header-background": {
+    "text": "Achtergrond van kop",
+    "hash": "488d5d16"
+  },
+  "theme-editor.ha.header-background-while-editing": {
+    "text": "Achtergrond van kop tijdens bewerken",
+    "hash": "1f70c5fe"
+  },
+  "theme-editor.ha.header-bottom-border": {
+    "text": "Onderrand van kop",
+    "hash": "faf29ae8"
+  },
+  "theme-editor.ha.header-height": {
+    "text": "Hoogte van kop",
+    "hash": "1fd980c1"
+  },
+  "theme-editor.ha.header-text": {
+    "text": "Tekst van kop",
+    "hash": "a16987ba"
+  },
+  "theme-editor.ha.header-text-while-editing": {
+    "text": "Tekst van kop tijdens bewerken",
+    "hash": "6a1f8251"
+  },
+  "theme-editor.ha.heading-font": {
+    "text": "Lettertype van koppen",
+    "hash": "20d26b0c"
+  },
+  "theme-editor.ha.heading-font-size": {
+    "text": "Lettergrootte van koppen",
+    "hash": "490f4db5"
+  },
+  "theme-editor.ha.heating-colour": {
+    "text": "Kleur van verwarmen",
+    "hash": "409ed308"
+  },
+  "theme-editor.ha.height-of-the-top-bar": {
+    "text": "Hoogte van de bovenbalk.",
+    "hash": "dfe3bef0"
+  },
+  "theme-editor.ha.icon-colour": {
+    "text": "Pictogramkleur",
+    "hash": "691d6a25"
+  },
+  "theme-editor.ha.icons-in-the-sidebar": {
+    "text": "Pictogrammen in de zijbalk.",
+    "hash": "1abb7c0a"
+  },
+  "theme-editor.ha.icons-of-covers-that-are-open": {
+    "text": "Pictogrammen van afdekkingen die open zijn.",
+    "hash": "d3899ffc"
+  },
+  "theme-editor.ha.icons-of-fans-that-are-on": {
+    "text": "Pictogrammen van ventilatoren die aan staan.",
+    "hash": "2aaf759b"
+  },
+  "theme-editor.ha.icons-of-lights-that-are-on": {
+    "text": "Pictogrammen van lampen die aan staan.",
+    "hash": "3871f31e"
+  },
+  "theme-editor.ha.icons-of-locks-that-are-locked": {
+    "text": "Pictogrammen van sloten die op slot zitten.",
+    "hash": "7931c422"
+  },
+  "theme-editor.ha.icons-of-locks-that-are-unlocked": {
+    "text": "Pictogrammen van sloten die open zijn.",
+    "hash": "e6586a02"
+  },
+  "theme-editor.ha.icons-of-media-players-that-are-playing": {
+    "text": "Pictogrammen van mediaspelers die afspelen.",
+    "hash": "df08925d"
+  },
+  "theme-editor.ha.icons-of-switches-that-are-on": {
+    "text": "Pictogrammen van schakelaars die aan staan.",
+    "hash": "d57a66c5"
+  },
+  "theme-editor.ha.icons-of-things-that-are-off-or-closed": {
+    "text": "Pictogrammen van dingen die uit of gesloten zijn.",
+    "hash": "d89e614b"
+  },
+  "theme-editor.ha.icons-of-things-that-are-on-or-open": {
+    "text": "Pictogrammen van dingen die aan of open zijn.",
+    "hash": "a0c3decd"
+  },
+  "theme-editor.ha.icons-of-unavailable-entities": {
+    "text": "Pictogrammen van niet-beschikbare entiteiten.",
+    "hash": "286e7bbc"
+  },
+  "theme-editor.ha.inactive-state-colour": {
+    "text": "Kleur van inactieve status",
+    "hash": "f35e499f"
+  },
+  "theme-editor.ha.info-colour": {
+    "text": "Infokleur",
+    "hash": "0eb9fc9a"
+  },
+  "theme-editor.ha.information-banners-and-notes": {
+    "text": "Informatiebanners en notities.",
+    "hash": "274b4b4f"
+  },
+  "theme-editor.ha.item-names-in-the-sidebar": {
+    "text": "Namen van items in de zijbalk.",
+    "hash": "d86b3900"
+  },
+  "theme-editor.ha.large-font-size": {
+    "text": "Grote lettergrootte",
+    "hash": "9cecbd0a"
+  },
+  "theme-editor.ha.large-radius": {
+    "text": "Grote hoekradius",
+    "hash": "4ae6a7dd"
+  },
+  "theme-editor.ha.larger-body-text": {
+    "text": "Grotere lopende tekst.",
+    "hash": "2df535db"
+  },
+  "theme-editor.ha.light-on-colour": {
+    "text": "Kleur van lamp aan",
+    "hash": "0ba55375"
+  },
+  "theme-editor.ha.light-tints-of-the-primary-colour": {
+    "text": "Lichte tinten van de primaire kleur.",
+    "hash": "708d2f3c"
+  },
+  "theme-editor.ha.lines-between-rows-and-around-inputs": {
+    "text": "Lijnen tussen rijen en rond invoervelden.",
+    "hash": "ad95e6f4"
+  },
+  "theme-editor.ha.locked-colour": {
+    "text": "Kleur van vergrendeld",
+    "hash": "40698ad2"
+  },
+  "theme-editor.ha.main-text-and-icons": {
+    "text": "Hoofdtekst en pictogrammen.",
+    "hash": "4e3072a6"
+  },
+  "theme-editor.ha.media-player-active-colour": {
+    "text": "Kleur van actieve mediaspeler",
+    "hash": "1b49517a"
+  },
+  "theme-editor.ha.medium-font-size": {
+    "text": "Gemiddelde lettergrootte",
+    "hash": "d1418cf1"
+  },
+  "theme-editor.ha.medium-radius": {
+    "text": "Gemiddelde hoekradius",
+    "hash": "c5fee673"
+  },
+  "theme-editor.ha.multiplies-every-ha-font-size-1-keeps": {
+    "text": "Vermenigvuldigt elke lettergrootte van HA. Bij 1 blijven ze gelijk.",
+    "hash": "855dc71c"
+  },
+  "theme-editor.ha.outline-colour": {
+    "text": "Contourkleur",
+    "hash": "6dd4dd03"
+  },
+  "theme-editor.ha.outlines-of-buttons-and-chips": {
+    "text": "Contouren van knoppen en chips.",
+    "hash": "ce482a2a"
+  },
+  "theme-editor.ha.page-background": {
+    "text": "Paginaachtergrond",
+    "hash": "54962022"
+  },
+  "theme-editor.ha.person-at-home-colour": {
+    "text": "Kleur van persoon thuis",
+    "hash": "99e5226d"
+  },
+  "theme-editor.ha.person-icons-while-home": {
+    "text": "Persoonspictogrammen terwijl iemand thuis is.",
+    "hash": "1cf1dbbe"
+  },
+  "theme-editor.ha.pressed-and-darker-primary-accents": {
+    "text": "Ingedrukte en donkerdere primaire accenten.",
+    "hash": "a4290d4f"
+  },
+  "theme-editor.ha.primary-colour": {
+    "text": "Primaire kleur",
+    "hash": "2ccfbde3"
+  },
+  "theme-editor.ha.primary-colour-dark-shade": {
+    "text": "Primaire kleur, donkere tint",
+    "hash": "6bd39d28"
+  },
+  "theme-editor.ha.primary-colour-light-shade": {
+    "text": "Primaire kleur, lichte tint",
+    "hash": "30cc8437"
+  },
+  "theme-editor.ha.primary-text": {
+    "text": "Primaire tekst",
+    "hash": "ecf5b5b5"
+  },
+  "theme-editor.ha.quiet-panels-input-fills-and-list": {
+    "text": "Rustige panelen, invoervullingen en lijststrepen.",
+    "hash": "1c53eda4"
+  },
+  "theme-editor.ha.rounding-of-every-card": {
+    "text": "Afronding van elke kaart.",
+    "hash": "d6781b33"
+  },
+  "theme-editor.ha.secondary-accent-used-by-a-few-controls": {
+    "text": "Secundair accent dat een paar bedieningselementen gebruiken.",
+    "hash": "8d8f6fbf"
+  },
+  "theme-editor.ha.secondary-background": {
+    "text": "Secundaire achtergrond",
+    "hash": "6f83c048"
+  },
+  "theme-editor.ha.secondary-text": {
+    "text": "Secundaire tekst",
+    "hash": "2deea466"
+  },
+  "theme-editor.ha.section-titles": {
+    "text": "Sectietitels.",
+    "hash": "459f970a"
+  },
+  "theme-editor.ha.shadow-colour": {
+    "text": "Schaduwkleur",
+    "hash": "66754751"
+  },
+  "theme-editor.ha.shadow-under-every-card": {
+    "text": "Schaduw onder elke kaart.",
+    "hash": "aaaf03b1"
+  },
+  "theme-editor.ha.sidebar-background": {
+    "text": "Achtergrond van zijbalk",
+    "hash": "95e7992b"
+  },
+  "theme-editor.ha.sidebar-icons": {
+    "text": "Pictogrammen van zijbalk",
+    "hash": "0c1971b9"
+  },
+  "theme-editor.ha.sidebar-selected-icon": {
+    "text": "Geselecteerd pictogram van zijbalk",
+    "hash": "25803ca7"
+  },
+  "theme-editor.ha.sidebar-selected-text": {
+    "text": "Geselecteerde tekst van zijbalk",
+    "hash": "abfabe91"
+  },
+  "theme-editor.ha.sidebar-text": {
+    "text": "Tekst van zijbalk",
+    "hash": "33d56c1b"
+  },
+  "theme-editor.ha.small-font-size": {
+    "text": "Kleine lettergrootte",
+    "hash": "9f9af426"
+  },
+  "theme-editor.ha.small-radius": {
+    "text": "Kleine hoekradius",
+    "hash": "c5ace22a"
+  },
+  "theme-editor.ha.success-colour": {
+    "text": "Succeskleur",
+    "hash": "a0677e35"
+  },
+  "theme-editor.ha.success-messages-and-confirmed-states": {
+    "text": "Succesberichten en bevestigde statussen.",
+    "hash": "e66ac6ec"
+  },
+  "theme-editor.ha.switch-on-colour": {
+    "text": "Kleur van schakelaar aan",
+    "hash": "ca800fb5"
+  },
+  "theme-editor.ha.text-and-icons-drawn-on-the-primary": {
+    "text": "Tekst en pictogrammen op de primaire kleur.",
+    "hash": "e92c6d6e"
+  },
+  "theme-editor.ha.text-and-icons-in-the-top-bar": {
+    "text": "Tekst en pictogrammen in de bovenbalk.",
+    "hash": "318031a8"
+  },
+  "theme-editor.ha.text-in-the-top-bar-in-dashboard-edit": {
+    "text": "Tekst in de bovenbalk in de bewerkmodus van het dashboard.",
+    "hash": "1281f044"
+  },
+  "theme-editor.ha.text-of-disabled-and-unavailable-things": {
+    "text": "Tekst van uitgeschakelde en niet-beschikbare dingen.",
+    "hash": "cc8ce308"
+  },
+  "theme-editor.ha.text-on-light-surfaces": {
+    "text": "Tekst op lichte vlakken",
+    "hash": "e58666bb"
+  },
+  "theme-editor.ha.text-on-primary-colour": {
+    "text": "Tekst op primaire kleur",
+    "hash": "339c4c71"
+  },
+  "theme-editor.ha.the-active-sidebar-item-icon": {
+    "text": "Het pictogram van het actieve item in de zijbalk.",
+    "hash": "45c95f3f"
+  },
+  "theme-editor.ha.the-active-sidebar-item-name": {
+    "text": "De naam van het actieve item in de zijbalk.",
+    "hash": "b4c30646"
+  },
+  "theme-editor.ha.the-background-of-a-dashboard-view-takes": {
+    "text": "De achtergrond van een dashboardweergave. Accepteert een kleurverloop of een afbeelding.",
+    "hash": "5304fb76"
+  },
+  "theme-editor.ha.the-colour-ha-shades-shadows-with": {
+    "text": "De kleur waarmee HA schaduwen inkleurt.",
+    "hash": "1872da60"
+  },
+  "theme-editor.ha.the-font-for-headings": {
+    "text": "Het lettertype voor koppen.",
+    "hash": "65280f41"
+  },
+  "theme-editor.ha.the-font-for-most-text": {
+    "text": "Het lettertype voor de meeste tekst.",
+    "hash": "06c3a3e9"
+  },
+  "theme-editor.ha.the-sidebar": {
+    "text": "De zijbalk.",
+    "hash": "58d41c7f"
+  },
+  "theme-editor.ha.the-top-bar-in-dashboard-edit-mode": {
+    "text": "De bovenbalk in de bewerkmodus van het dashboard.",
+    "hash": "b5dc5c71"
+  },
+  "theme-editor.ha.the-top-bar-of-every-page": {
+    "text": "De bovenbalk van elke pagina.",
+    "hash": "250e0b5b"
+  },
+  "theme-editor.ha.unavailable-state-colour": {
+    "text": "Kleur van niet-beschikbare status",
+    "hash": "427d6cde"
+  },
+  "theme-editor.ha.unlocked-colour": {
+    "text": "Kleur van ontgrendeld",
+    "hash": "a472c34a"
+  },
+  "theme-editor.ha.warning-colour": {
+    "text": "Waarschuwingskleur",
+    "hash": "e0540a98"
+  },
+  "theme-editor.ha.warnings-and-caution-states": {
+    "text": "Waarschuwingen en voorzichtigheidsstatussen.",
+    "hash": "41b16f92"
+  },
+  "theme-editor.ha.width-of-the-card-border": {
+    "text": "Breedte van de kaartrand.",
+    "hash": "4950ffbb"
+  },
+  "theme-editor.ha.wins-over-the-card-background-for-cards": {
+    "text": "Wint van de kaartachtergrond, alleen voor kaarten. Accepteert een kleurverloop.",
+    "hash": "c4af6a90"
+  },
+  "theme-editor.include-notice.check-again": {
+    "text": "Opnieuw controleren",
+    "hash": "fb7099ad"
+  },
+  "theme-editor.include-notice.checking": {
+    "text": "Controleren...",
+    "hash": "2e5f79bb"
+  },
+  "theme-editor.include-notice.copied": {
+    "text": "Gekopieerd",
+    "hash": "8d525e5f"
+  },
+  "theme-editor.include-notice.copy-lines": {
+    "text": "Regels kopiëren",
+    "hash": "aa3cc38f"
+  },
+  "theme-editor.include-notice.home-assistant-only-loads-themes-from": {
+    "text": "Home Assistant laadt alleen thema's uit /config/themes als je configuration.yaml deze regels bevat:",
+    "hash": "37fc8d8b"
+  },
+  "theme-editor.include-notice.lines-to-add-to-configuration-yaml": {
+    "text": "Regels om toe te voegen aan configuration.yaml",
+    "hash": "0a2c3fa6"
+  },
+  "theme-editor.include-notice.one-setup-step-before-you-can-save": {
+    "text": "Nog één instelling voordat je kunt opslaan",
+    "hash": "8d9e08af"
+  },
+  "theme-editor.include-notice.open-configuration-yaml-with-the-file": {
+    "text": "Open configuration.yaml met de bestandseditor of Studio Code Server, voeg de regels toe, controleer je configuratie en start Home Assistant daarna opnieuw op. Heb je al een frontend:-sectie? Voeg dan alleen de themes-regel eronder toe.",
+    "hash": "10355538"
+  },
+  "theme-editor.include-notice.show-me-how": {
+    "text": "Laat zien hoe",
+    "hash": "5a519f35"
+  },
+  "theme-editor.include-notice.the-editor-could-not-read-configuration": {
+    "text": "De editor kon configuration.yaml niet lezen om te controleren. Als thema's niet zijn ingesteld, doen deze regels dat:",
+    "hash": "24192f2e"
+  },
+  "theme-editor.include-notice.where-do-i-add-these-lines": {
+    "text": "Waar voeg ik deze regels toe?",
+    "hash": "80321d63"
+  },
+  "theme-editor.include-notice.you-can-skip-this-for-now-try-on": {
+    "text": "Je kunt dit nu overslaan. Op dashboard proberen werkt ook zonder.",
+    "hash": "6eb71c05"
+  },
+  "theme-editor.include-notice.your-configuration-yaml-lists-themes": {
+    "text": "Je configuration.yaml somt thema's inline op, dus Home Assistant leest /config/themes niet. Gebruik deze regels om de bestanden te gebruiken die deze editor schrijft:",
+    "hash": "edbb9c20"
+  },
+  "theme-editor.include-notice.your-configuration-yaml-loads-themes-in": {
+    "text": "Je configuration.yaml laadt thema's op een andere manier, dus de editor kan niet zeker weten of hij zijn bestanden kan zien. Met deze regels weet je dat zeker:",
+    "hash": "287e051b"
+  },
+  "theme-editor.lips.got-it": {
+    "text": "Begrepen",
+    "hash": "5ad3dbd1"
+  },
+  "theme-editor.lips.hide-noun-keys": {
+    "text": "Verberg {noun} ({keys})",
+    "hash": "62432946"
+  },
+  "theme-editor.lips.panels-hidden": {
+    "text": "{panels} verborgen",
+    "hash": "8048104c"
+  },
+  "theme-editor.lips.panels-shown": {
+    "text": "{panels} getoond",
+    "hash": "755f1a3b"
+  },
+  "theme-editor.lips.shortcut-keys": {
+    "text": "Sneltoets: {keys}",
+    "hash": "2fc10998"
+  },
+  "theme-editor.lips.show-noun-keys": {
+    "text": "Toon {noun} ({keys})",
+    "hash": "7a362b14"
+  },
+  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de pijl aan de rand om het te tonen.",
+    "hash": "cca8a786"
+  },
+  "theme-editor.lips.variables": {
+    "text": "variabelen",
+    "hash": "7af0b3e4"
+  },
+  "theme-editor.lips.variables-panel": {
+    "text": "Variabelenpaneel",
+    "hash": "aeb81548"
+  },
+  "theme-editor.magic-card.borders-and-bar-tracks": {
+    "text": "Randen en balksporen.",
+    "hash": "d2219f9e"
+  },
+  "theme-editor.magic-card.button-text": {
+    "text": "Knoptekst.",
+    "hash": "d8201145"
+  },
+  "theme-editor.magic-card.buttons-bars-and-accents": {
+    "text": "Knoppen, balken en accenten.",
+    "hash": "96bbf78e"
+  },
+  "theme-editor.magic-card.cancel-and-error-text-in-the-popup": {
+    "text": "Annuleren en foutmeldingen in de pop-up.",
+    "hash": "9b591190"
+  },
+  "theme-editor.magic-card.captions-and-hints": {
+    "text": "Bijschriften en hints.",
+    "hash": "cc379920"
+  },
+  "theme-editor.magic-card.card-and-popup-rounding": {
+    "text": "Afronding van kaart en pop-up.",
+    "hash": "c162228f"
+  },
+  "theme-editor.magic-card.card-background": {
+    "text": "Kaartachtergrond",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.magic-card.card-background-override": {
+    "text": "Overschrijving van kaartachtergrond",
+    "hash": "cff0a4fe"
+  },
+  "theme-editor.magic-card.card-border": {
+    "text": "Rand van de kaart.",
+    "hash": "7bffeddd"
+  },
+  "theme-editor.magic-card.card-border-colour": {
+    "text": "Randkleur van kaart",
+    "hash": "8256cea1"
+  },
+  "theme-editor.magic-card.card-border-width": {
+    "text": "Randbreedte van kaart",
+    "hash": "a775554c"
+  },
+  "theme-editor.magic-card.card-corner-radius": {
+    "text": "Hoekradius van kaart",
+    "hash": "f96a2fba"
+  },
+  "theme-editor.magic-card.card-shadow": {
+    "text": "Kaartschaduw",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.magic-card.card-surface-and-flow-labels": {
+    "text": "Kaartvlak en stroomlabels.",
+    "hash": "b82e508b"
+  },
+  "theme-editor.magic-card.disabled-colour": {
+    "text": "Kleur van uitgeschakeld",
+    "hash": "bc08355e"
+  },
+  "theme-editor.magic-card.divider-colour": {
+    "text": "Scheidingskleur",
+    "hash": "20ac535f"
+  },
+  "theme-editor.magic-card.empty-slider-track": {
+    "text": "Leeg schuifregelaarspoor.",
+    "hash": "e874d626"
+  },
+  "theme-editor.magic-card.error-colour": {
+    "text": "Foutkleur",
+    "hash": "6b14a7aa"
+  },
+  "theme-editor.magic-card.light-on-colour": {
+    "text": "Kleur van lamp aan",
+    "hash": "0ba55375"
+  },
+  "theme-editor.magic-card.main-text": {
+    "text": "Hoofdtekst.",
+    "hash": "f7c7ed58"
+  },
+  "theme-editor.magic-card.primary-colour": {
+    "text": "Primaire kleur",
+    "hash": "2ccfbde3"
+  },
+  "theme-editor.magic-card.primary-text": {
+    "text": "Primaire tekst",
+    "hash": "ecf5b5b5"
+  },
+  "theme-editor.magic-card.secondary-text": {
+    "text": "Secundaire tekst",
+    "hash": "2deea466"
+  },
+  "theme-editor.magic-card.shadow-under-the-card": {
+    "text": "Schaduw onder de kaart.",
+    "hash": "e40053b9"
+  },
+  "theme-editor.magic-card.slider-track": {
+    "text": "Spoor van schuifregelaar",
+    "hash": "4a4914e0"
+  },
+  "theme-editor.magic-card.success-colour": {
+    "text": "Succeskleur",
+    "hash": "a0677e35"
+  },
+  "theme-editor.magic-card.text-on-primary-colour": {
+    "text": "Tekst op primaire kleur",
+    "hash": "339c4c71"
+  },
+  "theme-editor.magic-card.the-light-slider": {
+    "text": "De lampschuifregelaar.",
+    "hash": "63c59fb5"
+  },
+  "theme-editor.magic-card.the-save-button-in-the-popup": {
+    "text": "De opslaanknop in de pop-up.",
+    "hash": "5b98b328"
+  },
+  "theme-editor.magic-card.track-behind-the-fill-a-slider-with-its": {
+    "text": "Spoor achter de vulling. Een schuifregelaar met een eigen sporkleur behoudt die.",
+    "hash": "1ed88d84"
+  },
+  "theme-editor.magic-card.wins-over-the-card-background": {
+    "text": "Wint van de kaartachtergrond.",
+    "hash": "ff59b558"
+  },
+  "theme-editor.model.a-mode-block-must-be-light-or-dark-and": {
+    "text": "Een modusblok moet light of dark zijn en variabelen bevatten.",
+    "hash": "8b59d4c4"
+  },
+  "theme-editor.model.enter-a-border-like-1px-solid-ccc": {
+    "text": "Voer een rand in zoals 1px solid #ccc.",
+    "hash": "2d099567"
+  },
+  "theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115": {
+    "text": "Voer een kleur in zoals #1a73e8 of rgb(26, 115, 232).",
+    "hash": "f94f7f14"
+  },
+  "theme-editor.model.enter-a-colour-or-a-gradient": {
+    "text": "Voer een kleur of een kleurverloop in.",
+    "hash": "f4672716"
+  },
+  "theme-editor.model.enter-a-font-family": {
+    "text": "Voer een lettertypefamilie in.",
+    "hash": "b4dc2764"
+  },
+  "theme-editor.model.enter-a-length-like-12px-or-1rem": {
+    "text": "Voer een lengte in zoals 12px of 1rem.",
+    "hash": "2459378f"
+  },
+  "theme-editor.model.enter-a-number": {
+    "text": "Voer een getal in.",
+    "hash": "7b2968fb"
+  },
+  "theme-editor.model.enter-a-shadow-like-0-2px-6px-rgba-0-0-0": {
+    "text": "Voer een schaduw in zoals 0 2px 6px rgba(0, 0, 0, 0.3).",
+    "hash": "1266bf21"
+  },
+  "theme-editor.model.enter-a-value": {
+    "text": "Voer een waarde in.",
+    "hash": "8b347a23"
+  },
+  "theme-editor.model.enter-three-numbers-from-0-to-255-like": {
+    "text": "Voer drie getallen van 0 tot 255 in, zoals 255, 120, 0.",
+    "hash": "7af98a9a"
+  },
+  "theme-editor.model.modes-must-hold-a-light-and-a-dark-block": {
+    "text": "Modi moeten een licht en een donker blok bevatten.",
+    "hash": "0ca8caf2"
+  },
+  "theme-editor.model.remove-chars-and-unmatched-brackets-from": {
+    "text": "Verwijder {chars} en haakjes zonder tegenhanger uit de waarde.",
+    "hash": "dd451e60"
+  },
+  "theme-editor.model.this-field-takes-one-colour-not-a": {
+    "text": "Dit veld accepteert één kleur, geen kleurverloop.",
+    "hash": "2144b855"
+  },
+  "theme-editor.model.this-value-has-a-control-character": {
+    "text": "Deze waarde bevat een besturingsteken. Verwijder het.",
+    "hash": "649f9df1"
+  },
+  "theme-editor.model.this-value-is-longer-than-max-characters": {
+    "text": "Deze waarde is langer dan {max} tekens.",
+    "hash": "09b92633"
+  },
+  "theme-editor.model.this-value-must-be-text-or-a-number": {
+    "text": "Deze waarde moet tekst of een getal zijn.",
+    "hash": "62f93b7f"
+  },
+  "theme-editor.model.use-letters-numbers-dashes-and": {
+    "text": "Gebruik letters, cijfers, streepjes en underscores voor een variabelenaam.",
+    "hash": "8a4e32df"
+  },
+  "theme-editor.mushroom.alarm-armed-state-rgb": {
+    "text": "Status alarm ingeschakeld (RGB)",
+    "hash": "b1cc4832"
+  },
+  "theme-editor.mushroom.alarm-disarmed-state-rgb": {
+    "text": "Status alarm uitgeschakeld (RGB)",
+    "hash": "41481d68"
+  },
+  "theme-editor.mushroom.alarm-triggered-state-rgb": {
+    "text": "Status alarm afgegaan (RGB)",
+    "hash": "b50131cc"
+  },
+  "theme-editor.mushroom.amber-rgb": {
+    "text": "Amber (RGB)",
+    "hash": "b77c22d1"
+  },
+  "theme-editor.mushroom.badge-icon-size": {
+    "text": "Pictogramgrootte van badge",
+    "hash": "420bbc5f"
+  },
+  "theme-editor.mushroom.badge-radius": {
+    "text": "Hoekradius van badge",
+    "hash": "702058d3"
+  },
+  "theme-editor.mushroom.badge-size": {
+    "text": "Grootte van badge",
+    "hash": "fa34f9dc"
+  },
+  "theme-editor.mushroom.black-rgb": {
+    "text": "Zwart (RGB)",
+    "hash": "c9dfc3e1"
+  },
+  "theme-editor.mushroom.blue-grey-rgb": {
+    "text": "Blauwgrijs (RGB)",
+    "hash": "afb0643f"
+  },
+  "theme-editor.mushroom.blue-rgb": {
+    "text": "Blauw (RGB)",
+    "hash": "be09d895"
+  },
+  "theme-editor.mushroom.brown-rgb": {
+    "text": "Bruin (RGB)",
+    "hash": "62d6e023"
+  },
+  "theme-editor.mushroom.button-width-as-a-multiple-of-its-height": {
+    "text": "Breedte van de knop als veelvoud van de hoogte.",
+    "hash": "d92ee713"
+  },
+  "theme-editor.mushroom.card-spacing": {
+    "text": "Kaartafstand",
+    "hash": "3d03a18f"
+  },
+  "theme-editor.mushroom.chip-avatar-padding": {
+    "text": "Binnenmarge van chip-avatar",
+    "hash": "8f22a4d9"
+  },
+  "theme-editor.mushroom.chip-avatar-radius": {
+    "text": "Hoekradius van chip-avatar",
+    "hash": "b5220758"
+  },
+  "theme-editor.mushroom.chip-background": {
+    "text": "Chipachtergrond",
+    "hash": "b6656922"
+  },
+  "theme-editor.mushroom.chip-border-colour": {
+    "text": "Randkleur van chip",
+    "hash": "08e15dc6"
+  },
+  "theme-editor.mushroom.chip-border-width": {
+    "text": "Randbreedte van chip",
+    "hash": "7d29594c"
+  },
+  "theme-editor.mushroom.chip-height": {
+    "text": "Chiphoogte",
+    "hash": "0864182c"
+  },
+  "theme-editor.mushroom.chip-icon-size": {
+    "text": "Pictogramgrootte van chip",
+    "hash": "06c02c15"
+  },
+  "theme-editor.mushroom.chip-padding": {
+    "text": "Binnenmarge van chip",
+    "hash": "21c39e4b"
+  },
+  "theme-editor.mushroom.chip-radius": {
+    "text": "Hoekradius van chip",
+    "hash": "50269e70"
+  },
+  "theme-editor.mushroom.chip-shadow": {
+    "text": "Chipschaduw",
+    "hash": "93215529"
+  },
+  "theme-editor.mushroom.chip-spacing": {
+    "text": "Chipafstand",
+    "hash": "f6f9c99f"
+  },
+  "theme-editor.mushroom.chip-text-size": {
+    "text": "Tekstgrootte van chip",
+    "hash": "57ae16db"
+  },
+  "theme-editor.mushroom.chip-text-weight": {
+    "text": "Tekstdikte van chip",
+    "hash": "4a0de034"
+  },
+  "theme-editor.mushroom.climate-auto-state-rgb": {
+    "text": "Status klimaat automatisch (RGB)",
+    "hash": "55a5bea1"
+  },
+  "theme-editor.mushroom.climate-cool-state-rgb": {
+    "text": "Status klimaat koelen (RGB)",
+    "hash": "bf5b9fe4"
+  },
+  "theme-editor.mushroom.climate-dry-state-rgb": {
+    "text": "Status klimaat drogen (RGB)",
+    "hash": "2b402b44"
+  },
+  "theme-editor.mushroom.climate-fan-only-state-rgb": {
+    "text": "Status klimaat alleen ventilator (RGB)",
+    "hash": "4580eb2e"
+  },
+  "theme-editor.mushroom.climate-heat-cool-state-rgb": {
+    "text": "Status klimaat verwarmen en koelen (RGB)",
+    "hash": "6d54a6fc"
+  },
+  "theme-editor.mushroom.climate-heat-state-rgb": {
+    "text": "Status klimaat verwarmen (RGB)",
+    "hash": "4d4b9368"
+  },
+  "theme-editor.mushroom.climate-idle-state-rgb": {
+    "text": "Status klimaat inactief (RGB)",
+    "hash": "372cc90b"
+  },
+  "theme-editor.mushroom.climate-off-state-rgb": {
+    "text": "Status klimaat uit (RGB)",
+    "hash": "dde5c5c9"
+  },
+  "theme-editor.mushroom.control-button-ratio": {
+    "text": "Verhouding van bedieningsknop",
+    "hash": "8891a10b"
+  },
+  "theme-editor.mushroom.control-height": {
+    "text": "Hoogte van bediening",
+    "hash": "b7ddb720"
+  },
+  "theme-editor.mushroom.control-icon-size": {
+    "text": "Pictogramgrootte van bediening",
+    "hash": "1794933f"
+  },
+  "theme-editor.mushroom.control-radius": {
+    "text": "Hoekradius van bediening",
+    "hash": "398a9072"
+  },
+  "theme-editor.mushroom.control-spacing": {
+    "text": "Afstand van bediening",
+    "hash": "be5e03f1"
+  },
+  "theme-editor.mushroom.cover-closed-state-rgb": {
+    "text": "Status afdekking gesloten (RGB)",
+    "hash": "569f141b"
+  },
+  "theme-editor.mushroom.cover-open-state-rgb": {
+    "text": "Status afdekking open (RGB)",
+    "hash": "b1b5692d"
+  },
+  "theme-editor.mushroom.cyan-rgb": {
+    "text": "Cyaan (RGB)",
+    "hash": "9eaeb0cd"
+  },
+  "theme-editor.mushroom.danger-rgb": {
+    "text": "Gevaar (RGB)",
+    "hash": "af9c0737"
+  },
+  "theme-editor.mushroom.dark-grey-rgb": {
+    "text": "Donkergrijs (RGB)",
+    "hash": "e98dabff"
+  },
+  "theme-editor.mushroom.deep-orange-rgb": {
+    "text": "Dieporanje (RGB)",
+    "hash": "69bc4c59"
+  },
+  "theme-editor.mushroom.deep-purple-rgb": {
+    "text": "Diep paars (RGB)",
+    "hash": "53aa03d6"
+  },
+  "theme-editor.mushroom.delay-in-milliseconds": {
+    "text": "Vertraging in milliseconden.",
+    "hash": "7a216afc"
+  },
+  "theme-editor.mushroom.disabled-rgb": {
+    "text": "Uitgeschakeld (RGB)",
+    "hash": "2cf73adb"
+  },
+  "theme-editor.mushroom.entity-state-rgb": {
+    "text": "Entiteitsstatus (RGB)",
+    "hash": "b596ecc5"
+  },
+  "theme-editor.mushroom.fan-state-rgb": {
+    "text": "Ventilatorstatus (RGB)",
+    "hash": "4fd28d6d"
+  },
+  "theme-editor.mushroom.gap-between-the-parts-of-a-card": {
+    "text": "Ruimte tussen de onderdelen van een kaart.",
+    "hash": "971d0594"
+  },
+  "theme-editor.mushroom.green-rgb": {
+    "text": "Groen (RGB)",
+    "hash": "0b153347"
+  },
+  "theme-editor.mushroom.grey-rgb": {
+    "text": "Grijs (RGB)",
+    "hash": "634ad654"
+  },
+  "theme-editor.mushroom.humidifier-state-rgb": {
+    "text": "Status luchtbevochtiger (RGB)",
+    "hash": "8b3e8457"
+  },
+  "theme-editor.mushroom.icon-radius": {
+    "text": "Hoekradius van pictogram",
+    "hash": "8f95505e"
+  },
+  "theme-editor.mushroom.icon-size": {
+    "text": "Pictogramgrootte",
+    "hash": "a86cafc7"
+  },
+  "theme-editor.mushroom.icon-symbol-size": {
+    "text": "Grootte van pictogramsymbool",
+    "hash": "b70559bf"
+  },
+  "theme-editor.mushroom.indigo-rgb": {
+    "text": "Indigo (RGB)",
+    "hash": "6da3f8ec"
+  },
+  "theme-editor.mushroom.info-rgb": {
+    "text": "Info (RGB)",
+    "hash": "b4b544c9"
+  },
+  "theme-editor.mushroom.layout-alignment": {
+    "text": "Uitlijning van opmaak",
+    "hash": "13a8487c"
+  },
+  "theme-editor.mushroom.light-blue-rgb": {
+    "text": "Lichtblauw (RGB)",
+    "hash": "910da9e2"
+  },
+  "theme-editor.mushroom.light-green-rgb": {
+    "text": "Lichtgroen (RGB)",
+    "hash": "36dc1e4a"
+  },
+  "theme-editor.mushroom.light-grey-rgb": {
+    "text": "Lichtgrijs (RGB)",
+    "hash": "a34ec942"
+  },
+  "theme-editor.mushroom.light-state-rgb": {
+    "text": "Lampstatus (RGB)",
+    "hash": "683b5c8d"
+  },
+  "theme-editor.mushroom.lime-rgb": {
+    "text": "Limoen (RGB)",
+    "hash": "522db552"
+  },
+  "theme-editor.mushroom.lock-locked-state-rgb": {
+    "text": "Status slot vergrendeld (RGB)",
+    "hash": "c7f12828"
+  },
+  "theme-editor.mushroom.lock-pending-state-rgb": {
+    "text": "Status slot in behandeling (RGB)",
+    "hash": "a1ab05f8"
+  },
+  "theme-editor.mushroom.lock-state-rgb": {
+    "text": "Slotstatus (RGB)",
+    "hash": "0fee547e"
+  },
+  "theme-editor.mushroom.lock-unlocked-state-rgb": {
+    "text": "Status slot ontgrendeld (RGB)",
+    "hash": "b91c7a91"
+  },
+  "theme-editor.mushroom.media-player-state-rgb": {
+    "text": "Mediaspelerstatus (RGB)",
+    "hash": "27b79fcc"
+  },
+  "theme-editor.mushroom.movement-before-a-slider-reacts": {
+    "text": "Beweging voordat een schuifregelaar reageert.",
+    "hash": "e9bbc99b"
+  },
+  "theme-editor.mushroom.number-input-debounce": {
+    "text": "Vertraging van getalinvoer",
+    "hash": "dbf8a1de"
+  },
+  "theme-editor.mushroom.number-state-rgb": {
+    "text": "Getalstatus (RGB)",
+    "hash": "f086182f"
+  },
+  "theme-editor.mushroom.orange-rgb": {
+    "text": "Oranje (RGB)",
+    "hash": "356193af"
+  },
+  "theme-editor.mushroom.person-home-state-rgb": {
+    "text": "Status persoon thuis (RGB)",
+    "hash": "be8fad5d"
+  },
+  "theme-editor.mushroom.person-not-home-state-rgb": {
+    "text": "Status persoon niet thuis (RGB)",
+    "hash": "5b3863b9"
+  },
+  "theme-editor.mushroom.person-unknown-state-rgb": {
+    "text": "Status persoon onbekend (RGB)",
+    "hash": "f7e0d162"
+  },
+  "theme-editor.mushroom.person-zone-state-rgb": {
+    "text": "Status persoon in zone (RGB)",
+    "hash": "a702d24e"
+  },
+  "theme-editor.mushroom.pink-rgb": {
+    "text": "Roze (RGB)",
+    "hash": "371d499a"
+  },
+  "theme-editor.mushroom.primary-letter-spacing": {
+    "text": "Letterafstand van primaire tekst",
+    "hash": "534877cf"
+  },
+  "theme-editor.mushroom.primary-line-height": {
+    "text": "Regelhoogte van primaire tekst",
+    "hash": "65b98881"
+  },
+  "theme-editor.mushroom.primary-text-colour": {
+    "text": "Kleur van primaire tekst",
+    "hash": "137442b2"
+  },
+  "theme-editor.mushroom.primary-text-size": {
+    "text": "Grootte van primaire tekst",
+    "hash": "9f2179a3"
+  },
+  "theme-editor.mushroom.primary-text-weight": {
+    "text": "Dikte van primaire tekst",
+    "hash": "01bd3155"
+  },
+  "theme-editor.mushroom.purple-rgb": {
+    "text": "Paars (RGB)",
+    "hash": "dee2d0c0"
+  },
+  "theme-editor.mushroom.red-rgb": {
+    "text": "Rood (RGB)",
+    "hash": "a5facd77"
+  },
+  "theme-editor.mushroom.secondary-letter-spacing": {
+    "text": "Letterafstand van secundaire tekst",
+    "hash": "0e4ec9f6"
+  },
+  "theme-editor.mushroom.secondary-line-height": {
+    "text": "Regelhoogte van secundaire tekst",
+    "hash": "e8873f04"
+  },
+  "theme-editor.mushroom.secondary-text-colour": {
+    "text": "Kleur van secundaire tekst",
+    "hash": "3f0c3d35"
+  },
+  "theme-editor.mushroom.secondary-text-size": {
+    "text": "Grootte van secundaire tekst",
+    "hash": "47e1b795"
+  },
+  "theme-editor.mushroom.secondary-text-weight": {
+    "text": "Dikte van secundaire tekst",
+    "hash": "407984de"
+  },
+  "theme-editor.mushroom.slider-threshold": {
+    "text": "Drempel van schuifregelaar",
+    "hash": "fbb2a728"
+  },
+  "theme-editor.mushroom.subtitle-colour": {
+    "text": "Kleur van ondertitel",
+    "hash": "1a158789"
+  },
+  "theme-editor.mushroom.subtitle-letter-spacing": {
+    "text": "Letterafstand van ondertitel",
+    "hash": "c8d359ed"
+  },
+  "theme-editor.mushroom.subtitle-line-height": {
+    "text": "Regelhoogte van ondertitel",
+    "hash": "22d77c5c"
+  },
+  "theme-editor.mushroom.subtitle-size": {
+    "text": "Grootte van ondertitel",
+    "hash": "55a8a04a"
+  },
+  "theme-editor.mushroom.subtitle-weight": {
+    "text": "Dikte van ondertitel",
+    "hash": "36fd3aab"
+  },
+  "theme-editor.mushroom.success-rgb": {
+    "text": "Succes (RGB)",
+    "hash": "f8a295c2"
+  },
+  "theme-editor.mushroom.teal-rgb": {
+    "text": "Groenblauw (RGB)",
+    "hash": "9d66bf31"
+  },
+  "theme-editor.mushroom.three-numbers-0-to-255-like-244-67-54": {
+    "text": "Drie getallen van 0 tot 255, zoals 244, 67, 54.",
+    "hash": "b899babf"
+  },
+  "theme-editor.mushroom.title-colour": {
+    "text": "Kleur van titel",
+    "hash": "fbe291da"
+  },
+  "theme-editor.mushroom.title-letter-spacing": {
+    "text": "Letterafstand van titel",
+    "hash": "566761d6"
+  },
+  "theme-editor.mushroom.title-line-height": {
+    "text": "Regelhoogte van titel",
+    "hash": "83d564bb"
+  },
+  "theme-editor.mushroom.title-padding": {
+    "text": "Binnenmarge van titel",
+    "hash": "ed127ba1"
+  },
+  "theme-editor.mushroom.title-size": {
+    "text": "Grootte van titel",
+    "hash": "8808ac4f"
+  },
+  "theme-editor.mushroom.title-spacing": {
+    "text": "Afstand van titel",
+    "hash": "cefcafa8"
+  },
+  "theme-editor.mushroom.title-weight": {
+    "text": "Dikte van titel",
+    "hash": "1ac6c0a9"
+  },
+  "theme-editor.mushroom.update-installing-rgb": {
+    "text": "Status update wordt geïnstalleerd (RGB)",
+    "hash": "952f0804"
+  },
+  "theme-editor.mushroom.update-off-rgb": {
+    "text": "Status update uit (RGB)",
+    "hash": "8c9abcda"
+  },
+  "theme-editor.mushroom.update-on-state-rgb": {
+    "text": "Status update aan (RGB)",
+    "hash": "68273109"
+  },
+  "theme-editor.mushroom.vacuum-state-rgb": {
+    "text": "Stofzuigerstatus (RGB)",
+    "hash": "8282c99b"
+  },
+  "theme-editor.mushroom.warning-rgb": {
+    "text": "Waarschuwing (RGB)",
+    "hash": "2804c9e1"
+  },
+  "theme-editor.mushroom.white-rgb": {
+    "text": "Wit (RGB)",
+    "hash": "80a153c3"
+  },
+  "theme-editor.mushroom.yellow-rgb": {
+    "text": "Geel (RGB)",
+    "hash": "84a0c048"
+  },
+  "theme-editor.preset-dialog.added-c-to-my-presets": {
+    "text": "{c} toegevoegd aan Mijn voorinstellingen",
+    "hash": "316df7d6"
+  },
+  "theme-editor.preset-dialog.author-optional": {
+    "text": "Auteur (optioneel)",
+    "hash": "2dc783e6"
+  },
+  "theme-editor.preset-dialog.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "theme-editor.preset-dialog.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "theme-editor.preset-dialog.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "theme-editor.preset-dialog.delete-name": {
+    "text": "{name} verwijderen?",
+    "hash": "a4b982a9"
+  },
+  "theme-editor.preset-dialog.deleted-name": {
+    "text": "{name} verwijderd.",
+    "hash": "1f9ebcfd"
+  },
+  "theme-editor.preset-dialog.description-optional": {
+    "text": "Beschrijving (optioneel)",
+    "hash": "f6cbe2f0"
+  },
+  "theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters": {
+    "text": "Voer een naam van 1 tot 80 tekens in.",
+    "hash": "3cf7289f"
+  },
+  "theme-editor.preset-dialog.export-theme": {
+    "text": "Thema exporteren",
+    "hash": "575ade1f"
+  },
+  "theme-editor.preset-dialog.import-theme": {
+    "text": "Thema importeren",
+    "hash": "f9cc6392"
+  },
+  "theme-editor.preset-dialog.it-did-not-work": {
+    "text": "Het is niet gelukt.",
+    "hash": "7959b921"
+  },
+  "theme-editor.preset-dialog.loading": {
+    "text": "Laden...",
+    "hash": "47d2a515"
+  },
+  "theme-editor.preset-dialog.magic-card-utils-did-not-accept-this": {
+    "text": "Magic Card Utils heeft dit preset niet geaccepteerd. Controleer de naam en de waarden.",
+    "hash": "a01b8cc9"
+  },
+  "theme-editor.preset-dialog.name": {
+    "text": "Naam",
+    "hash": "dcd1d522"
+  },
+  "theme-editor.preset-dialog.name-reason": {
+    "text": "{name}: {reason}",
+    "hash": "c1e15352"
+  },
+  "theme-editor.preset-dialog.nothing-was-saved": {
+    "text": "Er is niets opgeslagen",
+    "hash": "3df0c14a"
+  },
+  "theme-editor.preset-dialog.only-administrators-can-change-presets": {
+    "text": "Alleen beheerders kunnen presets wijzigen.",
+    "hash": "e2ba19d1"
+  },
+  "theme-editor.preset-dialog.open-as-new-theme": {
+    "text": "Openen als nieuw thema",
+    "hash": "138c95ab"
+  },
+  "theme-editor.preset-dialog.rename": {
+    "text": "Hernoemen",
+    "hash": "3064d79a"
+  },
+  "theme-editor.preset-dialog.rename-preset": {
+    "text": "Voorinstelling hernoemen",
+    "hash": "0e7392eb"
+  },
+  "theme-editor.preset-dialog.renamed-to-name": {
+    "text": "Hernoemd naar {name}.",
+    "hash": "b93f484a"
+  },
+  "theme-editor.preset-dialog.save-as-my-preset": {
+    "text": "Opslaan als mijn voorinstelling",
+    "hash": "bd12a457"
+  },
+  "theme-editor.preset-dialog.save-preset": {
+    "text": "Voorinstelling opslaan",
+    "hash": "362a1376"
+  },
+  "theme-editor.preset-dialog.saved-name-under-my-presets": {
+    "text": "{name} opgeslagen onder Mijn voorinstellingen.",
+    "hash": "d00a4397"
+  },
+  "theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in": {
+    "text": "Een thema opslaan vraagt om één instelling in Home Assistant. Op dashboard proberen werkt ook zonder; de editor laat de regels zien die je moet toevoegen.",
+    "hash": "77875996"
+  },
+  "theme-editor.preset-dialog.the-tools-could-not-load-check-your": {
+    "text": "De hulpmiddelen konden niet worden geladen. Controleer je verbinding.",
+    "hash": "297e50fa"
+  },
+  "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
+    "text": "Dit zijn voorinstellingen, nog geen thema's op je dashboard. Kies Nieuw thema en kies er een onder Mijn voorinstellingen.",
+    "hash": "3788cc99"
+  },
+  "theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your": {
+    "text": "Dit is een voorinstelling, nog geen thema op je dashboard. Open het als nieuw thema om het te proberen en op te slaan.",
+    "hash": "1509cb6f"
+  },
+  "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
+    "text": "Deze voorinstelling is elders gewijzigd. Open de lijst opnieuw.",
+    "hash": "3fb554d0"
+  },
+  "theme-editor.preset-dialog.this-removes-it-from-my-presets-themes": {
+    "text": "Dit verwijdert het uit Mijn voorinstellingen. Thema's die ermee zijn gemaakt, blijven bestaan.",
+    "hash": "889e3a34"
+  },
+  "theme-editor.preset-dialog.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme": {
+    "text": "Werk Magic Card Utils bij om themavoorinstellingen te bewaren. Een bestand met één thema opent nog steeds.",
+    "hash": "64d32a00"
+  },
+  "theme-editor.preset-dialog.you-can-keep-100-presets-delete-one": {
+    "text": "Je kunt 100 voorinstellingen bewaren. Verwijder er eerst een.",
+    "hash": "f70a194b"
+  },
+  "theme-editor.preview-cards.button": {
+    "text": "Knop",
+    "hash": "707eab0c"
+  },
+  "theme-editor.preview-cards.could-not-load-label-reason": {
+    "text": "Kon {label} niet laden. {reason}",
+    "hash": "eb829ff5"
+  },
+  "theme-editor.preview-cards.entities": {
+    "text": "Entiteiten",
+    "hash": "7fdb3cce"
+  },
+  "theme-editor.preview-cards.home-assistant-card-helpers-are-not": {
+    "text": "De kaarthulpfuncties van Home Assistant zijn niet beschikbaar",
+    "hash": "f76bac10"
+  },
+  "theme-editor.preview-cards.home-assistant-is-not-connected": {
+    "text": "Home Assistant is niet verbonden.",
+    "hash": "0d802428"
+  },
+  "theme-editor.preview-cards.label-could-not-be-loaded": {
+    "text": "{label} kon niet worden geladen.",
+    "hash": "77f44573"
+  },
+  "theme-editor.preview-cards.label-did-not-start-in-time": {
+    "text": "{label} is niet op tijd gestart.",
+    "hash": "df440651"
+  },
+  "theme-editor.preview-cards.label-has-a-resource-address-the-editor": {
+    "text": "{label} heeft een bronadres dat de editor niet laadt.",
+    "hash": "cb02e652"
+  },
+  "theme-editor.preview-cards.label-is-loaded-for-the-preview": {
+    "text": "{label} is geladen voor het voorbeeld.",
+    "hash": "15e3dbce"
+  },
+  "theme-editor.preview-cards.label-is-not-in-the-dashboard-resources": {
+    "text": "{label} staat niet in de dashboardbronnen.",
+    "hash": "75db4b55"
+  },
+  "theme-editor.preview-cards.label-is-not-loaded-in-this-editor-so": {
+    "text": "{label} is niet geladen in deze editor, dus het voorbeeld kan het niet tonen. De variabelen hieronder kun je nog steeds bewerken en opslaan.",
+    "hash": "7ed8f869"
+  },
+  "theme-editor.preview-cards.load-label-for-preview": {
+    "text": "{label} laden voor voorbeeld",
+    "hash": "a70efb13"
+  },
+  "theme-editor.preview-cards.loading": {
+    "text": "Laden...",
+    "hash": "47d2a515"
+  },
+  "theme-editor.preview-cards.loading-label": {
+    "text": "{label} laden...",
+    "hash": "10405792"
+  },
+  "theme-editor.preview-cards.preview-not-available": {
+    "text": "Voorbeeld niet beschikbaar",
+    "hash": "bef26137"
+  },
+  "theme-editor.preview-cards.the-card-is-loaded-for-the-preview": {
+    "text": "De kaart is geladen voor het voorbeeld.",
+    "hash": "746639da"
+  },
+  "theme-editor.preview-cards.this-card-cannot-be-loaded-for-the": {
+    "text": "Deze kaart kan niet worden geladen voor het voorbeeld.",
+    "hash": "a4fc372b"
+  },
+  "theme-editor.preview.a-link": {
+    "text": "een link",
+    "hash": "5a346444"
+  },
+  "theme-editor.preview.accent": {
+    "text": "Accent",
+    "hash": "a5c6fb18"
+  },
+  "theme-editor.preview.add-a-light-or-a-switch-to-home": {
+    "text": "Voeg een lamp of een schakelaar toe aan Home Assistant om het voorbeeld van {name} te zien.",
+    "hash": "3c4f6be8"
+  },
+  "theme-editor.preview.body-text-in-the-primary-text-colour": {
+    "text": "Lopende tekst in de primaire tekstkleur.",
+    "hash": "5b792903"
+  },
+  "theme-editor.preview.controls": {
+    "text": "Bediening",
+    "hash": "799c2691"
+  },
+  "theme-editor.preview.entities-card": {
+    "text": "entiteitenkaart",
+    "hash": "76a03bd9"
+  },
+  "theme-editor.preview.error-message": {
+    "text": "Foutmelding",
+    "hash": "a5dc35f1"
+  },
+  "theme-editor.preview.heading": {
+    "text": "Kop",
+    "hash": "b34f17f0"
+  },
+  "theme-editor.preview.info-message": {
+    "text": "Infobericht",
+    "hash": "afd17ae0"
+  },
+  "theme-editor.preview.map": {
+    "text": "Kaart",
+    "hash": "be176b00"
+  },
+  "theme-editor.preview.nothing-set-yet-the-preview-shows-home": {
+    "text": "Nog niets ingesteld. Het voorbeeld toont de standaardweergave van Home Assistant.",
+    "hash": "65da8228"
+  },
+  "theme-editor.preview.overview": {
+    "text": "Overzicht",
+    "hash": "d4b1ea57"
+  },
+  "theme-editor.preview.preview-mode": {
+    "text": "Voorbeeldmodus",
+    "hash": "481bc90f"
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-using-the": {
+    "text": "Voorbeeld van {count} voorbeeldkaarten met de {mode, select, dark {donkere} other {lichte}} variabelen. De voorbeelden zijn niet interactief.",
+    "hash": "b12c54c0"
+  },
+  "theme-editor.preview.preview-of-name-could-not-load": {
+    "text": "Het voorbeeld van {name} kon niet worden geladen.",
+    "hash": "64f9682a"
+  },
+  "theme-editor.preview.previewing-mode": {
+    "text": "Voorbeeld van {mode, select, dark {donker} other {licht}}",
+    "hash": "175f0117"
+  },
+  "theme-editor.preview.primary": {
+    "text": "Primair",
+    "hash": "efe10c80"
+  },
+  "theme-editor.preview.secondary": {
+    "text": "Secundair",
+    "hash": "62f2ccff"
+  },
+  "theme-editor.preview.secondary-text-and-link": {
+    "text": "Secundaire tekst en {link}.",
+    "hash": "5ad607f9"
+  },
+  "theme-editor.preview.settings": {
+    "text": "Instellingen",
+    "hash": "74a883a0"
+  },
+  "theme-editor.preview.showing-the-last-valid-value-for-c": {
+    "text": "Toont de laatste geldige waarde voor {c, plural, one {# variabele} other {# variabelen}}.",
+    "hash": "26a68ea0"
+  },
+  "theme-editor.preview.success-message": {
+    "text": "Succesbericht",
+    "hash": "306f66dc"
+  },
+  "theme-editor.preview.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "theme-editor.preview.text-field": {
+    "text": "Tekstveld",
+    "hash": "4610cad5"
+  },
+  "theme-editor.preview.the-preview-is-drawn-with-real-home": {
+    "text": "Het voorbeeld is getekend met echte Home Assistant-elementen en je variabelen. Een paar dingen kunnen op het dashboard anders zijn: thema's die afhangen van aangepaste kaart-CSS, en de zijbalk en de kop.",
+    "hash": "cb87f82c"
+  },
+  "theme-editor.preview.theme-preview-mode": {
+    "text": "Themavoorbeeld, {mode, select, dark {donker} other {licht}}",
+    "hash": "b85b6701"
+  },
+  "theme-editor.preview.this-theme-has-no-light-or-dark-modes": {
+    "text": "Dit thema heeft geen lichte of donkere modus.",
+    "hash": "aa189240"
+  },
+  "theme-editor.preview.tile-card": {
+    "text": "tegelkaart",
+    "hash": "7af533e6"
+  },
+  "theme-editor.preview.warning-message": {
+    "text": "Waarschuwingsbericht",
+    "hash": "d8ce812c"
+  },
+  "theme-editor.raw-rows.add": {
+    "text": "Toevoegen",
+    "hash": "9fd728c6"
+  },
+  "theme-editor.raw-rows.add-any-variable": {
+    "text": "Voeg een willekeurige variabele toe",
+    "hash": "ab9961ec"
+  },
+  "theme-editor.raw-rows.added-c-to-scope": {
+    "text": "{c, plural, one {# variabele} other {# variabelen}} toegevoegd aan {scope}",
+    "hash": "0a85100b"
+  },
+  "theme-editor.raw-rows.added-name-to-scope": {
+    "text": "{name} toegevoegd aan {scope}",
+    "hash": "bb10ccda"
+  },
+  "theme-editor.raw-rows.could-not-read-lines": {
+    "text": "Kon niet lezen: {lines}",
+    "hash": "6b81138a"
+  },
+  "theme-editor.raw-rows.enter-a-name": {
+    "text": "Voer een naam in.",
+    "hash": "099f9079"
+  },
+  "theme-editor.raw-rows.enter-a-value": {
+    "text": "Voer een waarde in.",
+    "hash": "8b347a23"
+  },
+  "theme-editor.raw-rows.name": {
+    "text": "Naam",
+    "hash": "dcd1d522"
+  },
+  "theme-editor.raw-rows.nothing-was-added": {
+    "text": "Er is niets toegevoegd",
+    "hash": "09025461"
+  },
+  "theme-editor.raw-rows.remove-chars-from-the-value": {
+    "text": "Verwijder {chars} uit de waarde.",
+    "hash": "960558a4"
+  },
+  "theme-editor.raw-rows.this-variable-already-exists-in-scope": {
+    "text": "Deze variabele bestaat al in {scope}. Toevoegen vervangt de waarde.",
+    "hash": "44e4f3e9"
+  },
+  "theme-editor.raw-rows.update": {
+    "text": "Bijwerken",
+    "hash": "c1c1009d"
+  },
+  "theme-editor.raw-rows.use-a-single-line": {
+    "text": "Gebruik één regel.",
+    "hash": "e347f9a4"
+  },
+  "theme-editor.raw-rows.use-letters-numbers-hyphens-and": {
+    "text": "Gebruik letters, cijfers, koppeltekens en underscores. Deze naam is niet toegestaan.",
+    "hash": "70bb7755"
+  },
+  "theme-editor.raw-rows.use-the-name-as-it-appears-in-the-theme": {
+    "text": "Gebruik de naam zoals die in het themabestand staat, zonder de streepjes ervoor. Je kunt ook meerdere regels van naam: waarde plakken.",
+    "hash": "d5ba1891"
+  },
+  "theme-editor.raw-rows.value": {
+    "text": "Waarde",
+    "hash": "8e37953d"
+  },
+  "theme-editor.save-bar.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "theme-editor.save-bar.save-ctrl-s": {
+    "text": "Opslaan (Ctrl+S)",
+    "hash": "4be89ed5"
+  },
+  "theme-editor.save-bar.saving": {
+    "text": "Opslaan...",
+    "hash": "dc85af8f"
+  },
+  "theme-editor.start-view.a-blank-theme": {
+    "text": "een leeg thema",
+    "hash": "00846ffb"
+  },
+  "theme-editor.start-view.a-preset": {
+    "text": "Een voorinstelling",
+    "hash": "a9734a0f"
+  },
+  "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
+    "text": "Een leeg thema. Voeg alleen de variabelen toe die je wilt wijzigen.",
+    "hash": "37300aad"
+  },
+  "theme-editor.start-view.an-installed-theme": {
+    "text": "Een geïnstalleerd thema",
+    "hash": "416ce064"
+  },
+  "theme-editor.start-view.blank": {
+    "text": "Leeg",
+    "hash": "2c3d371c"
+  },
+  "theme-editor.start-view.c": {
+    "text": "{c, plural, one {# variabele} other {# variabelen}}",
+    "hash": "ea6c10e7"
+  },
+  "theme-editor.start-view.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "theme-editor.start-view.cannot-be-removed-later": {
+    "text": "Kan later niet worden verwijderd.",
+    "hash": "a0c60060"
+  },
+  "theme-editor.start-view.copies-the-variables-from-the-installed": {
+    "text": "Kopieert de variabelen van het geïnstalleerde thema. Het origineel verandert niet. Ingebouwde thema's tonen slechts een deel van hun variabelen.",
+    "hash": "b55161db"
+  },
+  "theme-editor.start-view.copy-to-edit": {
+    "text": "Kopiëren om te bewerken",
+    "hash": "3bf53c98"
+  },
+  "theme-editor.start-view.could-not-delete-name-reason": {
+    "text": "Kon {name} niet verwijderen. {reason}",
+    "hash": "a4fbd926"
+  },
+  "theme-editor.start-view.could-not-read-name-neither-its-file-nor": {
+    "text": "Kon {name} niet lezen. Noch het bestand, noch Home Assistant heeft de waarden. Laad de thema's opnieuw en probeer het nog eens.",
+    "hash": "6e1f7406"
+  },
+  "theme-editor.start-view.could-not-read-name-reason": {
+    "text": "Kon {name} niet lezen. {reason}",
+    "hash": "805b41a9"
+  },
+  "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
+    "text": "Maak een thema vanuit een voorinstelling of kopieer een thema dat je hebt geïnstalleerd.",
+    "hash": "d57906f4"
+  },
+  "theme-editor.start-view.create-from-name": {
+    "text": "Maken vanuit {name}",
+    "hash": "32b205cf"
+  },
+  "theme-editor.start-view.create-theme": {
+    "text": "Thema maken",
+    "hash": "d7ed40ee"
+  },
+  "theme-editor.start-view.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "theme-editor.start-view.delete-name": {
+    "text": "{name} verwijderen?",
+    "hash": "a4b982a9"
+  },
+  "theme-editor.start-view.duplicate": {
+    "text": "Dupliceren",
+    "hash": "02cdaabf"
+  },
+  "theme-editor.start-view.file-file": {
+    "text": "Bestand {file}.",
+    "hash": "aee02cad"
+  },
+  "theme-editor.start-view.import": {
+    "text": "Importeren",
+    "hash": "2cff9baa"
+  },
+  "theme-editor.start-view.installed-theme": {
+    "text": "Geïnstalleerd thema",
+    "hash": "caa84d09"
+  },
+  "theme-editor.start-view.installed-themes": {
+    "text": "Geïnstalleerde thema's",
+    "hash": "89faedd0"
+  },
+  "theme-editor.start-view.it-is-in-a-subfolder-of-config-themes": {
+    "text": "Het staat in een submap van /config/themes.",
+    "hash": "baff7cfc"
+  },
+  "theme-editor.start-view.it-uses-home-assistant-tags-such-as": {
+    "text": "Het gebruikt Home Assistant-tags zoals !secret.",
+    "hash": "92aa0b83"
+  },
+  "theme-editor.start-view.its-file-holds-several-themes-and-saving": {
+    "text": "Het bestand bevat meerdere thema's en opslaan zou ze allemaal herschrijven.",
+    "hash": "801f748d"
+  },
+  "theme-editor.start-view.light-and-dark-modes": {
+    "text": "Lichte en donkere modus",
+    "hash": "73c5d8b7"
+  },
+  "theme-editor.start-view.light-dark": {
+    "text": "Licht + donker",
+    "hash": "a4cf6566"
+  },
+  "theme-editor.start-view.loading-presets": {
+    "text": "Voorinstellingen laden",
+    "hash": "8120a27f"
+  },
+  "theme-editor.start-view.loading-themes": {
+    "text": "Thema's laden",
+    "hash": "68dba03b"
+  },
+  "theme-editor.start-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Kleine letters, cijfers, koppeltekens en underscores. Wordt gebruikt als bestandsnaam.",
+    "hash": "bb1fdbf1"
+  },
+  "theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is": {
+    "text": "{n, plural, one {# voorinstelling staat} other {# voorinstellingen staan}} onder Mijn voorinstellingen, maar een voorinstelling is nog geen thema. Kies Nieuw thema en kies de voorinstelling om er een te maken.",
+    "hash": "ac8b706d"
+  },
+  "theme-editor.start-view.name-your-theme": {
+    "text": "Geef je thema een naam",
+    "hash": "dddc578d"
+  },
+  "theme-editor.start-view.new-theme": {
+    "text": "Nieuw thema",
+    "hash": "56ce19dd"
+  },
+  "theme-editor.start-view.no-installed-theme-matches": {
+    "text": "Geen geïnstalleerd thema komt overeen.",
+    "hash": "d6902e96"
+  },
+  "theme-editor.start-view.no-theme-called-query": {
+    "text": "Geen thema met de naam {query}.",
+    "hash": "28532025"
+  },
+  "theme-editor.start-view.no-themes-yet": {
+    "text": "Nog geen thema's",
+    "hash": "dc3cdada"
+  },
+  "theme-editor.start-view.pick-a-preset-to-start-from": {
+    "text": "Kies een voorinstelling om mee te beginnen",
+    "hash": "40d39ea0"
+  },
+  "theme-editor.start-view.pick-a-theme-to-copy": {
+    "text": "Kies een thema om te kopiëren",
+    "hash": "c3cfabe4"
+  },
+  "theme-editor.start-view.presets-are-still-loading": {
+    "text": "Voorinstellingen worden nog geladen",
+    "hash": "0f657057"
+  },
+  "theme-editor.start-view.presets-could-not-load-check-your": {
+    "text": "Voorinstellingen konden niet worden geladen. Controleer je verbinding en probeer het opnieuw. Blijft het mislukken, laad dan de pagina opnieuw.",
+    "hash": "345ad212"
+  },
+  "theme-editor.start-view.read-only": {
+    "text": "Alleen-lezen",
+    "hash": "8ac76735"
+  },
+  "theme-editor.start-view.reading": {
+    "text": "Lezen...",
+    "hash": "768f1f99"
+  },
+  "theme-editor.start-view.same-in-light-and-dark": {
+    "text": "Hetzelfde in licht en donker",
+    "hash": "c64dc7db"
+  },
+  "theme-editor.start-view.search-installed-themes": {
+    "text": "Geïnstalleerde thema's zoeken",
+    "hash": "8f4ed4ba"
+  },
+  "theme-editor.start-view.search-themes": {
+    "text": "Thema's zoeken",
+    "hash": "22da14c0"
+  },
+  "theme-editor.start-view.start-from": {
+    "text": "Beginnen met",
+    "hash": "eb3f51dc"
+  },
+  "theme-editor.start-view.the-file-could-not-be-read-as-yaml": {
+    "text": "Het bestand kon niet als YAML worden gelezen.",
+    "hash": "fb45332b"
+  },
+  "theme-editor.start-view.the-file-is-a-link-to-somewhere-else": {
+    "text": "Het bestand is een koppeling naar een andere plek.",
+    "hash": "5d70f3ca"
+  },
+  "theme-editor.start-view.the-file-is-too-large-to-edit-here": {
+    "text": "Het bestand is te groot om hier te bewerken.",
+    "hash": "4b25b51b"
+  },
+  "theme-editor.start-view.the-file-name-is-not-a-name-this-editor": {
+    "text": "De bestandsnaam is geen naam die deze editor kan schrijven.",
+    "hash": "400dca2b"
+  },
+  "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
+    "text": "De themanaam komt niet overeen met de bestandsnaam.",
+    "hash": "9106c5da"
+  },
+  "theme-editor.start-view.themes": {
+    "text": "Thema's",
+    "hash": "43ae3265"
+  },
+  "theme-editor.start-view.themes-could-not-be-read": {
+    "text": "Thema's konden niet worden gelezen",
+    "hash": "78a126fa"
+  },
+  "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
+    "text": "Dit verwijdert /config/{file} en {c, plural, one {het andere thema} other {de andere # thema's}} in dat bestand. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
+    "hash": "1d67874e"
+  },
+  "theme-editor.start-view.this-removes-config-file-screens-that": {
+    "text": "Dit verwijdert /config/{file}. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
+    "hash": "728badac"
+  },
+  "theme-editor.start-view.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "theme-editor.start-view.your-themes-live-in-config-themes": {
+    "text": "Je thema's staan in /config/themes.",
+    "hash": "d5aef6dc"
+  },
+  "theme-editor.theme-editor.could-not-open-name-reason": {
+    "text": "Kon {name} niet openen. {reason}",
+    "hash": "4c166073"
+  },
+  "theme-editor.theme-editor.deleted-name": {
+    "text": "{name} verwijderd.",
+    "hash": "1f9ebcfd"
+  },
+  "theme-editor.theme-editor.details": {
+    "text": "Details",
+    "hash": "45989de4"
+  },
+  "theme-editor.theme-editor.found-it-you-can-save-themes-now": {
+    "text": "Gevonden. Je kunt nu thema's opslaan.",
+    "hash": "d7fe1425"
+  },
+  "theme-editor.theme-editor.loading-the-theme-editor": {
+    "text": "Thema-editor laden...",
+    "hash": "b96e9362"
+  },
+  "theme-editor.theme-editor.only-administrators-can-edit-themes": {
+    "text": "Alleen beheerders kunnen thema's bewerken.",
+    "hash": "aa35e075"
+  },
+  "theme-editor.theme-editor.still-not-found-restart-home-assistant": {
+    "text": "Nog steeds niet gevonden. Start Home Assistant opnieuw op als je de regels net hebt toegevoegd.",
+    "hash": "ac49a8c0"
+  },
+  "theme-editor.theme-editor.the-check-failed-reason": {
+    "text": "De controle is mislukt. {reason}",
+    "hash": "dd97c780"
+  },
+  "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
+    "text": "De editoronderdelen van Magic Card konden niet worden geladen. De editor wordt met Magic Card meegeleverd als magic-card-theme-editor.js: werk Magic Card bij naar 2026.10.06 of nieuwer als dit blijft gebeuren.",
+    "hash": "e21f53cc"
+  },
+  "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
+    "text": "De thema-editor kon niet worden geladen. Laad de pagina opnieuw.",
+    "hash": "83047783"
+  },
+  "theme-editor.theme-editor.waiting-for-home-assistant-to-connect": {
+    "text": "Wachten tot Home Assistant verbinding maakt...",
+    "hash": "76497e43"
+  },
+  "theme-editor.tile.colour-of-the-primary-text": {
+    "text": "Kleur van de primaire tekst.",
+    "hash": "eb15f998"
+  },
+  "theme-editor.tile.colour-of-the-secondary-text": {
+    "text": "Kleur van de secundaire tekst.",
+    "hash": "119c5332"
+  },
+  "theme-editor.tile.corner-radius-of-the-tile-icon": {
+    "text": "Hoekradius van het tegelpictogram.",
+    "hash": "9e41d950"
+  },
+  "theme-editor.tile.font-size-of-the-primary-text": {
+    "text": "Lettergrootte van de primaire tekst.",
+    "hash": "319be86e"
+  },
+  "theme-editor.tile.font-size-of-the-secondary-text": {
+    "text": "Lettergrootte van de secundaire tekst.",
+    "hash": "9ed3710b"
+  },
+  "theme-editor.tile.font-weight-of-the-primary-text": {
+    "text": "Letterdikte van de primaire tekst.",
+    "hash": "2dd535ca"
+  },
+  "theme-editor.tile.font-weight-of-the-secondary-text": {
+    "text": "Letterdikte van de secundaire tekst.",
+    "hash": "475efd6e"
+  },
+  "theme-editor.tile.icon-radius": {
+    "text": "Hoekradius van pictogram",
+    "hash": "8f95505e"
+  },
+  "theme-editor.tile.keeps-tiles-that-never-wrap-level-with": {
+    "text": "Houdt tegels die nooit afbreken gelijk met tegels die dat wel doen.",
+    "hash": "cd5bd29e"
+  },
+  "theme-editor.tile.letter-spacing-of-the-primary-text": {
+    "text": "Letterafstand van de primaire tekst.",
+    "hash": "25dd9aec"
+  },
+  "theme-editor.tile.letter-spacing-of-the-secondary-text": {
+    "text": "Letterafstand van de secundaire tekst.",
+    "hash": "2e92522b"
+  },
+  "theme-editor.tile.line-height-of-the-primary-text": {
+    "text": "Regelhoogte van de primaire tekst.",
+    "hash": "7167f502"
+  },
+  "theme-editor.tile.line-height-of-the-secondary-text": {
+    "text": "Regelhoogte van de secundaire tekst.",
+    "hash": "d3645c17"
+  },
+  "theme-editor.tile.primary-letter-spacing": {
+    "text": "Letterafstand van primaire tekst",
+    "hash": "534877cf"
+  },
+  "theme-editor.tile.primary-line-height": {
+    "text": "Regelhoogte van primaire tekst",
+    "hash": "65b98881"
+  },
+  "theme-editor.tile.primary-text-colour": {
+    "text": "Kleur van primaire tekst",
+    "hash": "137442b2"
+  },
+  "theme-editor.tile.primary-text-minimum-height": {
+    "text": "Minimale hoogte van primaire tekst",
+    "hash": "5ea2ee4a"
+  },
+  "theme-editor.tile.primary-text-size": {
+    "text": "Grootte van primaire tekst",
+    "hash": "9f2179a3"
+  },
+  "theme-editor.tile.primary-text-weight": {
+    "text": "Dikte van primaire tekst",
+    "hash": "01bd3155"
+  },
+  "theme-editor.tile.reserves-room-for-a-missing-secondary": {
+    "text": "Houdt ruimte vrij voor een ontbrekende secundaire regel.",
+    "hash": "39764337"
+  },
+  "theme-editor.tile.secondary-letter-spacing": {
+    "text": "Letterafstand van secundaire tekst",
+    "hash": "0e4ec9f6"
+  },
+  "theme-editor.tile.secondary-line-height": {
+    "text": "Regelhoogte van secundaire tekst",
+    "hash": "e8873f04"
+  },
+  "theme-editor.tile.secondary-text-colour": {
+    "text": "Kleur van secundaire tekst",
+    "hash": "3f0c3d35"
+  },
+  "theme-editor.tile.secondary-text-size": {
+    "text": "Grootte van secundaire tekst",
+    "hash": "47e1b795"
+  },
+  "theme-editor.tile.secondary-text-weight": {
+    "text": "Dikte van secundaire tekst",
+    "hash": "407984de"
+  },
+  "theme-editor.tile.text-block-minimum-height": {
+    "text": "Minimale hoogte van tekstblok",
+    "hash": "c96fd39b"
+  },
+  "theme-editor.tile.text-gap": {
+    "text": "Tekstafstand",
+    "hash": "4c1ed527"
+  },
+  "theme-editor.tile.vertical-gap-between-primary-and": {
+    "text": "Verticale ruimte tussen primaire en secundaire tekst.",
+    "hash": "ab4a7553"
+  },
+  "theme-editor.trial-bar.editor": {
+    "text": "Editor",
+    "hash": "936a161c"
+  },
+  "theme-editor.trial-bar.move-to-bottom": {
+    "text": "Naar beneden verplaatsen",
+    "hash": "df933761"
+  },
+  "theme-editor.trial-bar.move-to-top": {
+    "text": "Naar boven verplaatsen",
+    "hash": "349d5d60"
+  },
+  "theme-editor.trial-bar.n-not-valid-left-out": {
+    "text": "{n} ongeldig, weggelaten",
+    "hash": "10da5468"
+  },
+  "theme-editor.trial-bar.open-editor": {
+    "text": "Editor openen",
+    "hash": "550697e0"
+  },
+  "theme-editor.trial-bar.revert": {
+    "text": "Terugzetten",
+    "hash": "0026c505"
+  },
+  "theme-editor.trial-bar.revert-theme-trial": {
+    "text": "Thema-proef terugzetten",
+    "hash": "3586f1fa"
+  },
+  "theme-editor.trial-bar.theme-trial": {
+    "text": "Thema-proef",
+    "hash": "98bcc0d8"
+  },
+  "theme-editor.trial-bar.trying-name": {
+    "text": "{name} proberen",
+    "hash": "6d6487e2"
+  },
+  "theme-editor.trial-bar.trying-name-on-this-tab-mode": {
+    "text": "{name} proberen op dit tabblad ({mode, select, dark {donker} other {licht}})",
+    "hash": "e9c4812c"
+  },
+  "theme-editor.trial.reverted-this-tab-shows-your-own-theme": {
+    "text": "Teruggezet. Dit tabblad toont weer je eigen thema.",
+    "hash": "35c0d9e0"
+  },
+  "theme-editor.trial.saved-this-tab-now-uses-the-saved-theme": {
+    "text": "Opgeslagen. Dit tabblad gebruikt nu het opgeslagen themabestand.",
+    "hash": "5fdde5f1"
+  },
+  "theme-editor.trial.trial-ended-after-10-minutes": {
+    "text": "De proef is na 10 minuten beëindigd.",
+    "hash": "7d8dee7d"
+  },
+  "theme-editor.trial.trial-ended-because-the-theme-changed": {
+    "text": "De proef is beëindigd omdat het thema veranderde.",
+    "hash": "b3f0b750"
+  },
+  "theme-editor.ultra-card.accents-and-active-elements": {
+    "text": "Accenten en actieve elementen.",
+    "hash": "f8a4b04a"
+  },
+  "theme-editor.ultra-card.borders-and-separators": {
+    "text": "Randen en scheidingslijnen.",
+    "hash": "634e2bc7"
+  },
+  "theme-editor.ultra-card.card-background": {
+    "text": "Kaartachtergrond",
+    "hash": "fbdd2498"
+  },
+  "theme-editor.ultra-card.card-background-override": {
+    "text": "Overschrijving van kaartachtergrond",
+    "hash": "cff0a4fe"
+  },
+  "theme-editor.ultra-card.card-radius": {
+    "text": "Hoekradius van kaart",
+    "hash": "8ba76469"
+  },
+  "theme-editor.ultra-card.card-shadow": {
+    "text": "Kaartschaduw",
+    "hash": "b94cea6d"
+  },
+  "theme-editor.ultra-card.card-surface": {
+    "text": "Kaartvlak.",
+    "hash": "38351014"
+  },
+  "theme-editor.ultra-card.corner-radius-of-the-card": {
+    "text": "Hoekradius van de kaart.",
+    "hash": "7be23f35"
+  },
+  "theme-editor.ultra-card.divider-colour": {
+    "text": "Scheidingskleur",
+    "hash": "20ac535f"
+  },
+  "theme-editor.ultra-card.error-colour": {
+    "text": "Foutkleur",
+    "hash": "6b14a7aa"
+  },
+  "theme-editor.ultra-card.error-messages": {
+    "text": "Foutmeldingen.",
+    "hash": "782e2f7d"
+  },
+  "theme-editor.ultra-card.main-text": {
+    "text": "Hoofdtekst.",
+    "hash": "f7c7ed58"
+  },
+  "theme-editor.ultra-card.muted-text": {
+    "text": "Gedempte tekst.",
+    "hash": "a05571ac"
+  },
+  "theme-editor.ultra-card.primary-colour": {
+    "text": "Primaire kleur",
+    "hash": "2ccfbde3"
+  },
+  "theme-editor.ultra-card.primary-text-colour": {
+    "text": "Kleur van primaire tekst",
+    "hash": "137442b2"
+  },
+  "theme-editor.ultra-card.secondary-text-colour": {
+    "text": "Kleur van secundaire tekst",
+    "hash": "3f0c3d35"
+  },
+  "theme-editor.ultra-card.shadow-of-the-card": {
+    "text": "Schaduw van de kaart.",
+    "hash": "58f56089"
+  },
+  "theme-editor.ultra-card.takes-priority-over-the-card-background": {
+    "text": "Heeft voorrang op de kaartachtergrond.",
+    "hash": "65944041"
+  },
+  "theme-editor.util.a-and-b": {
+    "text": "{a} en {b}",
+    "hash": "04f767bd"
+  },
+  "theme-editor.util.a-theme-called-name-already-exists": {
+    "text": "Er bestaat al een thema met de naam {name}.",
+    "hash": "7ae06a66"
+  },
+  "theme-editor.util.dark": {
+    "text": "Donker",
+    "hash": "60acc53f"
+  },
+  "theme-editor.util.enter-a-name": {
+    "text": "Voer een naam in.",
+    "hash": "099f9079"
+  },
+  "theme-editor.util.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "theme-editor.util.shared": {
+    "text": "Gedeeld",
+    "hash": "e3c4b39d"
+  },
+  "theme-editor.util.this-name-is-reserved": {
+    "text": "Deze naam is gereserveerd.",
+    "hash": "6b930899"
+  },
+  "theme-editor.util.use-lowercase-letters-numbers-hyphens": {
+    "text": "Gebruik kleine letters, cijfers, koppeltekens en underscores, beginnend met een letter of cijfer (maximaal 64 tekens).",
+    "hash": "2ed797ed"
+  }
 }

@@ -1,0 +1,754 @@
+{
+  "theme-presets.library.amber-console": {
+    "text": "Amber Console",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.amber-on-blue-grey-mirage": {
+    "text": "Amber on blue-grey mirage.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.arcade": {
+    "text": "Arcade",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.ashen-keep": {
+    "text": "Ashen Keep",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.autumn": {
+    "text": "Autumn",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.ayu-mirage": {
+    "text": "Ayu Mirage",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.balanced-low-glare-cream-and-teal": {
+    "text": "Balanced low-glare cream and teal.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.black-and-white-nothing-in-between": {
+    "text": "Black and white, nothing in between.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.candlelit-cloister": {
+    "text": "Candlelit Cloister",
+    "note": "Shown in library (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.library.cassette": {
+    "text": "Cassette",
+    "note": "Shown in library (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.library.catppuccin-latte-mocha": {
+    "text": "Catppuccin Latte & Mocha",
+    "note": "Shown in library (theme-presets).",
+    "max": 40
+  },
+  "theme-presets.library.charcoal-iron-and-pale-limestone-deep": {
+    "text": "Charcoal iron and pale limestone; deep red accent, coral at night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 110
+  },
+  "theme-presets.library.clean-light-with-a-calm-blue": {
+    "text": "Clean light with a calm blue.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.clean-primer-blues-and-neutral-greys": {
+    "text": "Clean Primer blues and neutral greys.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.cobalt-blue-with-a-gold-primary": {
+    "text": "Cobalt blue with a gold primary.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.cobalt-gold": {
+    "text": "Cobalt Gold",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.cobalt-prism": {
+    "text": "Cobalt Prism",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.contrast": {
+    "text": "Contrast",
+    "note": "Shown in library (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.library.cool-arctic-blues-on-polar-night": {
+    "text": "Cool arctic blues on polar night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.crimson-pines": {
+    "text": "Crimson Pines",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.deep-greens-with-an-amber-spark": {
+    "text": "Deep greens with an amber spark.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.deep-navy-with-soft-periwinkle": {
+    "text": "Deep navy with soft periwinkle.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.deep-petrol-and-steel-grey-with-a": {
+    "text": "Deep petrol and steel-grey with a coolant-cyan accent; copper at night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 115
+  },
+  "theme-presets.library.deep-survey": {
+    "text": "Deep Survey",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.desert": {
+    "text": "Desert",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.dracula-night": {
+    "text": "Dracula Night",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.dusky-blue-night-warm-fox-white-day": {
+    "text": "Dusky blue night, warm fox-white day.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.dust-duel": {
+    "text": "Dust Duel",
+    "note": "Shown in library (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.library.ember": {
+    "text": "Ember",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.everforest-moss": {
+    "text": "Everforest Moss",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.faded-tape-deck-red-and-cream": {
+    "text": "Faded tape-deck red and cream.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.familiar-editor-greys-with-a-bright-blue": {
+    "text": "Familiar editor greys with a bright blue.",
+    "note": "Shown in library (theme-presets).",
+    "max": 70
+  },
+  "theme-presets.library.forest": {
+    "text": "Forest",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.fresh-leaf-green-and-blossom-pink": {
+    "text": "Fresh leaf green and blossom pink.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.frontier-freighter": {
+    "text": "Frontier Freighter",
+    "note": "Shown in library (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.library.frost": {
+    "text": "Frost",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.frosted-cards-over-a-graphite-gradient": {
+    "text": "Frosted cards over a graphite gradient.",
+    "note": "Shown in library (theme-presets).",
+    "max": 65
+  },
+  "theme-presets.library.frosted-cards-over-a-rose-gradient": {
+    "text": "Frosted cards over a rose gradient.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.frosted-cards-over-an-aqua-gradient": {
+    "text": "Frosted cards over an aqua gradient.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.github-light-dark": {
+    "text": "GitHub Light & Dark",
+    "note": "Shown in library (theme-presets).",
+    "max": 35
+  },
+  "theme-presets.library.glass-aqua": {
+    "text": "Glass Aqua",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.glass-blurred-translucent-cards-on-a": {
+    "text": "Glass: blurred, translucent cards on a soft gradient.",
+    "note": "Shown in library (theme-presets).",
+    "max": 85
+  },
+  "theme-presets.library.glass-graphite": {
+    "text": "Glass Graphite",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.glass-rose": {
+    "text": "Glass Rose",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.gruvbox-retro": {
+    "text": "Gruvbox Retro",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.hi-vis": {
+    "text": "Hi-Vis",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.high-contrast-green-on-black-strong": {
+    "text": "High contrast green on black, strong edges.",
+    "note": "Shown in library (theme-presets).",
+    "max": 70
+  },
+  "theme-presets.library.high-contrast-strong-edges": {
+    "text": "High contrast, strong edges.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.hot-magenta-and-electric-cyan-neon-on-a": {
+    "text": "Hot magenta and electric cyan neon on a dark city night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 90
+  },
+  "theme-presets.library.hot-pink-and-cyan-on-dark-purple": {
+    "text": "Hot pink and cyan on dark purple.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.icy-blue-with-a-violet-touch": {
+    "text": "Icy blue with a violet touch.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.ink": {
+    "text": "Ink",
+    "note": "Shown in library (theme-presets).",
+    "max": 5
+  },
+  "theme-presets.library.kanagawa-wave": {
+    "text": "Kanagawa Wave",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.lavender-mist": {
+    "text": "Lavender Mist",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.lilac-and-amber-on-near-black-like-a": {
+    "text": "Lilac and amber on near-black, like a retro starship console.",
+    "note": "Shown in library (theme-presets).",
+    "max": 100
+  },
+  "theme-presets.library.lime-and-magenta-on-charcoal": {
+    "text": "Lime and magenta on charcoal.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.low-contrast-sage-on-soft-grey": {
+    "text": "Low-contrast sage on soft grey.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.material-baseline-purple-with-teal": {
+    "text": "Material baseline purple with teal.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.material-violet": {
+    "text": "Material Violet",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.midnight-oled": {
+    "text": "Midnight OLED",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.mint-and-sky-on-ink": {
+    "text": "Mint and sky on ink.",
+    "note": "Shown in library (theme-presets).",
+    "max": 35
+  },
+  "theme-presets.library.monokai-lime": {
+    "text": "Monokai Lime",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.muted-rose-and-iris-calm-and-low": {
+    "text": "Muted rose and iris, calm and low contrast.",
+    "note": "Shown in library (theme-presets).",
+    "max": 70
+  },
+  "theme-presets.library.neon-lit-city-blues-and-violets": {
+    "text": "Neon-lit city blues and violets.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.neon-magenta-and-cyan-80s-cabinet": {
+    "text": "Neon magenta and cyan, 80s cabinet.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.neon-rain": {
+    "text": "Neon Rain",
+    "note": "Shown in library (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.library.neutral-blue-grey-for-any-room": {
+    "text": "Neutral blue-grey for any room.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.night-owl-navy": {
+    "text": "Night Owl Navy",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.nightfox-dayfox": {
+    "text": "Nightfox & Dayfox",
+    "note": "Shown in library (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.library.nord-frost": {
+    "text": "Nord Frost",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.ocean": {
+    "text": "Ocean",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.ochre-basin": {
+    "text": "Ochre Basin",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.off-white-panels-burnt-orange-accent": {
+    "text": "Off-white panels, burnt orange accent: navy ink by day, denim blue at night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 125
+  },
+  "theme-presets.library.oled-amber": {
+    "text": "OLED Amber",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.oled-green": {
+    "text": "OLED Green",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.one-dark-pro": {
+    "text": "One Dark Pro",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.library.orbital-smelter": {
+    "text": "Orbital Smelter",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.oxblood-red-over-a-dark-pine-forest-moss": {
+    "text": "Oxblood red over a dark pine forest, moss-green panels, green-black nights.",
+    "note": "Shown in library (theme-presets).",
+    "max": 120
+  },
+  "theme-presets.library.paper": {
+    "text": "Paper",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.pastel-lilac-and-rose": {
+    "text": "Pastel lilac and rose.",
+    "note": "Shown in library (theme-presets).",
+    "max": 40
+  },
+  "theme-presets.library.pastel-raspberry-and-mint": {
+    "text": "Pastel raspberry and mint.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.plum-and-old-gold-on-parchment-wine": {
+    "text": "Plum and old gold on parchment; wine-black at night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 85
+  },
+  "theme-presets.library.poimandres-mint": {
+    "text": "Poimandres Mint",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.pure-black-for-wall-tablets": {
+    "text": "Pure black for wall tablets.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.pure-black-in-dark-mode-only-keep-the": {
+    "text": "Pure black in dark mode only. Keep the screen in dark mode.",
+    "note": "Shown in library (theme-presets).",
+    "max": 95
+  },
+  "theme-presets.library.pure-black-with-amber-for-wall-tablets": {
+    "text": "Pure black with amber, for wall tablets.",
+    "note": "Shown in library (theme-presets).",
+    "max": 65
+  },
+  "theme-presets.library.pure-black-with-terminal-green-for-wall": {
+    "text": "Pure black with terminal green, for wall tablets.",
+    "note": "Shown in library (theme-presets).",
+    "max": 80
+  },
+  "theme-presets.library.purple-and-pink-on-deep-indigo": {
+    "text": "Purple and pink on deep indigo.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.red-clay-desert-brick-header-red-accent": {
+    "text": "Red-clay desert, brick header, red accent; sand-gold by night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 100
+  },
+  "theme-presets.library.rose-pine-bloom": {
+    "text": "Rose Pine Bloom",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.rust-olive-and-warm-paper": {
+    "text": "Rust, olive and warm paper.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.saddle-tan-and-rust-on-sandy-cream-a": {
+    "text": "Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 125
+  },
+  "theme-presets.library.sand": {
+    "text": "Sand",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.silvered-jade-leaves-and-gold-touches-by": {
+    "text": "Silvered jade leaves and gold touches by day; sage green by night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 110
+  },
+  "theme-presets.library.silverleaf-glade": {
+    "text": "Silverleaf Glade",
+    "note": "Shown in library (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.library.sky-blue-and-sun-yellow": {
+    "text": "Sky blue and sun yellow.",
+    "note": "Shown in library (theme-presets).",
+    "max": 40
+  },
+  "theme-presets.library.slate": {
+    "text": "Slate",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.soft-green-forest-tones-easy-on-the-eyes": {
+    "text": "Soft green forest tones, easy on the eyes.",
+    "note": "Shown in library (theme-presets).",
+    "max": 70
+  },
+  "theme-presets.library.soft-pastel-accents-latte-by-day-and": {
+    "text": "Soft pastel accents, latte by day and mocha by night.",
+    "note": "Shown in library (theme-presets).",
+    "max": 85
+  },
+  "theme-presets.library.solarized-glow": {
+    "text": "Solarized Glow",
+    "note": "Shown in library (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.library.sorbet": {
+    "text": "Sorbet",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.spring": {
+    "text": "Spring",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.summer": {
+    "text": "Summer",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.sun-baked-ochre-olive-header-at-night-an": {
+    "text": "Sun-baked ochre, olive header; at night an ochre glow on deep indigo.",
+    "note": "Shown in library (theme-presets).",
+    "max": 115
+  },
+  "theme-presets.library.synthwave-sunset": {
+    "text": "Synthwave Sunset",
+    "note": "Shown in library (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.library.teal-depths-and-coral": {
+    "text": "Teal depths and coral.",
+    "note": "Shown in library (theme-presets).",
+    "max": 40
+  },
+  "theme-presets.library.terracotta-dust-and-oasis-teal": {
+    "text": "Terracotta, dust and oasis teal.",
+    "note": "Shown in library (theme-presets).",
+    "max": 55
+  },
+  "theme-presets.library.tokyo-night-lights": {
+    "text": "Tokyo Night Lights",
+    "note": "Shown in library (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.library.ukiyo-e-indigo-and-parchment": {
+    "text": "Ukiyo-e indigo and parchment.",
+    "note": "Shown in library (theme-presets).",
+    "max": 50
+  },
+  "theme-presets.library.ultramarine-blue-with-an-orange-spark": {
+    "text": "Ultramarine blue with an orange spark, sleek and futuristic.",
+    "note": "Shown in library (theme-presets).",
+    "max": 100
+  },
+  "theme-presets.library.uses-blur-and-transparency-can-be-slow": {
+    "text": "Uses blur and transparency. Can be slow on old tablets.",
+    "note": "Shown in library (theme-presets).",
+    "max": 90
+  },
+  "theme-presets.library.warm-neutral-stone-and-clay": {
+    "text": "Warm neutral stone and clay.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.warm-paper-and-terracotta": {
+    "text": "Warm paper and terracotta.",
+    "note": "Shown in library (theme-presets).",
+    "max": 45
+  },
+  "theme-presets.library.warm-retro-browns-with-a-teal-link": {
+    "text": "Warm retro browns with a teal link.",
+    "note": "Shown in library (theme-presets).",
+    "max": 60
+  },
+  "theme-presets.library.winter": {
+    "text": "Winter",
+    "note": "Shown in library (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.library.zenburn-calm": {
+    "text": "Zenburn Calm",
+    "note": "Shown in library (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.picker.all": {
+    "text": "All",
+    "note": "Shown in picker (theme-presets).",
+    "max": 5
+  },
+  "theme-presets.picker.clear-search": {
+    "text": "Clear search",
+    "note": "Shown in picker (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.picker.contacts-another-website": {
+    "text": "Contacts another website",
+    "note": "Shown in picker (theme-presets).",
+    "max": 40
+  },
+  "theme-presets.picker.delete": {
+    "text": "Delete",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.desert": {
+    "text": "desert",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.picker.export": {
+    "text": "Export",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.picker.fantasy": {
+    "text": "fantasy",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.fantasy-2": {
+    "text": "Fantasy",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.forest": {
+    "text": "forest",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.picker.genre": {
+    "text": "genre",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.picker.independent-colour-schemes-made-for": {
+    "text": "Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.",
+    "note": "Shown in picker (theme-presets).",
+    "max": 190
+  },
+  "theme-presets.picker.inspired-by": {
+    "text": "Inspired by",
+    "note": "Shown in picker (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.picker.inspired-by-2": {
+    "text": "inspired by",
+    "note": "Shown in picker (theme-presets).",
+    "max": 20
+  },
+  "theme-presets.picker.inspired-by-name": {
+    "text": "Inspired by {name}",
+    "note": "Shown in picker (theme-presets).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-presets.picker.my": {
+    "text": "my",
+    "note": "Shown in picker (theme-presets).",
+    "max": 5
+  },
+  "theme-presets.picker.my-presets": {
+    "text": "My presets",
+    "note": "Shown in picker (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.picker.n-shown": {
+    "text": "{n, plural, one {# preset} other {# presets}} shown",
+    "note": "Shown in picker (theme-presets).",
+    "max": 30,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "theme-presets.picker.n-shown-try-a-b-c-d-or-e": {
+    "text": "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.",
+    "note": "Shown in picker (theme-presets).",
+    "max": 80,
+    "vars": {
+      "a": "The value that replaces a in the text.",
+      "b": "The value that replaces b in the text.",
+      "c": "The value that replaces c in the text.",
+      "d": "The value that replaces d in the text.",
+      "e": "The value that replaces e in the text.",
+      "n": "The count the text is about."
+    }
+  },
+  "theme-presets.picker.name-palette-or-style": {
+    "text": "Name, palette or style",
+    "note": "Shown in picker (theme-presets).",
+    "max": 40
+  },
+  "theme-presets.picker.neon": {
+    "text": "neon",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.picker.no-preset-matches-query": {
+    "text": "No preset matches \"{query}\".",
+    "note": "Shown in picker (theme-presets).",
+    "max": 50,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "theme-presets.picker.original": {
+    "text": "Original",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.original-2": {
+    "text": "original",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.preset": {
+    "text": "Preset",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.presets-use-genre-and-colour-words-not": {
+    "text": "Presets use genre and colour words, not titles. Try one of these:",
+    "note": "Shown in picker (theme-presets).",
+    "max": 105
+  },
+  "theme-presets.picker.rename": {
+    "text": "Rename",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  },
+  "theme-presets.picker.sci-fi": {
+    "text": "sci-fi",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.sci-fi-2": {
+    "text": "Sci-fi",
+    "note": "Shown in picker (theme-presets).",
+    "max": 15
+  },
+  "theme-presets.picker.sci-fi-fantasy": {
+    "text": "Sci-fi & fantasy",
+    "note": "Shown in picker (theme-presets).",
+    "max": 30
+  },
+  "theme-presets.picker.search-presets": {
+    "text": "Search presets",
+    "note": "Shown in picker (theme-presets).",
+    "max": 25
+  },
+  "theme-presets.picker.show": {
+    "text": "Show",
+    "note": "Shown in picker (theme-presets).",
+    "max": 10
+  }
+}

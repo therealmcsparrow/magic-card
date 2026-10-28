@@ -25,11 +25,11 @@ export interface PresetDlgOpts {
 }
 
 const known = (code: string): string | undefined =>
-  code === 'library_full' ? t('You can keep 100 presets. Delete one first.') : code === 'conflict' ? t('This preset changed elsewhere. Reopen the list.') : undefined;
+  code === 'library_full' ? t('theme-editor.preset-dialog.you-can-keep-100-presets-delete-one') : code === 'conflict' ? t('theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the') : undefined;
 const why = (e: unknown): string => {
   const x = e as ThemeBackendError;
   // only text of this editor: the server's own field messages are English and are not shown
-  return known(x.code) ?? (x.code === 'invalid_format' ? t('Magic Card Utils did not accept this preset. Check the name and the values.') : x.code === 'unauthorized' ? t('Only administrators can change presets.') : t('It did not work.'));
+  return known(x.code) ?? (x.code === 'invalid_format' ? t('theme-editor.preset-dialog.magic-card-utils-did-not-accept-this') : x.code === 'unauthorized' ? t('theme-editor.preset-dialog.only-administrators-can-change-presets') : t('theme-editor.preset-dialog.it-did-not-work'));
 };
 
 /**
@@ -147,7 +147,7 @@ export class MctePresetDialog extends LitElement {
     const name = this._name.trim();
     if (!store) return;
     if (!del && (!name || name.length > 80)) {
-      this._error = t('Enter a name of 1 to 80 characters.');
+      this._error = t('theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters');
       return;
     }
     const d = re ? tgt?.description : this._desc.trim();
@@ -161,8 +161,8 @@ export class MctePresetDialog extends LitElement {
     };
     void this._run(async () =>
       del
-        ? (await store.remove(tgt!.id), t('Deleted {name}.', { name: tgt!.name }))
-        : (await store.save(input, re ? tgt!.updated_at : undefined), re ? t('Renamed to {name}.', { name }) : t('Saved {name} under My presets.', { name })),
+        ? (await store.remove(tgt!.id), t('theme-editor.preset-dialog.deleted-name', { name: tgt!.name }))
+        : (await store.save(input, re ? tgt!.updated_at : undefined), re ? t('theme-editor.preset-dialog.renamed-to-name', { name }) : t('theme-editor.preset-dialog.saved-name-under-my-presets', { name })),
     );
   }
 
@@ -171,7 +171,7 @@ export class MctePresetDialog extends LitElement {
     if (!store) {
       // Older Magic Card Utils: one theme opens as a new, unsaved theme ("Create from file").
       if (items.length !== 1) {
-        this._error = t('Update Magic Card Utils to keep theme presets. A file with one theme still opens.');
+        this._error = t('theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme');
         return;
       }
       this._open(items[0]);
@@ -188,7 +188,7 @@ export class MctePresetDialog extends LitElement {
         await store.save(input);
         saved.push(it);
       } catch (e) {
-        failed.push(t('{name}: {reason}', { name: it.name, reason: why(e) }));
+        failed.push(t('theme-editor.preset-dialog.name-reason', { name: it.name, reason: why(e) }));
       }
     }
     this._busy = false;
@@ -204,14 +204,14 @@ export class MctePresetDialog extends LitElement {
   private _fields(): TemplateResult {
     const f = (id: string, label: string, max: number, k: '_name' | '_desc' | '_author'): TemplateResult =>
       html`<label class="lbl" for=${id}>${label}</label><input id=${id} class="input" maxlength=${max} .value=${this[k]} @input=${(e: Event) => ((this[k] = (e.target as HTMLInputElement).value), (this._error = ''))} />`;
-    return html`${f('pn', t('Name'), 80, '_name')}${this._mode === 'save' ? html`${f('pd', t('Description (optional)'), 280, '_desc')}${f('pa', t('Author (optional)'), 80, '_author')}` : nothing}`;
+    return html`${f('pn', t('theme-editor.preset-dialog.name'), 80, '_name')}${this._mode === 'save' ? html`${f('pd', t('theme-editor.preset-dialog.description-optional'), 280, '_desc')}${f('pa', t('theme-editor.preset-dialog.author-optional'), 80, '_author')}` : nothing}`;
   }
 
   private _panel(mode: 'import' | 'export'): TemplateResult {
-    if (this._tx === 'loading') return html`<p class="help" role="status">${t('Loading...')}</p>`;
+    if (this._tx === 'loading') return html`<p class="help" role="status">${t('theme-editor.preset-dialog.loading')}</p>`;
     if (this._tx === 'error') {
-      return html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${t('The tools could not load. Check your connection.')}</span></p>
-        <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._loadTx()}>${t('Try again')}</button>`;
+      return html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${t('theme-editor.preset-dialog.the-tools-could-not-load-check-your')}</span></p>
+        <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._loadTx()}>${t('theme-editor.preset-dialog.try-again')}</button>`;
     }
     const o = this._opts;
     const item = o.doc
@@ -236,26 +236,26 @@ export class MctePresetDialog extends LitElement {
     const m = this._mode;
     const tgt = this._opts.target;
     const go = (label: string, cls = 'btn-primary'): TemplateResult =>
-      html`<button type="button" class="btn btn-secondary" @click=${() => this._close()}>${t('Cancel')}</button><button type="submit" class="btn ${cls}" aria-disabled=${this._busy ? 'true' : 'false'}>${label}</button>`;
-    if (m === 'save') return { title: t('Save as my preset'), body: html`${this._fields()}${this._err()}`, foot: go(t('Save preset')) };
-    if (m === 'rename') return { title: t('Rename preset'), body: html`${this._fields()}${this._err()}`, foot: go(t('Rename')) };
-    if (m === 'delete') return { title: t('Delete {name}?', { name: String(tgt?.name ?? '') }), body: html`<p>${t('This removes it from My presets. Themes made from it stay.')}</p>${this._err()}`, foot: go(t('Delete'), 'btn-danger') };
-    return { title: m === 'export' ? t('Export theme') : t('Import theme'), body: this._done ? this._result() : this._panel(m!), foot: nothing };
+      html`<button type="button" class="btn btn-secondary" @click=${() => this._close()}>${t('theme-editor.preset-dialog.cancel')}</button><button type="submit" class="btn ${cls}" aria-disabled=${this._busy ? 'true' : 'false'}>${label}</button>`;
+    if (m === 'save') return { title: t('theme-editor.preset-dialog.save-as-my-preset'), body: html`${this._fields()}${this._err()}`, foot: go(t('theme-editor.preset-dialog.save-preset')) };
+    if (m === 'rename') return { title: t('theme-editor.preset-dialog.rename-preset'), body: html`${this._fields()}${this._err()}`, foot: go(t('theme-editor.preset-dialog.rename')) };
+    if (m === 'delete') return { title: t('theme-editor.preset-dialog.delete-name', { name: String(tgt?.name ?? '') }), body: html`<p>${t('theme-editor.preset-dialog.this-removes-it-from-my-presets-themes')}</p>${this._err()}`, foot: go(t('theme-editor.preset-dialog.delete'), 'btn-danger') };
+    return { title: m === 'export' ? t('theme-editor.preset-dialog.export-theme') : t('theme-editor.preset-dialog.import-theme'), body: this._done ? this._result() : this._panel(m!), foot: nothing };
   }
 
   private _result(): TemplateResult {
     const { saved, failed } = this._done!;
     const one = saved.length === 1;
     const setup = !!this.include && this.include.state !== 'ok';
-    return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? t('Added {c} to My presets', { c: saved.length }) : t('Nothing was saved')}</h3>
+    return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? t('theme-editor.preset-dialog.added-c-to-my-presets', { c: saved.length }) : t('theme-editor.preset-dialog.nothing-was-saved')}</h3>
       ${saved.length
-        ? html`<p>${one ? t('This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.') : t('These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.')}</p>
-            ${setup ? html`<p class="help">${t('Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.')}</p>` : nothing}`
+        ? html`<p>${one ? t('theme-editor.preset-dialog.this-is-a-preset-not-a-theme-on-your') : t('theme-editor.preset-dialog.these-are-presets-not-themes-on-your')}</p>
+            ${setup ? html`<p class="help">${t('theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in')}</p>` : nothing}`
         : nothing}
       ${failed.map((f) => html`<p role="alert">${f}</p>`)}
       <div class="res-foot">
-        <button type="button" class="btn ${one ? 'btn-secondary' : 'btn-primary'}" @click=${() => this._close()}>${t('Close')}</button>
-        ${one ? html`<button type="button" class="btn btn-primary" @click=${() => this._open(saved[0])}>${t('Open as new theme')}</button>` : nothing}
+        <button type="button" class="btn ${one ? 'btn-secondary' : 'btn-primary'}" @click=${() => this._close()}>${t('theme-editor.preset-dialog.close')}</button>
+        ${one ? html`<button type="button" class="btn btn-primary" @click=${() => this._open(saved[0])}>${t('theme-editor.preset-dialog.open-as-new-theme')}</button>` : nothing}
       </div>`;
   }
 

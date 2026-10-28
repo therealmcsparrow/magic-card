@@ -1,6 +1,7 @@
 import { THEME_CATALOGUE_CONTRACT_VERSION } from '../../contracts/theme-catalogue';
-import type { CatalogueEntry, CatalogueGroup, CatalogueGroupId, CatalogueSource, FieldKind, ThemeCatalogue } from '../../contracts/theme-catalogue';
+import type { CatalogueGroupId, CatalogueSource, FieldKind, ThemeCatalogue } from '../../contracts/theme-catalogue';
 import { m } from '../i18n';
+import type { MarkedEntry, MarkedGroup } from '../model';
 import { HA_ENTRIES } from './ha';
 import { MAGIC_CARD_ENTRIES } from './magic-card';
 import { TILE_ENTRIES } from './tile';
@@ -17,23 +18,23 @@ import { BUTTON_CARD_ENTRIES } from './button-card';
  * through groupEntries().
  */
 
-export const CATALOGUE_GROUPS: CatalogueGroup[] = [
-  { id: 'primary', label: m('Primary and accent') },
-  { id: 'backgrounds', label: m('Backgrounds and cards') },
-  { id: 'text', label: m('Text') },
-  { id: 'states', label: m('States and alerts') },
-  { id: 'sizes', label: m('Sizes and radii') },
-  { id: 'chrome', label: m('Header and sidebar') },
-  { id: 'magic-card', label: m('Magic Card'), previewTag: 'magic-card' },
-  { id: 'tile', label: m('Tile card'), previewTag: 'hui-tile-card' },
-  { id: 'mushroom', label: m('Mushroom'), previewTag: 'mushroom-entity-card', resourcePattern: /mushroom/i },
-  { id: 'bubble-card', label: m('Bubble Card'), previewTag: 'bubble-card', resourcePattern: /bubble-card/i },
-  { id: 'ultra-card', label: m('Ultra Card'), previewTag: 'ultra-card', resourcePattern: /ultra-card/i },
-  { id: 'button-card', label: m('button-card'), previewTag: 'button-card', resourcePattern: /button-card/i },
-  { id: 'other', label: m('Other') },
+export const CATALOGUE_GROUPS: MarkedGroup[] = [
+  { id: 'primary', label: m('theme-editor.catalogue.primary-and-accent') },
+  { id: 'backgrounds', label: m('theme-editor.catalogue.backgrounds-and-cards') },
+  { id: 'text', label: m('theme-editor.catalogue.text') },
+  { id: 'states', label: m('theme-editor.catalogue.states-and-alerts') },
+  { id: 'sizes', label: m('theme-editor.catalogue.sizes-and-radii') },
+  { id: 'chrome', label: m('theme-editor.catalogue.header-and-sidebar') },
+  { id: 'magic-card', label: m('theme-editor.catalogue.magic-card'), previewTag: 'magic-card' },
+  { id: 'tile', label: m('theme-editor.catalogue.tile-card'), previewTag: 'hui-tile-card' },
+  { id: 'mushroom', label: m('theme-editor.catalogue.mushroom'), previewTag: 'mushroom-entity-card', resourcePattern: /mushroom/i },
+  { id: 'bubble-card', label: m('theme-editor.catalogue.bubble-card'), previewTag: 'bubble-card', resourcePattern: /bubble-card/i },
+  { id: 'ultra-card', label: m('theme-editor.catalogue.ultra-card'), previewTag: 'ultra-card', resourcePattern: /ultra-card/i },
+  { id: 'button-card', label: m('theme-editor.catalogue.button-card'), previewTag: 'button-card', resourcePattern: /button-card/i },
+  { id: 'other', label: m('theme-editor.catalogue.other') },
 ];
 
-const RAW: CatalogueEntry[] = [
+const RAW: MarkedEntry[] = [
   ...HA_ENTRIES,
   ...MAGIC_CARD_ENTRIES,
   ...TILE_ENTRIES,
@@ -44,8 +45,8 @@ const RAW: CatalogueEntry[] = [
 ];
 
 /** Merge 'follows' rows into their owners (see the header). The inputs are not changed. */
-export function mergeEntries(raw: readonly CatalogueEntry[]): CatalogueEntry[] {
-  const owners: CatalogueEntry[] = raw.filter((e) => e.role !== 'follows').map((e) => ({ ...e }));
+export function mergeEntries(raw: readonly MarkedEntry[]): MarkedEntry[] {
+  const owners: MarkedEntry[] = raw.filter((e) => e.role !== 'follows').map((e) => ({ ...e }));
   for (const f of raw) {
     if (f.role !== 'follows') continue;
     let owner = owners.find((e) => e.name === f.name);
@@ -59,7 +60,7 @@ export function mergeEntries(raw: readonly CatalogueEntry[]): CatalogueEntry[] {
   return owners;
 }
 
-export const CATALOGUE: ThemeCatalogue = {
+export const CATALOGUE: Omit<ThemeCatalogue, 'entries'> & { entries: MarkedEntry[] } = {
   version: THEME_CATALOGUE_CONTRACT_VERSION,
   groups: CATALOGUE_GROUPS,
   entries: mergeEntries(RAW),
@@ -67,7 +68,7 @@ export const CATALOGUE: ThemeCatalogue = {
 
 const BY_NAME = new Map(CATALOGUE.entries.map((e) => [e.name, e]));
 
-export const entryByName = (name: string): CatalogueEntry | undefined => BY_NAME.get(name);
+export const entryByName = (name: string): MarkedEntry | undefined => BY_NAME.get(name);
 
 /** The field kind of a variable name; undefined for names the catalogue does not know (they are "Other"). */
 export const kindOf = (name: string): FieldKind | undefined => BY_NAME.get(name)?.kind;
@@ -83,7 +84,7 @@ const SOURCE_OF_GROUP: Partial<Record<CatalogueGroupId, CatalogueSource>> = {
 };
 
 export interface GroupRow {
-  entry: CatalogueEntry;
+  entry: MarkedEntry;
   /** True when the group's card reads a variable another group owns (shown after the card's own). */
   follows: boolean;
 }

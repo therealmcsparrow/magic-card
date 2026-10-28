@@ -44,9 +44,9 @@ export function parseRawLines(text: string): { entries: RawEntry[]; failed: stri
 /** The liberal check for the raw row, plus the catalogue kind when the name is known. */
 export function rawValueError(name: string, value: string): string | null {
   const v = cleanRawValue(value);
-  if (!v) return t('Enter a value.');
-  if (/[\r\n]/.test(v)) return t('Use a single line.');
-  if (/[;{}]/.test(v)) return t('Remove {chars} from the value.', { chars: '; { }' });
+  if (!v) return t('theme-editor.raw-rows.enter-a-value');
+  if (/[\r\n]/.test(v)) return t('theme-editor.raw-rows.use-a-single-line');
+  if (/[;{}]/.test(v)) return t('theme-editor.raw-rows.remove-chars-from-the-value', { chars: '; { }' });
   return validateValue(kindOf(name) ?? 'text', v);
 }
 
@@ -106,12 +106,12 @@ export class McteRawRows extends LitElement {
   private _add(): boolean {
     const name = this._cleanName;
     if (!name) {
-      this._error = t('Enter a name.');
+      this._error = t('theme-editor.raw-rows.enter-a-name');
       this._focus('#raw-name');
       return false;
     }
     if (!okName(name)) {
-      this._error = t('Use letters, numbers, hyphens and underscores. This name is not allowed.');
+      this._error = t('theme-editor.raw-rows.use-letters-numbers-hyphens-and');
       this._focus('#raw-name');
       return false;
     }
@@ -122,7 +122,7 @@ export class McteRawRows extends LitElement {
       return false;
     }
     fire(this, 'mcte-add', { entries: [{ name, value: cleanRawValue(this._value) }] });
-    this._status = t('Added {name} to {scope}', { name, scope: this._scopeWord });
+    this._status = t('theme-editor.raw-rows.added-name-to-scope', { name, scope: this._scopeWord });
     this._name = '';
     this._value = '';
     this._error = '';
@@ -146,8 +146,8 @@ export class McteRawRows extends LitElement {
     e.preventDefault();
     const { entries, failed } = parseRawLines(text);
     if (entries.length) fire(this, 'mcte-add', { entries });
-    this._status = entries.length ? t('Added {c, plural, one {# variable} other {# variables}} to {scope}', { c: entries.length, scope: this._scopeWord }) : t('Nothing was added');
-    this._error = failed.length ? t('Could not read: {lines}', { lines: failed.join(' | ') }) : '';
+    this._status = entries.length ? t('theme-editor.raw-rows.added-c-to-scope', { c: entries.length, scope: this._scopeWord }) : t('theme-editor.raw-rows.nothing-was-added');
+    this._error = failed.length ? t('theme-editor.raw-rows.could-not-read-lines', { lines: failed.join(' | ') }) : '';
     this._name = '';
     this._value = '';
     this._pending();
@@ -166,10 +166,10 @@ export class McteRawRows extends LitElement {
     const colour = !!parseColor(this._value);
     return html`
       <div class="panel" role="group" aria-labelledby="raw-title">
-        <h3 id="raw-title" class="title">${t('Add any variable')}</h3>
+        <h3 id="raw-title" class="title">${t('theme-editor.raw-rows.add-any-variable')}</h3>
         <div class="line">
           <div class="cell">
-            <label class="lbl" for="raw-name">${t('Name')}</label>
+            <label class="lbl" for="raw-name">${t('theme-editor.raw-rows.name')}</label>
             <input
               id="raw-name"
               class="input mono"
@@ -185,7 +185,7 @@ export class McteRawRows extends LitElement {
             />
           </div>
           <div class="cell">
-            <label class="lbl" for="raw-value">${t('Value')}</label>
+            <label class="lbl" for="raw-value">${t('theme-editor.raw-rows.value')}</label>
             <div class="val">
               ${colour ? html`<span class="swatch" style="background:${this._value}" aria-hidden="true"></span>` : nothing}
               <input
@@ -202,12 +202,12 @@ export class McteRawRows extends LitElement {
               />
             </div>
           </div>
-          <button type="button" class="btn btn-secondary add" @click=${() => this._add()}>${exists ? t('Update') : t('Add')}</button>
+          <button type="button" class="btn btn-secondary add" @click=${() => this._add()}>${exists ? t('theme-editor.raw-rows.update') : t('theme-editor.raw-rows.add')}</button>
         </div>
         <p id="raw-help" class="help">
           ${exists
-            ? t('This variable already exists in {scope}. Add will replace its value.', { scope: this._scopeWord })
-            : t('Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.')}
+            ? t('theme-editor.raw-rows.this-variable-already-exists-in-scope', { scope: this._scopeWord })
+            : t('theme-editor.raw-rows.use-the-name-as-it-appears-in-the-theme')}
         </p>
         ${this._error ? html`<p class="help error" id="raw-error" role="alert">${glyph('alertCircle', 16)}${this._error}</p>` : nothing}
         <p class="help" role="status">${this._status}</p>

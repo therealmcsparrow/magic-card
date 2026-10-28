@@ -4,6 +4,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
+import type { MessageIndex } from '../contracts/i18n';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
 import { kitLip } from '../ui-kit/css/lip';
@@ -297,7 +298,7 @@ export class McteEditorView extends LitElement {
     this._rawPending = false;
     this._usedLink = false;
     this._computeHints(true);
-    if (d.from) this._say(t('Editing {scope}. Created from {from}.', { scope: scopeLabel(this._scope), from: d.from }));
+    if (d.from) this._say(t('theme-editor.editor-view.editing-scope-created-from-from', { scope: scopeLabel(this._scope), from: d.from }));
   }
 
   protected updated(changed: PropertyValues): void {
@@ -359,11 +360,11 @@ export class McteEditorView extends LitElement {
   }
 
   private get _reason(): SaveReason | null {
-    if (!this.draft?.editable) return { text: t('This theme is read only. Copy it to edit.') };
-    if (this.include && this.include.state !== 'ok') return { text: t('Saving is off until themes are set up'), action: 'recheck', actionLabel: t('Check again') };
+    if (!this.draft?.editable) return { text: t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit') };
+    if (this.include && this.include.state !== 'ok') return { text: t('theme-editor.editor-view.saving-is-off-until-themes-are-set-up'), action: 'recheck', actionLabel: t('theme-editor.editor-view.check-again') };
     const n = this._errors.length;
-    if (n) return { text: t('Fix {c, plural, one {# value} other {# values}} to save', { c: n }), action: 'fix', actionLabel: t('Show the first') };
-    if (!this._isNew && !this._dirty) return { text: t('No changes to save'), quiet: true };
+    if (n) return { text: t('theme-editor.editor-view.fix-c-to-save', { c: n }), action: 'fix', actionLabel: t('theme-editor.editor-view.show-the-first') };
+    if (!this._isNew && !this._dirty) return { text: t('theme-editor.editor-view.no-changes-to-save'), quiet: true };
     return null;
   }
 
@@ -413,20 +414,20 @@ export class McteEditorView extends LitElement {
 
   private _onMoveShared(name: string, value: string): void {
     this._edit(setVar(removeVar(this._doc, name, this._scope === 'shared' ? undefined : this._scope), name, value));
-    this._say(t('Moved {label} to Shared. Light and Dark both use it.', { label: this._labelOf(name) }));
+    this._say(t('theme-editor.editor-view.moved-label-to-shared-light-and-dark', { label: this._labelOf(name) }));
   }
 
   private _onReset(name: string): void {
     const label = this._labelOf(name);
     this._edit(removeVar(this._doc, name, this._scope === 'shared' ? undefined : this._scope));
-    this._say(t('Removed {label} from {scope}', { label, scope: scopeLabel(this._scope) }));
+    this._say(t('theme-editor.editor-view.removed-label-from-scope', { label, scope: scopeLabel(this._scope) }));
   }
 
   private _onSetModes(name: string, value: string, modes: ThemeMode[]): void {
     let d = this._doc;
     for (const m of modes) d = setVar(d, name, value, m);
     this._edit(d);
-    this._say(t('Set in {modes}', { modes: modeList(modes) }));
+    this._say(t('theme-editor.editor-view.set-in-modes', { modes: modeList(modes) }));
   }
 
   private _onAdd(entries: Array<{ name: string; value: string }>): void {
@@ -461,7 +462,7 @@ export class McteEditorView extends LitElement {
     d.modes = { light: {}, dark: {} };
     this._edit(d as ThemeDoc);
     this._closeDlg();
-    this._say(t('Added light and dark modes. Variables you set before stay shared.'));
+    this._say(t('theme-editor.editor-view.added-light-and-dark-modes-variables-you'));
   }
 
   private _copyMode(from: ThemeMode, to: ThemeMode): void {
@@ -473,8 +474,8 @@ export class McteEditorView extends LitElement {
     this._edit(d);
     this._menu = false;
     this._showToast({
-      text: t('Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.', { c: n, from: scopeLabel(from), to: scopeLabel(to) }),
-      action: { label: t('Undo'), run: () => this._undoEdit() },
+      text: t('theme-editor.editor-view.copied-c-from-from-to-to', { c: n, from: scopeLabel(from), to: scopeLabel(to) }),
+      action: { label: t('theme-editor.editor-view.undo'), run: () => this._undoEdit() },
     });
   }
 
@@ -506,11 +507,11 @@ export class McteEditorView extends LitElement {
       if (/^var\(/i.test(col) || !col.trim()) continue;
       const r = /gradient\(/i.test(card) ? 'transparent' : textContrast(col, card, stage);
       if (r === null) continue;
-      if (r === 'transparent') hints.set(name, { text: t('Contrast not checked: value has transparency.'), ok: null });
+      if (r === 'transparent') hints.set(name, { text: t('theme-editor.editor-view.contrast-not-checked-value-has'), ok: null });
       else {
         const ratio = one.format(r.ratio);
         hints.set(name, {
-          text: r.ok ? t('Contrast on card, {mode}: {ratio} to 1, easy to read', { mode: modeName, ratio }) : t('Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1', { mode: modeName, ratio }),
+          text: r.ok ? t('theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-easy-to', { mode: modeName, ratio }) : t('theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-hard-to', { mode: modeName, ratio }),
           ok: r.ok,
         });
       }
@@ -548,7 +549,7 @@ export class McteEditorView extends LitElement {
       rows = allKeys(this._doc)
         .filter((k) => !entryByName(k))
         .map((k) => ({
-          entry: { name: k, group: 'other' as const, source: 'ha' as const, kind: 'text' as const, label: k },
+          entry: { name: k, group: 'other' as const, source: 'ha' as const, kind: 'text' as const, label: k as unknown as MessageIndex },
           follows: false,
           custom: true,
         }));
@@ -662,14 +663,14 @@ export class McteEditorView extends LitElement {
   /** A half-filled "Add any variable" row would be lost by a save: warn first instead. */
   private _warnRawPending(): void {
     this._afterSave = null;
-    const dismiss = { label: t('Cancel'), run: () => (this._banner = null) };
+    const dismiss = { label: t('theme-editor.editor-view.cancel'), run: () => (this._banner = null) };
     this._banner = {
       kind: 'warn',
-      title: t('A variable is typed but not added'),
-      message: t('The Add any variable row still holds text. Add it to the theme before saving, or save without it.'),
+      title: t('theme-editor.editor-view.a-variable-is-typed-but-not-added'),
+      message: t('theme-editor.editor-view.the-add-any-variable-row-still-holds'),
       actions: [
-        { label: t('Add it and save'), run: () => void this._addPendingAndSave() },
-        { label: t('Save without it'), run: () => ((this._banner = null), void this._saveClick(true)) },
+        { label: t('theme-editor.editor-view.add-it-and-save'), run: () => void this._addPendingAndSave() },
+        { label: t('theme-editor.editor-view.save-without-it'), run: () => ((this._banner = null), void this._saveClick(true)) },
         dismiss,
       ],
     };
@@ -717,13 +718,13 @@ export class McteEditorView extends LitElement {
       this._rewriteAck = true;
       if (isTrialActive()) stopTrial('saved');
       // The header's status row shows "Saved hh:mm" and "Use this theme"; this is for screen readers.
-      this._say(res.loaded ? t('Saved {name} and reloaded themes. Screens that use this theme update now.', { name: this._name }) : t('Saved {name}.', { name: this._name }));
+      this._say(res.loaded ? t('theme-editor.editor-view.saved-name-and-reloaded-themes-screens', { name: this._name }) : t('theme-editor.editor-view.saved-name', { name: this._name }));
       if (!res.loaded) {
         this._banner = {
           kind: 'warn',
-          title: t('Saved {file}, but Home Assistant does not list {name} yet', { file: res.file, name: this._name }),
-          message: t('Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.'),
-          actions: [{ label: t('Dismiss'), run: () => (this._banner = null) }],
+          title: t('theme-editor.editor-view.saved-file-but-home-assistant-does-not', { file: res.file, name: this._name }),
+          message: t('theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or'),
+          actions: [{ label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) }],
         };
       }
       fire(this, 'mcte-saved', { name: this._name });
@@ -744,52 +745,52 @@ export class McteEditorView extends LitElement {
 
   private _saveBanner(err: ThemeBackendError): Banner {
     const name = this._name;
-    const dismiss = { label: t('Dismiss'), run: () => (this._banner = null) };
-    const retry = { label: t('Try again'), run: () => void this._saveClick() };
-    const failed = t('Could not save {name}', { name });
+    const dismiss = { label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) };
+    const retry = { label: t('theme-editor.editor-view.try-again'), run: () => void this._saveClick() };
+    const failed = t('theme-editor.editor-view.could-not-save-name', { name });
     switch (err.code) {
       case 'conflict':
         return {
           kind: 'warn',
-          title: t('{name}.yaml changed on disk', { name }),
-          message: t('This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.'),
+          title: t('theme-editor.editor-view.name-yaml-changed-on-disk', { name }),
+          message: t('theme-editor.editor-view.this-file-changed-since-you-opened-it'),
           actions: [
-            { label: t('Reload'), run: () => void this._reload() },
-            { label: t('Save anyway'), run: () => void this._doSave(true) },
+            { label: t('theme-editor.editor-view.reload'), run: () => void this._reload() },
+            { label: t('theme-editor.editor-view.save-anyway'), run: () => void this._doSave(true) },
           ],
         };
       case 'name_taken':
         return {
           kind: 'error',
           title: failed,
-          message: err.message || t('A theme with this name already exists.'),
-          actions: this._isNew ? [{ label: t('Choose another name'), run: () => this._openRename() }, dismiss] : [dismiss],
+          message: err.message || t('theme-editor.editor-view.a-theme-with-this-name-already-exists'),
+          actions: this._isNew ? [{ label: t('theme-editor.editor-view.choose-another-name'), run: () => this._openRename() }, dismiss] : [dismiss],
         };
       case 'themes_not_included':
         fire(this, 'mcte-recheck');
         return {
           kind: 'error',
           title: failed,
-          message: t('Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.'),
+          message: t('theme-editor.editor-view.home-assistant-does-not-load-config'),
           actions: [dismiss],
         };
       case 'unauthorized':
-        return { kind: 'error', title: failed, message: t('Only administrators can edit themes.'), actions: [dismiss] };
+        return { kind: 'error', title: failed, message: t('theme-editor.editor-view.only-administrators-can-edit-themes'), actions: [dismiss] };
       case 'invalid_format': {
         const first = err.errors?.[0];
         const nameErr = err.errors?.find((x) => x.path === 'name');
         return {
           kind: 'error',
           title: failed,
-          message: first ? t('{path}: {message}', { path: first.path.replace(/^theme\./, ''), message: first.message }) : err.message,
-          actions: nameErr && this._isNew ? [{ label: t('Choose another name'), run: () => this._openRename() }, dismiss] : [dismiss],
+          message: first ? t('theme-editor.editor-view.path-message', { path: first.path.replace(/^theme\./, ''), message: first.message }) : err.message,
+          actions: nameErr && this._isNew ? [{ label: t('theme-editor.editor-view.choose-another-name'), run: () => this._openRename() }, dismiss] : [dismiss],
         };
       }
       default:
         return {
           kind: 'error',
           title: failed,
-          message: /lost|closed|connection/i.test(err.message ?? '') ? t('The connection to Home Assistant was lost. Your changes are still here.') : (err.message ?? ''),
+          message: /lost|closed|connection/i.test(err.message ?? '') ? t('theme-editor.editor-view.the-connection-to-home-assistant-was') : (err.message ?? ''),
           actions: [retry, dismiss],
         };
     }
@@ -805,9 +806,9 @@ export class McteEditorView extends LitElement {
       this._previewDoc = cloneDoc(r.theme);
       this._mtime = r.mtime;
       this._banner = null;
-      this._say(t('Reloaded the file from disk.'));
+      this._say(t('theme-editor.editor-view.reloaded-the-file-from-disk'));
     } catch (e) {
-      this._banner = { kind: 'error', title: t('Could not read {name}', { name: this._name }), message: (e as Error).message, actions: [{ label: t('Dismiss'), run: () => (this._banner = null) }] };
+      this._banner = { kind: 'error', title: t('theme-editor.editor-view.could-not-read-name', { name: this._name }), message: (e as Error).message, actions: [{ label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) }] };
     }
   }
 
@@ -820,20 +821,20 @@ export class McteEditorView extends LitElement {
   private _applyRename(): void {
     const v = this._renameValue.trim();
     if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(v) || v === 'default' || v === 'backend-selected') {
-      this._renameError = t('Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).');
+      this._renameError = t('theme-editor.editor-view.use-lowercase-letters-numbers-hyphens');
       return;
     }
     this._name = v;
     this._closeDlg();
     this._banner = null;
     fire(this, 'mcte-rename', { name: v });
-    this._say(t('Named the theme {name}. Press Save to write it.', { name: v }));
+    this._say(t('theme-editor.editor-view.named-the-theme-name-press-save-to-write', { name: v }));
   }
 
   private _use(): void {
     const ok = useTheme(this._name);
     this._usedLink = !ok;
-    this._usedMsg = ok ? t('Now using {name} for your user.', { name: this._name }) : t('Pick {name} in your profile to use it.', { name: this._name });
+    this._usedMsg = ok ? t('theme-editor.editor-view.now-using-name-for-your-user', { name: this._name }) : t('theme-editor.editor-view.pick-name-in-your-profile-to-use-it', { name: this._name });
     this._toastEl()?.close();
   }
 
@@ -842,7 +843,7 @@ export class McteEditorView extends LitElement {
     try {
       await this.backend.remove(this._name);
     } catch (e) {
-      this._dlgError = t('Could not delete {name}. {reason}', { name: this._name, reason: (e as Error).message ?? '' }).trim();
+      this._dlgError = t('theme-editor.editor-view.could-not-delete-name-reason', { name: this._name, reason: (e as Error).message ?? '' }).trim();
       return;
     }
     if (isTrialActive() && getTrial()?.name === this._name) stopTrial('discard');
@@ -903,31 +904,31 @@ export class McteEditorView extends LitElement {
   }
 
   private _copyKey(text: string): void {
-    void copyText(text).then(() => this._say(t('Copied key {text}', { text })));
+    void copyText(text).then(() => this._say(t('theme-editor.editor-view.copied-key-text', { text })));
   }
 
   // ── render: pieces ──
 
   private _chips(): TemplateResult {
     const dirtyChip = this._isNew
-      ? html`<span class="chip is-warn">${t('New, not saved')}</span>`
+      ? html`<span class="chip is-warn">${t('theme-editor.editor-view.new-not-saved')}</span>`
       : this._dirty
-        ? html`<span class="chip is-warn">${t('Unsaved changes')}</span>`
+        ? html`<span class="chip is-warn">${t('theme-editor.editor-view.unsaved-changes')}</span>`
         : nothing;
     const n = this._errors.length;
     return html`${dirtyChip}
-    ${this._trial ? html`<span class="chip is-accent">${t('Trying on this tab')}</span>` : nothing}
-    ${!this.draft.editable ? html`<span class="chip is-warn">${t('Read only')}</span>` : nothing}
-    ${n ? html`<button type="button" class="chip is-warn" @click=${() => this._jumpToFirstError()}>${t('{c, plural, one {# value needs} other {# values need}} a fix', { c: n })}</button>` : nothing}`;
+    ${this._trial ? html`<span class="chip is-accent">${t('theme-editor.editor-view.trying-on-this-tab')}</span>` : nothing}
+    ${!this.draft.editable ? html`<span class="chip is-warn">${t('theme-editor.editor-view.read-only')}</span>` : nothing}
+    ${n ? html`<button type="button" class="chip is-warn" @click=${() => this._jumpToFirstError()}>${t('theme-editor.editor-view.c-a-fix', { c: n })}</button>` : nothing}`;
   }
 
   private _tryHelp(): string {
-    return t('Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).', { mode: browserMode(this.hass) });
+    return t('theme-editor.editor-view.applies-to-this-browser-tab-only-open-a', { mode: browserMode(this.hass) });
   }
 
   private _tryTip(): string {
     const other = browserMode(this.hass) === 'dark' ? 'light' : 'dark';
-    return t('{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.', { help: this._tryHelp(), other });
+    return t('theme-editor.editor-view.help-the-revert-button-stays-at-the-edge', { help: this._tryHelp(), other });
   }
 
   private _tryButton(inMenu = false): TemplateResult {
@@ -941,7 +942,7 @@ export class McteEditorView extends LitElement {
       title=${this._tryTip()}
       @click=${() => this._toggleTrial()}
     >
-      ${glyph('eyeOn', 18)} ${on ? t('Stop trying') : t('Try on dashboard')}
+      ${glyph('eyeOn', 18)} ${on ? t('theme-editor.editor-view.stop-trying') : t('theme-editor.editor-view.try-on-dashboard')}
     </button>`;
   }
 
@@ -951,21 +952,21 @@ export class McteEditorView extends LitElement {
     return html`<div class="menuwrap" @focusout=${(e: FocusEvent) => {
       if (this._menu && !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null)) this._menu = false;
     }}>
-      <button type="button" class="icon-btn more" aria-label=${t('More actions')} aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${() => (this._menu = !this._menu)}>
+      <button type="button" class="icon-btn more" aria-label=${t('theme-editor.editor-view.more-actions')} aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${() => (this._menu = !this._menu)}>
         ${glyph('dotsHorizontal')}
       </button>
       ${this._menu
-        ? html`<div class="menu" role="menu" aria-label=${t('More actions')} @keydown=${this._menuKey}>
+        ? html`<div class="menu" role="menu" aria-label=${t('theme-editor.editor-view.more-actions')} @keydown=${this._menuKey}>
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
-            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>${t('Save as my preset')}</button>` : nothing}
-            <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>${t('Export theme')}</button>
-            <button type="button" role="menuitem" @click=${() => this._openDlg('yaml')}>${t('Show YAML')}</button>
-            <button type="button" role="menuitem" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say(t('Copied YAML')), (this._menu = false)))}>${t('Copy YAML')}</button>
+            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
+            <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>${t('theme-editor.editor-view.export-theme')}</button>
+            <button type="button" role="menuitem" @click=${() => this._openDlg('yaml')}>${t('theme-editor.editor-view.show-yaml')}</button>
+            <button type="button" role="menuitem" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say(t('theme-editor.editor-view.copied-yaml')), (this._menu = false)))}>${t('theme-editor.editor-view.copy-yaml')}</button>
             ${this._hasModes && this.draft.editable
-              ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>${t('Copy Light to Dark')}</button>
-                  <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>${t('Copy Dark to Light')}</button>`
+              ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>${t('theme-editor.editor-view.copy-light-to-dark')}</button>
+                  <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>${t('theme-editor.editor-view.copy-dark-to-light')}</button>`
               : nothing}
-            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => this._openDlg('delete')}>${t('Delete theme')}</button>` : nothing}
+            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => this._openDlg('delete')}>${t('theme-editor.editor-view.delete-theme')}</button>` : nothing}
           </div>`
         : nothing}
     </div>`;
@@ -983,11 +984,11 @@ export class McteEditorView extends LitElement {
             : nothing}`
         : nothing}
       ${showSaved
-        ? html`<span class="help saved" role="status">${t('Saved {time}', { time: this._savedAt })}</span>
-            <button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('Use this theme')}</button>`
+        ? html`<span class="help saved" role="status">${t('theme-editor.editor-view.saved-time', { time: this._savedAt })}</span>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('theme-editor.editor-view.use-this-theme')}</button>`
         : nothing}
       ${this._usedMsg
-        ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">${t('Open your profile')}</a>` : nothing}`
+        ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">${t('theme-editor.editor-view.open-your-profile')}</a>` : nothing}`
         : nothing}
     </div>`;
   }
@@ -996,21 +997,21 @@ export class McteEditorView extends LitElement {
     const compact = this._w < 640;
     return html`<header class="hdr">
       <div class="left">
-        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${glyph('arrowLeft')} ${t('Themes')}</button>
+        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${glyph('arrowLeft')} ${t('theme-editor.editor-view.themes')}</button>
         <h2 class="tname" tabindex="-1">${this._name}</h2>
         <div class="chips">${this._chips()}</div>
       </div>
       <div class="right">
-        ${this.backend?.presets && this._w >= 640 ? html`<button type="button" class="btn btn-secondary savepreset" @click=${() => this._presetDlg('save')}>${t('Save as my preset')}</button>` : nothing}
+        ${this.backend?.presets && this._w >= 640 ? html`<button type="button" class="btn btn-secondary savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
       </div>
       <div class="row2">
         <div class="ctrls">
           ${this._hasModes
-            ? html`<span class="lbl sr-only" id="edit-lbl">${t('Editing')}</span>
+            ? html`<span class="lbl sr-only" id="edit-lbl">${t('theme-editor.editor-view.editing')}</span>
                 <mcte-mode-switch
-                  label=${t('Edit variables for')}
+                  label=${t('theme-editor.editor-view.edit-variables-for')}
                   .value=${this._scope}
                   .options=${[
                     { value: 'shared', label: scopeLabel('shared') },
@@ -1020,7 +1021,7 @@ export class McteEditorView extends LitElement {
                   @mcte-change=${(e: CustomEvent) => this._setScope(e.detail.value as Scope)}
                 ></mcte-mode-switch>`
             : this.draft.editable
-              ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>${t('Add light and dark modes')}</button>`
+              ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>${t('theme-editor.editor-view.add-light-and-dark-modes')}</button>`
               : nothing}
           ${compact ? nothing : this._tryButton()}
         </div>
@@ -1037,8 +1038,8 @@ export class McteEditorView extends LitElement {
     return html`<div class="notice warn" role="status">
       ${glyph('information')}
       <div class="body">
-        <strong>${t('Contacts another website')}</strong>
-        <p>${o.hosts.length ? t('Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.', { hosts: o.hosts.join(', ') }) : t('Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.')}</p>
+        <strong>${t('theme-editor.editor-view.contacts-another-website')}</strong>
+        <p>${o.hosts.length ? t('theme-editor.editor-view.some-values-load-files-from-hosts-the', { hosts: o.hosts.join(', ') }) : t('theme-editor.editor-view.some-values-load-files-from-another')}</p>
       </div>
     </div>`;
   }
@@ -1102,15 +1103,15 @@ export class McteEditorView extends LitElement {
     const core = CORE_GROUPS.map(one);
     const cards = CARD_GROUPS.map(one);
     return html`
-      ${searching ? html`<p class="help" role="status">${t('{c, plural, one {# variable matches} other {# variables match}}', { c: shown })}</p>` : nothing}
+      ${searching ? html`<p class="help" role="status">${t('theme-editor.editor-view.c', { c: shown })}</p>` : nothing}
       ${searching && shown === 0
         ? html`<div class="empty">
-            <p>${t('No variable called {query} in the lists.', { query: this._query })}</p>
-            <button type="button" class="btn btn-secondary" @click=${() => ((this._rawPrefill = this._query.trim()), (this._query = ''), (this._q = ''))}>${t('Add {name} as a variable', { name: this._query.trim() })}</button>
+            <p>${t('theme-editor.editor-view.no-variable-called-query-in-the-lists', { query: this._query })}</p>
+            <button type="button" class="btn btn-secondary" @click=${() => ((this._rawPrefill = this._query.trim()), (this._query = ''), (this._q = ''))}>${t('theme-editor.editor-view.add-name-as-a-variable', { name: this._query.trim() })}</button>
           </div>`
         : nothing}
       ${core}
-      ${cards.some((c) => c !== nothing) ? html`<h2 class="sect">${t('Magic Card and integrations')}</h2>${cards}` : nothing}
+      ${cards.some((c) => c !== nothing) ? html`<h2 class="sect">${t('theme-editor.editor-view.magic-card-and-integrations')}</h2>${cards}` : nothing}
     `;
   }
 
@@ -1127,25 +1128,25 @@ export class McteEditorView extends LitElement {
       ${this._bannerEl()}
       <div class="tools">
         <div class="searchbox">
-          <label class="sr-only" for="vsearch">${t('Search variables')}</label>
+          <label class="sr-only" for="vsearch">${t('theme-editor.editor-view.search-variables')}</label>
           <input
             id="vsearch"
             class="input"
             type="search"
-            placeholder=${t('Search by name or value')}
+            placeholder=${t('theme-editor.editor-view.search-by-name-or-value')}
             autocomplete="off"
             .value=${this._query}
             @input=${(e: Event) => this._search((e.target as HTMLInputElement).value)}
             @keydown=${(e: KeyboardEvent) => e.key === 'Escape' && this._query && (e.stopPropagation(), this._search(''))}
           />
         </div>
-        <label class="switch-row"><input type="checkbox" .checked=${this._onlyChanged} @change=${(e: Event) => (this._onlyChanged = (e.target as HTMLInputElement).checked)} /> ${t('Only changed')}</label>
+        <label class="switch-row"><input type="checkbox" .checked=${this._onlyChanged} @change=${(e: Event) => (this._onlyChanged = (e.target as HTMLInputElement).checked)} /> ${t('theme-editor.editor-view.only-changed')}</label>
       </div>
-      <p class="help status" role="status" aria-live="polite">${t('Editing {scope}. Previewing {mode}.', { scope: scopeLabel(this._scope), mode: scopeLabel(this._mode) })}</p>
+      <p class="help status" role="status" aria-live="polite">${t('theme-editor.editor-view.editing-scope-previewing-mode', { scope: scopeLabel(this._scope), mode: scopeLabel(this._mode) })}</p>
       ${this._scope === 'shared' && this._hasModes
-        ? html`<p class="help">${t('Shared applies to light and dark unless a mode sets its own value (the top level of the file).')}</p>`
+        ? html`<p class="help">${t('theme-editor.editor-view.shared-applies-to-light-and-dark-unless')}</p>`
         : nothing}
-      ${!this.draft.editable ? html`<p class="help">${this.draft.reason ? t('This theme is read only. {reason} Copy it to edit.', { reason: this.draft.reason }) : t('This theme is read only. Copy it to edit.')}</p>` : nothing}
+      ${!this.draft.editable ? html`<p class="help">${this.draft.reason ? t('theme-editor.editor-view.this-theme-is-read-only-reason-copy-it', { reason: this.draft.reason }) : t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit')}</p>` : nothing}
       <div class="groups">${this._groups()}</div>
       ${this.draft.editable
         ? html`<mcte-raw-rows
@@ -1172,15 +1173,15 @@ export class McteEditorView extends LitElement {
     return html`<div class="strip">
       ${this._stripOpen
         ? html`<div class="strip-sample" inert aria-hidden="true">
-            <div class="mini-tile"><span class="dot"></span><span><b>${t('Living room')}</b><br /><small>${t('On')}</small></span></div>
-            <span class="mini-btn">${t('Button')}</span>
+            <div class="mini-tile"><span class="dot"></span><span><b>${t('theme-editor.editor-view.living-room')}</b><br /><small>${t('theme-editor.editor-view.on')}</small></span></div>
+            <span class="mini-btn">${t('theme-editor.editor-view.button')}</span>
           </div>`
         : nothing}
       <div class="strip-bar">
         <button type="button" class="btn btn-text btn-sm" aria-expanded=${this._stripOpen ? 'true' : 'false'} @click=${() => (this._stripOpen = !this._stripOpen)}>
-          ${this._stripOpen ? t('Hide live strip') : t('Show live strip')}
+          ${this._stripOpen ? t('theme-editor.editor-view.hide-live-strip') : t('theme-editor.editor-view.show-live-strip')}
         </button>
-        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>${t('Open preview')}</button>
+        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>${t('theme-editor.editor-view.open-preview')}</button>
       </div>
     </div>`;
   }
@@ -1192,9 +1193,9 @@ export class McteEditorView extends LitElement {
       const lips = this._lips;
       const hidden = lips.isHidden('variables');
       return html`<div class="cols ${hidden ? 'no-vars' : ''}" style="--mc-lip-at-start: ${hidden ? '0px' : 'var(--vw)'}">
-        <section class="pane vars" id="vars-pane" role="region" aria-label=${t('Variables panel')} ?inert=${hidden} data-lip=${lips.state('variables')} data-dir=${lips.dir}>${this._varsPanel()}</section>
+        <section class="pane vars" id="vars-pane" role="region" aria-label=${t('theme-editor.editor-view.variables-panel')} ?inert=${hidden} data-lip=${lips.state('variables')} data-dir=${lips.dir}>${this._varsPanel()}</section>
         ${lips.lip('variables')}
-        <section class="pane prev" role="region" aria-label=${t('Preview')}>${this._previewPanel()}</section>
+        <section class="pane prev" role="region" aria-label=${t('theme-editor.editor-view.preview')}>${this._previewPanel()}</section>
       </div>`;
     }
     return html`
@@ -1204,11 +1205,11 @@ export class McteEditorView extends LitElement {
           <mcte-mode-switch
             full
             kind="tablist"
-            label=${t('Editor panels')}
+            label=${t('theme-editor.editor-view.editor-panels')}
             .value=${this._panel}
             .options=${[
-              { value: 'vars', label: t('Variables'), controls: 'panel-vars' },
-              { value: 'preview', label: t('Preview'), controls: 'panel-preview' },
+              { value: 'vars', label: t('theme-editor.editor-view.variables'), controls: 'panel-vars' },
+              { value: 'preview', label: t('theme-editor.editor-view.preview'), controls: 'panel-preview' },
             ]}
             @mcte-change=${(e: CustomEvent) => (this._panel = e.detail.value)}
           ></mcte-mode-switch>
@@ -1216,42 +1217,42 @@ export class McteEditorView extends LitElement {
       </div>
       ${this._panel === 'vars' ? this._strip() : nothing}
       <div class="panes">
-        <section id="panel-vars" class="pane" role="tabpanel" aria-label=${t('Variables')} ?hidden=${this._panel !== 'vars'}>${this._varsPanel()}</section>
-        <section id="panel-preview" class="pane" role="tabpanel" aria-label=${t('Preview')} ?hidden=${this._panel !== 'preview'}>${this._previewPanel()}</section>
+        <section id="panel-vars" class="pane" role="tabpanel" aria-label=${t('theme-editor.editor-view.variables')} ?hidden=${this._panel !== 'vars'}>${this._varsPanel()}</section>
+        <section id="panel-preview" class="pane" role="tabpanel" aria-label=${t('theme-editor.editor-view.preview')} ?hidden=${this._panel !== 'preview'}>${this._previewPanel()}</section>
       </div>
     `;
   }
 
   private _dialog(): TemplateResult | typeof nothing {
     const name = this._name;
-    const cancel = html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>${t('Cancel')}</button>`;
+    const cancel = html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>${t('theme-editor.editor-view.cancel')}</button>`;
     const close = () => (this._dlg = null);
     const err = (t: string) => html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${t}</span></p>`;
     switch (this._dlg) {
       case 'discard':
-        return dialog(t('Discard changes to {name}?', { name }), html`<p>${t('You have changes that are not saved.')}</p>`, html`${cancel}
-          <button type="button" class="btn btn-danger" @click=${() => this._discard()}>${t('Discard')}</button>
-          ${this._reason ? nothing : html`<button type="button" class="btn btn-primary" @click=${() => ((this._afterSave = 'back'), this._closeDlg(), void this._saveClick())}>${t('Save')}</button>`}`, close);
+        return dialog(t('theme-editor.editor-view.discard-changes-to-name', { name }), html`<p>${t('theme-editor.editor-view.you-have-changes-that-are-not-saved')}</p>`, html`${cancel}
+          <button type="button" class="btn btn-danger" @click=${() => this._discard()}>${t('theme-editor.editor-view.discard')}</button>
+          ${this._reason ? nothing : html`<button type="button" class="btn btn-primary" @click=${() => ((this._afterSave = 'back'), this._closeDlg(), void this._saveClick())}>${t('theme-editor.editor-view.save')}</button>`}`, close);
       case 'first-save':
-        return dialog(t('Save and rewrite this file?'), html`<p>${t('Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.', { name })}</p>`, html`${cancel}
-          <button type="button" class="btn btn-primary" @click=${() => ((this._rewriteAck = true), this._closeDlg(), void this._doSave())}>${t('Save')}</button>`, close);
+        return dialog(t('theme-editor.editor-view.save-and-rewrite-this-file'), html`<p>${t('theme-editor.editor-view.saving-rewrites-name-yaml-comments-in', { name })}</p>`, html`${cancel}
+          <button type="button" class="btn btn-primary" @click=${() => ((this._rewriteAck = true), this._closeDlg(), void this._doSave())}>${t('theme-editor.editor-view.save')}</button>`, close);
       case 'delete':
-        return dialog(t('Delete {name}?', { name }), html`<p>${t('This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.', { file: this._file ?? `themes/${name}.yaml` })}</p>${this._dlgError ? err(this._dlgError) : nothing}`, html`${cancel}
-          <button type="button" class="btn btn-danger" @click=${() => void this._delete()}>${t('Delete')}</button>`, close);
+        return dialog(t('theme-editor.editor-view.delete-name', { name }), html`<p>${t('theme-editor.editor-view.this-removes-config-file-screens-that', { file: this._file ?? `themes/${name}.yaml` })}</p>${this._dlgError ? err(this._dlgError) : nothing}`, html`${cancel}
+          <button type="button" class="btn btn-danger" @click=${() => void this._delete()}>${t('theme-editor.editor-view.delete')}</button>`, close);
       case 'add-modes':
-        return dialog(t('Add light and dark modes?'), html`<p>${t('Variables you set now stay shared. You can then override any of them for light or dark.')}</p>`, html`${cancel}
-          <button type="button" class="btn btn-primary" @click=${() => this._addModes()}>${t('Add modes')}</button>`, close);
+        return dialog(t('theme-editor.editor-view.add-light-and-dark-modes-2'), html`<p>${t('theme-editor.editor-view.variables-you-set-now-stay-shared-you')}</p>`, html`${cancel}
+          <button type="button" class="btn btn-primary" @click=${() => this._addModes()}>${t('theme-editor.editor-view.add-modes')}</button>`, close);
       case 'yaml': {
         const text = toYaml(name, this._doc);
-        return dialog(`${name}.yaml`, html`<p class="help">${t('The file Save would write. It is read only here.')}</p><pre class="code" tabindex="0" aria-label=${t('YAML of {name}', { name })}>${text}</pre>`, html`
-          <button type="button" class="btn btn-secondary" @click=${() => void copyText(text).then(() => this._say(t('Copied YAML')))}>${glyph('contentCopy')} ${t('Copy YAML')}</button>
-          <button type="button" class="btn btn-primary" autofocus @click=${() => this._closeDlg()}>${t('Close')}</button>`, close);
+        return dialog(`${name}.yaml`, html`<p class="help">${t('theme-editor.editor-view.the-file-save-would-write-it-is-read')}</p><pre class="code" tabindex="0" aria-label=${t('theme-editor.editor-view.yaml-of-name', { name })}>${text}</pre>`, html`
+          <button type="button" class="btn btn-secondary" @click=${() => void copyText(text).then(() => this._say(t('theme-editor.editor-view.copied-yaml')))}>${glyph('contentCopy')} ${t('theme-editor.editor-view.copy-yaml')}</button>
+          <button type="button" class="btn btn-primary" autofocus @click=${() => this._closeDlg()}>${t('theme-editor.editor-view.close')}</button>`, close);
       }
       case 'rename':
-        return dialog(t('Choose another name'), html`<label class="lbl" for="rename">${t('Name your theme')}</label>
+        return dialog(t('theme-editor.editor-view.choose-another-name'), html`<label class="lbl" for="rename">${t('theme-editor.editor-view.name-your-theme')}</label>
           <input id="rename" class="input mono" .value=${this._renameValue} aria-invalid=${this._renameError ? 'true' : 'false'} @input=${(e: Event) => ((this._renameValue = (e.target as HTMLInputElement).value), (this._renameError = ''))} />
-          ${this._renameError ? err(this._renameError) : html`<p class="help">${t('Lowercase letters, numbers, hyphens and underscores. Used as the file name.')}</p>`}`, html`${cancel}
-          <button type="submit" class="btn btn-primary">${t('Use this name')}</button>`, close, (e) => (e.preventDefault(), this._applyRename()));
+          ${this._renameError ? err(this._renameError) : html`<p class="help">${t('theme-editor.editor-view.lowercase-letters-numbers-hyphens-and')}</p>`}`, html`${cancel}
+          <button type="submit" class="btn btn-primary">${t('theme-editor.editor-view.use-this-name')}</button>`, close, (e) => (e.preventDefault(), this._applyRename()));
       default:
         return nothing;
     }

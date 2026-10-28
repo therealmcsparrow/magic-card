@@ -153,24 +153,24 @@ export class McThemeTrialBar extends LitElement {
   protected render(): TemplateResult | typeof nothing {
     const tr = this._trial;
     if (!tr) return nothing;
-    const text = this._narrow ? t('Trying {name}', { name: tr.name }) : t('Trying {name} on this tab ({mode, select, dark {dark} other {light}})', { name: tr.name, mode: tr.mode });
+    const text = this._narrow ? t('theme-editor.trial-bar.trying-name', { name: tr.name }) : t('theme-editor.trial-bar.trying-name-on-this-tab-mode', { name: tr.name, mode: tr.mode });
     if (this._short) {
-      return html`<div class="pill round ${this._edge}" role="region" aria-label=${t('Theme trial')}>
+      return html`<div class="pill round ${this._edge}" role="region" aria-label=${t('theme-editor.trial-bar.theme-trial')}>
         <span class="sr" role="status">${text}</span>
-        <button type="button" class="round-btn" aria-label=${t('Revert theme trial')} title=${t('Revert theme trial')} @click=${() => stopTrial('revert')}>${glyph('undo')} ${t('Revert')}</button>
+        <button type="button" class="round-btn" aria-label=${t('theme-editor.trial-bar.revert-theme-trial')} title=${t('theme-editor.trial-bar.revert-theme-trial')} @click=${() => stopTrial('revert')}>${glyph('undo')} ${t('theme-editor.trial-bar.revert')}</button>
       </div>`;
     }
-    return html`<div class="pill ${this._edge}" role="region" aria-label=${t('Theme trial')}>
+    return html`<div class="pill ${this._edge}" role="region" aria-label=${t('theme-editor.trial-bar.theme-trial')}>
       ${glyph('palette')}
-      <span class="msg" role="status">${text}${tr.skipped ? html` <span class="skip">(${t('{n} not valid, left out', { n: tr.skipped })})</span>` : nothing}</span>
+      <span class="msg" role="status">${text}${tr.skipped ? html` <span class="skip">(${t('theme-editor.trial-bar.n-not-valid-left-out', { n: tr.skipped })})</span>` : nothing}</span>
       <span class="actions">
-        <button type="button" class="revert" @click=${() => stopTrial('revert')}>${t('Revert')}</button>
-        <button type="button" class="plain" @click=${() => openEditor()}>${this._narrow ? t('Editor') : t('Open editor')}</button>
+        <button type="button" class="revert" @click=${() => stopTrial('revert')}>${t('theme-editor.trial-bar.revert')}</button>
+        <button type="button" class="plain" @click=${() => openEditor()}>${this._narrow ? t('theme-editor.trial-bar.editor') : t('theme-editor.trial-bar.open-editor')}</button>
         <button
           type="button"
           class="plain icon"
-          aria-label=${this._edge === 'bottom' ? t('Move to top') : t('Move to bottom')}
-          title=${this._edge === 'bottom' ? t('Move to top') : t('Move to bottom')}
+          aria-label=${this._edge === 'bottom' ? t('theme-editor.trial-bar.move-to-top') : t('theme-editor.trial-bar.move-to-bottom')}
+          title=${this._edge === 'bottom' ? t('theme-editor.trial-bar.move-to-top') : t('theme-editor.trial-bar.move-to-bottom')}
           @click=${() => this._flip()}
         >
           ${this._edge === 'bottom' ? '▲' : '▼'}

@@ -1,0 +1,1323 @@
+{
+  "look-editor.element.0-dots-moving-dashes-instead": {
+    "text": "0 dots: moving dashes instead.",
+    "note": "Shown in element (look-editor).",
+    "max": 50
+  },
+  "look-editor.element.0-shapes-nothing-travels": {
+    "text": "0 shapes: nothing travels.",
+    "note": "Shown in element (look-editor).",
+    "max": 45
+  },
+  "look-editor.element.4-or-more-glowing-or-tube-lines-on-one": {
+    "text": "4 or more glowing or tube lines on one card. To keep wall tablets smooth, bubbles and flicker are reduced automatically.",
+    "note": "Shown in element (look-editor).",
+    "max": 195
+  },
+  "look-editor.element.7-or-more-glowing-or-tube-lines-moving": {
+    "text": "7 or more glowing or tube lines. Moving highlights and splashes are switched off automatically.",
+    "note": "Shown in element (look-editor).",
+    "max": 155
+  },
+  "look-editor.element.a-small-effect-at-the-to-module-each": {
+    "text": "A small effect at the To module each time a shape arrives.",
+    "note": "Shown in element (look-editor).",
+    "max": 95
+  },
+  "look-editor.element.a-tube-under-8-px-is-hard-to-read": {
+    "text": "A tube under 8 px is hard to read.",
+    "note": "Shown in element (look-editor).",
+    "max": 55
+  },
+  "look-editor.element.alternate-with": {
+    "text": "Alternate with",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.arrival": {
+    "text": "Arrival",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.arrow": {
+    "text": "Arrow",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.arrowhead": {
+    "text": "Arrowhead",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.bubble": {
+    "text": "Bubble",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.bubble-count": {
+    "text": "Bubble count",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.bubbles": {
+    "text": "Bubbles",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.by-value": {
+    "text": "By value",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.cable": {
+    "text": "Cable",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.chevron": {
+    "text": "Chevron",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.colour": {
+    "text": "Colour",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.colour-mode": {
+    "text": "Colour mode",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.colour-ranges": {
+    "text": "Colour ranges",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.comet": {
+    "text": "Comet",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.core-colour": {
+    "text": "Core colour",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.count-follows-spacing": {
+    "text": "Count follows spacing.",
+    "note": "Shown in element (look-editor).",
+    "max": 40
+  },
+  "look-editor.element.dash-length-px": {
+    "text": "Dash length (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.dashed": {
+    "text": "Dashed",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.default-look": {
+    "text": "Default look",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.diamond": {
+    "text": "Diamond",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.different-start-marker": {
+    "text": "Different start marker",
+    "note": "Shown in element (look-editor).",
+    "max": 40
+  },
+  "look-editor.element.dismiss": {
+    "text": "Dismiss",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.dot": {
+    "text": "Dot",
+    "note": "Shown in element (look-editor).",
+    "max": 5
+  },
+  "look-editor.element.dot-size-px": {
+    "text": "Dot size (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.dots": {
+    "text": "Dots",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.dotted": {
+    "text": "Dotted",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.double-rail": {
+    "text": "Double rail",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.drop": {
+    "text": "Drop",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.electric": {
+    "text": "Electric",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.end-marker": {
+    "text": "End marker",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.ends": {
+    "text": "Ends",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.even": {
+    "text": "Even",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.fields-added": {
+    "text": "{fields} added.",
+    "note": "Shown in element (look-editor).",
+    "max": 25,
+    "vars": {
+      "fields": "The value that replaces fields in the text."
+    }
+  },
+  "look-editor.element.flicker": {
+    "text": "Flicker",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.gap-px": {
+    "text": "Gap (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.glass-tint": {
+    "text": "Glass tint",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.glow-px": {
+    "text": "Glow (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.gradient": {
+    "text": "Gradient",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.icon": {
+    "text": "Icon",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.idle-colour": {
+    "text": "Idle colour",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.in-pixels": {
+    "text": "In pixels",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.level-follows-value": {
+    "text": "Level follows value",
+    "note": "Shown in element (look-editor).",
+    "max": 35
+  },
+  "look-editor.element.line": {
+    "text": "Line",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.line-end-colour": {
+    "text": "Line end colour",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.line-style": {
+    "text": "Line style",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.look-change-undone": {
+    "text": "Look change undone.",
+    "note": "Shown in element (look-editor).",
+    "max": 40
+  },
+  "look-editor.element.look-reset-n-removed": {
+    "text": "Look reset. {n, plural, one {# setting} other {# settings}} removed.",
+    "note": "Shown in element (look-editor).",
+    "max": 50,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "look-editor.element.marker-size-px": {
+    "text": "Marker size (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.motion": {
+    "text": "Motion",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.n-px": {
+    "text": "{n} px",
+    "note": "Shown in element (look-editor).",
+    "max": 10,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "look-editor.element.name-look": {
+    "text": "{name} look",
+    "note": "Shown in element (look-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.element.name-look-applied-n-changed": {
+    "text": "{name} look applied. {n, plural, one {# setting} other {# settings}} changed.",
+    "note": "Shown in element (look-editor).",
+    "max": 65,
+    "vars": {
+      "n": "The count the text is about.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.element.neon": {
+    "text": "Neon",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.none": {
+    "text": "None",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.nothing-arrives-while-motion-is-pulse": {
+    "text": "Nothing arrives while Motion is Pulse.",
+    "note": "Shown in element (look-editor).",
+    "max": 65
+  },
+  "look-editor.element.off": {
+    "text": "Off",
+    "note": "Shown in element (look-editor).",
+    "max": 5
+  },
+  "look-editor.element.pick-a-sensor-or-device-first-the-colour": {
+    "text": "Pick a sensor or device first: the colour follows its value.",
+    "note": "Shown in element (look-editor).",
+    "max": 100
+  },
+  "look-editor.element.pick-a-sensor-or-device-first-the-level": {
+    "text": "Pick a sensor or device first: the level follows its value.",
+    "note": "Shown in element (look-editor).",
+    "max": 95
+  },
+  "look-editor.element.pick-an-icon": {
+    "text": "Pick an icon.",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.presets": {
+    "text": "Presets",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.pulse": {
+    "text": "Pulse",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.rail-gap-px": {
+    "text": "Rail gap (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.random": {
+    "text": "Random",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.reset-look": {
+    "text": "Reset look",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.ring": {
+    "text": "Ring",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.rotate-with-the-line": {
+    "text": "Rotate with the line",
+    "note": "Shown in element (look-editor).",
+    "max": 35
+  },
+  "look-editor.element.round-node": {
+    "text": "Round node",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.scale-width": {
+    "text": "Scale width",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.shape": {
+    "text": "Shape",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.shape-colour": {
+    "text": "Shape colour",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.shape-size-px": {
+    "text": "Shape size (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.shapes": {
+    "text": "Shapes",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.shapes-stay-in-place-and-pulse-the-pulse": {
+    "text": "Shapes stay in place and pulse. The pulse speed follows the value.",
+    "note": "Shown in element (look-editor).",
+    "max": 110
+  },
+  "look-editor.element.sheath-colour": {
+    "text": "Sheath colour",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.single": {
+    "text": "Single",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.size-variation": {
+    "text": "Size variation (%)",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.solid": {
+    "text": "Solid",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.spacing": {
+    "text": "Spacing",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.spacing-is-ignored-while-motion-is-pulse": {
+    "text": "Spacing is ignored while Motion is Pulse.",
+    "note": "Shown in element (look-editor).",
+    "max": 70
+  },
+  "look-editor.element.spacing-px": {
+    "text": "Spacing (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.spark": {
+    "text": "Spark",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.spin": {
+    "text": "Spin",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.splash": {
+    "text": "Splash",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.splash-on-arrival": {
+    "text": "Splash on arrival",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.splash-size-px": {
+    "text": "Splash size (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.spread-and-motion": {
+    "text": "Spread and motion",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.square": {
+    "text": "Square",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.star": {
+    "text": "Star",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.start-marker": {
+    "text": "Start marker",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.strong": {
+    "text": "Strong",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.subtle": {
+    "text": "Subtle",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.the-flow-look-could-not-be-loaded-so-the": {
+    "text": "The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.",
+    "note": "Shown in element (look-editor).",
+    "max": 155
+  },
+  "look-editor.element.the-line-takes-the-colour-of-the-range": {
+    "text": "The line takes the colour of the range the value falls in.",
+    "note": "Shown in element (look-editor).",
+    "max": 95
+  },
+  "look-editor.element.the-tube-is-empty-until-the-value-passes": {
+    "text": "The tube is empty until the value passes Min.",
+    "note": "Shown in element (look-editor).",
+    "max": 75
+  },
+  "look-editor.element.this-card-shows-at-most-40-moving-shapes": {
+    "text": "This card shows at most 40 moving shapes. Some of this line's shapes are skipped.",
+    "note": "Shown in element (look-editor).",
+    "max": 130
+  },
+  "look-editor.element.travel": {
+    "text": "Travel",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.tube": {
+    "text": "Tube",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.turns-the-shape-once-every-3-seconds": {
+    "text": "Turns the shape once every 3 seconds while it travels. Off by default.",
+    "note": "Shown in element (look-editor).",
+    "max": 115
+  },
+  "look-editor.element.twisted": {
+    "text": "Twisted",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.undo": {
+    "text": "Undo",
+    "note": "Shown in element (look-editor).",
+    "max": 15
+  },
+  "look-editor.element.undo-name-look": {
+    "text": "Undo {name} look",
+    "note": "Shown in element (look-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.element.undo-reset": {
+    "text": "Undo reset",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.up-to-twice-the-width-at-max": {
+    "text": "Up to twice the width at Max.",
+    "note": "Shown in element (look-editor).",
+    "max": 50
+  },
+  "look-editor.element.used-is-used-kept-but-not-used-kept": {
+    "text": "{used} is used. Kept but not used: {kept}.",
+    "note": "Shown in element (look-editor).",
+    "max": 70,
+    "vars": {
+      "kept": "The value that replaces kept in the text.",
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "look-editor.element.wave": {
+    "text": "Wave",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.wave-height-px": {
+    "text": "Wave height (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.element.wavelength-px": {
+    "text": "Wavelength (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.width-px": {
+    "text": "Width (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 20
+  },
+  "look-editor.element.your-own-look": {
+    "text": "Your own look",
+    "note": "Shown in element (look-editor).",
+    "max": 25
+  },
+  "look-editor.element.your-own-look-started-from-name": {
+    "text": "Your own look, started from {name}",
+    "note": "Shown in element (look-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.element.your-system-has-reduced-motion-on-so": {
+    "text": "Your system has reduced motion on, so this look stays still. Turn it off in your system settings to see it move.",
+    "note": "Shown in element (look-editor).",
+    "max": 180
+  },
+  "look-editor.element.zigzag": {
+    "text": "Zigzag",
+    "note": "Shown in element (look-editor).",
+    "max": 10
+  },
+  "look-editor.element.zigzag-height-px": {
+    "text": "Zigzag height (px)",
+    "note": "Shown in element (look-editor).",
+    "max": 30
+  },
+  "look-editor.mc-slider-look-editor.add-evenly": {
+    "text": "Add evenly",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.add-stop": {
+    "text": "Add stop",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.apply": {
+    "text": "Apply",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.auto": {
+    "text": "Auto",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.auto-2": {
+    "text": "auto",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.auto-from-the-light-s-colour": {
+    "text": "Auto, from the light's colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 50
+  },
+  "look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour": {
+    "text": "Auto works with brightness and colour temperature sliders.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 95
+  },
+  "look-editor.mc-slider-look-editor.beside-the-slider": {
+    "text": "Beside the slider",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30
+  },
+  "look-editor.mc-slider-look-editor.big-fill": {
+    "text": "Big fill",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.blur-behind": {
+    "text": "Blur behind",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives": {
+    "text": "Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 170
+  },
+  "look-editor.mc-slider-look-editor.border-colour": {
+    "text": "Border colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.border-px": {
+    "text": "Border (px)",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider": {
+    "text": "Brightness: dark to bright in the slider colour. Colour temperature: warm to cool.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 135
+  },
+  "look-editor.mc-slider-look-editor.centre": {
+    "text": "Centre",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider": {
+    "text": "Centre needs a vertical slider.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 55
+  },
+  "look-editor.mc-slider-look-editor.circle": {
+    "text": "Circle",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.close": {
+    "text": "Close",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.colour-source-source": {
+    "text": "Colour source: {source}.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 40,
+    "vars": {
+      "source": "The value that replaces source in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.default-look": {
+    "text": "Default look",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.delete-stop-n": {
+    "text": "Delete stop {n}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.end-colour": {
+    "text": "End colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.entity-icon": {
+    "text": "Entity icon",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the": {
+    "text": "Falls back to Slider colour when the light has no colour.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 95
+  },
+  "look-editor.mc-slider-look-editor.fill": {
+    "text": "Fill",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.following-the-light": {
+    "text": "Following the light",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 35
+  },
+  "look-editor.mc-slider-look-editor.gap-px": {
+    "text": "Gap (px)",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.glass": {
+    "text": "Glass",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.glow-px": {
+    "text": "Glow (px)",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.gradient": {
+    "text": "Gradient",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.gradient-light-s-colour-to-end-colour": {
+    "text": "Gradient, light's colour to end colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 65
+  },
+  "look-editor.mc-slider-look-editor.handle": {
+    "text": "Handle",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.hidden": {
+    "text": "Hidden",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.hidden-is-the-same-as-turning-show-value": {
+    "text": "Hidden is the same as turning Show value off.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 75
+  },
+  "look-editor.mc-slider-look-editor.hidden-needs-a-handle": {
+    "text": "Hidden needs a handle.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 40
+  },
+  "look-editor.mc-slider-look-editor.icon": {
+    "text": "Icon",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.icon-position": {
+    "text": "Icon position",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.in-a-bubble-while-dragging": {
+    "text": "In a bubble while dragging",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 45
+  },
+  "look-editor.mc-slider-look-editor.in-the-track": {
+    "text": "In the track",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.in-your-system-settings-turn-on-reduced": {
+    "text": "In your system settings, turn on reduced motion (Accessibility).",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 105
+  },
+  "look-editor.mc-slider-look-editor.label": {
+    "text": "Label",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.light-s-colour": {
+    "text": "Light's colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.line": {
+    "text": "Line",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.look-change-undone": {
+    "text": "Look change undone.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 40
+  },
+  "look-editor.mc-slider-look-editor.look-reset-count": {
+    "text": "Look reset. {count}.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 35,
+    "vars": {
+      "count": "The value that replaces count in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.min-and-max-labels": {
+    "text": "Min and max labels",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30
+  },
+  "look-editor.mc-slider-look-editor.n": {
+    "text": "{n, plural, one {# setting removed} other {# settings removed}}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "look-editor.mc-slider-look-editor.n-2": {
+    "text": "{n, plural, one {# setting changed} other {# settings changed}}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "look-editor.mc-slider-look-editor.n-3": {
+    "text": "{n, plural, one {# stop} other {# stops}}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the": {
+    "text": "{n} characters of each label show on the card. Screen readers get the full label.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 130,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
+    "text": "{n} stops is the most.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.name-look": {
+    "text": "{name} look",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.name-look-applied-count": {
+    "text": "{name} look applied. {count}.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 50,
+    "vars": {
+      "count": "The value that replaces count in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.name-look-is-already-applied": {
+    "text": "{name} look is already applied.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.none": {
+    "text": "None",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
+    "text": "On a Mac: System Settings, Accessibility, Display.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 80
+  },
+  "look-editor.mc-slider-look-editor.on-ipad-settings-accessibility-motion": {
+    "text": "On iPad: Settings, Accessibility, Motion.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 70
+  },
+  "look-editor.mc-slider-look-editor.only-lights-have-a-colour-of-their-own": {
+    "text": "Only lights have a colour of their own.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 65
+  },
+  "look-editor.mc-slider-look-editor.pick-a-light-first": {
+    "text": "Pick a light first.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 35
+  },
+  "look-editor.mc-slider-look-editor.pill": {
+    "text": "Pill",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.presets": {
+    "text": "Presets",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.replaces-the-stops-with-this-many-spread": {
+    "text": "Replaces the stops with this many, spread from {min} to {max}.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 100,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.reset-label": {
+    "text": "Reset {label}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.reset-look": {
+    "text": "Reset look",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.segmented": {
+    "text": "Segmented",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.segments": {
+    "text": "Segments",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the": {
+    "text": "Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 160
+  },
+  "look-editor.mc-slider-look-editor.shape": {
+    "text": "Shape",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.size-px": {
+    "text": "Size (px)",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.slider-colour": {
+    "text": "Slider colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30
+  },
+  "look-editor.mc-slider-look-editor.slider-shape": {
+    "text": "Slider shape",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30
+  },
+  "look-editor.mc-slider-look-editor.snap-to-stops": {
+    "text": "Snap to stops",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.solid": {
+    "text": "Solid",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.sort-by-value": {
+    "text": "Sort by value",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.square": {
+    "text": "Square",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.standard": {
+    "text": "Standard",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.start": {
+    "text": "Start",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.stop-n": {
+    "text": "Stop {n}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.stop-outside-the-range": {
+    "text": "Stop outside the range",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 40
+  },
+  "look-editor.mc-slider-look-editor.stops": {
+    "text": "Stops",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or": {
+    "text": "The light's colour, if that is on, or Slider colour is where the fill starts. Gradient and Auto build on it.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 175
+  },
+  "look-editor.mc-slider-look-editor.the-long-side-the-short-side-is-0-57": {
+    "text": "The long side. The short side is 0.57 times that.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 80
+  },
+  "look-editor.mc-slider-look-editor.the-module-s-own-corners-are-in-the": {
+    "text": "The module's own corners are in the Design tab.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 80
+  },
+  "look-editor.mc-slider-look-editor.the-slider-look-could-not-be-loaded-so": {
+    "text": "The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 160
+  },
+  "look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px": {
+    "text": "The touch area stays at least 40 px.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 60
+  },
+  "look-editor.mc-slider-look-editor.the-track-and-fill-follow-this-shape-the": {
+    "text": "The track and fill follow this shape. The handle stays on the track. Use a wide or tall shape for the clearest result.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 190
+  },
+  "look-editor.mc-slider-look-editor.the-track-still-moves-and-can-be-used": {
+    "text": "The track still moves and can be used with keyboard and touch. Add a value display so people can read the level.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 180
+  },
+  "look-editor.mc-slider-look-editor.thickness-px": {
+    "text": "Thickness (px)",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.thin": {
+    "text": "Thin",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.tick-every": {
+    "text": "Tick every",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.ticks": {
+    "text": "Ticks",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.touch-screens-have-no-hover-so-the-value": {
+    "text": "Touch screens have no hover, so the value is shown for 2 seconds after you let go.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 135
+  },
+  "look-editor.mc-slider-look-editor.track-and-fill": {
+    "text": "Track and fill",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.track-corners-px": {
+    "text": "Track corners (px)",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30
+  },
+  "look-editor.mc-slider-look-editor.track-style": {
+    "text": "Track style",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.undo": {
+    "text": "Undo",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 15
+  },
+  "look-editor.mc-slider-look-editor.undo-look-change": {
+    "text": "Undo look change",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 45
+  },
+  "look-editor.mc-slider-look-editor.undo-name-look": {
+    "text": "Undo {name} look",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.undo-reset": {
+    "text": "Undo reset",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.update-while-dragging": {
+    "text": "Update while dragging",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 35
+  },
+  "look-editor.mc-slider-look-editor.use-own-colour": {
+    "text": "Use own colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.use-the-light-s-colour": {
+    "text": "Use the light's colour",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 40
+  },
+  "look-editor.mc-slider-look-editor.value": {
+    "text": "Value",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.value-display": {
+    "text": "Value display",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.value-shown-beside-the-slider-because": {
+    "text": "Value shown beside the slider, because there is no handle.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 95
+  },
+  "look-editor.mc-slider-look-editor.where": {
+    "text": "Where",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 10
+  },
+  "look-editor.mc-slider-look-editor.with-no-handle-and-no-value-shown-the": {
+    "text": "With no handle and no value shown, the level can only be read from the fill.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 125
+  },
+  "look-editor.mc-slider-look-editor.your-own-look": {
+    "text": "Your own look",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 25
+  },
+  "look-editor.mc-slider-look-editor.your-own-look-started-from-name": {
+    "text": "Your own look, started from {name}",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so": {
+    "text": "Your system has reduced motion on, so this look stays still.",
+    "note": "Shown in mc slider look editor (look-editor).",
+    "max": 100
+  },
+  "look-editor.presets.big-fill": {
+    "text": "Big fill",
+    "note": "Shown in presets (look-editor).",
+    "max": 15
+  },
+  "look-editor.presets.blue-tube-with-drops-and-a-rising-level": {
+    "text": "Blue tube with drops and a rising level.",
+    "note": "Shown in presets (look-editor).",
+    "max": 65
+  },
+  "look-editor.presets.cool-dashed-line-with-arrows": {
+    "text": "Cool dashed line with arrows.",
+    "note": "Shown in presets (look-editor).",
+    "max": 50
+  },
+  "look-editor.presets.data": {
+    "text": "Data",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  },
+  "look-editor.presets.energy": {
+    "text": "Energy",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  },
+  "look-editor.presets.glass": {
+    "text": "Glass",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  },
+  "look-editor.presets.glowing-line-round-glowing-handle": {
+    "text": "Glowing line, round glowing handle.",
+    "note": "Shown in presets (look-editor).",
+    "max": 60
+  },
+  "look-editor.presets.glowing-yellow-orange-line-with-sparks": {
+    "text": "Glowing yellow-orange line with sparks.",
+    "note": "Shown in presets (look-editor).",
+    "max": 65
+  },
+  "look-editor.presets.heat": {
+    "text": "Heat",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  },
+  "look-editor.presets.large-fill-with-icon-and-value-updates": {
+    "text": "Large fill with icon and value. Updates while you drag.",
+    "note": "Shown in presets (look-editor).",
+    "max": 90
+  },
+  "look-editor.presets.material": {
+    "text": "Material",
+    "note": "Shown in presets (look-editor).",
+    "max": 15
+  },
+  "look-editor.presets.minimal": {
+    "text": "Minimal",
+    "note": "Shown in presets (look-editor).",
+    "max": 15
+  },
+  "look-editor.presets.neon": {
+    "text": "Neon",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  },
+  "look-editor.presets.neon-2": {
+    "text": "Neon",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  },
+  "look-editor.presets.pink-glowing-line-with-dots": {
+    "text": "Pink glowing line with dots.",
+    "note": "Shown in presets (look-editor).",
+    "max": 45
+  },
+  "look-editor.presets.see-through-track-pill-handle": {
+    "text": "See-through track, pill handle.",
+    "note": "Shown in presets (look-editor).",
+    "max": 50
+  },
+  "look-editor.presets.standard-bar-with-a-round-handle": {
+    "text": "Standard bar with a round handle.",
+    "note": "Shown in presets (look-editor).",
+    "max": 55
+  },
+  "look-editor.presets.thin-line-round-handle-value-beside-it": {
+    "text": "Thin line, round handle, value beside it.",
+    "note": "Shown in presets (look-editor).",
+    "max": 70
+  },
+  "look-editor.presets.warm-wavy-line-with-comets": {
+    "text": "Warm wavy line with comets.",
+    "note": "Shown in presets (look-editor).",
+    "max": 45
+  },
+  "look-editor.presets.water": {
+    "text": "Water",
+    "note": "Shown in presets (look-editor).",
+    "max": 10
+  }
+}

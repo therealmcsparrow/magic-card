@@ -1,228 +1,998 @@
 {
-  "0 dots: moving dashes instead.": "0 stippen: in plaats daarvan bewegende streepjes.",
-  "0 shapes: nothing travels.": "0 vormen: er beweegt niets.",
-  "4 or more glowing or tube lines on one card. To keep wall tablets smooth, bubbles and flicker are reduced automatically.": "4 of meer gloeiende of buislijnen op één kaart. Om wandtablets soepel te houden, worden bellen en geflikker automatisch verminderd.",
-  "7 or more glowing or tube lines. Moving highlights and splashes are switched off automatically.": "7 of meer gloeiende of buislijnen. Bewegende lichtstrepen en spetters worden automatisch uitgezet.",
-  "A small effect at the To module each time a shape arrives.": "Een klein effect bij de Naar-module telkens als een vorm aankomt.",
-  "A tube under 8 px is hard to read.": "Een buis onder 8 px is moeilijk te lezen.",
-  "Add evenly": "Gelijkmatig toevoegen",
-  "Add stop": "Stop toevoegen",
-  "Alternate with": "Afwisselen met",
-  "Apply": "Toepassen",
-  "Arrival": "Aankomst",
-  "Arrow": "Pijl",
-  "Arrowhead": "Pijlpunt",
-  "Auto": "Automatisch",
-  "Auto works with brightness and colour temperature sliders.": "Automatisch werkt met schuifregelaars voor helderheid en kleurtemperatuur.",
-  "Auto, from the light's colour": "Automatisch, vanaf de kleur van het licht",
-  "Beside the slider": "Naast de schuifregelaar",
-  "Big fill": "Grote vulling",
-  "Blue tube with drops and a rising level.": "Blauwe buis met druppels en een stijgend niveau.",
-  "Blur behind": "Achtergrond vervagen",
-  "Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets.": "Vervaagt wat achter de baan zit. Uit geeft een vlakke, doorzichtige vulling. Vervaging kan oudere wandtablets trager maken.",
-  "Border (px)": "Rand (px)",
-  "Border colour": "Randkleur",
-  "Brightness: dark to bright in the slider colour. Colour temperature: warm to cool.": "Helderheid: van donker naar licht in de kleur van de schuifregelaar. Kleurtemperatuur: van warm naar koel.",
-  "Bubble": "Bel",
-  "Bubble count": "Aantal bellen",
-  "Bubbles": "Bellen",
-  "By value": "Op waarde",
-  "Cable": "Kabel",
-  "Centre": "Midden",
-  "Centre needs a vertical slider.": "Midden werkt alleen bij een verticale schuifregelaar.",
-  "Chevron": "Winkelhaak",
-  "Circle": "Cirkel",
-  "Close": "Sluiten",
-  "Colour": "Kleur",
-  "Colour mode": "Kleurmodus",
-  "Colour ranges": "Kleurbereiken",
-  "Colour source: {source}.": "Kleurbron: {source}.",
-  "Comet": "Komeet",
-  "Cool dashed line with arrows.": "Koele stippellijn met pijlen.",
-  "Core colour": "Kernkleur",
-  "Count follows spacing.": "Het aantal volgt de afstand.",
-  "Dash length (px)": "Streeplengte (px)",
-  "Dashed": "Gestreept",
-  "Data": "Data",
-  "Default look": "Standaardlook",
-  "Delete stop {n}": "Stop {n} verwijderen",
-  "Diamond": "Ruit",
-  "Different start marker": "Andere startmarkering",
-  "Dismiss": "Sluiten",
-  "Dot": "Stip",
-  "Dot size (px)": "Stipgrootte (px)",
-  "Dots": "Stippen",
-  "Dotted": "Gestippeld",
-  "Double rail": "Dubbele rail",
-  "Drop": "Druppel",
-  "Electric": "Elektrisch",
-  "End colour": "Eindkleur",
-  "End marker": "Eindmarkering",
-  "Ends": "Uiteinden",
-  "Energy": "Energie",
-  "Entity icon": "Entiteitspictogram",
-  "Even": "Gelijkmatig",
-  "Falls back to Slider colour when the light has no colour.": "Valt terug op de kleur van de schuifregelaar als het licht geen kleur heeft.",
-  "Fill": "Vulling",
-  "Flicker": "Flikkering",
-  "Following the light": "Volgt het licht",
-  "Gap (px)": "Tussenruimte (px)",
-  "Glass": "Glas",
-  "Glass tint": "Glaskleur",
-  "Glow (px)": "Gloed (px)",
-  "Glowing line, round glowing handle.": "Gloeiende lijn, rond gloeiend handvat.",
-  "Glowing yellow-orange line with sparks.": "Gloeiende geeloranje lijn met vonken.",
-  "Gradient": "Kleurverloop",
-  "Gradient, light's colour to end colour": "Verloop, van de kleur van het licht naar de eindkleur",
-  "Handle": "Handvat",
-  "Heat": "Warmte",
-  "Hidden": "Verborgen",
-  "Hidden is the same as turning Show value off.": "Verborgen is hetzelfde als Waarde tonen uitzetten.",
-  "Hidden needs a handle.": "Verborgen werkt alleen met een handvat.",
-  "Icon": "Pictogram",
-  "Icon position": "Pictogrampositie",
-  "Idle colour": "Kleur bij inactiviteit",
-  "In a bubble while dragging": "In een bel tijdens het slepen",
-  "In pixels": "In pixels",
-  "In the track": "In de baan",
-  "Label": "Label",
-  "Large fill with icon and value. Updates while you drag.": "Grote vulling met pictogram en waarde. Werkt bij tijdens het slepen.",
-  "Level follows value": "Niveau volgt de waarde",
-  "Light's colour": "Kleur van het licht",
-  "Line": "Lijn",
-  "Line end colour": "Kleur aan het einde",
-  "Line style": "Lijnstijl",
-  "Look reset. {count}.": "Uiterlijk hersteld. {count}.",
-  "Look reset. {n, plural, one {# setting} other {# settings}} removed.": "Look gereset. {n, plural, one {# instelling} other {# instellingen}} verwijderd.",
-  "Marker size (px)": "Markeringsgrootte (px)",
-  "Material": "Material",
-  "Min and max labels": "Min- en maxlabels",
-  "Minimal": "Minimaal",
-  "Motion": "Beweging",
-  "Neon": "Neon",
-  "None": "Geen",
-  "Nothing arrives while Motion is Pulse.": "Er komt niets aan zolang Beweging op Puls staat.",
-  "Off": "Uit",
-  "In your system settings, turn on reduced motion (Accessibility).": "Zet verminderde beweging aan in de systeeminstellingen (Toegankelijkheid).",
-  "On a Mac: System Settings, Accessibility, Display.": "Op een Mac: Systeeminstellingen, Toegankelijkheid, Scherm.",
-  "On iPad: Settings, Accessibility, Motion.": "Op iPad: Instellingen, Toegankelijkheid, Beweging.",
-  "Only lights have a colour of their own.": "Alleen lampen hebben een eigen kleur.",
-  "Pick a light first.": "Kies eerst een lamp.",
-  "Pick a sensor or device first: the colour follows its value.": "Kies eerst een sensor of apparaat: de kleur volgt de waarde ervan.",
-  "Pick a sensor or device first: the level follows its value.": "Kies eerst een sensor of apparaat: het niveau volgt de waarde ervan.",
-  "Pick an icon.": "Kies een pictogram.",
-  "Pill": "Pil",
-  "Pink glowing line with dots.": "Roze gloeiende lijn met stippen.",
-  "Presets": "Voorinstellingen",
-  "Pulse": "Puls",
-  "Rail gap (px)": "Railafstand (px)",
-  "Random": "Willekeurig",
-  "Replaces the stops with this many, spread from {min} to {max}.": "Vervangt de stops door dit aantal, verdeeld van {min} tot {max}.",
-  "Reset look": "Look herstellen",
-  "Reset {label}": "{label} herstellen",
-  "Ring": "Ring",
-  "Rotate with the line": "Meedraaien met de lijn",
-  "Round node": "Ronde knoop",
-  "Scale width": "Dikte schalen",
-  "See-through track, pill handle.": "Doorzichtige baan, pilvormig handvat.",
-  "Segmented": "Gesegmenteerd",
-  "Segments": "Segmenten",
-  "Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.": "Verstuurt hooguit 4 wijzigingen per seconde. De eindwaarde gaat altijd mee als je loslaat. Standaard uit.",
-  "Shape": "Vorm",
-  "Shape colour": "Vormkleur",
-  "Shape size (px)": "Vormgrootte (px)",
-  "Shapes": "Vormen",
-  "Shapes stay in place and pulse. The pulse speed follows the value.": "Vormen blijven staan en pulseren. De pulssnelheid volgt de waarde.",
-  "Sheath colour": "Mantelkleur",
-  "Single": "Enkel",
-  "Size (px)": "Grootte (px)",
-  "Size variation (%)": "Groottevariatie (%)",
-  "Slider colour": "Kleur van de schuifregelaar",
-  "Slider shape": "Vorm van de schuifregelaar",
-  "Snap to stops": "Vastklikken op stops",
-  "Solid": "Effen",
-  "Sort by value": "Sorteren op waarde",
-  "Spacing": "Afstand",
-  "Spacing (px)": "Afstand (px)",
-  "Spacing is ignored while Motion is Pulse.": "De afstand wordt genegeerd zolang Beweging op Puls staat.",
-  "Spark": "Vonk",
-  "Spin": "Draaien",
-  "Splash": "Spat",
-  "Splash on arrival": "Spat bij aankomst",
-  "Splash size (px)": "Spatgrootte (px)",
-  "Spread and motion": "Verdeling en beweging",
-  "Square": "Vierkant",
-  "Standard": "Standaard",
-  "Standard bar with a round handle.": "Standaardbalk met een rond handvat.",
-  "Star": "Ster",
-  "Start": "Begin",
-  "Start marker": "Startmarkering",
-  "Stop outside the range": "Stop buiten het bereik",
-  "Stop {n}": "Stop {n}",
-  "Stops": "Stops",
-  "Strong": "Sterk",
-  "Subtle": "Subtiel",
-  "The light's colour, if that is on, or Slider colour is where the fill starts. Gradient and Auto build on it.": "De kleur van het licht, als die aan staat, of anders de kleur van de schuifregelaar, is het begin van de vulling. Verloop en Automatisch bouwen daarop voort.",
-  "The line takes the colour of the range the value falls in.": "De lijn krijgt de kleur van het bereik waarin de waarde valt.",
-  "The long side. The short side is 0.57 times that.": "De lange zijde. De korte zijde is 0,57 keer zo groot.",
-  "The module's own corners are in the Design tab.": "De eigen hoeken van de module staan op het tabblad Ontwerp.",
-  "The touch area stays at least 40 px.": "Het aanraakgebied blijft minstens 40 px.",
-  "The track and fill follow this shape. The handle stays on the track. Use a wide or tall shape for the clearest result.": "De baan en vulling volgen deze vorm. Het handvat blijft op de baan. Een brede of hoge vorm geeft het duidelijkste resultaat.",
-  "The track still moves and can be used with keyboard and touch. Add a value display so people can read the level.": "De baan beweegt nog steeds en werkt met toetsenbord en aanraking. Toon ook de waarde, zodat mensen het niveau kunnen aflezen.",
-  "The tube is empty until the value passes Min.": "De buis is leeg tot de waarde Min overschrijdt.",
-  "Thickness (px)": "Dikte (px)",
-  "Thin": "Dun",
-  "Thin line, round handle, value beside it.": "Dunne lijn, rond handvat, waarde ernaast.",
-  "This card shows at most 40 moving shapes. Some of this line's shapes are skipped.": "Deze kaart toont hooguit 40 bewegende vormen. Een deel van de vormen van deze lijn wordt overgeslagen.",
-  "Tick every": "Streepje elke",
-  "Ticks": "Streepjes",
-  "Touch screens have no hover, so the value is shown for 2 seconds after you let go.": "Aanraakschermen hebben geen hover, dus de waarde blijft 2 seconden zichtbaar nadat je loslaat.",
-  "Track and fill": "Baan en vulling",
-  "Track corners (px)": "Hoeken van de baan (px)",
-  "Track style": "Baanstijl",
-  "Travel": "Reizen",
-  "Tube": "Buis",
-  "Turns the shape once every 3 seconds while it travels. Off by default.": "Draait de vorm elke 3 seconden eenmaal rond terwijl hij reist. Standaard uit.",
-  "Twisted": "Gedraaid",
-  "Undo": "Ongedaan maken",
-  "Undo look change": "Wijziging van het uiterlijk ongedaan maken",
-  "Undo reset": "Herstel ongedaan maken",
-  "Undo {name} look": "Look {name} ongedaan maken",
-  "Up to twice the width at Max.": "Tot twee keer zo dik bij Max.",
-  "Update while dragging": "Bijwerken tijdens het slepen",
-  "Use own colour": "Eigen kleur gebruiken",
-  "Use the light's colour": "Kleur van het licht gebruiken",
-  "Value": "Waarde",
-  "Value display": "Waardeweergave",
-  "Value shown beside the slider, because there is no handle.": "Waarde naast de schuifregelaar getoond, omdat er geen handvat is.",
-  "Warm wavy line with comets.": "Warme golflijn met kometen.",
-  "Water": "Water",
-  "Wave": "Golf",
-  "Wave height (px)": "Golfhoogte (px)",
-  "Wavelength (px)": "Golflengte (px)",
-  "Where": "Waar",
-  "Width (px)": "Breedte (px)",
-  "With no handle and no value shown, the level can only be read from the fill.": "Zonder handvat en zonder waarde is het niveau alleen aan de vulling af te lezen.",
-  "Your own look": "Je eigen look",
-  "Your own look, started from {name}": "Je eigen look, begonnen met {name}",
-  "Your system has reduced motion on, so this look stays still.": "Je systeem heeft verminderde beweging aan, dus dit uiterlijk blijft stilstaan.",
-  "Your system has reduced motion on, so this look stays still. Turn it off in your system settings to see it move.": "Je systeem heeft verminderde beweging aan, dus deze look blijft stil. Zet die uit in de systeeminstellingen om hem te zien bewegen.",
-  "Zigzag": "Zigzag",
-  "Zigzag height (px)": "Zigzaghoogte (px)",
-  "auto": "automatisch",
-  "{fields} added.": "{fields} toegevoegd.",
-  "{n, plural, one {# setting changed} other {# settings changed}}": "{n, plural, one {# instelling gewijzigd} other {# instellingen gewijzigd}}",
-  "{n, plural, one {# setting removed} other {# settings removed}}": "{n, plural, one {# instelling verwijderd} other {# instellingen verwijderd}}",
-  "{n, plural, one {# stop} other {# stops}}": "{n, plural, one {# stop} other {# stops}}",
-  "{name} look": "Look {name}",
-  "{name} look applied. {count}.": "Uiterlijk {name} toegepast. {count}.",
-  "{name} look applied. {n, plural, one {# setting} other {# settings}} changed.": "Look {name} toegepast. {n, plural, one {# instelling} other {# instellingen}} gewijzigd.",
-  "{name} look is already applied.": "Uiterlijk {name} is al toegepast.",
-  "{n} characters of each label show on the card. Screen readers get the full label.": "{n} tekens van elk label staan op de kaart. Schermlezers krijgen het volledige label.",
-  "{n} px": "{n} px",
-  "{n} stops is the most.": "Meer dan {n} stops kan niet.",
-  "{used} is used. Kept but not used: {kept}.": "{used} wordt gebruikt. Bewaard maar niet gebruikt: {kept}.",
-  "The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.": "De sliderlook kon niet worden geladen, dus de kaart houdt de standaardslider. Je instellingen zijn opgeslagen.",
-  "The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.": "De flowlook kon niet worden geladen, dus de kaart houdt de klassieke flow. Je instellingen zijn opgeslagen.",
-  "Look change undone.": "Wijziging van de look ongedaan gemaakt."
+  "look-editor.element.0-dots-moving-dashes-instead": {
+    "text": "0 stippen: in plaats daarvan bewegende streepjes.",
+    "hash": "2cd27b03"
+  },
+  "look-editor.element.0-shapes-nothing-travels": {
+    "text": "0 vormen: er beweegt niets.",
+    "hash": "5ecc1367"
+  },
+  "look-editor.element.4-or-more-glowing-or-tube-lines-on-one": {
+    "text": "4 of meer gloeiende of buislijnen op één kaart. Om wandtablets soepel te houden, worden bellen en geflikker automatisch verminderd.",
+    "hash": "758a4fad"
+  },
+  "look-editor.element.7-or-more-glowing-or-tube-lines-moving": {
+    "text": "7 of meer gloeiende of buislijnen. Bewegende lichtstrepen en spetters worden automatisch uitgezet.",
+    "hash": "9481da47"
+  },
+  "look-editor.element.a-small-effect-at-the-to-module-each": {
+    "text": "Een klein effect bij de Naar-module telkens als een vorm aankomt.",
+    "hash": "feebfd59"
+  },
+  "look-editor.element.a-tube-under-8-px-is-hard-to-read": {
+    "text": "Een buis onder 8 px is moeilijk te lezen.",
+    "hash": "6e567a66"
+  },
+  "look-editor.element.alternate-with": {
+    "text": "Afwisselen met",
+    "hash": "b536d93a"
+  },
+  "look-editor.element.arrival": {
+    "text": "Aankomst",
+    "hash": "794adbbc"
+  },
+  "look-editor.element.arrow": {
+    "text": "Pijl",
+    "hash": "05800e70"
+  },
+  "look-editor.element.arrowhead": {
+    "text": "Pijlpunt",
+    "hash": "5c85bdb0"
+  },
+  "look-editor.element.bubble": {
+    "text": "Bel",
+    "hash": "77d87b00"
+  },
+  "look-editor.element.bubble-count": {
+    "text": "Aantal bellen",
+    "hash": "fb4705ab"
+  },
+  "look-editor.element.bubbles": {
+    "text": "Bellen",
+    "hash": "d0bba2c5"
+  },
+  "look-editor.element.by-value": {
+    "text": "Op waarde",
+    "hash": "7a290d34"
+  },
+  "look-editor.element.cable": {
+    "text": "Kabel",
+    "hash": "eaf9795d"
+  },
+  "look-editor.element.chevron": {
+    "text": "Winkelhaak",
+    "hash": "c9143fa6"
+  },
+  "look-editor.element.colour": {
+    "text": "Kleur",
+    "hash": "3a9dfa58"
+  },
+  "look-editor.element.colour-mode": {
+    "text": "Kleurmodus",
+    "hash": "1f2f41fc"
+  },
+  "look-editor.element.colour-ranges": {
+    "text": "Kleurbereiken",
+    "hash": "8de38687"
+  },
+  "look-editor.element.comet": {
+    "text": "Komeet",
+    "hash": "b8cdd253"
+  },
+  "look-editor.element.core-colour": {
+    "text": "Kernkleur",
+    "hash": "4de7fc2c"
+  },
+  "look-editor.element.count-follows-spacing": {
+    "text": "Het aantal volgt de afstand.",
+    "hash": "3a88798c"
+  },
+  "look-editor.element.dash-length-px": {
+    "text": "Streeplengte (px)",
+    "hash": "97d123ac"
+  },
+  "look-editor.element.dashed": {
+    "text": "Gestreept",
+    "hash": "2fe14ade"
+  },
+  "look-editor.element.default-look": {
+    "text": "Standaardlook",
+    "hash": "55b59d75"
+  },
+  "look-editor.element.diamond": {
+    "text": "Ruit",
+    "hash": "b639c243"
+  },
+  "look-editor.element.different-start-marker": {
+    "text": "Andere startmarkering",
+    "hash": "063b3d57"
+  },
+  "look-editor.element.dismiss": {
+    "text": "Sluiten",
+    "hash": "48845bff"
+  },
+  "look-editor.element.dot": {
+    "text": "Stip",
+    "hash": "599079bc"
+  },
+  "look-editor.element.dot-size-px": {
+    "text": "Stipgrootte (px)",
+    "hash": "886a1312"
+  },
+  "look-editor.element.dots": {
+    "text": "Stippen",
+    "hash": "6de335fa"
+  },
+  "look-editor.element.dotted": {
+    "text": "Gestippeld",
+    "hash": "be454f3c"
+  },
+  "look-editor.element.double-rail": {
+    "text": "Dubbele rail",
+    "hash": "391641a1"
+  },
+  "look-editor.element.drop": {
+    "text": "Druppel",
+    "hash": "c8af9ae3"
+  },
+  "look-editor.element.electric": {
+    "text": "Elektrisch",
+    "hash": "a76dab2d"
+  },
+  "look-editor.element.end-marker": {
+    "text": "Eindmarkering",
+    "hash": "91c238cc"
+  },
+  "look-editor.element.ends": {
+    "text": "Uiteinden",
+    "hash": "e98982c9"
+  },
+  "look-editor.element.even": {
+    "text": "Gelijkmatig",
+    "hash": "8c29bf34"
+  },
+  "look-editor.element.fields-added": {
+    "text": "{fields} toegevoegd.",
+    "hash": "5976af51"
+  },
+  "look-editor.element.flicker": {
+    "text": "Flikkering",
+    "hash": "ba3baf3d"
+  },
+  "look-editor.element.gap-px": {
+    "text": "Tussenruimte (px)",
+    "hash": "b80d9421"
+  },
+  "look-editor.element.glass-tint": {
+    "text": "Glaskleur",
+    "hash": "fb8247d2"
+  },
+  "look-editor.element.glow-px": {
+    "text": "Gloed (px)",
+    "hash": "d8c44a42"
+  },
+  "look-editor.element.gradient": {
+    "text": "Kleurverloop",
+    "hash": "2523561c"
+  },
+  "look-editor.element.icon": {
+    "text": "Pictogram",
+    "hash": "a35abcd6"
+  },
+  "look-editor.element.idle-colour": {
+    "text": "Kleur bij inactiviteit",
+    "hash": "fb7ef9b4"
+  },
+  "look-editor.element.in-pixels": {
+    "text": "In pixels",
+    "hash": "ed6e9ee9"
+  },
+  "look-editor.element.level-follows-value": {
+    "text": "Niveau volgt de waarde",
+    "hash": "15405827"
+  },
+  "look-editor.element.line": {
+    "text": "Lijn",
+    "hash": "d7852cd0"
+  },
+  "look-editor.element.line-end-colour": {
+    "text": "Kleur aan het einde",
+    "hash": "93d6e2aa"
+  },
+  "look-editor.element.line-style": {
+    "text": "Lijnstijl",
+    "hash": "2c4a93b5"
+  },
+  "look-editor.element.look-change-undone": {
+    "text": "Wijziging van de look ongedaan gemaakt.",
+    "hash": "2a3ab621"
+  },
+  "look-editor.element.look-reset-n-removed": {
+    "text": "Look gereset. {n, plural, one {# instelling} other {# instellingen}} verwijderd.",
+    "hash": "237a0f1a"
+  },
+  "look-editor.element.marker-size-px": {
+    "text": "Markeringsgrootte (px)",
+    "hash": "1b9e6fc5"
+  },
+  "look-editor.element.motion": {
+    "text": "Beweging",
+    "hash": "8ca34424"
+  },
+  "look-editor.element.n-px": {
+    "text": "{n} px",
+    "hash": "f7dd9964"
+  },
+  "look-editor.element.name-look": {
+    "text": "Look {name}",
+    "hash": "21cf5aec"
+  },
+  "look-editor.element.name-look-applied-n-changed": {
+    "text": "Look {name} toegepast. {n, plural, one {# instelling} other {# instellingen}} gewijzigd.",
+    "hash": "4cbbfabe"
+  },
+  "look-editor.element.neon": {
+    "text": "Neon",
+    "hash": "618484e2"
+  },
+  "look-editor.element.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "look-editor.element.nothing-arrives-while-motion-is-pulse": {
+    "text": "Er komt niets aan zolang Beweging op Puls staat.",
+    "hash": "f5a89d9a"
+  },
+  "look-editor.element.off": {
+    "text": "Uit",
+    "hash": "ca7981b4"
+  },
+  "look-editor.element.pick-a-sensor-or-device-first-the-colour": {
+    "text": "Kies eerst een sensor of apparaat: de kleur volgt de waarde ervan.",
+    "hash": "7626c46c"
+  },
+  "look-editor.element.pick-a-sensor-or-device-first-the-level": {
+    "text": "Kies eerst een sensor of apparaat: het niveau volgt de waarde ervan.",
+    "hash": "dc6ed8f2"
+  },
+  "look-editor.element.pick-an-icon": {
+    "text": "Kies een pictogram.",
+    "hash": "c10ff123"
+  },
+  "look-editor.element.presets": {
+    "text": "Voorinstellingen",
+    "hash": "954f93fe"
+  },
+  "look-editor.element.pulse": {
+    "text": "Puls",
+    "hash": "f7a403c6"
+  },
+  "look-editor.element.rail-gap-px": {
+    "text": "Railafstand (px)",
+    "hash": "535be50a"
+  },
+  "look-editor.element.random": {
+    "text": "Willekeurig",
+    "hash": "67bc4844"
+  },
+  "look-editor.element.reset-look": {
+    "text": "Look herstellen",
+    "hash": "f03606d8"
+  },
+  "look-editor.element.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "look-editor.element.rotate-with-the-line": {
+    "text": "Meedraaien met de lijn",
+    "hash": "a45ea60e"
+  },
+  "look-editor.element.round-node": {
+    "text": "Ronde knoop",
+    "hash": "6fb0e2b8"
+  },
+  "look-editor.element.scale-width": {
+    "text": "Dikte schalen",
+    "hash": "afd9d571"
+  },
+  "look-editor.element.shape": {
+    "text": "Vorm",
+    "hash": "e0e49270"
+  },
+  "look-editor.element.shape-colour": {
+    "text": "Vormkleur",
+    "hash": "92993111"
+  },
+  "look-editor.element.shape-size-px": {
+    "text": "Vormgrootte (px)",
+    "hash": "66cb75a9"
+  },
+  "look-editor.element.shapes": {
+    "text": "Vormen",
+    "hash": "75e8028a"
+  },
+  "look-editor.element.shapes-stay-in-place-and-pulse-the-pulse": {
+    "text": "Vormen blijven staan en pulseren. De pulssnelheid volgt de waarde.",
+    "hash": "04e10615"
+  },
+  "look-editor.element.sheath-colour": {
+    "text": "Mantelkleur",
+    "hash": "ba7205c4"
+  },
+  "look-editor.element.single": {
+    "text": "Enkel",
+    "hash": "8888a029"
+  },
+  "look-editor.element.size-variation": {
+    "text": "Groottevariatie (%)",
+    "hash": "0de1998a"
+  },
+  "look-editor.element.solid": {
+    "text": "Effen",
+    "hash": "b8b311b0"
+  },
+  "look-editor.element.spacing": {
+    "text": "Afstand",
+    "hash": "62a822a5"
+  },
+  "look-editor.element.spacing-is-ignored-while-motion-is-pulse": {
+    "text": "De afstand wordt genegeerd zolang Beweging op Puls staat.",
+    "hash": "f9a0a1de"
+  },
+  "look-editor.element.spacing-px": {
+    "text": "Afstand (px)",
+    "hash": "537aa730"
+  },
+  "look-editor.element.spark": {
+    "text": "Vonk",
+    "hash": "529bc3b0"
+  },
+  "look-editor.element.spin": {
+    "text": "Draaien",
+    "hash": "b9e96ae5"
+  },
+  "look-editor.element.splash": {
+    "text": "Spat",
+    "hash": "c3fa854c"
+  },
+  "look-editor.element.splash-on-arrival": {
+    "text": "Spat bij aankomst",
+    "hash": "e1669733"
+  },
+  "look-editor.element.splash-size-px": {
+    "text": "Spatgrootte (px)",
+    "hash": "3a11fd6b"
+  },
+  "look-editor.element.spread-and-motion": {
+    "text": "Verdeling en beweging",
+    "hash": "b5166371"
+  },
+  "look-editor.element.square": {
+    "text": "Vierkant",
+    "hash": "c11092bc"
+  },
+  "look-editor.element.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "look-editor.element.start-marker": {
+    "text": "Startmarkering",
+    "hash": "1c16736f"
+  },
+  "look-editor.element.strong": {
+    "text": "Sterk",
+    "hash": "30a04fdc"
+  },
+  "look-editor.element.subtle": {
+    "text": "Subtiel",
+    "hash": "3eadecfb"
+  },
+  "look-editor.element.the-flow-look-could-not-be-loaded-so-the": {
+    "text": "De flowlook kon niet worden geladen, dus de kaart houdt de klassieke flow. Je instellingen zijn opgeslagen.",
+    "hash": "ebad4d18"
+  },
+  "look-editor.element.the-line-takes-the-colour-of-the-range": {
+    "text": "De lijn krijgt de kleur van het bereik waarin de waarde valt.",
+    "hash": "9fae4a64"
+  },
+  "look-editor.element.the-tube-is-empty-until-the-value-passes": {
+    "text": "De buis is leeg tot de waarde Min overschrijdt.",
+    "hash": "9bc21fba"
+  },
+  "look-editor.element.this-card-shows-at-most-40-moving-shapes": {
+    "text": "Deze kaart toont hooguit 40 bewegende vormen. Een deel van de vormen van deze lijn wordt overgeslagen.",
+    "hash": "ae3497a7"
+  },
+  "look-editor.element.travel": {
+    "text": "Reizen",
+    "hash": "d2b98fb5"
+  },
+  "look-editor.element.tube": {
+    "text": "Buis",
+    "hash": "557ed347"
+  },
+  "look-editor.element.turns-the-shape-once-every-3-seconds": {
+    "text": "Draait de vorm elke 3 seconden eenmaal rond terwijl hij reist. Standaard uit.",
+    "hash": "e4c3a6a4"
+  },
+  "look-editor.element.twisted": {
+    "text": "Gedraaid",
+    "hash": "ad84d09a"
+  },
+  "look-editor.element.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "look-editor.element.undo-name-look": {
+    "text": "Look {name} ongedaan maken",
+    "hash": "7e1b36be"
+  },
+  "look-editor.element.undo-reset": {
+    "text": "Herstel ongedaan maken",
+    "hash": "c4961cf5"
+  },
+  "look-editor.element.up-to-twice-the-width-at-max": {
+    "text": "Tot twee keer zo dik bij Max.",
+    "hash": "71efcb13"
+  },
+  "look-editor.element.used-is-used-kept-but-not-used-kept": {
+    "text": "{used} wordt gebruikt. Bewaard maar niet gebruikt: {kept}.",
+    "hash": "79275e43"
+  },
+  "look-editor.element.wave": {
+    "text": "Golf",
+    "hash": "43eb1b14"
+  },
+  "look-editor.element.wave-height-px": {
+    "text": "Golfhoogte (px)",
+    "hash": "d0523dc4"
+  },
+  "look-editor.element.wavelength-px": {
+    "text": "Golflengte (px)",
+    "hash": "30f58266"
+  },
+  "look-editor.element.width-px": {
+    "text": "Breedte (px)",
+    "hash": "bad5f0ee"
+  },
+  "look-editor.element.your-own-look": {
+    "text": "Je eigen look",
+    "hash": "2f9609c5"
+  },
+  "look-editor.element.your-own-look-started-from-name": {
+    "text": "Je eigen look, begonnen met {name}",
+    "hash": "32176931"
+  },
+  "look-editor.element.your-system-has-reduced-motion-on-so": {
+    "text": "Je systeem heeft verminderde beweging aan, dus deze look blijft stil. Zet die uit in de systeeminstellingen om hem te zien bewegen.",
+    "hash": "bedb38e4"
+  },
+  "look-editor.element.zigzag": {
+    "text": "Zigzag",
+    "hash": "cc4964d9"
+  },
+  "look-editor.element.zigzag-height-px": {
+    "text": "Zigzaghoogte (px)",
+    "hash": "adcbd509"
+  },
+  "look-editor.mc-slider-look-editor.add-evenly": {
+    "text": "Gelijkmatig toevoegen",
+    "hash": "44e90e5e"
+  },
+  "look-editor.mc-slider-look-editor.add-stop": {
+    "text": "Stop toevoegen",
+    "hash": "5dec20de"
+  },
+  "look-editor.mc-slider-look-editor.apply": {
+    "text": "Toepassen",
+    "hash": "31e392d1"
+  },
+  "look-editor.mc-slider-look-editor.auto": {
+    "text": "Automatisch",
+    "hash": "02862497"
+  },
+  "look-editor.mc-slider-look-editor.auto-2": {
+    "text": "automatisch",
+    "hash": "929260ad"
+  },
+  "look-editor.mc-slider-look-editor.auto-from-the-light-s-colour": {
+    "text": "Automatisch, vanaf de kleur van het licht",
+    "hash": "f6942fbf"
+  },
+  "look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour": {
+    "text": "Automatisch werkt met schuifregelaars voor helderheid en kleurtemperatuur.",
+    "hash": "7187134c"
+  },
+  "look-editor.mc-slider-look-editor.beside-the-slider": {
+    "text": "Naast de schuifregelaar",
+    "hash": "8e5df5b5"
+  },
+  "look-editor.mc-slider-look-editor.big-fill": {
+    "text": "Grote vulling",
+    "hash": "a2d1ebd7"
+  },
+  "look-editor.mc-slider-look-editor.blur-behind": {
+    "text": "Achtergrond vervagen",
+    "hash": "e6749d91"
+  },
+  "look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives": {
+    "text": "Vervaagt wat achter de baan zit. Uit geeft een vlakke, doorzichtige vulling. Vervaging kan oudere wandtablets trager maken.",
+    "hash": "689f6dfc"
+  },
+  "look-editor.mc-slider-look-editor.border-colour": {
+    "text": "Randkleur",
+    "hash": "6c9e0b99"
+  },
+  "look-editor.mc-slider-look-editor.border-px": {
+    "text": "Rand (px)",
+    "hash": "0ae2d3f8"
+  },
+  "look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider": {
+    "text": "Helderheid: van donker naar licht in de kleur van de schuifregelaar. Kleurtemperatuur: van warm naar koel.",
+    "hash": "cd9a9682"
+  },
+  "look-editor.mc-slider-look-editor.centre": {
+    "text": "Midden",
+    "hash": "45c19322"
+  },
+  "look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider": {
+    "text": "Midden werkt alleen bij een verticale schuifregelaar.",
+    "hash": "00d3034f"
+  },
+  "look-editor.mc-slider-look-editor.circle": {
+    "text": "Cirkel",
+    "hash": "b93d3bce"
+  },
+  "look-editor.mc-slider-look-editor.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "look-editor.mc-slider-look-editor.colour-source-source": {
+    "text": "Kleurbron: {source}.",
+    "hash": "7267e35b"
+  },
+  "look-editor.mc-slider-look-editor.default-look": {
+    "text": "Standaardlook",
+    "hash": "55b59d75"
+  },
+  "look-editor.mc-slider-look-editor.delete-stop-n": {
+    "text": "Stop {n} verwijderen",
+    "hash": "94de549b"
+  },
+  "look-editor.mc-slider-look-editor.end-colour": {
+    "text": "Eindkleur",
+    "hash": "1050f1b7"
+  },
+  "look-editor.mc-slider-look-editor.entity-icon": {
+    "text": "Entiteitspictogram",
+    "hash": "5fc2fad0"
+  },
+  "look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the": {
+    "text": "Valt terug op de kleur van de schuifregelaar als het licht geen kleur heeft.",
+    "hash": "cecf31a6"
+  },
+  "look-editor.mc-slider-look-editor.fill": {
+    "text": "Vulling",
+    "hash": "033955d4"
+  },
+  "look-editor.mc-slider-look-editor.following-the-light": {
+    "text": "Volgt het licht",
+    "hash": "ccb7e397"
+  },
+  "look-editor.mc-slider-look-editor.gap-px": {
+    "text": "Tussenruimte (px)",
+    "hash": "b80d9421"
+  },
+  "look-editor.mc-slider-look-editor.glass": {
+    "text": "Glas",
+    "hash": "82c26818"
+  },
+  "look-editor.mc-slider-look-editor.glow-px": {
+    "text": "Gloed (px)",
+    "hash": "d8c44a42"
+  },
+  "look-editor.mc-slider-look-editor.gradient": {
+    "text": "Kleurverloop",
+    "hash": "2523561c"
+  },
+  "look-editor.mc-slider-look-editor.gradient-light-s-colour-to-end-colour": {
+    "text": "Verloop, van de kleur van het licht naar de eindkleur",
+    "hash": "257ab2f5"
+  },
+  "look-editor.mc-slider-look-editor.handle": {
+    "text": "Handvat",
+    "hash": "fa04ae3d"
+  },
+  "look-editor.mc-slider-look-editor.hidden": {
+    "text": "Verborgen",
+    "hash": "7e6fefff"
+  },
+  "look-editor.mc-slider-look-editor.hidden-is-the-same-as-turning-show-value": {
+    "text": "Verborgen is hetzelfde als Waarde tonen uitzetten.",
+    "hash": "878b502a"
+  },
+  "look-editor.mc-slider-look-editor.hidden-needs-a-handle": {
+    "text": "Verborgen werkt alleen met een handvat.",
+    "hash": "ea9cf2bf"
+  },
+  "look-editor.mc-slider-look-editor.icon": {
+    "text": "Pictogram",
+    "hash": "a35abcd6"
+  },
+  "look-editor.mc-slider-look-editor.icon-position": {
+    "text": "Pictogrampositie",
+    "hash": "aa62e053"
+  },
+  "look-editor.mc-slider-look-editor.in-a-bubble-while-dragging": {
+    "text": "In een bel tijdens het slepen",
+    "hash": "b2f59e34"
+  },
+  "look-editor.mc-slider-look-editor.in-the-track": {
+    "text": "In de baan",
+    "hash": "075742c7"
+  },
+  "look-editor.mc-slider-look-editor.in-your-system-settings-turn-on-reduced": {
+    "text": "Zet verminderde beweging aan in de systeeminstellingen (Toegankelijkheid).",
+    "hash": "d89cf4a3"
+  },
+  "look-editor.mc-slider-look-editor.label": {
+    "text": "Label",
+    "hash": "0e66373f"
+  },
+  "look-editor.mc-slider-look-editor.light-s-colour": {
+    "text": "Kleur van het licht",
+    "hash": "2fea08a3"
+  },
+  "look-editor.mc-slider-look-editor.line": {
+    "text": "Lijn",
+    "hash": "d7852cd0"
+  },
+  "look-editor.mc-slider-look-editor.look-change-undone": {
+    "text": "Wijziging van de look ongedaan gemaakt.",
+    "hash": "2a3ab621"
+  },
+  "look-editor.mc-slider-look-editor.look-reset-count": {
+    "text": "Uiterlijk hersteld. {count}.",
+    "hash": "43aa40c1"
+  },
+  "look-editor.mc-slider-look-editor.min-and-max-labels": {
+    "text": "Min- en maxlabels",
+    "hash": "297de253"
+  },
+  "look-editor.mc-slider-look-editor.n": {
+    "text": "{n, plural, one {# instelling verwijderd} other {# instellingen verwijderd}}",
+    "hash": "32de1fb8"
+  },
+  "look-editor.mc-slider-look-editor.n-2": {
+    "text": "{n, plural, one {# instelling gewijzigd} other {# instellingen gewijzigd}}",
+    "hash": "4b4ba721"
+  },
+  "look-editor.mc-slider-look-editor.n-3": {
+    "text": "{n, plural, one {# stop} other {# stops}}",
+    "hash": "75d490e5"
+  },
+  "look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the": {
+    "text": "{n} tekens van elk label staan op de kaart. Schermlezers krijgen het volledige label.",
+    "hash": "4f3e77b5"
+  },
+  "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
+    "text": "Meer dan {n} stops kan niet.",
+    "hash": "d4596f52"
+  },
+  "look-editor.mc-slider-look-editor.name-look": {
+    "text": "Look {name}",
+    "hash": "21cf5aec"
+  },
+  "look-editor.mc-slider-look-editor.name-look-applied-count": {
+    "text": "Uiterlijk {name} toegepast. {count}.",
+    "hash": "4c4dcf2e"
+  },
+  "look-editor.mc-slider-look-editor.name-look-is-already-applied": {
+    "text": "Uiterlijk {name} is al toegepast.",
+    "hash": "1b039b87"
+  },
+  "look-editor.mc-slider-look-editor.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
+    "text": "Op een Mac: Systeeminstellingen, Toegankelijkheid, Scherm.",
+    "hash": "2f5cbeb8"
+  },
+  "look-editor.mc-slider-look-editor.on-ipad-settings-accessibility-motion": {
+    "text": "Op iPad: Instellingen, Toegankelijkheid, Beweging.",
+    "hash": "268e3d86"
+  },
+  "look-editor.mc-slider-look-editor.only-lights-have-a-colour-of-their-own": {
+    "text": "Alleen lampen hebben een eigen kleur.",
+    "hash": "9e6189e7"
+  },
+  "look-editor.mc-slider-look-editor.pick-a-light-first": {
+    "text": "Kies eerst een lamp.",
+    "hash": "ffe624e6"
+  },
+  "look-editor.mc-slider-look-editor.pill": {
+    "text": "Pil",
+    "hash": "9945c78b"
+  },
+  "look-editor.mc-slider-look-editor.presets": {
+    "text": "Voorinstellingen",
+    "hash": "954f93fe"
+  },
+  "look-editor.mc-slider-look-editor.replaces-the-stops-with-this-many-spread": {
+    "text": "Vervangt de stops door dit aantal, verdeeld van {min} tot {max}.",
+    "hash": "8d2490f2"
+  },
+  "look-editor.mc-slider-look-editor.reset-label": {
+    "text": "{label} herstellen",
+    "hash": "3a375ef7"
+  },
+  "look-editor.mc-slider-look-editor.reset-look": {
+    "text": "Look herstellen",
+    "hash": "f03606d8"
+  },
+  "look-editor.mc-slider-look-editor.segmented": {
+    "text": "Gesegmenteerd",
+    "hash": "d71a0c69"
+  },
+  "look-editor.mc-slider-look-editor.segments": {
+    "text": "Segmenten",
+    "hash": "48c64fe0"
+  },
+  "look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the": {
+    "text": "Verstuurt hooguit 4 wijzigingen per seconde. De eindwaarde gaat altijd mee als je loslaat. Standaard uit.",
+    "hash": "629d26d6"
+  },
+  "look-editor.mc-slider-look-editor.shape": {
+    "text": "Vorm",
+    "hash": "e0e49270"
+  },
+  "look-editor.mc-slider-look-editor.size-px": {
+    "text": "Grootte (px)",
+    "hash": "2c1cb5c6"
+  },
+  "look-editor.mc-slider-look-editor.slider-colour": {
+    "text": "Kleur van de schuifregelaar",
+    "hash": "fe395e28"
+  },
+  "look-editor.mc-slider-look-editor.slider-shape": {
+    "text": "Vorm van de schuifregelaar",
+    "hash": "c876b1f4"
+  },
+  "look-editor.mc-slider-look-editor.snap-to-stops": {
+    "text": "Vastklikken op stops",
+    "hash": "0fdebf46"
+  },
+  "look-editor.mc-slider-look-editor.solid": {
+    "text": "Effen",
+    "hash": "b8b311b0"
+  },
+  "look-editor.mc-slider-look-editor.sort-by-value": {
+    "text": "Sorteren op waarde",
+    "hash": "b102d29b"
+  },
+  "look-editor.mc-slider-look-editor.square": {
+    "text": "Vierkant",
+    "hash": "c11092bc"
+  },
+  "look-editor.mc-slider-look-editor.standard": {
+    "text": "Standaard",
+    "hash": "ef669154"
+  },
+  "look-editor.mc-slider-look-editor.start": {
+    "text": "Begin",
+    "hash": "e4bb9f1e"
+  },
+  "look-editor.mc-slider-look-editor.stop-n": {
+    "text": "Stop {n}",
+    "hash": "ef6e0584"
+  },
+  "look-editor.mc-slider-look-editor.stop-outside-the-range": {
+    "text": "Stop buiten het bereik",
+    "hash": "5a043103"
+  },
+  "look-editor.mc-slider-look-editor.stops": {
+    "text": "Stops",
+    "hash": "877a8887"
+  },
+  "look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or": {
+    "text": "De kleur van het licht, als die aan staat, of anders de kleur van de schuifregelaar, is het begin van de vulling. Verloop en Automatisch bouwen daarop voort.",
+    "hash": "9db6a711"
+  },
+  "look-editor.mc-slider-look-editor.the-long-side-the-short-side-is-0-57": {
+    "text": "De lange zijde. De korte zijde is 0,57 keer zo groot.",
+    "hash": "f7fa8ba8"
+  },
+  "look-editor.mc-slider-look-editor.the-module-s-own-corners-are-in-the": {
+    "text": "De eigen hoeken van de module staan op het tabblad Ontwerp.",
+    "hash": "8f55ca01"
+  },
+  "look-editor.mc-slider-look-editor.the-slider-look-could-not-be-loaded-so": {
+    "text": "De sliderlook kon niet worden geladen, dus de kaart houdt de standaardslider. Je instellingen zijn opgeslagen.",
+    "hash": "a1393fee"
+  },
+  "look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px": {
+    "text": "Het aanraakgebied blijft minstens 40 px.",
+    "hash": "fc8e4de6"
+  },
+  "look-editor.mc-slider-look-editor.the-track-and-fill-follow-this-shape-the": {
+    "text": "De baan en vulling volgen deze vorm. Het handvat blijft op de baan. Een brede of hoge vorm geeft het duidelijkste resultaat.",
+    "hash": "39d13fbb"
+  },
+  "look-editor.mc-slider-look-editor.the-track-still-moves-and-can-be-used": {
+    "text": "De baan beweegt nog steeds en werkt met toetsenbord en aanraking. Toon ook de waarde, zodat mensen het niveau kunnen aflezen.",
+    "hash": "b234c72e"
+  },
+  "look-editor.mc-slider-look-editor.thickness-px": {
+    "text": "Dikte (px)",
+    "hash": "5a1ef935"
+  },
+  "look-editor.mc-slider-look-editor.thin": {
+    "text": "Dun",
+    "hash": "da68daae"
+  },
+  "look-editor.mc-slider-look-editor.tick-every": {
+    "text": "Streepje elke",
+    "hash": "54e86c5c"
+  },
+  "look-editor.mc-slider-look-editor.ticks": {
+    "text": "Streepjes",
+    "hash": "5b50f27e"
+  },
+  "look-editor.mc-slider-look-editor.touch-screens-have-no-hover-so-the-value": {
+    "text": "Aanraakschermen hebben geen hover, dus de waarde blijft 2 seconden zichtbaar nadat je loslaat.",
+    "hash": "f3ba3cdd"
+  },
+  "look-editor.mc-slider-look-editor.track-and-fill": {
+    "text": "Baan en vulling",
+    "hash": "9bfc5544"
+  },
+  "look-editor.mc-slider-look-editor.track-corners-px": {
+    "text": "Hoeken van de baan (px)",
+    "hash": "af6e77c0"
+  },
+  "look-editor.mc-slider-look-editor.track-style": {
+    "text": "Baanstijl",
+    "hash": "592d2add"
+  },
+  "look-editor.mc-slider-look-editor.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "look-editor.mc-slider-look-editor.undo-look-change": {
+    "text": "Wijziging van het uiterlijk ongedaan maken",
+    "hash": "4ab5bf2c"
+  },
+  "look-editor.mc-slider-look-editor.undo-name-look": {
+    "text": "Look {name} ongedaan maken",
+    "hash": "7e1b36be"
+  },
+  "look-editor.mc-slider-look-editor.undo-reset": {
+    "text": "Herstel ongedaan maken",
+    "hash": "c4961cf5"
+  },
+  "look-editor.mc-slider-look-editor.update-while-dragging": {
+    "text": "Bijwerken tijdens het slepen",
+    "hash": "f7d07777"
+  },
+  "look-editor.mc-slider-look-editor.use-own-colour": {
+    "text": "Eigen kleur gebruiken",
+    "hash": "b93e3261"
+  },
+  "look-editor.mc-slider-look-editor.use-the-light-s-colour": {
+    "text": "Kleur van het licht gebruiken",
+    "hash": "91199ad5"
+  },
+  "look-editor.mc-slider-look-editor.value": {
+    "text": "Waarde",
+    "hash": "8e37953d"
+  },
+  "look-editor.mc-slider-look-editor.value-display": {
+    "text": "Waardeweergave",
+    "hash": "e775cca2"
+  },
+  "look-editor.mc-slider-look-editor.value-shown-beside-the-slider-because": {
+    "text": "Waarde naast de schuifregelaar getoond, omdat er geen handvat is.",
+    "hash": "184e2c0b"
+  },
+  "look-editor.mc-slider-look-editor.where": {
+    "text": "Waar",
+    "hash": "1daaa38f"
+  },
+  "look-editor.mc-slider-look-editor.with-no-handle-and-no-value-shown-the": {
+    "text": "Zonder handvat en zonder waarde is het niveau alleen aan de vulling af te lezen.",
+    "hash": "709ad5f1"
+  },
+  "look-editor.mc-slider-look-editor.your-own-look": {
+    "text": "Je eigen look",
+    "hash": "2f9609c5"
+  },
+  "look-editor.mc-slider-look-editor.your-own-look-started-from-name": {
+    "text": "Je eigen look, begonnen met {name}",
+    "hash": "32176931"
+  },
+  "look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so": {
+    "text": "Je systeem heeft verminderde beweging aan, dus dit uiterlijk blijft stilstaan.",
+    "hash": "244c5d4f"
+  },
+  "look-editor.presets.big-fill": {
+    "text": "Grote vulling",
+    "hash": "a2d1ebd7"
+  },
+  "look-editor.presets.blue-tube-with-drops-and-a-rising-level": {
+    "text": "Blauwe buis met druppels en een stijgend niveau.",
+    "hash": "e41f68f1"
+  },
+  "look-editor.presets.cool-dashed-line-with-arrows": {
+    "text": "Koele stippellijn met pijlen.",
+    "hash": "d9612e73"
+  },
+  "look-editor.presets.data": {
+    "text": "Data",
+    "hash": "cec3a9b8"
+  },
+  "look-editor.presets.energy": {
+    "text": "Energie",
+    "hash": "f2fcd3f7"
+  },
+  "look-editor.presets.glass": {
+    "text": "Glas",
+    "hash": "82c26818"
+  },
+  "look-editor.presets.glowing-line-round-glowing-handle": {
+    "text": "Gloeiende lijn, rond gloeiend handvat.",
+    "hash": "126233f7"
+  },
+  "look-editor.presets.glowing-yellow-orange-line-with-sparks": {
+    "text": "Gloeiende geeloranje lijn met vonken.",
+    "hash": "0da2abb4"
+  },
+  "look-editor.presets.heat": {
+    "text": "Warmte",
+    "hash": "ee255635"
+  },
+  "look-editor.presets.large-fill-with-icon-and-value-updates": {
+    "text": "Grote vulling met pictogram en waarde. Werkt bij tijdens het slepen.",
+    "hash": "f3d550a2"
+  },
+  "look-editor.presets.material": {
+    "text": "Material",
+    "hash": "616cb218"
+  },
+  "look-editor.presets.minimal": {
+    "text": "Minimaal",
+    "hash": "057b5de4"
+  },
+  "look-editor.presets.neon": {
+    "text": "Neon",
+    "hash": "618484e2"
+  },
+  "look-editor.presets.neon-2": {
+    "text": "Neon",
+    "hash": "618484e2"
+  },
+  "look-editor.presets.pink-glowing-line-with-dots": {
+    "text": "Roze gloeiende lijn met stippen.",
+    "hash": "e8a115c6"
+  },
+  "look-editor.presets.see-through-track-pill-handle": {
+    "text": "Doorzichtige baan, pilvormig handvat.",
+    "hash": "8ef10398"
+  },
+  "look-editor.presets.standard-bar-with-a-round-handle": {
+    "text": "Standaardbalk met een rond handvat.",
+    "hash": "c3dfad73"
+  },
+  "look-editor.presets.thin-line-round-handle-value-beside-it": {
+    "text": "Dunne lijn, rond handvat, waarde ernaast.",
+    "hash": "ede2da0b"
+  },
+  "look-editor.presets.warm-wavy-line-with-comets": {
+    "text": "Warme golflijn met kometen.",
+    "hash": "07ef3dfe"
+  },
+  "look-editor.presets.water": {
+    "text": "Water",
+    "hash": "7ca7dea9"
+  }
 }

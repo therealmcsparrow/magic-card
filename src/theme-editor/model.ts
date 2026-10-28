@@ -1,5 +1,6 @@
+import type { MessageIndex } from '../contracts/i18n';
 import { THEME_VAR_RE } from '../contracts/theme-catalogue';
-import type { FieldKind } from '../contracts/theme-catalogue';
+import type { CatalogueEntry, CatalogueGroup, FieldKind } from '../contracts/theme-catalogue';
 import type { ThemeDoc, ThemeMode, ThemeValue } from '../contracts/theme-editor';
 import { t } from './i18n';
 
@@ -8,6 +9,12 @@ import { t } from './i18n';
  * edit returns a new doc that keeps the key order of the file (new keys go at the end of their
  * block) and every key it did not touch, so a save changes only what the user changed.
  */
+
+/** A catalogue entry whose label and hint are m() marks of this namespace, so t() accepts them. */
+export type MarkedEntry = CatalogueEntry & { label: MessageIndex; hint?: MessageIndex };
+
+/** A catalogue group whose label is an m() mark of this namespace. */
+export type MarkedGroup = CatalogueGroup & { label: MessageIndex };
 
 export interface DocError {
   /** Backend path form: "theme.primary-color", "theme.modes.dark.x". */
@@ -150,9 +157,9 @@ const balanced = (v: string): boolean => {
 /** The browser's CSS check; true where there is none (the structural checks above it still run). */
 const supports = (prop: string, value: string): boolean => (typeof CSS !== 'undefined' && typeof CSS.supports === 'function' ? CSS.supports(prop, value) : true);
 
-const sizeMsg = (): string => t('Enter a length like 12px or 1rem.');
-const gradientMsg = (): string => t('This field takes one colour, not a gradient.');
-const colourMsg = (): string => t('Enter a colour like #1a73e8 or rgb(26, 115, 232).');
+const sizeMsg = (): string => t('theme-editor.model.enter-a-length-like-12px-or-1rem');
+const gradientMsg = (): string => t('theme-editor.model.this-field-takes-one-colour-not-a');
+const colourMsg = (): string => t('theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115');
 
 /** True for the two colour-field errors the field group words itself (a colour field leads with the picker). */
 export const isGradientMsg = (message: string): boolean => message === gradientMsg();
@@ -160,20 +167,20 @@ export const isColourMsg = (message: string): boolean => message === colourMsg()
 
 /** null when `value` is fine for `kind`, else a short reason for the field's inline error. */
 export function validateValue(kind: FieldKind, value: ThemeValue): string | null {
-  if (typeof value === 'number' && !Number.isFinite(value)) return kind === 'number' ? t('Enter a number.') : t('Enter a value.');
+  if (typeof value === 'number' && !Number.isFinite(value)) return kind === 'number' ? t('theme-editor.model.enter-a-number') : t('theme-editor.model.enter-a-value');
   const v = String(value).trim();
-  if (!v) return t('Enter a value.');
-  if (v.length > MAX_VALUE_LENGTH) return t('This value is longer than {max} characters.', { max: String(MAX_VALUE_LENGTH) });
-  if (BAD_CHARS_RE.test(v)) return t('This value has a control character. Remove it.');
+  if (!v) return t('theme-editor.model.enter-a-value');
+  if (v.length > MAX_VALUE_LENGTH) return t('theme-editor.model.this-value-is-longer-than-max-characters', { max: String(MAX_VALUE_LENGTH) });
+  if (BAD_CHARS_RE.test(v)) return t('theme-editor.model.this-value-has-a-control-character');
   if (kind === 'text') return null;
-  if (/[;{}]/.test(v) || !balanced(v)) return t('Remove {chars} and unmatched brackets from the value.', { chars: '; { }' });
+  if (/[;{}]/.test(v) || !balanced(v)) return t('theme-editor.model.remove-chars-and-unmatched-brackets-from', { chars: '; { }' });
   const isVar = VAR_RE.test(v);
   switch (kind) {
     case 'number':
-      return Number.isFinite(Number(v)) ? null : t('Enter a number.');
+      return Number.isFinite(Number(v)) ? null : t('theme-editor.model.enter-a-number');
     case 'rgb': {
       const m = RGB_RE.exec(v);
-      return m && [m[1], m[2], m[3]].every((n) => Number(n) <= 255) ? null : t('Enter three numbers from 0 to 255, like 255, 120, 0.');
+      return m && [m[1], m[2], m[3]].every((n) => Number(n) <= 255) ? null : t('theme-editor.model.enter-three-numbers-from-0-to-255-like');
     }
     case 'size':
       if (isVar) return null;
@@ -184,13 +191,13 @@ export function validateValue(kind: FieldKind, value: ThemeValue): string | null
       if (GRADIENT_RE.test(v)) return gradientMsg();
       return supports('color', v) ? null : colourMsg();
     case 'background':
-      return isVar || supports('background', v) ? null : t('Enter a colour or a gradient.');
+      return isVar || supports('background', v) ? null : t('theme-editor.model.enter-a-colour-or-a-gradient');
     case 'shadow':
-      return supports('box-shadow', v) ? null : t('Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).');
+      return supports('box-shadow', v) ? null : t('theme-editor.model.enter-a-shadow-like-0-2px-6px-rgba-0-0-0');
     case 'border':
-      return supports('border', v) ? null : t('Enter a border like 1px solid #ccc.');
+      return supports('border', v) ? null : t('theme-editor.model.enter-a-border-like-1px-solid-ccc');
     case 'font':
-      return supports('font-family', v) ? null : t('Enter a font family.');
+      return supports('font-family', v) ? null : t('theme-editor.model.enter-a-font-family');
     default:
       return null;
   }
@@ -204,9 +211,9 @@ export function docErrors(doc: ThemeDoc, kindOf: (name: string) => FieldKind | u
   const errors: DocError[] = [];
   const checkVar = (path: string, name: string, value: unknown): void => {
     if (!THEME_VAR_RE.test(name) || FORBIDDEN_KEYS.has(name)) {
-      errors.push({ path, message: t('Use letters, numbers, dashes and underscores for a variable name.') });
+      errors.push({ path, message: t('theme-editor.model.use-letters-numbers-dashes-and') });
     } else if (!isScalar(value)) {
-      errors.push({ path, message: t('This value must be text or a number.') });
+      errors.push({ path, message: t('theme-editor.model.this-value-must-be-text-or-a-number') });
     } else {
       const message = validateValue(kindOf(name) ?? 'text', value);
       if (message) errors.push({ path, message });
@@ -216,11 +223,11 @@ export function docErrors(doc: ThemeDoc, kindOf: (name: string) => FieldKind | u
     if (k !== 'modes') {
       checkVar(`theme.${k}`, k, v);
     } else if (v !== undefined && !isRecord(v)) {
-      errors.push({ path: 'theme.modes', message: t('Modes must hold a light and a dark block.') });
+      errors.push({ path: 'theme.modes', message: t('theme-editor.model.modes-must-hold-a-light-and-a-dark-block') });
     } else if (v !== undefined) {
       for (const [mode, block] of Object.entries(v as Bag<unknown>)) {
         const base = `theme.modes.${mode}`;
-        if (!MODES.includes(mode) || !isRecord(block)) errors.push({ path: base, message: t('A mode block must be light or dark and hold variables.') });
+        if (!MODES.includes(mode) || !isRecord(block)) errors.push({ path: base, message: t('theme-editor.model.a-mode-block-must-be-light-or-dark-and') });
         else for (const [bk, bv] of Object.entries(block)) checkVar(`${base}.${bk}`, bk, bv);
       }
     }
