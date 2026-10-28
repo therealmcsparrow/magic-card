@@ -1715,27 +1715,27 @@
   },
   "svg-editor.views.fit-to-view": {
     "text": "Fit to view",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that zooms the canvas so the whole drawing is visible.",
     "max": 20
   },
   "svg-editor.views.flat": {
     "text": "Flat",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for the stroke end style with a straight cut at the end point. Not the word for an apartment.",
     "max": 10
   },
   "svg-editor.views.flip-horizontally": {
     "text": "Flip horizontally",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that mirrors the selection from left to right.",
     "max": 30
   },
   "svg-editor.views.flip-vertically": {
     "text": "Flip vertically",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that mirrors the selection from top to bottom.",
     "max": 25
   },
   "svg-editor.views.for-example-mdi-lightbulb-home-assistant": {
     "text": "For example mdi:lightbulb. Home Assistant icons and installed icon packs work.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint under the icon name field. mdi:lightbulb is a literal icon id and stays as written.",
     "max": 125
   },
   "svg-editor.views.getting-big-tidy-reduces-precision-and": {
@@ -1750,7 +1750,7 @@
   },
   "svg-editor.views.grid-size": {
     "text": "Grid {size}",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option label for a preset grid spacing. {size} is a number, for example 4.",
     "max": 20,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -1758,32 +1758,32 @@
   },
   "svg-editor.views.grid-size-2": {
     "text": "Grid size",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the group of grid spacing options. Same English as the other grid size labels but a heading here.",
     "max": 15
   },
   "svg-editor.views.groups-can-be-4-levels-deep": {
     "text": "Groups can be 4 levels deep.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Message when nesting a group would go past the limit. Same English as the layers message; keep the translations equal.",
     "max": 45
   },
   "svg-editor.views.heavy-for-wall-tablets": {
     "text": "Heavy for wall tablets",
-    "note": "Shown in views (svg-editor).",
+    "note": "Short warning badge that the drawing is large and may be slow on low-powered wall-mounted tablets.",
     "max": 40
   },
   "svg-editor.views.height": {
     "text": "Height",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a number field for the height of a shape or canvas. Pairs with Width.",
     "max": 10
   },
   "svg-editor.views.hidden": {
     "text": "Hidden",
-    "note": "Shown in views (svg-editor).",
+    "note": "State label for a layer that is switched off and not drawn.",
     "max": 10
   },
   "svg-editor.views.holes-where-shapes-overlap": {
     "text": "Holes where shapes overlap",
-    "note": "Shown in views (svg-editor).",
+    "note": "Description of the even-odd fill rule option: overlapping areas are left empty.",
     "max": 45
   },
   "svg-editor.views.home-assistant-would-show-little-of-this": {
@@ -1803,52 +1803,52 @@
   },
   "svg-editor.views.how-to-install": {
     "text": "How to install",
-    "note": "Shown in views (svg-editor).",
+    "note": "Link or button that opens steps for installing the Magic Card Utils add-on.",
     "max": 25
   },
   "svg-editor.views.icon-canvas": {
     "text": "Icon canvas",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the drawing area where the icon is shown and edited.",
     "max": 20
   },
   "svg-editor.views.icon-editor": {
     "text": "Icon editor",
-    "note": "Shown in views (svg-editor).",
+    "note": "Title of the full editor for drawing a single icon. Contrast with Image editor.",
     "max": 20
   },
   "svg-editor.views.icon-name": {
     "text": "Icon name",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the text field for the name an icon is saved under.",
     "max": 15
   },
   "svg-editor.views.image-editor": {
     "text": "Image editor",
-    "note": "Shown in views (svg-editor).",
+    "note": "Title of the full editor for drawing a larger image. Contrast with Icon editor.",
     "max": 20
   },
   "svg-editor.views.import-file": {
     "text": "Import file",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that adds an SVG file from the computer as layers. Pairs with Export file.",
     "max": 20
   },
   "svg-editor.views.in-handle-angle": {
     "text": "In handle angle",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the direction of the handle on the incoming side of a curve point. In is an adjective for the handle.",
     "max": 25
   },
   "svg-editor.views.in-handle-length": {
     "text": "In handle length",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the reach of the handle on the incoming side of a curve point. In is an adjective for the handle.",
     "max": 30
   },
   "svg-editor.views.in-home-assistant": {
     "text": "In Home Assistant",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of a preview showing how the icon looks in Home Assistant's own cards. Contrast with In Magic Card.",
     "max": 30
   },
   "svg-editor.views.in-home-assistant-at-px-pixels": {
     "text": "In Home Assistant at {px} pixels",
-    "note": "Shown in views (svg-editor).",
+    "note": "Preview caption. {px} is a number, the icon size in pixels.",
     "max": 55,
     "vars": {
       "px": "The value that replaces px in the text."
@@ -1856,22 +1856,22 @@
   },
   "svg-editor.views.in-magic-card": {
     "text": "In Magic Card",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of a preview showing the icon as Magic Card draws it. Magic Card is a product name.",
     "max": 25
   },
   "svg-editor.views.inner-size": {
     "text": "Inner size",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a number field for the size of the drawing area inside the safe margin.",
     "max": 20
   },
   "svg-editor.views.insert": {
     "text": "Insert",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that adds the chosen icon into the drawing.",
     "max": 10
   },
   "svg-editor.views.inspector-panel": {
     "text": "Inspector panel",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the side panel with properties of the selected shape.",
     "max": 25
   },
   "svg-editor.views.it-is-saved-in-the-library": {
@@ -1881,22 +1881,22 @@
   },
   "svg-editor.views.join": {
     "text": "Join",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that connects two open paths into one. Not the stroke corner style.",
     "max": 10
   },
   "svg-editor.views.keep-a-copy-in-this-card": {
     "text": "Keep a copy in this card",
-    "note": "Shown in views (svg-editor).",
+    "note": "Checkbox label on delete: the card keeps its own copy of the icon so it still shows.",
     "max": 40
   },
   "svg-editor.views.keep-accent": {
     "text": "Keep Accent",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that cancels the switch to one paint and leaves Accent layers as they are. Accent matches its own label.",
     "max": 20
   },
   "svg-editor.views.keep-editing": {
     "text": "Keep editing",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button in the leave warning that closes the dialog and stays in the editor.",
     "max": 20
   },
   "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
@@ -1906,47 +1906,47 @@
   },
   "svg-editor.views.layer": {
     "text": "Layer",
-    "note": "Shown in views (svg-editor).",
+    "note": "Singular word for one drawing layer, used in labels and headings. Plural is Layers.",
     "max": 10
   },
   "svg-editor.views.layers": {
     "text": "Layers",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the list of drawing layers. Plural of Layer.",
     "max": 10
   },
   "svg-editor.views.layers-and-library-panel": {
     "text": "Layers and library panel",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the side panel that holds the layers list and the saved icon library.",
     "max": 40
   },
   "svg-editor.views.leave": {
     "text": "Leave",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that exits the editor and drops unsaved changes. Verb. Not the direction Left.",
     "max": 10
   },
   "svg-editor.views.leave-without-saving": {
     "text": "Leave without saving?",
-    "note": "Shown in views (svg-editor).",
+    "note": "Dialog title asking whether to exit with unsaved changes. A question.",
     "max": 35
   },
   "svg-editor.views.leave-without-using": {
     "text": "Leave without using",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that exits the editor without applying the drawing to the card.",
     "max": 35
   },
   "svg-editor.views.left": {
     "text": "Left",
-    "note": "Shown in views (svg-editor).",
+    "note": "Direction or alignment option, the left edge. Not the verb Leave.",
     "max": 10
   },
   "svg-editor.views.library": {
     "text": "Library",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading or tab for the collection of saved icons.",
     "max": 15
   },
   "svg-editor.views.light": {
     "text": "Light",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for previewing the drawing on a light background. Pairs with Dark; not a lamp.",
     "max": 10
   },
   "svg-editor.views.loading-the-icon-editor": {
@@ -1966,17 +1966,17 @@
   },
   "svg-editor.views.lock-ratio": {
     "text": "Lock ratio",
-    "note": "Shown in views (svg-editor).",
+    "note": "Toggle that keeps width and height in proportion when one of them changes.",
     "max": 25
   },
   "svg-editor.views.locked": {
     "text": "Locked",
-    "note": "Shown in views (svg-editor).",
+    "note": "State label for a layer that cannot be selected or changed.",
     "max": 15
   },
   "svg-editor.views.main": {
     "text": "Main",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of the first paint role of an icon, the colour that follows the entity colour. Pairs with Accent.",
     "max": 10
   },
   "svg-editor.views.main-follows-the-entity-colour-accent": {
@@ -1986,12 +1986,12 @@
   },
   "svg-editor.views.main-preview-colour": {
     "text": "Main preview colour",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a colour picker that sets which colour the Main paint shows while editing. Preview only.",
     "max": 35
   },
   "svg-editor.views.make-c-main": {
     "text": "Make {c, plural, one {# Accent layer} other {# Accent layers}} Main?",
-    "note": "Shown in views (svg-editor).",
+    "note": "Dialog title as a question. Plural by {c}, the number of Accent layers; Accent and Main match their own labels.",
     "max": 45,
     "vars": {
       "c": "The count the text is about."
@@ -1999,77 +1999,77 @@
   },
   "svg-editor.views.make-main": {
     "text": "Make Main",
-    "note": "Shown in views (svg-editor).",
+    "note": "Confirm button that repaints Accent layers with Main. Main matches its own label.",
     "max": 15
   },
   "svg-editor.views.markup": {
     "text": "markup",
-    "note": "Shown in views (svg-editor).",
+    "note": "Lower-case noun for the SVG source code, used inside a longer sentence. Not marketing.",
     "max": 10
   },
   "svg-editor.views.maximise": {
     "text": "Maximise",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that makes the editor window fill the screen. British spelling.",
     "max": 15
   },
   "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
     "text": "Move: Alt+Up / Down. In or out of a group: Alt+Shift+Right / Left.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Keyboard help for reordering layers. Alt, Shift and the arrow key names stay as written.",
     "max": 110
   },
   "svg-editor.views.move-down": {
     "text": "Move down",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that moves the selected layer one place down in the list.",
     "max": 15
   },
   "svg-editor.views.move-in-steps-of-4": {
     "text": "Move in steps of 4",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a toggle that makes keyboard and drag moves jump by 4 units. Keep the number 4.",
     "max": 30
   },
   "svg-editor.views.move-to": {
     "text": "Move to…",
-    "note": "Shown in views (svg-editor).",
+    "note": "Menu entry that opens a list of groups to move the layer into. The ellipsis means a choice follows.",
     "max": 20
   },
   "svg-editor.views.move-up": {
     "text": "Move up",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that moves the selected layer one place up in the list.",
     "max": 15
   },
   "svg-editor.views.move-window": {
     "text": "Move window",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the handle used to drag the editor window to another place on screen.",
     "max": 20
   },
   "svg-editor.views.my-icons": {
     "text": "My icons",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading or tab for icons the person saved themselves in the library.",
     "max": 20
   },
   "svg-editor.views.name": {
     "text": "Name",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a text field for the name of a layer or an icon.",
     "max": 10
   },
   "svg-editor.views.name-used-in-the-library": {
     "text": "Name used in the library",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint under the icon name field saying this is the name the icon is listed under.",
     "max": 40
   },
   "svg-editor.views.next": {
     "text": "Next",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that moves to the next item, such as the next point or result.",
     "max": 10
   },
   "svg-editor.views.no-layers-yet": {
     "text": "No layers yet.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Empty-state text in the layers list before anything is drawn.",
     "max": 25
   },
   "svg-editor.views.no-matches-for-query-clear-the-search": {
     "text": "No matches for \"{query}\". Clear the search.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Empty-state text for a library search. {query} is what the person typed; keep the quotation marks.",
     "max": 70,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -2082,12 +2082,12 @@
   },
   "svg-editor.views.none": {
     "text": "None",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option meaning no value is set, for example no stroke or no fill.",
     "max": 10
   },
   "svg-editor.views.nothing-here-yet": {
     "text": "Nothing here yet",
-    "note": "Shown in views (svg-editor).",
+    "note": "Short empty-state heading for a list with no items. Not an error.",
     "max": 30
   },
   "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
@@ -2097,37 +2097,37 @@
   },
   "svg-editor.views.nudge": {
     "text": "Nudge",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading for the buttons or settings that move a selection by a small step.",
     "max": 15
   },
   "svg-editor.views.ok": {
     "text": "OK",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that confirms a message and closes it. Keep it very short.",
     "max": 5
   },
   "svg-editor.views.open-file": {
     "text": "Open file",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that opens an SVG file from the computer as the drawing. Unlike Import file, it replaces the drawing.",
     "max": 15
   },
   "svg-editor.views.open-path": {
     "text": "Open path",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that opens a closed path by removing the closing segment. Opposite of Close path.",
     "max": 15
   },
   "svg-editor.views.out-handle-angle": {
     "text": "Out handle angle",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the direction of the handle on the outgoing side of a curve point. Pairs with In handle angle.",
     "max": 30
   },
   "svg-editor.views.out-handle-length": {
     "text": "Out handle length",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the reach of the handle on the outgoing side of a curve point. Pairs with In handle length.",
     "max": 30
   },
   "svg-editor.views.panel": {
     "text": "Panel",
-    "note": "Shown in views (svg-editor).",
+    "note": "Short label for a side panel of the editor, used on the show or hide button.",
     "max": 10
   },
   "svg-editor.views.paste-some-svg-first": {
@@ -2137,7 +2137,7 @@
   },
   "svg-editor.views.paste-svg": {
     "text": "Paste SVG",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that adds SVG code from the clipboard into the drawing. SVG stays as written.",
     "max": 15
   },
   "svg-editor.views.pasted-and-opened-files-are-cleaned": {
@@ -2147,27 +2147,27 @@
   },
   "svg-editor.views.path": {
     "text": "Path",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of a free-form shape made of points. Same English as the tool name; keep the translations equal.",
     "max": 10
   },
   "svg-editor.views.pick-a-shape": {
     "text": "Pick a shape",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the menu from which a ready-made shape such as a star is chosen.",
     "max": 20
   },
   "svg-editor.views.pick-a-tool-on-the-left-or-press-p-to": {
     "text": "Pick a tool on the left, or press P to draw.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Empty-canvas hint. The letter P is the pen tool key and stays as written.",
     "max": 75
   },
   "svg-editor.views.pick-mdi-or-a-pack": {
     "text": "Pick MDI or a pack",
-    "note": "Shown in views (svg-editor).",
+    "note": "Placeholder asking to choose the Material Design Icons set or an installed icon pack. MDI stays as written.",
     "max": 30
   },
   "svg-editor.views.point-index-of-count": {
     "text": "Point {index} of {count}",
-    "note": "Shown in views (svg-editor).",
+    "note": "Position of the selected path point. {index} is its number, {count} the total points.",
     "max": 40,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -2176,22 +2176,22 @@
   },
   "svg-editor.views.polygon-or-star": {
     "text": "Polygon or star",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the options for a regular polygon or star, such as the number of points.",
     "max": 25
   },
   "svg-editor.views.position-and-size": {
     "text": "Position and size",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the inspector section with X, Y, width and height fields.",
     "max": 30
   },
   "svg-editor.views.preview": {
     "text": "Preview",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the area that shows how the icon will look on a card.",
     "max": 15
   },
   "svg-editor.views.preview-at-px-pixels": {
     "text": "Preview at {px} pixels",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of a preview drawn at a fixed size. {px} is a number, the size in pixels.",
     "max": 40,
     "vars": {
       "px": "The value that replaces px in the text."
@@ -2199,167 +2199,167 @@
   },
   "svg-editor.views.previous": {
     "text": "Previous",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that moves to the previous item, such as the previous point. Pairs with Next.",
     "max": 15
   },
   "svg-editor.views.reading": {
     "text": "Reading…",
-    "note": "Shown in views (svg-editor).",
+    "note": "Short progress text while a chosen file is being read. Keep the ellipsis.",
     "max": 15
   },
   "svg-editor.views.redo": {
     "text": "Redo",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that brings back a change that was undone. Pairs with Undo.",
     "max": 10
   },
   "svg-editor.views.reload": {
     "text": "Reload",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that loads the changed library icon again after it was changed elsewhere.",
     "max": 15
   },
   "svg-editor.views.rename": {
     "text": "Rename",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that lets the person type a new name for a layer or an icon.",
     "max": 10
   },
   "svg-editor.views.resize-window": {
     "text": "Resize window",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the handle used to drag the editor window to a new size.",
     "max": 25
   },
   "svg-editor.views.restore-size": {
     "text": "Restore size",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that returns a maximised editor window to its earlier size. Opposite of Maximise.",
     "max": 25
   },
   "svg-editor.views.reverse-direction": {
     "text": "Reverse direction",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that flips the order of the points of a path so it runs the other way.",
     "max": 30
   },
   "svg-editor.views.right": {
     "text": "Right",
-    "note": "Shown in views (svg-editor).",
+    "note": "Direction or alignment option, the right edge. Not the word for correct.",
     "max": 10
   },
   "svg-editor.views.rotate-15": {
     "text": "Rotate -15",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that turns the selection 15 degrees anticlockwise. Keep the minus sign and number; the other one is +15.",
     "max": 20
   },
   "svg-editor.views.rotate-15-2": {
     "text": "Rotate +15",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that turns the selection 15 degrees clockwise. Keep the plus sign and number; the other one is -15.",
     "max": 20
   },
   "svg-editor.views.rotate-90-degrees-anticlockwise": {
     "text": "Rotate 90 degrees anticlockwise",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that turns the selection a quarter turn to the left. British word for counter-clockwise.",
     "max": 50
   },
   "svg-editor.views.rotate-90-degrees-clockwise": {
     "text": "Rotate 90 degrees clockwise",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that turns the selection a quarter turn to the right.",
     "max": 45
   },
   "svg-editor.views.round": {
     "text": "Round",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for rounded stroke ends or corners. An adjective, not a number operation.",
     "max": 10
   },
   "svg-editor.views.save": {
     "text": "Save",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that stores changes to the library icon being edited.",
     "max": 10
   },
   "svg-editor.views.save-as-a-copy": {
     "text": "Save as a copy",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that saves the drawing as a separate library icon and leaves the original unchanged.",
     "max": 25
   },
   "svg-editor.views.save-as-new": {
     "text": "Save as new",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that saves the drawing as a new library icon under a new name.",
     "max": 20
   },
   "svg-editor.views.save-current-icon": {
     "text": "Save current icon",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button in the library panel that saves the icon now open in the editor.",
     "max": 30
   },
   "svg-editor.views.save-to-library": {
     "text": "Save to library",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that stores the drawing in the icon library. Also named in the Ctrl+S shortcut help.",
     "max": 25
   },
   "svg-editor.views.saved": {
     "text": "Saved",
-    "note": "Shown in views (svg-editor).",
+    "note": "Short status shown after the icon was stored in the library.",
     "max": 10
   },
   "svg-editor.views.search-my-icons": {
     "text": "Search my icons",
-    "note": "Shown in views (svg-editor).",
+    "note": "Placeholder and accessible name of the search field in the saved icon library.",
     "max": 25
   },
   "svg-editor.views.search-the-home-assistant-icons-and": {
     "text": "Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint in the icon picker search. mdi:lightbulb is a literal icon id and stays as written.",
     "max": 150
   },
   "svg-editor.views.select-all": {
     "text": "Select all",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that selects every shape in the drawing.",
     "max": 20
   },
   "svg-editor.views.selected-point": {
     "text": "Selected point",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the inspector section with fields for the one path point that is selected.",
     "max": 25
   },
   "svg-editor.views.shape-actions": {
     "text": "Shape actions",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the group of buttons that act on the selected shape, such as duplicate or flip.",
     "max": 25
   },
   "svg-editor.views.shape-options": {
     "text": "Shape options",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the group of settings for the shape tool, such as corners or points.",
     "max": 25
   },
   "svg-editor.views.shapes": {
     "text": "Shapes",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of the tool that draws ready-made shapes such as a rectangle or star. Same English as the tool name.",
     "max": 10
   },
   "svg-editor.views.sharp": {
     "text": "Sharp",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for the star or corner style with pointed, unrounded tips. Not about taste or clarity.",
     "max": 10
   },
   "svg-editor.views.short-no-slashes-shown-in-the-list": {
     "text": "Short, no slashes. Shown in the list.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint under the icon name field. Slashes means the / character and is not allowed in names.",
     "max": 60
   },
   "svg-editor.views.shortcuts": {
     "text": "Shortcuts",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the list of keyboard shortcuts. Not a link shortcut.",
     "max": 15
   },
   "svg-editor.views.show-20-x-20-safe-area": {
     "text": "Show 20 x 20 safe area",
-    "note": "Shown in views (svg-editor).",
+    "note": "Toggle that shows the guide square where icon content should stay. Keep the numbers; x is a multiplication sign.",
     "max": 40
   },
   "svg-editor.views.show-nudge-pad": {
     "text": "Show nudge pad",
-    "note": "Shown in views (svg-editor).",
+    "note": "Toggle that shows on-screen arrow buttons for moving the selection in small steps.",
     "max": 25
   },
   "svg-editor.views.size-32-kb-c": {
     "text": "{size} / 32 KB · {c, plural, one {# point} other {# points}}",
-    "note": "Shown in views (svg-editor).",
+    "note": "Size meter: {size} is the current file size out of the 32 KB limit; {c} is the number of points. Keep the dot between the parts.",
     "max": 40,
     "vars": {
       "c": "The count the text is about.",
@@ -2368,7 +2368,7 @@
   },
   "svg-editor.views.size-kb": {
     "text": "{size} KB",
-    "note": "Shown in views (svg-editor).",
+    "note": "File size of an icon in the library list. {size} is a number; KB stays as written.",
     "max": 15,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -2376,32 +2376,32 @@
   },
   "svg-editor.views.size-of-the-icon-markup-in-your": {
     "text": "Size of the icon markup in your dashboard",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tooltip for the size meter: how much space the icon's SVG code takes in the dashboard configuration.",
     "max": 70
   },
   "svg-editor.views.skip-to-canvas": {
     "text": "Skip to canvas",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hidden link for keyboard and screen reader users that jumps focus to the drawing area.",
     "max": 25
   },
   "svg-editor.views.skip-to-inspector": {
     "text": "Skip to inspector",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hidden link for keyboard and screen reader users that jumps focus to the properties panel.",
     "max": 30
   },
   "svg-editor.views.skip-to-point-fields": {
     "text": "Skip to point fields",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hidden link for keyboard and screen reader users that jumps focus to the fields of the selected point.",
     "max": 35
   },
   "svg-editor.views.smooth": {
     "text": "Smooth",
-    "note": "Shown in views (svg-editor).",
+    "note": "Point type with a curved, flowing join, as opposed to Corner.",
     "max": 10
   },
   "svg-editor.views.snap-to-grid": {
     "text": "Snap to grid",
-    "note": "Shown in views (svg-editor).",
+    "note": "Toggle that makes points and shapes jump to the nearest grid line.",
     "max": 20
   },
   "svg-editor.views.snapping-and-the-arrow-keys-move-by-this": {
@@ -2411,32 +2411,32 @@
   },
   "svg-editor.views.solid": {
     "text": "Solid",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for a filled star or shape style, as opposed to an outline. Not a state of matter.",
     "max": 10
   },
   "svg-editor.views.square": {
     "text": "Square",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option for a square stroke end that extends past the end point. Also the shape name; not a town square.",
     "max": 10
   },
   "svg-editor.views.star": {
     "text": "Star",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of the star shape option. Same English as the tool name; keep the translations equal.",
     "max": 10
   },
   "svg-editor.views.start-from": {
     "text": "Start from…",
-    "note": "Shown in views (svg-editor).",
+    "note": "Menu entry that opens the chooser for a starting point such as an icon or a blank canvas.",
     "max": 20
   },
   "svg-editor.views.start-over": {
     "text": "Start over?",
-    "note": "Shown in views (svg-editor).",
+    "note": "Dialog title as a question before the drawing is replaced. Differs from the button Start over only by the question mark.",
     "max": 20
   },
   "svg-editor.views.start-over-2": {
     "text": "Start over",
-    "note": "Shown in views (svg-editor).",
+    "note": "Confirm button that replaces the drawing with a fresh start. Undo brings the old one back.",
     "max": 20
   },
   "svg-editor.views.state-icons-win-over-your-drawing-remove": {
@@ -2451,12 +2451,12 @@
   },
   "svg-editor.views.stroke": {
     "text": "Stroke",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the outline of a shape and its colour or width. Pairs with Fill; not a medical term.",
     "max": 10
   },
   "svg-editor.views.svg": {
     "text": ".svg",
-    "note": "Shown in views (svg-editor).",
+    "note": "File extension shown as a label on the file button. Not translatable; keep the dot.",
     "max": 10
   },
   "svg-editor.views.svg-markup": {

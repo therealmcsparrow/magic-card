@@ -251,7 +251,7 @@
   },
   "layer-editor.bg-layer-editor.remove": {
     "text": "Remove",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button that removes the selected background layer from the card backdrop.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.remove-state-state": {
@@ -264,77 +264,77 @@
   },
   "layer-editor.bg-layer-editor.repeat": {
     "text": "Repeat",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Tiling choice for a background picture: repeat it in both directions, like a pattern.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.repeat-both": {
     "text": "Repeat both",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Tiling option: tile the background picture across and down.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.repeat-downwards": {
     "text": "Repeat downwards",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Tiling option: tile the background picture vertically only (CSS repeat-y).",
     "max": 30
   },
   "layer-editor.bg-layer-editor.repeat-sideways": {
     "text": "Repeat sideways",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Tiling option: tile the background picture horizontally only (CSS repeat-x).",
     "max": 25
   },
   "layer-editor.bg-layer-editor.rest-when-nobody-is-there": {
     "text": "Rest when nobody is there",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Switch for a live camera layer: pause the video when no one is watching the dashboard.",
     "max": 40
   },
   "layer-editor.bg-layer-editor.seconds": {
     "text": "seconds",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Unit label after a number field, for the snapshot refresh interval or pan duration.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.show-not-updated-when-snapshots-fail": {
     "text": "Show \"Not updated\" when snapshots fail",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Switch on a camera snapshot layer: display a notice when a refresh fails. Keep the quoted words as the card shows them.",
     "max": 65
   },
   "layer-editor.bg-layer-editor.show-yaml": {
     "text": "Show YAML",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button in the background layer editor that reveals the YAML of this layer.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.shows-the-framing-in-the-preview-it": {
     "text": "Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Help text under the pan and zoom preview button; explains it ignores the reduced-motion setting.",
     "max": 180
   },
   "layer-editor.bg-layer-editor.size": {
     "text": "Size",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for how large a background picture is drawn, for example cover or contain.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.size-in": {
     "text": "Size in %",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Number field for a custom background picture size as a percentage of the card.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.source": {
     "text": "Source",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for where a background layer gets its picture or stream from.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.source-changed": {
     "text": "Source changed.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Short confirmation announced after the picture source of a layer is changed.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.start": {
     "text": "Start",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Label for the starting framing of a pan and zoom, as a pair with the end framing.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.state-renamed": {
     "text": "State renamed.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Short confirmation announced after a state entry of a layer is renamed.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.still-picture-refreshed-every-n-s-the": {
@@ -347,57 +347,57 @@
   },
   "layer-editor.bg-layer-editor.stop-preview": {
     "text": "Stop preview",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button that ends the running pan and zoom preview in the layer editor.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.strong-blur-can-make-older-tablets-slow": {
     "text": "Strong blur can make older tablets slow.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Performance warning under the blur field of a background layer.",
     "max": 65
   },
   "layer-editor.bg-layer-editor.the-device-s-own-picture": {
     "text": "The device's own picture",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Source option: use the picture set for the device showing the dashboard, not a fixed image.",
     "max": 40
   },
   "layer-editor.bg-layer-editor.thickness": {
     "text": "Thickness",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for line width in a pattern background layer, such as stripes or grid lines.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.this-gradient-cannot-be-shown-use-linear": {
     "text": "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Error for an invalid gradient value; the CSS examples must stay untranslated.",
     "max": 175
   },
   "layer-editor.bg-layer-editor.this-gradient-has-css-the-editor-cannot": {
     "text": "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Info shown when a typed gradient is valid CSS but too complex for the visual gradient editor.",
     "max": 150
   },
   "layer-editor.bg-layer-editor.when-state-is": {
     "text": "When state is",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Label before an entity state value; the picture or layer applies when the entity has that state.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.where-the-framing-ends": {
     "text": "Where the framing ends",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Group heading for the end point of a pan and zoom movement.",
     "max": 40
   },
   "layer-editor.bg-layer-editor.which-picture": {
     "text": "Which picture?",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Question heading above the image source choices when adding or editing an image layer.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.zoom-from": {
     "text": "Zoom from",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Number field: zoom level at the start of a pan and zoom movement.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.zoom-to": {
     "text": "Zoom to",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Number field: zoom level at the end of a pan and zoom movement.",
     "max": 15
   },
   "layer-editor.bg-layers-ops.entity-not-found-id-the-next-layer-is": {
@@ -450,22 +450,22 @@
   },
   "layer-editor.bg-layers-ops.snapshot-failed-the-last-good-frame": {
     "text": "Snapshot failed. The last good frame stays visible.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Message when a camera snapshot refresh fails on a background layer.",
     "max": 85
   },
   "layer-editor.bg-layers-ops.the-picture-could-not-be-loaded-the-next": {
     "text": "The picture could not be loaded. The next layer is shown.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Message when an image layer fails to load, so the layer behind it takes over.",
     "max": 95
   },
   "layer-editor.bg-layers-ops.this-image-is-no-longer-in-the-library": {
     "text": "This image is no longer in the library.",
-    "note": "Shown in bg layers ops (layer-editor).",
+    "note": "Message when a layer points to an image deleted from the image library.",
     "max": 65
   },
   "layer-editor.bg-layers.add-layer": {
     "text": "Add layer",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button in the Card backdrop list that adds a new background layer.",
     "max": 15
   },
   "layer-editor.bg-layers.add-layer-n-left": {
@@ -486,12 +486,12 @@
   },
   "layer-editor.bg-layers.backward": {
     "text": "Backward",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Card backdrop list: move this background layer one step towards the back. Not the module placement.",
     "max": 15
   },
   "layer-editor.bg-layers.blend": {
     "text": "blend",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Lower-case cost tag in the Card backdrop list: this layer uses a blend mode.",
     "max": 10
   },
   "layer-editor.bg-layers.blur-px-px": {
@@ -504,32 +504,32 @@
   },
   "layer-editor.bg-layers.can-t-reach-it-pick-it-in-the-structure": {
     "text": "Can't reach it? Pick it in the structure list.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Hint in the Card backdrop editor: a layer hidden behind others can be selected from the tree.",
     "max": 75
   },
   "layer-editor.bg-layers.card-backdrop-layers-front-first": {
     "text": "Card backdrop layers, front first",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Accessible name of the backdrop layer list; the front layer is listed first.",
     "max": 55
   },
   "layer-editor.bg-layers.change-backgrounds-in-this-rule": {
     "text": "Change backgrounds in this rule",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button inside a Design rule that gives the rule its own set of backdrop layers.",
     "max": 50
   },
   "layer-editor.bg-layers.choose-a-picture-or-a-device": {
     "text": "Choose a picture or a device.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Empty-state prompt for an image layer that has no source picked yet.",
     "max": 50
   },
   "layer-editor.bg-layers.cost-on-older-tablets": {
     "text": "Cost on older tablets:",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Label before the cost tag (light, medium, heavy) of the Card backdrop layer list.",
     "max": 40
   },
   "layer-editor.bg-layers.delete": {
     "text": "Delete",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button in the Card backdrop list that deletes a background layer.",
     "max": 15
   },
   "layer-editor.bg-layers.delete-name": {
@@ -542,27 +542,27 @@
   },
   "layer-editor.bg-layers.drops-blur-blend-and-pan-and-zoom-for": {
     "text": "Drops blur, blend and pan and zoom for this card and keeps the pictures.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Help text explaining what Low-power mode does in the Card backdrop editor.",
     "max": 120
   },
   "layer-editor.bg-layers.forward": {
     "text": "Forward",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Card backdrop list: move this background layer one step towards the front. Not the module placement.",
     "max": 15
   },
   "layer-editor.bg-layers.heavy": {
     "text": "heavy",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Lower-case cost tag in the Card backdrop list: a layer that is demanding for older tablets.",
     "max": 10
   },
   "layer-editor.bg-layers.hidden": {
     "text": "Hidden",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Status tag on a backdrop layer that is switched off and not drawn.",
     "max": 10
   },
   "layer-editor.bg-layers.hide": {
     "text": "Hide",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button that hides a backdrop layer without deleting it; the opposite of Show.",
     "max": 10
   },
   "layer-editor.bg-layers.hide-name": {
@@ -584,32 +584,32 @@
   },
   "layer-editor.bg-layers.layer-type": {
     "text": "Layer type",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Field label for the kind of background layer: image, gradient, pattern, colour or camera.",
     "max": 20
   },
   "layer-editor.bg-layers.light": {
     "text": "light",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Lower-case cost tag in the Card backdrop list: a layer that is cheap for older tablets.",
     "max": 10
   },
   "layer-editor.bg-layers.live-camera": {
     "text": "live camera",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Lower-case cost tag in the Card backdrop list: the layer streams live video.",
     "max": 20
   },
   "layer-editor.bg-layers.looks": {
     "text": "Looks",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Heading of the ready-made backdrop looks in the Card backdrop editor; pick one to fill the layers.",
     "max": 15
   },
   "layer-editor.bg-layers.low-power-mode": {
     "text": "Low-power mode",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Switch label in the Card backdrop editor that drops costly effects for weak devices.",
     "max": 25
   },
   "layer-editor.bg-layers.medium": {
     "text": "medium",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Lower-case cost tag in the Card backdrop list: a layer with moderate cost for older tablets.",
     "max": 10
   },
   "layer-editor.bg-layers.move-name-backward": {
@@ -680,27 +680,27 @@
   },
   "layer-editor.bg-layers.no-layers-yet-add-an-image-gradient": {
     "text": "No layers yet. Add an image, gradient, pattern or colour behind the card content.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Empty state of the Card backdrop list.",
     "max": 130
   },
   "layer-editor.bg-layers.no-picture-yet": {
     "text": "No picture yet",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Placeholder in a backdrop layer row whose image source is still empty.",
     "max": 25
   },
   "layer-editor.bg-layers.pan-and-zoom": {
     "text": "pan and zoom",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Lower-case cost tag in the Card backdrop list: the layer slowly moves and zooms.",
     "max": 20
   },
   "layer-editor.bg-layers.problem": {
     "text": "Problem",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Status tag on a backdrop layer row that has an error, such as a missing image.",
     "max": 15
   },
   "layer-editor.bg-layers.show": {
     "text": "Show",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button that shows a hidden backdrop layer again; the opposite of Hide.",
     "max": 10
   },
   "layer-editor.bg-layers.show-name": {
@@ -713,22 +713,22 @@
   },
   "layer-editor.bg-layers.start-again-from-the-normal-ones": {
     "text": "Start again from the normal ones",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button in a Design rule: copy the normal card backdrop layers into the rule's own set.",
     "max": 55
   },
   "layer-editor.bg-layers.this-rule-does-not-change-the": {
     "text": "This rule does not change the backgrounds.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Status in a Design rule: the card keeps its normal backdrop layers when the rule applies.",
     "max": 70
   },
   "layer-editor.bg-layers.this-rule-uses-its-own-backgrounds": {
     "text": "This rule uses its own backgrounds instead of the normal ones.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Status in a Design rule: the rule replaces the normal backdrop layers with its own.",
     "max": 100
   },
   "layer-editor.bg-layers.to-put-a-module-behind-others-use": {
     "text": "To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Help text at the top of the Card backdrop editor that separates it from module Placement.",
     "max": 190
   },
   "layer-editor.bg-layers.type-layer-n": {
@@ -742,57 +742,57 @@
   },
   "layer-editor.bg-layers.undo": {
     "text": "Undo",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button that reverts the last change to the card backdrop layers.",
     "max": 15
   },
   "layer-editor.bg-layers.undone": {
     "text": "Undone.",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Short confirmation announced after Undo in the Card backdrop editor.",
     "max": 20
   },
   "layer-editor.bg-layers.use-the-normal-backgrounds": {
     "text": "Use the normal backgrounds",
-    "note": "Shown in bg layers (layer-editor).",
+    "note": "Button in a Design rule that drops the rule's own layers and goes back to the card's normal backdrop.",
     "max": 45
   },
   "layer-editor.controls.add-a-colour-at-the-back-to-blend-with": {
     "text": "Add a colour at the back to blend with.",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Hint under the Blend field: a blend mode needs a layer or colour behind it to mix with.",
     "max": 65
   },
   "layer-editor.controls.blend": {
     "text": "Blend",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Field label for the CSS blend mode of a layer (how it mixes with what is behind it).",
     "max": 10
   },
   "layer-editor.controls.darken": {
     "text": "Darken",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS darken): keeps the darker of the two colours.",
     "max": 15
   },
   "layer-editor.controls.darker-where-layers-overlap": {
     "text": "Darker where layers overlap",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Multiply blend mode in the Blend dropdown.",
     "max": 45
   },
   "layer-editor.controls.gentle-contrast": {
     "text": "Gentle contrast",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Soft light blend mode in the Blend dropdown.",
     "max": 25
   },
   "layer-editor.controls.if-this-browser-cannot-blend-the-layer": {
     "text": "If this browser cannot blend, the layer shows normally.",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Fallback help text under the Blend field.",
     "max": 90
   },
   "layer-editor.controls.keeps-the-darker-colour": {
     "text": "Keeps the darker colour",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Darken blend mode in the Blend dropdown.",
     "max": 40
   },
   "layer-editor.controls.keeps-the-lighter-colour": {
     "text": "Keeps the lighter colour",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Lighten blend mode in the Blend dropdown.",
     "max": 40
   },
   "layer-editor.controls.label-value": {
@@ -805,67 +805,67 @@
   },
   "layer-editor.controls.lighten": {
     "text": "Lighten",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS lighten): keeps the lighter of the two colours.",
     "max": 15
   },
   "layer-editor.controls.lighter-like-projected-light": {
     "text": "Lighter, like projected light",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Screen blend mode in the Blend dropdown.",
     "max": 50
   },
   "layer-editor.controls.more-contrast": {
     "text": "More contrast",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Overlay blend mode in the Blend dropdown.",
     "max": 25
   },
   "layer-editor.controls.multiply": {
     "text": "Multiply",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS multiply): the layer darkens what is behind it.",
     "max": 20
   },
   "layer-editor.controls.no-blending": {
     "text": "No blending",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Short description of the Normal blend mode in the Blend dropdown.",
     "max": 20
   },
   "layer-editor.controls.normal": {
     "text": "Normal",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS normal): the layer is drawn without mixing.",
     "max": 10
   },
   "layer-editor.controls.off": {
     "text": "Off",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Toggle value in the layer controls, such as a switch that is turned off.",
     "max": 5
   },
   "layer-editor.controls.on": {
     "text": "On",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Toggle value in the layer controls, such as a switch that is turned on.",
     "max": 5
   },
   "layer-editor.controls.overlay": {
     "text": "Overlay",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS overlay): boosts contrast by combining multiply and screen.",
     "max": 15
   },
   "layer-editor.controls.screen": {
     "text": "Screen",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS screen): the layer lightens what is behind it. Not a display screen.",
     "max": 25
   },
   "layer-editor.controls.soft-light": {
     "text": "Soft light",
-    "note": "Shown in controls (layer-editor).",
+    "note": "Blend mode option (CSS soft-light): a gentle contrast change.",
     "max": 20
   },
   "layer-editor.layer-groups.a-live-camera-behind-other-modules-keeps": {
     "text": "A live camera behind other modules keeps video running all day, which is heavy for a wall tablet. For a quiet backdrop, use a still picture in Card backdrop.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Warning in the module Placement section when a live camera module is set to sit behind others.",
     "max": 255
   },
   "layer-editor.layer-groups.adds-a-dark-fade-over-this-picture-so": {
     "text": "Adds a dark fade over this picture so text stays readable. Also called a scrim.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text for the Darken behind text option on a module that is placed as a picture.",
     "max": 130
   },
   "layer-editor.layer-groups.applied-name": {
@@ -878,37 +878,37 @@
   },
   "layer-editor.layer-groups.automatic": {
     "text": "Automatic",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option in the module Placement section: let the card choose the stacking order itself.",
     "max": 15
   },
   "layer-editor.layer-groups.back": {
     "text": "Back",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Stacking position of a module in Placement: at the back, behind its siblings. Not a Back navigation button.",
     "max": 10
   },
   "layer-editor.layer-groups.backward": {
     "text": "Backward",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Module Placement: move this module one step behind the next sibling in the stack.",
     "max": 15
   },
   "layer-editor.layer-groups.behind-others": {
     "text": "Behind others",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Module Placement option: the module fills its container behind the other modules.",
     "max": 25
   },
   "layer-editor.layer-groups.black": {
     "text": "Black",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Choice of darkening colour for Darken behind text; the opposite is White.",
     "max": 10
   },
   "layer-editor.layer-groups.blend": {
     "text": "blend",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case cost tag in the Placement effects section: the module uses a blend mode.",
     "max": 10
   },
   "layer-editor.layer-groups.blur": {
     "text": "Blur",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Field label for the blur effect on a placed module (CSS blur).",
     "max": 10
   },
   "layer-editor.layer-groups.blur-px-px": {
@@ -921,57 +921,57 @@
   },
   "layer-editor.layer-groups.can-t-reach-it-pick-it-in-the-structure": {
     "text": "Can't reach it? Pick it in the structure list.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Hint in module Placement: a module covered by others can be selected from the tree.",
     "max": 75
   },
   "layer-editor.layer-groups.card-colour": {
     "text": "Card colour",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option for the colour a module's darkening or contrast check is measured against: the card's own colour.",
     "max": 20
   },
   "layer-editor.layer-groups.change-position": {
     "text": "Change position",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Button in module Placement that opens the controls for where the module sits.",
     "max": 25
   },
   "layer-editor.layer-groups.check-the-text-yourself": {
     "text": "Check the text yourself.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Contrast verdict when the editor cannot measure readability over a picture.",
     "max": 40
   },
   "layer-editor.layer-groups.clicks-and-taps-go-through": {
     "text": "Clicks and taps go through",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Short status label: the module ignores pointer input and passes it to what is under it.",
     "max": 45
   },
   "layer-editor.layer-groups.clicks-go-to-whatever-is-under-this": {
     "text": "Clicks go to whatever is under this module.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text under the click-through switch when it is on.",
     "max": 70
   },
   "layer-editor.layer-groups.clicks-reach-the-modules-in-front-this": {
     "text": "Clicks reach the modules in front. This module's own action is off while this is on.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text under the click-through switch warning that the module's tap action stops working.",
     "max": 135
   },
   "layer-editor.layer-groups.colour": {
     "text": "Colour",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Field label for the darkening colour in module Placement (black, white or custom).",
     "max": 10
   },
   "layer-editor.layer-groups.copied": {
     "text": "Copied",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Brief confirmation on the Copy YAML button after the text went to the clipboard.",
     "max": 10
   },
   "layer-editor.layer-groups.copy-yaml": {
     "text": "Copy YAML",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Button in module Placement that copies the placement settings as YAML.",
     "max": 15
   },
   "layer-editor.layer-groups.cost-on-older-tablets": {
     "text": "Cost on older tablets:",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Label before the cost tag (light, medium, heavy) in the module Placement effects section.",
     "max": 40
   },
   "layer-editor.layer-groups.covers-name-at-this-width-taps-on-the": {
@@ -984,17 +984,17 @@
   },
   "layer-editor.layer-groups.custom": {
     "text": "Custom",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option for choosing your own value instead of a preset, such as a custom darkening strength.",
     "max": 10
   },
   "layer-editor.layer-groups.custom-colour": {
     "text": "Custom colour",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option and field label for picking any colour for the darkening, besides black and white.",
     "max": 25
   },
   "layer-editor.layer-groups.darken-behind-text": {
     "text": "Darken behind text",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Section title and switch for the dark fade (scrim) over a placed picture.",
     "max": 30
   },
   "layer-editor.layer-groups.distance-from-the-anchor-position-enter": {
@@ -1007,122 +1007,122 @@
   },
   "layer-editor.layer-groups.distance-from-the-centre-negative-values": {
     "text": "Distance from the centre. Negative values move it left or up.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text for the offset fields when a module is anchored to the centre.",
     "max": 100
   },
   "layer-editor.layer-groups.effects-and-darkening": {
     "text": "Effects and darkening",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Heading of the collapsible group with blur, blend and Darken behind text in module Placement.",
     "max": 35
   },
   "layer-editor.layer-groups.enter-0-or-more-the-module-stays-inside": {
     "text": "Enter 0 or more: the module stays inside the card.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Validation hint for an offset field that rejects negative numbers.",
     "max": 80
   },
   "layer-editor.layer-groups.enter-a-distance-in-px-or": {
     "text": "Enter a distance in px or %.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Validation error for an offset field that is not a number with px or % unit.",
     "max": 45
   },
   "layer-editor.layer-groups.even": {
     "text": "Even",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Darkening option: the same strength across the whole picture, with no fade.",
     "max": 15
   },
   "layer-editor.layer-groups.fills": {
     "text": "Fills",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Status word in the Placement summary: the module fills its container (verb, not a noun).",
     "max": 10
   },
   "layer-editor.layer-groups.fills-the-whole-container-behind-the": {
     "text": "Fills the whole container behind the other modules and takes no space. To put a picture behind the whole card, use Card backdrop on the card's Design tab.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Explanation of the Behind others placement choice.",
     "max": 250
   },
   "layer-editor.layer-groups.floats-over-the-container-at-a-fixed": {
     "text": "Floats over the container at a fixed spot and takes no space.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Explanation of the On top placement choice.",
     "max": 100
   },
   "layer-editor.layer-groups.forward": {
     "text": "Forward",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Module Placement: move this module one step in front of the next sibling in the stack.",
     "max": 15
   },
   "layer-editor.layer-groups.from-bottom": {
     "text": "From bottom",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Short offset field label: distance from the bottom edge of the container, in a compact layout.",
     "max": 20
   },
   "layer-editor.layer-groups.from-left": {
     "text": "From left",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Short offset field label: distance from the left edge of the container, in a compact layout.",
     "max": 15
   },
   "layer-editor.layer-groups.from-right": {
     "text": "From right",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Short offset field label: distance from the right edge of the container, in a compact layout.",
     "max": 20
   },
   "layer-editor.layer-groups.from-the-bottom": {
     "text": "From the bottom",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Full offset field label: distance from the bottom edge. Same English as From bottom, used where there is room.",
     "max": 25
   },
   "layer-editor.layer-groups.from-the-centre": {
     "text": "From the centre",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Offset field label for a module anchored at the centre: distance from the middle of the container.",
     "max": 25
   },
   "layer-editor.layer-groups.from-the-left": {
     "text": "From the left",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Full offset field label: distance from the left edge. Same English as From left, used where there is room.",
     "max": 25
   },
   "layer-editor.layer-groups.from-the-right": {
     "text": "From the right",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Full offset field label: distance from the right edge. Same English as From right, used where there is room.",
     "max": 25
   },
   "layer-editor.layer-groups.from-the-top": {
     "text": "From the top",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Full offset field label: distance from the top edge. Same English as From top, used where there is room.",
     "max": 20
   },
   "layer-editor.layer-groups.from-top": {
     "text": "From top",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Short offset field label: distance from the top edge of the container, in a compact layout.",
     "max": 15
   },
   "layer-editor.layer-groups.front": {
     "text": "Front",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Stacking position of a module in Placement: in front of its siblings.",
     "max": 10
   },
   "layer-editor.layer-groups.heavy": {
     "text": "heavy",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case cost tag in module Placement: an effect that is demanding for older tablets.",
     "max": 10
   },
   "layer-editor.layer-groups.its-container": {
     "text": "Its container",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option for what a placed module is measured against: the container (column, tab or card) it sits in.",
     "max": 25
   },
   "layer-editor.layer-groups.its-row": {
     "text": "Its row",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option for what a placed module is measured against: the row it sits in.",
     "max": 15
   },
   "layer-editor.layer-groups.keyboard-order-top-positions-come-first": {
     "text": "Keyboard order: top positions come first, bottom positions after the normal modules. For touch, aim for 44 px or more.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Accessibility tip in module Placement about tab order and touch target size.",
     "max": 190
   },
   "layer-editor.layer-groups.large-text-only-3-1": {
     "text": "Large text only (3:1).",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Contrast verdict: the colours reach a 3:1 ratio, enough only for large text.",
     "max": 40
   },
   "layer-editor.layer-groups.layer": {
@@ -1379,12 +1379,12 @@
   },
   "layer-editor.layers-sheet.front-first-tap-one-to-select-it": {
     "text": "Front first. Tap one to select it.",
-    "note": "Shown in layers sheet (layer-editor).",
+    "note": "Help text in the Layers here sheet, which lists layers at the selected place from front to back.",
     "max": 55
   },
   "layer-editor.layers-sheet.layers-here": {
     "text": "Layers here",
-    "note": "Shown in layers sheet (layer-editor).",
+    "note": "Title of the sheet listing the stacked layers at the spot where the user tapped.",
     "max": 20
   },
   "layer-editor.layers-sheet.n-from-the-front-here": {
@@ -1397,72 +1397,72 @@
   },
   "layer-editor.layers-sheet.nothing-here": {
     "text": "Nothing here.",
-    "note": "Shown in layers sheet (layer-editor).",
+    "note": "Empty state of the Layers here sheet when no layer is at the tapped spot.",
     "max": 25
   },
   "layer-editor.looks.camera-still-picture": {
     "text": "Camera still picture",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made backdrop look that shows a refreshed camera snapshot.",
     "max": 35
   },
   "layer-editor.looks.colour-wash": {
     "text": "Colour wash",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made backdrop look: a soft, see-through tint of one colour.",
     "max": 20
   },
   "layer-editor.looks.corner-badge": {
     "text": "Corner badge",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a small module pinned in one card corner.",
     "max": 20
   },
   "layer-editor.looks.dimmed-backdrop": {
     "text": "Dimmed backdrop",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a picture with a dark layer over it so content stands out.",
     "max": 25
   },
   "layer-editor.looks.dotted-texture": {
     "text": "Dotted texture",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a subtle dot pattern behind the card.",
     "max": 25
   },
   "layer-editor.looks.frosted": {
     "text": "Frosted",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a blurred, frosted-glass effect over what is behind.",
     "max": 15
   },
   "layer-editor.looks.photo-dark-at-the-bottom": {
     "text": "Photo, dark at the bottom",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a photo with a fade to dark at its lower edge for text.",
     "max": 40
   },
   "layer-editor.looks.picture-behind-buttons": {
     "text": "Picture behind buttons",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a picture filling the container behind a row of buttons.",
     "max": 40
   },
   "layer-editor.looks.soft-glow": {
     "text": "Soft glow",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a blurred radial light behind the content.",
     "max": 15
   },
   "layer-editor.looks.soft-vignette": {
     "text": "Soft vignette",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: edges that fade darker towards the corners.",
     "max": 25
   },
   "layer-editor.looks.top-banner": {
     "text": "Top banner",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a wide module fixed along the top edge of the container.",
     "max": 20
   },
   "layer-editor.looks.weather-backdrop": {
     "text": "Weather backdrop",
-    "note": "Shown in looks (layer-editor).",
+    "note": "Name of a ready-made look: a backdrop that changes with a weather entity state.",
     "max": 30
   },
   "layer-editor.mc-anchor-grid.position": {
     "text": "Position",
-    "note": "Shown in mc anchor grid (layer-editor).",
+    "note": "Accessible name of the 3x3 anchor grid used to choose which corner or edge a module sticks to.",
     "max": 15
   }
 }

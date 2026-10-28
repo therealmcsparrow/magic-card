@@ -4002,12 +4002,12 @@
   },
   "anim-studio.particles-layers.child-shape": {
     "text": "Child shape",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Label of the shape of a child particle in the particle layer list. Not the shape of the parent.",
     "max": 20
   },
   "anim-studio.particles-layers.down": {
     "text": "down",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Lowercase direction word filling {direction} in the announcement 'moved down' after an emitter changes place.",
     "max": 10
   },
   "anim-studio.particles-layers.hide-and-solo-are-unavailable-the": {
@@ -4017,37 +4017,37 @@
   },
   "anim-studio.particles-layers.in-front-of-the-content": {
     "text": "in front of the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Lowercase fragment that fills {where} in 'Move {where}' and similar texts; the emitter is drawn over the card content.",
     "max": 40
   },
   "anim-studio.particles-layers.layer-name": {
     "text": "Layer name",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Accessible name of the text field for renaming an emitter in the particle layer list.",
     "max": 20
   },
   "anim-studio.particles-layers.move-down": {
     "text": "Move down",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Menu item in the particle layer list that moves the selected emitter one step down the stack.",
     "max": 15
   },
   "anim-studio.particles-layers.move-emitter-behind-the-content": {
     "text": "Move emitter behind the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip of a button on an emitter row that sends the emitter under the card content.",
     "max": 50
   },
   "anim-studio.particles-layers.move-emitter-down": {
     "text": "Move emitter down",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip of a button on an emitter row that moves the emitter one step down the stack.",
     "max": 30
   },
   "anim-studio.particles-layers.move-emitter-in-front-of-the-content": {
     "text": "Move emitter in front of the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip of a button on an emitter row that brings the emitter over the card content.",
     "max": 60
   },
   "anim-studio.particles-layers.move-emitter-up": {
     "text": "Move emitter up",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip of a button on an emitter row that moves the emitter one step up the stack.",
     "max": 30
   },
   "anim-studio.particles-layers.move-name-down": {
@@ -4077,7 +4077,7 @@
   },
   "anim-studio.particles-layers.move-up-drawn-on-top": {
     "text": "Move up (drawn on top)",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Menu item that moves the selected emitter one step up, so it is drawn above the others in the stack.",
     "max": 40
   },
   "anim-studio.particles-layers.move-where": {
@@ -4133,12 +4133,12 @@
   },
   "anim-studio.particles-layers.particle-layers": {
     "text": "Particle layers",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Heading and accessible name of the list of emitters and card content, ordered from back to front.",
     "max": 25
   },
   "anim-studio.particles-layers.shape": {
     "text": "Shape",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Label of the shape of a particle in a row of the particle layer list. Not a drawn shape.",
     "max": 10
   },
   "anim-studio.particles-layers.text-icons-and-background-of-the-card": {
@@ -4148,7 +4148,7 @@
   },
   "anim-studio.particles-layers.up": {
     "text": "up",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Lowercase direction word filling {direction} in the announcement 'moved up' after an emitter changes place.",
     "max": 10
   },
   "anim-studio.particles-utils.after-seconds-s": {
@@ -4169,27 +4169,27 @@
   },
   "anim-studio.particles-utils.at-end-of-life": {
     "text": "at end of life",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase trigger phrase filling {trigger} in the child-particle summary; children appear when the parent fades out.",
     "max": 35
   },
   "anim-studio.particles-utils.burst": {
     "text": "Burst",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of an emission style in the particles editor: all particles appear at once instead of in a stream.",
     "max": 15
   },
   "anim-studio.particles-utils.ceiling": {
     "text": "Ceiling",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the top edge of the box in the collision list; particles can bounce off it.",
     "max": 15
   },
   "anim-studio.particles-utils.circle": {
     "text": "Circle",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle shape and of a round emitter area in the particles editor.",
     "max": 10
   },
   "anim-studio.particles-utils.content-box": {
     "text": "Content box",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of an emitter placement in the particles editor: the box around the card's icon or text.",
     "max": 20
   },
   "anim-studio.particles-utils.convert-the-preset-to-custom-particles": {
@@ -4199,7 +4199,7 @@
   },
   "anim-studio.particles-utils.count": {
     "text": "{count, plural, one {# dot} other {# dots}}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Summary of how many dot-shaped particles an effect has. {count} is the number.",
     "max": 10,
     "vars": {
       "count": "The count the text is about."
@@ -4207,7 +4207,7 @@
   },
   "anim-studio.particles-utils.count-2": {
     "text": "{count, plural, one {# icon} other {# icons}}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Summary of how many icon-shaped particles an effect has. {count} is the number.",
     "max": 15,
     "vars": {
       "count": "The count the text is about."
@@ -4215,7 +4215,7 @@
   },
   "anim-studio.particles-utils.count-3": {
     "text": "{count, plural, one {# shape} other {# shapes}}",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Summary of how many different particle shapes an effect mixes. {count} is the number.",
     "max": 15,
     "vars": {
       "count": "The count the text is about."
@@ -4233,22 +4233,22 @@
   },
   "anim-studio.particles-utils.dot": {
     "text": "Dot",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the simplest particle shape, a small filled circle, in the shape picker.",
     "max": 5
   },
   "anim-studio.particles-utils.down": {
     "text": "down",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase compass word for the gravity or emission direction in the physics summary, as in 'Gravity 1.0 down'.",
     "max": 10
   },
   "anim-studio.particles-utils.down-left": {
     "text": "down left",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase diagonal direction in the physics summary, pointing to the bottom left.",
     "max": 15
   },
   "anim-studio.particles-utils.down-right": {
     "text": "down right",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase diagonal direction in the physics summary, pointing to the bottom right.",
     "max": 20
   },
   "anim-studio.particles-utils.drag-value": {
@@ -4261,17 +4261,17 @@
   },
   "anim-studio.particles-utils.drift": {
     "text": "Drift",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset or motion style in which particles float slowly and sideways.",
     "max": 10
   },
   "anim-studio.particles-utils.emoji": {
     "text": "Emoji",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Capitalised name of the emoji particle shape in the shape picker, used as a heading or option.",
     "max": 10
   },
   "anim-studio.particles-utils.emoji-2": {
     "text": "emoji",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase noun used inside a sentence, for example as the default shape name of an emoji particle.",
     "max": 10
   },
   "anim-studio.particles-utils.enter-an-emoji-or-a-symbol": {
@@ -4281,27 +4281,27 @@
   },
   "anim-studio.particles-utils.explode-and-fall": {
     "text": "Explode and fall",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset: particles burst outwards and then drop under gravity.",
     "max": 30
   },
   "anim-studio.particles-utils.fall": {
     "text": "Fall",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset in which particles drop from the top, such as rain or leaves.",
     "max": 10
   },
   "anim-studio.particles-utils.fireflies": {
     "text": "Fireflies",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset: small glowing dots that drift and blink like fireflies.",
     "max": 15
   },
   "anim-studio.particles-utils.floor": {
     "text": "Floor",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the bottom edge of the box in the collision list; particles can bounce off it.",
     "max": 10
   },
   "anim-studio.particles-utils.fountain": {
     "text": "Fountain",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset: particles shoot upwards and arc back down like water.",
     "max": 15
   },
   "anim-studio.particles-utils.from-to-to-unit": {
@@ -4325,12 +4325,12 @@
   },
   "anim-studio.particles-utils.heart": {
     "text": "Heart",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the heart-shaped particle in the shape picker.",
     "max": 10
   },
   "anim-studio.particles-utils.icon": {
     "text": "Icon",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the particle shape that uses a Material Design icon, and of the emitter placement on the card's icon.",
     "max": 10
   },
   "anim-studio.particles-utils.icon-and-emoji-particles-export-as-dots": {
@@ -4340,12 +4340,12 @@
   },
   "anim-studio.particles-utils.left": {
     "text": "left",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase compass word for the gravity or emission direction in the physics summary. Not the verb.",
     "max": 10
   },
   "anim-studio.particles-utils.left-edge": {
     "text": "Left edge",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the left side of the box in the collision list; particles can bounce off it.",
     "max": 15
   },
   "anim-studio.particles-utils.list-bounce-bounce": {
@@ -4381,7 +4381,7 @@
   },
   "anim-studio.particles-utils.no-gravity": {
     "text": "No gravity",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Physics summary text for an effect whose gravity strength is zero, so particles do not fall.",
     "max": 20
   },
   "anim-studio.particles-utils.no-svg-element-found": {
@@ -4391,27 +4391,27 @@
   },
   "anim-studio.particles-utils.off": {
     "text": "Off",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Value in a particle summary meaning a feature such as the collider is switched off.",
     "max": 5
   },
   "anim-studio.particles-utils.on-collision": {
     "text": "on collision",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase trigger phrase filling {trigger} in the child-particle summary; children appear when a particle hits an edge.",
     "max": 20
   },
   "anim-studio.particles-utils.orbit": {
     "text": "Orbit",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset or motion style in which particles circle around a centre point.",
     "max": 10
   },
   "anim-studio.particles-utils.particle-preset": {
     "text": "Particle preset",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Label of the preset picker in the particles editor; a ready-made particle effect to start from.",
     "max": 25
   },
   "anim-studio.particles-utils.particles": {
     "text": "Particles",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Default name of the first emitter and a heading for the particle effect. Plural noun.",
     "max": 15
   },
   "anim-studio.particles-utils.particles-n": {
@@ -4429,47 +4429,47 @@
   },
   "anim-studio.particles-utils.radius": {
     "text": "Radius",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a measurement of a circular emitter area or collider, in the particles summary.",
     "max": 10
   },
   "anim-studio.particles-utils.rain": {
     "text": "Rain",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset: thin drops falling from the top of the card.",
     "max": 10
   },
   "anim-studio.particles-utils.right": {
     "text": "right",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase compass word for the gravity or emission direction in the physics summary. Not 'correct'.",
     "max": 10
   },
   "anim-studio.particles-utils.right-edge": {
     "text": "Right edge",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the right side of the box in the collision list; particles can bounce off it.",
     "max": 20
   },
   "anim-studio.particles-utils.ring": {
     "text": "Ring",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle shape and a preset: a hollow circle or a ring of particles.",
     "max": 10
   },
   "anim-studio.particles-utils.ring-preset": {
     "text": "Ring preset",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a group of particle presets that run around the ring of a card; also a category in the preset picker.",
     "max": 20
   },
   "anim-studio.particles-utils.rise": {
     "text": "Rise",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset in which particles float upwards, such as bubbles or smoke.",
     "max": 10
   },
   "anim-studio.particles-utils.scene-preset": {
     "text": "Scene preset",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a category in the preset picker for presets that fill the whole card with a scene.",
     "max": 20
   },
   "anim-studio.particles-utils.seasonal-scene": {
     "text": "Seasonal scene",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset group for seasonal effects such as snow, falling leaves or blossom.",
     "max": 25
   },
   "anim-studio.particles-utils.seed-seed-spin-span": {
@@ -4483,57 +4483,57 @@
   },
   "anim-studio.particles-utils.shape": {
     "text": "Shape",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Fallback name of a particle shape in the summary when the shape has no specific name.",
     "max": 10
   },
   "anim-studio.particles-utils.spark": {
     "text": "Spark",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle shape or preset: a short bright streak like a spark from a fire.",
     "max": 10
   },
   "anim-studio.particles-utils.spiral": {
     "text": "Spiral",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset or motion style in which particles wind outwards in a spiral.",
     "max": 10
   },
   "anim-studio.particles-utils.spread-across": {
     "text": "Spread across",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of an emitter placement: particles start spread along the full width of the box.",
     "max": 25
   },
   "anim-studio.particles-utils.spread-down": {
     "text": "Spread down",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of an emitter placement: particles start spread along the full height of the box.",
     "max": 20
   },
   "anim-studio.particles-utils.square": {
     "text": "Square",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the square particle shape in the shape picker.",
     "max": 10
   },
   "anim-studio.particles-utils.star": {
     "text": "Star",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the star-shaped particle in the shape picker.",
     "max": 10
   },
   "anim-studio.particles-utils.streak": {
     "text": "Streak",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a stretched, line-like particle shape in the shape picker, as for rain or shooting stars.",
     "max": 10
   },
   "anim-studio.particles-utils.svg": {
     "text": "SVG",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the particle shape that uses a pasted SVG drawing. Keep SVG untranslated.",
     "max": 5
   },
   "anim-studio.particles-utils.svg-shape": {
     "text": "SVG shape",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Label of the field for pasting SVG markup to use as a particle shape in the particles editor.",
     "max": 15
   },
   "anim-studio.particles-utils.swirl": {
     "text": "Swirl",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset or motion style in which particles curl around in loose circles.",
     "max": 10
   },
   "anim-studio.particles-utils.the-loop-hit-the-size-limit-so-the-file": {
@@ -4553,7 +4553,7 @@
   },
   "anim-studio.particles-utils.triangle": {
     "text": "Triangle",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of the triangle particle shape in the shape picker.",
     "max": 15
   },
   "anim-studio.particles-utils.turbulence-value": {
@@ -4566,17 +4566,17 @@
   },
   "anim-studio.particles-utils.up": {
     "text": "up",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase compass word for the gravity or emission direction in the physics summary, as in 'Gravity 1.0 up'.",
     "max": 10
   },
   "anim-studio.particles-utils.up-left": {
     "text": "up left",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase diagonal direction in the physics summary, pointing to the top left.",
     "max": 15
   },
   "anim-studio.particles-utils.up-right": {
     "text": "up right",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Lowercase diagonal direction in the physics summary, pointing to the top right.",
     "max": 15
   },
   "anim-studio.particles-utils.use-up-to-8-characters": {
@@ -4586,27 +4586,27 @@
   },
   "anim-studio.particles-utils.wave": {
     "text": "Wave",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset or motion style in which particles move in a wavy line.",
     "max": 10
   },
   "anim-studio.particles-utils.zigzag": {
     "text": "Zigzag",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Name of a particle preset or motion style in which particles move in sharp left-right turns.",
     "max": 10
   },
   "anim-studio.parts-layers.alt-arrowdown": {
     "text": "Alt+ArrowDown",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Keyboard shortcut shown in the parts list tooltip for moving a part down. Key names may be translated.",
     "max": 25
   },
   "anim-studio.parts-layers.alt-arrowup": {
     "text": "Alt+ArrowUp",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Keyboard shortcut shown in the parts list tooltip for moving a part up. Key names may be translated.",
     "max": 20
   },
   "anim-studio.parts-layers.cancel": {
     "text": "Cancel",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button in the parts list that closes the split-icon panel without splitting.",
     "max": 10
   },
   "anim-studio.parts-layers.click-a-part-to-animate-it-on-the": {
@@ -4616,7 +4616,7 @@
   },
   "anim-studio.parts-layers.count": {
     "text": "{count, plural, one {# key} other {# keys}}",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Count of keyframes on a part, shown in the parts list. A key is a keyframe, not a keyboard key.",
     "max": 10,
     "vars": {
       "count": "The count the text is about."
@@ -4632,27 +4632,27 @@
   },
   "anim-studio.parts-layers.ctrl-g": {
     "text": "Ctrl+G",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Keyboard shortcut shown in a tooltip for grouping the selected parts. Key names may be translated.",
     "max": 10
   },
   "anim-studio.parts-layers.ctrl-shift-g": {
     "text": "Ctrl+Shift+G",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Keyboard shortcut shown in a tooltip for ungrouping the selected group. Key names may be translated.",
     "max": 20
   },
   "anim-studio.parts-layers.down": {
     "text": "down",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Lowercase direction word filling {direction} in the announcement '{name} moved down' after a part is reordered.",
     "max": 10
   },
   "anim-studio.parts-layers.group": {
     "text": "Group",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button and menu item in the parts list that puts the selected parts into one group. Verb.",
     "max": 10
   },
   "anim-studio.parts-layers.group-removed": {
     "text": "Group removed",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Confirmation message after one group is dissolved in the parts list; its parts stay.",
     "max": 25
   },
   "anim-studio.parts-layers.grouped-count-parts": {
@@ -4665,17 +4665,17 @@
   },
   "anim-studio.parts-layers.groups-removed": {
     "text": "Groups removed",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Confirmation message after several groups are dissolved at once in the parts list; their parts stay.",
     "max": 25
   },
   "anim-studio.parts-layers.icon-parts": {
     "text": "Icon parts",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Heading of the parts list when the parts come from a split icon.",
     "max": 20
   },
   "anim-studio.parts-layers.icon-to-split": {
     "text": "Icon to split",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Label of the text field where the user types the icon id, such as mdi:bell-ring, to split into parts.",
     "max": 25
   },
   "anim-studio.parts-layers.keyframe-tracks-of-name": {
@@ -4688,17 +4688,17 @@
   },
   "anim-studio.parts-layers.merge-parts": {
     "text": "Merge parts",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button in the parts list that joins the selected parts into a single part.",
     "max": 25
   },
   "anim-studio.parts-layers.move-down": {
     "text": "Move down",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Menu item in the parts list that moves the selected part lower in the stacking order.",
     "max": 15
   },
   "anim-studio.parts-layers.move-down-drawn-underneath": {
     "text": "Move down (drawn underneath)",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Tooltip of the move-down button in the parts list; the part is drawn beneath the others.",
     "max": 45
   },
   "anim-studio.parts-layers.move-name-down-drawn-underneath": {
@@ -4719,22 +4719,22 @@
   },
   "anim-studio.parts-layers.move-up-drawn-on-top": {
     "text": "Move up (drawn on top)",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Tooltip of the move-up button in the parts list; the part is drawn above the others.",
     "max": 40
   },
   "anim-studio.parts-layers.moved-down-drawn-underneath": {
     "text": "Moved down: drawn underneath",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Short confirmation after a part is moved down in the parts list; it is now drawn beneath the others.",
     "max": 45
   },
   "anim-studio.parts-layers.moved-up-drawn-on-top": {
     "text": "Moved up: drawn on top",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Short confirmation after a part is moved up in the parts list; it is now drawn above the others.",
     "max": 40
   },
   "anim-studio.parts-layers.name": {
     "text": "Name",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Accessible name of the text field for renaming a part in the parts list.",
     "max": 10
   },
   "anim-studio.parts-layers.name-moved-direction": {
@@ -4748,17 +4748,17 @@
   },
   "anim-studio.parts-layers.part-actions": {
     "text": "Part actions",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Accessible name of the row of buttons that act on one part in the parts list, such as move or group.",
     "max": 20
   },
   "anim-studio.parts-layers.parts-merged": {
     "text": "Parts merged",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Confirmation message after the selected parts are merged into one in the parts list.",
     "max": 25
   },
   "anim-studio.parts-layers.renamed": {
     "text": "Renamed",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Short confirmation after a part is renamed in the parts list.",
     "max": 15
   },
   "anim-studio.parts-layers.replace-count-parts": {
@@ -4771,22 +4771,22 @@
   },
   "anim-studio.parts-layers.split-again": {
     "text": "Split again",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button that reopens the split-icon panel after an icon was already split, to redo the split.",
     "max": 20
   },
   "anim-studio.parts-layers.split-back-into-shapes": {
     "text": "Split back into shapes",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button for a merged part that splits it back into its original separate shapes.",
     "max": 40
   },
   "anim-studio.parts-layers.split-icon": {
     "text": "Split icon",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Heading and button that open the panel for turning an icon into separate parts.",
     "max": 20
   },
   "anim-studio.parts-layers.split-into-count": {
     "text": "Split into {count, plural, one {# part} other {# parts}}",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Short button label for splitting an icon, with the number of parts it will make. {count} is that number.",
     "max": 30,
     "vars": {
       "count": "The count the text is about."
@@ -4816,7 +4816,7 @@
   },
   "anim-studio.parts-layers.splitting": {
     "text": "Splitting…",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Busy label on the split button while the icon is being loaded and cut into parts.",
     "max": 20
   },
   "anim-studio.parts-layers.splitting-again-replaces-the-parts-their": {
@@ -4850,17 +4850,17 @@
   },
   "anim-studio.parts-layers.tracks-combined-no-order": {
     "text": "Tracks (combined, no order)",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Label of the single combined row of keyframe tracks for a group; the order of the parts does not matter there.",
     "max": 45
   },
   "anim-studio.parts-layers.ungroup": {
     "text": "Ungroup",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Button and menu item in the parts list that dissolves the selected group and keeps its parts.",
     "max": 15
   },
   "anim-studio.parts-layers.up": {
     "text": "up",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Lowercase direction word filling {direction} in the announcement '{name} moved up' after a part is reordered.",
     "max": 10
   },
   "anim-studio.parts-layers.use-an-icon-id-like-mdi-bell-ring": {
@@ -4907,22 +4907,22 @@
   },
   "anim-studio.parts-overlay.icon-parts": {
     "text": "Icon parts",
-    "note": "Shown in parts overlay (anim-studio).",
+    "note": "Short accessible name of the overlay on the stage that outlines each part of a split icon.",
     "max": 20
   },
   "anim-studio.parts-overlay.icon-parts-on-the-stage": {
     "text": "Icon parts on the stage",
-    "note": "Shown in parts overlay (anim-studio).",
+    "note": "Longer accessible description of the overlay that lets the user pick and move the parts of a split icon on the stage.",
     "max": 40
   },
   "anim-studio.parts-overlay.move-path-point": {
     "text": "Move path point",
-    "note": "Shown in parts overlay (anim-studio).",
+    "note": "Accessible label for the draggable point of a motion path drawn over the part on the stage.",
     "max": 25
   },
   "anim-studio.parts-overlay.move-pivot": {
     "text": "Move pivot",
-    "note": "Shown in parts overlay (anim-studio).",
+    "note": "Tooltip for dragging the pivot, the point a part rotates and scales around, on the stage.",
     "max": 25
   },
   "anim-studio.parts-overlay.pivot-of-name": {
@@ -4943,12 +4943,12 @@
   },
   "anim-studio.path-editor.add-colour": {
     "text": "Add colour",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that adds a colour for the particles that travel along the path.",
     "max": 20
   },
   "anim-studio.path-editor.clear-path": {
     "text": "Clear path",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that removes all points of the path so the user can start again.",
     "max": 20
   },
   "anim-studio.path-editor.click-the-stage-to-add-a-point-click-the": {
@@ -4958,17 +4958,17 @@
   },
   "anim-studio.path-editor.close-path": {
     "text": "Close path",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that joins the last point to the first, making a closed shape.",
     "max": 20
   },
   "anim-studio.path-editor.closed": {
     "text": "Closed",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Short status in the path editor: the path loops back to its first point.",
     "max": 10
   },
   "anim-studio.path-editor.closed-path": {
     "text": "Closed path",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Accessible name or tooltip of a path whose last point joins its first, in the path editor.",
     "max": 20
   },
   "anim-studio.path-editor.colour-i": {
@@ -4981,12 +4981,12 @@
   },
   "anim-studio.path-editor.colours": {
     "text": "Colours",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Heading above the list of colours that the particles on the path can take, in the path editor.",
     "max": 15
   },
   "anim-studio.path-editor.count": {
     "text": "{count, plural, one {# point} other {# points}}",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Number of points on the path, shown in the path editor. {count} is that number.",
     "max": 15,
     "vars": {
       "count": "The count the text is about."
@@ -4994,17 +4994,17 @@
   },
   "anim-studio.path-editor.count-2": {
     "text": "Count",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Number field label in the path editor for how many particles travel along the path.",
     "max": 10
   },
   "anim-studio.path-editor.curved": {
     "text": "Curved",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Option in the path editor for a smooth point whose line bends with handles. Opposite of Corner.",
     "max": 10
   },
   "anim-studio.path-editor.delete": {
     "text": "Delete",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that removes the selected path point.",
     "max": 15
   },
   "anim-studio.path-editor.double-click-a-point-to-make-it-smooth": {
@@ -5019,17 +5019,17 @@
   },
   "anim-studio.path-editor.element": {
     "text": "Element",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Option in the path editor: the path is sized to the whole moving element, not in pixels. Not an HTML element.",
     "max": 15
   },
   "anim-studio.path-editor.follow-rotation": {
     "text": "Follow rotation",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Switch label in the path editor; the moving element turns to face the direction of the path.",
     "max": 25
   },
   "anim-studio.path-editor.icon": {
     "text": "Icon",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Option in the path editor for the card's icon as the thing that moves along the path.",
     "max": 10
   },
   "anim-studio.path-editor.key-moves-one-handle-alone": {
@@ -5050,17 +5050,17 @@
   },
   "anim-studio.path-editor.largest": {
     "text": "Largest",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Label for the biggest size a particle reaches along the path, in the path editor. Pairs with Smallest.",
     "max": 15
   },
   "anim-studio.path-editor.mixed": {
     "text": "Mixed",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Value shown in the path editor when points differ, for example some smooth and some corners.",
     "max": 10
   },
   "anim-studio.path-editor.motion": {
     "text": "Motion",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Section heading in the path editor for settings of how the element moves along the path.",
     "max": 10
   },
   "anim-studio.path-editor.none-set-the-particles-take-the": {
@@ -5070,22 +5070,22 @@
   },
   "anim-studio.path-editor.of-size": {
     "text": "% of size",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Unit label next to a number field in the path editor; the value is a percentage of the element's size.",
     "max": 20
   },
   "anim-studio.path-editor.open": {
     "text": "Open",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Short status in the path editor: the path has a start and an end that do not meet. Not the verb.",
     "max": 10
   },
   "anim-studio.path-editor.open-path": {
     "text": "Open path",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that breaks the join between the last and first points.",
     "max": 15
   },
   "anim-studio.path-editor.particles": {
     "text": "Particles",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Option in the path editor: small particles travel along the path instead of one element moving.",
     "max": 15
   },
   "anim-studio.path-editor.particles-travel-the-path-one-after": {
@@ -5095,12 +5095,12 @@
   },
   "anim-studio.path-editor.path": {
     "text": "Path",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Heading and tab name of the path editor, where the user draws the line an element moves along.",
     "max": 10
   },
   "anim-studio.path-editor.pixels": {
     "text": "Pixels",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Option in the path editor: path points are fixed pixel positions, the same at every size.",
     "max": 10
   },
   "anim-studio.path-editor.points-are-in-of-the-moving-element-so": {

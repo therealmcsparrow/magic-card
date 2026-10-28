@@ -5937,7 +5937,7 @@
   },
   "card-editor.media-picker.media-folders": {
     "text": "Media folders",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Heading of the list of media source folders in the media picker.",
     "max": 25
   },
   "card-editor.media-picker.media-url-or-path": {
@@ -5957,17 +5957,17 @@
   },
   "card-editor.media-picker.save": {
     "text": "Save",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Button in the media picker that saves the changes made there.",
     "max": 10
   },
   "card-editor.media-picker.select-media": {
     "text": "Select media",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Button or title that opens the media picker to choose an image or file.",
     "max": 20
   },
   "card-editor.module-selector.add-module": {
     "text": "Add module",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Title of the module selector when adding a new module to the card.",
     "max": 20
   },
   "card-editor.module-selector.add-name-module": {
@@ -5980,32 +5980,32 @@
   },
   "card-editor.module-selector.advanced": {
     "text": "Advanced",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Category tab in the module selector for the more technical modules.",
     "max": 15
   },
   "card-editor.module-selector.all": {
     "text": "All",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Category tab in the module selector that shows every module.",
     "max": 5
   },
   "card-editor.module-selector.content": {
     "text": "Content",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Category tab in the module selector for modules that show text, images or values.",
     "max": 15
   },
   "card-editor.module-selector.controls": {
     "text": "Controls",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Category tab in the module selector for modules the user can operate, such as buttons and sliders.",
     "max": 15
   },
   "card-editor.module-selector.layout": {
     "text": "Layout",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Category tab in the module selector for modules that arrange other modules, such as rows and tabs.",
     "max": 10
   },
   "card-editor.module-selector.module-category": {
     "text": "Module category",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Accessible label for the row of category tabs in the module selector.",
     "max": 25
   },
   "card-editor.module-selector.no-modules-in-this-category": {
@@ -6023,7 +6023,7 @@
   },
   "card-editor.module-selector.replace-with": {
     "text": "Replace with…",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Title of the module selector when swapping an existing module for another type.",
     "max": 25
   },
   "card-editor.module-selector.replace-with-name": {
@@ -6036,32 +6036,32 @@
   },
   "card-editor.module-selector.search-modules": {
     "text": "Search modules",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Placeholder and label of the search box in the module selector.",
     "max": 25
   },
   "card-editor.pane-editor.card-settings": {
     "text": "Card settings",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Heading of the pane with settings for the whole card rather than one module.",
     "max": 25
   },
   "card-editor.pane-editor.editor-mode": {
     "text": "Editor mode",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Accessible label for the switch between Form, Structure and YAML editing.",
     "max": 20
   },
   "card-editor.pane-editor.form": {
     "text": "Form",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Editor mode option that edits the card through fields instead of code.",
     "max": 10
   },
   "card-editor.pane-editor.open-studio": {
     "text": "Open studio",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Button that opens the full-screen studio editor for this card.",
     "max": 20
   },
   "card-editor.pane-editor.redo": {
     "text": "Redo",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Toolbar button that reapplies the change that was just undone.",
     "max": 10
   },
   "card-editor.pane-editor.rows-mods-build-visually-with-layers": {
@@ -6075,67 +6075,67 @@
   },
   "card-editor.pane-editor.structure": {
     "text": "Structure",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Editor mode option that shows the card as a tree of modules.",
     "max": 15
   },
   "card-editor.pane-editor.undo": {
     "text": "Undo",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Toolbar button that reverts the last change made in the editor.",
     "max": 15
   },
   "card-editor.pane-editor.untitled-card": {
     "text": "Untitled card",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Fallback name in the editor header when the card has no title yet.",
     "max": 25
   },
   "card-editor.pane-editor.yaml": {
     "text": "YAML",
-    "note": "Shown in pane editor (card-editor).",
+    "note": "Editor mode option that edits the card as raw YAML code; keep the format name.",
     "max": 10
   },
   "card-editor.picker-parts.close": {
     "text": "Close",
-    "note": "Shown in picker parts (card-editor).",
+    "note": "Button in a picker window's title bar that closes the window.",
     "max": 10
   },
   "card-editor.picker-parts.maximise": {
     "text": "Maximise",
-    "note": "Shown in picker parts (card-editor).",
+    "note": "Button in a picker window's title bar that enlarges it to fill the screen.",
     "max": 15
   },
   "card-editor.picker-parts.move-window": {
     "text": "Move window",
-    "note": "Shown in picker parts (card-editor).",
+    "note": "Accessible label for the title bar handle that drags a picker window.",
     "max": 20
   },
   "card-editor.picker-parts.resize-window": {
     "text": "Resize window",
-    "note": "Shown in picker parts (card-editor).",
+    "note": "Accessible label for the corner handle that resizes a picker window.",
     "max": 25
   },
   "card-editor.picker-parts.restore-size": {
     "text": "Restore size",
-    "note": "Shown in picker parts (card-editor).",
+    "note": "Button that returns a maximised picker window to its earlier size.",
     "max": 25
   },
   "card-editor.popup-settings.auto-close": {
     "text": "Auto close",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Setting for the time after which the pop-up closes by itself.",
     "max": 20
   },
   "card-editor.popup-settings.backdrop-blur": {
     "text": "Backdrop blur",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Setting for how strongly the page behind an open pop-up is blurred.",
     "max": 25
   },
   "card-editor.popup-settings.backdrop-opacity": {
     "text": "Backdrop opacity",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Setting for how dark the dimmed layer behind an open pop-up is.",
     "max": 30
   },
   "card-editor.popup-settings.close-when": {
     "text": "Close when",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Label for the condition that closes the pop-up; the condition fields follow it.",
     "max": 20
   },
   "card-editor.popup-settings.closes-when-the-entity-changes-to-this": {
@@ -6155,12 +6155,12 @@
   },
   "card-editor.popup-settings.dialog": {
     "text": "Dialog",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Pop-up display style option: a centred dialog box over the page.",
     "max": 15
   },
   "card-editor.popup-settings.entity": {
     "text": "Entity",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Label of the Home Assistant entity whose state opens or closes the pop-up.",
     "max": 10
   },
   "card-editor.popup-settings.label-state": {
@@ -6173,12 +6173,12 @@
   },
   "card-editor.popup-settings.max-height": {
     "text": "Max height",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Setting for the tallest the pop-up may grow before its content scrolls.",
     "max": 20
   },
   "card-editor.popup-settings.navigation-path": {
     "text": "Navigation path",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Dashboard path that opens or closes the pop-up when the user navigates to it.",
     "max": 25
   },
   "card-editor.popup-settings.navigation-path-copied": {
@@ -6198,7 +6198,7 @@
   },
   "card-editor.popup-settings.off": {
     "text": "Off",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Option that turns a pop-up trigger off, so nothing opens or closes it automatically.",
     "max": 5
   },
   "card-editor.popup-settings.open-it-from-any-button-tap-action": {
@@ -6211,7 +6211,7 @@
   },
   "card-editor.popup-settings.open-when": {
     "text": "Open when",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Label for the condition that opens the pop-up; the condition fields follow it.",
     "max": 15
   },
   "card-editor.popup-settings.opens-when-the-entity-changes-to-this": {
@@ -6226,12 +6226,12 @@
   },
   "card-editor.popup-settings.pop-up-id": {
     "text": "Pop-up ID",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Unique identifier other cards use to open this pop-up; ID is short for identifier.",
     "max": 15
   },
   "card-editor.popup-settings.preview-pop-up": {
     "text": "Preview pop-up",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Button that opens the pop-up inside the editor so the user can check its look.",
     "max": 25
   },
   "card-editor.popup-settings.seconds-without-interaction-empty-stays": {
@@ -6241,7 +6241,7 @@
   },
   "card-editor.popup-settings.sheet": {
     "text": "Sheet",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Pop-up display style option: a panel that slides in from the screen edge.",
     "max": 10
   },
   "card-editor.popup-settings.show-close-button": {
@@ -6256,17 +6256,17 @@
   },
   "card-editor.popup-settings.style": {
     "text": "Style",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Label for choosing how the pop-up is displayed, as a dialog or a sheet.",
     "max": 10
   },
   "card-editor.popup-settings.title": {
     "text": "Title",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Field for the heading text shown at the top of the pop-up.",
     "max": 10
   },
   "card-editor.popup-settings.width": {
     "text": "Width",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Field for how wide the pop-up is, as a length.",
     "max": 10
   },
   "card-editor.popup-settings.without-an-id-it-opens-only-from-its": {
@@ -6276,82 +6276,82 @@
   },
   "card-editor.ring-editor.always": {
     "text": "Always",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Ring visibility option: the ring is shown at all times, whatever the entity state.",
     "max": 10
   },
   "card-editor.ring-editor.animated": {
     "text": "Animated",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Ring mode option: the ring plays a moving animation instead of showing a value.",
     "max": 15
   },
   "card-editor.ring-editor.animation": {
     "text": "Animation",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for choosing which animation style the ring plays.",
     "max": 15
   },
   "card-editor.ring-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field naming the entity attribute whose number drives the ring.",
     "max": 15
   },
   "card-editor.ring-editor.bottom": {
     "text": "Bottom",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the bottom edge.",
     "max": 10
   },
   "card-editor.ring-editor.bottom-left": {
     "text": "Bottom left",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the bottom-left corner.",
     "max": 20
   },
   "card-editor.ring-editor.bottom-right": {
     "text": "Bottom right",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the bottom-right corner.",
     "max": 20
   },
   "card-editor.ring-editor.caps": {
     "text": "Caps",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for the shape of the stroke ends of the ring (flat or round), not capital letters.",
     "max": 10
   },
   "card-editor.ring-editor.centre": {
     "text": "Centre",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Position option: the ring or its start sits at the middle of the edge.",
     "max": 10
   },
   "card-editor.ring-editor.chase-dots": {
     "text": "Chase dots",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Animation style name: small dots that run around the ring one after another.",
     "max": 20
   },
   "card-editor.ring-editor.clockwise": {
     "text": "Clockwise",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Direction option: the ring fills or animates the way clock hands turn.",
     "max": 15
   },
   "card-editor.ring-editor.colour": {
     "text": "Colour",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for the colour of the animated ring; the full-ring setting is Ring colour.",
     "max": 10
   },
   "card-editor.ring-editor.counter-clockwise": {
     "text": "Counter-clockwise",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Direction option: the ring fills or animates against the way clock hands turn.",
     "max": 30
   },
   "card-editor.ring-editor.direction": {
     "text": "Direction",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for choosing whether the ring runs clockwise or counter-clockwise.",
     "max": 15
   },
   "card-editor.ring-editor.elapsed": {
     "text": "Elapsed",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Timer ring option: the ring shows the time that has passed so far.",
     "max": 15
   },
   "card-editor.ring-editor.entity": {
     "text": "Entity",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for the Home Assistant entity that drives the ring.",
     "max": 10
   },
   "card-editor.ring-editor.entity-for-show-condition": {
@@ -6361,27 +6361,27 @@
   },
   "card-editor.ring-editor.fill-transition": {
     "text": "Fill transition",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Setting for how smoothly the ring fill moves when the value changes.",
     "max": 25
   },
   "card-editor.ring-editor.flat": {
     "text": "Flat",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Cap shape option: the ring stroke ends are cut square.",
     "max": 10
   },
   "card-editor.ring-editor.full": {
     "text": "Full",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Ring mode option: a complete ring around the whole card edge.",
     "max": 10
   },
   "card-editor.ring-editor.glow-px": {
     "text": "Glow (px)",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field for the size of the ring glow in pixels; px is the unit and stays.",
     "max": 15
   },
   "card-editor.ring-editor.inside": {
     "text": "Inside",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Placement option: the ring is drawn inside the card edge.",
     "max": 10
   },
   "card-editor.ring-editor.label-entity": {
@@ -6402,27 +6402,27 @@
   },
   "card-editor.ring-editor.left": {
     "text": "Left",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the left edge.",
     "max": 10
   },
   "card-editor.ring-editor.length": {
     "text": "Length (%)",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field for how much of the ring edge an animated segment covers, in percent.",
     "max": 20
   },
   "card-editor.ring-editor.marching-ants": {
     "text": "Marching ants",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Animation style name: a dashed line whose dashes crawl around the ring.",
     "max": 25
   },
   "card-editor.ring-editor.max": {
     "text": "Max",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field for the entity value at which the ring is completely filled.",
     "max": 5
   },
   "card-editor.ring-editor.min": {
     "text": "Min",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field for the entity value at which the ring is empty.",
     "max": 5
   },
   "card-editor.ring-editor.min-max-and-attribute-do-not-apply-to-a": {
@@ -6432,7 +6432,7 @@
   },
   "card-editor.ring-editor.mode": {
     "text": "Mode",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for choosing how the ring behaves, such as showing a value or a timer.",
     "max": 10
   },
   "card-editor.ring-editor.module-entity-entity": {
@@ -6445,17 +6445,17 @@
   },
   "card-editor.ring-editor.number": {
     "text": "Number",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Ring mode option: the ring follows a numeric entity state or attribute.",
     "max": 10
   },
   "card-editor.ring-editor.off": {
     "text": "Off",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Ring mode option that turns the ring off so nothing is drawn.",
     "max": 5
   },
   "card-editor.ring-editor.outside": {
     "text": "Outside",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Placement option: the ring is drawn outside the card edge.",
     "max": 15
   },
   "card-editor.ring-editor.pick-an-entity-a-value-ring-without-one": {
@@ -6470,27 +6470,27 @@
   },
   "card-editor.ring-editor.position": {
     "text": "Position",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for choosing where on the card edge the ring starts.",
     "max": 15
   },
   "card-editor.ring-editor.pulse": {
     "text": "Pulse",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Animation style name: the whole ring fades in and out rhythmically.",
     "max": 10
   },
   "card-editor.ring-editor.remaining": {
     "text": "Remaining",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Timer ring option: the ring shows the time that is left.",
     "max": 15
   },
   "card-editor.ring-editor.right": {
     "text": "Right",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the right edge.",
     "max": 10
   },
   "card-editor.ring-editor.ring-colour": {
     "text": "Ring colour",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for the colour of the ring fill when it shows a value.",
     "max": 20
   },
   "card-editor.ring-editor.ring-colour-from-this-remaining-up": {
@@ -6505,37 +6505,37 @@
   },
   "card-editor.ring-editor.ring-mode": {
     "text": "Ring mode",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label of the top-level choice for what kind of ring the card draws.",
     "max": 15
   },
   "card-editor.ring-editor.round": {
     "text": "Round",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Cap shape option: the ring stroke ends are rounded.",
     "max": 10
   },
   "card-editor.ring-editor.show": {
     "text": "Show",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for choosing when the ring is visible, for example always or only when active.",
     "max": 10
   },
   "card-editor.ring-editor.snake": {
     "text": "Snake",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Animation style name: a single bright segment that slithers around the ring.",
     "max": 10
   },
   "card-editor.ring-editor.speed": {
     "text": "Speed",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field for how fast the ring animation runs.",
     "max": 10
   },
   "card-editor.ring-editor.start": {
     "text": "Start",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for the point on the card edge where the ring fill begins.",
     "max": 10
   },
   "card-editor.ring-editor.state-value": {
     "text": "State value",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Source option: the ring follows the entity state itself rather than an attribute.",
     "max": 20
   },
   "card-editor.ring-editor.the-card-clips-its-edge-the-ring-sits": {
@@ -6545,32 +6545,32 @@
   },
   "card-editor.ring-editor.thresholds": {
     "text": "Thresholds",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Heading of the list of value limits at which the ring changes colour.",
     "max": 20
   },
   "card-editor.ring-editor.timer-fill": {
     "text": "Timer fill",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for choosing whether a timer ring shows elapsed or remaining time.",
     "max": 20
   },
   "card-editor.ring-editor.top": {
     "text": "Top",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the top edge.",
     "max": 5
   },
   "card-editor.ring-editor.top-left": {
     "text": "Top left",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the top-left corner.",
     "max": 15
   },
   "card-editor.ring-editor.top-right": {
     "text": "Top right",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Start position option: the ring begins at the top-right corner.",
     "max": 15
   },
   "card-editor.ring-editor.track-colour": {
     "text": "Track colour",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label for the colour of the unfilled background track behind the ring.",
     "max": 20
   },
   "card-editor.ring-editor.track-opacity": {
@@ -6580,7 +6580,7 @@
   },
   "card-editor.ring-editor.value": {
     "text": "Value",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Ring mode option: the ring shows an entity value as a filled portion.",
     "max": 10
   },
   "card-editor.ring-editor.while-entity-is-on": {
@@ -6595,7 +6595,7 @@
   },
   "card-editor.ring-editor.width-px": {
     "text": "Width (px)",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field for the thickness of the ring line in pixels; px is the unit and stays.",
     "max": 20
   },
   "card-editor.seasonal-editor.an-input-boolean-or-switch-off-hides-the": {
@@ -6605,7 +6605,7 @@
   },
   "card-editor.seasonal-editor.auto": {
     "text": "Auto",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Option that picks the season or holiday scene from today's date.",
     "max": 10
   },
   "card-editor.seasonal-editor.auto-shows-a-holiday-between-these-dates": {
@@ -6629,27 +6629,27 @@
   },
   "card-editor.seasonal-editor.autumn": {
     "text": "Autumn",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Season name for the falling-leaves scene; British word for the fall.",
     "max": 10
   },
   "card-editor.seasonal-editor.behind-content": {
     "text": "Behind content",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Layer option: the seasonal scene is drawn behind the card modules.",
     "max": 25
   },
   "card-editor.seasonal-editor.border-decorations": {
     "text": "Border decorations",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Switch for decorative items, such as lights or garlands, along the card border.",
     "max": 30
   },
   "card-editor.seasonal-editor.christmas": {
     "text": "Christmas",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Holiday name for the Christmas scene and its date setting.",
     "max": 15
   },
   "card-editor.seasonal-editor.combine-with": {
     "text": "Combine with",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Label for adding a second scene, such as a holiday, on top of the season.",
     "max": 20
   },
   "card-editor.seasonal-editor.day-and-night": {
@@ -6659,7 +6659,7 @@
   },
   "card-editor.seasonal-editor.easter": {
     "text": "Easter",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Holiday name for the Easter scene and its date setting.",
     "max": 10
   },
   "card-editor.seasonal-editor.easter-dates-automatic": {
@@ -6674,22 +6674,22 @@
   },
   "card-editor.seasonal-editor.halloween": {
     "text": "Halloween",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Holiday name for the Halloween scene and its date setting.",
     "max": 15
   },
   "card-editor.seasonal-editor.hemisphere": {
     "text": "Hemisphere",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Label for choosing the northern or southern half of the Earth, which flips the seasons.",
     "max": 20
   },
   "card-editor.seasonal-editor.holiday-dates": {
     "text": "Holiday dates",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Heading of the section where the start and end dates of each holiday are set.",
     "max": 25
   },
   "card-editor.seasonal-editor.holidays": {
     "text": "Holidays",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Heading of the section that switches individual holiday scenes on or off.",
     "max": 15
   },
   "card-editor.seasonal-editor.how-many-particles-100-is-24-the-most-a": {
@@ -6699,12 +6699,12 @@
   },
   "card-editor.seasonal-editor.intensity": {
     "text": "Intensity",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Setting for how many particles or how strong the seasonal effect is.",
     "max": 15
   },
   "card-editor.seasonal-editor.layer": {
     "text": "Layer",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Label for choosing whether the scene sits behind or over the card content.",
     "max": 10
   },
   "card-editor.seasonal-editor.lights-icicles-frost-a-cobweb-a-pumpkin": {
@@ -6714,7 +6714,7 @@
   },
   "card-editor.seasonal-editor.live": {
     "text": "Live",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Status word meaning the scene follows today's real date, as opposed to a preview date.",
     "max": 10
   },
   "card-editor.seasonal-editor.n-changed": {
@@ -6727,27 +6727,27 @@
   },
   "card-editor.seasonal-editor.new-year": {
     "text": "New Year",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Holiday name for the New Year scene and its date setting.",
     "max": 15
   },
   "card-editor.seasonal-editor.none": {
     "text": "None",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Option meaning no extra scene is combined with the season.",
     "max": 10
   },
   "card-editor.seasonal-editor.north": {
     "text": "North",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Hemisphere option for the northern half of the Earth.",
     "max": 10
   },
   "card-editor.seasonal-editor.off-switch": {
     "text": "Off switch",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Label for an entity (a switch) that turns the seasonal scene off when it is on.",
     "max": 20
   },
   "card-editor.seasonal-editor.over-content": {
     "text": "Over content",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Layer option: the seasonal scene is drawn on top of the card modules.",
     "max": 20
   },
   "card-editor.seasonal-editor.over-the-content-dimmed-taps-still-reach": {
@@ -6757,7 +6757,7 @@
   },
   "card-editor.seasonal-editor.preview": {
     "text": "preview",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Lower-case status word shown inside a sentence when a preview date is in use.",
     "max": 15
   },
   "card-editor.seasonal-editor.preview-date": {
