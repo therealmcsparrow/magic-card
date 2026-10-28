@@ -283,6 +283,7 @@ export class PathCanvas extends LitElement {
     if (changed.has('mode')) this.tabIndex = this.mode === 'view' ? -1 : 0;
     if (changed.has('mode')) this.describeKeys();
     if (changed.has('mode') && this.mode !== 'add') this._cross = undefined;
+    if (changed.has('paths') && this._sel && !this.holdsSelection(this._sel)) this._sel = undefined;
     const pl = this.placement;
     if (this.overlay && pl && this.frame.w > 0 && this.frame.h > 0 && (changed.has('overlay') || changed.has('placement') || changed.has('frame'))) {
       const zx = pl.width / this.frame.w;
@@ -290,6 +291,12 @@ export class PathCanvas extends LitElement {
       this._view = { zoom: zx, zy, x: pl.left - this.frame.x * zx, y: pl.top - this.frame.y * zy };
       this._viewSet = true;
     }
+  }
+
+  /** Whether the current paths still hold the selected path and every selected point. */
+  private holdsSelection(sel: PathSelection): boolean {
+    const n = this.paths[sel.path]?.anchors.length;
+    return n !== undefined && sel.anchors.every((i) => i < n) && (!sel.handle || sel.handle.anchor < n);
   }
 
   protected firstUpdated(): void {
@@ -573,7 +580,7 @@ export class PathCanvas extends LitElement {
     if (on) this.ownerDocument.addEventListener('pointerdown', this._pageDown, true);
   }
 
-  /** Whether the press landed on host UI: a dialog, menu or open popover anywhere, or a control in the canvas's own tree scope or a shadow tree reached through the canvas. Nodes from the canvas upward are not looked at. */
+  /** Whether the press landed on host UI: a dialog, menu or open popover anywhere, or a control in the canvas's own tree scope or a shadow tree nested under it. Nodes from the canvas upward are not looked at. */
   private overControl(path: EventTarget[]): boolean {
     const mine = new Set<Node>();
     for (let n: Node | null = this as Node; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) mine.add(n);
@@ -596,12 +603,11 @@ export class PathCanvas extends LitElement {
     }
   }
 
-  /** Whether the element sits in the canvas's own root node, or in a shadow tree whose chain of hosts leads to the canvas. */
+  /** Whether the element sits in the canvas's own root node, or in a shadow tree nested under it (the chain of hosts reaches that root node). */
   private ownScope(el: Element, home: Node): boolean {
-    const r: Node = el.getRootNode();
-    if (r === home) return true;
-    for (let host = (r as ShadowRoot).host as Element | undefined; host; host = (host.getRootNode() as ShadowRoot).host) {
-      if (host === this) return true;
+    for (let r: Node = el.getRootNode(); r; r = (r as ShadowRoot).host?.getRootNode()) {
+      if (r === home) return true;
+      if (!(r as ShadowRoot).host) return false;
     }
     return false;
   }
