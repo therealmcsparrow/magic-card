@@ -36,7 +36,7 @@
   },
   "anim-studio.animated-svg.the-animation-is-not-valid-message": {
     "text": "The animation is not valid: {message}",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error shown when SVG export fails. {message} is the validation error from the animation check, already worded for the user.",
     "max": 60,
     "vars": {
       "message": "The value that replaces message in the text."
@@ -49,7 +49,7 @@
   },
   "anim-studio.animated-svg.the-file-is-size-kb-larger-than-256-kb": {
     "text": "The file is {size} KB, larger than 256 KB.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning about an imported SVG file that is too big. {size} is the file size as a number in kilobytes; 256 KB is the fixed limit.",
     "max": 70,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -77,7 +77,7 @@
   },
   "anim-studio.animated-svg.unexpected-element-element": {
     "text": "Unexpected element <{element}>.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error for an SVG file with a tag the studio does not accept. {element} is the tag name, such as script; keep the angle brackets.",
     "max": 50,
     "vars": {
       "element": "The value that replaces element in the text."
@@ -100,7 +100,7 @@
   },
   "anim-studio.bezier-editor.default-inherited": {
     "text": "Default ({inherited})",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Placeholder in the easing text field, shown while it is empty. {inherited} is the easing that applies by default, as a preset name or a cubic-bezier value; keep it as is.",
     "max": 35,
     "vars": {
       "inherited": "The value that replaces inherited in the text."
@@ -128,7 +128,7 @@
   },
   "anim-studio.bezier-editor.label-preset": {
     "text": "{label} preset",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Accessible name of the group of easing preset buttons. {label} is the name of the field it belongs to, or 'Easing' when it has none.",
     "max": 25,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -146,7 +146,7 @@
   },
   "anim-studio.bezier-editor.the-animation-s-easing-easinglabel": {
     "text": "The animation's easing ({easingLabel})",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Tooltip of the 'Default' easing preset button, meaning no easing of its own. {easingLabel} is the lowercase name of the easing it falls back to.",
     "max": 65,
     "vars": {
       "easingLabel": "The value that replaces easingLabel in the text."
@@ -164,7 +164,7 @@
   },
   "anim-studio.bindings-panel.at-most-max-bindings-per-animation": {
     "text": "At most {max} bindings per animation.",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Hint shown when the binding limit is reached. {max} is the maximum number of entity bindings, a whole number.",
     "max": 60,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -187,7 +187,7 @@
   },
   "anim-studio.bindings-panel.binding-added-property": {
     "text": "Binding added: {property}.",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Screen-reader announcement after adding a binding (not shown on screen). {property} is the name of the animated property it drives, such as Rotation.",
     "max": 45,
     "vars": {
       "property": "The value that replaces property in the text."
@@ -200,7 +200,7 @@
   },
   "anim-studio.bindings-panel.binding-n": {
     "text": "Binding {n}",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Heading of one binding card in the list. {n} is its position in the list, counting from 1.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -213,7 +213,7 @@
   },
   "anim-studio.bindings-panel.delete-binding-n": {
     "text": "Delete binding {n}",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Accessible name (screen readers only) of the delete icon button on a binding; the tooltip is the separate 'Delete binding'. {n} is the binding's position in the list, from 1.",
     "max": 30,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -221,7 +221,7 @@
   },
   "anim-studio.bindings-panel.drive-name-from-the-entity-s-value": {
     "text": "Drive {name} from the entity’s value: rotation speed from a fan’s percentage, a fill from a battery level.",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Help text under the bindings list. {name} is the lowercase name of the animation property being driven, such as 'rotation'.",
     "max": 170,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -249,7 +249,7 @@
   },
   "anim-studio.bindings-panel.from-unit": {
     "text": "From{unit}",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Field label for the lower end of a value range. {unit} is the unit, already with its own leading space (such as ' (%)') or empty; do not add a space.",
     "max": 20,
     "vars": {
       "unit": "The value that replaces unit in the text."
@@ -312,7 +312,7 @@
   },
   "anim-studio.bindings-panel.the-entity-s-value-drives-name-preview": {
     "text": "The entity’s value drives {name}. Preview it with the value slider on the stage.",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Status text shown while a binding is active. {name} is the lowercase name of the driven property, such as 'rotation'.",
     "max": 130,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -340,7 +340,7 @@
   },
   "anim-studio.bindings-panel.to-unit": {
     "text": "To{unit}",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Field label for the upper end of a value range. {unit} is the unit, already with its own leading space (such as ' (%)') or empty; do not add a space.",
     "max": 15,
     "vars": {
       "unit": "The value that replaces unit in the text."
@@ -553,7 +553,7 @@
   },
   "anim-studio.draw-host.at-most-count-shapes-fit-in-a-rig": {
     "text": "At most {count} shapes fit in a rig.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message when the drawing limit is reached. {count} is the maximum number of shapes, a whole number.",
     "max": 60,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -561,7 +561,7 @@
   },
   "anim-studio.draw-host.at-most-tracks-animated-targets": {
     "text": "At most {tracks} animated targets.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message when too many parts are animated. {tracks} is the maximum number of animated targets, a whole number.",
     "max": 55,
     "vars": {
       "tracks": "The value that replaces tracks in the text."
@@ -574,7 +574,7 @@
   },
   "anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-add-a": {
     "text": "Cursor at x {x}, y {y}. Press Enter to add a point.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement while drawing with the keyboard. {x} and {y} are the cursor's coordinates on the canvas, whole numbers.",
     "max": 85,
     "vars": {
       "x": "The value that replaces x in the text.",
@@ -583,7 +583,7 @@
   },
   "anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-finish": {
     "text": "Cursor at x {x}, y {y}. Press Enter to finish.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement while drawing with the keyboard and a shape is under way. {x} and {y} are the cursor's coordinates on the canvas.",
     "max": 75,
     "vars": {
       "x": "The value that replaces x in the text.",
@@ -592,7 +592,7 @@
   },
   "anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-start": {
     "text": "Cursor at x {x}, y {y}. Press Enter to start.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement while drawing with the keyboard before a shape has begun. {x} and {y} are the cursor's coordinates on the canvas.",
     "max": 75,
     "vars": {
       "x": "The value that replaces x in the text.",
@@ -636,7 +636,7 @@
   },
   "anim-studio.draw-host.label-tool-hint": {
     "text": "{label} tool. {hint}",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Accessible name of the drawing canvas. {label} is the name of the selected tool, such as Pen; {hint} is a short sentence on how to use it, followed by keyboard help.",
     "max": 35,
     "vars": {
       "hint": "The value that replaces hint in the text.",
@@ -650,7 +650,7 @@
   },
   "anim-studio.draw-host.name-added": {
     "text": "{name} added.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement after a shape is drawn. {name} is the shape's default name, such as Rectangle 2.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -658,7 +658,7 @@
   },
   "anim-studio.draw-host.name-added-count-points": {
     "text": "{name} added, {count} points.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement after a pen path is finished. {name} is the new shape's name; {count} is its number of anchor points, a whole number.",
     "max": 50,
     "vars": {
       "count": "The value that replaces count in the text.",
@@ -667,7 +667,7 @@
   },
   "anim-studio.draw-host.name-is-locked-unlock-it-in-layers": {
     "text": "{name} is locked. Unlock it in Layers.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement when an edit is refused. {name} is the shape's name, or the word 'shape'; Layers is the panel's name.",
     "max": 65,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -690,7 +690,7 @@
   },
   "anim-studio.draw-host.point-count-placed-enter-again-on-the": {
     "text": "Point {count} placed. Enter again on the same spot finishes the stroke.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement after the Enter key places a point. {count} is the number of points placed so far, counting from 1.",
     "max": 115,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -718,7 +718,7 @@
   },
   "anim-studio.draw-host.started-at-x-x-y-y-move-the-cursor-and": {
     "text": "Started at x {x}, y {y}. Move the cursor and press Enter to finish. Escape cancels.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Screen-reader announcement when a keyboard-drawn shape begins. {x} and {y} are the start point's coordinates on the canvas. Enter and Escape are key names.",
     "max": 135,
     "vars": {
       "x": "The value that replaces x in the text.",
@@ -752,7 +752,7 @@
   },
   "anim-studio.draw-layers.bring-name-forward": {
     "text": "Bring {name} forward",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Accessible name of the move-up button on a shape row, one step in the stacking order. {name} is the shape's name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -760,7 +760,7 @@
   },
   "anim-studio.draw-layers.bring-name-over-the-icon": {
     "text": "Bring {name} over the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Accessible name of the move-up button when the shape is at the top of the layer below the icon, so the next step puts it over the icon. {name} is the shape's name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -783,7 +783,7 @@
   },
   "anim-studio.draw-layers.delete-name": {
     "text": "Delete {name}",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Accessible name (screen readers only) of the delete icon button on a shape row; the tooltip is the separate 'Delete shape'. {name} is the shape's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -816,7 +816,7 @@
   },
   "anim-studio.draw-layers.name-moved-where": {
     "text": "{name} moved {where}",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Screen-reader announcement after a shape changes stacking order. {name} is the shape's name; {where} is a separate translated word: up, down, over the icon or under the icon.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -830,7 +830,7 @@
   },
   "anim-studio.draw-layers.send-name-backward": {
     "text": "Send {name} backward",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Accessible name of the move-down button on a shape row, one step in the stacking order. {name} is the shape's name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -838,7 +838,7 @@
   },
   "anim-studio.draw-layers.send-name-under-the-icon": {
     "text": "Send {name} under the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Accessible name of the move-down button when the shape is at the bottom of the layer over the icon, so the next step puts it under the icon. {name} is the shape's name.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -996,7 +996,7 @@
   },
   "anim-studio.draw-svg-dialog.at-most-shapes-shapes-fit-in-a-rig": {
     "text": "At most {shapes} shapes fit in a rig.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Error in the SVG import dialog when the file has too many shapes. {shapes} is the maximum allowed, a whole number. Same English as another key; this one is in the dialog.",
     "max": 60,
     "vars": {
       "shapes": "The value that replaces shapes in the text."
@@ -1112,7 +1112,7 @@
   },
   "anim-studio.draw-svg-dialog.kb-of-32-kb": {
     "text": "{kb} of 32 KB",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Size meter caption in the SVG dialog. {kb} is the current size already formatted with its unit, such as '4.2 KB'; 32 KB is the fixed limit.",
     "max": 25,
     "vars": {
       "kb": "The value that replaces kb in the text."
@@ -1145,7 +1145,7 @@
   },
   "anim-studio.draw-svg-dialog.size-kb": {
     "text": "{size} KB",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "A file size in kilobytes. {size} is a number already rounded, such as 4.2 or 12. Used for the size of the SVG file in the import dialog.",
     "max": 15,
     "vars": {
       "size": "The value that replaces size in the text."
@@ -1233,7 +1233,7 @@
   },
   "anim-studio.draw-utils.the-animation-would-be-larger-than-max": {
     "text": "The animation would be larger than {max} KB ({size} KB).",
-    "note": "Shown in draw utils (anim-studio).",
+    "note": "Error when an edit would make the animation too big. {max} is the size limit and {size} the size the edit would reach, both whole numbers in kilobytes.",
     "max": 90,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -1357,7 +1357,7 @@
   },
   "anim-studio.icon-start.name-animation": {
     "text": "{name} animation",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Default title of a new animation made from an icon. {name} is the icon's display name, such as Fan.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1365,7 +1365,7 @@
   },
   "anim-studio.icon-start.no-icon-animations-match-query": {
     "text": "No icon animations match \"{query}\".",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Empty-search message in the icon animation list. {query} is the text the user typed in the search box.",
     "max": 60,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -1488,7 +1488,7 @@
   },
   "anim-studio.key-inspector.also-at-at": {
     "text": "Also at {at}",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Field heading for a second keyframe of the selection. {at} is its position on the timeline as a percentage, such as 40%.",
     "max": 20,
     "vars": {
       "at": "The value that replaces at in the text."
@@ -1501,7 +1501,7 @@
   },
   "anim-studio.key-inspector.at-at-secs-s": {
     "text": "At {at} · {secs} s",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Subtitle of the key inspector for one keyframe. {at} is its timeline position as a percentage, such as 40%; {secs} is the same moment in seconds.",
     "max": 30,
     "vars": {
       "at": "The value that replaces at in the text.",
@@ -1530,7 +1530,7 @@
   },
   "anim-studio.key-inspector.count-keyframes": {
     "text": "{count} keyframes",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Heading of the key inspector when several keyframes are selected. {count} is how many, always 2 or more.",
     "max": 30,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -1538,7 +1538,7 @@
   },
   "anim-studio.key-inspector.count-targets": {
     "text": "{count} targets",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Names the animated parts when the selected keyframes belong to several. {count} is how many parts, 2 or more.",
     "max": 25,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -1546,7 +1546,7 @@
   },
   "anim-studio.key-inspector.custom-axis-axis": {
     "text": "Custom axis ({axis})",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Dropdown option shown when a rotation axis is not one of the presets. {axis} is the axis numbers separated by commas, such as 1, 0, 0.",
     "max": 35,
     "vars": {
       "axis": "The value that replaces axis in the text."
@@ -1554,7 +1554,7 @@
   },
   "anim-studio.key-inspector.delete-count-keyframes": {
     "text": "Delete {count} keyframes",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Button that deletes all selected keyframes. {count} is how many are selected, 2 or more.",
     "max": 40,
     "vars": {
       "count": "The value that replaces count in the text."
@@ -1622,7 +1622,7 @@
   },
   "anim-studio.key-inspector.label-easing-to-the-next-key": {
     "text": "{label} easing to the next key",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Label of the easing field for one keyframe. {label} is the name of the property lane, such as Rotation; 'key' means keyframe.",
     "max": 50,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -1635,7 +1635,7 @@
   },
   "anim-studio.key-inspector.must-be-between-min-and-max-unit": {
     "text": "Must be between {min} and {max} {unit}.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Validation error under a number field. {min} and {max} are the allowed range limits; {unit} is the unit, such as deg or px, and can be empty.",
     "max": 65,
     "vars": {
       "max": "The value that replaces max in the text.",
@@ -1645,7 +1645,7 @@
   },
   "anim-studio.key-inspector.names-share-this-curve": {
     "text": "{names} share this curve.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Help text after the easing field. {names} is a list of the property names that use the same curve, joined by commas, such as Scale X, Scale Y.",
     "max": 40,
     "vars": {
       "names": "The value that replaces names in the text."
@@ -1698,7 +1698,7 @@
   },
   "anim-studio.key-inspector.remove-name-from-this-keyframe": {
     "text": "Remove {name} from this keyframe",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Accessible name of a remove icon button next to one property. {name} is the lowercase property name, such as rotation.",
     "max": 55,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1731,7 +1731,7 @@
   },
   "anim-studio.key-inspector.shadow-name": {
     "text": "Shadow {name}",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Label of a shadow sub-field. {name} is the lowercase name of the shadow part, such as blur or colour.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1764,7 +1764,7 @@
   },
   "anim-studio.key-inspector.target-at-at-secs-s": {
     "text": "{target} · at {at} · {secs} s",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Subtitle for a keyframe when several parts are selected. {target} is the name of the part; {at} is its timeline position as a percentage; {secs} is the same moment in seconds.",
     "max": 50,
     "vars": {
       "at": "The value that replaces at in the text.",
@@ -1819,7 +1819,7 @@
   },
   "anim-studio.key-inspector.where-from-to-to": {
     "text": "{where} · {from} to {to}",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Subtitle for several selected keyframes. {where} is the part name or '2 targets'; {from} and {to} are the earliest and latest timeline positions as percentages.",
     "max": 40,
     "vars": {
       "from": "The value that replaces from in the text.",
@@ -1849,7 +1849,7 @@
   },
   "anim-studio.keyframes-editor.add-a-name-keyframe-at-the-playhead": {
     "text": "Add a {name} keyframe at the playhead",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the add button on a parent track row (not a single property row). {name} is the lowercase track name, such as shadow.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1857,7 +1857,7 @@
   },
   "anim-studio.keyframes-editor.add-a-property-to-target": {
     "text": "Add a property to {target}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the add-property button on the timeline. {target} is the name of the selected animated part.",
     "max": 45,
     "vars": {
       "target": "The value that replaces target in the text."
@@ -1870,7 +1870,7 @@
   },
   "anim-studio.keyframes-editor.add-lane-keyframe": {
     "text": "Add {lane} keyframe",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Name of an undo step, not shown on a control. {lane} is the lowercase name of the property the keyframe animates, such as rotation.",
     "max": 35,
     "vars": {
       "lane": "The value that replaces lane in the text."
@@ -1878,7 +1878,7 @@
   },
   "anim-studio.keyframes-editor.add-name-keyframe-at-the-playhead": {
     "text": "Add {name} keyframe at the playhead",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the add button on a single property row. {name} is the lowercase property name, such as rotation. The English without 'a' differs from the parent-row text on purpose.",
     "max": 60,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -1891,7 +1891,7 @@
   },
   "anim-studio.keyframes-editor.add-property-to-target-at-the-playhead": {
     "text": "Add property to {target} at the playhead ({at})",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the add-property control. {target} is the name of the selected animated part; {at} is the playhead position as a percentage, such as 40%.",
     "max": 80,
     "vars": {
       "at": "The value that replaces at in the text.",
@@ -1905,7 +1905,7 @@
   },
   "anim-studio.keyframes-editor.at-the-playhead-filter": {
     "text": "At the playhead: {filter}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the current-value chip for a filter property. {filter} is the CSS filter value, such as blur(2px); do not translate it.",
     "max": 40,
     "vars": {
       "filter": "The value that replaces filter in the text."
@@ -1913,7 +1913,7 @@
   },
   "anim-studio.keyframes-editor.at-the-playhead-text": {
     "text": "At the playhead: {text}",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the current-value chip for a property. {text} is the property's value at the playhead, such as 45deg or a colour; do not translate it.",
     "max": 40,
     "vars": {
       "text": "The value that replaces text in the text."
