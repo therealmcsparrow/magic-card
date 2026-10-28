@@ -1,7 +1,7 @@
 {
   "svg-editor.combine.c": {
     "text": "{c, plural, one {1 open line was left out.} other {# open lines were left out.}}",
-    "note": "Shown in combine (svg-editor).",
+    "note": "Status message after combining shapes. {c} is the number of open lines (no area) that were skipped; the plural picks the singular or plural sentence.",
     "max": 45,
     "vars": {
       "c": "The count the text is about."
@@ -9,7 +9,7 @@
   },
   "svg-editor.combine.merged-c-parts-into-one-path": {
     "text": "Merged {c} parts into one path.",
-    "note": "Shown in combine (svg-editor).",
+    "note": "Status message after combining shapes into one outline. {c} is the number of shapes that were merged (two or more).",
     "max": 50,
     "vars": {
       "c": "The value that replaces c in the text."
@@ -37,7 +37,7 @@
   },
   "svg-editor.layers.collapse-name": {
     "text": "Collapse {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the arrow that folds a group in the layer list. {name} is the group's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -45,7 +45,7 @@
   },
   "svg-editor.layers.drag-to-move-name": {
     "text": "Drag to move {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the drag handle on a layer row. {name} is the layer's name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -53,7 +53,7 @@
   },
   "svg-editor.layers.expand-name": {
     "text": "Expand {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the arrow that unfolds a group in the layer list. {name} is the group's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -61,12 +61,12 @@
   },
   "svg-editor.layers.groups-can-be-4-levels-deep": {
     "text": "Groups can be 4 levels deep.",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Message in the layer list when a move would nest groups too deeply. Same English as the message in the main editor, which has its own key.",
     "max": 45
   },
   "svg-editor.layers.hide-name": {
     "text": "Hide {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the eye button that hides a layer. {name} is the layer's name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -74,7 +74,7 @@
   },
   "svg-editor.layers.into-name": {
     "text": "Into {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Menu item in the Move to list that moves a layer inside the group {name}. Keep it short; {name} is a group name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -92,12 +92,12 @@
   },
   "svg-editor.layers.layers": {
     "text": "Layers",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Heading of the panel that lists the drawing's layers (shapes and groups). One word, a noun.",
     "max": 10
   },
   "svg-editor.layers.lock-name": {
     "text": "Lock {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the padlock button that locks a layer. {name} is the layer's name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -105,7 +105,7 @@
   },
   "svg-editor.layers.move-down": {
     "text": "Move down",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Button or menu item that moves the selected layer one step down in the layer order (towards the back).",
     "max": 15
   },
   "svg-editor.layers.move-into-group-above": {
@@ -120,17 +120,17 @@
   },
   "svg-editor.layers.move-to": {
     "text": "Move to…",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Menu item that opens a list of groups to move the layer into. The ellipsis means a further choice follows.",
     "max": 20
   },
   "svg-editor.layers.move-up": {
     "text": "Move up",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Button or menu item that moves the selected layer one step up in the layer order (towards the front).",
     "max": 15
   },
   "svg-editor.layers.name-is-locked": {
     "text": "{name} is locked.",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Status message when the user tries to change a locked layer. {name} is the layer's name.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -138,7 +138,7 @@
   },
   "svg-editor.layers.name-moved-into-group-position-pos-of": {
     "text": "{name} moved into {group}, position {pos} of {total}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Screen reader announcement after a layer is moved into a group. {name} is the layer, {group} the group, {pos} the new place and {total} the number of items there.",
     "max": 85,
     "vars": {
       "group": "The value that replaces group in the text.",
@@ -149,7 +149,7 @@
   },
   "svg-editor.layers.name-moved-position-pos-of-total": {
     "text": "{name} moved, position {pos} of {total}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Screen reader announcement after a layer changes place within its list. {name} is the layer, {pos} its new place and {total} the number of items.",
     "max": 65,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -159,7 +159,7 @@
   },
   "svg-editor.layers.name-moved-to-the-top-level-position-pos": {
     "text": "{name} moved to the top level, position {pos} of {total}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Screen reader announcement after a layer leaves its group. {name} is the layer, {pos} its new place and {total} the number of top-level items.",
     "max": 90,
     "vars": {
       "name": "The value that replaces name in the text.",
@@ -169,7 +169,7 @@
   },
   "svg-editor.layers.name-selected": {
     "text": "{name} selected.",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Screen reader announcement when a layer is selected in the layer list. {name} is the layer's name. Same English as the canvas message, which has its own key.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -182,7 +182,7 @@
   },
   "svg-editor.layers.show-name": {
     "text": "Show {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the eye button that shows a hidden layer. {name} is the layer's name.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -195,12 +195,12 @@
   },
   "svg-editor.layers.top-level": {
     "text": "Top level",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Menu item in the Move to list that takes a layer out of every group, so it sits at the root of the drawing.",
     "max": 15
   },
   "svg-editor.layers.ungroup-name": {
     "text": "Ungroup {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the button that dissolves a group. {name} is the group's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -208,7 +208,7 @@
   },
   "svg-editor.layers.unlock-name": {
     "text": "Unlock {name}",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip and screen reader label of the padlock button that unlocks a layer. {name} is the layer's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -216,12 +216,12 @@
   },
   "svg-editor.lips.got-it": {
     "text": "Got it",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Button that dismisses the hint about hidden side panels. Means the user has understood.",
     "max": 10
   },
   "svg-editor.lips.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Tooltip of the edge arrow that hides a side panel. {noun} is the panel name (the lowercase inspector or layers and library text) and {keys} is the keyboard shortcut.",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -230,27 +230,27 @@
   },
   "svg-editor.lips.inspector": {
     "text": "inspector",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Lowercase name of the properties panel, inserted into a sentence as {noun} (for example in Hide and Show tooltips). Not a heading.",
     "max": 15
   },
   "svg-editor.lips.inspector-panel": {
     "text": "Inspector panel",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Name of the properties panel with a capital letter, filling {panels} in the hidden and shown announcements and used as a label.",
     "max": 25
   },
   "svg-editor.lips.layers-and-library": {
     "text": "layers and library",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Lowercase name of the left panel, inserted into a sentence as {noun} (for example in Hide and Show tooltips). Not a heading.",
     "max": 30
   },
   "svg-editor.lips.layers-and-library-panel": {
     "text": "Layers and library panel",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Name of the left panel with a capital letter, filling {panels} in the hidden and shown announcements and used as a label.",
     "max": 40
   },
   "svg-editor.lips.panels-hidden": {
     "text": "{panels} hidden",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Screen reader announcement after a side panel is hidden. {panels} is a panel name such as Inspector panel.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -258,7 +258,7 @@
   },
   "svg-editor.lips.panels-shown": {
     "text": "{panels} shown",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Screen reader announcement after a side panel is shown again. {panels} is a panel name such as Inspector panel.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."

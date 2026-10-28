@@ -2290,22 +2290,22 @@
   },
   "anim-studio.keyframes-utils.30-fps": {
     "text": "30 fps",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Frame-rate choice of 30 frames per second in the keyframes helper lists; keep the number and the unit abbreviation.",
     "max": 10
   },
   "anim-studio.keyframes-utils.animation-colour": {
     "text": "Animation colour",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: the colour that the animation itself applies to the icon, not a field label.",
     "max": 30
   },
   "anim-studio.keyframes-utils.background": {
     "text": "Background",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: the fill behind the icon. A lane or option name, not a field label.",
     "max": 20
   },
   "anim-studio.keyframes-utils.blur": {
     "text": "Blur",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: the blur filter that softens the icon. A lane name, not a field label.",
     "max": 10
   },
   "anim-studio.keyframes-utils.bottom": {
@@ -2325,7 +2325,7 @@
   },
   "anim-studio.keyframes-utils.brighten": {
     "text": "Brighten",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane or effect in the keyframes helper lists: makes the icon lighter. A verb used as a label.",
     "max": 15
   },
   "anim-studio.keyframes-utils.centre": {
@@ -2335,47 +2335,47 @@
   },
   "anim-studio.keyframes-utils.colour": {
     "text": "Colour",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: the icon's fill colour. A lane name, not a field label.",
     "max": 10
   },
   "anim-studio.keyframes-utils.corner-radius": {
     "text": "Corner radius",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: how round the corners of the background shape are.",
     "max": 25
   },
   "anim-studio.keyframes-utils.custom-curve": {
     "text": "Custom curve",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Option in the easing list of the keyframes helpers: a curve the user draws, as opposed to a named preset.",
     "max": 20
   },
   "anim-studio.keyframes-utils.default": {
     "text": "Default",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Option in a keyframes helper list meaning the built-in value is used, with nothing set by the user.",
     "max": 15
   },
   "anim-studio.keyframes-utils.draw-on": {
     "text": "Draw on",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: the stroke draws itself onto the icon, like a pen. Two words, a verb phrase.",
     "max": 15
   },
   "anim-studio.keyframes-utils.drop-shadow": {
     "text": "Drop shadow",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: a soft shadow cast behind the icon.",
     "max": 20
   },
   "anim-studio.keyframes-utils.element": {
     "text": "Element",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Option in a keyframes helper list: the target is a single element (part) of the icon, not the whole icon.",
     "max": 15
   },
   "anim-studio.keyframes-utils.filter": {
     "text": "Filter",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Group name in the keyframes helper lists for image-effect lanes such as blur and greyscale; a noun, not a verb.",
     "max": 10
   },
   "anim-studio.keyframes-utils.glow": {
     "text": "Glow",
-    "note": "Shown in keyframes utils (anim-studio).",
+    "note": "Name of a lane in the keyframes helper lists: a soft light halo around the icon.",
     "max": 10
   },
   "anim-studio.keyframes-utils.greyscale": {

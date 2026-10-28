@@ -3673,7 +3673,7 @@
   },
   "card-editor.flows-editor.try-again": {
     "text": "Try again",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Button on the flows editor's error state that retries loading the editor.",
     "max": 15
   },
   "card-editor.flows-editor.up-to-twice-the-width-at-max": {
@@ -3683,7 +3683,7 @@
   },
   "card-editor.flows-editor.value": {
     "text": "Value",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the choice for what drives the flow: the entity state, an attribute or a template.",
     "max": 10
   },
   "card-editor.flows-editor.value-and-route": {
@@ -3693,17 +3693,17 @@
   },
   "card-editor.flows-editor.visibility": {
     "text": "Visibility",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Heading of the section deciding when the flow is shown.",
     "max": 20
   },
   "card-editor.flows-editor.while-flowing": {
     "text": "While flowing",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Visibility option that shows the flow only while the entity value is non-zero.",
     "max": 25
   },
   "card-editor.flows-editor.width-px": {
     "text": "Width (px)",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the number field for the thickness of the flow line, in pixels.",
     "max": 20
   },
   "card-editor.flows.column-n": {
@@ -3737,47 +3737,47 @@
   },
   "card-editor.font-picker.browse": {
     "text": "Browse",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Button that opens the font browser dialog to pick a font from a list.",
     "max": 10
   },
   "card-editor.font-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Button that closes the font browser without changing the chosen font.",
     "max": 10
   },
   "card-editor.font-picker.font-family": {
     "text": "Font family",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Label of the field for the font's family name, such as Roboto or Arial.",
     "max": 20
   },
   "card-editor.font-picker.font-source": {
     "text": "Font source",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Label of the choice between Google Fonts and fonts installed on this device.",
     "max": 20
   },
   "card-editor.font-picker.fonts": {
     "text": "Fonts",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Heading of the list of fonts in the font browser.",
     "max": 15
   },
   "card-editor.font-picker.google": {
     "text": "Google",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Short tab or option name for the Google Fonts source; the brand name is not translated.",
     "max": 10
   },
   "card-editor.font-picker.google-fonts": {
     "text": "Google Fonts",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Full product name used as a heading or title for the Google Fonts list; do not translate.",
     "max": 20
   },
   "card-editor.font-picker.local": {
     "text": "Local",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Short tab or option name for fonts installed on this device, as opposed to Google.",
     "max": 10
   },
   "card-editor.font-picker.local-fonts": {
     "text": "Local fonts",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Heading or title for the list of fonts installed on this device.",
     "max": 20
   },
   "card-editor.font-picker.no-fonts-found": {
@@ -3787,17 +3787,17 @@
   },
   "card-editor.font-picker.save": {
     "text": "Save",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Button that confirms the selected font and closes the font browser.",
     "max": 10
   },
   "card-editor.font-picker.search-fonts": {
     "text": "Search fonts",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Placeholder of the search box in the font browser; filters the list by font name.",
     "max": 20
   },
   "card-editor.font-picker.select-font": {
     "text": "Select font",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Placeholder of the font field before any font has been chosen.",
     "max": 20
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
@@ -3807,7 +3807,7 @@
   },
   "card-editor.forecast-editor.animated-icons": {
     "text": "Animated icons",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Switch that plays animated weather icons in the forecast instead of still ones.",
     "max": 25
   },
   "card-editor.forecast-editor.animated-weather-icons-instead-of-static": {
@@ -3817,17 +3817,17 @@
   },
   "card-editor.forecast-editor.daily": {
     "text": "Daily",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Forecast type option showing one forecast entry per day.",
     "max": 10
   },
   "card-editor.forecast-editor.forecast-type": {
     "text": "Forecast type",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Label of the dropdown choosing daily, hourly or twice-daily forecast entries.",
     "max": 25
   },
   "card-editor.forecast-editor.hourly": {
     "text": "Hourly",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Forecast type option showing one forecast entry per hour.",
     "max": 10
   },
   "card-editor.forecast-editor.number-of-forecasts": {
@@ -3837,17 +3837,17 @@
   },
   "card-editor.forecast-editor.show-precipitation": {
     "text": "Show precipitation",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Switch that adds the expected rain or snow amount to each forecast entry.",
     "max": 30
   },
   "card-editor.forecast-editor.show-temperature": {
     "text": "Show temperature",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Switch that adds the forecast temperature to each forecast entry.",
     "max": 30
   },
   "card-editor.forecast-editor.show-wind": {
     "text": "Show wind",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Switch that adds the forecast wind speed to each forecast entry.",
     "max": 15
   },
   "card-editor.forecast-editor.this-entity-has-no-type-forecast": {
@@ -3861,7 +3861,7 @@
   },
   "card-editor.forecast-editor.twice-daily": {
     "text": "Twice daily",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Forecast type option showing two entries per day, usually day and night.",
     "max": 20
   },
   "card-editor.forecast-editor.type-not-provided-by-this-entity": {
@@ -3874,22 +3874,22 @@
   },
   "card-editor.forecast-editor.weather-entity": {
     "text": "Weather entity",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Label of the entity picker for the weather entity that supplies the forecast.",
     "max": 25
   },
   "card-editor.gauge-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Label of the field for the entity attribute the gauge reads instead of the state.",
     "max": 15
   },
   "card-editor.gauge-editor.automatic": {
     "text": "Automatic",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Option that lets the gauge choose its own colour or range instead of a fixed setting.",
     "max": 15
   },
   "card-editor.gauge-editor.colour-ranges": {
     "text": "Colour ranges",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Heading of the list that maps value ranges to gauge colours.",
     "max": 25
   },
   "card-editor.gauge-editor.decimals": {

@@ -1945,87 +1945,87 @@
   },
   "labels.css-property-options.100": {
     "text": "100",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 100 is the thinnest text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.200": {
     "text": "200",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 200 is extra-light text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.300": {
     "text": "300",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 300 is light text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.400": {
     "text": "400",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 400 is regular text, the same as Normal. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.500": {
     "text": "500",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 500 is medium text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.600": {
     "text": "600",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 600 is semi-bold text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.700": {
     "text": "700",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 700 is bold text, the same as Bold. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.800": {
     "text": "800",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 800 is extra-bold text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.900": {
     "text": "900",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (number): 900 is the heaviest, black text. Keep the digits.",
     "max": 5
   },
   "labels.css-property-options.absolute": {
     "text": "Absolute",
-    "note": "Shown in css property options (labels).",
+    "note": "Position option: the element is placed at exact offsets inside its parent, outside the normal flow.",
     "max": 15
   },
   "labels.css-property-options.alternate": {
     "text": "Alternate",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation-direction option: the animation plays forwards, then backwards, on each repeat.",
     "max": 15
   },
   "labels.css-property-options.alternate-reverse": {
     "text": "Alternate-reverse",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation-direction option: like Alternate, but the first run plays backwards.",
     "max": 30
   },
   "labels.css-property-options.anywhere": {
     "text": "Anywhere",
-    "note": "Shown in css property options (labels).",
+    "note": "Overflow-wrap option: a long word may break at any character to avoid overflowing.",
     "max": 15
   },
   "labels.css-property-options.auto": {
     "text": "Auto",
-    "note": "Shown in css property options (labels).",
+    "note": "Option shared by several CSS fields (overflow, z-index, cursor and others): the browser picks the value itself.",
     "max": 15
   },
   "labels.css-property-options.backwards": {
     "text": "Backwards",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation fill-mode option: the first frame applies during the delay, before the animation starts.",
     "max": 15
   },
   "labels.css-property-options.baseline": {
     "text": "Baseline",
-    "note": "Shown in css property options (labels).",
+    "note": "Align-items option: items line up on the baseline of their text, not on an edge.",
     "max": 15
   },
   "labels.css-property-options.block": {
     "text": "Block",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: the element takes a full-width line of its own, like a paragraph.",
     "max": 10
   },
   "labels.css-property-options.bold": {
