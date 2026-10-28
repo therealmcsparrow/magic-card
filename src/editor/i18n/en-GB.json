@@ -8163,7 +8163,7 @@
   },
   "card-editor.studio.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
-    "note": "Shown in studio (card-editor).",
+    "note": "Tooltip on a studio toolbar button that hides a panel. {noun} is the panel name, such as inspector or layers; {keys} is its keyboard shortcut. Twin of Show {noun} ({keys}).",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -8202,7 +8202,7 @@
   },
   "card-editor.studio.mods": {
     "text": "{mods, plural, one {# module} other {# modules}}",
-    "note": "Shown in studio (card-editor).",
+    "note": "Studio status text counting the modules in the card, for example 1 module or 5 modules. Plural forms follow the count.",
     "max": 15,
     "vars": {
       "mods": "The count the text is about."
@@ -8210,7 +8210,7 @@
   },
   "card-editor.studio.panels-hidden": {
     "text": "{panels} hidden",
-    "note": "Shown in studio (card-editor).",
+    "note": "Studio status text naming the panels currently hidden. {panels} is a list of panel names, such as inspector, layers. Twin of {panels} shown.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -8218,7 +8218,7 @@
   },
   "card-editor.studio.panels-shown": {
     "text": "{panels} shown",
-    "note": "Shown in studio (card-editor).",
+    "note": "Studio status text naming the panels currently visible. {panels} is a list of panel names, such as inspector, layers. Twin of {panels} hidden.",
     "max": 25,
     "vars": {
       "panels": "The value that replaces panels in the text."
@@ -8251,7 +8251,7 @@
   },
   "card-editor.studio.shortcut-keys": {
     "text": "Shortcut: {keys}",
-    "note": "Shown in studio (card-editor).",
+    "note": "Tooltip line naming the keyboard shortcut of a studio action. {keys} is the key combination, such as Ctrl+Z.",
     "max": 30,
     "vars": {
       "keys": "The value that replaces keys in the text."
@@ -8259,7 +8259,7 @@
   },
   "card-editor.studio.show-noun-keys": {
     "text": "Show {noun} ({keys})",
-    "note": "Shown in studio (card-editor).",
+    "note": "Tooltip on a studio toolbar button that shows a hidden panel. {noun} is the panel name, such as inspector or layers; {keys} is its keyboard shortcut. Twin of Hide {noun} ({keys}).",
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
@@ -8273,7 +8273,7 @@
   },
   "card-editor.studio.the-noun-panel-is-hidden-as-you-left-it": {
     "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
-    "note": "Shown in studio (card-editor).",
+    "note": "Hint in the studio when a panel stays hidden from the last session. {noun} is the panel name, such as inspector or layers. The arrow is the small handle on the studio edge.",
     "max": 130,
     "vars": {
       "noun": "The value that replaces noun in the text."
@@ -8336,7 +8336,7 @@
   },
   "card-editor.tabs-editor.tab-n": {
     "text": "Tab {n}",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Default name of a tab in the tabs editor list. {n} is its position, starting at 1.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -8389,7 +8389,7 @@
   },
   "card-editor.template-bar.linked-to-template-name": {
     "text": "Linked to template {name}.",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Template bar message saying this card follows a saved template. {name} is the template name, as the user typed it.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8402,7 +8402,7 @@
   },
   "card-editor.template-bar.n": {
     "text": "{n, plural, one {# override} other {# overrides}}",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Template bar count of local overrides, for example 1 override or 3 overrides. Plural forms follow the count.",
     "max": 20,
     "vars": {
       "n": "The count the text is about."
@@ -8410,7 +8410,7 @@
   },
   "card-editor.template-bar.n-locally": {
     "text": "{n, plural, one {# field differs} other {# fields differ}} locally.",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Template bar sentence saying how many fields differ from the linked template, for example 2 fields differ locally. Plural forms follow the count.",
     "max": 40,
     "vars": {
       "n": "The count the text is about."
@@ -8428,7 +8428,7 @@
   },
   "card-editor.template-bar.re-sync-overrides": {
     "text": "Re-sync {overrides}",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Button in the template bar that discards local overrides and copies the template again. {overrides} is a count such as 3 overrides.",
     "max": 35,
     "vars": {
       "overrides": "The value that replaces overrides in the text."
@@ -8456,7 +8456,7 @@
   },
   "card-editor.template-picker.a-template-named-name-already-exists": {
     "text": "A template named \"{name}\" already exists.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Error in the save-template dialog when the chosen name is taken. {name} is the name typed. Short twin of the version that asks to overwrite.",
     "max": 70,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8464,7 +8464,7 @@
   },
   "card-editor.template-picker.a-template-named-name-already-exists-2": {
     "text": "A template named \"{name}\" already exists. Overwrite?",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Confirmation question when saving a template under a taken name. {name} is the name typed. Answering yes replaces the saved template.",
     "max": 85,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8487,7 +8487,7 @@
   },
   "card-editor.template-picker.delete-template-name": {
     "text": "Delete template {name}",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Accessible label and tooltip of the delete icon on a template row. {name} is the template name.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8505,7 +8505,7 @@
   },
   "card-editor.template-picker.edit-template-name": {
     "text": "Edit template {name}",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Accessible label and tooltip of the edit icon on a template row. {name} is the template name.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8533,7 +8533,7 @@
   },
   "card-editor.template-picker.load-name-this-will-replace-your-current": {
     "text": "Load \"{name}\"? This will replace your current config.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Confirmation question before loading a template over the card being edited. {name} is the template name. Confirming discards the current card config.",
     "max": 85,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -8611,7 +8611,7 @@
   },
   "card-editor.template-sync.row-n": {
     "text": "Row {n}",
-    "note": "Shown in template sync (card-editor).",
+    "note": "Row heading in the template sync list. {n} is the row number, starting at 1. Same English as other Row {n} labels.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -8619,7 +8619,7 @@
   },
   "card-editor.template-sync.row-row-col-col": {
     "text": "Row {row} / Col {col}",
-    "note": "Shown in template sync (card-editor).",
+    "note": "Position label in the template sync list pointing at one module. {row} and {col} are numbers starting at 1.",
     "max": 35,
     "vars": {
       "col": "The value that replaces col in the text.",
@@ -8678,7 +8678,7 @@
   },
   "card-editor.text-editor.use-jinja2-templates-example": {
     "text": "Use Jinja2 templates: {example}",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Hint under the text field. {example} is a code sample of a Jinja2 template; keep Jinja2 untranslated.",
     "max": 50,
     "vars": {
       "example": "The value that replaces example in the text."
@@ -8696,7 +8696,7 @@
   },
   "card-editor.tree-chip.n": {
     "text": "{n, plural, one {# layer} other {# layers}}",
-    "note": "Shown in tree chip (card-editor).",
+    "note": "Small chip on a tree node counting the layers it holds, for example 1 layer or 4 layers. Plural forms follow the count.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -8709,7 +8709,7 @@
   },
   "card-editor.tree-chip.on-top-anchor": {
     "text": "On top, {anchor}",
-    "note": "Shown in tree chip (card-editor).",
+    "note": "Chip on a tree node for a layer drawn above the card. {anchor} is where it is pinned, such as top left.",
     "max": 30,
     "vars": {
       "anchor": "The value that replaces anchor in the text."
@@ -8722,7 +8722,7 @@
   },
   "card-editor.unit-field.label-unit": {
     "text": "{label} unit",
-    "note": "Shown in unit field (card-editor).",
+    "note": "Accessible label of the unit dropdown beside a number field. {label} is the field name, such as Width, giving Width unit.",
     "max": 20,
     "vars": {
       "label": "The value that replaces label in the text."
@@ -8780,7 +8780,7 @@
   },
   "card-editor.value-bg-editor.empty-uses-the-module-entity-entity": {
     "text": "Empty uses the module entity ({entity}).",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Helper text under the value background entity field. {entity} is the entity ID of the module, used when the field is left blank.",
     "max": 65,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -8853,7 +8853,7 @@
   },
   "card-editor.value-bg-editor.module-entity-entity": {
     "text": "Module entity ({entity})",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Dropdown option in the value background editor that follows the module's own entity. {entity} is its entity ID.",
     "max": 40,
     "vars": {
       "entity": "The value that replaces entity in the text."
@@ -8886,7 +8886,7 @@
   },
   "card-editor.value-bg-editor.the-area-fades-out-upwards-the-line": {
     "text": "The area fades out upwards. The line stays faint ({pct}%) so text over it stays readable.",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Description of the fade style for the value background. {pct} is the line opacity as a whole number, so the text reads 30% for 30.",
     "max": 145,
     "vars": {
       "pct": "The value that replaces pct in the text."
@@ -9029,7 +9029,7 @@
   },
   "card-editor.view-detect.matches-this-view-sections-columns-of-12": {
     "text": "Matches this view (sections, {columns} of 12 columns)",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Badge saying the card width fits a sections view. {columns} is how many of the 12 grid columns the card spans.",
     "max": 85,
     "vars": {
       "columns": "The value that replaces columns in the text."
@@ -9062,7 +9062,7 @@
   },
   "card-editor.view-detect.view-type-type-isn-t-supported": {
     "text": "View type {type} isn't supported",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Warning when the dashboard view is of a type the card cannot adapt to. {type} is the view type name, such as masonry.",
     "max": 55,
     "vars": {
       "type": "The value that replaces type in the text."
@@ -9135,7 +9135,7 @@
   },
   "card-editor.yaml-editor.n": {
     "text": "{n, plural, one {Embed it to share this card with another Home Assistant.} other {Embed them to share this card with another Home Assistant.}}",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Hint in the YAML editor. It refers to the custom animations the card uses: it for one, them for several. Plural forms follow the count.",
     "max": 95,
     "vars": {
       "n": "The count the text is about."
@@ -9143,7 +9143,7 @@
   },
   "card-editor.yaml-editor.uses-n-of-your-animations": {
     "text": "Uses {n} of your animations.",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Hint in the YAML editor saying how many of the user's own custom animations the card refers to. {n} is a number.",
     "max": 45,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -9156,7 +9156,7 @@
   },
   "card-editor.yaml-editor.yaml-copied-not-embedded-not-found-ids": {
     "text": "YAML copied. Not embedded (not found): {ids}.",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Toast after copying YAML when some custom animations could not be found. {ids} is a comma-separated list of animation IDs.",
     "max": 75,
     "vars": {
       "ids": "The value that replaces ids in the text."
