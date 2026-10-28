@@ -3692,17 +3692,17 @@
   },
   "anim-studio.particles-editor.seed": {
     "text": "Seed",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of the number field in the particles editor that fixes the random pattern, so the same seed gives the same effect.",
     "max": 15
   },
   "anim-studio.particles-editor.shape": {
     "text": "Shape",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of the particle shape field in the particles editor; what each particle looks like. Not the drawn shape in the draw tools.",
     "max": 10
   },
   "anim-studio.particles-editor.shape-mix": {
     "text": "Shape mix",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Heading in the particles editor for a list of several shapes, each with a weight, mixed in one effect.",
     "max": 15
   },
   "anim-studio.particles-editor.shape-n": {

@@ -1,137 +1,137 @@
 {
   "layer-editor.bg-layer-editor.add-state": {
     "text": "Add state",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button in the background layer editor: adds a rule that gives the layer another look for one entity state.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.another-attribute": {
     "text": "Another attribute…",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Dropdown entry in the background layer editor: choose an entity attribute that is not in the short list. Keep the ellipsis.",
     "max": 30
   },
   "layer-editor.bg-layer-editor.any-other-state": {
     "text": "Any other state",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Name of the fallback state rule in the background layer editor: used when no other state rule matches.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.back-and-forth": {
     "text": "Back and forth",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Option for how the picture pans and zooms: it moves one way, then returns, repeatedly.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.blur": {
     "text": "Blur",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label in the background layer editor: how strongly the layer is blurred. A noun, not an action.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.changes-with-state": {
     "text": "Changes with state",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Option in the background layer editor: the layer's look follows the entity state, with a rule for each state.",
     "max": 30
   },
   "layer-editor.bg-layer-editor.checks": {
     "text": "Checks",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Pattern choice for a pattern layer: a chequerboard of alternating squares. Plural noun.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.colour": {
     "text": "Colour",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Layer type and field label in the background layer editor: a layer filled with one flat colour.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.copied": {
     "text": "Copied",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Short confirmation that replaces the Copy YAML button label for a moment after the YAML is copied to the clipboard.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.copy-yaml": {
     "text": "Copy YAML",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Button in the background layer editor: copies the layer's configuration as YAML to the clipboard. Keep YAML.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.custom-size": {
     "text": "Custom size",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Picture sizing option: the person enters their own width and height instead of Fill the card or Fit inside.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.device": {
     "text": "Device",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label in the background layer editor: the Home Assistant device whose picture or state the layer follows.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.diagonal-lines": {
     "text": "Diagonal lines",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Pattern choice for a pattern layer: slanted parallel stripes. Different from Lines, which are straight.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.dim-from-bottom": {
     "text": "Dim from bottom",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Option for darkening behind text: the shade is strongest at the bottom edge and fades upwards.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.dim-from-top": {
     "text": "Dim from top",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Option for darkening behind text: the shade is strongest at the top edge and fades downwards.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.dims-the-frame-and-shows-how-long-ago": {
     "text": "Dims the frame and shows how long ago the last good picture arrived.",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Hint under a camera setting: when the camera stops sending pictures, the last one is dimmed and an age such as '5 min ago' is shown.",
     "max": 110
   },
   "layer-editor.bg-layer-editor.do-not-repeat": {
     "text": "Do not repeat",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Image option: the picture is drawn once and not tiled across the layer.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.dot-size": {
     "text": "Dot size",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for a dots pattern layer: how big each dot is.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.dots": {
     "text": "Dots",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Pattern choice for a pattern layer: a regular grid of small dots. Plural noun.",
     "max": 10
   },
   "layer-editor.bg-layer-editor.duration": {
     "text": "Duration",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label in the background layer editor: how long one pan-and-zoom or slideshow cycle takes.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.end": {
     "text": "End",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label for the end of a pan and zoom move: where the picture finishes. Pairs with Start.",
     "max": 5
   },
   "layer-editor.bg-layer-editor.fill-the-card": {
     "text": "Fill the card",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Picture sizing option: the picture covers the whole card and may be cropped. Opposite of Fit inside.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.fit-inside": {
     "text": "Fit inside",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Picture sizing option: the whole picture is shown inside the card and nothing is cropped. Opposite of Fill the card.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.focus-point": {
     "text": "Focus point",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Field label: the spot of the picture that stays in view when it is cropped to fit the card.",
     "max": 20
   },
   "layer-editor.bg-layer-editor.follows-a-device": {
     "text": "Follows a device",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Option in the background layer editor: the layer takes its picture or state from a chosen device.",
     "max": 30
   },
   "layer-editor.bg-layer-editor.gradient": {
     "text": "Gradient",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Layer type in the background layer editor: a smooth blend between colours, built with the visual controls.",
     "max": 15
   },
   "layer-editor.bg-layer-editor.gradient-css": {
     "text": "Gradient (CSS)",
-    "note": "Shown in bg layer editor (layer-editor).",
+    "note": "Layer type in the background layer editor: a gradient written as a CSS value by hand. Keep CSS.",
     "max": 25
   },
   "layer-editor.bg-layer-editor.grid": {

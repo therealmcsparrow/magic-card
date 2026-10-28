@@ -1011,7 +1011,7 @@
   },
   "svg-editor.names.a-group-can-t-go-inside-itself": {
     "text": "A group can't go inside itself.",
-    "note": "Shown in names (svg-editor).",
+    "note": "Message when you drag a group into one of its own children in the layer tree.",
     "max": 50
   },
   "svg-editor.names.accent": {
@@ -1051,7 +1051,7 @@
   },
   "svg-editor.names.and-previous-and-next-point-c-corner-or": {
     "text": "[ and ] previous and next point, C corner or smooth, H handle, Delete removes",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line for point editing. The key names and letters are keys on the keyboard and stay as written.",
     "max": 125
   },
   "svg-editor.names.arrow": {
@@ -1061,7 +1061,7 @@
   },
   "svg-editor.names.arrows-move-shift-arrows-move-far-alt": {
     "text": "Arrows move, Shift+arrows move far, Alt+arrows move 0.1",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line for nudging a selection. Shift and Alt are key names and stay as written; 0.1 is a distance in units.",
     "max": 90
   },
   "svg-editor.names.backward": {
@@ -1114,12 +1114,12 @@
   },
   "svg-editor.names.ctrl-d-duplicate-ctrl-g-group-shift-h": {
     "text": "Ctrl+D duplicate, Ctrl+G group, Shift+H and Shift+V flip",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line for shape shortcuts. Key combinations such as Ctrl+D stay as written; translate only the action words.",
     "max": 90
   },
   "svg-editor.names.ctrl-z-undo-ctrl-shift-z-redo-ctrl-enter": {
     "text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help line for undo, redo and saving. Key combinations stay as written; Done and Save to library match the button labels.",
     "max": 115
   },
   "svg-editor.names.drop": {
@@ -1167,7 +1167,7 @@
   },
   "svg-editor.names.in-a-number-field-ctrl-z-undoes-the": {
     "text": "In a number field Ctrl+Z undoes the field. Press Enter first to undo the editor.",
-    "note": "Shown in names (svg-editor).",
+    "note": "Keyboard help hint about undo inside a number input. Ctrl+Z and Enter are key names and stay as written.",
     "max": 130
   },
   "svg-editor.names.intersect": {
@@ -1190,7 +1190,7 @@
   },
   "svg-editor.names.it-can-t-go-there": {
     "text": "It can't go there.",
-    "note": "Shown in names (svg-editor).",
+    "note": "Short message when a dragged layer is dropped on a place that does not accept it.",
     "max": 30
   },
   "svg-editor.names.join": {

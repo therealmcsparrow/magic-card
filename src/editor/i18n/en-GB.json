@@ -5005,7 +5005,7 @@
   },
   "card-editor.image-editor.image-url": {
     "text": "Image URL",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Label of the text field for a web address or /local path of the image.",
     "max": 15
   },
   "card-editor.image-editor.none": {
@@ -5123,12 +5123,12 @@
   },
   "card-editor.inspector.flows": {
     "text": "Flows",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector tab for animated flow lines that follow entity values.",
     "max": 10
   },
   "card-editor.inspector.general": {
     "text": "General",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector tab with the basic content settings, such as entity and name.",
     "max": 15
   },
   "card-editor.inspector.hidden-on-dashboard": {
@@ -5191,7 +5191,7 @@
   },
   "card-editor.inspector.settings": {
     "text": "Settings",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector tab for the card-level or container-level options of the selection.",
     "max": 15
   },
   "card-editor.inspector.the-modules-inside-this-layout-the": {
@@ -5231,12 +5231,12 @@
   },
   "card-editor.item-menu.add": {
     "text": "Add",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Context menu entry that opens a submenu of things to add at this position.",
     "max": 10
   },
   "card-editor.item-menu.add-column": {
     "text": "Add column",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Context menu entry that inserts a new empty column next to the selected one.",
     "max": 20
   },
   "card-editor.item-menu.add-flow-from-here": {
@@ -5246,27 +5246,27 @@
   },
   "card-editor.item-menu.add-module": {
     "text": "Add module",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Context menu entry that adds a content module, such as an icon or gauge, to the selection.",
     "max": 20
   },
   "card-editor.item-menu.add-row": {
     "text": "Add row",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Context menu entry that inserts a new empty row next to the selected one.",
     "max": 15
   },
   "card-editor.item-menu.add-tab": {
     "text": "Add tab",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Context menu entry that adds a new tab to the selected tab bar.",
     "max": 20
   },
   "card-editor.item-menu.arrange": {
     "text": "Arrange",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Context menu entry that opens move and reorder options, such as move up or down.",
     "max": 15
   },
   "card-editor.item-menu.back": {
     "text": "Back",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that returns from a submenu to the main item menu.",
     "max": 10
   },
   "card-editor.item-menu.back-to-normal": {
@@ -5276,17 +5276,17 @@
   },
   "card-editor.item-menu.cancel": {
     "text": "Cancel",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu button that leaves a pending action, such as a delete confirmation, unchanged.",
     "max": 10
   },
   "card-editor.item-menu.card": {
     "text": "Card",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu heading for actions that apply to the whole card, not the selected item.",
     "max": 10
   },
   "card-editor.item-menu.close": {
     "text": "Close",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Accessible name of the control that closes the item menu.",
     "max": 10
   },
   "card-editor.item-menu.column-n": {
@@ -5314,12 +5314,12 @@
   },
   "card-editor.item-menu.copy-design": {
     "text": "Copy design",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that copies the selected item's look so it can be pasted onto another.",
     "max": 20
   },
   "card-editor.item-menu.copy-module": {
     "text": "Copy module",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that copies the whole module, with content and design, for pasting elsewhere.",
     "max": 20
   },
   "card-editor.item-menu.copy-this-yaml": {
@@ -5329,17 +5329,17 @@
   },
   "card-editor.item-menu.copy-yaml": {
     "text": "Copy YAML",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that copies the selected item's configuration as YAML text to the clipboard.",
     "max": 15
   },
   "card-editor.item-menu.delete": {
     "text": "Delete",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that removes the selected item; a confirmation may follow.",
     "max": 15
   },
   "card-editor.item-menu.delete-column": {
     "text": "Delete column",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that removes the selected column together with everything in it.",
     "max": 25
   },
   "card-editor.item-menu.delete-column-name-and-its-n": {
@@ -5353,12 +5353,12 @@
   },
   "card-editor.item-menu.delete-row": {
     "text": "Delete row",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that removes the selected row together with everything in it.",
     "max": 20
   },
   "card-editor.item-menu.delete-tab": {
     "text": "Delete tab",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Menu entry that removes the selected tab together with its content.",
     "max": 20
   },
   "card-editor.item-menu.delete-tab-name-and-its-n": {
