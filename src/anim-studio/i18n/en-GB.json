@@ -3882,47 +3882,47 @@
   },
   "anim-studio.particles-editor.to": {
     "text": "To",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of the end value of a range in the particles editor, paired with From. Not the preposition in a sentence.",
     "max": 5
   },
   "anim-studio.particles-editor.trimmed": {
     "text": "Trimmed",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Short status badge in the particles editor: the loop was cut down to stay within the size limit.",
     "max": 15
   },
   "anim-studio.particles-editor.turbulence": {
     "text": "Turbulence",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Slider label in the particles editor for how much particles wobble and swirl at random while they move.",
     "max": 20
   },
   "anim-studio.particles-editor.turn-collider-off": {
     "text": "Turn collider off",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip or button label in the particles editor that stops particles bouncing off a collider shape.",
     "max": 30
   },
   "anim-studio.particles-editor.turn-collider-on": {
     "text": "Turn collider on",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip or button label in the particles editor that makes particles bounce off a collider shape.",
     "max": 30
   },
   "anim-studio.particles-editor.turn-fade-off": {
     "text": "Turn fade off",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip or button label in the particles editor that stops particles fading out at the end of their life.",
     "max": 25
   },
   "anim-studio.particles-editor.turn-fade-on": {
     "text": "Turn fade on",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip or button label in the particles editor that makes particles fade out at the end of their life.",
     "max": 20
   },
   "anim-studio.particles-editor.turn-on-a-collider-first": {
     "text": "Turn on a collider first.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint in the particles editor, shown when a collider option is unavailable because no collider is switched on.",
     "max": 40
   },
   "anim-studio.particles-editor.unknown-preset": {
     "text": "Unknown preset",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Name shown in the particles editor when the saved preset id is not found, for example from a newer version.",
     "max": 25
   },
   "anim-studio.particles-editor.up-to-parentsleft-for-this-emitter-all": {
@@ -3936,7 +3936,7 @@
   },
   "anim-studio.particles-editor.use-baked-loop": {
     "text": "Use baked loop",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Button in the particles editor that switches to the pre-computed loop, which is light on dashboards.",
     "max": 25
   },
   "anim-studio.particles-editor.use-emoji": {
@@ -3949,37 +3949,37 @@
   },
   "anim-studio.particles-editor.use-live-simulation": {
     "text": "Use live simulation",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Button in the particles editor that switches to calculating the particles live instead of the baked loop.",
     "max": 35
   },
   "anim-studio.particles-editor.use-the-parent-s-colours": {
     "text": "Use the parent's colours",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Switch label in the child particle settings; child particles copy the colours of the particle that spawned them.",
     "max": 40
   },
   "anim-studio.particles-editor.variation": {
     "text": "Variation",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Slider label in the particles editor for how much each particle differs randomly from the base value.",
     "max": 15
   },
   "anim-studio.particles-editor.weight": {
     "text": "Weight",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Number field label for how often a shape in the mix is picked compared with the others. Not physical weight.",
     "max": 10
   },
   "anim-studio.particles-editor.wind-angle-deg": {
     "text": "Wind angle (deg)",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Number field label in the particles editor; the direction the wind pushes particles, in degrees.",
     "max": 30
   },
   "anim-studio.particles-layers.behind-the-content": {
     "text": "behind the content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Lowercase fragment that fills {where} in 'Move {where}' and similar texts; the emitter is drawn under the card content.",
     "max": 30
   },
   "anim-studio.particles-layers.card-content": {
     "text": "Card content",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Name of the fixed row in the particle layer list that stands for the card's own text, icons and background.",
     "max": 20
   },
   "anim-studio.particles-layers.card-content-text-icons-and-background": {
@@ -3989,7 +3989,7 @@
   },
   "anim-studio.particles-layers.child-particles": {
     "text": "Child particles",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Name of the layer row for particles that other particles spawn, when no emitter name is available.",
     "max": 25
   },
   "anim-studio.particles-layers.child-particles-of-name": {

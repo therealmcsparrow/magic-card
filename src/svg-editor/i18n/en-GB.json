@@ -1615,32 +1615,32 @@
   },
   "svg-editor.views.dismiss": {
     "text": "Dismiss",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that hides a message without taking any action.",
     "max": 15
   },
   "svg-editor.views.document": {
     "text": "Document",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading for settings of the whole drawing, such as canvas size, not of one shape.",
     "max": 15
   },
   "svg-editor.views.done": {
     "text": "Done",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that applies the drawing to the card and leaves the editor. Also named in the Ctrl+Enter shortcut help.",
     "max": 10
   },
   "svg-editor.views.down": {
     "text": "Down",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that moves the selected layer one step down in the stack, or lower in drawing order.",
     "max": 10
   },
   "svg-editor.views.drag-a-box-or-click-two-corners-without": {
     "text": "Drag a box, or click two corners. Without a mouse: arrows move the crosshair, Enter sets a corner.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tool hint for the select tool's box selection. Enter is a key name and stays as written.",
     "max": 160
   },
   "svg-editor.views.drag-across-shapes-to-cut-them-along-the": {
     "text": "Drag across shapes to cut them along the whole line. Arrows move the crosshair, Enter sets an end.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tool hint for the knife tool that cuts shapes. Enter is a key name and stays as written.",
     "max": 160
   },
   "svg-editor.views.drag-to-draw-the-line-is-smoothed-when": {
@@ -1650,42 +1650,42 @@
   },
   "svg-editor.views.drag-to-move-the-view-scroll-to-move": {
     "text": "Drag to move the view. Scroll to move, Ctrl and scroll to zoom.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tool hint for the hand tool that pans the canvas. Ctrl is a key name and stays as written.",
     "max": 105
   },
   "svg-editor.views.dual-tone": {
     "text": "Dual-tone",
-    "note": "Shown in views (svg-editor).",
+    "note": "Name of an icon colour mode that uses two paints, Main and Accent, instead of one.",
     "max": 15
   },
   "svg-editor.views.duplicate": {
     "text": "Duplicate",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that makes a copy of the selected shape. Verb, not an adjective.",
     "max": 15
   },
   "svg-editor.views.entity-off": {
     "text": "Entity off",
-    "note": "Shown in views (svg-editor).",
+    "note": "Preview option that shows the icon as it looks when the Home Assistant entity is switched off.",
     "max": 20
   },
   "svg-editor.views.entity-on": {
     "text": "Entity on",
-    "note": "Shown in views (svg-editor).",
+    "note": "Preview option that shows the icon as it looks when the Home Assistant entity is switched on.",
     "max": 15
   },
   "svg-editor.views.everything-painted-accent-is-painted": {
     "text": "Everything painted Accent is painted Main instead. You can undo this.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Confirmation after switching an icon to one paint. Accent and Main are the paint names and must match their own labels.",
     "max": 115
   },
   "svg-editor.views.export-file": {
     "text": "Export file",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that downloads the drawing as an SVG file.",
     "max": 20
   },
   "svg-editor.views.export-import": {
     "text": "Export / Import",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the panel section for getting drawings out of and into the editor. Keep the slash.",
     "max": 25
   },
   "svg-editor.views.fewer-decimals-make-a-smaller-icon": {
@@ -1695,22 +1695,22 @@
   },
   "svg-editor.views.fill": {
     "text": "Fill",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the inside colour of a shape. Pairs with Stroke.",
     "max": 10
   },
   "svg-editor.views.fill-and-stroke": {
     "text": "Fill and stroke",
-    "note": "Shown in views (svg-editor).",
+    "note": "Option that paints both the inside and the outline of a shape.",
     "max": 25
   },
   "svg-editor.views.fill-rule": {
     "text": "Fill rule",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label for the setting that decides which areas of an overlapping path are filled (non-zero or even-odd).",
     "max": 15
   },
   "svg-editor.views.finish-path": {
     "text": "Finish path",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that ends the path being drawn and leaves it open. Differs from Close path.",
     "max": 20
   },
   "svg-editor.views.fit-to-view": {
