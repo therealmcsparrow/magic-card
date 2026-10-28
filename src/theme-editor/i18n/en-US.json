@@ -1676,8 +1676,8 @@
     "hash": "649f9df1"
   },
   "theme-editor.model.this-value-is-longer-than-max-characters": {
-    "text": "This value is longer than {max} characters.",
-    "hash": "09b92633"
+    "text": "{max, plural, one {This value is longer than # character.} other {This value is longer than # characters.}}",
+    "hash": "7eb8e7f7"
   },
   "theme-editor.model.this-value-must-be-text-or-a-number": {
     "text": "This value must be text or a number.",
@@ -2395,9 +2395,13 @@
     "text": "Preview mode",
     "hash": "481bc90f"
   },
-  "theme-editor.preview.preview-of-count-sample-cards-using-the": {
-    "text": "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.",
-    "hash": "b12c54c0"
+  "theme-editor.preview.preview-of-count-sample-cards-dark": {
+    "text": "{count, plural, one {Preview of # sample card using the dark variables. The sample is not interactive.} other {Preview of # sample cards using the dark variables. The samples are not interactive.}}",
+    "hash": "4532599d"
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-light": {
+    "text": "{count, plural, one {Preview of # sample card using the light variables. The sample is not interactive.} other {Preview of # sample cards using the light variables. The samples are not interactive.}}",
+    "hash": "823745e5"
   },
   "theme-editor.preview.preview-of-name-could-not-load": {
     "text": "Preview of {name} could not load.",

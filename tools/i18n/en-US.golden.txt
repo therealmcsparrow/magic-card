@@ -180,7 +180,7 @@ anim-studio	anim-studio.part-inspector.centre	Center
 anim-studio	anim-studio.part-inspector.count-on-the-timeline-rotate-move-scale	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and color this part there.
 anim-studio	anim-studio.part-inspector.no-keys-yet-add-keys-on-the-timeline-to	No keys yet. Add keys on the timeline to rotate, move, scale, fade or color this part.
 anim-studio	anim-studio.particles-editor.add-colour	Add color
-anim-studio	anim-studio.particles-editor.at-most-colours-colours	At most {colours} colors
+anim-studio	anim-studio.particles-editor.at-most-colours-colours	{colours, plural, one {At most # color} other {At most # colors}}
 anim-studio	anim-studio.particles-editor.between-min-and-max-empty-uses-intensity	Between {min} and {max}; empty uses {intensity}. Timing and color come from the animation settings.
 anim-studio	anim-studio.particles-editor.child-colour	Child color
 anim-studio	anim-studio.particles-editor.colour-n	Color {n}

@@ -1676,8 +1676,8 @@
     "hash": "649f9df1"
   },
   "theme-editor.model.this-value-is-longer-than-max-characters": {
-    "text": "Deze waarde is langer dan {max} tekens.",
-    "hash": "09b92633"
+    "text": "{max, plural, one {Deze waarde is langer dan # teken.} other {Deze waarde is langer dan # tekens.}}",
+    "hash": "7eb8e7f7"
   },
   "theme-editor.model.this-value-must-be-text-or-a-number": {
     "text": "Deze waarde moet tekst of een getal zijn.",
@@ -2395,9 +2395,13 @@
     "text": "Voorbeeldmodus",
     "hash": "481bc90f"
   },
-  "theme-editor.preview.preview-of-count-sample-cards-using-the": {
-    "text": "Voorbeeld van {count} voorbeeldkaarten met de {mode, select, dark {donkere} other {lichte}} variabelen. De voorbeelden zijn niet interactief.",
-    "hash": "b12c54c0"
+  "theme-editor.preview.preview-of-count-sample-cards-dark": {
+    "text": "{count, plural, one {Voorbeeld van # voorbeeldkaart met de donkere variabelen. Het voorbeeld is niet interactief.} other {Voorbeeld van # voorbeeldkaarten met de donkere variabelen. De voorbeelden zijn niet interactief.}}",
+    "hash": "4532599d"
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-light": {
+    "text": "{count, plural, one {Voorbeeld van # voorbeeldkaart met de lichte variabelen. Het voorbeeld is niet interactief.} other {Voorbeeld van # voorbeeldkaarten met de lichte variabelen. De voorbeelden zijn niet interactief.}}",
+    "hash": "823745e5"
   },
   "theme-editor.preview.preview-of-name-could-not-load": {
     "text": "Het voorbeeld van {name} kon niet worden geladen.",

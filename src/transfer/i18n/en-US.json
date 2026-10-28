@@ -68,16 +68,16 @@
     "hash": "1d8ce038"
   },
   "transfer.envelope.the-author-must-be-1-max-characters-so": {
-    "text": "The author must be 1-{max} characters, so it was left out.",
-    "hash": "75811817"
+    "text": "{max, plural, one {The author must be 1 character, so it was left out.} other {The author must be 1-# characters, so it was left out.}}",
+    "hash": "f34ad4f0"
   },
   "transfer.envelope.the-checker-for-images-did-not-load-so": {
     "text": "The checker for images did not load, so this image was not read.",
     "hash": "f1d22ef2"
   },
   "transfer.envelope.the-description-must-be-1-max-characters": {
-    "text": "The description must be 1-{max} characters, so it was left out.",
-    "hash": "54caf9c4"
+    "text": "{max, plural, one {The description must be 1 character, so it was left out.} other {The description must be 1-# characters, so it was left out.}}",
+    "hash": "59da6379"
   },
   "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
     "text": "The id \"{id}\" appears twice in this file; the first one was used.",
@@ -108,8 +108,8 @@
     "hash": "ff5de08c"
   },
   "transfer.envelope.this-file-holds-more-than-max-items-so": {
-    "text": "This file holds more than {max} items, so it was not read.",
-    "hash": "bd852bdf"
+    "text": "{max, plural, one {This file holds more than # item, so it was not read.} other {This file holds more than # items, so it was not read.}}",
+    "hash": "edff1fa1"
   },
   "transfer.envelope.this-file-is-larger-than-8-mb-so-it-was": {
     "text": "This file is larger than 8 MB, so it was not read.",
@@ -447,13 +447,29 @@
     "text": "Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor's IP address.",
     "hash": "dd585584"
   },
-  "transfer.panel.export-items": {
-    "text": "Export {items}",
-    "hash": "3dc6c213"
+  "transfer.panel.export-animations": {
+    "text": "{n, plural, one {Export # animation} other {Export # animations}}",
+    "hash": "48e5c5a5"
+  },
+  "transfer.panel.export-icons": {
+    "text": "{n, plural, one {Export # icon} other {Export # icons}}",
+    "hash": "cc51c0ae"
+  },
+  "transfer.panel.export-images": {
+    "text": "{n, plural, one {Export # image} other {Export # images}}",
+    "hash": "97419d59"
+  },
+  "transfer.panel.export-shapes": {
+    "text": "{n, plural, one {Export # shape} other {Export # shapes}}",
+    "hash": "71c568f4"
   },
   "transfer.panel.export-text": {
     "text": "Export text",
     "hash": "e4c3120f"
+  },
+  "transfer.panel.export-themes": {
+    "text": "{n, plural, one {Export # theme} other {Export # themes}}",
+    "hash": "c7cc2084"
   },
   "transfer.panel.file-format": {
     "text": "File format",
@@ -463,17 +479,33 @@
     "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
     "hash": "62625dad"
   },
+  "transfer.panel.import-animations": {
+    "text": "{n, plural, one {Import # animation} other {Import # animations}}",
+    "hash": "75831c8b"
+  },
   "transfer.panel.import-anyway": {
     "text": "Import anyway",
     "hash": "e06eac7e"
   },
-  "transfer.panel.import-items": {
-    "text": "Import {items}",
-    "hash": "c903551f"
+  "transfer.panel.import-icons": {
+    "text": "{n, plural, one {Import # icon} other {Import # icons}}",
+    "hash": "3b3f2aac"
+  },
+  "transfer.panel.import-images": {
+    "text": "{n, plural, one {Import # image} other {Import # images}}",
+    "hash": "1073854d"
   },
   "transfer.panel.import-presets": {
     "text": "Import presets",
     "hash": "0d44eca1"
+  },
+  "transfer.panel.import-shapes": {
+    "text": "{n, plural, one {Import # shape} other {Import # shapes}}",
+    "hash": "9e85886c"
+  },
+  "transfer.panel.import-themes": {
+    "text": "{n, plural, one {Import # theme} other {Import # themes}}",
+    "hash": "f9811f49"
   },
   "transfer.panel.json-or-svg-up-to-8-mb": {
     "text": "JSON or SVG, up to 8 MB",
@@ -531,9 +563,25 @@
     "text": "Replace them",
     "hash": "f199ad2e"
   },
-  "transfer.panel.source-holds-items": {
-    "text": "{source} holds {items}.",
-    "hash": "a039162e"
+  "transfer.panel.source-holds-animations": {
+    "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
+    "hash": "cddd5aed"
+  },
+  "transfer.panel.source-holds-icons": {
+    "text": "{n, plural, one {{source} holds # icon.} other {{source} holds # icons.}}",
+    "hash": "b2deffe5"
+  },
+  "transfer.panel.source-holds-images": {
+    "text": "{n, plural, one {{source} holds # image.} other {{source} holds # images.}}",
+    "hash": "a2260029"
+  },
+  "transfer.panel.source-holds-shapes": {
+    "text": "{n, plural, one {{source} holds # shape.} other {{source} holds # shapes.}}",
+    "hash": "c7698106"
+  },
+  "transfer.panel.source-holds-themes": {
+    "text": "{n, plural, one {{source} holds # theme.} other {{source} holds # themes.}}",
+    "hash": "c69b55de"
   },
   "transfer.panel.the-author-name-is-saved-in-the-file": {
     "text": "The author name is saved in the file. Check it before you share the file.",
@@ -616,8 +664,8 @@
     "hash": "0eca0c64"
   },
   "transfer.shape.a-shape-holds-at-most-max-points-this": {
-    "text": "A shape holds at most {max} points (this one has {n}).",
-    "hash": "1da1b920"
+    "text": "{max, plural, one {A shape holds at most # point (this one has {n}).} other {A shape holds at most # points (this one has {n}).}}",
+    "hash": "aa67485b"
   },
   "transfer.shape.corner-name-is-not-valid-so-it-was-left": {
     "text": "Corner {name} is not valid, so it was left out.",
@@ -736,8 +784,8 @@
     "hash": "121ee242"
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {
-    "text": "The value of \"{key}\" is longer than {max} characters, so it was left out.",
-    "hash": "dcc64e48"
+    "text": "{max, plural, one {The value of \"{key}\" is longer than # character, so it was left out.} other {The value of \"{key}\" is longer than # characters, so it was left out.}}",
+    "hash": "7e6add95"
   },
   "transfer.theme.the-value-of-key-is-not-text-or-a-number": {
     "text": "The value of \"{key}\" is not text or a number, so it was left out.",

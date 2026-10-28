@@ -2992,8 +2992,8 @@
     "hash": "baaddf70"
   },
   "card-editor.gradient-editor.up-to-max-stops": {
-    "text": "Up to {max} stops",
-    "hash": "c43ddb62"
+    "text": "{max, plural, one {Up to # stop} other {Up to # stops}}",
+    "hash": "9e63a734"
   },
   "card-editor.gradient-editor.use-a-hex-colour-rgb-a-or-var-name": {
     "text": "Use a hex color, rgb(a) or var(--name).",
@@ -4192,8 +4192,8 @@
     "hash": "ba318cc1"
   },
   "card-editor.layout-glyph.n-columns-ratio": {
-    "text": "{n} columns, {ratio}",
-    "hash": "d7042c25"
+    "text": "{n, plural, one {# column, {ratio}} other {# columns, {ratio}}}",
+    "hash": "9523a894"
   },
   "card-editor.library-sheet.close": {
     "text": "Close",
@@ -4300,8 +4300,8 @@
     "hash": "28a8d980"
   },
   "card-editor.magic-card-editor.replaced-old-with-new-the-modules-of-all": {
-    "text": "Replaced {old} with {new}. The modules of all {n} tabs are kept in tab order.",
-    "hash": "bb09dc9d"
+    "text": "{n, plural, one {Replaced {old} with {new}. The modules of the only tab are kept in tab order.} other {Replaced {old} with {new}. The modules of all # tabs are kept in tab order.}}",
+    "hash": "940764c2"
   },
   "card-editor.magic-card-editor.this-card-is-linked-to-template-name-do": {
     "text": "This card is linked to template {name}. Do you want to update all linked cards with this structural change?",
@@ -6700,8 +6700,8 @@
     "hash": "ebd1472a"
   },
   "card-editor.yaml-editor.uses-n-of-your-animations": {
-    "text": "Uses {n} of your animations.",
-    "hash": "3aa97799"
+    "text": "{n, plural, one {Uses # of your animations.} other {Uses # of your animations.}}",
+    "hash": "e4e96f08"
   },
   "card-editor.yaml-editor.yaml-copied": {
     "text": "YAML copied.",

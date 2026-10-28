@@ -52,8 +52,8 @@
     "hash": "3e1302d5"
   },
   "image-transfer.reader.only-the-first-max-connections-were-kept": {
-    "text": "Alleen de eerste {max} koppelingen zijn bewaard.",
-    "hash": "d5184c17"
+    "text": "{max, plural, one {Alleen de eerste # koppeling is bewaard.} other {Alleen de eerste # koppelingen zijn bewaard.}}",
+    "hash": "3c8c85e8"
   },
   "image-transfer.reader.the-image-could-not-be-read": {
     "text": "De afbeelding kon niet worden gelezen.",

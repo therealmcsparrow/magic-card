@@ -664,12 +664,12 @@
     "hash": "75d490e5"
   },
   "look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the": {
-    "text": "{n} tekens van elk label staan op de kaart. Schermlezers krijgen het volledige label.",
-    "hash": "4f3e77b5"
+    "text": "{n, plural, one {# teken van elk label staat op de kaart. Schermlezers krijgen het volledige label.} other {# tekens van elk label staan op de kaart. Schermlezers krijgen het volledige label.}}",
+    "hash": "b4fa4591"
   },
   "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
-    "text": "Meer dan {n} stops kan niet.",
-    "hash": "d4596f52"
+    "text": "{n, plural, one {Meer dan # stop kan niet.} other {Meer dan # stops kan niet.}}",
+    "hash": "b96ea2af"
   },
   "look-editor.mc-slider-look-editor.name-look": {
     "text": "Look {name}",

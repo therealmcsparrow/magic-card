@@ -4044,11 +4044,11 @@
     "max": 10
   },
   "card-editor.gradient-editor.up-to-max-stops": {
-    "text": "Up to {max} stops",
+    "text": "{max, plural, one {Up to # stop} other {Up to # stops}}",
     "note": "Hint of the most colour stops a gradient can have. {max} is a whole number, always 2 or more, so no singular form is needed.",
     "max": 30,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most stops a gradient can have."
     }
   },
   "card-editor.gradient-editor.use-a-hex-colour-rgb-a-or-var-name": {
@@ -5694,11 +5694,11 @@
     }
   },
   "card-editor.layout-glyph.n-columns-ratio": {
-    "text": "{n} columns, {ratio}",
+    "text": "{n, plural, one {# column, {ratio}} other {# columns, {ratio}}}",
     "note": "Accessible description of a layout preview. {n} is the column count, 2 or more, so always plural; {ratio} is the width ratio, such as 1:2.",
     "max": 35,
     "vars": {
-      "n": "The value that replaces n in the text.",
+      "n": "The number of columns.",
       "ratio": "The value that replaces ratio in the text."
     }
   },
@@ -5847,11 +5847,11 @@
     }
   },
   "card-editor.magic-card-editor.replaced-old-with-new-the-modules-of-all": {
-    "text": "Replaced {old} with {new}. The modules of all {n} tabs are kept in tab order.",
+    "text": "{n, plural, one {Replaced {old} with {new}. The modules of the only tab are kept in tab order.} other {Replaced {old} with {new}. The modules of all # tabs are kept in tab order.}}",
     "note": "Toast after replacing a tabs module. {old} and {new} are translated module type names; {n} is the number of tabs, always 2 or more, so no singular form.",
     "max": 125,
     "vars": {
-      "n": "The value that replaces n in the text.",
+      "n": "The number of tabs.",
       "new": "The value that replaces new in the text.",
       "old": "The value that replaces old in the text."
     }
@@ -9135,11 +9135,11 @@
     }
   },
   "card-editor.yaml-editor.uses-n-of-your-animations": {
-    "text": "Uses {n} of your animations.",
+    "text": "{n, plural, one {Uses # of your animations.} other {Uses # of your animations.}}",
     "note": "Hint in the YAML editor saying how many of the user's own custom animations the card refers to. {n} is a number.",
     "max": 45,
     "vars": {
-      "n": "The value that replaces n in the text."
+      "n": "The number of animations the YAML uses."
     }
   },
   "card-editor.yaml-editor.yaml-copied": {

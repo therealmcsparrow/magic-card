@@ -188,7 +188,5 @@ export function kindWord(a: EditPath['anchors'][number], smooth: boolean): strin
   return k === 'smooth' ? t('path-canvas.geometry.smooth') : k === 'symmetric' ? t('path-canvas.geometry.symmetric') : t('path-canvas.geometry.corner');
 }
 
-export const pointsWord = (n: number): string => t('path-canvas.geometry.n', { n });
-
 /** An angle in degrees, said in the language. */
 export const degrees = (v: number): string => t('path-canvas.geometry.n-degrees', { n: shown(v) });

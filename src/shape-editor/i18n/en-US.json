@@ -48,8 +48,8 @@
     "hash": "16ec095c"
   },
   "shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points": {
-    "text": "A shape holds up to {max} points.",
-    "hash": "9b8297e2"
+    "text": "{max, plural, one {A shape holds up to # point.} other {A shape holds up to # points.}}",
+    "hash": "a3258886"
   },
   "shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes": {
     "text": "A shape named {name} exists. Saving changes every card that uses it.",
@@ -128,8 +128,8 @@
     "hash": "0372c574"
   },
   "shape-editor.mc-shape-studio.c-of-max-points": {
-    "text": "{c} of {max} points",
-    "hash": "0b60a2bf"
+    "text": "{max, plural, one {{c} of # point} other {{c} of # points}}",
+    "hash": "a392177d"
   },
   "shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it": {
     "text": "Can raise the space, not lower it.",

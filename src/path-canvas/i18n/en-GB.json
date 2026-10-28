@@ -14,14 +14,6 @@
     "note": "Name of a snap guide in the drawing canvas: the edge of the frame or of another shape. Read out to screen reader users.",
     "max": 10
   },
-  "path-canvas.geometry.n": {
-    "text": "{n, plural, one {# point} other {# points}}",
-    "note": "Count of points on a path. {n} is the number of points. Inserted into longer sentences such as Path, 4 points, closed.",
-    "max": 15,
-    "vars": {
-      "n": "The count the text is about."
-    }
-  },
   "path-canvas.geometry.n-degrees": {
     "text": "{n, plural, one {# degree} other {# degrees}}",
     "note": "An angle. {n} is the angle in degrees, rounded as it is shown.",
@@ -46,11 +38,11 @@
     "max": 15
   },
   "path-canvas.mc-path-canvas.all-points-selected": {
-    "text": "All {points} selected.",
+    "text": "{points, plural, one {All # point selected.} other {All # points selected.}}",
     "note": "Screen reader announcement. {points} is a count with its noun, such as 4 points.",
     "max": 40,
     "vars": {
-      "points": "The value that replaces points in the text."
+      "points": "The number of points in the path."
     }
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-cursor-or-the": {
@@ -93,11 +85,11 @@
     "max": 25
   },
   "path-canvas.mc-path-canvas.n-points-selected": {
-    "text": "{n} points selected.",
+    "text": "{n, plural, one {# point selected.} other {# points selected.}}",
     "note": "Screen reader announcement. {n} is the number of selected points, always more than one.",
     "max": 35,
     "vars": {
-      "n": "The value that replaces n in the text."
+      "n": "The count the text is about."
     }
   },
   "path-canvas.mc-path-canvas.path-closed": {
@@ -111,36 +103,36 @@
     "max": 25
   },
   "path-canvas.mc-path-canvas.path-points-closed": {
-    "text": "Path, {points}, closed.",
+    "text": "{points, plural, one {Path, # point, closed.} other {Path, # points, closed.}}",
     "note": "Accessible name of a closed path (its ends are joined). {points} is a count with its noun, such as 4 points. Compare Path, {points}, open.",
     "max": 40,
     "vars": {
-      "points": "The value that replaces points in the text."
+      "points": "The number of points in the path."
     }
   },
   "path-canvas.mc-path-canvas.path-points-open": {
-    "text": "Path, {points}, open.",
+    "text": "{points, plural, one {Path, # point, open.} other {Path, # points, open.}}",
     "note": "Accessible name of an open path (its ends are not joined). {points} is a count with its noun, such as 4 points. Compare Path, {points}, closed.",
     "max": 35,
     "vars": {
-      "points": "The value that replaces points in the text."
+      "points": "The number of points in the path."
     }
   },
   "path-canvas.mc-path-canvas.point-added-points": {
-    "text": "Point added, {points}.",
+    "text": "{points, plural, one {Point added, # point.} other {Point added, # points.}}",
     "note": "Screen reader announcement after one point was added. {points} is the new total as a count with its noun, such as 5 points.",
     "max": 40,
     "vars": {
-      "points": "The value that replaces points in the text."
+      "points": "The number of points in the path now."
     }
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
-    "text": "{deleted, plural, one {Point deleted} other {Points deleted}}, {points}.",
+    "text": "{deleted, plural, one {Point deleted} other {Points deleted}}, {points, plural, one {# point} other {# points}}.",
     "note": "Screen reader announcement after points were removed. {deleted} is how many points were removed; {points} is the new total as a count with its noun, such as 3 points.",
     "max": 40,
     "vars": {
       "deleted": "The count the text is about.",
-      "points": "The value that replaces points in the text."
+      "points": "The number of points left in the path."
     }
   },
   "path-canvas.mc-path-canvas.point-n-is-now-kind": {
@@ -185,11 +177,11 @@
     "max": 215
   },
   "path-canvas.mc-path-canvas.this-path-has-max-points-the-most-you": {
-    "text": "This path has {max} points, the most you can add. Move, delete or change them instead.",
+    "text": "{max, plural, one {This path has # point, the most you can add. Move, delete or change it instead.} other {This path has # points, the most you can add. Move, delete or change them instead.}}",
     "note": "Message when the point limit is reached. {max} is the largest number of points one path may have.",
     "max": 140,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most points a path can have."
     }
   },
   "path-canvas.mc-path-canvas.this-point-has-no-handles-press-c-to": {

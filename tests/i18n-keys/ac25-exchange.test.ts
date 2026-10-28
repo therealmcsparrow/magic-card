@@ -107,17 +107,20 @@ describe('AC25 export', () => {
     expect(f['en-US'].json['demo.panel.colour']).toBe('Pick a color for the card');
   });
 
-  it('describes each key: note and max in the description, max, hash, plural categories, placeholders', () => {
+  it('describes each key: note, one line per argument and max in the description; max, hash, plural categories as x- values; no placeholders object', () => {
     const f = flatFiles(exported());
     for (const locale of ['en-GB', 'en-US', 'nl']) {
       const j = f[locale].json;
       expect(j['@demo.panel.title'].description, locale).toBe('Heading of the demo panel. Max 20 characters.');
+      expect(j['@demo.panel.count'].description, locale).toBe('Number of items in the list. {n}: Number of items. Max 30 characters.');
+      expect(j['@demo.panel.hi'].description, locale).toBe('Greeting above the form. {name}: Name of the person. Max 30 characters.');
       expect(j['@demo.panel.title']['x-max-length'], locale).toBe(20);
       expect(j['@demo.panel.title']['x-source-hash'], locale).toBe(sourceHash('Hello'));
-      expect(j['@demo.panel.title'].placeholders, `${locale} no arguments, no placeholders`).toBeUndefined();
+      expect(Object.keys(j['@demo.panel.title']), locale).not.toContain('placeholders');
       expect([...j['@demo.panel.count']['x-plural']].sort(), locale).toEqual(['one', 'other']);
-      expect(j['@demo.panel.count'].placeholders, locale).toEqual({ n: { description: 'Number of items' } });
-      expect(j['@demo.panel.hi'].placeholders, locale).toEqual({ name: { description: 'Name of the person' } });
+      expect(j['@demo.panel.count'].placeholders, locale).toBeUndefined();
+      expect(j['@demo.panel.hi'].placeholders, locale).toBeUndefined();
+      expect(Object.keys(j['@demo.panel.count']), locale).toEqual(['description', ...(locale === 'en-GB' ? [] : ['source_text']), 'x-max-length', 'x-source-hash', 'x-plural']);
       expect(j['@demo.panel.title']['x-plural'], `${locale} no plural`).toBeUndefined();
     }
   });
@@ -250,6 +253,58 @@ describe('AC25 the @key and x- values of an imported file are not trusted', () =
   });
 });
 
+describe('AC25 services rewrite the file', () => {
+  it('imports the same values from a file whose @key objects carry stale x- values and a Weblate-style placeholders object', () => {
+    const p = exported();
+    const before = sources(p);
+    editFlat(p, 'nl', (j) => {
+      j['@demo.panel.hi'].placeholders = { $NAME$: { content: '{name}' } };
+      j['@demo.panel.hi']['x-source-hash'] = '00000000';
+      j['@demo.panel.hi']['x-stale'] = true;
+      j['@demo.panel.count'].placeholders = 'not an object';
+    });
+    const r = p.flat('import');
+    expect(r.code, r.all).toBe(0);
+    expect(sources(p)).toEqual(before);
+  });
+
+  it('accepts a plural with other spacing and branch order, writes it as it came, and the next export gives the same text back', () => {
+    const p = exported();
+    editFlat(p, 'nl', (j) => (j['demo.panel.count'] = '{n,plural,other{# stuks} one{# stuk}}'));
+    const r = p.flat('import');
+    expect(r.code, r.all).toBe(0);
+    expect(p.flat('export').code).toBe(0);
+    expect(flatFiles(p)['nl'].json['demo.panel.count']).toBe('{n,plural,other{# stuks} one{# stuk}}');
+    expect(flatFiles(p)['nl'].json['@demo.panel.count']['x-plural']).toEqual(['other', 'one']);
+  });
+
+  it('takes the locale from the file name when "@@locale" is missing, and keeps the repository text of a key that came back missing or empty', () => {
+    const p = exported();
+    const before = sources(p);
+    editFlat(p, 'nl', (j) => {
+      delete j['@@locale'];
+      delete j['demo.panel.hi'];
+      j['demo.panel.title'] = '';
+    });
+    const r = p.flat('import');
+    expect(r.code, r.all).toBe(0);
+    expect(sources(p)).toEqual(before);
+  });
+
+  it('ignores "@@" names other than "@@locale"', () => {
+    const p = exported();
+    const before = sources(p);
+    editFlat(p, 'nl', (j) => {
+      j['@@last_modified'] = '2026-10-28T00:00:00Z';
+      j['@@author'] = 'someone';
+      j['@@x-note'] = { a: 1 };
+    });
+    const r = p.flat('import');
+    expect(r.code, r.all).toBe(0);
+    expect(sources(p)).toEqual(before);
+  });
+});
+
 describe('AC25 import refuses untrusted input and writes nothing', () => {
   const raw = (p: Project, locale: string, edit: (text: string, json: Record<string, any>) => string) => {
     const f = flatFiles(p)[locale];
@@ -257,6 +312,14 @@ describe('AC25 import refuses untrusted input and writes nothing', () => {
   };
   const cases: Array<[string, (p: Project) => void]> = [
     ['an unknown key', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.ghost'] = 'Boe'))],
+    ['an @ name for __proto__', (p) => raw(p, 'nl', (t) => t.replace(/\n}\n$/, ',\n  "@__proto__": { "description": "x" }\n}\n'))],
+    ['an @ name for constructor', (p) => editFlat(p, 'nl', (j) => (j['@constructor'] = { description: 'x' }))],
+    ['an @@ name for prototype', (p) => raw(p, 'nl', (t) => t.replace(/\n}\n$/, ',\n  "@@prototype": "x"\n}\n'))],
+    ['a wrong "@@locale"', (p) => editFlat(p, 'nl', (j) => (j['@@locale'] = 'de'))],
+    ['a text whose arguments differ from the English', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.hi'] = 'Hoi {naam}'))],
+    ['a text without the English arguments', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.hi'] = 'Hoi'))],
+    ['a plural turned into a plain argument', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.count'] = '{n} stuks'))],
+    ['a text longer than its maximum', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hallo daar, dit is veel te lang voor de kop'))],
     ['a key of a namespace that does not exist', (p) => editFlat(p, 'nl', (j) => (j['nowhere.panel.title'] = 'Boe'))],
     ['the key __proto__', (p) => raw(p, 'nl', (t) => t.replace(/\n}\n$/, ',\n  "__proto__": "polluted"\n}\n'))],
     ['the key constructor', (p) => editFlat(p, 'nl', (j) => (j.constructor = 'polluted'))],
@@ -343,5 +406,55 @@ describe('AC25 --check', () => {
     const r = fixture().flat('--check');
     expect(r.code).toBe(1);
     expect(r.all).not.toMatch(/Cannot find module|MODULE_NOT_FOUND/);
+  });
+});
+
+describe('AC25 the Magic Card Utils namespace', () => {
+  const withMcu = (): Project => {
+    const p = fixture();
+    const hash = sourceHash('Save');
+    p.writeJson('mcu/i18n/en-GB.json', { 'mcu-panel.panel.save': { text: 'Save', note: 'Label of the save button.', max: 20 } });
+    p.writeJson('mcu/i18n/en-US.json', { 'mcu-panel.panel.save': { text: 'Save', hash } });
+    p.writeJson('mcu/i18n/nl.json', { 'mcu-panel.panel.save': { text: 'Opslaan', hash } });
+    return p;
+  };
+
+  it('is exported with --mcu, imported back into that repository, and left out of a plain --check', () => {
+    const p = withMcu();
+    const mcu = p.abs('mcu');
+    expect(p.flat('export', '--mcu', mcu).code).toBe(0);
+    expect(flatFiles(p)['nl'].json['mcu-panel.panel.save']).toBe('Opslaan');
+    expect(p.flat('--check', '--mcu', mcu).code).toBe(0);
+    expect(p.flat('--check').code).toBe(0);
+    editFlat(p, 'nl', (j) => (j['mcu-panel.panel.save'] = 'Bewaren'));
+    const before = sources(p);
+    const r = p.flat('import', '--mcu', mcu);
+    expect(r.code, r.all).toBe(0);
+    const after = sources(p);
+    expect(Object.keys(after).filter((k) => after[k] !== before[k])).toEqual(['mcu/i18n/nl.json']);
+    expect(p.json<Record<string, any>>('mcu/i18n/nl.json')['mcu-panel.panel.save']).toEqual({ text: 'Bewaren', hash: sourceHash('Save') });
+  });
+
+  it('refuses a key of that namespace when --mcu is not given, and refuses an export that would drop it', () => {
+    const p = withMcu();
+    expect(p.flat('export', '--mcu', p.abs('mcu')).code).toBe(0);
+    const before = p.snapshot();
+    expect(p.flat('import').code).not.toBe(0);
+    expect(p.flat('export').code).not.toBe(0);
+    expect(p.snapshot()).toEqual(before);
+  });
+});
+
+describe('AC25 the refusal names what is wrong', () => {
+  it('names every unknown key so the localizer can delete it in the service', () => {
+    const p = exported();
+    editFlat(p, 'nl', (j) => {
+      j['demo.panel.ghost'] = 'Boe';
+      j['demo.panel.spook'] = 'Boe';
+    });
+    const r = p.flat('import');
+    expect(r.code).not.toBe(0);
+    expect(r.all).toContain('demo.panel.ghost');
+    expect(r.all).toContain('demo.panel.spook');
   });
 });

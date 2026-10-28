@@ -48,7 +48,6 @@ import {
   kindWord,
   loupeCentre,
   rnd,
-  pointsWord,
   degrees,
   snapAngle,
   snapEdges,
@@ -445,7 +444,7 @@ export class PathCanvas extends LitElement {
     }
     if (sel.anchors.length === 1) return `${this.describeAnchor(sel.path, sel.anchors[0])}.`;
     if (sel.anchors.length > 1) return t('path-canvas.mc-path-canvas.n-points-selected', { n: sel.anchors.length });
-    return p.closed ? t('path-canvas.mc-path-canvas.path-points-closed', { points: pointsWord(p.anchors.length) }) : t('path-canvas.mc-path-canvas.path-points-open', { points: pointsWord(p.anchors.length) });
+    return p.closed ? t('path-canvas.mc-path-canvas.path-points-closed', { points: p.anchors.length }) : t('path-canvas.mc-path-canvas.path-points-open', { points: p.anchors.length });
   }
 
   private announce(text: string, delay = 0): void {
@@ -840,7 +839,7 @@ export class PathCanvas extends LitElement {
       'Add point',
     );
     this.setSel({ path, anchors: [r.index] }, false);
-    this.announce(t('path-canvas.mc-path-canvas.point-added-points', { points: pointsWord(r.path.anchors.length) }));
+    this.announce(t('path-canvas.mc-path-canvas.point-added-points', { points: r.path.anchors.length }));
   }
 
   // ── pointer: move ──
@@ -1092,7 +1091,7 @@ export class PathCanvas extends LitElement {
   private afterAdd(path: number, index: number, list: EditPath[], closed?: boolean): void {
     const n = list[path]?.anchors.length ?? 0;
     this.setSel({ path, anchors: [closed ? 0 : index] }, false);
-    this.announce(closed ? t('path-canvas.mc-path-canvas.path-closed') : t('path-canvas.mc-path-canvas.point-added-points', { points: pointsWord(n) }));
+    this.announce(closed ? t('path-canvas.mc-path-canvas.path-closed') : t('path-canvas.mc-path-canvas.point-added-points', { points: n }));
   }
 
   private finishMarquee(g: Gesture, s: Pt): void {
@@ -1265,7 +1264,7 @@ export class PathCanvas extends LitElement {
         const ap = this.active();
         const n = this.paths[ap].anchors.length;
         this.setSel({ path: ap, anchors: Array.from({ length: n }, (_, i) => i) }, false);
-        this.announce(t('path-canvas.mc-path-canvas.all-points-selected', { points: pointsWord(n) }));
+        this.announce(t('path-canvas.mc-path-canvas.all-points-selected', { points: n }));
       }
       return;
     }
@@ -1457,7 +1456,7 @@ export class PathCanvas extends LitElement {
     const n = np.anchors.length;
     this.emitChange(n ? this.paths.map((x, i) => (i === ap ? np : x)) : this.paths.filter((_, i) => i !== ap), true, sel.anchors.length > 1 ? 'Delete points' : 'Delete point');
     this.setSel(n ? { path: ap, anchors: [Math.min(n - 1, Math.max(0, Math.min(...sel.anchors) - 1))] } : undefined, false);
-    this.announce(n ? t('path-canvas.mc-path-canvas.point-deleted-points', { deleted: sel.anchors.length, points: pointsWord(n) }) : t('path-canvas.mc-path-canvas.path-deleted'));
+    this.announce(n ? t('path-canvas.mc-path-canvas.point-deleted-points', { deleted: sel.anchors.length, points: n }) : t('path-canvas.mc-path-canvas.path-deleted'));
   }
 
   private insertAfter(): void {

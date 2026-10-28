@@ -163,11 +163,11 @@
     "max": 30
   },
   "anim-studio.bindings-panel.at-most-max-bindings-per-animation": {
-    "text": "At most {max} bindings per animation.",
+    "text": "{max, plural, one {At most # binding per animation.} other {At most # bindings per animation.}}",
     "note": "Hint shown when the binding limit is reached. {max} is the maximum number of entity bindings, a whole number.",
     "max": 60,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most bindings an animation holds."
     }
   },
   "anim-studio.bindings-panel.attribute": {
@@ -552,19 +552,19 @@
     "max": 105
   },
   "anim-studio.draw-host.at-most-count-shapes-fit-in-a-rig": {
-    "text": "At most {count} shapes fit in a rig.",
+    "text": "{count, plural, one {At most # shape fits in a rig.} other {At most # shapes fit in a rig.}}",
     "note": "Message when the drawing limit is reached. {count} is the maximum number of shapes, a whole number.",
     "max": 60,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The most shapes a rig holds."
     }
   },
   "anim-studio.draw-host.at-most-tracks-animated-targets": {
-    "text": "At most {tracks} animated targets.",
+    "text": "{tracks, plural, one {At most # animated target.} other {At most # animated targets.}}",
     "note": "Message when too many parts are animated. {tracks} is the maximum number of animated targets, a whole number.",
     "max": 55,
     "vars": {
-      "tracks": "The value that replaces tracks in the text."
+      "tracks": "The most animated targets an animation holds."
     }
   },
   "anim-studio.draw-host.click-to-add-the-next-point": {
@@ -655,11 +655,11 @@
     }
   },
   "anim-studio.draw-host.name-added-count-points": {
-    "text": "{name} added, {count} points.",
+    "text": "{count, plural, one {{name} added, # point.} other {{name} added, # points.}}",
     "note": "Screen-reader announcement after a pen path is finished. {name} is the new shape's name; {count} is its number of anchor points, a whole number.",
     "max": 50,
     "vars": {
-      "count": "The value that replaces count in the text.",
+      "count": "The number of points in the shape.",
       "name": "The value that replaces name in the text."
     }
   },
@@ -993,11 +993,11 @@
     "max": 35
   },
   "anim-studio.draw-svg-dialog.at-most-shapes-shapes-fit-in-a-rig": {
-    "text": "At most {shapes} shapes fit in a rig.",
+    "text": "{shapes, plural, one {At most # shape fits in a rig.} other {At most # shapes fit in a rig.}}",
     "note": "Error in the SVG import dialog when the file has too many shapes. {shapes} is the maximum allowed, a whole number. Same English as another key; this one is in the dialog.",
     "max": 60,
     "vars": {
-      "shapes": "The value that replaces shapes in the text."
+      "shapes": "The most shapes a rig holds."
     }
   },
   "anim-studio.draw-svg-dialog.black-in-an-img-the-text-colour-inline": {
@@ -2817,7 +2817,7 @@
     "max": 25
   },
   "anim-studio.part-inspector.group-of-count": {
-    "text": "Group of {count, plural, one {# part} other {# parts}}",
+    "text": "{count, plural, one {Group of # part} other {Group of # parts}}",
     "note": "Subtitle in the part inspector when a group is selected. {count} is how many parts the group holds.",
     "max": 30,
     "vars": {
@@ -3187,27 +3187,27 @@
     "max": 35
   },
   "anim-studio.particles-editor.at-most-colours-colours": {
-    "text": "At most {colours} colours",
+    "text": "{colours, plural, one {At most # colour} other {At most # colours}}",
     "note": "Tooltip of the disabled Add colour button in the particles editor. {colours} is the maximum number of colours.",
     "max": 40,
     "vars": {
-      "colours": "The value that replaces colours in the text."
+      "colours": "The most colours an emitter holds."
     }
   },
   "anim-studio.particles-editor.at-most-emitters-emitters": {
-    "text": "At most {emitters} emitters.",
+    "text": "{emitters, plural, one {At most # emitter.} other {At most # emitters.}}",
     "note": "Help text under the disabled Add emitter button. {emitters} is the maximum number of emitters a particle effect can have.",
     "max": 45,
     "vars": {
-      "emitters": "The value that replaces emitters in the text."
+      "emitters": "The most emitters an animation holds."
     }
   },
   "anim-studio.particles-editor.at-most-max-shapes-shapes": {
-    "text": "At most {mAX_SHAPES} shapes",
+    "text": "{mAX_SHAPES, plural, one {At most # shape} other {At most # shapes}}",
     "note": "Tooltip of the disabled Add shape button in the particles editor. {mAX_SHAPES} is the maximum number of particle shapes.",
     "max": 45,
     "vars": {
-      "mAX_SHAPES": "The value that replaces mAX_SHAPES in the text."
+      "mAX_SHAPES": "The most shapes an emitter holds."
     }
   },
   "anim-studio.particles-editor.baked-loop": {
@@ -3622,12 +3622,12 @@
     "max": 60
   },
   "anim-studio.particles-editor.particles-particles-emitters-emitters": {
-    "text": "{particles} particles · {emitters} emitters",
+    "text": "{particles, plural, one {# particle} other {# particles}} · {emitters, plural, one {# emitter} other {# emitters}}",
     "note": "Summary line when an effect has several emitters. {particles} is the total number of particles and {emitters} is the number of emitters.",
     "max": 70,
     "vars": {
-      "emitters": "The value that replaces emitters in the text.",
-      "particles": "The value that replaces particles in the text."
+      "emitters": "The number of emitters.",
+      "particles": "The number of particles."
     }
   },
   "anim-studio.particles-editor.particles-take-the-colours-in-turn-pick": {
@@ -4675,11 +4675,11 @@
     "max": 10
   },
   "anim-studio.parts-layers.grouped-count-parts": {
-    "text": "Grouped {count} parts",
+    "text": "{count, plural, one {Grouped # part} other {Grouped # parts}}",
     "note": "Confirmation after merging several parts into one group. Count is the number of parts.",
     "max": 35,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The number of parts."
     }
   },
   "anim-studio.parts-layers.groups-removed": {
@@ -4784,11 +4784,11 @@
     "max": 15
   },
   "anim-studio.parts-layers.replace-count-parts": {
-    "text": "Replace {count} parts",
+    "text": "{count, plural, one {Replace # part} other {Replace # parts}}",
     "note": "Button that replaces the current parts with the split result. Count is the number of parts.",
     "max": 35,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The number of parts."
     }
   },
   "anim-studio.parts-layers.split-again": {
@@ -4807,7 +4807,7 @@
     "max": 20
   },
   "anim-studio.parts-layers.split-into-count": {
-    "text": "Split into {count, plural, one {# part} other {# parts}}",
+    "text": "{count, plural, one {Split into # part} other {Split into # parts}}",
     "note": "Short button label for splitting an icon, with the number of parts it will make. {count} is that number.",
     "max": 30,
     "vars": {
@@ -4815,20 +4815,20 @@
     }
   },
   "anim-studio.parts-layers.split-into-count-parts": {
-    "text": "Split into {count} parts",
+    "text": "{count, plural, one {Split into # part} other {Split into # parts}}",
     "note": "Button that splits the icon into separate parts. Count is the number of parts it will make.",
     "max": 40,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The number of parts."
     }
   },
   "anim-studio.parts-layers.split-into-count-the-first-parts": {
-    "text": "Split into {count, plural, one {# part} other {# parts}} (the first {parts})",
+    "text": "{count, plural, one {Split into # part} other {Split into # parts}} (the first {parts})",
     "note": "Split button when the icon has more shapes than a rig can hold. Parts is the already-formatted limit.",
     "max": 65,
     "vars": {
       "count": "The count the text is about.",
-      "parts": "The value that replaces parts in the text."
+      "parts": "The most parts a rig holds."
     }
   },
   "anim-studio.parts-layers.split-the-icon-to-animate-its-shapes-one": {
@@ -4847,12 +4847,12 @@
     "max": 105
   },
   "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": {
-    "text": "The icon has {count} shapes: the first {parts} became parts (the most a rig holds), the rest stay at rest.",
+    "text": "The icon has {count, plural, one {# shape} other {# shapes}}: {parts, plural, one {the first # became a part} other {the first # became parts}} (the most a rig holds), the rest stay at rest.",
     "note": "Notice after splitting a large icon. Count is the shape total; parts is the already-formatted number of parts made.",
     "max": 170,
     "vars": {
-      "count": "The value that replaces count in the text.",
-      "parts": "The value that replaces parts in the text."
+      "count": "The number of shapes in the icon.",
+      "parts": "The number of shapes that became parts."
     }
   },
   "anim-studio.parts-layers.the-parts-come-from-the-document-s-own": {
@@ -4891,11 +4891,11 @@
     "max": 55
   },
   "anim-studio.parts-model.a-rig-has-at-most-groups-groups": {
-    "text": "A rig has at most {groups} groups.",
+    "text": "{groups, plural, one {A rig has at most # group.} other {A rig has at most # groups.}}",
     "note": "Error shown when the group limit is reached. Groups is the maximum number allowed.",
     "max": 55,
     "vars": {
-      "groups": "The value that replaces groups in the text."
+      "groups": "The most groups a rig holds."
     }
   },
   "anim-studio.parts-model.part-i": {
@@ -4920,11 +4920,11 @@
     "max": 65
   },
   "anim-studio.parts-model.this-animation-has-tracks-animated": {
-    "text": "This animation has {tracks} animated targets, the most it can hold. Remove one to animate this part.",
+    "text": "{tracks, plural, one {This animation has # animated target, the most it can hold. Remove it to animate this part.} other {This animation has # animated targets, the most it can hold. Remove one to animate this part.}}",
     "note": "Error shown when the animation has no room for another animated target. Tracks is the maximum number.",
     "max": 160,
     "vars": {
-      "tracks": "The value that replaces tracks in the text."
+      "tracks": "The number of animated targets in the animation."
     }
   },
   "anim-studio.parts-overlay.icon-parts": {
@@ -5372,11 +5372,11 @@
     "max": 10
   },
   "anim-studio.sequence-editor.a-sequence-has-at-most-steps-steps": {
-    "text": "A sequence has at most {steps} steps.",
+    "text": "{steps, plural, one {A sequence has at most # step.} other {A sequence has at most # steps.}}",
     "note": "Error shown when the step limit is reached. Steps is the maximum number allowed.",
     "max": 60,
     "vars": {
-      "steps": "The value that replaces steps in the text."
+      "steps": "The most steps a sequence holds."
     }
   },
   "anim-studio.sequence-editor.a-sequence-needs-at-least-one-step": {
@@ -5400,11 +5400,11 @@
     "max": 15
   },
   "anim-studio.sequence-editor.at-most-steps-steps": {
-    "text": "At most {steps} steps",
+    "text": "{steps, plural, one {At most # step} other {At most # steps}}",
     "note": "Short tooltip on the disabled add-step button. Steps is the maximum number allowed.",
     "max": 35,
     "vars": {
-      "steps": "The value that replaces steps in the text."
+      "steps": "The most steps a sequence holds."
     }
   },
   "anim-studio.sequence-editor.cannot-play": {
@@ -6191,11 +6191,11 @@
     "max": 20
   },
   "anim-studio.states-panel.at-most-clips-max-states": {
-    "text": "At most {cLIPS_MAX} states.",
+    "text": "{cLIPS_MAX, plural, one {At most # state.} other {At most # states.}}",
     "note": "Error shown when the state limit is reached. The placeholder is the maximum number of states.",
     "max": 45,
     "vars": {
-      "cLIPS_MAX": "The value that replaces cLIPS_MAX in the text."
+      "cLIPS_MAX": "The most states an animation holds."
     }
   },
   "anim-studio.states-panel.delete-state": {
@@ -6569,21 +6569,21 @@
     "max": 15
   },
   "anim-studio.studio-model.the-library-holds-at-most-cap-animations": {
-    "text": "The library holds at most {cap} animations: only {fit} more fit, {skipped} were not imported.",
+    "text": "The library holds at most {cap, plural, one {# animation} other {# animations}}: only {fit, plural, one {# more fits} other {# more fit}}, {skipped, plural, one {# was} other {# were}} not imported.",
     "note": "Import result when only some animations fit. Cap is the library limit; fit and skipped are counts.",
     "max": 150,
     "vars": {
-      "cap": "The value that replaces cap in the text.",
-      "fit": "The value that replaces fit in the text.",
-      "skipped": "The value that replaces skipped in the text."
+      "cap": "The most animations the library holds.",
+      "fit": "The number of animations that still fit.",
+      "skipped": "The number of animations that were not imported."
     }
   },
   "anim-studio.studio-model.the-library-is-full-cap-animations": {
-    "text": "The library is full ({cap} animations): nothing was imported.",
+    "text": "{cap, plural, one {The library is full (# animation): nothing was imported.} other {The library is full (# animations): nothing was imported.}}",
     "note": "Import result when the library has no room at all. Cap is the library limit.",
     "max": 100,
     "vars": {
-      "cap": "The value that replaces cap in the text."
+      "cap": "The most animations the library holds."
     }
   },
   "anim-studio.studio-model.the-yaml-is-too-large-to-import-over-1": {
@@ -6818,11 +6818,11 @@
     }
   },
   "anim-studio.studio.count-targets": {
-    "text": "{count} targets",
+    "text": "{count, plural, one {# target} other {# targets}}",
     "note": "Number of animated targets in an animation, shown on its list entry. Plural forms may be needed.",
     "max": 25,
     "vars": {
-      "count": "The value that replaces count in the text."
+      "count": "The count the text is about."
     }
   },
   "anim-studio.studio.custom": {
@@ -7719,35 +7719,35 @@
     "max": 70
   },
   "anim-studio.validation-text.at-most-max-animations": {
-    "text": "At most {max} animations.",
+    "text": "{max, plural, one {At most # animation.} other {At most # animations.}}",
     "note": "Validation error for too many animations. Max is the limit.",
     "max": 40,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most animations a library holds."
     }
   },
   "anim-studio.validation-text.at-most-max-characters": {
-    "text": "At most {max} characters.",
+    "text": "{max, plural, one {At most # character.} other {At most # characters.}}",
     "note": "Validation error for text that is too long. Max is the character limit.",
     "max": 40,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most characters the field takes."
     }
   },
   "anim-studio.validation-text.at-most-max-entries": {
-    "text": "At most {max} entries.",
+    "text": "{max, plural, one {At most # entry.} other {At most # entries.}}",
     "note": "Validation error for a list with too many items. Max is the limit.",
     "max": 40,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most entries the list takes."
     }
   },
   "anim-studio.validation-text.at-most-max-particles-over-all-emitters": {
-    "text": "At most {max} particles over all emitters.",
+    "text": "{max, plural, one {At most # particle over all emitters.} other {At most # particles over all emitters.}}",
     "note": "Validation error when emitters together exceed the particle limit. Max is the combined limit.",
     "max": 70,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most particles over all emitters."
     }
   },
   "anim-studio.validation-text.children-cannot-have-children-of-their": {
@@ -8054,11 +8054,11 @@
     "max": 50
   },
   "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": {
-    "text": "The SVG has too many shapes; at most {room} fit.",
+    "text": "{room, plural, one {The SVG has too many shapes; at most # fits.} other {The SVG has too many shapes; at most # fit.}}",
     "note": "Error when an imported SVG exceeds the shape limit. Room is how many shapes still fit.",
     "max": 80,
     "vars": {
-      "room": "The value that replaces room in the text."
+      "room": "The number of shapes that still fit."
     }
   },
   "anim-studio.validation-text.the-svg-is-larger-than-32-kb": {

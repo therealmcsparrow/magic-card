@@ -9,7 +9,7 @@ import { loadSvgCss } from '../svg-safety/css-loader';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
-import { count } from './count';
+import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
 import { locale, t } from './i18n';
@@ -181,7 +181,7 @@ export class TransferPanel extends LitElement {
     const icon = kinds.includes('icon');
     const types = accept.replace(/\./g, '').replace(/,/g, ', ');
     return html`
-      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? t('transfer.panel.import-items', { items: count(r.items.length, r.kind) }) : t('transfer.panel.this-file-was-not-imported')) : t('transfer.panel.import-presets')}</h3></div>
+      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? importLabel(r.items.length, r.kind) : t('transfer.panel.this-file-was-not-imported')) : t('transfer.panel.import-presets')}</h3></div>
       <div class="bar">
         ${button({ label: t('transfer.panel.choose-a-file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
         <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
@@ -203,7 +203,7 @@ export class TransferPanel extends LitElement {
   private _summary(r: Ok): string {
     const n = this._notes(r);
     const kept = n.filter(KEPT).length;
-    const parts = [t('transfer.panel.source-holds-items', { source: this._fileName || t('transfer.panel.the-text'), items: count(r.items.length, r.kind) })];
+    const parts = [sourceHolds(this._fileName || t('transfer.panel.the-text'), r.items.length, r.kind)];
     if (kept) parts.push(t('transfer.panel.n', { n: kept }));
     if (n.length - kept) parts.push(t('transfer.panel.n-2', { n: n.length - kept }));
     return parts.join(' ');
@@ -263,7 +263,7 @@ export class TransferPanel extends LitElement {
           </div>`
         : nothing}
       <div class="bar">
-        ${button({ label: kept.length ? t('transfer.panel.import-anyway') : t('transfer.panel.import-items', { items: count(r.items.length, r.kind) }), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
+        ${button({ label: kept.length ? t('transfer.panel.import-anyway') : importLabel(r.items.length, r.kind), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
         ${button({ label: t('transfer.panel.cancel'), variant: 'text', onClick: () => (this._res = undefined) })}
       </div>
     `;
@@ -305,7 +305,7 @@ export class TransferPanel extends LitElement {
     if (!e?.items.length) return html`<p class="help" role="status">${t('transfer.panel.nothing-to-export')}</p>`;
     const text = this._text();
     return html`
-      <div class="group-head"><h3 tabindex="-1">${t('transfer.panel.export-items', { items: count(e.items.length, e.kind) })}</h3></div>
+      <div class="group-head"><h3 tabindex="-1">${exportLabel(e.items.length, e.kind)}</h3></div>
       ${e.kind === 'image'
         ? nothing
         : html`<div class="field">

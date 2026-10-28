@@ -116,8 +116,8 @@
     "hash": "8bc83a36"
   },
   "anim-studio.bindings-panel.at-most-max-bindings-per-animation": {
-    "text": "Hooguit {max} koppelingen per animatie.",
-    "hash": "1f975119"
+    "text": "{max, plural, one {Hooguit # koppeling per animatie.} other {Hooguit # koppelingen per animatie.}}",
+    "hash": "8d4a76c5"
   },
   "anim-studio.bindings-panel.attribute": {
     "text": "Attribuut",
@@ -408,12 +408,12 @@
     "hash": "108a763c"
   },
   "anim-studio.draw-host.at-most-count-shapes-fit-in-a-rig": {
-    "text": "Hooguit {count} vormen passen in een rig.",
-    "hash": "9ee09724"
+    "text": "{count, plural, one {Hooguit # vorm past in een rig.} other {Hooguit # vormen passen in een rig.}}",
+    "hash": "a5e00407"
   },
   "anim-studio.draw-host.at-most-tracks-animated-targets": {
-    "text": "Hooguit {tracks} geanimeerde doelen.",
-    "hash": "5f2916dc"
+    "text": "{tracks, plural, one {Hooguit # geanimeerd doel.} other {Hooguit # geanimeerde doelen.}}",
+    "hash": "46cac497"
   },
   "anim-studio.draw-host.click-to-add-the-next-point": {
     "text": "Klik om het volgende punt toe te voegen",
@@ -468,8 +468,8 @@
     "hash": "a5f571df"
   },
   "anim-studio.draw-host.name-added-count-points": {
-    "text": "{name} toegevoegd, {count} punten.",
-    "hash": "6a260b80"
+    "text": "{count, plural, one {{name} toegevoegd, # punt.} other {{name} toegevoegd, # punten.}}",
+    "hash": "9716510c"
   },
   "anim-studio.draw-host.name-is-locked-unlock-it-in-layers": {
     "text": "{name} is vergrendeld. Ontgrendel hem in Lagen.",
@@ -712,8 +712,8 @@
     "hash": "f09a94d5"
   },
   "anim-studio.draw-svg-dialog.at-most-shapes-shapes-fit-in-a-rig": {
-    "text": "Hooguit {shapes} vormen passen in een rig.",
-    "hash": "1e8c3dd1"
+    "text": "{shapes, plural, one {Hooguit # vorm past in een rig.} other {Hooguit # vormen passen in een rig.}}",
+    "hash": "e18f7c84"
   },
   "anim-studio.draw-svg-dialog.black-in-an-img-the-text-colour-inline": {
     "text": "Zwart in een <img>, de tekstkleur inline.",
@@ -2000,8 +2000,8 @@
     "hash": "598d6292"
   },
   "anim-studio.part-inspector.group-of-count": {
-    "text": "Groep van {count, plural, one {# onderdeel} other {# onderdelen}}",
-    "hash": "2fdb419b"
+    "text": "{count, plural, one {Groep van # onderdeel} other {Groep van # onderdelen}}",
+    "hash": "fc4e8551"
   },
   "anim-studio.part-inspector.group-pivot": {
     "text": "Draaipunt van groep",
@@ -2276,16 +2276,16 @@
     "hash": "dfa0f9ba"
   },
   "anim-studio.particles-editor.at-most-colours-colours": {
-    "text": "Hooguit {colours} kleuren",
-    "hash": "e16206b4"
+    "text": "{colours, plural, one {Hooguit # kleur} other {Hooguit # kleuren}}",
+    "hash": "b1d99b5b"
   },
   "anim-studio.particles-editor.at-most-emitters-emitters": {
-    "text": "Hooguit {emitters} emitters.",
-    "hash": "f06c3cc9"
+    "text": "{emitters, plural, one {Hooguit # emitter.} other {Hooguit # emitters.}}",
+    "hash": "a108d72c"
   },
   "anim-studio.particles-editor.at-most-max-shapes-shapes": {
-    "text": "Hooguit {mAX_SHAPES} vormen",
-    "hash": "9671c741"
+    "text": "{mAX_SHAPES, plural, one {Hooguit # vorm} other {Hooguit # vormen}}",
+    "hash": "37acf217"
   },
   "anim-studio.particles-editor.baked-loop": {
     "text": "Ingebakken lus",
@@ -2588,8 +2588,8 @@
     "hash": "b6f3cb57"
   },
   "anim-studio.particles-editor.particles-particles-emitters-emitters": {
-    "text": "{particles} deeltjes · {emitters} emitters",
-    "hash": "d3288348"
+    "text": "{particles, plural, one {# deeltje} other {# deeltjes}} · {emitters, plural, one {# emitter} other {# emitters}}",
+    "hash": "20df3361"
   },
   "anim-studio.particles-editor.particles-take-the-colours-in-turn-pick": {
     "text": "Deeltjes nemen om beurten de kleuren. Kies er een om hem te wijzigen.",
@@ -3328,8 +3328,8 @@
     "hash": "34ca0e76"
   },
   "anim-studio.parts-layers.grouped-count-parts": {
-    "text": "{count} onderdelen gegroepeerd",
-    "hash": "1274b765"
+    "text": "{count, plural, one {# onderdeel gegroepeerd} other {# onderdelen gegroepeerd}}",
+    "hash": "56048712"
   },
   "anim-studio.parts-layers.groups-removed": {
     "text": "{count, plural, one {Groep verwijderd} other {Groepen verwijderd}}",
@@ -3400,8 +3400,8 @@
     "hash": "05487af3"
   },
   "anim-studio.parts-layers.replace-count-parts": {
-    "text": "{count} onderdelen vervangen",
-    "hash": "a28e4ff5"
+    "text": "{count, plural, one {# onderdeel vervangen} other {# onderdelen vervangen}}",
+    "hash": "d00f37c4"
   },
   "anim-studio.parts-layers.split-again": {
     "text": "Opnieuw splitsen",
@@ -3416,16 +3416,16 @@
     "hash": "1e3ae1ec"
   },
   "anim-studio.parts-layers.split-into-count": {
-    "text": "Splitsen in {count, plural, one {# onderdeel} other {# onderdelen}}",
-    "hash": "b26695f4"
+    "text": "{count, plural, one {Splitsen in # onderdeel} other {Splitsen in # onderdelen}}",
+    "hash": "54d9edfc"
   },
   "anim-studio.parts-layers.split-into-count-parts": {
-    "text": "Gesplitst in {count} onderdelen",
-    "hash": "525e5108"
+    "text": "{count, plural, one {Gesplitst in # onderdeel} other {Gesplitst in # onderdelen}}",
+    "hash": "54d9edfc"
   },
   "anim-studio.parts-layers.split-into-count-the-first-parts": {
-    "text": "Splitsen in {count, plural, one {# onderdeel} other {# onderdelen}} (de eerste {parts})",
-    "hash": "aee42429"
+    "text": "{count, plural, one {Splitsen in # onderdeel} other {Splitsen in # onderdelen}} (de eerste {parts})",
+    "hash": "54c3b491"
   },
   "anim-studio.parts-layers.split-the-icon-to-animate-its-shapes-one": {
     "text": "Splits het pictogram om zijn vormen een voor een te animeren: de klepel van een bel, de bladen van een ventilator.",
@@ -3440,8 +3440,8 @@
     "hash": "5a113a37"
   },
   "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": {
-    "text": "Het pictogram heeft {count} vormen: de eerste {parts} werden onderdelen (het meeste wat een rig aankan), de rest blijft in rust.",
-    "hash": "7c929822"
+    "text": "Het pictogram heeft {count, plural, one {# vorm} other {# vormen}}: {parts, plural, one {de eerste # werd een onderdeel} other {de eerste # werden onderdelen}} (het meeste wat een rig aankan), de rest blijft in rust.",
+    "hash": "bd77ac3b"
   },
   "anim-studio.parts-layers.the-parts-come-from-the-document-s-own": {
     "text": "De onderdelen komen uit de eigen SVG van het document, een onderdeel per vorm.",
@@ -3472,8 +3472,8 @@
     "hash": "2400617e"
   },
   "anim-studio.parts-model.a-rig-has-at-most-groups-groups": {
-    "text": "Een rig heeft hooguit {groups} groepen.",
-    "hash": "49b408c6"
+    "text": "{groups, plural, one {Een rig heeft hooguit # groep.} other {Een rig heeft hooguit # groepen.}}",
+    "hash": "9fa111fa"
   },
   "anim-studio.parts-model.part-i": {
     "text": "Onderdeel {i}",
@@ -3488,8 +3488,8 @@
     "hash": "31522274"
   },
   "anim-studio.parts-model.this-animation-has-tracks-animated": {
-    "text": "Deze animatie heeft {tracks} geanimeerde doelen, het maximum. Verwijder er een om dit onderdeel te animeren.",
-    "hash": "4fe4748e"
+    "text": "{tracks, plural, one {Deze animatie heeft # geanimeerd doel, het maximum. Verwijder het om dit onderdeel te animeren.} other {Deze animatie heeft # geanimeerde doelen, het maximum. Verwijder er een om dit onderdeel te animeren.}}",
+    "hash": "2a402961"
   },
   "anim-studio.parts-overlay.icon-parts": {
     "text": "Pictogramonderdelen",
@@ -3816,8 +3816,8 @@
     "hash": "464d23b5"
   },
   "anim-studio.sequence-editor.a-sequence-has-at-most-steps-steps": {
-    "text": "Een reeks heeft hooguit {steps} stappen.",
-    "hash": "ce8050c3"
+    "text": "{steps, plural, one {Een reeks heeft hooguit # stap.} other {Een reeks heeft hooguit # stappen.}}",
+    "hash": "9760a6a7"
   },
   "anim-studio.sequence-editor.a-sequence-needs-at-least-one-step": {
     "text": "Een reeks heeft minstens één stap nodig",
@@ -3836,8 +3836,8 @@
     "hash": "1dd10f24"
   },
   "anim-studio.sequence-editor.at-most-steps-steps": {
-    "text": "Hooguit {steps} stappen",
-    "hash": "19309ff4"
+    "text": "{steps, plural, one {Hooguit # stap} other {Hooguit # stappen}}",
+    "hash": "9fb50de4"
   },
   "anim-studio.sequence-editor.cannot-play": {
     "text": "Kan niet afspelen",
@@ -4396,8 +4396,8 @@
     "hash": "d4871096"
   },
   "anim-studio.states-panel.at-most-clips-max-states": {
-    "text": "Hooguit {cLIPS_MAX} statussen.",
-    "hash": "bdc41b3c"
+    "text": "{cLIPS_MAX, plural, one {Hooguit # status.} other {Hooguit # statussen.}}",
+    "hash": "361a7ba9"
   },
   "anim-studio.states-panel.delete-state": {
     "text": "Status verwijderen",
@@ -4656,12 +4656,12 @@
     "hash": "0740f4ba"
   },
   "anim-studio.studio-model.the-library-holds-at-most-cap-animations": {
-    "text": "De bibliotheek bevat hooguit {cap} animaties: er passen nog maar {fit}, {skipped} zijn niet geïmporteerd.",
-    "hash": "96136087"
+    "text": "De bibliotheek bevat hooguit {cap, plural, one {# animatie} other {# animaties}}: {fit, plural, one {er past nog maar #} other {er passen nog maar #}}, {skipped, plural, one {# is} other {# zijn}} niet geïmporteerd.",
+    "hash": "ecb0b0e6"
   },
   "anim-studio.studio-model.the-library-is-full-cap-animations": {
-    "text": "De bibliotheek is vol ({cap} animaties): er is niets geïmporteerd.",
-    "hash": "acb55521"
+    "text": "{cap, plural, one {De bibliotheek is vol (# animatie): er is niets geïmporteerd.} other {De bibliotheek is vol (# animaties): er is niets geïmporteerd.}}",
+    "hash": "b46e7dfd"
   },
   "anim-studio.studio-model.the-yaml-is-too-large-to-import-over-1": {
     "text": "De YAML is te groot om te importeren (meer dan 1 MB).",
@@ -4836,8 +4836,8 @@
     "hash": "5dc651c3"
   },
   "anim-studio.studio.count-targets": {
-    "text": "{count} doelen",
-    "hash": "4628d8d6"
+    "text": "{count, plural, one {# doel} other {# doelen}}",
+    "hash": "66494c50"
   },
   "anim-studio.studio.custom": {
     "text": "Aangepast",
@@ -5448,20 +5448,20 @@
     "hash": "d7d3dec4"
   },
   "anim-studio.validation-text.at-most-max-animations": {
-    "text": "Hooguit {max} animaties.",
-    "hash": "dc786299"
+    "text": "{max, plural, one {Hooguit # animatie.} other {Hooguit # animaties.}}",
+    "hash": "5f8d5979"
   },
   "anim-studio.validation-text.at-most-max-characters": {
-    "text": "Hooguit {max} tekens.",
-    "hash": "88a8b97d"
+    "text": "{max, plural, one {Hooguit # teken.} other {Hooguit # tekens.}}",
+    "hash": "cd8e58b7"
   },
   "anim-studio.validation-text.at-most-max-entries": {
-    "text": "Hooguit {max} items.",
-    "hash": "43b6c78a"
+    "text": "{max, plural, one {Hooguit # item.} other {Hooguit # items.}}",
+    "hash": "f2705738"
   },
   "anim-studio.validation-text.at-most-max-particles-over-all-emitters": {
-    "text": "Hooguit {max} deeltjes over alle emitters.",
-    "hash": "4160dc47"
+    "text": "{max, plural, one {Hooguit # deeltje over alle emitters.} other {Hooguit # deeltjes over alle emitters.}}",
+    "hash": "69a955fc"
   },
   "anim-studio.validation-text.children-cannot-have-children-of-their": {
     "text": "Kinderen kunnen geen eigen kinderen hebben.",
@@ -5688,8 +5688,8 @@
     "hash": "cf1f4072"
   },
   "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": {
-    "text": "De SVG heeft te veel vormen; er passen er maximaal {room}.",
-    "hash": "1913cac6"
+    "text": "{room, plural, one {De SVG heeft te veel vormen; er past er maximaal #.} other {De SVG heeft te veel vormen; er passen er maximaal #.}}",
+    "hash": "b9082bad"
   },
   "anim-studio.validation-text.the-svg-is-larger-than-32-kb": {
     "text": "De SVG is groter dan 32 KB.",

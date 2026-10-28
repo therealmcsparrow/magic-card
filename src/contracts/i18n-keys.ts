@@ -1,5 +1,5 @@
 /*
- * Contract: i18n-keys. Version 1.0.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; the text-id path is gone
+ * Contract: i18n-keys. Version 1.1.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; the text-id path is gone
  * (see "Text ids" below). Types and tool constants only: src/ imports types,
  * tools read the constants (the file has only type imports, which transpiling drops, so tools transpile and run
  * it like the i18n contract).
@@ -66,14 +66,15 @@
  * One flat file per locale under i18n/flat/ (card and Magic Card Utils namespaces together), ARB JSON (EXCHANGE_FORMAT):
  *   "@@locale": locale
  *   "<key>": the text in that locale (ICU message, plural branches included)
- *   "@<key>": { description: note + " Max <max> characters.", source_text: English (translations only),
- *              placeholders: one entry per argument with its vars description, "x-max-length": max,
- *              "x-source-hash": hash of the English, "x-stale": true when stale (translations only),
- *              "x-plural": the plural categories the message uses, "x-aliases": old keys from renames.json }
+ *   "@<key>": { description: note, one "{name}: <vars description>" per argument (sorted), then "Max <max> characters.",
+ *              source_text: English (translations only), "x-max-length": max, "x-source-hash": hash of the English,
+ *              "x-stale": true when stale (translations only), "x-plural": the plural categories the message uses,
+ *              "x-aliases": old keys from renames.json }. No placeholders object: argument notes live in description.
  * Keys from renames.json appear only in x-aliases, never as entries. `import` writes nl.json (and the en-US
  * exceptions) back; export then import of unchanged files gives byte-identical source files. `--check` exits 1 when
  * a committed exchange file differs from a fresh export. No dist file is read or written. Imported files are
  * untrusted: size-capped, keys checked against KEY_PATTERN and en-GB.json, no prototype keys, texts through D6.
+ * Incoming "@<key>" objects (placeholders and x- values included) and "@@" names other than "@@locale" are ignored, not validated; import rebuilds them from en-GB.
  *
  * ── Error cases ──
  * key does not match KEY_PATTERN or its prefix is not the namespace -> check-i18n error (D1) and build error
@@ -89,7 +90,7 @@
 
 import type { MessageIndex, RichArgs } from './i18n';
 
-export const I18N_KEYS_CONTRACT_VERSION = '1.0.0';
+export const I18N_KEYS_CONTRACT_VERSION = '1.1.0';
 
 /** Namespace, then two to five kebab segments. The prefix check against the namespace is separate. */
 export const KEY_PATTERN = /^[a-z][a-z0-9-]*(\.[a-z0-9]+(-[a-z0-9]+)*){2,5}$/;
@@ -137,7 +138,6 @@ export interface Rename {
 export interface ExchangeMeta {
   description: string;
   source_text?: string;
-  placeholders?: Readonly<Record<string, { description: string }>>;
   'x-max-length': number;
   'x-source-hash': SourceHash;
   'x-stale'?: boolean;

@@ -276,7 +276,7 @@ export class McteThemePreview extends LitElement {
           </div>`}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
       <section class="stage" aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })} tabindex="0">
-        <p class="sr">${t('theme-editor.preview.preview-of-count-sample-cards-using-the', { count, mode })}</p>
+        <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
         ${this._skipped > 0
           ? html`<p class="strip" role="status">${t('theme-editor.preview.showing-the-last-valid-value-for-c', { c: this._skipped })}</p>`
           : nothing}

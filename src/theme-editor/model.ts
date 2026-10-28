@@ -164,7 +164,7 @@ export function validateValue(kind: FieldKind, value: ThemeValue): string | null
   if (typeof value === 'number' && !Number.isFinite(value)) return kind === 'number' ? t('theme-editor.model.enter-a-number') : t('theme-editor.model.enter-a-value');
   const v = String(value).trim();
   if (!v) return t('theme-editor.model.enter-a-value');
-  if (v.length > MAX_VALUE_LENGTH) return t('theme-editor.model.this-value-is-longer-than-max-characters', { max: String(MAX_VALUE_LENGTH) });
+  if (v.length > MAX_VALUE_LENGTH) return t('theme-editor.model.this-value-is-longer-than-max-characters', { max: MAX_VALUE_LENGTH });
   if (BAD_CHARS_RE.test(v)) return t('theme-editor.model.this-value-has-a-control-character');
   if (kind === 'text') return null;
   if (/[;{}]/.test(v) || !balanced(v)) return t('theme-editor.model.remove-chars-and-unmatched-brackets-from', { chars: '; { }' });

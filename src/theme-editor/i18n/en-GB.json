@@ -2273,11 +2273,11 @@
     "max": 75
   },
   "theme-editor.model.this-value-is-longer-than-max-characters": {
-    "text": "This value is longer than {max} characters.",
+    "text": "{max, plural, one {This value is longer than # character.} other {This value is longer than # characters.}}",
     "note": "Validation error on a variable value. {max} is the character limit (a number).",
     "max": 70,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most characters a value can have."
     }
   },
   "theme-editor.model.this-value-must-be-text-or-a-number": {
@@ -3228,13 +3228,20 @@
     "note": "Accessible name of the Light/Dark switch for the preview. Mode means light or dark appearance.",
     "max": 20
   },
-  "theme-editor.preview.preview-of-count-sample-cards-using-the": {
-    "text": "Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.",
-    "note": "Accessible description of the preview area. {count} is the number of sample cards; {mode} is 'dark' or 'light'.",
+  "theme-editor.preview.preview-of-count-sample-cards-dark": {
+    "text": "{count, plural, one {Preview of # sample card using the dark variables. The sample is not interactive.} other {Preview of # sample cards using the dark variables. The samples are not interactive.}}",
+    "note": "Screen reader line above the preview stage in dark mode: how many sample cards it shows.",
     "max": 150,
     "vars": {
-      "count": "The value that replaces count in the text.",
-      "mode": "The value that replaces mode in the text."
+      "count": "The number of sample cards."
+    }
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-light": {
+    "text": "{count, plural, one {Preview of # sample card using the light variables. The sample is not interactive.} other {Preview of # sample cards using the light variables. The samples are not interactive.}}",
+    "note": "Screen reader line above the preview stage in light mode: how many sample cards it shows.",
+    "max": 150,
+    "vars": {
+      "count": "The number of sample cards."
     }
   },
   "theme-editor.preview.preview-of-name-could-not-load": {

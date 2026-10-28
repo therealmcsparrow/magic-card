@@ -107,11 +107,11 @@
     }
   },
   "transfer.envelope.the-author-must-be-1-max-characters-so": {
-    "text": "The author must be 1-{max} characters, so it was left out.",
+    "text": "{max, plural, one {The author must be 1 character, so it was left out.} other {The author must be 1-# characters, so it was left out.}}",
     "note": "Import warning. {max} is the longest author name allowed, in characters. The author is the creator named in the file.",
     "max": 95,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most characters the author can have."
     }
   },
   "transfer.envelope.the-checker-for-images-did-not-load-so": {
@@ -120,11 +120,11 @@
     "max": 105
   },
   "transfer.envelope.the-description-must-be-1-max-characters": {
-    "text": "The description must be 1-{max} characters, so it was left out.",
+    "text": "{max, plural, one {The description must be 1 character, so it was left out.} other {The description must be 1-# characters, so it was left out.}}",
     "note": "Import warning. {max} is the longest description allowed, in characters.",
     "max": 105,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most characters the description can have."
     }
   },
   "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
@@ -173,11 +173,11 @@
     }
   },
   "transfer.envelope.this-file-holds-more-than-max-items-so": {
-    "text": "This file holds more than {max} items, so it was not read.",
+    "text": "{max, plural, one {This file holds more than # item, so it was not read.} other {This file holds more than # items, so it was not read.}}",
     "note": "Import error. {max} is the largest number of items one file may hold.",
     "max": 95,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most items a file can hold."
     }
   },
   "transfer.envelope.this-file-is-larger-than-8-mb-so-it-was": {
@@ -684,18 +684,50 @@
       "hosts": "The value that replaces hosts in the text."
     }
   },
-  "transfer.panel.export-items": {
-    "text": "Export {items}",
-    "note": "Panel heading or button. {items} is a counted phrase made elsewhere, such as '3 shapes'. Word order inside it is not under your control.",
+  "transfer.panel.export-animations": {
+    "text": "{n, plural, one {Export # animation} other {Export # animations}}",
+    "note": "Heading and button of the export step; counts the animations that are exported.",
     "max": 25,
     "vars": {
-      "items": "The value that replaces items in the text."
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-icons": {
+    "text": "{n, plural, one {Export # icon} other {Export # icons}}",
+    "note": "Heading and button of the export step; counts the icons that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-images": {
+    "text": "{n, plural, one {Export # image} other {Export # images}}",
+    "note": "Heading and button of the export step; counts the images that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-shapes": {
+    "text": "{n, plural, one {Export # shape} other {Export # shapes}}",
+    "note": "Heading and button of the export step; counts the shapes that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
     }
   },
   "transfer.panel.export-text": {
     "text": "Export text",
     "note": "Label of the read-only box that holds the export as text, ready to copy.",
     "max": 20
+  },
+  "transfer.panel.export-themes": {
+    "text": "{n, plural, one {Export # theme} other {Export # themes}}",
+    "note": "Heading and button of the export step; counts the themes that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
   },
   "transfer.panel.file-format": {
     "text": "File format",
@@ -707,23 +739,55 @@
     "note": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep HACS and product names unchanged.",
     "max": 125
   },
+  "transfer.panel.import-animations": {
+    "text": "{n, plural, one {Import # animation} other {Import # animations}}",
+    "note": "Heading and button of the import step; counts the animations that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
   "transfer.panel.import-anyway": {
     "text": "Import anyway",
     "note": "Button that proceeds with the import after the user has read the warnings.",
     "max": 25
   },
-  "transfer.panel.import-items": {
-    "text": "Import {items}",
-    "note": "Button that imports what was read. {items} is a counted phrase made elsewhere, such as '3 icons'.",
+  "transfer.panel.import-icons": {
+    "text": "{n, plural, one {Import # icon} other {Import # icons}}",
+    "note": "Heading and button of the import step; counts the icons that are imported.",
     "max": 25,
     "vars": {
-      "items": "The value that replaces items in the text."
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.import-images": {
+    "text": "{n, plural, one {Import # image} other {Import # images}}",
+    "note": "Heading and button of the import step; counts the images that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
     }
   },
   "transfer.panel.import-presets": {
     "text": "Import presets",
     "note": "Panel heading for importing theme presets. 'Presets' are saved dashboard themes.",
     "max": 25
+  },
+  "transfer.panel.import-shapes": {
+    "text": "{n, plural, one {Import # shape} other {Import # shapes}}",
+    "note": "Heading and button of the import step; counts the shapes that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.import-themes": {
+    "text": "{n, plural, one {Import # theme} other {Import # themes}}",
+    "note": "Heading and button of the import step; counts the themes that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
   },
   "transfer.panel.json-or-svg-up-to-8-mb": {
     "text": "JSON or SVG, up to 8 MB",
@@ -814,13 +878,49 @@
     "note": "Choice when imported names clash: overwrite the saved items. 'Them' means the clashing items. Pairs with 'Keep both'.",
     "max": 20
   },
-  "transfer.panel.source-holds-items": {
-    "text": "{source} holds {items}.",
-    "note": "First sentence of the import summary. {source} is the file name, or the phrase 'The text' when the user pasted text. {items} is a counted phrase such as '3 shapes'.",
+  "transfer.panel.source-holds-animations": {
+    "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (animations).",
     "max": 40,
     "vars": {
-      "items": "The value that replaces items in the text.",
-      "source": "The value that replaces source in the text."
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-icons": {
+    "text": "{n, plural, one {{source} holds # icon.} other {{source} holds # icons.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (icons).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-images": {
+    "text": "{n, plural, one {{source} holds # image.} other {{source} holds # images.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (images).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-shapes": {
+    "text": "{n, plural, one {{source} holds # shape.} other {{source} holds # shapes.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (shapes).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-themes": {
+    "text": "{n, plural, one {{source} holds # theme.} other {{source} holds # themes.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (themes).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
     }
   },
   "transfer.panel.the-author-name-is-saved-in-the-file": {
@@ -930,12 +1030,12 @@
     "max": 125
   },
   "transfer.shape.a-shape-holds-at-most-max-points-this": {
-    "text": "A shape holds at most {max} points (this one has {n}).",
+    "text": "{max, plural, one {A shape holds at most # point (this one has {n}).} other {A shape holds at most # points (this one has {n}).}}",
     "note": "Import warning for a shape file with too many points. {max} is the largest number of points allowed, {n} is how many the file has. Both are numbers.",
     "max": 90,
     "vars": {
-      "max": "The value that replaces max in the text.",
-      "n": "The value that replaces n in the text."
+      "max": "The most points a shape can have.",
+      "n": "The number of points in the file."
     }
   },
   "transfer.shape.corner-name-is-not-valid-so-it-was-left": {
@@ -1134,12 +1234,12 @@
     }
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {
-    "text": "The value of \"{key}\" is longer than {max} characters, so it was left out.",
+    "text": "{max, plural, one {The value of \"{key}\" is longer than # character, so it was left out.} other {The value of \"{key}\" is longer than # characters, so it was left out.}}",
     "note": "Import note. {key} is the variable's name from the file, in quotes; do not translate it. {max} is the largest number of characters allowed, a number.",
     "max": 120,
     "vars": {
       "key": "The value that replaces key in the text.",
-      "max": "The value that replaces max in the text."
+      "max": "The most characters a value can have."
     }
   },
   "transfer.theme.the-value-of-key-is-not-text-or-a-number": {

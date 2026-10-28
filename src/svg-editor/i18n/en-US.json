@@ -4,8 +4,8 @@
     "hash": "857ca759"
   },
   "svg-editor.combine.merged-c-parts-into-one-path": {
-    "text": "Merged {c} parts into one path.",
-    "hash": "d35d8328"
+    "text": "{c, plural, one {Merged # part into one path.} other {Merged # parts into one path.}}",
+    "hash": "3f44dcd8"
   },
   "svg-editor.combine.select-a-second-shape": {
     "text": "Select a second shape.",
@@ -200,8 +200,8 @@
     "hash": "54972ecd"
   },
   "svg-editor.mc-svg-editor.c-shapes-selected": {
-    "text": "{c} shapes selected",
-    "hash": "13a26b3d"
+    "text": "{c, plural, one {# shape selected} other {# shapes selected}}",
+    "hash": "b1fb4e7e"
   },
   "svg-editor.mc-svg-editor.centre-on-canvas": {
     "text": "Center on canvas",
@@ -372,8 +372,8 @@
     "hash": "485053e8"
   },
   "svg-editor.mc-svg-editor.opened-name-the-first-of-count-icons-in": {
-    "text": "Opened {name}, the first of {count} icons in the file. The others were not used.",
-    "hash": "4627b0c6"
+    "text": "{count, plural, one {Opened {name}, the first of # icon in the file. The other was not used.} other {Opened {name}, the first of # icons in the file. The others were not used.}}",
+    "hash": "9f71785d"
   },
   "svg-editor.mc-svg-editor.over-the-32-kb-limit": {
     "text": "Over the 32 KB limit",
@@ -432,8 +432,8 @@
     "hash": "75e8028a"
   },
   "svg-editor.mc-svg-editor.spaced-c-shapes-evenly": {
-    "text": "Spaced {c} shapes evenly.",
-    "hash": "581fea2b"
+    "text": "{c, plural, one {Spaced # shape evenly.} other {Spaced # shapes evenly.}}",
+    "hash": "f8f22f5e"
   },
   "svg-editor.mc-svg-editor.that-file-has-no-shapes-an-icon-can-use": {
     "text": "That file has no shapes an icon can use.",
@@ -464,8 +464,8 @@
     "hash": "df59af1b"
   },
   "svg-editor.mc-svg-editor.this-icon-has-c-points-you-can-edit-and": {
-    "text": "This icon has {c} points. You can edit and move them, but not add points until it has fewer than 100.",
-    "hash": "b562040d"
+    "text": "{c, plural, one {This icon has # point. You can edit and move it, but not add points until it has fewer than 100.} other {This icon has # points. You can edit and move them, but not add points until it has fewer than 100.}}",
+    "hash": "d54ca6c3"
   },
   "svg-editor.mc-svg-editor.this-icon-is-used-kb-and-the-limit-is-32": {
     "text": "This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.",
@@ -760,8 +760,8 @@
     "hash": "35843e7a"
   },
   "svg-editor.names.combined-c-shapes": {
-    "text": "Combined {c} shapes.",
-    "hash": "f2d6d2a6"
+    "text": "{c, plural, one {Combined # shape.} other {Combined # shapes.}}",
+    "hash": "6a4ff67e"
   },
   "svg-editor.names.combined-shape": {
     "text": "Combined shape",
@@ -788,8 +788,8 @@
     "hash": "5b76f62e"
   },
   "svg-editor.names.excluded-c-shapes": {
-    "text": "Excluded {c} shapes.",
-    "hash": "92a06abd"
+    "text": "{c, plural, one {Excluded # shape.} other {Excluded # shapes.}}",
+    "hash": "c0813326"
   },
   "svg-editor.names.excluded-shape": {
     "text": "Excluded shape",
@@ -816,8 +816,8 @@
     "hash": "a069db5b"
   },
   "svg-editor.names.intersected-c-shapes": {
-    "text": "Intersected {c} shapes.",
-    "hash": "4fc7d3d1"
+    "text": "{c, plural, one {Intersected # shape.} other {Intersected # shapes.}}",
+    "hash": "32e501fa"
   },
   "svg-editor.names.intersected-shape": {
     "text": "Intersected shape",
@@ -1040,8 +1040,8 @@
     "hash": "d719689d"
   },
   "svg-editor.views.c-shapes-selected": {
-    "text": "{c} shapes selected",
-    "hash": "13a26b3d"
+    "text": "{c, plural, one {# shape selected} other {# shapes selected}}",
+    "hash": "b1fb4e7e"
   },
   "svg-editor.views.cancel": {
     "text": "Cancel",

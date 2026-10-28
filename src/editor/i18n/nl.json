@@ -2992,8 +2992,8 @@
     "hash": "baaddf70"
   },
   "card-editor.gradient-editor.up-to-max-stops": {
-    "text": "Tot {max} kleurpunten",
-    "hash": "c43ddb62"
+    "text": "{max, plural, one {Tot # kleurpunt} other {Tot # kleurpunten}}",
+    "hash": "9e63a734"
   },
   "card-editor.gradient-editor.use-a-hex-colour-rgb-a-or-var-name": {
     "text": "Gebruik een hexkleur, rgb(a) of var(--naam).",
@@ -4192,8 +4192,8 @@
     "hash": "ba318cc1"
   },
   "card-editor.layout-glyph.n-columns-ratio": {
-    "text": "{n} kolommen, {ratio}",
-    "hash": "d7042c25"
+    "text": "{n, plural, one {# kolom, {ratio}} other {# kolommen, {ratio}}}",
+    "hash": "9523a894"
   },
   "card-editor.library-sheet.close": {
     "text": "Sluiten",
@@ -4300,8 +4300,8 @@
     "hash": "28a8d980"
   },
   "card-editor.magic-card-editor.replaced-old-with-new-the-modules-of-all": {
-    "text": "{old} vervangen door {new}. De modules van alle {n} tabbladen blijven in tabbladvolgorde staan.",
-    "hash": "bb09dc9d"
+    "text": "{n, plural, one {{old} vervangen door {new}. De modules van het enige tabblad blijven in tabbladvolgorde staan.} other {{old} vervangen door {new}. De modules van alle # tabbladen blijven in tabbladvolgorde staan.}}",
+    "hash": "940764c2"
   },
   "card-editor.magic-card-editor.this-card-is-linked-to-template-name-do": {
     "text": "Deze kaart is gekoppeld aan sjabloon {name}. Wil je alle gekoppelde kaarten bijwerken met deze structuurwijziging?",
@@ -6700,8 +6700,8 @@
     "hash": "ebd1472a"
   },
   "card-editor.yaml-editor.uses-n-of-your-animations": {
-    "text": "Gebruikt {n} van je animaties.",
-    "hash": "3aa97799"
+    "text": "{n, plural, one {Gebruikt # van je animaties.} other {Gebruikt # van je animaties.}}",
+    "hash": "e4e96f08"
   },
   "card-editor.yaml-editor.yaml-copied": {
     "text": "YAML gekopieerd.",

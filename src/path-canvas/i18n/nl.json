@@ -11,10 +11,6 @@
     "text": "Rand",
     "hash": "0f82fe72"
   },
-  "path-canvas.geometry.n": {
-    "text": "{n, plural, one {# punt} other {# punten}}",
-    "hash": "0dbf0152"
-  },
   "path-canvas.geometry.n-degrees": {
     "text": "{n, plural, one {# graad} other {# graden}}",
     "hash": "5af54564"
@@ -32,8 +28,8 @@
     "hash": "ac9fc833"
   },
   "path-canvas.mc-path-canvas.all-points-selected": {
-    "text": "Alle {points} geselecteerd.",
-    "hash": "272e3a67"
+    "text": "{points, plural, one {Alle # punt geselecteerd.} other {Alle # punten geselecteerd.}}",
+    "hash": "84d39b9e"
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-cursor-or-the": {
     "text": "Pijltjestoetsen verplaatsen de cursor of het geselecteerde punt. Enter plaatst een punt, of sluit het pad op het eerste punt. Tab loopt door de punten. C wisselt tussen glad en hoekig. Delete verwijdert een punt.",
@@ -64,8 +60,8 @@
     "hash": "019795c3"
   },
   "path-canvas.mc-path-canvas.n-points-selected": {
-    "text": "{n} punten geselecteerd.",
-    "hash": "9b290b57"
+    "text": "{n, plural, one {# punt geselecteerd.} other {# punten geselecteerd.}}",
+    "hash": "d96ba0a4"
   },
   "path-canvas.mc-path-canvas.path-closed": {
     "text": "Pad gesloten.",
@@ -76,20 +72,20 @@
     "hash": "0d58359d"
   },
   "path-canvas.mc-path-canvas.path-points-closed": {
-    "text": "Pad, {points}, gesloten.",
-    "hash": "ade7e2d1"
+    "text": "{points, plural, one {Pad, # punt, gesloten.} other {Pad, # punten, gesloten.}}",
+    "hash": "841708c1"
   },
   "path-canvas.mc-path-canvas.path-points-open": {
-    "text": "Pad, {points}, open.",
-    "hash": "c48b0ce6"
+    "text": "{points, plural, one {Pad, # punt, open.} other {Pad, # punten, open.}}",
+    "hash": "7984b98a"
   },
   "path-canvas.mc-path-canvas.point-added-points": {
-    "text": "Punt toegevoegd, {points}.",
-    "hash": "e14a9e5d"
+    "text": "{points, plural, one {Punt toegevoegd, # punt.} other {Punt toegevoegd, # punten.}}",
+    "hash": "5bc00524"
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
-    "text": "{deleted, plural, one {Punt verwijderd} other {Punten verwijderd}}, {points}.",
-    "hash": "2a103eac"
+    "text": "{deleted, plural, one {Punt verwijderd} other {Punten verwijderd}}, {points, plural, one {# punt} other {# punten}}.",
+    "hash": "69072882"
   },
   "path-canvas.mc-path-canvas.point-n-is-now-kind": {
     "text": "Punt {n} is nu {kind}.",
@@ -116,8 +112,8 @@
     "hash": "dc456960"
   },
   "path-canvas.mc-path-canvas.this-path-has-max-points-the-most-you": {
-    "text": "Dit pad heeft {max} punten, het maximum. Verplaats, verwijder of wijzig ze in plaats daarvan.",
-    "hash": "6da65397"
+    "text": "{max, plural, one {Dit pad heeft # punt, het maximum. Verplaats, verwijder of wijzig het in plaats daarvan.} other {Dit pad heeft # punten, het maximum. Verplaats, verwijder of wijzig ze in plaats daarvan.}}",
+    "hash": "3fcd9019"
   },
   "path-canvas.mc-path-canvas.this-point-has-no-handles-press-c-to": {
     "text": "Dit punt heeft geen handvatten. Druk op C om het vloeiend te maken.",

@@ -52,8 +52,8 @@
     "hash": "3e1302d5"
   },
   "image-transfer.reader.only-the-first-max-connections-were-kept": {
-    "text": "Only the first {max} connections were kept.",
-    "hash": "d5184c17"
+    "text": "{max, plural, one {Only the first # connection was kept.} other {Only the first # connections were kept.}}",
+    "hash": "3c8c85e8"
   },
   "image-transfer.reader.the-image-could-not-be-read": {
     "text": "The image could not be read.",

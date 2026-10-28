@@ -48,8 +48,8 @@
     "hash": "16ec095c"
   },
   "shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points": {
-    "text": "Een vorm kan maximaal {max} punten hebben.",
-    "hash": "9b8297e2"
+    "text": "{max, plural, one {Een vorm kan maximaal # punt hebben.} other {Een vorm kan maximaal # punten hebben.}}",
+    "hash": "a3258886"
   },
   "shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes": {
     "text": "Er bestaat al een vorm met de naam {name}. Opslaan wijzigt elke kaart die hem gebruikt.",
@@ -128,8 +128,8 @@
     "hash": "0372c574"
   },
   "shape-editor.mc-shape-studio.c-of-max-points": {
-    "text": "{c} van {max} punten",
-    "hash": "0b60a2bf"
+    "text": "{max, plural, one {{c} van # punt} other {{c} van # punten}}",
+    "hash": "a392177d"
   },
   "shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it": {
     "text": "Kan de ruimte vergroten, niet verkleinen.",

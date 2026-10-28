@@ -8,11 +8,11 @@
     }
   },
   "svg-editor.combine.merged-c-parts-into-one-path": {
-    "text": "Merged {c} parts into one path.",
+    "text": "{c, plural, one {Merged # part into one path.} other {Merged # parts into one path.}}",
     "note": "Status message after combining shapes into one outline. {c} is the number of shapes that were merged (two or more).",
     "max": 50,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of parts."
     }
   },
   "svg-editor.combine.select-a-second-shape": {
@@ -344,11 +344,11 @@
     }
   },
   "svg-editor.mc-svg-editor.c-shapes-selected": {
-    "text": "{c} shapes selected",
+    "text": "{c, plural, one {# shape selected} other {# shapes selected}}",
     "note": "Label in the inspector when several shapes are selected. {c} is the number, always two or more, so no singular form is needed.",
     "max": 35,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of shapes."
     }
   },
   "svg-editor.mc-svg-editor.centre-on-canvas": {
@@ -589,11 +589,11 @@
     }
   },
   "svg-editor.mc-svg-editor.opened-name-the-first-of-count-icons-in": {
-    "text": "Opened {name}, the first of {count} icons in the file. The others were not used.",
+    "text": "{count, plural, one {Opened {name}, the first of # icon in the file. The other was not used.} other {Opened {name}, the first of # icons in the file. The others were not used.}}",
     "note": "Status message after opening a file that holds several icons. {name} is the icon that was used and {count} is how many icons the file holds (two or more).",
     "max": 130,
     "vars": {
-      "count": "The value that replaces count in the text.",
+      "count": "The number of icons in the file.",
       "name": "The value that replaces name in the text."
     }
   },
@@ -677,11 +677,11 @@
     "max": 10
   },
   "svg-editor.mc-svg-editor.spaced-c-shapes-evenly": {
-    "text": "Spaced {c} shapes evenly.",
+    "text": "{c, plural, one {Spaced # shape evenly.} other {Spaced # shapes evenly.}}",
     "note": "Status message after distributing shapes evenly. {c} is the number of shapes, always three or more.",
     "max": 40,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of shapes."
     }
   },
   "svg-editor.mc-svg-editor.that-file-has-no-shapes-an-icon-can-use": {
@@ -720,11 +720,11 @@
     "max": 75
   },
   "svg-editor.mc-svg-editor.this-icon-has-c-points-you-can-edit-and": {
-    "text": "This icon has {c} points. You can edit and move them, but not add points until it has fewer than 100.",
+    "text": "{c, plural, one {This icon has # point. You can edit and move it, but not add points until it has fewer than 100.} other {This icon has # points. You can edit and move them, but not add points until it has fewer than 100.}}",
     "note": "Hint in the point editor for a complex path. {c} is the current number of points (100 or more); the limit of 100 is fixed.",
     "max": 165,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of points."
     }
   },
   "svg-editor.mc-svg-editor.this-icon-is-used-kb-and-the-limit-is-32": {
@@ -1100,11 +1100,11 @@
     "max": 15
   },
   "svg-editor.names.combined-c-shapes": {
-    "text": "Combined {c} shapes.",
+    "text": "{c, plural, one {Combined # shape.} other {Combined # shapes.}}",
     "note": "Status message after the combine (union) operation. {c} is the number of shapes, always two or more.",
     "max": 35,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of shapes."
     }
   },
   "svg-editor.names.combined-shape": {
@@ -1138,11 +1138,11 @@
     "max": 15
   },
   "svg-editor.names.excluded-c-shapes": {
-    "text": "Excluded {c} shapes.",
+    "text": "{c, plural, one {Excluded # shape.} other {Excluded # shapes.}}",
     "note": "Status message after the exclude operation. {c} is the number of shapes, always two or more.",
     "max": 35,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of shapes."
     }
   },
   "svg-editor.names.excluded-shape": {
@@ -1176,11 +1176,11 @@
     "max": 15
   },
   "svg-editor.names.intersected-c-shapes": {
-    "text": "Intersected {c} shapes.",
+    "text": "{c, plural, one {Intersected # shape.} other {Intersected # shapes.}}",
     "note": "Status message after the intersect operation. {c} is the number of shapes, always two or more.",
     "max": 40,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of shapes."
     }
   },
   "svg-editor.names.intersected-shape": {
@@ -1477,11 +1477,11 @@
     "max": 20
   },
   "svg-editor.views.c-shapes-selected": {
-    "text": "{c} shapes selected",
+    "text": "{c, plural, one {# shape selected} other {# shapes selected}}",
     "note": "Status line when several shapes are selected. {c} is the count, always two or more.",
     "max": 35,
     "vars": {
-      "c": "The value that replaces c in the text."
+      "c": "The number of shapes."
     }
   },
   "svg-editor.views.cancel": {

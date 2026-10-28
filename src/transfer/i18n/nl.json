@@ -68,16 +68,16 @@
     "hash": "1d8ce038"
   },
   "transfer.envelope.the-author-must-be-1-max-characters-so": {
-    "text": "De auteur moet 1-{max} tekens lang zijn, dus is weggelaten.",
-    "hash": "75811817"
+    "text": "{max, plural, one {De auteur moet 1 teken lang zijn, dus is weggelaten.} other {De auteur moet 1-# tekens lang zijn, dus is weggelaten.}}",
+    "hash": "f34ad4f0"
   },
   "transfer.envelope.the-checker-for-images-did-not-load-so": {
     "text": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
     "hash": "f1d22ef2"
   },
   "transfer.envelope.the-description-must-be-1-max-characters": {
-    "text": "De beschrijving moet 1-{max} tekens lang zijn, dus is weggelaten.",
-    "hash": "54caf9c4"
+    "text": "{max, plural, one {De beschrijving moet 1 teken lang zijn, dus is weggelaten.} other {De beschrijving moet 1-# tekens lang zijn, dus is weggelaten.}}",
+    "hash": "59da6379"
   },
   "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
     "text": "De id \"{id}\" komt twee keer voor in dit bestand; de eerste is gebruikt.",
@@ -108,8 +108,8 @@
     "hash": "ff5de08c"
   },
   "transfer.envelope.this-file-holds-more-than-max-items-so": {
-    "text": "Dit bestand bevat meer dan {max} items, dus het is niet gelezen.",
-    "hash": "bd852bdf"
+    "text": "{max, plural, one {Dit bestand bevat meer dan # item, dus het is niet gelezen.} other {Dit bestand bevat meer dan # items, dus het is niet gelezen.}}",
+    "hash": "edff1fa1"
   },
   "transfer.envelope.this-file-is-larger-than-8-mb-so-it-was": {
     "text": "Dit bestand is groter dan 8 MB, dus het is niet gelezen.",
@@ -447,13 +447,29 @@
     "text": "Elke browser die een dashboard met dit thema toont, vraagt bestanden op bij {hosts}, en die sites kunnen het IP-adres van de bezoeker zien.",
     "hash": "dd585584"
   },
-  "transfer.panel.export-items": {
-    "text": "{items} exporteren",
-    "hash": "3dc6c213"
+  "transfer.panel.export-animations": {
+    "text": "{n, plural, one {# animatie exporteren} other {# animaties exporteren}}",
+    "hash": "48e5c5a5"
+  },
+  "transfer.panel.export-icons": {
+    "text": "{n, plural, one {# pictogram exporteren} other {# pictogrammen exporteren}}",
+    "hash": "cc51c0ae"
+  },
+  "transfer.panel.export-images": {
+    "text": "{n, plural, one {# afbeelding exporteren} other {# afbeeldingen exporteren}}",
+    "hash": "97419d59"
+  },
+  "transfer.panel.export-shapes": {
+    "text": "{n, plural, one {# vorm exporteren} other {# vormen exporteren}}",
+    "hash": "71c568f4"
   },
   "transfer.panel.export-text": {
     "text": "Exporttekst",
     "hash": "e4c3120f"
+  },
+  "transfer.panel.export-themes": {
+    "text": "{n, plural, one {# thema exporteren} other {# thema's exporteren}}",
+    "hash": "c7cc2084"
   },
   "transfer.panel.file-format": {
     "text": "Bestandsindeling",
@@ -463,17 +479,33 @@
     "text": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
     "hash": "62625dad"
   },
+  "transfer.panel.import-animations": {
+    "text": "{n, plural, one {# animatie importeren} other {# animaties importeren}}",
+    "hash": "75831c8b"
+  },
   "transfer.panel.import-anyway": {
     "text": "Toch importeren",
     "hash": "e06eac7e"
   },
-  "transfer.panel.import-items": {
-    "text": "{items} importeren",
-    "hash": "c903551f"
+  "transfer.panel.import-icons": {
+    "text": "{n, plural, one {# pictogram importeren} other {# pictogrammen importeren}}",
+    "hash": "3b3f2aac"
+  },
+  "transfer.panel.import-images": {
+    "text": "{n, plural, one {# afbeelding importeren} other {# afbeeldingen importeren}}",
+    "hash": "1073854d"
   },
   "transfer.panel.import-presets": {
     "text": "Presets importeren",
     "hash": "0d44eca1"
+  },
+  "transfer.panel.import-shapes": {
+    "text": "{n, plural, one {# vorm importeren} other {# vormen importeren}}",
+    "hash": "9e85886c"
+  },
+  "transfer.panel.import-themes": {
+    "text": "{n, plural, one {# thema importeren} other {# thema's importeren}}",
+    "hash": "f9811f49"
   },
   "transfer.panel.json-or-svg-up-to-8-mb": {
     "text": "JSON of SVG, tot 8 MB",
@@ -531,9 +563,25 @@
     "text": "Vervang ze",
     "hash": "f199ad2e"
   },
-  "transfer.panel.source-holds-items": {
-    "text": "{source} bevat {items}.",
-    "hash": "a039162e"
+  "transfer.panel.source-holds-animations": {
+    "text": "{n, plural, one {{source} bevat # animatie.} other {{source} bevat # animaties.}}",
+    "hash": "cddd5aed"
+  },
+  "transfer.panel.source-holds-icons": {
+    "text": "{n, plural, one {{source} bevat # pictogram.} other {{source} bevat # pictogrammen.}}",
+    "hash": "b2deffe5"
+  },
+  "transfer.panel.source-holds-images": {
+    "text": "{n, plural, one {{source} bevat # afbeelding.} other {{source} bevat # afbeeldingen.}}",
+    "hash": "a2260029"
+  },
+  "transfer.panel.source-holds-shapes": {
+    "text": "{n, plural, one {{source} bevat # vorm.} other {{source} bevat # vormen.}}",
+    "hash": "c7698106"
+  },
+  "transfer.panel.source-holds-themes": {
+    "text": "{n, plural, one {{source} bevat # thema.} other {{source} bevat # thema's.}}",
+    "hash": "c69b55de"
   },
   "transfer.panel.the-author-name-is-saved-in-the-file": {
     "text": "De naam van de auteur komt in het bestand. Controleer hem voordat je het bestand deelt.",
@@ -616,8 +664,8 @@
     "hash": "0eca0c64"
   },
   "transfer.shape.a-shape-holds-at-most-max-points-this": {
-    "text": "Een vorm bevat maximaal {max} punten (deze heeft er {n}).",
-    "hash": "1da1b920"
+    "text": "{max, plural, one {Een vorm bevat maximaal # punt (deze heeft er {n}).} other {Een vorm bevat maximaal # punten (deze heeft er {n}).}}",
+    "hash": "aa67485b"
   },
   "transfer.shape.corner-name-is-not-valid-so-it-was-left": {
     "text": "Hoek {name} is niet geldig, dus is weggelaten.",
@@ -736,8 +784,8 @@
     "hash": "121ee242"
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {
-    "text": "De waarde van \"{key}\" is langer dan {max} tekens, dus is weggelaten.",
-    "hash": "dcc64e48"
+    "text": "{max, plural, one {De waarde van \"{key}\" is langer dan # teken, dus is weggelaten.} other {De waarde van \"{key}\" is langer dan # tekens, dus is weggelaten.}}",
+    "hash": "7e6add95"
   },
   "transfer.theme.the-value-of-key-is-not-text-or-a-number": {
     "text": "De waarde van \"{key}\" is geen tekst of getal, dus is weggelaten.",

@@ -95,11 +95,11 @@
     }
   },
   "image-transfer.reader.only-the-first-max-connections-were-kept": {
-    "text": "Only the first {max} connections were kept.",
+    "text": "{max, plural, one {Only the first # connection was kept.} other {Only the first # connections were kept.}}",
     "note": "Import warning. {max} is the largest number of connections one image may have.",
     "max": 70,
     "vars": {
-      "max": "The value that replaces max in the text."
+      "max": "The most connections an image keeps."
     }
   },
   "image-transfer.reader.the-image-could-not-be-read": {

@@ -324,8 +324,8 @@
     "hash": "07096aea"
   },
   "layer-editor.bg-layers-ops.limit-of-max-layers-reached-more-layers": {
-    "text": "Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.",
-    "hash": "fd294c32"
+    "text": "{max, plural, one {Limit of # layer reached. More layers slow down older wall tablets. Remove it to add another.} other {Limit of # layers reached. More layers slow down older wall tablets. Remove one to add another.}}",
+    "hash": "679666f6"
   },
   "layer-editor.bg-layers-ops.no-picture-for-state-state-no-any-other": {
     "text": "No picture for state {state}. No \"Any other state\" picture is set, so the next layer is shown.",

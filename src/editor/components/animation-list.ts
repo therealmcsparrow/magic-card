@@ -502,7 +502,7 @@ export class AnimationList extends LitElement {
     return html`
       <div class="cond">
         <div class="cond-head">
-          <span class="n">${t('card-editor.animation-list.animation-n', { n: index + 1 })} <span class="sub">· ${p?.name ?? a.preset}</span></span>
+          <span class="n">${t('card-editor.animation-list.animation-n', { n: index + 1 })} <span class="sub">· ${p ? lt(p.name) : a.preset}</span></span>
           <button
             type="button"
             class="icon-btn sm danger"

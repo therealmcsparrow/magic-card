@@ -11,10 +11,6 @@
     "text": "Edge",
     "hash": "0f82fe72"
   },
-  "path-canvas.geometry.n": {
-    "text": "{n, plural, one {# point} other {# points}}",
-    "hash": "0dbf0152"
-  },
   "path-canvas.geometry.n-degrees": {
     "text": "{n, plural, one {# degree} other {# degrees}}",
     "hash": "5af54564"
@@ -32,8 +28,8 @@
     "hash": "ac9fc833"
   },
   "path-canvas.mc-path-canvas.all-points-selected": {
-    "text": "All {points} selected.",
-    "hash": "272e3a67"
+    "text": "{points, plural, one {All # point selected.} other {All # points selected.}}",
+    "hash": "84d39b9e"
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-cursor-or-the": {
     "text": "Arrow keys move the cursor or the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C switches smooth and corner. Delete removes a point.",
@@ -64,8 +60,8 @@
     "hash": "019795c3"
   },
   "path-canvas.mc-path-canvas.n-points-selected": {
-    "text": "{n} points selected.",
-    "hash": "9b290b57"
+    "text": "{n, plural, one {# point selected.} other {# points selected.}}",
+    "hash": "d96ba0a4"
   },
   "path-canvas.mc-path-canvas.path-closed": {
     "text": "Path closed.",
@@ -76,20 +72,20 @@
     "hash": "0d58359d"
   },
   "path-canvas.mc-path-canvas.path-points-closed": {
-    "text": "Path, {points}, closed.",
-    "hash": "ade7e2d1"
+    "text": "{points, plural, one {Path, # point, closed.} other {Path, # points, closed.}}",
+    "hash": "841708c1"
   },
   "path-canvas.mc-path-canvas.path-points-open": {
-    "text": "Path, {points}, open.",
-    "hash": "c48b0ce6"
+    "text": "{points, plural, one {Path, # point, open.} other {Path, # points, open.}}",
+    "hash": "7984b98a"
   },
   "path-canvas.mc-path-canvas.point-added-points": {
-    "text": "Point added, {points}.",
-    "hash": "e14a9e5d"
+    "text": "{points, plural, one {Point added, # point.} other {Point added, # points.}}",
+    "hash": "5bc00524"
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
-    "text": "{deleted, plural, one {Point deleted} other {Points deleted}}, {points}.",
-    "hash": "2a103eac"
+    "text": "{deleted, plural, one {Point deleted} other {Points deleted}}, {points, plural, one {# point} other {# points}}.",
+    "hash": "69072882"
   },
   "path-canvas.mc-path-canvas.point-n-is-now-kind": {
     "text": "Point {n} is now {kind}.",
@@ -116,8 +112,8 @@
     "hash": "dc456960"
   },
   "path-canvas.mc-path-canvas.this-path-has-max-points-the-most-you": {
-    "text": "This path has {max} points, the most you can add. Move, delete or change them instead.",
-    "hash": "6da65397"
+    "text": "{max, plural, one {This path has # point, the most you can add. Move, delete or change it instead.} other {This path has # points, the most you can add. Move, delete or change them instead.}}",
+    "hash": "3fcd9019"
   },
   "path-canvas.mc-path-canvas.this-point-has-no-handles-press-c-to": {
     "text": "This point has no handles. Press C to make it smooth.",

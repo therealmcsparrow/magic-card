@@ -868,19 +868,19 @@
     }
   },
   "look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the": {
-    "text": "{n} characters of each label show on the card. Screen readers get the full label.",
+    "text": "{n, plural, one {# character of each label shows on the card. Screen readers get the full label.} other {# characters of each label show on the card. Screen readers get the full label.}}",
     "note": "Help text for the label length setting. {n} is a number, the maximum characters shown. 'Label' is the min and max text at the ends of the slider.",
     "max": 130,
     "vars": {
-      "n": "The value that replaces n in the text."
+      "n": "The number of characters shown."
     }
   },
   "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
-    "text": "{n} stops is the most.",
+    "text": "{n, plural, one {# stop is the most.} other {# stops are the most.}}",
     "note": "Hint shown when the stop limit is reached. {n} is the maximum number of colour stops allowed (a number, always plural in practice).",
     "max": 40,
     "vars": {
-      "n": "The value that replaces n in the text."
+      "n": "The most stops a slider can have."
     }
   },
   "look-editor.mc-slider-look-editor.name-look": {
