@@ -1,0 +1,67 @@
+{
+  "controls.dropdown-view.dropdown": {
+    "text": "Dropdown",
+    "note": "Shown in dropdown view (controls).",
+    "max": 15
+  },
+  "controls.dropdown-view.no-options": {
+    "text": "No options",
+    "note": "Shown in dropdown view (controls).",
+    "max": 20
+  },
+  "controls.light-view.effect": {
+    "text": "Effect",
+    "note": "Shown in light view (controls).",
+    "max": 10
+  },
+  "controls.light-view.light": {
+    "text": "Light",
+    "note": "Shown in light view (controls).",
+    "max": 10
+  },
+  "controls.light-view.name-colour": {
+    "text": "{name} colour",
+    "note": "Shown in light view (controls).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "controls.light-view.name-effect": {
+    "text": "{name} effect",
+    "note": "Shown in light view (controls).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "controls.light-view.toggle-name": {
+    "text": "Toggle {name}",
+    "note": "Shown in light view (controls).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "controls.spinbox-view.decrease-name": {
+    "text": "Decrease {name}",
+    "note": "Shown in spinbox view (controls).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "controls.spinbox-view.increase-name": {
+    "text": "Increase {name}",
+    "note": "Shown in spinbox view (controls).",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "controls.spinbox-view.spinbox": {
+    "text": "Spinbox",
+    "note": "Shown in spinbox view (controls).",
+    "max": 15
+  }
+}

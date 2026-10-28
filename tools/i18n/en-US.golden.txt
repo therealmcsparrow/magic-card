@@ -249,7 +249,7 @@ theme-editor	Warning colour	Warning color
 icon-library	Centre	Center
 icon-library	Centre bulb	Center bulb
 icon-library	LED strip colour chase	LED strip color chase
-controls	{name} colour	{name} color
+controls	controls.light-view.name-colour	{name} color
 image-tools	Accent colour	Accent color
 image-tools	Colours	Colors
 image-tools	Main and Accent follow the colours you set for this card.	Main and Accent follow the colors you set for this card.

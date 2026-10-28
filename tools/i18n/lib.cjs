@@ -292,6 +292,10 @@ function usText(text, words, exceptions) {
         continue;
       }
       const j = closeAt(s, i);
+      if (j < 0) {
+        out += s.slice(i);
+        break;
+      }
       const body = s.slice(i + 1, j);
       const m = /^(\s*\w+\s*,\s*(?:plural|select)\s*,)([\s\S]*)$/.exec(body);
       if (!m) out += '{' + body + '}';
@@ -306,6 +310,10 @@ function usText(text, words, exceptions) {
           }
           const open = q[0].length - 1;
           const e = closeAt(r, open);
+          if (e < 0) {
+            res += r;
+            break;
+          }
           res += q[1] + '{' + walk(r.slice(open + 1, e)) + '}';
           r = r.slice(e + 1);
         }

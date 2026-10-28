@@ -71,10 +71,13 @@ function sortedEntries(cat) {
     .sort((a, b) => byCode(a.gb, b.gb) || byCode(a.key, b.key));
 }
 
+/** Whether a shipped en-US or nl cell equal to its en-GB cell is written empty; on from i18n 2.0.0. */
+const EMPTY_CELLS = false;
+
 /**
  * Compiled tables of a key namespace: rows (en-GB, en-US, nl strings, as lib.genSource takes them) and the
- * key -> index map. Keys whose three texts are all equal share one entry; a shipped en-US or nl cell equal to
- * its en-GB cell is written empty (the run time shows en-GB for an empty cell).
+ * key -> index map. Keys whose three texts are all equal share one entry; from i18n 2.0.0 (EMPTY_CELLS) a
+ * shipped en-US or nl cell equal to its en-GB cell is written empty (the run time shows en-GB for an empty cell).
  */
 function tablesForKeys(cat) {
   const gb = [];
@@ -87,8 +90,8 @@ function tablesForKeys(cat) {
     if (!shared.has(sig)) {
       shared.set(sig, gb.length);
       gb.push(e.gb);
-      us.push(e.us === e.gb ? '' : e.us);
-      nl.push(e.nl === e.gb ? '' : e.nl);
+      us.push(EMPTY_CELLS && e.us === e.gb ? '' : e.us);
+      nl.push(EMPTY_CELLS && e.nl === e.gb ? '' : e.nl);
     }
     indexOf.set(e.key, shared.get(sig));
   }
@@ -132,6 +135,10 @@ function longestText(msg) {
       continue;
     }
     const j = lib.closeAt(msg, i);
+    if (j < 0) {
+      out += msg.slice(i);
+      break;
+    }
     const body = msg.slice(i + 1, j);
     const m = /^\s*\w+\s*,\s*(?:plural|select)\s*,([\s\S]*)$/.exec(body);
     if (!m) out += '{' + body + '}';
@@ -143,6 +150,7 @@ function longestText(msg) {
         if (!q) break;
         const open = q[0].length - 1;
         const e = lib.closeAt(r, open);
+        if (e < 0) break;
         const t = longestText(r.slice(open + 1, e));
         if ([...t].length > [...best].length) best = t;
         r = r.slice(e + 1);
@@ -210,7 +218,7 @@ function checkNamespace({ ns, cat, uses = new Map(), textSites = [], waivers = n
     ['nl', 'nl.json'],
   ];
   for (const [slot, name] of fileProblems) {
-    if (cat.raw[slot] !== null && cat.raw[slot].replace(/\r\n/g, '\n') !== canonicalJson(slot === 'gb' ? 'gb' : 'tr', cat[slot])) add('D8', 'error', `${name}: not sorted by key, not two-space JSON with a final newline, or an entry has fields the contract does not know`);
+    if (cat.raw[slot] !== null && cat.raw[slot] !== canonicalJson(slot === 'gb' ? 'gb' : 'tr', cat[slot])) add('D8', 'error', `${name}: not sorted by key, not two-space JSON with a final newline, or an entry has fields the contract does not know`);
   }
 
   for (const [key, e] of cat.gb) {

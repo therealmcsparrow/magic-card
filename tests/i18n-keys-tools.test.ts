@@ -74,13 +74,13 @@ describe('tablesForKeys', () => {
     expect(t.indexOf.get('a.b.c')).not.toBe(t.indexOf.get('a.b.e'));
     expect(t.count).toBe(3);
   });
-  it('writes a cell equal to the en-GB cell as empty', () => {
-    expect(t.rows[1]).toEqual(['', 'Color', '']);
+  it('writes the full cells until i18n 2.0.0', () => {
+    expect(t.rows[1]).toEqual(['Alpha', 'Color', 'Colour']);
     expect(t.rows[2]).toEqual(['Alfa', 'Kleur', 'Kleur']);
   });
-  it('falls back to en-GB for a missing translation, so it ships an empty cell', () => {
+  it('falls back to en-GB for a missing translation, so it ships the English', () => {
     const only = keys.tablesForKeys(cat({ 'a.b.c': gbEntry('Colour') }));
-    expect(only.rows).toEqual([['Colour'], [''], ['']]);
+    expect(only.rows).toEqual([['Colour'], ['Colour'], ['Colour']]);
   });
 });
 
@@ -135,6 +135,27 @@ describe('checkNamespace', () => {
     expect(check(c).map((x) => x.msg).join()).toMatch(/\(nl\): 10 characters, max is 8/);
     const p = '{n, plural, one {# item} other {# items in the list}}';
     expect(keys.longestText(p)).toBe('# items in the list');
+  });
+  it('longestText ends on an unclosed brace, also in a long run of them', () => {
+    expect(keys.longestText('Hello {name')).toBe('Hello {name');
+    expect(keys.longestText('{n, plural, one {# item} other {# items')).toBe('{n, plural, one {# item} other {# items');
+    const run = '{'.repeat(200_000);
+    const t0 = Date.now();
+    expect(keys.longestText(run)).toBe(run);
+    expect(Date.now() - t0).toBeLessThan(2000);
+  });
+  it('the American converter ends on an unclosed brace, also in a long run of them', () => {
+    const us = lib.usConverter();
+    expect(us('Hello {name')).toBe('Hello {name');
+    const run = '{'.repeat(200_000);
+    const t0 = Date.now();
+    expect(us(run)).toBe(run);
+    expect(Date.now() - t0).toBeLessThan(2000);
+  });
+  it('D8: a file with CRLF line endings fails', () => {
+    const c = ok();
+    c.raw.gb = String(c.raw.gb).replace(/\n/g, '\r\n');
+    expect(check(c).map((x) => x.rule)).toContain('D8');
   });
   it('D8: a file that is not sorted or formatted as the contract says', () => {
     const c = ok();

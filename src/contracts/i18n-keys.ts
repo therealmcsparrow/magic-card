@@ -45,8 +45,8 @@
  *
  * ── Compiled tables (messages.gen.ts, unchanged shape: three '|' joined strings, en-GB, en-US, nl) ──
  * Order: by en-GB text, then key. Keys whose en-GB, en-US and nl texts are all equal share one entry (one index).
- * A shipped en-US or nl cell equal to its en-GB cell is written empty; the runtime shows en-GB for an empty cell,
- * which is the same text. Source catalogues stay complete.
+ * From i18n 2.0.0, a shipped en-US or nl cell equal to its en-GB cell is written empty; the runtime shows en-GB for
+ * an empty cell, which is the same text. Source catalogues stay complete.
  *
  * ── Types (generated, git-ignored src/<folder>/i18n/keys.gen.ts) ──
  * `export interface Keys { 'ns.place.item': ArgsOf<message> }` with the English as the doc comment of each key, so

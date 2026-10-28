@@ -40,7 +40,7 @@ export class SpinboxView implements ModuleView {
       if (next === value) return;
       setPendingValue(key, next, ctrl.value, (v) => runServiceCall(hass, call(v)), () => ctx?.requestUpdate());
     };
-    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Spinbox');
+    const name = stateObj ? entityDisplayName(hass, stateObj) : t('controls.spinbox-view.spinbox');
     const atMin = value !== undefined && ctrl !== undefined && value <= ctrl.min;
     const atMax = value !== undefined && ctrl !== undefined && value >= ctrl.max;
 
@@ -49,7 +49,7 @@ export class SpinboxView implements ModuleView {
         <button
           type="button"
           class="mc-spinbox-btn mc-spinbox-decrement"
-          aria-label=${t('Decrease {name}', { name })}
+          aria-label=${t('controls.spinbox-view.decrease-name', { name })}
           ?disabled=${disabled || atMin}
           @click=${change(-1)}
           @pointerdown=${stopControlEvent}
@@ -60,7 +60,7 @@ export class SpinboxView implements ModuleView {
         <button
           type="button"
           class="mc-spinbox-btn mc-spinbox-increment"
-          aria-label=${t('Increase {name}', { name })}
+          aria-label=${t('controls.spinbox-view.increase-name', { name })}
           ?disabled=${disabled || atMax}
           @click=${change(1)}
           @pointerdown=${stopControlEvent}
