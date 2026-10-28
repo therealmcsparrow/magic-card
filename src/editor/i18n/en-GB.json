@@ -3668,7 +3668,7 @@
   },
   "card-editor.flows-editor.top": {
     "text": "Top",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Side option: the flow leaves or enters through the top edge of the element.",
     "max": 5
   },
   "card-editor.flows-editor.try-again": {
