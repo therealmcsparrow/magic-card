@@ -811,7 +811,7 @@
   },
   "anim-studio.draw-layers.move-up-drawn-on-top": {
     "text": "Move up (drawn on top)",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip of the move-up button in the drawn shapes list; unlike the parts and emitter lists, it moves a shape.",
     "max": 40
   },
   "anim-studio.draw-layers.name-moved-where": {
@@ -1448,7 +1448,7 @@
   },
   "anim-studio.icon-start.this-icon-could-not-be-loaded-check-the": {
     "text": "This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Error on the icon start screen when the icon picked there fails to load; the parts list has its own copy.",
     "max": 155
   },
   "anim-studio.icon-start.this-icon-has-no-shapes-to-animate": {
@@ -4840,7 +4840,7 @@
   },
   "anim-studio.parts-layers.this-icon-could-not-be-loaded-check-the": {
     "text": "This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Error in the parts list when the icon of an existing part fails to load; the icon start screen has its own copy.",
     "max": 155
   },
   "anim-studio.parts-layers.this-icon-has-no-shapes-to-split": {
