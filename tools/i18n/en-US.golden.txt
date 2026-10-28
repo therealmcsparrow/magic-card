@@ -129,128 +129,153 @@ shape-editor	shape-editor.mc-shape-studio.centre	Center
 shape-editor	shape-editor.mc-shape-studio.maximise	Maximize
 shape-editor	shape-editor.mc-shape-studio.pen-cancelled	Pen canceled.
 transfer	transfer.library-view.maximise	Maximize
-anim-studio	Add colour	Add color
-anim-studio	Animation colour	Animation color
-anim-studio	At most {colours} colours	At most {colours} colors
-anim-studio	Between {min} and {max}; empty uses {intensity}. Timing and colour come from the animation settings.	Between {min} and {max}; empty uses {intensity}. Timing and color come from the animation settings.
-anim-studio	Black in an <img>, the text colour inline.	Black in an <img>, the text color inline.
-anim-studio	Blends from the first colour to the second.	Blends from the first color to the second.
-anim-studio	Build one from scratch or customise one of the presets. Saved animations appear in every card's animation picker, under My animations.	Build one from scratch or customize one of the presets. Saved animations appear in every card's animation picker, under My animations.
-anim-studio	Centre	Center
-anim-studio	Child colour	Child color
-anim-studio	Colour	Color
-anim-studio	Colour mix	Color mix
-anim-studio	Colour {i}	Color {i}
-anim-studio	Colour {n}	Color {n}
-anim-studio	Colour {n}: entity colour	Color {n}: entity color
-anim-studio	Colour {n}: {colour}	Color {n}: {colour}
-anim-studio	Colour: currentColor	Color: currentColor
-anim-studio	Colours	Colors
-anim-studio	Customise a preset	Customize a preset
-anim-studio	Customise a preset…	Customize a preset…
-anim-studio	Customise one of {count}	Customize one of {count}
-anim-studio	Drag to draw. Shift: circle, Alt: from the centre.	Drag to draw. Shift: circle, Alt: from the center.
-anim-studio	Drag to draw. Shift: square, Alt: from the centre.	Drag to draw. Shift: square, Alt: from the center.
-anim-studio	Drawing cancelled.	Drawing canceled.
-anim-studio	Entity colour	Entity color
-anim-studio	Fill colour	Fill color
-anim-studio	From colour	From color
-anim-studio	Greyscale	Grayscale
-anim-studio	Maximise	Maximize
-anim-studio	Move, scale, turn and colour on a timeline	Move, scale, turn and color on a timeline
-anim-studio	Must be two numbers (colours only for color_mix).	Must be two numbers (colors only for color_mix).
-anim-studio	No colours: particles use the animation colour.	No colors: particles use the animation color.
-anim-studio	No keys yet. Add keys on the timeline to rotate, move, scale, fade or colour this part.	No keys yet. Add keys on the timeline to rotate, move, scale, fade or color this part.
-anim-studio	None set: the particles take the animation colour.	None set: the particles take the animation color.
-anim-studio	Not a valid colour.	Not a valid color.
-anim-studio	Not an allowed shadow: x y blur spread colour.	Not an allowed shadow: x y blur spread color.
-anim-studio	Own child colour	Own child color
-anim-studio	Particles take the colours in turn. Pick one to change it.	Particles take the colors in turn. Pick one to change it.
-anim-studio	Paths and shapes only: scripts, styles and links are removed. The shape is filled with the particle colour.	Paths and shapes only: scripts, styles and links are removed. The shape is filled with the particle color.
-anim-studio	Remove colour	Remove color
-anim-studio	Remove colour {i}	Remove color {i}
-anim-studio	Remove colour {n}	Remove color {n}
-anim-studio	Shadow colour	Shadow color
-anim-studio	Stroke colour	Stroke color
-anim-studio	Swaps the preset for your own particles: shape, movement, size and colours become editable.	Swaps the preset for your own particles: shape, movement, size and colors become editable.
-anim-studio	Text and icon colour	Text and icon color
-anim-studio	The colour is not a valid CSS colour: the file uses currentColor.	The color is not a valid CSS color: the file uses currentColor.
-anim-studio	The entity colour button uses the animation colour (the card entry's colour, else the entity's).	The entity color button uses the animation color (the card entry's color, else the entity's).
-anim-studio	The timeline also animates this colour: while it plays, its colour wins over this binding.	The timeline also animates this color: while it plays, its color wins over this binding.
-anim-studio	To colour	To color
-anim-studio	Use a colour or a gradient.	Use a color or a gradient.
-anim-studio	Use the parent's colours	Use the parent's colors
-anim-studio	color_mix needs two colours.	color_mix needs two colors.
-anim-studio	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and colour this part there.	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and color this part there.
-icon-animator	Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards.	Glow: the full animation with its lit parts in the animation's color, else the theme's, and a soft halo on dark cards.
-theme-editor	Accent colour	Accent color
-theme-editor	Active state colour	Active state color
-theme-editor	Alarm triggered colour	Alarm triggered color
-theme-editor	Binary sensor active colour	Binary sensor active color
-theme-editor	Blue grey (RGB)	Blue gray (RGB)
-theme-editor	Body text in the primary text colour.	Body text in the primary text color.
-theme-editor	Card border colour	Card border color
-theme-editor	Card title colour	Card title color
-theme-editor	Chip border colour	Chip border color
-theme-editor	Colour of card titles.	Color of card titles.
-theme-editor	Colour of the card border.	Color of the card border.
-theme-editor	Colour of the dimmed area behind a pop-up.	Color of the dimmed area behind a pop-up.
-theme-editor	Colour of the primary text.	Color of the primary text.
-theme-editor	Colour of the secondary text.	Color of the secondary text.
-theme-editor	Cooling colour	Cooling color
-theme-editor	Cover open colour	Cover open color
-theme-editor	Dark grey (RGB)	Dark gray (RGB)
-theme-editor	Disabled colour	Disabled color
-theme-editor	Divider colour	Divider color
-theme-editor	Enter a colour like #1a73e8 or rgb(26, 115, 232).	Enter a color like #1a73e8 or rgb(26, 115, 232).
-theme-editor	Enter a colour or a gradient.	Enter a color or a gradient.
-theme-editor	Entity icons that have no state colour.	Entity icons that have no state color.
-theme-editor	Error colour	Error color
-theme-editor	Fan on colour	Fan on color
-theme-editor	Fill colour for light sliders.	Fill color for light sliders.
-theme-editor	Grey (RGB)	Gray (RGB)
-theme-editor	Heating colour	Heating color
-theme-editor	Icon colour	Icon color
-theme-editor	Icon colour when an entity is inactive.	Icon color when an entity is inactive.
-theme-editor	Inactive state colour	Inactive state color
-theme-editor	Info colour	Info color
-theme-editor	Light colour	Light color
-theme-editor	Light grey (RGB)	Light gray (RGB)
-theme-editor	Light on colour	Light on color
-theme-editor	Light tints of the primary colour.	Light tints of the primary color.
-theme-editor	Locked colour	Locked color
-theme-editor	Maximise	Maximize
-theme-editor	Media player active colour	Media player active color
-theme-editor	Outline colour	Outline color
-theme-editor	Person at home colour	Person at home color
-theme-editor	Pop-up backdrop colour	Pop-up backdrop color
-theme-editor	Primary colour	Primary color
-theme-editor	Primary colour, dark shade	Primary color, dark shade
-theme-editor	Primary colour, light shade	Primary color, light shade
-theme-editor	Primary text colour	Primary text color
-theme-editor	Secondary text colour	Secondary text color
-theme-editor	Shadow colour	Shadow color
-theme-editor	State icon colour	State icon color
-theme-editor	Subtitle colour	Subtitle color
-theme-editor	Success colour	Success color
-theme-editor	Switch on colour	Switch on color
-theme-editor	Text and icons drawn on the primary colour.	Text and icons drawn on the primary color.
-theme-editor	Text colour of tooltips.	Text color of tooltips.
-theme-editor	Text on primary colour	Text on primary color
-theme-editor	The colour HA shades shadows with.	The color HA shades shadows with.
-theme-editor	This field takes one colour, not a gradient.	This field takes one color, not a gradient.
-theme-editor	This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.	This is not a color. Pick one with the swatch, or type a value like #3b82f6 or teal.
-theme-editor	This variable takes a single colour. Gradients work in Card background and Dashboard background.	This variable takes a single color. Gradients work in Card background and Dashboard background.
-theme-editor	Title colour	Title color
-theme-editor	Tooltip text colour	Tooltip text color
-theme-editor	Tooltip text colour fallback.	Tooltip text color fallback.
-theme-editor	Track behind the fill. A slider with its own track colour keeps it.	Track behind the fill. A slider with its own track color keeps it.
-theme-editor	Unavailable state colour	Unavailable state color
-theme-editor	Unlocked colour	Unlocked color
-theme-editor	Warning colour	Warning color
-icon-library	Centre	Center
-icon-library	Centre bulb	Center bulb
-icon-library	LED strip colour chase	LED strip color chase
+anim-studio	anim-studio.animated-svg.the-colour-is-not-a-valid-css-colour-the	The color is not a valid CSS color: the file uses currentColor.
+anim-studio	anim-studio.bindings-panel.from-colour	From color
+anim-studio	anim-studio.bindings-panel.to-colour	To color
+anim-studio	anim-studio.bindings-utils.blends-from-the-first-colour-to-the	Blends from the first color to the second.
+anim-studio	anim-studio.bindings-utils.colour-mix	Color mix
+anim-studio	anim-studio.bindings-utils.the-timeline-also-animates-this-colour	The timeline also animates this color: while it plays, its color wins over this binding.
+anim-studio	anim-studio.draw-host.drawing-cancelled	Drawing canceled.
+anim-studio	anim-studio.draw-store.drag-to-draw-shift-circle-alt-from-the	Drag to draw. Shift: circle, Alt: from the center.
+anim-studio	anim-studio.draw-store.drag-to-draw-shift-square-alt-from-the	Drag to draw. Shift: square, Alt: from the center.
+anim-studio	anim-studio.draw-svg-dialog.black-in-an-img-the-text-colour-inline	Black in an <img>, the text color inline.
+anim-studio	anim-studio.draw-svg-dialog.colour	Color
+anim-studio	anim-studio.draw-svg-dialog.colour-currentcolor	Color: currentColor
+anim-studio	anim-studio.key-inspector.not-a-valid-colour	Not a valid color.
+anim-studio	anim-studio.key-inspector.not-an-allowed-shadow-x-y-blur-spread	Not an allowed shadow: x y blur spread color.
+anim-studio	anim-studio.key-inspector.shadow-colour	Shadow color
+anim-studio	anim-studio.key-inspector.stroke-colour	Stroke color
+anim-studio	anim-studio.key-inspector.text-and-icon-colour	Text and icon color
+anim-studio	anim-studio.key-inspector.the-entity-colour-button-uses-the	The entity color button uses the animation color (the card entry's color, else the entity's).
+anim-studio	anim-studio.key-inspector.use-a-colour-or-a-gradient	Use a color or a gradient.
+anim-studio	anim-studio.keyframes-utils.animation-colour	Animation color
+anim-studio	anim-studio.keyframes-utils.centre	Center
+anim-studio	anim-studio.keyframes-utils.colour	Color
+anim-studio	anim-studio.keyframes-utils.greyscale	Grayscale
+anim-studio	anim-studio.keyframes-utils.stroke-colour	Stroke color
+anim-studio	anim-studio.part-inspector.centre	Center
+anim-studio	anim-studio.part-inspector.count-on-the-timeline-rotate-move-scale	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and color this part there.
+anim-studio	anim-studio.part-inspector.no-keys-yet-add-keys-on-the-timeline-to	No keys yet. Add keys on the timeline to rotate, move, scale, fade or color this part.
+anim-studio	anim-studio.particles-editor.add-colour	Add color
+anim-studio	anim-studio.particles-editor.at-most-colours-colours	At most {colours} colors
+anim-studio	anim-studio.particles-editor.between-min-and-max-empty-uses-intensity	Between {min} and {max}; empty uses {intensity}. Timing and color come from the animation settings.
+anim-studio	anim-studio.particles-editor.child-colour	Child color
+anim-studio	anim-studio.particles-editor.colour-n	Color {n}
+anim-studio	anim-studio.particles-editor.colour-n-colour	Color {n}: {colour}
+anim-studio	anim-studio.particles-editor.colour-n-entity-colour	Color {n}: entity color
+anim-studio	anim-studio.particles-editor.colours	Colors
+anim-studio	anim-studio.particles-editor.entity-colour	Entity color
+anim-studio	anim-studio.particles-editor.no-colours-particles-use-the-animation	No colors: particles use the animation color.
+anim-studio	anim-studio.particles-editor.own-child-colour	Own child color
+anim-studio	anim-studio.particles-editor.particles-take-the-colours-in-turn-pick	Particles take the colors in turn. Pick one to change it.
+anim-studio	anim-studio.particles-editor.paths-and-shapes-only-scripts-styles-and	Paths and shapes only: scripts, styles and links are removed. The shape is filled with the particle color.
+anim-studio	anim-studio.particles-editor.remove-colour	Remove color
+anim-studio	anim-studio.particles-editor.remove-colour-n	Remove color {n}
+anim-studio	anim-studio.particles-editor.swaps-the-preset-for-your-own-particles	Swaps the preset for your own particles: shape, movement, size and colors become editable.
+anim-studio	anim-studio.particles-editor.use-the-parent-s-colours	Use the parent's colors
+anim-studio	anim-studio.path-editor.add-colour	Add color
+anim-studio	anim-studio.path-editor.colour-i	Color {i}
+anim-studio	anim-studio.path-editor.colours	Colors
+anim-studio	anim-studio.path-editor.none-set-the-particles-take-the	None set: the particles take the animation color.
+anim-studio	anim-studio.path-editor.remove-colour	Remove color
+anim-studio	anim-studio.path-editor.remove-colour-i	Remove color {i}
+anim-studio	anim-studio.shape-inspector.fill-colour	Fill color
+anim-studio	anim-studio.shape-inspector.stroke-colour	Stroke color
+anim-studio	anim-studio.studio.build-one-from-scratch-or-customise-one	Build one from scratch or customize one of the presets. Saved animations appear in every card's animation picker, under My animations.
+anim-studio	anim-studio.studio.customise-a-preset	Customize a preset…
+anim-studio	anim-studio.studio.customise-a-preset-2	Customize a preset
+anim-studio	anim-studio.studio.customise-one-of-count	Customize one of {count}
+anim-studio	anim-studio.studio.move-scale-turn-and-colour-on-a-timeline	Move, scale, turn and color on a timeline
+anim-studio	anim-studio.validation-text.color-mix-needs-two-colours	color_mix needs two colors.
+anim-studio	anim-studio.validation-text.must-be-two-numbers-colours-only-for	Must be two numbers (colors only for color_mix).
+anim-studio	anim-studio.validation-text.not-a-valid-colour	Not a valid color.
+anim-studio	anim-studio.window.maximise	Maximize
+icon-animator	icon-animator.animated-icon-grid.glow-the-full-animation-with-its-lit	Glow: the full animation with its lit parts in the animation's color, else the theme's, and a soft halo on dark cards.
+theme-editor	theme-editor.bubble-card.accent-colour	Accent color
+theme-editor	theme-editor.bubble-card.colour-of-the-dimmed-area-behind-a-pop	Color of the dimmed area behind a pop-up.
+theme-editor	theme-editor.bubble-card.fill-colour-for-light-sliders	Fill color for light sliders.
+theme-editor	theme-editor.bubble-card.light-colour	Light color
+theme-editor	theme-editor.bubble-card.pop-up-backdrop-colour	Pop-up backdrop color
+theme-editor	theme-editor.button-card.icon-colour-when-an-entity-is-inactive	Icon color when an entity is inactive.
+theme-editor	theme-editor.button-card.primary-text-colour	Primary text color
+theme-editor	theme-editor.button-card.state-icon-colour	State icon color
+theme-editor	theme-editor.button-card.text-colour-of-tooltips	Text color of tooltips.
+theme-editor	theme-editor.button-card.tooltip-text-colour	Tooltip text color
+theme-editor	theme-editor.button-card.tooltip-text-colour-fallback	Tooltip text color fallback.
+theme-editor	theme-editor.dialogs.maximise	Maximize
+theme-editor	theme-editor.field-group.this-is-not-a-colour-pick-one-with-the	This is not a color. Pick one with the swatch, or type a value like #3b82f6 or teal.
+theme-editor	theme-editor.field-group.this-variable-takes-a-single-colour	This variable takes a single color. Gradients work in Card background and Dashboard background.
+theme-editor	theme-editor.ha.accent-colour	Accent color
+theme-editor	theme-editor.ha.active-state-colour	Active state color
+theme-editor	theme-editor.ha.alarm-triggered-colour	Alarm triggered color
+theme-editor	theme-editor.ha.binary-sensor-active-colour	Binary sensor active color
+theme-editor	theme-editor.ha.card-border-colour	Card border color
+theme-editor	theme-editor.ha.card-title-colour	Card title color
+theme-editor	theme-editor.ha.colour-of-card-titles	Color of card titles.
+theme-editor	theme-editor.ha.colour-of-the-card-border	Color of the card border.
+theme-editor	theme-editor.ha.cooling-colour	Cooling color
+theme-editor	theme-editor.ha.cover-open-colour	Cover open color
+theme-editor	theme-editor.ha.disabled-colour	Disabled color
+theme-editor	theme-editor.ha.divider-colour	Divider color
+theme-editor	theme-editor.ha.entity-icons-that-have-no-state-colour	Entity icons that have no state color.
+theme-editor	theme-editor.ha.error-colour	Error color
+theme-editor	theme-editor.ha.fan-on-colour	Fan on color
+theme-editor	theme-editor.ha.heating-colour	Heating color
+theme-editor	theme-editor.ha.icon-colour	Icon color
+theme-editor	theme-editor.ha.inactive-state-colour	Inactive state color
+theme-editor	theme-editor.ha.info-colour	Info color
+theme-editor	theme-editor.ha.light-on-colour	Light on color
+theme-editor	theme-editor.ha.light-tints-of-the-primary-colour	Light tints of the primary color.
+theme-editor	theme-editor.ha.locked-colour	Locked color
+theme-editor	theme-editor.ha.media-player-active-colour	Media player active color
+theme-editor	theme-editor.ha.outline-colour	Outline color
+theme-editor	theme-editor.ha.person-at-home-colour	Person at home color
+theme-editor	theme-editor.ha.primary-colour	Primary color
+theme-editor	theme-editor.ha.primary-colour-dark-shade	Primary color, dark shade
+theme-editor	theme-editor.ha.primary-colour-light-shade	Primary color, light shade
+theme-editor	theme-editor.ha.shadow-colour	Shadow color
+theme-editor	theme-editor.ha.success-colour	Success color
+theme-editor	theme-editor.ha.switch-on-colour	Switch on color
+theme-editor	theme-editor.ha.text-and-icons-drawn-on-the-primary	Text and icons drawn on the primary color.
+theme-editor	theme-editor.ha.text-on-primary-colour	Text on primary color
+theme-editor	theme-editor.ha.the-colour-ha-shades-shadows-with	The color HA shades shadows with.
+theme-editor	theme-editor.ha.unavailable-state-colour	Unavailable state color
+theme-editor	theme-editor.ha.unlocked-colour	Unlocked color
+theme-editor	theme-editor.ha.warning-colour	Warning color
+theme-editor	theme-editor.magic-card.card-border-colour	Card border color
+theme-editor	theme-editor.magic-card.disabled-colour	Disabled color
+theme-editor	theme-editor.magic-card.divider-colour	Divider color
+theme-editor	theme-editor.magic-card.error-colour	Error color
+theme-editor	theme-editor.magic-card.light-on-colour	Light on color
+theme-editor	theme-editor.magic-card.primary-colour	Primary color
+theme-editor	theme-editor.magic-card.success-colour	Success color
+theme-editor	theme-editor.magic-card.text-on-primary-colour	Text on primary color
+theme-editor	theme-editor.magic-card.track-behind-the-fill-a-slider-with-its	Track behind the fill. A slider with its own track color keeps it.
+theme-editor	theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115	Enter a color like #1a73e8 or rgb(26, 115, 232).
+theme-editor	theme-editor.model.enter-a-colour-or-a-gradient	Enter a color or a gradient.
+theme-editor	theme-editor.model.this-field-takes-one-colour-not-a	This field takes one color, not a gradient.
+theme-editor	theme-editor.mushroom.blue-grey-rgb	Blue gray (RGB)
+theme-editor	theme-editor.mushroom.chip-border-colour	Chip border color
+theme-editor	theme-editor.mushroom.dark-grey-rgb	Dark gray (RGB)
+theme-editor	theme-editor.mushroom.grey-rgb	Gray (RGB)
+theme-editor	theme-editor.mushroom.light-grey-rgb	Light gray (RGB)
+theme-editor	theme-editor.mushroom.primary-text-colour	Primary text color
+theme-editor	theme-editor.mushroom.secondary-text-colour	Secondary text color
+theme-editor	theme-editor.mushroom.subtitle-colour	Subtitle color
+theme-editor	theme-editor.mushroom.title-colour	Title color
+theme-editor	theme-editor.preview.body-text-in-the-primary-text-colour	Body text in the primary text color.
+theme-editor	theme-editor.tile.colour-of-the-primary-text	Color of the primary text.
+theme-editor	theme-editor.tile.colour-of-the-secondary-text	Color of the secondary text.
+theme-editor	theme-editor.tile.primary-text-colour	Primary text color
+theme-editor	theme-editor.tile.secondary-text-colour	Secondary text color
+theme-editor	theme-editor.ultra-card.divider-colour	Divider color
+theme-editor	theme-editor.ultra-card.error-colour	Error color
+theme-editor	theme-editor.ultra-card.primary-colour	Primary color
+theme-editor	theme-editor.ultra-card.primary-text-colour	Primary text color
+theme-editor	theme-editor.ultra-card.secondary-text-colour	Secondary text color
+icon-library	icon-library.library.centre	Center
+icon-library	icon-library.library.centre-bulb	Center bulb
+icon-library	icon-library.library.led-strip-colour-chase	LED strip color chase
 controls	controls.light-view.name-colour	{name} color
 image-tools	image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the	Thumbnails show the saved colors. On the card the live parts change with their devices.
 image-tools	image-tools.mc-library-image-field.accent-colour	Accent color
@@ -258,37 +283,37 @@ image-tools	image-tools.mc-library-image-field.colours	Colors
 image-tools	image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you	Main and Accent follow the colors you set for this card.
 image-tools	image-tools.mc-library-image-field.main-colour	Main color
 image-tools	image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one	To change colors, use live parts in one picture. To swap pictures, use states.
-look-editor	Auto works with brightness and colour temperature sliders.	Auto works with brightness and color temperature sliders.
-look-editor	Auto, from the light's colour	Auto, from the light's color
-look-editor	Border colour	Border color
-look-editor	Brightness: dark to bright in the slider colour. Colour temperature: warm to cool.	Brightness: dark to bright in the slider color. Color temperature: warm to cool.
-look-editor	Centre	Center
-look-editor	Centre needs a vertical slider.	Center needs a vertical slider.
-look-editor	Colour	Color
-look-editor	Colour mode	Color mode
-look-editor	Colour ranges	Color ranges
-look-editor	Colour source: {source}.	Color source: {source}.
-look-editor	Core colour	Core color
-look-editor	End colour	End color
-look-editor	Falls back to Slider colour when the light has no colour.	Falls back to Slider color when the light has no color.
-look-editor	Gradient, light's colour to end colour	Gradient, light's color to end color
-look-editor	Idle colour	Idle color
-look-editor	Light's colour	Light's color
-look-editor	Line end colour	Line end color
-look-editor	Only lights have a colour of their own.	Only lights have a color of their own.
-look-editor	Pick a sensor or device first: the colour follows its value.	Pick a sensor or device first: the color follows its value.
-look-editor	Shape colour	Shape color
-look-editor	Sheath colour	Sheath color
-look-editor	Slider colour	Slider color
-look-editor	The light's colour, if that is on, or Slider colour is where the fill starts. Gradient and Auto build on it.	The light's color, if that is on, or Slider color is where the fill starts. Gradient and Auto build on it.
-look-editor	The line takes the colour of the range the value falls in.	The line takes the color of the range the value falls in.
-look-editor	Use own colour	Use own color
-look-editor	Use the light's colour	Use the light's color
-theme-presets	Amber on blue-grey mirage.	Amber on blue-gray mirage.
-theme-presets	Clean Primer blues and neutral greys.	Clean Primer blues and neutral grays.
-theme-presets	Deep petrol and steel-grey with a coolant-cyan accent; copper at night.	Deep petrol and steel-gray with a coolant-cyan accent; copper at night.
-theme-presets	Familiar editor greys with a bright blue.	Familiar editor grays with a bright blue.
-theme-presets	Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.	Independent color schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.
-theme-presets	Low-contrast sage on soft grey.	Low-contrast sage on soft gray.
-theme-presets	Neutral blue-grey for any room.	Neutral blue-gray for any room.
-theme-presets	Presets use genre and colour words, not titles. Try one of these:	Presets use genre and color words, not titles. Try one of these:
+look-editor	look-editor.element.colour	Color
+look-editor	look-editor.element.colour-mode	Color mode
+look-editor	look-editor.element.colour-ranges	Color ranges
+look-editor	look-editor.element.core-colour	Core color
+look-editor	look-editor.element.idle-colour	Idle color
+look-editor	look-editor.element.line-end-colour	Line end color
+look-editor	look-editor.element.pick-a-sensor-or-device-first-the-colour	Pick a sensor or device first: the color follows its value.
+look-editor	look-editor.element.shape-colour	Shape color
+look-editor	look-editor.element.sheath-colour	Sheath color
+look-editor	look-editor.element.the-line-takes-the-colour-of-the-range	The line takes the color of the range the value falls in.
+look-editor	look-editor.mc-slider-look-editor.auto-from-the-light-s-colour	Auto, from the light's color
+look-editor	look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour	Auto works with brightness and color temperature sliders.
+look-editor	look-editor.mc-slider-look-editor.border-colour	Border color
+look-editor	look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider	Brightness: dark to bright in the slider color. Color temperature: warm to cool.
+look-editor	look-editor.mc-slider-look-editor.centre	Center
+look-editor	look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider	Center needs a vertical slider.
+look-editor	look-editor.mc-slider-look-editor.colour-source-source	Color source: {source}.
+look-editor	look-editor.mc-slider-look-editor.end-colour	End color
+look-editor	look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the	Falls back to Slider color when the light has no color.
+look-editor	look-editor.mc-slider-look-editor.gradient-light-s-colour-to-end-colour	Gradient, light's color to end color
+look-editor	look-editor.mc-slider-look-editor.light-s-colour	Light's color
+look-editor	look-editor.mc-slider-look-editor.only-lights-have-a-colour-of-their-own	Only lights have a color of their own.
+look-editor	look-editor.mc-slider-look-editor.slider-colour	Slider color
+look-editor	look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or	The light's color, if that is on, or Slider color is where the fill starts. Gradient and Auto build on it.
+look-editor	look-editor.mc-slider-look-editor.use-own-colour	Use own color
+look-editor	look-editor.mc-slider-look-editor.use-the-light-s-colour	Use the light's color
+theme-presets	theme-presets.library.amber-on-blue-grey-mirage	Amber on blue-gray mirage.
+theme-presets	theme-presets.library.clean-primer-blues-and-neutral-greys	Clean Primer blues and neutral grays.
+theme-presets	theme-presets.library.deep-petrol-and-steel-grey-with-a	Deep petrol and steel-gray with a coolant-cyan accent; copper at night.
+theme-presets	theme-presets.library.familiar-editor-greys-with-a-bright-blue	Familiar editor grays with a bright blue.
+theme-presets	theme-presets.library.low-contrast-sage-on-soft-grey	Low-contrast sage on soft gray.
+theme-presets	theme-presets.library.neutral-blue-grey-for-any-room	Neutral blue-gray for any room.
+theme-presets	theme-presets.picker.independent-colour-schemes-made-for	Independent color schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.
+theme-presets	theme-presets.picker.presets-use-genre-and-colour-words-not	Presets use genre and color words, not titles. Try one of these:

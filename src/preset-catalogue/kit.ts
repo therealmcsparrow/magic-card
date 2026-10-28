@@ -1,6 +1,6 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, ParticleDirection, ParticleShape, ParticlesSpec } from '../anim-studio/model';
 import type { CatalogueGroup, CataloguePreset } from '../contracts/preset-catalogue';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { t } from './i18n';
 import type { ParticleFlow, ParticlePhysics, ParticleColliders, ParticleRanges, ParticlesSim, SubEmitter, WeightedShape, BuiltinShape, Range } from '../contracts/particles-v2';
 
@@ -206,7 +206,7 @@ export function particlesDoc(id: string, name: string, p: ParticlesInput): Anima
 export interface EntryInput {
   id: string;
   /** An m() mark; the entry reads it with t() (a getter, so a language change applies at once). */
-  name: MessageId;
+  name: MessageIndex;
   /** The mini card's icon in the tile. */
   icon: string;
   tags: string[];

@@ -8,7 +8,7 @@ const H = THEME.halloween;
 export const HALLOWEEN = group('Halloween', [
   {
     id: 'halloween-bat-flight',
-    name: m('Bat flight'),
+    name: m('preset-catalogue.halloween.bat-flight'),
     icon: 'mdi:bat',
     tags: ['bats', 'night', 'spooky', 'flying', 'particles'],
     heavy: true,
@@ -28,7 +28,7 @@ export const HALLOWEEN = group('Halloween', [
   },
   {
     id: 'halloween-ghost-float',
-    name: m('Ghost float'),
+    name: m('preset-catalogue.halloween.ghost-float'),
     icon: 'mdi:ghost',
     tags: ['ghost', 'float', 'spooky', 'boo'],
     doc: (id, name) =>
@@ -49,7 +49,7 @@ export const HALLOWEEN = group('Halloween', [
   },
   {
     id: 'halloween-jack-o-lantern-glow',
-    name: m("Jack-o'-lantern glow"),
+    name: m("preset-catalogue.halloween.jack-o-lantern-glow"),
     icon: 'mdi:halloween',
     tags: ['pumpkin', 'lantern', 'candle', 'glow', 'halloween'],
     doc: (id, name) =>
@@ -68,7 +68,7 @@ export const HALLOWEEN = group('Halloween', [
   },
   {
     id: 'halloween-creeping-fog',
-    name: m('Creeping fog'),
+    name: m('preset-catalogue.halloween.creeping-fog'),
     icon: 'mdi:weather-fog',
     tags: ['fog', 'mist', 'spooky', 'night', 'particles'],
     doc: (id, name) =>
@@ -88,7 +88,7 @@ export const HALLOWEEN = group('Halloween', [
   },
   {
     id: 'halloween-bubbling-cauldron',
-    name: m('Bubbling cauldron'),
+    name: m('preset-catalogue.halloween.bubbling-cauldron'),
     icon: 'mdi:pot-mix',
     tags: ['cauldron', 'potion', 'witch', 'bubbles', 'pop', 'particles'],
     heavy: true,
@@ -118,7 +118,7 @@ export const HALLOWEEN = group('Halloween', [
   },
   {
     id: 'halloween-spider-drop',
-    name: m('Spider drop'),
+    name: m('preset-catalogue.halloween.spider-drop'),
     icon: 'mdi:spider',
     tags: ['spider', 'drop', 'web', 'spooky', 'halloween'],
     doc: (id, name) =>
@@ -144,7 +144,7 @@ export const HALLOWEEN = group('Halloween', [
   },
   {
     id: 'halloween-skull-chatter',
-    name: m('Skull chatter'),
+    name: m('preset-catalogue.halloween.skull-chatter'),
     icon: 'mdi:skull',
     tags: ['skull', 'chatter', 'jaw', 'spooky', 'halloween'],
     doc: (id, name) =>

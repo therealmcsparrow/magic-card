@@ -1,48 +1,186 @@
 {
-  "Bat flight": "Bat flight",
-  "Bauble sway": "Bauble sway",
-  "Blush glow": "Blush glow",
-  "Bubbling cauldron": "Bubbling cauldron",
-  "Candlelight": "Candlelight",
-  "Chimney smoke": "Chimney smoke",
-  "Creeping fog": "Creeping fog",
-  "Cupid sparkle": "Cupid sparkle",
-  "Dishwasher steam": "Dishwasher steam",
-  "Doorbell ring": "Doorbell ring",
-  "Energy flow": "Energy flow",
-  "Fairy light glow": "Fairy light glow",
-  "Falling petals": "Falling petals",
-  "Fan running": "Fan running",
-  "Floating hearts": "Floating hearts",
-  "Fresh sparkle": "Fresh sparkle",
-  "Garden sprinkler": "Garden sprinkler",
-  "Ghost float": "Ghost float",
-  "Golden star shower": "Golden star shower",
-  "Heart burst": "Heart burst",
-  "Hearth flicker": "Hearth flicker",
-  "Heating up": "Heating up",
-  "Jack-o'-lantern glow": "Jack-o'-lantern glow",
-  "Jingle bell": "Jingle bell",
-  "Lamp breathe": "Lamp breathe",
-  "Lamp switch-on": "Lamp switch-on",
-  "Leak drip & splash": "Leak drip & splash",
-  "Licking flames": "Licking flames",
-  "Lub-dub heartbeat": "Lub-dub heartbeat",
-  "Mail arrived": "Mail arrived",
-  "Motion detected": "Motion detected",
-  "New Year fireworks": "New Year fireworks",
-  "Party sparkle": "Party sparkle",
-  "Present hop": "Present hop",
-  "Rising embers": "Rising embers",
-  "Robot vacuum glide": "Robot vacuum glide",
-  "Skull chatter": "Skull chatter",
-  "Snow that settles": "Snow that settles",
-  "Soap bubbles that pop": "Soap bubbles that pop",
-  "Sparkler": "Sparkler",
-  "Spider drop": "Spider drop",
-  "Spray mist": "Spray mist",
-  "Sunbeam dust": "Sunbeam dust",
-  "Sunrise warm-up": "Sunrise warm-up",
-  "Washer spin cycle": "Washer spin cycle",
-  "Wipe clean": "Wipe clean"
+  "preset-catalogue.christmas.bauble-sway": {
+    "text": "Bauble sway",
+    "hash": "6d59dce6"
+  },
+  "preset-catalogue.christmas.fairy-light-glow": {
+    "text": "Fairy light glow",
+    "hash": "e587ebba"
+  },
+  "preset-catalogue.christmas.golden-star-shower": {
+    "text": "Golden star shower",
+    "hash": "c871b495"
+  },
+  "preset-catalogue.christmas.jingle-bell": {
+    "text": "Jingle bell",
+    "hash": "caacc59f"
+  },
+  "preset-catalogue.christmas.new-year-fireworks": {
+    "text": "New Year fireworks",
+    "hash": "251d68e9"
+  },
+  "preset-catalogue.christmas.present-hop": {
+    "text": "Present hop",
+    "hash": "b94844c4"
+  },
+  "preset-catalogue.christmas.snow-that-settles": {
+    "text": "Snow that settles",
+    "hash": "e899d673"
+  },
+  "preset-catalogue.cleaning.dishwasher-steam": {
+    "text": "Dishwasher steam",
+    "hash": "e92d2a5d"
+  },
+  "preset-catalogue.cleaning.fresh-sparkle": {
+    "text": "Fresh sparkle",
+    "hash": "a1450874"
+  },
+  "preset-catalogue.cleaning.robot-vacuum-glide": {
+    "text": "Robot vacuum glide",
+    "hash": "db376a1d"
+  },
+  "preset-catalogue.cleaning.soap-bubbles-that-pop": {
+    "text": "Soap bubbles that pop",
+    "hash": "34821905"
+  },
+  "preset-catalogue.cleaning.spray-mist": {
+    "text": "Spray mist",
+    "hash": "14590bff"
+  },
+  "preset-catalogue.cleaning.washer-spin-cycle": {
+    "text": "Washer spin cycle",
+    "hash": "83677928"
+  },
+  "preset-catalogue.cleaning.wipe-clean": {
+    "text": "Wipe clean",
+    "hash": "e4c3c33d"
+  },
+  "preset-catalogue.fire.chimney-smoke": {
+    "text": "Chimney smoke",
+    "hash": "a8507c0f"
+  },
+  "preset-catalogue.fire.hearth-flicker": {
+    "text": "Hearth flicker",
+    "hash": "ad367976"
+  },
+  "preset-catalogue.fire.heating-up": {
+    "text": "Heating up",
+    "hash": "42154cd3"
+  },
+  "preset-catalogue.fire.licking-flames": {
+    "text": "Licking flames",
+    "hash": "823d771c"
+  },
+  "preset-catalogue.fire.rising-embers": {
+    "text": "Rising embers",
+    "hash": "7abccb65"
+  },
+  "preset-catalogue.fire.sparkler": {
+    "text": "Sparkler",
+    "hash": "31275f47"
+  },
+  "preset-catalogue.halloween.bat-flight": {
+    "text": "Bat flight",
+    "hash": "184bf251"
+  },
+  "preset-catalogue.halloween.bubbling-cauldron": {
+    "text": "Bubbling cauldron",
+    "hash": "5131c7fb"
+  },
+  "preset-catalogue.halloween.creeping-fog": {
+    "text": "Creeping fog",
+    "hash": "3cf49039"
+  },
+  "preset-catalogue.halloween.ghost-float": {
+    "text": "Ghost float",
+    "hash": "97dc2e85"
+  },
+  "preset-catalogue.halloween.jack-o-lantern-glow": {
+    "text": "Jack-o'-lantern glow",
+    "hash": "c14cc577"
+  },
+  "preset-catalogue.halloween.skull-chatter": {
+    "text": "Skull chatter",
+    "hash": "7582e03c"
+  },
+  "preset-catalogue.halloween.spider-drop": {
+    "text": "Spider drop",
+    "hash": "55f31b1a"
+  },
+  "preset-catalogue.home.doorbell-ring": {
+    "text": "Doorbell ring",
+    "hash": "e979b023"
+  },
+  "preset-catalogue.home.energy-flow": {
+    "text": "Energy flow",
+    "hash": "52b0ec74"
+  },
+  "preset-catalogue.home.fan-running": {
+    "text": "Fan running",
+    "hash": "cc144a85"
+  },
+  "preset-catalogue.home.garden-sprinkler": {
+    "text": "Garden sprinkler",
+    "hash": "28156c89"
+  },
+  "preset-catalogue.home.leak-drip-splash": {
+    "text": "Leak drip & splash",
+    "hash": "db1c9003"
+  },
+  "preset-catalogue.home.mail-arrived": {
+    "text": "Mail arrived",
+    "hash": "a332e5da"
+  },
+  "preset-catalogue.home.motion-detected": {
+    "text": "Motion detected",
+    "hash": "c8ef4e9c"
+  },
+  "preset-catalogue.light.candlelight": {
+    "text": "Candlelight",
+    "hash": "8350ec38"
+  },
+  "preset-catalogue.light.lamp-breathe": {
+    "text": "Lamp breathe",
+    "hash": "4370f555"
+  },
+  "preset-catalogue.light.lamp-switch-on": {
+    "text": "Lamp switch-on",
+    "hash": "4e582c0c"
+  },
+  "preset-catalogue.light.party-sparkle": {
+    "text": "Party sparkle",
+    "hash": "aaf213c7"
+  },
+  "preset-catalogue.light.sunbeam-dust": {
+    "text": "Sunbeam dust",
+    "hash": "ecf4023c"
+  },
+  "preset-catalogue.light.sunrise-warm-up": {
+    "text": "Sunrise warm-up",
+    "hash": "9ddae226"
+  },
+  "preset-catalogue.valentine.blush-glow": {
+    "text": "Blush glow",
+    "hash": "75331886"
+  },
+  "preset-catalogue.valentine.cupid-sparkle": {
+    "text": "Cupid sparkle",
+    "hash": "411c77a9"
+  },
+  "preset-catalogue.valentine.falling-petals": {
+    "text": "Falling petals",
+    "hash": "5966bdd6"
+  },
+  "preset-catalogue.valentine.floating-hearts": {
+    "text": "Floating hearts",
+    "hash": "0feb69b2"
+  },
+  "preset-catalogue.valentine.heart-burst": {
+    "text": "Heart burst",
+    "hash": "76d12c53"
+  },
+  "preset-catalogue.valentine.lub-dub-heartbeat": {
+    "text": "Lub-dub heartbeat",
+    "hash": "43f777b7"
+  }
 }

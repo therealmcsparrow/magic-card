@@ -8,7 +8,7 @@ const L = THEME.light;
 export const LIGHT = group('Light & colour', [
   {
     id: 'light-lamp-breathe',
-    name: m('Lamp breathe'),
+    name: m('preset-catalogue.light.lamp-breathe'),
     icon: 'mdi:lightbulb-on',
     tags: ['lamp', 'bulb', 'breathe', 'glow', 'night light'],
     doc: (id, name) =>
@@ -24,7 +24,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-lamp-switch-on',
-    name: m('Lamp switch-on'),
+    name: m('preset-catalogue.light.lamp-switch-on'),
     icon: 'mdi:lamp',
     tags: ['lamp', 'switch', 'on', 'event', 'glow'],
     doc: (id, name) =>
@@ -43,7 +43,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-sunbeam-dust',
-    name: m('Sunbeam dust'),
+    name: m('preset-catalogue.light.sunbeam-dust'),
     icon: 'mdi:white-balance-sunny',
     tags: ['dust', 'motes', 'sunbeam', 'calm', 'particles'],
     doc: (id, name) =>
@@ -63,7 +63,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-candlelight',
-    name: m('Candlelight'),
+    name: m('preset-catalogue.light.candlelight'),
     icon: 'mdi:candle',
     tags: ['candle', 'warm', 'flicker', 'cosy', 'glow'],
     doc: (id, name) =>
@@ -83,7 +83,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-sunrise-warm-up',
-    name: m('Sunrise warm-up'),
+    name: m('preset-catalogue.light.sunrise-warm-up'),
     icon: 'mdi:weather-sunset-up',
     tags: ['sunrise', 'wake up', 'warm', 'colour', 'glow'],
     doc: (id, name) =>
@@ -99,7 +99,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-party-sparkle',
-    name: m('Party sparkle'),
+    name: m('preset-catalogue.light.party-sparkle'),
     icon: 'mdi:party-popper',
     tags: ['party', 'disco', 'sparkle', 'colour', 'particles'],
     doc: (id, name) =>

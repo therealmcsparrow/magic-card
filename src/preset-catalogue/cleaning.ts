@@ -9,7 +9,7 @@ const FOAM = [C.glow, '#ffffff', '#b2ebf2'];
 export const CLEANING = group('Cleaning', [
   {
     id: 'clean-soap-bubbles-pop',
-    name: m('Soap bubbles that pop'),
+    name: m('preset-catalogue.cleaning.soap-bubbles-that-pop'),
     icon: 'mdi:chart-bubble',
     tags: ['bubbles', 'soap', 'washing', 'pop', 'droplets', 'particles'],
     heavy: true,
@@ -41,7 +41,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-fresh-sparkle',
-    name: m('Fresh sparkle'),
+    name: m('preset-catalogue.cleaning.fresh-sparkle'),
     icon: 'mdi:shimmer',
     tags: ['sparkle', 'clean', 'shine', 'done', 'particles'],
     doc: (id, name) =>
@@ -60,7 +60,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-robot-vacuum-glide',
-    name: m('Robot vacuum glide'),
+    name: m('preset-catalogue.cleaning.robot-vacuum-glide'),
     icon: 'mdi:robot-vacuum',
     tags: ['vacuum', 'robot', 'cleaning', 'running', 'roomba'],
     doc: (id, name) =>
@@ -80,7 +80,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-washer-spin-cycle',
-    name: m('Washer spin cycle'),
+    name: m('preset-catalogue.cleaning.washer-spin-cycle'),
     icon: 'mdi:washing-machine',
     tags: ['washing machine', 'laundry', 'spin', 'rumble', 'running'],
     doc: (id, name) =>
@@ -105,7 +105,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-dishwasher-steam',
-    name: m('Dishwasher steam'),
+    name: m('preset-catalogue.cleaning.dishwasher-steam'),
     icon: 'mdi:dishwasher',
     tags: ['steam', 'dishwasher', 'drying', 'hot', 'particles'],
     doc: (id, name) =>
@@ -124,7 +124,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-spray-mist',
-    name: m('Spray mist'),
+    name: m('preset-catalogue.cleaning.spray-mist'),
     icon: 'mdi:spray-bottle',
     tags: ['spray', 'mist', 'cleaning', 'humidifier', 'particles'],
     doc: (id, name) =>
@@ -145,7 +145,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-wipe-clean',
-    name: m('Wipe clean'),
+    name: m('preset-catalogue.cleaning.wipe-clean'),
     icon: 'mdi:broom',
     tags: ['broom', 'mop', 'wipe', 'sweep', 'cleaning'],
     doc: (id, name) =>

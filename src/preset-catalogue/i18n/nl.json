@@ -1,48 +1,186 @@
 {
-  "Snow that settles": "Sneeuw die blijft liggen",
-  "New Year fireworks": "Nieuwjaarsvuurwerk",
-  "Jingle bell": "Belletje",
-  "Bauble sway": "Zwaaiende kerstbal",
-  "Present hop": "Huppelend cadeau",
-  "Golden star shower": "Gouden sterrenregen",
-  "Fairy light glow": "Gloeiende lichtjes",
-  "Soap bubbles that pop": "Zeepbellen die knappen",
-  "Fresh sparkle": "Frisse glans",
-  "Robot vacuum glide": "Glijdende robotstofzuiger",
-  "Washer spin cycle": "Centrifugeren",
-  "Dishwasher steam": "Stoom uit de vaatwasser",
-  "Spray mist": "Spraynevel",
-  "Wipe clean": "Schoonvegen",
-  "Hearth flicker": "Flikkerende haard",
-  "Heating up": "Opwarmen",
-  "Rising embers": "Opstijgende vonken",
-  "Licking flames": "Likkende vlammen",
-  "Chimney smoke": "Rook uit de schoorsteen",
-  "Sparkler": "Sterretje",
-  "Bat flight": "Vliegende vleermuis",
-  "Ghost float": "Zwevend spook",
-  "Jack-o'-lantern glow": "Gloeiende pompoenlantaarn",
-  "Creeping fog": "Kruipende mist",
-  "Bubbling cauldron": "Borrelende ketel",
-  "Spider drop": "Zakkende spin",
-  "Skull chatter": "Klapperende schedel",
-  "Leak drip & splash": "Lekkende druppel met spetter",
-  "Fan running": "Draaiende ventilator",
-  "Doorbell ring": "Deurbel gaat",
-  "Motion detected": "Beweging gedetecteerd",
-  "Mail arrived": "Post is er",
-  "Energy flow": "Energiestroom",
-  "Garden sprinkler": "Tuinsproeier",
-  "Lamp breathe": "Ademende lamp",
-  "Lamp switch-on": "Lamp gaat aan",
-  "Sunbeam dust": "Stof in zonlicht",
-  "Candlelight": "Kaarslicht",
-  "Sunrise warm-up": "Warme zonsopgang",
-  "Party sparkle": "Feestelijke glinstering",
-  "Blush glow": "Blozende gloed",
-  "Cupid sparkle": "Fonkeling van Cupido",
-  "Falling petals": "Vallende bloemblaadjes",
-  "Floating hearts": "Zwevende harten",
-  "Heart burst": "Hartenexplosie",
-  "Lub-dub heartbeat": "Bonzend hart"
+  "preset-catalogue.christmas.bauble-sway": {
+    "text": "Zwaaiende kerstbal",
+    "hash": "6d59dce6"
+  },
+  "preset-catalogue.christmas.fairy-light-glow": {
+    "text": "Gloeiende lichtjes",
+    "hash": "e587ebba"
+  },
+  "preset-catalogue.christmas.golden-star-shower": {
+    "text": "Gouden sterrenregen",
+    "hash": "c871b495"
+  },
+  "preset-catalogue.christmas.jingle-bell": {
+    "text": "Belletje",
+    "hash": "caacc59f"
+  },
+  "preset-catalogue.christmas.new-year-fireworks": {
+    "text": "Nieuwjaarsvuurwerk",
+    "hash": "251d68e9"
+  },
+  "preset-catalogue.christmas.present-hop": {
+    "text": "Huppelend cadeau",
+    "hash": "b94844c4"
+  },
+  "preset-catalogue.christmas.snow-that-settles": {
+    "text": "Sneeuw die blijft liggen",
+    "hash": "e899d673"
+  },
+  "preset-catalogue.cleaning.dishwasher-steam": {
+    "text": "Stoom uit de vaatwasser",
+    "hash": "e92d2a5d"
+  },
+  "preset-catalogue.cleaning.fresh-sparkle": {
+    "text": "Frisse glans",
+    "hash": "a1450874"
+  },
+  "preset-catalogue.cleaning.robot-vacuum-glide": {
+    "text": "Glijdende robotstofzuiger",
+    "hash": "db376a1d"
+  },
+  "preset-catalogue.cleaning.soap-bubbles-that-pop": {
+    "text": "Zeepbellen die knappen",
+    "hash": "34821905"
+  },
+  "preset-catalogue.cleaning.spray-mist": {
+    "text": "Spraynevel",
+    "hash": "14590bff"
+  },
+  "preset-catalogue.cleaning.washer-spin-cycle": {
+    "text": "Centrifugeren",
+    "hash": "83677928"
+  },
+  "preset-catalogue.cleaning.wipe-clean": {
+    "text": "Schoonvegen",
+    "hash": "e4c3c33d"
+  },
+  "preset-catalogue.fire.chimney-smoke": {
+    "text": "Rook uit de schoorsteen",
+    "hash": "a8507c0f"
+  },
+  "preset-catalogue.fire.hearth-flicker": {
+    "text": "Flikkerende haard",
+    "hash": "ad367976"
+  },
+  "preset-catalogue.fire.heating-up": {
+    "text": "Opwarmen",
+    "hash": "42154cd3"
+  },
+  "preset-catalogue.fire.licking-flames": {
+    "text": "Likkende vlammen",
+    "hash": "823d771c"
+  },
+  "preset-catalogue.fire.rising-embers": {
+    "text": "Opstijgende vonken",
+    "hash": "7abccb65"
+  },
+  "preset-catalogue.fire.sparkler": {
+    "text": "Sterretje",
+    "hash": "31275f47"
+  },
+  "preset-catalogue.halloween.bat-flight": {
+    "text": "Vliegende vleermuis",
+    "hash": "184bf251"
+  },
+  "preset-catalogue.halloween.bubbling-cauldron": {
+    "text": "Borrelende ketel",
+    "hash": "5131c7fb"
+  },
+  "preset-catalogue.halloween.creeping-fog": {
+    "text": "Kruipende mist",
+    "hash": "3cf49039"
+  },
+  "preset-catalogue.halloween.ghost-float": {
+    "text": "Zwevend spook",
+    "hash": "97dc2e85"
+  },
+  "preset-catalogue.halloween.jack-o-lantern-glow": {
+    "text": "Gloeiende pompoenlantaarn",
+    "hash": "c14cc577"
+  },
+  "preset-catalogue.halloween.skull-chatter": {
+    "text": "Klapperende schedel",
+    "hash": "7582e03c"
+  },
+  "preset-catalogue.halloween.spider-drop": {
+    "text": "Zakkende spin",
+    "hash": "55f31b1a"
+  },
+  "preset-catalogue.home.doorbell-ring": {
+    "text": "Deurbel gaat",
+    "hash": "e979b023"
+  },
+  "preset-catalogue.home.energy-flow": {
+    "text": "Energiestroom",
+    "hash": "52b0ec74"
+  },
+  "preset-catalogue.home.fan-running": {
+    "text": "Draaiende ventilator",
+    "hash": "cc144a85"
+  },
+  "preset-catalogue.home.garden-sprinkler": {
+    "text": "Tuinsproeier",
+    "hash": "28156c89"
+  },
+  "preset-catalogue.home.leak-drip-splash": {
+    "text": "Lekkende druppel met spetter",
+    "hash": "db1c9003"
+  },
+  "preset-catalogue.home.mail-arrived": {
+    "text": "Post is er",
+    "hash": "a332e5da"
+  },
+  "preset-catalogue.home.motion-detected": {
+    "text": "Beweging gedetecteerd",
+    "hash": "c8ef4e9c"
+  },
+  "preset-catalogue.light.candlelight": {
+    "text": "Kaarslicht",
+    "hash": "8350ec38"
+  },
+  "preset-catalogue.light.lamp-breathe": {
+    "text": "Ademende lamp",
+    "hash": "4370f555"
+  },
+  "preset-catalogue.light.lamp-switch-on": {
+    "text": "Lamp gaat aan",
+    "hash": "4e582c0c"
+  },
+  "preset-catalogue.light.party-sparkle": {
+    "text": "Feestelijke glinstering",
+    "hash": "aaf213c7"
+  },
+  "preset-catalogue.light.sunbeam-dust": {
+    "text": "Stof in zonlicht",
+    "hash": "ecf4023c"
+  },
+  "preset-catalogue.light.sunrise-warm-up": {
+    "text": "Warme zonsopgang",
+    "hash": "9ddae226"
+  },
+  "preset-catalogue.valentine.blush-glow": {
+    "text": "Blozende gloed",
+    "hash": "75331886"
+  },
+  "preset-catalogue.valentine.cupid-sparkle": {
+    "text": "Fonkeling van Cupido",
+    "hash": "411c77a9"
+  },
+  "preset-catalogue.valentine.falling-petals": {
+    "text": "Vallende bloemblaadjes",
+    "hash": "5966bdd6"
+  },
+  "preset-catalogue.valentine.floating-hearts": {
+    "text": "Zwevende harten",
+    "hash": "0feb69b2"
+  },
+  "preset-catalogue.valentine.heart-burst": {
+    "text": "Hartenexplosie",
+    "hash": "76d12c53"
+  },
+  "preset-catalogue.valentine.lub-dub-heartbeat": {
+    "text": "Bonzend hart",
+    "hash": "43f777b7"
+  }
 }

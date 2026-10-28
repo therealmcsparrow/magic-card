@@ -8,7 +8,7 @@ const X = THEME.christmas;
 export const CHRISTMAS = group('Christmas', [
   {
     id: 'xmas-snow-settle',
-    name: m('Snow that settles'),
+    name: m('preset-catalogue.christmas.snow-that-settles'),
     icon: 'mdi:snowflake',
     tags: ['snow', 'winter', 'snowflakes', 'floor', 'settle', 'particles'],
     heavy: true,
@@ -30,7 +30,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-new-year-fireworks',
-    name: m('New Year fireworks'),
+    name: m('preset-catalogue.christmas.new-year-fireworks'),
     icon: 'mdi:firework',
     tags: ['fireworks', 'new year', 'celebration', 'party', 'particles'],
     heavy: true,
@@ -65,7 +65,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-jingle-bell',
-    name: m('Jingle bell'),
+    name: m('preset-catalogue.christmas.jingle-bell'),
     icon: 'mdi:bell-ring',
     tags: ['bell', 'jingle', 'ring', 'christmas', 'notification'],
     doc: (id, name) =>
@@ -87,7 +87,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-bauble-sway',
-    name: m('Bauble sway'),
+    name: m('preset-catalogue.christmas.bauble-sway'),
     icon: 'mdi:ornament',
     tags: ['bauble', 'ornament', 'tree', 'sway', 'christmas'],
     doc: (id, name) =>
@@ -104,7 +104,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-present-hop',
-    name: m('Present hop'),
+    name: m('preset-catalogue.christmas.present-hop'),
     icon: 'mdi:gift',
     tags: ['gift', 'present', 'hop', 'surprise', 'christmas'],
     doc: (id, name) =>
@@ -126,7 +126,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-golden-star-shower',
-    name: m('Golden star shower'),
+    name: m('preset-catalogue.christmas.golden-star-shower'),
     icon: 'mdi:star-shooting',
     tags: ['stars', 'gold', 'christmas', 'shower', 'particles'],
     doc: (id, name) =>
@@ -144,7 +144,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-fairy-lights',
-    name: m('Fairy light glow'),
+    name: m('preset-catalogue.christmas.fairy-light-glow'),
     icon: 'mdi:string-lights',
     tags: ['lights', 'fairy lights', 'tree', 'glow', 'christmas'],
     doc: (id, name) =>

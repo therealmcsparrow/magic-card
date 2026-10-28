@@ -1,0 +1,3080 @@
+{
+  "icon-library.fire-cleaning.air-bottom": {
+    "text": "Air bottom",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.air-filter": {
+    "text": "Air filter",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.air-top": {
+    "text": "Air top",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.big-sparkle": {
+    "text": "Big sparkle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.body": {
+    "text": "Body",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.bottle": {
+    "text": "Bottle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.bottom-drops": {
+    "text": "Bottom drops",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.bristles": {
+    "text": "Bristles",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.broom": {
+    "text": "Broom",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.button": {
+    "text": "Button",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.campfire": {
+    "text": "Campfire",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.can": {
+    "text": "Can",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 5
+  },
+  "icon-library.fire-cleaning.candle": {
+    "text": "Candle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.cuff": {
+    "text": "Cuff",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.door-window": {
+    "text": "Door window",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.dot": {
+    "text": "Dot",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 5
+  },
+  "icon-library.fire-cleaning.drop": {
+    "text": "Drop",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.exclamation": {
+    "text": "Exclamation",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.exclamation-mark": {
+    "text": "Exclamation mark",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 30
+  },
+  "icon-library.fire-cleaning.extinguisher": {
+    "text": "Extinguisher",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.filter": {
+    "text": "Filter",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.fire-alert": {
+    "text": "Fire alert",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.fire-extinguisher": {
+    "text": "Fire extinguisher",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 30
+  },
+  "icon-library.fire-cleaning.fire-ring": {
+    "text": "Fire ring",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.fire-sprinkler": {
+    "text": "Fire sprinkler",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.flame": {
+    "text": "Flame",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.grill": {
+    "text": "Grill",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.hand-wash": {
+    "text": "Hand wash",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.handle": {
+    "text": "Handle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.hands": {
+    "text": "Hands",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.inner-flame": {
+    "text": "Inner flame",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.iron": {
+    "text": "Iron",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.lid": {
+    "text": "Lid",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.logs": {
+    "text": "Logs",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.machine": {
+    "text": "Machine",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.middle-drops": {
+    "text": "Middle drops",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.mist-1": {
+    "text": "Mist 1",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-2": {
+    "text": "Mist 2",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-3": {
+    "text": "Mist 3",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-4": {
+    "text": "Mist 4",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-5": {
+    "text": "Mist 5",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-6": {
+    "text": "Mist 6",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.nozzle": {
+    "text": "Nozzle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.ring": {
+    "text": "Ring",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.robot-vacuum-side-view": {
+    "text": "Robot vacuum side view",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 40
+  },
+  "icon-library.fire-cleaning.sensor": {
+    "text": "Sensor",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.shell": {
+    "text": "Shell",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.small-sparkle": {
+    "text": "Small sparkle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.smoke-1": {
+    "text": "Smoke 1",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.smoke-2": {
+    "text": "Smoke 2",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.smoke-3": {
+    "text": "Smoke 3",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.soap-pump": {
+    "text": "Soap pump",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.sparkle": {
+    "text": "Sparkle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.sparkling-clean": {
+    "text": "Sparkling clean",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.spray-bottle": {
+    "text": "Spray bottle",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.spray-can": {
+    "text": "Spray can",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.sprinkler": {
+    "text": "Sprinkler",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.top-drops": {
+    "text": "Top drops",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.torch": {
+    "text": "Torch",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.trigger": {
+    "text": "Trigger",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.trigger-head": {
+    "text": "Trigger head",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.vacuum": {
+    "text": "Vacuum",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.vacuum-cleaner": {
+    "text": "Vacuum cleaner",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.washing-machine-alert": {
+    "text": "Washing machine alert",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 35
+  },
+  "icon-library.fire-cleaning.wheel": {
+    "text": "Wheel",
+    "note": "Shown in fire cleaning (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.3d-printer": {
+    "text": "3D printer",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.3d-printer-nozzle": {
+    "text": "3D printer nozzle",
+    "note": "Shown in home (icon-library).",
+    "max": 30
+  },
+  "icon-library.home.access-point": {
+    "text": "Access point",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.antenna": {
+    "text": "Antenna",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.beam": {
+    "text": "Beam",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.bed": {
+    "text": "Bed",
+    "note": "Shown in home (icon-library).",
+    "max": 5
+  },
+  "icon-library.home.bottom-unit": {
+    "text": "Bottom unit",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.case": {
+    "text": "Case",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.cutting-head": {
+    "text": "Cutting head",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.door": {
+    "text": "Door",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.drip": {
+    "text": "Drip",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.filament": {
+    "text": "Filament",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.frame": {
+    "text": "Frame",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.garage": {
+    "text": "Garage",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.garage-opening": {
+    "text": "Garage opening",
+    "note": "Shown in home (icon-library).",
+    "max": 25
+  },
+  "icon-library.home.head": {
+    "text": "Head",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.home-assistant": {
+    "text": "Home Assistant",
+    "note": "Shown in home (icon-library).",
+    "max": 25
+  },
+  "icon-library.home.house": {
+    "text": "House",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.hub": {
+    "text": "Hub",
+    "note": "Shown in home (icon-library).",
+    "max": 5
+  },
+  "icon-library.home.inner-left-wave": {
+    "text": "Inner left wave",
+    "note": "Shown in home (icon-library).",
+    "max": 25
+  },
+  "icon-library.home.inner-right-wave": {
+    "text": "Inner right wave",
+    "note": "Shown in home (icon-library).",
+    "max": 30
+  },
+  "icon-library.home.inner-waves": {
+    "text": "Inner waves",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.knob-1": {
+    "text": "Knob 1",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.knob-2": {
+    "text": "Knob 2",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.knob-3": {
+    "text": "Knob 3",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.laser-cutter": {
+    "text": "Laser cutter",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.laser-head": {
+    "text": "Laser head",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.left-blade": {
+    "text": "Left blade",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.left-node": {
+    "text": "Left node",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.left-oven-glow": {
+    "text": "Left oven glow",
+    "note": "Shown in home (icon-library).",
+    "max": 25
+  },
+  "icon-library.home.left-pipe": {
+    "text": "Left pipe",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.letter-slot": {
+    "text": "Letter slot",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.lid": {
+    "text": "Lid",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.light-switch": {
+    "text": "Light switch",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.mail-arrived": {
+    "text": "Mail arrived",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.mailbox": {
+    "text": "Mailbox",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.material": {
+    "text": "Material",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.middle-unit": {
+    "text": "Middle unit",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.nozzle": {
+    "text": "Nozzle",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.outer-left-wave": {
+    "text": "Outer left wave",
+    "note": "Shown in home (icon-library).",
+    "max": 25
+  },
+  "icon-library.home.outer-right-wave": {
+    "text": "Outer right wave",
+    "note": "Shown in home (icon-library).",
+    "max": 30
+  },
+  "icon-library.home.outer-waves": {
+    "text": "Outer waves",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.parcel": {
+    "text": "Parcel",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.parcel-delivered": {
+    "text": "Parcel delivered",
+    "note": "Shown in home (icon-library).",
+    "max": 30
+  },
+  "icon-library.home.plate": {
+    "text": "Plate",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.print": {
+    "text": "Print",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.print-head": {
+    "text": "Print head",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.rail": {
+    "text": "Rail",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.right-blade": {
+    "text": "Right blade",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.right-node": {
+    "text": "Right node",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.right-oven-glow": {
+    "text": "Right oven glow",
+    "note": "Shown in home (icon-library).",
+    "max": 25
+  },
+  "icon-library.home.right-pipe": {
+    "text": "Right pipe",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.rotor": {
+    "text": "Rotor",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.server": {
+    "text": "Server",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.sleeping": {
+    "text": "Sleeping",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.spark": {
+    "text": "Spark",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.stove": {
+    "text": "Stove",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.toast": {
+    "text": "Toast",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.toaster": {
+    "text": "Toaster",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.toggle": {
+    "text": "Toggle",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.toolhead": {
+    "text": "Toolhead",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.top-blade": {
+    "text": "Top blade",
+    "note": "Shown in home (icon-library).",
+    "max": 15
+  },
+  "icon-library.home.top-node": {
+    "text": "Top node",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.top-unit": {
+    "text": "Top unit",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.tower": {
+    "text": "Tower",
+    "note": "Shown in home (icon-library).",
+    "max": 10
+  },
+  "icon-library.home.water-leak": {
+    "text": "Water leak",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.home.wind-turbine": {
+    "text": "Wind turbine",
+    "note": "Shown in home (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.a": {
+    "text": "A",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.air-bottom": {
+    "text": "Air bottom",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.air-conditioner": {
+    "text": "Air conditioner",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.air-purifier": {
+    "text": "Air purifier",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.air-top": {
+    "text": "Air top",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.alarm-clock": {
+    "text": "Alarm clock",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.alarm-light": {
+    "text": "Alarm light",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.alert": {
+    "text": "Alert",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.bar": {
+    "text": "Bar",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.bar-1": {
+    "text": "Bar 1",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bar-2": {
+    "text": "Bar 2",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bar-3": {
+    "text": "Bar 3",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.base": {
+    "text": "Base",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bases": {
+    "text": "Bases",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.battery": {
+    "text": "Battery",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.battery-charging": {
+    "text": "Battery charging",
+    "note": "Shown in library (icon-library).",
+    "max": 30
+  },
+  "icon-library.library.battery-level": {
+    "text": "Battery level",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.bee": {
+    "text": "Bee",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.bell": {
+    "text": "Bell",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bell-and-clapper": {
+    "text": "Bell and clapper",
+    "note": "Shown in library (icon-library).",
+    "max": 30
+  },
+  "icon-library.library.big-star": {
+    "text": "Big star",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.bin": {
+    "text": "Bin",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bird": {
+    "text": "Bird",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.blades": {
+    "text": "Blades",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.body": {
+    "text": "Body",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bolt": {
+    "text": "Bolt",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.bottom-gust": {
+    "text": "Bottom gust",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.bottom-slat": {
+    "text": "Bottom slat",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.bottom-strip": {
+    "text": "Bottom strip",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.brush": {
+    "text": "Brush",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bulb": {
+    "text": "Bulb",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.bulb-glow": {
+    "text": "Bulb glow",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.button": {
+    "text": "Button",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.c": {
+    "text": "C",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.camera": {
+    "text": "Camera",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.camera-head": {
+    "text": "Camera head",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.camera-snapshot": {
+    "text": "Camera snapshot",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.car": {
+    "text": "Car",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.car-driving": {
+    "text": "Car driving",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.ceiling-fan-with-light": {
+    "text": "Ceiling fan with light",
+    "note": "Shown in library (icon-library).",
+    "max": 40
+  },
+  "icon-library.library.ceiling-light": {
+    "text": "Ceiling light",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.centre": {
+    "text": "Centre",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.centre-bulb": {
+    "text": "Centre bulb",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.charge": {
+    "text": "Charge",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.clapper": {
+    "text": "Clapper",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.clear-night": {
+    "text": "Clear night",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.clock": {
+    "text": "Clock",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.cloud": {
+    "text": "Cloud",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.cloudy": {
+    "text": "Cloudy",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.coffee-maker": {
+    "text": "Coffee maker",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.cone": {
+    "text": "Cone",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.cooking-pot": {
+    "text": "Cooking pot",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.curtains": {
+    "text": "Curtains",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.detector": {
+    "text": "Detector",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.dial": {
+    "text": "Dial",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.dishwasher": {
+    "text": "Dishwasher",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.display": {
+    "text": "Display",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.dog": {
+    "text": "Dog",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.door": {
+    "text": "Door",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.door-leaf": {
+    "text": "Door leaf",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.door-opening": {
+    "text": "Door opening",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.doorbell-press": {
+    "text": "Doorbell press",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.doorbell-ring": {
+    "text": "Doorbell ring",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.dot": {
+    "text": "Dot",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.drop": {
+    "text": "Drop",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-1": {
+    "text": "Drop 1",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-10": {
+    "text": "Drop 10",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.drop-11": {
+    "text": "Drop 11",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.drop-12": {
+    "text": "Drop 12",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.drop-2": {
+    "text": "Drop 2",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-3": {
+    "text": "Drop 3",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-4": {
+    "text": "Drop 4",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-5": {
+    "text": "Drop 5",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-6": {
+    "text": "Drop 6",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-7": {
+    "text": "Drop 7",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-8": {
+    "text": "Drop 8",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drop-9": {
+    "text": "Drop 9",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.drum": {
+    "text": "Drum",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.dryer": {
+    "text": "Dryer",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.electric-car-charging": {
+    "text": "Electric car charging",
+    "note": "Shown in library (icon-library).",
+    "max": 35
+  },
+  "icon-library.library.energy": {
+    "text": "Energy",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.energy-meter": {
+    "text": "Energy meter",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.exclamation": {
+    "text": "Exclamation",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.exclamation-mark": {
+    "text": "Exclamation mark",
+    "note": "Shown in library (icon-library).",
+    "max": 30
+  },
+  "icon-library.library.face": {
+    "text": "Face",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.fan": {
+    "text": "Fan",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.fan-spin": {
+    "text": "Fan spin",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.faucet": {
+    "text": "Faucet",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.fireplace": {
+    "text": "Fireplace",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.fish": {
+    "text": "Fish",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.flame": {
+    "text": "Flame",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.flower": {
+    "text": "Flower",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.fog": {
+    "text": "Fog",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.fog-line-1": {
+    "text": "Fog line 1",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.fog-line-2": {
+    "text": "Fog line 2",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.fog-line-3": {
+    "text": "Fog line 3",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.fog-line-4": {
+    "text": "Fog line 4",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.foot": {
+    "text": "Foot",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.frame": {
+    "text": "Frame",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.freezer-door": {
+    "text": "Freezer door",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.fridge-door": {
+    "text": "Fridge door",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.garage": {
+    "text": "Garage",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.garage-door": {
+    "text": "Garage door",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.gate": {
+    "text": "Gate",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.gauge": {
+    "text": "Gauge",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.hail": {
+    "text": "Hail",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.hailstone-1": {
+    "text": "Hailstone 1",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.hailstone-2": {
+    "text": "Hailstone 2",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.hailstone-3": {
+    "text": "Hailstone 3",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.hand": {
+    "text": "Hand",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.handle": {
+    "text": "Handle",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.hands": {
+    "text": "Hands",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.handset": {
+    "text": "Handset",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.head": {
+    "text": "Head",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.headphones": {
+    "text": "Headphones",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.heart": {
+    "text": "Heart",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.heart-and-pulse": {
+    "text": "Heart and pulse",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.heart-top": {
+    "text": "Heart top",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.heartbeat": {
+    "text": "Heartbeat",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.hearth": {
+    "text": "Hearth",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.heat-haze": {
+    "text": "Heat haze",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.heating-element": {
+    "text": "Heating element",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.heavy-snow": {
+    "text": "Heavy snow",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.home": {
+    "text": "Home",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.horizon-1": {
+    "text": "Horizon 1",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.horizon-2": {
+    "text": "Horizon 2",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.hourglass": {
+    "text": "Hourglass",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.house": {
+    "text": "House",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.hub": {
+    "text": "Hub",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.humidifier-mist": {
+    "text": "Humidifier mist",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.humidity-drop": {
+    "text": "Humidity drop",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.inner-flame": {
+    "text": "Inner flame",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.inner-wave": {
+    "text": "Inner wave",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.kettle": {
+    "text": "Kettle",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.kettle-boiling": {
+    "text": "Kettle boiling",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.knob": {
+    "text": "Knob",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.ladder": {
+    "text": "Ladder",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.leaf": {
+    "text": "Leaf",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.leaf-in-the-wind": {
+    "text": "Leaf in the wind",
+    "note": "Shown in library (icon-library).",
+    "max": 30
+  },
+  "icon-library.library.led-strip-colour-chase": {
+    "text": "LED strip colour chase",
+    "note": "Shown in library (icon-library).",
+    "max": 40
+  },
+  "icon-library.library.left-bell": {
+    "text": "Left bell",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-blade": {
+    "text": "Left blade",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-bulb": {
+    "text": "Left bulb",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-curtain": {
+    "text": "Left curtain",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-drop": {
+    "text": "Left drop",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-drop-1": {
+    "text": "Left drop 1",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-drop-2": {
+    "text": "Left drop 2",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-drop-3": {
+    "text": "Left drop 3",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-drop-4": {
+    "text": "Left drop 4",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-drop-5": {
+    "text": "Left drop 5",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-drop-6": {
+    "text": "Left drop 6",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-flake": {
+    "text": "Left flake",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-leaf": {
+    "text": "Left leaf",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-pipe": {
+    "text": "Left pipe",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-ray": {
+    "text": "Left ray",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-steam": {
+    "text": "Left steam",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.left-tick": {
+    "text": "Left tick",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.left-wave": {
+    "text": "Left wave",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.lens": {
+    "text": "Lens",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.light": {
+    "text": "Light",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.light-group": {
+    "text": "Light group",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.light-rays": {
+    "text": "Light rays",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.line": {
+    "text": "Line",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.lock": {
+    "text": "Lock",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.machine": {
+    "text": "Machine",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mantel": {
+    "text": "Mantel",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.mark-1": {
+    "text": "Mark 1",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-2": {
+    "text": "Mark 2",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-3": {
+    "text": "Mark 3",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-4": {
+    "text": "Mark 4",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-5": {
+    "text": "Mark 5",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-6": {
+    "text": "Mark 6",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-7": {
+    "text": "Mark 7",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.mark-8": {
+    "text": "Mark 8",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.meter": {
+    "text": "Meter",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.middle-arc": {
+    "text": "Middle arc",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.middle-drop": {
+    "text": "Middle drop",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.middle-gust": {
+    "text": "Middle gust",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.middle-ray": {
+    "text": "Middle ray",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.middle-slat": {
+    "text": "Middle slat",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.middle-strip": {
+    "text": "Middle strip",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.middle-wave": {
+    "text": "Middle wave",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.moon": {
+    "text": "Moon",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.motion-detected": {
+    "text": "Motion detected",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.mount": {
+    "text": "Mount",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.mower": {
+    "text": "Mower",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.music-note-dance": {
+    "text": "Music note dance",
+    "note": "Shown in library (icon-library).",
+    "max": 30
+  },
+  "icon-library.library.needle": {
+    "text": "Needle",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.note": {
+    "text": "Note",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.notification": {
+    "text": "Notification",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.outdoor-temperature": {
+    "text": "Outdoor temperature",
+    "note": "Shown in library (icon-library).",
+    "max": 35
+  },
+  "icon-library.library.outer-flame": {
+    "text": "Outer flame",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.outer-wave": {
+    "text": "Outer wave",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.oven": {
+    "text": "Oven",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.oven-heating": {
+    "text": "Oven heating",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.pad": {
+    "text": "Pad",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.panel": {
+    "text": "Panel",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.paper": {
+    "text": "Paper",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.partly-cloudy": {
+    "text": "Partly cloudy",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.pendant": {
+    "text": "Pendant",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.person": {
+    "text": "Person",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.person-home": {
+    "text": "Person home",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.pet": {
+    "text": "Pet",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.phone": {
+    "text": "Phone",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.phone-ringing": {
+    "text": "Phone ringing",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.phone-signal": {
+    "text": "Phone signal",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.phone-vibrate": {
+    "text": "Phone vibrate",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.plant": {
+    "text": "Plant",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.play": {
+    "text": "Play",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.plug": {
+    "text": "Plug",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.plug-in": {
+    "text": "Plug in",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.pool": {
+    "text": "Pool",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.pot": {
+    "text": "Pot",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.pouring-rain": {
+    "text": "Pouring rain",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.power-button": {
+    "text": "Power button",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.printer": {
+    "text": "Printer",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.pump": {
+    "text": "Pump",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.radiator": {
+    "text": "Radiator",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.radiator-heat": {
+    "text": "Radiator heat",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.rain": {
+    "text": "Rain",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.ray-1": {
+    "text": "Ray 1",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.ray-2": {
+    "text": "Ray 2",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.ray-3": {
+    "text": "Ray 3",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.ray-bottom": {
+    "text": "Ray bottom",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.ray-bottom-left": {
+    "text": "Ray bottom left",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.ray-bottom-right": {
+    "text": "Ray bottom right",
+    "note": "Shown in library (icon-library).",
+    "max": 30
+  },
+  "icon-library.library.ray-left": {
+    "text": "Ray left",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.ray-right": {
+    "text": "Ray right",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.ray-top": {
+    "text": "Ray top",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.ray-top-left": {
+    "text": "Ray top left",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.ray-top-right": {
+    "text": "Ray top right",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.rays": {
+    "text": "Rays",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.right-bell": {
+    "text": "Right bell",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-blade": {
+    "text": "Right blade",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-bulb": {
+    "text": "Right bulb",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-curtain": {
+    "text": "Right curtain",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.right-drop": {
+    "text": "Right drop",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-drop-1": {
+    "text": "Right drop 1",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-drop-2": {
+    "text": "Right drop 2",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-drop-3": {
+    "text": "Right drop 3",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-drop-4": {
+    "text": "Right drop 4",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-drop-5": {
+    "text": "Right drop 5",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-drop-6": {
+    "text": "Right drop 6",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-flake": {
+    "text": "Right flake",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-leaf": {
+    "text": "Right leaf",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-pipe": {
+    "text": "Right pipe",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-ray": {
+    "text": "Right ray",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.right-steam": {
+    "text": "Right steam",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-tick": {
+    "text": "Right tick",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.right-wave": {
+    "text": "Right wave",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.ring": {
+    "text": "Ring",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.robot": {
+    "text": "Robot",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.robot-mower": {
+    "text": "Robot mower",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.robot-vacuum": {
+    "text": "Robot vacuum",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.rod": {
+    "text": "Rod",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.roller-shutter": {
+    "text": "Roller shutter",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.router": {
+    "text": "Router",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.sand": {
+    "text": "Sand",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.security-armed": {
+    "text": "Security armed",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.security-camera": {
+    "text": "Security camera",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.sensor": {
+    "text": "Sensor",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.shackle": {
+    "text": "Shackle",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.shade": {
+    "text": "Shade",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.shield": {
+    "text": "Shield",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.shower": {
+    "text": "Shower",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.sign": {
+    "text": "Sign",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.signal": {
+    "text": "Signal",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.slash": {
+    "text": "Slash",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.slat-1": {
+    "text": "Slat 1",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.slat-2": {
+    "text": "Slat 2",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.slat-3": {
+    "text": "Slat 3",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.slat-4": {
+    "text": "Slat 4",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.small-star": {
+    "text": "Small star",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.smoke-alarm": {
+    "text": "Smoke alarm",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.smoke-detector-standby": {
+    "text": "Smoke detector standby",
+    "note": "Shown in library (icon-library).",
+    "max": 40
+  },
+  "icon-library.library.snow": {
+    "text": "Snow",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.snowflake": {
+    "text": "Snowflake",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.soil": {
+    "text": "Soil",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.solar-power": {
+    "text": "Solar power",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.sound-waves": {
+    "text": "Sound waves",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.speaker": {
+    "text": "Speaker",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.sprinkler": {
+    "text": "Sprinkler",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.sprout": {
+    "text": "Sprout",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.stand": {
+    "text": "Stand",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.storm-with-rain": {
+    "text": "Storm with rain",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.sun": {
+    "text": "Sun",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.sun-and-cloud": {
+    "text": "Sun and cloud",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.sunny": {
+    "text": "Sunny",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.sunset": {
+    "text": "Sunset",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.switch-toggle": {
+    "text": "Switch toggle",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.table-lamp-switching-on": {
+    "text": "Table lamp switching on",
+    "note": "Shown in library (icon-library).",
+    "max": 40
+  },
+  "icon-library.library.tap": {
+    "text": "Tap",
+    "note": "Shown in library (icon-library).",
+    "max": 5
+  },
+  "icon-library.library.television": {
+    "text": "Television",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.thermometer": {
+    "text": "Thermometer",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.thunderstorm": {
+    "text": "Thunderstorm",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.timer": {
+    "text": "Timer",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.toe-1": {
+    "text": "Toe 1",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.toe-2": {
+    "text": "Toe 2",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.toe-3": {
+    "text": "Toe 3",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.toe-4": {
+    "text": "Toe 4",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.top-arc": {
+    "text": "Top arc",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.top-gust": {
+    "text": "Top gust",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.top-slat": {
+    "text": "Top slat",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.top-strip": {
+    "text": "Top strip",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.top-tick": {
+    "text": "Top tick",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.top-wave": {
+    "text": "Top wave",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.track": {
+    "text": "Track",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.trash-day": {
+    "text": "Trash day",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.tumble-dryer": {
+    "text": "Tumble dryer",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.tv-on": {
+    "text": "TV on",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.valve": {
+    "text": "Valve",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.volume": {
+    "text": "Volume",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.walker": {
+    "text": "Walker",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.walking": {
+    "text": "Walking",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.washing-machine": {
+    "text": "Washing machine",
+    "note": "Shown in library (icon-library).",
+    "max": 25
+  },
+  "icon-library.library.water": {
+    "text": "Water",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.water-drop": {
+    "text": "Water drop",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.water-pump": {
+    "text": "Water pump",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.watering": {
+    "text": "Watering",
+    "note": "Shown in library (icon-library).",
+    "max": 15
+  },
+  "icon-library.library.watering-can": {
+    "text": "Watering can",
+    "note": "Shown in library (icon-library).",
+    "max": 20
+  },
+  "icon-library.library.wi-fi": {
+    "text": "Wi-Fi",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.library.windy": {
+    "text": "Windy",
+    "note": "Shown in library (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.arms": {
+    "text": "Arms",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.base": {
+    "text": "Base",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.beam-edge-1": {
+    "text": "Beam edge 1",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.beam-edge-2": {
+    "text": "Beam edge 2",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.bulb": {
+    "text": "Bulb",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.bulb-shining": {
+    "text": "Bulb shining",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.canopy": {
+    "text": "Canopy",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.chandelier": {
+    "text": "Chandelier",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.desk-lamp": {
+    "text": "Desk lamp",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.floor-lamp": {
+    "text": "Floor lamp",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.lamp": {
+    "text": "Lamp",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.lamp-front": {
+    "text": "Lamp front",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.lava": {
+    "text": "Lava",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.lava-lamp": {
+    "text": "Lava lamp",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.left-lamp": {
+    "text": "Left lamp",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.left-light": {
+    "text": "Left light",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.light": {
+    "text": "Light",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.middle-light": {
+    "text": "Middle light",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.moon": {
+    "text": "Moon",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.night-light": {
+    "text": "Night light",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.pendant-lights": {
+    "text": "Pendant lights",
+    "note": "Shown in lights (icon-library).",
+    "max": 25
+  },
+  "icon-library.lights.ray-1": {
+    "text": "Ray 1",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.ray-2": {
+    "text": "Ray 2",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.ray-3": {
+    "text": "Ray 3",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.ray-left": {
+    "text": "Ray left",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.ray-right": {
+    "text": "Ray right",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.ray-top": {
+    "text": "Ray top",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.ray-top-left": {
+    "text": "Ray top left",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.ray-top-right": {
+    "text": "Ray top right",
+    "note": "Shown in lights (icon-library).",
+    "max": 25
+  },
+  "icon-library.lights.right-lamp": {
+    "text": "Right lamp",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.right-lamp-and-bulb": {
+    "text": "Right lamp and bulb",
+    "note": "Shown in lights (icon-library).",
+    "max": 35
+  },
+  "icon-library.lights.right-light": {
+    "text": "Right light",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.lights.shade": {
+    "text": "Shade",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.spotlight": {
+    "text": "Spotlight",
+    "note": "Shown in lights (icon-library).",
+    "max": 15
+  },
+  "icon-library.lights.stand": {
+    "text": "Stand",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.star": {
+    "text": "Star",
+    "note": "Shown in lights (icon-library).",
+    "max": 10
+  },
+  "icon-library.lights.track-light": {
+    "text": "Track light",
+    "note": "Shown in lights (icon-library).",
+    "max": 20
+  },
+  "icon-library.nature.back-left-leg": {
+    "text": "Back left leg",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.back-right-leg": {
+    "text": "Back right leg",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.band-1": {
+    "text": "Band 1",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.band-2": {
+    "text": "Band 2",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.band-3": {
+    "text": "Band 3",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.band-4": {
+    "text": "Band 4",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.band-5": {
+    "text": "Band 5",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.bee": {
+    "text": "Bee",
+    "note": "Shown in nature (icon-library).",
+    "max": 5
+  },
+  "icon-library.nature.bee-and-flower": {
+    "text": "Bee and flower",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.body": {
+    "text": "Body",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.butterfly": {
+    "text": "Butterfly",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.cat": {
+    "text": "Cat",
+    "note": "Shown in nature (icon-library).",
+    "max": 5
+  },
+  "icon-library.nature.dog-barking": {
+    "text": "Dog barking",
+    "note": "Shown in nature (icon-library).",
+    "max": 20
+  },
+  "icon-library.nature.dolphin": {
+    "text": "Dolphin",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.duck": {
+    "text": "Duck",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.flower": {
+    "text": "Flower",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.front-left-leg": {
+    "text": "Front left leg",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.front-right-leg": {
+    "text": "Front right leg",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.head": {
+    "text": "Head",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.hurricane": {
+    "text": "Hurricane",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.jellyfish": {
+    "text": "Jellyfish",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.ladybug": {
+    "text": "Ladybug",
+    "note": "Shown in nature (icon-library).",
+    "max": 20
+  },
+  "icon-library.nature.left-wing": {
+    "text": "Left wing",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.left-wing-case": {
+    "text": "Left wing case",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.penguin": {
+    "text": "Penguin",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.right-wing": {
+    "text": "Right wing",
+    "note": "Shown in nature (icon-library).",
+    "max": 20
+  },
+  "icon-library.nature.right-wing-case": {
+    "text": "Right wing case",
+    "note": "Shown in nature (icon-library).",
+    "max": 25
+  },
+  "icon-library.nature.shell": {
+    "text": "Shell",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.snail": {
+    "text": "Snail",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.nature.tornado": {
+    "text": "Tornado",
+    "note": "Shown in nature (icon-library).",
+    "max": 15
+  },
+  "icon-library.nature.turtle": {
+    "text": "Turtle",
+    "note": "Shown in nature (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.balloon": {
+    "text": "Balloon",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.band": {
+    "text": "Band",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.bat": {
+    "text": "Bat",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.bauble-n": {
+    "text": "Bauble {n}",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "icon-library.seasonal.beating-heart": {
+    "text": "Beating heart",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.bell": {
+    "text": "Bell",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.bend": {
+    "text": "Bend",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.big-heart": {
+    "text": "Big heart",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.bloom": {
+    "text": "Bloom",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.body": {
+    "text": "Body",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.box": {
+    "text": "Box",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.brim": {
+    "text": "Brim",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.broken-heart": {
+    "text": "Broken heart",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.candy-cane": {
+    "text": "Candy cane",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.cauldron": {
+    "text": "Cauldron",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.cherry": {
+    "text": "Cherry",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.christmas-tree": {
+    "text": "Christmas tree",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.clapper": {
+    "text": "Clapper",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.cuff": {
+    "text": "Cuff",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.cupcake": {
+    "text": "Cupcake",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.firework": {
+    "text": "Firework",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.floating-hearts": {
+    "text": "Floating hearts",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.foot": {
+    "text": "Foot",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.frosting": {
+    "text": "Frosting",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.gem": {
+    "text": "Gem",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.ghost": {
+    "text": "Ghost",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.gift": {
+    "text": "Gift",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.gravestone": {
+    "text": "Gravestone",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.ground": {
+    "text": "Ground",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.hand": {
+    "text": "Hand",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.hand-with-heart": {
+    "text": "Hand with heart",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.hat": {
+    "text": "Hat",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.heart": {
+    "text": "Heart",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.hook-end": {
+    "text": "Hook end",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.jack-o-lantern": {
+    "text": "Jack-o'-lantern",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.jaw": {
+    "text": "Jaw",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.jingle-bell": {
+    "text": "Jingle bell",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.left-bulb": {
+    "text": "Left bulb",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.left-eye": {
+    "text": "Left eye",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.left-half": {
+    "text": "Left half",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.left-leaf": {
+    "text": "Left leaf",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.left-wing": {
+    "text": "Left wing",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.lid": {
+    "text": "Lid",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.magic-staff": {
+    "text": "Magic staff",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.middle-bulb": {
+    "text": "Middle bulb",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.nose-cone": {
+    "text": "Nose cone",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.orb": {
+    "text": "Orb",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.ornament": {
+    "text": "Ornament",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.owl": {
+    "text": "Owl",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.party-popper": {
+    "text": "Party popper",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.popper": {
+    "text": "Popper",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.pot": {
+    "text": "Pot",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.pumpkin": {
+    "text": "Pumpkin",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.right-bulb": {
+    "text": "Right bulb",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.right-eye": {
+    "text": "Right eye",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.right-half": {
+    "text": "Right half",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.right-leaf": {
+    "text": "Right leaf",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.right-wing": {
+    "text": "Right wing",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.ring": {
+    "text": "Ring",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.rocket": {
+    "text": "Rocket",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.shooting-star": {
+    "text": "Shooting star",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.skull": {
+    "text": "Skull",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.small-heart": {
+    "text": "Small heart",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.snowman": {
+    "text": "Snowman",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.sparkle-2": {
+    "text": "Sparkle 2",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.sparkle-3": {
+    "text": "Sparkle 3",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.sparkle-4": {
+    "text": "Sparkle 4",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.spider": {
+    "text": "Spider",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.spoon": {
+    "text": "Spoon",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.staff": {
+    "text": "Staff",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.staff-and-orb": {
+    "text": "Staff and orb",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.star": {
+    "text": "Star",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.stem": {
+    "text": "Stem",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.stone": {
+    "text": "Stone",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.streamer-1": {
+    "text": "Streamer 1",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.streamer-2": {
+    "text": "Streamer 2",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.streamer-3": {
+    "text": "Streamer 3",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.streamer-4": {
+    "text": "Streamer 4",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.string-lights": {
+    "text": "String lights",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.thread": {
+    "text": "Thread",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.top": {
+    "text": "Top",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 5
+  },
+  "icon-library.seasonal.trail-1": {
+    "text": "Trail 1",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.trail-2": {
+    "text": "Trail 2",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.trail-3": {
+    "text": "Trail 3",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.tree": {
+    "text": "Tree",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.tulip": {
+    "text": "Tulip",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.twinkling-star": {
+    "text": "Twinkling star",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 25
+  },
+  "icon-library.seasonal.wire": {
+    "text": "Wire",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 10
+  },
+  "icon-library.seasonal.wizard-hat": {
+    "text": "Wizard hat",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 20
+  },
+  "icon-library.seasonal.wrapper-1": {
+    "text": "Wrapper 1",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.wrapper-2": {
+    "text": "Wrapper 2",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.seasonal.wrapper-3": {
+    "text": "Wrapper 3",
+    "note": "Shown in seasonal (icon-library).",
+    "max": 15
+  },
+  "icon-library.style-hints.face-glow": {
+    "text": "Face glow",
+    "note": "Shown in style hints (icon-library).",
+    "max": 15
+  }
+}

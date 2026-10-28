@@ -529,7 +529,7 @@ function glowDoc(
     }
     addedShapes.push({
       id,
-      name: t('Glow halo'),
+      name: t('icon-animator.style.glow-halo'),
       d,
       fill: 'none',
       stroke: paint.halo,

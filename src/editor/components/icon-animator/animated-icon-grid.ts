@@ -6,7 +6,7 @@ import { DEFAULT_ICON_STYLE, ICON_STYLES, type IconStyle } from '../../../contra
 import { styleDoc } from '../../../icon-anim/style';
 import { fold } from '../../../i18n/fold';
 import { t, m } from '../../../icon-anim/i18n';
-import type { MessageId } from '../../../contracts/i18n';
+import type { MessageIndex } from '../../../contracts/i18n';
 
 /*
  * The animated icon grid (lazy chunk magic-card-icon-animator.js): live moving tiles for the user's
@@ -24,11 +24,11 @@ const THUMB_TAG = 'mc-animated-icon-thumb';
 /** What a tile stands for: a built-in library entry, or one of the user's own documents. */
 export type AnimatedIconPick = { kind: 'library'; entry: LibraryEntry; style?: IconStyle; restyle?: boolean } | { kind: 'mine'; doc: AnimationDoc };
 
-const STYLE_LABELS: Record<IconStyle, MessageId> = { quiet: m('Quiet'), living: m('Living'), glow: m('Glow') };
-const STYLE_HELP: Record<IconStyle, MessageId> = {
-  quiet: m('Quiet: one part moves a little, slower. For calm dashboards.'),
-  living: m('Living: the full animation, as drawn.'),
-  glow: m("Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards."),
+const STYLE_LABELS: Record<IconStyle, MessageIndex> = { quiet: m('icon-animator.animated-icon-grid.quiet'), living: m('icon-animator.animated-icon-grid.living'), glow: m('icon-animator.animated-icon-grid.glow') };
+const STYLE_HELP: Record<IconStyle, MessageIndex> = {
+  quiet: m('icon-animator.animated-icon-grid.quiet-one-part-moves-a-little-slower-for'),
+  living: m('icon-animator.animated-icon-grid.living-the-full-animation-as-drawn'),
+  glow: m("icon-animator.animated-icon-grid.glow-the-full-animation-with-its-lit"),
 };
 const isStyle = (v: unknown): v is IconStyle => (ICON_STYLES as readonly unknown[]).includes(v);
 
@@ -350,7 +350,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         void this.updateComplete.then(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
       };
       return html`<div class="style">
-        <span class="lbl" id="aig-style">${t('Style')}</span>
+        <span class="lbl" id="aig-style">${t('icon-animator.animated-icon-grid.style')}</span>
         <div class="seg" role="radiogroup" aria-labelledby="aig-style" aria-describedby="aig-style-help" @keydown=${onKey}>
           ${ICON_STYLES.map((s) => {
             const on = s === this._style;
@@ -391,11 +391,11 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         const matches = this._matches();
         builtIns = this._all || !matches.length ? ICON_LIBRARY : matches;
         if (!matches.length)
-          intro = html`<p class="help">${this._entityDomain ? t('No library animation matches {icon} or {domain}; showing all of them.', { icon: this.icon, domain: this._entityDomain }) : t('No library animation matches {icon}; showing all of them.', { icon: this.icon })}</p>`;
+          intro = html`<p class="help">${this._entityDomain ? t('icon-animator.animated-icon-grid.no-library-animation-matches-icon-or', { icon: this.icon, domain: this._entityDomain }) : t('icon-animator.animated-icon-grid.no-library-animation-matches-icon', { icon: this.icon })}</p>`;
         else if (matches.length < ICON_LIBRARY.length)
           toggle = html`<div>
             <button type="button" class="btn btn-text btn-sm" @click=${() => (this._all = !this._all)}>
-              ${this._all ? t('Show matches only') : t('Show all ({count})', { count: ICON_LIBRARY.length })}
+              ${this._all ? t('icon-animator.animated-icon-grid.show-matches-only') : t('icon-animator.animated-icon-grid.show-all-count', { count: ICON_LIBRARY.length })}
             </button>
           </div>`;
       }
@@ -406,29 +406,29 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
             <input
               class="input"
               type="search"
-              placeholder=${t('Search icons')}
-              aria-label=${t('Search animated icons')}
+              placeholder=${t('icon-animator.animated-icon-grid.search-icons')}
+              aria-label=${t('icon-animator.animated-icon-grid.search-animated-icons')}
               .value=${this._query}
               @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)}
             />
           </div>
-          <select class="input domain" aria-label=${t('Domain')} .value=${this._domain} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
-            <option value="">${t('All domains')}</option>
+          <select class="input domain" aria-label=${t('icon-animator.animated-icon-grid.domain')} .value=${this._domain} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
+            <option value="">${t('icon-animator.animated-icon-grid.all-domains')}</option>
             ${[...LIBRARY_DOMAINS].sort((a, b) => domainName(a, this.hass).localeCompare(domainName(b, this.hass))).map((d) => html`<option value=${d} ?selected=${d === this._domain}>${domainName(d, this.hass)}</option>`)}
           </select>
         </div>
         ${mine.length
           ? html`<section aria-labelledby="aig-mine">
-              <h3 id="aig-mine">${t('My animations')}</h3>
+              <h3 id="aig-mine">${t('icon-animator.animated-icon-grid.my-animations')}</h3>
               <ul class="grid" role="list">
-                ${mine.map((d) => this._tile(d.id, d.name, d.rig?.icon ?? this.icon, t('My animation'), d, { kind: 'mine', doc: d }))}
+                ${mine.map((d) => this._tile(d.id, d.name, d.rig?.icon ?? this.icon, t('icon-animator.animated-icon-grid.my-animation'), d, { kind: 'mine', doc: d }))}
               </ul>
             </section>`
           : nothing}
         ${builtIns.length
           ? html`<section aria-labelledby="aig-lib">
               <div class="lib-head">
-                <h3 id="aig-lib">${t('Icon library')}</h3>
+                <h3 id="aig-lib">${t('icon-animator.animated-icon-grid.icon-library')}</h3>
                 ${this._styleControl()}
               </div>
               <p class="help" id="aig-style-help">${t(STYLE_HELP[this._style])}</p>
@@ -440,7 +440,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
             </section>`
           : mine.length
             ? nothing
-            : html`<p class="help no-results">${t('No icon animations match "{query}".', { query: this._query })}</p>`}
+            : html`<p class="help no-results">${t('icon-animator.animated-icon-grid.no-icon-animations-match-query', { query: this._query })}</p>`}
       `;
     }
   }

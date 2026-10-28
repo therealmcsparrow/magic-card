@@ -1,0 +1,232 @@
+{
+  "preset-catalogue.christmas.bauble-sway": {
+    "text": "Bauble sway",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.christmas.fairy-light-glow": {
+    "text": "Fairy light glow",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.christmas.golden-star-shower": {
+    "text": "Golden star shower",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.christmas.jingle-bell": {
+    "text": "Jingle bell",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.christmas.new-year-fireworks": {
+    "text": "New Year fireworks",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.christmas.present-hop": {
+    "text": "Present hop",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.christmas.snow-that-settles": {
+    "text": "Snow that settles",
+    "note": "Shown in christmas (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.cleaning.dishwasher-steam": {
+    "text": "Dishwasher steam",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.cleaning.fresh-sparkle": {
+    "text": "Fresh sparkle",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.cleaning.robot-vacuum-glide": {
+    "text": "Robot vacuum glide",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.cleaning.soap-bubbles-that-pop": {
+    "text": "Soap bubbles that pop",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 35
+  },
+  "preset-catalogue.cleaning.spray-mist": {
+    "text": "Spray mist",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.cleaning.washer-spin-cycle": {
+    "text": "Washer spin cycle",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.cleaning.wipe-clean": {
+    "text": "Wipe clean",
+    "note": "Shown in cleaning (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.fire.chimney-smoke": {
+    "text": "Chimney smoke",
+    "note": "Shown in fire (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.fire.hearth-flicker": {
+    "text": "Hearth flicker",
+    "note": "Shown in fire (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.fire.heating-up": {
+    "text": "Heating up",
+    "note": "Shown in fire (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.fire.licking-flames": {
+    "text": "Licking flames",
+    "note": "Shown in fire (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.fire.rising-embers": {
+    "text": "Rising embers",
+    "note": "Shown in fire (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.fire.sparkler": {
+    "text": "Sparkler",
+    "note": "Shown in fire (preset-catalogue).",
+    "max": 15
+  },
+  "preset-catalogue.halloween.bat-flight": {
+    "text": "Bat flight",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.halloween.bubbling-cauldron": {
+    "text": "Bubbling cauldron",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.halloween.creeping-fog": {
+    "text": "Creeping fog",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.halloween.ghost-float": {
+    "text": "Ghost float",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.halloween.jack-o-lantern-glow": {
+    "text": "Jack-o'-lantern glow",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 35
+  },
+  "preset-catalogue.halloween.skull-chatter": {
+    "text": "Skull chatter",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.halloween.spider-drop": {
+    "text": "Spider drop",
+    "note": "Shown in halloween (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.home.doorbell-ring": {
+    "text": "Doorbell ring",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.home.energy-flow": {
+    "text": "Energy flow",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.home.fan-running": {
+    "text": "Fan running",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.home.garden-sprinkler": {
+    "text": "Garden sprinkler",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.home.leak-drip-splash": {
+    "text": "Leak drip & splash",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 30
+  },
+  "preset-catalogue.home.mail-arrived": {
+    "text": "Mail arrived",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.home.motion-detected": {
+    "text": "Motion detected",
+    "note": "Shown in home (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.light.candlelight": {
+    "text": "Candlelight",
+    "note": "Shown in light (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.light.lamp-breathe": {
+    "text": "Lamp breathe",
+    "note": "Shown in light (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.light.lamp-switch-on": {
+    "text": "Lamp switch-on",
+    "note": "Shown in light (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.light.party-sparkle": {
+    "text": "Party sparkle",
+    "note": "Shown in light (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.light.sunbeam-dust": {
+    "text": "Sunbeam dust",
+    "note": "Shown in light (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.light.sunrise-warm-up": {
+    "text": "Sunrise warm-up",
+    "note": "Shown in light (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.valentine.blush-glow": {
+    "text": "Blush glow",
+    "note": "Shown in valentine (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.valentine.cupid-sparkle": {
+    "text": "Cupid sparkle",
+    "note": "Shown in valentine (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.valentine.falling-petals": {
+    "text": "Falling petals",
+    "note": "Shown in valentine (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.valentine.floating-hearts": {
+    "text": "Floating hearts",
+    "note": "Shown in valentine (preset-catalogue).",
+    "max": 25
+  },
+  "preset-catalogue.valentine.heart-burst": {
+    "text": "Heart burst",
+    "note": "Shown in valentine (preset-catalogue).",
+    "max": 20
+  },
+  "preset-catalogue.valentine.lub-dub-heartbeat": {
+    "text": "Lub-dub heartbeat",
+    "note": "Shown in valentine (preset-catalogue).",
+    "max": 30
+  }
+}
