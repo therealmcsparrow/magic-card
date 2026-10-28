@@ -5,9 +5,11 @@
 //
 // The codemod CLI is not in a contract: these tests use its header, `node tools/i18n-codemod.mjs <namespace>` (dry
 // run, writes nothing) and `... --write` (rewrites the call sites, writes en-GB.json / en-US.json / nl.json).
+import fs from 'node:fs';
 import { afterAll, describe, expect, it } from 'vitest';
 import { I18N_CONTRACT_VERSION } from '../../src/contracts/i18n';
 import { KEY_PATTERN, NOTE_MIN_CHARS } from '../../src/contracts/i18n-keys';
+import { i18nFor, setI18nLocale } from '../../src/i18n/runtime';
 import { callerSource, cleanupProjects, importLine, keyedProject, NAMESPACES, Project, sourceHash, writeLegacy, type KeyedEntry } from './harness';
 
 afterAll(cleanupProjects);
@@ -232,22 +234,88 @@ describe('AC8 the codemod keeps the rendered text of every locale', () => {
   });
 });
 
-describe('AC8 texts with a quote before a brace', () => {
+describe('texts with a quote before a brace', () => {
   // D6 forbids an apostrophe before { } or # (the runtime has no quoting). 'Saved '{name}'.' is such a text in the
-  // image editor and in Magic Card Utils today. AC8 says the rendered text is byte-identical.
-  it('keeps the exact characters of an English text such as Saved \'{name}\'. through the codemod', () => {
+  // image editor and in Magic Card Utils today. The codemod rewords it to curly quotes, lists the change, and the
+  // text snapshot accepts exactly that change when it is given the list.
+  const OLD_GB = "Saved '{name}'.";
+  const OLD_NL = "'{name}' opgeslagen.";
+  const NEW_GB = 'Saved ‘{name}’.';
+  const NEW_NL = '‘{name}’ opgeslagen.';
+
+  function reworded() {
     const p = new Project();
-    writeLegacy(p, 'demo', { "Saved '{name}'.": "'{name}' opgeslagen." });
-    p.write('src/demo/panel.ts', importLine('demo') + 'export const a = t("Saved \'{name}\'.", { name: 1 });\n');
+    writeLegacy(p, 'demo', { [OLD_GB]: OLD_NL });
+    const src = importLine('demo') + `export const a = t(${JSON.stringify(OLD_GB)}, { name: 1 });\n`;
+    p.write('src/demo/panel.ts', src);
     p.writeJson('tools/i18n/legacy-count.json', { demo: 1, other: 0 });
     p.writeJson('i18n/waivers.json', []);
     p.writeJson('i18n/renames.json', []);
     expect(p.build().code).toBe(0);
-    const r = p.run('tools/i18n-codemod.mjs', 'demo', '--write');
+    const before = p.abs('before.json');
+    const snap = p.run('tools/i18n/text-snapshot.mjs', 'demo', '--out', before);
+    expect(snap.code, snap.all).toBe(0);
+    const list = p.abs('reworded.json');
+    const r = p.run('tools/i18n-codemod.mjs', 'demo', '--write', '--reworded-out', list);
     expect(r.code, r.all).toBe(0);
-    const gb = Object.values(p.json<Record<string, { text: string }>>(`${DIR}/en-GB.json`)).map((e) => e.text);
-    const nl = Object.values(p.json<Record<string, { text: string }>>(`${DIR}/nl.json`)).map((e) => e.text);
-    expect(gb).toEqual(["Saved '{name}'."]);
-    expect(nl).toEqual(["'{name}' opgeslagen."]);
+    p.writeJson('tools/i18n/legacy-count.json', { demo: 0, other: 0 });
+    expect(p.build().code).toBe(0);
+    return { p, before, list };
+  }
+
+  it('rewords a quote before a brace to curly quotes and lists the change', () => {
+    const { p, list } = reworded();
+    const gbJson = p.json<Record<string, { text: string }>>(`${DIR}/en-GB.json`);
+    const nlJson = p.json<Record<string, { text: string; hash: string }>>(`${DIR}/nl.json`);
+    const keys = Object.keys(gbJson);
+    expect(keys).toHaveLength(1);
+    const key = keys[0];
+    expect(gbJson[key].text).toBe(NEW_GB);
+    expect(nlJson[key].text).toBe(NEW_NL);
+    // the curly quotes are U+2018 before the brace and U+2019 after it, nothing else changed
+    expect(gbJson[key].text).toBe(OLD_GB.replace("'{", '‘{').replace("}'", '}’'));
+    expect(nlJson[key].text).toBe(OLD_NL.replace("'{", '‘{').replace("}'", '}’'));
+
+    // the list names this one message: its old and new text in en-GB, en-US (generated from en-GB) and nl, and nothing else
+    const items = JSON.parse(fs.readFileSync(list, 'utf8')) as Array<{ locale: string; from: string; to: string }>;
+    expect(items.map((i) => i.locale).sort()).toEqual(['en-GB', 'en-US', 'nl']);
+    expect(items.find((i) => i.locale === 'en-US')).toMatchObject({ from: OLD_GB, to: NEW_GB });
+    expect(items.find((i) => i.locale === 'en-GB')).toMatchObject({ from: OLD_GB, to: NEW_GB });
+    expect(items.find((i) => i.locale === 'nl')).toMatchObject({ from: OLD_NL, to: NEW_NL });
+
+    // the nl text is confirmed against the new English, so --strict finds nothing stale and D6 has nothing to flag
+    expect(nlJson[key].hash).toBe(sourceHash(NEW_GB));
+    const c = p.check('--strict');
+    expect(c.all).toContain('0 errors');
+    expect(c.all).not.toMatch(/stale/i);
+    expect(c.code, c.all).toBe(0);
+  });
+
+  it('renders the curly-quote texts through the built tables and the runtime', () => {
+    const { p } = reworded();
+    const out = p.loader('src/demo/panel.ts', p.read('src/demo/panel.ts')).out;
+    const index = +/\bt\((\d+)/.exec(out)![1];
+    const src = p.read(`${DIR}/messages.gen.ts`);
+    const cells = JSON.parse(src.slice(src.indexOf('= [') + 2, src.lastIndexOf(']') + 1).replace(/,\s*\]$/, ']')) as [string, string, string];
+    const i = i18nFor('demo', cells);
+    setI18nLocale({ language: 'en-GB', locale: { language: 'en-GB' } } as never);
+    expect(i.t(index as never, { name: 'X' })).toBe('Saved ‘X’.');
+    setI18nLocale({ language: 'en-US', locale: { language: 'en-US' } } as never);
+    expect(i.t(index as never, { name: 'X' })).toBe('Saved ‘X’.');
+    setI18nLocale({ language: 'nl', locale: { language: 'nl' } } as never);
+    expect(i.t(index as never, { name: 'X' })).toBe('‘X’ opgeslagen.');
+    setI18nLocale(undefined);
+  });
+
+  it('passes the text snapshot compare with the list and reports exactly this one site without it', () => {
+    const { p, before, list } = reworded();
+    const withList = p.run('tools/i18n/text-snapshot.mjs', 'demo', '--compare', before, '--reworded', list);
+    expect(withList.code, withList.all).toBe(0);
+    const without = p.run('tools/i18n/text-snapshot.mjs', 'demo', '--compare', before);
+    expect(without.code, without.all).toBe(1);
+    const lines = without.out.split('\n').filter((l) => /^\S+#\d+ (en-GB|en-US|nl): /.test(l));
+    expect(new Set(lines.map((l) => l.split(' ')[0])).size, without.all).toBe(1);
+    expect(lines.map((l) => l.split(' ')[1]).sort()).toEqual(['en-GB:', 'en-US:', 'nl:']);
+    expect(without.all).toContain('3 differences');
   });
 });
