@@ -95,7 +95,7 @@
   },
   "anim-studio.bezier-editor.default": {
     "text": "Default",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Option in the easing preset list that uses the easing the animation already inherits.",
     "max": 15
   },
   "anim-studio.bezier-editor.default-inherited": {
@@ -108,22 +108,22 @@
   },
   "anim-studio.bezier-editor.easing": {
     "text": "Easing",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Label of the easing field. Easing is the speed curve of a motion between two keyframes.",
     "max": 15
   },
   "anim-studio.bezier-editor.easing-value": {
     "text": "Easing value",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Accessible name of the text field where the easing is typed as a preset or curve.",
     "max": 20
   },
   "anim-studio.bezier-editor.end-handle": {
     "text": "End handle",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Accessible name of the draggable control point that shapes the end of the easing curve.",
     "max": 20
   },
   "anim-studio.bezier-editor.in-out": {
     "text": "In-out",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Group heading for easing presets that start and end slowly, in a preset list.",
     "max": 10
   },
   "anim-studio.bezier-editor.label-preset": {
@@ -136,7 +136,7 @@
   },
   "anim-studio.bezier-editor.start-handle": {
     "text": "Start handle",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Accessible name of the draggable control point that shapes the start of the easing curve.",
     "max": 20
   },
   "anim-studio.bezier-editor.steps-jump-between-values-there-is-no": {
@@ -172,7 +172,7 @@
   },
   "anim-studio.bindings-panel.attribute": {
     "text": "Attribute",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the field naming the entity attribute whose value drives the binding.",
     "max": 15
   },
   "anim-studio.bindings-panel.attribute-names-use-letters-digits-and": {
@@ -182,7 +182,7 @@
   },
   "anim-studio.bindings-panel.background": {
     "text": "Background",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Option in the binding target list: the card background, as opposed to an element or icon.",
     "max": 20
   },
   "anim-studio.bindings-panel.binding-added-property": {
@@ -229,7 +229,7 @@
   },
   "anim-studio.bindings-panel.element": {
     "text": "Element",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Option in the binding target list: a single element of the card, such as a shape or text.",
     "max": 15
   },
   "anim-studio.bindings-panel.empty-reads-the-state-for-example": {
@@ -239,12 +239,12 @@
   },
   "anim-studio.bindings-panel.entity-value": {
     "text": "Entity value",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label for the input source of a binding: the number read from the entity or its attribute.",
     "max": 20
   },
   "anim-studio.bindings-panel.from-colour": {
     "text": "From colour",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the colour used when the value is at its minimum, in a colour-mix binding.",
     "max": 20
   },
   "anim-studio.bindings-panel.from-unit": {
@@ -257,57 +257,57 @@
   },
   "anim-studio.bindings-panel.icon": {
     "text": "Icon",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Option in the binding target list: the icon of the card.",
     "max": 10
   },
   "anim-studio.bindings-panel.max": {
     "text": "Max",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the number field for the highest input value of a binding. Keep it short.",
     "max": 5
   },
   "anim-studio.bindings-panel.min": {
     "text": "Min",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the number field for the lowest input value of a binding. Keep it short.",
     "max": 5
   },
   "anim-studio.bindings-panel.name": {
     "text": "Name",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Option in the binding target list: the card name text, or the label of the name field.",
     "max": 10
   },
   "anim-studio.bindings-panel.output": {
     "text": "Output",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the output range fields: what the target property becomes at min and max.",
     "max": 10
   },
   "anim-studio.bindings-panel.property": {
     "text": "Property",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the list that picks which property of the target the binding changes, such as opacity.",
     "max": 15
   },
   "anim-studio.bindings-panel.smoothing-s": {
     "text": "Smoothing (s)",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the field for how many seconds a value change is eased over; (s) means seconds.",
     "max": 25
   },
   "anim-studio.bindings-panel.state": {
     "text": "State",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the binding source that reads the entity state itself, capitalised as a field label.",
     "max": 10
   },
   "anim-studio.bindings-panel.state-2": {
     "text": "state",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Lower-case word for the entity state, slotted into a longer sentence. Keep it lower case.",
     "max": 10
   },
   "anim-studio.bindings-panel.the-background": {
     "text": "the background",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Noun phrase for the card background, slotted into a sentence about a binding target.",
     "max": 25
   },
   "anim-studio.bindings-panel.the-element": {
     "text": "the element",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Noun phrase for the chosen element, slotted into a sentence about a binding target.",
     "max": 20
   },
   "anim-studio.bindings-panel.the-entity-s-value-drives-name-preview": {
@@ -320,22 +320,22 @@
   },
   "anim-studio.bindings-panel.the-icon": {
     "text": "the icon",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Noun phrase for the card icon, slotted into a sentence about a binding target.",
     "max": 15
   },
   "anim-studio.bindings-panel.the-name": {
     "text": "the name",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Noun phrase for the card name text, slotted into a sentence about a binding target.",
     "max": 15
   },
   "anim-studio.bindings-panel.the-state": {
     "text": "the state",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Noun phrase for the entity state, slotted into a sentence about a binding source.",
     "max": 15
   },
   "anim-studio.bindings-panel.to-colour": {
     "text": "To colour",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Label of the colour used when the value is at its maximum, in a colour-mix binding.",
     "max": 15
   },
   "anim-studio.bindings-panel.to-unit": {
@@ -348,7 +348,7 @@
   },
   "anim-studio.bindings-panel.value-bindings": {
     "text": "Value bindings",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Heading of the panel listing bindings that link an entity value to a visual property.",
     "max": 25
   },
   "anim-studio.bindings-utils.attribute-names-use-letters-digits-and": {
@@ -363,12 +363,12 @@
   },
   "anim-studio.bindings-utils.colour-mix": {
     "text": "Colour mix",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that blends between two colours as the value changes.",
     "max": 20
   },
   "anim-studio.bindings-utils.draw": {
     "text": "Draw",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that draws a line on progressively, like a gauge filling.",
     "max": 10
   },
   "anim-studio.bindings-utils.draws-the-line-on-a-battery-or-level": {
@@ -393,12 +393,12 @@
   },
   "anim-studio.bindings-utils.move-x": {
     "text": "Move X",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that moves the target horizontally. X is the horizontal axis.",
     "max": 15
   },
   "anim-studio.bindings-utils.move-y": {
     "text": "Move Y",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that moves the target vertically. Y is the vertical axis.",
     "max": 15
   },
   "anim-studio.bindings-utils.moves-sideways": {
@@ -413,12 +413,12 @@
   },
   "anim-studio.bindings-utils.opacity": {
     "text": "Opacity",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that fades the target, from transparent to fully visible.",
     "max": 15
   },
   "anim-studio.bindings-utils.playback-speed": {
     "text": "Playback speed",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that changes how fast this animation plays.",
     "max": 25
   },
   "anim-studio.bindings-utils.plays-this-animation-faster-or-slower": {
@@ -428,17 +428,17 @@
   },
   "anim-studio.bindings-utils.rotation": {
     "text": "Rotation",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that turns the target to an angle, such as a dial needle.",
     "max": 15
   },
   "anim-studio.bindings-utils.rotation-speed": {
     "text": "Rotation speed",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that spins the target continuously, faster as the value rises.",
     "max": 25
   },
   "anim-studio.bindings-utils.scale": {
     "text": "Scale",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Name of a binding property that makes the target larger or smaller as the value changes.",
     "max": 10
   },
   "anim-studio.bindings-utils.spins-continuously-faster-as-the-value": {
@@ -473,17 +473,17 @@
   },
   "anim-studio.canvas-host.add-point": {
     "text": "Add point",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for inserting a new point on a path in the drawing canvas.",
     "max": 15
   },
   "anim-studio.canvas-host.change-point-type": {
     "text": "Change point type",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for switching a path point between a corner and a smooth curve.",
     "max": 30
   },
   "anim-studio.canvas-host.close-path": {
     "text": "Close path",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for joining the last point of an open path back to its first point.",
     "max": 20
   },
   "anim-studio.canvas-host.couldn-t-load-the-drawing-tools": {
@@ -493,42 +493,42 @@
   },
   "anim-studio.canvas-host.delete-handle": {
     "text": "Delete handle",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for removing one curve handle from a path point.",
     "max": 25
   },
   "anim-studio.canvas-host.delete-point": {
     "text": "Delete point",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for removing a single point from a path. Singular form.",
     "max": 20
   },
   "anim-studio.canvas-host.delete-points": {
     "text": "Delete points",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for removing several selected points from a path. Plural form.",
     "max": 25
   },
   "anim-studio.canvas-host.move-handle": {
     "text": "Move handle",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for dragging a curve handle of a path point.",
     "max": 20
   },
   "anim-studio.canvas-host.move-path": {
     "text": "Move path",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for dragging a whole path to a new position.",
     "max": 15
   },
   "anim-studio.canvas-host.move-point": {
     "text": "Move point",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for dragging a single path point. Singular form.",
     "max": 20
   },
   "anim-studio.canvas-host.move-points": {
     "text": "Move points",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Undo-history label for dragging several selected path points together. Plural form.",
     "max": 20
   },
   "anim-studio.canvas-host.reload-page": {
     "text": "Reload page",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Button that reloads the browser page so the matching version of the drawing tools loads.",
     "max": 20
   },
   "anim-studio.canvas-host.reloading-the-page-discards-changes-that": {
@@ -543,7 +543,7 @@
   },
   "anim-studio.canvas-host.try-again": {
     "text": "Try again",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Button shown beside the drawing-tools load error that retries loading them.",
     "max": 20
   },
   "anim-studio.draw-host.arrow-keys-move-the-cursor-enter-places": {
@@ -601,12 +601,12 @@
   },
   "anim-studio.draw-host.drawing": {
     "text": "Drawing",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Accessible name or heading of the drawing region, used as a noun.",
     "max": 15
   },
   "anim-studio.draw-host.drawing-area": {
     "text": "drawing area",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Lower-case role description read by screen readers for the canvas where shapes are drawn.",
     "max": 20
   },
   "anim-studio.draw-host.drawing-cancelled": {
@@ -621,17 +621,17 @@
   },
   "anim-studio.draw-host.erase-shape": {
     "text": "Erase shape",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Undo-history label for erasing one shape with the eraser tool. Singular form.",
     "max": 20
   },
   "anim-studio.draw-host.erase-shapes": {
     "text": "Erase shapes",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Undo-history label for erasing several shapes in one eraser stroke. Plural form.",
     "max": 20
   },
   "anim-studio.draw-host.finish-path": {
     "text": "Finish path",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Button shown while drawing a path with the pen or freehand tool; it ends the path.",
     "max": 20
   },
   "anim-studio.draw-host.label-tool-hint": {
@@ -680,7 +680,7 @@
   },
   "anim-studio.draw-host.path": {
     "text": "Path",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Default name of a shape drawn with the pen tool; a number is appended, as in 'Path 2'.",
     "max": 10
   },
   "anim-studio.draw-host.pen-click-to-add-points-click-the-first": {
@@ -708,7 +708,7 @@
   },
   "anim-studio.draw-host.shape": {
     "text": "Shape",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Fallback name for a shape, used in messages such as the locked-layer announcement when the shape has no name.",
     "max": 10
   },
   "anim-studio.draw-host.shape-points-drag-a-point-to-move-it": {
@@ -727,7 +727,7 @@
   },
   "anim-studio.draw-host.stroke": {
     "text": "Stroke",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Default name of a shape drawn with the freehand tool; a number is appended, as in 'Stroke 2'.",
     "max": 10
   },
   "anim-studio.draw-host.that-layer-is-locked-unlock-it-in-layers": {
@@ -768,7 +768,7 @@
   },
   "anim-studio.draw-layers.bring-over-the-icon": {
     "text": "Bring over the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Menu item that moves the selected shape in front of the card icon. Compare 'Send under the icon'.",
     "max": 35
   },
   "anim-studio.draw-layers.bring-shape-forward": {
@@ -791,22 +791,22 @@
   },
   "anim-studio.draw-layers.delete-shape": {
     "text": "Delete shape",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip and accessible name of the button that deletes a shape in the layer list.",
     "max": 20
   },
   "anim-studio.draw-layers.down": {
     "text": "down",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Lower-case direction word announced when a shape moves down the layer order.",
     "max": 10
   },
   "anim-studio.draw-layers.draws-on": {
     "text": "draws on",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Short lower-case phrase after a shape name saying which layer group it is drawn on.",
     "max": 15
   },
   "anim-studio.draw-layers.move-down": {
     "text": "Move down",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip and accessible name of the button that moves a shape one step down the layer list.",
     "max": 15
   },
   "anim-studio.draw-layers.move-up-drawn-on-top": {
@@ -825,7 +825,7 @@
   },
   "anim-studio.draw-layers.over-the-icon": {
     "text": "over the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Short lower-case phrase saying a shape is drawn in front of the card icon.",
     "max": 25
   },
   "anim-studio.draw-layers.send-name-backward": {
@@ -856,17 +856,17 @@
   },
   "anim-studio.draw-layers.send-under-the-icon": {
     "text": "Send under the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Menu item that moves the selected shape behind the card icon. Compare 'Bring over the icon'.",
     "max": 35
   },
   "anim-studio.draw-layers.shapes-over-the-icon": {
     "text": "Shapes over the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Heading of the layer-list group holding shapes drawn in front of the card icon.",
     "max": 35
   },
   "anim-studio.draw-layers.shapes-under-the-icon": {
     "text": "Shapes under the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Heading of the layer-list group holding shapes drawn behind the card icon.",
     "max": 35
   },
   "anim-studio.draw-layers.the-rig-holds-the-most-shapes-it-can-48": {
@@ -876,12 +876,12 @@
   },
   "anim-studio.draw-layers.under-the-icon": {
     "text": "under the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Short lower-case phrase saying a shape is drawn behind the card icon.",
     "max": 25
   },
   "anim-studio.draw-layers.up": {
     "text": "up",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Lower-case direction word announced when a shape moves up the layer order.",
     "max": 10
   },
   "anim-studio.draw-store.click-a-shape-to-select-it-drag-to-move": {
@@ -926,42 +926,42 @@
   },
   "anim-studio.draw-store.ellipse": {
     "text": "Ellipse",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that draws ellipses and circles, in the tool list.",
     "max": 15
   },
   "anim-studio.draw-store.erase": {
     "text": "Erase",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that deletes shapes by clicking or dragging over them.",
     "max": 10
   },
   "anim-studio.draw-store.freehand": {
     "text": "Freehand",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that draws a smoothed line by following the pointer.",
     "max": 20
   },
   "anim-studio.draw-store.line": {
     "text": "Line",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that draws a straight line by dragging.",
     "max": 10
   },
   "anim-studio.draw-store.motion-path": {
     "text": "Motion path",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that draws the route a selected part travels along.",
     "max": 20
   },
   "anim-studio.draw-store.pen": {
     "text": "Pen",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that builds a path point by point, with optional curves.",
     "max": 5
   },
   "anim-studio.draw-store.rectangle": {
     "text": "Rectangle",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that draws rectangles and squares.",
     "max": 15
   },
   "anim-studio.draw-store.select": {
     "text": "Select",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Name of the drawing tool that selects and moves existing shapes. Verb used as a tool name.",
     "max": 10
   },
   "anim-studio.draw-svg-dialog.a-looping-svg-file-of-the-animation": {
