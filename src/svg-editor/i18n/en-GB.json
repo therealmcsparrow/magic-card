@@ -1740,12 +1740,12 @@
   },
   "svg-editor.views.getting-big-tidy-reduces-precision-and": {
     "text": "Getting big. Tidy reduces precision and drops hidden layers.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning under the size meter when the drawing nears the size limit. Tidy is the button that shrinks it.",
     "max": 100
   },
   "svg-editor.views.give-the-icon-a-name": {
     "text": "Give the icon a name.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Prompt shown when saving an icon to the library without a name yet.",
     "max": 35
   },
   "svg-editor.views.grid-size": {
@@ -1901,7 +1901,7 @@
   },
   "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
     "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint shown when Magic Card Utils is not installed. Keep the product name Magic Card Utils unchanged.",
     "max": 215
   },
   "svg-editor.views.layer": {
@@ -1981,7 +1981,7 @@
   },
   "svg-editor.views.main-follows-the-entity-colour-accent": {
     "text": "Main follows the entity colour. Accent follows the card's secondary colour. Colours come from the card, so the icon can change with state.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Explains the two-colour mode. Main and Accent are the names of the two colour slots and match the labels in the colour list.",
     "max": 225
   },
   "svg-editor.views.main-preview-colour": {

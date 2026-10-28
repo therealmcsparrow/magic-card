@@ -7024,12 +7024,12 @@
   },
   "card-editor.shape-editor.circle": {
     "text": "Circle",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: the card is clipped to a circle.",
     "max": 10
   },
   "card-editor.shape-editor.corner-size": {
     "text": "Corner size",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Field for how large the corner treatment is; Cut size and Cutout size are other shape settings.",
     "max": 20
   },
   "card-editor.shape-editor.could-not-reach-magic-card-utils-try": {
@@ -7039,32 +7039,32 @@
   },
   "card-editor.shape-editor.custom": {
     "text": "Custom",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset option for a user-drawn shape; Custom shape is the heading of its editor.",
     "max": 10
   },
   "card-editor.shape-editor.custom-shape": {
     "text": "Custom shape",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Heading of the section where the user draws or pastes their own outline.",
     "max": 20
   },
   "card-editor.shape-editor.cut-corners": {
     "text": "Cut corners",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: corners are sliced off diagonally instead of rounded.",
     "max": 20
   },
   "card-editor.shape-editor.cut-size": {
     "text": "Cut size",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Field for how much is sliced off each corner of the Cut corners shape.",
     "max": 15
   },
   "card-editor.shape-editor.cutout-size": {
     "text": "Cutout size",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Field for how large the notch is that is cut out of one edge of the card.",
     "max": 25
   },
   "card-editor.shape-editor.edge": {
     "text": "Edge",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Label for choosing which side of the card the cutout is on.",
     "max": 10
   },
   "card-editor.shape-editor.edit-as-custom": {
@@ -7074,7 +7074,7 @@
   },
   "card-editor.shape-editor.edit-shape": {
     "text": "Edit shape",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button or title that opens the shape editor for the card outline.",
     "max": 20
   },
   "card-editor.shape-editor.give-it-a-name": {
@@ -7084,7 +7084,7 @@
   },
   "card-editor.shape-editor.hexagon": {
     "text": "Hexagon",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: the card is clipped to a six-sided polygon.",
     "max": 15
   },
   "card-editor.shape-editor.in-px-or-of-the-shorter-side": {
@@ -7099,7 +7099,7 @@
   },
   "card-editor.shape-editor.left": {
     "text": "Left",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Edge option that places the shape cutout or effect on the left edge.",
     "max": 10
   },
   "card-editor.shape-editor.library": {

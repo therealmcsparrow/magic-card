@@ -5318,7 +5318,7 @@
   },
   "anim-studio.preset-grid.clear-search": {
     "text": "Clear search",
-    "note": "Shown in preset grid (anim-studio).",
+    "note": "Button that empties the preset search box and shows all presets again.",
     "max": 20
   },
   "anim-studio.preset-grid.no-presets-match-query": {
@@ -5331,22 +5331,22 @@
   },
   "anim-studio.preset-grid.plays-on-tap": {
     "text": "Plays on tap",
-    "note": "Shown in preset grid (anim-studio).",
+    "note": "Badge on a preset card saying the animation starts when the card is tapped.",
     "max": 20
   },
   "anim-studio.preset-grid.prefers-reduced-motion-reduce": {
     "text": "(prefers-reduced-motion: reduce)",
-    "note": "Shown in preset grid (anim-studio).",
+    "note": "CSS media query name shown as a technical hint next to the reduced-motion notice. Do not translate the query.",
     "max": 55
   },
   "anim-studio.preset-grid.preview": {
     "text": "Preview",
-    "note": "Shown in preset grid (anim-studio).",
+    "note": "Button or label on a preset card that plays the animation as a preview.",
     "max": 15
   },
   "anim-studio.preset-grid.tap": {
     "text": "Tap",
-    "note": "Shown in preset grid (anim-studio).",
+    "note": "Trigger name on a preset card for animations that play when the card is tapped.",
     "max": 10
   },
   "anim-studio.sequence-editor.a-sequence-has-at-most-steps-steps": {
@@ -5364,7 +5364,7 @@
   },
   "anim-studio.sequence-editor.add-step": {
     "text": "Add step",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Button in the sequence editor that appends one animation step to the list.",
     "max": 15
   },
   "anim-studio.sequence-editor.add-the-animations-to-play-one-after": {
@@ -5374,7 +5374,7 @@
   },
   "anim-studio.sequence-editor.animation": {
     "text": "Animation",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Field label in a sequence step for the animation that plays in that step.",
     "max": 15
   },
   "anim-studio.sequence-editor.at-most-steps-steps": {
@@ -5387,12 +5387,12 @@
   },
   "anim-studio.sequence-editor.cannot-play": {
     "text": "Cannot play",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Status in the sequence summary when no step can run, for example because every step is missing.",
     "max": 20
   },
   "anim-studio.sequence-editor.count": {
     "text": "{count, plural, one {# step} other {# steps}}",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Number of steps in the sequence summary, with singular and plural forms.",
     "max": 15,
     "vars": {
       "count": "The count the text is about."
@@ -5408,12 +5408,12 @@
   },
   "anim-studio.sequence-editor.delay": {
     "text": "Delay",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Field label in a sequence step for the wait before the step starts.",
     "max": 10
   },
   "anim-studio.sequence-editor.delay-between-children": {
     "text": "Delay between children",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Field label for the pause between one child module and the next when a sequence plays on a row or column.",
     "max": 40
   },
   "anim-studio.sequence-editor.delay-counts-from-the-end-of-the": {
@@ -5431,7 +5431,7 @@
   },
   "anim-studio.sequence-editor.delete-step": {
     "text": "Delete step",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on the button that removes a step from the sequence.",
     "max": 20
   },
   "anim-studio.sequence-editor.delete-step-i": {
@@ -5454,32 +5454,32 @@
   },
   "anim-studio.sequence-editor.duration": {
     "text": "Duration",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Field label in a sequence step for how long the step runs.",
     "max": 15
   },
   "anim-studio.sequence-editor.loop": {
     "text": "Loop",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Label of the switch that makes the whole sequence repeat.",
     "max": 10
   },
   "anim-studio.sequence-editor.loop-off": {
     "text": "Loop off",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on the loop button while looping is on; pressing it stops the repeat.",
     "max": 15
   },
   "anim-studio.sequence-editor.loop-on": {
     "text": "Loop on",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on the loop button while looping is off; pressing it makes the sequence repeat.",
     "max": 15
   },
   "anim-studio.sequence-editor.loops": {
     "text": "loops",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Lower-case word in the sequence summary meaning the sequence repeats; not the field label.",
     "max": 10
   },
   "anim-studio.sequence-editor.loops-2": {
     "text": "Loops",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Capitalised status label for a repeating sequence, used as a standalone badge.",
     "max": 10
   },
   "anim-studio.sequence-editor.move-step-i": {
@@ -5500,17 +5500,17 @@
   },
   "anim-studio.sequence-editor.no-steps-yet": {
     "text": "No steps yet",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Empty state title of the sequence step list before any step is added.",
     "max": 20
   },
   "anim-studio.sequence-editor.not-found": {
     "text": "Not found",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Label on a step whose animation no longer exists, so it will be skipped.",
     "max": 15
   },
   "anim-studio.sequence-editor.nothing-plays-yet": {
     "text": "Nothing plays yet.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Sequence summary shown while the sequence has no steps to run.",
     "max": 30
   },
   "anim-studio.sequence-editor.play-on-a-row-s-columns-or-a-column-s": {
