@@ -68,7 +68,7 @@
     "hash": "1d8ce038"
   },
   "transfer.envelope.the-author-must-be-1-max-characters-so": {
-    "text": "{max, plural, one {De auteur moet 1 teken lang zijn, dus is weggelaten.} other {De auteur moet 1-# tekens lang zijn, dus is weggelaten.}}",
+    "text": "{max, plural, one {De auteur moet 1 teken lang zijn, dus is weggelaten.} other {De auteur moet tussen 1 en # tekens lang zijn, dus is weggelaten.}}",
     "hash": "f34ad4f0"
   },
   "transfer.envelope.the-checker-for-images-did-not-load-so": {
@@ -76,7 +76,7 @@
     "hash": "f1d22ef2"
   },
   "transfer.envelope.the-description-must-be-1-max-characters": {
-    "text": "{max, plural, one {De beschrijving moet 1 teken lang zijn, dus is weggelaten.} other {De beschrijving moet 1-# tekens lang zijn, dus is weggelaten.}}",
+    "text": "{max, plural, one {De beschrijving moet 1 teken lang zijn, dus is weggelaten.} other {De beschrijving moet tussen 1 en # tekens lang zijn, dus is weggelaten.}}",
     "hash": "59da6379"
   },
   "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {

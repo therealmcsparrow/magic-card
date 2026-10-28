@@ -3400,7 +3400,7 @@
     "hash": "05487af3"
   },
   "anim-studio.parts-layers.replace-count-parts": {
-    "text": "{count, plural, one {# onderdeel vervangen} other {# onderdelen vervangen}}",
+    "text": "{count, plural, one {Vervang # onderdeel} other {Vervang # onderdelen}}",
     "hash": "d00f37c4"
   },
   "anim-studio.parts-layers.split-again": {
@@ -3420,7 +3420,7 @@
     "hash": "54d9edfc"
   },
   "anim-studio.parts-layers.split-into-count-parts": {
-    "text": "{count, plural, one {Gesplitst in # onderdeel} other {Gesplitst in # onderdelen}}",
+    "text": "{count, plural, one {Splitsen in # onderdeel} other {Splitsen in # onderdelen}}",
     "hash": "54d9edfc"
   },
   "anim-studio.parts-layers.split-into-count-the-first-parts": {
@@ -3440,7 +3440,7 @@
     "hash": "5a113a37"
   },
   "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": {
-    "text": "Het pictogram heeft {count, plural, one {# vorm} other {# vormen}}: {parts, plural, one {de eerste # werd een onderdeel} other {de eerste # werden onderdelen}} (het meeste wat een rig aankan), de rest blijft in rust.",
+    "text": "Het pictogram heeft {count, plural, one {# vorm} other {# vormen}}: {parts, plural, one {het eerste werd een onderdeel} other {de eerste # werden onderdelen}} (het meeste wat een rig aankan), de rest blijft in rust.",
     "hash": "bd77ac3b"
   },
   "anim-studio.parts-layers.the-parts-come-from-the-document-s-own": {
@@ -5688,7 +5688,7 @@
     "hash": "cf1f4072"
   },
   "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": {
-    "text": "{room, plural, one {De SVG heeft te veel vormen; er past er maximaal #.} other {De SVG heeft te veel vormen; er passen er maximaal #.}}",
+    "text": "{room, plural, one {De SVG heeft te veel vormen; er past nog maar #.} other {De SVG heeft te veel vormen; er passen nog maar #.}}",
     "hash": "b9082bad"
   },
   "anim-studio.validation-text.the-svg-is-larger-than-32-kb": {

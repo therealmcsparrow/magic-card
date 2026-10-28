@@ -6102,7 +6102,7 @@
     "x-max-length": 15,
     "x-source-hash": "05487af3"
   },
-  "anim-studio.parts-layers.replace-count-parts": "{count, plural, one {# onderdeel vervangen} other {# onderdelen vervangen}}",
+  "anim-studio.parts-layers.replace-count-parts": "{count, plural, one {Vervang # onderdeel} other {Vervang # onderdelen}}",
   "@anim-studio.parts-layers.replace-count-parts": {
     "description": "Button that replaces the current parts with the split result. Count is the number of parts. {count}: The number of parts. Max 35 characters.",
     "source_text": "{count, plural, one {Replace # part} other {Replace # parts}}",
@@ -6145,7 +6145,7 @@
       "other"
     ]
   },
-  "anim-studio.parts-layers.split-into-count-parts": "{count, plural, one {Gesplitst in # onderdeel} other {Gesplitst in # onderdelen}}",
+  "anim-studio.parts-layers.split-into-count-parts": "{count, plural, one {Splitsen in # onderdeel} other {Splitsen in # onderdelen}}",
   "@anim-studio.parts-layers.split-into-count-parts": {
     "description": "Button that splits the icon into separate parts. Count is the number of parts it will make. {count}: The number of parts. Max 40 characters.",
     "source_text": "{count, plural, one {Split into # part} other {Split into # parts}}",
@@ -6188,7 +6188,7 @@
     "x-max-length": 105,
     "x-source-hash": "5a113a37"
   },
-  "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": "Het pictogram heeft {count, plural, one {# vorm} other {# vormen}}: {parts, plural, one {de eerste # werd een onderdeel} other {de eerste # werden onderdelen}} (het meeste wat een rig aankan), de rest blijft in rust.",
+  "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": "Het pictogram heeft {count, plural, one {# vorm} other {# vormen}}: {parts, plural, one {het eerste werd een onderdeel} other {de eerste # werden onderdelen}} (het meeste wat een rig aankan), de rest blijft in rust.",
   "@anim-studio.parts-layers.the-icon-has-count-shapes-the-first": {
     "description": "Notice after splitting a large icon. Count is the shape total; parts is the already-formatted number of parts made. {count}: The number of shapes in the icon. {parts}: The number of shapes that became parts. Max 170 characters.",
     "source_text": "The icon has {count, plural, one {# shape} other {# shapes}}: {parts, plural, one {the first # became a part} other {the first # became parts}} (the most a rig holds), the rest stay at rest.",
@@ -10214,7 +10214,7 @@
     "x-max-length": 50,
     "x-source-hash": "cf1f4072"
   },
-  "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": "{room, plural, one {De SVG heeft te veel vormen; er past er maximaal #.} other {De SVG heeft te veel vormen; er passen er maximaal #.}}",
+  "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": "{room, plural, one {De SVG heeft te veel vormen; er past nog maar #.} other {De SVG heeft te veel vormen; er passen nog maar #.}}",
   "@anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": {
     "description": "Error when an imported SVG exceeds the shape limit. Room is how many shapes still fit. {room}: The number of shapes that still fit. Max 80 characters.",
     "source_text": "{room, plural, one {The SVG has too many shapes; at most # fits.} other {The SVG has too many shapes; at most # fit.}}",
@@ -37232,7 +37232,7 @@
       "other"
     ]
   },
-  "look-editor.mc-slider-look-editor.n-stops-is-the-most": "{n, plural, one {Meer dan # stop kan niet.} other {Meer dan # stops kan niet.}}",
+  "look-editor.mc-slider-look-editor.n-stops-is-the-most": "{n, plural, one {Het maximum is # stop.} other {Het maximum is # stops.}}",
   "@look-editor.mc-slider-look-editor.n-stops-is-the-most": {
     "description": "Hint shown when the stop limit is reached. {n} is the maximum number of colour stops allowed (a number, always plural in practice). {n}: The most stops a slider can have. Max 40 characters.",
     "source_text": "{n, plural, one {# stop is the most.} other {# stops are the most.}}",
@@ -51748,7 +51748,7 @@
     "x-max-length": 135,
     "x-source-hash": "1d8ce038"
   },
-  "transfer.envelope.the-author-must-be-1-max-characters-so": "{max, plural, one {De auteur moet 1 teken lang zijn, dus is weggelaten.} other {De auteur moet 1-# tekens lang zijn, dus is weggelaten.}}",
+  "transfer.envelope.the-author-must-be-1-max-characters-so": "{max, plural, one {De auteur moet 1 teken lang zijn, dus is weggelaten.} other {De auteur moet tussen 1 en # tekens lang zijn, dus is weggelaten.}}",
   "@transfer.envelope.the-author-must-be-1-max-characters-so": {
     "description": "Import warning. {max} is the longest author name allowed, in characters. The author is the creator named in the file. {max}: The most characters the author can have. Max 95 characters.",
     "source_text": "{max, plural, one {The author must be 1 character, so it was left out.} other {The author must be 1-# characters, so it was left out.}}",
@@ -51766,7 +51766,7 @@
     "x-max-length": 105,
     "x-source-hash": "f1d22ef2"
   },
-  "transfer.envelope.the-description-must-be-1-max-characters": "{max, plural, one {De beschrijving moet 1 teken lang zijn, dus is weggelaten.} other {De beschrijving moet 1-# tekens lang zijn, dus is weggelaten.}}",
+  "transfer.envelope.the-description-must-be-1-max-characters": "{max, plural, one {De beschrijving moet 1 teken lang zijn, dus is weggelaten.} other {De beschrijving moet tussen 1 en # tekens lang zijn, dus is weggelaten.}}",
   "@transfer.envelope.the-description-must-be-1-max-characters": {
     "description": "Import warning. {max} is the longest description allowed, in characters. {max}: The most characters the description can have. Max 105 characters.",
     "source_text": "{max, plural, one {The description must be 1 character, so it was left out.} other {The description must be 1-# characters, so it was left out.}}",

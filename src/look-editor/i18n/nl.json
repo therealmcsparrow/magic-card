@@ -668,7 +668,7 @@
     "hash": "b4fa4591"
   },
   "look-editor.mc-slider-look-editor.n-stops-is-the-most": {
-    "text": "{n, plural, one {Meer dan # stop kan niet.} other {Meer dan # stops kan niet.}}",
+    "text": "{n, plural, one {Het maximum is # stop.} other {Het maximum is # stops.}}",
     "hash": "b96ea2af"
   },
   "look-editor.mc-slider-look-editor.name-look": {
