@@ -3,7 +3,7 @@ import { state } from 'lit/decorators.js';
 import { loadPathCanvas } from '../../path-canvas/loader';
 import { PATH_CANVAS_OVERLAY_REVISION, PATH_CANVAS_TAG, type CanvasPlacement, type PathCanvasChunk } from '../../contracts/path-canvas';
 import type { StageInfo } from '../slots';
-import { t } from '../i18n';
+import { t, m, type MessageId } from '../i18n';
 
 /** Where the path canvas stands: not asked for yet, loading, ready, the chunk failed, or the page holds an older canvas element. */
 export type CanvasState = 'idle' | 'loading' | 'ready' | 'failed' | 'old';
@@ -13,6 +13,23 @@ export const overlayRevisionOk = (): boolean => {
   const ctor = typeof customElements === 'undefined' ? undefined : (customElements.get(PATH_CANVAS_TAG) as { contractRevision?: number } | undefined);
   return (ctor?.contractRevision ?? 0) >= PATH_CANVAS_OVERLAY_REVISION;
 };
+
+/** The canvas names its steps in English; they are looked up here so the undo list reads in the user's language. */
+const STEPS: Record<string, MessageId> = {
+  'Add point': m('Add point'),
+  'Move point': m('Move point'),
+  'Move points': m('Move points'),
+  'Move path': m('Move path'),
+  'Move handle': m('Move handle'),
+  'Delete point': m('Delete point'),
+  'Delete points': m('Delete points'),
+  'Delete handle': m('Delete handle'),
+  'Close path': m('Close path'),
+  'Change point type': m('Change point type'),
+};
+
+/** A step name from the canvas in the user's language (an unknown one keeps its English text). */
+export const stepLabel = (label: string): string => (STEPS[label] ? t(STEPS[label]) : label);
 
 /** A box on screen from a box in the unscaled card (x, y, width, height from the card's top-left) and the stage geometry. */
 export function placeBox(stage: StageInfo | undefined, box: { x: number; y: number; width: number; height: number }): CanvasPlacement | undefined {

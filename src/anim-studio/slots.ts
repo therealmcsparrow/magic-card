@@ -108,7 +108,7 @@ export interface PanelSpec {
    * with it, filling the card (inset 0, card px). `top` / `bottom`: a bar above / below the canvas,
    * unscaled, that never covers the card (toolbars, the preview-entity capsule).
    */
-  dock?: 'overlay' | 'top' | 'bottom';
+  dock?: 'overlay' | 'top' | 'bottom' | 'canvas';
 }
 
 /** The registered panels (registration order). */

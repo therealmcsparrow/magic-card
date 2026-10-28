@@ -4,26 +4,12 @@ import type { Box, EditPath } from '../../contracts/path-model';
 import type { CanvasPlacement, PathChange, PathPaint, SnapConfig } from '../../contracts/path-canvas';
 import type { AnimationDoc } from '../model';
 import type { StageInfo } from '../slots';
-import { t, m, type MessageId } from '../i18n';
+import { t } from '../i18n';
 import { parsePath, pointAtTime, serializePath } from './path-utils';
-import { CanvasHost, placeBox } from './canvas-host';
+import { CanvasHost, placeBox, stepLabel } from './canvas-host';
 
 /** Grid step in document units: 5% (percent paths) or 10 px. */
 const gridStep = (units: string | undefined): number => (units === 'px' ? 10 : 5);
-
-/** The canvas names its steps in English; they are looked up here so the undo list reads in the user's language. */
-const STEPS: Record<string, MessageId> = {
-  'Add point': m('Add point'),
-  'Move point': m('Move point'),
-  'Move points': m('Move points'),
-  'Move path': m('Move path'),
-  'Move handle': m('Move handle'),
-  'Delete point': m('Delete point'),
-  'Delete points': m('Delete points'),
-  'Delete handle': m('Delete handle'),
-  'Close path': m('Close path'),
-  'Change point type': m('Change point type'),
-};
 
 type Pt = [number, number];
 const NO_PAINT: PathPaint[] = [];
@@ -200,7 +186,7 @@ export class AnimPathHost extends CanvasHost {
     const d = serializePath(this._live);
     this._path = this._live;
     this._d = d;
-    const label = STEPS[detail.label] ? t(STEPS[detail.label]) : detail.label;
+    const label = stepLabel(detail.label);
     const doc: AnimationDoc = { ...this.doc, path: { ...(this.doc.path ?? { units: 'percent', follow_rotation: false, subject: 'element' }), d } };
     this._announce = label;
     this.dispatchEvent(new CustomEvent('doc-change', { bubbles: true, composed: true, detail: { doc, label } }));
