@@ -2307,7 +2307,7 @@
   },
   "theme-editor.mushroom.amber-rgb": {
     "text": "Amber (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding amber as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.badge-icon-size": {
@@ -2317,17 +2317,17 @@
   },
   "theme-editor.mushroom.badge-radius": {
     "text": "Badge radius",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for badge corner rounding. Radius means corner size.",
     "max": 20
   },
   "theme-editor.mushroom.badge-size": {
     "text": "Badge size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the size of the small status badge on an icon.",
     "max": 20
   },
   "theme-editor.mushroom.black-rgb": {
     "text": "Black (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding black as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.blue-grey-rgb": {
@@ -2337,12 +2337,12 @@
   },
   "theme-editor.mushroom.blue-rgb": {
     "text": "Blue (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding blue as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.brown-rgb": {
     "text": "Brown (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding brown as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.button-width-as-a-multiple-of-its-height": {
@@ -2352,7 +2352,7 @@
   },
   "theme-editor.mushroom.card-spacing": {
     "text": "Card spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the gap between cards.",
     "max": 20
   },
   "theme-editor.mushroom.chip-avatar-padding": {
@@ -2367,7 +2367,7 @@
   },
   "theme-editor.mushroom.chip-background": {
     "text": "Chip background",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the background of a chip, the small pill-shaped item.",
     "max": 25
   },
   "theme-editor.mushroom.chip-border-colour": {
@@ -2382,7 +2382,7 @@
   },
   "theme-editor.mushroom.chip-height": {
     "text": "Chip height",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how tall a chip, the small pill-shaped item, is.",
     "max": 20
   },
   "theme-editor.mushroom.chip-icon-size": {
@@ -2392,22 +2392,22 @@
   },
   "theme-editor.mushroom.chip-padding": {
     "text": "Chip padding",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the space inside a chip, the small pill-shaped item.",
     "max": 20
   },
   "theme-editor.mushroom.chip-radius": {
     "text": "Chip radius",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for chip corner rounding. Radius means corner size.",
     "max": 20
   },
   "theme-editor.mushroom.chip-shadow": {
     "text": "Chip shadow",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the drop shadow under a chip.",
     "max": 20
   },
   "theme-editor.mushroom.chip-spacing": {
     "text": "Chip spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the gap between chips.",
     "max": 20
   },
   "theme-editor.mushroom.chip-text-size": {
@@ -2467,7 +2467,7 @@
   },
   "theme-editor.mushroom.control-height": {
     "text": "Control height",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how tall the control buttons on a card are.",
     "max": 25
   },
   "theme-editor.mushroom.control-icon-size": {
@@ -2477,12 +2477,12 @@
   },
   "theme-editor.mushroom.control-radius": {
     "text": "Control radius",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for control button corner rounding. Radius means corner size.",
     "max": 25
   },
   "theme-editor.mushroom.control-spacing": {
     "text": "Control spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the gap between control buttons.",
     "max": 25
   },
   "theme-editor.mushroom.cover-closed-state-rgb": {
@@ -2497,12 +2497,12 @@
   },
   "theme-editor.mushroom.cyan-rgb": {
     "text": "Cyan (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding cyan as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.danger-rgb": {
     "text": "Danger (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding the danger colour as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.dark-grey-rgb": {
@@ -2527,7 +2527,7 @@
   },
   "theme-editor.mushroom.disabled-rgb": {
     "text": "Disabled (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding the disabled colour as red, green and blue numbers. Keep RGB.",
     "max": 25
   },
   "theme-editor.mushroom.entity-state-rgb": {
@@ -2547,12 +2547,12 @@
   },
   "theme-editor.mushroom.green-rgb": {
     "text": "Green (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding green as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.grey-rgb": {
     "text": "Grey (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding grey as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.humidifier-state-rgb": {
@@ -2562,12 +2562,12 @@
   },
   "theme-editor.mushroom.icon-radius": {
     "text": "Icon radius",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for icon corner rounding. Radius means corner size.",
     "max": 25
   },
   "theme-editor.mushroom.icon-size": {
     "text": "Icon size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how large icons are drawn.",
     "max": 20
   },
   "theme-editor.mushroom.icon-symbol-size": {
@@ -2577,17 +2577,17 @@
   },
   "theme-editor.mushroom.indigo-rgb": {
     "text": "Indigo (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding indigo as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.info-rgb": {
     "text": "Info (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding the info colour as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.layout-alignment": {
     "text": "Layout alignment",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how card content lines up, such as left or centre.",
     "max": 30
   },
   "theme-editor.mushroom.light-blue-rgb": {
@@ -2612,7 +2612,7 @@
   },
   "theme-editor.mushroom.lime-rgb": {
     "text": "Lime (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding lime as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.lock-locked-state-rgb": {
@@ -2657,7 +2657,7 @@
   },
   "theme-editor.mushroom.orange-rgb": {
     "text": "Orange (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding orange as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.person-home-state-rgb": {
@@ -2682,7 +2682,7 @@
   },
   "theme-editor.mushroom.pink-rgb": {
     "text": "Pink (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding pink as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.primary-letter-spacing": {
@@ -2712,12 +2712,12 @@
   },
   "theme-editor.mushroom.purple-rgb": {
     "text": "Purple (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding purple as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.red-rgb": {
     "text": "Red (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding red as red, green and blue numbers. Keep RGB.",
     "max": 15
   },
   "theme-editor.mushroom.secondary-letter-spacing": {
@@ -2747,12 +2747,12 @@
   },
   "theme-editor.mushroom.slider-threshold": {
     "text": "Slider threshold",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the slider position at which its appearance switches.",
     "max": 30
   },
   "theme-editor.mushroom.subtitle-colour": {
     "text": "Subtitle colour",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the colour of the second line of text on a card.",
     "max": 25
   },
   "theme-editor.mushroom.subtitle-letter-spacing": {
@@ -2767,22 +2767,22 @@
   },
   "theme-editor.mushroom.subtitle-size": {
     "text": "Subtitle size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the font size of the second line of text on a card.",
     "max": 25
   },
   "theme-editor.mushroom.subtitle-weight": {
     "text": "Subtitle weight",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how bold the second line of text is. Weight means font boldness.",
     "max": 25
   },
   "theme-editor.mushroom.success-rgb": {
     "text": "Success (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding the success colour as red, green and blue numbers. Keep RGB.",
     "max": 25
   },
   "theme-editor.mushroom.teal-rgb": {
     "text": "Teal (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding teal as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.three-numbers-0-to-255-like-244-67-54": {
@@ -2792,7 +2792,7 @@
   },
   "theme-editor.mushroom.title-colour": {
     "text": "Title colour",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the colour of the title text on a card.",
     "max": 20
   },
   "theme-editor.mushroom.title-letter-spacing": {
@@ -2807,22 +2807,22 @@
   },
   "theme-editor.mushroom.title-padding": {
     "text": "Title padding",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the space around the Title card's text.",
     "max": 25
   },
   "theme-editor.mushroom.title-size": {
     "text": "Title size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the font size of the title text.",
     "max": 20
   },
   "theme-editor.mushroom.title-spacing": {
     "text": "Title spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for the gap between the title and what follows it.",
     "max": 25
   },
   "theme-editor.mushroom.title-weight": {
     "text": "Title weight",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable for how bold the title text is. Weight means font boldness.",
     "max": 20
   },
   "theme-editor.mushroom.update-installing-rgb": {
@@ -2847,17 +2847,17 @@
   },
   "theme-editor.mushroom.warning-rgb": {
     "text": "Warning (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding the warning colour as red, green and blue numbers. Keep RGB.",
     "max": 25
   },
   "theme-editor.mushroom.white-rgb": {
     "text": "White (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding white as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.mushroom.yellow-rgb": {
     "text": "Yellow (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of the Mushroom variable holding yellow as red, green and blue numbers. Keep RGB.",
     "max": 20
   },
   "theme-editor.preset-dialog.added-c-to-my-presets": {
@@ -3869,7 +3869,7 @@
   },
   "theme-editor.tile.icon-radius": {
     "text": "Icon radius",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile card theme variable for icon corner rounding. Radius means corner size.",
     "max": 25
   },
   "theme-editor.tile.keeps-tiles-that-never-wrap-level-with": {
@@ -3964,7 +3964,7 @@
   },
   "theme-editor.tile.text-gap": {
     "text": "Text gap",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the Tile card theme variable for the space between the lines of text.",
     "max": 15
   },
   "theme-editor.tile.vertical-gap-between-primary-and": {
@@ -3974,7 +3974,7 @@
   },
   "theme-editor.trial-bar.editor": {
     "text": "Editor",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Link in the trial bar that goes back to the theme editor. Noun.",
     "max": 10
   },
   "theme-editor.trial-bar.move-to-bottom": {
@@ -3997,12 +3997,12 @@
   },
   "theme-editor.trial-bar.open-editor": {
     "text": "Open editor",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Button in the trial bar that opens the theme being tried in the editor. Verb.",
     "max": 20
   },
   "theme-editor.trial-bar.revert": {
     "text": "Revert",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Button in the trial bar that puts back the theme that was active before the trial.",
     "max": 15
   },
   "theme-editor.trial-bar.revert-theme-trial": {
@@ -4012,7 +4012,7 @@
   },
   "theme-editor.trial-bar.theme-trial": {
     "text": "Theme trial",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Accessible name of the bar shown while a theme is applied to this browser tab only. Trial means test.",
     "max": 20
   },
   "theme-editor.trial-bar.trying-name": {
@@ -4064,7 +4064,7 @@
   },
   "theme-editor.ultra-card.card-background": {
     "text": "Card background",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card theme variable for the card background.",
     "max": 25
   },
   "theme-editor.ultra-card.card-background-override": {
@@ -4074,17 +4074,17 @@
   },
   "theme-editor.ultra-card.card-radius": {
     "text": "Card radius",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card theme variable for card corner rounding. Radius means corner size.",
     "max": 20
   },
   "theme-editor.ultra-card.card-shadow": {
     "text": "Card shadow",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card theme variable for the drop shadow under a card.",
     "max": 20
   },
   "theme-editor.ultra-card.card-surface": {
     "text": "Card surface.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Short description of the group of Ultra Card variables that style the card body.",
     "max": 25
   },
   "theme-editor.ultra-card.corner-radius-of-the-card": {
@@ -4094,32 +4094,32 @@
   },
   "theme-editor.ultra-card.divider-colour": {
     "text": "Divider colour",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card theme variable for thin separator lines.",
     "max": 25
   },
   "theme-editor.ultra-card.error-colour": {
     "text": "Error colour",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card theme variable for error states.",
     "max": 20
   },
   "theme-editor.ultra-card.error-messages": {
     "text": "Error messages.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Short description under an Ultra Card variable that styles error messages.",
     "max": 25
   },
   "theme-editor.ultra-card.main-text": {
     "text": "Main text.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Short description under an Ultra Card variable that sets the main text colour.",
     "max": 20
   },
   "theme-editor.ultra-card.muted-text": {
     "text": "Muted text.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Short description under an Ultra Card variable that sets the dimmer, less prominent text colour.",
     "max": 20
   },
   "theme-editor.ultra-card.primary-colour": {
     "text": "Primary colour",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Label of the Ultra Card theme variable for the main brand colour.",
     "max": 25
   },
   "theme-editor.ultra-card.primary-text-colour": {
@@ -4161,7 +4161,7 @@
   },
   "theme-editor.util.dark": {
     "text": "Dark",
-    "note": "Shown in util (theme-editor).",
+    "note": "Name of the dark mode tab for theme values. Adjective, not a noun for darkness.",
     "max": 10
   },
   "theme-editor.util.enter-a-name": {
@@ -4171,12 +4171,12 @@
   },
   "theme-editor.util.light": {
     "text": "Light",
-    "note": "Shown in util (theme-editor).",
+    "note": "Name of the light mode tab for theme values. Adjective, not a lamp or a weight.",
     "max": 10
   },
   "theme-editor.util.shared": {
     "text": "Shared",
-    "note": "Shown in util (theme-editor).",
+    "note": "Name of the tab for theme values used by both light and dark modes. Adjective.",
     "max": 10
   },
   "theme-editor.util.this-name-is-reserved": {

@@ -8775,7 +8775,7 @@
   },
   "card-editor.value-bg-editor.down": {
     "text": "Down",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Direction option: the background fills from top to bottom.",
     "max": 10
   },
   "card-editor.value-bg-editor.empty-uses-the-module-entity-entity": {
@@ -8788,27 +8788,27 @@
   },
   "card-editor.value-bg-editor.entity": {
     "text": "Entity",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the Home Assistant entity that drives the value background.",
     "max": 10
   },
   "card-editor.value-bg-editor.fill": {
     "text": "Fill",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Value background type: a bar that fills in proportion to the value. Noun.",
     "max": 10
   },
   "card-editor.value-bg-editor.fill-colour": {
     "text": "Fill colour",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Colour picker label for the inside of the filled bar or area.",
     "max": 20
   },
   "card-editor.value-bg-editor.fill-direction": {
     "text": "Fill direction",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the side from which the fill bar grows: up, down, left or right.",
     "max": 25
   },
   "card-editor.value-bg-editor.fill-opacity": {
     "text": "Fill opacity",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Slider label for how see-through the fill bar is.",
     "max": 25
   },
   "card-editor.value-bg-editor.fill-the-area-under-the-line": {
@@ -8823,17 +8823,17 @@
   },
   "card-editor.value-bg-editor.hours": {
     "text": "Hours",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for how many hours of history the sparkline or wave covers. Plural unit of time.",
     "max": 10
   },
   "card-editor.value-bg-editor.left": {
     "text": "Left",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Direction option: the background fills from the right edge towards the left.",
     "max": 10
   },
   "card-editor.value-bg-editor.line-colour": {
     "text": "Line colour",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Colour picker label for the line drawn along the sparkline or wave.",
     "max": 20
   },
   "card-editor.value-bg-editor.line-width-px": {
@@ -8843,12 +8843,12 @@
   },
   "card-editor.value-bg-editor.max": {
     "text": "Max",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the value at which the background is completely full. Short for maximum.",
     "max": 5
   },
   "card-editor.value-bg-editor.min": {
     "text": "Min",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the value at which the background is empty. Short for minimum.",
     "max": 5
   },
   "card-editor.value-bg-editor.module-entity-entity": {
@@ -8861,7 +8861,7 @@
   },
   "card-editor.value-bg-editor.off": {
     "text": "Off",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Value background type that shows no background at all. Not an entity state.",
     "max": 5
   },
   "card-editor.value-bg-editor.pick-an-entity-a-value-background": {
@@ -8871,17 +8871,17 @@
   },
   "card-editor.value-bg-editor.right": {
     "text": "Right",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Direction option: the background fills from the left edge towards the right.",
     "max": 10
   },
   "card-editor.value-bg-editor.smoothing": {
     "text": "Smoothing",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for how strongly the sparkline or wave curve is rounded off. Noun.",
     "max": 15
   },
   "card-editor.value-bg-editor.sparkline": {
     "text": "Sparkline",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Value background type: a small line chart of the entity's recent history. Charting term.",
     "max": 15
   },
   "card-editor.value-bg-editor.the-area-fades-out-upwards-the-line": {
@@ -8894,12 +8894,12 @@
   },
   "card-editor.value-bg-editor.type": {
     "text": "Type",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for choosing the kind of value background: off, fill, area, sparkline or wave.",
     "max": 10
   },
   "card-editor.value-bg-editor.up": {
     "text": "Up",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Direction option: the background fills from bottom to top.",
     "max": 10
   },
   "card-editor.value-bg-editor.up-to-168-a-week": {
@@ -8914,42 +8914,42 @@
   },
   "card-editor.value-bg-editor.wave": {
     "text": "Wave",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Value background type: an animated wavy liquid level that rises with the value. Noun.",
     "max": 10
   },
   "card-editor.vertical-editor.align": {
     "text": "Align",
-    "note": "Shown in vertical editor (card-editor).",
+    "note": "Field label for how items line up horizontally in a vertical stack. Verb used as a label.",
     "max": 10
   },
   "card-editor.vertical-editor.centre": {
     "text": "Centre",
-    "note": "Shown in vertical editor (card-editor).",
+    "note": "Alignment option: items sit in the middle of the stack's width. British spelling.",
     "max": 10
   },
   "card-editor.vertical-editor.end": {
     "text": "End",
-    "note": "Shown in vertical editor (card-editor).",
+    "note": "Alignment option: items sit against the end edge of the stack. Right in left-to-right layouts.",
     "max": 5
   },
   "card-editor.vertical-editor.gap": {
     "text": "Gap",
-    "note": "Shown in vertical editor (card-editor).",
+    "note": "Field label for the empty space between stacked items. Noun.",
     "max": 15
   },
   "card-editor.vertical-editor.start": {
     "text": "Start",
-    "note": "Shown in vertical editor (card-editor).",
+    "note": "Alignment option: items sit against the start edge of the stack. Left in left-to-right layouts.",
     "max": 10
   },
   "card-editor.vertical-editor.stretch": {
     "text": "Stretch",
-    "note": "Shown in vertical editor (card-editor).",
+    "note": "Alignment option: items grow to fill the full width of the stack. Verb used as an option.",
     "max": 15
   },
   "card-editor.video-bg-editor.autoplay": {
     "text": "Autoplay",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Switch label: the background video starts playing as soon as the card loads.",
     "max": 20
   },
   "card-editor.video-bg-editor.browsers-only-autoplay-muted-videos": {
@@ -8959,27 +8959,27 @@
   },
   "card-editor.video-bg-editor.contain": {
     "text": "Contain",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Fit option: the whole video is visible, with empty bars if the shapes differ. CSS object-fit term.",
     "max": 15
   },
   "card-editor.video-bg-editor.cover": {
     "text": "Cover",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Fit option: the video fills the whole card and may be cropped. CSS object-fit term.",
     "max": 10
   },
   "card-editor.video-bg-editor.fit": {
     "text": "Fit",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Field label for how the video is sized to the card: contain or cover. Noun.",
     "max": 10
   },
   "card-editor.video-bg-editor.loop": {
     "text": "Loop",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Switch label: the background video restarts when it reaches the end.",
     "max": 10
   },
   "card-editor.video-bg-editor.muted": {
     "text": "Muted",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Switch label: the background video plays without sound. Adjective.",
     "max": 10
   },
   "card-editor.video-bg-editor.plays-behind-the-other-modules-in-the": {
@@ -9004,7 +9004,7 @@
   },
   "card-editor.video-bg-editor.video-url": {
     "text": "Video URL",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Field label for the web address or file path of the background video. Keep URL.",
     "max": 15
   },
   "card-editor.view-detect.couldn-t-tell-the-view-type": {
@@ -9042,7 +9042,7 @@
   },
   "card-editor.view-detect.narrow": {
     "text": "Narrow",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Name of the dashboard view width class for small screens such as phones. Adjective.",
     "max": 10
   },
   "card-editor.view-detect.narrow-400-pixels": {
@@ -9052,7 +9052,7 @@
   },
   "card-editor.view-detect.panel": {
     "text": "Panel",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Name of the Home Assistant panel view type, where one card fills the whole page.",
     "max": 10
   },
   "card-editor.view-detect.panel-full-width": {
@@ -9070,7 +9070,7 @@
   },
   "card-editor.view-detect.wide": {
     "text": "Wide",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Name of the dashboard view width class for large screens such as desktops. Adjective.",
     "max": 10
   },
   "card-editor.view-detect.wide-800-pixels": {
@@ -9080,7 +9080,7 @@
   },
   "card-editor.weather-editor.animated-icons": {
     "text": "Animated icons",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Switch label: use moving weather icons instead of still ones.",
     "max": 25
   },
   "card-editor.weather-editor.animated-weather-icons-instead-of-static": {
@@ -9090,22 +9090,22 @@
   },
   "card-editor.weather-editor.forecast-days": {
     "text": "Forecast days",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Field label for how many days of forecast the weather module lists. Number input.",
     "max": 25
   },
   "card-editor.weather-editor.show-condition": {
     "text": "Show condition",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Switch label: show the weather condition word, such as Cloudy. Show is a verb.",
     "max": 25
   },
   "card-editor.weather-editor.show-forecast": {
     "text": "Show forecast",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Switch label: show the upcoming days' forecast under the current weather. Show is a verb.",
     "max": 25
   },
   "card-editor.weather-editor.show-temperature": {
     "text": "Show temperature",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Switch label: show the current temperature number. Show is a verb.",
     "max": 30
   },
   "card-editor.weather-editor.this-entity-has-no-daily-forecast-its": {
@@ -9115,12 +9115,12 @@
   },
   "card-editor.weather-editor.weather-entity": {
     "text": "Weather entity",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Field label for the Home Assistant weather entity the module reads, such as weather.home.",
     "max": 25
   },
   "card-editor.yaml-editor.copy-yaml": {
     "text": "Copy YAML",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Button that copies the card's YAML code to the clipboard. Copy is a verb.",
     "max": 15
   },
   "card-editor.yaml-editor.copying-failed-the-browser-blocked-the": {
@@ -9151,7 +9151,7 @@
   },
   "card-editor.yaml-editor.yaml-copied": {
     "text": "YAML copied.",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Confirmation shown after the YAML was copied to the clipboard.",
     "max": 20
   },
   "card-editor.yaml-editor.yaml-copied-not-embedded-not-found-ids": {
