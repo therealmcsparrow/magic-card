@@ -7104,7 +7104,7 @@
   },
   "card-editor.shape-editor.library": {
     "text": "Library",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Tab or source option that lists the ready-made shapes shipped with the card.",
     "max": 15
   },
   "card-editor.shape-editor.linked-to-the-saved-shape-name-change-it": {
@@ -7117,7 +7117,7 @@
   },
   "card-editor.shape-editor.loading": {
     "text": "Loading",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Status text while the shape library is being fetched.",
     "max": 15
   },
   "card-editor.shape-editor.make-a-custom-shape": {
@@ -7127,7 +7127,7 @@
   },
   "card-editor.shape-editor.my-shapes": {
     "text": "My shapes",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Tab or heading for the shapes the user has saved themselves.",
     "max": 15
   },
   "card-editor.shape-editor.my-shapes-n": {
@@ -7140,7 +7140,7 @@
   },
   "card-editor.shape-editor.name": {
     "text": "Name",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Field for the name under which a custom shape is saved.",
     "max": 10
   },
   "card-editor.shape-editor.no-saved-shapes-yet-make-a-custom-shape": {
@@ -7150,22 +7150,22 @@
   },
   "card-editor.shape-editor.none": {
     "text": "None",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset option meaning no special shape, so the card keeps its normal rectangle.",
     "max": 10
   },
   "card-editor.shape-editor.notch": {
     "text": "Notch",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: a small rectangular bite is taken out of one edge.",
     "max": 10
   },
   "card-editor.shape-editor.octagon": {
     "text": "Octagon",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: the card is clipped to an eight-sided polygon.",
     "max": 15
   },
   "card-editor.shape-editor.organic": {
     "text": "Organic",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Category of freeform, natural-looking shapes such as the blob.",
     "max": 15
   },
   "card-editor.shape-editor.paused-off-screen-and-with-reduced": {
@@ -7180,27 +7180,27 @@
   },
   "card-editor.shape-editor.pill": {
     "text": "Pill",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: a capsule with fully rounded short ends.",
     "max": 10
   },
   "card-editor.shape-editor.presets": {
     "text": "Presets",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Heading of the grid of built-in shape choices.",
     "max": 20
   },
   "card-editor.shape-editor.right": {
     "text": "Right",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Edge option that places the shape cutout or effect on the right edge.",
     "max": 10
   },
   "card-editor.shape-editor.rounded": {
     "text": "Rounded",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: a rectangle with generously rounded corners.",
     "max": 15
   },
   "card-editor.shape-editor.save": {
     "text": "Save",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that stores the drawn shape in My shapes.",
     "max": 10
   },
   "card-editor.shape-editor.save-as-shape": {
@@ -7218,37 +7218,37 @@
   },
   "card-editor.shape-editor.seed": {
     "text": "Seed",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Number that fixes the random outline of an organic shape; the same seed gives the same shape.",
     "max": 15
   },
   "card-editor.shape-editor.shape": {
     "text": "Shape",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Label for choosing the outline the card is clipped to.",
     "max": 10
   },
   "card-editor.shape-editor.shape-source": {
     "text": "Shape source",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Label for choosing where the shape comes from, such as presets, library or your own.",
     "max": 20
   },
   "card-editor.shape-editor.shuffle": {
     "text": "Shuffle",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that picks a new random seed to generate a different organic shape.",
     "max": 15
   },
   "card-editor.shape-editor.side-cut": {
     "text": "Side cut",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: a semicircular bite is cut out of the sides of the card.",
     "max": 15
   },
   "card-editor.shape-editor.smoothing": {
     "text": "Smoothing",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Setting for how smooth, rather than angular, the organic outline is.",
     "max": 15
   },
   "card-editor.shape-editor.squircle": {
     "text": "Squircle",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: a blend of square and circle with smoothly curved corners.",
     "max": 15
   },
   "card-editor.shape-editor.the-blob-morphs-slowly": {
@@ -7293,7 +7293,7 @@
   },
   "card-editor.shape-editor.ticket": {
     "text": "Ticket",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: a ticket outline with notches in both sides.",
     "max": 10
   },
   "card-editor.shape-editor.ticket-wave-and-blob-can-not-be-edited": {
@@ -7303,12 +7303,12 @@
   },
   "card-editor.shape-editor.top": {
     "text": "Top",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Edge option that places the shape cutout or effect on the top edge.",
     "max": 5
   },
   "card-editor.shape-editor.use": {
     "text": "Use",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that applies the chosen shape to the card; a verb, not a noun.",
     "max": 10
   },
   "card-editor.shape-editor.use-a-copy-of-name": {
@@ -7360,27 +7360,27 @@
   },
   "card-editor.shape-editor.wave": {
     "text": "Wave",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: one edge of the card has a wavy line.",
     "max": 10
   },
   "card-editor.shape-editor.wave-edge": {
     "text": "Wave edge",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Label for choosing which edge of the card carries the wave.",
     "max": 15
   },
   "card-editor.shape-editor.wave-height": {
     "text": "Wave height",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Field for how tall each crest of the wavy edge is.",
     "max": 20
   },
   "card-editor.shape-editor.waves": {
     "text": "Waves",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Field for how many wave crests fit along the wavy edge; plural of Wave.",
     "max": 10
   },
   "card-editor.shape-editor.wobble": {
     "text": "Wobble",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Setting for how irregular the organic outline is; higher values look less regular.",
     "max": 10
   },
   "card-editor.shape-editor.your-account-can-use-the-library-but-not": {
@@ -7390,22 +7390,22 @@
   },
   "card-editor.shape-editor.your-own": {
     "text": "Your own",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Source option for a shape the user draws or pastes themselves.",
     "max": 15
   },
   "card-editor.shape-host.shape-applied": {
     "text": "Shape applied.",
-    "note": "Shown in shape host (card-editor).",
+    "note": "Confirmation message shown after the chosen shape was set on the card.",
     "max": 25
   },
   "card-editor.slider-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Field naming the entity attribute the slider reads and sets.",
     "max": 15
   },
   "card-editor.slider-editor.direction": {
     "text": "Direction",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Label for choosing whether the slider runs horizontally or vertically.",
     "max": 15
   },
   "card-editor.slider-editor.empty-the-entity-s-own-range-and-step": {
@@ -7415,7 +7415,7 @@
   },
   "card-editor.slider-editor.entity": {
     "text": "Entity",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Label for the Home Assistant entity the slider controls.",
     "max": 10
   },
   "card-editor.slider-editor.following-the-light": {
@@ -7425,12 +7425,12 @@
   },
   "card-editor.slider-editor.horizontal": {
     "text": "Horizontal",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Direction option: the slider moves left to right.",
     "max": 20
   },
   "card-editor.slider-editor.max": {
     "text": "Max",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Field for the highest value the slider can set.",
     "max": 5
   },
   "card-editor.slider-editor.min": {

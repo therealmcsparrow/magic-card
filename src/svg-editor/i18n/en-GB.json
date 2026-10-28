@@ -1951,17 +1951,17 @@
   },
   "svg-editor.views.loading-the-icon-editor": {
     "text": "Loading the icon editor",
-    "note": "Shown in views (svg-editor).",
+    "note": "Status text while the icon editor code is being fetched. No full stop.",
     "max": 40
   },
   "svg-editor.views.loading-the-image-editor": {
     "text": "Loading the image editor",
-    "note": "Shown in views (svg-editor).",
+    "note": "Status text while the image editor code is being fetched. No full stop.",
     "max": 40
   },
   "svg-editor.views.loading-your-icons": {
     "text": "Loading your icons…",
-    "note": "Shown in views (svg-editor).",
+    "note": "Status text while the saved icon library loads.",
     "max": 35
   },
   "svg-editor.views.lock-ratio": {
@@ -2446,7 +2446,7 @@
   },
   "svg-editor.views.stored-in-magic-card-utils-also": {
     "text": "Stored in Magic Card Utils. Also available in Home Assistant as mcu:<name>.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Storage hint for a saved icon. The text mcu:<name> is an icon id pattern and must stay exactly as written.",
     "max": 120
   },
   "svg-editor.views.stroke": {
@@ -2466,12 +2466,12 @@
   },
   "svg-editor.views.tab-walks-the-points-and-jump-to-the": {
     "text": "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Keyboard help for the path point editor. Key names, brackets and the letters X and Y stay as written.",
     "max": 170
   },
   "svg-editor.views.the-animated-icon-you-picked-is-removed": {
     "text": "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning that a previously chosen animated icon is dropped when the drawing is used. This icon is the name of an option in the animation settings.",
     "max": 160
   },
   "svg-editor.views.the-animation-you-set-on-this-icon": {
@@ -2506,7 +2506,7 @@
   },
   "svg-editor.views.this-module-will-use-your-drawing": {
     "text": "This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Confirmation text. {icon} is the id of the icon being replaced, for example mdi:lamp, and stays unchanged. Draw and Morph are effect names.",
     "max": 170,
     "vars": {
       "icon": "The value that replaces icon in the text."
@@ -2514,7 +2514,7 @@
   },
   "svg-editor.views.this-module-will-use-your-drawing-2": {
     "text": "This module will use your drawing. Colours, Draw and Morph effects keep working on it.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Confirmation text when the module has no icon yet. Draw and Morph are effect names.",
     "max": 140
   },
   "svg-editor.views.tidy": {
@@ -2572,7 +2572,7 @@
   },
   "svg-editor.views.use-follows-the-library-change-lamp-and": {
     "text": "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Explains the two buttons Use and Use as copy. Lamp is only an example icon name; translate it as a sample name.",
     "max": 185
   },
   "svg-editor.views.use-holes-when-overlapping-parts-should": {
@@ -2587,17 +2587,17 @@
   },
   "svg-editor.views.use-on-this-card": {
     "text": "Use on this card",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button label: keeps the drawing on this card only, without saving it to the library.",
     "max": 30
   },
   "svg-editor.views.use-this-icon": {
     "text": "Use this icon",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button label: applies the icon being edited to the card and closes the editor.",
     "max": 25
   },
   "svg-editor.views.use-this-svg": {
     "text": "Use this SVG",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button label in the paste or open SVG step: accepts the cleaned SVG and continues. SVG is the file format name.",
     "max": 20
   },
   "svg-editor.views.use-two-colours-main-and-accent": {
@@ -2607,7 +2607,7 @@
   },
   "svg-editor.views.used-as-mcu-id": {
     "text": "Used as mcu:{id}",
-    "note": "Shown in views (svg-editor).",
+    "note": "Shows the icon id other cards use. {id} is the saved icon id; mcu: is a fixed prefix and both stay unchanged.",
     "max": 30,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -2620,7 +2620,7 @@
   },
   "svg-editor.views.width": {
     "text": "Width",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the number field for the drawing width, in canvas units.",
     "max": 10
   },
   "svg-editor.views.without-a-copy-the-card-shows-the": {
@@ -2630,27 +2630,27 @@
   },
   "svg-editor.views.working": {
     "text": "Working…",
-    "note": "Shown in views (svg-editor).",
+    "note": "Busy status on a button or panel while an action such as saving or tidying runs.",
     "max": 15
   },
   "svg-editor.views.x": {
     "text": "X",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the horizontal coordinate field for a point. Keep the single letter X.",
     "max": 5
   },
   "svg-editor.views.y": {
     "text": "Y",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the vertical coordinate field for a point. Keep the single letter Y.",
     "max": 5
   },
   "svg-editor.views.zoom-in": {
     "text": "Zoom in",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tooltip and label of the button that makes the canvas larger.",
     "max": 15
   },
   "svg-editor.views.zoom-out": {
     "text": "Zoom out",
-    "note": "Shown in views (svg-editor).",
+    "note": "Tooltip and label of the button that makes the canvas smaller.",
     "max": 15
   }
 }

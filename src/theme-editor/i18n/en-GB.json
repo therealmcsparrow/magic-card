@@ -1,7 +1,7 @@
 {
   "theme-editor.bubble-card.accent-colour": {
     "text": "Accent colour",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the accent colour, in the variables panel.",
     "max": 25
   },
   "theme-editor.bubble-card.accent-for-active-states-and-sliders": {
@@ -26,7 +26,7 @@
   },
   "theme-editor.bubble-card.border": {
     "text": "Border",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the card border, in the variables panel.",
     "max": 10
   },
   "theme-editor.bubble-card.border-of-bubble-cards": {
@@ -56,7 +56,7 @@
   },
   "theme-editor.bubble-card.corner-radius": {
     "text": "Corner radius",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the general corner rounding, in the variables panel.",
     "max": 25
   },
   "theme-editor.bubble-card.corner-radius-of-button-cards": {
@@ -86,22 +86,22 @@
   },
   "theme-editor.bubble-card.icon-background": {
     "text": "Icon background",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the fill behind icons, in the variables panel.",
     "max": 25
   },
   "theme-editor.bubble-card.icon-radius": {
     "text": "Icon radius",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for icon corner rounding. Radius means corner size, not a circle's half-width.",
     "max": 25
   },
   "theme-editor.bubble-card.light-colour": {
     "text": "Light colour",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the colour of lights that are on. 'Light' is a lamp, not a brightness.",
     "max": 20
   },
   "theme-editor.bubble-card.main-background": {
     "text": "Main background",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the main card background, in the variables panel.",
     "max": 25
   },
   "theme-editor.bubble-card.main-background-of-button-cards": {
@@ -121,12 +121,12 @@
   },
   "theme-editor.bubble-card.pop-up-background": {
     "text": "Pop-up background",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the background of pop-up windows.",
     "max": 30
   },
   "theme-editor.bubble-card.pop-up-radius": {
     "text": "Pop-up radius",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for pop-up corner rounding. Radius means corner size.",
     "max": 25
   },
   "theme-editor.bubble-card.radius-for-every-bubble-element": {
@@ -136,7 +136,7 @@
   },
   "theme-editor.bubble-card.secondary-background": {
     "text": "Secondary background",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the second, lighter background used on inner parts.",
     "max": 35
   },
   "theme-editor.bubble-card.secondary-background-of-every-bubble": {
@@ -146,17 +146,17 @@
   },
   "theme-editor.bubble-card.shadow": {
     "text": "Shadow",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the drop shadow under cards. Noun, not a verb.",
     "max": 10
   },
   "theme-editor.bubble-card.sub-button-background": {
     "text": "Sub-button background",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for the fill of the small buttons on a card.",
     "max": 35
   },
   "theme-editor.bubble-card.sub-button-radius": {
     "text": "Sub-button radius",
-    "note": "Shown in bubble card (theme-editor).",
+    "note": "Label of the Bubble Card theme variable for sub-button corner rounding. Radius means corner size.",
     "max": 30
   },
   "theme-editor.button-card.background-of-the-loading-spinner": {
@@ -171,17 +171,17 @@
   },
   "theme-editor.button-card.card-background": {
     "text": "Card background",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for the card background, in the variables panel.",
     "max": 25
   },
   "theme-editor.button-card.card-radius": {
     "text": "Card radius",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for card corner rounding. Radius means corner size.",
     "max": 20
   },
   "theme-editor.button-card.card-shadow": {
     "text": "Card shadow",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for the drop shadow under a card.",
     "max": 20
   },
   "theme-editor.button-card.corner-radius-of-tooltips": {
@@ -211,7 +211,7 @@
   },
   "theme-editor.button-card.secondary-background": {
     "text": "Secondary background",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for the second background colour used on inner parts.",
     "max": 35
   },
   "theme-editor.button-card.shadow-of-tooltips": {
@@ -236,7 +236,7 @@
   },
   "theme-editor.button-card.tooltip-background": {
     "text": "Tooltip background",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for the background of the hover tooltip.",
     "max": 30
   },
   "theme-editor.button-card.tooltip-background-fallback": {
@@ -251,12 +251,12 @@
   },
   "theme-editor.button-card.tooltip-padding": {
     "text": "Tooltip padding",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for the space inside the hover tooltip.",
     "max": 25
   },
   "theme-editor.button-card.tooltip-radius": {
     "text": "Tooltip radius",
-    "note": "Shown in button card (theme-editor).",
+    "note": "Label of the button-card theme variable for tooltip corner rounding. Radius means corner size.",
     "max": 25
   },
   "theme-editor.button-card.tooltip-text-colour": {
@@ -286,12 +286,12 @@
   },
   "theme-editor.catalogue.bubble-card": {
     "text": "Bubble Card",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Name of the third-party Bubble Card integration in the catalogue; keep as a product name.",
     "max": 20
   },
   "theme-editor.catalogue.button-card": {
     "text": "button-card",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Name of the third-party button-card integration in the catalogue; keep lower-case as a product name.",
     "max": 20
   },
   "theme-editor.catalogue.header-and-sidebar": {
@@ -301,17 +301,17 @@
   },
   "theme-editor.catalogue.magic-card": {
     "text": "Magic Card",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Name of this product in the catalogue of themeable cards; keep as a product name.",
     "max": 20
   },
   "theme-editor.catalogue.mushroom": {
     "text": "Mushroom",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Name of the third-party Mushroom card set in the catalogue; keep as a product name.",
     "max": 15
   },
   "theme-editor.catalogue.other": {
     "text": "Other",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Catalogue group heading for variables that belong to no listed card or part.",
     "max": 10
   },
   "theme-editor.catalogue.primary-and-accent": {
@@ -331,42 +331,42 @@
   },
   "theme-editor.catalogue.text": {
     "text": "Text",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Catalogue group heading for text colour and font variables. Noun.",
     "max": 10
   },
   "theme-editor.catalogue.tile-card": {
     "text": "Tile card",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Name of the Home Assistant Tile card in the catalogue of themeable cards.",
     "max": 15
   },
   "theme-editor.catalogue.ultra-card": {
     "text": "Ultra Card",
-    "note": "Shown in catalogue (theme-editor).",
+    "note": "Name of the third-party Ultra Card integration in the catalogue; keep as a product name.",
     "max": 20
   },
   "theme-editor.dialogs.close": {
     "text": "Close",
-    "note": "Shown in dialogs (theme-editor).",
+    "note": "Button on a floating dialog window that closes it. Same English as the Close buttons in the editor and preset dialog.",
     "max": 10
   },
   "theme-editor.dialogs.maximise": {
     "text": "Maximise",
-    "note": "Shown in dialogs (theme-editor).",
+    "note": "Tooltip on the window button that makes the dialog fill the screen.",
     "max": 15
   },
   "theme-editor.dialogs.move-window": {
     "text": "Move window",
-    "note": "Shown in dialogs (theme-editor).",
+    "note": "Accessible label of the title bar handle used to drag the dialog around.",
     "max": 20
   },
   "theme-editor.dialogs.resize-window": {
     "text": "Resize window",
-    "note": "Shown in dialogs (theme-editor).",
+    "note": "Accessible label of the corner handle used to drag the dialog to a new size.",
     "max": 25
   },
   "theme-editor.dialogs.restore-size": {
     "text": "Restore size",
-    "note": "Shown in dialogs (theme-editor).",
+    "note": "Tooltip on the window button that returns a maximised dialog to its earlier size.",
     "max": 35
   },
   "theme-editor.editor-view.a-theme-with-this-name-already-exists": {

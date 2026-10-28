@@ -5520,52 +5520,52 @@
   },
   "anim-studio.sequence-editor.play-order": {
     "text": "Play order",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Field label for whether a sequence plays in list order or all steps at once.",
     "max": 20
   },
   "anim-studio.sequence-editor.playback": {
     "text": "Playback",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Section heading in the sequence editor for the loop and play settings.",
     "max": 15
   },
   "anim-studio.sequence-editor.plays": {
     "text": "Plays",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Short label before the total running time of the sequence, as in Plays 3 s.",
     "max": 10
   },
   "anim-studio.sequence-editor.plays-once": {
     "text": "plays once",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Lower-case fragment in the sequence summary when looping is off.",
     "max": 20
   },
   "anim-studio.sequence-editor.preset": {
     "text": "Preset",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Group heading in the step animation picker for built-in presets.",
     "max": 15
   },
   "anim-studio.sequence-editor.schedule": {
     "text": "Schedule",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Heading above the timeline of when each step starts and ends.",
     "max": 15
   },
   "anim-studio.sequence-editor.search-animations": {
     "text": "Search animations",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Placeholder and accessible label of the search box in the step animation picker.",
     "max": 30
   },
   "anim-studio.sequence-editor.stagger-children": {
     "text": "Stagger children",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Switch label: start each child module of a row or column a little after the previous one.",
     "max": 30
   },
   "anim-studio.sequence-editor.stagger-off": {
     "text": "Stagger off",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on the stagger button while staggering is on; pressing it turns staggering off.",
     "max": 20
   },
   "anim-studio.sequence-editor.stagger-on": {
     "text": "Stagger on",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on the stagger button while staggering is off; pressing it turns staggering on.",
     "max": 20
   },
   "anim-studio.sequence-editor.start-again-after-the-last-step": {
@@ -5575,7 +5575,7 @@
   },
   "anim-studio.sequence-editor.step-animation": {
     "text": "Step animation",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Accessible label of the picker that chooses the animation for one step.",
     "max": 25
   },
   "anim-studio.sequence-editor.step-count-added-name": {
@@ -5652,7 +5652,7 @@
   },
   "anim-studio.sequence-layers.move-down-plays-later": {
     "text": "Move down (plays later)",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Tooltip on the move-down button of a step row in the sequence layers list.",
     "max": 40
   },
   "anim-studio.sequence-layers.move-name-down-plays-later": {
@@ -5673,12 +5673,12 @@
   },
   "anim-studio.sequence-layers.move-step": {
     "text": "Move step",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Accessible label of the drag handle on a step row in the sequence layers list.",
     "max": 20
   },
   "anim-studio.sequence-layers.move-up-plays-earlier": {
     "text": "Move up (plays earlier)",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Tooltip on the move-up button of a step row in the sequence layers list.",
     "max": 40
   },
   "anim-studio.sequence-layers.name-is-now-step-to-of-count": {
@@ -5698,12 +5698,12 @@
   },
   "anim-studio.sequence-layers.sequence-steps": {
     "text": "Sequence steps",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Visible heading of the step list in the sequence layers panel.",
     "max": 25
   },
   "anim-studio.sequence-layers.sequence-steps-plays-first-to-last": {
     "text": "Sequence steps (plays first to last)",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Screen reader label of the step list, which says the top step plays first.",
     "max": 60
   },
   "anim-studio.sequence-layers.step-i": {
@@ -5753,7 +5753,7 @@
   },
   "anim-studio.sequence-utils.keyframes": {
     "text": "Keyframes",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Animation type name shown on a sequence step that uses a keyframe animation.",
     "max": 15
   },
   "anim-studio.sequence-utils.kind-cannot-play-in-a-sequence-this-step": {
@@ -5766,17 +5766,17 @@
   },
   "anim-studio.sequence-utils.my-animations": {
     "text": "my animations",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Lower-case form used inside a sentence, for example a step that lists saved custom animations.",
     "max": 25
   },
   "anim-studio.sequence-utils.my-animations-2": {
     "text": "My animations",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Capitalised group heading for the user's saved custom animations in the step picker.",
     "max": 25
   },
   "anim-studio.sequence-utils.no-animation": {
     "text": "No animation",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Name shown on a sequence step that has no animation chosen yet.",
     "max": 20
   },
   "anim-studio.sequence-utils.not-found-in-my-animations-this-step-is": {
@@ -5786,7 +5786,7 @@
   },
   "anim-studio.sequence-utils.particles": {
     "text": "Particles",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Animation type name shown on a sequence step that uses a particle effect.",
     "max": 15
   },
   "anim-studio.sequence-utils.particles-along-a-path-cannot-play-in-a": {
@@ -5796,7 +5796,7 @@
   },
   "anim-studio.sequence-utils.path": {
     "text": "Path",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Animation type name shown on a sequence step that uses a motion path.",
     "max": 10
   },
   "anim-studio.sequence-utils.pick-an-animation-for-this-step": {
@@ -5806,12 +5806,12 @@
   },
   "anim-studio.sequence-utils.preset": {
     "text": "Preset",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Animation type name shown on a sequence step that uses a built-in preset.",
     "max": 15
   },
   "anim-studio.sequence-utils.sequence": {
     "text": "Sequence",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Animation type name shown on a step that plays another saved sequence.",
     "max": 15
   },
   "anim-studio.sequence-utils.unknown-preset-this-step-is-skipped": {
@@ -5826,27 +5826,27 @@
   },
   "anim-studio.shape-inspector.anchor-points": {
     "text": "Anchor points",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Section heading in the shape inspector for the editable points that define the outline.",
     "max": 25
   },
   "anim-studio.shape-inspector.animation": {
     "text": "Animation",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Section heading in the shape inspector for the animation applied to the selected shape.",
     "max": 15
   },
   "anim-studio.shape-inspector.bring-forward": {
     "text": "Bring forward",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Button that moves the selected shape one step in front of the others.",
     "max": 25
   },
   "anim-studio.shape-inspector.change-fill": {
     "text": "Change fill",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Tooltip on the swatch that opens the fill colour picker for the selected shape.",
     "max": 20
   },
   "anim-studio.shape-inspector.change-stroke": {
     "text": "Change stroke",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Tooltip on the swatch that opens the outline colour picker for the selected shape.",
     "max": 25
   },
   "anim-studio.shape-inspector.changes-the-last-stroke-too-the-dotted": {
@@ -5861,22 +5861,22 @@
   },
   "anim-studio.shape-inspector.delete-shape": {
     "text": "Delete shape",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Button in the shape inspector that removes the selected shape from the drawing.",
     "max": 20
   },
   "anim-studio.shape-inspector.detail": {
     "text": "Detail",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Slider label for how many points a freehand line keeps; more detail follows the pen more closely.",
     "max": 10
   },
   "anim-studio.shape-inspector.draw-motion-path": {
     "text": "Draw motion path",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Button that switches to the stage to draw the path the selected shape travels along.",
     "max": 30
   },
   "anim-studio.shape-inspector.draw-on": {
     "text": "Draw on",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Option in the shape inspector for the draw-on effect, where the outline is drawn progressively.",
     "max": 15
   },
   "anim-studio.shape-inspector.draw-on-the-stage-where-the-shape": {
@@ -5886,37 +5886,37 @@
   },
   "anim-studio.shape-inspector.drawing": {
     "text": "Drawing",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Section heading in the shape inspector for fill, stroke and outline settings.",
     "max": 15
   },
   "anim-studio.shape-inspector.fill": {
     "text": "Fill",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label in the shape inspector for the colour inside the shape.",
     "max": 10
   },
   "anim-studio.shape-inspector.fill-colour": {
     "text": "Fill colour",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Accessible label of the fill colour control in the shape inspector.",
     "max": 20
   },
   "anim-studio.shape-inspector.flat": {
     "text": "Flat",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Option for a plain single-colour fill, as opposed to a gradient.",
     "max": 10
   },
   "anim-studio.shape-inspector.follow-the-path": {
     "text": "Follow the path",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Switch label: the shape turns to face the direction it moves along the motion path.",
     "max": 25
   },
   "anim-studio.shape-inspector.freehand": {
     "text": "Freehand",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Name of the drawing tool or shape type where the user draws a line by hand.",
     "max": 20
   },
   "anim-studio.shape-inspector.grid": {
     "text": "Grid",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Snapping option: points land on a regular grid of whole icon units.",
     "max": 10
   },
   "anim-studio.shape-inspector.it-turns-with-the-direction-it-travels": {
@@ -5926,12 +5926,12 @@
   },
   "anim-studio.shape-inspector.layer": {
     "text": "Layer",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label in the shape inspector for the stacking position of the shape.",
     "max": 10
   },
   "anim-studio.shape-inspector.line-ends": {
     "text": "Line ends",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label for the cap style at the two ends of an open line, such as round or square.",
     "max": 15
   },
   "anim-studio.shape-inspector.more-smoothing-fewer-points-and-a-calmer": {
@@ -5946,7 +5946,7 @@
   },
   "anim-studio.shape-inspector.motion-path": {
     "text": "Motion path",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Section heading in the shape inspector for the path the selected shape travels along.",
     "max": 20
   },
   "anim-studio.shape-inspector.moving-target": {
@@ -5959,22 +5959,22 @@
   },
   "anim-studio.shape-inspector.name": {
     "text": "Name",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label in the shape inspector for the name of the selected shape.",
     "max": 10
   },
   "anim-studio.shape-inspector.new-shapes": {
     "text": "New shapes",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Section heading for settings that apply to shapes drawn from now on, not the selected one.",
     "max": 20
   },
   "anim-studio.shape-inspector.over-the-icon": {
     "text": "Over the icon",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Option for the layer of new shapes: drawn in front of the icon.",
     "max": 25
   },
   "anim-studio.shape-inspector.paint": {
     "text": "Paint",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Section heading in the shape inspector for colours: fill and stroke.",
     "max": 10
   },
   "anim-studio.shape-inspector.points-jump-to-the-icon-s-and-other": {
@@ -5989,27 +5989,27 @@
   },
   "anim-studio.shape-inspector.redraw": {
     "text": "Redraw",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Button that lets the user draw the selected freehand line again from scratch.",
     "max": 15
   },
   "anim-studio.shape-inspector.remove": {
     "text": "Remove",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Button that takes the fill or stroke off the selected shape; the shape itself stays.",
     "max": 15
   },
   "anim-studio.shape-inspector.remove-fill": {
     "text": "Remove fill",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Tooltip on the button that clears the fill of the selected shape.",
     "max": 20
   },
   "anim-studio.shape-inspector.remove-stroke": {
     "text": "Remove stroke",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Tooltip on the button that clears the outline of the selected shape.",
     "max": 25
   },
   "anim-studio.shape-inspector.round": {
     "text": "Round",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Line end style with a rounded cap.",
     "max": 10
   },
   "anim-studio.shape-inspector.select-a-part-or-shape-first": {
@@ -6019,22 +6019,22 @@
   },
   "anim-studio.shape-inspector.send-backward": {
     "text": "Send backward",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Button that moves the selected shape one step behind the others.",
     "max": 25
   },
   "anim-studio.shape-inspector.shape": {
     "text": "Shape",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Heading of the shape inspector panel when a drawn shape is selected.",
     "max": 10
   },
   "anim-studio.shape-inspector.shape-over-the-icon": {
     "text": "Shape over the icon",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Description of one selected shape that is drawn in front of the icon.",
     "max": 35
   },
   "anim-studio.shape-inspector.shape-under-the-icon": {
     "text": "Shape under the icon",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Description of one selected shape that is drawn behind the icon.",
     "max": 35
   },
   "anim-studio.shape-inspector.size-icon-units": {
@@ -6047,42 +6047,42 @@
   },
   "anim-studio.shape-inspector.smooth": {
     "text": "Smooth",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Point type in the shape inspector: a curved point, as opposed to a corner.",
     "max": 10
   },
   "anim-studio.shape-inspector.smoothing": {
     "text": "Smoothing",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Slider label for how much a freehand line is simplified after drawing.",
     "max": 15
   },
   "anim-studio.shape-inspector.snapping": {
     "text": "Snapping",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label for whether points snap to a grid or to nearby points.",
     "max": 15
   },
   "anim-studio.shape-inspector.square": {
     "text": "Square",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Line end style with a square cap that extends past the end point.",
     "max": 10
   },
   "anim-studio.shape-inspector.stroke": {
     "text": "Stroke",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label in the shape inspector for the outline of the shape.",
     "max": 10
   },
   "anim-studio.shape-inspector.stroke-colour": {
     "text": "Stroke colour",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Accessible label of the outline colour control in the shape inspector.",
     "max": 25
   },
   "anim-studio.shape-inspector.stroke-width-icon-units": {
     "text": "Stroke width (icon units)",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label for outline thickness, measured in the icon's own coordinate units, not pixels.",
     "max": 40
   },
   "anim-studio.shape-inspector.target": {
     "text": "Target",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Field label in the shape inspector for which part or shape the animation is applied to.",
     "max": 10
   },
   "anim-studio.shape-inspector.the-line-draws-in-over-the-cycle": {
@@ -6102,27 +6102,27 @@
   },
   "anim-studio.shape-inspector.under-the-icon": {
     "text": "Under the icon",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Option for the layer of new shapes: drawn behind the icon.",
     "max": 25
   },
   "anim-studio.stage-sim.custom": {
     "text": "Custom",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Option in the stage preview state menu that lets the user type their own state value.",
     "max": 10
   },
   "anim-studio.stage-sim.custom-state": {
     "text": "Custom state",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Label of the text field where the user types their own simulated state value.",
     "max": 20
   },
   "anim-studio.stage-sim.off": {
     "text": "Off",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Simulated entity state in the stage preview: the entity is switched off.",
     "max": 5
   },
   "anim-studio.stage-sim.on": {
     "text": "On",
-    "note": "Shown in stage sim (anim-studio).",
+    "note": "Simulated entity state in the stage preview: the entity is switched on.",
     "max": 5
   },
   "anim-studio.stage-sim.pct-of-the-input-range": {
