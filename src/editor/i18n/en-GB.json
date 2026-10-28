@@ -3894,57 +3894,57 @@
   },
   "card-editor.gauge-editor.decimals": {
     "text": "Decimals",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Label of the field for how many decimal places the gauge value shows.",
     "max": 15
   },
   "card-editor.gauge-editor.entity": {
     "text": "Entity",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Label of the picker for the entity whose value the gauge displays.",
     "max": 10
   },
   "card-editor.gauge-editor.full-circle": {
     "text": "Full (circle)",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Gauge style option: the dial is drawn as a complete 360 degree circle.",
     "max": 25
   },
   "card-editor.gauge-editor.gauge-style": {
     "text": "Gauge style",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Label of the dropdown that picks the dial shape: full, half or quarter.",
     "max": 20
   },
   "card-editor.gauge-editor.half-semicircle": {
     "text": "Half (semicircle)",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Gauge style option: the dial is drawn as a 180 degree semicircle.",
     "max": 30
   },
   "card-editor.gauge-editor.max": {
     "text": "Max",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Label of the number field for the value at the full end of the gauge scale.",
     "max": 5
   },
   "card-editor.gauge-editor.min": {
     "text": "Min",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Label of the number field for the value at the empty end of the gauge scale.",
     "max": 5
   },
   "card-editor.gauge-editor.quarter": {
     "text": "Quarter",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Gauge style option: the dial is drawn as a 90 degree quarter circle.",
     "max": 15
   },
   "card-editor.gauge-editor.show-name": {
     "text": "Show name",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Toggle label: print the entity name on the gauge.",
     "max": 15
   },
   "card-editor.gauge-editor.show-needle": {
     "text": "Show needle",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Toggle label: draw a needle pointing at the current value.",
     "max": 20
   },
   "card-editor.gauge-editor.show-unit": {
     "text": "Show unit",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Toggle label: print the unit of measurement, such as % or W, beside the value.",
     "max": 15
   },
   "card-editor.gauge-editor.the-arc-takes-the-colour-of-the-highest": {
@@ -3959,12 +3959,12 @@
   },
   "card-editor.gradient-editor.add-stop": {
     "text": "Add stop",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Button that adds a colour stop (a point where the gradient changes colour).",
     "max": 20
   },
   "card-editor.gradient-editor.angle": {
     "text": "Angle",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Label of the field for the direction of a linear gradient, in degrees.",
     "max": 10
   },
   "card-editor.gradient-editor.angle-degrees": {
@@ -3982,17 +3982,17 @@
   },
   "card-editor.gradient-editor.colour": {
     "text": "colour",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Lower-case word used inside a longer label for one stop, such as the stop colour.",
     "max": 10
   },
   "card-editor.gradient-editor.gradient-preview": {
     "text": "Gradient preview",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Accessible name of the strip that previews the gradient being edited.",
     "max": 30
   },
   "card-editor.gradient-editor.linear": {
     "text": "Linear",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Gradient type option: colours blend along a straight line.",
     "max": 10
   },
   "card-editor.gradient-editor.name-gradient-type": {
@@ -4005,7 +4005,7 @@
   },
   "card-editor.gradient-editor.radial": {
     "text": "Radial",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Gradient type option: colours blend outwards from a centre point.",
     "max": 10
   },
   "card-editor.gradient-editor.remove-stop-num": {
@@ -4018,7 +4018,7 @@
   },
   "card-editor.gradient-editor.reverse": {
     "text": "Reverse",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Button that flips the order of the gradient stops.",
     "max": 15
   },
   "card-editor.gradient-editor.stop-num-colour": {
@@ -4040,7 +4040,7 @@
   },
   "card-editor.gradient-editor.type": {
     "text": "Type",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Label of the dropdown that switches between linear and radial gradients.",
     "max": 10
   },
   "card-editor.gradient-editor.up-to-max-stops": {
@@ -4063,27 +4063,27 @@
   },
   "card-editor.graphs-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Label of the field for an entity attribute to plot instead of the state.",
     "max": 15
   },
   "card-editor.graphs-editor.entity": {
     "text": "Entity",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Label of the picker for the entity whose history the graph plots.",
     "max": 10
   },
   "card-editor.graphs-editor.every-change": {
     "text": "Every change",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Sampling option: add a point to the graph each time the entity changes.",
     "max": 20
   },
   "card-editor.graphs-editor.fill": {
     "text": "Fill",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Toggle label: shade the area under the graph line.",
     "max": 10
   },
   "card-editor.graphs-editor.fill-colour": {
     "text": "Fill colour",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Label of the colour picker for the shaded area under the graph line.",
     "max": 20
   },
   "card-editor.graphs-editor.hours-to-show": {
@@ -4093,12 +4093,12 @@
   },
   "card-editor.graphs-editor.line-colour": {
     "text": "Line colour",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Label of the colour picker for the graph line itself.",
     "max": 20
   },
   "card-editor.graphs-editor.line-width": {
     "text": "Line width",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Label of the field for the thickness of the graph line.",
     "max": 20
   },
   "card-editor.graphs-editor.name-current-value-and-time-span-under": {
@@ -4113,12 +4113,12 @@
   },
   "card-editor.graphs-editor.show-labels": {
     "text": "Show labels",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Toggle label: print axis labels (time and value) on the graph.",
     "max": 20
   },
   "card-editor.graphs-editor.show-points": {
     "text": "Show points",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Toggle label: draw a dot on the line at every data point.",
     "max": 20
   },
   "card-editor.graphs-editor.values-are-averaged-per-period-2-every": {
@@ -4128,47 +4128,47 @@
   },
   "card-editor.horizontal-editor.align": {
     "text": "Align",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Label of the dropdown that aligns children across the row (vertical position).",
     "max": 10
   },
   "card-editor.horizontal-editor.centre": {
     "text": "Centre",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Alignment option: place the children in the middle of the row.",
     "max": 10
   },
   "card-editor.horizontal-editor.end": {
     "text": "End",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Alignment option: place the children at the end (right or bottom) of the row.",
     "max": 5
   },
   "card-editor.horizontal-editor.gap": {
     "text": "Gap",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Label of the field for the space between neighbouring children in the row.",
     "max": 15
   },
   "card-editor.horizontal-editor.justify": {
     "text": "Justify",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Label of the dropdown that spreads children along the row (horizontal distribution).",
     "max": 15
   },
   "card-editor.horizontal-editor.space-around": {
     "text": "Space around",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Justify option: equal space around each child, so edge gaps are half the inner gaps.",
     "max": 20
   },
   "card-editor.horizontal-editor.space-between": {
     "text": "Space between",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Justify option: first and last child touch the edges, the rest are spread evenly.",
     "max": 25
   },
   "card-editor.horizontal-editor.start": {
     "text": "Start",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Alignment option: place the children at the start (left or top) of the row.",
     "max": 10
   },
   "card-editor.horizontal-editor.stretch": {
     "text": "Stretch",
-    "note": "Shown in horizontal editor (card-editor).",
+    "note": "Alignment option: make the children fill the full height of the row.",
     "max": 15
   },
   "card-editor.icon-editor.colours-the-icon-like-home-assistant": {
@@ -4178,22 +4178,22 @@
   },
   "card-editor.icon-editor.entity": {
     "text": "Entity",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Label of the picker for the entity that drives the icon state and colour.",
     "max": 10
   },
   "card-editor.icon-editor.icon": {
     "text": "Icon",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Label of the picker for which icon the icon element displays.",
     "max": 10
   },
   "card-editor.icon-editor.icon-colour": {
     "text": "Icon colour",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Label of the colour picker for the icon glyph, not its background.",
     "max": 20
   },
   "card-editor.icon-editor.size": {
     "text": "Size",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Label of the field for the icon width and height.",
     "max": 10
   },
   "card-editor.icon-editor.the-icon-uses-this-gradient-as-its-fill": {
@@ -4223,22 +4223,22 @@
   },
   "card-editor.icon-fx-editor.a-script": {
     "text": "a script",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Fragment inside the SVG safety warning: the uploaded SVG contains a script.",
     "max": 15
   },
   "card-editor.icon-fx-editor.accent-colour": {
     "text": "Accent colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the colour picker for the accent part of an icon effect.",
     "max": 25
   },
   "card-editor.icon-fx-editor.add-colour": {
     "text": "Add colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Button that adds one more colour to the effect's colour list.",
     "max": 20
   },
   "card-editor.icon-fx-editor.angle-deg": {
     "text": "Angle (deg)",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the angle field for an effect; deg means degrees.",
     "max": 20
   },
   "card-editor.icon-fx-editor.animated-weather-icons-replace-icon": {
@@ -4258,7 +4258,7 @@
   },
   "card-editor.icon-fx-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the field for an entity attribute that drives the icon effect.",
     "max": 15
   },
   "card-editor.icon-fx-editor.auto-for-this-entity-rule": {
@@ -4281,7 +4281,7 @@
   },
   "card-editor.icon-fx-editor.colour": {
     "text": "Colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of a single colour picker inside an icon effect.",
     "max": 10
   },
   "card-editor.icon-fx-editor.colour-n": {
@@ -4294,12 +4294,12 @@
   },
   "card-editor.icon-fx-editor.colour-style": {
     "text": "Colour style",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the dropdown that picks solid, duotone or gradient colouring for the icon.",
     "max": 20
   },
   "card-editor.icon-fx-editor.custom-svg": {
     "text": "Custom SVG",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Section heading for using your own SVG file as the icon.",
     "max": 20
   },
   "card-editor.icon-fx-editor.customise-this-icon": {
@@ -4309,17 +4309,17 @@
   },
   "card-editor.icon-fx-editor.device-animation": {
     "text": "Device animation",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the dropdown that picks an animation matching the device type, such as a fan spinning.",
     "max": 30
   },
   "card-editor.icon-fx-editor.direction": {
     "text": "Direction",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the dropdown for which way the effect moves: up, down, left or right.",
     "max": 15
   },
   "card-editor.icon-fx-editor.down": {
     "text": "Down",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Direction option: the effect moves downwards.",
     "max": 10
   },
   "card-editor.icon-fx-editor.draw-an-icon": {
@@ -4329,7 +4329,7 @@
   },
   "card-editor.icon-fx-editor.draw-duration": {
     "text": "Draw duration",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the field for how long the line-draw effect takes to trace the icon.",
     "max": 25
   },
   "card-editor.icon-fx-editor.draw-your-own-svg-icon-instead-of-one": {
@@ -4339,12 +4339,12 @@
   },
   "card-editor.icon-fx-editor.duotone": {
     "text": "Duotone",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Colour style option: the icon uses two colours, primary and secondary.",
     "max": 15
   },
   "card-editor.icon-fx-editor.edit-icon": {
     "text": "Edit icon",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Button that opens the icon editor to change the chosen icon.",
     "max": 20
   },
   "card-editor.icon-fx-editor.effects-need-the-icon-shape-this-icon": {
@@ -4375,22 +4375,22 @@
   },
   "card-editor.icon-fx-editor.entity": {
     "text": "Entity",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the picker for the entity whose state drives the icon effect.",
     "max": 10
   },
   "card-editor.icon-fx-editor.event-handlers": {
     "text": "event handlers",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Fragment inside the SVG safety warning: the SVG has inline event handlers such as onclick.",
     "max": 25
   },
   "card-editor.icon-fx-editor.external-references": {
     "text": "external references",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Fragment inside the SVG safety warning: the SVG links to files or addresses outside itself.",
     "max": 35
   },
   "card-editor.icon-fx-editor.fill-colour": {
     "text": "Fill colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the colour picker for the liquid level in the liquid-fill effect.",
     "max": 20
   },
   "card-editor.icon-fx-editor.fills-the-icon-like-a-liquid-with-a": {
@@ -4400,17 +4400,17 @@
   },
   "card-editor.icon-fx-editor.gradient": {
     "text": "Gradient",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Colour style option: the icon blends through a list of colours.",
     "max": 15
   },
   "card-editor.icon-fx-editor.gradient-colours": {
     "text": "Gradient colours",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Heading of the list of colours that make up the icon gradient.",
     "max": 30
   },
   "card-editor.icon-fx-editor.icon-effects": {
     "text": "Icon effects",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Title of the whole effects panel for animating and colouring an icon.",
     "max": 20
   },
   "card-editor.icon-fx-editor.icon-when-off": {
@@ -4425,17 +4425,17 @@
   },
   "card-editor.icon-fx-editor.left": {
     "text": "Left",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Direction option: the effect moves to the left.",
     "max": 10
   },
   "card-editor.icon-fx-editor.line-draw": {
     "text": "Line draw",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Effect name: the icon outline is traced as if drawn by a pen.",
     "max": 15
   },
   "card-editor.icon-fx-editor.liquid-fill": {
     "text": "Liquid fill",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Effect name: the icon fills with liquid up to a level set by the entity value.",
     "max": 20
   },
   "card-editor.icon-fx-editor.list-and-last": {
@@ -4449,7 +4449,7 @@
   },
   "card-editor.icon-fx-editor.loading": {
     "text": "Loading",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Effect name: a spinner-style animation that suggests something is in progress.",
     "max": 15
   },
   "card-editor.icon-fx-editor.makes-your-own-copy-the-original-stays": {
@@ -4467,12 +4467,12 @@
   },
   "card-editor.icon-fx-editor.max": {
     "text": "Max",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the entity value at which the effect is fully filled or at its strongest.",
     "max": 5
   },
   "card-editor.icon-fx-editor.min": {
     "text": "Min",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the entity value at which the effect is empty or at its weakest.",
     "max": 5
   },
   "card-editor.icon-fx-editor.module-entity-entity": {
@@ -4485,7 +4485,7 @@
   },
   "card-editor.icon-fx-editor.morph": {
     "text": "Morph",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Effect name: the icon changes smoothly into another shape when the state changes.",
     "max": 15
   },
   "card-editor.icon-fx-editor.morphs-between-the-state-icons-when-the": {
@@ -4541,12 +4541,12 @@
   },
   "card-editor.icon-fx-editor.primary-colour": {
     "text": "Primary colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the colour picker for the main layer of a duotone icon.",
     "max": 25
   },
   "card-editor.icon-fx-editor.remove-colour": {
     "text": "Remove colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Tooltip of the button that deletes one colour from the gradient list.",
     "max": 25
   },
   "card-editor.icon-fx-editor.remove-colour-n": {
@@ -4559,7 +4559,7 @@
   },
   "card-editor.icon-fx-editor.reset-section": {
     "text": "Reset section",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Button that restores one group of effect settings to their defaults.",
     "max": 25
   },
   "card-editor.icon-fx-editor.reset-section-icon-effects": {
@@ -4569,7 +4569,7 @@
   },
   "card-editor.icon-fx-editor.right": {
     "text": "Right",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Direction option: the effect moves to the right.",
     "max": 10
   },
   "card-editor.icon-fx-editor.saved-icon-name-was-not-found-the-card": {
@@ -4582,17 +4582,17 @@
   },
   "card-editor.icon-fx-editor.secondary-colour": {
     "text": "Secondary colour",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the colour picker for the second layer of a duotone icon.",
     "max": 30
   },
   "card-editor.icon-fx-editor.solid": {
     "text": "Solid",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Colour style option: the icon uses one flat colour.",
     "max": 10
   },
   "card-editor.icon-fx-editor.state-icons": {
     "text": "State icons",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Heading of the list that maps entity states to different icons.",
     "max": 20
   },
   "card-editor.icon-fx-editor.state-icons-the-icon-while-the-entity-is": {
@@ -4607,7 +4607,7 @@
   },
   "card-editor.icon-fx-editor.svg-markup": {
     "text": "SVG markup",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the text area where SVG source code can be pasted.",
     "max": 20
   },
   "card-editor.icon-fx-editor.svg-viewbox-0-0-24-24-svg": {
@@ -4656,7 +4656,7 @@
   },
   "card-editor.icon-fx-editor.up": {
     "text": "Up",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Direction option: the effect moves upwards.",
     "max": 10
   },
   "card-editor.icon-fx-editor.up-to-32-kb-parts-with-fill-currentcolor": {
@@ -4666,7 +4666,7 @@
   },
   "card-editor.icon-fx-editor.upload-svg": {
     "text": "Upload SVG",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Button that opens a file chooser to load an SVG file from the device.",
     "max": 20
   },
   "card-editor.icon-fx-editor.use-and-image-aren-t-supported-draw-the": {
@@ -4676,122 +4676,122 @@
   },
   "card-editor.icon-fx-editor.value": {
     "text": "Value",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Label of the field that picks the entity value, rather than an attribute, to drive the effect.",
     "max": 10
   },
   "card-editor.icon-fx-editor.wave": {
     "text": "Wave",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Effect name: a ripple moves across the icon like a wave.",
     "max": 10
   },
   "card-editor.icon-fx-options.auto": {
     "text": "Auto",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Option that lets the card choose the icon effect from the entity's device type.",
     "max": 10
   },
   "card-editor.icon-fx-options.drum": {
     "text": "Drum",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: the icon beats rhythmically like a drum.",
     "max": 10
   },
   "card-editor.icon-fx-options.equalizer": {
     "text": "Equalizer",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: bars rise and fall like an audio equaliser. Keep the product spelling.",
     "max": 15
   },
   "card-editor.icon-fx-options.flame": {
     "text": "Flame",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: the icon flickers like a flame.",
     "max": 10
   },
   "card-editor.icon-fx-options.glow": {
     "text": "Glow",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: a soft light halo appears around the icon.",
     "max": 10
   },
   "card-editor.icon-fx-options.loop": {
     "text": "Loop",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Trigger option: the animation repeats without stopping.",
     "max": 10
   },
   "card-editor.icon-fx-options.off": {
     "text": "Off",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Option that switches the icon effect off completely.",
     "max": 5
   },
   "card-editor.icon-fx-options.on-change": {
     "text": "On change",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Trigger option: play the animation once each time the entity state changes.",
     "max": 15
   },
   "card-editor.icon-fx-options.on-load": {
     "text": "On load",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Trigger option: play the animation once when the card first appears.",
     "max": 15
   },
   "card-editor.icon-fx-options.pulse": {
     "text": "Pulse",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: the icon grows and shrinks rhythmically like a heartbeat.",
     "max": 10
   },
   "card-editor.icon-fx-options.shake": {
     "text": "Shake",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: the icon jiggles quickly from side to side.",
     "max": 10
   },
   "card-editor.icon-fx-options.snow": {
     "text": "Snow",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: snowflakes fall over the icon.",
     "max": 10
   },
   "card-editor.icon-fx-options.spin": {
     "text": "Spin",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: the icon rotates continuously around its centre.",
     "max": 10
   },
   "card-editor.icon-fx-options.swing": {
     "text": "Swing",
-    "note": "Shown in icon fx options (card-editor).",
+    "note": "Effect name: the icon swings back and forth like a pendulum.",
     "max": 10
   },
   "card-editor.icon-host.icon-applied": {
     "text": "Icon applied.",
-    "note": "Shown in icon host (card-editor).",
+    "note": "Confirmation message shown after the chosen icon has been set on the element.",
     "max": 25
   },
   "card-editor.icon-picker.advanced": {
     "text": "Advanced",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Tab or section name for extra icon options such as effects and custom SVG.",
     "max": 15
   },
   "card-editor.icon-picker.all": {
     "text": "All",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Filter chip that shows icons from every library at once.",
     "max": 5
   },
   "card-editor.icon-picker.animated-icons": {
     "text": "Animated icons",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Tab or heading for the library of icons that move.",
     "max": 25
   },
   "card-editor.icon-picker.browse-icons": {
     "text": "Browse icons",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button that opens the full icon browser dialog.",
     "max": 25
   },
   "card-editor.icon-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button that closes the icon browser without changing the icon.",
     "max": 10
   },
   "card-editor.icon-picker.clear": {
     "text": "Clear",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button that removes the chosen icon so the field is empty again.",
     "max": 10
   },
   "card-editor.icon-picker.clear-search": {
     "text": "Clear search",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Tooltip of the small button that empties the icon search box.",
     "max": 20
   },
   "card-editor.icon-picker.customise-a-copy": {
@@ -4806,22 +4806,22 @@
   },
   "card-editor.icon-picker.icon": {
     "text": "Icon",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Label of the icon field, used for singular one-icon context in the picker.",
     "max": 10
   },
   "card-editor.icon-picker.icon-source": {
     "text": "Icon source",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Label of the choice between icon libraries, such as Home Assistant icons or your own.",
     "max": 20
   },
   "card-editor.icon-picker.icons": {
     "text": "Icons",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Plural heading above the grid of icons in the browser.",
     "max": 15
   },
   "card-editor.icon-picker.icons-from": {
     "text": "Icons from",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Prefix before a library name, as in Icons from Material Design.",
     "max": 20
   },
   "card-editor.icon-picker.keep-a-copy-in-this-card-adds-size": {
@@ -4839,17 +4839,17 @@
   },
   "card-editor.icon-picker.library": {
     "text": "Library",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Label of the dropdown that picks which icon library to browse.",
     "max": 15
   },
   "card-editor.icon-picker.loading": {
     "text": "Loading…",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Short busy text while the picker itself is starting; the icons message is separate.",
     "max": 15
   },
   "card-editor.icon-picker.loading-icons": {
     "text": "Loading icons…",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Busy text shown while the icon list for the chosen library downloads.",
     "max": 25
   },
   "card-editor.icon-picker.material-design-icons": {
@@ -4859,7 +4859,7 @@
   },
   "card-editor.icon-picker.my-icons": {
     "text": "My icons",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Tab or filter for icons the user has saved or uploaded themselves.",
     "max": 20
   },
   "card-editor.icon-picker.my-icons-n": {
@@ -4903,27 +4903,27 @@
   },
   "card-editor.icon-picker.retry": {
     "text": "Retry",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button shown after the icon list failed to load; tries the download again.",
     "max": 20
   },
   "card-editor.icon-picker.save": {
     "text": "Save",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button that stores the chosen icon and closes the icon browser.",
     "max": 10
   },
   "card-editor.icon-picker.search-icons": {
     "text": "Search icons",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Placeholder and accessible name of the icon search box.",
     "max": 20
   },
   "card-editor.icon-picker.select-icon": {
     "text": "Select icon",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Title of the icon browser dialog and the prompt to pick one icon.",
     "max": 20
   },
   "card-editor.icon-picker.show-all": {
     "text": "Show all",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button that expands the icon grid to list every matching icon, not only the first few.",
     "max": 15
   },
   "card-editor.icon-picker.showing-shown-of-total-refine-the-search": {
@@ -4965,37 +4965,37 @@
   },
   "card-editor.image-editor.aspect-ratio": {
     "text": "Aspect ratio",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Label of the field for the image width-to-height ratio, such as 16:9.",
     "max": 20
   },
   "card-editor.image-editor.contain": {
     "text": "Contain",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Fit option: the whole image is visible and may leave empty bands (CSS contain).",
     "max": 15
   },
   "card-editor.image-editor.cover": {
     "text": "Cover",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Fit option: the image fills the box and edges may be cropped (CSS cover).",
     "max": 10
   },
   "card-editor.image-editor.entity": {
     "text": "Entity",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Label of the picker for an entity whose picture is shown, such as a camera.",
     "max": 10
   },
   "card-editor.image-editor.fill": {
     "text": "Fill",
-    "note": "Shown in image editor (card-editor). Context: fit.",
+    "note": "Fit option: the image is stretched to fill the box exactly (CSS fill), which can distort it.",
     "max": 10
   },
   "card-editor.image-editor.fit": {
     "text": "Fit",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Label of the dropdown that sets how the image is sized inside its box.",
     "max": 10
   },
   "card-editor.image-editor.image": {
     "text": "Image",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Label of the picker for an uploaded or built-in image file.",
     "max": 10
   },
   "card-editor.image-editor.image-from-attribute": {
@@ -5010,7 +5010,7 @@
   },
   "card-editor.image-editor.none": {
     "text": "None",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Fit option: the image keeps its natural size with no scaling (CSS none).",
     "max": 10
   },
   "card-editor.image-editor.shows-the-entity-s-picture-person-image": {
@@ -5035,52 +5035,52 @@
   },
   "card-editor.info-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Label of the field for an entity attribute to show instead of the state.",
     "max": 15
   },
   "card-editor.info-editor.entity": {
     "text": "Entity",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Label of the picker for the entity whose name and state the info element shows.",
     "max": 10
   },
   "card-editor.info-editor.icon": {
     "text": "Icon",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Label of the picker for the icon shown beside the info text.",
     "max": 10
   },
   "card-editor.info-editor.prefix": {
     "text": "Prefix",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Label of the text field for words placed before the value, such as a currency sign.",
     "max": 15
   },
   "card-editor.info-editor.secondary-info": {
     "text": "Secondary info",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Label of the dropdown for the smaller second line, such as last changed.",
     "max": 25
   },
   "card-editor.info-editor.show-icon": {
     "text": "Show icon",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Toggle label: display the entity icon in the info element.",
     "max": 15
   },
   "card-editor.info-editor.show-name": {
     "text": "Show name",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Toggle label: display the entity name in the info element.",
     "max": 15
   },
   "card-editor.info-editor.show-state": {
     "text": "Show state",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Toggle label: display the current entity state in the info element.",
     "max": 20
   },
   "card-editor.info-editor.show-unit": {
     "text": "Show unit",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Toggle label: display the unit of measurement after the info value.",
     "max": 15
   },
   "card-editor.info-editor.suffix": {
     "text": "Suffix",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Label of the text field for words placed after the value, such as a unit.",
     "max": 15
   },
   "card-editor.info-editor.with-nothing-else-shown-the-state-is": {
@@ -5090,12 +5090,12 @@
   },
   "card-editor.inspector.actions": {
     "text": "Actions",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector tab for tap, hold and double-tap actions of the selected element.",
     "max": 15
   },
   "card-editor.inspector.card": {
     "text": "Card",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector entry that selects the whole card instead of a single element.",
     "max": 10
   },
   "card-editor.inspector.column-n": {
@@ -5108,17 +5108,17 @@
   },
   "card-editor.inspector.conditions": {
     "text": "Conditions",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector tab for rules that show or hide the selected element.",
     "max": 20
   },
   "card-editor.inspector.custom-widths": {
     "text": "custom widths",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Lower-case fragment inside a sentence about columns that have their own width set.",
     "max": 25
   },
   "card-editor.inspector.design": {
     "text": "Design",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector tab for colours, spacing, borders and other looks of the selected element.",
     "max": 10
   },
   "card-editor.inspector.flows": {

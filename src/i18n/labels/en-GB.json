@@ -2030,567 +2030,567 @@
   },
   "labels.css-property-options.bold": {
     "text": "Bold",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-weight option (word): heavy text, the same as 700. Not the Bold style button.",
     "max": 10
   },
   "labels.css-property-options.border-box": {
     "text": "Border-box",
-    "note": "Shown in css property options (labels).",
+    "note": "Box-sizing option: width and height include the padding and the border. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.both": {
     "text": "Both",
-    "note": "Shown in css property options (labels).",
+    "note": "Option for animation fill-mode (apply the first and last frame) and for the clear field (both sides).",
     "max": 10
   },
   "labels.css-property-options.bottom": {
     "text": "Bottom",
-    "note": "Shown in css property options (labels).",
+    "note": "Vertical-align or background-position option: align to the lower edge.",
     "max": 10
   },
   "labels.css-property-options.break-all": {
     "text": "Break-all",
-    "note": "Shown in css property options (labels).",
+    "note": "Word-break option: lines may break between any two characters. Keep the CSS term.",
     "max": 15
   },
   "labels.css-property-options.break-spaces": {
     "text": "Break-spaces",
-    "note": "Shown in css property options (labels).",
+    "note": "White-space option: spaces are kept and lines may wrap at them. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.break-word": {
     "text": "Break-word",
-    "note": "Shown in css property options (labels).",
+    "note": "Word-break or overflow-wrap option: a long word breaks only when it would overflow.",
     "max": 20
   },
   "labels.css-property-options.capitalize": {
     "text": "Capitalize",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-transform option: the first letter of every word becomes a capital.",
     "max": 25
   },
   "labels.css-property-options.centre": {
     "text": "Centre",
-    "note": "Shown in css property options (labels).",
+    "note": "Alignment option in the CSS fields (text-align, align-items, justify-content): centred. Not the animation preset.",
     "max": 10
   },
   "labels.css-property-options.circle": {
     "text": "Circle",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items get a hollow round bullet.",
     "max": 10
   },
   "labels.css-property-options.clip": {
     "text": "Clip",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-overflow or overflow option: content that does not fit is cut off without a sign.",
     "max": 10
   },
   "labels.css-property-options.collapse": {
     "text": "Collapse",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-collapse option: neighbouring table cells share one border line.",
     "max": 15
   },
   "labels.css-property-options.column": {
     "text": "Column",
-    "note": "Shown in css property options (labels).",
+    "note": "Flex-direction or grid-auto-flow option: items are laid out top to bottom.",
     "max": 10
   },
   "labels.css-property-options.column-dense": {
     "text": "Column dense",
-    "note": "Shown in css property options (labels).",
+    "note": "Grid-auto-flow option: fill columns first and back-fill gaps with later items.",
     "max": 20
   },
   "labels.css-property-options.column-reverse": {
     "text": "Column-reverse",
-    "note": "Shown in css property options (labels).",
+    "note": "Flex-direction option: items are laid out bottom to top.",
     "max": 25
   },
   "labels.css-property-options.contain": {
     "text": "Contain",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-size or object-fit option: scale the image to fit entirely inside the box.",
     "max": 15
   },
   "labels.css-property-options.content-box": {
     "text": "Content-box",
-    "note": "Shown in css property options (labels).",
+    "note": "Box-sizing option: width and height cover the content only, padding and border come on top. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.contents": {
     "text": "Contents",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: the element's own box disappears and only its children are shown.",
     "max": 15
   },
   "labels.css-property-options.cover": {
     "text": "Cover",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-size or object-fit option: scale the image to fill the box, cropping the overflow.",
     "max": 10
   },
   "labels.css-property-options.crosshair": {
     "text": "Crosshair",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the mouse pointer turns into a precise cross.",
     "max": 15
   },
   "labels.css-property-options.dashed": {
     "text": "Dashed",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: a line made of short dashes. Not the Dashed line style of a shape.",
     "max": 10
   },
   "labels.css-property-options.decimal": {
     "text": "Decimal",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items are numbered 1, 2, 3.",
     "max": 15
   },
   "labels.css-property-options.default": {
     "text": "Default",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the normal arrow pointer.",
     "max": 15
   },
   "labels.css-property-options.dense": {
     "text": "Dense",
-    "note": "Shown in css property options (labels).",
+    "note": "Grid-auto-flow option: back-fill earlier gaps in the grid with smaller items.",
     "max": 10
   },
   "labels.css-property-options.disc": {
     "text": "Disc",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items get a solid round bullet.",
     "max": 10
   },
   "labels.css-property-options.dotted": {
     "text": "Dotted",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: a line made of dots.",
     "max": 10
   },
   "labels.css-property-options.double": {
     "text": "Double",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style or text-decoration option: two parallel lines. Not the Double rail slider look.",
     "max": 10
   },
   "labels.css-property-options.ellipsis": {
     "text": "Ellipsis",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-overflow option: cut-off text ends in three dots (...).",
     "max": 20
   },
   "labels.css-property-options.fixed": {
     "text": "Fixed",
-    "note": "Shown in css property options (labels).",
+    "note": "Position or background-attachment option: stays put relative to the screen when the page scrolls.",
     "max": 10
   },
   "labels.css-property-options.flex": {
     "text": "Flex",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: the element becomes a flexible box that lays out its children. Keep the CSS term.",
     "max": 10
   },
   "labels.css-property-options.flex-end": {
     "text": "Flex-end",
-    "note": "Shown in css property options (labels).",
+    "note": "Alignment option for flex layouts: items sit at the end of the axis (right or bottom, following direction).",
     "max": 15
   },
   "labels.css-property-options.flex-start": {
     "text": "Flex-start",
-    "note": "Shown in css property options (labels).",
+    "note": "Alignment option for flex layouts: items sit at the start of the axis (left or top, following direction).",
     "max": 20
   },
   "labels.css-property-options.forwards": {
     "text": "Forwards",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation fill-mode option: the last frame stays applied after the animation ends.",
     "max": 15
   },
   "labels.css-property-options.grab": {
     "text": "Grab",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the pointer becomes an open hand, showing something can be dragged.",
     "max": 10
   },
   "labels.css-property-options.grid": {
     "text": "Grid",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: the element lays out its children in rows and columns. Keep the CSS term.",
     "max": 10
   },
   "labels.css-property-options.groove": {
     "text": "Groove",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: a 3D border that looks carved into the page.",
     "max": 10
   },
   "labels.css-property-options.hidden": {
     "text": "Hidden",
-    "note": "Shown in css property options (labels).",
+    "note": "Overflow or visibility option: content is not shown (overflow also clips it, with no scrolling).",
     "max": 10
   },
   "labels.css-property-options.inline": {
     "text": "Inline",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: the element flows within a line of text, like a word.",
     "max": 10
   },
   "labels.css-property-options.inline-block": {
     "text": "Inline-block",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: flows within a line of text but keeps a width and height of its own. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.inline-flex": {
     "text": "Inline-flex",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: a flexible box that sits within a line of text. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.inline-grid": {
     "text": "Inline-grid",
-    "note": "Shown in css property options (labels).",
+    "note": "Display option: a grid that sits within a line of text. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.inset": {
     "text": "Inset",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: a 3D border that makes the box look pressed in.",
     "max": 10
   },
   "labels.css-property-options.inside": {
     "text": "Inside",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style-position option: the bullet sits inside the text block.",
     "max": 10
   },
   "labels.css-property-options.italic": {
     "text": "Italic",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-style option: slanted text using the italic design of the font.",
     "max": 10
   },
   "labels.css-property-options.justify": {
     "text": "Justify",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-align option: lines are stretched so both edges are flush.",
     "max": 15
   },
   "labels.css-property-options.keep-all": {
     "text": "Keep-all",
-    "note": "Shown in css property options (labels).",
+    "note": "Word-break option: no breaks inside Chinese, Japanese or Korean text. Keep the CSS term.",
     "max": 15
   },
   "labels.css-property-options.left": {
     "text": "Left",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-align or float option: the left edge. In CSS it is always left, not the start of the text direction.",
     "max": 10
   },
   "labels.css-property-options.line-through": {
     "text": "Line-through",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-decoration option: a line struck through the middle of the text.",
     "max": 20
   },
   "labels.css-property-options.local": {
     "text": "Local",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-attachment option: the background scrolls with the content of the element.",
     "max": 10
   },
   "labels.css-property-options.lower-alpha": {
     "text": "Lower-alpha",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items are lettered a, b, c.",
     "max": 20
   },
   "labels.css-property-options.lower-roman": {
     "text": "Lower-roman",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items use lower-case Roman numerals i, ii, iii.",
     "max": 20
   },
   "labels.css-property-options.lowercase": {
     "text": "Lowercase",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-transform option: all letters are shown in lower case.",
     "max": 15
   },
   "labels.css-property-options.move": {
     "text": "Move",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the pointer becomes a four-way arrow, showing something can be moved.",
     "max": 15
   },
   "labels.css-property-options.no-repeat": {
     "text": "No-repeat",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-repeat option: the background image is drawn once and not tiled.",
     "max": 15
   },
   "labels.css-property-options.none": {
     "text": "None",
-    "note": "Shown in css property options (labels).",
+    "note": "Option shared by several CSS fields (display, border-style, text-decoration, float): switches the feature off.",
     "max": 10
   },
   "labels.css-property-options.normal": {
     "text": "Normal",
-    "note": "Shown in css property options (labels).",
+    "note": "Option shared by several CSS fields (font-style, font-weight, white-space, letter-spacing): the standard setting.",
     "max": 10
   },
   "labels.css-property-options.not-allowed": {
     "text": "Not-allowed",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the pointer shows a forbidden sign over something that cannot be used.",
     "max": 20
   },
   "labels.css-property-options.nowrap": {
     "text": "Nowrap",
-    "note": "Shown in css property options (labels).",
+    "note": "White-space or flex-wrap option: everything stays on one line. Keep the CSS term.",
     "max": 15
   },
   "labels.css-property-options.oblique": {
     "text": "Oblique",
-    "note": "Shown in css property options (labels).",
+    "note": "Font-style option: text slanted by the browser, close to italic but not a separate font design.",
     "max": 15
   },
   "labels.css-property-options.outset": {
     "text": "Outset",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: a 3D border that makes the box look raised.",
     "max": 15
   },
   "labels.css-property-options.outside": {
     "text": "Outside",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style-position option: the bullet hangs outside the text block.",
     "max": 15
   },
   "labels.css-property-options.overline": {
     "text": "Overline",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-decoration option: a line drawn above the text.",
     "max": 15
   },
   "labels.css-property-options.padding-box": {
     "text": "Padding-box",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-clip option: the background stops at the padding edge, under the border. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.paused": {
     "text": "Paused",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation-play-state option: the animation is stopped at its current frame.",
     "max": 10
   },
   "labels.css-property-options.pointer": {
     "text": "Pointer",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the pointer becomes a hand with a finger, showing something can be clicked.",
     "max": 15
   },
   "labels.css-property-options.pre": {
     "text": "Pre",
-    "note": "Shown in css property options (labels).",
+    "note": "White-space option, short for preformatted: spaces and line breaks are kept as typed. Keep the CSS term.",
     "max": 5
   },
   "labels.css-property-options.pre-line": {
     "text": "Pre-line",
-    "note": "Shown in css property options (labels).",
+    "note": "White-space option: line breaks are kept, runs of spaces are merged. Keep the CSS term.",
     "max": 15
   },
   "labels.css-property-options.pre-wrap": {
     "text": "Pre-wrap",
-    "note": "Shown in css property options (labels).",
+    "note": "White-space option: spaces and line breaks are kept and long lines still wrap. Keep the CSS term.",
     "max": 15
   },
   "labels.css-property-options.relative": {
     "text": "Relative",
-    "note": "Shown in css property options (labels).",
+    "note": "Position option: the element stays in the normal flow and can be nudged from its usual place.",
     "max": 15
   },
   "labels.css-property-options.repeat": {
     "text": "Repeat",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-repeat option: the background image is tiled in both directions.",
     "max": 10
   },
   "labels.css-property-options.repeat-x": {
     "text": "Repeat-x",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-repeat option: the image is tiled horizontally only. Keep the x.",
     "max": 20
   },
   "labels.css-property-options.repeat-y": {
     "text": "Repeat-y",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-repeat option: the image is tiled vertically only. Keep the y.",
     "max": 20
   },
   "labels.css-property-options.reverse": {
     "text": "Reverse",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation-direction option: the animation always plays backwards.",
     "max": 15
   },
   "labels.css-property-options.ridge": {
     "text": "Ridge",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: a 3D border that looks raised, the opposite of Groove.",
     "max": 10
   },
   "labels.css-property-options.right": {
     "text": "Right",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-align or float option: the right edge. In CSS it is always right, not the end of the text direction.",
     "max": 10
   },
   "labels.css-property-options.round": {
     "text": "Round",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-repeat option: tiles are resized so a whole number of them fits. Not the Round node shape.",
     "max": 10
   },
   "labels.css-property-options.row": {
     "text": "Row",
-    "note": "Shown in css property options (labels).",
+    "note": "Flex-direction or grid-auto-flow option: items are laid out left to right.",
     "max": 5
   },
   "labels.css-property-options.row-dense": {
     "text": "Row dense",
-    "note": "Shown in css property options (labels).",
+    "note": "Grid-auto-flow option: fill rows first and back-fill gaps with later items.",
     "max": 15
   },
   "labels.css-property-options.row-reverse": {
     "text": "Row-reverse",
-    "note": "Shown in css property options (labels).",
+    "note": "Flex-direction option: items are laid out right to left.",
     "max": 20
   },
   "labels.css-property-options.running": {
     "text": "Running",
-    "note": "Shown in css property options (labels).",
+    "note": "Animation-play-state option: the animation plays normally.",
     "max": 15
   },
   "labels.css-property-options.scroll": {
     "text": "Scroll",
-    "note": "Shown in css property options (labels).",
+    "note": "Overflow option: content that does not fit can be scrolled. Also a background-attachment option.",
     "max": 10
   },
   "labels.css-property-options.separate": {
     "text": "Separate",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-collapse option: each table cell keeps its own border.",
     "max": 15
   },
   "labels.css-property-options.solid": {
     "text": "Solid",
-    "note": "Shown in css property options (labels).",
+    "note": "Border-style option: one continuous line.",
     "max": 15
   },
   "labels.css-property-options.space": {
     "text": "Space",
-    "note": "Shown in css property options (labels).",
+    "note": "Background-repeat option: tiles keep their size and the leftover room is spread between them.",
     "max": 10
   },
   "labels.css-property-options.space-around": {
     "text": "Space-around",
-    "note": "Shown in css property options (labels).",
+    "note": "Justify-content option: free room is shared around items, with half-size gaps at the ends. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.space-between": {
     "text": "Space-between",
-    "note": "Shown in css property options (labels).",
+    "note": "Justify-content option: free room goes between items, with none at the ends. Keep the CSS term.",
     "max": 25
   },
   "labels.css-property-options.space-evenly": {
     "text": "Space-evenly",
-    "note": "Shown in css property options (labels).",
+    "note": "Justify-content option: free room is split into equal gaps, including at the ends. Keep the CSS term.",
     "max": 20
   },
   "labels.css-property-options.square": {
     "text": "Square",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items get a square bullet. Not the Square shape in the look editor.",
     "max": 10
   },
   "labels.css-property-options.static": {
     "text": "Static",
-    "note": "Shown in css property options (labels).",
+    "note": "Position option: the default, normal flow with no offsets applied.",
     "max": 10
   },
   "labels.css-property-options.sticky": {
     "text": "Sticky",
-    "note": "Shown in css property options (labels).",
+    "note": "Position option: the element scrolls normally, then sticks at an edge once it reaches it.",
     "max": 10
   },
   "labels.css-property-options.stretch": {
     "text": "Stretch",
-    "note": "Shown in css property options (labels).",
+    "note": "Align-items or align-content option: items grow to fill the space. Not the Stretch animation preset.",
     "max": 15
   },
   "labels.css-property-options.text": {
     "text": "Text",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the pointer becomes the I-beam, showing text can be selected.",
     "max": 10
   },
   "labels.css-property-options.top": {
     "text": "Top",
-    "note": "Shown in css property options (labels).",
+    "note": "Vertical-align or background-position option: align to the upper edge.",
     "max": 5
   },
   "labels.css-property-options.underline": {
     "text": "Underline",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-decoration option: a line drawn under the text.",
     "max": 15
   },
   "labels.css-property-options.upper-alpha": {
     "text": "Upper-alpha",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items are lettered A, B, C.",
     "max": 20
   },
   "labels.css-property-options.upper-roman": {
     "text": "Upper-roman",
-    "note": "Shown in css property options (labels).",
+    "note": "List-style option: list items use upper-case Roman numerals I, II, III.",
     "max": 20
   },
   "labels.css-property-options.uppercase": {
     "text": "Uppercase",
-    "note": "Shown in css property options (labels).",
+    "note": "Text-transform option: all letters are shown in capitals.",
     "max": 15
   },
   "labels.css-property-options.visible": {
     "text": "Visible",
-    "note": "Shown in css property options (labels).",
+    "note": "Overflow or visibility option: content is shown, and overflowing content spills out of the box.",
     "max": 15
   },
   "labels.css-property-options.wait": {
     "text": "Wait",
-    "note": "Shown in css property options (labels).",
+    "note": "Cursor option: the pointer shows a busy symbol, such as an hourglass or spinner.",
     "max": 10
   },
   "labels.css-property-options.wrap": {
     "text": "Wrap",
-    "note": "Shown in css property options (labels).",
+    "note": "Flex-wrap option: items move on to a new line when they run out of room.",
     "max": 10
   },
   "labels.css-property-options.wrap-reverse": {
     "text": "Wrap-reverse",
-    "note": "Shown in css property options (labels).",
+    "note": "Flex-wrap option: items wrap onto new lines placed in the opposite order.",
     "max": 20
   },
   "labels.device-anim.drum-while-cleaning": {
     "text": "Drum while cleaning",
-    "note": "Shown in device anim (labels).",
+    "note": "Option describing a device animation: the washing-machine drum spins while the cleaning cycle runs.",
     "max": 35
   },
   "labels.device-anim.drum-while-running": {
     "text": "Drum while running",
-    "note": "Shown in device anim (labels).",
+    "note": "Option describing a device animation: the appliance drum spins while the device state is running.",
     "max": 30
   },
   "labels.device-anim.drum-while-the-state-is-running-washing": {
     "text": "Drum while the state is running, washing or drying",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a device animation: the drum spins whenever the entity state is running, washing or drying.",
     "max": 80
   },
   "labels.device-anim.equalizer-while-playing": {
     "text": "Equalizer while playing",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a device animation for media players: equalizer bars move while the player is playing.",
     "max": 40
   },
   "labels.device-anim.flame-while-heating-snow-while-cooling": {
     "text": "Flame while heating, Snow while cooling, Spin while only the fan runs",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a climate device animation. Flame, Snow and Spin are animation preset names, so keep them in line with those translations.",
     "max": 115
   },
   "labels.device-anim.glow-while-on-in-the-light-s-colour-and": {
     "text": "Glow while on, in the light's colour and brightness",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a light device animation: a glow while the light is on, matching its colour and brightness.",
     "max": 85
   },
   "labels.device-anim.pulse-in-the-alert-colour-while": {
     "text": "Pulse in the alert colour while triggered",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of an alarm device animation: it pulses in the alert colour while the alarm is triggered.",
     "max": 70
   },
   "labels.device-anim.pulse-in-the-alert-colour-while-on": {
     "text": "Pulse in the alert colour while on",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a sensor device animation: it pulses in the alert colour while the sensor is on.",
     "max": 55
   },
   "labels.device-anim.shake-while-jammed-pulse-while-locking": {
     "text": "Shake while jammed, Pulse while locking or unlocking",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a lock device animation. Shake and Pulse are animation preset names, so keep them in line with those translations.",
     "max": 85
   },
   "labels.device-anim.spin-while-on-faster-at-a-higher-speed": {
     "text": "Spin while on, faster at a higher speed",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a fan device animation: it spins while on and spins faster at a higher speed setting.",
     "max": 65
   },
   "labels.device-anim.swing-a-slightly-opened-pose-while-open": {
     "text": "Swing: a slightly opened pose while open",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a device animation: the icon holds a slightly opened pose while open. Swing is an animation preset name.",
     "max": 65
   },
   "labels.device-anim.swing-while-opening-or-closing-a": {
     "text": "Swing while opening or closing, a slightly opened pose while open",
-    "note": "Shown in device anim (labels).",
+    "note": "Description of a door or cover device animation: it swings while opening or closing, then holds a slightly opened pose.",
     "max": 105
   },
   "labels.field-reset.reset-label": {
@@ -2603,17 +2603,17 @@
   },
   "labels.field-reset.reset-to-default": {
     "text": "Reset to default",
-    "note": "Shown in field reset (labels).",
+    "note": "Tooltip of the reset icon beside a field that has been changed: puts the field back to its default value.",
     "max": 30
   },
   "labels.horizontal-module.arrange-child-modules-in-a-row": {
     "text": "Arrange child modules in a row",
-    "note": "Shown in horizontal module (labels).",
+    "note": "Description of the Horizontal layout module in the module picker: the modules inside sit side by side.",
     "max": 50
   },
   "labels.horizontal-module.horizontal": {
     "text": "Horizontal",
-    "note": "Shown in horizontal module (labels).",
+    "note": "Name of the layout module that places its child modules side by side. Pairs with Vertical.",
     "max": 20
   },
   "labels.icon-doc.part-n": {
@@ -2626,527 +2626,527 @@
   },
   "labels.icon-module.display-an-icon-from-mdi-or-entity": {
     "text": "Display an icon from MDI or entity",
-    "note": "Shown in icon module (labels).",
+    "note": "Description of the Icon module in the module picker. MDI is Material Design Icons; keep the abbreviation.",
     "max": 60
   },
   "labels.icon-module.icon": {
     "text": "Icon",
-    "note": "Shown in icon module (labels).",
+    "note": "Name of the module that shows a single icon, listed in the module picker and the tree.",
     "max": 10
   },
   "labels.info-module.display-entity-name-state-and-attributes": {
     "text": "Display entity name, state, and attributes",
-    "note": "Shown in info module (labels).",
+    "note": "Description of the Info module in the module picker: it shows an entity's name, state and attributes.",
     "max": 70
   },
   "labels.info-module.info": {
     "text": "Info",
-    "note": "Shown in info module (labels).",
+    "note": "Name of the module that shows an entity's name, state and attributes, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.arc-gauge-for-displaying-numeric-sensor": {
     "text": "Arc gauge for displaying numeric sensor values",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Gauge module in the module picker: a curved dial for a number such as a temperature.",
     "max": 75
   },
   "labels.lazy-metadata.arrange-child-modules-in-a-slider": {
     "text": "Arrange child modules in a slider",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Slider layout module in the module picker: the child modules become slides to swipe through.",
     "max": 55
   },
   "labels.lazy-metadata.camera": {
     "text": "Camera",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that shows a camera entity's stream, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.clock": {
     "text": "Clock",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that shows the current time and date, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.custom-card": {
     "text": "Custom card",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that embeds another Lovelace card, listed in the module picker.",
     "max": 20
   },
   "labels.lazy-metadata.display-a-camera-entity-stream": {
     "text": "Display a camera entity stream",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Camera module in the module picker.",
     "max": 50
   },
   "labels.lazy-metadata.display-a-static-image-or-entity-picture": {
     "text": "Display a static image or entity picture",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Image module in the module picker: a fixed image or an entity's picture.",
     "max": 65
   },
   "labels.lazy-metadata.display-current-time-and-date": {
     "text": "Display current time and date",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Clock module in the module picker.",
     "max": 50
   },
   "labels.lazy-metadata.display-entity-history-as-a-line-graph": {
     "text": "Display entity history as a line graph",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Graph module in the module picker: past values of an entity drawn as a line.",
     "max": 65
   },
   "labels.lazy-metadata.display-weather-entity-information": {
     "text": "Display weather entity information",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Weather module in the module picker: current conditions from a weather entity.",
     "max": 55
   },
   "labels.lazy-metadata.display-weather-forecast-data": {
     "text": "Display weather forecast data",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Forecast module in the module picker: upcoming weather, not current conditions.",
     "max": 50
   },
   "labels.lazy-metadata.dropdown": {
     "text": "Dropdown",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that lets people choose one option from a list, listed in the module picker.",
     "max": 15
   },
   "labels.lazy-metadata.embed-any-3rd-party-lovelace-card": {
     "text": "Embed any 3rd party Lovelace card",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Custom card module in the module picker. Lovelace is the Home Assistant dashboard; keep the name.",
     "max": 55
   },
   "labels.lazy-metadata.forecast": {
     "text": "Forecast",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that shows the weather forecast, listed in the module picker.",
     "max": 20
   },
   "labels.lazy-metadata.gauge": {
     "text": "Gauge",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that shows a number on a curved dial, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.graph": {
     "text": "Graph",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that draws an entity's history as a line, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.image": {
     "text": "Image",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that shows a picture, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.light": {
     "text": "Light",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that controls a light entity, listed in the module picker. Not the light colour theme.",
     "max": 10
   },
   "labels.lazy-metadata.light-control-with-brightness-colour": {
     "text": "Light control with brightness, colour temperature, and colour options",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Light module in the module picker.",
     "max": 115
   },
   "labels.lazy-metadata.markdown": {
     "text": "Markdown",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that renders Markdown-formatted text, listed in the module picker. Keep Markdown untranslated.",
     "max": 15
   },
   "labels.lazy-metadata.numeric-input-with-increment-and": {
     "text": "Numeric input with increment and decrement buttons",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Spinbox module in the module picker: a number field with plus and minus buttons.",
     "max": 80
   },
   "labels.lazy-metadata.range-slider-for-controlling-numeric": {
     "text": "Range slider for controlling numeric values",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Slider module in the module picker: drag a handle to set a number.",
     "max": 70
   },
   "labels.lazy-metadata.render-markdown-formatted-content": {
     "text": "Render markdown-formatted content",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Markdown module in the module picker.",
     "max": 55
   },
   "labels.lazy-metadata.select-dropdown-for-choosing-from-a-list": {
     "text": "Select dropdown for choosing from a list of options",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Dropdown module in the module picker.",
     "max": 85
   },
   "labels.lazy-metadata.slider": {
     "text": "Slider",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module with a draggable handle that sets a number, listed in the module picker. Not Slider layout.",
     "max": 15
   },
   "labels.lazy-metadata.slider-layout": {
     "text": "Slider layout",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the layout module that shows its child modules as swipeable slides. Not the value Slider.",
     "max": 25
   },
   "labels.lazy-metadata.spinbox": {
     "text": "Spinbox",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the number field with plus and minus buttons, listed in the module picker.",
     "max": 15
   },
   "labels.lazy-metadata.tabbed-container-for-groups-of-modules": {
     "text": "Tabbed container for groups of modules",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Tabs module in the module picker: each tab holds its own group of modules.",
     "max": 65
   },
   "labels.lazy-metadata.tabs": {
     "text": "Tabs",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the layout module that groups other modules under tab buttons, listed in the module picker.",
     "max": 10
   },
   "labels.lazy-metadata.video-background": {
     "text": "Video background",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that plays a video behind other modules, listed in the module picker.",
     "max": 30
   },
   "labels.lazy-metadata.video-playing-behind-the-other-modules": {
     "text": "Video playing behind the other modules of its column or layout",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Description of the Video background module in the module picker.",
     "max": 100
   },
   "labels.lazy-metadata.weather": {
     "text": "Weather",
-    "note": "Shown in lazy metadata (labels).",
+    "note": "Name of the module that shows current weather conditions, listed in the module picker.",
     "max": 15
   },
   "labels.part-presets.blink": {
     "text": "Blink",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part switches off and on quickly.",
     "max": 10
   },
   "labels.part-presets.blinks-twice": {
     "text": "Blinks twice",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Blink part preset: it blinks two times, then rests.",
     "max": 20
   },
   "labels.part-presets.bounce": {
     "text": "Bounce",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part hops up and lands again.",
     "max": 10
   },
   "labels.part-presets.delay": {
     "text": "Delay",
-    "note": "Shown in part presets (labels).",
+    "note": "Field label for a part preset setting: how long the part waits before its animation starts.",
     "max": 10
   },
   "labels.part-presets.direction": {
     "text": "Direction",
-    "note": "Shown in part presets (labels).",
+    "note": "Field label for a part preset setting: 1 plays the effect forwards, -1 plays it the other way.",
     "max": 15
   },
   "labels.part-presets.draw-loop": {
     "text": "Draw loop",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the outline draws on, holds and draws off in a loop.",
     "max": 15
   },
   "labels.part-presets.draw-on": {
     "text": "Draw on",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the outline is drawn as if by pen, then the part fills in.",
     "max": 15
   },
   "labels.part-presets.draws-its-outline-then-fills-direction-1": {
     "text": "Draws its outline, then fills (direction -1 draws it off)",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Draw on part preset. Direction is the field of that name; keep -1 as written.",
     "max": 95
   },
   "labels.part-presets.draws-on-holds-and-draws-off-again": {
     "text": "Draws on, holds, and draws off again",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Draw loop part preset.",
     "max": 60
   },
   "labels.part-presets.drifts-up-and-down": {
     "text": "Drifts up and down",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Float part preset: the part moves gently up and down.",
     "max": 30
   },
   "labels.part-presets.duration-share": {
     "text": "Duration share",
-    "note": "Shown in part presets (labels).",
+    "note": "Field label for a part preset setting: the part of the whole animation time this effect takes, as a fraction.",
     "max": 25
   },
   "labels.part-presets.fade": {
     "text": "Fade",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part becomes see-through and returns.",
     "max": 10
   },
   "labels.part-presets.fades-out-and-back-in": {
     "text": "Fades out and back in",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Fade part preset.",
     "max": 35
   },
   "labels.part-presets.flicker": {
     "text": "Flicker",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: brightness jitters unevenly, like a flame.",
     "max": 15
   },
   "labels.part-presets.flickers-like-a-flame": {
     "text": "Flickers like a flame",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Flicker part preset.",
     "max": 35
   },
   "labels.part-presets.float": {
     "text": "Float",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part drifts up and down. Not the CSS float option.",
     "max": 10
   },
   "labels.part-presets.grows-and-shrinks-back-direction-1": {
     "text": "Grows and shrinks back (direction -1 shrinks)",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Pulse part preset. Direction is the field of that name; keep -1 as written.",
     "max": 75
   },
   "labels.part-presets.intensity": {
     "text": "Intensity",
-    "note": "Shown in part presets (labels).",
+    "note": "Field label for a part preset setting: how strong the effect is.",
     "max": 15
   },
   "labels.part-presets.lights-up-one-part-after-another-on-a": {
     "text": "Lights up one part after another (on a group or several parts)",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Wave part preset: it needs a group or several selected parts, which glow in turn.",
     "max": 100
   },
   "labels.part-presets.moves-down-and-back": {
     "text": "Moves down and back",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Slide down part preset.",
     "max": 35
   },
   "labels.part-presets.moves-left-and-back": {
     "text": "Moves left and back",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Slide left part preset. Left is the screen side.",
     "max": 35
   },
   "labels.part-presets.moves-right-and-back": {
     "text": "Moves right and back",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Slide right part preset. Right is the screen side.",
     "max": 35
   },
   "labels.part-presets.moves-up-and-back": {
     "text": "Moves up and back",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Slide up part preset.",
     "max": 30
   },
   "labels.part-presets.pop": {
     "text": "Pop",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part appears from nothing with a small overshoot.",
     "max": 5
   },
   "labels.part-presets.pops-in-from-nothing-with-an-overshoot": {
     "text": "Pops in from nothing with an overshoot",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Pop part preset.",
     "max": 65
   },
   "labels.part-presets.pulse": {
     "text": "Pulse",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part grows and shrinks back in a steady rhythm.",
     "max": 10
   },
   "labels.part-presets.ring": {
     "text": "Ring",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: it rings like a bell. Not the Ring shape or the ring corner.",
     "max": 10
   },
   "labels.part-presets.rings-like-a-bell-quick-swings-that-die": {
     "text": "Rings like a bell: quick swings that die down",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Ring part preset.",
     "max": 75
   },
   "labels.part-presets.rocks-on-its-base": {
     "text": "Rocks on its base",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Wobble part preset: it tilts from side to side around its bottom.",
     "max": 30
   },
   "labels.part-presets.shake": {
     "text": "Shake",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part moves quickly from side to side.",
     "max": 10
   },
   "labels.part-presets.shakes-from-side-to-side": {
     "text": "Shakes from side to side",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Shake part preset.",
     "max": 40
   },
   "labels.part-presets.slide-down": {
     "text": "Slide down",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part moves down and returns.",
     "max": 25
   },
   "labels.part-presets.slide-left": {
     "text": "Slide left",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part moves to the screen's left and returns.",
     "max": 20
   },
   "labels.part-presets.slide-right": {
     "text": "Slide right",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part moves to the screen's right and returns.",
     "max": 20
   },
   "labels.part-presets.slide-up": {
     "text": "Slide up",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part moves up and returns.",
     "max": 20
   },
   "labels.part-presets.spin": {
     "text": "Spin",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part turns round continuously.",
     "max": 10
   },
   "labels.part-presets.squashes-jumps-and-lands": {
     "text": "Squashes, jumps and lands",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Bounce part preset.",
     "max": 40
   },
   "labels.part-presets.swing": {
     "text": "Swing",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part swings from its top like a pendulum.",
     "max": 10
   },
   "labels.part-presets.swings-from-its-top-settling-back": {
     "text": "Swings from its top, settling back",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Swing part preset.",
     "max": 55
   },
   "labels.part-presets.turns": {
     "text": "Turns",
-    "note": "Shown in part presets (labels).",
+    "note": "Field label for a part preset setting: how many whole turns the part makes per cycle.",
     "max": 10
   },
   "labels.part-presets.turns-round-at-a-steady-speed-whole": {
     "text": "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)",
-    "note": "Shown in part presets (labels).",
+    "note": "Description of the Spin part preset. Turns is the field of that name.",
     "max": 125
   },
   "labels.part-presets.wave": {
     "text": "Wave",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: a group of parts lights up one after another.",
     "max": 10
   },
   "labels.part-presets.wobble": {
     "text": "Wobble",
-    "note": "Shown in part presets (labels).",
+    "note": "Name of an icon-part animation preset: the part rocks from side to side on its base.",
     "max": 10
   },
   "labels.row-module.grid-row-with-columns-nestable-inside": {
     "text": "Grid row with columns, nestable inside any column",
-    "note": "Shown in row module (labels).",
+    "note": "Description of the Row module in the module picker: a row split into columns that can sit inside another column.",
     "max": 80
   },
   "labels.row-module.row": {
     "text": "Row",
-    "note": "Shown in row module (labels).",
+    "note": "Name of the layout module that holds columns, listed in the module picker. Not the Row flex-direction option.",
     "max": 5
   },
   "labels.seasonal-labels.autumn": {
     "text": "Autumn",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a season in a seasonal choice list. British English: Autumn, not Fall.",
     "max": 10
   },
   "labels.seasonal-labels.christmas": {
     "text": "Christmas",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a holiday in a seasonal choice list, used for a festive theme or effect.",
     "max": 15
   },
   "labels.seasonal-labels.cloudy": {
     "text": "Cloudy",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: an overcast sky.",
     "max": 10
   },
   "labels.seasonal-labels.dusk": {
     "text": "Dusk",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a time of day in a seasonal choice list: the evening twilight.",
     "max": 10
   },
   "labels.seasonal-labels.easter": {
     "text": "Easter",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a holiday in a seasonal choice list, used for a spring festive theme or effect.",
     "max": 10
   },
   "labels.seasonal-labels.fog": {
     "text": "Fog",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: misty, low visibility.",
     "max": 5
   },
   "labels.seasonal-labels.halloween": {
     "text": "Halloween",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a holiday in a seasonal choice list, used for a spooky theme or effect.",
     "max": 15
   },
   "labels.seasonal-labels.new-year": {
     "text": "New Year",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a holiday in a seasonal choice list: the turn of the year, with a party feel.",
     "max": 15
   },
   "labels.seasonal-labels.night": {
     "text": "Night",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a time of day in a seasonal choice list: a dark sky with stars.",
     "max": 10
   },
   "labels.seasonal-labels.rain": {
     "text": "Rain",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: falling rain.",
     "max": 10
   },
   "labels.seasonal-labels.snow": {
     "text": "Snow",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: falling snow. Also an animation preset elsewhere.",
     "max": 10
   },
   "labels.seasonal-labels.spring": {
     "text": "Spring",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a season in a seasonal choice list. The season, not the coil or the verb.",
     "max": 10
   },
   "labels.seasonal-labels.summer": {
     "text": "Summer",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a season in a seasonal choice list.",
     "max": 10
   },
   "labels.seasonal-labels.sunny": {
     "text": "Sunny",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: a clear, bright sky.",
     "max": 10
   },
   "labels.seasonal-labels.thunderstorm": {
     "text": "Thunderstorm",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: storm with lightning.",
     "max": 20
   },
   "labels.seasonal-labels.valentine": {
     "text": "Valentine",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a holiday in a seasonal choice list: Valentine's Day, with a romantic theme.",
     "max": 15
   },
   "labels.seasonal-labels.windy": {
     "text": "Windy",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a weather condition in a seasonal choice list: strong wind.",
     "max": 10
   },
   "labels.seasonal-labels.winter": {
     "text": "Winter",
-    "note": "Shown in seasonal labels (labels).",
+    "note": "Name of a season in a seasonal choice list.",
     "max": 10
   },
   "labels.separator-module.separator": {
     "text": "Separator",
-    "note": "Shown in separator module (labels).",
+    "note": "Name of the module that draws a dividing line between other modules, listed in the module picker.",
     "max": 15
   },
   "labels.separator-module.visual-divider-between-modules": {
     "text": "Visual divider between modules",
-    "note": "Shown in separator module (labels).",
+    "note": "Description of the Separator module in the module picker.",
     "max": 50
   },
   "labels.text-module.display-static-or-template-text": {
     "text": "Display static or template text",
-    "note": "Shown in text module (labels).",
+    "note": "Description of the Text module in the module picker: fixed text or text built from a template.",
     "max": 50
   },
   "labels.text-module.text": {
     "text": "Text",
-    "note": "Shown in text module (labels).",
+    "note": "Name of the module that shows fixed or templated text, listed in the module picker. Not the Text cursor option.",
     "max": 10
   },
   "labels.vertical-module.arrange-child-modules-in-a-column": {
     "text": "Arrange child modules in a column",
-    "note": "Shown in vertical module (labels).",
+    "note": "Description of the Vertical layout module in the module picker: the modules inside are stacked.",
     "max": 55
   },
   "labels.vertical-module.vertical": {
     "text": "Vertical",
-    "note": "Shown in vertical module (labels).",
+    "note": "Name of the layout module that stacks its child modules top to bottom. Pairs with Horizontal.",
     "max": 15
   }
 }
