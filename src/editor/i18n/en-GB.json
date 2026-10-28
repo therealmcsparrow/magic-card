@@ -3643,12 +3643,12 @@
   },
   "card-editor.flows-editor.straight": {
     "text": "Straight",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Route option drawing the flow as a straight line between its ends.",
     "max": 15
   },
   "card-editor.flows-editor.template": {
     "text": "Template",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option meaning the flow's value comes from a template instead of an entity.",
     "max": 15
   },
   "card-editor.flows-editor.this-line-look-is-wide-so-it-attaches-to": {
@@ -3658,12 +3658,12 @@
   },
   "card-editor.flows-editor.to": {
     "text": "To",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for the element where the flow ends.",
     "max": 5
   },
   "card-editor.flows-editor.to-side": {
     "text": "To side",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Label of the picker for which edge of the end element the flow arrives at.",
     "max": 15
   },
   "card-editor.flows-editor.top": {
