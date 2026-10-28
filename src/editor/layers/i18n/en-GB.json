@@ -1127,47 +1127,47 @@
   },
   "layer-editor.layer-groups.layer": {
     "text": "Layer",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Noun for a placed module seen as a layer in the stack, used in row and list labels.",
     "max": 10
   },
   "layer-editor.layer-groups.let-clicks-and-taps-go-through": {
     "text": "Let clicks and taps go through",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Label of the click-through switch in module Placement.",
     "max": 50
   },
   "layer-editor.layer-groups.light": {
     "text": "Light",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Darkening strength option (a gentle fade). Capitalised, unlike the lower-case cost tag light.",
     "max": 10
   },
   "layer-editor.layer-groups.light-2": {
     "text": "light",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case cost tag in module Placement: an effect that is cheap for older tablets.",
     "max": 10
   },
   "layer-editor.layer-groups.live-camera": {
     "text": "live camera",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case cost tag in module Placement: the module streams live video.",
     "max": 20
   },
   "layer-editor.layer-groups.looks": {
     "text": "Looks",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Heading of the ready-made placement looks in module Placement; picking one fills in the settings.",
     "max": 15
   },
   "layer-editor.layer-groups.low-power-mode-drops-blur-blend-and-pan": {
     "text": "Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Warning tip in module Placement explaining what the card-wide Low-power mode removes.",
     "max": 140
   },
   "layer-editor.layer-groups.medium": {
     "text": "Medium",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Darkening strength option (a middle fade). Capitalised, unlike the lower-case cost tag medium.",
     "max": 10
   },
   "layer-editor.layer-groups.medium-2": {
     "text": "medium",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case cost tag in module Placement: an effect with moderate cost for older tablets.",
     "max": 10
   },
   "layer-editor.layer-groups.move-name-backward": {
@@ -1221,77 +1221,77 @@
   },
   "layer-editor.layer-groups.normal": {
     "text": "Normal",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Placement option: the module keeps its usual place in the layout, with no stacking changes.",
     "max": 10
   },
   "layer-editor.layer-groups.nothing-else-is-in-this-container-so": {
     "text": "Nothing else is in this container, so this module shows in the normal place until you add one.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Info shown when a module is set Behind others but is alone in its container.",
     "max": 155
   },
   "layer-editor.layer-groups.on-top": {
     "text": "On top",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Module Placement option: the module floats over its container at a fixed spot.",
     "max": 10
   },
   "layer-editor.layer-groups.opacity": {
     "text": "Opacity",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Field label for how see-through a placed module is (CSS opacity).",
     "max": 15
   },
   "layer-editor.layer-groups.order": {
     "text": "Order",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Field label for the stacking order of a placed module among its siblings.",
     "max": 10
   },
   "layer-editor.layer-groups.pan-and-zoom": {
     "text": "pan and zoom",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case cost tag in module Placement: the picture slowly moves and zooms.",
     "max": 20
   },
   "layer-editor.layer-groups.placement": {
     "text": "Placement",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Name of the module section for stacking and pinning a module. Referred to by name in other help texts.",
     "max": 15
   },
   "layer-editor.layer-groups.position": {
     "text": "Position",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Field label for where a module is pinned in its container, shown with the anchor grid.",
     "max": 15
   },
   "layer-editor.layer-groups.show-yaml": {
     "text": "Show YAML",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Button in module Placement that reveals the placement settings as YAML.",
     "max": 15
   },
   "layer-editor.layer-groups.smaller-than-a-fingertip-44-px-add": {
     "text": "Smaller than a fingertip (44 px). Add padding in Design.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Touch-target warning for a pinned module that measures under 44 px.",
     "max": 90
   },
   "layer-editor.layer-groups.strength": {
     "text": "Strength",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Field label for how dark the Darken behind text fade is.",
     "max": 15
   },
   "layer-editor.layer-groups.strong": {
     "text": "Strong",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Darkening strength option, stronger than Medium and weaker than Very strong.",
     "max": 10
   },
   "layer-editor.layer-groups.strong-blur-can-make-older-tablets-slow": {
     "text": "Strong blur can make older tablets slow.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Performance warning under the blur field in module Placement.",
     "max": 65
   },
   "layer-editor.layer-groups.style": {
     "text": "Style",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Name of the card's Style section (colour and image), referred to in Placement help texts.",
     "max": 10
   },
   "layer-editor.layer-groups.takes-its-normal-place-in-the-column": {
     "text": "Takes its normal place in the column.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Explanation of the Normal placement choice.",
     "max": 60
   },
   "layer-editor.layer-groups.tapping-name-will-do-nothing-while-this": {
@@ -1304,77 +1304,77 @@
   },
   "layer-editor.layer-groups.text-hard-to-read-darken-behind-text": {
     "text": "Text hard to read? Darken behind text",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Link or prompt shown when contrast is low; it turns on the Darken behind text option.",
     "max": 60
   },
   "layer-editor.layer-groups.text-is-readable": {
     "text": "Text is readable.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Contrast verdict: the colours pass for normal-sized text.",
     "max": 30
   },
   "layer-editor.layer-groups.the-whole-card": {
     "text": "The whole card",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Option for what a placed module is measured against: the full card, not only its container.",
     "max": 25
   },
   "layer-editor.layer-groups.this-layer-has-no-action-so-it-only": {
     "text": "This layer has no action, so it only blocks taps.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Info shown for a covering module without a tap action that still catches pointer input.",
     "max": 80
   },
   "layer-editor.layer-groups.this-module": {
     "text": "this module",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Lower-case inline phrase that refers to the module being edited, used inside a longer sentence.",
     "max": 20
   },
   "layer-editor.layer-groups.this-module-keeps-its-own-action": {
     "text": "This module keeps its own action.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Help text under the click-through switch when it is off.",
     "max": 55
   },
   "layer-editor.layer-groups.this-video-background-sits-behind-its": {
     "text": "This video background sits behind its siblings on its own, as before. Choose an option to set it.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Info for a camera module from an older config that was placed behind others automatically.",
     "max": 160
   },
   "layer-editor.layer-groups.tint-only-not-for-text": {
     "text": "Tint only. Not for text.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Contrast verdict: the colours are too close for readable text, fine only for a tint.",
     "max": 40
   },
   "layer-editor.layer-groups.to-back": {
     "text": "To back",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Module Placement action: send this module to the very back of the stack.",
     "max": 25
   },
   "layer-editor.layer-groups.to-front": {
     "text": "To front",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Module Placement action: bring this module to the very front of the stack.",
     "max": 20
   },
   "layer-editor.layer-groups.turn-on-low-power-mode": {
     "text": "Turn on Low-power mode",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Button in a Placement warning that switches on the card-wide Low-power mode.",
     "max": 40
   },
   "layer-editor.layer-groups.undo": {
     "text": "Undo",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Button that reverts the last change to module Placement.",
     "max": 15
   },
   "layer-editor.layer-groups.very-strong": {
     "text": "Very strong",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Darkening strength option, the strongest preset, above Strong.",
     "max": 20
   },
   "layer-editor.layer-groups.white": {
     "text": "White",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Choice of darkening colour for Darken behind text; the opposite is Black.",
     "max": 10
   },
   "layer-editor.layer-groups.with-a-black-darkening-of-60-or-more": {
     "text": "With a black darkening of 60 % or more, white text stays readable on any picture. This holds for the fully dark part. With a fade, text must sit in the strongest third from that edge.",
-    "note": "Shown in layer groups (layer-editor).",
+    "note": "Contrast explanation under Darken behind text; keep the 60 % threshold as written.",
     "max": 295
   },
   "layer-editor.layers-sheet.front-first-tap-one-to-select-it": {

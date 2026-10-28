@@ -5131,7 +5131,7 @@
   },
   "anim-studio.path-editor.remove-colour": {
     "text": "Remove colour",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that deletes the selected colour stop.",
     "max": 25
   },
   "anim-studio.path-editor.remove-colour-i": {
@@ -5152,17 +5152,17 @@
   },
   "anim-studio.path-editor.reverse-direction": {
     "text": "Reverse direction",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that flips the path so it runs from end to start.",
     "max": 30
   },
   "anim-studio.path-editor.smallest": {
     "text": "Smallest",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Lower end label of the size range in the path editor, the opposite of Largest.",
     "max": 15
   },
   "anim-studio.path-editor.smooth-all": {
     "text": "Smooth all",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that turns every point into a smooth curve point.",
     "max": 20
   },
   "anim-studio.path-editor.spaced-evenly-along-the-path-1-to": {
@@ -5175,17 +5175,17 @@
   },
   "anim-studio.path-editor.start-from-a-template": {
     "text": "Start from a template",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Heading above the ready-made path shapes in the path editor.",
     "max": 35
   },
   "anim-studio.path-editor.straight": {
     "text": "Straight",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Point type in the path editor: a corner joined by straight lines, not a curve.",
     "max": 15
   },
   "anim-studio.path-editor.straighten-all": {
     "text": "Straighten all",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Button in the path editor that turns every point into a straight corner.",
     "max": 25
   },
   "anim-studio.path-editor.the-module-s-icon-moves-along-the-path": {
@@ -5210,12 +5210,12 @@
   },
   "anim-studio.path-editor.units": {
     "text": "Units",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Field label in the path editor for the unit of the path size, such as pixels or percent.",
     "max": 10
   },
   "anim-studio.path-editor.what-moves": {
     "text": "What moves",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Field label in the path editor for choosing which item travels along the path.",
     "max": 20
   },
   "anim-studio.path-host.click-to-add-the-next-point": {
@@ -5235,7 +5235,7 @@
   },
   "anim-studio.path-host.start": {
     "text": "Start",
-    "note": "Shown in path host (anim-studio).",
+    "note": "Marker on the stage labelling the first point of the motion path.",
     "max": 10
   },
   "anim-studio.path-host.the-drawing-tools-are-ready": {
@@ -5245,17 +5245,17 @@
   },
   "anim-studio.path-layers.element": {
     "text": "Element",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Layer name in the path layers list for the whole element that moves along the path.",
     "max": 15
   },
   "anim-studio.path-layers.icon": {
     "text": "Icon",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Layer name in the path layers list for the module icon that moves along the path.",
     "max": 10
   },
   "anim-studio.path-layers.motion-path": {
     "text": "Motion path",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Layer name in the path layers list for the drawn path itself.",
     "max": 20
   },
   "anim-studio.path-layers.moves-along-subject": {
@@ -5273,47 +5273,47 @@
   },
   "anim-studio.path-layers.particles": {
     "text": "Particles",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Layer name in the path layers list for the particles that travel along the path.",
     "max": 15
   },
   "anim-studio.path-layers.path-layers": {
     "text": "Path layers",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Visible heading of the path layers list.",
     "max": 20
   },
   "anim-studio.path-layers.path-layers-no-stacking-order": {
     "text": "Path layers (no stacking order)",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Screen reader label of the path layers list, which says the items have no front-to-back order.",
     "max": 50
   },
   "anim-studio.path-utils.bounce": {
     "text": "Bounce",
-    "note": "Shown in path utils (anim-studio).",
+    "note": "Name of a ready-made path template that bounces up and down.",
     "max": 10
   },
   "anim-studio.path-utils.circle": {
     "text": "Circle",
-    "note": "Shown in path utils (anim-studio).",
+    "note": "Name of a ready-made path template shaped like a circle.",
     "max": 10
   },
   "anim-studio.path-utils.figure-8": {
     "text": "Figure 8",
-    "note": "Shown in path utils (anim-studio).",
+    "note": "Name of a ready-made path template shaped like the number 8 lying on its side or upright.",
     "max": 15
   },
   "anim-studio.path-utils.spiral": {
     "text": "Spiral",
-    "note": "Shown in path utils (anim-studio).",
+    "note": "Name of a ready-made path template that winds inwards or outwards.",
     "max": 10
   },
   "anim-studio.path-utils.wave": {
     "text": "Wave",
-    "note": "Shown in path utils (anim-studio).",
+    "note": "Name of a ready-made path template with a smooth wavy line.",
     "max": 10
   },
   "anim-studio.path-utils.zigzag": {
     "text": "Zigzag",
-    "note": "Shown in path utils (anim-studio).",
+    "note": "Name of a ready-made path template with sharp alternating turns.",
     "max": 10
   },
   "anim-studio.preset-grid.clear-search": {

@@ -2461,7 +2461,7 @@
   },
   "svg-editor.views.svg-markup": {
     "text": "SVG markup",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the text area that holds the SVG source code to copy or paste.",
     "max": 20
   },
   "svg-editor.views.tab-walks-the-points-and-jump-to-the": {
@@ -2519,32 +2519,32 @@
   },
   "svg-editor.views.tidy": {
     "text": "Tidy",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of the option that shrinks the drawing by rounding numbers and dropping hidden layers.",
     "max": 10
   },
   "svg-editor.views.tidy-now": {
     "text": "Tidy now",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that runs the tidy step on the drawing straight away, shown with the size warning.",
     "max": 15
   },
   "svg-editor.views.tools": {
     "text": "Tools",
-    "note": "Shown in views (svg-editor).",
+    "note": "Accessible name of the toolbar with the drawing tools, such as pen and rectangle.",
     "max": 15
   },
   "svg-editor.views.try-again": {
     "text": "Try again",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button next to an error that repeats the action which failed, such as loading the editor.",
     "max": 20
   },
   "svg-editor.views.type": {
     "text": "Type",
-    "note": "Shown in views (svg-editor).",
+    "note": "Label of a choice for the kind of point, Corner or Smooth. A noun, not the verb to type.",
     "max": 10
   },
   "svg-editor.views.undo": {
     "text": "Undo",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that reverses the last change. Pairs with Redo.",
     "max": 15
   },
   "svg-editor.views.undo-brings-the-old-drawing-back": {
@@ -2554,17 +2554,17 @@
   },
   "svg-editor.views.units": {
     "text": "units",
-    "note": "Shown in views (svg-editor).",
+    "note": "Lower-case suffix after a number field, meaning canvas units rather than pixels.",
     "max": 10
   },
   "svg-editor.views.up": {
     "text": "Up",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that moves the selected layer one step up in the stack, or higher in drawing order. Pairs with Down.",
     "max": 10
   },
   "svg-editor.views.update-name": {
     "text": "Update \"{name}\"",
-    "note": "Shown in views (svg-editor).",
+    "note": "Button that saves changes over the library icon. {name} is the icon name; keep the quotation marks.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."

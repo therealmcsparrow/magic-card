@@ -6762,17 +6762,17 @@
   },
   "card-editor.seasonal-editor.preview-date": {
     "text": "Preview date",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Date field to try a scene on a chosen day instead of today.",
     "max": 20
   },
   "card-editor.seasonal-editor.seasonal-scene": {
     "text": "Seasonal scene",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Heading and switch for the animated seasonal background of the card.",
     "max": 25
   },
   "card-editor.seasonal-editor.seasons": {
     "text": "Seasons",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Heading of the section that lists the four seasons and their scenes.",
     "max": 15
   },
   "card-editor.seasonal-editor.shows-auto-on-another-day-in-this": {
@@ -6787,7 +6787,7 @@
   },
   "card-editor.seasonal-editor.south": {
     "text": "South",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Hemisphere option for the southern half of the Earth.",
     "max": 10
   },
   "card-editor.seasonal-editor.south-flips-the-seasons": {
@@ -6797,17 +6797,17 @@
   },
   "card-editor.seasonal-editor.spring": {
     "text": "Spring",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Season name for the blossom scene; the season, not a coil.",
     "max": 10
   },
   "card-editor.seasonal-editor.summer": {
     "text": "Summer",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Season name for the warm, sunny scene.",
     "max": 10
   },
   "card-editor.seasonal-editor.today": {
     "text": "today",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Lower-case word used inside a sentence for the current calendar date.",
     "max": 10
   },
   "card-editor.seasonal-editor.use-mm-dd-mm-dd-like-12-01-12-26-or-off": {
@@ -6817,32 +6817,32 @@
   },
   "card-editor.seasonal-editor.valentine": {
     "text": "Valentine",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Holiday name for the Valentine's Day scene and its date setting.",
     "max": 15
   },
   "card-editor.seasonal-editor.weather": {
     "text": "Weather",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Heading and switch for scenes that follow the current weather, such as rain or snow.",
     "max": 15
   },
   "card-editor.seasonal-editor.weather-entity": {
     "text": "Weather entity",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Field for the Home Assistant weather entity that drives the weather scene.",
     "max": 25
   },
   "card-editor.seasonal-editor.winter": {
     "text": "Winter",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Season name for the snowy, cold scene.",
     "max": 10
   },
   "card-editor.selection.card": {
     "text": "Card",
-    "note": "Shown in selection (card-editor).",
+    "note": "Name of the selected item type when the whole card is selected in the editor.",
     "max": 10
   },
   "card-editor.selection.column": {
     "text": "Column",
-    "note": "Shown in selection (card-editor).",
+    "note": "Name of the selected item type when a layout column is selected in the editor.",
     "max": 10
   },
   "card-editor.selection.column-n": {
@@ -6855,7 +6855,7 @@
   },
   "card-editor.selection.custom-widths": {
     "text": "Custom widths",
-    "note": "Shown in selection (card-editor).",
+    "note": "Setting in the selection panel to give each column its own width.",
     "max": 25
   },
   "card-editor.selection.layout-layout": {
@@ -6868,7 +6868,7 @@
   },
   "card-editor.selection.module": {
     "text": "Module",
-    "note": "Shown in selection (card-editor).",
+    "note": "Name of the selected item type when a single module is selected in the editor.",
     "max": 10
   },
   "card-editor.selection.n": {
@@ -6889,67 +6889,67 @@
   },
   "card-editor.selection.tab": {
     "text": "Tab",
-    "note": "Shown in selection (card-editor).",
+    "note": "Name of the selected item type when one tab of a tab bar is selected in the editor.",
     "max": 10
   },
   "card-editor.separator-editor.colour": {
     "text": "Colour",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Label for the colour of the separator line.",
     "max": 10
   },
   "card-editor.separator-editor.dashed": {
     "text": "Dashed",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Line style option: the separator is drawn as short dashes.",
     "max": 10
   },
   "card-editor.separator-editor.direction": {
     "text": "Direction",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Label for choosing whether the separator runs horizontally or vertically.",
     "max": 15
   },
   "card-editor.separator-editor.dotted": {
     "text": "Dotted",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Line style option: the separator is drawn as a row of dots.",
     "max": 10
   },
   "card-editor.separator-editor.horizontal": {
     "text": "Horizontal",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Direction option: the separator runs left to right.",
     "max": 20
   },
   "card-editor.separator-editor.none": {
     "text": "None",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Line style option: no visible line, so the separator only adds empty space.",
     "max": 10
   },
   "card-editor.separator-editor.solid": {
     "text": "Solid",
-    "note": "Shown in separator editor (card-editor). Context: line.",
+    "note": "Line style option: the separator is one continuous unbroken line.",
     "max": 15
   },
   "card-editor.separator-editor.style": {
     "text": "Style",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Label for choosing the line style of the separator, such as solid or dashed.",
     "max": 10
   },
   "card-editor.separator-editor.vertical": {
     "text": "Vertical",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Direction option: the separator runs top to bottom.",
     "max": 15
   },
   "card-editor.separator-editor.width": {
     "text": "Width",
-    "note": "Shown in separator editor (card-editor).",
+    "note": "Field for the thickness of the separator line, not the horizontal size of the card.",
     "max": 10
   },
   "card-editor.service-picker.browse-services": {
     "text": "Browse services",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Button that opens the list of Home Assistant services to pick from.",
     "max": 25
   },
   "card-editor.service-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Button that closes the service picker without choosing a service.",
     "max": 10
   },
   "card-editor.service-picker.no-services-found": {
@@ -6959,22 +6959,22 @@
   },
   "card-editor.service-picker.search-services": {
     "text": "Search services",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Placeholder and label of the search box in the service picker.",
     "max": 25
   },
   "card-editor.service-picker.select-service": {
     "text": "Select service",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Title of the service picker window, asking the user to choose one service.",
     "max": 25
   },
   "card-editor.service-picker.service": {
     "text": "Service",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Label of the field that holds the chosen Home Assistant service, for example light.turn_on.",
     "max": 15
   },
   "card-editor.service-picker.services": {
     "text": "Services",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Heading above the list of available Home Assistant services; plural of Service.",
     "max": 15
   },
   "card-editor.shape-editor.0-is-round-1-is-most-irregular": {
@@ -6989,7 +6989,7 @@
   },
   "card-editor.shape-editor.all": {
     "text": "All",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Option that applies a shape setting, such as corners, to all sides at once.",
     "max": 5
   },
   "card-editor.shape-editor.an-open-pop-up-keeps-a-rectangular": {
@@ -6999,17 +6999,17 @@
   },
   "card-editor.shape-editor.animate": {
     "text": "Animate",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Switch that makes the card shape morph or move over time.",
     "max": 15
   },
   "card-editor.shape-editor.blob": {
     "text": "Blob",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Preset shape name: an organic, irregular rounded outline.",
     "max": 10
   },
   "card-editor.shape-editor.bottom": {
     "text": "Bottom",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Edge option that places the shape cutout or effect on the bottom edge.",
     "max": 10
   },
   "card-editor.shape-editor.box-shadow-follows-the-shape-as-a-drop": {
@@ -7019,7 +7019,7 @@
   },
   "card-editor.shape-editor.cancel": {
     "text": "Cancel",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button that closes the shape editor and discards the changes made there.",
     "max": 10
   },
   "card-editor.shape-editor.circle": {
