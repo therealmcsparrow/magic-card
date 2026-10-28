@@ -7106,17 +7106,17 @@
   },
   "anim-studio.studio.layers": {
     "text": "layers",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Lower-case plural noun used inside a sentence, such as a count of layers in a hint.",
     "max": 10
   },
   "anim-studio.studio.layers-2": {
     "text": "Layers",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Capitalised name of the layers panel, used as a heading or in panel toggles.",
     "max": 10
   },
   "anim-studio.studio.layers-panel": {
     "text": "Layers panel",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Accessible name of the studio panel that lists the animation's layers.",
     "max": 20
   },
   "anim-studio.studio.library": {

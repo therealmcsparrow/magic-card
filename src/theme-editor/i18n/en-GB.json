@@ -3262,7 +3262,7 @@
   },
   "theme-editor.preview.secondary": {
     "text": "Secondary",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Label of a sample colour swatch in the preview that shows the secondary colour.",
     "max": 15
   },
   "theme-editor.preview.secondary-text-and-link": {
@@ -3275,7 +3275,7 @@
   },
   "theme-editor.preview.settings": {
     "text": "Settings",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Name of a sample sidebar entry in the preview; the Home Assistant Settings page.",
     "max": 15
   },
   "theme-editor.preview.showing-the-last-valid-value-for-c": {
@@ -3288,17 +3288,17 @@
   },
   "theme-editor.preview.success-message": {
     "text": "Success message",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample alert in the preview that uses the success colour.",
     "max": 25
   },
   "theme-editor.preview.text": {
     "text": "Text",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Heading of the preview group with sample paragraphs and links. Noun.",
     "max": 10
   },
   "theme-editor.preview.text-field": {
     "text": "Text field",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Label of a sample input box in the preview where text can be typed.",
     "max": 20
   },
   "theme-editor.preview.the-preview-is-drawn-with-real-home": {
@@ -3321,17 +3321,17 @@
   },
   "theme-editor.preview.tile-card": {
     "text": "tile card",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Lower-case name of the Home Assistant Tile card, used inside a sentence in the preview.",
     "max": 15
   },
   "theme-editor.preview.warning-message": {
     "text": "Warning message",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample alert in the preview that uses the warning colour.",
     "max": 25
   },
   "theme-editor.raw-rows.add": {
     "text": "Add",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Button that adds a new name and value row to the raw variables list. Verb.",
     "max": 10
   },
   "theme-editor.raw-rows.add-any-variable": {
@@ -3377,7 +3377,7 @@
   },
   "theme-editor.raw-rows.name": {
     "text": "Name",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Column heading for the name of a raw variable, such as primary-color. Same English as the preset field.",
     "max": 10
   },
   "theme-editor.raw-rows.nothing-was-added": {
@@ -3403,7 +3403,7 @@
   },
   "theme-editor.raw-rows.update": {
     "text": "Update",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Button that applies changes made to an existing raw variable row. Verb.",
     "max": 10
   },
   "theme-editor.raw-rows.use-a-single-line": {
@@ -3423,22 +3423,22 @@
   },
   "theme-editor.raw-rows.value": {
     "text": "Value",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Column heading for the value of a raw variable, such as a colour or a length.",
     "max": 10
   },
   "theme-editor.save-bar.save": {
     "text": "Save",
-    "note": "Shown in save bar (theme-editor).",
+    "note": "Button in the bottom save bar that writes the theme to its file. Verb. Same English as the editor button.",
     "max": 10
   },
   "theme-editor.save-bar.save-ctrl-s": {
     "text": "Save (Ctrl+S)",
-    "note": "Shown in save bar (theme-editor).",
+    "note": "Tooltip of the save bar button, naming its keyboard shortcut. Keep Ctrl+S unchanged.",
     "max": 25
   },
   "theme-editor.save-bar.saving": {
     "text": "Saving...",
-    "note": "Shown in save bar (theme-editor).",
+    "note": "Busy label on the save bar button while the file is written. Keep the three dots.",
     "max": 15
   },
   "theme-editor.start-view.a-blank-theme": {
@@ -3448,7 +3448,7 @@
   },
   "theme-editor.start-view.a-preset": {
     "text": "A preset",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Choice in the new theme dialog to begin from a ready-made preset.",
     "max": 20
   },
   "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
@@ -3463,7 +3463,7 @@
   },
   "theme-editor.start-view.blank": {
     "text": "Blank",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Choice in the new theme dialog to begin with an empty theme. Adjective.",
     "max": 10
   },
   "theme-editor.start-view.c": {
@@ -3476,7 +3476,7 @@
   },
   "theme-editor.start-view.cancel": {
     "text": "Cancel",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button that closes a start view dialog without creating or deleting anything. Same English as the editor.",
     "max": 10
   },
   "theme-editor.start-view.cannot-be-removed-later": {
@@ -3535,12 +3535,12 @@
   },
   "theme-editor.start-view.create-theme": {
     "text": "Create theme",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Confirm button of the new theme dialog that makes the theme file.",
     "max": 20
   },
   "theme-editor.start-view.delete": {
     "text": "Delete",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button on a theme card that starts deleting that theme. Same English as the editor and preset dialog.",
     "max": 15
   },
   "theme-editor.start-view.delete-name": {
@@ -3553,7 +3553,7 @@
   },
   "theme-editor.start-view.duplicate": {
     "text": "Duplicate",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button on a theme card that makes a copy of that theme. Verb.",
     "max": 15
   },
   "theme-editor.start-view.file-file": {
@@ -3566,17 +3566,17 @@
   },
   "theme-editor.start-view.import": {
     "text": "Import",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button on the start view that opens the import dialog for preset files. Verb.",
     "max": 10
   },
   "theme-editor.start-view.installed-theme": {
     "text": "Installed theme",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Singular option for beginning a new theme from a theme already installed in Home Assistant.",
     "max": 25
   },
   "theme-editor.start-view.installed-themes": {
     "text": "Installed themes",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Heading of the list of themes already installed in Home Assistant.",
     "max": 30
   },
   "theme-editor.start-view.it-is-in-a-subfolder-of-config-themes": {
@@ -3606,12 +3606,12 @@
   },
   "theme-editor.start-view.loading-presets": {
     "text": "Loading presets",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Screen-reader label of the spinner while the preset list loads. No dots.",
     "max": 25
   },
   "theme-editor.start-view.loading-themes": {
     "text": "Loading themes",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Screen-reader label of the spinner while the theme list loads. No dots.",
     "max": 25
   },
   "theme-editor.start-view.lowercase-letters-numbers-hyphens-and": {
@@ -3634,7 +3634,7 @@
   },
   "theme-editor.start-view.new-theme": {
     "text": "New theme",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button and dialog title for making a new theme from the start view.",
     "max": 15
   },
   "theme-editor.start-view.no-installed-theme-matches": {
@@ -3677,12 +3677,12 @@
   },
   "theme-editor.start-view.read-only": {
     "text": "Read only",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Badge on a theme card for a file that cannot be changed from here. Same English as the editor badge.",
     "max": 15
   },
   "theme-editor.start-view.reading": {
     "text": "Reading...",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Busy text while a chosen preset file is being read. Keep the three dots.",
     "max": 20
   },
   "theme-editor.start-view.same-in-light-and-dark": {
@@ -3697,12 +3697,12 @@
   },
   "theme-editor.start-view.search-themes": {
     "text": "Search themes",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Placeholder of the search box that filters the list of themes.",
     "max": 25
   },
   "theme-editor.start-view.start-from": {
     "text": "Start from",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Label above the choices Blank, A preset and Installed theme in the new theme dialog.",
     "max": 20
   },
   "theme-editor.start-view.the-file-could-not-be-read-as-yaml": {
@@ -3732,7 +3732,7 @@
   },
   "theme-editor.start-view.themes": {
     "text": "Themes",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Main heading of the start view above the list of themes. Same English as the editor breadcrumb.",
     "max": 10
   },
   "theme-editor.start-view.themes-could-not-be-read": {
@@ -3759,7 +3759,7 @@
   },
   "theme-editor.start-view.try-again": {
     "text": "Try again",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button that repeats a failed theme list load. Same English as the editor and preset dialog.",
     "max": 20
   },
   "theme-editor.start-view.your-themes-live-in-config-themes": {
@@ -3786,7 +3786,7 @@
   },
   "theme-editor.theme-editor.details": {
     "text": "Details",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Heading of the section with the theme's name, file and other facts. Noun.",
     "max": 15
   },
   "theme-editor.theme-editor.found-it-you-can-save-themes-now": {

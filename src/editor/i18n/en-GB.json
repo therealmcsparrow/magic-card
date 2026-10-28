@@ -8628,22 +8628,22 @@
   },
   "card-editor.text-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Field label for the entity attribute whose value the text module shows.",
     "max": 15
   },
   "card-editor.text-editor.display": {
     "text": "Display",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Field label for choosing what the text module shows: name, state, attribute or remaining time. Verb-like noun.",
     "max": 15
   },
   "card-editor.text-editor.entity": {
     "text": "Entity",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Field label for the Home Assistant entity the text module reads. Use the Home Assistant term.",
     "max": 10
   },
   "card-editor.text-editor.name": {
     "text": "Name",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Display option: show the entity's friendly name as the text. Noun.",
     "max": 10
   },
   "card-editor.text-editor.name-and-state": {
@@ -8653,7 +8653,7 @@
   },
   "card-editor.text-editor.remaining": {
     "text": "Remaining",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Display option: show the time left on a timer entity. Adjective, as in time remaining.",
     "max": 15
   },
   "card-editor.text-editor.shows-an-entity-s-state-or-name-instead": {
@@ -8663,17 +8663,17 @@
   },
   "card-editor.text-editor.state": {
     "text": "State",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Display option: show the entity's current state, such as on or 21.5. Noun, not a region.",
     "max": 10
   },
   "card-editor.text-editor.text": {
     "text": "Text",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Field label for the fixed words the text module shows. Noun, not a verb.",
     "max": 10
   },
   "card-editor.text-editor.use-entity": {
     "text": "Use entity",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Switch label: take the text from an entity instead of typing it. Use is a verb.",
     "max": 20
   },
   "card-editor.text-editor.use-jinja2-templates-example": {
@@ -8686,12 +8686,12 @@
   },
   "card-editor.text-editor.use-template": {
     "text": "Use template",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Switch label: build the text from a Jinja template instead of fixed words. Not a saved card template.",
     "max": 20
   },
   "card-editor.tree-chip.behind-others": {
     "text": "Behind others",
-    "note": "Shown in tree chip (card-editor).",
+    "note": "Small chip on a tree item that is drawn underneath its siblings in the stacking order.",
     "max": 25
   },
   "card-editor.tree-chip.n": {
@@ -8704,7 +8704,7 @@
   },
   "card-editor.tree-chip.on-top": {
     "text": "On top",
-    "note": "Shown in tree chip (card-editor).",
+    "note": "Small chip on a tree item that is drawn above its siblings in the stacking order.",
     "max": 10
   },
   "card-editor.tree-chip.on-top-anchor": {
@@ -8717,7 +8717,7 @@
   },
   "card-editor.unit-field.custom": {
     "text": "Custom",
-    "note": "Shown in unit field (card-editor).",
+    "note": "Option in the unit list that lets the user type their own unit. Adjective.",
     "max": 10
   },
   "card-editor.unit-field.label-unit": {
@@ -8730,7 +8730,7 @@
   },
   "card-editor.unit-field.unit": {
     "text": "Unit",
-    "note": "Shown in unit field (card-editor).",
+    "note": "Field label for the unit of measurement shown after a value, such as °C or %.",
     "max": 10
   },
   "card-editor.value-bg-editor.a-curved-line-instead-of-straight": {
@@ -8745,32 +8745,32 @@
   },
   "card-editor.value-bg-editor.area": {
     "text": "Area",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Value background type: a filled area chart behind the value. Not a room or Home Assistant area.",
     "max": 10
   },
   "card-editor.value-bg-editor.area-opacity": {
     "text": "Area opacity",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Slider label for how see-through the filled area of the chart is.",
     "max": 25
   },
   "card-editor.value-bg-editor.attribute": {
     "text": "Attribute",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the entity attribute that drives the value background.",
     "max": 15
   },
   "card-editor.value-bg-editor.auto": {
     "text": "Auto",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Option that lets the card pick the range or colour itself. Short for automatic.",
     "max": 10
   },
   "card-editor.value-bg-editor.colour": {
     "text": "Colour",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the single colour of the value background. Fill colour and Line colour are separate.",
     "max": 10
   },
   "card-editor.value-bg-editor.direction": {
     "text": "Direction",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Field label for the way the value background runs: up, down, left or right.",
     "max": 15
   },
   "card-editor.value-bg-editor.down": {
