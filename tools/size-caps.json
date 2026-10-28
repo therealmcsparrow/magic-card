@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 81820,
+        "cap": 81006,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 81820
+        "measured": 81006
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 70033,
-      "measured": 70033
+      "cap": 69356,
+      "measured": 69356
     }
   },
   "files": {
@@ -224,9 +224,9 @@
       "note": "Look editors (editor-only chunk, contract look-editor 1.0.0). 60 KiB, measured 58,323 + 5 %. The contract ceiling is 73,728 B; the ceiling here is the current cap."
     },
     "magic-card-controls.js": {
-      "raw": 20480,
+      "raw": 23552,
       "ceiling": 61440,
-      "note": "20 KiB, measured 18,674 + 5 %, rounded up to 1 KiB. The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "23 KiB, measured 22,243 + 5 %, rounded up to 1 KiB (it carries the rules only its views render). The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-modules-extra.js": {
       "raw": 51200,
@@ -924,6 +924,12 @@
       "field": "/files/magic-card-path-canvas.js/ceiling",
       "from": 67584,
       "to": 69632
+    },
+    {
+      "id": "controls-raw-20480-to-23552",
+      "field": "/files/magic-card-controls.js/raw",
+      "from": 20480,
+      "to": 23552
     }
   ]
 }

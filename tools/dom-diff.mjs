@@ -9,8 +9,9 @@
 //   node tools/dom-diff.mjs --ref <rev>           reference revision (default 01540cd2)
 //   node tools/dom-diff.mjs --ref-dist <dir>      reference = an existing webpack output directory (before/after of one change)
 //   node tools/dom-diff.mjs --only 001,063        limit to fixture ids
-//   node tools/dom-diff.mjs --dump <dir>          also write both serialisations as <dir>/{current,reference}/NNN.txt
+//   node tools/dom-diff.mjs --dump <dir>          also write both serialisations as <dir>/{current,reference}/NNN.txt (with --sheets also NNN.sheets.txt)
 //   node tools/dom-diff.mjs --sheets              also compare the adopted stylesheet text of every card
+//   node tools/dom-diff.mjs --sheets-moved        like --sheets, but the rules of all adopted sheets of a root are compared as one sorted list (rules moved between sheets are not a difference); every fixture is rendered twice and the second render is compared
 //   node tools/dom-diff.mjs --selftest            normaliser and comparison rules, no browser, no build
 //
 // Normalisation (the only one, and it is written here, in serialise() and normaliseText()):
@@ -37,7 +38,8 @@ const CACHE = path.join(ROOT, '.cache', 'dom-diff'); // .cache/ is git-ignored
 const DEFAULT_REF = '01540cd2';
 const MAX_FIXTURE_BYTES = 262144;
 const MAX_ALIASES = 1000;
-const SHEETS = process.argv.includes('--sheets');
+const MOVED = process.argv.includes('--sheets-moved');
+const SHEETS = MOVED || process.argv.includes('--sheets');
 
 // ── serialisation (pure, used by the worker and by --selftest) ───────────────────────────────────────
 
@@ -132,6 +134,9 @@ async function selftest() {
     ['sheet: a descendant space is a difference', canonCss('.a .b{top:0}') === canonCss('.a.b{top:0}'), false],
     ['sheet: a space between two values is a difference', canonCss('a{margin:1px 2px}') === canonCss('a{margin:1px2px}'), false],
     ['sheet: string text is a difference', canonCss('a{content:"a  b"}') === canonCss('a{content:"a b"}'), false],
+    ['sheet-moved: a rule moved to a second sheet is not a difference', sortedRules(['.a{top:0}.b{left:0}']).join() === sortedRules(['.b{left:0}', '.a{top:0}']).join(), true],
+    ['sheet-moved: a dropped rule is a difference', sortedRules(['.a{top:0}.b{left:0}']).join() === sortedRules(['.a{top:0}']).join(), false],
+    ['sheet-moved: a rule listed twice is a difference', sortedRules(['.a{top:0}']).join() === sortedRules(['.a{top:0}', '.a{top:0}']).join(), false],
     ['sheet: a changed value is a difference', canonCss('a{color:red}') === canonCss('a{color:blue}'), false],
   ];
   for (const [name, got, want] of sheetCases) {
@@ -399,17 +404,25 @@ export function canonCss(text) {
 // the text each sheet was given: happy-dom's own rule parser drops some multi-line selectors, a browser does not
 const SHEET_TEXT = new WeakMap();
 
+/** The rules of several sheet texts as one sorted list: a rule moved from one sheet to another keeps its place in it. */
+export const sortedRules = (texts) => texts.flatMap((t) => canonCss(t).split(/(?<=})/)).filter(Boolean).sort();
+
 /**
  * The adopted stylesheets of a card and of every element below it, one line per rule (the text given to the sheet), in tree
  * order. The shadow-tree serialisation does not show them. Only taken with --sheets.
  */
-export function collectSheets(root, out = []) {
+export function collectSheets(root, out = [], merged = MOVED) {
   const visit = (node, label) => {
     const sheets = node.adoptedStyleSheets ?? [];
-    sheets.forEach((sheet, si) => {
-      out.push(`${label} sheet ${si}`);
-      for (const r of canonCss(SHEET_TEXT.get(sheet) ?? '').split(/(?<=})/)) out.push(`  ${r}`);
-    });
+    if (merged && sheets.length) {
+      out.push(`${label} sheet 0`);
+      for (const r of sortedRules(sheets.map((sheet) => SHEET_TEXT.get(sheet) ?? ''))) out.push(`  ${r}`);
+    } else {
+      sheets.forEach((sheet, si) => {
+        out.push(`${label} sheet ${si}`);
+        for (const r of canonCss(SHEET_TEXT.get(sheet) ?? '').split(/(?<=})/)) out.push(`  ${r}`);
+      });
+    }
     for (const c of node.children ?? []) walk(c, `${label}>${c.localName}`);
   };
   const walk = (el, label) => {
@@ -465,7 +478,9 @@ async function worker(distDir, outFile, only) {
   const Card = customElements.get('magic-card');
   if (!Card) throw new Error('magic-card was not registered by the entry');
   const results = {};
-  for (const f of fixtureFiles(only)) {
+  // --sheets-moved renders every fixture twice and keeps the second: a card root holds the sheets of every chunk the page has loaded, so no card depends on which fixture ran first
+  const fixtureList = fixtureFiles(only);
+  for (const f of MOVED ? [...fixtureList, ...fixtureList] : fixtureList) {
     const id = f.slice(0, 3);
     try {
       const config = await loadYaml(path.join(FIXTURES, f));
@@ -491,7 +506,8 @@ function runWorker(distDir, label, only) {
   mkdirSync(CACHE, { recursive: true });
   const out = path.join(CACHE, `render-${label}-${process.pid}.json`);
   const args = [fileURLToPath(import.meta.url), '--worker', distDir, out];
-  if (SHEETS) args.push('--sheets');
+  if (MOVED) args.push('--sheets-moved');
+  else if (SHEETS) args.push('--sheets');
   if (only) args.push('--only', only.join(','));
   const r = spawnSync(process.execPath, args, { encoding: 'utf8', maxBuffer: 1 << 28, timeout: 15 * 60 * 1000 });
   if (r.status !== 0 || !existsSync(out)) {
@@ -557,6 +573,7 @@ async function main() {
       for (const [label, r] of [['current', a], ['reference', b]]) {
         mkdirSync(path.join(dump, label), { recursive: true });
         writeFileSync(path.join(dump, label, `${id}.txt`), r.text + '\n');
+        if (SHEETS) writeFileSync(path.join(dump, label, `${id}.sheets.txt`), (r.sheets ?? '') + '\n');
       }
     }
     if (SHEETS && a.sheets !== b.sheets) {

@@ -261,7 +261,10 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * - A chunk entry may export `styles` (CSSResultGroup). Before whenReady callbacks run, Core adds those
  *   sheets to the card's sheet list and to the adoptedStyleSheets of every connected card, so the
  *   feature's CSS and its first render land in the same frame. Feature CSS lives only in its chunk;
- *   src/css/css.ts keeps the plain sheet. Adoption assigns a new array
+ *   src/css/css.ts keeps the plain sheet: every rule the card or a stub's placeholder needs before a chunk arrives, and every
+ *   rule two chunks or a chunk and the entry use. The rules only the views of 'controls' and 'modules-extra' render are
+ *   src/css/controls-styles.ts and src/css/extras-styles.ts, exported as the `styles` of those two chunks. A rule that has
+ *   to follow a plain rule of equal weight on the same element stays in the plain sheet, because a chunk's sheet comes after it. Adoption assigns a new array
  *   (`root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...sheets]`), never push (frozen on Chromium
  *   85); connectedCallback adds sheets a card missed while disconnected. Same-frame adoption is verified on
  *   Chromium 85, Chrome and Firefox ESR; Safari 16.4 must be confirmed on a device, otherwise Core
@@ -315,7 +318,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   path parser and outline maths. webpack requests it in the same import() call as every chunk whose modules use it
  *   (today anim, seasonal, decor, svg-icon and slider-look; the entry graph lists them). It has no install, BUILD
  *   export, needs row, part name or notice. A failed load fails the requesting chunk's import(), which shows that
- *   chunk's notice and retries both URLs with `r=`. No other module may join a shared chunk without a change to this contract.
+ *   chunk's notice and retries each file of the group that has not loaded yet, under a URL not requested before on this page; a file that already loaded is not requested again. No other module may join a shared chunk without a change to this contract.
  *
  * ── import() sites ──
  * - Card side: import() only in src/utils/lazy-chunks.ts (the chunk table), src/anim-studio/anim-chunk.ts and the manifest check in

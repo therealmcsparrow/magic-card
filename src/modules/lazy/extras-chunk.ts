@@ -12,6 +12,7 @@ import { tabsStyles } from '../layout/tabs-styles';
 import { weatherIconStyles } from '../../icons/weather-icons';
 import { ClockView } from '../advanced/clock-view';
 import { ImageView } from '../content/image-view';
+import { extrasViewStyles } from '../../css/extras-styles';
 
 /*
  * Chunk entry of dist/magic-card-modules-extra.js (contract lazy-module 1.0.0). Evaluating this file changes
@@ -23,7 +24,7 @@ declare const __MC_BUILD_VERSION__: string | undefined;
 
 export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
 
-export const styles = [weatherIconStyles, tabsStyles];
+export const styles = [weatherIconStyles, tabsStyles, extrasViewStyles];
 
 export function install(): void {
   if (!customElements.get('mc-embedded-card')) customElements.define('mc-embedded-card', EmbeddedCard);
