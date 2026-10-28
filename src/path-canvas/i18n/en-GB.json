@@ -1,22 +1,22 @@
 {
   "path-canvas.geometry.centre": {
     "text": "Centre",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Name of a snap guide in the drawing canvas: the middle line of the frame. Read out to screen reader users.",
     "max": 10
   },
   "path-canvas.geometry.corner": {
     "text": "corner",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Lower case word for a type of point: a sharp bend with no curve. Used inside sentences such as Point 2 of 5, corner. Not a corner of the screen.",
     "max": 10
   },
   "path-canvas.geometry.edge": {
     "text": "Edge",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Name of a snap guide in the drawing canvas: the edge of the frame or of another shape. Read out to screen reader users.",
     "max": 10
   },
   "path-canvas.geometry.n": {
     "text": "{n, plural, one {# point} other {# points}}",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Count of points on a path. {n} is the number of points. Inserted into longer sentences such as Path, 4 points, closed.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -24,7 +24,7 @@
   },
   "path-canvas.geometry.one": {
     "text": "{one, select, yes {{n} degree} other {{n} degrees}}",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "An angle. {one} is the keyword yes when the angle is exactly 1 and no otherwise; do not translate the keywords yes and other. {n} is the angle number.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -33,22 +33,22 @@
   },
   "path-canvas.geometry.safe-area-edge": {
     "text": "Safe area edge",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Name of a snap guide in the drawing canvas: the border of the area where content is not clipped. Read out to screen reader users.",
     "max": 25
   },
   "path-canvas.geometry.smooth": {
     "text": "smooth",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Lower case word for a type of point: a curved point whose two handles may differ in length. Used inside sentences such as Point 2 of 5, smooth.",
     "max": 10
   },
   "path-canvas.geometry.symmetric": {
     "text": "symmetric",
-    "note": "Shown in geometry (path-canvas).",
+    "note": "Lower case word for a type of point: a curved point whose two handles are always equal in length. Used inside sentences such as Point 2 of 5, symmetric.",
     "max": 15
   },
   "path-canvas.mc-path-canvas.all-points-selected": {
     "text": "All {points} selected.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement. {points} is a count with its noun, such as 4 points.",
     "max": 40,
     "vars": {
       "points": "The value that replaces points in the text."
@@ -56,27 +56,27 @@
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-cursor-or-the": {
     "text": "Arrow keys move the cursor or the selected point. Enter places a point, or closes the path on its first point. Tab steps through points. C switches smooth and corner. Delete removes a point.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Keyboard instructions for the drawing canvas in pen mode, read by screen readers. Keep the key names Enter, Tab, C and Delete as on a keyboard. Smooth and corner are the two point types.",
     "max": 305
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-in-handle": {
     "text": "Arrow keys move the in handle.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader hint when the incoming curve handle of a point is selected. The in handle controls the curve arriving at the point; do not confuse with the out handle.",
     "max": 50
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-out-handle": {
     "text": "Arrow keys move the out handle.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader hint when the outgoing curve handle of a point is selected. The out handle controls the curve leaving the point; do not confuse with the in handle.",
     "max": 50
   },
   "path-canvas.mc-path-canvas.arrow-keys-move-the-point": {
     "text": "Arrow keys move the point.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader hint when a point on a path is selected.",
     "max": 45
   },
   "path-canvas.mc-path-canvas.cursor-at-x-x-y-y-press-enter-to-place-a": {
     "text": "Cursor at x {x}, y {y}. Press Enter to place a point.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement in pen mode. {x} and {y} are the cursor's horizontal and vertical position on the canvas, as numbers. Keep the key name Enter.",
     "max": 85,
     "vars": {
       "x": "The value that replaces x in the text.",
@@ -85,17 +85,17 @@
   },
   "path-canvas.mc-path-canvas.drawing-canvas": {
     "text": "drawing canvas",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Lower case accessible name of the area where paths are drawn. Appended to a description of the canvas for screen readers.",
     "max": 25
   },
   "path-canvas.mc-path-canvas.handle-deleted": {
     "text": "Handle deleted.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after a curve handle of a point was removed.",
     "max": 25
   },
   "path-canvas.mc-path-canvas.n-points-selected": {
     "text": "{n} points selected.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement. {n} is the number of selected points, always more than one.",
     "max": 35,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -103,17 +103,17 @@
   },
   "path-canvas.mc-path-canvas.path-closed": {
     "text": "Path closed.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after the last point was joined to the first, making a closed shape.",
     "max": 20
   },
   "path-canvas.mc-path-canvas.path-deleted": {
     "text": "Path deleted.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after a whole path was removed. A path is one drawn line or shape.",
     "max": 25
   },
   "path-canvas.mc-path-canvas.path-points-closed": {
     "text": "Path, {points}, closed.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Accessible name of a closed path (its ends are joined). {points} is a count with its noun, such as 4 points. Compare Path, {points}, open.",
     "max": 40,
     "vars": {
       "points": "The value that replaces points in the text."
@@ -121,7 +121,7 @@
   },
   "path-canvas.mc-path-canvas.path-points-open": {
     "text": "Path, {points}, open.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Accessible name of an open path (its ends are not joined). {points} is a count with its noun, such as 4 points. Compare Path, {points}, closed.",
     "max": 35,
     "vars": {
       "points": "The value that replaces points in the text."
@@ -129,7 +129,7 @@
   },
   "path-canvas.mc-path-canvas.point-added-points": {
     "text": "Point added, {points}.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after one point was added. {points} is the new total as a count with its noun, such as 5 points.",
     "max": 40,
     "vars": {
       "points": "The value that replaces points in the text."
@@ -137,7 +137,7 @@
   },
   "path-canvas.mc-path-canvas.point-deleted-points": {
     "text": "Point deleted, {points}.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after one point was removed. {points} is the new total as a count with its noun, such as 3 points.",
     "max": 40,
     "vars": {
       "points": "The value that replaces points in the text."
@@ -145,7 +145,7 @@
   },
   "path-canvas.mc-path-canvas.point-n-is-now-kind": {
     "text": "Point {n} is now {kind}.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after a point changed type. {n} is the point's position in the path, starting at 1. {kind} is one of the words smooth, symmetric or corner.",
     "max": 40,
     "vars": {
       "kind": "The value that replaces kind in the text.",
@@ -154,7 +154,7 @@
   },
   "path-canvas.mc-path-canvas.point-n-of-total-kind-x-x-y-y": {
     "text": "Point {n} of {total}, {kind}, x {x}, y {y}",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Accessible name of a point. {n} is its position, starting at 1. {total} is the number of points on the path. {kind} is smooth, symmetric or corner. {x} and {y} are its coordinates.",
     "max": 70,
     "vars": {
       "kind": "The value that replaces kind in the text.",
@@ -166,12 +166,12 @@
   },
   "path-canvas.mc-path-canvas.points": {
     "text": "Points",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Label of the list or toolbar group of points of the selected path. A plural noun.",
     "max": 10
   },
   "path-canvas.mc-path-canvas.points-deleted-points": {
     "text": "Points deleted, {points}.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after several points were removed. {points} is the new total as a count with its noun, such as 3 points.",
     "max": 40,
     "vars": {
       "points": "The value that replaces points in the text."
@@ -179,22 +179,22 @@
   },
   "path-canvas.mc-path-canvas.rotation": {
     "text": "Rotation",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Label of the angle readout while a selection is turned. Shown with a value in degrees.",
     "max": 15
   },
   "path-canvas.mc-path-canvas.selection-cleared": {
     "text": "Selection cleared.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader announcement after the user deselected all points and paths.",
     "max": 30
   },
   "path-canvas.mc-path-canvas.tab-steps-through-points-arrow-keys-move": {
     "text": "Tab steps through points. Arrow keys move the selected point. C switches smooth and corner. Delete removes a point. Escape deselects.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Keyboard instructions for the drawing canvas in select mode, read by screen readers. Keep the key names Tab, C, Delete and Escape as on a keyboard.",
     "max": 215
   },
   "path-canvas.mc-path-canvas.this-path-has-max-points-the-most-you": {
     "text": "This path has {max} points, the most you can add. Move, delete or change them instead.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Message when the point limit is reached. {max} is the largest number of points one path may have.",
     "max": 140,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -202,12 +202,12 @@
   },
   "path-canvas.mc-path-canvas.this-point-has-no-handles-press-c-to": {
     "text": "This point has no handles. Press C to make it smooth.",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Screen reader hint for a corner point without curve handles. Keep the key name C. Smooth is the point type that has handles.",
     "max": 85
   },
   "path-canvas.mc-path-canvas.w-w-h-h": {
     "text": "W {w} H {h}",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Size readout while scaling a selection. W is width and H is height, abbreviated. {w} and {h} are numbers.",
     "max": 20,
     "vars": {
       "h": "The value that replaces h in the text.",
@@ -216,7 +216,7 @@
   },
   "path-canvas.mc-path-canvas.which": {
     "text": "{which, select, in {In handle of point {n}, x {x}, y {y}.} other {Out handle of point {n}, x {x}, y {y}.}}",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Accessible name of a curve handle with its position. {which} is the keyword in or out; do not translate the keywords in and other. {n} is the point's position, starting at 1. {x} and {y} are coordinates.",
     "max": 65,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -227,7 +227,7 @@
   },
   "path-canvas.mc-path-canvas.which-2": {
     "text": "{which, select, in {In handle of point {n}.} other {Out handle of point {n}.}}",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Same as the other handle name but without coordinates. {which} is the keyword in or out; do not translate the keywords in and other. {n} is the point's position, starting at 1.",
     "max": 40,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -236,7 +236,7 @@
   },
   "path-canvas.mc-path-canvas.x-x-y-y": {
     "text": "x {x}, y {y}",
-    "note": "Shown in mc path canvas (path-canvas).",
+    "note": "Position readout. {x} is the horizontal and {y} the vertical coordinate, as numbers.",
     "max": 20,
     "vars": {
       "x": "The value that replaces x in the text.",

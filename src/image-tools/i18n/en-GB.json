@@ -1,47 +1,47 @@
 {
   "image-tools.editor-host.image-editor": {
     "text": "Image editor",
-    "note": "Shown in editor host (image-tools).",
+    "note": "Title of the full-screen drawing editor for SVG images. A noun phrase.",
     "max": 20
   },
   "image-tools.mc-image-picker.ask-an-administrator-to-add-one": {
     "text": "Ask an administrator to add one.",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Hint in the image picker's empty state, for users without admin rights. Follows No images yet.",
     "max": 55
   },
   "image-tools.mc-image-picker.cancel": {
     "text": "Cancel",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Button that closes the image picker without choosing an image. A verb.",
     "max": 10
   },
   "image-tools.mc-image-picker.draw-a-new-image": {
     "text": "Draw a new image",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Button in the image picker window that opens the drawing editor. Same English as the button in the image field, which is outside the picker.",
     "max": 30
   },
   "image-tools.mc-image-picker.images": {
     "text": "Images",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Title of the image picker window. Plural noun.",
     "max": 15
   },
   "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
     "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Message inside the image picker window when the companion integration is missing. HACS is a Home Assistant add-on store; keep the name. Magic Card and Magic Card Utils are product names.",
     "max": 125
   },
   "image-tools.mc-image-picker.in-use": {
     "text": "In use",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Badge on an image in the picker that a card already uses.",
     "max": 10
   },
   "image-tools.mc-image-picker.loading-images": {
     "text": "Loading images…",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Shown in the image picker while the image list is being fetched.",
     "max": 25
   },
   "image-tools.mc-image-picker.n": {
     "text": "{n, plural, one {# live connection} other {# live connections}}",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Short label on an image thumbnail. {n} is how many live connections the image has. A live connection links a part of the image to a Home Assistant entity so it changes with it. Compare the longer version with Live: in front.",
     "max": 30,
     "vars": {
       "n": "The count the text is about."
@@ -49,7 +49,7 @@
   },
   "image-tools.mc-image-picker.n-2": {
     "text": "{n, plural, one {Live: # connection} other {Live: # connections}}",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Accessible name of the same live connection count, with Live as a prefix. {n} is the number of connections.",
     "max": 35,
     "vars": {
       "n": "The count the text is about."
@@ -57,7 +57,7 @@
   },
   "image-tools.mc-image-picker.n-kib": {
     "text": "{n} KiB",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "File size of an image. {n} is a number of kibibytes (1,024 bytes). Keep the unit KiB.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -65,7 +65,7 @@
   },
   "image-tools.mc-image-picker.no-image-matches-query": {
     "text": "No image matches “{query}”.",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Empty search result in the image picker. {query} is the text the user typed in the search field.",
     "max": 45,
     "vars": {
       "query": "The value that replaces query in the text."
@@ -73,62 +73,62 @@
   },
   "image-tools.mc-image-picker.no-images-yet": {
     "text": "No images yet.",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Empty state of the image picker when the library holds no images.",
     "max": 25
   },
   "image-tools.mc-image-picker.pick-an-image": {
     "text": "Pick an image",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Accessible name of the list of images in the picker window. Compare Choose an image in the image field.",
     "max": 25
   },
   "image-tools.mc-image-picker.search-images": {
     "text": "Search images",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Placeholder and accessible name of the search field in the image picker. Search is a verb.",
     "max": 25
   },
   "image-tools.mc-image-picker.the-images-could-not-be-loaded": {
     "text": "The images could not be loaded.",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Error in the image picker when the library list could not be fetched. Followed by a Try again button.",
     "max": 50
   },
   "image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the": {
     "text": "Thumbnails show the saved colours. On the card the live parts change with their devices.",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Help text in the image picker. Live parts are the parts of an image connected to Home Assistant entities, so their colours change with the device state.",
     "max": 145
   },
   "image-tools.mc-image-picker.try-again": {
     "text": "Try again",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Button that retries loading the image list after an error. A verb phrase.",
     "max": 15
   },
   "image-tools.mc-image-picker.use-this-image": {
     "text": "Use this image",
-    "note": "Shown in mc image picker (image-tools).",
+    "note": "Button in the image picker that confirms the selected image for the card. A verb.",
     "max": 25
   },
   "image-tools.mc-library-image-field.accent-colour": {
     "text": "Accent colour",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of a colour picker for the second of the two colours of an image. Pairs with Main colour.",
     "max": 25
   },
   "image-tools.mc-library-image-field.add-an-image-module-behind-the-content": {
     "text": "Add an image module behind the content",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that adds an image element to the card, placed behind everything else as a background. A module is one element of the card.",
     "max": 65
   },
   "image-tools.mc-library-image-field.address-or-media": {
     "text": "Address or media",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of the choice to use a web address (URL) or a file from the Home Assistant media browser instead of a library image.",
     "max": 30
   },
   "image-tools.mc-library-image-field.adds-a-hidden-list-after-the-picture-for": {
     "text": "Adds a hidden list after the picture, for example \"Kitchen light: on\". It updates when a device changes.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Help text of the switch that adds a list of device states for screen readers. The example Kitchen light: on shows the pattern device name, colon, state; translate it naturally.",
     "max": 170
   },
   "image-tools.mc-library-image-field.and-n-more": {
     "text": "and {n} more",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "End of a shortened list of devices. {n} is how many further devices are not shown.",
     "max": 20,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -136,7 +136,7 @@
   },
   "image-tools.mc-library-image-field.card-shape-set-to-shape": {
     "text": "Card shape set to {shape}.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Screen reader announcement after picking an image. {shape} is the card's new aspect ratio, such as 4/3 or 1.",
     "max": 45,
     "vars": {
       "shape": "The value that replaces shape in the text."
@@ -144,52 +144,52 @@
   },
   "image-tools.mc-library-image-field.choose": {
     "text": "Choose",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Short button that opens the image picker when no image is set. A verb. Compare Pick another, which replaces an image.",
     "max": 10
   },
   "image-tools.mc-library-image-field.choose-an-image": {
     "text": "Choose an image",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Accessible name of the Choose button. Compare Pick an image, which names the list inside the picker window.",
     "max": 25
   },
   "image-tools.mc-library-image-field.clear": {
     "text": "Clear",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that removes the chosen image from the field. A verb.",
     "max": 10
   },
   "image-tools.mc-library-image-field.colours": {
     "text": "Colours",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Accessible name of the group with the Main colour and Accent colour pickers. Plural noun.",
     "max": 15
   },
   "image-tools.mc-library-image-field.copy-reference": {
     "text": "Copy reference",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that copies the image's reference (its address in the library) to the clipboard. A verb.",
     "max": 25
   },
   "image-tools.mc-library-image-field.description-for-screen-readers": {
     "text": "Description for screen readers",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of a text area for alternative text that describes the image to people who cannot see it.",
     "max": 50
   },
   "image-tools.mc-library-image-field.draw-a-new-image": {
     "text": "Draw a new image",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button in the image field that opens the drawing editor. Same English as the button inside the picker window.",
     "max": 30
   },
   "image-tools.mc-library-image-field.edit-image": {
     "text": "Edit image",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that opens the chosen image in the drawing editor. A verb. Not the same as View image.",
     "max": 20
   },
   "image-tools.mc-library-image-field.hide-list": {
     "text": "Hide list",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that collapses the list of devices that are connected to the image. Opposite of Show list.",
     "max": 15
   },
   "image-tools.mc-library-image-field.id-not-found": {
     "text": "{id} (not found)",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Shown when the image's reference points to a library image that no longer exists. {id} is the image's reference, a technical identifier. Keep it as is.",
     "max": 30,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -197,17 +197,17 @@
   },
   "image-tools.mc-library-image-field.image": {
     "text": "Image",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of the image field, and name of the image module type. A noun.",
     "max": 10
   },
   "image-tools.mc-library-image-field.image-module-added-behind-the-content": {
     "text": "Image module added behind the content. Remove the background layer if you no longer need it.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Confirmation after the background image was added. A module is one element of the card. A layer is an element stacked behind others.",
     "max": 150
   },
   "image-tools.mc-library-image-field.image-set-name": {
     "text": "Image set: {name}.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Screen reader announcement after the user picked an image. {name} is the image's name. Set is a past participle: the image was set, not a set of images.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -215,42 +215,42 @@
   },
   "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
     "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window. HACS is a Home Assistant add-on store; keep the name.",
     "max": 125
   },
   "image-tools.mc-library-image-field.library-image": {
     "text": "Library image",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of the choice to use an image from the shared image library. Opposite of Address or media.",
     "max": 30
   },
   "image-tools.mc-library-image-field.list-connected-devices-and-their-states": {
     "text": "List connected devices and their states for screen readers",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of a switch. List is a verb: write out the devices and their current states as hidden text for screen readers.",
     "max": 95
   },
   "image-tools.mc-library-image-field.live": {
     "text": "Live",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Badge on an image that has live connections, meaning parts of it follow Home Assistant devices. An adjective.",
     "max": 10
   },
   "image-tools.mc-library-image-field.live-parts-of-this-picture-follow-their": {
     "text": "Live: parts of this picture follow their devices, here too.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Tooltip that explains the Live badge. Starts with the badge name, which should match the translation of Live. Here too means in the editor as well as on the card.",
     "max": 95
   },
   "image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you": {
     "text": "Main and Accent follow the colours you set for this card.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Help text for the two colour pickers. Main and Accent are the labels Main colour and Accent colour; keep them consistent.",
     "max": 95
   },
   "image-tools.mc-library-image-field.main-colour": {
     "text": "Main colour",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Label of a colour picker for the first of the two colours of an image. Pairs with Accent colour.",
     "max": 20
   },
   "image-tools.mc-library-image-field.n": {
     "text": "{n, plural, one {Uses # device} other {Uses # devices}}",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Short summary of an image. {n} is how many devices (Home Assistant entities) the image follows.",
     "max": 25,
     "vars": {
       "n": "The count the text is about."
@@ -258,7 +258,7 @@
   },
   "image-tools.mc-library-image-field.n-left": {
     "text": "{n} left",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Character counter under the description box. {n} is how many more characters can be typed before the limit.",
     "max": 15,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -266,72 +266,72 @@
   },
   "image-tools.mc-library-image-field.need-buttons-or-a-description": {
     "text": "Need buttons or a description?",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Question that introduces the button for adding a separate image module. It is shown above the Add an image module behind the content button.",
     "max": 50
   },
   "image-tools.mc-library-image-field.no-image-chosen": {
     "text": "No image chosen",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Shown in the image field when no image is set.",
     "max": 25
   },
   "image-tools.mc-library-image-field.not-found": {
     "text": "(not found)",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Placed after a device's technical name in the list when Home Assistant no longer knows that device. The brackets are part of the text.",
     "max": 20
   },
   "image-tools.mc-library-image-field.not-set-screen-readers-skip-this-picture": {
     "text": "Not set (screen readers skip this picture)",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Status under the description box when the description is empty. Opposite of Set (screen readers read it).",
     "max": 70
   },
   "image-tools.mc-library-image-field.off": {
     "text": "Off",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "State of the switch that lists connected devices. Opposite of On.",
     "max": 5
   },
   "image-tools.mc-library-image-field.on": {
     "text": "On",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "State of the switch that lists connected devices. Opposite of Off.",
     "max": 5
   },
   "image-tools.mc-library-image-field.optional-describe-what-the-picture-shows": {
     "text": "Optional. Describe what the picture shows. Without it, screen readers skip the picture.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Help text under the description box. Describe is an instruction to the user.",
     "max": 140
   },
   "image-tools.mc-library-image-field.pick-another": {
     "text": "Pick another",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that opens the image picker to replace the chosen image. Compare Choose, which is shown when no image is set.",
     "max": 20
   },
   "image-tools.mc-library-image-field.reference-copied": {
     "text": "Reference copied.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Confirmation after Copy reference. A reference is the image's address in the library.",
     "max": 30
   },
   "image-tools.mc-library-image-field.rename-a-device-in-home-assistant-to": {
     "text": "Rename a device in Home Assistant to change what is read.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Help text under the list of devices that screen readers will read out. Read means spoken aloud by the screen reader.",
     "max": 95
   },
   "image-tools.mc-library-image-field.set-screen-readers-read-it": {
     "text": "Set (screen readers read it)",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Status under the description box when a description is filled in. Set means filled in. Opposite of Not set (screen readers skip this picture).",
     "max": 45
   },
   "image-tools.mc-library-image-field.show-list": {
     "text": "Show list",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that expands the list of devices that are connected to the image. Opposite of Hide list.",
     "max": 15
   },
   "image-tools.mc-library-image-field.that-is-the-longest-description-500": {
     "text": "That is the longest description (500 characters).",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Warning when the description reached its maximum length of 500 characters. The number is fixed text.",
     "max": 80
   },
   "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
     "text": "The card shape ({card}) differs from the drawing ({drawing}).",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Warning. {card} is the card's current aspect ratio, such as 16/9. {drawing} is the shape of the image, such as 4/3 or Square. Followed by a button to match them.",
     "max": 100,
     "vars": {
       "card": "The value that replaces card in the text.",
@@ -340,52 +340,52 @@
   },
   "image-tools.mc-library-image-field.the-drawing-editor-could-not-load-try": {
     "text": "The drawing editor could not load. Try again.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Error when the drawing editor failed to load, usually a network problem.",
     "max": 75
   },
   "image-tools.mc-library-image-field.the-reference-could-not-be-copied-select": {
     "text": "The reference could not be copied. Select it and copy it by hand.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Error when copying to the clipboard failed. The reference is the image's address shown in the field above.",
     "max": 105
   },
   "image-tools.mc-library-image-field.this-image-is-no-longer-in-the-library": {
     "text": "This image is no longer in the library.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Warning when the chosen image has been deleted from the library.",
     "max": 65
   },
   "image-tools.mc-library-image-field.this-is-a-background-screen-readers-skip": {
     "text": "This is a background. Screen readers skip it, and it cannot hold buttons.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Help text shown when the image sits behind the card's content. Background means purely decorative.",
     "max": 120
   },
   "image-tools.mc-library-image-field.this-is-the-address-cards-use-it-stays": {
     "text": "This is the address cards use. It stays the same when you rename the image.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Help text under the image's reference. The address is a technical identifier, not a web address.",
     "max": 120
   },
   "image-tools.mc-library-image-field.this-picture-shows-live-devices-add-a": {
     "text": "This picture shows live devices. Add a description or switch on the list so everyone can follow it.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Accessibility hint. Live devices are Home Assistant entities the picture follows. The list is the Show list switch for screen readers.",
     "max": 160
   },
   "image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one": {
     "text": "To change colours, use live parts in one picture. To swap pictures, use states.",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Tip. Live parts are parts of an image connected to Home Assistant entities. States are the card's feature to show a different picture per entity state.",
     "max": 130
   },
   "image-tools.mc-library-image-field.use-the-drawing-s-shape": {
     "text": "Use the drawing's shape",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that sets the card's aspect ratio to match the drawing. Follows a warning that the two differ.",
     "max": 40
   },
   "image-tools.mc-library-image-field.view-image": {
     "text": "View image",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Button that opens the chosen image for viewing only, without editing. A verb. Not the same as Edit image.",
     "max": 20
   },
   "image-tools.mc-library-image-field.will-read-now": {
     "text": "Will read now:",
-    "note": "Shown in mc library image field (image-tools).",
+    "note": "Introduces the list of devices and states a screen reader will announce. Read means spoken aloud. A colon follows and the list comes after it.",
     "max": 25
   }
 }

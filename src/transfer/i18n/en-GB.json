@@ -6,7 +6,7 @@
   },
   "transfer.count.n": {
     "text": "{n, plural, one {# animation} other {# animations}}",
-    "note": "Shown in count (transfer).",
+    "note": "Count of animations in an import or export summary. {n} is the number of items. Same pattern as the theme, shape, image and icon counts.",
     "max": 20,
     "vars": {
       "n": "The count the text is about."
@@ -14,7 +14,7 @@
   },
   "transfer.count.n-2": {
     "text": "{n, plural, one {# theme} other {# themes}}",
-    "note": "Shown in count (transfer).",
+    "note": "Count of themes (sets of colours and styles) in an import or export summary. {n} is the number of items.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -22,7 +22,7 @@
   },
   "transfer.count.n-3": {
     "text": "{n, plural, one {# shape} other {# shapes}}",
-    "note": "Shown in count (transfer).",
+    "note": "Count of card shapes (drawn outlines) in an import or export summary. {n} is the number of items.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -30,7 +30,7 @@
   },
   "transfer.count.n-4": {
     "text": "{n, plural, one {# image} other {# images}}",
-    "note": "Shown in count (transfer).",
+    "note": "Count of library images in an import or export summary. {n} is the number of items.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -38,7 +38,7 @@
   },
   "transfer.count.n-5": {
     "text": "{n, plural, one {# icon} other {# icons}}",
-    "note": "Shown in count (transfer).",
+    "note": "Count of drawn SVG icons in an import or export summary. {n} is the number of items.",
     "max": 15,
     "vars": {
       "n": "The count the text is about."
@@ -71,7 +71,7 @@
   },
   "transfer.envelope.key-is-not-a-preset-field-so-it-was-left": {
     "text": "\"{key}\" is not a preset field, so it was left out.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import warning. {key} is the name of a setting found in the file, written in English. Keep it as is. Same English as the image loader message.",
     "max": 80,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -99,7 +99,7 @@
   },
   "transfer.envelope.step-n-plays-name-which-is-not-in-this": {
     "text": "Step {n} plays \"{name}\", which is not in this file. It works if you already have it.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import warning for an animation sequence. {n} is the step's position, starting at 1. {name} is the name of another animation that the step starts.",
     "max": 135,
     "vars": {
       "n": "The value that replaces n in the text.",
@@ -108,7 +108,7 @@
   },
   "transfer.envelope.the-author-must-be-1-max-characters-so": {
     "text": "The author must be 1-{max} characters, so it was left out.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import warning. {max} is the longest author name allowed, in characters. The author is the creator named in the file.",
     "max": 95,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -121,7 +121,7 @@
   },
   "transfer.envelope.the-description-must-be-1-max-characters": {
     "text": "The description must be 1-{max} characters, so it was left out.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import warning. {max} is the longest description allowed, in characters.",
     "max": 105,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -129,7 +129,7 @@
   },
   "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
     "text": "The id \"{id}\" appears twice in this file; the first one was used.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import warning. {id} is a technical identifier found in the file. Keep it as is.",
     "max": 105,
     "vars": {
       "id": "The value that replaces id in the text."
@@ -147,7 +147,7 @@
   },
   "transfer.envelope.the-name-says-want-but-the-file-holds": {
     "text": "The name says {want}, but the file holds {found}.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error. The file name suggests one kind of item, such as animations, but the content is another kind. {want} and {found} are item kinds with a count, such as 3 animations.",
     "max": 80,
     "vars": {
       "found": "The value that replaces found in the text.",
@@ -166,7 +166,7 @@
   },
   "transfer.envelope.this-file-holds-kind-presets-which-this": {
     "text": "This file holds \"{kind}\" presets, which this version of Magic Card does not know.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error. {kind} is the preset type written in the file, in English, such as animation. Keep it as is.",
     "max": 130,
     "vars": {
       "kind": "The value that replaces kind in the text."
@@ -174,7 +174,7 @@
   },
   "transfer.envelope.this-file-holds-more-than-max-items-so": {
     "text": "This file holds more than {max} items, so it was not read.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error. {max} is the largest number of items one file may hold.",
     "max": 95,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -187,7 +187,7 @@
   },
   "transfer.envelope.this-file-needs-a-newer-magic-card": {
     "text": "This file needs a newer Magic Card (format {major}.x).",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error. {major} is the major version number of the file format, such as 2. The x stays as a literal letter.",
     "max": 90,
     "vars": {
       "major": "The value that replaces major in the text."
@@ -205,7 +205,7 @@
   },
   "transfer.icon.a-link-name": {
     "text": "a link ({name})",
-    "note": "Shown in icon (transfer).",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is the link's attribute, such as href. Lower case, a noun phrase.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -213,22 +213,22 @@
   },
   "transfer.icon.a-script": {
     "text": "a script",
-    "note": "Shown in icon (transfer).",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. A script is program code embedded in the file. Lower case, a noun phrase.",
     "max": 15
   },
   "transfer.icon.a-style-attribute": {
     "text": "a style attribute",
-    "note": "Shown in icon (transfer).",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. A style attribute is inline CSS on an element. Lower case, a noun phrase.",
     "max": 30
   },
   "transfer.icon.a-use-reference": {
     "text": "a <use> reference",
-    "note": "Shown in icon (transfer).",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. Keep <use>, an SVG element name. Lower case, a noun phrase.",
     "max": 30
   },
   "transfer.icon.count": {
     "text": "{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}",
-    "note": "Shown in icon (transfer).",
+    "note": "Import notice for an SVG. {what} is one of the lower case phrases such as a script or a link (name). {count} is how often it was removed.",
     "max": 50,
     "vars": {
       "count": "The count the text is about.",
@@ -237,7 +237,7 @@
   },
   "transfer.icon.key-is-not-valid-path-data-so-it-was": {
     "text": "\"{key}\" is not valid path data, so it was left out.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import warning. {key} is the name of a field found in the file, in English. Keep it as is. Path data is the text that describes a drawn line.",
     "max": 85,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -255,7 +255,7 @@
   },
   "transfer.icon.the-attribute-name": {
     "text": "the attribute {name}",
-    "note": "Shown in icon (transfer).",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is an SVG attribute name such as onclick. Lower case.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -263,7 +263,7 @@
   },
   "transfer.icon.the-event-handler-name": {
     "text": "the event handler {name}",
-    "note": "Shown in icon (transfer).",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is an attribute such as onclick that runs code on an event. Lower case.",
     "max": 40,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -276,7 +276,7 @@
   },
   "transfer.icon.the-icon-is-larger-than-kb-kb": {
     "text": "The icon is larger than {kb} KB.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
     "max": 55,
     "vars": {
       "kb": "The value that replaces kb in the text."
@@ -314,7 +314,7 @@
   },
   "transfer.image-transfer-loader.key-is-not-a-preset-field-so-it-was-left": {
     "text": "\"{key}\" is not a preset field, so it was left out.",
-    "note": "Shown in image transfer loader (transfer).",
+    "note": "Import warning for an image file. {key} is the name of a setting found in the file, written in English. Keep it as is. Same English as the envelope message.",
     "max": 80,
     "vars": {
       "key": "The value that replaces key in the text."
@@ -1015,7 +1015,7 @@
   },
   "transfer.shape.the-shape-is-larger-than-kb-kb": {
     "text": "The shape is larger than {kb} KB.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
     "max": 55,
     "vars": {
       "kb": "The value that replaces kb in the text."
@@ -1127,7 +1127,7 @@
   },
   "transfer.theme.the-theme-is-larger-than-kb-kb": {
     "text": "The theme is larger than {kb} KB.",
-    "note": "Shown in theme (transfer).",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
     "max": 55,
     "vars": {
       "kb": "The value that replaces kb in the text."

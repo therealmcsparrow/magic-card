@@ -1,232 +1,232 @@
 {
   "preset-catalogue.christmas.bauble-sway": {
     "text": "Bauble sway",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of a ready-made animation preset in the Christmas group: a tree ornament (bauble) swinging gently.",
     "max": 20
   },
   "preset-catalogue.christmas.fairy-light-glow": {
     "text": "Fairy light glow",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of an animation preset in the Christmas group: a string of small decorative lights glowing.",
     "max": 30
   },
   "preset-catalogue.christmas.golden-star-shower": {
     "text": "Golden star shower",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of an animation preset in the Christmas group: golden stars falling like rain.",
     "max": 30
   },
   "preset-catalogue.christmas.jingle-bell": {
     "text": "Jingle bell",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of an animation preset in the Christmas group: a bell that rings back and forth.",
     "max": 20
   },
   "preset-catalogue.christmas.new-year-fireworks": {
     "text": "New Year fireworks",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of an animation preset in the Christmas group: fireworks bursting for New Year's Eve.",
     "max": 30
   },
   "preset-catalogue.christmas.present-hop": {
     "text": "Present hop",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of an animation preset in the Christmas group: a gift box that hops. Present means gift here, not now.",
     "max": 20
   },
   "preset-catalogue.christmas.snow-that-settles": {
     "text": "Snow that settles",
-    "note": "Shown in christmas (preset-catalogue).",
+    "note": "Name of an animation preset in the Christmas group: snowfall that piles up and stays.",
     "max": 30
   },
   "preset-catalogue.cleaning.dishwasher-steam": {
     "text": "Dishwasher steam",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: steam rising from a dishwasher.",
     "max": 30
   },
   "preset-catalogue.cleaning.fresh-sparkle": {
     "text": "Fresh sparkle",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: small stars that twinkle to show something is clean.",
     "max": 25
   },
   "preset-catalogue.cleaning.robot-vacuum-glide": {
     "text": "Robot vacuum glide",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: a robot vacuum cleaner gliding across the floor.",
     "max": 30
   },
   "preset-catalogue.cleaning.soap-bubbles-that-pop": {
     "text": "Soap bubbles that pop",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: soap bubbles that rise and burst.",
     "max": 35
   },
   "preset-catalogue.cleaning.spray-mist": {
     "text": "Spray mist",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: a fine spray of liquid from a bottle.",
     "max": 20
   },
   "preset-catalogue.cleaning.washer-spin-cycle": {
     "text": "Washer spin cycle",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: a washing machine drum spinning.",
     "max": 30
   },
   "preset-catalogue.cleaning.wipe-clean": {
     "text": "Wipe clean",
-    "note": "Shown in cleaning (preset-catalogue).",
+    "note": "Name of an animation preset in the Cleaning group: a wiping motion that leaves a surface clean. Wipe is a verb.",
     "max": 20
   },
   "preset-catalogue.fire.chimney-smoke": {
     "text": "Chimney smoke",
-    "note": "Shown in fire (preset-catalogue).",
+    "note": "Name of an animation preset in the Fire group: smoke curling out of a chimney.",
     "max": 25
   },
   "preset-catalogue.fire.hearth-flicker": {
     "text": "Hearth flicker",
-    "note": "Shown in fire (preset-catalogue).",
+    "note": "Name of an animation preset in the Fire group: flames of a fireplace flickering. Hearth is the floor of a fireplace.",
     "max": 25
   },
   "preset-catalogue.fire.heating-up": {
     "text": "Heating up",
-    "note": "Shown in fire (preset-catalogue).",
+    "note": "Name of an animation preset in the Fire group: a heater glowing as it warms up.",
     "max": 20
   },
   "preset-catalogue.fire.licking-flames": {
     "text": "Licking flames",
-    "note": "Shown in fire (preset-catalogue).",
+    "note": "Name of an animation preset in the Fire group: flames that flick upward. Licking is figurative, not tasting.",
     "max": 25
   },
   "preset-catalogue.fire.rising-embers": {
     "text": "Rising embers",
-    "note": "Shown in fire (preset-catalogue).",
+    "note": "Name of an animation preset in the Fire group: glowing sparks of a fire drifting up. Embers are hot bits of coal.",
     "max": 25
   },
   "preset-catalogue.fire.sparkler": {
     "text": "Sparkler",
-    "note": "Shown in fire (preset-catalogue).",
+    "note": "Name of an animation preset in the Fire group: a hand-held firework stick that throws sparks.",
     "max": 15
   },
   "preset-catalogue.halloween.bat-flight": {
     "text": "Bat flight",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: a bat (the animal) flying.",
     "max": 20
   },
   "preset-catalogue.halloween.bubbling-cauldron": {
     "text": "Bubbling cauldron",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: a witch's pot with bubbling liquid.",
     "max": 30
   },
   "preset-catalogue.halloween.creeping-fog": {
     "text": "Creeping fog",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: fog that spreads slowly along the ground.",
     "max": 20
   },
   "preset-catalogue.halloween.ghost-float": {
     "text": "Ghost float",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: a ghost drifting up and down. Float is a verb here.",
     "max": 20
   },
   "preset-catalogue.halloween.jack-o-lantern-glow": {
     "text": "Jack-o'-lantern glow",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: a carved pumpkin lantern glowing from inside.",
     "max": 35
   },
   "preset-catalogue.halloween.skull-chatter": {
     "text": "Skull chatter",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: a skull whose jaw clatters. Chatter means rattling teeth.",
     "max": 25
   },
   "preset-catalogue.halloween.spider-drop": {
     "text": "Spider drop",
-    "note": "Shown in halloween (preset-catalogue).",
+    "note": "Name of an animation preset in the Halloween group: a spider lowering itself on a thread.",
     "max": 20
   },
   "preset-catalogue.home.doorbell-ring": {
     "text": "Doorbell ring",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: a doorbell ringing. Ring is the sound, not a finger ring.",
     "max": 25
   },
   "preset-catalogue.home.energy-flow": {
     "text": "Energy flow",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: electricity moving along a line, for power or grid readings.",
     "max": 20
   },
   "preset-catalogue.home.fan-running": {
     "text": "Fan running",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: a fan with turning blades. Fan is the appliance, not a supporter.",
     "max": 20
   },
   "preset-catalogue.home.garden-sprinkler": {
     "text": "Garden sprinkler",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: a lawn sprinkler throwing water.",
     "max": 30
   },
   "preset-catalogue.home.leak-drip-splash": {
     "text": "Leak drip & splash",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: a water leak with a drop falling and splashing. The ampersand joins drip and splash.",
     "max": 30
   },
   "preset-catalogue.home.mail-arrived": {
     "text": "Mail arrived",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: a letter arriving in the mailbox.",
     "max": 20
   },
   "preset-catalogue.home.motion-detected": {
     "text": "Motion detected",
-    "note": "Shown in home (preset-catalogue).",
+    "note": "Name of an animation preset in the Home group: a motion sensor noticing movement.",
     "max": 25
   },
   "preset-catalogue.light.candlelight": {
     "text": "Candlelight",
-    "note": "Shown in light (preset-catalogue).",
+    "note": "Name of an animation preset in the Light group: a candle flame flickering.",
     "max": 20
   },
   "preset-catalogue.light.lamp-breathe": {
     "text": "Lamp breathe",
-    "note": "Shown in light (preset-catalogue).",
+    "note": "Name of an animation preset in the Light group: a lamp that slowly brightens and dims, like breathing. Breathe is a verb used as a noun.",
     "max": 20
   },
   "preset-catalogue.light.lamp-switch-on": {
     "text": "Lamp switch-on",
-    "note": "Shown in light (preset-catalogue).",
+    "note": "Name of an animation preset in the Light group: a lamp lighting up when switched on.",
     "max": 25
   },
   "preset-catalogue.light.party-sparkle": {
     "text": "Party sparkle",
-    "note": "Shown in light (preset-catalogue).",
+    "note": "Name of an animation preset in the Light group: colourful lights twinkling like at a party.",
     "max": 25
   },
   "preset-catalogue.light.sunbeam-dust": {
     "text": "Sunbeam dust",
-    "note": "Shown in light (preset-catalogue).",
+    "note": "Name of an animation preset in the Light group: dust specks floating in a ray of sunlight.",
     "max": 20
   },
   "preset-catalogue.light.sunrise-warm-up": {
     "text": "Sunrise warm-up",
-    "note": "Shown in light (preset-catalogue).",
+    "note": "Name of an animation preset in the Light group: light that slowly turns warm like a sunrise.",
     "max": 25
   },
   "preset-catalogue.valentine.blush-glow": {
     "text": "Blush glow",
-    "note": "Shown in valentine (preset-catalogue).",
+    "note": "Name of an animation preset in the Valentine group: a soft pink glow, like blushing cheeks.",
     "max": 20
   },
   "preset-catalogue.valentine.cupid-sparkle": {
     "text": "Cupid sparkle",
-    "note": "Shown in valentine (preset-catalogue).",
+    "note": "Name of an animation preset in the Valentine group: sparkles around Cupid's arrow, the god of love.",
     "max": 25
   },
   "preset-catalogue.valentine.falling-petals": {
     "text": "Falling petals",
-    "note": "Shown in valentine (preset-catalogue).",
+    "note": "Name of an animation preset in the Valentine group: flower petals drifting down.",
     "max": 25
   },
   "preset-catalogue.valentine.floating-hearts": {
     "text": "Floating hearts",
-    "note": "Shown in valentine (preset-catalogue).",
+    "note": "Name of an animation preset in the Valentine group: heart symbols rising slowly.",
     "max": 25
   },
   "preset-catalogue.valentine.heart-burst": {
     "text": "Heart burst",
-    "note": "Shown in valentine (preset-catalogue).",
+    "note": "Name of an animation preset in the Valentine group: a heart symbol that bursts into smaller hearts.",
     "max": 20
   },
   "preset-catalogue.valentine.lub-dub-heartbeat": {
     "text": "Lub-dub heartbeat",
-    "note": "Shown in valentine (preset-catalogue).",
+    "note": "Name of an animation preset in the Valentine group: a heart pulsing in the two-beat rhythm of lub-dub, the sound of a heartbeat.",
     "max": 30
   }
 }

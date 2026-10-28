@@ -1,27 +1,27 @@
 {
   "controls.dropdown-view.dropdown": {
     "text": "Dropdown",
-    "note": "Shown in dropdown view (controls).",
+    "note": "Name of the dropdown control module (a list of options to pick one from). Shown as its label in the card.",
     "max": 15
   },
   "controls.dropdown-view.no-options": {
     "text": "No options",
-    "note": "Shown in dropdown view (controls).",
+    "note": "Shown in a dropdown control when the entity offers no options to choose from.",
     "max": 20
   },
   "controls.light-view.effect": {
     "text": "Effect",
-    "note": "Shown in light view (controls).",
+    "note": "Label of the light effect picker (a built-in light effect such as colour loop). A noun, not a verb.",
     "max": 10
   },
   "controls.light-view.light": {
     "text": "Light",
-    "note": "Shown in light view (controls).",
+    "note": "Name of the light control module. A noun: a lamp entity in Home Assistant.",
     "max": 10
   },
   "controls.light-view.name-colour": {
     "text": "{name} colour",
-    "note": "Shown in light view (controls).",
+    "note": "Accessible label of the colour picker of a light. {name} is the light's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -29,7 +29,7 @@
   },
   "controls.light-view.name-effect": {
     "text": "{name} effect",
-    "note": "Shown in light view (controls).",
+    "note": "Accessible label of the effect picker of a light. {name} is the light's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -37,7 +37,7 @@
   },
   "controls.light-view.toggle-name": {
     "text": "Toggle {name}",
-    "note": "Shown in light view (controls).",
+    "note": "Accessible label of the on/off switch of a light. {name} is the light's name. Toggle is a verb.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -45,7 +45,7 @@
   },
   "controls.spinbox-view.decrease-name": {
     "text": "Decrease {name}",
-    "note": "Shown in spinbox view (controls).",
+    "note": "Accessible label of the minus button of a number control. {name} is the entity's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -53,7 +53,7 @@
   },
   "controls.spinbox-view.increase-name": {
     "text": "Increase {name}",
-    "note": "Shown in spinbox view (controls).",
+    "note": "Accessible label of the plus button of a number control. {name} is the entity's name.",
     "max": 25,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -61,7 +61,7 @@
   },
   "controls.spinbox-view.spinbox": {
     "text": "Spinbox",
-    "note": "Shown in spinbox view (controls).",
+    "note": "Name of the spinbox control module (a number field with plus and minus buttons).",
     "max": 15
   }
 }

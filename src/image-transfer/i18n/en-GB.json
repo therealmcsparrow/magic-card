@@ -6,7 +6,7 @@
   },
   "image-transfer.chunk.delete-name-cards-that-use-it-show-that": {
     "text": "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Confirmation before deleting an image from the library. {name} is the image's name, chosen by the user.",
     "max": 140,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -14,7 +14,7 @@
   },
   "image-transfer.chunk.duplicate-name": {
     "text": "Duplicate {name}",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Label of a library action that copies an image. {name} is the image's name, chosen by the user.",
     "max": 30,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -22,7 +22,7 @@
   },
   "image-transfer.chunk.duplicated-as-name": {
     "text": "Duplicated as {name}.",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Confirmation after an image was copied. {name} is the name of the new copy.",
     "max": 35,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -35,7 +35,7 @@
   },
   "image-transfer.chunk.n": {
     "text": "{n, plural, one {# connection} other {# connections}}",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Part of an image's summary line. {n} is how many connections the image has. A connection links a part of the image to a Home Assistant entity.",
     "max": 25,
     "vars": {
       "n": "The count the text is about."
@@ -43,7 +43,7 @@
   },
   "image-transfer.chunk.n-kb": {
     "text": "{n} KB",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "File size of an image in the summary line. {n} is a whole number of kilobytes, at least 1.",
     "max": 10,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -51,7 +51,7 @@
   },
   "image-transfer.chunk.name-copy": {
     "text": "{name} copy",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Suggested name for a copied image. {name} is the name of the original image.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -59,7 +59,7 @@
   },
   "image-transfer.chunk.name-for-the-copy-of-name": {
     "text": "Name for the copy of {name}",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Label of the name field when copying an image. {name} is the name of the original image.",
     "max": 45,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -72,7 +72,7 @@
   },
   "image-transfer.chunk.view-name": {
     "text": "View {name}",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Label of a library action that opens an image. {name} is the image's name, chosen by the user.",
     "max": 20,
     "vars": {
       "name": "The value that replaces name in the text."
@@ -80,7 +80,7 @@
   },
   "image-transfer.reader.connection-n-is-not-valid-so-it-was-left": {
     "text": "Connection {n} is not valid, so it was left out.",
-    "note": "Shown in reader (image-transfer).",
+    "note": "Import warning. {n} is the position (starting at 1) of the skipped connection in the imported file. A connection links a part of the image to an entity.",
     "max": 80,
     "vars": {
       "n": "The value that replaces n in the text."
@@ -88,7 +88,7 @@
   },
   "image-transfer.reader.n": {
     "text": "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}",
-    "note": "Shown in reader (image-transfer).",
+    "note": "Import warning. {n} is how many further connections were skipped because they have no name.",
     "max": 90,
     "vars": {
       "n": "The count the text is about."
@@ -96,7 +96,7 @@
   },
   "image-transfer.reader.only-the-first-max-connections-were-kept": {
     "text": "Only the first {max} connections were kept.",
-    "note": "Shown in reader (image-transfer).",
+    "note": "Import warning. {max} is the largest number of connections one image may have.",
     "max": 70,
     "vars": {
       "max": "The value that replaces max in the text."
@@ -109,12 +109,12 @@
   },
   "image-transfer.reader.the-image-holds-markup-that-is-not": {
     "text": "The image holds markup that is not allowed.",
-    "note": "Shown in reader (image-transfer).",
+    "note": "Import error. The SVG file contains code, such as scripts, that is blocked for safety.",
     "max": 70
   },
   "image-transfer.reader.the-image-is-larger-than-kb-kb": {
     "text": "The image is larger than {kb} KB.",
-    "note": "Shown in reader (image-transfer).",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
     "max": 55,
     "vars": {
       "kb": "The value that replaces kb in the text."
