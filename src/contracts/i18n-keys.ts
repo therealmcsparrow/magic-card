@@ -1,5 +1,5 @@
 /*
- * Contract: i18n-keys. Version 1.1.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; the text-id path is gone
+ * Contract: i18n-keys. Version 1.1.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; text is addressed by key only
  * (see "Text ids" below). Types and tool constants only: src/ imports types,
  * tools read the constants (the file has only type imports, which transpiling drops, so tools transpile and run
  * it like the i18n contract).
@@ -56,7 +56,7 @@
  * ids type-check through the MessageIndex overload, which check-i18n allows only in loader output (D1).
  *
  * ── Text ids ──
- * From i18n 2.0.0 the text-id path, tc() and the legacy count are gone. The runtime takes table indices only; vitest
+ * The runtime takes table indices only; vitest
  * runs the same rewrite as webpack (tools/i18n/vite-plugin.mjs) and tests render a key through tools/i18n/test-msg.ts.
  * A call whose first argument is not a literal key of its namespace is a check error (D1) and a build error.
  * Magic Card Utils has no build step: its generated mc-i18n-panel.js holds the key -> index map and exports t, tx and

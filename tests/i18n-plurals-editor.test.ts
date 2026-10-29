@@ -10,7 +10,7 @@ import { t as look, m as lookM } from '../src/look-editor/i18n';
 import { t as theme, m as themeM } from '../src/theme-editor/i18n';
 import { msg } from '../tools/i18n/test-msg';
 
-/* Counts shown with words are one plural message per place (icu.M1): en-GB and en-US take one/other, Dutch one/other. */
+/* Counts shown with words are one plural message per place: en-GB and en-US take one/other, Dutch one/other. */
 
 type Fn = (key: never, args?: Record<string, string | number>) => string;
 type Row = [
@@ -414,7 +414,7 @@ describe('no count is built by joining or picking strings', () => {
   }
 });
 
-/* Counts stated with a noun (limits, selections, announcements) are one plural message per place (icu.M1, icu.M5):
+/* Counts stated with a noun (limits, selections, announcements) are one plural message per place:
    the code passes the number, each branch is a full sentence. */
 type Pair = [key: string, args: Record<string, string | number>, gb: string, nl: string];
 const COUNTS: Pair[] = [

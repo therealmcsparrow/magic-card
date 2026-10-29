@@ -139,8 +139,7 @@
  * D9 Stale: an en-US or nl entry whose hash differs from the hash of the current en-GB text fails the release
  *    check unless i18n/waivers.json holds a waiver for that key and hash; a waiver for an unknown key, an old
  *    hash or with an empty reason fails.
- * D10 Removed in 2.0.0 with the legacy count and its file: a call whose first argument is not a key is a D1
- *    error in every namespace. D6 also refuses an apostrophe before { } or # in a catalogue and messages
+ * D10 A call whose first argument is not a key is a D1 error in every namespace. D6 also refuses an apostrophe before { } or # in a catalogue and messages
  *    nested deeper than three brace levels, and limits plural branches to the locale's CLDR categories.
  * Characterization (local vitest; tests/ is not committed): per screen, a text snapshot (text nodes,
  * aria-label, title, placeholder, alt) in en-GB and en-US before extraction, unchanged after extraction,
