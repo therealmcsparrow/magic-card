@@ -1,22 +1,22 @@
 {
   "anim-studio.animated-svg.contains-a-link": {
     "text": "Contains a link.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error in the animated SVG tool when an imported SVG holds a link (an anchor element), which the studio rejects for safety.",
     "max": 30
   },
   "anim-studio.animated-svg.contains-an-element-that-runs-or-fetches": {
     "text": "Contains an element that runs or fetches.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error in the animated SVG tool when an imported SVG holds a script or an element that loads outside content, which is refused for safety.",
     "max": 70
   },
   "anim-studio.animated-svg.contains-an-event-handler": {
     "text": "Contains an event handler.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error in the animated SVG tool when an imported SVG has an event attribute such as onclick, which is refused for safety.",
     "max": 45
   },
   "anim-studio.animated-svg.contains-an-external-reference": {
     "text": "Contains an external reference.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error in the animated SVG tool when an imported SVG points to a file or address outside itself, which is refused for safety.",
     "max": 50
   },
   "anim-studio.animated-svg.nothing-is-drawn": {
@@ -26,12 +26,12 @@
   },
   "anim-studio.animated-svg.only-keyframe-animations-export-as-an": {
     "text": "Only keyframe animations export as an animated SVG.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Notice in the SVG export tool when the open animation is not a keyframe animation (for example particles), so it cannot be exported as an animated SVG.",
     "max": 85
   },
   "anim-studio.animated-svg.states-clips-are-not-exported-the-file": {
     "text": "States (clips) are not exported: the file plays the animation’s own timeline.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning in the SVG export tool when the animation has states (clips) that play per entity state; the exported file only plays the main timeline.",
     "max": 125
   },
   "anim-studio.animated-svg.the-animation-is-not-valid-message": {
@@ -44,7 +44,7 @@
   },
   "anim-studio.animated-svg.the-colour-is-not-a-valid-css-colour-the": {
     "text": "The colour is not a valid CSS colour: the file uses currentColor.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning in the SVG export tool when a colour in the animation cannot be written as a CSS colour, so the file falls back to currentColor (the text colour of the page).",
     "max": 105
   },
   "anim-studio.animated-svg.the-file-is-size-kb-larger-than-256-kb": {
@@ -57,22 +57,22 @@
   },
   "anim-studio.animated-svg.the-file-loops-the-repeat-count-is-not": {
     "text": "The file loops: the repeat count is not exported.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning in the SVG export tool when the animation repeats a set number of times; the exported file loops forever instead.",
     "max": 80
   },
   "anim-studio.animated-svg.the-icon-has-no-shapes-to-export": {
     "text": "The icon has no shapes to export.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Error in the SVG export tool when the icon has no drawable shapes, so there is nothing to write to the file.",
     "max": 55
   },
   "anim-studio.animated-svg.the-smil-fallback-plays-the-animation": {
     "text": "The SMIL fallback plays the animation forwards only.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning in the SVG export tool: viewers that use the older SMIL animation fallback play the animation forwards only, without reverse or alternate direction.",
     "max": 85
   },
   "anim-studio.animated-svg.tracks-of-card-parts-name-state": {
     "text": "Tracks of card parts (name, state, background) are not exported.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning in the SVG export tool: keyframe tracks that animate card parts other than the icon are left out of the exported file.",
     "max": 105
   },
   "anim-studio.animated-svg.unexpected-element-element": {
@@ -90,7 +90,7 @@
   },
   "anim-studio.animated-svg.value-bindings-are-not-exported-the-file": {
     "text": "Value bindings are not exported: the file plays at the drawn values.",
-    "note": "Shown in animated svg (anim-studio).",
+    "note": "Warning in the SVG export tool: entity value bindings are dropped, so the exported file always plays with the values as drawn.",
     "max": 110
   },
   "anim-studio.bezier-editor.default": {
@@ -141,7 +141,7 @@
   },
   "anim-studio.bezier-editor.steps-jump-between-values-there-is-no": {
     "text": "Steps jump between values; there is no curve to edit.",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Hint in the easing editor, shown instead of the curve graph when the easing is steps(n), which has no bezier curve to drag.",
     "max": 85
   },
   "anim-studio.bezier-editor.the-animation-s-easing-easinglabel": {
@@ -154,7 +154,7 @@
   },
   "anim-studio.bezier-editor.use-a-preset-name-cubic-bezier-x1-y1-x2": {
     "text": "Use a preset name, cubic-bezier(x1, y1, x2, y2) or steps(n).",
-    "note": "Shown in bezier editor (anim-studio).",
+    "note": "Error under the easing text field when the typed value is not a known easing. Keep the cubic-bezier and steps syntax as is.",
     "max": 100
   },
   "anim-studio.bindings-panel.add-value-binding": {
@@ -177,7 +177,7 @@
   },
   "anim-studio.bindings-panel.attribute-names-use-letters-digits-and": {
     "text": "Attribute names use letters, digits, _ . and - (no spaces).",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Error under the attribute field of a binding when the typed attribute name has characters Home Assistant attribute names do not use.",
     "max": 95
   },
   "anim-studio.bindings-panel.background": {
@@ -234,7 +234,7 @@
   },
   "anim-studio.bindings-panel.empty-reads-the-state-for-example": {
     "text": "Empty reads the state. For example percentage (fan) or brightness (light).",
-    "note": "Shown in bindings panel (anim-studio).",
+    "note": "Help text under the attribute field of a binding: leaving it empty reads the entity state; examples are real attribute names. Keep the attribute names as is.",
     "max": 120
   },
   "anim-studio.bindings-panel.entity-value": {
@@ -353,12 +353,12 @@
   },
   "anim-studio.bindings-utils.attribute-names-use-letters-digits-and": {
     "text": "Attribute names use letters, digits, _ . and -.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Validation error for a binding whose attribute name has characters other than letters, digits, underscore, dot or hyphen.",
     "max": 80
   },
   "anim-studio.bindings-utils.blends-from-the-first-colour-to-the": {
     "text": "Blends from the first colour to the second.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Colour mix binding property, shown in the property list: the colour moves from the first to the second as the value rises.",
     "max": 70
   },
   "anim-studio.bindings-utils.colour-mix": {
@@ -373,22 +373,22 @@
   },
   "anim-studio.bindings-utils.draws-the-line-on-a-battery-or-level": {
     "text": "Draws the line on (a battery or level).",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Draw binding property, shown in the property list: the outline draws in as the value rises, like a battery or level indicator.",
     "max": 65
   },
   "anim-studio.bindings-utils.fades-in-with-the-value": {
     "text": "Fades in with the value.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Opacity binding property, shown in the property list: the target becomes more visible as the value rises.",
     "max": 40
   },
   "anim-studio.bindings-utils.grows-with-the-value": {
     "text": "Grows with the value.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Scale binding property, shown in the property list: the target becomes larger as the value rises.",
     "max": 35
   },
   "anim-studio.bindings-utils.min-and-max-must-differ": {
     "text": "Min and max must differ.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Validation error on a binding whose Min and Max input values are equal, which leaves no range to map.",
     "max": 40
   },
   "anim-studio.bindings-utils.move-x": {
@@ -408,7 +408,7 @@
   },
   "anim-studio.bindings-utils.moves-up-or-down": {
     "text": "Moves up or down.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Move Y binding property, shown in the property list: the target shifts vertically with the value.",
     "max": 30
   },
   "anim-studio.bindings-utils.opacity": {
@@ -423,7 +423,7 @@
   },
   "anim-studio.bindings-utils.plays-this-animation-faster-or-slower": {
     "text": "Plays this animation faster or slower.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Playback speed binding property, shown in the property list: the animation speeds up or slows down with the value.",
     "max": 65
   },
   "anim-studio.bindings-utils.rotation": {
@@ -443,32 +443,32 @@
   },
   "anim-studio.bindings-utils.spins-continuously-faster-as-the-value": {
     "text": "Spins continuously, faster as the value rises (a fan).",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Rotation speed binding property, shown in the property list: the target keeps turning and speeds up with the value.",
     "max": 90
   },
   "anim-studio.bindings-utils.the-timeline-also-animates-the-draw-here": {
     "text": "The timeline also animates the draw here: while it plays, it wins over this binding.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Warning under a Draw binding when the keyframe timeline animates the same draw-on property; the timeline takes priority while it plays.",
     "max": 135
   },
   "anim-studio.bindings-utils.the-timeline-also-animates-the-opacity": {
     "text": "The timeline also animates the opacity here: while it plays, its opacity wins over this binding.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Warning under an Opacity binding when the keyframe timeline animates the same opacity; the timeline takes priority while it plays.",
     "max": 155
   },
   "anim-studio.bindings-utils.the-timeline-also-animates-this-colour": {
     "text": "The timeline also animates this colour: while it plays, its colour wins over this binding.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Warning under a Colour mix binding when the keyframe timeline animates the same colour; the timeline takes priority while it plays.",
     "max": 145
   },
   "anim-studio.bindings-utils.the-timeline-skews-this-target-while-it": {
     "text": "The timeline skews this target: while it plays, the skew replaces this binding’s movement.",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Warning under a Move binding when the keyframe timeline skews the same target; the skew replaces the binding's movement while it plays.",
     "max": 145
   },
   "anim-studio.bindings-utils.turns-to-an-angle-a-needle-or-a-dial": {
     "text": "Turns to an angle (a needle or a dial).",
-    "note": "Shown in bindings utils (anim-studio).",
+    "note": "Description of the Rotation binding property, shown in the property list: the target turns to an angle set by the value.",
     "max": 65
   },
   "anim-studio.canvas-host.add-point": {
@@ -488,7 +488,7 @@
   },
   "anim-studio.canvas-host.couldn-t-load-the-drawing-tools": {
     "text": "Couldn't load the drawing tools.",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Error shown in the studio canvas when the drawing tools failed to load; a Try again button sits beside it.",
     "max": 55
   },
   "anim-studio.canvas-host.delete-handle": {
@@ -533,12 +533,12 @@
   },
   "anim-studio.canvas-host.reloading-the-page-discards-changes-that": {
     "text": "Reloading the page discards changes that are not saved. Reload anyway?",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Confirmation question in a dialog before the Reload page button reloads the browser page and loses unsaved studio edits.",
     "max": 115
   },
   "anim-studio.canvas-host.the-drawing-tools-on-this-page-are-from": {
     "text": "The drawing tools on this page are from another Magic Card version. Reload the page to draw here.",
-    "note": "Shown in canvas host (anim-studio).",
+    "note": "Error shown in the studio canvas when the loaded drawing tools do not match the card version; a Reload page button sits beside it.",
     "max": 160
   },
   "anim-studio.canvas-host.try-again": {
@@ -548,7 +548,7 @@
   },
   "anim-studio.draw-host.arrow-keys-move-the-cursor-enter-places": {
     "text": "Arrow keys move the cursor, Enter places points, Escape cancels.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Keyboard help appended to the drawing canvas's accessible name, read by screen readers. Keep the key names as is.",
     "max": 105
   },
   "anim-studio.draw-host.at-most-count-shapes-fit-in-a-rig": {
@@ -616,7 +616,7 @@
   },
   "anim-studio.draw-host.drop-the-svg-to-import-it": {
     "text": "Drop the .svg to import it",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Overlay on the drawing stage while a file is dragged over it; dropping an .svg file imports it as shapes.",
     "max": 45
   },
   "anim-studio.draw-host.erase-shapes": {
@@ -643,7 +643,7 @@
   },
   "anim-studio.draw-host.move-away-from-the-start-first": {
     "text": "Move away from the start first.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message when the user tries to close a freehand or pen path on its first point before moving away from it.",
     "max": 50
   },
   "anim-studio.draw-host.name-added": {
@@ -673,7 +673,7 @@
   },
   "anim-studio.draw-host.no-shapes-yet-pick-a-drawing-tool": {
     "text": "No shapes yet: pick a drawing tool.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Empty-state hint on the drawing stage when the rig has no shapes; it tells the user to choose a tool from the toolbar.",
     "max": 60
   },
   "anim-studio.draw-host.path": {
@@ -683,7 +683,7 @@
   },
   "anim-studio.draw-host.pen-click-to-add-points-click-the-first": {
     "text": "Pen. Click to add points, click the first point to close.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Usage hint for the pen tool, shown as the tool's status text and used in the canvas's accessible name.",
     "max": 95
   },
   "anim-studio.draw-host.point-count-placed-enter-again-on-the": {
@@ -701,7 +701,7 @@
   },
   "anim-studio.draw-host.select-a-part-or-shape-then-draw-its": {
     "text": "Select a part or shape, then draw its motion path.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Status hint on the drawing stage for the motion path tool; it tells the user to select a part first.",
     "max": 80
   },
   "anim-studio.draw-host.shape": {
@@ -711,7 +711,7 @@
   },
   "anim-studio.draw-host.shape-points-drag-a-point-to-move-it": {
     "text": "Shape points. Drag a point to move it.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Accessible name of the point-editing layer on the drawing stage, read by screen readers, with a short usage hint.",
     "max": 65
   },
   "anim-studio.draw-host.started-at-x-x-y-y-move-the-cursor-and": {
@@ -730,12 +730,12 @@
   },
   "anim-studio.draw-host.that-layer-is-locked-unlock-it-in-layers": {
     "text": "That layer is locked. Unlock it in Layers.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message on the drawing stage when the user edits a locked layer; Layers is the name of the layers panel.",
     "max": 70
   },
   "anim-studio.draw-host.the-drawing-tools-are-not-loaded-yet": {
     "text": "The drawing tools are not loaded yet.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message on the drawing stage when the user starts to draw before the lazy-loaded drawing tools have finished loading.",
     "max": 60
   },
   "anim-studio.draw-host.the-drawing-tools-are-ready": {
@@ -745,7 +745,7 @@
   },
   "anim-studio.draw-host.the-path-has-the-most-points-it-can-hold": {
     "text": "The path has the most points it can hold.",
-    "note": "Shown in draw host (anim-studio).",
+    "note": "Message on the drawing stage when the user tries to add a point to a path that reached the point limit.",
     "max": 70
   },
   "anim-studio.draw-layers.bring-name-forward": {
@@ -771,12 +771,12 @@
   },
   "anim-studio.draw-layers.bring-shape-forward": {
     "text": "Bring shape forward",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip and accessible name of the button in the layers panel that moves the selected shape one step up in the stacking order.",
     "max": 35
   },
   "anim-studio.draw-layers.bring-shape-over-the-icon": {
     "text": "Bring shape over the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip and accessible name of the layers-panel button that moves a shape from below the icon to above it.",
     "max": 40
   },
   "anim-studio.draw-layers.delete-name": {
@@ -844,12 +844,12 @@
   },
   "anim-studio.draw-layers.send-shape-backward": {
     "text": "Send shape backward",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip and accessible name of the layers-panel button that moves the selected shape one step down in the stacking order.",
     "max": 35
   },
   "anim-studio.draw-layers.send-shape-under-the-icon": {
     "text": "Send shape under the icon",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip and accessible name of the layers-panel button that moves a shape from above the icon to below it.",
     "max": 40
   },
   "anim-studio.draw-layers.send-under-the-icon": {
@@ -869,7 +869,7 @@
   },
   "anim-studio.draw-layers.the-rig-holds-the-most-shapes-it-can-48": {
     "text": "The rig holds the most shapes it can (48).",
-    "note": "Shown in draw layers (anim-studio).",
+    "note": "Tooltip on the disabled add-shape button in the layers panel once the rig has reached its limit of 48 shapes.",
     "max": 70
   },
   "anim-studio.draw-layers.under-the-icon": {
@@ -884,42 +884,42 @@
   },
   "anim-studio.draw-store.click-a-shape-to-select-it-drag-to-move": {
     "text": "Click a shape to select it, drag to move it.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Select tool, shown as status text on the drawing stage and in the canvas's accessible name.",
     "max": 75
   },
   "anim-studio.draw-store.click-or-drag-over-shapes-to-delete-them": {
     "text": "Click or drag over shapes to delete them.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Eraser tool, shown as status text on the drawing stage and in the canvas's accessible name.",
     "max": 70
   },
   "anim-studio.draw-store.click-to-add-points-drag-for-curves": {
     "text": "Click to add points, drag for curves. Click the first point to close, or choose Finish path.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Pen tool, shown as status text on the drawing stage. Finish path is the name of a button.",
     "max": 150
   },
   "anim-studio.draw-store.drag-to-draw-a-line": {
     "text": "Drag to draw a line.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Line tool, shown as status text on the drawing stage and in the canvas's accessible name.",
     "max": 35
   },
   "anim-studio.draw-store.drag-to-draw-shift-circle-alt-from-the": {
     "text": "Drag to draw. Shift: circle, Alt: from the centre.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Ellipse tool, shown as status text on the drawing stage. Shift and Alt are key names.",
     "max": 80
   },
   "anim-studio.draw-store.drag-to-draw-shift-square-alt-from-the": {
     "text": "Drag to draw. Shift: square, Alt: from the centre.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Rectangle tool, shown as status text on the drawing stage. Shift and Alt are key names.",
     "max": 80
   },
   "anim-studio.draw-store.draw-freely-the-stroke-is-smoothed-when": {
     "text": "Draw freely; the stroke is smoothed when you let go.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Freehand tool, shown as status text on the drawing stage and in the canvas's accessible name.",
     "max": 85
   },
   "anim-studio.draw-store.draw-the-path-the-selected-part-travels": {
     "text": "Draw the path the selected part travels, starting where it rests.",
-    "note": "Shown in draw store (anim-studio).",
+    "note": "Usage hint for the Motion path tool, shown as status text on the drawing stage and in the canvas's accessible name.",
     "max": 105
   },
   "anim-studio.draw-store.ellipse": {
@@ -964,12 +964,12 @@
   },
   "anim-studio.draw-svg-dialog.a-looping-svg-file-of-the-animation": {
     "text": "A looping SVG file of the animation",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description under the animated SVG export option in the import and export dialog: it downloads the animation as one looping .svg file.",
     "max": 60
   },
   "anim-studio.draw-svg-dialog.a-looping-svg-file-of-the-baked": {
     "text": "A looping SVG file of the baked particles",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description under the particles export option in the import and export dialog: the simulated particles are saved as one looping .svg file.",
     "max": 70
   },
   "anim-studio.draw-svg-dialog.add-as-shapes": {
@@ -979,7 +979,7 @@
   },
   "anim-studio.draw-svg-dialog.add-the-drawing-as-shapes-over-the-icon": {
     "text": "Add the drawing as shapes over the icon, or use it as the icon itself.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Explanation in the SVG import dialog of the two choices after a file is loaded: add its shapes over the icon, or replace the icon.",
     "max": 115
   },
   "anim-studio.draw-svg-dialog.animated-svg": {
@@ -1002,32 +1002,32 @@
   },
   "anim-studio.draw-svg-dialog.black-in-an-img-the-text-colour-inline": {
     "text": "Black in an <img>, the text colour inline.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description of the currentColor export in the dialog: the icon shows black in an img tag and takes the text colour when inline. Keep <img> as is.",
     "max": 70
   },
   "anim-studio.draw-svg-dialog.browsers-play-its-css-keyframes": {
     "text": "Browsers play its CSS keyframes.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description of the animated SVG export in the dialog, for a file whose animation is plain CSS keyframes.",
     "max": 55
   },
   "anim-studio.draw-svg-dialog.browsers-play-its-css-keyframes-the-smil": {
     "text": "Browsers play its CSS keyframes; the SMIL copy plays where CSS animation is missing.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description of the animated SVG export in the dialog, for a file that also carries a SMIL fallback for viewers without CSS animation.",
     "max": 135
   },
   "anim-studio.draw-svg-dialog.card-yaml-copied-paste-it-into-a-module": {
     "text": "Card YAML copied: paste it into a module",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Confirmation in the export dialog after the Copy button put the card YAML on the clipboard.",
     "max": 65
   },
   "anim-studio.draw-svg-dialog.card-yaml-to-copy": {
     "text": "Card YAML to copy",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Accessible name of the read-only text box in the export dialog that holds the card YAML for manual copying.",
     "max": 30
   },
   "anim-studio.draw-svg-dialog.choose-an-svg-file": {
     "text": "Choose an .svg file.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Error in the SVG import dialog when the picked or dropped file is not an .svg file.",
     "max": 35
   },
   "anim-studio.draw-svg-dialog.choose-another": {
@@ -1052,12 +1052,12 @@
   },
   "anim-studio.draw-svg-dialog.copies-icon-svg-and-the-svg-as-card-yaml": {
     "text": "Copies icon: svg and the SVG as card YAML",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description of the Copy as card YAML option in the export dialog. Keep icon: svg as is, it is the YAML key.",
     "max": 70
   },
   "anim-studio.draw-svg-dialog.copy-failed-select-the-text-below-and": {
     "text": "Copy failed: select the text below and copy it",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Error in the export dialog when the clipboard is blocked; the user copies the text box below by hand.",
     "max": 75
   },
   "anim-studio.draw-svg-dialog.copy-svg": {
@@ -1085,7 +1085,7 @@
   },
   "anim-studio.draw-svg-dialog.drop-an-svg-file-here": {
     "text": "Drop an .svg file here",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Label of the drop zone in the SVG import dialog; the user can also click it to pick a file.",
     "max": 40
   },
   "anim-studio.draw-svg-dialog.icon": {
@@ -1121,7 +1121,7 @@
   },
   "anim-studio.draw-svg-dialog.nothing-to-export-yet": {
     "text": "Nothing to export yet.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Empty state in the export dialog when the icon has no shapes to save or copy.",
     "max": 40
   },
   "anim-studio.draw-svg-dialog.parts-shapes": {
@@ -1177,12 +1177,12 @@
   },
   "anim-studio.draw-svg-dialog.the-file-could-not-be-read": {
     "text": "The file could not be read.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Error in the SVG import dialog when the browser fails to read the chosen file.",
     "max": 45
   },
   "anim-studio.draw-svg-dialog.the-icon-at-rest-without-animation-ids": {
     "text": "The icon at rest, without animation. Ids stay on each part and shape.",
-    "note": "Shown in draw svg dialog (anim-studio).",
+    "note": "Description of the still SVG export in the dialog: the icon as drawn, with no motion, keeping the id of every part.",
     "max": 115
   },
   "anim-studio.draw-svg-dialog.the-svg-is-larger-than-32-kb": {
@@ -1227,7 +1227,7 @@
   },
   "anim-studio.draw-tools.motion-path-select-a-part-or-shape-first": {
     "text": "Motion path: select a part or shape first",
-    "note": "Shown in draw tools (anim-studio).",
+    "note": "Tooltip on the disabled Motion path tool button in the toolbar while nothing is selected.",
     "max": 70
   },
   "anim-studio.draw-tools.save-as-icon": {
@@ -1382,7 +1382,7 @@
   },
   "anim-studio.icon-start.or-start-from-the-icon-library": {
     "text": "Or start from the icon library",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Heading on the studio start screen above the searchable icon list, an alternative to typing an icon id.",
     "max": 50
   },
   "anim-studio.icon-start.person": {
@@ -1392,7 +1392,7 @@
   },
   "anim-studio.icon-start.pick-an-icon-or-type-an-id-like-mdi-bell": {
     "text": "Pick an icon, or type an id like mdi:bell-ring.",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Help text on the studio start screen under the icon field. Keep the example id mdi:bell-ring as is.",
     "max": 80
   },
   "anim-studio.icon-start.plant": {
@@ -1407,7 +1407,7 @@
   },
   "anim-studio.icon-start.search-the-icon-library": {
     "text": "Search the icon library",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Placeholder and accessible name of the search field above the icon list on the studio start screen.",
     "max": 40
   },
   "anim-studio.icon-start.sensor": {
@@ -1432,7 +1432,7 @@
   },
   "anim-studio.icon-start.start-from-an-icon": {
     "text": "Start from an icon",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Heading of the studio start screen where the user picks an icon to split into animatable parts.",
     "max": 30
   },
   "anim-studio.icon-start.sun": {
@@ -1447,12 +1447,12 @@
   },
   "anim-studio.icon-start.the-icon-is-split-into-its-parts-select": {
     "text": "The icon is split into its parts. Select a part, then give it a preset: swing, spin, draw on and more.",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Confirmation on the studio start screen after an icon was split, telling the user what to do next.",
     "max": 165
   },
   "anim-studio.icon-start.the-icon-library-could-not-be-loaded": {
     "text": "The icon library could not be loaded. Check your connection, then try again.",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Error on the studio start screen when the icon list fails to load; the user retries after checking the connection.",
     "max": 125
   },
   "anim-studio.icon-start.this-icon-could-not-be-loaded-check-the": {
@@ -1462,7 +1462,7 @@
   },
   "anim-studio.icon-start.this-icon-has-no-shapes-to-animate": {
     "text": "This icon has no shapes to animate.",
-    "note": "Shown in icon start (anim-studio).",
+    "note": "Error on the studio start screen when the chosen icon holds no drawable shapes, so it cannot be split into parts.",
     "max": 60
   },
   "anim-studio.icon-start.timer": {
@@ -1529,7 +1529,7 @@
   },
   "anim-studio.key-inspector.blur-has-its-own-lane-and-is-added-to": {
     "text": "Blur has its own lane and is added to this list.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Hint in the key inspector's property list: Blur is a separate timeline lane, and adding it also puts it in this list.",
     "max": 80
   },
   "anim-studio.key-inspector.copy": {
@@ -1576,7 +1576,7 @@
   },
   "anim-studio.key-inspector.drag-any-of-them-on-the-timeline-or-use": {
     "text": "Drag any of them on the timeline, or use the arrow keys, to move them together.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Hint in the key inspector when several keyframes are selected: moving one moves all of them.",
     "max": 130
   },
   "anim-studio.key-inspector.drawn": {
@@ -1586,12 +1586,12 @@
   },
   "anim-studio.key-inspector.easing-to-the-next-keyframe": {
     "text": "Easing to the next keyframe",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Label of the easing field in the key inspector: the speed curve used between this keyframe and the next.",
     "max": 45
   },
   "anim-studio.key-inspector.edit-the-keyframe-s-easing": {
     "text": "Edit the keyframe's easing",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Tooltip and accessible name of the key inspector button that opens the easing editor for the selected keyframe.",
     "max": 45
   },
   "anim-studio.key-inspector.filter": {
@@ -1639,7 +1639,7 @@
   },
   "anim-studio.key-inspector.must-be-between-0-and-100": {
     "text": "Must be between 0 and 100%.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Error under the keyframe position field in the key inspector when the typed percentage is outside the cycle.",
     "max": 45
   },
   "anim-studio.key-inspector.must-be-between-min-and-max-unit": {
@@ -1667,17 +1667,17 @@
   },
   "anim-studio.key-inspector.not-an-allowed-shadow-x-y-blur-spread": {
     "text": "Not an allowed shadow: x y blur spread colour.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Error under the shadow field in the key inspector when the typed value does not follow the allowed order of offsets, blur, spread and colour.",
     "max": 75
   },
   "anim-studio.key-inspector.only-this-property-default-follows-the": {
     "text": "Only this property. Default follows the keyframe's easing.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Tooltip of a per-property easing field in the key inspector: it changes this property only; Default uses the keyframe's easing.",
     "max": 95
   },
   "anim-studio.key-inspector.only-this-property-default-follows-the-2": {
     "text": "Only this property. Default follows the keyframe's easing (the animation easing).",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Tooltip of a per-property easing field in the key inspector when the keyframe has no easing, so Default falls back to the animation's easing.",
     "max": 130
   },
   "anim-studio.key-inspector.opacity": {
@@ -1692,7 +1692,7 @@
   },
   "anim-studio.key-inspector.property-keys-get-their-own-easing-whole": {
     "text": "Property keys get their own easing; whole keyframes set the keyframe's easing.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Help text in the key inspector explaining which easing applies: one on a single property key, or one on the whole keyframe.",
     "max": 125
   },
   "anim-studio.key-inspector.radius": {
@@ -1702,7 +1702,7 @@
   },
   "anim-studio.key-inspector.remove-from-this-keyframe": {
     "text": "Remove from this keyframe",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Tooltip and accessible name of the button in the key inspector that removes one property from the selected keyframe.",
     "max": 40
   },
   "anim-studio.key-inspector.remove-name-from-this-keyframe": {
@@ -1783,32 +1783,32 @@
   },
   "anim-studio.key-inspector.text-and-icon-colour": {
     "text": "Text and icon colour",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Label of the colour property in the key inspector that tints the card's text and icon.",
     "max": 35
   },
   "anim-studio.key-inspector.the-entity-colour-button-uses-the": {
     "text": "The entity colour button uses the animation colour (the card entry's colour, else the entity's).",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Tooltip of the entity colour button next to a colour field in the key inspector, explaining which colour it fills in.",
     "max": 155
   },
   "anim-studio.key-inspector.the-selected-keyframes-use-different": {
     "text": "The selected keyframes use different easings; a choice here sets all of them.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Hint in the key inspector's easing field when several selected keyframes disagree; picking an easing overwrites all of them.",
     "max": 125
   },
   "anim-studio.key-inspector.this-is-the-lane-s-last-key-no-segment": {
     "text": "This is the lane's last key: no segment follows it, so its easing has no effect.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Notice in the key inspector's easing field when the selected key is the last on its timeline lane.",
     "max": 130
   },
   "anim-studio.key-inspector.this-is-the-last-keyframe-no-segment": {
     "text": "This is the last keyframe: no segment follows it, so its easing has no effect.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Notice in the key inspector's easing field when the selected keyframe is the last one of the animation.",
     "max": 125
   },
   "anim-studio.key-inspector.this-keyframe-sets-no-property-add-one": {
     "text": "This keyframe sets no property. Add one with Add property.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Empty state in the key inspector for a keyframe without properties. Add property is the name of a button.",
     "max": 95
   },
   "anim-studio.key-inspector.turn": {
@@ -1818,12 +1818,12 @@
   },
   "anim-studio.key-inspector.use-a-colour-or-a-gradient": {
     "text": "Use a colour or a gradient.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Error under a colour field in the key inspector when the typed value is neither a colour nor a gradient.",
     "max": 45
   },
   "anim-studio.key-inspector.use-filter-functions-like-brightness-1-2": {
     "text": "Use filter functions like brightness(1.2) hue-rotate(30deg); url() is not allowed.",
-    "note": "Shown in key inspector (anim-studio).",
+    "note": "Error under the filter field in the key inspector when the typed value is not an allowed CSS filter. Keep the CSS examples as is.",
     "max": 135
   },
   "anim-studio.key-inspector.where-from-to-to": {
@@ -1853,7 +1853,7 @@
   },
   "anim-studio.keyframes-editor.add-a-keyframe-at-the-playhead": {
     "text": "Add a keyframe at the playhead",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip and accessible name of the timeline button that adds a keyframe at the current playhead position.",
     "max": 50
   },
   "anim-studio.keyframes-editor.add-a-name-keyframe-at-the-playhead": {
@@ -1909,7 +1909,7 @@
   },
   "anim-studio.keyframes-editor.arrows-move-the-keyframe-alt-and-arrows": {
     "text": "Arrows move the keyframe, Alt and arrows go to the next one, Delete removes it.",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Keyboard help in the accessible name of a keyframe marker on the timeline. Keep the key names as is.",
     "max": 130
   },
   "anim-studio.keyframes-editor.at-the-playhead-filter": {
@@ -2004,7 +2004,7 @@
   },
   "anim-studio.keyframes-editor.drag-to-move-snaps-shift-free-alt": {
     "text": "Drag to move (snaps; Shift: free, Alt: duplicate). Ctrl-click adds a key, Shift-click selects a range. Arrows move, Alt and arrows go to the next key, Delete removes.",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of a keyframe marker on the timeline listing mouse and keyboard actions. Keep the key names as is.",
     "max": 270
   },
   "anim-studio.keyframes-editor.duplicate-count": {
@@ -2139,17 +2139,17 @@
   },
   "anim-studio.keyframes-editor.no-keyframes-yet-use-add-property-or": {
     "text": "No keyframes yet: use Add property, or double-click its lane.",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Empty state on the timeline when the selected part has no keyframes. Add property is the name of a button.",
     "max": 100
   },
   "anim-studio.keyframes-editor.no-properties-animate-yet-use-add": {
     "text": "No properties animate yet. Use Add property, or double-click a lane.",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Empty state on the timeline when the animation animates no property at all. Add property is the name of a button.",
     "max": 110
   },
   "anim-studio.keyframes-editor.nothing-pasted-those-properties-do-not": {
     "text": "Nothing pasted: those properties do not fit here",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Message after Paste on the timeline when the copied keyframes hold properties that this target cannot animate.",
     "max": 80
   },
   "anim-studio.keyframes-editor.onion-skin": {
@@ -2159,7 +2159,7 @@
   },
   "anim-studio.keyframes-editor.onion-skin-mark-the-keyframes-around-the": {
     "text": "Onion skin: mark the keyframes around the playhead",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the timeline toggle that highlights the keyframes before and after the playhead.",
     "max": 80
   },
   "anim-studio.keyframes-editor.paste-at-the-playhead-into-target-ctrl-v": {
@@ -2172,7 +2172,7 @@
   },
   "anim-studio.keyframes-editor.paste-keyframes-at-the-playhead": {
     "text": "Paste keyframes at the playhead",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip and accessible name of the timeline button that pastes the copied keyframes at the playhead.",
     "max": 50
   },
   "anim-studio.keyframes-editor.pct-seconds-seconds": {
@@ -2201,17 +2201,17 @@
   },
   "anim-studio.keyframes-editor.ruler-in-percent-of-the-cycle-or-in": {
     "text": "Ruler in percent of the cycle or in seconds",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Accessible name of the timeline toggle that switches the ruler between percent and seconds.",
     "max": 70
   },
   "anim-studio.keyframes-editor.ruler-in-percent-show-seconds": {
     "text": "Ruler in percent; show seconds",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the timeline ruler toggle while the ruler shows percent; clicking it switches to seconds.",
     "max": 50
   },
   "anim-studio.keyframes-editor.ruler-in-seconds-show-percent": {
     "text": "Ruler in seconds; show percent",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the timeline ruler toggle while the ruler shows seconds; clicking it switches to percent.",
     "max": 50
   },
   "anim-studio.keyframes-editor.seconds": {
@@ -2247,7 +2247,7 @@
   },
   "anim-studio.keyframes-editor.snap-to-keyframes-the-playhead-and-the": {
     "text": "Snap to keyframes, the playhead and the grid (hold Shift to drag freely)",
-    "note": "Shown in keyframes editor (anim-studio).",
+    "note": "Tooltip of the timeline snapping toggle. Shift is a key name.",
     "max": 120
   },
   "anim-studio.keyframes-editor.snapping": {
@@ -2851,7 +2851,7 @@
   },
   "anim-studio.part-inspector.moves-the-part-along-a-curve-from-its": {
     "text": "Moves the part along a curve, from its rest position. Drag the points on the stage.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Help text in the part inspector under the motion path setting.",
     "max": 135
   },
   "anim-studio.part-inspector.name": {
@@ -2861,7 +2861,7 @@
   },
   "anim-studio.part-inspector.no-keys-yet-add-keys-on-the-timeline-to": {
     "text": "No keys yet. Add keys on the timeline to rotate, move, scale, fade or colour this part.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Empty state in the part inspector for a part without keyframes, pointing the user to the timeline.",
     "max": 140
   },
   "anim-studio.part-inspector.off": {
@@ -2977,32 +2977,32 @@
   },
   "anim-studio.part-inspector.the-outline-is-traced-then-the-part": {
     "text": "The outline is traced, then the part fills in.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Help text in the part inspector under the draw-on setting, describing what the effect looks like.",
     "max": 75
   },
   "anim-studio.part-inspector.the-point-the-group-rotates-and-scales": {
     "text": "The point the group rotates and scales around, in icon units. Drag it on the stage.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Help text in the part inspector under the pivot setting of a group of parts.",
     "max": 135
   },
   "anim-studio.part-inspector.the-point-the-part-rotates-and-scales": {
     "text": "The point the part rotates and scales around, in icon units. Drag it on the stage.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Help text in the part inspector under the pivot setting of a single part.",
     "max": 135
   },
   "anim-studio.part-inspector.the-point-the-preset-turns-this-group": {
     "text": "The point the preset turns this group around, in icon units. It wins over the group's own pivot. Drag it on the stage.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Help text in the part inspector under the preset pivot of a group; it overrides the group's own pivot.",
     "max": 190
   },
   "anim-studio.part-inspector.the-point-the-preset-turns-this-part": {
     "text": "The point the preset turns this part around, in icon units. It wins over the part's own pivot. Drag it on the stage.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Help text in the part inspector under the preset pivot of a single part; it overrides the part's own pivot.",
     "max": 190
   },
   "anim-studio.part-inspector.this-part-has-its-own-draw-keys-on-the": {
     "text": "This part has its own draw keys on the timeline.",
-    "note": "Shown in part inspector (anim-studio).",
+    "note": "Notice in the part inspector that the draw-on setting is off because the timeline already holds draw keys for this part.",
     "max": 80
   },
   "anim-studio.part-inspector.top": {
@@ -3081,7 +3081,7 @@
   },
   "anim-studio.part-presets-panel.one-click-animates-the-selection-fine": {
     "text": "One click animates the selection; fine-tune the keys on the timeline.",
-    "note": "Shown in part presets panel (anim-studio).",
+    "note": "Help text at the top of the part presets panel explaining that a preset applies at once and can be edited afterwards.",
     "max": 115
   },
   "anim-studio.part-presets-panel.part-presets": {
@@ -3115,7 +3115,7 @@
   },
   "anim-studio.part-presets-panel.this-animation-already-has-24-animated": {
     "text": "This animation already has 24 animated targets: remove one to add a preset.",
-    "note": "Shown in part presets panel (anim-studio).",
+    "note": "Notice in the part presets panel when the animation has reached the limit of 24 animated targets, so no preset can be added.",
     "max": 120
   },
   "anim-studio.particles-editor.0-pulls-down-90-left-180-up-270-right": {
