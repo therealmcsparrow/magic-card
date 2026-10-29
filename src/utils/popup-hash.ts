@@ -23,13 +23,6 @@ export function isValidPopupHash(hash: unknown): hash is string {
   return typeof hash === 'string' && POPUP_ID.test(hash);
 }
 
-/** Editor message for an invalid pop-up ID ('' when valid or empty). */
-export function popupHashError(raw: unknown): string {
-  const hash = normalizePopupHash(raw);
-  if (!hash || isValidPopupHash(hash)) return '';
-  return 'Use letters, digits, - and _ only (no spaces).';
-}
-
 /** The valid pop-up ID of a config, if any. */
 export function popupHash(popup: PopupConfig | undefined): string | undefined {
   const hash = normalizePopupHash(popup?.hash);

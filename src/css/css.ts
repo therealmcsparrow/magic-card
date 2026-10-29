@@ -107,6 +107,8 @@ const magicCardLocalStyles = css`
   .mc-icon ha-state-icon,
   .mc-icon mc-svg-icon {
     --mdc-icon-size: var(--mc-icon-size, 24px);
+    width: var(--mdc-icon-size);
+    height: var(--mdc-icon-size);
   }
 
   .mc-info {

@@ -6257,6 +6257,11 @@
     "note": "Field for the heading text shown at the top of the pop-up.",
     "max": 10
   },
+  "card-editor.popup-settings.use-letters-digits-and-only-no-spaces": {
+    "text": "Use letters, digits, - and _ only (no spaces).",
+    "note": "Error under the pop-up ID field when the ID has a character that cannot be in a URL hash.",
+    "max": 75
+  },
   "card-editor.popup-settings.width": {
     "text": "Width",
     "note": "Field for how wide the pop-up is, as a length.",

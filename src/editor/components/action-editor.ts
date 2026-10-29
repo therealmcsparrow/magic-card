@@ -10,7 +10,7 @@ import {
   renderToggleField,
 } from '../../utils/form-utils';
 import { fromYaml, toYaml } from '../../utils/yaml-utils';
-import { normalizePopupHash, popupHashError } from '../../utils/popup-hash';
+import { isValidPopupHash, normalizePopupHash } from '../../utils/popup-hash';
 import { popupIfLoaded } from '../../card/popup-seam';
 import { t, tx, m, tl, type MessageIndex } from '../i18n';
 
@@ -48,7 +48,7 @@ export function renderActionConfig(
 ): TemplateResult {
   const currentAction = action || { action: 'none' as ActionType };
   const popupId = normalizePopupHash(currentAction.hash);
-  const popupError = popupHashError(popupId);
+  const popupError = popupId && !isValidPopupHash(popupId) ? t('card-editor.popup-settings.use-letters-digits-and-only-no-spaces') : '';
   const listId = `mc-popup-ids-${key}`;
   const needsEntity = currentAction.action === 'more-info' || currentAction.action === 'toggle';
   const useModuleEntity = currentAction.use_module_entity !== false; // default true

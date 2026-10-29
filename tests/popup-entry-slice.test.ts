@@ -52,7 +52,6 @@ describe('pop-up code in the entry', () => {
       'isValidPopupHash',
       'normalizePopupHash',
       'popupHash',
-      'popupHashError',
       'urlWithHash',
     ]);
   });

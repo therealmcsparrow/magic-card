@@ -15,6 +15,7 @@ export const iconBaseStyles = css`
     height: var(--mdc-icon-size, 24px);
     vertical-align: middle;
     line-height: 0;
+    contain: layout;
   }
   svg[part='svg'] {
     display: block;

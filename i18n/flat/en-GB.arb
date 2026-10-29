@@ -15852,6 +15852,12 @@
     "x-max-length": 10,
     "x-source-hash": "7e8cd205"
   },
+  "card-editor.popup-settings.use-letters-digits-and-only-no-spaces": "Use letters, digits, - and _ only (no spaces).",
+  "@card-editor.popup-settings.use-letters-digits-and-only-no-spaces": {
+    "description": "Error under the pop-up ID field when the ID has a character that cannot be in a URL hash. Max 75 characters.",
+    "x-max-length": 75,
+    "x-source-hash": "a36bcca5"
+  },
   "card-editor.popup-settings.width": "Width",
   "@card-editor.popup-settings.width": {
     "description": "Field for how wide the pop-up is, as a length. Max 10 characters.",

@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 72979,
+        "cap": 72994,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 72979
+        "measured": 72994
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 62524,
-      "measured": 62524
+      "cap": 62477,
+      "measured": 62477
     }
   },
   "files": {
@@ -952,6 +952,12 @@
       "field": "/files/magic-card-decor.js/raw",
       "from": 26624,
       "to": 28672
+    },
+    {
+      "id": "entry-stage4-72979-to-72994",
+      "field": "/entry/stages/3/cap",
+      "from": 72979,
+      "to": 72994
     }
   ]
 }

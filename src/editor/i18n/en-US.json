@@ -4603,6 +4603,10 @@
     "text": "Title",
     "hash": "7e8cd205"
   },
+  "card-editor.popup-settings.use-letters-digits-and-only-no-spaces": {
+    "text": "Use letters, digits, - and _ only (no spaces).",
+    "hash": "a36bcca5"
+  },
   "card-editor.popup-settings.width": {
     "text": "Width",
     "hash": "3019947b"

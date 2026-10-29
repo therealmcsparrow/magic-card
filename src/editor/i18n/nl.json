@@ -4603,6 +4603,10 @@
     "text": "Titel",
     "hash": "7e8cd205"
   },
+  "card-editor.popup-settings.use-letters-digits-and-only-no-spaces": {
+    "text": "Gebruik alleen letters, cijfers, - en _ (geen spaties).",
+    "hash": "a36bcca5"
+  },
   "card-editor.popup-settings.width": {
     "text": "Breedte",
     "hash": "3019947b"
