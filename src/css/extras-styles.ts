@@ -2,14 +2,14 @@ import { css } from 'lit';
 
 export const extrasViewStyles = css`
   .mc-clock-time {
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     font-size: 2rem;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
   }
 
   .mc-clock-date {
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     font-size: var(--mc-font-size-sm);
     color: var(--mc-design-color, var(--mc-text-secondary));
   }

@@ -5,6 +5,7 @@ import type { LazyModuleStub, ModuleView, RetryableLazyChunk } from '../contract
 import type { MessageIndex } from '../contracts/i18n';
 import { currentRenderContext } from '../services/render-context';
 import { chunkNotice } from '../card/chunk-notice';
+import { failedChunkNames } from '../utils/lazy-chunk';
 
 class ModuleRegistryImpl {
   private modules = new Map<ModuleType, MagicModule>();
@@ -49,19 +50,16 @@ class ModuleRegistryImpl {
 
   private renderLazy(stub: LazyModuleStub, chunk: RetryableLazyChunk, config: CardModule, hass?: HomeAssistant) {
     const view = this.views.get(stub.metadata.type);
-    if (view) return view.renderPreview(config, hass);
-    // the notice (lazy-module 1.4.0 "Failure"): after the stub's own box, so the slot keeps the size its config gives it
-    const notice = () => chunkNotice(chunk);
-    if (stub.renderPreview) {
-      void chunk.load();
-      const preview = stub.renderPreview(config, hass);
-      return chunk.failed() ? html`${preview}${notice()}` : preview;
-    }
+    // the notice (lazy-module 1.4.0 "Failure"): after the module's own box, so the slot keeps the size its config gives it.
+    // A chunk that has failed keeps its status container after a retry worked, for the focus hand-over and the "loaded" text.
+    const withNotice = (box: unknown) => (failedChunkNames().has(chunk.name) ? html`${box}${chunkNotice(chunk)}` : box);
+    if (view) return withNotice(view.renderPreview(config, hass));
     void chunk.load();
+    if (stub.renderPreview) return withNotice(stub.renderPreview(config, hass));
     const update = currentRenderContext()?.requestUpdate;
     // kept through a failure: a retry that succeeds later renders the module
     if (update) chunk.whenReady(update);
-    return chunk.failed() ? html`${stub.placeholder(config, 'failed')}${notice()}` : stub.placeholder(config, 'pending');
+    return withNotice(stub.placeholder(config, chunk.failed() ? 'failed' : 'pending'));
   }
 
   get(type: ModuleType): MagicModule | undefined {

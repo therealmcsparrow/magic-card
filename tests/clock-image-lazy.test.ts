@@ -120,10 +120,13 @@ describe('modules-extra needs for clock and image', () => {
 });
 
 describe('clock view styles', () => {
-  it('keeps the time and the date on one line each, as the reserved height assumes', async () => {
+  it('lets the time and the date wrap in a narrow column (reflow at 320 px), never clip or overflow', async () => {
     const { extrasViewStyles } = await import('../src/css/extras-styles');
     const text = extrasViewStyles.cssText.replace(/\s+/g, ' ');
-    expect(text).toMatch(/\.mc-clock-time \{[^}]*white-space: nowrap/);
-    expect(text).toMatch(/\.mc-clock-date \{[^}]*white-space: nowrap/);
+    for (const sel of ['time', 'date']) {
+      const rule = new RegExp(`\\.mc-clock-${sel} \\{([^}]*)\\}`).exec(text)![1];
+      expect(rule).not.toMatch(/white-space:\s*nowrap|overflow:\s*hidden|text-overflow/);
+      expect(rule).toMatch(/overflow-wrap:\s*anywhere/);
+    }
   });
 });
