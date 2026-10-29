@@ -59,7 +59,7 @@ To translate:
 1.  Upload or sync `i18n/flat/nl.arb` in your service.
 2.  Translate the empty units and check the units marked `x-stale`. An empty unit means the message has no Dutch text yet.
 3.  Download the returned file and save it as `i18n/flat/nl.arb`.
-4.  Run `node tools/i18n-flat.mjs import`.
+4.  Run `node tools/i18n-flat.mjs import --mcu <path to magic-card-utils>`.
 
 A Dutch text that you leave empty keeps the text the repository already has.
 
@@ -69,11 +69,11 @@ All commands run from the root of the Magic Card repository.
 
 | Command | What it does |
 | --- | --- |
-| `node tools/i18n-flat.mjs export` | Writes the three `.arb` files from the source catalogues. |
-| `node tools/i18n-flat.mjs import` | Reads `nl.arb` and `en-US.arb` from `i18n/flat/` and writes the Dutch texts to `nl.json` and the American exceptions to `tools/i18n/en-US-exceptions.json`. |
-| `node tools/i18n-flat.mjs --check` | Exits with 1 when a committed `.arb` file differs from a fresh export. Run `export` to fix it. |
+| `node tools/i18n-flat.mjs export --mcu <path to magic-card-utils>` | Writes the three `.arb` files from the source catalogues, including the Magic Card Utils panel. |
+| `node tools/i18n-flat.mjs import --mcu <path to magic-card-utils>` | Reads `nl.arb` and `en-US.arb` from `i18n/flat/` and writes the Dutch texts to the `nl.json` files and the American exceptions to `tools/i18n/en-US-exceptions.json`. |
+| `node tools/i18n-flat.mjs --check --mcu <path to magic-card-utils>` | Exits with 1 when a committed `.arb` file differs from a fresh export. Run `export` to fix it. |
 
-Add `--mcu <path to the Magic Card Utils repository>` to any of them to include the `mcu-panel` namespace. Without it, `export` refuses to run when the committed files already hold `mcu-panel` keys, so a card-only export cannot drop them.
+`<path to magic-card-utils>` is the folder where you cloned the Magic Card Utils repository. The committed `.arb` files hold the `mcu-panel` keys, so pass `--mcu` every time. `export` refuses to run without it, so a card-only export cannot drop those keys. `import` needs it to find the keys of the panel. `--check` leaves the `mcu-panel` entries out of the comparison when you omit it.
 
 `import` also takes file names, and `--locale nl` or `--locale en-US` when the file name does not say which language it is. The file for English (UK) is never read back, because `en-GB.json` is the source.
 
@@ -108,7 +108,7 @@ A renamed message moves its English, American and Dutch texts, their hashes and 
 
 ## Every change ships its Dutch text
 
-A change that adds or edits text in the interface carries its keys and the English (UK), English (US) and Dutch texts in the same change. Do not leave Dutch for later. `npm run i18n` builds the American text and the tables, and the checks fail on a missing note, a missing maximum, a text over its maximum or a stale Dutch text at release. Run `node tools/i18n-flat.mjs export` last, so the exchange files match.
+A change that adds or edits text in the interface carries its keys and the English (UK), English (US) and Dutch texts in the same change. Do not leave Dutch for later. `npm run i18n` builds the American text and the tables, and the checks fail on a missing note, a missing maximum, a text over its maximum or a stale Dutch text at release. Run `node tools/i18n-flat.mjs export --mcu <path to magic-card-utils>` last, so the exchange files match.
 
 ## What is not in the files
 

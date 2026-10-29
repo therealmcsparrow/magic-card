@@ -13,6 +13,12 @@ Two small files hold code that several features read, so the card file does not 
 
 Keep both files in the folder next to `magic-card.js`, with their `.br` and `.gz` copies, like every other file of the release.
 
+## The Google Fonts list
+
+Magic Card knows 20 Google Fonts by name: Roboto, Open Sans, Lato, Montserrat, Oswald, Source Sans Pro, Raleway, PT Sans, Merriweather, Playfair Display, Lora, PT Serif, Noto Sans, Ubuntu, Poppins, Nunito, Inconsolata, Fira Code, Source Code Pro and Dancing Script. The list lives in the card file, `magic-card.js`, so it is not a part of its own.
+
+The card reads it each time it draws. When a font family in the card's settings names one of these fonts, the card adds one stylesheet link for it to the page, once per font per page visit. The font comes from `fonts.googleapis.com`, with the weights 300, 400, 500 and 700, or fewer for a font that does not have all four. A card that names none of them, or only Roboto or a system font, loads nothing from Google. Roboto is Home Assistant's own font and is never fetched. The card editor's font picker uses the same loader. See the privacy note in the main README.
+
 ## When a part cannot load
 
 A part is a file that a feature needs, such as the slider, a background, an animation or the editor. When one cannot be fetched, the card does not break. It shows one of these messages in place of the part, and the rest of the card keeps working.
@@ -39,7 +45,7 @@ Parts that depend on a file behave in a fixed way while they wait:
 
 The files come from the same Home Assistant server as `magic-card.js`, through `/hacsfiles/magic-card/` or `/local/`. A part can load only while the browser can reach Home Assistant. If the connection drops, the notice appears, and **Try again** asks for the file once the connection is back.
 
-Once a part has loaded, the card keeps it for the rest of the page visit. A reload starts again from the card file.
+When a card needs a part, it asks for the file once and reuses that one request. Cards on the same page that need the same part share it, and a part that has loaded is not requested again. Nothing in the card unloads a part. A reload of the page starts again from the card file.
 
 If a file is missing from the folder, the feature it belongs to shows its notice and the rest of the card still works. Check that every file of the release is in the folder next to `magic-card.js`, including the `.br` and `.gz` copies. See [Manual](../../README.md#manual).
 

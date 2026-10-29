@@ -8,6 +8,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ### Improved
 -   **Plain cards load faster.** The main file is smaller, because code that only some cards use now sits in two shared files, `magic-card-history.js` and `magic-card-shape-path.js`. A plain card still loads nothing else. A card that needs one of them fetches it with its own feature file. See [Loading and updates](documentation/loading-and-size/README.md).
+-   **Card effects arrive after the card text.** Card effects now appear just after the card text, with a short fade, so the text is readable first.
 -   **Dutch wording.** Several Dutch texts are corrected, and counts such as "1 shape" and "2 shapes" now use the right singular or plural form in the editors, the animation studio and the theme editor.
 -   **Translators.** The text files can be exchanged with Weblate or Crowdin. See [Translating](documentation/translating/README.md).
 
