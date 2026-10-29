@@ -1,6 +1,6 @@
-// AC5: an ICU plural message is validated at build time and rendered at run time through Intl.PluralRules, with no
+// An ICU plural message is validated at build time and rendered at run time through Intl.PluralRules, with no
 // ICU library in dist; nl and en one/other render correctly (Chromium 85: tests/i18n-keys/browser/chromium85.mjs,
-// run below when the portable build is installed; Safari 16.4 is a recorded gap, see the QA Handoff).
+// run below when the portable build is installed; Safari 16.4 is not covered).
 // Contract: src/contracts/i18n-keys.ts "Source files" (message syntax); src/contracts/i18n.ts "Message syntax", D6.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -25,7 +25,7 @@ function project(text: string, nl: string = text, args: string[] = ['n']): Proje
 
 const checked = (p: Project) => p.check('--ci');
 
-describe('AC5 valid ICU messages build and pass', () => {
+describe('valid ICU messages build and pass', () => {
   it.each([
     ['plural with =0, one and other', COUNT, COUNT_NL],
     ['plural with one and other', '{n, plural, one {# point} other {# points}}', '{n, plural, one {# punt} other {# punten}}'],
@@ -40,7 +40,7 @@ describe('AC5 valid ICU messages build and pass', () => {
   });
 });
 
-describe('AC5 message syntax is validated at build time (D6)', () => {
+describe('message syntax is validated at build time (D6)', () => {
   const bad: Array<[string, string, string?]> = [
     ['a plural without an other branch', '{n, plural, one {# item}}'],
     ['a select without an other branch', '{kind, select, line {A line}}', '{kind, select, line {Een lijn}}'],
@@ -83,7 +83,7 @@ describe('AC5 message syntax is validated at build time (D6)', () => {
   });
 });
 
-describe('AC5 the compiled table keeps the ICU string; no ICU library is built in', () => {
+describe('the compiled table keeps the ICU string; no ICU library is built in', () => {
   it('writes the plural message into the three tables as one entry of ICU text', () => {
     const p = project(COUNT, COUNT_NL);
     const [gb, us, nl] = p.tables('demo');
@@ -106,7 +106,7 @@ describe('AC5 the compiled table keeps the ICU string; no ICU library is built i
   });
 });
 
-describe('AC5 rendering on Intl.PluralRules (the shipped runtime, fixture tables)', () => {
+describe('rendering on Intl.PluralRules (the shipped runtime, fixture tables)', () => {
   let t: (id: number, args?: Record<string, string | number>) => string;
   let index = 0;
   beforeEach(() => {
@@ -143,7 +143,7 @@ describe('AC5 rendering on Intl.PluralRules (the shipped runtime, fixture tables
   });
 });
 
-describe('AC5 Chromium 85', () => {
+describe('Chromium 85', () => {
   it('renders the plural messages in nl and en on the portable Chromium 85 build (85.0.4183.0)', () => {
     const r = spawnSync(process.execPath, [path.join(REPO, 'tests/i18n-keys/browser/chromium85.mjs'), '--plurals'], { encoding: 'utf8', timeout: 90_000 });
     expect(r.stdout + r.stderr).toContain('HeadlessChrome/85.');

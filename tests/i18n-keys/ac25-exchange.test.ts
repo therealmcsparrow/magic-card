@@ -1,8 +1,8 @@
-// AC25: tools/i18n-flat.mjs writes one flat ARB file per locale under i18n/flat/ (key, English, note, max length, ICU
+// tools/i18n-flat.mjs writes one flat ARB file per locale under i18n/flat/ (key, English, note, max length, ICU
 // plural forms, source hash, stale flag); export then import of unchanged files gives byte-identical source files;
 // renamed keys appear only as aliases; --check exits 1 when the export is stale; imported files are untrusted.
-// Contract: src/contracts/i18n-keys.ts "Exchange files". Format choice: .company/work/roadmap-leftovers/T2-tech-researcher-exchange.md
-// (ARB; import reads values only and rebuilds every @key and x- value from en-GB).
+// Contract: src/contracts/i18n-keys.ts "Exchange files". Format: ARB
+// (import reads values only and rebuilds every @key and x- value from en-GB).
 //
 // CLI assumed from the contract text: `node tools/i18n-flat.mjs export`, `... import`, `... --check`. The file name of
 // a locale is not fixed by the contract; the tests find each file by its "@@locale".
@@ -73,7 +73,7 @@ const editFlat = (p: Project, locale: string, edit: (json: Record<string, any>) 
   p.write(f.file, JSON.stringify(f.json, null, 2) + '\n');
 };
 
-describe('AC25 export', () => {
+describe('export', () => {
   it('writes one ARB file per locale under i18n/flat/, each with its "@@locale"', () => {
     const files = flatFiles(exported());
     expect(Object.keys(files).sort()).toEqual(['en-GB', 'en-US', 'nl']);
@@ -165,7 +165,7 @@ describe('AC25 export', () => {
   });
 });
 
-describe('AC25 round trip', () => {
+describe('round trip', () => {
   it('leaves every source file byte-identical after export then import of unchanged files (stale stays stale)', () => {
     const p = exported();
     const before = sources(p);
@@ -222,7 +222,7 @@ describe('AC25 round trip', () => {
   });
 });
 
-describe('AC25 the @key and x- values of an imported file are not trusted', () => {
+describe('the @key and x- values of an imported file are not trusted', () => {
   it('rebuilds them from en-GB: edited descriptions, max, hash and stale flags change nothing, and the next export restores them', () => {
     const p = exported();
     const clean = flatFiles(p)['nl'].raw;
@@ -253,7 +253,7 @@ describe('AC25 the @key and x- values of an imported file are not trusted', () =
   });
 });
 
-describe('AC25 services rewrite the file', () => {
+describe('services rewrite the file', () => {
   it('imports the same values from a file whose @key objects carry stale x- values and a Weblate-style placeholders object', () => {
     const p = exported();
     const before = sources(p);
@@ -305,7 +305,7 @@ describe('AC25 services rewrite the file', () => {
   });
 });
 
-describe('AC25 import refuses untrusted input and writes nothing', () => {
+describe('import refuses untrusted input and writes nothing', () => {
   const raw = (p: Project, locale: string, edit: (text: string, json: Record<string, any>) => string) => {
     const f = flatFiles(p)[locale];
     p.write(f.file, edit(f.raw, f.json));
@@ -360,7 +360,7 @@ describe('AC25 import refuses untrusted input and writes nothing', () => {
   });
 });
 
-describe('AC25 --check', () => {
+describe('--check', () => {
   it('exits 0 for a fresh export and writes nothing', () => {
     const p = exported();
     const before = p.snapshot();
@@ -409,7 +409,7 @@ describe('AC25 --check', () => {
   });
 });
 
-describe('AC25 the Magic Card Utils namespace', () => {
+describe('the Magic Card Utils namespace', () => {
   const withMcu = (): Project => {
     const p = fixture();
     const hash = sourceHash('Save');
@@ -445,7 +445,7 @@ describe('AC25 the Magic Card Utils namespace', () => {
   });
 });
 
-describe('AC25 the refusal names what is wrong', () => {
+describe('the refusal names what is wrong', () => {
   it('names every unknown key so the localizer can delete it in the service', () => {
     const p = exported();
     editFlat(p, 'nl', (j) => {

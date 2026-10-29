@@ -19,7 +19,7 @@ function built(entries = ENTRIES, calls?: string[]): Project {
   return p;
 }
 
-describe('AC1 keyed namespace passes', () => {
+describe('keyed namespace passes', () => {
   it('builds and passes check-i18n --ci, with a key and its literal in the call site', () => {
     const p = built();
     const r = p.check('--ci');
@@ -36,7 +36,7 @@ describe('AC1 keyed namespace passes', () => {
   });
 });
 
-describe('AC1 key rules (D1)', () => {
+describe('key rules (D1)', () => {
   const cases: Array<[string, string]> = [
     ['a template string with a substitution', 'const part = "title";\nexport const x = t(`demo.panel.${part}`);\n'],
     ['a concatenation', "export const x = t('demo.panel.' + 'title');\n"],
@@ -75,7 +75,7 @@ describe('AC1 key rules (D1)', () => {
   });
 });
 
-describe('AC1 data literals', () => {
+describe('data literals', () => {
   it('lets t() render a value that an m() mark holds (the rendering path of data literals), marks being keys too', () => {
     const p = built();
     p.write('src/demo/data.ts', importLine('demo', 't, m') + "const item = { label: m('demo.panel.title') };\nexport const x = t(item.label);\n");
@@ -94,7 +94,7 @@ describe('AC1 data literals', () => {
   });
 });
 
-describe('AC1 text ids are gone', () => {
+describe('text ids are gone', () => {
   it('fails the check and the build for a text-id call in a namespace that has no en-GB.json', () => {
     const p = new Project();
     p.write('src/other/panel.ts', callerSource('other', ['Save']));
@@ -118,7 +118,7 @@ describe('AC1 text ids are gone', () => {
   });
 });
 
-describe('AC1 loader (tools/i18n-loader.cjs)', () => {
+describe('loader (tools/i18n-loader.cjs)', () => {
   const load = (p: Project, rel: string, source: string) => p.loader(rel, source);
 
   it('rewrites a key to its table index and leaves no key text in the output', () => {
@@ -146,7 +146,7 @@ describe('AC1 loader (tools/i18n-loader.cjs)', () => {
   });
 });
 
-describe('AC1 per-namespace setup', () => {
+describe('per-namespace setup', () => {
   it('writeKeyed keeps the fixture honest: en-GB.json is the only place that holds English next to the key', () => {
     const p = new Project();
     writeKeyed(p, 'demo', ENTRIES);

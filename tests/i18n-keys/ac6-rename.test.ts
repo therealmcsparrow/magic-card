@@ -1,4 +1,4 @@
-// AC6: a key rename through tools/i18n-rename.mjs <from> <to> moves the en-GB, en-US and nl entries, their hashes
+// A key rename through tools/i18n-rename.mjs <from> <to> moves the en-GB, en-US and nl entries, their hashes
 // and waivers, rewrites the literal at every call site, and appends a Rename to i18n/renames.json (history for the
 // exchange files only; never read by src or webpack, never in dist). A rename onto an existing key is refused and
 // writes nothing. Contract: src/contracts/i18n-keys.ts "Renames", "Error cases".
@@ -43,7 +43,7 @@ function renameProject(): Project {
 
 const canonical = (o: Record<string, unknown>) => JSON.stringify(Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : 1))), null, 2) + '\n';
 
-describe('AC6 rename inside a namespace', () => {
+describe('rename inside a namespace', () => {
   it('moves the entries of all three locales with their notes, max, vars and hashes', () => {
     const p = renameProject();
     const before = {
@@ -120,7 +120,7 @@ describe('AC6 rename inside a namespace', () => {
   });
 });
 
-describe('AC6 rename to another namespace (a control moved to another screen)', () => {
+describe('rename to another namespace (a control moved to another screen)', () => {
   function twoNamespaces(): Project {
     const p = renameProject();
     writeKeyed(p, 'other', [{ key: 'other.misc.note', text: 'A note', nl: 'Een notitie', max: 40 }]);
@@ -162,7 +162,7 @@ describe('AC6 rename to another namespace (a control moved to another screen)', 
   });
 });
 
-describe('AC6 refusals write nothing', () => {
+describe('refusals write nothing', () => {
   const refused: Array<[string, string, string]> = [
     ['onto an existing key', 'demo.panel.title', 'demo.panel.hi'],
     ['onto an existing key of another namespace', 'demo.panel.title', 'other.misc.note'],

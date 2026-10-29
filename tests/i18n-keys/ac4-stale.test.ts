@@ -1,4 +1,4 @@
-// AC4: an English change on a key with nl / en-US entries fails the release check as stale (source hash per
+// An English change on a key with nl / en-US entries fails the release check as stale (source hash per
 // entry); the only way out besides confirming is an i18n/waivers.json entry (key + hash + reason) for a typo or
 // punctuation change; the UI keeps showing the old translation. Contract: src/contracts/i18n-keys.ts
 // "Source hash and stale translations"; i18n.ts D4, D9.
@@ -31,7 +31,7 @@ function staleProject(): { p: Project; oldHash: string; newHash: string } {
   return { p, oldHash: sourceHash('Hello'), newHash: sourceHash('Hello there') };
 }
 
-describe('AC4 source hash in the catalogues', () => {
+describe('source hash in the catalogues', () => {
   it('stores the hash of its English in every en-US entry (generated) and every confirmed nl entry', () => {
     const p = built();
     const us = p.json<Record<string, { text: string; hash: string }>>(`${DIR}/en-US.json`);
@@ -59,7 +59,7 @@ describe('AC4 source hash in the catalogues', () => {
   });
 });
 
-describe('AC4 stale blocks the release check (D9)', () => {
+describe('stale blocks the release check (D9)', () => {
   it('fails check-i18n --strict, naming the key, when the nl hash is not the hash of the current English', () => {
     const { p } = staleProject();
     const r = p.check('--strict');
@@ -96,7 +96,7 @@ describe('AC4 stale blocks the release check (D9)', () => {
   });
 });
 
-describe('AC4 the old translation stays on screen while stale', () => {
+describe('the old translation stays on screen while stale', () => {
   it('ships the stored nl text of a stale key in the compiled table, so users see the old translation', () => {
     const { p } = staleProject();
     const [gb, , nl] = p.tables('demo');
@@ -106,7 +106,7 @@ describe('AC4 the old translation stays on screen while stale', () => {
   });
 });
 
-describe('AC4 waivers (i18n/waivers.json)', () => {
+describe('waivers (i18n/waivers.json)', () => {
   it('lets a waiver for the key and the current hash, with a reason, pass --strict', () => {
     const { p, newHash } = staleProject();
     p.writeJson('i18n/waivers.json', [{ key: 'demo.panel.title', hash: newHash, reason: 'Added a word, meaning unchanged for the Dutch text' }]);
@@ -164,7 +164,7 @@ describe('AC4 waivers (i18n/waivers.json)', () => {
   });
 });
 
-describe('AC4 en-US stays generated (D4)', () => {
+describe('en-US stays generated (D4)', () => {
   it('fails when en-US.json was edited by hand', () => {
     const p = built();
     const us = p.json<Record<string, any>>(`${DIR}/en-US.json`);

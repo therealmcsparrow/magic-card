@@ -1,4 +1,4 @@
-// AC3: one en-GB file per namespace; a key without a context note (place, max length, variables) fails the check;
+// One en-GB file per namespace; a key without a context note (place, max length, variables) fails the check;
 // an nl or en-US text over max fails it (D8). Contract: src/contracts/i18n-keys.ts "Source files"; i18n.ts D8.
 import { afterAll, describe, expect, it } from 'vitest';
 import { cleanupProjects, keyedProject, NAMESPACES, Project, sourceHash, type KeyedEntry } from './harness';
@@ -32,7 +32,7 @@ const fails = (p: Project, key: string) => {
   expect(r.all).toContain(key);
 };
 
-describe('AC3 a complete catalogue passes', () => {
+describe('a complete catalogue passes', () => {
   it('passes the check with notes, max and vars', () => {
     const r = project().check('--ci');
     expect(r.all).toContain('0 errors');
@@ -45,7 +45,7 @@ describe('AC3 a complete catalogue passes', () => {
   });
 });
 
-describe('AC3 context note (D8)', () => {
+describe('context note (D8)', () => {
   it('fails when a key has no note', () => {
     fails(project((_p, gb) => delete gb['demo.panel.title'].note), 'demo.panel.title');
   });
@@ -61,7 +61,7 @@ describe('AC3 context note (D8)', () => {
   });
 });
 
-describe('AC3 max length (D8)', () => {
+describe('max length (D8)', () => {
   it('fails when a key has no max', () => {
     fails(project((_p, gb) => delete gb['demo.panel.title'].max), 'demo.panel.title');
   });
@@ -101,7 +101,7 @@ describe('AC3 max length (D8)', () => {
   });
 });
 
-describe('AC3 variables (D8)', () => {
+describe('variables (D8)', () => {
   it('fails when a text with an argument has no vars', () => {
     fails(project((_p, gb) => delete gb['demo.panel.hi'].vars), 'demo.panel.hi');
   });
@@ -125,7 +125,7 @@ describe('AC3 variables (D8)', () => {
   });
 });
 
-describe('AC3 file format (D8): sorted by key, two-space JSON, LF, final newline', () => {
+describe('file format (D8): sorted by key, two-space JSON, LF, final newline', () => {
   const entries = () => ({
     gb: (rev = false) => {
       const gb = JSON.parse(JSON.stringify({ 'demo.panel.hi': { text: 'Hi {name}', note: 'Greeting in the demo panel.', max: 30, vars: { name: 'Name of the person' } }, 'demo.panel.title': { text: 'Hello', note: 'Heading of the demo panel.', max: 20 } }));
@@ -177,7 +177,7 @@ describe('AC3 file format (D8): sorted by key, two-space JSON, LF, final newline
   });
 });
 
-describe('AC3 completeness of the locale files', () => {
+describe('completeness of the locale files', () => {
   it('fails when a key has no nl entry', () => {
     const p = project((_p, _gb, nl) => delete nl['demo.panel.hi']);
     const r = p.check('--ci');
@@ -198,7 +198,7 @@ describe('AC3 completeness of the locale files', () => {
   });
 });
 
-describe('AC3 namespaces without an en-GB.json', () => {
+describe('namespaces without an en-GB.json', () => {
   it('need no note while no call uses them', () => {
     const p = new Project();
     p.build();

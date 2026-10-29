@@ -38,7 +38,7 @@ function template(): string {
   if (templateDir) return templateDir;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mc-i18n-keys-tpl-'));
   copyDir(path.join(REPO, 'tools'), path.join(dir, 'tools'), (r) => r.startsWith('node_modules'));
-  // QA self-check only: MC_QA_TOOLS_OVERLAY=<dir> lays reference tools over the copy to prove the tests themselves
+  // Self-check of the tests only: MC_QA_TOOLS_OVERLAY=<dir> lays reference tools over the copy to prove the tests themselves
   if (process.env.MC_QA_TOOLS_OVERLAY) copyDir(process.env.MC_QA_TOOLS_OVERLAY, path.join(dir, 'tools'));
   fs.mkdirSync(path.join(dir, 'src/i18n'), { recursive: true });
   fs.mkdirSync(path.join(dir, 'src/utils'), { recursive: true });

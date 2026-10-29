@@ -1,4 +1,4 @@
-// AC2: an unknown key, or a missing or extra ICU {var}, fails tsc (generated key types, npm run typecheck).
+// An unknown key, or a missing or extra ICU {var}, fails tsc (generated key types, npm run typecheck).
 // Contract: src/contracts/i18n-keys.ts "Types". The generated keys.gen.ts is written beside the namespace by the
 // build; the namespace's index.ts exports t / tx / m typed over its Keys interface (KeyedI18n).
 import { spawnSync } from 'node:child_process';
@@ -45,14 +45,14 @@ function tsc(p: Project, usage: string): RunResult {
 let shared: Project | undefined;
 const project = () => (shared ??= typedProject());
 
-describe('AC2 generated key types', () => {
+describe('generated key types', () => {
   it('writes src/<folder>/i18n/keys.gen.ts with one entry per key and the English as its doc comment', () => {
     const p = project();
     expect(p.exists('src/demo/i18n/keys.gen.ts')).toBe(true);
     const src = p.read('src/demo/i18n/keys.gen.ts');
     for (const e of ENTRIES) {
       expect(src).toContain(`"${e.key}"`);
-      // the English sits in a doc comment (the dev preview, AC9)
+      // the English sits in a doc comment (the dev preview)
       expect(src).toContain('/** ' + e.text + ' */');
     }
   });
