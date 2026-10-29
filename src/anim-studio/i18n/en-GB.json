@@ -7877,52 +7877,52 @@
   },
   "anim-studio.validation-text.must-be-self-none-a-preset-or-custom-id": {
     "text": "Must be self, none, a preset or custom:<id>.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a clip animation field in the studio; lists the allowed values. Keep the words and placeholder as is.",
     "max": 75
   },
   "anim-studio.validation-text.must-be-svg-markup": {
     "text": "Must be SVG markup.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an SVG field in the studio when the value is not SVG markup.",
     "max": 35
   },
   "anim-studio.validation-text.must-be-text": {
     "text": "Must be text.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a field in the studio YAML editor that expects text.",
     "max": 25
   },
   "anim-studio.validation-text.must-be-text-of-at-most-40-characters": {
     "text": "Must be text of at most 40 characters.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a name field in the studio when the text is longer than 40 characters.",
     "max": 65
   },
   "anim-studio.validation-text.must-be-three-numbers-x-y-z-not-all-0": {
     "text": "Must be three numbers [x, y, z], not all 0.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a 3D axis field in the studio; needs three numbers that are not all zero. Keep the brackets as is.",
     "max": 70
   },
   "anim-studio.validation-text.must-be-true-or-false": {
     "text": "Must be true or false.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a switch field in the studio YAML editor; the value must be true or false.",
     "max": 40
   },
   "anim-studio.validation-text.must-be-two-numbers-colours-only-for": {
     "text": "Must be two numbers (colours only for color_mix).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a keyframe value pair in the studio; needs two numbers, with colours allowed only for color_mix.",
     "max": 80
   },
   "anim-studio.validation-text.must-be-two-numbers-x-y": {
     "text": "Must be two numbers [x, y].",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a position field in the studio; the value must be two numbers. Keep the brackets as is.",
     "max": 45
   },
   "anim-studio.validation-text.must-be-up-to-8-characters-an-emoji-or-a": {
     "text": "Must be up to 8 characters (an emoji or a symbol).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under the emoji particle field in the studio when the text is longer than 8 characters.",
     "max": 80
   },
   "anim-studio.validation-text.must-differ-from-min": {
     "text": "Must differ from min.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a range field in the studio when the maximum equals the minimum.",
     "max": 35
   },
   "anim-studio.validation-text.needs-at-least-min-entries": {
@@ -7935,7 +7935,7 @@
   },
   "anim-studio.validation-text.needs-at-least-one-entry": {
     "text": "Needs at least one entry.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a list field in the studio YAML editor when the list is empty.",
     "max": 40
   },
   "anim-studio.validation-text.no-kind-id-in-the-rig": {
@@ -7954,17 +7954,17 @@
   },
   "anim-studio.validation-text.not-a-part-of-this-rig": {
     "text": "Not a part of this rig.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a part field in the studio; the named part does not exist in this icon's parts.",
     "max": 40
   },
   "anim-studio.validation-text.not-a-timeline-lane": {
     "text": "Not a timeline lane.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a track field in the studio; the value does not name a lane on the timeline.",
     "max": 35
   },
   "anim-studio.validation-text.not-a-valid-animation-id": {
     "text": "Not a valid animation id.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an animation id field in the studio when the id has the wrong format.",
     "max": 40
   },
   "anim-studio.validation-text.not-a-valid-colour": {
@@ -7974,7 +7974,7 @@
   },
   "anim-studio.validation-text.not-a-valid-easing": {
     "text": "Not a valid easing.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an easing field in the studio when the value is not a known easing.",
     "max": 35
   },
   "anim-studio.validation-text.not-an-allowed-kind-value": {
@@ -7992,12 +7992,12 @@
   },
   "anim-studio.validation-text.not-valid-path-data-it-must-start-with-m": {
     "text": "Not valid path data (it must start with M).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a path data field in the studio; path data must begin with an M command. Keep M as is.",
     "max": 70
   },
   "anim-studio.validation-text.only-for-the-trigger-time": {
     "text": "Only for the trigger time.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a trigger field in the studio; the setting applies only to the trigger time.",
     "max": 45
   },
   "anim-studio.validation-text.required": {
@@ -8007,27 +8007,27 @@
   },
   "anim-studio.validation-text.set-icon-or-svg-not-both": {
     "text": "Set icon or svg, not both.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a shape source field in the studio; icon and svg are mutually exclusive. Keep icon and svg as is.",
     "max": 45
   },
   "anim-studio.validation-text.set-one-of-builtin-icon-emoji-or-svg": {
     "text": "Set one of builtin, icon, emoji or svg.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a particle shape source in the studio; exactly one source must be set. Keep the key names as is.",
     "max": 65
   },
   "anim-studio.validation-text.set-one-of-from-or-svg": {
     "text": "Set one of from or svg.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a path source field in the studio; exactly one of from or svg must be set. Keep the key names as is.",
     "max": 40
   },
   "anim-studio.validation-text.set-one-of-icon-emoji-or-svg": {
     "text": "Set one of icon, emoji or svg.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a shape source field in the studio; exactly one source must be set. Keep the key names as is.",
     "max": 50
   },
   "anim-studio.validation-text.set-one-of-state-state-not-entity-on": {
     "text": "Set one of state, state_not, entity_on, above or below.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a state rule in the studio; one match condition must be set. Keep the key names as is.",
     "max": 90
   },
   "anim-studio.validation-text.the-animation-is-larger-than-size-kb": {
@@ -8040,7 +8040,7 @@
   },
   "anim-studio.validation-text.the-path-draws-nothing": {
     "text": "The path draws nothing.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a path field in the studio when the path data produces no visible line.",
     "max": 40
   },
   "anim-studio.validation-text.the-svg-draws-nothing": {
@@ -8050,7 +8050,7 @@
   },
   "anim-studio.validation-text.the-svg-has-no-shapes-to-draw": {
     "text": "The SVG has no shapes to draw.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an SVG field in the studio when the markup contains no drawable shapes.",
     "max": 50
   },
   "anim-studio.validation-text.the-svg-has-too-many-shapes-at-most-room": {
@@ -8068,7 +8068,7 @@
   },
   "anim-studio.validation-text.the-svg-is-too-complex": {
     "text": "The SVG is too complex.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an SVG field in the studio when the markup has too many shapes or points.",
     "max": 40
   },
   "anim-studio.validation-text.this-card-plays-engine-engine-update": {
@@ -8081,22 +8081,22 @@
   },
   "anim-studio.validation-text.unsupported-version-expected-1": {
     "text": "Unsupported version (expected 1).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under the version field of an animation in the studio; only version 1 is supported.",
     "max": 55
   },
   "anim-studio.validation-text.use-1-32-lowercase-letters-digits-or": {
     "text": "Use 1-32 lowercase letters, digits, - or _ (starting with a letter or digit).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an id field in the studio; gives the allowed length and characters for ids up to 32 characters.",
     "max": 125
   },
   "anim-studio.validation-text.use-1-64-lowercase-letters-digits-or": {
     "text": "Use 1-64 lowercase letters, digits, - or _ (starting with a letter or digit).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an id field in the studio; gives the allowed length and characters for ids up to 64 characters.",
     "max": 125
   },
   "anim-studio.validation-text.use-keywords-lengths-or-percentages-e-g": {
     "text": "Use keywords, lengths or percentages, e.g. \"50% 100%\".",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under the pivot field in the studio; says to use keywords, lengths or percentages and gives an example.",
     "max": 90
   },
   "anim-studio.window.close": {

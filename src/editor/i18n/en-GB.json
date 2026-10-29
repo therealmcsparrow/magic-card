@@ -6493,12 +6493,12 @@
   },
   "card-editor.ring-editor.ring-colour-from-this-remaining-up": {
     "text": "Ring colour from this remaining % up; overrides Colour.",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Helper text under a ring colour-stop field in the ring editor; tells the user the stop applies from that remaining percentage upwards.",
     "max": 90
   },
   "card-editor.ring-editor.ring-colour-from-this-value-up-overrides": {
     "text": "Ring colour from this value up; overrides Colour.",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Helper text under a ring colour-stop field in the ring editor; tells the user the stop applies from that raw value upwards.",
     "max": 80
   },
   "card-editor.ring-editor.ring-mode": {
@@ -6538,7 +6538,7 @@
   },
   "card-editor.ring-editor.the-card-clips-its-edge-the-ring-sits": {
     "text": "The card clips its edge: the ring sits inside it and its glow shows inward.",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Helper text in the ring editor beside the option that clips the ring to the card edge; explains the ring and glow stay inside the card.",
     "max": 120
   },
   "card-editor.ring-editor.thresholds": {
@@ -6573,7 +6573,7 @@
   },
   "card-editor.ring-editor.track-opacity": {
     "text": "Track opacity (%)",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Label of the ring editor field that sets how see-through the unfilled ring track is, as a percentage.",
     "max": 30
   },
   "card-editor.ring-editor.value": {
@@ -6598,7 +6598,7 @@
   },
   "card-editor.seasonal-editor.an-input-boolean-or-switch-off-hides-the": {
     "text": "An input_boolean or switch: off hides the scene, on every card that uses it.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text under the seasonal editor entity switch; says turning that entity off hides the scene on every card using it.",
     "max": 125
   },
   "card-editor.seasonal-editor.auto": {
@@ -6608,7 +6608,7 @@
   },
   "card-editor.seasonal-editor.auto-shows-a-holiday-between-these-dates": {
     "text": "Auto shows a holiday between these dates (inclusive), else the season. A range may run over the new year. Type off to skip a holiday.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text in the seasonal editor holiday section; explains holiday date ranges, that they may cross the new year, and that typing off skips one.",
     "max": 215
   },
   "card-editor.seasonal-editor.auto-when-scene": {
@@ -6622,7 +6622,7 @@
   },
   "card-editor.seasonal-editor.automatic-palm-sunday-to-easter-monday": {
     "text": "Automatic: Palm Sunday to Easter Monday, worked out for each year.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text for the Easter date fields in the seasonal editor; says the dates are calculated each year when left automatic.",
     "max": 110
   },
   "card-editor.seasonal-editor.autumn": {
@@ -6652,7 +6652,7 @@
   },
   "card-editor.seasonal-editor.day-and-night": {
     "text": "Day and night",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Label of the seasonal editor option that adds a day and night scene layer.",
     "max": 25
   },
   "card-editor.seasonal-editor.easter": {
@@ -6662,12 +6662,12 @@
   },
   "card-editor.seasonal-editor.easter-dates-automatic": {
     "text": "Easter dates automatic",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Label of the seasonal editor switch that lets Easter dates be worked out automatically instead of typed.",
     "max": 40
   },
   "card-editor.seasonal-editor.extra-scenes-layered-on-top-like-day-and": {
     "text": "Extra scenes layered on top, like Day and night during winter.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text in the seasonal editor for the extra scenes list; explains these scenes are drawn on top of the season scene.",
     "max": 100
   },
   "card-editor.seasonal-editor.halloween": {
@@ -6692,7 +6692,7 @@
   },
   "card-editor.seasonal-editor.how-many-particles-100-is-24-the-most-a": {
     "text": "How many particles: 100% is 24, the most a scene draws.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text under the seasonal editor particle amount slider; tells the user 100% equals 24 particles, the scene maximum.",
     "max": 90
   },
   "card-editor.seasonal-editor.intensity": {
@@ -6707,7 +6707,7 @@
   },
   "card-editor.seasonal-editor.lights-icicles-frost-a-cobweb-a-pumpkin": {
     "text": "Lights, icicles, frost, a cobweb, a pumpkin or a flower vine along the border, for the scenes that have them. The content keeps clear of them.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text for the seasonal editor border decoration option; lists the possible decorations and says card content stays clear of them.",
     "max": 230
   },
   "card-editor.seasonal-editor.live": {
@@ -6750,7 +6750,7 @@
   },
   "card-editor.seasonal-editor.over-the-content-dimmed-taps-still-reach": {
     "text": "Over the content, dimmed. Taps still reach the content.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text for the seasonal editor option that draws the scene over the content; says it is dimmed and does not block taps.",
     "max": 90
   },
   "card-editor.seasonal-editor.preview": {
@@ -6775,12 +6775,12 @@
   },
   "card-editor.seasonal-editor.shows-auto-on-another-day-in-this": {
     "text": "Shows Auto on another day in this preview only. Not saved.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text for the seasonal editor preview date picker; says the chosen day only changes the preview and is not saved.",
     "max": 95
   },
   "card-editor.seasonal-editor.snow-rain-a-storm-sun-clouds-fog-or-wind": {
     "text": "Snow, rain, a storm, sun, clouds, fog or wind, from its state.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text for the seasonal editor weather scene option; lists the weather scenes that follow a weather entity's state.",
     "max": 100
   },
   "card-editor.seasonal-editor.south": {
@@ -6790,7 +6790,7 @@
   },
   "card-editor.seasonal-editor.south-flips-the-seasons": {
     "text": "South flips the seasons.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Helper text for the seasonal editor hemisphere choice; says choosing South reverses the seasons.",
     "max": 40
   },
   "card-editor.seasonal-editor.spring": {
@@ -6810,7 +6810,7 @@
   },
   "card-editor.seasonal-editor.use-mm-dd-mm-dd-like-12-01-12-26-or-off": {
     "text": "Use MM-DD..MM-DD, like 12-01..12-26, or off.",
-    "note": "Shown in seasonal editor (card-editor).",
+    "note": "Placeholder or hint on a seasonal editor holiday date field; shows the MM-DD..MM-DD format, or off to disable.",
     "max": 75
   },
   "card-editor.seasonal-editor.valentine": {
@@ -6952,7 +6952,7 @@
   },
   "card-editor.service-picker.no-services-found": {
     "text": "No services found",
-    "note": "Shown in service picker (card-editor).",
+    "note": "Empty state in the service picker dropdown when the search matches no Home Assistant service.",
     "max": 30
   },
   "card-editor.service-picker.search-services": {
@@ -6977,12 +6977,12 @@
   },
   "card-editor.shape-editor.0-is-round-1-is-most-irregular": {
     "text": "0 is round, 1 is most irregular.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text under the shape editor blob irregularity slider; explains the scale from round to most irregular.",
     "max": 55
   },
   "card-editor.shape-editor.1-is-rounder-0-is-squarer": {
     "text": "1 is rounder, 0 is squarer.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text under the shape editor corner roundness slider; explains which end is rounder and which is squarer.",
     "max": 45
   },
   "card-editor.shape-editor.all": {
@@ -6992,7 +6992,7 @@
   },
   "card-editor.shape-editor.an-open-pop-up-keeps-a-rectangular": {
     "text": "An open pop-up keeps a rectangular surface.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text in the shape editor telling the user a pop-up that is open does not take the card shape.",
     "max": 70
   },
   "card-editor.shape-editor.animate": {
@@ -7012,7 +7012,7 @@
   },
   "card-editor.shape-editor.box-shadow-follows-the-shape-as-a-drop": {
     "text": "Box shadow follows the shape as a drop shadow (first shadow only).",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text in the shape editor about box shadow; says the shadow follows the shape as a drop shadow and only the first one is used.",
     "max": 110
   },
   "card-editor.shape-editor.cancel": {
@@ -7032,7 +7032,7 @@
   },
   "card-editor.shape-editor.could-not-reach-magic-card-utils-try": {
     "text": "Could not reach Magic Card Utils. Try again.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Error message in the shape editor when saving or loading shapes fails because the Magic Card Utils add-on cannot be reached.",
     "max": 75
   },
   "card-editor.shape-editor.custom": {
@@ -7067,7 +7067,7 @@
   },
   "card-editor.shape-editor.edit-as-custom": {
     "text": "Edit as custom",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button in the shape editor that turns the chosen preset shape into an editable custom shape.",
     "max": 25
   },
   "card-editor.shape-editor.edit-shape": {
@@ -7077,7 +7077,7 @@
   },
   "card-editor.shape-editor.give-it-a-name": {
     "text": "Give it a name.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Validation message in the shape editor save step when the shape name is empty.",
     "max": 25
   },
   "card-editor.shape-editor.hexagon": {
@@ -7087,12 +7087,12 @@
   },
   "card-editor.shape-editor.in-px-or-of-the-shorter-side": {
     "text": "In px, or % of the shorter side.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text on a shape editor size field; says the value is in pixels or a percentage of the shorter side.",
     "max": 55
   },
   "card-editor.shape-editor.keep-your-own-shapes-for-every-dashboard": {
     "text": "Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, this shape is saved in this card only.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Notice in the shape editor when Magic Card Utils is missing; says shapes stay in this card until the free add-on is installed.",
     "max": 210
   },
   "card-editor.shape-editor.left": {
@@ -7120,7 +7120,7 @@
   },
   "card-editor.shape-editor.make-a-custom-shape": {
     "text": "Make a custom shape",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button in the shape editor that starts drawing a new custom shape.",
     "max": 35
   },
   "card-editor.shape-editor.my-shapes": {
@@ -7143,7 +7143,7 @@
   },
   "card-editor.shape-editor.no-saved-shapes-yet-make-a-custom-shape": {
     "text": "No saved shapes yet. Make a custom shape, then choose Save as shape.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Empty state in the shape editor saved-shapes list; tells the user how to add the first shape.",
     "max": 110
   },
   "card-editor.shape-editor.none": {
@@ -7168,12 +7168,12 @@
   },
   "card-editor.shape-editor.paused-off-screen-and-with-reduced": {
     "text": "Paused off-screen and with reduced motion.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text in the shape editor for animated shapes; says the animation pauses off-screen and when reduced motion is on.",
     "max": 70
   },
   "card-editor.shape-editor.pick-another-random-blob": {
     "text": "Pick another random blob",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button or tooltip in the shape editor that generates a new random blob shape.",
     "max": 40
   },
   "card-editor.shape-editor.pill": {
@@ -7203,7 +7203,7 @@
   },
   "card-editor.shape-editor.save-as-shape": {
     "text": "Save as shape",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Button in the shape editor that saves the current custom shape to the shape library.",
     "max": 25
   },
   "card-editor.shape-editor.saved-as-name-find-it-under-my-shapes": {
@@ -7251,32 +7251,32 @@
   },
   "card-editor.shape-editor.the-blob-morphs-slowly": {
     "text": "The blob morphs slowly.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text for the shape editor blob animation option; says the blob outline changes slowly over time.",
     "max": 40
   },
   "card-editor.shape-editor.the-library-is-full-delete-a-shape-first": {
     "text": "The library is full. Delete a shape first.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Error in the shape editor when saving, because the shape library has reached its limit; tells the user to delete a shape.",
     "max": 70
   },
   "card-editor.shape-editor.the-shape-clips-anything-that-pops-out": {
     "text": "The shape clips anything that pops out of the module, like dropdowns and tooltips.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text in the shape editor warning that content popping out of the module, such as dropdowns, is clipped to the shape.",
     "max": 135
   },
   "card-editor.shape-editor.the-shape-editor-could-not-load-check": {
     "text": "The shape editor could not load. Check your connection and try again.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Error shown in place of the shape editor when its code fails to load; tells the user to check the connection and retry.",
     "max": 115
   },
   "card-editor.shape-editor.the-shape-replaces-border-radius-here": {
     "text": "The shape replaces Border radius here.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text in the shape editor saying a chosen shape overrides the Border radius setting.",
     "max": 65
   },
   "card-editor.shape-editor.the-waves-flow-along-the-edge": {
     "text": "The waves flow along the edge.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text for the shape editor wave animation option; says the wave pattern moves along the edge.",
     "max": 50
   },
   "card-editor.shape-editor.this-card-now-has-its-own-copy": {

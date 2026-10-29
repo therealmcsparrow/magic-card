@@ -1,32 +1,32 @@
 {
   "look-editor.element.0-dots-moving-dashes-instead": {
     "text": "0 dots: moving dashes instead.",
-    "note": "Shown in element (look-editor).",
+    "note": "Hint under the dot count in the flow look editor. Tells the user that a count of zero draws moving dashes instead of dots.",
     "max": 50
   },
   "look-editor.element.0-shapes-nothing-travels": {
     "text": "0 shapes: nothing travels.",
-    "note": "Shown in element (look-editor).",
+    "note": "Hint under the shape count in the flow look editor. Tells the user that a count of zero sends no shapes along the line.",
     "max": 45
   },
   "look-editor.element.4-or-more-glowing-or-tube-lines-on-one": {
     "text": "4 or more glowing or tube lines on one card. To keep wall tablets smooth, bubbles and flicker are reduced automatically.",
-    "note": "Shown in element (look-editor).",
+    "note": "Performance warning in the flow look editor. Explains that bubbles and flicker are cut back when a card has four or more glowing or tube lines.",
     "max": 195
   },
   "look-editor.element.7-or-more-glowing-or-tube-lines-moving": {
     "text": "7 or more glowing or tube lines. Moving highlights and splashes are switched off automatically.",
-    "note": "Shown in element (look-editor).",
+    "note": "Stronger performance warning in the flow look editor. Explains that highlights and splashes are switched off with seven or more glowing or tube lines.",
     "max": 155
   },
   "look-editor.element.a-small-effect-at-the-to-module-each": {
     "text": "A small effect at the To module each time a shape arrives.",
-    "note": "Shown in element (look-editor).",
+    "note": "Hint under the Splash on arrival switch in the flow look editor. Describes the effect played at the destination module.",
     "max": 95
   },
   "look-editor.element.a-tube-under-8-px-is-hard-to-read": {
     "text": "A tube under 8 px is hard to read.",
-    "note": "Shown in element (look-editor).",
+    "note": "Warning under the tube width field in the flow look editor. Appears when the width is below 8 px.",
     "max": 55
   },
   "look-editor.element.alternate-with": {
@@ -106,12 +106,12 @@
   },
   "look-editor.element.count-follows-spacing": {
     "text": "Count follows spacing.",
-    "note": "Shown in element (look-editor).",
+    "note": "Hint next to the shape count in the flow look editor. Says the count is worked out from the spacing setting.",
     "max": 40
   },
   "look-editor.element.dash-length-px": {
     "text": "Dash length (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Field label in the flow look editor. Sets how long each dash is, in pixels.",
     "max": 30
   },
   "look-editor.element.dashed": {
@@ -131,7 +131,7 @@
   },
   "look-editor.element.different-start-marker": {
     "text": "Different start marker",
-    "note": "Shown in element (look-editor).",
+    "note": "Switch label in the flow look editor. Lets the line start with a marker that differs from the end marker.",
     "max": 40
   },
   "look-editor.element.dismiss": {
@@ -146,7 +146,7 @@
   },
   "look-editor.element.dot-size-px": {
     "text": "Dot size (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Field label in the flow look editor. Sets the diameter of each moving dot, in pixels.",
     "max": 25
   },
   "look-editor.element.dots": {
@@ -239,7 +239,7 @@
   },
   "look-editor.element.level-follows-value": {
     "text": "Level follows value",
-    "note": "Shown in element (look-editor).",
+    "note": "Switch label in the flow look editor. Makes the tube fill level track the value of the chosen entity.",
     "max": 35
   },
   "look-editor.element.line": {
@@ -249,7 +249,7 @@
   },
   "look-editor.element.line-end-colour": {
     "text": "Line end colour",
-    "note": "Shown in element (look-editor).",
+    "note": "Colour field label in the flow look editor. Sets the colour at the far end of the line.",
     "max": 25
   },
   "look-editor.element.line-style": {
@@ -272,7 +272,7 @@
   },
   "look-editor.element.marker-size-px": {
     "text": "Marker size (px)",
-    "note": "Shown in element (look-editor).",
+    "note": "Field label in the flow look editor. Sets the size of the line's start and end markers, in pixels.",
     "max": 30
   },
   "look-editor.element.motion": {
