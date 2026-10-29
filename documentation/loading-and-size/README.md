@@ -4,6 +4,15 @@ Magic Card loads its files from one folder. `magic-card.js` is the only file a d
 
 The table under [Loading the other files](../../README.md#loading-the-other-files) in the main README lists which file each feature needs.
 
+## Files that features share
+
+Two small files hold code that several features read, so the card file does not need it and no feature carries its own copy. A plain card loads neither.
+
+-   `magic-card-history.js` holds the cache of recorded entity history. A card fetches it together with the file of a feature that reads history: a value background with a sparkline (in `magic-card-decor.js`) or a graphs module (in `magic-card-modules-extra.js`). Both use the same copy, so history that one has read is not requested again by the other.
+-   `magic-card-shape-path.js` holds the maths for outline shapes. A card fetches it together with a feature that draws along an outline: a ring, an outline shape or a value background (`magic-card-decor.js`), flow lines, seasonal scenes, a slider look, a custom shape, or the card editor.
+
+Keep both files in the folder next to `magic-card.js`, with their `.br` and `.gz` copies, like every other file of the release.
+
 ## When a part cannot load
 
 A part is a file that a feature needs, such as the slider, a background, an animation or the editor. When one cannot be fetched, the card does not break. It shows one of these messages in place of the part, and the rest of the card keeps working.

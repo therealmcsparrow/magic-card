@@ -50,7 +50,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
 -   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
 -   Library images (needs Magic Card Utils): draw pictures in the image editor, trace over a photo or floor plan, open or import SVG files, and show a library image in an image module or as a background behind the content. See [Images](documentation/images/README.md).
--   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. See [Languages](documentation/languages/README.md).
+-   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. See [Languages](documentation/languages/README.md). To help translate, see [Translating](documentation/translating/README.md).
 -   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
 ## Installation
@@ -118,6 +118,8 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-layers.js` | Cards with a moving card backdrop (pan and zoom, or camera snapshots). Colour, gradient, pattern and picture backdrops draw without it. |
 | `magic-card-templates.js` | Cards linked to a template. Other cards never load it. A linked card shows its own settings until it arrives. |
 | `magic-card-path-core.js` | The path parser shared by animations, icons, decorations and slider looks. Plain cards never load it; cards that use those features load it alongside their own file. |
+| `magic-card-history.js` | Cards with a graphs module or a sparkline value background, alongside their own file. Plain cards never load it. |
+| `magic-card-shape-path.js` | Cards with a ring, an outline shape, flow lines, a seasonal scene, a slider look or a custom shape, alongside their own file. Plain cards never load it. |
 | `magic-card-manifest.js` | Read only when a part fails to load, so the card can tell that its file comes from a different release than its parts. |
 | `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
 | `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
