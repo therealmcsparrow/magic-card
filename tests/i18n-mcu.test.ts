@@ -48,6 +48,18 @@ describe('tools/i18n-mcu.mjs', () => {
     expect(r.hard.join('|')).toContain('Open it');
   });
 
+  it('rejects a tc() context that contains the id separator', () => {
+    const src = `
+      const { tc: trc } = i18nFor("mcu-panel", tables);
+      const a = trc("a|b", "Save");
+      const b = trc("menu", "Save");
+    `;
+    const r = scanPanel(src, 'x.js');
+    expect(r.violations).toHaveLength(1);
+    expect(r.violations[0]).toContain('x.js:3 tc()');
+    expect(r.violations[0]).toContain("'|'");
+  });
+
   it('reads the names bound by an import from mc-i18n-panel.js and tells keys from text ids', () => {
     const r = scanPanel(PANEL.replace('tr("Save")', 'tr("mcu-panel.panel.save")'), 'x.js');
     expect([...r.names.entries()].sort()).toEqual([['tr', 't'], ['trx', 'tx']]);

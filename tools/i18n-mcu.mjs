@@ -82,6 +82,7 @@ export function scanPanel(source, file = PANEL_REL) {
       const text = lit(first);
       const c = fn === 'tc' ? lit(n.arguments[0]) : undefined;
       if (text === undefined || (fn === 'tc' && c === undefined)) violations.push(`${file}:${line(n)} ${n.expression.text}(): the id is not a string literal (D1)`);
+      else if (fn === 'tc' && c.includes('|')) violations.push(`${file}:${line(n)} tc(): the context contains '|' (D6)`);
       else if (fn !== 'tc' && KEY_PATTERN.test(text)) {
         if (!used.has(text)) used.set(text, []);
         used.get(text).push({ file, line: line(n) });
