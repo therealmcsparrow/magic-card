@@ -1788,17 +1788,17 @@
   },
   "svg-editor.views.home-assistant-would-show-little-of-this": {
     "text": "Home Assistant would show little of this drawing. It draws one filled shape without strokes.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning in the icon editor Home Assistant preview. Says most of the drawing would be lost because HA draws one filled shape without strokes.",
     "max": 150
   },
   "svg-editor.views.home-assistant-would-show-nothing-for": {
     "text": "Home Assistant would show nothing for this drawing. It draws filled shapes only.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning in the icon editor Home Assistant preview. Says nothing would show because the drawing has no filled shapes.",
     "max": 130
   },
   "svg-editor.views.how-home-assistant-draws-a-saved-icon-in": {
     "text": "How Home Assistant draws a saved icon in its own cards: one colour, filled shapes only.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Caption for the Home Assistant preview in the icon editor. Explains the preview shows one colour and filled shapes only.",
     "max": 140
   },
   "svg-editor.views.how-to-install": {
@@ -1876,7 +1876,7 @@
   },
   "svg-editor.views.it-is-saved-in-the-library": {
     "text": "It is saved in the library.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Status line in the icon editor use dialog. Tells the user the icon is stored in the shared library.",
     "max": 45
   },
   "svg-editor.views.join": {
@@ -2077,7 +2077,7 @@
   },
   "svg-editor.views.no-saved-icons-yet-save-an-icon-here-and": {
     "text": "No saved icons yet. Save an icon here and use it on any dashboard.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Empty state in the icon editor library list. Explains saved icons can be reused on any dashboard.",
     "max": 110
   },
   "svg-editor.views.none": {
@@ -2142,7 +2142,7 @@
   },
   "svg-editor.views.pasted-and-opened-files-are-cleaned": {
     "text": "Pasted and opened files are cleaned first. Scripts, images and links are removed.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Safety hint in the icon editor import view. Tells the user that scripts, images and links are stripped from imported files.",
     "max": 130
   },
   "svg-editor.views.path": {
@@ -2406,7 +2406,7 @@
   },
   "svg-editor.views.snapping-and-the-arrow-keys-move-by-this": {
     "text": "Snapping and the arrow keys move by this size.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint under the grid size field in the icon editor. Says the grid step is also the arrow key step.",
     "max": 75
   },
   "svg-editor.views.solid": {
@@ -2441,7 +2441,7 @@
   },
   "svg-editor.views.state-icons-win-over-your-drawing-remove": {
     "text": "State icons win over your drawing. Remove them to see your drawing.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning in the icon editor use dialog. Explains state-specific icons override the drawing until they are removed.",
     "max": 110
   },
   "svg-editor.views.stored-in-magic-card-utils-also": {
@@ -2476,22 +2476,22 @@
   },
   "svg-editor.views.the-animation-you-set-on-this-icon": {
     "text": "The animation you set on This icon follows your drawing.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint in the icon editor use dialog. Tells the user the animation already set on This icon applies to the new drawing.",
     "max": 90
   },
   "svg-editor.views.the-icon-editor-could-not-load-check": {
     "text": "The icon editor could not load. Check your connection and try again.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Error screen when the icon editor code fails to load. Suggests checking the connection and retrying.",
     "max": 110
   },
   "svg-editor.views.the-image-editor-could-not-load-check": {
     "text": "The image editor could not load. Check your connection and try again.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Error screen when the image editor code fails to load. Suggests checking the connection and retrying.",
     "max": 115
   },
   "svg-editor.views.this-card-is-linked-to-a-template-your": {
     "text": "This card is linked to a template. Your drawing is used on this card only.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Notice in the icon editor use dialog for a card linked to a template. Explains the drawing applies to this card, not to the template.",
     "max": 120
   },
   "svg-editor.views.this-icon-was-changed-somewhere-else": {
@@ -2501,7 +2501,7 @@
   },
   "svg-editor.views.this-is-not-used-on-the-card-yet": {
     "text": "This is not used on the card yet.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Status line in the icon editor use dialog. Tells the user the drawing has not been applied to the card.",
     "max": 55
   },
   "svg-editor.views.this-module-will-use-your-drawing": {
@@ -2549,7 +2549,7 @@
   },
   "svg-editor.views.undo-brings-the-old-drawing-back": {
     "text": "Undo brings the old drawing back.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint after opening or replacing a drawing in the icon editor. Says Undo restores the previous drawing.",
     "max": 55
   },
   "svg-editor.views.units": {
@@ -2577,12 +2577,12 @@
   },
   "svg-editor.views.use-holes-when-overlapping-parts-should": {
     "text": "Use holes when overlapping parts should cut each other out.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint in the icon editor fill settings. Explains the holes option makes overlapping parts cut each other out.",
     "max": 95
   },
   "svg-editor.views.use-it-on-this-card-to-keep-your-work-or": {
     "text": "Use it on this card to keep your work, or leave without using it.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Body of the leave dialog in the icon editor. Offers applying the drawing to the card or leaving without it.",
     "max": 105
   },
   "svg-editor.views.use-on-this-card": {
@@ -2602,7 +2602,7 @@
   },
   "svg-editor.views.use-two-colours-main-and-accent": {
     "text": "Use two colours: Main and Accent.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint in the icon editor colour settings. Tells the user the icon can have two colours, Main and Accent.",
     "max": 55
   },
   "svg-editor.views.used-as-mcu-id": {
@@ -2615,7 +2615,7 @@
   },
   "svg-editor.views.what-do-you-want-to-start-from": {
     "text": "What do you want to start from?",
-    "note": "Shown in views (svg-editor).",
+    "note": "Heading of the start screen in the icon editor. Asks the user to pick a starting point, such as blank, a file or the library.",
     "max": 50
   },
   "svg-editor.views.width": {
@@ -2625,7 +2625,7 @@
   },
   "svg-editor.views.without-a-copy-the-card-shows-the": {
     "text": "Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Warning in the icon editor use dialog. Explains the card falls back to the default icon if the add-on or library icon disappears and no copy is kept.",
     "max": 150
   },
   "svg-editor.views.working": {
