@@ -149,7 +149,7 @@ module.exports = (env, argv) => {
             }),
           ]
         : [],
-      // No vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (a chunk that always loads after another is its child). The one shared chunk is src/path/core.ts
+      // No vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (a chunk that always loads after another is its child). The shared chunks hold one module each: src/path/core.ts, src/services/history-cache.ts and src/utils/shape-path.ts
       splitChunks: {
         chunks: 'async',
         minSize: 0,
@@ -157,6 +157,10 @@ module.exports = (env, argv) => {
           default: false,
           defaultVendors: false,
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
+          // the one copy of the recorded-history cache that <mc-value-bg> (decor) and the graphs view (modules-extra) read
+          history: { test: /[\\/]src[\\/]services[\\/]history-cache\.ts$/, name: 'history', chunks: 'async', enforce: true },
+          // the one copy of the shape outline maths and its memo, read by decor, flows, seasonal, slider-look, shape-custom and the editor
+          'shape-path': { test: /[\\/]src[\\/]utils[\\/]shape-path\.ts$/, name: 'shape-path', chunks: 'async', enforce: true },
         },
       },
       runtimeChunk: false,

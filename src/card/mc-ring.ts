@@ -4,7 +4,8 @@ import { ringPath } from '../utils/ring-outline';
 import type { ResolvedShape } from './shape-resolve';
 import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 import { linearGradientSvg, parseGradient } from '../utils/gradient';
-import { ResolvedRing, ringInset, ringStroke, ringTimerTick } from '../utils/ring';
+import type { ResolvedRing } from '../utils/ring';
+import { ringInset, ringStroke, ringTimerTick } from './ring-stroke';
 import { TimerTick } from '../utils/timer';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';

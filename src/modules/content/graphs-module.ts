@@ -7,9 +7,6 @@ import { generateId } from '../../utils/id-generator';
 import type { ModuleDependencies } from '../../services/card-dependencies';
 import { lazyChunks } from '../../utils/lazy-chunks';
 
-export { clearHistoryCache, downsample, historyRequest, parseHistory } from '../../services/history-cache';
-export type { HistorySample } from '../../services/history-cache';
-
 class GraphsModule extends BaseLazyStub {
   readonly metadata: LazyStubMetadata = { type: 'graphs' };
 

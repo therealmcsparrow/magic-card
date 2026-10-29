@@ -1,6 +1,7 @@
 import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
 import type { HomeAssistant } from '../types';
-import { ResolvedValueBackground, sparklineHistory, sparklinePath } from '../utils/value-background';
+import type { ResolvedValueBackground } from '../utils/value-background';
+import { sparklineHistory, sparklinePath } from './value-bg-sparkline';
 import { entityNumber, isUnavailable } from '../utils/entity-value';
 import { CachedHistory, getHistory, HISTORY_TTL_MS, HistorySample, peekHistory } from '../services/history-cache';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';

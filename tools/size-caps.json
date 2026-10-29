@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 79462,
+        "cap": 72979,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 79462
+        "measured": 72979
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 68068,
-      "measured": 68068
+      "cap": 62524,
+      "measured": 62524
     }
   },
   "files": {
@@ -199,9 +199,9 @@
       "note": "15 KiB, measured 13,982 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The pop-up controller, the page coordinator and the pop-up rules. The contract ceiling is 20,480 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-decor.js": {
-      "raw": 26624,
+      "raw": 28672,
       "ceiling": 49152,
-      "note": "26 KiB, measured 25,319 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. <mc-ring>, <mc-shape>, <mc-value-bg>, the ring outline and its copy of the radii and shape-ring path. The contract ceiling is 49,152 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "28 KiB, measured 27,289 (plain throwaway copy, docker node 24.22.0) + 5 %, rounded up to 1 KiB. <mc-ring>, <mc-shape>, <mc-value-bg>, the ring stroke maths, the sparkline path, the ring outline and its copy of the radii and shape-ring path. The contract ceiling is 49,152 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-flow-look.js": {
       "raw": 32768,
@@ -247,6 +247,16 @@
       "raw": 9216,
       "ceiling": 10240,
       "note": "Shared path parser and outline maths (src/path/core.ts only). 9 KiB, measured 7,807 + 5 %, rounded up to 1 KiB. The contract ceiling is 10,240 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
+    },
+    "magic-card-shape-path.js": {
+      "raw": 13312,
+      "ceiling": 20480,
+      "note": "Shared shape outline maths and its memo (src/utils/shape-path.ts only). 13 KiB, measured 11,889 + 5 %, rounded up to 1 KiB. The contract ceiling is 20,480 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
+    },
+    "magic-card-history.js": {
+      "raw": 2048,
+      "ceiling": 4096,
+      "note": "Shared recorded-history cache (src/services/history-cache.ts only), read by the decor and modules-extra chunks. 2 KiB, measured 1,929 + 5 %, rounded up to 1 KiB. The contract ceiling is 4,096 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
     },
     "magic-card-i18n-labels.js": {
       "raw": 25600,
@@ -936,6 +946,12 @@
       "field": "/files/magic-card-modules-extra.js/raw",
       "from": 51200,
       "to": 52224
+    },
+    {
+      "id": "decor-raw-26624-to-28672",
+      "field": "/files/magic-card-decor.js/raw",
+      "from": 26624,
+      "to": 28672
     }
   ]
 }
