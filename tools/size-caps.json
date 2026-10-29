@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 73016,
+        "cap": 73017,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 73016
+        "measured": 73017
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 62417,
-      "measured": 62417
+      "cap": 62474,
+      "measured": 62474
     }
   },
   "files": {
@@ -982,6 +982,18 @@
       "field": "/entry/stages/3/cap",
       "from": 73006,
       "to": 73016
+    },
+    {
+      "id": "entry-stage4-73016-to-73017",
+      "field": "/entry/stages/3/cap",
+      "from": 73016,
+      "to": 73017
+    },
+    {
+      "id": "entry-br-62417-to-62474",
+      "field": "/entry/br/cap",
+      "from": 62417,
+      "to": 62474
     }
   ]
 }

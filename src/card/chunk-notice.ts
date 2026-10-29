@@ -88,6 +88,9 @@ interface Seen {
 }
 const seen = new WeakMap<RetryableLazyChunk, Seen>();
 
+/** The chunk has shown (or is about to show) a notice: its status container stays for the "loaded" text. */
+export const hasNotice = (c: RetryableLazyChunk): boolean => seen.has(c);
+
 /** One extra attempt. Focus on the button moves to the status container, because the button goes when the chunk loads. */
 async function retry(c: RetryableLazyChunk, s: Seen, e: Event): Promise<void> {
   if (s.busy) return;

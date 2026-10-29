@@ -4,8 +4,7 @@ import { html } from 'lit';
 import type { LazyModuleStub, ModuleView, RetryableLazyChunk } from '../contracts/lazy-module';
 import type { MessageIndex } from '../contracts/i18n';
 import { currentRenderContext } from '../services/render-context';
-import { chunkNotice } from '../card/chunk-notice';
-import { failedChunkNames } from '../utils/lazy-chunk';
+import { chunkNotice, hasNotice } from '../card/chunk-notice';
 
 class ModuleRegistryImpl {
   private modules = new Map<ModuleType, MagicModule>();
@@ -51,8 +50,8 @@ class ModuleRegistryImpl {
   private renderLazy(stub: LazyModuleStub, chunk: RetryableLazyChunk, config: CardModule, hass?: HomeAssistant) {
     const view = this.views.get(stub.metadata.type);
     // the notice (lazy-module 1.4.0 "Failure"): after the module's own box, so the slot keeps the size its config gives it.
-    // A chunk that has failed keeps its status container after a retry worked, for the focus hand-over and the "loaded" text.
-    const withNotice = (box: unknown) => (failedChunkNames().has(chunk.name) ? html`${box}${chunkNotice(chunk)}` : box);
+    // A chunk whose notice was shown keeps its status container after a retry worked, for the focus hand-over and the "loaded" text.
+    const withNotice = (box: unknown) => (chunk.failed() || hasNotice(chunk) ? html`${box}${chunkNotice(chunk)}` : box);
     if (view) return withNotice(view.renderPreview(config, hass));
     void chunk.load();
     if (stub.renderPreview) return withNotice(stub.renderPreview(config, hass));
