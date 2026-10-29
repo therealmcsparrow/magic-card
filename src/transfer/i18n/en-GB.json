@@ -1,7 +1,7 @@
 {
   "transfer.animation.the-animation-data-is-missing": {
     "text": "The animation data is missing.",
-    "note": "Shown in animation (transfer).",
+    "note": "Import error for an animation entry that has no animation data in it. It tells the user that entry was skipped.",
     "max": 50
   },
   "transfer.count.n": {
@@ -46,27 +46,27 @@
   },
   "transfer.envelope.animation-files-are-imported-in-the-card": {
     "text": "Animation files are imported in the card editor (My animations) or the animation studio.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Hint in the import report when an animation file is opened in the wrong place. It tells the user where animation files are imported.",
     "max": 145
   },
   "transfer.envelope.animations-do-not-store-a-description-so": {
     "text": "Animations do not store a description, so it was not kept.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import report line for an animation file that carries a description. It tells the user the description was dropped.",
     "max": 95
   },
   "transfer.envelope.animations-do-not-store-an-author-so-it": {
     "text": "Animations do not store an author, so it was not kept.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import report line for an animation file that carries an author. It tells the user the author was dropped.",
     "max": 90
   },
   "transfer.envelope.icon-files-are-imported-in-the-card": {
     "text": "Icon files are imported in the card editor (My icons) or the SVG editor.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Hint in the import report when an icon file is opened in the wrong place. It tells the user where icon files are imported.",
     "max": 120
   },
   "transfer.envelope.image-files-are-imported-in-magic-card": {
     "text": "Image files are imported in Magic Card Utils > Images.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Hint in the import report when an image file is opened in the wrong place. It tells the user where image files are imported.",
     "max": 90
   },
   "transfer.envelope.key-is-not-a-preset-field-so-it-was-left": {
@@ -79,22 +79,22 @@
   },
   "transfer.envelope.nothing-in-this-file-could-be-imported": {
     "text": "Nothing in this file could be imported.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Summary line of the import report when every entry failed. It tells the user nothing was added.",
     "max": 65
   },
   "transfer.envelope.only-icons-and-images-have-keywords-so": {
     "text": "Only icons and images have keywords, so they were left out.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import report line for keywords found on a kind that does not use them. It tells the user the keywords were dropped.",
     "max": 95
   },
   "transfer.envelope.shape-files-are-imported-in-the-card": {
     "text": "Shape files are imported in the card editor (My shapes) or the shape editor.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Hint in the import report when a shape file is opened in the wrong place. It tells the user where shape files are imported.",
     "max": 125
   },
   "transfer.envelope.some-keywords-were-not-valid-at-most-10": {
     "text": "Some keywords were not valid (at most 10 words of 1-32 characters), so they were left out.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import report line when keywords break the limits. It tells the user the allowed count and length and that the keywords were dropped.",
     "max": 145
   },
   "transfer.envelope.step-n-plays-name-which-is-not-in-this": {
@@ -156,12 +156,12 @@
   },
   "transfer.envelope.theme-files-are-imported-in-magic-card": {
     "text": "Theme files are imported in Magic Card Utils > Themes.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Hint in the import report when a theme file is opened in the wrong place. It tells the user where theme files are imported.",
     "max": 90
   },
   "transfer.envelope.this-entry-is-not-an-object": {
     "text": "This entry is not an object.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error for one list entry that is plain text or a number instead of a record. It tells the user that entry was skipped.",
     "max": 45
   },
   "transfer.envelope.this-file-holds-kind-presets-which-this": {
@@ -195,12 +195,12 @@
   },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": {
     "text": "This is not a Magic Card preset file.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error when the pasted or chosen file lacks the preset file markers. It tells the user the file is of another kind.",
     "max": 60
   },
   "transfer.envelope.this-text-is-larger-than-1-mb-so-it-was": {
     "text": "This text is larger than 1 MB, so it was not read.",
-    "note": "Shown in envelope (transfer).",
+    "note": "Import error when the pasted text is over the size limit. It tells the user nothing was read and why.",
     "max": 80
   },
   "transfer.icon.a-link-name": {
@@ -271,7 +271,7 @@
   },
   "transfer.icon.the-icon-has-no-svg": {
     "text": "The icon has no SVG.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error for an icon entry without a drawing. It tells the user that icon was skipped.",
     "max": 35
   },
   "transfer.icon.the-icon-is-larger-than-kb-kb": {
@@ -284,27 +284,27 @@
   },
   "transfer.icon.the-icon-is-too-large": {
     "text": "The icon is too large.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error for an icon entry over the size limit. It tells the user that icon was skipped.",
     "max": 40
   },
   "transfer.icon.the-svg-could-not-be-read": {
     "text": "The SVG could not be read.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error when an icon's drawing is not valid SVG. It tells the user that icon was skipped.",
     "max": 45
   },
   "transfer.icon.the-svg-has-no-shapes-to-draw": {
     "text": "The SVG has no shapes to draw.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error when an icon's SVG holds nothing drawable. It tells the user that icon was skipped.",
     "max": 50
   },
   "transfer.icon.the-svg-is-larger-than-32-kb": {
     "text": "The SVG is larger than 32 KB.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error when an icon's SVG is over the 32 KB limit. It tells the user the size cap and that the icon was skipped.",
     "max": 50
   },
   "transfer.icon.the-svg-is-too-complex": {
     "text": "The SVG is too complex.",
-    "note": "Shown in icon (transfer).",
+    "note": "Import error when an icon's SVG has too many shapes or points. It tells the user to simplify it; the icon was skipped.",
     "max": 40
   },
   "transfer.icon.the-view-box-is-not-four-numbers-so-it": {
@@ -991,7 +991,7 @@
   },
   "transfer.safe-parse.image-files-are-json-not-yaml-export": {
     "text": "Image files are JSON, not YAML. Export them as JSON.",
-    "note": "Shown in safe parse (transfer).",
+    "note": "Import error when YAML is given where an image file is expected. It tells the user to export the images as JSON instead.",
     "max": 85
   },
   "transfer.safe-parse.merge-keys-are-not-allowed-in-preset": {
@@ -1001,7 +1001,7 @@
   },
   "transfer.safe-parse.not-valid-yaml-or-json": {
     "text": "Not valid YAML or JSON.",
-    "note": "Shown in safe parse (transfer).",
+    "note": "Import error when the pasted text cannot be parsed. It tells the user to check the text for typos or cut-off content.",
     "max": 40
   },
   "transfer.safe-parse.numbers-must-be-finite-no-inf-or-nan": {
@@ -1011,7 +1011,7 @@
   },
   "transfer.safe-parse.paste-or-choose-a-file-first": {
     "text": "Paste or choose a file first.",
-    "note": "Shown in safe parse (transfer).",
+    "note": "Message when import is pressed with an empty box. It tells the user to paste text or choose a file before continuing.",
     "max": 50
   },
   "transfer.safe-parse.this-file-is-larger-than-1-mb-so-it-was": {
@@ -1026,7 +1026,7 @@
   },
   "transfer.safe-parse.this-file-is-too-complex-to-read-safely": {
     "text": "This file is too complex to read safely (too many nested or repeated values).",
-    "note": "Shown in safe parse (transfer).",
+    "note": "Import error when the file nests or repeats values beyond the safe-reading limits. It tells the user the file was refused, not partly read.",
     "max": 125
   },
   "transfer.shape.a-shape-holds-at-most-max-points-this": {
@@ -1080,27 +1080,27 @@
   },
   "transfer.shape.the-corner-size-is-not-valid-so-it-was": {
     "text": "The corner size is not valid, so it was left out.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import report line for a shape whose corner size is out of range. The shape is still imported without that value.",
     "max": 80
   },
   "transfer.shape.the-corner-type-is-not-valid-so-it-was": {
     "text": "The corner type is not valid, so it was left out.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import report line for a shape with an unknown corner type. The shape is still imported without that value.",
     "max": 80
   },
   "transfer.shape.the-corners-setting-is-not-valid-so-it": {
     "text": "The corners setting is not valid, so it was left out.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import report line for a shape whose overall corners setting is invalid. The shape is still imported without that value.",
     "max": 85
   },
   "transfer.shape.the-padding-is-not-valid-so-it-was-left": {
     "text": "The padding is not valid, so it was left out.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import report line for a shape whose text padding is invalid. The shape is still imported without that value.",
     "max": 75
   },
   "transfer.shape.the-points-list-is-not-valid-so-it-was": {
     "text": "The points list is not valid, so it was left out.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import report line for a shape whose outline points are invalid. The shape is still imported without that value.",
     "max": 80
   },
   "transfer.shape.the-shape-data-is-missing": {
@@ -1123,7 +1123,7 @@
   },
   "transfer.shape.the-smoothing-is-not-valid-so-it-was": {
     "text": "The smoothing is not valid, so it was left out.",
-    "note": "Shown in shape (transfer).",
+    "note": "Import report line for a shape whose smoothing value is invalid. The shape is still imported without that value.",
     "max": 80
   },
   "transfer.theme.another-website": {

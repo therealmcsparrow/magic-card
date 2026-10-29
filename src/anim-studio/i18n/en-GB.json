@@ -3120,17 +3120,17 @@
   },
   "anim-studio.particles-editor.0-pulls-down-90-left-180-up-270-right": {
     "text": "0 pulls down, 90 left, 180 up, 270 right.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the gravity direction field in the particles editor; explains which angle pulls particles which way.",
     "max": 70
   },
   "anim-studio.particles-editor.0-stops-on-impact-1-bounces-back-at-full": {
     "text": "0 stops on impact, 1 bounces back at full speed.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the bounce field in the particles editor; explains what the lowest and highest values do.",
     "max": 80
   },
   "anim-studio.particles-editor.a-baked-loop-keeps-lifetimes-inside-one": {
     "text": "A baked loop keeps lifetimes inside one loop.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint beside the baked loop option in the particles editor; says lifetimes are kept inside a single loop.",
     "max": 75
   },
   "anim-studio.particles-editor.about-percent-of-particles": {
@@ -3143,7 +3143,7 @@
   },
   "anim-studio.particles-editor.add-a-shape-to-mix-shapes-each-one-gets": {
     "text": "Add a shape to mix shapes. Each one gets a weight.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint in the particles editor shape list; tells the user that added shapes are mixed, each with its own weight.",
     "max": 80
   },
   "anim-studio.particles-editor.add-colour": {
@@ -3163,7 +3163,7 @@
   },
   "anim-studio.particles-editor.adds-random-swirls-to-the-motion": {
     "text": "Adds random swirls to the motion.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the turbulence field in the particles editor; says it adds random swirls to particle movement.",
     "max": 55
   },
   "anim-studio.particles-editor.all-particles": {
@@ -3300,7 +3300,7 @@
   },
   "anim-studio.particles-editor.children-burst-out-from-the-point-where": {
     "text": "Children burst out from the point where they spawn.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the child particles option in the particles editor; says children burst out from the spawn point.",
     "max": 85
   },
   "anim-studio.particles-editor.collide-with": {
@@ -3398,12 +3398,12 @@
   },
   "anim-studio.particles-editor.each-particle-picks-a-speed-in-this": {
     "text": "Each particle picks a speed in this range, measured in % of the card's shorter side per second. At 100, a particle crosses a square card in one second.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the speed range fields in the particles editor; explains the unit and gives a worked example.",
     "max": 245
   },
   "anim-studio.particles-editor.each-particle-turns-the-way-it-picks": {
     "text": "Each particle turns the way it picks, left or right.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the spin direction option in the particles editor; says each particle picks left or right.",
     "max": 85
   },
   "anim-studio.particles-editor.emitter-name": {
@@ -3476,7 +3476,7 @@
   },
   "anim-studio.particles-editor.in-front-particles-draw-over-text-and": {
     "text": "In front: particles draw over text and icons. They never block clicks.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the layer order option in the particles editor; says particles draw over content but never block clicks.",
     "max": 115
   },
   "anim-studio.particles-editor.largest-size": {
@@ -3506,7 +3506,7 @@
   },
   "anim-studio.particles-editor.live-simulation-runs-on-every-dashboard": {
     "text": "Live simulation runs on every dashboard that shows this card and uses more CPU, especially on wall tablets. Animated SVG export plays the baked loop instead.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Warning under the live simulation mode in the particles editor; tells the user it costs CPU and exports as the baked loop.",
     "max": 255
   },
   "anim-studio.particles-editor.living-room": {
@@ -3553,17 +3553,17 @@
   },
   "anim-studio.particles-editor.negative-blows-the-rain-to-the-left": {
     "text": "Negative blows the rain to the left, positive to the right. It sets the gravity direction.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the wind or gravity direction field in the particles editor; explains the sign of the value.",
     "max": 145
   },
   "anim-studio.particles-editor.no-colours-particles-use-the-animation": {
     "text": "No colours: particles use the animation colour.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Empty state of the colour list in the particles editor; says particles fall back to the animation colour.",
     "max": 80
   },
   "anim-studio.particles-editor.no-free-particles-left-lower-a-count-to": {
     "text": "No free particles left. Lower a count to add an emitter.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Notice beside the add emitter button in the particles editor when the particle budget is used up; tells the user to lower a count.",
     "max": 90
   },
   "anim-studio.particles-editor.none": {
@@ -3588,7 +3588,7 @@
   },
   "anim-studio.particles-editor.open-a-particles-animation-to-design-its": {
     "text": "Open a particles animation to design its particles.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Empty state of the particles editor when no particles animation is open; tells the user to open one first.",
     "max": 85
   },
   "anim-studio.particles-editor.own-child-colour": {
@@ -3618,7 +3618,7 @@
   },
   "anim-studio.particles-editor.particles-appear-and-vanish-softly": {
     "text": "Particles appear and vanish softly.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the fade option in the particles editor; says particles appear and vanish softly.",
     "max": 60
   },
   "anim-studio.particles-editor.particles-particles-emitters-emitters": {
@@ -3632,12 +3632,12 @@
   },
   "anim-studio.particles-editor.particles-take-the-colours-in-turn-pick": {
     "text": "Particles take the colours in turn. Pick one to change it.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint above the colour list in the particles editor; says colours are used in turn and can be changed by picking one.",
     "max": 95
   },
   "anim-studio.particles-editor.paths-and-shapes-only-scripts-styles-and": {
     "text": "Paths and shapes only: scripts, styles and links are removed. The shape is filled with the particle colour.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint in the custom SVG shape section of the particles editor; says what is stripped on import and how the shape is filled.",
     "max": 175
   },
   "anim-studio.particles-editor.pause-preview": {
@@ -3667,7 +3667,7 @@
   },
   "anim-studio.particles-editor.reduced-motion-is-on-so-the-preview": {
     "text": "Reduced motion is on, so the preview stays still.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Notice over the particles preview when the system asks for reduced motion; explains why the preview does not move.",
     "max": 80
   },
   "anim-studio.particles-editor.remove-colour": {
@@ -3783,7 +3783,7 @@
   },
   "anim-studio.particles-editor.slows-particles-down-over-time": {
     "text": "Slows particles down over time.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the drag or friction field in the particles editor; says particles slow down over time.",
     "max": 50
   },
   "anim-studio.particles-editor.smallest-size": {
@@ -3841,7 +3841,7 @@
   },
   "anim-studio.particles-editor.swaps-the-preset-for-your-own-particles": {
     "text": "Swaps the preset for your own particles: shape, movement, size and colours become editable.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Tooltip on the convert to custom button in the particles editor; says the preset is replaced by editable particles.",
     "max": 150
   },
   "anim-studio.particles-editor.text": {
@@ -3851,52 +3851,52 @@
   },
   "anim-studio.particles-editor.the-box-of-the-card-s-icon-or-of-its": {
     "text": "The box of the card's icon or of its text.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the emitter placement option in the particles editor; says particles spawn in the icon or text box.",
     "max": 70
   },
   "anim-studio.particles-editor.the-look-changes-a-little": {
     "text": "The look changes a little.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the randomise seed button in the particles editor; says the look changes slightly.",
     "max": 45
   },
   "anim-studio.particles-editor.the-same-seed-gives-the-same-loop-every": {
     "text": "The same seed gives the same loop every time.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the seed field in the particles editor; says a fixed seed repeats the same loop.",
     "max": 75
   },
   "anim-studio.particles-editor.the-shape-as-a-mask": {
     "text": "The shape as a mask",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Label of a placement choice in the particles editor; particles spawn inside the shape used as a mask.",
     "max": 35
   },
   "anim-studio.particles-editor.the-studio-works-out-every-particle-s": {
     "text": "The studio works out every particle's path once and plays it as a loop. Light on dashboards.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint under the baked loop mode in the particles editor; says the path is precomputed so dashboards stay light.",
     "max": 150
   },
   "anim-studio.particles-editor.these-apply-to-every-emitter-placement": {
     "text": "These apply to every emitter. Placement is set per emitter.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint above the shared settings in the particles editor; says they affect all emitters and placement is per emitter.",
     "max": 95
   },
   "anim-studio.particles-editor.they-replace-the-preset-s-look": {
     "text": "They replace the preset's look.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Hint above the custom colours in the particles editor; says they override the preset's own look.",
     "max": 50
   },
   "anim-studio.particles-editor.this-loop-hit-the-size-limit-so-it-shows": {
     "text": "This loop hit the size limit, so it shows fewer particles. Lower the count or the child particles.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Warning in the particles editor when the baked loop reaches the size limit; tells the user to lower counts.",
     "max": 160
   },
   "anim-studio.particles-editor.this-loop-is-large-so-it-takes-longer-to": {
     "text": "This loop is large, so it takes longer to load on wall tablets. Lower the count or the child particles.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Warning in the particles editor when the baked loop is large; says wall tablets load it slowly and to lower counts.",
     "max": 165
   },
   "anim-studio.particles-editor.this-preset-is-not-available-in-this": {
     "text": "This preset is not available in this version of Magic Card.",
-    "note": "Shown in particles editor (anim-studio).",
+    "note": "Error in the particles editor when a saved preset is missing from this Magic Card version.",
     "max": 95
   },
   "anim-studio.particles-editor.timing": {
@@ -4008,7 +4008,7 @@
   },
   "anim-studio.particles-layers.card-content-text-icons-and-background": {
     "text": "Card content. Text, icons and background of the card.",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Tooltip on the card content row in the particles layers list; describes what that layer contains.",
     "max": 85
   },
   "anim-studio.particles-layers.child-particles": {
@@ -4036,7 +4036,7 @@
   },
   "anim-studio.particles-layers.hide-and-solo-are-unavailable-the": {
     "text": "Hide and solo are unavailable: the particle preview could not be built.",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Notice in the particles layers list when the hide and solo buttons are disabled because the preview failed to build.",
     "max": 115
   },
   "anim-studio.particles-layers.in-front-of-the-content": {
@@ -4167,7 +4167,7 @@
   },
   "anim-studio.particles-layers.text-icons-and-background-of-the-card": {
     "text": ". Text, icons and background of the card.",
-    "note": "Shown in particles layers (anim-studio).",
+    "note": "Second half of the card content tooltip in the particles layers list; the leading full stop joins it to the layer name.",
     "max": 70
   },
   "anim-studio.particles-layers.up": {
@@ -4218,7 +4218,7 @@
   },
   "anim-studio.particles-utils.convert-the-preset-to-custom-particles": {
     "text": "Convert the preset to custom particles to export it.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Error shown when exporting a preset particles animation as SVG; tells the user to convert it to custom particles first.",
     "max": 85
   },
   "anim-studio.particles-utils.count": {
@@ -4300,7 +4300,7 @@
   },
   "anim-studio.particles-utils.enter-an-emoji-or-a-symbol": {
     "text": "Enter an emoji or a symbol.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Validation message under the emoji particle field in the particles editor when it is empty.",
     "max": 45
   },
   "anim-studio.particles-utils.explode-and-fall": {
@@ -4359,7 +4359,7 @@
   },
   "anim-studio.particles-utils.icon-and-emoji-particles-export-as-dots": {
     "text": "Icon and emoji particles export as dots.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Notice shown when exporting particles as SVG; says icon and emoji particles become dots in the file.",
     "max": 65
   },
   "anim-studio.particles-utils.left": {
@@ -4383,7 +4383,7 @@
   },
   "anim-studio.particles-utils.live-simulation-exports-as-its-baked": {
     "text": "Live simulation exports as its baked loop.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Notice shown when exporting particles as SVG; says a live simulation exports as its baked loop.",
     "max": 70
   },
   "anim-studio.particles-utils.min-max-px": {
@@ -4448,7 +4448,7 @@
   },
   "anim-studio.particles-utils.paste-the-markup-of-an-svg": {
     "text": "Paste the markup of an <svg>.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Validation message under the custom SVG shape field in the particles editor when no valid markup is pasted.",
     "max": 50
   },
   "anim-studio.particles-utils.radius": {
@@ -4562,12 +4562,12 @@
   },
   "anim-studio.particles-utils.the-loop-hit-the-size-limit-so-the-file": {
     "text": "The loop hit the size limit, so the file shows fewer particles.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Notice shown when exporting particles as SVG; says the file shows fewer particles because of the size limit.",
     "max": 105
   },
   "anim-studio.particles-utils.the-particle-engine-is-not-loaded-yet": {
     "text": "The particle engine is not loaded yet.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Error shown when exporting particles as SVG before the particle engine has loaded; the user can try again shortly.",
     "max": 65
   },
   "anim-studio.particles-utils.the-svg-draws-nothing": {
@@ -4605,7 +4605,7 @@
   },
   "anim-studio.particles-utils.use-up-to-8-characters": {
     "text": "Use up to 8 characters.",
-    "note": "Shown in particles utils (anim-studio).",
+    "note": "Validation message under the emoji or symbol particle field in the particles editor when the text is too long.",
     "max": 40
   },
   "anim-studio.particles-utils.wave": {
@@ -4635,7 +4635,7 @@
   },
   "anim-studio.parts-layers.click-a-part-to-animate-it-on-the": {
     "text": "Click a part to animate it on the timeline. Shift or Ctrl adds to the selection; double-click or F2 renames. H hides, S solos, L locks (preview only).",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Hint at the top of the parts list; explains selecting, renaming, hiding, soloing and locking parts.",
     "max": 240
   },
   "anim-studio.parts-layers.count": {
@@ -4833,7 +4833,7 @@
   },
   "anim-studio.parts-layers.split-the-icon-to-animate-its-shapes-one": {
     "text": "Split the icon to animate its shapes one by one: a bell's clapper, a fan's blades.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Empty state of the parts list before the icon is split; explains why splitting is useful.",
     "max": 135
   },
   "anim-studio.parts-layers.splitting": {
@@ -4843,7 +4843,7 @@
   },
   "anim-studio.parts-layers.splitting-again-replaces-the-parts-their": {
     "text": "Splitting again replaces the parts, their groups and their keys.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Warning near the split button in the parts list; says splitting again replaces parts, groups and keys.",
     "max": 105
   },
   "anim-studio.parts-layers.the-icon-has-count-shapes-the-first": {
@@ -4857,7 +4857,7 @@
   },
   "anim-studio.parts-layers.the-parts-come-from-the-document-s-own": {
     "text": "The parts come from the document's own SVG, one part per shape.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Hint in the parts list for a drawn document; says each shape in its own SVG becomes one part.",
     "max": 105
   },
   "anim-studio.parts-layers.this-icon-could-not-be-loaded-check-the": {
@@ -4867,7 +4867,7 @@
   },
   "anim-studio.parts-layers.this-icon-has-no-shapes-to-split": {
     "text": "This icon has no shapes to split.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Error in the parts list when the chosen icon has no shapes to split into parts.",
     "max": 55
   },
   "anim-studio.parts-layers.tracks-combined-no-order": {
@@ -4887,7 +4887,7 @@
   },
   "anim-studio.parts-layers.use-an-icon-id-like-mdi-bell-ring": {
     "text": "Use an icon id like mdi:bell-ring.",
-    "note": "Shown in parts layers (anim-studio).",
+    "note": "Validation message under the icon field in the parts list when the icon id is not in the set:name form.",
     "max": 55
   },
   "anim-studio.parts-model.a-rig-has-at-most-groups-groups": {
@@ -4916,7 +4916,7 @@
   },
   "anim-studio.parts-model.select-two-or-more-parts-to-group-them": {
     "text": "Select two or more parts to group them.",
-    "note": "Shown in parts model (anim-studio).",
+    "note": "Message in the parts list when the group action is used with fewer than two parts selected.",
     "max": 65
   },
   "anim-studio.parts-model.this-animation-has-tracks-animated": {
@@ -4975,7 +4975,7 @@
   },
   "anim-studio.path-editor.click-the-stage-to-add-a-point-click-the": {
     "text": "Click the stage to add a point, click the line to insert one.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint at the top of the motion path editor; explains how to add and insert points on the stage.",
     "max": 100
   },
   "anim-studio.path-editor.close-path": {
@@ -5031,12 +5031,12 @@
   },
   "anim-studio.path-editor.double-click-a-point-to-make-it-smooth": {
     "text": "Double-click a point to make it smooth or a corner.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint in the motion path editor; explains that double-clicking a point toggles smooth and corner.",
     "max": 85
   },
   "anim-studio.path-editor.drag-points-and-handles": {
     "text": "Drag points and handles.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Short hint in the motion path editor; says points and handles can be dragged to reshape the path.",
     "max": 40
   },
   "anim-studio.path-editor.element": {
@@ -5087,7 +5087,7 @@
   },
   "anim-studio.path-editor.none-set-the-particles-take-the": {
     "text": "None set: the particles take the animation colour.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the particle colour field in the path editor; says an empty field falls back to the animation colour.",
     "max": 80
   },
   "anim-studio.path-editor.of-size": {
@@ -5112,7 +5112,7 @@
   },
   "anim-studio.path-editor.particles-travel-the-path-one-after": {
     "text": "Particles travel the path one after another, over the whole element.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the particle spacing option in the path editor; says particles follow the path one after another.",
     "max": 110
   },
   "anim-studio.path-editor.path": {
@@ -5127,12 +5127,12 @@
   },
   "anim-studio.path-editor.points-are-in-of-the-moving-element-so": {
     "text": "Points are in % of the moving element, so the path scales with it.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the path units option in the path editor; says percentage points scale with the moving element.",
     "max": 110
   },
   "anim-studio.path-editor.points-are-in-pixels-the-same-at-every": {
     "text": "Points are in pixels, the same at every size.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the path units option in the path editor; says pixel points stay the same at every size.",
     "max": 75
   },
   "anim-studio.path-editor.points-snap-to-a-10-px-grid-hold-key-to": {
@@ -5212,22 +5212,22 @@
   },
   "anim-studio.path-editor.the-module-s-icon-moves-along-the-path": {
     "text": "The module's icon moves along the path.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the subject choice in the path editor; says the module's icon is what moves along the path.",
     "max": 65
   },
   "anim-studio.path-editor.the-motion-runs-back-to-the-start-along": {
     "text": "The motion runs back to the start along the path.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the ping-pong option in the path editor; says the motion returns along the same path.",
     "max": 80
   },
   "anim-studio.path-editor.the-whole-element-moves-along-the-path": {
     "text": "The whole element moves along the path from where it rests.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the subject choice in the path editor; says the whole element moves from its resting place.",
     "max": 95
   },
   "anim-studio.path-editor.turn-the-subject-to-face-the-direction": {
     "text": "Turn the subject to face the direction of travel.",
-    "note": "Shown in path editor (anim-studio).",
+    "note": "Hint under the auto-rotate option in the path editor; says the subject turns to face its travel direction.",
     "max": 80
   },
   "anim-studio.path-editor.units": {
@@ -5247,12 +5247,12 @@
   },
   "anim-studio.path-host.click-to-place-the-first-point": {
     "text": "Click to place the first point",
-    "note": "Shown in path host (anim-studio).",
+    "note": "Prompt on the stage while drawing a motion path that has no points yet.",
     "max": 50
   },
   "anim-studio.path-host.motion-path-click-to-add-points-drag-to": {
     "text": "Motion path. Click to add points, drag to move them.",
-    "note": "Shown in path host (anim-studio).",
+    "note": "Accessible label of the motion path drawing area on the stage; read out by screen readers.",
     "max": 85
   },
   "anim-studio.path-host.start": {
@@ -5290,7 +5290,7 @@
   },
   "anim-studio.path-layers.no-motion-path-yet-draw-one-on-the-stage": {
     "text": "No motion path yet. Draw one on the stage.",
-    "note": "Shown in path layers (anim-studio).",
+    "note": "Empty state of the path layers list; tells the user to draw a motion path on the stage.",
     "max": 70
   },
   "anim-studio.path-layers.particles": {
@@ -5381,7 +5381,7 @@
   },
   "anim-studio.sequence-editor.a-sequence-needs-at-least-one-step": {
     "text": "A sequence needs at least one step",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Validation message in the sequence editor when the step list is empty.",
     "max": 55
   },
   "anim-studio.sequence-editor.add-step": {
@@ -5391,7 +5391,7 @@
   },
   "anim-studio.sequence-editor.add-the-animations-to-play-one-after": {
     "text": "Add the animations to play one after another.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Empty state of the sequence step list; tells the user to add animations that play in order.",
     "max": 75
   },
   "anim-studio.sequence-editor.animation": {
@@ -5448,7 +5448,7 @@
   },
   "anim-studio.sequence-editor.delay-counts-from-the-end-of-the-2": {
     "text": "Delay counts from the end of the previous step. Empty duration uses the animation's own.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Hint under the step delay and duration fields in the sequence editor; explains how both are timed.",
     "max": 145
   },
   "anim-studio.sequence-editor.delete-step": {
@@ -5466,12 +5466,12 @@
   },
   "anim-studio.sequence-editor.drag-or-press-alt-up-or-alt-down-to-move": {
     "text": "Drag, or press Alt+Up or Alt+Down, to move the step.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Accessible description of a step's drag handle in the sequence editor; names the keyboard shortcuts.",
     "max": 85
   },
   "anim-studio.sequence-editor.drag-to-reorder-alt-up-alt-down": {
     "text": "Drag to reorder (Alt+Up / Alt+Down)",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Tooltip on a step's drag handle in the sequence editor; names the keyboard shortcuts for reordering.",
     "max": 60
   },
   "anim-studio.sequence-editor.duration": {
@@ -5537,7 +5537,7 @@
   },
   "anim-studio.sequence-editor.play-on-a-row-s-columns-or-a-column-s": {
     "text": "Play on a row's columns or a column's modules one after another.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Hint under the stagger option in the sequence editor; says the sequence plays across a row's columns or a column's modules.",
     "max": 105
   },
   "anim-studio.sequence-editor.play-order": {
@@ -5592,7 +5592,7 @@
   },
   "anim-studio.sequence-editor.start-again-after-the-last-step": {
     "text": "Start again after the last step.",
-    "note": "Shown in sequence editor (anim-studio).",
+    "note": "Hint under the repeat option in the sequence editor; says the sequence restarts after its last step.",
     "max": 55
   },
   "anim-studio.sequence-editor.step-animation": {
@@ -5715,7 +5715,7 @@
   },
   "anim-studio.sequence-layers.no-steps-yet-add-a-clip-to-start-the": {
     "text": "No steps yet. Add a clip to start the sequence.",
-    "note": "Shown in sequence layers (anim-studio).",
+    "note": "Empty state of the sequence layers list; tells the user to add a clip to begin.",
     "max": 80
   },
   "anim-studio.sequence-layers.sequence-steps": {

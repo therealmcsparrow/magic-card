@@ -36,7 +36,7 @@
   },
   "image-tools.mc-image-picker.loading-images": {
     "text": "Loading images…",
-    "note": "Shown in the image picker while the image list is being fetched.",
+    "note": "Status line in the image picker while the image list is being fetched. It tells the user to wait; it goes away once the images appear.",
     "max": 25
   },
   "image-tools.mc-image-picker.n": {
@@ -271,7 +271,7 @@
   },
   "image-tools.mc-library-image-field.no-image-chosen": {
     "text": "No image chosen",
-    "note": "Shown in the image field when no image is set.",
+    "note": "Placeholder in the library image field when no image is set. It tells the user the field is empty and that they can pick one.",
     "max": 25
   },
   "image-tools.mc-library-image-field.not-found": {

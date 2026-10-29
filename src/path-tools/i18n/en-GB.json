@@ -140,7 +140,7 @@
   },
   "path-tools.panel.nothing-to-preview-yet": {
     "text": "Nothing to preview yet.",
-    "note": "Shown in a path tool's panel before a preview can be calculated.",
+    "note": "Empty state in a path tool's panel. It tells the user no preview exists yet because the current selection gives the tool nothing to calculate.",
     "max": 40
   },
   "path-tools.panel.positive-grows-the-shape-negative": {

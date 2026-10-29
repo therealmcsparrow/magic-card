@@ -2892,12 +2892,12 @@
   },
   "card-editor.design-panel.search-css-properties-e-g-padding": {
     "text": "Search CSS properties, e.g. padding",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Placeholder of the search box at the top of the design panel; typing filters the list of style properties.",
     "max": 60
   },
   "card-editor.design-panel.show-in-tree": {
     "text": "Show in tree",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Button in the design panel that selects the current element in the layout tree so the user can find its place.",
     "max": 20
   },
   "card-editor.design-panel.state-reset": {
@@ -2928,7 +2928,7 @@
   },
   "card-editor.design-panel.text-uses-this-gradient-as-its-fill": {
     "text": "Text uses this gradient as its fill. Older tablets show the first colour.",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Hint under the text gradient option in the design panel; explains the gradient fills the text and the fallback on old browsers.",
     "max": 120
   },
   "card-editor.design-panel.theme-accent": {
@@ -2943,7 +2943,7 @@
   },
   "card-editor.design-panel.use-default-value": {
     "text": "Use Default value",
-    "note": "Shown in design panel (card-editor).",
+    "note": "Menu item in the design panel that clears a custom style value so the property falls back to its default.",
     "max": 30
   },
   "card-editor.dropdown-editor.add-option": {
@@ -2973,7 +2973,7 @@
   },
   "card-editor.dropdown-editor.leave-empty-to-offer-the-entity-s-own": {
     "text": "Leave empty to offer the entity's own options. Custom options rename or pick from them; a value the entity does not offer is shown disabled.",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Hint under the options list of the dropdown module editor; explains empty means the entity's own options and what custom options do.",
     "max": 225
   },
   "card-editor.dropdown-editor.option-n": {
@@ -3000,12 +3000,12 @@
   },
   "card-editor.dropdown-editor.the-hvac-mode": {
     "text": "the HVAC mode",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Name of what a climate dropdown sets, slotted into a sentence in the dropdown module editor.",
     "max": 25
   },
   "card-editor.dropdown-editor.this-entity-has-no-options-a-dropdown": {
     "text": "This entity has no options a dropdown can set (use an input select, select, input text or text with custom options, climate, fan, light, media player, water heater or humidifier).",
-    "note": "Shown in dropdown editor (card-editor).",
+    "note": "Warning in the dropdown module editor when the chosen entity offers no options; lists the entity types that work.",
     "max": 290
   },
   "card-editor.dropdown-editor.value": {
@@ -3051,7 +3051,7 @@
   },
   "card-editor.entity-picker.no-entities-found": {
     "text": "No entities found",
-    "note": "Shown in entity picker (card-editor).",
+    "note": "Empty state of the entity picker list when the search matches nothing.",
     "max": 30
   },
   "card-editor.entity-picker.save": {
@@ -3081,7 +3081,7 @@
   },
   "card-editor.entity-source.a-different-kind-of-device": {
     "text": "a different kind of device",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Phrase in the entity source warning that names what the tile expects instead; slotted into a longer sentence.",
     "max": 45
   },
   "card-editor.entity-source.a-light": {
@@ -3091,12 +3091,12 @@
   },
   "card-editor.entity-source.a-list-of-options": {
     "text": "a list of options",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Phrase in the entity source warning naming what a dropdown tile needs from its entity; slotted into a longer sentence.",
     "max": 30
   },
   "card-editor.entity-source.a-row-column-or-layout-around-this-tile": {
     "text": "A row, column or layout around this tile has No entity, so there is nothing to follow.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Hint in the entity source setting of a tile whose parent has No entity; tells the user the follow option has nothing to inherit.",
     "max": 140
   },
   "card-editor.entity-source.a-sensor": {
@@ -3111,7 +3111,7 @@
   },
   "card-editor.entity-source.a-weather-source": {
     "text": "a weather source",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Phrase in the entity source warning naming what a weather tile needs; slotted into a longer sentence.",
     "max": 30
   },
   "card-editor.entity-source.attributes-of-id-source": {
@@ -3130,12 +3130,12 @@
   },
   "card-editor.entity-source.card-modules-do-not-follow-the-card-s": {
     "text": "Card modules do not follow the card's entity.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Hint in the entity source setting of a card-level module; says it must pick its own entity.",
     "max": 75
   },
   "card-editor.entity-source.card-settings-general": {
     "text": "Card settings > General",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Menu path shown in the entity source hint, pointing the user to where the card's main entity is set.",
     "max": 40
   },
   "card-editor.entity-source.column": {
@@ -3145,7 +3145,7 @@
   },
   "card-editor.entity-source.did-you-mean-no-entity": {
     "text": "Did you mean No entity?",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Question in the entity source field when the typed value looks like an attempt to switch the entity off; offers the No entity choice.",
     "max": 40
   },
   "card-editor.entity-source.entity": {
@@ -3248,7 +3248,7 @@
   },
   "card-editor.entity-source.share-with-tiles-inside": {
     "text": "Share with tiles inside",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Switch label in the entity source setting of a container; when on, tiles inside follow this entity.",
     "max": 40
   },
   "card-editor.entity-source.slides": {
@@ -3263,7 +3263,7 @@
   },
   "card-editor.entity-source.that-is-not-an-entity-id-it-needs-a-dot": {
     "text": "That is not an entity id. It needs a dot, like light.kitchen. To switch the entity off, use No entity.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Error under the entity source field when the typed text is not a valid entity id; shows the expected format and the alternative.",
     "max": 165
   },
   "card-editor.entity-source.this-tile-needs-kind-the-source-s-device": {
@@ -3278,32 +3278,32 @@
   },
   "card-editor.entity-source.this-tile-shows-no-device": {
     "text": "This tile shows no device.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Hint in the entity source setting when a tile is set to No entity, so nothing from a device is displayed.",
     "max": 45
   },
   "card-editor.entity-source.tiles-inside-follow-this-entity-unless": {
     "text": "Tiles inside follow this entity unless they pick their own.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Hint under the Share with tiles inside switch when on; tells the user child tiles inherit this entity.",
     "max": 95
   },
   "card-editor.entity-source.tiles-inside-get-no-entity-unless-they": {
     "text": "Tiles inside get no entity unless they pick one.",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Hint under the Share with tiles inside switch when off; tells the user child tiles start without an entity.",
     "max": 80
   },
   "card-editor.entity-source.use-no-entity": {
     "text": "Use No entity",
-    "note": "Shown in entity source (card-editor).",
+    "note": "Button in the entity source field that sets the tile to No entity, shown next to the invalid id error.",
     "max": 25
   },
   "card-editor.flows-editor.0-dots-moving-dashes-instead": {
     "text": "0 dots: moving dashes instead.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint under the dot count field in the flows editor; says that zero draws moving dashes rather than dots.",
     "max": 50
   },
   "card-editor.flows-editor.a-negative-value-runs-the-dots-from-the": {
     "text": "A negative value runs the dots from the end to the start.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint under the speed field in the flows editor; explains a negative value reverses the flow direction.",
     "max": 95
   },
   "card-editor.flows-editor.add-flow": {
@@ -3318,7 +3318,7 @@
   },
   "card-editor.flows-editor.animated-lines-between-two-modules-like": {
     "text": "Animated lines between two modules, like solar to house. Speed, width and direction can follow an entity value.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Description of the flows feature at the top of the flows editor; tells the user what flow lines are and what an entity can drive.",
     "max": 180
   },
   "card-editor.flows-editor.attach-to": {
@@ -3343,7 +3343,7 @@
   },
   "card-editor.flows-editor.beside-the-line": {
     "text": "Beside the line",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option for the value label position in the flows editor; places the label next to the line instead of on it.",
     "max": 25
   },
   "card-editor.flows-editor.bottom": {
@@ -3371,7 +3371,7 @@
   },
   "card-editor.flows-editor.couldn-t-load-the-line-styles": {
     "text": "Couldn't load the line styles.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Error in the flows editor when the line look list fails to load.",
     "max": 50
   },
   "card-editor.flows-editor.curve": {
@@ -3394,7 +3394,7 @@
   },
   "card-editor.flows-editor.dot-size-px": {
     "text": "Dot size (px)",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Field label in the flows editor for the diameter of the moving dots, in pixels.",
     "max": 25
   },
   "card-editor.flows-editor.dots": {
@@ -3409,7 +3409,7 @@
   },
   "card-editor.flows-editor.end-attach-to": {
     "text": "End: attach to",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Field label in the flows editor choosing which part of the end module the line ends at.",
     "max": 25
   },
   "card-editor.flows-editor.entity": {
@@ -3460,12 +3460,12 @@
   },
   "card-editor.flows-editor.icon-or-picture": {
     "text": "Icon or picture",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option in the flows editor attach-to field; the line meets the module's icon, picture or dial.",
     "max": 25
   },
   "card-editor.flows-editor.icon-or-picture-ends-the-line-at-the": {
     "text": "Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the module's edge.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint under the attach-to fields in the flows editor; explains the difference between the two options.",
     "max": 175
   },
   "card-editor.flows-editor.idle-colour": {
@@ -3508,7 +3508,7 @@
   },
   "card-editor.flows-editor.loading-line-styles": {
     "text": "Loading line styles...",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Progress message in the flows editor while the line look list loads.",
     "max": 40
   },
   "card-editor.flows-editor.look": {
@@ -3528,7 +3528,7 @@
   },
   "card-editor.flows-editor.min-speed-s": {
     "text": "Min speed (s)",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Field label in the flows editor for the slowest travel time, in seconds, used when the entity value is at its minimum.",
     "max": 25
   },
   "card-editor.flows-editor.min-to-max": {
@@ -3547,7 +3547,7 @@
   },
   "card-editor.flows-editor.module-not-found": {
     "text": "Module not found",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Warning in the flows editor when a line points to a module that no longer exists.",
     "max": 30
   },
   "card-editor.flows-editor.module-not-found-id": {
@@ -3568,7 +3568,7 @@
   },
   "card-editor.flows-editor.no-entity-the-line-always-flows-at-its": {
     "text": "No entity: the line always flows at its speed.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint in the flows editor when no entity is picked; tells the user the line runs at a fixed speed.",
     "max": 75
   },
   "card-editor.flows-editor.none": {
@@ -3578,32 +3578,32 @@
   },
   "card-editor.flows-editor.on-the-line": {
     "text": "On the line",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Option for the value label position in the flows editor; draws the label on top of the line.",
     "max": 20
   },
   "card-editor.flows-editor.pick-a-module": {
     "text": "Pick a module",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Placeholder of the module dropdown in the flows editor; asks the user to choose a start or end module.",
     "max": 25
   },
   "card-editor.flows-editor.pick-an-entity-a-value-label-needs-one": {
     "text": "Pick an entity: a value label needs one.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint in the flows editor when a value label is on but no entity is chosen.",
     "max": 65
   },
   "card-editor.flows-editor.pick-the-end-module": {
     "text": "Pick the end module",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Validation message in the flows editor when a line has no end module yet.",
     "max": 35
   },
   "card-editor.flows-editor.pick-the-start-module": {
     "text": "Pick the start module",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Validation message in the flows editor when a line has no start module yet.",
     "max": 35
   },
   "card-editor.flows-editor.reverse-when-negative": {
     "text": "Reverse when negative",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Switch label in the flows editor; flips the line direction when the entity value drops below zero.",
     "max": 35
   },
   "card-editor.flows-editor.right": {
@@ -3623,7 +3623,7 @@
   },
   "card-editor.flows-editor.seconds-for-a-dot-to-travel-the-line": {
     "text": "Seconds for a dot to travel the line: Speed at Max, Min speed just above Min.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint under the speed fields in the flows editor; explains which entity values map to the fast and slow travel times.",
     "max": 125
   },
   "card-editor.flows-editor.show": {
@@ -3638,7 +3638,7 @@
   },
   "card-editor.flows-editor.start-attach-to": {
     "text": "Start: attach to",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Field label in the flows editor choosing which part of the start module the line begins at.",
     "max": 30
   },
   "card-editor.flows-editor.straight": {
@@ -3653,7 +3653,7 @@
   },
   "card-editor.flows-editor.this-line-look-is-wide-so-it-attaches-to": {
     "text": "This line look is wide, so it attaches to the module box until you pick Icon or picture.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint in the flows editor for wide line looks; explains why the line attaches to the module box.",
     "max": 145
   },
   "card-editor.flows-editor.to": {
@@ -3678,7 +3678,7 @@
   },
   "card-editor.flows-editor.up-to-twice-the-width-at-max": {
     "text": "Up to twice the width at Max.",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Hint under the width field in the flows editor; says the line grows to double width at the maximum value.",
     "max": 50
   },
   "card-editor.flows-editor.value": {
@@ -3688,7 +3688,7 @@
   },
   "card-editor.flows-editor.value-and-route": {
     "text": "Value and route",
-    "note": "Shown in flows editor (card-editor).",
+    "note": "Section heading in the flows editor grouping the entity, value label and start and end settings.",
     "max": 25
   },
   "card-editor.flows-editor.visibility": {
@@ -3716,7 +3716,7 @@
   },
   "card-editor.flows.give-this-module-an-id-in-the-template": {
     "text": "Give this module an id in the template",
-    "note": "Shown in flows (card-editor).",
+    "note": "Hint in the flows editor for modules without an id; tells the user to add one in the template so a line can target it.",
     "max": 65
   },
   "card-editor.flows.module-n": {
@@ -3782,7 +3782,7 @@
   },
   "card-editor.font-picker.no-fonts-found": {
     "text": "No fonts found",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Empty state of the font picker list when the search matches no font.",
     "max": 25
   },
   "card-editor.font-picker.save": {
@@ -3802,7 +3802,7 @@
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
     "text": "The quick brown fox jumps over the lazy dog",
-    "note": "Shown in font picker (card-editor).",
+    "note": "Sample sentence in the font picker, drawn in each font so the user can preview how it looks.",
     "max": 70
   },
   "card-editor.forecast-editor.animated-icons": {
@@ -3832,7 +3832,7 @@
   },
   "card-editor.forecast-editor.number-of-forecasts": {
     "text": "Number of forecasts",
-    "note": "Shown in forecast editor (card-editor).",
+    "note": "Field label in the forecast module editor for how many forecast entries to display.",
     "max": 35
   },
   "card-editor.forecast-editor.show-precipitation": {
@@ -3949,12 +3949,12 @@
   },
   "card-editor.gauge-editor.the-arc-takes-the-colour-of-the-highest": {
     "text": "The arc takes the colour of the highest range at or below the value.",
-    "note": "Shown in gauge editor (card-editor).",
+    "note": "Hint under the colour ranges in the gauge editor; explains which range colour the arc uses.",
     "max": 110
   },
   "card-editor.gradient-editor.a-gradient-needs-at-least-2-stops": {
     "text": "A gradient needs at least 2 stops",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Validation message in the gradient editor; shown when the user tries to remove a stop below the minimum of two.",
     "max": 55
   },
   "card-editor.gradient-editor.add-stop": {
@@ -3977,7 +3977,7 @@
   },
   "card-editor.gradient-editor.angle-in-degrees": {
     "text": "Angle in degrees",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Field label in the gradient editor for the gradient direction, in degrees.",
     "max": 30
   },
   "card-editor.gradient-editor.colour": {
@@ -4053,12 +4053,12 @@
   },
   "card-editor.gradient-editor.use-a-hex-colour-rgb-a-or-var-name": {
     "text": "Use a hex colour, rgb(a) or var(--name).",
-    "note": "Shown in gradient editor (card-editor).",
+    "note": "Error under a gradient stop colour field when the value is not a recognised colour; lists the accepted formats.",
     "max": 65
   },
   "card-editor.graphs-editor.an-attribute-graph-loads-every-recorded": {
     "text": "An attribute graph loads every recorded state with all its attributes; long periods can load slowly.",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Warning in the graphs editor when an attribute is graphed; tells the user long periods may be slow.",
     "max": 160
   },
   "card-editor.graphs-editor.attribute": {
@@ -4088,7 +4088,7 @@
   },
   "card-editor.graphs-editor.hours-to-show": {
     "text": "Hours to show",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Field label in the graphs editor for how far back in time the graph reaches.",
     "max": 25
   },
   "card-editor.graphs-editor.line-colour": {
@@ -4103,12 +4103,12 @@
   },
   "card-editor.graphs-editor.name-current-value-and-time-span-under": {
     "text": "Name, current value and time span under the graph.",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Hint for the footer switch in the graphs editor; says what the text under the graph contains.",
     "max": 80
   },
   "card-editor.graphs-editor.points-per-hour": {
     "text": "Points per hour",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Field label in the graphs editor for how many averaged data points are drawn per hour.",
     "max": 25
   },
   "card-editor.graphs-editor.show-labels": {
@@ -4123,7 +4123,7 @@
   },
   "card-editor.graphs-editor.values-are-averaged-per-period-2-every": {
     "text": "Values are averaged per period (2 = every 30 minutes). Empty draws every recorded change.",
-    "note": "Shown in graphs editor (card-editor).",
+    "note": "Hint under the points per hour field in the graphs editor; explains the averaging and the empty case.",
     "max": 145
   },
   "card-editor.horizontal-editor.align": {
@@ -4198,7 +4198,7 @@
   },
   "card-editor.icon-editor.the-icon-uses-this-gradient-as-its-fill": {
     "text": "The icon uses this gradient as its fill. Older tablets show the first colour.",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Hint under the icon gradient option in the icon editor; explains the gradient fills the icon and the old-browser fallback.",
     "max": 125
   },
   "card-editor.icon-editor.use-entity-colour": {
@@ -4208,7 +4208,7 @@
   },
   "card-editor.icon-editor.use-entity-colour-wins-while-the-entity": {
     "text": "Use entity colour wins while the entity has a state colour; this colour applies otherwise.",
-    "note": "Shown in icon editor (card-editor).",
+    "note": "Hint in the icon editor next to the colour field; explains how it combines with Use entity colour.",
     "max": 145
   },
   "card-editor.icon-editor.use-entity-icon": {
@@ -4218,7 +4218,7 @@
   },
   "card-editor.icon-fx-editor.a-javascript-link": {
     "text": "a javascript: link",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Phrase in the icon effects editor naming a blocked kind of link in an imported SVG; slotted into a longer sentence.",
     "max": 30
   },
   "card-editor.icon-fx-editor.a-script": {
@@ -4243,17 +4243,17 @@
   },
   "card-editor.icon-fx-editor.animated-weather-icons-replace-icon": {
     "text": "Animated weather icons replace icon effects. Your icon effects are paused and come back when Animated icons is off.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Notice in the icon effects editor when Animated icons is on; says effects are paused and return when it is turned off.",
     "max": 185
   },
   "card-editor.icon-fx-editor.animated-weather-icons-replace-icon-2": {
     "text": "Animated weather icons replace icon effects.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Short notice in the icon effects editor when Animated icons is on; says effects have no visible result.",
     "max": 75
   },
   "card-editor.icon-fx-editor.animates-the-icon-like-the-device-it": {
     "text": "Animates the icon like the device it shows.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Description of the Auto option in the icon effects editor; the icon moves to match the entity, such as a spinning fan.",
     "max": 70
   },
   "card-editor.icon-fx-editor.attribute": {
@@ -4271,12 +4271,12 @@
   },
   "card-editor.icon-fx-editor.auto-has-no-animation-for-this-entity": {
     "text": "Auto has no animation for this entity; pick one.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint in the icon effects editor when Auto finds no matching animation; asks the user to choose an effect.",
     "max": 80
   },
   "card-editor.icon-fx-editor.clear-every-icon-effect": {
     "text": "Clear every icon effect",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Menu item in the icon effects editor that removes all icon effects from the module at once.",
     "max": 40
   },
   "card-editor.icon-fx-editor.colour": {
@@ -4304,7 +4304,7 @@
   },
   "card-editor.icon-fx-editor.customise-this-icon": {
     "text": "Customise this icon",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Button in the icon effects editor that opens the icon editor to change the shape or colours of the current icon.",
     "max": 35
   },
   "card-editor.icon-fx-editor.device-animation": {
@@ -4334,7 +4334,7 @@
   },
   "card-editor.icon-fx-editor.draw-your-own-svg-icon-instead-of-one": {
     "text": "Draw your own SVG icon instead of one from the icon list.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Description of the custom SVG option in the icon effects editor; tells the user they can paste their own drawing.",
     "max": 95
   },
   "card-editor.icon-fx-editor.duotone": {
@@ -4349,12 +4349,12 @@
   },
   "card-editor.icon-fx-editor.effects-need-the-icon-shape-this-icon": {
     "text": "Effects need the icon shape; this icon could not be loaded (or is a multi-colour logo), so it is shown as is.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Warning in the icon effects editor when the icon shape cannot be read; explains effects are skipped and the icon is drawn unchanged.",
     "max": 175
   },
   "card-editor.icon-fx-editor.empty-opacity": {
     "text": "Empty opacity (%)",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Field label in the liquid fill settings of the icon effects editor for how visible the unfilled part of the icon stays.",
     "max": 30
   },
   "card-editor.icon-fx-editor.empty-the-module-s-entity-entity": {
@@ -4395,7 +4395,7 @@
   },
   "card-editor.icon-fx-editor.fills-the-icon-like-a-liquid-with-a": {
     "text": "Fills the icon like a liquid with a value, e.g. a battery level.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Description of the Liquid fill effect in the icon effects editor; the icon fills up in proportion to a value.",
     "max": 105
   },
   "card-editor.icon-fx-editor.gradient": {
@@ -4415,12 +4415,12 @@
   },
   "card-editor.icon-fx-editor.icon-when-off": {
     "text": "Icon when off",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Field label in the morph settings of the icon effects editor for the icon shown while the entity is off.",
     "max": 25
   },
   "card-editor.icon-fx-editor.icon-when-on": {
     "text": "Icon when on",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Field label in the morph settings of the icon effects editor for the icon shown while the entity is on.",
     "max": 20
   },
   "card-editor.icon-fx-editor.left": {
@@ -4462,7 +4462,7 @@
   },
   "card-editor.icon-fx-editor.material-design-icons": {
     "text": "Material Design Icons",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Name of the built-in icon set in the icon effects editor icon source choice; a proper name.",
     "max": 35
   },
   "card-editor.icon-fx-editor.max": {
@@ -4490,7 +4490,7 @@
   },
   "card-editor.icon-fx-editor.morphs-between-the-state-icons-when-the": {
     "text": "Morphs between the state icons when the entity turns on or off.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Description of the Morph effect in the icon effects editor; the icon changes shape between its on and off icons.",
     "max": 105
   },
   "card-editor.icon-fx-editor.n-set": {
@@ -4511,32 +4511,32 @@
   },
   "card-editor.icon-fx-editor.parts-of-the-icon-drawn-in-accent-in-the": {
     "text": "Parts of the icon drawn in Accent in the icon editor.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint in the icon effects editor for the accent colour; says which icon parts it recolours when the icon was drawn in the icon editor.",
     "max": 85
   },
   "card-editor.icon-fx-editor.parts-of-the-svg-with-class-mc-accent": {
     "text": "Parts of the SVG with class=\"mc-accent\".",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint in the icon effects editor for pasted SVGs; says which parts the accent colour applies to. Keep the class name unchanged.",
     "max": 65
   },
   "card-editor.icon-fx-editor.pauses-while-the-entity-is-off-or": {
     "text": "Pauses while the entity is off or unavailable.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint for an icon effect switch in the icon effects editor; says the animation stops when the entity is off or unavailable.",
     "max": 75
   },
   "card-editor.icon-fx-editor.pick-an-entity-a-fill-without-a-value": {
     "text": "Pick an entity: a fill without a value stays empty.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint in the icon effects editor when Liquid fill has no entity; the icon would stay unfilled.",
     "max": 85
   },
   "card-editor.icon-fx-editor.pick-an-entity-auto-animates-the-icon": {
     "text": "Pick an entity: Auto animates the icon from its state.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint in the icon effects editor when Auto is chosen without an entity; Auto needs one to pick an animation.",
     "max": 90
   },
   "card-editor.icon-fx-editor.pick-the-state-icons-icon-when-on-off-to": {
     "text": "Pick the state icons (Icon when on / off) to morph between; unset sides use the module's icon.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint in the icon effects editor when Morph has no icons set; tells the user to choose them and what the fallback is.",
     "max": 155
   },
   "card-editor.icon-fx-editor.primary-colour": {
@@ -4564,7 +4564,7 @@
   },
   "card-editor.icon-fx-editor.reset-section-icon-effects": {
     "text": "Reset section Icon effects",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Menu item that restores all settings of the Icon effects section to their defaults.",
     "max": 45
   },
   "card-editor.icon-fx-editor.right": {
@@ -4597,12 +4597,12 @@
   },
   "card-editor.icon-fx-editor.state-icons-the-icon-while-the-entity-is": {
     "text": "State icons: the icon while the entity is on or off. Empty: the module's icon.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Section hint in the icon effects editor explaining the on and off state icons and the empty fallback.",
     "max": 125
   },
   "card-editor.icon-fx-editor.styles-are-removed-use-fill-attributes": {
     "text": "Styles are removed; use fill attributes (for example fill=\"#f44336\") for colours.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Notice in the icon effects editor after pasting an SVG; says style blocks are stripped and fill attributes should be used. Keep the example colour.",
     "max": 130
   },
   "card-editor.icon-fx-editor.svg-markup": {
@@ -4612,12 +4612,12 @@
   },
   "card-editor.icon-fx-editor.svg-viewbox-0-0-24-24-svg": {
     "text": "<svg viewBox=\"0 0 24 24\">…</svg>",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Placeholder of the SVG code box in the icon effects editor, showing the shape of markup to paste. Do not translate the code.",
     "max": 55
   },
   "card-editor.icon-fx-editor.the-colour-along-these-stops-follows-the": {
     "text": "The colour along these stops follows the value: Liquid fill's entity, min and max, else the module's entity from 0 to 100.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint under the colour stops in the icon effects editor; explains which value drives the colour along the stops.",
     "max": 200
   },
   "card-editor.icon-fx-editor.the-empty-part-uses-the-colour-colour": {
@@ -4630,12 +4630,12 @@
   },
   "card-editor.icon-fx-editor.the-icon-editor-could-not-load-check": {
     "text": "The icon editor could not load. Check your connection and try again.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Error in the icon effects editor when the icon editor part fails to load; asks the user to check the connection and retry.",
     "max": 110
   },
   "card-editor.icon-fx-editor.the-svg-is-larger-than-32-kb": {
     "text": "The SVG is larger than 32 KB.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Error in the icon effects editor when a pasted SVG exceeds the size limit; the SVG is not used.",
     "max": 50
   },
   "card-editor.icon-fx-editor.this-svg-contains-list-remove-it-and-try": {
@@ -4654,7 +4654,7 @@
   },
   "card-editor.icon-fx-editor.up-to-32-kb-parts-with-fill-currentcolor": {
     "text": "Up to 32 KB. Parts with fill=\"currentColor\" take the icon colour, parts with class=\"mc-accent\" the accent colour.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Hint under the SVG code box in the icon effects editor; gives the size limit and how to mark parts for the icon and accent colours.",
     "max": 185
   },
   "card-editor.icon-fx-editor.upload-svg": {
@@ -4664,7 +4664,7 @@
   },
   "card-editor.icon-fx-editor.use-and-image-aren-t-supported-draw-the": {
     "text": "<use> and <image> aren't supported. Draw the shapes as paths and try again.",
-    "note": "Shown in icon fx editor (card-editor).",
+    "note": "Error in the icon effects editor when a pasted SVG uses unsupported elements; tells the user to convert them to paths.",
     "max": 120
   },
   "card-editor.icon-fx-editor.value": {
@@ -4789,7 +4789,7 @@
   },
   "card-editor.icon-picker.customise-a-copy": {
     "text": "Customise a copy",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Button in the icon picker that copies a library icon into the user's own icons so it can be edited.",
     "max": 30
   },
   "card-editor.icon-picker.draw-an-icon": {
@@ -4827,7 +4827,7 @@
   },
   "card-editor.icon-picker.keep-your-own-icons-install-the-free": {
     "text": "Keep your own icons: install the free Magic Card Utils add-on.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Hint in the icon picker where saved icons would appear; points the user to the add-on that stores them.",
     "max": 100
   },
   "card-editor.icon-picker.library": {
@@ -4847,7 +4847,7 @@
   },
   "card-editor.icon-picker.material-design-icons": {
     "text": "Material Design icons",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Tab label in the icon picker for the standard Home Assistant icon set.",
     "max": 35
   },
   "card-editor.icon-picker.my-icons": {
@@ -4881,17 +4881,17 @@
   },
   "card-editor.icon-picker.no-icons-found": {
     "text": "No icons found",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Empty state of the icon picker grid when the search matches no icon.",
     "max": 30
   },
   "card-editor.icon-picker.no-icons-found-type-a-full-id-such-as": {
     "text": "No icons found. Type a full id, such as mdi:fan.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Empty state of the icon picker search that also tells the user to type a full icon id. Keep the example id.",
     "max": 80
   },
   "card-editor.icon-picker.no-saved-icons-yet-draw-an-icon-then": {
     "text": "No saved icons yet. Draw an icon, then choose Save to library in the editor.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Empty state of the saved icons tab in the icon picker; explains how to add the first icon.",
     "max": 125
   },
   "card-editor.icon-picker.retry": {
@@ -4938,12 +4938,12 @@
   },
   "card-editor.icon-picker.the-animated-icons-could-not-be-loaded": {
     "text": "The animated icons could not be loaded. Try again.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Error in the icon picker when the animated icons tab fails to load.",
     "max": 80
   },
   "card-editor.icon-picker.the-icon-editor-could-not-load-try-again": {
     "text": "The icon editor could not load. Try again.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Error in the icon picker when the icon editor opened from it fails to load.",
     "max": 70
   },
   "card-editor.icon-picker.use-as-copy": {
@@ -4953,7 +4953,7 @@
   },
   "card-editor.icon-picker.without-a-copy-the-card-shows-the": {
     "text": "Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.",
-    "note": "Shown in icon picker (card-editor).",
+    "note": "Warning in the icon picker about using a library icon directly; says why making a copy is safer.",
     "max": 150
   },
   "card-editor.image-editor.aspect-ratio": {
@@ -4993,7 +4993,7 @@
   },
   "card-editor.image-editor.image-from-attribute": {
     "text": "Image from attribute",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Field label in the image module editor for an entity attribute that holds the image address.",
     "max": 35
   },
   "card-editor.image-editor.image-url": {
@@ -5008,22 +5008,22 @@
   },
   "card-editor.image-editor.shows-the-entity-s-picture-person-image": {
     "text": "Shows the entity's picture (person, image, camera, media player).",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Hint under the Use entity picture switch in the image editor; says which entity types supply a picture.",
     "max": 105
   },
   "card-editor.image-editor.the-attribute-holds-the-image-url-it": {
     "text": "The attribute holds the image URL; it replaces the entity picture and the image URL.",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Hint under the image attribute field in the image editor; explains it takes priority over the other image sources.",
     "max": 135
   },
   "card-editor.image-editor.use-a-ratio-like-16-9-4-3-1-5-or-56-25": {
     "text": "Use a ratio like 16:9, 4/3, 1.5 or 56.25%. 16:9 is used until then.",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Hint under the aspect ratio field in the image editor; lists accepted formats and the temporary default.",
     "max": 110
   },
   "card-editor.image-editor.use-entity-picture": {
     "text": "Use entity picture",
-    "note": "Shown in image editor (card-editor).",
+    "note": "Switch label in the image editor; shows the picture the entity provides instead of a typed image address.",
     "max": 30
   },
   "card-editor.info-editor.attribute": {
@@ -5078,7 +5078,7 @@
   },
   "card-editor.info-editor.with-nothing-else-shown-the-state-is": {
     "text": "With nothing else shown, the state is shown anyway.",
-    "note": "Shown in info editor (card-editor).",
+    "note": "Hint in the info module editor when every part is switched off; tells the user the state still appears.",
     "max": 85
   },
   "card-editor.inspector.actions": {
@@ -5163,7 +5163,7 @@
   },
   "card-editor.inspector.reset-to-template": {
     "text": "Reset to template",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Button in the inspector that discards the user's changes to the selected item and returns it to the template.",
     "max": 30
   },
   "card-editor.inspector.row-n": {
@@ -5189,37 +5189,37 @@
   },
   "card-editor.inspector.the-modules-inside-this-layout-the": {
     "text": "The modules inside this layout; the layout's modules differ from the template.",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector description of the modules list of a layout the user has changed; says it no longer matches the template.",
     "max": 125
   },
   "card-editor.inspector.the-modules-inside-this-layout-they": {
     "text": "The modules inside this layout; they follow the template as one list.",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector description of the modules list of an unchanged layout; says template updates carry through.",
     "max": 115
   },
   "card-editor.inspector.this-module-is-part-of-its-layout-the": {
     "text": "This module is part of its layout; the layout's modules differ from the template.",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector notice on a module inside a layout the user has changed; says the layout no longer matches the template.",
     "max": 130
   },
   "card-editor.inspector.this-module-is-part-of-its-layout-they": {
     "text": "This module is part of its layout; they follow the template as one list.",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector notice on a module inside an unchanged layout; says the layout's modules follow the template.",
     "max": 120
   },
   "card-editor.inspector.unknown-module-type": {
     "text": "Unknown module type",
-    "note": "Shown in inspector (card-editor).",
+    "note": "Inspector message when a module's type is not recognised, for example from a newer version or a typo in YAML.",
     "max": 35
   },
   "card-editor.item-menu.a-row-needs-one-column": {
     "text": "A row needs one column",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Tooltip on the disabled Delete item in the item menu of the last column of a row.",
     "max": 40
   },
   "card-editor.item-menu.a-tabs-module-needs-one-tab": {
     "text": "A tabs module needs one tab",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Tooltip on the disabled Delete item in the item menu of the last tab of a tabs module.",
     "max": 50
   },
   "card-editor.item-menu.add": {
@@ -5264,7 +5264,7 @@
   },
   "card-editor.item-menu.back-to-normal": {
     "text": "Back to normal",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that returns an item to its normal state, such as undoing a hidden or float setting.",
     "max": 25
   },
   "card-editor.item-menu.cancel": {
@@ -5297,12 +5297,12 @@
   },
   "card-editor.item-menu.copy-a-module-first": {
     "text": "Copy a module first",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Tooltip on the disabled paste entries in the item menu when nothing has been copied yet.",
     "max": 35
   },
   "card-editor.item-menu.copy-and-paste": {
     "text": "Copy and paste",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Group heading in the item menu above the copy, paste and duplicate entries.",
     "max": 25
   },
   "card-editor.item-menu.copy-design": {
@@ -5317,7 +5317,7 @@
   },
   "card-editor.item-menu.copy-this-yaml": {
     "text": "Copy this YAML",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that copies the selected item's YAML to the clipboard.",
     "max": 25
   },
   "card-editor.item-menu.copy-yaml": {
@@ -5385,17 +5385,17 @@
   },
   "card-editor.item-menu.edit-card-settings": {
     "text": "Edit card settings",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on the card root that opens the card settings panel.",
     "max": 30
   },
   "card-editor.item-menu.hide-on-dashboard": {
     "text": "Hide on dashboard",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that hides the selected item on the dashboard while it stays in the editor.",
     "max": 30
   },
   "card-editor.item-menu.hide-tab-on-dashboard": {
     "text": "Hide tab on dashboard",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on a tab that hides the tab on the dashboard while it stays in the editor.",
     "max": 35
   },
   "card-editor.item-menu.into-container": {
@@ -5408,7 +5408,7 @@
   },
   "card-editor.item-menu.merge-pasted-design": {
     "text": "Merge pasted design",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that applies a copied design on top of the item's existing style rather than replacing it.",
     "max": 35
   },
   "card-editor.item-menu.module": {
@@ -5491,7 +5491,7 @@
   },
   "card-editor.item-menu.no-other-column-to-move-to": {
     "text": "No other column to move to",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Tooltip on the disabled Move to column entry in the item menu when the row has only one column.",
     "max": 45
   },
   "card-editor.item-menu.no-other-module-type-to-replace-with": {

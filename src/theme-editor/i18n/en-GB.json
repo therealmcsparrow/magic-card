@@ -1531,62 +1531,62 @@
   },
   "theme-editor.ha.icons-in-the-sidebar": {
     "text": "Icons in the sidebar.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons in the sidebar menu.",
     "max": 35
   },
   "theme-editor.ha.icons-of-covers-that-are-open": {
     "text": "Icons of covers that are open.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of covers, such as blinds, that are open.",
     "max": 50
   },
   "theme-editor.ha.icons-of-fans-that-are-on": {
     "text": "Icons of fans that are on.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of fans that are on.",
     "max": 45
   },
   "theme-editor.ha.icons-of-lights-that-are-on": {
     "text": "Icons of lights that are on.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of lights that are on.",
     "max": 45
   },
   "theme-editor.ha.icons-of-locks-that-are-locked": {
     "text": "Icons of locks that are locked.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of locks that are locked.",
     "max": 50
   },
   "theme-editor.ha.icons-of-locks-that-are-unlocked": {
     "text": "Icons of locks that are unlocked.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of locks that are unlocked.",
     "max": 55
   },
   "theme-editor.ha.icons-of-media-players-that-are-playing": {
     "text": "Icons of media players that are playing.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of media players that are playing.",
     "max": 65
   },
   "theme-editor.ha.icons-of-switches-that-are-on": {
     "text": "Icons of switches that are on.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of switches that are on.",
     "max": 50
   },
   "theme-editor.ha.icons-of-things-that-are-off-or-closed": {
     "text": "Icons of things that are off or closed.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of entities that are off or closed.",
     "max": 65
   },
   "theme-editor.ha.icons-of-things-that-are-on-or-open": {
     "text": "Icons of things that are on or open.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of entities that are on or open.",
     "max": 60
   },
   "theme-editor.ha.icons-of-unavailable-entities": {
     "text": "Icons of unavailable entities.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of entities that are unavailable.",
     "max": 50
   },
   "theme-editor.ha.inactive-state-colour": {
     "text": "Inactive state colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of entities in an inactive state (off, closed).",
     "max": 35
   },
   "theme-editor.ha.info-colour": {
@@ -1596,17 +1596,17 @@
   },
   "theme-editor.ha.information-banners-and-notes": {
     "text": "Information banners and notes.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant info colour variable; says it colours information banners and notes.",
     "max": 50
   },
   "theme-editor.ha.item-names-in-the-sidebar": {
     "text": "Item names in the sidebar.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the item names in the sidebar menu.",
     "max": 45
   },
   "theme-editor.ha.large-font-size": {
     "text": "Large font size",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the large text size.",
     "max": 25
   },
   "theme-editor.ha.large-radius": {
@@ -1616,7 +1616,7 @@
   },
   "theme-editor.ha.larger-body-text": {
     "text": "Larger body text.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant font size variable; says it sets the size of larger body text.",
     "max": 30
   },
   "theme-editor.ha.light-on-colour": {
@@ -1626,12 +1626,12 @@
   },
   "theme-editor.ha.light-tints-of-the-primary-colour": {
     "text": "Light tints of the primary colour.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the light, pale versions of the primary colour.",
     "max": 55
   },
   "theme-editor.ha.lines-between-rows-and-around-inputs": {
     "text": "Lines between rows and around inputs.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant divider colour variable; says it colours lines between rows and around inputs.",
     "max": 60
   },
   "theme-editor.ha.locked-colour": {
@@ -1641,17 +1641,17 @@
   },
   "theme-editor.ha.main-text-and-icons": {
     "text": "Main text and icons.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant primary text colour variable; says it colours main text and icons.",
     "max": 35
   },
   "theme-editor.ha.media-player-active-colour": {
     "text": "Media player active colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of media players that are playing.",
     "max": 45
   },
   "theme-editor.ha.medium-font-size": {
     "text": "Medium font size",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the medium text size.",
     "max": 30
   },
   "theme-editor.ha.medium-radius": {
@@ -1661,7 +1661,7 @@
   },
   "theme-editor.ha.multiplies-every-ha-font-size-1-keeps": {
     "text": "Multiplies every HA font size. 1 keeps them.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the font size scale variable; explains the factor, where 1 leaves sizes unchanged. HA means Home Assistant.",
     "max": 75
   },
   "theme-editor.ha.outline-colour": {
@@ -1671,7 +1671,7 @@
   },
   "theme-editor.ha.outlines-of-buttons-and-chips": {
     "text": "Outlines of buttons and chips.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the outlines of buttons and chips.",
     "max": 50
   },
   "theme-editor.ha.page-background": {
@@ -1681,17 +1681,17 @@
   },
   "theme-editor.ha.person-at-home-colour": {
     "text": "Person at home colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of a person who is at home.",
     "max": 35
   },
   "theme-editor.ha.person-icons-while-home": {
     "text": "Person icons while home.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours person icons while that person is home.",
     "max": 45
   },
   "theme-editor.ha.pressed-and-darker-primary-accents": {
     "text": "Pressed and darker primary accents.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the darker primary colour used for pressed states.",
     "max": 60
   },
   "theme-editor.ha.primary-colour": {
@@ -1701,12 +1701,12 @@
   },
   "theme-editor.ha.primary-colour-dark-shade": {
     "text": "Primary colour, dark shade",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the darker shade of the primary colour.",
     "max": 45
   },
   "theme-editor.ha.primary-colour-light-shade": {
     "text": "Primary colour, light shade",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the lighter shade of the primary colour.",
     "max": 45
   },
   "theme-editor.ha.primary-text": {
@@ -1716,17 +1716,17 @@
   },
   "theme-editor.ha.quiet-panels-input-fills-and-list": {
     "text": "Quiet panels, input fills and list stripes.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant secondary background variable; says it fills quiet panels, inputs and list stripes.",
     "max": 70
   },
   "theme-editor.ha.rounding-of-every-card": {
     "text": "Rounding of every card.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the corner rounding of all cards.",
     "max": 40
   },
   "theme-editor.ha.secondary-accent-used-by-a-few-controls": {
     "text": "Secondary accent used by a few controls.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant accent colour variable; says a few controls use it as a second accent.",
     "max": 65
   },
   "theme-editor.ha.secondary-background": {
@@ -1751,7 +1751,7 @@
   },
   "theme-editor.ha.shadow-under-every-card": {
     "text": "Shadow under every card.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the drop shadow under all cards.",
     "max": 40
   },
   "theme-editor.ha.sidebar-background": {
@@ -1766,12 +1766,12 @@
   },
   "theme-editor.ha.sidebar-selected-icon": {
     "text": "Sidebar selected icon",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the icon colour of the selected sidebar item.",
     "max": 35
   },
   "theme-editor.ha.sidebar-selected-text": {
     "text": "Sidebar selected text",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the text colour of the selected sidebar item.",
     "max": 35
   },
   "theme-editor.ha.sidebar-text": {
@@ -1781,7 +1781,7 @@
   },
   "theme-editor.ha.small-font-size": {
     "text": "Small font size",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the small text size.",
     "max": 25
   },
   "theme-editor.ha.small-radius": {
@@ -1796,37 +1796,37 @@
   },
   "theme-editor.ha.success-messages-and-confirmed-states": {
     "text": "Success messages and confirmed states.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant success colour variable; says it colours success messages and confirmed states.",
     "max": 65
   },
   "theme-editor.ha.switch-on-colour": {
     "text": "Switch on colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of switches that are on.",
     "max": 30
   },
   "theme-editor.ha.text-and-icons-drawn-on-the-primary": {
     "text": "Text and icons drawn on the primary colour.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours text and icons placed on top of the primary colour.",
     "max": 70
   },
   "theme-editor.ha.text-and-icons-in-the-top-bar": {
     "text": "Text and icons in the top bar.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the text and icons in the top bar.",
     "max": 50
   },
   "theme-editor.ha.text-in-the-top-bar-in-dashboard-edit": {
     "text": "Text in the top bar in dashboard edit mode.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the top bar text while a dashboard is being edited.",
     "max": 70
   },
   "theme-editor.ha.text-of-disabled-and-unavailable-things": {
     "text": "Text of disabled and unavailable things.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant disabled text colour variable; says it colours text of disabled and unavailable items.",
     "max": 65
   },
   "theme-editor.ha.text-on-light-surfaces": {
     "text": "Text on light surfaces",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the dark text colour used on surfaces that stay light.",
     "max": 40
   },
   "theme-editor.ha.text-on-primary-colour": {
@@ -1836,32 +1836,32 @@
   },
   "theme-editor.ha.the-active-sidebar-item-icon": {
     "text": "The active sidebar item icon.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the icon of the selected sidebar item.",
     "max": 50
   },
   "theme-editor.ha.the-active-sidebar-item-name": {
     "text": "The active sidebar item name.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours the name of the selected sidebar item.",
     "max": 50
   },
   "theme-editor.ha.the-background-of-a-dashboard-view-takes": {
     "text": "The background of a dashboard view. Takes a gradient or an image.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant dashboard background variable; says it sets the view background and accepts a gradient or image.",
     "max": 105
   },
   "theme-editor.ha.the-colour-ha-shades-shadows-with": {
     "text": "The colour HA shades shadows with.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the colour used to draw shadows. HA means Home Assistant.",
     "max": 55
   },
   "theme-editor.ha.the-font-for-headings": {
     "text": "The font for headings.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the font family of headings.",
     "max": 40
   },
   "theme-editor.ha.the-font-for-most-text": {
     "text": "The font for most text.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the main font family for body text.",
     "max": 40
   },
   "theme-editor.ha.the-sidebar": {
@@ -1871,17 +1871,17 @@
   },
   "theme-editor.ha.the-top-bar-in-dashboard-edit-mode": {
     "text": "The top bar in dashboard edit mode.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the top bar background while a dashboard is being edited.",
     "max": 60
   },
   "theme-editor.ha.the-top-bar-of-every-page": {
     "text": "The top bar of every page.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the top bar background on every page.",
     "max": 45
   },
   "theme-editor.ha.unavailable-state-colour": {
     "text": "Unavailable state colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of entities whose state is unavailable.",
     "max": 40
   },
   "theme-editor.ha.unlocked-colour": {
@@ -1896,17 +1896,17 @@
   },
   "theme-editor.ha.warnings-and-caution-states": {
     "text": "Warnings and caution states.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant warning colour variable; says it colours warnings and caution states.",
     "max": 45
   },
   "theme-editor.ha.width-of-the-card-border": {
     "text": "Width of the card border.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets how thick the line around cards is.",
     "max": 40
   },
   "theme-editor.ha.wins-over-the-card-background-for-cards": {
     "text": "Wins over the card background for cards only. Takes a gradient.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant ha-card background variable; says it overrides the card background on cards only and accepts a gradient.",
     "max": 105
   },
   "theme-editor.include-notice.check-again": {
@@ -1931,52 +1931,52 @@
   },
   "theme-editor.include-notice.home-assistant-only-loads-themes-from": {
     "text": "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Intro sentence in the setup notice, followed by a code block; explains why the lines are needed. File names and paths stay as written.",
     "max": 160
   },
   "theme-editor.include-notice.lines-to-add-to-configuration-yaml": {
     "text": "Lines to add to configuration.yaml",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Accessible name of the code block in the setup notice that holds the lines to copy into configuration.yaml.",
     "max": 55
   },
   "theme-editor.include-notice.one-setup-step-before-you-can-save": {
     "text": "One setup step before you can save",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Title of the setup notice shown when Home Assistant is not yet set to read theme files from /config/themes.",
     "max": 55
   },
   "theme-editor.include-notice.open-configuration-yaml-with-the-file": {
     "text": "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Step-by-step help revealed by Show me how; File editor and Studio Code Server are Home Assistant add-on names, and frontend: is a YAML key.",
     "max": 330
   },
   "theme-editor.include-notice.show-me-how": {
     "text": "Show me how",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Button in the setup notice that reveals the steps for editing configuration.yaml.",
     "max": 20
   },
   "theme-editor.include-notice.the-editor-could-not-read-configuration": {
     "text": "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Intro sentence in the setup notice when the include check failed; the lines to add follow in a code block.",
     "max": 160
   },
   "theme-editor.include-notice.where-do-i-add-these-lines": {
     "text": "Where do I add these lines?",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Heading of the expandable help in the setup notice that explains where in configuration.yaml the lines go.",
     "max": 45
   },
   "theme-editor.include-notice.you-can-skip-this-for-now-try-on": {
     "text": "You can skip this for now. Try on dashboard works without it.",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Reassurance in the setup notice that the step is optional for trying a theme. Try on dashboard is a button label.",
     "max": 100
   },
   "theme-editor.include-notice.your-configuration-yaml-lists-themes": {
     "text": "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Intro sentence in the setup notice when configuration.yaml defines themes inline; the replacement lines follow in a code block.",
     "max": 235
   },
   "theme-editor.include-notice.your-configuration-yaml-loads-themes-in": {
     "text": "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:",
-    "note": "Shown in include notice (theme-editor).",
+    "note": "Intro sentence in the setup notice when themes come from an include or other method; the lines to add follow in a code block.",
     "max": 215
   },
   "theme-editor.lips.got-it": {
@@ -2046,7 +2046,7 @@
   },
   "theme-editor.magic-card.borders-and-bar-tracks": {
     "text": "Borders and bar tracks.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable in the variables panel; says it colours borders and the tracks behind bars.",
     "max": 40
   },
   "theme-editor.magic-card.button-text": {
@@ -2056,22 +2056,22 @@
   },
   "theme-editor.magic-card.buttons-bars-and-accents": {
     "text": "Buttons, bars and accents.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under the Magic Card accent variable; says it colours buttons, bars and accents.",
     "max": 45
   },
   "theme-editor.magic-card.cancel-and-error-text-in-the-popup": {
     "text": "Cancel and error text in the popup.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it colours the Cancel button and error messages in the card's popup.",
     "max": 60
   },
   "theme-editor.magic-card.captions-and-hints": {
     "text": "Captions and hints.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it colours captions and hint text.",
     "max": 35
   },
   "theme-editor.magic-card.card-and-popup-rounding": {
     "text": "Card and popup rounding.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it sets the corner rounding of the card and its popup.",
     "max": 40
   },
   "theme-editor.magic-card.card-background": {
@@ -2111,7 +2111,7 @@
   },
   "theme-editor.magic-card.card-surface-and-flow-labels": {
     "text": "Card surface and flow labels.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it sets the card surface and the labels on flow lines.",
     "max": 50
   },
   "theme-editor.magic-card.disabled-colour": {
@@ -2126,7 +2126,7 @@
   },
   "theme-editor.magic-card.empty-slider-track": {
     "text": "Empty slider track.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it colours the unfilled part of a slider track.",
     "max": 35
   },
   "theme-editor.magic-card.error-colour": {
@@ -2161,7 +2161,7 @@
   },
   "theme-editor.magic-card.shadow-under-the-card": {
     "text": "Shadow under the card.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it sets the drop shadow under the card.",
     "max": 40
   },
   "theme-editor.magic-card.slider-track": {
@@ -2181,62 +2181,62 @@
   },
   "theme-editor.magic-card.the-light-slider": {
     "text": "The light slider.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it colours the brightness slider for lights.",
     "max": 30
   },
   "theme-editor.magic-card.the-save-button-in-the-popup": {
     "text": "The save button in the popup.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it colours the Save button in the card's popup.",
     "max": 50
   },
   "theme-editor.magic-card.track-behind-the-fill-a-slider-with-its": {
     "text": "Track behind the fill. A slider with its own track colour keeps it.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it colours the track behind a slider fill, unless the slider sets its own.",
     "max": 110
   },
   "theme-editor.magic-card.wins-over-the-card-background": {
     "text": "Wins over the card background.",
-    "note": "Shown in magic card (theme-editor).",
+    "note": "Helper text under a Magic Card variable; says it overrides the general card background for this card.",
     "max": 50
   },
   "theme-editor.model.a-mode-block-must-be-light-or-dark-and": {
     "text": "A mode block must be light or dark and hold variables.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error when a mode section in the theme file is not named light or dark, or has no variables.",
     "max": 90
   },
   "theme-editor.model.enter-a-border-like-1px-solid-ccc": {
     "text": "Enter a border like 1px solid #ccc.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a border field; the example is a CSS value and stays as written.",
     "max": 60
   },
   "theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115": {
     "text": "Enter a colour like #1a73e8 or rgb(26, 115, 232).",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a colour field; the examples are CSS values and stay as written.",
     "max": 80
   },
   "theme-editor.model.enter-a-colour-or-a-gradient": {
     "text": "Enter a colour or a gradient.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a field that accepts either a colour or a gradient, such as a card background.",
     "max": 50
   },
   "theme-editor.model.enter-a-font-family": {
     "text": "Enter a font family.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a font field that was left empty or invalid.",
     "max": 35
   },
   "theme-editor.model.enter-a-length-like-12px-or-1rem": {
     "text": "Enter a length like 12px or 1rem.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a size field; the examples are CSS lengths and stay as written.",
     "max": 55
   },
   "theme-editor.model.enter-a-number": {
     "text": "Enter a number.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a numeric field, such as a scale factor, when the value is not a number.",
     "max": 25
   },
   "theme-editor.model.enter-a-shadow-like-0-2px-6px-rgba-0-0-0": {
     "text": "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under a shadow field; the example is a CSS value and stays as written.",
     "max": 80
   },
   "theme-editor.model.enter-a-value": {
@@ -2246,12 +2246,12 @@
   },
   "theme-editor.model.enter-three-numbers-from-0-to-255-like": {
     "text": "Enter three numbers from 0 to 255, like 255, 120, 0.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error under an RGB triple field (red, green, blue); the example stays as written.",
     "max": 85
   },
   "theme-editor.model.modes-must-hold-a-light-and-a-dark-block": {
     "text": "Modes must hold a light and a dark block.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error when the modes section of the theme file lacks a light or a dark part.",
     "max": 70
   },
   "theme-editor.model.remove-chars-and-unmatched-brackets-from": {
@@ -2264,12 +2264,12 @@
   },
   "theme-editor.model.this-field-takes-one-colour-not-a": {
     "text": "This field takes one colour, not a gradient.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error when a gradient is typed into a field that only accepts a single colour.",
     "max": 75
   },
   "theme-editor.model.this-value-has-a-control-character": {
     "text": "This value has a control character. Remove it.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error when a value contains a hidden control character, often from pasting; tells the user to delete it.",
     "max": 75
   },
   "theme-editor.model.this-value-is-longer-than-max-characters": {
@@ -2282,12 +2282,12 @@
   },
   "theme-editor.model.this-value-must-be-text-or-a-number": {
     "text": "This value must be text or a number.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error when a theme value is a list or nested block instead of plain text or a number.",
     "max": 60
   },
   "theme-editor.model.use-letters-numbers-dashes-and": {
     "text": "Use letters, numbers, dashes and underscores for a variable name.",
-    "note": "Shown in model (theme-editor).",
+    "note": "Validation error when a variable name in the theme file has characters that are not allowed.",
     "max": 105
   },
   "theme-editor.mushroom.alarm-armed-state-rgb": {

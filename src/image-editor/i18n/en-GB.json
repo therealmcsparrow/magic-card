@@ -15,7 +15,7 @@
   },
   "image-editor.chunk.could-not-reach-magic-card-utils-your": {
     "text": "Could not reach Magic Card Utils. Your work is safe.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error message after a failed save or load of the image library. It tells the user the server was unreachable and the drawing is still in the editor.",
     "max": 85
   },
   "image-editor.chunk.ctrl-z-undo-ctrl-shift-z-redo-ctrl-s": {
@@ -25,7 +25,7 @@
   },
   "image-editor.chunk.draw-something-first": {
     "text": "Draw something first",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Tooltip on a disabled action such as Save while the canvas is empty. It tells the user to add a shape before using it.",
     "max": 35
   },
   "image-editor.chunk.duplicate": {
@@ -45,7 +45,7 @@
   },
   "image-editor.chunk.give-it-a-name": {
     "text": "Give it a name.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Validation message in the save dialog when the name box is empty. It tells the user to type a name before saving.",
     "max": 25
   },
   "image-editor.chunk.image-canvas": {
@@ -97,7 +97,7 @@
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": {
     "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Message in the image editor when the companion integration is missing. It tells the user what to install and how.",
     "max": 125
   },
   "image-editor.chunk.import-an-svg-file": {

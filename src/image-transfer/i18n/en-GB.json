@@ -30,7 +30,7 @@
   },
   "image-transfer.chunk.export-all-images": {
     "text": "Export all images",
-    "note": "Shown in chunk (image-transfer).",
+    "note": "Label of the action that exports every saved image to one file. It tells the user the whole image library is included.",
     "max": 30
   },
   "image-transfer.chunk.n": {
@@ -104,7 +104,7 @@
   },
   "image-transfer.reader.the-image-could-not-be-read": {
     "text": "The image could not be read.",
-    "note": "Shown in reader (image-transfer).",
+    "note": "Error in the import report for an image entry that has no readable drawing. It tells the user that image could not be imported.",
     "max": 45
   },
   "image-transfer.reader.the-image-holds-markup-that-is-not": {
