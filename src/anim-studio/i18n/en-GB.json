@@ -7810,22 +7810,22 @@
   },
   "anim-studio.validation-text.must-be-a-state-text": {
     "text": "Must be a state (text).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a state match field in the studio; the value must be an entity state written as text.",
     "max": 40
   },
   "anim-studio.validation-text.must-be-a-subpath-index-a-whole-number": {
     "text": "Must be a subpath index (a whole number from 0).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a subpath field in the studio; the value must be a whole number counting from 0.",
     "max": 80
   },
   "anim-studio.validation-text.must-be-a-whole-number": {
     "text": "Must be a whole number.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a numeric field in the studio that accepts only whole numbers.",
     "max": 40
   },
   "anim-studio.validation-text.must-be-an-attribute-name": {
     "text": "Must be an attribute name.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an attribute field in the studio; the value must be an entity attribute name.",
     "max": 45
   },
   "anim-studio.validation-text.must-be-an-icon-id-like-mdi-bell": {
@@ -7840,7 +7840,7 @@
   },
   "anim-studio.validation-text.must-be-an-object": {
     "text": "Must be an object.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a field in the studio YAML editor that expects an object of named settings.",
     "max": 30
   },
   "anim-studio.validation-text.must-be-between-min-and-max": {
@@ -7854,17 +7854,17 @@
   },
   "anim-studio.validation-text.must-be-element-icon-name-state": {
     "text": "Must be element, icon, name, state, background, part:<id>, group:<id> or shape:<id>.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a track target field in the studio; lists the allowed target names. Keep the names and placeholders as is.",
     "max": 135
   },
   "anim-studio.validation-text.must-be-min-max": {
     "text": "Must be [min, max].",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a range field in the studio; the value must be a minimum and maximum pair. Keep the brackets as is.",
     "max": 35
   },
   "anim-studio.validation-text.must-be-min-max-px-between-1-and-200-min": {
     "text": "Must be [min, max] px between 1 and 200, min ≤ max.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under the particle size range in the studio; gives the allowed pixel limits for the pair.",
     "max": 85
   },
   "anim-studio.validation-text.must-be-one-of-options": {
