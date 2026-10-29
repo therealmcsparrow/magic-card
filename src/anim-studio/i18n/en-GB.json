@@ -5770,7 +5770,7 @@
   },
   "anim-studio.sequence-utils.effects-with-their-own-layer-cannot-play": {
     "text": "Effects with their own layer cannot play in a sequence. This step is skipped.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Warning on a sequence step that uses an effect with its own layer; the step is skipped when played.",
     "max": 125
   },
   "anim-studio.sequence-utils.keyframes": {
@@ -5803,7 +5803,7 @@
   },
   "anim-studio.sequence-utils.not-found-in-my-animations-this-step-is": {
     "text": "Not found in My animations. This step is skipped.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Warning on a sequence step whose saved animation no longer exists; the step is skipped when played.",
     "max": 80
   },
   "anim-studio.sequence-utils.particles": {
@@ -5813,7 +5813,7 @@
   },
   "anim-studio.sequence-utils.particles-along-a-path-cannot-play-in-a": {
     "text": "Particles along a path cannot play in a sequence. This step is skipped.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Warning on a sequence step that uses particles along a path; the step is skipped when played.",
     "max": 115
   },
   "anim-studio.sequence-utils.path": {
@@ -5823,7 +5823,7 @@
   },
   "anim-studio.sequence-utils.pick-an-animation-for-this-step": {
     "text": "Pick an animation for this step.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Validation message on a sequence step that has no animation chosen yet.",
     "max": 55
   },
   "anim-studio.sequence-utils.preset": {
@@ -5838,12 +5838,12 @@
   },
   "anim-studio.sequence-utils.unknown-preset-this-step-is-skipped": {
     "text": "Unknown preset. This step is skipped.",
-    "note": "Shown in sequence utils (anim-studio).",
+    "note": "Warning on a sequence step whose preset is not recognised; the step is skipped when played.",
     "max": 60
   },
   "anim-studio.shape-inspector.an-open-line-is-drawn-by-its-stroke": {
     "text": "An open line is drawn by its stroke.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint in the shape inspector for an open line; says only the stroke is visible, so fill has no effect.",
     "max": 60
   },
   "anim-studio.shape-inspector.anchor-points": {
@@ -5873,12 +5873,12 @@
   },
   "anim-studio.shape-inspector.changes-the-last-stroke-too-the-dotted": {
     "text": "Changes the last stroke too. The dotted line is what you drew.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint in the shape inspector for a smoothed shape; says the last stroke changes too and the dotted line is the original drawing.",
     "max": 100
   },
   "anim-studio.shape-inspector.corner-radius-icon-units": {
     "text": "Corner radius (icon units)",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Label of the corner radius field in the shape inspector; the value is in icon units.",
     "max": 45
   },
   "anim-studio.shape-inspector.delete-shape": {
@@ -5903,7 +5903,7 @@
   },
   "anim-studio.shape-inspector.draw-on-the-stage-where-the-shape": {
     "text": "Draw on the stage where the shape travels, starting where it rests.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint in the shape inspector motion section; tells the user to draw the travel path on the stage.",
     "max": 110
   },
   "anim-studio.shape-inspector.drawing": {
@@ -5943,7 +5943,7 @@
   },
   "anim-studio.shape-inspector.it-turns-with-the-direction-it-travels": {
     "text": "It turns with the direction it travels.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint under the auto-rotate option in the shape inspector; says the shape turns with its travel direction.",
     "max": 65
   },
   "anim-studio.shape-inspector.layer": {
@@ -5958,12 +5958,12 @@
   },
   "anim-studio.shape-inspector.more-smoothing-fewer-points-and-a-calmer": {
     "text": "More smoothing: fewer points and a calmer line. The dotted line is what you drew.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint under the smoothing slider in the shape inspector for a drawn line; says more smoothing gives fewer points and the dotted line is the original.",
     "max": 130
   },
   "anim-studio.shape-inspector.more-smoothing-fewer-points-and-a-calmer-2": {
     "text": "More smoothing: fewer points and a calmer line.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint under the smoothing slider in the shape inspector; says more smoothing gives fewer points and a calmer line.",
     "max": 80
   },
   "anim-studio.shape-inspector.motion-path": {
@@ -6001,12 +6001,12 @@
   },
   "anim-studio.shape-inspector.points-jump-to-the-icon-s-and-other": {
     "text": "Points jump to the icon’s and other shapes’ points nearby.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Tooltip on the point snapping toggle in the shape inspector; says points jump to nearby points of the icon and other shapes.",
     "max": 95
   },
   "anim-studio.shape-inspector.points-land-on-whole-icon-units-hold": {
     "text": "Points land on whole icon units. Hold Shift to place freely.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Tooltip on the grid snapping toggle in the shape inspector; says points snap to whole icon units and Shift places freely.",
     "max": 100
   },
   "anim-studio.shape-inspector.redraw": {
@@ -6109,17 +6109,17 @@
   },
   "anim-studio.shape-inspector.the-line-draws-in-over-the-cycle": {
     "text": "The line draws in over the cycle.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint under the draw-on option in the shape inspector for an open line; says the line draws in over the cycle.",
     "max": 55
   },
   "anim-studio.shape-inspector.the-outline-draws-in-over-the-cycle-then": {
     "text": "The outline draws in over the cycle, then the shape fills.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint under the draw-on option in the shape inspector for a closed shape; says the outline draws in, then the fill appears.",
     "max": 95
   },
   "anim-studio.shape-inspector.the-shape-turns-with-the-direction-it": {
     "text": "The shape turns with the direction it travels.",
-    "note": "Shown in shape inspector (anim-studio).",
+    "note": "Hint under the auto-rotate option in the shape inspector motion section; says the shape turns with its travel direction.",
     "max": 75
   },
   "anim-studio.shape-inspector.under-the-icon": {
@@ -6249,7 +6249,7 @@
   },
   "anim-studio.states-panel.on-means-active-for-its-domain-open-home": {
     "text": "On means active for its domain (open, home, playing...).",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Hint beside the on option of the states panel; explains that on means active for the entity's domain.",
     "max": 90
   },
   "anim-studio.states-panel.play": {
@@ -6259,7 +6259,7 @@
   },
   "anim-studio.states-panel.play-something-else-per-entity-state-a": {
     "text": "Play something else per entity state: a light that glows when on and rests when off. The entity is the module’s, or the one set on the animation in the card.",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Introduction at the top of the states panel; explains playing different animations per entity state and which entity is used.",
     "max": 255
   },
   "anim-studio.states-panel.state": {
@@ -6307,7 +6307,7 @@
   },
   "anim-studio.states-panel.the-first-state-that-matches-plays-with": {
     "text": "The first state that matches plays; with no match (or an unavailable entity) the own timeline plays. The entity is the module’s, or the one set on the animation in the card.",
-    "note": "Shown in states panel (anim-studio).",
+    "note": "Hint under the states list in the states panel; explains that the first matching state plays and the own timeline is the fallback.",
     "max": 280
   },
   "anim-studio.states-panel.transition": {
@@ -6392,7 +6392,7 @@
   },
   "anim-studio.states-utils.effect-presets-cannot-play-as-a-state": {
     "text": "Effect presets cannot play as a state: plays nothing.",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Warning on a state row in the states panel that uses an effect preset; the state plays nothing.",
     "max": 85
   },
   "anim-studio.states-utils.entity-is-off": {
@@ -6435,7 +6435,7 @@
   },
   "anim-studio.states-utils.not-in-your-animations-plays-nothing": {
     "text": "Not in your animations: plays nothing until it is saved there.",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Warning on a state row in the states panel whose animation is not in My animations; it plays nothing until saved.",
     "max": 100
   },
   "anim-studio.states-utils.nothing": {
@@ -6455,7 +6455,7 @@
   },
   "anim-studio.states-utils.particle-and-sequence-animations-cannot": {
     "text": "Particle and sequence animations cannot play as a state.",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Warning on a state row in the states panel that uses a particle or sequence animation, which cannot play as a state.",
     "max": 90
   },
   "anim-studio.states-utils.state-is": {
@@ -6475,7 +6475,7 @@
   },
   "anim-studio.states-utils.that-animation-has-states-of-its-own-the": {
     "text": "That animation has states of its own: the card skips this state.",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Warning on a state row in the states panel whose animation has its own states; the card skips this state.",
     "max": 105
   },
   "anim-studio.states-utils.this-animation": {
@@ -6485,12 +6485,12 @@
   },
   "anim-studio.states-utils.unknown-preset-plays-nothing": {
     "text": "Unknown preset: plays nothing.",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Warning on a state row in the states panel whose preset is not recognised; the state plays nothing.",
     "max": 50
   },
   "anim-studio.states-utils.use-own-timeline-to-play-this-animation": {
     "text": "Use Own timeline to play this animation.",
-    "note": "Shown in states utils (anim-studio).",
+    "note": "Hint on a state row in the states panel; tells the user to choose Own timeline to play this animation itself.",
     "max": 65
   },
   "anim-studio.states-utils.value-above": {
@@ -6535,7 +6535,7 @@
   },
   "anim-studio.studio-model.no-animations-found": {
     "text": "No animations found.",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Error in the studio import dialog when the pasted YAML contains no animations.",
     "max": 35
   },
   "anim-studio.studio-model.not-valid": {
@@ -6555,7 +6555,7 @@
   },
   "anim-studio.studio-model.paste-or-load-some-yaml-first": {
     "text": "Paste or load some YAML first.",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Error in the studio import dialog when the user imports with an empty YAML field.",
     "max": 50
   },
   "anim-studio.studio-model.path": {
@@ -6588,7 +6588,7 @@
   },
   "anim-studio.studio-model.the-yaml-is-too-large-to-import-over-1": {
     "text": "The YAML is too large to import (over 1 MB).",
-    "note": "Shown in studio model (anim-studio).",
+    "note": "Error in the studio import dialog when the pasted YAML is over the 1 MB limit.",
     "max": 75
   },
   "anim-studio.studio-stage.all-layers-shown": {
@@ -6598,7 +6598,7 @@
   },
   "anim-studio.studio-stage.all-layers-shown-locks-kept": {
     "text": "All layers shown. Locks kept.",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip on the show all layers button on the studio stage; says hidden layers return and locks stay.",
     "max": 55
   },
   "anim-studio.studio-stage.card-theme": {
@@ -6621,7 +6621,7 @@
   },
   "anim-studio.studio-stage.layers-hidden-in-the-preview": {
     "text": "Layers hidden in the preview",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Label of the badge on the studio stage that shows some layers are hidden in the preview.",
     "max": 45
   },
   "anim-studio.studio-stage.light-card": {
@@ -6631,7 +6631,7 @@
   },
   "anim-studio.studio-stage.magic-card-is-not-loaded-on-this-page": {
     "text": "Magic Card is not loaded on this page",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Heading of the notice on the studio stage when the magic-card element is missing, so no preview can play.",
     "max": 60
   },
   "anim-studio.studio-stage.now-of-total-seconds": {
@@ -6703,27 +6703,27 @@
   },
   "anim-studio.studio-stage.the-preview-is-scaled-to-fit-the-stage": {
     "text": "The preview is scaled to fit the stage",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip on the studio stage when the card preview is shrunk to fit; tells the user sizes are not actual.",
     "max": 65
   },
   "anim-studio.studio-stage.the-preview-plays-on-a-real-magic-card": {
     "text": "The preview plays on a real magic-card. Load magic-card.js (your dashboard resource) before the animation studio.",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Body of the notice on the studio stage when the card is not loaded; tells the user to load magic-card.js first.",
     "max": 185
   },
   "anim-studio.studio-stage.with-reduced-motion-the-card-shows-its": {
     "text": "With reduced motion the card shows its still state: this animation does not play.",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Notice on the studio stage when the system asks for reduced motion; says the card shows its still state.",
     "max": 130
   },
   "anim-studio.studio-stage.zoomed-to-the-icon-while-you-edit-its": {
     "text": "Zoomed to the icon while you edit its parts or draw",
-    "note": "Shown in studio stage (anim-studio).",
+    "note": "Tooltip on the studio stage zoom badge; says the view zooms to the icon while editing parts or drawing.",
     "max": 85
   },
   "anim-studio.studio.a-sequence-lasts-as-long-as-its-steps": {
     "text": "A sequence lasts as long as its steps. Cards can still scale it with their Duration.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the duration area for a sequence in the studio; says length follows the steps but cards can scale it.",
     "max": 135
   },
   "anim-studio.studio.all": {
@@ -6743,7 +6743,7 @@
   },
   "anim-studio.studio.animate-an-icon-s-parts": {
     "text": "Animate an icon's parts",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Description of the parts animation type on the studio new animation screen.",
     "max": 40
   },
   "anim-studio.studio.animation": {
@@ -6783,7 +6783,7 @@
   },
   "anim-studio.studio.build-one-from-scratch-or-customise-one": {
     "text": "Build one from scratch or customise one of the presets. Saved animations appear in every card's animation picker, under My animations.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Introduction on the studio start screen; tells the user how to begin and where saved animations appear.",
     "max": 215
   },
   "anim-studio.studio.cancel": {
@@ -6793,7 +6793,7 @@
   },
   "anim-studio.studio.cards-that-use-it-stop-playing-it-unless": {
     "text": "Cards that use it stop playing it, unless they embed a copy.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Warning in the studio delete confirmation; says cards using the animation stop playing it unless they embed a copy.",
     "max": 100
   },
   "anim-studio.studio.cards-use-it-as": {
@@ -6905,7 +6905,7 @@
   },
   "anim-studio.studio.drag-to-resize-the-stage-double-click": {
     "text": "Drag to resize the stage (double-click: reset)",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip on the stage resize handle in the studio; explains dragging resizes and double-clicking resets.",
     "max": 75
   },
   "anim-studio.studio.duplicate": {
@@ -6977,7 +6977,7 @@
   },
   "anim-studio.studio.fix-the-marked-fields-first": {
     "text": "Fix the marked fields first.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Message in the studio when saving is blocked by invalid fields; tells the user to fix the marked ones.",
     "max": 45
   },
   "anim-studio.studio.follow-a-drawn-path": {
@@ -7011,7 +7011,7 @@
   },
   "anim-studio.studio.hide-solo-and-lock-only-change-this": {
     "text": "Hide, solo and lock only change this preview.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint in the studio layers panel; says hide, solo and lock affect only the preview, not the saved animation.",
     "max": 75
   },
   "anim-studio.studio.icon": {
@@ -7031,7 +7031,7 @@
   },
   "anim-studio.studio.icon-moves-only-the-module-s-icon-cards": {
     "text": "Icon moves only the module's icon. Cards can override it.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the target choice in the studio; says Icon moves only the module's icon and cards can override it.",
     "max": 95
   },
   "anim-studio.studio.icon-parts": {
@@ -7041,7 +7041,7 @@
   },
   "anim-studio.studio.icons-emoji-or-shapes-that-fall-rise-or": {
     "text": "Icons, emoji or shapes that fall, rise or burst",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Description of the particles animation type on the studio new animation screen.",
     "max": 80
   },
   "anim-studio.studio.import": {
@@ -7465,7 +7465,7 @@
   },
   "anim-studio.studio.some-panels-are-hidden-as-you-left-them": {
     "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Notice in the studio when several side panels are collapsed; tells the user to use the edge arrows to show them.",
     "max": 135
   },
   "anim-studio.studio.stage-height": {
@@ -7485,32 +7485,32 @@
   },
   "anim-studio.studio.the-animation-s-keyframes-move-the": {
     "text": "The animation's keyframes move the module's icon.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the target choice in the studio; says the keyframes move the module's icon.",
     "max": 80
   },
   "anim-studio.studio.the-animation-s-keyframes-move-the-2": {
     "text": "The animation's keyframes move the element.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the target choice in the studio; says the keyframes move the whole element.",
     "max": 70
   },
   "anim-studio.studio.the-animation-s-keyframes-move-the-icon": {
     "text": "The animation's keyframes move the icon.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the target choice in the studio; says the keyframes move the icon.",
     "max": 65
   },
   "anim-studio.studio.the-animation-s-keyframes-move-the-whole": {
     "text": "The animation's keyframes move the whole element.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the target choice in the studio; says the keyframes move the whole element.",
     "max": 80
   },
   "anim-studio.studio.the-import-and-export-tool-could-not-be": {
     "text": "The import and export tool could not be loaded. Reload the page and try again.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Error in the studio when the import and export tool fails to load; tells the user to reload the page.",
     "max": 125
   },
   "anim-studio.studio.the-layers-panel-is-hidden-as-you": {
     "text": "The layers panel is hidden, as you collapsed it before. Use the arrow on the edge to show it.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Notice in the studio when the layers panel is collapsed; tells the user to use the edge arrow to show it.",
     "max": 150
   },
   "anim-studio.studio.the-new-animation-name-was-not-saved": {
@@ -7531,12 +7531,12 @@
   },
   "anim-studio.studio.the-point-it-scales-and-turns-around": {
     "text": "The point it scales and turns around.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Hint under the pivot setting in the studio; explains the pivot is the point the element scales and turns around.",
     "max": 60
   },
   "anim-studio.studio.the-preset-becomes-your-own-animation-to": {
     "text": "The preset becomes your own animation to edit: motion presets as keyframes, particle and ring presets with their settings.",
-    "note": "Shown in studio (anim-studio).",
+    "note": "Tooltip on the make it my own button for a preset in the studio; explains what the preset turns into.",
     "max": 200
   },
   "anim-studio.studio.this-animation": {
@@ -7705,7 +7705,7 @@
   },
   "anim-studio.validation-text.a-clip-cannot-play-its-own-document-use": {
     "text": "A clip cannot play its own document (use self).",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a sequence clip field in the studio; says a clip cannot play its own document and to use self.",
     "max": 80
   },
   "anim-studio.validation-text.a-sequence-cannot-play-itself": {
@@ -7715,7 +7715,7 @@
   },
   "anim-studio.validation-text.another-track-already-animates-this": {
     "text": "Another track already animates this target.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a track target field in the studio; says another track already animates that target.",
     "max": 70
   },
   "anim-studio.validation-text.at-most-max-animations": {
@@ -7752,17 +7752,17 @@
   },
   "anim-studio.validation-text.children-cannot-have-children-of-their": {
     "text": "Children cannot have children of their own.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under the child particles field in the studio; says child particles cannot spawn further children.",
     "max": 70
   },
   "anim-studio.validation-text.color-mix-needs-two-colours": {
     "text": "color_mix needs two colours.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a colour mix value in the studio; says color_mix needs exactly two colours. Keep color_mix as is.",
     "max": 45
   },
   "anim-studio.validation-text.draw-on-is-only-for-icon-parts-and": {
     "text": "Draw-on is only for icon parts and shapes.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a draw-on track in the studio; says draw-on works only on icon parts and shapes.",
     "max": 70
   },
   "anim-studio.validation-text.duplicate-id-id": {
@@ -7775,37 +7775,37 @@
   },
   "anim-studio.validation-text.min-must-not-be-above-max": {
     "text": "Min must not be above max.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a range field in the studio; says the minimum cannot be higher than the maximum.",
     "max": 45
   },
   "anim-studio.validation-text.must-be-1-16-of-a-z-0-9-and-and-unique": {
     "text": "Must be 1-16 of a-z, 0-9 and -, and unique.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an id field in the studio; gives the allowed length and characters and says the id must be unique.",
     "max": 70
   },
   "anim-studio.validation-text.must-be-a-list": {
     "text": "Must be a list.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a field in the studio YAML editor that expects a list.",
     "max": 25
   },
   "anim-studio.validation-text.must-be-a-motion-preset-or-a-custom": {
     "text": "Must be a motion preset or a custom keyframes / path animation.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an animation reference in the studio; the value must be a motion preset or a custom keyframes or path animation.",
     "max": 105
   },
   "anim-studio.validation-text.must-be-a-number": {
     "text": "Must be a number.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a numeric field in the studio when the value is not a number.",
     "max": 30
   },
   "anim-studio.validation-text.must-be-a-pair-from-to": {
     "text": "Must be a pair [from, to].",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under a from and to field in the studio; the value must be a two-item pair. Keep the brackets as is.",
     "max": 45
   },
   "anim-studio.validation-text.must-be-a-particle-ring-or-scene-preset": {
     "text": "Must be a particle, ring or scene preset.",
-    "note": "Shown in validation text (anim-studio).",
+    "note": "Validation message under an effect reference in the studio; the value must be a particle, ring or scene preset.",
     "max": 70
   },
   "anim-studio.validation-text.must-be-a-state-text": {

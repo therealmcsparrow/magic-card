@@ -5496,12 +5496,12 @@
   },
   "card-editor.item-menu.no-other-module-type-to-replace-with": {
     "text": "No other module type to replace with",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Tooltip on the disabled Replace with entry in the item menu when no other module type fits.",
     "max": 60
   },
   "card-editor.item-menu.nothing-differs-from-the-template": {
     "text": "Nothing differs from the template",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Tooltip on the disabled Reset to template entry in the item menu when the item has no changes.",
     "max": 55
   },
   "card-editor.item-menu.out-to-parent": {
@@ -5524,17 +5524,17 @@
   },
   "card-editor.item-menu.paste-module-after": {
     "text": "Paste module after",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that pastes the copied module directly after the selected item.",
     "max": 30
   },
   "card-editor.item-menu.put-behind-others": {
     "text": "Put behind others",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that sends a floating module to the back of the stack.",
     "max": 30
   },
   "card-editor.item-menu.put-on-top": {
     "text": "Put on top",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that brings a floating module to the front of the stack.",
     "max": 20
   },
   "card-editor.item-menu.rename": {
@@ -5554,17 +5554,17 @@
   },
   "card-editor.item-menu.reset-card-to-template": {
     "text": "Reset card to template…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on the card root that opens a confirmation to discard all changes and return to the template.",
     "max": 40
   },
   "card-editor.item-menu.reset-column-to-template": {
     "text": "Reset column to template…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on a column that opens a confirmation to return that column to the template.",
     "max": 40
   },
   "card-editor.item-menu.reset-layout-to-template": {
     "text": "Reset layout to template…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on a layout module that opens a confirmation to return it to the template.",
     "max": 40
   },
   "card-editor.item-menu.reset-name-to-the-template-changes-to": {
@@ -5585,17 +5585,17 @@
   },
   "card-editor.item-menu.reset-row-to-template": {
     "text": "Reset row to template…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on a row that opens a confirmation to return that row to the template.",
     "max": 40
   },
   "card-editor.item-menu.reset-the-whole-card-to-the-template-all": {
     "text": "Reset the whole card to the template? All your changes are lost.",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Confirmation question for resetting the whole card; warns that every change is discarded.",
     "max": 105
   },
   "card-editor.item-menu.reset-to-template": {
     "text": "Reset to template…",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Generic item menu entry that opens a confirmation to return the selected item to the template.",
     "max": 30
   },
   "card-editor.item-menu.row-n": {
@@ -5617,12 +5617,12 @@
   },
   "card-editor.item-menu.show-on-dashboard": {
     "text": "Show on dashboard",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that makes a hidden item visible on the dashboard again.",
     "max": 30
   },
   "card-editor.item-menu.show-tab-on-dashboard": {
     "text": "Show tab on dashboard",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry on a hidden tab that makes it visible on the dashboard again.",
     "max": 35
   },
   "card-editor.item-menu.slot-n": {
@@ -5643,17 +5643,17 @@
   },
   "card-editor.item-menu.wrap-in-layout": {
     "text": "Wrap in layout",
-    "note": "Shown in item menu (card-editor).",
+    "note": "Item menu entry that puts the selected module inside a new layout module.",
     "max": 25
   },
   "card-editor.layer-editor-loader.layer-settings-could-not-load-reload-the": {
     "text": "Layer settings could not load. Reload the page.",
-    "note": "Shown in layer editor loader (card-editor).",
+    "note": "Error in the layer editor when its settings fail to load; asks the user to reload the page.",
     "max": 80
   },
   "card-editor.layer-editor-loader.loading-layer-settings": {
     "text": "Loading layer settings…",
-    "note": "Shown in layer editor loader (card-editor).",
+    "note": "Progress message in the layer editor while its settings load.",
     "max": 40
   },
   "card-editor.layers-here.behind-others": {
@@ -5734,7 +5734,7 @@
   },
   "card-editor.library-sheet.the-library-could-not-load-check-your": {
     "text": "The library could not load. Check your connection and try again.",
-    "note": "Shown in library sheet (card-editor).",
+    "note": "Error in the library sheet when the library fails to load; asks the user to check the connection and retry.",
     "max": 105
   },
   "card-editor.light-editor.brightness": {
@@ -5779,12 +5779,12 @@
   },
   "card-editor.light-editor.show-colour-picker": {
     "text": "Show colour picker",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Switch label in the light module editor; adds a colour picker control to the light tile.",
     "max": 30
   },
   "card-editor.light-editor.show-colour-temp": {
     "text": "Show colour temp",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Switch label in the light module editor; adds a colour temperature control (warm to cool) to the light tile.",
     "max": 30
   },
   "card-editor.light-editor.show-effects": {
@@ -5794,7 +5794,7 @@
   },
   "card-editor.light-editor.tap-the-icon-to-turn-the-light-on-or-off": {
     "text": "Tap the icon to turn the light on or off. Leave Icon empty to show the light's own icon.",
-    "note": "Shown in light editor (card-editor).",
+    "note": "Hint in the light module editor describing what tapping the icon does and what an empty Icon field shows.",
     "max": 145
   },
   "card-editor.light-editor.this-light-has-no-what-the-control-is": {
@@ -5807,7 +5807,7 @@
   },
   "card-editor.magic-card-editor.could-not-load-the-template-so-the": {
     "text": "Could not load the template, so the column was not reset.",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Error toast in the card editor when a column reset fails because the template could not be loaded; nothing changed.",
     "max": 95
   },
   "card-editor.magic-card-editor.loading-editor": {
@@ -5825,7 +5825,7 @@
   },
   "card-editor.magic-card-editor.only-this-card": {
     "text": "Only this card",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Button in the Update linked cards dialog that saves the change to this card only.",
     "max": 25
   },
   "card-editor.magic-card-editor.replaced-old-with-new": {
@@ -5866,12 +5866,12 @@
   },
   "card-editor.magic-card-editor.update-all-linked-cards": {
     "text": "Update all linked cards",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Button in the Update linked cards dialog that applies the change to every card sharing this template.",
     "max": 40
   },
   "card-editor.magic-card-editor.update-linked-cards": {
     "text": "Update linked cards?",
-    "note": "Shown in magic card editor (card-editor).",
+    "note": "Title of the dialog shown when saving a template-based card; asks whether other cards using it should change too.",
     "max": 35
   },
   "card-editor.markdown-editor.attribute": {
@@ -5881,7 +5881,7 @@
   },
   "card-editor.markdown-editor.bold-italic-code": {
     "text": "**Bold**, _italic_, `code`",
-    "note": "Shown in markdown editor (card-editor).",
+    "note": "Placeholder of the text box in the markdown module editor, showing example formatting. Keep the markdown symbols.",
     "max": 45
   },
   "card-editor.markdown-editor.content": {
@@ -5891,7 +5891,7 @@
   },
   "card-editor.markdown-editor.entity-for-templates": {
     "text": "Entity (for templates)",
-    "note": "Shown in markdown editor (card-editor).",
+    "note": "Field label in the markdown module editor for the entity that template expressions in the text can read.",
     "max": 40
   },
   "card-editor.markdown-editor.markdown-with-home-assistant-templates-e": {
@@ -5935,17 +5935,17 @@
   },
   "card-editor.media-picker.media-url-or-path": {
     "text": "Media URL or path",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Field label in the media picker for typing a web address or file path to an image or video.",
     "max": 30
   },
   "card-editor.media-picker.no-items-found": {
     "text": "No items found",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Empty state of the media picker list when a folder or search has no files.",
     "max": 25
   },
   "card-editor.media-picker.no-media-sources-available": {
     "text": "No media sources available",
-    "note": "Shown in media picker (card-editor).",
+    "note": "Empty state of the media picker when Home Assistant offers no media source to browse.",
     "max": 45
   },
   "card-editor.media-picker.save": {
@@ -6003,7 +6003,7 @@
   },
   "card-editor.module-selector.no-modules-in-this-category": {
     "text": "No modules in this category.",
-    "note": "Shown in module selector (card-editor).",
+    "note": "Empty state of the module selector when the chosen category or search has no modules.",
     "max": 45
   },
   "card-editor.module-selector.no-modules-match-query": {
@@ -6133,17 +6133,17 @@
   },
   "card-editor.popup-settings.closes-when-the-entity-changes-to-this": {
     "text": "Closes when the entity changes to this state.",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Hint under the close state field in the pop-up settings; says which entity state closes the pop-up.",
     "max": 75
   },
   "card-editor.popup-settings.copy-failed-select-the-path-and-copy-it": {
     "text": "Copy failed: select the path and copy it",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Error toast in the pop-up settings when copying the navigation path fails; tells the user to copy it by hand.",
     "max": 65
   },
   "card-editor.popup-settings.copy-navigation-path": {
     "text": "Copy navigation path",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Button in the pop-up settings that copies a link path other cards can use to open this pop-up.",
     "max": 35
   },
   "card-editor.popup-settings.dialog": {
@@ -6176,17 +6176,17 @@
   },
   "card-editor.popup-settings.navigation-path-copied": {
     "text": "Navigation path copied",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Confirmation toast in the pop-up settings after the navigation path is copied.",
     "max": 40
   },
   "card-editor.popup-settings.no-header-text": {
     "text": "No header text",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Label in the pop-up settings shown when the pop-up header has no text.",
     "max": 25
   },
   "card-editor.popup-settings.no-preview-of-this-card-to-open-yet": {
     "text": "No preview of this card to open yet",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Tooltip on the disabled preview button in the pop-up settings when the card preview has not rendered.",
     "max": 60
   },
   "card-editor.popup-settings.off": {
@@ -6209,12 +6209,12 @@
   },
   "card-editor.popup-settings.opens-when-the-entity-changes-to-this": {
     "text": "Opens when the entity changes to this state, e.g. a doorbell turning on.",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Hint under the open state field in the pop-up settings; says which entity state opens the pop-up.",
     "max": 120
   },
   "card-editor.popup-settings.percent-0-is-no-darkening": {
     "text": "Percent, 0 is no darkening.",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Hint under the backdrop dimming field in the pop-up settings; gives the unit and what zero means.",
     "max": 45
   },
   "card-editor.popup-settings.pop-up-id": {
@@ -6229,7 +6229,7 @@
   },
   "card-editor.popup-settings.seconds-without-interaction-empty-stays": {
     "text": "Seconds without interaction. Empty: stays open.",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Hint under the auto-close field in the pop-up settings; gives the unit and says an empty value never closes it.",
     "max": 80
   },
   "card-editor.popup-settings.sheet": {
@@ -6239,12 +6239,12 @@
   },
   "card-editor.popup-settings.show-close-button": {
     "text": "Show close button",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Switch label in the pop-up settings; adds a close button to the pop-up header.",
     "max": 30
   },
   "card-editor.popup-settings.state-e-g-on-empty-any-change": {
     "text": "State, e.g. on (empty: any change)",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Placeholder of the state fields in the pop-up settings; shows an example and says an empty value reacts to any change.",
     "max": 55
   },
   "card-editor.popup-settings.style": {
@@ -6269,7 +6269,7 @@
   },
   "card-editor.popup-settings.without-an-id-it-opens-only-from-its": {
     "text": "Without an ID it opens only from its triggers.",
-    "note": "Shown in popup settings (card-editor).",
+    "note": "Hint under the pop-up ID field; says that without an ID other cards cannot open it by link.",
     "max": 75
   },
   "card-editor.ring-editor.always": {
@@ -6354,7 +6354,7 @@
   },
   "card-editor.ring-editor.entity-for-show-condition": {
     "text": "Entity for show condition",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Field label in the ring editor for the entity whose state decides whether the ring is shown.",
     "max": 40
   },
   "card-editor.ring-editor.fill-transition": {
@@ -6425,7 +6425,7 @@
   },
   "card-editor.ring-editor.min-max-and-attribute-do-not-apply-to-a": {
     "text": "Min, Max and Attribute do not apply to a timer; thresholds use its remaining %.",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Notice in the ring editor when the entity is a timer; says which fields are ignored and what thresholds measure.",
     "max": 130
   },
   "card-editor.ring-editor.mode": {
@@ -6458,12 +6458,12 @@
   },
   "card-editor.ring-editor.pick-an-entity-a-value-ring-without-one": {
     "text": "Pick an entity: a value ring without one stays empty.",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Hint in the ring editor when a value ring has no entity; the ring would show nothing.",
     "max": 85
   },
   "card-editor.ring-editor.pick-an-entity-this-condition-never": {
     "text": "Pick an entity: this condition never shows the ring without one.",
-    "note": "Shown in ring editor (card-editor).",
+    "note": "Hint in the ring editor when a show condition has no entity; the ring would never appear.",
     "max": 105
   },
   "card-editor.ring-editor.position": {

@@ -115,7 +115,7 @@
   },
   "image-editor.chunk.magic-card-utils-reported-an-error-and": {
     "text": "Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error message when the server answers with a failure. It tells the user the drawing is intact and points to Export file as a backup.",
     "max": 170
   },
   "image-editor.chunk.my-image": {
@@ -159,12 +159,12 @@
   },
   "image-editor.chunk.save-the-image-first": {
     "text": "Save the image first.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Tooltip on a disabled action that needs a saved image, shown while the image is new. It tells the user to save first.",
     "max": 35
   },
   "image-editor.chunk.save-your-changes-first": {
     "text": "Save your changes first.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Tooltip on a disabled action that needs the saved version, shown while there are unsaved edits. It tells the user to save first.",
     "max": 40
   },
   "image-editor.chunk.saved": {
@@ -195,12 +195,12 @@
   },
   "image-editor.chunk.showing-the-drawing-as-on-a-card-with": {
     "text": "Showing the drawing as on a card, with the entity off.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Screen reader announcement after the user switches the preview to the card view. It tells them the entity-off look is being shown.",
     "max": 90
   },
   "image-editor.chunk.showing-the-drawing-in-the-editor": {
     "text": "Showing the drawing in the editor colours.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Screen reader announcement after the user switches the preview back to the editor view. It tells them the drawing shows its own colours.",
     "max": 70
   },
   "image-editor.chunk.text": {
@@ -210,27 +210,27 @@
   },
   "image-editor.chunk.text-tool-click-or-tap-where-the-text": {
     "text": "Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Screen reader announcement when the text tool is picked. It explains how to place, type and finish a text layer. Key names stay as written.",
     "max": 185
   },
   "image-editor.chunk.that-drawing-is-over-256-kib": {
     "text": "That drawing is over 256 KiB.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when the library refuses a save because the drawing is too large. It tells the user the size limit.",
     "max": 50
   },
   "image-editor.chunk.that-file-cannot-be-used-as-an-image": {
     "text": "That file cannot be used as an image.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error after opening a file that the image editor rejects for a reason with no specific message. Nothing is loaded.",
     "max": 60
   },
   "image-editor.chunk.that-file-has-no-shapes-an-image-can-use": {
     "text": "That file has no shapes an image can use.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error after opening an SVG that holds nothing drawable. It tells the user the file was not loaded.",
     "max": 70
   },
   "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
     "text": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when a pasted or chosen SVG is over the 8 MB open limit. It tells the user the limit and to try a smaller file.",
     "max": 100
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": {
@@ -252,7 +252,7 @@
   },
   "image-editor.chunk.the-library-is-full-200-images-delete": {
     "text": "The library is full (200 images). Delete one to add another.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when saving a new image while the library holds its maximum. It tells the user the limit and to delete an image first.",
     "max": 100
   },
   "image-editor.chunk.the-library-refused-this-image-reason": {
@@ -265,27 +265,27 @@
   },
   "image-editor.chunk.the-library-refused-this-image-use": {
     "text": "The library refused this image. Use Export file to keep a copy.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when the library rejects a save for a reason with no specific message. It points the user to Export file as a backup.",
     "max": 105
   },
   "image-editor.chunk.the-reference-picture-was-not-saved": {
     "text": "The reference picture was not saved.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Notice after saving an image that has a tracing picture loaded. It tells the user the picture is never stored with the image.",
     "max": 60
   },
   "image-editor.chunk.this-drawing-cannot-be-saved-as-an-image": {
     "text": "This drawing cannot be saved as an image.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when the drawing fails the check before saving. It tells the user nothing was saved.",
     "max": 70
   },
   "image-editor.chunk.this-image-has-parts-that-this-editor": {
     "text": "This image has parts that this editor cannot change yet, so it opens for viewing only.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Banner on an image the editor cannot edit safely. It tells the user the image is read-only and why.",
     "max": 140
   },
   "image-editor.chunk.this-image-is-no-longer-in-the-library": {
     "text": "This image is no longer in the library.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when saving an image that was deleted elsewhere in the meantime. It tells the user the stored copy is gone.",
     "max": 65
   },
   "image-editor.chunk.this-image-was-changed-somewhere-else": {
@@ -295,7 +295,7 @@
   },
   "image-editor.chunk.this-is-not-valid-svg-check-that-it": {
     "text": "This is not valid SVG. Check that it starts with <svg and is closed.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Error when pasted markup cannot be parsed. It tells the user what a valid SVG looks like. Keep the literal tag as written.",
     "max": 110
   },
   "image-editor.chunk.too-big": {
@@ -323,17 +323,17 @@
   },
   "image-editor.chunk.use-80-characters-or-fewer": {
     "text": "Use 80 characters or fewer.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Validation message under the image name box in the save dialog. It tells the user the name length limit.",
     "max": 45
   },
   "image-editor.chunk.you-can-look-at-this-image-but-not": {
     "text": "You can look at this image but not change it. Ask an administrator.",
-    "note": "Shown in chunk (image-editor).",
+    "note": "Banner for a user without edit rights. It tells them the image is read-only and who can change that.",
     "max": 110
   },
   "image-editor.importer.choose-an-svg-file": {
     "text": "Choose an SVG file.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Error when a chosen file is not an SVG. It tells the user to pick a file of that type.",
     "max": 35
   },
   "image-editor.importer.choose-another-file": {
@@ -399,7 +399,7 @@
   },
   "image-editor.importer.nothing-was-removed": {
     "text": "Nothing was removed.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Line in the import summary when cleaning dropped no parts of the file. It tells the user the SVG came in complete.",
     "max": 35
   },
   "image-editor.importer.other-parts-an-image-cannot-use": {
@@ -432,22 +432,22 @@
   },
   "image-editor.importer.some-parts-cannot-be-edited-such-as": {
     "text": "Some parts cannot be edited, such as clipped ones. They are kept as locked layers.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Line in the import summary for parts the editor cannot change. It tells the user they stay visible as locked layers.",
     "max": 135
   },
   "image-editor.importer.that-file-is-too-big-to-open-over-8-mb": {
     "text": "That file is too big to open (over 8 MB). Try a smaller copy.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Error when a chosen SVG file is over the 8 MB open limit. It tells the user the limit and to try a smaller file.",
     "max": 100
   },
   "image-editor.importer.the-file-could-not-be-read": {
     "text": "The file could not be read.",
-    "note": "Shown in importer (image-editor).",
+    "note": "Error when the browser fails to read the chosen file. It tells the user to try the file again or another one.",
     "max": 45
   },
   "image-editor.paint-ui.a-gradient-needs-at-least-2-stops": {
     "text": "A gradient needs at least 2 stops.",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Validation message in the gradient editor when the user removes below the minimum. It tells them the lowest stop count.",
     "max": 55
   },
   "image-editor.paint-ui.accent": {
@@ -467,7 +467,7 @@
   },
   "image-editor.paint-ui.at-most-8-stops": {
     "text": "At most 8 stops.",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Validation message in the gradient editor when the user adds beyond the limit. It tells them the highest stop count.",
     "max": 30
   },
   "image-editor.paint-ui.centre-x": {
@@ -594,7 +594,7 @@
   },
   "image-editor.paint-ui.opacity-fades-the-whole-layer": {
     "text": "Opacity fades the whole layer.",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Hint beside the layer opacity slider. It tells the user the setting affects fill and outline together.",
     "max": 50
   },
   "image-editor.paint-ui.or-type-a-name": {
@@ -669,17 +669,17 @@
   },
   "image-editor.paint-ui.use-a-colour-like-3f6fb5": {
     "text": "Use a colour like #3f6fb5.",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Validation message under the colour box for a value that is not a colour. It gives a hex example. Keep the example as written.",
     "max": 45
   },
   "image-editor.paint-ui.use-a-name-that-starts-with-two-dashes": {
     "text": "Use a name that starts with two dashes, like --my-colour.",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Validation message under the theme variable box for a name in the wrong form. It gives an example. Keep the example as written.",
     "max": 95
   },
   "image-editor.paint-ui.use-up-to-8-numbers-separated-by-spaces": {
     "text": "Use up to 8 numbers separated by spaces, like 8 4.",
-    "note": "Shown in paint ui (image-editor).",
+    "note": "Validation message under the dash pattern box for a bad value. It tells the user the format and gives an example.",
     "max": 80
   },
   "image-editor.part.imported-part": {
@@ -689,17 +689,17 @@
   },
   "image-editor.part.rename-reorder-hide-or-delete-it": {
     "text": "Rename, reorder, hide or delete it.",
-    "note": "Shown in part (image-editor).",
+    "note": "Hint on a layer row that the layer can be managed from its menu. It lists what the user can do with it.",
     "max": 60
   },
   "image-editor.part.this-part-keeps-its-own-colours": {
     "text": "This part keeps its own colours.",
-    "note": "Shown in part (image-editor).",
+    "note": "Hint on a locked part from an imported file. It tells the user the colour controls do not apply to it.",
     "max": 55
   },
   "image-editor.reference-ui.alignment-is-remembered-on-this-device": {
     "text": "Alignment is remembered on this device for this image. The picture is not.",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Hint in the tracing picture panel. It tells the user that only the position is kept, and only on this device.",
     "max": 120
   },
   "image-editor.reference-ui.choose-a-picture": {
@@ -724,7 +724,7 @@
   },
   "image-editor.reference-ui.for-tracing-only-the-picture-is-never": {
     "text": "For tracing only. The picture is never saved.",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Hint in the tracing picture panel. It tells the user the picture is a guide and is not part of the saved image.",
     "max": 75
   },
   "image-editor.reference-ui.hide": {
@@ -784,7 +784,7 @@
   },
   "image-editor.reference-ui.reference-pictures-are-not-kept-pick-it": {
     "text": "Reference pictures are not kept. Pick it again if you reopen the image.",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Hint in the tracing picture panel. It tells the user to choose the picture again after reopening the image.",
     "max": 115
   },
   "image-editor.reference-ui.remove-picture": {
@@ -809,7 +809,7 @@
   },
   "image-editor.reference-ui.scale-and-rotate-are-around-the-middle": {
     "text": "Scale and rotate are around the middle of the picture.",
-    "note": "Shown in reference ui (image-editor).",
+    "note": "Hint beside the tracing picture scale and rotate controls. It tells the user which point the picture turns around.",
     "max": 90
   },
   "image-editor.reference-ui.show": {
@@ -849,17 +849,17 @@
   },
   "image-editor.reference.that-file-is-too-big-to-open-over-64-mb": {
     "text": "That file is too big to open (over 64 MB). Try a smaller copy.",
-    "note": "Shown in reference (image-editor).",
+    "note": "Error when a tracing picture is over the 64 MB limit. It tells the user the limit and to try a smaller file.",
     "max": 100
   },
   "image-editor.reference.this-browser-cannot-open-that-picture": {
     "text": "This browser cannot open that picture. Save it as a JPEG and try again.",
-    "note": "Shown in reference (image-editor).",
+    "note": "Error when a tracing picture is in a format the browser cannot decode. It suggests converting to JPEG.",
     "max": 115
   },
   "image-editor.reference.your-last-alignment-for-this-image-was": {
     "text": "Your last alignment for this image was applied.",
-    "note": "Shown in reference (image-editor).",
+    "note": "Notice after a tracing picture loads. It tells the user the remembered position and scale were restored.",
     "max": 80
   },
   "image-editor.text-tool.cancel": {
@@ -874,7 +874,7 @@
   },
   "image-editor.text-tool.enter-adds-the-text-shift-enter-starts-a": {
     "text": "Enter adds the text. Shift+Enter starts a new line. Esc cancels.",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Keyboard hint while typing a new text layer. It lists the keys to confirm, break a line or cancel. Key names stay as written.",
     "max": 105
   },
   "image-editor.text-tool.n-left": {
@@ -887,7 +887,7 @@
   },
   "image-editor.text-tool.no-text-was-added": {
     "text": "No text was added.",
-    "note": "Shown in text tool (image-editor).",
+    "note": "Screen reader announcement when the text tool closes with an empty box. It tells the user no layer was created.",
     "max": 30
   },
   "image-editor.text-tool.text-cancelled": {
@@ -942,7 +942,7 @@
   },
   "image-editor.text-ui.enter-adds-a-line": {
     "text": "Enter adds a line.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Keyboard hint in the text layer inspector. It tells the user that Enter breaks the line here. The key name stays as written.",
     "max": 30
   },
   "image-editor.text-ui.every-letter-the-same-width": {
@@ -1040,7 +1040,7 @@
   },
   "image-editor.text-ui.text-uses-fonts-already-on-the-device": {
     "text": "Text uses fonts already on the device. Nothing is downloaded, so it can look a little different on another device.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Hint under the font choice in the text inspector. It warns that the lettering depends on the fonts of the viewing device.",
     "max": 185
   },
   "image-editor.text-ui.that-is-the-longest-text-2048-characters": {
@@ -1050,7 +1050,7 @@
   },
   "image-editor.text-ui.the-empty-text-layer-was-removed": {
     "text": "The empty text layer was removed.",
-    "note": "Shown in text ui (image-editor).",
+    "note": "Screen reader announcement after a text layer is cleared of all text. It tells the user the layer was deleted.",
     "max": 55
   },
   "image-editor.text-ui.weight": {
@@ -1134,7 +1134,7 @@
   },
   "image-editor.ui.cards-that-set-their-own-shape-keep-it": {
     "text": "Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Hint beside the image shape setting. It tells the user a change does not reach cards with their own shape and how to make them follow it.",
     "max": 200
   },
   "image-editor.ui.close": {
@@ -1225,7 +1225,7 @@
   },
   "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
     "text": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Explanation under the image size line. It tells the user what the KiB unit means and how big the limit is.",
     "max": 160
   },
   "image-editor.ui.layers": {
@@ -1279,7 +1279,7 @@
   },
   "image-editor.ui.no-layers-yet": {
     "text": "No layers yet.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Empty state of the layers panel. It tells the user the drawing has no shapes yet.",
     "max": 25
   },
   "image-editor.ui.none": {
@@ -1289,7 +1289,7 @@
   },
   "image-editor.ui.nothing-to-export-yet": {
     "text": "Nothing to export yet.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Message in the export panel when the canvas is empty. It tells the user to draw something before exporting.",
     "max": 40
   },
   "image-editor.ui.outline-paint": {
@@ -1302,7 +1302,7 @@
   },
   "image-editor.ui.pick-a-shape-pixel-numbers-only-set-the": {
     "text": "Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Hint in the canvas size panel. It tells the user the numbers only set the working grid and the saved image resizes to fit any card.",
     "max": 135
   },
   "image-editor.ui.radial-gradient": {
@@ -1342,7 +1342,7 @@
   },
   "image-editor.ui.select-the-biggest-layer-and-simplify-it": {
     "text": "Select the biggest layer and simplify it, or delete layers you do not need.",
-    "note": "Shown in ui (image-editor).",
+    "note": "Advice shown with the too-big size message. It tells the user two ways to bring the image under the limit.",
     "max": 120
   },
   "image-editor.ui.shape": {
