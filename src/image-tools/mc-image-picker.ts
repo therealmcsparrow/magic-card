@@ -175,44 +175,44 @@ export class McImagePicker extends LitElement {
     const ratio = shape?.label ?? '';
     const sel = this._sel === i.id;
     const live = this.background && i.bindings > 0;
-    const spoken = [i.name, ratio.replace(':', ' to '), t('{n} KiB', { n: kib(i.bytes) }), live ? t('{n, plural, one {# live connection} other {# live connections}}', { n: i.bindings }) : ''].filter(Boolean).join(', ');
+    const spoken = [i.name, ratio.replace(':', ' to '), t('image-tools.mc-image-picker.n-kib', { n: kib(i.bytes) }), live ? t('image-tools.mc-image-picker.n', { n: i.bindings }) : ''].filter(Boolean).join(', ');
     return html`<button type="button" class="pick" role="radio" data-id=${i.id} aria-checked=${sel ? 'true' : 'false'} tabindex=${at === this._at ? '0' : '-1'} aria-label=${spoken} @click=${() => { this._sel = i.id; this._at = at; }}>
       <span class="thumb" aria-hidden="true">${i.thumb && THUMB_RE.test(i.thumb) ? html`<img alt="" src=${i.thumb} />` : html`<ha-icon icon="mdi:image-outline"></ha-icon>`}</span>
       <span class="name" aria-hidden="true">${sel ? html`<span class="tick">✓ </span>` : nothing}${i.name}</span>
       <span class="meta" aria-hidden="true">
-        ${i.id === this.current ? html`<span class="chip">${t('In use')}</span>` : nothing}
+        ${i.id === this.current ? html`<span class="chip">${t('image-tools.mc-image-picker.in-use')}</span>` : nothing}
         ${ratio ? html`<span class="chip">${ratio}</span>` : nothing}
-        <span>${t('{n} KiB', { n: kib(i.bytes) })}</span>
-        ${live ? html`<span class="chip">◆ ${t('{n, plural, one {Live: # connection} other {Live: # connections}}', { n: i.bindings })}</span>` : nothing}
+        <span>${t('image-tools.mc-image-picker.n-kib', { n: kib(i.bytes) })}</span>
+        ${live ? html`<span class="chip">◆ ${t('image-tools.mc-image-picker.n-2', { n: i.bindings })}</span>` : nothing}
       </span>
     </button>`;
   }
 
   private _body(): TemplateResult {
     const l = this._list;
-    if (!l) return html`<p class="mc-picker-loading" role="status">${t('Loading images…')}</p>`;
-    if (l.state === 'missing') return html`<p class="mc-picker-empty" role="status">${t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.')}</p>`;
+    if (!l) return html`<p class="mc-picker-loading" role="status">${t('image-tools.mc-image-picker.loading-images')}</p>`;
+    if (l.state === 'missing') return html`<p class="mc-picker-empty" role="status">${t('image-tools.mc-image-picker.images-need-magic-card-utils-it-is')}</p>`;
     if (l.state === 'error') {
-      return html`<div class="mc-picker-empty" role="alert">${t('The images could not be loaded.')}
-        <button type="button" class="btn btn-secondary btn-sm" data-act="retry" @click=${() => { resetImages(); void this._load(); }}>${t('Try again')}</button></div>`;
+      return html`<div class="mc-picker-empty" role="alert">${t('image-tools.mc-image-picker.the-images-could-not-be-loaded')}
+        <button type="button" class="btn btn-secondary btn-sm" data-act="retry" @click=${() => { resetImages(); void this._load(); }}>${t('image-tools.mc-image-picker.try-again')}</button></div>`;
     }
     if (!l.items.length) {
-      return html`<div class="mc-picker-empty" role="status">${t('No images yet.')} ${this.canDraw
-        ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="draw" @click=${() => this.dispatchEvent(new CustomEvent('draw'))}>${t('Draw a new image')}</button>`
-        : t('Ask an administrator to add one.')}</div>`;
+      return html`<div class="mc-picker-empty" role="status">${t('image-tools.mc-image-picker.no-images-yet')} ${this.canDraw
+        ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="draw" @click=${() => this.dispatchEvent(new CustomEvent('draw'))}>${t('image-tools.mc-image-picker.draw-a-new-image')}</button>`
+        : t('image-tools.mc-image-picker.ask-an-administrator-to-add-one')}</div>`;
     }
     const items = this._items();
-    if (!items.length) return html`<p class="mc-picker-empty" role="status">${t('No image matches “{query}”.', { query: this._query.trim() })}</p>`;
-    return html`<div class="grid" role="radiogroup" aria-label=${t('Images')} @keydown=${(e: KeyboardEvent) => this._key(e, items)}>${items.map((i, at) => this._tile(i, at))}</div>
-      ${this.background ? html`<p class="note">${t('Thumbnails show the saved colours. On the card the live parts change with their devices.')}</p>` : nothing}`;
+    if (!items.length) return html`<p class="mc-picker-empty" role="status">${t('image-tools.mc-image-picker.no-image-matches-query', { query: this._query.trim() })}</p>`;
+    return html`<div class="grid" role="radiogroup" aria-label=${t('image-tools.mc-image-picker.images')} @keydown=${(e: KeyboardEvent) => this._key(e, items)}>${items.map((i, at) => this._tile(i, at))}</div>
+      ${this.background ? html`<p class="note">${t('image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the')}</p>` : nothing}`;
   }
 
   protected render(): TemplateResult {
     return renderPickerWindow(
-      t('Pick an image'),
+      t('image-tools.mc-image-picker.pick-an-image'),
       () => this._close(),
       'm',
-      html`<div class="mc-picker-search">${renderPickerSearch(t('Search images'), this._query, (v) => { this._query = v; this._at = 0; }, {
+      html`<div class="mc-picker-search">${renderPickerSearch(t('image-tools.mc-image-picker.search-images'), this._query, (v) => { this._query = v; this._at = 0; }, {
           onKeydown: (e) => {
             if (e.key !== 'ArrowDown') return;
             e.preventDefault();
@@ -223,8 +223,8 @@ export class McImagePicker extends LitElement {
         })}</div>
         ${this._body()}
         <div class="mc-picker-footer" slot="footer">
-          <button type="button" class="btn btn-secondary" data-act="cancel" @click=${() => this._close()}>${t('Cancel')}</button>
-          <button type="button" class="btn btn-primary" data-act="use" ?disabled=${!this._sel} @click=${() => this._use()}>${t('Use this image')}</button>
+          <button type="button" class="btn btn-secondary" data-act="cancel" @click=${() => this._close()}>${t('image-tools.mc-image-picker.cancel')}</button>
+          <button type="button" class="btn btn-primary" data-act="use" ?disabled=${!this._sel} @click=${() => this._use()}>${t('image-tools.mc-image-picker.use-this-image')}</button>
         </div>`,
     );
   }

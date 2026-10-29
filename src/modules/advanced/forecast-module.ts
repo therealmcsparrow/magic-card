@@ -15,7 +15,7 @@ export function forecastSkeleton(count: number, config?: ForecastModuleConfig): 
       ${Array.from({ length: count }).map(
         (_, i) => html`
           <div class="mc-forecast-item">
-            <span class="mc-forecast-label">${t('Day {n}', { n: i + 1 })}</span>
+            <span class="mc-forecast-label">${t('card.forecast-module.day-n', { n: i + 1 })}</span>
             <ha-icon icon="mdi:weather-partly-cloudy"></ha-icon>
             <span class="mc-forecast-temp">--°</span>
           </div>

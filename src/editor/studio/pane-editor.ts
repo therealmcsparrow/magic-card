@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { EditorMode, EditorState, HomeAssistant, MagicCardConfig } from '../../types';
 import type { EditorStateManager } from '../state/editor-state';
 import { editorSystem } from '../../css/editor-stack';
-import { effectiveWidths, widthWeights } from '../../utils/column-widths';
+import { effectiveWidths, widthWeights } from '../../utils/column-widths-edit';
 import { countModules, selectionFromPath } from './selection';
 import type { Inspector } from '../inspector/inspector';
 
@@ -11,11 +11,11 @@ import './structure-outline';
 import './template-bar';
 import '../inspector/inspector';
 import '../modes/yaml-editor';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
-const MODES: Array<{ id: EditorMode; label: MessageId }> = [
-  { id: 'form', label: m('Form') },
-  { id: 'yaml', label: m('YAML') },
+const MODES: Array<{ id: EditorMode; label: MessageIndex }> = [
+  { id: 'form', label: m('card-editor.pane-editor.form') },
+  { id: 'yaml', label: m('card-editor.pane-editor.yaml') },
 ];
 
 /**
@@ -103,7 +103,7 @@ export class PaneEditor extends LitElement {
 
     return html`
       <div class="pane-head">
-        <div class="seg mode" role="tablist" aria-label=${t('Editor mode')}>
+        <div class="seg mode" role="tablist" aria-label=${t('card-editor.pane-editor.editor-mode')}>
           ${MODES.map((m) => {
             const on = m.id === mode;
             return html`
@@ -118,10 +118,10 @@ export class PaneEditor extends LitElement {
             `;
           })}
         </div>
-        <button type="button" class="icon-btn" title=${t('Undo')} aria-label=${t('Undo')} ?disabled=${!sm.canUndo()} @click=${() => sm.undo()}>
+        <button type="button" class="icon-btn" title=${t('card-editor.pane-editor.undo')} aria-label=${t('card-editor.pane-editor.undo')} ?disabled=${!sm.canUndo()} @click=${() => sm.undo()}>
           <ha-icon icon="mdi:undo"></ha-icon>
         </button>
-        <button type="button" class="icon-btn" title=${t('Redo')} aria-label=${t('Redo')} ?disabled=${!sm.canRedo()} @click=${() => sm.redo()}>
+        <button type="button" class="icon-btn" title=${t('card-editor.pane-editor.redo')} aria-label=${t('card-editor.pane-editor.redo')} ?disabled=${!sm.canRedo()} @click=${() => sm.redo()}>
           <ha-icon icon="mdi:redo"></ha-icon>
         </button>
       </div>
@@ -133,9 +133,9 @@ export class PaneEditor extends LitElement {
               ${this._renderCta(s)}
               <section aria-labelledby="sec-structure">
                 <div class="sec-title">
-                  <h3 id="sec-structure">${t('Structure')}</h3>
+                  <h3 id="sec-structure">${t('card-editor.pane-editor.structure')}</h3>
                   <button type="button" class="btn btn-text btn-sm" @click=${() => sm.setSelectedPath(null)}>
-                    <ha-icon icon="mdi:card-outline"></ha-icon>${t('Card settings')}
+                    <ha-icon icon="mdi:card-outline"></ha-icon>${t('card-editor.pane-editor.card-settings')}
                   </button>
                 </div>
                 <mc-structure-outline
@@ -161,14 +161,14 @@ export class PaneEditor extends LitElement {
         <div class="cta-top">
           ${this._renderThumb(config, s)}
           <div class="cta-text">
-            <h3>${config.name?.trim() || t('Untitled card')}</h3>
+            <h3>${config.name?.trim() || t('card-editor.pane-editor.untitled-card')}</h3>
             <p>
-              ${t('{rows, plural, one {# row} other {# rows}} · {mods, plural, one {# module} other {# modules}}. Build visually with layers, canvas and the full inspector.', { rows: rows.length, mods })}
+              ${t('card-editor.pane-editor.rows-mods-build-visually-with-layers', { rows: rows.length, mods })}
             </p>
           </div>
         </div>
         <button type="button" class="btn btn-primary" @click=${this._openStudio}>
-          <ha-icon icon="mdi:arrow-expand"></ha-icon>${t('Open studio')}
+          <ha-icon icon="mdi:arrow-expand"></ha-icon>${t('card-editor.pane-editor.open-studio')}
         </button>
       </div>
     `;

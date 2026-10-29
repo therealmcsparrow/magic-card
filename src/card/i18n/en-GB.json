@@ -1,0 +1,482 @@
+{
+  "card.bar-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Configuration error of the bar module. Min and max are the lowest and highest value of the bar. Same English as in the gauge, slider and spinbox modules.",
+    "max": 45
+  },
+  "card.bar-module.unavailable": {
+    "text": "Unavailable",
+    "note": "Shown in a bar when the entity's state is unavailable in Home Assistant (for example the device is offline).",
+    "max": 20
+  },
+  "card.button-module.button": {
+    "text": "Button",
+    "note": "Name of the button module, shown as the default label. A noun, not a verb.",
+    "max": 10
+  },
+  "card.card-helpers.timeout-waiting-for-tag": {
+    "text": "Timeout waiting for {tag}",
+    "note": "Error when a Home Assistant component did not become available in time. {tag} is a technical element name such as hui-entities-card. Keep it as is.",
+    "max": 40,
+    "vars": {
+      "tag": "The value that replaces tag in the text."
+    }
+  },
+  "card.card-pause.pause-motion": {
+    "text": "Pause motion",
+    "note": "Label of the button that freezes all animations on the card, for people who are bothered by movement. A verb phrase.",
+    "max": 20
+  },
+  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
+    "text": "Magic Card was updated. Reload the page to see this part. The rest of this card works.",
+    "note": "Notice shown in place of a feature that could not load after an update. Magic Card is the product name. This part refers to the missing feature, such as the animation.",
+    "max": 140
+  },
+  "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
+    "text": "{part} did not load. The rest of this card works.",
+    "note": "Notice. {part} is a phrase with a capital letter that names the missing feature, such as The animation or The slider (see the keys that start with The). It starts the sentence.",
+    "max": 80,
+    "vars": {
+      "part": "The value that replaces part in the text."
+    }
+  },
+  "card.chunk-notice.part-loaded": {
+    "text": "{part} loaded.",
+    "note": "Screen reader announcement after the missing feature loaded. {part} is a phrase such as The animation or The slider (see the keys that start with The).",
+    "max": 25,
+    "vars": {
+      "part": "The value that replaces part in the text."
+    }
+  },
+  "card.chunk-notice.part-of-this-card": {
+    "text": "Part of this card",
+    "note": "Fallback in place of {part} when the missing feature has no known name.",
+    "max": 30
+  },
+  "card.chunk-notice.reload-page": {
+    "text": "Reload page",
+    "note": "Button that reloads the browser page. A verb phrase.",
+    "max": 20
+  },
+  "card.chunk-notice.still-not-loading-try-again-in-a-moment": {
+    "text": "Still not loading. Try again in a moment, or reload the page.",
+    "note": "Notice shown after the Try again button was used and the feature still did not load.",
+    "max": 100
+  },
+  "card.chunk-notice.the-animation": {
+    "text": "The animation",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to the animated icon or effect on the card.",
+    "max": 25
+  },
+  "card.chunk-notice.the-background": {
+    "text": "The background",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to the background layers of the card.",
+    "max": 25
+  },
+  "card.chunk-notice.the-custom-shape": {
+    "text": "The custom shape",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to a card shape drawn by the user.",
+    "max": 30
+  },
+  "card.chunk-notice.the-flow-style": {
+    "text": "The flow style",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to the animated flow look of a line or bar.",
+    "max": 25
+  },
+  "card.chunk-notice.the-icon": {
+    "text": "The icon",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to an animated icon.",
+    "max": 15
+  },
+  "card.chunk-notice.the-seasonal-effect": {
+    "text": "The seasonal effect",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to effects such as snow or fireworks.",
+    "max": 35
+  },
+  "card.chunk-notice.the-slider": {
+    "text": "The slider",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to the slider control.",
+    "max": 20
+  },
+  "card.chunk-notice.the-text-block": {
+    "text": "The text block",
+    "note": "Name of a feature, inserted as {part} at the start of a sentence. Refers to a text module with rich content.",
+    "max": 25
+  },
+  "card.chunk-notice.try-again": {
+    "text": "Try again",
+    "note": "Button that tries to load the missing feature again. A verb phrase.",
+    "max": 20
+  },
+  "card.config-validator.background-layers-index-unknown-layer": {
+    "text": "background_layers {index}: unknown layer type",
+    "note": "Configuration error for the card's YAML. Keep background_layers exactly as written; it is a setting name. {index} is the position of the layer in the list, as a number.",
+    "max": 75,
+    "vars": {
+      "index": "The value that replaces index in the text."
+    }
+  },
+  "card.config-validator.background-layers-must-be-a-list": {
+    "text": "background_layers must be a list",
+    "note": "Configuration error for the card's YAML. Keep background_layers exactly as written; it is a setting name. A list is a YAML list.",
+    "max": 55
+  },
+  "card.config-validator.background-layers-only-the-first-max": {
+    "text": "background_layers: only the first {max, plural, one {# layer is} other {# layers are}} used",
+    "note": "Configuration warning. Keep background_layers exactly as written; it is a setting name. {max} is the largest number of layers that is used.",
+    "max": 90,
+    "vars": {
+      "max": "The value that replaces max in the text."
+    }
+  },
+  "card.config-validator.config-must-be-an-object": {
+    "text": "Config must be an object",
+    "note": "Configuration error for the card's YAML: the top level is not a set of keys and values. Config is short for configuration. Object is the technical term.",
+    "max": 40
+  },
+  "card.config-validator.config-must-have-a-rows-array": {
+    "text": "Config must have a rows array",
+    "note": "Configuration error for the card's YAML. Keep rows as written; it is a setting name. Array means a list.",
+    "max": 60
+  },
+  "card.config-validator.config-must-have-a-type": {
+    "text": "Config must have a type",
+    "note": "Configuration error for the card's YAML. The type setting is missing. Config is short for configuration.",
+    "max": 40
+  },
+  "card.config-validator.layers-low-power-must-be-true-or-false": {
+    "text": "layers_low_power must be true or false",
+    "note": "Configuration error for the card's YAML. Keep layers_low_power exactly as written; it is a setting name. The words true and false are YAML values; keep them as written.",
+    "max": 65
+  },
+  "card.config-validator.pause-button-corner-is-not-a-corner": {
+    "text": "pause_button_corner is not a corner",
+    "note": "Configuration error for the card's YAML. Keep pause_button_corner exactly as written; it is a setting name. It must be one of the four corners of the card.",
+    "max": 60
+  },
+  "card.config-validator.pause-button-must-be-auto-always-or": {
+    "text": "pause_button must be auto, always or hidden",
+    "note": "Configuration error for the card's YAML. Keep pause_button and the values auto, always and hidden exactly as written; they are not translated.",
+    "max": 70
+  },
+  "card.config-validator.row-row-col-col-module-module-layer-must": {
+    "text": "Row {row}, Col {col}, Module {module}: layer must be an object",
+    "note": "Configuration error for the card's YAML. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. Object is the technical term.",
+    "max": 100,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-missing": {
+    "text": "Row {row}, Col {col}, Module {module}: missing type",
+    "note": "Configuration error for the card's YAML. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. The module has no type setting.",
+    "max": 85,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-must-be-an": {
+    "text": "Row {row}, Col {col}, Module {module}: must be an object",
+    "note": "Configuration error for the card's YAML. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. Object is the technical term.",
+    "max": 90,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-type-error": {
+    "text": "Row {row}, Col {col}, Module {module} ({type}): {error}",
+    "note": "Configuration error wrapper. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. {type} is the module type, such as bar. {error} is a message for that module and may already be translated.",
+    "max": 90,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "error": "The value that replaces error in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text.",
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-unknown": {
+    "text": "Row {row}, Col {col}, Module {module}: unknown placement",
+    "note": "Configuration error for the card's YAML. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. Placement means where the module sits in the layout.",
+    "max": 90,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-col-col-module-module-unknown-2": {
+    "text": "Row {row}, Col {col}, Module {module}: unknown type \"{type}\"",
+    "note": "Configuration error for the card's YAML. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. {type} is the module type the user wrote, which is not recognised. Keep it as is.",
+    "max": 100,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "module": "The value that replaces module in the text.",
+      "row": "The value that replaces row in the text.",
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.config-validator.row-row-column-col-must-have-a-modules": {
+    "text": "Row {row}, Column {col} must have a modules array",
+    "note": "Configuration error for the card's YAML. {row} and {col} are position numbers. Keep modules as written; it is a setting name. Array means a list. Same as the other Row and Col errors, but with Column written out.",
+    "max": 80,
+    "vars": {
+      "col": "The value that replaces col in the text.",
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.config-validator.row-row-must-have-a-columns-array": {
+    "text": "Row {row} must have a columns array",
+    "note": "Configuration error for the card's YAML. {row} is the row's position number. Keep columns as written; it is a setting name. Array means a list.",
+    "max": 60,
+    "vars": {
+      "row": "The value that replaces row in the text."
+    }
+  },
+  "card.custom-card-module.card-config-must-be-a-mapping": {
+    "text": "Card config must be a mapping",
+    "note": "Configuration error of the custom card module. A mapping is a YAML set of keys and values. Config is short for configuration.",
+    "max": 50
+  },
+  "card.custom-card-module.loading-card": {
+    "text": "Loading card...",
+    "note": "Shown while the embedded card loads, in the editor preview. Same English as the key in the custom card view.",
+    "max": 25
+  },
+  "card.custom-card-module.no-card-type-set": {
+    "text": "No card type set",
+    "note": "Shown in the custom card module when no card type was entered, for example custom:my-card.",
+    "max": 30
+  },
+  "card.custom-card-view.loading-card": {
+    "text": "Loading card...",
+    "note": "Shown while the embedded card loads, on the dashboard. Same English as the key in the custom card module.",
+    "max": 25
+  },
+  "card.forecast-module.day-n": {
+    "text": "Day {n}",
+    "note": "Placeholder label for a forecast day in the editor preview. {n} is the day number, starting at 1.",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "card.forecast-view.unavailable": {
+    "text": "Unavailable",
+    "note": "Shown in the forecast when the weather entity's state is unavailable in Home Assistant.",
+    "max": 20
+  },
+  "card.gauge-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Configuration error of the gauge module. Min and max are the lowest and highest value of the gauge. Same English as in the bar, slider and spinbox modules.",
+    "max": 45
+  },
+  "card.gauge-view.unavailable": {
+    "text": "Unavailable",
+    "note": "Shown in a gauge when the entity's state is unavailable in Home Assistant (for example the device is offline).",
+    "max": 20
+  },
+  "card.graphs-view.no-entity": {
+    "text": "No entity",
+    "note": "Shown in the graph module when no entity is chosen. An entity is a Home Assistant device or sensor.",
+    "max": 15
+  },
+  "card.horizontal-module.empty-row": {
+    "text": "Empty row",
+    "note": "Placeholder shown in the editor in a row layout module that holds no modules.",
+    "max": 15
+  },
+  "card.image-module.entity-is-required-when-using-entity": {
+    "text": "Entity is required when using entity picture",
+    "note": "Configuration error of the image module. Entity picture is the picture that Home Assistant stores with an entity, for example a camera snapshot.",
+    "max": 75
+  },
+  "card.info-module.no-entity": {
+    "text": "No entity",
+    "note": "Shown in the info module when no entity is chosen. An entity is a Home Assistant device or sensor.",
+    "max": 15
+  },
+  "card.magic-card.activate-name": {
+    "text": "Activate {name}",
+    "note": "Accessible name of a module that can be pressed. {name} is the label the user gave to the module. Activate is a verb.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.magic-card.activate-type-module": {
+    "text": "Activate {type} module",
+    "note": "Accessible name of a module that can be pressed and has no label. {type} is the module type in English, such as button or image. Activate is a verb.",
+    "max": 40,
+    "vars": {
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.magic-card.invalid-configuration-errors": {
+    "text": "Invalid configuration: {errors}",
+    "note": "Error shown on the card. {errors} is a list of the configuration errors found, separated by commas.",
+    "max": 50,
+    "vars": {
+      "errors": "The value that replaces errors in the text."
+    }
+  },
+  "card.magic-card.magic-card-the-visual-editor-could-not": {
+    "text": "Magic Card: the visual editor could not be loaded.",
+    "note": "Error shown when the card's editor failed to load. Magic Card is the product name. Visual editor is the graphical editor, as opposed to YAML.",
+    "max": 80
+  },
+  "card.magic-card.needs-another-device": {
+    "text": "Needs another device",
+    "note": "Shown on a card or module that requires a second device, for example a camera, that is not set up yet.",
+    "max": 35
+  },
+  "card.magic-card.no-configuration": {
+    "text": "No configuration",
+    "note": "Short heading of the empty-card state, shown in the card list or preview. Longer sibling: No configuration provided.",
+    "max": 30
+  },
+  "card.magic-card.no-configuration-provided": {
+    "text": "No configuration provided",
+    "note": "Error shown on the card when its YAML is empty. Longer sibling of No configuration.",
+    "max": 40
+  },
+  "card.magic-card.pop-up": {
+    "text": "Pop-up",
+    "note": "Name of a window that opens over the dashboard, used as its label. A noun.",
+    "max": 10
+  },
+  "card.magic-card.template-name-couldn-t-be-loaded-showing": {
+    "text": "Template \"{name}\" couldn't be loaded. Showing this card's own settings.",
+    "note": "Warning. A template is a saved set of card settings that cards can share. {name} is the template's name. This message is for a template that exists but failed to load; compare the key that says it wasn't found.",
+    "max": 115,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.magic-card.template-name-wasn-t-found-showing-this": {
+    "text": "Template \"{name}\" wasn't found. Showing this card's own settings.",
+    "note": "Warning. A template is a saved set of card settings that cards can share. {name} is the template's name. This message is for a template that does not exist; compare the key that says it couldn't be loaded.",
+    "max": 105,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.markdown-module.markdown-content-is-required": {
+    "text": "Markdown content is required",
+    "note": "Configuration error of the markdown module. Markdown is a text formatting syntax; keep the name.",
+    "max": 45
+  },
+  "card.popup-controller.close": {
+    "text": "Close",
+    "note": "Button that closes the pop-up window. A verb.",
+    "max": 10
+  },
+  "card.render-module.unknown-module-type": {
+    "text": "Unknown module: {type}",
+    "note": "Error shown in place of a module. {type} is the module type the user wrote, which is not recognised. Keep it as is.",
+    "max": 40,
+    "vars": {
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "card.slider-layout-module.empty-slider": {
+    "text": "Empty slider",
+    "note": "Placeholder in the editor for a slide layout module (a carousel of slides) that holds no slides. Not the slider control.",
+    "max": 20
+  },
+  "card.slider-layout-module.next-slide": {
+    "text": "Next slide",
+    "note": "Accessible name of the button that shows the next slide of a carousel.",
+    "max": 20
+  },
+  "card.slider-layout-module.previous-slide": {
+    "text": "Previous slide",
+    "note": "Accessible name of the button that shows the previous slide of a carousel.",
+    "max": 25
+  },
+  "card.slider-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Configuration error of the slider control module. Min and max are the lowest and highest value. Same English as in the bar, gauge and spinbox modules.",
+    "max": 45
+  },
+  "card.slider-module.step-must-be-greater-than-0": {
+    "text": "Step must be greater than 0",
+    "note": "Configuration error of the slider control module. Step is the size of one move of the slider. Same English as in the spinbox module.",
+    "max": 45
+  },
+  "card.slider-view.slider": {
+    "text": "Slider",
+    "note": "Accessible name of the slider control (a bar you drag to set a value) when it shows in a card. Same English as the key in the view file.",
+    "max": 15
+  },
+  "card.spinbox-module.min-must-be-less-than-max": {
+    "text": "Min must be less than max",
+    "note": "Configuration error of the spinbox module. Min and max are the lowest and highest value. Same English as in the bar, gauge and slider modules.",
+    "max": 45
+  },
+  "card.spinbox-module.step-must-be-greater-than-0": {
+    "text": "Step must be greater than 0",
+    "note": "Configuration error of the spinbox module. Step is how much one press of plus or minus changes the value. Same English as in the slider module.",
+    "max": 45
+  },
+  "card.stack-host.not-updated-n-min": {
+    "text": "Not updated {n} min",
+    "note": "Warning on stale data in a background layer. {n} is the number of minutes since the last update, at least 1. Min is short for minutes.",
+    "max": 35,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "card.text-module.entity-is-required": {
+    "text": "Entity is required",
+    "note": "Configuration error of the text module. An entity is a Home Assistant device or sensor.",
+    "max": 30
+  },
+  "card.text-module.template-error-error": {
+    "text": "Template error: {error}",
+    "note": "Error in a text module. Template here is a Home Assistant Jinja text template. {error} is a technical message and is not translated.",
+    "max": 40,
+    "vars": {
+      "error": "The value that replaces error in the text."
+    }
+  },
+  "card.text-module.template-is-required": {
+    "text": "Template is required",
+    "note": "Configuration error of the text module. Template here is a Home Assistant Jinja text template, not a saved card template.",
+    "max": 35
+  },
+  "card.text-module.text-content-is-required": {
+    "text": "Text content is required",
+    "note": "Configuration error of the text module: the text to show is empty.",
+    "max": 40
+  },
+  "card.text-module.unavailable": {
+    "text": "unavailable",
+    "note": "Lower case word shown inside text when the entity's state is unavailable in Home Assistant. Not a sentence on its own.",
+    "max": 20
+  },
+  "card.vertical-module.empty-column": {
+    "text": "Empty column",
+    "note": "Placeholder shown in the editor in a column layout module that holds no modules.",
+    "max": 20
+  },
+  "card.view.couldn-t-set-name": {
+    "text": "Couldn't set {name}",
+    "note": "Error shown when a slider could not change a value in Home Assistant. {name} is the entity's name.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "card.view.slider": {
+    "text": "Slider",
+    "note": "Accessible name of the slider control (a bar you drag to set a value) in a card view. Same English as the key in the slider view.",
+    "max": 15
+  }
+}

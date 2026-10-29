@@ -34,13 +34,13 @@ export const buttonEditor: ModuleEditor = {
     const eid = entityFor(c, scope);
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx, write: (m, e) => withEntity(m, e, eid) })}
-        ${renderTextField(t('Label'), c.label, (v) => onChange({ ...c, label: v }), 'label', syncCtx)}
+        ${renderEntitySourceField(t('card-editor.button-editor.entity'), c, onChange, hass, scope, { syncCtx, write: (m, e) => withEntity(m, e, eid) })}
+        ${renderTextField(t('card-editor.button-editor.label'), c.label, (v) => onChange({ ...c, label: v }), 'label', syncCtx)}
         ${eid
-          ? renderToggleField(t('Use entity icon'), c.use_entity_icon, (v) => onChange({ ...c, use_entity_icon: v }), 'use_entity_icon', syncCtx)
+          ? renderToggleField(t('card-editor.button-editor.use-entity-icon'), c.use_entity_icon, (v) => onChange({ ...c, use_entity_icon: v }), 'use_entity_icon', syncCtx)
           : nothing}
         ${!(c.use_entity_icon && eid) && c.icon !== 'svg'
-          ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
+          ? renderIconField(t('card-editor.button-editor.icon'), c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: eid,
@@ -50,32 +50,32 @@ export const buttonEditor: ModuleEditor = {
           syncCtx,
         })}
         ${eid
-          ? renderToggleField(t('Use entity colour'), c.use_entity_color, (v) => onChange({ ...c, use_entity_color: v }), 'use_entity_color', syncCtx,
-            t("Colours the icon like Home Assistant does for this entity's state."))
+          ? renderToggleField(t('card-editor.button-editor.use-entity-colour'), c.use_entity_color, (v) => onChange({ ...c, use_entity_color: v }), 'use_entity_color', syncCtx,
+            t("card-editor.button-editor.colours-the-icon-like-home-assistant"))
           : nothing}
         ${renderSegField(
-          t('Button style'),
+          t('card-editor.button-editor.button-style'),
           c.button_style,
           [
-            { label: t('Default'), value: 'default' },
-            { label: t('Outline'), value: 'outline' },
-            { label: t('Flat'), value: 'flat' },
-            { label: t('Icon only'), value: 'icon-only' },
+            { label: t('card-editor.button-editor.default'), value: 'default' },
+            { label: t('card-editor.button-editor.outline'), value: 'outline' },
+            { label: t('card-editor.button-editor.flat'), value: 'flat' },
+            { label: t('card-editor.button-editor.icon-only'), value: 'icon-only' },
           ],
           (v) => onChange({ ...c, button_style: v as ButtonModuleConfig['button_style'] }),
           'button_style',
           syncCtx,
         )}
         ${renderToggleField(
-          t('Show state'),
+          t('card-editor.button-editor.show-state'),
           c.show_state,
           (v) => onChange({ ...c, show_state: v }),
           'show_state',
           syncCtx,
-          t("Shows the entity's state (or the attribute picked below) next to the label."),
+          t("card-editor.button-editor.shows-the-entity-s-state-or-the"),
         )}
         ${c.show_state
-          ? renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))
+          ? renderAttributeField(t('card-editor.button-editor.attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))
           : nothing}
       </div>
     `;

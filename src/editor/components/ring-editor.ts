@@ -11,57 +11,57 @@ import './color-picker';
 import './unit-field';
 import './entity-picker';
 import './attribute-picker';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
-type Opt = { value: string; label: MessageId };
+type Opt = { value: string; label: MessageIndex };
 
 const MODES: Opt[] = [
-  { value: 'off', label: m('Off') },
-  { value: 'value', label: m('Value') },
-  { value: 'animated', label: m('Animated') },
+  { value: 'off', label: m('card-editor.ring-editor.off') },
+  { value: 'value', label: m('card-editor.ring-editor.value') },
+  { value: 'animated', label: m('card-editor.ring-editor.animated') },
 ];
 const ANIMATIONS: Opt[] = [
-  { value: 'snake', label: m('Snake') },
-  { value: 'pulse', label: m('Pulse') },
-  { value: 'full', label: m('Full') },
-  { value: 'dots', label: m('Chase dots') },
-  { value: 'dashes', label: m('Marching ants') },
+  { value: 'snake', label: m('card-editor.ring-editor.snake') },
+  { value: 'pulse', label: m('card-editor.ring-editor.pulse') },
+  { value: 'full', label: m('card-editor.ring-editor.full') },
+  { value: 'dots', label: m('card-editor.ring-editor.chase-dots') },
+  { value: 'dashes', label: m('card-editor.ring-editor.marching-ants') },
 ];
 const STARTS: Opt[] = [
-  { value: 'top', label: m('Top') },
-  { value: 'top-right', label: m('Top right') },
-  { value: 'right', label: m('Right') },
-  { value: 'bottom-right', label: m('Bottom right') },
-  { value: 'bottom', label: m('Bottom') },
-  { value: 'bottom-left', label: m('Bottom left') },
-  { value: 'left', label: m('Left') },
-  { value: 'top-left', label: m('Top left') },
+  { value: 'top', label: m('card-editor.ring-editor.top') },
+  { value: 'top-right', label: m('card-editor.ring-editor.top-right') },
+  { value: 'right', label: m('card-editor.ring-editor.right') },
+  { value: 'bottom-right', label: m('card-editor.ring-editor.bottom-right') },
+  { value: 'bottom', label: m('card-editor.ring-editor.bottom') },
+  { value: 'bottom-left', label: m('card-editor.ring-editor.bottom-left') },
+  { value: 'left', label: m('card-editor.ring-editor.left') },
+  { value: 'top-left', label: m('card-editor.ring-editor.top-left') },
 ];
 const DIRECTIONS: Opt[] = [
-  { value: 'cw', label: m('Clockwise') },
-  { value: 'ccw', label: m('Counter-clockwise') },
+  { value: 'cw', label: m('card-editor.ring-editor.clockwise') },
+  { value: 'ccw', label: m('card-editor.ring-editor.counter-clockwise') },
 ];
 const CAPS: Opt[] = [
-  { value: 'round', label: m('Round') },
-  { value: 'butt', label: m('Flat') },
+  { value: 'round', label: m('card-editor.ring-editor.round') },
+  { value: 'butt', label: m('card-editor.ring-editor.flat') },
 ];
 const POSITIONS: Opt[] = [
-  { value: 'inside', label: m('Inside') },
-  { value: 'center', label: m('Centre') },
-  { value: 'outside', label: m('Outside') },
+  { value: 'inside', label: m('card-editor.ring-editor.inside') },
+  { value: 'center', label: m('card-editor.ring-editor.centre') },
+  { value: 'outside', label: m('card-editor.ring-editor.outside') },
 ];
 const BOUND_MODES: Opt[] = [
-  { value: 'number', label: m('Number') },
-  { value: 'entity', label: m('Entity') },
+  { value: 'number', label: m('card-editor.ring-editor.number') },
+  { value: 'entity', label: m('card-editor.ring-editor.entity') },
 ];
 const TIMER_FILLS: Opt[] = [
-  { value: 'remaining', label: m('Remaining') },
-  { value: 'elapsed', label: m('Elapsed') },
+  { value: 'remaining', label: m('card-editor.ring-editor.remaining') },
+  { value: 'elapsed', label: m('card-editor.ring-editor.elapsed') },
 ];
 const SHOW: Array<Opt & { entity?: boolean }> = [
-  { value: 'always', label: m('Always') },
-  { value: 'entity_on', label: m('While entity is on'), entity: true },
-  { value: 'state', label: m('While state equals…'), entity: true },
+  { value: 'always', label: m('card-editor.ring-editor.always') },
+  { value: 'entity_on', label: m('card-editor.ring-editor.while-entity-is-on'), entity: true },
+  { value: 'state', label: m('card-editor.ring-editor.while-state-equals'), entity: true },
 ];
 
 /**
@@ -248,13 +248,13 @@ export class RingEditor extends LitElement {
     return this._field(
       label,
       key,
-      html`${this._seg(t('{label} source', { label }), mode, BOUND_MODES, pick)}
+      html`${this._seg(t('card-editor.ring-editor.label-source', { label }), mode, BOUND_MODES, pick)}
         ${mode === 'number'
           ? this._number(id, key, RING_DEFAULTS[key], undefined, undefined, 0.1)
           : html`<mc-entity-picker
                 .hass=${this.hass}
                 .value=${entity}
-                .label=${t('{label} entity', { label })}
+                .label=${t('card-editor.ring-editor.label-entity', { label })}
                 @value-changed=${(e: CustomEvent) => write(e.detail.value ? { entity: e.detail.value } : undefined)}
               ></mc-entity-picker>
               ${hasAttrs
@@ -280,11 +280,11 @@ export class RingEditor extends LitElement {
     const timer = isTimer(entity) && !r.attribute;
     const bound = (v: ValueBound | undefined, def: number) => (typeof v === 'number' ? v : def);
     return html`
-      ${this._field(t('Entity'), 'entity', this._entity('entity', t('Entity'), this.defaultEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity')))}
-      ${entity ? nothing : html`<p class="help">${t('Pick an entity: a value ring without one stays empty.')}</p>`}
+      ${this._field(t('card-editor.ring-editor.entity'), 'entity', this._entity('entity', t('card-editor.ring-editor.entity'), this.defaultEntity ? t('card-editor.ring-editor.module-entity-entity', { entity: this.defaultEntity }) : t('card-editor.ring-editor.entity')))}
+      ${entity ? nothing : html`<p class="help">${t('card-editor.ring-editor.pick-an-entity-a-value-ring-without-one')}</p>`}
       ${!timer && entity && this.hass?.states[entity] && Object.keys(this.hass.states[entity].attributes || {}).length
         ? this._field(
-            t('Attribute'),
+            t('card-editor.ring-editor.attribute'),
             'attribute',
             html`<mc-attribute-picker
               .hass=${this.hass}
@@ -296,19 +296,19 @@ export class RingEditor extends LitElement {
         : nothing}
       ${timer
         ? this._field(
-            t('Timer fill'),
+            t('card-editor.ring-editor.timer-fill'),
             'timer_fill',
-            html`${this._seg(t('Timer fill'), r.timer_fill ?? 'remaining', TIMER_FILLS, (v) => this._set({ timer_fill: v === 'remaining' ? undefined : (v as RingConfig['timer_fill']) }))}
-              <p class="help">${t('Min, Max and Attribute do not apply to a timer; thresholds use its remaining %.')}</p>`,
+            html`${this._seg(t('card-editor.ring-editor.timer-fill'), r.timer_fill ?? 'remaining', TIMER_FILLS, (v) => this._set({ timer_fill: v === 'remaining' ? undefined : (v as RingConfig['timer_fill']) }))}
+              <p class="help">${t('card-editor.ring-editor.min-max-and-attribute-do-not-apply-to-a')}</p>`,
           )
         : html`<div class=${typeof r.min === 'object' || typeof r.max === 'object' || this._entityBound.min || this._entityBound.max ? 'bounds' : 'two'}>
-            ${this._bound('min', t('Min'))} ${this._bound('max', t('Max'))}
+            ${this._bound('min', t('card-editor.ring-editor.min'))} ${this._bound('max', t('card-editor.ring-editor.max'))}
           </div>`}
-      ${this._field(t('Fill transition'), 'transition', this._time('transition', t('Fill transition'), RING_DEFAULTS.transition))}
-      ${renderColorRangesField(t('Thresholds'), r.thresholds, (t: ColorRange[] | undefined) => this._set({ thresholds: t }), {
+      ${this._field(t('card-editor.ring-editor.fill-transition'), 'transition', this._time('transition', t('card-editor.ring-editor.fill-transition'), RING_DEFAULTS.transition))}
+      ${renderColorRangesField(t('card-editor.ring-editor.thresholds'), r.thresholds, (t: ColorRange[] | undefined) => this._set({ thresholds: t }), {
         min: timer ? 0 : bound(r.min, RING_DEFAULTS.min),
         max: timer ? 100 : bound(r.max, RING_DEFAULTS.max),
-        help: timer ? t('Ring colour from this remaining % up; overrides Colour.') : t('Ring colour from this value up; overrides Colour.'),
+        help: timer ? t('card-editor.ring-editor.ring-colour-from-this-remaining-up') : t('card-editor.ring-editor.ring-colour-from-this-value-up-overrides'),
       })}
     `;
   }
@@ -316,10 +316,10 @@ export class RingEditor extends LitElement {
   private _animated(): TemplateResult {
     const anim = this._r.animation ?? RING_DEFAULTS.animation;
     return html`
-      ${this._field(t('Animation'), 'animation', this._select('ring-anim', anim, ANIMATIONS, (v) => this._set({ animation: v as RingConfig['animation'] })), 'ring-anim')}
+      ${this._field(t('card-editor.ring-editor.animation'), 'animation', this._select('ring-anim', anim, ANIMATIONS, (v) => this._set({ animation: v as RingConfig['animation'] })), 'ring-anim')}
       <div class="two">
-        ${anim === 'snake' ? this._field(t('Length (%)'), 'length', this._number('ring-len', 'length', RING_DEFAULTS.length, 1, 99), 'ring-len') : nothing}
-        ${anim === 'full' ? nothing : this._field(t('Speed'), 'speed', this._time('speed', t('Speed'), RING_DEFAULTS.speed))}
+        ${anim === 'snake' ? this._field(t('card-editor.ring-editor.length'), 'length', this._number('ring-len', 'length', RING_DEFAULTS.length, 1, 99), 'ring-len') : nothing}
+        ${anim === 'full' ? nothing : this._field(t('card-editor.ring-editor.speed'), 'speed', this._time('speed', t('card-editor.ring-editor.speed'), RING_DEFAULTS.speed))}
       </div>
     `;
   }
@@ -327,13 +327,13 @@ export class RingEditor extends LitElement {
   private _position(): TemplateResult {
     const pick = (v: string) => this._set({ position: v as RingConfig['position'] });
     const pos = this._r.position ?? RING_DEFAULTS.position;
-    if (!this.clipped) return this._field(t('Position'), 'position', this._seg(t('Position'), pos, POSITIONS, pick));
+    if (!this.clipped) return this._field(t('card-editor.ring-editor.position'), 'position', this._seg(t('card-editor.ring-editor.position'), pos, POSITIONS, pick));
     const opts = POSITIONS.filter((o) => o.value !== 'outside');
     return this._field(
-      t('Position'),
+      t('card-editor.ring-editor.position'),
       'position',
-      html`${this._seg(t('Position'), pos === 'outside' ? 'inside' : pos, opts, pick)}
-        <p class="help">${t('The card clips its edge: the ring sits inside it and its glow shows inward.')}</p>`,
+      html`${this._seg(t('card-editor.ring-editor.position'), pos === 'outside' ? 'inside' : pos, opts, pick)}
+        <p class="help">${t('card-editor.ring-editor.the-card-clips-its-edge-the-ring-sits')}</p>`,
     );
   }
 
@@ -344,17 +344,17 @@ export class RingEditor extends LitElement {
     const opts = SHOW.map((o) => ({ ...o, disabled: !!o.entity && !hasEntity && o.value !== trigger }));
     return html`
       ${this._field(
-        t('Entity for show condition'),
+        t('card-editor.ring-editor.entity-for-show-condition'),
         'trigger_entity',
-        this._entity('trigger_entity', t('Entity for show condition'), this.defaultEntity && !this.requireEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity for show condition')),
+        this._entity('trigger_entity', t('card-editor.ring-editor.entity-for-show-condition'), this.defaultEntity && !this.requireEntity ? t('card-editor.ring-editor.module-entity-entity', { entity: this.defaultEntity }) : t('card-editor.ring-editor.entity-for-show-condition')),
       )}
-      ${this._field(t('Show'), 'trigger', this._select('ring-show', trigger, opts, (v) => this._set({ trigger: v === 'always' ? undefined : (v as AnimationTrigger) })), 'ring-show')}
+      ${this._field(t('card-editor.ring-editor.show'), 'trigger', this._select('ring-show', trigger, opts, (v) => this._set({ trigger: v === 'always' ? undefined : (v as AnimationTrigger) })), 'ring-show')}
       ${!hasEntity && trigger !== 'always'
-        ? html`<p class="help">${t('Pick an entity: this condition never shows the ring without one.')}</p>`
+        ? html`<p class="help">${t('card-editor.ring-editor.pick-an-entity-this-condition-never')}</p>`
         : nothing}
       ${trigger === 'state'
         ? this._field(
-            t('State value'),
+            t('card-editor.ring-editor.state-value'),
             'state',
             html`<input class="input" id="ring-state" type="text" .value=${r.state || ''} @input=${(e: InputEvent) => this._set({ state: (e.target as HTMLInputElement).value })} />`,
             'ring-state',
@@ -368,21 +368,21 @@ export class RingEditor extends LitElement {
     const mode = r.mode === 'value' || r.mode === 'animated' ? r.mode : 'off';
     return html`
       <div class="ring-ed">
-        ${this._field(t('Mode'), undefined, this._seg(t('Ring mode'), mode, MODES, (v) => this._mode(v)))}
+        ${this._field(t('card-editor.ring-editor.mode'), undefined, this._seg(t('card-editor.ring-editor.ring-mode'), mode, MODES, (v) => this._mode(v)))}
         ${mode === 'off'
           ? nothing
           : html`
               ${mode === 'value' ? this._value() : this._animated()}
               <div class="two">
-                ${this._field(t('Width (px)'), 'width', this._number('ring-width', 'width', RING_DEFAULTS.width, 0.5, 40, 0.5), 'ring-width')}
-                ${this._field(t('Glow (px)'), 'glow', this._number('ring-glow', 'glow', 0, 0, 40), 'ring-glow')}
+                ${this._field(t('card-editor.ring-editor.width-px'), 'width', this._number('ring-width', 'width', RING_DEFAULTS.width, 0.5, 40, 0.5), 'ring-width')}
+                ${this._field(t('card-editor.ring-editor.glow-px'), 'glow', this._number('ring-glow', 'glow', 0, 0, 40), 'ring-glow')}
               </div>
-              ${this._field(t('Colour'), 'color', this._color('color', t('Ring colour')))}
-              ${this._field(t('Track colour'), 'track_color', this._color('track_color', t('Track colour')))}
-              ${this._field(t('Track opacity (%)'), 'track_opacity', this._number('ring-track-op', 'track_opacity', 100, 0, 100, 5), 'ring-track-op')}
-              ${this._field(t('Start'), 'start', this._select('ring-start', r.start ?? RING_DEFAULTS.start, STARTS, (v) => this._set({ start: v as RingConfig['start'] })), 'ring-start')}
-              ${this._field(t('Direction'), 'direction', this._seg(t('Direction'), r.direction ?? 'cw', DIRECTIONS, (v) => this._set({ direction: v as RingConfig['direction'] })))}
-              ${this._field(t('Caps'), 'linecap', this._seg(t('Caps'), r.linecap ?? 'round', CAPS, (v) => this._set({ linecap: v as RingConfig['linecap'] })))}
+              ${this._field(t('card-editor.ring-editor.colour'), 'color', this._color('color', t('card-editor.ring-editor.ring-colour')))}
+              ${this._field(t('card-editor.ring-editor.track-colour'), 'track_color', this._color('track_color', t('card-editor.ring-editor.track-colour')))}
+              ${this._field(t('card-editor.ring-editor.track-opacity'), 'track_opacity', this._number('ring-track-op', 'track_opacity', 100, 0, 100, 5), 'ring-track-op')}
+              ${this._field(t('card-editor.ring-editor.start'), 'start', this._select('ring-start', r.start ?? RING_DEFAULTS.start, STARTS, (v) => this._set({ start: v as RingConfig['start'] })), 'ring-start')}
+              ${this._field(t('card-editor.ring-editor.direction'), 'direction', this._seg(t('card-editor.ring-editor.direction'), r.direction ?? 'cw', DIRECTIONS, (v) => this._set({ direction: v as RingConfig['direction'] })))}
+              ${this._field(t('card-editor.ring-editor.caps'), 'linecap', this._seg(t('card-editor.ring-editor.caps'), r.linecap ?? 'round', CAPS, (v) => this._set({ linecap: v as RingConfig['linecap'] })))}
               ${this._position()}
               ${this._show()}
             `}

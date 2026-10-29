@@ -1,6 +1,7 @@
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { m } from '../i18n';
-import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue';
+import type { FieldKind } from '../../contracts/theme-catalogue';
+import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
  * Ultra Card v3.13.3 (commit 4cb4a6c). It documents no HA theme variables (its own `--uc-*` values are
@@ -10,18 +11,18 @@ import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue'
 const REF = 'https://github.com/WJDDesigns/Ultra-Card/blob/v3.13.3/src/cards/ultra-card.ts';
 const VERIFIED = '2026-10-17';
 
-type Row = [name: string, kind: FieldKind, label: MessageId, hint: MessageId];
+type Row = [name: string, kind: FieldKind, label: MessageIndex, hint: MessageIndex];
 
 const ROWS: Row[] = [
-  ['primary-color', 'color', m('Primary colour'), m('Accents and active elements.')],
-  ['primary-text-color', 'color', m('Primary text colour'), m('Main text.')],
-  ['secondary-text-color', 'color', m('Secondary text colour'), m('Muted text.')],
-  ['divider-color', 'color', m('Divider colour'), m('Borders and separators.')],
-  ['card-background-color', 'background', m('Card background'), m('Card surface.')],
-  ['ha-card-background', 'background', m('Card background override'), m('Takes priority over the card background.')],
-  ['ha-card-border-radius', 'size', m('Card radius'), m('Corner radius of the card.')],
-  ['ha-card-box-shadow', 'shadow', m('Card shadow'), m('Shadow of the card.')],
-  ['error-color', 'color', m('Error colour'), m('Error messages.')],
+  ['primary-color', 'color', m('theme-editor.ultra-card.primary-colour'), m('theme-editor.ultra-card.accents-and-active-elements')],
+  ['primary-text-color', 'color', m('theme-editor.ultra-card.primary-text-colour'), m('theme-editor.ultra-card.main-text')],
+  ['secondary-text-color', 'color', m('theme-editor.ultra-card.secondary-text-colour'), m('theme-editor.ultra-card.muted-text')],
+  ['divider-color', 'color', m('theme-editor.ultra-card.divider-colour'), m('theme-editor.ultra-card.borders-and-separators')],
+  ['card-background-color', 'background', m('theme-editor.ultra-card.card-background'), m('theme-editor.ultra-card.card-surface')],
+  ['ha-card-background', 'background', m('theme-editor.ultra-card.card-background-override'), m('theme-editor.ultra-card.takes-priority-over-the-card-background')],
+  ['ha-card-border-radius', 'size', m('theme-editor.ultra-card.card-radius'), m('theme-editor.ultra-card.corner-radius-of-the-card')],
+  ['ha-card-box-shadow', 'shadow', m('theme-editor.ultra-card.card-shadow'), m('theme-editor.ultra-card.shadow-of-the-card')],
+  ['error-color', 'color', m('theme-editor.ultra-card.error-colour'), m('theme-editor.ultra-card.error-messages')],
 ];
 
 export const ULTRA_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(

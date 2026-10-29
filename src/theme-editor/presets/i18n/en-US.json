@@ -1,149 +1,590 @@
 {
-  "All": "All",
-  "Amber Console": "Amber Console",
-  "Amber on blue-grey mirage.": "Amber on blue-gray mirage.",
-  "Arcade": "Arcade",
-  "Ashen Keep": "Ashen Keep",
-  "Autumn": "Autumn",
-  "Ayu Mirage": "Ayu Mirage",
-  "Balanced low-glare cream and teal.": "Balanced low-glare cream and teal.",
-  "Black and white, nothing in between.": "Black and white, nothing in between.",
-  "Candlelit Cloister": "Candlelit Cloister",
-  "Cassette": "Cassette",
-  "Catppuccin Latte & Mocha": "Catppuccin Latte & Mocha",
-  "Charcoal iron and pale limestone; deep red accent, coral at night.": "Charcoal iron and pale limestone; deep red accent, coral at night.",
-  "Clean Primer blues and neutral greys.": "Clean Primer blues and neutral grays.",
-  "Clean light with a calm blue.": "Clean light with a calm blue.",
-  "Clear search": "Clear search",
-  "Cobalt Gold": "Cobalt Gold",
-  "Cobalt Prism": "Cobalt Prism",
-  "Cobalt blue with a gold primary.": "Cobalt blue with a gold primary.",
-  "Contacts another website": "Contacts another website",
-  "Contrast": "Contrast",
-  "Cool arctic blues on polar night.": "Cool arctic blues on polar night.",
-  "Crimson Pines": "Crimson Pines",
-  "Deep Survey": "Deep Survey",
-  "Deep greens with an amber spark.": "Deep greens with an amber spark.",
-  "Deep navy with soft periwinkle.": "Deep navy with soft periwinkle.",
-  "Deep petrol and steel-grey with a coolant-cyan accent; copper at night.": "Deep petrol and steel-gray with a coolant-cyan accent; copper at night.",
-  "Delete": "Delete",
-  "Desert": "Desert",
-  "Dracula Night": "Dracula Night",
-  "Dusky blue night, warm fox-white day.": "Dusky blue night, warm fox-white day.",
-  "Dust Duel": "Dust Duel",
-  "Ember": "Ember",
-  "Everforest Moss": "Everforest Moss",
-  "Export": "Export",
-  "Faded tape-deck red and cream.": "Faded tape-deck red and cream.",
-  "Familiar editor greys with a bright blue.": "Familiar editor grays with a bright blue.",
-  "Fantasy": "Fantasy",
-  "Forest": "Forest",
-  "Fresh leaf green and blossom pink.": "Fresh leaf green and blossom pink.",
-  "Frontier Freighter": "Frontier Freighter",
-  "Frost": "Frost",
-  "Frosted cards over a graphite gradient.": "Frosted cards over a graphite gradient.",
-  "Frosted cards over a rose gradient.": "Frosted cards over a rose gradient.",
-  "Frosted cards over an aqua gradient.": "Frosted cards over an aqua gradient.",
-  "GitHub Light & Dark": "GitHub Light & Dark",
-  "Glass Aqua": "Glass Aqua",
-  "Glass Graphite": "Glass Graphite",
-  "Glass Rose": "Glass Rose",
-  "Glass: blurred, translucent cards on a soft gradient.": "Glass: blurred, translucent cards on a soft gradient.",
-  "Gruvbox Retro": "Gruvbox Retro",
-  "Hi-Vis": "Hi-Vis",
-  "High contrast green on black, strong edges.": "High contrast green on black, strong edges.",
-  "High contrast, strong edges.": "High contrast, strong edges.",
-  "Hot magenta and electric cyan neon on a dark city night.": "Hot magenta and electric cyan neon on a dark city night.",
-  "Hot pink and cyan on dark purple.": "Hot pink and cyan on dark purple.",
-  "Icy blue with a violet touch.": "Icy blue with a violet touch.",
-  "Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.": "Independent color schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.",
-  "Ink": "Ink",
-  "Inspired by": "Inspired by",
-  "Inspired by {name}": "Inspired by {name}",
-  "Kanagawa Wave": "Kanagawa Wave",
-  "Lavender Mist": "Lavender Mist",
-  "Lilac and amber on near-black, like a retro starship console.": "Lilac and amber on near-black, like a retro starship console.",
-  "Lime and magenta on charcoal.": "Lime and magenta on charcoal.",
-  "Low-contrast sage on soft grey.": "Low-contrast sage on soft gray.",
-  "Material Violet": "Material Violet",
-  "Material baseline purple with teal.": "Material baseline purple with teal.",
-  "Midnight OLED": "Midnight OLED",
-  "Mint and sky on ink.": "Mint and sky on ink.",
-  "Monokai Lime": "Monokai Lime",
-  "Muted rose and iris, calm and low contrast.": "Muted rose and iris, calm and low contrast.",
-  "My presets": "My presets",
-  "Name, palette or style": "Name, palette or style",
-  "Neon Rain": "Neon Rain",
-  "Neon magenta and cyan, 80s cabinet.": "Neon magenta and cyan, 80s cabinet.",
-  "Neon-lit city blues and violets.": "Neon-lit city blues and violets.",
-  "Neutral blue-grey for any room.": "Neutral blue-gray for any room.",
-  "Night Owl Navy": "Night Owl Navy",
-  "Nightfox & Dayfox": "Nightfox & Dayfox",
-  "No preset matches \"{query}\".": "No preset matches \"{query}\".",
-  "Nord Frost": "Nord Frost",
-  "OLED Amber": "OLED Amber",
-  "OLED Green": "OLED Green",
-  "Ocean": "Ocean",
-  "Ochre Basin": "Ochre Basin",
-  "Off-white panels, burnt orange accent: navy ink by day, denim blue at night.": "Off-white panels, burnt orange accent: navy ink by day, denim blue at night.",
-  "One Dark Pro": "One Dark Pro",
-  "Orbital Smelter": "Orbital Smelter",
-  "Original": "Original",
-  "Oxblood red over a dark pine forest, moss-green panels, green-black nights.": "Oxblood red over a dark pine forest, moss-green panels, green-black nights.",
-  "Paper": "Paper",
-  "Pastel lilac and rose.": "Pastel lilac and rose.",
-  "Pastel raspberry and mint.": "Pastel raspberry and mint.",
-  "Plum and old gold on parchment; wine-black at night.": "Plum and old gold on parchment; wine-black at night.",
-  "Poimandres Mint": "Poimandres Mint",
-  "Preset": "Preset",
-  "Presets use genre and colour words, not titles. Try one of these:": "Presets use genre and color words, not titles. Try one of these:",
-  "Pure black for wall tablets.": "Pure black for wall tablets.",
-  "Pure black in dark mode only. Keep the screen in dark mode.": "Pure black in dark mode only. Keep the screen in dark mode.",
-  "Pure black with amber, for wall tablets.": "Pure black with amber, for wall tablets.",
-  "Pure black with terminal green, for wall tablets.": "Pure black with terminal green, for wall tablets.",
-  "Purple and pink on deep indigo.": "Purple and pink on deep indigo.",
-  "Red-clay desert, brick header, red accent; sand-gold by night.": "Red-clay desert, brick header, red accent; sand-gold by night.",
-  "Rename": "Rename",
-  "Rose Pine Bloom": "Rose Pine Bloom",
-  "Rust, olive and warm paper.": "Rust, olive and warm paper.",
-  "Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.": "Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.",
-  "Sand": "Sand",
-  "Sci-fi": "Sci-fi",
-  "Sci-fi & fantasy": "Sci-fi & fantasy",
-  "Search presets": "Search presets",
-  "Show": "Show",
-  "Silvered jade leaves and gold touches by day; sage green by night.": "Silvered jade leaves and gold touches by day; sage green by night.",
-  "Silverleaf Glade": "Silverleaf Glade",
-  "Sky blue and sun yellow.": "Sky blue and sun yellow.",
-  "Slate": "Slate",
-  "Soft green forest tones, easy on the eyes.": "Soft green forest tones, easy on the eyes.",
-  "Soft pastel accents, latte by day and mocha by night.": "Soft pastel accents, latte by day and mocha by night.",
-  "Solarized Glow": "Solarized Glow",
-  "Sorbet": "Sorbet",
-  "Spring": "Spring",
-  "Summer": "Summer",
-  "Sun-baked ochre, olive header; at night an ochre glow on deep indigo.": "Sun-baked ochre, olive header; at night an ochre glow on deep indigo.",
-  "Synthwave Sunset": "Synthwave Sunset",
-  "Teal depths and coral.": "Teal depths and coral.",
-  "Terracotta, dust and oasis teal.": "Terracotta, dust and oasis teal.",
-  "Tokyo Night Lights": "Tokyo Night Lights",
-  "Ukiyo-e indigo and parchment.": "Ukiyo-e indigo and parchment.",
-  "Ultramarine blue with an orange spark, sleek and futuristic.": "Ultramarine blue with an orange spark, sleek and futuristic.",
-  "Uses blur and transparency. Can be slow on old tablets.": "Uses blur and transparency. Can be slow on old tablets.",
-  "Warm neutral stone and clay.": "Warm neutral stone and clay.",
-  "Warm paper and terracotta.": "Warm paper and terracotta.",
-  "Warm retro browns with a teal link.": "Warm retro browns with a teal link.",
-  "Winter": "Winter",
-  "Zenburn Calm": "Zenburn Calm",
-  "desert": "desert",
-  "fantasy": "fantasy",
-  "forest": "forest",
-  "genre": "genre",
-  "inspired by": "inspired by",
-  "my": "my",
-  "neon": "neon",
-  "original": "original",
-  "sci-fi": "sci-fi",
-  "{n, plural, one {# preset} other {# presets}} shown": "{n, plural, one {# preset} other {# presets}} shown",
-  "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.": "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}."
+  "theme-presets.library.amber-console": {
+    "text": "Amber Console",
+    "hash": "05aa4f18"
+  },
+  "theme-presets.library.amber-on-blue-grey-mirage": {
+    "text": "Amber on blue-gray mirage.",
+    "hash": "b2ee81a3"
+  },
+  "theme-presets.library.arcade": {
+    "text": "Arcade",
+    "hash": "df79c0f3"
+  },
+  "theme-presets.library.ashen-keep": {
+    "text": "Ashen Keep",
+    "hash": "5abc5f1e"
+  },
+  "theme-presets.library.autumn": {
+    "text": "Autumn",
+    "hash": "e0906c2d"
+  },
+  "theme-presets.library.ayu-mirage": {
+    "text": "Ayu Mirage",
+    "hash": "0ccd94a2"
+  },
+  "theme-presets.library.balanced-low-glare-cream-and-teal": {
+    "text": "Balanced low-glare cream and teal.",
+    "hash": "3287ddf1"
+  },
+  "theme-presets.library.black-and-white-nothing-in-between": {
+    "text": "Black and white, nothing in between.",
+    "hash": "59b95dc2"
+  },
+  "theme-presets.library.candlelit-cloister": {
+    "text": "Candlelit Cloister",
+    "hash": "42b48ee5"
+  },
+  "theme-presets.library.cassette": {
+    "text": "Cassette",
+    "hash": "47da0fc3"
+  },
+  "theme-presets.library.catppuccin-latte-mocha": {
+    "text": "Catppuccin Latte & Mocha",
+    "hash": "adba5faa"
+  },
+  "theme-presets.library.charcoal-iron-and-pale-limestone-deep": {
+    "text": "Charcoal iron and pale limestone; deep red accent, coral at night.",
+    "hash": "9b803c36"
+  },
+  "theme-presets.library.clean-light-with-a-calm-blue": {
+    "text": "Clean light with a calm blue.",
+    "hash": "c5314af4"
+  },
+  "theme-presets.library.clean-primer-blues-and-neutral-greys": {
+    "text": "Clean Primer blues and neutral grays.",
+    "hash": "baad0d47"
+  },
+  "theme-presets.library.cobalt-blue-with-a-gold-primary": {
+    "text": "Cobalt blue with a gold primary.",
+    "hash": "280536df"
+  },
+  "theme-presets.library.cobalt-gold": {
+    "text": "Cobalt Gold",
+    "hash": "29d2aa6d"
+  },
+  "theme-presets.library.cobalt-prism": {
+    "text": "Cobalt Prism",
+    "hash": "28e59053"
+  },
+  "theme-presets.library.contrast": {
+    "text": "Contrast",
+    "hash": "08795ba0"
+  },
+  "theme-presets.library.cool-arctic-blues-on-polar-night": {
+    "text": "Cool arctic blues on polar night.",
+    "hash": "1f0cc3de"
+  },
+  "theme-presets.library.crimson-pines": {
+    "text": "Crimson Pines",
+    "hash": "16d6a9d8"
+  },
+  "theme-presets.library.deep-greens-with-an-amber-spark": {
+    "text": "Deep greens with an amber spark.",
+    "hash": "c7c95e92"
+  },
+  "theme-presets.library.deep-navy-with-soft-periwinkle": {
+    "text": "Deep navy with soft periwinkle.",
+    "hash": "db62cfd8"
+  },
+  "theme-presets.library.deep-petrol-and-steel-grey-with-a": {
+    "text": "Deep petrol and steel-gray with a coolant-cyan accent; copper at night.",
+    "hash": "c0cdf2b1"
+  },
+  "theme-presets.library.deep-survey": {
+    "text": "Deep Survey",
+    "hash": "64c4a861"
+  },
+  "theme-presets.library.desert": {
+    "text": "Desert",
+    "hash": "0c8ffc17"
+  },
+  "theme-presets.library.dracula-night": {
+    "text": "Dracula Night",
+    "hash": "65e74c10"
+  },
+  "theme-presets.library.dusky-blue-night-warm-fox-white-day": {
+    "text": "Dusky blue night, warm fox-white day.",
+    "hash": "ee66cd0f"
+  },
+  "theme-presets.library.dust-duel": {
+    "text": "Dust Duel",
+    "hash": "df3d5f00"
+  },
+  "theme-presets.library.ember": {
+    "text": "Ember",
+    "hash": "cb1655db"
+  },
+  "theme-presets.library.everforest-moss": {
+    "text": "Everforest Moss",
+    "hash": "a14b60ba"
+  },
+  "theme-presets.library.faded-tape-deck-red-and-cream": {
+    "text": "Faded tape-deck red and cream.",
+    "hash": "3f9f88d1"
+  },
+  "theme-presets.library.familiar-editor-greys-with-a-bright-blue": {
+    "text": "Familiar editor grays with a bright blue.",
+    "hash": "61404d81"
+  },
+  "theme-presets.library.forest": {
+    "text": "Forest",
+    "hash": "eed88b3a"
+  },
+  "theme-presets.library.fresh-leaf-green-and-blossom-pink": {
+    "text": "Fresh leaf green and blossom pink.",
+    "hash": "abbe81ed"
+  },
+  "theme-presets.library.frontier-freighter": {
+    "text": "Frontier Freighter",
+    "hash": "23c5a975"
+  },
+  "theme-presets.library.frost": {
+    "text": "Frost",
+    "hash": "17636dd6"
+  },
+  "theme-presets.library.frosted-cards-over-a-graphite-gradient": {
+    "text": "Frosted cards over a graphite gradient.",
+    "hash": "2f1d0950"
+  },
+  "theme-presets.library.frosted-cards-over-a-rose-gradient": {
+    "text": "Frosted cards over a rose gradient.",
+    "hash": "f4bac77c"
+  },
+  "theme-presets.library.frosted-cards-over-an-aqua-gradient": {
+    "text": "Frosted cards over an aqua gradient.",
+    "hash": "3b4e7bfe"
+  },
+  "theme-presets.library.github-light-dark": {
+    "text": "GitHub Light & Dark",
+    "hash": "236fc8b1"
+  },
+  "theme-presets.library.glass-aqua": {
+    "text": "Glass Aqua",
+    "hash": "53611d4c"
+  },
+  "theme-presets.library.glass-blurred-translucent-cards-on-a": {
+    "text": "Glass: blurred, translucent cards on a soft gradient.",
+    "hash": "9129e060"
+  },
+  "theme-presets.library.glass-graphite": {
+    "text": "Glass Graphite",
+    "hash": "2df5b6a7"
+  },
+  "theme-presets.library.glass-rose": {
+    "text": "Glass Rose",
+    "hash": "43bdc277"
+  },
+  "theme-presets.library.gruvbox-retro": {
+    "text": "Gruvbox Retro",
+    "hash": "5ef8219f"
+  },
+  "theme-presets.library.hi-vis": {
+    "text": "Hi-Vis",
+    "hash": "c1b820a8"
+  },
+  "theme-presets.library.high-contrast-green-on-black-strong": {
+    "text": "High contrast green on black, strong edges.",
+    "hash": "d5b2351e"
+  },
+  "theme-presets.library.high-contrast-strong-edges": {
+    "text": "High contrast, strong edges.",
+    "hash": "17901e15"
+  },
+  "theme-presets.library.hot-magenta-and-electric-cyan-neon-on-a": {
+    "text": "Hot magenta and electric cyan neon on a dark city night.",
+    "hash": "d274b3d3"
+  },
+  "theme-presets.library.hot-pink-and-cyan-on-dark-purple": {
+    "text": "Hot pink and cyan on dark purple.",
+    "hash": "4594b976"
+  },
+  "theme-presets.library.icy-blue-with-a-violet-touch": {
+    "text": "Icy blue with a violet touch.",
+    "hash": "ca61a28d"
+  },
+  "theme-presets.library.ink": {
+    "text": "Ink",
+    "hash": "f089d622"
+  },
+  "theme-presets.library.kanagawa-wave": {
+    "text": "Kanagawa Wave",
+    "hash": "b33a887f"
+  },
+  "theme-presets.library.lavender-mist": {
+    "text": "Lavender Mist",
+    "hash": "a7c810d3"
+  },
+  "theme-presets.library.lilac-and-amber-on-near-black-like-a": {
+    "text": "Lilac and amber on near-black, like a retro starship console.",
+    "hash": "b76818f0"
+  },
+  "theme-presets.library.lime-and-magenta-on-charcoal": {
+    "text": "Lime and magenta on charcoal.",
+    "hash": "8edc8073"
+  },
+  "theme-presets.library.low-contrast-sage-on-soft-grey": {
+    "text": "Low-contrast sage on soft gray.",
+    "hash": "c69d3817"
+  },
+  "theme-presets.library.material-baseline-purple-with-teal": {
+    "text": "Material baseline purple with teal.",
+    "hash": "db8a65c4"
+  },
+  "theme-presets.library.material-violet": {
+    "text": "Material Violet",
+    "hash": "1b90b686"
+  },
+  "theme-presets.library.midnight-oled": {
+    "text": "Midnight OLED",
+    "hash": "b039f5a0"
+  },
+  "theme-presets.library.mint-and-sky-on-ink": {
+    "text": "Mint and sky on ink.",
+    "hash": "ee456802"
+  },
+  "theme-presets.library.monokai-lime": {
+    "text": "Monokai Lime",
+    "hash": "1974b883"
+  },
+  "theme-presets.library.muted-rose-and-iris-calm-and-low": {
+    "text": "Muted rose and iris, calm and low contrast.",
+    "hash": "b94e40d5"
+  },
+  "theme-presets.library.neon-lit-city-blues-and-violets": {
+    "text": "Neon-lit city blues and violets.",
+    "hash": "46c4731f"
+  },
+  "theme-presets.library.neon-magenta-and-cyan-80s-cabinet": {
+    "text": "Neon magenta and cyan, 80s cabinet.",
+    "hash": "29734e98"
+  },
+  "theme-presets.library.neon-rain": {
+    "text": "Neon Rain",
+    "hash": "c15240f6"
+  },
+  "theme-presets.library.neutral-blue-grey-for-any-room": {
+    "text": "Neutral blue-gray for any room.",
+    "hash": "7d3671d0"
+  },
+  "theme-presets.library.night-owl-navy": {
+    "text": "Night Owl Navy",
+    "hash": "0fd470e5"
+  },
+  "theme-presets.library.nightfox-dayfox": {
+    "text": "Nightfox & Dayfox",
+    "hash": "45bc1e5a"
+  },
+  "theme-presets.library.nord-frost": {
+    "text": "Nord Frost",
+    "hash": "de06db46"
+  },
+  "theme-presets.library.ocean": {
+    "text": "Ocean",
+    "hash": "fed12611"
+  },
+  "theme-presets.library.ochre-basin": {
+    "text": "Ochre Basin",
+    "hash": "96532e95"
+  },
+  "theme-presets.library.off-white-panels-burnt-orange-accent": {
+    "text": "Off-white panels, burnt orange accent: navy ink by day, denim blue at night.",
+    "hash": "fa674dbd"
+  },
+  "theme-presets.library.oled-amber": {
+    "text": "OLED Amber",
+    "hash": "ecf5ce33"
+  },
+  "theme-presets.library.oled-green": {
+    "text": "OLED Green",
+    "hash": "826890a2"
+  },
+  "theme-presets.library.one-dark-pro": {
+    "text": "One Dark Pro",
+    "hash": "a85f8ca2"
+  },
+  "theme-presets.library.orbital-smelter": {
+    "text": "Orbital Smelter",
+    "hash": "fe126a91"
+  },
+  "theme-presets.library.oxblood-red-over-a-dark-pine-forest-moss": {
+    "text": "Oxblood red over a dark pine forest, moss-green panels, green-black nights.",
+    "hash": "7ed02b32"
+  },
+  "theme-presets.library.paper": {
+    "text": "Paper",
+    "hash": "35045eff"
+  },
+  "theme-presets.library.pastel-lilac-and-rose": {
+    "text": "Pastel lilac and rose.",
+    "hash": "4ba6a817"
+  },
+  "theme-presets.library.pastel-raspberry-and-mint": {
+    "text": "Pastel raspberry and mint.",
+    "hash": "bfb5be91"
+  },
+  "theme-presets.library.plum-and-old-gold-on-parchment-wine": {
+    "text": "Plum and old gold on parchment; wine-black at night.",
+    "hash": "05b3f67d"
+  },
+  "theme-presets.library.poimandres-mint": {
+    "text": "Poimandres Mint",
+    "hash": "a504f973"
+  },
+  "theme-presets.library.pure-black-for-wall-tablets": {
+    "text": "Pure black for wall tablets.",
+    "hash": "6fe0c321"
+  },
+  "theme-presets.library.pure-black-in-dark-mode-only-keep-the": {
+    "text": "Pure black in dark mode only. Keep the screen in dark mode.",
+    "hash": "1f8fbf3b"
+  },
+  "theme-presets.library.pure-black-with-amber-for-wall-tablets": {
+    "text": "Pure black with amber, for wall tablets.",
+    "hash": "1d36db4d"
+  },
+  "theme-presets.library.pure-black-with-terminal-green-for-wall": {
+    "text": "Pure black with terminal green, for wall tablets.",
+    "hash": "5051e25d"
+  },
+  "theme-presets.library.purple-and-pink-on-deep-indigo": {
+    "text": "Purple and pink on deep indigo.",
+    "hash": "cbb40a0b"
+  },
+  "theme-presets.library.red-clay-desert-brick-header-red-accent": {
+    "text": "Red-clay desert, brick header, red accent; sand-gold by night.",
+    "hash": "7425e974"
+  },
+  "theme-presets.library.rose-pine-bloom": {
+    "text": "Rose Pine Bloom",
+    "hash": "b37db282"
+  },
+  "theme-presets.library.rust-olive-and-warm-paper": {
+    "text": "Rust, olive and warm paper.",
+    "hash": "7789f3fb"
+  },
+  "theme-presets.library.saddle-tan-and-rust-on-sandy-cream-a": {
+    "text": "Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.",
+    "hash": "ef5f2c14"
+  },
+  "theme-presets.library.sand": {
+    "text": "Sand",
+    "hash": "82855c11"
+  },
+  "theme-presets.library.silvered-jade-leaves-and-gold-touches-by": {
+    "text": "Silvered jade leaves and gold touches by day; sage green by night.",
+    "hash": "513aaa5e"
+  },
+  "theme-presets.library.silverleaf-glade": {
+    "text": "Silverleaf Glade",
+    "hash": "3787051f"
+  },
+  "theme-presets.library.sky-blue-and-sun-yellow": {
+    "text": "Sky blue and sun yellow.",
+    "hash": "dfe18438"
+  },
+  "theme-presets.library.slate": {
+    "text": "Slate",
+    "hash": "10ad4c38"
+  },
+  "theme-presets.library.soft-green-forest-tones-easy-on-the-eyes": {
+    "text": "Soft green forest tones, easy on the eyes.",
+    "hash": "704d480d"
+  },
+  "theme-presets.library.soft-pastel-accents-latte-by-day-and": {
+    "text": "Soft pastel accents, latte by day and mocha by night.",
+    "hash": "48b08606"
+  },
+  "theme-presets.library.solarized-glow": {
+    "text": "Solarized Glow",
+    "hash": "4952db44"
+  },
+  "theme-presets.library.sorbet": {
+    "text": "Sorbet",
+    "hash": "3336c246"
+  },
+  "theme-presets.library.spring": {
+    "text": "Spring",
+    "hash": "db29e82a"
+  },
+  "theme-presets.library.summer": {
+    "text": "Summer",
+    "hash": "c0de243c"
+  },
+  "theme-presets.library.sun-baked-ochre-olive-header-at-night-an": {
+    "text": "Sun-baked ochre, olive header; at night an ochre glow on deep indigo.",
+    "hash": "c224374b"
+  },
+  "theme-presets.library.synthwave-sunset": {
+    "text": "Synthwave Sunset",
+    "hash": "ec1bfdbe"
+  },
+  "theme-presets.library.teal-depths-and-coral": {
+    "text": "Teal depths and coral.",
+    "hash": "5ef8646f"
+  },
+  "theme-presets.library.terracotta-dust-and-oasis-teal": {
+    "text": "Terracotta, dust and oasis teal.",
+    "hash": "eed9aad1"
+  },
+  "theme-presets.library.tokyo-night-lights": {
+    "text": "Tokyo Night Lights",
+    "hash": "71540276"
+  },
+  "theme-presets.library.ukiyo-e-indigo-and-parchment": {
+    "text": "Ukiyo-e indigo and parchment.",
+    "hash": "1ac2634c"
+  },
+  "theme-presets.library.ultramarine-blue-with-an-orange-spark": {
+    "text": "Ultramarine blue with an orange spark, sleek and futuristic.",
+    "hash": "f3fe8c50"
+  },
+  "theme-presets.library.uses-blur-and-transparency-can-be-slow": {
+    "text": "Uses blur and transparency. Can be slow on old tablets.",
+    "hash": "67bf5d4b"
+  },
+  "theme-presets.library.warm-neutral-stone-and-clay": {
+    "text": "Warm neutral stone and clay.",
+    "hash": "a8859445"
+  },
+  "theme-presets.library.warm-paper-and-terracotta": {
+    "text": "Warm paper and terracotta.",
+    "hash": "5596a851"
+  },
+  "theme-presets.library.warm-retro-browns-with-a-teal-link": {
+    "text": "Warm retro browns with a teal link.",
+    "hash": "21f7a4d2"
+  },
+  "theme-presets.library.winter": {
+    "text": "Winter",
+    "hash": "1b17869e"
+  },
+  "theme-presets.library.zenburn-calm": {
+    "text": "Zenburn Calm",
+    "hash": "3579cc2e"
+  },
+  "theme-presets.picker.all": {
+    "text": "All",
+    "hash": "a52ace42"
+  },
+  "theme-presets.picker.clear-search": {
+    "text": "Clear search",
+    "hash": "3b7ea517"
+  },
+  "theme-presets.picker.contacts-another-website": {
+    "text": "Contacts another website",
+    "hash": "56e74582"
+  },
+  "theme-presets.picker.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "theme-presets.picker.desert": {
+    "text": "desert",
+    "hash": "237ab336"
+  },
+  "theme-presets.picker.export": {
+    "text": "Export",
+    "hash": "36648955"
+  },
+  "theme-presets.picker.fantasy": {
+    "text": "fantasy",
+    "hash": "5292f275"
+  },
+  "theme-presets.picker.fantasy-2": {
+    "text": "Fantasy",
+    "hash": "54285551"
+  },
+  "theme-presets.picker.forest": {
+    "text": "forest",
+    "hash": "619a2ccf"
+  },
+  "theme-presets.picker.genre": {
+    "text": "genre",
+    "hash": "4856d20b"
+  },
+  "theme-presets.picker.independent-colour-schemes-made-for": {
+    "text": "Independent color schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.",
+    "hash": "20e5a384"
+  },
+  "theme-presets.picker.inspired-by": {
+    "text": "Inspired by",
+    "hash": "eedc6115"
+  },
+  "theme-presets.picker.inspired-by-2": {
+    "text": "inspired by",
+    "hash": "73669dc1"
+  },
+  "theme-presets.picker.inspired-by-name": {
+    "text": "Inspired by {name}",
+    "hash": "3f788562"
+  },
+  "theme-presets.picker.my": {
+    "text": "my",
+    "hash": "03846851"
+  },
+  "theme-presets.picker.my-presets": {
+    "text": "My presets",
+    "hash": "58c2abee"
+  },
+  "theme-presets.picker.n-shown": {
+    "text": "{n, plural, one {# preset} other {# presets}} shown",
+    "hash": "9329f47b"
+  },
+  "theme-presets.picker.n-shown-try-a-b-c-d-or-e": {
+    "text": "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.",
+    "hash": "909c76e0"
+  },
+  "theme-presets.picker.name-palette-or-style": {
+    "text": "Name, palette or style",
+    "hash": "942e614f"
+  },
+  "theme-presets.picker.neon": {
+    "text": "neon",
+    "hash": "1b6405d1"
+  },
+  "theme-presets.picker.no-preset-matches-query": {
+    "text": "No preset matches \"{query}\".",
+    "hash": "cd4fb6dc"
+  },
+  "theme-presets.picker.original": {
+    "text": "Original",
+    "hash": "88d759ea"
+  },
+  "theme-presets.picker.original-2": {
+    "text": "original",
+    "hash": "0682c5f2"
+  },
+  "theme-presets.picker.preset": {
+    "text": "Preset",
+    "hash": "7252e7ce"
+  },
+  "theme-presets.picker.presets-use-genre-and-colour-words-not": {
+    "text": "Presets use genre and color words, not titles. Try one of these:",
+    "hash": "d30c5e52"
+  },
+  "theme-presets.picker.rename": {
+    "text": "Rename",
+    "hash": "3064d79a"
+  },
+  "theme-presets.picker.sci-fi": {
+    "text": "sci-fi",
+    "hash": "96dee9f0"
+  },
+  "theme-presets.picker.sci-fi-2": {
+    "text": "Sci-fi",
+    "hash": "2f94b971"
+  },
+  "theme-presets.picker.sci-fi-fantasy": {
+    "text": "Sci-fi & fantasy",
+    "hash": "43ccc08d"
+  },
+  "theme-presets.picker.search-presets": {
+    "text": "Search presets",
+    "hash": "b2e5d6ff"
+  },
+  "theme-presets.picker.show": {
+    "text": "Show",
+    "hash": "0df6f1ca"
+  }
 }

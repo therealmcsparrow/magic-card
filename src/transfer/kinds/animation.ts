@@ -11,7 +11,7 @@ import type { KindResult, Raw } from '../types';
  * file mentions them (src/transfer/panel.ts), so neither is copied into this chunk.
  */
 export function readAnimation(index: number, id: string, name: string, data: unknown): KindResult<TransferDataByKind['animation']> {
-  if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('The animation data is missing.'))] };
+  if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('transfer.animation.the-animation-data-is-missing'))] };
   const raw: Raw = { ...data, id, name };
   const r = validateAnimationDoc(raw, { v2: 'strict' });
   if (!r.ok) {

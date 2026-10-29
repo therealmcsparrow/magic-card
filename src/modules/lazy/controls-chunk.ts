@@ -5,6 +5,7 @@ import { SpinboxView } from '../controls/spinbox-view';
 import { DropdownView } from '../controls/dropdown-view';
 import { LightView } from '../controls/light-view';
 import { GaugeView } from '../controls/gauge-view';
+import { controlsViewStyles } from '../../css/controls-styles';
 
 /*
  * Chunk entry of dist/magic-card-controls.js (contract lazy-module 1.4.0): the views of the slider, spinbox, dropdown,
@@ -18,6 +19,9 @@ import { GaugeView } from '../controls/gauge-view';
 declare const __MC_BUILD_VERSION__: string | undefined;
 
 export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
+
+/** The rules only these views render; they reach the cards in the same task as the views. */
+export const styles = [controlsViewStyles];
 
 export function install(): void {
   ModuleRegistry.provideView('slider', new SliderView());

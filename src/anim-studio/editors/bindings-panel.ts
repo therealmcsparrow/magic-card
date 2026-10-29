@@ -30,9 +30,9 @@ import { t, m, type MessageId } from '../i18n';
  * it. `.doc` is never mutated: every edit emits `doc-change` { doc, label }.
  */
 
-const CARD_TARGET_NAMES: Record<string, MessageId> = { element: m('Element'), icon: m('Icon'), name: m('Name'), state: m('State'), background: m('Background') };
+const CARD_TARGET_NAMES: Record<string, MessageId> = { element: m('anim-studio.bindings-panel.element'), icon: m('anim-studio.bindings-panel.icon'), name: m('anim-studio.bindings-panel.name'), state: m('anim-studio.bindings-panel.state'), background: m('anim-studio.bindings-panel.background') };
 /** The card target in a sentence ("Drive the icon from ..."). */
-const CARD_TARGET_PHRASE: Record<string, MessageId> = { element: m('the element'), icon: m('the icon'), name: m('the name'), state: m('the state'), background: m('the background') };
+const CARD_TARGET_PHRASE: Record<string, MessageId> = { element: m('anim-studio.bindings-panel.the-element'), icon: m('anim-studio.bindings-panel.the-icon'), name: m('anim-studio.bindings-panel.the-name'), state: m('anim-studio.bindings-panel.the-state'), background: m('anim-studio.bindings-panel.the-background') };
 
 /** The selected target's display name. */
 export function targetName(doc: AnimationDoc | undefined, target: TargetRef): string {
@@ -83,14 +83,14 @@ export class AnimBindingsPanel extends LitElement {
     const b = newBinding(target);
     this._write([...list, b], 'Add value binding');
     this._focusAfter = `.bind[data-i="${list.length}"] select.prop`;
-    this._announce = t('Binding added: {property}.', { property: t(bindInfo(b.property).label) });
+    this._announce = t('anim-studio.bindings-panel.binding-added-property', { property: t(bindInfo(b.property).label) });
   }
 
   private _remove(index: number): void {
     const list = (this.doc?.bindings ?? []).filter((_b, i) => i !== index);
     this._write(list, 'Delete value binding');
     this._focusAfter = '.add';
-    this._announce = t('Binding deleted.');
+    this._announce = t('anim-studio.bindings-panel.binding-deleted');
   }
 
   /** Whether an Attribute value can be written; keeps the field's error state. */
@@ -148,19 +148,19 @@ export class AnimBindingsPanel extends LitElement {
         this._patch(index, { ...b, output: out }, 'Change binding colours');
       };
       return html`<div class="field">
-          <div class="field-head"><span class="lbl">${t('From colour')}</span></div>
-          <mc-color-picker .value=${from} .label=${t('From colour')} @value-changed=${(e: CustomEvent) => pick(0, e.detail.value)}></mc-color-picker>
+          <div class="field-head"><span class="lbl">${t('anim-studio.bindings-panel.from-colour')}</span></div>
+          <mc-color-picker .value=${from} .label=${t('anim-studio.bindings-panel.from-colour')} @value-changed=${(e: CustomEvent) => pick(0, e.detail.value)}></mc-color-picker>
         </div>
         <div class="field">
-          <div class="field-head"><span class="lbl">${t('To colour')}</span></div>
-          <mc-color-picker .value=${to} .label=${t('To colour')} @value-changed=${(e: CustomEvent) => pick(1, e.detail.value)}></mc-color-picker>
+          <div class="field-head"><span class="lbl">${t('anim-studio.bindings-panel.to-colour')}</span></div>
+          <mc-color-picker .value=${to} .label=${t('anim-studio.bindings-panel.to-colour')} @value-changed=${(e: CustomEvent) => pick(1, e.detail.value)}></mc-color-picker>
         </div>`;
     }
     const [a, c] = b.output as [number, number];
     const unit = info.unit ? ` (${info.unit})` : '';
     return html`<div class="pair">
-      ${this._num(`${id}-from`, t('From{unit}', { unit }), a, info.step, (n) => this._patch(index, { ...b, output: [n, c] }, 'Change binding output'))}
-      ${this._num(`${id}-to`, t('To{unit}', { unit }), c, info.step, (n) => this._patch(index, { ...b, output: [a, n] }, 'Change binding output'))}
+      ${this._num(`${id}-from`, t('anim-studio.bindings-panel.from-unit', { unit }), a, info.step, (n) => this._patch(index, { ...b, output: [n, c] }, 'Change binding output'))}
+      ${this._num(`${id}-to`, t('anim-studio.bindings-panel.to-unit', { unit }), c, info.step, (n) => this._patch(index, { ...b, output: [a, n] }, 'Change binding output'))}
     </div>`;
   }
 
@@ -173,13 +173,13 @@ export class AnimBindingsPanel extends LitElement {
     const bad = this._badAttr.has(index);
     return html`<li class="cond bind" data-i=${index}>
       <div class="cond-head">
-        <span class="n">${t('Binding {n}', { n: n + 1 })} <span class="sub">· ${t(info.label)}</span></span>
-        <button type="button" class="icon-btn sm danger del" aria-label=${t('Delete binding {n}', { n: n + 1 })} title=${t('Delete binding')} ?disabled=${this.disabled} @click=${() => this._remove(index)}>
+        <span class="n">${t('anim-studio.bindings-panel.binding-n', { n: n + 1 })} <span class="sub">· ${t(info.label)}</span></span>
+        <button type="button" class="icon-btn sm danger del" aria-label=${t('anim-studio.bindings-panel.delete-binding-n', { n: n + 1 })} title=${t('anim-studio.bindings-panel.delete-binding')} ?disabled=${this.disabled} @click=${() => this._remove(index)}>
           <ha-icon icon="mdi:delete-outline"></ha-icon>
         </button>
       </div>
       <div class="field">
-        <div class="field-head"><label for="${id}-p">${t('Property')}</label></div>
+        <div class="field-head"><label for="${id}-p">${t('anim-studio.bindings-panel.property')}</label></div>
         <div class="select">
           <select
             class="input prop"
@@ -195,14 +195,14 @@ export class AnimBindingsPanel extends LitElement {
         <p class="help" id="${id}-ph">${t(info.hint)}</p>
       </div>
       <fieldset>
-        <legend>${t('Entity value')}</legend>
+        <legend>${t('anim-studio.bindings-panel.entity-value')}</legend>
         <div class="field">
-          <div class="field-head"><label for="${id}-a">${t('Attribute')}</label></div>
+          <div class="field-head"><label for="${id}-a">${t('anim-studio.bindings-panel.attribute')}</label></div>
           <input
             class="input mono"
             id="${id}-a"
             type="text"
-            placeholder=${t('state')}
+            placeholder=${t('anim-studio.bindings-panel.state-2')}
             autocomplete="off"
             spellcheck="false"
             aria-describedby="${id}-ah"
@@ -220,18 +220,18 @@ export class AnimBindingsPanel extends LitElement {
             }}
           />
           <p class="help ${bad ? 'error' : ''}" id="${id}-ah">
-            ${bad ? t('Attribute names use letters, digits, _ . and - (no spaces).') : t('Empty reads the state. For example percentage (fan) or brightness (light).')}
+            ${bad ? t('anim-studio.bindings-panel.attribute-names-use-letters-digits-and') : t('anim-studio.bindings-panel.empty-reads-the-state-for-example')}
           </p>
         </div>
         <div class="pair">
-          ${this._num(`${id}-min`, t('Min'), b.input.min, 1, (v) => this._patch(index, { ...b, input: { ...b.input, min: v } }, 'Change binding range'))}
-          ${this._num(`${id}-max`, t('Max'), b.input.max, 1, (v) => this._patch(index, { ...b, input: { ...b.input, max: v } }, 'Change binding range'))}
+          ${this._num(`${id}-min`, t('anim-studio.bindings-panel.min'), b.input.min, 1, (v) => this._patch(index, { ...b, input: { ...b.input, min: v } }, 'Change binding range'))}
+          ${this._num(`${id}-max`, t('anim-studio.bindings-panel.max'), b.input.max, 1, (v) => this._patch(index, { ...b, input: { ...b.input, max: v } }, 'Change binding range'))}
         </div>
       </fieldset>
       <fieldset>
-        <legend>${t('Output')}</legend>
+        <legend>${t('anim-studio.bindings-panel.output')}</legend>
         ${this._output(b, index)}
-        ${this._num(`${id}-s`, t('Smoothing (s)'), b.smoothing ?? 0, 0.1, (v) => {
+        ${this._num(`${id}-s`, t('anim-studio.bindings-panel.smoothing-s'), b.smoothing ?? 0, 0.1, (v) => {
           const next = { ...b };
           if (v > 0) next.smoothing = Math.min(10, v);
           else delete next.smoothing;
@@ -253,15 +253,15 @@ export class AnimBindingsPanel extends LitElement {
       <div class="wrap">
         <p class="help lead">
           ${mine.length
-            ? html`${t('The entity’s value drives {name}. Preview it with the value slider on the stage.', { name })}`
-            : html`${t('Drive {name} from the entity’s value: rotation speed from a fan’s percentage, a fill from a battery level.', { name })}`}
+            ? html`${t('anim-studio.bindings-panel.the-entity-s-value-drives-name-preview', { name })}`
+            : html`${t('anim-studio.bindings-panel.drive-name-from-the-entity-s-value', { name })}`}
         </p>
         ${mine.length ? html`<ol class="binds">${mine.map((x, n) => this._binding(x.b, x.index, n))}</ol>` : nothing}
         <div class="foot">
           <button type="button" class="btn btn-text btn-sm add" ?disabled=${this.disabled || full} @click=${() => this._add()}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add value binding')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('anim-studio.bindings-panel.add-value-binding')}
           </button>
-          ${full ? html`<span class="help">${t('At most {max} bindings per animation.', { max: BINDINGS_MAX })}</span>` : nothing}
+          ${full ? html`<span class="help">${t('anim-studio.bindings-panel.at-most-max-bindings-per-animation', { max: BINDINGS_MAX })}</span>` : nothing}
         </div>
         <div class="sr-only" role="status" aria-live="polite">${this._announce}</div>
       </div>
@@ -328,7 +328,7 @@ registerPanel({
   tag: 'mc-anim-bindings-panel',
   place: 'inspector',
   when: (doc, sel) => doc.kind === 'keyframes' && sel.kind === 'target' && !!selectedTarget(sel),
-  title: m('Value bindings'),
+  title: m('anim-studio.bindings-panel.value-bindings'),
   order: 60,
 });
 

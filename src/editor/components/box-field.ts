@@ -4,7 +4,7 @@ import { DesignConfig } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import './unit-field';
 import './color-picker';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
@@ -12,18 +12,18 @@ const SIDES: Side[] = ['top', 'right', 'bottom', 'left'];
 /** Same units as mc-unit-field (auto, calc(…) and var(…) are its "Custom" values). */
 const UNITS = ['px', 'em', 'rem', '%', 'vw', 'vh'];
 
-const SIDE_META: Record<Side, { label: MessageId; icon: string }> = {
-  top: { label: m('Top'), icon: 'mdi:border-top-variant' },
-  right: { label: m('Right'), icon: 'mdi:border-right-variant' },
-  bottom: { label: m('Bottom'), icon: 'mdi:border-bottom-variant' },
-  left: { label: m('Left'), icon: 'mdi:border-left-variant' },
+const SIDE_META: Record<Side, { label: MessageIndex; icon: string }> = {
+  top: { label: m('card-editor.box-field.top'), icon: 'mdi:border-top-variant' },
+  right: { label: m('card-editor.box-field.right'), icon: 'mdi:border-right-variant' },
+  bottom: { label: m('card-editor.box-field.bottom'), icon: 'mdi:border-bottom-variant' },
+  left: { label: m('card-editor.box-field.left'), icon: 'mdi:border-left-variant' },
 };
 
-const CORNER_META: Record<Side, { label: MessageId; icon: string }> = {
-  top: { label: m('Top left'), icon: 'mdi:border-top-variant' },
-  right: { label: m('Top right'), icon: 'mdi:border-right-variant' },
-  bottom: { label: m('Bottom right'), icon: 'mdi:border-bottom-variant' },
-  left: { label: m('Bottom left'), icon: 'mdi:border-left-variant' },
+const CORNER_META: Record<Side, { label: MessageIndex; icon: string }> = {
+  top: { label: m('card-editor.box-field.top-left'), icon: 'mdi:border-top-variant' },
+  right: { label: m('card-editor.box-field.top-right'), icon: 'mdi:border-right-variant' },
+  bottom: { label: m('card-editor.box-field.bottom-right'), icon: 'mdi:border-bottom-variant' },
+  left: { label: m('card-editor.box-field.bottom-left'), icon: 'mdi:border-left-variant' },
 };
 
 /** What a side holds in shorthand mode: a length, a colour or a word from `options` (a border style). */
@@ -258,7 +258,7 @@ export class BoxField extends LitElement {
       const extra = own && !this.options.some((o) => o.value === own) ? [{ value: own, label: own }] : [];
       return html`<div class="select">
         <select class="input side-select" data-side=${position} aria-label=${label} @change=${(e: Event) => write((e.target as HTMLSelectElement).value)}>
-          <option value="" ?selected=${!own}>${hint ? t('Inherit ({value})', { value: shown }) : t('Not set')}</option>
+          <option value="" ?selected=${!own}>${hint ? t('card-editor.box-field.inherit-value', { value: shown }) : t('card-editor.box-field.not-set')}</option>
           ${[...this.options, ...extra].map((o) => html`<option value=${o.value} ?selected=${o.value === own}>${o.label}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -336,7 +336,7 @@ export class BoxField extends LitElement {
             aria-pressed=${(this.shorthand ? this._shLinked : this._linked) ? 'true' : 'false'}
             @click=${this._toggleLink}
           >
-            <ha-icon icon="mdi:link-variant"></ha-icon>${t('Same on all sides')}
+            <ha-icon icon="mdi:link-variant"></ha-icon>${t('card-editor.box-field.same-on-all-sides')}
           </button>
         </div>
       </div>

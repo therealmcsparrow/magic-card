@@ -39,12 +39,12 @@ export interface TrialState {
 /** What a screen reader hears when a trial ends, in the language. */
 export const trialEndText = (reason: TrialEnd): string =>
   reason === 'saved'
-    ? t('Saved. This tab now uses the saved theme file.')
+    ? t('theme-editor.trial.saved-this-tab-now-uses-the-saved-theme')
     : reason === 'idle'
-      ? t('Trial ended after 10 minutes.')
+      ? t('theme-editor.trial.trial-ended-after-10-minutes')
       : reason === 'theme-changed'
-        ? t('Trial ended because the theme changed.')
-        : t('Reverted. This tab shows your own theme again.');
+        ? t('theme-editor.trial.trial-ended-because-the-theme-changed')
+        : t('theme-editor.trial.reverted-this-tab-shows-your-own-theme');
 
 type Listener = (state: TrialState | null, reason?: TrialEnd) => void;
 

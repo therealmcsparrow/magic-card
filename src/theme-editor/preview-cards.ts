@@ -97,7 +97,7 @@ export function sampleConfig(id: SampleId, picks: Picks): Record<string, unknown
     case 'tile-off':
       return picks.off ?? any ? { type: 'tile', entity: picks.off ?? any } : null;
     case 'entities':
-      return picks.all.length ? { type: 'entities', title: t('Entities'), entities: picks.all } : null;
+      return picks.all.length ? { type: 'entities', title: t('theme-editor.preview-cards.entities'), entities: picks.all } : null;
     case 'magic-card':
       return {
         type: 'custom:magic-card',
@@ -110,7 +110,7 @@ export function sampleConfig(id: SampleId, picks: Picks): Record<string, unknown
                 id: 'preview-col',
                 modules: [
                   { id: 'preview-text', type: 'text', text: 'Magic Card' },
-                  { id: 'preview-button', type: 'button', label: t('Button') },
+                  { id: 'preview-button', type: 'button', label: t('theme-editor.preview-cards.button') },
                   { id: 'preview-bar', type: 'bar', min: 0, max: 100, ...(picks.numeric ? { entity: picks.numeric } : {}) },
                 ],
               },
@@ -135,7 +135,7 @@ export async function createSample(config: Record<string, unknown>, hass: unknow
     el = await (await helpers).createCardElement(config);
   } else {
     const type = String(config.type ?? '');
-    if (!type.startsWith('custom:')) throw new Error(t('Home Assistant card helpers are not available'));
+    if (!type.startsWith('custom:')) throw new Error(t('theme-editor.preview-cards.home-assistant-card-helpers-are-not'));
     el = document.createElement(type.slice('custom:'.length));
     (el as HTMLElement & { setConfig?: (c: unknown) => void }).setConfig?.(config);
   }
@@ -179,22 +179,22 @@ const LOAD_TIMEOUT_MS = 8000;
 /** Loads a card group's dashboard resource and waits until its preview element is defined. */
 export async function loadGroupCard(hass: Hass | undefined, id: CatalogueGroupId): Promise<void> {
   const group = CATALOGUE_GROUPS.find((g) => g.id === id);
-  if (!group?.previewTag || !group.resourcePattern) throw new Error(t('This card cannot be loaded for the preview.'));
+  if (!group?.previewTag || !group.resourcePattern) throw new Error(t('theme-editor.preview-cards.this-card-cannot-be-loaded-for-the'));
   if (customElements.get(group.previewTag)) return;
-  if (!hass?.callWS) throw new Error(t('Home Assistant is not connected.'));
+  if (!hass?.callWS) throw new Error(t('theme-editor.preview-cards.home-assistant-is-not-connected'));
   const resources = await hass.callWS<Resource[]>({ type: 'lovelace/resources' });
   const pattern = group.resourcePattern;
   const found = (resources ?? []).find((r) => typeof r.url === 'string' && pattern.test(r.url));
-  if (!found) throw new Error(t('{label} is not in the dashboard resources.', { label: t(group.label) }));
-  if (!isLoadableUrl(found.url)) throw new Error(t('{label} has a resource address the editor will not load.', { label: t(group.label) }));
+  if (!found) throw new Error(t('theme-editor.preview-cards.label-is-not-in-the-dashboard-resources', { label: t(group.label) }));
+  if (!isLoadableUrl(found.url)) throw new Error(t('theme-editor.preview-cards.label-has-a-resource-address-the-editor', { label: t(group.label) }));
   const tag = group.previewTag;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const defined = customElements.whenDefined(tag);
   const script = document.createElement('script');
   script.type = found.type === 'module' ? 'module' : 'text/javascript';
   const failed = new Promise<never>((_, reject) => {
-    script.onerror = () => reject(new Error(t('{label} could not be loaded.', { label: t(group.label) })));
-    timer = setTimeout(() => reject(new Error(t('{label} did not start in time.', { label: t(group.label) }))), LOAD_TIMEOUT_MS);
+    script.onerror = () => reject(new Error(t('theme-editor.preview-cards.label-could-not-be-loaded', { label: t(group.label) })));
+    timer = setTimeout(() => reject(new Error(t('theme-editor.preview-cards.label-did-not-start-in-time', { label: t(group.label) }))), LOAD_TIMEOUT_MS);
   });
   script.src = found.url;
   document.head.appendChild(script);
@@ -245,7 +245,7 @@ export class McteGroupPreview extends LitElement {
       await loadGroupCard(this.hass as Hass | undefined, this.group);
       this._load = 'idle';
       const found = CATALOGUE_GROUPS.find((g) => g.id === this.group);
-      this._announce = found ? t('{label} is loaded for the preview.', { label: t(found.label) }) : t('The card is loaded for the preview.');
+      this._announce = found ? t('theme-editor.preview-cards.label-is-loaded-for-the-preview', { label: t(found.label) }) : t('theme-editor.preview-cards.the-card-is-loaded-for-the-preview');
     } catch (err) {
       this._load = 'error';
       this._error = err instanceof Error ? err.message : String(err);
@@ -260,17 +260,17 @@ export class McteGroupPreview extends LitElement {
     }
     const busy = this._load === 'loading';
     return html`<div class="notice" part="notice">
-      <p class="title">${t('Preview not available')}</p>
+      <p class="title">${t('theme-editor.preview-cards.preview-not-available')}</p>
       <p class="help">
-        ${t('{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.', { label: status.label })}
+        ${t('theme-editor.preview-cards.label-is-not-loaded-in-this-editor-so', { label: status.label })}
       </p>
       ${status.canLoad
         ? html`<button type="button" class="btn" aria-disabled=${busy ? 'true' : 'false'} @click=${() => !busy && this._loadCard()}>
-            ${busy ? t('Loading...') : t('Load {label} for preview', { label: status.label })}
+            ${busy ? t('theme-editor.preview-cards.loading') : t('theme-editor.preview-cards.load-label-for-preview', { label: status.label })}
           </button>`
         : nothing}
-      <p class="status" role="status">${busy ? t('Loading {label}...', { label: status.label }) : ''}</p>
-      ${this._load === 'error' ? html`<p class="error" role="alert">${t('Could not load {label}. {reason}', { label: status.label, reason: this._error })}</p>` : nothing}
+      <p class="status" role="status">${busy ? t('theme-editor.preview-cards.loading-label', { label: status.label }) : ''}</p>
+      ${this._load === 'error' ? html`<p class="error" role="alert">${t('theme-editor.preview-cards.could-not-load-label-reason', { label: status.label, reason: this._error })}</p>` : nothing}
     </div>`;
   }
 

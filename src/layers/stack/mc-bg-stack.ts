@@ -48,7 +48,8 @@ interface Src {
   detail?: string;
 }
 
-type Item = BgStackItem;
+/** `fade`: the newest picture arrived on screen with motion allowed, so its element carries the arrival fade. */
+type Item = BgStackItem & { fade?: boolean };
 
 /** Sets one validated value per property through the CSSOM (never a concatenated style string). */
 class StyleSet extends Directive {
@@ -82,7 +83,7 @@ export class McBgStack extends LitElement implements BgStackView {
   static styles = css`
     :host{display:block;position:absolute;top:0;right:0;bottom:0;left:0;z-index:-1;overflow:hidden;border-radius:inherit;pointer-events:none}
     .l,.img,.fill,.pic{position:absolute;top:0;right:0;bottom:0;left:0}
-    .img{animation:mcbg-in .3s ease-out}
+    .img.in{animation:mcbg-in .3s ease-out}
     .pz{animation:mcbg-pz var(--d) ease-in-out infinite var(--dir);animation-play-state:paused}
     .pz[data-pz=play]{animation-play-state:running}
     .pz[data-pz=start],.pz[data-pz=end]{animation:none;transform:translate(var(--x0,0),var(--y0,0)) scale(var(--s0))}
@@ -90,7 +91,7 @@ export class McBgStack extends LitElement implements BgStackView {
     .pz[data-pz=start]{--s0:var(--f)}
     @keyframes mcbg-in{from{opacity:0}}
     @keyframes mcbg-pz{from{transform:scale(var(--f))}to{transform:translate(var(--tx),var(--ty)) scale(var(--t))}}
-    @media (prefers-reduced-motion:reduce){.img{animation:none}}
+    @media (prefers-reduced-motion:reduce){.img.in{animation:none}}
   `;
   static properties = {
     layers: { attribute: false },
@@ -134,6 +135,7 @@ export class McBgStack extends LitElement implements BgStackView {
     this._run?.stop();
     this._run = undefined;
     for (const i of this.items) {
+      i.fade = false;
       clearTimeout(i.fadeTimer);
       i.fadeTimer = undefined;
       i.prev = undefined;
@@ -351,13 +353,16 @@ export class McBgStack extends LitElement implements BgStackView {
     this._fade(i);
   }
 
-  /** Keep `prev` under the new picture for FADE_MS; no fade under reduced motion or while off screen or paused. */
+  /**
+   * Fade the new picture in over `prev` for FADE_MS. Under reduced motion, off screen or paused the picture
+   * is shown at once and is not marked, so its element never gets the animation, now or when the card runs again.
+   */
   private _fade(i: Item): void {
     clearTimeout(i.fadeTimer);
     i.fadeTimer = undefined;
-    if (!i.prev) return;
-    if (window.matchMedia?.(REDUCED).matches || this.hasAttribute('offscreen')) i.prev = undefined;
-    else {
+    i.fade = !(window.matchMedia?.(REDUCED).matches || this.hasAttribute('offscreen'));
+    if (!i.fade) i.prev = undefined;
+    else if (i.prev) {
       i.fadeTimer = setTimeout(() => {
         i.fadeTimer = undefined;
         i.prev = undefined;
@@ -428,7 +433,7 @@ export class McBgStack extends LitElement implements BgStackView {
         '--d': `${pz.duration}s`, '--dir': pz.alternate ? 'alternate' : 'normal',
       });
     }
-    return html`<div class="img"><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}>${
+    return html`<div class=${!still && i.fade ? 'img in' : 'img'}><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}>${
       live ? html`<mc-svg-image .ref=${url} .hass=${this.hass} .layer=${c} .at=${i.index}></mc-svg-image>` : nothing
     }</div></div>`;
   }

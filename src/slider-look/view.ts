@@ -126,7 +126,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     : stateObj
       ? formatEntityValue(hass, stateObj).text
       : '';
-  const name = (stateObj ? entityDisplayName(hass, stateObj) : t('Slider')).slice(0, MAX_NAME);
+  const name = (stateObj ? entityDisplayName(hass, stateObj) : t('card.view.slider')).slice(0, MAX_NAME);
   const frac = value === undefined || range <= 0 ? 0 : Math.max(0, Math.min(1, (value - min) / range));
   st.frac = frac;
   st.text = valueText;
@@ -233,7 +233,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   if (labels.length) vars.push(`--nl: ${labels.length}`);
 
   // ── the failed call: snap back, show the hint, say it
-  const couldnt = () => t("Couldn't set {name}", { name });
+  const couldnt = () => t("card.view.couldn-t-set-name", { name });
   const message = st.err ? couldnt() : '';
   const trackEl = () => st.wrap.value?.closest('.mc-tile-slider');
   /** The failed-call text: spoken (the status line) and shown for the same few seconds (under the track). */

@@ -374,7 +374,7 @@ export class AnimKeyframesEditor extends LitElement {
     const k = keys.find((x) => this._isLocked(x));
     if (!k || !this._view) return false;
     const where = targetLabel(this._view, k.target);
-    this._announce(t('{name} is locked. Unlock it in Layers.', { name: k.lane === '*' ? where : `${where} ${LANE_BY_ID[k.lane as LaneId] ? laneLabel(k.lane as LaneId).toLowerCase() : k.lane}` }));
+    this._announce(t('anim-studio.keyframes-editor.name-is-locked-unlock-it-in-layers', { name: k.lane === '*' ? where : `${where} ${LANE_BY_ID[k.lane as LaneId] ? laneLabel(k.lane as LaneId).toLowerCase() : k.lane}` }));
     return true;
   }
 
@@ -585,7 +585,7 @@ export class AnimKeyframesEditor extends LitElement {
     d.lastTarget = target;
     const res = moveTargetKeys(d.base!, d.sel!, target - d.grab!.at, d.duplicate);
     const n = d.sel!.length;
-    d.label = d.duplicate ? t('Duplicate {count, plural, one {keyframe} other {keyframes}}', { count: n }) : t('Move {count, plural, one {keyframe} other {keyframes}}', { count: n });
+    d.label = d.duplicate ? t('anim-studio.keyframes-editor.duplicate-count', { count: n }) : t('anim-studio.keyframes-editor.move-count', { count: n });
     this._draft = res.doc;
     this._select(res.selection, true);
     const grabbed = res.selection[d.sel!.findIndex((s) => tkeyId(s, this._main) === tkeyId(d.grab!, this._main))];
@@ -633,7 +633,7 @@ export class AnimKeyframesEditor extends LitElement {
       const doc = this._draft;
       const grabbed = this._keys.find((s) => s.target === d.grab!.target && s.lane === d.grab!.lane);
       if (grabbed) this._pendingFocus = tkeyId(grabbed, this._main);
-      this._emit(doc, d.label ?? t('Move keyframe'));
+      this._emit(doc, d.label ?? t('anim-studio.keyframes-editor.move-keyframe'));
       this._emitSelection();
       // keep showing the result until the host feeds the doc back
       this._draft = doc;
@@ -813,7 +813,7 @@ export class AnimKeyframesEditor extends LitElement {
     this._laneFocus.set(`${target}|${lane}`, sel[0].at);
     this._anchor = sel[0];
     this._collapsed.delete(target);
-    this._commit(withTrackKeyframes(view, target, res.keyframes), lane === '*' ? t('Add keyframe') : t('Add {lane} keyframe', { lane: laneLabel(lane).toLowerCase() }), sel);
+    this._commit(withTrackKeyframes(view, target, res.keyframes), lane === '*' ? t('anim-studio.keyframes-editor.add-keyframe') : t('anim-studio.keyframes-editor.add-lane-keyframe', { lane: laneLabel(lane).toLowerCase() }), sel);
   }
 
   private _onTrackDblClick(e: MouseEvent, target: TargetRef, lane: KeyLane): void {
@@ -831,7 +831,7 @@ export class AnimKeyframesEditor extends LitElement {
     const view = this._view;
     if (!n || !view || this._refuseLocked(this._keys)) return;
     this._commit(deleteTargetKeys(view, this._keys), `Delete ${n === 1 ? 'keyframe' : 'keyframes'}`, []);
-    this._announce(t('{count, plural, one {# keyframe} other {# keyframes}} deleted', { count: n }));
+    this._announce(t('anim-studio.keyframes-editor.count-deleted', { count: n }));
   }
 
   private _copy(): void {
@@ -839,7 +839,7 @@ export class AnimKeyframesEditor extends LitElement {
     const c = view ? copyTargetKeys(view, this._keys) : undefined;
     if (!c) return;
     setKeyClipboard(c);
-    this._announce(t('{count, plural, one {# keyframe} other {# keyframes}} copied', { count: c.items.length }));
+    this._announce(t('anim-studio.keyframes-editor.count-copied', { count: c.items.length }));
   }
 
   /**
@@ -857,13 +857,13 @@ export class AnimKeyframesEditor extends LitElement {
     const dest = targets.size > 1 ? {} : one ? { target: one.target, lane: one.lane as LaneId } : { target: this._active };
     const res = pasteTargetKeys(view, clip, round1(this.time * 100), dest);
     if (!res.selection.length) {
-      this._announce(t('Nothing pasted: those properties do not fit here'));
+      this._announce(t('anim-studio.keyframes-editor.nothing-pasted-those-properties-do-not'));
       return;
     }
     if (this._refuseLocked(res.selection)) return;
     this._commit(res.doc, `Paste ${res.selection.length === 1 ? 'keyframe' : 'keyframes'}`, res.selection);
-    const skipped = res.skipped ? t('; {skipped} skipped (not for this target or lane)', { skipped: res.skipped }) : '';
-    this._announce(t('{count, plural, one {# keyframe} other {# keyframes}} pasted at {at}{skipped}', { count: res.selection.length, at: pctText(this.time * 100), skipped }));
+    const skipped = res.skipped ? t('anim-studio.keyframes-editor.skipped-skipped-not-for-this-target-or', { skipped: res.skipped }) : '';
+    this._announce(t('anim-studio.keyframes-editor.count-pasted-at-at-skipped', { count: res.selection.length, at: pctText(this.time * 100), skipped }));
   }
 
   private _selectLane(target: TargetRef, lane: KeyLane, extend: boolean): void {
@@ -1560,7 +1560,7 @@ export class AnimKeyframesEditor extends LitElement {
     return html`<mc-ui-menu
       class="add-menu"
       .items=${items}
-      label=${t('Add property to {target} at the playhead ({at})', { target: targetLabel(this._view!, active), at: pctText(at) })}
+      label=${t('anim-studio.keyframes-editor.add-property-to-target-at-the-playhead', { target: targetLabel(this._view!, active), at: pctText(at) })}
       @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
         e.stopPropagation();
         this._addLane(e.detail.id as LaneId);
@@ -1583,12 +1583,12 @@ export class AnimKeyframesEditor extends LitElement {
     const clip = keyClipboard();
     return html`
       <div class="bar">
-        <div class="readout" role="group" aria-label=${t('Playhead')}>
+        <div class="readout" role="group" aria-label=${t('anim-studio.keyframes-editor.playhead')}>
           <button
             type="button"
             class="icon-btn sm"
-            aria-label=${t('Previous keyframe')}
-            title=${t('Previous keyframe')}
+            aria-label=${t('anim-studio.keyframes-editor.previous-keyframe')}
+            title=${t('anim-studio.keyframes-editor.previous-keyframe')}
             ?disabled=${o.prev === undefined}
             @click=${() => this._jump(-1)}
           >
@@ -1598,8 +1598,8 @@ export class AnimKeyframesEditor extends LitElement {
           <button
             type="button"
             class="icon-btn sm"
-            aria-label=${t('Next keyframe')}
-            title=${t('Next keyframe')}
+            aria-label=${t('anim-studio.keyframes-editor.next-keyframe')}
+            title=${t('anim-studio.keyframes-editor.next-keyframe')}
             ?disabled=${o.next === undefined}
             @click=${() => this._jump(1)}
           >
@@ -1611,24 +1611,24 @@ export class AnimKeyframesEditor extends LitElement {
           class="btn btn-secondary btn-sm add-btn"
           aria-haspopup="menu"
           aria-expanded=${this._menuOpen ? 'true' : 'false'}
-          title=${t('Add a property to {target}', { target: targetLabel(this._view!, active) })}
+          title=${t('anim-studio.keyframes-editor.add-a-property-to-target', { target: targetLabel(this._view!, active) })}
           ?disabled=${this.disabled || !free.length}
           @click=${() => {
             if (this._menuOpen) this._menuOpen = false;
             else if (Date.now() - this._menuClosedAt > 400) this._menuOpen = true;
           }}
         >
-          <ha-icon icon="mdi:plus"></ha-icon><span class="lbl">${narrow ? t('Property') : t('Add property')}</span>
+          <ha-icon icon="mdi:plus"></ha-icon><span class="lbl">${narrow ? t('anim-studio.keyframes-editor.property') : t('anim-studio.keyframes-editor.add-property')}</span>
         </button>
         ${this._menuOpen ? this._renderAddMenu(free, active, at) : nothing}
         <span class="spacer"></span>
-        <div class="tools" role="toolbar" aria-label=${t('Keyframe tools')}>
+        <div class="tools" role="toolbar" aria-label=${t('anim-studio.keyframes-editor.keyframe-tools')}>
           <button
             type="button"
             class="icon-btn sm"
             data-act="copy"
-            aria-label=${t('Copy keyframes')}
-            title=${t('Copy (Ctrl+C)')}
+            aria-label=${t('anim-studio.keyframes-editor.copy-keyframes')}
+            title=${t('anim-studio.keyframes-editor.copy-ctrl-c')}
             ?disabled=${!this._keys.length}
             @click=${this._copy}
           >
@@ -1638,8 +1638,8 @@ export class AnimKeyframesEditor extends LitElement {
             type="button"
             class="icon-btn sm"
             data-act="paste"
-            aria-label=${t('Paste keyframes at the playhead')}
-            title=${clip ? t('Paste at the playhead into {target} (Ctrl+V)', { target: targetLabel(this._view!, active) }) : t('Copy keyframes first')}
+            aria-label=${t('anim-studio.keyframes-editor.paste-keyframes-at-the-playhead')}
+            title=${clip ? t('anim-studio.keyframes-editor.paste-at-the-playhead-into-target-ctrl-v', { target: targetLabel(this._view!, active) }) : t('anim-studio.keyframes-editor.copy-keyframes-first')}
             ?disabled=${!clip || this.disabled}
             @click=${this._paste}
           >
@@ -1649,8 +1649,8 @@ export class AnimKeyframesEditor extends LitElement {
             type="button"
             class="icon-btn sm danger"
             data-act="delete"
-            aria-label=${t('Delete keyframes')}
-            title=${t('Delete (Del)')}
+            aria-label=${t('anim-studio.keyframes-editor.delete-keyframes')}
+            title=${t('anim-studio.keyframes-editor.delete-del')}
             ?disabled=${!this._keys.length || this.disabled}
             @click=${this._delete}
           >
@@ -1662,8 +1662,8 @@ export class AnimKeyframesEditor extends LitElement {
             class="icon-btn sm"
             data-act="onion"
             aria-pressed=${this.onionSkin ? 'true' : 'false'}
-            aria-label=${t('Onion skin')}
-            title=${t('Onion skin: mark the keyframes around the playhead')}
+            aria-label=${t('anim-studio.keyframes-editor.onion-skin')}
+            title=${t('anim-studio.keyframes-editor.onion-skin-mark-the-keyframes-around-the')}
             @click=${() => (this.onionSkin = !this.onionSkin)}
           >
             <ha-icon icon="mdi:layers-triple-outline"></ha-icon>
@@ -1682,16 +1682,16 @@ export class AnimKeyframesEditor extends LitElement {
     const labels = ticks.major.filter((p) => Math.abs(p - now * 100) * ppp > 34);
     return html`
       <div class="ruler">
-        <div class="ruler-head">${narrow ? '' : this._unit === 's' ? t('Seconds') : t('Cycle')}</div>
+        <div class="ruler-head">${narrow ? '' : this._unit === 's' ? t('anim-studio.keyframes-editor.seconds') : t('anim-studio.keyframes-editor.cycle')}</div>
         <div
           class="ruler-track"
           role="slider"
           tabindex="0"
-          aria-label=${t('Playhead')}
+          aria-label=${t('anim-studio.keyframes-editor.playhead')}
           aria-valuemin="0"
           aria-valuemax="100"
           aria-valuenow=${round1(now * 100)}
-          aria-valuetext=${t('{pct}, {seconds} seconds', { pct: pctText(now * 100), seconds: (this._view!.duration * now).toFixed(2) })}
+          aria-valuetext=${t('anim-studio.keyframes-editor.pct-seconds-seconds', { pct: pctText(now * 100), seconds: (this._view!.duration * now).toFixed(2) })}
           @pointerdown=${this._onRulerDown}
           @pointermove=${this._onPointerMove}
           @pointerup=${this._onPointerUp}
@@ -1733,7 +1733,7 @@ export class AnimKeyframesEditor extends LitElement {
     const tab = this._laneTab(target, lane, times);
     const o = this.onionSkin && target === this._active ? this.onion : {};
     const tname = target === main && this._groups().length === 1 ? '' : `${targetLabel(this._view!, target)} `;
-    const name = lane === '*' ? (tname ? t('{target} keyframe', { target: tname.trim() }) : t('keyframe')) : tname ? t('{target} {lane} keyframe', { target: tname.trim(), lane: laneLabel(lane).toLowerCase() }) : t('{lane} keyframe', { lane: laneLabel(lane).toLowerCase() });
+    const name = lane === '*' ? (tname ? t('anim-studio.keyframes-editor.target-keyframe', { target: tname.trim() }) : t('anim-studio.keyframes-editor.keyframe')) : tname ? t('anim-studio.keyframes-editor.target-lane-keyframe', { target: tname.trim(), lane: laneLabel(lane).toLowerCase() }) : t('anim-studio.keyframes-editor.lane-keyframe', { lane: laneLabel(lane).toLowerCase() });
     const label = name.charAt(0).toUpperCase() + name.slice(1);
     const spans = times.slice(0, -1).map((a, i) => {
       const b = times[i + 1];
@@ -1767,9 +1767,9 @@ export class AnimKeyframesEditor extends LitElement {
         aria-valuemin="0"
         aria-valuemax="100"
         aria-valuenow=${at}
-        aria-valuetext=${[pctText(at), val, sel ? t('selected') : '', locked ? t('locked') : ''].filter(Boolean).join(', ')}
+        aria-valuetext=${[pctText(at), val, sel ? t('anim-studio.keyframes-editor.selected') : '', locked ? t('anim-studio.keyframes-editor.locked') : ''].filter(Boolean).join(', ')}
         aria-describedby="kf-help"
-        title=${val ? t('{label} at {at} · {value}', { label, at: pctText(at), value: val }) : t('{label} at {at}', { label, at: pctText(at) })}
+        title=${val ? t('anim-studio.keyframes-editor.label-at-at-value', { label, at: pctText(at), value: val }) : t('anim-studio.keyframes-editor.label-at-at', { label, at: pctText(at) })}
         @pointerdown=${(e: PointerEvent) => this._onKeyDown(e, k)}
         @keydown=${(e: KeyboardEvent) => this._onKeyKeydown(e, k)}
         @focus=${() => this._laneFocus.set(`${target}|${lane}`, at)}
@@ -1797,15 +1797,15 @@ export class AnimKeyframesEditor extends LitElement {
         data-lane="*"
         data-target=${g.target}
         role="group"
-        aria-label=${t('{name} keyframes', { name })}
+        aria-label=${t('anim-studio.keyframes-editor.name-keyframes', { name })}
       >
         <div class="head">
           <button
             type="button"
             class="icon-btn sm collapse"
             aria-expanded=${open ? 'true' : 'false'}
-            aria-label=${open ? t('Collapse {name}', { name }) : t('Expand {name}', { name })}
-            title=${open ? t('Collapse') : t('Expand')}
+            aria-label=${open ? t('anim-studio.keyframes-editor.collapse-name', { name }) : t('anim-studio.keyframes-editor.expand-name', { name })}
+            title=${open ? t('anim-studio.keyframes-editor.collapse') : t('anim-studio.keyframes-editor.expand')}
             @click=${() => this._toggleGroup(g.target)}
           >
             <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -1813,7 +1813,7 @@ export class AnimKeyframesEditor extends LitElement {
           <button
             type="button"
             class="lane-name"
-            title=${t('Select every {name} keyframe (Shift adds)', { name: name.toLowerCase() })}
+            title=${t('anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds', { name: name.toLowerCase() })}
             @click=${(e: MouseEvent) => this._selectLane(g.target, '*', e.shiftKey || e.ctrlKey || e.metaKey)}
           >
             <ha-icon icon=${targetIcon(g.target)}></ha-icon>
@@ -1822,8 +1822,8 @@ export class AnimKeyframesEditor extends LitElement {
           <button
             type="button"
             class="icon-btn sm lane-add"
-            aria-label=${t('Add a {name} keyframe at the playhead', { name: name.toLowerCase() })}
-            title=${t('Add a keyframe at the playhead')}
+            aria-label=${t('anim-studio.keyframes-editor.add-a-name-keyframe-at-the-playhead', { name: name.toLowerCase() })}
+            title=${t('anim-studio.keyframes-editor.add-a-keyframe-at-the-playhead')}
             ?disabled=${this.disabled}
             @click=${() => this._add(g.target, '*', this.time * 100)}
           >
@@ -1848,12 +1848,12 @@ export class AnimKeyframesEditor extends LitElement {
     const now = fragmentText(def.id, sampleLane(kfs, def.id, this.time * 100, this._view!.easing));
     const active = this._keys.some((s) => s.target === g.target && s.lane === lane);
     return html`
-      <div class="row lane sub ${active ? 'active' : ''}" data-lane=${lane} data-target=${g.target} role="group" aria-label=${t('{label} lane', { label: t(def.label) })}>
+      <div class="row lane sub ${active ? 'active' : ''}" data-lane=${lane} data-target=${g.target} role="group" aria-label=${t('anim-studio.keyframes-editor.label-lane', { label: t(def.label) })}>
         <div class="head">
           <button
             type="button"
             class="lane-name"
-            title=${t('Select every {name} keyframe (Shift adds)', { name: t(def.label).toLowerCase() })}
+            title=${t('anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds', { name: t(def.label).toLowerCase() })}
             @click=${(e: MouseEvent) => this._selectLane(g.target, lane, e.shiftKey || e.ctrlKey || e.metaKey)}
           >
             <ha-icon icon=${def.icon}></ha-icon>
@@ -1863,8 +1863,8 @@ export class AnimKeyframesEditor extends LitElement {
           <button
             type="button"
             class="icon-btn sm lane-add"
-            aria-label=${t('Add {name} keyframe at the playhead', { name: t(def.label).toLowerCase() })}
-            title=${t('Add a keyframe at the playhead')}
+            aria-label=${t('anim-studio.keyframes-editor.add-name-keyframe-at-the-playhead', { name: t(def.label).toLowerCase() })}
+            title=${t('anim-studio.keyframes-editor.add-a-keyframe-at-the-playhead')}
             ?disabled=${this.disabled}
             @click=${() => this._add(g.target, lane, this.time * 100)}
           >
@@ -1886,7 +1886,7 @@ export class AnimKeyframesEditor extends LitElement {
   private _laneValue(kfs: AnimationKeyframe[], lane: LaneId, text: string): TemplateResult {
     const f = sampleLane(kfs, lane, this.time * 100, this._view!.easing) ?? {};
     const swatch = (bg: string, extra = '') =>
-      html`<span class="val" title=${t('At the playhead: {text}', { text })}><i class="sw" style="background: ${bg};${extra}"></i></span>`;
+      html`<span class="val" title=${t('anim-studio.keyframes-editor.at-the-playhead-text', { text })}><i class="sw" style="background: ${bg};${extra}"></i></span>`;
     const anim = (v: string) => v.replace(/var\(--mc-anim-c\)/g, this.entityColor);
     if (lane === 'color' && f.color) return swatch(anim(f.color));
     if (lane === 'background' && f.background) return swatch(anim(f.background));
@@ -1897,8 +1897,8 @@ export class AnimKeyframesEditor extends LitElement {
         `box-shadow: ${f.shadow === 'none' ? 'none' : anim(f.shadow).replace(/(\d+(?:\.\d+)?)px/g, (_, n) => `${Math.min(4, Number(n) / 4)}px`)}`,
       );
     if (lane === 'filter' && f.filter)
-      return html`<span class="val" title=${t('At the playhead: {filter}', { filter: f.filter })}>${f.filter.match(/^[a-z-]+/)?.[0] ?? f.filter}</span>`;
-    return html`<span class="val" title=${t('At the playhead: {text}', { text })}>${text}</span>`;
+      return html`<span class="val" title=${t('anim-studio.keyframes-editor.at-the-playhead-filter', { filter: f.filter })}>${f.filter.match(/^[a-z-]+/)?.[0] ?? f.filter}</span>`;
+    return html`<span class="val" title=${t('anim-studio.keyframes-editor.at-the-playhead-text', { text })}>${text}</span>`;
   }
 
   /** The zoomed tracks' width (px); undefined at 100% (the tracks fill the body). */
@@ -1917,13 +1917,13 @@ export class AnimKeyframesEditor extends LitElement {
       if (this._collapsed.has(g.target)) continue;
       const used = usedLanes(g.keyframes);
       for (const id of used) rows.push(this._renderLane(g, id));
-      if (!used.length && !g.main) rows.push(html`<div class="empty-group">${t('No keyframes yet: use Add property, or double-click its lane.')}</div>`);
+      if (!used.length && !g.main) rows.push(html`<div class="empty-group">${t('anim-studio.keyframes-editor.no-keyframes-yet-use-add-property-or')}</div>`);
     }
     const b = this._band;
     const tw = this._trackWidth();
     const nothingYet = groups.every((g) => !usedLanes(g.keyframes).length);
     return html`
-      <div class="tl" role="group" aria-label=${t('Keyframe timeline')}>
+      <div class="tl" role="group" aria-label=${t('anim-studio.keyframes-editor.keyframe-timeline')}>
         <div class="tl-body" @wheel=${this._onWheel}>
           <div class="tl-content" style=${tw ? `--tw: ${tw}` : ''}>
             ${this._renderRuler()}
@@ -1938,13 +1938,13 @@ export class AnimKeyframesEditor extends LitElement {
                   : nothing
               }
             </div>
-            ${nothingYet ? html`<div class="empty-lanes"><ha-icon icon="mdi:information-outline"></ha-icon>${t('No properties animate yet. Use Add property, or double-click a lane.')}</div>` : nothing}
+            ${nothingYet ? html`<div class="empty-lanes"><ha-icon icon="mdi:information-outline"></ha-icon>${t('anim-studio.keyframes-editor.no-properties-animate-yet-use-add')}</div>` : nothing}
             ${this._overlays()}
           </div>
         </div>
         ${this._renderFoot()}
         <span class="sr-only" id="kf-help">
-          ${t('Drag to move (snaps; Shift: free, Alt: duplicate). Ctrl-click adds a key, Shift-click selects a range. Arrows move, Alt and arrows go to the next key, Delete removes.')}
+          ${t('anim-studio.keyframes-editor.drag-to-move-snaps-shift-free-alt')}
         </span>
       </div>
     `;
@@ -1952,25 +1952,25 @@ export class AnimKeyframesEditor extends LitElement {
 
   private _renderFoot(): TemplateResult {
     const z = this._zoom;
-    return html`<div class="tl-foot" role="toolbar" aria-label=${t('Timeline view')}>
+    return html`<div class="tl-foot" role="toolbar" aria-label=${t('anim-studio.keyframes-editor.timeline-view')}>
       <button
         type="button"
         class="icon-btn sm"
         data-act="snap"
         aria-pressed=${this._snap ? 'true' : 'false'}
-        aria-label=${t('Snapping')}
-        title=${t('Snap to keyframes, the playhead and the grid (hold Shift to drag freely)')}
+        aria-label=${t('anim-studio.keyframes-editor.snapping')}
+        title=${t('anim-studio.keyframes-editor.snap-to-keyframes-the-playhead-and-the')}
         @click=${() => (this._snap = !this._snap)}
       >
         <ha-icon icon="mdi:magnet"></ha-icon>
       </button>
       <label class="grid-select">
-        <span class="sr-only">${t('Snap grid')}</span>
+        <span class="sr-only">${t('anim-studio.keyframes-editor.snap-grid')}</span>
         <div class="select">
           <select
             class="input"
             data-act="grid"
-            aria-label=${t('Snap grid')}
+            aria-label=${t('anim-studio.keyframes-editor.snap-grid')}
             ?disabled=${!this._snap}
             @change=${(e: Event) => (this._grid = (e.target as HTMLSelectElement).value as SnapGrid)}
           >
@@ -1983,8 +1983,8 @@ export class AnimKeyframesEditor extends LitElement {
         type="button"
         class="unit-btn"
         data-act="units"
-        aria-label=${this._unit === 's' ? t('Ruler in seconds; show percent') : t('Ruler in percent; show seconds')}
-        title=${t('Ruler in percent of the cycle or in seconds')}
+        aria-label=${this._unit === 's' ? t('anim-studio.keyframes-editor.ruler-in-seconds-show-percent') : t('anim-studio.keyframes-editor.ruler-in-percent-show-seconds')}
+        title=${t('anim-studio.keyframes-editor.ruler-in-percent-of-the-cycle-or-in')}
         @click=${() => (this._unit = this._unit === 's' ? 'pct' : 's')}
       >
         ${this._unit === 's' ? 's' : '%'}
@@ -1994,20 +1994,20 @@ export class AnimKeyframesEditor extends LitElement {
         type="button"
         class="icon-btn sm"
         data-act="zoom-out"
-        aria-label=${t('Zoom out')}
-        title=${t('Zoom out (Ctrl -)')}
+        aria-label=${t('anim-studio.keyframes-editor.zoom-out')}
+        title=${t('anim-studio.keyframes-editor.zoom-out-ctrl')}
         ?disabled=${z <= 1}
         @click=${() => this._setZoom(zoomStep(z, -1))}
       >
         <ha-icon icon="mdi:magnify-minus-outline"></ha-icon>
       </button>
-      <span class="zoom-pct" aria-live="polite" title=${t('Ctrl + wheel zooms')}>${Math.round(z * 100)}%</span>
+      <span class="zoom-pct" aria-live="polite" title=${t('anim-studio.keyframes-editor.ctrl-wheel-zooms')}>${Math.round(z * 100)}%</span>
       <button
         type="button"
         class="icon-btn sm"
         data-act="zoom-in"
-        aria-label=${t('Zoom in')}
-        title=${t('Zoom in (Ctrl +)')}
+        aria-label=${t('anim-studio.keyframes-editor.zoom-in')}
+        title=${t('anim-studio.keyframes-editor.zoom-in-ctrl')}
         ?disabled=${z >= 10}
         @click=${() => this._setZoom(zoomStep(z, 1))}
       >
@@ -2017,8 +2017,8 @@ export class AnimKeyframesEditor extends LitElement {
         type="button"
         class="icon-btn sm"
         data-act="zoom-fit"
-        aria-label=${t('Fit the cycle')}
-        title=${t('Fit the whole cycle')}
+        aria-label=${t('anim-studio.keyframes-editor.fit-the-cycle')}
+        title=${t('anim-studio.keyframes-editor.fit-the-whole-cycle')}
         ?disabled=${z <= 1}
         @click=${() => this._setZoom(1)}
       >
@@ -2033,7 +2033,7 @@ export class AnimKeyframesEditor extends LitElement {
     const g: TimelineTrack = { target, keyframes: kfs, main: target === this._main };
     const times = laneTimes(kfs, '*');
     return html`
-      <div class="tl narrow" role="group" aria-label=${t('Keyframe timeline')}>
+      <div class="tl narrow" role="group" aria-label=${t('anim-studio.keyframes-editor.keyframe-timeline')}>
         <div class="tl-body">
           <div class="tl-content">
             ${this._renderRuler()}
@@ -2042,7 +2042,7 @@ export class AnimKeyframesEditor extends LitElement {
             </div>
             ${this._overlays()}
           </div>
-          <ul class="kf-list" aria-label=${t('Keyframes')}>
+          <ul class="kf-list" aria-label=${t('anim-studio.keyframes-editor.keyframes')}>
             ${times.map((at) => {
               const k: TKey = { target, lane: '*', at };
               const sel = this._isSel(k);
@@ -2064,14 +2064,14 @@ export class AnimKeyframesEditor extends LitElement {
                   }}
                 >
                   <span class="at">${pctText(at)}</span>
-                  <span class="props">${lanes || t('Empty keyframe')}${vals ? html`<small>${vals}</small>` : nothing}</span>
+                  <span class="props">${lanes || t('anim-studio.keyframes-editor.empty-keyframe')}${vals ? html`<small>${vals}</small>` : nothing}</span>
                   <span class="ease">${easingLabel(e)}</span>
                 </button>
               </li>`;
             })}
           </ul>
         </div>
-        <span class="sr-only" id="kf-help">${t('Arrows move the keyframe, Alt and arrows go to the next one, Delete removes it.')}</span>
+        <span class="sr-only" id="kf-help">${t('anim-studio.keyframes-editor.arrows-move-the-keyframe-alt-and-arrows')}</span>
       </div>
     `;
   }

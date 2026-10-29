@@ -1,6 +1,6 @@
 import type { SceneId } from './seasonal';
 import { SCENE_LABELS } from './seasonal-labels';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 
 /*
  * Seasonal scenes as data: per scene the particle kinds (drawn by src/card/seasonal-symbols.ts),
@@ -94,7 +94,7 @@ export interface ParticleSpec {
 
 export interface SceneDef {
   id: SceneId;
-  label: MessageId;
+  label: MessageIndex;
   particles: readonly ParticleSpec[];
   ambient?: readonly AmbientKind[];
   decorations?: readonly DecoMotif[];

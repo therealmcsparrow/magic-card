@@ -1,0 +1,754 @@
+{
+  "theme-presets.library.amber-console": {
+    "text": "Amber Console",
+    "note": "Preset name: amber text on dark, like an old terminal, shown as a card title. Console means a text terminal.",
+    "max": 25
+  },
+  "theme-presets.library.amber-on-blue-grey-mirage": {
+    "text": "Amber on blue-grey mirage.",
+    "note": "Preset description in the preset picker: amber accents on a hazy blue-grey base, a warm but cool-toned mood.",
+    "max": 45
+  },
+  "theme-presets.library.arcade": {
+    "text": "Arcade",
+    "note": "Preset name: a bright theme styled after arcade cabinets. Name of a colour theme, shown as a card title; not the place.",
+    "max": 10
+  },
+  "theme-presets.library.ashen-keep": {
+    "text": "Ashen Keep",
+    "note": "Name of a built-in dark theme preset with ash-grey tones. A proper name, keep it short.",
+    "max": 20
+  },
+  "theme-presets.library.autumn": {
+    "text": "Autumn",
+    "note": "Preset name: a seasonal colour theme in warm autumn colours, shown as a card title. Pairs with Spring, Summer and Winter.",
+    "max": 10
+  },
+  "theme-presets.library.ayu-mirage": {
+    "text": "Ayu Mirage",
+    "note": "Name of a built-in theme preset in the style of the Ayu Mirage editor colour scheme. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.balanced-low-glare-cream-and-teal": {
+    "text": "Balanced low-glare cream and teal.",
+    "note": "Preset description in the preset picker: soft cream surfaces with teal accents, easy on the eyes.",
+    "max": 55
+  },
+  "theme-presets.library.black-and-white-nothing-in-between": {
+    "text": "Black and white, nothing in between.",
+    "note": "Preset description in the preset picker: strict black and white with no mid greys, for maximum contrast.",
+    "max": 60
+  },
+  "theme-presets.library.candlelit-cloister": {
+    "text": "Candlelit Cloister",
+    "note": "Name of a built-in theme preset with warm candlelight colours. A proper name.",
+    "max": 30
+  },
+  "theme-presets.library.cassette": {
+    "text": "Cassette",
+    "note": "Preset name: a retro theme in faded tape-deck red and cream, shown as a card title.",
+    "max": 15
+  },
+  "theme-presets.library.catppuccin-latte-mocha": {
+    "text": "Catppuccin Latte & Mocha",
+    "note": "Preset name in the preset picker: the Catppuccin pastel palette in its light (Latte) and dark (Mocha) variants.",
+    "max": 40
+  },
+  "theme-presets.library.charcoal-iron-and-pale-limestone-deep": {
+    "text": "Charcoal iron and pale limestone; deep red accent, coral at night.",
+    "note": "Preset description in the preset picker: charcoal and pale limestone with a deep red accent by day that turns coral at night.",
+    "max": 110
+  },
+  "theme-presets.library.clean-light-with-a-calm-blue": {
+    "text": "Clean light with a calm blue.",
+    "note": "Preset description in the preset picker: a bright, plain light theme with one calm blue accent.",
+    "max": 50
+  },
+  "theme-presets.library.clean-primer-blues-and-neutral-greys": {
+    "text": "Clean Primer blues and neutral greys.",
+    "note": "Preset description. 'Primer' is the name of GitHub's design system; keep it unchanged.",
+    "max": 60
+  },
+  "theme-presets.library.cobalt-blue-with-a-gold-primary": {
+    "text": "Cobalt blue with a gold primary.",
+    "note": "Preset description in the preset picker: deep cobalt blue surfaces with gold as the primary accent colour.",
+    "max": 55
+  },
+  "theme-presets.library.cobalt-gold": {
+    "text": "Cobalt Gold",
+    "note": "Name of a built-in theme preset that pairs cobalt blue with gold. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.cobalt-prism": {
+    "text": "Cobalt Prism",
+    "note": "Name of a built-in theme preset built on cobalt blue with prismatic accents. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.contrast": {
+    "text": "Contrast",
+    "note": "Preset name: a high-contrast theme with strong edges, shown as a card title. A noun, not the verb.",
+    "max": 15
+  },
+  "theme-presets.library.cool-arctic-blues-on-polar-night": {
+    "text": "Cool arctic blues on polar night.",
+    "note": "Preset description in the preset picker: icy blues on a dark blue-grey base, a cold and calm mood.",
+    "max": 55
+  },
+  "theme-presets.library.crimson-pines": {
+    "text": "Crimson Pines",
+    "note": "Name of a built-in theme preset that pairs crimson with forest green. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.deep-greens-with-an-amber-spark": {
+    "text": "Deep greens with an amber spark.",
+    "note": "Preset description in the preset picker: dark forest greens with a small amber highlight.",
+    "max": 55
+  },
+  "theme-presets.library.deep-navy-with-soft-periwinkle": {
+    "text": "Deep navy with soft periwinkle.",
+    "note": "Preset description in the preset picker: deep navy surfaces with soft periwinkle blue accents.",
+    "max": 50
+  },
+  "theme-presets.library.deep-petrol-and-steel-grey-with-a": {
+    "text": "Deep petrol and steel-grey with a coolant-cyan accent; copper at night.",
+    "note": "Preset description in the preset picker: deep petrol and steel-grey with a bright cyan accent by day that turns copper at night.",
+    "max": 115
+  },
+  "theme-presets.library.deep-survey": {
+    "text": "Deep Survey",
+    "note": "Name of a built-in theme preset with deep, dark survey-instrument colours. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.desert": {
+    "text": "Desert",
+    "note": "Preset name: a theme in sand and sun colours, shown as a card title. Capitalised; the lower-case 'desert' key is a search word.",
+    "max": 10
+  },
+  "theme-presets.library.dracula-night": {
+    "text": "Dracula Night",
+    "note": "Name of a built-in dark theme preset in the style of the Dracula editor colour scheme. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.dusky-blue-night-warm-fox-white-day": {
+    "text": "Dusky blue night, warm fox-white day.",
+    "note": "Preset description in the preset picker: a dusky blue dark mode and a warm off-white light mode.",
+    "max": 60
+  },
+  "theme-presets.library.dust-duel": {
+    "text": "Dust Duel",
+    "note": "Name of a built-in theme preset with dusty desert tones. A proper name.",
+    "max": 15
+  },
+  "theme-presets.library.ember": {
+    "text": "Ember",
+    "note": "Preset name: a glowing orange-red theme, like embers, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.everforest-moss": {
+    "text": "Everforest Moss",
+    "note": "Name of a built-in theme preset in the style of the Everforest editor colour scheme, with mossy greens. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.faded-tape-deck-red-and-cream": {
+    "text": "Faded tape-deck red and cream.",
+    "note": "Preset description in the preset picker: washed-out red with cream, a retro hi-fi look.",
+    "max": 50
+  },
+  "theme-presets.library.familiar-editor-greys-with-a-bright-blue": {
+    "text": "Familiar editor greys with a bright blue.",
+    "note": "Preset description in the preset picker: neutral greys like a code editor with a bright blue accent.",
+    "max": 70
+  },
+  "theme-presets.library.forest": {
+    "text": "Forest",
+    "note": "Preset name: a theme in soft green forest tones, shown as a card title. Capitalised; the lower-case 'forest' key is a search word.",
+    "max": 10
+  },
+  "theme-presets.library.fresh-leaf-green-and-blossom-pink": {
+    "text": "Fresh leaf green and blossom pink.",
+    "note": "Preset description in the preset picker: a light spring palette of leaf green with blossom pink.",
+    "max": 55
+  },
+  "theme-presets.library.frontier-freighter": {
+    "text": "Frontier Freighter",
+    "note": "Name of a built-in sci-fi theme preset styled like a worn cargo ship. A proper name.",
+    "max": 30
+  },
+  "theme-presets.library.frost": {
+    "text": "Frost",
+    "note": "Preset name: a cool icy-blue theme, shown as a card title. Different from 'Nord Frost', which is named after a colour scheme.",
+    "max": 10
+  },
+  "theme-presets.library.frosted-cards-over-a-graphite-gradient": {
+    "text": "Frosted cards over a graphite gradient.",
+    "note": "Preset description in the preset picker: translucent frosted cards on a dark graphite gradient background.",
+    "max": 65
+  },
+  "theme-presets.library.frosted-cards-over-a-rose-gradient": {
+    "text": "Frosted cards over a rose gradient.",
+    "note": "Preset description in the preset picker: translucent frosted cards on a rose-pink gradient background.",
+    "max": 60
+  },
+  "theme-presets.library.frosted-cards-over-an-aqua-gradient": {
+    "text": "Frosted cards over an aqua gradient.",
+    "note": "Preset description in the preset picker: translucent frosted cards on an aqua gradient background.",
+    "max": 60
+  },
+  "theme-presets.library.github-light-dark": {
+    "text": "GitHub Light & Dark",
+    "note": "Preset name in the preset picker: a theme with the light and dark colours of the GitHub interface.",
+    "max": 35
+  },
+  "theme-presets.library.glass-aqua": {
+    "text": "Glass Aqua",
+    "note": "Name of a built-in frosted-glass theme preset with aqua accents. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.glass-blurred-translucent-cards-on-a": {
+    "text": "Glass: blurred, translucent cards on a soft gradient.",
+    "note": "Preset description. 'Glass' names the frosted-glass style (blur and transparency) shared by the Glass presets; it is not a drinking glass.",
+    "max": 85
+  },
+  "theme-presets.library.glass-graphite": {
+    "text": "Glass Graphite",
+    "note": "Name of a built-in frosted-glass theme preset in graphite grey. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.glass-rose": {
+    "text": "Glass Rose",
+    "note": "Name of a built-in frosted-glass theme preset with rose-pink accents. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.gruvbox-retro": {
+    "text": "Gruvbox Retro",
+    "note": "Name of a built-in theme preset in the style of the Gruvbox editor colour scheme, with warm retro colours. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.hi-vis": {
+    "text": "Hi-Vis",
+    "note": "Preset name: short for high-visibility, like safety clothing; a very bright, high-contrast theme. Shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.high-contrast-green-on-black-strong": {
+    "text": "High contrast green on black, strong edges.",
+    "note": "Preset description in the preset picker: bright green on black with strong borders, for readability.",
+    "max": 70
+  },
+  "theme-presets.library.high-contrast-strong-edges": {
+    "text": "High contrast, strong edges.",
+    "note": "Preset description in the preset picker: a high contrast theme with strong borders, for readability.",
+    "max": 45
+  },
+  "theme-presets.library.hot-magenta-and-electric-cyan-neon-on-a": {
+    "text": "Hot magenta and electric cyan neon on a dark city night.",
+    "note": "Preset description in the preset picker: hot magenta and electric cyan neon colours on a dark city-night base.",
+    "max": 90
+  },
+  "theme-presets.library.hot-pink-and-cyan-on-dark-purple": {
+    "text": "Hot pink and cyan on dark purple.",
+    "note": "Preset description in the preset picker: hot pink and cyan accents on a dark purple base.",
+    "max": 55
+  },
+  "theme-presets.library.icy-blue-with-a-violet-touch": {
+    "text": "Icy blue with a violet touch.",
+    "note": "Preset description in the preset picker: pale icy blue with a hint of violet, a cool light mood.",
+    "max": 50
+  },
+  "theme-presets.library.ink": {
+    "text": "Ink",
+    "note": "Preset name: a dark theme in deep ink colours, shown as a card title. Very short, so keep it brief (limit 5 characters).",
+    "max": 5
+  },
+  "theme-presets.library.kanagawa-wave": {
+    "text": "Kanagawa Wave",
+    "note": "Name of a built-in theme preset in the style of the Kanagawa editor colour scheme. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.lavender-mist": {
+    "text": "Lavender Mist",
+    "note": "Name of a built-in theme preset with soft lavender tones. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.lilac-and-amber-on-near-black-like-a": {
+    "text": "Lilac and amber on near-black, like a retro starship console.",
+    "note": "Preset description in the preset picker: lilac and amber accents on near-black, styled like a retro starship console.",
+    "max": 100
+  },
+  "theme-presets.library.lime-and-magenta-on-charcoal": {
+    "text": "Lime and magenta on charcoal.",
+    "note": "Preset description in the preset picker: lime green and magenta accents on a charcoal base.",
+    "max": 50
+  },
+  "theme-presets.library.low-contrast-sage-on-soft-grey": {
+    "text": "Low-contrast sage on soft grey.",
+    "note": "Preset description in the preset picker: muted sage green on soft grey with gentle contrast.",
+    "max": 50
+  },
+  "theme-presets.library.material-baseline-purple-with-teal": {
+    "text": "Material baseline purple with teal.",
+    "note": "Preset description. 'Material' is Google's Material Design; 'baseline' is its default colour set. Keep Material unchanged.",
+    "max": 60
+  },
+  "theme-presets.library.material-violet": {
+    "text": "Material Violet",
+    "note": "Name of a built-in theme preset with a Material-style violet primary colour. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.midnight-oled": {
+    "text": "Midnight OLED",
+    "note": "Name of a built-in theme preset with a true-black background for OLED screens. OLED stays untranslated.",
+    "max": 25
+  },
+  "theme-presets.library.mint-and-sky-on-ink": {
+    "text": "Mint and sky on ink.",
+    "note": "Preset description in the preset picker: mint green and sky blue accents on a very dark ink-blue base.",
+    "max": 35
+  },
+  "theme-presets.library.monokai-lime": {
+    "text": "Monokai Lime",
+    "note": "Name of a built-in theme preset in the style of the Monokai editor colour scheme, with lime accents. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.muted-rose-and-iris-calm-and-low": {
+    "text": "Muted rose and iris, calm and low contrast.",
+    "note": "Preset description in the preset picker: muted rose and iris with low contrast for a calm look.",
+    "max": 70
+  },
+  "theme-presets.library.neon-lit-city-blues-and-violets": {
+    "text": "Neon-lit city blues and violets.",
+    "note": "Preset description in the preset picker: glowing blues and violets like a city lit by neon at night.",
+    "max": 55
+  },
+  "theme-presets.library.neon-magenta-and-cyan-80s-cabinet": {
+    "text": "Neon magenta and cyan, 80s cabinet.",
+    "note": "Preset description in the preset picker: neon magenta and cyan in the style of an 1980s arcade cabinet.",
+    "max": 60
+  },
+  "theme-presets.library.neon-rain": {
+    "text": "Neon Rain",
+    "note": "Name of a built-in dark theme preset with neon accents, like lights on wet streets. A proper name.",
+    "max": 15
+  },
+  "theme-presets.library.neutral-blue-grey-for-any-room": {
+    "text": "Neutral blue-grey for any room.",
+    "note": "Preset description in the preset picker: a neutral blue-grey palette that suits any dashboard.",
+    "max": 50
+  },
+  "theme-presets.library.night-owl-navy": {
+    "text": "Night Owl Navy",
+    "note": "Preset name in the preset picker: a deep navy dark theme inspired by the Night Owl editor palette.",
+    "max": 25
+  },
+  "theme-presets.library.nightfox-dayfox": {
+    "text": "Nightfox & Dayfox",
+    "note": "Preset name in the preset picker: the Nightfox dark and Dayfox light editor palettes as one theme.",
+    "max": 30
+  },
+  "theme-presets.library.nord-frost": {
+    "text": "Nord Frost",
+    "note": "Name of a built-in theme preset in the style of the Nord colour palette, with icy blues. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.ocean": {
+    "text": "Ocean",
+    "note": "Preset name: a theme in sea blues and teals, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.ochre-basin": {
+    "text": "Ochre Basin",
+    "note": "Name of a built-in theme preset with ochre and earthy desert colours. A proper name.",
+    "max": 20
+  },
+  "theme-presets.library.off-white-panels-burnt-orange-accent": {
+    "text": "Off-white panels, burnt orange accent: navy ink by day, denim blue at night.",
+    "note": "Preset description in the preset picker: off-white panels with a burnt orange accent, navy ink text by day and denim blue at night.",
+    "max": 125
+  },
+  "theme-presets.library.oled-amber": {
+    "text": "OLED Amber",
+    "note": "Name of a built-in theme preset with a true-black background and amber accents. OLED stays untranslated.",
+    "max": 20
+  },
+  "theme-presets.library.oled-green": {
+    "text": "OLED Green",
+    "note": "Name of a built-in theme preset with a true-black background and green accents. OLED stays untranslated.",
+    "max": 20
+  },
+  "theme-presets.library.one-dark-pro": {
+    "text": "One Dark Pro",
+    "note": "Preset name in the preset picker: a dark theme with the colours of the One Dark Pro editor palette.",
+    "max": 20
+  },
+  "theme-presets.library.orbital-smelter": {
+    "text": "Orbital Smelter",
+    "note": "Name of a built-in sci-fi theme preset styled like an industrial smelter in orbit. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.oxblood-red-over-a-dark-pine-forest-moss": {
+    "text": "Oxblood red over a dark pine forest, moss-green panels, green-black nights.",
+    "note": "Preset description in the preset picker: oxblood red over a dark pine forest, with moss-green panels and green-black nights.",
+    "max": 120
+  },
+  "theme-presets.library.paper": {
+    "text": "Paper",
+    "note": "Preset name: a soft off-white theme that looks like paper, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.pastel-lilac-and-rose": {
+    "text": "Pastel lilac and rose.",
+    "note": "Preset description in the preset picker: soft pastel lilac and rose, a light and gentle mood.",
+    "max": 40
+  },
+  "theme-presets.library.pastel-raspberry-and-mint": {
+    "text": "Pastel raspberry and mint.",
+    "note": "Preset description in the preset picker: soft pastel raspberry pink with mint green, a light and playful mood.",
+    "max": 45
+  },
+  "theme-presets.library.plum-and-old-gold-on-parchment-wine": {
+    "text": "Plum and old gold on parchment; wine-black at night.",
+    "note": "Preset description in the preset picker: plum and old gold on a parchment-coloured day mode, with a wine-black dark mode.",
+    "max": 85
+  },
+  "theme-presets.library.poimandres-mint": {
+    "text": "Poimandres Mint",
+    "note": "Name of a built-in theme preset in the style of the Poimandres editor colour scheme, with mint accents. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.pure-black-for-wall-tablets": {
+    "text": "Pure black for wall tablets.",
+    "note": "Preset description in the preset picker: true black backgrounds for wall-mounted tablets, which saves power on OLED screens.",
+    "max": 45
+  },
+  "theme-presets.library.pure-black-in-dark-mode-only-keep-the": {
+    "text": "Pure black in dark mode only. Keep the screen in dark mode.",
+    "note": "Preset description in the preset picker: true black only in dark mode, so the screen must stay in dark mode to get it.",
+    "max": 95
+  },
+  "theme-presets.library.pure-black-with-amber-for-wall-tablets": {
+    "text": "Pure black with amber, for wall tablets.",
+    "note": "Preset description in the preset picker: true black backgrounds with amber accents for wall-mounted tablets.",
+    "max": 65
+  },
+  "theme-presets.library.pure-black-with-terminal-green-for-wall": {
+    "text": "Pure black with terminal green, for wall tablets.",
+    "note": "Preset description in the preset picker: true black backgrounds with terminal green accents for wall-mounted tablets.",
+    "max": 80
+  },
+  "theme-presets.library.purple-and-pink-on-deep-indigo": {
+    "text": "Purple and pink on deep indigo.",
+    "note": "Preset description in the preset picker: purple and pink accents on a deep indigo base.",
+    "max": 50
+  },
+  "theme-presets.library.red-clay-desert-brick-header-red-accent": {
+    "text": "Red-clay desert, brick header, red accent; sand-gold by night.",
+    "note": "Preset description in the preset picker: a red-clay desert look with a brick header and red accent by day, sand-gold at night.",
+    "max": 100
+  },
+  "theme-presets.library.rose-pine-bloom": {
+    "text": "Rose Pine Bloom",
+    "note": "Preset name in the preset picker: a theme inspired by the Rose Pine palette, with muted rose and pine tones.",
+    "max": 25
+  },
+  "theme-presets.library.rust-olive-and-warm-paper": {
+    "text": "Rust, olive and warm paper.",
+    "note": "Preset description in the preset picker: rust orange and olive green on warm paper-coloured surfaces.",
+    "max": 45
+  },
+  "theme-presets.library.saddle-tan-and-rust-on-sandy-cream-a": {
+    "text": "Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.",
+    "note": "Preset description in the preset picker: saddle tan and rust on sandy cream with a worn look by day, weathered teal at night.",
+    "max": 125
+  },
+  "theme-presets.library.sand": {
+    "text": "Sand",
+    "note": "Preset name: a warm neutral theme in sandy colours, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.silvered-jade-leaves-and-gold-touches-by": {
+    "text": "Silvered jade leaves and gold touches by day; sage green by night.",
+    "note": "Preset description in the preset picker: silvered jade leaves with gold touches by day, sage green by night.",
+    "max": 110
+  },
+  "theme-presets.library.silverleaf-glade": {
+    "text": "Silverleaf Glade",
+    "note": "Name of a built-in fantasy theme preset with silver and woodland greens. A proper name.",
+    "max": 30
+  },
+  "theme-presets.library.sky-blue-and-sun-yellow": {
+    "text": "Sky blue and sun yellow.",
+    "note": "Preset description in the preset picker: bright sky blue with sun yellow, a cheerful light mood.",
+    "max": 40
+  },
+  "theme-presets.library.slate": {
+    "text": "Slate",
+    "note": "Preset name: a neutral blue-grey theme, named after slate stone, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.soft-green-forest-tones-easy-on-the-eyes": {
+    "text": "Soft green forest tones, easy on the eyes.",
+    "note": "Preset description in the preset picker: soft forest greens with gentle contrast, easy on the eyes.",
+    "max": 70
+  },
+  "theme-presets.library.soft-pastel-accents-latte-by-day-and": {
+    "text": "Soft pastel accents, latte by day and mocha by night.",
+    "note": "Preset description in the preset picker: soft pastel accents on a latte-coloured light mode and a mocha-coloured dark mode.",
+    "max": 85
+  },
+  "theme-presets.library.solarized-glow": {
+    "text": "Solarized Glow",
+    "note": "Name of a built-in theme preset in the style of the Solarized colour palette. A proper name.",
+    "max": 25
+  },
+  "theme-presets.library.sorbet": {
+    "text": "Sorbet",
+    "note": "Preset name: a theme in soft pastel fruit colours, like the frozen dessert, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.spring": {
+    "text": "Spring",
+    "note": "Preset name: a seasonal colour theme in fresh spring colours, shown as a card title. The season, not the coil.",
+    "max": 10
+  },
+  "theme-presets.library.summer": {
+    "text": "Summer",
+    "note": "Preset name: a seasonal colour theme in bright summer colours, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.sun-baked-ochre-olive-header-at-night-an": {
+    "text": "Sun-baked ochre, olive header; at night an ochre glow on deep indigo.",
+    "note": "Preset description in the preset picker: sun-baked ochre with an olive header by day, an ochre glow on deep indigo at night.",
+    "max": 115
+  },
+  "theme-presets.library.synthwave-sunset": {
+    "text": "Synthwave Sunset",
+    "note": "Name of a built-in theme preset with 1980s synthwave sunset colours, pink and purple. A proper name.",
+    "max": 30
+  },
+  "theme-presets.library.teal-depths-and-coral": {
+    "text": "Teal depths and coral.",
+    "note": "Preset description in the preset picker: deep teal surfaces with coral accents.",
+    "max": 40
+  },
+  "theme-presets.library.terracotta-dust-and-oasis-teal": {
+    "text": "Terracotta, dust and oasis teal.",
+    "note": "Preset description in the preset picker: terracotta and dusty sand tones with an oasis teal accent.",
+    "max": 55
+  },
+  "theme-presets.library.tokyo-night-lights": {
+    "text": "Tokyo Night Lights",
+    "note": "Preset name in the preset picker: a dark theme inspired by the Tokyo Night editor palette, with glowing city-light accents.",
+    "max": 30
+  },
+  "theme-presets.library.ukiyo-e-indigo-and-parchment": {
+    "text": "Ukiyo-e indigo and parchment.",
+    "note": "Preset description in the preset picker: indigo ink on parchment, like a Japanese woodblock print.",
+    "max": 50
+  },
+  "theme-presets.library.ultramarine-blue-with-an-orange-spark": {
+    "text": "Ultramarine blue with an orange spark, sleek and futuristic.",
+    "note": "Preset description in the preset picker: ultramarine blue with an orange spark, a sleek and futuristic mood.",
+    "max": 100
+  },
+  "theme-presets.library.uses-blur-and-transparency-can-be-slow": {
+    "text": "Uses blur and transparency. Can be slow on old tablets.",
+    "note": "Warning line in the preset picker for presets that use blur and transparency, which can slow down old tablets.",
+    "max": 90
+  },
+  "theme-presets.library.warm-neutral-stone-and-clay": {
+    "text": "Warm neutral stone and clay.",
+    "note": "Preset description in the preset picker: warm neutral stone and clay tones, a quiet earthy mood.",
+    "max": 45
+  },
+  "theme-presets.library.warm-paper-and-terracotta": {
+    "text": "Warm paper and terracotta.",
+    "note": "Preset description in the preset picker: warm paper-coloured surfaces with terracotta accents.",
+    "max": 45
+  },
+  "theme-presets.library.warm-retro-browns-with-a-teal-link": {
+    "text": "Warm retro browns with a teal link.",
+    "note": "Preset description in the preset picker: warm retro browns with a teal colour for links.",
+    "max": 60
+  },
+  "theme-presets.library.winter": {
+    "text": "Winter",
+    "note": "Preset name: a seasonal colour theme in cold winter colours, shown as a card title.",
+    "max": 10
+  },
+  "theme-presets.library.zenburn-calm": {
+    "text": "Zenburn Calm",
+    "note": "Name of a built-in theme preset in the style of the Zenburn editor colour scheme, with low-contrast calm tones. A proper name.",
+    "max": 20
+  },
+  "theme-presets.picker.all": {
+    "text": "All",
+    "note": "Option in the 'Show' filter switch that lists every preset. A count follows the word.",
+    "max": 5
+  },
+  "theme-presets.picker.clear-search": {
+    "text": "Clear search",
+    "note": "Text button shown when no preset matches; empties the search box and shows all presets.",
+    "max": 20
+  },
+  "theme-presets.picker.contacts-another-website": {
+    "text": "Contacts another website",
+    "note": "Small privacy tag on a preset card: this preset loads a font or image from an external site.",
+    "max": 40
+  },
+  "theme-presets.picker.delete": {
+    "text": "Delete",
+    "note": "Button on a saved preset in My presets; removes the preset after confirmation.",
+    "max": 15
+  },
+  "theme-presets.picker.desert": {
+    "text": "desert",
+    "note": "Suggested search word, lower case, shown on a button after a failed search. Clicking it searches for this word.",
+    "max": 10
+  },
+  "theme-presets.picker.export": {
+    "text": "Export",
+    "note": "Button on a saved preset; downloads it as a file so it can be shared or imported elsewhere.",
+    "max": 10
+  },
+  "theme-presets.picker.fantasy": {
+    "text": "fantasy",
+    "note": "Suggested search word, lower case, on a button after a failed search; also a hidden keyword for fantasy presets. Not the heading, which is 'Fantasy'.",
+    "max": 15
+  },
+  "theme-presets.picker.fantasy-2": {
+    "text": "Fantasy",
+    "note": "Sub-heading above the fantasy presets in the Sci-fi & fantasy group. The lower-case 'fantasy' key is a search word instead.",
+    "max": 15
+  },
+  "theme-presets.picker.forest": {
+    "text": "forest",
+    "note": "Suggested search word, lower case, shown on a button after a failed search. Clicking it searches for this word.",
+    "max": 10
+  },
+  "theme-presets.picker.genre": {
+    "text": "genre",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the Sci-fi & fantasy presets.",
+    "max": 10
+  },
+  "theme-presets.picker.independent-colour-schemes-made-for": {
+    "text": "Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.",
+    "note": "Legal-style disclaimer above the Sci-fi & fantasy presets. Keep the meaning exactly; Magic Card is the product name and stays untranslated.",
+    "max": 190
+  },
+  "theme-presets.picker.inspired-by": {
+    "text": "Inspired by",
+    "note": "Option in the 'Show' filter switch for presets that take after a known colour scheme. A count follows. Capitalised; the lower-case key is a hidden search word.",
+    "max": 20
+  },
+  "theme-presets.picker.inspired-by-2": {
+    "text": "inspired by",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the presets in the 'Inspired by' group.",
+    "max": 20
+  },
+  "theme-presets.picker.inspired-by-name": {
+    "text": "Inspired by {name}",
+    "note": "Caption on a preset card. {name} is the name of the real colour scheme it takes after, such as Nord; keep it unchanged.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-presets.picker.my": {
+    "text": "my",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the user's own saved presets. Use the word a user would type for 'my'.",
+    "max": 5
+  },
+  "theme-presets.picker.my-presets": {
+    "text": "My presets",
+    "note": "Option in the 'Show' filter switch and group heading for presets the user saved. A count follows.",
+    "max": 25
+  },
+  "theme-presets.picker.n-shown": {
+    "text": "{n, plural, one {# preset} other {# presets}} shown",
+    "note": "Screen-reader status after filtering the preset list. {n} is the number of presets now visible.",
+    "max": 30,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "theme-presets.picker.n-shown-try-a-b-c-d-or-e": {
+    "text": "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.",
+    "note": "Screen-reader status when a search finds nothing. {n} is the number shown (0 here). {a} to {e} are five suggested search words, the translations of sci-fi, fantasy, neon, desert and forest.",
+    "max": 80,
+    "vars": {
+      "a": "The value that replaces a in the text.",
+      "b": "The value that replaces b in the text.",
+      "c": "The value that replaces c in the text.",
+      "d": "The value that replaces d in the text.",
+      "e": "The value that replaces e in the text.",
+      "n": "The count the text is about."
+    }
+  },
+  "theme-presets.picker.name-palette-or-style": {
+    "text": "Name, palette or style",
+    "note": "Placeholder text in the preset search box. 'Palette' means colour palette.",
+    "max": 40
+  },
+  "theme-presets.picker.neon": {
+    "text": "neon",
+    "note": "Suggested search word, lower case, shown on a button after a failed search. Clicking it searches for this word.",
+    "max": 10
+  },
+  "theme-presets.picker.no-preset-matches-query": {
+    "text": "No preset matches \"{query}\".",
+    "note": "Empty search result. {query} is the text typed in the preset search box; do not translate it.",
+    "max": 50,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "theme-presets.picker.original": {
+    "text": "Original",
+    "note": "Option in the 'Show' filter switch for presets made for Magic Card, not based on another scheme. A count follows. Not 'initial'.",
+    "max": 15
+  },
+  "theme-presets.picker.original-2": {
+    "text": "original",
+    "note": "Hidden search keyword, lower case, not shown. Typing it finds the presets in the 'Original' group.",
+    "max": 15
+  },
+  "theme-presets.picker.preset": {
+    "text": "Preset",
+    "note": "Accessible name (not visible) of the radio group that lists presets. A preset is a ready-made set of theme colours.",
+    "max": 15
+  },
+  "theme-presets.picker.presets-use-genre-and-colour-words-not": {
+    "text": "Presets use genre and colour words, not titles. Try one of these:",
+    "note": "Help text above the suggestion buttons, which are the words sci-fi, fantasy, neon, desert and forest. Ends with a colon.",
+    "max": 105
+  },
+  "theme-presets.picker.rename": {
+    "text": "Rename",
+    "note": "Button on a saved preset in My presets; lets the user change the preset's name.",
+    "max": 10
+  },
+  "theme-presets.picker.sci-fi": {
+    "text": "sci-fi",
+    "note": "Suggested search word, lower case, on a button after a failed search; also a hidden keyword for sci-fi presets. Not the heading, which is 'Sci-fi'.",
+    "max": 15
+  },
+  "theme-presets.picker.sci-fi-2": {
+    "text": "Sci-fi",
+    "note": "Sub-heading above the sci-fi presets in the Sci-fi & fantasy group. The lower-case 'sci-fi' key is a search word instead.",
+    "max": 15
+  },
+  "theme-presets.picker.sci-fi-fantasy": {
+    "text": "Sci-fi & fantasy",
+    "note": "Option in the 'Show' filter switch and group heading for genre-themed presets. A count follows.",
+    "max": 30
+  },
+  "theme-presets.picker.search-presets": {
+    "text": "Search presets",
+    "note": "Accessible name (not visible) of the preset search box.",
+    "max": 25
+  },
+  "theme-presets.picker.show": {
+    "text": "Show",
+    "note": "Label of the filter switch (All, Original, Inspired by, ...). It is a verb: 'Show: All'.",
+    "max": 10
+  }
+}

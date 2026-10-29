@@ -270,7 +270,7 @@ export class McShapeStudio extends LitElement {
     const fresh = now.find((m) => m.tone !== 'info' && !this.seen.has(key(m)));
     this.seen = new Set(now.map(key));
     if (fresh) {
-      this.msgLive = `${fresh.tone === 'error' ? t('Error') : t('Warning')}: ${fresh.text}`;
+      this.msgLive = `${fresh.tone === 'error' ? t('shape-editor.mc-shape-studio.error') : t('shape-editor.mc-shape-studio.warning')}: ${fresh.text}`;
       clearTimeout(this.msgTimer);
       this.msgTimer = setTimeout(() => (this.msgLive = ''), 4000);
     }
@@ -320,7 +320,7 @@ export class McShapeStudio extends LitElement {
     this.linked = this.saved = this.openedId = undefined;
     this.emitted = false;
     this.size = ROW;
-    if (!this.name && this.host !== 'mcu') this.name = t('Custom shape');
+    if (!this.name && this.host !== 'mcu') this.name = t('shape-editor.mc-shape-studio.custom-shape');
     let o: CustomShapeOptions = this.value?.shape_options ?? {};
     if (this.preset) {
       const st = presetToCustom(this.preset.shape, this.preset.shape_options, ROW.w, ROW.h);
@@ -328,12 +328,12 @@ export class McShapeStudio extends LitElement {
         o = st.options;
         const from = t(presetName(st.from));
         this.caption = this.startedCaption(from, st.note);
-        this.name = t('{name} copy', { name: from });
-      } else this.notice = t('Ticket, Wave and Blob can\'t be edited yet. Use the preset as it is.');
+        this.name = t('shape-editor.mc-shape-studio.name-copy', { name: from });
+      } else this.notice = t('shape-editor.mc-shape-studio.ticket-wave-and-blob-can-t-be-edited-yet');
     } else if (o.ref) {
       const look = lookupFor(this.customShapes);
       this.linked = o.ref;
-      if (!look.library(o.ref) && !look.inline(o.ref)) this.notice = t('Saved shape "{id}" was not found. This card uses its own copy.', { id: o.ref });
+      if (!look.library(o.ref) && !look.inline(o.ref)) this.notice = t('shape-editor.mc-shape-studio.saved-shape-id-was-not-found-this-card', { id: o.ref });
       o = resolveCustomShape(o, look);
     }
     this.doc = this.read(o);
@@ -356,10 +356,10 @@ export class McShapeStudio extends LitElement {
 
   /** What the editor says it started from ("Edit as custom"): the notes are the model's `note` codes. */
   private startedCaption(name: string, note: string): string {
-    if (note === 'bevel') return t('Started from Notch. Its corners are cut straight, so they start as Bevel.');
-    if (note === 'path') return t('Started from {name}. It opens as a path, so you can move every point.', { name });
-    if (note === 'ellipse') return t('Started from Circle. On a wide card the custom shape is a pill, not an ellipse.');
-    return t('Started from {name}. Your changes make this shape custom.', { name });
+    if (note === 'bevel') return t('shape-editor.mc-shape-studio.started-from-notch-its-corners-are-cut');
+    if (note === 'path') return t('shape-editor.mc-shape-studio.started-from-name-it-opens-as-a-path-so', { name });
+    if (note === 'ellipse') return t('shape-editor.mc-shape-studio.started-from-circle-on-a-wide-card-the');
+    return t('shape-editor.mc-shape-studio.started-from-name-your-changes-make-this', { name });
   }
 
   /** Host 'mcu' Edit: take the name and update time of the library item behind `savedId`. */
@@ -488,12 +488,12 @@ export class McShapeStudio extends LitElement {
 
   undo(): void {
     const p = this.past.pop();
-    if (p) this.jump(p, t('Undo'), this.future);
+    if (p) this.jump(p, t('shape-editor.mc-shape-studio.undo'), this.future);
   }
 
   redo(): void {
     const f = this.future.pop();
-    if (f) this.jump(f, t('Redo'), this.past);
+    if (f) this.jump(f, t('shape-editor.mc-shape-studio.redo'), this.past);
   }
 
   private jump(to: Doc, label: string, stack: Doc[]): void {
@@ -523,7 +523,7 @@ export class McShapeStudio extends LitElement {
       else if (this.pointSel !== undefined) this.selectPoint(undefined);
       else if (!this.escHinted) {
         this.escHinted = true;
-        this.toastShow(this.host === 'mcu' ? t('Esc doesn\'t close the editor. Use Close.') : t('Esc doesn\'t close the editor. Use Done or Back to card editor.'));
+        this.toastShow(this.host === 'mcu' ? t('shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-close') : t('shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or'));
       }
       e.preventDefault();
       e.stopPropagation();
@@ -568,7 +568,7 @@ export class McShapeStudio extends LitElement {
   setTogether(on: boolean): void {
     this.together = on;
     this.allChanged = false;
-    if (on && KEYS.some((k) => !same(this.doc.corners[k], this.doc.corners.tl))) this.commit({ ...this.doc, corners: cornersOf(this.doc.corners.tl) }, t('Applied Top left to all corners.'));
+    if (on && KEYS.some((k) => !same(this.doc.corners[k], this.doc.corners.tl))) this.commit({ ...this.doc, corners: cornersOf(this.doc.corners.tl) }, t('shape-editor.mc-shape-studio.applied-top-left-to-all-corners'));
   }
 
   setCorners(corners: Doc['corners'], label: string): void {
@@ -578,14 +578,14 @@ export class McShapeStudio extends LitElement {
   resetCorner(): void {
     const corners = { ...this.doc.corners };
     for (const k of this.together ? KEYS : [this.sel]) corners[k] = { ...this.initial.corners[k] };
-    this.setCorners(corners, t('Reset'));
+    this.setCorners(corners, t('shape-editor.mc-shape-studio.reset'));
   }
 
   /** Extra space (corner mode) or the padding of a free path: only ever raised above what is computed. */
   setSpace(side: Side, v: number): void {
     const x = Math.max(0, Math.ceil(Number.isFinite(v) ? v : 0));
     const d = this.doc;
-    this.commit(d.mode === 'path' ? { ...d, pad: { ...d.pad, [side]: Math.max(d.solver[side], x) } } : { ...d, extra: { ...d.extra, [side]: x } }, t('Extra space'), `sp-${side}`);
+    this.commit(d.mode === 'path' ? { ...d, pad: { ...d.pad, [side]: Math.max(d.solver[side], x) } } : { ...d, extra: { ...d.extra, [side]: x } }, t('shape-editor.mc-shape-studio.extra-space'), `sp-${side}`);
   }
 
   // corner handles on the drawing
@@ -609,13 +609,13 @@ export class McShapeStudio extends LitElement {
       const c = corners[k];
       corners[k] = { ...c, size: c.pct ? r1((px / Math.min(w, h)) * 100) : Math.round(px), type: c.type === 'square' ? 'round' : c.type };
     }
-    this.live_({ ...this.doc, corners }, t('Size'));
+    this.live_({ ...this.doc, corners }, t('shape-editor.mc-shape-studio.size'));
   }
 
   handleUp(e: PointerEvent): void {
     if (!this.drag || e.pointerId !== this.drag.id) return;
     this.drag = undefined;
-    this.commit(this.doc, t('Size'));
+    this.commit(this.doc, t('shape-editor.mc-shape-studio.size'));
   }
 
   /** The pointer in the corner's own frame (distance from its two sides, px). */
@@ -646,17 +646,17 @@ export class McShapeStudio extends LitElement {
     if (m === this.doc.mode) return;
     // the switch is rebuilt for the other mode: a keyboard user on it stays on it (arrow keys switch and move together)
     const on = this.shadowRoot?.activeElement;
-    const keep = on instanceof HTMLElement && on.getAttribute('role') === 'radio' && on.parentElement?.getAttribute('aria-label') === t('Shape type');
+    const keep = on instanceof HTMLElement && on.getAttribute('role') === 'radio' && on.parentElement?.getAttribute('aria-label') === t('shape-editor.mc-shape-studio.shape-type');
     const refocus = (): void => {
-      if (keep) void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>(`[aria-label="${t('Shape type')}"] [data-val="${m}"]`)?.focus());
+      if (keep) void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>(`[aria-label="${t('shape-editor.mc-shape-studio.shape-type')}"] [data-val="${m}"]`)?.focus());
     };
     this.dropPending();
     this.strip = undefined;
     if (m === 'path') return void this.toPath().then(refocus);
     this.pointSel = this.cvSel = this.picker = undefined;
-    this.commit({ ...this.doc, mode: 'corners' }, t('Corners'));
+    this.commit({ ...this.doc, mode: 'corners' }, t('shape-editor.mc-shape-studio.corners'));
     this.together = this.allSame();
-    this.say(t('Corners.'));
+    this.say(t('shape-editor.mc-shape-studio.corners-2'));
     refocus();
   }
 
@@ -668,10 +668,10 @@ export class McShapeStudio extends LitElement {
     const solver = this.solve(points);
     this.fromPath = false;
     this.baseline = JSON.stringify(points);
-    this.commit({ ...this.doc, mode: 'path', points, solver, pad: solver }, t('Free shape'));
+    this.commit({ ...this.doc, mode: 'path', points, solver, pad: solver }, t('shape-editor.mc-shape-studio.free-shape'));
     this.panel = 'outline';
     this.selectPoint(0);
-    this.note(t('Corners turned into points. Undo brings them back.'), true, `${t('Corners turned into points. Undo brings them back.')} ${t('Free shape. {c, plural, one {# point} other {# points}}.', { c: points.length })}`);
+    this.note(t('shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings'), true, `${t('shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings')} ${t('shape-editor.mc-shape-studio.free-shape-c', { c: points.length })}`);
   }
 
   /** The visible result line under the canvas (the live region says it once). */
@@ -734,8 +734,8 @@ export class McShapeStudio extends LitElement {
     const a = paths[0]?.anchors;
     if (!a) return;
     if (a.length > MAX_SHAPE_POINTS || a.length < 3) {
-      if (a.length < 3) this.note(t('A shape needs at least 3 points.'));
-      else this.say(t('A shape holds up to {max} points.', { max: MAX_SHAPE_POINTS }));
+      if (a.length < 3) this.note(t('shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points'));
+      else this.say(t('shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points', { max: MAX_SHAPE_POINTS }));
       return this.requestUpdate();
     }
     const points = fromAnchors(this.doc.points, a, this.size.w, this.size.h);
@@ -774,7 +774,7 @@ export class McShapeStudio extends LitElement {
     if (tool === 'pen') {
       this.pending = { kind: 'pen' };
       this.pointSel = this.cvSel = undefined;
-      this.say(t('Drawing a new outline. This replaces your shape when you finish.'));
+      this.say(t('shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your'));
     }
   }
 
@@ -786,7 +786,7 @@ export class McShapeStudio extends LitElement {
     this.cvSel = undefined;
     if (was.kind === 'pen') {
       this.tool = 'nodes';
-      if (say) this.say(t('Pen cancelled.'));
+      if (say) this.say(t('shape-editor.mc-shape-studio.pen-cancelled'));
     }
   }
 
@@ -803,7 +803,7 @@ export class McShapeStudio extends LitElement {
     if (!p || !path) return;
     if (p.kind === 'pen') {
       if (path.anchors.length > MAX_SHAPE_POINTS) {
-        this.say(t('A shape holds up to {max} points.', { max: MAX_SHAPE_POINTS }));
+        this.say(t('shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points', { max: MAX_SHAPE_POINTS }));
         return this.requestUpdate();
       }
       this.pending = { kind: 'pen', path };
@@ -813,8 +813,8 @@ export class McShapeStudio extends LitElement {
 
   finishPen(): void {
     const p = this.pending;
-    if (p?.kind !== 'pen' || (p.path?.anchors.length ?? 0) < 3) return this.say(t('Add 3 points to finish.'));
-    this.replaceOutline(p.path!.anchors, t('Replaced your outline.'));
+    if (p?.kind !== 'pen' || (p.path?.anchors.length ?? 0) < 3) return this.say(t('shape-editor.mc-shape-studio.add-3-points-to-finish'));
+    this.replaceOutline(p.path!.anchors, t('shape-editor.mc-shape-studio.replaced-your-outline'));
   }
 
   /** Pen and Start from: the anchors become the outline with default anchoring, one history step. */
@@ -854,7 +854,7 @@ export class McShapeStudio extends LitElement {
     this.picker = undefined;
     if (to === 'start') {
       const free = this.doc.mode === 'path';
-      this.replaceOutline(this.D.primitive(kind, { x: 0, y: 0, w, h }).anchors, free ? t('Started from {k}.', { k: t(PRIM[kind]) }) : t('Started from {k}. Switched to Free shape.', { k: t(PRIM[kind]) }));
+      this.replaceOutline(this.D.primitive(kind, { x: 0, y: 0, w, h }).anchors, free ? t('shape-editor.mc-shape-studio.started-from-k', { k: t(PRIM[kind]) }) : t('shape-editor.mc-shape-studio.started-from-k-switched-to-free-shape', { k: t(PRIM[kind]) }));
       return;
     }
     this.dropPending();
@@ -863,7 +863,7 @@ export class McShapeStudio extends LitElement {
     const path = this.D.primitive(kind, { x: w / 4, y: h / 4, w: w / 2, h: h / 2 });
     this.pending = { kind: 'shape', prim: kind, path };
     this.cvSel = { path: 1, anchors: [] };
-    this.say(t('{k} ready to combine. Use the arrows or fields to place it.', { k: t(PRIM[kind]) }));
+    this.say(t('shape-editor.mc-shape-studio.k-ready-to-combine-use-the-arrows-or', { k: t(PRIM[kind]) }));
     void this.updateComplete.then(() => this.focusTo('#ox'));
   }
 
@@ -875,14 +875,14 @@ export class McShapeStudio extends LitElement {
     this.busy = '';
     const p = this.pending;
     if (p?.kind !== 'shape' || !this.E) return;
-    if (!B) return this.note(t('Couldn\'t load the shape tools. Try again.'));
+    if (!B) return this.note(t('shape-editor.mc-shape-studio.couldn-t-load-the-shape-tools-try-again'));
     const { w, h } = this.size;
     const r = B.run(op as BooleanOp, [this.path, p.path].map((x) => ({ paths: [x], fillRule: 'nonzero' as const })), { frame: { x: 0, y: 0, w, h } });
-    if (!r.ok) return this.note(r.reason === 'too-complex' ? t('These shapes have too many points to combine. Nothing was changed.') : t('Nothing would be left of the shape. Nothing was changed.'));
+    if (!r.ok) return this.note(r.reason === 'too-complex' ? t('shape-editor.mc-shape-studio.these-shapes-have-too-many-points-to') : t('shape-editor.mc-shape-studio.nothing-would-be-left-of-the-shape'));
     const o = B.singleOutline(r);
     const c = o.path.anchors.length;
-    if (c > MAX_SHAPE_POINTS) return this.note(t('The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.', { c: c, max: MAX_SHAPE_POINTS }));
-    this.replaceOutline(o.path.anchors, [t('{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.', { op, c }), o.droppedPieces ? t('Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.', { c: o.droppedPieces }) : '', o.filledHoles ? t('Card shapes have one outline, so the hole was filled.') : ''].filter(Boolean).join(' '));
+    if (c > MAX_SHAPE_POINTS) return this.note(t('shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape', { c: c, max: MAX_SHAPE_POINTS }));
+    this.replaceOutline(o.path.anchors, [t('shape-editor.mc-shape-studio.op-the-outline-has-c', { op, c }), o.droppedPieces ? t('shape-editor.mc-shape-studio.kept-the-largest-piece-c-removed', { c: o.droppedPieces }) : '', o.filledHoles ? t('shape-editor.mc-shape-studio.card-shapes-have-one-outline-so-the-hole') : ''].filter(Boolean).join(' '));
     void this.updateComplete.then(() => this.focusTo('[data-pick=combine]'));
   }
 
@@ -932,12 +932,12 @@ export class McShapeStudio extends LitElement {
   /** The entries for what was pressed: the pending shape, a point, a segment or the empty canvas. */
   menuItems(hit?: PathContext['hit']): MenuEntry[] {
     const m = (id: string, label: string, reason?: string): MenuEntry => ({ id, label, reason });
-    if (this.pending?.kind === 'shape') return [...OPS.map(([k, label]) => m(k, t(label))), m('centre', t('Centre')), m('cancel', t('Cancel'))];
-    const full = this.doc.points.length >= MAX_SHAPE_POINTS ? t('A shape holds up to {max} points.', { max: MAX_SHAPE_POINTS }) : undefined;
+    if (this.pending?.kind === 'shape') return [...OPS.map(([k, label]) => m(k, t(label))), m('centre', t('shape-editor.mc-shape-studio.centre')), m('cancel', t('shape-editor.mc-shape-studio.cancel'))];
+    const full = this.doc.points.length >= MAX_SHAPE_POINTS ? t('shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points', { max: MAX_SHAPE_POINTS }) : undefined;
     const a = hit?.anchor === undefined ? undefined : this.path.anchors[hit.anchor];
-    if (a) return [m('kind', a.in || a.out ? t('Corner') : t('Smooth')), m('after', t('Add point after'), full), m('remove', t('Remove point'), this.doc.points.length <= 3 ? t('A shape needs at least 3 points.') : undefined)];
-    if (hit?.segment !== undefined) return [m('here', t('Add point here'), full)];
-    return [m('start', t('Start from a shape...')), m('add', t('Add shape...')), m('pen', t('Pen'))];
+    if (a) return [m('kind', a.in || a.out ? t('shape-editor.mc-shape-studio.corner') : t('shape-editor.mc-shape-studio.smooth')), m('after', t('shape-editor.mc-shape-studio.add-point-after'), full), m('remove', t('shape-editor.mc-shape-studio.remove-point'), this.doc.points.length <= 3 ? t('shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points') : undefined)];
+    if (hit?.segment !== undefined) return [m('here', t('shape-editor.mc-shape-studio.add-point-here'), full)];
+    return [m('start', t('shape-editor.mc-shape-studio.start-from-a-shape')), m('add', t('shape-editor.mc-shape-studio.add-shape')), m('pen', t('shape-editor.mc-shape-studio.pen'))];
   }
 
   openMenu(hit: PathContext['hit'], at: Pt, touch: boolean, opener?: HTMLElement): void {
@@ -964,9 +964,9 @@ export class McShapeStudio extends LitElement {
       opener: b,
       anchor: b,
       items: [
-        { id: 'export', label: t('Export file'), icon: 'mdi:file-export-outline' },
-        { id: 'import', label: t('Import file'), icon: 'mdi:file-import-outline' },
-        { id: 'yaml', label: t('Copy YAML'), glyph: 'copy' },
+        { id: 'export', label: t('shape-editor.mc-shape-studio.export-file'), icon: 'mdi:file-export-outline' },
+        { id: 'import', label: t('shape-editor.mc-shape-studio.import-file'), icon: 'mdi:file-import-outline' },
+        { id: 'yaml', label: t('shape-editor.mc-shape-studio.copy-yaml'), glyph: 'copy' },
       ],
     };
     void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement & { show(): void }>('mc-ui-menu')?.show());
@@ -985,7 +985,7 @@ export class McShapeStudio extends LitElement {
     if (OPS.some(([k]) => k === id)) void this.boolean(id);
     else if (id === 'centre') this.setOperand('centre');
     else if (id === 'cancel') this.dropPending(true);
-    else if (id === 'kind') this.editPath((E, p) => E.toggleSmooth(p, h!.anchor!), t('Point type'));
+    else if (id === 'kind') this.editPath((E, p) => E.toggleSmooth(p, h!.anchor!), t('shape-editor.mc-shape-studio.point-type'));
     else if (id === 'after') this.addAfter(h?.anchor);
     else if (id === 'remove') this.deletePoint(h?.anchor);
     else if (id === 'here' && h?.segment !== undefined && h.at) this.addAfter(h.segment, segT(this.path, h.segment, h.at));
@@ -1002,14 +1002,14 @@ export class McShapeStudio extends LitElement {
 
   onLimit(e: Event): void {
     e.stopPropagation();
-    this.say(t('A shape holds up to {max} points.', { max: MAX_SHAPE_POINTS }));
+    this.say(t('shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points', { max: MAX_SHAPE_POINTS }));
   }
 
   /** Keeps a dragged point (and its handles) inside the box, as the runtime does. */
   constrain = (pt: Pt): Pt => [clamp(pt[0], 0, this.size.w), clamp(pt[1], 0, this.size.h)];
 
   movePoint(i: number, x?: number, y?: number): void {
-    this.editPath((E, p) => E.moveAnchor(p, i, x ?? p.anchors[i].x, y ?? p.anchors[i].y), t('Move point'), `pt-${i}`);
+    this.editPath((E, p) => E.moveAnchor(p, i, x ?? p.anchors[i].x, y ?? p.anchors[i].y), t('shape-editor.mc-shape-studio.move-point'), `pt-${i}`);
   }
 
   nudge(dx: number, dy: number, big: boolean): void {
@@ -1028,23 +1028,23 @@ export class McShapeStudio extends LitElement {
 
   addAfter(i = this.pointSel, at = 0.5): void {
     if (i === undefined || !this.E) return;
-    if (this.doc.points.length >= MAX_SHAPE_POINTS) return this.say(t('A shape holds up to {max} points.', { max: MAX_SHAPE_POINTS }));
+    if (this.doc.points.length >= MAX_SHAPE_POINTS) return this.say(t('shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points', { max: MAX_SHAPE_POINTS }));
     const r = this.E.insertAt(this.path, i, at);
     if (r.index < 0) return;
-    this.commitPoints(fromAnchors(this.doc.points, r.path.anchors, this.size.w, this.size.h), t('Add point after'));
+    this.commitPoints(fromAnchors(this.doc.points, r.path.anchors, this.size.w, this.size.h), t('shape-editor.mc-shape-studio.add-point-after'));
     this.selectPoint(r.index);
   }
 
   deletePoint(i = this.pointSel): void {
     if (i === undefined) return;
-    if (this.doc.points.length <= 3) return this.note(t('A shape needs at least 3 points.'));
-    this.editPath((E, p) => E.remove(p, i), t('Delete'));
+    if (this.doc.points.length <= 3) return this.note(t('shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points'));
+    this.editPath((E, p) => E.remove(p, i), t('shape-editor.mc-shape-studio.delete'));
     this.selectPoint(Math.max(0, i - 1));
-    this.say(t('Point removed, {c, plural, one {# point} other {# points}}.', { c: this.doc.points.length }));
+    this.say(t('shape-editor.mc-shape-studio.point-removed-c', { c: this.doc.points.length }));
   }
 
   setAxis(i: number, axis: 'x' | 'y', a: Axis): void {
-    this.commit({ ...this.doc, points: this.doc.points.map((p, j) => (j === i ? { ...p, [axis]: a } : p)) }, t('Advanced: how this point moves when the card resizes'), `ax-${i}-${axis}`);
+    this.commit({ ...this.doc, points: this.doc.points.map((p, j) => (j === i ? { ...p, [axis]: a } : p)) }, t('shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the'), `ax-${i}-${axis}`);
   }
 
   /** Switch what a point is anchored to without moving it. */
@@ -1086,7 +1086,7 @@ export class McShapeStudio extends LitElement {
 
   /** Replace the shape in the editor with a library item (one history step: undo brings the old one back). */
   openItem(item: SavedShape): void {
-    this.commit(this.read(item.shape), t('Open'));
+    this.commit(this.read(item.shape), t('shape-editor.mc-shape-studio.open'));
     this.together = this.allSame();
     this.name = item.name;
     this.openedId = item.id;
@@ -1099,7 +1099,7 @@ export class McShapeStudio extends LitElement {
 
   openSave(): void {
     if (this.noLib) return this.showPanel('library');
-    this.saveName = this.name === t('Custom shape') ? '' : this.name;
+    this.saveName = this.name === t('shape-editor.mc-shape-studio.custom-shape') ? '' : this.name;
     this.saveError = '';
     this.back = (this.shadowRoot?.activeElement as HTMLElement | null) ?? undefined;
     this.saving = true;
@@ -1115,7 +1115,7 @@ export class McShapeStudio extends LitElement {
     const name = this.saveName.trim().slice(0, 40);
     const shape = this.options();
     if (!name || tooBig(shape)) {
-      this.saveError = name ? t('This shape is too big for the library (8 KB).') : t('Give it a name.');
+      this.saveError = name ? t('shape-editor.mc-shape-studio.this-shape-is-too-big-for-the-library-8') : t('shape-editor.mc-shape-studio.give-it-a-name');
       return;
     }
     const ex = this.existing;
@@ -1129,10 +1129,10 @@ export class McShapeStudio extends LitElement {
       this.openedId = item.id;
       this.closeWindows();
       this.saving = false;
-      this.toastShow(t('Saved to library as {name}. Press Done to use it on this card.', { name: item.name }), { label: t('Use on this card'), run: () => this.useSaved() });
+      this.toastShow(t('shape-editor.mc-shape-studio.saved-to-library-as-name-press-done-to', { name: item.name }), { label: t('shape-editor.mc-shape-studio.use-on-this-card'), run: () => this.useSaved() });
     } catch (e) {
       const p = e instanceof LibraryError ? e.problem : 'unreachable';
-      this.saveError = t(FAIL[p]) ?? t('Could not save {name}. Try again.', { name: name });
+      this.saveError = t(FAIL[p]) ?? t('shape-editor.mc-shape-studio.could-not-save-name-try-again', { name: name });
       if (p === 'missing' || p === 'readonly') this.lib = { ...this.lib, state: p };
     }
     this.saveBusy = false;
@@ -1145,8 +1145,8 @@ export class McShapeStudio extends LitElement {
     this.emitted = true;
     this.linked = s.id;
     this.toastHide();
-    this.fire({ value: { shape: 'custom', shape_options: { ref: s.id } }, customShapes: { [s.id]: this.options() }, commit: true, label: t('Use on this card') });
-    this.say(t('Shape applied to {target}', { target: this.label || t('Shape editor') }));
+    this.fire({ value: { shape: 'custom', shape_options: { ref: s.id } }, customShapes: { [s.id]: this.options() }, commit: true, label: t('shape-editor.mc-shape-studio.use-on-this-card') });
+    this.say(t('shape-editor.mc-shape-studio.shape-applied-to-target', { target: this.label || t('shape-editor.mc-shape-studio.shape-editor') }));
   }
 
   /** Delete after the snackbar: hidden at once, removed for good when the undo time runs out. */
@@ -1154,7 +1154,7 @@ export class McShapeStudio extends LitElement {
     this.flushDelete();
     this.lib = { ...this.lib, hidden: new Set([...this.lib.hidden, item.id]) };
     this.trash = { item, timer: setTimeout(() => this.flushDelete(), 10000) };
-    this.toastShow(t('Deleted {name}. Cards that use it keep their inline copy.', { name: item.name }), { label: t('Undo'), run: this.undoRun });
+    this.toastShow(t('shape-editor.mc-shape-studio.deleted-name-cards-that-use-it-keep', { name: item.name }), { label: t('shape-editor.mc-shape-studio.undo'), run: this.undoRun });
   }
 
   private undoRun = (): void => this.undoDelete();
@@ -1188,7 +1188,7 @@ export class McShapeStudio extends LitElement {
   async copyText(text: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(text);
-      this.say(t('Copied'));
+      this.say(t('shape-editor.mc-shape-studio.copied'));
     } catch {
       this.say(text);
     }
@@ -1204,7 +1204,7 @@ export class McShapeStudio extends LitElement {
       this.back = back;
       this.xfer = { mode, back };
     } catch {
-      this.toastShow(t('Could not load the export and import tool. Try again.'));
+      this.toastShow(t('shape-editor.mc-shape-studio.could-not-load-the-export-and-import'));
     }
   }
 
@@ -1214,7 +1214,7 @@ export class McShapeStudio extends LitElement {
   }
 
   private get exportItems(): { kind: 'shape'; items: TransferItem<'shape'>[] } {
-    const name = this.name.trim() || t('Custom shape');
+    const name = this.name.trim() || t('shape-editor.mc-shape-studio.custom-shape');
     const data: CustomShapeOptions = { ...this.options() };
     delete data.ref;
     return { kind: 'shape', items: [{ id: this.saved?.id ?? slug(name), name, data }] };
@@ -1229,16 +1229,16 @@ export class McShapeStudio extends LitElement {
     this.name = it.name || this.name;
     this.together = false;
     this.pointSel = this.cvSel = undefined;
-    this.commit(d, t('Imported {name}', { name: it.name }));
+    this.commit(d, t('shape-editor.mc-shape-studio.imported-name', { name: it.name }));
     this.together = this.allSame();
     if (d.mode === 'path') void this.ensureCanvas();
-    if (items.length > 1) this.say(t('Only the first of {c} shapes in the file was used.', { c: items.length }));
+    if (items.length > 1) this.say(t('shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file', { c: items.length }));
   }
 
   // ── leaving ──
 
   done(): void {
-    if (this.preset && !this.emitted) this.send(true, t('Shape applied to {target}', { target: this.label || t('Shape editor') }));
+    if (this.preset && !this.emitted) this.send(true, t('shape-editor.mc-shape-studio.shape-applied-to-target', { target: this.label || t('shape-editor.mc-shape-studio.shape-editor') }));
     this.leave(true);
   }
 
@@ -1263,7 +1263,7 @@ export class McShapeStudio extends LitElement {
     }
     const shape = this.options();
     if (tooBig(shape)) {
-      this.mcuError = t('This shape is too big for the library (8 KB).');
+      this.mcuError = t('shape-editor.mc-shape-studio.this-shape-is-too-big-for-the-library-8');
       return;
     }
     if (this.saveBusy) return;
@@ -1279,12 +1279,12 @@ export class McShapeStudio extends LitElement {
       this.saved = { id: item.id, name: item.name, updated_at: item.updated_at, json: JSON.stringify(shape) };
       this.openedId = item.id;
       this.name = item.name;
-      this.say(t('Saved'));
+      this.say(t('shape-editor.mc-shape-studio.saved'));
       this.dispatchEvent(new CustomEvent('mc-shape-save', { detail: { saved: item }, bubbles: true, composed: true }));
     } catch (e) {
       const p = e instanceof LibraryError ? e.problem : 'unreachable';
       if (p === 'conflict') this.conflict = true;
-      else this.mcuError = t(FAIL[p]) ?? t('Could not save {name}. Try again.', { name: name });
+      else this.mcuError = t(FAIL[p]) ?? t('shape-editor.mc-shape-studio.could-not-save-name-try-again', { name: name });
     }
     this.saveBusy = false;
   }
@@ -1317,21 +1317,21 @@ export class McShapeStudio extends LitElement {
 
   // prettier-ignore
   protected render(): TemplateResult {
-    const title = this.label ? t('Shape for {target}', { target: this.label }) : t('Shape editor');
+    const title = this.label ? t('shape-editor.mc-shape-studio.shape-for-target', { target: this.label }) : t('shape-editor.mc-shape-studio.shape-editor');
     const inPath = this.tab === 'path';
     return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(true)}></span>
 ${this.lips.status()}
-<div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => void this.lips.reveal('inspector').then(() => this.focusTo('.insp button, .insp input')))}</div>
+<div class="skips">${btn(t('shape-editor.mc-shape-studio.skip-to-canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('shape-editor.mc-shape-studio.skip-to-point-fields'), () => this.focusTo('#fx')) : nothing}${btn(t('shape-editor.mc-shape-studio.skip-to-inspector'), () => void this.lips.reveal('inspector').then(() => this.focusTo('.insp button, .insp input')))}</div>
 ${this.top(title)}
-${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work${this.lips.isHidden('side') ? ' no-side' : ''}${this.lips.isHidden('inspector') ? ' no-insp' : ''}" style=${lipTokens(this.lips.state('side'), this.lips.state('inspector'), this.bar.width)}>
-<aside class="left ${this.sheet ? 'sheet' : ''}" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('Side panel')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}
+${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check')}</p>${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.boot())}` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div>` : html`<div class="work${this.lips.isHidden('side') ? ' no-side' : ''}${this.lips.isHidden('inspector') ? ' no-insp' : ''}" style=${lipTokens(this.lips.state('side'), this.lips.state('inspector'), this.bar.width)}>
+<aside class="left ${this.sheet ? 'sheet' : ''}" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.side-panel')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')], ['library', t('shape-editor.mc-shape-studio.library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}
 <main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
-${this.lips.lip('inspector')}<aside class="insp" id="inspector" ?inert=${this.lips.isHidden('inspector')} data-lip=${this.lips.state('inspector')} data-dir=${this.lips.dir} aria-label=${t('Inspector panel')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
+${this.lips.lip('inspector')}<aside class="insp" id="inspector" ?inert=${this.lips.isHidden('inspector')} data-lip=${this.lips.state('inspector')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.inspector-panel')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
-${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? t('Export / Import') : t('Outline actions')} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
-<mc-ui-popover id="pv-pop" .label=${t('Preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
-<mc-ui-popover id="help-pop" .label=${t('Shortcuts')} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
+${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? t('shape-editor.mc-shape-studio.export-import') : t('shape-editor.mc-shape-studio.outline-actions')} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
+<mc-ui-popover id="pv-pop" .label=${t('shape-editor.mc-shape-studio.preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
+<mc-ui-popover id="help-pop" .label=${t('shape-editor.mc-shape-studio.shortcuts')} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
 ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
 <mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div><div class="sr-only" role="status" aria-live="polite" id="msglive">${this.msgLive}</div>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(false)}></span></div>`;
@@ -1362,18 +1362,18 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const actions: KitButtonOptions[] = [];
     // narrow window or 200 % zoom: shorter words, Export / Import as a glyph, the title for screen readers only (styles.ts), so the bar needs one or two rows
     const tight = this.layout === 'compact' || this.layout === 'stacked';
-    if (this.layout === 'compact') actions.push({ label: `${this.tab === 'path' ? t('Points') : t('Outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
-    actions.push({ label: t('Export / Import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
-    if (mcu) actions.push({ label: t('Save'), variant: 'primary', disabledReason: this.saveBusy ? t('Working...') : undefined, onClick: () => void this.saveMcu() });
-    else actions.push({ label: t('Save to library'), onClick: () => this.openSave() }, { label: t('Done'), variant: 'primary', onClick: () => this.done() });
+    if (this.layout === 'compact') actions.push({ label: `${this.tab === 'path' ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
+    actions.push({ label: t('shape-editor.mc-shape-studio.export-import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
+    if (mcu) actions.push({ label: t('shape-editor.mc-shape-studio.save'), variant: 'primary', disabledReason: this.saveBusy ? t('shape-editor.mc-shape-studio.working') : undefined, onClick: () => void this.saveMcu() });
+    else actions.push({ label: t('shape-editor.mc-shape-studio.save-to-library'), onClick: () => this.openSave() }, { label: t('shape-editor.mc-shape-studio.done'), variant: 'primary', onClick: () => this.done() });
     return topBar({
-      back: { label: mcu ? t('Close') : tight ? t('Back') : t('Back to card editor'), onClick: () => (mcu ? this.close() : this.leave(false)) },
+      back: { label: mcu ? t('shape-editor.mc-shape-studio.close') : tight ? t('shape-editor.mc-shape-studio.back') : t('shape-editor.mc-shape-studio.back-to-card-editor'), onClick: () => (mcu ? this.close() : this.leave(false)) },
       title,
-      name: { label: t('Shape name'), placeholder: mcu ? t('Shape name') : undefined, value: this.name, error: mcu && this.nameErr ? t('Give the shape a name.') : undefined, onInput: (v) => ((this.name = v), (this.nameErr = false)) },
-      undo: { label: t('Undo'), glyph: 'undo', keys: 'Control+Z', disabledReason: this.canUndo ? undefined : t('Nothing to undo'), onClick: () => this.undo() },
-      redo: { label: t('Redo'), glyph: 'redo', keys: 'Control+Shift+Z', disabledReason: this.future.length ? undefined : t('Nothing to redo'), onClick: () => this.redo() },
+      name: { label: t('shape-editor.mc-shape-studio.shape-name'), placeholder: mcu ? t('shape-editor.mc-shape-studio.shape-name') : undefined, value: this.name, error: mcu && this.nameErr ? t('shape-editor.mc-shape-studio.give-the-shape-a-name') : undefined, onInput: (v) => ((this.name = v), (this.nameErr = false)) },
+      undo: { label: t('shape-editor.mc-shape-studio.undo'), glyph: 'undo', keys: 'Control+Z', disabledReason: this.canUndo ? undefined : t('shape-editor.mc-shape-studio.nothing-to-undo'), onClick: () => this.undo() },
+      redo: { label: t('shape-editor.mc-shape-studio.redo'), glyph: 'redo', keys: 'Control+Shift+Z', disabledReason: this.future.length ? undefined : t('shape-editor.mc-shape-studio.nothing-to-redo'), onClick: () => this.redo() },
       actions,
-      help: { label: t('Shortcuts'), glyph: 'helpCircle', haspopup: 'dialog', expanded: this.helpOpen, controls: 'help-pop', onClick: (e) => this.togglePop(e, 'help') },
+      help: { label: t('shape-editor.mc-shape-studio.shortcuts'), glyph: 'helpCircle', haspopup: 'dialog', expanded: this.helpOpen, controls: 'help-pop', onClick: (e) => this.togglePop(e, 'help') },
     });
   }
 
@@ -1381,14 +1381,14 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
   private msgs(): Msg[] {
     const out: Msg[] = [];
     if (this.host === 'mcu') {
-      if (this.conflict) out.push({ id: 'conflict', tone: 'warn', text: t('This shape was changed somewhere else.'), conflict: true });
+      if (this.conflict) out.push({ id: 'conflict', tone: 'warn', text: t('shape-editor.mc-shape-studio.this-shape-was-changed-somewhere-else'), conflict: true });
       else if (this.mcuError) out.push({ id: 'mcu', tone: 'error', text: this.mcuError });
     }
     if (this.notice) out.push({ id: 'notice', tone: 'warn', text: this.notice });
-    else if (this.linked) out.push({ id: 'linked', tone: 'info', text: t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked }) });
+    else if (this.linked) out.push({ id: 'linked', tone: 'info', text: t('shape-editor.mc-shape-studio.linked-to-the-saved-shape-id-your-edits', { id: this.linked }) });
     for (const p of this.an) {
-      if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) out.push({ id: `cut-${p.id}`, tone: 'warn', text: this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.') });
-      if (p.cross) out.push({ id: `cross-${p.id}`, tone: 'warn', text: t('The outline crosses itself at {where}.', { where: sh(p.id) }) });
+      if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) out.push({ id: `cut-${p.id}`, tone: 'warn', text: this.doc.mode === 'path' ? t('shape-editor.mc-shape-studio.the-outline-cuts-into-the-text-area-at', { where: sh(p.id) }) : t('shape-editor.mc-shape-studio.the-corners-cut-into-the-text-area-raise') });
+      if (p.cross) out.push({ id: `cross-${p.id}`, tone: 'warn', text: t('shape-editor.mc-shape-studio.the-outline-crosses-itself-at-where', { where: sh(p.id) }) });
     }
     return out;
   }
@@ -1400,23 +1400,23 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
   /** The left sidebar's tabs: Draw (the panels) and Messages (with a count). The tab is never switched for the user. */
   private sideTabs(): TemplateResult {
     const n = this.msgCount();
-    return seg(t('Sidebar'), [['draw', t('Draw')], ['messages', n ? `${t('Messages')} (${n})` : t('Messages')]], this.side, (v) => (this.side = v), true);
+    return seg(t('shape-editor.mc-shape-studio.sidebar'), [['draw', t('shape-editor.mc-shape-studio.draw')], ['messages', n ? `${t('shape-editor.mc-shape-studio.messages')} (${n})` : t('shape-editor.mc-shape-studio.messages')]], this.side, (v) => (this.side = v), true);
   }
 
   // prettier-ignore
   private msgList(): TemplateResult {
     const list = this.msgs();
-    if (!list.length) return html`<p class="help">${t('No messages.')}</p>`;
-    const kind = (m: Msg): string => (m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note'));
-    return html`<div class="mlist">${list.map((m) => html`<div class="notice mrow ${m.tone}"><span class="sr-only">${kind(m)}: </span>${kitGlyph(m.tone === 'info' ? 'information' : 'alertCircle', 20)}<span class="ell" title=${m.text}>${m.text}</span>${button({ label: t('Show full message'), glyph: 'eyeOn', iconOnly: true, size: 'sm', onClick: (e) => ((this.back = e.currentTarget as HTMLElement), (this.msgOpen = m.id)) })}</div>`)}</div>`;
+    if (!list.length) return html`<p class="help">${t('shape-editor.mc-shape-studio.no-messages')}</p>`;
+    const kind = (m: Msg): string => (m.tone === 'error' ? t('shape-editor.mc-shape-studio.error') : m.tone === 'warn' ? t('shape-editor.mc-shape-studio.warning') : t('shape-editor.mc-shape-studio.note'));
+    return html`<div class="mlist">${list.map((m) => html`<div class="notice mrow ${m.tone}"><span class="sr-only">${kind(m)}: </span>${kitGlyph(m.tone === 'info' ? 'information' : 'alertCircle', 20)}<span class="ell" title=${m.text}>${m.text}</span>${button({ label: t('shape-editor.mc-shape-studio.show-full-message'), glyph: 'eyeOn', iconOnly: true, size: 'sm', onClick: (e) => ((this.back = e.currentTarget as HTMLElement), (this.msgOpen = m.id)) })}</div>`)}</div>`;
   }
 
   // prettier-ignore
   private msgWin(): TemplateResult | typeof nothing {
     const m = this.msgs().find((x) => x.id === this.msgOpen);
     if (!m) return nothing;
-    const heading = m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note');
-    const foot = html`${m.conflict ? html`${btn(t('Save as a copy'), () => (this.closeWindows(), void this.saveMcu(true)))}${btn(t('Reload'), () => (this.closeWindows(), void this.reloadMcu()))}` : nothing}${btn(t('Close'), () => this.closeWindows(), { variant: 'primary', size: 'md' })}`;
+    const heading = m.tone === 'error' ? t('shape-editor.mc-shape-studio.error') : m.tone === 'warn' ? t('shape-editor.mc-shape-studio.warning') : t('shape-editor.mc-shape-studio.note');
+    const foot = html`${m.conflict ? html`${btn(t('shape-editor.mc-shape-studio.save-as-a-copy'), () => (this.closeWindows(), void this.saveMcu(true)))}${btn(t('shape-editor.mc-shape-studio.reload'), () => (this.closeWindows(), void this.reloadMcu()))}` : nothing}${btn(t('shape-editor.mc-shape-studio.close'), () => this.closeWindows(), { variant: 'primary', size: 'md' })}`;
     return this.win(heading, html`<p>${m.text}</p>`, foot, { size: 's', onClose: () => ((this.msgOpen = undefined), (this.msgReturn = true), setTimeout(() => (this.msgReturn = false), 1500)) });
   }
 
@@ -1425,14 +1425,14 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
   /** One window of the ui kit: title, body and a footer of buttons; movable, resizable and maximisable (an alert has no grips). */
   // prettier-ignore
   private win(heading: string, body: TemplateResult, foot: TemplateResult | typeof nothing, o: { size?: 's' | 'm' | 'l'; variant?: 'dialog' | 'picker'; initialFocus?: string; onClose: () => void }): TemplateResult {
-    return html`<mc-ui-window variant=${o.variant ?? 'dialog'} size=${o.size ?? nothing} heading=${heading} closeLabel=${t('Close')} movable resizable maximizable moveLabel=${t('Move window')} resizeLabel=${t('Resize window')} maximizeLabel=${t('Maximise')} restoreLabel=${t('Restore size')} initialFocus=${o.initialFocus ?? nothing} .opener=${this.back} @mc-window-close=${(e: Event) => (e.stopPropagation(), o.onClose())}>${body}${foot === nothing ? nothing : html`<div slot="footer" class="foot">${foot}</div>`}</mc-ui-window>`;
+    return html`<mc-ui-window variant=${o.variant ?? 'dialog'} size=${o.size ?? nothing} heading=${heading} closeLabel=${t('shape-editor.mc-shape-studio.close')} movable resizable maximizable moveLabel=${t('shape-editor.mc-shape-studio.move-window')} resizeLabel=${t('shape-editor.mc-shape-studio.resize-window')} maximizeLabel=${t('shape-editor.mc-shape-studio.maximise')} restoreLabel=${t('shape-editor.mc-shape-studio.restore-size')} initialFocus=${o.initialFocus ?? nothing} .opener=${this.back} @mc-window-close=${(e: Event) => (e.stopPropagation(), o.onClose())}>${body}${foot === nothing ? nothing : html`<div slot="footer" class="foot">${foot}</div>`}</mc-ui-window>`;
   }
 
   // prettier-ignore
   private leaveWin(): TemplateResult {
-    return html`<mc-ui-window variant="alert" heading=${t('Leave without saving?')} closeLabel=${t('Close')} initialFocus="keep" .opener=${this.back} @mc-window-close=${(e: Event) => (e.stopPropagation(), (this.leaving = false))}>
-<p>${t('Changes since the last save are lost.')}</p>
-<div slot="footer" class="foot"><button type="button" id="keep" class="btn btn-secondary" @click=${() => this.closeWindows()}>${t('Keep editing')}</button><button type="button" class="btn btn-danger" @click=${() => (this.closeWindows(), this.leave(false))}>${t('Leave')}</button></div></mc-ui-window>`;
+    return html`<mc-ui-window variant="alert" heading=${t('shape-editor.mc-shape-studio.leave-without-saving')} closeLabel=${t('shape-editor.mc-shape-studio.close')} initialFocus="keep" .opener=${this.back} @mc-window-close=${(e: Event) => (e.stopPropagation(), (this.leaving = false))}>
+<p>${t('shape-editor.mc-shape-studio.changes-since-the-last-save-are-lost')}</p>
+<div slot="footer" class="foot"><button type="button" id="keep" class="btn btn-secondary" @click=${() => this.closeWindows()}>${t('shape-editor.mc-shape-studio.keep-editing')}</button><button type="button" class="btn btn-danger" @click=${() => (this.closeWindows(), this.leave(false))}>${t('shape-editor.mc-shape-studio.leave')}</button></div></mc-ui-window>`;
   }
 
   // prettier-ignore
@@ -1440,10 +1440,10 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const ex = this.existing;
     const asNew = this.openedId && ex?.id === this.openedId;
     const body = html`<div class="dlg" @keydown=${(e: KeyboardEvent) => e.key === 'Enter' && (e.preventDefault(), void this.doSave())}>
-<label class="field"><span class="fl">${t('Name')}</span><input class="input" id="sn" type="text" maxlength="40" aria-describedby="se" .value=${this.saveName} @input=${(e: Event) => (this.saveName = (e.target as HTMLInputElement).value)} /></label>
-<p class="help">${t('Short, no slashes. Shown in the list.')}</p>${ex ? html`<p class="help">${t('A shape named {name} exists. Saving changes every card that uses it.', { name: ex.name })}</p>` : nothing}<p class="help error" id="se" role="alert">${this.saveError}</p></div>`;
-    const foot = html`${btn(t('Cancel'), () => this.closeWindows())}${asNew ? btn(t('Save as new'), () => ((this.saveName = t('{name} copy', { name: ex!.name })), this.focusTo('#sn'))) : nothing}${btn(ex ? t('Update "{name}"', { name: ex.name }) : t('Save'), () => void this.doSave(), { variant: 'primary', size: 'md', disabledReason: this.saveBusy ? t('Working...') : undefined })}`;
-    return this.win(t('Save to library'), body, foot, { initialFocus: 'sn', onClose: () => (this.saving = false) });
+<label class="field"><span class="fl">${t('shape-editor.mc-shape-studio.name')}</span><input class="input" id="sn" type="text" maxlength="40" aria-describedby="se" .value=${this.saveName} @input=${(e: Event) => (this.saveName = (e.target as HTMLInputElement).value)} /></label>
+<p class="help">${t('shape-editor.mc-shape-studio.short-no-slashes-shown-in-the-list')}</p>${ex ? html`<p class="help">${t('shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes', { name: ex.name })}</p>` : nothing}<p class="help error" id="se" role="alert">${this.saveError}</p></div>`;
+    const foot = html`${btn(t('shape-editor.mc-shape-studio.cancel'), () => this.closeWindows())}${asNew ? btn(t('shape-editor.mc-shape-studio.save-as-new'), () => ((this.saveName = t('shape-editor.mc-shape-studio.name-copy', { name: ex!.name })), this.focusTo('#sn'))) : nothing}${btn(ex ? t('shape-editor.mc-shape-studio.update-name', { name: ex.name }) : t('shape-editor.mc-shape-studio.save'), () => void this.doSave(), { variant: 'primary', size: 'md', disabledReason: this.saveBusy ? t('shape-editor.mc-shape-studio.working') : undefined })}`;
+    return this.win(t('shape-editor.mc-shape-studio.save-to-library'), body, foot, { initialFocus: 'sn', onClose: () => (this.saving = false) });
   }
 
   // prettier-ignore
@@ -1451,7 +1451,7 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const x = this.xfer!;
     const body = html`<mc-transfer-panel .host=${'shape-editor'} .mode=${x.mode} .exportItems=${x.mode === 'export' ? this.exportItems : undefined} .hasLibrary=${!this.noLib}
 @mc-transfer-close=${() => this.closeTransfer()} @mc-transfer-import=${(e: CustomEvent<{ items: TransferItem[] }>) => (e.stopPropagation(), this.importItems(e.detail.items))}></mc-transfer-panel>`;
-    return this.win(x.mode === 'export' ? t('Export file') : t('Import file'), body, nothing, { size: 'l', onClose: () => (this.xfer = undefined) });
+    return this.win(x.mode === 'export' ? t('shape-editor.mc-shape-studio.export-file') : t('shape-editor.mc-shape-studio.import-file'), body, nothing, { size: 'l', onClose: () => (this.xfer = undefined) });
   }
 
   /** Start from and Combine with: the groups of shapes as tiles. A tile starts the action at once; arrows only move focus. */
@@ -1463,12 +1463,12 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const tile = (val: string, i: number, label: string, pic: TemplateResult, run: () => void): TemplateResult => html`<button type="button" class="tile pk" data-val=${val} tabindex=${i === 0 ? 0 : -1} @click=${run}><span class="thumb">${pic}</span><span>${label}</span></button>`;
     const grid = (name: string, items: TemplateResult[]): TemplateResult => html`<div class="tiles" role="group" aria-label=${name} @keydown=${this.pickKey}>${items}</div>`;
     const shapes = this.D && this.E
-      ? grid(t('Shapes'), PRIMITIVE_KINDS.map((k, i) => tile(k, i, t(PRIM[k]), html`<svg viewBox="0 0 20 20" aria-hidden="true"><path d=${this.glyphOf(k)} /></svg>`, () => this.choose(k))))
-      : this.canvas === 'fail' ? html`<p class="help" role="alert">${t('The path editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.ensureCanvas())}` : html`<p class="help" role="status">${t('Loading the shape editor')}</p>`;
-    const body = html`<div class="dlg">${start ? html`<p class="help">${t('Replaces your current outline. Undo brings it back.')}</p>` : nothing}
-${start && this.doc.mode === 'corners' ? group(t('Corner styles'), STARTERS.length, grid(t('Corner styles'), STARTERS.map((s, i) => tile(s.id, i, t(STARTER[s.id]), glyph(s.corners().tl.type), () => this.applyStarter(s.id))))) : nothing}
-${group(t('Shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
-    return this.win(start ? t('Start from a shape') : t('Combine with'), body, btn(t('Cancel'), () => this.closeWindows()), { variant: 'picker', onClose: () => (this.picker = undefined) });
+      ? grid(t('shape-editor.mc-shape-studio.shapes'), PRIMITIVE_KINDS.map((k, i) => tile(k, i, t(PRIM[k]), html`<svg viewBox="0 0 20 20" aria-hidden="true"><path d=${this.glyphOf(k)} /></svg>`, () => this.choose(k))))
+      : this.canvas === 'fail' ? html`<p class="help" role="alert">${t('shape-editor.mc-shape-studio.the-path-editor-could-not-load-check')}</p>${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.ensureCanvas())}` : html`<p class="help" role="status">${t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</p>`;
+    const body = html`<div class="dlg">${start ? html`<p class="help">${t('shape-editor.mc-shape-studio.replaces-your-current-outline-undo')}</p>` : nothing}
+${start && this.doc.mode === 'corners' ? group(t('shape-editor.mc-shape-studio.corner-styles'), STARTERS.length, grid(t('shape-editor.mc-shape-studio.corner-styles'), STARTERS.map((s, i) => tile(s.id, i, t(STARTER[s.id]), glyph(s.corners().tl.type), () => this.applyStarter(s.id))))) : nothing}
+${group(t('shape-editor.mc-shape-studio.shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
+    return this.win(start ? t('shape-editor.mc-shape-studio.start-from-a-shape-2') : t('shape-editor.mc-shape-studio.combine-with'), body, btn(t('shape-editor.mc-shape-studio.cancel'), () => this.closeWindows()), { variant: 'picker', onClose: () => (this.picker = undefined) });
   }
 
   /** Arrows move focus through the tiles in two dimensions (a tile starts the action only when pressed); Home and End jump. */
@@ -1498,8 +1498,8 @@ ${group(t('Shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
   /** The tool rail (Free shape): Select, Add point, Remove point, Pen. */
   // prettier-ignore
   private rail(): TemplateResult {
-    const T: Array<[Tool, string, string, string?]> = [['nodes', t('Select'), 'mdi:cursor-default', 'V'], ['add', t('Add point'), 'mdi:vector-polyline-plus'], ['remove', t('Remove point'), 'mdi:vector-polyline-minus'], ['pen', t('Pen'), 'mdi:fountain-pen-tip', 'P']];
-    return toolbar({ label: t('Free shape tools'), orientation: narrow() ? 'horizontal' : 'vertical', kind: 'rail', items: T.map(([k, label, icon, keys]) => ({ label, icon, iconOnly: true, keys, pressed: this.tool === k, onClick: () => this.setTool(k) })) });
+    const T: Array<[Tool, string, string, string?]> = [['nodes', t('shape-editor.mc-shape-studio.select'), 'mdi:cursor-default', 'V'], ['add', t('shape-editor.mc-shape-studio.add-point'), 'mdi:vector-polyline-plus'], ['remove', t('shape-editor.mc-shape-studio.remove-point'), 'mdi:vector-polyline-minus'], ['pen', t('shape-editor.mc-shape-studio.pen'), 'mdi:fountain-pen-tip', 'P']];
+    return toolbar({ label: t('shape-editor.mc-shape-studio.free-shape-tools'), orientation: narrow() ? 'horizontal' : 'vertical', kind: 'rail', items: T.map(([k, label, icon, keys]) => ({ label, icon, iconOnly: true, keys, pressed: this.tool === k, onClick: () => this.setTool(k) })) });
   }
 
   /** The float toolbar over the canvas: Preview, Start from, Combine, Grid and Snap. Icons only on a narrow layer. */
@@ -1508,17 +1508,17 @@ ${group(t('Shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
     const free = this.doc.mode === 'path';
     const iconOnly = this.layout === 'compact' || this.layout === 'stacked';
     const items: Array<KitButtonOptions | 'divider'> = [
-      { label: t('Preview'), glyph: 'eyeOn', iconOnly, haspopup: 'dialog', expanded: this.pvOpen, controls: 'pv-pop', onClick: (e) => this.togglePop(e, 'pv') },
+      { label: t('shape-editor.mc-shape-studio.preview'), glyph: 'eyeOn', iconOnly, haspopup: 'dialog', expanded: this.pvOpen, controls: 'pv-pop', onClick: (e) => this.togglePop(e, 'pv') },
       'divider',
-      { label: t('Start from...'), icon: 'mdi:shape-outline', iconOnly, haspopup: 'dialog', onClick: () => this.openPicker('start') },
+      { label: t('shape-editor.mc-shape-studio.start-from'), icon: 'mdi:shape-outline', iconOnly, haspopup: 'dialog', onClick: () => this.openPicker('start') },
     ];
     if (free) items.push(
-      { label: t('Combine...'), icon: 'mdi:vector-combine', iconOnly, haspopup: 'dialog', onClick: () => this.openPicker('combine') },
+      { label: t('shape-editor.mc-shape-studio.combine'), icon: 'mdi:vector-combine', iconOnly, haspopup: 'dialog', onClick: () => this.openPicker('combine') },
       'divider',
-      { label: t('Grid'), icon: 'mdi:grid', iconOnly, pressed: this.grid, onClick: () => (this.grid = !this.grid) },
-      { label: t('Snap'), icon: 'mdi:magnet', iconOnly, pressed: this.snapOn, onClick: () => (this.snapOn = !this.snapOn) },
+      { label: t('shape-editor.mc-shape-studio.grid'), icon: 'mdi:grid', iconOnly, pressed: this.grid, onClick: () => (this.grid = !this.grid) },
+      { label: t('shape-editor.mc-shape-studio.snap'), icon: 'mdi:magnet', iconOnly, pressed: this.snapOn, onClick: () => (this.snapOn = !this.snapOn) },
     );
-    return html`<div class="float">${toolbar({ label: t('Canvas tools'), orientation: 'horizontal', kind: 'float', items })}</div>`;
+    return html`<div class="float">${toolbar({ label: t('shape-editor.mc-shape-studio.canvas-tools'), orientation: 'horizontal', kind: 'float', items })}</div>`;
   }
 
   /** The drawing: corner mode is the runtime outline with corner handles, path mode is the shared canvas. */
@@ -1527,11 +1527,11 @@ ${group(t('Shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
     const { w, h } = this.size;
     const cur = this.cur;
     if (this.doc.mode === 'path') {
-      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('The path editor could not load. Check your connection and try again.')} ${btn(t('Try again'), () => void this.ensureCanvas())}</div>` : t('Loading the shape editor')}</div></div>`;
-      return html`<div class="stage"><mc-path-canvas aria-label=${t('Shape editor')} aria-describedby="hint" loupeLabel=${t('at {name}', { name: sh(this.size.id) })}
+      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('shape-editor.mc-shape-studio.the-path-editor-could-not-load-check')} ${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.ensureCanvas())}</div>` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div></div>`;
+      return html`<div class="stage"><mc-path-canvas aria-label=${t('shape-editor.mc-shape-studio.shape-editor')} aria-describedby="hint" loupeLabel=${t('shape-editor.mc-shape-studio.at-name', { name: sh(this.size.id) })}
 .frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: this.snapOn, grid: GRID, anchors: false, frame: true }} .pixelGrid=${this.grid} .gridStep=${GRID}
 .nudge=${1} .bigNudge=${10} .fineNudge=${0.1} .constrain=${this.constrain} .transform=${this.transformBox} .contextMenu=${this.pending?.kind !== 'pen'}
-@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('Click or tap to add points. Drag to curve.') : this.tool === 'add' ? t('Click on the outline to add a point.') : this.tool === 'remove' ? t('Click a point to remove it.') : t('Tab into the canvas. [ and ] choose a point. Arrows move it.')}</span>${this.dock()}</div>`;
+@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve') : this.tool === 'add' ? t('shape-editor.mc-shape-studio.click-on-the-outline-to-add-a-point') : this.tool === 'remove' ? t('shape-editor.mc-shape-studio.click-a-point-to-remove-it') : t('shape-editor.mc-shape-studio.tab-into-the-canvas-and-choose-a-point')}</span>${this.dock()}</div>`;
     }
     const k = this.stageW ? this.stageW / (w + 2 * PAD) : 1;
     const f = this.doc.mode === 'corners' ? Math.min(1, ...clamped(this.doc.corners, w, h).map((c) => c.to / c.from)) : 1;
@@ -1541,7 +1541,7 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
       const o = Math.max(cornerPx(this.doc.corners[key], w, h) * f * 0.5, 14 / k);
       const [x, y] = [i === 0 || i === 3 ? o : w - o, i < 2 ? o : h - o];
       return svg`<g aria-hidden="true"><circle class="handle ${this.sel === key || this.together ? 'on' : ''}" cx=${x} cy=${y} r=${5 / k} /><circle class="hit" cx=${x} cy=${y} r=${hit} @pointerdown=${(e: PointerEvent) => this.handleDown(e, key)} @pointermove=${(e: PointerEvent) => this.handleMove(e)} @pointerup=${(e: PointerEvent) => this.handleUp(e)} @pointercancel=${(e: PointerEvent) => this.handleUp(e)} /></g>`;
-    }) : nothing}</svg>${this.floatBar()}${k < 0.995 ? html`<span class="scale">${t('shown at {pct}%', { pct: Math.round(k * 100) })}</span>` : nothing}${this.dock()}</div>`;
+    }) : nothing}</svg>${this.floatBar()}${k < 0.995 ? html`<span class="scale">${t('shape-editor.mc-shape-studio.shown-at-pct', { pct: Math.round(k * 100) })}</span>` : nothing}${this.dock()}</div>`;
   }
 
   /** The foot of the canvas: the pen's Finish / Cancel bar and the result note (cleared by the next edit, a mode change or 8 s). */
@@ -1550,7 +1550,7 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
     const s = this.strip;
     const pen = this.penBar();
     if (!s && pen === nothing) return nothing;
-    return html`<div class="dock" @pointerenter=${() => this.holdStrip()} @focusin=${() => this.holdStrip()} @pointerleave=${() => this.strip && this.armStrip()} @focusout=${() => this.strip && this.armStrip()}>${pen}${s ? notice({ tone: 'info', text: s.text, transient: true, action: s.undo && this.canUndo ? { label: t('Undo'), onClick: () => this.undo() } : undefined }) : nothing}</div>`;
+    return html`<div class="dock" @pointerenter=${() => this.holdStrip()} @focusin=${() => this.holdStrip()} @pointerleave=${() => this.strip && this.armStrip()} @focusout=${() => this.strip && this.armStrip()}>${pen}${s ? notice({ tone: 'info', text: s.text, transient: true, action: s.undo && this.canUndo ? { label: t('shape-editor.mc-shape-studio.undo'), onClick: () => this.undo() } : undefined }) : nothing}</div>`;
   }
 
   // prettier-ignore
@@ -1559,27 +1559,27 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
     if (p?.kind !== 'pen') return nothing;
     const c = p.path?.anchors.length ?? 0;
     const ok = c >= 3;
-    return html`<div class="pen" role="group" aria-label=${t('New outline')}><strong>${t('Drawing a new outline. This replaces your shape when you finish.')}</strong><span class="help why" id="penwhy">${t('Click or tap to add points. Drag to curve.')} ${ok ? t('{c, plural, one {# point} other {# points}}', { c }) : t('Add 3 points to finish.')}</span>
-<button type="button" class="btn btn-primary btn-sm" aria-disabled=${!ok} aria-describedby="penwhy" @click=${() => (ok ? this.finishPen() : this.say(t('Add 3 points to finish.')))}>${t('Finish')}</button>${btn(t('Cancel'), () => this.dropPending(true))}</div>`;
+    return html`<div class="pen" role="group" aria-label=${t('shape-editor.mc-shape-studio.new-outline')}><strong>${t('shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your')}</strong><span class="help why" id="penwhy">${t('shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve')} ${ok ? t('shape-editor.mc-shape-studio.c', { c }) : t('shape-editor.mc-shape-studio.add-3-points-to-finish')}</span>
+<button type="button" class="btn btn-primary btn-sm" aria-disabled=${!ok} aria-describedby="penwhy" @click=${() => (ok ? this.finishPen() : this.say(t('shape-editor.mc-shape-studio.add-3-points-to-finish')))}>${t('shape-editor.mc-shape-studio.finish')}</button>${btn(t('shape-editor.mc-shape-studio.cancel'), () => this.dropPending(true))}</div>`;
   }
 
   /** The three previews, behind the Preview button (an anchored popover): they are the renderer's own outlines. */
   // prettier-ignore
   private previews(): TemplateResult {
     const mark = this.doc.mode === 'path' || Object.values(this.doc.corners).some((c) => c.type !== 'square');
-    return html`<div class="pop-body"><div class="pv-head">${seg(t('Preview'), [['card', t('On card')], ['outline', t('Outlines')]], this.cardView ? 'card' : 'outline', (v) => (this.cardView = v === 'card'), false, false)}</div>
-${switchRow({ id: 'older', label: t('Show older browser look'), checked: this.older, onChange: (b) => (this.older = b) })}
+    return html`<div class="pop-body"><div class="pv-head">${seg(t('shape-editor.mc-shape-studio.preview'), [['card', t('shape-editor.mc-shape-studio.on-card')], ['outline', t('shape-editor.mc-shape-studio.outlines')]], this.cardView ? 'card' : 'outline', (v) => (this.cardView = v === 'card'), false, false)}</div>
+${switchRow({ id: 'older', label: t('shape-editor.mc-shape-studio.show-older-browser-look'), checked: this.older, onChange: (b) => (this.older = b) })}
 <div class="pv-row">${this.an.map((p) => {
       const sc = p.w <= 120 ? 1 : p.w <= 360 ? 0.5 : 0.4;
       const bare = this.cardView ? '' : 'bare';
-      return html`<button type="button" class="pv ${this.cardView ? 'card' : ''} ${p.cut || p.cross ? 'cut' : ''}" aria-pressed=${this.size.id === p.id} aria-label=${t('Preview at {name} size, {w} by {h}', { name: sh(p.id), w: p.w, h: p.h })} @click=${() => this.setSize(this.sizes.find((s) => s.id === p.id)!)}>
+      return html`<button type="button" class="pv ${this.cardView ? 'card' : ''} ${p.cut || p.cross ? 'cut' : ''}" aria-pressed=${this.size.id === p.id} aria-label=${t('shape-editor.mc-shape-studio.preview-at-name-size-w-by-h', { name: sh(p.id), w: p.w, h: p.h })} @click=${() => this.setSize(this.sizes.find((s) => s.id === p.id)!)}>
 <svg viewBox="0 0 ${p.w} ${p.h}" style="width:${Math.max(96, Math.round(p.w * sc))}px" aria-hidden="true">${this.older ? svg`<polygon class="shape ${bare}" points=${p.poly.map((q) => `${r1(q[0])},${r1(q[1])}`).join(' ')} />` : svg`<path class="shape ${bare}" d=${p.d} />`}${this.cardView ? this.sample(p) : nothing}</svg>
 <span class="help">${nm(p.id)}${sc < 1 ? ` (${Math.round(sc * 100)}%)` : ''}</span></button>`;
-    })}</div><p class="help">${t('Ring, border, shadow and value background follow the outline.')}</p>${this.older ? html`<p class="help">${t('Older browsers draw the curved corners as straight facets. Border, ring and shadow stay.')}</p>` : nothing}${mark ? html`<p class="help">${t('Focus rings and hover scale of content that touches a cut edge are clipped by the shape.')}</p>` : nothing}</div>`;
+    })}</div><p class="help">${t('shape-editor.mc-shape-studio.ring-border-shadow-and-value-background')}</p>${this.older ? html`<p class="help">${t('shape-editor.mc-shape-studio.older-browsers-draw-the-curved-corners')}</p>` : nothing}${mark ? html`<p class="help">${t('shape-editor.mc-shape-studio.focus-rings-and-hover-scale-of-content')}</p>` : nothing}</div>`;
   }
 
   private shortcuts(): TemplateResult {
-    return html`<div class="pop-body"><h3>${t('Shortcuts')}</h3><ul class="keys">${SHORTCUTS.map((k) => html`<li>${t(k)}</li>`)}</ul></div>`;
+    return html`<div class="pop-body"><h3>${t('shape-editor.mc-shape-studio.shortcuts')}</h3><ul class="keys">${SHORTCUTS.map((k) => html`<li>${t(k)}</li>`)}</ul></div>`;
   }
 
   /** The text area (dashed) and two lines of sample text where the card would put its content. */
@@ -1593,7 +1593,7 @@ ${switchRow({ id: 'older', label: t('Show older browser look'), checked: this.ol
 
   // prettier-ignore
   private cornerRows(): TemplateResult {
-    return html`<div class="rows" role="list" aria-label=${t('Outline')}>${KEYS.map((k) => {
+    return html`<div class="rows" role="list" aria-label=${t('shape-editor.mc-shape-studio.outline')}>${KEYS.map((k) => {
       const c = this.doc.corners[k];
       const on = this.sel === k;
       return html`<div class="row ${on ? 'selected' : ''}" role="listitem"><button type="button" class="name" aria-current=${on ? 'true' : nothing} @click=${() => (this.sel = k)}>${t(CORNER[k])}</button><span class="mono">${c.type === 'square' ? t(TYPE.square).toLowerCase() : `${c.type} ${c.size}${c.pct ? '%' : ''}`}</span></div>`;
@@ -1602,22 +1602,22 @@ ${switchRow({ id: 'older', label: t('Show older browser look'), checked: this.ol
 
   // prettier-ignore
   private pointRows(): TemplateResult {
-    return html`<div class="rows" role="list" aria-label=${t('Points')}>${this.path.anchors.map((q, i) => {
+    return html`<div class="rows" role="list" aria-label=${t('shape-editor.mc-shape-studio.points')}>${this.path.anchors.map((q, i) => {
       const on = this.pointSel === i;
-      return html`<div class="row ${on ? 'selected' : ''}" role="listitem"><button type="button" class="name" aria-current=${on ? 'true' : nothing} @click=${() => (this.selectPoint(i), this.shadowRoot?.querySelector<HTMLElement & { focusAnchor(p: number, a: number): void }>('mc-path-canvas')?.focusAnchor(0, i))}>${t('Point {i}', { i: i + 1 })}</button><span class="mono">${t('{x}, {y}', { x: r1(q.x), y: r1(q.y) })}</span></div>`;
+      return html`<div class="row ${on ? 'selected' : ''}" role="listitem"><button type="button" class="name" aria-current=${on ? 'true' : nothing} @click=${() => (this.selectPoint(i), this.shadowRoot?.querySelector<HTMLElement & { focusAnchor(p: number, a: number): void }>('mc-path-canvas')?.focusAnchor(0, i))}>${t('shape-editor.mc-shape-studio.point-i', { i: i + 1 })}</button><span class="mono">${t('shape-editor.mc-shape-studio.x-y', { x: r1(q.x), y: r1(q.y) })}</span></div>`;
     })}</div>`;
   }
 
   // prettier-ignore
   private libPanel(): TemplateResult {
     const st = this.lib.state;
-    if (this.noLib) return html`${empty({ title: t('Keep your own shapes'), text: t('Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, what you build is saved in this card only.'), icon: 'mdi:shape-outline' })}<a href="https://github.com/therealmcsparrow/magic-card-utils" target="_blank" rel="noopener">${t('How to install')}</a>`;
-    if (st === 'loading' || st === 'idle') return html`<p class="help" role="status">${t('Loading your shapes')}</p>`;
-    if (st !== 'ready') return html`<div role="alert">${notice({ tone: 'error', text: st === 'readonly' ? t(FAIL.readonly) : t('Could not reach Magic Card Utils. Your work is safe in this card.') })}${btn(t('Try again'), () => void this.loadLib())}</div>`;
+    if (this.noLib) return html`${empty({ title: t('shape-editor.mc-shape-studio.keep-your-own-shapes'), text: t('shape-editor.mc-shape-studio.keep-your-own-shapes-for-every-dashboard'), icon: 'mdi:shape-outline' })}<a href="https://github.com/therealmcsparrow/magic-card-utils" target="_blank" rel="noopener">${t('shape-editor.mc-shape-studio.how-to-install')}</a>`;
+    if (st === 'loading' || st === 'idle') return html`<p class="help" role="status">${t('shape-editor.mc-shape-studio.loading-your-shapes')}</p>`;
+    if (st !== 'ready') return html`<div role="alert">${notice({ tone: 'error', text: st === 'readonly' ? t(FAIL.readonly) : t('shape-editor.mc-shape-studio.could-not-reach-magic-card-utils-your') })}${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.loadLib())}</div>`;
     const items = this.items;
-    return html`<p class="help">${t('Use follows the library: change "Lamp" and every card that uses it changes. Use as copy makes the card independent.')}</p><input class="input" type="search" aria-label=${t('Search my shapes')} placeholder=${t('Search my shapes')} .value=${this.lib.q} @input=${(e: Event) => (this.lib = { ...this.lib, q: (e.target as HTMLInputElement).value })} />
-${items.length ? html`<div class="rows libs" role="list">${items.map((it) => row({ id: it.id, name: it.name, content: html`<button type="button" class="thumb-li" aria-label=${t('Open {name}', { name: it.name })} @click=${() => this.openItem(it)}><svg viewBox="0 0 48 32" aria-hidden="true"><path class="shape" d=${shapePath('custom', 48, 32, it.shape as ShapeOptions)?.d ?? ''} /></svg><span>${it.name}</span></button>`, actions: [{ label: t('Delete {name}', { name: it.name }), glyph: 'delete', variant: 'danger', onClick: () => this.removeItem(it) }] }))}</div>` : empty(this.lib.q ? { title: t('No shapes match "{q}".', { q: this.lib.q }) } : { title: t('No saved shapes yet'), text: t('Save a shape here and use it on any dashboard.'), icon: 'mdi:shape-outline' })}
-${btn(t('Save current shape'), () => this.openSave())}`;
+    return html`<p class="help">${t('shape-editor.mc-shape-studio.use-follows-the-library-change-lamp-and')}</p><input class="input" type="search" aria-label=${t('shape-editor.mc-shape-studio.search-my-shapes')} placeholder=${t('shape-editor.mc-shape-studio.search-my-shapes')} .value=${this.lib.q} @input=${(e: Event) => (this.lib = { ...this.lib, q: (e.target as HTMLInputElement).value })} />
+${items.length ? html`<div class="rows libs" role="list">${items.map((it) => row({ id: it.id, name: it.name, content: html`<button type="button" class="thumb-li" aria-label=${t('shape-editor.mc-shape-studio.open-name', { name: it.name })} @click=${() => this.openItem(it)}><svg viewBox="0 0 48 32" aria-hidden="true"><path class="shape" d=${shapePath('custom', 48, 32, it.shape as ShapeOptions)?.d ?? ''} /></svg><span>${it.name}</span></button>`, actions: [{ label: t('shape-editor.mc-shape-studio.delete-name', { name: it.name }), glyph: 'delete', variant: 'danger', onClick: () => this.removeItem(it) }] }))}</div>` : empty(this.lib.q ? { title: t('shape-editor.mc-shape-studio.no-shapes-match-q', { q: this.lib.q }) } : { title: t('shape-editor.mc-shape-studio.no-saved-shapes-yet'), text: t('shape-editor.mc-shape-studio.save-a-shape-here-and-use-it-on-any'), icon: 'mdi:shape-outline' })}
+${btn(t('shape-editor.mc-shape-studio.save-current-shape'), () => this.openSave())}`;
   }
 
   // ── inspectors ──
@@ -1625,21 +1625,21 @@ ${btn(t('Save current shape'), () => this.openSave())}`;
   /** The Shape section head: its name and, once saved, whether the shape changed since. */
   private shapeHead(): TemplateResult {
     const dirty = this.host === 'mcu' ? this.mcuDirty : this.dirtyFromSaved;
-    return html`<div class="sec-head">${sectionHead({ title: t('Shape'), level: 3 })}<span aria-live="polite">${this.saved ? chip({ label: dirty ? t('Changed since saved') : t('Saved'), tone: dirty ? 'warn' : 'accent' }) : nothing}</span></div>`;
+    return html`<div class="sec-head">${sectionHead({ title: t('shape-editor.mc-shape-studio.shape'), level: 3 })}<span aria-live="polite">${this.saved ? chip({ label: dirty ? t('shape-editor.mc-shape-studio.changed-since-saved') : t('shape-editor.mc-shape-studio.saved'), tone: dirty ? 'warn' : 'accent' }) : nothing}</span></div>`;
   }
 
   // prettier-ignore
   private modeSwitch(): TemplateResult {
-    const note = this.edited ? (this.fromPath ? t('Corners will be square.') : t('Going back to Corners drops your edited points. Undo brings them back.')) : '';
-    return html`${seg(t('Shape type'), [['corners', t('Corners')], ['path', t('Free shape')]], this.tab, (m) => this.setMode(m))}${note ? html`<p class="help" id="modenote">${note}</p>` : nothing}`;
+    const note = this.edited ? (this.fromPath ? t('shape-editor.mc-shape-studio.corners-will-be-square') : t('shape-editor.mc-shape-studio.going-back-to-corners-drops-your-edited')) : '';
+    return html`${seg(t('shape-editor.mc-shape-studio.shape-type'), [['corners', t('shape-editor.mc-shape-studio.corners')], ['path', t('shape-editor.mc-shape-studio.free-shape')]], this.tab, (m) => this.setMode(m))}${note ? html`<p class="help" id="modenote">${note}</p>` : nothing}`;
   }
 
   /** Edit at: the size the shape is drawn and checked at (Width and Height for a custom size). */
   // prettier-ignore
   private editAt(): TemplateResult {
     const { w, h, id } = this.size;
-    return html`<div class="field" role="group" aria-label=${t('Edit at')}><span class="fl">${t('Edit at')}</span>${seg(t('Edit at'), EDIT_AT.map(([k, label]) => [k, t(label)] as [string, string]), id, (k) => this.setSize(k === 'custom' ? { id: 'custom', w, h } : SIZES.find((s) => s.id === k)!))}</div>
-${id === 'custom' ? html`<div class="grid2">${num(t('Width'), w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(t('Height'), h, (v) => this.setDims(w, v), { min: 24, max: MAX_SIZE })}</div>` : nothing}`;
+    return html`<div class="field" role="group" aria-label=${t('shape-editor.mc-shape-studio.edit-at')}><span class="fl">${t('shape-editor.mc-shape-studio.edit-at')}</span>${seg(t('shape-editor.mc-shape-studio.edit-at'), EDIT_AT.map(([k, label]) => [k, t(label)] as [string, string]), id, (k) => this.setSize(k === 'custom' ? { id: 'custom', w, h } : SIZES.find((s) => s.id === k)!))}</div>
+${id === 'custom' ? html`<div class="grid2">${num(t('shape-editor.mc-shape-studio.width'), w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(t('shape-editor.mc-shape-studio.height'), h, (v) => this.setDims(w, v), { min: 24, max: MAX_SIZE })}</div>` : nothing}`;
   }
 
   // prettier-ignore
@@ -1657,16 +1657,16 @@ ${id === 'custom' ? html`<div class="grid2">${num(t('Width'), w, (v) => this.set
       void this.updateComplete.then(() => this.focusTo(sel));
     };
     return html`<section class="sec">${this.shapeHead()}${this.caption ? html`<p class="help" role="status">${this.caption}</p>` : nothing}${this.modeSwitch()}${this.editAt()}</section>
-<section class="sec">${sectionHead({ title: t('Starters'), level: 4 })}<div class="acts" role="group" aria-label=${t('Starters')}>${STARTERS.map((s) => chip({ label: t(STARTER[s.id]), onClick: () => this.applyStarter(s.id) }))}</div></section>
-<section class="sec"><fieldset ?disabled=${d.mode === 'path'} class="bare-set">${sectionHead({ title: t('Corner'), level: 4 })}<div class="field"><span class="fl">${t('Edit corners')}</span>${seg(t('Edit corners'), [['each', t('Each corner')], ['all', t('All corners together')]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
-${this.together && this.allChanged ? html`<p class="help" role="status">${t('All four corners changed. Change just one?')} ${btn(t('Edit corners separately'), () => this.setTogether(false), { variant: 'text' })}</p>` : nothing}
-<div class="corner-form"><div class="cmini" role="radiogroup" aria-label=${t('Corner')} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.cmini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button type="button" role="radio" aria-label=${t(CORNER[k])} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
-<div class="cf"><h4 class="sub-label">${this.together ? t('All four corners') : t(CORNER[this.sel])}</h4><span class="fl" id="ct">${t('Type')}</span><div class="ctiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (ty) => this.editCorner({ type: ty as CornerType }, t(TYPE[ty as CornerType])), '.ctiles [tabindex="0"]')}>${CORNER_TYPES.map((ty) => html`<button type="button" role="radio" aria-label=${t(TYPE[ty])} aria-checked=${c.type === ty} tabindex=${c.type === ty ? 0 : -1} title=${t(TYPE_HELP[ty])} @click=${() => this.editCorner({ type: ty }, t(TYPE[ty]))}>${glyph(ty)}${t(TYPE[ty])}</button>`)}</div><p class="help" id="th">${t(TYPE_HELP[c.type])}</p>
-${c.type === 'square' ? html`<p class="help">${t('Square corners have no size.')}</p>` : html`<div class="field"><span class="fl">${t('Size')}</span><div class="unit"><input class="input" type="number" min="0" inputmode="decimal" aria-label=${t('Size')} .value=${String(r1(c.size))} @change=${(e: Event) => this.editCorner({ size: Math.max(0, +(e.target as HTMLInputElement).value || 0) }, t('Size'), `size-${this.sel}`)} /><div class="select"><select class="input" aria-label=${t('Unit')} @change=${(e: Event) => { const p = (e.target as HTMLSelectElement).value === '%'; this.editCorner({ pct: p, size: toPct(p) }, t('Unit')); }}><option value="px" ?selected=${!c.pct}>px</option><option value="%" ?selected=${c.pct}>%</option></select><ha-icon icon="mdi:chevron-down"></ha-icon></div></div><p class="help">${c.pct ? t('Follows the card\'s shorter side.') : t('Stays the same on every card size.')}</p></div>`}
-<div class="acts">${btn(t('Copy to all corners'), () => this.setCorners(cornersOf(c), t('Copy to all corners')), { variant: 'text' })}${btn(t('Reset'), () => this.resetCorner(), { variant: 'text' })}</div></div></div>
-${clamped(d.corners, this.size.w, this.size.h).map((x) => html`<span class="chip is-warn" role="status">${t('Corner is smaller on small cards: {v} px on {size}.', { size: sh(this.size.id), v: r1(x.to) })}</span>`)}
-${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? slider({ id: 'smooth', label: t('Smoothing'), min: 0, max: 1, step: 0.05, value: d.smoothing, onInput: (v) => this.commit({ ...d, smoothing: clamp(v, 0, 1) }, t('Smoothing'), 'smooth'), onChange: (v) => this.commit({ ...this.doc, smoothing: clamp(v, 0, 1) }, t('Smoothing'), 'smooth') }) : nothing}</fieldset></section>
-${this.spaceBlock(worst)}<div class="acts">${btn(t('Reset shape'), () => this.commit(this.initial, t('Reset shape')), { variant: 'text' })}</div>`;
+<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.starters'), level: 4 })}<div class="acts" role="group" aria-label=${t('shape-editor.mc-shape-studio.starters')}>${STARTERS.map((s) => chip({ label: t(STARTER[s.id]), onClick: () => this.applyStarter(s.id) }))}</div></section>
+<section class="sec"><fieldset ?disabled=${d.mode === 'path'} class="bare-set">${sectionHead({ title: t('shape-editor.mc-shape-studio.corner'), level: 4 })}<div class="field"><span class="fl">${t('shape-editor.mc-shape-studio.edit-corners')}</span>${seg(t('shape-editor.mc-shape-studio.edit-corners'), [['each', t('shape-editor.mc-shape-studio.each-corner')], ['all', t('shape-editor.mc-shape-studio.all-corners-together')]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
+${this.together && this.allChanged ? html`<p class="help" role="status">${t('shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one')} ${btn(t('shape-editor.mc-shape-studio.edit-corners-separately'), () => this.setTogether(false), { variant: 'text' })}</p>` : nothing}
+<div class="corner-form"><div class="cmini" role="radiogroup" aria-label=${t('shape-editor.mc-shape-studio.corner')} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.cmini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button type="button" role="radio" aria-label=${t(CORNER[k])} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
+<div class="cf"><h4 class="sub-label">${this.together ? t('shape-editor.mc-shape-studio.all-four-corners') : t(CORNER[this.sel])}</h4><span class="fl" id="ct">${t('shape-editor.mc-shape-studio.type')}</span><div class="ctiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (ty) => this.editCorner({ type: ty as CornerType }, t(TYPE[ty as CornerType])), '.ctiles [tabindex="0"]')}>${CORNER_TYPES.map((ty) => html`<button type="button" role="radio" aria-label=${t(TYPE[ty])} aria-checked=${c.type === ty} tabindex=${c.type === ty ? 0 : -1} title=${t(TYPE_HELP[ty])} @click=${() => this.editCorner({ type: ty }, t(TYPE[ty]))}>${glyph(ty)}${t(TYPE[ty])}</button>`)}</div><p class="help" id="th">${t(TYPE_HELP[c.type])}</p>
+${c.type === 'square' ? html`<p class="help">${t('shape-editor.mc-shape-studio.square-corners-have-no-size')}</p>` : html`<div class="field"><span class="fl">${t('shape-editor.mc-shape-studio.size')}</span><div class="unit"><input class="input" type="number" min="0" inputmode="decimal" aria-label=${t('shape-editor.mc-shape-studio.size')} .value=${String(r1(c.size))} @change=${(e: Event) => this.editCorner({ size: Math.max(0, +(e.target as HTMLInputElement).value || 0) }, t('shape-editor.mc-shape-studio.size'), `size-${this.sel}`)} /><div class="select"><select class="input" aria-label=${t('shape-editor.mc-shape-studio.unit')} @change=${(e: Event) => { const p = (e.target as HTMLSelectElement).value === '%'; this.editCorner({ pct: p, size: toPct(p) }, t('shape-editor.mc-shape-studio.unit')); }}><option value="px" ?selected=${!c.pct}>px</option><option value="%" ?selected=${c.pct}>%</option></select><ha-icon icon="mdi:chevron-down"></ha-icon></div></div><p class="help">${c.pct ? t('shape-editor.mc-shape-studio.follows-the-card-s-shorter-side') : t('shape-editor.mc-shape-studio.stays-the-same-on-every-card-size')}</p></div>`}
+<div class="acts">${btn(t('shape-editor.mc-shape-studio.copy-to-all-corners'), () => this.setCorners(cornersOf(c), t('shape-editor.mc-shape-studio.copy-to-all-corners')), { variant: 'text' })}${btn(t('shape-editor.mc-shape-studio.reset'), () => this.resetCorner(), { variant: 'text' })}</div></div></div>
+${clamped(d.corners, this.size.w, this.size.h).map((x) => html`<span class="chip is-warn" role="status">${t('shape-editor.mc-shape-studio.corner-is-smaller-on-small-cards-v-px-on', { size: sh(this.size.id), v: r1(x.to) })}</span>`)}
+${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? slider({ id: 'smooth', label: t('shape-editor.mc-shape-studio.smoothing'), min: 0, max: 1, step: 0.05, value: d.smoothing, onInput: (v) => this.commit({ ...d, smoothing: clamp(v, 0, 1) }, t('shape-editor.mc-shape-studio.smoothing'), 'smooth'), onChange: (v) => this.commit({ ...this.doc, smoothing: clamp(v, 0, 1) }, t('shape-editor.mc-shape-studio.smoothing'), 'smooth') }) : nothing}</fieldset></section>
+${this.spaceBlock(worst)}<div class="acts">${btn(t('shape-editor.mc-shape-studio.reset-shape'), () => this.commit(this.initial, t('shape-editor.mc-shape-studio.reset-shape')), { variant: 'text' })}</div>`;
   }
 
   // prettier-ignore
@@ -1674,16 +1674,16 @@ ${this.spaceBlock(worst)}<div class="acts">${btn(t('Reset shape'), () => this.co
     const d = this.doc;
     const ins = this.cur?.inset ?? noSides();
     const path = d.mode === 'path';
-    return html`<section class="sec">${sectionHead({ title: t('Space for text'), level: 4 })}<span class="mono" aria-label=${t('Space for text: top, right, bottom, left')}>${SIDES.map((s) => Math.round(ins[s])).join(' ')}</span><p class="help">${path ? t('Measured inside the outline at the size you edit at. Raise a side if you need more.') : t('Keeps text away from the corners. The card works it out for you.')}</p>${!path && worst > 0 ? html`<p class="help">${t('Corners use up to {v} px per side.', { v: r1(worst) })}</p>` : nothing}
-${switchRow({ id: 'show-text', label: t('Show text area'), checked: this.showText, onChange: (b) => (this.showText = b) })}<div class="field"><span class="fl" id="xs">${t('Extra space')}</span><div class="grid4" role="group" aria-labelledby="xs">${SIDES.map((s) => num(t(SIDE[s]), path ? d.pad[s] : d.extra[s], (v) => this.setSpace(s, v), { min: path ? d.solver[s] : 0 }))}</div><p class="help">${t('Can raise the space, not lower it.')}</p></div></section>`;
+    return html`<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.space-for-text'), level: 4 })}<span class="mono" aria-label=${t('shape-editor.mc-shape-studio.space-for-text-top-right-bottom-left')}>${SIDES.map((s) => Math.round(ins[s])).join(' ')}</span><p class="help">${path ? t('shape-editor.mc-shape-studio.measured-inside-the-outline-at-the-size') : t('shape-editor.mc-shape-studio.keeps-text-away-from-the-corners-the')}</p>${!path && worst > 0 ? html`<p class="help">${t('shape-editor.mc-shape-studio.corners-use-up-to-v-px-per-side', { v: r1(worst) })}</p>` : nothing}
+${switchRow({ id: 'show-text', label: t('shape-editor.mc-shape-studio.show-text-area'), checked: this.showText, onChange: (b) => (this.showText = b) })}<div class="field"><span class="fl" id="xs">${t('shape-editor.mc-shape-studio.extra-space')}</span><div class="grid4" role="group" aria-labelledby="xs">${SIDES.map((s) => num(t(SIDE[s]), path ? d.pad[s] : d.extra[s], (v) => this.setSpace(s, v), { min: path ? d.solver[s] : 0 }))}</div><p class="help">${t('shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it')}</p></div></section>`;
   }
 
   // prettier-ignore
   private pathInspector(): TemplateResult {
     const d = this.doc;
-    return html`<section class="sec">${this.shapeHead()}<p class="help">${t('Drag points, or pick one in the list.')}</p>${this.modeSwitch()}${this.editAt()}</section>
-${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${this.combine()}<section class="sec">${sectionHead({ title: t('Points'), level: 4 })}<span class="mono" role="status">${t('{c} of {max} points', { c: d.points.length, max: MAX_SHAPE_POINTS })}</span>
-<div class="acts">${btn(t('Reverse direction'), () => (this.commitPoints(reversePoints(d.points), t('Reverse direction')), this.selectPoint(undefined)))}</div></section>${this.spaceBlock(0)}`;
+    return html`<section class="sec">${this.shapeHead()}<p class="help">${t('shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list')}</p>${this.modeSwitch()}${this.editAt()}</section>
+${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${this.combine()}<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.points'), level: 4 })}<span class="mono" role="status">${t('shape-editor.mc-shape-studio.c-of-max-points', { c: d.points.length, max: MAX_SHAPE_POINTS })}</span>
+<div class="acts">${btn(t('shape-editor.mc-shape-studio.reverse-direction'), () => (this.commitPoints(reversePoints(d.points), t('shape-editor.mc-shape-studio.reverse-direction')), this.selectPoint(undefined)))}</div></section>${this.spaceBlock(0)}`;
   }
 
   get cvMode(): CanvasMode {
@@ -1697,9 +1697,9 @@ ${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${thi
     const p = this.pending;
     const b = this.operandBox;
     if (p?.kind !== 'shape' || !b) return nothing;
-    return html`<section class="sec" role="group" aria-label=${t('Shape to combine')}>${sectionHead({ title: t('Combine'), level: 4 })}<div class="pv-head"><strong>${t('{k} (not applied yet)', { k: t(PRIM[p.prim]) })}</strong><span class="grow"></span>${btn(t('Cancel'), () => this.dropPending(), { variant: 'text' })}</div>
+    return html`<section class="sec" role="group" aria-label=${t('shape-editor.mc-shape-studio.shape-to-combine')}>${sectionHead({ title: t('shape-editor.mc-shape-studio.combine-2'), level: 4 })}<div class="pv-head"><strong>${t('shape-editor.mc-shape-studio.k-not-applied-yet', { k: t(PRIM[p.prim]) })}</strong><span class="grow"></span>${btn(t('shape-editor.mc-shape-studio.cancel'), () => this.dropPending(), { variant: 'text' })}</div>
 <div class="grid4">${num(t(BOX.x), b.x, (v) => this.setOperand({ x: v }), { id: 'ox' })}${num(t(BOX.y), b.y, (v) => this.setOperand({ y: v }))}${num(t(BOX.w), b.w, (v) => this.setOperand({ w: v }), { min: 1 })}${num(t(BOX.h), b.h, (v) => this.setOperand({ h: v }), { min: 1 })}</div>
-<div class="acts">${btn(t('Centre'), () => this.setOperand('centre'))}</div><p class="help">${t('Move it with the arrow keys or drag it on the canvas.')}</p><div class="acts ops">${OPS.map(([k, label]) => html`<button type="button" class="btn btn-secondary btn-sm" aria-busy=${this.busy === k} @click=${() => void this.boolean(k)}>${this.busy === k ? t('Working...') : t(label)}</button>`)}</div><p class="help">${t('Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.')}</p></section>`;
+<div class="acts">${btn(t('shape-editor.mc-shape-studio.centre'), () => this.setOperand('centre'))}</div><p class="help">${t('shape-editor.mc-shape-studio.move-it-with-the-arrow-keys-or-drag-it')}</p><div class="acts ops">${OPS.map(([k, label]) => html`<button type="button" class="btn btn-secondary btn-sm" aria-busy=${this.busy === k} @click=${() => void this.boolean(k)}>${this.busy === k ? t('shape-editor.mc-shape-studio.working') : t(label)}</button>`)}</div><p class="help">${t('shape-editor.mc-shape-studio.combine-adds-it-to-the-outline-subtract')}</p></section>`;
   }
 
   // prettier-ignore
@@ -1715,21 +1715,21 @@ ${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${thi
       const [dx, dy] = q ? [q[0] - a.x, q[1] - a.y] : [0, 0];
       const len = Math.hypot(dx, dy);
       const ang = q ? (Math.atan2(dy, dx) * 180) / Math.PI : which === 'in' ? 180 : 0;
-      return html`<fieldset class="grid2 bare-set"><legend>${t(HANDLE[which])}</legend>${num(t('Angle'), ang, (v) => this.setHandle(i, which, v, len || 20))}${num(t('Length'), len, (v) => this.setHandle(i, which, ang, Math.max(0, v)), { min: 0 })}</fieldset>`;
+      return html`<fieldset class="grid2 bare-set"><legend>${t(HANDLE[which])}</legend>${num(t('shape-editor.mc-shape-studio.angle'), ang, (v) => this.setHandle(i, which, v, len || 20))}${num(t('shape-editor.mc-shape-studio.length'), len, (v) => this.setHandle(i, which, ang, Math.max(0, v)), { min: 0 })}</fieldset>`;
     };
     const ax = (axis: 'x' | 'y'): TemplateResult => {
       const cur = p[axis];
       const size = axis === 'x' ? w : h;
       const x = axis === 'x';
-      const lbl = cur.k === 's' ? (x ? t('Position across the width') : t('Position down the height')) : t(DIST[`${axis}${cur.k}`]);
-      return html`<div class="field"><span class="fl">${x ? t('Horizontal anchor') : t('Vertical anchor')}</span>${seg(x ? t('Horizontal anchor') : t('Vertical anchor'), [['l', x ? t('Left') : t('Top')], ['r', x ? t('Right') : t('Bottom')], ['s', t('Stretch')]] as Array<[Axis['k'], string]>, cur.k, (k) => this.setAnchorKind(i, axis, k))}
+      const lbl = cur.k === 's' ? (x ? t('shape-editor.mc-shape-studio.position-across-the-width') : t('shape-editor.mc-shape-studio.position-down-the-height')) : t(DIST[`${axis}${cur.k}`]);
+      return html`<div class="field"><span class="fl">${x ? t('shape-editor.mc-shape-studio.horizontal-anchor') : t('shape-editor.mc-shape-studio.vertical-anchor')}</span>${seg(x ? t('shape-editor.mc-shape-studio.horizontal-anchor') : t('shape-editor.mc-shape-studio.vertical-anchor'), [['l', x ? t('shape-editor.mc-shape-studio.left') : t('shape-editor.mc-shape-studio.top')], ['r', x ? t('shape-editor.mc-shape-studio.right') : t('shape-editor.mc-shape-studio.bottom')], ['s', t('shape-editor.mc-shape-studio.stretch')]] as Array<[Axis['k'], string]>, cur.k, (k) => this.setAnchorKind(i, axis, k))}
 ${num(lbl, cur.v, (v) => this.setAxis(i, axis, { ...cur, v: clamp(v, 0, cur.k === 's' ? 100 : size) }), { step: cur.k === 's' ? 0.5 : 1, min: 0 })}<span class="help mono">${r1(x ? a.x : a.y)} / ${size}</span></div>`;
     };
-    const pad = (label: string, icon: string, dx: number, dy: number): TemplateResult => button({ label: t('Move {dir, select, left {left} up {up} down {down} other {right}}', { dir: label }), icon, iconOnly: true, onClick: (e) => this.nudge(dx, dy, e.shiftKey) });
-    return html`<section class="sec" aria-label=${t('Selected point')}>${sectionHead({ title: t('Point {i} of {c}', { i: i + 1, c: cnt }), level: 3 })}<div class="acts">${btn(t('Previous'), () => this.selectPoint((i + cnt - 1) % cnt))}${btn(t('Next'), () => this.selectPoint((i + 1) % cnt))}</div>
-${seg(t('Point type'), [['c', t('Corner')], ['s', t('Smooth')]], smooth ? 's' : 'c', (k) => this.editPath((E, pa) => E.setKind(pa, i, k === 's' ? 'smooth' : 'corner'), t('Point type')))}
-<div class="grid2">${num(t('X, from the left edge'), a.x, (v) => this.movePoint(i, clamp(v, 0, w)), { id: 'fx' })}${num(t('Y, from the top edge'), a.y, (v) => this.movePoint(i, undefined, clamp(v, 0, h)))}</div><p class="help">${t('at {name}, {w} x {h}', { name: sh(this.size.id), w: w, h: h })}</p>
-${coarse() ? html`<div class="acts" role="group" aria-label=${t('Nudge')}>${pad('left', 'mdi:arrow-left', -1, 0)}${pad('up', 'mdi:arrow-up', 0, -1)}${pad('down', 'mdi:arrow-down', 0, 1)}${pad('right', 'mdi:arrow-right', 1, 0)}</div>` : nothing}
-${hdl('in')}${hdl('out')}<div class="acts">${btn(t('Add point after'), () => this.addAfter())}${btn(t('Remove point'), () => this.deletePoint())}</div><details><summary>${t('Advanced: how this point moves when the card resizes')}</summary>${ax('x')}${ax('y')}</details></section>`;
+    const pad = (label: string, icon: string, dx: number, dy: number): TemplateResult => button({ label: t('shape-editor.mc-shape-studio.move-dir', { dir: label }), icon, iconOnly: true, onClick: (e) => this.nudge(dx, dy, e.shiftKey) });
+    return html`<section class="sec" aria-label=${t('shape-editor.mc-shape-studio.selected-point')}>${sectionHead({ title: t('shape-editor.mc-shape-studio.point-i-of-c', { i: i + 1, c: cnt }), level: 3 })}<div class="acts">${btn(t('shape-editor.mc-shape-studio.previous'), () => this.selectPoint((i + cnt - 1) % cnt))}${btn(t('shape-editor.mc-shape-studio.next'), () => this.selectPoint((i + 1) % cnt))}</div>
+${seg(t('shape-editor.mc-shape-studio.point-type'), [['c', t('shape-editor.mc-shape-studio.corner')], ['s', t('shape-editor.mc-shape-studio.smooth')]], smooth ? 's' : 'c', (k) => this.editPath((E, pa) => E.setKind(pa, i, k === 's' ? 'smooth' : 'corner'), t('shape-editor.mc-shape-studio.point-type')))}
+<div class="grid2">${num(t('shape-editor.mc-shape-studio.x-from-the-left-edge'), a.x, (v) => this.movePoint(i, clamp(v, 0, w)), { id: 'fx' })}${num(t('shape-editor.mc-shape-studio.y-from-the-top-edge'), a.y, (v) => this.movePoint(i, undefined, clamp(v, 0, h)))}</div><p class="help">${t('shape-editor.mc-shape-studio.at-name-w-x-h', { name: sh(this.size.id), w: w, h: h })}</p>
+${coarse() ? html`<div class="acts" role="group" aria-label=${t('shape-editor.mc-shape-studio.nudge')}>${pad('left', 'mdi:arrow-left', -1, 0)}${pad('up', 'mdi:arrow-up', 0, -1)}${pad('down', 'mdi:arrow-down', 0, 1)}${pad('right', 'mdi:arrow-right', 1, 0)}</div>` : nothing}
+${hdl('in')}${hdl('out')}<div class="acts">${btn(t('shape-editor.mc-shape-studio.add-point-after'), () => this.addAfter())}${btn(t('shape-editor.mc-shape-studio.remove-point'), () => this.deletePoint())}</div><details><summary>${t('shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the')}</summary>${ax('x')}${ax('y')}</details></section>`;
   }
 }

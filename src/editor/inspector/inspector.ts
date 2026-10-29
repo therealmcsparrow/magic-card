@@ -42,7 +42,8 @@ import {
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
 import { entityStats, resolveEntitySource } from '../entity-source';
-import { childListKey, replaceDescendant } from '../../utils/module-path';
+import { childListKey } from '../../utils/module-path';
+import { replaceDescendant } from '../../utils/module-path-edit';
 import { layerContext } from '../layers/placement-model';
 import { onStatus } from '../layers/bg-status';
 import { moveLayer, turnOnLowPower } from '../layers/layer-actions';
@@ -85,17 +86,17 @@ import '../components/media-picker';
 import '../components/card-picker';
 import '../components/box-field';
 import '../components/design-panel';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
 type Kind = Selection['kind'];
 
 /** Tabs are text-only in every variant (one tab style). */
-const TAB_META: Record<EditorTab, { label: MessageId }> = {
-  general: { label: m('General') },
-  actions: { label: m('Actions') },
-  conditions: { label: m('Conditions') },
-  design: { label: m('Design') },
-  flows: { label: m('Flows') },
+const TAB_META: Record<EditorTab, { label: MessageIndex }> = {
+  general: { label: m('card-editor.inspector.general') },
+  actions: { label: m('card-editor.inspector.actions') },
+  conditions: { label: m('card-editor.inspector.conditions') },
+  design: { label: m('card-editor.inspector.design') },
+  flows: { label: m('card-editor.inspector.flows') },
 };
 const MODULE_TAB_ORDER: EditorTab[] = ['general', 'actions', 'conditions', 'design'];
 const KIND_TABS: Record<Exclude<Kind, 'module'>, EditorTab[]> = {
@@ -424,7 +425,7 @@ export class Inspector extends LitElement {
       <div class="insp" @field-sync-toggle=${this._onSyncToggle} @mc-open-card-entity=${this._openCardEntity} @mc-select-first-tab=${this._showFirstTab}>
         <div class="insp-head">
           ${this._renderIdentity(config, sel)}
-          <div class="seg full tabs" role="tablist" aria-label=${t('Settings')}>
+          <div class="seg full tabs" role="tablist" aria-label=${t('card-editor.inspector.settings')}>
             ${tabs.map((id) => {
               const on = id === tab;
               return html`
@@ -455,13 +456,13 @@ export class Inspector extends LitElement {
     const info = describeSelection(config, sel);
     const s = clampSelection(config, sel);
     const crumb = (label: string, target: Selection) =>
-      html`<button type="button" class="crumb" title=${t('Select {label}', { label })} @click=${() => this._goTo(target)}>${label}</button>`;
+      html`<button type="button" class="crumb" title=${t('card-editor.inspector.select-label', { label })} @click=${() => this._goTo(target)}>${label}</button>`;
     const dot = html`<span aria-hidden="true"> · </span>`;
-    const rowOf = (i: number) => t('Row {n}', { n: i + 1 });
-    const colOf = (i: number) => t('Column {n}', { n: i + 1 });
-    const rows = (n: number) => t('{n, plural, one {# row} other {# rows}}', { n });
-    const columns = (n: number) => t('{n, plural, one {# column} other {# columns}}', { n });
-    const modules = (n: number) => t('{n, plural, one {# module} other {# modules}}', { n });
+    const rowOf = (i: number) => t('card-editor.inspector.row-n', { n: i + 1 });
+    const colOf = (i: number) => t('card-editor.inspector.column-n', { n: i + 1 });
+    const rows = (n: number) => t('card-editor.inspector.n', { n });
+    const columns = (n: number) => t('card-editor.inspector.n-2', { n });
+    const modules = (n: number) => t('card-editor.inspector.n-3', { n });
 
     // Header: "<Type> · <label>" with a one-line path under it.
     let title = info.title;
@@ -469,14 +470,14 @@ export class Inspector extends LitElement {
     let path: TemplateResult;
     switch (s.kind) {
       case 'card': {
-        title = config.name?.trim() ? `${t('Card')} · ${info.title}` : t('Card');
+        title = config.name?.trim() ? `${t('card-editor.inspector.card')} · ${info.title}` : t('card-editor.inspector.card');
         path = html`${rows((config.rows || []).length)} · ${modules(countModules(config))}`;
         break;
       }
       case 'row': {
         const row = config.rows[s.row];
         icon = 'mdi:table-row';
-        path = html`${columns(row.columns.length)} · ${hasColumnWidths(row) ? t('custom widths') : t('layout {layout}', { layout: row.layout || '1' })}`;
+        path = html`${columns(row.columns.length)} · ${hasColumnWidths(row) ? t('card-editor.inspector.custom-widths') : t('card-editor.inspector.layout-layout', { layout: row.layout || '1' })}`;
         break;
       }
       case 'column': {
@@ -525,7 +526,7 @@ export class Inspector extends LitElement {
         <div class="txt">
           <h2>${title}</h2>
           <p class="path">${path}${isHiddenItem(itemAt(config, s))
-            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>${t('Hidden on dashboard')}</span>`
+            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>${t('card-editor.inspector.hidden-on-dashboard')}</span>`
             : nothing}</p>
         </div>
       </div>
@@ -635,7 +636,7 @@ export class Inspector extends LitElement {
       return html`
         <div class="empty">
           <ha-icon icon="mdi:puzzle-remove-outline"></ha-icon>
-          <strong>${t('Unknown module type')}</strong>
+          <strong>${t('card-editor.inspector.unknown-module-type')}</strong>
           <p class="mono">${mod.type}</p>
         </div>
       `;
@@ -678,11 +679,11 @@ export class Inspector extends LitElement {
     return html`
       <div class="child-list-sync" data-overridden=${overridden ? '' : nothing}>
         <p class="help">${overridden
-          ? child ? t("This module is part of its layout; the layout's modules differ from the template.") : t("The modules inside this layout; the layout's modules differ from the template.")
-          : child ? t('This module is part of its layout; they follow the template as one list.') : t('The modules inside this layout; they follow the template as one list.')}</p>
+          ? child ? t("card-editor.inspector.this-module-is-part-of-its-layout-the") : t("card-editor.inspector.the-modules-inside-this-layout-the")
+          : child ? t('card-editor.inspector.this-module-is-part-of-its-layout-they') : t('card-editor.inspector.the-modules-inside-this-layout-they')}</p>
         ${overridden
           ? html`<button type="button" class="btn btn-text btn-sm child-list-reset" @click=${() => this._resetChildList(sel.row, sel.col, sel.module, key)}>
-              <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset to template')}
+              <ha-icon icon="mdi:backup-restore"></ha-icon>${t('card-editor.inspector.reset-to-template')}
             </button>`
           : nothing}
       </div>

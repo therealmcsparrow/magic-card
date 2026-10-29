@@ -33,8 +33,8 @@ class SpinboxModule extends BaseLazyStub {
 
   validate(config: CardModule): string[] {
     const c = config as SpinboxModuleConfig;
-    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return [t('Min must be less than max')];
-    if (c.step !== undefined && !(c.step > 0)) return [t('Step must be greater than 0')];
+    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return [t('card.spinbox-module.min-must-be-less-than-max')];
+    if (c.step !== undefined && !(c.step > 0)) return [t('card.spinbox-module.step-must-be-greater-than-0')];
     return [];
   }
 }

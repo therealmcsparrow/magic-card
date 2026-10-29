@@ -41,6 +41,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | Folder | Covers |
 | --- | --- |
 | [Languages](languages/README.md) | English (UK), English (US) and Dutch, which language Magic Card uses, and which text stays in English |
+| [Translating](translating/README.md) | For translators and contributors: the text files, exchange files for Weblate and Crowdin, stale translations |
 | [Accessibility](accessibility/README.md) | The WCAG 2.2 AA target, the keyboard and screen reader support in the editors, and what still needs a check on a real device |
 
 ## Examples

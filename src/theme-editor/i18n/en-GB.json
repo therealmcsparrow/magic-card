@@ -1,0 +1,4197 @@
+{
+  "theme-editor.bubble-card.accent-colour": {
+    "text": "Accent colour",
+    "note": "Label of the Bubble Card theme variable for the accent colour, in the variables panel.",
+    "max": 25
+  },
+  "theme-editor.bubble-card.accent-for-active-states-and-sliders": {
+    "text": "Accent for active states and sliders.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the accent colour of active states and sliders.",
+    "max": 60
+  },
+  "theme-editor.bubble-card.background-behind-icons": {
+    "text": "Background behind icons.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the fill behind icons.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.background-of-pop-ups": {
+    "text": "Background of pop-ups.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the background of pop-up windows.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.background-of-sub-buttons": {
+    "text": "Background of sub-buttons.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the fill of the small buttons on a card.",
+    "max": 45
+  },
+  "theme-editor.bubble-card.border": {
+    "text": "Border",
+    "note": "Label of the Bubble Card theme variable for the card border, in the variables panel.",
+    "max": 10
+  },
+  "theme-editor.bubble-card.border-of-bubble-cards": {
+    "text": "Border of Bubble cards.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the border drawn around Bubble cards.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.box-shadow-of-bubble-cards": {
+    "text": "Box shadow of Bubble cards.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the drop shadow under Bubble cards.",
+    "max": 45
+  },
+  "theme-editor.bubble-card.button-card-background": {
+    "text": "Button card background",
+    "note": "Label of the Bubble Card theme variable for the background of button cards, in the variables panel.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.button-card-radius": {
+    "text": "Button card radius",
+    "note": "Label of the Bubble Card theme variable for button card corner rounding. Radius means corner size.",
+    "max": 30
+  },
+  "theme-editor.bubble-card.colour-of-the-dimmed-area-behind-a-pop": {
+    "text": "Colour of the dimmed area behind a pop-up.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the colour of the dimmed screen behind an open pop-up.",
+    "max": 70
+  },
+  "theme-editor.bubble-card.corner-radius": {
+    "text": "Corner radius",
+    "note": "Label of the Bubble Card theme variable for the general corner rounding, in the variables panel.",
+    "max": 25
+  },
+  "theme-editor.bubble-card.corner-radius-of-button-cards": {
+    "text": "Corner radius of button cards.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets how round the corners of button cards are.",
+    "max": 50
+  },
+  "theme-editor.bubble-card.corner-radius-of-icons": {
+    "text": "Corner radius of icons.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets how round the corners of icons are.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.corner-radius-of-pop-ups": {
+    "text": "Corner radius of pop-ups.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets how round the corners of pop-ups are.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.corner-radius-of-sub-buttons": {
+    "text": "Corner radius of sub-buttons.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets how round the corners of sub-buttons are.",
+    "max": 50
+  },
+  "theme-editor.bubble-card.fill-colour-for-light-sliders": {
+    "text": "Fill colour for light sliders.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the fill colour of sliders for lights.",
+    "max": 50
+  },
+  "theme-editor.bubble-card.icon-background": {
+    "text": "Icon background",
+    "note": "Label of the Bubble Card theme variable for the fill behind icons, in the variables panel.",
+    "max": 25
+  },
+  "theme-editor.bubble-card.icon-radius": {
+    "text": "Icon radius",
+    "note": "Label of the Bubble Card theme variable for icon corner rounding. Radius means corner size, not a circle's half-width.",
+    "max": 25
+  },
+  "theme-editor.bubble-card.light-colour": {
+    "text": "Light colour",
+    "note": "Label of the Bubble Card theme variable for the colour of lights that are on. 'Light' is a lamp, not a brightness.",
+    "max": 20
+  },
+  "theme-editor.bubble-card.main-background": {
+    "text": "Main background",
+    "note": "Label of the Bubble Card theme variable for the main card background, in the variables panel.",
+    "max": 25
+  },
+  "theme-editor.bubble-card.main-background-of-button-cards": {
+    "text": "Main background of button cards.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the main background of button cards.",
+    "max": 55
+  },
+  "theme-editor.bubble-card.main-background-of-every-bubble-element": {
+    "text": "Main background of every Bubble element.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the main background of all Bubble Card parts at once.",
+    "max": 65
+  },
+  "theme-editor.bubble-card.pop-up-backdrop-colour": {
+    "text": "Pop-up backdrop colour",
+    "note": "Label of the Bubble Card theme variable for the dimmed backdrop behind a pop-up, in the variables panel.",
+    "max": 40
+  },
+  "theme-editor.bubble-card.pop-up-background": {
+    "text": "Pop-up background",
+    "note": "Label of the Bubble Card theme variable for the background of pop-up windows.",
+    "max": 30
+  },
+  "theme-editor.bubble-card.pop-up-radius": {
+    "text": "Pop-up radius",
+    "note": "Label of the Bubble Card theme variable for pop-up corner rounding. Radius means corner size.",
+    "max": 25
+  },
+  "theme-editor.bubble-card.radius-for-every-bubble-element": {
+    "text": "Radius for every Bubble element.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the corner rounding of all Bubble Card parts at once.",
+    "max": 55
+  },
+  "theme-editor.bubble-card.secondary-background": {
+    "text": "Secondary background",
+    "note": "Label of the Bubble Card theme variable for the second, lighter background used on inner parts.",
+    "max": 35
+  },
+  "theme-editor.bubble-card.secondary-background-of-every-bubble": {
+    "text": "Secondary background of every Bubble element.",
+    "note": "Helper text under a Bubble Card variable in the variables panel; tells the user it sets the second, lighter background used on inner parts of Bubble Card.",
+    "max": 75
+  },
+  "theme-editor.bubble-card.shadow": {
+    "text": "Shadow",
+    "note": "Label of the Bubble Card theme variable for the drop shadow under cards. Noun, not a verb.",
+    "max": 10
+  },
+  "theme-editor.bubble-card.sub-button-background": {
+    "text": "Sub-button background",
+    "note": "Label of the Bubble Card theme variable for the fill of the small buttons on a card.",
+    "max": 35
+  },
+  "theme-editor.bubble-card.sub-button-radius": {
+    "text": "Sub-button radius",
+    "note": "Label of the Bubble Card theme variable for sub-button corner rounding. Radius means corner size.",
+    "max": 30
+  },
+  "theme-editor.button-card.background-of-the-loading-spinner": {
+    "text": "Background of the loading spinner.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the background of the loading spinner.",
+    "max": 55
+  },
+  "theme-editor.button-card.background-of-tooltips": {
+    "text": "Background of tooltips.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the background of hover tooltips.",
+    "max": 40
+  },
+  "theme-editor.button-card.card-background": {
+    "text": "Card background",
+    "note": "Label of the button-card theme variable for the card background, in the variables panel.",
+    "max": 25
+  },
+  "theme-editor.button-card.card-radius": {
+    "text": "Card radius",
+    "note": "Label of the button-card theme variable for card corner rounding. Radius means corner size.",
+    "max": 20
+  },
+  "theme-editor.button-card.card-shadow": {
+    "text": "Card shadow",
+    "note": "Label of the button-card theme variable for the drop shadow under a card.",
+    "max": 20
+  },
+  "theme-editor.button-card.corner-radius-of-tooltips": {
+    "text": "Corner radius of tooltips.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets how round the corners of hover tooltips are.",
+    "max": 45
+  },
+  "theme-editor.button-card.font-size-of-tooltips": {
+    "text": "Font size of tooltips.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the size of the text in hover tooltips.",
+    "max": 40
+  },
+  "theme-editor.button-card.icon-colour-when-an-entity-is-inactive": {
+    "text": "Icon colour when an entity is inactive.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the icon colour of an entity that is off or inactive.",
+    "max": 65
+  },
+  "theme-editor.button-card.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Label of the colour field for the main text of Button Card. The Mushroom, Tile and Ultra Card groups have fields with the same English.",
+    "max": 35
+  },
+  "theme-editor.button-card.radius-of-the-ripple-on-the-icon": {
+    "text": "Radius of the ripple on the icon.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the size of the ripple shown when the icon is pressed.",
+    "max": 55
+  },
+  "theme-editor.button-card.secondary-background": {
+    "text": "Secondary background",
+    "note": "Label of the button-card theme variable for the second background colour used on inner parts.",
+    "max": 35
+  },
+  "theme-editor.button-card.shadow-of-tooltips": {
+    "text": "Shadow of tooltips.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the drop shadow of hover tooltips.",
+    "max": 35
+  },
+  "theme-editor.button-card.space-inside-tooltips": {
+    "text": "Space inside tooltips.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the padding inside hover tooltips.",
+    "max": 40
+  },
+  "theme-editor.button-card.state-icon-colour": {
+    "text": "State icon colour",
+    "note": "Label of the button-card theme variable for the colour of the state icon, in the variables panel.",
+    "max": 30
+  },
+  "theme-editor.button-card.text-colour-of-tooltips": {
+    "text": "Text colour of tooltips.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the text colour of hover tooltips.",
+    "max": 40
+  },
+  "theme-editor.button-card.tooltip-background": {
+    "text": "Tooltip background",
+    "note": "Label of the button-card theme variable for the background of the hover tooltip.",
+    "max": 30
+  },
+  "theme-editor.button-card.tooltip-background-fallback": {
+    "text": "Tooltip background fallback.",
+    "note": "Helper text under a button-card variable in the variables panel; says it is the backup tooltip background used when the main one is not set.",
+    "max": 45
+  },
+  "theme-editor.button-card.tooltip-maximum-width": {
+    "text": "Tooltip maximum width",
+    "note": "Label of the button-card theme variable for the widest a hover tooltip may grow, in the variables panel.",
+    "max": 35
+  },
+  "theme-editor.button-card.tooltip-padding": {
+    "text": "Tooltip padding",
+    "note": "Label of the button-card theme variable for the space inside the hover tooltip.",
+    "max": 25
+  },
+  "theme-editor.button-card.tooltip-radius": {
+    "text": "Tooltip radius",
+    "note": "Label of the button-card theme variable for tooltip corner rounding. Radius means corner size.",
+    "max": 25
+  },
+  "theme-editor.button-card.tooltip-text-colour": {
+    "text": "Tooltip text colour",
+    "note": "Label of the button-card theme variable for the text colour of hover tooltips, in the variables panel.",
+    "max": 35
+  },
+  "theme-editor.button-card.tooltip-text-colour-fallback": {
+    "text": "Tooltip text colour fallback.",
+    "note": "Helper text under a button-card variable in the variables panel; says it is the backup tooltip text colour used when the main one is not set.",
+    "max": 50
+  },
+  "theme-editor.button-card.tooltip-text-size": {
+    "text": "Tooltip text size",
+    "note": "Label of the button-card theme variable for the text size in hover tooltips, in the variables panel.",
+    "max": 30
+  },
+  "theme-editor.button-card.widest-a-tooltip-grows": {
+    "text": "Widest a tooltip grows.",
+    "note": "Helper text under a button-card variable in the variables panel; says it sets the maximum width of a hover tooltip.",
+    "max": 40
+  },
+  "theme-editor.catalogue.backgrounds-and-cards": {
+    "text": "Backgrounds and cards",
+    "note": "Catalogue group heading for variables that colour page backgrounds and card surfaces.",
+    "max": 35
+  },
+  "theme-editor.catalogue.bubble-card": {
+    "text": "Bubble Card",
+    "note": "Name of the third-party Bubble Card integration in the catalogue; keep as a product name.",
+    "max": 20
+  },
+  "theme-editor.catalogue.button-card": {
+    "text": "button-card",
+    "note": "Name of the third-party button-card integration in the catalogue; keep lower-case as a product name.",
+    "max": 20
+  },
+  "theme-editor.catalogue.header-and-sidebar": {
+    "text": "Header and sidebar",
+    "note": "Catalogue group heading for variables that style the top bar and the side menu.",
+    "max": 30
+  },
+  "theme-editor.catalogue.magic-card": {
+    "text": "Magic Card",
+    "note": "Name of this product in the catalogue of themeable cards; keep as a product name.",
+    "max": 20
+  },
+  "theme-editor.catalogue.mushroom": {
+    "text": "Mushroom",
+    "note": "Name of the third-party Mushroom card set in the catalogue; keep as a product name.",
+    "max": 15
+  },
+  "theme-editor.catalogue.other": {
+    "text": "Other",
+    "note": "Catalogue group heading for variables that belong to no listed card or part.",
+    "max": 10
+  },
+  "theme-editor.catalogue.primary-and-accent": {
+    "text": "Primary and accent",
+    "note": "Catalogue group heading for the main brand colour variables and their accents.",
+    "max": 30
+  },
+  "theme-editor.catalogue.sizes-and-radii": {
+    "text": "Sizes and radii",
+    "note": "Catalogue group heading for font size and corner rounding variables. Radii is the plural of radius (corner size).",
+    "max": 25
+  },
+  "theme-editor.catalogue.states-and-alerts": {
+    "text": "States and alerts",
+    "note": "Catalogue group heading for variables that colour entity states, warnings and errors.",
+    "max": 30
+  },
+  "theme-editor.catalogue.text": {
+    "text": "Text",
+    "note": "Catalogue group heading for text colour and font variables. Noun.",
+    "max": 10
+  },
+  "theme-editor.catalogue.tile-card": {
+    "text": "Tile card",
+    "note": "Name of the Home Assistant Tile card in the catalogue of themeable cards.",
+    "max": 15
+  },
+  "theme-editor.catalogue.ultra-card": {
+    "text": "Ultra Card",
+    "note": "Name of the third-party Ultra Card integration in the catalogue; keep as a product name.",
+    "max": 20
+  },
+  "theme-editor.dialogs.close": {
+    "text": "Close",
+    "note": "Button on a floating dialog window that closes it. Same English as the Close buttons in the editor and preset dialog.",
+    "max": 10
+  },
+  "theme-editor.dialogs.maximise": {
+    "text": "Maximise",
+    "note": "Tooltip on the window button that makes the dialog fill the screen.",
+    "max": 15
+  },
+  "theme-editor.dialogs.move-window": {
+    "text": "Move window",
+    "note": "Accessible label of the title bar handle used to drag the dialog around.",
+    "max": 20
+  },
+  "theme-editor.dialogs.resize-window": {
+    "text": "Resize window",
+    "note": "Accessible label of the corner handle used to drag the dialog to a new size.",
+    "max": 25
+  },
+  "theme-editor.dialogs.restore-size": {
+    "text": "Restore size",
+    "note": "Tooltip on the window button that returns a maximised dialog to its earlier size.",
+    "max": 35
+  },
+  "theme-editor.editor-view.a-theme-with-this-name-already-exists": {
+    "text": "A theme with this name already exists.",
+    "note": "Error banner in the editor when saving a new theme whose name is taken; offers to pick another name.",
+    "max": 65
+  },
+  "theme-editor.editor-view.a-variable-is-typed-but-not-added": {
+    "text": "A variable is typed but not added",
+    "note": "Warning title in the editor when Save is pressed while the Add any variable row still holds unadded text.",
+    "max": 55
+  },
+  "theme-editor.editor-view.add-it-and-save": {
+    "text": "Add it and save",
+    "note": "Button in the unadded-variable warning that adds the typed variable to the theme and then saves.",
+    "max": 25
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes": {
+    "text": "Add light and dark modes",
+    "note": "Confirm button of the dialog that adds separate light and dark sections to a theme. Verb.",
+    "max": 40
+  },
+  "theme-editor.editor-view.add-light-and-dark-modes-2": {
+    "text": "Add light and dark modes?",
+    "note": "Title of the confirmation dialog that asks whether to add separate light and dark sections to the theme.",
+    "max": 40
+  },
+  "theme-editor.editor-view.add-modes": {
+    "text": "Add modes",
+    "note": "Button that adds light and dark mode sections to a theme that has only shared values. Mode means light or dark.",
+    "max": 15
+  },
+  "theme-editor.editor-view.add-name-as-a-variable": {
+    "text": "Add {name} as a variable",
+    "note": "Button shown after a search finds no match. {name} is the CSS variable name the user typed, such as --primary-color; do not translate it.",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.added-light-and-dark-modes-variables-you": {
+    "text": "Added light and dark modes. Variables you set before stay shared.",
+    "note": "Toast after light and dark modes were added; tells the user that values set earlier remain in the Shared set.",
+    "max": 105
+  },
+  "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
+    "text": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
+    "note": "Help text for trying a theme without saving. {mode} is 'dark' or 'light': the colour mode of the current Home Assistant profile.",
+    "max": 150,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.editor-view.button": {
+    "text": "Button",
+    "note": "Name of a sample button used as a preview example in the editor. Noun, not an action.",
+    "max": 10
+  },
+  "theme-editor.editor-view.c": {
+    "text": "{c, plural, one {# variable matches} other {# variables match}}",
+    "note": "Result count under the variable search box. {c} is the number of theme variables matching the search.",
+    "max": 30,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.editor-view.c-a-fix": {
+    "text": "{c, plural, one {# value needs} other {# values need}} a fix",
+    "note": "Validation summary next to the Save button. {c} is the number of variable values that are not valid CSS.",
+    "max": 35,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.editor-view.cancel": {
+    "text": "Cancel",
+    "note": "Button in an editor confirmation that keeps the theme as it is. Same English as the start view and preset dialog.",
+    "max": 10
+  },
+  "theme-editor.editor-view.check-again": {
+    "text": "Check again",
+    "note": "Button in the editor banner that re-runs the include check. Same English as the include notice button.",
+    "max": 20
+  },
+  "theme-editor.editor-view.choose-another-name": {
+    "text": "Choose another name",
+    "note": "Button on a name-conflict error and title of the rename dialog, where the user types a different theme name.",
+    "max": 35
+  },
+  "theme-editor.editor-view.close": {
+    "text": "Close",
+    "note": "Button in the editor view that closes the open theme or panel. Same English as the dialog buttons.",
+    "max": 10
+  },
+  "theme-editor.editor-view.contacts-another-website": {
+    "text": "Contacts another website",
+    "note": "Short warning heading in the editor when a theme value loads files from an external site (privacy notice follows).",
+    "max": 40
+  },
+  "theme-editor.editor-view.contrast-not-checked-value-has": {
+    "text": "Contrast not checked: value has transparency.",
+    "note": "Hint on the preview card when the colour is see-through, so the readability check cannot be done.",
+    "max": 75
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-easy-to": {
+    "text": "Contrast on card, {mode}: {ratio} to 1, easy to read",
+    "note": "Accessible description of a colour contrast check on a preview card. {mode} is 'Light' or 'Dark'; {ratio} is the contrast ratio, such as 7.2. Passing case, see the 'hard to read' key.",
+    "max": 85,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "ratio": "The value that replaces ratio in the text."
+    }
+  },
+  "theme-editor.editor-view.contrast-on-card-mode-ratio-to-1-hard-to": {
+    "text": "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1",
+    "note": "Accessible description of a failing colour contrast check. {mode} is 'Light' or 'Dark'; {ratio} is the contrast ratio, such as 3.1. 4.5 to 1 is the fixed accessibility threshold.",
+    "max": 110,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "ratio": "The value that replaces ratio in the text."
+    }
+  },
+  "theme-editor.editor-view.copied-c-from-from-to-to": {
+    "text": "Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.",
+    "note": "Toast after copying values between modes. {c} is the number of variables; {from} and {to} are the mode names 'Light', 'Dark' or 'Shared'.",
+    "max": 65,
+    "vars": {
+      "c": "The count the text is about.",
+      "from": "The value that replaces from in the text.",
+      "to": "The value that replaces to in the text."
+    }
+  },
+  "theme-editor.editor-view.copied-key-text": {
+    "text": "Copied key {text}",
+    "note": "Toast after copying a variable name to the clipboard. {text} is the CSS variable name, such as --card-background-color; do not translate it.",
+    "max": 30,
+    "vars": {
+      "text": "The value that replaces text in the text."
+    }
+  },
+  "theme-editor.editor-view.copied-yaml": {
+    "text": "Copied YAML",
+    "note": "Brief button label after the theme YAML went to the clipboard. Past tense; YAML is the file format.",
+    "max": 20
+  },
+  "theme-editor.editor-view.copy-dark-to-light": {
+    "text": "Copy Dark to Light",
+    "note": "Menu item that copies every Dark value into the Light mode. Dark and Light are mode tab names.",
+    "max": 30
+  },
+  "theme-editor.editor-view.copy-light-to-dark": {
+    "text": "Copy Light to Dark",
+    "note": "Menu item that copies every Light value into the Dark mode. Light and Dark are mode tab names.",
+    "max": 30
+  },
+  "theme-editor.editor-view.copy-yaml": {
+    "text": "Copy YAML",
+    "note": "Button that copies the theme as YAML text to the clipboard. YAML is the file format.",
+    "max": 15
+  },
+  "theme-editor.editor-view.could-not-delete-name-reason": {
+    "text": "Could not delete {name}. {reason}",
+    "note": "Error toast in the editor after a failed delete. {name} is the theme name; {reason} is a full sentence explaining why, supplied separately.",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.editor-view.could-not-read-name": {
+    "text": "Could not read {name}",
+    "note": "Error toast when a theme's values cannot be loaded. {name} is the theme name.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.could-not-save-name": {
+    "text": "Could not save {name}",
+    "note": "Error toast when writing a theme file fails. {name} is the theme name.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.delete": {
+    "text": "Delete",
+    "note": "Confirm button that permanently deletes the open theme. Same English as the start view and preset dialog.",
+    "max": 15
+  },
+  "theme-editor.editor-view.delete-name": {
+    "text": "Delete {name}?",
+    "note": "Confirmation dialog title for deleting the open theme. {name} is the theme name. Same English as the start view and preset dialog, which delete other things.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.delete-theme": {
+    "text": "Delete theme",
+    "note": "Menu item that starts deleting the open theme; a confirmation follows.",
+    "max": 20
+  },
+  "theme-editor.editor-view.discard": {
+    "text": "Discard",
+    "note": "Button that throws away unsaved edits when leaving the editor.",
+    "max": 15
+  },
+  "theme-editor.editor-view.discard-changes-to-name": {
+    "text": "Discard changes to {name}?",
+    "note": "Confirmation dialog title when leaving a theme with unsaved edits. {name} is the theme name.",
+    "max": 45,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.dismiss": {
+    "text": "Dismiss",
+    "note": "Button that hides a notice banner without acting on it.",
+    "max": 15
+  },
+  "theme-editor.editor-view.edit-variables-for": {
+    "text": "Edit variables for",
+    "note": "Accessible label of the Shared / Light / Dark switch; the chosen tab says which values the user is editing.",
+    "max": 30
+  },
+  "theme-editor.editor-view.editing": {
+    "text": "Editing",
+    "note": "Small label before the name of the theme that is open for editing.",
+    "max": 15
+  },
+  "theme-editor.editor-view.editing-scope-created-from-from": {
+    "text": "Editing {scope}. Created from {from}.",
+    "note": "Status line above the variables. {scope} is the part being edited: 'Shared', 'Light' or 'Dark'; {from} is the name of the theme or preset this one was copied from.",
+    "max": 60,
+    "vars": {
+      "from": "The value that replaces from in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.editor-view.editing-scope-previewing-mode": {
+    "text": "Editing {scope}. Previewing {mode}.",
+    "note": "Status line above the variables. {scope} is the part being edited: 'Shared', 'Light' or 'Dark'; {mode} is the preview mode, 'light' or 'dark'.",
+    "max": 60,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.editor-view.editor-panels": {
+    "text": "Editor panels",
+    "note": "Accessible name of the group of buttons that show or hide the editor's side panels.",
+    "max": 25
+  },
+  "theme-editor.editor-view.export-theme": {
+    "text": "Export theme",
+    "note": "Menu item in the editor that saves the open theme as a file. Same English as the preset dialog title.",
+    "max": 20
+  },
+  "theme-editor.editor-view.fix-c-to-save": {
+    "text": "Fix {c, plural, one {# value} other {# values}} to save",
+    "note": "Tooltip on the disabled Save button. {c} is the number of invalid variable values blocking the save.",
+    "max": 35,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
+    "text": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
+    "note": "Help text for trying a theme. {help} is a full sentence from another string, placed first; {other} is the opposite mode to the current one, 'dark' or 'light'. Revert is a button label.",
+    "max": 165,
+    "vars": {
+      "help": "The value that replaces help in the text.",
+      "other": "The value that replaces other in the text."
+    }
+  },
+  "theme-editor.editor-view.hide-live-strip": {
+    "text": "Hide live strip",
+    "note": "Toggle button on narrow screens that collapses the small live preview strip above the variables.",
+    "max": 25
+  },
+  "theme-editor.editor-view.home-assistant-does-not-load-config": {
+    "text": "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.",
+    "note": "Banner message after a failed include check; tells the user which setup steps to do. Check again is a button label.",
+    "max": 175
+  },
+  "theme-editor.editor-view.living-room": {
+    "text": "Living room",
+    "note": "Sample room name in the preview, standing in for the user's own area names.",
+    "max": 20
+  },
+  "theme-editor.editor-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
+    "note": "Helper text under the theme name field in the editor. The start view has a key with the same English for the new-theme form.",
+    "max": 120
+  },
+  "theme-editor.editor-view.magic-card-and-integrations": {
+    "text": "Magic Card and integrations",
+    "note": "Section heading above the variable groups for Magic Card and the supported third-party cards.",
+    "max": 45
+  },
+  "theme-editor.editor-view.more-actions": {
+    "text": "More actions",
+    "note": "Accessible label of the three-dot button that opens the editor's overflow menu.",
+    "max": 20
+  },
+  "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
+    "text": "Moved {label} to Shared. Light and Dark both use it.",
+    "note": "Toast after a variable is moved into the Shared set. {label} is the variable's display label, for example 'Primary colour'. Shared, Light and Dark are tab names.",
+    "max": 85,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.editor-view.name-yaml-changed-on-disk": {
+    "text": "{name}.yaml changed on disk",
+    "note": "Warning title when the theme file was edited outside the editor. {name} is the file name without extension; '.yaml' stays as written.",
+    "max": 45,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.name-your-theme": {
+    "text": "Name your theme",
+    "note": "Prompt label for the theme name field in the editor. The start view has a key with the same English.",
+    "max": 25
+  },
+  "theme-editor.editor-view.named-the-theme-name-press-save-to-write": {
+    "text": "Named the theme {name}. Press Save to write it.",
+    "note": "Toast after the theme name is filled in automatically. {name} is the new theme name. Save is the button label.",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.new-not-saved": {
+    "text": "New, not saved",
+    "note": "Status chip in the editor header for a theme that has not been written to a file yet.",
+    "max": 25
+  },
+  "theme-editor.editor-view.no-changes-to-save": {
+    "text": "No changes to save",
+    "note": "Quiet status text beside the disabled Save button when the theme matches its file.",
+    "max": 35
+  },
+  "theme-editor.editor-view.no-variable-called-query-in-the-lists": {
+    "text": "No variable called {query} in the lists.",
+    "note": "Empty search result. {query} is the text the user typed in the variable search box; do not translate it.",
+    "max": 65,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "theme-editor.editor-view.now-using-name-for-your-user": {
+    "text": "Now using {name} for your user.",
+    "note": "Toast after the theme is set in the user's Home Assistant profile. {name} is the theme name.",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.on": {
+    "text": "On",
+    "note": "State shown for the sample switch in the preview. Means switched on, not the preposition.",
+    "max": 5
+  },
+  "theme-editor.editor-view.only-administrators-can-edit-themes": {
+    "text": "Only administrators can edit themes.",
+    "note": "Notice in the editor view for users who are not Home Assistant administrators. The main theme editor shows the same English on its own screen.",
+    "max": 60
+  },
+  "theme-editor.editor-view.only-changed": {
+    "text": "Only changed",
+    "note": "Filter toggle that lists only variables whose value differs from the default.",
+    "max": 20
+  },
+  "theme-editor.editor-view.open-preview": {
+    "text": "Open preview",
+    "note": "Button that opens the live preview panel on narrow screens where it is hidden.",
+    "max": 20
+  },
+  "theme-editor.editor-view.open-your-profile": {
+    "text": "Open your profile",
+    "note": "Link after saving that opens the user's Home Assistant profile page, where the theme can be chosen.",
+    "max": 30
+  },
+  "theme-editor.editor-view.path-message": {
+    "text": "{path}: {message}",
+    "note": "One validation problem in a list. {path} is where it was found, such as a variable name or file path (do not translate); {message} is the problem description.",
+    "max": 30,
+    "vars": {
+      "message": "The value that replaces message in the text.",
+      "path": "The value that replaces path in the text."
+    }
+  },
+  "theme-editor.editor-view.pick-name-in-your-profile-to-use-it": {
+    "text": "Pick {name} in your profile to use it.",
+    "note": "Hint after saving. {name} is the theme name; 'profile' is the user's Home Assistant profile page.",
+    "max": 65,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.preview": {
+    "text": "Preview",
+    "note": "Heading and tab name of the panel that shows sample cards in the open theme. Noun.",
+    "max": 15
+  },
+  "theme-editor.editor-view.read-only": {
+    "text": "Read only",
+    "note": "Badge on a theme file that cannot be changed from here. Same English as the start view badge.",
+    "max": 15
+  },
+  "theme-editor.editor-view.reload": {
+    "text": "Reload",
+    "note": "Button that reloads the theme from disk, replacing what is in the editor.",
+    "max": 15
+  },
+  "theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or": {
+    "text": "Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.",
+    "note": "Warning body after saving when Home Assistant did not list the theme yet; confirms the file is saved and says how to load it.",
+    "max": 140
+  },
+  "theme-editor.editor-view.reloaded-the-file-from-disk": {
+    "text": "Reloaded the file from disk.",
+    "note": "Toast after the Reload button replaced the editor contents with the saved file.",
+    "max": 45
+  },
+  "theme-editor.editor-view.removed-label-from-scope": {
+    "text": "Removed {label} from {scope}",
+    "note": "Toast after a variable is removed. {label} is the variable's display label; {scope} is 'Shared', 'Light' or 'Dark'.",
+    "max": 45,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.editor-view.save": {
+    "text": "Save",
+    "note": "Button in the editor that writes the theme to its file. Verb. Same English as the save bar button.",
+    "max": 10
+  },
+  "theme-editor.editor-view.save-and-rewrite-this-file": {
+    "text": "Save and rewrite this file?",
+    "note": "Title of the first-save confirmation; the body warns that comments in the file are removed.",
+    "max": 45
+  },
+  "theme-editor.editor-view.save-anyway": {
+    "text": "Save anyway",
+    "note": "Button that saves the theme although validation found problems.",
+    "max": 20
+  },
+  "theme-editor.editor-view.save-as-my-preset": {
+    "text": "Save as my preset",
+    "note": "Button in the editor view that stores the open theme as a personal preset. The preset dialog has a key with the same English as its confirm button.",
+    "max": 35
+  },
+  "theme-editor.editor-view.save-without-it": {
+    "text": "Save without it",
+    "note": "Button in the unadded-variable warning that saves the theme and leaves the typed text out.",
+    "max": 25
+  },
+  "theme-editor.editor-view.saved-file-but-home-assistant-does-not": {
+    "text": "Saved {file}, but Home Assistant does not list {name} yet",
+    "note": "Warning after saving. {file} is the file name such as my_theme.yaml (do not translate); {name} is the theme name.",
+    "max": 95,
+    "vars": {
+      "file": "The value that replaces file in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-name": {
+    "text": "Saved {name}.",
+    "note": "Success toast after saving a theme. {name} is the theme name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-name-and-reloaded-themes-screens": {
+    "text": "Saved {name} and reloaded themes. Screens that use this theme update now.",
+    "note": "Success toast after saving and reloading. {name} is the theme name.",
+    "max": 120,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-time": {
+    "text": "Saved {time}",
+    "note": "Status text beside the Save button. {time} is a relative time such as 'just now' or '2 min ago', already localised.",
+    "max": 20,
+    "vars": {
+      "time": "The value that replaces time in the text."
+    }
+  },
+  "theme-editor.editor-view.saving-is-off-until-themes-are-set-up": {
+    "text": "Saving is off until themes are set up",
+    "note": "Tooltip on the disabled Save button while the configuration.yaml themes line is missing.",
+    "max": 60
+  },
+  "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
+    "text": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
+    "note": "Notice shown before saving. {name} is the theme file name without extension; '.yaml' stays as written.",
+    "max": 210,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.search-by-name-or-value": {
+    "text": "Search by name or value",
+    "note": "Hint text for the variable search box, saying it matches variable names and their values.",
+    "max": 40
+  },
+  "theme-editor.editor-view.search-variables": {
+    "text": "Search variables",
+    "note": "Placeholder of the search box that filters the theme variables list.",
+    "max": 30
+  },
+  "theme-editor.editor-view.set-in-modes": {
+    "text": "Set in {modes}",
+    "note": "Badge on a variable. {modes} is the mode name or names that already hold a value, such as 'Light' or 'Light and Dark'.",
+    "max": 25,
+    "vars": {
+      "modes": "The value that replaces modes in the text."
+    }
+  },
+  "theme-editor.editor-view.shared-applies-to-light-and-dark-unless": {
+    "text": "Shared applies to light and dark unless a mode sets its own value (the top level of the file).",
+    "note": "Help text under the Shared tab explaining that these values apply to both modes unless overridden.",
+    "max": 155
+  },
+  "theme-editor.editor-view.show-live-strip": {
+    "text": "Show live strip",
+    "note": "Toggle button on narrow screens that expands the small live preview strip above the variables.",
+    "max": 25
+  },
+  "theme-editor.editor-view.show-the-first": {
+    "text": "Show the first",
+    "note": "Action beside the Fix N values to save message; jumps to the first invalid value.",
+    "max": 25
+  },
+  "theme-editor.editor-view.show-yaml": {
+    "text": "Show YAML",
+    "note": "Toggle that reveals the raw YAML source of the open theme.",
+    "max": 15
+  },
+  "theme-editor.editor-view.some-values-load-files-from-another": {
+    "text": "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.",
+    "note": "Privacy warning used when only one external site is involved; says the site can see the user's IP address. Try on dashboard is a button label.",
+    "max": 225
+  },
+  "theme-editor.editor-view.some-values-load-files-from-hosts-the": {
+    "text": "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.",
+    "note": "Privacy warning. {hosts} is a comma-separated list of external host names, such as fonts.example.com; do not translate. 'Try on dashboard' is a button label.",
+    "max": 230,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "theme-editor.editor-view.stop-trying": {
+    "text": "Stop trying",
+    "note": "Button that ends a temporary trial of the theme in this browser tab.",
+    "max": 20
+  },
+  "theme-editor.editor-view.the-add-any-variable-row-still-holds": {
+    "text": "The Add any variable row still holds text. Add it to the theme before saving, or save without it.",
+    "note": "Body of the unadded-variable warning; explains the two choices offered by its buttons. Add any variable is a field label.",
+    "max": 160
+  },
+  "theme-editor.editor-view.the-connection-to-home-assistant-was": {
+    "text": "The connection to Home Assistant was lost. Your changes are still here.",
+    "note": "Banner in the editor when the connection drops; reassures the user that unsaved edits are kept.",
+    "max": 115
+  },
+  "theme-editor.editor-view.the-file-save-would-write-it-is-read": {
+    "text": "The file Save would write. It is read only here.",
+    "note": "Caption above the YAML view; says it shows the exact file that Save would write and cannot be edited there.",
+    "max": 80
+  },
+  "theme-editor.editor-view.themes": {
+    "text": "Themes",
+    "note": "Breadcrumb link in the editor that goes back to the list of themes. Same English as the start view heading.",
+    "max": 10
+  },
+  "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
+    "text": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
+    "note": "Warning body when the theme file was edited outside the editor; explains the Reload and Save anyway choices.",
+    "max": 185
+  },
+  "theme-editor.editor-view.this-removes-config-file-screens-that": {
+    "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
+    "note": "Body of the delete confirmation in the editor. {file} is the theme file name, such as my_theme.yaml; the path stays untranslated.",
+    "max": 160,
+    "vars": {
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
+    "text": "This theme is read only. Copy it to edit.",
+    "note": "Banner on a theme that cannot be changed, when no reason is known; points the user to the Copy action.",
+    "max": 70
+  },
+  "theme-editor.editor-view.this-theme-is-read-only-reason-copy-it": {
+    "text": "This theme is read only. {reason} Copy it to edit.",
+    "note": "Banner on a theme that cannot be changed. {reason} is a finished sentence explaining why, ending in a full stop. 'Copy' refers to the Copy action.",
+    "max": 80,
+    "vars": {
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.editor-view.try-again": {
+    "text": "Try again",
+    "note": "Button that repeats a failed save or load in the editor. Same English as the start view and preset dialog.",
+    "max": 20
+  },
+  "theme-editor.editor-view.try-on-dashboard": {
+    "text": "Try on dashboard",
+    "note": "Button that applies the open theme to this browser tab only, without saving, so the user can see it on a dashboard.",
+    "max": 30
+  },
+  "theme-editor.editor-view.trying-on-this-tab": {
+    "text": "Trying on this tab",
+    "note": "Status chip in the editor header while a temporary theme trial runs in this browser tab.",
+    "max": 35
+  },
+  "theme-editor.editor-view.undo": {
+    "text": "Undo",
+    "note": "Button that reverses the last variable edit in the theme.",
+    "max": 15
+  },
+  "theme-editor.editor-view.unsaved-changes": {
+    "text": "Unsaved changes",
+    "note": "Status label beside the Save button while edits are not yet written to the file.",
+    "max": 30
+  },
+  "theme-editor.editor-view.use-lowercase-letters-numbers-hyphens": {
+    "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
+    "note": "Validation error in the editor view for an invalid theme name. The util key with the same English is the shared check used elsewhere.",
+    "max": 185
+  },
+  "theme-editor.editor-view.use-this-name": {
+    "text": "Use this name",
+    "note": "Confirm button of the rename dialog that applies the typed theme name.",
+    "max": 25
+  },
+  "theme-editor.editor-view.use-this-theme": {
+    "text": "Use this theme",
+    "note": "Button after saving that selects the theme in the user's Home Assistant profile for this browser.",
+    "max": 25
+  },
+  "theme-editor.editor-view.variables": {
+    "text": "Variables",
+    "note": "Heading of the list of CSS theme variables. Variables are named style values, not programming variables.",
+    "max": 15
+  },
+  "theme-editor.editor-view.variables-panel": {
+    "text": "Variables panel",
+    "note": "Accessible name of the editor panel that holds the variable list. Same English as the side tab tooltip.",
+    "max": 25
+  },
+  "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
+    "text": "Variables you set now stay shared. You can then override any of them for light or dark.",
+    "note": "Body of the add-modes confirmation; explains that existing values stay in Shared and can be overridden per mode.",
+    "max": 140
+  },
+  "theme-editor.editor-view.yaml-of-name": {
+    "text": "YAML of {name}",
+    "note": "Accessible name of the raw YAML text area. {name} is the theme name. YAML is the file format; do not translate.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.you-have-changes-that-are-not-saved": {
+    "text": "You have changes that are not saved.",
+    "note": "Body of the dialog shown when leaving a theme with unsaved edits; the buttons offer to discard or stay.",
+    "max": 60
+  },
+  "theme-editor.field-group.also-set-in-modes": {
+    "text": "Also set in {modes}",
+    "note": "Hint on a variable row. {modes} is the other mode or modes that hold their own value, such as 'Dark'.",
+    "max": 35,
+    "vars": {
+      "modes": "The value that replaces modes in the text."
+    }
+  },
+  "theme-editor.field-group.c-set": {
+    "text": "{c} set",
+    "note": "Badge on a variable group heading. {c} is the number of its variables that have a value. 'Set' means configured, not the verb to place.",
+    "max": 15,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "theme-editor.field-group.copy-key-name": {
+    "text": "Copy key {name}",
+    "note": "Tooltip of the copy icon on a variable row. {name} is the CSS variable name, such as --primary-color; do not translate it.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.field-group.custom": {
+    "text": "Custom",
+    "note": "Option on a variable that lets the user type their own value instead of a preset one.",
+    "max": 10
+  },
+  "theme-editor.field-group.default": {
+    "text": "Default",
+    "note": "Option or badge for a variable that uses the built-in value. Adjective, not the verb.",
+    "max": 15
+  },
+  "theme-editor.field-group.default-value": {
+    "text": "Default: {value}",
+    "note": "Hint under a variable. {value} is the built-in default, such as a CSS colour or length (e.g. #03a9f4, 12px); do not translate it.",
+    "max": 30,
+    "vars": {
+      "value": "The value that replaces value in the text."
+    }
+  },
+  "theme-editor.field-group.home-assistant-variable": {
+    "text": "Home Assistant variable",
+    "note": "Fallback label on a variable row for a Home Assistant CSS variable that has no friendlier name.",
+    "max": 40
+  },
+  "theme-editor.field-group.keep-in-mode-only": {
+    "text": "Keep in {mode} only",
+    "note": "Button on a shared variable that turns it into a single-mode value. {mode} is 'Light' or 'Dark'.",
+    "max": 35,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.keep-in-shared-only": {
+    "text": "Keep in Shared only",
+    "note": "Button on a variable that removes its Light and Dark overrides so only the Shared value remains.",
+    "max": 35
+  },
+  "theme-editor.field-group.light-and-dark-both-use-their-own-value": {
+    "text": "Light and Dark both use their own value, so this has no effect.",
+    "note": "Hint on a Shared variable that both modes override; tells the user the Shared value is never used.",
+    "max": 105
+  },
+  "theme-editor.field-group.mode-uses-its-own-value-this-only": {
+    "text": "{mode} uses its own value. This only changes {covered}.",
+    "note": "Hint on a Shared variable. {mode} is 'Light' or 'Dark', the mode that has its own value; {covered} is the single mode label ('Light' or 'Dark') that this edit still changes. Both are mode names, so keep them capitalised.",
+    "max": 90,
+    "vars": {
+      "covered": "The value that replaces covered in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.move-to-shared": {
+    "text": "Move to Shared",
+    "note": "Button on a variable that has the same value in Light and Dark; moves it into the Shared set.",
+    "max": 25
+  },
+  "theme-editor.field-group.not-installed-here": {
+    "text": "Not installed here",
+    "note": "Badge on a variable group for a third-party card that is not installed in this Home Assistant.",
+    "max": 30
+  },
+  "theme-editor.field-group.not-set": {
+    "text": "Not set",
+    "note": "Status of a variable that has no value in this theme. 'Set' means configured.",
+    "max": 15
+  },
+  "theme-editor.field-group.only-in-mode": {
+    "text": "Only in {mode}",
+    "note": "Badge on a variable that has a value in one mode only. {mode} is 'Light' or 'Dark'.",
+    "max": 25,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.only-mode-gets-this-value-other-keeps": {
+    "text": "Only {mode} gets this value. {other} keeps the default.",
+    "note": "Hint on a variable. {mode} is the mode that has the value and {other} the opposite mode; both are 'Light' or 'Dark'.",
+    "max": 90,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "other": "The value that replaces other in the text."
+    }
+  },
+  "theme-editor.field-group.remove-from-scope": {
+    "text": "Remove from {scope}",
+    "note": "Button label that clears a variable's value. {scope} is 'Shared', 'Light' or 'Dark'.",
+    "max": 35,
+    "vars": {
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.field-group.remove-label-from-scope": {
+    "text": "Remove {label} from {scope}",
+    "note": "Accessible name of the remove icon on a variable. {label} is the variable's display label; {scope} is 'Shared', 'Light' or 'Dark'.",
+    "max": 45,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.field-group.set-here": {
+    "text": "Set here",
+    "note": "Status of a variable that has its own value in the current tab, rather than the Shared one.",
+    "max": 15
+  },
+  "theme-editor.field-group.set-in-both": {
+    "text": "Set in both",
+    "note": "Badge on a variable that has a value in both Light and Dark. 'Set' means configured.",
+    "max": 20
+  },
+  "theme-editor.field-group.set-in-mode-too": {
+    "text": "Set in {mode} too",
+    "note": "Button that copies a variable's value into the other mode. {mode} is 'Light' or 'Dark', the mode that receives it.",
+    "max": 30,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.field-group.shared": {
+    "text": "Shared",
+    "note": "Status of a variable that takes its value from the Shared tab, used by both light and dark modes.",
+    "max": 10
+  },
+  "theme-editor.field-group.shared-value": {
+    "text": "Shared: {value}",
+    "note": "Hint showing the value both modes use. {value} is a CSS value such as #ffffff or 8px; do not translate it. 'Shared' is a tab name.",
+    "max": 25,
+    "vars": {
+      "value": "The value that replaces value in the text."
+    }
+  },
+  "theme-editor.field-group.shared-value-has-no-effect": {
+    "text": "Shared value has no effect",
+    "note": "Short badge on a Shared variable that Light and Dark both override, so it is never used.",
+    "max": 45
+  },
+  "theme-editor.field-group.this-is-not-a-colour-pick-one-with-the": {
+    "text": "This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.",
+    "note": "Error under a colour field when the typed value is not a colour; the examples (#3b82f6, teal) are CSS values, keep them as written.",
+    "max": 140
+  },
+  "theme-editor.field-group.this-variable-takes-a-single-colour": {
+    "text": "This variable takes a single colour. Gradients work in Card background and Dashboard background.",
+    "note": "Error under a colour field when a gradient was typed; points to the two variables that accept gradients (Card background, Dashboard background are field labels).",
+    "max": 155
+  },
+  "theme-editor.field-group.value-set-in-one-mode-only": {
+    "text": "Value set in one mode only",
+    "note": "Tooltip on a badge for a variable that has a value in Light or Dark but not both.",
+    "max": 45
+  },
+  "theme-editor.ha.a-blur-behind-translucent-cards-like": {
+    "text": "A blur behind translucent cards, like blur(10px).",
+    "note": "Helper text under a Home Assistant variable; says it blurs what is behind see-through cards. blur(10px) is a CSS value, keep it as written.",
+    "max": 80
+  },
+  "theme-editor.ha.a-line-under-the-top-bar-like-1px-solid": {
+    "text": "A line under the top bar, like 1px solid #ccc.",
+    "note": "Helper text under a Home Assistant variable; says it draws a line under the top bar. The example is a CSS value, keep it as written.",
+    "max": 75
+  },
+  "theme-editor.ha.accent-colour": {
+    "text": "Accent colour",
+    "note": "Label of the Home Assistant theme variable for the accent colour used on highlights.",
+    "max": 25
+  },
+  "theme-editor.ha.active-state-colour": {
+    "text": "Active state colour",
+    "note": "Label of the Home Assistant variable for the colour of entities in an active state (on, open, playing).",
+    "max": 35
+  },
+  "theme-editor.ha.alarm-icons-while-triggered": {
+    "text": "Alarm icons while triggered.",
+    "note": "Helper text under a Home Assistant variable; says it colours alarm icons while the alarm is triggered.",
+    "max": 45
+  },
+  "theme-editor.ha.alarm-triggered-colour": {
+    "text": "Alarm triggered colour",
+    "note": "Label of the Home Assistant variable for the colour of an alarm that has been triggered.",
+    "max": 40
+  },
+  "theme-editor.ha.behind-everything-including-the": {
+    "text": "Behind everything, including the dashboard.",
+    "note": "Helper text under a Home Assistant variable; says it is the lowest background, behind all pages and dashboards.",
+    "max": 70
+  },
+  "theme-editor.ha.binary-sensor-active-colour": {
+    "text": "Binary sensor active colour",
+    "note": "Label of the Home Assistant variable for the colour of binary sensors that are on.",
+    "max": 45
+  },
+  "theme-editor.ha.binary-sensors-that-are-on": {
+    "text": "Binary sensors that are on.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of binary sensors that are on.",
+    "max": 45
+  },
+  "theme-editor.ha.body-font": {
+    "text": "Body font",
+    "note": "Label of the Home Assistant theme variable for the font of ordinary text.",
+    "max": 30
+  },
+  "theme-editor.ha.body-text": {
+    "text": "Body text.",
+    "note": "Short description under a Home Assistant variable that affects ordinary paragraph text.",
+    "max": 20
+  },
+  "theme-editor.ha.buttons-toggles-active-icons-and-links": {
+    "text": "Buttons, toggles, active icons and links.",
+    "note": "Helper text under the Home Assistant primary colour variable; lists what the colour is used on.",
+    "max": 70
+  },
+  "theme-editor.ha.captions-and-secondary-lines": {
+    "text": "Captions and secondary lines.",
+    "note": "Helper text under a Home Assistant text colour variable; says it colours captions and secondary lines.",
+    "max": 50
+  },
+  "theme-editor.ha.captions-hints-and-secondary-lines": {
+    "text": "Captions, hints and secondary lines.",
+    "note": "Helper text under the Home Assistant secondary text colour variable; says it colours captions, hints and secondary lines.",
+    "max": 60
+  },
+  "theme-editor.ha.card-backdrop-filter": {
+    "text": "Card backdrop filter",
+    "note": "Label of the Home Assistant variable for the filter, such as a blur, applied behind cards.",
+    "max": 35
+  },
+  "theme-editor.ha.card-background": {
+    "text": "Card background",
+    "note": "Label of the Home Assistant theme variable for the background of every dashboard card.",
+    "max": 25
+  },
+  "theme-editor.ha.card-background-override": {
+    "text": "Card background override",
+    "note": "Label of the field in the Home Assistant variables group that overrides every card background. The Magic Card and Ultra Card groups have the same English.",
+    "max": 40
+  },
+  "theme-editor.ha.card-border-colour": {
+    "text": "Card border colour",
+    "note": "Label of the Home Assistant variables field for the colour of card borders. The Magic Card group has the same English.",
+    "max": 30
+  },
+  "theme-editor.ha.card-border-width": {
+    "text": "Card border width",
+    "note": "Label of the Home Assistant variables field for the thickness of card borders. The Magic Card group has the same English.",
+    "max": 30
+  },
+  "theme-editor.ha.card-corner-radius": {
+    "text": "Card corner radius",
+    "note": "Label of the Home Assistant variables field for how rounded card corners are. The Magic Card group has the same English.",
+    "max": 30
+  },
+  "theme-editor.ha.card-shadow": {
+    "text": "Card shadow",
+    "note": "Label of the Home Assistant theme variable for the drop shadow under dashboard cards.",
+    "max": 20
+  },
+  "theme-editor.ha.card-title-colour": {
+    "text": "Card title colour",
+    "note": "Label of the Home Assistant variable for the colour of card titles.",
+    "max": 30
+  },
+  "theme-editor.ha.card-title-font": {
+    "text": "Card title font",
+    "note": "Label of the Home Assistant variable for the font family of card titles.",
+    "max": 25
+  },
+  "theme-editor.ha.card-title-size": {
+    "text": "Card title size",
+    "note": "Label of the Home Assistant variable for the font size of card titles.",
+    "max": 25
+  },
+  "theme-editor.ha.card-titles": {
+    "text": "Card titles.",
+    "note": "Short description under a Home Assistant variable that affects the heading at the top of a card.",
+    "max": 20
+  },
+  "theme-editor.ha.cards-dialogs-and-menus-takes-a-gradient": {
+    "text": "Cards, dialogs and menus. Takes a gradient.",
+    "note": "Helper text under the Home Assistant card background variable; lists where it applies and says a gradient is allowed.",
+    "max": 70
+  },
+  "theme-editor.ha.climate-icons-that-are-cooling": {
+    "text": "Climate icons that are cooling.",
+    "note": "Helper text under a Home Assistant variable; says it colours climate icons while the device is cooling.",
+    "max": 50
+  },
+  "theme-editor.ha.climate-icons-that-are-heating": {
+    "text": "Climate icons that are heating.",
+    "note": "Helper text under a Home Assistant variable; says it colours climate icons while the device is heating.",
+    "max": 50
+  },
+  "theme-editor.ha.colour-of-card-titles": {
+    "text": "Colour of card titles.",
+    "note": "Helper text under a Home Assistant variable; says it sets the colour of card titles.",
+    "max": 40
+  },
+  "theme-editor.ha.colour-of-the-card-border": {
+    "text": "Colour of the card border.",
+    "note": "Helper text under a Home Assistant variable; says it sets the colour of the line around cards.",
+    "max": 45
+  },
+  "theme-editor.ha.cooling-colour": {
+    "text": "Cooling colour",
+    "note": "Label of the Home Assistant theme variable for the climate colour shown while cooling.",
+    "max": 25
+  },
+  "theme-editor.ha.cover-open-colour": {
+    "text": "Cover open colour",
+    "note": "Label of the Home Assistant variable for the colour of covers, such as blinds, that are open.",
+    "max": 30
+  },
+  "theme-editor.ha.dark-text-used-where-the-surface-stays": {
+    "text": "Dark text used where the surface stays light.",
+    "note": "Helper text under a Home Assistant variable; says it is the dark text colour for surfaces that stay light in every mode.",
+    "max": 75
+  },
+  "theme-editor.ha.dashboard-background": {
+    "text": "Dashboard background",
+    "note": "Label of the Home Assistant theme variable for the background behind all dashboard cards.",
+    "max": 35
+  },
+  "theme-editor.ha.disabled-colour": {
+    "text": "Disabled colour",
+    "note": "Label of the Home Assistant theme variable for controls that cannot be used. Same English as the Magic Card variable.",
+    "max": 25
+  },
+  "theme-editor.ha.disabled-controls-and-empty-slider": {
+    "text": "Disabled controls and empty slider tracks.",
+    "note": "Helper text under a Home Assistant variable; says it colours disabled controls and the empty part of slider tracks.",
+    "max": 70
+  },
+  "theme-editor.ha.disabled-text": {
+    "text": "Disabled text",
+    "note": "Label of the Home Assistant theme variable for the text colour of unusable controls.",
+    "max": 25
+  },
+  "theme-editor.ha.divider-colour": {
+    "text": "Divider colour",
+    "note": "Label of the Home Assistant theme variable for thin separator lines. Same English as the Magic Card variable.",
+    "max": 25
+  },
+  "theme-editor.ha.entity-icons-that-have-no-state-colour": {
+    "text": "Entity icons that have no state colour.",
+    "note": "Helper text under a Home Assistant variable; says it is the default colour of entity icons without a state-specific colour.",
+    "max": 65
+  },
+  "theme-editor.ha.error-colour": {
+    "text": "Error colour",
+    "note": "Label of the Home Assistant theme variable for error states. Same English as the Magic Card and Ultra Card ones.",
+    "max": 20
+  },
+  "theme-editor.ha.errors-delete-buttons-and-critical": {
+    "text": "Errors, delete buttons and critical states.",
+    "note": "Helper text under the Home Assistant error colour variable; lists what it is used on.",
+    "max": 70
+  },
+  "theme-editor.ha.extra-large-font-size": {
+    "text": "Extra large font size",
+    "note": "Label of the Home Assistant variable for the extra large text size.",
+    "max": 35
+  },
+  "theme-editor.ha.extra-large-radius": {
+    "text": "Extra large radius",
+    "note": "Label of the Home Assistant variable for the extra large corner rounding. Radius means corner size.",
+    "max": 30
+  },
+  "theme-editor.ha.fan-on-colour": {
+    "text": "Fan on colour",
+    "note": "Label of the Home Assistant variable for the colour of fans that are on.",
+    "max": 25
+  },
+  "theme-editor.ha.font-family-of-card-titles": {
+    "text": "Font family of card titles.",
+    "note": "Helper text under a Home Assistant variable; says it sets the font used for card titles.",
+    "max": 45
+  },
+  "theme-editor.ha.font-size-of-card-titles": {
+    "text": "Font size of card titles.",
+    "note": "Helper text under a Home Assistant variable; says it sets the text size of card titles.",
+    "max": 40
+  },
+  "theme-editor.ha.font-size-scale": {
+    "text": "Font size scale",
+    "note": "Label of the Home Assistant variable that scales every font size by one factor.",
+    "max": 25
+  },
+  "theme-editor.ha.ha-extra-large-corner-radius": {
+    "text": "HA extra large corner radius.",
+    "note": "Helper text under a Home Assistant variable; says it is the extra large corner rounding. HA means Home Assistant.",
+    "max": 50
+  },
+  "theme-editor.ha.ha-large-corner-radius-cards-use-it-by": {
+    "text": "HA large corner radius. Cards use it by default.",
+    "note": "Helper text under a Home Assistant variable; says it is the large corner rounding that cards use unless changed. HA means Home Assistant.",
+    "max": 80
+  },
+  "theme-editor.ha.ha-medium-corner-radius": {
+    "text": "HA medium corner radius.",
+    "note": "Helper text under a Home Assistant variable; says it is the medium corner rounding. HA means Home Assistant.",
+    "max": 40
+  },
+  "theme-editor.ha.ha-small-corner-radius": {
+    "text": "HA small corner radius.",
+    "note": "Helper text under a Home Assistant variable; says it is the small corner rounding. HA means Home Assistant.",
+    "max": 40
+  },
+  "theme-editor.ha.header-background": {
+    "text": "Header background",
+    "note": "Label of the Home Assistant theme variable for the top app bar background.",
+    "max": 30
+  },
+  "theme-editor.ha.header-background-while-editing": {
+    "text": "Header background while editing",
+    "note": "Label of the Home Assistant variable for the top bar background in dashboard edit mode.",
+    "max": 50
+  },
+  "theme-editor.ha.header-bottom-border": {
+    "text": "Header bottom border",
+    "note": "Label of the Home Assistant variable for the line under the top bar.",
+    "max": 35
+  },
+  "theme-editor.ha.header-height": {
+    "text": "Header height",
+    "note": "Label of the Home Assistant theme variable for how tall the top app bar is.",
+    "max": 25
+  },
+  "theme-editor.ha.header-text": {
+    "text": "Header text",
+    "note": "Label of the Home Assistant theme variable for text and icons in the top app bar.",
+    "max": 20
+  },
+  "theme-editor.ha.header-text-while-editing": {
+    "text": "Header text while editing",
+    "note": "Label of the Home Assistant variable for the top bar text colour in dashboard edit mode.",
+    "max": 40
+  },
+  "theme-editor.ha.heading-font": {
+    "text": "Heading font",
+    "note": "Label of the Home Assistant theme variable for the font of headings and titles.",
+    "max": 25
+  },
+  "theme-editor.ha.heading-font-size": {
+    "text": "Heading font size",
+    "note": "Label of the Home Assistant variable for the text size of headings.",
+    "max": 30
+  },
+  "theme-editor.ha.heating-colour": {
+    "text": "Heating colour",
+    "note": "Label of the Home Assistant theme variable for the climate colour shown while heating.",
+    "max": 25
+  },
+  "theme-editor.ha.height-of-the-top-bar": {
+    "text": "Height of the top bar.",
+    "note": "Helper text under a Home Assistant variable; says it sets how tall the top bar is.",
+    "max": 40
+  },
+  "theme-editor.ha.icon-colour": {
+    "text": "Icon colour",
+    "note": "Label of the Home Assistant theme variable for the default colour of icons.",
+    "max": 20
+  },
+  "theme-editor.ha.icons-in-the-sidebar": {
+    "text": "Icons in the sidebar.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons in the sidebar menu.",
+    "max": 35
+  },
+  "theme-editor.ha.icons-of-covers-that-are-open": {
+    "text": "Icons of covers that are open.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of covers, such as blinds, that are open.",
+    "max": 50
+  },
+  "theme-editor.ha.icons-of-fans-that-are-on": {
+    "text": "Icons of fans that are on.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of fans that are on.",
+    "max": 45
+  },
+  "theme-editor.ha.icons-of-lights-that-are-on": {
+    "text": "Icons of lights that are on.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of lights that are on.",
+    "max": 45
+  },
+  "theme-editor.ha.icons-of-locks-that-are-locked": {
+    "text": "Icons of locks that are locked.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of locks that are locked.",
+    "max": 50
+  },
+  "theme-editor.ha.icons-of-locks-that-are-unlocked": {
+    "text": "Icons of locks that are unlocked.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of locks that are unlocked.",
+    "max": 55
+  },
+  "theme-editor.ha.icons-of-media-players-that-are-playing": {
+    "text": "Icons of media players that are playing.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of media players that are playing.",
+    "max": 65
+  },
+  "theme-editor.ha.icons-of-switches-that-are-on": {
+    "text": "Icons of switches that are on.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of switches that are on.",
+    "max": 50
+  },
+  "theme-editor.ha.icons-of-things-that-are-off-or-closed": {
+    "text": "Icons of things that are off or closed.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of entities that are off or closed.",
+    "max": 65
+  },
+  "theme-editor.ha.icons-of-things-that-are-on-or-open": {
+    "text": "Icons of things that are on or open.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of entities that are on or open.",
+    "max": 60
+  },
+  "theme-editor.ha.icons-of-unavailable-entities": {
+    "text": "Icons of unavailable entities.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icons of entities that are unavailable.",
+    "max": 50
+  },
+  "theme-editor.ha.inactive-state-colour": {
+    "text": "Inactive state colour",
+    "note": "Label of the Home Assistant variable for the colour of entities in an inactive state (off, closed).",
+    "max": 35
+  },
+  "theme-editor.ha.info-colour": {
+    "text": "Info colour",
+    "note": "Label of the Home Assistant theme variable for informational messages, usually blue.",
+    "max": 20
+  },
+  "theme-editor.ha.information-banners-and-notes": {
+    "text": "Information banners and notes.",
+    "note": "Helper text under the Home Assistant info colour variable; says it colours information banners and notes.",
+    "max": 50
+  },
+  "theme-editor.ha.item-names-in-the-sidebar": {
+    "text": "Item names in the sidebar.",
+    "note": "Helper text under a Home Assistant variable; says it colours the item names in the sidebar menu.",
+    "max": 45
+  },
+  "theme-editor.ha.large-font-size": {
+    "text": "Large font size",
+    "note": "Label of the Home Assistant variable for the large text size.",
+    "max": 25
+  },
+  "theme-editor.ha.large-radius": {
+    "text": "Large radius",
+    "note": "Label of the Home Assistant theme variable for the biggest corner rounding. Radius means corner size.",
+    "max": 20
+  },
+  "theme-editor.ha.larger-body-text": {
+    "text": "Larger body text.",
+    "note": "Helper text under a Home Assistant font size variable; says it sets the size of larger body text.",
+    "max": 30
+  },
+  "theme-editor.ha.light-on-colour": {
+    "text": "Light on colour",
+    "note": "Label of the Home Assistant variables field for the colour of a light that is switched on. The Magic Card group has the same English.",
+    "max": 25
+  },
+  "theme-editor.ha.light-tints-of-the-primary-colour": {
+    "text": "Light tints of the primary colour.",
+    "note": "Helper text under a Home Assistant variable; says it sets the light, pale versions of the primary colour.",
+    "max": 55
+  },
+  "theme-editor.ha.lines-between-rows-and-around-inputs": {
+    "text": "Lines between rows and around inputs.",
+    "note": "Helper text under the Home Assistant divider colour variable; says it colours lines between rows and around inputs.",
+    "max": 60
+  },
+  "theme-editor.ha.locked-colour": {
+    "text": "Locked colour",
+    "note": "Label of the Home Assistant theme variable for a lock in the locked state.",
+    "max": 25
+  },
+  "theme-editor.ha.main-text-and-icons": {
+    "text": "Main text and icons.",
+    "note": "Helper text under the Home Assistant primary text colour variable; says it colours main text and icons.",
+    "max": 35
+  },
+  "theme-editor.ha.media-player-active-colour": {
+    "text": "Media player active colour",
+    "note": "Label of the Home Assistant variable for the colour of media players that are playing.",
+    "max": 45
+  },
+  "theme-editor.ha.medium-font-size": {
+    "text": "Medium font size",
+    "note": "Label of the Home Assistant variable for the medium text size.",
+    "max": 30
+  },
+  "theme-editor.ha.medium-radius": {
+    "text": "Medium radius",
+    "note": "Label of the Home Assistant theme variable for mid-sized corner rounding. Radius means corner size.",
+    "max": 25
+  },
+  "theme-editor.ha.multiplies-every-ha-font-size-1-keeps": {
+    "text": "Multiplies every HA font size. 1 keeps them.",
+    "note": "Helper text under the font size scale variable; explains the factor, where 1 leaves sizes unchanged. HA means Home Assistant.",
+    "max": 75
+  },
+  "theme-editor.ha.outline-colour": {
+    "text": "Outline colour",
+    "note": "Label of the Home Assistant theme variable for outlines drawn around inputs and buttons.",
+    "max": 25
+  },
+  "theme-editor.ha.outlines-of-buttons-and-chips": {
+    "text": "Outlines of buttons and chips.",
+    "note": "Helper text under a Home Assistant variable; says it colours the outlines of buttons and chips.",
+    "max": 50
+  },
+  "theme-editor.ha.page-background": {
+    "text": "Page background",
+    "note": "Label of the Home Assistant theme variable for the background of settings and other full pages.",
+    "max": 25
+  },
+  "theme-editor.ha.person-at-home-colour": {
+    "text": "Person at home colour",
+    "note": "Label of the Home Assistant variable for the colour of a person who is at home.",
+    "max": 35
+  },
+  "theme-editor.ha.person-icons-while-home": {
+    "text": "Person icons while home.",
+    "note": "Helper text under a Home Assistant variable; says it colours person icons while that person is home.",
+    "max": 45
+  },
+  "theme-editor.ha.pressed-and-darker-primary-accents": {
+    "text": "Pressed and darker primary accents.",
+    "note": "Helper text under a Home Assistant variable; says it sets the darker primary colour used for pressed states.",
+    "max": 60
+  },
+  "theme-editor.ha.primary-colour": {
+    "text": "Primary colour",
+    "note": "Label of the Home Assistant theme variable for the main brand colour. Same English as the Magic Card and Ultra Card ones.",
+    "max": 25
+  },
+  "theme-editor.ha.primary-colour-dark-shade": {
+    "text": "Primary colour, dark shade",
+    "note": "Label of the Home Assistant variable for the darker shade of the primary colour.",
+    "max": 45
+  },
+  "theme-editor.ha.primary-colour-light-shade": {
+    "text": "Primary colour, light shade",
+    "note": "Label of the Home Assistant variable for the lighter shade of the primary colour.",
+    "max": 45
+  },
+  "theme-editor.ha.primary-text": {
+    "text": "Primary text",
+    "note": "Label of the Home Assistant theme variable for the main text colour. Same English as the Magic Card variable.",
+    "max": 20
+  },
+  "theme-editor.ha.quiet-panels-input-fills-and-list": {
+    "text": "Quiet panels, input fills and list stripes.",
+    "note": "Helper text under the Home Assistant secondary background variable; says it fills quiet panels, inputs and list stripes.",
+    "max": 70
+  },
+  "theme-editor.ha.rounding-of-every-card": {
+    "text": "Rounding of every card.",
+    "note": "Helper text under a Home Assistant variable; says it sets the corner rounding of all cards.",
+    "max": 40
+  },
+  "theme-editor.ha.secondary-accent-used-by-a-few-controls": {
+    "text": "Secondary accent used by a few controls.",
+    "note": "Helper text under the Home Assistant accent colour variable; says a few controls use it as a second accent.",
+    "max": 65
+  },
+  "theme-editor.ha.secondary-background": {
+    "text": "Secondary background",
+    "note": "Label of the Home Assistant theme variable for the second background used behind grouped areas.",
+    "max": 35
+  },
+  "theme-editor.ha.secondary-text": {
+    "text": "Secondary text",
+    "note": "Label of the Home Assistant theme variable for dimmer supporting text. Same English as the Magic Card variable.",
+    "max": 25
+  },
+  "theme-editor.ha.section-titles": {
+    "text": "Section titles.",
+    "note": "Short description under a Home Assistant variable that affects headings that start a section.",
+    "max": 25
+  },
+  "theme-editor.ha.shadow-colour": {
+    "text": "Shadow colour",
+    "note": "Label of the Home Assistant theme variable for the colour of drop shadows.",
+    "max": 25
+  },
+  "theme-editor.ha.shadow-under-every-card": {
+    "text": "Shadow under every card.",
+    "note": "Helper text under a Home Assistant variable; says it sets the drop shadow under all cards.",
+    "max": 40
+  },
+  "theme-editor.ha.sidebar-background": {
+    "text": "Sidebar background",
+    "note": "Label of the Home Assistant theme variable for the side menu background.",
+    "max": 30
+  },
+  "theme-editor.ha.sidebar-icons": {
+    "text": "Sidebar icons",
+    "note": "Label of the Home Assistant theme variable for icon colour in the side menu.",
+    "max": 25
+  },
+  "theme-editor.ha.sidebar-selected-icon": {
+    "text": "Sidebar selected icon",
+    "note": "Label of the Home Assistant variable for the icon colour of the selected sidebar item.",
+    "max": 35
+  },
+  "theme-editor.ha.sidebar-selected-text": {
+    "text": "Sidebar selected text",
+    "note": "Label of the Home Assistant variable for the text colour of the selected sidebar item.",
+    "max": 35
+  },
+  "theme-editor.ha.sidebar-text": {
+    "text": "Sidebar text",
+    "note": "Label of the Home Assistant theme variable for text colour in the side menu.",
+    "max": 20
+  },
+  "theme-editor.ha.small-font-size": {
+    "text": "Small font size",
+    "note": "Label of the Home Assistant variable for the small text size.",
+    "max": 25
+  },
+  "theme-editor.ha.small-radius": {
+    "text": "Small radius",
+    "note": "Label of the Home Assistant theme variable for the smallest corner rounding. Radius means corner size.",
+    "max": 20
+  },
+  "theme-editor.ha.success-colour": {
+    "text": "Success colour",
+    "note": "Label of the Home Assistant theme variable for success states, usually green. Same English as the Magic Card one.",
+    "max": 25
+  },
+  "theme-editor.ha.success-messages-and-confirmed-states": {
+    "text": "Success messages and confirmed states.",
+    "note": "Helper text under the Home Assistant success colour variable; says it colours success messages and confirmed states.",
+    "max": 65
+  },
+  "theme-editor.ha.switch-on-colour": {
+    "text": "Switch on colour",
+    "note": "Label of the Home Assistant variable for the colour of switches that are on.",
+    "max": 30
+  },
+  "theme-editor.ha.text-and-icons-drawn-on-the-primary": {
+    "text": "Text and icons drawn on the primary colour.",
+    "note": "Helper text under a Home Assistant variable; says it colours text and icons placed on top of the primary colour.",
+    "max": 70
+  },
+  "theme-editor.ha.text-and-icons-in-the-top-bar": {
+    "text": "Text and icons in the top bar.",
+    "note": "Helper text under a Home Assistant variable; says it colours the text and icons in the top bar.",
+    "max": 50
+  },
+  "theme-editor.ha.text-in-the-top-bar-in-dashboard-edit": {
+    "text": "Text in the top bar in dashboard edit mode.",
+    "note": "Helper text under a Home Assistant variable; says it colours the top bar text while a dashboard is being edited.",
+    "max": 70
+  },
+  "theme-editor.ha.text-of-disabled-and-unavailable-things": {
+    "text": "Text of disabled and unavailable things.",
+    "note": "Helper text under the Home Assistant disabled text colour variable; says it colours text of disabled and unavailable items.",
+    "max": 65
+  },
+  "theme-editor.ha.text-on-light-surfaces": {
+    "text": "Text on light surfaces",
+    "note": "Label of the Home Assistant variable for the dark text colour used on surfaces that stay light.",
+    "max": 40
+  },
+  "theme-editor.ha.text-on-primary-colour": {
+    "text": "Text on primary colour",
+    "note": "Label of the Home Assistant variables field for text drawn on the primary colour. The Magic Card group has the same English.",
+    "max": 40
+  },
+  "theme-editor.ha.the-active-sidebar-item-icon": {
+    "text": "The active sidebar item icon.",
+    "note": "Helper text under a Home Assistant variable; says it colours the icon of the selected sidebar item.",
+    "max": 50
+  },
+  "theme-editor.ha.the-active-sidebar-item-name": {
+    "text": "The active sidebar item name.",
+    "note": "Helper text under a Home Assistant variable; says it colours the name of the selected sidebar item.",
+    "max": 50
+  },
+  "theme-editor.ha.the-background-of-a-dashboard-view-takes": {
+    "text": "The background of a dashboard view. Takes a gradient or an image.",
+    "note": "Helper text under the Home Assistant dashboard background variable; says it sets the view background and accepts a gradient or image.",
+    "max": 105
+  },
+  "theme-editor.ha.the-colour-ha-shades-shadows-with": {
+    "text": "The colour HA shades shadows with.",
+    "note": "Helper text under a Home Assistant variable; says it is the colour used to draw shadows. HA means Home Assistant.",
+    "max": 55
+  },
+  "theme-editor.ha.the-font-for-headings": {
+    "text": "The font for headings.",
+    "note": "Helper text under a Home Assistant variable; says it sets the font family of headings.",
+    "max": 40
+  },
+  "theme-editor.ha.the-font-for-most-text": {
+    "text": "The font for most text.",
+    "note": "Helper text under a Home Assistant variable; says it sets the main font family for body text.",
+    "max": 40
+  },
+  "theme-editor.ha.the-sidebar": {
+    "text": "The sidebar.",
+    "note": "Short description of the group of variables that style the side menu.",
+    "max": 20
+  },
+  "theme-editor.ha.the-top-bar-in-dashboard-edit-mode": {
+    "text": "The top bar in dashboard edit mode.",
+    "note": "Helper text under a Home Assistant variable; says it sets the top bar background while a dashboard is being edited.",
+    "max": 60
+  },
+  "theme-editor.ha.the-top-bar-of-every-page": {
+    "text": "The top bar of every page.",
+    "note": "Helper text under a Home Assistant variable; says it sets the top bar background on every page.",
+    "max": 45
+  },
+  "theme-editor.ha.unavailable-state-colour": {
+    "text": "Unavailable state colour",
+    "note": "Label of the Home Assistant variable for the colour of entities whose state is unavailable.",
+    "max": 40
+  },
+  "theme-editor.ha.unlocked-colour": {
+    "text": "Unlocked colour",
+    "note": "Label of the Home Assistant theme variable for a lock in the unlocked state.",
+    "max": 25
+  },
+  "theme-editor.ha.warning-colour": {
+    "text": "Warning colour",
+    "note": "Label of the Home Assistant theme variable for warnings, usually orange or amber.",
+    "max": 25
+  },
+  "theme-editor.ha.warnings-and-caution-states": {
+    "text": "Warnings and caution states.",
+    "note": "Helper text under the Home Assistant warning colour variable; says it colours warnings and caution states.",
+    "max": 45
+  },
+  "theme-editor.ha.width-of-the-card-border": {
+    "text": "Width of the card border.",
+    "note": "Helper text under a Home Assistant variable; says it sets how thick the line around cards is.",
+    "max": 40
+  },
+  "theme-editor.ha.wins-over-the-card-background-for-cards": {
+    "text": "Wins over the card background for cards only. Takes a gradient.",
+    "note": "Helper text under the Home Assistant ha-card background variable; says it overrides the card background on cards only and accepts a gradient.",
+    "max": 105
+  },
+  "theme-editor.include-notice.check-again": {
+    "text": "Check again",
+    "note": "Button in the include notice that re-runs the check of the themes include line. Same English as the editor banner.",
+    "max": 20
+  },
+  "theme-editor.include-notice.checking": {
+    "text": "Checking...",
+    "note": "Busy label on the include notice button while the check runs. Keep the three dots.",
+    "max": 20
+  },
+  "theme-editor.include-notice.copied": {
+    "text": "Copied",
+    "note": "Brief button label after the configuration lines went to the clipboard. Past tense.",
+    "max": 10
+  },
+  "theme-editor.include-notice.copy-lines": {
+    "text": "Copy lines",
+    "note": "Button that copies the configuration lines the user must add to Home Assistant. Lines means lines of text.",
+    "max": 20
+  },
+  "theme-editor.include-notice.home-assistant-only-loads-themes-from": {
+    "text": "Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:",
+    "note": "Intro sentence in the setup notice, followed by a code block; explains why the lines are needed. File names and paths stay as written.",
+    "max": 160
+  },
+  "theme-editor.include-notice.lines-to-add-to-configuration-yaml": {
+    "text": "Lines to add to configuration.yaml",
+    "note": "Accessible name of the code block in the setup notice that holds the lines to copy into configuration.yaml.",
+    "max": 55
+  },
+  "theme-editor.include-notice.one-setup-step-before-you-can-save": {
+    "text": "One setup step before you can save",
+    "note": "Title of the setup notice shown when Home Assistant is not yet set to read theme files from /config/themes.",
+    "max": 55
+  },
+  "theme-editor.include-notice.open-configuration-yaml-with-the-file": {
+    "text": "Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.",
+    "note": "Step-by-step help revealed by Show me how; File editor and Studio Code Server are Home Assistant add-on names, and frontend: is a YAML key.",
+    "max": 330
+  },
+  "theme-editor.include-notice.show-me-how": {
+    "text": "Show me how",
+    "note": "Button in the setup notice that reveals the steps for editing configuration.yaml.",
+    "max": 20
+  },
+  "theme-editor.include-notice.the-editor-could-not-read-configuration": {
+    "text": "The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:",
+    "note": "Intro sentence in the setup notice when the include check failed; the lines to add follow in a code block.",
+    "max": 160
+  },
+  "theme-editor.include-notice.where-do-i-add-these-lines": {
+    "text": "Where do I add these lines?",
+    "note": "Heading of the expandable help in the setup notice that explains where in configuration.yaml the lines go.",
+    "max": 45
+  },
+  "theme-editor.include-notice.you-can-skip-this-for-now-try-on": {
+    "text": "You can skip this for now. Try on dashboard works without it.",
+    "note": "Reassurance in the setup notice that the step is optional for trying a theme. Try on dashboard is a button label.",
+    "max": 100
+  },
+  "theme-editor.include-notice.your-configuration-yaml-lists-themes": {
+    "text": "Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:",
+    "note": "Intro sentence in the setup notice when configuration.yaml defines themes inline; the replacement lines follow in a code block.",
+    "max": 235
+  },
+  "theme-editor.include-notice.your-configuration-yaml-loads-themes-in": {
+    "text": "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:",
+    "note": "Intro sentence in the setup notice when themes come from an include or other method; the lines to add follow in a code block.",
+    "max": 215
+  },
+  "theme-editor.lips.got-it": {
+    "text": "Got it",
+    "note": "Button that dismisses the one-time hint about the side panel tabs. Means understood.",
+    "max": 10
+  },
+  "theme-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "note": "Tooltip on a side panel edge tab. {noun} is the panel name, such as 'variables' or 'preview'; {keys} is the keyboard shortcut, such as Ctrl+B; do not translate it.",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "theme-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "note": "Screen-reader announcement after hiding panels. {panels} is the name of the panel or panels hidden, such as 'Preview'.",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "theme-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "note": "Screen-reader announcement after showing panels. {panels} is the name of the panel or panels shown, such as 'Preview'.",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "theme-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "note": "Tooltip text. {keys} is a keyboard shortcut, such as Ctrl+B; do not translate it.",
+    "max": 30,
+    "vars": {
+      "keys": "The value that replaces keys in the text."
+    }
+  },
+  "theme-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "note": "Tooltip on a side panel edge tab when the panel is hidden. {noun} is the panel name, such as 'variables'; {keys} is the keyboard shortcut; do not translate it.",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "note": "Hint at the screen edge. {noun} is the panel name, such as 'variables' or 'preview'.",
+    "max": 130,
+    "vars": {
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "theme-editor.lips.variables": {
+    "text": "variables",
+    "note": "Lower-case panel name inside a sentence such as 'variables hidden'. Same English as the Variables heading.",
+    "max": 15
+  },
+  "theme-editor.lips.variables-panel": {
+    "text": "Variables panel",
+    "note": "Tooltip on the side tab that shows or hides the variables panel. Same English as the editor view label.",
+    "max": 25
+  },
+  "theme-editor.magic-card.borders-and-bar-tracks": {
+    "text": "Borders and bar tracks.",
+    "note": "Helper text under a Magic Card variable in the variables panel; says it colours borders and the tracks behind bars.",
+    "max": 40
+  },
+  "theme-editor.magic-card.button-text": {
+    "text": "Button text.",
+    "note": "Short description under a Magic Card variable that sets the text colour on buttons.",
+    "max": 20
+  },
+  "theme-editor.magic-card.buttons-bars-and-accents": {
+    "text": "Buttons, bars and accents.",
+    "note": "Helper text under the Magic Card accent variable; says it colours buttons, bars and accents.",
+    "max": 45
+  },
+  "theme-editor.magic-card.cancel-and-error-text-in-the-popup": {
+    "text": "Cancel and error text in the popup.",
+    "note": "Helper text under a Magic Card variable; says it colours the Cancel button and error messages in the card's popup.",
+    "max": 60
+  },
+  "theme-editor.magic-card.captions-and-hints": {
+    "text": "Captions and hints.",
+    "note": "Helper text under a Magic Card variable; says it colours captions and hint text.",
+    "max": 35
+  },
+  "theme-editor.magic-card.card-and-popup-rounding": {
+    "text": "Card and popup rounding.",
+    "note": "Helper text under a Magic Card variable; says it sets the corner rounding of the card and its popup.",
+    "max": 40
+  },
+  "theme-editor.magic-card.card-background": {
+    "text": "Card background",
+    "note": "Label of the Magic Card theme variable for the card background.",
+    "max": 25
+  },
+  "theme-editor.magic-card.card-background-override": {
+    "text": "Card background override",
+    "note": "Label of the Magic Card variables field that overrides the background of Magic Card cards. The Home Assistant and Ultra Card groups have the same English.",
+    "max": 40
+  },
+  "theme-editor.magic-card.card-border": {
+    "text": "Card border.",
+    "note": "Short description under a Magic Card variable that sets the line around the card.",
+    "max": 20
+  },
+  "theme-editor.magic-card.card-border-colour": {
+    "text": "Card border colour",
+    "note": "Label of the Magic Card variables field for the border colour of Magic Card cards. The Home Assistant group has the same English.",
+    "max": 30
+  },
+  "theme-editor.magic-card.card-border-width": {
+    "text": "Card border width",
+    "note": "Label of the Magic Card variables field for the border thickness of Magic Card cards. The Home Assistant group has the same English.",
+    "max": 30
+  },
+  "theme-editor.magic-card.card-corner-radius": {
+    "text": "Card corner radius",
+    "note": "Label of the Magic Card variables field for the corner rounding of Magic Card cards. The Home Assistant group has the same English.",
+    "max": 30
+  },
+  "theme-editor.magic-card.card-shadow": {
+    "text": "Card shadow",
+    "note": "Label of the Magic Card theme variable for the drop shadow under the card.",
+    "max": 20
+  },
+  "theme-editor.magic-card.card-surface-and-flow-labels": {
+    "text": "Card surface and flow labels.",
+    "note": "Helper text under a Magic Card variable; says it sets the card surface and the labels on flow lines.",
+    "max": 50
+  },
+  "theme-editor.magic-card.disabled-colour": {
+    "text": "Disabled colour",
+    "note": "Label of the Magic Card theme variable for controls that cannot be used.",
+    "max": 25
+  },
+  "theme-editor.magic-card.divider-colour": {
+    "text": "Divider colour",
+    "note": "Label of the Magic Card theme variable for thin separator lines.",
+    "max": 25
+  },
+  "theme-editor.magic-card.empty-slider-track": {
+    "text": "Empty slider track.",
+    "note": "Helper text under a Magic Card variable; says it colours the unfilled part of a slider track.",
+    "max": 35
+  },
+  "theme-editor.magic-card.error-colour": {
+    "text": "Error colour",
+    "note": "Label of the Magic Card theme variable for error states.",
+    "max": 20
+  },
+  "theme-editor.magic-card.light-on-colour": {
+    "text": "Light on colour",
+    "note": "Label of the Magic Card variables field for the colour of a light that is switched on. The Home Assistant group has the same English.",
+    "max": 25
+  },
+  "theme-editor.magic-card.main-text": {
+    "text": "Main text.",
+    "note": "Short description under a Magic Card variable that sets the main text colour.",
+    "max": 20
+  },
+  "theme-editor.magic-card.primary-colour": {
+    "text": "Primary colour",
+    "note": "Label of the Magic Card theme variable for the main brand colour.",
+    "max": 25
+  },
+  "theme-editor.magic-card.primary-text": {
+    "text": "Primary text",
+    "note": "Label of the Magic Card theme variable for the main text colour.",
+    "max": 20
+  },
+  "theme-editor.magic-card.secondary-text": {
+    "text": "Secondary text",
+    "note": "Label of the Magic Card theme variable for dimmer supporting text.",
+    "max": 25
+  },
+  "theme-editor.magic-card.shadow-under-the-card": {
+    "text": "Shadow under the card.",
+    "note": "Helper text under a Magic Card variable; says it sets the drop shadow under the card.",
+    "max": 40
+  },
+  "theme-editor.magic-card.slider-track": {
+    "text": "Slider track",
+    "note": "Label of the Magic Card theme variable for the unfilled rail of a slider.",
+    "max": 25
+  },
+  "theme-editor.magic-card.success-colour": {
+    "text": "Success colour",
+    "note": "Label of the Magic Card theme variable for success states, usually green.",
+    "max": 25
+  },
+  "theme-editor.magic-card.text-on-primary-colour": {
+    "text": "Text on primary colour",
+    "note": "Label of the Magic Card variables field for text drawn on the primary colour. The Home Assistant group has the same English.",
+    "max": 40
+  },
+  "theme-editor.magic-card.the-light-slider": {
+    "text": "The light slider.",
+    "note": "Helper text under a Magic Card variable; says it colours the brightness slider for lights.",
+    "max": 30
+  },
+  "theme-editor.magic-card.the-save-button-in-the-popup": {
+    "text": "The save button in the popup.",
+    "note": "Helper text under a Magic Card variable; says it colours the Save button in the card's popup.",
+    "max": 50
+  },
+  "theme-editor.magic-card.track-behind-the-fill-a-slider-with-its": {
+    "text": "Track behind the fill. A slider with its own track colour keeps it.",
+    "note": "Helper text under a Magic Card variable; says it colours the track behind a slider fill, unless the slider sets its own.",
+    "max": 110
+  },
+  "theme-editor.magic-card.wins-over-the-card-background": {
+    "text": "Wins over the card background.",
+    "note": "Helper text under a Magic Card variable; says it overrides the general card background for this card.",
+    "max": 50
+  },
+  "theme-editor.model.a-mode-block-must-be-light-or-dark-and": {
+    "text": "A mode block must be light or dark and hold variables.",
+    "note": "Validation error when a mode section in the theme file is not named light or dark, or has no variables.",
+    "max": 90
+  },
+  "theme-editor.model.enter-a-border-like-1px-solid-ccc": {
+    "text": "Enter a border like 1px solid #ccc.",
+    "note": "Validation error under a border field; the example is a CSS value and stays as written.",
+    "max": 60
+  },
+  "theme-editor.model.enter-a-colour-like-1a73e8-or-rgb-26-115": {
+    "text": "Enter a colour like #1a73e8 or rgb(26, 115, 232).",
+    "note": "Validation error under a colour field; the examples are CSS values and stay as written.",
+    "max": 80
+  },
+  "theme-editor.model.enter-a-colour-or-a-gradient": {
+    "text": "Enter a colour or a gradient.",
+    "note": "Validation error under a field that accepts either a colour or a gradient, such as a card background.",
+    "max": 50
+  },
+  "theme-editor.model.enter-a-font-family": {
+    "text": "Enter a font family.",
+    "note": "Validation error under a font field that was left empty or invalid.",
+    "max": 35
+  },
+  "theme-editor.model.enter-a-length-like-12px-or-1rem": {
+    "text": "Enter a length like 12px or 1rem.",
+    "note": "Validation error under a size field; the examples are CSS lengths and stay as written.",
+    "max": 55
+  },
+  "theme-editor.model.enter-a-number": {
+    "text": "Enter a number.",
+    "note": "Validation error under a numeric field, such as a scale factor, when the value is not a number.",
+    "max": 25
+  },
+  "theme-editor.model.enter-a-shadow-like-0-2px-6px-rgba-0-0-0": {
+    "text": "Enter a shadow like 0 2px 6px rgba(0, 0, 0, 0.3).",
+    "note": "Validation error under a shadow field; the example is a CSS value and stays as written.",
+    "max": 80
+  },
+  "theme-editor.model.enter-a-value": {
+    "text": "Enter a value.",
+    "note": "Validation error from the theme model when a variable has no value. The raw rows key with the same English is shown beside the raw row field.",
+    "max": 25
+  },
+  "theme-editor.model.enter-three-numbers-from-0-to-255-like": {
+    "text": "Enter three numbers from 0 to 255, like 255, 120, 0.",
+    "note": "Validation error under an RGB triple field (red, green, blue); the example stays as written.",
+    "max": 85
+  },
+  "theme-editor.model.modes-must-hold-a-light-and-a-dark-block": {
+    "text": "Modes must hold a light and a dark block.",
+    "note": "Validation error when the modes section of the theme file lacks a light or a dark part.",
+    "max": 70
+  },
+  "theme-editor.model.remove-chars-and-unmatched-brackets-from": {
+    "text": "Remove {chars} and unmatched brackets from the value.",
+    "note": "Validation error on a variable value. {chars} is a list of forbidden characters, such as ; and {}, shown as symbols; do not translate.",
+    "max": 85,
+    "vars": {
+      "chars": "The value that replaces chars in the text."
+    }
+  },
+  "theme-editor.model.this-field-takes-one-colour-not-a": {
+    "text": "This field takes one colour, not a gradient.",
+    "note": "Validation error when a gradient is typed into a field that only accepts a single colour.",
+    "max": 75
+  },
+  "theme-editor.model.this-value-has-a-control-character": {
+    "text": "This value has a control character. Remove it.",
+    "note": "Validation error when a value contains a hidden control character, often from pasting; tells the user to delete it.",
+    "max": 75
+  },
+  "theme-editor.model.this-value-is-longer-than-max-characters": {
+    "text": "{max, plural, one {This value is longer than # character.} other {This value is longer than # characters.}}",
+    "note": "Validation error on a variable value. {max} is the character limit (a number).",
+    "max": 70,
+    "vars": {
+      "max": "The most characters a value can have."
+    }
+  },
+  "theme-editor.model.this-value-must-be-text-or-a-number": {
+    "text": "This value must be text or a number.",
+    "note": "Validation error when a theme value is a list or nested block instead of plain text or a number.",
+    "max": 60
+  },
+  "theme-editor.model.use-letters-numbers-dashes-and": {
+    "text": "Use letters, numbers, dashes and underscores for a variable name.",
+    "note": "Validation error when a variable name in the theme file has characters that are not allowed.",
+    "max": 105
+  },
+  "theme-editor.mushroom.alarm-armed-state-rgb": {
+    "text": "Alarm armed state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an armed alarm, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.alarm-disarmed-state-rgb": {
+    "text": "Alarm disarmed state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a disarmed alarm, entered as three numbers.",
+    "max": 45
+  },
+  "theme-editor.mushroom.alarm-triggered-state-rgb": {
+    "text": "Alarm triggered state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a triggered alarm, entered as three numbers.",
+    "max": 45
+  },
+  "theme-editor.mushroom.amber-rgb": {
+    "text": "Amber (RGB)",
+    "note": "Label of the Mushroom variable holding amber as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.badge-icon-size": {
+    "text": "Badge icon size",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the icon inside a Mushroom badge.",
+    "max": 30
+  },
+  "theme-editor.mushroom.badge-radius": {
+    "text": "Badge radius",
+    "note": "Label of the Mushroom variable for badge corner rounding. Radius means corner size.",
+    "max": 20
+  },
+  "theme-editor.mushroom.badge-size": {
+    "text": "Badge size",
+    "note": "Label of the Mushroom variable for the size of the small status badge on an icon.",
+    "max": 20
+  },
+  "theme-editor.mushroom.black-rgb": {
+    "text": "Black (RGB)",
+    "note": "Label of the Mushroom variable holding black as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.blue-grey-rgb": {
+    "text": "Blue grey (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the blue grey palette colour, entered as three numbers.",
+    "max": 25
+  },
+  "theme-editor.mushroom.blue-rgb": {
+    "text": "Blue (RGB)",
+    "note": "Label of the Mushroom variable holding blue as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.brown-rgb": {
+    "text": "Brown (RGB)",
+    "note": "Label of the Mushroom variable holding brown as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.button-width-as-a-multiple-of-its-height": {
+    "text": "Button width as a multiple of its height.",
+    "note": "Helper text under the control button ratio field in the variables panel. Says the width is a multiple of the height, so 2 makes a button twice as wide as it is tall.",
+    "max": 70
+  },
+  "theme-editor.mushroom.card-spacing": {
+    "text": "Card spacing",
+    "note": "Label of the Mushroom variable for the gap between cards.",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-avatar-padding": {
+    "text": "Chip avatar padding",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the space around the avatar picture inside a chip.",
+    "max": 35
+  },
+  "theme-editor.mushroom.chip-avatar-radius": {
+    "text": "Chip avatar radius",
+    "note": "Label of a Mushroom variable in the variables panel. Sets how round the corners of a chip avatar are.",
+    "max": 30
+  },
+  "theme-editor.mushroom.chip-background": {
+    "text": "Chip background",
+    "note": "Label of the Mushroom variable for the background of a chip, the small pill-shaped item.",
+    "max": 25
+  },
+  "theme-editor.mushroom.chip-border-colour": {
+    "text": "Chip border colour",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the colour of the border around chips.",
+    "max": 30
+  },
+  "theme-editor.mushroom.chip-border-width": {
+    "text": "Chip border width",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the thickness of the border around chips.",
+    "max": 30
+  },
+  "theme-editor.mushroom.chip-height": {
+    "text": "Chip height",
+    "note": "Label of the Mushroom variable for how tall a chip, the small pill-shaped item, is.",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-icon-size": {
+    "text": "Chip icon size",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the icon inside a chip.",
+    "max": 25
+  },
+  "theme-editor.mushroom.chip-padding": {
+    "text": "Chip padding",
+    "note": "Label of the Mushroom variable for the space inside a chip, the small pill-shaped item.",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-radius": {
+    "text": "Chip radius",
+    "note": "Label of the Mushroom variable for chip corner rounding. Radius means corner size.",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-shadow": {
+    "text": "Chip shadow",
+    "note": "Label of the Mushroom variable for the drop shadow under a chip.",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-spacing": {
+    "text": "Chip spacing",
+    "note": "Label of the Mushroom variable for the gap between chips.",
+    "max": 20
+  },
+  "theme-editor.mushroom.chip-text-size": {
+    "text": "Chip text size",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the font size of the text in a chip.",
+    "max": 25
+  },
+  "theme-editor.mushroom.chip-text-weight": {
+    "text": "Chip text weight",
+    "note": "Label of a Mushroom variable in the variables panel. Sets how bold the text in a chip is.",
+    "max": 30
+  },
+  "theme-editor.mushroom.climate-auto-state-rgb": {
+    "text": "Climate auto state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in auto mode, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-cool-state-rgb": {
+    "text": "Climate cool state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in cool mode, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-dry-state-rgb": {
+    "text": "Climate dry state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in dry mode, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-fan-only-state-rgb": {
+    "text": "Climate fan only state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in fan only mode, entered as three numbers.",
+    "max": 45
+  },
+  "theme-editor.mushroom.climate-heat-cool-state-rgb": {
+    "text": "Climate heat cool state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in heat cool mode, entered as three numbers.",
+    "max": 50
+  },
+  "theme-editor.mushroom.climate-heat-state-rgb": {
+    "text": "Climate heat state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in heat mode, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-idle-state-rgb": {
+    "text": "Climate idle state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an idle climate device, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.climate-off-state-rgb": {
+    "text": "Climate off state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device that is off, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.control-button-ratio": {
+    "text": "Control button ratio",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the width of control buttons as a multiple of their height.",
+    "max": 35
+  },
+  "theme-editor.mushroom.control-height": {
+    "text": "Control height",
+    "note": "Label of the Mushroom variable for how tall the control buttons on a card are.",
+    "max": 25
+  },
+  "theme-editor.mushroom.control-icon-size": {
+    "text": "Control icon size",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the icon inside control buttons.",
+    "max": 30
+  },
+  "theme-editor.mushroom.control-radius": {
+    "text": "Control radius",
+    "note": "Label of the Mushroom variable for control button corner rounding. Radius means corner size.",
+    "max": 25
+  },
+  "theme-editor.mushroom.control-spacing": {
+    "text": "Control spacing",
+    "note": "Label of the Mushroom variable for the gap between control buttons.",
+    "max": 25
+  },
+  "theme-editor.mushroom.cover-closed-state-rgb": {
+    "text": "Cover closed state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a closed cover, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.cover-open-state-rgb": {
+    "text": "Cover open state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an open cover, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.cyan-rgb": {
+    "text": "Cyan (RGB)",
+    "note": "Label of the Mushroom variable holding cyan as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.danger-rgb": {
+    "text": "Danger (RGB)",
+    "note": "Label of the Mushroom variable holding the danger colour as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.dark-grey-rgb": {
+    "text": "Dark grey (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the dark grey palette colour, entered as three numbers.",
+    "max": 25
+  },
+  "theme-editor.mushroom.deep-orange-rgb": {
+    "text": "Deep orange (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the deep orange palette colour, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.deep-purple-rgb": {
+    "text": "Deep purple (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the deep purple palette colour, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.delay-in-milliseconds": {
+    "text": "Delay in milliseconds.",
+    "note": "Helper text under a Mushroom delay field in the variables panel. Says the value is a number of milliseconds.",
+    "max": 40
+  },
+  "theme-editor.mushroom.disabled-rgb": {
+    "text": "Disabled (RGB)",
+    "note": "Label of the Mushroom variable holding the disabled colour as red, green and blue numbers. Keep RGB.",
+    "max": 25
+  },
+  "theme-editor.mushroom.entity-state-rgb": {
+    "text": "Entity state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an entity in its default state, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.fan-state-rgb": {
+    "text": "Fan state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a fan that is on, entered as three numbers.",
+    "max": 25
+  },
+  "theme-editor.mushroom.gap-between-the-parts-of-a-card": {
+    "text": "Gap between the parts of a card.",
+    "note": "Helper text under a Mushroom spacing field in the variables panel. Says the value is the space between the parts of a card.",
+    "max": 55
+  },
+  "theme-editor.mushroom.green-rgb": {
+    "text": "Green (RGB)",
+    "note": "Label of the Mushroom variable holding green as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.grey-rgb": {
+    "text": "Grey (RGB)",
+    "note": "Label of the Mushroom variable holding grey as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.humidifier-state-rgb": {
+    "text": "Humidifier state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a humidifier that is on, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.icon-radius": {
+    "text": "Icon radius",
+    "note": "Label of the Mushroom variable for icon corner rounding. Radius means corner size.",
+    "max": 25
+  },
+  "theme-editor.mushroom.icon-size": {
+    "text": "Icon size",
+    "note": "Label of the Mushroom variable for how large icons are drawn.",
+    "max": 20
+  },
+  "theme-editor.mushroom.icon-symbol-size": {
+    "text": "Icon symbol size",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the symbol inside the round icon shape.",
+    "max": 30
+  },
+  "theme-editor.mushroom.indigo-rgb": {
+    "text": "Indigo (RGB)",
+    "note": "Label of the Mushroom variable holding indigo as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.info-rgb": {
+    "text": "Info (RGB)",
+    "note": "Label of the Mushroom variable holding the info colour as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.layout-alignment": {
+    "text": "Layout alignment",
+    "note": "Label of the Mushroom variable for how card content lines up, such as left or centre.",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-blue-rgb": {
+    "text": "Light blue (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the light blue palette colour, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-green-rgb": {
+    "text": "Light green (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the light green palette colour, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-grey-rgb": {
+    "text": "Light grey (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the light grey palette colour, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.light-state-rgb": {
+    "text": "Light state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a light that is on, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.lime-rgb": {
+    "text": "Lime (RGB)",
+    "note": "Label of the Mushroom variable holding lime as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.lock-locked-state-rgb": {
+    "text": "Lock locked state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a locked lock, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.lock-pending-state-rgb": {
+    "text": "Lock pending state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a lock that is locking or unlocking, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.lock-state-rgb": {
+    "text": "Lock state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the default RGB colour of a lock, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.lock-unlocked-state-rgb": {
+    "text": "Lock unlocked state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an unlocked lock, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.media-player-state-rgb": {
+    "text": "Media player state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an active media player, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.movement-before-a-slider-reacts": {
+    "text": "Movement before a slider reacts.",
+    "note": "Helper text under a Mushroom slider threshold field in the variables panel. Says the value is how far you must drag before the slider moves.",
+    "max": 55
+  },
+  "theme-editor.mushroom.number-input-debounce": {
+    "text": "Number input debounce",
+    "note": "Label of a Mushroom variable in the variables panel. Sets how long to wait after you stop typing in a number field before the value is sent.",
+    "max": 35
+  },
+  "theme-editor.mushroom.number-state-rgb": {
+    "text": "Number state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a number entity, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.orange-rgb": {
+    "text": "Orange (RGB)",
+    "note": "Label of the Mushroom variable holding orange as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.person-home-state-rgb": {
+    "text": "Person home state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person who is home, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.person-not-home-state-rgb": {
+    "text": "Person not home state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person who is away, entered as three numbers.",
+    "max": 45
+  },
+  "theme-editor.mushroom.person-unknown-state-rgb": {
+    "text": "Person unknown state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person whose location is unknown, entered as three numbers.",
+    "max": 45
+  },
+  "theme-editor.mushroom.person-zone-state-rgb": {
+    "text": "Person zone state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person who is in a named zone, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.pink-rgb": {
+    "text": "Pink (RGB)",
+    "note": "Label of the Mushroom variable holding pink as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.primary-letter-spacing": {
+    "text": "Primary letter spacing",
+    "note": "Label of the Mushroom variable for the spacing between letters of the main text. The Tile group has the same English.",
+    "max": 40
+  },
+  "theme-editor.mushroom.primary-line-height": {
+    "text": "Primary line height",
+    "note": "Label of the Mushroom variable for the line height of the main text. The Tile group has the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Label of the Mushroom variable for the colour of the main text. The Tile, Button Card and Ultra Card groups have the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.primary-text-size": {
+    "text": "Primary text size",
+    "note": "Label of the Mushroom variable for the font size of the main text. The Tile group has the same English.",
+    "max": 30
+  },
+  "theme-editor.mushroom.primary-text-weight": {
+    "text": "Primary text weight",
+    "note": "Label of the Mushroom variable for how bold the main text is. The Tile group has the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.purple-rgb": {
+    "text": "Purple (RGB)",
+    "note": "Label of the Mushroom variable holding purple as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.red-rgb": {
+    "text": "Red (RGB)",
+    "note": "Label of the Mushroom variable holding red as red, green and blue numbers. Keep RGB.",
+    "max": 15
+  },
+  "theme-editor.mushroom.secondary-letter-spacing": {
+    "text": "Secondary letter spacing",
+    "note": "Label of the Mushroom variable for the spacing between letters of the secondary text. The Tile group has the same English.",
+    "max": 40
+  },
+  "theme-editor.mushroom.secondary-line-height": {
+    "text": "Secondary line height",
+    "note": "Label of the Mushroom variable for the line height of the secondary text. The Tile group has the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.secondary-text-colour": {
+    "text": "Secondary text colour",
+    "note": "Label of the Mushroom variable for the colour of the secondary text. The Tile and Ultra Card groups have the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.secondary-text-size": {
+    "text": "Secondary text size",
+    "note": "Label of the Mushroom variable for the font size of the secondary text. The Tile group has the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.secondary-text-weight": {
+    "text": "Secondary text weight",
+    "note": "Label of the Mushroom variable for how bold the secondary text is. The Tile group has the same English.",
+    "max": 35
+  },
+  "theme-editor.mushroom.slider-threshold": {
+    "text": "Slider threshold",
+    "note": "Label of the Mushroom variable for the slider position at which its appearance switches.",
+    "max": 30
+  },
+  "theme-editor.mushroom.subtitle-colour": {
+    "text": "Subtitle colour",
+    "note": "Label of the Mushroom variable for the colour of the second line of text on a card.",
+    "max": 25
+  },
+  "theme-editor.mushroom.subtitle-letter-spacing": {
+    "text": "Subtitle letter spacing",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the space between letters in a card subtitle.",
+    "max": 40
+  },
+  "theme-editor.mushroom.subtitle-line-height": {
+    "text": "Subtitle line height",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the line height of a card subtitle.",
+    "max": 35
+  },
+  "theme-editor.mushroom.subtitle-size": {
+    "text": "Subtitle size",
+    "note": "Label of the Mushroom variable for the font size of the second line of text on a card.",
+    "max": 25
+  },
+  "theme-editor.mushroom.subtitle-weight": {
+    "text": "Subtitle weight",
+    "note": "Label of the Mushroom variable for how bold the second line of text is. Weight means font boldness.",
+    "max": 25
+  },
+  "theme-editor.mushroom.success-rgb": {
+    "text": "Success (RGB)",
+    "note": "Label of the Mushroom variable holding the success colour as red, green and blue numbers. Keep RGB.",
+    "max": 25
+  },
+  "theme-editor.mushroom.teal-rgb": {
+    "text": "Teal (RGB)",
+    "note": "Label of the Mushroom variable holding teal as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.three-numbers-0-to-255-like-244-67-54": {
+    "text": "Three numbers, 0 to 255, like 244, 67, 54.",
+    "note": "Helper text under every Mushroom RGB colour field in the variables panel. Says to enter red, green and blue as three numbers from 0 to 255.",
+    "max": 70
+  },
+  "theme-editor.mushroom.title-colour": {
+    "text": "Title colour",
+    "note": "Label of the Mushroom variable for the colour of the title text on a card.",
+    "max": 20
+  },
+  "theme-editor.mushroom.title-letter-spacing": {
+    "text": "Title letter spacing",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the space between letters in a card title.",
+    "max": 35
+  },
+  "theme-editor.mushroom.title-line-height": {
+    "text": "Title line height",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the line height of a card title.",
+    "max": 30
+  },
+  "theme-editor.mushroom.title-padding": {
+    "text": "Title padding",
+    "note": "Label of the Mushroom variable for the space around the Title card's text.",
+    "max": 25
+  },
+  "theme-editor.mushroom.title-size": {
+    "text": "Title size",
+    "note": "Label of the Mushroom variable for the font size of the title text.",
+    "max": 20
+  },
+  "theme-editor.mushroom.title-spacing": {
+    "text": "Title spacing",
+    "note": "Label of the Mushroom variable for the gap between the title and what follows it.",
+    "max": 25
+  },
+  "theme-editor.mushroom.title-weight": {
+    "text": "Title weight",
+    "note": "Label of the Mushroom variable for how bold the title text is. Weight means font boldness.",
+    "max": 20
+  },
+  "theme-editor.mushroom.update-installing-rgb": {
+    "text": "Update installing (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an update that is installing, entered as three numbers.",
+    "max": 40
+  },
+  "theme-editor.mushroom.update-off-rgb": {
+    "text": "Update off (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an update entity with nothing to install, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.update-on-state-rgb": {
+    "text": "Update on state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an update that is available, entered as three numbers.",
+    "max": 35
+  },
+  "theme-editor.mushroom.vacuum-state-rgb": {
+    "text": "Vacuum state (RGB)",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an active vacuum, entered as three numbers.",
+    "max": 30
+  },
+  "theme-editor.mushroom.warning-rgb": {
+    "text": "Warning (RGB)",
+    "note": "Label of the Mushroom variable holding the warning colour as red, green and blue numbers. Keep RGB.",
+    "max": 25
+  },
+  "theme-editor.mushroom.white-rgb": {
+    "text": "White (RGB)",
+    "note": "Label of the Mushroom variable holding white as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.mushroom.yellow-rgb": {
+    "text": "Yellow (RGB)",
+    "note": "Label of the Mushroom variable holding yellow as red, green and blue numbers. Keep RGB.",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.added-c-to-my-presets": {
+    "text": "Added {c} to My presets",
+    "note": "Toast after importing presets. {c} is a finished phrase with the count, such as '3 presets'. My presets is a section name.",
+    "max": 40,
+    "vars": {
+      "c": "The value that replaces c in the text."
+    }
+  },
+  "theme-editor.preset-dialog.author-optional": {
+    "text": "Author (optional)",
+    "note": "Field label for who made the preset when saving or exporting it. The field may stay empty.",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.cancel": {
+    "text": "Cancel",
+    "note": "Button that closes a preset dialog without doing anything. Same English as the editor and start view.",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.close": {
+    "text": "Close",
+    "note": "Button that closes the preset dialog after an import or export report. Same English as other Close buttons.",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.delete": {
+    "text": "Delete",
+    "note": "Confirm button that permanently deletes a saved preset. Same English as the editor and start view.",
+    "max": 15
+  },
+  "theme-editor.preset-dialog.delete-name": {
+    "text": "Delete {name}?",
+    "note": "Confirmation title for deleting a saved preset from My presets. {name} is the preset name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.deleted-name": {
+    "text": "Deleted {name}.",
+    "note": "Toast after a saved preset is deleted. {name} is the preset name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.description-optional": {
+    "text": "Description (optional)",
+    "note": "Field label for a short note describing the preset. The field may stay empty.",
+    "max": 40
+  },
+  "theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters": {
+    "text": "Enter a name of 1 to 80 characters.",
+    "note": "Validation error under the name field in the preset dialog. Appears when the name is empty or longer than 80 characters.",
+    "max": 60
+  },
+  "theme-editor.preset-dialog.export-theme": {
+    "text": "Export theme",
+    "note": "Title of the dialog that saves a theme as a preset file. Same English as the editor menu item.",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.import-theme": {
+    "text": "Import theme",
+    "note": "Title of the dialog that brings in themes from a preset file.",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.it-did-not-work": {
+    "text": "It did not work.",
+    "note": "Fallback error in the preset dialog when saving or deleting a preset fails without a more specific reason.",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.loading": {
+    "text": "Loading...",
+    "note": "Busy text in the preset dialog while the saved presets load. Keep the three dots.",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.magic-card-utils-did-not-accept-this": {
+    "text": "Magic Card Utils did not accept this preset. Check the name and the values.",
+    "note": "Error in the preset dialog when Magic Card Utils rejects a save. Tells you to check the name and the values and try again.",
+    "max": 120
+  },
+  "theme-editor.preset-dialog.name": {
+    "text": "Name",
+    "note": "Field label for the preset name. Same English as the Name column of the raw rows.",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.name-reason": {
+    "text": "{name}: {reason}",
+    "note": "One failed item in an import report. {name} is the preset name; {reason} is why it was skipped.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.preset-dialog.nothing-was-saved": {
+    "text": "Nothing was saved",
+    "note": "Heading of the error in the preset dialog after a failed save. Tells you the preset was not stored; the reason follows.",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.only-administrators-can-change-presets": {
+    "text": "Only administrators can change presets.",
+    "note": "Error in the preset dialog for non-administrators. Explains that saving or deleting presets needs an administrator account.",
+    "max": 65
+  },
+  "theme-editor.preset-dialog.open-as-new-theme": {
+    "text": "Open as new theme",
+    "note": "Button in the preset dialog that opens the selected preset as a new theme in the editor, ready to try and save.",
+    "max": 30
+  },
+  "theme-editor.preset-dialog.rename": {
+    "text": "Rename",
+    "note": "Confirm button that applies a new name to a saved preset.",
+    "max": 10
+  },
+  "theme-editor.preset-dialog.rename-preset": {
+    "text": "Rename preset",
+    "note": "Title of the dialog for renaming a saved preset.",
+    "max": 25
+  },
+  "theme-editor.preset-dialog.renamed-to-name": {
+    "text": "Renamed to {name}.",
+    "note": "Toast after renaming a saved preset. {name} is the new preset name.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.save-as-my-preset": {
+    "text": "Save as my preset",
+    "note": "Confirm button of the preset dialog that saves the theme as a personal preset. The editor view has a key with the same English for its opening button.",
+    "max": 35
+  },
+  "theme-editor.preset-dialog.save-preset": {
+    "text": "Save preset",
+    "note": "Title and button of the dialog that stores the open theme as a reusable preset.",
+    "max": 25
+  },
+  "theme-editor.preset-dialog.saved-name-under-my-presets": {
+    "text": "Saved {name} under My presets.",
+    "note": "Toast after saving the current look as a preset. {name} is the preset name. My presets is a section name.",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in": {
+    "text": "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.",
+    "note": "Notice in the preset dialog when the one-time Home Assistant setup for saving themes is missing. Says Try on dashboard still works and the editor lists the lines to add.",
+    "max": 200
+  },
+  "theme-editor.preset-dialog.the-tools-could-not-load-check-your": {
+    "text": "The tools could not load. Check your connection.",
+    "note": "Error in the preset dialog when the helper tools for presets fail to load. Tells you to check your connection.",
+    "max": 80
+  },
+  "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
+    "text": "{count, plural, one {This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.} other {These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.}}",
+    "note": "Message in the preset dialog after saving. {count} is how many presets were saved; for one the text says to open it as a new theme, for several to choose New theme and pick them under My presets.",
+    "max": 165,
+    "vars": {
+      "count": "The count the text is about."
+    }
+  },
+  "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
+    "text": "This preset changed elsewhere. Reopen the list.",
+    "note": "Error in the preset dialog when the preset was changed in another tab or by another user. Tells you to reopen the list for the current version.",
+    "max": 80
+  },
+  "theme-editor.preset-dialog.this-removes-it-from-my-presets-themes": {
+    "text": "This removes it from My presets. Themes made from it stay.",
+    "note": "Confirmation text in the preset dialog before a preset is deleted. Says themes already made from it are kept.",
+    "max": 95
+  },
+  "theme-editor.preset-dialog.try-again": {
+    "text": "Try again",
+    "note": "Button that repeats a failed preset action. Same English as the editor and start view.",
+    "max": 20
+  },
+  "theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets. A file with one theme still opens.",
+    "note": "Warning in the preset dialog when the installed Magic Card Utils is too old to keep theme presets. Says a file with a single theme still opens.",
+    "max": 130
+  },
+  "theme-editor.preset-dialog.you-can-keep-100-presets-delete-one": {
+    "text": "You can keep 100 presets. Delete one first.",
+    "note": "Error in the preset dialog when the limit of 100 saved presets is reached. Tells you to delete one before saving another.",
+    "max": 70
+  },
+  "theme-editor.preview-cards.button": {
+    "text": "Button",
+    "note": "Name of the sample button card in the preview. Noun, not an action.",
+    "max": 10
+  },
+  "theme-editor.preview-cards.could-not-load-label-reason": {
+    "text": "Could not load {label}. {reason}",
+    "note": "Error under a sample card. {label} is the card's display name, such as a custom card type; {reason} is a finished sentence saying why.",
+    "max": 55,
+    "vars": {
+      "label": "The value that replaces label in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.preview-cards.entities": {
+    "text": "Entities",
+    "note": "Name of the sample Entities card in the preview. Entities are Home Assistant devices and sensors.",
+    "max": 15
+  },
+  "theme-editor.preview-cards.home-assistant-card-helpers-are-not": {
+    "text": "Home Assistant card helpers are not available",
+    "note": "Heading of the placeholder in the preview when Home Assistant card helpers cannot be reached, so the real card cannot be drawn.",
+    "max": 75
+  },
+  "theme-editor.preview-cards.home-assistant-is-not-connected": {
+    "text": "Home Assistant is not connected.",
+    "note": "Placeholder in the preview cards when there is no live connection to Home Assistant, so no card can be drawn yet.",
+    "max": 55
+  },
+  "theme-editor.preview-cards.label-could-not-be-loaded": {
+    "text": "{label} could not be loaded.",
+    "note": "Error under a sample card, without a reason. {label} is the card's display name.",
+    "max": 45,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-did-not-start-in-time": {
+    "text": "{label} did not start in time.",
+    "note": "Error under a sample card when it times out while loading. {label} is the card's display name.",
+    "max": 50,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-has-a-resource-address-the-editor": {
+    "text": "{label} has a resource address the editor will not load.",
+    "note": "Security notice under a sample card. {label} is the card's display name; 'resource address' is the URL of its script file.",
+    "max": 90,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-is-loaded-for-the-preview": {
+    "text": "{label} is loaded for the preview.",
+    "note": "Status under a sample card. {label} is the card's display name.",
+    "max": 55,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-is-not-in-the-dashboard-resources": {
+    "text": "{label} is not in the dashboard resources.",
+    "note": "Status under a sample card. {label} is the card's display name; 'dashboard resources' is the Home Assistant list of loaded JavaScript files.",
+    "max": 70,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.label-is-not-loaded-in-this-editor-so": {
+    "text": "{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.",
+    "note": "Status under a sample card. {label} is the card's display name.",
+    "max": 195,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.load-label-for-preview": {
+    "text": "Load {label} for preview",
+    "note": "Button under a sample card. {label} is the card's display name.",
+    "max": 40,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.loading": {
+    "text": "Loading...",
+    "note": "Placeholder inside a sample card while it is being prepared. Keep the three dots.",
+    "max": 20
+  },
+  "theme-editor.preview-cards.loading-label": {
+    "text": "Loading {label}...",
+    "note": "Progress text under a sample card. {label} is the card's display name.",
+    "max": 30,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.preview-cards.preview-not-available": {
+    "text": "Preview not available",
+    "note": "Heading of the placeholder in the preview when a sample card cannot be displayed.",
+    "max": 35
+  },
+  "theme-editor.preview-cards.the-card-is-loaded-for-the-preview": {
+    "text": "The card is loaded for the preview.",
+    "note": "Status line in the preview cards saying the card type has loaded and is used to draw the preview.",
+    "max": 60
+  },
+  "theme-editor.preview-cards.this-card-cannot-be-loaded-for-the": {
+    "text": "This card cannot be loaded for the preview.",
+    "note": "Status line in the preview cards saying the card type is not installed or failed to load, so no preview is drawn for it.",
+    "max": 70
+  },
+  "theme-editor.preview.a-link": {
+    "text": "a link",
+    "note": "Sample link text inside a preview sentence, shown in the link colour. Lower case on purpose.",
+    "max": 10
+  },
+  "theme-editor.preview.accent": {
+    "text": "Accent",
+    "note": "Label of a sample colour swatch in the preview that shows the accent colour.",
+    "max": 10
+  },
+  "theme-editor.preview.add-a-light-or-a-switch-to-home": {
+    "text": "Add a light or a switch to Home Assistant to see the {name} sample.",
+    "note": "Empty state in the preview. {name} is the name of the sample card, such as 'Light' or 'Switch'.",
+    "max": 110,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preview.body-text-in-the-primary-text-colour": {
+    "text": "Body text in the primary text colour.",
+    "note": "Sample paragraph in the preview drawn in the primary text colour, so you can judge that variable.",
+    "max": 60
+  },
+  "theme-editor.preview.controls": {
+    "text": "Controls",
+    "note": "Heading of the preview group with sample switches, sliders and buttons.",
+    "max": 15
+  },
+  "theme-editor.preview.entities-card": {
+    "text": "entities card",
+    "note": "Lower-case name of the Home Assistant Entities card, used inside a sentence in the preview.",
+    "max": 25
+  },
+  "theme-editor.preview.error-message": {
+    "text": "Error message",
+    "note": "Sample alert in the preview that uses the error colour.",
+    "max": 25
+  },
+  "theme-editor.preview.heading": {
+    "text": "Heading",
+    "note": "Sample heading text in the preview, showing the heading font. Noun.",
+    "max": 15
+  },
+  "theme-editor.preview.info-message": {
+    "text": "Info message",
+    "note": "Sample alert in the preview that uses the info colour.",
+    "max": 20
+  },
+  "theme-editor.preview.map": {
+    "text": "Map",
+    "note": "Name of a sample sidebar entry in the preview. Noun; the Home Assistant Map page.",
+    "max": 5
+  },
+  "theme-editor.preview.nothing-set-yet-the-preview-shows-home": {
+    "text": "Nothing set yet. The preview shows Home Assistant's default look.",
+    "note": "Empty-state message in the preview when the theme has no variables yet. Tells you the default look is shown until you add some.",
+    "max": 105
+  },
+  "theme-editor.preview.overview": {
+    "text": "Overview",
+    "note": "Name of a sample sidebar entry in the preview; the Home Assistant Overview dashboard.",
+    "max": 15
+  },
+  "theme-editor.preview.preview-mode": {
+    "text": "Preview mode",
+    "note": "Accessible name of the Light/Dark switch for the preview. Mode means light or dark appearance.",
+    "max": 20
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-dark": {
+    "text": "{count, plural, one {Preview of # sample card using the dark variables. The sample is not interactive.} other {Preview of # sample cards using the dark variables. The samples are not interactive.}}",
+    "note": "Screen reader line above the preview stage in dark mode: how many sample cards it shows.",
+    "max": 150,
+    "vars": {
+      "count": "The number of sample cards."
+    }
+  },
+  "theme-editor.preview.preview-of-count-sample-cards-light": {
+    "text": "{count, plural, one {Preview of # sample card using the light variables. The sample is not interactive.} other {Preview of # sample cards using the light variables. The samples are not interactive.}}",
+    "note": "Screen reader line above the preview stage in light mode: how many sample cards it shows.",
+    "max": 150,
+    "vars": {
+      "count": "The number of sample cards."
+    }
+  },
+  "theme-editor.preview.preview-of-name-could-not-load": {
+    "text": "Preview of {name} could not load.",
+    "note": "Error in the preview area. {name} is the name of the sample card that failed.",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.preview.previewing-mode": {
+    "text": "Previewing {mode, select, dark {dark} other {light}}",
+    "note": "Short label above the preview. {mode} is 'dark' or 'light', the mode being previewed.",
+    "max": 30,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.preview.primary": {
+    "text": "Primary",
+    "note": "Label of a sample colour swatch in the preview that shows the primary colour.",
+    "max": 15
+  },
+  "theme-editor.preview.secondary": {
+    "text": "Secondary",
+    "note": "Label of a sample colour swatch in the preview that shows the secondary colour.",
+    "max": 15
+  },
+  "theme-editor.preview.secondary-text-and-link": {
+    "text": "Secondary text and {link}.",
+    "note": "Sample text in the preview. {link} is a styled link whose words come from another string, so it shows the link colour.",
+    "max": 45,
+    "vars": {
+      "link": "The value that replaces link in the text."
+    }
+  },
+  "theme-editor.preview.settings": {
+    "text": "Settings",
+    "note": "Name of a sample sidebar entry in the preview; the Home Assistant Settings page.",
+    "max": 15
+  },
+  "theme-editor.preview.showing-the-last-valid-value-for-c": {
+    "text": "Showing the last valid value for {c, plural, one {# variable} other {# variables}}.",
+    "note": "Notice in the preview. {c} is the number of variables whose current value is invalid, so the preview keeps their previous value.",
+    "max": 75,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.preview.success-message": {
+    "text": "Success message",
+    "note": "Sample alert in the preview that uses the success colour.",
+    "max": 25
+  },
+  "theme-editor.preview.text": {
+    "text": "Text",
+    "note": "Heading of the preview group with sample paragraphs and links. Noun.",
+    "max": 10
+  },
+  "theme-editor.preview.text-field": {
+    "text": "Text field",
+    "note": "Label of a sample input box in the preview where text can be typed.",
+    "max": 20
+  },
+  "theme-editor.preview.the-preview-is-drawn-with-real-home": {
+    "text": "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.",
+    "note": "Note under the preview. Says it uses real Home Assistant elements and your variables, and that custom card CSS, the sidebar and the header can look different on the dashboard.",
+    "max": 295
+  },
+  "theme-editor.preview.theme-preview-mode": {
+    "text": "Theme preview, {mode, select, dark {dark} other {light}}",
+    "note": "Accessible name of the preview region. {mode} is 'dark' or 'light'.",
+    "max": 35,
+    "vars": {
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "theme-editor.preview.this-theme-has-no-light-or-dark-modes": {
+    "text": "This theme has no light or dark modes.",
+    "note": "Message in the preview when the theme has a single look, so the light and dark switch has nothing to toggle.",
+    "max": 65
+  },
+  "theme-editor.preview.tile-card": {
+    "text": "tile card",
+    "note": "Lower-case name of the Home Assistant Tile card, used inside a sentence in the preview.",
+    "max": 15
+  },
+  "theme-editor.preview.warning-message": {
+    "text": "Warning message",
+    "note": "Sample alert in the preview that uses the warning colour.",
+    "max": 25
+  },
+  "theme-editor.raw-rows.add": {
+    "text": "Add",
+    "note": "Button that adds a new name and value row to the raw variables list. Verb.",
+    "max": 10
+  },
+  "theme-editor.raw-rows.add-any-variable": {
+    "text": "Add any variable",
+    "note": "Heading of the section where you add a variable that has no dedicated field, by typing its name and value.",
+    "max": 35
+  },
+  "theme-editor.raw-rows.added-c-to-scope": {
+    "text": "Added {c, plural, one {# variable} other {# variables}} to {scope}",
+    "note": "Toast after pasting several variables in the raw editor. {c} is the number added; {scope} is 'Shared', 'Light' or 'Dark'.",
+    "max": 45,
+    "vars": {
+      "c": "The count the text is about.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.raw-rows.added-name-to-scope": {
+    "text": "Added {name} to {scope}",
+    "note": "Toast after adding one variable in the raw editor. {name} is the CSS variable name (do not translate); {scope} is 'Shared', 'Light' or 'Dark'.",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.raw-rows.could-not-read-lines": {
+    "text": "Could not read: {lines}",
+    "note": "Error after pasting text. {lines} is the pasted lines that were not valid 'name: value' pairs; do not translate them.",
+    "max": 40,
+    "vars": {
+      "lines": "The value that replaces lines in the text."
+    }
+  },
+  "theme-editor.raw-rows.enter-a-name": {
+    "text": "Enter a name.",
+    "note": "Error under the name field of a raw variable row when it is left empty. The util key with the same English is the shared check.",
+    "max": 25
+  },
+  "theme-editor.raw-rows.enter-a-value": {
+    "text": "Enter a value.",
+    "note": "Error under the value field of a raw variable row when it is left empty. The model key with the same English is the validation result.",
+    "max": 25
+  },
+  "theme-editor.raw-rows.name": {
+    "text": "Name",
+    "note": "Column heading for the name of a raw variable, such as primary-color. Same English as the preset field.",
+    "max": 10
+  },
+  "theme-editor.raw-rows.nothing-was-added": {
+    "text": "Nothing was added",
+    "note": "Heading of the message after you submit the add-variable field and no line could be used; the reason follows.",
+    "max": 30
+  },
+  "theme-editor.raw-rows.remove-chars-from-the-value": {
+    "text": "Remove {chars} from the value.",
+    "note": "Validation error in the raw editor. {chars} is a list of forbidden characters shown as symbols; do not translate. Compare the model key that also mentions brackets.",
+    "max": 50,
+    "vars": {
+      "chars": "The value that replaces chars in the text."
+    }
+  },
+  "theme-editor.raw-rows.this-variable-already-exists-in-scope": {
+    "text": "This variable already exists in {scope}. Add will replace its value.",
+    "note": "Warning in the raw editor's add row. {scope} is 'Shared', 'Light' or 'Dark'. Add is the button label.",
+    "max": 110,
+    "vars": {
+      "scope": "The value that replaces scope in the text."
+    }
+  },
+  "theme-editor.raw-rows.update": {
+    "text": "Update",
+    "note": "Button that applies changes made to an existing raw variable row. Verb.",
+    "max": 10
+  },
+  "theme-editor.raw-rows.use-a-single-line": {
+    "text": "Use a single line.",
+    "note": "Validation error under the add-variable value field when the value spans several lines. Asks for a single line.",
+    "max": 30
+  },
+  "theme-editor.raw-rows.use-letters-numbers-hyphens-and": {
+    "text": "Use letters, numbers, hyphens and underscores. This name is not allowed.",
+    "note": "Validation error under the add-variable name field when the name has characters that are not allowed or is not permitted.",
+    "max": 120
+  },
+  "theme-editor.raw-rows.use-the-name-as-it-appears-in-the-theme": {
+    "text": "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.",
+    "note": "Helper text under the add-variable name field. Says to type the name as in the theme file, without leading dashes, and that you can paste several name: value lines.",
+    "max": 200
+  },
+  "theme-editor.raw-rows.value": {
+    "text": "Value",
+    "note": "Column heading for the value of a raw variable, such as a colour or a length.",
+    "max": 10
+  },
+  "theme-editor.save-bar.save": {
+    "text": "Save",
+    "note": "Button in the bottom save bar that writes the theme to its file. Verb. Same English as the editor button.",
+    "max": 10
+  },
+  "theme-editor.save-bar.save-ctrl-s": {
+    "text": "Save (Ctrl+S)",
+    "note": "Tooltip of the save bar button, naming its keyboard shortcut. Keep Ctrl+S unchanged.",
+    "max": 25
+  },
+  "theme-editor.save-bar.saving": {
+    "text": "Saving...",
+    "note": "Busy label on the save bar button while the file is written. Keep the three dots.",
+    "max": 15
+  },
+  "theme-editor.start-view.a-blank-theme": {
+    "text": "a blank theme",
+    "note": "Fragment on the start screen naming the option to begin with an empty theme instead of a preset or copy.",
+    "max": 25
+  },
+  "theme-editor.start-view.a-preset": {
+    "text": "A preset",
+    "note": "Choice in the new theme dialog to begin from a ready-made preset.",
+    "max": 20
+  },
+  "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
+    "text": "An empty theme. Add only the variables you want to change.",
+    "note": "Description of the blank theme option on the start screen. Says you add only the variables you want to change.",
+    "max": 95
+  },
+  "theme-editor.start-view.an-installed-theme": {
+    "text": "An installed theme",
+    "note": "Option label on the start screen for copying a theme that is already installed in Home Assistant.",
+    "max": 30
+  },
+  "theme-editor.start-view.blank": {
+    "text": "Blank",
+    "note": "Choice in the new theme dialog to begin with an empty theme. Adjective.",
+    "max": 10
+  },
+  "theme-editor.start-view.c": {
+    "text": "{c, plural, one {# variable} other {# variables}}",
+    "note": "Count on a theme card in the start view. {c} is the number of variables the theme defines.",
+    "max": 20,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "theme-editor.start-view.cancel": {
+    "text": "Cancel",
+    "note": "Button that closes a start view dialog without creating or deleting anything. Same English as the editor.",
+    "max": 10
+  },
+  "theme-editor.start-view.cannot-be-removed-later": {
+    "text": "Cannot be removed later.",
+    "note": "Warning on the start screen that the chosen result cannot be removed afterwards.",
+    "max": 40
+  },
+  "theme-editor.start-view.copies-the-variables-from-the-installed": {
+    "text": "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.",
+    "note": "Description of the copy option on the start screen. Says the original theme is unchanged and built-in themes only expose part of their variables.",
+    "max": 205
+  },
+  "theme-editor.start-view.copy-to-edit": {
+    "text": "Copy to edit",
+    "note": "Button on the start screen that copies the picked installed theme into a new theme you can edit.",
+    "max": 25
+  },
+  "theme-editor.start-view.could-not-delete-name-reason": {
+    "text": "Could not delete {name}. {reason}",
+    "note": "Error toast in the start view after a failed delete. {name} is the theme name; {reason} is a finished sentence saying why.",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.start-view.could-not-read-name-neither-its-file-nor": {
+    "text": "Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.",
+    "note": "Error toast when opening a theme from the start view. {name} is the theme name.",
+    "max": 175,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.could-not-read-name-reason": {
+    "text": "Could not read {name}. {reason}",
+    "note": "Error toast when opening a theme from the start view. {name} is the theme name; {reason} is a finished sentence saying why.",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
+    "text": "Create a theme from a preset or copy one you have installed.",
+    "note": "Intro text at the top of the start screen. Says you can create a theme from a preset or copy an installed one.",
+    "max": 100
+  },
+  "theme-editor.start-view.create-from-name": {
+    "text": "Create from {name}",
+    "note": "Button on a preset card that makes a new theme from it. {name} is the preset name, such as Amber Console.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.create-theme": {
+    "text": "Create theme",
+    "note": "Confirm button of the new theme dialog that makes the theme file.",
+    "max": 20
+  },
+  "theme-editor.start-view.delete": {
+    "text": "Delete",
+    "note": "Button on a theme card that starts deleting that theme. Same English as the editor and preset dialog.",
+    "max": 15
+  },
+  "theme-editor.start-view.delete-name": {
+    "text": "Delete {name}?",
+    "note": "Confirmation title in the start view for deleting a theme. {name} is the theme name. Same English as in the editor view and preset dialog.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.duplicate": {
+    "text": "Duplicate",
+    "note": "Button on a theme card that makes a copy of that theme. Verb.",
+    "max": 15
+  },
+  "theme-editor.start-view.file-file": {
+    "text": "File {file}.",
+    "note": "Caption on a theme card. {file} is the YAML file name, such as my_theme.yaml; do not translate it. 'File' is the noun.",
+    "max": 20,
+    "vars": {
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.start-view.import": {
+    "text": "Import",
+    "note": "Button on the start view that opens the import dialog for preset files. Verb.",
+    "max": 10
+  },
+  "theme-editor.start-view.installed-theme": {
+    "text": "Installed theme",
+    "note": "Singular option for beginning a new theme from a theme already installed in Home Assistant.",
+    "max": 25
+  },
+  "theme-editor.start-view.installed-themes": {
+    "text": "Installed themes",
+    "note": "Heading of the list of themes already installed in Home Assistant.",
+    "max": 30
+  },
+  "theme-editor.start-view.it-is-in-a-subfolder-of-config-themes": {
+    "text": "It is in a subfolder of /config/themes.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is in a subfolder of /config/themes.",
+    "max": 65
+  },
+  "theme-editor.start-view.it-uses-home-assistant-tags-such-as": {
+    "text": "It uses Home Assistant tags such as !secret.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file uses Home Assistant tags such as !secret.",
+    "max": 75
+  },
+  "theme-editor.start-view.its-file-holds-several-themes-and-saving": {
+    "text": "Its file holds several themes, and saving would rewrite all of them.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file holds several themes and saving would rewrite them all.",
+    "max": 110
+  },
+  "theme-editor.start-view.light-and-dark-modes": {
+    "text": "Light and dark modes",
+    "note": "Label on the start screen for a theme that has separate light and dark variable sets.",
+    "max": 35
+  },
+  "theme-editor.start-view.light-dark": {
+    "text": "Light + dark",
+    "note": "Short badge on the start screen showing that a theme has both light and dark modes.",
+    "max": 20
+  },
+  "theme-editor.start-view.loading-presets": {
+    "text": "Loading presets",
+    "note": "Screen-reader label of the spinner while the preset list loads. No dots.",
+    "max": 25
+  },
+  "theme-editor.start-view.loading-themes": {
+    "text": "Loading themes",
+    "note": "Screen-reader label of the spinner while the theme list loads. No dots.",
+    "max": 25
+  },
+  "theme-editor.start-view.lowercase-letters-numbers-hyphens-and": {
+    "text": "Lowercase letters, numbers, hyphens and underscores. Used as the file name.",
+    "note": "Helper text under the name field of the new-theme form on the start view. The editor view has a key with the same English.",
+    "max": 120
+  },
+  "theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is": {
+    "text": "{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.",
+    "note": "Empty-state help. {n} is the number of saved presets. My presets and New theme are a section name and a button label; match them.",
+    "max": 180,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "theme-editor.start-view.name-your-theme": {
+    "text": "Name your theme",
+    "note": "Prompt label for the theme name field on the start view when creating a theme. The editor view has a key with the same English.",
+    "max": 25
+  },
+  "theme-editor.start-view.new-theme": {
+    "text": "New theme",
+    "note": "Button and dialog title for making a new theme from the start view.",
+    "max": 15
+  },
+  "theme-editor.start-view.no-installed-theme-matches": {
+    "text": "No installed theme matches.",
+    "note": "Empty-state message on the start screen when the search finds no installed theme.",
+    "max": 45
+  },
+  "theme-editor.start-view.no-theme-called-query": {
+    "text": "No theme called {query}.",
+    "note": "Empty search result. {query} is the text typed in the theme search box; do not translate it.",
+    "max": 40,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "theme-editor.start-view.no-themes-yet": {
+    "text": "No themes yet",
+    "note": "Heading of the empty state on the start screen when no themes are installed.",
+    "max": 25
+  },
+  "theme-editor.start-view.pick-a-preset-to-start-from": {
+    "text": "Pick a preset to start from",
+    "note": "Section heading on the start screen above the list of bundled presets.",
+    "max": 45
+  },
+  "theme-editor.start-view.pick-a-theme-to-copy": {
+    "text": "Pick a theme to copy",
+    "note": "Section heading on the start screen above the list of installed themes you can copy.",
+    "max": 35
+  },
+  "theme-editor.start-view.presets-are-still-loading": {
+    "text": "Presets are still loading",
+    "note": "Status heading on the start screen while the preset list is being fetched.",
+    "max": 40
+  },
+  "theme-editor.start-view.presets-could-not-load-check-your": {
+    "text": "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.",
+    "note": "Error on the start screen when the preset list fails to load. Tells you to check your connection, retry, and reload the page if it keeps failing.",
+    "max": 160
+  },
+  "theme-editor.start-view.read-only": {
+    "text": "Read only",
+    "note": "Badge on a theme card for a file that cannot be changed from here. Same English as the editor badge.",
+    "max": 15
+  },
+  "theme-editor.start-view.reading": {
+    "text": "Reading...",
+    "note": "Busy text while a chosen preset file is being read. Keep the three dots.",
+    "max": 20
+  },
+  "theme-editor.start-view.same-in-light-and-dark": {
+    "text": "Same in light and dark",
+    "note": "Label on the start screen for a theme that uses one set of variables in both light and dark.",
+    "max": 40
+  },
+  "theme-editor.start-view.search-installed-themes": {
+    "text": "Search installed themes",
+    "note": "Label and placeholder of the search box above the installed themes on the start screen.",
+    "max": 40
+  },
+  "theme-editor.start-view.search-themes": {
+    "text": "Search themes",
+    "note": "Placeholder of the search box that filters the list of themes.",
+    "max": 25
+  },
+  "theme-editor.start-view.start-from": {
+    "text": "Start from",
+    "note": "Label above the choices Blank, A preset and Installed theme in the new theme dialog.",
+    "max": 20
+  },
+  "theme-editor.start-view.the-file-could-not-be-read-as-yaml": {
+    "text": "The file could not be read as YAML.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is not valid YAML.",
+    "max": 60
+  },
+  "theme-editor.start-view.the-file-is-a-link-to-somewhere-else": {
+    "text": "The file is a link to somewhere else.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is a link to another location.",
+    "max": 60
+  },
+  "theme-editor.start-view.the-file-is-too-large-to-edit-here": {
+    "text": "The file is too large to edit here.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is too large for this editor.",
+    "max": 60
+  },
+  "theme-editor.start-view.the-file-name-is-not-a-name-this-editor": {
+    "text": "The file name is not a name this editor can write.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file name has characters the editor cannot write.",
+    "max": 80
+  },
+  "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
+    "text": "The theme name does not match the file name.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: the theme name inside the file differs from the file name.",
+    "max": 75
+  },
+  "theme-editor.start-view.themes": {
+    "text": "Themes",
+    "note": "Main heading of the start view above the list of themes. Same English as the editor breadcrumb.",
+    "max": 10
+  },
+  "theme-editor.start-view.themes-could-not-be-read": {
+    "text": "Themes could not be read",
+    "note": "Heading of the error on the start screen when reading the installed themes fails.",
+    "max": 40
+  },
+  "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
+    "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",
+    "note": "Delete confirmation body when the file holds several themes. {file} is the file name, such as themes.yaml (path stays untranslated); {c} is the number of other themes in it.",
+    "max": 220,
+    "vars": {
+      "c": "The count the text is about.",
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.start-view.this-removes-config-file-screens-that": {
+    "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
+    "note": "Delete confirmation body in the start view when the file holds one theme. {file} is the file name; the path stays untranslated.",
+    "max": 160,
+    "vars": {
+      "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.start-view.try-again": {
+    "text": "Try again",
+    "note": "Button that repeats a failed theme list load. Same English as the editor and preset dialog.",
+    "max": 20
+  },
+  "theme-editor.start-view.your-themes-live-in-config-themes": {
+    "text": "Your themes live in /config/themes.",
+    "note": "Hint on the start screen telling you your themes are stored in the /config/themes folder of Home Assistant.",
+    "max": 60
+  },
+  "theme-editor.theme-editor.could-not-open-name-reason": {
+    "text": "Could not open {name}. {reason}",
+    "note": "Error toast when opening a theme. {name} is the theme name; {reason} is a finished sentence saying why.",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.theme-editor.deleted-name": {
+    "text": "Deleted {name}.",
+    "note": "Toast after a theme is deleted. {name} is the theme name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.theme-editor.details": {
+    "text": "Details",
+    "note": "Heading of the section with the theme's name, file and other facts. Noun.",
+    "max": 15
+  },
+  "theme-editor.theme-editor.found-it-you-can-save-themes-now": {
+    "text": "Found it. You can save themes now.",
+    "note": "Success message in the theme editor after a re-check finds the setup lines, so saving themes now works.",
+    "max": 55
+  },
+  "theme-editor.theme-editor.loading-the-theme-editor": {
+    "text": "Loading the theme editor...",
+    "note": "Loading text in the theme editor while its parts are being fetched.",
+    "max": 45
+  },
+  "theme-editor.theme-editor.only-administrators-can-edit-themes": {
+    "text": "Only administrators can edit themes.",
+    "note": "Notice on the main theme editor screen for users who are not Home Assistant administrators. The editor view shows the same English inside an open theme.",
+    "max": 60
+  },
+  "theme-editor.theme-editor.still-not-found-restart-home-assistant": {
+    "text": "Still not found. Restart Home Assistant if you have just added the lines.",
+    "note": "Message in the theme editor when a re-check still cannot find the setup lines. Tells you to restart Home Assistant if you just added them.",
+    "max": 120
+  },
+  "theme-editor.theme-editor.the-check-failed-reason": {
+    "text": "The check failed. {reason}",
+    "note": "Error after the pre-save check. {reason} is a finished sentence saying why.",
+    "max": 45,
+    "vars": {
+      "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
+    "text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
+    "note": "Error in the theme editor when its script cannot be loaded. Names the file and says to update Magic Card to 2026.10.06 or newer if it persists.",
+    "max": 290
+  },
+  "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
+    "text": "The theme editor could not load. Reload the page.",
+    "note": "Error in the theme editor when loading fails. Tells you to reload the page.",
+    "max": 80
+  },
+  "theme-editor.theme-editor.waiting-for-home-assistant-to-connect": {
+    "text": "Waiting for Home Assistant to connect...",
+    "note": "Loading text in the theme editor while Home Assistant has not connected yet.",
+    "max": 65
+  },
+  "theme-editor.tile.colour-of-the-primary-text": {
+    "text": "Colour of the primary text.",
+    "note": "Helper text for the tile primary text colour field in the variables panel. Says it sets the colour of the main line of a tile.",
+    "max": 45
+  },
+  "theme-editor.tile.colour-of-the-secondary-text": {
+    "text": "Colour of the secondary text.",
+    "note": "Helper text for the tile secondary text colour field in the variables panel. Says it sets the colour of the second line of a tile, such as the state.",
+    "max": 50
+  },
+  "theme-editor.tile.corner-radius-of-the-tile-icon": {
+    "text": "Corner radius of the tile icon.",
+    "note": "Helper text for the tile icon radius field in the variables panel. Says it sets how round the corners of the tile icon are.",
+    "max": 50
+  },
+  "theme-editor.tile.font-size-of-the-primary-text": {
+    "text": "Font size of the primary text.",
+    "note": "Helper text for the tile primary font size field in the variables panel. Sets the size of the main line.",
+    "max": 50
+  },
+  "theme-editor.tile.font-size-of-the-secondary-text": {
+    "text": "Font size of the secondary text.",
+    "note": "Helper text for the tile secondary font size field in the variables panel. Sets the size of the second line.",
+    "max": 55
+  },
+  "theme-editor.tile.font-weight-of-the-primary-text": {
+    "text": "Font weight of the primary text.",
+    "note": "Helper text for the tile primary font weight field in the variables panel. Sets how bold the main line is.",
+    "max": 55
+  },
+  "theme-editor.tile.font-weight-of-the-secondary-text": {
+    "text": "Font weight of the secondary text.",
+    "note": "Helper text for the tile secondary font weight field in the variables panel. Sets how bold the second line is.",
+    "max": 55
+  },
+  "theme-editor.tile.icon-radius": {
+    "text": "Icon radius",
+    "note": "Label of the Tile card theme variable for icon corner rounding. Radius means corner size.",
+    "max": 25
+  },
+  "theme-editor.tile.keeps-tiles-that-never-wrap-level-with": {
+    "text": "Keeps tiles that never wrap level with ones that do.",
+    "note": "Helper text for a tile minimum height field in the variables panel. Says it keeps tiles whose text never wraps level with tiles whose text does.",
+    "max": 85
+  },
+  "theme-editor.tile.letter-spacing-of-the-primary-text": {
+    "text": "Letter spacing of the primary text.",
+    "note": "Helper text for the tile primary letter spacing field in the variables panel. Sets the space between letters of the main line.",
+    "max": 60
+  },
+  "theme-editor.tile.letter-spacing-of-the-secondary-text": {
+    "text": "Letter spacing of the secondary text.",
+    "note": "Helper text for the tile secondary letter spacing field in the variables panel. Sets the space between letters of the second line.",
+    "max": 60
+  },
+  "theme-editor.tile.line-height-of-the-primary-text": {
+    "text": "Line height of the primary text.",
+    "note": "Helper text for the tile primary line height field in the variables panel. Sets the line spacing of the main line.",
+    "max": 55
+  },
+  "theme-editor.tile.line-height-of-the-secondary-text": {
+    "text": "Line height of the secondary text.",
+    "note": "Helper text for the tile secondary line height field in the variables panel. Sets the line spacing of the second line.",
+    "max": 55
+  },
+  "theme-editor.tile.primary-letter-spacing": {
+    "text": "Primary letter spacing",
+    "note": "Label of the Tile variable for the spacing between letters of the main text. The Mushroom group has the same English.",
+    "max": 40
+  },
+  "theme-editor.tile.primary-line-height": {
+    "text": "Primary line height",
+    "note": "Label of the Tile variable for the line height of the main text. The Mushroom group has the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Label of the Tile variable for the colour of the main text. The Mushroom, Button Card and Ultra Card groups have the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.primary-text-minimum-height": {
+    "text": "Primary text minimum height",
+    "note": "Label of the tile variable in the variables panel that sets the minimum height of the main text line.",
+    "max": 45
+  },
+  "theme-editor.tile.primary-text-size": {
+    "text": "Primary text size",
+    "note": "Label of the Tile variable for the font size of the main text. The Mushroom group has the same English.",
+    "max": 30
+  },
+  "theme-editor.tile.primary-text-weight": {
+    "text": "Primary text weight",
+    "note": "Label of the Tile variable for how bold the main text is. The Mushroom group has the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.reserves-room-for-a-missing-secondary": {
+    "text": "Reserves room for a missing secondary line.",
+    "note": "Helper text for the tile secondary line reserve field in the variables panel. Says it keeps room for a second line that is missing.",
+    "max": 70
+  },
+  "theme-editor.tile.secondary-letter-spacing": {
+    "text": "Secondary letter spacing",
+    "note": "Label of the Tile variable for the spacing between letters of the secondary text. The Mushroom group has the same English.",
+    "max": 40
+  },
+  "theme-editor.tile.secondary-line-height": {
+    "text": "Secondary line height",
+    "note": "Label of the Tile variable for the line height of the secondary text. The Mushroom group has the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.secondary-text-colour": {
+    "text": "Secondary text colour",
+    "note": "Label of the Tile variable for the colour of the secondary text. The Mushroom and Ultra Card groups have the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.secondary-text-size": {
+    "text": "Secondary text size",
+    "note": "Label of the Tile variable for the font size of the secondary text. The Mushroom group has the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.secondary-text-weight": {
+    "text": "Secondary text weight",
+    "note": "Label of the Tile variable for how bold the secondary text is. The Mushroom group has the same English.",
+    "max": 35
+  },
+  "theme-editor.tile.text-block-minimum-height": {
+    "text": "Text block minimum height",
+    "note": "Label of the tile variable in the variables panel that sets the minimum height of the whole text block.",
+    "max": 40
+  },
+  "theme-editor.tile.text-gap": {
+    "text": "Text gap",
+    "note": "Label of the Tile card theme variable for the space between the lines of text.",
+    "max": 15
+  },
+  "theme-editor.tile.vertical-gap-between-primary-and": {
+    "text": "Vertical gap between primary and secondary text.",
+    "note": "Helper text for the tile text gap field in the variables panel. Sets the vertical space between the main and the second line.",
+    "max": 80
+  },
+  "theme-editor.trial-bar.editor": {
+    "text": "Editor",
+    "note": "Link in the trial bar that goes back to the theme editor. Noun.",
+    "max": 10
+  },
+  "theme-editor.trial-bar.move-to-bottom": {
+    "text": "Move to bottom",
+    "note": "Tooltip and label of the trial bar button that moves the bar to the bottom of the screen.",
+    "max": 25
+  },
+  "theme-editor.trial-bar.move-to-top": {
+    "text": "Move to top",
+    "note": "Tooltip and label of the trial bar button that moves the bar to the top of the screen.",
+    "max": 25
+  },
+  "theme-editor.trial-bar.n-not-valid-left-out": {
+    "text": "{n} not valid, left out",
+    "note": "Note in the trial bar while trying a theme. {n} is the number of variables skipped because their values are invalid.",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "theme-editor.trial-bar.open-editor": {
+    "text": "Open editor",
+    "note": "Button in the trial bar that opens the theme being tried in the editor. Verb.",
+    "max": 20
+  },
+  "theme-editor.trial-bar.revert": {
+    "text": "Revert",
+    "note": "Button in the trial bar that puts back the theme that was active before the trial.",
+    "max": 15
+  },
+  "theme-editor.trial-bar.revert-theme-trial": {
+    "text": "Revert theme trial",
+    "note": "Tooltip and label of the trial bar button that ends the Try on dashboard trial and returns this tab to your own theme.",
+    "max": 30
+  },
+  "theme-editor.trial-bar.theme-trial": {
+    "text": "Theme trial",
+    "note": "Accessible name of the bar shown while a theme is applied to this browser tab only. Trial means test.",
+    "max": 20
+  },
+  "theme-editor.trial-bar.trying-name": {
+    "text": "Trying {name}",
+    "note": "Trial bar title while a theme is applied to this tab only. {name} is the theme name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.trial-bar.trying-name-on-this-tab-mode": {
+    "text": "Trying {name} on this tab ({mode, select, dark {dark} other {light}})",
+    "note": "Trial bar title. {name} is the theme name; {mode} is 'dark' or 'light'. 'This tab' means this browser tab.",
+    "max": 55,
+    "vars": {
+      "mode": "The value that replaces mode in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.trial.reverted-this-tab-shows-your-own-theme": {
+    "text": "Reverted. This tab shows your own theme again.",
+    "note": "Toast after you end a theme trial. Says this tab shows your own theme again.",
+    "max": 75
+  },
+  "theme-editor.trial.saved-this-tab-now-uses-the-saved-theme": {
+    "text": "Saved. This tab now uses the saved theme file.",
+    "note": "Toast after you save a theme during a trial. Says this tab now uses the saved theme file.",
+    "max": 75
+  },
+  "theme-editor.trial.trial-ended-after-10-minutes": {
+    "text": "Trial ended after 10 minutes.",
+    "note": "Toast when a theme trial stops by itself after its 10 minute limit.",
+    "max": 50
+  },
+  "theme-editor.trial.trial-ended-because-the-theme-changed": {
+    "text": "Trial ended because the theme changed.",
+    "note": "Toast when a theme trial stops because the theme was changed while it ran.",
+    "max": 65
+  },
+  "theme-editor.ultra-card.accents-and-active-elements": {
+    "text": "Accents and active elements.",
+    "note": "Helper text for an Ultra Card colour field in the variables panel. Says it colours accents and active elements.",
+    "max": 45
+  },
+  "theme-editor.ultra-card.borders-and-separators": {
+    "text": "Borders and separators.",
+    "note": "Helper text for an Ultra Card colour field in the variables panel. Says it colours borders and separators.",
+    "max": 40
+  },
+  "theme-editor.ultra-card.card-background": {
+    "text": "Card background",
+    "note": "Label of the Ultra Card theme variable for the card background.",
+    "max": 25
+  },
+  "theme-editor.ultra-card.card-background-override": {
+    "text": "Card background override",
+    "note": "Label of the Ultra Card variable that overrides the card background. The Home Assistant and Magic Card groups have the same English.",
+    "max": 40
+  },
+  "theme-editor.ultra-card.card-radius": {
+    "text": "Card radius",
+    "note": "Label of the Ultra Card theme variable for card corner rounding. Radius means corner size.",
+    "max": 20
+  },
+  "theme-editor.ultra-card.card-shadow": {
+    "text": "Card shadow",
+    "note": "Label of the Ultra Card theme variable for the drop shadow under a card.",
+    "max": 20
+  },
+  "theme-editor.ultra-card.card-surface": {
+    "text": "Card surface.",
+    "note": "Short description of the group of Ultra Card variables that style the card body.",
+    "max": 25
+  },
+  "theme-editor.ultra-card.corner-radius-of-the-card": {
+    "text": "Corner radius of the card.",
+    "note": "Helper text for the Ultra Card radius field in the variables panel. Sets how round the card corners are.",
+    "max": 45
+  },
+  "theme-editor.ultra-card.divider-colour": {
+    "text": "Divider colour",
+    "note": "Label of the Ultra Card theme variable for thin separator lines.",
+    "max": 25
+  },
+  "theme-editor.ultra-card.error-colour": {
+    "text": "Error colour",
+    "note": "Label of the Ultra Card theme variable for error states.",
+    "max": 20
+  },
+  "theme-editor.ultra-card.error-messages": {
+    "text": "Error messages.",
+    "note": "Short description under an Ultra Card variable that styles error messages.",
+    "max": 25
+  },
+  "theme-editor.ultra-card.main-text": {
+    "text": "Main text.",
+    "note": "Short description under an Ultra Card variable that sets the main text colour.",
+    "max": 20
+  },
+  "theme-editor.ultra-card.muted-text": {
+    "text": "Muted text.",
+    "note": "Short description under an Ultra Card variable that sets the dimmer, less prominent text colour.",
+    "max": 20
+  },
+  "theme-editor.ultra-card.primary-colour": {
+    "text": "Primary colour",
+    "note": "Label of the Ultra Card theme variable for the main brand colour.",
+    "max": 25
+  },
+  "theme-editor.ultra-card.primary-text-colour": {
+    "text": "Primary text colour",
+    "note": "Label of the Ultra Card variable for the colour of the main text. The Mushroom, Tile and Button Card groups have the same English.",
+    "max": 35
+  },
+  "theme-editor.ultra-card.secondary-text-colour": {
+    "text": "Secondary text colour",
+    "note": "Label of the Ultra Card variable for the colour of the secondary text. The Mushroom and Tile groups have the same English.",
+    "max": 35
+  },
+  "theme-editor.ultra-card.shadow-of-the-card": {
+    "text": "Shadow of the card.",
+    "note": "Helper text for the Ultra Card shadow field in the variables panel. Sets the shadow drawn around the card.",
+    "max": 35
+  },
+  "theme-editor.ultra-card.takes-priority-over-the-card-background": {
+    "text": "Takes priority over the card background.",
+    "note": "Helper text for an Ultra Card background field in the variables panel. Says this value wins over the general card background.",
+    "max": 65
+  },
+  "theme-editor.util.a-and-b": {
+    "text": "{a} and {b}",
+    "note": "Joins two items in a list. {a} and {b} are mode or panel names such as 'Light' and 'Dark'; do not add a comma.",
+    "max": 20,
+    "vars": {
+      "a": "The value that replaces a in the text.",
+      "b": "The value that replaces b in the text."
+    }
+  },
+  "theme-editor.util.a-theme-called-name-already-exists": {
+    "text": "A theme called {name} already exists.",
+    "note": "Validation error on the theme name field. {name} is the name the user typed.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.util.dark": {
+    "text": "Dark",
+    "note": "Name of the dark mode tab for theme values. Adjective, not a noun for darkness.",
+    "max": 10
+  },
+  "theme-editor.util.enter-a-name": {
+    "text": "Enter a name.",
+    "note": "Validation error from the shared name check when a theme name is empty. The raw rows key with the same English is for variable names.",
+    "max": 25
+  },
+  "theme-editor.util.light": {
+    "text": "Light",
+    "note": "Name of the light mode tab for theme values. Adjective, not a lamp or a weight.",
+    "max": 10
+  },
+  "theme-editor.util.shared": {
+    "text": "Shared",
+    "note": "Name of the tab for theme values used by both light and dark modes. Adjective.",
+    "max": 10
+  },
+  "theme-editor.util.this-name-is-reserved": {
+    "text": "This name is reserved.",
+    "note": "Validation error under a variable name field when the name is reserved by the editor and cannot be used.",
+    "max": 40
+  },
+  "theme-editor.util.use-lowercase-letters-numbers-hyphens": {
+    "text": "Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).",
+    "note": "Validation error returned by the shared name check for an invalid theme name. The editor view has a key with the same English.",
+    "max": 185
+  }
+}

@@ -227,17 +227,17 @@ const compact = (): boolean => typeof matchMedia === 'function' && matchMedia('(
 export function renderPickerWindow(title: string, onClose: () => void, size: 's' | 'm' | 'l', content: TemplateResult): TemplateResult {
   return html`<mc-ui-window
     heading=${title}
-    closeLabel=${t('Close')}
+    closeLabel=${t('card-editor.picker-parts.close')}
     variant=${compact() ? 'sheet' : 'picker'}
     size=${size}
     initialFocus="mc-picker-search"
     movable
     resizable
     maximizable
-    moveLabel=${t('Move window')}
-    resizeLabel=${t('Resize window')}
-    maximizeLabel=${t('Maximise')}
-    restoreLabel=${t('Restore size')}
+    moveLabel=${t('card-editor.picker-parts.move-window')}
+    resizeLabel=${t('card-editor.picker-parts.resize-window')}
+    maximizeLabel=${t('card-editor.picker-parts.maximise')}
+    restoreLabel=${t('card-editor.picker-parts.restore-size')}
     @mc-window-close=${onClose}
     >${content}</mc-ui-window>`;
 }

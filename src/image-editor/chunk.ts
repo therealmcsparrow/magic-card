@@ -105,7 +105,7 @@ function lookOf(el: Element, s: Shape, xml: Document, f: Flag, texts: Map<string
   const words = texts.get(el.getAttribute('data-mc-text') ?? '');
   if (words) {
     look.text = words;
-    if (!el.hasAttribute('data-name')) s = { ...s, name: nameOf(words.s, t('Text')) };
+    if (!el.hasAttribute('data-name')) s = { ...s, name: nameOf(words.s, t('image-editor.chunk.text')) };
   }
   return Object.keys(look).length ? { ...s, look } : s;
 }
@@ -252,9 +252,9 @@ export class ImageExt implements ImageUi {
 
   /** Why the editor is view-only, in plain words. */
   get readReason(): string {
-    if (this.lossy) return t('This image has parts that this editor cannot change yet, so it opens for viewing only.');
-    if (this.noLibrary) return t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.');
-    return t('You can look at this image but not change it. Ask an administrator.');
+    if (this.lossy) return t('image-editor.chunk.this-image-has-parts-that-this-editor');
+    if (this.noLibrary) return t('image-editor.chunk.images-need-magic-card-utils-it-is');
+    return t('image-editor.chunk.you-can-look-at-this-image-but-not');
   }
 
   private get noLibrary(): boolean {
@@ -262,11 +262,11 @@ export class ImageExt implements ImageUi {
   }
 
   get title(): string {
-    return t('Image editor');
+    return t('image-editor.chunk.image-editor');
   }
 
   get canvasLabel(): string {
-    return t('Image canvas');
+    return t('image-editor.chunk.image-canvas');
   }
 
   get modal(): boolean {
@@ -302,7 +302,7 @@ export class ImageExt implements ImageUi {
     try {
       const item = await fetchImage(this.hass, src.id);
       if (!item) {
-        this.problem = t('This image is no longer in the library.');
+        this.problem = t('image-editor.chunk.this-image-is-no-longer-in-the-library');
         return undefined;
       }
       return this.fromStored(item);
@@ -321,7 +321,7 @@ export class ImageExt implements ImageUi {
 
   /** The 'image-svg' source and the start window: the markup through the sanitiser and the reader; the import summary shows with the drawing (ready()). */
   private openSvg(text: string, name?: string): Doc | string {
-    const r = this.fromFile(text, name?.replace(/\.svg$/i, '') || t('My image'));
+    const r = this.fromFile(text, name?.replace(/\.svg$/i, '') || t('image-editor.chunk.my-image'));
     if (typeof r === 'string') return r;
     this.next = summary(name, r.stripped, r.doc);
     return r.doc;
@@ -365,8 +365,8 @@ export class ImageExt implements ImageUi {
     const s = this.api.sanitizeImage(text, { file: true, css: this.css });
     if (s.error) return this.sanitiseText(s.error);
     const r = readImage(s.markup, s.viewBox, name);
-    if (!r.doc.shapes.length) return t('That file has no shapes an image can use.');
-    if (!r.all) return t('That file cannot be used as an image.');
+    if (!r.doc.shapes.length) return t('image-editor.chunk.that-file-has-no-shapes-an-image-can-use');
+    if (!r.all) return t('image-editor.chunk.that-file-cannot-be-used-as-an-image');
     K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
     return { doc: r.doc, stripped: s.stripped };
   }
@@ -406,7 +406,7 @@ export class ImageExt implements ImageUi {
     sh.apply(r.doc, 'Import SVG file');
     sh.grid = gridFor(r.doc.vb.w, r.doc.vb.h);
     this.imp = summary(name, r.stripped, r.doc);
-    sh.showToast(t("Imported '{name}'.", { name }), { label: t('Undo'), run: () => sh.undo() });
+    sh.showToast(t("image-editor.chunk.imported-name", { name }), { label: t('image-editor.chunk.undo'), run: () => sh.undo() });
     sh.requestUpdate();
     sh.fitView();
   }
@@ -493,7 +493,7 @@ export class ImageExt implements ImageUi {
     if (s.look || s.fill === 'none' || s.stroke !== 'none' || s.type === 'line') return { shape: s };
     const vb = this.shell.doc.vb;
     const out: Shape = { ...s, stroke: 'accent', width: Math.max(2, Math.round(Math.max(vb.w, vb.h) / 500)) };
-    if (this.ref && this.shown) return { shape: withLook(out, { opacity: REF_OPACITY }), note: t('Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.', { pct: REF_OPACITY }) };
+    if (this.ref && this.shown) return { shape: withLook(out, { opacity: REF_OPACITY }), note: t('image-editor.chunk.opacity-set-to-pct-so-the-reference', { pct: REF_OPACITY }) };
     return { shape: out };
   }
 
@@ -504,13 +504,13 @@ export class ImageExt implements ImageUi {
 
   previewButton(): TemplateResult {
     return button({
-      label: t('As on a card'),
+      label: t('image-editor.chunk.as-on-a-card'),
       size: 'sm',
       variant: 'secondary',
       pressed: this.asCard,
       onClick: () => {
         this.asCard = !this.asCard;
-        this.shell.say(this.asCard ? t('Showing the drawing as on a card, with the entity off.') : t('Showing the drawing in the editor colours.'));
+        this.shell.say(this.asCard ? t('image-editor.chunk.showing-the-drawing-as-on-a-card-with') : t('image-editor.chunk.showing-the-drawing-in-the-editor'));
         this.shell.requestUpdate();
       },
     });
@@ -521,7 +521,7 @@ export class ImageExt implements ImageUi {
   }
 
   private sanitiseText(e: string): string {
-    return e === 'too_large' ? t('That drawing is over 256 KiB.') : e === 'not_svg' ? t('This is not valid SVG. Check that it starts with <svg and is closed.') : e === 'empty' ? t('That file has no shapes an image can use.') : t('That file cannot be used as an image.');
+    return e === 'too_large' ? t('image-editor.chunk.that-drawing-is-over-256-kib') : e === 'not_svg' ? t('image-editor.chunk.this-is-not-valid-svg-check-that-it') : e === 'empty' ? t('image-editor.chunk.that-file-has-no-shapes-an-image-can-use') : t('image-editor.chunk.that-file-cannot-be-used-as-an-image');
   }
 
   // ── markup out ──
@@ -611,17 +611,17 @@ export class ImageExt implements ImageUi {
 
   /** Why a layer's lock stays as it is (an imported part cannot be unlocked), else undefined. */
   lockNote(s: Shape): string | undefined {
-    return s.look?.part ? t('{name} stays locked: imported parts cannot be edited.', { name: s.name }) : undefined;
+    return s.look?.part ? t('image-editor.chunk.name-stays-locked-imported-parts-cannot', { name: s.name }) : undefined;
   }
 
   get hint(): string {
-    return t('Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.');
+    return t('image-editor.chunk.text-tool-click-or-tap-where-the-text');
   }
 
   railTool(): KitButtonOptions {
     const sh = this.shell;
     return {
-      label: t('Text'),
+      label: t('image-editor.chunk.text'),
       icon: 'mdi:format-text',
       iconOnly: true,
       keys: 'T',
@@ -671,18 +671,18 @@ export class ImageExt implements ImageUi {
   }
 
   blockReason(out: Out): string | undefined {
-    return out.error === 'empty' ? t('Draw something first') : out.error === 'over' ? t('Too big to save') : out.error === 'invalid' ? t('This drawing cannot be saved as an image.') : undefined;
+    return out.error === 'empty' ? t('image-editor.chunk.draw-something-first') : out.error === 'over' ? t('image-editor.chunk.too-big-to-save') : out.error === 'invalid' ? t('image-editor.chunk.this-drawing-cannot-be-saved-as-an-image') : undefined;
   }
 
   /** The meter's sentence for a size. */
   sentence(bytes: number): string {
     const used = kibShown(bytes);
     const l = meterLevel(bytes);
-    return l === 'small' ? t('Image size: {used} KiB of 256 KiB. Fine.', { used }) : l === 'big' ? t('Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.', { used }) : l === 'full' ? t('Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.', { used }) : t('Image size: {used} KiB of 256 KiB. Too big to save.', { used });
+    return l === 'small' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-fine', { used }) : l === 'big' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-getting', { used }) : l === 'full' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-nearly', { used }) : t('image-editor.chunk.image-size-used-kib-of-256-kib-too-big', { used });
   }
 
   word(l: MeterLevel): string {
-    return l === 'small' ? t('fine') : l === 'big' ? t('getting big') : l === 'full' ? t('nearly full') : t('too big');
+    return l === 'small' ? t('image-editor.chunk.fine') : l === 'big' ? t('image-editor.chunk.getting-big') : l === 'full' ? t('image-editor.chunk.nearly-full') : t('image-editor.chunk.too-big');
   }
 
   /** One polite announcement per crossing into Getting big or Nearly full (Too big is an alert in the meter itself). */
@@ -746,7 +746,7 @@ export class ImageExt implements ImageUi {
     sh.apply({ ...sh.doc, vb: { ...sh.doc.vb, w: r.w, h: r.h } }, 'Canvas size');
     sh.grid = gridFor(r.w, r.h);
     this.size = undefined;
-    sh.say(t('Canvas size set to {w} by {h}.', { w: r.w, h: r.h }));
+    sh.say(t('image-editor.chunk.canvas-size-set-to-w-by-h', { w: r.w, h: r.h }));
     sh.requestUpdate();
     sh.fitView();
     this.restoreFocus();
@@ -785,14 +785,14 @@ export class ImageExt implements ImageUi {
   private refusedText(): { id: string; why: string } | undefined {
     for (const s of this.shell.doc.shapes) {
       const word = refusedWord(s.look?.text?.s ?? '') ?? refusedWord(s.name);
-      if (word) return { id: s.id, why: t('The library does not accept the text "{word}", in the layer "{name}". Change it, then save again.', { word, name: s.name }) };
+      if (word) return { id: s.id, why: t('image-editor.chunk.the-library-does-not-accept-the-text', { word, name: s.name }) };
     }
     return undefined;
   }
 
   openDetails(mode: DetailsDlg['mode'], opener?: HTMLElement): void {
     this.back = opener ?? this.back;
-    const name = mode === 'first' ? this.name : t('{name} copy', { name: this.name || t('My image') });
+    const name = mode === 'first' ? this.name : t('image-editor.chunk.name-copy', { name: this.name || t('image-editor.chunk.my-image') });
     this.details = { mode, name, keywords: (this.meta.keywords ?? []).join(', '), author: this.meta.author ?? '', description: this.meta.description ?? '', more: false };
     this.shell.requestUpdate();
     void this.loadTaken();
@@ -830,8 +830,8 @@ export class ImageExt implements ImageUi {
     const d = this.details;
     if (!d || this.busy) return;
     const name = d.name.trim();
-    if (!name) return this.setDetails({ error: t('Give it a name.') });
-    if (name.length > 80) return this.setDetails({ error: t('Use 80 characters or fewer.') });
+    if (!name) return this.setDetails({ error: t('image-editor.chunk.give-it-a-name') });
+    if (name.length > 80) return this.setDetails({ error: t('image-editor.chunk.use-80-characters-or-fewer') });
     const meta = {
       name,
       keywords: d.keywords.split(',').map((k) => k.trim()).filter(Boolean).slice(0, 12),
@@ -843,7 +843,7 @@ export class ImageExt implements ImageUi {
     try {
       const taken = new Set((await listImages(this.hass)).map((i) => i.id));
       this.taken = taken;
-      if (taken.size >= MAX_IMAGES) return this.setDetails({ error: t('The library is full (200 images). Delete one to add another.') });
+      if (taken.size >= MAX_IMAGES) return this.setDetails({ error: t('image-editor.chunk.the-library-is-full-200-images-delete') });
       const id = freeImageId(name, taken);
       if (d.mode === 'duplicate') await this.duplicate(id, meta);
       else await this.write({ id, ...meta }, d.mode === 'copy');
@@ -891,11 +891,11 @@ export class ImageExt implements ImageUi {
       sh.markSaved();
       sh.fire('mc-svg-save', { target: 'image-library', svg: built.input.svg, saved: built.input } satisfies SvgSaveDetail);
       if (copy && was) {
-        sh.showToast(t("Saved as '{name}'. The original is unchanged.", { name: meta.name }) + this.refNote(), undefined, 8000);
-        sh.say(t("Saved as '{name}'. The original is unchanged.", { name: meta.name }));
+        sh.showToast(t("image-editor.chunk.saved-as-name-the-original-is-unchanged", { name: meta.name }) + this.refNote(), undefined, 8000);
+        sh.say(t("image-editor.chunk.saved-as-name-the-original-is-unchanged", { name: meta.name }));
       } else {
-        sh.showToast(t("Saved '{name}'.", { name: meta.name }) + this.refNote(), undefined, 6000);
-        sh.say(t('Saved'));
+        sh.showToast(t("image-editor.chunk.saved-name", { name: meta.name }) + this.refNote(), undefined, 6000);
+        sh.say(t('image-editor.chunk.saved'));
       }
       this.restoreFocus();
     } catch (e) {
@@ -907,7 +907,7 @@ export class ImageExt implements ImageUi {
   }
 
   private refNote(): string {
-    return this.ref ? ` ${t('The reference picture was not saved.')}` : '';
+    return this.ref ? ` ${t('image-editor.chunk.the-reference-picture-was-not-saved')}` : '';
   }
 
   /** Duplicate: the stored version under a new id, then the editor shows the copy. */
@@ -929,7 +929,7 @@ export class ImageExt implements ImageUi {
     }
     this.api.invalidate([newId]);
     sh.fire('mc-svg-save', { target: 'image-library', svg: input.svg, saved: input } satisfies SvgSaveDetail);
-    sh.showToast(t("Saved as '{name}'. The original is unchanged.", { name: meta.name }), undefined, 8000);
+    sh.showToast(t("image-editor.chunk.saved-as-name-the-original-is-unchanged", { name: meta.name }), undefined, 8000);
     this.restoreFocus();
   }
 
@@ -937,24 +937,24 @@ export class ImageExt implements ImageUi {
     const err = e instanceof ImageError ? e : undefined;
     const p = err?.problem ?? 'unreachable';
     return p === 'readonly'
-      ? t('You can look at this image but not change it. Ask an administrator.')
+      ? t('image-editor.chunk.you-can-look-at-this-image-but-not')
       : p === 'conflict'
-        ? t('This image was changed somewhere else.')
+        ? t('image-editor.chunk.this-image-was-changed-somewhere-else')
         : p === 'full'
-          ? t('The library is full (200 images). Delete one to add another.')
+          ? t('image-editor.chunk.the-library-is-full-200-images-delete')
           : p === 'too_large'
-            ? t('Too big to save: {used} KiB of 256 KiB.', { used: kibShown(err?.bytes ?? this.shell.out.bytes) })
+            ? t('image-editor.chunk.too-big-to-save-used-kib-of-256-kib', { used: kibShown(err?.bytes ?? this.shell.out.bytes) })
             : p === 'invalid'
               ? err?.word
-                ? t('The library does not accept the text "{word}". Change it, then save again.', { word: err.word })
+                ? t('image-editor.chunk.the-library-does-not-accept-the-text-2', { word: err.word })
                 : err?.detail
-                  ? t('The library refused this image: {reason}', { reason: err.detail })
-                  : t('The library refused this image. Use Export file to keep a copy.')
+                  ? t('image-editor.chunk.the-library-refused-this-image-reason', { reason: err.detail })
+                  : t('image-editor.chunk.the-library-refused-this-image-use')
               : p === 'missing'
-                ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.')
+                ? t('image-editor.chunk.images-need-magic-card-utils-it-is')
                 : p === 'failed'
-                  ? t('Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.')
-                  : t('Could not reach Magic Card Utils. Your work is safe.');
+                  ? t('image-editor.chunk.magic-card-utils-reported-an-error-and')
+                  : t('image-editor.chunk.could-not-reach-magic-card-utils-your');
   }
 
   private fail(e: unknown): void {
@@ -963,7 +963,7 @@ export class ImageExt implements ImageUi {
       if (e.problem === 'conflict') {
         this.details = undefined;
         this.conflict = true;
-        sh.say(t('This image was changed somewhere else.'));
+        sh.say(t('image-editor.chunk.this-image-was-changed-somewhere-else'));
         this.landFocus();
         return;
       }
@@ -1012,7 +1012,7 @@ export class ImageExt implements ImageUi {
     const url = URL.createObjectURL(b);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${K.slug(this.name || t('My image'))}.svg`;
+    a.download = `${K.slug(this.name || t('image-editor.chunk.my-image'))}.svg`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -1025,11 +1025,11 @@ export class ImageExt implements ImageUi {
 
   menuItems(): MenuEntry[] {
     const sh = this.shell;
-    const need = this.id ? undefined : t('Save the image first.');
+    const need = this.id ? undefined : t('image-editor.chunk.save-the-image-first');
     return [
-      { id: 'img:copy', label: t('Save as a copy…'), reason: sh.out.svg ? this.refusedText()?.why : t('Draw something first') },
-      { id: 'img:duplicate', label: t('Duplicate…'), reason: need ?? (sh.dirty ? t('Save your changes first.') : undefined) },
-      { id: 'img:import', label: t('Import an SVG file…') },
+      { id: 'img:copy', label: t('image-editor.chunk.save-as-a-copy'), reason: sh.out.svg ? this.refusedText()?.why : t('image-editor.chunk.draw-something-first') },
+      { id: 'img:duplicate', label: t('image-editor.chunk.duplicate'), reason: need ?? (sh.dirty ? t('image-editor.chunk.save-your-changes-first') : undefined) },
+      { id: 'img:import', label: t('image-editor.chunk.import-an-svg-file') },
     ];
   }
 
@@ -1067,19 +1067,19 @@ export class ImageExt implements ImageUi {
   }
 
   get nameLabel(): string {
-    return t('Image name');
+    return t('image-editor.chunk.image-name');
   }
 
   get keys(): string {
-    return t('Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text');
+    return t('image-editor.chunk.ctrl-z-undo-ctrl-shift-z-redo-ctrl-s');
   }
 
   get saveWhy(): string | undefined {
-    return this.shell.out.error === 'empty' ? t('Draw something first') : this.busy ? t('Saving…') : undefined;
+    return this.shell.out.error === 'empty' ? t('image-editor.chunk.draw-something-first') : this.busy ? t('image-editor.chunk.saving') : undefined;
   }
 
   get tooBig(): string {
-    return t('That SVG is too big to open (over 8 MB). Try a smaller copy.');
+    return t('image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb');
   }
 
   viewer(): TemplateResult {

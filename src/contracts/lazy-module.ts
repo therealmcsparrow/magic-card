@@ -3,10 +3,13 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.8.0 (LAZY_MODULE_CONTRACT).
+ * Contract: lazy modules and lazy card chunks. Version 1.10.0 (LAZY_MODULE_CONTRACT).
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
+ * - Shared chunks (section "Shared chunks"): path-core, history and shape-path. `history` holds
+ *   src/services/history-cache.ts only, the one copy of the recorded-history cache that <mc-value-bg> (decor) and the
+ *   graphs view (modules-extra) read. magic-card.js holds neither the cache nor a re-export of it.
  * - The six older chunks without install() also carry BUILD and their loaders refuse a mismatch through
  *   sameBuild() (section "Build-checked older chunks", SAME_BUILD_CHUNK_FILES, SameBuildModule). The four
  *   lazyChunk() chunks of that group are unchanged.
@@ -87,8 +90,10 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   (src/utils/popup.ts). What must hold before the chunk loads stays in the entry and follows the config alone: whether
  *   the card is a hidden pop-up (popupHidden, `data-mc-popup-hidden`, `data-mc-popup-editor` and their host rules in the plain sheet, the taken-out-of-flow styles of the
  *   card, hui-card and grid cell: src/card/popup-nav.ts), so a pop-up card never shows in the layout early and installing
- *   the chunk moves nothing. navigateToPopup and the PopupHandle types are in popup-nav.ts too. The controller attaches
- *   after the install and opens a pop-up whose #id is already in the URL, without a history entry.
+ *   the chunk moves nothing. navigateToPopup is in src/utils/popup-run.ts and is the chunk's `api.navigate`. The "Open pop-up" action
+ *   calls it when the chunk is installed; otherwise the tap loads the chunk first (a card that only opens a pop-up has no
+ *   popup need in its config) and the card shows the chunk's failure notice with its retry button if that load fails. The
+ *   controller attaches after the install and opens a pop-up whose #id is already in the URL, without a history entry.
  * - LazyChunkName includes 'decor' (dist/magic-card-decor.js, ceiling 49,152 B, chunk entry src/card/decor-chunk.ts). It defines
  *   <mc-ring>, <mc-shape> and <mc-value-bg> in install(); the card renders their tags from its config and the entity states
  *   (src/card/card-decorations.ts), so they upgrade in place and `api` is empty. Its needs() is wantsDecor
@@ -261,7 +266,10 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * - A chunk entry may export `styles` (CSSResultGroup). Before whenReady callbacks run, Core adds those
  *   sheets to the card's sheet list and to the adoptedStyleSheets of every connected card, so the
  *   feature's CSS and its first render land in the same frame. Feature CSS lives only in its chunk;
- *   src/css/css.ts keeps the plain sheet. Adoption assigns a new array
+ *   src/css/css.ts keeps the plain sheet: every rule the card or a stub's placeholder needs before a chunk arrives, and every
+ *   rule two chunks or a chunk and the entry use. The rules only the views of 'controls' and 'modules-extra' render are
+ *   src/css/controls-styles.ts and src/css/extras-styles.ts, exported as the `styles` of those two chunks. A rule that has
+ *   to follow a plain rule of equal weight on the same element stays in the plain sheet, because a chunk's sheet comes after it. Adoption assigns a new array
  *   (`root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...sheets]`), never push (frozen on Chromium
  *   85); connectedCallback adds sheets a card missed while disconnected. Same-frame adoption is verified on
  *   Chromium 85, Chrome and Firefox ESR; Safari 16.4 must be confirmed on a device, otherwise Core
@@ -315,7 +323,21 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   path parser and outline maths. webpack requests it in the same import() call as every chunk whose modules use it
  *   (today anim, seasonal, decor, svg-icon and slider-look; the entry graph lists them). It has no install, BUILD
  *   export, needs row, part name or notice. A failed load fails the requesting chunk's import(), which shows that
- *   chunk's notice and retries both URLs with `r=`. No other module may join a shared chunk without a change to this contract.
+ *   chunk's notice and retries each file of the group that has not loaded yet, under a URL not requested before on this page; a file that already loaded is not requested again. No other module may join a shared chunk without a change to this contract.
+ *
+ * - history (dist/magic-card-history.js, ceiling 4,096 B) holds src/services/history-cache.ts only. It is the one copy of the
+ *   recorded-history cache (two Maps) that <mc-value-bg> (decor) and the graphs view (modules-extra) read while they render,
+ *   so webpack requests it in the same import() call as decor and as modules-extra and no render waits for it. A shared chunk
+ *   may hold module state because it is that module's only chunk. Plain cards never request it. The decor chunk holds the
+ *   sparkline path and window (src/card/value-bg-sparkline.ts); resolveValueBackground stays in magic-card.js. Failure and
+ *   retry are those of path-core.
+ *
+ * - shape-path (dist/magic-card-shape-path.js, ceiling 20,480 B) holds src/utils/shape-path.ts only, the one copy of the
+ *   shape outline maths and its outline memo. decor (<mc-shape>, <mc-ring>), flows, seasonal, slider-look, shape-custom and the editor read it,
+ *   and webpack requests it in the same import() call as each of them. It holds no SVG sink. The custom builder is not its state:
+ *   src/utils/shape-custom-loader.ts (magic-card.js) keeps it and shape-path reads it from there, dropping its memo when the builder
+ *   changes, so magic-card.js never imports shape-path. The ring stroke maths are in the decor chunk (src/card/ring-stroke.ts).
+ *   Plain cards never request it. Failure and retry are those of path-core.
  *
  * ── import() sites ──
  * - Card side: import() only in src/utils/lazy-chunks.ts (the chunk table), src/anim-studio/anim-chunk.ts and the manifest check in
@@ -391,8 +413,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   path overlays at the same time: the import alone is larger than the studio's headroom.
  */
 
-export const LAZY_MODULE_CONTRACT = '1.8.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 22;
+export const LAZY_MODULE_CONTRACT = '1.10.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 24;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -417,7 +439,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
 
 /**
  * Sanity ceilings (B, minified). The CAPS entry is measured + 5 % rounded up to 1 KiB; a measured
- * size over its ceiling means a magic-card.js module (Lit, registry, utils, shape-path) was copied
+ * size over its ceiling means a magic-card.js module (Lit, registry, utils) or the module of a shared chunk (LAZY_SHARED_CHUNK_FILES) was copied
  * into the chunk. Report it, do not raise the ceiling.
  */
 export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
@@ -448,16 +470,22 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
 };
 
 /** Chunks that only hold shared source (section "Shared chunks"): no install, no BUILD, no notice. */
-export type LazySharedChunkName = 'path-core';
+export type LazySharedChunkName = 'path-core' | 'history' | 'shape-path';
 
 export const LAZY_SHARED_CHUNK_FILES: Record<LazySharedChunkName, string> = {
   'path-core': 'magic-card-path-core.js',
+  history: 'magic-card-history.js',
+  'shape-path': 'magic-card-shape-path.js',
 };
 
 /** Sanity ceilings (B, minified), as LAZY_CHUNK_CEILINGS. */
 export const LAZY_SHARED_CHUNK_CEILINGS: Record<LazySharedChunkName, number> = {
   /** src/path/core.ts only. */
   'path-core': 10_240,
+  /** src/services/history-cache.ts only. */
+  history: 4_096,
+  /** src/utils/shape-path.ts only. */
+  'shape-path': 20_480,
 };
 
 /** Which module types each chunk serves (seasonal, flows, pause, popup, decor, flow-look, slider-look, layers, svg-icon, anim and templates serve no module type). */

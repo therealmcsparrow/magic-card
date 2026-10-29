@@ -5,7 +5,7 @@ import { splitIcon, type SplitPiece } from '../../icons/icon-split';
 import { anchorOf, piecesBox, type Anchor } from '../icon-doc';
 import { mdiGeometry } from '../mdi-paths';
 import { presetKeyframes } from '../part-presets';
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { t as tn } from './i18n';
 
 /*
@@ -21,16 +21,16 @@ import { t as tn } from './i18n';
 // ── builder ──
 
 export type Pivot = Anchor | [number, number];
-export type PartDef = [name: MessageId, from: number[], pivot?: Pivot];
-export type GroupDef = [name: MessageId, parts: string[], pivot?: Pivot];
+export type PartDef = [name: MessageIndex, from: number[], pivot?: Pivot];
+export type GroupDef = [name: MessageIndex, parts: string[], pivot?: Pivot];
 
 /** A drawn shape of an entry: its name is an m() mark; `n` fills the {n} of a numbered name. */
-export type SpecShape = Omit<RigShape, 'name'> & { name: MessageId; n?: number };
+export type SpecShape = Omit<RigShape, 'name'> & { name: MessageIndex; n?: number };
 
 export interface Spec {
   id: string;
   /** An m() mark; the tile, the document and the search read it with tn() once the icon tables are ready. */
-  name: MessageId;
+  name: MessageIndex;
   domain: string;
   icon: string;
   tags: string[];

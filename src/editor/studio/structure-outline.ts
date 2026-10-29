@@ -8,7 +8,8 @@ import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
 import { kindNoun, sourceWord } from '../components/entity-source';
 import { ignoresEntity, resolveContainerSource, resolveEntitySource, takesEntity } from '../entity-source';
-import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
+import { hasColumnWidths } from '../../utils/column-widths';
+import { effectiveWidths, widthWeights } from '../../utils/column-widths-edit';
 import {
   Selection,
   selectionFromKey,
@@ -29,7 +30,8 @@ import {
   layerName,
 } from './selection';
 import type { ModuleSelection, SlotSelection } from './selection';
-import { ChildStep, childSlots, descendantAt, hasChildSlots, hasSlotNodes } from '../../utils/module-path';
+import { ChildStep, childSlots, hasChildSlots } from '../../utils/module-path';
+import { descendantAt, hasSlotNodes } from '../../utils/module-path-edit';
 import { slotLabel } from '../slot-label';
 import { t } from '../i18n';
 import { moveModuleTo, type DropPlace } from '../state/tree-move';
@@ -274,9 +276,9 @@ export class StructureOutline extends LitElement {
   private _defaultLabel(sel: Selection): string | undefined {
     const config = this._state?.config;
     if (!config) return undefined;
-    if (sel.kind === 'row') return t('Row {n}', { n: sel.row + 1 });
-    if (sel.kind === 'column') return t('Column {n}', { n: sel.col + 1 });
-    if (sel.kind === 'slot') return t('Column {n}', { n: sel.slot + 1 });
+    if (sel.kind === 'row') return t('card-editor.structure-outline.row-n', { n: sel.row + 1 });
+    if (sel.kind === 'column') return t('card-editor.structure-outline.column-n', { n: sel.col + 1 });
+    if (sel.kind === 'slot') return t('card-editor.structure-outline.column-n', { n: sel.slot + 1 });
     const mod = sel.kind === 'module' ? moduleAt(config, sel) : undefined;
     return mod ? moduleTitle({ ...mod, editor_name: undefined }) : undefined;
   }
@@ -334,7 +336,7 @@ export class StructureOutline extends LitElement {
   /** "Hidden on dashboard" mark after an item's name. */
   private _hiddenMark(item: unknown): TemplateResult | typeof nothing {
     return isHiddenItem(item)
-      ? html`<ha-icon class="hid-ico" icon="mdi:eye-off-outline" title=${t('Hidden on dashboard')}></ha-icon><span class="sr-only">${t('Hidden on dashboard')}</span>`
+      ? html`<ha-icon class="hid-ico" icon="mdi:eye-off-outline" title=${t('card-editor.structure-outline.hidden-on-dashboard')}></ha-icon><span class="sr-only">${t('card-editor.structure-outline.hidden-on-dashboard')}</span>`
       : nothing;
   }
 
@@ -686,18 +688,18 @@ export class StructureOutline extends LitElement {
     if (!moved) return;
     this.stateManager.updateConfig(moved.config);
     this.stateManager.setSelectedPath(moved.path);
-    this._status(t('Moved {name} to {where}', { name: this._moduleName(moduleAt(moved.config, selectionFromPath(moved.path))!), where: this._placeName(moved.config, drop.place) }));
+    this._status(t('card-editor.structure-outline.moved-name-to-where', { name: this._moduleName(moduleAt(moved.config, selectionFromPath(moved.path))!), where: this._placeName(moved.config, drop.place) }));
   }
 
   /** The list a drop landed in, in words: "Row 1 Column 2", "Tabs Kitchen", "Vertical". */
   private _placeName(config: MagicCardConfig, place: DropPlace): string {
-    const column = t('Row {row} Column {column}', { row: place.row + 1, column: place.col + 1 });
+    const column = t('card-editor.structure-outline.row-row-column-column', { row: place.row + 1, column: place.col + 1 });
     if (place.module === undefined) return column;
     const top = config.rows[place.row]?.columns[place.col]?.modules[place.module];
     const owner = descendantAt(top, place.child ?? []);
     if (!owner) return column;
     const slot = slotLabel(owner, place.slot ?? 0);
-    return slot ? t('{name} {slot}', { name: this._moduleName(owner), slot }) : this._moduleName(owner);
+    return slot ? t('card-editor.structure-outline.name-slot', { name: this._moduleName(owner), slot }) : this._moduleName(owner);
   }
 
   private _onTreeDragLeave(e: DragEvent): void {
@@ -715,7 +717,7 @@ export class StructureOutline extends LitElement {
     const rows = this._rows;
     const selKey = this._selectedKey;
     const focusKey = this._resolveFocusKey(selKey);
-    const cardName = this._state?.config.name?.trim() || t('Card');
+    const cardName = this._state?.config.name?.trim() || t('card-editor.structure-outline.card');
     const card = this._itemAttrs('card', selKey, focusKey);
     const renamingCard = this._renaming === 'card';
 
@@ -733,7 +735,7 @@ export class StructureOutline extends LitElement {
         <ul
           class="tree"
           role="tree"
-          aria-label=${t('Card structure')}
+          aria-label=${t('card-editor.structure-outline.card-structure')}
           @dragleave=${this._onTreeDragLeave}
         >
           <li role="none">
@@ -750,7 +752,7 @@ export class StructureOutline extends LitElement {
                 @dblclick=${() => this.startRename('card')}
               >
                 <ha-icon icon="mdi:card-outline"></ha-icon>
-                ${renamingCard ? this._renderRename({ kind: 'card' }, t('Card name')) : html`<span class="text"><span class="name">${cardName}</span></span>`}
+                ${renamingCard ? this._renderRename({ kind: 'card' }, t('card-editor.structure-outline.card-name')) : html`<span class="text"><span class="name">${cardName}</span></span>`}
               </div>
             </div>
           </li>
@@ -760,17 +762,17 @@ export class StructureOutline extends LitElement {
           ? html`
               <div class="foot">
                 <button type="button" class="btn btn-secondary btn-sm" @click=${this._requestAddRow}>
-                  <ha-icon icon="mdi:plus"></ha-icon>${t('Add row')}
+                  <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.structure-outline.add-row')}
                 </button>
               </div>
             `
           : html`
               <div class="empty card-empty">
                 <ha-icon icon="mdi:view-sequential-outline"></ha-icon>
-                <strong>${t('No rows yet')}</strong>
-                <p>${t('Rows hold columns, columns hold modules.')}</p>
+                <strong>${t('card-editor.structure-outline.no-rows-yet')}</strong>
+                <p>${t('card-editor.structure-outline.rows-hold-columns-columns-hold-modules')}</p>
                 <button type="button" class="btn btn-text btn-sm" @click=${this._requestAddRow}>
-                  <ha-icon icon="mdi:plus"></ha-icon>${t('Add row')}
+                  <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.structure-outline.add-row')}
                 </button>
               </div>
             `}
@@ -815,7 +817,7 @@ export class StructureOutline extends LitElement {
     const lineAfter = drop?.type === 'row' && ri === this._rows.length - 1 && drop.index === ri + 1;
     const sel: Selection = { kind: 'row', row: ri };
     const menuOpen = this._menuOpenFor(sel);
-    const name = layerName(row) ?? t('Row {n}', { n: ri + 1 });
+    const name = layerName(row) ?? t('card-editor.structure-outline.row-n', { n: ri + 1 });
     const renaming = this._renaming === key;
 
     return html`
@@ -834,7 +836,7 @@ export class StructureOutline extends LitElement {
             class="caret"
             tabindex="-1"
             aria-expanded=${open ? 'true' : 'false'}
-            aria-label=${open ? t('Collapse row {n}', { n: ri + 1 }) : t('Expand row {n}', { n: ri + 1 })}
+            aria-label=${open ? t('card-editor.structure-outline.collapse-row-n', { n: ri + 1 }) : t('card-editor.structure-outline.expand-row-n', { n: ri + 1 })}
             @click=${() => this._setCollapsed(ri, open)}
           >
             <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -846,7 +848,7 @@ export class StructureOutline extends LitElement {
             data-current=${a.current ? '' : nothing}
           >
             ${renaming
-              ? this._renderRename(sel, t('Row name'))
+              ? this._renderRename(sel, t('card-editor.structure-outline.row-name'))
               : this.variant === 'pane'
                 ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span>${this._containerEntity(row, { row: ri })}</span>`
                 : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(row, { row: ri })}</span>${this._renderGlyph(row)}`}
@@ -855,7 +857,7 @@ export class StructureOutline extends LitElement {
           <button
             type="button"
             class="icon-btn sm more"
-            aria-label=${t('{name} actions', { name })}
+            aria-label=${t('card-editor.structure-outline.name-actions', { name })}
             aria-haspopup="menu"
             aria-expanded=${menuOpen ? 'true' : 'false'}
             @click=${(e: Event) => this._openMenuFor(sel, e)}
@@ -887,7 +889,7 @@ export class StructureOutline extends LitElement {
     const dropInto = this._dropZone(key) === 'inside';
     const menuOpen = this._menuOpenFor(sel);
     const col = this._rows[ri]?.columns[ci];
-    const name = layerName(col) ?? t('Column {n}', { n: ci + 1 });
+    const name = layerName(col) ?? t('card-editor.structure-outline.column-n', { n: ci + 1 });
 
     return html`
       <li role="none" class="col ${dropInto && n ? 'drop-into' : ''}">
@@ -901,16 +903,16 @@ export class StructureOutline extends LitElement {
             data-hidden=${isHiddenItem(col) ? '' : nothing}
             data-current=${a.current ? '' : nothing}
           >
-            ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(col, { row: ri, col: ci })}</span>`}
+            ${this._renaming === key ? this._renderRename(sel, t('card-editor.structure-outline.column-name')) : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(col, { row: ri, col: ci })}</span>`}
             ${this._hiddenMark(col)}
-            ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('Own module list: not synced with the template. Reset column restores it.')}></ha-icon><span class="sr-only">${t('Own module list, not synced with the template')}</span>` : nothing}
-            <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
+            ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('card-editor.structure-outline.own-module-list-not-synced-with-the')}></ha-icon><span class="sr-only">${t('card-editor.structure-outline.own-module-list-not-synced-with-the-2')}</span>` : nothing}
+            <span class="chip is-count">${n}<span class="sr-only"> ${t('card-editor.structure-outline.n', { n })}</span></span>
             ${renderLayerCount(countLayers(modules))}
           </div>
           <button
             type="button"
             class="icon-btn sm more"
-            aria-label=${t('Row {row} column {column} actions', { row: ri + 1, column: ci + 1 })}
+            aria-label=${t('card-editor.structure-outline.row-row-column-column-actions', { row: ri + 1, column: ci + 1 })}
             aria-haspopup="menu"
             aria-expanded=${menuOpen ? 'true' : 'false'}
             @click=${(e: Event) => this._openMenuFor(sel, e)}
@@ -932,14 +934,14 @@ export class StructureOutline extends LitElement {
                 @dragover=${(e: DragEvent) => this._onItemDragOver(e, sel)}
                 @drop=${this._dropModule}
               >
-                <p>${t('Empty column')}</p>
+                <p>${t('card-editor.structure-outline.empty-column')}</p>
                 <button
                   type="button"
                   class="btn btn-text btn-sm"
-                  aria-label=${t('Add module to Row {row} Column {column}', { row: ri + 1, column: ci + 1 })}
+                  aria-label=${t('card-editor.structure-outline.add-module-to-row-row-column-column', { row: ri + 1, column: ci + 1 })}
                   @click=${() => this._addModule(ri, ci)}
                 >
-                  <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
+                  <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.structure-outline.add-module')}
                 </button>
               </div>
             `}
@@ -954,10 +956,10 @@ export class StructureOutline extends LitElement {
         <button
           type="button"
           class="btn btn-text btn-sm"
-          aria-label=${t('Add module to Row {row} Column {column}', { row: ri + 1, column: ci + 1 })}
+          aria-label=${t('card-editor.structure-outline.add-module-to-row-row-column-column', { row: ri + 1, column: ci + 1 })}
           @click=${() => this._addModule(ri, ci)}
         >
-          <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
+          <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.structure-outline.add-module')}
         </button>
       </li>
     `;
@@ -970,10 +972,10 @@ export class StructureOutline extends LitElement {
         <button
           type="button"
           class="btn btn-text btn-sm"
-          aria-label=${t('Add column to Row {row}', { row: ri + 1 })}
+          aria-label=${t('card-editor.structure-outline.add-column-to-row-row', { row: ri + 1 })}
           @click=${() => this._addColumn(ri)}
         >
-          <ha-icon icon="mdi:plus"></ha-icon>${t('Add column')}
+          <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.structure-outline.add-column')}
         </button>
       </li>
     `;
@@ -989,12 +991,12 @@ export class StructureOutline extends LitElement {
     if (!config || ignoresEntity(mod) || !(takesEntity(mod.type) || hasChildSlots(mod))) return nothing;
     const info = resolveEntitySource(config, sel);
     const from = info.inherited;
-    if (info.choice === 'none') return html`<span class="sub">${t('No entity')}</span>`;
+    if (info.choice === 'none') return html`<span class="sub">${t('card-editor.structure-outline.no-entity')}</span>`;
     if (info.choice !== 'inherit' || info.cardModule || !from) return nothing;
     if (info.mismatch) {
-      return html`<span class="sub is-mismatch"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon>${t('Needs {kind}', { kind: kindNoun(info.domains?.length === 1 ? info.domains[0] : undefined) })}<span class="sr-only">${t('Entity does not fit this module')}</span></span>`;
+      return html`<span class="sub is-mismatch"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon>${t('card-editor.structure-outline.needs-kind', { kind: kindNoun(info.domains?.length === 1 ? info.domains[0] : undefined) })}<span class="sr-only">${t('card-editor.structure-outline.entity-does-not-fit-this-module')}</span></span>`;
     }
-    return html`<span class="sub is-inherited"><ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('Inherited entity')} </span>${this.variant === 'pane' ? html`${t('Same as {source}', { source: sourceWord(from.from) })} · ` : nothing}${this.variant === 'layers' ? from.id : breakableId(from.id)}</span>`;
+    return html`<span class="sub is-inherited"><ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('card-editor.structure-outline.inherited-entity')} </span>${this.variant === 'pane' ? html`${t('card-editor.structure-outline.same-as-source', { source: sourceWord(from.from) })} · ` : nothing}${this.variant === 'layers' ? from.id : breakableId(from.id)}</span>`;
   }
 
   private _renderModule(
@@ -1034,7 +1036,7 @@ export class StructureOutline extends LitElement {
           >
             <ha-icon icon=${icon}></ha-icon>
             ${this._renaming === key
-              ? this._renderRename(sel, t('Module name'))
+              ? this._renderRename(sel, t('card-editor.structure-outline.module-name'))
               : html`<span class="text">
                   <span class="name">${moduleTitle(mod)}</span>
                   ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : followed}
@@ -1043,7 +1045,7 @@ export class StructureOutline extends LitElement {
             ${renderLayerCount(countLayers(childSlots(mod)?.flat()))}
             ${this._hiddenMark(mod)}
             ${overrides
-              ? html`<span class="ovr-dot" title=${t('Has local overrides')}></span><span class="sr-only">${t('Has local overrides')}</span>`
+              ? html`<span class="ovr-dot" title=${t('card-editor.structure-outline.has-local-overrides')}></span><span class="sr-only">${t('card-editor.structure-outline.has-local-overrides')}</span>`
               : nothing}
           </div>
           ${this._renderModuleMore(mod, sel, a.tab)}
@@ -1106,18 +1108,18 @@ export class StructureOutline extends LitElement {
               >
                 ${isTabs ? html`<ha-icon icon=${icon}></ha-icon>` : nothing}
                 ${renaming
-                  ? this._renderRename(sel, isTabs ? t('Tab name') : t('Column name'))
+                  ? this._renderRename(sel, isTabs ? t('card-editor.structure-outline.tab-name') : t('card-editor.structure-outline.column-name'))
                   : html`<span class="text"><span class="name">${label}</span>${isTabs ? nothing : this._containerEntity(entry ?? {}, { row: owner.row, col: owner.col, module: owner.module, child: owner.child, slot })}</span>`}
                 ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
-                <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
+                <span class="chip is-count">${n}<span class="sr-only"> ${t('card-editor.structure-outline.n', { n })}</span></span>
                 ${renderLayerCount(countLayers(list))}
               </div>
               <button
                 type="button"
                 class="icon-btn sm more"
                 tabindex=${a.tab}
-                aria-label=${t('{name} actions', { name: label })}
+                aria-label=${t('card-editor.structure-outline.name-actions', { name: label })}
                 aria-haspopup="menu"
                 aria-expanded=${menuOpen ? 'true' : 'false'}
                 @click=${(e: Event) => this._openMenuFor(sel, e)}
@@ -1133,9 +1135,9 @@ export class StructureOutline extends LitElement {
         `;
       })}
       <li role="treeitem" aria-level=${level} class="add-col">
-        <button type="button" class="btn btn-text btn-sm" aria-label=${isTabs ? t('Add tab to {name}', { name: this._moduleName(parent) }) : t('Add column to {name}', { name: this._moduleName(parent) })}
+        <button type="button" class="btn btn-text btn-sm" aria-label=${isTabs ? t('card-editor.structure-outline.add-tab-to-name', { name: this._moduleName(parent) }) : t('card-editor.structure-outline.add-column-to-name', { name: this._moduleName(parent) })}
           @click=${() => this._addSlot(owner, parent.type)}>
-          <ha-icon icon="mdi:plus"></ha-icon>${isTabs ? t('Add tab') : t('Add column')}
+          <ha-icon icon="mdi:plus"></ha-icon>${isTabs ? t('card-editor.structure-outline.add-tab') : t('card-editor.structure-outline.add-column')}
         </button>
       </li>
     </ul>`;
@@ -1146,10 +1148,10 @@ export class StructureOutline extends LitElement {
     const config = this._state?.config;
     if (!config) return nothing;
     const info = resolveContainerSource(config, at);
-    if (info.choice === 'none') return html`<span class="sub">${t('No entity')}</span>`;
+    if (info.choice === 'none') return html`<span class="sub">${t('card-editor.structure-outline.no-entity')}</span>`;
     const id = typeof node.entity === 'string' && ENTITY_RE.test(node.entity) ? node.entity : undefined;
     if (!id) return nothing;
-    return html`<span class="sub is-entity">${node.share_entity === true ? html`<ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('Shared with tiles inside')} </span>` : nothing}${breakableId(id)}</span>`;
+    return html`<span class="sub is-entity">${node.share_entity === true ? html`<ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('card-editor.structure-outline.shared-with-tiles-inside')} </span>` : nothing}${breakableId(id)}</span>`;
   }
 
   /** One layout child (and its own children). */
@@ -1180,7 +1182,7 @@ export class StructureOutline extends LitElement {
           >
             <ha-icon icon=${icon}></ha-icon>
             ${this._renaming === key
-              ? this._renderRename(sel, t('Module name'))
+              ? this._renderRename(sel, t('card-editor.structure-outline.module-name'))
               : html`<span class="text">
                   <span class="name">${title}</span>
                   ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : followed}
@@ -1200,8 +1202,8 @@ export class StructureOutline extends LitElement {
   private _renderAddChild(owner: ModuleSel, slot: number, where: string, level: number): TemplateResult {
     return html`
       <li role="treeitem" aria-level=${level} class="add-mod">
-        <button type="button" class="btn btn-text btn-sm" aria-label=${t('Add module to {where}', { where })} @click=${() => this._addChild(owner, slot)}>
-          <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
+        <button type="button" class="btn btn-text btn-sm" aria-label=${t('card-editor.structure-outline.add-module-to-where', { where })} @click=${() => this._addChild(owner, slot)}>
+          <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.structure-outline.add-module')}
         </button>
       </li>
     `;
@@ -1220,7 +1222,7 @@ export class StructureOutline extends LitElement {
         type="button"
         class="icon-btn sm more"
         tabindex=${tab}
-        aria-label=${t('Module options for {name}', { name: this._moduleName(mod) })}
+        aria-label=${t('card-editor.structure-outline.module-options-for-name', { name: this._moduleName(mod) })}
         aria-haspopup="menu"
         aria-expanded=${open ? 'true' : 'false'}
         @click=${(e: Event) => this._openMenuFor(sel, e)}

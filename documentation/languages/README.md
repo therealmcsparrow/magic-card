@@ -22,4 +22,4 @@ The editors use the same language setting as the rest of Magic Card. The dialogs
 
 ## Translations
 
-Translations are welcome. Open an issue on [GitHub](https://github.com/therealmcsparrow/magic-card/issues) if you want to help with a language.
+Translations are welcome. Open an issue on [GitHub](https://github.com/therealmcsparrow/magic-card/issues) if you want to help with a language. How the text files work is in [Translating](../translating/README.md).

@@ -141,11 +141,11 @@ export class IconPicker extends LitElement {
 
   private _renderTabs(): TemplateResult {
     return html`
-      <div class="seg" role="tablist" aria-label=${t('Icon source')}>
+      <div class="seg" role="tablist" aria-label=${t('card-editor.icon-picker.icon-source')}>
         ${(['icons', 'animated'] as const).map((tb) => html`
           <button type="button" role="tab" aria-selected=${this._tab === tb ? 'true' : 'false'}
             tabindex=${this._tab === tb ? '0' : '-1'} @click=${() => this._setTab(tb)} @keydown=${this._onTabKeydown}
-          >${tb === 'icons' ? t('Icons') : t('Animated icons')}</button>
+          >${tb === 'icons' ? t('card-editor.icon-picker.icons') : t('card-editor.icon-picker.animated-icons')}</button>
         `)}
       </div>
     `;
@@ -153,10 +153,10 @@ export class IconPicker extends LitElement {
 
   private _renderAnimated(): TemplateResult {
     const a = this.animated!;
-    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">${t('Loading…')}</div>`;
+    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">${t('card-editor.icon-picker.loading')}</div>`;
     if (this._chunk === 'failed') {
-      return html`<div class="mc-picker-empty">${t('The animated icons could not be loaded. Try again.')}
-        <button type="button" class="btn btn-secondary" @click=${() => this._setTab('animated')}>${t('Retry')}</button></div>`;
+      return html`<div class="mc-picker-empty">${t('card-editor.icon-picker.the-animated-icons-could-not-be-loaded')}
+        <button type="button" class="btn btn-secondary" @click=${() => this._setTab('animated')}>${t('card-editor.icon-picker.retry')}</button></div>`;
     }
     const m = a.module as CardModule & { entity?: string };
     return html`<mc-animated-icon-grid .hass=${this.hass} .icon=${this.value} .entity=${m.entity ?? ''}
@@ -365,7 +365,7 @@ export class IconPicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder="mdi:icon"
-          aria-label=${this.label || t('Icon')}
+          aria-label=${this.label || t('card-editor.icon-picker.icon')}
           spellcheck="false"
           @input=${this._onInputChange}
           @keydown=${this._onFieldKeydown}
@@ -375,8 +375,8 @@ export class IconPicker extends LitElement {
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label=${t('Browse icons')}
-          title=${t('Browse icons')}
+          aria-label=${t('card-editor.icon-picker.browse-icons')}
+          title=${t('card-editor.icon-picker.browse-icons')}
           data-focus-key="icon-entry"
           @click=${this._openModal}
         >
@@ -395,21 +395,21 @@ export class IconPicker extends LitElement {
   private _renderKeep(): TemplateResult | string {
     const k = this._keep;
     if (!k || this._selectedIcon.trim() !== `mcu:${k.id}`) return '';
-    const kb = k.bytes < 1024 ? t('{n} B', { n: k.bytes }) : t('{size} KB', { size: (k.bytes / 1024).toFixed(1) });
+    const kb = k.bytes < 1024 ? t('card-editor.icon-picker.n-b', { n: k.bytes }) : t('card-editor.icon-picker.size-kb', { size: (k.bytes / 1024).toFixed(1) });
     return html`<details class="mc-picker-keep">
-      <summary>${t('Advanced')}</summary>
+      <summary>${t('card-editor.icon-picker.advanced')}</summary>
       <div class="switch-row">
         <div class="txt">
-          <div class="field-head"><label for="mc-keep-copy">${t('Keep a copy in this card (adds {size})', { size: kb })}</label></div>
-          <p class="help" id="mc-keep-help">${t('Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.')}</p>
+          <div class="field-head"><label for="mc-keep-copy">${t('card-editor.icon-picker.keep-a-copy-in-this-card-adds-size', { size: kb })}</label></div>
+          <p class="help" id="mc-keep-help">${t('card-editor.icon-picker.without-a-copy-the-card-shows-the')}</p>
         </div>
         <button type="button" class="switch" id="mc-keep-copy" role="switch" aria-checked=${k.on ? 'true' : 'false'} aria-describedby="mc-keep-help"
           @click=${() => (this._keep = { ...k, on: !k.on })}></button>
       </div>
       ${this.animated
         ? html`<div class="mc-picker-keep-actions">
-            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('copy')}>${t('Use as copy')}</button>
-            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('customise')}>${t('Customise a copy')}</button>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('copy')}>${t('card-editor.icon-picker.use-as-copy')}</button>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('customise')}>${t('card-editor.icon-picker.customise-a-copy')}</button>
           </div>`
         : ''}
     </details>`;
@@ -423,30 +423,30 @@ export class IconPicker extends LitElement {
     const grid = !!this.animated && this._tab === 'animated';
 
     return html`
-      ${renderPickerWindow(t('Select icon'), () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('card-editor.icon-picker.select-icon'), () => this._closeModal(), 'm', html`
           <div class="mc-picker-stack">
           ${this.animated ? this._renderTabs() : ''}
           ${grid ? html`<div class="mc-picker-list" role="tabpanel">${this._renderAnimated()}</div>` : html`
           ${lib?.state === 'ok'
-            ? html`<div class="seg full" role="radiogroup" aria-label=${t('Icons from')}>
-                ${(['all', 'mine'] as const).map((v) => html`<button type="button" role="radio" aria-checked=${this._src === v ? 'true' : 'false'} @click=${() => { this._src = v; this._active = -1; }}>${v === 'all' ? t('All') : t('My icons ({n})', { n: lib.items.length })}</button>`)}
+            ? html`<div class="seg full" role="radiogroup" aria-label=${t('card-editor.icon-picker.icons-from')}>
+                ${(['all', 'mine'] as const).map((v) => html`<button type="button" role="radio" aria-checked=${this._src === v ? 'true' : 'false'} @click=${() => { this._src = v; this._active = -1; }}>${v === 'all' ? t('card-editor.icon-picker.all') : t('card-editor.icon-picker.my-icons-n', { n: lib.items.length })}</button>`)}
               </div>`
             : ''}
           <div class="mc-picker-search">
-            ${renderPickerSearch(t('Search icons'), this._searchQuery, (v) => this._onSearch(v), {
+            ${renderPickerSearch(t('card-editor.icon-picker.search-icons'), this._searchQuery, (v) => this._onSearch(v), {
               onKeydown: (e) => this._onSearchKeydown(e),
               listId: 'mc-icon-list',
               activeId,
             })}
           </div>
-          <p class="sr-only" role="status">${this._icons === null ? '' : total > 0 ? t('{n, plural, one {# icon found} other {# icons found}}', { n: total }) : t('No icons found')}</p>
-          <div class="mc-picker-list" id="mc-icon-list" role="listbox" aria-label=${t('Icons')}>
+          <p class="sr-only" role="status">${this._icons === null ? '' : total > 0 ? t('card-editor.icon-picker.n', { n: total }) : t('card-editor.icon-picker.no-icons-found')}</p>
+          <div class="mc-picker-list" id="mc-icon-list" role="listbox" aria-label=${t('card-editor.icon-picker.icons')}>
             ${this._icons === null
-              ? html`<div class="mc-picker-loading">${t('Loading icons…')}</div>`
+              ? html`<div class="mc-picker-loading">${t('card-editor.icon-picker.loading-icons')}</div>`
               : rows.length > 0
                 ? rows.map((icon, i) => html`
-                    ${i === 0 && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('My icons')} <button type="button" class="btn btn-text btn-sm" @click=${() => { this._src = 'mine'; }}>${t('Show all')}</button></div>` : ''}
-                    ${i === mine && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('Material Design icons')}</div>` : ''}
+                    ${i === 0 && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('card-editor.icon-picker.my-icons')} <button type="button" class="btn btn-text btn-sm" @click=${() => { this._src = 'mine'; }}>${t('card-editor.icon-picker.show-all')}</button></div>` : ''}
+                    ${i === mine && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('card-editor.icon-picker.material-design-icons')}</div>` : ''}
                     <button
                       type="button"
                       role="option"
@@ -466,23 +466,23 @@ export class IconPicker extends LitElement {
                     </button>
                   `)
                 : this._src === 'mine' && !this._searchQuery.trim()
-                  ? html`<div class="mc-picker-empty">${t('No saved icons yet. Draw an icon, then choose Save to library in the editor.')}${this.animated ? html` <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}</div>`
-                  : html`<div class="mc-picker-empty">${t('No icons found. Type a full id, such as mdi:fan.')}${this.animated && this._src === 'mine' ? html` <button type="button" class="btn btn-secondary" @click=${() => { this._searchQuery = ''; }}>${t('Clear search')}</button> <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}</div>`}
+                  ? html`<div class="mc-picker-empty">${t('card-editor.icon-picker.no-saved-icons-yet-draw-an-icon-then')}${this.animated ? html` <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : ''}</div>`
+                  : html`<div class="mc-picker-empty">${t('card-editor.icon-picker.no-icons-found-type-a-full-id-such-as')}${this.animated && this._src === 'mine' ? html` <button type="button" class="btn btn-secondary" @click=${() => { this._searchQuery = ''; }}>${t('card-editor.icon-picker.clear-search')}</button> <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : ''}</div>`}
             ${total > rows.length
-              ? html`<div class="mc-picker-more">${t('Showing {shown} of {total}. Refine the search to see more.', { shown: rows.length, total })}</div>`
+              ? html`<div class="mc-picker-more">${t('card-editor.icon-picker.showing-shown-of-total-refine-the-search', { shown: rows.length, total })}</div>`
               : ''}
           </div>`}
           ${grid ? '' : this._renderKeep()}
           </div>
           <div class="mc-picker-footer" slot="footer">
-            ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>${t('Clear')}</button>`}
-            ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}
-            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>${t('Library')}</button>` : ''}
-            ${!grid && lib && lib.state === 'missing' ? html`<span class="help">${t('Keep your own icons: install the free Magic Card Utils add-on.')}</span>` : ''}
-            ${this._editorFailed ? html`<span class="help error" role="alert">${t('The icon editor could not load. Try again.')}</span>` : ''}
+            ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>${t('card-editor.icon-picker.clear')}</button>`}
+            ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : ''}
+            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>${t('card-editor.icon-picker.library')}</button>` : ''}
+            ${!grid && lib && lib.state === 'missing' ? html`<span class="help">${t('card-editor.icon-picker.keep-your-own-icons-install-the-free')}</span>` : ''}
+            ${this._editorFailed ? html`<span class="help error" role="alert">${t('card-editor.icon-picker.the-icon-editor-could-not-load-try-again')}</span>` : ''}
             <span class="spacer"></span>
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
-            ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>`}
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.icon-picker.cancel')}</button>
+            ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('card-editor.icon-picker.save')}</button>`}
           </div>
       `)}
     `;

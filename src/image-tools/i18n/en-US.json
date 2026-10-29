@@ -1,71 +1,286 @@
 {
-  "(not found)": "(not found)",
-  "Accent colour": "Accent color",
-  "Add an image module behind the content": "Add an image module behind the content",
-  "Address or media": "Address or media",
-  "Adds a hidden list after the picture, for example \"Kitchen light: on\". It updates when a device changes.": "Adds a hidden list after the picture, for example \"Kitchen light: on\". It updates when a device changes.",
-  "Ask an administrator to add one.": "Ask an administrator to add one.",
-  "Cancel": "Cancel",
-  "Card shape set to {shape}.": "Card shape set to {shape}.",
-  "Choose": "Choose",
-  "Choose an image": "Choose an image",
-  "Clear": "Clear",
-  "Colours": "Colors",
-  "Copy reference": "Copy reference",
-  "Description for screen readers": "Description for screen readers",
-  "Draw a new image": "Draw a new image",
-  "Edit image": "Edit image",
-  "Hide list": "Hide list",
-  "Image": "Image",
-  "Image editor": "Image editor",
-  "Image module added behind the content. Remove the background layer if you no longer need it.": "Image module added behind the content. Remove the background layer if you no longer need it.",
-  "Image set: {name}.": "Image set: {name}.",
-  "Images": "Images",
-  "Images need Magic Card Utils. It is installed through HACS, like Magic Card.": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-  "In use": "In use",
-  "Library image": "Library image",
-  "List connected devices and their states for screen readers": "List connected devices and their states for screen readers",
-  "Live": "Live",
-  "Live: parts of this picture follow their devices, here too.": "Live: parts of this picture follow their devices, here too.",
-  "Loading images…": "Loading images…",
-  "Main and Accent follow the colours you set for this card.": "Main and Accent follow the colors you set for this card.",
-  "Main colour": "Main color",
-  "Need buttons or a description?": "Need buttons or a description?",
-  "No image chosen": "No image chosen",
-  "No image matches “{query}”.": "No image matches “{query}”.",
-  "No images yet.": "No images yet.",
-  "Not set (screen readers skip this picture)": "Not set (screen readers skip this picture)",
-  "Off": "Off",
-  "On": "On",
-  "Optional. Describe what the picture shows. Without it, screen readers skip the picture.": "Optional. Describe what the picture shows. Without it, screen readers skip the picture.",
-  "Pick an image": "Pick an image",
-  "Pick another": "Pick another",
-  "Reference copied.": "Reference copied.",
-  "Rename a device in Home Assistant to change what is read.": "Rename a device in Home Assistant to change what is read.",
-  "Search images": "Search images",
-  "Set (screen readers read it)": "Set (screen readers read it)",
-  "Show list": "Show list",
-  "That is the longest description (500 characters).": "That is the longest description (500 characters).",
-  "The card shape ({card}) differs from the drawing ({drawing}).": "The card shape ({card}) differs from the drawing ({drawing}).",
-  "The drawing editor could not load. Try again.": "The drawing editor could not load. Try again.",
-  "The images could not be loaded.": "The images could not be loaded.",
-  "The reference could not be copied. Select it and copy it by hand.": "The reference could not be copied. Select it and copy it by hand.",
-  "This image is no longer in the library.": "This image is no longer in the library.",
-  "This is a background. Screen readers skip it, and it cannot hold buttons.": "This is a background. Screen readers skip it, and it cannot hold buttons.",
-  "This is the address cards use. It stays the same when you rename the image.": "This is the address cards use. It stays the same when you rename the image.",
-  "This picture shows live devices. Add a description or switch on the list so everyone can follow it.": "This picture shows live devices. Add a description or switch on the list so everyone can follow it.",
-  "Thumbnails show the saved colours. On the card the live parts change with their devices.": "Thumbnails show the saved colors. On the card the live parts change with their devices.",
-  "To change colours, use live parts in one picture. To swap pictures, use states.": "To change colors, use live parts in one picture. To swap pictures, use states.",
-  "Try again": "Try again",
-  "Use the drawing's shape": "Use the drawing's shape",
-  "Use this image": "Use this image",
-  "View image": "View image",
-  "Will read now:": "Will read now:",
-  "and {n} more": "and {n} more",
-  "{id} (not found)": "{id} (not found)",
-  "{n, plural, one {# live connection} other {# live connections}}": "{n, plural, one {# live connection} other {# live connections}}",
-  "{n, plural, one {Live: # connection} other {Live: # connections}}": "{n, plural, one {Live: # connection} other {Live: # connections}}",
-  "{n, plural, one {Uses # device} other {Uses # devices}}": "{n, plural, one {Uses # device} other {Uses # devices}}",
-  "{n} KiB": "{n} KiB",
-  "{n} left": "{n} left"
+  "image-tools.editor-host.image-editor": {
+    "text": "Image editor",
+    "hash": "52945574"
+  },
+  "image-tools.mc-image-picker.ask-an-administrator-to-add-one": {
+    "text": "Ask an administrator to add one.",
+    "hash": "daf22937"
+  },
+  "image-tools.mc-image-picker.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "image-tools.mc-image-picker.draw-a-new-image": {
+    "text": "Draw a new image",
+    "hash": "d6b72d9a"
+  },
+  "image-tools.mc-image-picker.images": {
+    "text": "Images",
+    "hash": "be7e2f20"
+  },
+  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "hash": "62625dad"
+  },
+  "image-tools.mc-image-picker.in-use": {
+    "text": "In use",
+    "hash": "750af77a"
+  },
+  "image-tools.mc-image-picker.loading-images": {
+    "text": "Loading images…",
+    "hash": "746e71d4"
+  },
+  "image-tools.mc-image-picker.n": {
+    "text": "{n, plural, one {# live connection} other {# live connections}}",
+    "hash": "b5a88066"
+  },
+  "image-tools.mc-image-picker.n-2": {
+    "text": "{n, plural, one {Live: # connection} other {Live: # connections}}",
+    "hash": "11d042d2"
+  },
+  "image-tools.mc-image-picker.n-kib": {
+    "text": "{n} KiB",
+    "hash": "b41f8b57"
+  },
+  "image-tools.mc-image-picker.no-image-matches-query": {
+    "text": "No image matches “{query}”.",
+    "hash": "3d6cad37"
+  },
+  "image-tools.mc-image-picker.no-images-yet": {
+    "text": "No images yet.",
+    "hash": "c397a5b4"
+  },
+  "image-tools.mc-image-picker.pick-an-image": {
+    "text": "Pick an image",
+    "hash": "a723faca"
+  },
+  "image-tools.mc-image-picker.search-images": {
+    "text": "Search images",
+    "hash": "9e13d826"
+  },
+  "image-tools.mc-image-picker.the-images-could-not-be-loaded": {
+    "text": "The images could not be loaded.",
+    "hash": "2c18f1c2"
+  },
+  "image-tools.mc-image-picker.thumbnails-show-the-saved-colours-on-the": {
+    "text": "Thumbnails show the saved colors. On the card the live parts change with their devices.",
+    "hash": "d1c7ab7d"
+  },
+  "image-tools.mc-image-picker.try-again": {
+    "text": "Try again",
+    "hash": "d8b8392e"
+  },
+  "image-tools.mc-image-picker.use-this-image": {
+    "text": "Use this image",
+    "hash": "b2f8cf0a"
+  },
+  "image-tools.mc-library-image-field.accent-colour": {
+    "text": "Accent color",
+    "hash": "12376f4c"
+  },
+  "image-tools.mc-library-image-field.add-an-image-module-behind-the-content": {
+    "text": "Add an image module behind the content",
+    "hash": "50bd61aa"
+  },
+  "image-tools.mc-library-image-field.address-or-media": {
+    "text": "Address or media",
+    "hash": "787cf952"
+  },
+  "image-tools.mc-library-image-field.adds-a-hidden-list-after-the-picture-for": {
+    "text": "Adds a hidden list after the picture, for example \"Kitchen light: on\". It updates when a device changes.",
+    "hash": "13d76816"
+  },
+  "image-tools.mc-library-image-field.and-n-more": {
+    "text": "and {n} more",
+    "hash": "827ab950"
+  },
+  "image-tools.mc-library-image-field.card-shape-set-to-shape": {
+    "text": "Card shape set to {shape}.",
+    "hash": "fc40aefb"
+  },
+  "image-tools.mc-library-image-field.choose": {
+    "text": "Choose",
+    "hash": "c7f93783"
+  },
+  "image-tools.mc-library-image-field.choose-an-image": {
+    "text": "Choose an image",
+    "hash": "ceed9fd5"
+  },
+  "image-tools.mc-library-image-field.clear": {
+    "text": "Clear",
+    "hash": "83b12c22"
+  },
+  "image-tools.mc-library-image-field.colours": {
+    "text": "Colors",
+    "hash": "88f20221"
+  },
+  "image-tools.mc-library-image-field.copy-reference": {
+    "text": "Copy reference",
+    "hash": "141ae3df"
+  },
+  "image-tools.mc-library-image-field.description-for-screen-readers": {
+    "text": "Description for screen readers",
+    "hash": "c4a2966a"
+  },
+  "image-tools.mc-library-image-field.draw-a-new-image": {
+    "text": "Draw a new image",
+    "hash": "d6b72d9a"
+  },
+  "image-tools.mc-library-image-field.edit-image": {
+    "text": "Edit image",
+    "hash": "d9d12b04"
+  },
+  "image-tools.mc-library-image-field.hide-list": {
+    "text": "Hide list",
+    "hash": "08cd45a3"
+  },
+  "image-tools.mc-library-image-field.id-not-found": {
+    "text": "{id} (not found)",
+    "hash": "2e91ab0b"
+  },
+  "image-tools.mc-library-image-field.image": {
+    "text": "Image",
+    "hash": "1aa4cb0b"
+  },
+  "image-tools.mc-library-image-field.image-module-added-behind-the-content": {
+    "text": "Image module added behind the content. Remove the background layer if you no longer need it.",
+    "hash": "d477a087"
+  },
+  "image-tools.mc-library-image-field.image-set-name": {
+    "text": "Image set: {name}.",
+    "hash": "d8f48be1"
+  },
+  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "hash": "62625dad"
+  },
+  "image-tools.mc-library-image-field.library-image": {
+    "text": "Library image",
+    "hash": "624441fd"
+  },
+  "image-tools.mc-library-image-field.list-connected-devices-and-their-states": {
+    "text": "List connected devices and their states for screen readers",
+    "hash": "9f9e8750"
+  },
+  "image-tools.mc-library-image-field.live": {
+    "text": "Live",
+    "hash": "b64ac05f"
+  },
+  "image-tools.mc-library-image-field.live-parts-of-this-picture-follow-their": {
+    "text": "Live: parts of this picture follow their devices, here too.",
+    "hash": "39a4cbd1"
+  },
+  "image-tools.mc-library-image-field.main-and-accent-follow-the-colours-you": {
+    "text": "Main and Accent follow the colors you set for this card.",
+    "hash": "57dab719"
+  },
+  "image-tools.mc-library-image-field.main-colour": {
+    "text": "Main color",
+    "hash": "d21426ea"
+  },
+  "image-tools.mc-library-image-field.n": {
+    "text": "{n, plural, one {Uses # device} other {Uses # devices}}",
+    "hash": "de60f4b0"
+  },
+  "image-tools.mc-library-image-field.n-left": {
+    "text": "{n} left",
+    "hash": "19816380"
+  },
+  "image-tools.mc-library-image-field.need-buttons-or-a-description": {
+    "text": "Need buttons or a description?",
+    "hash": "ca254217"
+  },
+  "image-tools.mc-library-image-field.no-image-chosen": {
+    "text": "No image chosen",
+    "hash": "90d4c150"
+  },
+  "image-tools.mc-library-image-field.not-found": {
+    "text": "(not found)",
+    "hash": "f5047624"
+  },
+  "image-tools.mc-library-image-field.not-set-screen-readers-skip-this-picture": {
+    "text": "Not set (screen readers skip this picture)",
+    "hash": "65fe8610"
+  },
+  "image-tools.mc-library-image-field.off": {
+    "text": "Off",
+    "hash": "ca7981b4"
+  },
+  "image-tools.mc-library-image-field.on": {
+    "text": "On",
+    "hash": "13001175"
+  },
+  "image-tools.mc-library-image-field.optional-describe-what-the-picture-shows": {
+    "text": "Optional. Describe what the picture shows. Without it, screen readers skip the picture.",
+    "hash": "3a178011"
+  },
+  "image-tools.mc-library-image-field.pick-another": {
+    "text": "Pick another",
+    "hash": "ee5c1855"
+  },
+  "image-tools.mc-library-image-field.reference-copied": {
+    "text": "Reference copied.",
+    "hash": "c5ffea6b"
+  },
+  "image-tools.mc-library-image-field.rename-a-device-in-home-assistant-to": {
+    "text": "Rename a device in Home Assistant to change what is read.",
+    "hash": "9adeac02"
+  },
+  "image-tools.mc-library-image-field.set-screen-readers-read-it": {
+    "text": "Set (screen readers read it)",
+    "hash": "1d81a1be"
+  },
+  "image-tools.mc-library-image-field.show-list": {
+    "text": "Show list",
+    "hash": "28cd43f8"
+  },
+  "image-tools.mc-library-image-field.that-is-the-longest-description-500": {
+    "text": "That is the longest description (500 characters).",
+    "hash": "51019adf"
+  },
+  "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
+    "text": "The card shape ({card}) differs from the drawing ({drawing}).",
+    "hash": "6a4ef02f"
+  },
+  "image-tools.mc-library-image-field.the-drawing-editor-could-not-load-try": {
+    "text": "The drawing editor could not load. Try again.",
+    "hash": "a9a4c88b"
+  },
+  "image-tools.mc-library-image-field.the-reference-could-not-be-copied-select": {
+    "text": "The reference could not be copied. Select it and copy it by hand.",
+    "hash": "19726340"
+  },
+  "image-tools.mc-library-image-field.this-image-is-no-longer-in-the-library": {
+    "text": "This image is no longer in the library.",
+    "hash": "ba95db40"
+  },
+  "image-tools.mc-library-image-field.this-is-a-background-screen-readers-skip": {
+    "text": "This is a background. Screen readers skip it, and it cannot hold buttons.",
+    "hash": "42ea06a4"
+  },
+  "image-tools.mc-library-image-field.this-is-the-address-cards-use-it-stays": {
+    "text": "This is the address cards use. It stays the same when you rename the image.",
+    "hash": "e6f4c73b"
+  },
+  "image-tools.mc-library-image-field.this-picture-shows-live-devices-add-a": {
+    "text": "This picture shows live devices. Add a description or switch on the list so everyone can follow it.",
+    "hash": "e24edd12"
+  },
+  "image-tools.mc-library-image-field.to-change-colours-use-live-parts-in-one": {
+    "text": "To change colors, use live parts in one picture. To swap pictures, use states.",
+    "hash": "7684e26b"
+  },
+  "image-tools.mc-library-image-field.use-the-drawing-s-shape": {
+    "text": "Use the drawing's shape",
+    "hash": "a2e705e0"
+  },
+  "image-tools.mc-library-image-field.view-image": {
+    "text": "View image",
+    "hash": "5bb55a4b"
+  },
+  "image-tools.mc-library-image-field.will-read-now": {
+    "text": "Will read now:",
+    "hash": "06a7870c"
+  }
 }

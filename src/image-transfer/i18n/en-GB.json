@@ -1,0 +1,123 @@
+{
+  "image-transfer.chunk.create-copy": {
+    "text": "Create copy",
+    "note": "Button in the image transfer dialog that saves a duplicate of the image as a new one.",
+    "max": 20
+  },
+  "image-transfer.chunk.delete-name-cards-that-use-it-show-that": {
+    "text": "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.",
+    "note": "Confirmation before deleting an image from the library. {name} is the image's name, chosen by the user.",
+    "max": 140,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-transfer.chunk.duplicate-name": {
+    "text": "Duplicate {name}",
+    "note": "Label of a library action that copies an image. {name} is the image's name, chosen by the user.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-transfer.chunk.duplicated-as-name": {
+    "text": "Duplicated as {name}.",
+    "note": "Confirmation after an image was copied. {name} is the name of the new copy.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-transfer.chunk.export-all-images": {
+    "text": "Export all images",
+    "note": "Label of the action that exports every saved image to one file. It tells the user the whole image library is included.",
+    "max": 30
+  },
+  "image-transfer.chunk.n": {
+    "text": "{n, plural, one {# connection} other {# connections}}",
+    "note": "Part of an image's summary line. {n} is how many connections the image has. A connection links a part of the image to a Home Assistant entity.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "image-transfer.chunk.n-kb": {
+    "text": "{n} KB",
+    "note": "File size of an image in the summary line. {n} is a whole number of kilobytes, at least 1.",
+    "max": 10,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-transfer.chunk.name-copy": {
+    "text": "{name} copy",
+    "note": "Suggested name for a copied image. {name} is the name of the original image.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-transfer.chunk.name-for-the-copy-of-name": {
+    "text": "Name for the copy of {name}",
+    "note": "Label of the name field when copying an image. {name} is the name of the original image.",
+    "max": 45,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-transfer.chunk.new-image": {
+    "text": "New image",
+    "note": "Button in the image transfer dialog that starts a blank image in the image editor.",
+    "max": 20
+  },
+  "image-transfer.chunk.view-name": {
+    "text": "View {name}",
+    "note": "Label of a library action that opens an image. {name} is the image's name, chosen by the user.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "image-transfer.reader.connection-n-is-not-valid-so-it-was-left": {
+    "text": "Connection {n} is not valid, so it was left out.",
+    "note": "Import warning. {n} is the position (starting at 1) of the skipped connection in the imported file. A connection links a part of the image to an entity.",
+    "max": 80,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "image-transfer.reader.n": {
+    "text": "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}",
+    "note": "Import warning. {n} is how many further connections were skipped because they have no name.",
+    "max": 90,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "image-transfer.reader.only-the-first-max-connections-were-kept": {
+    "text": "{max, plural, one {Only the first # connection was kept.} other {Only the first # connections were kept.}}",
+    "note": "Import warning. {max} is the largest number of connections one image may have.",
+    "max": 70,
+    "vars": {
+      "max": "The most connections an image keeps."
+    }
+  },
+  "image-transfer.reader.the-image-could-not-be-read": {
+    "text": "The image could not be read.",
+    "note": "Error in the import report for an image entry that has no readable drawing. It tells the user that image could not be imported.",
+    "max": 45
+  },
+  "image-transfer.reader.the-image-holds-markup-that-is-not": {
+    "text": "The image holds markup that is not allowed.",
+    "note": "Import error. The SVG file contains code, such as scripts, that is blocked for safety.",
+    "max": 70
+  },
+  "image-transfer.reader.the-image-is-larger-than-kb-kb": {
+    "text": "The image is larger than {kb} KB.",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  }
+}

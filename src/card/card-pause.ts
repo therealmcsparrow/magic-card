@@ -100,7 +100,7 @@ export class CardPause {
     if (auto) this._recheck();
     const corner = CORNERS.includes(String(c.pause_button_corner)) ? (c.pause_button_corner as PauseButtonCorner) : 'bottom-left';
     if (!show) return nothing;
-    const label = t('Pause motion');
+    const label = t('card.card-pause.pause-motion');
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;

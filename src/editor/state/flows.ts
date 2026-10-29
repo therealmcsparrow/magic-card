@@ -27,7 +27,7 @@ export interface FlowModuleOption {
 }
 
 /** Why a locked module can't be picked (From / To, studio connect mode). */
-export const TEMPLATE_ID_HINT = m('Give this module an id in the template');
+export const TEMPLATE_ID_HINT = m('card-editor.flows.give-this-module-an-id-in-the-template');
 
 /** Prefix of a select value for a module without an id. */
 const PATH_PREFIX = '@';
@@ -88,7 +88,7 @@ export function flowModuleOptions(config: MagicCardConfig, hass?: HomeAssistant)
   };
   (config.rows || []).forEach((row, r) =>
     (row?.columns || []).forEach((col, c) =>
-      (col?.modules || []).forEach((mod, m) => visit(mod, moduleSelection(r, c, m), [t('Row {n}', { n: r + 1 }), t('Column {n}', { n: c + 1 })])),
+      (col?.modules || []).forEach((mod, m) => visit(mod, moduleSelection(r, c, m), [t('card-editor.flows.row-n', { n: r + 1 }), t('card-editor.flows.column-n', { n: c + 1 })])),
     ),
   );
   // Identical labels (two unlabelled Text modules in a column) get their position in their list.
@@ -97,7 +97,7 @@ export function flowModuleOptions(config: MagicCardConfig, hass?: HomeAssistant)
   for (const o of out) {
     if ((count.get(o.label) ?? 0) < 2) continue;
     const step = o.sel.child?.[o.sel.child.length - 1];
-    o.label = `${o.label} · ${t('Module {n}', { n: (step ? step.index : o.sel.module) + 1 })}`;
+    o.label = `${o.label} · ${t('card-editor.flows.module-n', { n: (step ? step.index : o.sel.module) + 1 })}`;
   }
   return out;
 }

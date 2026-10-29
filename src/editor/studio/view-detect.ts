@@ -1,4 +1,4 @@
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 /**
  * Which dashboard view the card sits in, and how wide the studio canvas should be to match.
  * Pure helpers; the studio runs them when it opens. Home Assistant gives the card editor the whole
@@ -32,14 +32,14 @@ export interface CanvasWidth {
   borderless: boolean;
 }
 
-export const OPTION_LABELS: Record<CanvasWidthOption, MessageId> = { narrow: m('Narrow'), wide: m('Wide'), panel: m('Panel') };
+export const OPTION_LABELS: Record<CanvasWidthOption, MessageIndex> = { narrow: m('card-editor.view-detect.narrow'), wide: m('card-editor.view-detect.wide'), panel: m('card-editor.view-detect.panel') };
 export const OPTION_PX: Record<'narrow' | 'wide', number> = { narrow: 400, wide: 800 };
 export const OPTION_IDS = Object.keys(OPTION_LABELS) as CanvasWidthOption[];
 /** The radios' accessible names (design: "Narrow, 400 pixels"). */
-export const OPTION_NAMES: Record<CanvasWidthOption, MessageId> = {
-  narrow: m('Narrow, 400 pixels'),
-  wide: m('Wide, 800 pixels'),
-  panel: m('Panel, full width'),
+export const OPTION_NAMES: Record<CanvasWidthOption, MessageIndex> = {
+  narrow: m('card-editor.view-detect.narrow-400-pixels'),
+  wide: m('card-editor.view-detect.wide-800-pixels'),
+  panel: m('card-editor.view-detect.panel-full-width'),
 };
 
 interface ViewLike {
@@ -50,7 +50,7 @@ interface ViewLike {
 }
 
 const unknown = (reason: string): DetectedView => ({ kind: 'unknown', reason });
-const unknownReason = (): string => t("Couldn't tell the view type");
+const unknownReason = (): string => t("card-editor.view-detect.couldn-t-tell-the-view-type");
 
 /** The view the URL points at: its last segment matches a view `path`, else a view index; none = the first view. */
 function viewFromPath(views: ViewLike[], pathname: string): ViewLike | undefined {
@@ -84,7 +84,7 @@ export function detectView(lovelace: unknown, pathname: string, cardConfig?: Rec
     const pos = (cardConfig?.view_layout as { position?: unknown } | undefined)?.position;
     return { kind: 'sidebar', reason: '', sidebar: pos === 'sidebar' };
   }
-  return unknown(t("View type {type} isn't supported", { type }));
+  return unknown(t("card-editor.view-detect.view-type-type-isn-t-supported", { type }));
 }
 
 /** HA's sections grid: 12 columns with 8 px gaps inside a section of `400 x span + 32 x (span - 1)` px. */
@@ -99,17 +99,17 @@ export function autoWidth(view: DetectedView): CanvasWidth {
     ({ option, px, note, canMatch: false, borderless });
   switch (view.kind) {
     case 'panel':
-      return match('panel', null, t('Matches this view (panel)'), true);
+      return match('panel', null, t('card-editor.view-detect.matches-this-view-panel'), true);
     case 'masonry':
-      return match('narrow', OPTION_PX.narrow, t('Matches this view (masonry)'));
+      return match('narrow', OPTION_PX.narrow, t('card-editor.view-detect.matches-this-view-masonry'));
     case 'sections':
       return view.columns
-        ? match('narrow', sectionCardWidth(view.columns, view.span), t('Matches this view (sections, {columns} of 12 columns)', { columns: view.columns }))
-        : match('narrow', OPTION_PX.narrow, t('Matches this view (sections)'));
+        ? match('narrow', sectionCardWidth(view.columns, view.span), t('card-editor.view-detect.matches-this-view-sections-columns-of-12', { columns: view.columns }))
+        : match('narrow', OPTION_PX.narrow, t('card-editor.view-detect.matches-this-view-sections'));
     case 'sidebar':
       return view.sidebar
-        ? match('narrow', 380, t('Matches this view (sidebar)'))
-        : match('wide', OPTION_PX.wide, t('Matches this view (sidebar)'));
+        ? match('narrow', 380, t('card-editor.view-detect.matches-this-view-sidebar'))
+        : match('wide', OPTION_PX.wide, t('card-editor.view-detect.matches-this-view-sidebar'));
     default:
       return match('narrow', OPTION_PX.narrow, view.reason || unknownReason());
   }

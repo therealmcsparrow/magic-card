@@ -16,7 +16,7 @@ import { note } from './types';
 /** The helpers and shared messages the chunk is handed once; it imports none of them. */
 export const imageTransferKit: ImageTransferKit = {
   note,
-  droppedKey: (item, path) => note('dropped_key', item, path, t('"{key}" is not a preset field, so it was left out.', { key: path.slice(path.lastIndexOf('.') + 1) })),
+  droppedKey: (item, path) => note('dropped_key', item, path, t('transfer.image-transfer-loader.key-is-not-a-preset-field-so-it-was-left', { key: path.slice(path.lastIndexOf('.') + 1) })),
   removedNote,
   elementWhat,
   attributeWhat,

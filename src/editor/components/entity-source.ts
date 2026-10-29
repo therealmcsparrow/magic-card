@@ -6,24 +6,24 @@ import { editorSystem } from '../../css/editor-stack';
 import { editorKey } from '../../utils/editor-key';
 import { renderEntityField, renderFieldHead, renderToggleField } from '../../utils/form-utils';
 import type { SyncContext } from '../../utils/sync-path';
-import { m, t, type MessageId } from '../i18n';
+import { m, t, type MessageIndex } from '../i18n';
 import './entity-picker';
 
-const SOURCES: Record<EntitySourceKind, MessageId> = { card: m('card'), row: m('row'), column: m('column'), tabs: m('tabs'), slides: m('slides') };
+const SOURCES: Record<EntitySourceKind, MessageIndex> = { card: m('card-editor.entity-source.card'), row: m('card-editor.entity-source.row'), column: m('card-editor.entity-source.column'), tabs: m('card-editor.entity-source.tabs'), slides: m('card-editor.entity-source.slides') };
 
 /** The nouns of the field, as plain words (no "domain", no "entity" jargon in the mismatch sentence). */
 export const sourceWord = (kind: EntitySourceKind): string => t(SOURCES[kind]);
 
-const KINDS: Record<string, MessageId> = {
-  camera: m('a camera'),
-  light: m('a light'),
-  weather: m('a weather source'),
-  sensor: m('a sensor'),
-  binary_sensor: m('a sensor'),
-  switch: m('a switch'),
-  input_select: m('a list of options'),
-  select: m('a list of options'),
-  other: m('a different kind of device'),
+const KINDS: Record<string, MessageIndex> = {
+  camera: m('card-editor.entity-source.a-camera'),
+  light: m('card-editor.entity-source.a-light'),
+  weather: m('card-editor.entity-source.a-weather-source'),
+  sensor: m('card-editor.entity-source.a-sensor'),
+  binary_sensor: m('card-editor.entity-source.a-sensor'),
+  switch: m('card-editor.entity-source.a-switch'),
+  input_select: m('card-editor.entity-source.a-list-of-options'),
+  select: m('card-editor.entity-source.a-list-of-options'),
+  other: m('card-editor.entity-source.a-different-kind-of-device'),
 };
 
 /** "a sensor", "a camera": what a Home Assistant domain is called in a sentence. */
@@ -33,7 +33,7 @@ export const kindNoun = (domain: string | undefined): string => t(KINDS[domain &
 export function attributeCaption(scope?: EntitySourceInfo): string | undefined {
   const from = scope?.inherited;
   if (!scope || scope.choice !== 'inherit' || !from || !scope.effective) return undefined;
-  return t('Attributes of {id} ({source})', { id: scope.effective, source: sourceWord(from.from) });
+  return t('card-editor.entity-source.attributes-of-id-source', { id: scope.effective, source: sourceWord(from.from) });
 }
 
 /** Event: the user asked for Card settings > General (the Card entity field). */
@@ -178,7 +178,7 @@ export class EntitySource extends LitElement {
     const i = this.info;
     if (!i.mismatch || !i.inherited) return '';
     const kind = kindNoun(i.domains?.length === 1 ? i.domains[0] : undefined);
-    return t("This tile needs {kind}. The {source}'s device is {thing}, so the tile stays empty.", {
+    return t("card-editor.entity-source.this-tile-needs-kind-the-source-s-device", {
       kind,
       source: sourceWord(i.inherited.from),
       thing: kindNoun(i.inherited.id.split('.')[0]),
@@ -196,7 +196,7 @@ export class EntitySource extends LitElement {
     this._picking = false;
     if (this.value !== undefined) this.onChange(undefined);
     const inh = this.info.inherited!;
-    const base = t('Now using {name} from the {source}.', { name: this._name(inh.id), source: sourceWord(inh.from) });
+    const base = t('card-editor.entity-source.now-using-name-from-the-source', { name: this._name(inh.id), source: sourceWord(inh.from) });
     this._say(this.info.mismatch ? `${base} ${this._mismatchText()}` : base);
   };
 
@@ -212,7 +212,7 @@ export class EntitySource extends LitElement {
   private _none = (): void => {
     this._picking = false;
     if (this._raw !== 'none') this.onChange('none');
-    this._say(t('No entity.'));
+    this._say(t('card-editor.entity-source.no-entity'));
   };
 
   /** The mismatch button: opens the picker window, filtered to the kind this tile needs. */
@@ -237,7 +237,7 @@ export class EntitySource extends LitElement {
     this.onChange(v === '' ? undefined : v);
     if (v && this.hass?.states?.[v] && v !== this._announced) {
       this._announced = v;
-      this._say(t('Now using {name}.', { name: this._name(v) }));
+      this._say(t('card-editor.entity-source.now-using-name', { name: this._name(v) }));
     }
   };
 
@@ -263,14 +263,14 @@ export class EntitySource extends LitElement {
 
   private _link(sentence: string): TemplateResult {
     const [before, after] = sentence.split('\u0001');
-    return html`${before}<button type="button" class="link" @click=${this._openCardSettings}>${t('Card settings > General')}</button>${after ?? ''}`;
+    return html`${before}<button type="button" class="link" @click=${this._openCardSettings}>${t('card-editor.entity-source.card-settings-general')}</button>${after ?? ''}`;
   }
 
   private _hint(): TemplateResult | typeof nothing {
     const i = this.info;
-    if (i.cardModule) return html`<p class="help" id="hint">${t("Card modules do not follow the card's entity.")}</p>`;
+    if (i.cardModule) return html`<p class="help" id="hint">${t("card-editor.entity-source.card-modules-do-not-follow-the-card-s")}</p>`;
     if (i.choice === 'none') {
-      return html`<p class="help" id="hint">${this.layout ? t('Tiles inside get no entity unless they pick one.') : t('This tile shows no device.')}</p>`;
+      return html`<p class="help" id="hint">${this.layout ? t('card-editor.entity-source.tiles-inside-get-no-entity-unless-they') : t('card-editor.entity-source.this-tile-shows-no-device')}</p>`;
     }
     if (i.choice === 'own') return nothing;
     if (this._canFollow && !this._picking) {
@@ -278,18 +278,18 @@ export class EntitySource extends LitElement {
       const stateObj = this.hass?.states?.[inh.id];
       const known = !this.hass?.states || !!stateObj;
       const name = this._name(inh.id);
-      const first = known ? name : t('{name} (not found)', { name });
+      const first = known ? name : t('card-editor.entity-source.name-not-found', { name });
       const detail = stateObj ? `${inh.id} · ${this.hass!.formatEntityState?.(stateObj) ?? stateObj.state}` : '';
       return html`
-        <p class="line" id="hint"><ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span>${t('From {source}: {name}', { source: sourceWord(inh.from), name: first })}</span></p>
+        <p class="line" id="hint"><ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span>${t('card-editor.entity-source.from-source-name', { source: sourceWord(inh.from), name: first })}</span></p>
         ${stateObj ? html`<p class="sub mono">${detail}</p>` : nothing}
       `;
     }
     if (this._picking || i.cardModule) return nothing;
     // nothing to follow
     const msg = i.walled
-      ? html`${t('A row, column or layout around this tile has No entity, so there is nothing to follow.')}`
-      : this._link(t("Nothing chosen yet. To use the card's device, set it in {link}.", { link: '\u0001' }));
+      ? html`${t('card-editor.entity-source.a-row-column-or-layout-around-this-tile')}`
+      : this._link(t("card-editor.entity-source.nothing-chosen-yet-to-use-the-card-s", { link: '\u0001' }));
     return html`<p class="help" id="hint">${msg}</p>`;
   }
 
@@ -300,8 +300,8 @@ export class EntitySource extends LitElement {
     return html`
       <p class="warn"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon><span>${this._mismatchText()}</span></p>
       <div class="acts">
-        <button type="button" class="btn btn-secondary btn-sm" @click=${this._pickAndOpen}>${t('Pick {kind}', { kind: one ? kindNoun(i.domains![0]) : t('a device') })}</button>
-        <button type="button" class="btn btn-secondary btn-sm" @click=${this._none}>${t('No entity')}</button>
+        <button type="button" class="btn btn-secondary btn-sm" @click=${this._pickAndOpen}>${t('card-editor.entity-source.pick-kind', { kind: one ? kindNoun(i.domains![0]) : t('card-editor.entity-source.a-device') })}</button>
+        <button type="button" class="btn btn-secondary btn-sm" @click=${this._none}>${t('card-editor.entity-source.no-entity-2')}</button>
       </div>
     `;
   }
@@ -313,9 +313,9 @@ export class EntitySource extends LitElement {
     const near = raw.trim().toLowerCase() === 'none';
     return html`
       <p class="warn"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon><span>${near
-        ? t('Did you mean No entity?')
-        : t('That is not an entity id. It needs a dot, like light.kitchen. To switch the entity off, use No entity.')}</span></p>
-      ${near ? html`<div class="acts"><button type="button" class="btn btn-secondary btn-sm" @click=${this._none}>${t('Use No entity')}</button></div>` : nothing}
+        ? t('card-editor.entity-source.did-you-mean-no-entity')
+        : t('card-editor.entity-source.that-is-not-an-entity-id-it-needs-a-dot')}</span></p>
+      ${near ? html`<div class="acts"><button type="button" class="btn btn-secondary btn-sm" @click=${this._none}>${t('card-editor.entity-source.use-no-entity')}</button></div>` : nothing}
     `;
   }
 
@@ -328,17 +328,17 @@ export class EntitySource extends LitElement {
     if (!i.cardModule) {
       options.push({
         id: 'same',
-        label: t('Same as {source}', { source: sourceWord(i.inherited?.from ?? 'card') }),
+        label: t('card-editor.entity-source.same-as-source', { source: sourceWord(i.inherited?.from ?? 'card') }),
         on: this._same,
         disabled: !canFollow,
       });
     }
-    options.push({ id: 'pick', label: t('Pick one'), on: this._pick }, { id: 'none', label: t('No entity'), on: this._none });
+    options.push({ id: 'pick', label: t('card-editor.entity-source.pick-one'), on: this._pick }, { id: 'none', label: t('card-editor.entity-source.no-entity-2'), on: this._none });
     const tabbable = options.find((o) => o.id === pressed) ?? options.find((o) => !o.disabled) ?? options[0];
     const hint = this._hint();
     return html`
       <div class="src">
-        <div class="seg full" role="group" aria-label=${t('Entity source')} @keydown=${this._onKey} @focusout=${this._onFocusOut}>
+        <div class="seg full" role="group" aria-label=${t('card-editor.entity-source.entity-source')} @keydown=${this._onKey} @focusout=${this._onFocusOut}>
           ${options.map((o) => html`<button
             type="button"
             data-choice=${o.id}
@@ -356,8 +356,8 @@ export class EntitySource extends LitElement {
               .hass=${this.hass}
               .value=${i.choice === 'own' ? this._raw ?? '' : ''}
               .domain=${this.domain}
-              .label=${t('Own entity')}
-              .placeholder=${t('Pick a device')}
+              .label=${t('card-editor.entity-source.own-entity')}
+              .placeholder=${t('card-editor.entity-source.pick-a-device')}
               @value-changed=${this._onPicked}
             ></mc-entity-picker>`
           : nothing}
@@ -433,15 +433,15 @@ export function renderEntityBlock(
   const share = isLayout(c) && scope.choice === 'own' && !scope.invalidOwn;
   return html`
     <div class="mc-tab-content">
-      ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
+      ${renderEntitySourceField(t('card-editor.entity-source.entity'), c, onChange, hass, scope, { syncCtx })}
       ${share
         ? renderToggleField(
-            t('Share with tiles inside'),
+            t('card-editor.entity-source.share-with-tiles-inside'),
             (c as { share_entity?: boolean }).share_entity === true,
             (v) => onChange({ ...c, share_entity: v } as CardModule),
             'share_entity',
             syncCtx,
-            t('Tiles inside follow this entity unless they pick their own.'),
+            t('card-editor.entity-source.tiles-inside-follow-this-entity-unless'),
           )
         : nothing}
     </div>

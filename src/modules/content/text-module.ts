@@ -33,8 +33,8 @@ function entityName(hass: HomeAssistant, stateObj: HassEntity): string {
 class TextModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'text',
-    name: lm('Text'),
-    description: lm('Display static or template text'),
+    name: lm('labels.text-module.text'),
+    description: lm('labels.text-module.display-static-or-template-text'),
     category: 'content',
     icon: 'mdi:format-text',
   };
@@ -71,7 +71,7 @@ class TextModule extends BaseMagicModule {
       case 'pending':
         return '';
       case 'error':
-        return html`<span class="mc-template-error" role="alert" title=${result.error}>${t('Template error: {error}', { error: result.error })}</span>`;
+        return html`<span class="mc-template-error" role="alert" title=${result.error}>${t('card.text-module.template-error-error', { error: result.error })}</span>`;
       default:
         return text;
     }
@@ -81,7 +81,7 @@ class TextModule extends BaseMagicModule {
   private _entityText(c: TextModuleConfig, hass?: HomeAssistant): TemplateResult | string {
     const id = c.entity!;
     const stateObj = hass?.states?.[id];
-    if (!hass || !stateObj) return html`${id} <span class="mc-text-muted">${t('unavailable')}</span>`;
+    if (!hass || !stateObj) return html`${id} <span class="mc-text-muted">${t('card.text-module.unavailable')}</span>`;
     const display = c.entity_display || 'state';
     if (display === 'name') return entityName(hass, stateObj);
     // a timer's live countdown; idle (and other entities) show the state
@@ -93,9 +93,9 @@ class TextModule extends BaseMagicModule {
 
   hints(config: CardModule): string[] {
     const textConfig = config as TextModuleConfig;
-    if (textConfig.use_entity) return textConfig.entity ? [] : [t('Entity is required')];
+    if (textConfig.use_entity) return textConfig.entity ? [] : [t('card.text-module.entity-is-required')];
     if (textConfig.text) return [];
-    return [textConfig.use_template ? t('Template is required') : t('Text content is required')];
+    return [textConfig.use_template ? t('card.text-module.template-is-required') : t('card.text-module.text-content-is-required')];
   }
 }
 

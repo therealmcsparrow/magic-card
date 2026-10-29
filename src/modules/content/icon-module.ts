@@ -12,8 +12,8 @@ import { lm } from '../../i18n/labels/mark';
 class IconModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'icon',
-    name: lm('Icon'),
-    description: lm('Display an icon from MDI or entity'),
+    name: lm('labels.icon-module.icon'),
+    description: lm('labels.icon-module.display-an-icon-from-mdi-or-entity'),
     category: 'content',
     icon: 'mdi:emoticon-outline',
   };

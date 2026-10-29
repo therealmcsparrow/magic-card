@@ -27,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0 # the translation check reads the en-GB catalogues of the base commit
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -34,6 +35,27 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Type check (generated message keys included)
+        run: npm run typecheck
+      - name: Translations and message keys (drift, stale hashes on touched keys)
+        # Keys that are new or whose en-GB text changed against the base need a current nl text. Base: the commit before the push, or the
+        # PR base branch, the same as the size-caps job. A base that does not resolve fails; only a new branch (no commit before) has none.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): touched keys not compared"
+            node tools/check-i18n.mjs --ci
+          else
+            node tools/check-i18n.mjs --ci --base "$base"
+          fi
 
   build:
     name: Build and size budget
@@ -73,10 +95,6 @@ jobs:
           elif ! git cat-file -e "$base^{commit}"; then
             echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
             exit 1
-          elif ! git cat-file -e "$base:tools/entry-graph.json"; then
-            # bootstrap: the base commit predates the debt file, so there is no list to compare with. Visible, and only this case.
-            echo "::notice::base $base has no tools/entry-graph.json yet (bootstrap): debt growth not compared"
-            node tools/check-entry-graph.mjs
           else
             ENTRY_GRAPH_BASE="$base" node tools/check-entry-graph.mjs --require-base
           fi
@@ -97,7 +115,7 @@ jobs:
       - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
         # The debt file (tools/es-syntax-debt.json, editor side only) may not grow against the base: the commit before the push, or the PR
         # base branch, the same as the entry graph step. A base that does not resolve fails (--require-base); only a new branch (no commit
-        # before) and a base that predates the debt file (bootstrap) skip the growth check, with a notice.
+        # before) skips the growth check, with a notice.
         env:
           EVENT_NAME: ${{ github.event_name }}
           BASE_BRANCH: ${{ github.base_ref }}
@@ -115,9 +133,6 @@ jobs:
           elif ! git cat-file -e "$base^{commit}"; then
             echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
             exit 1
-          elif ! git cat-file -e "$base:tools/es-syntax-debt.json"; then
-            echo "::notice::base $base has no tools/es-syntax-debt.json yet (bootstrap): debt growth not compared"
-            node tools/check-es-syntax.mjs --no-base
           else
             ES_SYNTAX_BASE="$base" node tools/check-es-syntax.mjs --require-base
           fi

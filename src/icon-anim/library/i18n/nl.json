@@ -1,553 +1,2462 @@
 {
-  "3D printer": "3D-printer",
-  "3D printer nozzle": "Mondstuk van de 3D-printer",
-  "A": "A",
-  "Access point": "Toegangspunt",
-  "Air bottom": "Lucht onder",
-  "Air conditioner": "Airconditioner",
-  "Air filter": "Luchtfilter",
-  "Air purifier": "Luchtreiniger",
-  "Air top": "Lucht boven",
-  "Alarm clock": "Wekker",
-  "Alarm light": "Alarmlicht",
-  "Alert": "Waarschuwing",
-  "Antenna": "Antenne",
-  "Arms": "Armen",
-  "Back left leg": "Linkerachterpoot",
-  "Back right leg": "Rechterachterpoot",
-  "Balloon": "Ballon",
-  "Band": "Band",
-  "Band 1": "Band 1",
-  "Band 2": "Band 2",
-  "Band 3": "Band 3",
-  "Band 4": "Band 4",
-  "Band 5": "Band 5",
-  "Bar": "Balk",
-  "Bar 1": "Balk 1",
-  "Bar 2": "Balk 2",
-  "Bar 3": "Balk 3",
-  "Base": "Voet",
-  "Bases": "Voeten",
-  "Bat": "Vleermuis",
-  "Battery": "Batterij",
-  "Battery charging": "Batterij laadt op",
-  "Battery level": "Batterijniveau",
-  "Bauble {n}": "Kerstbal {n}",
-  "Beam": "Straal",
-  "Beam edge 1": "Straalrand 1",
-  "Beam edge 2": "Straalrand 2",
-  "Beating heart": "Kloppend hart",
-  "Bed": "Bed",
-  "Bee": "Bij",
-  "Bee and flower": "Bij en bloem",
-  "Bell": "Bel",
-  "Bell and clapper": "Bel en klepel",
-  "Bend": "Bocht",
-  "Big heart": "Groot hart",
-  "Big sparkle": "Grote fonkeling",
-  "Big star": "Grote ster",
-  "Bin": "Afvalbak",
-  "Bird": "Vogel",
-  "Blades": "Bladen",
-  "Bloom": "Bloesem",
-  "Body": "Romp",
-  "Bolt": "Bliksemschicht",
-  "Bottle": "Fles",
-  "Bottom drops": "Onderste druppels",
-  "Bottom gust": "Onderste windvlaag",
-  "Bottom slat": "Onderste lamel",
-  "Bottom strip": "Onderste strook",
-  "Bottom unit": "Onderste eenheid",
-  "Box": "Doos",
-  "Brim": "Rand",
-  "Bristles": "Haren",
-  "Broken heart": "Gebroken hart",
-  "Broom": "Bezem",
-  "Brush": "Borstel",
-  "Bulb": "Lamp",
-  "Bulb glow": "Gloeiende lamp",
-  "Bulb shining": "Schijnende lamp",
-  "Butterfly": "Vlinder",
-  "Button": "Knop",
-  "C": "C",
-  "Camera": "Camera",
-  "Camera head": "Camerakop",
-  "Camera snapshot": "Camerabeeld",
-  "Campfire": "Kampvuur",
-  "Can": "Blik",
-  "Candle": "Kaars",
-  "Candy cane": "Zuurstok",
-  "Canopy": "Kap",
-  "Car": "Auto",
-  "Car driving": "Rijdende auto",
-  "Case": "Behuizing",
-  "Cat": "Kat",
-  "Cauldron": "Ketel",
-  "Ceiling fan with light": "Plafondventilator met licht",
-  "Ceiling light": "Plafondlamp",
-  "Centre": "Midden",
-  "Centre bulb": "Middelste lamp",
-  "Chandelier": "Kroonluchter",
-  "Charge": "Lading",
-  "Cherry": "Kers",
-  "Christmas tree": "Kerstboom",
-  "Clapper": "Klepel",
-  "Clear night": "Heldere nacht",
-  "Clock": "Klok",
-  "Cloud": "Wolk",
-  "Cloudy": "Bewolkt",
-  "Coffee maker": "Koffiezetapparaat",
-  "Cone": "Kegel",
-  "Cooking pot": "Kookpan",
-  "Cuff": "Manchet",
-  "Cupcake": "Cupcake",
-  "Curtains": "Gordijnen",
-  "Cutting head": "Snijkop",
-  "Desk lamp": "Bureaulamp",
-  "Detector": "Melder",
-  "Dial": "Wijzerplaat",
-  "Dishwasher": "Vaatwasser",
-  "Display": "Display",
-  "Dog": "Hond",
-  "Dog barking": "Blaffende hond",
-  "Dolphin": "Dolfijn",
-  "Door": "Deur",
-  "Door leaf": "Deurblad",
-  "Door opening": "Deur gaat open",
-  "Door window": "Deurraam",
-  "Doorbell press": "Deurbel ingedrukt",
-  "Doorbell ring": "Deurbel gaat",
-  "Dot": "Stip",
-  "Drip": "Druppel",
-  "Drop": "Druppel",
-  "Drop 1": "Druppel 1",
-  "Drop 10": "Druppel 10",
-  "Drop 11": "Druppel 11",
-  "Drop 12": "Druppel 12",
-  "Drop 2": "Druppel 2",
-  "Drop 3": "Druppel 3",
-  "Drop 4": "Druppel 4",
-  "Drop 5": "Druppel 5",
-  "Drop 6": "Druppel 6",
-  "Drop 7": "Druppel 7",
-  "Drop 8": "Druppel 8",
-  "Drop 9": "Druppel 9",
-  "Drum": "Trommel",
-  "Dryer": "Droger",
-  "Duck": "Eend",
-  "Electric car charging": "Elektrische auto laadt op",
-  "Energy": "Energie",
-  "Energy meter": "Energiemeter",
-  "Exclamation": "Uitroep",
-  "Exclamation mark": "Uitroepteken",
-  "Extinguisher": "Blusser",
-  "Face": "Gezicht",
-  "Face glow": "Gezichtsgloed",
-  "Fan": "Ventilator",
-  "Fan spin": "Draaiende ventilator",
-  "Faucet": "Kraan",
-  "Filament": "Gloeidraad",
-  "Filter": "Filter",
-  "Fire alert": "Brandalarm",
-  "Fire extinguisher": "Brandblusser",
-  "Fire ring": "Vuurring",
-  "Fire sprinkler": "Sprinkler",
-  "Fireplace": "Open haard",
-  "Firework": "Vuurwerk",
-  "Fish": "Vis",
-  "Flame": "Vlam",
-  "Floating hearts": "Zwevende harten",
-  "Floor lamp": "Staande lamp",
-  "Flower": "Bloem",
-  "Fog": "Mist",
-  "Fog line 1": "Mistlijn 1",
-  "Fog line 2": "Mistlijn 2",
-  "Fog line 3": "Mistlijn 3",
-  "Fog line 4": "Mistlijn 4",
-  "Foot": "Voet",
-  "Frame": "Frame",
-  "Freezer door": "Vriezerdeur",
-  "Fridge door": "Koelkastdeur",
-  "Front left leg": "Linkervoorpoot",
-  "Front right leg": "Rechtervoorpoot",
-  "Frosting": "Glazuur",
-  "Garage": "Garage",
-  "Garage door": "Garagedeur",
-  "Garage opening": "Garagedeur gaat open",
-  "Gate": "Poort",
-  "Gauge": "Meter",
-  "Gem": "Edelsteen",
-  "Ghost": "Spook",
-  "Gift": "Cadeau",
-  "Gravestone": "Grafsteen",
-  "Grill": "Grill",
-  "Ground": "Grond",
-  "Hail": "Hagel",
-  "Hailstone 1": "Hagelsteen 1",
-  "Hailstone 2": "Hagelsteen 2",
-  "Hailstone 3": "Hagelsteen 3",
-  "Hand": "Hand",
-  "Hand wash": "Handen wassen",
-  "Hand with heart": "Hand met hart",
-  "Handle": "Handvat",
-  "Hands": "Handen",
-  "Handset": "Hoorn",
-  "Hat": "Hoed",
-  "Head": "Kop",
-  "Headphones": "Koptelefoon",
-  "Heart": "Hart",
-  "Heart and pulse": "Hart en hartslag",
-  "Heart top": "Bovenkant hart",
-  "Heartbeat": "Hartslag",
-  "Hearth": "Haard",
-  "Heat haze": "Hittegolving",
-  "Heating element": "Verwarmingselement",
-  "Heavy snow": "Zware sneeuwval",
-  "Home": "Thuis",
-  "Home Assistant": "Home Assistant",
-  "Hook end": "Haakeinde",
-  "Horizon 1": "Horizon 1",
-  "Horizon 2": "Horizon 2",
-  "Hourglass": "Zandloper",
-  "House": "Huis",
-  "Hub": "Hub",
-  "Humidifier mist": "Luchtbevochtiger",
-  "Humidity drop": "Vochtigheidsdruppel",
-  "Hurricane": "Orkaan",
-  "Inner flame": "Binnenste vlam",
-  "Inner left wave": "Binnenste linkergolf",
-  "Inner right wave": "Binnenste rechtergolf",
-  "Inner wave": "Binnenste golf",
-  "Inner waves": "Binnenste golven",
-  "Iron": "Strijkijzer",
-  "Jack-o'-lantern": "Pompoenlantaarn",
-  "Jaw": "Kaak",
-  "Jellyfish": "Kwal",
-  "Jingle bell": "Belletje",
-  "Kettle": "Waterkoker",
-  "Kettle boiling": "Kokende waterkoker",
-  "Knob": "Knop",
-  "Knob 1": "Knop 1",
-  "Knob 2": "Knop 2",
-  "Knob 3": "Knop 3",
-  "LED strip colour chase": "Ledstrip met kleurenloopeffect",
-  "Ladder": "Ladder",
-  "Ladybug": "Lieveheersbeestje",
-  "Lamp": "Lamp",
-  "Lamp front": "Voorkant lamp",
-  "Laser cutter": "Lasersnijder",
-  "Laser head": "Laserkop",
-  "Lava": "Lava",
-  "Lava lamp": "Lavalamp",
-  "Leaf": "Blad",
-  "Leaf in the wind": "Blad in de wind",
-  "Left bell": "Linkerbel",
-  "Left blade": "Linkerblad",
-  "Left bulb": "Linkerlamp",
-  "Left curtain": "Linkergordijn",
-  "Left drop": "Linkerdruppel",
-  "Left drop 1": "Linkerdruppel 1",
-  "Left drop 2": "Linkerdruppel 2",
-  "Left drop 3": "Linkerdruppel 3",
-  "Left drop 4": "Linkerdruppel 4",
-  "Left drop 5": "Linkerdruppel 5",
-  "Left drop 6": "Linkerdruppel 6",
-  "Left eye": "Linkeroog",
-  "Left flake": "Linkervlok",
-  "Left half": "Linkerhelft",
-  "Left lamp": "Linkerlamp",
-  "Left leaf": "Linkerblad",
-  "Left light": "Linkerlicht",
-  "Left node": "Linkerknooppunt",
-  "Left oven glow": "Oven-gloed links",
-  "Left pipe": "Linkerpijp",
-  "Left ray": "Linkerstraal",
-  "Left steam": "Linkerstoom",
-  "Left tick": "Linkerhaakje",
-  "Left wave": "Linkergolf",
-  "Left wing": "Linkervleugel",
-  "Left wing case": "Linkervleugeldek",
-  "Lens": "Lens",
-  "Letter slot": "Brievensleuf",
-  "Lid": "Deksel",
-  "Light": "Licht",
-  "Light group": "Lichtgroep",
-  "Light rays": "Lichtstralen",
-  "Light switch": "Lichtschakelaar",
-  "Line": "Lijn",
-  "Lock": "Slot",
-  "Logs": "Houtblokken",
-  "Machine": "Machine",
-  "Magic staff": "Toverstaf",
-  "Mail arrived": "Post is er",
-  "Mailbox": "Brievenbus",
-  "Mantel": "Schoorsteenmantel",
-  "Mark 1": "Markering 1",
-  "Mark 2": "Markering 2",
-  "Mark 3": "Markering 3",
-  "Mark 4": "Markering 4",
-  "Mark 5": "Markering 5",
-  "Mark 6": "Markering 6",
-  "Mark 7": "Markering 7",
-  "Mark 8": "Markering 8",
-  "Material": "Materiaal",
-  "Meter": "Meter",
-  "Middle arc": "Middelste boog",
-  "Middle bulb": "Middelste lamp",
-  "Middle drop": "Middelste druppel",
-  "Middle drops": "Middelste druppels",
-  "Middle gust": "Middelste windvlaag",
-  "Middle light": "Middelste licht",
-  "Middle ray": "Middelste straal",
-  "Middle slat": "Middelste lamel",
-  "Middle strip": "Middelste strook",
-  "Middle unit": "Middelste eenheid",
-  "Middle wave": "Middelste golf",
-  "Mist 1": "Nevel 1",
-  "Mist 2": "Nevel 2",
-  "Mist 3": "Nevel 3",
-  "Mist 4": "Nevel 4",
-  "Mist 5": "Nevel 5",
-  "Mist 6": "Nevel 6",
-  "Moon": "Maan",
-  "Motion detected": "Beweging gedetecteerd",
-  "Mount": "Beugel",
-  "Mower": "Maaier",
-  "Music note dance": "Dansende muzieknoot",
-  "Needle": "Naald",
-  "Night light": "Nachtlampje",
-  "Nose cone": "Neuskegel",
-  "Note": "Noot",
-  "Notification": "Melding",
-  "Nozzle": "Mondstuk",
-  "Orb": "Bol",
-  "Ornament": "Kerstversiering",
-  "Outdoor temperature": "Buitentemperatuur",
-  "Outer flame": "Buitenste vlam",
-  "Outer left wave": "Buitenste linkergolf",
-  "Outer right wave": "Buitenste rechtergolf",
-  "Outer wave": "Buitenste golf",
-  "Outer waves": "Buitenste golven",
-  "Oven": "Oven",
-  "Oven heating": "Oven warmt op",
-  "Owl": "Uil",
-  "Pad": "Kussen",
-  "Panel": "Paneel",
-  "Paper": "Papier",
-  "Parcel": "Pakket",
-  "Parcel delivered": "Pakket bezorgd",
-  "Partly cloudy": "Half bewolkt",
-  "Party popper": "Confettikanon",
-  "Pendant": "Hanglamp",
-  "Pendant lights": "Hanglampen",
-  "Penguin": "Pinguïn",
-  "Person": "Persoon",
-  "Person home": "Persoon thuis",
-  "Pet": "Huisdier",
-  "Phone": "Telefoon",
-  "Phone ringing": "Telefoon gaat over",
-  "Phone signal": "Telefoonsignaal",
-  "Phone vibrate": "Trillende telefoon",
-  "Plant": "Plant",
-  "Plate": "Bord",
-  "Play": "Afspelen",
-  "Plug": "Stekker",
-  "Plug in": "Stekker erin",
-  "Pool": "Zwembad",
-  "Popper": "Knaller",
-  "Pot": "Pan",
-  "Pouring rain": "Stortregen",
-  "Power button": "Aan-uitknop",
-  "Print": "Afdruk",
-  "Print head": "Printkop",
-  "Printer": "Printer",
-  "Pump": "Pomp",
-  "Pumpkin": "Pompoen",
-  "Radiator": "Radiator",
-  "Radiator heat": "Warme radiator",
-  "Rail": "Rail",
-  "Rain": "Regen",
-  "Ray 1": "Straal 1",
-  "Ray 2": "Straal 2",
-  "Ray 3": "Straal 3",
-  "Ray bottom": "Straal onder",
-  "Ray bottom left": "Straal linksonder",
-  "Ray bottom right": "Straal rechtsonder",
-  "Ray left": "Straal links",
-  "Ray right": "Straal rechts",
-  "Ray top": "Straal boven",
-  "Ray top left": "Straal linksboven",
-  "Ray top right": "Straal rechtsboven",
-  "Rays": "Stralen",
-  "Right bell": "Rechterbel",
-  "Right blade": "Rechterblad",
-  "Right bulb": "Rechterlamp",
-  "Right curtain": "Rechtergordijn",
-  "Right drop": "Rechterdruppel",
-  "Right drop 1": "Rechterdruppel 1",
-  "Right drop 2": "Rechterdruppel 2",
-  "Right drop 3": "Rechterdruppel 3",
-  "Right drop 4": "Rechterdruppel 4",
-  "Right drop 5": "Rechterdruppel 5",
-  "Right drop 6": "Rechterdruppel 6",
-  "Right eye": "Rechteroog",
-  "Right flake": "Rechtervlok",
-  "Right half": "Rechterhelft",
-  "Right lamp": "Rechterlamp",
-  "Right lamp and bulb": "Rechterlamp met fitting",
-  "Right leaf": "Rechterblad",
-  "Right light": "Rechterlicht",
-  "Right node": "Rechterknooppunt",
-  "Right oven glow": "Oven-gloed rechts",
-  "Right pipe": "Rechterpijp",
-  "Right ray": "Rechterstraal",
-  "Right steam": "Rechterstoom",
-  "Right tick": "Rechterhaakje",
-  "Right wave": "Rechtergolf",
-  "Right wing": "Rechtervleugel",
-  "Right wing case": "Rechtervleugeldek",
-  "Ring": "Ring",
-  "Robot": "Robot",
-  "Robot mower": "Robotmaaier",
-  "Robot vacuum": "Robotstofzuiger",
-  "Robot vacuum side view": "Robotstofzuiger van opzij",
-  "Rocket": "Raket",
-  "Rod": "Staaf",
-  "Roller shutter": "Rolluik",
-  "Rotor": "Rotor",
-  "Router": "Router",
-  "Sand": "Zand",
-  "Security armed": "Beveiliging ingeschakeld",
-  "Security camera": "Beveiligingscamera",
-  "Sensor": "Sensor",
-  "Server": "Server",
-  "Shackle": "Beugel",
-  "Shade": "Kap",
-  "Shell": "Schelp",
-  "Shield": "Schild",
-  "Shooting star": "Vallende ster",
-  "Shower": "Douche",
-  "Sign": "Bord",
-  "Signal": "Signaal",
-  "Skull": "Schedel",
-  "Slash": "Schuine streep",
-  "Slat 1": "Lamel 1",
-  "Slat 2": "Lamel 2",
-  "Slat 3": "Lamel 3",
-  "Slat 4": "Lamel 4",
-  "Sleeping": "Slapend",
-  "Small heart": "Klein hart",
-  "Small sparkle": "Kleine fonkeling",
-  "Small star": "Kleine ster",
-  "Smoke 1": "Rook 1",
-  "Smoke 2": "Rook 2",
-  "Smoke 3": "Rook 3",
-  "Smoke alarm": "Rookmelder",
-  "Smoke detector standby": "Rookmelder stand-by",
-  "Snail": "Slak",
-  "Snow": "Sneeuw",
-  "Snowflake": "Sneeuwvlok",
-  "Snowman": "Sneeuwpop",
-  "Soap pump": "Zeeppomp",
-  "Soil": "Aarde",
-  "Solar power": "Zonne-energie",
-  "Sound waves": "Geluidsgolven",
-  "Spark": "Vonk",
-  "Sparkle": "Fonkeling",
-  "Sparkle 2": "Fonkeling 2",
-  "Sparkle 3": "Fonkeling 3",
-  "Sparkle 4": "Fonkeling 4",
-  "Sparkling clean": "Glimmend schoon",
-  "Speaker": "Luidspreker",
-  "Spider": "Spin",
-  "Spoon": "Lepel",
-  "Spotlight": "Spot",
-  "Spray bottle": "Sprayfles",
-  "Spray can": "Spuitbus",
-  "Sprinkler": "Sproeier",
-  "Sprout": "Scheut",
-  "Staff": "Staf",
-  "Staff and orb": "Staf en bol",
-  "Stand": "Standaard",
-  "Star": "Ster",
-  "Stem": "Steel",
-  "Stone": "Steen",
-  "Storm with rain": "Storm met regen",
-  "Stove": "Fornuis",
-  "Streamer 1": "Serpentine 1",
-  "Streamer 2": "Serpentine 2",
-  "Streamer 3": "Serpentine 3",
-  "Streamer 4": "Serpentine 4",
-  "String lights": "Lichtsnoer",
-  "Sun": "Zon",
-  "Sun and cloud": "Zon en wolk",
-  "Sunny": "Zonnig",
-  "Sunset": "Zonsondergang",
-  "Switch toggle": "Schakelaar omzetten",
-  "TV on": "Tv aan",
-  "Table lamp switching on": "Tafellamp gaat aan",
-  "Tap": "Kraan",
-  "Television": "Televisie",
-  "Thermometer": "Thermometer",
-  "Thread": "Draad",
-  "Thunderstorm": "Onweer",
-  "Timer": "Timer",
-  "Toast": "Toast",
-  "Toaster": "Broodrooster",
-  "Toe 1": "Teen 1",
-  "Toe 2": "Teen 2",
-  "Toe 3": "Teen 3",
-  "Toe 4": "Teen 4",
-  "Toggle": "Schakelaar",
-  "Toolhead": "Gereedschapskop",
-  "Top": "Boven",
-  "Top arc": "Bovenste boog",
-  "Top blade": "Bovenste blad",
-  "Top drops": "Bovenste druppels",
-  "Top gust": "Bovenste windvlaag",
-  "Top node": "Bovenste knooppunt",
-  "Top slat": "Bovenste lamel",
-  "Top strip": "Bovenste strook",
-  "Top tick": "Bovenste haakje",
-  "Top unit": "Bovenste eenheid",
-  "Top wave": "Bovenste golf",
-  "Torch": "Zaklamp",
-  "Tornado": "Tornado",
-  "Tower": "Toren",
-  "Track": "Spoor",
-  "Track light": "Railspot",
-  "Trail 1": "Spoor 1",
-  "Trail 2": "Spoor 2",
-  "Trail 3": "Spoor 3",
-  "Trash day": "Vuilnisdag",
-  "Tree": "Boom",
-  "Trigger": "Trekker",
-  "Trigger head": "Trekkerkop",
-  "Tulip": "Tulp",
-  "Tumble dryer": "Wasdroger",
-  "Turtle": "Schildpad",
-  "Twinkling star": "Fonkelende ster",
-  "Vacuum": "Stofzuiger",
-  "Vacuum cleaner": "Stofzuiger",
-  "Valve": "Ventiel",
-  "Volume": "Volume",
-  "Walker": "Wandelaar",
-  "Walking": "Wandelend",
-  "Washing machine": "Wasmachine",
-  "Washing machine alert": "Wasmachine klaar",
-  "Water": "Water",
-  "Water drop": "Waterdruppel",
-  "Water leak": "Waterlek",
-  "Water pump": "Waterpomp",
-  "Watering": "Water geven",
-  "Watering can": "Gieter",
-  "Wheel": "Wiel",
-  "Wi-Fi": "Wifi",
-  "Wind turbine": "Windturbine",
-  "Windy": "Winderig",
-  "Wire": "Draad",
-  "Wizard hat": "Tovenaarshoed",
-  "Wrapper 1": "Verpakking 1",
-  "Wrapper 2": "Verpakking 2",
-  "Wrapper 3": "Verpakking 3"
+  "icon-library.fire-cleaning.air-bottom": {
+    "text": "Lucht onder",
+    "hash": "e1bc53b3"
+  },
+  "icon-library.fire-cleaning.air-filter": {
+    "text": "Luchtfilter",
+    "hash": "a21c7fe0"
+  },
+  "icon-library.fire-cleaning.air-top": {
+    "text": "Lucht boven",
+    "hash": "2eeefa53"
+  },
+  "icon-library.fire-cleaning.big-sparkle": {
+    "text": "Grote fonkeling",
+    "hash": "eb3d9643"
+  },
+  "icon-library.fire-cleaning.body": {
+    "text": "Romp",
+    "hash": "6ccaa641"
+  },
+  "icon-library.fire-cleaning.bottle": {
+    "text": "Fles",
+    "hash": "e27e3cb0"
+  },
+  "icon-library.fire-cleaning.bottom-drops": {
+    "text": "Onderste druppels",
+    "hash": "ac2de44e"
+  },
+  "icon-library.fire-cleaning.bristles": {
+    "text": "Haren",
+    "hash": "de68538d"
+  },
+  "icon-library.fire-cleaning.broom": {
+    "text": "Bezem",
+    "hash": "cfdced0c"
+  },
+  "icon-library.fire-cleaning.button": {
+    "text": "Knop",
+    "hash": "707eab0c"
+  },
+  "icon-library.fire-cleaning.campfire": {
+    "text": "Kampvuur",
+    "hash": "bf3fac40"
+  },
+  "icon-library.fire-cleaning.can": {
+    "text": "Blik",
+    "hash": "2dba9a87"
+  },
+  "icon-library.fire-cleaning.candle": {
+    "text": "Kaars",
+    "hash": "75656ad6"
+  },
+  "icon-library.fire-cleaning.cuff": {
+    "text": "Manchet",
+    "hash": "3a564322"
+  },
+  "icon-library.fire-cleaning.door-window": {
+    "text": "Deurraam",
+    "hash": "06d20ec9"
+  },
+  "icon-library.fire-cleaning.dot": {
+    "text": "Stip",
+    "hash": "599079bc"
+  },
+  "icon-library.fire-cleaning.drop": {
+    "text": "Druppel",
+    "hash": "c8af9ae3"
+  },
+  "icon-library.fire-cleaning.exclamation": {
+    "text": "Uitroep",
+    "hash": "e73c3fed"
+  },
+  "icon-library.fire-cleaning.exclamation-mark": {
+    "text": "Uitroepteken",
+    "hash": "80ef1ad7"
+  },
+  "icon-library.fire-cleaning.extinguisher": {
+    "text": "Blusser",
+    "hash": "f3d2cb76"
+  },
+  "icon-library.fire-cleaning.filter": {
+    "text": "Filter",
+    "hash": "638e249f"
+  },
+  "icon-library.fire-cleaning.fire-alert": {
+    "text": "Brandalarm",
+    "hash": "a7187b0d"
+  },
+  "icon-library.fire-cleaning.fire-extinguisher": {
+    "text": "Brandblusser",
+    "hash": "7125e8fc"
+  },
+  "icon-library.fire-cleaning.fire-ring": {
+    "text": "Vuurring",
+    "hash": "45726b4d"
+  },
+  "icon-library.fire-cleaning.fire-sprinkler": {
+    "text": "Sprinkler",
+    "hash": "075d0591"
+  },
+  "icon-library.fire-cleaning.flame": {
+    "text": "Vlam",
+    "hash": "dfb0f521"
+  },
+  "icon-library.fire-cleaning.grill": {
+    "text": "Grill",
+    "hash": "738c8bf7"
+  },
+  "icon-library.fire-cleaning.hand-wash": {
+    "text": "Handen wassen",
+    "hash": "eba255cb"
+  },
+  "icon-library.fire-cleaning.handle": {
+    "text": "Handvat",
+    "hash": "fa04ae3d"
+  },
+  "icon-library.fire-cleaning.hands": {
+    "text": "Handen",
+    "hash": "6b720477"
+  },
+  "icon-library.fire-cleaning.inner-flame": {
+    "text": "Binnenste vlam",
+    "hash": "68ef6c15"
+  },
+  "icon-library.fire-cleaning.iron": {
+    "text": "Strijkijzer",
+    "hash": "bd223c81"
+  },
+  "icon-library.fire-cleaning.lid": {
+    "text": "Deksel",
+    "hash": "eea3f22e"
+  },
+  "icon-library.fire-cleaning.logs": {
+    "text": "Houtblokken",
+    "hash": "ea2100dc"
+  },
+  "icon-library.fire-cleaning.machine": {
+    "text": "Machine",
+    "hash": "8f1cc42d"
+  },
+  "icon-library.fire-cleaning.middle-drops": {
+    "text": "Middelste druppels",
+    "hash": "cda1e2fa"
+  },
+  "icon-library.fire-cleaning.mist-1": {
+    "text": "Nevel 1",
+    "hash": "224b3e65"
+  },
+  "icon-library.fire-cleaning.mist-2": {
+    "text": "Nevel 2",
+    "hash": "ee82c49e"
+  },
+  "icon-library.fire-cleaning.mist-3": {
+    "text": "Nevel 3",
+    "hash": "b94a4131"
+  },
+  "icon-library.fire-cleaning.mist-4": {
+    "text": "Nevel 4",
+    "hash": "cf28e660"
+  },
+  "icon-library.fire-cleaning.mist-5": {
+    "text": "Nevel 5",
+    "hash": "bd32a1c0"
+  },
+  "icon-library.fire-cleaning.mist-6": {
+    "text": "Nevel 6",
+    "hash": "696e1c12"
+  },
+  "icon-library.fire-cleaning.nozzle": {
+    "text": "Mondstuk",
+    "hash": "68de2ee9"
+  },
+  "icon-library.fire-cleaning.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "icon-library.fire-cleaning.robot-vacuum-side-view": {
+    "text": "Robotstofzuiger van opzij",
+    "hash": "f6a0adb8"
+  },
+  "icon-library.fire-cleaning.sensor": {
+    "text": "Sensor",
+    "hash": "162cc64c"
+  },
+  "icon-library.fire-cleaning.shell": {
+    "text": "Schelp",
+    "hash": "a7332854"
+  },
+  "icon-library.fire-cleaning.small-sparkle": {
+    "text": "Kleine fonkeling",
+    "hash": "3776d201"
+  },
+  "icon-library.fire-cleaning.smoke-1": {
+    "text": "Rook 1",
+    "hash": "6fe8b135"
+  },
+  "icon-library.fire-cleaning.smoke-2": {
+    "text": "Rook 2",
+    "hash": "aa2f3b63"
+  },
+  "icon-library.fire-cleaning.smoke-3": {
+    "text": "Rook 3",
+    "hash": "47f4a6ee"
+  },
+  "icon-library.fire-cleaning.soap-pump": {
+    "text": "Zeeppomp",
+    "hash": "ff7adc56"
+  },
+  "icon-library.fire-cleaning.sparkle": {
+    "text": "Fonkeling",
+    "hash": "abac3d1e"
+  },
+  "icon-library.fire-cleaning.sparkling-clean": {
+    "text": "Glimmend schoon",
+    "hash": "078999e7"
+  },
+  "icon-library.fire-cleaning.spray-bottle": {
+    "text": "Sprayfles",
+    "hash": "7faacdfb"
+  },
+  "icon-library.fire-cleaning.spray-can": {
+    "text": "Spuitbus",
+    "hash": "6073726e"
+  },
+  "icon-library.fire-cleaning.sprinkler": {
+    "text": "Sproeier",
+    "hash": "7ed7237e"
+  },
+  "icon-library.fire-cleaning.top-drops": {
+    "text": "Bovenste druppels",
+    "hash": "ca54dc5b"
+  },
+  "icon-library.fire-cleaning.torch": {
+    "text": "Zaklamp",
+    "hash": "dcc578ac"
+  },
+  "icon-library.fire-cleaning.trigger": {
+    "text": "Trekker",
+    "hash": "8b9c6437"
+  },
+  "icon-library.fire-cleaning.trigger-head": {
+    "text": "Trekkerkop",
+    "hash": "6473398b"
+  },
+  "icon-library.fire-cleaning.vacuum": {
+    "text": "Stofzuiger",
+    "hash": "f93faa36"
+  },
+  "icon-library.fire-cleaning.vacuum-cleaner": {
+    "text": "Stofzuiger",
+    "hash": "addb93e8"
+  },
+  "icon-library.fire-cleaning.washing-machine-alert": {
+    "text": "Wasmachine klaar",
+    "hash": "2da069d9"
+  },
+  "icon-library.fire-cleaning.wheel": {
+    "text": "Wiel",
+    "hash": "889a0832"
+  },
+  "icon-library.home.3d-printer": {
+    "text": "3D-printer",
+    "hash": "936b3b51"
+  },
+  "icon-library.home.3d-printer-nozzle": {
+    "text": "Mondstuk van de 3D-printer",
+    "hash": "6f398b05"
+  },
+  "icon-library.home.access-point": {
+    "text": "Toegangspunt",
+    "hash": "68eddefa"
+  },
+  "icon-library.home.antenna": {
+    "text": "Antenne",
+    "hash": "7b2e6c05"
+  },
+  "icon-library.home.beam": {
+    "text": "Straal",
+    "hash": "2e5b0ef5"
+  },
+  "icon-library.home.bed": {
+    "text": "Bed",
+    "hash": "f816a74c"
+  },
+  "icon-library.home.bottom-unit": {
+    "text": "Onderste eenheid",
+    "hash": "c44365d8"
+  },
+  "icon-library.home.case": {
+    "text": "Behuizing",
+    "hash": "15f86e24"
+  },
+  "icon-library.home.cutting-head": {
+    "text": "Snijkop",
+    "hash": "1a4ca2f2"
+  },
+  "icon-library.home.door": {
+    "text": "Deur",
+    "hash": "fbf247e4"
+  },
+  "icon-library.home.drip": {
+    "text": "Druppel",
+    "hash": "4b841ee3"
+  },
+  "icon-library.home.filament": {
+    "text": "Gloeidraad",
+    "hash": "0a9066fa"
+  },
+  "icon-library.home.frame": {
+    "text": "Frame",
+    "hash": "d0b50e06"
+  },
+  "icon-library.home.garage": {
+    "text": "Garage",
+    "hash": "b15f6253"
+  },
+  "icon-library.home.garage-opening": {
+    "text": "Garagedeur gaat open",
+    "hash": "b13f01d4"
+  },
+  "icon-library.home.head": {
+    "text": "Kop",
+    "hash": "9bb0aacc"
+  },
+  "icon-library.home.home-assistant": {
+    "text": "Home Assistant",
+    "hash": "2a366abb"
+  },
+  "icon-library.home.house": {
+    "text": "Huis",
+    "hash": "2526c620"
+  },
+  "icon-library.home.hub": {
+    "text": "Hub",
+    "hash": "d87c9ca3"
+  },
+  "icon-library.home.inner-left-wave": {
+    "text": "Binnenste linkergolf",
+    "hash": "1080ff3c"
+  },
+  "icon-library.home.inner-right-wave": {
+    "text": "Binnenste rechtergolf",
+    "hash": "ad606bdf"
+  },
+  "icon-library.home.inner-waves": {
+    "text": "Binnenste golven",
+    "hash": "3060151b"
+  },
+  "icon-library.home.knob-1": {
+    "text": "Knop 1",
+    "hash": "f790ae05"
+  },
+  "icon-library.home.knob-2": {
+    "text": "Knop 2",
+    "hash": "ce547107"
+  },
+  "icon-library.home.knob-3": {
+    "text": "Knop 3",
+    "hash": "01c467fe"
+  },
+  "icon-library.home.laser-cutter": {
+    "text": "Lasersnijder",
+    "hash": "5909ce64"
+  },
+  "icon-library.home.laser-head": {
+    "text": "Laserkop",
+    "hash": "81e663cd"
+  },
+  "icon-library.home.left-blade": {
+    "text": "Linkerblad",
+    "hash": "c63d0a4c"
+  },
+  "icon-library.home.left-node": {
+    "text": "Linkerknooppunt",
+    "hash": "4da790bf"
+  },
+  "icon-library.home.left-oven-glow": {
+    "text": "Oven-gloed links",
+    "hash": "5263cf04"
+  },
+  "icon-library.home.left-pipe": {
+    "text": "Linkerpijp",
+    "hash": "35f5acfc"
+  },
+  "icon-library.home.letter-slot": {
+    "text": "Brievensleuf",
+    "hash": "eab5365d"
+  },
+  "icon-library.home.lid": {
+    "text": "Deksel",
+    "hash": "eea3f22e"
+  },
+  "icon-library.home.light-switch": {
+    "text": "Lichtschakelaar",
+    "hash": "c8aa6be8"
+  },
+  "icon-library.home.mail-arrived": {
+    "text": "Post is er",
+    "hash": "a332e5da"
+  },
+  "icon-library.home.mailbox": {
+    "text": "Brievenbus",
+    "hash": "0a461c04"
+  },
+  "icon-library.home.material": {
+    "text": "Materiaal",
+    "hash": "616cb218"
+  },
+  "icon-library.home.middle-unit": {
+    "text": "Middelste eenheid",
+    "hash": "d232bd66"
+  },
+  "icon-library.home.nozzle": {
+    "text": "Mondstuk",
+    "hash": "68de2ee9"
+  },
+  "icon-library.home.outer-left-wave": {
+    "text": "Buitenste linkergolf",
+    "hash": "f1777ee4"
+  },
+  "icon-library.home.outer-right-wave": {
+    "text": "Buitenste rechtergolf",
+    "hash": "ba564465"
+  },
+  "icon-library.home.outer-waves": {
+    "text": "Buitenste golven",
+    "hash": "58c82b0f"
+  },
+  "icon-library.home.parcel": {
+    "text": "Pakket",
+    "hash": "80458335"
+  },
+  "icon-library.home.parcel-delivered": {
+    "text": "Pakket bezorgd",
+    "hash": "85e904d1"
+  },
+  "icon-library.home.plate": {
+    "text": "Bord",
+    "hash": "a7cd5d8f"
+  },
+  "icon-library.home.print": {
+    "text": "Afdruk",
+    "hash": "df0fe798"
+  },
+  "icon-library.home.print-head": {
+    "text": "Printkop",
+    "hash": "92500dbc"
+  },
+  "icon-library.home.rail": {
+    "text": "Rail",
+    "hash": "8b270e33"
+  },
+  "icon-library.home.right-blade": {
+    "text": "Rechterblad",
+    "hash": "14c74d5a"
+  },
+  "icon-library.home.right-node": {
+    "text": "Rechterknooppunt",
+    "hash": "8e4f6208"
+  },
+  "icon-library.home.right-oven-glow": {
+    "text": "Oven-gloed rechts",
+    "hash": "be0812ba"
+  },
+  "icon-library.home.right-pipe": {
+    "text": "Rechterpijp",
+    "hash": "9f707284"
+  },
+  "icon-library.home.rotor": {
+    "text": "Rotor",
+    "hash": "f214fc83"
+  },
+  "icon-library.home.server": {
+    "text": "Server",
+    "hash": "aef7de28"
+  },
+  "icon-library.home.sleeping": {
+    "text": "Slapend",
+    "hash": "12ff393b"
+  },
+  "icon-library.home.spark": {
+    "text": "Vonk",
+    "hash": "529bc3b0"
+  },
+  "icon-library.home.stove": {
+    "text": "Fornuis",
+    "hash": "a9b5a4dc"
+  },
+  "icon-library.home.toast": {
+    "text": "Toast",
+    "hash": "34b86033"
+  },
+  "icon-library.home.toaster": {
+    "text": "Broodrooster",
+    "hash": "8a56e579"
+  },
+  "icon-library.home.toggle": {
+    "text": "Schakelaar",
+    "hash": "3d03a1de"
+  },
+  "icon-library.home.toolhead": {
+    "text": "Gereedschapskop",
+    "hash": "007d23e8"
+  },
+  "icon-library.home.top-blade": {
+    "text": "Bovenste blad",
+    "hash": "904efdc7"
+  },
+  "icon-library.home.top-node": {
+    "text": "Bovenste knooppunt",
+    "hash": "26dce0e6"
+  },
+  "icon-library.home.top-unit": {
+    "text": "Bovenste eenheid",
+    "hash": "76c079a5"
+  },
+  "icon-library.home.tower": {
+    "text": "Toren",
+    "hash": "aeb11001"
+  },
+  "icon-library.home.water-leak": {
+    "text": "Waterlek",
+    "hash": "c21e3380"
+  },
+  "icon-library.home.wind-turbine": {
+    "text": "Windturbine",
+    "hash": "3c2b2780"
+  },
+  "icon-library.library.a": {
+    "text": "A",
+    "hash": "559aead0"
+  },
+  "icon-library.library.air-bottom": {
+    "text": "Lucht onder",
+    "hash": "e1bc53b3"
+  },
+  "icon-library.library.air-conditioner": {
+    "text": "Airconditioner",
+    "hash": "42fac761"
+  },
+  "icon-library.library.air-purifier": {
+    "text": "Luchtreiniger",
+    "hash": "041bacc7"
+  },
+  "icon-library.library.air-top": {
+    "text": "Lucht boven",
+    "hash": "2eeefa53"
+  },
+  "icon-library.library.alarm-clock": {
+    "text": "Wekker",
+    "hash": "253dd71d"
+  },
+  "icon-library.library.alarm-light": {
+    "text": "Alarmlicht",
+    "hash": "a22d5c6a"
+  },
+  "icon-library.library.alert": {
+    "text": "Waarschuwing",
+    "hash": "44a57b22"
+  },
+  "icon-library.library.bar": {
+    "text": "Balk",
+    "hash": "95d64cac"
+  },
+  "icon-library.library.bar-1": {
+    "text": "Balk 1",
+    "hash": "fb2e13b7"
+  },
+  "icon-library.library.bar-2": {
+    "text": "Balk 2",
+    "hash": "6a7a0230"
+  },
+  "icon-library.library.bar-3": {
+    "text": "Balk 3",
+    "hash": "f835ec2f"
+  },
+  "icon-library.library.base": {
+    "text": "Voet",
+    "hash": "7b47361a"
+  },
+  "icon-library.library.bases": {
+    "text": "Voeten",
+    "hash": "363bc61a"
+  },
+  "icon-library.library.battery": {
+    "text": "Batterij",
+    "hash": "dfcb7c16"
+  },
+  "icon-library.library.battery-charging": {
+    "text": "Batterij laadt op",
+    "hash": "0541b151"
+  },
+  "icon-library.library.battery-level": {
+    "text": "Batterijniveau",
+    "hash": "74271bb9"
+  },
+  "icon-library.library.bee": {
+    "text": "Bij",
+    "hash": "f5779450"
+  },
+  "icon-library.library.bell": {
+    "text": "Bel",
+    "hash": "8e80b2b4"
+  },
+  "icon-library.library.bell-and-clapper": {
+    "text": "Bel en klepel",
+    "hash": "63df8a98"
+  },
+  "icon-library.library.big-star": {
+    "text": "Grote ster",
+    "hash": "0d3f2ea0"
+  },
+  "icon-library.library.bin": {
+    "text": "Afvalbak",
+    "hash": "be177b94"
+  },
+  "icon-library.library.bird": {
+    "text": "Vogel",
+    "hash": "68b515e1"
+  },
+  "icon-library.library.blades": {
+    "text": "Bladen",
+    "hash": "ec4d6b95"
+  },
+  "icon-library.library.body": {
+    "text": "Romp",
+    "hash": "6ccaa641"
+  },
+  "icon-library.library.bolt": {
+    "text": "Bliksemschicht",
+    "hash": "ea0151c4"
+  },
+  "icon-library.library.bottom-gust": {
+    "text": "Onderste windvlaag",
+    "hash": "f21821be"
+  },
+  "icon-library.library.bottom-slat": {
+    "text": "Onderste lamel",
+    "hash": "ebe88feb"
+  },
+  "icon-library.library.bottom-strip": {
+    "text": "Onderste strook",
+    "hash": "5323eaf7"
+  },
+  "icon-library.library.brush": {
+    "text": "Borstel",
+    "hash": "8624ca0f"
+  },
+  "icon-library.library.bulb": {
+    "text": "Lamp",
+    "hash": "b1d8b12c"
+  },
+  "icon-library.library.bulb-glow": {
+    "text": "Gloeiende lamp",
+    "hash": "4b165d4b"
+  },
+  "icon-library.library.button": {
+    "text": "Knop",
+    "hash": "707eab0c"
+  },
+  "icon-library.library.c": {
+    "text": "C",
+    "hash": "6b23c0d5"
+  },
+  "icon-library.library.camera": {
+    "text": "Camera",
+    "hash": "03494b0d"
+  },
+  "icon-library.library.camera-head": {
+    "text": "Camerakop",
+    "hash": "d8ca3835"
+  },
+  "icon-library.library.camera-snapshot": {
+    "text": "Camerabeeld",
+    "hash": "75794490"
+  },
+  "icon-library.library.car": {
+    "text": "Auto",
+    "hash": "a5cdf07d"
+  },
+  "icon-library.library.car-driving": {
+    "text": "Rijdende auto",
+    "hash": "6f0eabdd"
+  },
+  "icon-library.library.ceiling-fan-with-light": {
+    "text": "Plafondventilator met licht",
+    "hash": "9e68ea60"
+  },
+  "icon-library.library.ceiling-light": {
+    "text": "Plafondlamp",
+    "hash": "d00ed93d"
+  },
+  "icon-library.library.centre": {
+    "text": "Midden",
+    "hash": "45c19322"
+  },
+  "icon-library.library.centre-bulb": {
+    "text": "Middelste lamp",
+    "hash": "8fec057a"
+  },
+  "icon-library.library.charge": {
+    "text": "Lading",
+    "hash": "ff9f88ce"
+  },
+  "icon-library.library.clapper": {
+    "text": "Klepel",
+    "hash": "089bb653"
+  },
+  "icon-library.library.clear-night": {
+    "text": "Heldere nacht",
+    "hash": "698de6fc"
+  },
+  "icon-library.library.clock": {
+    "text": "Klok",
+    "hash": "93ff9273"
+  },
+  "icon-library.library.cloud": {
+    "text": "Wolk",
+    "hash": "b977b950"
+  },
+  "icon-library.library.cloudy": {
+    "text": "Bewolkt",
+    "hash": "c63401ab"
+  },
+  "icon-library.library.coffee-maker": {
+    "text": "Koffiezetapparaat",
+    "hash": "3e2b8d2a"
+  },
+  "icon-library.library.cone": {
+    "text": "Kegel",
+    "hash": "3b5ebcbf"
+  },
+  "icon-library.library.cooking-pot": {
+    "text": "Kookpan",
+    "hash": "f3e8d0b1"
+  },
+  "icon-library.library.curtains": {
+    "text": "Gordijnen",
+    "hash": "49bf6823"
+  },
+  "icon-library.library.detector": {
+    "text": "Melder",
+    "hash": "541ffce2"
+  },
+  "icon-library.library.dial": {
+    "text": "Wijzerplaat",
+    "hash": "9f2c3557"
+  },
+  "icon-library.library.dishwasher": {
+    "text": "Vaatwasser",
+    "hash": "db60f9f5"
+  },
+  "icon-library.library.display": {
+    "text": "Display",
+    "hash": "34e108c0"
+  },
+  "icon-library.library.dog": {
+    "text": "Hond",
+    "hash": "0eb129bf"
+  },
+  "icon-library.library.door": {
+    "text": "Deur",
+    "hash": "fbf247e4"
+  },
+  "icon-library.library.door-leaf": {
+    "text": "Deurblad",
+    "hash": "23fec965"
+  },
+  "icon-library.library.door-opening": {
+    "text": "Deur gaat open",
+    "hash": "2baeff0d"
+  },
+  "icon-library.library.doorbell-press": {
+    "text": "Deurbel ingedrukt",
+    "hash": "cc279dfa"
+  },
+  "icon-library.library.doorbell-ring": {
+    "text": "Deurbel gaat",
+    "hash": "e979b023"
+  },
+  "icon-library.library.dot": {
+    "text": "Stip",
+    "hash": "599079bc"
+  },
+  "icon-library.library.drop": {
+    "text": "Druppel",
+    "hash": "c8af9ae3"
+  },
+  "icon-library.library.drop-1": {
+    "text": "Druppel 1",
+    "hash": "c3fd0af9"
+  },
+  "icon-library.library.drop-10": {
+    "text": "Druppel 10",
+    "hash": "8ff86373"
+  },
+  "icon-library.library.drop-11": {
+    "text": "Druppel 11",
+    "hash": "5bad87ab"
+  },
+  "icon-library.library.drop-12": {
+    "text": "Druppel 12",
+    "hash": "2b2cfff9"
+  },
+  "icon-library.library.drop-2": {
+    "text": "Druppel 2",
+    "hash": "5c4ad8f7"
+  },
+  "icon-library.library.drop-3": {
+    "text": "Druppel 3",
+    "hash": "3954147f"
+  },
+  "icon-library.library.drop-4": {
+    "text": "Druppel 4",
+    "hash": "4561e956"
+  },
+  "icon-library.library.drop-5": {
+    "text": "Druppel 5",
+    "hash": "239aec23"
+  },
+  "icon-library.library.drop-6": {
+    "text": "Druppel 6",
+    "hash": "d5499520"
+  },
+  "icon-library.library.drop-7": {
+    "text": "Druppel 7",
+    "hash": "079315ed"
+  },
+  "icon-library.library.drop-8": {
+    "text": "Druppel 8",
+    "hash": "fa2e8473"
+  },
+  "icon-library.library.drop-9": {
+    "text": "Druppel 9",
+    "hash": "f22ac589"
+  },
+  "icon-library.library.drum": {
+    "text": "Trommel",
+    "hash": "1d506926"
+  },
+  "icon-library.library.dryer": {
+    "text": "Droger",
+    "hash": "0a5e403c"
+  },
+  "icon-library.library.electric-car-charging": {
+    "text": "Elektrische auto laadt op",
+    "hash": "d7e217cd"
+  },
+  "icon-library.library.energy": {
+    "text": "Energie",
+    "hash": "f2fcd3f7"
+  },
+  "icon-library.library.energy-meter": {
+    "text": "Energiemeter",
+    "hash": "7bedcadc"
+  },
+  "icon-library.library.exclamation": {
+    "text": "Uitroep",
+    "hash": "e73c3fed"
+  },
+  "icon-library.library.exclamation-mark": {
+    "text": "Uitroepteken",
+    "hash": "80ef1ad7"
+  },
+  "icon-library.library.face": {
+    "text": "Gezicht",
+    "hash": "304afc32"
+  },
+  "icon-library.library.fan": {
+    "text": "Ventilator",
+    "hash": "e27be641"
+  },
+  "icon-library.library.fan-spin": {
+    "text": "Draaiende ventilator",
+    "hash": "ad720230"
+  },
+  "icon-library.library.faucet": {
+    "text": "Kraan",
+    "hash": "e00246bf"
+  },
+  "icon-library.library.fireplace": {
+    "text": "Open haard",
+    "hash": "c23f7c11"
+  },
+  "icon-library.library.fish": {
+    "text": "Vis",
+    "hash": "3f3f8baa"
+  },
+  "icon-library.library.flame": {
+    "text": "Vlam",
+    "hash": "dfb0f521"
+  },
+  "icon-library.library.flower": {
+    "text": "Bloem",
+    "hash": "77dc2a65"
+  },
+  "icon-library.library.fog": {
+    "text": "Mist",
+    "hash": "14394e97"
+  },
+  "icon-library.library.fog-line-1": {
+    "text": "Mistlijn 1",
+    "hash": "f73dc1f7"
+  },
+  "icon-library.library.fog-line-2": {
+    "text": "Mistlijn 2",
+    "hash": "424c52e4"
+  },
+  "icon-library.library.fog-line-3": {
+    "text": "Mistlijn 3",
+    "hash": "2a3cf9f0"
+  },
+  "icon-library.library.fog-line-4": {
+    "text": "Mistlijn 4",
+    "hash": "f3242784"
+  },
+  "icon-library.library.foot": {
+    "text": "Voet",
+    "hash": "24177360"
+  },
+  "icon-library.library.frame": {
+    "text": "Frame",
+    "hash": "d0b50e06"
+  },
+  "icon-library.library.freezer-door": {
+    "text": "Vriezerdeur",
+    "hash": "42736d14"
+  },
+  "icon-library.library.fridge-door": {
+    "text": "Koelkastdeur",
+    "hash": "d6190089"
+  },
+  "icon-library.library.garage": {
+    "text": "Garage",
+    "hash": "b15f6253"
+  },
+  "icon-library.library.garage-door": {
+    "text": "Garagedeur",
+    "hash": "bfc7b9ea"
+  },
+  "icon-library.library.gate": {
+    "text": "Poort",
+    "hash": "fa77a525"
+  },
+  "icon-library.library.gauge": {
+    "text": "Meter",
+    "hash": "f6d8f4c8"
+  },
+  "icon-library.library.hail": {
+    "text": "Hagel",
+    "hash": "f5cc0075"
+  },
+  "icon-library.library.hailstone-1": {
+    "text": "Hagelsteen 1",
+    "hash": "94c5891b"
+  },
+  "icon-library.library.hailstone-2": {
+    "text": "Hagelsteen 2",
+    "hash": "45b4a087"
+  },
+  "icon-library.library.hailstone-3": {
+    "text": "Hagelsteen 3",
+    "hash": "4cc2487f"
+  },
+  "icon-library.library.hand": {
+    "text": "Hand",
+    "hash": "fa18c067"
+  },
+  "icon-library.library.handle": {
+    "text": "Handvat",
+    "hash": "fa04ae3d"
+  },
+  "icon-library.library.hands": {
+    "text": "Handen",
+    "hash": "6b720477"
+  },
+  "icon-library.library.handset": {
+    "text": "Hoorn",
+    "hash": "abb59397"
+  },
+  "icon-library.library.head": {
+    "text": "Kop",
+    "hash": "9bb0aacc"
+  },
+  "icon-library.library.headphones": {
+    "text": "Koptelefoon",
+    "hash": "86df32cf"
+  },
+  "icon-library.library.heart": {
+    "text": "Hart",
+    "hash": "770af9d1"
+  },
+  "icon-library.library.heart-and-pulse": {
+    "text": "Hart en hartslag",
+    "hash": "e26ac236"
+  },
+  "icon-library.library.heart-top": {
+    "text": "Bovenkant hart",
+    "hash": "fff6869b"
+  },
+  "icon-library.library.heartbeat": {
+    "text": "Hartslag",
+    "hash": "9df89427"
+  },
+  "icon-library.library.hearth": {
+    "text": "Haard",
+    "hash": "0c8b0dbe"
+  },
+  "icon-library.library.heat-haze": {
+    "text": "Hittegolving",
+    "hash": "fab57353"
+  },
+  "icon-library.library.heating-element": {
+    "text": "Verwarmingselement",
+    "hash": "c6d30c9e"
+  },
+  "icon-library.library.heavy-snow": {
+    "text": "Zware sneeuwval",
+    "hash": "58cd7f38"
+  },
+  "icon-library.library.home": {
+    "text": "Thuis",
+    "hash": "3a786953"
+  },
+  "icon-library.library.horizon-1": {
+    "text": "Horizon 1",
+    "hash": "c30ac435"
+  },
+  "icon-library.library.horizon-2": {
+    "text": "Horizon 2",
+    "hash": "edd9d410"
+  },
+  "icon-library.library.hourglass": {
+    "text": "Zandloper",
+    "hash": "46594469"
+  },
+  "icon-library.library.house": {
+    "text": "Huis",
+    "hash": "2526c620"
+  },
+  "icon-library.library.hub": {
+    "text": "Hub",
+    "hash": "d87c9ca3"
+  },
+  "icon-library.library.humidifier-mist": {
+    "text": "Luchtbevochtiger",
+    "hash": "3b955f40"
+  },
+  "icon-library.library.humidity-drop": {
+    "text": "Vochtigheidsdruppel",
+    "hash": "7bd2b820"
+  },
+  "icon-library.library.inner-flame": {
+    "text": "Binnenste vlam",
+    "hash": "68ef6c15"
+  },
+  "icon-library.library.inner-wave": {
+    "text": "Binnenste golf",
+    "hash": "d80445ed"
+  },
+  "icon-library.library.kettle": {
+    "text": "Waterkoker",
+    "hash": "e9d28791"
+  },
+  "icon-library.library.kettle-boiling": {
+    "text": "Kokende waterkoker",
+    "hash": "f16c0504"
+  },
+  "icon-library.library.knob": {
+    "text": "Knop",
+    "hash": "ca07c594"
+  },
+  "icon-library.library.ladder": {
+    "text": "Ladder",
+    "hash": "df066364"
+  },
+  "icon-library.library.leaf": {
+    "text": "Blad",
+    "hash": "b83382a9"
+  },
+  "icon-library.library.leaf-in-the-wind": {
+    "text": "Blad in de wind",
+    "hash": "ed5f03c2"
+  },
+  "icon-library.library.led-strip-colour-chase": {
+    "text": "Ledstrip met kleurenloopeffect",
+    "hash": "8cf7de0a"
+  },
+  "icon-library.library.left-bell": {
+    "text": "Linkerbel",
+    "hash": "83fe806d"
+  },
+  "icon-library.library.left-blade": {
+    "text": "Linkerblad",
+    "hash": "c63d0a4c"
+  },
+  "icon-library.library.left-bulb": {
+    "text": "Linkerlamp",
+    "hash": "12f517a1"
+  },
+  "icon-library.library.left-curtain": {
+    "text": "Linkergordijn",
+    "hash": "b5930933"
+  },
+  "icon-library.library.left-drop": {
+    "text": "Linkerdruppel",
+    "hash": "fcc3e97d"
+  },
+  "icon-library.library.left-drop-1": {
+    "text": "Linkerdruppel 1",
+    "hash": "164acd28"
+  },
+  "icon-library.library.left-drop-2": {
+    "text": "Linkerdruppel 2",
+    "hash": "c5112dfc"
+  },
+  "icon-library.library.left-drop-3": {
+    "text": "Linkerdruppel 3",
+    "hash": "93488e99"
+  },
+  "icon-library.library.left-drop-4": {
+    "text": "Linkerdruppel 4",
+    "hash": "c144673b"
+  },
+  "icon-library.library.left-drop-5": {
+    "text": "Linkerdruppel 5",
+    "hash": "e3102d15"
+  },
+  "icon-library.library.left-drop-6": {
+    "text": "Linkerdruppel 6",
+    "hash": "f3036789"
+  },
+  "icon-library.library.left-flake": {
+    "text": "Linkervlok",
+    "hash": "ffd36583"
+  },
+  "icon-library.library.left-leaf": {
+    "text": "Linkerblad",
+    "hash": "d254b1db"
+  },
+  "icon-library.library.left-pipe": {
+    "text": "Linkerpijp",
+    "hash": "35f5acfc"
+  },
+  "icon-library.library.left-ray": {
+    "text": "Linkerstraal",
+    "hash": "17736422"
+  },
+  "icon-library.library.left-steam": {
+    "text": "Linkerstoom",
+    "hash": "afd3c05f"
+  },
+  "icon-library.library.left-tick": {
+    "text": "Linkerhaakje",
+    "hash": "4786ba85"
+  },
+  "icon-library.library.left-wave": {
+    "text": "Linkergolf",
+    "hash": "b5708877"
+  },
+  "icon-library.library.lens": {
+    "text": "Lens",
+    "hash": "4317a99a"
+  },
+  "icon-library.library.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "icon-library.library.light-group": {
+    "text": "Lichtgroep",
+    "hash": "47fe55da"
+  },
+  "icon-library.library.light-rays": {
+    "text": "Lichtstralen",
+    "hash": "d8a454a0"
+  },
+  "icon-library.library.line": {
+    "text": "Lijn",
+    "hash": "d7852cd0"
+  },
+  "icon-library.library.lock": {
+    "text": "Slot",
+    "hash": "db44b8db"
+  },
+  "icon-library.library.machine": {
+    "text": "Machine",
+    "hash": "8f1cc42d"
+  },
+  "icon-library.library.mantel": {
+    "text": "Schoorsteenmantel",
+    "hash": "ea64db69"
+  },
+  "icon-library.library.mark-1": {
+    "text": "Markering 1",
+    "hash": "5ad07876"
+  },
+  "icon-library.library.mark-2": {
+    "text": "Markering 2",
+    "hash": "b048d547"
+  },
+  "icon-library.library.mark-3": {
+    "text": "Markering 3",
+    "hash": "29ac0d01"
+  },
+  "icon-library.library.mark-4": {
+    "text": "Markering 4",
+    "hash": "f43d4e79"
+  },
+  "icon-library.library.mark-5": {
+    "text": "Markering 5",
+    "hash": "b1225963"
+  },
+  "icon-library.library.mark-6": {
+    "text": "Markering 6",
+    "hash": "4e784cf1"
+  },
+  "icon-library.library.mark-7": {
+    "text": "Markering 7",
+    "hash": "8ef8ccb2"
+  },
+  "icon-library.library.mark-8": {
+    "text": "Markering 8",
+    "hash": "6b57f1db"
+  },
+  "icon-library.library.meter": {
+    "text": "Meter",
+    "hash": "2293b30e"
+  },
+  "icon-library.library.middle-arc": {
+    "text": "Middelste boog",
+    "hash": "596406f1"
+  },
+  "icon-library.library.middle-drop": {
+    "text": "Middelste druppel",
+    "hash": "0300e86c"
+  },
+  "icon-library.library.middle-gust": {
+    "text": "Middelste windvlaag",
+    "hash": "b7aac2e8"
+  },
+  "icon-library.library.middle-ray": {
+    "text": "Middelste straal",
+    "hash": "d40a5718"
+  },
+  "icon-library.library.middle-slat": {
+    "text": "Middelste lamel",
+    "hash": "75e72e69"
+  },
+  "icon-library.library.middle-strip": {
+    "text": "Middelste strook",
+    "hash": "b508ccbf"
+  },
+  "icon-library.library.middle-wave": {
+    "text": "Middelste golf",
+    "hash": "de4cc28d"
+  },
+  "icon-library.library.moon": {
+    "text": "Maan",
+    "hash": "5fc16525"
+  },
+  "icon-library.library.motion-detected": {
+    "text": "Beweging gedetecteerd",
+    "hash": "c8ef4e9c"
+  },
+  "icon-library.library.mount": {
+    "text": "Beugel",
+    "hash": "d5605821"
+  },
+  "icon-library.library.mower": {
+    "text": "Maaier",
+    "hash": "06f212fd"
+  },
+  "icon-library.library.music-note-dance": {
+    "text": "Dansende muzieknoot",
+    "hash": "fe9d55ed"
+  },
+  "icon-library.library.needle": {
+    "text": "Naald",
+    "hash": "8f1913f5"
+  },
+  "icon-library.library.note": {
+    "text": "Noot",
+    "hash": "d8da2c49"
+  },
+  "icon-library.library.notification": {
+    "text": "Melding",
+    "hash": "7d31b833"
+  },
+  "icon-library.library.outdoor-temperature": {
+    "text": "Buitentemperatuur",
+    "hash": "07eb821b"
+  },
+  "icon-library.library.outer-flame": {
+    "text": "Buitenste vlam",
+    "hash": "b9b5dc95"
+  },
+  "icon-library.library.outer-wave": {
+    "text": "Buitenste golf",
+    "hash": "d8143047"
+  },
+  "icon-library.library.oven": {
+    "text": "Oven",
+    "hash": "47e7bdb2"
+  },
+  "icon-library.library.oven-heating": {
+    "text": "Oven warmt op",
+    "hash": "3f2f6342"
+  },
+  "icon-library.library.pad": {
+    "text": "Kussen",
+    "hash": "095c18be"
+  },
+  "icon-library.library.panel": {
+    "text": "Paneel",
+    "hash": "d0d91173"
+  },
+  "icon-library.library.paper": {
+    "text": "Papier",
+    "hash": "35045eff"
+  },
+  "icon-library.library.partly-cloudy": {
+    "text": "Half bewolkt",
+    "hash": "f7be3227"
+  },
+  "icon-library.library.pendant": {
+    "text": "Hanglamp",
+    "hash": "f0f7234a"
+  },
+  "icon-library.library.person": {
+    "text": "Persoon",
+    "hash": "6007db63"
+  },
+  "icon-library.library.person-home": {
+    "text": "Persoon thuis",
+    "hash": "6337fd27"
+  },
+  "icon-library.library.pet": {
+    "text": "Huisdier",
+    "hash": "8f0d1b30"
+  },
+  "icon-library.library.phone": {
+    "text": "Telefoon",
+    "hash": "63dceb88"
+  },
+  "icon-library.library.phone-ringing": {
+    "text": "Telefoon gaat over",
+    "hash": "eae6d120"
+  },
+  "icon-library.library.phone-signal": {
+    "text": "Telefoonsignaal",
+    "hash": "561bd7b4"
+  },
+  "icon-library.library.phone-vibrate": {
+    "text": "Trillende telefoon",
+    "hash": "edc9e135"
+  },
+  "icon-library.library.plant": {
+    "text": "Plant",
+    "hash": "0bd287f6"
+  },
+  "icon-library.library.play": {
+    "text": "Afspelen",
+    "hash": "436e6101"
+  },
+  "icon-library.library.plug": {
+    "text": "Stekker",
+    "hash": "01153ebe"
+  },
+  "icon-library.library.plug-in": {
+    "text": "Stekker erin",
+    "hash": "09d4b553"
+  },
+  "icon-library.library.pool": {
+    "text": "Zwembad",
+    "hash": "f1302427"
+  },
+  "icon-library.library.pot": {
+    "text": "Pan",
+    "hash": "5847d110"
+  },
+  "icon-library.library.pouring-rain": {
+    "text": "Stortregen",
+    "hash": "67cc0f8d"
+  },
+  "icon-library.library.power-button": {
+    "text": "Aan-uitknop",
+    "hash": "df40d9c0"
+  },
+  "icon-library.library.printer": {
+    "text": "Printer",
+    "hash": "024eac5b"
+  },
+  "icon-library.library.pump": {
+    "text": "Pomp",
+    "hash": "871a51ca"
+  },
+  "icon-library.library.radiator": {
+    "text": "Radiator",
+    "hash": "e15f88dc"
+  },
+  "icon-library.library.radiator-heat": {
+    "text": "Warme radiator",
+    "hash": "ec091e71"
+  },
+  "icon-library.library.rain": {
+    "text": "Regen",
+    "hash": "a6d20aa6"
+  },
+  "icon-library.library.ray-1": {
+    "text": "Straal 1",
+    "hash": "218c8384"
+  },
+  "icon-library.library.ray-2": {
+    "text": "Straal 2",
+    "hash": "846d63bf"
+  },
+  "icon-library.library.ray-3": {
+    "text": "Straal 3",
+    "hash": "53a9a7ef"
+  },
+  "icon-library.library.ray-bottom": {
+    "text": "Straal onder",
+    "hash": "533f9997"
+  },
+  "icon-library.library.ray-bottom-left": {
+    "text": "Straal linksonder",
+    "hash": "afe08a0b"
+  },
+  "icon-library.library.ray-bottom-right": {
+    "text": "Straal rechtsonder",
+    "hash": "d2aa4743"
+  },
+  "icon-library.library.ray-left": {
+    "text": "Straal links",
+    "hash": "ef59fd2a"
+  },
+  "icon-library.library.ray-right": {
+    "text": "Straal rechts",
+    "hash": "5e5c2885"
+  },
+  "icon-library.library.ray-top": {
+    "text": "Straal boven",
+    "hash": "9af5c90f"
+  },
+  "icon-library.library.ray-top-left": {
+    "text": "Straal linksboven",
+    "hash": "0694ba08"
+  },
+  "icon-library.library.ray-top-right": {
+    "text": "Straal rechtsboven",
+    "hash": "e98da7fc"
+  },
+  "icon-library.library.rays": {
+    "text": "Stralen",
+    "hash": "01f3b57c"
+  },
+  "icon-library.library.right-bell": {
+    "text": "Rechterbel",
+    "hash": "f5d0a36b"
+  },
+  "icon-library.library.right-blade": {
+    "text": "Rechterblad",
+    "hash": "14c74d5a"
+  },
+  "icon-library.library.right-bulb": {
+    "text": "Rechterlamp",
+    "hash": "ea769996"
+  },
+  "icon-library.library.right-curtain": {
+    "text": "Rechtergordijn",
+    "hash": "8d4f1fe6"
+  },
+  "icon-library.library.right-drop": {
+    "text": "Rechterdruppel",
+    "hash": "9795def8"
+  },
+  "icon-library.library.right-drop-1": {
+    "text": "Rechterdruppel 1",
+    "hash": "56b79d8a"
+  },
+  "icon-library.library.right-drop-2": {
+    "text": "Rechterdruppel 2",
+    "hash": "d547b6c1"
+  },
+  "icon-library.library.right-drop-3": {
+    "text": "Rechterdruppel 3",
+    "hash": "e95e59bb"
+  },
+  "icon-library.library.right-drop-4": {
+    "text": "Rechterdruppel 4",
+    "hash": "520a0986"
+  },
+  "icon-library.library.right-drop-5": {
+    "text": "Rechterdruppel 5",
+    "hash": "881c4f9f"
+  },
+  "icon-library.library.right-drop-6": {
+    "text": "Rechterdruppel 6",
+    "hash": "92009063"
+  },
+  "icon-library.library.right-flake": {
+    "text": "Rechtervlok",
+    "hash": "f9e89290"
+  },
+  "icon-library.library.right-leaf": {
+    "text": "Rechterblad",
+    "hash": "50647285"
+  },
+  "icon-library.library.right-pipe": {
+    "text": "Rechterpijp",
+    "hash": "9f707284"
+  },
+  "icon-library.library.right-ray": {
+    "text": "Rechterstraal",
+    "hash": "bbb1faee"
+  },
+  "icon-library.library.right-steam": {
+    "text": "Rechterstoom",
+    "hash": "42aaf87b"
+  },
+  "icon-library.library.right-tick": {
+    "text": "Rechterhaakje",
+    "hash": "a1fc4532"
+  },
+  "icon-library.library.right-wave": {
+    "text": "Rechtergolf",
+    "hash": "904b04e3"
+  },
+  "icon-library.library.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "icon-library.library.robot": {
+    "text": "Robot",
+    "hash": "3bf6b51b"
+  },
+  "icon-library.library.robot-mower": {
+    "text": "Robotmaaier",
+    "hash": "df890b39"
+  },
+  "icon-library.library.robot-vacuum": {
+    "text": "Robotstofzuiger",
+    "hash": "085477a7"
+  },
+  "icon-library.library.rod": {
+    "text": "Staaf",
+    "hash": "a612a5f4"
+  },
+  "icon-library.library.roller-shutter": {
+    "text": "Rolluik",
+    "hash": "1cb9d8a7"
+  },
+  "icon-library.library.router": {
+    "text": "Router",
+    "hash": "065d8e6c"
+  },
+  "icon-library.library.sand": {
+    "text": "Zand",
+    "hash": "82855c11"
+  },
+  "icon-library.library.security-armed": {
+    "text": "Beveiliging ingeschakeld",
+    "hash": "411d6b14"
+  },
+  "icon-library.library.security-camera": {
+    "text": "Beveiligingscamera",
+    "hash": "411e2852"
+  },
+  "icon-library.library.sensor": {
+    "text": "Sensor",
+    "hash": "162cc64c"
+  },
+  "icon-library.library.shackle": {
+    "text": "Beugel",
+    "hash": "f705d5dc"
+  },
+  "icon-library.library.shade": {
+    "text": "Kap",
+    "hash": "c01576cf"
+  },
+  "icon-library.library.shield": {
+    "text": "Schild",
+    "hash": "480d4be7"
+  },
+  "icon-library.library.shower": {
+    "text": "Douche",
+    "hash": "01db9e7c"
+  },
+  "icon-library.library.sign": {
+    "text": "Bord",
+    "hash": "0c9618e9"
+  },
+  "icon-library.library.signal": {
+    "text": "Signaal",
+    "hash": "1e9806e4"
+  },
+  "icon-library.library.slash": {
+    "text": "Schuine streep",
+    "hash": "9c92721e"
+  },
+  "icon-library.library.slat-1": {
+    "text": "Lamel 1",
+    "hash": "c07ba67a"
+  },
+  "icon-library.library.slat-2": {
+    "text": "Lamel 2",
+    "hash": "5ce068d7"
+  },
+  "icon-library.library.slat-3": {
+    "text": "Lamel 3",
+    "hash": "570c827c"
+  },
+  "icon-library.library.slat-4": {
+    "text": "Lamel 4",
+    "hash": "acc6fb2a"
+  },
+  "icon-library.library.small-star": {
+    "text": "Kleine ster",
+    "hash": "1756ae29"
+  },
+  "icon-library.library.smoke-alarm": {
+    "text": "Rookmelder",
+    "hash": "0f119d88"
+  },
+  "icon-library.library.smoke-detector-standby": {
+    "text": "Rookmelder stand-by",
+    "hash": "aa4e6b82"
+  },
+  "icon-library.library.snow": {
+    "text": "Sneeuw",
+    "hash": "4f946da9"
+  },
+  "icon-library.library.snowflake": {
+    "text": "Sneeuwvlok",
+    "hash": "1dbd59f6"
+  },
+  "icon-library.library.soil": {
+    "text": "Aarde",
+    "hash": "032b5a60"
+  },
+  "icon-library.library.solar-power": {
+    "text": "Zonne-energie",
+    "hash": "d53c8dca"
+  },
+  "icon-library.library.sound-waves": {
+    "text": "Geluidsgolven",
+    "hash": "ee06ea46"
+  },
+  "icon-library.library.speaker": {
+    "text": "Luidspreker",
+    "hash": "a9e0c705"
+  },
+  "icon-library.library.sprinkler": {
+    "text": "Sproeier",
+    "hash": "7ed7237e"
+  },
+  "icon-library.library.sprout": {
+    "text": "Scheut",
+    "hash": "badd2252"
+  },
+  "icon-library.library.stand": {
+    "text": "Standaard",
+    "hash": "2de251e0"
+  },
+  "icon-library.library.storm-with-rain": {
+    "text": "Storm met regen",
+    "hash": "7f9c0ae3"
+  },
+  "icon-library.library.sun": {
+    "text": "Zon",
+    "hash": "db18f17f"
+  },
+  "icon-library.library.sun-and-cloud": {
+    "text": "Zon en wolk",
+    "hash": "9f3a94bb"
+  },
+  "icon-library.library.sunny": {
+    "text": "Zonnig",
+    "hash": "adf259f6"
+  },
+  "icon-library.library.sunset": {
+    "text": "Zonsondergang",
+    "hash": "275dbda9"
+  },
+  "icon-library.library.switch-toggle": {
+    "text": "Schakelaar omzetten",
+    "hash": "d1b5a513"
+  },
+  "icon-library.library.table-lamp-switching-on": {
+    "text": "Tafellamp gaat aan",
+    "hash": "0c9f8b65"
+  },
+  "icon-library.library.tap": {
+    "text": "Kraan",
+    "hash": "464d23b5"
+  },
+  "icon-library.library.television": {
+    "text": "Televisie",
+    "hash": "7e7536a9"
+  },
+  "icon-library.library.thermometer": {
+    "text": "Thermometer",
+    "hash": "958fb624"
+  },
+  "icon-library.library.thunderstorm": {
+    "text": "Onweer",
+    "hash": "31a9beb9"
+  },
+  "icon-library.library.timer": {
+    "text": "Timer",
+    "hash": "cdeec2b3"
+  },
+  "icon-library.library.toe-1": {
+    "text": "Teen 1",
+    "hash": "80d657ba"
+  },
+  "icon-library.library.toe-2": {
+    "text": "Teen 2",
+    "hash": "c867b6c5"
+  },
+  "icon-library.library.toe-3": {
+    "text": "Teen 3",
+    "hash": "70e13d13"
+  },
+  "icon-library.library.toe-4": {
+    "text": "Teen 4",
+    "hash": "cdb0f33f"
+  },
+  "icon-library.library.top-arc": {
+    "text": "Bovenste boog",
+    "hash": "904e3065"
+  },
+  "icon-library.library.top-gust": {
+    "text": "Bovenste windvlaag",
+    "hash": "914e76e8"
+  },
+  "icon-library.library.top-slat": {
+    "text": "Bovenste lamel",
+    "hash": "79f64624"
+  },
+  "icon-library.library.top-strip": {
+    "text": "Bovenste strook",
+    "hash": "fc5dea53"
+  },
+  "icon-library.library.top-tick": {
+    "text": "Bovenste haakje",
+    "hash": "81f095bf"
+  },
+  "icon-library.library.top-wave": {
+    "text": "Bovenste golf",
+    "hash": "ca3c68c1"
+  },
+  "icon-library.library.track": {
+    "text": "Spoor",
+    "hash": "051f01f0"
+  },
+  "icon-library.library.trash-day": {
+    "text": "Vuilnisdag",
+    "hash": "cf7fba4d"
+  },
+  "icon-library.library.tumble-dryer": {
+    "text": "Wasdroger",
+    "hash": "c8e15f69"
+  },
+  "icon-library.library.tv-on": {
+    "text": "Tv aan",
+    "hash": "fa807c56"
+  },
+  "icon-library.library.valve": {
+    "text": "Ventiel",
+    "hash": "094db509"
+  },
+  "icon-library.library.volume": {
+    "text": "Volume",
+    "hash": "b10fb966"
+  },
+  "icon-library.library.walker": {
+    "text": "Wandelaar",
+    "hash": "f4034e7e"
+  },
+  "icon-library.library.walking": {
+    "text": "Wandelend",
+    "hash": "1dabd513"
+  },
+  "icon-library.library.washing-machine": {
+    "text": "Wasmachine",
+    "hash": "6a2ddb70"
+  },
+  "icon-library.library.water": {
+    "text": "Water",
+    "hash": "7ca7dea9"
+  },
+  "icon-library.library.water-drop": {
+    "text": "Waterdruppel",
+    "hash": "95870f1c"
+  },
+  "icon-library.library.water-pump": {
+    "text": "Waterpomp",
+    "hash": "29e86c78"
+  },
+  "icon-library.library.watering": {
+    "text": "Water geven",
+    "hash": "2ee11146"
+  },
+  "icon-library.library.watering-can": {
+    "text": "Gieter",
+    "hash": "4fb7e50c"
+  },
+  "icon-library.library.wi-fi": {
+    "text": "Wifi",
+    "hash": "337253f2"
+  },
+  "icon-library.library.windy": {
+    "text": "Winderig",
+    "hash": "cdcaccab"
+  },
+  "icon-library.lights.arms": {
+    "text": "Armen",
+    "hash": "f831a06b"
+  },
+  "icon-library.lights.base": {
+    "text": "Voet",
+    "hash": "7b47361a"
+  },
+  "icon-library.lights.beam-edge-1": {
+    "text": "Straalrand 1",
+    "hash": "7671af87"
+  },
+  "icon-library.lights.beam-edge-2": {
+    "text": "Straalrand 2",
+    "hash": "3ea36119"
+  },
+  "icon-library.lights.bulb": {
+    "text": "Lamp",
+    "hash": "b1d8b12c"
+  },
+  "icon-library.lights.bulb-shining": {
+    "text": "Schijnende lamp",
+    "hash": "73aa88f3"
+  },
+  "icon-library.lights.canopy": {
+    "text": "Kap",
+    "hash": "64a6ddff"
+  },
+  "icon-library.lights.chandelier": {
+    "text": "Kroonluchter",
+    "hash": "48f27d55"
+  },
+  "icon-library.lights.desk-lamp": {
+    "text": "Bureaulamp",
+    "hash": "2a85fd5e"
+  },
+  "icon-library.lights.floor-lamp": {
+    "text": "Staande lamp",
+    "hash": "f33a4b01"
+  },
+  "icon-library.lights.lamp": {
+    "text": "Lamp",
+    "hash": "bc294628"
+  },
+  "icon-library.lights.lamp-front": {
+    "text": "Voorkant lamp",
+    "hash": "d38a6b1e"
+  },
+  "icon-library.lights.lava": {
+    "text": "Lava",
+    "hash": "09541df8"
+  },
+  "icon-library.lights.lava-lamp": {
+    "text": "Lavalamp",
+    "hash": "b6146f1b"
+  },
+  "icon-library.lights.left-lamp": {
+    "text": "Linkerlamp",
+    "hash": "27b8266f"
+  },
+  "icon-library.lights.left-light": {
+    "text": "Linkerlicht",
+    "hash": "d7c2f269"
+  },
+  "icon-library.lights.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "icon-library.lights.middle-light": {
+    "text": "Middelste licht",
+    "hash": "013db93b"
+  },
+  "icon-library.lights.moon": {
+    "text": "Maan",
+    "hash": "5fc16525"
+  },
+  "icon-library.lights.night-light": {
+    "text": "Nachtlampje",
+    "hash": "78c28ebe"
+  },
+  "icon-library.lights.pendant-lights": {
+    "text": "Hanglampen",
+    "hash": "0ceae6b3"
+  },
+  "icon-library.lights.ray-1": {
+    "text": "Straal 1",
+    "hash": "218c8384"
+  },
+  "icon-library.lights.ray-2": {
+    "text": "Straal 2",
+    "hash": "846d63bf"
+  },
+  "icon-library.lights.ray-3": {
+    "text": "Straal 3",
+    "hash": "53a9a7ef"
+  },
+  "icon-library.lights.ray-left": {
+    "text": "Straal links",
+    "hash": "ef59fd2a"
+  },
+  "icon-library.lights.ray-right": {
+    "text": "Straal rechts",
+    "hash": "5e5c2885"
+  },
+  "icon-library.lights.ray-top": {
+    "text": "Straal boven",
+    "hash": "9af5c90f"
+  },
+  "icon-library.lights.ray-top-left": {
+    "text": "Straal linksboven",
+    "hash": "0694ba08"
+  },
+  "icon-library.lights.ray-top-right": {
+    "text": "Straal rechtsboven",
+    "hash": "e98da7fc"
+  },
+  "icon-library.lights.right-lamp": {
+    "text": "Rechterlamp",
+    "hash": "e4d1d0d7"
+  },
+  "icon-library.lights.right-lamp-and-bulb": {
+    "text": "Rechterlamp met fitting",
+    "hash": "cc72c3ef"
+  },
+  "icon-library.lights.right-light": {
+    "text": "Rechterlicht",
+    "hash": "955b3f45"
+  },
+  "icon-library.lights.shade": {
+    "text": "Kap",
+    "hash": "c01576cf"
+  },
+  "icon-library.lights.spotlight": {
+    "text": "Spot",
+    "hash": "fca7aa83"
+  },
+  "icon-library.lights.stand": {
+    "text": "Standaard",
+    "hash": "2de251e0"
+  },
+  "icon-library.lights.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "icon-library.lights.track-light": {
+    "text": "Railspot",
+    "hash": "e35875d4"
+  },
+  "icon-library.nature.back-left-leg": {
+    "text": "Linkerachterpoot",
+    "hash": "5279161c"
+  },
+  "icon-library.nature.back-right-leg": {
+    "text": "Rechterachterpoot",
+    "hash": "6f06dc40"
+  },
+  "icon-library.nature.band-1": {
+    "text": "Band 1",
+    "hash": "621c9873"
+  },
+  "icon-library.nature.band-2": {
+    "text": "Band 2",
+    "hash": "5ede19e9"
+  },
+  "icon-library.nature.band-3": {
+    "text": "Band 3",
+    "hash": "05bc7872"
+  },
+  "icon-library.nature.band-4": {
+    "text": "Band 4",
+    "hash": "89da7fd8"
+  },
+  "icon-library.nature.band-5": {
+    "text": "Band 5",
+    "hash": "c20aae47"
+  },
+  "icon-library.nature.bee": {
+    "text": "Bij",
+    "hash": "f5779450"
+  },
+  "icon-library.nature.bee-and-flower": {
+    "text": "Bij en bloem",
+    "hash": "d3e23729"
+  },
+  "icon-library.nature.body": {
+    "text": "Romp",
+    "hash": "6ccaa641"
+  },
+  "icon-library.nature.butterfly": {
+    "text": "Vlinder",
+    "hash": "a30f6a02"
+  },
+  "icon-library.nature.cat": {
+    "text": "Kat",
+    "hash": "48735c4f"
+  },
+  "icon-library.nature.dog-barking": {
+    "text": "Blaffende hond",
+    "hash": "b3795e2b"
+  },
+  "icon-library.nature.dolphin": {
+    "text": "Dolfijn",
+    "hash": "1af9db1e"
+  },
+  "icon-library.nature.duck": {
+    "text": "Eend",
+    "hash": "3b67f1c9"
+  },
+  "icon-library.nature.flower": {
+    "text": "Bloem",
+    "hash": "77dc2a65"
+  },
+  "icon-library.nature.front-left-leg": {
+    "text": "Linkervoorpoot",
+    "hash": "734cba10"
+  },
+  "icon-library.nature.front-right-leg": {
+    "text": "Rechtervoorpoot",
+    "hash": "416f2823"
+  },
+  "icon-library.nature.head": {
+    "text": "Kop",
+    "hash": "9bb0aacc"
+  },
+  "icon-library.nature.hurricane": {
+    "text": "Orkaan",
+    "hash": "8e33279b"
+  },
+  "icon-library.nature.jellyfish": {
+    "text": "Kwal",
+    "hash": "2f0a7632"
+  },
+  "icon-library.nature.ladybug": {
+    "text": "Lieveheersbeestje",
+    "hash": "3e48ea39"
+  },
+  "icon-library.nature.left-wing": {
+    "text": "Linkervleugel",
+    "hash": "bf48cc21"
+  },
+  "icon-library.nature.left-wing-case": {
+    "text": "Linkervleugeldek",
+    "hash": "72df111c"
+  },
+  "icon-library.nature.penguin": {
+    "text": "Pinguïn",
+    "hash": "d84ab159"
+  },
+  "icon-library.nature.right-wing": {
+    "text": "Rechtervleugel",
+    "hash": "24261167"
+  },
+  "icon-library.nature.right-wing-case": {
+    "text": "Rechtervleugeldek",
+    "hash": "7e1bb96d"
+  },
+  "icon-library.nature.shell": {
+    "text": "Schelp",
+    "hash": "a7332854"
+  },
+  "icon-library.nature.snail": {
+    "text": "Slak",
+    "hash": "19c62aa1"
+  },
+  "icon-library.nature.tornado": {
+    "text": "Tornado",
+    "hash": "3582d91a"
+  },
+  "icon-library.nature.turtle": {
+    "text": "Schildpad",
+    "hash": "5171ce30"
+  },
+  "icon-library.seasonal.balloon": {
+    "text": "Ballon",
+    "hash": "85bddc94"
+  },
+  "icon-library.seasonal.band": {
+    "text": "Band",
+    "hash": "0bd9cec5"
+  },
+  "icon-library.seasonal.bat": {
+    "text": "Vleermuis",
+    "hash": "f2813a52"
+  },
+  "icon-library.seasonal.bauble-n": {
+    "text": "Kerstbal {n}",
+    "hash": "ca2ee88e"
+  },
+  "icon-library.seasonal.beating-heart": {
+    "text": "Kloppend hart",
+    "hash": "a565b4aa"
+  },
+  "icon-library.seasonal.bell": {
+    "text": "Bel",
+    "hash": "8e80b2b4"
+  },
+  "icon-library.seasonal.bend": {
+    "text": "Bocht",
+    "hash": "eb05d490"
+  },
+  "icon-library.seasonal.big-heart": {
+    "text": "Groot hart",
+    "hash": "2a60c087"
+  },
+  "icon-library.seasonal.bloom": {
+    "text": "Bloesem",
+    "hash": "fe689170"
+  },
+  "icon-library.seasonal.body": {
+    "text": "Romp",
+    "hash": "6ccaa641"
+  },
+  "icon-library.seasonal.box": {
+    "text": "Doos",
+    "hash": "512fd3c6"
+  },
+  "icon-library.seasonal.brim": {
+    "text": "Rand",
+    "hash": "cf36a072"
+  },
+  "icon-library.seasonal.broken-heart": {
+    "text": "Gebroken hart",
+    "hash": "e1ebcda4"
+  },
+  "icon-library.seasonal.candy-cane": {
+    "text": "Zuurstok",
+    "hash": "b0b3e0b3"
+  },
+  "icon-library.seasonal.cauldron": {
+    "text": "Ketel",
+    "hash": "a8952948"
+  },
+  "icon-library.seasonal.cherry": {
+    "text": "Kers",
+    "hash": "abf61b12"
+  },
+  "icon-library.seasonal.christmas-tree": {
+    "text": "Kerstboom",
+    "hash": "e963e8ff"
+  },
+  "icon-library.seasonal.clapper": {
+    "text": "Klepel",
+    "hash": "089bb653"
+  },
+  "icon-library.seasonal.cuff": {
+    "text": "Manchet",
+    "hash": "3a564322"
+  },
+  "icon-library.seasonal.cupcake": {
+    "text": "Cupcake",
+    "hash": "7fd60aa9"
+  },
+  "icon-library.seasonal.firework": {
+    "text": "Vuurwerk",
+    "hash": "01113719"
+  },
+  "icon-library.seasonal.floating-hearts": {
+    "text": "Zwevende harten",
+    "hash": "0feb69b2"
+  },
+  "icon-library.seasonal.foot": {
+    "text": "Voet",
+    "hash": "24177360"
+  },
+  "icon-library.seasonal.frosting": {
+    "text": "Glazuur",
+    "hash": "503de432"
+  },
+  "icon-library.seasonal.gem": {
+    "text": "Edelsteen",
+    "hash": "5108a0f0"
+  },
+  "icon-library.seasonal.ghost": {
+    "text": "Spook",
+    "hash": "df1bc498"
+  },
+  "icon-library.seasonal.gift": {
+    "text": "Cadeau",
+    "hash": "1a596a09"
+  },
+  "icon-library.seasonal.gravestone": {
+    "text": "Grafsteen",
+    "hash": "e925b4fc"
+  },
+  "icon-library.seasonal.ground": {
+    "text": "Grond",
+    "hash": "151bf493"
+  },
+  "icon-library.seasonal.hand": {
+    "text": "Hand",
+    "hash": "fa18c067"
+  },
+  "icon-library.seasonal.hand-with-heart": {
+    "text": "Hand met hart",
+    "hash": "ea1c93e0"
+  },
+  "icon-library.seasonal.hat": {
+    "text": "Hoed",
+    "hash": "dc34efd4"
+  },
+  "icon-library.seasonal.heart": {
+    "text": "Hart",
+    "hash": "770af9d1"
+  },
+  "icon-library.seasonal.hook-end": {
+    "text": "Haakeinde",
+    "hash": "1983ba38"
+  },
+  "icon-library.seasonal.jack-o-lantern": {
+    "text": "Pompoenlantaarn",
+    "hash": "de45ebe1"
+  },
+  "icon-library.seasonal.jaw": {
+    "text": "Kaak",
+    "hash": "b27dd491"
+  },
+  "icon-library.seasonal.jingle-bell": {
+    "text": "Belletje",
+    "hash": "caacc59f"
+  },
+  "icon-library.seasonal.left-bulb": {
+    "text": "Linkerlamp",
+    "hash": "12f517a1"
+  },
+  "icon-library.seasonal.left-eye": {
+    "text": "Linkeroog",
+    "hash": "52cafbcc"
+  },
+  "icon-library.seasonal.left-half": {
+    "text": "Linkerhelft",
+    "hash": "6eaadaf4"
+  },
+  "icon-library.seasonal.left-leaf": {
+    "text": "Linkerblad",
+    "hash": "d254b1db"
+  },
+  "icon-library.seasonal.left-wing": {
+    "text": "Linkervleugel",
+    "hash": "bf48cc21"
+  },
+  "icon-library.seasonal.lid": {
+    "text": "Deksel",
+    "hash": "eea3f22e"
+  },
+  "icon-library.seasonal.magic-staff": {
+    "text": "Toverstaf",
+    "hash": "4a61194e"
+  },
+  "icon-library.seasonal.middle-bulb": {
+    "text": "Middelste lamp",
+    "hash": "090b69fd"
+  },
+  "icon-library.seasonal.nose-cone": {
+    "text": "Neuskegel",
+    "hash": "6c088848"
+  },
+  "icon-library.seasonal.orb": {
+    "text": "Bol",
+    "hash": "8483460e"
+  },
+  "icon-library.seasonal.ornament": {
+    "text": "Kerstversiering",
+    "hash": "b895389c"
+  },
+  "icon-library.seasonal.owl": {
+    "text": "Uil",
+    "hash": "72992b75"
+  },
+  "icon-library.seasonal.party-popper": {
+    "text": "Confettikanon",
+    "hash": "9c6843d5"
+  },
+  "icon-library.seasonal.popper": {
+    "text": "Knaller",
+    "hash": "03d1631c"
+  },
+  "icon-library.seasonal.pot": {
+    "text": "Pan",
+    "hash": "5847d110"
+  },
+  "icon-library.seasonal.pumpkin": {
+    "text": "Pompoen",
+    "hash": "c6c5211a"
+  },
+  "icon-library.seasonal.right-bulb": {
+    "text": "Rechterlamp",
+    "hash": "ea769996"
+  },
+  "icon-library.seasonal.right-eye": {
+    "text": "Rechteroog",
+    "hash": "405b869d"
+  },
+  "icon-library.seasonal.right-half": {
+    "text": "Rechterhelft",
+    "hash": "faae1547"
+  },
+  "icon-library.seasonal.right-leaf": {
+    "text": "Rechterblad",
+    "hash": "50647285"
+  },
+  "icon-library.seasonal.right-wing": {
+    "text": "Rechtervleugel",
+    "hash": "24261167"
+  },
+  "icon-library.seasonal.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "icon-library.seasonal.rocket": {
+    "text": "Raket",
+    "hash": "d40a5aca"
+  },
+  "icon-library.seasonal.shooting-star": {
+    "text": "Vallende ster",
+    "hash": "46d236b9"
+  },
+  "icon-library.seasonal.skull": {
+    "text": "Schedel",
+    "hash": "2fb09efc"
+  },
+  "icon-library.seasonal.small-heart": {
+    "text": "Klein hart",
+    "hash": "f6e0038c"
+  },
+  "icon-library.seasonal.snowman": {
+    "text": "Sneeuwpop",
+    "hash": "d6da45cb"
+  },
+  "icon-library.seasonal.sparkle-2": {
+    "text": "Fonkeling 2",
+    "hash": "76310b03"
+  },
+  "icon-library.seasonal.sparkle-3": {
+    "text": "Fonkeling 3",
+    "hash": "71874599"
+  },
+  "icon-library.seasonal.sparkle-4": {
+    "text": "Fonkeling 4",
+    "hash": "0da2d7da"
+  },
+  "icon-library.seasonal.spider": {
+    "text": "Spin",
+    "hash": "2964c4cc"
+  },
+  "icon-library.seasonal.spoon": {
+    "text": "Lepel",
+    "hash": "97072839"
+  },
+  "icon-library.seasonal.staff": {
+    "text": "Staf",
+    "hash": "681927e3"
+  },
+  "icon-library.seasonal.staff-and-orb": {
+    "text": "Staf en bol",
+    "hash": "c56fbaec"
+  },
+  "icon-library.seasonal.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "icon-library.seasonal.stem": {
+    "text": "Steel",
+    "hash": "7bcc3897"
+  },
+  "icon-library.seasonal.stone": {
+    "text": "Steen",
+    "hash": "6ffa6b8b"
+  },
+  "icon-library.seasonal.streamer-1": {
+    "text": "Serpentine 1",
+    "hash": "ee6f55aa"
+  },
+  "icon-library.seasonal.streamer-2": {
+    "text": "Serpentine 2",
+    "hash": "2d965956"
+  },
+  "icon-library.seasonal.streamer-3": {
+    "text": "Serpentine 3",
+    "hash": "db8a0f8e"
+  },
+  "icon-library.seasonal.streamer-4": {
+    "text": "Serpentine 4",
+    "hash": "ae1333bf"
+  },
+  "icon-library.seasonal.string-lights": {
+    "text": "Lichtsnoer",
+    "hash": "085a7f1f"
+  },
+  "icon-library.seasonal.thread": {
+    "text": "Draad",
+    "hash": "5373c7f8"
+  },
+  "icon-library.seasonal.top": {
+    "text": "Boven",
+    "hash": "d5cdfcf7"
+  },
+  "icon-library.seasonal.trail-1": {
+    "text": "Spoor 1",
+    "hash": "267400b8"
+  },
+  "icon-library.seasonal.trail-2": {
+    "text": "Spoor 2",
+    "hash": "72b275ef"
+  },
+  "icon-library.seasonal.trail-3": {
+    "text": "Spoor 3",
+    "hash": "acafa0e3"
+  },
+  "icon-library.seasonal.tree": {
+    "text": "Boom",
+    "hash": "b85f5fab"
+  },
+  "icon-library.seasonal.tulip": {
+    "text": "Tulp",
+    "hash": "0a99c90e"
+  },
+  "icon-library.seasonal.twinkling-star": {
+    "text": "Fonkelende ster",
+    "hash": "0ca48018"
+  },
+  "icon-library.seasonal.wire": {
+    "text": "Draad",
+    "hash": "149987d3"
+  },
+  "icon-library.seasonal.wizard-hat": {
+    "text": "Tovenaarshoed",
+    "hash": "c7025246"
+  },
+  "icon-library.seasonal.wrapper-1": {
+    "text": "Verpakking 1",
+    "hash": "e50dfec2"
+  },
+  "icon-library.seasonal.wrapper-2": {
+    "text": "Verpakking 2",
+    "hash": "ba10d28c"
+  },
+  "icon-library.seasonal.wrapper-3": {
+    "text": "Verpakking 3",
+    "hash": "401ec203"
+  },
+  "icon-library.style-hints.face-glow": {
+    "text": "Gezichtsgloed",
+    "hash": "3a432dbe"
+  }
 }

@@ -199,4 +199,4 @@ export const DEFAULT_TAB_RENDERERS: Partial<Record<EditorTab, ModuleTabRender>> 
 };
 
 /** Shown for an unknown module type and for a tab its editor does not list. */
-export const renderNoSettings = (): TemplateResult => html`<p class="help">${t('No settings for this module.')}</p>`;
+export const renderNoSettings = (): TemplateResult => html`<p class="help">${t('card-editor.base-editor.no-settings-for-this-module')}</p>`;

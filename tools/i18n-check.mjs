@@ -1,21 +1,29 @@
-// Drift check D1-D7 (contract src/contracts/i18n.ts 1.0.0). Run as `npm run i18n -- --check` or
+// Drift check D1-D9 (contracts src/contracts/i18n.ts 2.0.0 and i18n-keys.ts). Run as `npm run i18n -- --check` or
 // `node tools/check-i18n.mjs [--ci] [--strict] [--verbose] [--update-baseline] [--placement]`.
-//   D1 every id is a string literal      D2 every id has en-US and nl entries with the same arguments
+//   D1 every id is a string literal; a text that is not a key and a tc() call are errors; a key matches the key pattern, starts with its namespace and is in en-GB.json
+//   D2 every id has en-US and nl entries with the same arguments
 //   D3 en-GB spelling                    D4 en-US.json equals the generator output
 //   D5 no hard-coded user text (ratchet) D6 every message parses     D7 runtime size, import scan and
 //   placement (which bundle holds the runtime, the tables and each namespace's call sites; reads the
 //   production build's module list, node_modules/.cache/magic-card/i18n-stats.json, written by webpack.config.js;
 //   --placement requires it and runs after `npm run build`, without it the placement part is skipped)
+//   D8 every en-GB.json entry has a note, a max and the vars its text needs; no text is over max; the files are sorted
+//   D9 a translation made from other English is stale unless i18n/waivers.json holds a waiver for the key and the
+//   current hash; waivers for an unknown key, an old hash or with no reason fail
 // Namespaces whose status in I18N_MODULES is 'pending' report D2 as warnings. --strict (or
 // I18N_RELEASE_STRICT in the contract) makes them errors, requires every namespace to be
 // 'complete' and every D5 baseline to be 0. --ci adds GitHub annotations. Exit 1 on any error.
+// --base <commit>: a key is touched when it is new against that commit or its en-GB text differs from it; D2 and D9 on touched keys
+// are errors even where they would be warnings. Untouched keys keep their level. Without --base the output is unchanged.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
 import { run as checkUS } from './i18n-us.mjs';
-import { placement, STATS_FILE } from './i18n/placement.mjs';
+import { placement } from './i18n/placement.mjs';
 const require = createRequire(import.meta.url);
 const lib = require('./i18n/lib.cjs');
+const keys = require('./i18n/keys.cjs');
 const ts = require('typescript');
 
 const BASELINE = path.join(lib.ROOT, 'tools/i18n/baseline.json');
@@ -47,6 +55,50 @@ export function spellingErrors(contract, text) {
   return out;
 }
 
+/** The keys of a catalogue that are new against the base catalogue (a Map, or null when the base has none) or whose en-GB text differs. */
+export function touchedKeys(gb, baseGb) {
+  const out = new Set();
+  for (const [key, e] of gb) {
+    const was = baseGb?.get(key);
+    if (was === undefined || was?.text !== e?.text) out.add(key);
+  }
+  return out;
+}
+
+/** Turns the D2 and D9 warnings about a touched key into errors. */
+export function escalateTouched(results, ns, touched) {
+  const head = `${ns} "`;
+  return results.map((r) => {
+    if (r.level !== 'warn' || (r.rule !== 'D2' && r.rule !== 'D9') || !r.msg.startsWith(head)) return r;
+    return touched.has(r.msg.slice(head.length, r.msg.indexOf('"', head.length))) ? { ...r, level: 'error' } : r;
+  });
+}
+
+function git(args) {
+  return execFileSync('git', args, { cwd: lib.ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 });
+}
+
+/** The commit a --base value names, or '' when it is not a commit. */
+function resolveBase(value) {
+  if (!value || value.startsWith('-')) return '';
+  try {
+    return git(['rev-parse', '--verify', '--quiet', `${value}^{commit}`]).trim();
+  } catch {
+    return '';
+  }
+}
+
+/** The en-GB catalogue of a namespace folder at the base commit as a Map, or null when the commit has none. */
+function baseCatalogue(commit, dir) {
+  let raw;
+  try {
+    raw = git(['show', `${commit}:${lib.rel(path.join(dir, 'en-GB.json'))}`]);
+  } catch {
+    return null;
+  }
+  return new Map(Object.entries(JSON.parse(raw)));
+}
+
 export async function main(argv = process.argv.slice(2)) {
   const flags = new Set(argv);
   const placementOnly = flags.has('--placement');
@@ -54,12 +106,23 @@ export async function main(argv = process.argv.slice(2)) {
   const strict = flags.has('--strict') || contract.I18N_RELEASE_STRICT === true || process.env.I18N_RELEASE_STRICT === '1';
   const ci = flags.has('--ci') || process.env.CI === 'true';
   const verbose = flags.has('--verbose');
+  let baseCommit = '';
+  const baseAt = argv.findIndex((a) => a === '--base' || a.startsWith('--base='));
+  if (baseAt >= 0) {
+    const value = argv[baseAt].startsWith('--base=') ? argv[baseAt].slice(7) : argv[baseAt + 1];
+    baseCommit = resolveBase(value);
+    if (!baseCommit) {
+      console.error(`${ci ? '::error::' : 'FAIL '}base ${value ?? ''} does not resolve to a commit (shallow checkout or wrong ref)`);
+      return 1;
+    }
+  }
+  let touchedCount = 0;
   const errors = [];
   const warnings = [];
   const err = (rule, msg) => errors.push(`${rule} ${msg}`);
   const warn = (rule, msg) => warnings.push(`${rule} ${msg}`);
 
-  const { ids, ctxIds, violations, nsList } = lib.extractAll();
+  const { keys: keyUses, violations, nsList } = lib.extractAll();
   const modules = contract.I18N_MODULES;
   if (placementOnly) {
     const out = placement(contract, nsList, { required: true });
@@ -81,43 +144,44 @@ export async function main(argv = process.argv.slice(2)) {
     }
   }
 
+  const keyCatalogues = new Map();
+  const waivers = keys.readWaivers();
+  for (const p of waivers.problems) err('D9', p);
   for (const n of nsList) {
     const pending = modules[n.ns]?.status !== 'complete' && !strict;
-    const report = pending ? warn : err;
-    const set = ids.get(n.ns);
-    const us = lib.catalogue(n, 'en-US.json');
-    const nl = lib.catalogue(n, 'nl.json');
-    const ctx = ctxIds.get(n.ns);
-    const text = (id) => (ctx.has(id) ? id.slice(ctx.get(id).length + 1) : id);
-
-    for (const id of lib.sortedIds(set)) {
-      const base = lib.parseMessage(text(id));
-      if (base.error) err('D6', `${n.ns} "${id}" (en-GB): ${base.error}`);
-      for (const [loc, table] of [['en-US', us], ['nl', nl]]) {
-        const v = table[id];
-        if (typeof v !== 'string' || v.trim() === '') {
-          report('D2', `${n.ns} "${id}": no ${loc} entry`);
-          continue;
-        }
-        const p = lib.parseMessage(v);
-        if (p.error) err('D6', `${n.ns} "${id}" (${loc}): ${p.error}`);
-        else if (!base.error && lib.argSig(p.args) !== lib.argSig(base.args)) report('D2', `${n.ns} "${id}" (${loc}): arguments differ (${lib.argNames(p.args)} vs ${lib.argNames(base.args)})`);
-      }
-      // D3 spelling of the en-GB id
-      for (const m of spellingErrors(contract, text(id))) err('D3', `${n.ns} "${id}": ${m}`);
+    let cat;
+    try {
+      cat = keys.loadCatalogues(n.dir);
+    } catch (e) {
+      err('D8', `${n.ns}: ${e.message}`);
+      continue;
     }
-    for (const k of Object.keys(us)) if (!set.has(k)) err('D2', `${n.ns} en-US.json: stale entry "${k}"`);
-    for (const k of Object.keys(nl)) if (!set.has(k)) report('D2', `${n.ns} nl.json: stale entry "${k}"`);
+    if (!cat.has) {
+      for (const [key, sites] of keyUses.get(n.ns)) err('D1', `${n.ns} "${key}" is a key but the namespace has no en-GB.json (${sites[0].file}:${sites[0].line})`);
+      continue;
+    }
+    keyCatalogues.set(n.ns, cat);
+    let results = keys.checkNamespace({ ns: n.ns, cat, uses: keyUses.get(n.ns), waivers: waivers.waivers, pending, strict, spelling: (t) => spellingErrors(contract, t) });
+    if (baseCommit) {
+      const touched = touchedKeys(cat.gb, baseCatalogue(baseCommit, n.dir));
+      touchedCount += touched.size;
+      results = escalateTouched(results, n.ns, touched);
+    }
+    for (const r of results) (r.level === 'warn' ? warn : err)(r.rule, r.msg);
   }
 
   // D4
   for (const r of checkUS({ check: true })) if (!r.ok) err('D4', `${r.ns}: out of date, run npm run i18n and review the diff`);
   const exceptions = lib.readJson(path.join(lib.ROOT, 'tools/i18n/en-US-exceptions.json'), {});
-  const all = new Set([...ids.values()].flatMap((s) => [...s]));
+  const all = new Set();
+  for (const cat of keyCatalogues.values()) for (const e of cat.gb.values()) if (typeof e?.text === 'string') all.add(e.text);
   for (const k of Object.keys(exceptions)) {
-    if (!all.has(k)) err('D4', `en-US-exceptions.json: "${k}" is not an extracted id`);
-    else if (lib.usText(k, contract.EN_US_WORDS, {}) === exceptions[k]) err('D4', `en-US-exceptions.json: "${k}" equals the word-list result, remove the exception`);
+    if (!all.has(k)) err('D4', `en-US-exceptions.json: "${k}" is not an en-GB text`);
+    else if (lib.usText(k, contract.EN_US_WORDS) === exceptions[k]) err('D4', `en-US-exceptions.json: "${k}" equals the word-list result, remove the exception`);
   }
+
+  // D9 waivers
+  for (const m of keys.checkWaivers(waivers.waivers, keyCatalogues.values())) err('D9', m.replace(/^D9 /, ''));
 
   // D5
   const counts = scanHardCoded(contract, nsList, verbose);
@@ -148,8 +212,8 @@ export async function main(argv = process.argv.slice(2)) {
     for (const st of sf.statements) {
       if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue;
       const spec = st.moduleSpecifier.text;
-      if (/contracts\/i18n$/.test(spec) && !st.importClause?.isTypeOnly) err('D7', `${r}: imports a value from the i18n contract (tools only; use import type)`);
-      if (/\.gen$/.test(spec) && !/\/i18n\/index\.ts$/.test(r)) err('D7', `${r}: imports a messages.gen table (only src/<folder>/i18n/index.ts may)`);
+      if (/contracts\/i18n(-keys)?$/.test(spec) && !st.importClause?.isTypeOnly) err('D7', `${r}: imports a value from the i18n contract (tools only; use import type)`);
+      if (/\.gen$/.test(spec) && !/\/i18n\/index\.ts$|^src\/i18n\/labels\/(index|mark)\.ts$/.test(r)) err('D7', `${r}: imports a messages.gen table (only src/<folder>/i18n/index.ts and src/i18n/labels/{index,mark}.ts may)`);
     }
   }
 
@@ -160,6 +224,7 @@ export async function main(argv = process.argv.slice(2)) {
 
   for (const w of warnings) console.warn(`${ci ? '::warning::' : 'warn '}${w}`);
   for (const e of errors) console.error(`${ci ? '::error::' : 'FAIL '}${e}`);
+  if (baseCommit) console.log(`i18n check: base ${baseCommit.slice(0, 8)}, ${touchedCount} touched keys`);
   console.log(`i18n check: ${nsList.length} namespaces, ${errors.length} errors, ${warnings.length} warnings${strict ? ' (strict)' : ' (non-strict)'}`);
   return errors.length ? 1 : 0;
 }
@@ -211,12 +276,12 @@ function scanHardCoded(contract, nsList, verbose) {
         const parts = ts.isNoSubstitutionTemplateLiteral(t) ? [t.text] : [t.head.text, ...t.templateSpans.map((s) => s.literal.text)];
         const joined = parts.join('\u0000').replace(/<!--[\s\S]*?-->/g, '').replace(/<(style|script)\b[\s\S]*?<\/\1>/gi, '');
         for (const m of joined.matchAll(/(?:^|>)([^<>]*)(?=<|$)/g)) {
-          const txt = m[1].replace(/\u0000/g, ' ');
+          const txt = m[1].replaceAll('\0', ' ');
           if (userText(txt)) hit(file, line(n), `text "${txt.trim().slice(0, 40)}"`);
         }
         for (const tag of joined.matchAll(/<[a-z][^<>]*>/gi)) {
           for (const a of tag[0].matchAll(/\s(\.?[a-z][\w-]*)="([^"]*)"/gi)) {
-            if (attrs.has(a[1].replace(/^\./, '')) && userText(a[2].replace(/\u0000/g, ' '))) hit(file, line(n), `${a[1]}="${a[2].slice(0, 30)}"`);
+            if (attrs.has(a[1].replace(/^\./, '')) && userText(a[2].replaceAll('\0', ' '))) hit(file, line(n), `${a[1]}="${a[2].slice(0, 30)}"`);
           }
         }
       } else if (ts.isPropertyAssignment(n) && (ts.isIdentifier(n.name) || ts.isStringLiteral(n.name)) && (props.has(n.name.text) || inTable(n))) {

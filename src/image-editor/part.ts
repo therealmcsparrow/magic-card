@@ -124,7 +124,7 @@ export function layerOf(at: Shape, run: Held[], xml: Document, vb: { w: number; 
   const ids = [...m.matchAll(/\bid="([^"]+)"/g)].map((r) => r[1]);
   const b = boxOf(m, vb);
   const outline: EditPath = { anchors: [{ x: b.x, y: b.y }, { x: b.x + b.w, y: b.y }, { x: b.x + b.w, y: b.y + b.h }, { x: b.x, y: b.y + b.h }], closed: true };
-  return { ...at, name: own || (n > 1 ? `${t('Imported part')} ${n}` : t('Imported part')), fill: 'main', stroke: 'none', locked: true, paths: [outline], look: { part: { m, d, i: [...ids, ...d.keys()] } } };
+  return { ...at, name: own || (n > 1 ? `${t('image-editor.part.imported-part')} ${n}` : t('image-editor.part.imported-part')), fill: 'main', stroke: 'none', locked: true, paths: [outline], look: { part: { m, d, i: [...ids, ...d.keys()] } } };
 }
 
 // ── out ──
@@ -186,6 +186,6 @@ export function partNode(x: ImageExt, s: Shape): TemplateResult | undefined {
 // ── inspector ──
 
 /** What can be done with an imported part, in the inspector. */
-export const partRows = (s: Shape): TemplateResult | undefined => (s.look?.part ? html`<p class="help">${t('Rename, reorder, hide or delete it.')}</p>` : undefined);
+export const partRows = (s: Shape): TemplateResult | undefined => (s.look?.part ? html`<p class="help">${t('image-editor.part.rename-reorder-hide-or-delete-it')}</p>` : undefined);
 
-export const partColours = (): TemplateResult => html`<p class="help">${t('This part keeps its own colours.')}</p>`;
+export const partColours = (): TemplateResult => html`<p class="help">${t('image-editor.part.this-part-keeps-its-own-colours')}</p>`;

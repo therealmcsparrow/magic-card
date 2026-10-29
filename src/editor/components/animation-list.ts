@@ -33,20 +33,20 @@ import { docBytes, hasCopy, keepPicked, setAnimationCopy } from '../custom/anima
 import './color-picker';
 import './unit-field';
 import './entity-picker';
-import { t, m, tl, type MessageId } from '../i18n';
+import { t, m, tl, type MessageIndex } from '../i18n';
 
-const TRIGGERS: Array<{ value: AnimationTrigger; label: MessageId; entity?: boolean }> = [
-  { value: 'always', label: m('Always') },
-  { value: 'entity_on', label: m('While entity is on'), entity: true },
-  { value: 'state', label: m('While state equals…'), entity: true },
-  { value: 'tap', label: m('On tap') },
+const TRIGGERS: Array<{ value: AnimationTrigger; label: MessageIndex; entity?: boolean }> = [
+  { value: 'always', label: m('card-editor.animation-list.always') },
+  { value: 'entity_on', label: m('card-editor.animation-list.while-entity-is-on'), entity: true },
+  { value: 'state', label: m('card-editor.animation-list.while-state-equals'), entity: true },
+  { value: 'tap', label: m('card-editor.animation-list.on-tap') },
 ];
 
-const DIRECTIONS: Array<{ value: AnimationDirection; label: MessageId }> = [
-  { value: 'normal', label: m('Normal') },
-  { value: 'reverse', label: m('Reverse') },
-  { value: 'alternate', label: m('Alternate') },
-  { value: 'alternate-reverse', label: m('Alternate reverse') },
+const DIRECTIONS: Array<{ value: AnimationDirection; label: MessageIndex }> = [
+  { value: 'normal', label: m('card-editor.animation-list.normal') },
+  { value: 'reverse', label: m('card-editor.animation-list.reverse') },
+  { value: 'alternate', label: m('card-editor.animation-list.alternate') },
+  { value: 'alternate-reverse', label: m('card-editor.animation-list.alternate-reverse') },
 ];
 
 const REPEATS = ['infinite', '1', '2', '3', '5'];
@@ -294,18 +294,18 @@ export class AnimationList extends LitElement {
     const seen = new Map<string, number>();
     const key = (n: string): string => n.trim().toLowerCase();
     for (const n of [...mine.map((d) => d.name), ...card.map((d) => d.name), ...ANIMATION_PRESETS.map((p) => lt(p.name))]) seen.set(key(n), (seen.get(key(n)) ?? 0) + 1);
-    const label = (name: string, docId: string): string => ((seen.get(key(name)) ?? 0) > 1 ? t('{name} ({id})', { name, id: docId }) : name);
+    const label = (name: string, docId: string): string => ((seen.get(key(name)) ?? 0) > 1 ? t('card-editor.animation-list.name-id', { name, id: docId }) : name);
     const cat = isCustomRef(value) && customRefId(value).startsWith(CAT_PREFIX);
     const preset = getAnimationPreset(value);
     const known = (motion ? !!preset && isMotionPreset(preset) : !!preset) || !!this._catEntry(value) || (!cat && !!this._doc(value)) || (isCustomRef(value) && card.some((d) => d.id === customRefId(value)));
     // a stored catalogue pick reads as its id until the catalogue loaded (or when it is not in it)
     const unknown = motion && (preset || isCustomRef(value))
-      ? t('{name} (not played on tabs)', { name: preset ? lt(preset.name) : customRefId(value) })
+      ? t('card-editor.animation-list.name-not-played-on-tabs', { name: preset ? lt(preset.name) : customRefId(value) })
       : cat
         ? this._doc(value)?.name ?? customRefId(value)
         : isCustomRef(value)
-          ? t('{id} (not found)', { id: customRefId(value) })
-          : t('{id} (unknown)', { id: value });
+          ? t('card-editor.animation-list.id-not-found', { id: customRefId(value) })
+          : t('card-editor.animation-list.id-unknown', { id: value });
     return html`
       <div class="select">
         <select
@@ -315,12 +315,12 @@ export class AnimationList extends LitElement {
         >
           ${known ? nothing : html`<option value=${value} selected>${unknown}</option>`}
           ${mine.length
-            ? html`<optgroup label=${t('My animations')}>
+            ? html`<optgroup label=${t('card-editor.animation-list.my-animations')}>
                 ${mine.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${label(d.name, d.id)}</option>`)}
               </optgroup>`
             : nothing}
           ${card.length
-            ? html`<optgroup label=${t('This card')}>
+            ? html`<optgroup label=${t('card-editor.animation-list.this-card')}>
                 ${card.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${label(d.name, d.id)}</option>`)}
               </optgroup>`
             : nothing}
@@ -346,9 +346,9 @@ export class AnimationList extends LitElement {
 
   private _target(index: number, a: AnimationConfig, fallback: 'module' | 'icon' = 'module'): TemplateResult {
     const opts = [
-      { value: 'module', label: this.moduleLabel || t('Module') },
-      { value: 'icon', label: t('Icon') },
-      ...(this.allowLabel ? [{ value: 'label', label: t('Label') }] : []),
+      { value: 'module', label: this.moduleLabel || t('card-editor.animation-list.module') },
+      { value: 'icon', label: t('card-editor.animation-list.icon') },
+      ...(this.allowLabel ? [{ value: 'label', label: t('card-editor.animation-list.label') }] : []),
     ];
     const current = opts.some((o) => o.value === a.target) ? a.target : fallback;
     const pick = (v: string) => this._patch(index, { target: v as AnimationConfig['target'] });
@@ -362,7 +362,7 @@ export class AnimationList extends LitElement {
       requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
     };
     return html`
-      <div class="seg full" role="radiogroup" aria-label=${t('Target')} @keydown=${onKey}>
+      <div class="seg full" role="radiogroup" aria-label=${t('card-editor.animation-list.target')} @keydown=${onKey}>
         ${opts.map((o) => {
           const on = o.value === current;
           return html`<button
@@ -381,7 +381,7 @@ export class AnimationList extends LitElement {
   private _repeat(index: number, a: AnimationConfig, id: string, def?: 'infinite' | number): TemplateResult {
     const it = a.iterations ?? def ?? getAnimationPreset(a.preset)?.defaults.iterations ?? 'infinite';
     const custom = this._custom.has(a.id) || !REPEATS.includes(String(it));
-    const opts = [...REPEATS.map((r) => ({ value: r, label: r === 'infinite' ? t('Infinite') : r })), { value: 'custom', label: t('Custom') }];
+    const opts = [...REPEATS.map((r) => ({ value: r, label: r === 'infinite' ? t('card-editor.animation-list.infinite') : r })), { value: 'custom', label: t('card-editor.animation-list.custom') }];
     const onPick = (v: string) => {
       const next = new Set(this._custom);
       if (v === 'custom') {
@@ -394,7 +394,7 @@ export class AnimationList extends LitElement {
       this._custom = next;
       this._patch(index, { iterations: v === 'infinite' ? 'infinite' : Number(v) });
     };
-    return this._field(t('Repeat'), this._select(id, custom ? 'custom' : String(it), opts, onPick), id);
+    return this._field(t('card-editor.animation-list.repeat'), this._select(id, custom ? 'custom' : String(it), opts, onPick), id);
   }
 
   /**
@@ -409,25 +409,25 @@ export class AnimationList extends LitElement {
     const decoOn = a.decorations !== false;
     const help =
       scene === 'weather'
-        ? t("Follows a weather entity: the module's, or the one picked as Entity for play condition.")
+        ? t("card-editor.animation-list.follows-a-weather-entity-the-module-s-or")
         : scene === 'daynight'
-          ? t('Stars and fireflies at night, a warm glow at dusk and dawn (sun.sun), nothing by day.')
+          ? t('card-editor.animation-list.stars-and-fireflies-at-night-a-warm-glow')
           : '';
     return html`
       <div class="cond">
         <div class="cond-head">
-          <span class="n">${t('Animation {n}', { n: index + 1 })} <span class="sub">· ${lt(p.name)}</span></span>
-          <button type="button" class="icon-btn sm danger" aria-label=${t('Delete animation {n}', { n: index + 1 })} title=${t('Delete animation')} @click=${() => this._remove(index)}>
+          <span class="n">${t('card-editor.animation-list.animation-n', { n: index + 1 })} <span class="sub">· ${lt(p.name)}</span></span>
+          <button type="button" class="icon-btn sm danger" aria-label=${t('card-editor.animation-list.delete-animation-n', { n: index + 1 })} title=${t('card-editor.animation-list.delete-animation')} @click=${() => this._remove(index)}>
             <ha-icon icon="mdi:delete-outline"></ha-icon>
           </button>
         </div>
         ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
-        ${this._field(t('Preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+        ${this._field(t('card-editor.animation-list.preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
         ${help ? html`<p class="help">${help}</p>` : nothing}
         ${this._play(index, a, trigger, id('play'))}
         <div class="two">
           ${this._field(
-            t('Density (%)'),
+            t('card-editor.animation-list.density'),
             html`<input
               class="input"
               id=${id('int')}
@@ -444,7 +444,7 @@ export class AnimationList extends LitElement {
             id('int'),
           )}
           ${this._field(
-            t('Strength (%)'),
+            t('card-editor.animation-list.strength'),
             html`<input
               class="input"
               id=${id('strength')}
@@ -464,22 +464,22 @@ export class AnimationList extends LitElement {
         ${deco
           ? html`<div class="switch-row">
               <div class="txt">
-                ${t('Border decorations')}
-                <p class="help">${t('Drawn along the border; the content keeps clear of them.')}</p>
+                ${t('card-editor.animation-list.border-decorations')}
+                <p class="help">${t('card-editor.animation-list.drawn-along-the-border-the-content-keeps')}</p>
               </div>
               <button
                 type="button"
                 class="switch"
                 role="switch"
                 aria-checked=${decoOn ? 'true' : 'false'}
-                aria-label=${t('Border decorations')}
+                aria-label=${t('card-editor.animation-list.border-decorations')}
                 @click=${() => this._patch(index, { decorations: decoOn ? false : undefined })}
               ></button>
             </div>`
           : nothing}
         <div class="foot">
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
-            <ha-icon icon="mdi:restore"></ha-icon>${t('Reset to preset')}
+            <ha-icon icon="mdi:restore"></ha-icon>${t('card-editor.animation-list.reset-to-preset')}
           </button>
         </div>
       </div>
@@ -502,24 +502,24 @@ export class AnimationList extends LitElement {
     return html`
       <div class="cond">
         <div class="cond-head">
-          <span class="n">${t('Animation {n}', { n: index + 1 })} <span class="sub">· ${p?.name ?? a.preset}</span></span>
+          <span class="n">${t('card-editor.animation-list.animation-n', { n: index + 1 })} <span class="sub">· ${p ? lt(p.name) : a.preset}</span></span>
           <button
             type="button"
             class="icon-btn sm danger"
-            aria-label=${t('Delete animation {n}', { n: index + 1 })}
-            title=${t('Delete animation')}
+            aria-label=${t('card-editor.animation-list.delete-animation-n', { n: index + 1 })}
+            title=${t('card-editor.animation-list.delete-animation')}
             @click=${() => this._remove(index)}
           >
             <ha-icon icon="mdi:delete-outline"></ha-icon>
           </button>
         </div>
         ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
-        ${this._field(t('Preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
-        ${this.allowIcon ? this._field(t('Target'), this._target(index, a)) : nothing}
+        ${this._field(t('card-editor.animation-list.preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+        ${this.allowIcon ? this._field(t('card-editor.animation-list.target'), this._target(index, a)) : nothing}
         ${this._play(index, a, trigger, id('play'))}
         ${trigger === 'state'
           ? this._field(
-              t('State value'),
+              t('card-editor.animation-list.state-value'),
               html`<input
                 class="input"
                 id=${id('state')}
@@ -531,10 +531,10 @@ export class AnimationList extends LitElement {
             )
           : nothing}
         ${this._field(
-          t('Colour'),
+          t('card-editor.animation-list.colour'),
           html`<mc-color-picker
             .value=${a.color || ''}
-            .label=${t('Animation colour')}
+            .label=${t('card-editor.animation-list.animation-colour')}
             .allowEntity=${this.allowEntityColor}
             .entityColor=${this.entityColor}
             @value-changed=${(e: CustomEvent) => this._patch(index, { color: e.detail.value })}
@@ -542,7 +542,7 @@ export class AnimationList extends LitElement {
         )}
         ${p && hasStrength(p)
           ? this._field(
-              t('Strength (%)'),
+              t('card-editor.animation-list.strength'),
               html`<input
                 class="input"
                 id=${id('strength')}
@@ -560,16 +560,16 @@ export class AnimationList extends LitElement {
             )
           : nothing}
         <div class="two">
-          ${this._field(t('Duration'), this._time(index, 'duration', a.duration ?? d?.duration, d?.duration))}
-          ${this._field(t('Delay'), this._time(index, 'delay', a.delay ?? d?.delay, d?.delay))}
+          ${this._field(t('card-editor.animation-list.duration'), this._time(index, 'duration', a.duration ?? d?.duration, d?.duration))}
+          ${this._field(t('card-editor.animation-list.delay'), this._time(index, 'delay', a.delay ?? d?.delay, d?.delay))}
         </div>
         <div class="two">
-          ${this._field(t('Easing'), this._select(id('easing'), easing, easingOpts, (v) => this._patch(index, { easing: v })), id('easing'))}
+          ${this._field(t('card-editor.animation-list.easing'), this._select(id('easing'), easing, easingOpts, (v) => this._patch(index, { easing: v })), id('easing'))}
           ${this._repeat(index, a, id('repeat'))}
         </div>
         ${custom
           ? this._field(
-              t('Repeat count'),
+              t('card-editor.animation-list.repeat-count'),
               html`<input
                 class="input"
                 id=${id('count')}
@@ -587,7 +587,7 @@ export class AnimationList extends LitElement {
           : nothing}
         <div class="two">
           ${this._field(
-            t('Direction'),
+            t('card-editor.animation-list.direction'),
             this._select(id('dir'), a.direction ?? d?.direction ?? 'normal', tl(DIRECTIONS), (v) => this._patch(index, { direction: v as AnimationDirection })),
             id('dir'),
           )}
@@ -614,7 +614,7 @@ export class AnimationList extends LitElement {
         ${p
           ? html`<div class="foot">
               <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
-                <ha-icon icon="mdi:restore"></ha-icon>${t('Reset to preset')}
+                <ha-icon icon="mdi:restore"></ha-icon>${t('card-editor.animation-list.reset-to-preset')}
               </button>
             </div>`
           : nothing}
@@ -644,11 +644,11 @@ export class AnimationList extends LitElement {
   private _missingHelp(): string {
     switch (animLibrary().status) {
       case 'unavailable':
-        return t('Not found. My animations needs the Magic Card Utils integration; the card plays its embedded copy if it has one.');
+        return t('card-editor.animation-list.not-found-my-animations-needs-the-magic');
       case 'ready':
-        return t('Not found in My animations. The card plays its embedded copy if it has one.');
+        return t('card-editor.animation-list.not-found-in-my-animations-the-card');
       default:
-        return t('Loading My animations…');
+        return t('card-editor.animation-list.loading-my-animations');
     }
   }
 
@@ -659,11 +659,11 @@ export class AnimationList extends LitElement {
     if (!lib || !sm) return nothing;
     const on = hasCopy(sm.getConfig(), ref);
     const n = docBytes(lib);
-    const kb = n < 1024 ? t('{n} B', { n }) : t('{size} KB', { size: (n / 1024).toFixed(1) });
+    const kb = n < 1024 ? t('card-editor.animation-list.n-b', { n }) : t('card-editor.animation-list.size-kb', { size: (n / 1024).toFixed(1) });
     return html`<div class="switch-row">
       <div class="txt">
-        <div class="field-head"><label for=${id}>${on ? t('Keep a copy in this card ({size})', { size: kb }) : t('Keep a copy in this card (adds {size})', { size: kb })}</label></div>
-        <p class="help" id="${id}-help">${t('Without a copy, the card plays nothing if Magic Card Utils or this animation is removed.')}</p>
+        <div class="field-head"><label for=${id}>${on ? t('card-editor.animation-list.keep-a-copy-in-this-card-size', { size: kb }) : t('card-editor.animation-list.keep-a-copy-in-this-card-adds-size', { size: kb })}</label></div>
+        <p class="help" id="${id}-help">${t('card-editor.animation-list.without-a-copy-the-card-plays-nothing-if')}</p>
       </div>
       <button type="button" class="switch" id=${id} role="switch" aria-checked=${on ? 'true' : 'false'} aria-describedby="${id}-help"
         @click=${() => { setAnimationCopy(sm, ref, !on, false); this.requestUpdate(); }}></button>
@@ -681,13 +681,13 @@ export class AnimationList extends LitElement {
     const trigger = a.trigger ?? 'always';
     const head = html`
       <div class="cond-head">
-        <span class="n">${t('Animation {n}', { n: index + 1 })} <span class="sub">· ${doc?.name ?? ref}</span></span>
-        <button type="button" class="icon-btn sm danger" aria-label=${t('Delete animation {n}', { n: index + 1 })} title=${t('Delete animation')} @click=${() => this._remove(index)}>
+        <span class="n">${t('card-editor.animation-list.animation-n', { n: index + 1 })} <span class="sub">· ${doc?.name ?? ref}</span></span>
+        <button type="button" class="icon-btn sm danger" aria-label=${t('card-editor.animation-list.delete-animation-n', { n: index + 1 })} title=${t('card-editor.animation-list.delete-animation')} @click=${() => this._remove(index)}>
           <ha-icon icon="mdi:delete-outline"></ha-icon>
         </button>
       </div>
       ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
-      ${this._field(t('Preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+      ${this._field(t('card-editor.animation-list.preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
       ${this._keepCopy(ref, id('keep'))}
     `;
     if (!doc) {
@@ -695,9 +695,9 @@ export class AnimationList extends LitElement {
         ${head}
         <p class="help">
           ${ref.startsWith('quick-')
-            ? t('An animated icon stored in this card.')
+            ? t('card-editor.animation-list.an-animated-icon-stored-in-this-card')
             : ref.startsWith(CAT_PREFIX)
-              ? t('A preset stored in this card.')
+              ? t('card-editor.animation-list.a-preset-stored-in-this-card')
               : this._missingHelp()}
         </p>
         ${this._play(index, a, trigger, id('play'))}
@@ -717,23 +717,23 @@ export class AnimationList extends LitElement {
     return html`
       <div class="cond">
         ${head}
-        ${this.allowIcon && !layer ? this._field(t('Target'), this._target(index, a, docTarget)) : nothing}
+        ${this.allowIcon && !layer ? this._field(t('card-editor.animation-list.target'), this._target(index, a, docTarget)) : nothing}
         ${this._play(index, a, trigger, id('play'))}
         ${doc.clips?.length || doc.bindings?.length
           ? this._field(
-              t('Entity for states and values'),
+              t('card-editor.animation-list.entity-for-states-and-values'),
               html`<mc-entity-picker
                 .hass=${this.hass}
                 .value=${a.entity || ''}
-                .label=${t('Entity for states and values')}
-                .placeholder=${this.defaultEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : 'entity_id'}
+                .label=${t('card-editor.animation-list.entity-for-states-and-values')}
+                .placeholder=${this.defaultEntity ? t('card-editor.animation-list.module-entity-entity', { entity: this.defaultEntity }) : 'entity_id'}
                 @value-changed=${(e: CustomEvent) => this._patch(index, { entity: e.detail.value })}
               ></mc-entity-picker>`,
             )
           : nothing}
         ${trigger === 'state'
           ? this._field(
-              t('State value'),
+              t('card-editor.animation-list.state-value'),
               html`<input
                 class="input"
                 id=${id('state')}
@@ -747,10 +747,10 @@ export class AnimationList extends LitElement {
         ${doc.kind === 'sequence'
           ? nothing
           : this._field(
-              t('Colour'),
+              t('card-editor.animation-list.colour'),
               html`<mc-color-picker
                 .value=${a.color || ''}
-                .label=${t('Animation colour')}
+                .label=${t('card-editor.animation-list.animation-colour')}
                 .allowEntity=${this.allowEntityColor}
                 .entityColor=${this.entityColor}
                 @value-changed=${(e: CustomEvent) => this._patch(index, { color: e.detail.value })}
@@ -758,18 +758,18 @@ export class AnimationList extends LitElement {
             )}
         ${doc.kind === 'sequence'
           ? nothing
-          : this._field(t('Strength (%)'), this._number(index, 'strength', id('strength'), a.strength, String(DEFAULT_STRENGTH), 0, 100, 5), id('strength'))}
+          : this._field(t('card-editor.animation-list.strength'), this._number(index, 'strength', id('strength'), a.strength, String(DEFAULT_STRENGTH), 0, 100, 5), id('strength'))}
         <div class="two">
-          ${this._field(t('Duration'), this._time(index, 'duration', a.duration, `${doc.duration}s`))}
-          ${this._field(t('Delay'), this._time(index, 'delay', a.delay, '0s'))}
+          ${this._field(t('card-editor.animation-list.duration'), this._time(index, 'duration', a.duration, `${doc.duration}s`))}
+          ${this._field(t('card-editor.animation-list.delay'), this._time(index, 'delay', a.delay, '0s'))}
         </div>
         <div class="two">
-          ${this._field(t('Easing'), this._select(id('easing'), easing, easingOpts, (v) => this._patch(index, { easing: v })), id('easing'))}
+          ${this._field(t('card-editor.animation-list.easing'), this._select(id('easing'), easing, easingOpts, (v) => this._patch(index, { easing: v })), id('easing'))}
           ${this._repeat(index, a, id('repeat'), doc.iterations)}
         </div>
         ${custom
           ? this._field(
-              t('Repeat count'),
+              t('card-editor.animation-list.repeat-count'),
               html`<input
                 class="input"
                 id=${id('count')}
@@ -787,12 +787,12 @@ export class AnimationList extends LitElement {
           : nothing}
         <div class="two">
           ${this._field(
-            t('Direction'),
+            t('card-editor.animation-list.direction'),
             this._select(id('dir'), a.direction ?? doc.direction ?? 'normal', tl(DIRECTIONS), (v) => this._patch(index, { direction: v as AnimationDirection })),
             id('dir'),
           )}
           ${amplitude
-            ? this._field(t('Amplitude (%)'), this._number(index, 'intensity', id('int'), a.intensity, '100', 0, 400, 5), id('int'))
+            ? this._field(t('card-editor.animation-list.amplitude'), this._number(index, 'intensity', id('int'), a.intensity, '100', 0, 400, 5), id('int'))
             : base
               ? this._field(
                   intensityLabel(base, lt),
@@ -803,7 +803,7 @@ export class AnimationList extends LitElement {
         </div>
         <div class="foot">
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
-            <ha-icon icon="mdi:restore"></ha-icon>${t('Reset to animation')}
+            <ha-icon icon="mdi:restore"></ha-icon>${t('card-editor.animation-list.reset-to-animation')}
           </button>
         </div>
       </div>
@@ -823,21 +823,21 @@ export class AnimationList extends LitElement {
     }));
     return html`
       ${this._field(
-        t('Entity for play condition'),
+        t('card-editor.animation-list.entity-for-play-condition'),
         html`<mc-entity-picker
           .hass=${this.hass}
           .value=${a.trigger_entity || ''}
-          .label=${this.defaultEntity && !this.requireTriggerEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity for play condition')}
+          .label=${this.defaultEntity && !this.requireTriggerEntity ? t('card-editor.animation-list.module-entity-entity', { entity: this.defaultEntity }) : t('card-editor.animation-list.entity-for-play-condition')}
           @value-changed=${(e: CustomEvent) => this._patch(index, { trigger_entity: e.detail.value })}
         ></mc-entity-picker>`,
       )}
       ${this._field(
-        t('Play'),
+        t('card-editor.animation-list.play'),
         this._select(playId, trigger, opts, (v) => this._patch(index, { trigger: v as AnimationTrigger })),
         playId,
       )}
       ${!hasEntity && trigger !== 'always' && TRIGGERS.find((t) => t.value === trigger)?.entity
-        ? html`<p class="help">${t('Pick an entity: this condition never plays without one.')}</p>`
+        ? html`<p class="help">${t('card-editor.animation-list.pick-an-entity-this-condition-never')}</p>`
         : nothing}
     `;
   }
@@ -845,7 +845,7 @@ export class AnimationList extends LitElement {
   private _time(index: number, key: 'duration' | 'delay', value: string | undefined, placeholder: string | undefined): TemplateResult {
     return html`<mc-unit-field
       .value=${value ?? ''}
-      .label=${key === 'duration' ? t('Duration') : t('Delay')}
+      .label=${key === 'duration' ? t('card-editor.animation-list.duration') : t('card-editor.animation-list.delay')}
       .units=${['s', 'ms']}
       .placeholder=${(placeholder ?? '0s').replace(/m?s$/, '')}
       @value-changed=${(e: CustomEvent) => this._patch(index, { [key]: e.detail.value })}
@@ -854,18 +854,18 @@ export class AnimationList extends LitElement {
 
   protected render(): TemplateResult {
     const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon }).map((n) =>
-      n ? lt('Overrides {name}: both animate the {what}', { name: lt(n.name), what: lt(n.what) }) : undefined,
+      n ? lt('labels.animation-list.overrides-name-both-animate-the-what', { name: lt(n.name), what: lt(n.what) }) : undefined,
     );
     return html`
       <div class="list">
         ${this.animations.map((a, i) => this._block(a, i, notes[i]))}
         <div>
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._add()}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add animation')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.animation-list.add-animation')}
           </button>
           ${this.motionOnly
             ? nothing
-            : html`<button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'animation')}>${t('Library')}</button>`}
+            : html`<button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'animation')}>${t('card-editor.animation-list.library')}</button>`}
         </div>
       </div>
     `;

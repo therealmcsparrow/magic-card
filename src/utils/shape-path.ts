@@ -1,5 +1,5 @@
 import type { ShapeKind, ShapeOptions } from '../types';
-import type { CustomShapeChunk } from '../contracts/custom-shape';
+import { customBuilder } from './shape-custom-loader';
 
 /*
  * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size:
@@ -303,7 +303,7 @@ function build(kind: ShapeKind, w: number, h: number, o: ShapeOptions, pad: Shap
 
   switch (kind) {
     case 'custom':
-      return customBuilder?.(w, h, o);
+      return customBuilder()?.(w, h, o);
     case 'squircle': {
       const smoothing = clamp(num(o.smoothing) ?? SHAPE_DEFAULTS.smoothing, 0, 1);
       // smoothing 1 → n 3 (round), 0 → n 8 (almost square corners); the classic squircle is n 4
@@ -455,7 +455,7 @@ function buildInset(kind: ShapeKind, w: number, h: number, o: ShapeOptions, off:
   const iw = w - 2 * off;
   const ih = h - 2 * off;
   if (!(iw > 0 && ih > 0)) return undefined;
-  if (kind === 'custom') return customBuilder?.(w, h, o, off);
+  if (kind === 'custom') return customBuilder()?.(w, h, o, off);
   let inner: ShapeOptions = o;
   if (kind === 'notch' || kind === 'octagon') inner = { ...o, corner: Math.max(0, cutCorner(kind, w, h, o) - (2 - Math.SQRT2) * off) };
   else if (kind === 'squircle') inner = { ...o, corner: Math.max(0, squircleRadius(w, h, o) - off) };
@@ -690,15 +690,6 @@ interface ShapeOutline {
   poly?: Pt[];
 }
 
-/** The `shape: custom` builder, once its lazy chunk has loaded (src/utils/shape-custom-loader.ts); empty before. */
-let customBuilder: CustomShapeChunk['buildCustom'] | undefined;
-
-/** Register (or, with nothing, remove) the custom builder; outlines memoised so far are dropped. */
-export function useCustomBuilder(fn?: CustomShapeChunk['buildCustom']): void {
-  customBuilder = fn;
-  memo.clear();
-}
-
 /** The JSON of an options object, once per object (options objects are replaced, not edited, on a change). */
 const optionKeys = new WeakMap<object, string>();
 const keyOf = (o: ShapeOptions): string => {
@@ -710,11 +701,18 @@ const keyOf = (o: ShapeOptions): string => {
 /** Recent outlines (several layers ask for the same shape and size: clip, stroke, ring, flows). */
 const memo = new Map<string, ShapeOutline | undefined>();
 const MEMO_SIZE = 256;
+/** The builder the memo was filled under; a different one (arrived, replaced, removed) drops the memo. */
+let seenBuilder: ReturnType<typeof customBuilder>;
 
 /** The shape's outline (memoised): path, content inset and polyline; `off` px inward (buildInset). */
 function shapeOutline(kind: ShapeKind, w: number, h: number, opts: ShapeOptions | undefined, off = 0, pad?: ShapeInset): ShapeOutline | undefined {
   if (!valid(kind, w, h)) return undefined;
-  if (kind === 'custom' && !customBuilder) return undefined;
+  const cb = customBuilder();
+  if (cb !== seenBuilder) {
+    seenBuilder = cb;
+    memo.clear();
+  }
+  if (kind === 'custom' && !cb) return undefined;
   const o = opts && typeof opts === 'object' ? opts : {};
   // (a custom shape's outline and inset do not depend on the content padding: one memo entry for all of them)
   const known = pad && kind !== 'custom' ? cleanPad(pad) : zero();

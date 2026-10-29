@@ -4,6 +4,20 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.12-beta.12 (2026-10-29)
+
+### Improved
+-   **Plain cards load faster.** The main file is smaller, because code that only some cards use now sits in two shared files, `magic-card-history.js` and `magic-card-shape-path.js`. A plain card still loads nothing else. A card that needs one of them fetches it with its own feature file. See [Loading and updates](documentation/loading-and-size/README.md).
+-   **Card effects arrive after the card text.** Card effects now appear just after the card text, with a short fade, so the text is readable first.
+-   **Dutch wording.** Several Dutch texts are corrected, and counts such as "1 shape" and "2 shapes" now use the right singular or plural form in the editors, the animation studio and the theme editor.
+-   **Translators.** The text files can be exchanged with Weblate or Crowdin. See [Translating](documentation/translating/README.md).
+
+### Fixed
+-   **The animation list shows preset names.** An animation that uses a preset showed a number in the card editor, such as "Animation 1 · 446". It now shows the preset's name.
+-   **The paused backdrop no longer fades in.** When a card is paused, scrolled out of view or set to reduced motion, a new backdrop picture appears at once instead of fading in.
+-   **Icons and clock no longer jump while loading.** Icons keep their size before their code arrives, and the clock keeps room for its time and date on one line each, so the cards below stay where they are. A very long date in a narrow column now runs past its column instead of wrapping.
+-   **Pop-up ID message.** The hint for an invalid pop-up ID is translated.
+
 ## 2026.10.12-beta.11 (2026-10-28)
 
 ### Added

@@ -1,6 +1,7 @@
 import { BUILD_VERSION } from '../utils/build-version';
 import { PopupController, type PopupControllerOptions } from './popup-controller';
 import { popupCoordinator } from './popup-coordinator';
+import { navigateToPopup } from '../utils/popup-run';
 import type { ReactiveControllerHost } from 'lit';
 
 /*
@@ -21,6 +22,8 @@ export { popupStyles as styles } from '../css/popup';
  */
 export const api = {
   create: (host: ReactiveControllerHost & HTMLElement, opts: PopupControllerOptions): PopupController => new PopupController(host, opts),
+  /** "Open pop-up" action: push `#id` onto the URL and let the cards look again; false for an invalid ID. */
+  navigate: navigateToPopup,
   /** "Close pop-up" action: closes the open pop-up; false when none is open. */
   closeOpen: (): boolean => popupCoordinator.closeOpen(),
   /** Pop-up IDs of the Magic Cards on the page (action editor suggestions). */

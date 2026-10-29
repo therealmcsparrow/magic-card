@@ -222,7 +222,7 @@ export function nextShapeId(taken: Array<{ id: string }> | string[], base = 'sha
 export function docSizeError(doc: AnimationDoc): string | undefined {
   const json = JSON.stringify(doc);
   const bytes = typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(json).length : json.length;
-  return bytes > ANIMATION_CAPS.bytes ? t('The animation would be larger than {max} KB ({size} KB).', { max: Math.round(ANIMATION_CAPS.bytes / 1024), size: Math.ceil(bytes / 1024) }) : undefined;
+  return bytes > ANIMATION_CAPS.bytes ? t('anim-studio.draw-utils.the-animation-would-be-larger-than-max', { max: Math.round(ANIMATION_CAPS.bytes / 1024), size: Math.ceil(bytes / 1024) }) : undefined;
 }
 
 const shapesOf = (doc: AnimationDoc): RigShape[] => doc.rig?.shapes ?? [];

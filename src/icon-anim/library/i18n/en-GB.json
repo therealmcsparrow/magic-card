@@ -1,0 +1,3080 @@
+{
+  "icon-library.fire-cleaning.air-bottom": {
+    "text": "Air bottom",
+    "note": "Part name in an animated icon: the lower air flow lines.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.air-filter": {
+    "text": "Air filter",
+    "note": "Icon animation name: a filter that cleans the air.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.air-top": {
+    "text": "Air top",
+    "note": "Part name in an animated icon: the upper air flow lines.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.big-sparkle": {
+    "text": "Big sparkle",
+    "note": "Part name in an animated icon: the larger twinkling star shape.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.body": {
+    "text": "Body",
+    "note": "Part name in an animated icon: the main body of the object.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.bottle": {
+    "text": "Bottle",
+    "note": "Part name in an animated icon: a bottle.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.bottom-drops": {
+    "text": "Bottom drops",
+    "note": "Part name in an animated icon: the lowest row of water drops.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.bristles": {
+    "text": "Bristles",
+    "note": "Part name in an animated icon: the stiff hairs of a brush or broom.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.broom": {
+    "text": "Broom",
+    "note": "Icon animation name: a sweeping broom.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.button": {
+    "text": "Button",
+    "note": "Part name in an animated icon: a push button on a device.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.campfire": {
+    "text": "Campfire",
+    "note": "Icon animation name: a burning outdoor campfire.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.can": {
+    "text": "Can",
+    "note": "Part name in an animated icon: a metal can (the noun, not the verb).",
+    "max": 5
+  },
+  "icon-library.fire-cleaning.candle": {
+    "text": "Candle",
+    "note": "Icon animation name: a candle with a flickering flame.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.cuff": {
+    "text": "Cuff",
+    "note": "Part name in an animated icon: the cuff at the end of a sleeve.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.door-window": {
+    "text": "Door window",
+    "note": "Part name in an animated icon: the glass panel in an appliance door.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.dot": {
+    "text": "Dot",
+    "note": "Part name in an animated icon: a small round dot.",
+    "max": 5
+  },
+  "icon-library.fire-cleaning.drop": {
+    "text": "Drop",
+    "note": "Part name in an animated icon: a single water drop (the noun).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.exclamation": {
+    "text": "Exclamation",
+    "note": "Part name in an animated icon: the exclamation sign, short form.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.exclamation-mark": {
+    "text": "Exclamation mark",
+    "note": "Part name in an animated icon: the warning sign shaped like !.",
+    "max": 30
+  },
+  "icon-library.fire-cleaning.extinguisher": {
+    "text": "Extinguisher",
+    "note": "Icon animation name: a fire extinguisher, short form.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.filter": {
+    "text": "Filter",
+    "note": "Part name in an animated icon: a filter element.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.fire-alert": {
+    "text": "Fire alert",
+    "note": "Icon animation name: a flame with a warning sign.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.fire-extinguisher": {
+    "text": "Fire extinguisher",
+    "note": "Icon animation name: a fire extinguisher spraying foam.",
+    "max": 30
+  },
+  "icon-library.fire-cleaning.fire-ring": {
+    "text": "Fire ring",
+    "note": "Part name in an animated icon: the ring of a gas burner or fire pit.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.fire-sprinkler": {
+    "text": "Fire sprinkler",
+    "note": "Icon animation name: a ceiling sprinkler that sprays water on a fire.",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.flame": {
+    "text": "Flame",
+    "note": "Part name in an animated icon: a flame (the noun).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.grill": {
+    "text": "Grill",
+    "note": "Icon animation name: a barbecue grill.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.hand-wash": {
+    "text": "Hand wash",
+    "note": "Icon animation name: hands being washed under water.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.handle": {
+    "text": "Handle",
+    "note": "Part name in an animated icon: a grip or handle (the noun).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.hands": {
+    "text": "Hands",
+    "note": "Part name in an animated icon: two human hands.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.inner-flame": {
+    "text": "Inner flame",
+    "note": "Part name in an animated icon: the smaller flame inside the outer flame.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.iron": {
+    "text": "Iron",
+    "note": "Icon animation name: a clothes iron (not the metal).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.lid": {
+    "text": "Lid",
+    "note": "Part name in an animated icon: a lid that opens and closes.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.logs": {
+    "text": "Logs",
+    "note": "Part name in an animated icon: pieces of firewood.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.machine": {
+    "text": "Machine",
+    "note": "Part name in an animated icon: the body of an appliance.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.middle-drops": {
+    "text": "Middle drops",
+    "note": "Part name in an animated icon: the middle row of water drops.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.mist-1": {
+    "text": "Mist 1",
+    "note": "Part name in an animated icon: first of six mist puffs, numbered.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-2": {
+    "text": "Mist 2",
+    "note": "Part name in an animated icon: second of six mist puffs, numbered.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-3": {
+    "text": "Mist 3",
+    "note": "Part name in an animated icon: third of six mist puffs, numbered.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-4": {
+    "text": "Mist 4",
+    "note": "Part name in an animated icon: fourth of six mist puffs, numbered.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-5": {
+    "text": "Mist 5",
+    "note": "Part name in an animated icon: fifth of six mist puffs, numbered.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.mist-6": {
+    "text": "Mist 6",
+    "note": "Part name in an animated icon: sixth of six mist puffs, numbered.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.nozzle": {
+    "text": "Nozzle",
+    "note": "Part name in an animated icon: the spray tip of a hose or sprayer.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.ring": {
+    "text": "Ring",
+    "note": "Part name in an animated icon: a round ring shape.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.robot-vacuum-side-view": {
+    "text": "Robot vacuum side view",
+    "note": "Icon animation name: a robot vacuum cleaner drawn from the side.",
+    "max": 40
+  },
+  "icon-library.fire-cleaning.sensor": {
+    "text": "Sensor",
+    "note": "Part name in an animated icon: a small sensor on a device.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.shell": {
+    "text": "Shell",
+    "note": "Part name in an animated icon: the outer casing of a device.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.small-sparkle": {
+    "text": "Small sparkle",
+    "note": "Part name in an animated icon: the smaller twinkling star shape.",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.smoke-1": {
+    "text": "Smoke 1",
+    "note": "Part name in an animated icon: first of three smoke puffs, numbered.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.smoke-2": {
+    "text": "Smoke 2",
+    "note": "Part name in an animated icon: second of three smoke puffs, numbered.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.smoke-3": {
+    "text": "Smoke 3",
+    "note": "Part name in an animated icon: third of three smoke puffs, numbered.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.soap-pump": {
+    "text": "Soap pump",
+    "note": "Icon animation name: a soap dispenser being pressed.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.sparkle": {
+    "text": "Sparkle",
+    "note": "Part name in an animated icon: a twinkling star shape (the noun).",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.sparkling-clean": {
+    "text": "Sparkling clean",
+    "note": "Icon animation name: a surface shining after cleaning.",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.spray-bottle": {
+    "text": "Spray bottle",
+    "note": "Icon animation name: a trigger bottle spraying cleaner.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.spray-can": {
+    "text": "Spray can",
+    "note": "Icon animation name: an aerosol can spraying.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.sprinkler": {
+    "text": "Sprinkler",
+    "note": "Icon animation name: a water sprinkler.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.top-drops": {
+    "text": "Top drops",
+    "note": "Part name in an animated icon: the highest row of water drops.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.torch": {
+    "text": "Torch",
+    "note": "Icon animation name: a burning torch (a flame on a stick).",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.trigger": {
+    "text": "Trigger",
+    "note": "Part name in an animated icon: the squeezable lever of a sprayer.",
+    "max": 15
+  },
+  "icon-library.fire-cleaning.trigger-head": {
+    "text": "Trigger head",
+    "note": "Part name in an animated icon: the top of a sprayer with its lever.",
+    "max": 20
+  },
+  "icon-library.fire-cleaning.vacuum": {
+    "text": "Vacuum",
+    "note": "Icon animation name: a vacuum cleaner, short form.",
+    "max": 10
+  },
+  "icon-library.fire-cleaning.vacuum-cleaner": {
+    "text": "Vacuum cleaner",
+    "note": "Icon animation name: an upright or canister vacuum cleaner.",
+    "max": 25
+  },
+  "icon-library.fire-cleaning.washing-machine-alert": {
+    "text": "Washing machine alert",
+    "note": "Icon animation name: a washing machine with a warning sign.",
+    "max": 35
+  },
+  "icon-library.fire-cleaning.wheel": {
+    "text": "Wheel",
+    "note": "Part name in an animated icon: a wheel that turns.",
+    "max": 10
+  },
+  "icon-library.home.3d-printer": {
+    "text": "3D printer",
+    "note": "Icon animation name: a 3D printer building an object.",
+    "max": 20
+  },
+  "icon-library.home.3d-printer-nozzle": {
+    "text": "3D printer nozzle",
+    "note": "Part name in an animated icon: the hot tip that melts filament.",
+    "max": 30
+  },
+  "icon-library.home.access-point": {
+    "text": "Access point",
+    "note": "Icon animation name: a Wi-Fi access point sending signals.",
+    "max": 20
+  },
+  "icon-library.home.antenna": {
+    "text": "Antenna",
+    "note": "Part name in an animated icon: a radio antenna.",
+    "max": 15
+  },
+  "icon-library.home.beam": {
+    "text": "Beam",
+    "note": "Part name in an animated icon: a beam of light or laser.",
+    "max": 10
+  },
+  "icon-library.home.bed": {
+    "text": "Bed",
+    "note": "Part name in an animated icon: the build plate or a sleeping bed.",
+    "max": 5
+  },
+  "icon-library.home.bottom-unit": {
+    "text": "Bottom unit",
+    "note": "Part name in an animated icon: the lowest of three stacked units.",
+    "max": 20
+  },
+  "icon-library.home.case": {
+    "text": "Case",
+    "note": "Part name in an animated icon: the housing around a device.",
+    "max": 10
+  },
+  "icon-library.home.cutting-head": {
+    "text": "Cutting head",
+    "note": "Part name in an animated icon: the moving head of a cutting machine.",
+    "max": 20
+  },
+  "icon-library.home.door": {
+    "text": "Door",
+    "note": "Part name in an animated icon: a door that swings open.",
+    "max": 10
+  },
+  "icon-library.home.drip": {
+    "text": "Drip",
+    "note": "Part name in an animated icon: a falling drop (the noun).",
+    "max": 10
+  },
+  "icon-library.home.filament": {
+    "text": "Filament",
+    "note": "Part name in an animated icon: plastic thread fed into a 3D printer.",
+    "max": 15
+  },
+  "icon-library.home.frame": {
+    "text": "Frame",
+    "note": "Part name in an animated icon: the outer frame of a device.",
+    "max": 10
+  },
+  "icon-library.home.garage": {
+    "text": "Garage",
+    "note": "Icon animation name: a garage building.",
+    "max": 10
+  },
+  "icon-library.home.garage-opening": {
+    "text": "Garage opening",
+    "note": "Icon animation name: a garage door rolling up.",
+    "max": 25
+  },
+  "icon-library.home.head": {
+    "text": "Head",
+    "note": "Part name in an animated icon: the moving head of a machine.",
+    "max": 10
+  },
+  "icon-library.home.home-assistant": {
+    "text": "Home Assistant",
+    "note": "Icon animation name: the Home Assistant logo. The product name stays unchanged.",
+    "max": 25
+  },
+  "icon-library.home.house": {
+    "text": "House",
+    "note": "Icon animation name: a house.",
+    "max": 10
+  },
+  "icon-library.home.hub": {
+    "text": "Hub",
+    "note": "Icon animation name: a smart home hub (central device).",
+    "max": 5
+  },
+  "icon-library.home.inner-left-wave": {
+    "text": "Inner left wave",
+    "note": "Part name in an animated icon: the closer signal arc on the left.",
+    "max": 25
+  },
+  "icon-library.home.inner-right-wave": {
+    "text": "Inner right wave",
+    "note": "Part name in an animated icon: the closer signal arc on the right.",
+    "max": 30
+  },
+  "icon-library.home.inner-waves": {
+    "text": "Inner waves",
+    "note": "Part name in an animated icon: the closer pair of signal arcs.",
+    "max": 20
+  },
+  "icon-library.home.knob-1": {
+    "text": "Knob 1",
+    "note": "Part name in an animated icon: first of three cooker knobs, numbered.",
+    "max": 10
+  },
+  "icon-library.home.knob-2": {
+    "text": "Knob 2",
+    "note": "Part name in an animated icon: second of three cooker knobs, numbered.",
+    "max": 10
+  },
+  "icon-library.home.knob-3": {
+    "text": "Knob 3",
+    "note": "Part name in an animated icon: third of three cooker knobs, numbered.",
+    "max": 10
+  },
+  "icon-library.home.laser-cutter": {
+    "text": "Laser cutter",
+    "note": "Icon animation name: a laser cutting machine.",
+    "max": 20
+  },
+  "icon-library.home.laser-head": {
+    "text": "Laser head",
+    "note": "Part name in an animated icon: the moving head that fires the laser.",
+    "max": 20
+  },
+  "icon-library.home.left-blade": {
+    "text": "Left blade",
+    "note": "Part name in an animated icon: the blade on the left side.",
+    "max": 20
+  },
+  "icon-library.home.left-node": {
+    "text": "Left node",
+    "note": "Part name in an animated icon: the connection point on the left.",
+    "max": 15
+  },
+  "icon-library.home.left-oven-glow": {
+    "text": "Left oven glow",
+    "note": "Part name in an animated icon: the heating glow on the left of an oven.",
+    "max": 25
+  },
+  "icon-library.home.left-pipe": {
+    "text": "Left pipe",
+    "note": "Part name in an animated icon: the pipe on the left.",
+    "max": 15
+  },
+  "icon-library.home.letter-slot": {
+    "text": "Letter slot",
+    "note": "Part name in an animated icon: the opening where mail goes in.",
+    "max": 20
+  },
+  "icon-library.home.lid": {
+    "text": "Lid",
+    "note": "Part name in an animated icon: a lid or flap that opens.",
+    "max": 10
+  },
+  "icon-library.home.light-switch": {
+    "text": "Light switch",
+    "note": "Icon animation name: a wall switch being flicked.",
+    "max": 20
+  },
+  "icon-library.home.mail-arrived": {
+    "text": "Mail arrived",
+    "note": "Icon animation name: a letter dropping into a mailbox.",
+    "max": 20
+  },
+  "icon-library.home.mailbox": {
+    "text": "Mailbox",
+    "note": "Icon animation name: a postbox for letters.",
+    "max": 15
+  },
+  "icon-library.home.material": {
+    "text": "Material",
+    "note": "Part name in an animated icon: the sheet or stock being cut or printed.",
+    "max": 15
+  },
+  "icon-library.home.middle-unit": {
+    "text": "Middle unit",
+    "note": "Part name in an animated icon: the middle of three stacked units.",
+    "max": 20
+  },
+  "icon-library.home.nozzle": {
+    "text": "Nozzle",
+    "note": "Part name in an animated icon: the tip that releases material.",
+    "max": 10
+  },
+  "icon-library.home.outer-left-wave": {
+    "text": "Outer left wave",
+    "note": "Part name in an animated icon: the farther signal arc on the left.",
+    "max": 25
+  },
+  "icon-library.home.outer-right-wave": {
+    "text": "Outer right wave",
+    "note": "Part name in an animated icon: the farther signal arc on the right.",
+    "max": 30
+  },
+  "icon-library.home.outer-waves": {
+    "text": "Outer waves",
+    "note": "Part name in an animated icon: the farther pair of signal arcs.",
+    "max": 20
+  },
+  "icon-library.home.parcel": {
+    "text": "Parcel",
+    "note": "Part name in an animated icon: a wrapped package.",
+    "max": 10
+  },
+  "icon-library.home.parcel-delivered": {
+    "text": "Parcel delivered",
+    "note": "Icon animation name: a package arriving at the door.",
+    "max": 30
+  },
+  "icon-library.home.plate": {
+    "text": "Plate",
+    "note": "Part name in an animated icon: a flat plate or build surface.",
+    "max": 10
+  },
+  "icon-library.home.print": {
+    "text": "Print",
+    "note": "Part name in an animated icon: the object being printed (the noun).",
+    "max": 10
+  },
+  "icon-library.home.print-head": {
+    "text": "Print head",
+    "note": "Part name in an animated icon: the moving head of a printer.",
+    "max": 20
+  },
+  "icon-library.home.rail": {
+    "text": "Rail",
+    "note": "Part name in an animated icon: the bar a head slides along.",
+    "max": 10
+  },
+  "icon-library.home.right-blade": {
+    "text": "Right blade",
+    "note": "Part name in an animated icon: the blade on the right side.",
+    "max": 20
+  },
+  "icon-library.home.right-node": {
+    "text": "Right node",
+    "note": "Part name in an animated icon: the connection point on the right.",
+    "max": 20
+  },
+  "icon-library.home.right-oven-glow": {
+    "text": "Right oven glow",
+    "note": "Part name in an animated icon: the heating glow on the right of an oven.",
+    "max": 25
+  },
+  "icon-library.home.right-pipe": {
+    "text": "Right pipe",
+    "note": "Part name in an animated icon: the pipe on the right.",
+    "max": 20
+  },
+  "icon-library.home.rotor": {
+    "text": "Rotor",
+    "note": "Part name in an animated icon: the spinning part of a turbine.",
+    "max": 10
+  },
+  "icon-library.home.server": {
+    "text": "Server",
+    "note": "Icon animation name: a computer server rack.",
+    "max": 10
+  },
+  "icon-library.home.sleeping": {
+    "text": "Sleeping",
+    "note": "Icon animation name: a person asleep in bed (verb form).",
+    "max": 15
+  },
+  "icon-library.home.spark": {
+    "text": "Spark",
+    "note": "Part name in an animated icon: a small electric spark.",
+    "max": 10
+  },
+  "icon-library.home.stove": {
+    "text": "Stove",
+    "note": "Icon animation name: a cooker with hobs.",
+    "max": 10
+  },
+  "icon-library.home.toast": {
+    "text": "Toast",
+    "note": "Part name in an animated icon: a slice of toasted bread.",
+    "max": 10
+  },
+  "icon-library.home.toaster": {
+    "text": "Toaster",
+    "note": "Icon animation name: a toaster popping up toast.",
+    "max": 15
+  },
+  "icon-library.home.toggle": {
+    "text": "Toggle",
+    "note": "Part name in an animated icon: a sliding on/off switch.",
+    "max": 10
+  },
+  "icon-library.home.toolhead": {
+    "text": "Toolhead",
+    "note": "Part name in an animated icon: the moving tool carrier of a 3D printer.",
+    "max": 15
+  },
+  "icon-library.home.top-blade": {
+    "text": "Top blade",
+    "note": "Part name in an animated icon: the blade at the top.",
+    "max": 15
+  },
+  "icon-library.home.top-node": {
+    "text": "Top node",
+    "note": "Part name in an animated icon: the connection point at the top.",
+    "max": 20
+  },
+  "icon-library.home.top-unit": {
+    "text": "Top unit",
+    "note": "Part name in an animated icon: the highest of three stacked units.",
+    "max": 20
+  },
+  "icon-library.home.tower": {
+    "text": "Tower",
+    "note": "Part name in an animated icon: a tall mast or tower.",
+    "max": 10
+  },
+  "icon-library.home.water-leak": {
+    "text": "Water leak",
+    "note": "Icon animation name: water dripping from a pipe.",
+    "max": 20
+  },
+  "icon-library.home.wind-turbine": {
+    "text": "Wind turbine",
+    "note": "Icon animation name: a wind turbine with turning blades.",
+    "max": 20
+  },
+  "icon-library.library.a": {
+    "text": "A",
+    "note": "Part name in an animated icon: a single part labelled with the letter A.",
+    "max": 5
+  },
+  "icon-library.library.air-bottom": {
+    "text": "Air bottom",
+    "note": "Part name in an animated icon: the lower air flow lines.",
+    "max": 20
+  },
+  "icon-library.library.air-conditioner": {
+    "text": "Air conditioner",
+    "note": "Icon animation name: a wall air conditioner blowing air.",
+    "max": 25
+  },
+  "icon-library.library.air-purifier": {
+    "text": "Air purifier",
+    "note": "Icon animation name: a device that cleans room air.",
+    "max": 20
+  },
+  "icon-library.library.air-top": {
+    "text": "Air top",
+    "note": "Part name in an animated icon: the upper air flow lines.",
+    "max": 15
+  },
+  "icon-library.library.alarm-clock": {
+    "text": "Alarm clock",
+    "note": "Icon animation name: a ringing alarm clock.",
+    "max": 20
+  },
+  "icon-library.library.alarm-light": {
+    "text": "Alarm light",
+    "note": "Icon animation name: a flashing siren light.",
+    "max": 20
+  },
+  "icon-library.library.alert": {
+    "text": "Alert",
+    "note": "Icon animation name: a warning sign (the noun).",
+    "max": 15
+  },
+  "icon-library.library.bar": {
+    "text": "Bar",
+    "note": "Part name in an animated icon: a single bar.",
+    "max": 5
+  },
+  "icon-library.library.bar-1": {
+    "text": "Bar 1",
+    "note": "Part name in an animated icon: first of three bars, numbered.",
+    "max": 10
+  },
+  "icon-library.library.bar-2": {
+    "text": "Bar 2",
+    "note": "Part name in an animated icon: second of three bars, numbered.",
+    "max": 10
+  },
+  "icon-library.library.bar-3": {
+    "text": "Bar 3",
+    "note": "Part name in an animated icon: third of three bars, numbered.",
+    "max": 10
+  },
+  "icon-library.library.base": {
+    "text": "Base",
+    "note": "Part name in an animated icon: the foot or bottom part.",
+    "max": 10
+  },
+  "icon-library.library.bases": {
+    "text": "Bases",
+    "note": "Part name in an animated icon: several feet or bottom parts together.",
+    "max": 10
+  },
+  "icon-library.library.battery": {
+    "text": "Battery",
+    "note": "Icon animation name: a battery.",
+    "max": 15
+  },
+  "icon-library.library.battery-charging": {
+    "text": "Battery charging",
+    "note": "Icon animation name: a battery filling up while it charges.",
+    "max": 30
+  },
+  "icon-library.library.battery-level": {
+    "text": "Battery level",
+    "note": "Icon animation name: a battery whose charge level moves.",
+    "max": 25
+  },
+  "icon-library.library.bee": {
+    "text": "Bee",
+    "note": "Icon animation name: a flying bee.",
+    "max": 5
+  },
+  "icon-library.library.bell": {
+    "text": "Bell",
+    "note": "Icon animation name: a swinging bell.",
+    "max": 10
+  },
+  "icon-library.library.bell-and-clapper": {
+    "text": "Bell and clapper",
+    "note": "Icon animation name: a bell with its tongue striking the sides.",
+    "max": 30
+  },
+  "icon-library.library.big-star": {
+    "text": "Big star",
+    "note": "Part name in an animated icon: the larger star.",
+    "max": 15
+  },
+  "icon-library.library.bin": {
+    "text": "Bin",
+    "note": "Icon animation name: a rubbish bin.",
+    "max": 10
+  },
+  "icon-library.library.bird": {
+    "text": "Bird",
+    "note": "Icon animation name: a flying bird.",
+    "max": 10
+  },
+  "icon-library.library.blades": {
+    "text": "Blades",
+    "note": "Part name in an animated icon: the turning blades of a fan or rotor.",
+    "max": 10
+  },
+  "icon-library.library.body": {
+    "text": "Body",
+    "note": "Part name in an animated icon: the main body of the object.",
+    "max": 10
+  },
+  "icon-library.library.bolt": {
+    "text": "Bolt",
+    "note": "Part name in an animated icon: a lightning bolt.",
+    "max": 15
+  },
+  "icon-library.library.bottom-gust": {
+    "text": "Bottom gust",
+    "note": "Part name in an animated icon: the lowest puff of wind.",
+    "max": 20
+  },
+  "icon-library.library.bottom-slat": {
+    "text": "Bottom slat",
+    "note": "Part name in an animated icon: the lowest slat of a blind or shutter.",
+    "max": 20
+  },
+  "icon-library.library.bottom-strip": {
+    "text": "Bottom strip",
+    "note": "Part name in an animated icon: the lowest strip.",
+    "max": 20
+  },
+  "icon-library.library.brush": {
+    "text": "Brush",
+    "note": "Part name in an animated icon: a cleaning or paint brush.",
+    "max": 10
+  },
+  "icon-library.library.bulb": {
+    "text": "Bulb",
+    "note": "Icon animation name: a light bulb.",
+    "max": 10
+  },
+  "icon-library.library.bulb-glow": {
+    "text": "Bulb glow",
+    "note": "Part name in an animated icon: the glow around a light bulb.",
+    "max": 15
+  },
+  "icon-library.library.button": {
+    "text": "Button",
+    "note": "Part name in an animated icon: a push button.",
+    "max": 10
+  },
+  "icon-library.library.c": {
+    "text": "C",
+    "note": "Part name in an animated icon: a single part labelled with the letter C.",
+    "max": 5
+  },
+  "icon-library.library.camera": {
+    "text": "Camera",
+    "note": "Icon animation name: a camera.",
+    "max": 10
+  },
+  "icon-library.library.camera-head": {
+    "text": "Camera head",
+    "note": "Part name in an animated icon: the pivoting camera on its mount.",
+    "max": 20
+  },
+  "icon-library.library.camera-snapshot": {
+    "text": "Camera snapshot",
+    "note": "Icon animation name: a camera taking a picture with a flash.",
+    "max": 25
+  },
+  "icon-library.library.car": {
+    "text": "Car",
+    "note": "Icon animation name: a car.",
+    "max": 5
+  },
+  "icon-library.library.car-driving": {
+    "text": "Car driving",
+    "note": "Icon animation name: a car moving along a road.",
+    "max": 20
+  },
+  "icon-library.library.ceiling-fan-with-light": {
+    "text": "Ceiling fan with light",
+    "note": "Icon animation name: a ceiling fan with a lamp underneath.",
+    "max": 40
+  },
+  "icon-library.library.ceiling-light": {
+    "text": "Ceiling light",
+    "note": "Icon animation name: a light fitted to the ceiling.",
+    "max": 25
+  },
+  "icon-library.library.centre": {
+    "text": "Centre",
+    "note": "Part name in an animated icon: the middle piece. British spelling.",
+    "max": 10
+  },
+  "icon-library.library.centre-bulb": {
+    "text": "Centre bulb",
+    "note": "Part name in an animated icon: the middle light bulb.",
+    "max": 20
+  },
+  "icon-library.library.charge": {
+    "text": "Charge",
+    "note": "Part name in an animated icon: the electric charge level (the noun).",
+    "max": 10
+  },
+  "icon-library.library.clapper": {
+    "text": "Clapper",
+    "note": "Part name in an animated icon: the tongue inside a bell.",
+    "max": 15
+  },
+  "icon-library.library.clear-night": {
+    "text": "Clear night",
+    "note": "Icon animation name: weather with a moon and stars and no clouds.",
+    "max": 20
+  },
+  "icon-library.library.clock": {
+    "text": "Clock",
+    "note": "Icon animation name: a clock with moving hands.",
+    "max": 10
+  },
+  "icon-library.library.cloud": {
+    "text": "Cloud",
+    "note": "Part name in an animated icon: a cloud.",
+    "max": 10
+  },
+  "icon-library.library.cloudy": {
+    "text": "Cloudy",
+    "note": "Icon animation name: weather with a cloudy sky.",
+    "max": 10
+  },
+  "icon-library.library.coffee-maker": {
+    "text": "Coffee maker",
+    "note": "Icon animation name: a coffee machine brewing.",
+    "max": 20
+  },
+  "icon-library.library.cone": {
+    "text": "Cone",
+    "note": "Part name in an animated icon: a cone of light.",
+    "max": 10
+  },
+  "icon-library.library.cooking-pot": {
+    "text": "Cooking pot",
+    "note": "Icon animation name: a pot cooking on a hob.",
+    "max": 20
+  },
+  "icon-library.library.curtains": {
+    "text": "Curtains",
+    "note": "Icon animation name: curtains that open and close.",
+    "max": 15
+  },
+  "icon-library.library.detector": {
+    "text": "Detector",
+    "note": "Part name in an animated icon: a detector unit, for example for smoke.",
+    "max": 15
+  },
+  "icon-library.library.dial": {
+    "text": "Dial",
+    "note": "Part name in an animated icon: a round dial with a pointer.",
+    "max": 15
+  },
+  "icon-library.library.dishwasher": {
+    "text": "Dishwasher",
+    "note": "Icon animation name: a dishwasher running.",
+    "max": 20
+  },
+  "icon-library.library.display": {
+    "text": "Display",
+    "note": "Part name in an animated icon: a screen (the noun).",
+    "max": 15
+  },
+  "icon-library.library.dog": {
+    "text": "Dog",
+    "note": "Icon animation name: a dog.",
+    "max": 5
+  },
+  "icon-library.library.door": {
+    "text": "Door",
+    "note": "Icon animation name: a door that opens.",
+    "max": 10
+  },
+  "icon-library.library.door-leaf": {
+    "text": "Door leaf",
+    "note": "Part name in an animated icon: the moving panel of a door.",
+    "max": 15
+  },
+  "icon-library.library.door-opening": {
+    "text": "Door opening",
+    "note": "Icon animation name: a door swinging open (verb form).",
+    "max": 20
+  },
+  "icon-library.library.doorbell-press": {
+    "text": "Doorbell press",
+    "note": "Icon animation name: a finger pressing a doorbell.",
+    "max": 25
+  },
+  "icon-library.library.doorbell-ring": {
+    "text": "Doorbell ring",
+    "note": "Icon animation name: a doorbell ringing (verb form).",
+    "max": 25
+  },
+  "icon-library.library.dot": {
+    "text": "Dot",
+    "note": "Part name in an animated icon: a small round dot.",
+    "max": 5
+  },
+  "icon-library.library.drop": {
+    "text": "Drop",
+    "note": "Part name in an animated icon: a single water drop (the noun).",
+    "max": 10
+  },
+  "icon-library.library.drop-1": {
+    "text": "Drop 1",
+    "note": "Part name in an animated icon: first of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-10": {
+    "text": "Drop 10",
+    "note": "Part name in an animated icon: tenth of twelve drops, numbered.",
+    "max": 15
+  },
+  "icon-library.library.drop-11": {
+    "text": "Drop 11",
+    "note": "Part name in an animated icon: eleventh of twelve drops, numbered.",
+    "max": 15
+  },
+  "icon-library.library.drop-12": {
+    "text": "Drop 12",
+    "note": "Part name in an animated icon: twelfth of twelve drops, numbered.",
+    "max": 15
+  },
+  "icon-library.library.drop-2": {
+    "text": "Drop 2",
+    "note": "Part name in an animated icon: second of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-3": {
+    "text": "Drop 3",
+    "note": "Part name in an animated icon: third of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-4": {
+    "text": "Drop 4",
+    "note": "Part name in an animated icon: fourth of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-5": {
+    "text": "Drop 5",
+    "note": "Part name in an animated icon: fifth of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-6": {
+    "text": "Drop 6",
+    "note": "Part name in an animated icon: sixth of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-7": {
+    "text": "Drop 7",
+    "note": "Part name in an animated icon: seventh of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-8": {
+    "text": "Drop 8",
+    "note": "Part name in an animated icon: eighth of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drop-9": {
+    "text": "Drop 9",
+    "note": "Part name in an animated icon: ninth of twelve drops, numbered.",
+    "max": 10
+  },
+  "icon-library.library.drum": {
+    "text": "Drum",
+    "note": "Part name in an animated icon: the spinning drum of a washer or dryer.",
+    "max": 10
+  },
+  "icon-library.library.dryer": {
+    "text": "Dryer",
+    "note": "Icon animation name: a clothes dryer.",
+    "max": 10
+  },
+  "icon-library.library.electric-car-charging": {
+    "text": "Electric car charging",
+    "note": "Icon animation name: an electric car plugged in and charging.",
+    "max": 35
+  },
+  "icon-library.library.energy": {
+    "text": "Energy",
+    "note": "Icon animation name: a symbol for electrical energy.",
+    "max": 10
+  },
+  "icon-library.library.energy-meter": {
+    "text": "Energy meter",
+    "note": "Icon animation name: a meter that measures power use.",
+    "max": 20
+  },
+  "icon-library.library.exclamation": {
+    "text": "Exclamation",
+    "note": "Part name in an animated icon: the exclamation sign, short form.",
+    "max": 20
+  },
+  "icon-library.library.exclamation-mark": {
+    "text": "Exclamation mark",
+    "note": "Part name in an animated icon: the warning sign shaped like !.",
+    "max": 30
+  },
+  "icon-library.library.face": {
+    "text": "Face",
+    "note": "Part name in an animated icon: the face of a character or clock.",
+    "max": 10
+  },
+  "icon-library.library.fan": {
+    "text": "Fan",
+    "note": "Icon animation name: a fan with turning blades.",
+    "max": 10
+  },
+  "icon-library.library.fan-spin": {
+    "text": "Fan spin",
+    "note": "Icon animation name: a fan spinning round and round.",
+    "max": 20
+  },
+  "icon-library.library.faucet": {
+    "text": "Faucet",
+    "note": "Icon animation name: a water tap (US word kept as the library name).",
+    "max": 10
+  },
+  "icon-library.library.fireplace": {
+    "text": "Fireplace",
+    "note": "Icon animation name: a fireplace with burning logs.",
+    "max": 15
+  },
+  "icon-library.library.fish": {
+    "text": "Fish",
+    "note": "Icon animation name: a swimming fish.",
+    "max": 10
+  },
+  "icon-library.library.flame": {
+    "text": "Flame",
+    "note": "Part name in an animated icon: a flame (the noun).",
+    "max": 10
+  },
+  "icon-library.library.flower": {
+    "text": "Flower",
+    "note": "Icon animation name: a flower.",
+    "max": 10
+  },
+  "icon-library.library.fog": {
+    "text": "Fog",
+    "note": "Icon animation name: weather with thick fog.",
+    "max": 5
+  },
+  "icon-library.library.fog-line-1": {
+    "text": "Fog line 1",
+    "note": "Part name in an animated icon: first of four fog streaks, numbered.",
+    "max": 20
+  },
+  "icon-library.library.fog-line-2": {
+    "text": "Fog line 2",
+    "note": "Part name in an animated icon: second of four fog streaks, numbered.",
+    "max": 20
+  },
+  "icon-library.library.fog-line-3": {
+    "text": "Fog line 3",
+    "note": "Part name in an animated icon: third of four fog streaks, numbered.",
+    "max": 20
+  },
+  "icon-library.library.fog-line-4": {
+    "text": "Fog line 4",
+    "note": "Part name in an animated icon: fourth of four fog streaks, numbered.",
+    "max": 20
+  },
+  "icon-library.library.foot": {
+    "text": "Foot",
+    "note": "Part name in an animated icon: a foot of a person or animal.",
+    "max": 10
+  },
+  "icon-library.library.frame": {
+    "text": "Frame",
+    "note": "Part name in an animated icon: the outer frame.",
+    "max": 10
+  },
+  "icon-library.library.freezer-door": {
+    "text": "Freezer door",
+    "note": "Part name in an animated icon: the lower door of a fridge freezer.",
+    "max": 20
+  },
+  "icon-library.library.fridge-door": {
+    "text": "Fridge door",
+    "note": "Part name in an animated icon: the upper door of a fridge freezer.",
+    "max": 20
+  },
+  "icon-library.library.garage": {
+    "text": "Garage",
+    "note": "Icon animation name: a garage building.",
+    "max": 10
+  },
+  "icon-library.library.garage-door": {
+    "text": "Garage door",
+    "note": "Icon animation name: a garage door that rolls up and down.",
+    "max": 20
+  },
+  "icon-library.library.gate": {
+    "text": "Gate",
+    "note": "Icon animation name: a gate that swings open.",
+    "max": 10
+  },
+  "icon-library.library.gauge": {
+    "text": "Gauge",
+    "note": "Icon animation name: a round gauge with a moving needle.",
+    "max": 10
+  },
+  "icon-library.library.hail": {
+    "text": "Hail",
+    "note": "Icon animation name: weather with hail falling.",
+    "max": 10
+  },
+  "icon-library.library.hailstone-1": {
+    "text": "Hailstone 1",
+    "note": "Part name in an animated icon: first of three hailstones, numbered.",
+    "max": 20
+  },
+  "icon-library.library.hailstone-2": {
+    "text": "Hailstone 2",
+    "note": "Part name in an animated icon: second of three hailstones, numbered.",
+    "max": 20
+  },
+  "icon-library.library.hailstone-3": {
+    "text": "Hailstone 3",
+    "note": "Part name in an animated icon: third of three hailstones, numbered.",
+    "max": 20
+  },
+  "icon-library.library.hand": {
+    "text": "Hand",
+    "note": "Part name in an animated icon: a human hand.",
+    "max": 10
+  },
+  "icon-library.library.handle": {
+    "text": "Handle",
+    "note": "Part name in an animated icon: a grip or handle (the noun).",
+    "max": 10
+  },
+  "icon-library.library.hands": {
+    "text": "Hands",
+    "note": "Part name in an animated icon: the hands of a clock.",
+    "max": 10
+  },
+  "icon-library.library.handset": {
+    "text": "Handset",
+    "note": "Part name in an animated icon: the receiver of a telephone.",
+    "max": 15
+  },
+  "icon-library.library.head": {
+    "text": "Head",
+    "note": "Part name in an animated icon: the head of a figure or device.",
+    "max": 10
+  },
+  "icon-library.library.headphones": {
+    "text": "Headphones",
+    "note": "Icon animation name: headphones playing music.",
+    "max": 20
+  },
+  "icon-library.library.heart": {
+    "text": "Heart",
+    "note": "Icon animation name: a heart shape.",
+    "max": 10
+  },
+  "icon-library.library.heart-and-pulse": {
+    "text": "Heart and pulse",
+    "note": "Icon animation name: a heart with a heartbeat line.",
+    "max": 25
+  },
+  "icon-library.library.heart-top": {
+    "text": "Heart top",
+    "note": "Part name in an animated icon: the top part of a heart shape.",
+    "max": 15
+  },
+  "icon-library.library.heartbeat": {
+    "text": "Heartbeat",
+    "note": "Icon animation name: a pulse line that beats like a heart.",
+    "max": 15
+  },
+  "icon-library.library.hearth": {
+    "text": "Hearth",
+    "note": "Part name in an animated icon: the floor of a fireplace.",
+    "max": 10
+  },
+  "icon-library.library.heat-haze": {
+    "text": "Heat haze",
+    "note": "Part name in an animated icon: wavy air rising from heat.",
+    "max": 15
+  },
+  "icon-library.library.heating-element": {
+    "text": "Heating element",
+    "note": "Part name in an animated icon: the glowing coil of a heater or oven.",
+    "max": 25
+  },
+  "icon-library.library.heavy-snow": {
+    "text": "Heavy snow",
+    "note": "Icon animation name: weather with thick falling snow.",
+    "max": 20
+  },
+  "icon-library.library.home": {
+    "text": "Home",
+    "note": "Icon animation name: a home symbol.",
+    "max": 10
+  },
+  "icon-library.library.horizon-1": {
+    "text": "Horizon 1",
+    "note": "Part name in an animated icon: first horizon line, numbered.",
+    "max": 15
+  },
+  "icon-library.library.horizon-2": {
+    "text": "Horizon 2",
+    "note": "Part name in an animated icon: second horizon line, numbered.",
+    "max": 15
+  },
+  "icon-library.library.hourglass": {
+    "text": "Hourglass",
+    "note": "Icon animation name: an hourglass with falling sand.",
+    "max": 15
+  },
+  "icon-library.library.house": {
+    "text": "House",
+    "note": "Icon animation name: a house.",
+    "max": 10
+  },
+  "icon-library.library.hub": {
+    "text": "Hub",
+    "note": "Icon animation name: a smart home hub (central device).",
+    "max": 5
+  },
+  "icon-library.library.humidifier-mist": {
+    "text": "Humidifier mist",
+    "note": "Icon animation name: a humidifier releasing mist.",
+    "max": 25
+  },
+  "icon-library.library.humidity-drop": {
+    "text": "Humidity drop",
+    "note": "Icon animation name: a drop that stands for air humidity.",
+    "max": 25
+  },
+  "icon-library.library.inner-flame": {
+    "text": "Inner flame",
+    "note": "Part name in an animated icon: the smaller flame inside the outer flame.",
+    "max": 20
+  },
+  "icon-library.library.inner-wave": {
+    "text": "Inner wave",
+    "note": "Part name in an animated icon: the closer signal or water arc.",
+    "max": 20
+  },
+  "icon-library.library.kettle": {
+    "text": "Kettle",
+    "note": "Icon animation name: an electric kettle.",
+    "max": 10
+  },
+  "icon-library.library.kettle-boiling": {
+    "text": "Kettle boiling",
+    "note": "Icon animation name: a kettle with steam rising (verb form).",
+    "max": 25
+  },
+  "icon-library.library.knob": {
+    "text": "Knob",
+    "note": "Part name in an animated icon: a turning knob.",
+    "max": 10
+  },
+  "icon-library.library.ladder": {
+    "text": "Ladder",
+    "note": "Part name in an animated icon: a ladder.",
+    "max": 10
+  },
+  "icon-library.library.leaf": {
+    "text": "Leaf",
+    "note": "Part name in an animated icon: a single leaf.",
+    "max": 10
+  },
+  "icon-library.library.leaf-in-the-wind": {
+    "text": "Leaf in the wind",
+    "note": "Icon animation name: a leaf blown about by the wind.",
+    "max": 30
+  },
+  "icon-library.library.led-strip-colour-chase": {
+    "text": "LED strip colour chase",
+    "note": "Icon animation name: colours running along an LED light strip.",
+    "max": 40
+  },
+  "icon-library.library.left-bell": {
+    "text": "Left bell",
+    "note": "Part name in an animated icon: the bell on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-blade": {
+    "text": "Left blade",
+    "note": "Part name in an animated icon: the blade on the left side.",
+    "max": 20
+  },
+  "icon-library.library.left-bulb": {
+    "text": "Left bulb",
+    "note": "Part name in an animated icon: the light bulb on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-curtain": {
+    "text": "Left curtain",
+    "note": "Part name in an animated icon: the curtain panel on the left.",
+    "max": 20
+  },
+  "icon-library.library.left-drop": {
+    "text": "Left drop",
+    "note": "Part name in an animated icon: the water drop on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-drop-1": {
+    "text": "Left drop 1",
+    "note": "Part name in an animated icon: first drop on the left, numbered.",
+    "max": 20
+  },
+  "icon-library.library.left-drop-2": {
+    "text": "Left drop 2",
+    "note": "Part name in an animated icon: second drop on the left, numbered.",
+    "max": 20
+  },
+  "icon-library.library.left-drop-3": {
+    "text": "Left drop 3",
+    "note": "Part name in an animated icon: third drop on the left, numbered.",
+    "max": 20
+  },
+  "icon-library.library.left-drop-4": {
+    "text": "Left drop 4",
+    "note": "Part name in an animated icon: fourth drop on the left, numbered.",
+    "max": 20
+  },
+  "icon-library.library.left-drop-5": {
+    "text": "Left drop 5",
+    "note": "Part name in an animated icon: fifth drop on the left, numbered.",
+    "max": 20
+  },
+  "icon-library.library.left-drop-6": {
+    "text": "Left drop 6",
+    "note": "Part name in an animated icon: sixth drop on the left, numbered.",
+    "max": 20
+  },
+  "icon-library.library.left-flake": {
+    "text": "Left flake",
+    "note": "Part name in an animated icon: the snowflake on the left.",
+    "max": 20
+  },
+  "icon-library.library.left-leaf": {
+    "text": "Left leaf",
+    "note": "Part name in an animated icon: the leaf on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-pipe": {
+    "text": "Left pipe",
+    "note": "Part name in an animated icon: the pipe on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-ray": {
+    "text": "Left ray",
+    "note": "Part name in an animated icon: the light ray on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-steam": {
+    "text": "Left steam",
+    "note": "Part name in an animated icon: the steam curl on the left.",
+    "max": 20
+  },
+  "icon-library.library.left-tick": {
+    "text": "Left tick",
+    "note": "Part name in an animated icon: the tick mark on the left.",
+    "max": 15
+  },
+  "icon-library.library.left-wave": {
+    "text": "Left wave",
+    "note": "Part name in an animated icon: the wave arc on the left.",
+    "max": 15
+  },
+  "icon-library.library.lens": {
+    "text": "Lens",
+    "note": "Part name in an animated icon: the glass lens of a camera.",
+    "max": 10
+  },
+  "icon-library.library.light": {
+    "text": "Light",
+    "note": "Part name in an animated icon: a lamp or its light (the noun).",
+    "max": 10
+  },
+  "icon-library.library.light-group": {
+    "text": "Light group",
+    "note": "Part name in an animated icon: several lights that switch together.",
+    "max": 20
+  },
+  "icon-library.library.light-rays": {
+    "text": "Light rays",
+    "note": "Part name in an animated icon: the rays of light around a lamp.",
+    "max": 20
+  },
+  "icon-library.library.line": {
+    "text": "Line",
+    "note": "Part name in an animated icon: a straight line.",
+    "max": 10
+  },
+  "icon-library.library.lock": {
+    "text": "Lock",
+    "note": "Icon animation name: a padlock that locks and unlocks.",
+    "max": 10
+  },
+  "icon-library.library.machine": {
+    "text": "Machine",
+    "note": "Part name in an animated icon: the body of an appliance.",
+    "max": 15
+  },
+  "icon-library.library.mantel": {
+    "text": "Mantel",
+    "note": "Part name in an animated icon: the shelf above a fireplace.",
+    "max": 20
+  },
+  "icon-library.library.mark-1": {
+    "text": "Mark 1",
+    "note": "Part name in an animated icon: first of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-2": {
+    "text": "Mark 2",
+    "note": "Part name in an animated icon: second of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-3": {
+    "text": "Mark 3",
+    "note": "Part name in an animated icon: third of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-4": {
+    "text": "Mark 4",
+    "note": "Part name in an animated icon: fourth of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-5": {
+    "text": "Mark 5",
+    "note": "Part name in an animated icon: fifth of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-6": {
+    "text": "Mark 6",
+    "note": "Part name in an animated icon: sixth of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-7": {
+    "text": "Mark 7",
+    "note": "Part name in an animated icon: seventh of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.mark-8": {
+    "text": "Mark 8",
+    "note": "Part name in an animated icon: eighth of eight scale marks, numbered.",
+    "max": 15
+  },
+  "icon-library.library.meter": {
+    "text": "Meter",
+    "note": "Icon animation name: a measuring meter (the device).",
+    "max": 10
+  },
+  "icon-library.library.middle-arc": {
+    "text": "Middle arc",
+    "note": "Part name in an animated icon: the middle curved line.",
+    "max": 20
+  },
+  "icon-library.library.middle-drop": {
+    "text": "Middle drop",
+    "note": "Part name in an animated icon: the middle water drop.",
+    "max": 20
+  },
+  "icon-library.library.middle-gust": {
+    "text": "Middle gust",
+    "note": "Part name in an animated icon: the middle puff of wind.",
+    "max": 20
+  },
+  "icon-library.library.middle-ray": {
+    "text": "Middle ray",
+    "note": "Part name in an animated icon: the middle light ray.",
+    "max": 20
+  },
+  "icon-library.library.middle-slat": {
+    "text": "Middle slat",
+    "note": "Part name in an animated icon: the middle slat of a blind or shutter.",
+    "max": 20
+  },
+  "icon-library.library.middle-strip": {
+    "text": "Middle strip",
+    "note": "Part name in an animated icon: the middle strip.",
+    "max": 20
+  },
+  "icon-library.library.middle-wave": {
+    "text": "Middle wave",
+    "note": "Part name in an animated icon: the middle wave arc.",
+    "max": 20
+  },
+  "icon-library.library.moon": {
+    "text": "Moon",
+    "note": "Icon animation name: a crescent moon.",
+    "max": 10
+  },
+  "icon-library.library.motion-detected": {
+    "text": "Motion detected",
+    "note": "Icon animation name: a sensor that has noticed movement.",
+    "max": 25
+  },
+  "icon-library.library.mount": {
+    "text": "Mount",
+    "note": "Part name in an animated icon: the bracket that holds a device (the noun).",
+    "max": 10
+  },
+  "icon-library.library.mower": {
+    "text": "Mower",
+    "note": "Icon animation name: a lawn mower.",
+    "max": 10
+  },
+  "icon-library.library.music-note-dance": {
+    "text": "Music note dance",
+    "note": "Icon animation name: music notes dancing about.",
+    "max": 30
+  },
+  "icon-library.library.needle": {
+    "text": "Needle",
+    "note": "Part name in an animated icon: the pointer of a gauge.",
+    "max": 10
+  },
+  "icon-library.library.note": {
+    "text": "Note",
+    "note": "Part name in an animated icon: a musical note (the noun).",
+    "max": 10
+  },
+  "icon-library.library.notification": {
+    "text": "Notification",
+    "note": "Icon animation name: a bell or badge announcing a new message.",
+    "max": 20
+  },
+  "icon-library.library.outdoor-temperature": {
+    "text": "Outdoor temperature",
+    "note": "Icon animation name: a thermometer with a house and sun outdoors.",
+    "max": 35
+  },
+  "icon-library.library.outer-flame": {
+    "text": "Outer flame",
+    "note": "Part name in an animated icon: the larger flame around the inner flame.",
+    "max": 20
+  },
+  "icon-library.library.outer-wave": {
+    "text": "Outer wave",
+    "note": "Part name in an animated icon: the farther signal or water arc.",
+    "max": 20
+  },
+  "icon-library.library.oven": {
+    "text": "Oven",
+    "note": "Icon animation name: a kitchen oven.",
+    "max": 10
+  },
+  "icon-library.library.oven-heating": {
+    "text": "Oven heating",
+    "note": "Icon animation name: an oven glowing as it heats up.",
+    "max": 20
+  },
+  "icon-library.library.pad": {
+    "text": "Pad",
+    "note": "Part name in an animated icon: a flat pad or cushion.",
+    "max": 10
+  },
+  "icon-library.library.panel": {
+    "text": "Panel",
+    "note": "Part name in an animated icon: a flat panel, for example solar.",
+    "max": 10
+  },
+  "icon-library.library.paper": {
+    "text": "Paper",
+    "note": "Part name in an animated icon: a sheet of paper.",
+    "max": 10
+  },
+  "icon-library.library.partly-cloudy": {
+    "text": "Partly cloudy",
+    "note": "Icon animation name: weather with sun behind some cloud.",
+    "max": 25
+  },
+  "icon-library.library.pendant": {
+    "text": "Pendant",
+    "note": "Part name in an animated icon: a lamp hanging from a cord.",
+    "max": 15
+  },
+  "icon-library.library.person": {
+    "text": "Person",
+    "note": "Icon animation name: a person.",
+    "max": 10
+  },
+  "icon-library.library.person-home": {
+    "text": "Person home",
+    "note": "Icon animation name: a person arriving at home.",
+    "max": 20
+  },
+  "icon-library.library.pet": {
+    "text": "Pet",
+    "note": "Icon animation name: a house pet (the noun).",
+    "max": 10
+  },
+  "icon-library.library.phone": {
+    "text": "Phone",
+    "note": "Icon animation name: a telephone.",
+    "max": 10
+  },
+  "icon-library.library.phone-ringing": {
+    "text": "Phone ringing",
+    "note": "Icon animation name: a telephone that is ringing.",
+    "max": 25
+  },
+  "icon-library.library.phone-signal": {
+    "text": "Phone signal",
+    "note": "Icon animation name: a phone with mobile signal bars.",
+    "max": 20
+  },
+  "icon-library.library.phone-vibrate": {
+    "text": "Phone vibrate",
+    "note": "Icon animation name: a phone shaking in silent mode.",
+    "max": 25
+  },
+  "icon-library.library.plant": {
+    "text": "Plant",
+    "note": "Icon animation name: a potted plant.",
+    "max": 10
+  },
+  "icon-library.library.play": {
+    "text": "Play",
+    "note": "Icon animation name: a play triangle.",
+    "max": 10
+  },
+  "icon-library.library.plug": {
+    "text": "Plug",
+    "note": "Icon animation name: an electrical plug.",
+    "max": 10
+  },
+  "icon-library.library.plug-in": {
+    "text": "Plug in",
+    "note": "Icon animation name: a plug being pushed into a socket.",
+    "max": 15
+  },
+  "icon-library.library.pool": {
+    "text": "Pool",
+    "note": "Icon animation name: a swimming pool with rippling water.",
+    "max": 10
+  },
+  "icon-library.library.pot": {
+    "text": "Pot",
+    "note": "Part name in an animated icon: a pot or flowerpot.",
+    "max": 5
+  },
+  "icon-library.library.pouring-rain": {
+    "text": "Pouring rain",
+    "note": "Icon animation name: weather with heavy rain.",
+    "max": 20
+  },
+  "icon-library.library.power-button": {
+    "text": "Power button",
+    "note": "Icon animation name: the on/off symbol button.",
+    "max": 20
+  },
+  "icon-library.library.printer": {
+    "text": "Printer",
+    "note": "Icon animation name: a paper printer.",
+    "max": 15
+  },
+  "icon-library.library.pump": {
+    "text": "Pump",
+    "note": "Icon animation name: a pump moving liquid.",
+    "max": 10
+  },
+  "icon-library.library.radiator": {
+    "text": "Radiator",
+    "note": "Icon animation name: a heating radiator.",
+    "max": 15
+  },
+  "icon-library.library.radiator-heat": {
+    "text": "Radiator heat",
+    "note": "Icon animation name: a radiator giving off warmth.",
+    "max": 25
+  },
+  "icon-library.library.rain": {
+    "text": "Rain",
+    "note": "Icon animation name: weather with rain falling.",
+    "max": 10
+  },
+  "icon-library.library.ray-1": {
+    "text": "Ray 1",
+    "note": "Part name in an animated icon: first light ray, numbered.",
+    "max": 10
+  },
+  "icon-library.library.ray-2": {
+    "text": "Ray 2",
+    "note": "Part name in an animated icon: second light ray, numbered.",
+    "max": 10
+  },
+  "icon-library.library.ray-3": {
+    "text": "Ray 3",
+    "note": "Part name in an animated icon: third light ray, numbered.",
+    "max": 10
+  },
+  "icon-library.library.ray-bottom": {
+    "text": "Ray bottom",
+    "note": "Part name in an animated icon: the light ray pointing down.",
+    "max": 20
+  },
+  "icon-library.library.ray-bottom-left": {
+    "text": "Ray bottom left",
+    "note": "Part name in an animated icon: the light ray pointing down and left.",
+    "max": 25
+  },
+  "icon-library.library.ray-bottom-right": {
+    "text": "Ray bottom right",
+    "note": "Part name in an animated icon: the light ray pointing down and right.",
+    "max": 30
+  },
+  "icon-library.library.ray-left": {
+    "text": "Ray left",
+    "note": "Part name in an animated icon: the light ray pointing left.",
+    "max": 15
+  },
+  "icon-library.library.ray-right": {
+    "text": "Ray right",
+    "note": "Part name in an animated icon: the light ray pointing right.",
+    "max": 15
+  },
+  "icon-library.library.ray-top": {
+    "text": "Ray top",
+    "note": "Part name in an animated icon: the light ray pointing up.",
+    "max": 15
+  },
+  "icon-library.library.ray-top-left": {
+    "text": "Ray top left",
+    "note": "Part name in an animated icon: the light ray pointing up and left.",
+    "max": 20
+  },
+  "icon-library.library.ray-top-right": {
+    "text": "Ray top right",
+    "note": "Part name in an animated icon: the light ray pointing up and right.",
+    "max": 25
+  },
+  "icon-library.library.rays": {
+    "text": "Rays",
+    "note": "Part name in an animated icon: all rays of light together.",
+    "max": 10
+  },
+  "icon-library.library.right-bell": {
+    "text": "Right bell",
+    "note": "Part name in an animated icon: the bell on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-blade": {
+    "text": "Right blade",
+    "note": "Part name in an animated icon: the blade on the right side.",
+    "max": 20
+  },
+  "icon-library.library.right-bulb": {
+    "text": "Right bulb",
+    "note": "Part name in an animated icon: the light bulb on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-curtain": {
+    "text": "Right curtain",
+    "note": "Part name in an animated icon: the curtain panel on the right.",
+    "max": 25
+  },
+  "icon-library.library.right-drop": {
+    "text": "Right drop",
+    "note": "Part name in an animated icon: the water drop on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-drop-1": {
+    "text": "Right drop 1",
+    "note": "Part name in an animated icon: first drop on the right, numbered.",
+    "max": 20
+  },
+  "icon-library.library.right-drop-2": {
+    "text": "Right drop 2",
+    "note": "Part name in an animated icon: second drop on the right, numbered.",
+    "max": 20
+  },
+  "icon-library.library.right-drop-3": {
+    "text": "Right drop 3",
+    "note": "Part name in an animated icon: third drop on the right, numbered.",
+    "max": 20
+  },
+  "icon-library.library.right-drop-4": {
+    "text": "Right drop 4",
+    "note": "Part name in an animated icon: fourth drop on the right, numbered.",
+    "max": 20
+  },
+  "icon-library.library.right-drop-5": {
+    "text": "Right drop 5",
+    "note": "Part name in an animated icon: fifth drop on the right, numbered.",
+    "max": 20
+  },
+  "icon-library.library.right-drop-6": {
+    "text": "Right drop 6",
+    "note": "Part name in an animated icon: sixth drop on the right, numbered.",
+    "max": 20
+  },
+  "icon-library.library.right-flake": {
+    "text": "Right flake",
+    "note": "Part name in an animated icon: the snowflake on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-leaf": {
+    "text": "Right leaf",
+    "note": "Part name in an animated icon: the leaf on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-pipe": {
+    "text": "Right pipe",
+    "note": "Part name in an animated icon: the pipe on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-ray": {
+    "text": "Right ray",
+    "note": "Part name in an animated icon: the light ray on the right.",
+    "max": 15
+  },
+  "icon-library.library.right-steam": {
+    "text": "Right steam",
+    "note": "Part name in an animated icon: the steam curl on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-tick": {
+    "text": "Right tick",
+    "note": "Part name in an animated icon: the tick mark on the right.",
+    "max": 20
+  },
+  "icon-library.library.right-wave": {
+    "text": "Right wave",
+    "note": "Part name in an animated icon: the wave arc on the right.",
+    "max": 20
+  },
+  "icon-library.library.ring": {
+    "text": "Ring",
+    "note": "Part name in an animated icon: a round ring shape.",
+    "max": 10
+  },
+  "icon-library.library.robot": {
+    "text": "Robot",
+    "note": "Icon animation name: a small robot.",
+    "max": 10
+  },
+  "icon-library.library.robot-mower": {
+    "text": "Robot mower",
+    "note": "Icon animation name: an automatic lawn mower.",
+    "max": 20
+  },
+  "icon-library.library.robot-vacuum": {
+    "text": "Robot vacuum",
+    "note": "Icon animation name: an automatic vacuum cleaner.",
+    "max": 20
+  },
+  "icon-library.library.rod": {
+    "text": "Rod",
+    "note": "Part name in an animated icon: a thin straight rod.",
+    "max": 5
+  },
+  "icon-library.library.roller-shutter": {
+    "text": "Roller shutter",
+    "note": "Icon animation name: a shutter that rolls up and down.",
+    "max": 25
+  },
+  "icon-library.library.router": {
+    "text": "Router",
+    "note": "Icon animation name: a network router with blinking lights.",
+    "max": 10
+  },
+  "icon-library.library.sand": {
+    "text": "Sand",
+    "note": "Part name in an animated icon: falling sand grains.",
+    "max": 10
+  },
+  "icon-library.library.security-armed": {
+    "text": "Security armed",
+    "note": "Icon animation name: an alarm system that is switched on.",
+    "max": 25
+  },
+  "icon-library.library.security-camera": {
+    "text": "Security camera",
+    "note": "Icon animation name: a surveillance camera that sweeps round.",
+    "max": 25
+  },
+  "icon-library.library.sensor": {
+    "text": "Sensor",
+    "note": "Part name in an animated icon: a small sensor.",
+    "max": 10
+  },
+  "icon-library.library.shackle": {
+    "text": "Shackle",
+    "note": "Part name in an animated icon: the curved bar of a padlock.",
+    "max": 15
+  },
+  "icon-library.library.shade": {
+    "text": "Shade",
+    "note": "Part name in an animated icon: a lampshade.",
+    "max": 10
+  },
+  "icon-library.library.shield": {
+    "text": "Shield",
+    "note": "Icon animation name: a protective shield.",
+    "max": 10
+  },
+  "icon-library.library.shower": {
+    "text": "Shower",
+    "note": "Icon animation name: a shower head spraying water.",
+    "max": 10
+  },
+  "icon-library.library.sign": {
+    "text": "Sign",
+    "note": "Part name in an animated icon: a signboard (the noun).",
+    "max": 10
+  },
+  "icon-library.library.signal": {
+    "text": "Signal",
+    "note": "Part name in an animated icon: wireless signal waves.",
+    "max": 10
+  },
+  "icon-library.library.slash": {
+    "text": "Slash",
+    "note": "Part name in an animated icon: a diagonal line across the icon.",
+    "max": 15
+  },
+  "icon-library.library.slat-1": {
+    "text": "Slat 1",
+    "note": "Part name in an animated icon: first blind slat, numbered.",
+    "max": 10
+  },
+  "icon-library.library.slat-2": {
+    "text": "Slat 2",
+    "note": "Part name in an animated icon: second blind slat, numbered.",
+    "max": 10
+  },
+  "icon-library.library.slat-3": {
+    "text": "Slat 3",
+    "note": "Part name in an animated icon: third blind slat, numbered.",
+    "max": 10
+  },
+  "icon-library.library.slat-4": {
+    "text": "Slat 4",
+    "note": "Part name in an animated icon: fourth blind slat, numbered.",
+    "max": 10
+  },
+  "icon-library.library.small-star": {
+    "text": "Small star",
+    "note": "Part name in an animated icon: the smaller star.",
+    "max": 20
+  },
+  "icon-library.library.smoke-alarm": {
+    "text": "Smoke alarm",
+    "note": "Icon animation name: a smoke alarm sounding.",
+    "max": 20
+  },
+  "icon-library.library.smoke-detector-standby": {
+    "text": "Smoke detector standby",
+    "note": "Icon animation name: a smoke detector waiting with a blinking light.",
+    "max": 40
+  },
+  "icon-library.library.snow": {
+    "text": "Snow",
+    "note": "Icon animation name: weather with snow falling.",
+    "max": 10
+  },
+  "icon-library.library.snowflake": {
+    "text": "Snowflake",
+    "note": "Icon animation name: a turning snowflake.",
+    "max": 15
+  },
+  "icon-library.library.soil": {
+    "text": "Soil",
+    "note": "Part name in an animated icon: garden earth.",
+    "max": 10
+  },
+  "icon-library.library.solar-power": {
+    "text": "Solar power",
+    "note": "Icon animation name: a solar panel under the sun.",
+    "max": 20
+  },
+  "icon-library.library.sound-waves": {
+    "text": "Sound waves",
+    "note": "Part name in an animated icon: arcs that show sound spreading.",
+    "max": 20
+  },
+  "icon-library.library.speaker": {
+    "text": "Speaker",
+    "note": "Icon animation name: a loudspeaker.",
+    "max": 15
+  },
+  "icon-library.library.sprinkler": {
+    "text": "Sprinkler",
+    "note": "Icon animation name: a garden water sprinkler.",
+    "max": 15
+  },
+  "icon-library.library.sprout": {
+    "text": "Sprout",
+    "note": "Icon animation name: a seedling growing from the soil.",
+    "max": 10
+  },
+  "icon-library.library.stand": {
+    "text": "Stand",
+    "note": "Part name in an animated icon: the base a device stands on (the noun).",
+    "max": 10
+  },
+  "icon-library.library.storm-with-rain": {
+    "text": "Storm with rain",
+    "note": "Icon animation name: weather with a storm cloud and rain.",
+    "max": 25
+  },
+  "icon-library.library.sun": {
+    "text": "Sun",
+    "note": "Icon animation name: the sun.",
+    "max": 5
+  },
+  "icon-library.library.sun-and-cloud": {
+    "text": "Sun and cloud",
+    "note": "Icon animation name: the sun partly hidden by a cloud.",
+    "max": 25
+  },
+  "icon-library.library.sunny": {
+    "text": "Sunny",
+    "note": "Icon animation name: weather with a bright sun.",
+    "max": 10
+  },
+  "icon-library.library.sunset": {
+    "text": "Sunset",
+    "note": "Icon animation name: the sun going down at the horizon.",
+    "max": 15
+  },
+  "icon-library.library.switch-toggle": {
+    "text": "Switch toggle",
+    "note": "Icon animation name: an on/off switch being flipped.",
+    "max": 25
+  },
+  "icon-library.library.table-lamp-switching-on": {
+    "text": "Table lamp switching on",
+    "note": "Icon animation name: a table lamp that lights up.",
+    "max": 40
+  },
+  "icon-library.library.tap": {
+    "text": "Tap",
+    "note": "Icon animation name: a water tap with dripping water (the noun).",
+    "max": 5
+  },
+  "icon-library.library.television": {
+    "text": "Television",
+    "note": "Icon animation name: a television set.",
+    "max": 20
+  },
+  "icon-library.library.thermometer": {
+    "text": "Thermometer",
+    "note": "Icon animation name: a thermometer with rising mercury.",
+    "max": 20
+  },
+  "icon-library.library.thunderstorm": {
+    "text": "Thunderstorm",
+    "note": "Icon animation name: weather with thunder and lightning.",
+    "max": 20
+  },
+  "icon-library.library.timer": {
+    "text": "Timer",
+    "note": "Icon animation name: a countdown timer.",
+    "max": 10
+  },
+  "icon-library.library.toe-1": {
+    "text": "Toe 1",
+    "note": "Part name in an animated icon: first toe of a paw, numbered.",
+    "max": 10
+  },
+  "icon-library.library.toe-2": {
+    "text": "Toe 2",
+    "note": "Part name in an animated icon: second toe of a paw, numbered.",
+    "max": 10
+  },
+  "icon-library.library.toe-3": {
+    "text": "Toe 3",
+    "note": "Part name in an animated icon: third toe of a paw, numbered.",
+    "max": 10
+  },
+  "icon-library.library.toe-4": {
+    "text": "Toe 4",
+    "note": "Part name in an animated icon: fourth toe of a paw, numbered.",
+    "max": 10
+  },
+  "icon-library.library.top-arc": {
+    "text": "Top arc",
+    "note": "Part name in an animated icon: the highest curved line.",
+    "max": 15
+  },
+  "icon-library.library.top-gust": {
+    "text": "Top gust",
+    "note": "Part name in an animated icon: the highest puff of wind.",
+    "max": 20
+  },
+  "icon-library.library.top-slat": {
+    "text": "Top slat",
+    "note": "Part name in an animated icon: the highest slat of a blind or shutter.",
+    "max": 15
+  },
+  "icon-library.library.top-strip": {
+    "text": "Top strip",
+    "note": "Part name in an animated icon: the highest strip.",
+    "max": 15
+  },
+  "icon-library.library.top-tick": {
+    "text": "Top tick",
+    "note": "Part name in an animated icon: the tick mark at the top.",
+    "max": 15
+  },
+  "icon-library.library.top-wave": {
+    "text": "Top wave",
+    "note": "Part name in an animated icon: the highest wave arc.",
+    "max": 15
+  },
+  "icon-library.library.track": {
+    "text": "Track",
+    "note": "Part name in an animated icon: a rail or groove (the noun).",
+    "max": 10
+  },
+  "icon-library.library.trash-day": {
+    "text": "Trash day",
+    "note": "Icon animation name: a bin being put out for collection.",
+    "max": 15
+  },
+  "icon-library.library.tumble-dryer": {
+    "text": "Tumble dryer",
+    "note": "Icon animation name: a clothes dryer with a turning drum.",
+    "max": 20
+  },
+  "icon-library.library.tv-on": {
+    "text": "TV on",
+    "note": "Icon animation name: a television switched on.",
+    "max": 10
+  },
+  "icon-library.library.valve": {
+    "text": "Valve",
+    "note": "Icon animation name: a water or gas valve that turns.",
+    "max": 10
+  },
+  "icon-library.library.volume": {
+    "text": "Volume",
+    "note": "Icon animation name: a speaker with sound level waves.",
+    "max": 10
+  },
+  "icon-library.library.walker": {
+    "text": "Walker",
+    "note": "Icon animation name: a person walking (the noun).",
+    "max": 10
+  },
+  "icon-library.library.walking": {
+    "text": "Walking",
+    "note": "Icon animation name: a person walking (verb form).",
+    "max": 15
+  },
+  "icon-library.library.washing-machine": {
+    "text": "Washing machine",
+    "note": "Icon animation name: a washing machine with a turning drum.",
+    "max": 25
+  },
+  "icon-library.library.water": {
+    "text": "Water",
+    "note": "Part name in an animated icon: water (the noun).",
+    "max": 10
+  },
+  "icon-library.library.water-drop": {
+    "text": "Water drop",
+    "note": "Icon animation name: a single falling water drop.",
+    "max": 20
+  },
+  "icon-library.library.water-pump": {
+    "text": "Water pump",
+    "note": "Icon animation name: a pump moving water.",
+    "max": 20
+  },
+  "icon-library.library.watering": {
+    "text": "Watering",
+    "note": "Icon animation name: plants being watered (verb form).",
+    "max": 15
+  },
+  "icon-library.library.watering-can": {
+    "text": "Watering can",
+    "note": "Icon animation name: a can pouring water on plants.",
+    "max": 20
+  },
+  "icon-library.library.wi-fi": {
+    "text": "Wi-Fi",
+    "note": "Icon animation name: the Wi-Fi symbol. Keep the brand spelling Wi-Fi.",
+    "max": 10
+  },
+  "icon-library.library.windy": {
+    "text": "Windy",
+    "note": "Icon animation name: weather with strong wind.",
+    "max": 10
+  },
+  "icon-library.lights.arms": {
+    "text": "Arms",
+    "note": "Part name in an animated icon: the branches of a chandelier.",
+    "max": 10
+  },
+  "icon-library.lights.base": {
+    "text": "Base",
+    "note": "Part name in an animated icon: the foot of a lamp.",
+    "max": 10
+  },
+  "icon-library.lights.beam-edge-1": {
+    "text": "Beam edge 1",
+    "note": "Part name in an animated icon: first edge line of a light beam, numbered.",
+    "max": 20
+  },
+  "icon-library.lights.beam-edge-2": {
+    "text": "Beam edge 2",
+    "note": "Part name in an animated icon: second edge line of a light beam, numbered.",
+    "max": 20
+  },
+  "icon-library.lights.bulb": {
+    "text": "Bulb",
+    "note": "Part name in an animated icon: a light bulb.",
+    "max": 10
+  },
+  "icon-library.lights.bulb-shining": {
+    "text": "Bulb shining",
+    "note": "Icon animation name: a light bulb that is shining (verb form).",
+    "max": 20
+  },
+  "icon-library.lights.canopy": {
+    "text": "Canopy",
+    "note": "Part name in an animated icon: the cover at the top of a hanging lamp.",
+    "max": 10
+  },
+  "icon-library.lights.chandelier": {
+    "text": "Chandelier",
+    "note": "Icon animation name: a hanging chandelier with several bulbs.",
+    "max": 20
+  },
+  "icon-library.lights.desk-lamp": {
+    "text": "Desk lamp",
+    "note": "Icon animation name: an adjustable desk lamp.",
+    "max": 15
+  },
+  "icon-library.lights.floor-lamp": {
+    "text": "Floor lamp",
+    "note": "Icon animation name: a tall standing lamp.",
+    "max": 20
+  },
+  "icon-library.lights.lamp": {
+    "text": "Lamp",
+    "note": "Icon animation name: a lamp.",
+    "max": 10
+  },
+  "icon-library.lights.lamp-front": {
+    "text": "Lamp front",
+    "note": "Part name in an animated icon: the front of a lamp, facing the viewer.",
+    "max": 20
+  },
+  "icon-library.lights.lava": {
+    "text": "Lava",
+    "note": "Part name in an animated icon: the floating wax blobs in a lava lamp.",
+    "max": 10
+  },
+  "icon-library.lights.lava-lamp": {
+    "text": "Lava lamp",
+    "note": "Icon animation name: a lamp with slowly rising blobs.",
+    "max": 15
+  },
+  "icon-library.lights.left-lamp": {
+    "text": "Left lamp",
+    "note": "Part name in an animated icon: the lamp on the left.",
+    "max": 15
+  },
+  "icon-library.lights.left-light": {
+    "text": "Left light",
+    "note": "Part name in an animated icon: the light on the left.",
+    "max": 20
+  },
+  "icon-library.lights.light": {
+    "text": "Light",
+    "note": "Part name in an animated icon: a lamp or its light (the noun).",
+    "max": 10
+  },
+  "icon-library.lights.middle-light": {
+    "text": "Middle light",
+    "note": "Part name in an animated icon: the middle light.",
+    "max": 20
+  },
+  "icon-library.lights.moon": {
+    "text": "Moon",
+    "note": "Part name in an animated icon: a crescent moon.",
+    "max": 10
+  },
+  "icon-library.lights.night-light": {
+    "text": "Night light",
+    "note": "Icon animation name: a small light that stays on at night.",
+    "max": 20
+  },
+  "icon-library.lights.pendant-lights": {
+    "text": "Pendant lights",
+    "note": "Icon animation name: several lamps hanging from cords.",
+    "max": 25
+  },
+  "icon-library.lights.ray-1": {
+    "text": "Ray 1",
+    "note": "Part name in an animated icon: first light ray, numbered.",
+    "max": 10
+  },
+  "icon-library.lights.ray-2": {
+    "text": "Ray 2",
+    "note": "Part name in an animated icon: second light ray, numbered.",
+    "max": 10
+  },
+  "icon-library.lights.ray-3": {
+    "text": "Ray 3",
+    "note": "Part name in an animated icon: third light ray, numbered.",
+    "max": 10
+  },
+  "icon-library.lights.ray-left": {
+    "text": "Ray left",
+    "note": "Part name in an animated icon: the light ray pointing left.",
+    "max": 15
+  },
+  "icon-library.lights.ray-right": {
+    "text": "Ray right",
+    "note": "Part name in an animated icon: the light ray pointing right.",
+    "max": 15
+  },
+  "icon-library.lights.ray-top": {
+    "text": "Ray top",
+    "note": "Part name in an animated icon: the light ray pointing up.",
+    "max": 15
+  },
+  "icon-library.lights.ray-top-left": {
+    "text": "Ray top left",
+    "note": "Part name in an animated icon: the light ray pointing up and left.",
+    "max": 20
+  },
+  "icon-library.lights.ray-top-right": {
+    "text": "Ray top right",
+    "note": "Part name in an animated icon: the light ray pointing up and right.",
+    "max": 25
+  },
+  "icon-library.lights.right-lamp": {
+    "text": "Right lamp",
+    "note": "Part name in an animated icon: the lamp on the right.",
+    "max": 20
+  },
+  "icon-library.lights.right-lamp-and-bulb": {
+    "text": "Right lamp and bulb",
+    "note": "Part name in an animated icon: the lamp and its bulb on the right.",
+    "max": 35
+  },
+  "icon-library.lights.right-light": {
+    "text": "Right light",
+    "note": "Part name in an animated icon: the light on the right.",
+    "max": 20
+  },
+  "icon-library.lights.shade": {
+    "text": "Shade",
+    "note": "Part name in an animated icon: a lampshade.",
+    "max": 10
+  },
+  "icon-library.lights.spotlight": {
+    "text": "Spotlight",
+    "note": "Icon animation name: a focused spotlight beam.",
+    "max": 15
+  },
+  "icon-library.lights.stand": {
+    "text": "Stand",
+    "note": "Part name in an animated icon: the pole a lamp stands on (the noun).",
+    "max": 10
+  },
+  "icon-library.lights.star": {
+    "text": "Star",
+    "note": "Part name in an animated icon: a star shape.",
+    "max": 10
+  },
+  "icon-library.lights.track-light": {
+    "text": "Track light",
+    "note": "Icon animation name: spotlights on a ceiling rail.",
+    "max": 20
+  },
+  "icon-library.nature.back-left-leg": {
+    "text": "Back left leg",
+    "note": "Part name in an animated icon: the rear leg on the left of an animal.",
+    "max": 25
+  },
+  "icon-library.nature.back-right-leg": {
+    "text": "Back right leg",
+    "note": "Part name in an animated icon: the rear leg on the right of an animal.",
+    "max": 25
+  },
+  "icon-library.nature.band-1": {
+    "text": "Band 1",
+    "note": "Part name in an animated icon: first stripe or band, numbered.",
+    "max": 10
+  },
+  "icon-library.nature.band-2": {
+    "text": "Band 2",
+    "note": "Part name in an animated icon: second stripe or band, numbered.",
+    "max": 10
+  },
+  "icon-library.nature.band-3": {
+    "text": "Band 3",
+    "note": "Part name in an animated icon: third stripe or band, numbered.",
+    "max": 10
+  },
+  "icon-library.nature.band-4": {
+    "text": "Band 4",
+    "note": "Part name in an animated icon: fourth stripe or band, numbered.",
+    "max": 10
+  },
+  "icon-library.nature.band-5": {
+    "text": "Band 5",
+    "note": "Part name in an animated icon: fifth stripe or band, numbered.",
+    "max": 10
+  },
+  "icon-library.nature.bee": {
+    "text": "Bee",
+    "note": "Icon animation name: a flying bee.",
+    "max": 5
+  },
+  "icon-library.nature.bee-and-flower": {
+    "text": "Bee and flower",
+    "note": "Icon animation name: a bee hovering at a flower.",
+    "max": 25
+  },
+  "icon-library.nature.body": {
+    "text": "Body",
+    "note": "Part name in an animated icon: the body of an animal.",
+    "max": 10
+  },
+  "icon-library.nature.butterfly": {
+    "text": "Butterfly",
+    "note": "Icon animation name: a butterfly flapping its wings.",
+    "max": 15
+  },
+  "icon-library.nature.cat": {
+    "text": "Cat",
+    "note": "Icon animation name: a cat.",
+    "max": 5
+  },
+  "icon-library.nature.dog-barking": {
+    "text": "Dog barking",
+    "note": "Icon animation name: a dog that is barking (verb form).",
+    "max": 20
+  },
+  "icon-library.nature.dolphin": {
+    "text": "Dolphin",
+    "note": "Icon animation name: a dolphin leaping.",
+    "max": 15
+  },
+  "icon-library.nature.duck": {
+    "text": "Duck",
+    "note": "Icon animation name: a duck (the bird).",
+    "max": 10
+  },
+  "icon-library.nature.flower": {
+    "text": "Flower",
+    "note": "Icon animation name: a flower.",
+    "max": 10
+  },
+  "icon-library.nature.front-left-leg": {
+    "text": "Front left leg",
+    "note": "Part name in an animated icon: the front leg on the left of an animal.",
+    "max": 25
+  },
+  "icon-library.nature.front-right-leg": {
+    "text": "Front right leg",
+    "note": "Part name in an animated icon: the front leg on the right of an animal.",
+    "max": 25
+  },
+  "icon-library.nature.head": {
+    "text": "Head",
+    "note": "Part name in an animated icon: the head of an animal.",
+    "max": 10
+  },
+  "icon-library.nature.hurricane": {
+    "text": "Hurricane",
+    "note": "Icon animation name: the swirling symbol of a hurricane.",
+    "max": 15
+  },
+  "icon-library.nature.jellyfish": {
+    "text": "Jellyfish",
+    "note": "Icon animation name: a jellyfish pulsing through water.",
+    "max": 15
+  },
+  "icon-library.nature.ladybug": {
+    "text": "Ladybug",
+    "note": "Icon animation name: a ladybird beetle (US spelling kept in the library name).",
+    "max": 20
+  },
+  "icon-library.nature.left-wing": {
+    "text": "Left wing",
+    "note": "Part name in an animated icon: the wing on the left.",
+    "max": 15
+  },
+  "icon-library.nature.left-wing-case": {
+    "text": "Left wing case",
+    "note": "Part name in an animated icon: the hard shell over the left wing of a beetle.",
+    "max": 25
+  },
+  "icon-library.nature.penguin": {
+    "text": "Penguin",
+    "note": "Icon animation name: a waddling penguin.",
+    "max": 15
+  },
+  "icon-library.nature.right-wing": {
+    "text": "Right wing",
+    "note": "Part name in an animated icon: the wing on the right.",
+    "max": 20
+  },
+  "icon-library.nature.right-wing-case": {
+    "text": "Right wing case",
+    "note": "Part name in an animated icon: the hard shell over the right wing of a beetle.",
+    "max": 25
+  },
+  "icon-library.nature.shell": {
+    "text": "Shell",
+    "note": "Part name in an animated icon: the shell of a snail or turtle.",
+    "max": 10
+  },
+  "icon-library.nature.snail": {
+    "text": "Snail",
+    "note": "Icon animation name: a crawling snail.",
+    "max": 10
+  },
+  "icon-library.nature.tornado": {
+    "text": "Tornado",
+    "note": "Icon animation name: a spinning tornado funnel.",
+    "max": 15
+  },
+  "icon-library.nature.turtle": {
+    "text": "Turtle",
+    "note": "Icon animation name: a walking turtle.",
+    "max": 10
+  },
+  "icon-library.seasonal.balloon": {
+    "text": "Balloon",
+    "note": "Icon animation name: a floating party balloon.",
+    "max": 15
+  },
+  "icon-library.seasonal.band": {
+    "text": "Band",
+    "note": "Part name in an animated icon: a stripe or ribbon band (not a music band).",
+    "max": 10
+  },
+  "icon-library.seasonal.bat": {
+    "text": "Bat",
+    "note": "Icon animation name: a flying bat (the animal) for Halloween.",
+    "max": 10
+  },
+  "icon-library.seasonal.bauble-n": {
+    "text": "Bauble {n}",
+    "note": "Part name in an animated icon: a numbered Christmas bauble. {n} is its number.",
+    "max": 20,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "icon-library.seasonal.beating-heart": {
+    "text": "Beating heart",
+    "note": "Icon animation name: a heart that pulses.",
+    "max": 25
+  },
+  "icon-library.seasonal.bell": {
+    "text": "Bell",
+    "note": "Icon animation name: a swinging bell.",
+    "max": 10
+  },
+  "icon-library.seasonal.bend": {
+    "text": "Bend",
+    "note": "Part name in an animated icon: the curved bend of a candy cane.",
+    "max": 10
+  },
+  "icon-library.seasonal.big-heart": {
+    "text": "Big heart",
+    "note": "Part name in an animated icon: the larger heart.",
+    "max": 15
+  },
+  "icon-library.seasonal.bloom": {
+    "text": "Bloom",
+    "note": "Part name in an animated icon: the flower head (the noun).",
+    "max": 10
+  },
+  "icon-library.seasonal.body": {
+    "text": "Body",
+    "note": "Part name in an animated icon: the main body of the figure.",
+    "max": 10
+  },
+  "icon-library.seasonal.box": {
+    "text": "Box",
+    "note": "Part name in an animated icon: a gift box.",
+    "max": 5
+  },
+  "icon-library.seasonal.brim": {
+    "text": "Brim",
+    "note": "Part name in an animated icon: the flat rim of a hat.",
+    "max": 10
+  },
+  "icon-library.seasonal.broken-heart": {
+    "text": "Broken heart",
+    "note": "Icon animation name: a heart split in two.",
+    "max": 20
+  },
+  "icon-library.seasonal.candy-cane": {
+    "text": "Candy cane",
+    "note": "Icon animation name: a striped Christmas sweet shaped like a hook.",
+    "max": 20
+  },
+  "icon-library.seasonal.cauldron": {
+    "text": "Cauldron",
+    "note": "Icon animation name: a witch's bubbling cauldron.",
+    "max": 15
+  },
+  "icon-library.seasonal.cherry": {
+    "text": "Cherry",
+    "note": "Icon animation name: a cherry fruit (not the colour).",
+    "max": 10
+  },
+  "icon-library.seasonal.christmas-tree": {
+    "text": "Christmas tree",
+    "note": "Icon animation name: a decorated Christmas tree.",
+    "max": 25
+  },
+  "icon-library.seasonal.clapper": {
+    "text": "Clapper",
+    "note": "Part name in an animated icon: the tongue inside a bell.",
+    "max": 15
+  },
+  "icon-library.seasonal.cuff": {
+    "text": "Cuff",
+    "note": "Part name in an animated icon: the furry trim of a Christmas stocking.",
+    "max": 10
+  },
+  "icon-library.seasonal.cupcake": {
+    "text": "Cupcake",
+    "note": "Icon animation name: a small iced cake.",
+    "max": 15
+  },
+  "icon-library.seasonal.firework": {
+    "text": "Firework",
+    "note": "Icon animation name: a firework exploding in the sky.",
+    "max": 15
+  },
+  "icon-library.seasonal.floating-hearts": {
+    "text": "Floating hearts",
+    "note": "Icon animation name: hearts drifting upwards.",
+    "max": 25
+  },
+  "icon-library.seasonal.foot": {
+    "text": "Foot",
+    "note": "Part name in an animated icon: a foot of a figure.",
+    "max": 10
+  },
+  "icon-library.seasonal.frosting": {
+    "text": "Frosting",
+    "note": "Part name in an animated icon: the icing on a cake.",
+    "max": 15
+  },
+  "icon-library.seasonal.gem": {
+    "text": "Gem",
+    "note": "Part name in an animated icon: a sparkling gemstone.",
+    "max": 10
+  },
+  "icon-library.seasonal.ghost": {
+    "text": "Ghost",
+    "note": "Icon animation name: a floating Halloween ghost.",
+    "max": 10
+  },
+  "icon-library.seasonal.gift": {
+    "text": "Gift",
+    "note": "Icon animation name: a wrapped present.",
+    "max": 10
+  },
+  "icon-library.seasonal.gravestone": {
+    "text": "Gravestone",
+    "note": "Icon animation name: a Halloween headstone.",
+    "max": 20
+  },
+  "icon-library.seasonal.ground": {
+    "text": "Ground",
+    "note": "Part name in an animated icon: the earth under a scene (the noun).",
+    "max": 10
+  },
+  "icon-library.seasonal.hand": {
+    "text": "Hand",
+    "note": "Part name in an animated icon: a human hand.",
+    "max": 10
+  },
+  "icon-library.seasonal.hand-with-heart": {
+    "text": "Hand with heart",
+    "note": "Icon animation name: a hand holding out a heart.",
+    "max": 25
+  },
+  "icon-library.seasonal.hat": {
+    "text": "Hat",
+    "note": "Part name in an animated icon: a hat.",
+    "max": 5
+  },
+  "icon-library.seasonal.heart": {
+    "text": "Heart",
+    "note": "Icon animation name: a heart shape.",
+    "max": 10
+  },
+  "icon-library.seasonal.hook-end": {
+    "text": "Hook end",
+    "note": "Part name in an animated icon: the curved tip of a candy cane.",
+    "max": 15
+  },
+  "icon-library.seasonal.jack-o-lantern": {
+    "text": "Jack-o'-lantern",
+    "note": "Icon animation name: a carved glowing pumpkin face.",
+    "max": 25
+  },
+  "icon-library.seasonal.jaw": {
+    "text": "Jaw",
+    "note": "Part name in an animated icon: the lower jaw of a skull.",
+    "max": 5
+  },
+  "icon-library.seasonal.jingle-bell": {
+    "text": "Jingle bell",
+    "note": "Icon animation name: a small round bell that rings.",
+    "max": 20
+  },
+  "icon-library.seasonal.left-bulb": {
+    "text": "Left bulb",
+    "note": "Part name in an animated icon: the fairy light bulb on the left.",
+    "max": 15
+  },
+  "icon-library.seasonal.left-eye": {
+    "text": "Left eye",
+    "note": "Part name in an animated icon: the eye on the left.",
+    "max": 15
+  },
+  "icon-library.seasonal.left-half": {
+    "text": "Left half",
+    "note": "Part name in an animated icon: the left half of a split shape.",
+    "max": 15
+  },
+  "icon-library.seasonal.left-leaf": {
+    "text": "Left leaf",
+    "note": "Part name in an animated icon: the leaf on the left.",
+    "max": 15
+  },
+  "icon-library.seasonal.left-wing": {
+    "text": "Left wing",
+    "note": "Part name in an animated icon: the wing on the left.",
+    "max": 15
+  },
+  "icon-library.seasonal.lid": {
+    "text": "Lid",
+    "note": "Part name in an animated icon: a lid that opens.",
+    "max": 10
+  },
+  "icon-library.seasonal.magic-staff": {
+    "text": "Magic staff",
+    "note": "Icon animation name: a wizard's staff casting sparks.",
+    "max": 20
+  },
+  "icon-library.seasonal.middle-bulb": {
+    "text": "Middle bulb",
+    "note": "Part name in an animated icon: the middle fairy light bulb.",
+    "max": 20
+  },
+  "icon-library.seasonal.nose-cone": {
+    "text": "Nose cone",
+    "note": "Part name in an animated icon: the pointed tip of a rocket.",
+    "max": 15
+  },
+  "icon-library.seasonal.orb": {
+    "text": "Orb",
+    "note": "Part name in an animated icon: a glowing ball.",
+    "max": 5
+  },
+  "icon-library.seasonal.ornament": {
+    "text": "Ornament",
+    "note": "Icon animation name: a hanging tree decoration.",
+    "max": 15
+  },
+  "icon-library.seasonal.owl": {
+    "text": "Owl",
+    "note": "Icon animation name: an owl blinking.",
+    "max": 5
+  },
+  "icon-library.seasonal.party-popper": {
+    "text": "Party popper",
+    "note": "Icon animation name: a party popper shooting confetti.",
+    "max": 20
+  },
+  "icon-library.seasonal.popper": {
+    "text": "Popper",
+    "note": "Part name in an animated icon: the cone of a party popper.",
+    "max": 10
+  },
+  "icon-library.seasonal.pot": {
+    "text": "Pot",
+    "note": "Part name in an animated icon: a cooking pot or flowerpot.",
+    "max": 5
+  },
+  "icon-library.seasonal.pumpkin": {
+    "text": "Pumpkin",
+    "note": "Icon animation name: a pumpkin.",
+    "max": 15
+  },
+  "icon-library.seasonal.right-bulb": {
+    "text": "Right bulb",
+    "note": "Part name in an animated icon: the fairy light bulb on the right.",
+    "max": 20
+  },
+  "icon-library.seasonal.right-eye": {
+    "text": "Right eye",
+    "note": "Part name in an animated icon: the eye on the right.",
+    "max": 15
+  },
+  "icon-library.seasonal.right-half": {
+    "text": "Right half",
+    "note": "Part name in an animated icon: the right half of a split shape.",
+    "max": 20
+  },
+  "icon-library.seasonal.right-leaf": {
+    "text": "Right leaf",
+    "note": "Part name in an animated icon: the leaf on the right.",
+    "max": 20
+  },
+  "icon-library.seasonal.right-wing": {
+    "text": "Right wing",
+    "note": "Part name in an animated icon: the wing on the right.",
+    "max": 20
+  },
+  "icon-library.seasonal.ring": {
+    "text": "Ring",
+    "note": "Part name in an animated icon: a round ring shape.",
+    "max": 10
+  },
+  "icon-library.seasonal.rocket": {
+    "text": "Rocket",
+    "note": "Icon animation name: a firework rocket flying up.",
+    "max": 10
+  },
+  "icon-library.seasonal.shooting-star": {
+    "text": "Shooting star",
+    "note": "Icon animation name: a star streaking across the sky.",
+    "max": 25
+  },
+  "icon-library.seasonal.skull": {
+    "text": "Skull",
+    "note": "Icon animation name: a Halloween skull.",
+    "max": 10
+  },
+  "icon-library.seasonal.small-heart": {
+    "text": "Small heart",
+    "note": "Part name in an animated icon: the smaller heart.",
+    "max": 20
+  },
+  "icon-library.seasonal.snowman": {
+    "text": "Snowman",
+    "note": "Icon animation name: a snowman.",
+    "max": 15
+  },
+  "icon-library.seasonal.sparkle-2": {
+    "text": "Sparkle 2",
+    "note": "Part name in an animated icon: second twinkling star, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.sparkle-3": {
+    "text": "Sparkle 3",
+    "note": "Part name in an animated icon: third twinkling star, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.sparkle-4": {
+    "text": "Sparkle 4",
+    "note": "Part name in an animated icon: fourth twinkling star, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.spider": {
+    "text": "Spider",
+    "note": "Icon animation name: a spider on a thread.",
+    "max": 10
+  },
+  "icon-library.seasonal.spoon": {
+    "text": "Spoon",
+    "note": "Part name in an animated icon: a spoon stirring the cauldron.",
+    "max": 10
+  },
+  "icon-library.seasonal.staff": {
+    "text": "Staff",
+    "note": "Part name in an animated icon: a long wooden stick (not employees).",
+    "max": 10
+  },
+  "icon-library.seasonal.staff-and-orb": {
+    "text": "Staff and orb",
+    "note": "Part name in an animated icon: a stick topped with a glowing ball.",
+    "max": 25
+  },
+  "icon-library.seasonal.star": {
+    "text": "Star",
+    "note": "Part name in an animated icon: a star shape.",
+    "max": 10
+  },
+  "icon-library.seasonal.stem": {
+    "text": "Stem",
+    "note": "Part name in an animated icon: the stalk of a flower or pumpkin.",
+    "max": 10
+  },
+  "icon-library.seasonal.stone": {
+    "text": "Stone",
+    "note": "Part name in an animated icon: a stone or gem.",
+    "max": 10
+  },
+  "icon-library.seasonal.streamer-1": {
+    "text": "Streamer 1",
+    "note": "Part name in an animated icon: first party streamer, numbered.",
+    "max": 20
+  },
+  "icon-library.seasonal.streamer-2": {
+    "text": "Streamer 2",
+    "note": "Part name in an animated icon: second party streamer, numbered.",
+    "max": 20
+  },
+  "icon-library.seasonal.streamer-3": {
+    "text": "Streamer 3",
+    "note": "Part name in an animated icon: third party streamer, numbered.",
+    "max": 20
+  },
+  "icon-library.seasonal.streamer-4": {
+    "text": "Streamer 4",
+    "note": "Part name in an animated icon: fourth party streamer, numbered.",
+    "max": 20
+  },
+  "icon-library.seasonal.string-lights": {
+    "text": "String lights",
+    "note": "Icon animation name: a twinkling string of fairy lights.",
+    "max": 25
+  },
+  "icon-library.seasonal.thread": {
+    "text": "Thread",
+    "note": "Part name in an animated icon: the line a spider hangs from.",
+    "max": 10
+  },
+  "icon-library.seasonal.top": {
+    "text": "Top",
+    "note": "Part name in an animated icon: the upper part (not a garment).",
+    "max": 5
+  },
+  "icon-library.seasonal.trail-1": {
+    "text": "Trail 1",
+    "note": "Part name in an animated icon: first streak behind a moving star, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.trail-2": {
+    "text": "Trail 2",
+    "note": "Part name in an animated icon: second streak behind a moving star, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.trail-3": {
+    "text": "Trail 3",
+    "note": "Part name in an animated icon: third streak behind a moving star, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.tree": {
+    "text": "Tree",
+    "note": "Icon animation name: a tree.",
+    "max": 10
+  },
+  "icon-library.seasonal.tulip": {
+    "text": "Tulip",
+    "note": "Icon animation name: a tulip flower opening.",
+    "max": 10
+  },
+  "icon-library.seasonal.twinkling-star": {
+    "text": "Twinkling star",
+    "note": "Icon animation name: a star that twinkles.",
+    "max": 25
+  },
+  "icon-library.seasonal.wire": {
+    "text": "Wire",
+    "note": "Part name in an animated icon: the cable joining fairy lights.",
+    "max": 10
+  },
+  "icon-library.seasonal.wizard-hat": {
+    "text": "Wizard hat",
+    "note": "Icon animation name: a pointed wizard's hat.",
+    "max": 20
+  },
+  "icon-library.seasonal.wrapper-1": {
+    "text": "Wrapper 1",
+    "note": "Part name in an animated icon: first wrapping layer of a cupcake, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.wrapper-2": {
+    "text": "Wrapper 2",
+    "note": "Part name in an animated icon: second wrapping layer of a cupcake, numbered.",
+    "max": 15
+  },
+  "icon-library.seasonal.wrapper-3": {
+    "text": "Wrapper 3",
+    "note": "Part name in an animated icon: third wrapping layer of a cupcake, numbered.",
+    "max": 15
+  },
+  "icon-library.style-hints.face-glow": {
+    "text": "Face glow",
+    "note": "Part name in an animated icon: the soft glow around a face.",
+    "max": 15
+  }
+}

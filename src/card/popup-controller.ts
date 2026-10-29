@@ -1,9 +1,10 @@
 import { html, nothing, TemplateResult, ReactiveController, ReactiveControllerHost } from 'lit';
 import type { HomeAssistant, PopupConfig } from '../types';
-import { isPopupEnabled, popupHash, urlWithHash } from '../utils/popup';
-import { SwipeTracker, autoCloseMs, hashMatches, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
+import { isPopupEnabled } from '../utils/popup';
+import { popupHash, urlWithHash } from '../utils/popup-hash';
+import { SwipeTracker, autoCloseMs, hashMatches, navigateToPopup, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
 import { popupCoordinator } from './popup-coordinator';
-import { EditorPlace, LocationChange, PopupHandle, navigateToPopup, popupHidden } from './popup-nav';
+import { EditorPlace, LocationChange, PopupHandle, popupHidden } from './popup-nav';
 import { t } from './i18n';
 
 export type PopupPhase = 'closed' | 'open' | 'closing';
@@ -342,7 +343,7 @@ export class PopupController implements ReactiveController, PopupHandle {
         ${sheet ? html`<div class="mc-popup-handle" aria-hidden="true"></div>` : nothing}
         ${title ? html`<h2 class="mc-popup-title" id=${titleId}>${title}</h2>` : html`<span class="mc-popup-title"></span>`}
         ${showClose
-          ? html`<button type="button" class="mc-popup-close" aria-label=${t('Close')} title=${t('Close')} @click=${this._onCloseClick}>
+          ? html`<button type="button" class="mc-popup-close" aria-label=${t('card.popup-controller.close')} title=${t('card.popup-controller.close')} @click=${this._onCloseClick}>
               <ha-icon icon="mdi:close"></ha-icon>
             </button>`
           : nothing}

@@ -1,4 +1,4 @@
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { lm } from '../../i18n/labels/mark';
 import type { AnimationConfig } from '../../types';
 import { onIcon, onLabel } from '../../anim-studio/entries';
@@ -10,19 +10,19 @@ import { getAnimationPreset, type AnimationChannel } from '../../utils/animation
 
 type Prop = 'rotate' | 'translate' | 'scale' | 'opacity' | 'filter' | 'box-shadow';
 
-const PROP_LABEL: Record<Prop, MessageId> = {
-  rotate: lm('rotation'),
-  translate: lm('position'),
-  scale: lm('scale'),
-  opacity: lm('opacity'),
-  filter: lm('filter'),
-  'box-shadow': lm('glow'),
+const PROP_LABEL: Record<Prop, MessageIndex> = {
+  rotate: lm('labels.animation-conflicts.rotation'),
+  translate: lm('labels.animation-conflicts.position'),
+  scale: lm('labels.animation-conflicts.scale'),
+  opacity: lm('labels.animation-conflicts.opacity'),
+  filter: lm('labels.animation-conflicts.filter'),
+  'box-shadow': lm('labels.animation-conflicts.glow'),
 };
 
 /** Which earlier animation an entry overrides, and which property both animate; the editor words it (labels namespace). */
 export interface ConflictNote {
-  name: MessageId;
-  what: MessageId;
+  name: MessageIndex;
+  what: MessageIndex;
 }
 
 /** CSS properties an entry animates on its element: a glow is box-shadow on a wrapper, filter on an icon. */

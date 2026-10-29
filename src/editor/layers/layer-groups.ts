@@ -29,32 +29,32 @@ import { layerControlCss } from './tokens';
  */
 
 const PLACEMENT_ITEMS: ReadonlyArray<{ value: Placement; label: ReturnType<typeof m>; icon: string }> = [
-  { value: 'flow', label: m('Normal'), icon: 'mdi:view-sequential-outline' },
-  { value: 'background', label: m('Behind others'), icon: 'mdi:arrange-send-to-back' },
-  { value: 'overlay', label: m('On top'), icon: 'mdi:arrange-bring-to-front' },
+  { value: 'flow', label: m('layer-editor.layer-groups.normal'), icon: 'mdi:view-sequential-outline' },
+  { value: 'background', label: m('layer-editor.layer-groups.behind-others'), icon: 'mdi:arrange-send-to-back' },
+  { value: 'overlay', label: m('layer-editor.layer-groups.on-top'), icon: 'mdi:arrange-bring-to-front' },
 ];
 
 const SCRIM_STYLE_ITEMS: ReadonlyArray<{ value: ScrimStyle; label: ReturnType<typeof m>; swatch: string }> = [
-  { value: 'dim', label: m('Even'), swatch: 'linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6))' },
-  { value: 'bottom', label: m('From bottom'), swatch: 'linear-gradient(to top, rgba(0,0,0,.7) 35%, transparent)' },
-  { value: 'top', label: m('From top'), swatch: 'linear-gradient(to bottom, rgba(0,0,0,.7) 35%, transparent)' },
-  { value: 'left', label: m('From left'), swatch: 'linear-gradient(to right, rgba(0,0,0,.7) 35%, transparent)' },
-  { value: 'right', label: m('From right'), swatch: 'linear-gradient(to left, rgba(0,0,0,.7) 35%, transparent)' },
+  { value: 'dim', label: m('layer-editor.layer-groups.even'), swatch: 'linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6))' },
+  { value: 'bottom', label: m('layer-editor.layer-groups.from-bottom'), swatch: 'linear-gradient(to top, rgba(0,0,0,.7) 35%, transparent)' },
+  { value: 'top', label: m('layer-editor.layer-groups.from-top'), swatch: 'linear-gradient(to bottom, rgba(0,0,0,.7) 35%, transparent)' },
+  { value: 'left', label: m('layer-editor.layer-groups.from-left'), swatch: 'linear-gradient(to right, rgba(0,0,0,.7) 35%, transparent)' },
+  { value: 'right', label: m('layer-editor.layer-groups.from-right'), swatch: 'linear-gradient(to left, rgba(0,0,0,.7) 35%, transparent)' },
 ];
 
 const SCRIM_COLOURS: ReadonlyArray<{ id: 'black' | 'white' | 'card' | 'custom'; label: ReturnType<typeof m> }> = [
-  { id: 'black', label: m('Black') },
-  { id: 'white', label: m('White') },
-  { id: 'card', label: m('Card colour') },
-  { id: 'custom', label: m('Custom') },
+  { id: 'black', label: m('layer-editor.layer-groups.black') },
+  { id: 'white', label: m('layer-editor.layer-groups.white') },
+  { id: 'card', label: m('layer-editor.layer-groups.card-colour') },
+  { id: 'custom', label: m('layer-editor.layer-groups.custom') },
 ];
 
-const SCRIM_PRESET_LABELS = { light: m('Light'), medium: m('Medium'), strong: m('Strong'), 'very-strong': m('Very strong') } as const;
+const SCRIM_PRESET_LABELS = { light: m('layer-editor.layer-groups.light'), medium: m('layer-editor.layer-groups.medium'), strong: m('layer-editor.layer-groups.strong'), 'very-strong': m('layer-editor.layer-groups.very-strong') } as const;
 
 const FILLS: ReadonlyArray<{ value: LayerFill; label: ReturnType<typeof m> }> = [
-  { value: 'container', label: m('Its container') },
-  { value: 'row', label: m('Its row') },
-  { value: 'card', label: m('The whole card') },
+  { value: 'container', label: m('layer-editor.layer-groups.its-container') },
+  { value: 'row', label: m('layer-editor.layer-groups.its-row') },
+  { value: 'card', label: m('layer-editor.layer-groups.the-whole-card') },
 ];
 
 let uid = 0;
@@ -113,7 +113,7 @@ export class McLayerGroups extends LitElement {
   }
 
   private _nm(): string {
-    return this.ctx?.name || t('this module');
+    return this.ctx?.name || t('layer-editor.layer-groups.this-module');
   }
 
   private _switch(id: string, label: string, checked: boolean, on: (v: boolean) => void, help?: string): TemplateResult {
@@ -131,9 +131,9 @@ export class McLayerGroups extends LitElement {
   }
 
   private _placementHelp(p: Placement): string {
-    if (p === 'background') return t("Fills the whole container behind the other modules and takes no space. To put a picture behind the whole card, use Card backdrop on the card's Design tab.");
-    if (p === 'overlay') return t('Floats over the container at a fixed spot and takes no space.');
-    return t('Takes its normal place in the column.');
+    if (p === 'background') return t("layer-editor.layer-groups.fills-the-whole-container-behind-the");
+    if (p === 'overlay') return t('layer-editor.layer-groups.floats-over-the-container-at-a-fixed');
+    return t('layer-editor.layer-groups.takes-its-normal-place-in-the-column');
   }
 
   private _offsetField(axis: OffsetAxis, anchor: LayerAnchor): TemplateResult {
@@ -143,7 +143,7 @@ export class McLayerGroups extends LitElement {
     const value = this._draft[axis] ?? (axis === 'x' ? layer.offset_x : layer.offset_y) ?? '';
     const err = offsetError(value, anchor, axis);
     const id = `${this._id}-off-${axis}`;
-    const label = side === 'left' ? t('From the left') : side === 'right' ? t('From the right') : side === 'top' ? t('From the top') : side === 'bottom' ? t('From the bottom') : t('From the centre');
+    const label = side === 'left' ? t('layer-editor.layer-groups.from-the-left') : side === 'right' ? t('layer-editor.layer-groups.from-the-right') : side === 'top' ? t('layer-editor.layer-groups.from-the-top') : side === 'bottom' ? t('layer-editor.layer-groups.from-the-bottom') : t('layer-editor.layer-groups.from-the-centre');
     const commit = (raw: string): void => {
       let v = raw.trim();
       if (/^-?\d{1,4}(\.\d{1,2})?$/.test(v)) v = `${v}px`;
@@ -169,7 +169,7 @@ export class McLayerGroups extends LitElement {
         @change=${(e: Event) => commit((e.target as HTMLInputElement).value)}
       />
       ${err
-        ? html`<p class="err" id=${`${id}-e`} role="alert">${err === 'negative' ? t('Enter 0 or more: the module stays inside the card.') : t('Enter a distance in px or %.')}</p>`
+        ? html`<p class="err" id=${`${id}-e`} role="alert">${err === 'negative' ? t('layer-editor.layer-groups.enter-0-or-more-the-module-stays-inside') : t('layer-editor.layer-groups.enter-a-distance-in-px-or')}</p>`
         : nothing}
     </div>`;
   }
@@ -181,7 +181,7 @@ export class McLayerGroups extends LitElement {
       this._showUndo(prev, t(look.name));
     };
     return html`<div class="looks">
-      <span class="lbl" id=${`${this._id}-looks`}>${t('Looks')}</span>
+      <span class="lbl" id=${`${this._id}-looks`}>${t('layer-editor.layer-groups.looks')}</span>
       <div class="tiles2" role="group" aria-labelledby=${`${this._id}-looks`}>
         ${looksFor(this.mod).map(
           (look) => html`<button type="button" class="lyr-tile" data-look=${look.id} @click=${() => apply(look)}>
@@ -190,8 +190,8 @@ export class McLayerGroups extends LitElement {
         )}
       </div>
       ${this._undo
-        ? html`<p class="undo" role="status"><span>${t('Applied {name}.', { name: this._undo.name })}</span>
-            <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo-look" @click=${() => this._runUndo()}>${t('Undo')}</button></p>`
+        ? html`<p class="undo" role="status"><span>${t('layer-editor.layer-groups.applied-name', { name: this._undo.name })}</span>
+            <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo-look" @click=${() => this._runUndo()}>${t('layer-editor.layer-groups.undo')}</button></p>`
         : html`<p class="undo" role="status"></p>`}
     </div>`;
   }
@@ -221,8 +221,8 @@ export class McLayerGroups extends LitElement {
     const ctx = this.ctx;
     const camera = mod.type === 'camera' && p === 'background';
     return html`<section class="group" aria-labelledby=${`${this._id}-ph`}>
-      <div class="group-head"><h3 id=${`${this._id}-ph`}>${t('Placement')}</h3>${auto ? html`<span class="chip is-count">${t('Automatic')}</span>` : nothing}</div>
-      <div class="lseg" role="group" aria-label=${t('Placement')}>
+      <div class="group-head"><h3 id=${`${this._id}-ph`}>${t('layer-editor.layer-groups.placement')}</h3>${auto ? html`<span class="chip is-count">${t('layer-editor.layer-groups.automatic')}</span>` : nothing}</div>
+      <div class="lseg" role="group" aria-label=${t('layer-editor.layer-groups.placement')}>
         ${PLACEMENT_ITEMS.map((it) => {
           const on = !auto && p === it.value;
           return html`<button type="button" data-v=${it.value} aria-pressed=${on ? 'true' : 'false'} @click=${() => this._setPlacement(it.value)}>
@@ -231,18 +231,18 @@ export class McLayerGroups extends LitElement {
         })}
       </div>
       ${auto
-        ? html`<p class="help">${t('This video background sits behind its siblings on its own, as before. Choose an option to set it.')}</p>`
+        ? html`<p class="help">${t('layer-editor.layer-groups.this-video-background-sits-behind-its')}</p>`
         : html`<p class="help">${this._placementHelp(p)}</p>`}
-      ${p === 'background' ? html`<p class="help">${t("Can't reach it? Pick it in the structure list.")}</p>` : nothing}
+      ${p === 'background' ? html`<p class="help">${t("layer-editor.layer-groups.can-t-reach-it-pick-it-in-the-structure")}</p>` : nothing}
       ${camera
-        ? html`<p class="help" data-hint="camera">${t('A live camera behind other modules keeps video running all day, which is heavy for a wall tablet. For a quiet backdrop, use a still picture in Card backdrop.')}</p>`
+        ? html`<p class="help" data-hint="camera">${t('layer-editor.layer-groups.a-live-camera-behind-other-modules-keeps')}</p>`
         : nothing}
       ${p === 'background' && ctx && ctx.siblings === 0
-        ? html`<p class="help" data-hint="fallback">${t('Nothing else is in this container, so this module shows in the normal place until you add one.')}</p>`
+        ? html`<p class="help" data-hint="fallback">${t('layer-editor.layer-groups.nothing-else-is-in-this-container-so')}</p>`
         : nothing}
       ${p === 'background' && ctx?.canHoist
         ? html`<div>
-            <label for=${`${this._id}-fill`}>${t('Fills')}</label>
+            <label for=${`${this._id}-fill`}>${t('layer-editor.layer-groups.fills')}</label>
             <select class="lyr-input input" id=${`${this._id}-fill`} @change=${(e: Event) => this._commit(patchLayer(mod, { fill: this._fillValue((e.target as HTMLSelectElement).value) }))}>
               ${FILLS.map((f) => html`<option value=${f.value} ?selected=${(layer.fill ?? 'container') === f.value}>${t(f.label)}</option>`)}
             </select>
@@ -251,8 +251,8 @@ export class McLayerGroups extends LitElement {
       ${p === 'overlay'
         ? html`<div class="row2">
               <div class="f">
-                <span class="lbl" id=${`${this._id}-pos`}>${t('Position')}</span>
-                <mc-anchor-grid .value=${anchor} .label=${t('Position')} @change=${(e: CustomEvent) => this._commit(patchLayer(mod, { anchor: e.detail.value as LayerAnchor }))}></mc-anchor-grid>
+                <span class="lbl" id=${`${this._id}-pos`}>${t('layer-editor.layer-groups.position')}</span>
+                <mc-anchor-grid .value=${anchor} .label=${t('layer-editor.layer-groups.position')} @change=${(e: CustomEvent) => this._commit(patchLayer(mod, { anchor: e.detail.value as LayerAnchor }))}></mc-anchor-grid>
               </div>
               <div class="f fields">
                 ${this._offsetField('x', anchor)}
@@ -260,9 +260,9 @@ export class McLayerGroups extends LitElement {
               </div>
             </div>
             <p class="help">${axisKind(anchor, 'x') === 'edge' || axisKind(anchor, 'y') === 'edge'
-              ? t('Distance from the {anchor} position. Enter 0 or more: the module stays inside the card.', { anchor: anchorName(anchor).toLowerCase() })
-              : t('Distance from the centre. Negative values move it left or up.')}</p>
-            <p class="help">${t('Keyboard order: top positions come first, bottom positions after the normal modules. For touch, aim for 44 px or more.')}</p>`
+              ? t('layer-editor.layer-groups.distance-from-the-anchor-position-enter', { anchor: anchorName(anchor).toLowerCase() })
+              : t('layer-editor.layer-groups.distance-from-the-centre-negative-values')}</p>
+            <p class="help">${t('layer-editor.layer-groups.keyboard-order-top-positions-come-first')}</p>`
         : nothing}
       ${this._renderLooks()}
     </section>`;
@@ -286,20 +286,20 @@ export class McLayerGroups extends LitElement {
     const last = n === rank.count;
     const name = this._nm();
     const buttons: ReadonlyArray<{ to: MoveTo; icon: string; text: string; aria: string; off: boolean }> = [
-      { to: 'front', icon: '⤒', text: t('To front'), aria: t('Move {name} to the front', { name }), off: first },
-      { to: 'forward', icon: '↑', text: t('Forward'), aria: t('Move {name} forward', { name }), off: first },
-      { to: 'backward', icon: '↓', text: t('Backward'), aria: t('Move {name} backward', { name }), off: last },
-      { to: 'back', icon: '⤓', text: t('To back'), aria: t('Move {name} to the back', { name }), off: last },
+      { to: 'front', icon: '⤒', text: t('layer-editor.layer-groups.to-front'), aria: t('layer-editor.layer-groups.move-name-to-the-front', { name }), off: first },
+      { to: 'forward', icon: '↑', text: t('layer-editor.layer-groups.forward'), aria: t('layer-editor.layer-groups.move-name-forward', { name }), off: first },
+      { to: 'backward', icon: '↓', text: t('layer-editor.layer-groups.backward'), aria: t('layer-editor.layer-groups.move-name-backward', { name }), off: last },
+      { to: 'back', icon: '⤓', text: t('layer-editor.layer-groups.to-back'), aria: t('layer-editor.layer-groups.move-name-to-the-back', { name }), off: last },
     ];
     const shown = Math.min(rank.count, 8);
     return html`<div class="order-wrap">
-      <p class="readout" id=${`${this._id}-ord`} aria-live="polite">${t('{n, select, 1 {1st from the front, of {count}} 2 {2nd from the front, of {count}} 3 {3rd from the front, of {count}} other {{n}th from the front, of {count}}}', { n, count: rank.count })}</p>
+      <p class="readout" id=${`${this._id}-ord`} aria-live="polite">${t('layer-editor.layer-groups.n', { n, count: rank.count })}</p>
       <div class="stack" aria-hidden="true">
-        <span>${t('Front')}</span>
+        <span>${t('layer-editor.layer-groups.front')}</span>
         ${Array.from({ length: shown }, (_, i) => html`<span class=${i === Math.min(n, shown) - 1 ? 'bar me' : 'bar'}>${i === Math.min(n, shown) - 1 ? '✓' : ''}</span>`)}
-        <span>${t('Back')}</span>
+        <span>${t('layer-editor.layer-groups.back')}</span>
       </div>
-      <div class="order" role="group" aria-label=${t('Order')} aria-describedby=${`${this._id}-ord`}>
+      <div class="order" role="group" aria-label=${t('layer-editor.layer-groups.order')} aria-describedby=${`${this._id}-ord`}>
         ${buttons.map(
           (b) => html`<button
             type="button"
@@ -323,16 +323,16 @@ export class McLayerGroups extends LitElement {
     const action = hasModuleAction(mod);
     const help = on
       ? p === 'background'
-        ? t("Clicks reach the modules in front. This module's own action is off while this is on.")
-        : t('Clicks go to whatever is under this module.')
+        ? t("layer-editor.layer-groups.clicks-reach-the-modules-in-front-this")
+        : t('layer-editor.layer-groups.clicks-go-to-whatever-is-under-this')
       : action
-        ? t("This module keeps its own action.")
-        : t('This layer has no action, so it only blocks taps.');
-    return html`${this._switch(`${this._id}-ct`, t('Clicks and taps go through'), on, (v) => {
+        ? t("layer-editor.layer-groups.this-module-keeps-its-own-action")
+        : t('layer-editor.layer-groups.this-layer-has-no-action-so-it-only');
+    return html`${this._switch(`${this._id}-ct`, t('layer-editor.layer-groups.clicks-and-taps-go-through'), on, (v) => {
         const def = p === 'overlay' ? !action : true;
         this._commit(patchLayer(mod, { click_through: v === def ? undefined : v }));
       }, help)}
-      ${on && action ? html`<p class="warnrow" data-warn="action">${t('Tapping {name} will do nothing while this is on.', { name: this._nm() })}</p>` : nothing}`;
+      ${on && action ? html`<p class="warnrow" data-warn="action">${t('layer-editor.layer-groups.tapping-name-will-do-nothing-while-this', { name: this._nm() })}</p>` : nothing}`;
   }
 
   private _effectsCount(): number {
@@ -348,13 +348,13 @@ export class McLayerGroups extends LitElement {
     const blur = Math.max(0, Math.min(BLUR_MAX, l.blur ?? 0));
     return html`<div>
       <button type="button" class="disc" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`${this._id}-fx`} @click=${() => (this._effects = !open)}>
-        <span>${t('Effects and darkening')}</span>
-        ${count ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+        <span>${t('layer-editor.layer-groups.effects-and-darkening')}</span>
+        ${count ? html`<span class="chip is-count">${t('layer-editor.layer-groups.n-set', { n: count })}</span>` : nothing}
         ${chevron()}
       </button>
       <div class="effects" id=${`${this._id}-fx`} ?hidden=${!open}>
-        ${this._slider(`${this._id}-blur`, t('Blur'), blur, 0, BLUR_MAX, 'px', (v) => this._commit(patchLayer(mod, { blur: v || undefined })))}
-        ${blur > BLUR_LIGHT_MAX ? html`<p class="warnrow" data-warn="blur">${t('Strong blur can make older tablets slow.')}</p>` : nothing}
+        ${this._slider(`${this._id}-blur`, t('layer-editor.layer-groups.blur'), blur, 0, BLUR_MAX, 'px', (v) => this._commit(patchLayer(mod, { blur: v || undefined })))}
+        ${blur > BLUR_LIGHT_MAX ? html`<p class="warnrow" data-warn="blur">${t('layer-editor.layer-groups.strong-blur-can-make-older-tablets-slow')}</p>` : nothing}
         ${blendTiles(`${this._id}-bl`, l.blend, (v) => this._commit(patchLayer(mod, { blend: v })))}
         ${this._renderScrim()}
       </div>
@@ -369,11 +369,11 @@ export class McLayerGroups extends LitElement {
     const style = s?.style ?? SCRIM_DEFAULT.style;
     const colour = scrimColourId(s?.color);
     return html`<div class="scrim">
-      ${this._switch(`${this._id}-sc`, t('Darken behind text'), on, (v) => this._commit(patchScrim(mod, v ? 'on' : 'off')), t('Adds a dark fade over this picture so text stays readable. Also called a scrim.'))}
+      ${this._switch(`${this._id}-sc`, t('layer-editor.layer-groups.darken-behind-text'), on, (v) => this._commit(patchScrim(mod, v ? 'on' : 'off')), t('layer-editor.layer-groups.adds-a-dark-fade-over-this-picture-so'))}
       ${on
         ? html`<div class="effects">
             <div>
-              <span class="lbl" id=${`${this._id}-ss`}>${t('Style')}</span>
+              <span class="lbl" id=${`${this._id}-ss`}>${t('layer-editor.layer-groups.style')}</span>
               <div class="tiles2" role="group" aria-labelledby=${`${this._id}-ss`}>
                 ${SCRIM_STYLE_ITEMS.map(
                   (it) => html`<button type="button" class="lyr-tile" data-scrim-style=${it.value} aria-pressed=${style === it.value ? 'true' : 'false'} @click=${() => this._commit(patchScrim(mod, { style: it.value }))}>
@@ -383,28 +383,28 @@ export class McLayerGroups extends LitElement {
               </div>
             </div>
             <div>
-              <span class="lbl" id=${`${this._id}-sk`}>${t('Colour')}</span>
+              <span class="lbl" id=${`${this._id}-sk`}>${t('layer-editor.layer-groups.colour')}</span>
               <div class="lseg" role="group" aria-labelledby=${`${this._id}-sk`}>
                 ${SCRIM_COLOURS.map(
                   (c) => html`<button type="button" data-scrim-colour=${c.id} aria-pressed=${colour === c.id ? 'true' : 'false'} @click=${() => this._setScrimColour(c.id)}>${colour === c.id ? html`<span class="tick" aria-hidden="true">✓</span>` : nothing}${t(c.label)}</button>`,
                 )}
               </div>
               ${colour === 'custom'
-                ? html`<label for=${`${this._id}-cc`}>${t('Custom colour')}</label>
+                ? html`<label for=${`${this._id}-cc`}>${t('layer-editor.layer-groups.custom-colour')}</label>
                     <input class="lyr-input input" id=${`${this._id}-cc`} type="text" .value=${s?.color ?? ''} placeholder="#003366" @change=${(e: Event) => this._commit(patchScrim(mod, { color: (e.target as HTMLInputElement).value.trim() || undefined }))} />
-                    <p class="help">${t('Check the text yourself.')}</p>`
+                    <p class="help">${t('layer-editor.layer-groups.check-the-text-yourself')}</p>`
                 : nothing}
             </div>
             <div>
-              <span class="lbl" id=${`${this._id}-st`}>${t('Strength')}</span>
+              <span class="lbl" id=${`${this._id}-st`}>${t('layer-editor.layer-groups.strength')}</span>
               <div class="lseg" role="group" aria-labelledby=${`${this._id}-st`}>
                 ${SCRIM_PRESETS.map(
                   (p) => html`<button type="button" data-strength=${p.strength} aria-pressed=${strength === p.strength ? 'true' : 'false'} @click=${() => this._commit(patchScrim(mod, { strength: p.strength }))}>${strength === p.strength ? html`<span class="tick" aria-hidden="true">✓</span>` : nothing}${t(SCRIM_PRESET_LABELS[p.id])} ${p.strength}%</button>`,
                 )}
               </div>
-              ${this._slider(`${this._id}-sv`, t('Strength'), strength, 0, 90, '%', (v) => this._commit(patchScrim(mod, { strength: v })))}
-              <p class="help" data-scrim-note>${scrimLabel(strength) === 'readable' ? t('Text is readable.') : scrimLabel(strength) === 'large' ? t('Large text only (3:1).') : t('Tint only. Not for text.')}</p>
-              <p class="help">${t('With a black darkening of 60 % or more, white text stays readable on any picture. This holds for the fully dark part. With a fade, text must sit in the strongest third from that edge.')}</p>
+              ${this._slider(`${this._id}-sv`, t('layer-editor.layer-groups.strength'), strength, 0, 90, '%', (v) => this._commit(patchScrim(mod, { strength: v })))}
+              <p class="help" data-scrim-note>${scrimLabel(strength) === 'readable' ? t('layer-editor.layer-groups.text-is-readable') : scrimLabel(strength) === 'large' ? t('layer-editor.layer-groups.large-text-only-3-1') : t('layer-editor.layer-groups.tint-only-not-for-text')}</p>
+              <p class="help">${t('layer-editor.layer-groups.with-a-black-darkening-of-60-or-more')}</p>
             </div>
           </div>`
         : nothing}
@@ -423,13 +423,13 @@ export class McLayerGroups extends LitElement {
   private _renderCost(): TemplateResult {
     const cost = costFromModule(this.mod, this.ctx?.rank?.count ?? 1);
     const reason = (r: CostReason): string =>
-      r.code === 'blur' ? t('blur {px} px', { px: r.px }) : r.code === 'blend' ? t('blend') : r.code === 'panzoom' ? t('pan and zoom') : t('live camera');
-    const word = cost.level === 'heavy' ? t('heavy') : cost.level === 'medium' ? t('medium') : t('light');
+      r.code === 'blur' ? t('layer-editor.layer-groups.blur-px-px', { px: r.px }) : r.code === 'blend' ? t('layer-editor.layer-groups.blend') : r.code === 'panzoom' ? t('layer-editor.layer-groups.pan-and-zoom') : t('layer-editor.layer-groups.live-camera');
+    const word = cost.level === 'heavy' ? t('layer-editor.layer-groups.heavy') : cost.level === 'medium' ? t('layer-editor.layer-groups.medium-2') : t('layer-editor.layer-groups.light-2');
     return html`<div class="costbox">
-      <p class="cost" data-level=${cost.level} data-cost>${t('Cost on older tablets:')} <b>${word}</b>${cost.reasons.length ? ` (${cost.reasons.map(reason).join(', ')})` : ''}.</p>
+      <p class="cost" data-level=${cost.level} data-cost>${t('layer-editor.layer-groups.cost-on-older-tablets')} <b>${word}</b>${cost.reasons.length ? ` (${cost.reasons.map(reason).join(', ')})` : ''}.</p>
       ${cost.level !== 'light'
-        ? html`<div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="low-power" @click=${() => this.dispatchEvent(new CustomEvent('mc-layers-low-power', { bubbles: true, composed: true }))}>${t('Turn on Low-power mode')}</button></div>
-            <p class="help">${t('Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.')}</p>`
+        ? html`<div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="low-power" @click=${() => this.dispatchEvent(new CustomEvent('mc-layers-low-power', { bubbles: true, composed: true }))}>${t('layer-editor.layer-groups.turn-on-low-power-mode')}</button></div>
+            <p class="help">${t('layer-editor.layer-groups.low-power-mode-drops-blur-blend-and-pan')}</p>`
         : nothing}
     </div>`;
   }
@@ -447,14 +447,14 @@ export class McLayerGroups extends LitElement {
     const small = hasModuleAction(mod) && !effectiveClickThrough(mod) && isSmallTarget(own);
     return html`${covered.map(
       (c) => html`<div class="check" data-check="overlap">
-        <p class="warnrow">${t('Covers {name} at this width. Taps on the overlap go to this module.', { name: `“${c.name}”` })}</p>
+        <p class="warnrow">${t('layer-editor.layer-groups.covers-name-at-this-width-taps-on-the', { name: `“${c.name}”` })}</p>
         <div class="acts">
-          <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="pass" @click=${() => this._commit(patchLayer(mod, { click_through: true }))}>${t('Let clicks and taps go through')}</button>
-          <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="reposition" @click=${() => this.renderRoot.querySelector<HTMLElement>('mc-anchor-grid')?.shadowRoot?.querySelector<HTMLElement>('[tabindex="0"]')?.focus()}>${t('Change position')}</button>
+          <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="pass" @click=${() => this._commit(patchLayer(mod, { click_through: true }))}>${t('layer-editor.layer-groups.let-clicks-and-taps-go-through')}</button>
+          <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="reposition" @click=${() => this.renderRoot.querySelector<HTMLElement>('mc-anchor-grid')?.shadowRoot?.querySelector<HTMLElement>('[tabindex="0"]')?.focus()}>${t('layer-editor.layer-groups.change-position')}</button>
         </div>
       </div>`,
     )}
-    ${small ? html`<p class="warnrow" data-check="small">${t('Smaller than a fingertip (44 px). Add padding in Design.')}</p>` : nothing}`;
+    ${small ? html`<p class="warnrow" data-check="small">${t('layer-editor.layer-groups.smaller-than-a-fingertip-44-px-add')}</p>` : nothing}`;
   }
 
   private _renderLayer(): TemplateResult {
@@ -462,12 +462,12 @@ export class McLayerGroups extends LitElement {
     const layer = layerOf(mod);
     const bg = placementOf(mod) === 'background';
     return html`<section class="group" aria-labelledby=${`${this._id}-lh`}>
-      <div class="group-head"><h3 id=${`${this._id}-lh`}>${t('Layer')}</h3></div>
+      <div class="group-head"><h3 id=${`${this._id}-lh`}>${t('layer-editor.layer-groups.layer')}</h3></div>
       ${this._renderOrder()}
-      ${this._slider(`${this._id}-op`, t('Opacity'), Math.max(0, Math.min(100, layer.opacity ?? 100)), 0, 100, '%', (v) => this._commit(patchLayer(mod, { opacity: v === 100 ? undefined : v })))}
+      ${this._slider(`${this._id}-op`, t('layer-editor.layer-groups.opacity'), Math.max(0, Math.min(100, layer.opacity ?? 100)), 0, 100, '%', (v) => this._commit(patchLayer(mod, { opacity: v === 100 ? undefined : v })))}
       ${this._renderClickThrough()}
       ${bg && !layer.scrim
-        ? html`<div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="darken" @click=${() => this._commit(patchScrim(mod, 'on'))}>${t('Text hard to read? Darken behind text')}</button></div>`
+        ? html`<div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="darken" @click=${() => this._commit(patchScrim(mod, 'on'))}>${t('layer-editor.layer-groups.text-hard-to-read-darken-behind-text')}</button></div>`
         : nothing}
       ${this._renderEffects()}
       ${this._renderCost()}
@@ -482,13 +482,13 @@ export class McLayerGroups extends LitElement {
     if (!text) return nothing;
     return html`<div>
       <button type="button" class="disc" aria-expanded=${this._yaml ? 'true' : 'false'} aria-controls=${`${this._id}-y`} @click=${() => (this._yaml = !this._yaml)}>
-        <span>${t('Show YAML')}</span>${chevron()}
+        <span>${t('layer-editor.layer-groups.show-yaml')}</span>${chevron()}
       </button>
       <div id=${`${this._id}-y`} ?hidden=${!this._yaml}>
         <pre class="yaml" data-yaml>${text}</pre>
         <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="copy-yaml" @click=${async () => {
           this._copied = await copyText(text, this.renderRoot);
-        }}>${this._copied ? t('Copied') : t('Copy YAML')}</button></div>
+        }}>${this._copied ? t('layer-editor.layer-groups.copied') : t('layer-editor.layer-groups.copy-yaml')}</button></div>
       </div>
     </div>`;
   }

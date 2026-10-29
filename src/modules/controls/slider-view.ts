@@ -69,7 +69,7 @@ export class SliderView implements ModuleView {
       : stateObj
         ? formatEntityValue(hass, stateObj).text
         : '';
-    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Slider');
+    const name = stateObj ? entityDisplayName(hass, stateObj) : t('card.slider-view.slider');
 
     const track = renderTrack({
       value,

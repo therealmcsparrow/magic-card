@@ -23,11 +23,11 @@ export const SAFE_YAML_SCHEMA = jsYaml.CORE_SCHEMA;
 
 export type SafeParse = { ok: true; value: unknown } | { ok: false; refusal: TransferRefusal; message: string };
 
-const TOO_LARGE = (): string => t('This file is larger than 1 MB, so it was not read.');
-const TOO_LARGE_IMAGES = (): string => t('This file is larger than 8 MB, so it was not read.');
-const JSON_ONLY = (): string => t('Image files are JSON, not YAML. Export them as JSON.');
-const LIMITS = (): string => t('This file is too complex to read safely (too many nested or repeated values).');
-const NOT_PARSEABLE = (): string => t('Not valid YAML or JSON.');
+const TOO_LARGE = (): string => t('transfer.safe-parse.this-file-is-larger-than-1-mb-so-it-was');
+const TOO_LARGE_IMAGES = (): string => t('transfer.safe-parse.this-file-is-larger-than-8-mb-so-it-was');
+const JSON_ONLY = (): string => t('transfer.safe-parse.image-files-are-json-not-yaml-export');
+const LIMITS = (): string => t('transfer.safe-parse.this-file-is-too-complex-to-read-safely');
+const NOT_PARSEABLE = (): string => t('transfer.safe-parse.not-valid-yaml-or-json');
 const DROPPED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 /**
@@ -66,7 +66,7 @@ function boundedCopy(root: unknown, maxNodes = MAX_IMPORT_NODES, maxChars = MAX_
     if (depth > MAX_IMPORT_DEPTH) throw new Limit('limits', LIMITS());
     if (v === null || typeof v === 'boolean') return v;
     if (typeof v === 'number') {
-      if (!Number.isFinite(v)) throw new Limit('not_parseable', t('Numbers must be finite (no .inf or .nan).'));
+      if (!Number.isFinite(v)) throw new Limit('not_parseable', t('transfer.safe-parse.numbers-must-be-finite-no-inf-or-nan'));
       return v;
     }
     if (typeof v === 'string') {
@@ -81,7 +81,7 @@ function boundedCopy(root: unknown, maxNodes = MAX_IMPORT_NODES, maxChars = MAX_
     if (Array.isArray(v)) return v.map((x) => visit(x, depth + 1));
     const out: Record<string, unknown> = {};
     for (const k of Object.keys(v)) {
-      if (k === '<<') throw new Limit('not_parseable', t('Merge keys (<<) are not allowed in preset files.'));
+      if (k === '<<') throw new Limit('not_parseable', t('transfer.safe-parse.merge-keys-are-not-allowed-in-preset'));
       chars += k.length;
       if (chars > maxChars) throw new Limit('limits', LIMITS());
       if (DROPPED_KEYS.has(k)) continue;
@@ -100,7 +100,7 @@ export function safeParse(text: string): SafeParse {
   // over 1 MB only an image envelope written as JSON is read; the YAML parser never sees such a text
   const big = text.length > MAX_IMPORT_CHARS;
   if (big && trimmed[0] !== '{') return { ok: false, refusal: 'too_large', message: TOO_LARGE() };
-  if (!trimmed) return { ok: false, refusal: 'not_parseable', message: t('Paste or choose a file first.') };
+  if (!trimmed) return { ok: false, refusal: 'not_parseable', message: t('transfer.safe-parse.paste-or-choose-a-file-first') };
 
   let parsed: unknown;
   let have = false;

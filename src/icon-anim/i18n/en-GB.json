@@ -1,0 +1,157 @@
+{
+  "icon-animator.animated-icon-grid.all-domains": {
+    "text": "All domains",
+    "note": "Filter option that shows animations for every Home Assistant domain (the entity type, such as light or switch).",
+    "max": 20
+  },
+  "icon-animator.animated-icon-grid.domain": {
+    "text": "Domain",
+    "note": "Label of the filter for the Home Assistant domain, the entity type such as light, switch or climate. Not an internet domain.",
+    "max": 10
+  },
+  "icon-animator.animated-icon-grid.glow": {
+    "text": "Glow",
+    "note": "Name of an animation style: the animation with lit parts coloured and a soft halo. Pairs with Living and Quiet. A noun.",
+    "max": 10
+  },
+  "icon-animator.animated-icon-grid.glow-the-full-animation-with-its-lit": {
+    "text": "Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards.",
+    "note": "Tooltip that describes the Glow style. Starts with the style name, which should match the translation of Glow.",
+    "max": 195
+  },
+  "icon-animator.animated-icon-grid.icon-library": {
+    "text": "Icon library",
+    "note": "Name of the collection of ready-made animated icons that ships with the card. Used as a heading or tab.",
+    "max": 20
+  },
+  "icon-animator.animated-icon-grid.living": {
+    "text": "Living",
+    "note": "Name of an animation style: the full animation as drawn. Pairs with Glow and Quiet. An adjective, as in a living icon.",
+    "max": 10
+  },
+  "icon-animator.animated-icon-grid.living-the-full-animation-as-drawn": {
+    "text": "Living: the full animation, as drawn.",
+    "note": "Tooltip that describes the Living style. Starts with the style name, which should match the translation of Living.",
+    "max": 60
+  },
+  "icon-animator.animated-icon-grid.my-animation": {
+    "text": "My animation",
+    "note": "Heading for one animation the user made themselves. Singular. Compare My animations.",
+    "max": 20
+  },
+  "icon-animator.animated-icon-grid.my-animations": {
+    "text": "My animations",
+    "note": "Heading for the list of animations the user made themselves. Plural. Compare My animation.",
+    "max": 25
+  },
+  "icon-animator.animated-icon-grid.no-icon-animations-match-query": {
+    "text": "No icon animations match \"{query}\".",
+    "note": "Empty search result. {query} is the text the user typed in the search field.",
+    "max": 60,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "icon-animator.animated-icon-grid.no-library-animation-matches-icon": {
+    "text": "No library animation matches {icon}; showing all of them.",
+    "note": "Notice above the grid. {icon} is the name of the icon in use, for example mdi:lightbulb. Keep it as is.",
+    "max": 95,
+    "vars": {
+      "icon": "The value that replaces icon in the text."
+    }
+  },
+  "icon-animator.animated-icon-grid.no-library-animation-matches-icon-or": {
+    "text": "No library animation matches {icon} or {domain}; showing all of them.",
+    "note": "Notice above the grid. {icon} is the name of the icon in use, for example mdi:lightbulb. {domain} is the entity's Home Assistant domain, for example light. Keep both as is.",
+    "max": 115,
+    "vars": {
+      "domain": "The value that replaces domain in the text.",
+      "icon": "The value that replaces icon in the text."
+    }
+  },
+  "icon-animator.animated-icon-grid.quiet": {
+    "text": "Quiet",
+    "note": "Name of an animation style: a calm version where one part moves a little. Pairs with Glow and Living. An adjective.",
+    "max": 10
+  },
+  "icon-animator.animated-icon-grid.quiet-one-part-moves-a-little-slower-for": {
+    "text": "Quiet: one part moves a little, slower. For calm dashboards.",
+    "note": "Tooltip that describes the Quiet style. Starts with the style name, which should match the translation of Quiet.",
+    "max": 100
+  },
+  "icon-animator.animated-icon-grid.search-animated-icons": {
+    "text": "Search animated icons",
+    "note": "Placeholder and accessible name of the search field in the animation grid. Search is a verb.",
+    "max": 35
+  },
+  "icon-animator.animated-icon-grid.search-icons": {
+    "text": "Search icons",
+    "note": "Placeholder of a shorter search field for icons. Search is a verb. Compare Search animated icons.",
+    "max": 20
+  },
+  "icon-animator.animated-icon-grid.show-all-count": {
+    "text": "Show all ({count})",
+    "note": "Button that removes the filter and lists every animation. {count} is the total number of animations.",
+    "max": 30,
+    "vars": {
+      "count": "The value that replaces count in the text."
+    }
+  },
+  "icon-animator.animated-icon-grid.show-matches-only": {
+    "text": "Show matches only",
+    "note": "Button that narrows the list back to animations that fit the current icon. Opposite of Show all.",
+    "max": 30
+  },
+  "icon-animator.animated-icon-grid.style": {
+    "text": "Style",
+    "note": "Label of the choice between the Glow, Living and Quiet looks of an animation.",
+    "max": 10
+  },
+  "icon-animator.follow-icon.animated-drawing": {
+    "text": "Animated drawing",
+    "note": "Fallback name of an animated icon that has no name of its own, when it was drawn by the user.",
+    "max": 30
+  },
+  "icon-animator.follow-icon.animated-name": {
+    "text": "Animated {name}",
+    "note": "Name given to an animated icon made from an existing icon. {name} is the icon's name, such as lightbulb.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "icon-animator.follow-icon.count-removed-because-the-new-icon-has": {
+    "text": "{count, plural, one {# part animation was} other {# part animations were}} removed because the new icon has fewer parts.",
+    "note": "Notice after the user picked a different icon. {count} is how many per-part animations were removed. A part is a separately animated piece of the icon.",
+    "max": 110,
+    "vars": {
+      "count": "The count the text is about."
+    }
+  },
+  "icon-animator.follow-icon.part-n": {
+    "text": "Part {n}",
+    "note": "Label of one separately animated piece of an icon. {n} is its number, starting at 1.",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "icon-animator.follow-icon.the-animated-icon-was-removed-because": {
+    "text": "The animated icon was removed because the module's icon changed.",
+    "note": "Notice after the user changed the icon of a module that had an animated icon. A module is one element of the card.",
+    "max": 105
+  },
+  "icon-animator.follow-icon.the-icon-animation-now-uses-the-new-icon": {
+    "text": "The icon animation now uses the new icon ({icon}).",
+    "note": "Notice after the user changed the icon. {icon} is the name of the new icon, for example mdi:lightbulb. Keep it as is.",
+    "max": 80,
+    "vars": {
+      "icon": "The value that replaces icon in the text."
+    }
+  },
+  "icon-animator.style.glow-halo": {
+    "text": "Glow halo",
+    "note": "Label of the switch that adds a soft glow around a lit icon. A halo is a ring of light.",
+    "max": 15
+  }
+}

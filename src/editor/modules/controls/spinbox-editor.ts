@@ -21,18 +21,18 @@ export const spinboxEditor: ModuleEditor = {
     const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
+        ${renderEntitySourceField(t('card-editor.spinbox-editor.entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('card-editor.spinbox-editor.attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${stateObj && own?.readOnly
-          ? renderFieldHint(t('This value can only be shown: the entity (or this attribute) cannot be set from a spinbox.'))
+          ? renderFieldHint(t('card-editor.spinbox-editor.this-value-can-only-be-shown-the-entity'))
           : nothing}
         ${climateRange(stateObj, c.attribute)
-          ? renderFieldHint(t('The thermostat keeps a range (low / high): pick target_temp_low or target_temp_high as the attribute to set one end.'))
+          ? renderFieldHint(t('card-editor.spinbox-editor.the-thermostat-keeps-a-range-low-high'))
           : nothing}
-        ${renderNumberField(t('Min'), c.min, (v) => onChange({ ...c, min: optional(v) }), { optional: true, placeholder: own ? String(own.min) : '0' }, 'min', syncCtx)}
-        ${renderNumberField(t('Max'), c.max, (v) => onChange({ ...c, max: optional(v) }), { optional: true, placeholder: own ? String(own.max) : '100' }, 'max', syncCtx)}
-        ${renderNumberField(t('Step'), c.step, (v) => onChange({ ...c, step: optional(v) }), { optional: true, min: 0, placeholder: own ? String(own.step) : '1' }, 'step', syncCtx)}
-        ${renderFieldHint(t("Empty: the entity's own range and step. Min and max can only narrow that range; a step that is not a multiple of the entity's step is replaced by the entity's."))}
+        ${renderNumberField(t('card-editor.spinbox-editor.min'), c.min, (v) => onChange({ ...c, min: optional(v) }), { optional: true, placeholder: own ? String(own.min) : '0' }, 'min', syncCtx)}
+        ${renderNumberField(t('card-editor.spinbox-editor.max'), c.max, (v) => onChange({ ...c, max: optional(v) }), { optional: true, placeholder: own ? String(own.max) : '100' }, 'max', syncCtx)}
+        ${renderNumberField(t('card-editor.spinbox-editor.step'), c.step, (v) => onChange({ ...c, step: optional(v) }), { optional: true, min: 0, placeholder: own ? String(own.step) : '1' }, 'step', syncCtx)}
+        ${renderFieldHint(t("card-editor.spinbox-editor.empty-the-entity-s-own-range-and-step"))}
       </div>
     `;
   },

@@ -1,0 +1,175 @@
+{
+  "path-tools.names.draw-a-line-across-the-shapes-to-cut": {
+    "text": "Draw a line across the shapes to cut them in two.",
+    "note": "Hint for the Knife tool on the drawing canvas. It tells the user to drag a line that crosses the shapes.",
+    "max": 80
+  },
+  "path-tools.names.draw-a-longer-cut-line": {
+    "text": "Draw a longer cut line.",
+    "note": "Message when the Knife line was too short to cut anything.",
+    "max": 40
+  },
+  "path-tools.names.fits-the-shape-again-with-fewer-points": {
+    "text": "Fits the shape again with fewer points.",
+    "note": "Tooltip of the Simplify tool, which redraws a shape with fewer points.",
+    "max": 65
+  },
+  "path-tools.names.grows-or-shrinks-the-shape-by-the-amount": {
+    "text": "Grows or shrinks the shape by the amount you set.",
+    "note": "Tooltip of the Offset path tool, which makes a shape larger or smaller all around.",
+    "max": 80
+  },
+  "path-tools.names.join": {
+    "text": "Join",
+    "note": "Button name of a path tool that connects two open paths into one. A verb. Not the same as Split.",
+    "max": 10
+  },
+  "path-tools.names.join-works-on-open-paths-use-split-first": {
+    "text": "Join works on open paths. Use Split first to open a closed one.",
+    "note": "Message shown when the Join tool is used on a closed path. Join and Split are the names of two tools.",
+    "max": 105
+  },
+  "path-tools.names.joins-the-two-nearest-ends-of-the": {
+    "text": "Joins the two nearest ends of the selected open paths. With one path selected, it closes it.",
+    "note": "Tooltip of the Join tool. Open paths have two loose ends; closing a path connects its own ends.",
+    "max": 150
+  },
+  "path-tools.names.knife": {
+    "text": "Knife",
+    "note": "Button name of a path tool that cuts shapes along a line the user draws. Like a kitchen knife, used as a tool name.",
+    "max": 10
+  },
+  "path-tools.names.nothing-would-be-left-of-this-shape": {
+    "text": "Nothing would be left of this shape.",
+    "note": "Message when the Offset path tool was set to shrink a shape so far that it would vanish.",
+    "max": 60
+  },
+  "path-tools.names.offset-path": {
+    "text": "Offset path",
+    "note": "Button name of a path tool that grows or shrinks a shape evenly all around. Not a move.",
+    "max": 20
+  },
+  "path-tools.names.outline-stroke": {
+    "text": "Outline stroke",
+    "note": "Button name of a path tool that turns a line's thickness into a filled shape. Outline is a verb here.",
+    "max": 25
+  },
+  "path-tools.names.pick-a-point-between-the-ends-to-split": {
+    "text": "Pick a point between the ends to split here.",
+    "note": "Message for the Split tool when the selected point is an end of the path and cannot be split.",
+    "max": 75
+  },
+  "path-tools.names.select-a-closed-shape-open-lines-have-no": {
+    "text": "Select a closed shape. Open lines have no area.",
+    "note": "Message for the Offset path tool when the selection is an open line instead of a closed shape.",
+    "max": 80
+  },
+  "path-tools.names.simplify": {
+    "text": "Simplify",
+    "note": "Button name of a path tool that reduces the number of points of a shape. A verb.",
+    "max": 15
+  },
+  "path-tools.names.split": {
+    "text": "Split",
+    "note": "Button name of a path tool that cuts a path in two at the selected point. A verb. Not the same as Knife.",
+    "max": 10
+  },
+  "path-tools.names.splits-the-path-at-the-selected-point": {
+    "text": "Splits the path at the selected point.",
+    "note": "Tooltip of the Split tool.",
+    "max": 65
+  },
+  "path-tools.names.this-shape-has-no-stroke-to-outline": {
+    "text": "This shape has no stroke to outline.",
+    "note": "Message for the Outline stroke tool when the shape has no line (stroke) to convert. Stroke is the line around a shape.",
+    "max": 60
+  },
+  "path-tools.names.this-shape-has-too-many-points-for-this": {
+    "text": "This shape has too many points for this tool.",
+    "note": "Message when a path tool refuses a shape because it has more points than the tool can handle.",
+    "max": 75
+  },
+  "path-tools.names.this-shape-is-already-as-simple-as-this": {
+    "text": "This shape is already as simple as this setting allows.",
+    "note": "Message for the Simplify tool when the current Detail kept setting removes no further points.",
+    "max": 90
+  },
+  "path-tools.names.turns-the-stroke-into-a-filled-shape-you": {
+    "text": "Turns the stroke into a filled shape you can edit point by point.",
+    "note": "Tooltip of the Outline stroke tool. Stroke is the line around a shape.",
+    "max": 105
+  },
+  "path-tools.panel.a-higher-value-drops-more-points": {
+    "text": "A higher value drops more points.",
+    "note": "Help text under the Simplify setting. Drops means removes.",
+    "max": 55
+  },
+  "path-tools.panel.amount": {
+    "text": "Amount",
+    "note": "Label of the number field for how far the Offset path tool grows or shrinks a shape.",
+    "max": 15
+  },
+  "path-tools.panel.apply": {
+    "text": "Apply",
+    "note": "Button that confirms a path tool's preview and changes the shape. A verb.",
+    "max": 10
+  },
+  "path-tools.panel.before-now-after-after": {
+    "text": "{before, plural, one {# point} other {# points}} now, {after, plural, one {# point} other {# points}} after",
+    "note": "Preview line of a path tool. {before} is the current number of points of the shape. {after} is the number it will have after the tool is applied.",
+    "max": 45,
+    "vars": {
+      "after": "The count the text is about.",
+      "before": "The count the text is about."
+    }
+  },
+  "path-tools.panel.cancel": {
+    "text": "Cancel",
+    "note": "Button that closes a path tool's panel without changing the shape. A verb.",
+    "max": 10
+  },
+  "path-tools.panel.corners": {
+    "text": "Corners",
+    "note": "Label of the choice for how the corners of an offset shape are drawn: Round or Sharp.",
+    "max": 15
+  },
+  "path-tools.panel.detail-kept": {
+    "text": "Detail kept",
+    "note": "Label of the Simplify slider. A higher setting keeps more of the original shape's detail.",
+    "max": 20
+  },
+  "path-tools.panel.nothing-to-preview-yet": {
+    "text": "Nothing to preview yet.",
+    "note": "Empty state in a path tool's panel. It tells the user no preview exists yet because the current selection gives the tool nothing to calculate.",
+    "max": 40
+  },
+  "path-tools.panel.positive-grows-the-shape-negative": {
+    "text": "Positive grows the shape, negative shrinks it. From {min} to {max}.",
+    "note": "Help text under the Amount field of Offset path. {min} is the lowest allowed number (negative). {max} is the highest allowed number.",
+    "max": 110,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "path-tools.panel.round": {
+    "text": "Round",
+    "note": "Option for Corners: rounded corners, the opposite of Sharp. An adjective, not a verb.",
+    "max": 10
+  },
+  "path-tools.panel.sharp": {
+    "text": "Sharp",
+    "note": "Option for Corners: pointed corners, the opposite of Round.",
+    "max": 10
+  },
+  "path-tools.panel.smooth-corners": {
+    "text": "Smooth corners",
+    "note": "Checkbox label for the Simplify tool: keep the result smooth and curved instead of with sharp corners.",
+    "max": 25
+  },
+  "path-tools.panel.working-on-it": {
+    "text": "Working on it",
+    "note": "Shown while a path tool calculates its preview.",
+    "max": 25
+  }
+}

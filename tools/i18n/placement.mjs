@@ -32,9 +32,25 @@ export function bundlesOf(stats) {
   return by;
 }
 
+let sharedFiles;
+/** File names of the shared chunks (LAZY_SHARED_CHUNK_FILES of the lazy-module contract): they sit next to their users. */
+function sharedChunkFiles() {
+  if (sharedFiles) return sharedFiles;
+  sharedFiles = new Set();
+  try {
+    const text = fs.readFileSync(path.join(lib.ROOT, 'src/contracts/lazy-module.ts'), 'utf8');
+    const block = /^export const LAZY_SHARED_CHUNK_FILES\b[^=]*=\s*\{([^}]*)\}/m.exec(text);
+    for (const m of (block?.[1] ?? '').matchAll(/magic-card[\w-]*\.js/g)) sharedFiles.add(m[0]);
+  } catch {
+    // no lazy-module contract: no chunk is shared
+  }
+  return sharedFiles;
+}
+
 /**
  * Whether the file reaches the module: it holds it, or it is a chunk and every parent chunk reaches it (a lazy chunk
- * reuses the modules of the entry it hangs off; a chunk with two parents needs both to have it).
+ * reuses the modules of the entry it hangs off; a chunk with two parents needs both to have it). A shared chunk
+ * listed as a parent is only loaded beside its user and holds no namespace index, so it is not walked.
  */
 export function reaches(stats, by, file, mod, seen = new Set()) {
   if (by.get(file)?.has(mod)) return true;
@@ -42,7 +58,10 @@ export function reaches(stats, by, file, mod, seen = new Set()) {
   seen.add(file);
   const all = stats.chunks ?? [];
   const chunk = all.find((c) => (c.files ?? []).some((f) => fileOf(f) === file));
-  const parents = (chunk?.parents ?? []).map((id) => all.find((c) => c.id === id)).filter(Boolean);
+  const shared = sharedChunkFiles();
+  const parents = (chunk?.parents ?? [])
+    .map((id) => all.find((c) => c.id === id))
+    .filter((p) => p && !(p.files ?? []).some((f) => shared.has(fileOf(f))));
   if (!parents.length) return false;
   return parents.every((p) => reaches(stats, by, fileOf(p.files?.[0] ?? ''), mod, new Set(seen)));
 }

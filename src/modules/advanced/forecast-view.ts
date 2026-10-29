@@ -45,8 +45,8 @@ export class ForecastView implements ModuleView {
     if (type !== 'twice_daily' || item.is_daytime === undefined) return weekday;
     const localize = (hass as { localize?: Localize } | undefined)?.localize;
     const part = item.is_daytime
-      ? localize?.('ui.card.weather.day') || t('Day')
-      : localize?.('ui.card.weather.night') || t('Night');
+      ? localize?.('ui.card.weather.day') || t('modules-extra.forecast-view.day')
+      : localize?.('ui.card.weather.night') || t('modules-extra.forecast-view.night');
     return html`${weekday}<br />${part}`;
   }
 
@@ -75,13 +75,13 @@ export class ForecastView implements ModuleView {
       } catch {
         // the translated state is optional
       }
-      return this._message(state || cardT('Unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
+      return this._message(state || cardT('card.forecast-view.unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
     }
-    if (result.status === 'none') return this._message(t('This entity has no forecast'));
-    if (result.status === 'error') return this._message(t('Forecast not available: {error}', { error: result.error }));
+    if (result.status === 'none') return this._message(t('modules-extra.forecast-view.this-entity-has-no-forecast'));
+    if (result.status === 'error') return this._message(t('modules-extra.forecast-view.forecast-not-available-error', { error: result.error }));
 
     const items = result.forecast.slice(0, count);
-    if (!items.length) return this._message(t('No forecast data'));
+    if (!items.length) return this._message(t('modules-extra.forecast-view.no-forecast-data'));
 
     const a = entity.attributes;
     const units = hass?.config?.unit_system;

@@ -17,18 +17,18 @@ export const CLIPS_MAX = 12;
 export type WhenKind = 'state' | 'state_not' | 'entity_on' | 'entity_off' | 'above' | 'below';
 
 export const WHEN_KINDS: Array<{ id: WhenKind; label: MessageId }> = [
-  { id: 'state', label: m('State is') },
-  { id: 'state_not', label: m('State is not') },
-  { id: 'entity_on', label: m('Entity is on') },
-  { id: 'entity_off', label: m('Entity is off') },
-  { id: 'above', label: m('Value above') },
-  { id: 'below', label: m('Value below') },
+  { id: 'state', label: m('anim-studio.states-utils.state-is') },
+  { id: 'state_not', label: m('anim-studio.states-utils.state-is-not') },
+  { id: 'entity_on', label: m('anim-studio.states-utils.entity-is-on') },
+  { id: 'entity_off', label: m('anim-studio.states-utils.entity-is-off') },
+  { id: 'above', label: m('anim-studio.states-utils.value-above') },
+  { id: 'below', label: m('anim-studio.states-utils.value-below') },
 ];
 
 export const TRANSITIONS: Array<{ id: NonNullable<Clip['transition']>; label: MessageId; hint: MessageId }> = [
-  { id: 'cut', label: m('Cut'), hint: m('Switch at once') },
-  { id: 'crossfade', label: m('Crossfade'), hint: m('Fade out and back in (0.2 s)') },
-  { id: 'finish', label: m('Finish cycle'), hint: m('Let the current cycle end first') },
+  { id: 'cut', label: m('anim-studio.states-utils.cut'), hint: m('anim-studio.states-utils.switch-at-once') },
+  { id: 'crossfade', label: m('anim-studio.states-utils.crossfade'), hint: m('anim-studio.states-utils.fade-out-and-back-in-0-2-s') },
+  { id: 'finish', label: m('anim-studio.states-utils.finish-cycle'), hint: m('anim-studio.states-utils.let-the-current-cycle-end-first') },
 ];
 
 export function whenKind(w: ClipWhen): WhenKind {
@@ -92,10 +92,10 @@ export const clipPlayable = (doc: AnimationDoc | undefined, selfId?: string): bo
 export function clipOptions(library: unknown, selfId?: string): ClipOptionGroup[] {
   const groups: ClipOptionGroup[] = [
     {
-      label: t('This animation'),
+      label: t('anim-studio.states-utils.this-animation'),
       items: [
-        { value: 'self', label: t('Own timeline') },
-        { value: 'none', label: t('Nothing (stop)') },
+        { value: 'self', label: t('anim-studio.states-utils.own-timeline') },
+        { value: 'none', label: t('anim-studio.states-utils.nothing-stop') },
       ],
     },
   ];
@@ -103,7 +103,7 @@ export function clipOptions(library: unknown, selfId?: string): ClipOptionGroup[
     .filter((d) => clipPlayable(d, selfId))
     .sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id))
     .map((d) => ({ value: CUSTOM_PREFIX + d.id, label: d.name || d.id }));
-  if (mine.length) groups.push({ label: t('My animations'), items: mine });
+  if (mine.length) groups.push({ label: t('anim-studio.states-utils.my-animations'), items: mine });
   for (const g of ANIMATION_GROUPS) {
     const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id)).map((p) => ({ value: p.id, label: tl(p.name) }));
     if (items.length) groups.push({ label: tl(GROUP_LABELS[g]), items });
@@ -113,30 +113,30 @@ export function clipOptions(library: unknown, selfId?: string): ClipOptionGroup[
 
 /** A clip animation's display name. */
 export function clipAnimationLabel(animation: string, library: unknown, selfId?: string): string {
-  if (animation === 'self') return t('Own timeline');
-  if (animation === 'none') return t('Nothing');
+  if (animation === 'self') return t('anim-studio.states-utils.own-timeline');
+  if (animation === 'none') return t('anim-studio.states-utils.nothing');
   if (isCustomRef(animation)) {
     const id = customRefId(animation);
     const doc = libraryList(library).find((d) => d.id === id);
-    return doc ? doc.name || doc.id : id === selfId ? t('Own timeline') : t('{id} (not found)', { id });
+    return doc ? doc.name || doc.id : id === selfId ? t('anim-studio.states-utils.own-timeline') : t('anim-studio.states-utils.id-not-found', { id });
   }
   const known = getAnimationPreset(animation)?.name;
-  return known !== undefined ? tl(known) : t('{animation} (unknown)', { animation });
+  return known !== undefined ? tl(known) : t('anim-studio.states-utils.animation-unknown', { animation });
 }
 
 /** Why a clip plays nothing in the card, if it does not. */
 export function clipProblem(clip: Clip, library: unknown, selfId?: string): string | undefined {
   if (!isCustomRef(clip.animation)) {
     if (clip.animation === 'self' || clip.animation === 'none') return undefined;
-    if (!getAnimationPreset(clip.animation)) return t('Unknown preset: plays nothing.');
-    return SEQUENCEABLE_PRESETS.has(clip.animation) ? undefined : t('Effect presets cannot play as a state: plays nothing.');
+    if (!getAnimationPreset(clip.animation)) return t('anim-studio.states-utils.unknown-preset-plays-nothing');
+    return SEQUENCEABLE_PRESETS.has(clip.animation) ? undefined : t('anim-studio.states-utils.effect-presets-cannot-play-as-a-state');
   }
   const id = customRefId(clip.animation);
-  if (id === selfId) return t('Use Own timeline to play this animation.');
+  if (id === selfId) return t('anim-studio.states-utils.use-own-timeline-to-play-this-animation');
   const doc = libraryList(library).find((d) => d.id === id);
-  if (!doc) return t('Not in your animations: plays nothing until it is saved there.');
-  if (Array.isArray(doc.clips) && doc.clips.length) return t('That animation has states of its own: the card skips this state.');
-  if (!sequenceableDoc(doc)) return t('Particle and sequence animations cannot play as a state.');
+  if (!doc) return t('anim-studio.states-utils.not-in-your-animations-plays-nothing');
+  if (Array.isArray(doc.clips) && doc.clips.length) return t('anim-studio.states-utils.that-animation-has-states-of-its-own-the');
+  if (!sequenceableDoc(doc)) return t('anim-studio.states-utils.particle-and-sequence-animations-cannot');
   return undefined;
 }
 

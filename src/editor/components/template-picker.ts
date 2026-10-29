@@ -93,7 +93,7 @@ export class TemplatePicker extends LitElement {
       }
     } catch {
       this._templates = {};
-      this._error = t('Magic Card integration not found. Please install it via HACS and add the integration.');
+      this._error = t('card-editor.template-picker.magic-card-integration-not-found-please');
     }
     this._loading = false;
   }
@@ -102,7 +102,7 @@ export class TemplatePicker extends LitElement {
     this._saving = true;
     try {
       if (!this.hass) {
-        this._error = t('Home Assistant connection unavailable.');
+        this._error = t('card-editor.template-picker.home-assistant-connection-unavailable');
         this._saving = false;
         return false;
       }
@@ -115,7 +115,7 @@ export class TemplatePicker extends LitElement {
       this._saving = false;
       return true;
     } catch {
-      this._error = t('Failed to save template.');
+      this._error = t('card-editor.template-picker.failed-to-save-template');
       this._saving = false;
       return false;
     }
@@ -133,7 +133,7 @@ export class TemplatePicker extends LitElement {
       this._templates = updated;
       return true;
     } catch {
-      this._error = t('Failed to delete template.');
+      this._error = t('card-editor.template-picker.failed-to-delete-template');
       return false;
     }
   }
@@ -145,7 +145,7 @@ export class TemplatePicker extends LitElement {
   private async _handleCreateSave(): Promise<void> {
     const name = this._templateName.trim();
     if (!name) {
-      this._error = t('Template name is required.');
+      this._error = t('card-editor.template-picker.template-name-is-required');
       return;
     }
 
@@ -155,7 +155,7 @@ export class TemplatePicker extends LitElement {
     }
 
     if (!this.config) {
-      this._error = t('No config available to save.');
+      this._error = t('card-editor.template-picker.no-config-available-to-save');
       return;
     }
 
@@ -238,7 +238,7 @@ export class TemplatePicker extends LitElement {
     const oldName = this._editingTemplate;
     const newName = this._editName.trim();
     if (!newName) {
-      this._error = t('Template name is required.');
+      this._error = t('card-editor.template-picker.template-name-is-required');
       return;
     }
 
@@ -254,7 +254,7 @@ export class TemplatePicker extends LitElement {
     if (newName !== oldName) {
       // Check if new name already exists
       if (this._templates[newName]) {
-        this._error = t('A template named "{name}" already exists.', { name: newName });
+        this._error = t('card-editor.template-picker.a-template-named-name-already-exists', { name: newName });
         return;
       }
       await this._deleteTemplate(oldName);
@@ -277,7 +277,7 @@ export class TemplatePicker extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const title = this.mode === 'create' ? t('Create template') : t('Load template');
+    const title = this.mode === 'create' ? t('card-editor.template-picker.create-template') : t('card-editor.template-picker.load-template');
     return html`
       ${renderPickerWindow(title, () => this._close(), 's', html`${this.mode === 'create' ? this._renderCreate() : this._renderLink()}`)}
     `;
@@ -287,7 +287,7 @@ export class TemplatePicker extends LitElement {
     return html`
       <div class="mc-template-form">
         <div class="field">
-          <div class="field-head"><label for="tpl-name">${t('Template name')}</label></div>
+          <div class="field-head"><label for="tpl-name">${t('card-editor.template-picker.template-name')}</label></div>
           <input
             id="tpl-name"
             class="input"
@@ -301,7 +301,7 @@ export class TemplatePicker extends LitElement {
           />
         </div>
         <div class="field">
-          <div class="field-head"><label for="tpl-desc">${t('Description (optional)')}</label></div>
+          <div class="field-head"><label for="tpl-desc">${t('card-editor.template-picker.description-optional')}</label></div>
           <textarea
             id="tpl-desc"
             class="input"
@@ -315,16 +315,16 @@ export class TemplatePicker extends LitElement {
         ${this._showOverwrite
           ? html`
               <div class="mc-template-overwrite">
-                ${t('A template named "{name}" already exists. Overwrite?', { name: this._templateName.trim() })}
+                ${t('card-editor.template-picker.a-template-named-name-already-exists-2', { name: this._templateName.trim() })}
               </div>
             `
           : nothing}
       </div>
       <div class="mc-picker-footer" slot="footer">
-        <button type="button" class="btn btn-secondary" @click=${this._close}>${t('Cancel')}</button>
+        <button type="button" class="btn btn-secondary" @click=${this._close}>${t('card-editor.template-picker.cancel')}</button>
         ${this._showOverwrite
-          ? html`<button type="button" class="btn btn-primary" ?disabled=${this._saving} @click=${this._handleCreateSave}>${t('Overwrite')}</button>`
-          : html`<button type="button" class="btn btn-primary" ?disabled=${!this._templateName.trim() || this._saving} @click=${this._handleCreateSave}>${t('Save')}</button>`}
+          ? html`<button type="button" class="btn btn-primary" ?disabled=${this._saving} @click=${this._handleCreateSave}>${t('card-editor.template-picker.overwrite')}</button>`
+          : html`<button type="button" class="btn btn-primary" ?disabled=${!this._templateName.trim() || this._saving} @click=${this._handleCreateSave}>${t('card-editor.template-picker.save')}</button>`}
       </div>
     `;
   }
@@ -333,7 +333,7 @@ export class TemplatePicker extends LitElement {
     return html`
       <div class="mc-template-edit-form">
         <div class="field">
-          <div class="field-head"><label for="tpl-edit-name">${t('Template name')}</label></div>
+          <div class="field-head"><label for="tpl-edit-name">${t('card-editor.template-picker.template-name')}</label></div>
           <input
             id="tpl-edit-name"
             class="input"
@@ -347,7 +347,7 @@ export class TemplatePicker extends LitElement {
           />
         </div>
         <div class="field">
-          <div class="field-head"><label for="tpl-edit-desc">${t('Description (optional)')}</label></div>
+          <div class="field-head"><label for="tpl-edit-desc">${t('card-editor.template-picker.description-optional')}</label></div>
           <textarea
             id="tpl-edit-desc"
             class="input"
@@ -360,14 +360,14 @@ export class TemplatePicker extends LitElement {
         </div>
         ${this._error ? html`<div class="mc-template-error" role="alert">${this._error}</div>` : nothing}
         <div class="mc-template-edit-actions">
-          <button type="button" class="btn btn-secondary btn-sm" @click=${this._cancelEdit}>${t('Cancel')}</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${this._cancelEdit}>${t('card-editor.template-picker.cancel')}</button>
           <button
             type="button"
             class="btn btn-primary btn-sm"
             ?disabled=${!this._editName.trim() || this._saving}
             @click=${this._saveEdit}
           >
-            ${t('Save')}
+            ${t('card-editor.template-picker.save')}
           </button>
         </div>
       </div>
@@ -388,39 +388,39 @@ export class TemplatePicker extends LitElement {
 
   private _renderLink(): TemplateResult {
     if (this._loading) {
-      return html`<div class="mc-picker-loading">${t('Loading templates...')}</div>`;
+      return html`<div class="mc-picker-loading">${t('card-editor.template-picker.loading-templates')}</div>`;
     }
 
     const names = this._getFilteredTemplates();
 
     return html`
       <div class="mc-picker-search">
-        ${renderPickerSearch(t('Search templates'), this._searchQuery, (v) => { this._searchQuery = v; })}
+        ${renderPickerSearch(t('card-editor.template-picker.search-templates'), this._searchQuery, (v) => { this._searchQuery = v; })}
       </div>
       ${this._confirmLoad
         ? html`
             <div class="mc-template-confirm">
               <div class="mc-template-confirm-text">
-                ${t('Load "{name}"? This will replace your current config.', { name: this._confirmLoad })}
+                ${t('card-editor.template-picker.load-name-this-will-replace-your-current', { name: this._confirmLoad })}
               </div>
               ${this._asksDevice(this._confirmLoad)
                 ? html`<div class="mc-template-device">
-                    <p class="mc-template-confirm-text">${t('Which device is this card for?')}</p>
+                    <p class="mc-template-confirm-text">${t('card-editor.template-picker.which-device-is-this-card-for')}</p>
                     <mc-entity-picker
                       .hass=${this.hass}
                       .value=${this._device}
-                      .label=${t('Which device is this card for?')}
-                      .placeholder=${t('Pick a device')}
+                      .label=${t('card-editor.template-picker.which-device-is-this-card-for')}
+                      .placeholder=${t('card-editor.template-picker.pick-a-device')}
                       .strict=${true}
                       .preferred=${this._domainsOf(this._confirmLoad)}
                       @value-changed=${(e: CustomEvent<{ value: string }>) => { this._device = e.detail.value; }}
                     ></mc-entity-picker>
-                    <p class="help">${t('Tiles that follow the card will show it.')}</p>
+                    <p class="help">${t('card-editor.template-picker.tiles-that-follow-the-card-will-show-it')}</p>
                   </div>`
                 : nothing}
               <div class="mc-template-confirm-actions">
-                <button type="button" class="btn btn-secondary btn-sm" @click=${() => { this._confirmLoad = null; }}>${t('Cancel')}</button>
-                <button type="button" class="btn btn-primary btn-sm" @click=${() => this._handleLoadConfirm(this._confirmLoad!)}>${t('Load')}</button>
+                <button type="button" class="btn btn-secondary btn-sm" @click=${() => { this._confirmLoad = null; }}>${t('card-editor.template-picker.cancel')}</button>
+                <button type="button" class="btn btn-primary btn-sm" @click=${() => this._handleLoadConfirm(this._confirmLoad!)}>${t('card-editor.template-picker.load')}</button>
               </div>
             </div>
           `
@@ -453,8 +453,8 @@ export class TemplatePicker extends LitElement {
                     <button
                       type="button"
                       class="icon-btn sm"
-                      title=${t('Edit template')}
-                      aria-label=${t('Edit template {name}', { name })}
+                      title=${t('card-editor.template-picker.edit-template')}
+                      aria-label=${t('card-editor.template-picker.edit-template-name', { name })}
                       @click=${(e: Event) => {
                         e.stopPropagation();
                         this._startEdit(name);
@@ -465,8 +465,8 @@ export class TemplatePicker extends LitElement {
                     <button
                       type="button"
                       class="icon-btn sm danger"
-                      title=${t('Delete template')}
-                      aria-label=${t('Delete template {name}', { name })}
+                      title=${t('card-editor.template-picker.delete-template')}
+                      aria-label=${t('card-editor.template-picker.delete-template-name', { name })}
                       @click=${(e: Event) => {
                         e.stopPropagation();
                         this._handleDelete(name);
@@ -478,10 +478,10 @@ export class TemplatePicker extends LitElement {
                 </div>
               `,
             )
-          : html`<div class="mc-picker-empty">${t('No templates saved')}</div>`}
+          : html`<div class="mc-picker-empty">${t('card-editor.template-picker.no-templates-saved')}</div>`}
       </div>
       <div class="mc-picker-footer" slot="footer">
-        <button type="button" class="btn btn-secondary" @click=${this._close}>${t('Cancel')}</button>
+        <button type="button" class="btn btn-secondary" @click=${this._close}>${t('card-editor.template-picker.cancel')}</button>
       </div>
     `;
   }

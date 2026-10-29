@@ -68,12 +68,12 @@ export function pointAtTime(d: string, t: number): PathSample | undefined {
 export type PathTemplateId = 'circle' | 'figure-8' | 'wave' | 'bounce' | 'zigzag' | 'spiral';
 
 export const PATH_TEMPLATES: Array<{ id: PathTemplateId; label: MessageId }> = [
-  { id: 'circle', label: m('Circle') },
-  { id: 'figure-8', label: m('Figure 8') },
-  { id: 'wave', label: m('Wave') },
-  { id: 'bounce', label: m('Bounce') },
-  { id: 'zigzag', label: m('Zigzag') },
-  { id: 'spiral', label: m('Spiral') },
+  { id: 'circle', label: m('anim-studio.path-utils.circle') },
+  { id: 'figure-8', label: m('anim-studio.path-utils.figure-8') },
+  { id: 'wave', label: m('anim-studio.path-utils.wave') },
+  { id: 'bounce', label: m('anim-studio.path-utils.bounce') },
+  { id: 'zigzag', label: m('anim-studio.path-utils.zigzag') },
+  { id: 'spiral', label: m('anim-studio.path-utils.spiral') },
 ];
 
 /**

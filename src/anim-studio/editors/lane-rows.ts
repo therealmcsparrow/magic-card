@@ -42,6 +42,6 @@ export function trackRows(list: LayerRows, doc: AnimationDoc, selection: StudioS
     const key = laneKey(target, lane);
     const n = laneAts(doc, target, lane).length;
     const on = selection?.kind === 'keys' && !!selection.keys?.length && selection.keys.every((k) => k.target === target && k.lane === lane);
-    return list.row({ key, name: laneName(key), bare: true, level, badge: t('{count, plural, one {# key} other {# keys}}', { count: n }), describe: t('keyframe track'), selected: on, title: t('{name}: {count, plural, one {# key} other {# keys}}', { name: laneName(key), count: n }) });
+    return list.row({ key, name: laneName(key), bare: true, level, badge: t('anim-studio.lane-rows.count', { count: n }), describe: t('anim-studio.lane-rows.keyframe-track'), selected: on, title: t('anim-studio.lane-rows.name-count', { name: laneName(key), count: n }) });
   });
 }

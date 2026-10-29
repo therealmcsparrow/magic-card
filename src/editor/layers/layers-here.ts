@@ -23,7 +23,7 @@ export interface HereEntry {
   index?: number;
 }
 
-const PLACEMENT_WORDS = { flow: m('Normal'), background: m('Behind others'), overlay: m('On top') } as const;
+const PLACEMENT_WORDS = { flow: m('card-editor.layers-here.normal'), background: m('card-editor.layers-here.behind-others'), overlay: m('card-editor.layers-here.on-top') } as const;
 
 /** The module wrappers of the live card with their boxes. Placement comes from the config, not the DOM. */
 export function collectHitItems(root: ParentNode | null | undefined, config: MagicCardConfig): HitItem[] {
@@ -71,7 +71,7 @@ export function layersHere(items: readonly HitItem[], config: MagicCardConfig, c
       out.push({
         key: `backdrop:${index}`, kind: 'backdrop', index,
         name: s.detail ? `${t(s.type)}, ${s.detail}` : t(s.type),
-        detail: t('Card backdrop, layer {n}', { n: index + 1 }),
+        detail: t('card-editor.layers-here.card-backdrop-layer-n', { n: index + 1 }),
       });
     });
   }

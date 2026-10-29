@@ -23,7 +23,7 @@ export type Box = [number, number, number, number];
  */
 export function iconAnimationDoc(icon: string, geometry: IconGeometry, id: string, name: string, opts: { embed?: boolean } = {}): AnimationDoc {
   const pieces = splitIcon(geometry);
-  const parts: RigPart[] = pieces.slice(0, RIG_PART_CAP).map((p, i) => ({ id: `part-${i + 1}`, name: t('Part {n}', { n: i + 1 }), from: [p.index] }));
+  const parts: RigPart[] = pieces.slice(0, RIG_PART_CAP).map((p, i) => ({ id: `part-${i + 1}`, name: t('labels.icon-doc.part-n', { n: i + 1 }), from: [p.index] }));
   const svg = opts.embed ? svgFromGeometry(geometry) : undefined;
   const rig: Rig = svg ? { svg, parts } : { icon, parts };
   return {

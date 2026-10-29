@@ -1,4 +1,4 @@
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import type { EntityInherit } from '../contracts/entity-scope';
 import { TemplateResult } from 'lit';
 import {
@@ -11,8 +11,8 @@ import type { DependencyContext, ModuleDependencies } from '../services/card-dep
 
 export interface MagicModuleMetadata {
   type: ModuleType;
-  name: MessageId;
-  description: MessageId;
+  name: MessageIndex;
+  description: MessageIndex;
   category: ModuleCategory;
   icon: string;
   /** Entity-scope: false = card module (never inherits), a list = domains accepted when inherited, absent = any. */

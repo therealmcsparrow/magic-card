@@ -8,15 +8,11 @@ import type { ModuleDependencies } from '../../services/card-dependencies';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
 
-// Shared card helpers live in a sync util (the camera view and the editor use them too).
-export { getCardHelpers, whenDefined, stableJson, fullConfig } from '../../utils/card-helpers';
-export type { CardHelpers, ConfigurableElement } from '../../utils/card-helpers';
-
 /** The module with no card type set (sync: the stub and the view render the same box). */
 export const customCardEmpty = (): TemplateResult => html`
   <div class="mc-module mc-custom-card mc-custom-card-placeholder">
     <ha-icon icon="mdi:card-plus-outline"></ha-icon>
-    <span>${t('No card type set')}</span>
+    <span>${t('card.custom-card-module.no-card-type-set')}</span>
   </div>
 `;
 
@@ -38,7 +34,7 @@ class CustomCardModule extends BaseLazyStub {
     if (!(config as CustomCardModuleConfig).card_type) return customCardEmpty();
     return html`<div class="mc-module mc-custom-card"><div
       style="display:flex;align-items:center;justify-content:center;min-height:60px;color:var(--secondary-text-color,#6b7280);font-size:0.875rem"
-    >${state === 'pending' ? t('Loading card...') : ''}</div></div>`;
+    >${state === 'pending' ? t('card.custom-card-module.loading-card') : ''}</div></div>`;
   }
 
   /** The embedded card tracks its own entities: it gets every hass update. */
@@ -50,7 +46,7 @@ class CustomCardModule extends BaseLazyStub {
   validate(config: CardModule): string[] {
     const c = config as CustomCardModuleConfig;
     if (c.card_config !== undefined && (typeof c.card_config !== 'object' || c.card_config === null || Array.isArray(c.card_config))) {
-      return [t('Card config must be a mapping')];
+      return [t('card.custom-card-module.card-config-must-be-a-mapping')];
     }
     return [];
   }

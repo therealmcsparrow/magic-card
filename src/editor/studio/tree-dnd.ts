@@ -1,5 +1,6 @@
 import type { CardModule, MagicCardConfig } from '../../types';
-import { childSlots, hasChildSlots, hasSlotNodes } from '../../utils/module-path';
+import { childSlots, hasChildSlots } from '../../utils/module-path';
+import { hasSlotNodes } from '../../utils/module-path-edit';
 import { insideSource, type DropPlace } from '../state/tree-move';
 import { moduleAt, type ModuleSelection, type Selection } from './selection';
 

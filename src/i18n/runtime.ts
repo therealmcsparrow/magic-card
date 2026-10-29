@@ -1,10 +1,10 @@
 /*
- * Module i18n (contract src/contracts/i18n.ts 1.0.0): locale pick, compact tables and the
- * ICU-subset formatter. One copy per entry (magic-card.js, the studio entry, the theme-editor entry; each
+ * Module i18n (contract src/contracts/i18n.ts 2.0.0): locale pick, compact tables and the ICU-subset
+ * formatter. One copy per entry (magic-card.js, the studio entry, the theme-editor entry; each
  * <= I18N_RUNTIME_MAX_BYTES minified); every lazy chunk below an entry reuses its copy. Messages come from
- * per-namespace tables: three '|'-joined strings (en-GB, en-US, nl), entry i of each is message i. Ids are
- * numbers after tools/i18n-loader.cjs; without the loader (vitest, plain JS) the British text is looked up
- * in the en-GB table. A tc() id is stored in the en-GB table as context + U+0001 + text.
+ * per-namespace tables: three '|'-joined strings (en-GB, en-US, nl), entry i of each is message i. An id is
+ * the entry's number, which tools/i18n-loader.cjs writes in place of the key; an empty en-US or nl entry
+ * shows the en-GB text.
  */
 import type { I18nFor, I18nForLazy, Locale, LocaleHassLike, ResolveLocale, RichArgs } from '../contracts/i18n';
 import { formatNumber } from '../utils/locale-format';
@@ -45,10 +45,11 @@ const fmt = (s: string, a: RichArgs, h?: number): unknown[] =>
       if (!m[2]) return typeof v == 'object' ? [v] : v === undefined ? '' : typeof v == 'number' ? nf(v) : v;
       const br = m[3].split(BRANCH); // keys at even indexes, branch text after each
       const pl = m[2] == 'plural';
+      const sv = pl ? Math.round(+v * 10) / 10 : v; // the number as nf() shows it
       const find = (k: string) => br[br.findIndex((y, j) => !(j & 1) && y.trim() == k) + 1 || -1];
-      const pick = find('=' + v) ?? find(pl ? new Intl.PluralRules(NAMES[loc]).select(+v) : String(v)) ?? find('other');
+      const pick = find('=' + sv) ?? find(pl ? new Intl.PluralRules(NAMES[loc]).select(sv) : String(v)) ?? find('other');
       if (pick === undefined) throw 0;
-      return fmt(pick, a, pl ? +v : undefined);
+      return fmt(pick, a, pl ? sv : undefined);
     })
     .filter(String);
 
@@ -57,29 +58,22 @@ type Tables = Parameters<I18nFor>[1];
 const core = (ns: Parameters<I18nFor>[0], tb: () => Tables | undefined) => {
   const rows: string[][] = [];
   const row = (l: number) => (rows[l] ||= (tb() as Tables)[l].split('|'));
-  let ix: Map<string, number> | undefined;
-  /** Message text for id in locale l: that locale, else en-GB (context prefix stripped there). */
-  const look = (id: string | number, c = '', l = loc) => {
-    if (!tb()) return dbg('not ready ' + ns), '';
-    const i = typeof id == 'number' ? id : ((ix ||= new Map(row(0).map((s, k) => [s, k]))).get(c ? c + '\u0001' + id : id) ?? -1);
-    if (i < 0) return dbg('unknown ' + id), String(id);
-    return (l && row(l)[i]) || (row(0)[i] ?? '').slice(c ? c.length + 1 : 0);
-  };
-  const make = (id: string | number, a: RichArgs = {}, c?: string): unknown[] => {
+  /** Message i in locale l; an empty cell of en-US or nl gives the en-GB text. */
+  const look = (i: number, l = loc) => (tb() ? (row(l)[i] || row(0)[i]) ?? '' : (dbg('not ready ' + ns), ''));
+  const make = (i: number, a: RichArgs = {}): unknown[] => {
     try {
-      return fmt(look(id, c), a);
+      return fmt(look(i), a);
     } catch {
-      dbg('malformed ' + id);
-      return [look(id, c, 0)];
+      dbg('malformed ' + i);
+      return [look(i, 0)];
     }
   };
   return {
     ns,
     locale: () => NAMES[loc],
-    t: (id: string | number, a?: RichArgs) => make(id, a).join(''),
-    tc: (c: string, id: string | number, a?: RichArgs) => make(id, a, c).join(''),
-    tx: (id: string | number, a: RichArgs) => make(id, a),
-    m: (id: string) => id,
+    t: (i: number, a?: RichArgs) => make(i, a).join(''),
+    tx: (i: number, a: RichArgs) => make(i, a),
+    m: (i: number) => i,
   };
 };
 

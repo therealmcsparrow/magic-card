@@ -56,10 +56,10 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
 export function boolReason(st: BoolState, op: BooleanOp): string | undefined {
   const n = st.operands.length;
   if (n >= 2 || (n === 1 && op === 'union' && st.merge)) return undefined;
-  if (st.text) return t('Text cannot be combined with other layers.');
-  if (n === 1) return t('Select a second shape.');
-  if (st.openLayers) return t('Select closed shapes. Open lines have no area.');
-  return t('Select two or more closed shapes.');
+  if (st.text) return t('svg-editor.combine.text-cannot-be-combined-with-other');
+  if (n === 1) return t('svg-editor.combine.select-a-second-shape');
+  if (st.openLayers) return t('svg-editor.combine.select-closed-shapes-open-lines-have-no');
+  return t('svg-editor.combine.select-two-or-more-closed-shapes');
 }
 
 export function operandsOf(st: BoolState): BooleanOperand[] {
@@ -91,6 +91,6 @@ export function withResult(d: Doc, st: BoolState, op: BooleanOp, paths: EditPath
 /** The result's note text. */
 export function boolNote(op: BooleanOp, st: BoolState, skipped: number): string {
   const n = st.operands.length;
-  const main = n === 1 ? t('Merged {c} parts into one path.', { c: closedOf(st.operands[0]) }) : t(BOOL_DONE[op], { c: n, n: n - 1, from: st.operands[0].name });
-  return skipped > 0 ? `${main} ${t('{c, plural, one {1 open line was left out.} other {# open lines were left out.}}', { c: skipped })}` : main;
+  const main = n === 1 ? t('svg-editor.combine.merged-c-parts-into-one-path', { c: closedOf(st.operands[0]) }) : t(BOOL_DONE[op], { c: n, n: n - 1, from: st.operands[0].name });
+  return skipped > 0 ? `${main} ${t('svg-editor.combine.c', { c: skipped })}` : main;
 }

@@ -1,317 +1,1294 @@
 {
-  "A quarter circle cut into the card.": "Een kwartcirkel die in de kaart is uitgesneden.",
-  "A quarter circle.": "Een kwartcirkel.",
-  "A shape holds up to {max} points.": "Een vorm kan maximaal {max} punten hebben.",
-  "A shape named {name} exists. Saving changes every card that uses it.": "Er bestaat al een vorm met de naam {name}. Opslaan wijzigt elke kaart die hem gebruikt.",
-  "A shape needs at least 3 points.": "Een vorm heeft minstens 3 punten nodig.",
-  "A softer round, between a circle and a square.": "Een zachtere ronding, tussen een cirkel en een vierkant.",
-  "A square step cut into the corner.": "Een vierkante trede die in de hoek is uitgesneden.",
-  "A straight diagonal cut.": "Een rechte diagonale snede.",
-  "Add 3 points to finish.": "Voeg 3 punten toe om af te ronden.",
-  "Add point": "Punt toevoegen",
-  "Add point after": "Punt toevoegen erna",
-  "Add point here": "Punt hier toevoegen",
-  "Add shape...": "Vorm toevoegen...",
-  "Advanced: how this point moves when the card resizes": "Geavanceerd: hoe dit punt meebeweegt als de kaart van grootte verandert",
-  "All corners together": "Alle hoeken samen",
-  "All four corners": "Alle vier de hoeken",
-  "All four corners changed. Change just one?": "Alle vier de hoeken zijn gewijzigd. Maar één wijzigen?",
-  "Angle": "Hoek",
-  "Applied Top left to all corners.": "Linksboven toegepast op alle hoeken.",
-  "Arrow": "Pijl",
-  "Arrow keys move the point. Shift moves it further, Alt moves it less.": "De pijltjestoetsen verplaatsen het punt. Met Shift gaat het verder, met Alt minder ver.",
-  "Back": "Terug",
-  "Back to card editor": "Terug naar kaarteditor",
-  "Bevel": "Afgeschuind",
-  "Bottom": "Onder",
-  "Bottom left corner": "Hoek linksonder",
-  "Bottom right corner": "Hoek rechtsonder",
-  "Can raise the space, not lower it.": "Kan de ruimte vergroten, niet verkleinen.",
-  "Cancel": "Annuleren",
-  "Canvas tools": "Canvasgereedschap",
-  "Card shapes have one outline, so the hole was filled.": "Kaartvormen hebben één omtrek, dus het gat is opgevuld.",
-  "Centre": "Centreren",
-  "Changed since saved": "Gewijzigd sinds opslaan",
-  "Changes since the last save are lost.": "Wijzigingen sinds de laatste keer opslaan gaan verloren.",
-  "Chevron": "Punthaak",
-  "Circle": "Cirkel",
-  "Click a point to remove it.": "Klik op een punt om het te verwijderen.",
-  "Click on the outline to add a point.": "Klik op de omtrek om een punt toe te voegen.",
-  "Click or tap to add points. Drag to curve.": "Klik of tik om punten toe te voegen. Sleep om te buigen.",
-  "Close": "Sluiten",
-  "Cloud": "Wolk",
-  "Combine": "Samenvoegen",
-  "Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.": "Samenvoegen voegt hem toe aan de omtrek. Aftrekken snijdt hem eruit. Doorsnede houdt alleen de overlap.",
-  "Combine with": "Samenvoegen met",
-  "Combine...": "Samenvoegen...",
-  "Copied": "Gekopieerd",
-  "Copy YAML": "YAML kopiëren",
-  "Copy to all corners": "Naar alle hoeken kopiëren",
-  "Corner": "Hoek",
-  "Corner is smaller on small cards: {v} px on {size}.": "De hoek is kleiner op kleine kaarten: {v} px op {size}.",
-  "Corner styles": "Hoekstijlen",
-  "Corners": "Hoeken",
-  "Corners turned into points. Undo brings them back.": "Hoeken omgezet in punten. Ongedaan maken brengt ze terug.",
-  "Corners use up to {v} px per side.": "Hoeken nemen tot {v} px per zijde in beslag.",
-  "Corners will be square.": "De hoeken worden vierkant.",
-  "Corners.": "Hoeken.",
-  "Could not load the export and import tool. Try again.": "Het exporteer- en importeerprogramma kon niet worden geladen. Probeer het opnieuw.",
-  "Could not reach Magic Card Utils. Your work is safe in this card.": "Magic Card Utils is niet bereikbaar. Je werk is veilig in deze kaart.",
-  "Could not save {name}. Try again.": "{name} kon niet worden opgeslagen. Probeer het opnieuw.",
-  "Couldn't load the shape tools. Try again.": "De vormgereedschappen konden niet worden geladen. Probeer het opnieuw.",
-  "Ctrl+Z undoes, Ctrl+Shift+Z redoes, Ctrl+S saves.": "Ctrl+Z maakt ongedaan, Ctrl+Shift+Z doet opnieuw, Ctrl+S slaat op.",
-  "Custom": "Aangepast",
-  "Custom shape": "Eigen vorm",
-  "Custom size": "Aangepaste grootte",
-  "Cut corners": "Afgesneden hoeken",
-  "Delete": "Verwijderen",
-  "Delete removes the point.": "Delete verwijdert het punt.",
-  "Delete {name}": "{name} verwijderen",
-  "Deleted {name}. Cards that use it keep their inline copy.": "{name} verwijderd. Kaarten die het gebruiken houden hun eigen kopie.",
-  "Distance from the bottom edge": "Afstand tot de onderrand",
-  "Distance from the left edge": "Afstand tot de linkerrand",
-  "Distance from the right edge": "Afstand tot de rechterrand",
-  "Distance from the top edge": "Afstand tot de bovenrand",
-  "Done": "Klaar",
-  "Drag points, or pick one in the list.": "Sleep punten of kies er een in de lijst.",
-  "Draw": "Tekenen",
-  "Drawing a new outline. This replaces your shape when you finish.": "Je tekent een nieuwe omtrek. Die vervangt je vorm als je klaar bent.",
-  "Drop": "Druppel",
-  "Each corner": "Elke hoek",
-  "Edit at": "Bewerken op",
-  "Edit corners": "Hoeken bewerken",
-  "Edit corners separately": "Hoeken apart bewerken",
-  "Ellipse": "Ellips",
-  "Error": "Fout",
-  "Esc closes a window, then ends a drawing.": "Esc sluit een venster en beëindigt daarna een tekening.",
-  "Esc doesn't close the editor. Use Close.": "Esc sluit de editor niet. Gebruik Sluiten.",
-  "Esc doesn't close the editor. Use Done or Back to card editor.": "Esc sluit de editor niet. Gebruik Klaar of Terug naar kaarteditor.",
-  "Export / Import": "Exporteren / importeren",
-  "Export file": "Bestand exporteren",
-  "Extra space": "Extra ruimte",
-  "Finish": "Afronden",
-  "Focus rings and hover scale of content that touches a cut edge are clipped by the shape.": "Focusringen en zweefschaal van inhoud die een afgesneden rand raakt, worden door de vorm afgekapt.",
-  "Follows the card's shorter side.": "Volgt de kortste zijde van de kaart.",
-  "Free shape": "Vrije vorm",
-  "Free shape tools": "Gereedschap voor vrije vorm",
-  "Free shape. {c, plural, one {# point} other {# points}}.": "Vrije vorm. {c, plural, one {# punt} other {# punten}}.",
-  "Give it a name.": "Geef hem een naam.",
-  "Give the shape a name.": "Geef de vorm een naam.",
-  "Going back to Corners drops your edited points. Undo brings them back.": "Teruggaan naar Hoeken laat je bewerkte punten vallen. Ongedaan maken brengt ze terug.",
-  "Got it": "Begrepen",
-  "Grid": "Raster",
-  "H": "H",
-  "Heart": "Hart",
-  "Height": "Hoogte",
-  "Hexagon": "Zeshoek",
-  "Hide {noun} ({keys})": "Verberg {noun} ({keys})",
-  "Horizontal anchor": "Horizontaal anker",
-  "How to install": "Zo installeer je het",
-  "Import file": "Bestand importeren",
-  "Imported {name}": "{name} geïmporteerd",
-  "In handle": "Ingaande handgreep",
-  "Inspector panel": "Inspectorpaneel",
-  "Intersect": "Doorsnede",
-  "Keep editing": "Verder bewerken",
-  "Keep your own shapes": "Bewaar je eigen vormen",
-  "Keep your own shapes for every dashboard with the free Magic Card Utils add-on.": "Bewaar je eigen vormen voor elk dashboard met de gratis Magic Card Utils-add-on.",
-  "Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, what you build is saved in this card only.": "Bewaar je eigen vormen voor elk dashboard met de gratis Magic Card Utils-add-on. Tot die tijd wordt wat je bouwt alleen in deze kaart bewaard.",
-  "Keeps text away from the corners. The card works it out for you.": "Houdt tekst uit de hoeken. De kaart rekent het voor je uit.",
-  "Kept the largest piece. {c, plural, one {# smaller piece was} other {# smaller pieces were}} removed.": "Het grootste stuk is behouden. {c, plural, one {# kleiner stuk is} other {# kleinere stukken zijn}} verwijderd.",
-  "Lamp on": "Lamp aan",
-  "Leaf": "Blad",
-  "Leave": "Verlaten",
-  "Leave without saving?": "Verlaten zonder op te slaan?",
-  "Left": "Links",
-  "Length": "Lengte",
-  "Library": "Bibliotheek",
-  "Linked to the saved shape \"{id}\". Your edits make it this card's own shape.": "Gekoppeld aan de opgeslagen vorm \"{id}\". Als je iets wijzigt, wordt het de eigen vorm van deze kaart.",
-  "Living room": "Woonkamer",
-  "Loading the shape editor": "Vormeditor laden",
-  "Loading your shapes": "Je vormen laden",
-  "Maximise": "Maximaliseren",
-  "Measured inside the outline at the size you edit at. Raise a side if you need more.": "Gemeten binnen de omtrek op de grootte waarop je bewerkt. Vergroot een zijde als je meer nodig hebt.",
-  "Messages": "Berichten",
-  "Move it with the arrow keys or drag it on the canvas.": "Verplaats hem met de pijltjestoetsen of sleep hem op het canvas.",
-  "Move point": "Punt verplaatsen",
-  "Move window": "Venster verplaatsen",
-  "Move {dir, select, left {left} up {up} down {down} other {right}}": "Verplaats {dir, select, left {naar links} up {omhoog} down {omlaag} other {naar rechts}}",
-  "Name": "Naam",
-  "New outline": "Nieuwe omtrek",
-  "Next": "Volgende",
-  "No change, a sharp corner.": "Geen wijziging, een scherpe hoek.",
-  "No messages.": "Geen berichten.",
-  "No saved shapes yet": "Nog geen opgeslagen vormen",
-  "No shapes match \"{q}\".": "Geen vormen gevonden voor \"{q}\".",
-  "Notch": "Inkeping",
-  "Notched": "Ingekeept",
-  "Note": "Opmerking",
-  "Nothing to redo": "Niets om opnieuw te doen",
-  "Nothing to undo": "Niets om ongedaan te maken",
-  "Nothing would be left of the shape. Nothing was changed.": "Er zou niets van de vorm overblijven. Er is niets gewijzigd.",
-  "Nudge": "Verschuiven",
-  "Octagon": "Achthoek",
-  "Older browsers draw the curved corners as straight facets. Border, ring and shadow stay.": "Oudere browsers tekenen de ronde hoeken als rechte facetten. Rand, ring en schaduw blijven.",
-  "On card": "Op de kaart",
-  "Only the first of {c} shapes in the file was used.": "Alleen de eerste van de {c} vormen in het bestand is gebruikt.",
-  "Open": "Openen",
-  "Open {name}": "{name} openen",
-  "Out handle": "Uitgaande handgreep",
-  "Outline": "Omtrek",
-  "Outline actions": "Omtrekacties",
-  "Outlines": "Omtrekken",
-  "Pen": "Pen",
-  "Pen cancelled.": "Pen geannuleerd.",
-  "Pill": "Pil",
-  "Plus": "Plus",
-  "Point removed, {c, plural, one {# point} other {# points}}.": "Punt verwijderd, {c, plural, one {# punt} other {# punten}}.",
-  "Point type": "Puntsoort",
-  "Point {i}": "Punt {i}",
-  "Point {i} of {c}": "Punt {i} van {c}",
-  "Points": "Punten",
-  "Position across the width": "Positie over de breedte",
-  "Position down the height": "Positie langs de hoogte",
-  "Preview": "Voorbeeld",
-  "Preview at {name} size, {w} by {h}": "Voorbeeld op {name}-formaat, {w} bij {h}",
-  "Previous": "Vorige",
-  "Redo": "Opnieuw",
-  "Reload": "Opnieuw laden",
-  "Remove point": "Punt verwijderen",
-  "Replaced your outline.": "Je omtrek is vervangen.",
-  "Replaces your current outline. Undo brings it back.": "Vervangt je huidige omtrek. Ongedaan maken brengt hem terug.",
-  "Reset": "Herstellen",
-  "Reset shape": "Vorm herstellen",
-  "Resize window": "Venstergrootte aanpassen",
-  "Restore size": "Oorspronkelijke grootte",
-  "Reverse direction": "Richting omkeren",
-  "Right": "Rechts",
-  "Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.": "Rechtsklikken, lang indrukken, de menutoets of Shift+F10 opent Omtrekacties.",
-  "Ring, border, shadow and value background follow the outline.": "Ring, rand, schaduw en waardeachtergrond volgen de omtrek.",
-  "Round": "Rond",
-  "Rounded": "Afgerond",
-  "Rounded rectangle": "Afgeronde rechthoek",
-  "Row": "Rij",
-  "Row, wide 360 x 120": "Rij, breed 360 x 120",
-  "Save": "Opslaan",
-  "Save a shape here and use it on any dashboard.": "Sla hier een vorm op en gebruik hem op elk dashboard.",
-  "Save as a copy": "Opslaan als kopie",
-  "Save as new": "Opslaan als nieuw",
-  "Save current shape": "Huidige vorm opslaan",
-  "Save to library": "Opslaan in bibliotheek",
-  "Saved": "Opgeslagen",
-  "Saved shape \"{id}\" was not found. This card uses its own copy.": "Opgeslagen vorm \"{id}\" is niet gevonden. Deze kaart gebruikt zijn eigen kopie.",
-  "Saved to library as {name}. Press Done to use it on this card.": "Opgeslagen in de bibliotheek als {name}. Kies Klaar om het op deze kaart te gebruiken.",
-  "Scoop": "Uitholling",
-  "Scooped": "Uitgehold",
-  "Search my shapes": "Zoek in mijn vormen",
-  "Select": "Selecteren",
-  "Selected point": "Geselecteerd punt",
-  "Semicircle": "Halve cirkel",
-  "Shape": "Vorm",
-  "Shape applied to {target}": "Vorm toegepast op {target}",
-  "Shape editor": "Vormeditor",
-  "Shape for {target}": "Vorm voor {target}",
-  "Shape name": "Vormnaam",
-  "Shape to combine": "Vorm om samen te voegen",
-  "Shape type": "Vormsoort",
-  "Shapes": "Vormen",
-  "Shield": "Schild",
-  "Short, no slashes. Shown in the list.": "Kort, zonder schuine strepen. Getoond in de lijst.",
-  "Shortcut: {keys}": "Sneltoets: {keys}",
-  "Shortcuts": "Sneltoetsen",
-  "Show full message": "Volledig bericht tonen",
-  "Show older browser look": "Uiterlijk van oudere browsers tonen",
-  "Show or hide panels: Ctrl+\\ or ⌘\\": "Panelen tonen of verbergen: Ctrl+\\ of ⌘\\",
-  "Show text area": "Tekstgebied tonen",
-  "Show {noun} ({keys})": "Toon {noun} ({keys})",
-  "Side panel": "Zijpaneel",
-  "Sidebar": "Zijbalk",
-  "Size": "Grootte",
-  "Skip to canvas": "Naar het canvas",
-  "Skip to inspector": "Naar de inspecteur",
-  "Skip to point fields": "Naar de puntvelden",
-  "Smooth": "Vloeiend",
-  "Smoothing": "Verzachting",
-  "Snap": "Uitlijnen",
-  "Some panels are hidden, as you left them. Use the arrows on the edges to show them.": "Een paar panelen zijn verborgen, zoals je ze had achtergelaten. Gebruik de pijlen aan de randen om ze te tonen.",
-  "Space for text": "Ruimte voor tekst",
-  "Space for text: top, right, bottom, left": "Ruimte voor tekst: boven, rechts, onder, links",
-  "Speech bubble": "Tekstballon",
-  "Square": "Vierkant",
-  "Square corners have no size.": "Vierkante hoeken hebben geen grootte.",
-  "Squircle": "Squircle",
-  "Star": "Ster",
-  "Start from a shape": "Beginnen met een vorm",
-  "Start from a shape...": "Beginnen met een vorm...",
-  "Start from...": "Beginnen met...",
-  "Started from Circle. On a wide card the custom shape is a pill, not an ellipse.": "Begonnen met Cirkel. Op een brede kaart is de eigen vorm een pil, geen ellips.",
-  "Started from Notch. Its corners are cut straight, so they start as Bevel.": "Begonnen met Inkeping. De hoeken zijn recht afgesneden, dus ze beginnen als Afgeschuind.",
-  "Started from {k}.": "Begonnen met {k}.",
-  "Started from {k}. Switched to Free shape.": "Begonnen met {k}. Overgeschakeld naar Vrije vorm.",
-  "Started from {name}. It opens as a path, so you can move every point.": "Begonnen met {name}. Het opent als pad, zodat je elk punt kunt verplaatsen.",
-  "Started from {name}. Your changes make this shape custom.": "Begonnen met {name}. Door je wijzigingen wordt dit een eigen vorm.",
-  "Starters": "Beginstijlen",
-  "Stays the same on every card size.": "Blijft gelijk op elke kaartgrootte.",
-  "Stretch": "Uitrekken",
-  "Subtract": "Aftrekken",
-  "Tab": "Tab",
-  "Tab into the canvas, then [ and ] choose a point.": "Tab naar het canvas en kies daarna met [ en ] een punt.",
-  "Tab into the canvas. [ and ] choose a point. Arrows move it.": "Tab naar het canvas. [ en ] kiezen een punt. Pijltjes verplaatsen het.",
-  "Tag": "Label",
-  "The corners cut into the text area. Raise the extra space or make corners smaller.": "De hoeken snijden in het tekstgebied. Vergroot de extra ruimte of maak de hoeken kleiner.",
-  "The library is full. Delete a shape first.": "De bibliotheek is vol. Verwijder eerst een vorm.",
-  "The outline crosses itself at {where}.": "De omtrek kruist zichzelf bij {where}.",
-  "The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.": "De omtrek snijdt in het tekstgebied bij {where}. Vergroot Extra ruimte of geef de kaart een minimale hoogte.",
-  "The path editor could not load. Check your connection and try again.": "De padeditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
-  "The result needs {c} points. A card shape can have {max}. Nothing was changed. Try a smaller or simpler shape.": "Het resultaat heeft {c} punten nodig. Een kaartvorm kan er {max} hebben. Er is niets gewijzigd. Probeer een kleinere of eenvoudigere vorm.",
-  "The shape editor could not load. Check your connection and try again.": "De vormeditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
-  "The {noun} is hidden, as you left it. Use the arrow on the edge to show it.": "Verborgen, zoals je het had achtergelaten: {noun}. Gebruik de pijl aan de rand om het te tonen.",
-  "These shapes have too many points to combine. Nothing was changed.": "Deze vormen hebben te veel punten om samen te voegen. Er is niets gewijzigd.",
-  "This shape changed while you were editing. Save as new, or reload it.": "Deze vorm is gewijzigd terwijl je bewerkte. Sla op als nieuw of laad hem opnieuw.",
-  "This shape is too big for the library (8 KB).": "Deze vorm is te groot voor de bibliotheek (8 KB).",
-  "This shape was changed somewhere else.": "Deze vorm is ergens anders gewijzigd.",
-  "Ticket": "Kaartje",
-  "Ticket, Wave and Blob can't be edited yet. Use the preset as it is.": "Kaartje, Golf en Blob kunnen nog niet worden bewerkt. Gebruik de voorinstelling zoals hij is.",
-  "Tile": "Tegel",
-  "Tile, square 120 x 120": "Tegel, vierkant 120 x 120",
-  "Top": "Boven",
-  "Top left corner": "Hoek linksboven",
-  "Top right corner": "Hoek rechtsboven",
-  "Triangle": "Driehoek",
-  "Try again": "Opnieuw proberen",
-  "Two notched corners": "Twee ingekeepte hoeken",
-  "Type": "Type",
-  "Undo": "Ongedaan maken",
-  "Unit": "Eenheid",
-  "Update \"{name}\"": "\"{name}\" bijwerken",
-  "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.": "Gebruiken volgt de bibliotheek: wijzig \"Lamp\" en elke kaart die hem gebruikt verandert mee. Gebruiken als kopie maakt de kaart onafhankelijk.",
-  "Use on this card": "Gebruiken op deze kaart",
-  "V is Select. P is Pen.": "V is Selecteren. P is Pen.",
-  "Vertical anchor": "Verticaal anker",
-  "W": "B",
-  "Warning": "Waarschuwing",
-  "Wide": "Breed",
-  "Wide banner": "Brede banner",
-  "Wide banner 720 x 200": "Brede banner 720 x 200",
-  "Width": "Breedte",
-  "Working...": "Bezig...",
-  "X": "X",
-  "X, from the left edge": "X, vanaf de linkerrand",
-  "Y": "Y",
-  "Y, from the top edge": "Y, vanaf de bovenrand",
-  "Your account can use the library but not change it. Ask an admin, or keep this shape in the card only.": "Je account kan de bibliotheek gebruiken maar niet wijzigen. Vraag het een beheerder of bewaar deze vorm alleen in de kaart.",
-  "at {name}": "op {name}",
-  "at {name}, {w} x {h}": "op {name}, {w} x {h}",
-  "inspector": "inspector",
-  "shown at {pct}%": "getoond op {pct}%",
-  "side panel": "zijpaneel",
-  "{c, plural, one {# point} other {# points}}": "{c, plural, one {# punt} other {# punten}}",
-  "{c} of {max} points": "{c} van {max} punten",
-  "{k} (not applied yet)": "{k} (nog niet toegepast)",
-  "{k} ready to combine. Use the arrows or fields to place it.": "{k} staat klaar om samen te voegen. Plaats hem met de pijltjes of de velden.",
-  "{name} copy": "{name} kopie",
-  "{op, select, union {Combined} subtract {Subtracted} other {Intersected}}. The outline has {c, plural, one {# point} other {# points}}.": "{op, select, union {Samengevoegd} subtract {Afgetrokken} other {Doorsnede genomen}}. De omtrek heeft {c, plural, one {# punt} other {# punten}}.",
-  "{panels} hidden": "{panels} verborgen",
-  "{panels} shown": "{panels} getoond",
-  "{x}, {y}": "{x}, {y}"
+  "shape-editor.lips.got-it": {
+    "text": "Begrepen",
+    "hash": "5ad3dbd1"
+  },
+  "shape-editor.lips.hide-noun-keys": {
+    "text": "Verberg {noun} ({keys})",
+    "hash": "62432946"
+  },
+  "shape-editor.lips.inspector": {
+    "text": "inspector",
+    "hash": "98fe4422"
+  },
+  "shape-editor.lips.inspector-panel": {
+    "text": "Inspectorpaneel",
+    "hash": "20f92072"
+  },
+  "shape-editor.lips.panels-hidden": {
+    "text": "{panels} verborgen",
+    "hash": "8048104c"
+  },
+  "shape-editor.lips.panels-shown": {
+    "text": "{panels} getoond",
+    "hash": "755f1a3b"
+  },
+  "shape-editor.lips.shortcut-keys": {
+    "text": "Sneltoets: {keys}",
+    "hash": "2fc10998"
+  },
+  "shape-editor.lips.show-noun-keys": {
+    "text": "Toon {noun} ({keys})",
+    "hash": "7a362b14"
+  },
+  "shape-editor.lips.side-panel": {
+    "text": "Zijpaneel",
+    "hash": "c28cdd98"
+  },
+  "shape-editor.lips.side-panel-2": {
+    "text": "zijpaneel",
+    "hash": "faaafb22"
+  },
+  "shape-editor.lips.some-panels-are-hidden-as-you-left-them": {
+    "text": "Een paar panelen zijn verborgen, zoals je ze had achtergelaten. Gebruik de pijlen aan de randen om ze te tonen.",
+    "hash": "dab30b27"
+  },
+  "shape-editor.lips.the-noun-is-hidden-as-you-left-it-use": {
+    "text": "Verborgen, zoals je het had achtergelaten: {noun}. Gebruik de pijl aan de rand om het te tonen.",
+    "hash": "16ec095c"
+  },
+  "shape-editor.mc-shape-studio.a-shape-holds-up-to-max-points": {
+    "text": "{max, plural, one {Een vorm kan maximaal # punt hebben.} other {Een vorm kan maximaal # punten hebben.}}",
+    "hash": "a3258886"
+  },
+  "shape-editor.mc-shape-studio.a-shape-named-name-exists-saving-changes": {
+    "text": "Er bestaat al een vorm met de naam {name}. Opslaan wijzigt elke kaart die hem gebruikt.",
+    "hash": "7e135f33"
+  },
+  "shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points": {
+    "text": "Een vorm heeft minstens 3 punten nodig.",
+    "hash": "ad184e00"
+  },
+  "shape-editor.mc-shape-studio.add-3-points-to-finish": {
+    "text": "Voeg 3 punten toe om af te ronden.",
+    "hash": "e1183510"
+  },
+  "shape-editor.mc-shape-studio.add-point": {
+    "text": "Punt toevoegen",
+    "hash": "71c21386"
+  },
+  "shape-editor.mc-shape-studio.add-point-after": {
+    "text": "Punt toevoegen erna",
+    "hash": "11381b50"
+  },
+  "shape-editor.mc-shape-studio.add-point-here": {
+    "text": "Punt hier toevoegen",
+    "hash": "d1828848"
+  },
+  "shape-editor.mc-shape-studio.add-shape": {
+    "text": "Vorm toevoegen...",
+    "hash": "06cbf75d"
+  },
+  "shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the": {
+    "text": "Geavanceerd: hoe dit punt meebeweegt als de kaart van grootte verandert",
+    "hash": "67ab3a5b"
+  },
+  "shape-editor.mc-shape-studio.all-corners-together": {
+    "text": "Alle hoeken samen",
+    "hash": "9bb57ad4"
+  },
+  "shape-editor.mc-shape-studio.all-four-corners": {
+    "text": "Alle vier de hoeken",
+    "hash": "6fba1376"
+  },
+  "shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one": {
+    "text": "Alle vier de hoeken zijn gewijzigd. Maar één wijzigen?",
+    "hash": "018e6685"
+  },
+  "shape-editor.mc-shape-studio.angle": {
+    "text": "Hoek",
+    "hash": "1968034b"
+  },
+  "shape-editor.mc-shape-studio.applied-top-left-to-all-corners": {
+    "text": "Linksboven toegepast op alle hoeken.",
+    "hash": "2d932dce"
+  },
+  "shape-editor.mc-shape-studio.at-name": {
+    "text": "op {name}",
+    "hash": "f85524b4"
+  },
+  "shape-editor.mc-shape-studio.at-name-w-x-h": {
+    "text": "op {name}, {w} x {h}",
+    "hash": "56d77cd3"
+  },
+  "shape-editor.mc-shape-studio.back": {
+    "text": "Terug",
+    "hash": "76900f1b"
+  },
+  "shape-editor.mc-shape-studio.back-to-card-editor": {
+    "text": "Terug naar kaarteditor",
+    "hash": "89f5c8f1"
+  },
+  "shape-editor.mc-shape-studio.bottom": {
+    "text": "Onder",
+    "hash": "479ad21a"
+  },
+  "shape-editor.mc-shape-studio.c": {
+    "text": "{c, plural, one {# punt} other {# punten}}",
+    "hash": "0372c574"
+  },
+  "shape-editor.mc-shape-studio.c-of-max-points": {
+    "text": "{max, plural, one {{c} van # punt} other {{c} van # punten}}",
+    "hash": "a392177d"
+  },
+  "shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it": {
+    "text": "Kan de ruimte vergroten, niet verkleinen.",
+    "hash": "a2955351"
+  },
+  "shape-editor.mc-shape-studio.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "shape-editor.mc-shape-studio.canvas-tools": {
+    "text": "Canvasgereedschap",
+    "hash": "65f9ce20"
+  },
+  "shape-editor.mc-shape-studio.card-shapes-have-one-outline-so-the-hole": {
+    "text": "Kaartvormen hebben één omtrek, dus het gat is opgevuld.",
+    "hash": "c18dc8e0"
+  },
+  "shape-editor.mc-shape-studio.centre": {
+    "text": "Centreren",
+    "hash": "45c19322"
+  },
+  "shape-editor.mc-shape-studio.changed-since-saved": {
+    "text": "Gewijzigd sinds opslaan",
+    "hash": "a05dd6e9"
+  },
+  "shape-editor.mc-shape-studio.changes-since-the-last-save-are-lost": {
+    "text": "Wijzigingen sinds de laatste keer opslaan gaan verloren.",
+    "hash": "339c1c86"
+  },
+  "shape-editor.mc-shape-studio.click-a-point-to-remove-it": {
+    "text": "Klik op een punt om het te verwijderen.",
+    "hash": "e25292d4"
+  },
+  "shape-editor.mc-shape-studio.click-on-the-outline-to-add-a-point": {
+    "text": "Klik op de omtrek om een punt toe te voegen.",
+    "hash": "ccc916c2"
+  },
+  "shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve": {
+    "text": "Klik of tik om punten toe te voegen. Sleep om te buigen.",
+    "hash": "bc5354f0"
+  },
+  "shape-editor.mc-shape-studio.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "shape-editor.mc-shape-studio.combine": {
+    "text": "Samenvoegen...",
+    "hash": "b4c40284"
+  },
+  "shape-editor.mc-shape-studio.combine-2": {
+    "text": "Samenvoegen",
+    "hash": "35843e7a"
+  },
+  "shape-editor.mc-shape-studio.combine-adds-it-to-the-outline-subtract": {
+    "text": "Samenvoegen voegt hem toe aan de omtrek. Aftrekken snijdt hem eruit. Doorsnede houdt alleen de overlap.",
+    "hash": "ffd983db"
+  },
+  "shape-editor.mc-shape-studio.combine-with": {
+    "text": "Samenvoegen met",
+    "hash": "173e64a1"
+  },
+  "shape-editor.mc-shape-studio.copied": {
+    "text": "Gekopieerd",
+    "hash": "8d525e5f"
+  },
+  "shape-editor.mc-shape-studio.copy-to-all-corners": {
+    "text": "Naar alle hoeken kopiëren",
+    "hash": "d5269f6f"
+  },
+  "shape-editor.mc-shape-studio.copy-yaml": {
+    "text": "YAML kopiëren",
+    "hash": "e5a88d42"
+  },
+  "shape-editor.mc-shape-studio.corner": {
+    "text": "Hoek",
+    "hash": "adfde70b"
+  },
+  "shape-editor.mc-shape-studio.corner-is-smaller-on-small-cards-v-px-on": {
+    "text": "De hoek is kleiner op kleine kaarten: {v} px op {size}.",
+    "hash": "5501f217"
+  },
+  "shape-editor.mc-shape-studio.corner-styles": {
+    "text": "Hoekstijlen",
+    "hash": "a8a41791"
+  },
+  "shape-editor.mc-shape-studio.corners": {
+    "text": "Hoeken",
+    "hash": "1d3cc47e"
+  },
+  "shape-editor.mc-shape-studio.corners-2": {
+    "text": "Hoeken.",
+    "hash": "1024157f"
+  },
+  "shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings": {
+    "text": "Hoeken omgezet in punten. Ongedaan maken brengt ze terug.",
+    "hash": "9a5e19a4"
+  },
+  "shape-editor.mc-shape-studio.corners-use-up-to-v-px-per-side": {
+    "text": "Hoeken nemen tot {v} px per zijde in beslag.",
+    "hash": "098634ef"
+  },
+  "shape-editor.mc-shape-studio.corners-will-be-square": {
+    "text": "De hoeken worden vierkant.",
+    "hash": "6a686952"
+  },
+  "shape-editor.mc-shape-studio.could-not-load-the-export-and-import": {
+    "text": "Het exporteer- en importeerprogramma kon niet worden geladen. Probeer het opnieuw.",
+    "hash": "5631f7b6"
+  },
+  "shape-editor.mc-shape-studio.could-not-reach-magic-card-utils-your": {
+    "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig in deze kaart.",
+    "hash": "6d444f4d"
+  },
+  "shape-editor.mc-shape-studio.could-not-save-name-try-again": {
+    "text": "{name} kon niet worden opgeslagen. Probeer het opnieuw.",
+    "hash": "60224a78"
+  },
+  "shape-editor.mc-shape-studio.couldn-t-load-the-shape-tools-try-again": {
+    "text": "De vormgereedschappen konden niet worden geladen. Probeer het opnieuw.",
+    "hash": "a596e591"
+  },
+  "shape-editor.mc-shape-studio.custom-shape": {
+    "text": "Eigen vorm",
+    "hash": "c8f64a9b"
+  },
+  "shape-editor.mc-shape-studio.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "shape-editor.mc-shape-studio.delete-name": {
+    "text": "{name} verwijderen",
+    "hash": "3cf8146e"
+  },
+  "shape-editor.mc-shape-studio.deleted-name-cards-that-use-it-keep": {
+    "text": "{name} verwijderd. Kaarten die het gebruiken houden hun eigen kopie.",
+    "hash": "93e7e595"
+  },
+  "shape-editor.mc-shape-studio.done": {
+    "text": "Klaar",
+    "hash": "11a6767d"
+  },
+  "shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list": {
+    "text": "Sleep punten of kies er een in de lijst.",
+    "hash": "ec0bcade"
+  },
+  "shape-editor.mc-shape-studio.draw": {
+    "text": "Tekenen",
+    "hash": "61517c08"
+  },
+  "shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your": {
+    "text": "Je tekent een nieuwe omtrek. Die vervangt je vorm als je klaar bent.",
+    "hash": "321d66c6"
+  },
+  "shape-editor.mc-shape-studio.each-corner": {
+    "text": "Elke hoek",
+    "hash": "2c21f04c"
+  },
+  "shape-editor.mc-shape-studio.edit-at": {
+    "text": "Bewerken op",
+    "hash": "040c6ce6"
+  },
+  "shape-editor.mc-shape-studio.edit-corners": {
+    "text": "Hoeken bewerken",
+    "hash": "74dc6151"
+  },
+  "shape-editor.mc-shape-studio.edit-corners-separately": {
+    "text": "Hoeken apart bewerken",
+    "hash": "855a4525"
+  },
+  "shape-editor.mc-shape-studio.error": {
+    "text": "Fout",
+    "hash": "54a0e8c1"
+  },
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-close": {
+    "text": "Esc sluit de editor niet. Gebruik Sluiten.",
+    "hash": "54ca21d3"
+  },
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
+    "text": "Esc sluit de editor niet. Gebruik Klaar of Terug naar kaarteditor.",
+    "hash": "17988495"
+  },
+  "shape-editor.mc-shape-studio.export-file": {
+    "text": "Bestand exporteren",
+    "hash": "d9d979c6"
+  },
+  "shape-editor.mc-shape-studio.export-import": {
+    "text": "Exporteren / importeren",
+    "hash": "566eef18"
+  },
+  "shape-editor.mc-shape-studio.extra-space": {
+    "text": "Extra ruimte",
+    "hash": "6b42654a"
+  },
+  "shape-editor.mc-shape-studio.finish": {
+    "text": "Afronden",
+    "hash": "a6c7a84b"
+  },
+  "shape-editor.mc-shape-studio.focus-rings-and-hover-scale-of-content": {
+    "text": "Focusringen en zweefschaal van inhoud die een afgesneden rand raakt, worden door de vorm afgekapt.",
+    "hash": "708fc6a9"
+  },
+  "shape-editor.mc-shape-studio.follows-the-card-s-shorter-side": {
+    "text": "Volgt de kortste zijde van de kaart.",
+    "hash": "9cb6d703"
+  },
+  "shape-editor.mc-shape-studio.free-shape": {
+    "text": "Vrije vorm",
+    "hash": "9361c422"
+  },
+  "shape-editor.mc-shape-studio.free-shape-c": {
+    "text": "Vrije vorm. {c, plural, one {# punt} other {# punten}}.",
+    "hash": "69d9994d"
+  },
+  "shape-editor.mc-shape-studio.free-shape-tools": {
+    "text": "Gereedschap voor vrije vorm",
+    "hash": "80ba8dc8"
+  },
+  "shape-editor.mc-shape-studio.give-it-a-name": {
+    "text": "Geef hem een naam.",
+    "hash": "9d63f7c9"
+  },
+  "shape-editor.mc-shape-studio.give-the-shape-a-name": {
+    "text": "Geef de vorm een naam.",
+    "hash": "7f29c1cb"
+  },
+  "shape-editor.mc-shape-studio.going-back-to-corners-drops-your-edited": {
+    "text": "Teruggaan naar Hoeken laat je bewerkte punten vallen. Ongedaan maken brengt ze terug.",
+    "hash": "d348787b"
+  },
+  "shape-editor.mc-shape-studio.grid": {
+    "text": "Raster",
+    "hash": "0d7d12ac"
+  },
+  "shape-editor.mc-shape-studio.height": {
+    "text": "Hoogte",
+    "hash": "bfe2eca4"
+  },
+  "shape-editor.mc-shape-studio.horizontal-anchor": {
+    "text": "Horizontaal anker",
+    "hash": "9a6f6886"
+  },
+  "shape-editor.mc-shape-studio.how-to-install": {
+    "text": "Zo installeer je het",
+    "hash": "d77b0cba"
+  },
+  "shape-editor.mc-shape-studio.import-file": {
+    "text": "Bestand importeren",
+    "hash": "6a9e73cf"
+  },
+  "shape-editor.mc-shape-studio.imported-name": {
+    "text": "{name} geïmporteerd",
+    "hash": "dc946d49"
+  },
+  "shape-editor.mc-shape-studio.inspector-panel": {
+    "text": "Inspectorpaneel",
+    "hash": "20f92072"
+  },
+  "shape-editor.mc-shape-studio.k-not-applied-yet": {
+    "text": "{k} (nog niet toegepast)",
+    "hash": "c62e3873"
+  },
+  "shape-editor.mc-shape-studio.k-ready-to-combine-use-the-arrows-or": {
+    "text": "{k} staat klaar om samen te voegen. Plaats hem met de pijltjes of de velden.",
+    "hash": "3d324e1a"
+  },
+  "shape-editor.mc-shape-studio.keep-editing": {
+    "text": "Verder bewerken",
+    "hash": "e76fd2ad"
+  },
+  "shape-editor.mc-shape-studio.keep-your-own-shapes": {
+    "text": "Bewaar je eigen vormen",
+    "hash": "8cff7457"
+  },
+  "shape-editor.mc-shape-studio.keep-your-own-shapes-for-every-dashboard": {
+    "text": "Bewaar je eigen vormen voor elk dashboard met de gratis Magic Card Utils-add-on. Tot die tijd wordt wat je bouwt alleen in deze kaart bewaard.",
+    "hash": "49056b08"
+  },
+  "shape-editor.mc-shape-studio.keeps-text-away-from-the-corners-the": {
+    "text": "Houdt tekst uit de hoeken. De kaart rekent het voor je uit.",
+    "hash": "9a65e243"
+  },
+  "shape-editor.mc-shape-studio.kept-the-largest-piece-c-removed": {
+    "text": "Het grootste stuk is behouden. {c, plural, one {# kleiner stuk is} other {# kleinere stukken zijn}} verwijderd.",
+    "hash": "e6de8627"
+  },
+  "shape-editor.mc-shape-studio.leave": {
+    "text": "Verlaten",
+    "hash": "fc6e4a40"
+  },
+  "shape-editor.mc-shape-studio.leave-without-saving": {
+    "text": "Verlaten zonder op te slaan?",
+    "hash": "2190d03a"
+  },
+  "shape-editor.mc-shape-studio.left": {
+    "text": "Links",
+    "hash": "58eb9032"
+  },
+  "shape-editor.mc-shape-studio.length": {
+    "text": "Lengte",
+    "hash": "adc95605"
+  },
+  "shape-editor.mc-shape-studio.library": {
+    "text": "Bibliotheek",
+    "hash": "dc20b3d5"
+  },
+  "shape-editor.mc-shape-studio.linked-to-the-saved-shape-id-your-edits": {
+    "text": "Gekoppeld aan de opgeslagen vorm \"{id}\". Als je iets wijzigt, wordt het de eigen vorm van deze kaart.",
+    "hash": "cb82d3ce"
+  },
+  "shape-editor.mc-shape-studio.loading-the-shape-editor": {
+    "text": "Vormeditor laden",
+    "hash": "5920c611"
+  },
+  "shape-editor.mc-shape-studio.loading-your-shapes": {
+    "text": "Je vormen laden",
+    "hash": "332b964f"
+  },
+  "shape-editor.mc-shape-studio.maximise": {
+    "text": "Maximaliseren",
+    "hash": "1c9fcada"
+  },
+  "shape-editor.mc-shape-studio.measured-inside-the-outline-at-the-size": {
+    "text": "Gemeten binnen de omtrek op de grootte waarop je bewerkt. Vergroot een zijde als je meer nodig hebt.",
+    "hash": "af6ee445"
+  },
+  "shape-editor.mc-shape-studio.messages": {
+    "text": "Berichten",
+    "hash": "04d7b483"
+  },
+  "shape-editor.mc-shape-studio.move-dir": {
+    "text": "Verplaats {dir, select, left {naar links} up {omhoog} down {omlaag} other {naar rechts}}",
+    "hash": "a8c88ea0"
+  },
+  "shape-editor.mc-shape-studio.move-it-with-the-arrow-keys-or-drag-it": {
+    "text": "Verplaats hem met de pijltjestoetsen of sleep hem op het canvas.",
+    "hash": "a6bb10f0"
+  },
+  "shape-editor.mc-shape-studio.move-point": {
+    "text": "Punt verplaatsen",
+    "hash": "4f53ff4e"
+  },
+  "shape-editor.mc-shape-studio.move-window": {
+    "text": "Venster verplaatsen",
+    "hash": "50bb7be2"
+  },
+  "shape-editor.mc-shape-studio.name": {
+    "text": "Naam",
+    "hash": "dcd1d522"
+  },
+  "shape-editor.mc-shape-studio.name-copy": {
+    "text": "{name} kopie",
+    "hash": "938a6418"
+  },
+  "shape-editor.mc-shape-studio.new-outline": {
+    "text": "Nieuwe omtrek",
+    "hash": "56c73417"
+  },
+  "shape-editor.mc-shape-studio.next": {
+    "text": "Volgende",
+    "hash": "1ff57a29"
+  },
+  "shape-editor.mc-shape-studio.no-messages": {
+    "text": "Geen berichten.",
+    "hash": "4b2f6153"
+  },
+  "shape-editor.mc-shape-studio.no-saved-shapes-yet": {
+    "text": "Nog geen opgeslagen vormen",
+    "hash": "7565f7e3"
+  },
+  "shape-editor.mc-shape-studio.no-shapes-match-q": {
+    "text": "Geen vormen gevonden voor \"{q}\".",
+    "hash": "317b60c8"
+  },
+  "shape-editor.mc-shape-studio.note": {
+    "text": "Opmerking",
+    "hash": "d8da2c49"
+  },
+  "shape-editor.mc-shape-studio.nothing-to-redo": {
+    "text": "Niets om opnieuw te doen",
+    "hash": "4aaf2710"
+  },
+  "shape-editor.mc-shape-studio.nothing-to-undo": {
+    "text": "Niets om ongedaan te maken",
+    "hash": "83290078"
+  },
+  "shape-editor.mc-shape-studio.nothing-would-be-left-of-the-shape": {
+    "text": "Er zou niets van de vorm overblijven. Er is niets gewijzigd.",
+    "hash": "32ed27d1"
+  },
+  "shape-editor.mc-shape-studio.nudge": {
+    "text": "Verschuiven",
+    "hash": "a5239b85"
+  },
+  "shape-editor.mc-shape-studio.older-browsers-draw-the-curved-corners": {
+    "text": "Oudere browsers tekenen de ronde hoeken als rechte facetten. Rand, ring en schaduw blijven.",
+    "hash": "d735b011"
+  },
+  "shape-editor.mc-shape-studio.on-card": {
+    "text": "Op de kaart",
+    "hash": "cae96945"
+  },
+  "shape-editor.mc-shape-studio.only-the-first-of-c-shapes-in-the-file": {
+    "text": "{c, plural, one {Alleen de eerste van de # vorm in het bestand is gebruikt.} other {Alleen de eerste van de # vormen in het bestand is gebruikt.}}",
+    "hash": "1c1826fe"
+  },
+  "shape-editor.mc-shape-studio.op-the-outline-has-c": {
+    "text": "{op, select, union {Samengevoegd} subtract {Afgetrokken} other {Doorsnede genomen}}. De omtrek heeft {c, plural, one {# punt} other {# punten}}.",
+    "hash": "10decab6"
+  },
+  "shape-editor.mc-shape-studio.open": {
+    "text": "Openen",
+    "hash": "ed077f3d"
+  },
+  "shape-editor.mc-shape-studio.open-name": {
+    "text": "{name} openen",
+    "hash": "f687d181"
+  },
+  "shape-editor.mc-shape-studio.outline": {
+    "text": "Omtrek",
+    "hash": "eabbf3ab"
+  },
+  "shape-editor.mc-shape-studio.outline-actions": {
+    "text": "Omtrekacties",
+    "hash": "a4cc74f2"
+  },
+  "shape-editor.mc-shape-studio.outlines": {
+    "text": "Omtrekken",
+    "hash": "aee1b414"
+  },
+  "shape-editor.mc-shape-studio.pen": {
+    "text": "Pen",
+    "hash": "a04bd35b"
+  },
+  "shape-editor.mc-shape-studio.pen-cancelled": {
+    "text": "Pen geannuleerd.",
+    "hash": "fd6f2ef1"
+  },
+  "shape-editor.mc-shape-studio.point-i": {
+    "text": "Punt {i}",
+    "hash": "ae6dbb11"
+  },
+  "shape-editor.mc-shape-studio.point-i-of-c": {
+    "text": "Punt {i} van {c}",
+    "hash": "d818c5f9"
+  },
+  "shape-editor.mc-shape-studio.point-removed-c": {
+    "text": "Punt verwijderd, {c, plural, one {# punt} other {# punten}}.",
+    "hash": "0035b1fc"
+  },
+  "shape-editor.mc-shape-studio.point-type": {
+    "text": "Puntsoort",
+    "hash": "ba894ba7"
+  },
+  "shape-editor.mc-shape-studio.points": {
+    "text": "Punten",
+    "hash": "77deabe2"
+  },
+  "shape-editor.mc-shape-studio.position-across-the-width": {
+    "text": "Positie over de breedte",
+    "hash": "bfe4e12a"
+  },
+  "shape-editor.mc-shape-studio.position-down-the-height": {
+    "text": "Positie langs de hoogte",
+    "hash": "00deef36"
+  },
+  "shape-editor.mc-shape-studio.preview": {
+    "text": "Voorbeeld",
+    "hash": "324b134f"
+  },
+  "shape-editor.mc-shape-studio.preview-at-name-size-w-by-h": {
+    "text": "Voorbeeld op {name}-formaat, {w} bij {h}",
+    "hash": "97358d6b"
+  },
+  "shape-editor.mc-shape-studio.previous": {
+    "text": "Vorige",
+    "hash": "a57b08a4"
+  },
+  "shape-editor.mc-shape-studio.redo": {
+    "text": "Opnieuw",
+    "hash": "74273989"
+  },
+  "shape-editor.mc-shape-studio.reload": {
+    "text": "Opnieuw laden",
+    "hash": "bdc090ec"
+  },
+  "shape-editor.mc-shape-studio.remove-point": {
+    "text": "Punt verwijderen",
+    "hash": "272eeda3"
+  },
+  "shape-editor.mc-shape-studio.replaced-your-outline": {
+    "text": "Je omtrek is vervangen.",
+    "hash": "81e97882"
+  },
+  "shape-editor.mc-shape-studio.replaces-your-current-outline-undo": {
+    "text": "Vervangt je huidige omtrek. Ongedaan maken brengt hem terug.",
+    "hash": "0a5ea167"
+  },
+  "shape-editor.mc-shape-studio.reset": {
+    "text": "Herstellen",
+    "hash": "daee7606"
+  },
+  "shape-editor.mc-shape-studio.reset-shape": {
+    "text": "Vorm herstellen",
+    "hash": "5076bad9"
+  },
+  "shape-editor.mc-shape-studio.resize-window": {
+    "text": "Venstergrootte aanpassen",
+    "hash": "c82ca135"
+  },
+  "shape-editor.mc-shape-studio.restore-size": {
+    "text": "Oorspronkelijke grootte",
+    "hash": "b0a8b5c8"
+  },
+  "shape-editor.mc-shape-studio.reverse-direction": {
+    "text": "Richting omkeren",
+    "hash": "f8123301"
+  },
+  "shape-editor.mc-shape-studio.right": {
+    "text": "Rechts",
+    "hash": "883361d5"
+  },
+  "shape-editor.mc-shape-studio.ring-border-shadow-and-value-background": {
+    "text": "Ring, rand, schaduw en waardeachtergrond volgen de omtrek.",
+    "hash": "33297534"
+  },
+  "shape-editor.mc-shape-studio.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "shape-editor.mc-shape-studio.save-a-shape-here-and-use-it-on-any": {
+    "text": "Sla hier een vorm op en gebruik hem op elk dashboard.",
+    "hash": "14426c46"
+  },
+  "shape-editor.mc-shape-studio.save-as-a-copy": {
+    "text": "Opslaan als kopie",
+    "hash": "0ed28074"
+  },
+  "shape-editor.mc-shape-studio.save-as-new": {
+    "text": "Opslaan als nieuw",
+    "hash": "84b113d1"
+  },
+  "shape-editor.mc-shape-studio.save-current-shape": {
+    "text": "Huidige vorm opslaan",
+    "hash": "2ac6f73e"
+  },
+  "shape-editor.mc-shape-studio.save-to-library": {
+    "text": "Opslaan in bibliotheek",
+    "hash": "c2a5bbbd"
+  },
+  "shape-editor.mc-shape-studio.saved": {
+    "text": "Opgeslagen",
+    "hash": "b5c120b3"
+  },
+  "shape-editor.mc-shape-studio.saved-shape-id-was-not-found-this-card": {
+    "text": "Opgeslagen vorm \"{id}\" is niet gevonden. Deze kaart gebruikt zijn eigen kopie.",
+    "hash": "8630edbc"
+  },
+  "shape-editor.mc-shape-studio.saved-to-library-as-name-press-done-to": {
+    "text": "Opgeslagen in de bibliotheek als {name}. Kies Klaar om het op deze kaart te gebruiken.",
+    "hash": "408a284c"
+  },
+  "shape-editor.mc-shape-studio.search-my-shapes": {
+    "text": "Zoek in mijn vormen",
+    "hash": "0d98a640"
+  },
+  "shape-editor.mc-shape-studio.select": {
+    "text": "Selecteren",
+    "hash": "2a78025d"
+  },
+  "shape-editor.mc-shape-studio.selected-point": {
+    "text": "Geselecteerd punt",
+    "hash": "53f29419"
+  },
+  "shape-editor.mc-shape-studio.shape": {
+    "text": "Vorm",
+    "hash": "e0e49270"
+  },
+  "shape-editor.mc-shape-studio.shape-applied-to-target": {
+    "text": "Vorm toegepast op {target}",
+    "hash": "8a00a636"
+  },
+  "shape-editor.mc-shape-studio.shape-editor": {
+    "text": "Vormeditor",
+    "hash": "3bc2119f"
+  },
+  "shape-editor.mc-shape-studio.shape-for-target": {
+    "text": "Vorm voor {target}",
+    "hash": "0249f157"
+  },
+  "shape-editor.mc-shape-studio.shape-name": {
+    "text": "Vormnaam",
+    "hash": "b410af75"
+  },
+  "shape-editor.mc-shape-studio.shape-to-combine": {
+    "text": "Vorm om samen te voegen",
+    "hash": "3cf7eed8"
+  },
+  "shape-editor.mc-shape-studio.shape-type": {
+    "text": "Vormsoort",
+    "hash": "78d36bc8"
+  },
+  "shape-editor.mc-shape-studio.shapes": {
+    "text": "Vormen",
+    "hash": "75e8028a"
+  },
+  "shape-editor.mc-shape-studio.short-no-slashes-shown-in-the-list": {
+    "text": "Kort, zonder schuine strepen. Getoond in de lijst.",
+    "hash": "33a8c650"
+  },
+  "shape-editor.mc-shape-studio.shortcuts": {
+    "text": "Sneltoetsen",
+    "hash": "46e978d0"
+  },
+  "shape-editor.mc-shape-studio.show-full-message": {
+    "text": "Volledig bericht tonen",
+    "hash": "95bdb276"
+  },
+  "shape-editor.mc-shape-studio.show-older-browser-look": {
+    "text": "Uiterlijk van oudere browsers tonen",
+    "hash": "cb209997"
+  },
+  "shape-editor.mc-shape-studio.show-text-area": {
+    "text": "Tekstgebied tonen",
+    "hash": "a7870589"
+  },
+  "shape-editor.mc-shape-studio.shown-at-pct": {
+    "text": "getoond op {pct}%",
+    "hash": "055643c5"
+  },
+  "shape-editor.mc-shape-studio.side-panel": {
+    "text": "Zijpaneel",
+    "hash": "c28cdd98"
+  },
+  "shape-editor.mc-shape-studio.sidebar": {
+    "text": "Zijbalk",
+    "hash": "f7efa7bc"
+  },
+  "shape-editor.mc-shape-studio.size": {
+    "text": "Grootte",
+    "hash": "1af85190"
+  },
+  "shape-editor.mc-shape-studio.skip-to-canvas": {
+    "text": "Naar het canvas",
+    "hash": "10a92c72"
+  },
+  "shape-editor.mc-shape-studio.skip-to-inspector": {
+    "text": "Naar de inspecteur",
+    "hash": "fe11bbd8"
+  },
+  "shape-editor.mc-shape-studio.skip-to-point-fields": {
+    "text": "Naar de puntvelden",
+    "hash": "71cb500a"
+  },
+  "shape-editor.mc-shape-studio.smooth": {
+    "text": "Vloeiend",
+    "hash": "da519387"
+  },
+  "shape-editor.mc-shape-studio.smoothing": {
+    "text": "Verzachting",
+    "hash": "fcae13f0"
+  },
+  "shape-editor.mc-shape-studio.snap": {
+    "text": "Uitlijnen",
+    "hash": "98df9a59"
+  },
+  "shape-editor.mc-shape-studio.space-for-text": {
+    "text": "Ruimte voor tekst",
+    "hash": "93d660a2"
+  },
+  "shape-editor.mc-shape-studio.space-for-text-top-right-bottom-left": {
+    "text": "Ruimte voor tekst: boven, rechts, onder, links",
+    "hash": "3d264e4e"
+  },
+  "shape-editor.mc-shape-studio.square-corners-have-no-size": {
+    "text": "Vierkante hoeken hebben geen grootte.",
+    "hash": "512d1c82"
+  },
+  "shape-editor.mc-shape-studio.start-from": {
+    "text": "Beginnen met...",
+    "hash": "70adf727"
+  },
+  "shape-editor.mc-shape-studio.start-from-a-shape": {
+    "text": "Beginnen met een vorm...",
+    "hash": "b82679a3"
+  },
+  "shape-editor.mc-shape-studio.start-from-a-shape-2": {
+    "text": "Beginnen met een vorm",
+    "hash": "681c3923"
+  },
+  "shape-editor.mc-shape-studio.started-from-circle-on-a-wide-card-the": {
+    "text": "Begonnen met Cirkel. Op een brede kaart is de eigen vorm een pil, geen ellips.",
+    "hash": "5dfd5462"
+  },
+  "shape-editor.mc-shape-studio.started-from-k": {
+    "text": "Begonnen met {k}.",
+    "hash": "a54d2042"
+  },
+  "shape-editor.mc-shape-studio.started-from-k-switched-to-free-shape": {
+    "text": "Begonnen met {k}. Overgeschakeld naar Vrije vorm.",
+    "hash": "476cfcc2"
+  },
+  "shape-editor.mc-shape-studio.started-from-name-it-opens-as-a-path-so": {
+    "text": "Begonnen met {name}. Het opent als pad, zodat je elk punt kunt verplaatsen.",
+    "hash": "025a2eea"
+  },
+  "shape-editor.mc-shape-studio.started-from-name-your-changes-make-this": {
+    "text": "Begonnen met {name}. Door je wijzigingen wordt dit een eigen vorm.",
+    "hash": "aa2f8ca7"
+  },
+  "shape-editor.mc-shape-studio.started-from-notch-its-corners-are-cut": {
+    "text": "Begonnen met Inkeping. De hoeken zijn recht afgesneden, dus ze beginnen als Afgeschuind.",
+    "hash": "1e5f8a46"
+  },
+  "shape-editor.mc-shape-studio.starters": {
+    "text": "Beginstijlen",
+    "hash": "15f2172d"
+  },
+  "shape-editor.mc-shape-studio.stays-the-same-on-every-card-size": {
+    "text": "Blijft gelijk op elke kaartgrootte.",
+    "hash": "13243b54"
+  },
+  "shape-editor.mc-shape-studio.stretch": {
+    "text": "Uitrekken",
+    "hash": "a33fbcf8"
+  },
+  "shape-editor.mc-shape-studio.tab-into-the-canvas-and-choose-a-point": {
+    "text": "Tab naar het canvas. [ en ] kiezen een punt. Pijltjes verplaatsen het.",
+    "hash": "3f3b175d"
+  },
+  "shape-editor.mc-shape-studio.the-corners-cut-into-the-text-area-raise": {
+    "text": "De hoeken snijden in het tekstgebied. Vergroot de extra ruimte of maak de hoeken kleiner.",
+    "hash": "5783d6fd"
+  },
+  "shape-editor.mc-shape-studio.the-outline-crosses-itself-at-where": {
+    "text": "De omtrek kruist zichzelf bij {where}.",
+    "hash": "d8ecd099"
+  },
+  "shape-editor.mc-shape-studio.the-outline-cuts-into-the-text-area-at": {
+    "text": "De omtrek snijdt in het tekstgebied bij {where}. Vergroot Extra ruimte of geef de kaart een minimale hoogte.",
+    "hash": "abfb4376"
+  },
+  "shape-editor.mc-shape-studio.the-path-editor-could-not-load-check": {
+    "text": "De padeditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "2f4eddc0"
+  },
+  "shape-editor.mc-shape-studio.the-result-needs-c-points-a-card-shape": {
+    "text": "{c, plural, one {Het resultaat heeft # punt nodig. Een kaartvorm kan er {max} hebben. Er is niets gewijzigd. Probeer een kleinere of eenvoudigere vorm.} other {Het resultaat heeft # punten nodig. Een kaartvorm kan er {max} hebben. Er is niets gewijzigd. Probeer een kleinere of eenvoudigere vorm.}}",
+    "hash": "9f984b5b"
+  },
+  "shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check": {
+    "text": "De vormeditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "433d9c4b"
+  },
+  "shape-editor.mc-shape-studio.these-shapes-have-too-many-points-to": {
+    "text": "Deze vormen hebben te veel punten om samen te voegen. Er is niets gewijzigd.",
+    "hash": "54e66ea9"
+  },
+  "shape-editor.mc-shape-studio.this-shape-is-too-big-for-the-library-8": {
+    "text": "Deze vorm is te groot voor de bibliotheek (8 KB).",
+    "hash": "3c95c8e1"
+  },
+  "shape-editor.mc-shape-studio.this-shape-was-changed-somewhere-else": {
+    "text": "Deze vorm is ergens anders gewijzigd.",
+    "hash": "cb73166b"
+  },
+  "shape-editor.mc-shape-studio.ticket-wave-and-blob-can-t-be-edited-yet": {
+    "text": "Kaartje, Golf en Blob kunnen nog niet worden bewerkt. Gebruik de voorinstelling zoals hij is.",
+    "hash": "c3e75d36"
+  },
+  "shape-editor.mc-shape-studio.top": {
+    "text": "Boven",
+    "hash": "d5cdfcf7"
+  },
+  "shape-editor.mc-shape-studio.try-again": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "shape-editor.mc-shape-studio.type": {
+    "text": "Type",
+    "hash": "baaddf70"
+  },
+  "shape-editor.mc-shape-studio.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "shape-editor.mc-shape-studio.unit": {
+    "text": "Eenheid",
+    "hash": "4e545960"
+  },
+  "shape-editor.mc-shape-studio.update-name": {
+    "text": "\"{name}\" bijwerken",
+    "hash": "25e29e20"
+  },
+  "shape-editor.mc-shape-studio.use-follows-the-library-change-lamp-and": {
+    "text": "Gebruiken volgt de bibliotheek: wijzig \"Lamp\" en elke kaart die hem gebruikt verandert mee. Gebruiken als kopie maakt de kaart onafhankelijk.",
+    "hash": "383eaa11"
+  },
+  "shape-editor.mc-shape-studio.use-on-this-card": {
+    "text": "Gebruiken op deze kaart",
+    "hash": "2537d498"
+  },
+  "shape-editor.mc-shape-studio.vertical-anchor": {
+    "text": "Verticaal anker",
+    "hash": "ad14ed12"
+  },
+  "shape-editor.mc-shape-studio.warning": {
+    "text": "Waarschuwing",
+    "hash": "e981ddae"
+  },
+  "shape-editor.mc-shape-studio.width": {
+    "text": "Breedte",
+    "hash": "3019947b"
+  },
+  "shape-editor.mc-shape-studio.working": {
+    "text": "Bezig...",
+    "hash": "b93900bd"
+  },
+  "shape-editor.mc-shape-studio.x-from-the-left-edge": {
+    "text": "X, vanaf de linkerrand",
+    "hash": "ad284a53"
+  },
+  "shape-editor.mc-shape-studio.x-y": {
+    "text": "{x}, {y}",
+    "hash": "8ec3092c"
+  },
+  "shape-editor.mc-shape-studio.y-from-the-top-edge": {
+    "text": "Y, vanaf de bovenrand",
+    "hash": "76233527"
+  },
+  "shape-editor.names.a-quarter-circle": {
+    "text": "Een kwartcirkel.",
+    "hash": "b1018945"
+  },
+  "shape-editor.names.a-quarter-circle-cut-into-the-card": {
+    "text": "Een kwartcirkel die in de kaart is uitgesneden.",
+    "hash": "4a8ed575"
+  },
+  "shape-editor.names.a-softer-round-between-a-circle-and-a": {
+    "text": "Een zachtere ronding, tussen een cirkel en een vierkant.",
+    "hash": "87e3ee76"
+  },
+  "shape-editor.names.a-square-step-cut-into-the-corner": {
+    "text": "Een vierkante trede die in de hoek is uitgesneden.",
+    "hash": "42893173"
+  },
+  "shape-editor.names.a-straight-diagonal-cut": {
+    "text": "Een rechte diagonale snede.",
+    "hash": "a389b055"
+  },
+  "shape-editor.names.arrow": {
+    "text": "Pijl",
+    "hash": "05800e70"
+  },
+  "shape-editor.names.arrow-keys-move-the-point-shift-moves-it": {
+    "text": "De pijltjestoetsen verplaatsen het punt. Met Shift gaat het verder, met Alt minder ver.",
+    "hash": "b10e29d7"
+  },
+  "shape-editor.names.bevel": {
+    "text": "Afgeschuind",
+    "hash": "72c3bce2"
+  },
+  "shape-editor.names.bottom": {
+    "text": "Onder",
+    "hash": "479ad21a"
+  },
+  "shape-editor.names.bottom-left-corner": {
+    "text": "Hoek linksonder",
+    "hash": "4fd7d6ec"
+  },
+  "shape-editor.names.bottom-right-corner": {
+    "text": "Hoek rechtsonder",
+    "hash": "85004d7a"
+  },
+  "shape-editor.names.chevron": {
+    "text": "Punthaak",
+    "hash": "c9143fa6"
+  },
+  "shape-editor.names.circle": {
+    "text": "Cirkel",
+    "hash": "b93d3bce"
+  },
+  "shape-editor.names.cloud": {
+    "text": "Wolk",
+    "hash": "b977b950"
+  },
+  "shape-editor.names.combine": {
+    "text": "Samenvoegen",
+    "hash": "35843e7a"
+  },
+  "shape-editor.names.ctrl-z-undoes-ctrl-shift-z-redoes-ctrl-s": {
+    "text": "Ctrl+Z maakt ongedaan, Ctrl+Shift+Z doet opnieuw, Ctrl+S slaat op.",
+    "hash": "caa1eb9c"
+  },
+  "shape-editor.names.custom": {
+    "text": "Aangepast",
+    "hash": "494ca78f"
+  },
+  "shape-editor.names.custom-size": {
+    "text": "Aangepaste grootte",
+    "hash": "d432bb2b"
+  },
+  "shape-editor.names.cut-corners": {
+    "text": "Afgesneden hoeken",
+    "hash": "07b488c7"
+  },
+  "shape-editor.names.delete-removes-the-point": {
+    "text": "Delete verwijdert het punt.",
+    "hash": "21bdd743"
+  },
+  "shape-editor.names.distance-from-the-bottom-edge": {
+    "text": "Afstand tot de onderrand",
+    "hash": "27f44a85"
+  },
+  "shape-editor.names.distance-from-the-left-edge": {
+    "text": "Afstand tot de linkerrand",
+    "hash": "1d3dc583"
+  },
+  "shape-editor.names.distance-from-the-right-edge": {
+    "text": "Afstand tot de rechterrand",
+    "hash": "2dd0ceaa"
+  },
+  "shape-editor.names.distance-from-the-top-edge": {
+    "text": "Afstand tot de bovenrand",
+    "hash": "52c9413d"
+  },
+  "shape-editor.names.drop": {
+    "text": "Druppel",
+    "hash": "c8af9ae3"
+  },
+  "shape-editor.names.ellipse": {
+    "text": "Ellips",
+    "hash": "cb1ee8cb"
+  },
+  "shape-editor.names.esc-closes-a-window-then-ends-a-drawing": {
+    "text": "Esc sluit een venster en beëindigt daarna een tekening.",
+    "hash": "58a8115d"
+  },
+  "shape-editor.names.h": {
+    "text": "H",
+    "hash": "44bd7ae6"
+  },
+  "shape-editor.names.heart": {
+    "text": "Hart",
+    "hash": "770af9d1"
+  },
+  "shape-editor.names.hexagon": {
+    "text": "Zeshoek",
+    "hash": "ddcc1ac4"
+  },
+  "shape-editor.names.in-handle": {
+    "text": "Ingaande handgreep",
+    "hash": "543fe7c6"
+  },
+  "shape-editor.names.intersect": {
+    "text": "Doorsnede",
+    "hash": "a069db5b"
+  },
+  "shape-editor.names.keep-your-own-shapes-for-every-dashboard": {
+    "text": "Bewaar je eigen vormen voor elk dashboard met de gratis Magic Card Utils-add-on.",
+    "hash": "dce834e3"
+  },
+  "shape-editor.names.lamp-on": {
+    "text": "Lamp aan",
+    "hash": "a91d3d2e"
+  },
+  "shape-editor.names.leaf": {
+    "text": "Blad",
+    "hash": "b83382a9"
+  },
+  "shape-editor.names.left": {
+    "text": "Links",
+    "hash": "58eb9032"
+  },
+  "shape-editor.names.living-room": {
+    "text": "Woonkamer",
+    "hash": "268d40ee"
+  },
+  "shape-editor.names.no-change-a-sharp-corner": {
+    "text": "Geen wijziging, een scherpe hoek.",
+    "hash": "d5f8bc1f"
+  },
+  "shape-editor.names.notch": {
+    "text": "Inkeping",
+    "hash": "ff4af744"
+  },
+  "shape-editor.names.notched": {
+    "text": "Ingekeept",
+    "hash": "6cbb79ed"
+  },
+  "shape-editor.names.octagon": {
+    "text": "Achthoek",
+    "hash": "5935d200"
+  },
+  "shape-editor.names.out-handle": {
+    "text": "Uitgaande handgreep",
+    "hash": "0709db79"
+  },
+  "shape-editor.names.pill": {
+    "text": "Pil",
+    "hash": "9945c78b"
+  },
+  "shape-editor.names.plus": {
+    "text": "Plus",
+    "hash": "8a784378"
+  },
+  "shape-editor.names.right": {
+    "text": "Rechts",
+    "hash": "883361d5"
+  },
+  "shape-editor.names.right-click-long-press-the-menu-key-or": {
+    "text": "Rechtsklikken, lang indrukken, de menutoets of Shift+F10 opent Omtrekacties.",
+    "hash": "95b3fb5d"
+  },
+  "shape-editor.names.round": {
+    "text": "Rond",
+    "hash": "cd9558ac"
+  },
+  "shape-editor.names.rounded": {
+    "text": "Afgerond",
+    "hash": "0a62cd80"
+  },
+  "shape-editor.names.rounded-rectangle": {
+    "text": "Afgeronde rechthoek",
+    "hash": "c93421a7"
+  },
+  "shape-editor.names.row": {
+    "text": "Rij",
+    "hash": "95110d74"
+  },
+  "shape-editor.names.row-wide-360-x-120": {
+    "text": "Rij, breed 360 x 120",
+    "hash": "c24961e5"
+  },
+  "shape-editor.names.scoop": {
+    "text": "Uitholling",
+    "hash": "f1a13c3a"
+  },
+  "shape-editor.names.scooped": {
+    "text": "Uitgehold",
+    "hash": "9ba6da6f"
+  },
+  "shape-editor.names.semicircle": {
+    "text": "Halve cirkel",
+    "hash": "9b449f0f"
+  },
+  "shape-editor.names.shield": {
+    "text": "Schild",
+    "hash": "480d4be7"
+  },
+  "shape-editor.names.show-or-hide-panels-ctrl-or": {
+    "text": "Panelen tonen of verbergen: Ctrl+\\ of ⌘\\",
+    "hash": "0d82d33d"
+  },
+  "shape-editor.names.speech-bubble": {
+    "text": "Tekstballon",
+    "hash": "21056362"
+  },
+  "shape-editor.names.square": {
+    "text": "Vierkant",
+    "hash": "c11092bc"
+  },
+  "shape-editor.names.squircle": {
+    "text": "Squircle",
+    "hash": "7c243a9e"
+  },
+  "shape-editor.names.star": {
+    "text": "Ster",
+    "hash": "e357d396"
+  },
+  "shape-editor.names.subtract": {
+    "text": "Aftrekken",
+    "hash": "63df016f"
+  },
+  "shape-editor.names.tab": {
+    "text": "Tab",
+    "hash": "90ddf196"
+  },
+  "shape-editor.names.tab-into-the-canvas-then-and-choose-a": {
+    "text": "Tab naar het canvas en kies daarna met [ en ] een punt.",
+    "hash": "6addebe6"
+  },
+  "shape-editor.names.tag": {
+    "text": "Label",
+    "hash": "1503916a"
+  },
+  "shape-editor.names.the-library-is-full-delete-a-shape-first": {
+    "text": "De bibliotheek is vol. Verwijder eerst een vorm.",
+    "hash": "8149cd33"
+  },
+  "shape-editor.names.this-shape-changed-while-you-were": {
+    "text": "Deze vorm is gewijzigd terwijl je bewerkte. Sla op als nieuw of laad hem opnieuw.",
+    "hash": "b99d7188"
+  },
+  "shape-editor.names.this-shape-is-too-big-for-the-library-8": {
+    "text": "Deze vorm is te groot voor de bibliotheek (8 KB).",
+    "hash": "3c95c8e1"
+  },
+  "shape-editor.names.ticket": {
+    "text": "Kaartje",
+    "hash": "567a8b5f"
+  },
+  "shape-editor.names.tile": {
+    "text": "Tegel",
+    "hash": "6ea3c194"
+  },
+  "shape-editor.names.tile-square-120-x-120": {
+    "text": "Tegel, vierkant 120 x 120",
+    "hash": "367d4ee8"
+  },
+  "shape-editor.names.top": {
+    "text": "Boven",
+    "hash": "d5cdfcf7"
+  },
+  "shape-editor.names.top-left-corner": {
+    "text": "Hoek linksboven",
+    "hash": "6d3e61ad"
+  },
+  "shape-editor.names.top-right-corner": {
+    "text": "Hoek rechtsboven",
+    "hash": "596a26ae"
+  },
+  "shape-editor.names.triangle": {
+    "text": "Driehoek",
+    "hash": "a0252691"
+  },
+  "shape-editor.names.two-notched-corners": {
+    "text": "Twee ingekeepte hoeken",
+    "hash": "6e9bf7c3"
+  },
+  "shape-editor.names.v-is-select-p-is-pen": {
+    "text": "V is Selecteren. P is Pen.",
+    "hash": "04561623"
+  },
+  "shape-editor.names.w": {
+    "text": "B",
+    "hash": "fcb5f40d"
+  },
+  "shape-editor.names.wide": {
+    "text": "Breed",
+    "hash": "147170e7"
+  },
+  "shape-editor.names.wide-banner": {
+    "text": "Brede banner",
+    "hash": "46a04851"
+  },
+  "shape-editor.names.wide-banner-720-x-200": {
+    "text": "Brede banner 720 x 200",
+    "hash": "4cb7112d"
+  },
+  "shape-editor.names.x": {
+    "text": "X",
+    "hash": "4b68ab38"
+  },
+  "shape-editor.names.y": {
+    "text": "Y",
+    "hash": "18f5384d"
+  },
+  "shape-editor.names.your-account-can-use-the-library-but-not": {
+    "text": "Je account kan de bibliotheek gebruiken maar niet wijzigen. Vraag het een beheerder of bewaar deze vorm alleen in de kaart.",
+    "hash": "9a720207"
+  }
 }

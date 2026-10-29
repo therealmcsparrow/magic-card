@@ -210,7 +210,7 @@ export class Gestures {
       if (!this.pending) {
         this.pending = c;
         this.h.setLive({ from: c, cursor: c });
-        this.h.say(t('First corner set. Move, then press Enter for the opposite corner.'));
+        this.h.say(t('svg-editor.tools.first-corner-set-move-then-press-enter'));
       } else this.finish(this.pending, c, false);
       return true;
     }

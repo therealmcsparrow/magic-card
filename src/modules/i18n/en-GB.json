@@ -1,0 +1,83 @@
+{
+  "modules-extra.camera-view.no-camera": {
+    "text": "No camera",
+    "note": "Shown in the camera module when no camera entity is chosen.",
+    "max": 15
+  },
+  "modules-extra.custom-card-view.failed-to-load-type-error": {
+    "text": "Failed to load \"{type}\": {error}",
+    "note": "Error in the custom card module. {type} is the card type the user entered, for example custom:my-card. {error} is a technical message from the browser and is not translated.",
+    "max": 55,
+    "vars": {
+      "error": "The value that replaces error in the text.",
+      "type": "The value that replaces type in the text."
+    }
+  },
+  "modules-extra.custom-card-view.home-assistant-card-helpers-are-not": {
+    "text": "Home Assistant card helpers are not available",
+    "note": "Error in the custom card module. Home Assistant's built-in card loader could not be found, so the embedded card cannot be created.",
+    "max": 75
+  },
+  "modules-extra.forecast-view.day": {
+    "text": "Day",
+    "note": "Label of the daytime temperature in a weather forecast, opposite of Night. Not the calendar day.",
+    "max": 5
+  },
+  "modules-extra.forecast-view.forecast-not-available-error": {
+    "text": "Forecast not available: {error}",
+    "note": "Error in the forecast module. {error} is a technical message from Home Assistant and is not translated.",
+    "max": 50,
+    "vars": {
+      "error": "The value that replaces error in the text."
+    }
+  },
+  "modules-extra.forecast-view.night": {
+    "text": "Night",
+    "note": "Label of the night-time temperature in a weather forecast, opposite of Day.",
+    "max": 10
+  },
+  "modules-extra.forecast-view.no-forecast-data": {
+    "text": "No forecast data",
+    "note": "Shown in the forecast module when the weather entity returned an empty forecast.",
+    "max": 30
+  },
+  "modules-extra.forecast-view.this-entity-has-no-forecast": {
+    "text": "This entity has no forecast",
+    "note": "Shown in the forecast module when the chosen entity is not a weather entity or does not offer a forecast.",
+    "max": 45
+  },
+  "modules-extra.graphs-view.history-unavailable": {
+    "text": "History unavailable",
+    "note": "Shown in the graph module when the history of the entity could not be fetched.",
+    "max": 35
+  },
+  "modules-extra.graphs-view.loading-history": {
+    "text": "Loading history…",
+    "note": "Shown in the graph module while the entity's history is being fetched.",
+    "max": 30
+  },
+  "modules-extra.graphs-view.name-last-hours": {
+    "text": "{name}: last {hours, plural, one {# hour} other {# hours}}",
+    "note": "Title of a graph. {name} is the entity's name. {hours} is the length of the period shown, in hours.",
+    "max": 35,
+    "vars": {
+      "hours": "The count the text is about.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "modules-extra.graphs-view.no-numeric-history": {
+    "text": "No numeric history",
+    "note": "Shown in the graph module when the entity's history has no numbers to plot, for example a text sensor.",
+    "max": 30
+  },
+  "modules-extra.image-view.picture-not-available": {
+    "text": "Picture not available",
+    "note": "Shown in the image module when the entity has no picture or it failed to load.",
+    "max": 35
+  },
+  "modules-extra.tabs-view.empty-tab": {
+    "text": "Empty tab",
+    "note": "Shown in the tabs module when the selected tab has no content.",
+    "max": 15
+  }
+}

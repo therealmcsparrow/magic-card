@@ -52,10 +52,10 @@ export class McteSaveBar extends LitElement {
         aria-disabled=${off ? 'true' : 'false'}
         aria-busy=${this.saving ? 'true' : 'false'}
         aria-describedby=${ifDefined(this.reason ? 'reason' : undefined)}
-        title=${t('Save (Ctrl+S)')}
+        title=${t('theme-editor.save-bar.save-ctrl-s')}
         @click=${this._save}
       >
-        ${this.saving ? html`<span class="spin" aria-hidden="true"></span> ${t('Saving...')}` : t('Save')}
+        ${this.saving ? html`<span class="spin" aria-hidden="true"></span> ${t('theme-editor.save-bar.saving')}` : t('theme-editor.save-bar.save')}
       </button>
     `;
   }

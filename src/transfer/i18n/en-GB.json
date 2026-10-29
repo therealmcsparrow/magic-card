@@ -1,0 +1,1253 @@
+{
+  "transfer.animation.the-animation-data-is-missing": {
+    "text": "The animation data is missing.",
+    "note": "Import error for an animation entry that has no animation data in it. It tells the user that entry was skipped.",
+    "max": 50
+  },
+  "transfer.count.n": {
+    "text": "{n, plural, one {# animation} other {# animations}}",
+    "note": "Count of animations in an import or export summary. {n} is the number of items. Same pattern as the theme, shape, image and icon counts.",
+    "max": 20,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-2": {
+    "text": "{n, plural, one {# theme} other {# themes}}",
+    "note": "Count of themes (sets of colours and styles) in an import or export summary. {n} is the number of items.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-3": {
+    "text": "{n, plural, one {# shape} other {# shapes}}",
+    "note": "Count of card shapes (drawn outlines) in an import or export summary. {n} is the number of items.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-4": {
+    "text": "{n, plural, one {# image} other {# images}}",
+    "note": "Count of library images in an import or export summary. {n} is the number of items.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.count.n-5": {
+    "text": "{n, plural, one {# icon} other {# icons}}",
+    "note": "Count of drawn SVG icons in an import or export summary. {n} is the number of items.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.envelope.animation-files-are-imported-in-the-card": {
+    "text": "Animation files are imported in the card editor (My animations) or the animation studio.",
+    "note": "Hint in the import report when an animation file is opened in the wrong place. It tells the user where animation files are imported.",
+    "max": 145
+  },
+  "transfer.envelope.animations-do-not-store-a-description-so": {
+    "text": "Animations do not store a description, so it was not kept.",
+    "note": "Import report line for an animation file that carries a description. It tells the user the description was dropped.",
+    "max": 95
+  },
+  "transfer.envelope.animations-do-not-store-an-author-so-it": {
+    "text": "Animations do not store an author, so it was not kept.",
+    "note": "Import report line for an animation file that carries an author. It tells the user the author was dropped.",
+    "max": 90
+  },
+  "transfer.envelope.icon-files-are-imported-in-the-card": {
+    "text": "Icon files are imported in the card editor (My icons) or the SVG editor.",
+    "note": "Hint in the import report when an icon file is opened in the wrong place. It tells the user where icon files are imported.",
+    "max": 120
+  },
+  "transfer.envelope.image-files-are-imported-in-magic-card": {
+    "text": "Image files are imported in Magic Card Utils > Images.",
+    "note": "Hint in the import report when an image file is opened in the wrong place. It tells the user where image files are imported.",
+    "max": 90
+  },
+  "transfer.envelope.key-is-not-a-preset-field-so-it-was-left": {
+    "text": "\"{key}\" is not a preset field, so it was left out.",
+    "note": "Import warning. {key} is the name of a setting found in the file, written in English. Keep it as is. Same English as the image loader message.",
+    "max": 80,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.envelope.nothing-in-this-file-could-be-imported": {
+    "text": "Nothing in this file could be imported.",
+    "note": "Summary line of the import report when every entry failed. It tells the user nothing was added.",
+    "max": 65
+  },
+  "transfer.envelope.only-icons-and-images-have-keywords-so": {
+    "text": "Only icons and images have keywords, so they were left out.",
+    "note": "Import report line for keywords found on a kind that does not use them. It tells the user the keywords were dropped.",
+    "max": 95
+  },
+  "transfer.envelope.shape-files-are-imported-in-the-card": {
+    "text": "Shape files are imported in the card editor (My shapes) or the shape editor.",
+    "note": "Hint in the import report when a shape file is opened in the wrong place. It tells the user where shape files are imported.",
+    "max": 125
+  },
+  "transfer.envelope.some-keywords-were-not-valid-at-most-10": {
+    "text": "Some keywords were not valid (at most 10 words of 1-32 characters), so they were left out.",
+    "note": "Import report line when keywords break the limits. It tells the user the allowed count and length and that the keywords were dropped.",
+    "max": 145
+  },
+  "transfer.envelope.step-n-plays-name-which-is-not-in-this": {
+    "text": "Step {n} plays \"{name}\", which is not in this file. It works if you already have it.",
+    "note": "Import warning for an animation sequence. {n} is the step's position, starting at 1. {name} is the name of another animation that the step starts.",
+    "max": 135,
+    "vars": {
+      "n": "The value that replaces n in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.envelope.the-author-must-be-1-max-characters-so": {
+    "text": "{max, plural, one {The author must be 1 character, so it was left out.} other {The author must be 1-# characters, so it was left out.}}",
+    "note": "Import warning. {max} is the longest author name allowed, in characters. The author is the creator named in the file.",
+    "max": 95,
+    "vars": {
+      "max": "The most characters the author can have."
+    }
+  },
+  "transfer.envelope.the-checker-for-images-did-not-load-so": {
+    "text": "The checker for images did not load, so this image was not read.",
+    "note": "Error raised while reading a file before import (envelope check). Same English as the panel error, but a different code path. 'Checker' is the validator.",
+    "max": 105
+  },
+  "transfer.envelope.the-description-must-be-1-max-characters": {
+    "text": "{max, plural, one {The description must be 1 character, so it was left out.} other {The description must be 1-# characters, so it was left out.}}",
+    "note": "Import warning. {max} is the longest description allowed, in characters.",
+    "max": 105,
+    "vars": {
+      "max": "The most characters the description can have."
+    }
+  },
+  "transfer.envelope.the-id-id-appears-twice-in-this-file-the": {
+    "text": "The id \"{id}\" appears twice in this file; the first one was used.",
+    "note": "Import warning. {id} is a technical identifier found in the file. Keep it as is.",
+    "max": 105,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "transfer.envelope.the-id-must-be-1-64-lowercase-letters": {
+    "text": "The id must be 1-64 lowercase letters, digits, - or _.",
+    "note": "Validation error for an item identifier in an imported file. Keep the hyphen and underscore characters as written.",
+    "max": 90
+  },
+  "transfer.envelope.the-name-must-be-1-80-characters": {
+    "text": "The name must be 1-80 characters.",
+    "note": "Validation error for a name inside an imported file. Library rename uses 'The name must be 1 to 80 characters.' with different wording.",
+    "max": 55
+  },
+  "transfer.envelope.the-name-says-want-but-the-file-holds": {
+    "text": "The name says {want}, but the file holds {found}.",
+    "note": "Import error. The file name suggests one kind of item, such as animations, but the content is another kind. {want} and {found} are item kinds with a count, such as 3 animations.",
+    "max": 80,
+    "vars": {
+      "found": "The value that replaces found in the text.",
+      "want": "The value that replaces want in the text."
+    }
+  },
+  "transfer.envelope.theme-files-are-imported-in-magic-card": {
+    "text": "Theme files are imported in Magic Card Utils > Themes.",
+    "note": "Hint in the import report when a theme file is opened in the wrong place. It tells the user where theme files are imported.",
+    "max": 90
+  },
+  "transfer.envelope.this-entry-is-not-an-object": {
+    "text": "This entry is not an object.",
+    "note": "Import error for one list entry that is plain text or a number instead of a record. It tells the user that entry was skipped.",
+    "max": 45
+  },
+  "transfer.envelope.this-file-holds-kind-presets-which-this": {
+    "text": "This file holds \"{kind}\" presets, which this version of Magic Card does not know.",
+    "note": "Import error. {kind} is the preset type written in the file, in English, such as animation. Keep it as is.",
+    "max": 130,
+    "vars": {
+      "kind": "The value that replaces kind in the text."
+    }
+  },
+  "transfer.envelope.this-file-holds-more-than-max-items-so": {
+    "text": "{max, plural, one {This file holds more than # item, so it was not read.} other {This file holds more than # items, so it was not read.}}",
+    "note": "Import error. {max} is the largest number of items one file may hold.",
+    "max": 95,
+    "vars": {
+      "max": "The most items a file can hold."
+    }
+  },
+  "transfer.envelope.this-file-is-larger-than-8-mb-so-it-was": {
+    "text": "This file is larger than 8 MB, so it was not read.",
+    "note": "Size error for a chosen image file (envelope check). Same English as the text-reading error, which comes from the parser. 8 MB is a fixed limit.",
+    "max": 80
+  },
+  "transfer.envelope.this-file-needs-a-newer-magic-card": {
+    "text": "This file needs a newer Magic Card (format {major}.x).",
+    "note": "Import error. {major} is the major version number of the file format, such as 2. The x stays as a literal letter.",
+    "max": 90,
+    "vars": {
+      "major": "The value that replaces major in the text."
+    }
+  },
+  "transfer.envelope.this-is-not-a-magic-card-preset-file": {
+    "text": "This is not a Magic Card preset file.",
+    "note": "Import error when the pasted or chosen file lacks the preset file markers. It tells the user the file is of another kind.",
+    "max": 60
+  },
+  "transfer.envelope.this-text-is-larger-than-1-mb-so-it-was": {
+    "text": "This text is larger than 1 MB, so it was not read.",
+    "note": "Import error when the pasted text is over the size limit. It tells the user nothing was read and why.",
+    "max": 80
+  },
+  "transfer.icon.a-link-name": {
+    "text": "a link ({name})",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is the link's attribute, such as href. Lower case, a noun phrase.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.icon.a-script": {
+    "text": "a script",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. A script is program code embedded in the file. Lower case, a noun phrase.",
+    "max": 15
+  },
+  "transfer.icon.a-style-attribute": {
+    "text": "a style attribute",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. A style attribute is inline CSS on an element. Lower case, a noun phrase.",
+    "max": 30
+  },
+  "transfer.icon.a-use-reference": {
+    "text": "a <use> reference",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. Keep <use>, an SVG element name. Lower case, a noun phrase.",
+    "max": 30
+  },
+  "transfer.icon.count": {
+    "text": "{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}",
+    "note": "Import notice for an SVG. {what} is one of the lower case phrases such as a script or a link (name). {count} is how often it was removed.",
+    "max": 50,
+    "vars": {
+      "count": "The count the text is about.",
+      "what": "The value that replaces what in the text."
+    }
+  },
+  "transfer.icon.key-is-not-valid-path-data-so-it-was": {
+    "text": "\"{key}\" is not valid path data, so it was left out.",
+    "note": "Import warning. {key} is the name of a field found in the file, in English. Keep it as is. Path data is the text that describes a drawn line.",
+    "max": 85,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.icon.no-svg-element-found": {
+    "text": "No <svg> element found.",
+    "note": "Icon import error. Keep <svg> exactly as written; it is the SVG tag name, not a word to translate.",
+    "max": 40
+  },
+  "transfer.icon.open-it-in-the-svg-editor-and-save-to": {
+    "text": "Open it in the SVG editor and save to show it in Home Assistant's own cards.",
+    "note": "Hint for an imported animated icon: 'it' is the icon. Saving it in the SVG editor makes it appear in Home Assistant's standard cards.",
+    "max": 125
+  },
+  "transfer.icon.the-attribute-name": {
+    "text": "the attribute {name}",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is an SVG attribute name such as onclick. Lower case.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.icon.the-event-handler-name": {
+    "text": "the event handler {name}",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is an attribute such as onclick that runs code on an event. Lower case.",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.icon.the-icon-has-no-svg": {
+    "text": "The icon has no SVG.",
+    "note": "Import error for an icon entry without a drawing. It tells the user that icon was skipped.",
+    "max": 35
+  },
+  "transfer.icon.the-icon-is-larger-than-kb-kb": {
+    "text": "The icon is larger than {kb} KB.",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.icon.the-icon-is-too-large": {
+    "text": "The icon is too large.",
+    "note": "Import error for an icon entry over the size limit. It tells the user that icon was skipped.",
+    "max": 40
+  },
+  "transfer.icon.the-svg-could-not-be-read": {
+    "text": "The SVG could not be read.",
+    "note": "Import error when an icon's drawing is not valid SVG. It tells the user that icon was skipped.",
+    "max": 45
+  },
+  "transfer.icon.the-svg-has-no-shapes-to-draw": {
+    "text": "The SVG has no shapes to draw.",
+    "note": "Import error when an icon's SVG holds nothing drawable. It tells the user that icon was skipped.",
+    "max": 50
+  },
+  "transfer.icon.the-svg-is-larger-than-32-kb": {
+    "text": "The SVG is larger than 32 KB.",
+    "note": "Import error when an icon's SVG is over the 32 KB limit. It tells the user the size cap and that the icon was skipped.",
+    "max": 50
+  },
+  "transfer.icon.the-svg-is-too-complex": {
+    "text": "The SVG is too complex.",
+    "note": "Import error when an icon's SVG has too many shapes or points. It tells the user to simplify it; the icon was skipped.",
+    "max": 40
+  },
+  "transfer.icon.the-view-box-is-not-four-numbers-so-it": {
+    "text": "The view box is not four numbers, so it was taken from the SVG.",
+    "note": "Icon import note. The view box is the SVG viewBox attribute (x, y, width, height); the value was replaced by the one in the SVG itself.",
+    "max": 105
+  },
+  "transfer.image-transfer-loader.key-is-not-a-preset-field-so-it-was-left": {
+    "text": "\"{key}\" is not a preset field, so it was left out.",
+    "note": "Import warning for an image file. {key} is the name of a setting found in the file, written in English. Keep it as is. Same English as the envelope message.",
+    "max": 80,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.library-view.added-n-to-this-card": {
+    "text": "Added {n} to this card.",
+    "note": "Confirmation after an import into the card's own library. {n} is how many items were added, as a number.",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.animations": {
+    "text": "Animations",
+    "note": "Tab name in the library window. Lists saved animations (plural noun).",
+    "max": 20
+  },
+  "transfer.library-view.cancel": {
+    "text": "Cancel",
+    "note": "Button in the library window that abandons a rename or delete. Same English as the panel button, but a different screen.",
+    "max": 10
+  },
+  "transfer.library-view.close": {
+    "text": "Close",
+    "note": "Button that closes the library window. Same English as the panel button, but a different screen.",
+    "max": 10
+  },
+  "transfer.library-view.could-not-reach-magic-card-utils-nothing": {
+    "text": "Could not reach Magic Card Utils. Nothing was changed.",
+    "note": "Error when a write such as rename, delete or import failed because the add-on did not answer. Keep the product name Magic Card Utils unchanged.",
+    "max": 90
+  },
+  "transfer.library-view.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Error when the add-on did not answer while the library was loading or saving. Reassures that nothing was lost. Keep the product name unchanged.",
+    "max": 85
+  },
+  "transfer.library-view.delete": {
+    "text": "Delete",
+    "note": "Button that confirms deleting the chosen library item. Verb.",
+    "max": 15
+  },
+  "transfer.library-view.delete-name": {
+    "text": "Delete {name}",
+    "note": "Accessible label for a row's delete button, read by screen readers. {name} is the item's name, as the user typed it.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.delete-name-cards-that-use-it-keep-their": {
+    "text": "Delete {name}? Cards that use it keep their own copy, or show the default.",
+    "note": "Confirmation question before deleting a library item (animation, shape, icon or image). {name} is the item's name. Starts as a question, then a reassurance.",
+    "max": 120,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.delete-name-themes-you-applied-stay": {
+    "text": "Delete {name}? Themes you applied stay.",
+    "note": "Confirmation question before deleting a theme preset. {name} is the preset's name. The second sentence says dashboards already using the theme are not changed.",
+    "max": 70,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.deleted-name": {
+    "text": "Deleted {name}.",
+    "note": "Confirmation shown after a delete. {name} is the name of the item that was removed.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.edit-name": {
+    "text": "Edit {name}",
+    "note": "Accessible label for a row's edit button, read by screen readers. {name} is the item's name.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.export": {
+    "text": "Export",
+    "note": "Button that opens the export panel for the library. Verb, not a noun.",
+    "max": 10
+  },
+  "transfer.library-view.export-all": {
+    "text": "Export all",
+    "note": "Button that exports every item in the current tab. Shown when nothing is selected.",
+    "max": 20
+  },
+  "transfer.library-view.export-n-selected": {
+    "text": "Export {n} selected",
+    "note": "Button shown when items are ticked. {n} is how many items are selected, as a number.",
+    "max": 35,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.icons": {
+    "text": "Icons",
+    "note": "Tab name in the library window. Lists saved animated icons (plural noun).",
+    "max": 15
+  },
+  "transfer.library-view.images": {
+    "text": "Images",
+    "note": "Tab name in the library window. Lists saved SVG images (plural noun).",
+    "max": 15
+  },
+  "transfer.library-view.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep HACS, Magic Card and Magic Card Utils unchanged.",
+    "max": 125
+  },
+  "transfer.library-view.import": {
+    "text": "Import",
+    "note": "Button that opens the import panel for the library. Verb, not a noun.",
+    "max": 10
+  },
+  "transfer.library-view.imported-items-are-saved-in-this-card": {
+    "text": "Imported items are saved in this card.",
+    "note": "Hint under the import button when Magic Card Utils is not installed: items stay inside the card's own configuration.",
+    "max": 65
+  },
+  "transfer.library-view.imported-ok-of-total": {
+    "text": "Imported {ok} of {total}.",
+    "note": "Result of an import. {ok} is how many items were imported, {total} is how many were in the file. Both are numbers.",
+    "max": 40,
+    "vars": {
+      "ok": "The value that replaces ok in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "transfer.library-view.it-changed-while-you-were-looking-the": {
+    "text": "It changed while you were looking. The list is reloaded; try again.",
+    "note": "Conflict error: another editor changed the item before the user's action was saved. The list refreshes itself.",
+    "max": 110
+  },
+  "transfer.library-view.keep-your-own-items-on-every-dashboard": {
+    "text": "Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.",
+    "note": "Banner shown when the add-on is not installed. 'Items' are the user's saved animations, shapes and icons. Keep Magic Card Utils unchanged.",
+    "max": 180
+  },
+  "transfer.library-view.kind": {
+    "text": "Kind",
+    "note": "Label for the tab group: the type of item shown (animations, shapes, icons, images, theme presets). Noun, not 'kind' as in friendly.",
+    "max": 10
+  },
+  "transfer.library-view.kind-2": {
+    "text": "{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} image {Search images} other {Search theme presets}}",
+    "note": "Search box placeholder that changes with the open tab. {kind} is one of animation, shape, icon, image or other (other means theme presets); these words are codes, do not translate them.",
+    "max": 35,
+    "vars": {
+      "kind": "The value that replaces kind in the text."
+    }
+  },
+  "transfer.library-view.kind-3": {
+    "text": "{kind, select, animation {No animations match \"{q}\".} shape {No shapes match \"{q}\".} icon {No icons match \"{q}\".} image {No images match \"{q}\".} other {No theme presets match \"{q}\".}}",
+    "note": "Empty search result. {kind} is a code: animation, shape, icon, image or other (other means theme presets); do not translate the codes. {q} is the search text the user typed.",
+    "max": 50,
+    "vars": {
+      "kind": "The value that replaces kind in the text.",
+      "q": "The value that replaces q in the text."
+    }
+  },
+  "transfer.library-view.kind-4": {
+    "text": "{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} image {No images here yet.} other {No theme presets here yet.}}",
+    "note": "Empty state of a tab with nothing saved. {kind} is a code: animation, shape, icon, image or other (other means theme presets); do not translate the codes.",
+    "max": 45,
+    "vars": {
+      "kind": "The value that replaces kind in the text."
+    }
+  },
+  "transfer.library-view.loading": {
+    "text": "Loading...",
+    "note": "Status text while the library list is being fetched from the add-on.",
+    "max": 20
+  },
+  "transfer.library-view.magic-card-utils": {
+    "text": "Magic Card Utils",
+    "note": "Product name of the companion add-on, used as the label of the storage source. Do not translate.",
+    "max": 30
+  },
+  "transfer.library-view.maximise": {
+    "text": "Maximise",
+    "note": "Button that enlarges the library window to fill the screen. Pairs with 'Restore size'. Verb.",
+    "max": 15
+  },
+  "transfer.library-view.move-window": {
+    "text": "Move window",
+    "note": "Accessible label for the drag handle on the library window's title bar.",
+    "max": 20
+  },
+  "transfer.library-view.n-could-not-be-saved": {
+    "text": "{n} could not be saved.",
+    "note": "Import result line. {n} is how many items failed to save, as a number. Not a plural form, so write it to suit any count.",
+    "max": 40,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.n-did-not-fit-the-library-is-full": {
+    "text": "{n} did not fit: the library is full.",
+    "note": "Import result line. {n} is how many items were skipped because the storage limit was reached, as a number.",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.library-view.new-icon": {
+    "text": "New icon",
+    "note": "Button that opens the icon editor with an empty animated icon.",
+    "max": 15
+  },
+  "transfer.library-view.new-name-for-name": {
+    "text": "New name for {name}",
+    "note": "Label of the rename text field. {name} is the item's current name.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.new-shape": {
+    "text": "New shape",
+    "note": "Button that opens the shape editor with an empty shape.",
+    "max": 15
+  },
+  "transfer.library-view.rename-name": {
+    "text": "Rename {name}",
+    "note": "Accessible label for a row's rename button, read by screen readers. {name} is the item's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.renamed-to-name": {
+    "text": "Renamed to {name}.",
+    "note": "Confirmation after a rename. {name} is the new name.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.resize-window": {
+    "text": "Resize window",
+    "note": "Accessible label for the drag handle in the library window's corner.",
+    "max": 25
+  },
+  "transfer.library-view.restore-size": {
+    "text": "Restore size",
+    "note": "Button that returns the maximised library window to its normal size. Pairs with 'Maximise'.",
+    "max": 25
+  },
+  "transfer.library-view.save": {
+    "text": "Save",
+    "note": "Button that confirms a rename in the library window. Verb.",
+    "max": 10
+  },
+  "transfer.library-view.select-name": {
+    "text": "Select {name}",
+    "note": "Accessible label for a row's tick box, read by screen readers. {name} is the item's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.library-view.shapes": {
+    "text": "Shapes",
+    "note": "Tab name in the library window. Lists saved card shapes (plural noun).",
+    "max": 10
+  },
+  "transfer.library-view.source": {
+    "text": "Source",
+    "note": "Label for the choice of where items are stored: this card or Magic Card Utils. Noun, not source code.",
+    "max": 10
+  },
+  "transfer.library-view.the-library-is-full": {
+    "text": "The library is full.",
+    "note": "Error when saving would exceed the storage limit. Single-item version of the import line '{n} did not fit'.",
+    "max": 35
+  },
+  "transfer.library-view.the-name-must-be-1-to-80-characters": {
+    "text": "The name must be 1 to 80 characters.",
+    "note": "Validation error under the rename field. The limits 1 and 80 are fixed numbers.",
+    "max": 60
+  },
+  "transfer.library-view.theme-presets": {
+    "text": "Theme presets",
+    "note": "Tab name in the library window. Lists saved dashboard theme presets (plural noun).",
+    "max": 25
+  },
+  "transfer.library-view.this-card": {
+    "text": "This card",
+    "note": "Storage source option: items saved inside the current card only. Pairs with 'Magic Card Utils'.",
+    "max": 15
+  },
+  "transfer.library-view.try-again": {
+    "text": "Try again",
+    "note": "Button after a failed load of the library list. Repeats the request.",
+    "max": 20
+  },
+  "transfer.library-view.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets.",
+    "note": "Hint in the library window's Theme presets tab when the installed add-on is too old. Same English as the panel hint. Keep the product name unchanged.",
+    "max": 75
+  },
+  "transfer.library-view.your-account-can-use-the-library-but-not": {
+    "text": "Your account can use the library but not change it. Ask an admin.",
+    "note": "Permission error for a Home Assistant user without admin rights. 'Admin' means a Home Assistant administrator.",
+    "max": 105
+  },
+  "transfer.panel.cancel": {
+    "text": "Cancel",
+    "note": "Button in the import/export panel that abandons the step. Same English as the library window button, but a different screen.",
+    "max": 10
+  },
+  "transfer.panel.choose-a-file": {
+    "text": "Choose a file",
+    "note": "Button that opens the system file picker for an import.",
+    "max": 25
+  },
+  "transfer.panel.close": {
+    "text": "Close",
+    "note": "Text button that closes the import/export panel. Same English as the library window button, but a different screen.",
+    "max": 10
+  },
+  "transfer.panel.copied": {
+    "text": "Copied.",
+    "note": "Confirmation after the export text was copied to the clipboard.",
+    "max": 15
+  },
+  "transfer.panel.copy": {
+    "text": "Copy",
+    "note": "Button that copies the export text to the clipboard. Verb.",
+    "max": 10
+  },
+  "transfer.panel.copy-as-ha-theme": {
+    "text": "Copy as HA theme",
+    "note": "Button that copies a theme preset as YAML to paste into Home Assistant's themes file. HA means Home Assistant.",
+    "max": 30
+  },
+  "transfer.panel.could-not-copy-the-text-is-selected": {
+    "text": "Could not copy. The text is selected: press Ctrl+C.",
+    "note": "Fallback when the browser blocked clipboard access. Keep the key name Ctrl+C as written, or use the local shortcut.",
+    "max": 85
+  },
+  "transfer.panel.download": {
+    "text": "Download",
+    "note": "Button that saves the export as a file on the user's device. Verb.",
+    "max": 15
+  },
+  "transfer.panel.downloaded-name": {
+    "text": "Downloaded {name}.",
+    "note": "Confirmation after a download. {name} is the file name, for example an exported file's name with its extension.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.panel.every-browser-that-shows-a-dashboard": {
+    "text": "Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor's IP address.",
+    "note": "Privacy warning when a theme loads files from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "max": 205,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "transfer.panel.export-animations": {
+    "text": "{n, plural, one {Export # animation} other {Export # animations}}",
+    "note": "Heading and button of the export step; counts the animations that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-icons": {
+    "text": "{n, plural, one {Export # icon} other {Export # icons}}",
+    "note": "Heading and button of the export step; counts the icons that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-images": {
+    "text": "{n, plural, one {Export # image} other {Export # images}}",
+    "note": "Heading and button of the export step; counts the images that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-shapes": {
+    "text": "{n, plural, one {Export # shape} other {Export # shapes}}",
+    "note": "Heading and button of the export step; counts the shapes that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-text": {
+    "text": "Export text",
+    "note": "Label of the read-only box that holds the export as text, ready to copy.",
+    "max": 20
+  },
+  "transfer.panel.export-themes": {
+    "text": "{n, plural, one {Export # theme} other {Export # themes}}",
+    "note": "Heading and button of the export step; counts the themes that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.file-format": {
+    "text": "File format",
+    "note": "Label for the choice between export formats such as JSON and YAML.",
+    "max": 20
+  },
+  "transfer.panel.images-need-magic-card-utils-it-is": {
+    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "note": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep HACS and product names unchanged.",
+    "max": 125
+  },
+  "transfer.panel.import-animations": {
+    "text": "{n, plural, one {Import # animation} other {Import # animations}}",
+    "note": "Heading and button of the import step; counts the animations that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.import-anyway": {
+    "text": "Import anyway",
+    "note": "Button that proceeds with the import after the user has read the warnings.",
+    "max": 25
+  },
+  "transfer.panel.import-icons": {
+    "text": "{n, plural, one {Import # icon} other {Import # icons}}",
+    "note": "Heading and button of the import step; counts the icons that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.import-images": {
+    "text": "{n, plural, one {Import # image} other {Import # images}}",
+    "note": "Heading and button of the import step; counts the images that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.import-presets": {
+    "text": "Import presets",
+    "note": "Panel heading for importing theme presets. 'Presets' are saved dashboard themes.",
+    "max": 25
+  },
+  "transfer.panel.import-shapes": {
+    "text": "{n, plural, one {Import # shape} other {Import # shapes}}",
+    "note": "Heading and button of the import step; counts the shapes that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.import-themes": {
+    "text": "{n, plural, one {Import # theme} other {Import # themes}}",
+    "note": "Heading and button of the import step; counts the themes that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.json-or-svg-up-to-8-mb": {
+    "text": "JSON or SVG, up to 8 MB",
+    "note": "Help text next to the file button for image imports. JSON, SVG and MB are fixed terms; the size limit is fixed.",
+    "max": 40
+  },
+  "transfer.panel.keep-both": {
+    "text": "Keep both",
+    "note": "Choice when imported names clash with saved ones: keep both copies. Pairs with 'Replace them'.",
+    "max": 15
+  },
+  "transfer.panel.lines-that-start-with-card-mod-only-work": {
+    "text": "Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.",
+    "note": "Security warning about theme lines that start with 'card-mod-'. Keep card-mod and the prefix card-mod- exactly as written; it is a third-party add-on name.",
+    "max": 160
+  },
+  "transfer.panel.magic-card-utils-is-not-installed-so": {
+    "text": "Magic Card Utils is not installed, so these are saved as copies inside this card.",
+    "note": "Hint on the import panel when the add-on is missing. 'These' are the items about to be imported. Keep the product name unchanged.",
+    "max": 130
+  },
+  "transfer.panel.n": {
+    "text": "{n, plural, one {# value is kept as written. Check the list below.} other {# values are kept as written. Check the list below.}}",
+    "note": "Summary sentence after the file summary, a plural form. {n} counts theme values that were kept although they may be risky. A list of them follows in the panel.",
+    "max": 85,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-2": {
+    "text": "{n, plural, one {# note.} other {# notes.}}",
+    "note": "Sentence ending (with a full stop) in the file summary. {n} counts informational notes about left-out or odd values. Differs from the version without a full stop, which is a list heading.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-3": {
+    "text": "{n, plural, one {# value is kept as written} other {# values are kept as written}}",
+    "note": "Heading of a collapsible list, no full stop. {n} counts risky theme values that were kept unchanged. Shorter sibling of the summary sentence.",
+    "max": 45,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-4": {
+    "text": "{n, plural, one {# value points to a file on the sharer's Home Assistant (url(/local/...)). It may not exist on your system.} other {# values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.}}",
+    "note": "Warning, plural form. {n} counts theme values that point to files on the sharer's server. Keep url(/local/...) exactly as written; it is a code sample.",
+    "max": 175,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-5": {
+    "text": "{n, plural, one {# note} other {# notes}}",
+    "note": "Heading of a collapsible list, no full stop. {n} counts informational notes. Sibling of the version that ends with a full stop.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.n-6": {
+    "text": "{n, plural, one {{items} already exists} other {{items} already exist}}",
+    "note": "Label above the clash choice. {n} is how many clash, used only to pick the plural. {items} is a counted phrase such as '2 shapes', made elsewhere.",
+    "max": 40,
+    "vars": {
+      "items": "The value that replaces items in the text.",
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.nothing-to-export": {
+    "text": "Nothing to export.",
+    "note": "Empty state when the chosen tab holds no items to export.",
+    "max": 30
+  },
+  "transfer.panel.or-paste-the-text": {
+    "text": "Or paste the text",
+    "note": "Label of the paste box, an alternative to 'Choose a file'. 'Or' links the two options.",
+    "max": 30
+  },
+  "transfer.panel.read": {
+    "text": "Read",
+    "note": "Button that reads (parses) the pasted text. Verb in the imperative, not the past tense and not the noun.",
+    "max": 10
+  },
+  "transfer.panel.replace-them": {
+    "text": "Replace them",
+    "note": "Choice when imported names clash: overwrite the saved items. 'Them' means the clashing items. Pairs with 'Keep both'.",
+    "max": 20
+  },
+  "transfer.panel.source-holds-animations": {
+    "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (animations).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-icons": {
+    "text": "{n, plural, one {{source} holds # icon.} other {{source} holds # icons.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (icons).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-images": {
+    "text": "{n, plural, one {{source} holds # image.} other {{source} holds # images.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (images).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-shapes": {
+    "text": "{n, plural, one {{source} holds # shape.} other {{source} holds # shapes.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (shapes).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-themes": {
+    "text": "{n, plural, one {{source} holds # theme.} other {{source} holds # themes.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (themes).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.the-author-name-is-saved-in-the-file": {
+    "text": "The author name is saved in the file. Check it before you share the file.",
+    "note": "Privacy hint on the export panel. The author name is the one stored in the card's settings.",
+    "max": 120
+  },
+  "transfer.panel.the-checker-for-images-did-not-load-so": {
+    "text": "The checker for images did not load, so this image was not read.",
+    "note": "Error when the code that validates image files failed to load. 'Checker' is the validator, an internal part.",
+    "max": 105
+  },
+  "transfer.panel.the-checker-for-these-animations-did-not": {
+    "text": "The checker for these animations did not load, so the file was not read. Check your connection and try again.",
+    "note": "Error when the code that validates animation files failed to load, usually a network problem. 'Checker' is the validator.",
+    "max": 175
+  },
+  "transfer.panel.the-new-ones-get-a-number": {
+    "text": "The new ones get a number.",
+    "note": "Explains the 'Keep both' choice: the imported copies get a number added to their names, for example 'Pulse 2'.",
+    "max": 45
+  },
+  "transfer.panel.the-saved-ones-are-overwritten": {
+    "text": "The saved ones are overwritten.",
+    "note": "Explains the 'Replace them' choice: items already saved are lost and the imported ones take their place.",
+    "max": 50
+  },
+  "transfer.panel.the-text": {
+    "text": "The text",
+    "note": "Stands in for a file name as {source} in 'holds' when the user pasted text. Must work at the start of a sentence.",
+    "max": 15
+  },
+  "transfer.panel.this-file-was-not-imported": {
+    "text": "This file was not imported",
+    "note": "Heading of an error notice, no full stop. A reason for the failure follows underneath.",
+    "max": 45
+  },
+  "transfer.panel.types-up-to-1-mb": {
+    "text": "{types}, up to 1 MB",
+    "note": "Help text next to the file button. {types} is the accepted file types, such as 'JSON or YAML'. Shorter sibling of the SVG version.",
+    "max": 35,
+    "vars": {
+      "types": "The value that replaces types in the text."
+    }
+  },
+  "transfer.panel.types-up-to-1-mb-svg-up-to-32-kb": {
+    "text": "{types}, up to 1 MB; SVG up to 32 KB",
+    "note": "Help text for icon imports. {types} is the accepted file types, such as 'JSON or YAML'. SVG files have a smaller limit.",
+    "max": 60,
+    "vars": {
+      "types": "The value that replaces types in the text."
+    }
+  },
+  "transfer.panel.update-magic-card-utils-to-keep-theme": {
+    "text": "Update Magic Card Utils to keep theme presets.",
+    "note": "Error notice in the import panel when the installed add-on is too old for theme presets. Same English as the library window hint.",
+    "max": 75
+  },
+  "transfer.panel.what-to-do-with-them": {
+    "text": "What to do with them",
+    "note": "Accessible label of the clash choice group. 'Them' means the items whose names already exist.",
+    "max": 35
+  },
+  "transfer.panel.you-have-this-one": {
+    "text": "(you have this one)",
+    "note": "Marker beside an imported item that the user already has saved. Keep the brackets.",
+    "max": 35
+  },
+  "transfer.safe-parse.image-files-are-json-not-yaml-export": {
+    "text": "Image files are JSON, not YAML. Export them as JSON.",
+    "note": "Import error when YAML is given where an image file is expected. It tells the user to export the images as JSON instead.",
+    "max": 85
+  },
+  "transfer.safe-parse.merge-keys-are-not-allowed-in-preset": {
+    "text": "Merge keys (<<) are not allowed in preset files.",
+    "note": "YAML parse error. A merge key is the YAML feature written as two less-than signs. Keep (<<) exactly as written.",
+    "max": 80
+  },
+  "transfer.safe-parse.not-valid-yaml-or-json": {
+    "text": "Not valid YAML or JSON.",
+    "note": "Import error when the pasted text cannot be parsed. It tells the user to check the text for typos or cut-off content.",
+    "max": 40
+  },
+  "transfer.safe-parse.numbers-must-be-finite-no-inf-or-nan": {
+    "text": "Numbers must be finite (no .inf or .nan).",
+    "note": "YAML parse error. .inf and .nan are YAML spellings for infinity and not-a-number; keep them exactly as written.",
+    "max": 70
+  },
+  "transfer.safe-parse.paste-or-choose-a-file-first": {
+    "text": "Paste or choose a file first.",
+    "note": "Message when import is pressed with an empty box. It tells the user to paste text or choose a file before continuing.",
+    "max": 50
+  },
+  "transfer.safe-parse.this-file-is-larger-than-1-mb-so-it-was": {
+    "text": "This file is larger than 1 MB, so it was not read.",
+    "note": "Size error from the text parser for animation, shape and theme files. 1 MB is a fixed limit.",
+    "max": 80
+  },
+  "transfer.safe-parse.this-file-is-larger-than-8-mb-so-it-was": {
+    "text": "This file is larger than 8 MB, so it was not read.",
+    "note": "Size error from the text parser for image files. Same English as the envelope error. 8 MB is a fixed limit.",
+    "max": 80
+  },
+  "transfer.safe-parse.this-file-is-too-complex-to-read-safely": {
+    "text": "This file is too complex to read safely (too many nested or repeated values).",
+    "note": "Import error when the file nests or repeats values beyond the safe-reading limits. It tells the user the file was refused, not partly read.",
+    "max": 125
+  },
+  "transfer.shape.a-shape-holds-at-most-max-points-this": {
+    "text": "{max, plural, one {A shape holds at most # point (this one has {n}).} other {A shape holds at most # points (this one has {n}).}}",
+    "note": "Import warning for a shape file with too many points. {max} is the largest number of points allowed, {n} is how many the file has. Both are numbers.",
+    "max": 90,
+    "vars": {
+      "max": "The most points a shape can have.",
+      "n": "The number of points in the file."
+    }
+  },
+  "transfer.shape.corner-name-is-not-valid-so-it-was-left": {
+    "text": "Corner {name} is not valid, so it was left out.",
+    "note": "Import note about one corner setting. {name} is the corner's identifier from the file, such as top-left; do not translate it.",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.shape.key-is-not-a-corner-so-it-was-left-out": {
+    "text": "\"{key}\" is not a corner, so it was left out.",
+    "note": "Import note about an unknown entry in the corners list. {key} is the entry's name from the file, shown in quotes; do not translate it.",
+    "max": 75,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.shape.key-is-not-a-shape-setting-so-it-was": {
+    "text": "\"{key}\" is not a shape setting, so it was left out.",
+    "note": "Import note about an unknown top-level entry in a shape file. {key} is the entry's name from the file, shown in quotes; do not translate it.",
+    "max": 85,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.shape.padding-name-is-not-valid-so-it-was-left": {
+    "text": "Padding \"{name}\" is not valid, so it was left out.",
+    "note": "Import note about one padding side. {name} is the side's identifier from the file, such as top; do not translate it.",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "transfer.shape.point-n-is-not-valid-so-it-was-left-out": {
+    "text": "Point {n} is not valid, so it was left out.",
+    "note": "Import note about one point in the shape's outline. {n} is the point's position in the list, counting from 1.",
+    "max": 70,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "transfer.shape.the-corner-size-is-not-valid-so-it-was": {
+    "text": "The corner size is not valid, so it was left out.",
+    "note": "Import report line for a shape whose corner size is out of range. The shape is still imported without that value.",
+    "max": 80
+  },
+  "transfer.shape.the-corner-type-is-not-valid-so-it-was": {
+    "text": "The corner type is not valid, so it was left out.",
+    "note": "Import report line for a shape with an unknown corner type. The shape is still imported without that value.",
+    "max": 80
+  },
+  "transfer.shape.the-corners-setting-is-not-valid-so-it": {
+    "text": "The corners setting is not valid, so it was left out.",
+    "note": "Import report line for a shape whose overall corners setting is invalid. The shape is still imported without that value.",
+    "max": 85
+  },
+  "transfer.shape.the-padding-is-not-valid-so-it-was-left": {
+    "text": "The padding is not valid, so it was left out.",
+    "note": "Import report line for a shape whose text padding is invalid. The shape is still imported without that value.",
+    "max": 75
+  },
+  "transfer.shape.the-points-list-is-not-valid-so-it-was": {
+    "text": "The points list is not valid, so it was left out.",
+    "note": "Import report line for a shape whose outline points are invalid. The shape is still imported without that value.",
+    "max": 80
+  },
+  "transfer.shape.the-shape-data-is-missing": {
+    "text": "The shape data is missing.",
+    "note": "Import error: the file has no shape section at all. Different from 'The shape has no valid settings'.",
+    "max": 45
+  },
+  "transfer.shape.the-shape-has-no-valid-settings": {
+    "text": "The shape has no valid settings.",
+    "note": "Import error: a shape section exists but every setting in it was rejected. Different from 'The shape data is missing'.",
+    "max": 55
+  },
+  "transfer.shape.the-shape-is-larger-than-kb-kb": {
+    "text": "The shape is larger than {kb} KB.",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.shape.the-smoothing-is-not-valid-so-it-was": {
+    "text": "The smoothing is not valid, so it was left out.",
+    "note": "Import report line for a shape whose smoothing value is invalid. The shape is still imported without that value.",
+    "max": 80
+  },
+  "transfer.theme.another-website": {
+    "text": "another website",
+    "note": "Fallback wording used in place of a list of domain names when none could be worked out. Lower case, used mid-sentence.",
+    "max": 25
+  },
+  "transfer.theme.dark": {
+    "text": "Dark",
+    "note": "Name of the dark colour mode of a theme, used as {mode} in import notes. Starts a sentence before 'mode:'.",
+    "max": 10
+  },
+  "transfer.theme.key-is-a-card-mod-style-it-was-kept-with": {
+    "text": "\"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.",
+    "note": "Import warning, whole-theme version. {key} is the variable's name from the file, in quotes; do not translate it. Keep card-mod unchanged. Sibling with a mode prefix below.",
+    "max": 155,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-is-not-a-theme-variable-name-so-it": {
+    "text": "\"{key}\" is not a theme variable name, so it was left out.",
+    "note": "Import note. {key} is the entry's name from the file, in quotes; do not translate it. Theme variables are CSS custom properties that start with two hyphens or a known prefix.",
+    "max": 95,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
+    "text": "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "note": "Import warning, whole-theme version. {key} is the variable's name in quotes, {hosts} is a website domain list such as example.com. Do not translate either.",
+    "max": 150,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text.",
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
+    "text": "\"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "note": "Import warning, whole-theme version. {key} is the variable's name in quotes; do not translate it. 'Sharer' is the person who made the file.",
+    "max": 135,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.light": {
+    "text": "Light",
+    "note": "Name of the light colour mode of a theme, used as {mode} in import notes. Starts a sentence before 'mode:'.",
+    "max": 10
+  },
+  "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
+    "text": "{mode} mode: \"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.",
+    "note": "Import warning for one colour mode. {mode} is the translated word Light or Dark, {key} is the variable's name from the file in quotes. Keep card-mod unchanged.",
+    "max": 175,
+    "vars": {
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
+    "text": "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "note": "Import warning for one colour mode. {mode} is Light or Dark, {key} the variable's name in quotes, {hosts} a website domain list. Do not translate key or hosts.",
+    "max": 170,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text.",
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
+    "text": "{mode} mode: \"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "note": "Import warning for one colour mode. {mode} is Light or Dark, {key} the variable's name in quotes; do not translate key.",
+    "max": 160,
+    "vars": {
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.modes-key-is-not-light-or-dark-so-it-was": {
+    "text": "\"modes.{key}\" is not light or dark, so it was left out.",
+    "note": "Import note. Keep 'modes.' and the word before the placeholder as written: {key} is an unexpected entry name under modes in the file. Light and dark are the setting values.",
+    "max": 90,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.modes-must-hold-light-and-dark-so-it-was": {
+    "text": "\"modes\" must hold light and dark, so it was left out.",
+    "note": "Import note. 'modes' is the setting name in the file and stays unchanged; light and dark are its two required entries.",
+    "max": 85
+  },
+  "transfer.theme.the-theme-data-is-missing": {
+    "text": "The theme data is missing.",
+    "note": "Import error: the file has no theme section at all. Different from 'The theme has no variables'.",
+    "max": 45
+  },
+  "transfer.theme.the-theme-has-no-variables": {
+    "text": "The theme has no variables.",
+    "note": "Import error: a theme section exists but holds no usable theme variables. Different from 'The theme data is missing'.",
+    "max": 45
+  },
+  "transfer.theme.the-theme-is-larger-than-kb-kb": {
+    "text": "The theme is larger than {kb} KB.",
+    "note": "Import error. {kb} is the largest file size allowed, in kilobytes.",
+    "max": 55,
+    "vars": {
+      "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.theme.the-value-of-key-is-longer-than-max": {
+    "text": "{max, plural, one {The value of \"{key}\" is longer than # character, so it was left out.} other {The value of \"{key}\" is longer than # characters, so it was left out.}}",
+    "note": "Import note. {key} is the variable's name from the file, in quotes; do not translate it. {max} is the largest number of characters allowed, a number.",
+    "max": 120,
+    "vars": {
+      "key": "The value that replaces key in the text.",
+      "max": "The most characters a value can have."
+    }
+  },
+  "transfer.theme.the-value-of-key-is-not-text-or-a-number": {
+    "text": "The value of \"{key}\" is not text or a number, so it was left out.",
+    "note": "Import note. {key} is the variable's name from the file, in quotes; do not translate it. The value was a list or object, which themes cannot use.",
+    "max": 105,
+    "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  }
+}

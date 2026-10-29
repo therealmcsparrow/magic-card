@@ -436,7 +436,7 @@ export class AnimDrawHost extends CanvasHost {
   /** Refuse an edit of a locked shape and say so; true when refused. */
   private _refuseLocked(id: string): boolean {
     if (!this._isLocked(id)) return false;
-    this._announce = t('{name} is locked. Unlock it in Layers.', { name: this._shapes.find((s) => s.id === id)?.name ?? t('Shape') });
+    this._announce = t('anim-studio.draw-host.name-is-locked-unlock-it-in-layers', { name: this._shapes.find((s) => s.id === id)?.name ?? t('anim-studio.draw-host.shape') });
     return true;
   }
 
@@ -505,17 +505,17 @@ export class AnimDrawHost extends CanvasHost {
   private _commitShape(tool: DrawTool, d: string, closed: boolean): string | undefined {
     if (!this.doc || !d) return undefined;
     if (this._shapes.length >= V2_CAPS.shapes) {
-      this._announce = t('At most {count} shapes fit in a rig.', { count: V2_CAPS.shapes });
+      this._announce = t('anim-studio.draw-host.at-most-count-shapes-fit-in-a-rig', { count: V2_CAPS.shapes });
       return undefined;
     }
     const info = TOOL_INFO[tool];
     const id = nextShapeId(rigIds(this.doc), info.base);
     const n = this._shapes.filter((s) => s.id.startsWith(`${info.base}-`)).length + 1;
-    const shape: RigShape = { id, name: `${tool === 'pen' ? t('Path') : tool === 'freehand' ? t('Stroke') : t(info.label)} ${n}`, d, layer: drawStore.options.layer, ...newShapeStyle(drawStore.options, closed) };
+    const shape: RigShape = { id, name: `${tool === 'pen' ? t('anim-studio.draw-host.path') : tool === 'freehand' ? t('anim-studio.draw-host.stroke') : t(info.label)} ${n}`, d, layer: drawStore.options.layer, ...newShapeStyle(drawStore.options, closed) };
     const doc = addShape(this.doc, shape);
     if (!doc) return undefined;
     this._emitDoc(doc, `Draw ${tool}`);
-    this._announce = tool === 'pen' ? t('{name} added, {count} points.', { name: shape.name, count: anchorsOf(d).length }) : t('{name} added.', { name: shape.name });
+    this._announce = tool === 'pen' ? t('anim-studio.draw-host.name-added-count-points', { name: shape.name, count: anchorsOf(d).length }) : t('anim-studio.draw-host.name-added', { name: shape.name });
     return id;
   }
 
@@ -582,7 +582,7 @@ export class AnimDrawHost extends CanvasHost {
     const raw = this._toVB(v, local);
     const tool = activeTool(this.selection);
     if ((KB_TOOLS.has(tool) || tool === 'motion') && !this.chunk) {
-      this._announce = t('The drawing tools are not loaded yet.');
+      this._announce = t('anim-studio.draw-host.the-drawing-tools-are-not-loaded-yet');
       return;
     }
     switch (tool) {
@@ -617,11 +617,11 @@ export class AnimDrawHost extends CanvasHost {
       case 'freehand':
       case 'motion': {
         if (tool === 'motion' && !isRigRef(this.selection.target)) {
-          this._announce = t('Select a part or shape first.');
+          this._announce = t('anim-studio.draw-host.select-a-part-or-shape-first');
           return;
         }
         if (tool === 'motion' && this.layerView && isLocked(this.doc, this.layerView, this.selection.target!)) {
-          this._announce = t('That layer is locked. Unlock it in Layers.');
+          this._announce = t('anim-studio.draw-host.that-layer-is-locked-unlock-it-in-layers');
           return;
         }
         this._capture(e);
@@ -749,7 +749,7 @@ export class AnimDrawHost extends CanvasHost {
           const target = this.selection.target as TargetRef;
           const doc = setTrackPath(this.doc, target, fit.d, drawStore.options.follow);
           if (doc) this._emitDoc(doc, 'Draw motion path');
-          else this._announce = t('At most {tracks} animated targets.', { tracks: V2_CAPS.tracks });
+          else this._announce = t('anim-studio.draw-host.at-most-tracks-animated-targets', { tracks: V2_CAPS.tracks });
         }
         break;
       }
@@ -763,7 +763,7 @@ export class AnimDrawHost extends CanvasHost {
         if (!d.ids.length) break;
         let doc = d.base;
         for (const id of d.ids) doc = removeShape(doc, id);
-        this._emitDoc(doc, d.ids.length === 1 ? t('Erase shape') : t('Erase shapes'));
+        this._emitDoc(doc, t('anim-studio.draw-host.erase-shapes', { count: d.ids.length }));
         break;
       }
     }
@@ -840,7 +840,7 @@ export class AnimDrawHost extends CanvasHost {
       e.preventDefault();
       e.stopPropagation();
       this._kb = undefined;
-      this._announce = t('Drawing cancelled.');
+      this._announce = t('anim-studio.draw-host.drawing-cancelled');
       return true;
     }
     const dir = KB_ARROWS[e.key];
@@ -850,7 +850,7 @@ export class AnimDrawHost extends CanvasHost {
     const v = this._view();
     if (!v) return true;
     if (!this.chunk) {
-      this._announce = t('The drawing tools are not loaded yet.');
+      this._announce = t('anim-studio.draw-host.the-drawing-tools-are-not-loaded-yet');
       return true;
     }
     const kbTool = tool as KbTool;
@@ -867,7 +867,7 @@ export class AnimDrawHost extends CanvasHost {
       this._cross = p;
       const ends = kbTool !== 'freehand' && !!this._kb;
       const args = { x: fmt(p[0]), y: fmt(p[1]) };
-      this._announce = kbTool === 'freehand' ? t('Cursor at x {x}, y {y}. Press Enter to add a point.', args) : ends ? t('Cursor at x {x}, y {y}. Press Enter to finish.', args) : t('Cursor at x {x}, y {y}. Press Enter to start.', args);
+      this._announce = kbTool === 'freehand' ? t('anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-add-a', args) : ends ? t('anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-finish', args) : t('anim-studio.draw-host.cursor-at-x-x-y-y-press-enter-to-start', args);
       return true;
     }
     this._cross = at;
@@ -876,24 +876,24 @@ export class AnimDrawHost extends CanvasHost {
       const last = kb?.pts[kb.pts.length - 1];
       if (kb && last && last[0] === at[0] && last[1] === at[1]) {
         if (kb.pts.length > 1) this._finishStroke();
-        else this._announce = t('Move away from the start first.');
+        else this._announce = t('anim-studio.draw-host.move-away-from-the-start-first');
         return true;
       }
       const pts = [...(kb?.pts ?? []), at];
       this._kb = { tool: kbTool, pts };
-      this._announce = t('Point {count} placed. Enter again on the same spot finishes the stroke.', { count: pts.length });
+      this._announce = t('anim-studio.draw-host.point-count-placed-enter-again-on-the', { count: pts.length });
       return true;
     }
     if (!kb) {
       this._kb = { tool: kbTool, pts: [at] };
-      this._announce = t('Started at x {x}, y {y}. Move the cursor and press Enter to finish. Escape cancels.', { x: fmt(at[0]), y: fmt(at[1]) });
+      this._announce = t('anim-studio.draw-host.started-at-x-x-y-y-move-the-cursor-and', { x: fmt(at[0]), y: fmt(at[1]) });
     } else if (this._commitBox(kbTool, kb.pts[0], at, false, false)) this._kb = undefined;
-    else this._announce = t('Move away from the start first.');
+    else this._announce = t('anim-studio.draw-host.move-away-from-the-start-first');
     return true;
   }
 
   protected toolsReady(): void {
-    this._announce = t('The drawing tools are ready.');
+    this._announce = t('anim-studio.draw-host.the-drawing-tools-are-ready');
     this._focusArea();
   }
 
@@ -1116,9 +1116,9 @@ export class AnimDrawHost extends CanvasHost {
 
   private _hint(): string {
     const tool = activeTool(this.selection);
-    if (this._pen) return this._pen.anchors.length < 2 ? t('Click to add the next point') : t(TOOL_INFO.pen.hint);
-    if (tool === 'motion' && !isRigRef(this.selection.target)) return t('Select a part or shape, then draw its motion path.');
-    if (tool === 'select' && !this._shapes.length) return t('No shapes yet: pick a drawing tool.');
+    if (this._pen) return this._pen.anchors.length < 2 ? t('anim-studio.draw-host.click-to-add-the-next-point') : t(TOOL_INFO.pen.hint);
+    if (tool === 'motion' && !isRigRef(this.selection.target)) return t('anim-studio.draw-host.select-a-part-or-shape-then-draw-its');
+    if (tool === 'select' && !this._shapes.length) return t('anim-studio.draw-host.no-shapes-yet-pick-a-drawing-tool');
     if (this._drag || this._selectedId) return '';
     return t(TOOL_INFO[tool].hint);
   }
@@ -1131,9 +1131,9 @@ export class AnimDrawHost extends CanvasHost {
       return;
     }
     this.setAttribute('role', 'application');
-    this.setAttribute('aria-roledescription', t('drawing area'));
-    const keys = KB_TOOLS.has(tool) ? ` ${t('Arrow keys move the cursor, Enter places points, Escape cancels.')}` : '';
-    this.setAttribute('aria-label', t('{label} tool. {hint}', { label: t(TOOL_INFO[tool].label), hint: t(TOOL_INFO[tool].hint) }) + keys);
+    this.setAttribute('aria-roledescription', t('anim-studio.draw-host.drawing-area'));
+    const keys = KB_TOOLS.has(tool) ? ` ${t('anim-studio.draw-host.arrow-keys-move-the-cursor-enter-places')}` : '';
+    this.setAttribute('aria-label', t('anim-studio.draw-host.label-tool-hint', { label: t(TOOL_INFO[tool].label), hint: t(TOOL_INFO[tool].hint) }) + keys);
   }
 
   protected updated(): void {
@@ -1201,21 +1201,21 @@ export class AnimDrawHost extends CanvasHost {
             .nudge=${1}
             .bigNudge=${5}
             .fineNudge=${0.1}
-            aria-label=${tool === 'pen' ? t('Pen. Click to add points, click the first point to close.') : t('Shape points. Drag a point to move it.')}
+            aria-label=${tool === 'pen' ? t('anim-studio.draw-host.pen-click-to-add-points-click-the-first') : t('anim-studio.draw-host.shape-points-drag-a-point-to-move-it')}
             @mc-path-change=${this._onCanvas}
             @mc-path-select=${this._onCanvasSelect}
-            @mc-path-limit=${() => (this._announce = t('The path has the most points it can hold.'))}
+            @mc-path-limit=${() => (this._announce = t('anim-studio.draw-host.the-path-has-the-most-points-it-can-hold'))}
           ></mc-path-canvas>`
         : nothing}
-      ${(this._pen && this._pen.anchors.length >= 2) || (this._kb?.tool === 'freehand' && this._kb.pts.length >= 2) ? html`<button type="button" class="finish" @click=${() => this._finishButton()}>${t('Finish path')}</button>` : nothing}
-      ${this._dropping ? html`<div class="drop">${t('Drop the .svg to import it')}</div>` : nothing} ${this.renderNotice()}
+      ${(this._pen && this._pen.anchors.length >= 2) || (this._kb?.tool === 'freehand' && this._kb.pts.length >= 2) ? html`<button type="button" class="finish" @click=${() => this._finishButton()}>${t('anim-studio.draw-host.finish-path')}</button>` : nothing}
+      ${this._dropping ? html`<div class="drop">${t('anim-studio.draw-host.drop-the-svg-to-import-it')}</div>` : nothing} ${this.renderNotice()}
       <span class="sr-only" aria-live="polite">${this._announce}</span>
       <mc-anim-svg-dialog .doc=${this.doc} .pieces=${this._pieceList} .viewBox=${this._viewBox}></mc-anim-svg-dialog>
     `;
   }
 }
 
-registerPanel({ tag: 'mc-anim-draw-host', place: 'stage-tool', when: drawToolActive, title: m('Drawing'), order: 40, dock: 'canvas' });
+registerPanel({ tag: 'mc-anim-draw-host', place: 'stage-tool', when: drawToolActive, title: m('anim-studio.draw-host.drawing'), order: 40, dock: 'canvas' });
 
 declare global {
   interface HTMLElementTagNameMap {

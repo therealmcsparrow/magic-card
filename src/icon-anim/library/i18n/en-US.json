@@ -1,553 +1,2462 @@
 {
-  "3D printer": "3D printer",
-  "3D printer nozzle": "3D printer nozzle",
-  "A": "A",
-  "Access point": "Access point",
-  "Air bottom": "Air bottom",
-  "Air conditioner": "Air conditioner",
-  "Air filter": "Air filter",
-  "Air purifier": "Air purifier",
-  "Air top": "Air top",
-  "Alarm clock": "Alarm clock",
-  "Alarm light": "Alarm light",
-  "Alert": "Alert",
-  "Antenna": "Antenna",
-  "Arms": "Arms",
-  "Back left leg": "Back left leg",
-  "Back right leg": "Back right leg",
-  "Balloon": "Balloon",
-  "Band": "Band",
-  "Band 1": "Band 1",
-  "Band 2": "Band 2",
-  "Band 3": "Band 3",
-  "Band 4": "Band 4",
-  "Band 5": "Band 5",
-  "Bar": "Bar",
-  "Bar 1": "Bar 1",
-  "Bar 2": "Bar 2",
-  "Bar 3": "Bar 3",
-  "Base": "Base",
-  "Bases": "Bases",
-  "Bat": "Bat",
-  "Battery": "Battery",
-  "Battery charging": "Battery charging",
-  "Battery level": "Battery level",
-  "Bauble {n}": "Bauble {n}",
-  "Beam": "Beam",
-  "Beam edge 1": "Beam edge 1",
-  "Beam edge 2": "Beam edge 2",
-  "Beating heart": "Beating heart",
-  "Bed": "Bed",
-  "Bee": "Bee",
-  "Bee and flower": "Bee and flower",
-  "Bell": "Bell",
-  "Bell and clapper": "Bell and clapper",
-  "Bend": "Bend",
-  "Big heart": "Big heart",
-  "Big sparkle": "Big sparkle",
-  "Big star": "Big star",
-  "Bin": "Bin",
-  "Bird": "Bird",
-  "Blades": "Blades",
-  "Bloom": "Bloom",
-  "Body": "Body",
-  "Bolt": "Bolt",
-  "Bottle": "Bottle",
-  "Bottom drops": "Bottom drops",
-  "Bottom gust": "Bottom gust",
-  "Bottom slat": "Bottom slat",
-  "Bottom strip": "Bottom strip",
-  "Bottom unit": "Bottom unit",
-  "Box": "Box",
-  "Brim": "Brim",
-  "Bristles": "Bristles",
-  "Broken heart": "Broken heart",
-  "Broom": "Broom",
-  "Brush": "Brush",
-  "Bulb": "Bulb",
-  "Bulb glow": "Bulb glow",
-  "Bulb shining": "Bulb shining",
-  "Butterfly": "Butterfly",
-  "Button": "Button",
-  "C": "C",
-  "Camera": "Camera",
-  "Camera head": "Camera head",
-  "Camera snapshot": "Camera snapshot",
-  "Campfire": "Campfire",
-  "Can": "Can",
-  "Candle": "Candle",
-  "Candy cane": "Candy cane",
-  "Canopy": "Canopy",
-  "Car": "Car",
-  "Car driving": "Car driving",
-  "Case": "Case",
-  "Cat": "Cat",
-  "Cauldron": "Cauldron",
-  "Ceiling fan with light": "Ceiling fan with light",
-  "Ceiling light": "Ceiling light",
-  "Centre": "Center",
-  "Centre bulb": "Center bulb",
-  "Chandelier": "Chandelier",
-  "Charge": "Charge",
-  "Cherry": "Cherry",
-  "Christmas tree": "Christmas tree",
-  "Clapper": "Clapper",
-  "Clear night": "Clear night",
-  "Clock": "Clock",
-  "Cloud": "Cloud",
-  "Cloudy": "Cloudy",
-  "Coffee maker": "Coffee maker",
-  "Cone": "Cone",
-  "Cooking pot": "Cooking pot",
-  "Cuff": "Cuff",
-  "Cupcake": "Cupcake",
-  "Curtains": "Curtains",
-  "Cutting head": "Cutting head",
-  "Desk lamp": "Desk lamp",
-  "Detector": "Detector",
-  "Dial": "Dial",
-  "Dishwasher": "Dishwasher",
-  "Display": "Display",
-  "Dog": "Dog",
-  "Dog barking": "Dog barking",
-  "Dolphin": "Dolphin",
-  "Door": "Door",
-  "Door leaf": "Door leaf",
-  "Door opening": "Door opening",
-  "Door window": "Door window",
-  "Doorbell press": "Doorbell press",
-  "Doorbell ring": "Doorbell ring",
-  "Dot": "Dot",
-  "Drip": "Drip",
-  "Drop": "Drop",
-  "Drop 1": "Drop 1",
-  "Drop 10": "Drop 10",
-  "Drop 11": "Drop 11",
-  "Drop 12": "Drop 12",
-  "Drop 2": "Drop 2",
-  "Drop 3": "Drop 3",
-  "Drop 4": "Drop 4",
-  "Drop 5": "Drop 5",
-  "Drop 6": "Drop 6",
-  "Drop 7": "Drop 7",
-  "Drop 8": "Drop 8",
-  "Drop 9": "Drop 9",
-  "Drum": "Drum",
-  "Dryer": "Dryer",
-  "Duck": "Duck",
-  "Electric car charging": "Electric car charging",
-  "Energy": "Energy",
-  "Energy meter": "Energy meter",
-  "Exclamation": "Exclamation",
-  "Exclamation mark": "Exclamation mark",
-  "Extinguisher": "Extinguisher",
-  "Face": "Face",
-  "Face glow": "Face glow",
-  "Fan": "Fan",
-  "Fan spin": "Fan spin",
-  "Faucet": "Faucet",
-  "Filament": "Filament",
-  "Filter": "Filter",
-  "Fire alert": "Fire alert",
-  "Fire extinguisher": "Fire extinguisher",
-  "Fire ring": "Fire ring",
-  "Fire sprinkler": "Fire sprinkler",
-  "Fireplace": "Fireplace",
-  "Firework": "Firework",
-  "Fish": "Fish",
-  "Flame": "Flame",
-  "Floating hearts": "Floating hearts",
-  "Floor lamp": "Floor lamp",
-  "Flower": "Flower",
-  "Fog": "Fog",
-  "Fog line 1": "Fog line 1",
-  "Fog line 2": "Fog line 2",
-  "Fog line 3": "Fog line 3",
-  "Fog line 4": "Fog line 4",
-  "Foot": "Foot",
-  "Frame": "Frame",
-  "Freezer door": "Freezer door",
-  "Fridge door": "Fridge door",
-  "Front left leg": "Front left leg",
-  "Front right leg": "Front right leg",
-  "Frosting": "Frosting",
-  "Garage": "Garage",
-  "Garage door": "Garage door",
-  "Garage opening": "Garage opening",
-  "Gate": "Gate",
-  "Gauge": "Gauge",
-  "Gem": "Gem",
-  "Ghost": "Ghost",
-  "Gift": "Gift",
-  "Gravestone": "Gravestone",
-  "Grill": "Grill",
-  "Ground": "Ground",
-  "Hail": "Hail",
-  "Hailstone 1": "Hailstone 1",
-  "Hailstone 2": "Hailstone 2",
-  "Hailstone 3": "Hailstone 3",
-  "Hand": "Hand",
-  "Hand wash": "Hand wash",
-  "Hand with heart": "Hand with heart",
-  "Handle": "Handle",
-  "Hands": "Hands",
-  "Handset": "Handset",
-  "Hat": "Hat",
-  "Head": "Head",
-  "Headphones": "Headphones",
-  "Heart": "Heart",
-  "Heart and pulse": "Heart and pulse",
-  "Heart top": "Heart top",
-  "Heartbeat": "Heartbeat",
-  "Hearth": "Hearth",
-  "Heat haze": "Heat haze",
-  "Heating element": "Heating element",
-  "Heavy snow": "Heavy snow",
-  "Home": "Home",
-  "Home Assistant": "Home Assistant",
-  "Hook end": "Hook end",
-  "Horizon 1": "Horizon 1",
-  "Horizon 2": "Horizon 2",
-  "Hourglass": "Hourglass",
-  "House": "House",
-  "Hub": "Hub",
-  "Humidifier mist": "Humidifier mist",
-  "Humidity drop": "Humidity drop",
-  "Hurricane": "Hurricane",
-  "Inner flame": "Inner flame",
-  "Inner left wave": "Inner left wave",
-  "Inner right wave": "Inner right wave",
-  "Inner wave": "Inner wave",
-  "Inner waves": "Inner waves",
-  "Iron": "Iron",
-  "Jack-o'-lantern": "Jack-o'-lantern",
-  "Jaw": "Jaw",
-  "Jellyfish": "Jellyfish",
-  "Jingle bell": "Jingle bell",
-  "Kettle": "Kettle",
-  "Kettle boiling": "Kettle boiling",
-  "Knob": "Knob",
-  "Knob 1": "Knob 1",
-  "Knob 2": "Knob 2",
-  "Knob 3": "Knob 3",
-  "LED strip colour chase": "LED strip color chase",
-  "Ladder": "Ladder",
-  "Ladybug": "Ladybug",
-  "Lamp": "Lamp",
-  "Lamp front": "Lamp front",
-  "Laser cutter": "Laser cutter",
-  "Laser head": "Laser head",
-  "Lava": "Lava",
-  "Lava lamp": "Lava lamp",
-  "Leaf": "Leaf",
-  "Leaf in the wind": "Leaf in the wind",
-  "Left bell": "Left bell",
-  "Left blade": "Left blade",
-  "Left bulb": "Left bulb",
-  "Left curtain": "Left curtain",
-  "Left drop": "Left drop",
-  "Left drop 1": "Left drop 1",
-  "Left drop 2": "Left drop 2",
-  "Left drop 3": "Left drop 3",
-  "Left drop 4": "Left drop 4",
-  "Left drop 5": "Left drop 5",
-  "Left drop 6": "Left drop 6",
-  "Left eye": "Left eye",
-  "Left flake": "Left flake",
-  "Left half": "Left half",
-  "Left lamp": "Left lamp",
-  "Left leaf": "Left leaf",
-  "Left light": "Left light",
-  "Left node": "Left node",
-  "Left oven glow": "Left oven glow",
-  "Left pipe": "Left pipe",
-  "Left ray": "Left ray",
-  "Left steam": "Left steam",
-  "Left tick": "Left tick",
-  "Left wave": "Left wave",
-  "Left wing": "Left wing",
-  "Left wing case": "Left wing case",
-  "Lens": "Lens",
-  "Letter slot": "Letter slot",
-  "Lid": "Lid",
-  "Light": "Light",
-  "Light group": "Light group",
-  "Light rays": "Light rays",
-  "Light switch": "Light switch",
-  "Line": "Line",
-  "Lock": "Lock",
-  "Logs": "Logs",
-  "Machine": "Machine",
-  "Magic staff": "Magic staff",
-  "Mail arrived": "Mail arrived",
-  "Mailbox": "Mailbox",
-  "Mantel": "Mantel",
-  "Mark 1": "Mark 1",
-  "Mark 2": "Mark 2",
-  "Mark 3": "Mark 3",
-  "Mark 4": "Mark 4",
-  "Mark 5": "Mark 5",
-  "Mark 6": "Mark 6",
-  "Mark 7": "Mark 7",
-  "Mark 8": "Mark 8",
-  "Material": "Material",
-  "Meter": "Meter",
-  "Middle arc": "Middle arc",
-  "Middle bulb": "Middle bulb",
-  "Middle drop": "Middle drop",
-  "Middle drops": "Middle drops",
-  "Middle gust": "Middle gust",
-  "Middle light": "Middle light",
-  "Middle ray": "Middle ray",
-  "Middle slat": "Middle slat",
-  "Middle strip": "Middle strip",
-  "Middle unit": "Middle unit",
-  "Middle wave": "Middle wave",
-  "Mist 1": "Mist 1",
-  "Mist 2": "Mist 2",
-  "Mist 3": "Mist 3",
-  "Mist 4": "Mist 4",
-  "Mist 5": "Mist 5",
-  "Mist 6": "Mist 6",
-  "Moon": "Moon",
-  "Motion detected": "Motion detected",
-  "Mount": "Mount",
-  "Mower": "Mower",
-  "Music note dance": "Music note dance",
-  "Needle": "Needle",
-  "Night light": "Night light",
-  "Nose cone": "Nose cone",
-  "Note": "Note",
-  "Notification": "Notification",
-  "Nozzle": "Nozzle",
-  "Orb": "Orb",
-  "Ornament": "Ornament",
-  "Outdoor temperature": "Outdoor temperature",
-  "Outer flame": "Outer flame",
-  "Outer left wave": "Outer left wave",
-  "Outer right wave": "Outer right wave",
-  "Outer wave": "Outer wave",
-  "Outer waves": "Outer waves",
-  "Oven": "Oven",
-  "Oven heating": "Oven heating",
-  "Owl": "Owl",
-  "Pad": "Pad",
-  "Panel": "Panel",
-  "Paper": "Paper",
-  "Parcel": "Parcel",
-  "Parcel delivered": "Parcel delivered",
-  "Partly cloudy": "Partly cloudy",
-  "Party popper": "Party popper",
-  "Pendant": "Pendant",
-  "Pendant lights": "Pendant lights",
-  "Penguin": "Penguin",
-  "Person": "Person",
-  "Person home": "Person home",
-  "Pet": "Pet",
-  "Phone": "Phone",
-  "Phone ringing": "Phone ringing",
-  "Phone signal": "Phone signal",
-  "Phone vibrate": "Phone vibrate",
-  "Plant": "Plant",
-  "Plate": "Plate",
-  "Play": "Play",
-  "Plug": "Plug",
-  "Plug in": "Plug in",
-  "Pool": "Pool",
-  "Popper": "Popper",
-  "Pot": "Pot",
-  "Pouring rain": "Pouring rain",
-  "Power button": "Power button",
-  "Print": "Print",
-  "Print head": "Print head",
-  "Printer": "Printer",
-  "Pump": "Pump",
-  "Pumpkin": "Pumpkin",
-  "Radiator": "Radiator",
-  "Radiator heat": "Radiator heat",
-  "Rail": "Rail",
-  "Rain": "Rain",
-  "Ray 1": "Ray 1",
-  "Ray 2": "Ray 2",
-  "Ray 3": "Ray 3",
-  "Ray bottom": "Ray bottom",
-  "Ray bottom left": "Ray bottom left",
-  "Ray bottom right": "Ray bottom right",
-  "Ray left": "Ray left",
-  "Ray right": "Ray right",
-  "Ray top": "Ray top",
-  "Ray top left": "Ray top left",
-  "Ray top right": "Ray top right",
-  "Rays": "Rays",
-  "Right bell": "Right bell",
-  "Right blade": "Right blade",
-  "Right bulb": "Right bulb",
-  "Right curtain": "Right curtain",
-  "Right drop": "Right drop",
-  "Right drop 1": "Right drop 1",
-  "Right drop 2": "Right drop 2",
-  "Right drop 3": "Right drop 3",
-  "Right drop 4": "Right drop 4",
-  "Right drop 5": "Right drop 5",
-  "Right drop 6": "Right drop 6",
-  "Right eye": "Right eye",
-  "Right flake": "Right flake",
-  "Right half": "Right half",
-  "Right lamp": "Right lamp",
-  "Right lamp and bulb": "Right lamp and bulb",
-  "Right leaf": "Right leaf",
-  "Right light": "Right light",
-  "Right node": "Right node",
-  "Right oven glow": "Right oven glow",
-  "Right pipe": "Right pipe",
-  "Right ray": "Right ray",
-  "Right steam": "Right steam",
-  "Right tick": "Right tick",
-  "Right wave": "Right wave",
-  "Right wing": "Right wing",
-  "Right wing case": "Right wing case",
-  "Ring": "Ring",
-  "Robot": "Robot",
-  "Robot mower": "Robot mower",
-  "Robot vacuum": "Robot vacuum",
-  "Robot vacuum side view": "Robot vacuum side view",
-  "Rocket": "Rocket",
-  "Rod": "Rod",
-  "Roller shutter": "Roller shutter",
-  "Rotor": "Rotor",
-  "Router": "Router",
-  "Sand": "Sand",
-  "Security armed": "Security armed",
-  "Security camera": "Security camera",
-  "Sensor": "Sensor",
-  "Server": "Server",
-  "Shackle": "Shackle",
-  "Shade": "Shade",
-  "Shell": "Shell",
-  "Shield": "Shield",
-  "Shooting star": "Shooting star",
-  "Shower": "Shower",
-  "Sign": "Sign",
-  "Signal": "Signal",
-  "Skull": "Skull",
-  "Slash": "Slash",
-  "Slat 1": "Slat 1",
-  "Slat 2": "Slat 2",
-  "Slat 3": "Slat 3",
-  "Slat 4": "Slat 4",
-  "Sleeping": "Sleeping",
-  "Small heart": "Small heart",
-  "Small sparkle": "Small sparkle",
-  "Small star": "Small star",
-  "Smoke 1": "Smoke 1",
-  "Smoke 2": "Smoke 2",
-  "Smoke 3": "Smoke 3",
-  "Smoke alarm": "Smoke alarm",
-  "Smoke detector standby": "Smoke detector standby",
-  "Snail": "Snail",
-  "Snow": "Snow",
-  "Snowflake": "Snowflake",
-  "Snowman": "Snowman",
-  "Soap pump": "Soap pump",
-  "Soil": "Soil",
-  "Solar power": "Solar power",
-  "Sound waves": "Sound waves",
-  "Spark": "Spark",
-  "Sparkle": "Sparkle",
-  "Sparkle 2": "Sparkle 2",
-  "Sparkle 3": "Sparkle 3",
-  "Sparkle 4": "Sparkle 4",
-  "Sparkling clean": "Sparkling clean",
-  "Speaker": "Speaker",
-  "Spider": "Spider",
-  "Spoon": "Spoon",
-  "Spotlight": "Spotlight",
-  "Spray bottle": "Spray bottle",
-  "Spray can": "Spray can",
-  "Sprinkler": "Sprinkler",
-  "Sprout": "Sprout",
-  "Staff": "Staff",
-  "Staff and orb": "Staff and orb",
-  "Stand": "Stand",
-  "Star": "Star",
-  "Stem": "Stem",
-  "Stone": "Stone",
-  "Storm with rain": "Storm with rain",
-  "Stove": "Stove",
-  "Streamer 1": "Streamer 1",
-  "Streamer 2": "Streamer 2",
-  "Streamer 3": "Streamer 3",
-  "Streamer 4": "Streamer 4",
-  "String lights": "String lights",
-  "Sun": "Sun",
-  "Sun and cloud": "Sun and cloud",
-  "Sunny": "Sunny",
-  "Sunset": "Sunset",
-  "Switch toggle": "Switch toggle",
-  "TV on": "TV on",
-  "Table lamp switching on": "Table lamp switching on",
-  "Tap": "Tap",
-  "Television": "Television",
-  "Thermometer": "Thermometer",
-  "Thread": "Thread",
-  "Thunderstorm": "Thunderstorm",
-  "Timer": "Timer",
-  "Toast": "Toast",
-  "Toaster": "Toaster",
-  "Toe 1": "Toe 1",
-  "Toe 2": "Toe 2",
-  "Toe 3": "Toe 3",
-  "Toe 4": "Toe 4",
-  "Toggle": "Toggle",
-  "Toolhead": "Toolhead",
-  "Top": "Top",
-  "Top arc": "Top arc",
-  "Top blade": "Top blade",
-  "Top drops": "Top drops",
-  "Top gust": "Top gust",
-  "Top node": "Top node",
-  "Top slat": "Top slat",
-  "Top strip": "Top strip",
-  "Top tick": "Top tick",
-  "Top unit": "Top unit",
-  "Top wave": "Top wave",
-  "Torch": "Torch",
-  "Tornado": "Tornado",
-  "Tower": "Tower",
-  "Track": "Track",
-  "Track light": "Track light",
-  "Trail 1": "Trail 1",
-  "Trail 2": "Trail 2",
-  "Trail 3": "Trail 3",
-  "Trash day": "Trash day",
-  "Tree": "Tree",
-  "Trigger": "Trigger",
-  "Trigger head": "Trigger head",
-  "Tulip": "Tulip",
-  "Tumble dryer": "Tumble dryer",
-  "Turtle": "Turtle",
-  "Twinkling star": "Twinkling star",
-  "Vacuum": "Vacuum",
-  "Vacuum cleaner": "Vacuum cleaner",
-  "Valve": "Valve",
-  "Volume": "Volume",
-  "Walker": "Walker",
-  "Walking": "Walking",
-  "Washing machine": "Washing machine",
-  "Washing machine alert": "Washing machine alert",
-  "Water": "Water",
-  "Water drop": "Water drop",
-  "Water leak": "Water leak",
-  "Water pump": "Water pump",
-  "Watering": "Watering",
-  "Watering can": "Watering can",
-  "Wheel": "Wheel",
-  "Wi-Fi": "Wi-Fi",
-  "Wind turbine": "Wind turbine",
-  "Windy": "Windy",
-  "Wire": "Wire",
-  "Wizard hat": "Wizard hat",
-  "Wrapper 1": "Wrapper 1",
-  "Wrapper 2": "Wrapper 2",
-  "Wrapper 3": "Wrapper 3"
+  "icon-library.fire-cleaning.air-bottom": {
+    "text": "Air bottom",
+    "hash": "e1bc53b3"
+  },
+  "icon-library.fire-cleaning.air-filter": {
+    "text": "Air filter",
+    "hash": "a21c7fe0"
+  },
+  "icon-library.fire-cleaning.air-top": {
+    "text": "Air top",
+    "hash": "2eeefa53"
+  },
+  "icon-library.fire-cleaning.big-sparkle": {
+    "text": "Big sparkle",
+    "hash": "eb3d9643"
+  },
+  "icon-library.fire-cleaning.body": {
+    "text": "Body",
+    "hash": "6ccaa641"
+  },
+  "icon-library.fire-cleaning.bottle": {
+    "text": "Bottle",
+    "hash": "e27e3cb0"
+  },
+  "icon-library.fire-cleaning.bottom-drops": {
+    "text": "Bottom drops",
+    "hash": "ac2de44e"
+  },
+  "icon-library.fire-cleaning.bristles": {
+    "text": "Bristles",
+    "hash": "de68538d"
+  },
+  "icon-library.fire-cleaning.broom": {
+    "text": "Broom",
+    "hash": "cfdced0c"
+  },
+  "icon-library.fire-cleaning.button": {
+    "text": "Button",
+    "hash": "707eab0c"
+  },
+  "icon-library.fire-cleaning.campfire": {
+    "text": "Campfire",
+    "hash": "bf3fac40"
+  },
+  "icon-library.fire-cleaning.can": {
+    "text": "Can",
+    "hash": "2dba9a87"
+  },
+  "icon-library.fire-cleaning.candle": {
+    "text": "Candle",
+    "hash": "75656ad6"
+  },
+  "icon-library.fire-cleaning.cuff": {
+    "text": "Cuff",
+    "hash": "3a564322"
+  },
+  "icon-library.fire-cleaning.door-window": {
+    "text": "Door window",
+    "hash": "06d20ec9"
+  },
+  "icon-library.fire-cleaning.dot": {
+    "text": "Dot",
+    "hash": "599079bc"
+  },
+  "icon-library.fire-cleaning.drop": {
+    "text": "Drop",
+    "hash": "c8af9ae3"
+  },
+  "icon-library.fire-cleaning.exclamation": {
+    "text": "Exclamation",
+    "hash": "e73c3fed"
+  },
+  "icon-library.fire-cleaning.exclamation-mark": {
+    "text": "Exclamation mark",
+    "hash": "80ef1ad7"
+  },
+  "icon-library.fire-cleaning.extinguisher": {
+    "text": "Extinguisher",
+    "hash": "f3d2cb76"
+  },
+  "icon-library.fire-cleaning.filter": {
+    "text": "Filter",
+    "hash": "638e249f"
+  },
+  "icon-library.fire-cleaning.fire-alert": {
+    "text": "Fire alert",
+    "hash": "a7187b0d"
+  },
+  "icon-library.fire-cleaning.fire-extinguisher": {
+    "text": "Fire extinguisher",
+    "hash": "7125e8fc"
+  },
+  "icon-library.fire-cleaning.fire-ring": {
+    "text": "Fire ring",
+    "hash": "45726b4d"
+  },
+  "icon-library.fire-cleaning.fire-sprinkler": {
+    "text": "Fire sprinkler",
+    "hash": "075d0591"
+  },
+  "icon-library.fire-cleaning.flame": {
+    "text": "Flame",
+    "hash": "dfb0f521"
+  },
+  "icon-library.fire-cleaning.grill": {
+    "text": "Grill",
+    "hash": "738c8bf7"
+  },
+  "icon-library.fire-cleaning.hand-wash": {
+    "text": "Hand wash",
+    "hash": "eba255cb"
+  },
+  "icon-library.fire-cleaning.handle": {
+    "text": "Handle",
+    "hash": "fa04ae3d"
+  },
+  "icon-library.fire-cleaning.hands": {
+    "text": "Hands",
+    "hash": "6b720477"
+  },
+  "icon-library.fire-cleaning.inner-flame": {
+    "text": "Inner flame",
+    "hash": "68ef6c15"
+  },
+  "icon-library.fire-cleaning.iron": {
+    "text": "Iron",
+    "hash": "bd223c81"
+  },
+  "icon-library.fire-cleaning.lid": {
+    "text": "Lid",
+    "hash": "eea3f22e"
+  },
+  "icon-library.fire-cleaning.logs": {
+    "text": "Logs",
+    "hash": "ea2100dc"
+  },
+  "icon-library.fire-cleaning.machine": {
+    "text": "Machine",
+    "hash": "8f1cc42d"
+  },
+  "icon-library.fire-cleaning.middle-drops": {
+    "text": "Middle drops",
+    "hash": "cda1e2fa"
+  },
+  "icon-library.fire-cleaning.mist-1": {
+    "text": "Mist 1",
+    "hash": "224b3e65"
+  },
+  "icon-library.fire-cleaning.mist-2": {
+    "text": "Mist 2",
+    "hash": "ee82c49e"
+  },
+  "icon-library.fire-cleaning.mist-3": {
+    "text": "Mist 3",
+    "hash": "b94a4131"
+  },
+  "icon-library.fire-cleaning.mist-4": {
+    "text": "Mist 4",
+    "hash": "cf28e660"
+  },
+  "icon-library.fire-cleaning.mist-5": {
+    "text": "Mist 5",
+    "hash": "bd32a1c0"
+  },
+  "icon-library.fire-cleaning.mist-6": {
+    "text": "Mist 6",
+    "hash": "696e1c12"
+  },
+  "icon-library.fire-cleaning.nozzle": {
+    "text": "Nozzle",
+    "hash": "68de2ee9"
+  },
+  "icon-library.fire-cleaning.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "icon-library.fire-cleaning.robot-vacuum-side-view": {
+    "text": "Robot vacuum side view",
+    "hash": "f6a0adb8"
+  },
+  "icon-library.fire-cleaning.sensor": {
+    "text": "Sensor",
+    "hash": "162cc64c"
+  },
+  "icon-library.fire-cleaning.shell": {
+    "text": "Shell",
+    "hash": "a7332854"
+  },
+  "icon-library.fire-cleaning.small-sparkle": {
+    "text": "Small sparkle",
+    "hash": "3776d201"
+  },
+  "icon-library.fire-cleaning.smoke-1": {
+    "text": "Smoke 1",
+    "hash": "6fe8b135"
+  },
+  "icon-library.fire-cleaning.smoke-2": {
+    "text": "Smoke 2",
+    "hash": "aa2f3b63"
+  },
+  "icon-library.fire-cleaning.smoke-3": {
+    "text": "Smoke 3",
+    "hash": "47f4a6ee"
+  },
+  "icon-library.fire-cleaning.soap-pump": {
+    "text": "Soap pump",
+    "hash": "ff7adc56"
+  },
+  "icon-library.fire-cleaning.sparkle": {
+    "text": "Sparkle",
+    "hash": "abac3d1e"
+  },
+  "icon-library.fire-cleaning.sparkling-clean": {
+    "text": "Sparkling clean",
+    "hash": "078999e7"
+  },
+  "icon-library.fire-cleaning.spray-bottle": {
+    "text": "Spray bottle",
+    "hash": "7faacdfb"
+  },
+  "icon-library.fire-cleaning.spray-can": {
+    "text": "Spray can",
+    "hash": "6073726e"
+  },
+  "icon-library.fire-cleaning.sprinkler": {
+    "text": "Sprinkler",
+    "hash": "7ed7237e"
+  },
+  "icon-library.fire-cleaning.top-drops": {
+    "text": "Top drops",
+    "hash": "ca54dc5b"
+  },
+  "icon-library.fire-cleaning.torch": {
+    "text": "Torch",
+    "hash": "dcc578ac"
+  },
+  "icon-library.fire-cleaning.trigger": {
+    "text": "Trigger",
+    "hash": "8b9c6437"
+  },
+  "icon-library.fire-cleaning.trigger-head": {
+    "text": "Trigger head",
+    "hash": "6473398b"
+  },
+  "icon-library.fire-cleaning.vacuum": {
+    "text": "Vacuum",
+    "hash": "f93faa36"
+  },
+  "icon-library.fire-cleaning.vacuum-cleaner": {
+    "text": "Vacuum cleaner",
+    "hash": "addb93e8"
+  },
+  "icon-library.fire-cleaning.washing-machine-alert": {
+    "text": "Washing machine alert",
+    "hash": "2da069d9"
+  },
+  "icon-library.fire-cleaning.wheel": {
+    "text": "Wheel",
+    "hash": "889a0832"
+  },
+  "icon-library.home.3d-printer": {
+    "text": "3D printer",
+    "hash": "936b3b51"
+  },
+  "icon-library.home.3d-printer-nozzle": {
+    "text": "3D printer nozzle",
+    "hash": "6f398b05"
+  },
+  "icon-library.home.access-point": {
+    "text": "Access point",
+    "hash": "68eddefa"
+  },
+  "icon-library.home.antenna": {
+    "text": "Antenna",
+    "hash": "7b2e6c05"
+  },
+  "icon-library.home.beam": {
+    "text": "Beam",
+    "hash": "2e5b0ef5"
+  },
+  "icon-library.home.bed": {
+    "text": "Bed",
+    "hash": "f816a74c"
+  },
+  "icon-library.home.bottom-unit": {
+    "text": "Bottom unit",
+    "hash": "c44365d8"
+  },
+  "icon-library.home.case": {
+    "text": "Case",
+    "hash": "15f86e24"
+  },
+  "icon-library.home.cutting-head": {
+    "text": "Cutting head",
+    "hash": "1a4ca2f2"
+  },
+  "icon-library.home.door": {
+    "text": "Door",
+    "hash": "fbf247e4"
+  },
+  "icon-library.home.drip": {
+    "text": "Drip",
+    "hash": "4b841ee3"
+  },
+  "icon-library.home.filament": {
+    "text": "Filament",
+    "hash": "0a9066fa"
+  },
+  "icon-library.home.frame": {
+    "text": "Frame",
+    "hash": "d0b50e06"
+  },
+  "icon-library.home.garage": {
+    "text": "Garage",
+    "hash": "b15f6253"
+  },
+  "icon-library.home.garage-opening": {
+    "text": "Garage opening",
+    "hash": "b13f01d4"
+  },
+  "icon-library.home.head": {
+    "text": "Head",
+    "hash": "9bb0aacc"
+  },
+  "icon-library.home.home-assistant": {
+    "text": "Home Assistant",
+    "hash": "2a366abb"
+  },
+  "icon-library.home.house": {
+    "text": "House",
+    "hash": "2526c620"
+  },
+  "icon-library.home.hub": {
+    "text": "Hub",
+    "hash": "d87c9ca3"
+  },
+  "icon-library.home.inner-left-wave": {
+    "text": "Inner left wave",
+    "hash": "1080ff3c"
+  },
+  "icon-library.home.inner-right-wave": {
+    "text": "Inner right wave",
+    "hash": "ad606bdf"
+  },
+  "icon-library.home.inner-waves": {
+    "text": "Inner waves",
+    "hash": "3060151b"
+  },
+  "icon-library.home.knob-1": {
+    "text": "Knob 1",
+    "hash": "f790ae05"
+  },
+  "icon-library.home.knob-2": {
+    "text": "Knob 2",
+    "hash": "ce547107"
+  },
+  "icon-library.home.knob-3": {
+    "text": "Knob 3",
+    "hash": "01c467fe"
+  },
+  "icon-library.home.laser-cutter": {
+    "text": "Laser cutter",
+    "hash": "5909ce64"
+  },
+  "icon-library.home.laser-head": {
+    "text": "Laser head",
+    "hash": "81e663cd"
+  },
+  "icon-library.home.left-blade": {
+    "text": "Left blade",
+    "hash": "c63d0a4c"
+  },
+  "icon-library.home.left-node": {
+    "text": "Left node",
+    "hash": "4da790bf"
+  },
+  "icon-library.home.left-oven-glow": {
+    "text": "Left oven glow",
+    "hash": "5263cf04"
+  },
+  "icon-library.home.left-pipe": {
+    "text": "Left pipe",
+    "hash": "35f5acfc"
+  },
+  "icon-library.home.letter-slot": {
+    "text": "Letter slot",
+    "hash": "eab5365d"
+  },
+  "icon-library.home.lid": {
+    "text": "Lid",
+    "hash": "eea3f22e"
+  },
+  "icon-library.home.light-switch": {
+    "text": "Light switch",
+    "hash": "c8aa6be8"
+  },
+  "icon-library.home.mail-arrived": {
+    "text": "Mail arrived",
+    "hash": "a332e5da"
+  },
+  "icon-library.home.mailbox": {
+    "text": "Mailbox",
+    "hash": "0a461c04"
+  },
+  "icon-library.home.material": {
+    "text": "Material",
+    "hash": "616cb218"
+  },
+  "icon-library.home.middle-unit": {
+    "text": "Middle unit",
+    "hash": "d232bd66"
+  },
+  "icon-library.home.nozzle": {
+    "text": "Nozzle",
+    "hash": "68de2ee9"
+  },
+  "icon-library.home.outer-left-wave": {
+    "text": "Outer left wave",
+    "hash": "f1777ee4"
+  },
+  "icon-library.home.outer-right-wave": {
+    "text": "Outer right wave",
+    "hash": "ba564465"
+  },
+  "icon-library.home.outer-waves": {
+    "text": "Outer waves",
+    "hash": "58c82b0f"
+  },
+  "icon-library.home.parcel": {
+    "text": "Parcel",
+    "hash": "80458335"
+  },
+  "icon-library.home.parcel-delivered": {
+    "text": "Parcel delivered",
+    "hash": "85e904d1"
+  },
+  "icon-library.home.plate": {
+    "text": "Plate",
+    "hash": "a7cd5d8f"
+  },
+  "icon-library.home.print": {
+    "text": "Print",
+    "hash": "df0fe798"
+  },
+  "icon-library.home.print-head": {
+    "text": "Print head",
+    "hash": "92500dbc"
+  },
+  "icon-library.home.rail": {
+    "text": "Rail",
+    "hash": "8b270e33"
+  },
+  "icon-library.home.right-blade": {
+    "text": "Right blade",
+    "hash": "14c74d5a"
+  },
+  "icon-library.home.right-node": {
+    "text": "Right node",
+    "hash": "8e4f6208"
+  },
+  "icon-library.home.right-oven-glow": {
+    "text": "Right oven glow",
+    "hash": "be0812ba"
+  },
+  "icon-library.home.right-pipe": {
+    "text": "Right pipe",
+    "hash": "9f707284"
+  },
+  "icon-library.home.rotor": {
+    "text": "Rotor",
+    "hash": "f214fc83"
+  },
+  "icon-library.home.server": {
+    "text": "Server",
+    "hash": "aef7de28"
+  },
+  "icon-library.home.sleeping": {
+    "text": "Sleeping",
+    "hash": "12ff393b"
+  },
+  "icon-library.home.spark": {
+    "text": "Spark",
+    "hash": "529bc3b0"
+  },
+  "icon-library.home.stove": {
+    "text": "Stove",
+    "hash": "a9b5a4dc"
+  },
+  "icon-library.home.toast": {
+    "text": "Toast",
+    "hash": "34b86033"
+  },
+  "icon-library.home.toaster": {
+    "text": "Toaster",
+    "hash": "8a56e579"
+  },
+  "icon-library.home.toggle": {
+    "text": "Toggle",
+    "hash": "3d03a1de"
+  },
+  "icon-library.home.toolhead": {
+    "text": "Toolhead",
+    "hash": "007d23e8"
+  },
+  "icon-library.home.top-blade": {
+    "text": "Top blade",
+    "hash": "904efdc7"
+  },
+  "icon-library.home.top-node": {
+    "text": "Top node",
+    "hash": "26dce0e6"
+  },
+  "icon-library.home.top-unit": {
+    "text": "Top unit",
+    "hash": "76c079a5"
+  },
+  "icon-library.home.tower": {
+    "text": "Tower",
+    "hash": "aeb11001"
+  },
+  "icon-library.home.water-leak": {
+    "text": "Water leak",
+    "hash": "c21e3380"
+  },
+  "icon-library.home.wind-turbine": {
+    "text": "Wind turbine",
+    "hash": "3c2b2780"
+  },
+  "icon-library.library.a": {
+    "text": "A",
+    "hash": "559aead0"
+  },
+  "icon-library.library.air-bottom": {
+    "text": "Air bottom",
+    "hash": "e1bc53b3"
+  },
+  "icon-library.library.air-conditioner": {
+    "text": "Air conditioner",
+    "hash": "42fac761"
+  },
+  "icon-library.library.air-purifier": {
+    "text": "Air purifier",
+    "hash": "041bacc7"
+  },
+  "icon-library.library.air-top": {
+    "text": "Air top",
+    "hash": "2eeefa53"
+  },
+  "icon-library.library.alarm-clock": {
+    "text": "Alarm clock",
+    "hash": "253dd71d"
+  },
+  "icon-library.library.alarm-light": {
+    "text": "Alarm light",
+    "hash": "a22d5c6a"
+  },
+  "icon-library.library.alert": {
+    "text": "Alert",
+    "hash": "44a57b22"
+  },
+  "icon-library.library.bar": {
+    "text": "Bar",
+    "hash": "95d64cac"
+  },
+  "icon-library.library.bar-1": {
+    "text": "Bar 1",
+    "hash": "fb2e13b7"
+  },
+  "icon-library.library.bar-2": {
+    "text": "Bar 2",
+    "hash": "6a7a0230"
+  },
+  "icon-library.library.bar-3": {
+    "text": "Bar 3",
+    "hash": "f835ec2f"
+  },
+  "icon-library.library.base": {
+    "text": "Base",
+    "hash": "7b47361a"
+  },
+  "icon-library.library.bases": {
+    "text": "Bases",
+    "hash": "363bc61a"
+  },
+  "icon-library.library.battery": {
+    "text": "Battery",
+    "hash": "dfcb7c16"
+  },
+  "icon-library.library.battery-charging": {
+    "text": "Battery charging",
+    "hash": "0541b151"
+  },
+  "icon-library.library.battery-level": {
+    "text": "Battery level",
+    "hash": "74271bb9"
+  },
+  "icon-library.library.bee": {
+    "text": "Bee",
+    "hash": "f5779450"
+  },
+  "icon-library.library.bell": {
+    "text": "Bell",
+    "hash": "8e80b2b4"
+  },
+  "icon-library.library.bell-and-clapper": {
+    "text": "Bell and clapper",
+    "hash": "63df8a98"
+  },
+  "icon-library.library.big-star": {
+    "text": "Big star",
+    "hash": "0d3f2ea0"
+  },
+  "icon-library.library.bin": {
+    "text": "Bin",
+    "hash": "be177b94"
+  },
+  "icon-library.library.bird": {
+    "text": "Bird",
+    "hash": "68b515e1"
+  },
+  "icon-library.library.blades": {
+    "text": "Blades",
+    "hash": "ec4d6b95"
+  },
+  "icon-library.library.body": {
+    "text": "Body",
+    "hash": "6ccaa641"
+  },
+  "icon-library.library.bolt": {
+    "text": "Bolt",
+    "hash": "ea0151c4"
+  },
+  "icon-library.library.bottom-gust": {
+    "text": "Bottom gust",
+    "hash": "f21821be"
+  },
+  "icon-library.library.bottom-slat": {
+    "text": "Bottom slat",
+    "hash": "ebe88feb"
+  },
+  "icon-library.library.bottom-strip": {
+    "text": "Bottom strip",
+    "hash": "5323eaf7"
+  },
+  "icon-library.library.brush": {
+    "text": "Brush",
+    "hash": "8624ca0f"
+  },
+  "icon-library.library.bulb": {
+    "text": "Bulb",
+    "hash": "b1d8b12c"
+  },
+  "icon-library.library.bulb-glow": {
+    "text": "Bulb glow",
+    "hash": "4b165d4b"
+  },
+  "icon-library.library.button": {
+    "text": "Button",
+    "hash": "707eab0c"
+  },
+  "icon-library.library.c": {
+    "text": "C",
+    "hash": "6b23c0d5"
+  },
+  "icon-library.library.camera": {
+    "text": "Camera",
+    "hash": "03494b0d"
+  },
+  "icon-library.library.camera-head": {
+    "text": "Camera head",
+    "hash": "d8ca3835"
+  },
+  "icon-library.library.camera-snapshot": {
+    "text": "Camera snapshot",
+    "hash": "75794490"
+  },
+  "icon-library.library.car": {
+    "text": "Car",
+    "hash": "a5cdf07d"
+  },
+  "icon-library.library.car-driving": {
+    "text": "Car driving",
+    "hash": "6f0eabdd"
+  },
+  "icon-library.library.ceiling-fan-with-light": {
+    "text": "Ceiling fan with light",
+    "hash": "9e68ea60"
+  },
+  "icon-library.library.ceiling-light": {
+    "text": "Ceiling light",
+    "hash": "d00ed93d"
+  },
+  "icon-library.library.centre": {
+    "text": "Center",
+    "hash": "45c19322"
+  },
+  "icon-library.library.centre-bulb": {
+    "text": "Center bulb",
+    "hash": "8fec057a"
+  },
+  "icon-library.library.charge": {
+    "text": "Charge",
+    "hash": "ff9f88ce"
+  },
+  "icon-library.library.clapper": {
+    "text": "Clapper",
+    "hash": "089bb653"
+  },
+  "icon-library.library.clear-night": {
+    "text": "Clear night",
+    "hash": "698de6fc"
+  },
+  "icon-library.library.clock": {
+    "text": "Clock",
+    "hash": "93ff9273"
+  },
+  "icon-library.library.cloud": {
+    "text": "Cloud",
+    "hash": "b977b950"
+  },
+  "icon-library.library.cloudy": {
+    "text": "Cloudy",
+    "hash": "c63401ab"
+  },
+  "icon-library.library.coffee-maker": {
+    "text": "Coffee maker",
+    "hash": "3e2b8d2a"
+  },
+  "icon-library.library.cone": {
+    "text": "Cone",
+    "hash": "3b5ebcbf"
+  },
+  "icon-library.library.cooking-pot": {
+    "text": "Cooking pot",
+    "hash": "f3e8d0b1"
+  },
+  "icon-library.library.curtains": {
+    "text": "Curtains",
+    "hash": "49bf6823"
+  },
+  "icon-library.library.detector": {
+    "text": "Detector",
+    "hash": "541ffce2"
+  },
+  "icon-library.library.dial": {
+    "text": "Dial",
+    "hash": "9f2c3557"
+  },
+  "icon-library.library.dishwasher": {
+    "text": "Dishwasher",
+    "hash": "db60f9f5"
+  },
+  "icon-library.library.display": {
+    "text": "Display",
+    "hash": "34e108c0"
+  },
+  "icon-library.library.dog": {
+    "text": "Dog",
+    "hash": "0eb129bf"
+  },
+  "icon-library.library.door": {
+    "text": "Door",
+    "hash": "fbf247e4"
+  },
+  "icon-library.library.door-leaf": {
+    "text": "Door leaf",
+    "hash": "23fec965"
+  },
+  "icon-library.library.door-opening": {
+    "text": "Door opening",
+    "hash": "2baeff0d"
+  },
+  "icon-library.library.doorbell-press": {
+    "text": "Doorbell press",
+    "hash": "cc279dfa"
+  },
+  "icon-library.library.doorbell-ring": {
+    "text": "Doorbell ring",
+    "hash": "e979b023"
+  },
+  "icon-library.library.dot": {
+    "text": "Dot",
+    "hash": "599079bc"
+  },
+  "icon-library.library.drop": {
+    "text": "Drop",
+    "hash": "c8af9ae3"
+  },
+  "icon-library.library.drop-1": {
+    "text": "Drop 1",
+    "hash": "c3fd0af9"
+  },
+  "icon-library.library.drop-10": {
+    "text": "Drop 10",
+    "hash": "8ff86373"
+  },
+  "icon-library.library.drop-11": {
+    "text": "Drop 11",
+    "hash": "5bad87ab"
+  },
+  "icon-library.library.drop-12": {
+    "text": "Drop 12",
+    "hash": "2b2cfff9"
+  },
+  "icon-library.library.drop-2": {
+    "text": "Drop 2",
+    "hash": "5c4ad8f7"
+  },
+  "icon-library.library.drop-3": {
+    "text": "Drop 3",
+    "hash": "3954147f"
+  },
+  "icon-library.library.drop-4": {
+    "text": "Drop 4",
+    "hash": "4561e956"
+  },
+  "icon-library.library.drop-5": {
+    "text": "Drop 5",
+    "hash": "239aec23"
+  },
+  "icon-library.library.drop-6": {
+    "text": "Drop 6",
+    "hash": "d5499520"
+  },
+  "icon-library.library.drop-7": {
+    "text": "Drop 7",
+    "hash": "079315ed"
+  },
+  "icon-library.library.drop-8": {
+    "text": "Drop 8",
+    "hash": "fa2e8473"
+  },
+  "icon-library.library.drop-9": {
+    "text": "Drop 9",
+    "hash": "f22ac589"
+  },
+  "icon-library.library.drum": {
+    "text": "Drum",
+    "hash": "1d506926"
+  },
+  "icon-library.library.dryer": {
+    "text": "Dryer",
+    "hash": "0a5e403c"
+  },
+  "icon-library.library.electric-car-charging": {
+    "text": "Electric car charging",
+    "hash": "d7e217cd"
+  },
+  "icon-library.library.energy": {
+    "text": "Energy",
+    "hash": "f2fcd3f7"
+  },
+  "icon-library.library.energy-meter": {
+    "text": "Energy meter",
+    "hash": "7bedcadc"
+  },
+  "icon-library.library.exclamation": {
+    "text": "Exclamation",
+    "hash": "e73c3fed"
+  },
+  "icon-library.library.exclamation-mark": {
+    "text": "Exclamation mark",
+    "hash": "80ef1ad7"
+  },
+  "icon-library.library.face": {
+    "text": "Face",
+    "hash": "304afc32"
+  },
+  "icon-library.library.fan": {
+    "text": "Fan",
+    "hash": "e27be641"
+  },
+  "icon-library.library.fan-spin": {
+    "text": "Fan spin",
+    "hash": "ad720230"
+  },
+  "icon-library.library.faucet": {
+    "text": "Faucet",
+    "hash": "e00246bf"
+  },
+  "icon-library.library.fireplace": {
+    "text": "Fireplace",
+    "hash": "c23f7c11"
+  },
+  "icon-library.library.fish": {
+    "text": "Fish",
+    "hash": "3f3f8baa"
+  },
+  "icon-library.library.flame": {
+    "text": "Flame",
+    "hash": "dfb0f521"
+  },
+  "icon-library.library.flower": {
+    "text": "Flower",
+    "hash": "77dc2a65"
+  },
+  "icon-library.library.fog": {
+    "text": "Fog",
+    "hash": "14394e97"
+  },
+  "icon-library.library.fog-line-1": {
+    "text": "Fog line 1",
+    "hash": "f73dc1f7"
+  },
+  "icon-library.library.fog-line-2": {
+    "text": "Fog line 2",
+    "hash": "424c52e4"
+  },
+  "icon-library.library.fog-line-3": {
+    "text": "Fog line 3",
+    "hash": "2a3cf9f0"
+  },
+  "icon-library.library.fog-line-4": {
+    "text": "Fog line 4",
+    "hash": "f3242784"
+  },
+  "icon-library.library.foot": {
+    "text": "Foot",
+    "hash": "24177360"
+  },
+  "icon-library.library.frame": {
+    "text": "Frame",
+    "hash": "d0b50e06"
+  },
+  "icon-library.library.freezer-door": {
+    "text": "Freezer door",
+    "hash": "42736d14"
+  },
+  "icon-library.library.fridge-door": {
+    "text": "Fridge door",
+    "hash": "d6190089"
+  },
+  "icon-library.library.garage": {
+    "text": "Garage",
+    "hash": "b15f6253"
+  },
+  "icon-library.library.garage-door": {
+    "text": "Garage door",
+    "hash": "bfc7b9ea"
+  },
+  "icon-library.library.gate": {
+    "text": "Gate",
+    "hash": "fa77a525"
+  },
+  "icon-library.library.gauge": {
+    "text": "Gauge",
+    "hash": "f6d8f4c8"
+  },
+  "icon-library.library.hail": {
+    "text": "Hail",
+    "hash": "f5cc0075"
+  },
+  "icon-library.library.hailstone-1": {
+    "text": "Hailstone 1",
+    "hash": "94c5891b"
+  },
+  "icon-library.library.hailstone-2": {
+    "text": "Hailstone 2",
+    "hash": "45b4a087"
+  },
+  "icon-library.library.hailstone-3": {
+    "text": "Hailstone 3",
+    "hash": "4cc2487f"
+  },
+  "icon-library.library.hand": {
+    "text": "Hand",
+    "hash": "fa18c067"
+  },
+  "icon-library.library.handle": {
+    "text": "Handle",
+    "hash": "fa04ae3d"
+  },
+  "icon-library.library.hands": {
+    "text": "Hands",
+    "hash": "6b720477"
+  },
+  "icon-library.library.handset": {
+    "text": "Handset",
+    "hash": "abb59397"
+  },
+  "icon-library.library.head": {
+    "text": "Head",
+    "hash": "9bb0aacc"
+  },
+  "icon-library.library.headphones": {
+    "text": "Headphones",
+    "hash": "86df32cf"
+  },
+  "icon-library.library.heart": {
+    "text": "Heart",
+    "hash": "770af9d1"
+  },
+  "icon-library.library.heart-and-pulse": {
+    "text": "Heart and pulse",
+    "hash": "e26ac236"
+  },
+  "icon-library.library.heart-top": {
+    "text": "Heart top",
+    "hash": "fff6869b"
+  },
+  "icon-library.library.heartbeat": {
+    "text": "Heartbeat",
+    "hash": "9df89427"
+  },
+  "icon-library.library.hearth": {
+    "text": "Hearth",
+    "hash": "0c8b0dbe"
+  },
+  "icon-library.library.heat-haze": {
+    "text": "Heat haze",
+    "hash": "fab57353"
+  },
+  "icon-library.library.heating-element": {
+    "text": "Heating element",
+    "hash": "c6d30c9e"
+  },
+  "icon-library.library.heavy-snow": {
+    "text": "Heavy snow",
+    "hash": "58cd7f38"
+  },
+  "icon-library.library.home": {
+    "text": "Home",
+    "hash": "3a786953"
+  },
+  "icon-library.library.horizon-1": {
+    "text": "Horizon 1",
+    "hash": "c30ac435"
+  },
+  "icon-library.library.horizon-2": {
+    "text": "Horizon 2",
+    "hash": "edd9d410"
+  },
+  "icon-library.library.hourglass": {
+    "text": "Hourglass",
+    "hash": "46594469"
+  },
+  "icon-library.library.house": {
+    "text": "House",
+    "hash": "2526c620"
+  },
+  "icon-library.library.hub": {
+    "text": "Hub",
+    "hash": "d87c9ca3"
+  },
+  "icon-library.library.humidifier-mist": {
+    "text": "Humidifier mist",
+    "hash": "3b955f40"
+  },
+  "icon-library.library.humidity-drop": {
+    "text": "Humidity drop",
+    "hash": "7bd2b820"
+  },
+  "icon-library.library.inner-flame": {
+    "text": "Inner flame",
+    "hash": "68ef6c15"
+  },
+  "icon-library.library.inner-wave": {
+    "text": "Inner wave",
+    "hash": "d80445ed"
+  },
+  "icon-library.library.kettle": {
+    "text": "Kettle",
+    "hash": "e9d28791"
+  },
+  "icon-library.library.kettle-boiling": {
+    "text": "Kettle boiling",
+    "hash": "f16c0504"
+  },
+  "icon-library.library.knob": {
+    "text": "Knob",
+    "hash": "ca07c594"
+  },
+  "icon-library.library.ladder": {
+    "text": "Ladder",
+    "hash": "df066364"
+  },
+  "icon-library.library.leaf": {
+    "text": "Leaf",
+    "hash": "b83382a9"
+  },
+  "icon-library.library.leaf-in-the-wind": {
+    "text": "Leaf in the wind",
+    "hash": "ed5f03c2"
+  },
+  "icon-library.library.led-strip-colour-chase": {
+    "text": "LED strip color chase",
+    "hash": "8cf7de0a"
+  },
+  "icon-library.library.left-bell": {
+    "text": "Left bell",
+    "hash": "83fe806d"
+  },
+  "icon-library.library.left-blade": {
+    "text": "Left blade",
+    "hash": "c63d0a4c"
+  },
+  "icon-library.library.left-bulb": {
+    "text": "Left bulb",
+    "hash": "12f517a1"
+  },
+  "icon-library.library.left-curtain": {
+    "text": "Left curtain",
+    "hash": "b5930933"
+  },
+  "icon-library.library.left-drop": {
+    "text": "Left drop",
+    "hash": "fcc3e97d"
+  },
+  "icon-library.library.left-drop-1": {
+    "text": "Left drop 1",
+    "hash": "164acd28"
+  },
+  "icon-library.library.left-drop-2": {
+    "text": "Left drop 2",
+    "hash": "c5112dfc"
+  },
+  "icon-library.library.left-drop-3": {
+    "text": "Left drop 3",
+    "hash": "93488e99"
+  },
+  "icon-library.library.left-drop-4": {
+    "text": "Left drop 4",
+    "hash": "c144673b"
+  },
+  "icon-library.library.left-drop-5": {
+    "text": "Left drop 5",
+    "hash": "e3102d15"
+  },
+  "icon-library.library.left-drop-6": {
+    "text": "Left drop 6",
+    "hash": "f3036789"
+  },
+  "icon-library.library.left-flake": {
+    "text": "Left flake",
+    "hash": "ffd36583"
+  },
+  "icon-library.library.left-leaf": {
+    "text": "Left leaf",
+    "hash": "d254b1db"
+  },
+  "icon-library.library.left-pipe": {
+    "text": "Left pipe",
+    "hash": "35f5acfc"
+  },
+  "icon-library.library.left-ray": {
+    "text": "Left ray",
+    "hash": "17736422"
+  },
+  "icon-library.library.left-steam": {
+    "text": "Left steam",
+    "hash": "afd3c05f"
+  },
+  "icon-library.library.left-tick": {
+    "text": "Left tick",
+    "hash": "4786ba85"
+  },
+  "icon-library.library.left-wave": {
+    "text": "Left wave",
+    "hash": "b5708877"
+  },
+  "icon-library.library.lens": {
+    "text": "Lens",
+    "hash": "4317a99a"
+  },
+  "icon-library.library.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "icon-library.library.light-group": {
+    "text": "Light group",
+    "hash": "47fe55da"
+  },
+  "icon-library.library.light-rays": {
+    "text": "Light rays",
+    "hash": "d8a454a0"
+  },
+  "icon-library.library.line": {
+    "text": "Line",
+    "hash": "d7852cd0"
+  },
+  "icon-library.library.lock": {
+    "text": "Lock",
+    "hash": "db44b8db"
+  },
+  "icon-library.library.machine": {
+    "text": "Machine",
+    "hash": "8f1cc42d"
+  },
+  "icon-library.library.mantel": {
+    "text": "Mantel",
+    "hash": "ea64db69"
+  },
+  "icon-library.library.mark-1": {
+    "text": "Mark 1",
+    "hash": "5ad07876"
+  },
+  "icon-library.library.mark-2": {
+    "text": "Mark 2",
+    "hash": "b048d547"
+  },
+  "icon-library.library.mark-3": {
+    "text": "Mark 3",
+    "hash": "29ac0d01"
+  },
+  "icon-library.library.mark-4": {
+    "text": "Mark 4",
+    "hash": "f43d4e79"
+  },
+  "icon-library.library.mark-5": {
+    "text": "Mark 5",
+    "hash": "b1225963"
+  },
+  "icon-library.library.mark-6": {
+    "text": "Mark 6",
+    "hash": "4e784cf1"
+  },
+  "icon-library.library.mark-7": {
+    "text": "Mark 7",
+    "hash": "8ef8ccb2"
+  },
+  "icon-library.library.mark-8": {
+    "text": "Mark 8",
+    "hash": "6b57f1db"
+  },
+  "icon-library.library.meter": {
+    "text": "Meter",
+    "hash": "2293b30e"
+  },
+  "icon-library.library.middle-arc": {
+    "text": "Middle arc",
+    "hash": "596406f1"
+  },
+  "icon-library.library.middle-drop": {
+    "text": "Middle drop",
+    "hash": "0300e86c"
+  },
+  "icon-library.library.middle-gust": {
+    "text": "Middle gust",
+    "hash": "b7aac2e8"
+  },
+  "icon-library.library.middle-ray": {
+    "text": "Middle ray",
+    "hash": "d40a5718"
+  },
+  "icon-library.library.middle-slat": {
+    "text": "Middle slat",
+    "hash": "75e72e69"
+  },
+  "icon-library.library.middle-strip": {
+    "text": "Middle strip",
+    "hash": "b508ccbf"
+  },
+  "icon-library.library.middle-wave": {
+    "text": "Middle wave",
+    "hash": "de4cc28d"
+  },
+  "icon-library.library.moon": {
+    "text": "Moon",
+    "hash": "5fc16525"
+  },
+  "icon-library.library.motion-detected": {
+    "text": "Motion detected",
+    "hash": "c8ef4e9c"
+  },
+  "icon-library.library.mount": {
+    "text": "Mount",
+    "hash": "d5605821"
+  },
+  "icon-library.library.mower": {
+    "text": "Mower",
+    "hash": "06f212fd"
+  },
+  "icon-library.library.music-note-dance": {
+    "text": "Music note dance",
+    "hash": "fe9d55ed"
+  },
+  "icon-library.library.needle": {
+    "text": "Needle",
+    "hash": "8f1913f5"
+  },
+  "icon-library.library.note": {
+    "text": "Note",
+    "hash": "d8da2c49"
+  },
+  "icon-library.library.notification": {
+    "text": "Notification",
+    "hash": "7d31b833"
+  },
+  "icon-library.library.outdoor-temperature": {
+    "text": "Outdoor temperature",
+    "hash": "07eb821b"
+  },
+  "icon-library.library.outer-flame": {
+    "text": "Outer flame",
+    "hash": "b9b5dc95"
+  },
+  "icon-library.library.outer-wave": {
+    "text": "Outer wave",
+    "hash": "d8143047"
+  },
+  "icon-library.library.oven": {
+    "text": "Oven",
+    "hash": "47e7bdb2"
+  },
+  "icon-library.library.oven-heating": {
+    "text": "Oven heating",
+    "hash": "3f2f6342"
+  },
+  "icon-library.library.pad": {
+    "text": "Pad",
+    "hash": "095c18be"
+  },
+  "icon-library.library.panel": {
+    "text": "Panel",
+    "hash": "d0d91173"
+  },
+  "icon-library.library.paper": {
+    "text": "Paper",
+    "hash": "35045eff"
+  },
+  "icon-library.library.partly-cloudy": {
+    "text": "Partly cloudy",
+    "hash": "f7be3227"
+  },
+  "icon-library.library.pendant": {
+    "text": "Pendant",
+    "hash": "f0f7234a"
+  },
+  "icon-library.library.person": {
+    "text": "Person",
+    "hash": "6007db63"
+  },
+  "icon-library.library.person-home": {
+    "text": "Person home",
+    "hash": "6337fd27"
+  },
+  "icon-library.library.pet": {
+    "text": "Pet",
+    "hash": "8f0d1b30"
+  },
+  "icon-library.library.phone": {
+    "text": "Phone",
+    "hash": "63dceb88"
+  },
+  "icon-library.library.phone-ringing": {
+    "text": "Phone ringing",
+    "hash": "eae6d120"
+  },
+  "icon-library.library.phone-signal": {
+    "text": "Phone signal",
+    "hash": "561bd7b4"
+  },
+  "icon-library.library.phone-vibrate": {
+    "text": "Phone vibrate",
+    "hash": "edc9e135"
+  },
+  "icon-library.library.plant": {
+    "text": "Plant",
+    "hash": "0bd287f6"
+  },
+  "icon-library.library.play": {
+    "text": "Play",
+    "hash": "436e6101"
+  },
+  "icon-library.library.plug": {
+    "text": "Plug",
+    "hash": "01153ebe"
+  },
+  "icon-library.library.plug-in": {
+    "text": "Plug in",
+    "hash": "09d4b553"
+  },
+  "icon-library.library.pool": {
+    "text": "Pool",
+    "hash": "f1302427"
+  },
+  "icon-library.library.pot": {
+    "text": "Pot",
+    "hash": "5847d110"
+  },
+  "icon-library.library.pouring-rain": {
+    "text": "Pouring rain",
+    "hash": "67cc0f8d"
+  },
+  "icon-library.library.power-button": {
+    "text": "Power button",
+    "hash": "df40d9c0"
+  },
+  "icon-library.library.printer": {
+    "text": "Printer",
+    "hash": "024eac5b"
+  },
+  "icon-library.library.pump": {
+    "text": "Pump",
+    "hash": "871a51ca"
+  },
+  "icon-library.library.radiator": {
+    "text": "Radiator",
+    "hash": "e15f88dc"
+  },
+  "icon-library.library.radiator-heat": {
+    "text": "Radiator heat",
+    "hash": "ec091e71"
+  },
+  "icon-library.library.rain": {
+    "text": "Rain",
+    "hash": "a6d20aa6"
+  },
+  "icon-library.library.ray-1": {
+    "text": "Ray 1",
+    "hash": "218c8384"
+  },
+  "icon-library.library.ray-2": {
+    "text": "Ray 2",
+    "hash": "846d63bf"
+  },
+  "icon-library.library.ray-3": {
+    "text": "Ray 3",
+    "hash": "53a9a7ef"
+  },
+  "icon-library.library.ray-bottom": {
+    "text": "Ray bottom",
+    "hash": "533f9997"
+  },
+  "icon-library.library.ray-bottom-left": {
+    "text": "Ray bottom left",
+    "hash": "afe08a0b"
+  },
+  "icon-library.library.ray-bottom-right": {
+    "text": "Ray bottom right",
+    "hash": "d2aa4743"
+  },
+  "icon-library.library.ray-left": {
+    "text": "Ray left",
+    "hash": "ef59fd2a"
+  },
+  "icon-library.library.ray-right": {
+    "text": "Ray right",
+    "hash": "5e5c2885"
+  },
+  "icon-library.library.ray-top": {
+    "text": "Ray top",
+    "hash": "9af5c90f"
+  },
+  "icon-library.library.ray-top-left": {
+    "text": "Ray top left",
+    "hash": "0694ba08"
+  },
+  "icon-library.library.ray-top-right": {
+    "text": "Ray top right",
+    "hash": "e98da7fc"
+  },
+  "icon-library.library.rays": {
+    "text": "Rays",
+    "hash": "01f3b57c"
+  },
+  "icon-library.library.right-bell": {
+    "text": "Right bell",
+    "hash": "f5d0a36b"
+  },
+  "icon-library.library.right-blade": {
+    "text": "Right blade",
+    "hash": "14c74d5a"
+  },
+  "icon-library.library.right-bulb": {
+    "text": "Right bulb",
+    "hash": "ea769996"
+  },
+  "icon-library.library.right-curtain": {
+    "text": "Right curtain",
+    "hash": "8d4f1fe6"
+  },
+  "icon-library.library.right-drop": {
+    "text": "Right drop",
+    "hash": "9795def8"
+  },
+  "icon-library.library.right-drop-1": {
+    "text": "Right drop 1",
+    "hash": "56b79d8a"
+  },
+  "icon-library.library.right-drop-2": {
+    "text": "Right drop 2",
+    "hash": "d547b6c1"
+  },
+  "icon-library.library.right-drop-3": {
+    "text": "Right drop 3",
+    "hash": "e95e59bb"
+  },
+  "icon-library.library.right-drop-4": {
+    "text": "Right drop 4",
+    "hash": "520a0986"
+  },
+  "icon-library.library.right-drop-5": {
+    "text": "Right drop 5",
+    "hash": "881c4f9f"
+  },
+  "icon-library.library.right-drop-6": {
+    "text": "Right drop 6",
+    "hash": "92009063"
+  },
+  "icon-library.library.right-flake": {
+    "text": "Right flake",
+    "hash": "f9e89290"
+  },
+  "icon-library.library.right-leaf": {
+    "text": "Right leaf",
+    "hash": "50647285"
+  },
+  "icon-library.library.right-pipe": {
+    "text": "Right pipe",
+    "hash": "9f707284"
+  },
+  "icon-library.library.right-ray": {
+    "text": "Right ray",
+    "hash": "bbb1faee"
+  },
+  "icon-library.library.right-steam": {
+    "text": "Right steam",
+    "hash": "42aaf87b"
+  },
+  "icon-library.library.right-tick": {
+    "text": "Right tick",
+    "hash": "a1fc4532"
+  },
+  "icon-library.library.right-wave": {
+    "text": "Right wave",
+    "hash": "904b04e3"
+  },
+  "icon-library.library.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "icon-library.library.robot": {
+    "text": "Robot",
+    "hash": "3bf6b51b"
+  },
+  "icon-library.library.robot-mower": {
+    "text": "Robot mower",
+    "hash": "df890b39"
+  },
+  "icon-library.library.robot-vacuum": {
+    "text": "Robot vacuum",
+    "hash": "085477a7"
+  },
+  "icon-library.library.rod": {
+    "text": "Rod",
+    "hash": "a612a5f4"
+  },
+  "icon-library.library.roller-shutter": {
+    "text": "Roller shutter",
+    "hash": "1cb9d8a7"
+  },
+  "icon-library.library.router": {
+    "text": "Router",
+    "hash": "065d8e6c"
+  },
+  "icon-library.library.sand": {
+    "text": "Sand",
+    "hash": "82855c11"
+  },
+  "icon-library.library.security-armed": {
+    "text": "Security armed",
+    "hash": "411d6b14"
+  },
+  "icon-library.library.security-camera": {
+    "text": "Security camera",
+    "hash": "411e2852"
+  },
+  "icon-library.library.sensor": {
+    "text": "Sensor",
+    "hash": "162cc64c"
+  },
+  "icon-library.library.shackle": {
+    "text": "Shackle",
+    "hash": "f705d5dc"
+  },
+  "icon-library.library.shade": {
+    "text": "Shade",
+    "hash": "c01576cf"
+  },
+  "icon-library.library.shield": {
+    "text": "Shield",
+    "hash": "480d4be7"
+  },
+  "icon-library.library.shower": {
+    "text": "Shower",
+    "hash": "01db9e7c"
+  },
+  "icon-library.library.sign": {
+    "text": "Sign",
+    "hash": "0c9618e9"
+  },
+  "icon-library.library.signal": {
+    "text": "Signal",
+    "hash": "1e9806e4"
+  },
+  "icon-library.library.slash": {
+    "text": "Slash",
+    "hash": "9c92721e"
+  },
+  "icon-library.library.slat-1": {
+    "text": "Slat 1",
+    "hash": "c07ba67a"
+  },
+  "icon-library.library.slat-2": {
+    "text": "Slat 2",
+    "hash": "5ce068d7"
+  },
+  "icon-library.library.slat-3": {
+    "text": "Slat 3",
+    "hash": "570c827c"
+  },
+  "icon-library.library.slat-4": {
+    "text": "Slat 4",
+    "hash": "acc6fb2a"
+  },
+  "icon-library.library.small-star": {
+    "text": "Small star",
+    "hash": "1756ae29"
+  },
+  "icon-library.library.smoke-alarm": {
+    "text": "Smoke alarm",
+    "hash": "0f119d88"
+  },
+  "icon-library.library.smoke-detector-standby": {
+    "text": "Smoke detector standby",
+    "hash": "aa4e6b82"
+  },
+  "icon-library.library.snow": {
+    "text": "Snow",
+    "hash": "4f946da9"
+  },
+  "icon-library.library.snowflake": {
+    "text": "Snowflake",
+    "hash": "1dbd59f6"
+  },
+  "icon-library.library.soil": {
+    "text": "Soil",
+    "hash": "032b5a60"
+  },
+  "icon-library.library.solar-power": {
+    "text": "Solar power",
+    "hash": "d53c8dca"
+  },
+  "icon-library.library.sound-waves": {
+    "text": "Sound waves",
+    "hash": "ee06ea46"
+  },
+  "icon-library.library.speaker": {
+    "text": "Speaker",
+    "hash": "a9e0c705"
+  },
+  "icon-library.library.sprinkler": {
+    "text": "Sprinkler",
+    "hash": "7ed7237e"
+  },
+  "icon-library.library.sprout": {
+    "text": "Sprout",
+    "hash": "badd2252"
+  },
+  "icon-library.library.stand": {
+    "text": "Stand",
+    "hash": "2de251e0"
+  },
+  "icon-library.library.storm-with-rain": {
+    "text": "Storm with rain",
+    "hash": "7f9c0ae3"
+  },
+  "icon-library.library.sun": {
+    "text": "Sun",
+    "hash": "db18f17f"
+  },
+  "icon-library.library.sun-and-cloud": {
+    "text": "Sun and cloud",
+    "hash": "9f3a94bb"
+  },
+  "icon-library.library.sunny": {
+    "text": "Sunny",
+    "hash": "adf259f6"
+  },
+  "icon-library.library.sunset": {
+    "text": "Sunset",
+    "hash": "275dbda9"
+  },
+  "icon-library.library.switch-toggle": {
+    "text": "Switch toggle",
+    "hash": "d1b5a513"
+  },
+  "icon-library.library.table-lamp-switching-on": {
+    "text": "Table lamp switching on",
+    "hash": "0c9f8b65"
+  },
+  "icon-library.library.tap": {
+    "text": "Tap",
+    "hash": "464d23b5"
+  },
+  "icon-library.library.television": {
+    "text": "Television",
+    "hash": "7e7536a9"
+  },
+  "icon-library.library.thermometer": {
+    "text": "Thermometer",
+    "hash": "958fb624"
+  },
+  "icon-library.library.thunderstorm": {
+    "text": "Thunderstorm",
+    "hash": "31a9beb9"
+  },
+  "icon-library.library.timer": {
+    "text": "Timer",
+    "hash": "cdeec2b3"
+  },
+  "icon-library.library.toe-1": {
+    "text": "Toe 1",
+    "hash": "80d657ba"
+  },
+  "icon-library.library.toe-2": {
+    "text": "Toe 2",
+    "hash": "c867b6c5"
+  },
+  "icon-library.library.toe-3": {
+    "text": "Toe 3",
+    "hash": "70e13d13"
+  },
+  "icon-library.library.toe-4": {
+    "text": "Toe 4",
+    "hash": "cdb0f33f"
+  },
+  "icon-library.library.top-arc": {
+    "text": "Top arc",
+    "hash": "904e3065"
+  },
+  "icon-library.library.top-gust": {
+    "text": "Top gust",
+    "hash": "914e76e8"
+  },
+  "icon-library.library.top-slat": {
+    "text": "Top slat",
+    "hash": "79f64624"
+  },
+  "icon-library.library.top-strip": {
+    "text": "Top strip",
+    "hash": "fc5dea53"
+  },
+  "icon-library.library.top-tick": {
+    "text": "Top tick",
+    "hash": "81f095bf"
+  },
+  "icon-library.library.top-wave": {
+    "text": "Top wave",
+    "hash": "ca3c68c1"
+  },
+  "icon-library.library.track": {
+    "text": "Track",
+    "hash": "051f01f0"
+  },
+  "icon-library.library.trash-day": {
+    "text": "Trash day",
+    "hash": "cf7fba4d"
+  },
+  "icon-library.library.tumble-dryer": {
+    "text": "Tumble dryer",
+    "hash": "c8e15f69"
+  },
+  "icon-library.library.tv-on": {
+    "text": "TV on",
+    "hash": "fa807c56"
+  },
+  "icon-library.library.valve": {
+    "text": "Valve",
+    "hash": "094db509"
+  },
+  "icon-library.library.volume": {
+    "text": "Volume",
+    "hash": "b10fb966"
+  },
+  "icon-library.library.walker": {
+    "text": "Walker",
+    "hash": "f4034e7e"
+  },
+  "icon-library.library.walking": {
+    "text": "Walking",
+    "hash": "1dabd513"
+  },
+  "icon-library.library.washing-machine": {
+    "text": "Washing machine",
+    "hash": "6a2ddb70"
+  },
+  "icon-library.library.water": {
+    "text": "Water",
+    "hash": "7ca7dea9"
+  },
+  "icon-library.library.water-drop": {
+    "text": "Water drop",
+    "hash": "95870f1c"
+  },
+  "icon-library.library.water-pump": {
+    "text": "Water pump",
+    "hash": "29e86c78"
+  },
+  "icon-library.library.watering": {
+    "text": "Watering",
+    "hash": "2ee11146"
+  },
+  "icon-library.library.watering-can": {
+    "text": "Watering can",
+    "hash": "4fb7e50c"
+  },
+  "icon-library.library.wi-fi": {
+    "text": "Wi-Fi",
+    "hash": "337253f2"
+  },
+  "icon-library.library.windy": {
+    "text": "Windy",
+    "hash": "cdcaccab"
+  },
+  "icon-library.lights.arms": {
+    "text": "Arms",
+    "hash": "f831a06b"
+  },
+  "icon-library.lights.base": {
+    "text": "Base",
+    "hash": "7b47361a"
+  },
+  "icon-library.lights.beam-edge-1": {
+    "text": "Beam edge 1",
+    "hash": "7671af87"
+  },
+  "icon-library.lights.beam-edge-2": {
+    "text": "Beam edge 2",
+    "hash": "3ea36119"
+  },
+  "icon-library.lights.bulb": {
+    "text": "Bulb",
+    "hash": "b1d8b12c"
+  },
+  "icon-library.lights.bulb-shining": {
+    "text": "Bulb shining",
+    "hash": "73aa88f3"
+  },
+  "icon-library.lights.canopy": {
+    "text": "Canopy",
+    "hash": "64a6ddff"
+  },
+  "icon-library.lights.chandelier": {
+    "text": "Chandelier",
+    "hash": "48f27d55"
+  },
+  "icon-library.lights.desk-lamp": {
+    "text": "Desk lamp",
+    "hash": "2a85fd5e"
+  },
+  "icon-library.lights.floor-lamp": {
+    "text": "Floor lamp",
+    "hash": "f33a4b01"
+  },
+  "icon-library.lights.lamp": {
+    "text": "Lamp",
+    "hash": "bc294628"
+  },
+  "icon-library.lights.lamp-front": {
+    "text": "Lamp front",
+    "hash": "d38a6b1e"
+  },
+  "icon-library.lights.lava": {
+    "text": "Lava",
+    "hash": "09541df8"
+  },
+  "icon-library.lights.lava-lamp": {
+    "text": "Lava lamp",
+    "hash": "b6146f1b"
+  },
+  "icon-library.lights.left-lamp": {
+    "text": "Left lamp",
+    "hash": "27b8266f"
+  },
+  "icon-library.lights.left-light": {
+    "text": "Left light",
+    "hash": "d7c2f269"
+  },
+  "icon-library.lights.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "icon-library.lights.middle-light": {
+    "text": "Middle light",
+    "hash": "013db93b"
+  },
+  "icon-library.lights.moon": {
+    "text": "Moon",
+    "hash": "5fc16525"
+  },
+  "icon-library.lights.night-light": {
+    "text": "Night light",
+    "hash": "78c28ebe"
+  },
+  "icon-library.lights.pendant-lights": {
+    "text": "Pendant lights",
+    "hash": "0ceae6b3"
+  },
+  "icon-library.lights.ray-1": {
+    "text": "Ray 1",
+    "hash": "218c8384"
+  },
+  "icon-library.lights.ray-2": {
+    "text": "Ray 2",
+    "hash": "846d63bf"
+  },
+  "icon-library.lights.ray-3": {
+    "text": "Ray 3",
+    "hash": "53a9a7ef"
+  },
+  "icon-library.lights.ray-left": {
+    "text": "Ray left",
+    "hash": "ef59fd2a"
+  },
+  "icon-library.lights.ray-right": {
+    "text": "Ray right",
+    "hash": "5e5c2885"
+  },
+  "icon-library.lights.ray-top": {
+    "text": "Ray top",
+    "hash": "9af5c90f"
+  },
+  "icon-library.lights.ray-top-left": {
+    "text": "Ray top left",
+    "hash": "0694ba08"
+  },
+  "icon-library.lights.ray-top-right": {
+    "text": "Ray top right",
+    "hash": "e98da7fc"
+  },
+  "icon-library.lights.right-lamp": {
+    "text": "Right lamp",
+    "hash": "e4d1d0d7"
+  },
+  "icon-library.lights.right-lamp-and-bulb": {
+    "text": "Right lamp and bulb",
+    "hash": "cc72c3ef"
+  },
+  "icon-library.lights.right-light": {
+    "text": "Right light",
+    "hash": "955b3f45"
+  },
+  "icon-library.lights.shade": {
+    "text": "Shade",
+    "hash": "c01576cf"
+  },
+  "icon-library.lights.spotlight": {
+    "text": "Spotlight",
+    "hash": "fca7aa83"
+  },
+  "icon-library.lights.stand": {
+    "text": "Stand",
+    "hash": "2de251e0"
+  },
+  "icon-library.lights.star": {
+    "text": "Star",
+    "hash": "e357d396"
+  },
+  "icon-library.lights.track-light": {
+    "text": "Track light",
+    "hash": "e35875d4"
+  },
+  "icon-library.nature.back-left-leg": {
+    "text": "Back left leg",
+    "hash": "5279161c"
+  },
+  "icon-library.nature.back-right-leg": {
+    "text": "Back right leg",
+    "hash": "6f06dc40"
+  },
+  "icon-library.nature.band-1": {
+    "text": "Band 1",
+    "hash": "621c9873"
+  },
+  "icon-library.nature.band-2": {
+    "text": "Band 2",
+    "hash": "5ede19e9"
+  },
+  "icon-library.nature.band-3": {
+    "text": "Band 3",
+    "hash": "05bc7872"
+  },
+  "icon-library.nature.band-4": {
+    "text": "Band 4",
+    "hash": "89da7fd8"
+  },
+  "icon-library.nature.band-5": {
+    "text": "Band 5",
+    "hash": "c20aae47"
+  },
+  "icon-library.nature.bee": {
+    "text": "Bee",
+    "hash": "f5779450"
+  },
+  "icon-library.nature.bee-and-flower": {
+    "text": "Bee and flower",
+    "hash": "d3e23729"
+  },
+  "icon-library.nature.body": {
+    "text": "Body",
+    "hash": "6ccaa641"
+  },
+  "icon-library.nature.butterfly": {
+    "text": "Butterfly",
+    "hash": "a30f6a02"
+  },
+  "icon-library.nature.cat": {
+    "text": "Cat",
+    "hash": "48735c4f"
+  },
+  "icon-library.nature.dog-barking": {
+    "text": "Dog barking",
+    "hash": "b3795e2b"
+  },
+  "icon-library.nature.dolphin": {
+    "text": "Dolphin",
+    "hash": "1af9db1e"
+  },
+  "icon-library.nature.duck": {
+    "text": "Duck",
+    "hash": "3b67f1c9"
+  },
+  "icon-library.nature.flower": {
+    "text": "Flower",
+    "hash": "77dc2a65"
+  },
+  "icon-library.nature.front-left-leg": {
+    "text": "Front left leg",
+    "hash": "734cba10"
+  },
+  "icon-library.nature.front-right-leg": {
+    "text": "Front right leg",
+    "hash": "416f2823"
+  },
+  "icon-library.nature.head": {
+    "text": "Head",
+    "hash": "9bb0aacc"
+  },
+  "icon-library.nature.hurricane": {
+    "text": "Hurricane",
+    "hash": "8e33279b"
+  },
+  "icon-library.nature.jellyfish": {
+    "text": "Jellyfish",
+    "hash": "2f0a7632"
+  },
+  "icon-library.nature.ladybug": {
+    "text": "Ladybug",
+    "hash": "3e48ea39"
+  },
+  "icon-library.nature.left-wing": {
+    "text": "Left wing",
+    "hash": "bf48cc21"
+  },
+  "icon-library.nature.left-wing-case": {
+    "text": "Left wing case",
+    "hash": "72df111c"
+  },
+  "icon-library.nature.penguin": {
+    "text": "Penguin",
+    "hash": "d84ab159"
+  },
+  "icon-library.nature.right-wing": {
+    "text": "Right wing",
+    "hash": "24261167"
+  },
+  "icon-library.nature.right-wing-case": {
+    "text": "Right wing case",
+    "hash": "7e1bb96d"
+  },
+  "icon-library.nature.shell": {
+    "text": "Shell",
+    "hash": "a7332854"
+  },
+  "icon-library.nature.snail": {
+    "text": "Snail",
+    "hash": "19c62aa1"
+  },
+  "icon-library.nature.tornado": {
+    "text": "Tornado",
+    "hash": "3582d91a"
+  },
+  "icon-library.nature.turtle": {
+    "text": "Turtle",
+    "hash": "5171ce30"
+  },
+  "icon-library.seasonal.balloon": {
+    "text": "Balloon",
+    "hash": "85bddc94"
+  },
+  "icon-library.seasonal.band": {
+    "text": "Band",
+    "hash": "0bd9cec5"
+  },
+  "icon-library.seasonal.bat": {
+    "text": "Bat",
+    "hash": "f2813a52"
+  },
+  "icon-library.seasonal.bauble-n": {
+    "text": "Bauble {n}",
+    "hash": "ca2ee88e"
+  },
+  "icon-library.seasonal.beating-heart": {
+    "text": "Beating heart",
+    "hash": "a565b4aa"
+  },
+  "icon-library.seasonal.bell": {
+    "text": "Bell",
+    "hash": "8e80b2b4"
+  },
+  "icon-library.seasonal.bend": {
+    "text": "Bend",
+    "hash": "eb05d490"
+  },
+  "icon-library.seasonal.big-heart": {
+    "text": "Big heart",
+    "hash": "2a60c087"
+  },
+  "icon-library.seasonal.bloom": {
+    "text": "Bloom",
+    "hash": "fe689170"
+  },
+  "icon-library.seasonal.body": {
+    "text": "Body",
+    "hash": "6ccaa641"
+  },
+  "icon-library.seasonal.box": {
+    "text": "Box",
+    "hash": "512fd3c6"
+  },
+  "icon-library.seasonal.brim": {
+    "text": "Brim",
+    "hash": "cf36a072"
+  },
+  "icon-library.seasonal.broken-heart": {
+    "text": "Broken heart",
+    "hash": "e1ebcda4"
+  },
+  "icon-library.seasonal.candy-cane": {
+    "text": "Candy cane",
+    "hash": "b0b3e0b3"
+  },
+  "icon-library.seasonal.cauldron": {
+    "text": "Cauldron",
+    "hash": "a8952948"
+  },
+  "icon-library.seasonal.cherry": {
+    "text": "Cherry",
+    "hash": "abf61b12"
+  },
+  "icon-library.seasonal.christmas-tree": {
+    "text": "Christmas tree",
+    "hash": "e963e8ff"
+  },
+  "icon-library.seasonal.clapper": {
+    "text": "Clapper",
+    "hash": "089bb653"
+  },
+  "icon-library.seasonal.cuff": {
+    "text": "Cuff",
+    "hash": "3a564322"
+  },
+  "icon-library.seasonal.cupcake": {
+    "text": "Cupcake",
+    "hash": "7fd60aa9"
+  },
+  "icon-library.seasonal.firework": {
+    "text": "Firework",
+    "hash": "01113719"
+  },
+  "icon-library.seasonal.floating-hearts": {
+    "text": "Floating hearts",
+    "hash": "0feb69b2"
+  },
+  "icon-library.seasonal.foot": {
+    "text": "Foot",
+    "hash": "24177360"
+  },
+  "icon-library.seasonal.frosting": {
+    "text": "Frosting",
+    "hash": "503de432"
+  },
+  "icon-library.seasonal.gem": {
+    "text": "Gem",
+    "hash": "5108a0f0"
+  },
+  "icon-library.seasonal.ghost": {
+    "text": "Ghost",
+    "hash": "df1bc498"
+  },
+  "icon-library.seasonal.gift": {
+    "text": "Gift",
+    "hash": "1a596a09"
+  },
+  "icon-library.seasonal.gravestone": {
+    "text": "Gravestone",
+    "hash": "e925b4fc"
+  },
+  "icon-library.seasonal.ground": {
+    "text": "Ground",
+    "hash": "151bf493"
+  },
+  "icon-library.seasonal.hand": {
+    "text": "Hand",
+    "hash": "fa18c067"
+  },
+  "icon-library.seasonal.hand-with-heart": {
+    "text": "Hand with heart",
+    "hash": "ea1c93e0"
+  },
+  "icon-library.seasonal.hat": {
+    "text": "Hat",
+    "hash": "dc34efd4"
+  },
+  "icon-library.seasonal.heart": {
+    "text": "Heart",
+    "hash": "770af9d1"
+  },
+  "icon-library.seasonal.hook-end": {
+    "text": "Hook end",
+    "hash": "1983ba38"
+  },
+  "icon-library.seasonal.jack-o-lantern": {
+    "text": "Jack-o'-lantern",
+    "hash": "de45ebe1"
+  },
+  "icon-library.seasonal.jaw": {
+    "text": "Jaw",
+    "hash": "b27dd491"
+  },
+  "icon-library.seasonal.jingle-bell": {
+    "text": "Jingle bell",
+    "hash": "caacc59f"
+  },
+  "icon-library.seasonal.left-bulb": {
+    "text": "Left bulb",
+    "hash": "12f517a1"
+  },
+  "icon-library.seasonal.left-eye": {
+    "text": "Left eye",
+    "hash": "52cafbcc"
+  },
+  "icon-library.seasonal.left-half": {
+    "text": "Left half",
+    "hash": "6eaadaf4"
+  },
+  "icon-library.seasonal.left-leaf": {
+    "text": "Left leaf",
+    "hash": "d254b1db"
+  },
+  "icon-library.seasonal.left-wing": {
+    "text": "Left wing",
+    "hash": "bf48cc21"
+  },
+  "icon-library.seasonal.lid": {
+    "text": "Lid",
+    "hash": "eea3f22e"
+  },
+  "icon-library.seasonal.magic-staff": {
+    "text": "Magic staff",
+    "hash": "4a61194e"
+  },
+  "icon-library.seasonal.middle-bulb": {
+    "text": "Middle bulb",
+    "hash": "090b69fd"
+  },
+  "icon-library.seasonal.nose-cone": {
+    "text": "Nose cone",
+    "hash": "6c088848"
+  },
+  "icon-library.seasonal.orb": {
+    "text": "Orb",
+    "hash": "8483460e"
+  },
+  "icon-library.seasonal.ornament": {
+    "text": "Ornament",
+    "hash": "b895389c"
+  },
+  "icon-library.seasonal.owl": {
+    "text": "Owl",
+    "hash": "72992b75"
+  },
+  "icon-library.seasonal.party-popper": {
+    "text": "Party popper",
+    "hash": "9c6843d5"
+  },
+  "icon-library.seasonal.popper": {
+    "text": "Popper",
+    "hash": "03d1631c"
+  },
+  "icon-library.seasonal.pot": {
+    "text": "Pot",
+    "hash": "5847d110"
+  },
+  "icon-library.seasonal.pumpkin": {
+    "text": "Pumpkin",
+    "hash": "c6c5211a"
+  },
+  "icon-library.seasonal.right-bulb": {
+    "text": "Right bulb",
+    "hash": "ea769996"
+  },
+  "icon-library.seasonal.right-eye": {
+    "text": "Right eye",
+    "hash": "405b869d"
+  },
+  "icon-library.seasonal.right-half": {
+    "text": "Right half",
+    "hash": "faae1547"
+  },
+  "icon-library.seasonal.right-leaf": {
+    "text": "Right leaf",
+    "hash": "50647285"
+  },
+  "icon-library.seasonal.right-wing": {
+    "text": "Right wing",
+    "hash": "24261167"
+  },
+  "icon-library.seasonal.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "icon-library.seasonal.rocket": {
+    "text": "Rocket",
+    "hash": "d40a5aca"
+  },
+  "icon-library.seasonal.shooting-star": {
+    "text": "Shooting star",
+    "hash": "46d236b9"
+  },
+  "icon-library.seasonal.skull": {
+    "text": "Skull",
+    "hash": "2fb09efc"
+  },
+  "icon-library.seasonal.small-heart": {
+    "text": "Small heart",
+    "hash": "f6e0038c"
+  },
+  "icon-library.seasonal.snowman": {
+    "text": "Snowman",
+    "hash": "d6da45cb"
+  },
+  "icon-library.seasonal.sparkle-2": {
+    "text": "Sparkle 2",
+    "hash": "76310b03"
+  },
+  "icon-library.seasonal.sparkle-3": {
+    "text": "Sparkle 3",
+    "hash": "71874599"
+  },
+  "icon-library.seasonal.sparkle-4": {
+    "text": "Sparkle 4",
+    "hash": "0da2d7da"
+  },
+  "icon-library.seasonal.spider": {
+    "text": "Spider",
+    "hash": "2964c4cc"
+  },
+  "icon-library.seasonal.spoon": {
+    "text": "Spoon",
+    "hash": "97072839"
+  },
+  "icon-library.seasonal.staff": {
+    "text": "Staff",
+    "hash": "681927e3"
+  },
+  "icon-library.seasonal.staff-and-orb": {
+    "text": "Staff and orb",
+    "hash": "c56fbaec"
+  },
+  "icon-library.seasonal.star": {
+    "text": "Star",
+    "hash": "e357d396"
+  },
+  "icon-library.seasonal.stem": {
+    "text": "Stem",
+    "hash": "7bcc3897"
+  },
+  "icon-library.seasonal.stone": {
+    "text": "Stone",
+    "hash": "6ffa6b8b"
+  },
+  "icon-library.seasonal.streamer-1": {
+    "text": "Streamer 1",
+    "hash": "ee6f55aa"
+  },
+  "icon-library.seasonal.streamer-2": {
+    "text": "Streamer 2",
+    "hash": "2d965956"
+  },
+  "icon-library.seasonal.streamer-3": {
+    "text": "Streamer 3",
+    "hash": "db8a0f8e"
+  },
+  "icon-library.seasonal.streamer-4": {
+    "text": "Streamer 4",
+    "hash": "ae1333bf"
+  },
+  "icon-library.seasonal.string-lights": {
+    "text": "String lights",
+    "hash": "085a7f1f"
+  },
+  "icon-library.seasonal.thread": {
+    "text": "Thread",
+    "hash": "5373c7f8"
+  },
+  "icon-library.seasonal.top": {
+    "text": "Top",
+    "hash": "d5cdfcf7"
+  },
+  "icon-library.seasonal.trail-1": {
+    "text": "Trail 1",
+    "hash": "267400b8"
+  },
+  "icon-library.seasonal.trail-2": {
+    "text": "Trail 2",
+    "hash": "72b275ef"
+  },
+  "icon-library.seasonal.trail-3": {
+    "text": "Trail 3",
+    "hash": "acafa0e3"
+  },
+  "icon-library.seasonal.tree": {
+    "text": "Tree",
+    "hash": "b85f5fab"
+  },
+  "icon-library.seasonal.tulip": {
+    "text": "Tulip",
+    "hash": "0a99c90e"
+  },
+  "icon-library.seasonal.twinkling-star": {
+    "text": "Twinkling star",
+    "hash": "0ca48018"
+  },
+  "icon-library.seasonal.wire": {
+    "text": "Wire",
+    "hash": "149987d3"
+  },
+  "icon-library.seasonal.wizard-hat": {
+    "text": "Wizard hat",
+    "hash": "c7025246"
+  },
+  "icon-library.seasonal.wrapper-1": {
+    "text": "Wrapper 1",
+    "hash": "e50dfec2"
+  },
+  "icon-library.seasonal.wrapper-2": {
+    "text": "Wrapper 2",
+    "hash": "ba10d28c"
+  },
+  "icon-library.seasonal.wrapper-3": {
+    "text": "Wrapper 3",
+    "hash": "401ec203"
+  },
+  "icon-library.style-hints.face-glow": {
+    "text": "Face glow",
+    "hash": "3a432dbe"
+  }
 }

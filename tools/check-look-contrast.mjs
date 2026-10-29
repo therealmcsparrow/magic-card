@@ -1,4 +1,3 @@
-/* global console, process */
 // Contrast check of the flow and slider looks. Node only, no browser.
 // Usage: node tools/check-look-contrast.mjs [--verbose]
 //

@@ -8,7 +8,7 @@ import {
   renderTextField,
   renderTextareaField,
 } from '../../utils/form-utils';
-import { t, m, tl, type MessageId } from '../i18n';
+import { t, m, tl, type MessageIndex } from '../i18n';
 
 export type ConditionMode = 'every' | 'any';
 
@@ -21,42 +21,42 @@ export interface ConditionsListHandlers {
 }
 
 const TYPE_OPTIONS = [
-  { label: m('State'), value: 'state' },
-  { label: m('Attribute'), value: 'attribute' },
-  { label: m('Time'), value: 'time' },
-  { label: m('Template'), value: 'template' },
+  { label: m('card-editor.conditions-list.state'), value: 'state' },
+  { label: m('card-editor.conditions-list.attribute'), value: 'attribute' },
+  { label: m('card-editor.conditions-list.time'), value: 'time' },
+  { label: m('card-editor.conditions-list.template'), value: 'template' },
 ];
 
-const MODES: Array<{ value: ConditionMode; label: MessageId }> = [
-  { value: 'every', label: m('All match (AND)') },
-  { value: 'any', label: m('Any matches (OR)') },
+const MODES: Array<{ value: ConditionMode; label: MessageIndex }> = [
+  { value: 'every', label: m('card-editor.conditions-list.all-match-and') },
+  { value: 'any', label: m('card-editor.conditions-list.any-matches-or') },
 ];
 
 const OPERATORS = [
-  { label: m('equals'), value: 'eq' },
-  { label: m('not equals'), value: 'ne' },
+  { label: m('card-editor.conditions-list.equals'), value: 'eq' },
+  { label: m('card-editor.conditions-list.not-equals'), value: 'ne' },
 ];
 
 /** The empty-state sentence and the lead-in of the list name the thing the conditions belong to (whole sentences, so each language can agree the words). */
 const emptyHint = (subject: string): string =>
-  subject === 'rule' ? t('Add a condition to show this rule only when it matters.')
-    : subject === 'card' ? t('Add a condition to show this card only when it matters.')
-    : subject === 'row' ? t('Add a condition to show this row only when it matters.')
-    : subject === 'column' ? t('Add a condition to show this column only when it matters.')
-    : t('Add a condition to show this module only when it matters.');
+  subject === 'rule' ? t('card-editor.conditions-list.add-a-condition-to-show-this-rule-only')
+    : subject === 'card' ? t('card-editor.conditions-list.add-a-condition-to-show-this-card-only')
+    : subject === 'row' ? t('card-editor.conditions-list.add-a-condition-to-show-this-row-only')
+    : subject === 'column' ? t('card-editor.conditions-list.add-a-condition-to-show-this-column-only')
+    : t('card-editor.conditions-list.add-a-condition-to-show-this-module-only');
 const leadIn = (subject: string): string =>
-  subject === 'rule' ? t('Show this rule when…')
-    : subject === 'card' ? t('Show this card when…')
-    : subject === 'row' ? t('Show this row when…')
-    : subject === 'column' ? t('Show this column when…')
-    : t('Show this module when…');
+  subject === 'rule' ? t('card-editor.conditions-list.show-this-rule-when')
+    : subject === 'card' ? t('card-editor.conditions-list.show-this-card-when')
+    : subject === 'row' ? t('card-editor.conditions-list.show-this-row-when')
+    : subject === 'column' ? t('card-editor.conditions-list.show-this-column-when')
+    : t('card-editor.conditions-list.show-this-module-when');
 
 /** Match All/Any as a radio `.seg`. */
 export function renderMatchSeg(
   mode: ConditionMode,
   onMode: (mode: ConditionMode) => void,
   syncCtx?: SyncContext,
-  label = t('Match'),
+  label = t('card-editor.conditions-list.match'),
 ): TemplateResult {
   const onKey = (e: KeyboardEvent) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
@@ -69,7 +69,7 @@ export function renderMatchSeg(
   return html`
     <div class="field">
       ${label ? renderFieldHead(label, syncCtx ? 'mode' : undefined, syncCtx) : nothing}
-      <div class="seg full" role="radiogroup" aria-label=${t('Condition match')} @keydown=${onKey}>
+      <div class="seg full" role="radiogroup" aria-label=${t('card-editor.conditions-list.condition-match')} @keydown=${onKey}>
         ${MODES.map(
           (m) => html`
             <button
@@ -99,7 +99,7 @@ function renderStateMatch(
   return html`
     <div class="two">
       ${renderSelectField(
-        t('Operator'),
+        t('card-editor.conditions-list.operator'),
         negated ? 'ne' : 'eq',
         tl(OPERATORS),
         (op) => update(op === 'ne' ? { state: undefined, state_not: value } : { state: value, state_not: undefined }),
@@ -135,21 +135,21 @@ function renderConditionFields(
     case 'state':
     case 'attribute':
       return html`
-        ${renderEntityField(t('Entity'), cond.entity, (v) => update({ entity: v }), hass, undefined, p('entity'), ctx)}
+        ${renderEntityField(t('card-editor.conditions-list.entity'), cond.entity, (v) => update({ entity: v }), hass, undefined, p('entity'), ctx)}
         ${cond.type === 'attribute'
-          ? renderTextField(t('Attribute'), cond.attribute, (v) => update({ attribute: v }), p('attribute'), ctx)
+          ? renderTextField(t('card-editor.conditions-list.attribute'), cond.attribute, (v) => update({ attribute: v }), p('attribute'), ctx)
           : nothing}
-        ${renderStateMatch(cond, update, cond.type === 'attribute' ? t('Value') : t('State'), ctx)}
+        ${renderStateMatch(cond, update, cond.type === 'attribute' ? t('card-editor.conditions-list.value') : t('card-editor.conditions-list.state'), ctx)}
       `;
     case 'time':
       return html`
         <div class="two">
-          ${renderTimeField(t('After'), cond.after, (v) => update({ after: v }))}
-          ${renderTimeField(t('Before'), cond.before, (v) => update({ before: v }))}
+          ${renderTimeField(t('card-editor.conditions-list.after'), cond.after, (v) => update({ after: v }))}
+          ${renderTimeField(t('card-editor.conditions-list.before'), cond.before, (v) => update({ before: v }))}
         </div>
       `;
     case 'template':
-      return renderTextareaField(t('Template'), cond.template, (v) => update({ template: v }), { rows: 3 }, p('template'), ctx);
+      return renderTextareaField(t('card-editor.conditions-list.template'), cond.template, (v) => update({ template: v }), { rows: 3 }, p('template'), ctx);
     default:
       return html``;
   }
@@ -172,10 +172,10 @@ export function renderConditionsList(
     return html`
       <div class="empty">
         <ha-icon icon="mdi:eye-check-outline"></ha-icon>
-        <strong>${t('Always visible')}</strong>
+        <strong>${t('card-editor.conditions-list.always-visible')}</strong>
         <p>${emptyHint(subject)}</p>
         <button type="button" class="btn btn-secondary btn-sm" @click=${handlers.onAdd}>
-          <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
+          <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.conditions-list.add-condition')}
         </button>
       </div>
     `;
@@ -193,19 +193,19 @@ export function renderConditionsList(
         return html`
           <div class="cond">
             <div class="cond-head">
-              <span class="n">${t('Condition {n}', { n: idx + 1 })}</span>
+              <span class="n">${t('card-editor.conditions-list.condition-n', { n: idx + 1 })}</span>
               <button
                 type="button"
                 class="icon-btn sm danger"
-                aria-label=${t('Remove condition {n}', { n: idx + 1 })}
-                title=${t('Remove condition')}
+                aria-label=${t('card-editor.conditions-list.remove-condition-n', { n: idx + 1 })}
+                title=${t('card-editor.conditions-list.remove-condition')}
                 @click=${() => handlers.onRemove(idx)}
               >
                 <ha-icon icon="mdi:delete-outline"></ha-icon>
               </button>
             </div>
             ${renderSelectField(
-              t('Type'),
+              t('card-editor.conditions-list.type'),
               cond.type,
               tl(TYPE_OPTIONS),
               (v) => update({ type: v as DisplayCondition['type'] }),
@@ -218,7 +218,7 @@ export function renderConditionsList(
       })}
       <div>
         <button type="button" class="btn btn-secondary btn-sm" @click=${handlers.onAdd}>
-          <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
+          <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.conditions-list.add-condition')}
         </button>
       </div>
     </div>

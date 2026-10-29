@@ -24,8 +24,8 @@ export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolea
 class InfoModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'info',
-    name: lm('Info'),
-    description: lm('Display entity name, state, and attributes'),
+    name: lm('labels.info-module.info'),
+    description: lm('labels.info-module.display-entity-name-state-and-attributes'),
     category: 'content',
     icon: 'mdi:information-outline',
   };
@@ -49,7 +49,7 @@ class InfoModule extends BaseMagicModule {
     if (!showName && !showState && !c.secondary_info) showState = true;
     if (!showName && !showState && !entity) showName = true;
 
-    const name = entity ? entityDisplayName(hass, entity) : c.entity || t('No entity');
+    const name = entity ? entityDisplayName(hass, entity) : c.entity || t('card.info-module.no-entity');
     let state: string | ReturnType<typeof countdown> = '—';
     if (entity && !c.attribute && timerCountdown(entity) !== undefined) {
       // an active / paused timer: its remaining time, counting down live

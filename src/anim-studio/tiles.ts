@@ -13,6 +13,8 @@ export type PreviewTile = 'icon' | 'button' | 'text' | 'card';
 /** A simulated entity the tile's module reads (the stage adds it to the preview's hass, see tileHass). */
 export interface TileEntity {
   state: string;
+  /** The entity's friendly name, an m() mark. */
+  name: MessageId;
   attributes: Record<string, unknown>;
 }
 
@@ -32,18 +34,19 @@ export interface TileDef {
 export const CARD_TILE_ENTITY = 'sensor.mc_studio_living_room';
 
 export const TILES: TileDef[] = [
-  { id: 'icon', label: m('Icon'), icon: 'mdi:bell-ring-outline', targets: ['element', 'icon'] },
-  { id: 'button', label: m('Button'), icon: 'mdi:gesture-tap-button', targets: ['element', 'icon', 'name'] },
-  { id: 'text', label: m('Text'), icon: 'mdi:format-text', targets: ['element', 'name'] },
+  { id: 'icon', label: m('anim-studio.tiles.icon'), icon: 'mdi:bell-ring-outline', targets: ['element', 'icon'] },
+  { id: 'button', label: m('anim-studio.tiles.button'), icon: 'mdi:gesture-tap-button', targets: ['element', 'icon', 'name'] },
+  { id: 'text', label: m('anim-studio.tiles.text'), icon: 'mdi:format-text', targets: ['element', 'name'] },
   {
     id: 'card',
-    label: m('Card'),
+    label: m('anim-studio.tiles.card'),
     icon: 'mdi:card-text-outline',
     targets: ['element', 'icon', 'name', 'state', 'background'],
     entities: {
       [CARD_TILE_ENTITY]: {
         state: '21.5',
-        attributes: { friendly_name: m('Living room'), unit_of_measurement: '°C', device_class: 'temperature', state_class: 'measurement' },
+        name: m('anim-studio.tiles.living-room'),
+        attributes: { unit_of_measurement: '°C', device_class: 'temperature', state_class: 'measurement' },
       },
     },
   },
@@ -59,9 +62,9 @@ export function tileModule(tile: PreviewTile, id: string, thumb: boolean, animat
     case 'icon':
       return { id, type: 'icon', icon: 'mdi:bell-ring', size: thumb ? '36px' : '64px', design };
     case 'button':
-      return { id, type: 'button', label: t('Doorbell'), icon: 'mdi:bell', design };
+      return { id, type: 'button', label: t('anim-studio.tiles.doorbell'), icon: 'mdi:bell', design };
     case 'text':
-      return { id, type: 'text', text: t('Front door'), design: { ...design, font_size: thumb ? '18px' : '28px', font_weight: '500' } };
+      return { id, type: 'text', text: t('anim-studio.tiles.front-door'), design: { ...design, font_size: thumb ? '18px' : '28px', font_weight: '500' } };
     case 'card':
       // info-like: icon, name and state on a surface of its own, so the background has something to move
       return {
@@ -97,8 +100,7 @@ export function tileHass<T extends { states?: Record<string, unknown> }>(tile: P
   if (hit) return hit as T;
   const states: Record<string, unknown> = {};
   for (const [id, e] of Object.entries(ents)) {
-    const name = e.attributes.friendly_name as MessageId | undefined;
-    states[id] = { entity_id: id, state: e.state, attributes: name === undefined ? e.attributes : { ...e.attributes, friendly_name: t(name) }, last_changed: '', last_updated: '', context: { id: '' } };
+    states[id] = { entity_id: id, state: e.state, attributes: { ...e.attributes, friendly_name: t(e.name) }, last_changed: '', last_updated: '', context: { id: '' } };
   }
   const out = { ...hass, states: { ...states, ...(hass.states ?? {}) } };
   byTile.set(tile, out);

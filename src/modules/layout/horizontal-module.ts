@@ -11,8 +11,8 @@ import { lm } from '../../i18n/labels/mark';
 class HorizontalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'horizontal',
-    name: lm('Horizontal'),
-    description: lm('Arrange child modules in a row'),
+    name: lm('labels.horizontal-module.horizontal'),
+    description: lm('labels.horizontal-module.arrange-child-modules-in-a-row'),
     category: 'layout',
     icon: 'mdi:arrow-split-vertical',
   };
@@ -36,7 +36,7 @@ class HorizontalModule extends BaseMagicModule {
     return html`
       <div class="mc-module mc-horizontal" data-mc-layers=${laid?.layered ? '' : nothing}
         style="gap:${c.gap || '8px'}; align-items:${c.align || 'center'}; justify-content:${c.justify || 'start'}">
-        ${laid ? laid.content : renderEmptySlot(t('Empty row'))}
+        ${laid ? laid.content : renderEmptySlot(t('card.horizontal-module.empty-row'))}
       </div>
     `;
   }

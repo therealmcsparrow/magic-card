@@ -1,12 +1,42 @@
 {
-  "Dropdown": "Keuzelijst",
-  "No options": "Geen opties",
-  "Light": "Licht",
-  "Toggle {name}": "{name} aan- of uitzetten",
-  "{name} colour": "{name} kleur",
-  "{name} effect": "{name} effect",
-  "Effect": "Effect",
-  "Spinbox": "Getalkiezer",
-  "Decrease {name}": "{name} verlagen",
-  "Increase {name}": "{name} verhogen"
+  "controls.dropdown-view.dropdown": {
+    "text": "Keuzelijst",
+    "hash": "2c84dd8d"
+  },
+  "controls.dropdown-view.no-options": {
+    "text": "Geen opties",
+    "hash": "d7a89745"
+  },
+  "controls.light-view.effect": {
+    "text": "Effect",
+    "hash": "2252d5cf"
+  },
+  "controls.light-view.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "controls.light-view.name-colour": {
+    "text": "{name} kleur",
+    "hash": "5b55cbe0"
+  },
+  "controls.light-view.name-effect": {
+    "text": "{name} effect",
+    "hash": "048b8b7c"
+  },
+  "controls.light-view.toggle-name": {
+    "text": "{name} aan- of uitzetten",
+    "hash": "8601786e"
+  },
+  "controls.spinbox-view.decrease-name": {
+    "text": "{name} verlagen",
+    "hash": "b7c864f8"
+  },
+  "controls.spinbox-view.increase-name": {
+    "text": "{name} verhogen",
+    "hash": "adf50259"
+  },
+  "controls.spinbox-view.spinbox": {
+    "text": "Getalkiezer",
+    "hash": "d539f275"
+  }
 }

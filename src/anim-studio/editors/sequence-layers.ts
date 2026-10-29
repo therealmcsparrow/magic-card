@@ -82,7 +82,7 @@ export class AnimStepsLayers extends LitElement {
 
   private _name(i: number): string {
     const s = this.doc?.steps?.[i];
-    return s ? stepInfo(s.animation, this.library, this.doc?.id).name : t('Step {i}', { i: i + 1 });
+    return s ? stepInfo(s.animation, this.library, this.doc?.id).name : t('anim-studio.sequence-layers.step-i', { i: i + 1 });
   }
 
   private _move(from: number, dir: 'up' | 'down'): void {
@@ -97,8 +97,8 @@ export class AnimStepsLayers extends LitElement {
     } catch {
       ctl = undefined;
     }
-    this.dispatchEvent(new CustomEvent('doc-change', { bubbles: true, composed: true, detail: { doc: { ...doc, steps: moveItem(steps, from, to) }, label: t('Move step') } }));
-    this._list.announce(t('{name} is now step {to} of {count}', { name, to: to + 1, count: steps.length }), remapStepKeys(this.layerView ?? { hidden: [], solo: [], locked: [], open: [] }, from, to));
+    this.dispatchEvent(new CustomEvent('doc-change', { bubbles: true, composed: true, detail: { doc: { ...doc, steps: moveItem(steps, from, to) }, label: t('anim-studio.sequence-layers.move-step') } }));
+    this._list.announce(t('anim-studio.sequence-layers.name-is-now-step-to-of-count', { name, to: to + 1, count: steps.length }), remapStepKeys(this.layerView ?? { hidden: [], solo: [], locked: [], open: [] }, from, to));
     if (this._sel === `step:${from}`) this._sel = `step:${to}`;
     // the row key is the index: focus goes to the place the step moved to (after the row's own refocus)
     queueMicrotask(() => this._list.focusKey(`step:${to}`, ctl));
@@ -108,8 +108,8 @@ export class AnimStepsLayers extends LitElement {
     const doc = this.doc;
     if (!doc || doc.kind !== 'sequence') return nothing;
     const steps = doc.steps ?? [];
-    if (!steps.length) return html`<p class="empty-note">${t('No steps yet. Add a clip to start the sequence.')}</p>`;
-    return html`<ol aria-label=${t('Sequence steps (plays first to last)')}>
+    if (!steps.length) return html`<p class="empty-note">${t('anim-studio.sequence-layers.no-steps-yet-add-a-clip-to-start-the')}</p>`;
+    return html`<ol aria-label=${t('anim-studio.sequence-layers.sequence-steps-plays-first-to-last')}>
       ${steps.map((s, i) => {
         const info = stepInfo(s.animation, this.library, doc.id);
         const dur = info.status === 'ok' ? (s.duration ?? info.defaultDuration) : undefined;
@@ -121,10 +121,10 @@ export class AnimStepsLayers extends LitElement {
           thumb: html`<span class="num" aria-hidden="true">${i + 1}</span>`,
           note: info.problem,
           badge: dur !== undefined ? formatSeconds(dur) : undefined,
-          describe: info.problem ? t('step {i} of {count}, {problem}', { i: i + 1, count: steps.length, problem: info.problem }) : t('step {i} of {count}', { i: i + 1, count: steps.length }),
+          describe: info.problem ? t('anim-studio.sequence-layers.step-i-of-count-problem', { i: i + 1, count: steps.length, problem: info.problem }) : t('anim-studio.sequence-layers.step-i-of-count', { i: i + 1, count: steps.length }),
           selected: this._sel === key,
-          up: { ok: !this.disabled && i > 0, label: t('Move {name} up (plays earlier)', { name }), menu: t('Move up (plays earlier)') },
-          down: { ok: !this.disabled && i < steps.length - 1, label: t('Move {name} down (plays later)', { name }), menu: t('Move down (plays later)') },
+          up: { ok: !this.disabled && i > 0, label: t('anim-studio.sequence-layers.move-name-up-plays-earlier', { name }), menu: t('anim-studio.sequence-layers.move-up-plays-earlier') },
+          down: { ok: !this.disabled && i < steps.length - 1, label: t('anim-studio.sequence-layers.move-name-down-plays-later', { name }), menu: t('anim-studio.sequence-layers.move-down-plays-later') },
         });
       })}
     </ol>`;
@@ -135,7 +135,7 @@ registerPanel({
   tag: 'mc-anim-steps-layers',
   place: 'layers',
   when: (doc) => doc.kind === 'sequence',
-  title: m('Sequence steps'),
+  title: m('anim-studio.sequence-layers.sequence-steps'),
   order: 10,
 });
 

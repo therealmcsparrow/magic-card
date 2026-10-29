@@ -17,24 +17,24 @@ const ARR: SvgArrange[] = ['front', 'forward', 'backward', 'back'];
 const EDGES: SvgAlignEdge[] = ['left', 'centre', 'right', 'top', 'middle', 'bottom'];
 const OPS: BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
 
-export const emptyMenu = (): MenuEntry[] => [it('all', t('Select all')), it('zoom', t('Zoom to fit'))];
+export const emptyMenu = (): MenuEntry[] => [it('all', t('svg-editor.menu.select-all')), it('zoom', t('svg-editor.menu.zoom-to-fit'))];
 
 /** The topbar Export / Import menu: what the sidebar's Export section held. */
 export function xferItems(ed: McSvgEditor): MenuEntry[] {
-  const no = ed.out.svg ? undefined : t('Nothing to export yet.');
+  const no = ed.out.svg ? undefined : t('svg-editor.menu.nothing-to-export-yet');
   return [
-    it('x:export', t('Export file'), no),
-    it('x:import', t('Import file')),
-    it('x:copy', t('Copy SVG'), no, undefined, true),
-    it('x:download', t('Download .svg'), no),
-    it('x:ha', t('Copy as HA path'), no),
-    ...(ed.ha?.secondary ? [it('x:accent', t('Copy accent path'))] : []),
+    it('x:export', t('svg-editor.menu.export-file'), no),
+    it('x:import', t('svg-editor.menu.import-file')),
+    it('x:copy', t('svg-editor.menu.copy-svg'), no, undefined, true),
+    it('x:download', t('svg-editor.menu.download-svg'), no),
+    it('x:ha', t('svg-editor.menu.copy-as-ha-path'), no),
+    ...(ed.ha?.secondary ? [it('x:accent', t('svg-editor.menu.copy-accent-path'))] : []),
   ];
 }
 
 export function pointMenu(ed: McSvgEditor): MenuEntry[] {
   const k = ed.pointCtx?.kind;
-  return [it('kind', k === 'smooth' ? t('Corner') : t('Smooth')), it('addpt', t('Add point after'), ed.canAddPoint ? undefined : t('This is the last point of an open line.')), it('delpt', t('Delete point')), it('split', t('Split here'), ptReason(ed, 'split'))];
+  return [it('kind', k === 'smooth' ? t('svg-editor.menu.corner') : t('svg-editor.menu.smooth')), it('addpt', t('svg-editor.menu.add-point-after'), ed.canAddPoint ? undefined : t('svg-editor.menu.this-is-the-last-point-of-an-open-line')), it('delpt', t('svg-editor.menu.delete-point')), it('split', t('svg-editor.menu.split-here'), ptReason(ed, 'split'))];
 }
 
 const TARGETS: SvgAlignTarget[] = ['selection', 'canvas', 'safe'];
@@ -42,18 +42,18 @@ const TARGETS: SvgAlignTarget[] = ['selection', 'canvas', 'safe'];
 /** Align, distribute and place; the canvas toolbar adds the "relative to" choice in front. */
 export function alignItems(ed: McSvgEditor, tool: boolean): MenuEntry[] {
   const n = ed.items.items.length;
-  const noSafe = ed.safeOn ? undefined : t('The safe area is hidden.');
-  const none = tool && !n ? t('Nothing selected. Pick a layer, or click a shape.') : undefined;
-  const need3 = n >= 3 ? undefined : t('Select three or more shapes to space them evenly.');
-  const off = (k: SvgAlignTarget): string | undefined => (k === 'selection' && n < 2 ? t('Select two or more shapes to align them to each other.') : k === 'safe' && !ed.safeOn ? t('The safe area is hidden.') : undefined);
+  const noSafe = ed.safeOn ? undefined : t('svg-editor.menu.the-safe-area-is-hidden');
+  const none = tool && !n ? t('svg-editor.menu.nothing-selected-pick-a-layer-or-click-a') : undefined;
+  const need3 = n >= 3 ? undefined : t('svg-editor.menu.select-three-or-more-shapes-to-space');
+  const off = (k: SvgAlignTarget): string | undefined => (k === 'selection' && n < 2 ? t('svg-editor.menu.select-two-or-more-shapes-to-align-them') : k === 'safe' && !ed.safeOn ? t('svg-editor.menu.the-safe-area-is-hidden') : undefined);
   return [
-    ...(tool ? TARGETS.map((k) => ({ ...it(`tgt:${k}`, `${t('Relative to')}: ${t(ALIGN_TARGETS[k])}`, off(k)), checked: ed.alignBase === k })) : []),
+    ...(tool ? TARGETS.map((k) => ({ ...it(`tgt:${k}`, `${t('svg-editor.menu.relative-to')}: ${t(ALIGN_TARGETS[k])}`, off(k)), checked: ed.alignBase === k })) : []),
     ...EDGES.map((e, i) => it(`al:${e}`, t(ALIGN_EDGE[e]), none, undefined, tool && !i)),
-    it('dist:h', t('Distribute horizontally'), none ?? need3, undefined, tool),
-    it('dist:v', t('Distribute vertically'), none ?? need3),
-    it('place:centre', t('Centre on canvas'), undefined, undefined, tool),
-    it('place:fit', t('Fit to safe area'), noSafe),
-    it('place:match', t('Match safe-area edges'), noSafe),
+    it('dist:h', t('svg-editor.menu.distribute-horizontally'), none ?? need3, undefined, tool),
+    it('dist:v', t('svg-editor.menu.distribute-vertically'), none ?? need3),
+    it('place:centre', t('svg-editor.menu.centre-on-canvas'), undefined, undefined, tool),
+    it('place:fit', t('svg-editor.menu.fit-to-safe-area'), noSafe),
+    it('place:match', t('svg-editor.menu.match-safe-area-edges'), noSafe),
   ];
 }
 
@@ -62,17 +62,17 @@ export const pathItems = (ed: McSvgEditor): MenuEntry[] => PATH_BUTTONS.map((too
 
 export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
   return [
-    it('dup', t('Duplicate'), undefined, 'Control+D'),
-    it('del', t('Delete'), undefined, 'Delete'),
-    it('flipH', t('Flip horizontally'), undefined, 'Shift+H', true),
-    it('flipV', t('Flip vertically'), undefined, 'Shift+V'),
-    it('rotCW', t('Rotate 90 degrees clockwise')),
-    it('rotCCW', t('Rotate 90 degrees anticlockwise')),
-    ...(ed.dualOn ? [it('tone', ed.selected.every((s) => toneOf(s) === 'accent') ? t('Make Main') : t('Make Accent'))] : []),
-    { ...it('arrange', t('Arrange'), undefined, undefined, true), items: ARR.map((a) => it(`arr:${a}`, t(ARRANGE[a]), ed.canArrange(a) ? undefined : t('It is already there.'))) },
-    { ...it('align', t('Align')), items: alignItems(ed, false) },
+    it('dup', t('svg-editor.menu.duplicate'), undefined, 'Control+D'),
+    it('del', t('svg-editor.menu.delete'), undefined, 'Delete'),
+    it('flipH', t('svg-editor.menu.flip-horizontally'), undefined, 'Shift+H', true),
+    it('flipV', t('svg-editor.menu.flip-vertically'), undefined, 'Shift+V'),
+    it('rotCW', t('svg-editor.menu.rotate-90-degrees-clockwise')),
+    it('rotCCW', t('svg-editor.menu.rotate-90-degrees-anticlockwise')),
+    ...(ed.dualOn ? [it('tone', ed.selected.every((s) => toneOf(s) === 'accent') ? t('svg-editor.menu.make-main') : t('svg-editor.menu.make-accent'))] : []),
+    { ...it('arrange', t('svg-editor.menu.arrange'), undefined, undefined, true), items: ARR.map((a) => it(`arr:${a}`, t(ARRANGE[a]), ed.canArrange(a) ? undefined : t('svg-editor.menu.it-is-already-there'))) },
+    { ...it('align', t('svg-editor.menu.align')), items: alignItems(ed, false) },
     { ...it('combine', t(BOOL_OPS.union)), items: combineItems(ed) },
-    { ...it('path', t('Path')), items: pathItems(ed) },
+    { ...it('path', t('svg-editor.menu.path')), items: pathItems(ed) },
     ...(moveMenu(ed) ? [moveMenu(ed)!] : []),
   ];
 }

@@ -69,21 +69,21 @@ export class AnimStatesPanel extends LitElement {
     const clip = newClip(this._clips);
     this._write([...this._clips, clip], 'Add state');
     this._focusAfter = `.clip[data-i="${this._clips.length}"] select.when`;
-    this._announce = t('State {count} added: {when}.', { count: this._clips.length + 1, when: whenLabel(clip.when) });
+    this._announce = t('anim-studio.states-panel.state-count-added-when', { count: this._clips.length + 1, when: whenLabel(clip.when) });
   }
 
   private _remove(i: number): void {
     const clips = this._clips.filter((_c, j) => j !== i);
     this._write(clips, 'Delete state');
     this._focusAfter = clips.length ? `.clip[data-i="${Math.min(i, clips.length - 1)}"] .del` : '.add';
-    this._announce = t('State {i} deleted.', { i: i + 1 });
+    this._announce = t('anim-studio.states-panel.state-i-deleted', { i: i + 1 });
   }
 
   private _move(i: number, to: number): void {
     if (to < 0 || to >= this._clips.length) return;
     this._write(moveClip(this._clips, i, to), 'Reorder states');
     this._focusAfter = `.clip[data-i="${to}"] .${to < i ? 'up' : 'down'}`;
-    this._announce = t('State moved to position {to}.', { to: to + 1 });
+    this._announce = t('anim-studio.states-panel.state-moved-to-position-to', { to: to + 1 });
   }
 
   protected updated(): void {
@@ -101,7 +101,7 @@ export class AnimStatesPanel extends LitElement {
     const numeric = kind === 'above' || kind === 'below';
     return html`<div class="pair">
       <div class="field">
-        <div class="field-head"><label for="${id}-k">${t('When')}</label></div>
+        <div class="field-head"><label for="${id}-k">${t('anim-studio.states-panel.when')}</label></div>
         <div class="select">
           <select
             class="input when"
@@ -115,16 +115,16 @@ export class AnimStatesPanel extends LitElement {
         </div>
       </div>
       ${kind === 'entity_on' || kind === 'entity_off'
-        ? html`<div class="field"><div class="field-head"><span class="lbl">${t('Value')}</span></div><p class="help fill">${t('On means active for its domain (open, home, playing...).')}</p></div>`
+        ? html`<div class="field"><div class="field-head"><span class="lbl">${t('anim-studio.states-panel.value')}</span></div><p class="help fill">${t('anim-studio.states-panel.on-means-active-for-its-domain-open-home')}</p></div>`
         : html`<div class="field">
-            <div class="field-head"><label for="${id}-v">${numeric ? t('Number') : t('State')}</label></div>
+            <div class="field-head"><label for="${id}-v">${numeric ? t('anim-studio.states-panel.number') : t('anim-studio.states-panel.state')}</label></div>
             <input
               class="input ${numeric ? '' : 'mono'}"
               id="${id}-v"
               type=${numeric ? 'number' : 'text'}
               step="any"
               inputmode=${numeric ? 'decimal' : 'text'}
-              placeholder=${numeric ? '0' : t('on')}
+              placeholder=${numeric ? '0' : t('anim-studio.states-panel.on')}
               autocomplete="off"
               spellcheck="false"
               ?disabled=${this.disabled}
@@ -147,7 +147,7 @@ export class AnimStatesPanel extends LitElement {
     const groups = clipOptions(this.library, this.doc?.id);
     const known = groups.some((g) => g.items.some((x) => x.value === c.animation));
     return html`<div class="field">
-      <div class="field-head"><label for=${id}>${t('Play')}</label></div>
+      <div class="field-head"><label for=${id}>${t('anim-studio.states-panel.play')}</label></div>
       <div class="select">
         <select class="input play" id=${id} ?disabled=${this.disabled} @change=${(e: Event) => this._patch(i, { animation: (e.target as HTMLSelectElement).value }, 'Change state animation')}>
           ${known ? nothing : html`<option value=${c.animation} selected>${clipAnimationLabel(c.animation, this.library, this.doc?.id)}</option>`}
@@ -178,7 +178,7 @@ export class AnimStatesPanel extends LitElement {
     };
     const hintOf = (TRANSITIONS.find((x) => x.id === value) ?? TRANSITIONS[0]).hint;
     return html`<div class="field">
-      <div class="field-head"><span class="lbl" id="st-${i}-t">${t('Transition')}</span></div>
+      <div class="field-head"><span class="lbl" id="st-${i}-t">${t('anim-studio.states-panel.transition')}</span></div>
       <div class="seg full" role="radiogroup" aria-labelledby="st-${i}-t" aria-describedby="st-${i}-th" @keydown=${onKey}>
         ${TRANSITIONS.map((x) => {
           const on = x.id === value;
@@ -195,14 +195,14 @@ export class AnimStatesPanel extends LitElement {
     const problem = clipProblem(c, this.library, this.doc?.id);
     return html`<li class="cond clip" data-i=${i}>
       <div class="cond-head">
-        <span class="n">${t('State {i}', { i: i + 1 })} <span class="sub">· ${whenLabel(c.when)}</span></span>
-        <button type="button" class="icon-btn sm up" aria-label=${t('Move state {i} up', { i: i + 1 })} title=${t('Move up')} ?disabled=${this.disabled || i === 0} @click=${() => this._move(i, i - 1)}>
+        <span class="n">${t('anim-studio.states-panel.state-i', { i: i + 1 })} <span class="sub">· ${whenLabel(c.when)}</span></span>
+        <button type="button" class="icon-btn sm up" aria-label=${t('anim-studio.states-panel.move-state-i-up', { i: i + 1 })} title=${t('anim-studio.states-panel.move-up')} ?disabled=${this.disabled || i === 0} @click=${() => this._move(i, i - 1)}>
           <ha-icon icon="mdi:arrow-up"></ha-icon>
         </button>
-        <button type="button" class="icon-btn sm down" aria-label=${t('Move state {i} down', { i: i + 1 })} title=${t('Move down')} ?disabled=${this.disabled || i === n - 1} @click=${() => this._move(i, i + 1)}>
+        <button type="button" class="icon-btn sm down" aria-label=${t('anim-studio.states-panel.move-state-i-down', { i: i + 1 })} title=${t('anim-studio.states-panel.move-down')} ?disabled=${this.disabled || i === n - 1} @click=${() => this._move(i, i + 1)}>
           <ha-icon icon="mdi:arrow-down"></ha-icon>
         </button>
-        <button type="button" class="icon-btn sm danger del" aria-label=${t('Delete state {i}', { i: i + 1 })} title=${t('Delete state')} ?disabled=${this.disabled} @click=${() => this._remove(i)}>
+        <button type="button" class="icon-btn sm danger del" aria-label=${t('anim-studio.states-panel.delete-state-i', { i: i + 1 })} title=${t('anim-studio.states-panel.delete-state')} ?disabled=${this.disabled} @click=${() => this._remove(i)}>
           <ha-icon icon="mdi:delete-outline"></ha-icon>
         </button>
       </div>
@@ -218,15 +218,15 @@ export class AnimStatesPanel extends LitElement {
       <div class="wrap">
         <p class="help lead">
           ${clips.length
-            ? t('The first state that matches plays; with no match (or an unavailable entity) the own timeline plays. The entity is the module’s, or the one set on the animation in the card.')
-            : t('Play something else per entity state: a light that glows when on and rests when off. The entity is the module’s, or the one set on the animation in the card.')}
+            ? t('anim-studio.states-panel.the-first-state-that-matches-plays-with')
+            : t('anim-studio.states-panel.play-something-else-per-entity-state-a')}
         </p>
         ${clips.length ? html`<ol class="clips">${clips.map((c, i) => this._clip(c, i, clips.length))}</ol>` : nothing}
         <div class="foot">
           <button type="button" class="btn btn-text btn-sm add" ?disabled=${this.disabled || full} @click=${() => this._add()}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add state')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('anim-studio.states-panel.add-state')}
           </button>
-          ${full ? html`<span class="help">${t('At most {cLIPS_MAX} states.', { cLIPS_MAX: CLIPS_MAX })}</span>` : nothing}
+          ${full ? html`<span class="help">${t('anim-studio.states-panel.at-most-clips-max-states', { cLIPS_MAX: CLIPS_MAX })}</span>` : nothing}
         </div>
         <div class="sr-only" role="status" aria-live="polite">${this._announce}</div>
       </div>
@@ -289,7 +289,7 @@ export class AnimStatesPanel extends LitElement {
 }
 
 /** Nothing selected: the States section of the inspector. */
-registerPanel({ tag: 'mc-anim-states-panel', place: 'inspector', when: (_doc, sel) => sel.kind === 'none', title: m('States'), order: 60 });
+registerPanel({ tag: 'mc-anim-states-panel', place: 'inspector', when: (_doc, sel) => sel.kind === 'none', title: m('anim-studio.states-panel.states'), order: 60 });
 
 declare global {
   interface HTMLElementTagNameMap {

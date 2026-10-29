@@ -16,20 +16,20 @@ export const tabsEditor: ModuleEditor = {
 
     return html`
       <div class="mc-tab-content">
-        ${renderSelectField(t('Tab style'), c.tab_style, [
-          { label: t('Default'), value: 'default' },
-          { label: t('Pills'), value: 'pills' },
-          { label: t('Underline'), value: 'underline' },
+        ${renderSelectField(t('card-editor.tabs-editor.tab-style'), c.tab_style, [
+          { label: t('card-editor.tabs-editor.default'), value: 'default' },
+          { label: t('card-editor.tabs-editor.pills'), value: 'pills' },
+          { label: t('card-editor.tabs-editor.underline'), value: 'underline' },
         ], (v) => onChange({ ...c, tab_style: v as TabsModuleConfig['tab_style'] }), 'tab_style', syncCtx)}
         ${tabs.length > 1
-          ? renderSelectField(t('Default tab'), String(Math.min(c.active_tab ?? 0, tabs.length - 1)),
-            tabs.map((tab, i) => ({ label: tab.label || t('Tab {n}', { n: i + 1 }), value: String(i) })),
+          ? renderSelectField(t('card-editor.tabs-editor.default-tab'), String(Math.min(c.active_tab ?? 0, tabs.length - 1)),
+            tabs.map((tab, i) => ({ label: tab.label || t('card-editor.tabs-editor.tab-n', { n: i + 1 }), value: String(i) })),
             (v) => onChange({ ...c, active_tab: Number(v) }), 'active_tab', syncCtx)
           : nothing}
         ${tabs.some((t) => t.icon)
           ? renderIconFxEditor(c, hass, onChange, { icon: tabs.find((t) => t.icon)?.icon ?? '', syncCtx })
           : nothing}
-        <p class="help">${t('Add, rename and order tabs, and add their modules, in the structure tree.')}</p>
+        <p class="help">${t('card-editor.tabs-editor.add-rename-and-order-tabs-and-add-their')}</p>
       </div>
     `;
   },

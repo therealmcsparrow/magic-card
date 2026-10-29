@@ -97,7 +97,7 @@ export class TabsView implements ModuleView {
         </div>`;
     const panel = html`
         <div class="mc-tabs-content" role="tabpanel" data-mc-layers=${laid?.layered ? '' : nothing}>
-          ${laid ? laid.content : renderEmptySlot(t('Empty tab'))}
+          ${laid ? laid.content : renderEmptySlot(t('modules-extra.tabs-view.empty-tab'))}
         </div>`;
     // a bottom bar comes after the panel, so the focus order follows the visual order
     return html`

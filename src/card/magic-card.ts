@@ -76,7 +76,7 @@ import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
 import type { PopupController } from './popup-controller';
-import { EditorPlace, holdOutOfFlow, navigateToPopup, popupHidden } from './popup-nav';
+import { EditorPlace, holdOutOfFlow, popupHidden } from './popup-nav';
 import { popupIfLoaded } from './popup-seam';
 import { isPopupEnabled, wantsPopup } from '../utils/popup';
 import type { AnimationDoc } from '../anim-studio/model';
@@ -523,7 +523,7 @@ export class MagicCard extends LitElement {
 
   /** The editor is a lazy chunk; a rejection makes HA open its YAML editor instead. */
   static async getConfigElement(): Promise<HTMLElement> {
-    if (!(await loadEditor())) throw new Error(t('Magic Card: the visual editor could not be loaded.'));
+    if (!(await loadEditor())) throw new Error(t('card.magic-card.magic-card-the-visual-editor-could-not'));
     return document.createElement(EDITOR_TAG);
   }
 
@@ -555,12 +555,12 @@ export class MagicCard extends LitElement {
 
   setConfig(config: MagicCardConfig): void {
     if (!config) {
-      throw new Error(t('No configuration provided'));
+      throw new Error(t('card.magic-card.no-configuration-provided'));
     }
 
     const validation = ConfigValidator.validate(config);
     if (!validation.valid) {
-      throw new Error(t('Invalid configuration: {errors}', { errors: validation.errors.join('; ') }));
+      throw new Error(t('card.magic-card.invalid-configuration-errors', { errors: validation.errors.join('; ') }));
     }
 
     const prevTemplate = this._config?.template;
@@ -919,14 +919,14 @@ export class MagicCard extends LitElement {
     const name = this._config?.template;
     if (!name || !this._templateNotice) return nothing;
     return html`<div class="mc-template-notice" role="status" style="padding-block: 4px; font-size: 0.85em; line-height: 1.3; color: var(--secondary-text-color)">${this._templateNotice === 'missing'
-      ? t('Template "{name}" wasn\'t found. Showing this card\'s own settings.', { name })
-      : t('Template "{name}" couldn\'t be loaded. Showing this card\'s own settings.', { name })}</div>`;
+      ? t('card.magic-card.template-name-wasn-t-found-showing-this', { name })
+      : t('card.magic-card.template-name-couldn-t-be-loaded-showing', { name })}</div>`;
   }
 
   private _renderCard(): TemplateResult {
     const config = this._resolvedConfig ?? this._config;
     if (!config) {
-      return html`<ha-card><div class="mc-error">${t('No configuration')}</div></ha-card>`;
+      return html`<ha-card><div class="mc-error">${t('card.magic-card.no-configuration')}</div></ha-card>`;
     }
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
@@ -1054,14 +1054,14 @@ export class MagicCard extends LitElement {
           </ha-card>
         `
       : nothing;
-    const label = config.popup?.title?.trim() || config.name || t('Pop-up');
+    const label = config.popup?.title?.trim() || config.name || t('card.magic-card.pop-up');
     const dialog = popupCtl.renderDialog(surface, label, titleId, resolved.border_radius);
     if (popupHere) return dialog;
     // in an editor the card stays inline, marked as a pop-up
     const id = popupCtl.popupId();
     return html`
       <div class="mc-popup-badge" aria-hidden="true">
-        <ha-icon icon="mdi:dock-window"></ha-icon>${t('Pop-up')}${id ? html` · #${id}` : nothing}
+        <ha-icon icon="mdi:dock-window"></ha-icon>${t('card.magic-card.pop-up')}${id ? html` · #${id}` : nothing}
       </div>
       ${inline}${dialog}
     `;
@@ -1475,7 +1475,7 @@ export class MagicCard extends LitElement {
         data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control, parts: mod.type === 'button' ? design : undefined, tabs })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
-        data-mc-needs=${needs ? t('Needs another device') : nothing}
+        data-mc-needs=${needs ? t('card.magic-card.needs-another-device') : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
         data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing}
         data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}
@@ -1704,7 +1704,7 @@ export class MagicCard extends LitElement {
 
   private _getActionLabel(mod: CardModule): string {
     const customLabel = (mod.label as string | undefined) || (mod.name as string | undefined);
-    return customLabel ? t('Activate {name}', { name: customLabel }) : t('Activate {type} module', { type: mod.type });
+    return customLabel ? t('card.magic-card.activate-name', { name: customLabel }) : t('card.magic-card.activate-type-module', { type: mod.type });
   }
 
   private _onPointerDown(e: PointerEvent, mod: Actor): void {
@@ -1904,10 +1904,19 @@ export class MagicCard extends LitElement {
         );
         break;
 
-      case 'popup':
-        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens
-        navigateToPopup(action.hash);
+      case 'popup': {
+        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens. A card that is itself a
+        // pop-up has the chunk loading already; an opener card fetches it on this tap, and if that fails the card shows
+        // the chunk's failure notice with its retry button
+        const open = popupIfLoaded();
+        if (open) open.api.navigate(action.hash);
+        else {
+          this._met.add('popup');
+          this.requestUpdate();
+          void lazyChunks.popup.load().then((ok) => ok && popupIfLoaded()?.api.navigate(action.hash));
+        }
         break;
+      }
 
       case 'close-popup':
         // no chunk loaded: no pop-up can be open

@@ -18,19 +18,19 @@ import { BUTTON_CARD_ENTRIES } from './button-card';
  */
 
 export const CATALOGUE_GROUPS: CatalogueGroup[] = [
-  { id: 'primary', label: m('Primary and accent') },
-  { id: 'backgrounds', label: m('Backgrounds and cards') },
-  { id: 'text', label: m('Text') },
-  { id: 'states', label: m('States and alerts') },
-  { id: 'sizes', label: m('Sizes and radii') },
-  { id: 'chrome', label: m('Header and sidebar') },
-  { id: 'magic-card', label: m('Magic Card'), previewTag: 'magic-card' },
-  { id: 'tile', label: m('Tile card'), previewTag: 'hui-tile-card' },
-  { id: 'mushroom', label: m('Mushroom'), previewTag: 'mushroom-entity-card', resourcePattern: /mushroom/i },
-  { id: 'bubble-card', label: m('Bubble Card'), previewTag: 'bubble-card', resourcePattern: /bubble-card/i },
-  { id: 'ultra-card', label: m('Ultra Card'), previewTag: 'ultra-card', resourcePattern: /ultra-card/i },
-  { id: 'button-card', label: m('button-card'), previewTag: 'button-card', resourcePattern: /button-card/i },
-  { id: 'other', label: m('Other') },
+  { id: 'primary', label: m('theme-editor.catalogue.primary-and-accent') },
+  { id: 'backgrounds', label: m('theme-editor.catalogue.backgrounds-and-cards') },
+  { id: 'text', label: m('theme-editor.catalogue.text') },
+  { id: 'states', label: m('theme-editor.catalogue.states-and-alerts') },
+  { id: 'sizes', label: m('theme-editor.catalogue.sizes-and-radii') },
+  { id: 'chrome', label: m('theme-editor.catalogue.header-and-sidebar') },
+  { id: 'magic-card', label: m('theme-editor.catalogue.magic-card'), previewTag: 'magic-card' },
+  { id: 'tile', label: m('theme-editor.catalogue.tile-card'), previewTag: 'hui-tile-card' },
+  { id: 'mushroom', label: m('theme-editor.catalogue.mushroom'), previewTag: 'mushroom-entity-card', resourcePattern: /mushroom/i },
+  { id: 'bubble-card', label: m('theme-editor.catalogue.bubble-card'), previewTag: 'bubble-card', resourcePattern: /bubble-card/i },
+  { id: 'ultra-card', label: m('theme-editor.catalogue.ultra-card'), previewTag: 'ultra-card', resourcePattern: /ultra-card/i },
+  { id: 'button-card', label: m('theme-editor.catalogue.button-card'), previewTag: 'button-card', resourcePattern: /button-card/i },
+  { id: 'other', label: m('theme-editor.catalogue.other') },
 ];
 
 const RAW: CatalogueEntry[] = [

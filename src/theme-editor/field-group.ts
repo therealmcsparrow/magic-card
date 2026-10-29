@@ -3,23 +3,27 @@ import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import type { CatalogueEntry, CatalogueGroup } from '../contracts/theme-catalogue';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { glyph } from '../ui-kit/glyphs';
 import { groupPreview, previewCardsEvents } from './preview-cards';
 import { base } from './styles';
 import { t } from './i18n';
 import { isColourMsg, isGradientMsg } from './model';
+import type { CatalogueEntry, CatalogueGroup } from '../contracts/theme-catalogue';
 import { fire, modeList, ownValue, overriddenIn, scopeLabel } from './util';
 import type { Scope } from './util';
 
-export interface FieldRow {
-  entry: CatalogueEntry;
-  /** True when the group's card reads a variable another group owns. */
-  follows: boolean;
-  /** A variable in the file the catalogue does not know (group "Other"). */
-  custom?: boolean;
-}
+/** A variable in the file the catalogue does not know (group "Other"): it has no label or hint, the row shows its name. */
+export type CustomEntry = Pick<CatalogueEntry, 'name' | 'group' | 'source' | 'kind' | 'default'> & { hint?: undefined };
+
+export type FieldRow =
+  | {
+      entry: CatalogueEntry;
+      /** True when the group's card reads a variable another group owns. */
+      follows: boolean;
+      custom?: false;
+    }
+  | { entry: CustomEntry; follows: boolean; custom: true };
 
 export interface FieldHint {
   text: string;
@@ -40,13 +44,13 @@ export interface FieldCtx {
 }
 
 const modeLabel = (m: ThemeMode): string => scopeLabel(m);
-const isColour = (entry: CatalogueEntry): boolean => entry.kind === 'color' || entry.kind === 'background';
+const isColour = (entry: Pick<CatalogueEntry, 'kind'>): boolean => entry.kind === 'color' || entry.kind === 'background';
 
 /** The text under a field for an error from model.validateValue (colour fields lead with the picker). */
-export const fieldErrorText = (entry: CatalogueEntry, message: string): string => {
+export const fieldErrorText = (entry: Pick<CatalogueEntry, 'kind'>, message: string): string => {
   if (entry.kind === 'color') {
-    if (isGradientMsg(message)) return t('This variable takes a single colour. Gradients work in Card background and Dashboard background.');
-    if (isColourMsg(message)) return t('This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.');
+    if (isGradientMsg(message)) return t('theme-editor.field-group.this-variable-takes-a-single-colour');
+    if (isColourMsg(message)) return t('theme-editor.field-group.this-is-not-a-colour-pick-one-with-the');
   }
   return message;
 };
@@ -196,7 +200,7 @@ export class McteFieldGroup extends LitElement {
         spellcheck="false"
         autocomplete="off"
         inputmode=${entry.kind === 'number' ? 'decimal' : 'text'}
-        placeholder=${entry.default || t('Not set')}
+        placeholder=${entry.default || t('theme-editor.field-group.not-set')}
         aria-invalid=${err ? 'true' : 'false'}
         aria-describedby=${ifDefined(err ? `err-${name}` : undefined)}
         ?readonly=${this.ctx.readOnly}
@@ -217,17 +221,17 @@ export class McteFieldGroup extends LitElement {
     const both = others.length === 2;
     const covered = (['light', 'dark'] as ThemeMode[]).filter((m) => !others.includes(m));
     const text = both
-      ? t('Light and Dark both use their own value, so this has no effect.')
-      : t('{mode} uses its own value. This only changes {covered}.', { mode: modeLabel(others[0]), covered: modeLabel(covered[0]) });
-    return html`<div class="notice warn" role="group" aria-label=${t('Shared value has no effect')}>
+      ? t('theme-editor.field-group.light-and-dark-both-use-their-own-value')
+      : t('theme-editor.field-group.mode-uses-its-own-value-this-only', { mode: modeLabel(others[0]), covered: modeLabel(covered[0]) });
+    return html`<div class="notice warn" role="group" aria-label=${t('theme-editor.field-group.shared-value-has-no-effect')}>
       ${glyph('alertCircle')}
       <div class="body">
         <p>${text}</p>
         <div class="actions">
           <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-set-modes', { name, value, modes: others })}>
-            ${both ? t('Set in both') : t('Set in {mode} too', { mode: modeLabel(others[0]) })}
+            ${both ? t('theme-editor.field-group.set-in-both') : t('theme-editor.field-group.set-in-mode-too', { mode: modeLabel(others[0]) })}
           </button>
-          <button type="button" class="btn btn-text btn-sm" @click=${() => (this._kept = new Set(this._kept).add(key))}>${t('Keep in Shared only')}</button>
+          <button type="button" class="btn btn-text btn-sm" @click=${() => (this._kept = new Set(this._kept).add(key))}>${t('theme-editor.field-group.keep-in-shared-only')}</button>
         </div>
       </div>
     </div>`;
@@ -246,14 +250,14 @@ export class McteFieldGroup extends LitElement {
     const key = `${name}:only:${scope}`;
     if (!this.ctx.touched.has(name) || this._kept.has(key)) return nothing;
     const other: ThemeMode = scope === 'light' ? 'dark' : 'light';
-    return html`<div class="notice warn" role="group" aria-label=${t('Value set in one mode only')}>
+    return html`<div class="notice warn" role="group" aria-label=${t('theme-editor.field-group.value-set-in-one-mode-only')}>
       ${glyph('alertCircle')}
       <div class="body">
-        <p>${t('Only {mode} gets this value. {other} keeps the default.', { mode: modeLabel(scope), other: modeLabel(other) })}</p>
+        <p>${t('theme-editor.field-group.only-mode-gets-this-value-other-keeps', { mode: modeLabel(scope), other: modeLabel(other) })}</p>
         <div class="actions">
-          <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-set-modes', { name, value, modes: [other] })}>${t('Set in both')}</button>
-          <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-move-shared', { name, value })}>${t('Move to Shared')}</button>
-          <button type="button" class="btn btn-text btn-sm" @click=${() => (this._kept = new Set(this._kept).add(key))}>${t('Keep in {mode} only', { mode: modeLabel(scope) })}</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-set-modes', { name, value, modes: [other] })}>${t('theme-editor.field-group.set-in-both')}</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-move-shared', { name, value })}>${t('theme-editor.field-group.move-to-shared')}</button>
+          <button type="button" class="btn btn-text btn-sm" @click=${() => (this._kept = new Set(this._kept).add(key))}>${t('theme-editor.field-group.keep-in-mode-only', { mode: modeLabel(scope) })}</button>
         </div>
       </div>
     </div>`;
@@ -274,7 +278,7 @@ export class McteFieldGroup extends LitElement {
     const others = hasModes ? overriddenIn(doc, scope, name) : [];
     const hint = hints.get(name);
     const scopeName = scopeLabel(scope);
-    const statusText = state === 'set' ? t('Set here') : state === 'shared' ? t('Shared') : t('Default');
+    const statusText = state === 'set' ? t('theme-editor.field-group.set-here') : state === 'shared' ? t('theme-editor.field-group.shared') : t('theme-editor.field-group.default');
     const sharedValues =
       scope === 'shared' && others.length
         ? others.map((m) => `${modeLabel(m)} ${ownValue(doc, m, name)}`).join(', ')
@@ -286,23 +290,23 @@ export class McteFieldGroup extends LitElement {
           ? html`<span class="lbl" id="lbl-${name}">${label}</span>`
           : html`<label class="lbl ${custom ? 'mono' : ''}" for="in-${name}">${label}</label>`}
         <span class="status help">${statusText}</span>
-        ${custom ? html`<span class="chip">${t('Custom')}</span>` : nothing}
-        ${row.follows ? html`<span class="chip">${t('Home Assistant variable')}</span>` : nothing}
-        ${others.length ? html`<span class="chip">${t('Also set in {modes}', { modes: modeList(others) })}</span>` : nothing}
-        ${only ? html`<span class="chip is-warn">${t('Only in {mode}', { mode: modeLabel(only) })}</span>` : nothing}
+        ${custom ? html`<span class="chip">${t('theme-editor.field-group.custom')}</span>` : nothing}
+        ${row.follows ? html`<span class="chip">${t('theme-editor.field-group.home-assistant-variable')}</span>` : nothing}
+        ${others.length ? html`<span class="chip">${t('theme-editor.field-group.also-set-in-modes', { modes: modeList(others) })}</span>` : nothing}
+        ${only ? html`<span class="chip is-warn">${t('theme-editor.field-group.only-in-mode', { mode: modeLabel(only) })}</span>` : nothing}
         ${own && !this.ctx.readOnly
-          ? html`<button type="button" class="icon-btn sm reset" aria-label=${t('Remove {label} from {scope}', { label, scope: scopeName })} title=${t('Remove from {scope}', { scope: scopeName })} @click=${() => fire(this, 'mcte-reset', { name })}>
+          ? html`<button type="button" class="icon-btn sm reset" aria-label=${t('theme-editor.field-group.remove-label-from-scope', { label, scope: scopeName })} title=${t('theme-editor.field-group.remove-from-scope', { scope: scopeName })} @click=${() => fire(this, 'mcte-reset', { name })}>
               ${glyph('restart')}
             </button>`
           : nothing}
       </div>
       ${custom
         ? nothing
-        : html`<button type="button" class="key mono" aria-label=${t('Copy key {name}', { name })} @click=${() => fire(this, 'mcte-copy', { text: name, what: 'key' })}>${name}</button>`}
+        : html`<button type="button" class="key mono" aria-label=${t('theme-editor.field-group.copy-key-name', { name })} @click=${() => fire(this, 'mcte-copy', { text: name, what: 'key' })}>${name}</button>`}
       ${this._control(row, shown, own, err, label)}
       ${err ? html`<p class="help error" id="err-${name}" role="alert">${glyph('alertCircle', 16)}<span>${err}</span></p>` : nothing}
-      ${state === 'shared' ? html`<p class="help">${t('Shared: {value}', { value: String(sharedV) })}</p>` : nothing}
-      ${state === 'default' ? html`<p class="help">${entry.default ? t('Default: {value}', { value: entry.default }) : t('Not set')}</p>` : nothing}
+      ${state === 'shared' ? html`<p class="help">${t('theme-editor.field-group.shared-value', { value: String(sharedV) })}</p>` : nothing}
+      ${state === 'default' ? html`<p class="help">${entry.default ? t('theme-editor.field-group.default-value', { value: entry.default }) : t('theme-editor.field-group.not-set')}</p>` : nothing}
       ${sharedValues ? html`<p class="help">${sharedValues}</p>` : nothing}
       ${entry.hint ? html`<p class="help">${t(entry.hint)}</p>` : nothing}
       ${hint
@@ -320,8 +324,8 @@ export class McteFieldGroup extends LitElement {
       <h3 class="sector-head">
         <button type="button" class="sector-btn" aria-expanded=${this.open ? 'true' : 'false'} aria-controls="body-${g.id}" @click=${() => fire(this, 'mcte-toggle', { id: g.id })}>
           <span class="nm">${t(g.label)}</span>
-          ${this.setCount ? html`<span class="chip">${t('{c} set', { c: this.setCount })}</span>` : nothing}
-          ${missing ? html`<span class="chip">${glyph('information', 14)} ${t('Not installed here')}</span>` : nothing}
+          ${this.setCount ? html`<span class="chip">${t('theme-editor.field-group.c-set', { c: this.setCount })}</span>` : nothing}
+          ${missing ? html`<span class="chip">${glyph('information', 14)} ${t('theme-editor.field-group.not-installed-here')}</span>` : nothing}
           <span class="chev">${glyph('chevronDown')}</span>
         </button>
       </h3>

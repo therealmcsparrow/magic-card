@@ -10,25 +10,25 @@ export function shortcutKeys(): string {
 export function lipSpecs(): PanelLipSpec[] {
   const keys = shortcutKeys();
   const spec = (id: string, side: 'start' | 'end', name: string, noun: string): PanelLipSpec => ({
-    id, side, controls: id, name, noun, hideLabel: t('Hide {noun} ({keys})', { noun, keys }), showLabel: t('Show {noun} ({keys})', { noun, keys }),
+    id, side, controls: id, name, noun, hideLabel: t('svg-editor.lips.hide-noun-keys', { noun, keys }), showLabel: t('svg-editor.lips.show-noun-keys', { noun, keys }),
   });
   return [
-    spec('side', 'start', t('Layers and library panel'), t('layers and library')),
-    spec('inspector', 'end', t('Inspector panel'), t('inspector')),
+    spec('side', 'start', t('svg-editor.lips.layers-and-library-panel'), t('svg-editor.lips.layers-and-library')),
+    spec('inspector', 'end', t('svg-editor.lips.inspector-panel'), t('svg-editor.lips.inspector')),
   ];
 }
 
 export function lipStrings(locale: string): PanelLipStrings {
-  const hintOne = t('The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' });
+  const hintOne = t('svg-editor.lips.the-noun-panel-is-hidden-as-you-left-it', { noun: '{noun}' });
   return {
     locale,
-    hidden: t('{panels} hidden', { panels: '{panels}' }),
-    shown: t('{panels} shown', { panels: '{panels}' }),
+    hidden: t('svg-editor.lips.panels-hidden', { panels: '{panels}' }),
+    shown: t('svg-editor.lips.panels-shown', { panels: '{panels}' }),
     hintOne,
-    hintMany: t('Some panels are hidden, as you left them. Use the arrows on the edges to show them.'),
+    hintMany: t('svg-editor.lips.some-panels-are-hidden-as-you-left-them'),
     hintMigrated: hintOne,
-    hintShortcut: t('Shortcut: {keys}', { keys: shortcutKeys() }),
-    gotIt: t('Got it'),
+    hintShortcut: t('svg-editor.lips.shortcut-keys', { keys: shortcutKeys() }),
+    gotIt: t('svg-editor.lips.got-it'),
   };
 }
 

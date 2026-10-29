@@ -1,4 +1,4 @@
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { lm } from '../i18n/labels/mark';
 import type { DeviceAnim, HassEntity } from '../types';
 import { isEntityActive } from '../utils/entity-color';
@@ -96,35 +96,35 @@ export function autoDeviceAnim(stateObj: HassEntity | undefined): DeviceAnimSpec
  * What Auto does for an entity's domain / device class, whatever its state is right now (the editor's
  * help). Kept next to autoDeviceAnim so both cover the same entities; undefined where Auto has nothing.
  */
-export function autoDeviceRule(stateObj: HassEntity | undefined, entityId = stateObj?.entity_id ?? ''): MessageId | undefined {
+export function autoDeviceRule(stateObj: HassEntity | undefined, entityId = stateObj?.entity_id ?? ''): MessageIndex | undefined {
   const domain = entityId.split('.')[0];
   const dc = String(stateObj?.attributes?.device_class ?? '');
   switch (domain) {
     case 'fan':
-      return lm('Spin while on, faster at a higher speed');
+      return lm('labels.device-anim.spin-while-on-faster-at-a-higher-speed');
     case 'light':
-      return lm("Glow while on, in the light's colour and brightness");
+      return lm("labels.device-anim.glow-while-on-in-the-light-s-colour-and");
     case 'climate':
-      return lm('Flame while heating, Snow while cooling, Spin while only the fan runs');
+      return lm('labels.device-anim.flame-while-heating-snow-while-cooling');
     case 'vacuum':
-      return lm('Drum while cleaning');
+      return lm('labels.device-anim.drum-while-cleaning');
     case 'sensor':
-      return lm('Drum while the state is running, washing or drying');
+      return lm('labels.device-anim.drum-while-the-state-is-running-washing');
     case 'binary_sensor':
-      if (dc === 'running') return lm('Drum while running');
-      if (OPENING_CLASSES.has(dc)) return lm('Swing: a slightly opened pose while open');
-      if (ALERT_CLASSES.has(dc)) return lm('Pulse in the alert colour while on');
+      if (dc === 'running') return lm('labels.device-anim.drum-while-running');
+      if (OPENING_CLASSES.has(dc)) return lm('labels.device-anim.swing-a-slightly-opened-pose-while-open');
+      if (ALERT_CLASSES.has(dc)) return lm('labels.device-anim.pulse-in-the-alert-colour-while-on');
       return undefined;
     case 'cover':
-      return lm('Swing while opening or closing, a slightly opened pose while open');
+      return lm('labels.device-anim.swing-while-opening-or-closing-a');
     case 'lock':
-      return lm('Shake while jammed, Pulse while locking or unlocking');
+      return lm('labels.device-anim.shake-while-jammed-pulse-while-locking');
     case 'media_player':
-      return lm('Equalizer while playing');
+      return lm('labels.device-anim.equalizer-while-playing');
     case 'alarm_control_panel':
-      return lm('Pulse in the alert colour while triggered');
+      return lm('labels.device-anim.pulse-in-the-alert-colour-while');
     case 'siren':
-      return lm('Pulse in the alert colour while on');
+      return lm('labels.device-anim.pulse-in-the-alert-colour-while-on');
     default:
       return undefined;
   }

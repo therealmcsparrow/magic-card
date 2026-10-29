@@ -1,5 +1,5 @@
-import { useCustomBuilder } from './shape-path';
 import type { LazyChunkControl } from './lazy-chunk';
+import type { CustomShapeChunk } from '../contracts/custom-shape';
 
 /*
  * The `shape: custom` builder (src/utils/shape-custom.ts) is a lazy chunk, dist/magic-card-shape-custom.js
@@ -8,10 +8,22 @@ import type { LazyChunkControl } from './lazy-chunk';
  * load resolves. A failed load is retried (silent, then in the background) with the failure notice; the
  * element stays unshaped meanwhile. The chunk comes from a slot the chunk table (src/utils/lazy-chunks.ts)
  * fills, like in anim-runtime-loader.ts.
+ *
+ * This file holds the registered builder; src/utils/shape-path.ts (a shared chunk) reads it, so the entry never
+ * imports shape-path.
  */
 
 type Chunk = LazyChunkControl<typeof import('./shape-custom')>;
 let chunk: Chunk | undefined;
+let builder: CustomShapeChunk['buildCustom'] | undefined;
+
+/** Register (or, with nothing, remove) the custom builder; shape-path drops the outlines it memoised. */
+export const useCustomBuilder = (fn?: CustomShapeChunk['buildCustom']): void => {
+  builder = fn;
+};
+
+/** The registered builder; undefined until the chunk has loaded. */
+export const customBuilder = (): CustomShapeChunk['buildCustom'] | undefined => builder;
 
 // runs in the install step, also for a load that succeeds on a background retry
 const register = (): void => void chunk?.whenReady(() => useCustomBuilder(chunk!.module()!.buildCustom));

@@ -1,7 +1,8 @@
 import type { CardModule, EditorPath, MagicCardConfig, ModuleType } from '../../types';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { CSS_SECTORS } from '../../utils/css-properties';
-import { ChildStep, childSlots, descendantAt, hasChildSlots, hasSlotNodes } from '../../utils/module-path';
+import { ChildStep, childSlots, hasChildSlots } from '../../utils/module-path';
+import { descendantAt, hasSlotNodes } from '../../utils/module-path-edit';
 import { deepClone } from '../../utils/deep-merge';
 import type { ModuleSelection } from '../studio/selection';
 import { selectionToPath } from '../studio/selection';

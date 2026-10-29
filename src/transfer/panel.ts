@@ -9,7 +9,7 @@ import { loadSvgCss } from '../svg-safety/css-loader';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
-import { count } from './count';
+import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
 import { locale, t } from './i18n';
@@ -123,7 +123,7 @@ export class TransferPanel extends LitElement {
     this._res =
       ok.every(Boolean) && (images || !wantsImages)
         ? parseTransfer(text, { accept: this._kinds(), fileName, images, css })
-        : { ok: false, refusal: 'limits', message: wantsImages ? t('The checker for images did not load, so this image was not read.') : t('The checker for these animations did not load, so the file was not read. Check your connection and try again.') };
+        : { ok: false, refusal: 'limits', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
     this._choice = 'keep-both';
     this.focusResult();
   }
@@ -181,18 +181,18 @@ export class TransferPanel extends LitElement {
     const icon = kinds.includes('icon');
     const types = accept.replace(/\./g, '').replace(/,/g, ', ');
     return html`
-      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? t('Import {items}', { items: count(r.items.length, r.kind) }) : t('This file was not imported')) : t('Import presets')}</h3></div>
+      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? importLabel(r.items.length, r.kind) : t('transfer.panel.this-file-was-not-imported')) : t('transfer.panel.import-presets')}</h3></div>
       <div class="bar">
-        ${button({ label: t('Choose a file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
+        ${button({ label: t('transfer.panel.choose-a-file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
         <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
-        <span class="help">${images ? t('JSON or SVG, up to 8 MB') : icon ? t('{types}, up to 1 MB; SVG up to 32 KB', { types }) : t('{types}, up to 1 MB', { types })}</span>
+        <span class="help">${images ? t('transfer.panel.json-or-svg-up-to-8-mb') : icon ? t('transfer.panel.types-up-to-1-mb-svg-up-to-32-kb', { types }) : t('transfer.panel.types-up-to-1-mb', { types })}</span>
       </div>
       <div class="field">
-        <div class="field-head"><label for="paste">${t('Or paste the text')}</label></div>
+        <div class="field-head"><label for="paste">${t('transfer.panel.or-paste-the-text')}</label></div>
         <textarea id="paste" class="input" spellcheck="false"></textarea>
         <div class="bar">
-          ${button({ label: t('Read'), onClick: () => void this._read(this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value) })}
-          ${button({ label: t('Close'), variant: 'text', onClick: this._close })}
+          ${button({ label: t('transfer.panel.read'), onClick: () => void this._read(this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value) })}
+          ${button({ label: t('transfer.panel.close'), variant: 'text', onClick: this._close })}
         </div>
       </div>
       ${r?.ok ? html`<p id="res" class="res" tabindex="-1" role="status">${this._summary(r)}</p>` : r ? html`<div id="res" tabindex="-1">${notice({ tone: 'error', text: r.message })}</div>` : nothing}
@@ -203,9 +203,9 @@ export class TransferPanel extends LitElement {
   private _summary(r: Ok): string {
     const n = this._notes(r);
     const kept = n.filter(KEPT).length;
-    const parts = [t('{source} holds {items}.', { source: this._fileName || t('The text'), items: count(r.items.length, r.kind) })];
-    if (kept) parts.push(t('{n, plural, one {# value is kept as written. Check the list below.} other {# values are kept as written. Check the list below.}}', { n: kept }));
-    if (n.length - kept) parts.push(t('{n, plural, one {# note.} other {# notes.}}', { n: n.length - kept }));
+    const parts = [sourceHolds(this._fileName || t('transfer.panel.the-text'), r.items.length, r.kind)];
+    if (kept) parts.push(t('transfer.panel.n', { n: kept }));
+    if (n.length - kept) parts.push(t('transfer.panel.n-2', { n: n.length - kept }));
     return parts.join(' ');
   }
 
@@ -220,51 +220,51 @@ export class TransferPanel extends LitElement {
     const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
     return html`
       <ul>
-        ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('(you have this one)')}</span>` : nothing}</li>`)}
+        ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
       </ul>
       ${kept.length
         ? html`<div class="notice warn" role="status">
             ${glyph('help', 20)}
             <div class="body">
-              <strong>${t('{n, plural, one {# value is kept as written} other {# values are kept as written}}', { n: kept.length })}</strong>
-              <span class="help">${hosts.length ? `${t('Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor\'s IP address.', { hosts: hosts.join(', ') })} ` : ''}${t('Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.')}</span>
+              <strong>${t('transfer.panel.n-3', { n: kept.length })}</strong>
+              <span class="help">${hosts.length ? `${t('transfer.panel.every-browser-that-shows-a-dashboard', { hosts: hosts.join(', ') })} ` : ''}${t('transfer.panel.lines-that-start-with-card-mod-only-work')}</span>
               <ul>
                 ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.hosts?.length ? ` (${n.hosts.join(', ')})` : ''}</li>`)}
               </ul>
             </div>
           </div>`
         : nothing}
-      ${local.length ? html`<p class="help">${t("{n, plural, one {# value points to a file on the sharer's Home Assistant (url(/local/...)). It may not exist on your system.} other {# values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.}}", { n: local.length })}</p>` : nothing}
+      ${local.length ? html`<p class="help">${t("transfer.panel.n-4", { n: local.length })}</p>` : nothing}
       ${rest.length
         ? html`<details class="cond" ?open=${r.kind === 'image'}>
-            <summary>${t('{n, plural, one {# note} other {# notes}}', { n: rest.length })}</summary>
+            <summary>${t('transfer.panel.n-5', { n: rest.length })}</summary>
             <ul>
               ${rest.map((n) => html`<li>${name(n)}${n.message}</li>`)}
             </ul>
           </details>`
         : nothing}
-      ${r.kind !== 'theme' && r.kind !== 'image' && !this.hasLibrary ? html`<p class="help">${t('Magic Card Utils is not installed, so these are saved as copies inside this card.')}</p>` : nothing}
-      ${blocked ? notice({ tone: 'error', text: r.kind === 'image' ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.') : t('Update Magic Card Utils to keep theme presets.') }) : nothing}
+      ${r.kind !== 'theme' && r.kind !== 'image' && !this.hasLibrary ? html`<p class="help">${t('transfer.panel.magic-card-utils-is-not-installed-so')}</p>` : nothing}
+      ${blocked ? notice({ tone: 'error', text: r.kind === 'image' ? t('transfer.panel.images-need-magic-card-utils-it-is') : t('transfer.panel.update-magic-card-utils-to-keep-theme') }) : nothing}
       ${clashes.length
         ? html`<div class="field">
-            <div class="field-head"><span class="lbl">${t('{n, plural, one {{items} already exists} other {{items} already exist}}', { n: clashes.length, items: count(clashes.length, r.kind) })}</span></div>
+            <div class="field-head"><span class="lbl">${t('transfer.panel.n-6', { n: clashes.length, items: count(clashes.length, r.kind) })}</span></div>
             ${seg({
               role: 'radiogroup',
-              label: t('What to do with them'),
+              label: t('transfer.panel.what-to-do-with-them'),
               full: true,
               value: this._choice,
               items: [
-                { value: 'keep-both', label: t('Keep both') },
-                { value: 'replace', label: t('Replace them') },
+                { value: 'keep-both', label: t('transfer.panel.keep-both') },
+                { value: 'replace', label: t('transfer.panel.replace-them') },
               ],
               onChange: (c) => (this._choice = c),
             })}
-            <p class="help">${this._choice === 'replace' ? t('The saved ones are overwritten.') : t('The new ones get a number.')}</p>
+            <p class="help">${this._choice === 'replace' ? t('transfer.panel.the-saved-ones-are-overwritten') : t('transfer.panel.the-new-ones-get-a-number')}</p>
           </div>`
         : nothing}
       <div class="bar">
-        ${button({ label: kept.length ? t('Import anyway') : t('Import {items}', { items: count(r.items.length, r.kind) }), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
-        ${button({ label: t('Cancel'), variant: 'text', onClick: () => (this._res = undefined) })}
+        ${button({ label: kept.length ? t('transfer.panel.import-anyway') : importLabel(r.items.length, r.kind), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
+        ${button({ label: t('transfer.panel.cancel'), variant: 'text', onClick: () => (this._res = undefined) })}
       </div>
     `;
   }
@@ -287,32 +287,32 @@ export class TransferPanel extends LitElement {
     a.download = this._name();
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    this._done = t('Downloaded {name}.', { name: a.download });
+    this._done = t('transfer.panel.downloaded-name', { name: a.download });
   }
 
   private async _copy(text: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(text);
-      this._done = t('Copied.');
+      this._done = t('transfer.panel.copied');
     } catch {
       this.renderRoot.querySelector<HTMLTextAreaElement>('#out')?.select();
-      this._done = t('Could not copy. The text is selected: press Ctrl+C.');
+      this._done = t('transfer.panel.could-not-copy-the-text-is-selected');
     }
   }
 
   private _export(): TemplateResult {
     const e = this.exportItems;
-    if (!e?.items.length) return html`<p class="help" role="status">${t('Nothing to export.')}</p>`;
+    if (!e?.items.length) return html`<p class="help" role="status">${t('transfer.panel.nothing-to-export')}</p>`;
     const text = this._text();
     return html`
-      <div class="group-head"><h3 tabindex="-1">${t('Export {items}', { items: count(e.items.length, e.kind) })}</h3></div>
+      <div class="group-head"><h3 tabindex="-1">${exportLabel(e.items.length, e.kind)}</h3></div>
       ${e.kind === 'image'
         ? nothing
         : html`<div class="field">
-        <div class="field-head"><span class="lbl">${t('File format')}</span></div>
+        <div class="field-head"><span class="lbl">${t('transfer.panel.file-format')}</span></div>
         ${seg({
           role: 'radiogroup',
-          label: t('File format'),
+          label: t('transfer.panel.file-format'),
           value: this._format,
           items: [
             { value: 'yaml', label: 'YAML' },
@@ -321,13 +321,13 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${e.items.some((i) => i.author) ? html`<p class="help">${t('The author name is saved in the file. Check it before you share the file.')}</p>` : nothing}
-      <textarea id="out" class="input" readonly aria-label=${t('Export text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
+      ${e.items.some((i) => i.author) ? html`<p class="help">${t('transfer.panel.the-author-name-is-saved-in-the-file')}</p>` : nothing}
+      <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
-        ${button({ label: t('Download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
-        ${button({ label: t('Copy'), icon: 'mdi:content-copy', onClick: () => this._copy(text) })}
-        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: t('Copy as HA theme'), onClick: () => this._copy(haThemeYaml(e.items[0].name, e.items[0].data as never)) }) : nothing}
-        ${button({ label: t('Close'), variant: 'text', onClick: this._close })}
+        ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
+        ${button({ label: t('transfer.panel.copy'), icon: 'mdi:content-copy', onClick: () => this._copy(text) })}
+        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: t('transfer.panel.copy-as-ha-theme'), onClick: () => this._copy(haThemeYaml(e.items[0].name, e.items[0].data as never)) }) : nothing}
+        ${button({ label: t('transfer.panel.close'), variant: 'text', onClick: this._close })}
       </div>
       <div role="status" aria-live="polite" class="help">${this._done}</div>
     `;

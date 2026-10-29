@@ -174,7 +174,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
 
   private _toast(text: string, undoable: boolean): void {
     const el = this.renderRoot.querySelector('mc-ui-toast') as (HTMLElement & { show?: (o: unknown) => void }) | null;
-    el?.show?.({ text, action: undoable ? { id: 'undo', label: t('Undo') } : undefined, duration: LOOK_UNDO_TOAST_MS });
+    el?.show?.({ text, action: undoable ? { id: 'undo', label: t('look-editor.mc-slider-look-editor.undo') } : undefined, duration: LOOK_UNDO_TOAST_MS });
   }
 
   /** The card draws the look with the slider-look chunk: when it cannot load, say so here (the settings are saved, the card keeps the standard slider). */
@@ -192,14 +192,14 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this._refused = false;
     this._rm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!n) {
-      this._toast(t('{name} look is already applied.', { name }), false);
+      this._toast(t('look-editor.mc-slider-look-editor.name-look-is-already-applied', { name }), false);
       return;
     }
-    this._undoLabel = t('Undo {name} look', { name });
+    this._undoLabel = t('look-editor.mc-slider-look-editor.undo-name-look', { name });
     this.onUndoChange?.(prev);
     this.onChange?.(next);
     this._watchChunk();
-    this._toast(t('{name} look applied. {count}.', { name, count: this._countText(n) }), true);
+    this._toast(t('look-editor.mc-slider-look-editor.name-look-applied-count', { name, count: n }), true);
   }
 
   private _reset(): void {
@@ -208,16 +208,10 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     const n = changedCount(prev, next);
     if (!n) return;
     this._rm = false;
-    this._undoLabel = t('Undo reset');
+    this._undoLabel = t('look-editor.mc-slider-look-editor.undo-reset');
     this.onUndoChange?.(prev);
     this.onChange?.(next);
-    this._toast(t('Look reset. {count}.', { count: this._countText(n, true) }), true);
-  }
-
-  private _countText(n: number, removed = false): string {
-    return removed
-      ? t('{n, plural, one {# setting removed} other {# settings removed}}', { n })
-      : t('{n, plural, one {# setting changed} other {# settings changed}}', { n });
+    this._toast(t('look-editor.mc-slider-look-editor.look-reset-count', { count: n }), true);
   }
 
   private _undo(): void {
@@ -228,7 +222,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this.onUndoChange?.(undefined);
     this.onChange?.(snap);
     // the Undo button is gone after this: keep focus in the group (Reset look) and say what happened
-    this._toast(t('Look change undone.'), false);
+    this._toast(t('look-editor.mc-slider-look-editor.look-change-undone'), false);
     void this.updateComplete.then(() => {
       const reset = this.renderRoot.querySelector<HTMLButtonElement>('[data-role=reset]');
       // Reset look is disabled when the undo left no look keys: the preset chips are the next place
@@ -247,7 +241,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       help,
       control,
       onReset: set ? () => this._set({ [key]: undefined }) : undefined,
-      resetLabel: t('Reset {label}', { label: label.toLowerCase() }),
+      resetLabel: t('look-editor.mc-slider-look-editor.reset-label', { label: label.toLowerCase() }),
     });
   }
 
@@ -294,7 +288,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       // a value equal to the default removes the key (rule 2)
       onChange: (v) => this._set(o.write ? o.write(v) : { [key]: v === (SLIDER_LOOK_DEFAULTS as Bag)[key] ? undefined : v }),
     })}${set && !o.disabled
-      ? html`<button type="button" class="btn sm ghost" @click=${() => this._set({ [key]: undefined })}>${t('Reset {label}', { label: label.toLowerCase() })}</button>`
+      ? html`<button type="button" class="btn sm ghost" @click=${() => this._set({ [key]: undefined })}>${t('look-editor.mc-slider-look-editor.reset-label', { label: label.toLowerCase() })}</button>`
       : nothing}`;
   }
 
@@ -344,40 +338,40 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
 
   private _styleLabel(s: SliderTrackStyle): string {
     switch (s) {
-      case 'thin': return t('Thin');
-      case 'pill': return t('Pill');
-      case 'segmented': return t('Segmented');
-      case 'glass': return t('Glass');
-      case 'big-fill': return t('Big fill');
-      default: return t('Standard');
+      case 'thin': return t('look-editor.mc-slider-look-editor.thin');
+      case 'pill': return t('look-editor.mc-slider-look-editor.pill');
+      case 'segmented': return t('look-editor.mc-slider-look-editor.segmented');
+      case 'glass': return t('look-editor.mc-slider-look-editor.glass');
+      case 'big-fill': return t('look-editor.mc-slider-look-editor.big-fill');
+      default: return t('look-editor.mc-slider-look-editor.standard');
     }
   }
 
   private _thumbLabel(s: SliderThumb): string {
     switch (s) {
-      case 'circle': return t('Circle');
-      case 'pill': return t('Pill');
-      case 'square': return t('Square');
-      case 'none': return t('None');
-      default: return t('Line');
+      case 'circle': return t('look-editor.mc-slider-look-editor.circle');
+      case 'pill': return t('look-editor.mc-slider-look-editor.pill');
+      case 'square': return t('look-editor.mc-slider-look-editor.square');
+      case 'none': return t('look-editor.mc-slider-look-editor.none');
+      default: return t('look-editor.mc-slider-look-editor.line');
     }
   }
 
   private _positionLabel(p: ValuePosition): string {
     switch (p) {
-      case 'bubble': return t('In a bubble while dragging');
-      case 'track': return t('In the track');
-      case 'hidden': return t('Hidden');
-      default: return t('Beside the slider');
+      case 'bubble': return t('look-editor.mc-slider-look-editor.in-a-bubble-while-dragging');
+      case 'track': return t('look-editor.mc-slider-look-editor.in-the-track');
+      case 'hidden': return t('look-editor.mc-slider-look-editor.hidden');
+      default: return t('look-editor.mc-slider-look-editor.beside-the-slider');
     }
   }
 
   /** The colour source in force: the light, a gradient or Auto built on it, or Slider colour (contract precedence). */
   private _fillSource(): string {
     const c = this._c;
-    const base = c.use_entity_color ? t("Light's colour") : t('Slider colour');
-    if (c.fill_mode === 'gradient') return c.use_entity_color ? t("Gradient, light's colour to end colour") : t('Gradient');
-    if (c.fill_mode === 'auto') return c.use_entity_color ? t("Auto, from the light's colour") : t('Auto');
+    const base = c.use_entity_color ? t("look-editor.mc-slider-look-editor.light-s-colour") : t('look-editor.mc-slider-look-editor.slider-colour');
+    if (c.fill_mode === 'gradient') return c.use_entity_color ? t("look-editor.mc-slider-look-editor.gradient-light-s-colour-to-end-colour") : t('look-editor.mc-slider-look-editor.gradient');
+    if (c.fill_mode === 'auto') return c.use_entity_color ? t("look-editor.mc-slider-look-editor.auto-from-the-light-s-colour") : t('look-editor.mc-slider-look-editor.auto');
     return base;
   }
 
@@ -385,20 +379,20 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
 
   private _status(): string {
     const s = lookStatus(this._c);
-    if (s.kind === 'default') return t('Default look');
-    if (s.kind === 'preset') return t('{name} look', { name: t(SLIDER_PRESETS.find((p) => p.id === s.id)!.label) });
-    if (s.from) return t('Your own look, started from {name}', { name: t(SLIDER_PRESETS.find((p) => p.id === s.from)!.label) });
-    return t('Your own look');
+    if (s.kind === 'default') return t('look-editor.mc-slider-look-editor.default-look');
+    if (s.kind === 'preset') return t('look-editor.mc-slider-look-editor.name-look', { name: t(SLIDER_PRESETS.find((p) => p.id === s.id)!.label) });
+    if (s.from) return t('look-editor.mc-slider-look-editor.your-own-look-started-from-name', { name: t(SLIDER_PRESETS.find((p) => p.id === s.from)!.label) });
+    return t('look-editor.mc-slider-look-editor.your-own-look');
   }
 
   private _rmText(): string {
     const ua = typeof navigator === 'undefined' ? '' : navigator.userAgent;
     const where = /iPad|iPhone|iPod/.test(ua)
-      ? t('On iPad: Settings, Accessibility, Motion.')
+      ? t('look-editor.mc-slider-look-editor.on-ipad-settings-accessibility-motion')
       : /Mac/.test(ua)
-        ? t('On a Mac: System Settings, Accessibility, Display.')
-        : t('In your system settings, turn on reduced motion (Accessibility).');
-    return `${t('Your system has reduced motion on, so this look stays still.')} ${where}`;
+        ? t('look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility')
+        : t('look-editor.mc-slider-look-editor.in-your-system-settings-turn-on-reduced');
+    return `${t('look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so')} ${where}`;
   }
 
   protected render(): TemplateResult {
@@ -409,22 +403,22 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       <div class="bar">
         <p class="help status" id="sl-status">${this._status()}</p>
         <div class="btns">
-          ${this.undo ? html`<button type="button" class="btn secondary sm" @click=${() => this._undo()}>${this._undoLabel || t('Undo look change')}</button>` : nothing}
-          <button type="button" class="btn secondary sm" data-role="reset" ?disabled=${!hasLookKeys(c)} @click=${() => this._reset()}>${t('Reset look')}</button>
+          ${this.undo ? html`<button type="button" class="btn secondary sm" @click=${() => this._undo()}>${this._undoLabel || t('look-editor.mc-slider-look-editor.undo-look-change')}</button>` : nothing}
+          <button type="button" class="btn secondary sm" data-role="reset" ?disabled=${!hasLookKeys(c)} @click=${() => this._reset()}>${t('look-editor.mc-slider-look-editor.reset-look')}</button>
         </div>
       </div>
       <mc-ui-chip-group
-        .label=${t('Presets')}
+        .label=${t('look-editor.mc-slider-look-editor.presets')}
         .items=${SLIDER_PRESETS.map((p) => ({ value: p.id, label: t(p.label), description: t(p.description), preview: p.preview }))}
         .value=${chipValue}
         @mc-pick=${(e: CustomEvent<{ value: string }>) => this._applyPreset(e.detail.value)}
       ></mc-ui-chip-group>
       ${lazyChunks['slider-look'].failed()
-        ? notice({ tone: 'warn', text: t('The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.') })
+        ? notice({ tone: 'warn', text: t('look-editor.mc-slider-look-editor.the-slider-look-could-not-be-loaded-so') })
         : nothing}
       ${this._rm ? notice({ tone: 'info', text: this._rmText() }) : nothing}
       ${this._trackSection()} ${this._thumbSection()} ${this._valueSection()} ${this._shapeSection()} ${this._stopsSection()}
-      <mc-ui-toast .offset=${88} .dismissLabel=${t('Close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>
+      <mc-ui-toast .offset=${88} .dismissLabel=${t('look-editor.mc-slider-look-editor.close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>
     </div>`;
   }
 
@@ -435,61 +429,61 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     const th = (SLIDER_LOOK_DEFAULTS.track_thickness as Record<string, number>)[style];
     const vertical = c.direction === 'vertical';
     const fillItems = [
-      { value: 'solid', label: t('Solid') },
-      { value: 'gradient', label: t('Gradient') },
-      { value: 'auto', label: t('Auto'), disabledReason: this._autoOk ? undefined : t('Auto works with brightness and colour temperature sliders.') },
+      { value: 'solid', label: t('look-editor.mc-slider-look-editor.solid') },
+      { value: 'gradient', label: t('look-editor.mc-slider-look-editor.gradient') },
+      { value: 'auto', label: t('look-editor.mc-slider-look-editor.auto'), disabledReason: this._autoOk ? undefined : t('look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour') },
     ];
-    const lightReason = !this._eid ? t('Pick a light first.') : !this._isLight ? t('Only lights have a colour of their own.') : '';
+    const lightReason = !this._eid ? t('look-editor.mc-slider-look-editor.pick-a-light-first') : !this._isLight ? t('look-editor.mc-slider-look-editor.only-lights-have-a-colour-of-their-own') : '';
     return this._section(
       'track',
-      t('Track and fill'),
+      t('look-editor.mc-slider-look-editor.track-and-fill'),
       `${this._styleLabel(style)} · ${this._fillSource()}`,
       html`
         <div class="field">
-          <div class="field-head"><span class="lbl">${t('Fill')}</span></div>
-          ${seg({ role: 'radiogroup', label: t('Fill'), full: true, items: fillItems, value: mode, onChange: (v) => this._set({ fill_mode: v === 'solid' ? undefined : v }) })}
-          ${mode === 'auto' && !this._autoOk ? html`<p class="help" role="status">${t('Auto works with brightness and colour temperature sliders.')}</p>` : nothing}
-          ${mode === 'auto' ? html`<p class="help">${t('Brightness: dark to bright in the slider colour. Colour temperature: warm to cool.')}</p>` : nothing}
-          <p class="help" id="sl-source">${t('Colour source: {source}.', { source: this._fillSource() })} ${t("The light's colour, if that is on, or Slider colour is where the fill starts. Gradient and Auto build on it.")}</p>
+          <div class="field-head"><span class="lbl">${t('look-editor.mc-slider-look-editor.fill')}</span></div>
+          ${seg({ role: 'radiogroup', label: t('look-editor.mc-slider-look-editor.fill'), full: true, items: fillItems, value: mode, onChange: (v) => this._set({ fill_mode: v === 'solid' ? undefined : v }) })}
+          ${mode === 'auto' && !this._autoOk ? html`<p class="help" role="status">${t('look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour')}</p>` : nothing}
+          ${mode === 'auto' ? html`<p class="help">${t('look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider')}</p>` : nothing}
+          <p class="help" id="sl-source">${t('look-editor.mc-slider-look-editor.colour-source-source', { source: this._fillSource() })} ${t("look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or")}</p>
         </div>
-        ${mode === 'gradient' ? this._color('slider_color_to', t('End colour')) : nothing}
-        ${this._switch('use_entity_color', t("Use the light's colour"), !!c.use_entity_color, { disabled: !!lightReason && !c.use_entity_color, help: lightReason || t('Falls back to Slider colour when the light has no colour.') })}
-        ${c.use_entity_color ? html`<p class="help">${t('Following the light')} <button type="button" class="btn sm ghost" @click=${() => this._set({ use_entity_color: undefined })}>${t('Use own colour')}</button></p>` : nothing}
+        ${mode === 'gradient' ? this._color('slider_color_to', t('look-editor.mc-slider-look-editor.end-colour')) : nothing}
+        ${this._switch('use_entity_color', t("look-editor.mc-slider-look-editor.use-the-light-s-colour"), !!c.use_entity_color, { disabled: !!lightReason && !c.use_entity_color, help: lightReason || t('look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the') })}
+        ${c.use_entity_color ? html`<p class="help">${t('look-editor.mc-slider-look-editor.following-the-light')} <button type="button" class="btn sm ghost" @click=${() => this._set({ use_entity_color: undefined })}>${t('look-editor.mc-slider-look-editor.use-own-colour')}</button></p>` : nothing}
         <mc-ui-tile-group
-          .label=${t('Track style')}
+          .label=${t('look-editor.mc-slider-look-editor.track-style')}
           .items=${TRACK_TILES.map((x) => ({ value: x.value, label: this._styleLabel(x.value), preview: x.preview }))}
           .value=${style}
           @mc-pick=${(e: CustomEvent<{ value: string }>) => this._set({ track_style: e.detail.value === 'standard' ? undefined : e.detail.value })}
         ></mc-ui-tile-group>
         <div class="two">
-          ${this._num('track_thickness', t('Thickness (px)'), { placeholder: th, min: 2, max: 96, help: (c.track_thickness ?? th) < 6 ? t('The touch area stays at least 40 px.') : undefined })}
-          ${this._num('track_radius', t('Track corners (px)'), { placeholder: style === 'pill' ? 999 : style === 'big-fill' ? 20 : t('auto'), min: 0, max: 48 })}
+          ${this._num('track_thickness', t('look-editor.mc-slider-look-editor.thickness-px'), { placeholder: th, min: 2, max: 96, help: (c.track_thickness ?? th) < 6 ? t('look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px') : undefined })}
+          ${this._num('track_radius', t('look-editor.mc-slider-look-editor.track-corners-px'), { placeholder: style === 'pill' ? 999 : style === 'big-fill' ? 20 : t('look-editor.mc-slider-look-editor.auto-2'), min: 0, max: 48 })}
         </div>
-        <p class="help">${t("The module's own corners are in the Design tab.")}</p>
-        ${style === 'segmented' ? html`<div class="two">${this._num('segments', t('Segments'), { placeholder: t('auto'), min: 2, max: 20 })}${this._num('segment_gap', t('Gap (px)'), { placeholder: SLIDER_LOOK_DEFAULTS.segment_gap, min: 1, max: 8 })}</div>` : nothing}
-        ${style === 'glass' ? this._switch('glass_blur', t('Blur behind'), !!c.glass_blur, { help: t('Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets.') }) : nothing}
+        <p class="help">${t("look-editor.mc-slider-look-editor.the-module-s-own-corners-are-in-the")}</p>
+        ${style === 'segmented' ? html`<div class="two">${this._num('segments', t('look-editor.mc-slider-look-editor.segments'), { placeholder: t('look-editor.mc-slider-look-editor.auto-2'), min: 2, max: 20 })}${this._num('segment_gap', t('look-editor.mc-slider-look-editor.gap-px'), { placeholder: SLIDER_LOOK_DEFAULTS.segment_gap, min: 1, max: 8 })}</div>` : nothing}
+        ${style === 'glass' ? this._switch('glass_blur', t('look-editor.mc-slider-look-editor.blur-behind'), !!c.glass_blur, { help: t('look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives') }) : nothing}
         ${style === 'big-fill'
           ? html`
-              ${this._switch('show_icon', t('Entity icon'), c.show_icon !== false, { write: (v) => ({ show_icon: v ? undefined : false }) })}
-              ${c.show_icon !== false ? this._icon('icon', t('Icon')) : nothing}
+              ${this._switch('show_icon', t('look-editor.mc-slider-look-editor.entity-icon'), c.show_icon !== false, { write: (v) => ({ show_icon: v ? undefined : false }) })}
+              ${c.show_icon !== false ? this._icon('icon', t('look-editor.mc-slider-look-editor.icon')) : nothing}
               <div class="field">
-                <div class="field-head"><span class="lbl">${t('Icon position')}</span></div>
+                <div class="field-head"><span class="lbl">${t('look-editor.mc-slider-look-editor.icon-position')}</span></div>
                 ${seg({
                   role: 'radiogroup',
-                  label: t('Icon position'),
+                  label: t('look-editor.mc-slider-look-editor.icon-position'),
                   full: true,
                   items: [
-                    { value: 'start', label: t('Start') },
-                    { value: 'center', label: t('Centre'), disabledReason: vertical ? undefined : t('Centre needs a vertical slider.') },
+                    { value: 'start', label: t('look-editor.mc-slider-look-editor.start') },
+                    { value: 'center', label: t('look-editor.mc-slider-look-editor.centre'), disabledReason: vertical ? undefined : t('look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider') },
                   ],
                   value: c.icon_position ?? 'start',
                   onChange: (v) => this._set({ icon_position: v === 'start' ? undefined : v }),
                 })}
-                ${vertical ? nothing : html`<p class="help">${t('Centre needs a vertical slider.')}</p>`}
+                ${vertical ? nothing : html`<p class="help">${t('look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider')}</p>`}
               </div>
             `
           : nothing}
-        ${this._switch('live', t('Update while dragging'), !!c.live, { help: t('Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.') })}
+        ${this._switch('live', t('look-editor.mc-slider-look-editor.update-while-dragging'), !!c.live, { help: t('look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the') })}
       `,
     );
   }
@@ -502,31 +496,31 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     const items = (['line', 'circle', 'pill', 'square', 'none'] as SliderThumb[]).map((v) => ({ value: v, label: this._thumbLabel(v) }));
     return this._section(
       'thumb',
-      t('Handle'),
+      t('look-editor.mc-slider-look-editor.handle'),
       this._thumbLabel(thumb),
       html`
         ${seg({
           role: 'radiogroup',
-          label: t('Handle'),
+          label: t('look-editor.mc-slider-look-editor.handle'),
           full: true,
           items,
           value: thumb,
           onChange: (v) => {
             const { patch, movedValue } = thumbPatch(this._c, v);
             this._set(patch);
-            if (movedValue) this._toast(t('Value shown beside the slider, because there is no handle.'), false);
+            if (movedValue) this._toast(t('look-editor.mc-slider-look-editor.value-shown-beside-the-slider-because'), false);
           },
         })}
-        ${thumb === 'none' ? html`<p class="help">${t('The track still moves and can be used with keyboard and touch. Add a value display so people can read the level.')}</p>` : nothing}
-        ${levelUnreadable(c) ? notice({ tone: 'warn', text: t('With no handle and no value shown, the level can only be read from the fill.') }) : nothing}
+        ${thumb === 'none' ? html`<p class="help">${t('look-editor.mc-slider-look-editor.the-track-still-moves-and-can-be-used')}</p>` : nothing}
+        ${levelUnreadable(c) ? notice({ tone: 'warn', text: t('look-editor.mc-slider-look-editor.with-no-handle-and-no-value-shown-the') }) : nothing}
         ${shaped
           ? html`
-              ${this._num('thumb_size', t('Size (px)'), { placeholder: size, min: 4, max: 64, help: (c.thumb_size ?? size) < 24 ? t('The touch area stays at least 40 px.') : thumb === 'pill' ? t('The long side. The short side is 0.57 times that.') : undefined })}
+              ${this._num('thumb_size', t('look-editor.mc-slider-look-editor.size-px'), { placeholder: size, min: 4, max: 64, help: (c.thumb_size ?? size) < 24 ? t('look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px') : thumb === 'pill' ? t('look-editor.mc-slider-look-editor.the-long-side-the-short-side-is-0-57') : undefined })}
               <div class="two">
-                ${this._num('thumb_border', t('Border (px)'), { placeholder: 0, min: 0, max: 6 })}
-                ${this._num('thumb_glow', t('Glow (px)'), { placeholder: 0, min: 0, max: 30 })}
+                ${this._num('thumb_border', t('look-editor.mc-slider-look-editor.border-px'), { placeholder: 0, min: 0, max: 6 })}
+                ${this._num('thumb_glow', t('look-editor.mc-slider-look-editor.glow-px'), { placeholder: 0, min: 0, max: 30 })}
               </div>
-              ${this._color('thumb_border_color', t('Border colour'))} ${this._icon('thumb_icon', t('Icon'))}
+              ${this._color('thumb_border_color', t('look-editor.mc-slider-look-editor.border-colour'))} ${this._icon('thumb_icon', t('look-editor.mc-slider-look-editor.icon'))}
             `
           : nothing}
       `,
@@ -539,12 +533,12 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     const options = (['beside', 'bubble', 'track', 'hidden'] as ValuePosition[]).map((v) => ({ value: v, label: this._positionLabel(v) }));
     return this._section(
       'value',
-      t('Value display'),
+      t('look-editor.mc-slider-look-editor.value-display'),
       this._positionLabel(pos),
       html`
         ${field({
           id: 'sl-where',
-          label: t('Where'),
+          label: t('look-editor.mc-slider-look-editor.where'),
           control: this._select(
             'sl-where',
             pos,
@@ -561,11 +555,11 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
             'sl-where-help',
           ),
         })}
-        <p class="help" id="sl-where-help">${t('Hidden is the same as turning Show value off.')} ${t('Touch screens have no hover, so the value is shown for 2 seconds after you let go.')}</p>
-        ${this._refused ? html`<p class="help error" role="status">${t('Hidden needs a handle.')}</p>` : nothing}
-        ${this._switch('ticks', t('Ticks'), !!c.ticks)}
-        ${c.ticks ? this._num('tick_every', t('Tick every'), { placeholder: t('auto'), min: 0, max: 100000, step: 0.1 }) : nothing}
-        ${this._switch('show_limits', t('Min and max labels'), !!c.show_limits)}
+        <p class="help" id="sl-where-help">${t('look-editor.mc-slider-look-editor.hidden-is-the-same-as-turning-show-value')} ${t('look-editor.mc-slider-look-editor.touch-screens-have-no-hover-so-the-value')}</p>
+        ${this._refused ? html`<p class="help error" role="status">${t('look-editor.mc-slider-look-editor.hidden-needs-a-handle')}</p>` : nothing}
+        ${this._switch('ticks', t('look-editor.mc-slider-look-editor.ticks'), !!c.ticks)}
+        ${c.ticks ? this._num('tick_every', t('look-editor.mc-slider-look-editor.tick-every'), { placeholder: t('look-editor.mc-slider-look-editor.auto-2'), min: 0, max: 100000, step: 0.1 }) : nothing}
+        ${this._switch('show_limits', t('look-editor.mc-slider-look-editor.min-and-max-labels'), !!c.show_limits)}
       `,
     );
   }
@@ -574,17 +568,17 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     const c = this._c;
     return this._section(
       'shape',
-      t('Shape'),
-      c.track_shape ?? t('None'),
+      t('look-editor.mc-slider-look-editor.shape'),
+      c.track_shape ?? t('look-editor.mc-slider-look-editor.none'),
       html`
         <mc-shape-editor
           .shape=${c.track_shape}
           .options=${c.track_shape_options}
-          .label=${t('Slider shape')}
+          .label=${t('look-editor.mc-slider-look-editor.slider-shape')}
           .hass=${this.hass}
           .onChange=${(p: { shape?: string; shape_options?: unknown }) => this._set({ track_shape: p.shape === 'none' ? undefined : p.shape, track_shape_options: p.shape_options })}
         ></mc-shape-editor>
-        <p class="help">${t('The track and fill follow this shape. The handle stays on the track. Use a wide or tall shape for the clearest result.')}</p>
+        <p class="help">${t('look-editor.mc-slider-look-editor.the-track-and-fill-follow-this-shape-the')}</p>
       `,
     );
   }
@@ -600,16 +594,16 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     const sorted = stops.every((s, i) => i === 0 || stops[i - 1].value <= s.value);
     return this._section(
       'stops',
-      t('Stops'),
-      stops.length ? t('{n, plural, one {# stop} other {# stops}}', { n: stops.length }) : t('None'),
+      t('look-editor.mc-slider-look-editor.stops'),
+      stops.length ? t('look-editor.mc-slider-look-editor.n-3', { n: stops.length }) : t('look-editor.mc-slider-look-editor.none'),
       html`
-        ${this._switch('snap', t('Snap to stops'), !!c.snap)}
+        ${this._switch('snap', t('look-editor.mc-slider-look-editor.snap-to-stops'), !!c.snap)}
         ${stops.map((s, i) => {
           const bad = !stopInRange(s, min, max);
           const errId = `sl-stop-${i}-err`;
-          return html`<div class="stop" role="group" aria-label=${t('Stop {n}', { n: i + 1 })}>
+          return html`<div class="stop" role="group" aria-label=${t('look-editor.mc-slider-look-editor.stop-n', { n: i + 1 })}>
             <div class="field">
-              <div class="field-head"><label for="sl-stop-${i}-v">${t('Value')}</label></div>
+              <div class="field-head"><label for="sl-stop-${i}-v">${t('look-editor.mc-slider-look-editor.value')}</label></div>
               <input
                 class="input"
                 id="sl-stop-${i}-v"
@@ -625,7 +619,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
               />
             </div>
             <div class="field">
-              <div class="field-head"><label for="sl-stop-${i}-l">${t('Label')}</label></div>
+              <div class="field-head"><label for="sl-stop-${i}-l">${t('look-editor.mc-slider-look-editor.label')}</label></div>
               <input
                 class="input"
                 id="sl-stop-${i}-l"
@@ -637,26 +631,26 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
                 }}
               />
             </div>
-            <button type="button" class="icon-btn" aria-label=${t('Delete stop {n}', { n: i + 1 })} @click=${() => this._setStops(stops.filter((_x, j) => j !== i))}>
+            <button type="button" class="icon-btn" aria-label=${t('look-editor.mc-slider-look-editor.delete-stop-n', { n: i + 1 })} @click=${() => this._setStops(stops.filter((_x, j) => j !== i))}>
               <ha-icon icon="mdi:delete-outline"></ha-icon>
             </button>
-            ${bad ? html`<p class="help error stop-err" id=${errId} role="alert">${t('Stop outside the range')}</p>` : nothing}
+            ${bad ? html`<p class="help error stop-err" id=${errId} role="alert">${t('look-editor.mc-slider-look-editor.stop-outside-the-range')}</p>` : nothing}
           </div>`;
         })}
-        ${stops.length ? html`<p class="help">${t('{n} characters of each label show on the card. Screen readers get the full label.', { n: STOP_LABEL_CHARS })}</p>` : nothing}
+        ${stops.length ? html`<p class="help">${t('look-editor.mc-slider-look-editor.n-characters-of-each-label-show-on-the', { n: STOP_LABEL_CHARS })}</p>` : nothing}
         <div class="inline">
-          <button type="button" class="btn secondary sm" ?disabled=${stops.length >= MAX_STOPS} @click=${() => this._setStops([...stops, { value: nextStopValue(stops, min, max, step) }])}>${t('Add stop')}</button>
-          <button type="button" class="btn secondary sm" ?disabled=${sorted} @click=${() => this._setStops(sortStops(stops))}>${t('Sort by value')}</button>
+          <button type="button" class="btn secondary sm" ?disabled=${stops.length >= MAX_STOPS} @click=${() => this._setStops([...stops, { value: nextStopValue(stops, min, max, step) }])}>${t('look-editor.mc-slider-look-editor.add-stop')}</button>
+          <button type="button" class="btn secondary sm" ?disabled=${sorted} @click=${() => this._setStops(sortStops(stops))}>${t('look-editor.mc-slider-look-editor.sort-by-value')}</button>
         </div>
         <div class="field">
-          <div class="field-head"><label for="sl-evenly">${t('Add evenly')}</label></div>
+          <div class="field-head"><label for="sl-evenly">${t('look-editor.mc-slider-look-editor.add-evenly')}</label></div>
           <div class="inline">
             <input class="input" id="sl-evenly" type="number" min="2" max=${MAX_STOPS} step="1" aria-describedby="sl-evenly-help" .value=${String(this._evenly)} @input=${(e: Event) => (this._evenly = Number((e.target as HTMLInputElement).value) || 3)} />
-            <button type="button" class="btn secondary sm" @click=${() => this._setStops(evenStops(min, max, this._evenly))}>${t('Apply')}</button>
+            <button type="button" class="btn secondary sm" @click=${() => this._setStops(evenStops(min, max, this._evenly))}>${t('look-editor.mc-slider-look-editor.apply')}</button>
           </div>
-          <p class="help" id="sl-evenly-help">${t('Replaces the stops with this many, spread from {min} to {max}.', { min, max })}</p>
+          <p class="help" id="sl-evenly-help">${t('look-editor.mc-slider-look-editor.replaces-the-stops-with-this-many-spread', { min, max })}</p>
         </div>
-        ${stops.length >= MAX_STOPS ? html`<p class="help">${t('{n} stops is the most.', { n: MAX_STOPS })}</p>` : nothing}
+        ${stops.length >= MAX_STOPS ? html`<p class="help">${t('look-editor.mc-slider-look-editor.n-stops-is-the-most', { n: MAX_STOPS })}</p>` : nothing}
       `,
     );
   }
