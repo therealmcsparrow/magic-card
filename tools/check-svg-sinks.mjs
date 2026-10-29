@@ -263,6 +263,7 @@ export const sinksInSources = (srcDir = path.join(root, 'src'), named = new Map(
 
 // A shared chunk is fetched in the same Promise.all as the chunk that uses it: a sibling of its user, never what loads it.
 // webpack still lists it among the user's parents; it is left out of the parent set (it is checked as a sink holder itself).
+// A split chunk's `parents` are the chunks that issued its import(), so the group check reads `groups` (every chunk group the chunk is in, written by webpack.config.js): a shared chunk alone with other shared chunks in a group fails.
 // Built file names carry a content hash (magic-card-path-core.cb8d4820.js); the contract names the unhashed file.
 const unhashed = (f) => f.replace(/\.[0-9a-f]{6,}\.js$/, '.js');
 const isShared = (c, shared) => (c.files ?? []).some((f) => shared.includes(unhashed(f)));
@@ -283,7 +284,8 @@ export const sharedChunkProblems = ({ chunks, shared = sharedChunkFiles(), modul
       const held = c.modules ?? [];
       if (held.length !== listed.length || !listed.every((m) => held.includes(m))) problems.push(`shared chunk ${f} holds ${held.join(', ') || 'no modules'}, not exactly ${listed.join(', ')}`);
       if (c.entry || c.initial) problems.push(`shared chunk ${f} is an initial chunk (it must load beside its user, never with the page)`);
-      if (!(c.parents ?? []).some((id) => byId.get(id) && !isShared(byId.get(id), shared))) problems.push(`shared chunk ${f} forms a chunk group of its own: no chunk besides shared chunks loads it (it must load beside its user)`);
+      if (!c.groups && !(c.parents ?? []).some((id) => byId.get(id) && !isShared(byId.get(id), shared))) problems.push(`shared chunk ${f} forms a chunk group of its own: no chunk besides shared chunks loads it (it must load beside its user)`);
+      for (const group of c.groups ?? []) if (!group.some((id) => id !== c.id && byId.get(id) && !isShared(byId.get(id), shared))) problems.push(`shared chunk ${f} is alone in a chunk group with only shared chunks (it must load beside its user)`);
     }
   }
   return problems;
@@ -432,6 +434,9 @@ const selfTest = () => {
     ['a shared chunk with exactly its module and no import() passes', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE.replace('.js', '.cb8d4820.js')], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => 'export const a = 1;' }, 0],
     ['a shared chunk that no other chunk loads (a group of only the shared chunk) fails', { chunks: [entry, { id: 8, parents: [], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 1],
     ['a shared chunk whose only parent is another shared chunk fails', { chunks: [entry, { id: 8, parents: [], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, { id: 11, parents: [8], files: ['magic-card-lit.js'], names: ['lit'], modules: ['./src/lit.ts'] }, icon, particles], sinks, shared: [PATH_CORE, 'magic-card-lit.js'], modules: { [PATH_CORE]: ['./src/path/core.ts'], 'magic-card-lit.js': ['./src/lit.ts'] }, read: () => '' }, 2],
+    ['a shared chunk imported by decor and alone in its group (parent = importer) fails', { chunks: [entry, { id: 12, parents: [0], files: ['magic-card-decor.js'], names: ['decor'], modules: [] }, { id: 8, parents: [12], groups: [[8]], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 1],
+    ['a shared chunk in a group with its importer passes (parent = importer)', { chunks: [entry, { id: 12, parents: [0], groups: [[12, 8]], files: ['magic-card-decor.js'], names: ['decor'], modules: [] }, { id: 8, parents: [12], groups: [[12, 8]], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 0],
+    ['a shared chunk in one group with its user and another alone fails', { chunks: [entry, { id: 12, parents: [0], groups: [[12, 8]], files: ['magic-card-decor.js'], names: ['decor'], modules: [] }, { id: 8, parents: [12], groups: [[12, 8], [8]], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 1],
     ['sanitiser two chunks up passes', { chunks: [{ ...entry, modules: ['./src/index.ts', S] }, { id: 5, parents: [0], files: ['magic-card-editor.js'], names: ['editor'], modules: [] }, { ...icon, parents: [5], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
     ['an image sink beside the image sanitiser in its chunk passes', { chunks: [entry, icon, particles, imageChunk], sinks: [...sinks, imageSink] }, 0],
     ['an image sink behind the icon sanitiser only fails (pairing)', { chunks: [entry, icon, particles, { ...imageChunk, modules: ['./src/svg-image/export.ts', S] }], sinks: [...sinks, imageSink] }, 1],
@@ -652,6 +657,7 @@ const main = () => {
   const rules = readJson(path.join(root, RULES_REL), RULES_REL);
   const stats = readJson(file ? path.resolve(file) : STATS_DEFAULT, 'entry-graph stats');
   if (!stats.chunks?.length || !stats.chunks.some((c) => 'parents' in c)) throw new Error('the stats have no chunk parents (run a production build: npm run build)');
+  if (!stats.chunks.some((c) => 'groups' in c)) throw new Error('the stats have no chunk groups (run a production build: npm run build)');
   const listed = (rules.sinks ?? []).map(asSink);
   const named = new Map(listed.map((x) => [x.module, x.sanitiser]));
   const sources = readSources(path.join(root, 'src'));

@@ -90,8 +90,10 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   (src/utils/popup.ts). What must hold before the chunk loads stays in the entry and follows the config alone: whether
  *   the card is a hidden pop-up (popupHidden, `data-mc-popup-hidden`, `data-mc-popup-editor` and their host rules in the plain sheet, the taken-out-of-flow styles of the
  *   card, hui-card and grid cell: src/card/popup-nav.ts), so a pop-up card never shows in the layout early and installing
- *   the chunk moves nothing. navigateToPopup and the PopupHandle types are in popup-nav.ts too. The controller attaches
- *   after the install and opens a pop-up whose #id is already in the URL, without a history entry.
+ *   the chunk moves nothing. navigateToPopup is in src/utils/popup-run.ts and is the chunk's `api.navigate`. The "Open pop-up" action
+ *   calls it when the chunk is installed; otherwise the tap loads the chunk first (a card that only opens a pop-up has no
+ *   popup need in its config) and the card shows the chunk's failure notice with its retry button if that load fails. The
+ *   controller attaches after the install and opens a pop-up whose #id is already in the URL, without a history entry.
  * - LazyChunkName includes 'decor' (dist/magic-card-decor.js, ceiling 49,152 B, chunk entry src/card/decor-chunk.ts). It defines
  *   <mc-ring>, <mc-shape> and <mc-value-bg> in install(); the card renders their tags from its config and the entity states
  *   (src/card/card-decorations.ts), so they upgrade in place and `api` is empty. Its needs() is wantsDecor

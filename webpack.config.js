@@ -24,7 +24,9 @@ const writeI18nStats = (stats) => {
   // `size`: the source bytes of each module in that chunk (concatenated modules by their own size), for the byte counts of tools/check-chunk-dups.mjs
   const sized = (m) => (m.modules?.length ? m.modules.flatMap(sized) : [[m.name, m.size ?? 0]]);
   const sizeOf = (c) => Object.fromEntries((c.modules ?? []).flatMap(sized).filter(([n]) => n?.startsWith('./src/')));
-  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, files: c.files, modules: out.chunks[i].modules, size: sizeOf(c) })) };
+  // `groups`: the chunk ids of every chunk group the chunk belongs to (one id list per group, itself included), for tools/check-svg-sinks.mjs
+  const groupsOf = (id) => stats.compilation.chunkGroups.filter((g) => g.chunks.some((x) => x.id === id)).map((g) => g.chunks.map((x) => x.id));
+  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, groups: groupsOf(c.id), files: c.files, modules: out.chunks[i].modules, size: sizeOf(c) })) };
   fs.writeFileSync(path.resolve(path.dirname(file), 'entry-graph.json'), JSON.stringify(graph));
 };
 

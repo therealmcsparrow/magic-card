@@ -5,6 +5,7 @@ import * as popupHashModule from '../src/utils/popup-hash';
 import * as popupNav from '../src/card/popup-nav';
 import { api } from '../src/card/popup-chunk';
 import { __setLazyImporterForTests, lazyChunks } from '../src/utils/lazy-chunks';
+import { failedChunkNames } from '../src/utils/lazy-chunk';
 import type { HomeAssistant, MagicCardConfig } from '../src/types';
 
 /*
@@ -107,5 +108,21 @@ describe('"Open pop-up" action', () => {
     const el = await mount();
     el._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: 'bath' } } }, 'tap');
     expect(location.hash).toBe('#bath');
+  });
+});
+
+describe('"Open pop-up" tap when the popup chunk cannot load', () => {
+  it('a card that only opens a pop-up shows the load-failure notice with a retry button', async () => {
+    __setLazyImporterForTests('popup', (() => Promise.reject(new Error('404'))) as never);
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = await mount();
+    expect(el.shadowRoot!.querySelector('.mc-n')).toBeNull();
+    el._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');
+    await vi.waitFor(() => expect(failedChunkNames().has('popup')).toBe(true));
+    await el.updateComplete;
+    const notice = el.shadowRoot!.querySelector('.mc-n');
+    expect(notice).not.toBeNull();
+    expect(notice!.querySelector('button')).not.toBeNull();
+    expect(location.hash).toBe('');
   });
 });

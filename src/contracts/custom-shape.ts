@@ -11,14 +11,17 @@ import type { Outline } from '../utils/shape-path';
  * - magic-card.js (sync, Core-adjacent glue, at most 2,560 B net):
  *   - src/utils/shape-ref.ts: resolveCustomShape() and mergeShapeOptions() (moved out of
  *     shape-custom.ts; template-merge.ts and shape-resolve.ts import them from here).
- *   - src/utils/shape-path.ts: KINDS has 'custom'; the shared helpers the builder imports
- *     (cornerArc, cornerCentres, dedupeSegs, translate, clamp, p, parseShapeLength, SHAPE_DEFAULTS);
- *     toPath, flatten, the memo and everything after the Outline. It holds the builder in a slot:
- *     useCustomBuilder(fn) sets it and clears the memo; build / buildInset of kind 'custom' return
- *     undefined while the slot is empty (and that undefined is never memoised).
- *   - src/utils/shape-custom-loader.ts (Core lazy-loader list, particles-loader.ts pattern):
- *     loadCustomShapes(): Promise<boolean> loads the chunk once, calls useCustomBuilder, resolves
- *     false and warns once when the load fails (no retry until reload); customShapesReady(): boolean.
+ *   - src/utils/shape-custom-loader.ts (Core lazy-loader list, particles-loader.ts pattern): it holds the
+ *     builder slot. useCustomBuilder(fn) sets or removes the builder, customBuilder() reads it;
+ *     loadCustomShapes(): Promise<boolean> loads the chunk once, registers the builder, resolves
+ *     false and warns once when the load fails (silent retry, then in the background);
+ *     customShapesReady(): boolean.
+ *   - src/utils/shape-path.ts is the shared chunk dist/magic-card-shape-path.js (LAZY_SHARED_CHUNK_FILES), not part
+ *     of magic-card.js: KINDS has 'custom'; the shared helpers the builder imports (cornerArc, cornerCentres,
+ *     dedupeSegs, translate, clamp, p, parseShapeLength, SHAPE_DEFAULTS); toPath, flatten, the memo and
+ *     everything after the Outline. It reads the builder with customBuilder(); build / buildInset of kind
+ *     'custom' return undefined while the slot is empty (and that undefined is never memoised). shapeOutline
+ *     drops its memo when the builder it was filled under is a different one (arrived, replaced, removed).
  *   - src/card/shape-resolve.ts resolveShape(): for 'custom' without the builder it starts the load and returns
  *     undefined, so the element is drawn exactly as `shape: none` (no clip, no inset vars, no
  *     mc-shape, rectangle rings, flows on the box). The <mc-shape> element itself is in the `decor` chunk. It never paints a half-shaped state.
@@ -271,7 +274,7 @@ export interface CustomShapeRuntime {
 
 /**
  * The lazy chunk's module (src/utils/shape-custom.ts, dist/magic-card-shape-custom.js), loaded only
- * by src/utils/shape-custom-loader.ts and handed to shape-path's useCustomBuilder().
+ * by src/utils/shape-custom-loader.ts, which keeps its buildCustom as the builder shape-path reads.
  * buildCustom(w, h, opts, off = 0): the outline and content inset of a w x h box; off > 0 = the
  * shape moved off px inward in the same box (rings, inner border). Pure, no DOM, no padding input.
  */

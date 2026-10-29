@@ -1905,11 +1905,15 @@ export class MagicCard extends LitElement {
         break;
 
       case 'popup': {
-        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens; the card's config
-        // loads the popup chunk, so only a tap before it has installed waits for it
+        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens. A card that is itself a
+        // pop-up has the chunk loading already; an opener card fetches it on this tap, and if that fails the card shows
+        // the chunk's failure notice with its retry button
         const open = popupIfLoaded();
         if (open) open.api.navigate(action.hash);
-        else void lazyChunks.popup.load().then((ok) => ok && popupIfLoaded()?.api.navigate(action.hash));
+        else {
+          this._met.add('popup');
+          void lazyChunks.popup.load().then((ok) => ok && popupIfLoaded()?.api.navigate(action.hash));
+        }
         break;
       }
 
