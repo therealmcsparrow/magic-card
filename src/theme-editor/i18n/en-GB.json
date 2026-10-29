@@ -3722,17 +3722,17 @@
   },
   "theme-editor.start-view.the-file-is-too-large-to-edit-here": {
     "text": "The file is too large to edit here.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is too large for this editor.",
     "max": 60
   },
   "theme-editor.start-view.the-file-name-is-not-a-name-this-editor": {
     "text": "The file name is not a name this editor can write.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file name has characters the editor cannot write.",
     "max": 80
   },
   "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
     "text": "The theme name does not match the file name.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: the theme name inside the file differs from the file name.",
     "max": 75
   },
   "theme-editor.start-view.themes": {
@@ -3742,7 +3742,7 @@
   },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Heading of the error on the start screen when reading the installed themes fails.",
     "max": 40
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
@@ -3769,7 +3769,7 @@
   },
   "theme-editor.start-view.your-themes-live-in-config-themes": {
     "text": "Your themes live in /config/themes.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Hint on the start screen telling you your themes are stored in the /config/themes folder of Home Assistant.",
     "max": 60
   },
   "theme-editor.theme-editor.could-not-open-name-reason": {
@@ -3796,12 +3796,12 @@
   },
   "theme-editor.theme-editor.found-it-you-can-save-themes-now": {
     "text": "Found it. You can save themes now.",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Success message in the theme editor after a re-check finds the setup lines, so saving themes now works.",
     "max": 55
   },
   "theme-editor.theme-editor.loading-the-theme-editor": {
     "text": "Loading the theme editor...",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Loading text in the theme editor while its parts are being fetched.",
     "max": 45
   },
   "theme-editor.theme-editor.only-administrators-can-edit-themes": {
@@ -3811,7 +3811,7 @@
   },
   "theme-editor.theme-editor.still-not-found-restart-home-assistant": {
     "text": "Still not found. Restart Home Assistant if you have just added the lines.",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Message in the theme editor when a re-check still cannot find the setup lines. Tells you to restart Home Assistant if you just added them.",
     "max": 120
   },
   "theme-editor.theme-editor.the-check-failed-reason": {
@@ -3824,52 +3824,52 @@
   },
   "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
     "text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Error in the theme editor when its script cannot be loaded. Names the file and says to update Magic Card to 2026.10.06 or newer if it persists.",
     "max": 290
   },
   "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
     "text": "The theme editor could not load. Reload the page.",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Error in the theme editor when loading fails. Tells you to reload the page.",
     "max": 80
   },
   "theme-editor.theme-editor.waiting-for-home-assistant-to-connect": {
     "text": "Waiting for Home Assistant to connect...",
-    "note": "Shown in theme editor (theme-editor).",
+    "note": "Loading text in the theme editor while Home Assistant has not connected yet.",
     "max": 65
   },
   "theme-editor.tile.colour-of-the-primary-text": {
     "text": "Colour of the primary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile primary text colour field in the variables panel. Says it sets the colour of the main line of a tile.",
     "max": 45
   },
   "theme-editor.tile.colour-of-the-secondary-text": {
     "text": "Colour of the secondary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile secondary text colour field in the variables panel. Says it sets the colour of the second line of a tile, such as the state.",
     "max": 50
   },
   "theme-editor.tile.corner-radius-of-the-tile-icon": {
     "text": "Corner radius of the tile icon.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile icon radius field in the variables panel. Says it sets how round the corners of the tile icon are.",
     "max": 50
   },
   "theme-editor.tile.font-size-of-the-primary-text": {
     "text": "Font size of the primary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile primary font size field in the variables panel. Sets the size of the main line.",
     "max": 50
   },
   "theme-editor.tile.font-size-of-the-secondary-text": {
     "text": "Font size of the secondary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile secondary font size field in the variables panel. Sets the size of the second line.",
     "max": 55
   },
   "theme-editor.tile.font-weight-of-the-primary-text": {
     "text": "Font weight of the primary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile primary font weight field in the variables panel. Sets how bold the main line is.",
     "max": 55
   },
   "theme-editor.tile.font-weight-of-the-secondary-text": {
     "text": "Font weight of the secondary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile secondary font weight field in the variables panel. Sets how bold the second line is.",
     "max": 55
   },
   "theme-editor.tile.icon-radius": {
@@ -3879,27 +3879,27 @@
   },
   "theme-editor.tile.keeps-tiles-that-never-wrap-level-with": {
     "text": "Keeps tiles that never wrap level with ones that do.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for a tile minimum height field in the variables panel. Says it keeps tiles whose text never wraps level with tiles whose text does.",
     "max": 85
   },
   "theme-editor.tile.letter-spacing-of-the-primary-text": {
     "text": "Letter spacing of the primary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile primary letter spacing field in the variables panel. Sets the space between letters of the main line.",
     "max": 60
   },
   "theme-editor.tile.letter-spacing-of-the-secondary-text": {
     "text": "Letter spacing of the secondary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile secondary letter spacing field in the variables panel. Sets the space between letters of the second line.",
     "max": 60
   },
   "theme-editor.tile.line-height-of-the-primary-text": {
     "text": "Line height of the primary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile primary line height field in the variables panel. Sets the line spacing of the main line.",
     "max": 55
   },
   "theme-editor.tile.line-height-of-the-secondary-text": {
     "text": "Line height of the secondary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile secondary line height field in the variables panel. Sets the line spacing of the second line.",
     "max": 55
   },
   "theme-editor.tile.primary-letter-spacing": {
@@ -3919,7 +3919,7 @@
   },
   "theme-editor.tile.primary-text-minimum-height": {
     "text": "Primary text minimum height",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the tile variable in the variables panel that sets the minimum height of the main text line.",
     "max": 45
   },
   "theme-editor.tile.primary-text-size": {
@@ -3934,7 +3934,7 @@
   },
   "theme-editor.tile.reserves-room-for-a-missing-secondary": {
     "text": "Reserves room for a missing secondary line.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile secondary line reserve field in the variables panel. Says it keeps room for a second line that is missing.",
     "max": 70
   },
   "theme-editor.tile.secondary-letter-spacing": {
@@ -3964,7 +3964,7 @@
   },
   "theme-editor.tile.text-block-minimum-height": {
     "text": "Text block minimum height",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Label of the tile variable in the variables panel that sets the minimum height of the whole text block.",
     "max": 40
   },
   "theme-editor.tile.text-gap": {
@@ -3974,7 +3974,7 @@
   },
   "theme-editor.tile.vertical-gap-between-primary-and": {
     "text": "Vertical gap between primary and secondary text.",
-    "note": "Shown in tile (theme-editor).",
+    "note": "Helper text for the tile text gap field in the variables panel. Sets the vertical space between the main and the second line.",
     "max": 80
   },
   "theme-editor.trial-bar.editor": {
@@ -3984,12 +3984,12 @@
   },
   "theme-editor.trial-bar.move-to-bottom": {
     "text": "Move to bottom",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Tooltip and label of the trial bar button that moves the bar to the bottom of the screen.",
     "max": 25
   },
   "theme-editor.trial-bar.move-to-top": {
     "text": "Move to top",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Tooltip and label of the trial bar button that moves the bar to the top of the screen.",
     "max": 25
   },
   "theme-editor.trial-bar.n-not-valid-left-out": {
@@ -4012,7 +4012,7 @@
   },
   "theme-editor.trial-bar.revert-theme-trial": {
     "text": "Revert theme trial",
-    "note": "Shown in trial bar (theme-editor).",
+    "note": "Tooltip and label of the trial bar button that ends the Try on dashboard trial and returns this tab to your own theme.",
     "max": 30
   },
   "theme-editor.trial-bar.theme-trial": {
@@ -4039,32 +4039,32 @@
   },
   "theme-editor.trial.reverted-this-tab-shows-your-own-theme": {
     "text": "Reverted. This tab shows your own theme again.",
-    "note": "Shown in trial (theme-editor).",
+    "note": "Toast after you end a theme trial. Says this tab shows your own theme again.",
     "max": 75
   },
   "theme-editor.trial.saved-this-tab-now-uses-the-saved-theme": {
     "text": "Saved. This tab now uses the saved theme file.",
-    "note": "Shown in trial (theme-editor).",
+    "note": "Toast after you save a theme during a trial. Says this tab now uses the saved theme file.",
     "max": 75
   },
   "theme-editor.trial.trial-ended-after-10-minutes": {
     "text": "Trial ended after 10 minutes.",
-    "note": "Shown in trial (theme-editor).",
+    "note": "Toast when a theme trial stops by itself after its 10 minute limit.",
     "max": 50
   },
   "theme-editor.trial.trial-ended-because-the-theme-changed": {
     "text": "Trial ended because the theme changed.",
-    "note": "Shown in trial (theme-editor).",
+    "note": "Toast when a theme trial stops because the theme was changed while it ran.",
     "max": 65
   },
   "theme-editor.ultra-card.accents-and-active-elements": {
     "text": "Accents and active elements.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Helper text for an Ultra Card colour field in the variables panel. Says it colours accents and active elements.",
     "max": 45
   },
   "theme-editor.ultra-card.borders-and-separators": {
     "text": "Borders and separators.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Helper text for an Ultra Card colour field in the variables panel. Says it colours borders and separators.",
     "max": 40
   },
   "theme-editor.ultra-card.card-background": {
@@ -4094,7 +4094,7 @@
   },
   "theme-editor.ultra-card.corner-radius-of-the-card": {
     "text": "Corner radius of the card.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Helper text for the Ultra Card radius field in the variables panel. Sets how round the card corners are.",
     "max": 45
   },
   "theme-editor.ultra-card.divider-colour": {
@@ -4139,12 +4139,12 @@
   },
   "theme-editor.ultra-card.shadow-of-the-card": {
     "text": "Shadow of the card.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Helper text for the Ultra Card shadow field in the variables panel. Sets the shadow drawn around the card.",
     "max": 35
   },
   "theme-editor.ultra-card.takes-priority-over-the-card-background": {
     "text": "Takes priority over the card background.",
-    "note": "Shown in ultra card (theme-editor).",
+    "note": "Helper text for an Ultra Card background field in the variables panel. Says this value wins over the general card background.",
     "max": 65
   },
   "theme-editor.util.a-and-b": {
@@ -4186,7 +4186,7 @@
   },
   "theme-editor.util.this-name-is-reserved": {
     "text": "This name is reserved.",
-    "note": "Shown in util (theme-editor).",
+    "note": "Validation error under a variable name field when the name is reserved by the editor and cannot be used.",
     "max": 40
   },
   "theme-editor.util.use-lowercase-letters-numbers-hyphens": {

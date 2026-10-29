@@ -17,7 +17,7 @@
   },
   "svg-editor.combine.select-a-second-shape": {
     "text": "Select a second shape.",
-    "note": "Shown in combine (svg-editor).",
+    "note": "Hint in the icon editor combine panel when only one shape is selected. Tells the user a second shape is needed.",
     "max": 40
   },
   "svg-editor.combine.select-closed-shapes-open-lines-have-no": {
@@ -27,12 +27,12 @@
   },
   "svg-editor.combine.select-two-or-more-closed-shapes": {
     "text": "Select two or more closed shapes.",
-    "note": "Shown in combine (svg-editor).",
+    "note": "Hint in the icon editor combine panel when too few shapes are selected. Says open lines do not count.",
     "max": 55
   },
   "svg-editor.combine.text-cannot-be-combined-with-other": {
     "text": "Text cannot be combined with other layers.",
-    "note": "Shown in combine (svg-editor).",
+    "note": "Hint in the icon editor combine panel when a text layer is selected. Explains why combining is unavailable.",
     "max": 70
   },
   "svg-editor.layers.collapse-name": {
@@ -82,12 +82,12 @@
   },
   "svg-editor.layers.it-cannot-move-further": {
     "text": "It cannot move further.",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip on a disabled reorder button in the icon editor layers panel. The layer is already at the end of the list.",
     "max": 40
   },
   "svg-editor.layers.it-is-already-at-the-top-level": {
     "text": "It is already at the top level.",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip on the disabled Move out of group button in the icon editor layers panel. The layer is not inside a group.",
     "max": 50
   },
   "svg-editor.layers.layers": {
@@ -110,12 +110,12 @@
   },
   "svg-editor.layers.move-into-group-above": {
     "text": "Move into group above",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Button label in the icon editor layers panel. Puts the layer inside the group directly above it.",
     "max": 35
   },
   "svg-editor.layers.move-out-of-group": {
     "text": "Move out of group",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Button label in the icon editor layers panel. Takes the layer out of its group and up one level.",
     "max": 30
   },
   "svg-editor.layers.move-to": {
@@ -177,7 +177,7 @@
   },
   "svg-editor.layers.reaches-outside-the-20-x-20-safe-area": {
     "text": "Reaches outside the 20 x 20 safe area",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Warning badge on a layer in the icon editor layers panel. Flags a layer that extends beyond the 20 x 20 safe area of the icon.",
     "max": 60
   },
   "svg-editor.layers.show-name": {
@@ -190,7 +190,7 @@
   },
   "svg-editor.layers.there-is-no-group-above": {
     "text": "There is no group above.",
-    "note": "Shown in layers (svg-editor).",
+    "note": "Tooltip on the disabled Move into group above button in the icon editor layers panel. No group sits directly above the layer.",
     "max": 40
   },
   "svg-editor.layers.top-level": {
@@ -283,7 +283,7 @@
   },
   "svg-editor.lips.some-panels-are-hidden-as-you-left-them": {
     "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
-    "note": "Shown in lips (svg-editor).",
+    "note": "Hint in the icon editor when side panels are collapsed. Tells the user the edge arrows bring the panels back.",
     "max": 135
   },
   "svg-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
@@ -368,22 +368,22 @@
   },
   "svg-editor.mc-svg-editor.copied-the-accent-path": {
     "text": "Copied the accent path.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Toast in the icon editor after the user copies the accent path. Confirms the copy worked.",
     "max": 40
   },
   "svg-editor.mc-svg-editor.copied-the-path-and-viewbox-for-home": {
     "text": "Copied the path and viewBox, for Home Assistant custom icon sets. See the docs.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Toast in the icon editor after copying the path and viewBox. Confirms the copy and points to the docs for custom icon sets.",
     "max": 130
   },
   "svg-editor.mc-svg-editor.copied-the-svg": {
     "text": "Copied the SVG.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Toast in the icon editor after the user copies the full SVG markup. Confirms the copy worked.",
     "max": 25
   },
   "svg-editor.mc-svg-editor.could-not-copy-select-the-markup-and": {
     "text": "Could not copy. Select the markup and copy it yourself.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when clipboard access fails. Tells the user to select the markup and copy it by hand.",
     "max": 90
   },
   "svg-editor.mc-svg-editor.could-not-find-name-check-the-name-or": {
@@ -396,17 +396,17 @@
   },
   "svg-editor.mc-svg-editor.could-not-load-that-icon": {
     "text": "Could not load that icon.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when a chosen icon cannot be read, for example from the library or an icon picker.",
     "max": 40
   },
   "svg-editor.mc-svg-editor.could-not-load-the-export-and-import": {
     "text": "Could not load the export and import tool. Try again.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when the export and import code fails to load. Asks the user to retry.",
     "max": 85
   },
   "svg-editor.mc-svg-editor.could-not-read-that-file": {
     "text": "Could not read that file.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when opening a file from disk fails.",
     "max": 40
   },
   "svg-editor.mc-svg-editor.could-not-save-name-try-again": {
@@ -419,12 +419,12 @@
   },
   "svg-editor.mc-svg-editor.couldn-t-load-the-shape-tools-try-again": {
     "text": "Couldn't load the shape tools. Try again.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when the shape tool code fails to load. Asks the user to retry.",
     "max": 70
   },
   "svg-editor.mc-svg-editor.draw-something-first": {
     "text": "Draw something first",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Tooltip on a disabled action in the icon editor, such as Use or Save, while the drawing is still empty.",
     "max": 35
   },
   "svg-editor.mc-svg-editor.drawing-opened": {
@@ -449,7 +449,7 @@
   },
   "svg-editor.mc-svg-editor.everything-else-was-kept": {
     "text": "Everything else was kept.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Second sentence of an import toast in the icon editor. Reassures the user that content not listed as removed was kept.",
     "max": 40
   },
   "svg-editor.mc-svg-editor.finish-path": {
@@ -497,7 +497,7 @@
   },
   "svg-editor.mc-svg-editor.groups-deeper-than-4-levels-were-merged": {
     "text": "Groups deeper than 4 levels were merged.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Import notice in the icon editor. Tells the user that nested groups beyond four levels were flattened.",
     "max": 65
   },
   "svg-editor.mc-svg-editor.hand": {
@@ -567,17 +567,17 @@
   },
   "svg-editor.mc-svg-editor.nothing-is-left-of-these-shapes": {
     "text": "Nothing is left of these shapes.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Toast in the icon editor when a combine, subtract or intersect would leave no shape. Explains why the result is empty.",
     "max": 55
   },
   "svg-editor.mc-svg-editor.nothing-was-changed": {
     "text": "Nothing was changed.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Closing sentence of an icon editor toast. Tells the user the drawing was left as it was after a refused action.",
     "max": 35
   },
   "svg-editor.mc-svg-editor.opacity-is-not-kept-icons-are-one-solid": {
     "text": "Opacity is not kept. Icons are one solid colour.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Import notice in the icon editor. Tells the user that transparency in the file is dropped because icons use one solid colour.",
     "max": 80
   },
   "svg-editor.mc-svg-editor.opened-name-as-the-drawing-undo-brings": {
@@ -686,17 +686,17 @@
   },
   "svg-editor.mc-svg-editor.that-file-has-no-shapes-an-icon-can-use": {
     "text": "That file has no shapes an icon can use.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when an opened file holds nothing drawable, such as only images or text.",
     "max": 65
   },
   "svg-editor.mc-svg-editor.the-library-could-not-accept-this-icon": {
     "text": "The library could not accept this icon. Tidy it and try again.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when the library rejects a save. Suggests simplifying the drawing and retrying.",
     "max": 100
   },
   "svg-editor.mc-svg-editor.the-library-is-full-delete-an-icon-you": {
     "text": "The library is full. Delete an icon you no longer use.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error toast in the icon editor when saving to a full library. Tells the user to delete an icon to make room.",
     "max": 90
   },
   "svg-editor.mc-svg-editor.the-safe-area-is-hidden": {
@@ -706,17 +706,17 @@
   },
   "svg-editor.mc-svg-editor.the-svg-is-larger-than-32-kb": {
     "text": "The SVG is larger than 32 KB.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error in the icon editor when pasted or opened markup exceeds the 32 KB size limit.",
     "max": 50
   },
   "svg-editor.mc-svg-editor.the-svg-is-too-complex": {
     "text": "The SVG is too complex.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error in the icon editor when pasted or opened markup has too many elements or points to load.",
     "max": 40
   },
   "svg-editor.mc-svg-editor.these-shapes-have-too-many-points-to": {
     "text": "These shapes have too many points to combine.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Toast in the icon editor when a combine operation is refused for complexity. Tells the user why nothing happened.",
     "max": 75
   },
   "svg-editor.mc-svg-editor.this-icon-has-c-points-you-can-edit-and": {
@@ -742,7 +742,7 @@
   },
   "svg-editor.mc-svg-editor.this-is-not-valid-svg-check-that-it": {
     "text": "This is not valid SVG. Check that it starts with <svg and is closed.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Error in the icon editor when pasted markup cannot be parsed. Tells the user what a valid file looks like.",
     "max": 110
   },
   "svg-editor.mc-svg-editor.tidy-now": {
@@ -752,7 +752,7 @@
   },
   "svg-editor.mc-svg-editor.transforms-were-applied-to-the-paths-the": {
     "text": "Transforms were applied to the paths. The drawing looks the same, the markup is different.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Import notice in the icon editor. Explains transforms were baked into the paths, so the drawing is unchanged but the code differs.",
     "max": 145
   },
   "svg-editor.mc-svg-editor.try-again": {
@@ -772,7 +772,7 @@
   },
   "svg-editor.mc-svg-editor.use-40-characters-or-fewer": {
     "text": "Use 40 characters or fewer.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Validation message under the icon name field in the icon editor save form. Names are limited to 40 characters.",
     "max": 45
   },
   "svg-editor.mc-svg-editor.use-min-to-max": {
@@ -791,7 +791,7 @@
   },
   "svg-editor.mc-svg-editor.your-account-can-use-the-library-but-not": {
     "text": "Your account can use the library but not change it. Ask an admin, or keep this icon in the card only.",
-    "note": "Shown in mc svg editor (svg-editor).",
+    "note": "Permission error in the icon editor when a non-admin tries to save to the library. Suggests asking an admin or keeping the icon in the card.",
     "max": 165
   },
   "svg-editor.menu.add-point-after": {
@@ -916,7 +916,7 @@
   },
   "svg-editor.menu.nothing-to-export-yet": {
     "text": "Nothing to export yet.",
-    "note": "Shown in menu (svg-editor).",
+    "note": "Tooltip on the disabled export entry in the icon editor menu while the drawing is empty.",
     "max": 40
   },
   "svg-editor.menu.path": {
@@ -951,7 +951,7 @@
   },
   "svg-editor.menu.select-two-or-more-shapes-to-align-them": {
     "text": "Select two or more shapes to align them to each other.",
-    "note": "Shown in menu (svg-editor).",
+    "note": "Tooltip on the disabled align entries in the icon editor menu. Explains alignment needs at least two shapes.",
     "max": 90
   },
   "svg-editor.menu.smooth": {
@@ -971,7 +971,7 @@
   },
   "svg-editor.menu.this-is-the-last-point-of-an-open-line": {
     "text": "This is the last point of an open line.",
-    "note": "Shown in menu (svg-editor).",
+    "note": "Tooltip on a disabled point menu entry in the icon editor. Explains the action is unavailable on the end point of an open line.",
     "max": 65
   },
   "svg-editor.menu.zoom-to-fit": {
@@ -1344,12 +1344,12 @@
   },
   "svg-editor.pathtools.couldn-t-load-the-path-tools-try-again": {
     "text": "Couldn't load the path tools. Try again.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Error toast in the icon editor when the path tool code fails to load. Asks the user to retry.",
     "max": 70
   },
   "svg-editor.pathtools.join-works-on-open-paths-use-split-first": {
     "text": "Join works on open paths. Use Split first to open a closed one.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Hint in the icon editor path tools when Join is used on a closed shape. Tells the user to Split it first.",
     "max": 105
   },
   "svg-editor.pathtools.name-applied-before-points-before-after": {
@@ -1364,22 +1364,22 @@
   },
   "svg-editor.pathtools.select-a-closed-shape-open-lines-have-no": {
     "text": "Select a closed shape. Open lines have no area.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Hint in the icon editor path tools when an area-based action is used on an open line. Explains it needs a closed shape.",
     "max": 80
   },
   "svg-editor.pathtools.select-a-shape-first": {
     "text": "Select a shape first.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Hint in the icon editor path tools when an action is used with nothing selected.",
     "max": 35
   },
   "svg-editor.pathtools.select-one-point-between-the-ends-with": {
     "text": "Select one point between the ends with the Node tool.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Hint in the icon editor path tools when Split has no valid point. Tells the user to pick one inner point with the Node tool.",
     "max": 85
   },
   "svg-editor.pathtools.this-shape-has-no-stroke-to-outline": {
     "text": "This shape has no stroke to outline.",
-    "note": "Shown in pathtools (svg-editor).",
+    "note": "Hint in the icon editor path tools when Outline stroke is used on a shape without a stroke.",
     "max": 60
   },
   "svg-editor.tools.first-corner-set-move-then-press-enter": {
@@ -1504,7 +1504,7 @@
   },
   "svg-editor.views.changes-you-have-not-saved-are-lost": {
     "text": "Changes you have not saved are lost.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Body of the leave confirmation dialog in the icon editor. Warns that unsaved edits will be discarded.",
     "max": 60
   },
   "svg-editor.views.click-and-drag-on-the-canvas-or-click": {
@@ -1645,7 +1645,7 @@
   },
   "svg-editor.views.drag-to-draw-the-line-is-smoothed-when": {
     "text": "Drag to draw. The line is smoothed when you let go.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Canvas hint in the icon editor while the pencil tool is active. Explains how to draw and that the line is smoothed on release.",
     "max": 85
   },
   "svg-editor.views.drag-to-move-the-view-scroll-to-move": {
@@ -1690,7 +1690,7 @@
   },
   "svg-editor.views.fewer-decimals-make-a-smaller-icon": {
     "text": "Fewer decimals make a smaller icon. Hidden layers are not saved.",
-    "note": "Shown in views (svg-editor).",
+    "note": "Hint in the icon editor export panel. Explains the decimals setting trades precision for size and that hidden layers are left out.",
     "max": 105
   },
   "svg-editor.views.fill": {
