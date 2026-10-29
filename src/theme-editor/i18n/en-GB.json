@@ -2292,17 +2292,17 @@
   },
   "theme-editor.mushroom.alarm-armed-state-rgb": {
     "text": "Alarm armed state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an armed alarm, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.alarm-disarmed-state-rgb": {
     "text": "Alarm disarmed state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a disarmed alarm, entered as three numbers.",
     "max": 45
   },
   "theme-editor.mushroom.alarm-triggered-state-rgb": {
     "text": "Alarm triggered state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a triggered alarm, entered as three numbers.",
     "max": 45
   },
   "theme-editor.mushroom.amber-rgb": {
@@ -2312,7 +2312,7 @@
   },
   "theme-editor.mushroom.badge-icon-size": {
     "text": "Badge icon size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the icon inside a Mushroom badge.",
     "max": 30
   },
   "theme-editor.mushroom.badge-radius": {
@@ -2332,7 +2332,7 @@
   },
   "theme-editor.mushroom.blue-grey-rgb": {
     "text": "Blue grey (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the blue grey palette colour, entered as three numbers.",
     "max": 25
   },
   "theme-editor.mushroom.blue-rgb": {
@@ -2347,7 +2347,7 @@
   },
   "theme-editor.mushroom.button-width-as-a-multiple-of-its-height": {
     "text": "Button width as a multiple of its height.",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Helper text under the control button ratio field in the variables panel. Says the width is a multiple of the height, so 2 makes a button twice as wide as it is tall.",
     "max": 70
   },
   "theme-editor.mushroom.card-spacing": {
@@ -2357,12 +2357,12 @@
   },
   "theme-editor.mushroom.chip-avatar-padding": {
     "text": "Chip avatar padding",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the space around the avatar picture inside a chip.",
     "max": 35
   },
   "theme-editor.mushroom.chip-avatar-radius": {
     "text": "Chip avatar radius",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets how round the corners of a chip avatar are.",
     "max": 30
   },
   "theme-editor.mushroom.chip-background": {
@@ -2372,12 +2372,12 @@
   },
   "theme-editor.mushroom.chip-border-colour": {
     "text": "Chip border colour",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the colour of the border around chips.",
     "max": 30
   },
   "theme-editor.mushroom.chip-border-width": {
     "text": "Chip border width",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the thickness of the border around chips.",
     "max": 30
   },
   "theme-editor.mushroom.chip-height": {
@@ -2387,7 +2387,7 @@
   },
   "theme-editor.mushroom.chip-icon-size": {
     "text": "Chip icon size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the icon inside a chip.",
     "max": 25
   },
   "theme-editor.mushroom.chip-padding": {
@@ -2412,57 +2412,57 @@
   },
   "theme-editor.mushroom.chip-text-size": {
     "text": "Chip text size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the font size of the text in a chip.",
     "max": 25
   },
   "theme-editor.mushroom.chip-text-weight": {
     "text": "Chip text weight",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets how bold the text in a chip is.",
     "max": 30
   },
   "theme-editor.mushroom.climate-auto-state-rgb": {
     "text": "Climate auto state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in auto mode, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.climate-cool-state-rgb": {
     "text": "Climate cool state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in cool mode, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.climate-dry-state-rgb": {
     "text": "Climate dry state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in dry mode, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.climate-fan-only-state-rgb": {
     "text": "Climate fan only state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in fan only mode, entered as three numbers.",
     "max": 45
   },
   "theme-editor.mushroom.climate-heat-cool-state-rgb": {
     "text": "Climate heat cool state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in heat cool mode, entered as three numbers.",
     "max": 50
   },
   "theme-editor.mushroom.climate-heat-state-rgb": {
     "text": "Climate heat state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device in heat mode, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.climate-idle-state-rgb": {
     "text": "Climate idle state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an idle climate device, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.climate-off-state-rgb": {
     "text": "Climate off state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a climate device that is off, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.control-button-ratio": {
     "text": "Control button ratio",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the width of control buttons as a multiple of their height.",
     "max": 35
   },
   "theme-editor.mushroom.control-height": {
@@ -2472,7 +2472,7 @@
   },
   "theme-editor.mushroom.control-icon-size": {
     "text": "Control icon size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the icon inside control buttons.",
     "max": 30
   },
   "theme-editor.mushroom.control-radius": {
@@ -2487,12 +2487,12 @@
   },
   "theme-editor.mushroom.cover-closed-state-rgb": {
     "text": "Cover closed state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a closed cover, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.cover-open-state-rgb": {
     "text": "Cover open state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an open cover, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.cyan-rgb": {
@@ -2507,22 +2507,22 @@
   },
   "theme-editor.mushroom.dark-grey-rgb": {
     "text": "Dark grey (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the dark grey palette colour, entered as three numbers.",
     "max": 25
   },
   "theme-editor.mushroom.deep-orange-rgb": {
     "text": "Deep orange (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the deep orange palette colour, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.deep-purple-rgb": {
     "text": "Deep purple (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the deep purple palette colour, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.delay-in-milliseconds": {
     "text": "Delay in milliseconds.",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Helper text under a Mushroom delay field in the variables panel. Says the value is a number of milliseconds.",
     "max": 40
   },
   "theme-editor.mushroom.disabled-rgb": {
@@ -2532,17 +2532,17 @@
   },
   "theme-editor.mushroom.entity-state-rgb": {
     "text": "Entity state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an entity in its default state, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.fan-state-rgb": {
     "text": "Fan state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a fan that is on, entered as three numbers.",
     "max": 25
   },
   "theme-editor.mushroom.gap-between-the-parts-of-a-card": {
     "text": "Gap between the parts of a card.",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Helper text under a Mushroom spacing field in the variables panel. Says the value is the space between the parts of a card.",
     "max": 55
   },
   "theme-editor.mushroom.green-rgb": {
@@ -2557,7 +2557,7 @@
   },
   "theme-editor.mushroom.humidifier-state-rgb": {
     "text": "Humidifier state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a humidifier that is on, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.icon-radius": {
@@ -2572,7 +2572,7 @@
   },
   "theme-editor.mushroom.icon-symbol-size": {
     "text": "Icon symbol size",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the size of the symbol inside the round icon shape.",
     "max": 30
   },
   "theme-editor.mushroom.indigo-rgb": {
@@ -2592,22 +2592,22 @@
   },
   "theme-editor.mushroom.light-blue-rgb": {
     "text": "Light blue (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the light blue palette colour, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.light-green-rgb": {
     "text": "Light green (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the light green palette colour, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.light-grey-rgb": {
     "text": "Light grey (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB value of the light grey palette colour, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.light-state-rgb": {
     "text": "Light state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a light that is on, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.lime-rgb": {
@@ -2617,42 +2617,42 @@
   },
   "theme-editor.mushroom.lock-locked-state-rgb": {
     "text": "Lock locked state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a locked lock, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.lock-pending-state-rgb": {
     "text": "Lock pending state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a lock that is locking or unlocking, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.lock-state-rgb": {
     "text": "Lock state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the default RGB colour of a lock, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.lock-unlocked-state-rgb": {
     "text": "Lock unlocked state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an unlocked lock, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.media-player-state-rgb": {
     "text": "Media player state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an active media player, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.movement-before-a-slider-reacts": {
     "text": "Movement before a slider reacts.",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Helper text under a Mushroom slider threshold field in the variables panel. Says the value is how far you must drag before the slider moves.",
     "max": 55
   },
   "theme-editor.mushroom.number-input-debounce": {
     "text": "Number input debounce",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets how long to wait after you stop typing in a number field before the value is sent.",
     "max": 35
   },
   "theme-editor.mushroom.number-state-rgb": {
     "text": "Number state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a number entity, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.orange-rgb": {
@@ -2662,22 +2662,22 @@
   },
   "theme-editor.mushroom.person-home-state-rgb": {
     "text": "Person home state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person who is home, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.person-not-home-state-rgb": {
     "text": "Person not home state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person who is away, entered as three numbers.",
     "max": 45
   },
   "theme-editor.mushroom.person-unknown-state-rgb": {
     "text": "Person unknown state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person whose location is unknown, entered as three numbers.",
     "max": 45
   },
   "theme-editor.mushroom.person-zone-state-rgb": {
     "text": "Person zone state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of a person who is in a named zone, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.pink-rgb": {
@@ -2757,12 +2757,12 @@
   },
   "theme-editor.mushroom.subtitle-letter-spacing": {
     "text": "Subtitle letter spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the space between letters in a card subtitle.",
     "max": 40
   },
   "theme-editor.mushroom.subtitle-line-height": {
     "text": "Subtitle line height",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the line height of a card subtitle.",
     "max": 35
   },
   "theme-editor.mushroom.subtitle-size": {
@@ -2787,7 +2787,7 @@
   },
   "theme-editor.mushroom.three-numbers-0-to-255-like-244-67-54": {
     "text": "Three numbers, 0 to 255, like 244, 67, 54.",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Helper text under every Mushroom RGB colour field in the variables panel. Says to enter red, green and blue as three numbers from 0 to 255.",
     "max": 70
   },
   "theme-editor.mushroom.title-colour": {
@@ -2797,12 +2797,12 @@
   },
   "theme-editor.mushroom.title-letter-spacing": {
     "text": "Title letter spacing",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the space between letters in a card title.",
     "max": 35
   },
   "theme-editor.mushroom.title-line-height": {
     "text": "Title line height",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the line height of a card title.",
     "max": 30
   },
   "theme-editor.mushroom.title-padding": {
@@ -2827,22 +2827,22 @@
   },
   "theme-editor.mushroom.update-installing-rgb": {
     "text": "Update installing (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an update that is installing, entered as three numbers.",
     "max": 40
   },
   "theme-editor.mushroom.update-off-rgb": {
     "text": "Update off (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an update entity with nothing to install, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.update-on-state-rgb": {
     "text": "Update on state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an update that is available, entered as three numbers.",
     "max": 35
   },
   "theme-editor.mushroom.vacuum-state-rgb": {
     "text": "Vacuum state (RGB)",
-    "note": "Shown in mushroom (theme-editor).",
+    "note": "Label of a Mushroom variable in the variables panel. Sets the RGB colour of an active vacuum, entered as three numbers.",
     "max": 30
   },
   "theme-editor.mushroom.warning-rgb": {
@@ -2911,7 +2911,7 @@
   },
   "theme-editor.preset-dialog.enter-a-name-of-1-to-80-characters": {
     "text": "Enter a name of 1 to 80 characters.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Validation error under the name field in the preset dialog. Appears when the name is empty or longer than 80 characters.",
     "max": 60
   },
   "theme-editor.preset-dialog.export-theme": {
@@ -2926,7 +2926,7 @@
   },
   "theme-editor.preset-dialog.it-did-not-work": {
     "text": "It did not work.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Fallback error in the preset dialog when saving or deleting a preset fails without a more specific reason.",
     "max": 30
   },
   "theme-editor.preset-dialog.loading": {
@@ -2936,7 +2936,7 @@
   },
   "theme-editor.preset-dialog.magic-card-utils-did-not-accept-this": {
     "text": "Magic Card Utils did not accept this preset. Check the name and the values.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Error in the preset dialog when Magic Card Utils rejects a save. Tells you to check the name and the values and try again.",
     "max": 120
   },
   "theme-editor.preset-dialog.name": {
@@ -2955,17 +2955,17 @@
   },
   "theme-editor.preset-dialog.nothing-was-saved": {
     "text": "Nothing was saved",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Heading of the error in the preset dialog after a failed save. Tells you the preset was not stored; the reason follows.",
     "max": 30
   },
   "theme-editor.preset-dialog.only-administrators-can-change-presets": {
     "text": "Only administrators can change presets.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Error in the preset dialog for non-administrators. Explains that saving or deleting presets needs an administrator account.",
     "max": 65
   },
   "theme-editor.preset-dialog.open-as-new-theme": {
     "text": "Open as new theme",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Button in the preset dialog that opens the selected preset as a new theme in the editor, ready to try and save.",
     "max": 30
   },
   "theme-editor.preset-dialog.rename": {
@@ -3006,17 +3006,17 @@
   },
   "theme-editor.preset-dialog.saving-a-theme-needs-one-setup-step-in": {
     "text": "Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Notice in the preset dialog when the one-time Home Assistant setup for saving themes is missing. Says Try on dashboard still works and the editor lists the lines to add.",
     "max": 200
   },
   "theme-editor.preset-dialog.the-tools-could-not-load-check-your": {
     "text": "The tools could not load. Check your connection.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Error in the preset dialog when the helper tools for presets fail to load. Tells you to check your connection.",
     "max": 80
   },
   "theme-editor.preset-dialog.these-are-presets-not-themes-on-your": {
     "text": "{count, plural, one {This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.} other {These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.}}",
-    "note": "Shown in the dialog after presets were saved. {count} is how many presets were saved; one preset is opened as a new theme, several are picked under My presets.",
+    "note": "Message in the preset dialog after saving. {count} is how many presets were saved; for one the text says to open it as a new theme, for several to choose New theme and pick them under My presets.",
     "max": 165,
     "vars": {
       "count": "The count the text is about."
@@ -3024,12 +3024,12 @@
   },
   "theme-editor.preset-dialog.this-preset-changed-elsewhere-reopen-the": {
     "text": "This preset changed elsewhere. Reopen the list.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Error in the preset dialog when the preset was changed in another tab or by another user. Tells you to reopen the list for the current version.",
     "max": 80
   },
   "theme-editor.preset-dialog.this-removes-it-from-my-presets-themes": {
     "text": "This removes it from My presets. Themes made from it stay.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Confirmation text in the preset dialog before a preset is deleted. Says themes already made from it are kept.",
     "max": 95
   },
   "theme-editor.preset-dialog.try-again": {
@@ -3039,12 +3039,12 @@
   },
   "theme-editor.preset-dialog.update-magic-card-utils-to-keep-theme": {
     "text": "Update Magic Card Utils to keep theme presets. A file with one theme still opens.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Warning in the preset dialog when the installed Magic Card Utils is too old to keep theme presets. Says a file with a single theme still opens.",
     "max": 130
   },
   "theme-editor.preset-dialog.you-can-keep-100-presets-delete-one": {
     "text": "You can keep 100 presets. Delete one first.",
-    "note": "Shown in preset dialog (theme-editor).",
+    "note": "Error in the preset dialog when the limit of 100 saved presets is reached. Tells you to delete one before saving another.",
     "max": 70
   },
   "theme-editor.preview-cards.button": {
@@ -3068,12 +3068,12 @@
   },
   "theme-editor.preview-cards.home-assistant-card-helpers-are-not": {
     "text": "Home Assistant card helpers are not available",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Heading of the placeholder in the preview when Home Assistant card helpers cannot be reached, so the real card cannot be drawn.",
     "max": 75
   },
   "theme-editor.preview-cards.home-assistant-is-not-connected": {
     "text": "Home Assistant is not connected.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Placeholder in the preview cards when there is no live connection to Home Assistant, so no card can be drawn yet.",
     "max": 55
   },
   "theme-editor.preview-cards.label-could-not-be-loaded": {
@@ -3147,17 +3147,17 @@
   },
   "theme-editor.preview-cards.preview-not-available": {
     "text": "Preview not available",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Heading of the placeholder in the preview when a sample card cannot be displayed.",
     "max": 35
   },
   "theme-editor.preview-cards.the-card-is-loaded-for-the-preview": {
     "text": "The card is loaded for the preview.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Status line in the preview cards saying the card type has loaded and is used to draw the preview.",
     "max": 60
   },
   "theme-editor.preview-cards.this-card-cannot-be-loaded-for-the": {
     "text": "This card cannot be loaded for the preview.",
-    "note": "Shown in preview cards (theme-editor).",
+    "note": "Status line in the preview cards saying the card type is not installed or failed to load, so no preview is drawn for it.",
     "max": 70
   },
   "theme-editor.preview.a-link": {
@@ -3180,7 +3180,7 @@
   },
   "theme-editor.preview.body-text-in-the-primary-text-colour": {
     "text": "Body text in the primary text colour.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Sample paragraph in the preview drawn in the primary text colour, so you can judge that variable.",
     "max": 60
   },
   "theme-editor.preview.controls": {
@@ -3215,7 +3215,7 @@
   },
   "theme-editor.preview.nothing-set-yet-the-preview-shows-home": {
     "text": "Nothing set yet. The preview shows Home Assistant's default look.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Empty-state message in the preview when the theme has no variables yet. Tells you the default look is shown until you add some.",
     "max": 105
   },
   "theme-editor.preview.overview": {
@@ -3308,7 +3308,7 @@
   },
   "theme-editor.preview.the-preview-is-drawn-with-real-home": {
     "text": "The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Note under the preview. Says it uses real Home Assistant elements and your variables, and that custom card CSS, the sidebar and the header can look different on the dashboard.",
     "max": 295
   },
   "theme-editor.preview.theme-preview-mode": {
@@ -3321,7 +3321,7 @@
   },
   "theme-editor.preview.this-theme-has-no-light-or-dark-modes": {
     "text": "This theme has no light or dark modes.",
-    "note": "Shown in preview (theme-editor).",
+    "note": "Message in the preview when the theme has a single look, so the light and dark switch has nothing to toggle.",
     "max": 65
   },
   "theme-editor.preview.tile-card": {
@@ -3341,7 +3341,7 @@
   },
   "theme-editor.raw-rows.add-any-variable": {
     "text": "Add any variable",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Heading of the section where you add a variable that has no dedicated field, by typing its name and value.",
     "max": 35
   },
   "theme-editor.raw-rows.added-c-to-scope": {
@@ -3387,7 +3387,7 @@
   },
   "theme-editor.raw-rows.nothing-was-added": {
     "text": "Nothing was added",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Heading of the message after you submit the add-variable field and no line could be used; the reason follows.",
     "max": 30
   },
   "theme-editor.raw-rows.remove-chars-from-the-value": {
@@ -3413,17 +3413,17 @@
   },
   "theme-editor.raw-rows.use-a-single-line": {
     "text": "Use a single line.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Validation error under the add-variable value field when the value spans several lines. Asks for a single line.",
     "max": 30
   },
   "theme-editor.raw-rows.use-letters-numbers-hyphens-and": {
     "text": "Use letters, numbers, hyphens and underscores. This name is not allowed.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Validation error under the add-variable name field when the name has characters that are not allowed or is not permitted.",
     "max": 120
   },
   "theme-editor.raw-rows.use-the-name-as-it-appears-in-the-theme": {
     "text": "Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.",
-    "note": "Shown in raw rows (theme-editor).",
+    "note": "Helper text under the add-variable name field. Says to type the name as in the theme file, without leading dashes, and that you can paste several name: value lines.",
     "max": 200
   },
   "theme-editor.raw-rows.value": {
@@ -3448,7 +3448,7 @@
   },
   "theme-editor.start-view.a-blank-theme": {
     "text": "a blank theme",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Fragment on the start screen naming the option to begin with an empty theme instead of a preset or copy.",
     "max": 25
   },
   "theme-editor.start-view.a-preset": {
@@ -3458,12 +3458,12 @@
   },
   "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
     "text": "An empty theme. Add only the variables you want to change.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Description of the blank theme option on the start screen. Says you add only the variables you want to change.",
     "max": 95
   },
   "theme-editor.start-view.an-installed-theme": {
     "text": "An installed theme",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Option label on the start screen for copying a theme that is already installed in Home Assistant.",
     "max": 30
   },
   "theme-editor.start-view.blank": {
@@ -3486,17 +3486,17 @@
   },
   "theme-editor.start-view.cannot-be-removed-later": {
     "text": "Cannot be removed later.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Warning on the start screen that the chosen result cannot be removed afterwards.",
     "max": 40
   },
   "theme-editor.start-view.copies-the-variables-from-the-installed": {
     "text": "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Description of the copy option on the start screen. Says the original theme is unchanged and built-in themes only expose part of their variables.",
     "max": 205
   },
   "theme-editor.start-view.copy-to-edit": {
     "text": "Copy to edit",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Button on the start screen that copies the picked installed theme into a new theme you can edit.",
     "max": 25
   },
   "theme-editor.start-view.could-not-delete-name-reason": {
@@ -3527,7 +3527,7 @@
   },
   "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
     "text": "Create a theme from a preset or copy one you have installed.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Intro text at the top of the start screen. Says you can create a theme from a preset or copy an installed one.",
     "max": 100
   },
   "theme-editor.start-view.create-from-name": {
@@ -3586,27 +3586,27 @@
   },
   "theme-editor.start-view.it-is-in-a-subfolder-of-config-themes": {
     "text": "It is in a subfolder of /config/themes.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is in a subfolder of /config/themes.",
     "max": 65
   },
   "theme-editor.start-view.it-uses-home-assistant-tags-such-as": {
     "text": "It uses Home Assistant tags such as !secret.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file uses Home Assistant tags such as !secret.",
     "max": 75
   },
   "theme-editor.start-view.its-file-holds-several-themes-and-saving": {
     "text": "Its file holds several themes, and saving would rewrite all of them.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file holds several themes and saving would rewrite them all.",
     "max": 110
   },
   "theme-editor.start-view.light-and-dark-modes": {
     "text": "Light and dark modes",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Label on the start screen for a theme that has separate light and dark variable sets.",
     "max": 35
   },
   "theme-editor.start-view.light-dark": {
     "text": "Light + dark",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Short badge on the start screen showing that a theme has both light and dark modes.",
     "max": 20
   },
   "theme-editor.start-view.loading-presets": {
@@ -3644,7 +3644,7 @@
   },
   "theme-editor.start-view.no-installed-theme-matches": {
     "text": "No installed theme matches.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Empty-state message on the start screen when the search finds no installed theme.",
     "max": 45
   },
   "theme-editor.start-view.no-theme-called-query": {
@@ -3657,27 +3657,27 @@
   },
   "theme-editor.start-view.no-themes-yet": {
     "text": "No themes yet",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Heading of the empty state on the start screen when no themes are installed.",
     "max": 25
   },
   "theme-editor.start-view.pick-a-preset-to-start-from": {
     "text": "Pick a preset to start from",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Section heading on the start screen above the list of bundled presets.",
     "max": 45
   },
   "theme-editor.start-view.pick-a-theme-to-copy": {
     "text": "Pick a theme to copy",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Section heading on the start screen above the list of installed themes you can copy.",
     "max": 35
   },
   "theme-editor.start-view.presets-are-still-loading": {
     "text": "Presets are still loading",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Status heading on the start screen while the preset list is being fetched.",
     "max": 40
   },
   "theme-editor.start-view.presets-could-not-load-check-your": {
     "text": "Presets could not load. Check your connection and try again. If it keeps failing, reload the page.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Error on the start screen when the preset list fails to load. Tells you to check your connection, retry, and reload the page if it keeps failing.",
     "max": 160
   },
   "theme-editor.start-view.read-only": {
@@ -3692,12 +3692,12 @@
   },
   "theme-editor.start-view.same-in-light-and-dark": {
     "text": "Same in light and dark",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Label on the start screen for a theme that uses one set of variables in both light and dark.",
     "max": 40
   },
   "theme-editor.start-view.search-installed-themes": {
     "text": "Search installed themes",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Label and placeholder of the search box above the installed themes on the start screen.",
     "max": 40
   },
   "theme-editor.start-view.search-themes": {
@@ -3712,12 +3712,12 @@
   },
   "theme-editor.start-view.the-file-could-not-be-read-as-yaml": {
     "text": "The file could not be read as YAML.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is not valid YAML.",
     "max": 60
   },
   "theme-editor.start-view.the-file-is-a-link-to-somewhere-else": {
     "text": "The file is a link to somewhere else.",
-    "note": "Shown in start view (theme-editor).",
+    "note": "Reason on the start screen why an installed theme cannot be edited: its file is a link to another location.",
     "max": 60
   },
   "theme-editor.start-view.the-file-is-too-large-to-edit-here": {

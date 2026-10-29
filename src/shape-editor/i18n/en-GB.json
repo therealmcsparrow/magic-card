@@ -68,7 +68,7 @@
   },
   "shape-editor.lips.some-panels-are-hidden-as-you-left-them": {
     "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
-    "note": "Shown in lips (shape-editor).",
+    "note": "Hint in the shape studio when side panels are collapsed. Tells the user the edge arrows bring the panels back.",
     "max": 135
   },
   "shape-editor.lips.the-noun-is-hidden-as-you-left-it-use": {
@@ -97,12 +97,12 @@
   },
   "shape-editor.mc-shape-studio.a-shape-needs-at-least-3-points": {
     "text": "A shape needs at least 3 points.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Message in the shape studio when the user tries to remove a point from a three-point outline. Explains why it was not removed.",
     "max": 55
   },
   "shape-editor.mc-shape-studio.add-3-points-to-finish": {
     "text": "Add 3 points to finish.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Status hint in the shape studio while drawing a new outline. Tells the user three points are needed before it can be finished.",
     "max": 40
   },
   "shape-editor.mc-shape-studio.add-point": {
@@ -127,7 +127,7 @@
   },
   "shape-editor.mc-shape-studio.advanced-how-this-point-moves-when-the": {
     "text": "Advanced: how this point moves when the card resizes",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Collapsible heading in the shape studio point panel. Opens the settings for how the point follows the card size.",
     "max": 85
   },
   "shape-editor.mc-shape-studio.all-corners-together": {
@@ -142,7 +142,7 @@
   },
   "shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one": {
     "text": "All four corners changed. Change just one?",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Prompt in the shape studio after a corner edit changed all four corners together. Offers to edit only one corner.",
     "max": 70
   },
   "shape-editor.mc-shape-studio.angle": {
@@ -180,7 +180,7 @@
   },
   "shape-editor.mc-shape-studio.back-to-card-editor": {
     "text": "Back to card editor",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button in the shape studio header. Closes the studio and returns the user to the card editor.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.bottom": {
@@ -207,7 +207,7 @@
   },
   "shape-editor.mc-shape-studio.can-raise-the-space-not-lower-it": {
     "text": "Can raise the space, not lower it.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hint under the extra text space fields in the shape studio. Says the value can only add space above the automatic minimum.",
     "max": 55
   },
   "shape-editor.mc-shape-studio.cancel": {
@@ -222,7 +222,7 @@
   },
   "shape-editor.mc-shape-studio.card-shapes-have-one-outline-so-the-hole": {
     "text": "Card shapes have one outline, so the hole was filled.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Message in the shape studio after a combine or import left a hole. Explains the hole was filled because card shapes allow one outline.",
     "max": 85
   },
   "shape-editor.mc-shape-studio.centre": {
@@ -232,27 +232,27 @@
   },
   "shape-editor.mc-shape-studio.changed-since-saved": {
     "text": "Changed since saved",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Badge in the shape studio header. Shows that the shape has edits that are not saved yet.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.changes-since-the-last-save-are-lost": {
     "text": "Changes since the last save are lost.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Body of the Leave without saving? dialog in the shape studio. Warns that unsaved edits will be discarded.",
     "max": 60
   },
   "shape-editor.mc-shape-studio.click-a-point-to-remove-it": {
     "text": "Click a point to remove it.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Canvas hint in the shape studio while the remove-point tool is active. Tells the user a click deletes that point.",
     "max": 45
   },
   "shape-editor.mc-shape-studio.click-on-the-outline-to-add-a-point": {
     "text": "Click on the outline to add a point.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Canvas hint in the shape studio while the add-point tool is active. Tells the user where to click.",
     "max": 60
   },
   "shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve": {
     "text": "Click or tap to add points. Drag to curve.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Canvas hint in the shape studio while drawing a new outline. Explains clicking adds points and dragging makes them curve.",
     "max": 70
   },
   "shape-editor.mc-shape-studio.close": {
@@ -272,7 +272,7 @@
   },
   "shape-editor.mc-shape-studio.combine-adds-it-to-the-outline-subtract": {
     "text": "Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Help text in the shape studio combine panel. Describes what the Combine, Subtract and Intersect operations do.",
     "max": 140
   },
   "shape-editor.mc-shape-studio.combine-with": {
@@ -287,7 +287,7 @@
   },
   "shape-editor.mc-shape-studio.copy-to-all-corners": {
     "text": "Copy to all corners",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Button in the shape studio corner panel. Applies the selected corner's size and style to all four corners.",
     "max": 35
   },
   "shape-editor.mc-shape-studio.copy-yaml": {
@@ -326,7 +326,7 @@
   },
   "shape-editor.mc-shape-studio.corners-turned-into-points-undo-brings": {
     "text": "Corners turned into points. Undo brings them back.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Message in the shape studio after switching from corner editing to point editing. Says Undo restores the corners.",
     "max": 80
   },
   "shape-editor.mc-shape-studio.corners-use-up-to-v-px-per-side": {
@@ -339,17 +339,17 @@
   },
   "shape-editor.mc-shape-studio.corners-will-be-square": {
     "text": "Corners will be square.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Hint in the shape studio corner panel. Tells the user the chosen setting gives sharp, square corners.",
     "max": 40
   },
   "shape-editor.mc-shape-studio.could-not-load-the-export-and-import": {
     "text": "Could not load the export and import tool. Try again.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Error in the shape studio when the export and import code fails to load. Asks the user to retry.",
     "max": 85
   },
   "shape-editor.mc-shape-studio.could-not-reach-magic-card-utils-your": {
     "text": "Could not reach Magic Card Utils. Your work is safe in this card.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Error in the shape studio library panel when the Magic Card Utils add-on does not answer. Reassures the user the shape is kept in the card.",
     "max": 105
   },
   "shape-editor.mc-shape-studio.could-not-save-name-try-again": {
@@ -362,7 +362,7 @@
   },
   "shape-editor.mc-shape-studio.couldn-t-load-the-shape-tools-try-again": {
     "text": "Couldn't load the shape tools. Try again.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Error in the shape studio when the shape tool code fails to load. Asks the user to retry.",
     "max": 70
   },
   "shape-editor.mc-shape-studio.custom-shape": {
@@ -398,7 +398,7 @@
   },
   "shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list": {
     "text": "Drag points, or pick one in the list.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Canvas hint in the shape studio point editor. Tells the user how to select and move a point.",
     "max": 60
   },
   "shape-editor.mc-shape-studio.draw": {
@@ -408,7 +408,7 @@
   },
   "shape-editor.mc-shape-studio.drawing-a-new-outline-this-replaces-your": {
     "text": "Drawing a new outline. This replaces your shape when you finish.",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Banner in the shape studio while drawing. Warns that finishing replaces the current shape.",
     "max": 105
   },
   "shape-editor.mc-shape-studio.each-corner": {
@@ -428,7 +428,7 @@
   },
   "shape-editor.mc-shape-studio.edit-corners-separately": {
     "text": "Edit corners separately",
-    "note": "Shown in mc shape studio (shape-editor).",
+    "note": "Switch label in the shape studio corner panel. Lets the user set each corner on its own instead of all four together.",
     "max": 40
   },
   "shape-editor.mc-shape-studio.error": {

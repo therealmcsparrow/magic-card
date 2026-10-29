@@ -7281,12 +7281,12 @@
   },
   "card-editor.shape-editor.this-card-now-has-its-own-copy": {
     "text": "This card now has its own copy.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Confirmation in the shape editor after Use as copy; says the card now holds its own copy of the shape.",
     "max": 50
   },
   "card-editor.shape-editor.this-shape-can-not-be-saved": {
     "text": "This shape can not be saved.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Message in the shape editor when the current shape is not allowed in the library, so Save as shape cannot be used.",
     "max": 45
   },
   "card-editor.shape-editor.ticket": {
@@ -7296,7 +7296,7 @@
   },
   "card-editor.shape-editor.ticket-wave-and-blob-can-not-be-edited": {
     "text": "Ticket, Wave and Blob can not be edited yet. Use the preset as it is.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Message in the shape editor for the Ticket, Wave and Blob presets, which cannot yet be turned into custom shapes.",
     "max": 115
   },
   "card-editor.shape-editor.top": {
@@ -7324,12 +7324,12 @@
   },
   "card-editor.shape-editor.use-at-most-80-characters": {
     "text": "Use at most 80 characters.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Validation message in the shape editor save step when the shape name is longer than 80 characters.",
     "max": 45
   },
   "card-editor.shape-editor.use-follows-the-library-change-a-shape": {
     "text": "Use follows the library: change a shape and every card that uses it changes. Use as copy makes this card independent.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Helper text in the shape editor explaining the two ways to apply a library shape: linked to the library or as an independent copy.",
     "max": 190
   },
   "card-editor.shape-editor.use-name": {
@@ -7383,7 +7383,7 @@
   },
   "card-editor.shape-editor.your-account-can-use-the-library-but-not": {
     "text": "Your account can use the library but not change it. Ask an admin.",
-    "note": "Shown in shape editor (card-editor).",
+    "note": "Message in the shape editor for non-admin users; says they can use library shapes but not save or delete them.",
     "max": 105
   },
   "card-editor.shape-editor.your-own": {
@@ -7408,7 +7408,7 @@
   },
   "card-editor.slider-editor.empty-the-entity-s-own-range-and-step": {
     "text": "Empty: the entity's own range and step. Min and max can only narrow that range.",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Helper text under the slider editor range and step fields; says empty fields use the entity's own range and step.",
     "max": 130
   },
   "card-editor.slider-editor.entity": {
@@ -7418,7 +7418,7 @@
   },
   "card-editor.slider-editor.following-the-light": {
     "text": "Following the light",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Label in the slider editor colour control showing the slider takes its colour from the light it controls.",
     "max": 35
   },
   "card-editor.slider-editor.horizontal": {
@@ -7438,7 +7438,7 @@
   },
   "card-editor.slider-editor.same-as-where-in-look": {
     "text": "Same as Where in Look.",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Helper text in the slider editor saying a placement setting copies the Where choice from the Look settings.",
     "max": 40
   },
   "card-editor.slider-editor.show-value": {
@@ -7458,7 +7458,7 @@
   },
   "card-editor.slider-editor.this-value-can-only-be-shown-the-entity": {
     "text": "This value can only be shown: the entity (or this attribute) cannot be set from a slider.",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Warning in the slider editor when the chosen entity or attribute is read-only, so the slider only displays the value.",
     "max": 145
   },
   "card-editor.slider-editor.track-colour": {
@@ -7468,7 +7468,7 @@
   },
   "card-editor.slider-editor.use-own-colour": {
     "text": "Use own colour",
-    "note": "Shown in slider editor (card-editor).",
+    "note": "Label of the slider editor switch that lets the slider use its own colour instead of the entity colour.",
     "max": 25
   },
   "card-editor.slider-editor.vertical": {
@@ -7478,7 +7478,7 @@
   },
   "card-editor.slider-layout-editor.after-the-last-slide-go-back-to-the": {
     "text": "After the last slide, go back to the first one",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Label of the slider layout editor loop switch; makes the carousel return to the first slide after the last.",
     "max": 75
   },
   "card-editor.slider-layout-editor.autoplay": {
@@ -7488,7 +7488,7 @@
   },
   "card-editor.slider-layout-editor.autoplay-delay-ms": {
     "text": "Autoplay delay (ms)",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Label of the slider layout editor field that sets the pause between automatic slide changes, in milliseconds.",
     "max": 40
   },
   "card-editor.slider-layout-editor.loop": {
@@ -7508,22 +7508,22 @@
   },
   "card-editor.slider-layout-editor.slides-per-view": {
     "text": "Slides per view",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Label of the slider layout editor field that sets how many slides are visible at once.",
     "max": 25
   },
   "card-editor.slider-layout-editor.space-between-slides-px": {
     "text": "Space between slides (px)",
-    "note": "Shown in slider layout editor (card-editor).",
+    "note": "Label of the slider layout editor field that sets the gap between neighbouring slides, in pixels.",
     "max": 40
   },
   "card-editor.slider-look-host.couldn-t-load-the-slider-looks": {
     "text": "Couldn't load the slider looks.",
-    "note": "Shown in slider look host (card-editor).",
+    "note": "Error shown in the slider look area of the editor when the look definitions fail to load.",
     "max": 50
   },
   "card-editor.slider-look-host.loading-slider-looks": {
     "text": "Loading slider looks...",
-    "note": "Shown in slider look host (card-editor).",
+    "note": "Progress text shown in the slider look area of the editor while the look definitions load.",
     "max": 40
   },
   "card-editor.slider-look-host.look": {
@@ -7559,7 +7559,7 @@
   },
   "card-editor.spinbox-editor.empty-the-entity-s-own-range-and-step": {
     "text": "Empty: the entity's own range and step. Min and max can only narrow that range; a step that is not a multiple of the entity's step is replaced by the entity's.",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Helper text under the spinbox editor range and step fields; says empty fields use the entity's own values and a mismatched step is replaced.",
     "max": 255
   },
   "card-editor.spinbox-editor.entity": {
@@ -7584,12 +7584,12 @@
   },
   "card-editor.spinbox-editor.the-thermostat-keeps-a-range-low-high": {
     "text": "The thermostat keeps a range (low / high): pick target_temp_low or target_temp_high as the attribute to set one end.",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Hint in the spinbox editor for thermostat entities; explains how to pick the low or high target temperature as the attribute.",
     "max": 190
   },
   "card-editor.spinbox-editor.this-value-can-only-be-shown-the-entity": {
     "text": "This value can only be shown: the entity (or this attribute) cannot be set from a spinbox.",
-    "note": "Shown in spinbox editor (card-editor).",
+    "note": "Warning in the spinbox editor when the chosen entity or attribute is read-only, so the spinbox only displays the value.",
     "max": 145
   },
   "card-editor.structure-outline.add-column": {
@@ -7696,7 +7696,7 @@
   },
   "card-editor.structure-outline.entity-does-not-fit-this-module": {
     "text": "Entity does not fit this module",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Tooltip on a warning icon in the structure outline when a module's entity is of a type the module cannot show.",
     "max": 50
   },
   "card-editor.structure-outline.expand-row-n": {
@@ -7709,7 +7709,7 @@
   },
   "card-editor.structure-outline.has-local-overrides": {
     "text": "Has local overrides",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Tooltip on a structure outline badge showing the item has values that differ from its template.",
     "max": 35
   },
   "card-editor.structure-outline.hidden-on-dashboard": {
@@ -7784,17 +7784,17 @@
   },
   "card-editor.structure-outline.no-rows-yet": {
     "text": "No rows yet",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Empty state in the structure outline when the card layout has no rows.",
     "max": 20
   },
   "card-editor.structure-outline.own-module-list-not-synced-with-the": {
     "text": "Own module list: not synced with the template. Reset column restores it.",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Tooltip in the structure outline on a column with its own module list; explains it no longer follows the template and Reset column undoes that.",
     "max": 120
   },
   "card-editor.structure-outline.own-module-list-not-synced-with-the-2": {
     "text": "Own module list, not synced with the template",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Short label or tooltip in the structure outline marking a column whose module list is independent of the template.",
     "max": 75
   },
   "card-editor.structure-outline.row-n": {
@@ -7830,7 +7830,7 @@
   },
   "card-editor.structure-outline.rows-hold-columns-columns-hold-modules": {
     "text": "Rows hold columns, columns hold modules.",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Short explanation in the structure outline of how the card layout nests: rows contain columns, columns contain modules.",
     "max": 65
   },
   "card-editor.structure-outline.same-as-source": {
@@ -7843,7 +7843,7 @@
   },
   "card-editor.structure-outline.shared-with-tiles-inside": {
     "text": "Shared with tiles inside",
-    "note": "Shown in structure outline (card-editor).",
+    "note": "Tooltip in the structure outline marking an item shared with tiles placed inside it.",
     "max": 40
   },
   "card-editor.structure-outline.tab-name": {
@@ -7884,7 +7884,7 @@
   },
   "card-editor.studio-canvas.canvas-live-preview": {
     "text": "Canvas, live preview",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Accessible name of the studio canvas area that shows the card as a live preview.",
     "max": 35
   },
   "card-editor.studio-canvas.click-a-module-to-select-it-move-moves": {
@@ -7899,7 +7899,7 @@
   },
   "card-editor.studio-canvas.click-the-module-to-connect-to-escape": {
     "text": "Click the module to connect to. Escape cancels.",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Instruction on the studio canvas while the user picks a target module for a connection; Escape cancels the pick.",
     "max": 80
   },
   "card-editor.studio-canvas.click-the-module-to-connect-to-key": {
@@ -7948,7 +7948,7 @@
   },
   "card-editor.studio-canvas.drag-to-resize-double-click-for-equal": {
     "text": "Drag to resize, double-click for equal widths",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip on a studio canvas column divider; explains dragging resizes the columns and double-clicking evens them out.",
     "max": 75
   },
   "card-editor.studio-canvas.duplicate": {
@@ -8001,7 +8001,7 @@
   },
   "card-editor.studio-canvas.move-down-alt-down": {
     "text": "Move down (Alt+Down)",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip and label of the studio canvas toolbar button that moves the selected item down, with its keyboard shortcut.",
     "max": 35
   },
   "card-editor.studio-canvas.move-up": {
@@ -8011,7 +8011,7 @@
   },
   "card-editor.studio-canvas.move-up-alt-up": {
     "text": "Move up (Alt+Up)",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip and label of the studio canvas toolbar button that moves the selected item up, with its keyboard shortcut.",
     "max": 30
   },
   "card-editor.studio-canvas.name-behind-others": {
@@ -8032,7 +8032,7 @@
   },
   "card-editor.studio-canvas.navigation-is-off-in-preview": {
     "text": "Navigation is off in Preview",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Message on the studio canvas when a tap would navigate away while Preview mode is on; tells the user navigation is disabled there.",
     "max": 45
   },
   "card-editor.studio-canvas.note-or-pick-another-escape-cancels": {
@@ -8054,7 +8054,7 @@
   },
   "card-editor.studio-canvas.pause-preview-motion": {
     "text": "Pause preview motion",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip of the studio canvas button that freezes animations in the preview.",
     "max": 35
   },
   "card-editor.studio-canvas.placement": {
@@ -8064,7 +8064,7 @@
   },
   "card-editor.studio-canvas.placement-put-behind-others-put-on-top": {
     "text": "Placement: put behind others, put on top, back to normal",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip of the studio canvas control that sets a layer's placement behind others, on top, or normal.",
     "max": 90
   },
   "card-editor.studio-canvas.preview-not-updated-error": {
@@ -8086,17 +8086,17 @@
   },
   "card-editor.studio-canvas.resume-preview-motion": {
     "text": "Resume preview motion",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip of the studio canvas button that restarts animations in the preview after they were paused.",
     "max": 35
   },
   "card-editor.studio-canvas.select-layer-above": {
     "text": "Select layer above",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip of the studio canvas control that selects the layer stacked above the current one.",
     "max": 30
   },
   "card-editor.studio-canvas.select-layer-below": {
     "text": "Select layer below",
-    "note": "Shown in studio canvas (card-editor).",
+    "note": "Tooltip of the studio canvas control that selects the layer stacked below the current one.",
     "max": 30
   },
   "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": {
@@ -8131,7 +8131,7 @@
   },
   "card-editor.studio.back-to-dialog": {
     "text": "Back to dialog",
-    "note": "Shown in studio (card-editor).",
+    "note": "Button in the studio header that leaves the studio and returns to the normal editor dialog.",
     "max": 25
   },
   "card-editor.studio.canvas-width": {
@@ -8195,7 +8195,7 @@
   },
   "card-editor.studio.magic-card-studio": {
     "text": "Magic Card studio",
-    "note": "Shown in studio (card-editor).",
+    "note": "Title of the full-screen studio editor, shown in its header and as its accessible name.",
     "max": 30
   },
   "card-editor.studio.mods": {
@@ -8229,17 +8229,17 @@
   },
   "card-editor.studio.preview-actions-are-live": {
     "text": "Preview: actions are live",
-    "note": "Shown in studio (card-editor).",
+    "note": "Banner label in the studio while Preview is on, warning that taps run real actions on the user's devices.",
     "max": 40
   },
   "card-editor.studio.preview-esc-to-return": {
     "text": "Preview (Esc to return)",
-    "note": "Shown in studio (card-editor).",
+    "note": "Label of the studio Preview toggle while it is on; tells the user Esc returns to editing.",
     "max": 40
   },
   "card-editor.studio.preview-the-card-with-live-actions": {
     "text": "Preview the card with live actions",
-    "note": "Shown in studio (card-editor).",
+    "note": "Tooltip of the studio Preview toggle; says it shows the card with working actions.",
     "max": 55
   },
   "card-editor.studio.redo-ctrl-y": {
@@ -8266,7 +8266,7 @@
   },
   "card-editor.studio.some-panels-are-hidden-as-you-left-them": {
     "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
-    "note": "Shown in studio (card-editor).",
+    "note": "Hint in the studio when side panels are collapsed from an earlier session; tells the user to use the edge arrows to reopen them.",
     "max": 135
   },
   "card-editor.studio.the-noun-panel-is-hidden-as-you-left-it": {
@@ -8299,22 +8299,22 @@
   },
   "card-editor.sync-indicator.overridden-locally-click-to-re-sync-from": {
     "text": "Overridden locally. Click to re-sync from the template.",
-    "note": "Shown in sync indicator (card-editor).",
+    "note": "Tooltip of the sync indicator on a field whose value differs from the template; clicking restores the template value.",
     "max": 90
   },
   "card-editor.sync-indicator.synced-with-template": {
     "text": "Synced with template",
-    "note": "Shown in sync indicator (card-editor).",
+    "note": "Short accessible name of the sync indicator on a field that follows its template.",
     "max": 35
   },
   "card-editor.sync-indicator.synced-with-the-template-click-to-keep-a": {
     "text": "Synced with the template. Click to keep a local value that won't sync.",
-    "note": "Shown in sync indicator (card-editor).",
+    "note": "Tooltip of the sync indicator on a field that follows its template; clicking lets the user set a local value that stops syncing.",
     "max": 115
   },
   "card-editor.tabs-editor.add-rename-and-order-tabs-and-add-their": {
     "text": "Add, rename and order tabs, and add their modules, in the structure tree.",
-    "note": "Shown in tabs editor (card-editor).",
+    "note": "Helper text in the tabs editor pointing the user to the structure tree for adding, renaming and ordering tabs and their modules.",
     "max": 120
   },
   "card-editor.tabs-editor.default": {
@@ -8372,12 +8372,12 @@
   },
   "card-editor.template-bar.create-template-from-this-card": {
     "text": "Create template from this card",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Menu item in the template bar that saves this card's configuration as a new template and links the card to it.",
     "max": 50
   },
   "card-editor.template-bar.fully-in-sync": {
     "text": "Fully in sync.",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Status in the template bar saying the card has no local differences from its template.",
     "max": 30
   },
   "card-editor.template-bar.in-sync": {
@@ -8421,7 +8421,7 @@
   },
   "card-editor.template-bar.not-linked-to-a-template": {
     "text": "Not linked to a template",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Status in the template bar for a card that uses no template.",
     "max": 40
   },
   "card-editor.template-bar.re-sync-overrides": {
@@ -8434,7 +8434,7 @@
   },
   "card-editor.template-bar.save-to-template": {
     "text": "Save to template",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Button in the template bar that writes this card's local changes back to its template.",
     "max": 30
   },
   "card-editor.template-bar.template": {
@@ -8449,7 +8449,7 @@
   },
   "card-editor.template-bar.unlink-from-template": {
     "text": "Unlink from template",
-    "note": "Shown in template bar (card-editor).",
+    "note": "Button in the template bar that detaches the card from its template and keeps its current values.",
     "max": 35
   },
   "card-editor.template-picker.a-template-named-name-already-exists": {
@@ -8511,17 +8511,17 @@
   },
   "card-editor.template-picker.failed-to-delete-template": {
     "text": "Failed to delete template.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Error in the template picker when removing a template fails.",
     "max": 45
   },
   "card-editor.template-picker.failed-to-save-template": {
     "text": "Failed to save template.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Error in the template picker when saving a template fails.",
     "max": 40
   },
   "card-editor.template-picker.home-assistant-connection-unavailable": {
     "text": "Home Assistant connection unavailable.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Error in the template picker when there is no live Home Assistant connection to load or save templates.",
     "max": 65
   },
   "card-editor.template-picker.load": {
@@ -8549,17 +8549,17 @@
   },
   "card-editor.template-picker.magic-card-integration-not-found-please": {
     "text": "Magic Card integration not found. Please install it via HACS and add the integration.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Error in the template picker when the Magic Card integration is missing; tells the user to install it through HACS and add it.",
     "max": 140
   },
   "card-editor.template-picker.no-config-available-to-save": {
     "text": "No config available to save.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Error in the template picker when saving a template but the card has no configuration to store.",
     "max": 45
   },
   "card-editor.template-picker.no-templates-saved": {
     "text": "No templates saved",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Empty state in the template picker list when no template exists yet.",
     "max": 30
   },
   "card-editor.template-picker.overwrite": {
@@ -8589,17 +8589,17 @@
   },
   "card-editor.template-picker.template-name-is-required": {
     "text": "Template name is required.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Validation message in the template picker when saving a template with an empty name.",
     "max": 45
   },
   "card-editor.template-picker.tiles-that-follow-the-card-will-show-it": {
     "text": "Tiles that follow the card will show it.",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Helper text in the template picker saying tiles that follow the card will display the chosen template.",
     "max": 65
   },
   "card-editor.template-picker.which-device-is-this-card-for": {
     "text": "Which device is this card for?",
-    "note": "Shown in template picker (card-editor).",
+    "note": "Question in the template picker asking the user to choose the device the template is meant for.",
     "max": 50
   },
   "card-editor.template-sync.card": {
@@ -8646,7 +8646,7 @@
   },
   "card-editor.text-editor.name-and-state": {
     "text": "Name and state",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Option in the text editor entity source choice that shows both the entity name and its state.",
     "max": 25
   },
   "card-editor.text-editor.remaining": {
@@ -8656,7 +8656,7 @@
   },
   "card-editor.text-editor.shows-an-entity-s-state-or-name-instead": {
     "text": "Shows an entity's state or name instead of the text.",
-    "note": "Shown in text editor (card-editor).",
+    "note": "Helper text in the text editor entity field; says the chosen entity's state or name replaces the typed text.",
     "max": 85
   },
   "card-editor.text-editor.state": {
@@ -8733,12 +8733,12 @@
   },
   "card-editor.value-bg-editor.a-curved-line-instead-of-straight": {
     "text": "A curved line instead of straight segments.",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Helper text for the value background editor smooth option; says the graph line is drawn curved.",
     "max": 70
   },
   "card-editor.value-bg-editor.an-animated-wave-on-the-surface-still": {
     "text": "An animated wave on the surface. Still with reduced motion.",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Helper text for the value background editor wave option; says the wave animates but stays still when reduced motion is on.",
     "max": 95
   },
   "card-editor.value-bg-editor.area": {
@@ -8811,12 +8811,12 @@
   },
   "card-editor.value-bg-editor.fill-the-area-under-the-line": {
     "text": "Fill the area under the line.",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Helper text for the value background editor fill option; says the area below the graph line is filled with colour.",
     "max": 50
   },
   "card-editor.value-bg-editor.history-that-can-t-be-loaded-draws": {
     "text": "History that can't be loaded draws nothing.",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Helper text in the value background editor; warns that when the entity history cannot be loaded, nothing is drawn.",
     "max": 70
   },
   "card-editor.value-bg-editor.hours": {
@@ -8836,7 +8836,7 @@
   },
   "card-editor.value-bg-editor.line-width-px": {
     "text": "Line width (px)",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Label of the value background editor field that sets the graph line thickness in pixels.",
     "max": 25
   },
   "card-editor.value-bg-editor.max": {
@@ -8864,7 +8864,7 @@
   },
   "card-editor.value-bg-editor.pick-an-entity-a-value-background": {
     "text": "Pick an entity: a value background without one draws nothing.",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Warning in the value background editor shown while no entity is chosen; tells the user to pick one.",
     "max": 100
   },
   "card-editor.value-bg-editor.right": {
@@ -8902,12 +8902,12 @@
   },
   "card-editor.value-bg-editor.up-to-168-a-week": {
     "text": "Up to 168 (a week).",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Helper text on the value background editor history hours field; gives the maximum of 168 hours, one week.",
     "max": 35
   },
   "card-editor.value-bg-editor.value-background-type": {
     "text": "Value background type",
-    "note": "Shown in value bg editor (card-editor).",
+    "note": "Label of the value background editor choice between background styles, such as graph or wave.",
     "max": 35
   },
   "card-editor.value-bg-editor.wave": {
@@ -8952,7 +8952,7 @@
   },
   "card-editor.video-bg-editor.browsers-only-autoplay-muted-videos": {
     "text": "Browsers only autoplay muted videos.",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Helper text for the video background editor mute option; explains why sound-on videos may not start by themselves.",
     "max": 60
   },
   "card-editor.video-bg-editor.contain": {
@@ -8982,22 +8982,22 @@
   },
   "card-editor.video-bg-editor.plays-behind-the-other-modules-in-the": {
     "text": "Plays behind the other modules in the same column or layout. On its own in a column it shows at its own size.",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Helper text in the video background editor explaining the video plays behind sibling modules, or at its own size when alone in a column.",
     "max": 175
   },
   "card-editor.video-bg-editor.plays-while-the-card-is-visible-not-with": {
     "text": "Plays while the card is visible (not with reduced motion).",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Helper text in the video background editor saying playback runs only while the card is visible and not with reduced motion.",
     "max": 95
   },
   "card-editor.video-bg-editor.poster-image-url": {
     "text": "Poster image URL",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Label of the video background editor field for the still image shown before or instead of the video.",
     "max": 30
   },
   "card-editor.video-bg-editor.shown-until-the-video-plays-and-instead": {
     "text": "Shown until the video plays, and instead of it when it cannot play.",
-    "note": "Shown in video bg editor (card-editor).",
+    "note": "Helper text under the video background editor poster field; says the image shows until the video plays and as a fallback.",
     "max": 110
   },
   "card-editor.video-bg-editor.video-url": {
@@ -9007,22 +9007,22 @@
   },
   "card-editor.view-detect.couldn-t-tell-the-view-type": {
     "text": "Couldn't tell the view type",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Message in the view detection hint when the dashboard view type cannot be worked out.",
     "max": 45
   },
   "card-editor.view-detect.matches-this-view-masonry": {
     "text": "Matches this view (masonry)",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label in the view detection hint saying the chosen layout fits the current masonry view.",
     "max": 45
   },
   "card-editor.view-detect.matches-this-view-panel": {
     "text": "Matches this view (panel)",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label in the view detection hint saying the chosen layout fits the current panel view.",
     "max": 40
   },
   "card-editor.view-detect.matches-this-view-sections": {
     "text": "Matches this view (sections)",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label in the view detection hint saying the chosen layout fits the current sections view.",
     "max": 45
   },
   "card-editor.view-detect.matches-this-view-sections-columns-of-12": {
@@ -9035,7 +9035,7 @@
   },
   "card-editor.view-detect.matches-this-view-sidebar": {
     "text": "Matches this view (sidebar)",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label in the view detection hint saying the chosen layout fits the current sidebar view.",
     "max": 45
   },
   "card-editor.view-detect.narrow": {
@@ -9045,7 +9045,7 @@
   },
   "card-editor.view-detect.narrow-400-pixels": {
     "text": "Narrow, 400 pixels",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label of the narrow width choice in the view detection preview, a 400 pixel wide card.",
     "max": 30
   },
   "card-editor.view-detect.panel": {
@@ -9055,7 +9055,7 @@
   },
   "card-editor.view-detect.panel-full-width": {
     "text": "Panel, full width",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label of the panel width choice in the view detection preview, a card spanning the full width.",
     "max": 30
   },
   "card-editor.view-detect.view-type-type-isn-t-supported": {
@@ -9073,7 +9073,7 @@
   },
   "card-editor.view-detect.wide-800-pixels": {
     "text": "Wide, 800 pixels",
-    "note": "Shown in view detect (card-editor).",
+    "note": "Label of the wide width choice in the view detection preview, an 800 pixel wide card.",
     "max": 30
   },
   "card-editor.weather-editor.animated-icons": {
@@ -9108,7 +9108,7 @@
   },
   "card-editor.weather-editor.this-entity-has-no-daily-forecast-its": {
     "text": "This entity has no daily forecast; its first forecast type is shown. The Forecast module offers more options.",
-    "note": "Shown in weather editor (card-editor).",
+    "note": "Notice in the weather editor when the entity has no daily forecast; says another forecast type is used and points to the Forecast module.",
     "max": 175
   },
   "card-editor.weather-editor.weather-entity": {
@@ -9123,12 +9123,12 @@
   },
   "card-editor.yaml-editor.copying-failed-the-browser-blocked-the": {
     "text": "Copying failed: the browser blocked the clipboard.",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Error in the YAML editor when the copy button cannot write to the clipboard because the browser refuses.",
     "max": 80
   },
   "card-editor.yaml-editor.embed-my-animations": {
     "text": "Embed my animations",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Label of the YAML editor switch that adds the user's custom animations to the copied YAML.",
     "max": 35
   },
   "card-editor.yaml-editor.n": {
@@ -9162,7 +9162,7 @@
   },
   "card-editor.yaml-editor.yaml-copied-with-your-animations": {
     "text": "YAML copied with your animations.",
-    "note": "Shown in yaml editor (card-editor).",
+    "note": "Confirmation in the YAML editor after copying with the Embed my animations switch on.",
     "max": 55
   }
 }
