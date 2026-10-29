@@ -33,14 +33,17 @@ import type { Outline } from '../utils/shape-path';
  *     is connected it calls requestUpdate() once (particles pattern).
  * - dist/magic-card-shape-custom.js (lazy chunk, webpackChunkName "shape-custom"):
  *   src/utils/shape-custom.ts exports buildCustom() only (CustomShapeChunk below). It imports the
- *   shape-path helpers, which webpack takes from magic-card.js (splitChunks: false, available
- *   modules are not copied): the chunk must not contain shape-path.ts. Nothing else imports
+ *   shape-path helpers, which webpack requests from the shared chunk dist/magic-card-shape-path.js
+ *   in the same import() call: the chunk must not contain shape-path.ts. Nothing else imports
  *   shape-custom.ts statically; the editors (card editor preview, shape editor) await
  *   loadCustomShapes() and re-render, so there is one copy of the builder.
  * Editor: module `shape-editor` (lazy chunk) writes this schema; it never writes px paths.
  * Everything downstream of the Outline (clip, polygon fallback, border stroke, border length mask,
  * focus ring, ring via shapeRingPath / shapeInsetPath, drop shadow wrapper, value background, flows
- * via shapePoint, seasonal decorations) is unchanged and stays in magic-card.js.
+ * via shapePoint, seasonal decorations) is shared with the presets. Its maths (shape-path.ts,
+ * ring-path.ts, shape-clip.ts, the polygon fallback in src/path/core.ts) are not in magic-card.js:
+ * they sit in the shared chunks shape-path and path-core and in the decor, flows, seasonal and
+ * slider-look chunks.
  *
  * ── First paint ──
  * - Cold page, first card with `shape: custom`: the card paints unshaped (as `shape: none`) until
@@ -53,8 +56,9 @@ import type { Outline } from '../utils/shape-path';
  * - Load failure (offline, a stale dist): the element stays unshaped for the page's life; never
  *   blank, one console warning.
  * - Chromium 85-87: webpack's own chunk loader (script tag, public path from src/index.ts) works
- *   there; the chunk is ES2021 like the rest. The polygon fallback lives in magic-card.js and reads
- *   the path string, so it needs nothing from the chunk; the pending state is unshaped there too.
+ *   there; the chunk is ES2021 like the rest. The polygon fallback (polygonCss in src/path/core.ts,
+ *   used by src/card/shape-clip.ts) reads the path string, so it needs nothing from the shape-custom
+ *   chunk; the pending state is unshaped there too.
  *
  * ── YAML (card `shape_options`, or `design.shape_options` on modules, rows, columns) ──
  *

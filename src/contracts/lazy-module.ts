@@ -7,7 +7,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
- * - Shared chunks (section "Shared chunks", `history` from 1.9.0, `shape-path` from 1.10.0, revision 24): `history` and `shape-path` join `path-core`. `history` holds
+ * - Shared chunks (section "Shared chunks"): path-core, history and shape-path. `history` holds
  *   src/services/history-cache.ts only, the one copy of the recorded-history cache that <mc-value-bg> (decor) and the
  *   graphs view (modules-extra) read. magic-card.js holds neither the cache nor a re-export of it.
  * - The six older chunks without install() also carry BUILD and their loaders refuse a mismatch through
@@ -439,7 +439,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
 
 /**
  * Sanity ceilings (B, minified). The CAPS entry is measured + 5 % rounded up to 1 KiB; a measured
- * size over its ceiling means a magic-card.js module (Lit, registry, utils, shape-path) was copied
+ * size over its ceiling means a magic-card.js module (Lit, registry, utils) or the module of a shared chunk (LAZY_SHARED_CHUNK_FILES) was copied
  * into the chunk. Report it, do not raise the ceiling.
  */
 export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
