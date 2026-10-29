@@ -2,7 +2,8 @@ import type { LayerAnchor, LayerConfig, Placement, ScrimConfig, ScrimStyle } fro
 import type { LayerEditorContext } from '../../contracts/layer-editor';
 import type { CardModule, MagicCardConfig } from '../../types';
 import { isRunnableAction } from '../../utils/actions';
-import { childSlots, descendantAt } from '../../utils/module-path';
+import { childSlots } from '../../utils/module-path';
+import { descendantAt } from '../../utils/module-path-edit';
 import { toYaml } from '../../utils/yaml-utils';
 import { moduleDisplayName, moduleLabel, modulePathAttr, moduleSelection, type ModuleSelection } from '../studio/selection';
 

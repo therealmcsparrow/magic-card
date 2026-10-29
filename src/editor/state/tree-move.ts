@@ -1,6 +1,7 @@
 import type { CardModule, EditorPath, MagicCardConfig } from '../../types';
 import type { ModuleSelection } from '../studio/selection';
-import { ChildStep, childSlots, descendantAt, mutableSlot } from '../../utils/module-path';
+import { ChildStep, childSlots } from '../../utils/module-path';
+import { descendantAt, mutableSlot } from '../../utils/module-path-edit';
 import { deepClone } from '../../utils/deep-merge';
 import { markChildList, markColumnModules } from './template-marks';
 

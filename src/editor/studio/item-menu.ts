@@ -10,7 +10,8 @@ import { toYaml } from '../../utils/yaml-utils';
 import { orderedYamlConfig } from '../modes/yaml-editor';
 import { TEMPLATE_ID_HINT, templateIdMissing } from '../state/flows';
 import { countNotSynced } from '../state/template-sync';
-import { childSlots, descendantAt, hasSlotNodes } from '../../utils/module-path';
+import { childSlots } from '../../utils/module-path';
+import { descendantAt, hasSlotNodes } from '../../utils/module-path-edit';
 import { slotLabel } from '../slot-label';
 import {
   ModuleSelection,

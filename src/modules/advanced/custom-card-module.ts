@@ -8,10 +8,6 @@ import type { ModuleDependencies } from '../../services/card-dependencies';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
 
-// Shared card helpers live in a sync util (the camera view and the editor use them too).
-export { getCardHelpers, whenDefined, stableJson, fullConfig } from '../../utils/card-helpers';
-export type { CardHelpers, ConfigurableElement } from '../../utils/card-helpers';
-
 /** The module with no card type set (sync: the stub and the view render the same box). */
 export const customCardEmpty = (): TemplateResult => html`
   <div class="mc-module mc-custom-card mc-custom-card-placeholder">

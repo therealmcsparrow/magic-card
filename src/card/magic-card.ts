@@ -76,7 +76,7 @@ import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
 import type { PopupController } from './popup-controller';
-import { EditorPlace, holdOutOfFlow, navigateToPopup, popupHidden } from './popup-nav';
+import { EditorPlace, holdOutOfFlow, popupHidden } from './popup-nav';
 import { popupIfLoaded } from './popup-seam';
 import { isPopupEnabled, wantsPopup } from '../utils/popup';
 import type { AnimationDoc } from '../anim-studio/model';
@@ -1904,10 +1904,14 @@ export class MagicCard extends LitElement {
         );
         break;
 
-      case 'popup':
-        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens
-        navigateToPopup(action.hash);
+      case 'popup': {
+        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens; the card's config
+        // loads the popup chunk, so only a tap before it has installed waits for it
+        const open = popupIfLoaded();
+        if (open) open.api.navigate(action.hash);
+        else void lazyChunks.popup.load().then((ok) => ok && popupIfLoaded()?.api.navigate(action.hash));
         break;
+      }
 
       case 'close-popup':
         // no chunk loaded: no pop-up can be open

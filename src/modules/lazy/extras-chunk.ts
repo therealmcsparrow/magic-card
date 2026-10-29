@@ -13,6 +13,8 @@ import { weatherIconStyles } from '../../icons/weather-icons';
 import { ClockView } from '../advanced/clock-view';
 import { ImageView } from '../content/image-view';
 import { extrasViewStyles } from '../../css/extras-styles';
+import { provideTabHoverBorder } from '../../utils/css-utils';
+import { tabBorderStyle } from '../../utils/tab-border';
 
 /*
  * Chunk entry of dist/magic-card-modules-extra.js (contract lazy-module 1.0.0). Evaluating this file changes
@@ -39,4 +41,5 @@ export function install(): void {
   ModuleRegistry.provideView('tabs', new TabsView());
   ModuleRegistry.provideView('clock', new ClockView());
   ModuleRegistry.provideView('image', new ImageView());
+  provideTabHoverBorder(tabBorderStyle);
 }

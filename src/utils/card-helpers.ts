@@ -1,7 +1,7 @@
 import { t } from '../card/i18n';
 import type { HomeAssistant } from '../types';
 
-/* Home Assistant card helpers and small helpers shared by the camera and custom-card modules and their editors (sync, magic-card.js). */
+/* Home Assistant card helpers and small helpers shared by the camera and custom-card views (modules-extra) and the card editor. No module state, so each chunk that imports this file carries its own copy. */
 
 export interface CardHelpers {
   createCardElement(config: Record<string, unknown>): HTMLElement;
@@ -16,19 +16,13 @@ export type ConfigurableElement = HTMLElement & {
 
 const WAIT_MS = 5000;
 
-let _cardHelpersPromise: Promise<CardHelpers> | null = null;
-
-/** HA's card helpers (window.loadCardHelpers), loaded once; undefined outside Home Assistant. */
+/**
+ * HA's card helpers (window.loadCardHelpers); undefined outside Home Assistant. HA keeps the loaded helpers itself, so
+ * asking again is cheap and a failed load is tried again on the next call.
+ */
 export function getCardHelpers(): Promise<CardHelpers> | undefined {
   const load = (window as unknown as { loadCardHelpers?: () => Promise<CardHelpers> }).loadCardHelpers;
-  if (typeof load !== 'function') return undefined;
-  if (!_cardHelpersPromise) {
-    _cardHelpersPromise = Promise.resolve(load()).catch((err: unknown) => {
-      _cardHelpersPromise = null; // try again next time
-      throw err;
-    });
-  }
-  return _cardHelpersPromise;
+  return typeof load === 'function' ? Promise.resolve(load()) : undefined;
 }
 
 export function whenDefined(tag: string): Promise<unknown> {

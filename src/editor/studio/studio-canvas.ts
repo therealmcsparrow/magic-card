@@ -26,7 +26,8 @@ import {
 import { applyTabState, getStatePreview, onStatePreview, stateOfView, type TabPreviewState } from './tab-state-preview';
 import { childSlots } from '../../utils/module-path';
 import { TEMPLATE_ID_HINT, templateIdMissing } from '../state/flows';
-import { GridRowLike, columnWidthsTemplate, effectiveWidths, widthWeights } from '../../utils/column-widths';
+import { GridRowLike, columnWidthsTemplate } from '../../utils/column-widths';
+import { effectiveWidths, widthWeights } from '../../utils/column-widths-edit';
 import { equalizePair, resizePair, stepPair } from './column-resize';
 import { withTemplateAnimations } from '../../services/template-merge';
 import { BLOCKED_KEY, blockNavigation, forwardToDashboard, isNavigationRequest } from './studio-live-actions';

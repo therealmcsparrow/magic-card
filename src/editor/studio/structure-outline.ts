@@ -8,7 +8,8 @@ import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
 import { kindNoun, sourceWord } from '../components/entity-source';
 import { ignoresEntity, resolveContainerSource, resolveEntitySource, takesEntity } from '../entity-source';
-import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
+import { hasColumnWidths } from '../../utils/column-widths';
+import { effectiveWidths, widthWeights } from '../../utils/column-widths-edit';
 import {
   Selection,
   selectionFromKey,
@@ -29,7 +30,8 @@ import {
   layerName,
 } from './selection';
 import type { ModuleSelection, SlotSelection } from './selection';
-import { ChildStep, childSlots, descendantAt, hasChildSlots, hasSlotNodes } from '../../utils/module-path';
+import { ChildStep, childSlots, hasChildSlots } from '../../utils/module-path';
+import { descendantAt, hasSlotNodes } from '../../utils/module-path-edit';
 import { slotLabel } from '../slot-label';
 import { t } from '../i18n';
 import { moveModuleTo, type DropPlace } from '../state/tree-move';

@@ -10,7 +10,7 @@ import {
   getCardHelpers,
   stableJson,
   whenDefined,
-} from '../../../modules/advanced/custom-card-module';
+} from '../../../utils/card-helpers';
 import { buildSyncContext } from '../base-editor';
 import { t, tx } from '../../i18n';
 

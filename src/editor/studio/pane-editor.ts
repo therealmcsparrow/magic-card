@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { EditorMode, EditorState, HomeAssistant, MagicCardConfig } from '../../types';
 import type { EditorStateManager } from '../state/editor-state';
 import { editorSystem } from '../../css/editor-stack';
-import { effectiveWidths, widthWeights } from '../../utils/column-widths';
+import { effectiveWidths, widthWeights } from '../../utils/column-widths-edit';
 import { countModules, selectionFromPath } from './selection';
 import type { Inspector } from '../inspector/inspector';
 

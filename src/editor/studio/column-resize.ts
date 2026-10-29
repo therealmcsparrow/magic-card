@@ -1,4 +1,5 @@
-import { parseWidth, WidthUnit } from '../../utils/column-widths';
+import { WidthUnit } from '../../utils/column-widths';
+import { parseWidth } from '../../utils/column-widths-edit';
 
 /** Narrowest a column gets from a drag / key press, in card px. */
 export const MIN_COLUMN_PX = 40;

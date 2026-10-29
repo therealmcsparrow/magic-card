@@ -2,7 +2,7 @@ import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, PopupConfig, PopupTrigger } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
-import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, popupHashError } from '../../utils/popup';
+import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, popupHashError } from '../../utils/popup-hash';
 import { popupIfLoaded } from '../../card/popup-seam';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { fieldReset } from './field-reset';

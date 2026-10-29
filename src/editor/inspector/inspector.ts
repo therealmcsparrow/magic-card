@@ -42,7 +42,8 @@ import {
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
 import { entityStats, resolveEntitySource } from '../entity-source';
-import { childListKey, replaceDescendant } from '../../utils/module-path';
+import { childListKey } from '../../utils/module-path';
+import { replaceDescendant } from '../../utils/module-path-edit';
 import { layerContext } from '../layers/placement-model';
 import { onStatus } from '../layers/bg-status';
 import { moveLayer, turnOnLowPower } from '../layers/layer-actions';

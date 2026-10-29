@@ -1,9 +1,10 @@
 import { html, nothing, TemplateResult, ReactiveController, ReactiveControllerHost } from 'lit';
 import type { HomeAssistant, PopupConfig } from '../types';
-import { isPopupEnabled, popupHash, urlWithHash } from '../utils/popup';
-import { SwipeTracker, autoCloseMs, hashMatches, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
+import { isPopupEnabled } from '../utils/popup';
+import { popupHash, urlWithHash } from '../utils/popup-hash';
+import { SwipeTracker, autoCloseMs, hashMatches, navigateToPopup, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
 import { popupCoordinator } from './popup-coordinator';
-import { EditorPlace, LocationChange, PopupHandle, navigateToPopup, popupHidden } from './popup-nav';
+import { EditorPlace, LocationChange, PopupHandle, popupHidden } from './popup-nav';
 import { t } from './i18n';
 
 export type PopupPhase = 'closed' | 'open' | 'closing';

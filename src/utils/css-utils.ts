@@ -5,7 +5,6 @@ import { entityColorCss, isEntityColor } from './entity-color';
 import { parseGradient } from './gradient';
 import { mediaCssImage } from './media';
 import { buttonPartDecls } from './button-parts';
-import { tabBorderStyle } from './tab-border';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
@@ -71,6 +70,17 @@ export function designUsesEntityColor(design: DesignConfig | undefined): boolean
 }
 
 const TAB_BORDER_KEYS = ['border_width', 'border_style', 'border_color'];
+
+/**
+ * The hover Border of a tabs module as declarations for its tab buttons. The parsers behind it are in the modules-extra
+ * chunk with the tabs view, which provides this function when it installs; a hover rule built before that has no button
+ * border, and the card renders again once the chunk is ready.
+ */
+let tabHoverBorder: ((hover: unknown) => string) | undefined;
+export const provideTabHoverBorder = (fn: ((hover: unknown) => string) | undefined): void => {
+  tabHoverBorder = fn;
+};
+
 const BORDER_KEYS = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
 
 /** The border a button / dropdown control draws when the design writes none (width, style, colour). */
@@ -292,7 +302,7 @@ export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, 
   const bar = target.tabs ? list(tabTypeStyle(hover)) : [];
   const h = (resolveEntityColors(designNumbersToCss(hover as DesignConfig)) || {}) as Record<string, unknown>;
   // the Border width, style and colour of a tabs module draw on its tab buttons, rebuilt by the tab look's own parsers
-  const buttons = target.tabs ? list(tabBorderStyle(hover)) : [];
+  const buttons = target.tabs && tabHoverBorder ? list(tabHoverBorder(hover)) : [];
   if (!decls.length && !bar.length && !buttons.length) return '';
   const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const color = nonEmpty(h.border_color) && hoverSafe(nonEmpty(h.border_color)!.replace(/;/g, ''));

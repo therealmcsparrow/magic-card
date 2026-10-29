@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 81006,
+        "cap": 79462,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 81006
+        "measured": 79462
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 69356,
-      "measured": 69356
+      "cap": 68068,
+      "measured": 68068
     }
   },
   "files": {
@@ -229,9 +229,9 @@
       "note": "23 KiB, measured 22,243 + 5 %, rounded up to 1 KiB (it carries the rules only its views render). The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-modules-extra.js": {
-      "raw": 51200,
+      "raw": 52224,
       "ceiling": 57344,
-      "note": "Video background with placement keys (background layers), weather icon CSS, clock, image (picture files and library drawings) and tabs views with the tab bar design styles. 50 KiB, measured 49,648; ceiling 57,344 (lazy-module chunk ceilings)."
+      "note": "Video background with placement keys (background layers), weather icon CSS, clock, image (picture files and library drawings) and tabs views with the tab bar design styles and the tab border parsers, plus the card helpers of the camera and custom-card views. 51 KiB, measured 51,920 (Linux build, docker node 24.22.0) rounded up to 1 KiB; ceiling 57,344 (lazy-module chunk ceilings)."
     },
     "magic-card-svg-booleans.js": {
       "raw": 8192,
@@ -930,6 +930,12 @@
       "field": "/files/magic-card-controls.js/raw",
       "from": 20480,
       "to": 23552
+    },
+    {
+      "id": "modules-extra-raw-51200-to-52224",
+      "field": "/files/magic-card-modules-extra.js/raw",
+      "from": 51200,
+      "to": 52224
     }
   ]
 }

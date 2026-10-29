@@ -10,7 +10,7 @@ import {
   renderToggleField,
 } from '../../utils/form-utils';
 import { fromYaml, toYaml } from '../../utils/yaml-utils';
-import { normalizePopupHash, popupHashError } from '../../utils/popup';
+import { normalizePopupHash, popupHashError } from '../../utils/popup-hash';
 import { popupIfLoaded } from '../../card/popup-seam';
 import { t, tx, m, tl, type MessageIndex } from '../i18n';
 
