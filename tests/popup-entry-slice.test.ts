@@ -125,4 +125,19 @@ describe('"Open pop-up" tap when the popup chunk cannot load', () => {
     expect(notice!.querySelector('button')).not.toBeNull();
     expect(location.hash).toBe('');
   });
+
+  it('a second opener card shows the notice at once when the chunk failed before its tap', async () => {
+    __setLazyImporterForTests('popup', (() => Promise.reject(new Error('404'))) as never);
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const first = await mount();
+    first._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');
+    await vi.waitFor(() => expect(failedChunkNames().has('popup')).toBe(true));
+    const second = await mount();
+    expect(second.shadowRoot!.querySelector('.mc-n')).toBeNull();
+    second._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');
+    await second.updateComplete;
+    const notice = second.shadowRoot!.querySelector('.mc-n');
+    expect(notice).not.toBeNull();
+    expect(notice!.querySelector('button')).not.toBeNull();
+  });
 });

@@ -58,9 +58,12 @@ describe('entry caps', () => {
   it('no approved_raises entry added since the start names a cap of the entry file', () => {
     const known = new Set(base.approved_raises.map((r) => r.id));
     const added = now.approved_raises.filter((r) => !known.has(r.id));
-    // the only raise of the entry cap allowed: stage-4 cap 72,979 -> 72,994 (15 B), recorded as approved once
-    const approved = { id: 'entry-stage4-72979-to-72994', field: '/entry/stages/3/cap', from: 72979, to: 72994 };
-    expect(added.filter((r) => r.field.startsWith('/entry/')), 'entry raises').toEqual([approved]);
+    // the only raises of the entry cap allowed: stage-4 cap 72,979 -> 72,994 (15 B), then 72,994 -> 72,996 (2 B), each recorded as approved once
+    const approved = [
+      { id: 'entry-stage4-72979-to-72994', field: '/entry/stages/3/cap', from: 72979, to: 72994 },
+      { id: 'entry-stage4-72994-to-72996', field: '/entry/stages/3/cap', from: 72994, to: 72996 },
+    ];
+    expect(added.filter((r) => r.field.startsWith('/entry/')), 'entry raises').toEqual(approved);
     expect(stage(now).cap, 'the raised cap is still below the cap the run started with').toBeLessThan(stage(base).cap);
   });
 

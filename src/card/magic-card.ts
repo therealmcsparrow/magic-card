@@ -1912,6 +1912,7 @@ export class MagicCard extends LitElement {
         if (open) open.api.navigate(action.hash);
         else {
           this._met.add('popup');
+          this.requestUpdate();
           void lazyChunks.popup.load().then((ok) => ok && popupIfLoaded()?.api.navigate(action.hash));
         }
         break;
