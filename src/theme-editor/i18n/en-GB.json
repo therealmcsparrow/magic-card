@@ -1366,7 +1366,7 @@
   },
   "theme-editor.ha.colour-of-the-card-border": {
     "text": "Colour of the card border.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the colour of the line around cards.",
     "max": 45
   },
   "theme-editor.ha.cooling-colour": {
@@ -1376,12 +1376,12 @@
   },
   "theme-editor.ha.cover-open-colour": {
     "text": "Cover open colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of covers, such as blinds, that are open.",
     "max": 30
   },
   "theme-editor.ha.dark-text-used-where-the-surface-stays": {
     "text": "Dark text used where the surface stays light.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the dark text colour for surfaces that stay light in every mode.",
     "max": 75
   },
   "theme-editor.ha.dashboard-background": {
@@ -1396,7 +1396,7 @@
   },
   "theme-editor.ha.disabled-controls-and-empty-slider": {
     "text": "Disabled controls and empty slider tracks.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it colours disabled controls and the empty part of slider tracks.",
     "max": 70
   },
   "theme-editor.ha.disabled-text": {
@@ -1411,7 +1411,7 @@
   },
   "theme-editor.ha.entity-icons-that-have-no-state-colour": {
     "text": "Entity icons that have no state colour.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the default colour of entity icons without a state-specific colour.",
     "max": 65
   },
   "theme-editor.ha.error-colour": {
@@ -1421,57 +1421,57 @@
   },
   "theme-editor.ha.errors-delete-buttons-and-critical": {
     "text": "Errors, delete buttons and critical states.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under the Home Assistant error colour variable; lists what it is used on.",
     "max": 70
   },
   "theme-editor.ha.extra-large-font-size": {
     "text": "Extra large font size",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the extra large text size.",
     "max": 35
   },
   "theme-editor.ha.extra-large-radius": {
     "text": "Extra large radius",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the extra large corner rounding. Radius means corner size.",
     "max": 30
   },
   "theme-editor.ha.fan-on-colour": {
     "text": "Fan on colour",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the colour of fans that are on.",
     "max": 25
   },
   "theme-editor.ha.font-family-of-card-titles": {
     "text": "Font family of card titles.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the font used for card titles.",
     "max": 45
   },
   "theme-editor.ha.font-size-of-card-titles": {
     "text": "Font size of card titles.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets the text size of card titles.",
     "max": 40
   },
   "theme-editor.ha.font-size-scale": {
     "text": "Font size scale",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable that scales every font size by one factor.",
     "max": 25
   },
   "theme-editor.ha.ha-extra-large-corner-radius": {
     "text": "HA extra large corner radius.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the extra large corner rounding. HA means Home Assistant.",
     "max": 50
   },
   "theme-editor.ha.ha-large-corner-radius-cards-use-it-by": {
     "text": "HA large corner radius. Cards use it by default.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the large corner rounding that cards use unless changed. HA means Home Assistant.",
     "max": 80
   },
   "theme-editor.ha.ha-medium-corner-radius": {
     "text": "HA medium corner radius.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the medium corner rounding. HA means Home Assistant.",
     "max": 40
   },
   "theme-editor.ha.ha-small-corner-radius": {
     "text": "HA small corner radius.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it is the small corner rounding. HA means Home Assistant.",
     "max": 40
   },
   "theme-editor.ha.header-background": {
@@ -1481,12 +1481,12 @@
   },
   "theme-editor.ha.header-background-while-editing": {
     "text": "Header background while editing",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the top bar background in dashboard edit mode.",
     "max": 50
   },
   "theme-editor.ha.header-bottom-border": {
     "text": "Header bottom border",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the line under the top bar.",
     "max": 35
   },
   "theme-editor.ha.header-height": {
@@ -1501,7 +1501,7 @@
   },
   "theme-editor.ha.header-text-while-editing": {
     "text": "Header text while editing",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the top bar text colour in dashboard edit mode.",
     "max": 40
   },
   "theme-editor.ha.heading-font": {
@@ -1511,7 +1511,7 @@
   },
   "theme-editor.ha.heading-font-size": {
     "text": "Heading font size",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Label of the Home Assistant variable for the text size of headings.",
     "max": 30
   },
   "theme-editor.ha.heating-colour": {
@@ -1521,7 +1521,7 @@
   },
   "theme-editor.ha.height-of-the-top-bar": {
     "text": "Height of the top bar.",
-    "note": "Shown in ha (theme-editor).",
+    "note": "Helper text under a Home Assistant variable; says it sets how tall the top bar is.",
     "max": 40
   },
   "theme-editor.ha.icon-colour": {
