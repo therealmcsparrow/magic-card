@@ -32472,31 +32472,31 @@
   },
   "mcu-panel.panel.a-template-named-name-already-exists": "A template named ‘{name}’ already exists.",
   "@mcu-panel.panel.a-template-named-name-already-exists": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 70 characters.",
+    "description": "Error under the name field when you save or duplicate a template and the name is taken. {name} is the name you typed. {name}: The value that replaces name in the text. Max 70 characters.",
     "x-max-length": 70,
     "x-source-hash": "bd93b912"
   },
   "mcu-panel.panel.actions": "Actions",
   "@mcu-panel.panel.actions": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Column heading in the templates table, above the open, edit, duplicate and delete buttons. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "ff8059dc"
   },
   "mcu-panel.panel.animations": "Animations",
   "@mcu-panel.panel.animations": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Label of the Animations tab in the panel tab bar. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "7f7c3306"
   },
   "mcu-panel.panel.cancel": "Cancel",
   "@mcu-panel.panel.cancel": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Button that closes the edit, duplicate or delete window without saving anything. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "19766ed6"
   },
   "mcu-panel.panel.cannot-delete-linked-cards": "Cannot delete — {n, plural, one {# linked card} other {# linked cards}}",
   "@mcu-panel.panel.cannot-delete-linked-cards": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {n}: The count the text is about. Max 50 characters.",
+    "description": "Tooltip on the greyed-out delete button of a template that cards still use. {n} is how many cards use it. {n}: The count the text is about. Max 50 characters.",
     "x-max-length": 50,
     "x-source-hash": "259c2b7a",
     "x-plural": [
@@ -32506,7 +32506,7 @@
   },
   "mcu-panel.panel.cannot-delete-name-linked-cards": "Cannot delete {name}: {n, plural, one {# linked card} other {# linked cards}}",
   "@mcu-panel.panel.cannot-delete-name-linked-cards": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {n}: The count the text is about. {name}: The value that replaces name in the text. Max 60 characters.",
+    "description": "Screen reader label of the greyed-out delete button on a template row. {name} is the template name, {n} how many cards use it. {n}: The count the text is about. {name}: The value that replaces name in the text. Max 60 characters.",
     "x-max-length": 60,
     "x-source-hash": "b411ae21",
     "x-plural": [
@@ -32516,7 +32516,7 @@
   },
   "mcu-panel.panel.cannot-delete-still-linked-to-cards": "{n, plural, one {Cannot delete — still linked to # card.} other {Cannot delete — still linked to # cards.}}",
   "@mcu-panel.panel.cannot-delete-still-linked-to-cards": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {n}: The count the text is about. Max 65 characters.",
+    "description": "Error shown when a delete is refused because cards still use the template. {n} is the number of those cards. {n}: The count the text is about. Max 65 characters.",
     "x-max-length": 65,
     "x-source-hash": "1fdb90ac",
     "x-plural": [
@@ -32526,325 +32526,325 @@
   },
   "mcu-panel.panel.card-type": "Card Type",
   "@mcu-panel.panel.card-type": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Column heading in the templates table and label of the card type field in the template editor. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "c1b8c367"
   },
   "mcu-panel.panel.cards-that-picked-this-shape-from-the": "Cards that picked this shape from the library follow your changes. A card that holds its own copy, such as a shape drawn in the card editor, keeps its points. To use this version there, pick the shape again under My shapes in the card editor.",
   "@mcu-panel.panel.cards-that-picked-this-shape-from-the": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 390 characters.",
+    "description": "Hint in the shape editor of the Shapes tab that explains which cards follow a change to a library shape. Max 390 characters.",
     "x-max-length": 390,
     "x-source-hash": "0d2a7418"
   },
   "mcu-panel.panel.close": "Close",
   "@mcu-panel.panel.close": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Tooltip and screen reader label of the close button on the template editor and on the duplicate and delete windows. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "7d9eb7ac"
   },
   "mcu-panel.panel.copies-the-config-description-and-card": "Copies the config, description, and card type. Created and updated timestamps reset to now.",
   "@mcu-panel.panel.copies-the-config-description-and-card": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 150 characters.",
+    "description": "Help text under the name field in the duplicate window, saying what the copy takes over. Max 150 characters.",
     "x-max-length": 150,
     "x-source-hash": "79e6d149"
   },
   "mcu-panel.panel.corner-shape": "Corner shape",
   "@mcu-panel.panel.corner-shape": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Detail line on a shape in the Shapes tab when the shape has no points of its own and is a corner shape. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "7833e955"
   },
   "mcu-panel.panel.created": "Created",
   "@mcu-panel.panel.created": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Column heading in the templates table for the date a template was created. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "d70b9e24"
   },
   "mcu-panel.panel.delete": "Delete",
   "@mcu-panel.panel.delete": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Tooltip of the delete button on a template row and the button that confirms the delete in its window. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "e2d0a549"
   },
   "mcu-panel.panel.delete-failed": "Delete failed",
   "@mcu-panel.panel.delete-failed": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Error in the delete window when the template could not be deleted and the server gave no reason. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "8727e2ba"
   },
   "mcu-panel.panel.delete-name": "Delete {name}",
   "@mcu-panel.panel.delete-name": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 25 characters.",
+    "description": "Screen reader label of the delete button on a template row. {name} is the template name. {name}: The value that replaces name in the text. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "3cf8146e"
   },
   "mcu-panel.panel.delete-name-this-action-cannot-be-undone": "Delete {name}? This action cannot be undone.",
   "@mcu-panel.panel.delete-name-this-action-cannot-be-undone": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 75 characters.",
+    "description": "Question in the delete window. {name} is the template name, shown in bold. {name}: The value that replaces name in the text. Max 75 characters.",
     "x-max-length": 75,
     "x-source-hash": "392e7df1"
   },
   "mcu-panel.panel.delete-template": "Delete template",
   "@mcu-panel.panel.delete-template": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Title of the window that asks you to confirm deleting a template. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "da9a9b35"
   },
   "mcu-panel.panel.deleting": "Deleting…",
   "@mcu-panel.panel.deleting": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Label of the delete button in its window while the delete is running. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "43b5894c"
   },
   "mcu-panel.panel.description": "Description",
   "@mcu-panel.panel.description": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Label of the description field in the template editor. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "526e0087"
   },
   "mcu-panel.panel.dismiss": "Dismiss",
   "@mcu-panel.panel.dismiss": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Tooltip and screen reader label of the button that hides an error message in the Animations tab. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "48845bff"
   },
   "mcu-panel.panel.drawing-icons-and-shapes-here-needs": "Drawing icons and shapes here needs Magic Card {version} or newer. Update Magic Card in HACS.",
   "@mcu-panel.panel.drawing-icons-and-shapes-here-needs": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {version}: The value that replaces version in the text. Max 150 characters.",
+    "description": "Notice in the Icons and Shapes tabs when the installed Magic Card is too old. {version} is the lowest Magic Card version that can draw them. {version}: The value that replaces version in the text. Max 150 characters.",
     "x-max-length": 150,
     "x-source-hash": "7bd8082a"
   },
   "mcu-panel.panel.drawing-images-here-needs-magic-card": "Drawing images here needs Magic Card {version} or newer. Update Magic Card in HACS.",
   "@mcu-panel.panel.drawing-images-here-needs-magic-card": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {version}: The value that replaces version in the text. Max 135 characters.",
+    "description": "Notice in the Images tab when the installed Magic Card is too old. {version} is the lowest Magic Card version that can draw images. {version}: The value that replaces version in the text. Max 135 characters.",
     "x-max-length": 135,
     "x-source-hash": "3be5111c"
   },
   "mcu-panel.panel.duplicate": "Duplicate",
   "@mcu-panel.panel.duplicate": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Tooltip of the duplicate button on a template row and the button that makes the copy in its window. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "02cdaabf"
   },
   "mcu-panel.panel.duplicate-failed": "Duplicate failed",
   "@mcu-panel.panel.duplicate-failed": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 30 characters.",
+    "description": "Error in the duplicate window when the copy could not be made and the server gave no reason. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "9e3b1adc"
   },
   "mcu-panel.panel.duplicate-name": "Duplicate {name}",
   "@mcu-panel.panel.duplicate-name": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 30 characters.",
+    "description": "Screen reader label of the duplicate button on a template row. {name} is the template name. {name}: The value that replaces name in the text. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "fe06d16b"
   },
   "mcu-panel.panel.duplicate-template": "Duplicate template",
   "@mcu-panel.panel.duplicate-template": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 30 characters.",
+    "description": "Title of the window where you name and make a copy of a template. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "b876040a"
   },
   "mcu-panel.panel.duplicating": "Duplicating…",
   "@mcu-panel.panel.duplicating": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Label of the duplicate button in its window while the copy is being made. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "c9f56dc5"
   },
   "mcu-panel.panel.edit": "Edit",
   "@mcu-panel.panel.edit": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Tooltip of the edit button on a template row and of the button that switches the preview to editing. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "464c4ffd"
   },
   "mcu-panel.panel.edit-name": "Edit {name}",
   "@mcu-panel.panel.edit-name": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 20 characters.",
+    "description": "Screen reader label of the edit button on a template row. {name} is the template name. {name}: The value that replaces name in the text. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "2313fe21"
   },
   "mcu-panel.panel.edit-template": "Edit Template",
   "@mcu-panel.panel.edit-template": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Screen reader name of the template window while it is in edit mode. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "b42b895a"
   },
   "mcu-panel.panel.edit-template-2": "Edit template",
   "@mcu-panel.panel.edit-template-2": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Screen reader label of the button in the template preview that switches to editing. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "708c9a5c"
   },
   "mcu-panel.panel.edit-the-card-using-the-editor-on-the": "Edit the card using the editor on the right. Its changes are captured live.",
   "@mcu-panel.panel.edit-the-card-using-the-editor-on-the": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 120 characters.",
+    "description": "Help text in the left pane of the template editor, pointing to the card editor on the right. Max 120 characters.",
     "x-max-length": 120,
     "x-source-hash": "bdfa7ed2"
   },
   "mcu-panel.panel.editor": "Editor",
   "@mcu-panel.panel.editor": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Heading of the right-hand pane of the template window while you edit the card. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "936a161c"
   },
   "mcu-panel.panel.failed-to-render-preview": "Failed to render preview.",
   "@mcu-panel.panel.failed-to-render-preview": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 45 characters.",
+    "description": "Error in the template preview when the card could not be drawn and gave no message of its own. Max 45 characters.",
     "x-max-length": 45,
     "x-source-hash": "aeade066"
   },
   "mcu-panel.panel.icons": "Icons",
   "@mcu-panel.panel.icons": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Label of the Icons tab in the panel tab bar. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "eae96e02"
   },
   "mcu-panel.panel.images": "Images",
   "@mcu-panel.panel.images": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Label of the Images tab in the panel tab bar. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "be7e2f20"
   },
   "mcu-panel.panel.images-are-stored-in-home-assistant-not": "Images are stored in Home Assistant, not in your dashboard YAML. Export all keeps a backup.",
   "@mcu-panel.panel.images-are-stored-in-home-assistant-not": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 150 characters.",
+    "description": "Hint above the image list in the Images tab, saying where images are kept and how to back them up. Max 150 characters.",
     "x-max-length": 150,
     "x-source-hash": "ae2b9610"
   },
   "mcu-panel.panel.install-magic-card-to-draw-icons-and": "Install Magic Card to draw icons and shapes here.",
   "@mcu-panel.panel.install-magic-card-to-draw-icons-and": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 80 characters.",
+    "description": "Notice in the Icons and Shapes tabs when Magic Card is not installed. Max 80 characters.",
     "x-max-length": 80,
     "x-source-hash": "9fcb9cfe"
   },
   "mcu-panel.panel.install-magic-card-to-draw-images-here": "Install Magic Card to draw images here.",
   "@mcu-panel.panel.install-magic-card-to-draw-images-here": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 65 characters.",
+    "description": "Notice in the Images tab when Magic Card is not installed. Max 65 characters.",
     "x-max-length": 65,
     "x-source-hash": "0fdc1e5b"
   },
   "mcu-panel.panel.last-updated": "Last Updated",
   "@mcu-panel.panel.last-updated": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Column heading in the templates table for the date a template was last changed. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "048c7f2e"
   },
   "mcu-panel.panel.library": "Library",
   "@mcu-panel.panel.library": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Label of the Library tab in the panel tab bar. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "dc20b3d5"
   },
   "mcu-panel.panel.linked-cards": "Linked Cards",
   "@mcu-panel.panel.linked-cards": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Column heading in the templates table for how many cards use each template. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "1b795cc6"
   },
   "mcu-panel.panel.lovelace-card-helpers-are-unavailable": "Lovelace card helpers are unavailable until a dashboard has been opened.",
   "@mcu-panel.panel.lovelace-card-helpers-are-unavailable": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 120 characters.",
+    "description": "Error in the template preview when Home Assistant has not yet loaded the helpers for drawing cards. Opening any dashboard fixes it. Max 120 characters.",
     "x-max-length": 120,
     "x-source-hash": "7ab442df"
   },
   "mcu-panel.panel.magic-card-could-not-be-loaded-from-url": "Magic Card could not be loaded from {url}.",
   "@mcu-panel.panel.magic-card-could-not-be-loaded-from-url": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {url}: The value that replaces url in the text. Max 70 characters.",
+    "description": "Notice in the template editor and preview when the Magic Card file is not found. {url} is the address the panel tried. {url}: The value that replaces url in the text. Max 70 characters.",
     "x-max-length": 70,
     "x-source-hash": "a1a97249"
   },
   "mcu-panel.panel.magic-card-isn-t-installed-install-it": "Magic Card isn't installed. Install it from HACS and add it as a dashboard resource.",
   "@mcu-panel.panel.magic-card-isn-t-installed-install-it": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 135 characters.",
+    "description": "Notice in the template editor and preview when Magic Card is not installed. Max 135 characters.",
     "x-max-length": 135,
     "x-source-hash": "cd61b1ec"
   },
   "mcu-panel.panel.magic-card-utils": "Magic Card Utils",
   "@mcu-panel.panel.magic-card-utils": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 30 characters.",
+    "description": "Screen reader name of the panel tab bar. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "b19971b3"
   },
   "mcu-panel.panel.magic-card-version-is-too-old-for-magic": "Magic Card {version} is too old for Magic Card Utils (needs API version {min} or newer). Update Magic Card.",
   "@mcu-panel.panel.magic-card-version-is-too-old-for-magic": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {min}: The value that replaces min in the text. {version}: The value that replaces version in the text. Max 175 characters.",
+    "description": "Notice in the template editor and preview when Magic Card is too old. {version} is the installed Magic Card API version, {min} the lowest one the panel accepts. {min}: The value that replaces min in the text. {version}: The value that replaces version in the text. Max 175 characters.",
     "x-max-length": 175,
     "x-source-hash": "ecaa55e6"
   },
   "mcu-panel.panel.name": "Name",
   "@mcu-panel.panel.name": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Column heading in the templates table and label of the name field in the template editor. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "dcd1d522"
   },
   "mcu-panel.panel.name-copy": "{name} (copy)",
   "@mcu-panel.panel.name-copy": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 25 characters.",
+    "description": "Name offered in the duplicate window for the copy of a template. {name} is the name of the original. {name}: The value that replaces name in the text. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "83ad538b"
   },
   "mcu-panel.panel.name-copy-n": "{name} (copy {n})",
   "@mcu-panel.panel.name-copy-n": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {n}: The value that replaces n in the text. {name}: The value that replaces name in the text. Max 30 characters.",
+    "description": "Name offered in the duplicate window when ‘(copy)’ is taken. {name} is the original name, {n} the first free number. {n}: The value that replaces n in the text. {name}: The value that replaces name in the text. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "b2ea7059"
   },
   "mcu-panel.panel.name-is-required": "Name is required.",
   "@mcu-panel.panel.name-is-required": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 30 characters.",
+    "description": "Error under the name field when you save or duplicate a template with an empty name. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "f83a4bc1"
   },
   "mcu-panel.panel.new-template-name": "New template name",
   "@mcu-panel.panel.new-template-name": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 30 characters.",
+    "description": "Label of the name field in the duplicate window. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "0a05447d"
   },
   "mcu-panel.panel.no-card-type-available-neither-the": "No card type available — neither the config nor the template carries a `type`.",
   "@mcu-panel.panel.no-card-type-available-neither-the": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 125 characters.",
+    "description": "Error in the template preview when the card has no type to draw. `type` is the config key and stays as written. Max 125 characters.",
     "x-max-length": 125,
     "x-source-hash": "4e67d440"
   },
   "mcu-panel.panel.no-config-to-preview": "No config to preview.",
   "@mcu-panel.panel.no-config-to-preview": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 35 characters.",
+    "description": "Message in the template preview when the template has no card settings to show. Max 35 characters.",
     "x-max-length": 35,
     "x-source-hash": "2280220b"
   },
   "mcu-panel.panel.no-templates-saved-yet": "No templates saved yet.",
   "@mcu-panel.panel.no-templates-saved-yet": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 40 characters.",
+    "description": "Empty state of the Templates tab when no template exists. Max 40 characters.",
     "x-max-length": 40,
     "x-source-hash": "6d4c6b7c"
   },
   "mcu-panel.panel.only-administrators-can-create-or-change": "Only administrators can create or change images.",
   "@mcu-panel.panel.only-administrators-can-create-or-change": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 80 characters.",
+    "description": "Notice in the Images tab for users who are not Home Assistant administrators. Max 80 characters.",
     "x-max-length": 80,
     "x-source-hash": "ec7154b6"
   },
   "mcu-panel.panel.only-administrators-can-create-or-change-2": "Only administrators can create or change icons and shapes.",
   "@mcu-panel.panel.only-administrators-can-create-or-change-2": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 95 characters.",
+    "description": "Notice in the Icons and Shapes tabs for users who are not Home Assistant administrators. Max 95 characters.",
     "x-max-length": 95,
     "x-source-hash": "a634e825"
   },
   "mcu-panel.panel.open-in-studio": "Open in studio",
   "@mcu-panel.panel.open-in-studio": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Tooltip of the button on a template row that opens the template in the studio. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "ab1e4137"
   },
   "mcu-panel.panel.open-name-in-studio": "Open {name} in studio",
   "@mcu-panel.panel.open-name-in-studio": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {name}: The value that replaces name in the text. Max 35 characters.",
+    "description": "Screen reader label of the open in studio button on a template row. {name} is the template name. {name}: The value that replaces name in the text. Max 35 characters.",
     "x-max-length": 35,
     "x-source-hash": "16681a49"
   },
   "mcu-panel.panel.points": "{n, plural, one {# point} other {# points}}",
   "@mcu-panel.panel.points": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {n}: The count the text is about. Max 15 characters.",
+    "description": "Detail line on a shape in the Shapes tab. {n} is how many points the shape has. {n}: The count the text is about. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "0dbf0152",
     "x-plural": [
@@ -32854,133 +32854,133 @@
   },
   "mcu-panel.panel.preview": "Preview",
   "@mcu-panel.panel.preview": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Heading of the right-hand pane of the template window while it only shows the card. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "324b134f"
   },
   "mcu-panel.panel.request-failed": "Request failed",
   "@mcu-panel.panel.request-failed": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 25 characters.",
+    "description": "Fallback error message when a request to Home Assistant fails and returns no reason. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "cfce761b"
   },
   "mcu-panel.panel.save": "Save",
   "@mcu-panel.panel.save": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Button in the template editor that saves your changes. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "1509f561"
   },
   "mcu-panel.panel.saved-to-the-library-cards-with-their": "Saved to the library. Cards with their own copy of this shape keep it. To use this version in such a card, pick the shape again under My shapes in the card editor.",
   "@mcu-panel.panel.saved-to-the-library-cards-with-their": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 265 characters.",
+    "description": "Message in the shape editor after a shape is saved, explaining that cards with their own copy are not changed. Max 265 characters.",
     "x-max-length": 265,
     "x-source-hash": "b592e8d1"
   },
   "mcu-panel.panel.saving": "Saving…",
   "@mcu-panel.panel.saving": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Label of the save button in the template editor while the save is running. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "23e39291"
   },
   "mcu-panel.panel.shapes": "Shapes",
   "@mcu-panel.panel.shapes": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Label of the Shapes tab in the panel tab bar. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "75e8028a"
   },
   "mcu-panel.panel.template": "Template",
   "@mcu-panel.panel.template": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Heading of the left-hand pane of the template editor, above the name, description and card type. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "0575f29d"
   },
   "mcu-panel.panel.template-preview": "Template Preview",
   "@mcu-panel.panel.template-preview": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 30 characters.",
+    "description": "Screen reader name of the template window while it only shows the card. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "3fb9185a"
   },
   "mcu-panel.panel.templates": "Templates",
   "@mcu-panel.panel.templates": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 15 characters.",
+    "description": "Label of the Templates tab in the panel tab bar. Max 15 characters.",
     "x-max-length": 15,
     "x-source-hash": "56b564b7"
   },
   "mcu-panel.panel.that-shape-could-not-be-read-try-again": "That shape could not be read. Try again.",
   "@mcu-panel.panel.that-shape-could-not-be-read-try-again": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 65 characters.",
+    "description": "Notice in the Shapes tab when a chosen shape fails to open in the shape editor. Max 65 characters.",
     "x-max-length": 65,
     "x-source-hash": "9fe1b5b7"
   },
   "mcu-panel.panel.that-shape-no-longer-exists": "That shape no longer exists.",
   "@mcu-panel.panel.that-shape-no-longer-exists": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 45 characters.",
+    "description": "Notice in the Shapes tab when a chosen shape has been deleted in the meantime. Max 45 characters.",
     "x-max-length": 45,
     "x-source-hash": "10a53b14"
   },
   "mcu-panel.panel.the-animation-could-not-be-deleted": "The animation could not be deleted",
   "@mcu-panel.panel.the-animation-could-not-be-deleted": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 55 characters.",
+    "description": "Error in the Animations tab when deleting an animation fails and the server gave no reason. Max 55 characters.",
     "x-max-length": 55,
     "x-source-hash": "dc2678e7"
   },
   "mcu-panel.panel.the-animation-could-not-be-saved": "The animation could not be saved",
   "@mcu-panel.panel.the-animation-could-not-be-saved": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 55 characters.",
+    "description": "Error in the Animations tab when saving an animation fails and the server gave no reason. Max 55 characters.",
     "x-max-length": 55,
     "x-source-hash": "7e7c0cdb"
   },
   "mcu-panel.panel.the-animation-library-could-not-be": "The animation library could not be loaded.",
   "@mcu-panel.panel.the-animation-library-could-not-be": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 70 characters.",
+    "description": "Notice in the Animations tab when the list of saved animations cannot be fetched. A Try again button follows. Max 70 characters.",
     "x-max-length": 70,
     "x-source-hash": "e7b0c030"
   },
   "mcu-panel.panel.the-animation-studio-could-not-be-loaded": "The animation studio could not be loaded. It ships with Magic Card as {file}: update Magic Card to a version that includes it.",
   "@mcu-panel.panel.the-animation-studio-could-not-be-loaded": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {file}: The value that replaces file in the text. Max 205 characters.",
+    "description": "Notice in the Animations tab when the studio file is missing from Magic Card. {file} is the name of that file. {file}: The value that replaces file in the text. Max 205 characters.",
     "x-max-length": 205,
     "x-source-hash": "f4b7469d"
   },
   "mcu-panel.panel.the-editor-files-could-not-be-loaded": "The editor files could not be loaded from Magic Card. Reload the page and try again.",
   "@mcu-panel.panel.the-editor-files-could-not-be-loaded": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 135 characters.",
+    "description": "Notice in the Icons, Shapes and Images tabs when the editor files from Magic Card fail to load. Max 135 characters.",
     "x-max-length": 135,
     "x-source-hash": "dd90f518"
   },
   "mcu-panel.panel.the-magic-card-editor-could-not-be": "The Magic Card editor could not be loaded.",
   "@mcu-panel.panel.the-magic-card-editor-could-not-be": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 70 characters.",
+    "description": "Notice in the template editor when the Magic Card card editor fails to load. Max 70 characters.",
     "x-max-length": 70,
     "x-source-hash": "2dac0634"
   },
   "mcu-panel.panel.the-template-could-not-be-saved": "The template could not be saved.",
   "@mcu-panel.panel.the-template-could-not-be-saved": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 55 characters.",
+    "description": "Error in the template editor when saving fails and the server gave no reason. Max 55 characters.",
     "x-max-length": 55,
     "x-source-hash": "d7c3ca43"
   },
   "mcu-panel.panel.the-theme-editor-could-not-be-loaded-it": "The theme editor could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
   "@mcu-panel.panel.the-theme-editor-could-not-be-loaded-it": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
+    "description": "Notice in the Themes tab when the theme editor file is missing. {file} is the name of that file, {version} the lowest Magic Card version that has it. {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
     "x-max-length": 185,
     "x-source-hash": "beaf6a42"
   },
   "mcu-panel.panel.themes": "Themes",
   "@mcu-panel.panel.themes": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 10 characters.",
+    "description": "Label of the Themes tab in the panel tab bar. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "43ae3265"
   },
   "mcu-panel.panel.this-magic-card-utils-version-doesn-t": "This Magic Card Utils version doesn't match the theme editor in Magic Card. Update both to their latest versions.",
   "@mcu-panel.panel.this-magic-card-utils-version-doesn-t": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 185 characters.",
+    "description": "Notice in the Themes tab when the theme editor and this panel are from versions that do not work together. Max 185 characters.",
     "x-max-length": 185,
     "x-source-hash": "01cd0534"
   },
   "mcu-panel.panel.this-template-is-still-linked-to-cards": "{n, plural, one {This template is still linked to # card and cannot be deleted. Remove the bindings first.} other {This template is still linked to # cards and cannot be deleted. Remove the bindings first.}}",
   "@mcu-panel.panel.this-template-is-still-linked-to-cards": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). {n}: The count the text is about. Max 145 characters.",
+    "description": "Message in the delete window when cards still use the template. {n} is the number of those cards. {n}: The count the text is about. Max 145 characters.",
     "x-max-length": 145,
     "x-source-hash": "83def8f0",
     "x-plural": [
@@ -32990,7 +32990,7 @@
   },
   "mcu-panel.panel.try-again": "Try again",
   "@mcu-panel.panel.try-again": {
-    "description": "Shown in the Magic Card Utils panel (mcu-panel). Max 20 characters.",
+    "description": "Button under a load error in the Animations, Themes, Library, Shapes, Images and Icons tabs that tries the load again. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "d8b8392e"
   },

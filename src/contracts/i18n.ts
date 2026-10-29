@@ -100,7 +100,7 @@
  *   {kind, select, line {...} other {...}}         `other` required
  * Branches may hold {name} arguments, not another plural or select. `=N` and the plural category are chosen from
  * the number as it is shown (rounded to the one fraction digit formatNumber prints); `#` prints that number. No
- * literal braces, no newlines, no '|'. Deviation from icu.S3: there is no apostrophe quoting. D6 refuses an
+ * literal braces, no newlines, no '|'. The runtime has no apostrophe quoting. D6 refuses an
  * apostrophe before { } or # in a catalogue, so no message needs it; an apostrophe elsewhere ("Don't") is text.
  * Arguments are inserted as text after the locale text is chosen. Never
  * innerHTML. tx(id, args) returns parts (string | unknown) so lit can render rich arguments, e.g.

@@ -132,8 +132,24 @@ describe('export', () => {
     expect(f['en-US'].json['@demo.panel.title'].source_text).toBe('Hello');
   });
 
-  it('flags only the stale translation with x-stale: true, never the English', () => {
+  it('leaves x-stale off a translation whose current English has a waiver', () => {
     const f = flatFiles(exported());
+    expect(f['nl'].json['@demo.panel.colour']['x-stale']).not.toBe(true);
+    expect(f['nl'].json['@demo.panel.colour']['x-source-hash']).toBe(sourceHash(NEW_COLOUR));
+  });
+
+  it('flags a waiver for an older English text as stale again', () => {
+    const p = fixture();
+    p.writeJson('i18n/waivers.json', [{ key: 'demo.panel.colour', hash: sourceHash(OLD_COLOUR), reason: 'Old revision' }]);
+    expect(p.flat('export').code).toBe(0);
+    expect(flatFiles(p)['nl'].json['@demo.panel.colour']['x-stale']).toBe(true);
+  });
+
+  it('flags only the stale translation with x-stale: true, never the English', () => {
+    const p = fixture();
+    p.writeJson('i18n/waivers.json', []);
+    expect(p.flat('export').code).toBe(0);
+    const f = flatFiles(p);
     expect(f['nl'].json['@demo.panel.colour']['x-stale']).toBe(true);
     for (const k of ['demo.panel.title', 'demo.panel.count', 'demo.panel.hi', 'other.misc.note']) expect(f['nl'].json[`@${k}`]['x-stale'], k).not.toBe(true);
     for (const k of Object.keys(f['en-GB'].json).filter((k) => k.startsWith('@') && k !== '@@locale')) expect(f['en-GB'].json[k]['x-stale'], k).toBeUndefined();
@@ -325,6 +341,12 @@ describe('import refuses untrusted input and writes nothing', () => {
     ['the key constructor', (p) => editFlat(p, 'nl', (j) => (j.constructor = 'polluted'))],
     ['a key that does not match KEY_PATTERN', (p) => editFlat(p, 'nl', (j) => (j['Demo.Bad'] = 'Boe'))],
     ['a text with a pipe', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hallo | wereld'))],
+    ['a text with a right-to-left override', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hal' + String.fromCodePoint(0x202E) + 'lo'))],
+    ['a text with a bidi isolate', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hal' + String.fromCodePoint(0x2066) + 'lo'))],
+    ['a text with a C1 control character', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hal' + String.fromCodePoint(0x0085) + 'lo'))],
+    ['a text with a zero-width space', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hal' + String.fromCodePoint(0x200B) + 'lo'))],
+    ['a text with a byte order mark', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hal' + String.fromCodePoint(0xFEFF) + 'lo'))],
+    ['a text with a null character', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hal' + String.fromCodePoint(0x0000) + 'lo'))],
     ['a text with a newline', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.title'] = 'Hallo\nwereld'))],
     ['a plural without an other branch', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.count'] = '{n, plural, one {# stuk}}'))],
     ['a plural branch Dutch does not have', (p) => editFlat(p, 'nl', (j) => (j['demo.panel.count'] = '{n, plural, one {# stuk} few {# stuks} other {# stuks}}'))],
@@ -348,6 +370,15 @@ describe('import refuses untrusted input and writes nothing', () => {
     expect(r.all).not.toMatch(/Cannot find module|MODULE_NOT_FOUND|heap out of memory/);
     expect(p.snapshot()).toEqual(before);
     expect(({} as Record<string, unknown>).polluted, 'Object.prototype stays clean').toBeUndefined();
+  });
+
+  it('does not repeat the file bytes when the file is not valid JSON', () => {
+    const p = exported();
+    raw(p, 'nl', () => '{ "SECRETWORD": nope }');
+    const r = p.flat('import');
+    expect(r.code).not.toBe(0);
+    expect(r.all).toContain('not valid JSON');
+    expect(r.all).not.toContain('SECRETWORD');
   });
 
   it('refuses an import when the exchange folder is missing', () => {
@@ -439,8 +470,23 @@ describe('the Magic Card Utils namespace', () => {
     const p = withMcu();
     expect(p.flat('export', '--mcu', p.abs('mcu')).code).toBe(0);
     const before = p.snapshot();
-    expect(p.flat('import').code).not.toBe(0);
+    const r = p.flat('import');
+    expect(r.code).not.toBe(0);
+    expect(r.all).toContain('--mcu');
+    expect(r.all).toContain('mcu-panel.panel.save');
+    expect(r.all, 'no advice to delete a key the repository does own').not.toMatch(/delete it in the service/);
     expect(p.flat('export').code).not.toBe(0);
+    expect(p.snapshot()).toEqual(before);
+  });
+
+  it('refuses a Magic Card Utils key that --mcu does not know and says to delete it', () => {
+    const p = withMcu();
+    expect(p.flat('export', '--mcu', p.abs('mcu')).code).toBe(0);
+    editFlat(p, 'nl', (j) => (j['mcu-panel.panel.ghost'] = 'Boe'));
+    const before = p.snapshot();
+    const r = p.flat('import', '--mcu', p.abs('mcu'));
+    expect(r.code).not.toBe(0);
+    expect(r.all).toContain('mcu-panel.panel.ghost');
     expect(p.snapshot()).toEqual(before);
   });
 });

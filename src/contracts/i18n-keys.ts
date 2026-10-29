@@ -26,7 +26,7 @@
  * A message in these files is the runtime's ICU subset: at most three brace levels (TOP in src/i18n/runtime.ts), so a select over a
  * plural with an argument in a branch is written as one key per select value; every plural and select has an
  * `other` branch; a plural branch is `=N` or one of the CLDR cardinal categories of its locale (Node's
- * Intl.PluralRules); no apostrophe stands before `{`, `}` or `#` (the runtime has no quoting; deviation from icu.S3).
+ * Intl.PluralRules); no apostrophe stands before `{`, `}` or `#` (the runtime has no apostrophe quoting).
  * Every file is sorted by key, two-space JSON, LF, final newline (stable diffs; English stays visible in PRs).
  *
  * ── Source hash and stale translations ──

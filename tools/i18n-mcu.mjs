@@ -206,6 +206,7 @@ function buildKeyed(mcuRoot, dir) {
     if (r.level === 'error') errors.push(`${r.rule} ${r.msg}`);
   }
   for (const p of waivers.problems) errors.push(p);
+  errors.push(...keys.checkWaivers(waivers.waivers, [cat]));
   for (const h of hard) errors.push(`D5 ${NS} ${h}`);
   for (const [key, e] of cat.gb) {
     for (const loc of ['gb', 'us', 'nl']) {

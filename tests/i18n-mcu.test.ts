@@ -127,4 +127,28 @@ describe('tools/i18n-mcu.mjs', () => {
     expect(errors).toContain('D1 mcu-panel');
     expect(errors).toContain('is stale');
   });
+
+  it('runs the waiver checks on the panel catalogue: unknown key, old hash and empty reason are errors', () => {
+    const root = mcuRoot();
+    migratePanel(root, { write: true });
+    const gb = JSON.parse(fs.readFileSync(path.join(root, 'i18n/en-GB.json'), 'utf8'));
+    const hash = (nl: Record<string, { hash: string }>) => nl['mcu-panel.panel.save'].hash;
+    const nl = JSON.parse(fs.readFileSync(path.join(root, 'i18n/nl.json'), 'utf8'));
+    expect(gb['mcu-panel.panel.save']).toBeDefined();
+    const waivers = path.join(root, 'i18n/waivers.json');
+    fs.writeFileSync(waivers, JSON.stringify([{ key: 'mcu-panel.panel.save', hash: hash(nl), reason: 'fine' }]));
+    expect(buildPanel(root).errors.filter((e: string) => e.startsWith('D9'))).toEqual([]);
+    fs.writeFileSync(
+      waivers,
+      JSON.stringify([
+        { key: 'mcu-panel.panel.ghost', hash: hash(nl), reason: 'x' },
+        { key: 'mcu-panel.panel.save', hash: 'deadbeef', reason: 'x' },
+      ]),
+    );
+    const out = buildPanel(root).errors.join('\n');
+    expect(out).toContain('"mcu-panel.panel.ghost" is not a key');
+    expect(out).toContain('holds hash deadbeef');
+    fs.writeFileSync(waivers, JSON.stringify([{ key: 'mcu-panel.panel.save', hash: hash(nl), reason: '  ' }]));
+    expect(buildPanel(root).errors.join('\n')).toContain('has no reason');
+  });
 });

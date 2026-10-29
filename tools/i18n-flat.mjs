@@ -24,8 +24,13 @@ const MCU_NS = 'mcu-panel';
 const PROTOTYPE_NAMES = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_TEXT_CHARS = 2000;
 const MAX_REPORTED = 40;
-// eslint-disable-next-line no-control-regex -- the check is for control characters
-const CONTROL = /[\u0000-\u001f\u007f]/;
+// Control characters (C0, DEL, C1), line and paragraph separators, bidi marks, overrides and isolates, and the
+// invisible format characters (zero-width, word joiner, invisible operators, byte order mark) are not message text.
+const CONTROL = new RegExp(
+  '[' + [[0, 0x1f], [0x7f, 0x9f], [0x61c], [0x200b, 0x200f], [0x2028, 0x202e], [0x2060, 0x2069], [0xfeff]]
+    .map(([a, b]) => String.fromCodePoint(a) + (b ? '-' + String.fromCodePoint(b) : ''))
+    .join('') + ']',
+);
 const byCode = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const rel = (p) => path.relative(lib.ROOT, p).split(path.sep).join('/');
 
@@ -36,18 +41,24 @@ const refuse = (...lines) => {
 
 // ---- the catalogues ----
 
+const waiversOf = (root) => keys.readWaivers(path.join(root, contract.WAIVERS_FILE)).waivers;
+let cardWaiverMap;
+const cardWaivers = () => (cardWaiverMap ??= waiversOf(lib.ROOT));
+/** A waiver confirms every locale of a key for one English revision (the Map keys of readWaivers). */
+const hasWaiver = (waivers, key, hash) => waivers.has(key + String.fromCharCode(0) + hash);
+
 /** Every key namespace as { ns, dir, cat }; the Magic Card Utils namespace when a repository is given. */
 function loadNamespaces(mcu) {
   const out = [];
   for (const n of lib.activeNamespaces()) {
     const cat = keys.loadCatalogues(n.dir);
-    if (cat.has) out.push({ ns: n.ns, dir: n.dir, cat });
+    if (cat.has) out.push({ ns: n.ns, dir: n.dir, cat, waivers: cardWaivers() });
   }
   if (mcu) {
     const dir = path.resolve(mcu, 'i18n');
     const cat = keys.loadCatalogues(dir);
     if (!cat.has) refuse(`${dir}: no en-GB.json (is "${mcu}" the Magic Card Utils repository?)`);
-    out.push({ ns: MCU_NS, dir, cat });
+    out.push({ ns: MCU_NS, dir, cat, waivers: waiversOf(path.resolve(mcu)) });
   }
   return out;
 }
@@ -169,7 +180,7 @@ function exportAll(namespaces) {
       meta['x-source-hash'] = hash;
       if (locale === 'nl') {
         const have = ns.cat.nl.get(row.key);
-        if (isObject(have) && have.hash !== hash) meta['x-stale'] = true;
+        if (isObject(have) && have.hash !== hash && !hasWaiver(ns.waivers, row.key, hash)) meta['x-stale'] = true;
       }
       const plural = pluralCategories(text);
       if (plural.length) meta['x-plural'] = plural;
@@ -265,8 +276,8 @@ function readExchange(file, locale, errors) {
   let data;
   try {
     data = JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch (e) {
-    errors.push(`${name}: not valid JSON (${String(e.message).slice(0, 80)})`);
+  } catch {
+    errors.push(`${name}: not valid JSON`);
     return null;
   }
   if (!isObject(data)) {
@@ -290,10 +301,15 @@ function readExchange(file, locale, errors) {
 }
 
 /** The texts of one returned file that pass the checks: Map key -> text. Problems go to errors. */
-function checkTexts(file, locale, model, errors) {
+function checkTexts(file, locale, model, errors, mcu) {
   const texts = new Map();
   const unknown = [];
+  const mcuKeys = [];
   for (const [key, value] of file.values) {
+    if (!mcu && key.startsWith(MCU_NS + '.')) {
+      mcuKeys.push(key);
+      continue;
+    }
     const row = contract.KEY_PATTERN.test(key) ? model.get(key) : undefined;
     if (!row) {
       unknown.push(key);
@@ -308,6 +324,10 @@ function checkTexts(file, locale, model, errors) {
     if (bad) errors.push(`${file.name}: "${key}" ${bad}`);
     else texts.set(key, value);
   }
+  if (mcuKeys.length) {
+    const shown = mcuKeys.slice(0, 3).map((k) => JSON.stringify(k.slice(0, 120))).join(', ');
+    errors.push(`${file.name}: holds ${mcuKeys.length} ${MCU_NS} keys (${shown}${mcuKeys.length > 3 ? ', ...' : ''}): pass --mcu <magic-card-utils repo> so the import knows them`);
+  }
   for (const key of unknown.slice(0, MAX_REPORTED)) errors.push(`${file.name}: unknown key ${JSON.stringify(key.slice(0, 120))} is not in en-GB.json (delete it in the service)`);
   if (unknown.length > MAX_REPORTED) errors.push(`${file.name}: and ${unknown.length - MAX_REPORTED} more unknown keys`);
   return texts;
@@ -316,7 +336,7 @@ function checkTexts(file, locale, model, errors) {
 /** '' when a returned text is fine for its key: a valid message (D6) with the English arguments (D2) that fits (D8). */
 function textProblem(text, locale, row) {
   if (text.length > MAX_TEXT_CHARS) return `is longer than ${MAX_TEXT_CHARS} characters`;
-  if (CONTROL.test(text)) return 'has a control character';
+  if (CONTROL.test(text)) return 'has a control, bidi or invisible formatting character';
   const p = lib.parseMessage(text, false, new Map(), { locale, quotes: true });
   if (p.error) return `(${locale}): ${p.error}`;
   const base = lib.parseMessage(row.gb.text, false, new Map(), { locale: BASE, quotes: true });
@@ -387,7 +407,7 @@ function runImport({ mcu, locale, files }) {
   for (const job of jobs) {
     const file = readExchange(job.file, job.locale, errors);
     if (!file) continue;
-    const texts = checkTexts(file, job.locale, model, errors);
+    const texts = checkTexts(file, job.locale, model, errors, mcu);
     const plan = job.locale === 'nl' ? planDutch(texts, model, namespaces) : planAmerican(texts, model, errors);
     for (const [p, content] of plan) writes.set(p, content);
   }
