@@ -40,7 +40,7 @@ const readJson = (file, what) => {
   try {
     return JSON.parse(readFileSync(file, 'utf8'));
   } catch (e) {
-    throw new Error(`cannot read ${what} (${file}): ${e.message}`);
+    throw new Error(`cannot read ${what} (${file}): ${e.message}`, { cause: e });
   }
 };
 
@@ -211,7 +211,10 @@ export const cardBundle = (chunks) => {
   const inBundle = new Set([entry.id]);
   for (let grew = true; grew; ) {
     grew = false;
-    for (const c of chunks) if (!inBundle.has(c.id) && (c.parents ?? []).some((p) => inBundle.has(p))) inBundle.add(c.id), (grew = true);
+    for (const c of chunks) if (!inBundle.has(c.id) && (c.parents ?? []).some((p) => inBundle.has(p))) {
+        inBundle.add(c.id);
+        grew = true;
+      }
   }
   return { entry, bundle: chunks.filter((c) => inBundle.has(c.id)) };
 };

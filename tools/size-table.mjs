@@ -58,7 +58,6 @@ function decodeMappings(mappings) {
   let src = 0;
   let oLine = 0;
   let oCol = 0;
-  let name = 0;
   for (const lineStr of mappings.split(';')) {
     const segs = [];
     let col = 0;
@@ -82,7 +81,6 @@ function decodeMappings(mappings) {
         src += f[1];
         oLine += f[2];
         oCol += f[3];
-        if (f.length >= 5) name += f[4];
         segs.push({ col, src, sLine: oLine, sCol: oCol });
       } else segs.push({ col, src: -1, sLine: -1, sCol: -1 });
     }

@@ -81,7 +81,6 @@ export function scanText(text) {
 
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const sha256 = (data) => createHash('sha256').update(data).digest('hex');
-const loadKeys = () => JSON.parse(readFileSync(KEYS_FILE, 'utf8'));
 
 function fixtureFiles() {
   return readdirSync(FIXTURES)
@@ -135,7 +134,6 @@ export function classifyConfig(config, keys) {
   const nodeKeys = set(keys.layout_node);
   const commonKeys = set(keys.module_common);
   const designCss = set(keys.design.css);
-  const designStruct = set(keys.design.structure);
   const ruleDesignKeys = set(keys.design.conditional_rule);
   const displayKeys = set(keys.display.keys);
   const condKeys = set(keys.display.condition_keys);
@@ -408,7 +406,7 @@ function build() {
     try {
       config = parseYaml(text, f);
     } catch (e) {
-      throw new Error(`${f}: ${e.message}`);
+      throw new Error(`${f}: ${e.message}`, { cause: e });
     }
     const r = classifyConfig(config, keys);
     explain[id] = r.found;

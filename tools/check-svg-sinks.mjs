@@ -94,7 +94,7 @@ const readJson = (file, what) => {
   try {
     return JSON.parse(readFileSync(file, 'utf8'));
   } catch (e) {
-    throw new Error(`cannot read ${what} (${file}): ${e.message}`);
+    throw new Error(`cannot read ${what} (${file}): ${e.message}`, { cause: e });
   }
 };
 

@@ -264,7 +264,7 @@ const argNames = (a) => [...a.keys()].sort().join(',');
 const cap = (w, like) => (like === like.toUpperCase() && like.length > 1 ? w.toUpperCase() : like[0] === like[0].toUpperCase() ? w[0].toUpperCase() + w.slice(1) : w);
 
 /** Applies the word list to text outside the {name}, plural / select keys of a message. */
-function usText(text, words, exceptions) {
+function usText(text, words) {
   const word = (s) => s.replace(/[A-Za-z]+/g, (w) => (Object.prototype.hasOwnProperty.call(words, w.toLowerCase()) ? cap(words[w.toLowerCase()], w) : w));
   const walk = (s) => {
     let out = '';
@@ -315,7 +315,7 @@ function usText(text, words, exceptions) {
 function usConverter() {
   const { EN_US_WORDS } = loadContract();
   const exceptions = new Map(Object.entries(readJson(path.join(__dirname, 'en-US-exceptions.json'), {})));
-  return (text) => (exceptions.has(text) ? exceptions.get(text) : usText(text, EN_US_WORDS, exceptions));
+  return (text) => (exceptions.has(text) ? exceptions.get(text) : usText(text, EN_US_WORDS));
 }
 
 /** en-US table for a set of English texts: { text: american text }. */
@@ -324,7 +324,7 @@ function generateUS(ids) {
   const exceptions = readJson(path.join(__dirname, 'en-US-exceptions.json'), {});
   const out = {};
   for (const id of sortedIds(ids)) {
-    out[id] = Object.prototype.hasOwnProperty.call(exceptions, id) ? exceptions[id] : usText(id, EN_US_WORDS, exceptions);
+    out[id] = Object.prototype.hasOwnProperty.call(exceptions, id) ? exceptions[id] : usText(id, EN_US_WORDS);
   }
   return out;
 }

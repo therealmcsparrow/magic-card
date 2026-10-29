@@ -99,12 +99,12 @@ export function scanPanel(source, file = PANEL_REL) {
       const parts = ts.isNoSubstitutionTemplateLiteral(t) ? [t.text] : [t.head.text, ...t.templateSpans.map((s) => s.literal.text)];
       const joined = parts.join('\u0000').replace(/<!--[\s\S]*?-->/g, '').replace(/<(style|script)\b[\s\S]*?<\/\1>/gi, '');
       for (const m of joined.matchAll(/(?:^|>)([^<>]*)(?=<|$)/g)) {
-        const txt = m[1].replace(/\u0000/g, ' ');
+        const txt = m[1].replaceAll('\0', ' ');
         if (userText(txt)) hard.push(`${file}:${line(n)} text "${txt.trim().slice(0, 40)}"`);
       }
       for (const tag of joined.matchAll(/<[a-z][^<>]*>/gi)) {
         for (const a of tag[0].matchAll(/\s(\.?[a-z][\w-]*)="([^"]*)"/gi)) {
-          if (attrs.has(a[1].replace(/^\./, '')) && userText(a[2].replace(/\u0000/g, ' '))) hard.push(`${file}:${line(n)} ${a[1]}="${a[2].slice(0, 30)}"`);
+          if (attrs.has(a[1].replace(/^\./, '')) && userText(a[2].replaceAll('\0', ' '))) hard.push(`${file}:${line(n)} ${a[1]}="${a[2].slice(0, 30)}"`);
         }
       }
     }

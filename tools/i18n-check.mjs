@@ -20,7 +20,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { run as checkUS } from './i18n-us.mjs';
-import { placement, STATS_FILE } from './i18n/placement.mjs';
+import { placement } from './i18n/placement.mjs';
 const require = createRequire(import.meta.url);
 const lib = require('./i18n/lib.cjs');
 const keys = require('./i18n/keys.cjs');
@@ -177,7 +177,7 @@ export async function main(argv = process.argv.slice(2)) {
   for (const cat of keyCatalogues.values()) for (const e of cat.gb.values()) if (typeof e?.text === 'string') all.add(e.text);
   for (const k of Object.keys(exceptions)) {
     if (!all.has(k)) err('D4', `en-US-exceptions.json: "${k}" is not an en-GB text`);
-    else if (lib.usText(k, contract.EN_US_WORDS, {}) === exceptions[k]) err('D4', `en-US-exceptions.json: "${k}" equals the word-list result, remove the exception`);
+    else if (lib.usText(k, contract.EN_US_WORDS) === exceptions[k]) err('D4', `en-US-exceptions.json: "${k}" equals the word-list result, remove the exception`);
   }
 
   // D9 waivers
@@ -276,12 +276,12 @@ function scanHardCoded(contract, nsList, verbose) {
         const parts = ts.isNoSubstitutionTemplateLiteral(t) ? [t.text] : [t.head.text, ...t.templateSpans.map((s) => s.literal.text)];
         const joined = parts.join('\u0000').replace(/<!--[\s\S]*?-->/g, '').replace(/<(style|script)\b[\s\S]*?<\/\1>/gi, '');
         for (const m of joined.matchAll(/(?:^|>)([^<>]*)(?=<|$)/g)) {
-          const txt = m[1].replace(/\u0000/g, ' ');
+          const txt = m[1].replaceAll('\0', ' ');
           if (userText(txt)) hit(file, line(n), `text "${txt.trim().slice(0, 40)}"`);
         }
         for (const tag of joined.matchAll(/<[a-z][^<>]*>/gi)) {
           for (const a of tag[0].matchAll(/\s(\.?[a-z][\w-]*)="([^"]*)"/gi)) {
-            if (attrs.has(a[1].replace(/^\./, '')) && userText(a[2].replace(/\u0000/g, ' '))) hit(file, line(n), `${a[1]}="${a[2].slice(0, 30)}"`);
+            if (attrs.has(a[1].replace(/^\./, '')) && userText(a[2].replaceAll('\0', ' '))) hit(file, line(n), `${a[1]}="${a[2].slice(0, 30)}"`);
           }
         }
       } else if (ts.isPropertyAssignment(n) && (ts.isIdentifier(n.name) || ts.isStringLiteral(n.name)) && (props.has(n.name.text) || inTable(n))) {

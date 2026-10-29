@@ -357,7 +357,9 @@ function installDom(win) {
       Object.defineProperty(globalThis, n, {
         configurable: true,
         get: () => (typeof win[n] === 'function' && !/^[A-Z]/.test(n) ? win[n].bind(win) : win[n]),
-        set: (v) => Object.defineProperty(globalThis, n, { value: v, configurable: true, writable: true }),
+        set: (v) => {
+          Object.defineProperty(globalThis, n, { value: v, configurable: true, writable: true });
+        },
       });
     } catch {
       // read-only host property: leave the Node one

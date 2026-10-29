@@ -6,7 +6,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
+const nodeCrypto = require('crypto');
 const lib = require('./lib.cjs');
 
 const LOCALE_FILES = [
@@ -19,7 +19,7 @@ const contract = () => lib.loadKeysContract();
 
 /** First SOURCE_HASH_CHARS hex characters of SHA-256 over the NFC form of the en-GB text. */
 function sourceHash(text) {
-  return crypto.createHash('sha256').update(text.normalize('NFC'), 'utf8').digest('hex').slice(0, contract().SOURCE_HASH_CHARS);
+  return nodeCrypto.createHash('sha256').update(text.normalize('NFC'), 'utf8').digest('hex').slice(0, contract().SOURCE_HASH_CHARS);
 }
 
 const byCode = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
@@ -32,7 +32,7 @@ function readMap(file) {
   try {
     data = JSON.parse(raw);
   } catch (e) {
-    throw new Error(`${lib.rel(file)}: not valid JSON (${e.message})`);
+    throw new Error(`${lib.rel(file)}: not valid JSON (${e.message})`, { cause: e });
   }
   if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error(`${lib.rel(file)}: not a JSON object`);
   return { map: new Map(Object.entries(data)), raw };
@@ -238,7 +238,7 @@ function checkNamespace({ ns, cat, uses = new Map(), waivers = new Map(), pendin
     for (const m of spelling(e.text)) add('D3', 'error', `"${key}": ${m}`);
     if (!uses.has(key)) add('D2', 'error', `en-GB.json: "${key}" is used by no call`);
     const current = sourceHash(e.text);
-    for (const [loc, slot, name] of [['en-US', 'us', 'en-US.json'], ['nl', 'nl', 'nl.json']]) {
+    for (const [loc, slot] of [['en-US', 'us'], ['nl', 'nl']]) {
       const t = cat[slot].get(key);
       if (!isPlainObject(t) || typeof t.text !== 'string' || t.text.trim() === '') {
         add('D2', slot === 'nl' ? tr : 'error', `"${key}": no ${loc} entry`);

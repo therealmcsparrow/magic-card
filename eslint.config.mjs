@@ -83,6 +83,19 @@ export default tseslint.config(
     },
   },
   {
+    files: ['tools/**/*.mjs'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'module', globals: { ...globals.node, ...globals.es2021 } },
+  },
+  {
+    files: ['tools/**/*.cjs'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'commonjs', globals: { ...globals.node, ...globals.es2021 } },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
+    files: ['tools/theme-example-shots.mjs', 'tools/dom-diff.mjs'],
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  {
     files: REGISTERED_IMPORT_SITES,
     rules: { 'no-restricted-syntax': 'off' },
   },

@@ -24,6 +24,7 @@ const MCU_NS = 'mcu-panel';
 const PROTOTYPE_NAMES = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_TEXT_CHARS = 2000;
 const MAX_REPORTED = 40;
+// eslint-disable-next-line no-control-regex -- the check is for control characters
 const CONTROL = /[\u0000-\u001f\u007f]/;
 const byCode = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const rel = (p) => path.relative(lib.ROOT, p).split(path.sep).join('/');
@@ -349,7 +350,7 @@ function planAmerican(texts, model, errors) {
   const wanted = new Map();
   for (const [key, text] of texts) {
     const english = model.get(key).gb.text;
-    const made = lib.usText(english, words, {});
+    const made = lib.usText(english, words);
     const current = exceptions.has(english) ? exceptions.get(english) : made;
     if (text === current) continue;
     if (wanted.has(english) && wanted.get(english) !== text) errors.push(`en-US: two different texts for the English ${JSON.stringify(english.slice(0, 60))}`);
