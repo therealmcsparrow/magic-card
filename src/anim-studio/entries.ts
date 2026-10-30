@@ -72,9 +72,10 @@ export function presetFields(p: AnimationPreset): PresetFields {
 }
 
 /** A new entry with the preset's values written out, so the editor shows and edits them. */
-export function newAnimation(presetId: string, id: string): AnimationConfig {
+/** A new entry; in an icon module (`auto`) its target stays unset, so a rotation spins the icon (spinsIcon). */
+export function newAnimation(presetId: string, id: string, auto = false): AnimationConfig {
   const p = getAnimationPreset(presetId) ?? ANIMATION_PRESETS[0];
-  return { id, preset: p.id, target: 'module', trigger: p.trigger ?? 'always', ...presetFields(p) };
+  return { id, preset: p.id, ...(auto ? {} : { target: 'module' as const }), trigger: p.trigger ?? 'always', ...presetFields(p) };
 }
 
 /**
@@ -143,5 +144,10 @@ export function animationsUpdate(list: AnimationConfig[]): Record<string, unknow
 }
 
 export const onIcon = (e: AnimationConfig, allowIcon: boolean) => allowIcon && e.target === 'icon';
+/**
+ * In an icon module an entry without a target that rotates plays on the icon: the module's wrapper is as wide as its
+ * column, so turning it swings a left-aligned icon round the wrapper's centre.
+ */
+export const spinsIcon = (e: AnimationConfig, p: AnimationPreset | undefined) => !e.target && !!p?.channels.includes('rotate');
 /** The entry plays on the button label (rows and columns have none: their entries play on the module). */
 export const onLabel = (e: AnimationConfig, allowIcon: boolean) => allowIcon && e.target === 'label';

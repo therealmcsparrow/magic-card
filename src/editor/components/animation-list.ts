@@ -3,7 +3,7 @@ import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationConfig, AnimationDirection, AnimationTrigger, HomeAssistant } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
-import { applyPreset, newAnimation, resetToPreset } from '../../anim-studio/entries';
+import { applyPreset, newAnimation, resetToPreset, spinsIcon } from '../../anim-studio/entries';
 import { animationConflicts } from './animation-conflicts';
 import {
   ANIMATION_GROUPS,
@@ -110,6 +110,8 @@ export class AnimationList extends LitElement {
   @property({ type: Boolean }) allowIcon = false;
   /** The module has a label (a button): Target also offers Label. */
   @property({ type: Boolean }) allowLabel = false;
+  /** An icon module: a rotation without a target spins the icon (spinsIcon), and new entries leave the target unset. */
+  @property({ type: Boolean }) spinIcon = false;
   /**
    * Motion presets only (a tab): no library, card copies or catalogue, no particle, ring or seasonal
    * presets and no "On tap" play, because the element has no layer for them.
@@ -244,7 +246,7 @@ export class AnimationList extends LitElement {
 
   private _add(): void {
     const first = this.motionOnly ? ANIMATION_PRESETS.find(isMotionPreset) ?? ANIMATION_PRESETS[0] : ANIMATION_PRESETS[0];
-    this._write([...this.animations, newAnimation(first.id, generateId('anim'))]);
+    this._write([...this.animations, newAnimation(first.id, generateId('anim'), this.spinIcon)]);
   }
 
   private _remove(index: number): void {
@@ -515,7 +517,7 @@ export class AnimationList extends LitElement {
         </div>
         ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
         ${this._field(t('card-editor.animation-list.preset'), this._presetSelect(id('preset'), index, a.preset), id('preset'))}
-        ${this.allowIcon ? this._field(t('card-editor.animation-list.target'), this._target(index, a)) : nothing}
+        ${this.allowIcon ? this._field(t('card-editor.animation-list.target'), this._target(index, a, this.spinIcon && spinsIcon(a, p) ? 'icon' : 'module')) : nothing}
         ${this._play(index, a, trigger, id('play'))}
         ${trigger === 'state'
           ? this._field(
@@ -853,7 +855,7 @@ export class AnimationList extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon }).map((n) =>
+    const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon, spinIcon: this.spinIcon }).map((n) =>
       n ? lt('labels.animation-list.overrides-name-both-animate-the-what', { name: lt(n.name), what: lt(n.what) }) : undefined,
     );
     return html`

@@ -1,7 +1,7 @@
 import type { MessageIndex } from '../../contracts/i18n';
 import { lm } from '../../i18n/labels/mark';
 import type { AnimationConfig } from '../../types';
-import { onIcon, onLabel } from '../../anim-studio/entries';
+import { onIcon, onLabel, spinsIcon } from '../../anim-studio/entries';
 import { getAnimationPreset, type AnimationChannel } from '../../utils/animation-presets';
 
 /*
@@ -35,18 +35,19 @@ function props(channels: AnimationChannel[], onIcon: boolean): Prop[] {
  * Per entry, a note when it overrides an earlier entry on the same element and property (the
  * later animation in a CSS animation list wins), e.g. { name: Spin, what: rotation }.
  */
-export function animationConflicts(list: AnimationConfig[], opts: { allowIcon?: boolean } = {}): Array<ConflictNote | undefined> {
+export function animationConflicts(list: AnimationConfig[], opts: { allowIcon?: boolean; spinIcon?: boolean } = {}): Array<ConflictNote | undefined> {
   const allowIcon = opts.allowIcon !== false;
   // the module, its icon and its label are three elements: an entry only overrides one on the same element
-  const part = (x: AnimationConfig) => (onLabel(x, allowIcon) ? 2 : onIcon(x, allowIcon) ? 1 : 0);
+  const icon = (x: AnimationConfig) => onIcon(x, allowIcon) || (!!opts.spinIcon && spinsIcon(x, getAnimationPreset(x.preset)));
+  const part = (x: AnimationConfig) => (onLabel(x, allowIcon) ? 2 : icon(x) ? 1 : 0);
   return list.map((e, i) => {
     const p = getAnimationPreset(e.preset);
     if (!p) return undefined;
-    const mine = props(p.channels, onIcon(e, allowIcon));
+    const mine = props(p.channels, icon(e));
     for (let j = i - 1; j >= 0; j--) {
       const q = getAnimationPreset(list[j].preset);
       if (!q || part(list[j]) !== part(e)) continue;
-      const shared = props(q.channels, onIcon(list[j], allowIcon)).find((x) => mine.includes(x));
+      const shared = props(q.channels, icon(list[j])).find((x) => mine.includes(x));
       if (!shared) continue;
       const glow = p.channels.includes('glow') || q.channels.includes('glow');
       const what = shared === 'filter' && glow ? PROP_LABEL['box-shadow'] : PROP_LABEL[shared];

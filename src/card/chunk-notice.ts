@@ -91,12 +91,16 @@ const seen = new WeakMap<RetryableLazyChunk, Seen>();
 /** The chunk has shown (or is about to show) a notice: its status container stays for the "loaded" text. */
 export const hasNotice = (c: RetryableLazyChunk): boolean => seen.has(c);
 
+/** When a Try again button was last pressed (Date.now()): a pop-up asked for before it may still open. */
+export let retried = 0;
+
 /** One extra attempt. Focus on the button moves to the status container, because the button goes when the chunk loads. */
 async function retry(c: RetryableLazyChunk, s: Seen, e: Event): Promise<void> {
   if (s.busy) return;
   const box = (e.currentTarget as Element).closest<HTMLElement>('[role=status]')!;
   const held = box.contains((box.getRootNode() as ShadowRoot).activeElement);
   s.busy = true;
+  retried = Date.now();
   notifyChunks();
   const ok = await c.retry();
   s.busy = false;

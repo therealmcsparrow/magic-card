@@ -2,8 +2,9 @@ import { css } from 'lit';
 
 /*
  * The Pause motion button, the styles of the pause chunk (rule 3, which stops the card's CSS animations, is in pause-gap-css.ts). The button sits above
- * every layer (z 6; overlays live in the content's own stacking context), 6 px from its corner: 28 px visible,
- * 24 px at least, 44 px to hit under a coarse pointer (a transparent ::after box, no `inset`).
+ * every layer (z 6; overlays live in the content's own stacking context), 6 px from its corner: 28 px visible (34 px
+ * under a coarse pointer, a wall tablet: 6 + 34 fills the 24 px strip plus the 16 px padding), 24 px at least, 44 px to
+ * hit on every pointer (a transparent ::after box, no `inset`).
  * On a shaped card each offset adds the shape's content inset (--mc-shape-i*, 0 otherwise), so the
  * button stays inside the clip. The strip it sits in is pause-gap-css.ts. Written compact: css`` text goes into the bundle as is.
  */
@@ -17,5 +18,6 @@ export const pauseCardStyles = css`
 .mc-pause[data-corner=top-left]{top:calc(6px + var(--mc-shape-it,0px));left:calc(6px + var(--mc-shape-il,0px))}
 .mc-pause[data-corner=top-right]{top:calc(6px + var(--mc-shape-it,0px));right:calc(6px + var(--mc-shape-ir,0px))}
 .mc-pause::after{content:'';position:absolute;top:-8px;right:-8px;bottom:-8px;left:-8px}
+@media (pointer:coarse){.mc-pause{width:34px;height:34px}.mc-pause svg{width:20px;height:20px}.mc-pause::after{top:-5px;right:-5px;bottom:-5px;left:-5px}}
 @media (forced-colors:active){.mc-pause{border-color:ButtonText;background:ButtonFace;color:ButtonText}}
 `;

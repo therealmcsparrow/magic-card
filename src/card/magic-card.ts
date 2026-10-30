@@ -42,7 +42,7 @@ import { loadEditor } from '../utils/editor-loader';
 import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
 import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
 import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
-import { chunkNotice, noticeStyles } from './chunk-notice';
+import { chunkNotice, noticeStyles, retried } from './chunk-notice';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import type { SeasonalBudget } from '../utils/seasonal-scenes';
@@ -1421,7 +1421,7 @@ export class MagicCard extends LitElement {
 
     const design = resolveConditionalDesign(mod.design as DesignConfig, this.hass, mod.entity);
     const stateObj = mod.entity ? this.hass?.states[mod.entity] : undefined;
-    const anim = this._resolveAnim(design, stateObj);
+    const anim = this._resolveAnim(design, stateObj, { spinIcon: mod.type === 'icon' });
     const v2Index = this._v2(anim, stateObj, mod.entity);
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(design), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: mod.entity, clipped: !!shape, shaped: !!shape });
@@ -1505,7 +1505,7 @@ export class MagicCard extends LitElement {
    * when the chunk cannot load. The needs table starts the load from the config; a design that only shows up at render
    * time (a rule that resolves now) starts it here, once per card, and the card renders again when it has installed.
    */
-  private _resolveAnim(design: DesignConfig | undefined, stateObj: HassEntity | undefined, opts: { allowIcon?: boolean } = {}): ResolvedAnimations | undefined {
+  private _resolveAnim(design: DesignConfig | undefined, stateObj: HassEntity | undefined, opts: { allowIcon?: boolean; spinIcon?: boolean } = {}): ResolvedAnimations | undefined {
     const mod = animIfLoaded();
     if (mod) return mod.resolveAnimations(design, stateObj, { ...opts, states: this.hass?.states, custom: this._customLookup });
     if (!this._animWait && hasAnimations(design)) {
@@ -1907,13 +1907,16 @@ export class MagicCard extends LitElement {
       case 'popup': {
         // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens. A card that is itself a
         // pop-up has the chunk loading already; an opener card fetches it on this tap, and if that fails the card shows
-        // the chunk's failure notice with its retry button
+        // the chunk's failure notice with its retry button. The pop-up opens when the chunk arrives within a minute of
+        // the tap or of a Try again; one that turns up later from a background retry opens nothing.
         const open = popupIfLoaded();
         if (open) open.api.navigate(action.hash);
         else {
           this._met.add('popup');
           this.requestUpdate();
-          void lazyChunks.popup.load().then((ok) => ok && popupIfLoaded()?.api.navigate(action.hash));
+          const at = Date.now();
+          lazyChunks.popup.whenReady(() => this.isConnected && Date.now() - Math.max(at, retried) < 6e4 && popupIfLoaded()?.api.navigate(action.hash));
+          void lazyChunks.popup.load();
         }
         break;
       }
