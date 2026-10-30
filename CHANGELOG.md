@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## 2026.10.12-beta.13 (2026-10-29)
+## 2026.10.12-beta.13 (2026-10-30)
 
 ### Fixed
 -   **A pop-up opens after Try again.** When a tap on a pop-up opener could not load the pop-up and you press **Try again**, the pop-up now opens as soon as it has loaded. It also opens when the page loads it by itself within a minute of the tap. A pop-up that loads later than that does not open, so nothing jumps onto the dashboard long after you tapped.
