@@ -931,6 +931,7 @@ export class DesignPanel extends LitElement {
               .animations=${readAnimations(this._getActiveDesign() as DesignConfig)}
               .allowIcon=${isModule && ANIMATION_ICON_MODULES.includes(this.moduleType)}
               .allowLabel=${isModule && this.moduleType === 'button'}
+              .spinIcon=${isModule && this.moduleType === 'icon'}
               .hass=${this.hass}
               .defaultEntity=${isModule ? this.moduleEntity : ''}
               .requireTriggerEntity=${!isModule}

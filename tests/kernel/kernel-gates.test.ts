@@ -59,7 +59,7 @@ describe('entry caps', () => {
     const known = new Set(base.approved_raises.map((r) => r.id));
     const added = now.approved_raises.filter((r) => !known.has(r.id));
     // the only raises of the entry caps allowed, each recorded as approved once in .company/archive/size-caps/approvals.md:
-    // stage-4 gzip cap 72,979 -> 72,994 -> 72,996 -> 73,006 -> 73,016 -> 73,017, and brotli cap 62,469 -> 62,528, then 62,417 -> 62,474
+    // stage-4 gzip cap 72,979 -> 72,994 -> 72,996 -> 73,006 -> 73,016 -> 73,017 -> 73,082, and brotli cap 62,469 -> 62,528, then 62,417 -> 62,474 -> 62,535
     const approved = [
       { id: 'entry-stage4-72979-to-72994', field: '/entry/stages/3/cap', from: 72979, to: 72994 },
       { id: 'entry-stage4-72994-to-72996', field: '/entry/stages/3/cap', from: 72994, to: 72996 },
@@ -68,6 +68,8 @@ describe('entry caps', () => {
       { id: 'entry-stage4-73006-to-73016', field: '/entry/stages/3/cap', from: 73006, to: 73016 },
       { id: 'entry-stage4-73016-to-73017', field: '/entry/stages/3/cap', from: 73016, to: 73017 },
       { id: 'entry-br-62417-to-62474', field: '/entry/br/cap', from: 62417, to: 62474 },
+      { id: 'entry-stage4-73017-to-73082', field: '/entry/stages/3/cap', from: 73017, to: 73082 },
+      { id: 'entry-br-62474-to-62535', field: '/entry/br/cap', from: 62474, to: 62535 },
     ];
     expect(added.filter((r) => r.field.startsWith('/entry/')), 'entry raises').toEqual(approved);
     expect(stage(now).cap, 'the raised cap is still below the cap the run started with').toBeLessThan(stage(base).cap);

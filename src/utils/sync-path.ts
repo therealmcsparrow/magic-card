@@ -69,42 +69,6 @@ export function parsePath(path: string): string[] {
 }
 
 /**
- * Get value at a path in an object
- */
-export function getValueAtPath(obj: any, path: string): any {
-  const parts = parsePath(path);
-  let current = obj;
-
-  for (const part of parts) {
-    if (current == null) return undefined;
-    current = current[part];
-  }
-
-  return current;
-}
-
-/**
- * Set value at a path in an object (creates nested objects as needed)
- */
-export function setValueAtPath(obj: any, path: string, value: any): void {
-  const parts = parsePath(path);
-  let current = obj;
-
-  for (let i = 0; i < parts.length - 1; i++) {
-    const part = parts[i];
-    if (current[part] == null) {
-      // Check if next part is a number to create array vs object
-      const nextPart = parts[i + 1];
-      current[part] = /^\d+$/.test(nextPart) ? [] : {};
-    }
-    current = current[part];
-  }
-
-  const lastPart = parts[parts.length - 1];
-  current[lastPart] = value;
-}
-
-/**
  * Check if any parent path is not synced
  * e.g., if "rows.0.design" is not synced, then "rows.0.design.color" should also be treated as not synced
  */

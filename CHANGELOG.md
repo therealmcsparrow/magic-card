@@ -4,6 +4,16 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.12-beta.13 (2026-10-30)
+
+### Fixed
+-   **A pop-up opens after Try again.** When a tap on a pop-up opener could not load the pop-up and you press **Try again**, the pop-up now opens as soon as it has loaded. It also opens when the page loads it by itself within a minute of the tap. A pop-up that loads later than that does not open, so nothing jumps onto the dashboard long after you tapped.
+-   **Spin turns an icon in place.** On an icon module, Spin, Sway, Flip and the other rotating animations without a target now turn the icon itself. Before, they turned the whole module, which is as wide as its column, so a left-aligned icon swung round in a wide circle. Choose **Module** under Target to turn the whole module. New animations on an icon module leave Target on this default.
+-   **Bigger Pause button on touch screens.** On a touch screen the Pause motion button is 34 px instead of 28 px. It still fits in the strip the card keeps for it, and the area you can tap stays 44 px.
+
+### Security
+-   **Removed unused path helpers.** Two unused helpers that wrote values by path, which a code scan flagged for prototype pollution, are removed. No card used them.
+
 ## 2026.10.12-beta.12 (2026-10-29)
 
 ### Improved

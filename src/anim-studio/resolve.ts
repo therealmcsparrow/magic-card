@@ -15,7 +15,7 @@ import { runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { customRefId, docNeedsRuntime, isCustomRef, type AnimationDoc } from './model';
 import { useAnimationCss } from '../card/custom-anim-sheet';
 import { registerSequence } from '../card/sequence-player';
-import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, onLabel, readAnimations, seconds, strength } from './entries';
+import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, onLabel, readAnimations, seconds, spinsIcon, strength } from './entries';
 
 /*
  * What the card renders for a design with animations: the resolve. It lives in the lazy `anim` chunk, so a
@@ -155,7 +155,7 @@ export function particleLayout(n: number): Particle[] {
 export function resolveAnimations(
   design: DesignConfig | undefined,
   stateObj?: HassEntity,
-  opts: { allowIcon?: boolean; states?: Record<string, HassEntity>; custom?: CustomAnimationLookup } = {},
+  opts: { allowIcon?: boolean; spinIcon?: boolean; states?: Record<string, HassEntity>; custom?: CustomAnimationLookup } = {},
 ): ResolvedAnimations | undefined {
   design = resolveEntityColors(design);
   const allowIcon = opts.allowIcon !== false;
@@ -168,6 +168,8 @@ export function resolveAnimations(
   const runtime = { need: false, p: false };
 
   for (let e of readAnimations(design)) {
+    // a library animation's document says element or icon itself
+    const spin = !!opts.spinIcon && !isCustomRef(e.preset);
     if (isCustomRef(e.preset)) {
       const doc = opts.custom?.(customRefId(e.preset));
       if (!doc || !animationTriggerActive(e, stateObj, opts.states)) continue;
@@ -234,7 +236,7 @@ export function resolveAnimations(
       if (p.origin && !origins.n) origins.n = p.origin;
       continue;
     }
-    const icon = onIcon(e, allowIcon);
+    const icon = onIcon(e, allowIcon) || (spin && spinsIcon(e, p));
     lists.mi.push(`mc-anim-${p.id} ${timing}`);
     if (icon) {
       lists.i.push(`mc-anim-${p.id}${p.iconKeyframes ? '-icon' : ''} ${timing}`);
