@@ -27,4 +27,3 @@ SVG is the original. PNG files are exports of the SVG files, and the same terms 
 
 This note covers no logo or trademark of anyone else and no third-party art.
 
-Draft. Have a qualified lawyer review before publishing.
