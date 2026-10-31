@@ -5,11 +5,8 @@ import { isLayered, placementOf } from './layer-kind';
 import type { CardModule } from '../types';
 
 /*
- * Layer placement (contract layer-placement 1.0.0): which children of a container are in flow,
- * behind the others or on top, and what each wrapper gets. Pure: no lit, no DOM. Every value that
- * reaches an attribute or a style is clamped, matched against an allow-list or parsed from a strict
- * grammar here; nothing is copied from the config as text. Part of magic-card.js
- * (src/layers/layer-slot.ts assembles it).
+ * Layer placement: which children of a container are in flow, behind or on top, and what each
+ * wrapper gets. Pure: no lit, no DOM. Every value is clamped, allow-listed or strictly parsed.
  */
 
 const CARD_COLOR = 'var(--ha-card-background, var(--card-background-color, #fff))';

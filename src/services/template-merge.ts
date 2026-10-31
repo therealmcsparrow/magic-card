@@ -107,13 +107,9 @@ export function withTemplateAnimations(config: MagicCardConfig, docs: unknown, h
 }
 
 /**
- * Merges template structure with local overrides.
- * Template provides: structure (rows/columns/modules layout)
- * Local provides: overrides for properties marked in not_synced
- * Only properties in not_synced are kept from local; everything else comes from template.
- * Modules are matched by their `id` field.
- * `own`: `custom_animations` stays the card's own documents (the editor: the card config holds only
- * those); otherwise it is the template's merged with them by id (mergeCustomAnimations).
+ * Merges template structure with local overrides: local keeps only properties marked in
+ * not_synced, modules are matched by `id`. `own` keeps `custom_animations` as the card's own;
+ * otherwise they merge with the template's by id.
  */
 export function mergeTemplateWithOverrides(
   template: MagicCardConfig,

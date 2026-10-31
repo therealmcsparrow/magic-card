@@ -2,12 +2,9 @@ import { css, unsafeCSS } from 'lit';
 import { SHARED_SCENE_KEYFRAMES } from '../css/scene-keyframes';
 
 /*
- * Styles of <mc-seasonal>: the particle motions (CSS keyframes only), the particle artwork and the
- * ambient layers. Every particle is a `.p` box centred on (--x, --y) with --s (size), --d / --dl
- * (duration / delay), --c / --c2 (colours), --o (opacity), --dx (drift), --sw (sway), --r (rotation),
- * --wx / --wy (wander). Falling, rising and crossing particles move with `translate` in container
- * units (cqw / cqh of the layer); the inner artwork sways / tumbles / flaps with `transform`.
- * Static (reduced motion) and off-screen (paused) states are host attributes.
+ * Styles of <mc-seasonal>: particle motions, artwork and ambient layers. Each `.p` particle is
+ * centred on (--x, --y) with size, timing, colour and drift custom properties. Static and paused
+ * states are host attributes.
  */
 
 /** The existing scene keyframes, reused: the storm flash (at a fixed brightness) and the wind gusts. */

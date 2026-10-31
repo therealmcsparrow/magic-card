@@ -8,20 +8,10 @@ import { shapeClip } from './shape-clip';
 import type { ResolvedShape } from './shape-resolve';
 
 /*
- * Outline shapes on a module / row / column wrapper or the card (design `shape`, src/utils/shape-path.ts).
- * <mc-shape> sits inside the shaped element (aria-hidden, no layout, no pointer events) and, from the
- * element's rendered size (the ResizeObserver rings share):
- * - sets the element's `clip-path: path(...)` (a polygon where path() is unsupported): its
- *   background, content and hit area follow the shape;
- * - sets `--mc-shape-it / -ir / -ib / -il`, the shape's content inset, which the card's padding
- *   for shaped elements uses as a minimum (shapeElementStyle), so content stays inside the shape
- *   (the element's own padding, where it is more, lets the inset across be smaller; in a box taller
- *   than its content the content may move down to where the shape is wider);
- * - draws the border as an SVG stroke along the shape (the real border stays, transparent), masked
- *   to the border length windows; `--mc-shape-stroke` on the element overrides its colour (hover).
- * The element's inline style is the card's (Lit rewrites it on a change): the clip-path and vars
- * are written again when they go missing. Blob / wave `animate` morphs the clip (Web Animations)
- * and the stroke (SMIL) together; paused off-screen, off for reduced motion.
+ * Outline shapes on a module / row / column wrapper or the card (design `shape`). <mc-shape> sits
+ * inside the shaped element and, from its rendered size, sets `clip-path`, the content inset vars
+ * `--mc-shape-it/-ir/-ib/-il`, and draws the border as an SVG stroke along the shape.
+ * Blob / wave `animate` morphs the clip and stroke; paused off-screen and for reduced motion.
  */
 
 const REDUCED = '(prefers-reduced-motion: reduce)';

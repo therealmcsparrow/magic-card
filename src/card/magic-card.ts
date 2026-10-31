@@ -1623,11 +1623,8 @@ export class MagicCard extends LitElement {
   }
 
   /**
-   * The failure notices of this card (lazy-module 1.4.0 "Failure"): one per chunk that failed on this page and that
-   * this card needs, in flow as the last child of the content. The lazy modules show theirs in their own slot. A
-   * chunk that has failed keeps its element (empty once it recovered) for the "loaded" message. Nothing is rendered
-   * until a chunk fails, so a healthy or plain card has no notice, no status container. They share the part of
-   * `rest` (the last thing in the content): a template part of their own would add a marker node to every card.
+   * The failure notices of this card: one per failed chunk it needs, as the last child of the
+   * content. Nothing renders until a chunk fails. They share the part of `rest`.
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {

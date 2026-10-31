@@ -4,12 +4,9 @@ import { notifyChunks } from '../utils/lazy-chunk';
 import { t } from './i18n';
 
 /*
- * The failure notice of a lazy chunk: a template the card renders in its own shadow root, so it needs no element of
- * its own. It is always in flow (never absolute, no fixed height, nothing clipped). One anatomy: icon, a message that
- * names the part and says the rest works, a real <button> of at least 44 px. The role="status" container is rendered
- * empty and filled a frame later, so screen readers announce it, and it outlives the notice for the "loaded" message.
- * Text, border and focus ring use --mc-text: HA's default light primary (#03a9f4) is 2.63:1 on white, under the 3:1 a
- * control border needs.
+ * The failure notice of a lazy chunk: a template rendered in the card's shadow root, always in
+ * flow, with an icon, a message and a 44 px button. The role="status" container is filled a frame
+ * after it renders so screen readers announce it. Colours use --mc-text for 3:1 contrast.
  */
 export const noticeStyles = css`
   .mc-n {

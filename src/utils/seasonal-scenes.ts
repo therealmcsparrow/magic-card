@@ -3,12 +3,9 @@ import { SCENE_LABELS } from './seasonal-labels';
 import type { MessageIndex } from '../contracts/i18n';
 
 /*
- * Seasonal scenes as data: per scene the particle kinds (drawn by src/card/seasonal-symbols.ts),
- * their motion (a CSS keyframe in src/card/seasonal-css.ts), duration / size ranges, palette and
- * share of the particle budget, ambient layers (sun glow, dusk gradient, lightning, moon) and the
- * border decorations (<mc-seasonal-deco>). `layoutScenes` turns scenes + intensity + a seed into a
- * stable particle layout: the same seed always gives the same layout, so re-renders never jump.
- * Pure (no DOM).
+ * Seasonal scenes as data: particle kinds, motion, ranges, palette, share of the particle budget,
+ * ambient layers and border decorations. `layoutScenes` turns scenes + intensity + a seed into a
+ * stable particle layout, so re-renders never jump. Pure (no DOM).
  */
 
 /** Hard cap of elements (particles + ambient layers) in one layer. */
@@ -36,12 +33,8 @@ export type ParticleKind =
   | 'fogband';
 
 /**
- * fall: straight down with a sway (snow); tumble: down while flipping (leaves, petals, confetti);
- * rain: fast slanted streaks; drizzle: rain now and then; rise: up with a sway (hearts); flutter:
- * wander around a spot (butterflies, motes); fly: across the layer (bats); blow: sideways with a
- * tumble (wind leaves); twinkle: in place (stars); firefly: wander + blink; burst: firework
- * radial bursts; bob: in place up and down (eggs); drift: slow side to side (fog); across: slow
- * crossing (clouds); gust: wind lines.
+ * Particle motions: fall, tumble, rain, drizzle, rise, flutter, fly, blow, twinkle, firefly,
+ * burst, bob, drift, across and gust. Each maps to a CSS keyframe in src/card/seasonal-css.ts.
  */
 export type Motion =
   | 'fall'
@@ -403,10 +396,8 @@ export interface BudgetGrant {
 
 /**
  * The seasonal particle budget of one card render. The card's own scene takes its particles first;
- * the seasonal presets share the rest, scaled down evenly when together they ask for more. Their
- * total is only known after the render, so the scale comes from the previous render's demand
- * (`settle()` says whether it changed and the card should render again); within a render the
- * remaining budget is a hard limit, so the cap holds from the first render on.
+ * the presets share the rest, scaled by the previous render's demand (`settle()` says whether it
+ * changed); within a render the remaining budget is a hard limit.
  */
 export class SeasonalBudget {
   private _left = CARD_PARTICLE_CAP;

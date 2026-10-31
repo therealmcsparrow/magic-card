@@ -1,7 +1,5 @@
-/**
- * Utilities for building and managing property paths for sync tracking
- * Paths use dot notation: e.g., "rows.0.columns.1.modules.2.entity"
- */
+// Utilities for building and managing property paths for sync tracking.
+// Paths use dot notation: "rows.0.columns.1.modules.2.entity".
 
 export interface SyncContext {
   templateName?: string;

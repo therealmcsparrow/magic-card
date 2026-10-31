@@ -6,13 +6,8 @@ import { SeasonalBudget, sceneDecorations, sceneFlashes } from '../utils/seasona
 import { seasonalPreviewDate, setSeasonalPreviewDate } from '../utils/seasonal-preview';
 
 /*
- * Chunk entry of dist/magic-card-seasonal.js (contract lazy-module 1.0.0). Evaluating this file changes
- * nothing global: everything happens in install(), which src/utils/lazy-chunk.ts calls only when
- * BUILD matches the magic-card.js that loaded it. Defines <mc-seasonal> and <mc-seasonal-deco>; they upgrade in place.
- *
- * The chunk also carries what the card needs to resolve and budget a scene: the card reads `api` from
- * lazyChunks.seasonal.module() once the chunk is ready (src/card/seasonal-seam.ts). Until then the card renders
- * without a scene and keeps the layout band from its config (src/utils/seasonal.needs.ts).
+ * Chunk entry of dist/magic-card-seasonal.js: install() defines <mc-seasonal> and
+ * <mc-seasonal-deco>. It also carries the `api` the card reads to resolve and budget a scene.
  */
 
 declare const __MC_BUILD_VERSION__: string | undefined;

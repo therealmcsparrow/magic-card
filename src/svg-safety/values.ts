@@ -1,11 +1,9 @@
 import type { SvgPolicy, SvgValueKind, SvgWalkLimits } from '../contracts/svg-safety';
 
 /*
- * Value rules shared by the icon and image sanitisers. They mirror what the browser does with an SVG presentation
- * attribute (an attribute value is read as CSS: escapes, comments, url() and function tokens) and cover the threats of a
- * value that loads or runs something: script URLs, external url(), CSS escapes and comments, expression() and @import,
- * and functions outside the lists. Every check is an allow-list or a bounded scan; a value is capped by length before any
- * pattern runs.
+ * Value rules shared by the icon and image sanitisers: they mirror how a browser reads an SVG
+ * presentation attribute and reject script URLs, external url(), CSS escapes, expression() and
+ * @import. Every check is an allow-list or a bounded scan.
  */
 
 /** Tokens that make a value unsafe whatever its kind: backslash, angle brackets, `//`, comments, script and data URLs. */

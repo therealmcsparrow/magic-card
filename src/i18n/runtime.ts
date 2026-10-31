@@ -1,11 +1,5 @@
-/*
- * Module i18n (contract src/contracts/i18n.ts 2.0.0): locale pick, compact tables and the ICU-subset
- * formatter. One copy per entry (magic-card.js, the studio entry, the theme-editor entry; each
- * <= I18N_RUNTIME_MAX_BYTES minified); every lazy chunk below an entry reuses its copy. Messages come from
- * per-namespace tables: three '|'-joined strings (en-GB, en-US, nl), entry i of each is message i. An id is
- * the entry's number, which tools/i18n-loader.cjs writes in place of the key; an empty en-US or nl entry
- * shows the en-GB text.
- */
+// Module i18n runtime: locale pick, compact tables and the ICU-subset formatter. One copy per
+// entry; tables are three '|'-joined strings (en-GB, en-US, nl) indexed by the id the loader writes.
 import type { I18nFor, I18nForLazy, Locale, LocaleHassLike, ResolveLocale, RichArgs } from '../contracts/i18n';
 import { formatNumber } from '../utils/locale-format';
 

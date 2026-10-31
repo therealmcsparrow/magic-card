@@ -2,21 +2,10 @@ import type { ShapeKind, ShapeOptions } from '../types';
 import { customBuilder } from './shape-custom-loader';
 
 /*
- * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size:
- * squircle, hexagon, octagon, notch, ticket, wave edge, blob, pill and circle. One path source for
- * the clip-path, the border stroke, the ring and border length. Pure (no DOM).
- *
- * Paths use absolute M / L / C only (no arcs), and every point, control points included, lies inside
- * 0..w x 0..h, so a cubic never leaves the box (it stays inside its control polygon). `inset` is the
- * content padding that keeps a content rectangle inside the shape.
- *
- * The content sets a shaped element's height (inset + content + inset), so an inset that is a share
- * of the height feeds back: h/4 top and bottom doubles it. The insets keep that share small: the
- * content's corners sit on the outline close to the flat top / bottom (hexagons and octagons: on the
- * cut next to the flat edge; curves: a little below the top) and give up width instead. `pad` (where
- * the content starts anyway: border + the element's own padding) moves the corners down to it,
- * which needs less width. No inset shrinks as h grows, so a content-sized element settles instead of
- * flipping between two sizes.
+ * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size.
+ * One path source for the clip-path, border stroke, ring and border length. Pure (no DOM).
+ * Paths use absolute M / L / C only and stay inside 0..w x 0..h. `inset` is the content padding
+ * that keeps a content rectangle inside the shape; it never shrinks as h grows.
  */
 
 export type ShapeSide = 'top' | 'right' | 'bottom' | 'left';
@@ -486,11 +475,9 @@ const EDGES: Array<ShapeSide | 'all'> = ['top', 'right', 'bottom', 'left', 'all'
 const MAX_WAVES = 50;
 
 /**
- * A wavy edge (or every edge): a whole number of cosine periods that start and end on a crest on the
- * box edge (flat there, so no tooth where the wave meets a straight side) and dip 2 * amplitude in.
- * With `all`, the corners are quarter arcs of radius `a` and each wave runs between them; the
- * amplitude is at most an eighth of the smaller side and every period at least 2.5 amplitudes long,
- * so neighbouring waves never cross.
+ * A wavy edge (or every edge): whole cosine periods that start and end on a crest on the box edge.
+ * With `all`, the corners are quarter arcs and each wave runs between them; amplitude and period
+ * are limited so neighbouring waves never cross.
  */
 function wave(w: number, h: number, o: ShapeOptions): Outline {
   const edge = EDGES.includes(o.edge as ShapeSide) ? (o.edge as ShapeSide | 'all') : 'bottom';
@@ -737,13 +724,9 @@ const cleanPad = (pad: ShapeInset): ShapeInset => {
 };
 
 /**
- * The shape's outline in px for a w x h element (clockwise, closed), and the content padding that
- * keeps content inside it. Undefined for `none`, an unknown shape or an empty box. Options are
- * clamped so the shape always fits the box.
- *
- * `pad`: where the content starts on each side whatever the inset (border + the element's own
- * padding, px from the box edge). The content rectangle, each side at max(inset, pad), lies inside
- * the shape; a known padding lets the corners sit lower, so the inset across is smaller.
+ * The shape's outline in px for a w x h element (clockwise, closed) and the content padding that
+ * keeps content inside it. Undefined for `none`, an unknown shape or an empty box. `pad` is where
+ * the content starts anyway (border + own padding); a known pad lets the inset across be smaller.
  */
 export function shapePath(kind: ShapeKind, w: number, h: number, opts: ShapeOptions = {}, pad?: ShapeInset): ShapePathResult | undefined {
   const o = shapeOutline(kind, w, h, opts, 0, pad);

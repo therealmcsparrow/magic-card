@@ -29,15 +29,9 @@ const STACKING_STYLE = unsafeCSS(
 );
 
 /**
- * Card side of flow lines (only on a card with flows, `data-mc-flows` on the card content): the
- * content is the overlay's positioning box and its own stacking context, and module wrappers sit
- * at z-index 1 so the back layer (z-index 0) runs behind module content but over row / column
- * backgrounds; the front layer and labels sit at z-index 2.
- *
- * A row or column that forms its own stacking context (particle layers, a video background,
- * animations, filters, opacity, transforms...) would hold its wrappers' z-index inside it and paint as
- * a whole at level 0, under the back layer: those containers are lifted to z-index 1 themselves
- * (their background then covers the lines; plain containers keep the lines above theirs).
+ * Card side of flow lines (cards with `data-mc-flows`): the content is the overlay's stacking
+ * context, module wrappers sit at z-index 1, the front layer and labels at 2. Containers that
+ * form their own stacking context are lifted to z-index 1 so the back layer stays behind them.
  */
 export const flowsCardStyles = css`
   .mc-card-content[data-mc-flows] {

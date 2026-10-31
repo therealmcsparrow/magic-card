@@ -1,13 +1,6 @@
-/**
- * The searchable icon catalogue for the icon picker, built the way Home Assistant's own
- * ha-icon-picker builds it:
- * - MDI: HA's frontend serves the full list with keywords (tags + aliases) at
- *   `/static/mdi/iconList.json` (`[{ name, keywords }]`, the same file ha-icon-picker imports).
- *   When that is not reachable (another host, an old HA) a small built-in list of common icons is used.
- * - Third-party icon packs: `window.customIcons[prefix].getIconList()` (HACS packs such as
- *   hass-hue-icons, custom-brand-icons). Packs that only register `window.customIconsets[prefix]`
- *   have no list: their icons can still be typed as a full id (`prefix:name`).
- */
+// The searchable icon catalogue for the icon picker, built like ha-icon-picker: the MDI list with
+// keywords from `/static/mdi/iconList.json` (small built-in fallback), plus the lists of
+// `window.customIcons[prefix].getIconList()`. Icon sets without a list can still be typed as an id.
 
 export interface IconListItem {
   /** Full icon id, `prefix:name`. */

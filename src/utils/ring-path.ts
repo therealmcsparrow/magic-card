@@ -165,11 +165,9 @@ export function insetRadii(r: Radii, d: number): Radii {
 export const RING_STARTS: RingStart[] = ['top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'top-left'];
 
 /**
- * The outline of a shaped w x h border box (src/utils/shape-path.ts) for a ring or a border stroke:
- * the shape moved inward by `inset` (a true offset for cut / rounded corners: shapeInsetPath;
- * negative: the shape of the bigger box), starting at the outline point nearest to `start` and
- * running clockwise / counter-clockwise. Empty when nothing is left of the box or the shape is
- * none / unknown.
+ * The outline of a shaped w x h border box for a ring or border stroke: the shape moved inward by
+ * `inset` (negative: the bigger box), starting nearest to `start`, clockwise or not. Empty when
+ * nothing is left or the shape is none / unknown.
  */
 export function shapeRingPath(kind: ShapeKind, w: number, h: number, options: ShapeOptions | undefined, opts: RingPathOptions = {}): string {
   const d = opts.inset ?? 0;

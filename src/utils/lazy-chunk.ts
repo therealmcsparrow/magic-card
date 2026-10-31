@@ -49,12 +49,9 @@ let retrying = false;
 let hooked = false;
 
 /**
- * Call the chunk import. A retry asks for the chunk under a URL that has not been requested on this page
- * (`r=<n>`, n counts every retry request of every chunk): browsers remember a failed import() and may cache a
- * 404 for the URL. webpack reads the chunk URL (`__webpack_require__.u`) inside the import() call
- * itself, and only when it sends a request, so the number is taken there and lives only for that synchronous
- * call. An attempt that finds the request still in flight gets webpack's promise: no request, no number used,
- * and it is waiting, not a retry (lazy-module 1.4.0 "Failure, retry and timeout").
+ * Call the chunk import. A retry asks for the chunk under a URL not yet requested on this page
+ * (`r=<n>`), because browsers may cache a failed import(). The number is taken inside the import()
+ * call; an attempt that finds the request in flight reuses it and uses no number.
  */
 function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModule> {
   if (again && typeof __webpack_require__ !== 'undefined') {

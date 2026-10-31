@@ -93,11 +93,9 @@ export const withOpacity = (c: string, pct: number | undefined) =>
   pct === undefined || pct >= 100 ? c : `color-mix(in srgb, ${c} ${clamp(pct, 0, 100)}%, transparent)`;
 
 /**
- * What the ring draws, or undefined when it is off or its "Show only while" condition is false.
- * `defaultEntity`: the module's entity (value and condition default); none for card / row / column.
- * `clipped`: the ring's element clips its edge (the card: ha-card has overflow: hidden), so an
- * Outside ring would draw nothing; it is drawn Inside. `shaped`: the element is clipped to its
- * shape, which would cut off half of a Center ring too: every ring is drawn Inside.
+ * What the ring draws, or undefined when it is off or its condition is false. `defaultEntity` is
+ * the module's entity. `clipped` and `shaped` elements cut an Outside or Center ring, so it is
+ * drawn Inside.
  */
 export function resolveRing(
   ring: RingConfig | undefined,

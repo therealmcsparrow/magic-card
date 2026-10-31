@@ -1,10 +1,6 @@
-/**
- * Compositor-friendly travel along a flow line. A dot or shape that rides a path is animated with
- * `transform` keyframes taken from the path (translate, plus rotate for shapes that turn), not with
- * `offset-distance`: a transform animation runs on the compositor, so a running flow costs the main
- * thread nothing per frame (offset-distance re-runs style, layout and paint every frame: measured at 4x CPU
- * throttling). Pure: no DOM.
- */
+// Compositor-friendly travel along a flow line: a dot or shape riding a path is animated with
+// `transform` keyframes taken from the path, not `offset-distance`, so a running flow costs the
+// main thread nothing per frame. Pure: no DOM.
 
 /** A place on a path; `a` is the direction of travel in degrees, for shapes that turn. */
 export interface Stop {

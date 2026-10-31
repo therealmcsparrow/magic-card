@@ -1,7 +1,5 @@
-// Test helper (contract src/contracts/i18n.ts, TestMsg and TestMsgIndex): resolves a message key the way the build
-// does, so a test names the key and never the English text or a table number. msg(key, args?) renders the key in the
-// runtime's current locale through a real i18nFor instance over the namespace's compiled tables; msgIndex(key) is the
-// index the loader writes in place of the key.
+// Test helper: resolves a message key the way the build does, so a test names the key, not the text.
+// msg(key, args?) renders in the current locale; msgIndex(key) is the index the loader writes.
 import { createRequire } from 'node:module';
 import { i18nFor } from '../../src/i18n/runtime';
 import { TABLE_SEPARATOR, type I18nNamespace, type LocaleTables, type ModuleI18n, type TestMsg, type TestMsgIndex } from '../../src/contracts/i18n';

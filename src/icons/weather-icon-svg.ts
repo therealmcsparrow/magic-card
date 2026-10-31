@@ -3,12 +3,8 @@ import { safeColor } from '../utils/safe-css';
 import { pauseOffscreen } from './offscreen';
 
 /*
- * Animated weather icons: hand-drawn 64×64 SVGs for Home Assistant's weather conditions, used by the
- * Weather and Forecast modules with `animated_icons: true`. Motion is CSS only (transform / opacity,
- * the wind's dash offset), ≤ 8 particles per icon; reduced motion shows the still frame, and icons
- * off-screen (or scrolled out of the forecast row) pause.
- * Clouds follow the module colour (currentColor at 85% / 60%); sun, rain and lightning use HA's
- * weather state colours with fallbacks.
+ * Animated weather icons: hand-drawn 64×64 SVGs for the weather conditions, used with
+ * `animated_icons: true`. Motion is CSS only, reduced motion shows the still frame, off-screen pauses.
  */
 
 export const WEATHER_CONDITIONS = [

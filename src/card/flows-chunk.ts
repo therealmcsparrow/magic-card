@@ -3,14 +3,9 @@ import { McFlows } from './mc-flows';
 import { resolveCardFlows } from './flows-resolve';
 
 /*
- * Chunk entry of dist/magic-card-flows.js (lazy-module 1.4.0 chunk `flows`): the flow resolver, the line geometry and
- * motion, <mc-flows> (the overlay that measures the flow ends and draws the lines) and the card-side rules for
- * a card with flows (`styles`). Evaluating this file changes nothing global: install() defines <mc-flows>, which
- * upgrades in place. The card renders its content without the overlay until then; the overlay is absolutely positioned
- * over the card content, so a late line moves nothing.
- *
- * Parent of the flow-look chunk (the literal import() sits here), so webpack leaves the modules this chunk holds, among
- * them the flow-look slot, out of it.
+ * Chunk entry of dist/magic-card-flows.js: flow resolver, line geometry, <mc-flows> and the
+ * card-side rules. install() defines <mc-flows>, which upgrades in place. Parent of the
+ * flow-look chunk (the literal import() sits here).
  */
 
 export const BUILD: string = BUILD_VERSION;

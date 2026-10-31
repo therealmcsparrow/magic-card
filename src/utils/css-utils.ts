@@ -104,13 +104,9 @@ export function controlLook(type: string | undefined, variant?: string): Control
 }
 
 /**
- * `control`: a button / dropdown wrapper whose design border and shadow are drawn by the control
- * inside: the wrapper gets none of them, the control reads --mc-design-bw / -bs / -bc (four values,
- * top right bottom left, unset sides filled with the control's own default) and --mc-design-shadow.
- * Other modules, shaped elements and border-length overlays draw them on the wrapper.
- * `button`: a button module, whose icon, label and state keys become custom properties its parts read. For a hover
- * design it is the module's base design: a hover that sets a part key writes the keys of base and hover together,
- * so it leaves the others as the base has them.
+ * `control`: a button / dropdown wrapper whose border and shadow the inner control draws from
+ * --mc-design-bw / -bs / -bc / -shadow. `button`: a button module, whose icon, label and state keys
+ * become custom properties its parts read; a hover design writes base and hover keys together.
  */
 export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean | Partial<DesignConfig>, tabs?: boolean): string {
   if (!input) return '';
@@ -286,14 +282,9 @@ const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !importa
 const hoverSafe = (t: string) => t.replace(/[{}@]/g, '');
 
 /**
- * The scoped `:hover` rule of an element tagged `data-mc-hover="<id>"`, from its hover design
- * (same keys as the design, custom `css` included). Every declaration is `!important`: the design
- * itself is the element's inline style, which a stylesheet rule cannot otherwise override.
- * A shaped element / border length overlay keeps what draws its outline: the shape overrides
- * (transparent border, no box-shadow, padding at least the shape's inset) or the overlay's transparent
- * border come again after the hover declarations; a hover border colour goes to the shape's stroke
- * or the overlay's lines, a hover shadow to the shape's drop-shadow wrapper.
- * Empty when the hover design writes nothing.
+ * The scoped `:hover` rule of an element tagged `data-mc-hover="<id>"`, from its hover design.
+ * Every declaration is `!important` to beat the inline design. Shaped elements and border-length
+ * overlays keep what draws their outline. Empty when the hover design writes nothing.
  */
 export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string {
   if (!hover || typeof hover !== 'object') return '';
@@ -568,14 +559,10 @@ function borderLengthPlan(rec: Record<string, unknown>): BorderLengthPlan | unde
 }
 
 /**
- * `border_length` shortens every drawn side to a line of that length (e.g. 40%, 60px), placed by
- * `border_length_align` (start / center / end) along the full side, following rounded corners (even
- * a 50% radius). CSS cannot shorten a real border: the wrapper keeps its border (same width, so the
- * same layout) in a transparent colour; an overlay draws each side as a layer with the wrapper's
- * border-radius and only that side's border, masked to the length window.
- * Drawn sides: `border_length_sides` (one side) or all; of those, the sides with a border, or (no
- * border set at all) every one of them as a 2px solid line in the border / design colour. A width
- * without a style is solid. Undefined when unset, 100% or nothing would be drawn.
+ * `border_length` shortens every drawn side to a line of that length, placed by
+ * `border_length_align`. CSS cannot shorten a real border, so the wrapper keeps a transparent one
+ * and an overlay draws each side masked to the length window. Undefined when unset, 100% or
+ * nothing would be drawn.
  */
 export function resolveBorderLength(design?: DesignConfig): ResolvedBorderLength | undefined {
   const rec = (resolveEntityColors(designNumbersToCss(design)) || {}) as Record<string, unknown>;

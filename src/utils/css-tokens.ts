@@ -1,14 +1,6 @@
-/**
- * CSS tokenizer for sanitizeStyle (imported only by sanitize-html.ts). Mirrors the CSS Syntax Level 3
- * tokenizer (section 4.3: strings, bad strings, escapes, comments, numbers, function tokens, bracket
- * stack), because a style value must be split the way the browser splits it. Threats it closes:
- * an escape that hides a function name (`\75 rl(`), a comment that splits one (`ur/**\/l(`), a quote or `;`
- * that ends a declaration early in one parser and not in the other, an unclosed string or block that
- * swallows the next declaration. Escapes, comments, bad strings and strings cut off by the end of the
- * input are flagged `x` (unsafe to re-emit). One linear pass, hand-written, no backtracking regex.
- * Differences from the spec, both safe: `url(` is a plain function token, and a top-level at-rule runs
- * to the next `;`. Our declaration then ends at or after the browser's, so we merge more, never less.
- */
+// CSS tokenizer for sanitizeStyle (imported only by sanitize-html.ts). Mirrors the CSS Syntax
+// Level 3 tokenizer so a style value is split the way the browser splits it. Escapes, comments and
+// cut-off strings are flagged `x` (unsafe to re-emit). One linear pass, no backtracking regex.
 export type TokType =
   | 'ws' | 'str' | 'num' | 'pct' | 'dim' | 'id' | 'fn' | 'sym' | 'cmt'
   | 'open' | 'close' | 'comma' | 'colon' | 'semi' | 'delim';
@@ -37,11 +29,9 @@ const ESC = String.raw`\\(?:(?:[\da-f]{6}|[\da-f]{1,5}(?![\da-f]))[ \t\n]?|[^\n\
 const NAME = String.raw`(?:[\w\u0080-\uffff-]|${ESC})`;
 const IDENT = new RegExp(String.raw`(?:--|-?(?:[a-z_\u0080-\uffff]|${ESC}))${NAME}*`, 'iy');
 /**
- * Sticky regexes, tried in order at each position. Each has one way to match at a given character
- * (no overlapping alternatives), so a run is linear. A string takes its escapes and a continuation
- * (backslash + newline) whole; it ends before a bare newline or at the end of the input.
- * The branches are disjoint (not a backslash, the quote or a newline; a backslash and one character; a lone backslash only at the very end of the input).
- * `sym` holds hash, at-keyword, CDO and CDC: none of them is ever kept but a `#hex` colour.
+ * Sticky regexes, tried in order at each position. Each has one way to match at a character, so a
+ * run is linear. A string takes its escapes and continuations whole. `sym` holds hash, at-keyword,
+ * CDO and CDC; only a `#hex` colour is ever kept.
  */
 const RULES: [TokType, RegExp][] = [
   ['ws', /[ \t\n]+/y],

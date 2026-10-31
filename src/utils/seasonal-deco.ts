@@ -5,12 +5,9 @@ import type { DecoMotif } from './seasonal-scenes';
 import { seededRandom } from './seasonal-scenes';
 
 /*
- * Border decorations (<mc-seasonal-deco>) as geometry: the element's outline (rounded rectangle
- * from its radii, or its shape from src/utils/shape-path.ts via the ring path source) as a dense
- * clockwise polyline, and per motif the points / paths to draw along it. Christmas lights hang on
- * a sagging wire along the whole outline, icicles under the top edge, frost in the corners, a
- * cobweb in the top-right corner, a pumpkin on the bottom edge, a flower vine round the bottom-left
- * corner. Sizes clamp to the element; motifs that do not fit are dropped. Pure (no DOM).
+ * Border decorations (<mc-seasonal-deco>) as geometry: the element's outline as a dense clockwise
+ * polyline, and per motif the points / paths to draw along it. Sizes clamp to the element; motifs
+ * that do not fit are dropped. Pure (no DOM).
  */
 
 export interface Pt {

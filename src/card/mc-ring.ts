@@ -20,10 +20,8 @@ function sameRing(a: ResolvedRing | undefined, b: ResolvedRing | undefined): boo
 
 /**
  * The ring overlay of a card / row / column / module: an aria-hidden SVG over the parent's border
- * box whose path follows the parent's rendered size and border radii (re-measured on resize).
- * Never takes layout space or pointer events. The parent is made position: relative by the card
- * (`[data-mc-ring]`). Measuring only happens when the parent resizes (one ResizeObserver shared by
- * all rings) or its inline style / class changes (radius from a rule or appearance), not per render.
+ * box that follows its size and border radii. Re-measured on resize (shared ResizeObserver) or
+ * when the parent's style / class changes.
  */
 export class McRing extends LitElement {
   static properties = {

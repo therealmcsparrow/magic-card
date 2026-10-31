@@ -37,11 +37,8 @@ const onDrawingStatus = (e: Event) => {
 
 export class ImageView implements ModuleView {
   /**
-   * The image URL: an entity's attribute (when one is picked and its value is a URL, e.g. a
-   * cover URL or `entity_picture_local`), else its `entity_picture` (person, image.*, camera.*,
-   * media players) with "Use entity picture", else the static image. Relative HA URLs go through
-   * hass.hassUrl; an entity's value is parsed like the browser does and kept only as http(s) or a raster
-   * data: URL (safeSnapshotSrc), anything else shows the placeholder.
+   * The image URL: a picked entity attribute holding a URL, else `entity_picture` when "Use entity
+   * picture" is on, else the static image. Entity values are kept only as http(s) or raster data: URLs.
    */
   imageSource(c: ImageModuleConfig, hass?: HomeAssistant): string {
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;

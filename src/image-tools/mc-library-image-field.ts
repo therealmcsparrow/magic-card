@@ -13,12 +13,8 @@ import { t } from './i18n';
 import { THUMB_RE, entitiesOf, isLibraryValue, pickKeys, refId, sameShape, shapeKeys, shapeOf, type FieldContext, type Shape } from './model';
 
 /*
- * <mc-library-image-field>: the image input of the image module and of image background layers (and each `states`
- * value). Choices: a library image (picked with the Choose button, never by selecting the choice), "Draw a new image",
- * "Edit image", and the address / media field. Writes through one event, `image-change`, detail { keys }: the keys to
- * set on the module or layer (a key set to undefined is removed). The module context also owns the keys that belong to
- * the picture: aspect_ratio, colors, description and state_summary. A background context writes the reference only and
- * says the layer is decorative.
+ * <mc-library-image-field>: the image input of the image module and background layers. Writes
+ * through one `image-change` event, detail { keys }: the keys to set (undefined removes one).
  */
 
 const DESCRIPTION_MAX = 500;

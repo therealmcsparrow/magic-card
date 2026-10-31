@@ -1,11 +1,9 @@
 import type { HomeAssistant, MediaResolveResult } from '../types';
 
 /**
- * Browsed media (HA's media source) is stored as its `media-source://` id and resolved while
- * rendering: media_source/resolve_media returns a URL with a signature that expires (`authSig`),
- * so a stored URL breaks after a while or a reload. One resolve per id is in flight at a time for
- * every card; the URL is cached and resolved again shortly before its signature expires (while a
- * card shows it), when the websocket reconnects and when the media fails to load.
+ * Browsed media is stored as its `media-source://` id and resolved while rendering, since the
+ * signed URL expires. One resolve per id is in flight; the URL is cached and resolved again
+ * shortly before expiry, on websocket reconnect and on load failure.
  */
 
 export const MEDIA_SOURCE_PREFIX = 'media-source://';

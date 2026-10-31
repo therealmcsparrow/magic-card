@@ -8,20 +8,9 @@ import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 
 /*
- * Value background of a module / row / column wrapper or the card (design `value_background`,
- * src/utils/value-background.ts): an aria-hidden layer without pointer events behind the element's
- * content and above its own background (the parent, `data-mc-value-bg`, is an isolated stacking
- * context and the layer sits at z-index -1), clipped by its corner radius or shape clip-path.
- * - fill: a tank filled to the value's level from one side, moved with a transform (600 ms
- *   transition), with a scrolling wave on its surface; a faint hatch without a value, a 2 px floor
- *   line at a real 0. The wave pauses off-screen (the shared IntersectionObserver) and stands still
- *   for reduced motion.
- * - sparkline: the entity's recorded history (the shared history cache: one fetch per entity /
- *   hours / attribute, however many readers) over the last `hours` up to now, in the lower ~65% of
- *   the element, with the live value appended (without one the last value is held, dashed). Fetches
- *   only while on screen (before the first off-screen report and off-screen it shows what is
- *   cached); asks the cache again when its history goes stale. The bucketed history is worked out
- *   once per fetch. Only a sparkline measures its size (the ResizeObserver rings share).
+ * Value background of a module / row / column wrapper or the card (design `value_background`):
+ * an aria-hidden layer behind the content. `fill` is a tank filled to the value's level with a
+ * wave; `sparkline` draws the entity's history. Both pause off-screen.
  */
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
