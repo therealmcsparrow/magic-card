@@ -1,9 +1,4 @@
-/*
- * Layers at a point (Alt-click cycling, the "Layers here" sheet, float bar Select layer above / below).
- * Pure: the canvas hands in the module boxes it measured; this orders the ones holding the point from
- * the front to the back. Paint order inside a container is overlays, in-flow modules, backgrounds
- * (layer-placement 1.0.0 stacking); a nested child is in front of its layout parent.
- */
+/* Layers at a point (pure): orders the module boxes holding the point from front to back (overlays, in-flow modules, backgrounds; children before parents). */
 
 export type HitPlacement = 'flow' | 'background' | 'overlay';
 

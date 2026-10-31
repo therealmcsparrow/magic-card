@@ -32,20 +32,8 @@ export interface MenuOpenAt {
 }
 
 /**
- * One overflow / action menu of an editor element.
- *
- * The menu element stays in the host's shadow root (so its styles apply) but is shown in the
- * browser's top layer with the Popover API (`popover="manual"` + showPopover()). Top-layer elements
- * are positioned against the viewport even when an ancestor has a transform or clips overflow, which
- * is exactly what HA's card-editor dialog does (ha-dialog -> wa-dialog::part(dialog) has
- * `transform: translate(...)` and `overflow: hidden`): a plain `position: fixed` menu inside it is
- * offset by the dialog's origin and clipped away. Popovers opened later also stack above the
- * studio's modal <dialog>.
- *
- * Handles: positioning from the trigger rect or a pointer point (flips up when there is no room
- * below), keyboard navigation (ArrowUp/Down, Home/End, first-letter type-ahead, Escape with
- * stopPropagation, Tab closes and returns focus to the origin), outside-pointer close via
- * composedPath, following scroll in every enclosing shadow root, close on resize.
+ * One overflow / action menu of an editor element, shown in the top layer with the Popover API.
+ * Positions from the trigger or a pointer point, handles keyboard navigation, outside-pointer close and scroll following.
  */
 export class MenuPopover implements ReactiveController {
   trigger: HTMLElement | null = null;

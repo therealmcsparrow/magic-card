@@ -20,12 +20,8 @@ import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
 
 /*
- * Placement and Layer groups of a module's Design tab.
- * They edit the module's top-level `placement` and `layer` keys (layer-placement 1.0.0), never `design`.
- * Every option writes plain YAML; Looks write the same keys. Order moves and the card's Low-power mode need
- * the container list and the card config, so they leave as events the inspector handles:
- *   mc-layer-move  detail { to: 'front' | 'forward' | 'backward' | 'back' }
- *   mc-layers-low-power  (no detail)
+ * Placement and Layer groups of a module's Design tab; they edit the top-level `placement` and `layer` keys, never `design`.
+ * Order moves and Low-power mode leave as events: mc-layer-move { to } and mc-layers-low-power.
  */
 
 const PLACEMENT_ITEMS: ReadonlyArray<{ value: Placement; label: ReturnType<typeof m>; icon: string }> = [

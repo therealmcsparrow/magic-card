@@ -1,7 +1,4 @@
-/*
- * RovingFocus: arrow keys, Home and End over a group with one tab stop (toolbar, rail, seg, tree rows).
- * Pure helper plus a small class, so a template can use it from a keydown handler.
- */
+/* RovingFocus: arrow keys, Home and End over a group with one tab stop. */
 
 export type RovingOrientation = 'horizontal' | 'vertical' | 'both';
 

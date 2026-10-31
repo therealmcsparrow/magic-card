@@ -8,11 +8,8 @@ import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
 import { t } from '../i18n';
 
 /*
- * The Look block of the slider editor (contract look-editor 1.0.0, "Host rules"): <mc-slider-look-editor> once the
- * look-editor chunk is in, a skeleton while it loads, and on failure a status line with Try again. Today's fields stay
- * in the slider editor's General tab either way (the contract: failure shows only the status line). The open sections
- * and the one-level Undo snapshot are kept per module for the session, outside the element, so a tab switch does not
- * lose them; they are never written to YAML.
+ * The Look block of the slider editor: <mc-slider-look-editor> once its chunk is in, a skeleton while loading, a status line with Try again on failure.
+ * Open sections and the one-level Undo snapshot are kept per module for the session, never in YAML.
  */
 
 interface Session {

@@ -3,11 +3,8 @@ import { until } from 'lit/directives/until.js';
 import { BUILD_VERSION } from '../utils/build-version';
 
 /*
- * The card editor's loader of the image-tools chunk (magic-card-image-tools.js, contract image-editor 1.0.0, "Card
- * editor"). `loadImageTools()` resolves true once the chunk matches this build and has defined
- * <mc-library-image-field> and its picker; false on an import failure, a timeout, a build mismatch (a cached older
- * file) or an install error. One promise is shared while it is pending and after success; a failure clears it, so
- * the next render tries again. Hosts treat false as "show the plain image fields", never as an error that blocks editing.
+ * Loader of the image-tools chunk. `loadImageTools()` resolves true once the chunk matches this build and defined its elements;
+ * false on import failure, timeout, build mismatch or install error. The promise is shared; a failure clears it.
  */
 
 export const IMAGE_TOOLS_FILE = 'magic-card-image-tools.js';

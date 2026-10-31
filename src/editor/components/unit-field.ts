@@ -40,12 +40,8 @@ export function parseUnitValue(value: unknown): UnitValue {
 }
 
 /**
- * A value with a unit: a number input and a unit select. The unit joins the number only when the
- * number is committed (change, blur or Enter), never while typing; an empty number removes the value.
- * The select's "Custom" option (and a stored value that isn't a number with a unit: auto, calc(…),
- * var(…), …) turns the input into a text input for any CSS value. Picking a unit again converts a
- * plain number and clears anything else.
- * Emits `value-changed` with `detail.value` ('' = removed).
+ * A number input plus unit select; the unit joins the number on commit (change, blur, Enter), an empty number removes the value.
+ * "Custom" (or a non-numeric stored value) switches to a text input. Emits `value-changed` with `detail.value`.
  */
 @customElement('mc-unit-field')
 export class UnitField extends LitElement {

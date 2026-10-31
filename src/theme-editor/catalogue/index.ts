@@ -10,11 +10,8 @@ import { ULTRA_CARD_ENTRIES } from './ultra-card';
 import { BUTTON_CARD_ENTRIES } from './button-card';
 
 /*
- * The theme variable catalogue (Contract theme-catalogue 1.0.0): one file per source, merged here.
- * A source lists HA variables it reads as rows with role 'follows'. Rule 1 allows one entry per
- * name, so a 'follows' row is not kept as an entry: the owner (the HA entry, or the first source
- * that lists a name HA does not) gets the source in `alsoUsedBy`, and the source's group shows it
- * through groupEntries().
+ * The theme variable catalogue: one file per source, merged here.
+ * A 'follows' row is not kept as an entry; the owner gets the source in `alsoUsedBy`.
  */
 
 export const CATALOGUE_GROUPS: CatalogueGroup[] = [

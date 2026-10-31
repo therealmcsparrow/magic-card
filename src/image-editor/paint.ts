@@ -2,11 +2,8 @@ import type { Part } from './part';
 import type { TextData } from './text';
 
 /*
- * Paints of an image layer beyond Main, Accent and None: a hex or theme colour, a gradient, opacity and dashes. A layer keeps
- * these in `look`; its `fill` and `stroke` then stay on the placeholder Main so every other tool still sees a painted layer.
- * A colour is always the string the markup holds (a validated value), a gradient is placed in fractions of the layer's own
- * box so it follows the layer when it moves or is scaled, and the saved markup writes it in drawing units
- * (gradientUnits="userSpaceOnUse") so the canvas, the saved file and the card draw the same picture.
+ * Paints of an image layer beyond Main, Accent and None (hex or theme colour, gradient, opacity, dashes), kept in `look`.
+ * Gradients use fractions of the layer box and are saved in userSpaceOnUse units.
  */
 
 export const MAIN = 'var(--mc-image-main)';

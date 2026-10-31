@@ -91,12 +91,8 @@ function listOf(config: MagicCardConfig, sel: ModuleSelection): { list: CardModu
 }
 
 /**
- * Replace the selected module by a module of `type`, in a copy of `config`. Keeps the common keys
- * (entity, design, actions, conditions, name ...) and every key the new type lists; drops the rest, and
- * the design keys that only another type shows. A layout's modules are all kept: flattened in slot order
- * into a flat layout, one column of a row, one tab of tabs. Undefined for a type of the other kind, the
- * same type or an unknown one. `dropped` counts the settings that did not carry over. Pure: the caller
- * applies it with one updateConfig and selects `path` (the same place).
+ * Replaces the selected module by one of `type`, in a copy of `config`: keeps common keys and keys the new type lists, drops the rest.
+ * Layout children are kept (flattened or split by slot). Undefined for another kind or the same type. `dropped` counts lost settings.
  */
 export function retypeModule(
   config: MagicCardConfig,

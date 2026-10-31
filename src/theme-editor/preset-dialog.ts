@@ -33,11 +33,8 @@ const why = (e: unknown): string => {
 };
 
 /**
- * <mcte-preset-dialog>: every modal of My presets (Save as my preset, Rename, Delete) and of export /
- * import. Export and import show <mc-transfer-panel>, which comes from the transfer chunk
- * (window.MagicCard.loadTransfer, after loadEditor). Props: `backend`, `mine` (SavedThemePreset[]),
- * `taken` (theme names already used). Events (bubbling, composed): `mcte-mine-changed`,
- * `mcte-notice` { text }, `mcte-create` { name, doc, from } (an imported theme opened as a new one).
+ * <mcte-preset-dialog>: the modals of My presets (save, rename, delete) and of export / import.
+ * Props `backend`, `mine`, `taken`; events `mcte-mine-changed`, `mcte-notice`, `mcte-create`.
  */
 export class MctePresetDialog extends LitElement {
   static properties: PropertyDeclarations = {

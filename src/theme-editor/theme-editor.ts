@@ -22,11 +22,8 @@ type ListPhase = 'loading' | 'ready' | 'error';
 const NOTICE_MS = 10_000;
 
 /**
- * <magic-card-theme-editor>: the theme editor host (Contract theme-editor 1.0.0). The panel sets
- * `hass`, `narrow`, `backend` and `selectedName`. This shell waits for the backend, asks
- * magic-card.js for the editor chunk (mc-color-picker, mc-unit-field: window.MagicCard.loadEditor,
- * module-editor 1.0.0), then shows the theme list or one theme in the editor. It keeps the open
- * draft when the panel detaches it (tab switch) and mirrors the open theme through `mc-theme-select`.
+ * <magic-card-theme-editor>: the theme editor host. The panel sets `hass`, `narrow`, `backend` and `selectedName`.
+ * Loads the editor chunk, shows the list or one theme, keeps the draft across detach, mirrors the open theme through `mc-theme-select`.
  */
 export class MagicCardThemeEditor extends LitElement implements ThemeEditorElement {
   static readonly contractVersion = THEME_EDITOR_CONTRACT_VERSION;

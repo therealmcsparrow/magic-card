@@ -12,11 +12,8 @@ import { librarySource } from './library';
 import { t } from '../i18n';
 
 /*
- * The "Library" button of the icon picker, the shape section and the animation list opens this sheet in
- * the top layer (layer.ts): <mc-library-view> (the transfer chunk) with the card's copies as "This card".
- * Imports that do not go to Magic Card Utils reach `mc-transfer-import` here and are written into the
- * card as inline copies (`custom_animations`, `custom_shapes`, `custom_icons`), one undo step. Copies of
- * ids the library does not know are the card's own and are never pruned (prune.ts).
+ * Opens <mc-library-view> in the top layer with the card's copies as "This card".
+ * Imports not sent to Magic Card Utils are written into the card as inline copies in one undo step.
  */
 
 /** The card with imported items stored as its own copies (an item with an id replaces the copy with that id). */

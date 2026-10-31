@@ -136,12 +136,8 @@ async function formEditor(form: CardConfigForm): Promise<ConfigurableElement | u
 }
 
 /**
- * The embedded card's own editor, one per place it is shown (pane and studio inspectors, inline
- * layout editors), so two hosts never fight over one element. Like HA's card editor it comes from
- * the card's class: getConfigElement() (the card's editor element) or getConfigForm() (a form);
- * a code editor toggle switches to YAML, and a card without either (or a config the visual editor
- * cannot show) gets YAML. The editor's `config-changed` is stopped here and written into the module
- * through the `onChange` of the latest render, so it can never write back an outdated module config.
+ * The embedded card's own editor, one per place it is shown: from getConfigElement() or getConfigForm(), YAML otherwise.
+ * Its `config-changed` is stopped and written through the latest `onChange`.
  */
 @customElement('mc-custom-card-editor')
 export class CustomCardEditor extends LitElement {

@@ -1,7 +1,4 @@
-/*
- * LongPress: a touch held for `ms` that moves less than `slop` px (from the path canvas gesture, path-canvas 1.0.0).
- * More movement, a second finger or cancel() stops it.
- */
+/* LongPress: a touch held for `ms` that moves less than `slop` px; more movement, a second finger or cancel() stops it. */
 export class LongPress {
   private timer?: ReturnType<typeof setTimeout>;
   private from: [number, number] = [0, 0];

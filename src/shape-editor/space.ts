@@ -87,11 +87,8 @@ const meet = (a: Span[], b: Span[]): Span[] => {
 };
 
 /**
- * The inscribed rectangle of an outline as per-side insets (top, right, bottom, left; whole px, rounded
- * up): the rectangle inside the outline with the most area, width counting double (score width x width x
- * height, text needs width more than height). Sides without a feature stay 0. Run at the "Edit at" size.
- * Rows are tested every pixel, so a rectangle fits when every row between its top and bottom has it
- * inside one span of the outline.
+ * The inscribed rectangle of an outline as per-side insets (whole px): the largest-area rectangle inside, width counting double.
+ * Rows are tested every pixel; sides without a feature stay 0.
  */
 export function solveSpace(poly: Pt[], w: number, h: number): Sides {
   const rows = Math.ceil(h);

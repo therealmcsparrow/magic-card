@@ -3,14 +3,8 @@ import type { BuiltInThemePreset, ThemeDoc, ThemePresetLibrary } from '../../con
 import { m } from './i18n';
 
 /*
- * The preset library (Contract theme-presets 1.2.0): 57 themes, each with a light and a
- * dark mode, in one lazy chunk (magic-card-theme-presets.js) that the create dialog loads on first
- * open. It imports the namespace's m() marker (i18n/index.ts), so Node needs tools/ui-kit-ts-hooks.mjs to load it; the chunk holds
- * no UI code. The first 5 are the original starters (ids and values unchanged since 2026.10.06).
- * Inspired presets use their own colours and names; the credit names the palette that sparked them.
- * Every mode passes 4.5 to 1 for text, secondary text, text on primary and the state colours
- * (tests/theme-presets.contract.test.ts). Order: display order within a group; groups are contiguous
- * (original, inspired, genre). The 12 genre presets (Sci-fi & fantasy) carry `tags`, never a franchise term.
+ * The preset library: themes with a light and a dark mode in one lazy chunk; no UI code.
+ * Grouped original, inspired, genre; every mode passes 4.5:1 for text pairs; genre presets carry `tags`.
  */
 
 type Mode = Record<string, string>;

@@ -20,11 +20,8 @@ import { LINE_TILES, SHAPE_TILES } from '../tiles';
 import { applyPreset, appliedPreset, changeCount, colourMode, lookStatus, resetLook, spacingMode, unusedColourKeys, withKeys } from './model';
 
 /*
- * <mc-flow-look-editor> (contract look-editor 1.0.0): the Look group of a flow block. It renders
- * from the keys and writes only on a user action, one onChange with the whole next flow. Presets and Reset look keep one
- * level of Undo (toast for 20 s plus an inline button). Every control carries data-key (its YAML key) for the tests.
- * Section state: `open` holds the sections the user opened; a "-name" entry means the user closed a section that opens
- * by itself because its keys are set.
+ * <mc-flow-look-editor>: the Look group of a flow block. Renders from the keys, writes only on user action with the whole next flow.
+ * Presets and Reset look keep one level of Undo; `open` holds opened sections ("-name" = closed).
  */
 type Rec = Record<string, unknown>;
 type Opt = { value: string; label: string };

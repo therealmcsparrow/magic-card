@@ -4,13 +4,7 @@ import { ICON_LIBRARY } from '../../../icon-anim/library';
 import { isGlowPaint, styleDoc } from '../../../icon-anim/style';
 import type { IconStyle, LibraryEntry } from '../../../contracts/icon-library';
 
-/*
- * The hand-edit rule of contract icon-library 1.2.1 (LibraryPickFields): an icon entry with
- * `library_icon` is a library pick only while its stored document is still what styleDoc gives for
- * that entry and Style (its `name` and the glow colour picked aside). A document edited by hand
- * (YAML, the animation studio) is the user's own: the Style switch leaves it alone and it follows
- * the module's icon like any own animation. Lazy editor chunk only.
- */
+/* Hand-edit rule for library picks: an icon entry with `library_icon` is a library pick only while its stored document is still what styleDoc gives for that entry and Style. */
 
 /** A document as comparable text: normalised, without name, glow colours as one token, keys sorted. */
 function canonical(raw: unknown): string | undefined {

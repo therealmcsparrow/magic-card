@@ -18,11 +18,8 @@ import { layerControlCss } from './tokens';
 import { cancelSliderFrames, chevron, lyrSwitch } from './controls';
 
 /*
- * Card backdrop group: `background_layers`, first entry = front, at most
- * four. A list of two-line rows (thumbnail, title, summary, status; then Hide, Forward, Backward, Delete), an
- * inline editor per row, Looks, the cost meter and the rule view. Delete replaces the row in place with
- * "Deleted. Undo" (12 s, paused on hover or focus, Ctrl or Cmd+Z answers). Switching a type or source, applying
- * a Look: Undo only, no confirmation.
+ * Card backdrop group: `background_layers` (first = front, at most four) as rows with an inline editor, Looks, cost meter and rule view.
+ * Delete shows "Deleted. Undo" in place for 12 s.
  */
 
 const TYPE_ICONS: Record<string, string> = { image: 'mdi:image-outline', gradient: 'mdi:gradient-vertical', pattern: 'mdi:dots-grid', color: 'mdi:palette-outline' };

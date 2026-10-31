@@ -8,11 +8,8 @@ import { cardState, patchCard, type CardState } from './card-request';
 import { inlineDocs, removeInlineDoc, storedDoc, upsertInlineDoc } from './quick-model';
 
 /*
- * Catalogue presets picked in the card editor's Animations dropdown (contract preset-catalogue
- * 1.1.0): the document is stored inline in the card's `custom_animations` under
- * `cat-<entry id>` and the entry plays `custom:cat-<entry id>`, so the card needs no Magic Card
- * Utils. One copy per catalogue entry per card, shared by every entry playing it; a copy already in
- * the card (or its template) is kept as it is. Copies nothing plays any more are pruned.
+ * Catalogue presets picked in the Animations dropdown: the document is stored inline in `custom_animations` as `cat-<entry id>`, one copy per entry per card.
+ * Copies nothing plays any more are pruned.
  */
 
 /**

@@ -3,12 +3,8 @@ import { animationDocList, customAnimationIds } from '../../utils/custom-animati
 import { CUSTOM_PREFIX, customRefId } from '../../anim-studio/model';
 
 /*
- * Kept copies of saved items (mcu-library 1.0.0 "Pruning"): an entry of the card's `custom_icons`
- * or `custom_shapes` goes only when no module uses it AND its id is in the loaded library (so it is a
- * copy of a saved item). Entries the library does not know are the card's own (hand-written YAML,
- * imports made without Magic Card Utils) and stay. A library that is not loaded or not installed
- * (`undefined`) prunes nothing. A template-linked card keeps all copies: the template's modules may
- * use them and the card editor does not see those.
+ * Prunes kept copies: a `custom_icons` / `custom_shapes` entry goes only when no module uses it and its id is in the loaded library.
+ * An unloaded library prunes nothing; a template-linked card keeps all copies.
  */
 
 export interface KnownLibrary {

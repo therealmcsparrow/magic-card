@@ -9,17 +9,9 @@ import { browserMode, docFromHass, hassOf } from './util';
 import './trial-bar';
 
 /*
- * Try on dashboards: the draft's variables applied to Home Assistant in this browser tab
- * only, with a Revert bar that stays on screen after the editor panel is left.
- *
- * Mechanism: one <style id="mc-theme-trial"> in document.head holding a single `html {}` rule. The
- * declarations are written through the rule's CSSOM (setProperty with 'important'), never by building
- * CSS text, so a value like `red;}body{display:none` can only ever be one declaration or be refused.
- * Nothing is stored. The module is a singleton, so the trial outlives the editor element.
- *
- * The trial ends by Revert, Discard, a successful save (stopTrial 'saved'), the theme being changed in
- * the profile, 10 minutes without an edit, or a page reload. Known gaps (documented): views and cards
- * with their own `theme:`, and other tabs and devices.
+ * Try on dashboards: the draft's variables applied to HA in this tab only, with a Revert bar.
+ * One <style id="mc-theme-trial"> `html {}` rule written through the CSSOM, never CSS text.
+ * Ends by Revert, Discard, save, a profile theme change, 10 minutes idle or reload.
  */
 
 export const TRIAL_IDLE_MS = 10 * 60 * 1000;

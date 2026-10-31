@@ -1,7 +1,4 @@
-/*
- * Small pure geometry for the path tools: anchors as cubic chains, reversing, offset curves, arcs.
- * Imports the path-model types only (src/path/edit.ts lives in the path-canvas chunk and would be copied).
- */
+/* Small pure geometry for the path tools: cubic chains, reversing, offset curves, arcs. */
 import type { Anchor, Cubic, EditPath, Pt } from '../contracts/path-model';
 
 export const dist = (a: Pt, b: Pt): number => Math.hypot(a[0] - b[0], a[1] - b[1]);

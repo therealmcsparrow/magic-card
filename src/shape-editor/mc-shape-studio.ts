@@ -36,12 +36,8 @@ import { studioStyles } from './styles';
 import { btn, num, r1, seg } from './ui';
 
 /*
- * <mc-shape-studio> (contract svg-editor 1.0.0, shape part; custom-shape 1.0.0): the card shape
- * editor. Corner mode needs no canvas (type tiles, sizes, a drawing with corner handles); free path mode
- * hosts <mc-path-canvas> (path-canvas 1.0.0), loaded when it is first needed. Every change is a
- * `mc-shape-change` event (commit false while dragging); the builder comes from the shape-custom chunk
- * (shape-custom-loader), so the previews are the renderer. History keeps whole documents.
- * Templates are written compact on purpose (lit keeps their whitespace in the chunk): keep prettier off them.
+ * mc-shape-studio: the card shape editor. Corner mode needs no canvas; free path mode hosts mc-path-canvas.
+ * Changes fire `mc-shape-change` (commit false while dragging). Templates are compact on purpose: keep prettier off them.
  */
 
 export interface Preview {

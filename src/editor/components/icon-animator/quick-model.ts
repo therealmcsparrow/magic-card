@@ -8,13 +8,8 @@ import {
 import { CATALOGUE_DOC_PREFIX } from '../../../contracts/preset-catalogue';
 
 /*
- * Config edits for icon animations stored in the card (pure; the icon picker's Animated icons tab,
- * follow-icon, and cards made with the former Animate icon panel). A pick stores the document inline in the card's
- * `custom_animations` (the card editor cannot write the Magic Card Utils library) and points one
- * design animation entry of the module at it: `{ preset: 'custom:<id>', target: 'icon' }`.
- * Its documents use ids starting with `quick-`, which is how the editor finds its own entry again.
- * Imports nothing from magic-card.js but anim-studio/model (see loader.ts): the ids a card references
- * (customAnimationIds) come in as arguments.
+ * Config edits for icon animations stored in the card (pure): a pick stores the document inline in `custom_animations` and points one design entry at `custom:<id>`.
+ * Quick documents use ids starting with `quick-`.
  */
 
 export const QUICK_PREFIX = 'quick-';

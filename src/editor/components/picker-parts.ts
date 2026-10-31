@@ -14,17 +14,8 @@ function deepActiveElement(): HTMLElement | null {
 }
 
 /**
- * Shows a picker's `<dialog class="mc-picker-overlay">` in the browser's top layer (showModal()).
- *
- * Top-layer elements are positioned against the viewport even when an ancestor has a transform or
- * clips overflow. HA's card-editor dialog part has `transform: translate(...)` + `overflow: hidden`,
- * which made the old `position: fixed; inset: 0` overlay cover the dialog surface instead of the
- * viewport (off to the right / clipped on narrow screens). A modal dialog opened later also stacks
- * above the studio's modal <dialog>, traps focus (the rest of the page is inert) and gets the
- * Escape close request. Without showModal() the overlay is shown in flow (the old behaviour).
- *
- * The host renders the overlay while open; this controller opens it once rendered, routes Escape /
- * the native cancel through `onClose`, and returns focus to the trigger when the overlay goes away.
+ * Shows a picker's `<dialog class="mc-picker-overlay">` in the top layer (showModal()), so HA's transformed dialog cannot clip it.
+ * Routes Escape / cancel through `onClose` and returns focus to the trigger.
  */
 export interface PickerDialogOptions {
   /** Selector of the host's overlay <dialog> (default `dialog.mc-picker-overlay`). */

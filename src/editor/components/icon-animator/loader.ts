@@ -10,16 +10,8 @@ import { svgIconApi } from '../../../utils/svg-icon-loader';
 import { customAnimationIds } from '../../../utils/custom-animations';
 
 /*
- * The icon picker's Animated icons tab (its grid, its picks) and the follow-icon edits live in a lazy
- * editor chunk, dist/magic-card-icon-animator.js, loaded next to magic-card.js on first use (public path:
- * src/index.ts). Dashboards never load it. Part of magic-card.js: keep it tiny.
- *
- * The chunk gets the card bundle's modules it needs from `host` instead of importing them: a module
- * of magic-card.js that a chunk imports can no longer be scope-hoisted into the bundle, which costs
- * the bundle kilobytes. So the chunk imports only its own modules and those magic-card.js already
- * shares with the runtime chunk (anim-studio/model, compile, icons/path-math, svg-sanitize,
- * utils/animation-presets); everything else comes in here (short keys: their names are bytes in
- * magic-card.js).
+ * Loads the lazy icon-animator chunk (icon picker tab and follow-icon edits) on first use; dashboards never load it.
+ * The chunk gets the card bundle's modules from `host` instead of importing them, to keep magic-card.js small.
  */
 type IconApi = NonNullable<ReturnType<typeof svgIconApi>>;
 

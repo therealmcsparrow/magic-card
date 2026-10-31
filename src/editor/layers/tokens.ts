@@ -1,13 +1,8 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 
 /*
- * Layer editor tokens. Every control edge in the Placement, Layer and
- * Card backdrop groups uses --mc-ed-ctl-line (>= 3:1 against its panel, WCAG 1.4.11); selected and on / off
- * states carry a non-colour cue as well (check mark, bold label, 2 px border, "On" / "Off" text).
- *
- * The line is the kit field border (--mc-field-border: the theme text colour at 50 %), so these controls look like
- * the other editor panels. At 50 % it holds 3:1 on the HA default light and dark themes and on two custom ones.
- * LAYER_TOKENS are the fixed fallback for a browser without color-mix and the values the sampler test measures.
+ * Layer editor tokens: control edges use --mc-ed-ctl-line (>= 3:1, WCAG 1.4.11), derived from the kit field border.
+ * LAYER_TOKENS are the fixed fallback for browsers without color-mix.
  */
 
 /** Share of the text colour in the control line (theme mix). */

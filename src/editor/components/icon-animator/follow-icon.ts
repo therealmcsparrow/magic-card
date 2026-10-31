@@ -34,20 +34,8 @@ import {
 import { t, m } from '../../../icon-anim/i18n';
 
 /*
- * "This icon" animations follow their module's icon (lazy chunk; the card editor's state manager
- * calls followIcons through loader.ts after every edit of a card with inline animations). When a
- * module's own icon changes and then stays put for a second, its quick document is split again from the new icon: parts keep their
- * place by piece index (Part 1 stays Part 1), parts the new icon does not have go with their tracks,
- * bindings and empty groups, pivots move with their part's box, and the new drawing is embedded like
- * Apply does. Library animations (see below), documents of other modules, icons cleared back to the entity's
- * icon and icons whose shape cannot be loaded (a half-typed id in YAML) are left alone. On a
- * template-linked card a document the template supplies follows too: the result is the card's own
- * document with the same id (an override of the template's, like Apply on that card).
- *
- * A library animation (a stored built-in document, a My animations reference the icon picker
- * set, or an edited copy of a My animations document made by the former Animate icon panel) draws its own copy of an icon, so after the same settled icon change (Clear too) its entry
- * is removed instead, with its quick document when nothing else plays it. The tile pick that set it
- * changes the icon and the document in one action: nothing is removed then.
+ * "This icon" animations follow their module's icon: after the icon settles, the quick document is split again from the new icon (parts keep their piece index).
+ * Library animations are removed instead when the icon changes; other modules' documents and unloadable icons are left alone.
  */
 
 /** An own SVG (a document's `rig.svg`) as icon geometry, like icon-source builds it. */
@@ -138,13 +126,7 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig, tpl?: 
   return out;
 }
 
-/**
- * The modules whose library animation goes (`tpl`: the linked template's documents): the same icon
- * entry in `prev` and `next` (place, type, preset) playing a built-in document (its entry has
- * `library_icon` and the document is still the derived one, or, without the field, its name is an
- * ICON_LIBRARY entry's), a My animations reference or copy (MINE_PREFIX), and an own icon that
- * changed, Clear included.
- */
+/** The modules whose library animation goes: same icon entry in `prev` and `next` playing a built-in, My animations or edited-copy document, with an own icon that changed. */
 export function libraryIconChanges(
   prev: MagicCardConfig,
   next: MagicCardConfig,
@@ -233,11 +215,8 @@ function moved(pt: [number, number], from?: Box, to?: Box): [number, number] {
 }
 
 /**
- * The document on `icon` (its shape `g`): parts keep their piece indices (pieces the new icon lacks
- * are dropped, a part left without pieces goes with its tracks, bindings and empty groups), the new
- * icon's other pieces become new parts, pivots move with their part's box (`old`: the previous
- * drawing, when known) and the drawing is embedded (rig.svg) like Apply; an icon over the own-icon
- * cap keeps its id. `removed`: the tracks and bindings that went.
+ * The document on `icon` (shape `g`): parts keep their piece indices, new pieces become parts, pivots follow their box and the drawing is embedded.
+ * `removed` collects the tracks and bindings that went.
  */
 export function repointDoc(
   doc: AnimationDoc,
@@ -434,11 +413,8 @@ function arm(h: FollowHost, sm: CardState, map: Map<string, Pending>, w: Pending
 }
 
 /**
- * After an edit (`prev` to `next`): a module whose own icon changed has its quick document follow
- * the new icon once the icon stayed put for FOLLOW_DELAY_MS. A burst of edits (bell, bel, bell-ring
- * typed in YAML) follows once, from the icon and document before the burst to the final icon, so
- * parts are pruned only against that one. A library animation is dropped the same way, once after
- * the burst.
+ * After an edit (`prev` to `next`): a module whose own icon changed has its quick document follow the new icon once it stayed put for FOLLOW_DELAY_MS.
+ * A burst of edits follows once; a library animation is dropped the same way.
  */
 export function followIcons(
   h: FollowHost,
@@ -499,14 +475,8 @@ async function shapeOf(h: FollowHost, ref: string, config?: MagicCardConfig): Pr
 export const DROP_NOTE = m("icon-animator.follow-icon.the-animated-icon-was-removed-because");
 
 /**
- * One module's library animation goes once its icon settled on another (nothing when it went back
- * to the icon it had, or when the entry or its document changed meanwhile: a tile pick rewrote it).
- * An icon whose shape cannot load (a half-typed id) parks the wait ('park'): the next change of the
- * icon goes on from the icon before the burst, so typing the old id back drops nothing. The entry is removed (a template-linked module's list becomes
- * its own) and its quick document with it when nothing else plays it; a document the template
- * supplies stays the template's. Folded into the burst's last undo step while the card is still as
- * that edit left it, like follow. True: the editor was detached once the shape was in (the caller
- * waits for it to come back).
+ * Removes one module's library animation once its icon settled on another, with its quick document when nothing else plays it.
+ * Returns 'park' when the shape cannot load yet; true when the editor was detached (the caller waits).
  */
 async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean | 'park' | void> {
   const live = () => {
@@ -547,11 +517,8 @@ async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean |
 }
 
 /**
- * One module's document follows the icon it settled on (nothing when it went back to the icon it
- * had). Folded into the burst's last undo step while the card is still as that edit left it, else
- * its own step. A document another module still plays on its old icon is copied (the module gets
- * the copy). The note goes to Home Assistant's toast and to the animator. True: the editor was
- * detached when the result was ready (nothing written; the caller waits for it to come back).
+ * Makes one module's document follow the icon it settled on, folded into the burst's last undo step when possible.
+ * A document another module still plays is copied; true when the editor was detached (nothing written).
  */
 async function follow(h: FollowHost, sm: CardState, w: Pending): Promise<boolean | void> {
   const { id, from, path } = w;

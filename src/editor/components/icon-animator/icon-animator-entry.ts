@@ -1,10 +1,4 @@
-/*
- * Entry of the lazy editor chunk magic-card-icon-animator.js (loaded by ./loader.ts, which passes the
- * card bundle's modules in): defines <mc-animated-icon-grid> (the icon picker's Animated icons tab),
- * writes its picks (animated-icon-pick.ts) and lets "This icon" animations follow their module's icon
- * (follow-icon.ts). The Design tab's Animate icon panel was removed in 2026.10: splitting an
- * icon and animated SVG export live in the animation studio.
- */
+/* Entry of the lazy icon-animator chunk: the animated icon grid, its picks and the follow-icon edits. */
 export { defineAnimatedIconGrid, ANIMATED_ICON_GRID_TAG } from './animated-icon-grid';
 export { followIcons, iconAnimationFacts } from './follow-icon';
 export { pickAnimatedIcon, currentIconPick, currentIconStyle } from './animated-icon-pick';

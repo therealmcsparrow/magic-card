@@ -2,11 +2,8 @@ import type { FlowPreset } from '../contracts/look-editor';
 import { m } from './i18n';
 
 /*
- * Preset data of the look editors (contract look-editor 1.1.0). Every `preview` is a chunk-constant, static SVG
- * (72 x 56, the preset's own colours): <mc-ui-chip-group> draws it with unsafeHTML, so it must never be built from
- * config text. Labels and descriptions are m() marks, read with t() where the chips are built. A preset removes every
- * look key plus the existing keys it lists, then writes `values` (flows: tube_fill_value only for a flow with an entity).
- * Slider presets: SLIDER_PRESETS follows the flow ones.
+ * Preset data of the look editors. Every `preview` is a static chunk-constant SVG (72 x 56), never built from config text.
+ * A preset removes every look key plus the ones it lists, then writes `values`.
  */
 const pv = (inner: string): string => `<svg viewBox="0 0 72 56" width="72" height="56" fill="none" stroke-linecap="round">${inner}</svg>`;
 

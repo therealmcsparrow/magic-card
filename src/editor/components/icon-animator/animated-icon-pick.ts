@@ -22,12 +22,8 @@ import {
 } from './quick-model';
 
 /*
- * Writes a tile picked in the icon picker's Animated icons tab: the module
- * edit first (its own undo step), the card's `custom_animations` change folded into that step.
- * A library tile stores the entry's document in the picked Style (icon-anim/style.ts) and records
- * `library_icon` / `icon_style` on the icon entry (contract icon-library LibraryPickFields), its
- * Glow colour read from the entry's Color. A document edited by hand since (library-pick.ts) is not
- * a library pick any more: no tile is marked and a Style change leaves it alone.
+ * Writes a tile picked in the Animated icons tab: the module edit and the card `custom_animations` change in one undo step.
+ * A library tile stores the document in the picked Style and sets `library_icon` / `icon_style`; a hand-edited document is not a library pick.
  */
 
 /**
@@ -73,12 +69,8 @@ export function referenceMine(
 }
 
 /**
- * Built-in tile: the library document is stored inline under a `quick-icon-*` id (the module's own
- * when no other module plays it) and the module gets the tile's icon. My animations tile: the entry
- * points at the library document, nothing is stored, and the module's previous quick document goes;
- * the module's icon changes only when the document names one. On a template-linked card the
- * module's animation list is marked not_synced (the General tab's sync wrapper skips `design`).
- * False outside the card editor (nothing written) or when the document is not valid.
+ * Applies a tile pick: a built-in tile stores the document inline under a `quick-icon-*` id; a My animations tile points at the library document.
+ * False outside the card editor or for an invalid document.
  */
 export function pickAnimatedIcon(
   h: IconAnimatorHost,
