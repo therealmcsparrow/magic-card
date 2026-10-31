@@ -15,7 +15,10 @@ function fnv(text: string): string {
 /** The storage key of one card config on this page. An edited config gives a new key. */
 export const pauseKey = (source: object): string => PAUSE_STORAGE_PREFIX + location.pathname + ':' + fnv(JSON.stringify(source));
 
-/** True when this key was left paused; localStorage missing or blocked reads as playing. */
+/**
+ * True only when the stored value is exactly "1" (any other value, even "true" or " 1", reads as playing); the flag has no expiry.
+ * localStorage missing or blocked reads as playing. Reduced motion is checked before this flag, and the flag before playing.
+ */
 export function rememberedPause(key: string): boolean {
   try {
     return localStorage.getItem(key) === '1';
