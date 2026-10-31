@@ -50,6 +50,10 @@ Home Assistant then hides that update until a newer one comes out. Updating late
 
 Magic Card may go a while without a new release. That does not mean it stopped working. A release you installed keeps running as long as Home Assistant keeps loading custom cards the way it does today, and you can stay on it with the steps above.
 
+## Volunteer-run
+
+Magic Card is non-commercial open source software, made and looked after by a volunteer. It is not sold. At most it receives voluntary donations. Nothing on this page is a promise of support, of a reply within a set time, or of a future release. If that changes, [SECURITY.md](SECURITY.md) changes with it.
+
 ## Art
 
 No generated art ships with Magic Card. The look of the animated icons is defined by an art spec, `assets/brand/icon-library/p4-spec.json`. Finished originals are kept in one folder, `assets/brand/`. SVG is the original and PNG is an export of it. The licence for the folder is in `assets/brand/LICENSE.md`.
