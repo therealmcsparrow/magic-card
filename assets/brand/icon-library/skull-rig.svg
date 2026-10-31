@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Magic Card icon rig: Skull. Cut from MDI "skull" (Pictogrammers, Apache-2.0); jaw redrawn with a 1 unit gap.
+       piece 0 cranium static (eyes and nose are holes)
+       piece 1 jaw: chatter y 0 -> +1.2 -> 0, two quick bites then a rest; pivot [12, 19] (scale_y squash on landing). -->
+  <path id="cranium" d="M12 2A9 9 0 0 0 3 11C3 13.6 4.1 16 6 17.9H18C19.9 16 21 13.6 21 11A9 9 0 0 0 12 2Z M8,11A2,2 0 0,1 10,13A2,2 0 0,1 8,15A2,2 0 0,1 6,13A2,2 0 0,1 8,11Z M16,11A2,2 0 0,1 18,13A2,2 0 0,1 16,15A2,2 0 0,1 14,13A2,2 0 0,1 16,11Z M12,14L13.5,17H10.5Z"/>
+  <path id="jaw" data-pivot="12 19" d="M7 18.9H17V22H15V20H13V22H11V20H9V22H7Z"/>
+</svg>

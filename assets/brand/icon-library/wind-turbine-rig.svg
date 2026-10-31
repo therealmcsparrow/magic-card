@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Magic Card icon rig: Wind turbine. Cut from MDI "wind-turbine" (Pictogrammers, Apache-2.0).
+       piece 0 tower static (top tucked under the hub)
+       piece 1 hub, pieces 2-4 blades: part rotor = [1, 2, 3, 4], pivot [12, 9]; spin 360 deg linear. -->
+  <path id="tower" d="M11 11.5H13V19C15 19 15 21 15 21V22H9V21C9 21 9 19 11 19Z"/>
+  <g id="rotor" data-pivot="12 9">
+    <path id="hub" d="M9 9A3 3 0 1 0 15 9A3 3 0 1 0 9 9Z M10.5 9A1.5 1.5 0 1 1 13.5 9A1.5 1.5 0 1 1 10.5 9Z"/>
+    <path id="blade-top" d="M11.69 6.03L12.5 3.44C12.5 3.44 13.09 1.53 15 2.11L13.64 6.5Z"/>
+    <path id="blade-left" d="M9.13 8.18L4.67 9.63C5.31 11.53 7.2 10.9 7.2 10.9L9.27 10.23Z"/>
+    <path id="blade-right" d="M14.72 10.24L16.21 11.75C16.21 11.75 17.62 13.16 16.21 14.58L13.33 11.67Z"/>
+  </g>
+</svg>

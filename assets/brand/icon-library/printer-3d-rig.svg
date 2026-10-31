@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Magic Card icon rig: 3D printer (own drawing, MDI-compatible: filled, 24 grid, 2 unit live-area padding).
+       piece 0  frame   static: top beam, posts, base (one element, four subpaths)
+       piece 1  bed     static
+       piece 2  print   grows:  scale_y 0.15 -> 1, pivot [12, 17] (bottom centre)
+       piece 3  rail    group toolhead: rises y +2.5 -> 0 in step with the print
+       piece 4  head    group toolhead; own track: x ping-pong -2 .. +3.5 (layer passes)
+       group toolhead = [rail, head], pivot [12, 11]. -->
+  <path id="frame" d="M3 2H21V4H3Z M4 4H6V19H4Z M18 4H20V19H18Z M2 19H22V21H2Z"/>
+  <path id="bed" d="M6.5 17H17.5V18.5H6.5Z"/>
+  <path id="print" data-pivot="12 17" d="M8.5 14.5H15.5V17H8.5Z"/>
+  <g id="toolhead" data-pivot="12 11">
+    <path id="rail" d="M6 10.5H18V12H6Z"/>
+    <path id="head" d="M8 8.5H12V12.5H10.9L10.4 14H9.6L9.1 12.5H8Z"/>
+  </g>
+</svg>

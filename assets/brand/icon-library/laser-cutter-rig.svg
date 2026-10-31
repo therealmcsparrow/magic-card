@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Magic Card icon rig: Laser cutter (own drawing, MDI-compatible: filled, 24 grid).
+       piece 0  body      static: case with window (hole by opposite winding, nonzero)
+       piece 1  lid       static (open variant: rotate -25 around [3, 5])
+       piece 2  rail      static
+       piece 3  material  static
+       piece 4  head      group cut
+       piece 5  beam      group cut; opacity flicker 0.35 .. 1, never more than 3 flashes per second
+       shape    spark     accent fill (theme glow colour), group cut; scale 0.6 .. 1.2 pulse
+       group cut = [head, beam, spark], motion path along the rail: M0 0 H6 H0 (viewBox units). -->
+  <path id="body" d="M2 6H22V20H2Z M4 8V17H20V8Z"/>
+  <path id="lid" data-pivot="3 5" d="M3 3H21V5H3Z"/>
+  <path id="rail" d="M4 9H20V10.25H4Z"/>
+  <path id="material" d="M5 15.25H19V16.5H5Z"/>
+  <g id="cut" data-pivot="10.5 12">
+    <path id="head" d="M9 8.25H12V11.5H11.1L10.5 12.5L9.9 11.5H9Z"/>
+    <path id="beam" d="M10 12.5H11V15.25H10Z"/>
+    <path id="spark" class="mc-accent" fill="#ffb300" d="M10.5 13.4L11.05 14.7L12.35 15.25L11.05 15.8L10.5 17.1L9.95 15.8L8.65 15.25L9.95 14.7Z"/>
+  </g>
+</svg>
