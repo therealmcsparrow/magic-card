@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Roll back if an update breaks a card.** [MAINTAINING.md](MAINTAINING.md) now explains how to go back to the version that worked, check which version runs and stay on one version, using only the HACS and Home Assistant screens. It also holds the release steps. The [support page](documentation/support/README.md) has ready replies for a paused card and for the "Magic Card was updated" message.
+
 ## 2026.10.12-beta.13 (2026-10-30)
 
 ### Fixed
