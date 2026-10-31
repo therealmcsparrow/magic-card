@@ -31,14 +31,9 @@ interface Geometry {
 }
 
 /**
- * The motion path editor over the stage: an <mc-path-canvas> in overlay mode (contract path-canvas 1.1.0) with the
- * studio's own picture under it (origin cross, direction arrows, the subject at `.time`, the Start tag, a hint).
- * It sits in the stage's `canvas` slot, outside the scaled card, and maps the path's units to the screen with
- * `stage.screen`: percent paths are % of the subject's box (the stage for particles), px paths are stage px, and (0, 0)
- * is the subject's rest centre or, for particles, the stage's top left corner.
- * Pace: while a point is dragged the canvas shows the live outline and this host keeps its picture on the last
- * committed path; one `doc-change` per commit, never one per move.
- * Events: doc-change { doc, label } like every kind editor.
+ * The motion path editor over the stage: an <mc-path-canvas> in overlay mode with the studio's own picture under it
+ * (origin, direction, subject, Start tag). It sits in the `canvas` slot and maps path units through `stage.screen`. While
+ * a point drags the canvas shows the live outline; one `doc-change` { doc, label } per commit.
  */
 @customElement('mc-anim-path-host')
 export class AnimPathHost extends CanvasHost {

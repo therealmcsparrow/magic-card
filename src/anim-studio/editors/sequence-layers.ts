@@ -9,13 +9,8 @@ import { LayerRows, layerRowStyles } from './layer-row';
 import { formatSeconds, moveItem, stepInfo, type AnimationLibraryMap } from './sequence-utils';
 import { t, m } from '../i18n';
 
-/*
- * mc-anim-steps-layers (place 'layers', sequence documents): the steps in play order, first step first.
- * Move up = plays earlier. A step's LayerKey is its index (`step:<n>`), so a move remaps the keys of the
- * view (remapStepKeys) in the same turn as the document change. Hide takes the step out of the preview
- * (applyLayerView); the document keeps it. The row selects within this list; the steps' own settings are
- * in the Sequence editor.
- */
+// mc-anim-steps-layers (place 'layers'): the steps in play order. A step LayerKey is `step:<n>`, so a move remaps the view
+// keys (remapStepKeys) with the document change. Hide takes a step out of the preview only.
 
 export { remapStepKeys };
 

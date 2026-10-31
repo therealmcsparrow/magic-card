@@ -7,15 +7,9 @@ import type { AnimationDoc } from '../model';
 import { hideReason, isLocked, markedBelow, parentKey, toggleLayer } from '../layer-view';
 import { t, m, type MessageId } from '../i18n';
 
-/*
- * The shared layer row and its keyboard model (contract studio-layers.ts sections 4 and 5).
- * Every layers panel (Card parts, Icon parts, Shapes over / under the icon, later particles, tracks,
- * steps) renders its rows with `LayerRows.row()` and gets: a roving tab stop for the whole column,
- * Up / Down / Home / End across the panels, Right / Left for a disclosure, Alt+Up / Down to move, H S L
- * for hide / solo / lock, F2 to rename, the "Layer actions" menu in compact density, and
- * `layer-view-change` events. Rows are buttons (aria-pressed = selected) in a list item together with
- * their toggle buttons; the toggles are in the tab order only for the row that holds the tab stop.
- */
+// The shared layer row and its keyboard model: every layers panel renders rows with `LayerRows.row()` and gets a roving
+// tab stop, arrow / Home / End navigation, disclosure keys, Alt+Up / Down to move, H S L toggles, F2 rename, the compact
+// actions menu and `layer-view-change` events.
 
 /** Why a move is not possible, or what it does. */
 export interface MoveInfo {

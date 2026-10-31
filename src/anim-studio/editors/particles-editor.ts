@@ -158,15 +158,9 @@ export interface DocChangeDetail {
 }
 
 /**
- * The particle designer of the animation studio (particles v2, contract src/contracts/particles-
- * v2.ts). Open
- * sections: Mode (Baked loop / Live simulation), Shape (a weighted mix of up to 4 shapes),
- * Movement (13 flows, loop and particle speed, spread) and Look. Closed sections with a live
- * summary: Variation (seed, spin, delay, lifetime), Physics, Collisions and Child particles. A
- * 2026.10.03 document opens unchanged as a Baked loop; see particles-utils.ts for when an edit adds
- * `sim`. A document based on a built-in preset (particles.preset) shows that preset and can be
- * converted to custom particles. Never mutates `.doc`: every edit is one `doc-change` { doc, label }
- * (text and sliders send transient changes while editing, then one final change).
+ * The particle designer (particles v2): open sections Mode, Shape, Movement and Look; closed sections Variation, Physics,
+ * Collisions and Child particles. Never mutates `.doc`: each edit is one `doc-change` { doc, label } (transient while
+ * typing or sliding). A preset-based document can be converted to custom particles.
  */
 @customElement('mc-anim-particles-editor')
 export class AnimParticlesEditor extends LitElement {

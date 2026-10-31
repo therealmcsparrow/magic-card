@@ -8,14 +8,9 @@ import { cubicsToPath, toCubicSubpaths } from '../path/core';
 import { rigCss, rigSelector, tracksDraw } from './rig-css';
 import type { ApplyCtx, HintCtx, RuntimeHints } from './types';
 
-/*
- * v2 runtime, icon rigs. At resolve time (hints) a document with a rig gives an IconRig for the
- * module's main icon: the card renders that icon as <mc-svg-icon> in rig mode (render-icon reads the
- * hint from the render context). The rig names its geometry source, draws its parts, groups and
- * shapes as markup (body) and puts its stylesheet (rig-css.ts) in the icon's shadow root (sheet).
- * Until the source geometry resolves, or when it never does (unknown icon pack, offline),
- * mc-svg-icon draws the plain icon and the base animation keeps playing on it: nothing is logged.
- * This chunk imports neither Lit nor icon-source, so the card bundle keeps them whole (no exposure). */
+// v2 runtime, icon rigs: hints give an IconRig (geometry source, body markup, stylesheet) for the module icon, which the
+// card renders as <mc-svg-icon> in rig mode. Until the geometry resolves the plain icon is drawn. Imports neither Lit nor
+// icon-source, so the card bundle keeps them whole.
 
 export type Box = [number, number, number, number];
 const r3 = (n: number): string => String(+n.toFixed(3));
@@ -124,11 +119,8 @@ export interface RigMarkupOptions {
 }
 
 /**
- * The rig as SVG markup (a string: the card renders it with unsafeSVG, so this chunk needs no Lit):
- * shapes under, the pieces no part uses (at rest), parts (each `<g data-p>` with its pieces; a group
- * `<g data-g>` around its members, where its first member is), shapes over. Parts whose pieces are
- * missing (another icon resolved) are skipped; undefined when nothing of the rig can be drawn (the
- * caller draws the plain icon). Own part geometry is sanitised.
+ * The rig as SVG markup: shapes under, unused pieces, parts (groups around their members), shapes over. Parts whose pieces
+ * are missing are skipped; undefined when nothing can be drawn. Own geometry is sanitised.
  */
 export function rigMarkup(rig: Rig, pieces: SplitPiece[], opts: RigMarkupOptions = {}): string | undefined {
   const viewBox = opts.viewBox ?? '0 0 24 24';

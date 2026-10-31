@@ -7,13 +7,9 @@ import { safeColor } from '../utils/safe-css';
 import { entityStateColor, parseEntityColor } from '../utils/entity-color';
 import { flowLookRegistry } from './registry';
 
-/*
- * resolve() of the flow-look slot: every look key narrowed, clamped and defaulted (JSON-safe), the
- * colour mode decided. Value-mode colour: resolve() writes the range colour into
- * base.color (contract: "the colour mode result is applied to ResolvedFlow.color"), so mc-flows,
- * the label and the lines all see one colour; the gradient end colour comes back as look.colorTo.
- * Style default widths and the neon glow are applied to base as well (placeholders of unset keys).
- */
+// resolve() of the flow-look slot: every look key narrowed, clamped and defaulted, the colour mode decided. Value-mode
+// colour is written into base.color, the gradient end comes back as look.colorTo, and style default widths and the neon
+// glow are applied to base as placeholders of unset keys.
 
 const LINES: ReadonlySet<string> = new Set(['solid', 'dashed', 'dotted', 'double', 'wave', 'zigzag', 'tube', 'neon', 'cable']);
 const CAPS: ReadonlySet<string> = new Set(['none', 'round', 'arrow']);

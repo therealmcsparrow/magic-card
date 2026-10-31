@@ -104,20 +104,11 @@ const emitSelection = (el: HTMLElement, selection: StudioSelection): void => {
   el.dispatchEvent(new CustomEvent('selection-change', { bubbles: true, composed: true, detail: { selection } }));
 };
 
-/**
- * Drawing on the icon over the stage (stage-tool panel, `canvas` slot): an <mc-path-canvas> in overlay mode (contract
- * path-canvas 1.1.0) edits what has anchors, and the studio's own layer under it creates and moves shapes.
- * - The pen is the canvas in 'add' mode on a draft path; closing it (click the first point) or the Finish button makes
- *   one shape. Choosing another tool also finishes it.
- * - A selected single-subpath shape is edited in 'nodes' mode, one commit per gesture (the canvas outline is live while
- *   a point is dragged; the card shows the committed shape).
- * - Line, rectangle, ellipse, freehand, erase and the motion path draw through the layer under the canvas with the
- *   outlines from the chunk's `pathDraw`; select picks and moves a whole shape there (arrow keys move it too, Delete
- *   removes it). A press on the canvas's own targets (points, handles, the pen) never reaches that layer.
- * The icon's viewBox is `frame`; `placement` is that box on screen (stage.screen with the stage scale), so the tool layer,
- * the picture under it and the canvas share one mapping. Snaps to a 1-unit grid and to icon / shape anchors (Shift: free).
- * Events: doc-change { doc, label, transient? }, selection-change { selection }.
- */
+// Drawing on the icon over the stage: an <mc-path-canvas> in overlay mode edits shapes with anchors, and the studio's own
+// layer under it creates and moves shapes (line, rectangle, ellipse, freehand, erase, select). The pen draws a draft path
+// that closes into one shape; a selected single-subpath shape is edited in nodes mode. `frame` is the icon viewBox and
+// `placement` its box on screen. Snaps to a 1-unit grid and anchors (Shift: free). Events: doc-change { doc, label,
+// transient? }, selection-change { selection }.
 @customElement('mc-anim-draw-host')
 export class AnimDrawHost extends CanvasHost {
   static styles: CSSResultGroup = [

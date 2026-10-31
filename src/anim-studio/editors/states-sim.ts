@@ -4,14 +4,8 @@ import type { Binding, ClipWhen } from '../model-v2-core';
 import type { PreviewChangeDetail } from '../slots';
 import { t } from '../i18n';
 
-/*
- * The preview's simulated entity: the studio has no real entity behind the preview card, so its
- * animation entry drives clips and bindings from this one (`entity: SIM_ENTITY` on the entry, see
- * previewConfig's `entity` option) and the stage merges the simulated state into the hass it hands
- * the card (withSimEntity). The stage tool (editors/stage-sim.ts) picks the state (on, off,
- * unavailable, a custom text, or a number) and a value 0..1 across each binding's input range;
- * it emits `preview-change` { state, value, attributes } with the attributes already computed.
- */
+// The preview's simulated entity: its animation entry drives clips and bindings from SIM_ENTITY, and the stage merges the
+// simulated state into the hass it hands the card (withSimEntity). Fed by `preview-change` from stage-sim.ts.
 
 /** Entity id of the preview's simulated entity (a light: on / off are its active states). */
 export const SIM_ENTITY = 'light.mc_studio_preview';

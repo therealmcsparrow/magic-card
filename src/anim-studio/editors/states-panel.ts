@@ -23,14 +23,8 @@ import {
 import { whenLabel } from './states-sim';
 import { t, m } from '../i18n';
 
-/*
- * States (studio inspector, nothing selected): the document's clips, what plays per entity state.
- * Each clip is a condition card: When (kind + value), Play (own timeline, nothing, one of my
- * animations or a motion preset) and Transition (cut, crossfade, finish cycle); reorder with the
- * arrow buttons (the first match plays), delete, add up to 12. The driving entity is the module's
- * (or the animation entry's `entity:` in the card); the stage's state switcher previews it.
- * `.doc` is never mutated: every edit emits `doc-change` { doc, label }.
- */
+// States (studio inspector, nothing selected): the document clips as condition cards (When, Play, Transition), reordered
+// by arrows (first match plays), deleted, added up to 12. `.doc` is never mutated: edits emit `doc-change`.
 
 @customElement('mc-anim-states-panel')
 export class AnimStatesPanel extends LitElement {

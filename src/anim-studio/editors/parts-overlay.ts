@@ -35,20 +35,9 @@ import {
 } from './parts-model';
 import { t, m } from '../i18n';
 
-/*
- * Icon parts on the stage (studio slot 'stage-tool'): drawn over the preview card, exactly
- * on the rigged icon. Hover highlights a part, click selects it (Shift / Ctrl / Cmd add or toggle),
- * dragging on empty stage draws a selection band (parts fully inside it); selected parts show their box and pivot, the
- * pivot drags (snaps to 0.25 icon units, Shift places freely; arrow keys nudge it). The pivot is the one the part
- * plays with: a preset's track origin while the track has one (dragging moves that), else the part's own. A selected part
- * with a motion path shows the path with draggable points (path-utils geometry, icon units from the
- * rest position). Pointer events only (mouse, pen, touch): handles are 24 px or larger.
- *
- * Geometry: the parts are the auto-split pieces of the rig's source (the same splitIcon the card
- * runtime uses). The icon's box is measured on the live preview (the rigged <mc-svg-icon> inside
- * the stage's magic-card), so it holds at any stage scale; `.stage` (subject, viewBox) is the
- * fallback when the preview cannot be reached.
- */
+// Icon parts on the stage (slot 'stage-tool'), drawn over the rigged icon: hover, click and band select; selected parts
+// show box and pivot, the pivot drags (0.25 snap, Shift free, arrows nudge) and a motion path shows draggable points.
+// Pointer events only, handles 24 px or larger. The icon box is measured on the live preview; `.stage` is the fallback.
 
 type Pt = [number, number];
 /** The icon box in the overlay's own (unscaled) px. */

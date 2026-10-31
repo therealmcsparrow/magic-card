@@ -22,13 +22,9 @@ import { t, m, type MessageId } from '../i18n';
 
 // mc-color-picker comes from the editor chunk (loaded through window.MagicCard.loadEditor); the studio bundle must not define it.
 
-/*
- * Value bindings (studio inspector, a target selected): bind a property of the selected target to
- * the driving entity's value, e.g. the icon's rotation speed to a fan's percentage or a part's
- * draw to a battery level. Each binding: property, input (state or an attribute, min, max), output
- * range (numbers, or two colours for colour mix) and smoothing. The stage's value slider previews
- * it. `.doc` is never mutated: every edit emits `doc-change` { doc, label }.
- */
+// Value bindings (studio inspector): bind a property of the selected target to the driving entity value. Each binding has
+// a property, input (state or attribute, min, max), output range and smoothing. `.doc` is never mutated: every edit emits
+// `doc-change` { doc, label }.
 
 const CARD_TARGET_NAMES: Record<string, MessageId> = { element: m('anim-studio.bindings-panel.element'), icon: m('anim-studio.bindings-panel.icon'), name: m('anim-studio.bindings-panel.name'), state: m('anim-studio.bindings-panel.state'), background: m('anim-studio.bindings-panel.background') };
 /** The card target in a sentence ("Drive the icon from ..."). */

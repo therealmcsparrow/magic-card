@@ -19,14 +19,9 @@ import { ANIMATED_SVG_WARN_BYTES, animatedSvgFileName, checkAnimatedSvg, exportA
 import { bakedParticlesSvg } from './particles-utils';
 import { t } from '../i18n';
 
-/*
- * The own-icon dialog of the drawing tools (a kit <mc-ui-window>: a modal <dialog> in the top layer
- * above the studio, movable, resizable and maximisable): "Save as icon" shows the rig at rest as SVG with Copy SVG, Download .svg and
- * Use in card (YAML for `icon: svg` + `svg:`), or as an animated SVG (CSS keyframes plus a SMIL
- * fallback, looping; Copy SVG, Download .svg); "Import SVG" previews a file's shapes and adds them
- * to the rig, or makes the file the rig's source icon. Emits doc-change like every panel.
- * A particles document exports only as an animated SVG: its baked loop (particles-v2 bakedSvg).
- */
+// The own-icon dialog of the drawing tools (a kit <mc-ui-window>): "Save as icon" shows the rig at rest as SVG (copy,
+// download, use in card) or as an animated SVG; "Import SVG" previews a file and adds its shapes or makes it the rig
+// source. A particles document exports only as an animated SVG. Emits doc-change.
 
 const kb = (n: number): string => t('anim-studio.draw-svg-dialog.size-kb', { size: (n / 1024).toFixed(n < 10240 ? 1 : 0) });
 const bytes = (s: string): number => new TextEncoder().encode(s).length;

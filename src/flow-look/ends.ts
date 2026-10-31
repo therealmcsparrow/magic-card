@@ -4,14 +4,9 @@ import { at, fmt } from './sampler';
 import { unmix, type LineCtx } from './registry';
 import { arrival } from './arrival';
 
-/*
- * Caps at the two ends of the line, in the travel direction (reversed travel swaps them), drawn over
- * the line and the shapes inside the flow's group, with the arrival effect last. Round node: a filled
- * circle of two thirds of the cap size (2 x width at the default 3 x width) with a 1 px ring in the
- * card background. Arrowhead: a filled triangle, cap size long and 0.8 x cap size wide, tip on the end
- * point and pointing along the tangent; a start arrowhead points out of the line (away from travel).
- * Colour: the start cap in `color`, the end cap in the gradient end colour; idle: the idle colour.
- */
+// Caps at the two line ends in travel direction, drawn over the line and shapes with the arrival effect last. Round node:
+// a filled circle with a 1 px ring in the card background. Arrowhead: a filled triangle on the end point. The start cap
+// uses `color`, the end cap the gradient end colour; idle uses the idle colour.
 
 function cap(c: LineCtx, kind: FlowCap, s: number, dir: 1 | -1, end: boolean): SVGTemplateResult | typeof nothing {
   if (kind === 'none') return nothing;

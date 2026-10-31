@@ -233,14 +233,8 @@ export function particlesSummary(p: ParticlesSpec): string {
 
 // ── particles v2 (contract src/contracts/particles-v2.ts) ──
 
-/*
- * The editor shows every document as a v2 simulation: a 2026.10.03 (v1) document is read through
- * simFromV1 and opens unchanged as a Baked loop. An edit a v1 document can hold (a v1 flow, one
- * icon / emoji / SVG / dot, one spin value, gravity straight down or up) still writes the v1
- * fields only. The first edit it can't hold adds `sim` (mode baked, the editor's seed) and from
- * then on the v1 fields are kept as the fallback an older card plays (direction, shape, gravity,
- * spin). Count, size, colours, fade, spread, layer and the loop speed stay shared v1 fields.
- */
+// Every document shows as a v2 simulation; a v1 document opens unchanged as a Baked loop. An edit v1 can hold still writes
+// v1 fields only; the first edit it cannot hold adds `sim` and keeps the v1 fields as the fallback an older card plays.
 
 /** All 13 flows in the order of the flow grid. */
 export const FLOWS: ParticleFlow[] = ['fall', 'rise', 'drift', 'burst', 'orbit', 'spiral', 'fountain', 'explode', 'wave', 'vortex', 'zigzag', 'rain', 'wander'];

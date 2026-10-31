@@ -37,15 +37,9 @@ import {
 } from './parts-model';
 import { t, m } from '../i18n';
 
-/*
- * Icon parts in the Layers column (studio slot 'layers'). Splits the icon into parts
- * ("Split icon": each separate shape a part, holes kept with their shape), lists parts and groups
- * as a tree, selects them (click, Shift range, Ctrl / Cmd toggle; the selection is the studio's:
- * selection-change with target 'part:<id>' / 'group:<id>', so the timeline adds keys to that
- * target's track), renames (double-click, F2), groups (Ctrl+G), ungroups (Ctrl+Shift+G), merges,
- * splits back, reorders (Alt+arrows) and hides, solos and locks parts in the preview (session only, never stored; the shared layer row).
- * Every action is a button too: no hover-only or keyboard-only actions (tablet).
- */
+// Icon parts in the Layers column: split the icon, list parts and groups as a tree, select, rename, group, ungroup, merge,
+// split, reorder, and hide / solo / lock in the preview (session only). Selection is the studio's (selection-change with
+// target `part:<id>` / `group:<id>`). Every action is a button too.
 
 interface Row {
   ref: TargetRef;

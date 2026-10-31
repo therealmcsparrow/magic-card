@@ -3,16 +3,9 @@ import type { FlowLookQuality, FlowWithLook } from '../contracts/flow-look';
 import { at, fmt } from './sampler';
 import { unmix, type LineCtx } from './registry';
 
-/*
- * P2 arrival effect at the To module: a 1.5 px ring growing from 0 to the arrival size (diameter) and
- * fading in 450 ms; `splash` adds 6 droplets that fly out 0.6 x size in the same time. It repeats
- * every time a shape arrives: the period is the travel time / shapes (evenly spaced shapes). Pure CSS
- * (transform and opacity on class `an`: paused offscreen, none under reduced motion, and not drawn
- * then). The ring's stroke grows with it, 0 to 1.5 px: `vector-effect: non-scaling-stroke` would keep
- * the animation off the compositor and cost the main thread every frame. The keyframes are constant text with the generated flow id and numbers, inline in the
- * group, so the shared css stays as it is. Not drawn while idle, in tier minimal, under pulse (resolve
- * sets arrival none), or when no shape travels.
- */
+// Arrival effect at the To module: a 1.5 px ring growing to the arrival size and fading in 450 ms; `splash` adds 6
+// droplets. It repeats as each shape arrives. Pure CSS (transform and opacity on class `an`), keyframes inline in the
+// group. Not drawn while idle, in tier minimal, under pulse, or when no shape travels.
 
 const MS = 0.45;
 const DROPS = 6;

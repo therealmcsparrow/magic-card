@@ -1,8 +1,5 @@
-/*
- * The icon library (192 animated icons and their MDI shapes) is the largest part of the studio, so
- * it is a lazy chunk, magic-card-icon-library.js, loaded next to the studio bundle (public path:
- * public-path.ts) when the icon animation start opens. Nothing else in the studio imports it.
- */
+// The icon library is a lazy chunk loaded next to the studio bundle (public path: public-path.ts) when the icon animation
+// start opens. Nothing else in the studio imports it.
 import { sameBuild } from '../utils/build-version';
 
 export type IconLibrary = typeof import('./icon-library-chunk');

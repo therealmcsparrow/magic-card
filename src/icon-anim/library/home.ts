@@ -2,13 +2,8 @@ import { dim, k, padKeys, SPIN, te, t, type Spec } from './build';
 import { LASER_CUTTER, LASER_SPARK, PRINTER_3D, WIND_TURBINE } from './rigs';
 import { m } from './i18n';
 
-/*
- * P4 entries, theme home (brand artist's p4-spec.json, Living rigs): machines move mechanically
- * (linear spins and travel), events use anticipation and overshoot and rest for the last 40 %.
- * The maker machines use the pseudo-domain `maker`. Checked on the parts sheet: MDI's mailbox has
- * no separate flag (piece 1 is the letter slot), the bed's piece 1 is the sleeper's head and the
- * stove's pieces 0 and 5 are the oven window's glow marks.
- */
+// Library entries, theme home: machines move mechanically, events use anticipation and overshoot and rest for the last 40
+// %. The maker machines use the pseudo-domain `maker`.
 
 const r2 = (v: number) => Math.round(v * 100) / 100;
 

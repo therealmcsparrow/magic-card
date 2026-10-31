@@ -12,25 +12,10 @@ import { StageSheets, stageHide } from './stage-hide';
 import { DEFAULT_SIM, SIM_ENTITY, applyPreviewChange, simulates, withSimEntity, type PreviewSim } from './editors/states-sim';
 import { t, m, type MessageId } from './i18n';
 
-/*
- * The studio's preview stage: the real `magic-card` (already loaded by the page, never defined
- * here) playing the edited document on an icon, button or text tile, on a light or dark card, with
- * speed, play / pause, scrub and a reduced-motion preview (the still state the card shows then).
- *
- * The card is laid out at its natural width (FRAME_WIDTH) and scaled down to fit the canvas
- * (`transform: scale(k)`, k <= MAX_ZOOM = 1: never enlarged), so the stage never scrolls and never
- * grows its column. With `zoomIcon` (the studio sets it while icon parts or drawing tools are in use)
- * the stage zooms to the card's icon instead: the icon's box, with some room around it, fills the
- * canvas (up to ICON_ZOOM) and the rest of the card is cut off. The overlay slot (path overlay,
- * stage tools) is scaled and moved with the card: overlays draw in unscaled card px, and
- * `stage-rect` reports unscaled sizes, the scale and the card's on-screen box (`screen`). The canvas slot
- * covers the card area outside the scale, for tools that need unscaled pixels.
- *
- * A document with states or bindings (or a panel's `preview-change`, `.preview`) plays from a
- * simulated entity: the animation entry gets `entity: PREVIEW_ENTITY` and the preview hass carries
- * its state and attributes (the states simulation). The tile's own entities (the card tile's sensor)
- * are added with tileHass.
- */
+// The studio preview stage: the real `magic-card` playing the edited document on an icon, button or text tile, with speed,
+// play / pause, scrub and reduced-motion preview. The card is scaled to fit the canvas (never enlarged) or, with
+// `zoomIcon`, zoomed to its icon; `stage-rect` reports the scale and the screen box. A document with states or bindings
+// plays from a simulated entity (PREVIEW_ENTITY) merged into the preview hass.
 
 export type StageTheme = 'light' | 'dark';
 

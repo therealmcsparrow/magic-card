@@ -11,21 +11,10 @@ import { STYLE_HINTS } from './library/style-hints';
 import { m } from './library/i18n';
 import { fold as foldText } from '../i18n/fold';
 
-/*
- * The animated icon library (icon animator core, contract icon-library 1.2.0): ready animations for
- * the icons of most Home Assistant domains, plus pseudo-domain categories (animal, seasonal, maker,
- * household) for icons no domain fits. Each entry builds a normal keyframes document with a rig and
- * one track per moving part; the studio edits it like any other document. The rig's source is the
- * icon's own geometry embedded as SVG (`rig.svg`, the bundled MDI path of mdi-paths.ts), and the
- * parts name pieces of that SVG: a card plays it through the rig runtime without resolving any
- * icon, so a dashboard never depends on Home Assistant's MDI version for the piece numbering. Icons
- * whose moving piece MDI draws in one outline with the rest (the lock's shackle, the cctv head)
- * embed paths cut from the MDI path instead (`own`, see library/rigs.ts).
- *
- * This file holds the 2026.10.03 entries; the P4 entries (brand artist's p4-spec.json) live in the
- * category files under library/, the builder and motion helpers in library/build.ts.
- * Lives in the studio bundle and the lazy icon animator chunk only, never in magic-card.js.
- */
+// The animated icon library (contract icon-library): ready animations for the icons of most Home Assistant domains plus
+// pseudo-domain categories. Each entry builds a keyframes document with a rig from the bundled MDI path (`rig.svg`) or cut
+// `own` paths (library/rigs.ts). This file holds the first entries; the rest live in library/. Studio bundle and lazy icon
+// animator chunk only, never magic-card.js.
 
 export type { LibraryEntry } from '../contracts/icon-library';
 export { padKeys, svgOf } from './library/build';

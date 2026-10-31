@@ -4,16 +4,9 @@ import { anchorOf, piecesBox, type Anchor, type Box } from './icon-doc';
 import type { MessageIndex } from '../contracts/i18n';
 import { lm } from '../i18n/labels/mark';
 
-/*
- * Part presets (icon animator core): one click writes a ready motion on an icon part, group or
- * drawn shape as that target's track, with a few parameters (duration share and delay in % of the
- * cycle, intensity, direction). The result is a normal track, fully editable on the timeline.
- * Pure, no DOM; shared by the studio's icon mode and the Design tab's quick animator.
- *
- * A preset is a motion over a window of the cycle: it starts at `delay` % and takes `share` % of
- * the cycle; before the window the target rests as at the motion's start, after it as at its end
- * (a spin ends a whole turn on, the same look), so every preset loops seamlessly.
- */
+// Part presets: one click writes a ready motion on an icon part, group or shape as that target track, with a few
+// parameters (duration share, delay, intensity, direction). Pure, no DOM. A preset is a motion over a window of the cycle;
+// outside it the target rests at the start or end pose, so every preset loops.
 
 export interface PartPresetParam {
   id: string;

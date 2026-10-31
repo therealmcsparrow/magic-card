@@ -21,13 +21,8 @@ import { loadPathCanvas } from '../../path-canvas/loader';
 import { addDrawOnTrack, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn, removeShape, setTrackPath, updateShape } from './draw-utils';
 import { t, tx, m, type MessageId } from '../i18n';
 
-/*
- * mc-anim-shape-inspector (place 'inspector'): the settings of a selected drawn shape (name, fill,
- * stroke, width, line ends, layer over / under the icon, order, smoothing of a freehand stroke,
- * draw-on and its motion path), or, while a draw tool is active, that tool's options for new shapes
- * (and snapping). mc-unit-field / mc-color-picker are used by tag only (the card bundle defines
- * them). Every edit is one doc-change.
- */
+// mc-anim-shape-inspector (place 'inspector'): settings of a selected drawn shape (fill, stroke, ends, layer, order,
+// smoothing, draw-on, motion path) or the options of the active draw tool. Every edit is one doc-change.
 
 const CAPS: Array<{ value: NonNullable<RigShape['linecap']>; label: MessageId }> = [
   { value: 'round', label: m('anim-studio.shape-inspector.round') },

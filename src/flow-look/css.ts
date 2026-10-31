@@ -1,11 +1,7 @@
 import { SHAPE_CSS } from './shapes/css';
-/*
- * Styles for the mc-flows shadow root (flow-look rules 2-4). A constant: no config value is ever
- * inside it. Classes: `an` marks every animation of this chunk (paused offscreen / page-hidden,
- * none under reduced motion), `zz` electric zigzag variants (steps of 120 ms), `el` the electric
- * flicker (2 dips a second), `fk-s` / `fk-t` neon flicker (subtle 1 dip a second, strong 2 per 2 s,
- * irregular). Travelling dots, bubbles and dashes reuse the .dot / .dash rules of flows-css.ts.
- */
+// Styles for the mc-flows shadow root, a constant (no config value inside). Classes: `an` marks every animation of this
+// chunk, `zz` electric zigzag, `el` electric flicker, `fk-s` / `fk-t` neon flicker. Dots, bubbles and dashes reuse the
+// .dot / .dash rules of flows-css.ts.
 export const FLOW_LOOK_CSS = `
 .flow[data-line] path{transition:stroke .15s}
 @keyframes mc-flow-zz{0%,33.3%{opacity:1}33.4%,100%{opacity:0}}

@@ -10,18 +10,9 @@ import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { EASINGS } from '../utils/animation-presets';
 import { t } from '../anim-studio/i18n';
 
-/*
- * Animated SVG export (icon animator core): an icon animation as a standalone, looping SVG file.
- *
- * - CSS: a <style> with the document's @keyframes per part (the same rules the card's rig runtime
- *   adopts in the icon) and the element / icon keyframes on wrapper groups.
- * - SMIL fallback (opts.smil, default on): a second copy of the rig animated with <animate> /
- *   <animateTransform> for viewers without CSS animations. The CSS copy is hidden by attribute and
- *   shown by the stylesheet, the SMIL copy hidden by the stylesheet: a viewer with CSS plays the
- *   CSS copy, one without plays the SMIL copy, never both.
- * Only what a file can hold: clips (per-state timelines), value bindings and card-part tracks
- * (name, state, background) are left out with a warning; the file always loops.
- */
+// Animated SVG export: an icon animation as a standalone looping SVG. CSS: a <style> with the per-part @keyframes; SMIL
+// fallback (opts.smil, default on): a second rig copy animated with <animate>; the viewer plays one of them. Clips,
+// bindings and card-part tracks are left out with a warning.
 
 export interface AnimatedSvgOptions {
   /** Add the SMIL fallback copy (default true). */

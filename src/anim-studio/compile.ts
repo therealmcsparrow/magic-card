@@ -18,20 +18,9 @@ import {
   type PathSpec,
 } from './model';
 
-/*
- * Animation documents (model.ts) to what the card runs, pure:
- * - keyframes: an `@keyframes` rule; amplitudes scale with the entry's intensity
- *   (`--mcc-<id>-i`, 1 = as drawn), the animation colour `var(--mc-anim-c)` takes the entry's colour
- *   (`--mcc-<id>-c`) and Strength (`--mcc-<id>-s`), like a preset's $i / $c;
- * - particles: rules for an fx particle layer (`.mc-anim-fx[data-fx=<name>]`) plus its keyframes and
- *   the per-particle layout; a document based on a preset (particles.preset) renders that preset;
- * - path: sampled `translate` (+ `rotate` when following the path) keyframes in % of the element's
- *   own size or px. Particles on a px path use `offset-path: path()` (their layer is their containing
- *   block, so the path coordinates are unambiguous), with the sampled keyframes as the fallback;
- * - sequence: a schedule of Web Animations keyframes (sequence-player.ts runs it).
- * Reduced motion: `{ reducedMotion: true }` compiles the still variant (nothing plays), like the
- * presets under prefers-reduced-motion (the card's stylesheet does the same for the CSS kinds).
- */
+// Animation documents (model.ts) to what the card runs, pure: keyframes (intensity, colour and Strength vars), particles
+// (layer rules, keyframes, per-particle layout), path (sampled translate / rotate keyframes) and sequence (Web Animations
+// schedule for sequence-player.ts). `{ reducedMotion: true }` compiles the still variant.
 
 export interface ParticleSlot {
   /** % across (fall / rise), % down (drift). */
@@ -219,12 +208,9 @@ const PROPERTY_LANES: Record<string, EasingLaneId[]> = {
 const TIMING = 'animation-timing-function';
 
 /**
- * A keyframes list as `@keyframes name` plus, with per-lane easings, one extra `@keyframes
- * name-l<lane>` per CSS property whose lanes override the easing anywhere (named after the
- * property's first lane: x for translate, scale, filter...). The extra rules hold only that
- * property, with the lane's easing (the first overriding lane of the property wins), so all of them
- * play together with the same timing on the same element. Without `easings` this is exactly the v1
- * single rule.
+ * A keyframes list as `@keyframes name` plus, for per-lane easings, one extra `@keyframes name-l<lane>` per CSS property
+ * whose lanes override the easing; the extra rules hold only that property and play together. Without `easings` this is
+ * the single v1 rule.
  */
 export function keyframeListCss(name: string, kfs: AnimationKeyframe[], w: Writer): { css: string; lanes: string[] } {
   const decls = kfs.map((k) => keyframeDecls(k, w));

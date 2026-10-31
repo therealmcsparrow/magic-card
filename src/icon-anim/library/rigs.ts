@@ -1,11 +1,6 @@
-/*
- * Own rig paths of the icon library (the brand artist's rigs in assets/brand/icon-library/*-rig.svg):
- * filled paths on the 24 grid, one path element per piece, holes by opposite winding (nonzero).
- * A spec's `own` list is in piece order, so the index of a path is its piece number.
- *
- * Cut from MDI (Pictogrammers, https://pictogrammers.com, Apache-2.0): cctv, wind-turbine,
- * string-lights, skull, bat. Own drawings (MIT, this repository): printer-3d, laser-cutter.
- */
+// Own rig paths of the icon library: filled paths on the 24 grid, one per piece, holes by opposite winding; a spec's `own`
+// list is in piece order. Cut from MDI (Pictogrammers, Apache-2.0): cctv, wind-turbine, string-lights, skull, bat. Own
+// drawings (MIT, this repository): printer-3d, laser-cutter.
 
 // Security camera (MDI "cctv"): the mount (joint disc around 16,13, arm, wall bracket) drawn first so
 // the head covers the joint; the head is the camera body plus the front hood and pans around [16, 13].

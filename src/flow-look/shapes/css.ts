@@ -1,11 +1,6 @@
-/*
- * Constant styles of the travelling shapes (appended to the flow-look css). A shape reads its colour
- * from two custom properties set on its group: --mc-sc (colour) and --mc-so (opacity), so no config
- * value is ever inside this text. Classes: sf filled, ss stroked, so outline under a stroked shape,
- * ol outline on a filled one (tube and cable: the shape would vanish in the line's own colour), gl glow
- * halo, bb hollow bubble, hl its highlight, sp spin (svg), spi spin (html), pl pulse (svg or html),
- * ic icon box on the HTML layer. Every animation also carries `an` (paused offscreen / page-hidden).
- */
+// Constant styles of the travelling shapes. A shape reads colour and opacity from --mc-sc and --mc-so on its group.
+// Classes: sf filled, ss stroked, so / ol outlines, gl glow, bb bubble, hl highlight, sp / spi spin, pl pulse, ic icon
+// box. Every animation also carries `an`.
 export const SHAPE_CSS = `
 .sf{fill:var(--mc-sc);fill-opacity:var(--mc-so,1)}
 .ss{fill:none;stroke:var(--mc-sc);stroke-opacity:var(--mc-so,1);stroke-linecap:round;stroke-linejoin:round}

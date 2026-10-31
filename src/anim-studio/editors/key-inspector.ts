@@ -44,18 +44,9 @@ import {
 } from './keyframes-utils';
 import { t, m, list, type MessageId } from '../i18n';
 
-/*
- * The key inspector: the selected timeline keys' values and easing, in the studio's right column
- * (registered as the 'inspector' panel for a keys selection). One key: its position, the values of
- * its lane (or of every lane of a whole keyframe), the other properties at that time, and the
- * easing to the next key: a lane key edits its own per-lane easing (`easings[lane]`, the curve of
- * just that property), a whole keyframe the keyframe's easing. Several keys: one easing for all of
- * them, copy and delete.
- *
- * Panel contract (slots.ts): .doc .hass .library .time .disabled .selection .tile .stage; emits
- * doc-change { doc, label, transient? }, selection-change { selection } (a key moved or picked).
- * Uses <mc-unit-field> and <mc-color-picker> from the editor chunk (by tag).
- */
+// The key inspector (right column, panel for a keys selection): position, lane values and easing of the selected keys; a
+// lane key edits its per-lane easing, a whole keyframe its own easing, several keys one shared easing. Panel props as in
+// slots.ts; emits doc-change and selection-change. Uses <mc-unit-field> and <mc-color-picker> by tag.
 
 interface NumField {
   key: string;

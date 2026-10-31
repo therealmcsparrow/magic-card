@@ -21,39 +21,11 @@ import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
 import { t } from './i18n';
 import { t as tn } from './library/i18n';
 
-/*
- * Icon Styles (module icon-library, contract icon-library 1.2.1): every library entry
- * plays as Quiet, Living or Glow, all derived from its one Living rig when the user picks it in the
- * card editor. The card stores the result inline and plays it like any other document, so neither
- * magic-card.js nor the runtime chunk knows about Styles. Pure and deterministic.
- *
- * Quiet (the brand artist's direction A, p4-spec.json `styles.quiet`): one hero track keeps one
- * lane. Hero: hints.quiet.part, else a spin, else the target with the largest peak displacement in
- * icon units (a flip ranks last; within 10 % the larger box wins, so a group beats its members).
- * Lane: hints.quiet.lane, else the hero's largest channel. Offsets shrink by
- * f = min(QUIET.amplitude, 0.3 units / peak) and are clamped to QUIET; opacity becomes 0.7..1. A spin
- * keeps turning at half speed. Every other track, the colour, draw and path lanes and the top-level
- * keyframes go: the rest holds its drawn pose. Duration: max(x QUIET.slowdown, 1.6 s); keys keep
- * their place, eased ease-in-out (linear keys stay linear: sampled curves and spins), and so is the
- * document.
- *
- * Glow (direction C, `styles.glow`): Living plus a lit accent layer, no filter or blur anywhere.
- * - Accent targets (hints.glow.parts: part or group ids, `shape:<id>` for drawn shapes) take the
- *   glow colour: a constant colour lane on their track (a target with its own colour keys keeps
- *   them), a shape its fill.
- * - Halos: at most GLOW_CAPS.halos stroked copies of an accent target's outline, RigShape
- *   `glow-<id>` under the parts, whose track copies the motion of the target (or of its group when
- *   the target itself holds still) and pulses opacity GLOW.opacity[0] -> [1] -> [0]. The largest
- *   accent gets one; a second only when the entry has two accents of similar size. Without accent
- *   parts the first part with a track gets the halo.
- * - Glow-only shapes (GLOW_SHAPES: the jack-o'-lantern's face light) are added lit, moving with
- *   their part.
- * - Colour (fixed when picked): the entry's Color field (a plain colour), else the theme
- *   pair, else GLOW_FALLBACK's. Light or dark is the card background's brightness, read by CSS
- *   relative colour from the theme's card background variables (cardSwitch), so it follows Home
- *   Assistant's dark mode and a theme change without any card code. On light cards the colour is
- *   the darker one and halos are transparent.
- */
+// Icon Styles (contract icon-library): each library entry plays as Quiet, Living or Glow, all derived from its one Living
+// rig. The card stores the result inline. Pure and deterministic. Quiet: one hero track keeps one lane with shrunk
+// offsets, opacity 0.7..1, slowed duration; other tracks go. Glow: Living plus a lit accent layer, no filter or blur.
+// Accent targets take the glow colour and get stroked halo copies (RigShape `glow-<id>`) pulsing opacity; glow-only shapes
+// (GLOW_SHAPES) are added lit. Light or dark follows the card background.
 
 const SPEC_PEAK = 0.3;
 const MIN_DURATION = 1.6;

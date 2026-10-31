@@ -3,13 +3,9 @@ import type { HomeAssistant } from '../types';
 import { renderEntityIcon } from '../utils/entity-icon';
 import { css, ratio, type RGB } from './colour';
 
-/*
- * Big fill (slider-look 1.0.0): the entity icon and the value sit in the track, so whatever is under
- * them is the fill or the empty track depending on the value. One text
- * colour plus a 1 px outline in the opposite colour on both, not a two-tone clip. The text colour is
- * the one that reads best on the fill (4.5:1 on a plain fill); the outline carries it over the empty
- * track and across the fill edge (text against outline is 21:1).
- */
+// Big fill: the entity icon and the value sit in the track, so they get one text colour plus a 1 px outline in the
+// opposite colour, not a two-tone clip. The text colour reads best on the fill (4.5:1); the outline carries it across the
+// empty track.
 
 const WHITE: RGB = [255, 255, 255];
 const BLACK: RGB = [0, 0, 0];
