@@ -15,11 +15,17 @@ const CHANGELOG_LAST = '## 2026.10.12-beta.12';
 
 const SPEED = /\b(?:faster|quicker|sooner|snappier|speeds?\s+up)\b/i;
 const LOAD =
-  /\b(?:loads|loaded|loading|to\s+load|downloads?|downloaded|start-?up|renders|opens|card\s+file|main\s+file)\b/i;
+  /(?<!house\s)\b(?:loads?|loaded|loading)\b|\b(?:downloads?|downloaded|start-?up|starts?|paints?|renders|opens|tablets?|card\s+file|main\s+file)\b/i;
+// Speed wording that is a claim without a load word: "speeds up", "40% faster", "faster than before".
+const PLAIN_SPEED =
+  /\bspeeds?\s+up\s+(?:the\s+)?(?:cards?|page|dashboard|editor|app|loading|start-?up|it)\b|(?<![\w.])\d[\d,]*(?:\.\d+)?\s?(?:%|x|\u00d7)\s+(?:faster|quicker|sooner)\b|\b(?:faster|quicker|sooner)\s+than\s+(?:before|ever|(?:the\s+)?(?:old|previous|last|earlier)\b)/i;
 const BYTES = /(?<![\w.])-?\d[\d,]*(?:\.\d+)?\s?(?:bytes?|B|KB|kB|KiB|MB|MiB)\b/i;
 const PERCENT = /(?<![\w.])-?\d[\d,]*(?:\.\d+)?\s?%/;
 const TIMES = /(?<![\w.])\d+(?:\.\d+)?x\b/i;
 const COMPARATIVE = /\b(?:smaller|less|saves|saving|shrinks|shrunk)\b/i;
+// A sentence with a comparative but no figure is a size claim only when these say clearly that it is about the download.
+const COMPARATIVE_PLAIN = /\b(?:smaller|shrinks|shrunk)\b/i;
+const DOWNLOAD_PLAIN = /\b(?:gzip|brotli|card\s+file|main\s+file|download\s+size|the\s+download)\b|magic-card[\w.-]*\.js\b/i;
 const DOWNLOAD = /\b(?:downloads?|downloaded|gzip|brotli|card\s+file|main\s+file)\b|magic-card[\w.-]*\.js\b/i;
 const RELEASE = /\b\d{4}\.\d{2}\.\d{2}(?:-beta\.\d+)?\b/;
 const GZIP = /\bgzip\b/i;
@@ -54,25 +60,40 @@ function codeSpans(text) {
   return spans;
 }
 
-/** Inline links and reference links of a text: { start, end, target } with the target raw (reference ids are looked up by the caller). */
+/** Inline links and reference links of a text: { start, end, target } with the target raw (reference ids are looked up by the caller). One forward pass; every search result is reused, so the work is linear. */
 function links(text) {
   const found = [];
-  let pos = 0;
-  for (;;) {
-    const mid = text.indexOf('](', pos);
-    const ref = text.indexOf('][', pos);
-    const at = mid === -1 ? ref : ref === -1 ? mid : Math.min(mid, ref);
-    if (at === -1) break;
-    pos = at + 2;
-    let open = at - 1;
-    while (open >= (found.length ? found[found.length - 1].end : 0) && text[open] !== '[') open--;
-    if (open < 0 || text[open] !== '[') continue;
-    const inline = text.startsWith('](', at);
-    const close = text.indexOf(inline ? ')' : ']', at + 2);
-    if (close === -1) continue;
-    const raw = text.slice(at + 2, close).trim();
-    found.push({ start: open, end: close + 1, target: raw, ref: !inline, text: text.slice(open + 1, at) });
-    pos = close + 1;
+  const cache = new Map();
+  const nextIndex = (ch, from) => {
+    const c = cache.get(ch);
+    if (c && c.from <= from && (c.idx === -1 || c.idx >= from)) return c.idx;
+    const idx = text.indexOf(ch, from);
+    cache.set(ch, { from, idx });
+    return idx;
+  };
+  let open = -1;
+  let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (ch === '[') {
+      open = i;
+      i++;
+      continue;
+    }
+    const next = text[i + 1];
+    if (ch !== ']' || (next !== '(' && next !== '[') || open === -1) {
+      i++;
+      continue;
+    }
+    const inline = next === '(';
+    const close = nextIndex(inline ? ')' : ']', i + 2);
+    if (close === -1) {
+      i++;
+      continue;
+    }
+    found.push({ start: open, end: close + 1, target: text.slice(i + 2, close).trim(), ref: !inline, text: text.slice(open + 1, i) });
+    open = -1;
+    i = close + 1;
   }
   return found;
 }
@@ -86,7 +107,7 @@ function prose(text) {
     last = l.end;
   }
   out += text.slice(last);
-  return out.replace(/\bhref="[^"]*"/gi, '').replace(/<(?:https?:)[^>\s]*>/g, ' ');
+  return out.replace(/\bhref="[^"]*"/gi, '').replace(/<https?:[^<>\s]*>/g, ' ');
 }
 
 /** Link targets of a unit as repo-relative paths (null for an external or unresolvable target). */
@@ -164,7 +185,9 @@ function units(lines, firstLine) {
       continue;
     }
     if (!line.trim()) {
-      const next = lines.slice(i + 1).find((l) => l.trim());
+      let n = i + 1;
+      while (n < lines.length && !lines[n].trim()) n++;
+      const next = lines[n];
       if (!(block?.kind === 'item' && next && /^\s{2,}\S/.test(next) && !LIST_START.test(next))) flush();
       continue;
     }
@@ -222,7 +245,7 @@ export function scan(file, text, exists) {
   for (const unit of units(lines, firstLine)) {
     const words = prose(unit.text);
     const where = `${file}:${unit.line}`;
-    if (SPEED.test(words) && LOAD.test(words)) {
+    if ((SPEED.test(words) && LOAD.test(words)) || PLAIN_SPEED.test(words)) {
       const targets = linkTargets(unit.text, file, refs).filter((t) => t === BASELINE);
       let message = null;
       if (!targets.length) message = `${where} speed claim without a link to ${BASELINE}`;
@@ -231,8 +254,9 @@ export function scan(file, text, exists) {
       if (message) findings.push(message);
     }
     const figure = BYTES.test(words) || PERCENT.test(words) || TIMES.test(words);
-    if (figure && COMPARATIVE.test(words) && DOWNLOAD.test(words)) {
+    if ((figure && COMPARATIVE.test(words) && DOWNLOAD.test(words)) || (!figure && COMPARATIVE_PLAIN.test(words) && DOWNLOAD_PLAIN.test(words))) {
       const missing = [];
+      if (!figure) missing.push('a figure');
       if (!RELEASE.test(words)) missing.push('a release name (YYYY.MM.NN)');
       if (!GZIP.test(words)) missing.push('gzip');
       if (!BROTLI.test(words)) missing.push('brotli');
@@ -506,11 +530,81 @@ const FIXTURES = [
     expect: 'pass',
   },
   {
-    name: 'a sentence does not end inside a code span or a link',
+    name: 'a sentence does not end inside a code span',
     file: LOADING,
-    text: 'The `a. B` main file is faster [x. Y](README.md) at startup.',
+    text: 'The main file `x. Y` is faster.',
     expect: 'fail',
     has: 'speed claim',
+  },
+  {
+    name: 'a sentence does not end inside a link text',
+    file: LOADING,
+    text: 'The main file [x. Y](README.md) is faster.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: 'the bare verb "load" with "faster" is a speed claim',
+    file: LOADING,
+    text: 'Cards load faster than before.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: '"load" with a percentage and "faster" is a speed claim',
+    file: LOADING,
+    text: 'Cards now load 40% faster.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: '"quicker to start" is a speed claim',
+    file: LOADING,
+    text: 'The card is quicker to start.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: '"sooner on a tablet" is a speed claim',
+    file: LOADING,
+    text: 'The card draws sooner on a tablet.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: 'a percentage with "faster" is a speed claim without a load word',
+    file: LOADING,
+    text: 'The card is 40% faster.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: '"speeds up" alone is a speed claim',
+    file: LOADING,
+    text: 'The new build speeds up the card.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: '"faster than before" is a speed claim',
+    file: LOADING,
+    text: 'The card is faster than before.',
+    expect: 'fail',
+    has: 'speed claim',
+  },
+  {
+    name: 'a smaller main file without a figure is a size claim',
+    file: LOADING,
+    text: 'The main file is smaller.',
+    expect: 'fail',
+    has: 'size claim is missing a figure, a release name',
+  },
+  {
+    name: 'a smaller download with a release, gzip and brotli but no figure fails',
+    file: LOADING,
+    text: 'The download of 2026.10.12-beta.12 is smaller with gzip and with brotli.',
+    expect: 'fail',
+    has: 'size claim is missing a figure',
   },
   {
     name: 'a table row is one unit',
@@ -573,8 +667,25 @@ const FIXTURES = [
   },
 ];
 
+// Worst-case lines for a linear scan; each must finish well inside the limit.
+const SLOW = [
+  ['160 KB of "](x)"', '](x)'.repeat(40000)],
+  ['200 KB of "[a][b"', '[a][b'.repeat(40000)],
+  ['240 KB of "<http:"', '<http:'.repeat(40000)],
+  ['120 KB of "](x" with no closer', '](x'.repeat(40000)],
+  ['99 KB of "[](" ', '[]('.repeat(33000)],
+];
+
 function selfTest() {
   let bad = 0;
+  for (const [name, text] of SLOW) {
+    const t = Date.now();
+    scan('README.md', `The main file loads faster ${text}`, () => true);
+    const ms = Date.now() - t;
+    const good = ms < 1500;
+    console.log(`${good ? 'ok  ' : 'FAIL'} selftest: a long line stays fast, ${name} (${ms} ms)`);
+    if (!good) bad++;
+  }
   for (const f of FIXTURES) {
     const has = new Set(f.exists ?? [BASELINE]);
     const { claims, findings } = scan(f.file, f.text, (rel) => has.has(rel));
@@ -592,7 +703,12 @@ function selfTest() {
 const args = process.argv.slice(2);
 if (args.includes('--self-test')) selfTest();
 else if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const root = args.includes('--root') ? args[args.indexOf('--root') + 1] : ROOT;
+  const at = args.indexOf('--root');
+  const root = at === -1 ? ROOT : args[at + 1];
+  if (!root || root.startsWith('--')) {
+    console.error('Usage: node tools/check-claims.mjs [--root <dir>] | --self-test');
+    process.exit(2);
+  }
   const findings = check(root);
   for (const f of findings) console.error(`FAIL ${f}`);
   if (findings.length) process.exit(1);
