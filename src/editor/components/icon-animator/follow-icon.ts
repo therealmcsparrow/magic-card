@@ -33,10 +33,8 @@ import {
 } from './quick-model';
 import { t, m } from '../../../icon-anim/i18n';
 
-/*
- * "This icon" animations follow their module's icon: after the icon settles, the quick document is split again from the new icon (parts keep their piece index).
- * Library animations are removed instead when the icon changes; other modules' documents and unloadable icons are left alone.
- */
+// "This icon" animations follow their module's icon: the quick document is split again from the new icon.
+// Library animations are removed when the icon changes.
 
 /** An own SVG (a document's `rig.svg`) as icon geometry, like icon-source builds it. */
 export function svgGeometry(svg: string): IconGeometry | undefined {

@@ -1,11 +1,7 @@
 import { html, TemplateResult, nothing } from 'lit';
 import { t } from '../../i18n/labels';
 
-/**
- * The reset affordance of a field head (editor system `.field-reset`): a small icon button, shown
- * only while the field has a value. Resetting removes the value, so the default / inherited value
- * applies again; the caller makes it one (undoable) edit.
- */
+// The reset button of a field head: shown only while the field has a value; resetting removes it.
 export function fieldReset(label: string, visible: boolean, onReset: () => void, title?: string): TemplateResult | typeof nothing {
   if (!visible) return nothing;
   return html`<button

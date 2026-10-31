@@ -2,12 +2,8 @@ import type { BackgroundLayerConfig, BgLayerType } from '../../contracts/bg-stac
 import { m } from '../i18n';
 import { getStatus } from './bg-status';
 
-/*
- * The light half of the Card backdrop model (layer-editor 1.0.0 "Seam"): what the editor chunk itself needs
- * (the "Layers here" list, the group header warning, the rule view). Everything else is in bg-layers-ops.ts,
- * which only magic-card-layer-editor.js carries. The labels below are 'card-editor' ids: the panels render them
- * with the card-editor t(), not their own.
- */
+// The light half of the Card backdrop model (layer-editor 1.0.0): what the editor chunk itself needs.
+// The rest is in bg-layers-ops.ts.
 
 export const LAYER_TYPES: ReadonlyArray<{ value: BgLayerType; label: ReturnType<typeof m>; icon: string }> = [
   { value: 'image', label: m('card-editor.bg-layers-model.image'), icon: 'mdi:image-outline' },

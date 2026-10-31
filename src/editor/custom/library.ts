@@ -4,10 +4,7 @@ import type { MagicCardConfig } from '../../types';
 import { animLibrary } from '../../utils/anim-hooks';
 import { pruneLibraryCopies, type KnownLibrary } from './prune';
 
-/*
- * The card editor's side of the Magic Card Utils library: lists for the pickers, one icon for "Use", saving a shape, and the saved-id sets pruning needs.
- * Lists are cached per page; `unknown_command` (not installed) is remembered.
- */
+// The card editor's side of the Magic Card Utils library: lists for the pickers, one icon for "Use", saving a shape.
 
 interface Hass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;

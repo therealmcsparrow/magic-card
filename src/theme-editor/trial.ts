@@ -8,11 +8,7 @@ import { t } from './i18n';
 import { browserMode, docFromHass, hassOf } from './util';
 import './trial-bar';
 
-/*
- * Try on dashboards: the draft's variables applied to HA in this tab only, with a Revert bar.
- * One <style id="mc-theme-trial"> `html {}` rule written through the CSSOM, never CSS text.
- * Ends by Revert, Discard, save, a profile theme change, 10 minutes idle or reload.
- */
+// Try on dashboards: the draft's variables applied to HA in this tab only, with a Revert bar.
 
 export const TRIAL_IDLE_MS = 10 * 60 * 1000;
 

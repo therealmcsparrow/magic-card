@@ -3,10 +3,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { layoutWeights } from '../state/layouts';
 import { t } from '../i18n';
 
-/**
- * A row's column layout drawn as bars (`.layout-glyph`, editor system): one bar per column at its
- * share of the row. Used by the Layers tree and the inspector's layout picker.
- */
+// A row's column layout drawn as bars (`.layout-glyph`): one bar per column at its share of the row.
 export function renderLayoutGlyph(weights: readonly number[], active?: number): TemplateResult {
   const cols = weights.map((w) => `${Number.isFinite(w) && w > 0 ? +w.toFixed(3) : 1}fr`).join(' ');
   // `active`: that column's bar is marked (class "on"), e.g. a row module's column in the tree.

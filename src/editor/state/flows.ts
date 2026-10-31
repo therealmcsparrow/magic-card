@@ -5,10 +5,7 @@ import { slotLabel } from '../slot-label';
 import { ModuleSelection, moduleAt, moduleDisplayName, moduleLabel, moduleSelection, modulePathAttr } from '../studio/selection';
 import { t, m } from '../i18n';
 
-/**
- * Editor side of flow lines: the modules a flow can connect, module ids for flow endpoints (written
- * when a module has none) and keeping `flows` consistent when modules are deleted.
- */
+// Editor side of flow lines: connectable modules, module ids for endpoints, and keeping `flows` consistent on delete.
 
 /** One module a flow can start or end at (nested layout children included). */
 export interface FlowModuleOption {

@@ -6,10 +6,8 @@ import { collectNotSynced } from '../state/template-sync';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { t, tx } from '../i18n';
 
-/**
- * Template link status + actions.
- * Fires (bubbles, composed): template-create, template-load, template-resync, template-save, template-unlink.
- */
+// Template link status + actions.
+// Fires: template-create, template-load, template-resync, template-save, template-unlink.
 @customElement('mc-template-bar')
 export class TemplateBar extends LitElement {
   @property({ attribute: false }) config?: MagicCardConfig;

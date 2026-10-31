@@ -3,11 +3,7 @@ import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
-/**
- * Ultra Card v3.13.3 (commit 4cb4a6c). It documents no HA theme variables (its own `--uc-*` values are
- * internal and set per card), so the group lists the HA variables src/cards/ultra-card.ts reads with var()
- * (rule 4). These name variables the HA groups own (index.ts merges them as alsoUsedBy).
- */
+// Ultra Card v3.13.3 (commit 4cb4a6c): the HA variables src/cards/ultra-card.ts reads with var().
 const REF = 'https://github.com/WJDDesigns/Ultra-Card/blob/v3.13.3/src/cards/ultra-card.ts';
 const VERIFIED = '2026-10-17';
 

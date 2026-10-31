@@ -1,9 +1,6 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 
-/*
- * Layer editor tokens: control edges use --mc-ed-ctl-line (>= 3:1, WCAG 1.4.11), derived from the kit field border.
- * LAYER_TOKENS are the fixed fallback for browsers without color-mix.
- */
+// Layer editor tokens: control edges use --mc-ed-ctl-line (>= 3:1), with fixed LAYER_TOKENS as fallback.
 
 /** Share of the text colour in the control line (theme mix). */
 export const CTL_LINE_STRENGTH = 0.5;

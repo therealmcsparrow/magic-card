@@ -7,11 +7,7 @@ import { descendantAt } from '../../utils/module-path-edit';
 import { toYaml } from '../../utils/yaml-utils';
 import { moduleDisplayName, moduleLabel, modulePathAttr, moduleSelection, type ModuleSelection } from '../studio/selection';
 
-/*
- * Pure model of the Placement and Layer groups. The controls write the
- * contract keys (layer-placement 1.0.0) and nothing else: `placement` and `layer` on the module, never
- * `design`, never a preset name. Nothing here mutates its input.
- */
+// Pure model of the Placement and Layer groups (layer-placement 1.0.0): writes `placement` and `layer` only.
 
 export const PLACEMENTS: readonly Placement[] = ['flow', 'background', 'overlay'];
 const ANCHORS = new Set<string>(['top-left', 'top', 'top-right', 'left', 'center', 'right', 'bottom-left', 'bottom', 'bottom-right']);

@@ -1,11 +1,7 @@
 import type { CardModule } from '../../types';
 import { t } from '../i18n';
 
-/*
- * The text a new module is created with ("Hello World", "Tab 1", "Button") is English in magic-card.js: its
- * createDefault() cannot call the editor's tables (the dashboard bundle holds no editor text). The editor
- * writes it in the language of the person editing: the value lands in the config and stays as typed.
- */
+// The text a new module is created with, written in the language of the person editing.
 
 type Loose = Record<string, unknown>;
 

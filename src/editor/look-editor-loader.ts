@@ -1,9 +1,6 @@
 import { BUILD_VERSION } from '../utils/build-version';
 
-/*
- * Loader of the look-editor chunk. `loadLookEditor()` resolves true once the chunk matches this build and defined both look elements;
- * false on import failure, timeout, build mismatch or install error. The promise is shared; a failure clears it.
- */
+// Loader of the look-editor chunk: `loadLookEditor()` resolves true once the chunk matches this build.
 
 export const LOOK_EDITOR_FILE = 'magic-card-look-editor.js';
 /** A chunk that has not arrived after this long counts as failed (the skeleton must not spin for ever). */

@@ -3,10 +3,7 @@ import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
-/**
- * Bubble Card v3.4.2 (commit 91a5c77). The first ten names are the "Global CSS variables" table in README.md;
- * the rest are read with var() in the source file named in each row.
- */
+// Bubble Card v3.4.2 (commit 91a5c77): its documented global CSS variables and those read with var() in source.
 const BASE = 'https://github.com/Clooos/Bubble-Card/blob/v3.4.2/';
 const README = `${BASE}README.md`;
 const VERIFIED = '2026-10-17';

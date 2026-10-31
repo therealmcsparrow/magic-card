@@ -2,10 +2,7 @@ import type * as Chunk from './chunk';
 import type { ThemePresetLibrary } from '../../contracts/theme-editor';
 import { PRESETS_BUILD } from './build';
 
-/*
- * The presets and picker are a lazy chunk, loaded next to the editor when the create dialog first opens.
- * A load over 8 s counts as failed; the memo clears on failure so "Try again" calls import() again.
- */
+// Loads the presets and picker lazy chunk when the create dialog first opens; a failure clears the memo.
 export type PresetChunk = typeof Chunk;
 type Importer = () => Promise<PresetChunk>;
 

@@ -1,11 +1,7 @@
 import { contactsOtherHost, decodeCssEscapes } from '../contracts/preset-transfer';
 import type { ThemeDoc } from '../contracts/theme-editor';
 
-/*
- * Values of a theme that make the browser contact another host (the same test the import uses). The picker
- * badges such a preset, and the editor says so above the variables: the preview and "Try on dashboard" load
- * the file straight away.
- */
+// Detects theme values that make the browser contact another host; the picker and editor warn about them.
 
 const HOST = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi;
 

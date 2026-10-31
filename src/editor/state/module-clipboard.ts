@@ -5,10 +5,7 @@ import { childSlots } from '../../utils/module-path';
 import { CUSTOM_PREFIX, customRefId, isCustomRef } from '../../anim-studio/model';
 import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
 
-/**
- * Copy / paste of a whole module (with layout children): the editor clipboard is in localStorage, a copy also goes to the system clipboard as YAML.
- * It holds `{ module, custom_animations }`; an older entry with just the module still pastes.
- */
+// Copy / paste of a whole module (with layout children) through localStorage and the system clipboard as YAML.
 export const MODULE_CLIPBOARD_KEY = 'magic-card:module-clipboard';
 
 type Doc = Record<string, unknown>;

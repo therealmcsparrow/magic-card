@@ -11,10 +11,7 @@ import type { SwitchOption } from './mode-switch';
 import { t, tx } from './i18n';
 import { browserMode, scopeLabel } from './util';
 
-/*
- * The preview stage: every resolved draft variable is set inline on the stage element in this shadow root.
- * Variables the page theme sets but the draft does not are reset to HA's default.
- */
+// The preview stage: every resolved draft variable is set inline on the stage element.
 
 export const PREVIEW_TAG = 'mcte-theme-preview';
 /** Updates after the first are batched for this long (acceptance criterion 5: under 200 ms in all). */

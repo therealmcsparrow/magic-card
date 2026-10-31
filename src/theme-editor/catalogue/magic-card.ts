@@ -3,10 +3,7 @@ import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
-/**
- * What a theme can change on a Magic Card: the HA variables the card reads with var() ('follows' rows),
- * and --mc-* names read but never declared on :host (today --mc-slider-background).
- */
+// What a theme can change on a Magic Card: the HA variables the card reads with var(), and --mc-* names read but never declared.
 
 type Row = [name: string, kind: FieldKind, label: MessageIndex, hint: MessageIndex, role: 'own' | 'follows'];
 

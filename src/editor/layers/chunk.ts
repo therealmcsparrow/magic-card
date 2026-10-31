@@ -4,10 +4,7 @@ import { McBgLayers } from './bg-layers';
 import { McLayerDesign, McLayerGroups } from './layer-groups';
 import { McLayersSheet } from './layers-sheet';
 
-/*
- * Entry of the lazy layer-editor chunk: install() defines the elements, each guarded, and runs only when BUILD matches magic-card.js.
- * The host loads it through layer-editor-loader.ts.
- */
+// Entry of the lazy layer-editor chunk: install() defines the elements and runs only when BUILD matches magic-card.js.
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 

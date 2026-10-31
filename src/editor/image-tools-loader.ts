@@ -2,10 +2,7 @@ import { html, type TemplateResult } from 'lit';
 import { until } from 'lit/directives/until.js';
 import { BUILD_VERSION } from '../utils/build-version';
 
-/*
- * Loader of the image-tools chunk. `loadImageTools()` resolves true once the chunk matches this build and defined its elements;
- * false on import failure, timeout, build mismatch or install error. The promise is shared; a failure clears it.
- */
+// Loader of the image-tools chunk: `loadImageTools()` resolves true once the chunk matches this build.
 
 export const IMAGE_TOOLS_FILE = 'magic-card-image-tools.js';
 /** A chunk that has not arrived after this long counts as failed. */

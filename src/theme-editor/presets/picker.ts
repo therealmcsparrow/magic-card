@@ -7,10 +7,7 @@ import { fold } from '../../i18n/fold';
 import { outsideOf } from '../outside';
 import { m, t } from './i18n';
 
-/*
- * The preset picker of the create dialog: search, a Show filter and grouped swatch cards.
- * A template function rendered by <mcte-start-view>, which adopts `pickerStyles`.
- */
+// The preset picker of the create dialog: search, a Show filter and grouped swatch cards.
 
 export interface PickerView {
   lib: ThemePresetLibrary;

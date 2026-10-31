@@ -2,10 +2,7 @@ import type { MessageIndex } from '../../contracts/i18n';
 import type { BuiltInThemePreset, ThemeDoc, ThemePresetLibrary } from '../../contracts/theme-editor';
 import { m } from './i18n';
 
-/*
- * The preset library: themes with a light and a dark mode in one lazy chunk; no UI code.
- * Grouped original, inspired, genre; every mode passes 4.5:1 for text pairs; genre presets carry `tags`.
- */
+// The preset library: themes with a light and a dark mode in one lazy chunk; no UI code.
 
 type Mode = Record<string, string>;
 

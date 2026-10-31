@@ -8,10 +8,8 @@ import { fold } from '../../../i18n/fold';
 import { t, m } from '../../../icon-anim/i18n';
 import type { MessageIndex } from '../../../contracts/i18n';
 
-/*
- * The animated icon grid (lazy icon-animator chunk): live tiles for My animations and the icon library, with search and a domain filter.
- * Only emits `animated-icon-pick`; the Style control (Quiet / Living / Glow) applies to library tiles.
- */
+// The animated icon grid (lazy icon-animator chunk): live tiles for My animations and the icon library.
+// Only emits `animated-icon-pick`.
 
 export const ANIMATED_ICON_GRID_TAG = 'mc-animated-icon-grid';
 const THUMB_TAG = 'mc-animated-icon-thumb';

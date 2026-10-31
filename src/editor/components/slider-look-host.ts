@@ -7,10 +7,7 @@ import { editorSystem } from '../../css/editor-stack';
 import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
 import { t } from '../i18n';
 
-/*
- * The Look block of the slider editor: <mc-slider-look-editor> once its chunk is in, a skeleton while loading, a status line with Try again on failure.
- * Open sections and the one-level Undo snapshot are kept per module for the session, never in YAML.
- */
+// The Look block of the slider editor: the look editor once its chunk is in, a skeleton while loading, Try again on failure.
 
 interface Session {
   open: Set<string>;

@@ -7,10 +7,8 @@ import {
 } from '../../../anim-studio/model';
 import { CATALOGUE_DOC_PREFIX } from '../../../contracts/preset-catalogue';
 
-/*
- * Config edits for icon animations stored in the card (pure): a pick stores the document inline in `custom_animations` and points one design entry at `custom:<id>`.
- * Quick documents use ids starting with `quick-`.
- */
+// Pure config edits for icon animations stored in the card: a pick stores the document in `custom_animations`.
+// Quick documents use ids starting with `quick-`.
 
 export const QUICK_PREFIX = 'quick-';
 

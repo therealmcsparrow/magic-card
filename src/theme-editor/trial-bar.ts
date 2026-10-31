@@ -6,10 +6,7 @@ import { getTrial, openEditor, stopTrial, subscribeTrial } from './trial';
 import type { TrialState } from './trial';
 import { t } from './i18n';
 
-/*
- * <mc-theme-trial-bar>: the Revert bar of "Try on dashboards", first child of body so it is first in tab order.
- * Fixed high-contrast colours; scrolls focused elements out from under it (WCAG 2.4.11) and collapses under 480 px height.
- */
+// <mc-theme-trial-bar>: the Revert bar of "Try on dashboards", first child of body.
 
 export const SHORT_VIEWPORT_PX = 480;
 export const NARROW_VIEWPORT_PX = 640;

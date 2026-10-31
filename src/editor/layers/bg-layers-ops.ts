@@ -6,12 +6,8 @@ import { safeColor } from '../../utils/safe-css';
 import { parseGradient } from '../../utils/gradient';
 import { m, t } from './i18n';
 
-/*
- * The heavy half of the Card backdrop model, carried by
- * magic-card-layer-editor.js only. `background_layers`: first entry = front, at most MAX_BACKGROUND_LAYERS.
- * Every function returns new data; nothing mutates a layer. The light half (layerSummary, the rule view,
- * backdropHasProblem) stays in bg-layers-model.ts.
- */
+// The heavy half of the Card backdrop model, carried by magic-card-layer-editor.js only.
+// Every function returns new data; nothing mutates a layer.
 
 export const LIMIT_TEXT = m('layer-editor.bg-layers-ops.limit-of-max-layers-reached-more-layers');
 

@@ -15,10 +15,7 @@ import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
 import { attributeCaption, renderEntitySourceField, withEntityKey } from '../../components/entity-source';
 
-/**
- * The first entity picked for a new button (no entity, no actions yet) writes default actions
- * into the config, like HA's button card offers; existing buttons keep their (possibly empty) actions.
- */
+// Writes default actions into the config when the first entity is picked for a new button.
 function withEntity(config: CardModule, entity: string | undefined, current: string | undefined): CardModule {
   const c = config as ButtonModuleConfig;
   const isNew = !current && c.actions === undefined;

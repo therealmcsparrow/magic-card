@@ -3,10 +3,7 @@ import { shownValue } from '../../ui-kit/templates/shown-value';
 import { LAYER_BLENDS, type LayerBlend } from '../../contracts/layer-placement';
 import { m, t } from './i18n';
 
-/*
- * Small controls shared by the Layer group and the Card backdrop group. Each one carries these cues:
- * a 3:1 edge (layerControlCss), On / Off words beside a switch, and a check mark on a pressed button.
- */
+// Small controls shared by the Layer group and the Card backdrop group.
 
 /** The kit disclosure chevron (same path as <mc-ui-disclosure>); the sheet rotates it when the button is expanded. */
 export function chevron(): TemplateResult {

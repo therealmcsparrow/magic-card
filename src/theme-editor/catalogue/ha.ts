@@ -3,10 +3,7 @@ import { m } from '../i18n';
 import type { CatalogueGroupId, FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
-/**
- * HA's own theme variables a theme commonly sets (`ref` is the declaring file; defaults are the light-mode values).
- * Gradient kind only where HA paints the variable with the `background` shorthand.
- */
+// HA's own theme variables a theme commonly sets (`ref` is the declaring file; defaults are the light-mode values).
 const BASE = 'https://github.com/home-assistant/frontend/blob/20260930.4/';
 const VERIFIED = '2026-10-17';
 

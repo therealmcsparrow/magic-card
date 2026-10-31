@@ -5,11 +5,7 @@ import { descendantAt, mutableSlot } from '../../utils/module-path-edit';
 import { deepClone } from '../../utils/deep-merge';
 import { markChildList, markColumnModules } from './template-marks';
 
-/**
- * Where a moved module lands: `module` undefined = the module list of card column row/col;
- * otherwise slot `slot` of the layout at `descendantAt(top[module], child)`. `index` counts in the
- * list as it is before the move.
- */
+// Where a moved module lands: a card column row/col, or a slot of a layout module.
 export interface DropPlace {
   row: number;
   col: number;

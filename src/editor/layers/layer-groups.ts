@@ -19,10 +19,7 @@ import { blendTiles, cancelSliderFrames, chevron, lyrSlider, lyrSwitch } from '.
 import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
 
-/*
- * Placement and Layer groups of a module's Design tab; they edit the top-level `placement` and `layer` keys, never `design`.
- * Order moves and Low-power mode leave as events: mc-layer-move { to } and mc-layers-low-power.
- */
+// Placement and Layer groups of a module's Design tab; they edit the top-level `placement` and `layer` keys.
 
 const PLACEMENT_ITEMS: ReadonlyArray<{ value: Placement; label: ReturnType<typeof m>; icon: string }> = [
   { value: 'flow', label: m('layer-editor.layer-groups.normal'), icon: 'mdi:view-sequential-outline' },

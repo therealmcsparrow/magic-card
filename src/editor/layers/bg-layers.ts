@@ -17,10 +17,7 @@ import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
 import { cancelSliderFrames, chevron, lyrSwitch } from './controls';
 
-/*
- * Card backdrop group: `background_layers` (first = front, at most four) as rows with an inline editor, Looks, cost meter and rule view.
- * Delete shows "Deleted. Undo" in place for 12 s.
- */
+// Card backdrop group: `background_layers` as rows with an inline editor, Looks, cost meter and rule view.
 
 const TYPE_ICONS: Record<string, string> = { image: 'mdi:image-outline', gradient: 'mdi:gradient-vertical', pattern: 'mdi:dots-grid', color: 'mdi:palette-outline' };
 const ADD_ITEMS: ReadonlyArray<{ value: BgLayerType; label: ReturnType<typeof m> }> = LAYER_TYPES.map((x) => ({ value: x.value, label: x.label }));

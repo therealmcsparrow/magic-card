@@ -4,10 +4,7 @@ import type { LayerConfig, Placement } from '../../contracts/layer-placement';
 import type { CardModule, HomeAssistant } from '../../types';
 import { m } from './i18n';
 
-/*
- * Looks: one-tap tiles that write plain YAML (placement + layer, or background_layers
- * entries). A look is never stored by name. Data plus CSS gradients for the thumbnails, no images.
- */
+// Looks: one-tap tiles that write plain YAML (placement + layer, or background_layers entries).
 
 export interface ModuleLook {
   id: string;

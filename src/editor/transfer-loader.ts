@@ -1,9 +1,6 @@
 import { LOAD_TIMEOUT_MS, TRANSFER_CHUNK, TRANSFER_CONTRACT_VERSION, type TransferChunk } from '../contracts/preset-transfer';
 
-/*
- * The only importer of the transfer chunk; set as window.MagicCard.loadTransfer() so other editors reach it without their own import().
- * Memoised; rejects on import failure, timeout or a non-major-1 chunk, and a rejection clears the memo.
- */
+// The only importer of the transfer chunk; set as window.MagicCard.loadTransfer().
 
 let importer = (): Promise<unknown> => import(/* webpackChunkName: "transfer" */ '../transfer/chunk');
 let pending: Promise<TransferChunk> | undefined;

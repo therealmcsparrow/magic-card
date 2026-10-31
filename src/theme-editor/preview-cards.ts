@@ -4,10 +4,7 @@ import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import { CATALOGUE_GROUPS } from './catalogue';
 import { t } from './i18n';
 
-/*
- * Real cards for the preview, and the "Preview not available" notice of a card group.
- * Built-ins and Magic Card come from HA's card helpers; another project's card is created only once defined.
- */
+// Real cards for the preview, and the "Preview not available" notice of a card group.
 
 export const PREVIEW_GROUP_TAG = 'mcte-group-preview';
 

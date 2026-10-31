@@ -3,11 +3,7 @@ import { m } from '../i18n';
 import type { FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
-/**
- * Tile card: home-assistant/frontend tag 20260930.4 (commit 26690e0). The `--ha-tile-*` names are documented
- * as @cssprop in src/components/tile/ha-tile-icon.ts and ha-tile-info.ts. The tile colour itself follows
- * the HA state colours (ha group), so nothing else is listed here.
- */
+// Tile card: home-assistant/frontend tag 20260930.4 (commit 26690e0), the `--ha-tile-*` names.
 const BASE = 'https://github.com/home-assistant/frontend/blob/20260930.4/src/components/tile/';
 const VERIFIED = '2026-10-17';
 

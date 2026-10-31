@@ -11,10 +11,7 @@ import { loadTransfer } from '../transfer-loader';
 import { librarySource } from './library';
 import { t } from '../i18n';
 
-/*
- * Opens <mc-library-view> in the top layer with the card's copies as "This card".
- * Imports not sent to Magic Card Utils are written into the card as inline copies in one undo step.
- */
+// Opens <mc-library-view> in the top layer with the card's copies as "This card".
 
 /** The card with imported items stored as its own copies (an item with an id replaces the copy with that id). */
 export function withImported(c: MagicCardConfig, kind: TransferKind, items: TransferItem[]): MagicCardConfig {

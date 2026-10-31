@@ -9,10 +9,8 @@ import { animLibrary } from '../../../utils/anim-hooks';
 import { svgIconApi } from '../../../utils/svg-icon-loader';
 import { customAnimationIds } from '../../../utils/custom-animations';
 
-/*
- * Loads the lazy icon-animator chunk (icon picker tab and follow-icon edits) on first use; dashboards never load it.
- * The chunk gets the card bundle's modules from `host` instead of importing them, to keep magic-card.js small.
- */
+// Loads the lazy icon-animator chunk on first use; dashboards never load it.
+// The chunk gets the card bundle's modules from `host` instead of importing them.
 type IconApi = NonNullable<ReturnType<typeof svgIconApi>>;
 
 export const host = {

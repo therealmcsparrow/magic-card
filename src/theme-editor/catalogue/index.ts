@@ -9,10 +9,7 @@ import { BUBBLE_CARD_ENTRIES } from './bubble-card';
 import { ULTRA_CARD_ENTRIES } from './ultra-card';
 import { BUTTON_CARD_ENTRIES } from './button-card';
 
-/*
- * The theme variable catalogue: one file per source, merged here.
- * A 'follows' row is not kept as an entry; the owner gets the source in `alsoUsedBy`.
- */
+// The theme variable catalogue: one file per source, merged here.
 
 export const CATALOGUE_GROUPS: CatalogueGroup[] = [
   { id: 'primary', label: m('theme-editor.catalogue.primary-and-accent') },

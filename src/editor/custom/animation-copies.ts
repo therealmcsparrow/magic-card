@@ -5,10 +5,7 @@ import type { MagicCardConfig } from '../../types';
 import { animationDocList } from '../../utils/custom-animations';
 import type { CardState } from './bridge';
 
-/*
- * "Keep a copy in this card" for a library animation: the document goes into `custom_animations` under its library id.
- * On by default up to KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES; a sequence brings its steps' documents.
- */
+// "Keep a copy in this card" for a library animation: the document goes into `custom_animations` under its library id.
 
 export const docBytes = (doc: unknown): number => new TextEncoder().encode(JSON.stringify(doc)).length;
 

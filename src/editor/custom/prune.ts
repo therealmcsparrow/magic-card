@@ -2,10 +2,7 @@ import type { MagicCardConfig } from '../../types';
 import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
 import { CUSTOM_PREFIX, customRefId } from '../../anim-studio/model';
 
-/*
- * Prunes kept copies: a `custom_icons` / `custom_shapes` entry goes only when no module uses it and its id is in the loaded library.
- * An unloaded library prunes nothing; a template-linked card keeps all copies.
- */
+// Prunes kept `custom_icons` / `custom_shapes` copies that no module uses and whose id is in the loaded library.
 
 export interface KnownLibrary {
   /** Ids of the saved icons; undefined while the list is not loaded. */
