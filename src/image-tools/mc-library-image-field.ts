@@ -12,10 +12,7 @@ import { getImage, listImages, resetImages, type Listing } from './library';
 import { t } from './i18n';
 import { THUMB_RE, entitiesOf, isLibraryValue, pickKeys, refId, sameShape, shapeKeys, shapeOf, type FieldContext, type Shape } from './model';
 
-/*
- * <mc-library-image-field>: the image input of the image module and background layers. Writes
- * through one `image-change` event, detail { keys }: the keys to set (undefined removes one).
- */
+// <mc-library-image-field>: the image input of the image module and background layers; writes through one `image-change` event, detail { keys }.
 
 const DESCRIPTION_MAX = 500;
 const COUNT_FROM = 450;

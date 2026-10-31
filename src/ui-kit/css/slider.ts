@@ -1,10 +1,6 @@
 import { css, CSSResult } from 'lit';
 
-/*
- * .slider-row (contract ui-kit 1.0.0): label, range, number field, unit. Extracted from the card editor's gradient
- * angle row, which is the reference look: the label keeps 48 px, the range takes the rest (120 px minimum, then the
- * row wraps), the number field is 64 px. Below 240 px of container width the parts stack.
- */
+// .slider-row (contract ui-kit 1.0.0): label, range, number field, unit; the parts stack below 240 px of container width.
 export const kitSlider: CSSResult = /* @__PURE__ */ css`
   .slider-row {
     display: flex;

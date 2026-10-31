@@ -4,11 +4,7 @@ import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library.needs';
 import { heavyStep } from './frames';
 import { parseImage, serializeImage, templateOf } from './sanitize';
 
-/*
- * The image client: one copy per page. Reads library images through the card's own websocket (images_get, batched per
- * animation frame), keeps them in page memory only (one entry per id and updated_at), and follows the library: provider
- * events, reconnects, and a quiet retry with back-off for items that are missing.
- */
+// The image client, one copy per page: reads library images through the card websocket and keeps them in page memory only.
 
 type CallWS = (msg: Record<string, unknown>) => Promise<unknown>;
 interface Connection {

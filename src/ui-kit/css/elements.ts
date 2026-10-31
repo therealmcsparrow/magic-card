@@ -1,10 +1,6 @@
 import { css, CSSResult } from 'lit';
 
-/*
- * Shadow-root styles of the three kit elements (contract ui-kit 1.0.0). They read tokens with fallbacks, because an
- * element can sit in a root that never loaded editorTokens (the elements add no :host token block of their own, so a
- * screen that overrides tokens on its :host keeps its look).
- */
+// Shadow-root styles of the three kit elements (contract ui-kit 1.0.0); tokens are read with fallbacks.
 
 const inherit = /* @__PURE__ */ css`
   :host {

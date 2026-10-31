@@ -3,10 +3,7 @@ import { CUT_TOLERANCE_PX } from '../contracts/custom-shape';
 import { clamp } from '../utils/shape-path';
 import type { Sides } from './model';
 
-/*
- * "Space for text" maths on an outline polyline (px, closed): the inscribed-rectangle solver that fills
- * a free path's `padding`, and the checks the previews run (W6: content cut; the outline crossing itself).
- */
+// "Space for text" maths on an outline polyline: the inscribed-rectangle solver for a free path `padding` and the preview checks.
 
 export function inside(poly: Pt[], x: number, y: number): boolean {
   let c = false;

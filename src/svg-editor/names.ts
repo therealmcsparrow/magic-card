@@ -5,10 +5,7 @@ import type { PathTool } from '../contracts/path-tools';
 import type { SvgAlignEdge, SvgAlignTarget, SvgArrange } from '../contracts/svg-editor';
 import { m } from './i18n';
 
-/*
- * Names the editor shows for things it holds as data (shapes, tones, align edges, tools). Each is an id marked with m()
- * and rendered with t(), so the words live in the namespace's tables, never here.
- */
+// Names the editor shows for things it holds as data, each an id marked with m() and rendered with t().
 
 export const PRIM: Record<PrimitiveKind, MessageIndex> = {
   'rounded-rect': m('svg-editor.names.rounded-rectangle'),

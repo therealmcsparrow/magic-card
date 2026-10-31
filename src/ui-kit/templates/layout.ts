@@ -6,10 +6,7 @@ import { glyph } from '../glyphs';
 import { button } from './button';
 import { iconOf } from './icon';
 
-/*
- * Layout helpers (contract ui-kit 1.0.0): topBar, toolbar (float capsule or vertical rail) and sectionHead.
- * They render in the caller's root with the kit classes; the strings all come from the caller.
- */
+// Layout helpers (contract ui-kit 1.0.0): topBar, toolbar (float capsule or vertical rail) and sectionHead.
 
 let seq = 0;
 

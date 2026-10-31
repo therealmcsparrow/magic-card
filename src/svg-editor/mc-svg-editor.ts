@@ -79,12 +79,8 @@ import { imageApi, loadImageEditor } from './image-loader';
 import { imageKit } from './image-kit';
 import type { ImageShell, ImageUi } from './image-seam';
 
-/*
- * <mc-svg-editor> (contract svg-editor 1.0.0): the 24 x 24 icon editor. The document is a list of
- * layers; <mc-path-canvas> (path-canvas 1.0.0) is the editing surface for their anchors, and this element
- * is its host: it passes every subpath as one canvas path, draws the artwork underneath, and turns the
- * canvas's `mc-path-change` events back into layer edits. History keeps whole documents.
- */
+// <mc-svg-editor> (contract svg-editor 1.0.0): the 24 x 24 icon editor; host of <mc-path-canvas> (path-canvas 1.0.0).
+// History keeps whole documents.
 
 export interface Flat {
   paths: EditPath[];

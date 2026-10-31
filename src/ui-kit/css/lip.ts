@@ -1,11 +1,6 @@
 import { css, CSSResult } from 'lit';
 
-/*
- * kitLip (contract ui-kit-lips): the panel lip button, the hint, the status region and the hidden-panel
- * rules. Not in kitCss: only the editors with lips import it. Floor values come first (Chromium 85): left and
- * right before inset-inline-*, :focus before :focus:not(:focus-visible) before :focus-visible, transform
- * instead of translate, [data-dir=rtl] instead of :dir().
- */
+// kitLip (contract ui-kit-lips): the panel lip button, hint, status region and hidden-panel rules; floor values first (Chromium 85).
 export const kitLip: CSSResult = /* @__PURE__ */ css`
   .lip {
     position: absolute;

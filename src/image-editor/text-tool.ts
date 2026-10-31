@@ -7,10 +7,7 @@ import { t } from './i18n';
 import { cleanText } from './text';
 import { middle, newText } from './text-ui';
 
-/*
- * The Text tool: a click or tap on the canvas (or Enter on it, for the middle) opens a text field there. Enter or Done
- * adds the words as one text layer, Escape or Cancel adds nothing. Until then there is no layer, so nothing is undone.
- */
+// The Text tool: a click, tap or Enter on the canvas opens a text field; Enter or Done adds one text layer, Escape or Cancel adds nothing.
 
 const COUNT_FROM = 1900;
 

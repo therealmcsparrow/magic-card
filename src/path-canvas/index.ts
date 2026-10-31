@@ -6,10 +6,7 @@ import { tidyPath } from '../path/tidy';
 import { createHistory } from './history';
 import { PathCanvas } from './mc-path-canvas';
 
-/*
- * The path canvas chunk (dist/magic-card-path-canvas.js): defines <mc-path-canvas> once and hands
- * the editor-only path-model parts to the SVG and shape editor chunks. Never loaded by magic-card.js.
- */
+// The path canvas chunk (dist/magic-card-path-canvas.js): defines <mc-path-canvas> once and hands the path-model parts to the editor chunks.
 
 if (!customElements.get(PATH_CANVAS_TAG)) customElements.define(PATH_CANVAS_TAG, PathCanvas);
 

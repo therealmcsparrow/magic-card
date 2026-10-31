@@ -1,11 +1,7 @@
 import type { SvgCssOutcome, SvgCssPropertyRule, SvgPolicy } from '../contracts/svg-safety';
 import { onlyFunctions } from './values';
 
-/*
- * CSS paint resolver: turns the allowed paint declarations of style="" attributes and <style>
- * classes into plain presentation attributes, in place, and writes nothing else. Reads CSS like a
- * browser tokenises it, keeps a small allow-list, and caps every input by length and write budget.
- */
+// CSS paint resolver: turns allowed paint declarations of style="" and <style> classes into presentation attributes, in place.
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const XLINK_NS = 'http://www.w3.org/1999/xlink';

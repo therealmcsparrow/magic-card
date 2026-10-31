@@ -2,10 +2,7 @@ import type { MessageIndex } from '../contracts/i18n';
 import type { PathTool, ToolRefusal } from '../contracts/path-tools';
 import { m } from './i18n';
 
-/*
- * What the panel says about each tool, as ids marked with m() and rendered with t(). The refusal messages are the
- * contract's, word for word (path-tools 1.0.0).
- */
+// What the panel says about each tool, as ids marked with m() and rendered with t(); refusal messages are the contract text (path-tools 1.0.0).
 
 export const REFUSALS: Record<ToolRefusal, MessageIndex> = {
   'too-complex': m('path-tools.names.this-shape-has-too-many-points-for-this'),

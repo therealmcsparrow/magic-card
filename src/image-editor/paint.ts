@@ -1,10 +1,7 @@
 import type { Part } from './part';
 import type { TextData } from './text';
 
-/*
- * Paints of an image layer beyond Main, Accent and None (hex or theme colour, gradient, opacity, dashes), kept in `look`.
- * Gradients use fractions of the layer box and are saved in userSpaceOnUse units.
- */
+// Paints of an image layer beyond Main, Accent and None (hex or theme colour, gradient, opacity, dashes), kept in `look`.
 
 export const MAIN = 'var(--mc-image-main)';
 export const ACCENT = 'var(--mc-image-accent)';

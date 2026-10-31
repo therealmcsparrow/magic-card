@@ -19,10 +19,7 @@ import { FLOW_PRESETS } from '../presets';
 import { LINE_TILES, SHAPE_TILES } from '../tiles';
 import { applyPreset, appliedPreset, changeCount, colourMode, lookStatus, resetLook, spacingMode, unusedColourKeys, withKeys } from './model';
 
-/*
- * <mc-flow-look-editor>: the Look group of a flow block. Renders from the keys, writes only on user action with the whole next flow.
- * Presets and Reset look keep one level of Undo; `open` holds opened sections ("-name" = closed).
- */
+// <mc-flow-look-editor>: the Look group of a flow block. Renders from the keys and writes only on user action with the whole next flow.
 type Rec = Record<string, unknown>;
 type Opt = { value: string; label: string };
 type Key = keyof FlowConfig;

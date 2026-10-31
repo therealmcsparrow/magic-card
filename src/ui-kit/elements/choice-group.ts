@@ -5,10 +5,7 @@ import { UI_KIT_CONTRACT_REVISION, type UiChoice } from '../../contracts/ui-kit'
 import { rovingTarget } from '../controllers/roving-focus';
 import { kitChoiceGroupElementCss } from '../css/elements';
 
-/*
- * Shared body of <mc-ui-tile-group> and <mc-ui-chip-group>: buttons with aria-pressed in a role=group, one tab stop.
- * Arrows move focus only; Space, Enter or click fire 'mc-pick'. `preview` is static SVG from a chunk constant.
- */
+// Shared body of <mc-ui-tile-group> and <mc-ui-chip-group>: aria-pressed buttons in a role=group; fires "mc-pick".
 let uid = 0;
 
 export abstract class UiChoiceGroup extends LitElement {

@@ -1,10 +1,7 @@
 import type { FlowPreset } from '../contracts/look-editor';
 import { m } from './i18n';
 
-/*
- * Preset data of the look editors. Every `preview` is a static chunk-constant SVG (72 x 56), never built from config text.
- * A preset removes every look key plus the ones it lists, then writes `values`.
- */
+// Preset data of the look editors; every `preview` is a static chunk-constant SVG (72 x 56).
 const pv = (inner: string): string => `<svg viewBox="0 0 72 56" width="72" height="56" fill="none" stroke-linecap="round">${inner}</svg>`;
 
 export const FLOW_PRESETS: readonly FlowPreset[] = [

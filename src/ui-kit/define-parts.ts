@@ -1,11 +1,6 @@
 import { UI_KIT_CONTRACT_REVISION } from '../contracts/ui-kit';
 
-/*
- * The guarded define (contract ui-kit 1.0.0, "Define once"), without any element class: a screen that uses only some
- * kit elements (the theme editor: window and toast) hands over just those, so the others are never bundled.
- * defineUiKit() in define.ts passes all of them. A tag that exists with a lower revision is kept as it is (an
- * element cannot be redefined): within major 1 every change is additive.
- */
+// The guarded define (contract ui-kit 1.0.0, "Define once") without any element class; a screen hands over just the parts it uses.
 export type KitElementClass = CustomElementConstructor & { uiKitRevision?: number };
 
 export function defineKitElements(list: Array<[string, KitElementClass]>): void {

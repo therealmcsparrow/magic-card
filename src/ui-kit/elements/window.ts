@@ -7,10 +7,7 @@ import {
   CLICK_PX, NO_DRAG, arrowDelta, centred, clampRect, dockRect, maximisedRect, stepWidth, type Dock, type Rect,
 } from '../controllers/window-frame';
 
-/*
- * <mc-ui-window>: one modal window (native <dialog> + showModal()) with slotted content.
- * Escape closes only this window. Movable, resizable and maximizable; grips work from the keyboard. close() forgets placement.
- */
+// <mc-ui-window>: one modal window (native <dialog> + showModal()) with slotted content; movable, resizable and maximizable.
 
 const DOCKS: Dock[] = ['centre', 'end', 'start'];
 interface Drag {

@@ -4,10 +4,7 @@ import { t } from './i18n';
 import { BOOL_DONE, BOOL_NAME } from './names';
 import type { EditPath } from '../contracts/path-model';
 
-/*
- * Boolean buttons, the pure part: which selected layers are operands, why an operation is unavailable,
- * and the document after a result. The chunk call itself lives in the editor (it is async).
- */
+// Boolean buttons, the pure part: which layers are operands, why an operation is unavailable, and the document after a result.
 
 const closedOf = (s: Shape): number => s.paths.filter((p) => p.closed && p.anchors.length >= 3).length;
 const openOf = (s: Shape): number => s.paths.filter((p) => !(p.closed && p.anchors.length >= 3) && p.anchors.length > 1).length;

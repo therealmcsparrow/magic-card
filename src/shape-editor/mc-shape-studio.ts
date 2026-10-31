@@ -35,10 +35,7 @@ import { BOX, CORNER, DIST, EDIT_AT, FAIL, HANDLE, OPS, presetName, PRIM, SAMPLE
 import { studioStyles } from './styles';
 import { btn, num, r1, seg } from './ui';
 
-/*
- * mc-shape-studio: the card shape editor. Corner mode needs no canvas; free path mode hosts mc-path-canvas.
- * Changes fire `mc-shape-change` (commit false while dragging). Templates are compact on purpose: keep prettier off them.
- */
+// mc-shape-studio: the card shape editor; changes fire `mc-shape-change`. Templates are compact on purpose: keep prettier off them.
 
 export interface Preview {
   id: string;

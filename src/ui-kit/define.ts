@@ -8,11 +8,7 @@ import { UiTileGroup } from './elements/tile-group';
 import { UiToast } from './elements/toast';
 import { UiWindow } from './elements/window';
 
-/*
- * Guarded define of every kit element (contract ui-kit 1.0.0, "Define once"). The editor chunk, the studio entry and the
- * theme editor entry each carry a copy of the kit; whichever runs first defines a tag and the rest keep it (the guard is
- * in define-parts.ts). Call from install-style code, never at module top level of a lazy chunk (lazy-module 1.0.0).
- */
+// Guarded define of every kit element (contract ui-kit 1.0.0, "Define once"); call from install-style code, never at module top level.
 const ELEMENTS: Array<[string, KitElementClass]> = [
   [UI_MENU_TAG, UiMenu],
   [UI_WINDOW_TAG, UiWindow],

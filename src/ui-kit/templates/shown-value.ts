@@ -2,11 +2,7 @@ import { noChange } from 'lit';
 import { Directive, directive, type AttributePart, type Part } from 'lit/directive.js';
 import { setCommittedValue } from 'lit/directive-helpers.js';
 
-/**
- * `.value=${shownValue(text)}` (or an attribute) writes when the element's own value differs from `text`, not when `text`
- * differs from the last render. A value the user dragged or typed past what the host holds is put back on the next render,
- * also when the host holds the value it held before.
- */
+// `.value=${shownValue(text)}` writes when the own value of the element differs from `text`, not when `text` differs from the last render.
 class ShownValue extends Directive {
   render(value: string): string {
     return value;

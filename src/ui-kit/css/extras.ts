@@ -2,10 +2,7 @@ import { css, CSSResult } from 'lit';
 import { kitRow } from './rows';
 import { kitSlider } from './slider';
 
-/*
- * Kit parts that the card editor does not have, derived from its tokens and
- * patterns. Not part of editorSystem: a screen adds them with `kitCss`, so the card editor renders as before.
- */
+// Kit parts that the card editor does not have, derived from its tokens; not in editorSystem, a screen adds them with `kitCss`.
 
 /**
  * The geometry and motion tokens the kit owns (contract KIT_SCOPED_TOKENS). Declared on :host like editorTokens, no

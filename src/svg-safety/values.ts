@@ -1,10 +1,6 @@
 import type { SvgPolicy, SvgValueKind, SvgWalkLimits } from '../contracts/svg-safety';
 
-/*
- * Value rules shared by the icon and image sanitisers: they mirror how a browser reads an SVG
- * presentation attribute and reject script URLs, external url(), CSS escapes, expression() and
- * @import. Every check is an allow-list or a bounded scan.
- */
+// Value rules shared by the icon and image sanitisers: allow-lists and bounded scans that reject script URLs, external url() and @import.
 
 /** Tokens that make a value unsafe whatever its kind: backslash, angle brackets, `//`, comments, script and data URLs. */
 const DENY_RE = /[\\<>]|\/\/|\/\*|javascript:|vbscript:|data:|expression\s*\(|@import/i;

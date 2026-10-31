@@ -14,11 +14,7 @@ import { parseLenient } from '../svg-safety/parse';
 import { IMAGE_POLICY } from '../svg-safety/policy-image';
 import { byteLength, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
 
-/*
- * The image sanitiser: reduces markup to an allow-list of drawing elements and attributes; nothing that runs or fetches survives.
- * Length is capped before any pattern runs; style attributes and <style> rules are dropped unless the editor passes the CSS resolver (`css`).
- * The markup it returns is the only branded markup.
- */
+// The image sanitiser: reduces markup to an allow-list of drawing elements and attributes; its output is the only branded markup.
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const ELEMENTS = new Set(IMAGE_POLICY.elements);

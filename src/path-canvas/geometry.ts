@@ -3,10 +3,7 @@ import type { MessageIndex } from '../contracts/i18n';
 import { locale, m, t } from './i18n';
 import { HIT_MIN_COARSE, HIT_MIN_FINE, LOUPE_OFFSET_PX, LOUPE_SIZE_PX, SEGMENT_BAND_COARSE, SEGMENT_BAND_FINE, type SnapConfig } from '../contracts/path-canvas';
 
-/*
- * Pure maths of the path canvas: the view (frame units <-> CSS px), hit sizes, snapping, keyboard
- * steps, the touch loupe's place and the texts the canvas reads out. No DOM, no lit.
- */
+// Pure maths of the path canvas: the view, hit sizes, snapping, keyboard steps, the touch loupe place and the texts it reads out.
 
 /** zoom = CSS px per frame unit across (and down, unless `zy` says otherwise); (x, y) = where frame coordinate 0, 0 sits in the canvas (CSS px). */
 export interface View {

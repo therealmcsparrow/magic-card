@@ -5,11 +5,7 @@ import { kitMenuElementCss } from '../css/elements';
 import { isGlyphName, glyph, type GlyphName } from '../glyphs';
 import { placeAtPoint, placeAtRect, showTop } from '../place';
 
-/*
- * <mc-ui-menu> (contract ui-kit 1.0.0): action, overflow and context menu. Data API and events of <mc-path-menu>
- * (path-canvas): `items`, 'mc-menu-pick', 'mc-menu-close'. Top layer through the Popover API, a fixed-position
- * fallback without it. No strings of its own: every label comes from the caller.
- */
+// <mc-ui-menu> (contract ui-kit 1.0.0): action, overflow and context menu with the data API and events of <mc-path-menu>.
 
 const M = 8;
 

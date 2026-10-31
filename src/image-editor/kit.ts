@@ -3,11 +3,7 @@ import type * as Import from '../svg-editor/import';
 import type * as Views from '../svg-editor/views';
 import type * as Library from '../svg-editor/library';
 
-/*
- * The functions of the svg-editor chunk that the image editor uses. The shell hands them over when it creates the
- * image editor instead of the chunk importing those modules: a module another chunk imports can no longer be merged into
- * the editor's own, which costs the svg-editor chunk more than the functions weigh.
- */
+// The svg-editor chunk functions the image editor uses, handed over by the shell when it creates the image editor.
 export interface Kit {
   blankDoc: typeof Model.blankDoc;
   isOff: typeof Model.isOff;

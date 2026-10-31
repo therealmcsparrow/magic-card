@@ -2,10 +2,7 @@ import type { SvgImageApi } from '../contracts/svg-image';
 import type { Kit } from '../image-editor/kit';
 import type { ImageShell, ImageUi } from './image-seam';
 
-/*
- * Loads the image-editor chunk together with the svg-image chunk; the only import() of the image-editor chunk.
- * Returns null on failure or after 8 s; the next call tries again.
- */
+// Loads the image-editor chunk with the svg-image chunk (its only import()); null on failure or after 8 s.
 
 const TIMEOUT_MS = 8000;
 type Entry = (shell: ImageShell, api: SvgImageApi, kit: Kit) => ImageUi;

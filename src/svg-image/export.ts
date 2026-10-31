@@ -1,10 +1,6 @@
 import { parseImage, serializeImage } from './sanitize';
 
-/*
- * The SVG sinks that handle library-image markup for the editor chunks: sanitised nodes, a download file and a
- * raster thumbnail. The editors call these through the chunk's api; they hold no sink of their own. Every function
- * sanitises its input first, in this module's own chunk.
- */
+// The SVG sinks for library-image markup: sanitised nodes, a download file and a raster thumbnail; each sanitises its input first.
 
 const SVG_TYPE = 'image/svg+xml';
 /** Main and Accent as a picture can have them: it has no page styles, so theme variables become these colours. */

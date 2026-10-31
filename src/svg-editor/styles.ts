@@ -4,10 +4,7 @@ import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitCss } from '../ui-kit/css/extras';
 import { kitLip } from '../ui-kit/css/lip';
 
-/*
- * Styles of <mc-svg-editor>: the kit supplies tokens and primitives; this holds layout only (canvas stack, tree row drag states, responsive rules).
- * Layout follows the layer width (data-layout).
- */
+// Styles of <mc-svg-editor>: layout only (canvas stack, tree row drag states, responsive rules); the kit supplies tokens and primitives.
 export const editorStyles: CSSResult[] = [
   editorTokens,
   editorPrimitives,

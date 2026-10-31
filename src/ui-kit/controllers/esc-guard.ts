@@ -1,10 +1,6 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 
-/*
- * EscGuard: the three-layer Escape rule of svg-editor 1.0.0. While the host is connected every ancestor
- * <dialog> (the card dialog of Home Assistant) ignores its `cancel`, so Escape cannot close it from under
- * the editor. The host decides what Escape does and calls EscGuard.stop(e) for the key.
- */
+// EscGuard: the three-layer Escape rule of svg-editor 1.0.0; ancestor <dialog> cancels are ignored while the host is connected.
 export class EscGuard implements ReactiveController {
   private dialogs: Array<[HTMLDialogElement, EventListener]> = [];
 

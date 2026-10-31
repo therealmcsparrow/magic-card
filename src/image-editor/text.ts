@@ -2,10 +2,7 @@ import type { EditPath } from '../contracts/path-model';
 import { IMAGE_FONT_FAMILIES, IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import type { Box, Flag } from './paint';
 
-/*
- * Text layers: a layer whose placeholder path is the text rectangle and whose words are in `look.text`.
- * Written as plain <text> with <tspan> lines, anchored by alignment.
- */
+// Text layers: a layer whose placeholder path is the text rectangle and whose words are in `look.text`, written as <text> with <tspan> lines.
 
 export interface TextData {
   /** The words; a new line is "\n". */

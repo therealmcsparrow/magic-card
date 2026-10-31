@@ -6,11 +6,7 @@ import { imageCommands } from './commands';
 import { t } from './i18n';
 import { readImage } from './reader';
 
-/*
- * Chunk entry of dist/magic-card-image-transfer.js (contract preset-transfer 1.2.0, "The image-transfer chunk"). The
- * image side of the transfer panel and the library view: the reader of image files, the images_* calls, the row text
- * and the image-only words. It holds no SVG sink; thumbnails come from the svg-image api it is given.
- */
+// Chunk entry of dist/magic-card-image-transfer.js (preset-transfer 1.2.0): the image side of the transfer panel and the library view.
 
 type NameArgs = { name: string | number };
 

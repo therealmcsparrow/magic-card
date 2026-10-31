@@ -3,11 +3,7 @@ import { cardStateOf } from '../editor/custom/bridge';
 import { deepClone } from '../utils/deep-merge';
 import { generateId } from '../utils/id-generator';
 
-/**
- * "Add an image module behind the content": an image module with `placement: background` and the layer's reference,
- * appended to the first column of the card (one undo step). The background layer stays. False outside the card editor
- * or on a card with no column to put it in.
- */
+// "Add an image module behind the content": appends an image module with `placement: background` to the first column of the card.
 export function addImageModuleBehind(from: EventTarget, ref: string, aspect?: string): boolean {
   const sm = cardStateOf(from);
   if (!sm) return false;

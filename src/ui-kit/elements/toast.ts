@@ -4,10 +4,7 @@ import { UI_KIT_CONTRACT_REVISION, type UiToastAction } from '../../contracts/ui
 import { kitToast } from '../css/toast';
 import { showTop } from '../place';
 
-/*
- * <mc-ui-toast>: a transient confirmation; show() replaces the message. A role=status live region plus a manual-popover chip.
- * Never takes focus; pauses on hover, focus or press; Escape closes; `dismissLabel` adds a close button.
- */
+// <mc-ui-toast>: a transient confirmation; show() replaces the message. A role=status live region that never takes focus.
 const DEFAULT_MS = 6000;
 
 export class UiToast extends LitElement {

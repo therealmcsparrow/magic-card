@@ -1,10 +1,6 @@
 import type { PathToolsChunk } from '../contracts/path-tools';
 
-/*
- * Loads the path tools chunk (magic-card-path-tools.js) on the first use of a path tool. Used by the SVG editor
- * chunk only, together with the booleans loader. One shared promise; a failure or an 8 s timeout resolves
- * undefined (console.warn) and the next call tries again.
- */
+// Loads the path tools chunk (magic-card-path-tools.js) on the first use of a path tool; used by the SVG editor chunk only.
 
 const TIMEOUT_MS = 8000;
 let pending: Promise<PathToolsChunk | undefined> | undefined;
