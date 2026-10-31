@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Magic Card icon rig: Security camera. Derived from MDI "cctv" (Pictogrammers, Apache-2.0).
+       Pieces in drawing order. The mount is drawn first so the head covers the joint disc.
+       piece 0  mount  static: joint disc (r 2.5 around 16,13), arm and wall bracket
+       piece 1  head   pans:   camera body
+       piece 2  head   pans:   front hood
+       part head = [1, 2], pivot [16, 13] (joint centre). Pan range -12..+8 deg. -->
+  <path id="mount" d="M16 10.5A2.5 2.5 0 0 1 17 15.29V18H22V20H17C15.9 20 15 19.1 15 18V15.29A2.5 2.5 0 0 1 16 10.5Z"/>
+  <g id="head" data-pivot="16 13">
+    <path id="head-body" d="M8.31 9L16.44 4.28C17.45 3.7 18.74 4.05 19.33 5.06L20.71 7.46C21.3 8.47 20.95 9.76 19.94 10.35L11.81 15.04C10.86 15.59 9.63 15.26 9.08 14.31L7.58 11.71C7.03 10.75 7.36 9.53 8.31 9Z"/>
+    <path id="head-hood" d="M6.03 12.03L8.03 15.5L5.5 18.68L2 12.62Z"/>
+  </g>
+</svg>

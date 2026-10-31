@@ -1140,6 +1140,8 @@ Magic Card Utils makes no requests to other websites. Magic Card makes them only
 -   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 23 files, listed under [Loading the other files](#loading-the-other-files). With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
 -   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
+-   A card broke after an update. [MAINTAINING.md](MAINTAINING.md) has the steps to roll back to the version that worked, to see which version runs and to stay on one version.
+-   A card stands still, or Home Assistant says Magic Card was updated. See the [pause reply](documentation/support/README.md#pause-reply) and the [update reply](documentation/support/README.md#update-reply).
 
 ## Development
 

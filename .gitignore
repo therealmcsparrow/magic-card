@@ -41,7 +41,11 @@ Thumbs.db
 *.temp
 .cache/
 *.bak
-assets/
+
+# Assets: only the finished art originals in assets/brand are tracked
+assets/*
+!assets/brand/
+assets/brand/icon-audit/
 
 # TypeScript
 *.tsbuildinfo

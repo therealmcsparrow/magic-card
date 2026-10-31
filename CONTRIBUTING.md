@@ -29,7 +29,7 @@ Other scripts you will use:
 -   `npm run dups` fails when a module that holds state (a top-level `let`, a mutated `const`, a `customElements.define`) ends up in two chunks of the card bundle. Run it after `npm run build` when you move a module between chunks.
 -   `npm run notices` rebuilds the third-party notices. Run it after you add or update a dependency, or CI fails.
 
-Pull requests normally leave `dist/` alone. The maintainer rebuilds it in the release commit.
+Pull requests normally leave `dist/` alone. The maintainer rebuilds it in the release commit. The release steps are in [MAINTAINING.md](MAINTAINING.md#release-steps).
 
 ## Text and translations
 

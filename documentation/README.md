@@ -36,6 +36,12 @@ This folder documents the Magic Card editor and every option the card supports. 
 | --- | --- |
 | [Loading and size](loading-and-size/README.md) | Which file loads when, the sizes of the card file, the notices a card shows when a part fails, offline and failed loads, and how to undo a remembered pause |
 
+## Support
+
+| Folder | Covers |
+| --- | --- |
+| [Support](support/README.md) | Ready replies for a card that stands still after a pause and for the "Magic Card was updated" message |
+
 ## Languages and accessibility
 
 | Folder | Covers |
