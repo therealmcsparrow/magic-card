@@ -40,7 +40,7 @@ The installer and the browser each tell you something.
 
 Install the version you want with the **Redownload** steps above. Then stop Home Assistant from offering the next update.
 
-1. Open **Settings > System > Updates**. (unverified)
+1. Open **Settings > System > Updates**.
 2. Find the Magic Card update and open it. (unverified)
 3. Choose **Skip**. (unverified)
 
