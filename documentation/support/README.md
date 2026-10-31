@@ -8,4 +8,4 @@ Did you press Pause? Press the Pause motion button on the card again to play it.
 
 ## Update reply
 
-After an update, the card file and its parts can come from different releases. The card then shows "Magic Card was updated. Reload the page to see this part. The rest of this card works." (the text of the key `card.chunk-notice.magic-card-was-updated-reload-the-page`). Press **Reload page**, or hard refresh the browser, and the notice goes away.
+After an update, the card file and its parts can come from different releases. The card then shows "Magic Card was updated. Reload the page to see this part. The rest of this card works." (the text of the key `card.chunk-notice.magic-card-was-updated-reload-the-page`). Press **Reload page**, and the notice goes away. If it stays, clear the cache. In a browser, clear the cached images and files for this site, then reload. On a wall tablet or in the Home Assistant app, open the app settings, go to Debugging, choose Reset frontend cache, then reopen the dashboard.
