@@ -51,6 +51,11 @@ jobs:
           npm run manifest:selftest
           npm run manifest
 
+      - name: Speed and size claims in the docs have their evidence
+        run: |
+          npm run claims:selftest
+          npm run claims
+
       - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
         # parse and token rules only; the debt-growth check against main is the validate workflow's (the checkout here has no main to compare with)
         run: |

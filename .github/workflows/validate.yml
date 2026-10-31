@@ -35,6 +35,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Speed and size claims in the docs have their evidence
+        run: |
+          npm run claims:selftest
+          npm run claims
       - name: Type check (generated message keys included)
         run: npm run typecheck
       - name: Translations and message keys (drift, stale hashes on touched keys)

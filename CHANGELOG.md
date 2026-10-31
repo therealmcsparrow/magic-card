@@ -8,6 +8,8 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ### Added
 -   **Roll back if an update breaks a card.** [MAINTAINING.md](MAINTAINING.md) now explains how to go back to the version that worked, check which version runs and stay on one version, using only the HACS and Home Assistant screens. It also holds the release steps. The [support page](documentation/support/README.md) has ready replies for a paused card and for the "Magic Card was updated" message.
+-   **Report a paused card in Discussions.** The [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports) category has a form for a card that stands still or a focus problem. It asks for your Magic Card version, what you saw and what you did.
+-   **Size claims show how they were measured.** The [Loading and size](documentation/loading-and-size/README.md#how-we-measured) page now has a box that says which two releases were compared and how. A check that runs before every release makes sure a size claim in the README, this changelog or those pages names a release and gives both gzip and Brotli bytes, and that a speed claim links the tablet baseline. Until a timed run on a real device exists, Magic Card makes no claim about speed.
 
 ## 2026.10.12-beta.13 (2026-10-30)
 
@@ -22,7 +24,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## 2026.10.12-beta.12 (2026-10-29)
 
 ### Improved
--   **Plain cards load faster.** The main file is smaller, because code that only some cards use now sits in two shared files, `magic-card-history.js` and `magic-card-shape-path.js`. A plain card still loads nothing else. A card that needs one of them fetches it with its own feature file. See [Loading and updates](documentation/loading-and-size/README.md).
+-   **Plain cards download less.** The main file is smaller: 73,017 B gzip and 62,433 B Brotli, against 84,683 B gzip and 72,222 B Brotli in 2026.10.12-beta.11 (see [how we measured](documentation/loading-and-size/README.md#how-we-measured)), because code that only some cards use now sits in two shared files, `magic-card-history.js` and `magic-card-shape-path.js`. A plain card still loads nothing else. A card that needs one of them fetches it with its own feature file. See [Loading and updates](documentation/loading-and-size/README.md).
 -   **Card effects arrive after the card text.** Card effects now appear just after the card text, with a short fade, so the text is readable first.
 -   **Dutch wording.** Several Dutch texts are corrected, and counts such as "1 shape" and "2 shapes" now use the right singular or plural form in the editors, the animation studio and the theme editor.
 -   **Translators.** The text files can be exchanged with Weblate or Crowdin. See [Translating](documentation/translating/README.md).

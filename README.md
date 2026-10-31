@@ -1142,6 +1142,8 @@ Magic Card Utils makes no requests to other websites. Magic Card makes them only
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 -   A card broke after an update. [MAINTAINING.md](MAINTAINING.md) has the steps to roll back to the version that worked, to see which version runs and to stay on one version.
 -   A card stands still, or Home Assistant says Magic Card was updated. See the [pause reply](documentation/support/README.md#pause-reply) and the [update reply](documentation/support/README.md#update-reply).
+-   To report a card that stands still, post in [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports).
+-   How a size claim was measured and which cases we test: see [how we measured](documentation/loading-and-size/README.md#how-we-measured) and [bad cases we test](documentation/loading-and-size/README.md#bad-cases-we-test).
 
 ## Development
 

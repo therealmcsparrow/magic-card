@@ -68,3 +68,42 @@ If the browser does not allow the card to use storage, a pause lasts only for th
 Update through HACS, then hard refresh the browser. HACS does not delete the files of an earlier release. Once the update is done, you can delete the older files that the new release no longer uses. Keep every file of the new release.
 
 For a manual install, copy the whole new release, including the `.br` and `.gz` copies. When you replace a file, replace or delete its three copies together, because an old `.br` file is sent in place of a new `.js` file.
+
+## How we word size and speed claims
+
+A claim about size names the release it compares, and gives the gzip and the Brotli bytes. A claim about speed links to a measured run on a named device. Until a timed run exists, Magic Card makes no speed claim. A script, `npm run claims`, reads the README, the changelog and these pages on every push and before every release, and it fails when a claim lacks one of these.
+
+## How we measured
+
+The box has one column for the size check and one for the tablet timing, so a figure from one never sits under the other.
+
+| Field | Size of `magic-card.js` | Tablet timing |
+| --- | --- | --- |
+| Release compared | `v2026.10.12-beta.12` against `v2026.10.12-beta.11` | `v2026.10.12-beta.12` against `v2026.10.12-beta.11` |
+| Device | Not used. The bytes do not depend on a device. | No timed run yet |
+| Browser | Not used. | No timed run yet |
+| Network | Not used. | No timed run yet |
+| Cache state | Not used. | No timed run yet. Cold and warm runs are kept apart, and a warm figure is never set against a cold one. |
+| Date | 31 October 2026 | No timed run yet |
+| Gzip bytes | Listed under the box | Not used |
+| Brotli bytes | Listed under the box | Not used |
+
+The bytes of `magic-card.js`, as measured on 31 October 2026:
+
+-   Release 2026.10.12-beta.12: 73,017 B with gzip and 62,433 B with Brotli (225,204 B raw).
+-   Release 2026.10.12-beta.11: 84,683 B with gzip and 72,222 B with Brotli (264,566 B raw).
+
+How the bytes are taken: the committed `dist/magic-card.js` at each named release tag, compressed with gzip at level 9 and with Brotli at quality 11, on the Node version the size gate pins (24.22.0). A figure from any other Node version is not quoted, because another version can give other bytes for the same file.
+
+The tablet row stays on "No timed run yet" until a timed run on a real wall tablet is written up.
+
+## Bad cases we test
+
+These are the situations where a part cannot load or a stored value is wrong. The check is a script in `tests/kernel/browser/`, run against a copy of the released files. Every case passes today. A case that fails is a gap, and it is listed as one here.
+
+| Case | What you see | Result | Check |
+| --- | --- | --- | --- |
+| The connection drops while parts load | A notice per part, "did not load. The rest of this card works.", with **Try again**. Once the connection is back, **Try again** loads the parts and the notices go. | Pass | `bad-cases.mjs`, case `drop` |
+| Old card file with newer parts on the server | "Magic Card was updated. Reload the page to see this part." with **Reload page**. The rest of the card is drawn. | Pass | `bad-cases.mjs`, case `stale`; `skew-retry.mjs`, case `skew` |
+| A part from another build | The same "was updated" notice with **Reload page** only. The part is asked for once and not retried. | Pass | `bad-cases.mjs`, case `other-build` |
+| A stored pause value that is not valid | Only the stored value `1` pauses the card. Anything else plays, and the Pause button still works afterwards. | Pass | `bad-cases.mjs`, case `junk-pause` |
