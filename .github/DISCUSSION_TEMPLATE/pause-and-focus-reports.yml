@@ -1,0 +1,59 @@
+title: "Pause and focus: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form creates a public post. Anyone can read it, and it shows your GitHub username. Do not share access tokens, passwords, your Home Assistant web address, your location, or names or faces of people in your household. Cut those out of screenshots and YAML first. You can edit or delete your post at any time.
+
+        Fields marked (required) must be filled in. The rest are optional.
+
+  - type: markdown
+    attributes:
+      value: |
+        ## A filled-in example
+
+        - **Where I use Magic Card:** a wall tablet in the hallway, with a large system font size.
+        - **What I looked at:** the Pause button on an animated card.
+        - **What happened:** I paused the card, reloaded the page and the card was moving again. On another card, I tabbed to the Pause button with a keyboard and could not see a focus ring.
+        - **What I wanted instead:** the pause to be remembered after a reload, and a clear focus ring on the button.
+
+        Write your own report in the fields below. Do not copy the example.
+
+  - type: input
+    id: where
+    attributes:
+      label: "Where you use Magic Card (required)"
+      description: "Desktop, phone, tablet or wall panel, in a few words. Add anything that may matter: a screen reader, switch access, a large system font size or reduced motion turned on."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: "What is your report about? (required)"
+      options:
+        - "The Pause button or the remembered pause"
+        - "Keyboard focus ring or focus order"
+        - "Both"
+    validations:
+      required: true
+
+  - type: textarea
+    id: happened
+    attributes:
+      label: "What happened (required)"
+      description: "What you did, and what you saw. For focus, say which card or button, and whether the focus ring was hidden or hard to see."
+    validations:
+      required: true
+
+  - type: textarea
+    id: wanted
+    attributes:
+      label: "What you wanted instead"
+      description: "Optional. Describe the result you were hoping for."
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: "Anything else"
+      description: "Optional. Screenshots or card YAML help. Remove private details before you paste them."
