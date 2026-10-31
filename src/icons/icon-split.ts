@@ -1,11 +1,8 @@
 import type { IconGeometry } from './icon-source';
 import { cubicsToPath, toCubicSubpaths, type Cubic, type Pt } from '../path/core';
 
-/*
- * Auto-split of an icon into pieces for icon rigs. A single path splits into its subpaths (holes
- * and islands stay with their outer piece); several paths split by element, accent and stroked
- * shapes on their own. Pieces are numbered in drawing order.
- */
+// Auto-split of an icon into pieces for icon rigs. A single path splits into its subpaths (holes and islands stay with
+// their outer piece); several paths split by element. Pieces are numbered in drawing order.
 
 export interface SplitPiece {
   /** Index of the piece (what `RigPart.from` refers to). */

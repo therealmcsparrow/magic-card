@@ -94,12 +94,7 @@ import type { AnimSvgDialog } from './draw-svg-dialog';
 import { t, m } from '../i18n';
 import type { MessageIndex as LabelId } from '../../contracts/i18n';
 
-/**
- * The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx). The
- * studio bundle must not define the card's elements: mc-ring / mc-seasonal are used by tag only
- * (the card bundle, loaded first, defines them). A v2 slot may carry its own built-in shape
- * (`data-s`) or symbol (particles-v2 ParticleSlotV2).
- */
+/** The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx); mc-ring / mc-seasonal are used by tag only. */
 function renderFx(anim: ResolvedAnimations): TemplateResult {
   const symbol = (s: FxLayer['symbol'] | ParticleSlotV2['symbol']) => (!s ? nothing : 'icon' in s ? html`<ha-icon .icon=${s.icon}></ha-icon>` : s.text);
   // the card's seasonal chunk defines <mc-seasonal>; the element upgrades in place once it is loaded

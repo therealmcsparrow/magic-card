@@ -9,11 +9,9 @@ import { safeColor } from '../../utils/safe-css';
 import { blurOf, cssUrl, gradientCss, opacityOf, patternCss, positionCss, repeatCss, safeImageUrl, sanitiseStates, sizeCss } from './values';
 import { currentFx, liveStacks } from './fx-slot';
 
-/*
- * <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
- * Every URL, colour and gradient is validated before use; per-instance CSS goes through the CSSOM;
- * motion and camera refresh belong to the BgStackRun handed over by fx-slot.ts.
- */
+// <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
+// Every URL, colour and gradient is validated before use; per-instance CSS goes through the CSSOM;
+// motion and camera refresh belong to the BgStackRun handed over by fx-slot.ts.
 
 const TAG = 'mc-bg-stack';
 const FADE_MS = 300;

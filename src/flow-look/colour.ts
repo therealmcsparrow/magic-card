@@ -4,10 +4,9 @@ import { at, fmt } from './sampler';
 import { defaultStroke, unmix, type LineCtx, type Paint, type StrokeSpec } from './registry';
 import { memo, sampled } from './lines/util';
 
-// Gradient paint of the flow-look chunk: `color` to `colorTo` along the travel direction while flowing. A straight centre
-// line uses one userSpaceOnUse linearGradient; any other route uses N opaque overlapping windows of the same `d` in one
-// <g>. A dashed, dotted or liquid stroke on such a route moves its dash pattern to a mask. Colours the chunk cannot mix
-// (var(), names, color-mix) blend two whole paths under a mask of grey windows.
+// Gradient paint of the flow-look chunk: `color` to `colorTo` along the travel direction while flowing. A straight
+// centre line uses one userSpaceOnUse linearGradient; any other route uses N opaque overlapping windows of the same `d`.
+// Colours the chunk cannot mix (var(), names, color-mix) blend two whole paths under a mask.
 
 export type RGBA = [number, number, number, number];
 

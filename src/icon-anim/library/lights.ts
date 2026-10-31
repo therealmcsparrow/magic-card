@@ -1,12 +1,9 @@
 import { dim, k, osc, te, t, type Spec } from './build';
 import { m } from './i18n';
 
-/*
- * P4 entries, theme light (brand artist's p4-spec.json, Living rigs): slow breathing glow,
- * opacity 0.6..1, rays stagger outward, no hard flashes. Checked on the parts sheet: spotlight
- * piece 3 is the lamp's front (lens), the chandelier sways as a whole from its canopy, and the
- * pendant's bulb hangs under the right lamp, so they swing as one.
- */
+// Library entries, theme light: slow breathing glow, opacity 0.6..1, rays stagger outward, no hard flashes.
+// Checked on the parts sheet: spotlight piece 3 is the lamp's front, the chandelier sways as a whole from its canopy,
+// and the pendant's bulb hangs under the right lamp, so they swing as one.
 
 export const LIGHTS: Spec[] = [
   {

@@ -2,10 +2,8 @@ import { html, nothing, svg, SVGTemplateResult, TemplateResult } from 'lit';
 import { safeColor } from '../utils/safe-css';
 import { pauseOffscreen } from './offscreen';
 
-/*
- * Animated weather icons: hand-drawn 64×64 SVGs for the weather conditions, used with
- * `animated_icons: true`. Motion is CSS only, reduced motion shows the still frame, off-screen pauses.
- */
+// Animated weather icons: hand-drawn 64×64 SVGs for the weather conditions, used with `animated_icons: true`.
+// Motion is CSS only, reduced motion shows the still frame, off-screen pauses.
 
 export const WEATHER_CONDITIONS = [
   'clear-night', 'cloudy', 'exceptional', 'fog', 'hail', 'lightning', 'lightning-rainy', 'partlycloudy',

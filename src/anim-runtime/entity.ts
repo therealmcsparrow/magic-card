@@ -1,10 +1,7 @@
 import type { HassEntity } from '../types';
 
-/*
- * Entity reads of the runtime chunk. Same rules as src/utils/entity-value.ts (isUnavailable,
- * entityNumber), kept here so the chunk does not import those card modules: every card module the
- * chunk imports has to be exposed by magic-card.js, which costs card bytes.
- */
+// Entity reads of the runtime chunk, same rules as src/utils/entity-value.ts (isUnavailable, entityNumber).
+// Kept here so the chunk imports no card module, each of which would have to be exposed by magic-card.js.
 
 const UNAVAILABLE = new Set(['unavailable', 'unknown']);
 

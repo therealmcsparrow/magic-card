@@ -1,10 +1,9 @@
 import type { CompiledTrack, CompiledV2 } from '../anim-studio/compile-v2';
 import type { ApplyCtx } from './types';
 
-// v2 runtime, card-part targets: tracks on `element`, `icon`, `name`, `state` and `background` play on the module's marked
-// parts (`data-mc-part`) through rules in the runtime sheet scoped by the wrapper (`data-mc-tm`). Keyframes are shared per
-// run key and counted. Rows, columns and the card only take element and background. A module without its own background
-// element gets a generated layer so a background track moves alone.
+// v2 runtime, card-part targets: tracks on `element`, `icon`, `name`, `state` and `background` play on the module's
+// marked parts (`data-mc-part`) through rules in the runtime sheet scoped by the wrapper (`data-mc-tm`).
+// Keyframes are shared per run key and counted; rows, columns and the card only take element and background.
 
 /** Card-part targets this module plays (rig targets are rig.ts's). */
 const PART_TARGETS = new Set(['element', 'icon', 'name', 'state', 'background']);

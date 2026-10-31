@@ -11,11 +11,10 @@ export { BUILD_VERSION as BUILD } from '../utils/build-version';
 export const install = (): void => {};
 
 /*
- * The particles module (particles-v2 1.0.0): the lazy chunk dist/magic-card-particles.js
- * (webpackChunkName "particles", loaded by src/utils/particles-loader.ts), and imported directly
- * by the studio bundle. Loading it turns on `particles.sim` checking in the importing bundle's
- * validateAnimationDoc (lenient on the card, strict in the studio). The compile hook is `compile`;
- * the card registers it (useParticlesCompiler).
+ * The particles module (particles-v2 1.0.0): the lazy chunk dist/magic-card-particles.js (loaded by
+ * src/utils/particles-loader.ts), also imported directly by the studio bundle. Loading it turns on
+ * `particles.sim` checking in the importing bundle's validateAnimationDoc (lenient on the card, strict
+ * in the studio). The compile hook is `compile`; the card registers it (useParticlesCompiler).
  */
 
 useParticlesValidator(validateSim);

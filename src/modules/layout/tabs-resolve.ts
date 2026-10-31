@@ -1,12 +1,9 @@
 import { ConditionsService } from '../../services/conditions-service';
 import type { DisplayCondition, HomeAssistant } from '../../types';
 
-/*
- * The design of a tabs module with its matching conditional rules applied, for the tab_ keys only (the card sheet
- * resolves the css keys itself). Flat keys override, tab_active and tab_disabled merge key by key, and
- * tab_disabled_tabs adds up: two rules can each disable their own tab, and a rule cannot enable a tab the design
- * disables. Nothing here reads config text beyond the key names it compares.
- */
+// The design of a tabs module with its matching conditional rules applied, for the tab_ keys only. Flat keys override,
+// tab_active and tab_disabled merge key by key, and tab_disabled_tabs adds up: a rule cannot enable a tab the design
+// disables. Nothing here reads config text beyond the key names it compares.
 
 const MAX_RULES = 64;
 /** Most disabled tab positions read from a design. */

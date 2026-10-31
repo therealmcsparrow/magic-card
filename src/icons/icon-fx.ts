@@ -3,10 +3,8 @@ import { cssTime } from '../utils/safe-css';
 import { resolveDeviceAnim } from './device-anim';
 import { clamp, colour, entityLevel, FX_RANGE, mix, num, share } from './fx-values';
 
-/*
- * `icon_fx` resolved against the entity states: what <mc-svg-icon> draws. Pure (no DOM), so the
- * value / colour math is unit-tested on its own.
- */
+// `icon_fx` resolved against the entity states: what <mc-svg-icon> draws.
+// Pure (no DOM), so the value / colour math is unit-tested on its own.
 
 export type FillDirection = 'up' | 'down' | 'left' | 'right';
 export type ColorStyle = 'solid' | 'duotone' | 'gradient' | 'value';

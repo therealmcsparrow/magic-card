@@ -7,12 +7,9 @@ import { LANE_BY_ID, laneLabel, type LaneId } from './keyframes-utils';
 import type { LayerRows } from './layer-row';
 import { t } from '../i18n';
 
-/*
- * Keyframe tracks as lane rows: under a target row (card part, icon part, group,
- * shape) a disclosure lists one row per animated property. The disclosure state is `LayerView.open`
- * (keyed by the target row); a lane has hide / solo / lock but no order and no move. Choosing one
- * selects that track in the timeline.
- */
+// Keyframe tracks as lane rows: under a target row a disclosure lists one row per animated property.
+// The disclosure state is `LayerView.open`; a lane has hide / solo / lock but no order and no move.
+// Choosing one selects that track in the timeline.
 
 export const laneKey = (target: TargetRef, lane: string): LayerKey => `lane:${target}|${lane}`;
 

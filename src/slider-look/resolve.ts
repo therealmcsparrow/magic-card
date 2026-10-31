@@ -2,11 +2,8 @@ import type { SliderModuleConfig } from '../types';
 import type { SliderThumb, SliderTrackStyle } from '../contracts/slider-look';
 import { safeColor } from '../utils/safe-css';
 
-/*
- * Config to a plain, clamped look model (CFG rules): every number is narrowed and clamped, every
- * colour goes through safeColor, every enum falls back to its default. Style keys of another style
- * are kept in YAML and ignored here.
- */
+// Config to a plain, clamped look model (CFG rules): every number is narrowed and clamped, every colour goes through
+// safeColor, every enum falls back to its default. Style keys of another style are kept in YAML and ignored here.
 
 export const STYLES: readonly SliderTrackStyle[] = ['standard', 'thin', 'pill', 'segmented', 'glass', 'big-fill'];
 const THUMBS: readonly SliderThumb[] = ['line', 'circle', 'pill', 'square', 'none'];

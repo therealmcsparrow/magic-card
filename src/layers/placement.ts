@@ -4,10 +4,8 @@ import { safeColor } from '../utils/safe-css';
 import { isLayered, placementOf } from './layer-kind';
 import type { CardModule } from '../types';
 
-/*
- * Layer placement: which children of a container are in flow, behind or on top, and what each
- * wrapper gets. Pure: no lit, no DOM. Every value is clamped, allow-listed or strictly parsed.
- */
+// Layer placement: which children of a container are in flow, behind or on top, and what each wrapper gets.
+// Pure: no lit, no DOM. Every value is clamped, allow-listed or strictly parsed.
 
 const CARD_COLOR = 'var(--ha-card-background, var(--card-background-color, #fff))';
 const OFFSET = /^\s*(-?\d{1,6}(?:\.\d{1,3})?)(px|%)\s*$/;

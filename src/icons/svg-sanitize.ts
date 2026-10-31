@@ -5,11 +5,9 @@ import { ICON_MAX_BYTES, ICON_MAX_DEPTH, ICON_POLICY } from '../svg-safety/polic
 import { byteLength, cleanIconValue, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
 import { fmt, multiply, num, parseTransform, shapePath, transformPath, type Matrix } from './svg-geometry';
 
-/*
- * Own SVG icons: user markup reduced to an allowlist of drawing elements and attributes, plus the
- * shapes as path data. Nothing that runs or fetches survives. Paint styles become presentation
- * attributes only when the caller passes the resolver as `css`; otherwise styles are dropped.
- */
+// Own SVG icons: user markup reduced to an allowlist of drawing elements and attributes, plus the shapes as path data.
+// Nothing that runs or fetches survives. Paint styles become presentation attributes only when the caller passes
+// the resolver as `css`; otherwise styles are dropped.
 
 /** A stroked shape: its outline as path data and the stroke (width in viewBox units, transforms applied). */
 export interface StrokeShape {

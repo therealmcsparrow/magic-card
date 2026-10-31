@@ -1,11 +1,9 @@
 import { osc, SPIN, te, t, type Spec } from './build';
 import { m } from './i18n';
 
-/*
- * P4 entries, animals and weather (brand artist's p4-spec.json, Living rigs): organic follow-through,
- * nothing loops faster than 0.5 s. Animals use the pseudo-domain `animal` (their HA domain stays in
- * the tags). Checked on the parts sheet: in MDI's bee-flower piece 0 is the bee and piece 1 the flower.
- */
+// Library entries, animals and weather: organic follow-through, nothing loops faster than 0.5 s. Animals use the
+// pseudo-domain `animal` (their HA domain stays in the tags).
+// Checked on the parts sheet: in MDI's bee-flower piece 0 is the bee and piece 1 the flower.
 
 export const NATURE: Spec[] = [
   {

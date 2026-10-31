@@ -49,9 +49,8 @@ import { loadPresetCatalogue } from './preset-catalogue-loader';
 import { t, tr, m, locale, type MessageId } from './i18n';
 
 // The animation studio `<magic-card-animation-studio>`: library and editor. The host does the storage; the studio emits
-// mc-anim-save, mc-anim-duplicate, mc-anim-delete and mc-anim-select (bubbling, composed). A host sets `detail.result` to
-// its promise; the studio awaits it and shows a rejection's message and field errors. Unsaved edits are kept in
-// sessionStorage per animation id.
+// mc-anim-save, mc-anim-duplicate, mc-anim-delete and mc-anim-select (bubbling, composed) with `detail.result` a promise.
+// Unsaved edits are kept in sessionStorage per animation id.
 
 type Dialog =
   | { type: 'delete'; doc: AnimationDoc; uses: number | undefined; sequences: AnimationDoc[] }

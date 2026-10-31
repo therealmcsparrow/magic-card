@@ -5,12 +5,9 @@ import type { Clip, ClipWhen } from '../model-v2-core';
 import { sequenceableDoc } from './sequence-utils';
 import { t, m, type MessageId } from '../i18n';
 
-/*
- * Pure helpers of the States panel (editors/states-panel.ts): clip conditions as a kind plus a
- * value, the animations a clip may play, and list edits. Clips play list animations only
- * (keyframes and path documents, motion presets); a document that has states of its own is left
- * out (no recursion: the card would skip that clip).
- */
+// Pure helpers of the States panel (editors/states-panel.ts): clip conditions as a kind plus a value,
+// the animations a clip may play, and list edits. Clips play list animations only; a document with states of its
+// own is left out (no recursion).
 
 export const CLIPS_MAX = 12;
 

@@ -5,11 +5,8 @@ import { slug, uniqueId } from './ids';
 import { attributeWhat, elementWhat, removedNote } from './kinds/icon';
 import { note } from './types';
 
-/*
- * The one import() of the image-transfer chunk, together with the svg-image chunk whose api it
- * uses. Resolves undefined, never rejects (import failure, LOAD_TIMEOUT_MS, unknown revision);
- * the next call tries again.
- */
+// The one import() of the image-transfer chunk, together with the svg-image chunk whose api it uses.
+// Resolves undefined, never rejects (import failure, LOAD_TIMEOUT_MS, unknown revision); the next call tries again.
 
 /** The helpers and shared messages the chunk is handed once; it imports none of them. */
 export const imageTransferKit: ImageTransferKit = {

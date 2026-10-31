@@ -12,9 +12,8 @@ import { m } from './library/i18n';
 import { fold as foldText } from '../i18n/fold';
 
 // The animated icon library (contract icon-library): ready animations for the icons of most Home Assistant domains plus
-// pseudo-domain categories. Each entry builds a keyframes document with a rig from the bundled MDI path (`rig.svg`) or cut
-// `own` paths (library/rigs.ts). This file holds the first entries; the rest live in library/. Studio bundle and lazy icon
-// animator chunk only, never magic-card.js.
+// pseudo-domain categories, each a keyframes document with a rig. This file holds the first entries; the rest live in library/.
+// Studio bundle and lazy icon animator chunk only, never magic-card.js.
 
 export type { LibraryEntry } from '../contracts/icon-library';
 export { padKeys, svgOf } from './library/build';

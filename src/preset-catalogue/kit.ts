@@ -4,10 +4,8 @@ import type { MessageIndex } from '../contracts/i18n';
 import { t } from './i18n';
 import type { ParticleFlow, ParticlePhysics, ParticleColliders, ParticleRanges, ParticlesSim, SubEmitter, WeightedShape, BuiltinShape, Range } from '../contracts/particles-v2';
 
-/*
- * Builders shared by the catalogue files. This file imports types only, so nothing from either
- * bundle is copied into the chunk. Every builder returns a fresh object per call.
- */
+// Builders shared by the catalogue files. This file imports types only, so nothing from either bundle is copied
+// into the chunk. Every builder returns a fresh object per call.
 
 /** Theme pairs from p4-spec.json motion.themes (icon colour 3:1 on dark and light; glow decorative). */
 export const THEME = {

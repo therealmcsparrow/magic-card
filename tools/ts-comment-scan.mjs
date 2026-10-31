@@ -5,6 +5,22 @@ const DIRECTIVE = /^(?:\/\/+|\/\*+|\*)\s*(?:webpackChunkName|webpackIgnore|webpa
 const IMPORT_START = /^(?:import(?!\s*\()\b|export\s+(?:type\s+)?(?:\*|\{)[^;]*\bfrom\b|export\s+(?:type\s+)?(?:\*|\{)\s*$)/;
 const IMPORT_END = /['"]\s*(?:with\s*\{[^}]*\}\s*)?;?\s*(?:\/\/.*)?$/;
 
+/** Blanks the contents of single-line string and template literals so `/*` or `//` inside them is not read as a comment. */
+function blankStrings(line) {
+  let out = '';
+  let q = '';
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (q) {
+      if (c === '\\') { out += '  '; i++; } else if (c === q) { q = ''; out += c; } else out += ' ';
+    } else {
+      if (c === '"' || c === "'" || c === '`') q = c;
+      out += c;
+    }
+  }
+  return out;
+}
+
 /** Returns [{ start, end, lines, header }] for every comment block, directive lines excluded. */
 export function commentBlocks(text) {
   const lines = text.split(/\r?\n/);
@@ -47,8 +63,9 @@ export function commentBlocks(text) {
     } else if (firstCode < 0) {
       firstCode = i + 1;
     }
-    const open = t.lastIndexOf('/*');
-    if (open > 0 && !t.includes('*/', open + 2)) inBlock = true;
+    const code = blankStrings(t);
+    const open = code.lastIndexOf('/*');
+    if (open > 0 && !code.includes('*/', open + 2)) inBlock = true;
   }
   flush();
   const first = blocks[0];

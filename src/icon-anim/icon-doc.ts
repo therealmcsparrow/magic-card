@@ -3,10 +3,8 @@ import type { IconGeometry } from '../icons/icon-source';
 import { splitIcon, unionBox, type SplitPiece } from '../icons/icon-split';
 import { t } from '../i18n/labels';
 
-/*
- * Icon animation documents (icon animator core, shared by the studio's icon mode and the Design
- * tab's quick animator): an icon split into parts, ready for part presets. Pure, no DOM.
- */
+// Icon animation documents (icon animator core, shared by the studio's icon mode and the Design tab's quick animator):
+// an icon split into parts, ready for part presets. Pure, no DOM.
 
 /** Most parts a rig holds (model-v2 V2_CAPS.parts; repeated so this file needs no validator). */
 export const RIG_PART_CAP = 64;

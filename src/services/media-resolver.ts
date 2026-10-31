@@ -1,10 +1,8 @@
 import type { HomeAssistant, MediaResolveResult } from '../types';
 
-/**
- * Browsed media is stored as its `media-source://` id and resolved while rendering, since the
- * signed URL expires. One resolve per id is in flight; the URL is cached and resolved again
- * shortly before expiry, on websocket reconnect and on load failure.
- */
+// Browsed media is stored as its `media-source://` id and resolved while rendering, since the signed URL expires.
+// One resolve per id is in flight; the URL is cached and resolved again shortly before expiry,
+// on websocket reconnect and on load failure.
 
 export const MEDIA_SOURCE_PREFIX = 'media-source://';
 

@@ -1,10 +1,7 @@
 import { configHas } from '../utils/config-walk';
 
-/*
- * The svg-icon chunk's predicate: a card needs the chunk when it holds an icon <ha-icon> cannot
- * draw (library icon, `icon_fx`, own SVG, or a reference that is not a plain MDI id).
- * A predicate file: no imports but the config walk.
- */
+// The svg-icon chunk's predicate: a card needs the chunk when it holds an icon <ha-icon> cannot draw
+// (library icon, `icon_fx`, own SVG, or a reference that is not a plain MDI id). No imports but the config walk.
 
 /** The keys that hold an icon reference on a module, tab or button. */
 export const ICON_REF_KEYS: readonly string[] = ['icon', 'icon_on', 'icon_off'];

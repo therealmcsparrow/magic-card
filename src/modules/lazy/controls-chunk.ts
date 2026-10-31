@@ -7,10 +7,8 @@ import { LightView } from '../controls/light-view';
 import { GaugeView } from '../controls/gauge-view';
 import { controlsViewStyles } from '../../css/controls-styles';
 
-/*
- * Chunk entry of dist/magic-card-controls.js: the slider, spinbox, dropdown, light and gauge views.
- * Parent of the slider-look chunk (the literal import() sits here).
- */
+// Chunk entry of dist/magic-card-controls.js: the slider, spinbox, dropdown, light and gauge views.
+// Parent of the slider-look chunk (the literal import() sits here).
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 

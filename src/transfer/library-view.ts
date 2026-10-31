@@ -21,11 +21,8 @@ import { locale, t } from './i18n';
 import './panel';
 import type { TransferPanel } from './panel';
 
-/*
- * <mc-library-view>: the saved animations, shapes and icons (and My theme presets) in one list,
- * from "Magic Card Utils" and "This card" (read only). Rename and delete need an admin. Import
- * saves into Magic Card Utils, else fires `mc-transfer-import` to the host.
- */
+// <mc-library-view>: the saved animations, shapes and icons (and My theme presets) in one list, from "Magic Card Utils"
+// and "This card" (read only). Rename and delete need an admin. Import saves into Magic Card Utils, else fires `mc-transfer-import`.
 
 interface Row {
   id: string;

@@ -1,9 +1,7 @@
 import { unwatchOffscreen, watchOffscreen } from '../../icons/offscreen';
 
-/*
- * Streaming backgrounds: a camera or video-bg used as a background decodes no frames while off
- * screen, hidden or paused, and resumes on return. `pauseInFlow` applies the same in flow.
- */
+// Streaming backgrounds: a camera or video-bg used as a background decodes no frames while off screen, hidden or paused,
+// and resumes on return. `pauseInFlow` applies the same in flow.
 
 export type StreamKind = 'camera' | 'video-bg';
 

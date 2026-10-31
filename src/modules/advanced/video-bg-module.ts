@@ -6,10 +6,8 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 
-/**
- * Video background: plays behind the other modules of its column or layout (row, column, tab,
- * horizontal / vertical layout). On its own in a column it shows at its own size.
- */
+// Video background: plays behind the other modules of its column or layout (row, column, tab, horizontal / vertical layout).
+// On its own in a column it shows at its own size.
 class VideoBgModule extends BaseLazyStub {
   readonly metadata: LazyStubMetadata = { type: 'video-bg' };
 

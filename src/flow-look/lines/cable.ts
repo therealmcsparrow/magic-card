@@ -4,11 +4,8 @@ import { at, fmt } from '../sampler';
 import type { LineCtx } from '../registry';
 import { memo, stroke } from './util';
 
-/*
- * cable: a 1 px outline, the sheath (cable_color, else the line colour under a 35 % black stroke:
- * a darker shade without color-mix), the core (width - 2) in the line colour, and with `twisted`
- * diagonal strand marks every width x 1.6 px at 30 % opacity. It never animates.
- */
+// cable: a 1 px outline, the sheath (cable_color, else the line colour under a 35 % black stroke), the core (width - 2)
+// in the line colour, and with `twisted` diagonal strand marks every width x 1.6 px at 30 % opacity. It never animates.
 
 const OUT = FLOW_LOOK_THEME.cableOutline;
 

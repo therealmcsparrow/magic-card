@@ -10,11 +10,8 @@ import { rigViewBox, type ExportPiece } from '../svg-export';
 import { cubicsToD, parseViewBox, type Pt } from './draw-utils';
 import { m, type MessageId } from '../i18n';
 
-/*
- * State the drawing panels share (the toolbar, the stage overlay and the inspector are separate
- * panel elements): the tool options for new shapes, the last freehand stroke's raw samples (so the
- * smoothing slider can refit it), and the icon pieces the tools snap to and export.
- */
+// State the drawing panels share: the tool options for new shapes, the last freehand stroke's raw samples
+// (so the smoothing slider can refit it), and the icon pieces the tools snap to and export.
 
 export const DRAW_TOOLS = ['select', 'pen', 'line', 'rect', 'ellipse', 'freehand', 'erase', 'motion'] as const;
 export type DrawTool = (typeof DRAW_TOOLS)[number];

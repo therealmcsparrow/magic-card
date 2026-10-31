@@ -1,12 +1,9 @@
 import type { PresetCatalogueModule } from '../contracts/preset-catalogue';
 import { sameBuild } from '../utils/build-version';
 
-/*
- * The studio's loader of the preset catalogue chunk (magic-card-preset-catalogue.js, contract
- * preset-catalogue 1.1.0), loaded when the "Customise a preset" dialog opens. Same shape as
- * icon-library-loader.ts: one shared promise; a failure resolves undefined (console.warn) and the
- * next call tries again.
- */
+// The studio's loader of the preset catalogue chunk (magic-card-preset-catalogue.js, contract preset-catalogue 1.1.0),
+// loaded when the "Customise a preset" dialog opens. Same shape as icon-library-loader.ts: one shared promise;
+// a failure resolves undefined (console.warn) and the next call tries again.
 
 let pending: Promise<PresetCatalogueModule | undefined> | undefined;
 

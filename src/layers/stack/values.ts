@@ -5,10 +5,8 @@ import { BLUR_MAX, LAYER_ANCHORS } from '../../contracts/layer-placement.needs';
 import type { LayerAnchor } from '../../contracts/layer-placement';
 import type { BgPattern } from '../../contracts/bg-stack';
 
-/*
- * Pure value checks of <mc-bg-stack> (contract bg-stack): every value that reaches CSS or a
- * URL load goes through one of these allow-lists. No lit, no DOM except `URL`.
- */
+// Pure value checks of <mc-bg-stack> (contract bg-stack): every value that reaches CSS or a URL load goes through
+// one of these allow-lists. No lit, no DOM except `URL`.
 
 const MAX_GRADIENT = 600;
 export const MAX_STATES = 32;

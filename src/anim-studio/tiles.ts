@@ -1,12 +1,8 @@
 import type { TargetRef } from './model';
 import { t, m, type MessageId } from './i18n';
 
-/*
- * The preview stage's tiles: what the studio previews a document on. Each tile is one module of
- * the preview card (studio-model.ts previewConfig) with the card-part targets it has, so the
- * studio can offer only the targets the current tile can show. Tracks add tiles here (the card
- * tile: icon, name, state and background).
- */
+// The preview stage's tiles: what the studio previews a document on. Each tile is one module of the preview card
+// (studio-model.ts previewConfig) with the card-part targets it has, so only the targets the tile can show are offered.
 
 export type PreviewTile = 'icon' | 'button' | 'text' | 'card';
 

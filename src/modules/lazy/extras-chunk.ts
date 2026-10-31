@@ -16,11 +16,8 @@ import { extrasViewStyles } from '../../css/extras-styles';
 import { provideTabHoverBorder } from '../../utils/css-utils';
 import { tabBorderStyle } from '../../utils/tab-border';
 
-/*
- * Chunk entry of dist/magic-card-modules-extra.js (contract lazy-module 1.0.0). Evaluating this file changes
- * nothing global: everything happens in install(), which src/utils/lazy-chunk.ts calls only when
- * BUILD matches the magic-card.js that loaded it.
- */
+// Chunk entry of dist/magic-card-modules-extra.js (contract lazy-module 1.0.0). Evaluating this file changes nothing global:
+// everything happens in install(), which src/utils/lazy-chunk.ts calls only when BUILD matches the magic-card.js that loaded it.
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 

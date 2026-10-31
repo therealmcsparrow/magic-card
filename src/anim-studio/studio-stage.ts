@@ -13,9 +13,8 @@ import { DEFAULT_SIM, SIM_ENTITY, applyPreviewChange, simulates, withSimEntity, 
 import { t, m, type MessageId } from './i18n';
 
 // The studio preview stage: the real `magic-card` playing the edited document on an icon, button or text tile, with speed,
-// play / pause, scrub and reduced-motion preview. The card is scaled to fit the canvas (never enlarged) or, with
-// `zoomIcon`, zoomed to its icon; `stage-rect` reports the scale and the screen box. A document with states or bindings
-// plays from a simulated entity (PREVIEW_ENTITY) merged into the preview hass.
+// play / pause, scrub and reduced-motion preview. The card is scaled to fit the canvas or, with `zoomIcon`, zoomed
+// to its icon; a document with states or bindings plays from a simulated entity (PREVIEW_ENTITY).
 
 export type StageTheme = 'light' | 'dark';
 

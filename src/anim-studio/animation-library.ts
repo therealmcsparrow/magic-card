@@ -1,10 +1,9 @@
 import { validateAnimationDoc, validateAnimationLibrary, type AnimationDoc } from './model';
 import { useAnimationLibrary } from '../utils/anim-hooks';
 
-// The global animation library of the magic-card-utils integration: one fetch and one subscription per page, started by
-// the first card that renders a `custom:<id>` preset (or the editor picker). WebSocket commands: get_animations,
-// subscribe_animations (saved / deleted / reset), save_animation, delete_animation (admin). Without the integration the
-// status is unavailable; custom references fall back to inline custom_animations.
+// The global animation library of the magic-card-utils integration: one fetch and one subscription per page.
+// WebSocket commands: get_animations, subscribe_animations, save_animation, delete_animation (admin).
+// Without the integration the status is unavailable and custom references fall back to inline custom_animations.
 
 /** Retry delays (ms) after a failed first fetch that may work later. */
 const RETRY_MS = [5000, 15000, 60000];

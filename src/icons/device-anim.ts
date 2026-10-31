@@ -4,10 +4,8 @@ import type { DeviceAnim, HassEntity } from '../types';
 import { isEntityActive } from '../utils/entity-color';
 import { isUnavailable } from '../utils/entity-value';
 
-/*
- * Smart device animations (`icon_fx.device: auto`): which animation an entity's state calls for.
- * `speed` = seconds per cycle (0 = a static pose, e.g. a slightly opened door), `intensity` 0..1.
- */
+// Smart device animations (`icon_fx.device: auto`): which animation an entity's state calls for.
+// `speed` = seconds per cycle (0 = a static pose), `intensity` 0..1.
 
 export interface DeviceAnimSpec {
   anim: DeviceAnim;

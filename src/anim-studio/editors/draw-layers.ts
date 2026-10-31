@@ -13,12 +13,9 @@ import { hasDrawOn, isFilled, isStroked, moveShapeInLayer, removeShape } from '.
 import { selectedShapeId, sourceViewBox } from './draw-store';
 import { t, m } from '../i18n';
 
-/*
- * mc-anim-shapes-layers (place 'layers'): the rig's drawn shapes, top of the paint order first, with
- * a thumbnail, the layer (over / under the icon) and whether they draw on or move along a path.
- * Click selects the shape (selection target shape:<id>); the selected row offers move up / down
- * and delete (no hover-only actions: they work by touch too).
- */
+// mc-anim-shapes-layers (place 'layers'): the rig's drawn shapes, top of the paint order first, with a
+// thumbnail, the layer (over / under the icon) and whether they draw on or move along a path.
+// Click selects the shape; the selected row offers move up / down and delete (no hover-only actions).
 
 abstract class ShapesLayersBase extends LitElement {
   /** Which side of the icon this section lists. */

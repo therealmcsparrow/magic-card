@@ -37,6 +37,11 @@ describe('scanner', () => {
     const src = ['const a = 1; /* start', ' * 1', ' * 2', ' * 3', ' * 4', ' * 5', ' * 6', ' * 7 */', 'const b = 2;'].join('\n');
     expect(shape(src)).toEqual([[false, 7]]);
   });
+
+  it('ignores comment openers inside string literals', () => {
+    const open = ["if (v.includes('/*')) return true;", 'const x = `//`;'];
+    expect(shape([...open, '// 1', '// 2', '// 3', '// 4', '// 5', '// 6', '// 7'].join('\n'))).toEqual([[false, 7]]);
+  });
 });
 
 describe('comment limits in tracked .ts files', () => {

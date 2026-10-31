@@ -9,11 +9,9 @@ import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from './i18n';
 import { climateRange } from './spinbox-range';
 
-/**
- * Minus / value / plus for an entity's numeric value, with the same per-domain adapters as the
- * slider (input_number / number, climate target temperature, light brightness in %, fan speed, ...).
- * Clicks are collected and sent once after a short pause.
- */
+// Minus / value / plus for an entity's numeric value, with the same per-domain adapters as the slider
+// (input_number / number, climate target temperature, light brightness in %, fan speed, ...).
+// Clicks are collected and sent once after a short pause.
 export class SpinboxView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as SpinboxModuleConfig;

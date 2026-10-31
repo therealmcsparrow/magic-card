@@ -3,11 +3,8 @@ import { ANIMATION_PRESETS, DEFAULT_STRENGTH, EASINGS, getAnimationPreset, hasSt
 import { str } from '../utils/safe-css';
 import { isCustomRef } from '../utils/custom-ref';
 
-/*
- * The entries of a design's `animations` list: reading them (with the legacy single keys of v0.0.14), the preset values an
- * entry starts from, and the small value readers the resolve shares. Lives in the lazy `anim` chunk with the resolve
- * (src/anim-studio/resolve.ts); the card editor imports the editing helpers from here.
- */
+// The entries of a design's `animations` list: reading them (with the legacy single keys), the preset values an entry
+// starts from, and the small value readers the resolve shares. Lives in the lazy `anim` chunk with src/anim-studio/resolve.ts.
 
 /** Module types that render an icon hook (`.mc-anim-icon`), so Target = Icon makes sense. */
 export const ANIMATION_ICON_MODULES = ['icon', 'button', 'light', 'weather'];

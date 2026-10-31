@@ -5,10 +5,9 @@ import type { MessageIndex as LabelId } from '../../contracts/i18n';
 import { t as tl } from '../../i18n/labels';
 import { m, t, type MessageId } from '../i18n';
 
-// Pure, copy-on-write helpers of the keyframe timeline editor and its key inspector. A lane is one property; a key is {
-// lane, at } and lane `*` is the whole keyframe. Moving a lane key splits it off its keyframe and merges it at the new
-// time. Per target a timeline key is { target, lane, at } (TKey); top-level `keyframes` move `doc.target`, `doc.tracks`
-// hold the other targets, `easings[lane]` overrides `easing`.
+// Pure, copy-on-write helpers of the keyframe timeline editor and its key inspector. A lane is one property;
+// a key is { lane, at } and lane `*` is the whole keyframe. Per target a timeline key is { target, lane, at }
+// (TKey); top-level `keyframes` move `doc.target`, `doc.tracks` hold the others, `easings[lane]` overrides `easing`.
 
 export type LaneId =
   | 'x'

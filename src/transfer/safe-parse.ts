@@ -13,10 +13,8 @@ import type { TransferRefusal } from '../contracts/preset-transfer';
 import { refuseFile } from '../svg-io/intake';
 import { t } from './i18n';
 
-/*
- * Safe parsing of untrusted preset text (preset-transfer 1.0.0, "Safe parsing"). Pure, no DOM.
- * Never src/utils/yaml-utils fromYaml: it adds the merge tag.
- */
+// Safe parsing of untrusted preset text (preset-transfer 1.0.0, "Safe parsing"). Pure, no DOM.
+// Never src/utils/yaml-utils fromYaml: it adds the merge tag.
 
 /** CORE_SCHEMA only: no merge key, timestamps, binary or custom tags. */
 export const SAFE_YAML_SCHEMA = jsYaml.CORE_SCHEMA;

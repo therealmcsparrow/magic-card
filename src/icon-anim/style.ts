@@ -21,11 +21,9 @@ import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
 import { t } from './i18n';
 import { t as tn } from './library/i18n';
 
-// Icon Styles (contract icon-library): each library entry plays as Quiet, Living or Glow, all derived from its one Living
-// rig. The card stores the result inline. Pure and deterministic. Quiet: one hero track keeps one lane with shrunk
-// offsets, opacity 0.7..1, slowed duration; other tracks go. Glow: Living plus a lit accent layer, no filter or blur.
-// Accent targets take the glow colour and get stroked halo copies (RigShape `glow-<id>`) pulsing opacity; glow-only shapes
-// (GLOW_SHAPES) are added lit. Light or dark follows the card background.
+// Icon Styles (contract icon-library): each library entry plays as Quiet, Living or Glow, all derived from its one Living rig.
+// Quiet: one hero track, shrunk offsets, opacity 0.7..1, slowed duration. Glow: Living plus a lit accent layer, no filter or blur.
+// Pure and deterministic; the card stores the result inline.
 
 const SPEC_PEAK = 0.3;
 const MIN_DURATION = 1.6;

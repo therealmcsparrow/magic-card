@@ -23,11 +23,8 @@ import {
 import { m, t, type MessageId } from '../i18n';
 import { validationText } from '../validation-text';
 
-/*
- * Pure helpers of the particle designer (particles-editor.ts): the shape source, colour values
- * (entity colour <-> stored CSS), patches that keep a document valid, and "Convert to custom
- * particles" for a document based on a built-in fx preset.
- */
+// Pure helpers of the particle designer (particles-editor.ts): the shape source, colour values (entity colour <-> stored CSS),
+// patches that keep a document valid, and "Convert to custom particles" for a document based on a built-in fx preset.
 
 export type ShapeSource = 'dot' | 'icon' | 'emoji' | 'svg';
 export const SHAPE_SOURCES: Array<{ id: ShapeSource; label: MessageId; icon: string }> = [

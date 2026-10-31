@@ -2,12 +2,9 @@ import { nothing } from 'lit';
 import { directive, ElementPart, PartInfo, PartType } from 'lit/directive.js';
 import { AsyncDirective } from 'lit/async-directive.js';
 
-/**
- * One IntersectionObserver for every element with a looping animation (icon effects, animated
- * weather icons): off-screen elements get the `offscreen` attribute, which their styles use to pause
- * the animations. Clipping by a scrolling ancestor counts too (a forecast item scrolled out of its
- * row). An attribute, not a class: module templates own the class.
- */
+// One IntersectionObserver for every element with a looping animation: off-screen elements get the `offscreen` attribute,
+// which their styles use to pause the animations. Clipping by a scrolling ancestor counts too.
+// An attribute, not a class: module templates own the class.
 let io: IntersectionObserver | undefined;
 /** Elements told about every report (on screen or not), not only an attribute change. */
 const listeners = new WeakMap<Element, (onScreen: boolean) => void>();
