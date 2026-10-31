@@ -6,12 +6,7 @@ import { anchorName } from './anchor-names';
 import { t } from '../i18n';
 import { isAnchor, layerOf, placementOf } from './placement-model';
 
-/*
- * Structure tree chips. A module put behind others or on top carries a chip
- * with the word always visible (never an icon alone); an overlay adds a 14 px mini 3 x 3 glyph with its
- * anchor dot. The anchor is in the accessible name and a tooltip. Under 280 px the name wraps first, then
- * the glyph hides (container query on the outline host). A container holding layers shows "{n} layers".
- */
+// Structure tree chips for modules put behind others or on top, and for containers holding layers.
 
 const COL = (a: LayerAnchor): number => (a.includes('left') ? 0 : a.includes('right') ? 2 : 1);
 const ROW = (a: LayerAnchor): number => (a.includes('top') ? 0 : a.includes('bottom') ? 2 : 1);

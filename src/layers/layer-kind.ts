@@ -2,10 +2,8 @@ import type { Arranged } from '../contracts/layer-placement';
 import { childSlots } from '../utils/module-path';
 import type { CardModule } from '../types';
 
-/*
- * What a module's `placement` says (contract layer-placement): the checks that placement.ts, the slot and
- * the card's config walks share. No runtime, no CSS.
- */
+// What a module's `placement` says (contract layer-placement): the checks that placement.ts, the slot and the card's
+// config walks share. No runtime, no CSS.
 
 /** `placement` as a module carries it: background / overlay, else undefined (flow, unknown values). */
 export const placementOf = (mod: unknown): 'background' | 'overlay' | undefined => {

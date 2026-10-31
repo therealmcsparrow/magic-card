@@ -7,12 +7,8 @@ import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import { LayerRows, layerRowStyles } from './layer-row';
 import { t, m } from '../i18n';
 
-/*
- * mc-anim-path-layers (place 'layers', path documents): the motion path and what moves along it. Not a
- * paint stack: no stacking order, no move, no hide; both rows can be locked (the lock itself is enforced
- * by the path editor and overlay). The rows select within this list only: the path overlay is always
- * on the stage.
- */
+// mc-anim-path-layers (place 'layers', path documents): the motion path and what moves along it.
+// Not a paint stack (no order, no move, no hide); both rows can be locked. The rows select within this list only.
 
 const SUBJECTS = { element: m('anim-studio.path-layers.element'), icon: m('anim-studio.path-layers.icon'), particles: m('anim-studio.path-layers.particles') } as const;
 

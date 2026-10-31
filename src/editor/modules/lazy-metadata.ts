@@ -3,8 +3,8 @@ import type { MagicModuleMetadata } from '../../modules/module-types';
 import { lm } from '../../i18n/labels/mark';
 
 /**
- * Name, description, category and icon of the lazy modules. magic-card.js carries only each stub's type and
- * entity-scope rule; the module picker, the outline and the search read the rest, so it ships with the editor chunk.
+ * Name, description, category and icon of the lazy modules. magic-card.js carries only each stub's type and entity-scope rule;
+ * the module picker, the outline and the search read the rest, so it ships with the editor chunk.
  */
 const LAZY_METADATA: Record<string, Omit<MagicModuleMetadata, 'type' | 'inherit'>> = {
   clock: { name: lm('labels.lazy-metadata.clock'), description: lm('labels.lazy-metadata.display-current-time-and-date'), category: 'advanced', icon: 'mdi:clock-outline' },

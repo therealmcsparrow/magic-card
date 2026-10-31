@@ -8,15 +8,8 @@ import { presetKeyframes } from '../part-presets';
 import type { MessageIndex } from '../../contracts/i18n';
 import { t as tn } from './i18n';
 
-/*
- * The icon library's builder and motion helpers (module icon-library, contract 1.2.0). An entry is
- * a Spec: the icon (or own paths cut from it), named parts over its pieces, groups, shapes and the
- * tracks. build() turns it into a normal keyframes document with a rig; the studio edits it like
- * any other. The data lives in library.ts (the 2026.10.03 entries) and the category files next to
- * this one (the P4 entries from the brand artist's p4-spec.json).
- *
- * Lives in the studio bundle and the lazy icon animator chunk only, never in magic-card.js.
- */
+// The icon library builder and motion helpers: an entry is a Spec (icon or own paths, named parts, groups, shapes, tracks)
+// and build() turns it into a keyframes document with a rig. Studio bundle and icon animator chunk only.
 
 // ── builder ──
 

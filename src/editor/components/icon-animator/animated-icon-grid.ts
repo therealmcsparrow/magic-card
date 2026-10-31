@@ -8,15 +8,8 @@ import { fold } from '../../../i18n/fold';
 import { t, m } from '../../../icon-anim/i18n';
 import type { MessageIndex } from '../../../contracts/i18n';
 
-/*
- * The animated icon grid (lazy chunk magic-card-icon-animator.js): live moving tiles for the user's
- * own icon animations (My animations) and the built-in icon library, with search and a domain
- * filter. Used by the icon picker's "Animated icons" tab; it only
- * emits `animated-icon-pick`, the caller writes the choice. The Style control (Quiet / Living / Glow)
- * sits on the Icon library: its tiles preview in that Style and a pick stores it; changing it while
- * the module plays a library icon restyles that icon at once (`restyle`: the picker stays open).
- * My animations tiles have no Style.
- */
+// The animated icon grid (lazy icon-animator chunk): live tiles for My animations and the icon library.
+// Only emits `animated-icon-pick`.
 
 export const ANIMATED_ICON_GRID_TAG = 'mc-animated-icon-grid';
 const THUMB_TAG = 'mc-animated-icon-thumb';

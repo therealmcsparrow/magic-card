@@ -1,13 +1,6 @@
 import { LOAD_TIMEOUT_MS, TRANSFER_CHUNK, TRANSFER_CONTRACT_VERSION, type TransferChunk } from '../contracts/preset-transfer';
 
-/*
- * The only importer of the transfer chunk (magic-card-transfer.js, preset-transfer 1.0.0). It lives in
- * the card-editor chunk, which sets it as window.MagicCard.loadTransfer() (src/editor/custom/loaders.ts),
- * so the theme editor and the animation studio reach the chunk without a new import() of their own and
- * js-yaml and the Core validators come from the parents. Memoised while pending and once loaded; rejects
- * on an import failure, after LOAD_TIMEOUT_MS, or when the chunk is not major 1. A rejection clears the
- * memo, so the next call retries.
- */
+// The only importer of the transfer chunk; set as window.MagicCard.loadTransfer().
 
 let importer = (): Promise<unknown> => import(/* webpackChunkName: "transfer" */ '../transfer/chunk');
 let pending: Promise<TransferChunk> | undefined;

@@ -3,11 +3,7 @@ import { REFERENCE_ALIGN_KEY_PREFIX, REFERENCE_MAX_FILE_BYTES, REFERENCE_MAX_SID
 import { t } from './i18n';
 import type { ImageExt } from './chunk';
 
-/*
- * The reference picture: a photo or plan behind the canvas for tracing, while editing only. It is drawn from a <canvas>
- * held in page memory, so nothing about it is ever a URL, a markup string or part of the document. Only five alignment
- * numbers are kept on this device, per image.
- */
+// The reference picture: a photo or plan behind the canvas for tracing, drawn from a <canvas> in page memory while editing only.
 
 export interface Align {
   /** Offset of the picture's middle from the canvas middle, in drawing units. */

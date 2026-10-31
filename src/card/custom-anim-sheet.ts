@@ -1,9 +1,5 @@
-/*
- * The compiled rules of custom animations (@keyframes, particle styles): one constructable
- * stylesheet for the page, written once per document version and adopted by each card's shadow root
- * that renders a custom animation. Cards without one never adopt it. Without constructable
- * stylesheets a <style> per shadow root carries the same text.
- */
+// The compiled rules of custom animations: one constructable stylesheet per page, adopted by
+// each card shadow root that renders one (a <style> per root where unsupported).
 
 /** Rules by document id: an edited document replaces its old rules. */
 const rules = new Map<string, { name: string; css: string }>();

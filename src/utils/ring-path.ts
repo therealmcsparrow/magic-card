@@ -2,12 +2,7 @@ import type { RingStart, ShapeKind, ShapeOptions } from '../types';
 import { shapeInsetPath, shapePath } from './shape-path';
 import { parseClosed, restartAt, reverse, toPathString, translate } from '../path/core';
 
-/*
- * Computed border radii (per corner, elliptical, %) read from an element, clamped like CSS and optionally inset (the ring
- * sits inside / on / outside the border edge), and the outline of a shaped box as an SVG path that starts at a chosen point
- * and runs clockwise or counter-clockwise, so a dash with pathLength="100" fills from there in percent. The rounded
- * rectangle's own path is src/utils/ring-outline.ts.
- */
+/** Computed border radii of an element and the outline of a shaped box as an SVG path. */
 
 export interface CornerRadius {
   x: number;
@@ -165,11 +160,9 @@ export function insetRadii(r: Radii, d: number): Radii {
 export const RING_STARTS: RingStart[] = ['top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'top-left'];
 
 /**
- * The outline of a shaped w x h border box (src/utils/shape-path.ts) for a ring or a border stroke:
- * the shape moved inward by `inset` (a true offset for cut / rounded corners: shapeInsetPath;
- * negative: the shape of the bigger box), starting at the outline point nearest to `start` and
- * running clockwise / counter-clockwise. Empty when nothing is left of the box or the shape is
- * none / unknown.
+ * The outline of a shaped w x h border box for a ring or border stroke: the shape moved inward by
+ * `inset` (negative: the bigger box), starting nearest to `start`, clockwise or not. Empty when
+ * nothing is left or the shape is none / unknown.
  */
 export function shapeRingPath(kind: ShapeKind, w: number, h: number, options: ShapeOptions | undefined, opts: RingPathOptions = {}): string {
   const d = opts.inset ?? 0;

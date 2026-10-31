@@ -13,13 +13,9 @@ import type { AnimSvgDialog } from './draw-svg-dialog';
 import { t, m, list } from '../i18n';
 import { t as tl } from '../../i18n/labels';
 
-/*
- * Part presets (studio icon mode, inspector slot): with icon parts, groups or shapes selected, one
- * click writes a ready motion (swing, spin, ring, draw on...) as their tracks; the preset's
- * parameters (duration share, delay, intensity, direction) re-apply it as they change (a slider
- * drag is one undo step). The result is a normal track, fine-tuned on the timeline afterwards.
- * "Animated SVG" exports the animation as a looping SVG file.
- */
+// Part presets (studio icon mode, inspector slot): one click writes a ready motion as the tracks of the selected parts,
+// groups or shapes; its parameters re-apply it as they change (a slider drag is one undo step). "Animated SVG" exports a
+// looping SVG file.
 
 const isRig = (ref: string | undefined): ref is TargetRef => !!ref && /^(part|group|shape):/.test(ref);
 

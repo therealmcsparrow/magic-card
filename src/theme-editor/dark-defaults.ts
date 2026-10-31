@@ -1,14 +1,4 @@
-/*
- * Home Assistant's dark-mode default values for themeable variables.
- *
- * Source: home-assistant/frontend, src/resources/theme/color/color.globals.ts, `darkColorStyles`
- * (the `html {}` block that becomes `darkColorVariables`), checked against release 20260930.4.
- * HA applies these inline on <html> in dark mode, but only the light defaults exist as a stylesheet
- * rule, so the trial cannot read the dark ones. Used when a profile theme sets a key the draft lacks:
- * in dark mode the key goes back to this value. Left out: the --ha-color-* semantic tokens (derived
- * from var() chains, not set by themes) and the --codemirror-* syntax colours. If HA changes a
- * value, the trial falls back to a slightly stale default for that key; nothing breaks.
- */
+/* HA's dark-mode default values for themeable variables (from color.globals.ts darkColorStyles), used when a profile theme sets a key the draft lacks. */
 export const HA_DARK_DEFAULTS: Readonly<Record<string, string>> = {
   'primary-background-color': '#111111',
   'card-background-color': '#1c1c1c',

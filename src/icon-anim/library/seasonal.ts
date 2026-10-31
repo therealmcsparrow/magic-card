@@ -3,13 +3,9 @@ import { dim, osc, te, t, type Spec } from './build';
 import { BAT, SKULL, STRING_LIGHTS } from './rigs';
 import { m } from './i18n';
 
-/*
- * P4 entries, themes Christmas, Halloween and Valentine (brand artist's p4-spec.json, Living rigs).
- * Entries the spec gives the catch-all `sensor` domain use the pseudo-domain `seasonal` (sensor
- * stays in their tags); lights, weather and binary sensors keep their domain.
- * Christmas: gentle sway and staggered twinkle. Halloween: slow float broken by one quick move.
- * Valentine: lub-dub beats and soft floats.
- */
+// Library entries, themes Christmas, Halloween and Valentine. Entries with the catch-all `sensor` domain use the
+// pseudo-domain `seasonal`. Christmas: gentle sway and twinkle. Halloween: slow float and one quick move. Valentine:
+// lub-dub beats and soft floats.
 
 const GOLD = '#ffd54f';
 const bauble = (n: number, d: string) => ({ id: `bauble_${n}`, name: m('icon-library.seasonal.bauble-n'), n, d, fill: GOLD, layer: 'over' as const, origin: [12, 21] as [number, number] });

@@ -5,21 +5,9 @@ import type { MessageIndex as LabelId } from '../../contracts/i18n';
 import { t as tl } from '../../i18n/labels';
 import { m, t, type MessageId } from '../i18n';
 
-/*
- * Pure helpers of the keyframe timeline editor (mc-anim-keyframes-editor) and its key inspector.
- *
- * The document stores keyframes as objects at a time (`at`, % of the cycle) that may set several
- * properties. The timeline shows one lane per property: a lane has a key (diamond) at every time
- * where some keyframe sets that property. A key is addressed as { lane, at }; lane `*` is the whole
- * keyframe (the summary lane). Moving one lane's key moves only that property (it is split off its
- * keyframe and merged into the keyframe at the new time), moving a `*` key moves whole keyframes.
- * Every function is copy-on-write: inputs are never mutated.
- *
- * v2: a document has keyframes per target. The top-level `keyframes` are the main track (they
- * move `doc.target`, element or icon); `doc.tracks` hold the other targets (card parts, icon parts,
- * groups, shapes). The timeline groups lanes per target; a timeline key is { target, lane, at }
- * (TKey). A key may also carry per-lane easings (`easings[lane]`, overriding `easing` for that lane).
- */
+// Pure, copy-on-write helpers of the keyframe timeline editor and its key inspector. A lane is one property;
+// a key is { lane, at } and lane `*` is the whole keyframe. Per target a timeline key is { target, lane, at }
+// (TKey); top-level `keyframes` move `doc.target`, `doc.tracks` hold the others, `easings[lane]` overrides `easing`.
 
 export type LaneId =
   | 'x'

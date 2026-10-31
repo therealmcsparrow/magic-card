@@ -6,14 +6,8 @@ import { NO_SELECTION, registerPanel, type StudioSelection } from '../slots';
 import { DEFAULT_SIM, simAttributes, simNeeds, simNumericState, simulates, type PreviewChangeDetail } from './states-sim';
 import { t, m, type MessageId } from '../i18n';
 
-/*
- * Stage tool for documents with states or value bindings: a capsule at the foot of the preview
- * stage that sets the preview's simulated entity. State: On, Off, Unavailable, Value (the state is
- * the slider's number, for bindings and conditions that read the state) or Custom (any text). The
- * value slider runs 0-100 % across each binding's input range. Every change (and the first render,
- * and a document whose bindings changed) emits `preview-change` { state, value, attributes }
- * (bubbling, composed); the shell feeds it to the preview card (states-sim.ts withSimEntity).
- */
+// Stage tool for documents with states or value bindings: a capsule that sets the preview's simulated entity (On, Off,
+// Unavailable, Value or Custom) with a 0-100 % value slider. Emits `preview-change` { state, value, attributes }.
 
 type StateChoice = 'on' | 'off' | 'unavailable' | 'value' | 'custom';
 

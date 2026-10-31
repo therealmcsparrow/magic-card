@@ -3,12 +3,7 @@ import { editorTokens } from '../css/editor-system';
 import { editorPrimitives, kitCss } from '../ui-kit';
 import { kitLip } from '../ui-kit/css/lip';
 
-/*
- * Styles of <mc-shape-studio>: the card editor's tokens and primitives plus the kit parts (contract ui-kit 1.0.0),
- * then this layer's own layout only. No rule here targets a kit class. Layout follows the width of the
- * layer, never the device (data-layout); the tool rail turns into a row under 800 px of viewport,
- * the same media query as the kit's rail.
- */
+// Styles of <mc-shape-studio>: the card editor tokens and the kit parts (ui-kit 1.0.0), then this layer own layout only.
 // prettier-ignore
 const layout: CSSResult = css`
 :host{position:fixed;inset:0;z-index:1000;display:block;color:var(--mc-text);font:.875rem/1.4 var(--mc-font)}

@@ -10,8 +10,7 @@ import { t } from './i18n';
 import { climateRange } from './spinbox-range';
 
 /**
- * Minus / value / plus for an entity's numeric value, with the same per-domain adapters as the
- * slider (input_number / number, climate target temperature, light brightness in %, fan speed, ...).
+ * Minus / value / plus for an entity's numeric value, with the same per-domain adapters as the slider.
  * Clicks are collected and sent once after a short pause.
  */
 export class SpinboxView implements ModuleView {

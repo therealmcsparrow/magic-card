@@ -1,10 +1,7 @@
 import { MIN_BOX_SIDE, type Matrix6 } from '../contracts/path-canvas';
 import type { Box, Pt } from '../contracts/path-model';
 
-/*
- * Pure maths of the selection box: where the handles sit, what a scale or a
- * rotate drag leads to, the matrices the host applies, and the keyboard resize. No DOM, no lit.
- */
+// Pure maths of the selection box: handle places, scale and rotate drags, the matrices the host applies and keyboard resize.
 
 export type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w';
 type Sign = -1 | 0 | 1;

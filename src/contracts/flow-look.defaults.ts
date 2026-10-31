@@ -1,8 +1,6 @@
-/*
- * The numbers of the flow looks (contract flow-look.ts, which re-exports them).
- * A stateless leaf with no imports: the look editor takes them from here, so its chunk does not pull in the contract file, and the
- * flow-look chunk keeps its own copy.
- */
+// The numbers of the flow looks (contract flow-look.ts, which re-exports them). A stateless leaf with no imports:
+// the look editor takes them from here, so its chunk does not pull in the contract file, and the flow-look chunk
+// keeps its own copy.
 
 /** Defaults and ranges (clamped by resolve(); the editor uses the same numbers). */
 export const FLOW_LOOK_DEFAULTS = {

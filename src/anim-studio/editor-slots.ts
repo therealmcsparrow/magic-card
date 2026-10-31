@@ -1,16 +1,9 @@
 import type { AnimationKind } from './model';
 import { m, type MessageId } from './i18n';
 
-/*
- * Where each kind's own editor goes in the studio (contract: .superpowers/sdd/anim-studio/
- * editor-contract.md). The shell renders an editor by its tag once it is defined, so the editors
- * live in their own files (src/anim-studio/editors/<kind>-editor.ts, imported by the entry) and
- * the shell never imports them itself; until one is defined its slot shows a placeholder.
- *
- * Props: .doc .hass .library ({ [id]: doc }) .time (0-1, the scrub position) .disabled
- * Events: doc-change { doc, label, transient? } (a drag: transient moves, one final event = one
- * undo step), seek { time } (0-1).
- */
+// Where each kind editor goes in the studio. The shell renders an editor by its tag once defined, so editors live in
+// editors/<kind>-editor.ts. Props: .doc .hass .library .time .disabled. Events: doc-change { doc, label, transient? } (a
+// drag sends transient moves, then one final event) and seek { time }.
 
 export interface KindEditorSlot {
   tag: string;

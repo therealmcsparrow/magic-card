@@ -645,11 +645,8 @@ const magicCardLocalStyles = css`
     min-width: 0;
   }
   /*
-   * In a row, a child that is not full width (text, info, icon, button ...) keeps its min-content
-   * width (its longest word) next to full-width siblings, instead of being squeezed to one letter
-   * per line. The full-width siblings share the rest. Not for nested layouts (their min-content is
-   * every child's put together) or gauges (a fixed-size drawing that scales down): those shrink
-   * like before, so a narrow card does not overflow.
+   * In a row, a child that is not full width keeps its min-content width next to full-width
+   * siblings instead of squeezing to one letter per line. Not for nested layouts or gauges.
    */
   .mc-horizontal > .mc-module-wrapper:not(:has(> :is(${unsafeCSS(FULL_WIDTH_ROOTS)}, ${unsafeCSS(SHRINKING_ROOTS)}))) {
     min-width: min-content;
@@ -782,11 +779,9 @@ const magicCardLocalStyles = css`
   }
 
   /*
-   * With other modules next to it, the video is a background layer of their container (column,
-   * row column, tab, horizontal / vertical layout, slide): out of the flow, behind its siblings,
-   * filling the container. On its own it keeps its own size. The containers are named: a bare
-   * :has() would be checked against every element of the card on each change. Browsers without
-   * :has() (older WebViews) show the video in the flow, above its siblings.
+   * With other modules beside it, the video is a background layer of their container (out of the
+   * flow, behind siblings). The containers are named: a bare :has() would be checked against every
+   * element. Without :has() the video shows in the flow.
    */
   :is(.mc-column, .mc-horizontal, .mc-vertical, .mc-tabs-content, .swiper-slide):has(> .mc-module-wrapper:not([data-mc-placement]) > .mc-video-bg--media) {
     position: relative;

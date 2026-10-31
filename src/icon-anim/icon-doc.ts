@@ -3,10 +3,8 @@ import type { IconGeometry } from '../icons/icon-source';
 import { splitIcon, unionBox, type SplitPiece } from '../icons/icon-split';
 import { t } from '../i18n/labels';
 
-/*
- * Icon animation documents (icon animator core, shared by the studio's icon mode and the Design
- * tab's quick animator): an icon split into parts, ready for part presets. Pure, no DOM.
- */
+// Icon animation documents (icon animator core, shared by the studio's icon mode and the Design tab's quick animator):
+// an icon split into parts, ready for part presets. Pure, no DOM.
 
 /** Most parts a rig holds (model-v2 V2_CAPS.parts; repeated so this file needs no validator). */
 export const RIG_PART_CAP = 64;
@@ -14,12 +12,9 @@ export const RIG_PART_CAP = 64;
 export type Box = [number, number, number, number];
 
 /**
- * A keyframes document for `icon`: the icon split into its pieces (holes stay with their shape),
- * one part per piece ("Part 1…n", ids part-1…), no tracks yet. It plays on the module's icon and
- * loops; its element keyframes are one still key (the parts' tracks carry the motion).
- * `embed`: the geometry goes into the document as its own SVG (`rig.svg`, see svgFromGeometry)
- * instead of the icon id, so the parts never depend on the icon version a dashboard resolves (an
- * SVG over the 32 KB own-icon cap keeps the icon id).
+ * A keyframes document for `icon`: the icon split into pieces, one part each ("Part 1…n"), no tracks yet. It loops on the
+ * module icon. `embed` puts the geometry in the document as its own SVG (`rig.svg`) instead of the icon id, so parts never
+ * depend on the resolved icon version (an SVG over the 32 KB cap keeps the icon id).
  */
 export function iconAnimationDoc(icon: string, geometry: IconGeometry, id: string, name: string, opts: { embed?: boolean } = {}): AnimationDoc {
   const pieces = splitIcon(geometry);

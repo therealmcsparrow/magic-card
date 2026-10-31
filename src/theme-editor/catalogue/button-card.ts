@@ -4,9 +4,8 @@ import type { FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
- * button-card v7.0.1 (commit dfa304f). Its README documents no theme variables, so the own names are the
- * `--button-card-tooltip-*` ones read with var() in src/styles.ts. The 'follows' rows are HA variables that
- * file reads; they name variables the HA groups own (index.ts merges them as alsoUsedBy).
+ * button-card v7.0.1 (commit dfa304f). Its own names are the `--button-card-tooltip-*` ones read with var() in src/styles.ts;
+ * the 'follows' rows are HA variables that file reads (index.ts merges them as alsoUsedBy).
  */
 const REF = 'https://github.com/custom-cards/button-card/blob/v7.0.1/src/styles.ts';
 const VERIFIED = '2026-10-17';

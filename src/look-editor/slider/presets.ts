@@ -2,11 +2,7 @@ import type { SliderPreset, SliderPresetId } from '../../contracts/look-editor';
 import type { SliderTrackStyle } from '../../contracts/slider-look';
 import { m } from '../i18n';
 
-/*
- * The five slider presets and the static previews of presets and track styles.
- * Previews are chunk constants: inline SVG, aria-hidden by the tile group, never animated, never config text. Filters
- * are avoided (ids would clash inside one shadow root); glow is drawn with stacked translucent strokes.
- */
+// The five slider presets and the static previews of presets and track styles (inline SVG chunk constants).
 
 const svg = (w: number, h: number, body: string): string =>
   `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true" focusable="false">${body}</svg>`;

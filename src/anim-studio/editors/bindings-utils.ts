@@ -2,11 +2,8 @@ import type { AnimationDoc, AnimationKeyframe } from '../model';
 import type { BindProperty, Binding, TargetRef } from '../model-v2-core';
 import { m, t, type MessageId } from '../i18n';
 
-/*
- * Pure helpers of the value bindings panel (editors/bindings-panel.ts): the bindable properties
- * with their units and default output ranges, and list edits on the document's bindings (all
- * targets share one list of at most 8).
- */
+// Pure helpers of the value bindings panel (editors/bindings-panel.ts): the bindable properties with their
+// units and default output ranges, and list edits on the document's bindings (one list of at most 8).
 
 export const BINDINGS_MAX = 8;
 

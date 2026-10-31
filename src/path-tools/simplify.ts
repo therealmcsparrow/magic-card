@@ -1,7 +1,4 @@
-/*
- * Simplify (contract path-tools 1.0.0): per subpath, flatten finely, keep sharp corners as fixed points and
- * refit every run between them with deps.draw.fitCubics. With `smooth` only the open ends stay fixed. Pure.
- */
+/* Simplify: per subpath, keep sharp corners fixed and refit each run with deps.draw.fitCubics; `smooth` fixes only open ends. Pure. */
 import { CORNER_KEEP_DEG, MAX_TOOL_SEGMENTS, SIMPLIFY_MAX, SIMPLIFY_MIN } from '../contracts/path-tools';
 import type { PathToolsDeps, ToolOptions, ToolResult } from '../contracts/path-tools';
 import type { Anchor, Cubic, EditPath, Pt } from '../contracts/path-model';

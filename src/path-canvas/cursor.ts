@@ -1,9 +1,6 @@
 import type { CanvasMode } from '../contracts/path-canvas';
 
-/*
- * Which mouse cursor the surface shows (pure, no DOM). One answer per hit target, so the pointer always
- * tells what a press would do. '' means "set nothing": the host decides (draw tools, knife, hand).
- */
+// Which mouse cursor the surface shows (pure, no DOM), one answer per hit target; an empty string means the host decides.
 
 const ARROW = "%3Cpath d='M18.5 12a6.5 6.5 0 1 1-2-4.7M18.5 4v4h-4' fill='none' stroke-linecap='round' stroke-linejoin='round'";
 /** A turning arrow, 24 px, white halo under a dark stroke so it reads on any ground. `grab` where data URIs are blocked. */

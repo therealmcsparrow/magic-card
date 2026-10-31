@@ -1,9 +1,6 @@
 import type { ColorRange } from '../types';
 
-/**
- * Colour for `value` from a list of ranges: the range with the highest `from` at or below the value
- * wins (a range with a `to` from older configs only applies up to it). Undefined when none applies.
- */
+/** Colour for `value` from a list of ranges; undefined when none applies. */
 export function rangeColor(value: number | undefined, ranges: ColorRange[] | undefined): string | undefined {
   if (value === undefined || !Number.isFinite(value) || !Array.isArray(ranges)) return undefined;
   let best: ColorRange | undefined;

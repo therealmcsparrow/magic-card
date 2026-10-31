@@ -9,11 +9,7 @@ import { listImages, resetImages, type Listing } from './library';
 import { THUMB_RE, shapeOf } from './model';
 import { t } from './i18n';
 
-/*
- * The picker the library image field opens with its Choose button: a window over images_list with search, one tile per
- * image (thumbnail, name, shape, size) and radio keys on the tiles (arrows move, Space selects, Enter selects and uses).
- * The image in use stays first. Events: `pick` (detail { id }) and `close`.
- */
+// The picker the library image field opens: a window over images_list with search and one tile per image. Events: `pick` and `close`.
 
 const fold = (s: string): string => s.toLowerCase();
 const kib = (bytes: number): number => Math.max(1, Math.round(bytes / 1024));

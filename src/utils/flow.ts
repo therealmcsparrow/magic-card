@@ -6,15 +6,7 @@ import { FLOW_DEFAULTS } from './flow-keys';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';
 
-/**
- * Flow resolver (pure): a flow's config + hass -> what the overlay draws (`<mc-flows>`).
- *
- * Value -> motion: `|v| <= min` (or no numeric value) is idle; above it a log curve
- * `t = clamp(log1p(|v| - min) / log1p(max - min), 0, 1)` moves the traversal time from `min_speed`
- * (slowest) to `speed` (fastest) and the width from `width` to `width x 2` (`scale_width`). Power
- * values span orders of magnitude, so small loads still move visibly. A negative value reverses the
- * direction when `reverse_negative` (grid import / export). No entity: always flowing at `speed`.
- */
+/** Flow resolver (pure): a flow's config and hass to what the overlay draws. */
 
 export type Side = FlowSide;
 

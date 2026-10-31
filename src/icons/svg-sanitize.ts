@@ -5,17 +5,9 @@ import { ICON_MAX_BYTES, ICON_MAX_DEPTH, ICON_POLICY } from '../svg-safety/polic
 import { byteLength, cleanIconValue, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
 import { fmt, multiply, num, parseTransform, shapePath, transformPath, type Matrix } from './svg-geometry';
 
-/*
- * Own SVG icons: user markup reduced to an allowlist of drawing elements and attributes, plus the shapes as path data for
- * the icon effects. The text is parsed the way a browser reads an SVG file (XML first, then an inert text/html document)
- * and cleaned with the shared value rules of src/svg-safety. Nothing that runs or fetches survives: no scripts,
- * foreignObject, event handlers, links / `href`, animation elements or external url(). Styles are not kept as CSS: the
- * paint declarations of style attributes and <style> rules (fill, stroke, stop-color, the opacities and the stroke and
- * rule properties) become plain presentation attributes, a gradient's href gives it the stops it inherits, and every
- * other style part is dropped. That resolution runs only when the caller passes the resolver as `css` (an editor opening a
- * file; src/svg-safety/css-loader.ts); without it style attributes and <style> rules are dropped. Threats covered: script and event execution, external loads through url() or href, CSS
- * escapes and comments that hide a token, and resource exhaustion by size, nesting or style amplification.
- */
+// Own SVG icons: user markup reduced to an allowlist of drawing elements and attributes, plus the shapes as path data.
+// Nothing that runs or fetches survives. Paint styles become presentation attributes only when the caller passes
+// the resolver as `css`; otherwise styles are dropped.
 
 /** A stroked shape: its outline as path data and the stroke (width in viewBox units, transforms applied). */
 export interface StrokeShape {

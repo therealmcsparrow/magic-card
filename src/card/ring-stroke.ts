@@ -3,10 +3,7 @@ import { rangeColor } from '../utils/color-ranges';
 import { colour, withOpacity } from '../utils/ring';
 import type { ResolvedRing, RingTimer } from '../utils/ring';
 
-/*
- * How <mc-ring> (the decor chunk) draws a resolved ring: the stroke's dash pattern and motion, the stroke offset of the
- * border edge and the tick of a running timer. Pure, no DOM. The ring itself is resolved in src/utils/ring.ts.
- */
+/** How <mc-ring> draws a resolved ring: dash pattern, motion, stroke offset and timer tick. Pure, no DOM. */
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 

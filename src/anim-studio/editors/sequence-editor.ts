@@ -56,14 +56,9 @@ const clamp = (n: number, min: number, max: number): number => Math.min(max, Mat
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
 
 /**
- * Sequence document editor (studio inspector): the steps in play order, each a collapsible row
- * (animation, delay, duration override, plays), reordered by dragging the handle or Alt+Up /
- * Alt+Down; a schedule bar drawing one cycle with the playhead at `.time`; Loop and the
- * children stagger. Steps that cannot play (missing document, particles, an effect preset) are
- * flagged on their row and drawn as a gap marker, as the player skips them.
- *
- * Contract: .superpowers/sdd/anim-studio/editor-contract.md. `.doc` is never mutated; every edit
- * emits `doc-change` { doc, label } (a drag: transient ones while moving, one final on release).
+ * Sequence document editor (studio inspector): collapsible step rows reordered by drag or Alt+Up / Down, a schedule bar
+ * with the playhead at `.time`, Loop and the children stagger. Steps that cannot play are flagged. `.doc` is never
+ * mutated: every edit emits `doc-change` { doc, label }.
  */
 @customElement('mc-anim-sequence-editor')
 export class AnimSequenceEditor extends LitElement {

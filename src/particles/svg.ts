@@ -5,16 +5,9 @@ import { sanitizeSvg, SVG_MAX_BYTES } from '../icons/svg-sanitize';
 import { builtinPath } from './shapes';
 import { stopAt } from './css';
 
-/*
- * A baked loop as a standalone animated SVG (particles-v2 bakedSvg; the studio's export, P2-6).
- * It stays inside what the studio's export check (icon-anim/animated-svg.ts checkAnimatedSvg)
- * allows: only svg, g, path and style elements, no links, no url(), and a drawing (the file without
- * its <style>) the own-icon sanitiser accepts, so under 32 KB. Every particle is a <g> with its
- * shape as paths, moved by CSS keyframes (transform and opacity, linear, the loop's period). Icons
- * and emoji cannot be drawn with paths alone, so they export as dots. Own SVG shapes are their
- * sanitised paths in one colour, as the card's mask shows them. With reduced motion the file shows
- * the middle of the loop, standing still.
- */
+// A baked loop as a standalone animated SVG (bakedSvg, the studio export). It stays inside the export check: only svg, g,
+// path and style elements, no links or url(), drawing under 32 KB. Each particle is a <g> moved by CSS keyframes; icons
+// and emoji export as dots. Reduced motion shows the middle of the loop, still.
 
 const DOT = '<path d="M12 5a7 7 0 1 0 0 14a7 7 0 1 0 0-14z"/>';
 /** The drawing's budget: the sanitiser refuses more than SVG_MAX_BYTES; head and tail need some room. */

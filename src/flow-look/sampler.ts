@@ -1,11 +1,8 @@
 import { FLOW_GEOMETRY } from '../contracts/flow-look';
 
-/*
- * Path sampler of the flow-look chunk (contract flow-look 1.0.0). Parses exactly the
- * grammar flowPath() emits (absolute M L H V C A; arcs rx = ry, no rotation, small arc), so lengths
- * and offsets never come from DOM measuring. Conventions: y down; N = (-ty, tx); T' = k N (k signed
- * curvature); an offset curve P = C + o N has P' = T (1 - k o), so a loop needs k * o >= 1.
- */
+// Path sampler of the flow-look chunk (contract flow-look 1.0.0). Parses exactly the grammar flowPath() emits
+// (absolute M L H V C A; arcs rx = ry, no rotation, small arc), so lengths and offsets never come from DOM measuring.
+// Conventions: y down; N = (-ty, tx); T' = k N; an offset curve P = C + o N has P' = T (1 - k o), so a loop needs k * o >= 1.
 
 const NUM = /-?\d*\.?\d+(?:e-?\d+)?/g;
 const TAU = Math.PI * 2;

@@ -5,13 +5,8 @@ import { slug, uniqueId } from './ids';
 import { attributeWhat, elementWhat, removedNote } from './kinds/icon';
 import { note } from './types';
 
-/*
- * The one import() of the image-transfer chunk (magic-card-image-transfer.js), together with the svg-image chunk whose
- * api it uses for every sanitiser, thumbnail and cache call. Both imports name chunks the page may already hold; the
- * api is read from the chunk entry and the chunk's install() is never called here. Resolves undefined, never rejects:
- * on an import failure, after LOAD_TIMEOUT_MS, or when the chunk's revision is not the one this file understands. The
- * next call tries again.
- */
+// The one import() of the image-transfer chunk, together with the svg-image chunk whose api it uses.
+// Resolves undefined, never rejects (import failure, LOAD_TIMEOUT_MS, unknown revision); the next call tries again.
 
 /** The helpers and shared messages the chunk is handed once; it imports none of them. */
 export const imageTransferKit: ImageTransferKit = {

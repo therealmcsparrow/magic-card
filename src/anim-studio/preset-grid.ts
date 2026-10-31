@@ -13,20 +13,9 @@ import { standaloneHass } from './studio-stage';
 import { tileHass } from './tiles';
 import { t } from './i18n';
 
-/*
- * Module `preset-tiles` (contract preset-catalogue 1.1.0, tile part): the "Customise a preset"
- * dialog's grid of live mini cards. <mc-preset-grid> shows one tile per PresetTileSource, grouped
- * and filtered by `query`, and emits `preset-pick` ({ source }) on click, Enter or Space; the
- * dialog does the rest, the grid writes nothing. Each tile's <mc-preset-thumb> is a small
- * magic-card on the studio's card tile (icon, name, state, background) that plays the preset.
- *
- * Tile rules (PRESET_TILE_RULES_VERSION 1.0.0):
- * - the card exists only while the tile is on screen (IntersectionObserver); off screen nothing runs;
- * - tap presets and heavy scenes (seasonal, catalogue `heavy`) show a still card until hover or
- *   focus; a corner play badge (touch) previews one cycle;
- * - prefers-reduced-motion: every tile still, hover and focus do not play, no badge (the card
- *   itself honours reduced motion, so a badge could not play anything).
- */
+// <mc-preset-grid> (module preset-tiles): one live mini card per PresetTileSource, grouped and filtered by `query`; emits
+// `preset-pick` ({ source }) on click, Enter or Space. A tile's card exists only while on screen; tap presets and heavy
+// scenes stay still until hover or focus; reduced motion keeps every tile still.
 
 export const PRESET_GRID_TAG = 'mc-preset-grid';
 export const PRESET_THUMB_TAG = 'mc-preset-thumb';

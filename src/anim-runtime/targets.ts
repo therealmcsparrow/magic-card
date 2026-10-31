@@ -1,32 +1,9 @@
 import type { CompiledTrack, CompiledV2 } from '../anim-studio/compile-v2';
 import type { ApplyCtx } from './types';
 
-/*
- * v2 runtime, card-part targets (spec section D). A document's tracks on `element`, `icon`, `name`,
- * `state` and `background` play on the module's marked parts (`data-mc-part`, set by the module
- * templates) through rules in the runtime's own page-wide sheet (adopted by every card that uses
- * it), scoped by the wrapper:
- *
- *   [data-mc-run][data-mc-tm="w<n>"] [data-mc-part="name"] { animation: <doc A track>, <doc B track> }
- *
- * Rows, columns and the card (ha-card) are wrappers too: they have no parts of their own (every
- * name, state and icon belongs to a module inside), so only `element` and `background` play there.
- *
- * Each wrapper with card-part tracks gets an id of its own (data-mc-tm) and one rule per part that
- * plays the tracks of every document it runs, in entry order and each with its entry's timing (like
- * v1 entries, they stack). The tracks' @keyframes are shared per run key (the document's content
- * hash) and counted: they leave the sheet with the last wrapper running them. Parts of a module
- * nested inside the wrapper (layout modules) are left alone. `icon` and `element` tracks play after
- * the wrapper's base lists (--mc-anim-i / -m), which keep playing.
- *
- * A module without a background element of its own (everything but bar and gauge) gets a generated
- * layer for `background` tracks: an absolute, inset 0 element under the content that takes over the
- * wrapper's background (and its hover background), so moving or fading the background leaves the
- * content where it is. The wrapper paints no background meanwhile (`background: none !important`),
- * so `background` keys of an element track do nothing while a background track is active. The
- * hand-over happens without transitions. An SVG background (gauge track) takes transforms, opacity
- * and stroke; box properties (background, radius) do nothing on it.
- */
+// v2 runtime, card-part targets: tracks on `element`, `icon`, `name`, `state` and `background` play on the module's
+// marked parts (`data-mc-part`) through rules in the runtime sheet scoped by the wrapper (`data-mc-tm`).
+// Keyframes are shared per run key and counted; rows, columns and the card only take element and background.
 
 /** Card-part targets this module plays (rig targets are rig.ts's). */
 const PART_TARGETS = new Set(['element', 'icon', 'name', 'state', 'background']);

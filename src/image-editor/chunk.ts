@@ -31,11 +31,8 @@ import { importWin, readSvg, replaceWin, summary, type Imported } from './import
 import { contextOf, layerOf, lift, partColours, plain, partDefs, partNode, partOut, partRows, type Held } from './part';
 import { barTail, canvasDefs, detailsWin, sizeForm, sizeWin, slotView, tooBigWin, viewer } from './ui';
 
-/*
- * The image-only half of <mc-svg-editor> (contract image-editor 1.0.0): what the shell asks of an ImageUi at the places
- * where an image differs from an icon. Holds the canvas size, the save path, the size meter's words and the view-only
- * workspace. It draws no SVG itself: every sanitiser, thumbnail and download goes through the svg-image chunk's api.
- */
+// The image-only half of <mc-svg-editor> (contract image-editor 1.0.0): canvas size, save path, size meter words and
+// the view-only workspace. It draws no SVG itself; every sanitiser, thumbnail and download goes through the svg-image api.
 
 export interface SizeDlg {
   mode: 'create' | 'apply';

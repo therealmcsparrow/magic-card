@@ -1,9 +1,7 @@
 import { cubicsToPath, Pt, toCubicSubpaths } from '../path/core';
 
-/*
- * Geometry of SVG drawings: transform lists as matrices, shapes as path data, and a transformed outline. These are maths
- * on values the sanitisers have already cleaned; none of it decides what is safe to keep.
- */
+// Geometry of SVG drawings: transform lists as matrices, shapes as path data, and a transformed outline.
+// Maths on values the sanitisers have already cleaned; none of it decides what is safe to keep.
 
 export const fmt = (n: number): string => String(+n.toFixed(3));
 export const num = (v: string | null | undefined): number | undefined => {

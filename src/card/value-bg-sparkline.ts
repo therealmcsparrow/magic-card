@@ -2,11 +2,7 @@ import { chainPath } from '../utils/shape-path';
 import { bucketWindow } from '../services/history-cache';
 import { VALUE_BG_DEFAULTS } from '../utils/value-background';
 
-/*
- * The path of a history sparkline (design `value_background` of type `sparkline`): history samples to an SVG line
- * and area. Pure, no DOM. <mc-value-bg> (the decor chunk) draws it; the entry resolves the options only
- * (src/utils/value-background.ts).
- */
+/** The path of a history sparkline (design `value_background`): samples to an SVG line and area. Pure. */
 
 const num = (v: unknown): number | undefined => {
   const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : v;
@@ -19,14 +15,9 @@ interface Sample {
 }
 
 /**
- * The sparkline of history samples in a w x h box over the time window `start`..`end` (ms; the data's
- * own span when unset): samples before the window start at its left edge, later ones are dropped,
- * more than ~60 are averaged into equal time buckets (gaps keep the last value), and the last value
- * is held to the window's end (a value that never changed is a flat line across). The line is a
- * monotone cubic (no backtracking or overshoot) or straight; the area runs under it to the bottom.
- * Values scale between min and max (the data's own range when unset; swapped when reversed; clamped
- * when outside), inside `pad` px from the top and bottom; flat data is a line through the middle.
- * `{ line: '' }` without numeric samples, without a time span or for an empty box.
+ * The sparkline of history samples in a w x h box over the window `start`..`end`: long series are
+ * averaged into time buckets, the last value is held to the window end, the line is a monotone
+ * cubic or straight. `{ line: '' }` without samples, a time span or a box.
  */
 export function sparklinePath(
   points: Sample[],

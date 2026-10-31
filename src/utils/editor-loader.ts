@@ -2,23 +2,7 @@ import { VERSION } from '../version';
 import type { LazyChunkControl } from './lazy-chunk';
 import { lazyChunks } from './lazy-chunks';
 
-/*
- * The card editor (magic-card-editor, every module's settings tabs, the editor CSS and js-yaml) is a
- * lazy chunk, dist/magic-card-editor.js, loaded next to magic-card.js (public path: src/index.ts).
- * Dashboards never load it; MagicCard.getConfigElement() and window.MagicCard.loadEditor() (the
- * animation studio) do. Contract module-editor 1.0.0.
- *
- * Memoised while it loads or once it has loaded. A failure (offline, file missing, or a chunk from
- * another release next to a cached magic-card.js) resolves false, is logged, and the next call tries
- * again. The retry is not verified against a failed fetch: webpack forgets a failed chunk, but a
- * browser may keep the failed module request for that URL until the page reloads, so the warning
- * tells the user to reload.
- *
- * The editor's labels (CSS property names, animation presets, module names, ... : namespace 'labels',
- * contract i18n 1.0.0) sit in a second lazy chunk, magic-card-i18n-labels.js, that the editor chunk
- * imports. This file never imports it (magic-card.js carries only the label numbers); it awaits the
- * chunk's ready() and takes the same failure path when the labels cannot load.
- */
+/** Loader of the card editor chunk (dist/magic-card-editor.js) and its labels chunk. */
 
 interface EditorChunk {
   EDITOR_VERSION: string;

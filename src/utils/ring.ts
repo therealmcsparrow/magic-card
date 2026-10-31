@@ -8,11 +8,7 @@ import { entityNumber } from './entity-value';
 import { isTimer, timerFraction, timerProgress } from './timer';
 import { resolveBound } from './value-bound';
 
-/*
- * The ring of a card / row / column / module design (RingConfig): what to draw, resolved from the
- * config and the entity states. The outline itself is drawn by <mc-ring> (src/card/mc-ring.ts)
- * from the element's rendered size and radii (src/utils/ring-path.ts).
- */
+/** The ring of a card, row, column or module design (RingConfig), resolved from config and entity states. */
 
 export const RING_DEFAULTS = {
   width: 3,
@@ -93,11 +89,9 @@ export const withOpacity = (c: string, pct: number | undefined) =>
   pct === undefined || pct >= 100 ? c : `color-mix(in srgb, ${c} ${clamp(pct, 0, 100)}%, transparent)`;
 
 /**
- * What the ring draws, or undefined when it is off or its "Show only while" condition is false.
- * `defaultEntity`: the module's entity (value and condition default); none for card / row / column.
- * `clipped`: the ring's element clips its edge (the card: ha-card has overflow: hidden), so an
- * Outside ring would draw nothing; it is drawn Inside. `shaped`: the element is clipped to its
- * shape, which would cut off half of a Center ring too: every ring is drawn Inside.
+ * What the ring draws, or undefined when it is off or its condition is false. `defaultEntity` is
+ * the module's entity. `clipped` and `shaped` elements cut an Outside or Center ring, so it is
+ * drawn Inside.
  */
 export function resolveRing(
   ring: RingConfig | undefined,

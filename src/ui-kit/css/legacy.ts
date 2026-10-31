@@ -1,11 +1,6 @@
 import { css, CSSResult, unsafeCSS } from 'lit';
 
-/*
- * Legacy class mapping: module editors (30 files) still emit mc-* classes.
- * These rules give them exactly the primitives' look without touching module files.
- * LEGACY_INPUT carries enough specificity (0,5,1) to win over the old editor sheets
- * that may still be loaded in the same shadow root during the transition.
- */
+// Legacy class mapping: gives the mc-* classes of module editors the look of the primitives without touching module files.
 const LEGACY_INPUT = unsafeCSS(
   ':is(.mc-field, .mc-act-field, .mc-cond-field) :is(input, select, textarea)' +
     ":not([type='checkbox']):not([type='color']):not([type='range']):not([type='radio'])",

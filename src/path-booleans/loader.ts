@@ -1,10 +1,6 @@
 import type { PathBooleansChunk } from '../contracts/path-booleans';
 
-/*
- * Loads the booleans chunk (magic-card-svg-booleans.js) on the first press of a boolean button. Holds
- * no state: webpack joins repeated import() calls to one request. A failure or an 8 s timeout
- * resolves undefined (console.warn) and the next call tries again.
- */
+// Loads the booleans chunk (magic-card-svg-booleans.js) on the first press of a boolean button; a failure or 8 s timeout resolves undefined.
 
 const TIMEOUT_MS = 8000;
 

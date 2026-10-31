@@ -100,28 +100,10 @@ interface DragState {
 }
 
 /**
- * Keyframe timeline of a `keyframes` animation document: a ruler with the playhead (zoomable,
- * in % or seconds), and per target (the document's own keyframes, then its v2 tracks) a
- * collapsible group: a summary lane of whole keyframes plus one lane per animated property. The
- * selected key's values and easing are edited in the key inspector (key-inspector.ts), which the
- * studio shows in its right column: this editor emits `selection-change`.
- *
- * Uses <mc-unit-field> and <mc-color-picker> from the editor chunk through the key inspector.
- *
- * Contract (src/anim-studio/editors, see the studio shell): `.doc` is never mutated; every edit emits
- * `doc-change` { doc, label } (bubbles, composed), drags emit transient ones and a final one on
- * release; a ruler click / drag emits `seek` { time } (0-1); a selection emits `selection-change`
- * { selection: StudioSelection } (keys with their target). `.time` places the playhead;
- * `.studioSelection` (the shell's selection) selects keys and the active target.
- *
- * Mouse: double-click a lane (or its + button) to add a key there; drag keys (snapping to keys,
- * the playhead and the grid; Shift free, Alt duplicates); Ctrl-click toggles a key, Shift-click
- * selects the range from the last clicked key, drag a box to select across lanes and targets; click
- * a lane name to select all its keys; Ctrl + wheel zooms. Keyboard: Tab between lanes, arrows move
- * the selected keys (Shift: 10%), Alt+arrows and Home/End go to the previous / next key, Up/Down to
- * the lane above / below, Delete removes, Ctrl+C / Ctrl+V copy and paste at the playhead (into the
- * active target; a single lane selected takes a one-lane clip), Ctrl+A selects all, Ctrl +/- zoom,
- * Escape clears.
+ * Keyframe timeline of a `keyframes` document: a zoomable ruler with the playhead and, per target, a collapsible group
+ * with a summary lane plus one lane per animated property. Key values are edited in the key inspector. `.doc` is never
+ * mutated: edits emit `doc-change` (drags transient, then final), the ruler emits `seek`, selection emits
+ * `selection-change`. Mouse and keyboard: add, drag, range and box select, copy / paste, zoom, delete.
  */
 @customElement('mc-anim-keyframes-editor')
 export class AnimKeyframesEditor extends LitElement {

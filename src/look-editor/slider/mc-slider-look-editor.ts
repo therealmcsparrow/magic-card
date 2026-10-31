@@ -19,12 +19,8 @@ import {
   positionPatch, readStops, resetLook, sortStops, stopInRange, thumbPatch, valuePosition, withKeys, type ValuePosition,
 } from './logic';
 
-/*
- * <mc-slider-look-editor> (contract look-editor 1.0.0). The Look block of the
- * slider editor: presets, then Track and fill, Handle, Value display, Shape and Stops. Nothing is written on mount;
- * every change is one `onChange` with the whole next config; presets and Reset look are one change each with the Undo
- * routes (toast, 20 s, and a persistent button). Only SLIDER_LOOK_KEYS, slider_color, track_color and show_value are written.
- */
+// <mc-slider-look-editor> (contract look-editor 1.0.0): the Look block of the slider editor.
+// Every change is one `onChange` with the whole next config.
 
 type Bag = Record<string, unknown>;
 type Section = 'track' | 'thumb' | 'value' | 'shape' | 'stops';

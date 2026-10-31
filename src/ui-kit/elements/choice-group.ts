@@ -5,14 +5,7 @@ import { UI_KIT_CONTRACT_REVISION, type UiChoice } from '../../contracts/ui-kit'
 import { rovingTarget } from '../controllers/roving-focus';
 import { kitChoiceGroupElementCss } from '../css/elements';
 
-/*
- * Shared body of <mc-ui-tile-group> and <mc-ui-chip-group> (contract ui-kit 1.1.0).
- * MANUAL activation: every choice is a button with aria-pressed inside a role=group, one tab stop (roving tabindex);
- * the arrow keys, Home and End move focus only; Space, Enter or a click fire 'mc-pick'. The host owns `value`, so
- * moving focus never writes anything. `preview` is static SVG markup from a chunk constant (never config text), drawn
- * aria-hidden; the label stays the accessible name. The description line follows the focused choice, else the picked one.
- * Holds no strings.
- */
+// Shared body of <mc-ui-tile-group> and <mc-ui-chip-group>: aria-pressed buttons in a role=group; fires "mc-pick".
 let uid = 0;
 
 export abstract class UiChoiceGroup extends LitElement {

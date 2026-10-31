@@ -3,11 +3,7 @@ import type { FieldKind } from '../contracts/theme-catalogue';
 import type { ThemeDoc, ThemeMode, ThemeValue } from '../contracts/theme-editor';
 import { t } from './i18n';
 
-/*
- * The theme document model: pure functions on ThemeDoc, no DOM state. Docs are never mutated; every
- * edit returns a new doc that keeps the key order of the file (new keys go at the end of their
- * block) and every key it did not touch, so a save changes only what the user changed.
- */
+// The theme document model: pure functions on ThemeDoc that return a new doc and keep key order and untouched keys.
 
 
 export interface DocError {

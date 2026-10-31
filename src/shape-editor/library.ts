@@ -1,11 +1,7 @@
 import { CMD, LIBRARY_ID_RE, SHAPE_MAX_BYTES, type LibraryChangedDetail, type MagicCardUtilsWindow, type SavedShape, type SavedShapeInput } from '../contracts/mcu-library';
 import type { CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape';
 
-/*
- * The shape editor's side of the Magic Card Utils library (mcu-library 1.0.0). Browsing and saving use
- * the WebSocket commands; resolving a `ref` uses the provider (window.magicCardUtils) so the editor
- * sees what the card sees. Cards never call these.
- */
+// The shape editor side of the Magic Card Utils library (mcu-library 1.0.0): WebSocket commands for browsing and saving, the provider for `ref`.
 
 export interface Hass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;

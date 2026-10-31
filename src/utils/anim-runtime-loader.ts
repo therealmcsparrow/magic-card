@@ -1,17 +1,6 @@
 import type { LazyChunkControl } from './lazy-chunk';
 
-/*
- * The v2 animation runtime (icon rigs, card-part targets, clips, bindings) is a lazy chunk,
- * dist/magic-card-anim-runtime.js, loaded next to magic-card.js (public path: src/index.ts). Cards
- * whose animations need none of it never load it. It loads through lazyChunk() (lazy-module 1.4.0): one
- * import per page, a failure is retried (silent, then in the background) and shows the failure notice;
- * until it lands, or when it cannot be loaded, the base animation plays.
- *
- * The chunk comes from a slot that the chunk table (src/utils/lazy-chunks.ts) fills. This file never imports the
- * table: the animation studio bundle imports it through resolve.ts, and the table would pull every card chunk
- * entry into that bundle's chunk graph. A bundle without the table has no chunk, loads nothing and
- * runtimeIfLoaded() stays undefined, as it always did there.
- */
+/** Loader of the v2 animation runtime chunk (dist/magic-card-anim-runtime.js) through lazyChunk(). */
 
 export type AnimRuntime = typeof import('../anim-runtime');
 

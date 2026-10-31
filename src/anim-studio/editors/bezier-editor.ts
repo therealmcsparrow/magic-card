@@ -31,11 +31,9 @@ function glyph(b: Bezier | undefined): TemplateResult {
 }
 
 /**
- * Cubic-bezier easing editor: preset tiles, a curve with two draggable handles (pointer and
- * keyboard: arrows move a handle by 0.01, Shift by 0.1), the four numbers, and a text field that
- * takes any easing (steps() too). An empty value is "Default": the animation's own easing.
- * Emits `easing-change` { value: string | undefined, transient?: true } — transient while dragging,
- * one final event on release.
+ * Cubic-bezier easing editor: preset tiles, a curve with two draggable handles (arrows 0.01, Shift 0.1), four numbers and
+ * a text field that takes any easing. Empty means Default. Emits `easing-change` { value, transient? }: transient while
+ * dragging, one final event on release.
  */
 @customElement('mc-anim-bezier-editor')
 export class AnimBezierEditor extends LitElement {

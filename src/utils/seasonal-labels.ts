@@ -2,11 +2,7 @@ import type { SceneId } from './seasonal';
 import type { MessageIndex } from '../contracts/i18n';
 import { lm } from '../i18n/labels/mark';
 
-/*
- * The display name of each seasonal scene, kept apart from the scene tables (src/utils/seasonal-scenes.ts) so the
- * editor can name a scene without carrying them. A stateless leaf: type-only imports and the lm() marks (a number in
- * the labels table, resolved with t() from src/i18n/labels). seasonal-scenes.ts builds SCENES from it.
- */
+/** The display name of each seasonal scene, kept apart from the scene tables. */
 export const SCENE_LABELS: Record<SceneId, MessageIndex> = {
   winter: lm('labels.seasonal-labels.winter'),
   spring: lm('labels.seasonal-labels.spring'),

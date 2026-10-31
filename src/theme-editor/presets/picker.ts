@@ -7,13 +7,7 @@ import { fold } from '../../i18n/fold';
 import { outsideOf } from '../outside';
 import { m, t } from './i18n';
 
-/*
- * The preset picker of the create dialog: search, a Show filter, two groups
- * of cards with a swatch strip. It lives in the lazy preset chunk, not in the editor entry, because
- * the entry has a byte cap and nothing here is needed before the dialog opens. It is a
- * template function, not an element: <mcte-start-view> renders it into its own shadow root and adopts
- * `pickerStyles` there when the chunk arrives. lit, icons.ts and <mcte-mode-switch> come from the entry.
- */
+// The preset picker of the create dialog: search, a Show filter and grouped swatch cards.
 
 export interface PickerView {
   lib: ThemePresetLibrary;

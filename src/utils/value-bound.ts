@@ -1,10 +1,7 @@
 import type { HassEntity, ValueBound } from '../types';
 import { entityNumber } from './entity-value';
 
-/**
- * A min / max that is a number or `{ entity, attribute? }` (that entity's numeric state or
- * attribute). Anything unreadable (unavailable, not a number, a missing entity) is `def`.
- */
+/** A min / max that is a number or `{ entity, attribute? }`; anything unreadable is `def`. */
 export function resolveBound(v: ValueBound | string | undefined, states: Record<string, HassEntity> | undefined, def: number): number {
   if (v && typeof v === 'object') {
     const id = typeof v.entity === 'string' ? v.entity : '';

@@ -3,13 +3,8 @@ import type { IconStyleHints } from '../../contracts/icon-library';
 import type { MessageIndex } from '../../contracts/i18n';
 import { m } from './i18n';
 
-/*
- * Style hints of the icon library (module icon-library, contract 1.2.0), from the brand artist's
- * p4-spec.json `styles`: per entry the accent parts Glow lights (`glow.parts`, part or group ids and
- * `shape:<id>` for its drawn shapes; empty: halo only), its theme's glow colour (`glow.color`; none:
- * derived from the icon colour) and the Quiet hero where the automatic pick is wrong. Generated from
- * the spec: edit the spec and regenerate, or edit both. Read by style.ts only.
- */
+// Style hints of the icon library: per entry the accent parts Glow lights, its theme glow colour and the Quiet hero where
+// the automatic pick is wrong. Generated from the spec; read by style.ts only.
 
 export const STYLE_HINTS: Record<string, IconStyleHints> = {
   'bulb-glow': {

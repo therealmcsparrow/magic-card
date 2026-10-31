@@ -21,10 +21,8 @@ import {
 } from './path-utils';
 import { t, tx, m, type MessageId } from '../i18n';
 
-/*
- * mc-unit-field and mc-color-picker are used by tag only: the card bundle defines them and is
- * always loaded before the studio bundle (editor contract), so this file must not import them.
- */
+// mc-unit-field and mc-color-picker are used by tag only: the card bundle defines them and loads before the studio bundle,
+// so this file must not import them.
 
 type Look = NonNullable<PathSpec['particles']>;
 type Subject = PathSpec['subject'];

@@ -8,12 +8,8 @@ import { loadSvgEditor } from './loaders';
 import { getFullPath, hasTemplate, type SyncContext } from '../../utils/sync-path';
 import { t } from '../i18n';
 
-/*
- * The card editor's side of the SVG editor (svg-editor 1.0.0): "Draw an icon", "Customise this icon" and
- * "Edit icon" open <mc-svg-editor> in the top layer; its `mc-svg-save` is written into the module (`icon:
- * svg` + `svg`, or `icon: mcu:<id>` with an optional kept copy in `custom_icons`). The editor itself
- * saves to the library and handles Escape and focus; it does not close itself, so the layer goes here.
- */
+// The card editor's side of the SVG editor (svg-editor 1.0.0): opens <mc-svg-editor> in the top layer
+// and writes its `mc-svg-save` into the module.
 
 /** The module keys the editor writes; undefined removes the key. */
 export interface IconPatch {

@@ -1,10 +1,7 @@
 import type { HassEntity } from '../types';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 
-/*
- * Home Assistant timer entities (timer.*): how much is left, read from the state's attributes, and
- * one shared 1 s ticker for everything that shows a running timer (rings, countdown text).
- */
+/** Home Assistant timer entities (timer.*): time left and one shared 1 s ticker. */
 
 /** A timer's progress: `remaining` and `total` in ms. Idle timers have nothing left. */
 export interface TimerProgress {

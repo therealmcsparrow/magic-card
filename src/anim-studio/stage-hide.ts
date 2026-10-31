@@ -1,17 +1,9 @@
 import type { StageHide, StageParticles } from '../contracts/studio-layers';
 import { PARENTS_PREFIX, resolveHidden } from './layer-view';
 
-/*
- * The stage-only hide rules (contract studio-layers.ts section 3a). Every drawn row that is hidden or
- * soloed away gets one `opacity:0!important` rule. An important declaration beats CSS animations, Web
- * Animations (the clip crossfade), bindings' inline styles and live particle frames, so one mechanism
- * covers finite iterations, reduced motion, another clip playing and the crossfade, and the preview
- * document is not rewritten (no card re-render, no restart). The sheets go into the preview card only.
- *
- * Selectors used (a studio-facing surface of the runtime; tests/stage-hide.test.ts guards them):
- * data-p / data-g / data-s (rig.ts markup), data-mc-part (module templates), .mc-module-wrapper and
- * data-mc-gen-bg (targets.ts), .mc-anim-fx[data-fx] > i in slot order (card-decorations.ts).
- */
+// The stage-only hide rules: each hidden or soloed-away drawn row gets one `opacity:0!important` rule, which beats
+// animations and inline styles without rewriting the document. The sheets go into the preview card only. Selectors used:
+// data-p / data-g / data-s, data-mc-part, .mc-module-wrapper, data-mc-gen-bg, .mc-anim-fx[data-fx] > i.
 
 const HIDE = '{opacity:0!important}';
 /** A CSS attribute-selector string. */

@@ -3,12 +3,7 @@ import { BUILD_VERSION } from './build-version';
 import { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, SILENT_RETRY_MS } from '../contracts/lazy-module.needs';
 import type { EditorLazyChunkName, LazyChunkFailure, LazyChunkModule, LazyChunkName, OnDemandChunkName, RetryableLazyChunk } from '../contracts/lazy-module';
 
-/*
- * The one loader for the lazy chunks (contract lazy-module 1.4.0). Memoised load,
- * 10 s per attempt, one silent retry after 2 s, then the failed state (the notice, src/card/chunk-notice.ts)
- * and three background retries, BUILD check, install, styles adoption. The timing numbers come from
- * src/contracts/lazy-module.needs.ts: the entry may not import lazy-module.ts itself at run time.
- */
+/** The one loader for the lazy chunks (contract lazy-module 1.4.0): memoised load, retries, install, styles. */
 
 /** The release this magic-card.js was built from; chunk entries carry their own copy as BUILD. */
 export { BUILD_VERSION };
@@ -49,12 +44,9 @@ let retrying = false;
 let hooked = false;
 
 /**
- * Call the chunk import. A retry asks for the chunk under a URL that has not been requested on this page
- * (`r=<n>`, n counts every retry request of every chunk): browsers remember a failed import() and may cache a
- * 404 for the URL. webpack reads the chunk URL (`__webpack_require__.u`) inside the import() call
- * itself, and only when it sends a request, so the number is taken there and lives only for that synchronous
- * call. An attempt that finds the request still in flight gets webpack's promise: no request, no number used,
- * and it is waiting, not a retry (lazy-module 1.4.0 "Failure, retry and timeout").
+ * Call the chunk import. A retry asks for the chunk under a URL not yet requested on this page
+ * (`r=<n>`), because browsers may cache a failed import(). The number is taken inside the import()
+ * call; an attempt that finds the request in flight reuses it and uses no number.
  */
 function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModule> {
   if (again && typeof __webpack_require__ !== 'undefined') {

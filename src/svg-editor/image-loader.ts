@@ -2,14 +2,7 @@ import type { SvgImageApi } from '../contracts/svg-image';
 import type { Kit } from '../image-editor/kit';
 import type { ImageShell, ImageUi } from './image-seam';
 
-/*
- * Loads the image-editor chunk (magic-card-image-editor.js) for an image source, together with the svg-image chunk
- * whose api it uses for every sanitiser, thumbnail and download. The only import() of the image-editor chunk. An icon
- * source never calls this. null on failure or after 8 s; the next call tries again.
- * The svg-image chunk is imported here, not read from the card's chunk table: the table is in magic-card.js, and a
- * reference to it from an editor chunk would cost the entry bytes. Both imports name the same chunk, so the chunk file
- * is fetched once and its state (the image cache) is the one the cards use.
- */
+// Loads the image-editor chunk with the svg-image chunk (its only import()); null on failure or after 8 s.
 
 const TIMEOUT_MS = 8000;
 type Entry = (shell: ImageShell, api: SvgImageApi, kit: Kit) => ImageUi;

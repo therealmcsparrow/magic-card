@@ -14,12 +14,8 @@ import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
 import { locale, t } from './i18n';
 
-/*
- * <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept
- * external values) and export (format, download, copy). It never writes: after the user confirms it
- * dispatches `mc-transfer-import` { kind, items, choice } with the ids already resolved, and the host
- * saves. `mc-transfer-close` on Escape and on Close.
- */
+// <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept external values) and export.
+// It never writes: after the user confirms it dispatches `mc-transfer-import` { kind, items, choice }; `mc-transfer-close` on Escape and Close.
 
 type Ok = Extract<ParseResult, { ok: true }>;
 

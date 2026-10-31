@@ -17,10 +17,7 @@ import { renderConditionsList } from '../inspector/conditions-list';
 import '../components/design-panel';
 import { t } from '../i18n';
 
-/*
- * Default module tab renderers (module-editor 1.0.0): what a listed tab uses when its ModuleEditor
- * has no function for it. Moved from BaseMagicModule, behaviour unchanged.
- */
+// Default module tab renderers (module-editor 1.0.0): used when a listed tab has no function for it.
 
 /** SyncContext for a module's fields; undefined unless the card is linked to a template. */
 export function buildSyncContext(config: CardModule, template?: string): SyncContext | undefined {

@@ -4,12 +4,9 @@ import {
 } from '../../contracts/bg-stack';
 import { anchorXY, isAnchor, num } from './values';
 
-/*
- * The motion and refresh part of <mc-bg-stack>: pan / zoom settings and state, camera snapshot refresh,
- * the stale state with its pill, idle input, and the visibility, off-screen and reduced-motion wiring.
- * Nothing runs while the stack is off screen, the page is hidden or the card is paused: refresh, stale
- * ticker and idle timers are cleared and restarted on return.
- */
+// The motion and refresh part of <mc-bg-stack>: pan / zoom settings and state, camera snapshot refresh, the stale state
+// with its pill, idle input, and the visibility, off-screen and reduced-motion wiring.
+// Nothing runs while the stack is off screen, the page is hidden or the card is paused.
 
 const PILL_TICK_MS = 60_000;
 const REDUCED = '(prefers-reduced-motion: reduce)';

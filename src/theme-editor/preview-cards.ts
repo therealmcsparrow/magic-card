@@ -4,14 +4,7 @@ import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import { CATALOGUE_GROUPS } from './catalogue';
 import { t } from './i18n';
 
-/*
- * Real cards for the preview, and the "Preview not available" notice of a card group.
- *
- * Built-in cards (tile, entities, button) and Magic Card come from HA's card helpers, the way a
- * dashboard creates them. Another project's card is only created when its element is defined; the
- * user can ask the editor to load it from the dashboard resources (lovelace/resources) with one
- * button. Nothing here writes a CSS variable: the preview stage scopes those.
- */
+// Real cards for the preview, and the "Preview not available" notice of a card group.
 
 export const PREVIEW_GROUP_TAG = 'mcte-group-preview';
 

@@ -69,14 +69,8 @@ function collapse(s: Record<Side, string>): string {
 const EMPTY_SIDE: Record<SideCell, string> = { length: '0', style: 'none', color: 'currentcolor' };
 
 /**
- * Four-side value (padding / margin / border radius): a 2x2 grid where every side is a compact
- * mc-unit-field (number + unit, written on commit; Custom for auto / calc(…)), and a
- * "Same on all sides" link toggle in the foot row.
- *
- * In `shorthand` mode (a tab's border and corners) the field holds one design key with a 1 to 4 value
- * CSS shorthand in `value`: one input while the sides are linked, four when they are not; the
- * cells hold lengths, colours or words (`cell`), and `inherited` is the shorthand an empty side falls
- * back to (shown as that side's hint).
+ * Four-side value (padding / margin / radius): a 2x2 grid of mc-unit-field with a "Same on all sides" toggle.
+ * `shorthand` mode holds one 1 to 4 value CSS shorthand in `value`; `inherited` is the hint for an empty side.
  */
 @customElement('mc-box-field')
 export class BoxField extends LitElement {

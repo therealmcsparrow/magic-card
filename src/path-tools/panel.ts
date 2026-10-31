@@ -1,8 +1,4 @@
-/*
- * The tool panel template (contract path-tools 1.0.0). The SVG editor renders it in its inspector and owns the
- * state, the debounced preview and the dashed preview drawing; this only turns a state into markup. The controls are
- * the ui kit's templates (the host element carries the kit's CSS), so they look like every other editor screen.
- */
+/* The tool panel template: turns a state into markup with the ui kit's templates; the SVG editor owns state and preview. */
 import { html, nothing, type TemplateResult } from 'lit';
 import { OFFSET_MAX_ABS, OFFSET_MIN_ABS, SIMPLIFY_DEFAULT, SIMPLIFY_MAX, SIMPLIFY_MIN } from '../contracts/path-tools';
 import type { PanelActions, PanelState } from '../contracts/path-tools';

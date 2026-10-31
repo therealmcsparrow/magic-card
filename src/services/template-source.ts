@@ -1,11 +1,8 @@
 import { TEMPLATE_CMD, TEMPLATE_PROBE_MAX_MS, TEMPLATE_PROBE_MIN_MS, TEMPLATE_RETRY_MS, type TemplateHass, type TemplateSource, type TemplateState } from '../contracts/mcu-templates';
 
-/*
- * Template source (Module `template-source`, contract mcu-templates 1.0.0, src/contracts/mcu-templates.ts).
- * One page-wide instance. Per HA connection and template name there is one `subscribe_template`,
- * shared by every card that watches the name (reference counted). Replies are `unknown` and narrowed
- * here; anything unexpected is 'unavailable' plus one warning.
- */
+// Template source (Module `template-source`, contract mcu-templates 1.0.0, src/contracts/mcu-templates.ts), one page-wide instance.
+// Per HA connection and template name there is one `subscribe_template`, shared by every card that watches the name.
+// Replies are `unknown` and narrowed here; anything unexpected is 'unavailable' plus one warning.
 
 type Conn = NonNullable<TemplateHass['connection']>;
 type Listener = (state: TemplateState) => void;

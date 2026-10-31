@@ -5,11 +5,8 @@ import { wrapOnChangeWithSync } from '../state/template-sync';
 import type { ModuleSelection } from '../studio/selection';
 import { containerOf, reorderTarget, setPlacement, type MoveTo } from './placement-model';
 
-/*
- * Editor-state actions of the layer editor, shared by the inspector (order buttons), the tree / canvas item
- * menu (Put behind others, Put on top, Back to normal) and the float bar. The editor state manager is the
- * only writer; every action is one undo step except a nested reorder over several places.
- */
+// Editor-state actions of the layer editor, shared by the inspector, the item menu and the float bar.
+// Every action is one undo step except a nested reorder.
 
 /** Write a module the way the inspector does: a template-linked top-level module marks the changed keys not synced. */
 export function writeModule(sm: EditorStateManager, sel: ModuleSelection, next: CardModule): void {

@@ -4,11 +4,9 @@ import { compile, validateSim } from '../particles';
 import type { AnimationDoc } from './model';
 import { emitterIds } from './layer-view';
 
-/*
- * What the stage sheet needs to hide emitters (studio-layers.ts StageParticles): the layer name base,
- * each emitter's slot range and its row id. The ranges do not depend on geometry, so the particles
- * compiler runs once per document change at { aspect: 0 } (no bake), never per frame.
- */
+// What the stage sheet needs to hide emitters (studio-layers.ts StageParticles): the layer name base, each emitter's
+// slot range and its row id. The ranges do not depend on geometry, so the particles compiler runs once per
+// document change at { aspect: 0 }, never per frame.
 
 const cache = new WeakMap<object, StageParticles | undefined>();
 

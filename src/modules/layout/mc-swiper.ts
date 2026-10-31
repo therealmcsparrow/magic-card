@@ -17,11 +17,8 @@ export interface McSwiperOptions {
 }
 
 /**
- * Light-DOM host of one Swiper instance. Its children (`.swiper > .swiper-wrapper > .swiper-slide`,
- * pagination, prev / next buttons) are rendered by Lit inside the card's shadow root, so the card's
- * styles and module pipeline apply to every slide; this element only creates, updates and destroys
- * the Swiper instance (on connect / option change / disconnect). Slide changes made by Lit are picked
- * up by Swiper's mutation observer.
+ * Light-DOM host of one Swiper instance. Lit renders the slides inside the card's shadow root;
+ * this element only creates, updates and destroys the Swiper instance.
  */
 export class McSwiper extends HTMLElement {
   private _options?: McSwiperOptions;

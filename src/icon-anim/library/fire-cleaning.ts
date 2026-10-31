@@ -1,12 +1,8 @@
 import { blink2, emit, flame, k, osc, rise, te, t, type Spec } from './build';
 import { m } from './i18n';
 
-/*
- * P4 entries, themes fire and cleaning (brand artist's p4-spec.json, direction B: Living rigs).
- * Piece indices are splitIcon's on @mdi/js 7.4.47; the `verify` entries were checked on the parts
- * sheet (hand-wash: piece 0 is a sparkle and piece 1 the soap pump; vacuum: piece 1 is the wheel).
- * Fire: irregular flicker from the flame base, never more than 6 deg. Cleaning: glide, not bounce.
- */
+// Library entries, themes fire and cleaning. Piece indices are splitIcon's on @mdi/js 7.4.47; the `verify` entries were
+// checked on the parts sheet. Fire: irregular flicker from the flame base, never more than 6 deg. Cleaning: glide, not bounce.
 
 export const FIRE_AND_CLEANING: Spec[] = [
   // ── fire ──

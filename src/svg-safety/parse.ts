@@ -1,11 +1,6 @@
 import type { SvgParse } from '../contracts/svg-safety';
 
-/*
- * Parses untrusted SVG text the way the sanitisers consume it: as XML first, and when that is not well-formed or its root
- * is not <svg>, as text/html in an inert document (nothing in it loads or runs). Nothing here throws.
- * `acceptXml` lets a caller refuse an XML root it cannot take (the image sanitiser wants no foreign namespace); a refused
- * root falls through to the html parse like a parse error.
- */
+// Parses untrusted SVG text as XML first, else as text/html in an inert document; nothing here throws.
 export function parseLenient(text: string, acceptXml?: (root: Element) => boolean): SvgParse {
   if (typeof DOMParser === 'undefined') return undefined;
   const parser = new DOMParser();

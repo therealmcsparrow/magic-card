@@ -4,12 +4,7 @@ import type { Anchor, AnchorKind, EditPath, Pt } from '../contracts/path-model';
 import type { ShapeOptions } from '../types';
 import { clamp, parseShapeLength } from '../utils/shape-path';
 
-/*
- * The shape editor's document and the pure rules around it (contract custom-shape 1.0.0):
- * corner mode (type and size per corner, px or %), free path mode (points anchored to an edge or
- * stretching), the `padding` rules ("Space for text"), "Edit as custom" from the presets and a small
- * YAML writer. No DOM, no lit.
- */
+// The shape editor document and its pure rules (contract custom-shape 1.0.0): corner mode, free path mode, `padding`, "Edit as custom", YAML writer.
 
 export type Side = 'top' | 'right' | 'bottom' | 'left';
 export type Sides = Record<Side, number>;

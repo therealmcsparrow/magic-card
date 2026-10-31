@@ -1,7 +1,6 @@
-// Lazy chunks (magic-card-anim-runtime.js) load next to this file, wherever HA serves it from
-// (/hacsfiles/magic-card/, /local/...): a module script has no document.currentScript, so webpack's
-// automatic public path cannot find it. Imports are hoisted and run before this line; that is fine
-// because nothing loads a chunk while the modules evaluate (only after a card renders).
+// Lazy chunks load next to this file, wherever HA serves it from: a module script has no
+// document.currentScript, so webpack's automatic public path cannot find it. Imports are hoisted
+// but nothing loads a chunk while the modules evaluate.
 __webpack_public_path__ = new URL('.', import.meta.url).href;
 
 import { VERSION } from './version';

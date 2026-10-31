@@ -2,10 +2,7 @@ import type { CornerKey, CornerType } from '../contracts/custom-shape';
 import type { PrimitiveKind } from '../contracts/path-model';
 import { m, type NameKey } from './i18n';
 
-/*
- * Names the shape editor shows for things it holds as data (corners, sizes, corner types, shapes, library problems).
- * Each is an id marked with m() and rendered with t(), so the words live in the namespace's tables, never here.
- */
+// Names the shape editor shows for things it holds as data, each an id marked with m() and rendered with t().
 
 export const CORNER: Record<CornerKey, NameKey> = {
   tl: m('shape-editor.names.top-left-corner'),

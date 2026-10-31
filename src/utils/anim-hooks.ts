@@ -3,14 +3,7 @@ import type { ParticlesCompiler, ParticlesModule } from '../contracts/particles-
 import type { V2Compiler } from '../anim-studio/compile';
 import type { ParticlesValidator } from '../anim-studio/model';
 
-/*
- * The hook points of the animation compiler ("Core keeps the seam, not the compiler"). The compiler and the
- * document model live in the lazy `anim` chunk, and the chunks that plug into them (the v2 runtime registers its
- * compileV2, the particles chunk its compiler and sim validator, animation-library.ts the page's library) are separate
- * files that each carry their own copy of that code. The slots therefore sit here, in the entry, where every copy
- * finds the same ones. Plain code with no runtime imports. The compiler and particles setters are re-exported from
- * compile.ts and model.ts.
- */
+/** Hook points of the animation compiler, kept in the entry. Plain code, no runtime imports. */
 
 export const animHooks: {
   /** particles v2 compiler (the particles chunk, via src/utils/particles-loader.ts) and its lenient `sim` check. */

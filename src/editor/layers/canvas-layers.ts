@@ -6,12 +6,8 @@ import { collectHitItems, layersHere, type HereEntry } from './layers-here';
 import { cycleTarget } from './layers-at';
 import type { SheetItem } from '../../contracts/layer-editor';
 
-/*
- * The studio canvas side of layer selection: Alt-click cycling, the layers
- * under the pointer or under the selection, step above / below for the float bar, and the box measurer the
- * Layer group's overlap and small-target checks use. Hit testing reads the config, not the runtime
- * click-through, so a background is always selectable in the editor.
- */
+// The studio canvas side of layer selection: Alt-click cycling, layers under the pointer, step above / below,
+// and the box measurer for the Layer group checks.
 
 export interface CanvasLayersHost {
   /** The live card element (its shadow root holds the module wrappers). */

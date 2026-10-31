@@ -6,12 +6,8 @@ import type { ImageExt } from './chunk';
 import { t } from './i18n';
 import { K } from './kit';
 
-/*
- * Imported parts: runs of adjacent elements the editor cannot edit (clipping, masks, opacity of a group or of a fill alone,
- * colours it has no control for, text it cannot keep). Each run is one locked layer that keeps its markup. The markup was
- * through the image sanitiser before it got here and goes through it again on every save; on the canvas it is drawn from
- * the nodes of the svg-image api (api.fragment), never from a string of this chunk.
- */
+// Imported parts: runs of adjacent elements the editor cannot edit, each kept as one locked layer with its markup.
+// On the canvas they are drawn from the svg-image api nodes (api.fragment), never from a string of this chunk.
 
 export interface Part {
   /** The part's markup, with the attribute-carrying groups above it wrapped round it. */

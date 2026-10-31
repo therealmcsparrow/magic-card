@@ -4,15 +4,8 @@ import { samplePath, type PathSample } from '../compile';
 import type { PathSpec } from '../model';
 import { m, type MessageId } from '../i18n';
 
-/*
- * Path motion editing for the animation studio: the generic anchor model now lives in
- * src/path/edit.ts (contract path-model 1.0.0); this file keeps the studio's names for it (a shim,
- * removed once the studio calls src/path directly) plus what only the studio needs: where the subject
- * is at a time, and the motion templates. Coordinates are the document's own units (PathSpec.units,
- * usually % of the moving element's size).
- *
- * Only the first subpath is edited (motion runs along one line); serialising writes it alone.
- */
+// Path motion editing for the studio: a shim over the anchor model in src/path/edit.ts plus the subject position at a time
+// and the motion templates. Coordinates are the document units (PathSpec.units); only the first subpath is edited.
 
 export type { Anchor, EditPath, Pt };
 export { MAX_ANCHORS, copyAnchor, copyPath, fmtNum, isSmooth, nearestOnPath, segment, segmentCount, setClosed, smoothAll, snap, straightenAll, toggleSmooth };

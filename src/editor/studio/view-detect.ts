@@ -1,9 +1,6 @@
 import { t, m, type MessageIndex } from '../i18n';
-/**
- * Which dashboard view the card sits in, and how wide the studio canvas should be to match.
- * Pure helpers; the studio runs them when it opens. Home Assistant gives the card editor the whole
- * dashboard config (`lovelace`) but not the current view, so the view comes from the page URL.
- */
+// Which dashboard view the card sits in, and how wide the studio canvas should be to match.
+// Pure helpers; the view comes from the page URL.
 
 export type ViewKind = 'panel' | 'sections' | 'masonry' | 'sidebar' | 'unknown';
 export type CanvasWidthOption = 'narrow' | 'wide' | 'panel';

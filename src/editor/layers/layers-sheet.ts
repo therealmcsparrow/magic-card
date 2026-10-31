@@ -5,12 +5,8 @@ import { editorSystem } from '../../css/editor-stack';
 import { layerControlCss } from './tokens';
 import { t } from './i18n';
 
-/*
- * "Layers here" sheet: every layer at one point of the canvas, front first, modules and card
- * backdrop layers alike. One tap (44 px target) selects. Opened by press and hold (touch) or the float bar's
- * Layers here button; Alt-click is the mouse shortcut. Not the only route: the structure list stays.
- * Events: `pick` (detail { key }), `close`.
- */
+// "Layers here" sheet: every layer at one point of the canvas, front first; one tap selects.
+// Events: `pick` (detail { key }), `close`.
 
 export class McLayersSheet extends LitElement {
   @property({ attribute: false }) items: SheetItem[] = [];

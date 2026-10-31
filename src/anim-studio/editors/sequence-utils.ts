@@ -4,12 +4,9 @@ import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, getAnimationPreset }
 import { ANIMATION_CAPS, CUSTOM_PREFIX, SEQUENCEABLE_PRESETS, customRefId, isCustomRef, type AnimationDoc, type SequenceStep } from '../model';
 import { t } from '../i18n';
 
-/*
- * Pure helpers of the sequence editor (mc-anim-sequence-editor): what a step plays, how long it
- * takes and where it sits in the cycle. The timing mirrors compile.ts (compileSchedule): a step
- * starts `delay` s after the previous one ends and plays `duration × repeat`; a step that cannot
- * play is skipped and takes no time.
- */
+// Pure helpers of the sequence editor (mc-anim-sequence-editor): what a step plays, how long it takes and where it sits
+// in the cycle. The timing mirrors compile.ts (compileSchedule): a step starts `delay` s after the previous one ends
+// and plays `duration × repeat`; a step that cannot play is skipped and takes no time.
 
 /** The studio's library: documents by id. */
 export type AnimationLibraryMap = Readonly<Record<string, AnimationDoc>>;

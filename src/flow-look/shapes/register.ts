@@ -6,18 +6,9 @@ import { stops } from '../motion';
 import { flowLookRegistry, unmix, type LineCtx } from '../registry';
 import { body, turns } from './geometry';
 
-/*
- * The travelling shapes, registered as flowLookRegistry.shapes by the side-effect import in
- * ../parts.ts. Motion (flow-look rules 1 and 5):
- * - css: one element per shape playing transform keyframes sampled from the path (translate, plus
- *   rotate to the travel direction for shapes that turn, 180 degrees more for a flow that runs backwards)
- *   with a negative animation-delay: a compositor animation, no main-thread work per frame (offset-path
- *   re-ran style, layout and paint for every shape every frame). Spin is a second animation on an inner
- *   child (never the same element).
- * - pulse: shapes stay at fixed places on the line (static transform) and an inner child pulses with a
- *   period of travel time / count, rippling by phase.
- * The card budget counts elements (spin weighs 2 in mc-flows' allocateBudget), so nothing here weighs.
- */
+// The travelling shapes, registered as flowLookRegistry.shapes. css: one element per shape playing transform keyframes
+// sampled from the path with a negative animation-delay (compositor only); spin is a second animation on an inner child.
+// pulse: shapes stay at fixed places and an inner child pulses by phase. The card budget counts elements.
 
 const MAX = 40;
 const SPIN: readonly FlowShape[] = FLOW_SPIN_SHAPES;

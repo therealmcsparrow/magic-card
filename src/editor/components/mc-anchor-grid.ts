@@ -9,14 +9,8 @@ import { anchorName } from '../layers/anchor-names';
 export { anchorName };
 
 /*
- * mc-anchor-grid: the 3 x 3 position picker. A radiogroup with one tab stop
- * (roving tabindex), 2-D arrow keys, Home / End to the first / last cell. 32 px cells with a 4 px gap, 44 px
- * with an 8 px gap on coarse pointers. The chosen cell carries a check mark, a 2 px border in the text
- * colour and a bold name below the grid, so selection never rests on a hue (WCAG 1.4.1). There is no
- * "none" cell: leaving a placement is done with the Placement control. Used by the module Placement group,
- * image position and the pan and zoom focus point.
- *
- * Events: `change` (detail { value }) when the user picks a cell.
+ * mc-anchor-grid: the 3 x 3 position picker, a radiogroup with roving tabindex and 2-D arrow keys.
+ * Selection shows a check mark and a bold name, never colour alone. Emits `change` (detail { value }).
  */
 
 /** The cell a key moves to from `index`; stays on the grid edge. -1 for a non-grid key. */

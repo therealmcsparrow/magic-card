@@ -14,15 +14,9 @@ import { cutSlot, emitterPlan, parts, type DocPlan } from './emitters';
 import { childCount } from './children';
 import { SHAPES_CSS, SHAPES_KEY } from './shapes';
 
-/*
- * Compiling a v2 spec for one geometry (the ParticlesCompiler the card registers) and the after-render
- * step (apply / release). Bakes are cached per document (name base) with up to
- * PARTICLES_V2_CAPS.geometryVariants geometries each, least recently used dropped.
- * Every variant renders the same slots: the full pool of liveLayout (parents, then
- * min(parents x children per parent, elements cap - parents) child slots), so a re-bake for another
- * geometry only swaps the layer's name and rules, never its DOM. Geometry aspect 0 (the card's render,
- * before the layer is measured) compiles that pool without baking; apply bakes for the measured size.
- */
+// Compiling a v2 spec for one geometry (the ParticlesCompiler the card registers) and the after-render step (apply /
+// release). Bakes are cached per document with up to PARTICLES_V2_CAPS.geometryVariants geometries each. Every variant
+// renders the same slots (the full pool of liveLayout), so a re-bake only swaps the layer name and rules.
 
 interface Entry {
   compiled: CompiledParticlesV2;

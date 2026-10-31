@@ -1,10 +1,6 @@
 import type { CardModule } from '../types';
 
-/**
- * One step from a layout module to one of its children: `slot` is the column (row module) or tab
- * (tabs module) and is 0 for layouts with one flat `modules` list (horizontal, vertical,
- * slider-layout); `index` is the child's position in that slot.
- */
+/** One step from a layout module to one of its children: `slot` and `index`. */
 export interface ChildStep {
   slot: number;
   index: number;

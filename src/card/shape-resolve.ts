@@ -5,10 +5,7 @@ import type { LibraryChangedDetail, MagicCardUtilsWindow } from '../contracts/mc
 import { resolveCustomShape } from '../utils/shape-ref';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 
-/*
- * The resolve side of outline shapes (design `shape`): which shape a design asks for, the provider's shape library and
- * the clip-path value of a shape path. The <mc-shape> element that draws it is src/card/mc-shape.ts.
- */
+/** The resolve side of outline shapes (design `shape`): shape choice, library and clip-path value. */
 
 const KINDS = new Set<ShapeKind>(['custom', 'squircle', 'hexagon', 'octagon', 'blob', 'wave', 'notch', 'ticket', 'pill', 'circle']);
 

@@ -1,11 +1,4 @@
-/**
- * Put text on the system clipboard. Order: the Clipboard API (secure contexts only, so not on
- * Home Assistant over plain http), then a hidden textarea with `execCommand('copy')`. Resolves false
- * when both fail; the caller then shows the text to copy by hand.
- *
- * `within`: where the hidden textarea goes. Inside a modal <dialog> (the studio) everything outside
- * the dialog is inert and cannot be selected, so pass the caller's shadow root.
- */
+/** Puts text on the clipboard (Clipboard API, then a hidden textarea in `within`); resolves false if both fail. */
 export async function copyText(text: string, within: Node): Promise<boolean> {
   try {
     if (window.isSecureContext !== false && navigator.clipboard?.writeText) {

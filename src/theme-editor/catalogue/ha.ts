@@ -4,11 +4,8 @@ import type { CatalogueGroupId, FieldKind } from '../../contracts/theme-catalogu
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
 /**
- * Home Assistant's own theme variables: the ones a theme commonly sets, checked against
- * home-assistant/frontend tag 20260930.4 (`ref` is the file that declares or reads the variable;
- * defaults are HA's light-mode values). Gradient (`background` kind) only where HA paints the
- * variable with the `background` shorthand: card-background-color, ha-card-background and
- * lovelace-background. The header and sidebar backgrounds use `background-color`, so they stay colours.
+ * Home Assistant's own theme variables a theme commonly sets, checked against home-assistant/frontend tag 20260930.4
+ * (`ref` is the file that declares or reads the variable; defaults are HA's light-mode values).
  */
 const BASE = 'https://github.com/home-assistant/frontend/blob/20260930.4/';
 const VERIFIED = '2026-10-17';

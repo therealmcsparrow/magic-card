@@ -1,12 +1,8 @@
 import type { LoadCatalogue, PresetCatalogueModule } from '../../contracts/preset-catalogue';
 import { sameBuild } from '../../utils/build-version';
 
-/*
- * The card editor's loader of the preset catalogue chunk (magic-card-preset-catalogue.js, contract
- * preset-catalogue 1.1.0), called when the Animations list connects. Same chunk name as
- * the studio's loader, so both bundles share one file. One shared promise; a failure resolves
- * undefined (console.warn) and the next call tries again.
- */
+// The card editor's loader of the preset catalogue chunk (preset-catalogue 1.1.0).
+// One shared promise; a failure resolves undefined and the next call tries again.
 
 let importer = (): Promise<unknown> => import(/* webpackChunkName: "preset-catalogue" */ '../../preset-catalogue/index');
 let pending: Promise<PresetCatalogueModule | undefined> | undefined;

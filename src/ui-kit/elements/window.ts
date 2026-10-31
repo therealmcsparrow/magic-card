@@ -7,14 +7,7 @@ import {
   CLICK_PX, NO_DRAG, arrowDelta, centred, clampRect, dockRect, maximisedRect, stepWidth, type Dock, type Rect,
 } from '../controllers/window-frame';
 
-/*
- * <mc-ui-window> (contract ui-kit 1.0.0): one modal window for dialogs, pickers, confirmations and sheets.
- * Native <dialog> + showModal() in the shadow root: top layer (so it works inside Home Assistant's transformed
- * card dialog), a real focus trap, ::backdrop scrim. Escape closes this window only and never reaches the card
- * dialog. Content is slotted (the caller's light DOM, styled by the caller's kit CSS). No strings of its own.
- * Placement: movable (header drag + move grip), resizable (corner grip), maximizable (button). Keyboard on
- * the grips; a click on a grip is the single-pointer alternative (WCAG 2.5.7). No persistence: close() forgets it all.
- */
+// <mc-ui-window>: one modal window (native <dialog> + showModal()) with slotted content; movable, resizable and maximizable.
 
 const DOCKS: Dock[] = ['centre', 'end', 'start'];
 interface Drag {

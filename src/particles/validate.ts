@@ -18,15 +18,9 @@ import {
 import { ANIMATION_CAPS, Checker, ICON_RE, PARTICLE_DIRECTIONS, safeCssValue, type FieldError, type ParticlesSpec } from '../anim-studio/model';
 import { sanitizeSvg, SVG_MAX_BYTES } from '../icons/svg-sanitize';
 
-/*
- * particles-v2 ParticlesModule.validateSim: checks a raw `particles.sim`.
- * - strict (studio, catalogue): every problem is an error (path `particles.sim.*`); the sim is
- *   returned too, with defaults in place of the bad values.
- * - lenient (card): bad entries are dropped (a shape, a colour, the children) or take their
- *   default; the errors are still listed. A sim the card cannot play at all (not an object, an
- *   unknown engine or flow) comes back undefined, so the v1 fallback plays.
- * Missing fields take the defaults below. Children never have children (one level).
- */
+// ParticlesModule.validateSim: checks a raw `particles.sim`. strict (studio): every problem is an error and defaults
+// replace bad values. lenient (card): bad entries are dropped or defaulted, errors still listed; an unplayable sim comes
+// back undefined so the v1 fallback plays. Children never have children.
 
 const P = 'particles.sim';
 const FLOWS: readonly ParticleFlow[] = [...PARTICLE_DIRECTIONS, ...NEW_FLOWS];

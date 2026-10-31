@@ -6,9 +6,7 @@ import type { KindResult, Raw } from '../types';
 
 /**
  * An animation item: the document strict-validated with the item's id and name (authoritative).
- * v2 fields and `particles.sim` are checked when the host bundle has registered their validators
- * (model-v2.ts, useParticlesValidator): the panel loads the runtime and particles chunks first when a
- * file mentions them (src/transfer/panel.ts), so neither is copied into this chunk.
+ * v2 fields and `particles.sim` are checked when the host bundle has registered their validators (model-v2.ts, useParticlesValidator).
  */
 export function readAnimation(index: number, id: string, name: string, data: unknown): KindResult<TransferDataByKind['animation']> {
   if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('transfer.animation.the-animation-data-is-missing'))] };

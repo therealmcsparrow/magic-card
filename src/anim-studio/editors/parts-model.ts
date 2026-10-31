@@ -6,12 +6,9 @@ import { tileModule, type PreviewTile } from '../tiles';
 import type { StudioSelection } from '../slots';
 import { t } from '../i18n';
 
-/*
- * Icon parts in the studio: pure document edits for the parts layers, overlay and
- * inspector. Every function returns a new document (never mutates) and keeps the v2 references
- * valid: a removed part / group drops its tracks and bindings and leaves its groups.
- * Ids are unique across parts, groups and shapes (one namespace, `data-p` / `data-g` / `data-s`).
- */
+// Icon parts in the studio: pure document edits for the parts layers, overlay and inspector.
+// Every function returns a new document and keeps the v2 references valid: a removed part / group drops its tracks and bindings.
+// Ids are unique across parts, groups and shapes (`data-p` / `data-g` / `data-s`).
 
 export type Box = [number, number, number, number];
 

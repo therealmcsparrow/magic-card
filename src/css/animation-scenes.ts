@@ -1,8 +1,5 @@
-/*
- * Rings & sweeps and Scenes: keyframes and particle / layer styles. Same tokens as
- * animation-keyframes.ts ($i intensity, $c colour). Particles get --mc-anim-x (%), --mc-anim-phase
- * (0-1, pseudo-random) and --mc-anim-k (index / count, for even spacing) from the card.
- */
+// Rings & sweeps and Scenes: keyframes and particle / layer styles, with the tokens of
+// animation-keyframes.ts ($i intensity, $c colour).
 
 import { SHARED_SCENE_KEYFRAMES } from './scene-keyframes';
 

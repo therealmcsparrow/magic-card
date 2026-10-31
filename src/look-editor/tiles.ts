@@ -1,9 +1,6 @@
 import type { FlowLineStyle, FlowShape } from '../contracts/flow-look';
 
-/*
- * Static tile pictures of the flow editor (look-editor contract rule 9): chunk constants drawn in currentColor, never
- * animated and never built from config text (the tile group renders them with unsafeHTML).
- */
+// Static tile pictures of the flow editor (look-editor rule 9): chunk constants drawn in currentColor, never built from config text.
 const line = (inner: string): string =>
   `<svg viewBox="0 0 56 20" width="56" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 

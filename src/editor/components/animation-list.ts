@@ -70,11 +70,8 @@ const built = new Map<string, AnimationDoc>();
 const read = new WeakMap<object, AnimationDoc | undefined>();
 
 /**
- * The design's preset animations: one condition-style block per entry (preset, target, play,
- * colour, strength, timing, intensity), "Add animation" below. Choosing a preset writes its values into the
- * fields; "Reset to preset" restores them. A muted note marks an entry that overrides an earlier
- * one on the same element and channel. The preset dropdown also lists the preset catalogue (lazy
- * chunk): a pick plays `custom:cat-<entry id>` from a copy stored in the card.
+ * Design preset animations: one block per entry, "Add animation" below, "Reset to preset" restores values.
+ * A muted note marks an entry overriding an earlier one; the preset dropdown also lists the lazy catalogue.
  */
 @customElement('mc-animation-list')
 export class AnimationList extends LitElement {

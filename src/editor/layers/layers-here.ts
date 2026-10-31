@@ -6,11 +6,7 @@ import { layersAtPoint, layersInRegion, type HitItem, type HitPlacement } from '
 import { moduleName, placementOf } from './placement-model';
 import type { Box } from './checks';
 
-/*
- * Everything at one point of the canvas, modules and card backdrop layers together, front first. The
- * canvas calls collectHitItems() on the live card and layersHere() with the pointer or the selection's
- * centre; Alt-click, the Layers here sheet and the float bar's above / below buttons all use the list.
- */
+// Everything at one point of the canvas, modules and card backdrop layers together, front first.
 
 export interface HereEntry {
   /** data-mc-path, or `backdrop:<index>` (YAML index). */

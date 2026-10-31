@@ -1,9 +1,5 @@
-/*
- * Batch 6 presets: motion, light, borders, background scenes and interaction. Same tokens as
- * animation-keyframes.ts ($i intensity, $c colour). Particles get --mc-anim-x (%), --mc-anim-phase
- * (0-1) and --mc-anim-k (index / count). Ring presets (border snake, power flow dots, marching ants)
- * have no keyframes here: mc-ring animates its stroke.
- */
+// Batch 6 presets: motion, light, borders, background scenes and interaction. Same tokens as
+// animation-keyframes.ts ($i intensity, $c colour); particles get --mc-anim-x / -phase / -k.
 
 export const EXTRA_KEYFRAMES: Record<string, string> = {
   // ── Motion ──

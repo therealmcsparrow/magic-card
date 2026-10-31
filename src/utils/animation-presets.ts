@@ -3,13 +3,7 @@ import type { SceneId } from './seasonal';
 import { lm } from '../i18n/labels/mark';
 import type { MessageIndex } from '../contracts/i18n';
 
-/**
- * What a preset animates, for composition. Motion presets use the individual transform properties
- * (rotate / translate / scale), so different ones compose on one element; two animations of the
- * same channel on the same element do not, the later one wins.
- * - glow: box-shadow on a module / row / column, a drop-shadow filter on an icon
- * - fx: its own particle overlay (or ring along the outline) inside the wrapper, never conflicts
- */
+/** What a preset animates, for composition: motion, glow and fx channels. */
 export type AnimationChannel = 'rotate' | 'translate' | 'scale' | 'opacity' | 'filter' | 'glow' | 'fx';
 
 export type AnimationGroup =

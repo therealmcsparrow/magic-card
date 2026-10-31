@@ -48,26 +48,9 @@ import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
 import { t, tr, m, locale, type MessageId } from './i18n';
 
-/*
- * The animation studio: `<magic-card-animation-studio>`, a full-screen surface with the library
- * (search, new, customise a preset, duplicate, rename, delete, export / import YAML) and the editor
- * (live preview stage, timing form, undo / redo, dirty guard). The host (the magic-card-utils
- * panel) does the storage; the studio only emits events:
- *
- *   mc-anim-save       { animation }         create or update
- *   mc-anim-duplicate  { animation }         the copy, with its new id
- *   mc-anim-delete     { id }
- *   mc-anim-select     { id | null }         the open animation (deep links: ?animation=<id>)
- *
- * All bubble and are composed. `detail` is mutable: a host that stores sets `detail.result` to its
- * promise during dispatch; the studio awaits it (resolving to `{ animation }`, the stored document)
- * and shows a rejection's `message` and field `errors: [{ path, message }]`. A host may also resolve
- * to the stored document itself. With `standalone` (the dev harness) the studio applies the change
- * to its own in-memory library; otherwise no result means nothing stored it: an error.
- *
- * Unsaved edits survive the studio leaving the page (in-HA navigation, reload): kept in
- * sessionStorage per animation id (one key for an unsaved new one), offered back on the next open.
- */
+// The animation studio `<magic-card-animation-studio>`: library and editor. The host does the storage; the studio emits
+// mc-anim-save, mc-anim-duplicate, mc-anim-delete and mc-anim-select (bubbling, composed) with `detail.result` a promise.
+// Unsaved edits are kept in sessionStorage per animation id.
 
 type Dialog =
   | { type: 'delete'; doc: AnimationDoc; uses: number | undefined; sequences: AnimationDoc[] }

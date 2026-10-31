@@ -4,12 +4,7 @@ import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitButtonExtras, kitChipExtras, kitCheck, kitNotice, kitTokens } from '../ui-kit/css/extras';
 
-/*
- * The theme editor's stylesheet (contract theme-editor 1.2.0, ui-kit 1.0.0). The base is the kit: Core's
- * `editorTokens`, the card editor's primitives and the kit parts this screen uses, so buttons, fields, chips, the
- * segmented control and notices look exactly as they do in the card editor. What stays here: the fixed accent (a token
- * override, below) and a few layout rules the kit has no part for. Colour comes only from Home Assistant theme variables.
- */
+// The theme editor's stylesheet (theme-editor 1.2.0, ui-kit 1.0.0), built on the kit with a fixed accent.
 
 /*
  * The editor's own accent: fixed, so it never follows HA's or the draft's primary colour. It overrides the

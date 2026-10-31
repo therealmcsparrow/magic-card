@@ -1,11 +1,8 @@
 import { t } from './i18n';
 
-/*
- * Field errors come from the document validators in English: the animation model and the particles module sit in
- * magic-card.js and the particles chunk, which carry no studio text (contract i18n 1.0.0). The studio
- * shows them through this table: a message it knows reads in the current language (formatted ones by their shape),
- * anything else stays as the validator wrote it. A new validator message needs a line here, or it shows in English.
- */
+// Field errors come from the document validators in English, since the animation model and the particles module carry no studio text.
+// The studio shows them through this table in the current language; anything unknown stays as the validator wrote it.
+// A new validator message needs a line here, or it shows in English.
 
 const EXACT: Record<string, () => string> = {
   'A clip cannot play its own document (use self).': () => t('anim-studio.validation-text.a-clip-cannot-play-its-own-document-use'),

@@ -1,9 +1,5 @@
-/*
- * Heights a lazy module's placeholder reserves, estimated from its config, so the page does not move
- * when the module's chunk (or its first data) arrives. Pure and synchronous; lives in magic-card.js
- * because the stubs use it. Estimates, not layout: a few px either way is fine, 100+ px is the jump
- * this avoids. Measured on the default theme (14 px markdown text, 36 px weather icon).
- */
+// Heights a lazy module's placeholder reserves, estimated from its config, so the page does not
+// move when the chunk arrives. Pure and synchronous; estimates, not layout.
 
 /** Heading font scale and its (equal) margin in em of the heading's own size: h1..h6. */
 const HEADING = [
@@ -98,11 +94,8 @@ export function tabsMinHeight(config: { tab_style?: string; design?: { height?: 
 }
 
 /**
- * The clock module's `min-height` as a CSS length, or '' for none (a design height or min-height decides the box).
- * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
- * `design.line_height` as a number or a numeric string; a length counts per line, and a percentage too, because
- * the line boxes inherit it as the length it computes to (150% of 16 px is 24 px on both lines), not as a factor;
- * anything else (a string over 16 characters too) is 1.17, about the `normal` line height of the theme font.
+ * The clock module's `min-height` as a CSS length, or '' for none. Time line 2 rem plus date line
+ * 0.875 rem, times the line height (a number, numeric string or length; otherwise 1.17).
  */
 export function clockMinHeight(config: { show_date?: boolean; design?: { height?: unknown; min_height?: unknown; line_height?: unknown } | null }): string {
   const d = config.design;

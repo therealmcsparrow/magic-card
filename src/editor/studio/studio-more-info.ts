@@ -12,15 +12,8 @@ const TAG = 'ha-more-info-dialog';
 const CLOSE_EVENTS = ['closed', 'dialog-closed'];
 
 /**
- * Opens Home Assistant's more-info dialog inside the studio's own modal `<dialog>`.
- *
- * The studio is a native modal in the top layer; a dialog HA draws elsewhere (older frontends draw
- * outside the top layer) would sit behind it, inert. Inside the studio it can never be. Its close
- * events stop at the element: left alone they bubble through the studio up to HA's card dialog, which
- * reads them as its own close.
- *
- * Returns the mounted element, or null when HA has not defined the dialog yet; then HA's own
- * `hass-more-info` handling is asked instead (it loads the dialog and shows it).
+ * Opens HA's more-info dialog inside the studio's modal <dialog> so it cannot sit behind it; its close events stop at the element.
+ * Returns the element, or null when HA has not defined the dialog (then `hass-more-info` is asked).
  */
 export function openMoreInfo(host: HTMLElement, hass: HomeAssistant | undefined, entityId: string): HTMLElement | null {
   closeMoreInfo(host);

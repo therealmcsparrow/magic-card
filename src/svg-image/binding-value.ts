@@ -3,10 +3,8 @@ import { MAX_BINDING_RULES } from '../contracts/svg-image';
 import type { BindingValue, ImageBinding } from '../contracts/mcu-library-images';
 
 /**
- * The value a binding gives its target right now: the first rule that matches the entity's state (or attribute), else the
- * default, else undefined (the target keeps what is drawn). A rule with `state` is an exact match; a rule with `above`
- * and / or `below` compares the numeric value, and a value that is not a number never matches. Colour names such as
- * `main` or `theme:<name>` are returned as written; the caller turns them into paint.
+ * The value a binding gives its target right now: the first rule that matches the entity's state (or attribute), else the default, else undefined.
+ * `state` is an exact match; `above` / `below` compare the numeric value. Colour names are returned as written; the caller turns them into paint.
  */
 export function bindingValue(b: ImageBinding, hass: HomeAssistant | undefined): BindingValue | undefined {
   const stateObj = hass?.states?.[b.entity];

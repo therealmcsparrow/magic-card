@@ -11,15 +11,9 @@ import { LayerRows, layerRowStyles, type MoveInfo } from './layer-row';
 import { EMITTER_NAME_MAX, emitterCount, emitterLabel, emitterPlacement, moveEmitter, moveEmitterPastContent, renameEmitter, shapeLabel, shownShapes, viewSim } from './particles-utils';
 import { t, m } from '../i18n';
 
-/*
- * mc-anim-particles-layers (place 'layers', particles documents): the emitters as a paint stack around the
- * fixed Card content row. Top to bottom: the emitters in front of the content (top-most first), Card content,
- * the emitters behind it (top-most first). One step past Card content changes only that emitter's placement
- * (particles-utils moveEmitterPastContent). Rows: emitter, its Child particles (when on) and the shape rows
- * (select only). Selection is the particles editor's: this panel reads `emitter` / `all` and raises
- * `emitter-change` (the shell hands both to the editor). Hide and solo go to the stage sheet through the real
- * compiler's emitter slots (stage-particles.ts); a document without a v2 sim has no hide or solo.
- */
+// mc-anim-particles-layers (place 'layers'): the emitters as a paint stack around the fixed Card content row; one step
+// past it changes only the placement. Selection is the particles editor's (`emitter-change`). Hide and solo go through the
+// stage sheet; a document without a v2 sim has none.
 
 interface Em {
   /** Index in the document (0 = the primary): the paint order, bottom first. */

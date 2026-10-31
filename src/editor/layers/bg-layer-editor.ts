@@ -20,11 +20,7 @@ import type { PanPreview } from './bg-status';
 import { blendTiles, chevron, lyrSeg, lyrSlider, lyrSwitch } from './controls';
 import { isAnchor } from './placement-model';
 
-/*
- * Per-type editors of one Card backdrop layer. Every control writes the
- * plain bg-stack 1.0.0 keys of that layer. The element in bg-layers.ts owns the state; these functions only
- * render, through the small EditorHost interface.
- */
+// Per-type editors of one Card backdrop layer; every control writes the plain bg-stack 1.0.0 keys of that layer.
 
 export interface EditorHost {
   hass?: HomeAssistant;

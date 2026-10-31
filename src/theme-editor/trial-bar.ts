@@ -6,16 +6,7 @@ import { getTrial, openEditor, stopTrial, subscribeTrial } from './trial';
 import type { TrialState } from './trial';
 import { t } from './i18n';
 
-/*
- * <mc-theme-trial-bar>: the Revert bar of "Try on dashboards" (spec 9 and 16.5). trial.ts puts it as
- * the first child of document.body, so it is first in the tab order, and removes it when the trial
- * ends. It ignores the page's theme on purpose (fixed colours, 12:1 or better) so it can always be
- * read and used, whatever the draft looks like.
- *
- * WCAG 2.4.11: while it shows, a focusin listener scrolls the nearest scroller when the focused
- * element is under the bar, and the root gets scroll-padding equal to the bar's height. Under 480
- * css px of viewport height (200% zoom on a laptop) it collapses to a 44 px Revert button.
- */
+// <mc-theme-trial-bar>: the Revert bar of "Try on dashboards", first child of body.
 
 export const SHORT_VIEWPORT_PX = 480;
 export const NARROW_VIEWPORT_PX = 640;

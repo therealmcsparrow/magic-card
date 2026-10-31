@@ -3,70 +3,7 @@ import type { BackgroundLayerConfig } from './bg-stack';
 import type { LayerAnchor } from './layer-placement';
 import type { LayerGroupContext } from './module-editor';
 
-/*
- * Contract: layer editor panels. Version 1.0.0. The Placement / Layer groups and the
- * Card backdrop group live in the editor-side lazy chunk 'layer-editor' (lazy-module 1.2.0,
- * magic-card-layer-editor.js), not in magic-card-editor.js. bg-layer-editor.ts is a render function
- * used by <mc-bg-layers>, not an element; LAYER_EDITOR_TAGS lists the five elements install() defines.
- *
- * ── Seam ──
- * The editor chunk (host) keeps the light parts and renders the panels by tag only:
- *   stays in magic-card-editor.js: placement-model (light half), bg-layers-model (light half),
- *   layers-at, layers-here, canvas-layers, layer-actions, tree-chip, anchor-names, bg-status,
- *   layer-measure, checks, layer-design.ts (tag helper), the loader, and the edits in the inspector,
- *   outline, item menu and canvas; plus the types below.
- *   moves to the chunk (entry src/editor/layers/chunk.ts): layer-groups (mc-layer-groups,
- *   mc-layer-design), layer-styles, tokens, controls, cost, looks, bg-layers (mc-bg-layers),
- *   bg-layer-editor (render function), mc-anchor-grid, layers-sheet (mc-layers-sheet), the heavy
- *   halves of the two models.
- * The host never imports a chunk file; the chunk may import host light files and magic-card.js
- * modules (they resolve to the already loaded chunks, not copies; the ceiling catches a copy).
- *
- * ── Loading ──
- * src/editor/layers/layer-editor-loader.ts: `loadLayerEditor(): Promise<boolean>` through lazyChunk()
- * with `import(/* webpackChunkName: "layer-editor" *\/ './chunk')`; BUILD check, install() defines
- * the five LAYER_EDITOR_TAGS (customElements.define guarded by `customElements.get`, no
- * @customElement at module level, lazy-module "Chunk entries"). The three define-imports
- * (registry.ts, card-settings.ts, studio-canvas.ts) become calls to loadLayerEditor(); prefetch when
- * the studio or the card editor opens. Elements upgrade in place when it lands.
- * While loading: the host renders the tags (unknown elements show nothing) and, in their place, one
- * line "Loading layer settings…" (card-editor namespace). On failure (no retry until reload, like
- * every lazyChunk): "Layer settings could not load. Reload the page." The YAML tab keeps working.
- * The canvas press-and-hold sheet falls back to the item menu until the chunk is ready.
- *
- * ── Elements (tags, properties, events) ──
- * <mc-layer-design>  .config CardModule, .hass, .onChange (m) => void, .ctx LayerEditorContext;
- *                    slot: the rest of the design tab. Wraps <mc-layer-groups> (same properties).
- *   events (bubbles, composed): `mc-layer-move` { to: LayerMoveTo }, `mc-layers-low-power` (no detail).
- * <mc-bg-layers>     .layers BackgroundLayerConfig[], .hass, .onWrite (list) => void, .rule RuleView,
- *                    .onRule (act: 'start' | 'reset') => void, .lowPower boolean,
- *                    .onLowPower () => void, .cardEntity string. It reads layer status from the host's
- *                    bg-status store (light, editor chunk), not from events. Each layer's editor is
- *                    drawn by the bg-layer-editor render function inside it.
- * <mc-layers-sheet>  .items SheetItem[], .x number, .y number; events `pick` { key }, `close`.
- * <mc-anchor-grid>   .value LayerAnchor, label, show-name; event `change` { value }.
- *
- * ── i18n ──
- * Namespace `layer-editor` (tools/i18n/config.json and I18N_MODULES, en-GB ids, en-US and nl tables),
- * bundled into this chunk, I18N_RELEASE_STRICT applies. Strings of the light host parts (tree chips,
- * float bar, canvas announcements, bg-status sentences, the loading and failure lines) stay in
- * `card-editor`. A string used on both sides lives in `card-editor`.
- *
- * ── Rules ──
- * Controls: 3:1 boundary, non-colour on/off and selected cue (token sampler test); no
- * `inset` shorthand; British UI text through t() / m().
- *
- * ── Gradients ──
- * `to <side>` heads are read as angles everywhere a backdrop gradient is parsed (bg-stack values and
- * the gradient editor through one helper, gradientHeadAngle() in src/utils/gradient.ts): to top 0deg,
- * to right 90deg, to bottom 180deg, to left 270deg; corners (to top right ...) 45 / 135 / 225 /
- * 315deg (an approximation on non-square cards, stated in the docs). parseGradient() itself is not
- * changed, so other users of it render as today. Looks, docs and gallery write degrees.
- *
- * ── Size ──
- * Ceiling 114,688 B (lazy-module EDITOR_LAZY_CHUNK_CEILINGS); cap = measured + 5 % at the ratchet.
- * magic-card-editor.js (hosts only) about 868 KB, set at the final ratchet from the measured size.
- */
+/** Contract: layer editor panels. Version 1.0.0. */
 
 export const LAYER_EDITOR_CONTRACT = '1.0.0';
 export const LAYER_EDITOR_CONTRACT_REVISION = 2;

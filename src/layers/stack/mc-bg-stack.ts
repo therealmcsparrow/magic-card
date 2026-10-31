@@ -9,18 +9,9 @@ import { safeColor } from '../../utils/safe-css';
 import { blurOf, cssUrl, gradientCss, opacityOf, patternCss, positionCss, repeatCss, safeImageUrl, sanitiseStates, sizeCss } from './values';
 import { currentFx, liveStacks } from './fx-slot';
 
-/*
- * <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
- * Rules this file keeps:
- * - every URL goes through safeImageUrl, every colour through host.cssColor + safeColor, gradients are
- *   rebuilt from parseGradient output, enums are allow-listed (values.ts); per-instance CSS only through the CSSOM (sty directive, one validated value per property);
- * - blur sits on a static outer box; a moving picture (pan / zoom) is a transform animation on the inner image box;
- * - pan / zoom, camera refresh, the stale state and the idle, visibility and reduced-motion wiring belong to
- *   the BgStackRun that fx-slot.ts hands over (host.observeOffscreen sets `offscreen`); without it a picture
- *   shows unscaled and a camera layer keeps its first frame;
- * - a decode that resolves after disconnect, or for an older source, writes nothing;
- * - a value that starts with `mcu-image:` is a library image: never a URL, never decoded, drawn by <mc-svg-image> (the chunk's).
- */
+// <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
+// Every URL, colour and gradient is validated before use; per-instance CSS goes through the CSSOM;
+// motion and camera refresh belong to the BgStackRun handed over by fx-slot.ts.
 
 const TAG = 'mc-bg-stack';
 const FADE_MS = 300;

@@ -9,11 +9,7 @@ import type { McSvgEditor } from './mc-svg-editor';
 import { t } from './i18n';
 import { PT_NAME } from './names';
 
-/*
- * Path tools in the editor (contract svg-editor, path-tools 1.0.0): which layers a tool works on, why it
- * can't, the document after a result, and the panel flow (open, preview, Apply, Cancel). The geometry, the panel
- * template and their words are in the lazy chunk; nothing here runs before a tool is first used.
- */
+// Path tools in the editor (svg-editor, path-tools 1.0.0): target layers, refusals, the document after a result and the panel flow.
 
 export const PATH_BUTTONS: readonly PathTool[] = ['outline-stroke', 'offset', 'simplify', 'join', 'split'];
 

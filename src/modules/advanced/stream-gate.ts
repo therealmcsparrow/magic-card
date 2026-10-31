@@ -1,12 +1,7 @@
 import { unwatchOffscreen, watchOffscreen } from '../../icons/offscreen';
 
-/*
- * Streaming backgrounds (layer-placement 1.0.0 "Streaming backgrounds", card-pause 1.0.0 rule 1).
- * A camera or video-bg that renders as a background decodes no frames while it is off screen, the page
- * is hidden or its card is paused (shared offscreen observer), and resumes on return. In flow it
- * behaves as before: the gate is always open, except for `pauseInFlow` (a video-bg): there it follows
- * the shared observer too (off screen, card paused) but not the page-hidden rule. Chunk-only (magic-card-modules-extra.js).
- */
+// Streaming backgrounds: a camera or video-bg used as a background decodes no frames while off screen, hidden or paused,
+// and resumes on return. `pauseInFlow` applies the same in flow.
 
 export type StreamKind = 'camera' | 'video-bg';
 

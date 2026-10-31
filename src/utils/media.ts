@@ -3,11 +3,7 @@ import { safeImageUrl } from './safe-url';
 import { currentRenderContext } from '../services/render-context';
 import { cachedMediaUrl, mediaSourceId, unwrapCssUrl } from '../services/media-resolver';
 
-/**
- * An image URL usable in the card: Home Assistant's relative URLs (`/api/camera_proxy/...`,
- * `/api/image_proxy/...`, `/local/...`) go through hass.hassUrl when present (a dashboard served
- * from another origin, e.g. the companion app or an external URL).
- */
+/** An image URL usable in the card: HA relative URLs go through hass.hassUrl when present. */
 export function resolveMediaUrl(hass: HomeAssistant | undefined, url: string): string {
   if (!url) return url;
   const hassUrl = (hass as { hassUrl?: (path?: string) => string } | undefined)?.hassUrl;

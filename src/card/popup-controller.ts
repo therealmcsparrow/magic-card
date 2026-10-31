@@ -33,15 +33,9 @@ function reducedMotion(): boolean {
 }
 
 /**
- * The pop-up of a Magic Card (card `popup.enabled`): on a live dashboard the card takes no room
- * and shows in a native modal `<dialog>` (browser top layer: HA's transforms and overflow never clip
- * it) while `location.hash` is `#<popup.hash>`, after an open trigger or an "Open pop-up" action.
- * In an editor the card stays inline; "Preview pop-up" opens the real pop-up.
- *
- * History like HA's dialogs and Bubble Card: closing (button, backdrop, Escape, swipe down, auto
- * close, close trigger) removes the hash with history.back() when the hash came with a new history
- * entry, else with replaceState; the back button closes it. Only one Magic Card pop-up is open at a
- * time (src/card/popup-coordinator.ts).
+ * The pop-up of a Magic Card (`popup.enabled`): on a live dashboard the card shows in a native
+ * modal `<dialog>` while `location.hash` is `#<popup.hash>`; in an editor it stays inline.
+ * Closing removes the hash with history.back() or replaceState; one pop-up is open at a time.
  */
 export class PopupController implements ReactiveController, PopupHandle {
   phase: PopupPhase = 'closed';

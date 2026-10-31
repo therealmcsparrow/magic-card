@@ -4,13 +4,7 @@ import type { MagicCardConfig } from '../../types';
 import { animLibrary } from '../../utils/anim-hooks';
 import { pruneLibraryCopies, type KnownLibrary } from './prune';
 
-/*
- * The card editor's side of the Magic Card Utils library (mcu-library 1.0.0): lists for the "My icons"
- * and "My shapes" pickers, one icon for "Use", saving a shape from the shape section, and the sets of
- * saved ids that pruning needs. Cards never call these (editor chunk only). Lists are cached for the
- * page and dropped when the library changes; `unknown_command` means Magic Card Utils is not installed
- * and is remembered for the page.
- */
+// The card editor's side of the Magic Card Utils library: lists for the pickers, one icon for "Use", saving a shape.
 
 interface Hass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;

@@ -1,8 +1,4 @@
-/*
- * Offset path (contract path-tools 1.0.0): the area of the closed subpaths grown or shrunk. Union (grow) or
- * subtract (shrink) of the area and a band of width 2|amount| around its outline, so self-intersections are
- * gone by construction. Open subpaths are ignored (skippedOpen). Pure.
- */
+/* Offset path: grows or shrinks the closed subpaths by union / subtraction with a band around the outline. Open subpaths are skipped. Pure. */
 import { MAX_TOOL_SEGMENTS, OFFSET_MAX_ABS, OFFSET_MIN_ABS } from '../contracts/path-tools';
 import type { PathToolsDeps, ToolOptions, ToolResult } from '../contracts/path-tools';
 import type { EditPath } from '../contracts/path-model';

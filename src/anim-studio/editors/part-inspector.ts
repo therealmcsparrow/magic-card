@@ -41,14 +41,8 @@ import {
 import { parseViewBox } from './draw-utils';
 import { t, m, type MessageId } from '../i18n';
 
-/*
- * The inspector of a selected icon part or group (studio slot 'inspector' when the selection's
- * target is part:<id> / group:<id>): its name, its pivot (icon units, a 3x3 grid on the
- * part's box, reset to the box centre; a preset's pivot on the part's track wins and is edited
- * instead, until "Reset to part pivot" drops it), draw-on (the part's outline is drawn, then it fills), and a
- * motion path (edited on the stage by the parts overlay). Keys are added on the timeline, which
- * animates the selected target's track.
- */
+// The inspector of a selected icon part or group: name, pivot (3x3 grid on the part box; a preset pivot on the track wins
+// until reset), draw-on and a motion path edited on the stage by the parts overlay.
 
 type DrawMode = 'none' | 'on' | 'off' | 'custom';
 const PIVOTS: Array<{ fx: number; fy: number; label: MessageId }> = [

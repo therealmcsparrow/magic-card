@@ -1,8 +1,4 @@
-/*
- * Page-wide scheduling for the heavy steps of drawing a library image: the first sanitise of an item and the first clone of
- * its template into a stage. One such step runs per animation frame, after that frame has painted, so many cards that show
- * one drawing never make one long task. Nothing runs while the queue is empty.
- */
+/* Page-wide scheduling of the heavy steps of drawing a library image: one step per animation frame, after it painted. */
 
 type Job = { run?: () => void; draws?: boolean };
 

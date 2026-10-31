@@ -9,12 +9,8 @@ import { openLayer } from './layer';
 import { loadShapeEditor } from './loaders';
 import { t } from '../i18n';
 
-/*
- * The card editor's side of the shape editor (svg-editor 1.0.0, shape part): "Custom", "Edit as custom"
- * and "Edit shape" open <mc-shape-studio> in the top layer. Every committed change is written as a
- * ShapePatch (`shape`, `shape_options`, and the inline copies for `custom_shapes`), one undo step per
- * commit; the card behind the layer is live, so Back needs no prompt.
- */
+// The card editor's side of the shape editor (svg-editor 1.0.0, shape part): opens <mc-shape-studio> in the top layer
+// and writes every committed change as a ShapePatch, one undo step each.
 
 /** A ShapePatch plus inline copies for the card's `custom_shapes` (written with it, in the same undo step). */
 export type ShapeWrite = ShapePatch & { custom_shapes?: Record<string, CustomShapeOptions> };

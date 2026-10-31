@@ -4,12 +4,7 @@ import { PRIM } from './names';
 import { D } from './bind';
 import { toEditPaths, fromCorners, fromPrimitive, newShape, nameFor, type Doc, type Shape } from './model';
 
-/*
- * Draw tools on the stage: rectangle, ellipse, line, polygon / star and freehand, and the Hand tool.
- * Three ways in for every shape (WCAG 2.5.7): drag from corner to corner, click two corners, or the
- * keyboard crosshair (arrows move it, Enter sets a corner). The canvas never sees these pointers; the
- * pen and the point tools are the canvas's own.
- */
+// Draw tools on the stage: rectangle, ellipse, line, polygon / star, freehand and Hand, each by drag, two clicks or keyboard crosshair (WCAG 2.5.7).
 
 export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'shapes' | 'free' | 'hand' | 'knife' | 'text';
 export const SHAPE_TOOLS: readonly Tool[] = ['rect', 'ellipse', 'line', 'polygon', 'shapes', 'knife'];

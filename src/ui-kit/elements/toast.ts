@@ -4,15 +4,7 @@ import { UI_KIT_CONTRACT_REVISION, type UiToastAction } from '../../contracts/ui
 import { kitToast } from '../css/toast';
 import { showTop } from '../place';
 
-/*
- * <mc-ui-toast> (contract ui-kit 1.0.0): a transient confirmation of an action that needs no decision. One per screen
- * root; show() replaces the current message. The live region (role=status) exists from the start, so a message that
- * appears in it is announced; the visible chip is a manual popover (top layer), so it sits above an open <mc-ui-window>.
- * It never takes focus, pauses while hovered or focused within, and holds no strings of its own.
- * Since ui-kit 1.1.0 it also pauses while a press is held inside it (until the pointer is released anywhere),
- * Escape closes it, and `dismissLabel` adds a close button; with that label both buttons are 44 px (the look editors'
- * 20 s Undo toast).
- */
+// <mc-ui-toast>: a transient confirmation; show() replaces the message. A role=status live region that never takes focus.
 const DEFAULT_MS = 6000;
 
 export class UiToast extends LitElement {

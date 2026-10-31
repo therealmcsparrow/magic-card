@@ -4,11 +4,7 @@ import { UI_KIT_CONTRACT_REVISION, type UiPopoverClose } from '../../contracts/u
 import { kitPopoverElementCss } from '../css/elements';
 import { placeAtRect, showTop } from '../place';
 
-/*
- * <mc-ui-popover> (contract ui-kit 1.0.0): a non-modal panel anchored to a button (Shortcuts, Preview). Popover API
- * (top layer) with a fixed-position fallback. Escape and an outside press close it, focus returns to the anchor.
- * It is not a dialog: no aria-modal, no scrim. The caller sets aria-expanded / aria-controls on the anchor.
- */
+// <mc-ui-popover> (contract ui-kit 1.0.0): a non-modal panel anchored to a button, via the Popover API with a fixed-position fallback.
 export class UiPopover extends LitElement {
   static uiKitRevision = UI_KIT_CONTRACT_REVISION;
   static styles = kitPopoverElementCss;

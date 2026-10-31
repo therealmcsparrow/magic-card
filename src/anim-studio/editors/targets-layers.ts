@@ -9,13 +9,8 @@ import { NO_SELECTION, registerPanel, type StudioSelection } from '../slots';
 import { tileDef, type PreviewTile } from '../tiles';
 import { t, m, list, type MessageId } from '../i18n';
 
-/*
- * Layers panel of the card-part targets (spec section D): Element, Icon, Name, State and
- * Background. The current preview tile decides which can be previewed; the others are listed only
- * when the document already animates them (marked "Not on this tile"), and a hint names the rest and
- * the tile that has them. Choosing a row selects that target (selection-change), so the timeline and
- * the inspector follow it.
- */
+// Layers panel of the card-part targets (Element, Icon, Name, State, Background). The preview tile decides which can be
+// previewed; others are listed only when the document animates them. A row selects its target.
 
 interface TargetRow {
   target: TargetRef;

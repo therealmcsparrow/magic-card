@@ -1,9 +1,6 @@
 import type { HomeAssistant } from '../types';
 
-/**
- * Dates, times and numbers the way Home Assistant's frontend formats them: the user's profile
- * (hass.locale: language, time format, number format, time zone) decides, not the browser.
- */
+/** Dates, times and numbers formatted the way Home Assistant's frontend does, from hass.locale. */
 
 type LocaleHass = Pick<HomeAssistant, 'language' | 'locale' | 'config'> | undefined;
 

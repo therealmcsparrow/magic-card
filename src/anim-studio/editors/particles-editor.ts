@@ -94,12 +94,7 @@ import type { AnimSvgDialog } from './draw-svg-dialog';
 import { t, m } from '../i18n';
 import type { MessageIndex as LabelId } from '../../contracts/i18n';
 
-/**
- * The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx). The
- * studio bundle must not define the card's elements: mc-ring / mc-seasonal are used by tag only
- * (the card bundle, loaded first, defines them). A v2 slot may carry its own built-in shape
- * (`data-s`) or symbol (particles-v2 ParticleSlotV2).
- */
+/** The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx); mc-ring / mc-seasonal are used by tag only. */
 function renderFx(anim: ResolvedAnimations): TemplateResult {
   const symbol = (s: FxLayer['symbol'] | ParticleSlotV2['symbol']) => (!s ? nothing : 'icon' in s ? html`<ha-icon .icon=${s.icon}></ha-icon>` : s.text);
   // the card's seasonal chunk defines <mc-seasonal>; the element upgrades in place once it is loaded
@@ -158,15 +153,9 @@ export interface DocChangeDetail {
 }
 
 /**
- * The particle designer of the animation studio (particles v2, contract src/contracts/particles-
- * v2.ts). Open
- * sections: Mode (Baked loop / Live simulation), Shape (a weighted mix of up to 4 shapes),
- * Movement (13 flows, loop and particle speed, spread) and Look. Closed sections with a live
- * summary: Variation (seed, spin, delay, lifetime), Physics, Collisions and Child particles. A
- * 2026.10.03 document opens unchanged as a Baked loop; see particles-utils.ts for when an edit adds
- * `sim`. A document based on a built-in preset (particles.preset) shows that preset and can be
- * converted to custom particles. Never mutates `.doc`: every edit is one `doc-change` { doc, label }
- * (text and sliders send transient changes while editing, then one final change).
+ * The particle designer (particles v2): open sections Mode, Shape, Movement and Look; closed sections Variation, Physics,
+ * Collisions and Child particles. Never mutates `.doc`: each edit is one `doc-change` { doc, label } (transient while
+ * typing or sliding). A preset-based document can be converted to custom particles.
  */
 @customElement('mc-anim-particles-editor')
 export class AnimParticlesEditor extends LitElement {

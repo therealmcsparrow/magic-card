@@ -91,12 +91,7 @@ import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.n
 import { pauseKey, rememberedPause } from './pause-memory';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
-/**
- * A module with an id, and the same for every nested layout child (graph history and other per-module
- * state is keyed by id). A missing id is derived from the module's place, `${parentId}~${slot}.${index}`
- * for a child, so it is the same on every setConfig and every render. Copies only what it changes; the
- * caller's config is never mutated (and the card never writes ids back to the user's config).
- */
+/** Gives every module and nested layout child an id, derived from its place when missing; copies only what it changes. */
 function withModuleIds(mod: CardModule, fallbackId: string): CardModule {
   if (!mod || typeof mod !== 'object') return mod;
   const id = mod.id || fallbackId;
@@ -1623,11 +1618,8 @@ export class MagicCard extends LitElement {
   }
 
   /**
-   * The failure notices of this card (lazy-module 1.4.0 "Failure"): one per chunk that failed on this page and that
-   * this card needs, in flow as the last child of the content. The lazy modules show theirs in their own slot. A
-   * chunk that has failed keeps its element (empty once it recovered) for the "loaded" message. Nothing is rendered
-   * until a chunk fails, so a healthy or plain card has no notice, no status container. They share the part of
-   * `rest` (the last thing in the content): a template part of their own would add a marker node to every card.
+   * The failure notices of this card: one per failed chunk it needs, as the last child of the
+   * content. Nothing renders until a chunk fails. They share the part of `rest`.
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {
