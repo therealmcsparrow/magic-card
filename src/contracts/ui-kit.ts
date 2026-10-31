@@ -1,178 +1,6 @@
-/*
- * Contract: ui kit. Version 1.2.0.
- * The card editor (src/editor/ + src/css/editor-system) is the base look; the kit is extracted FROM it
- * (single source), not designed in parallel, so every screen has the same look and feel.
- *
- * Names:
- * - Tags are `mc-ui-*` (`mc-*` alone is the namespace of the card's own elements such as mc-path-menu):
- *   <mc-ui-window> (size 's'|'m'|'l'|'xl'; variant 'alert' for a confirm, 'sheet'), <mc-ui-menu>,
- *   <mc-ui-popover>, <mc-ui-toast>, <mc-ui-disclosure>, <mc-ui-tile-group>, <mc-ui-chip-group>.
- * - Hit size tokens are --mc-hit / --mc-hit-sm / --mc-hit-xs; --mc-radius-tag is the tag radius (the
- *   card's src/css/tokens.ts already has --mc-radius-sm: 4px). A "result of an action" notice is
- *   .notice.result-note (notice({ transient: true })); a tree row's small button is .row + .icon-btn.xs;
- *   the topbar is 56 px; the dialog width is 480.
- * - Kit-scoped tokens (KIT_SCOPED_TOKENS), `.toast` and `.check` are in KIT_CLASSES. --mc-accent-src is
- *   not used (it would rewrite every accent formula in Core editorTokens; the theme editor keeps
- *   overriding the accent tokens on its :host, as allowed below).
- *
- * Behaviour:
- * - Window: header drag, corner resize and maximise (UiWindowElement movable / resizable / maximizable /
- *   maximized and four caller labels; parts move, resize, maximize), with keyboard and single-pointer
- *   alternatives (WCAG 2.1.1, 2.5.7) and no persistence. Every non-alert window turns all three on, so
- *   the nine card-editor pickers, the module selector, the SVG editor's Start window and the studio
- *   dialogs behave the same. A scrim close needs press and release on the scrim. The footer shows from
- *   the first render, so a footer button can take the first focus (an alert's initialFocus).
- * - KitSliderOptions has valueText / numberLabel / disabled; KitRowOptions has sub / check / content /
- *   trail, an optional onSelect and an optional `lead`, a host's leading node drawn after the icon and
- *   before the name (the library view's shape thumbnail). Row templates only; no element changes.
- * - UiMenuEntry has an optional `sub`, a help line under the label (also the item's accessible
- *   description unless `reason` is set).
- * - <mc-ui-toast> has `dismissLabel` (a 44 px close button), Escape closes it, and a press inside it
- *   pauses the timer until the pointer is released.
- * - <mc-ui-disclosure>, <mc-ui-tile-group> and <mc-ui-chip-group> (UiDisclosureElement,
- *   UiChoiceGroupElement below). Tile and chip groups use MANUAL activation: aria-pressed buttons in
- *   role=group with a roving tabindex; arrows, Home and End move focus only; Space, Enter or a click
- *   select.
- * - Panel lips (./ui-kit-lips): the PanelLips controller and the kitLip part hide and show an editor's
- *   side panels, remember that per device and per editor, and own the Ctrl/Cmd + \ shortcut. Controller
- *   and CSS only; no element changes, so UI_KIT_CONTRACT_REVISION stays.
- *
- * ── Module and placement ──
- * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
- *   1. CSS parts (src/ui-kit/css/*.ts): lit CSSResult per component family, plus `kitCss` = all parts.
- *      Colours come only from Core tokens (src/css/editor-system.ts `editorTokens`). Geometry and motion
- *      tokens the kit adds itself (KIT_SCOPED_TOKENS) are declared on :host by the `kitTokens` part
- *      (Module-owned, no colours, so no Core change); every use carries the literal as var() fallback.
- *   2. Template helpers (src/ui-kit/templates/*.ts) and controllers (src/ui-kit/controllers/*.ts):
- *      functions that return lit templates rendered in the CALLER's shadow root (light DOM there), so
- *      labels, aria-labelledby, aria-describedby and forms keep working; each bundle compiles its own copy.
- *   3. Elements (src/ui-kit/elements/*.ts): only where top layer or focus management is needed:
- *      UI_MENU_TAG, UI_WINDOW_TAG, UI_POPOVER_TAG, UI_TOAST_TAG. Defined once, guarded (defineUiKit()).
- *
- * Physical copies (webpack splitChunks: false):
- * - magic-card-editor.js imports src/ui-kit/index.ts statically (the ONE copy for the editor family).
- *   Every chunk loaded below it (svg-editor, shape-editor, path-canvas, path-tools, svg-booleans,
- *   transfer) imports src/ui-kit/** statically and webpack leaves those modules out, because they are
- *   available in a parent chunk (the same rule that keeps lit, js-yaml and model.ts out of the transfer
- *   and path-tools chunks today). The stats.json of a build shows it.
- *   Rule: a child chunk may import only src/ui-kit/ files that src/ui-kit/index.ts reaches.
- * - The path-canvas chunk also loads under magic-card-animation-studio.js (lazy-module 1.8.0, section "path-canvas
- *   from the animation studio"), so it has two parents. webpack leaves a module out of a child chunk only when every
- *   parent holds it, and the chunk stays one self-contained file for both. The chunk imports nothing from src/ui-kit/
- *   today (its styles read the --mc-* tokens directly; <mc-ui-menu> comes from the editor family's define). If it ever
- *   imports a kit file, that file must be reached by src/ui-kit/index.ts and held by the studio entry as well, or the
- *   file is copied into the chunk.
- * - magic-card-animation-studio.js and magic-card-theme-editor.js (own entries, own lit) compile their
- *   own copy of the parts they import. Same source, same release.
- * - magic-card.js: never. Import scan: nothing reachable from src/index.ts imports src/ui-kit/ (+0 B).
- * - Magic Card Utils panel (plain JS, vendored lit 3.3.3): a generated CSS-only copy,
- *   www/mc-ui-kit.js, made by tools/export-ui-kit.mjs in this repo from layer 1 and the tokens (no
- *   templates, no elements). Recorded in MCU's VENDORED.md with the Magic Card version and SHA-256.
- *   When an MCU tab has loaded Magic Card's editor chunk or studio, the kit elements are defined and the
- *   panel may use them by tag (DOM API only, see "Bundle boundary").
- *
- * ── Bundle boundary (Lit instance identity) ──
- * Elements may be defined by any of three lit copies (editor family, studio entry, theme editor entry)
- * and used from a fourth (MCU's vendored lit). So their public API is DOM-level only:
- * attributes, properties holding plain data (JSON-like, HTMLElement refs), slots, DOM CustomEvents
- * (bubbles, composed). Never a lit TemplateResult, directive, CSSResult or class instance across the
- * boundary. A stylesheet handed across a bundle is a native CSSStyleSheet, never a CSSResult.
- *
- * ── Define once ──
- * defineUiKit() calls customElements.define(tag, cls) only when customElements.get(tag) is undefined.
- * Every element class has `static uiKitRevision = UI_KIT_CONTRACT_REVISION`. When a tag already exists
- * with a lower revision, the kit logs one console.debug and keeps it (an element cannot be redefined);
- * within major 1 every change is additive, so an older definition still serves newer callers, minus the
- * new optional props. The editor-family copy and the entry copies ship in the same release (HACS
- * installs every dist file together); skew only happens with a stale browser cache.
- * Defining happens in install-style code (defineUiKit()), never at module top level of a lazy chunk
- * (lazy-module 1.0.0 rule). The card-editor chunk calls it once when it loads; the studio and the theme
- * editor call it from their entry.
- *
- * ── Styling rules (drift guard, tested) ──
- * - A screen styles its own LAYOUT only. It may not write rules for kit class names (KIT_CLASSES) in its
- *   own sheets; selector scan test over src/ (excluding src/ui-kit/ and the legacy sheet).
- * - A screen may override TOKENS on its :host (the theme editor keeps its fixed accent).
- * - Hit size comes from --mc-hit / --mc-hit-sm / --mc-hit-xs (40 / 32 / 24 px fine, all 44 px coarse);
- *   focus is :focus-visible 2 px --mc-focus.
- * - Font: --mc-font (HA's body font with Roboto, system-ui fallback). Layers stop setting system-ui.
- * - Kit CSS is in the minify-templates loader include list (webpack.config.js) in production builds.
- *
- * ── Layer 1: CSS parts (class conventions) ──
- * Each part is a CSSResult in src/ui-kit/css/; names from editor-system.ts where they exist.
- * kitTokens   :host declarations of KIT_SCOPED_TOKENS, coarse-pointer overrides included
- * kitBase     *, focus-visible, ::selection, .sr-only, [hidden], scrollbars, .mono, reduced motion
- * kitButton   .btn + .btn-primary | .btn-secondary | .btn-text | .btn-danger (new) | .btn-sm;
- *             .icon-btn (+ .sm, .xs, .danger); states :hover, :active, [aria-pressed=true] (new), :disabled
- *             and [aria-disabled=true] (new, keeps focus), coarse 44 px via --mc-hit
- * kitField    .field, .field-head, .lbl, .help (.error, .lead), .input (input, textarea), .select,
- *             .unit, .with-icon, .with-action, .field-action, .color, .swatch, .field-reset; .check
- * kitSwitch   .switch-row, .switch (button role=switch aria-checked); replaces native checkboxes
- * kitChip     .chip (.is-accent, .is-warn, .is-error, .is-count), button.chip, [aria-pressed=true]
- * kitSeg      .seg (.full): the one tab bar AND segmented control (role tablist | radiogroup)
- * kitTile     .tiles, .tile (new: picture tile with always-visible 12 px label; aria-checked)
- * kitSection  .group, .group-head (h3), .sectors, .sector, .sector-btn (collapsible), .sector-body
- * kitRow      .rows, .row (new: tree / list row: grip, glyph, name, trailing .icon-btn.xs;
- *             aria-level, aria-selected, aria-expanded; 40 px fine / 44 px coarse)
- * kitToolbar  .toolbar (new: floating capsule), .rail (new: vertical 56 px tool rail),
- *             .topbar (new: full-screen layer header, 56 px)
- * kitNotice   .notice (new: inline banner .info | .warn | .error | .success, persists while true;
- *             + .result-note modifier: result of an action, cleared on the next edit), .empty,
- *             .toast (inverse chip look, used by UI_TOAST_TAG and by the MCU CSS-only copy)
- * kitSlider   .slider-row (new: label, range, number field, unit)
- * kitLip      .lip (panel lip button, data-side start | end) and [data-lip=hidden] (visibility, pointer
- *             events, motion); reads LIP_TOKENS; not in kitCss, imported by the editors with lips
- * kitMenu     .menu (popover menu look; used by UI_MENU_TAG and by MenuPopover callers)
- * kitWindow   .win-* classes used inside UI_WINDOW_TAG's shadow root (exported for the gallery)
- * editorLegacy (mc-* classes of the 30 module editors): moved to src/ui-kit/css/legacy.ts. Bundled into
- *             the card-editor chunk (magic-card-editor.js: card editor and studio) and the animation-studio
- *             chunk (magic-card-animation-studio.js, its own entry: the animation studio editors). It
- *             reaches those screens only through the editorSystem stack of src/css/editor-stack.ts; the SVG
- *             editor, shape editor, theme editor, transfer panel and MCU use kitCss and never import it.
- *
- * ── Layer 2: template helpers (signatures in UiKitTemplates; typed loosely, no lit import here) ──
- * Icons: `icon` is an HA icon name ("mdi:...", rendered as <ha-icon>) or `glyph` a GlyphName from the
- * kit's 24 x 24 stroke set (src/ui-kit/glyphs.ts: a copy of src/svg-editor/icons.ts plus the shape
- * editor's additions ). Every label string
- * comes from the caller (see the i18n contract); helpers hold no strings.
- *
- * ── Layer 3: elements ──
- * See UiMenuElement, UiWindowElement, UiPopoverElement, UiToastElement below.
- *
- * ── Controllers (source-shared) ──
- * MenuPopover (moved from src/editor/components/menu-popover.ts, unchanged API), RovingFocus
- * (toolbar, rail, seg, tree rows: arrows, Home/End, one tab stop), EscGuard (the three-layer Escape
- * rule of svg-editor 1.0.0: stopPropagation so HA's card dialog does not close), LongPress (from the
- * path canvas gesture, 8 px cancel rule), PanelLips (side panel lips, memory and shortcut; see
- * ./ui-kit-lips).
- *
- * ── Tests ──
- * 1. Gallery page: every part and element in every state (default, hover, focus-visible, pressed,
- *    disabled, error), light and dark theme, fine and coarse pointer, 100 % and 200 % zoom, 320 px
- *    reflow. Screenshots compared per component against a baseline (pixel diff threshold 0.1 %).
- *    Built with a test-only config, never a dist entry.
- * 2. Extraction proof: for every class that existed in editor-system.ts, the card editor screenshots
- *    before and after the move differ by 0 px (byte-identical CSS in the move commit).
- * 3. Elements: keyboard (arrows, Home/End, type-ahead, Esc, Tab leaves, focus returns to opener),
- *    roles (menu, menuitem, menuitemcheckbox, dialog, alertdialog, status), aria-modal only when modal,
- *    top layer inside HA's transformed card dialog (Popover API; fixed-position fallback on Chromium
- *    85-113), Escape never closes HA's dialog, define twice is harmless, a lower-revision definition
- *    keeps working, DOM-only API (a caller built on a different lit copy can drive it), a toast shown
- *    while a window is open renders above its scrim.
- *    Window placement: header drag and corner resize with mouse and touch; arrows on the move and
- *    resize grips (16 px, Shift 64), Home resets; a click without movement docks / steps the size; the
- *    maximise button toggles and restores the previous rect; min 320 x 240, header clamp after a
- *    viewport resize; Escape during a drag cancels it and leaves the window open; a press inside the
- *    panel released on the scrim does not close; show() after close() starts centred at the default
- *    size; no storage write; alert and compact sheet show no grips.
- * 4. Import scan: magic-card.js reaches no src/ui-kit/ file; child chunks import only files
- *    src/ui-kit/index.ts reaches; stats.json lists src/ui-kit/** only in magic-card-editor.js, the
- *    studio entry and the theme editor entry.
- * 5. Selector scan: no kit class rule outside src/ui-kit/ (allow list for layout-only modifiers).
- * 6. Window scan: every `<mc-ui-window` in src/ whose variant is not 'alert' sets movable,
- *    resizable and maximizable and binds all four placement labels.
- * 7. Panel lips: the tests listed in ./ui-kit-lips.
- */
+// Contract: ui kit. Version 1.2.0. The card editor (src/editor/ + src/css/editor-system) is the base look; the kit
+// is extracted FROM it (single source), not designed in parallel, so every screen has the same look and feel.
+// Names: - Tags are `mc-ui-*` (`mc-*` alone is the namespace of the card's own elements such as mc-path-menu):
 
 export * from './ui-kit-lips';
 
@@ -212,16 +40,8 @@ export const NEW_TOKENS = [
   '--mc-scrim',
 ] as const;
 /**
- * Kit-scoped geometry and motion tokens, declared by the `kitTokens` part on :host (Module, not
- * Core; no colours). A screen may override them on its :host like any token. Values (fine / coarse):
- *   --mc-hit-sm       32px / 44px     small controls, float-toolbar buttons, row menu button
- *   --mc-hit-xs       24px / 44px     in-row .icon-btn.xs
- *   --mc-radius-tag   6px             chips, tiles' inner preview, tags
- *   --mc-radius-seg   10px            segmented track, float toolbar capsule
- *   --mc-radius-xl    16px            window, sheet (top corners)
- *   --mc-ease         .15s ease-out   colour, border and shadow transitions (0s under reduced motion)
- *   --mc-shadow-dialog 0 24px 64px rgba(0,0,0,.22), 0 4px 12px rgba(0,0,0,.1)
- * (--mc-hit itself, 40px / 44px, is Core.) The lip's layout tokens are LIP_TOKENS (./ui-kit-lips).
+ * Kit-scoped geometry and motion tokens, declared by the `kitTokens` part on :host (Module, not Core; no colours).
+ * A screen may override them on its :host like any token.
  */
 export const KIT_SCOPED_TOKENS = [
   '--mc-hit-sm', '--mc-hit-xs', '--mc-radius-tag', '--mc-radius-seg', '--mc-radius-xl', '--mc-ease',
@@ -435,42 +255,9 @@ export interface UiWindowClose {
 }
 
 /**
- * <mc-ui-window>: one modal window for dialogs, pickers, confirmations and bottom sheets. Native
- * <dialog> + showModal() inside its shadow root (top layer, real focus trap, ::backdrop scrim
- * --mc-scrim). Escape: the 'cancel' event is handled (EscGuard): it closes this window only and
- * never reaches HA's card dialog. Focus returns to `opener`. `aria-modal` is true because it is.
- * Content is slotted (light DOM in the caller's root, styled by the caller's kit CSS).
- * Slots: default (body), "footer" (buttons, primary last), "header-actions" (optional icon buttons).
- * CSS parts: panel, header, title, close, body, footer; move, resize, maximize.
- * Scrim close: only when the press AND the release are on the scrim (a drag or a text selection
- * that starts in the panel and ends outside never closes; the old PickerDialogController rule).
- *
- * Placement (every window behaves the same). Each flag is off by default; every
- * caller of a non-alert window sets all three (test 6). Ignored, and their controls not rendered, for
- * variant 'alert' and for 'sheet' at compact width (the bottom sheet under 600 px).
- * - movable: drag by the header with mouse, pen or touch (pointer capture, touch-action none on the
- *   header), not when the press starts on a button, input, select or textarea. The header starts with
- *   a grip button (part `move`, glyph 'grip', aria-label moveLabel). Keyboard on the grip: arrows move
- *   16 px, Shift+arrows 64 px, Home re-centres. Single pointer without dragging (WCAG 2.5.7): a click
- *   on the grip docks the window, centre -> inline-end edge -> inline-start edge -> centre (16 px
- *   margin), so HA's card preview beside the editor can be seen.
- * - resizable: grip button at the bottom inline-end corner (part `resize`, aria-label resizeLabel).
- *   Drag resizes; arrows 16 px, Shift+arrows 64 px; Home returns to the size default; a click steps the
- *   width s -> m -> l -> xl -> s (WCAG 2.5.7). Minimum 320 x 240 px; maximum the viewport minus 16 px
- *   per side.
- * - maximizable: icon button before Close (part `maximize`, aria-pressed, aria-label maximizeLabel or
- *   restoreLabel): the panel fills the viewport minus 16 px per side; restoring returns the rect it had
- *   before. `maximized` is settable (also before show()) and reflects as an attribute.
- * - "A click" is a pointer release within 4 px of its press; more than that is a drag.
- * - Once moved, resized or maximised the panel has an explicit size: the body scrolls, header and footer
- *   stay. At least 48 px of the header stays inside the viewport, also after a viewport resize.
- * - Escape during a drag or resize cancels it (rect restored) and is consumed; the window stays open.
- * - Persistence: none, as today (the pickers' ModalDragResizeController.reset() runs on close; the SVG
- *   Start window keeps Maximise in memory only). Every show() starts centred at the size default and not
- *   maximised unless the caller set `maximized`. Nothing goes to localStorage, the config or MCU storage.
- * - Grips are 32 px fine (--mc-hit-sm) and 44 px coarse; focus ring per the styling rules; no rect
- *   transition (so reduced motion needs nothing extra). The kit holds no strings: a flag that is on
- *   without its label renders the control and logs one console.debug (test 6 keeps src/ clean).
+ * <mc-ui-window>: one modal window for dialogs, pickers, confirmations and bottom sheets. Native <dialog> +
+ * showModal() inside its shadow root (top layer, real focus trap, ::backdrop scrim --mc-scrim). Escape: the
+ * 'cancel' event is handled (EscGuard): it closes this window only and never reaches HA's card dialog.
  */
 export interface UiWindowElement extends HTMLElement {
   heading: string;
@@ -533,12 +320,9 @@ export interface UiToastAction {
 }
 
 /**
- * <mc-ui-toast>: transient confirmation of an action that needs no decision ("Copied SVG").
- * One per screen root; a new show() replaces the current message. Look: `.toast`,
- * bottom centre, `offset` px above the bottom edge. Top layer (popover="manual") so it shows above an
- * open <mc-ui-window>. Live region role=status (polite), never focus-stealing. Hides after `duration`
- * ms (default 6000), paused while hovered or focused within, and while pressed. Never the only place a failure is
- * reported (failures are a .notice). No strings of its own. CSS parts: toast, text, action.
+ * <mc-ui-toast>: transient confirmation of an action that needs no decision ("Copied SVG"). One per screen root; a
+ * new show() replaces the current message. Look: `.toast`, bottom centre, `offset` px above the bottom edge. Top
+ * layer (popover="manual") so it shows above an open <mc-ui-window>.
  */
 export interface UiToastElement extends HTMLElement {
   /** Default 16. Raise it when a save bar sits at the bottom. */
@@ -551,11 +335,9 @@ export interface UiToastElement extends HTMLElement {
 }
 
 /**
- * <mc-ui-disclosure>: a collapsible section row (button with aria-expanded, a heading around it).
- * `heading` is the title (never truncated), `summary` a short state line after it (truncates, wraps under the
- * title when narrow; part of the button's accessible name). `open` is settable and reflects; a click toggles
- * it and fires 'mc-toggle' { open } (bubbles, composed), so an inspector that owns the state can set `open`
- * again. Slot: default (the body, hidden while closed). `level` is the heading level (default 3).
+ * <mc-ui-disclosure>: a collapsible section row (button with aria-expanded, a heading around it). `heading` is the
+ * title (never truncated), `summary` a short state line after it (truncates, wraps under the title when narrow;
+ * part of the button's accessible name).
  */
 export interface UiDisclosureElement extends HTMLElement {
   heading: string;
@@ -579,11 +361,9 @@ export interface UiChoicePick {
 }
 
 /**
- * <mc-ui-tile-group> and <mc-ui-chip-group>: MANUAL activation. Buttons with aria-pressed in a role=group
- * named `label`; one tab stop (roving); Left / Right / Up / Down / Home / End move focus only; Space, Enter or
- * a click fire 'mc-pick'. `value` is owned by the host (the groups never change it themselves), so a group
- * never applies a choice on focus. Previews are aria-hidden; the label is the accessible name. They wrap at
- * every width, 44 px targets on coarse pointers.
+ * <mc-ui-tile-group> and <mc-ui-chip-group>: MANUAL activation. Buttons with aria-pressed in a role=group named
+ * `label`; one tab stop (roving); Left / Right / Up / Down / Home / End move focus only; Space, Enter or a click
+ * fire 'mc-pick'.
  */
 export interface UiChoiceGroupElement extends HTMLElement {
   label: string;

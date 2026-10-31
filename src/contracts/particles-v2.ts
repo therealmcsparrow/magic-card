@@ -1,170 +1,9 @@
 import type { ParticleShape, ParticleDirection, ParticlesSpec } from '../anim-studio/model';
 import type { ParticleSlot } from '../anim-studio/compile';
 
-/*
- * Contract: particles model v2, bake simulator, live engine. Version 1.2.0.
- * Engine 1 output is unchanged since 1.0. Compiler rules:
- * - BakeGeometry.aspect 0 is the "unmeasured" geometry: the unbaked full slot pool, no bake.
- * - A 'baked' CompiledParticlesV2 may carry static rules only (no keyframes) until the layer is measured.
- * - CompiledParticlesV2.slots is the full slot pool at every geometry, so a re-bake never changes the DOM.
- * - ParticlesModule.bakedCss takes an optional `pool`.
- * - The card's first render is unmeasured (`-g0`); `apply` bakes once for the measured size.
- * An implementation that follows 1.0.x and bakes aspect 0 at 0.25 does not fit the card's render path.
- *
- * Multiple emitters, each in front of or behind the card content. Engine stays 1.
- * - validateSim takes an optional `spec` (count, layer), so the document-wide parent cap is checked
- *   where the sim is validated; the compiler's emitter plan still trims as a safety net.
- * - A `layer` equal to ParticlesSpec.layer is valid and means the same as a missing one; the validator
- *   no longer normalises it (the studio's ops never write it).
- * - Lenient: a missing, malformed or duplicate extra emitter id is replaced by a generated `e<n>`;
- *   a broken `children` drops only the children, for every emitter (as for the primary). Invariant:
- *   lenient output always passes strict.
- * - CompiledParticlesV2.emitterSlots: each emitter's part and slot range, for the studio's stage hide
- *   rule (studio-layers contract). Hiding an emitter is no longer an opacity [0, 0] document edit.
- * - bakedCss keeps its signature; per-part rules stay internal to the chunk (apply.ts / css.ts).
- *
- * - ParticlesSim gets optional `emitters` (ParticleEmitter[], 1..PARTICLES_V2_CAPS.emitters - 1 extra
- *   emitters), `id` and `name`. The sim's own fields plus the spec's count / size / colors / fade /
- *   spread are emitter 0, "the primary emitter". A sim without `emitters` (or with an empty list,
- *   which the validator drops) is a 1.1.0 sim and bakes, compiles and renders byte for byte as before.
- * - Placement per emitter. ParticlesSpec.layer is the primary emitter's
- *   placement and the default of every extra emitter; ParticleEmitter.layer overrides it for that
- *   emitter. The studio writes ParticleEmitter.layer only when it differs from ParticlesSpec.layer
- *   (and removes it when equal), so a document whose emitters all sit on one side stores no `layer`
- *   on its extras. When the primary changes side, the studio rewrites the extras' `layer` so they
- *   keep their own side (one undo step). A stored `layer` equal to ParticlesSpec.layer (hand-edited
- *   YAML) is valid, behaves as missing and is kept as stored.
- * - Parts: a document renders AT MOST TWO particle layers, never one per emitter.
- *   Part 0 = the emitters on ParticlesSpec.layer's side (always holds the primary), in array order.
- *   Part 1 = the emitters on the other side, in array order; it exists only when at least one
- *   emitter is there. A document without part 1 renders exactly one layer, as 1.1.0 did
- *   (byte-identical: golden tests).
- * - Shared by all emitters of a document: ParticlesSpec.speed (the period), preset / intensity, and
- *   sim.engine, sim.mode, sim.colliders. Everything else, now including `layer`, is per emitter.
- * - Paint order: within a part, the part's first emitter is drawn first (bottom), its last emitter
- *   last (top). Across parts the card's z-order decides (back under the content, front over it).
- *   The document's slot pool and BakedLoop.elements are [part 0 emitters, then part 1 emitters], each
- *   emitter's block in array order: [e parents, e children] (within an emitter as 1.1.0). So part 0 is
- *   a prefix of the pool, part 1 the rest (BakedLoop.parts gives the cut). Each emitter's block is
- *   contiguous (CompiledParticlesV2.emitterSlots).
- * - Each emitter simulates on its own: its own seed (primary: sim.seed), its own children stream
- *   (deriveSeed(seed, 2) baked, deriveSeed(seed, 5) live layout). Emitters do not collide with each
- *   other. So removing, reordering or moving one emitter to the other side never changes another's
- *   motion, and hiding one in the studio (a stage rule over its slot range) changes nothing baked.
- * - Budgets per DOCUMENT (both parts together) stay the 1.1.0 numbers: parents of all emitters
- *   <= PARTICLES_V2_CAPS.parents; elements of all emitters <= PARTICLES_V2_CAPS.elements; child slots
- *   (elements - all parents) are split over the emitters with children in proportion to their
- *   parents (floor, remainders to the lowest emitter first, clamped to what the emitter wants);
- *   maxBytes is split the same way over emitters by element count (never by bytes, so one emitter's
- *   CSS size never moves another's stops) and covers the CSS of both parts together. With one
- *   emitter these rules give exactly the 1.1.0 numbers. Splitting into two parts adds one layer
- *   element (a span), never slots.
- *   Where the parent cap is enforced: validateSim with `spec` checks
- *   spec.count + all extras' counts (strict: error at `particles.sim.emitters`; lenient: extras'
- *   counts trimmed from the last emitter down, an extra trimmed to 0 is dropped). Without `spec` it
- *   checks the extras' own sum against PARTICLES_V2_CAPS.parents - 1. The compiler's emitter plan
- *   (emitters.ts) always applies the lenient trim with the real spec, so the bound holds on every path.
- *   model.ts (Core) does not check emitters.
- * - One bake per geometry per document: both parts share it (they fill the same wrapper, so they
- *   measure the same). Each part is applied, released and (live) stepped as its own layer; a live
- *   part steps only its own emitters' simulations.
- * - BakedElement.slot indexes the document's pool. With emitters an emitter that bakes fewer elements
- *   than its pool share leaves slots unused, so `slot` may skip; consumers (bakedCss) must key by
- *   `slot`, not by array position. For one emitter slot === array position, as before.
- * - Names: part 0 keeps `<base>-g<key>`; part 1 is `<base>o-g<key>` (unmeasured `<base>o-g0`). The
- *   card keys part 1's stylesheet entry `<docId>o-g<key>` (ParticlesApplyCtx.part), so the two parts
- *   never replace each other's rules.
- * - v1 fallback (old cards, chunk not loaded): the spec's v1 fields describe emitter 0 only, one layer
- *   on ParticlesSpec.layer. An older chunk (1.1.0) drops `emitters`, `id` and `name` (its validator
- *   builds a new object) and plays emitter 0. An older card with this chunk ignores `other` and plays
- *   part 0. No document migration, no AnimationDoc.version change.
- * - Validation (validateSim). Every extra emitter is checked by the primary's per-field rules, error
- *   paths `particles.sim.emitters[i].*`; count 1..PARTICLES_V2_CAPS.parents (integer), size / colors /
- *   fade / spread as ParticlesSpec; `layer` 'front' | 'back' or missing (strict: error; lenient: the
- *   field is dropped, the emitter follows ParticlesSpec.layer). Strict: every problem is an error.
- *   Lenient, same outcome for the primary and the extras:
- *   - a broken `children` drops only `children`; the emitter plays without them;
- *   - any other broken field of an extra drops that extra as a whole (the others play); more than
- *     the cap: the rest are dropped; the parent trim as above.
- *   `id`: 1-16 of [a-z0-9-], unique within the sim (the primary's `sim.id` included). Strict: error on
- *   a missing, malformed or duplicate id. Lenient: such an id is replaced by `e<n>`, n the smallest
- *   positive integer whose `e<n>` is not yet used in the sim, assigned in array order after drops
- *   (deterministic). A malformed `sim.id` is dropped in lenient mode (the studio shows 'main').
- *   `name`: trimmed text, at most 40 characters (lenient: cut to 40).
- *   Lenient output always passes strict with the same `spec`.
- * - ids are written by the studio only once a document has two or more emitters, so a single-emitter
- *   document saved by the 1.2.0 studio is byte-identical to one saved before.
- *
- * Card side of the parts (magic-card.js grows by 230 B measured, 1,024 B at most):
- * - compile.ts compileSim: CompiledAnimation.css = part 0 css + part 1 css (unmeasured pools);
- *   CompiledAnimation gets optional `split: { name, layer: CompiledLayer, sim }` from
- *   CompiledParticlesV2.other, with sim.part = 1. Absent when there is no part 1.
- * - anim-studio/resolve.ts customEntry: after part 0's FxLayer it pushes part 1's FxLayer (same style,
- *   tap and timing, its own `front`, `particles`, `sim`). The two spans are adjacent in the wrapper,
- *   in the entry's place, so their order against other entries' layers, seasonal, ring, value
- *   background, border lines and shape is what one layer had. Back parts sit at z-index -1, front
- *   parts at z-index auto (css/animations.ts unchanged); both are clipped by the wrapper as before;
- *   "On tap" restarts both (tap-fx.ts unchanged).
- * - card/magic-card.ts _syncParticles: the stylesheet key gains `o` for part 1. card-decorations.ts,
- *   the loaders and the stylesheet do not change. The card ignores emitterSlots.
- *
- * Implementation: module `particles` (src/particles/, lazy chunk dist/magic-card-particles.js, cap
- * 38,912 B; the studio bundle imports src/particles/index.ts directly).
- * Consumers: the card (src/anim-studio/resolve.ts, src/card/*) only through src/utils/particles-loader.ts,
- * the particles editor, the studio's stage hide (emitterSlots) and the studio's animated SVG export.
- *
- * Compatibility:
- * - A ParticlesSpec without `sim` is a v1 (2026.10.03) spec. It compiles through the existing
- *   compile.ts particlesCss, byte for byte as before. Nothing in this contract touches that path.
- * - `sim` is additive. AnimationDoc.version stays 1. The magic-card-utils integration checks
- *   structure and size only, so it stores `sim` unchanged (no integration release needed).
- * - The card bundle keeps `sim` as stored (unchecked, like the v2 rig fields). Only the particles
- *   chunk and the studio validate it (ParticlesModule.validateSim).
- * - With `sim`, the v1 fields still hold a playable fallback: `direction` = FALLBACK_DIRECTION of
- *   the flow, `shape` = the first non-builtin shape of the mix (or none). An older card, or this
- *   card while the chunk loads or after it failed to load, plays that fallback.
- * - `sim.engine` pins simulator behaviour. A change that alters baked output for the same input
- *   adds engine 2 and keeps engine 1 producing what it produced. Never change engine 1's output.
- *
- * Units (pinned as engine 1 implements them, src/particles/sim.ts; 1.0.1 corrects the 1.0.0 text,
- * which said "% per s" of width / height):
- * - Time in s, angles in deg.
- * - World unit u: 1 u = 1 % of the layer's SHORTER side, so motion is round on any aspect. A layer of
- *   aspect a (width / height) is 100a x 100 u when a >= 1, else 100 x 100/a u (aspect 2: 200 x 100 u).
- * - Speeds (ranges.speed, child speed) are u per s; gravity strength, turbulence strength and flow
- *   forces are u per s^2. On a wide card 10 u/s moves 10 % of the HEIGHT per s, which is
- *   10 / aspect % of the width per s. They are not % of width / height.
- * - Drag is 1/s: v *= exp(-drag * dt) per fixed step. Unit-free.
- * - Turbulence scale is the noise feature size in u (values below 1 act as 1). The field drifts at
- *   0.6 lattice cells per s.
- * - bounce, inherit, opacity and weights are unit-free shares (0-1, or relative).
- * - Positions that leave the sim (BakedStop x, y) are % of the layer's width (x) and height (y),
- *   x / W * 100 and y / H * 100 with W, H the layer in u. Content collider boxes
- *   (BakeGeometry.content) are likewise % of the layer's width and height.
- * - spread (the v1 field, 0-100) is a share of the spawn edge: of the width for fall and rise, of the
- *   height for drift and wave. Rain, fountain, orbit and vortex scale it their own way (flows.ts;
- *   orbit and vortex use it as a ring radius in u: max(5, spread/2) and max(10, spread/2)).
- * - Particle size is px (as v1). Collisions turn it into a radius of size / 2 / 120 * 100 u, as if the
- *   layer's shorter side were 120 px (REF_PX). The drawn size does not scale with the layer.
- * - Lifetime is clamped to [2/60 s, min(20 s, period - 2/60 s)]; persistent flows (orbit, wander)
- *   live the whole period when the period is at most 20 s. delay wraps modulo the period.
- * - The fixed step is PARTICLES_V2_CAPS.dt (1/60 s), semi-implicit Euler.
- *
- * Live engine rules: one shared requestAnimationFrame loop for all live layers on the page;
- * a layer steps only while on screen (src/icons/offscreen.ts watchOffscreen) and the page is
- * visible; release() or disconnect stops it; reduced motion draws one still frame and never starts
- * the loop. Baked layers register nothing per frame. 1.2.0: a layer steps one simulation per emitter
- * of its part in the same loop entry and writes one frame over that part's pool.
- *
- * Render sequence on the card (1.1.0; 1.2.0: per part, one bake per geometry shared by both parts):
- * 1. Render: the compiler runs with geometry `{ aspect: 0 }` (the layer has no size yet). It returns
- *    the unbaked pool under `<base>-g0`: static slot rules, no keyframes, no bake. The slots sit at
- *    the base opacity 0 and `animation:none`, so the first paint shows nothing and nothing flashes.
- * 2. After render: `apply` measures the layer, bakes once for the quantised geometry (cached per
- *    document, up to PARTICLES_V2_CAPS.geometryVariants), swaps `data-fx` to that variant's name and
- *    adds its rules. The DOM slots do not change. A layer that cannot be measured bakes DEFAULT_GEOMETRY.
- * 3. A later size change repeats step 2 only.
- * So a card costs one bake per geometry. The pool is the same at every step.
+/**
+ * Contract: particles model v2, bake simulator, live engine. Version 1.2.0. Engine 1 output is unchanged since
+ * 1.0.
  */
 
 export const PARTICLES_CONTRACT_VERSION = '1.2.0';
@@ -348,16 +187,9 @@ export const PARTICLES_V2_CAPS = {
 // ── bake ──
 
 /**
- * The layer the bake simulates in, quantised so near-equal cards share one bake: aspect
- * (width / height) to 0.25 steps clamped to [0.25, 8]; content box edges to 5 %.
- *
- * Unmeasured (1.1.0): `aspect` 0 (any value <= 0) is not a size. It is valid only as input to a
- * ParticlesCompiler and means "the layer has not been measured yet". The compiler returns the
- * unbaked full slot pool under the name `<base>-g0` and does not bake, so the 0.25 clamp does not
- * apply to it. `bake()` itself still quantises and clamps as above, and the card never calls it with
- * aspect 0. The card's render uses aspect 0 (the layer has no size before layout); `apply` measures
- * and bakes once. DEFAULT_GEOMETRY (aspect 2) is what `apply` bakes when the layer stays
- * unmeasurable (hidden, not laid out).
+ * The layer the bake simulates in, quantised so near-equal cards share one bake: aspect (width / height) to 0.25
+ * steps clamped to [0.25, 8]; content box edges to 5 %. Unmeasured (1.1.0): `aspect` 0 (any value <= 0) is not a
+ * size. It is valid only as input to a ParticlesCompiler and means "the layer has not been measured yet".
  */
 export interface BakeGeometry {
   aspect: number;
@@ -477,14 +309,9 @@ export interface CompiledParticlesV2 {
    */
   css: string;
   /**
-   * 1.1.0: always the full slot pool of the spec: the parents, then
-   * min(parents x children per parent, PARTICLES_V2_CAPS.elements - parents) child slots. It is the
-   * same pool at every geometry (measured or not) and in both modes, so a re-bake for another size
-   * changes only the rules and the layer's `data-fx`, never the DOM. A bake with fewer elements than
-   * slots leaves the rest unanimated (base opacity 0). Baked: element k takes pool look k (shape,
-   * size, colour); the collision radius still comes from the bake's own draw of that element.
-   * 1.2.0: the pools of part 0's emitters, concatenated in array order (each with its share of child
-   * slots, see the header); a baked element takes the pool look of its `slot`.
+   * 1.1.0: always the full slot pool of the spec: the parents, then min(parents x children per parent,
+   * PARTICLES_V2_CAPS.elements - parents) child slots. It is the same pool at every geometry (measured or not) and
+   * in both modes, so a re-bake for another size changes only the rules and the layer's `data-fx`, never the DOM.
    */
   slots: ParticleSlotV2[];
   /** Part 0's placement: ParticlesSpec.layer === 'front'. */
@@ -492,11 +319,9 @@ export interface CompiledParticlesV2 {
   /** Part 1, present only when at least one emitter is on the other side. */
   other?: CompiledParticlesPart;
   /**
-   * Every emitter of the validated sim (one entry for a single-emitter
-   * document), in index order. Optional in the type only so the 1.1.0 chunk still compiles; a 1.2.0
-   * chunk always sets it, at every geometry and in both modes. Used by the studio's stage hide
-   * (studio-layers contract); the card ignores it. Not part of css, slots or names, so the
-   * goldens are unaffected.
+   * Every emitter of the validated sim (one entry for a single-emitter document), in index order. Optional in the
+   * type only so the 1.1.0 chunk still compiles; a 1.2.0 chunk always sets it, at every geometry and in both modes.
+   * Used by the studio's stage hide (studio-layers contract); the card ignores it.
    */
   emitterSlots?: CompiledEmitterSlots[];
   /** Unmeasured: elements = slots.length, stops 0, bytes = css length, capped and warn false. 1.2.0: the whole document. */
@@ -539,22 +364,17 @@ export interface ParticlesModule {
   validateSim(raw: unknown, mode: 'strict' | 'lenient', spec?: Pick<ParticlesSpec, 'count' | 'layer'>): { sim?: ParticlesSim; errors: Array<{ path: string; message: string }> };
   bake: Bake;
   /**
-   * A baked loop as layer CSS (the card). Optional `pool` (1.1.0): the spec's full slot looks. With
-   * it, `slots` is the whole pool (not one per baked element) and element k takes pool look k. Without
-   * it, one slot per baked element (export, tests). 1.2.0: with `pool`, an element takes pool look
-   * `element.slot` (equal to k for one emitter). Renders the whole document as one layer; the card's
-   * per-part rules come from the compiler and apply (internal arguments, not part of this contract).
+   * A baked loop as layer CSS (the card). Optional `pool` (1.1.0): the spec's full slot looks. With it, `slots` is
+   * the whole pool (not one per baked element) and element k takes pool look k. Without it, one slot per baked
+   * element (export, tests). 1.2.0: with `pool`, an element takes pool look `element.slot` (equal to k for one.
    */
   bakedCss(loop: BakedLoop, name: string, docId: string, pool?: ParticleSlotLook[]): { css: string; slots: ParticleSlotV2[] };
   /** A baked loop as standalone animated SVG markup (studio export, P2-6; live documents export their bake). 1.2.0: back part first, then front. */
   bakedSvg(loop: BakedLoop, opts: { width: number; height: number; background?: string }): string;
   /**
-   * After each render, per fx layer of a v2 document: measures the layer, re-bakes when the
-   * quantised geometry differs from the compiled one (swaps the layer's data-fx name), and in live
-   * mode starts the engine. Idempotent per render. Never throws (logs once).
-   * The render before it is unmeasured (`-g0`, no bake); apply bakes once for the measured geometry,
-   * or DEFAULT_GEOMETRY when the layer has no size. 1.2.0: `ctx.part` picks the part's name, rules
-   * and (live) simulations; both parts use the same cached bake.
+   * After each render, per fx layer of a v2 document: measures the layer, re-bakes when the quantised geometry
+   * differs from the compiled one (swaps the layer's data-fx name), and in live mode starts the engine. Idempotent
+   * per render. Never throws (logs once).
    */
   apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void;
   /** The layer left the DOM or the card disconnected: stop and forget it. */

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 // @ts-expect-error plain ES module without types
-import { commentBlocks, commentViolations } from './helpers/ts-comment-scan.mjs';
+import { commentBlocks, commentViolations } from '../tools/ts-comment-scan.mjs';
 
 const root = path.resolve(__dirname, '..');
 const tracked = execFileSync('git', ['ls-files', '-z', '--', '*.ts'], { cwd: root, maxBuffer: 1 << 26 })
