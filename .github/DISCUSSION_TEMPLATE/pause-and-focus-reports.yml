@@ -5,6 +5,8 @@ body:
       value: |
         This form creates a public post. Anyone can read it, and it shows your GitHub username. Do not share access tokens, passwords, your Home Assistant web address, your location, or names or faces of people in your household. Cut those out of screenshots and YAML first. You can edit or delete your post at any time.
 
+        Posts are public, so share only what you are happy to make public.
+
         Fields marked (required) must be filled in. The rest are optional.
 
   - type: markdown
@@ -23,7 +25,7 @@ body:
     id: where
     attributes:
       label: "Where you use Magic Card (required)"
-      description: "Desktop, phone, tablet or wall panel, in a few words. Add anything that may matter: a screen reader, switch access, a large system font size or reduced motion turned on."
+      description: "Desktop, phone, tablet or wall panel, in a few words. Optionally add a device setting that may matter, such as screen reader, large text or reduced motion. You can leave settings out."
     validations:
       required: true
 
