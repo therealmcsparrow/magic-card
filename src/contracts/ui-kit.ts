@@ -1,6 +1,6 @@
 // Contract: ui kit. Version 1.2.0. The card editor (src/editor/ + src/css/editor-system) is the base look; the kit
 // is extracted FROM it (single source), not designed in parallel, so every screen has the same look and feel.
-// Names: - Tags are `mc-ui-*` (`mc-*` alone is the namespace of the card's own elements such as mc-path-menu):
+// Tags are `mc-ui-*`; `mc-*` alone is the namespace of the card's own elements such as mc-path-menu.
 
 export * from './ui-kit-lips';
 

@@ -178,6 +178,7 @@ export type ThemePresetGroup = 'mine' | 'original' | 'inspired' | 'genre';
  * Group order, Show labels, headings and search words. Type-level here; the picker keeps its own copy of the
  * values (src/contracts/ is types plus constants and the chunk must not pull in more). (1.2.0) mine: "My presets"
  * / search "my"; original: "Original" / search "original"; inspired: "Inspired by" / "inspired by"; genre:
+ * "Sci-fi & fantasy" / "genre".
  */
 export interface ThemePresetGroupInfo {
   id: ThemePresetGroup;

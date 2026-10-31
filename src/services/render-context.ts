@@ -5,8 +5,10 @@ import type { CardModule, NestedColumnConfig } from '../types';
 import type { ResolvedLayer } from '../contracts/layer-placement';
 import type { LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
 
-// What a module may ask of the card that is rendering it. Set by the card for the duration of its synchronous render.
-// Outside a card render (editor thumbnails, tests) there is no context and modules fall back to their static output.
+/**
+ * What a module may ask of the card that is rendering it. Set by the card for the duration of its (synchronous) render.
+ * Outside a card render (editor thumbnails, tests) there is no context and modules fall back to their static output.
+ */
 export interface RenderContext {
   /** Live result of a Jinja template (render_template subscription owned by the card). */
   template(template: string, variables?: Record<string, unknown>): TemplateState;

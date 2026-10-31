@@ -3,7 +3,10 @@ import { m } from '../i18n';
 import type { CatalogueGroupId, FieldKind } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry } from '../../contracts/theme-catalogue';
 
-// HA's own theme variables a theme commonly sets (`ref` is the declaring file; defaults are the light-mode values).
+/**
+ * Home Assistant's own theme variables a theme commonly sets, checked against home-assistant/frontend tag 20260930.4
+ * (`ref` is the file that declares or reads the variable; defaults are HA's light-mode values).
+ */
 const BASE = 'https://github.com/home-assistant/frontend/blob/20260930.4/';
 const VERIFIED = '2026-10-17';
 

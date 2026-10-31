@@ -1,7 +1,9 @@
 import type { HassEntity, DropdownModuleConfig } from '../../types';
 
-// What a dropdown sets on an entity: the option list it offers (an attribute of the entity), where the current option
-// comes from (the state or an attribute) and the service that selects one.
+/**
+ * What a dropdown sets on an entity: the option list it offers (an attribute of the entity), where
+ * the current option comes from (the state or an attribute) and the service that selects one.
+ */
 export interface SelectAdapter {
   /** Attribute holding the current option; undefined: the state. */
   current?: string;

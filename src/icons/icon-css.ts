@@ -1,7 +1,9 @@
 import { css } from 'lit';
 
-// <mc-svg-icon> base styles: sized like <ha-icon> (`--mdc-icon-size`). Effects animate transform / opacity / filter only;
-// reduced motion stops them and keeps the state (fill level, colours).
+/**
+ * <mc-svg-icon> base styles: sized like <ha-icon> (`--mdc-icon-size`), so module CSS that sizes icons keeps working.
+ * Effects animate transform / opacity / filter only; reduced motion stops them and keeps the state (fill level, colours).
+ */
 export const iconBaseStyles = css`
   :host {
     display: inline-flex;

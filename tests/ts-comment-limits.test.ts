@@ -15,16 +15,25 @@ describe('scanner', () => {
     const src = ['// a', '// b', '// c', '// d', 'import x from "y";', '', '/**', ' * 1', ' * 2', ' * 3', ' * 4', ' * 5', ' */', 'const a = import(/* webpackChunkName: "z" */ "z");', '// eslint-disable-next-line foo', 'const b = 1;'].join('\n');
     const v = commentViolations(src, 'f.ts');
     expect(v.map((x: { header: boolean; lines: number }) => [x.header, x.lines])).toEqual([[true, 4], [false, 7]]);
-    expect(commentBlocks('// ok\nconst a = 1;\n')[0].header).toBe(true);
+    expect(commentBlocks('// ok\n\nconst a = 1;\n')[0].header).toBe(true);
   });
 
   type V = { header: boolean; lines: number };
   const shape = (src: string) => commentViolations(src, 'f.ts').map((x: V) => [x.header, x.lines]);
 
   it('treats the first block after the imports as the file header', () => {
-    const src = ['import a from "a";', 'import { b,', '  c } from "b";', '', '// 1', '// 2', '// 3', '// 4', 'export const d = a;'].join('\n');
+    const src = ['import a from "a";', 'import { b,', '  c } from "b";', '', '// 1', '// 2', '// 3', '// 4', '', 'export const d = a;'].join('\n');
     expect(shape(src)).toEqual([[true, 4]]);
     expect(shape(['import a from "a";', '', 'export const d = a;', '', '// 1', '// 2', '// 3', '// 4'].join('\n'))).toEqual([]);
+  });
+
+  it('reads a comment directly on a declaration as its doc, not the header', () => {
+    const doc = ['/**', ' * 1', ' * 2', ' * 3', ' */', 'export function f() {}'];
+    expect(shape(['import a from "a";', '', ...doc].join('\n'))).toEqual([]);
+    expect(shape([...doc, 'export const g = 1;'].join('\n'))).toEqual([]);
+    expect(shape(['// 1', '// 2', '// 3', '// 4', 'import a from "a";', '', 'export const d = a;'].join('\n'))).toEqual([[true, 4]]);
+    expect(shape(['// 1', '// 2', '// 3', '// 4', '', 'export const d = 1;'].join('\n'))).toEqual([[true, 4]]);
+    expect(shape(['// 1', '// 2', '// 3', '// 4', '// 5', '// 6', '// 7', 'export const d = 1;'].join('\n'))).toEqual([[false, 7]]);
   });
 
   it('counts prose lines that only mention a magic word', () => {

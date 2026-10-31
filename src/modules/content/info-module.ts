@@ -12,8 +12,10 @@ import { countdown } from '../../utils/timer-countdown';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
 
-// Name and state toggles: both on when neither key is set (new YAML, like the default).
-// Once one is set, a missing other key is off, as in configs from before the defaults.
+/**
+ * Name and state toggles: both on when neither key is set (new YAML, like the default).
+ * Once one is set, a missing other key is off, as in configs from before the defaults.
+ */
 export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolean } {
   if (c.show_name === undefined && c.show_state === undefined) return { name: true, state: true };
   return { name: !!c.show_name, state: !!c.show_state };

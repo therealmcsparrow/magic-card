@@ -1,4 +1,5 @@
-// Scans TypeScript text for comment blocks: a block is a run of comment-only lines (// lines or one /* */ comment).
+// Scans TypeScript text for comment blocks: a run of comment-only lines (// lines or one /* */ comment).
+// The header is the first block before the first non-import statement unless it sits directly on a declaration.
 export const HEADER_MAX = 3;
 export const BLOCK_MAX = 6;
 const DIRECTIVE = /^(?:\/\/+|\/\*+|\*)\s*(?:webpackChunkName|webpackIgnore|webpackPrefetch|webpackPreload|eslint-(?:disable|enable)|@ts-(?:ignore|expect-error|nocheck|check)|istanbul ignore|c8 ignore|prettier-ignore|#__PURE__)|^\/\/\/\s*<reference/;
@@ -60,8 +61,10 @@ export function commentBlocks(text) {
       if (IMPORT_END.test(t)) inImport = false;
     } else if (IMPORT_START.test(t)) {
       inImport = !IMPORT_END.test(t) || /^(?:import|export)[^'"]*\{[^}]*$/.test(t);
-    } else if (firstCode < 0) {
-      firstCode = i + 1;
+    } else {
+      const prev = blocks[blocks.length - 1];
+      if (prev && prev.end === i) prev.attached = true;
+      if (firstCode < 0) firstCode = i + 1;
     }
     const code = blankStrings(t);
     const open = code.lastIndexOf('/*');
@@ -69,7 +72,7 @@ export function commentBlocks(text) {
   }
   flush();
   const first = blocks[0];
-  if (first && (firstCode < 0 || first.start < firstCode)) first.header = true;
+  if (first && !first.attached && (firstCode < 0 || first.start < firstCode)) first.header = true;
   return blocks;
 }
 

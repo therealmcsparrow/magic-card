@@ -3,7 +3,10 @@ import type { KitButtonOptions, KitRowOptions } from '../../contracts/ui-kit';
 import { glyph } from '../glyphs';
 import { iconOf } from './icon';
 
-// The list or tree row, rendered in the root of the caller; `level` makes it a treeitem, otherwise a listitem.
+/**
+ * The list or tree row, rendered in the caller's root. `level` makes it a treeitem; without it it is a listitem and `selected` only tints it.
+ * Additive to KitRowOptions: `sub` second line, `check` leading checkbox, `content` replaces the name, `trail` follows the actions.
+ */
 export interface RowOptions extends Omit<KitRowOptions, 'onSelect'> {
   onSelect?: KitRowOptions['onSelect'];
   sub?: string;

@@ -1,7 +1,10 @@
 import type { MagicCardConfig } from '../../types';
 import { childListKey } from '../../utils/module-path';
 
-// Template-linked card: a change to a layout's children overrides the top-level layout module's whole child list.
+/**
+ * Template-linked card: a change to a layout's children (any depth) overrides the top-level layout module's whole child list,
+ * the same as editing a child in the inspector (mutates: a clone).
+ */
 export function markChildList(config: MagicCardConfig, rowIndex: number, colIndex: number, moduleIndex: number): void {
   if (!config.template) return;
   const top = config.rows[rowIndex]?.columns[colIndex]?.modules[moduleIndex];

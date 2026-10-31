@@ -302,5 +302,6 @@ export type CreateImageTransfer = (api: SvgImageApi, kit: ImageTransferKit) => I
 
 /**
  * <mc-transfer-panel> (all hosts): properties `host: TransferHost`, `mode: 'import' | 'export'`, `exportItems?: {
- * kind, items }`, `taken(kind, id): boolean`, `hasLibrary: boolean`. Events (bubbling, composed):
+ * kind, items }`, `taken(kind, id): boolean`, `hasLibrary: boolean`. Events (bubbling, composed): `mc-transfer-import`
+ * (detail { kind, items, choice }, after the user confirms; the host saves) and `mc-transfer-close`.
  */
