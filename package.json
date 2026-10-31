@@ -25,6 +25,8 @@
     "dups:selftest": "node tools/check-chunk-dups.mjs --self-test",
     "manifest": "node tools/check-manifest.mjs",
     "manifest:selftest": "node tools/check-manifest.mjs --self-test",
+    "claims": "node tools/check-claims.mjs",
+    "claims:selftest": "node tools/check-claims.mjs --self-test",
     "notices": "node tools/third-party-notices.mjs",
     "sbom": "cyclonedx-npm --omit dev --output-format JSON --output-file sbom.cdx.json",
     "dev": "webpack serve --mode development",
