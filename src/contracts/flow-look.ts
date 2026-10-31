@@ -3,11 +3,8 @@ import type { ColorRange, FlowConfig, HomeAssistant } from '../types';
 import type { FlowGeometry } from '../utils/flow-geometry';
 import type { ResolvedFlow } from '../utils/flow';
 
-/**
- * Contract: flow looks. Version 2.0.0. Travel is transform keyframes in each flow's own <style> (compositor).
- * There is no offset-path / rotation probe, no SMIL fallback and no SMIL pause in mc-flows. `offsetPath`, `motion`
- * and `FlowMotionSupport` are not part of FlowLookRenderOptions; hosts pass neither.
- */
+/** Contract: flow looks. Version 2.0.0. Travel is transform keyframes in each flow's own <style> (compositor). No
+ * offset-path probe, SMIL fallback or SMIL pause; FlowLookRenderOptions has no `offsetPath` or `motion`. */
 
 export const FLOW_LOOK_CONTRACT = '2.0.0';
 export const FLOW_LOOK_CONTRACT_REVISION = 6;

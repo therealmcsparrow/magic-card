@@ -1,10 +1,8 @@
 import type { Box, EditPath } from './path-model';
 
-/**
- * Contract: path booleans. Version 1.0.0. Combine (union), subtract, intersect and exclude for closed outlines.
- * One implementation shared by the SVG editor and the shape editor. Implementation: module `path-booleans`, folder
- * src/path-booleans/, lazy chunk PATH_BOOLEANS_CHUNK_FILE (webpackChunkName PATH_BOOLEANS_CHUNK).
- */
+/** Contract: path booleans. Version 1.0.0. Combine (union), subtract, intersect and exclude for closed outlines. One
+ * implementation shared by the SVG editor and the shape editor. Implementation: module `path-booleans`, folder
+ * src/path-booleans/, lazy chunk PATH_BOOLEANS_CHUNK_FILE (webpackChunkName PATH_BOOLEANS_CHUNK). */
 
 export const PATH_BOOLEANS_CONTRACT_VERSION = '1.0.0';
 export const PATH_BOOLEANS_CONTRACT_REVISION = 2;

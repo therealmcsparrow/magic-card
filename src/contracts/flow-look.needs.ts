@@ -1,11 +1,9 @@
 import type { FlowConfig } from '../types';
 import type { FlowLookConfig, FlowShape } from './flow-look';
 
-/*
- * flow-look 2.0.0, the predicates, key list and numbers magic-card.js needs at run time (mc-flows, flow.ts, magic-card.ts,
- * lazy-features). They sit in this file, not in flow-look.ts, because the entry may import only *.needs.ts of a contract
- * (see tools/check-entry-graph.mjs); flow-look.ts re-exports them.
- */
+/** flow-look 2.0.0, the predicates, key list and numbers magic-card.js needs at run time (mc-flows, flow.ts,
+ * magic-card.ts, lazy-features). They sit in this file, not in flow-look.ts, because the entry may import only
+ * *.needs.ts of a contract (see tools/check-entry-graph.mjs); flow-look.ts re-exports them. */
 
 /** H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
 export const FLOW_QUALITY_THRESHOLDS = { lite: 3, minimal: 6 } as const;

@@ -1,10 +1,7 @@
 import type { AnimationDoc, LaneId } from '../anim-studio/model';
 
-/**
- * Contract: animated icon library. Version 1.2.1. Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY,
- * LIBRARY_DOMAINS, libraryFor, searchLibrary. `domain` may also be one of LIBRARY_CATEGORIES for icons without a
- * Home Assistant domain, and every entry must pass the split rules below.
- */
+/** Contract: animated icon library. Version 1.2.1. Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY,
+ * LIBRARY_DOMAINS, libraryFor, searchLibrary. `domain` may also be a LIBRARY_CATEGORIES value. */
 
 export const ICON_LIBRARY_CONTRACT_VERSION = '1.2.1';
 

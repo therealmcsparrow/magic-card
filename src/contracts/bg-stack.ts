@@ -2,9 +2,7 @@ import type { HomeAssistant } from '../types';
 import type { LayerAnchor, LayerBlend } from './layer-placement';
 
 /**
- * Contract: card background stack ("Card backdrop" in the UI). Version 1.2.0. At most 4 layers; pan/zoom on images
- * and camera snapshots only.
- */
+ * Contract: card background stack ("Card backdrop" in the UI). Version 1.2.0. At most 4 layers; pan/zoom on images and camera snapshots only. */
 
 export const BG_STACK_CONTRACT = '1.2.0';
 export const BG_STACK_CONTRACT_REVISION = 6;

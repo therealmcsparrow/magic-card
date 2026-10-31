@@ -1,5 +1,5 @@
 // Contract: i18n-keys. Version 1.1.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; text is
-// addressed by key only (see "Text ids" below).
+// addressed by key only.
 
 import type { MessageIndex, RichArgs } from './i18n';
 

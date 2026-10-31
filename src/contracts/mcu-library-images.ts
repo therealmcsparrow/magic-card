@@ -1,10 +1,7 @@
 import type { ItemMeta } from './mcu-library';
 
-/**
- * Contract: mcu-library 1.1.0, images part. Version 1.1.0. Mirror of magic-card-utils
- * custom_components/magic_card_utils/library_images_contract.py (of record: storage, commands, server validation,
- * provider and panel rules are written there). mcu-library 1.1.0 = mcu-library.ts plus this file; nothing in.
- */
+/** Contract: mcu-library 1.1.0, images part. Version 1.1.0. Mirror of magic-card-utils
+ * custom_components/magic_card_utils/library_images_contract.py, which holds the storage, command and validation rules. */
 
 export const MCU_LIBRARY_IMAGES_CONTRACT_VERSION = '1.1.0';
 

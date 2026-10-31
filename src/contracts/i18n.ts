@@ -1,4 +1,4 @@
-// Contract: i18n.
+// Contract: i18n. Version 2.0.0.
 
 export const I18N_CONTRACT_VERSION = '2.0.0';
 export const I18N_CONTRACT_REVISION = 5;

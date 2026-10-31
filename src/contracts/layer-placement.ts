@@ -1,11 +1,8 @@
 import type { TemplateResult } from 'lit';
 import type { CardModule } from '../types';
 
-/**
- * Contract: layer placement (background and overlay modules). Version 1.0.0. Overlay click-through default follows
- * its actions; scrim fade shape; card key `layers_low_power`; floor-safe CSS (no `inset` shorthand); ha-card
- * isolation; blend scope; streaming backgrounds pause; blur max 24 px and the performance rules.
- */
+/** Contract: layer placement (background and overlay modules). Version 1.0.0. Card key `layers_low_power`; floor-safe CSS
+ * (no `inset` shorthand); streaming backgrounds pause; blur max 24 px. */
 
 export const LAYER_PLACEMENT_CONTRACT = '1.0.0';
 export const LAYER_PLACEMENT_CONTRACT_REVISION = 4;
@@ -79,7 +76,7 @@ export interface ArrangedChild<T = CardModule> {
   layer?: ResolvedLayer;
 }
 
-/** A container's children in DOM order (sections above). */
+/** A container's children in DOM order. */
 export interface Arranged<T = CardModule> {
   /** DOM order 1 to 3. */
   front: ArrangedChild<T>[];

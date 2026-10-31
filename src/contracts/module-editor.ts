@@ -3,10 +3,8 @@ import type { CardModule, EditorTab, HomeAssistant, ModuleType } from '../types'
 import type { EntitySourceInfo } from './entity-scope';
 import type { TransferChunk } from './preset-transfer';
 
-/**
- * Contract: per-module editors. Version 1.3.0. Seam: dashboard module classes (src/modules/**) keep metadata,
- * createDefault, renderPreview, validate, hints, migrate and getDependencies.
- */
+/** Contract: per-module editors. Version 1.3.0. Module classes (src/modules/**) keep metadata, createDefault,
+ * renderPreview, validate, hints, migrate and getDependencies. */
 
 export const MODULE_EDITOR_CONTRACT = '1.3.0';
 export const MODULE_EDITOR_CONTRACT_REVISION = 3;

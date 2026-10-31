@@ -1,4 +1,4 @@
-// Renames one message key (contract src/contracts/i18n-keys.ts, "Renames").
+// Renames one message key (contract src/contracts/i18n-keys.ts).
 //
 //   node tools/i18n-rename.mjs <from> <to> [--dry-run]
 //

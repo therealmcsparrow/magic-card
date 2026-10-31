@@ -6,11 +6,8 @@ import type { ImageBinding, ImageSummary } from './mcu-library-images';
 import type { SanitizeOptions, SvgImageApi } from './svg-image';
 import type { SvgCssResolve } from './svg-safety';
 
-/**
- * Contract: preset files (export / import) and the transfer chunk. Version 1.3.0 (TRANSFER_CONTRACT_VERSION).
- * Kinds: animation, theme, shape, icon and image. The image code of the transfer chunk lives in its own child
- * chunk, image-transfer (below); parseTransfer's opts.images is that chunk's reader (ImageReader).
- */
+/** Contract: preset files (export / import) and the transfer chunk. Version 1.3.0 (TRANSFER_CONTRACT_VERSION). Kinds:
+ * animation, theme, shape, icon, image. Image code lives in the image-transfer child chunk (ImageReader). */
 
 export const TRANSFER_CONTRACT_VERSION = '1.3.0';
 /** File format marker value written by this version. */
@@ -226,8 +223,7 @@ export interface ImageReader {
   /**
    * `index` is the item's place in the file (for notes); `data` is the bounded copy's `data` value, or { svg } for an
    * SVG text read as an image. `options` goes to api.sanitizeImage unchanged: { file: true, css } only for that SVG
-   * item (`css` is parseTransfer's opts.css, absent when it has none; sections "SVG files as images" and "SVG text and
-   * the CSS paint resolver"), never for envelope items. Pure, synchronous.
+   * item (`css` is parseTransfer's opts.css, absent when it has none), never for envelope items. Pure, synchronous.
    */
   readImage(index: number, data: unknown, options?: SanitizeOptions): ImageKindResult;
 }
@@ -237,8 +233,7 @@ export interface TransferChunk {
   version: typeof TRANSFER_CONTRACT_VERSION | string;
   /**
    * Pure and synchronous: steps 1-5 above plus per-kind validation. `css` (svg-safety loadSvgCss's result, only from
-   * <mc-transfer-panel>) is forwarded to the sanitiser of an item read from SVG text and to nothing else (section "SVG
-   * text and the CSS paint resolver").
+   * <mc-transfer-panel>) is forwarded to the sanitiser of an item read from SVG text and to nothing else.
    */
   parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader; css?: SvgCssResolve }): ParseResult;
   serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat): string;

@@ -2,10 +2,8 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/**
- * Contract: lazy modules and lazy card chunks. Version 1.10.0 (LAZY_MODULE_CONTRACT). Swiper, the seasonal
- * decoration set, `marked` + markdown and the rarely used modules leave magic-card.js.
- */
+/** Contract: lazy modules and lazy card chunks. Version 1.10.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+ * and the rarely used modules leave magic-card.js. */
 
 export const LAZY_MODULE_CONTRACT = '1.10.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 24;
@@ -63,7 +61,7 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   templates: 12_288,
 };
 
-/** Chunks that only hold shared source (section "Shared chunks"): no install, no BUILD, no notice. */
+/** Chunks that only hold shared source: no install, no BUILD, no notice. */
 export type LazySharedChunkName = 'path-core' | 'history' | 'shape-path';
 
 export const LAZY_SHARED_CHUNK_FILES: Record<LazySharedChunkName, string> = {
@@ -90,7 +88,7 @@ export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow
   controls: ['slider', 'spinbox', 'dropdown', 'light', 'gauge'],
 };
 
-/** Chunks only an editor loads (section "Editor-side chunks"). */
+/** Chunks only an editor loads. */
 export type EditorLazyChunkName = 'layer-editor';
 
 export const EDITOR_LAZY_CHUNK_FILES: Record<EditorLazyChunkName, string> = {
@@ -103,7 +101,7 @@ export const EDITOR_LAZY_CHUNK_CEILINGS: Record<EditorLazyChunkName, number> = {
   'layer-editor': 114_688,
 };
 
-/** The svg-css chunk (section "Editor-side chunks"): the CSS paint resolver, loaded only where an SVG is opened. */
+/** The svg-css chunk: the CSS paint resolver, loaded only where an SVG is opened. */
 export const SVG_CSS_CHUNK = 'svg-css';
 export const SVG_CSS_CHUNK_FILE = 'magic-card-svg-css.js';
 /** Same meaning as LAZY_CHUNK_CEILINGS. The resolver (src/svg-safety/css.ts) is about 10 KiB minified. */
@@ -177,7 +175,7 @@ export interface LazyModuleStub extends Omit<MagicModule, 'renderPreview' | 'met
 
 // ── Needs, reserve, failure and manifest types ──
 
-/** Pure, synchronous, total check on a card config (section "needs(config)"). */
+/** Pure, synchronous, total check on a card config. */
 export type NeedsCheck = (config: unknown) => boolean;
 
 /** One row of the needs table, src/utils/lazy-features.ts. */
@@ -217,3 +215,10 @@ export interface LazyChunkManifest {
  * lazy-module.needs.ts, which magic-card.js may import; this file may not be imported by the entry at run time.
  */
 export { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, SILENT_RETRY_MS } from './lazy-module.needs';
+
+/**
+ * Adoption assigns a new array (`root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...sheets]`), never push (frozen on Chromium
+ * 85); connectedCallback adds sheets a card missed while disconnected. Same-frame adoption is verified on Chromium 85, Chrome and Firefox ESR; Safari 16.4 must be confirmed on a device, otherwise Core inserts a `<style>` element in the same task.
+ * While a slot of the card shows a notice, the host carries the `mc-fail` attribute; in that state ha-card is the scroll box and
+ * the layout-shift rule does not apply. A request that joins one in flight gets a fresh window: that is waiting, not a retry.
+ */

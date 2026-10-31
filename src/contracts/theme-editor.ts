@@ -2,8 +2,7 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 import type { MessageIndex } from './i18n';
 
 /**
- * Contract: theme editor host. Version 1.3.0. The chunk rule below allows `src/i18n/` (the runtime copy of this
- * entry and the search fold; i18n contract 1.0.0).
+ * Contract: theme editor host. Version 1.3.0. The chunk may import `src/i18n/` (runtime message copy and search fold).
  */
 
 export const THEME_EDITOR_CONTRACT_VERSION = '1.3.0';

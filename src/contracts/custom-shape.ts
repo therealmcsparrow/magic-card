@@ -2,9 +2,7 @@ import type { AnchorKind } from './path-model';
 import type { Outline } from '../utils/shape-path';
 
 /**
- * Contract: custom shape. Version 1.0.0. Config schema of `shape: custom` and the runtime corner / anchor builder
- * that turns it into an outline at the element's measured size.
- */
+ * Contract: custom shape. Version 1.0.0. Config schema of `shape: custom` and the runtime corner / anchor builder. */
 
 export const CUSTOM_SHAPE_CONTRACT_VERSION = '1.0.0';
 export const CUSTOM_SHAPE_CONTRACT_REVISION = 5;

@@ -1,11 +1,8 @@
 import type { AnimationDoc } from '../anim-studio/model';
 import type { CompiledEmitterSlots } from './particles-v2';
 
-/**
- * Contract: studio layers. Section 1 holds the particles move rule (placement per emitter). Section 3 says how
- * hide reaches the preview. Hides of rows that are drawn (parts, groups, shapes, card parts, emitters, children)
- * are a stage-only stylesheet (StageHide), not a change to the preview document.
- */
+/** Contract: studio layers. Revision 1 (STUDIO_LAYERS_REVISION). Particles move rule (placement per emitter); hides of
+ * drawn rows are a stage-only stylesheet (StageHide), not a change to the preview document. */
 
 export const STUDIO_LAYERS_REVISION = 1;
 
@@ -32,7 +29,7 @@ export const LAYER_TOGGLES: Record<string, readonly LayerToggle[]> = {
   step: ['hide', 'solo', 'lock'],
 };
 
-/** Row kinds hidden through the stage sheet (section 3a); every other hideable kind goes through ApplyLayerView (3b). */
+/** Row kinds hidden through the stage sheet ; every other hideable kind goes through ApplyLayerView. */
 export const STAGE_HIDE_KINDS = ['target', 'part', 'group', 'shape', 'emitter', 'children'] as const;
 
 /** Preview-only state of one document's layers (never saved). */
@@ -61,10 +58,10 @@ export interface LayerViewChangeDetail {
   announce?: string;
 }
 
-/** The document the preview card renders (src/anim-studio/layer-view.ts). Pure; lanes and steps only (section 3b); returns `doc` itself when no lane or step is hidden. */
+/** The document the preview card renders (src/anim-studio/layer-view.ts). Pure; lanes and steps only; returns `doc` itself when no lane or step is hidden. */
 export type ApplyLayerView = (doc: AnimationDoc, view: LayerView) => AnimationDoc;
 
-/** What the particles compiler reports for the document being previewed (section 3a); missing for documents without a v2 sim. */
+/** What the particles compiler reports for the document being previewed; missing for documents without a v2 sim. */
 export interface StageParticles {
   /** CompiledParticlesV2.name without its `-g<key>` suffix. */
   base: string;
@@ -74,7 +71,7 @@ export interface StageParticles {
   ids: string[];
 }
 
-/** The stage-only hide rules (src/anim-studio/stage-hide.ts, section 3a). Pure; empty strings when nothing drawn is hidden. */
+/** The stage-only hide rules (src/anim-studio/stage-hide.ts). Pure; empty strings when nothing drawn is hidden. */
 export type StageHide = (doc: AnimationDoc, view: LayerView, particles?: StageParticles) => { icon: string; card: string };
 
 /** Whether a key is locked, directly or through its target (a lane of a locked target, a member of a locked group). */

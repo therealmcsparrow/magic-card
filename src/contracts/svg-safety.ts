@@ -60,7 +60,7 @@ export type SvgCssProperty =
   | 'paint-order'
   | 'vector-effect';
 
-/** How a CSS declaration value is checked (section "CSS paint resolver", Declarations). */
+/** How a CSS declaration value is checked. */
 export type SvgCssValueKind =
   | 'paint'
   | 'stop-paint'
@@ -136,7 +136,7 @@ export interface SvgPolicy {
   /** Deny tokens on top of the shared set, lower-case. */
   readonly denyExtra: readonly string[];
   readonly limits: SvgWalkLimits;
-  /** CSS paint resolver data (section "CSS paint resolver"). */
+  /** CSS paint resolver data. */
   readonly css: SvgCssPolicy;
 }
 
@@ -149,7 +149,7 @@ export interface SvgSafety {
   cleanValue(kind: SvgValueKind, value: string, policy: SvgPolicy): string | undefined;
   withinLimits(root: Element, limits: SvgWalkLimits): 'ok' | 'too_complex';
   parseLenient(text: string): SvgParse;
-  /** Section "CSS paint resolver": changes `root` in place. */
+  /** Changes `root` in place. */
   resolveCss(root: Element, policy: SvgPolicy): SvgCssOutcome;
   byteLength(text: string): number;
   escapeText(s: string): string;
@@ -161,13 +161,13 @@ export type SvgCssResolve = (root: Element, policy: SvgPolicy) => SvgCssOutcome;
 
 /** The resolver option of a sanitiser call (icon: sanitizeSvg's second argument; image: part of svg-image SanitizeOptions). */
 export interface SvgCssOption {
-  /** Only from an open site (section "Where the resolver runs"); absent: styles are dropped and listed. */
+  /** Only from an open site; absent: styles are dropped and listed. */
   css?: SvgCssResolve;
 }
 
 /** What src/svg-safety/css-chunk.ts (dist/magic-card-svg-css.js) exports. */
 export interface SvgCssChunk {
-  /** The build define of the build that made this chunk (section "Loading the resolver"). */
+  /** The build define of the build that made this chunk. */
   readonly BUILD: string;
   readonly resolveCss: SvgCssResolve;
 }

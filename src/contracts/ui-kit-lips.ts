@@ -1,10 +1,7 @@
 import type { KitTemplate } from './ui-kit';
 
-/**
- * Contract: ui kit, panel lips (part of ui-kit 1.2.0; re-exported by ./ui-kit). A lip is a small button on the
- * inner edge of a side panel that hides and shows that panel. One controller per editor owns its lips, the
- * remembered state, the one-time hint, the status region and the Ctrl/Cmd + \ shortcut.
- */
+/** Contract: ui kit, panel lips (part of ui-kit 1.2.0; re-exported by ./ui-kit). A lip is a small button on a side
+ * panel's inner edge that hides and shows it; one controller per editor owns lips, state, hint and Ctrl/Cmd + \. */
 
 /** localStorage key prefix; the editor id follows. */
 export const PANEL_MEMORY_PREFIX = 'mc-panels:';
@@ -39,7 +36,7 @@ export const PANEL_IDS: Readonly<Record<PanelEditorId, readonly string[]>> = {
 /** 'overlay': model O+ (lip over the canvas, inset by the scrollbar). 'gutter': model G40 (own 40 px track plus the pull). */
 export type LipGeometry = 'overlay' | 'gutter';
 
-/** Geometry model per editor (see "Geometry per editor"). */
+/** Geometry model per editor. */
 export const LIP_GEOMETRY: Readonly<Record<PanelEditorId, LipGeometry>> = {
   'card-studio': 'overlay',
   'anim-studio': 'overlay',
@@ -153,7 +150,7 @@ export interface PanelLipsController {
   restore(): void;
 }
 
-/** src/ui-kit/controllers/scrollbar-width.ts: inline scrollbar width of `el` in px (see "Scrollbar measurement"). */
+/** src/ui-kit/controllers/scrollbar-width.ts: inline scrollbar width of `el` in px. */
 export type ScrollbarWidthFn = (el: HTMLElement) => number;
 
 /**

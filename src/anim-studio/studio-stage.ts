@@ -155,7 +155,7 @@ export class AnimationStage extends LitElement {
   private _sentTime = -1;
 
   private _themeSet = false;
-  /** The stage-only hide rules (section 3a of the studio-layers contract), kept in the preview card's roots. */
+  /** The stage-only hide rules, kept in the preview card's roots. */
   private _sheets = new StageSheets();
   private _mo?: MutationObserver;
   private _moRoot?: ShadowRoot;

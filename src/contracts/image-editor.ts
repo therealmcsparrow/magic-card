@@ -1,10 +1,8 @@
 import type { HomeAssistant } from '../types';
 import type { ImageBinding, SavedImageInput } from './mcu-library-images';
 
-/**
- * Contract: image editing. Version 1.2.0 (IMAGE_EDITOR_CONTRACT), revision 7 (IMAGE_EDITOR_CONTRACT_REVISION).
- * Full drawings are edited in the existing <mc-svg-editor> (svg-editor 1.2.0) in image mode.
- */
+/** Contract: image editing. Version 1.2.0 (IMAGE_EDITOR_CONTRACT), revision 7. Full drawings are edited in
+ * <mc-svg-editor> (svg-editor 1.2.0) in image mode. */
 
 export const IMAGE_EDITOR_CONTRACT = '1.2.0';
 export const IMAGE_EDITOR_CONTRACT_REVISION = 7;
@@ -34,9 +32,9 @@ export const MAX_IMAGE_IMPORT_BYTES = 8 * 1024 * 1024;
 /** New image ids: the slug of the name. */
 export const IMAGE_ID_SLUG = /^[a-z0-9](?:[a-z0-9-]{0,47})$/;
 
-/** The class that marks an imported part's group in the saved markup (section "Imported part, saved form"). */
+/** The class that marks an imported part's group in the saved markup. */
 export const IMAGE_PART_CLASS = 'mc-part';
-/** Most part data of one image, in UTF-16 code units (section "Part-data limit"). */
+/** Most part data of one image, in UTF-16 code units. */
 export const IMAGE_PART_DATA_MAX = 2 * 256 * 1024;
 
 export const REFERENCE_TYPES: readonly string[] = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif', 'image/bmp'];

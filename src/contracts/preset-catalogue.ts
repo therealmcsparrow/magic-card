@@ -1,11 +1,9 @@
 import type { AnimationDoc } from '../anim-studio/model';
 import type { AnimationGroup } from '../utils/animation-presets';
 
-/**
- * Contract: preset catalogue and preset tiles. Version 1.1.0. Implementation: module `preset-catalogue`
- * (src/preset-catalogue/, lazy chunk dist/magic-card-preset-catalogue.js, webpackChunkName "preset-catalogue" in
- * both loaders). Never part of magic-card.js or the studio entry.
- */
+/** Contract: preset catalogue and preset tiles. Version 1.1.0. Implementation: module `preset-catalogue`
+ * (src/preset-catalogue/, lazy chunk dist/magic-card-preset-catalogue.js, webpackChunkName "preset-catalogue" in both
+ * loaders). Never part of magic-card.js or the studio entry. */
 
 export const PRESET_CATALOGUE_CONTRACT_VERSION = '1.1.0';
 

@@ -1,11 +1,8 @@
 import type { CustomShapeOptions } from './custom-shape';
 import type { ThemeDoc } from './theme-editor';
 
-/**
- * Contract: Magic Card Utils library of saved icons, shapes and theme presets, plus the shared library view over
- * the existing animation store. Version 1.0.0. Python side of record: magic-card-utils
- * custom_components/magic_card_utils/library_contract.py (same version; this file mirrors it).
- */
+/** Contract: Magic Card Utils library of saved icons, shapes and theme presets. Version 1.0.0. Mirrors magic-card-utils
+ * custom_components/magic_card_utils/library_contract.py (same version). */
 
 export const MCU_LIBRARY_CONTRACT_VERSION = '1.0.0';
 export const MCU_LIBRARY_CONTRACT_REVISION = 4;
@@ -72,7 +69,7 @@ export interface SavedIconInput extends ItemMeta {
   keywords?: string[];
   /** Sanitised markup from the SVG editor (sanitizeSvg output, viewBox included). */
   svg: string;
-  /** Home Assistant form: every filled, non-accent shape in one path (see "Saved icon path"). */
+  /** Home Assistant form: every filled, non-accent shape in one path. */
   path: string;
   /** Accent shapes in one path (Home Assistant draws it at reduced opacity). */
   secondary_path?: string;

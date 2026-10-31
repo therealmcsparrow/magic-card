@@ -4,10 +4,8 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
 import type { SvgCssOption } from './svg-safety';
 import type { SanitisedImageMarkup } from './svg-reader';
 
-/**
- * Contract: library images on cards. Version 1.0.0. A library image is a full drawing saved in Magic Card Utils
- * (mcu-library 1.1.0, kind `images`).
- */
+/** Contract: library images on cards. Version 1.0.0. A library image is a full drawing saved in Magic Card Utils
+ * (mcu-library 1.1.0, kind `images`). */
 
 export const SVG_IMAGE_CONTRACT = '1.0.0';
 export const SVG_IMAGE_CONTRACT_REVISION = 7;
@@ -21,7 +19,7 @@ export const SVG_IMAGE_CHUNK_CEILING = 40 * 1024;
 export const SVG_IMAGE_TAG = 'mc-svg-image';
 export const SVG_IMAGE_STATUS_EVENT = 'mc-svg-image-status';
 
-/** The only editor-side files that import() the svg-image chunk entry (see "Chunk"); each reads `api` only. */
+/** The only editor-side files that import() the svg-image chunk entry; each reads `api` only. */
 export const SVG_IMAGE_EDITOR_IMPORT_SITES: readonly string[] = ['src/svg-editor/image-loader.ts', 'src/transfer/image-transfer-loader.ts'];
 
 /**
@@ -38,7 +36,7 @@ export const IMAGE_SKELETON_MS = 10_000;
 export const BINDING_MIN_INTERVAL_MS = 334;
 export const MAX_LAYER_PREFETCH = 4;
 
-/** Render budget lines (see "Render budget"); measured limits for tests, not runtime values. */
+/** Render budget lines; measured limits for tests, not runtime values. */
 export const COLD_FIRST_MEDIAN_MAX_MS = 200;
 export const COLD_FIRST_P95_MAX_MS = 300;
 export const CACHE_HIT_MEDIAN_MAX_MS = 100;
@@ -81,7 +79,7 @@ export const IMAGE_OVERLAY_TYPES: readonly string[] = ['icon', 'info', 'button']
 export const MAX_IMAGE_OVERLAYS = 32;
 
 export interface SanitizeOptions extends SvgCssOption {
-  /** A .svg file the user opened or imported: a leading prolog may be removed first (see above). */
+  /** A .svg file the user opened or imported: a leading prolog may be removed first. */
   file?: boolean;
 }
 
@@ -138,11 +136,11 @@ export interface SvgImageElementProps {
   entity?: string;
   description?: string;
   stateSummary?: boolean;
-  /** Set by <mc-bg-stack> only: the element is a background layer's drawing (see above). */
+  /** Set by <mc-bg-stack> only: the element is a background layer's drawing. */
   layer?: BackgroundLayerConfig;
   /** With `layer`: its YAML index, for the status event. */
   at?: number;
-  /** Read-only (see "Status"). */
+  /** Read-only. */
   readonly status: SvgImageStatus;
 }
 
@@ -153,7 +151,7 @@ type CallWS = (msg: Record<string, unknown>) => Promise<unknown>;
 
 /** What the svg-image chunk exports as `api`. */
 export interface SvgImageApi {
-  /** `options.css` only from an open site, and only with { file: true } (see "Styles and gradient href"). */
+  /** `options.css` only from an open site, and only with { file: true }. */
   sanitizeImage(markup: string, options?: SanitizeOptions): SanitizedImage;
   /** The library item, sanitised; undefined when missing. Shares the page cache. */
   getImage(id: string, callWS: CallWS): Promise<(SavedImage & { sanitized: SanitizedImage }) | undefined>;

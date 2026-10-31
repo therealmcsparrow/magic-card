@@ -6,7 +6,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
 export const PATH_CANVAS_CONTRACT_VERSION = '1.1.0';
 /** Revision number of this contract. */
 export const PATH_CANVAS_CONTRACT_REVISION = 8;
-/** The first element contractRevision with overlay mode (section "Overlay mode"). */
+/** The first element contractRevision with overlay mode. */
 export const PATH_CANVAS_OVERLAY_REVISION = 8;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
@@ -38,14 +38,14 @@ export const LONG_PRESS_SLOP_PX = 8;
 /** A contextmenu event this soon after an emitted context gesture is ignored. */
 export const CONTEXT_DEDUPE_MS = 500;
 /**
- * Overlay drag speed on the 4x throttled profile (section "Overlay mode"): frame interval in ms during a point drag
+ * Overlay drag speed on the 4x throttled profile: frame interval in ms during a point drag
  * of a path with `anchors` anchors, the first `warmFrames` frames dropped. p95 21 ms = three 7 ms display steps.
  */
 export const OVERLAY_DRAG_BUDGET = { anchors: 64, medianMs: 16.7, p95Ms: 21, warmFrames: 3 } as const;
 /** What may be edited. 'view' = render only (thumbnails, previews). */
 export type CanvasMode = 'view' | 'select' | 'nodes' | 'add';
 
-/** Unit of frame coordinates in overlay mode texts (section "Overlay mode"). */
+/** Unit of frame coordinates in overlay mode texts. */
 export type CanvasUnits = 'px' | '%';
 
 /** Where `frame` sits on screen in overlay mode: CSS px relative to the canvas element's top-left corner. */
@@ -176,7 +176,7 @@ export interface PathCanvasElement extends HTMLElement {
   gridStep?: number;
   /** Boolean attribute; ground and frame are transparent, the host draws underneath. */
   underlay?: boolean;
-  /** Boolean attribute, from 1.1.0 (section "Overlay mode"): edit over the host's picture; implies `underlay`. */
+  /** Boolean attribute, from 1.1.0: edit over the host's picture; implies `underlay`. */
   overlay?: boolean;
   /** Overlay mode only: the on-screen rectangle of `frame`; the host sets a new object on every picture change. */
   placement?: CanvasPlacement;

@@ -2,9 +2,7 @@ import type { ParticleShape, ParticleDirection, ParticlesSpec } from '../anim-st
 import type { ParticleSlot } from '../anim-studio/compile';
 
 /**
- * Contract: particles model v2, bake simulator, live engine. Version 1.2.0. Engine 1 output is unchanged since
- * 1.0.
- */
+ * Contract: particles model v2, bake simulator, live engine. Version 1.2.0. Engine 1 output is unchanged since 1.0. */
 
 export const PARTICLES_CONTRACT_VERSION = '1.2.0';
 export const PARTICLES_ENGINE = 1 as const;

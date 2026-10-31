@@ -5,10 +5,8 @@ import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
 import type { IntakePolicy } from './svg-intake';
 
-/**
- * Contract: svg editor. Version 1.2.0 (SVG_EDITOR_CONTRACT_VERSION), element revision 7
- * (SVG_EDITOR_CONTRACT_REVISION). SVG editor and shape editor hosts.
- */
+/** Contract: svg editor. Version 1.2.0 (SVG_EDITOR_CONTRACT_VERSION), element revision 7. SVG editor and shape editor
+ * hosts. */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.2.0';
 /** Revision number of <mc-svg-editor> (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
@@ -103,14 +101,14 @@ export interface SvgSaveDetail {
 
 export type SvgSaveTarget = SvgSaveDetail['target'];
 
-/** Section "Profiles": which profile the source kind picks. */
+/** Which profile the source kind picks. */
 export type EditorProfileName = 'icon' | 'image';
-/** One place in the shared top bar (section "Profiles"). */
+/** One place in the shared top bar. */
 export type TopBarSlot = 'back' | 'title' | 'start' | 'name' | 'undo-redo' | 'size' | 'canvas' | 'reference' | 'transfer' | 'more' | 'save' | 'done' | 'shortcuts' | 'preview';
-/** One entry of the shared start window (section "Profiles"). */
+/** One entry of the shared start window. */
 export type StartEntry = 'blank' | 'icon' | 'canvas-size' | 'paste' | 'open-file' | 'library' | 'import';
 
-/** What one profile sets. No such object exists at run time: the shell follows it in fixed code order (section "Profiles"). */
+/** What one profile sets. No such object exists at run time: the shell follows it in fixed code order. */
 export interface EditorProfile {
   readonly name: EditorProfileName;
   readonly topBar: readonly TopBarSlot[];

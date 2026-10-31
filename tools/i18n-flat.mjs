@@ -1,4 +1,4 @@
-// Exchange files for translation services (contract src/contracts/i18n-keys.ts, "Exchange files"): one ARB file per
+// Exchange files for translation services (contract src/contracts/i18n-keys.ts): one ARB file per
 // locale under i18n/flat/, the card namespaces and, with --mcu, the Magic Card Utils namespace together.
 //   node tools/i18n-flat.mjs export [--mcu <magic-card-utils repo>]   writes i18n/flat/<locale>.arb
 //   node tools/i18n-flat.mjs import [--mcu <repo>] [--locale <l>] [file ...]

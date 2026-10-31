@@ -3,10 +3,8 @@ import type { FlowBudget, FlowLookConfig } from './flow-look';
 import type { SliderLookConfig } from './slider-look';
 import type { MessageIndex } from './i18n';
 
-/**
- * Contract: look editors. Version 1.1.0. Covers manual activation, picture chips, 20 s toast, inline Undo,
- * undoable Reset look, settings count, tier notices from the budget.
- */
+/** Contract: look editors. Version 1.1.0. Manual activation, picture chips, 20 s toast, inline Undo, undoable Reset look,
+ * settings count, tier notices. */
 
 export const LOOK_EDITOR_CONTRACT = '1.1.0';
 export const LOOK_EDITOR_CONTRACT_REVISION = 5;

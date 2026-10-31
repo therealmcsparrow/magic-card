@@ -1,11 +1,9 @@
 import type { BooleanResult, PathBooleansChunk } from './path-booleans';
 import type { Box, EditPath, PathDraw, Pt } from './path-model';
 
-/**
- * Contract: path tools (SVG editor). Version 1.0.0. Tools: Outline stroke, Offset path, Simplify (doubles as
- * smooth), Join, Split at an anchor and a straight Knife. Implementation: module `path-tools`, folder
- * src/path-tools/, lazy chunk PATH_TOOLS_CHUNK_FILE (webpackChunkName PATH_TOOLS_CHUNK).
- */
+/** Contract: path tools (SVG editor). Version 1.0.0. Tools: Outline stroke, Offset path, Simplify (doubles as smooth),
+ * Join, Split at an anchor and a straight Knife. Implementation: module `path-tools`, folder src/path-tools/, lazy chunk
+ * PATH_TOOLS_CHUNK_FILE (webpackChunkName PATH_TOOLS_CHUNK). */
 
 export const PATH_TOOLS_CONTRACT_VERSION = '1.0.0';
 export const PATH_TOOLS_CONTRACT_REVISION = 2;
