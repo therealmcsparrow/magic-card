@@ -71,7 +71,7 @@ class TextModule extends BaseMagicModule {
       case 'pending':
         return '';
       case 'error':
-        return html`<span class="mc-template-error" role="alert" title=${result.error}>${t('card.text-module.template-error-error', { error: result.error })}</span>`;
+        return html`<span class="mc-template-error" role="status" title=${result.error}>${t('card.text-module.template-error-error', { error: result.error })}</span>`;
       default:
         return text;
     }
