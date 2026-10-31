@@ -1,14 +1,17 @@
 // Scans TypeScript text for comment blocks: a block is a run of comment-only lines (// lines or one /* */ comment).
 export const HEADER_MAX = 3;
 export const BLOCK_MAX = 6;
-const MAGIC = /webpackChunkName|webpackIgnore|webpackPrefetch|webpackPreload|eslint-(disable|enable)|@ts-(ignore|expect-error|nocheck|check)|istanbul ignore|c8 ignore|^\s*\/\/\/\s*<reference|prettier-ignore|#__PURE__/;
+const DIRECTIVE = /^(?:\/\/+|\/\*+|\*)\s*(?:webpackChunkName|webpackIgnore|webpackPrefetch|webpackPreload|eslint-(?:disable|enable)|@ts-(?:ignore|expect-error|nocheck|check)|istanbul ignore|c8 ignore|prettier-ignore|#__PURE__)|^\/\/\/\s*<reference/;
+const IMPORT_START = /^(?:import(?!\s*\()\b|export\s+(?:type\s+)?(?:\*|\{)[^;]*\bfrom\b|export\s+(?:type\s+)?(?:\*|\{)\s*$)/;
+const IMPORT_END = /['"]\s*(?:with\s*\{[^}]*\}\s*)?;?\s*(?:\/\/.*)?$/;
 
-/** Returns [{ start, end, lines, header }] for every comment block, magic lines excluded. */
+/** Returns [{ start, end, lines, header }] for every comment block, directive lines excluded. */
 export function commentBlocks(text) {
   const lines = text.split(/\r?\n/);
   const blocks = [];
   let cur = null;
   let inBlock = false;
+  let inImport = false;
   let firstCode = -1;
   const flush = () => { if (cur) { blocks.push(cur); cur = null; } };
   const add = (i) => {
@@ -19,25 +22,33 @@ export function commentBlocks(text) {
   for (let i = 0; i < lines.length; i++) {
     const t = lines[i].trim();
     if (inBlock) {
-      if (MAGIC.test(t)) flush(); else add(i);
+      if (DIRECTIVE.test(t)) flush(); else add(i);
       if (t.includes('*/')) { inBlock = false; flush(); }
       continue;
     }
     if (t === '') { flush(); continue; }
     if (t.startsWith('#!')) continue;
     if (t.startsWith('//')) {
-      if (MAGIC.test(t)) flush(); else add(i);
+      if (DIRECTIVE.test(t)) flush(); else add(i);
       continue;
     }
     if (t.startsWith('/*')) {
       flush();
-      if (MAGIC.test(t)) { if (!t.includes('*/')) inBlock = true; continue; }
+      if (DIRECTIVE.test(t)) { if (!t.includes('*/')) inBlock = true; continue; }
       add(i);
       if (t.includes('*/', 2)) flush(); else inBlock = true;
       continue;
     }
     flush();
-    if (firstCode < 0) firstCode = i + 1;
+    if (inImport) {
+      if (IMPORT_END.test(t)) inImport = false;
+    } else if (IMPORT_START.test(t)) {
+      inImport = !IMPORT_END.test(t) || /^(?:import|export)[^'"]*\{[^}]*$/.test(t);
+    } else if (firstCode < 0) {
+      firstCode = i + 1;
+    }
+    const open = t.lastIndexOf('/*');
+    if (open > 0 && !t.includes('*/', open + 2)) inBlock = true;
   }
   flush();
   const first = blocks[0];

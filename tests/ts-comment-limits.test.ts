@@ -17,6 +17,26 @@ describe('scanner', () => {
     expect(v.map((x: { header: boolean; lines: number }) => [x.header, x.lines])).toEqual([[true, 4], [false, 7]]);
     expect(commentBlocks('// ok\nconst a = 1;\n')[0].header).toBe(true);
   });
+
+  type V = { header: boolean; lines: number };
+  const shape = (src: string) => commentViolations(src, 'f.ts').map((x: V) => [x.header, x.lines]);
+
+  it('treats the first block after the imports as the file header', () => {
+    const src = ['import a from "a";', 'import { b,', '  c } from "b";', '', '// 1', '// 2', '// 3', '// 4', 'export const d = a;'].join('\n');
+    expect(shape(src)).toEqual([[true, 4]]);
+    expect(shape(['import a from "a";', '', 'export const d = a;', '', '// 1', '// 2', '// 3', '// 4'].join('\n'))).toEqual([]);
+  });
+
+  it('counts prose lines that only mention a magic word', () => {
+    const src = ['const a = 1;', '// 1', '// run eslint-disable carefully', '// 3', '// uses @ts-check here', '// 5', '// 6', '// 7'].join('\n');
+    expect(shape(src)).toEqual([[false, 7]]);
+    expect(shape(['const a = 1;', '// 1', '// 2', '// 3', '// 4', '// 5', '// 6', '// eslint-disable-next-line x', '// 8'].join('\n'))).toEqual([]);
+  });
+
+  it('tracks a block comment opened after code', () => {
+    const src = ['const a = 1; /* start', ' * 1', ' * 2', ' * 3', ' * 4', ' * 5', ' * 6', ' * 7 */', 'const b = 2;'].join('\n');
+    expect(shape(src)).toEqual([[false, 7]]);
+  });
 });
 
 describe('comment limits in tracked .ts files', () => {
