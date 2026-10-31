@@ -18,5 +18,7 @@ export const pauseCardStyles = css`
 .mc-pause-label[data-corner=top-right]{top:calc(6px + var(--mc-shape-it,0px));right:calc(6px + var(--mc-shape-ir,0px) + var(--s) + 4px)}
 @media (pointer:coarse){.mc-pause{width:34px;height:34px}.mc-pause svg{width:20px;height:20px}.mc-pause::after{top:-5px;right:-5px;bottom:-5px;left:-5px}}
 @media (pointer:coarse){.mc-pause-label{--s:34px}}
-@media (forced-colors:active){.mc-pause{border-color:ButtonText;background:ButtonFace;color:ButtonText}.mc-pause-label{border-color:CanvasText;background:Canvas;color:CanvasText}}
+@media (forced-colors:active){.mc-pause{border-color:ButtonText;background:ButtonFace;color:ButtonText}.mc-pause-label{border-color:CanvasText;background:Canvas;color:CanvasText}.mc-pause:focus-visible{outline:2px solid Highlight;outline-offset:2px;box-shadow:none}}
+ha-card[data-mc-paused] > .mc-pause{display:flex!important;visibility:visible!important;opacity:1!important;position:absolute!important;pointer-events:auto!important;z-index:6!important}
+ha-card[data-mc-paused] > .mc-pause-label{display:flex!important;visibility:visible!important;opacity:1!important;position:absolute!important;pointer-events:none!important;z-index:6!important}
 `;
