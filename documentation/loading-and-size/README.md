@@ -31,6 +31,8 @@ A part is a file that a feature needs, such as the slider, a background, an anim
 | "Template "name" couldn't be loaded. Showing this card's own settings." | The template cannot be shown, for example because Magic Card Utils is missing or still starting. See [Templates](../editor/templates.md#when-a-template-cannot-be-shown). | None |
 | "Magic Card: the visual editor could not be loaded." | The editor file cannot load. Home Assistant shows its YAML editor instead. | None |
 
+The "Magic Card was updated" message uses the key `card.chunk-notice.magic-card-was-updated-reload-the-page`.
+
 The card tries a failed part once more after two seconds. If that fails too, it keeps trying in the background, after 30 seconds, 90 seconds and 5 minutes. **Try again** asks for the file at once.
 
 Parts that depend on a file behave in a fixed way while they wait:
