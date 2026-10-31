@@ -6,10 +6,7 @@ import { reducedMotion } from '../utils/reduced-motion';
 import { PAUSE_ATTRIBUTE, PAUSE_EVENT } from '../contracts/card-pause.needs';
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
-/*
- * The viewer's "Pause motion" button of one card: holds the pause state, remembers it per page
- * and card (read by pause-memory.ts), and renders the button. Hidden by default.
- */
+/** The viewer's "Pause motion" button of one card: pause state, per-card memory and the button. */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
 const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 /** mdi:pause, mdi:play */

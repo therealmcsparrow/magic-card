@@ -4,12 +4,7 @@ import { popupCoordinator } from './popup-coordinator';
 import { navigateToPopup } from '../utils/popup-run';
 import type { ReactiveControllerHost } from 'lit';
 
-/*
- * Chunk entry of dist/magic-card-popup.js (lazy-module 1.4.0 chunk `popup`): the pop-up controller (open and close, the
- * dialog, focus, history, triggers, swipe), the one coordinator of the page's pop-ups and the pop-up rules (`styles`).
- * A pop-up card on a live dashboard is out of the flow from its config alone (popup-nav.ts), so installing the chunk
- * moves nothing; the controller opens a pop-up whose #id is already in the URL when it attaches.
- */
+/** Chunk entry of dist/magic-card-popup.js: pop-up controller, coordinator and rules. */
 
 export const BUILD: string = BUILD_VERSION;
 

@@ -2,11 +2,7 @@ import { chainPath } from '../utils/shape-path';
 import { bucketWindow } from '../services/history-cache';
 import { VALUE_BG_DEFAULTS } from '../utils/value-background';
 
-/*
- * The path of a history sparkline (design `value_background` of type `sparkline`): history samples to an SVG line
- * and area. Pure, no DOM. <mc-value-bg> (the decor chunk) draws it; the entry resolves the options only
- * (src/utils/value-background.ts).
- */
+/** The path of a history sparkline (design `value_background`): samples to an SVG line and area. Pure. */
 
 const num = (v: unknown): number | undefined => {
   const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : v;

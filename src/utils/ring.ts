@@ -8,11 +8,7 @@ import { entityNumber } from './entity-value';
 import { isTimer, timerFraction, timerProgress } from './timer';
 import { resolveBound } from './value-bound';
 
-/*
- * The ring of a card / row / column / module design (RingConfig): what to draw, resolved from the
- * config and the entity states. The outline itself is drawn by <mc-ring> (src/card/mc-ring.ts)
- * from the element's rendered size and radii (src/utils/ring-path.ts).
- */
+/** The ring of a card, row, column or module design (RingConfig), resolved from config and entity states. */
 
 export const RING_DEFAULTS = {
   width: 3,

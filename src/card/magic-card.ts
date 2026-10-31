@@ -91,12 +91,7 @@ import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.n
 import { pauseKey, rememberedPause } from './pause-memory';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
-/**
- * A module with an id, and the same for every nested layout child (graph history and other per-module
- * state is keyed by id). A missing id is derived from the module's place, `${parentId}~${slot}.${index}`
- * for a child, so it is the same on every setConfig and every render. Copies only what it changes; the
- * caller's config is never mutated (and the card never writes ids back to the user's config).
- */
+/** Gives every module and nested layout child an id, derived from its place when missing; copies only what it changes. */
 function withModuleIds(mod: CardModule, fallbackId: string): CardModule {
   if (!mod || typeof mod !== 'object') return mod;
   const id = mod.id || fallbackId;

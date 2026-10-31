@@ -5,10 +5,7 @@ import { McSeasonalDeco } from './mc-seasonal-deco';
 import { SeasonalBudget, sceneDecorations, sceneFlashes } from '../utils/seasonal-scenes';
 import { seasonalPreviewDate, setSeasonalPreviewDate } from '../utils/seasonal-preview';
 
-/*
- * Chunk entry of dist/magic-card-seasonal.js: install() defines <mc-seasonal> and
- * <mc-seasonal-deco>. It also carries the `api` the card reads to resolve and budget a scene.
- */
+/** Chunk entry of dist/magic-card-seasonal.js: defines <mc-seasonal> and <mc-seasonal-deco>. */
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 

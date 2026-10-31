@@ -1,9 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 
-/**
- * Storm flashes never stack: an element whose seasonal layer flashes carries `data-mc-flash`; a
- * layer inside another flashing element, or after a flashing sibling layer, skips its flash.
- */
+/** Storm flashes never stack: a seasonal layer skips its flash inside or after another flashing one. */
 export const NESTED_FLASH_SELECTOR = '[data-mc-flash] [data-mc-flash] > mc-seasonal';
 export const SIBLING_FLASH_SELECTOR = 'mc-seasonal[flash] ~ mc-seasonal';
 

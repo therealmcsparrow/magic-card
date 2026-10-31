@@ -3,11 +3,7 @@ import type { ParticlesCompiler, ParticlesModule } from '../contracts/particles-
 import type { V2Compiler } from '../anim-studio/compile';
 import type { ParticlesValidator } from '../anim-studio/model';
 
-/*
- * Hook points of the animation compiler. The compiler lives in the lazy `anim` chunk and its
- * plug-ins in separate files with their own copies, so the slots sit here in the entry. Plain
- * code with no runtime imports.
- */
+/** Hook points of the animation compiler, kept in the entry. Plain code, no runtime imports. */
 
 export const animHooks: {
   /** particles v2 compiler (the particles chunk, via src/utils/particles-loader.ts) and its lenient `sim` check. */

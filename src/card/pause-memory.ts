@@ -1,9 +1,6 @@
 import { PAUSE_STORAGE_PREFIX } from '../contracts/card-pause.needs';
 
-/*
- * The remembered Pause motion state, read by the card bundle so a pause the viewer chose holds from the first paint.
- * The pause chunk writes the same key on toggle, so both sides take it from here. Plain code, no imports of a chunk.
- */
+/** The remembered Pause motion state, read by the card bundle and written by the pause chunk. */
 
 /** FNV-1a (32 bit) as 8 hex digits. */
 function fnv(text: string): string {

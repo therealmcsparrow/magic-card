@@ -1,11 +1,7 @@
 import type { LazyChunkControl } from './lazy-chunk';
 import type { CustomShapeChunk } from '../contracts/custom-shape';
 
-/*
- * Loader of the `shape: custom` builder chunk (dist/magic-card-shape-custom.js) through lazyChunk().
- * Until the builder is registered the element renders as `shape: none`. This file holds the
- * registered builder; shape-path.ts reads it, so the entry never imports shape-path.
- */
+/** Loader of the `shape: custom` builder chunk (dist/magic-card-shape-custom.js) through lazyChunk(). */
 
 type Chunk = LazyChunkControl<typeof import('./shape-custom')>;
 let chunk: Chunk | undefined;

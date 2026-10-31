@@ -4,11 +4,7 @@ import { flatten, parseClosed } from '../path/core';
 import type { DecoMotif } from './seasonal-scenes';
 import { seededRandom } from './seasonal-scenes';
 
-/*
- * Border decorations (<mc-seasonal-deco>) as geometry: the element's outline as a dense clockwise
- * polyline, and per motif the points / paths to draw along it. Sizes clamp to the element; motifs
- * that do not fit are dropped. Pure (no DOM).
- */
+/** Border decorations (<mc-seasonal-deco>) as geometry along the element's outline. Pure (no DOM). */
 
 export interface Pt {
   x: number;

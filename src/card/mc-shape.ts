@@ -7,12 +7,7 @@ import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 import { shapeClip } from './shape-clip';
 import type { ResolvedShape } from './shape-resolve';
 
-/*
- * Outline shapes on a module / row / column wrapper or the card (design `shape`). <mc-shape> sits
- * inside the shaped element and, from its rendered size, sets `clip-path`, the content inset vars
- * `--mc-shape-it/-ir/-ib/-il`, and draws the border as an SVG stroke along the shape.
- * Blob / wave `animate` morphs the clip and stroke; paused off-screen and for reduced motion.
- */
+/** <mc-shape>: outline shapes on a module, row, column or card wrapper (design `shape`). */
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
 const INSET_VARS = ['--mc-shape-it', '--mc-shape-ir', '--mc-shape-ib', '--mc-shape-il'] as const;

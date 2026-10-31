@@ -1,10 +1,6 @@
 import { css } from 'lit';
 
-/*
- * Styles of the Pause motion button (pause chunk): above every layer, 6 px from its corner, 28 px
- * visible and 44 px to hit. A shaped card adds the shape's content inset (--mc-shape-i*). The strip
- * it sits in is pause-gap-css.ts. Written compact: css`` text goes into the bundle as is.
- */
+/** Styles of the Pause motion button (pause chunk). */
 export const pauseCardStyles = css`
 .mc-pause{position:absolute;z-index:6;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:24px;min-height:24px;margin:0;padding:0;border:1px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
 @media (hover:hover){.mc-pause:hover{background:rgba(0,0,0,.75)}}

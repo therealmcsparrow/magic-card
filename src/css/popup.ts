@@ -1,10 +1,6 @@
 import { css } from 'lit';
 
-/**
- * Pop-up mode (src/card/popup-controller.ts): a full-viewport transparent native <dialog> in the top
- * layer holding our own backdrop and the surface (the card's ha-card). Sheet: slides up from the
- * bottom edge; dialog: centred, fades and scales. Reduced motion: no movement.
- */
+/** Pop-up mode styles (src/card/popup-controller.ts): a top-layer <dialog> with a backdrop and the surface. */
 export const popupStyles = css`
   /* editor: inline card, marked as a pop-up (its host rules are in src/card/popup-host-css.ts); the badge sits on the card's top edge, so it covers as little of the content as possible */
   .mc-popup-badge {

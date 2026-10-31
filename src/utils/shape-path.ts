@@ -1,12 +1,7 @@
 import type { ShapeKind, ShapeOptions } from '../types';
 import { customBuilder } from './shape-custom-loader';
 
-/*
- * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size.
- * One path source for the clip-path, border stroke, ring and border length. Pure (no DOM).
- * Paths use absolute M / L / C only and stay inside 0..w x 0..h. `inset` is the content padding
- * that keeps a content rectangle inside the shape; it never shrinks as h grows.
- */
+/** Outline shapes for modules, rows, columns and the card as SVG paths in px. Pure (no DOM). */
 
 export type ShapeSide = 'top' | 'right' | 'bottom' | 'left';
 

@@ -3,12 +3,7 @@ import { BUILD_VERSION } from './build-version';
 import { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, SILENT_RETRY_MS } from '../contracts/lazy-module.needs';
 import type { EditorLazyChunkName, LazyChunkFailure, LazyChunkModule, LazyChunkName, OnDemandChunkName, RetryableLazyChunk } from '../contracts/lazy-module';
 
-/*
- * The one loader for the lazy chunks (contract lazy-module 1.4.0). Memoised load,
- * 10 s per attempt, one silent retry after 2 s, then the failed state (the notice, src/card/chunk-notice.ts)
- * and three background retries, BUILD check, install, styles adoption. The timing numbers come from
- * src/contracts/lazy-module.needs.ts: the entry may not import lazy-module.ts itself at run time.
- */
+/** The one loader for the lazy chunks (contract lazy-module 1.4.0): memoised load, retries, install, styles. */
 
 /** The release this magic-card.js was built from; chunk entries carry their own copy as BUILD. */
 export { BUILD_VERSION };

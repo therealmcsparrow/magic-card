@@ -7,11 +7,7 @@ import { CachedHistory, getHistory, HISTORY_TTL_MS, HistorySample, peekHistory }
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 
-/*
- * Value background of a module / row / column wrapper or the card (design `value_background`):
- * an aria-hidden layer behind the content. `fill` is a tank filled to the value's level with a
- * wave; `sparkline` draws the entity's history. Both pause off-screen.
- */
+/** <mc-value-bg>: the aria-hidden value background layer (design `value_background`): tank fill or sparkline. */
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
 /** The wave strip: four periods over twice the layer's width, scrolled by half of it per cycle. */

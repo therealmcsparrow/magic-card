@@ -2,10 +2,7 @@ import type { ShapeKind, ShapeOptions } from '../types';
 import type { Side } from './flow';
 import { shapePoint } from './shape-path';
 
-/**
- * Flow line geometry (pure): two module rects (px, relative to the card content box) + anchor sides
- * + route -> an SVG path `d`, a point on the path halfway (label) and its length (dash timing).
- */
+/** Flow line geometry (pure): module rects, anchor sides and route to an SVG path, midpoint and length. */
 
 export interface Rect {
   x: number;

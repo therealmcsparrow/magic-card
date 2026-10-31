@@ -2,11 +2,7 @@ import { BUILD_VERSION } from '../utils/build-version';
 import { McFlows } from './mc-flows';
 import { resolveCardFlows } from './flows-resolve';
 
-/*
- * Chunk entry of dist/magic-card-flows.js: flow resolver, line geometry, <mc-flows> and the
- * card-side rules. install() defines <mc-flows>, which upgrades in place. Parent of the
- * flow-look chunk (the literal import() sits here).
- */
+/** Chunk entry of dist/magic-card-flows.js: flow resolver, line geometry and <mc-flows>. */
 
 export const BUILD: string = BUILD_VERSION;
 

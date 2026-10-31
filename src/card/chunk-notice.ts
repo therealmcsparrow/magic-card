@@ -3,11 +3,7 @@ import type { RetryableLazyChunk } from '../contracts/lazy-module';
 import { notifyChunks } from '../utils/lazy-chunk';
 import { t } from './i18n';
 
-/*
- * The failure notice of a lazy chunk: a template rendered in the card's shadow root, always in
- * flow, with an icon, a message and a 44 px button. The role="status" container is filled a frame
- * after it renders so screen readers announce it. Colours use --mc-text for 3:1 contrast.
- */
+/** The failure notice of a lazy chunk: an icon, a message and a 44 px button in the card's shadow root. */
 export const noticeStyles = css`
   .mc-n {
     display: flex;

@@ -1,10 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 
-/**
- * Inline style properties that form a stacking context, matched as a declaration start (start of the
- * style, or after `;` / `; `) so `text-transform`, `filter: grayscale()`, `background-size: contain`
- * or a custom property never match. Entries without a colon are prefixes (`mask-image`...).
- */
+/** Inline style properties that form a stacking context, matched as a declaration start. */
 const STACKING_PROPS = [
   'filter:',
   'backdrop-filter:',

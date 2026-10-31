@@ -2,12 +2,7 @@ import { VERSION } from '../version';
 import type { LazyChunkControl } from './lazy-chunk';
 import { lazyChunks } from './lazy-chunks';
 
-/*
- * Loader of the card editor chunk (dist/magic-card-editor.js): dashboards never load it;
- * getConfigElement() and window.MagicCard.loadEditor() do. Memoised; a failure resolves false and
- * the next call tries again. It also awaits the editor's labels chunk (i18n namespace 'labels'),
- * which this file never imports.
- */
+/** Loader of the card editor chunk (dist/magic-card-editor.js) and its labels chunk. */
 
 interface EditorChunk {
   EDITOR_VERSION: string;

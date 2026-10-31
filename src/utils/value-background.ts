@@ -2,11 +2,7 @@ import type { HomeAssistant, ValueBackgroundConfig } from '../types';
 import { colour, entityLevel, share } from '../icons/fx-values';
 import { parseGradient } from './gradient';
 
-/*
- * `design.value_background` resolved against the entity states (pure, no DOM): a tank fill level or
- * the options of a history sparkline. The sparkline's path from history samples is in
- * src/card/value-bg-sparkline.ts (the decor chunk).
- */
+/** `design.value_background` resolved against the entity states (pure): tank level or sparkline options. */
 
 export type ValueBgDirection = 'up' | 'down' | 'left' | 'right';
 

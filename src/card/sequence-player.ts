@@ -2,10 +2,7 @@ import { hashString, type Schedule } from '../anim-studio/compile';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { reducedMotion } from '../utils/reduced-motion';
 
-/*
- * Custom sequences on Web Animations: the resolver marks elements `data-mc-seq`, and after each
- * render the card syncs one player per element. Players run on screen only, never for reduced motion.
- */
+/** Custom sequences on Web Animations: one player per marked element, on screen only. */
 
 export interface SequenceRun extends Omit<Schedule, 'target'> {
   /** What the sequence plays on: the element, its icon or (a button) its label. */

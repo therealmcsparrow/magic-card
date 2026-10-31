@@ -1,10 +1,6 @@
 import type { LazyChunkControl } from './lazy-chunk';
 
-/*
- * Loader of the v2 animation runtime chunk (dist/magic-card-anim-runtime.js) through lazyChunk():
- * one import per page, retried on failure, base animation plays until it lands. It never imports
- * the chunk table, which would pull every card chunk entry into the studio bundle.
- */
+/** Loader of the v2 animation runtime chunk (dist/magic-card-anim-runtime.js) through lazyChunk(). */
 
 export type AnimRuntime = typeof import('../anim-runtime');
 

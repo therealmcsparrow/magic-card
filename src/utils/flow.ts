@@ -6,11 +6,7 @@ import { FLOW_DEFAULTS } from './flow-keys';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';
 
-/**
- * Flow resolver (pure): a flow's config + hass -> what the overlay draws. Value to motion: idle at
- * or below `min`, above it a log curve moves traversal time from `min_speed` to `speed` and width
- * from `width` to `width x 2`. A negative value reverses when `reverse_negative`.
- */
+/** Flow resolver (pure): a flow's config and hass to what the overlay draws. */
 
 export type Side = FlowSide;
 

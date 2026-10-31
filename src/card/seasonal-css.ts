@@ -1,11 +1,7 @@
 import { css, unsafeCSS } from 'lit';
 import { SHARED_SCENE_KEYFRAMES } from '../css/scene-keyframes';
 
-/*
- * Styles of <mc-seasonal>: particle motions, artwork and ambient layers. Each `.p` particle is
- * centred on (--x, --y) with size, timing, colour and drift custom properties. Static and paused
- * states are host attributes.
- */
+/** Styles of <mc-seasonal>: particle motions, artwork and ambient layers. */
 
 /** The existing scene keyframes, reused: the storm flash (at a fixed brightness) and the wind gusts. */
 const reuse = (name: string, from: keyof typeof SHARED_SCENE_KEYFRAMES, intensity: number) =>

@@ -1,11 +1,6 @@
 import type { DecoMotif } from './seasonal-scenes';
 
-/**
- * Room (px: top, right, bottom, left) the content keeps from the edge so decorations never cover
- * it: the hanging light bulbs on every side, icicles under the top, the pumpkin above the bottom,
- * the vine along the bottom-left; cobweb and frost are faint corner backdrops (under the content).
- * The card pads its element to at least this (like a shape's inset). Undefined: nothing to keep.
- */
+/** Room (px: top, right, bottom, left) the content keeps from the edge so decorations never cover it. */
 export function decoInsets(motifs: readonly DecoMotif[]): [number, number, number, number] | undefined {
   const out: [number, number, number, number] = [0, 0, 0, 0];
   const atLeast = (i: number, v: number) => (out[i] = Math.max(out[i], v));

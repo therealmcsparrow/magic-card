@@ -3,10 +3,7 @@ import { McRing } from './mc-ring';
 import { McShape } from './mc-shape';
 import { McValueBg } from './mc-value-bg';
 
-/*
- * Chunk entry of dist/magic-card-decor.js: <mc-ring>, <mc-shape> and <mc-value-bg>. install()
- * defines them and they upgrade in place; a shaped card stays hidden until then (`data-mc-decor-wait`).
- */
+/** Chunk entry of dist/magic-card-decor.js: defines <mc-ring>, <mc-shape> and <mc-value-bg>. */
 
 export const BUILD: string = BUILD_VERSION;
 

@@ -2,11 +2,7 @@ import type { SceneId } from './seasonal';
 import { SCENE_LABELS } from './seasonal-labels';
 import type { MessageIndex } from '../contracts/i18n';
 
-/*
- * Seasonal scenes as data: particle kinds, motion, ranges, palette, share of the particle budget,
- * ambient layers and border decorations. `layoutScenes` turns scenes + intensity + a seed into a
- * stable particle layout, so re-renders never jump. Pure (no DOM).
- */
+/** Seasonal scenes as data, and `layoutScenes` for a stable particle layout. Pure (no DOM). */
 
 /** Hard cap of elements (particles + ambient layers) in one layer. */
 export const PARTICLE_CAP = 24;

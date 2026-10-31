@@ -1,11 +1,7 @@
 import type { HassEntity, PopupConfig, PopupTrigger } from '../types';
 import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, urlWithHash } from './popup-hash';
 
-/*
- * The run-time half of the pop-up helpers (hash match, "Open pop-up" navigation, open and close triggers, the dialog's CSS
- * variables, the swipe tracker). Only the `popup` chunk imports it; the config tests the card needs are in popup.ts, the
- * hash helpers the editor shares in popup-hash.ts.
- */
+/** The run-time half of the pop-up helpers; only the `popup` chunk imports it. */
 
 /** location.hash ('#kitchen', possibly percent-encoded) names this pop-up (case-sensitive). */
 export function hashMatches(locationHash: string, hash: string | undefined): boolean {
