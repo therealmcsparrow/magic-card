@@ -19058,6 +19058,12 @@
     "x-max-length": 55,
     "x-source-hash": "0e4493dd"
   },
+  "card-pause.card-pause.paused": "Paused",
+  "@card-pause.card-pause.paused": {
+    "description": "Visible state beside the pause button of a card, shown while its motion is paused. A single adjective, next to the button named Pause motion. Max 14 characters.",
+    "x-max-length": 14,
+    "x-source-hash": "e159b061"
+  },
   "card.bar-module.min-must-be-less-than-max": "Min must be less than max",
   "@card.bar-module.min-must-be-less-than-max": {
     "description": "Configuration error of the bar module. Min and max are the lowest and highest value of the bar. Same English as in the gauge, slider and spinbox modules. Max 45 characters.",

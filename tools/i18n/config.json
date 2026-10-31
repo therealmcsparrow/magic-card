@@ -19,6 +19,7 @@
     "preset-catalogue": { "dir": "src/preset-catalogue/i18n", "roots": ["src/preset-catalogue"] },
     "controls": { "dir": "src/modules/controls/i18n", "roots": ["src/modules/controls/dropdown-view.ts", "src/modules/controls/light-view.ts", "src/modules/controls/spinbox-view.ts"] },
     "modules-extra": { "dir": "src/modules/i18n", "roots": ["src/modules/advanced/custom-card-view.ts", "src/modules/advanced/forecast-view.ts", "src/modules/content/camera-view.ts", "src/modules/content/graphs-view.ts", "src/modules/layout/tabs-view.ts"] },
+    "card-pause": { "dir": "src/card/pause-i18n", "roots": ["src/card/card-pause.ts"] },
     "image-tools": { "dir": "src/image-tools/i18n", "roots": ["src/image-tools"] },
     "look-editor": { "dir": "src/look-editor/i18n", "roots": ["src/look-editor"] },
     "card-status": { "dir": "src/card-status/i18n", "roots": ["src/card-status"] },

@@ -1,6 +1,7 @@
 import { html, nothing } from 'lit';
 import type { LitElement, TemplateResult } from 'lit';
 import { t } from './i18n';
+import { t as tp } from './pause-i18n';
 import { motionCount, setCardPaused } from '../icons/offscreen';
 import { reducedMotion } from '../utils/reduced-motion';
 import { PAUSE_ATTRIBUTE, PAUSE_EVENT } from '../contracts/card-pause.needs';
@@ -85,7 +86,7 @@ export class CardPause {
 
   private _stop = (e: Event): void => e.stopPropagation();
 
-  /** Last child of ha-card. Under `auto` the observer count has no change event: look again after the render. */
+  /** Last child of ha-card, followed by the aria-hidden Paused label while pressed. Under `auto` the observer count has no change event: look again after the render. */
   button(c: CardPauseKeys, on: boolean): TemplateResult | typeof nothing {
     const auto = this._mode === 'auto';
     const show = this._mode === 'always' || (auto && this._wants(on));
@@ -96,7 +97,8 @@ export class CardPause {
     const label = t('card.card-pause.pause-motion');
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
-      ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
+      ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button
+      >${on ? html`<span class="mc-pause-label" data-corner=${corner} aria-hidden="true">${tp('card-pause.card-pause.paused')}</span>` : nothing}`;
   }
 
   private _wants(on: boolean): boolean {

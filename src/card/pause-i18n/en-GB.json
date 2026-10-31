@@ -1,0 +1,7 @@
+{
+  "card-pause.card-pause.paused": {
+    "text": "Paused",
+    "note": "Visible state beside the pause button of a card, shown while its motion is paused. A single adjective, next to the button named Pause motion.",
+    "max": 14
+  }
+}
