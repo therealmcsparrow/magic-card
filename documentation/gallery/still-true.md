@@ -48,7 +48,7 @@ rows:
 
 ## Reconnected
 
-Once Home Assistant answers again after an icon like the one above, the icon says so for three seconds and then goes. A connection that came back before the first strip appeared shows nothing.
+Once Home Assistant answers again after an icon like the one above, the icon says so for three seconds and then goes. A connection that came back before the first icon appeared shows nothing.
 
 ![A front door battery card reading 87 percent, with a status icon badge in the top-left corner, which announces Reconnected](images/139-reconnected.png)
 
