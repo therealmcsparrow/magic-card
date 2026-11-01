@@ -595,6 +595,10 @@
     "text": "Vervang ze",
     "hash": "f199ad2e"
   },
+  "transfer.panel.something-went-wrong-while-reading-this-file": {
+    "text": "Er ging iets mis bij het lezen. Er is niets geïmporteerd.",
+    "hash": "2d04efbc"
+  },
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} bevat # animatie.} other {{source} bevat # animaties.}}",
     "hash": "cddd5aed"
@@ -642,6 +646,10 @@
   "transfer.panel.the-text": {
     "text": "De tekst",
     "hash": "27364d4e"
+  },
+  "transfer.panel.the-wall-tablet-preview-did-not-load": {
+    "text": "De Wall tablet-weergave is niet geladen. Controleer je verbinding.",
+    "hash": "f8e960e1"
   },
   "transfer.panel.this-file-was-not-imported": {
     "text": "Dit bestand is niet geïmporteerd",

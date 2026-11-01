@@ -44,23 +44,37 @@ export function loadShareKit(): Promise<ShareKit | undefined> {
   return pending;
 }
 
-/** The notice texts, from the same chunk as the kit; undefined when they do not load. */
-export const loadNotice = (): Promise<typeof import('../share-kit/notice') | undefined> => import(/* webpackChunkName: "share-kit" */ '../share-kit/notice').catch(() => undefined);
-
-/** The mapping step, from the same chunk; undefined when it does not load. */
-export const loadMapping = (): Promise<typeof import('../share-kit/mapping') | undefined> => import(/* webpackChunkName: "share-kit" */ '../share-kit/mapping').catch(() => undefined);
-
-/** The mapping step on a saved item (defines <mc-map-entities>), from the same chunk; false when it does not load. */
-export const loadMapStep = (): Promise<boolean> => import(/* webpackChunkName: "share-kit" */ '../share-kit/map-step').then(() => true, () => false);
-
-/** The contrast check of an imported theme, from the same chunk; undefined when it does not load. */
-export const loadThemeCheck = (): Promise<typeof import('../share-kit/theme-check') | undefined> => import(/* webpackChunkName: "share-kit" */ '../share-kit/theme-check').catch(() => undefined);
-
-/** The animation preview (defines <mc-anim-preview>), from the same chunk; false when it does not load. */
-export const loadAnimPreview = (): Promise<boolean> => import(/* webpackChunkName: "share-kit" */ '../share-kit/anim-preview').then(() => true, () => false);
+/** The mapping step on a saved item (the kit's chunk defines <mc-map-entities>); false when the chunk does not load. */
+export const loadMapStep = (): Promise<boolean> => loadShareKit().then((kit) => !!kit);
 
 /** Tests: forget the loaded chunk. */
 export function __resetShareKitForTests(): void {
   pending = undefined;
   loaded = undefined;
+}
+
+const defaultTablet = (): Promise<unknown> => import(/* webpackChunkName: "share-tablet" */ '../share-kit/tablet');
+let tabletImport = defaultTablet;
+let tabletPending: Promise<boolean> | undefined;
+
+/** The Wall tablet element of the import preview (its own chunk, SHARE_TABLET_CHUNK). Resolves false, never rejects; the next call tries again. */
+export function loadShareTablet(): Promise<boolean> {
+  tabletPending ??= Promise.race([tabletImport().then(() => true), new Promise<boolean>((resolve) => setTimeout(() => resolve(false), LOAD_TIMEOUT_MS))]).then(
+    (ok) => {
+      if (!ok) tabletPending = undefined;
+      return ok;
+    },
+    (err: unknown) => {
+      tabletPending = undefined;
+      console.warn('Magic Card: Wall tablet preview not loaded', err);
+      return false;
+    },
+  );
+  return tabletPending;
+}
+
+/** Tests: forget the memo; `load` replaces the import (restored when omitted). */
+export function __setShareTabletImportForTests(load?: () => Promise<unknown>): void {
+  tabletPending = undefined;
+  tabletImport = load ?? defaultTablet;
 }

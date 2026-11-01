@@ -10,6 +10,8 @@ import { applyMapping, findPlaceholders, isMappable, mappingView } from './mappi
 export class MapEntities extends LitElement {
   /** The saved item's data; read again from storage, so only whole placeholder ids in it are ever replaced. */
   @property({ attribute: false }) value: unknown;
+  /** (optional) Entity ids to offer, by domain. */
+  @property({ attribute: false }) entities?: readonly string[];
   @state() private _map: Record<string, string> = {};
 
   protected createRenderRoot(): HTMLElement {
@@ -25,10 +27,10 @@ export class MapEntities extends LitElement {
   render(): TemplateResult {
     const found = findPlaceholders(this.value);
     const chosen = Object.values(this._map).some((v) => v !== '');
-    const ok = chosen && Object.values(this._map).every(isMappable);
+    const ok = chosen && found.every((p) => isMappable(this._map[p.id] ?? '', p.domain));
     const apply = (): void => void this.dispatchEvent(new CustomEvent('mc-map-apply', { bubbles: true, composed: true, detail: { data: applyMapping(this.value, this._map) } }));
     return html`<div @keydown=${(e: KeyboardEvent) => e.key === 'Escape' && (e.stopPropagation(), this._cancel())}>
-      ${found.length ? mappingView(found, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {})) : html`<p class="help">${t('share-kit.mapping.nothing-here-needs-mapping')}</p>`}
+      ${found.length ? mappingView(found, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {}), this.entities) : html`<p class="help">${t('share-kit.mapping.nothing-here-needs-mapping')}</p>`}
       <div class="bar">
         ${found.length ? html`<button type="button" class="btn btn-primary btn-sm" ?disabled=${!ok} @click=${apply}>${t('share-kit.mapping.save-mapping')}</button>` : nothing}
         <button type="button" class="btn btn-text btn-sm" @click=${this._cancel}>${t('share-kit.mapping.cancel')}</button>

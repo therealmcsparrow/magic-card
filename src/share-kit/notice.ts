@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { glyph } from '../ui-kit';
-import type { ImportNotice, ShareKit } from '../contracts/share-kit';
+import type { ImportNotice } from '../contracts/share-kit';
 import { t } from './i18n';
 
 // Fixed notice texts of the share-kit chunk, shown as plain text through the bound t.
@@ -45,10 +45,9 @@ export function contrastView(heading: string, items: { name: string; lines: stri
     : nothing;
 }
 
-/** The animated previews of imported animations. */
-export const animPreviews = (kit: ShareKit, items: readonly { data: unknown }[]): TemplateResult =>
-  html`<div data-share-anim-previews>${items.map((i) => html`<mc-anim-preview .doc=${kit.previewSafe('animation', i.data as never)}></mc-anim-preview>`)}</div>`;
+/** Shown under the export text when addresses on other websites were taken out; `hosts` are their domain names. */
+export const removedHostsNotice = (hosts: readonly string[]): string => t('share-kit.notice.addresses-on-other-websites-were-removed', { hosts: hosts.join(', ') });
 
-/** The notes under the export text: the author name and replaced entity IDs. */
-export const exportNotes = (hasAuthor: boolean, replaced: boolean): TemplateResult =>
-  html`${hasAuthor ? html`<p class="help" role="status">${authorNotice()}</p>` : nothing}${replaced ? html`<p class="help" data-ids-replaced role="status">${idsReplacedNotice()}</p>` : nothing}`;
+/** The notes under the export text: the author name, replaced entity IDs and removed addresses. */
+export const exportNotes = (hasAuthor: boolean, replaced: boolean, removedHosts: readonly string[] = []): TemplateResult =>
+  html`${hasAuthor ? html`<p class="help" role="status">${authorNotice()}</p>` : nothing}${replaced ? html`<p class="help" data-ids-replaced role="status">${idsReplacedNotice()}</p>` : nothing}${removedHosts.length ? html`<p class="help" data-hosts-removed role="status">${removedHostsNotice(removedHosts)}</p>` : nothing}`;

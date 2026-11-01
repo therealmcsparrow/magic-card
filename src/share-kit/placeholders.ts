@@ -14,14 +14,27 @@ const ENTITY_KEYS: ReadonlySet<string> = new Set(['entity', 'entity_id', 'entiti
 const WORD_DOMAINS: ReadonlySet<string> = new Set(['text', 'time', 'number', 'date', 'datetime', 'event', 'image', 'update', 'select', 'button', 'group', 'zone', 'remote', 'scene', 'schedule', 'calendar']);
 /** Keys that hold a service name (`light.turn_on`), which has the shape of an entity id but names no entity. */
 const SERVICE_KEYS: ReadonlySet<string> = new Set(['perform_action', 'service']);
-const TOKEN_RE = /([a-z][a-z0-9_]*)\.([a-z0-9_]+)/g;
+const TOKEN_RE = /(?<![a-z0-9_])([a-z][a-z0-9_]*)\.([a-z0-9_]+)/g;
 const ID_SHAPE_RE = /[_0-9]/;
+/** Query parameters that carry a secret; the value is dropped. */
+const SECRET_PARAM_RE = /([?&](?:token|access_token|signature|authSig|api_key)=)[^&#\s"'<>)]*/gi;
+/** A camera proxy path: the camera becomes a placeholder entity. */
+const CAMERA_PROXY_RE = /(\/api\/camera_proxy(?:_stream)?\/)([a-z][a-z0-9_]*\.[a-z0-9_]+)/g;
+/** An absolute web address up to its path: scheme, credentials, host and port. */
+const ORIGIN_RE = /\bhttps?:\/\/([^\s"'<>)/?#]*)/gi;
+const ORIGIN_PLACEHOLDER = 'https://example.invalid';
+/** Namespace addresses inline SVG needs; they name no host of the sender's. */
+const NAMESPACE_HOSTS: ReadonlySet<string> = new Set(['www.w3.org']);
 
 interface Pass {
   seen: Set<string>;
   byId: Map<string, string>;
   list: EntityPlaceholder[];
+  hosts: Set<string>;
 }
+
+/** What the pass took out besides entity ids; the host list is for the export notice. */
+export type PlaceholderResult<K extends TransferKind> = PlaceholderExport<K> & { removedHosts: string[] };
 
 /** Collects the domain of every id written in an entity field, so those domains are scanned for in free text. */
 function seeDomains(v: unknown, inEntityKey: boolean, depth: number, seen: Set<string>): void {
@@ -70,8 +83,23 @@ function isEntity(s: string, start: number, end: number, domain: string, object:
   return (q === "'" || q === '"') && s[end] === q;
 }
 
+/** `s` without secret query values, camera proxy cameras, or the origin of an absolute web address. */
+function scrubUrls(s: string, pass: Pass): string {
+  if (!s.includes('=') && !s.includes('://') && !s.includes('camera_proxy')) return s;
+  return s
+    .replace(SECRET_PARAM_RE, '$1')
+    .replace(CAMERA_PROXY_RE, (_m, head: string, id: string) => head + place(id, pass))
+    .replace(ORIGIN_RE, (m, authority: string) => {
+      const host = authority.slice(authority.lastIndexOf('@') + 1);
+      if (NAMESPACE_HOSTS.has(host.toLowerCase())) return m;
+      if (host) pass.hosts.add(host);
+      return ORIGIN_PLACEHOLDER;
+    });
+}
+
 /** `s` with every whole entity id replaced; the object id is read to its end, so light.kitchen_2 never splits. */
-function scan(s: string, pass: Pass): string {
+function scan(input: string, pass: Pass): string {
+  const s = scrubUrls(input, pass);
   if (!s.includes('.')) return s;
   const urls = urlRanges(s);
   let out = '';
@@ -103,14 +131,23 @@ function copy(v: unknown, inEntityKey: boolean, depth: number, pass: Pass, key =
     return scan(v, pass);
   }
   if (Array.isArray(v)) return v.map((e) => copy(e, inEntityKey, depth + 1, pass));
-  if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, e]) => [k, copy(e, ENTITY_KEYS.has(k), depth + 1, pass, k)]));
+  if (v && typeof v === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, e] of Object.entries(v)) {
+      const base = scan(k, pass);
+      let name = base;
+      for (let n = 2; Object.prototype.hasOwnProperty.call(out, name); n++) name = `${base}_${n}`;
+      Object.defineProperty(out, name, { value: copy(e, ENTITY_KEYS.has(k), depth + 1, pass, k), enumerable: true, writable: true, configurable: true });
+    }
+    return out;
+  }
   return v;
 }
 
 /** Items with their entity ids replaced, the header list, and the map back (placeholder to id) that is never written. */
-export function toPlaceholders<K extends TransferKind>(_kind: K, items: readonly TransferItem<K>[]): PlaceholderExport<K> {
-  const pass: Pass = { seen: new Set(), byId: new Map(), list: [] };
+export function toPlaceholders<K extends TransferKind>(_kind: K, items: readonly TransferItem<K>[]): PlaceholderResult<K> {
+  const pass: Pass = { seen: new Set(), byId: new Map(), list: [], hosts: new Set() };
   for (const it of items) seeDomains(it, false, 0, pass.seen);
   const out = items.map((it) => copy(it, false, 0, pass) as TransferItem<K>);
-  return { items: out, placeholders: pass.list, originals: Object.fromEntries([...pass.byId].map(([id, p]) => [p, id])) };
+  return { items: out, placeholders: pass.list, originals: Object.fromEntries([...pass.byId].map(([id, p]) => [p, id])), removedHosts: [...pass.hosts] };
 }

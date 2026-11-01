@@ -595,6 +595,10 @@
     "text": "Replace them",
     "hash": "f199ad2e"
   },
+  "transfer.panel.something-went-wrong-while-reading-this-file": {
+    "text": "Something went wrong while reading this. Nothing was imported.",
+    "hash": "2d04efbc"
+  },
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
     "hash": "cddd5aed"
@@ -642,6 +646,10 @@
   "transfer.panel.the-text": {
     "text": "The text",
     "hash": "27364d4e"
+  },
+  "transfer.panel.the-wall-tablet-preview-did-not-load": {
+    "text": "The Wall tablet preview did not load. Check your connection and try again.",
+    "hash": "f8e960e1"
   },
   "transfer.panel.this-file-was-not-imported": {
     "text": "This file was not imported",

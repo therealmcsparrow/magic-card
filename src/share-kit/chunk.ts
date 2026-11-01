@@ -7,7 +7,12 @@ import { previewSafe } from './preview';
 import { toPlaceholders } from './placeholders';
 import { styleDrops } from './style-drops';
 import { scanMarkers, strictValue, themeValue } from './strict';
-import { checkTheme } from './theme-check';
+import { checkTheme, contrastHeading, contrastWarnings } from './theme-check';
+import { importPreview } from './import-preview';
+import { contrastView, exportNotes, runView, untrustedNotice } from './notice';
+import { mappingView } from './mapping';
+import './anim-preview';
+import './map-step';
 
 // Chunk entry of dist/magic-card-share-kit.js (share-kit 1.0.0): the strict value checks the transfer chunk reads files through.
 
@@ -27,6 +32,7 @@ export const createShareKit: CreateShareKit = (helpers) => {
     previewSafe,
     styleDrops,
     checkContrast: checkTheme,
+    views: { untrustedNotice, exportNotes, runView, contrastHeading, contrastWarnings, contrastView, mappingView, importPreview },
   };
   return kit;
 };

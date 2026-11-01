@@ -2,6 +2,7 @@
 // (SHARE_KIT_VERSION). Strict value types, entity placeholders, demo states, the card reader, the import notice,
 // previews, the mapping step and the contrast check. It holds no HTML or SVG sink and makes no request.
 
+import type { TemplateResult, nothing } from 'lit';
 import type { MagicCardConfig } from '../types';
 import type { ThemeDoc } from './theme-editor';
 import type { ContrastReport } from './theme-safety';
@@ -10,6 +11,9 @@ import type { TransferDataByKind, TransferItem, TransferKind, TransferNote, Tran
 export const SHARE_KIT_VERSION = '1.0.0';
 export const SHARE_KIT_CHUNK = 'share-kit';
 export const SHARE_KIT_CHUNK_FILE = 'magic-card-share-kit.js';
+/** The Wall tablet of the import preview: its own chunk, loaded when the toggle is pressed (in the same loader file as the kit). */
+export const SHARE_TABLET_CHUNK = 'share-tablet';
+export const SHARE_TABLET_CHUNK_FILE = 'magic-card-share-tablet.js';
 /** Hard ceiling of the chunk's raw size; the enforced cap lives in tools/size-caps.json. Raising it changes this contract. */
 export const SHARE_KIT_CHUNK_CEILING = 40 * 1024; // 40,960 B
 /**
@@ -120,6 +124,8 @@ export interface PlaceholderExport<K extends TransferKind = TransferKind> {
   items: TransferItem<K>[];
   placeholders: EntityPlaceholder[];
   originals: Readonly<Record<string, string>>;
+  /** Domain names of the absolute addresses that were taken out, for the export notice. */
+  removedHosts: readonly string[];
 }
 
 /** A made-up state for the import preview only, never given to hass; it carries no entity_picture. */
@@ -181,6 +187,26 @@ export interface ShareKitHelpers {
   sanitizeIcon(item: number, path: string, svg: string): { svg?: string; notes: TransferNote[] };
 }
 
+/**
+ * The views and texts the transfer panel shows, so it reaches the chunk through the kit alone. They render names and
+ * values as text and make no request.
+ */
+export interface ShareKitViews {
+  /** The line above the preview of every import. */
+  untrustedNotice(): string;
+  exportNotes(hasAuthor: boolean, replaced: boolean, removedHosts?: readonly string[]): TemplateResult;
+  /** The actions and templates of a shared card. */
+  runView(run: ImportNotice): TemplateResult;
+  contrastHeading(): string;
+  /** The warning lines of one theme's contrast report. */
+  contrastWarnings(report: ContrastReport): string[];
+  contrastView(heading: string, items: { name: string; lines: string[] }[]): TemplateResult | typeof nothing;
+  /** The mapping step: one entity field per placeholder with its demo value, `entities` offered by domain, and Skip. */
+  mappingView(placeholders: readonly EntityPlaceholder[], values: Readonly<Record<string, string>>, onChange: (id: string, value: string) => void, onSkip: () => void, entities?: readonly string[]): TemplateResult;
+  /** The import preview of the items, from previewSafe copies and demo states; a theme gets the Wall tablet, an animation <mc-anim-preview>. The chunk defines <mc-anim-preview> and <mc-map-entities> when it loads. */
+  importPreview(kind: TransferKind, items: readonly TransferItem[], placeholders: readonly EntityPlaceholder[], wallTablet: boolean, onWallTablet: () => void): TemplateResult;
+}
+
 /** What the share-kit chunk gives the transfer chunk. Pure and synchronous, except where an element is passed in. */
 export interface ShareKit {
   version: typeof SHARE_KIT_VERSION | string;
@@ -209,6 +235,8 @@ export interface ShareKit {
   previewSafe<K extends TransferKind>(kind: K, data: TransferDataByKind[K]): TransferDataByKind[K];
   /** TEXT_PAIRS of a theme in light and dark, resolved on `probe` (a hidden element in the page). */
   checkContrast(doc: ThemeDoc, probe: HTMLElement): ContrastReport;
+  /** What the panel renders and says. */
+  views: ShareKitViews;
 }
 
 /** The share-kit chunk entry's export. */

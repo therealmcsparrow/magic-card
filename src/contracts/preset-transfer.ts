@@ -263,6 +263,12 @@ export interface ParseOptions {
   card?: CardKeyLists;
 }
 
+/** The statics of the element named by `tags.library`. */
+export interface LibraryViewStatics {
+  /** Loads <mc-map-entities>, the mapping step of a saved card; false when it does not load. */
+  mapStep(): Promise<boolean>;
+}
+
 /** What window.MagicCard.loadTransfer() / loadTransfer() resolves to. */
 export interface TransferChunk {
   version: typeof TRANSFER_CONTRACT_VERSION | string;

@@ -368,8 +368,12 @@ export class McteThemePreview extends LitElement {
       cursor: pointer;
     }
     .tablet-toggle[aria-pressed='true'] {
-      background: var(--primary-color);
-      color: var(--text-primary-color);
+      border-color: var(--primary-color);
+      box-shadow: inset 0 0 0 1px var(--primary-color);
+      font-weight: 600;
+    }
+    .tablet-toggle[aria-pressed='true']::before {
+      content: '¹3 a0';
     }
     .tablet-toggle:focus-visible {
       outline: 2px solid var(--primary-color);

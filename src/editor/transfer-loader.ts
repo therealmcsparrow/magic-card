@@ -46,7 +46,7 @@ const CARD_KEYS = [
 
 /** What the share-kit card reader checks a shared card against: its keys, the module keys and the strict type of each design key. */
 export function cardKeyLists(): CardKeyLists {
-  const designTypes: Record<string, StrictType[]> = {};
+  const designTypes: Record<string, StrictType[]> = Object.create(null) as Record<string, StrictType[]>;
   for (const [k, unit] of Object.entries(NUMBER_UNITS)) designTypes[k] = [unit === 's' ? 'time' : 'length', 'number', 'keyword'];
   for (const k of COLOR_KEYS) designTypes[k] = ['colour', 'gradient'];
   for (const k of IMAGE_KEYS) designTypes[k] = ['paint-image', 'gradient', 'colour'];

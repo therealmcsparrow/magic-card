@@ -13,7 +13,7 @@ import { checkCompressed, checkTextSize } from './safe-parse';
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
-import { loadAnimPreview, loadMapping, loadNotice, loadShareKit, loadThemeCheck, shareKit } from './share-kit-loader';
+import { loadShareKit, loadShareTablet, shareKit } from './share-kit-loader';
 import type { CardKeyLists, ShareKit } from '../contracts/share-kit';
 import type { ThemeDoc } from '../contracts/theme-editor';
 import { locale, t } from './i18n';
@@ -85,16 +85,15 @@ export class TransferPanel extends LitElement {
   /** The share-kit chunk; import and export are offered only once it has loaded. */
   @state() private _kit?: ShareKit;
   @state() private _kitFailed = false;
-  /** The notice texts, loaded from the same share-kit chunk. */
-  @state() private _words?: typeof import('../share-kit/notice');
-  /** The mapping step, from the same chunk; the entity ids chosen for placeholders. */
-  @state() private _mapper?: typeof import('../share-kit/mapping');
+  /** (optional) Entity ids the mapping step offers, by the domain of each placeholder. */
+  @property({ attribute: false }) entities?: readonly string[];
+  /** The entity ids chosen for placeholders. */
   @state() private _map: Record<string, string> = {};
   /** Contrast warnings of an imported theme, one list per item, from the theme check in the same chunk. */
   @state() private _contrast: Array<{ name: string; lines: string[] }> = [];
   @state() private _contrastHeading = '';
-  /** True once the animation preview element of the same chunk is defined. */
-  @state() private _animPreview = false;
+  @state() private _tablet = false;
+  @state() private _tabletFailed = false;
 
   private _fileName = '';
 
@@ -106,8 +105,6 @@ export class TransferPanel extends LitElement {
 
   private async _loadKit(): Promise<ShareKit | undefined> {
     this._kit ??= await loadShareKit();
-    if (this._kit) [this._words, this._mapper] = await Promise.all([this._words ?? loadNotice(), this._mapper ?? loadMapping()]);
-    if (!this._words || !this._mapper) this._kit = undefined;
     this._kitFailed = !this._kit;
     return this._kit;
   }
@@ -135,8 +132,21 @@ export class TransferPanel extends LitElement {
     });
   }
 
+  /** Reads pasted or opened text; anything that throws on the way becomes a visible refusal and nothing is imported. */
   private async _read(text: string, fileName?: string): Promise<void> {
+    try {
+      await this._readText(text, fileName);
+    } catch (err) {
+      console.warn('Magic Card: reading a transfer failed', err);
+      this._contrast = [];
+      this._res = { ok: false, refusal: 'not_parseable', message: t('transfer.panel.something-went-wrong-while-reading-this-file') };
+      this.focusResult();
+    }
+  }
+
+  private async _readText(text: string, fileName?: string): Promise<void> {
     this._fileName = fileName ?? '';
+    this._tabletFailed = false;
     // v2 fields and particle simulations are checked by validators that live in lazy chunks of the card; load them first
     const need = (re: RegExp, load: () => Promise<unknown>): Promise<unknown> => (re.test(text) ? load() : Promise.resolve(true));
     const [kit, ...ok] = await Promise.all([this._loadKit(), need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
@@ -161,18 +171,23 @@ export class TransferPanel extends LitElement {
     this.focusResult();
   }
 
-  /** A theme's contrast warnings and an animation's preview element, both from the share-kit chunk. */
-  private async _checkPreviews(r: Ok): Promise<void> {
-    if (r.kind === 'animation') {
-      this._animPreview = await loadAnimPreview();
+  /** The Wall tablet opens once its own chunk is loaded; when that fails it stays off and says so. */
+  private async _toggleTablet(): Promise<void> {
+    if (this._tablet) {
+      this._tablet = false;
       return;
     }
+    this._tabletFailed = !(await loadShareTablet());
+    this._tablet = !this._tabletFailed;
+  }
+
+  /** A theme's contrast warnings and an animation's preview element, both from the share-kit chunk. */
+  private async _checkPreviews(r: Ok): Promise<void> {
     const probe = this.renderRoot.querySelector<HTMLElement>('#probe');
-    if (r.kind !== 'theme' || !probe) return;
-    const check = await loadThemeCheck();
-    if (!check) return;
-    this._contrastHeading = check.contrastHeading();
-    this._contrast = r.items.map((i) => ({ name: i.name, lines: check.contrastWarnings(check.checkTheme(i.data as ThemeDoc, probe)) })).filter((i) => i.lines.length);
+    if (r.kind !== 'theme' || !probe || !this._kit) return;
+    const v = this._kit.views;
+    this._contrastHeading = v.contrastHeading();
+    this._contrast = r.items.map((i) => ({ name: i.name, lines: v.contrastWarnings(this._kit!.checkContrast(i.data as ThemeDoc, probe)) })).filter((i) => i.lines.length);
   }
 
   private async _onFile(e: Event): Promise<void> {
@@ -217,6 +232,8 @@ export class TransferPanel extends LitElement {
     this.dispatchEvent(new CustomEvent('mc-transfer-import', { bubbles: true, composed: true, detail: { kind: r.kind, items: mapped, choice: this._choice } }));
     this._res = undefined;
     this._map = {};
+    this._tablet = false;
+    this._tabletFailed = false;
   }
 
   /** Notes shown to the user: step refs the target already has are not a problem. */
@@ -280,7 +297,7 @@ export class TransferPanel extends LitElement {
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
     const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
     const run = this._kit!.importNotice(r.kind, r.items);
-    const w = this._words!;
+    const w = this._kit!.views;
     return html`
       ${notice({ tone: 'warn', text: w.untrustedNotice() })}
       <ul>
@@ -299,9 +316,10 @@ export class TransferPanel extends LitElement {
           </div>`
         : nothing}
       ${w.contrastView(this._contrastHeading, this._contrast)}
-      ${r.kind === 'animation' && this._animPreview ? w.animPreviews(this._kit!, r.items) : nothing}
+      ${w.importPreview(r.kind, r.items, run.placeholders, this._tablet, () => void this._toggleTablet())}
+      ${this._tabletFailed ? html`<p class="help" data-wall-tablet-failed role="alert">${t('transfer.panel.the-wall-tablet-preview-did-not-load')}</p>` : nothing}
       ${w.runView(run)}
-      ${run.placeholders.length ? this._mapper!.mappingView(run.placeholders, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {})) : nothing}
+      ${run.placeholders.length ? w.mappingView(run.placeholders, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {}), this.entities) : nothing}
       ${local.length ? html`<p class="help">${t("transfer.panel.n-4", { n: local.length })}</p>` : nothing}
       ${rest.length
         ? html`<details class="cond" ?open=${r.kind === 'image'}>
@@ -374,7 +392,8 @@ export class TransferPanel extends LitElement {
     const e = this.exportItems;
     if (!e?.items.length) return html`<p class="help" role="status">${t('transfer.panel.nothing-to-export')}</p>`;
     const text = this._text();
-    const replaced = this._kit!.placeholderItems(e.kind, e.items).placeholders.length > 0;
+    const shared = this._kit!.placeholderItems(e.kind, e.items);
+    const replaced = shared.placeholders.length > 0;
     return html`
       <div class="group-head"><h3 tabindex="-1">${exportLabel(e.items.length, e.kind)}</h3></div>
       ${e.kind === 'image'
@@ -392,12 +411,12 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${this._words?.exportNotes(e.items.some((i) => i.author), !!replaced)}
+      ${this._kit!.views.exportNotes(e.items.some((i) => i.author), !!replaced, shared.removedHosts)}
       <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
         ${button({ label: t('transfer.panel.copy'), icon: 'mdi:content-copy', onClick: () => this._copy(text) })}
-        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: t('transfer.panel.copy-as-ha-theme'), onClick: () => this._copy(haThemeYaml(e.items[0].name, e.items[0].data as never)) }) : nothing}
+        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: t('transfer.panel.copy-as-ha-theme'), onClick: () => this._copy(haThemeYaml(e.items[0].name, this._kit!.placeholderItems(e.kind, e.items).items[0].data as never)) }) : nothing}
         ${button({ label: t('transfer.panel.close'), variant: 'text', onClick: this._close })}
       </div>
       <div role="status" aria-live="polite" class="help">${this._done}</div>

@@ -938,6 +938,11 @@
     "note": "Choice when imported names clash: overwrite the saved items. 'Them' means the clashing items. Pairs with 'Keep both'.",
     "max": 20
   },
+  "transfer.panel.something-went-wrong-while-reading-this-file": {
+    "text": "Something went wrong while reading this. Nothing was imported.",
+    "note": "Refusal shown when reading pasted text or a file failed unexpectedly. Nothing is saved.",
+    "max": 80
+  },
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
     "note": "Line under the import heading: what the chosen file or pasted text holds (animations).",
@@ -1021,6 +1026,11 @@
     "text": "The text",
     "note": "Stands in for a file name as {source} in 'holds' when the user pasted text. Must work at the start of a sentence.",
     "max": 15
+  },
+  "transfer.panel.the-wall-tablet-preview-did-not-load": {
+    "text": "The Wall tablet preview did not load. Check your connection and try again.",
+    "note": "Error under the import preview of a theme when the code for the Wall tablet preview failed to load, usually a network problem.",
+    "max": 90
   },
   "transfer.panel.this-file-was-not-imported": {
     "text": "This file was not imported",

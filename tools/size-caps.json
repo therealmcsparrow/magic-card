@@ -158,6 +158,11 @@
       "ceiling": 40960,
       "note": "Share kit: strict value checks, entity placeholders, the card reader and previews. A child of the transfer chunk, no SVG sink. 36 KiB, measured 34,691 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 40,960 B (SHARE_KIT_CHUNK_CEILING)."
     },
+    "magic-card-share-tablet.js": {
+      "raw": 5120,
+      "ceiling": 5120,
+      "note": "Wall tablet of the import preview: defines <mc-wall-tablet>, loaded when the toggle is pressed. 5 KiB, measured 4,236 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB."
+    },
     "magic-card-svg-icon.js": {
       "raw": 47104,
       "ceiling": 47104,

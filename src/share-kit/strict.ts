@@ -55,6 +55,53 @@ export function scanMarkers(item: number, path: string, value: unknown, depth = 
   return undefined;
 }
 
+const URL_BASES = ['https://a.invalid/', 'http://b.invalid:8123/'] as const;
+const FETCH_SCHEME_RE = /^(?:https?|wss?|ftp|file|data|blob|javascript|vbscript|filesystem|about|chrome|view-source|media-source)$/i;
+
+/** The value as the URL parser reads it: outer control characters and spaces cut, tabs and line breaks removed, `\` read as `/`. */
+const flat = (s: string): string => {
+  let a = 0;
+  let b = s.length;
+  while (a < b && s.charCodeAt(a) <= 32) a++;
+  while (b > a && s.charCodeAt(b - 1) <= 32) b--;
+  return [...s.slice(a, b)]
+    .filter((ch) => ch !== '\t' && ch !== '\n' && ch !== '\r')
+    .map((ch) => (ch === '\\' ? '/' : ch))
+    .join('');
+};
+
+/** True when the whole value reads as a URL: it starts with a slash, or with a scheme that is not a plain icon id or a sentence. */
+export function urlLike(s: string): boolean {
+  const t = flat(s);
+  if (t.startsWith('/')) return true;
+  const m = /^([a-z][a-z0-9+.-]*):/i.exec(t);
+  if (!m) return false;
+  if (FETCH_SCHEME_RE.test(m[1])) return true;
+  const rest = t.slice(m[0].length);
+  return !(/^[\w-]+$/.test(rest) || /^\s/.test(rest) || rest === '');
+}
+
+/** True when the value stays on the page's own origin whatever the page is (checked against an https and an http base by the real URL parser). */
+export function sameOriginRelative(s: string): boolean {
+  const t = flat(s);
+  if ([...t].some(isControl)) return false;
+  try {
+    return URL_BASES.every((b) => new URL(t, b).origin === new URL(b).origin);
+  } catch {
+    return false;
+  }
+}
+
+/** A URL a shared card may hold: a raster data: image, or a path on this origin. */
+export const urlAllowed = (s: string): boolean => PAINT_DATA_URL_RE.test(s.trim()) || (sameOriginRelative(s) && !markerIn(s) && !/["'`()\s]/.test(s.trim()));
+
+/** Every url(...) of `s` names an allowed URL; a string without url() passes. */
+export function urlsOk(s: string): boolean {
+  const open = (s.match(/url\s*\(/gi) ?? []).length;
+  const args = [...s.matchAll(/url\s*\(\s*(?:"([^"]*)"|'([^']*)'|([^"'()\s]*))\s*\)/gi)].map((m) => m[1] ?? m[2] ?? m[3] ?? '');
+  return args.length === open && args.every(urlAllowed);
+}
+
 /** Splits at top level (outside parentheses and quotes) on commas or whitespace; undefined when unbalanced. */
 function splitTop(s: string, comma: boolean): string[] | undefined {
   const out: string[] = [];
@@ -78,15 +125,16 @@ function splitTop(s: string, comma: boolean): string[] | undefined {
   return comma ? parts : parts.filter((p) => p !== '');
 }
 
-/** The colour grammar of safeColor: hex, names and colour functions; never url() or image functions. */
+/** The colour grammar of safeColor: hex, names and colour functions; never url(), a path, a slash outside a function or a backslash. */
 function colour(s: string): boolean {
-  if (!s || s.length > MAX_COLOR || !/^[#\w\s(),.%+*/-]+$/.test(s) || s.includes('/*') || s.includes('*/')) return false;
+  if (!s || s.length > MAX_COLOR || !/^[#\w\s(),.%+*/-]+$/.test(s) || s.includes('/*') || s.includes('*/') || s.includes('//')) return false;
   let depth = 0;
   for (const ch of s) {
     if (ch === '(') depth++;
     else if (ch === ')' && --depth < 0) return false;
+    else if (depth === 0 && ch === '/') return false;
   }
-  if (depth !== 0) return false;
+  if (depth !== 0 || /[a-z]\.[a-z]/i.test(s.replace(/\([^()]*(?:\([^()]*\)[^()]*)*\)/g, ''))) return false;
   const fns = [...s.matchAll(/([a-z-]+)\s*\(/gi)];
   return fns.length === (s.match(/\(/g)?.length ?? 0) && fns.every((m) => COLOR_FUNCTIONS.has(m[1].toLowerCase()));
 }

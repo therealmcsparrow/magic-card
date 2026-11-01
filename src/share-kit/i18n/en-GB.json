@@ -9,39 +9,22 @@
     "note": "Button that plays or pauses the animated preview of an imported animation. Shown pressed while it plays.",
     "max": 20
   },
-  "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
-    "text": "A module of an unknown type was left out.",
-    "note": "Import note for a module in a shared card whose type Magic Card does not know.",
-    "max": 60
-  },
-  "share-kit.card.a-style-line-was-left-out-because-its-name-is": {
-    "text": "A style line was left out because its name is not allowed.",
-    "note": "Import note for a line in the free-form style (CSS) of a shared card whose property name is not valid.",
-    "max": 75
-  },
-  "share-kit.card.an-action-was-left-out-because-its-web-address-is": {
-    "text": "An action was left out because its web address is not a web link or a path on this dashboard ({rule}).",
-    "note": "Import note for a tap, hold or double-tap action in a shared card whose link is not a normal web link, for example one that starts with javascript:. {rule} is the id of the check.",
-    "max": 140,
+  "share-kit.card.a-picture-in-path-was-left-out-because-it-may": {
+    "text": "A picture in {path} was left out because it may load from another website ({rule}).",
+    "note": "Import note for a picture in the text of a shared card (markdown or HTML) that is not a file on this Home Assistant. {path} is the place of the text, {rule} the id of the check. The website names are listed beside it.",
+    "max": 120,
     "vars": {
-      "rule": "The id of the check, for example strict.action-url."
-    }
-  },
-  "share-kit.card.key-is-not-a-card-setting-so-it-was-left": {
-    "text": "{key} is not a card setting, so it was left out.",
-    "note": "Import note for a key in a shared card that Magic Card does not know. {key} is the key name.",
-    "max": 85,
-    "vars": {
-      "key": "The name of the key that was left out."
-    }
-  },
-  "share-kit.card.name-points-to-another-website-so-it-was-left": {
-    "text": "{name} points to another website, so it was left out ({rule}).",
-    "note": "Import note for a card value that loads from another website. {name} is the setting, {rule} the id of the check. The website names are listed beside it.",
-    "max": 100,
-    "vars": {
-      "name": "The name of the setting that was left out.",
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[0].content.",
       "rule": "The id of the check, for example strict.host."
+    }
+  },
+  "share-kit.card.a-style-line-in-path-was-left-out-because-its-name": {
+    "text": "A style line in {path} was left out because its name is not allowed ({rule}).",
+    "note": "Import note for a line in the free-form style (CSS) of a shared card whose property name is not valid. {path} is the place of the line, {rule} the id of the check.",
+    "max": 115,
+    "vars": {
+      "path": "The path of the setting, for example data.css[0].",
+      "rule": "The id of the check, for example strict.css."
     }
   },
   "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
@@ -52,19 +35,87 @@
       "name": "The name of the setting that uses the file."
     }
   },
-  "share-kit.card.name-was-left-out-because-its-value-is-not-allowed": {
-    "text": "{name} was left out because its value is not allowed ({rule}).",
-    "note": "Import note for a card value that fits no allowed type. {name} is the setting, {rule} the id of the check. The value itself is never shown.",
+  "share-kit.card.path-is-a-card-mod-style-so-it-was-left-out": {
+    "text": "{path} is a card-mod style, so it was left out ({rule}).",
+    "note": "Import note for a card-mod style inside a shared card. Card-mod styles are not imported with a card. {path} is the place of the style, {rule} the id of the check.",
     "max": 100,
     "vars": {
-      "name": "The name of the setting that was left out.",
-      "rule": "The id of the check, for example strict.colour."
+      "path": "The path of the setting, for example data.design.card-mod-card.",
+      "rule": "The id of the check, for example strict.card-mod."
+    }
+  },
+  "share-kit.card.path-is-a-module-of-an-unknown-type-so-it-was": {
+    "text": "{path} is a module of an unknown type, so it was left out ({rule}).",
+    "note": "Import note for a module in a shared card whose type Magic Card does not know. {path} is the place of the module, {rule} the id of the check.",
+    "max": 105,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[1].",
+      "rule": "The id of the check, for example strict.module."
+    }
+  },
+  "share-kit.card.path-is-not-a-card-setting-so-it-was-left-out": {
+    "text": "{path} is not a card setting, so it was left out ({rule}).",
+    "note": "Import note for a key in a shared card that Magic Card does not know. {path} is the place of the key, {rule} the id of the check.",
+    "max": 100,
+    "vars": {
+      "path": "The path of the setting, for example data.pwn.",
+      "rule": "The id of the check, for example strict.key."
+    }
+  },
+  "share-kit.card.path-points-to-another-website-so-it-was-left-out": {
+    "text": "{path} points to another website, or to an address that cannot be checked, so it was left out ({rule}).",
+    "note": "Import note for a card value that loads from another website or whose address cannot be told apart from one. {path} is the place of the setting, {rule} the id of the check. The website names are listed beside it.",
+    "max": 150,
+    "vars": {
+      "path": "The path of the setting, for example data.background_image.",
+      "rule": "The id of the check, for example strict.host."
+    }
+  },
+  "share-kit.card.path-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{path} was left out because its value is not allowed ({rule}).",
+    "note": "Import note for a card value that fits no allowed type. {path} is the place of the setting, {rule} the id of the check. The value itself is never shown.",
+    "max": 110,
+    "vars": {
+      "path": "The path of the setting, for example data.border_radius.",
+      "rule": "The id of the check, for example strict.length."
+    }
+  },
+  "share-kit.card.the-action-in-path-was-left-out-because-its-web-address": {
+    "text": "The action in {path} was left out because its web address is not a web link or a path on this dashboard ({rule}).",
+    "note": "Import note for a tap, hold or double-tap action in a shared card whose link is not a normal web link, for example one that starts with javascript:. {path} is the place of the action, {rule} the id of the check.",
+    "max": 170,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[0].actions.tap_action.",
+      "rule": "The id of the check, for example strict.action-url."
     }
   },
   "share-kit.card.this-is-not-a-magic-card-card": {
     "text": "This is not a Magic Card card.",
     "note": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported.",
     "max": 45
+  },
+  "share-kit.import-preview.demo-states-help": {
+    "text": "Made-up values stand in for your entities.",
+    "note": "Help line under a card preview that lists demo values.",
+    "max": 80
+  },
+  "share-kit.import-preview.preview-heading": {
+    "text": "Preview",
+    "note": "Heading above the preview of what was read from the file.",
+    "max": 20
+  },
+  "share-kit.import-preview.preview-of-name": {
+    "text": "Preview of {name}. Nothing is loaded from the internet.",
+    "note": "Accessible name of the preview of one item. {name} is the item name.",
+    "max": 120,
+    "vars": {
+      "name": "The item name."
+    }
+  },
+  "share-kit.import-preview.wall-tablet-toggle": {
+    "text": "Wall tablet",
+    "note": "Button that shows or hides the Wall tablet preview of an imported theme.",
+    "max": 24
   },
   "share-kit.mapping.cancel": {
     "text": "Cancel",
@@ -121,6 +172,14 @@
     "text": "They run only when someone uses the card. Nothing runs when you import it.",
     "note": "Help line under the actions heading of a shared card import.",
     "max": 120
+  },
+  "share-kit.notice.addresses-on-other-websites-were-removed": {
+    "text": "Addresses on other websites were removed from this export: {hosts}. Whoever imports it will not see them.",
+    "note": "Line under the export text. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "max": 130,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
   },
   "share-kit.notice.author-name-is-optional": {
     "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",

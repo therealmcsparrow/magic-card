@@ -14,6 +14,7 @@ import type {
   SeasonalSetting,
   ValueBackgroundConfig,
 } from '../../types';
+import type { LibraryViewStatics } from '../../contracts/preset-transfer';
 import type { FlowBudget } from '../../contracts/flow-look';
 import type { ShapePatch } from '../components/shape-editor';
 import type { SyncContext } from '../../utils/sync-path';
@@ -150,7 +151,7 @@ async function openMap(e: Event, config: MagicCardConfig, replace: (config: Magi
   slot.replaceChildren();
   try {
     const chunk = await loadTransfer();
-    if (!(await (customElements.get(chunk.tags.library) as unknown as { mapStep(): Promise<boolean> }).mapStep())) throw new Error('map');
+    if (!(await (customElements.get(chunk.tags.library) as unknown as LibraryViewStatics).mapStep())) throw new Error('map');
   } catch {
     slot.textContent = t('card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page');
     return;
