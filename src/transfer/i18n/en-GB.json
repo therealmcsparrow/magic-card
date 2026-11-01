@@ -335,6 +335,11 @@
       "key": "The value that replaces key in the text."
     }
   },
+  "transfer.import.compressed-file": {
+    "text": "This file is compressed. Magic Card reads only plain JSON or YAML; unpack it first.",
+    "note": "Import error when the chosen file starts like a gzip, zip, brotli or zstd archive. It tells the user to unpack the file first; the file is never decompressed. Keep JSON and YAML unchanged.",
+    "max": 110
+  },
   "transfer.library-view.added-n-to-this-card": {
     "text": "Added {n} to this card.",
     "note": "Confirmation after an import into the card's own library. {n} is how many items were added, as a number.",

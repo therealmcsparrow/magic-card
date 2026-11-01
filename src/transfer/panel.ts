@@ -4,11 +4,12 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { editorTokens } from '../css/editor-system';
 import { button, editorPrimitives, glyph, kitCss, notice, seg } from '../ui-kit';
 import { HOST_KINDS } from '../contracts/preset-transfer';
-import type { ClashChoice, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
+import type { ClashChoice, ParseResult, TransferFormat, TransferRefusal, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
 import { loadSvgCss } from '../svg-safety/css-loader';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
+import { checkCompressed, checkTextSize } from './safe-parse';
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
@@ -146,12 +147,22 @@ export class TransferPanel extends LitElement {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-    const refused = checkFileSize(file, this._kinds());
-    if (refused && !refused.ok) {
-      this._res = { ok: false, refusal: refused.refusal, message: refused.message };
-      this.focusResult();
-    } else await this._read(await file.text(), file.name);
+    const refused = checkFileSize(file, this._kinds()) ?? (await checkCompressed(file));
+    if (refused && !refused.ok) this._refuse(refused.refusal, refused.message);
+    else await this._read(await file.text(), file.name);
     input.value = '';
+  }
+
+  private _refuse(refusal: TransferRefusal, message: string): void {
+    this._res = { ok: false, refusal, message };
+    this.focusResult();
+  }
+
+  private _onPaste(): void {
+    const text = this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value;
+    const refused = checkTextSize(text);
+    if (refused && !refused.ok) this._refuse(refused.refusal, refused.message);
+    else void this._read(text);
   }
 
   private _close = (): void => void this.dispatchEvent(new CustomEvent('mc-transfer-close', { bubbles: true, composed: true }));
@@ -206,7 +217,7 @@ export class TransferPanel extends LitElement {
         <div class="field-head"><label for="paste">${t('transfer.panel.or-paste-the-text')}</label></div>
         <textarea id="paste" class="input" spellcheck="false"></textarea>
         <div class="bar">
-          ${button({ label: t('transfer.panel.read'), onClick: () => void this._read(this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value) })}
+          ${button({ label: t('transfer.panel.read'), onClick: () => this._onPaste() })}
           ${button({ label: t('transfer.panel.close'), variant: 'text', onClick: this._close })}
         </div>
       </div>

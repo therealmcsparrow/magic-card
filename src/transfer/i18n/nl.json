@@ -211,6 +211,10 @@
     "text": "\"{key}\" is geen preset-veld, dus is weggelaten.",
     "hash": "df0ade5b"
   },
+  "transfer.import.compressed-file": {
+    "text": "Dit bestand is gecomprimeerd. Magic Card leest alleen gewone JSON of YAML; pak het eerst uit.",
+    "hash": "77e1407c"
+  },
   "transfer.library-view.added-n-to-this-card": {
     "text": "{n} toegevoegd aan deze kaart.",
     "hash": "54d82490"

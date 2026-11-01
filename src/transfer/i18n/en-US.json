@@ -211,6 +211,10 @@
     "text": "\"{key}\" is not a preset field, so it was left out.",
     "hash": "df0ade5b"
   },
+  "transfer.import.compressed-file": {
+    "text": "This file is compressed. Magic Card reads only plain JSON or YAML; unpack it first.",
+    "hash": "77e1407c"
+  },
   "transfer.library-view.added-n-to-this-card": {
     "text": "Added {n} to this card.",
     "hash": "54d82490"

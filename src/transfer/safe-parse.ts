@@ -1,6 +1,7 @@
 import * as jsYaml from 'js-yaml';
 import { MAX_IMAGE_IMPORT_BYTES } from '../contracts/image-editor';
 import {
+  COMPRESSED_FILE_MAGIC,
   MAX_IMAGE_IMPORT_NODES,
   MAX_IMPORT_BYTES,
   MAX_IMPORT_CHARS,
@@ -39,6 +40,22 @@ export function checkFileSize(file: { size: number; name?: string }, accept?: re
     { types: [{ kind: 'json', extensions: images ? ['.json', '.svg'] : ['.json'], mimeTypes: [], maxBytes: MAX_IMAGE_IMPORT_BYTES }], other: { maxBytes: MAX_IMPORT_BYTES } },
   );
   return refused?.code === 'too_large' ? { ok: false, refusal: 'too_large', message: refused.maxBytes === MAX_IMPORT_BYTES ? TOO_LARGE() : TOO_LARGE_IMAGES() } : undefined;
+}
+
+/** Pasted text, before any scan or parse: UTF-16 length against the caps; over MAX_IMPORT_CHARS only a JSON envelope is read. */
+export function checkTextSize(text: string): SafeParse | undefined {
+  if (text.length > MAX_IMAGE_IMPORT_BYTES) return { ok: false, refusal: 'too_large', message: TOO_LARGE_IMAGES() };
+  if (text.length <= MAX_IMPORT_CHARS) return undefined;
+  let i = 0;
+  while (i < text.length && text.charCodeAt(i) <= 32) i++;
+  return text[i] === '{' ? undefined : { ok: false, refusal: 'too_large', message: TOO_LARGE() };
+}
+
+/** After the size check: the first bytes of the file (Blob.slice) decide; a compressed file is never read or decompressed. */
+export async function checkCompressed(file: Pick<Blob, 'slice'>): Promise<SafeParse | undefined> {
+  const head = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+  const hit = COMPRESSED_FILE_MAGIC.some((magic) => head.length >= magic.length && magic.every((b, i) => head[i] === b));
+  return hit ? { ok: false, refusal: 'not_a_preset_file', message: t('transfer.import.compressed-file') } : undefined;
 }
 
 class Limit extends Error {
