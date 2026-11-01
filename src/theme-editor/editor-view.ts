@@ -17,7 +17,9 @@ import type { DocError } from './model';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import type { UiToastElement } from '../contracts/ui-kit';
 import { base } from './styles';
-import { locale, t } from './i18n';
+import { hasWrap } from '../i18n/pseudo-hook';
+import { englishOf, isTranslated, legalText } from '../ui-kit/templates/legal';
+import { en, locale, m, t } from './i18n';
 import { fold } from '../i18n/fold';
 import { getTrial, isTrialActive, startTrial, stopTrial, subscribeTrial, syncTrialMode, updateTrial, useTheme } from './trial';
 import type { TrialState } from './trial';
@@ -130,6 +132,7 @@ export class McteEditorView extends LitElement {
     _panel: { state: true },
     _saving: { state: true },
     _savedAt: { state: true },
+    _english: { state: true },
     _usedMsg: { state: true },
     _msg: { state: true },
     _dlg: { state: true },
@@ -175,6 +178,7 @@ export class McteEditorView extends LitElement {
   private _panel: 'vars' | 'preview' = 'vars';
   private _saving = false;
   private _savedAt = '';
+  private _english = false;
   private _usedMsg = '';
   private _msg = '';
   private _dlg: Dlg = null;
@@ -1041,7 +1045,16 @@ export class McteEditorView extends LitElement {
       ${glyph('information')}
       <div class="body">
         <strong>${t('theme-editor.editor-view.contacts-another-website')}</strong>
-        <p>${o.hosts.length ? t('theme-editor.editor-view.some-values-load-files-from-hosts-the', { hosts: o.hosts.join(', ') }) : t('theme-editor.editor-view.some-values-load-files-from-another')}</p>
+        <p>${legalText({
+          text: o.hosts.length ? t('theme-editor.editor-view.some-values-load-files-from-hosts-the', { hosts: o.hosts.join(', ') }) : t('theme-editor.editor-view.some-values-load-files-from-another'),
+          english: o.hosts.length ? englishOf(en(m('theme-editor.editor-view.some-values-load-files-from-hosts-the')), { hosts: o.hosts.join(', ') }) : englishOf(en(m('theme-editor.editor-view.some-values-load-files-from-another'))),
+          translated: isTranslated(locale(), hasWrap()),
+          showEnglish: this._english,
+          onToggle: () => (this._english = !this._english),
+          prevailsLabel: t('theme-editor.legal.english-prevails'),
+          showLabel: t('theme-editor.legal.show-english'),
+          id: 'legal-outside',
+        })}</p>
       </div>
     </div>`;
   }

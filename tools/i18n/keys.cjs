@@ -264,7 +264,7 @@ function checkNamespace({ ns, cat, uses = new Map(), waivers = new Map(), pendin
   for (const [key, sites] of uses) {
     const bad = keyProblem(key);
     if (bad) add('D1', 'error', `"${key}" ${bad} (${sites[0].file}:${sites[0].line})`);
-    else if (!cat.gb.has(key)) add('D1', 'error', `"${key}" is not in en-GB.json (${sites[0].file}:${sites[0].line})`);
+    else if (!withLabels(cat).gb.has(key)) add('D1', 'error', `"${key}" is not in en-GB.json (${sites[0].file}:${sites[0].line})`);
   }
 
   const fileProblems = [
