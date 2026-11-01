@@ -528,6 +528,22 @@
     "note": "Product name of the companion add-on, used as the label of the storage source. Do not translate.",
     "max": 30
   },
+  "transfer.library-view.map-entities-for-name": {
+    "text": "Map entities for {name}",
+    "note": "Tooltip and screen-reader name of the row button that opens the entity mapping step for one saved image. {name} is the image name.",
+    "max": 45,
+    "vars": {
+      "name": "The name of the saved image."
+    }
+  },
+  "transfer.library-view.mapped-the-entities-in-name": {
+    "text": "Mapped the entities in {name}.",
+    "note": "Confirmation after the mapping of a saved image was saved. {name} is the image name.",
+    "max": 60,
+    "vars": {
+      "name": "The name of the saved image."
+    }
+  },
   "transfer.library-view.maximise": {
     "text": "Maximise",
     "note": "Button that enlarges the library window to fill the screen. Pairs with 'Restore size'. Verb.",

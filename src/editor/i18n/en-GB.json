@@ -1506,6 +1506,11 @@
     "note": "Hint under the card entity field; says templates never carry an entity and applying one keeps yours.",
     "max": 135
   },
+  "card-editor.card-settings.map-entities": {
+    "text": "Map entities",
+    "note": "Button in Card settings that opens the step linking the placeholders of an imported card to the user's own entities.",
+    "max": 25
+  },
   "card-editor.card-settings.match": {
     "text": "Match",
     "note": "Label for choosing whether all or any of the rule's conditions must be true (verb, not a noun).",
@@ -1734,6 +1739,11 @@
     "text": "Theme default",
     "note": "Dropdown option: use the value from the active Home Assistant theme, with no override.",
     "max": 25
+  },
+  "card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your": {
+    "text": "This card still uses placeholders instead of your entities. It will not show live values until you map them.",
+    "note": "Notice in Card settings above the Map entities button. A placeholder is a stand-in entity name such as light.mc_placeholder_1 from a shared card.",
+    "max": 130
   },
   "card-editor.card-settings.this-card-uses-only-its-own-custom": {
     "text": "This card uses only its own custom_animations.",

@@ -1,4 +1,12 @@
 {
+  "share-kit.anim-preview.animation-preview": {
+    "text": "Animation preview",
+    "hash": "d2ecb96a"
+  },
+  "share-kit.anim-preview.play": {
+    "text": "Play",
+    "hash": "436e6101"
+  },
   "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
     "text": "A module of an unknown type was left out.",
     "hash": "326212a3"
@@ -31,9 +39,21 @@
     "text": "This is not a Magic Card card.",
     "hash": "d853edff"
   },
+  "share-kit.mapping.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
   "share-kit.mapping.map-entities": {
     "text": "Map entities",
     "hash": "18d3b884"
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": {
+    "text": "Nothing here needs mapping.",
+    "hash": "e9c28eb4"
+  },
+  "share-kit.mapping.save-mapping": {
+    "text": "Save mapping",
+    "hash": "bb40e390"
   },
   "share-kit.mapping.skip-mapping": {
     "text": "Skip mapping",

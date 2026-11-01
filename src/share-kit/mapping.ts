@@ -9,7 +9,7 @@ import { t } from './i18n';
 
 const MAX_DEPTH = 100;
 /** A whole placeholder id: not inside a longer name, not followed by more id characters. */
-const PLACEHOLDER_RE = /(?<![a-z0-9_/-])[a-z][a-z0-9_]*\.mc_placeholder_[1-9][0-9]*(?![a-z0-9_])/g;
+const PLACEHOLDER_RE = /(?<![a-z0-9_/-])[a-z][a-z0-9_]{0,63}\.mc_placeholder_[1-9][0-9]{0,5}(?![a-z0-9_])/g;
 
 /** Placeholder ids in `value`, in first-occurrence order, each once. */
 export function findPlaceholders(value: unknown): EntityPlaceholder[] {

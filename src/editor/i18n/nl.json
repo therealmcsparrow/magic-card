@@ -1167,6 +1167,10 @@
     "text": "Magic Card Utils-sjablonen bevatten deze nooit. Een sjabloon toepassen laat de entiteit van deze kaart staan.",
     "hash": "e7f24b6a"
   },
+  "card-editor.card-settings.map-entities": {
+    "text": "Entiteiten koppelen",
+    "hash": "18d3b884"
+  },
   "card-editor.card-settings.match": {
     "text": "Overeenkomst",
     "hash": "03c0e806"
@@ -1330,6 +1334,10 @@
   "card-editor.card-settings.theme-default": {
     "text": "Standaard van het thema",
     "hash": "689a15ad"
+  },
+  "card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your": {
+    "text": "Deze kaart gebruikt nog plaatshouders in plaats van jouw entiteiten. Pas na het koppelen toont hij live waarden.",
+    "hash": "cf58dce1"
   },
   "card-editor.card-settings.this-card-uses-only-its-own-custom": {
     "text": "Deze kaart gebruikt alleen zijn eigen custom_animations.",

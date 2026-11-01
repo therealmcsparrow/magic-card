@@ -1,4 +1,14 @@
 {
+  "share-kit.anim-preview.animation-preview": {
+    "text": "Animation preview",
+    "note": "Accessible name of the small box that shows an imported animation before it is saved.",
+    "max": 40
+  },
+  "share-kit.anim-preview.play": {
+    "text": "Play",
+    "note": "Button that plays or pauses the animated preview of an imported animation. Shown pressed while it plays.",
+    "max": 20
+  },
   "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
     "text": "A module of an unknown type was left out.",
     "note": "Import note for a module in a shared card whose type Magic Card does not know.",
@@ -56,10 +66,25 @@
     "note": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported.",
     "max": 45
   },
+  "share-kit.mapping.cancel": {
+    "text": "Cancel",
+    "note": "Button that closes the mapping step without saving.",
+    "max": 20
+  },
   "share-kit.mapping.map-entities": {
     "text": "Map entities",
     "note": "Heading of the optional step in an import where placeholders are linked to the importer's own Home Assistant entities.",
     "max": 30
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": {
+    "text": "Nothing here needs mapping.",
+    "note": "Shown in the mapping step when the saved item holds no placeholders any more.",
+    "max": 45
+  },
+  "share-kit.mapping.save-mapping": {
+    "text": "Save mapping",
+    "note": "Button that saves the entities chosen in the mapping step into the saved image or card.",
+    "max": 25
   },
   "share-kit.mapping.skip-mapping": {
     "text": "Skip mapping",

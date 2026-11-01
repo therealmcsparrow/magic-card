@@ -142,6 +142,28 @@ async function openShare(e: Event, mode: 'import' | 'export', config: MagicCardC
   slot.append(panel);
 }
 
+const PLACEHOLDER_IN_CARD = /(?<![a-z0-9_/-])[a-z][a-z0-9_]{0,63}\.mc_placeholder_[1-9][0-9]{0,5}(?![a-z0-9_])/;
+
+/** Finish later: the mapping step of an import, opened on the open config; the mapped config replaces it. */
+async function openMap(e: Event, config: MagicCardConfig, replace: (config: MagicCardConfig) => void): Promise<void> {
+  const slot = (e.currentTarget as HTMLElement).closest('[data-card-share]')!.querySelector('[data-share-slot]')!;
+  slot.replaceChildren();
+  try {
+    const chunk = await loadTransfer();
+    if (!(await (customElements.get(chunk.tags.library) as unknown as { mapStep(): Promise<boolean> }).mapStep())) throw new Error('map');
+  } catch {
+    slot.textContent = t('card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page');
+    return;
+  }
+  const step = Object.assign(document.createElement('mc-map-entities'), { value: config });
+  step.addEventListener('mc-map-cancel', () => slot.replaceChildren());
+  step.addEventListener('mc-map-apply', (ev) => {
+    slot.replaceChildren();
+    replace((ev as CustomEvent).detail.data);
+  });
+  slot.append(step);
+}
+
 export function renderCardGeneral(
   config: MagicCardConfig,
   update: CardUpdate,
@@ -182,6 +204,12 @@ export function renderCardGeneral(
             <button type="button" class="btn btn-sm" data-share="export" @click=${(e: Event) => void openShare(e, 'export', config, share)}><ha-icon icon="mdi:export-variant"></ha-icon>${t('card-editor.card-settings.share-this-card')}</button>
             <button type="button" class="btn btn-sm" data-share="import" @click=${(e: Event) => void openShare(e, 'import', config, share)}><ha-icon icon="mdi:import"></ha-icon>${t('card-editor.card-settings.import-a-shared-card')}</button>
           </div>
+          ${PLACEHOLDER_IN_CARD.test(JSON.stringify(config))
+            ? html`<div class="bar" data-map-later>
+                <span class="help">${t('card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your')}</span>
+                <button type="button" class="btn btn-sm" @click=${(e: Event) => void openMap(e, config, share)}><ha-icon icon="mdi:link-variant"></ha-icon>${t('card-editor.card-settings.map-entities')}</button>
+              </div>`
+            : nothing}
           <div data-share-slot></div>
         </div>`
       : nothing}

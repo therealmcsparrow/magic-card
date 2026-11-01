@@ -50,6 +50,9 @@ export const loadNotice = (): Promise<typeof import('../share-kit/notice') | und
 /** The mapping step, from the same chunk; undefined when it does not load. */
 export const loadMapping = (): Promise<typeof import('../share-kit/mapping') | undefined> => import(/* webpackChunkName: "share-kit" */ '../share-kit/mapping').catch(() => undefined);
 
+/** The mapping step on a saved item (defines <mc-map-entities>), from the same chunk; false when it does not load. */
+export const loadMapStep = (): Promise<boolean> => import(/* webpackChunkName: "share-kit" */ '../share-kit/map-step').then(() => true, () => false);
+
 /** Tests: forget the loaded chunk. */
 export function __resetShareKitForTests(): void {
   pending = undefined;

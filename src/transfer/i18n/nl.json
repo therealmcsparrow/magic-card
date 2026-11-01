@@ -335,6 +335,14 @@
     "text": "Magic Card Utils",
     "hash": "b19971b3"
   },
+  "transfer.library-view.map-entities-for-name": {
+    "text": "Entiteiten koppelen voor {name}",
+    "hash": "4525b461"
+  },
+  "transfer.library-view.mapped-the-entities-in-name": {
+    "text": "De entiteiten in {name} zijn gekoppeld.",
+    "hash": "be25d33c"
+  },
   "transfer.library-view.maximise": {
     "text": "Maximaliseren",
     "hash": "1c9fcada"

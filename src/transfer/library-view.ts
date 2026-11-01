@@ -18,6 +18,7 @@ import { setI18nLocale } from '../i18n/runtime';
 import { count } from './count';
 import { loadImageTransfer } from './image-transfer-loader';
 import { locale, t } from './i18n';
+import { loadMapStep } from './share-kit-loader';
 import './panel';
 import type { TransferPanel } from './panel';
 
@@ -77,6 +78,8 @@ function commandSource(): LibrarySource {
 export class LibraryView extends LitElement {
   /** The Magic Card Utils panel gates on this (svg-editor contract), so the Library tab needs no SVG editor fetch. */
   static contractRevision = Math.max(SVG_EDITOR_CONTRACT_REVISION, IMAGES_MIN_CONTRACT_REVISION);
+  /** The card editor opens the mapping step of a card through this (loads <mc-map-entities>). */
+  static mapStep = loadMapStep;
   // kit parts plus layout only (contract ui-kit 1.0.0: a screen styles its own layout, never a kit class)
   static styles = [
     editorTokens,
@@ -142,6 +145,8 @@ export class LibraryView extends LitElement {
   @state() private _rows: Row[] = [];
   @state() private _sel = new Set<string>();
   @state() private _edit?: { id: string; kind: 'rename' | 'delete' | 'duplicate' };
+  /** The saved image whose placeholders are being mapped, with its data as read back from storage. */
+  @state() private _mapping?: { id: string; item: TransferItem<'image'>; data: unknown };
   @state() private _msg = '';
   @state() private _bad = false;
   private _opener?: HTMLElement;
@@ -375,6 +380,29 @@ export class LibraryView extends LitElement {
     }
   }
 
+  /** Map entities: the saved image is read again, checked as an import would be, and its placeholders are mapped in the same step. */
+  private async _mapOpen(r: Row): Promise<void> {
+    try {
+      const [item] = await this._ix!.exportItems(this.hass as never, [r.id]);
+      const read = this._ix!.readImage(0, item?.data);
+      if (!read.ok || !(await loadMapStep())) throw new Error('map');
+      this._mapping = { id: r.id, item, data: read.data };
+    } catch (e) {
+      this._fail(e);
+    }
+  }
+
+  private async _mapSave(r: Row, item: TransferItem<'image'>, data: unknown): Promise<void> {
+    try {
+      await this._ix!.save(this.hass as never, { ...item, data } as TransferItem<'image'>, (r.src as ImageSummary).updated_at);
+      this._ix!.invalidate([r.id]);
+      this._mapping = undefined;
+      await this._after(t('transfer.library-view.mapped-the-entities-in-name', { name: r.name }));
+    } catch (e) {
+      this._fail(e);
+    }
+  }
+
   private async _delete(r: Row): Promise<void> {
     try {
       const k = this._kind;
@@ -598,13 +626,16 @@ export class LibraryView extends LitElement {
       lead: thumb ?? x?.thumb,
       check,
       content:
-        e === 'rename'
+        this._mapping?.id === r.id
+          ? html`<mc-map-entities .value=${this._mapping.data} @mc-map-apply=${(ev: CustomEvent<{ data: unknown }>) => void this._mapSave(r, this._mapping!.item, ev.detail.data)} @mc-map-cancel=${() => (this._mapping = undefined)}></mc-map-entities>`
+          : e === 'rename'
           ? input(t('transfer.library-view.new-name-for-name', { name: r.name }), r.name, (v) => void this._rename(r, v))
           : e === 'duplicate'
             ? input(this._word('copy_label', { name: r.name }), this._word('copy_name', { name: r.name }), (v) => void this._duplicate(r, v))
             : undefined,
       actions: [
         ...(edit ? [act(image && !this._admin ? this._word('view', { name: r.name }) : t('transfer.library-view.edit-name', { name: r.name }), image && !this._admin ? 'mdi:eye-outline' : 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape' | 'image', r.id))] : []),
+        ...(can && !e && image?.bindings ? [act(t('transfer.library-view.map-entities-for-name', { name: r.name }), 'mdi:link-variant', () => void this._mapOpen(r))] : []),
         ...(can && !e && image ? [{ ...act(this._word('duplicate', { name: r.name }), 'mdi:content-copy', set('duplicate')), disabled: full }] : []),
         ...(can && !e ? [act(t('transfer.library-view.rename-name', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('transfer.library-view.delete-name', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : []),
       ],

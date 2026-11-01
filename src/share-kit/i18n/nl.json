@@ -1,4 +1,12 @@
 {
+  "share-kit.anim-preview.animation-preview": {
+    "text": "Voorbeeld van de animatie",
+    "hash": "d2ecb96a"
+  },
+  "share-kit.anim-preview.play": {
+    "text": "Afspelen",
+    "hash": "436e6101"
+  },
   "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
     "text": "Een module van een onbekend type is weggelaten.",
     "hash": "326212a3"
@@ -31,9 +39,21 @@
     "text": "Dit is geen Magic Card-kaart.",
     "hash": "d853edff"
   },
+  "share-kit.mapping.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
   "share-kit.mapping.map-entities": {
     "text": "Entiteiten koppelen",
     "hash": "18d3b884"
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": {
+    "text": "Hier hoeft niets gekoppeld te worden.",
+    "hash": "e9c28eb4"
+  },
+  "share-kit.mapping.save-mapping": {
+    "text": "Koppeling opslaan",
+    "hash": "bb40e390"
   },
   "share-kit.mapping.skip-mapping": {
     "text": "Overslaan",

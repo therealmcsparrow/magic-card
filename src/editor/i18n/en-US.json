@@ -1167,6 +1167,10 @@
     "text": "Magic Card Utils templates never include it. Applying one keeps this card's entity.",
     "hash": "e7f24b6a"
   },
+  "card-editor.card-settings.map-entities": {
+    "text": "Map entities",
+    "hash": "18d3b884"
+  },
   "card-editor.card-settings.match": {
     "text": "Match",
     "hash": "03c0e806"
@@ -1330,6 +1334,10 @@
   "card-editor.card-settings.theme-default": {
     "text": "Theme default",
     "hash": "689a15ad"
+  },
+  "card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your": {
+    "text": "This card still uses placeholders instead of your entities. It will not show live values until you map them.",
+    "hash": "cf58dce1"
   },
   "card-editor.card-settings.this-card-uses-only-its-own-custom": {
     "text": "This card uses only its own custom_animations.",
