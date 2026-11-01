@@ -405,6 +405,7 @@ export class AnimIconStart extends LitElement {
       .new-mark {
         position: absolute;
         top: 6px;
+        right: 6px; /* physical */
         inset-inline-end: 6px;
         width: 8px;
         height: 8px;

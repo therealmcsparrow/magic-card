@@ -220,7 +220,7 @@ export function renderTrack(o: TrackOptions): TemplateResult {
       @pointerup=${stopControlEvent}
       @click=${stopControlEvent}
       @keydown=${onKeyDown}
-      ${o.vertical ? nothing : trackDirection()}
+      ${trackDirection()}
       ${o.parts ? pauseOffscreen({ counted: false }) : nothing}
     >
       <div class="mc-tile-slider-background"></div>

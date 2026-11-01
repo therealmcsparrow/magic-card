@@ -82,7 +82,8 @@ export const SLIDER_LOOK_CSS = `
 .mc-tile-slider.mc-sl.mc-sl--big-fill.mc-tile-slider--vertical{height:12rem;max-height:calc(100% - 3rem);margin-top:1.5rem;margin-bottom:1.5rem}
 .mc-slider-container.mc-slider-container--bigfill{height:max(var(--mc-slider-vertical-height,120px),15rem)}
 /* a right-to-left horizontal track: the fill and its gradient are flipped as a whole, the placed parts count from the right edge */
-.mc-tile-slider[data-mc-rtl] .mc-sl-f,.mc-tile-slider[data-mc-rtl] .mc-sl-segs{transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}
 .mc-tile-slider[data-mc-rtl] .mc-sl-g{left:auto;right:calc(var(--v) * 100% - 9px)}
 .mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%);transform:translate(50%,-50%) scale(var(--sc,1))}
 .mc-tile-slider[data-mc-rtl] .mc-sl-k{left:auto;right:calc(var(--k) * 100%);margin-left:0;margin-right:-.5px}

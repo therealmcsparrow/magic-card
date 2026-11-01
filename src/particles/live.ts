@@ -183,8 +183,8 @@ const r = (v: number, d: number): number => {
   return Math.round(v * f) / f || 0;
 };
 
-/** Writes one frame into the layer's slots (<i> by position). `still`: and stops their CSS animation. `mirror`: x is flipped about the layer's centre. */
-export function writeFrame(layer: HTMLElement, frames: Array<LiveFrame | undefined>, still = false, mirror = false): void {
+/** Writes one frame into the layer's slots (<i> by position). `still`: and stops their CSS animation. */
+export function writeFrame(layer: HTMLElement, frames: Array<LiveFrame | undefined>, still = false): void {
   const items = layer.children;
   for (let k = 0; k < items.length; k++) {
     const st = (items[k] as HTMLElement).style;
@@ -194,7 +194,7 @@ export function writeFrame(layer: HTMLElement, frames: Array<LiveFrame | undefin
       if (st.getPropertyValue('opacity') !== '0') st.setProperty('opacity', '0');
       continue;
     }
-    st.setProperty('translate', `${r(mirror ? 100 - f.x : f.x, 2)}cqw ${r(f.y, 2)}cqh`);
+    st.setProperty('translate', `${r(f.x, 2)}cqw ${r(f.y, 2)}cqh`);
     st.setProperty('rotate', `${r(f.rotate, 1)}deg`);
     st.setProperty('opacity', String(r(f.opacity, 3)));
     if (f.scale !== 1) st.setProperty('scale', String(r(f.scale, 3)));
@@ -213,7 +213,6 @@ interface Entry {
   key: string;
   on: boolean;
   acc: number;
-  mirror: boolean;
 }
 
 const entries = new Map<HTMLElement, Entry>();
@@ -253,7 +252,7 @@ function frame(ts: number): void {
       for (const s of e.sims) s.step();
       e.acc -= DT;
     }
-    writeFrame(e.el, e.sims.flatMap((s) => s.frame()), false, e.mirror);
+    writeFrame(e.el, e.sims.flatMap((s) => s.frame()), false);
   }
   if (anyOn() && pageVisible()) raf = requestAnimationFrame(frame);
   else last = 0;
@@ -275,19 +274,16 @@ export function partSims(spec: ParticlesSpecV2, period: number, geometry: BakeGe
  * Runs `layer` (the document's `part`) live, one simulation per emitter of the part. Idempotent: the same
  * `key` (layer name: spec, period, geometry, part) keeps the running simulations; another key starts over.
  */
-export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0, mirror = false): void {
+export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0): void {
   const live = entries.get(layer);
-  if (live?.key === key) {
-    live.mirror = mirror;
-    return;
-  }
+  if (live?.key === key) return;
   stopLive(layer);
   if (!listening && typeof document !== 'undefined') {
     document.addEventListener('visibilitychange', onVisibility);
     listening = true;
   }
   const sims = partSims(spec, period, geometry, part);
-  const e: Entry = { el: layer, sims, key, on: false, acc: 0, mirror };
+  const e: Entry = { el: layer, sims, key, on: false, acc: 0 };
   entries.set(layer, e);
   const watched = watchOffscreen(layer, (on) => {
     if (entries.get(layer) !== e) return;

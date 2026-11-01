@@ -18,6 +18,26 @@ function sameRing(a: ResolvedRing | undefined, b: ResolvedRing | undefined): boo
   return ka.length === Object.keys(b).length && ka.every((k) => a[k] === b[k] || (k === 'timer' && JSON.stringify(a[k]) === JSON.stringify(b[k])));
 }
 
+const rings = new Set<McRing>();
+const remeasureAll = (): void => rings.forEach((r) => r.measure());
+let dirWatch: MutationObserver | undefined;
+const watchDirection = (r: McRing): void => {
+  if (!rings.size) {
+    window.addEventListener('mc-dir-change', remeasureAll);
+    if (typeof MutationObserver === 'function') {
+      dirWatch = new MutationObserver(remeasureAll);
+      dirWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+    }
+  }
+  rings.add(r);
+};
+const unwatchDirection = (r: McRing): void => {
+  if (!rings.delete(r) || rings.size) return;
+  window.removeEventListener('mc-dir-change', remeasureAll);
+  dirWatch?.disconnect();
+  dirWatch = undefined;
+};
+
 /**
  * The ring overlay of a card / row / column / module: an aria-hidden SVG over the parent's border
  * box that follows its size and border radii. Re-measured on resize (shared ResizeObserver) or
@@ -87,8 +107,6 @@ export class McRing extends LitElement {
   /** Only for a running timer ring: redraws every second while on screen (one shared ticker). */
   private _tick?: TimerTick;
   /** An "On tap" ring preset (data-tap) is hidden again once its lap is over. */
-  private _onDir = () => this.measure();
-  private _dirWatch?: MutationObserver;
   private _onEnd = () => {
     if (this.hasAttribute('data-tap')) this.removeAttribute('data-tapped');
   };
@@ -100,11 +118,7 @@ export class McRing extends LitElement {
     this._media?.addEventListener?.('change', this._onMedia);
     this._observe();
     this._timer();
-    window.addEventListener('mc-dir-change', this._onDir);
-    if (typeof MutationObserver === 'function') {
-      this._dirWatch = new MutationObserver(this._onDir);
-      this._dirWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
-    }
+    watchDirection(this);
   }
 
   disconnectedCallback(): void {
@@ -112,9 +126,7 @@ export class McRing extends LitElement {
     this._tick?.run(false);
     this._unobserve();
     this._media?.removeEventListener?.('change', this._onMedia);
-    window.removeEventListener('mc-dir-change', this._onDir);
-    this._dirWatch?.disconnect();
-    this._dirWatch = undefined;
+    unwatchDirection(this);
   }
 
   private _unobserve(): void {

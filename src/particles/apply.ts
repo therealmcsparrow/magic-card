@@ -129,6 +129,9 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
     const g = measured ?? DEFAULT_GEOMETRY;
     const e = entryFor(docId, spec, period, g);
     const part = ctx.part ? 1 : 0;
+    // a mirrored document flips the whole layer, so positions and rotations flip together
+    if (ctx.mirror) layer.style.setProperty('scale', '-1 1');
+    else if (layer.style.getPropertyValue('scale')) layer.style.removeProperty('scale');
     const c = (part ? e.compiled.other : e.compiled)!;
     // the render's unbaked pool (or another geometry's bake): this size's rules; the slots stay
     if (layer.getAttribute('data-fx') !== c.name) {
@@ -137,12 +140,12 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
     }
     if (ctx.reducedMotion) {
       stopLive(layer);
-      writeFrame(layer, stillFrame(e, spec, period, g, part), true, !!ctx.mirror);
+      writeFrame(layer, stillFrame(e, spec, period, g, part), true);
       stills.add(layer);
       return;
     }
     if (stills.delete(layer)) clearFrame(layer);
-    if (spec.sim.mode === 'live') startLive(layer, spec, period, g, c.name, part, !!ctx.mirror);
+    if (spec.sim.mode === 'live') startLive(layer, spec, period, g, c.name, part);
     else stopLive(layer);
   } catch (err) {
     if (!logged) {
