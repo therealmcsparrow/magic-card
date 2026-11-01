@@ -219,11 +219,9 @@ export interface LazyChunkManifest {
 }
 
 /**
- * Idle fetch: the first attempt starts its import on idle (IDLE_TIMEOUT_MS; IDLE_FALLBACK_MS without requestIdleCallback); retries keep their delays.
- * One chunk per frame: an arrived module is queued and each animation frame installs one whole chunk in one task (install, style adoption, ready,
- * then its whenReady callbacks); a hidden tab waits until it shows. CHUNK_TIMEOUT starts with the import and is cleared when the module arrives.
- *
- * Timing of one chunk's attempts. The numbers live in
+ * Idle fetch: the first attempt starts its import on idle (IDLE_TIMEOUT_MS; IDLE_FALLBACK_MS without requestIdleCallback); retries keep
+ * their delays. One chunk per frame: an arrived module is queued and each animation frame installs one whole chunk in one task; a hidden
+ * tab waits until it shows. CHUNK_TIMEOUT starts with the import and is cleared when the module arrives. The numbers live in
  * lazy-module.needs.ts, which magic-card.js may import; this file may not be imported by the entry at run time.
  */
 export { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, IDLE_FALLBACK_MS, IDLE_TIMEOUT_MS, SILENT_RETRY_MS } from './lazy-module.needs';
