@@ -45,13 +45,17 @@ Fix every message it reports.
 
 Add or update tests for every change in behaviour. In the same pull request, update the README, the [CHANGELOG](CHANGELOG.md) and the pages in the [documentation](documentation/README.md) folder that the change affects. A new option needs a line in the options reference, and a changed screen needs its page updated.
 
+## Screenshots
+
+Anything you attach to an issue or pull request is public. Before you add a screenshot, read [how to take and clean screenshots](documentation/contributing/screenshots.md). It lists what must not be visible and how to strip the metadata from the file.
+
 ## Commit messages
 
 Write a plain description of what the commit does, with no prefix such as `feat:` or `fix:`. For example: `Keep the studio canvas width when the view changes`.
 
 ## Pull requests
 
-Open pull requests against `main`. The pull request template asks for a summary, the linked issue, the checks you ran and screenshots of UI changes in light and dark mode. Keep each pull request to one change where you can.
+Open pull requests against `main`. The pull request template asks for a summary, the linked issue, the checks you ran and screenshots of UI changes in light and dark mode, plus the [screenshot checklist](documentation/contributing/screenshots.md). Keep each pull request to one change where you can.
 
 ## Licence
 

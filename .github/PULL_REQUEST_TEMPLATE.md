@@ -26,7 +26,16 @@
 
 ## Screenshots
 
-<!-- For a UI change, attach a light and a dark mode screenshot. Delete this section if it does not apply. -->
+<!-- For a UI change, attach a light and a dark mode screenshot. Delete this section if it does not apply. Screenshots in a pull request are public, so check the list below first. How to strip metadata: https://github.com/therealmcsparrow/magic-card/blob/main/documentation/contributing/screenshots.md -->
+
+- [ ] No household names (people, pets, rooms named after someone, your address)
+- [ ] No entity IDs
+- [ ] No URLs, including the browser address bar and any link to your Home Assistant
+- [ ] No IP addresses
+- [ ] No QR codes
+- [ ] No toasts or notifications in the frame
+- [ ] EXIF and other metadata stripped (see the [screenshot guide](https://github.com/therealmcsparrow/magic-card/blob/main/documentation/contributing/screenshots.md))
+- [ ] Taken on a demo Home Assistant with a throwaway user
 
 ## Notes for the reviewer
 
