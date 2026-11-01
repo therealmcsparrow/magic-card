@@ -17,6 +17,7 @@ import { fold as foldText } from '../i18n/fold';
 
 export type { LibraryEntry } from '../contracts/icon-library';
 export { padKeys, svgOf } from './library/build';
+export { RELEASE_NOTES, isNewInRelease, type ReleaseNotes } from './library/release-notes';
 
 // ── the library ──
 

@@ -49,7 +49,8 @@ export const infoEditor: ModuleEditor = {
         ${renderTextField(t('card-editor.info-editor.prefix'), c.prefix, (v) => onChange({ ...c, prefix: v }), 'prefix', syncCtx)}
         ${renderTextField(t('card-editor.info-editor.suffix'), c.suffix, (v) => onChange({ ...c, suffix: v }), 'suffix', syncCtx)}
         ${renderAttributeField(t('card-editor.info-editor.secondary-info'), c.secondary_info, (v) =>
-          onChange({ ...c, secondary_info: v }), hass, eid, 'secondary_info', syncCtx, attributeCaption(scope))}
+          onChange({ ...c, secondary_info: v }), hass, eid, 'secondary_info', syncCtx, attributeCaption(scope),
+          [{ value: 'last-changed', label: t('card-editor.info-editor.last-changed') }])}
       </div>
     `;
   },

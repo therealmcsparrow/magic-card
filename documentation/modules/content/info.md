@@ -24,7 +24,7 @@ Shows an entity's name and state, with an optional prefix, suffix, icon and one 
 | Icon effects | `icon_fx`, `icon_on`, `icon_off`, `svg` | | none | With Show icon on. See [Icon effects](../../icon-effects/README.md). |
 | Prefix | `prefix` | string | none | Text before the value. |
 | Suffix | `suffix` | string | none | Text after the value. |
-| Secondary info | `secondary_info` | attribute name | none | A third line with this attribute, formatted by Home Assistant. |
+| Secondary info | `secondary_info` | attribute name | none | A third line with this attribute, formatted by Home Assistant. Choose Last changed in the editor, or write `last-changed`, to show how long ago the entity last changed instead. |
 
 ## Name and state defaults
 
@@ -38,6 +38,20 @@ Shows an entity's name and state, with an optional prefix, suffix, icon and one 
 -   Without an entity the name reads "No entity" and the state "—".
 -   A `timer` entity (with no attribute set) shows the time left instead of its state: `H:MM:SS`, or `M:SS` under an hour. While the timer runs it counts down every second, but only while the module is on screen. A paused timer shows the time left when it was paused. An idle timer shows its state ("Idle") as usual. There is no option for this.
 -   The icon takes the entity's state colour. A design text colour overrides it.
+
+## Last changed
+
+With `secondary_info: last-changed` the third line shows when the entity last changed, for example "5 minutes ago". Home Assistant words the time in your language and keeps it up to date, so the line counts on by itself without a reload.
+
+-   The line stays empty when the entity has no last-changed time.
+-   It appears once Home Assistant has loaded its relative-time element, which normally happens before the card draws.
+-   An attribute that is itself called `last_changed` still works as before: write its name with the underscore.
+
+```yaml
+- type: info
+  entity: binary_sensor.front_door
+  secondary_info: last-changed
+```
 
 ## Example
 

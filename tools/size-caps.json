@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 74225,
+        "cap": 74387,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 74225
+        "measured": 74387
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 63396,
-      "measured": 63396
+      "cap": 63595,
+      "measured": 63595
     }
   },
   "files": {
@@ -1041,6 +1041,18 @@
       "field": "/files/magic-card-anim.js/raw",
       "from": 91136,
       "to": 92160
+    },
+    {
+      "id": "entry-stage4-74225-to-74387",
+      "field": "/entry/stages/3/cap",
+      "from": 74225,
+      "to": 74387
+    },
+    {
+      "id": "entry-br-63396-to-63595",
+      "field": "/entry/br/cap",
+      "from": 63396,
+      "to": 63595
     }
   ]
 }

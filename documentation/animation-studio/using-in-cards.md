@@ -26,7 +26,7 @@ The icon field of the Icon, Info, Button and Light modules has an icon picker wi
 Animated icons is a grid of tiles that play their animation while they are on screen. It has a search field ("Search icons") and a domain filter. The grid has two sections:
 
 -   My animations lists the icon animations you saved in the Magic Card Utils library. It shows only when the library is available and holds at least one icon animation.
--   Icon library lists the 192 built-in animations. Matches for the module's icon and entity come first. Show all (192) lists every entry, and Show matches only goes back. The Style switch next to its heading plays the tiles Quiet, Living or Glow, and a click stores that Style. See [Styles: Quiet, Living and Glow](../design/quick-icon-animator.md#styles-quiet-living-and-glow).
+-   Icon library lists the 192 built-in animations. Matches for the module's icon and entity come first. Show all (192) lists every entry, and Show matches only goes back. Three Style swatches next to its heading, Quiet, Living and Glow, each show a small preview of your icon in that Style. Pick one to play the tiles in it; a click on a tile stores that Style. See [Styles: Quiet, Living and Glow](../design/quick-icon-animator.md#styles-quiet-living-and-glow).
 
 The module's current animated icon is highlighted. A click on a tile sets the module's icon and its animation in one undo step and closes the picker.
 

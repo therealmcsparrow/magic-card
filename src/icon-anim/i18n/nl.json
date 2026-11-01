@@ -35,6 +35,10 @@
     "text": "Mijn animaties",
     "hash": "7dcbf5cd"
   },
+  "icon-animator.animated-icon-grid.new-in-this-release": {
+    "text": "Nieuw in deze versie",
+    "hash": "3cec8c47"
+  },
   "icon-animator.animated-icon-grid.no-icon-animations-match-query": {
     "text": "Geen pictogramanimaties komen overeen met \"{query}\".",
     "hash": "44b850a2"

@@ -1372,6 +1372,11 @@
       "name": "The value that replaces name in the text."
     }
   },
+  "anim-studio.icon-start.new-in-this-release": {
+    "text": "New in this release",
+    "note": "Hidden label of the small diamond on an icon library tile that was added in this release; screen readers read it as part of the tile name.",
+    "max": 30
+  },
   "anim-studio.icon-start.no-icon-animations-match-query": {
     "text": "No icon animations match \"{query}\".",
     "note": "Empty-search message in the icon animation list. {query} is the text the user typed in the search box.",

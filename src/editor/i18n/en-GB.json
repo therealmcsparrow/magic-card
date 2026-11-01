@@ -5041,6 +5041,11 @@
     "note": "Label of the picker for the icon shown beside the info text.",
     "max": 10
   },
+  "card-editor.info-editor.last-changed": {
+    "text": "Last changed",
+    "note": "Option in the Secondary info dropdown: shows when the entity last changed.",
+    "max": 20
+  },
   "card-editor.info-editor.prefix": {
     "text": "Prefix",
     "note": "Label of the text field for words placed before the value, such as a currency sign.",

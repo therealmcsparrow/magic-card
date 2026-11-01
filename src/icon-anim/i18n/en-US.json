@@ -35,6 +35,10 @@
     "text": "My animations",
     "hash": "7dcbf5cd"
   },
+  "icon-animator.animated-icon-grid.new-in-this-release": {
+    "text": "New in this release",
+    "hash": "3cec8c47"
+  },
   "icon-animator.animated-icon-grid.no-icon-animations-match-query": {
     "text": "No icon animations match \"{query}\".",
     "hash": "44b850a2"
