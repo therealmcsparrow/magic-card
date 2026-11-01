@@ -52,10 +52,6 @@ export class UnitField extends LitElement {
         display: block;
         min-width: 0;
       }
-      /* A number and its unit read as one left-to-right compound, so its joined edges and paddings stay physical */
-      .unit {
-        direction: ltr;
-      }
       /* "Custom" needs a wider select than a unit */
       .unit > .select.is-custom {
         width: 92px;

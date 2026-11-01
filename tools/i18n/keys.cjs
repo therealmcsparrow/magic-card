@@ -296,7 +296,7 @@ function checkNamespace({ ns, cat, uses = new Map(), waivers = new Map(), pendin
     }
     if (e.legal !== undefined && e.legal !== true) add('D8', 'error', `"${key}": legal must be true or left out`);
     const legal = isLegal(e);
-    if (legal && [...waivers.keys()].some((w) => w.startsWith(`${key} `))) add('D10', 'error', `"${key}": a waiver is not allowed on legal text; only a translation made from the current English confirms it`);
+    if (legal && [...waivers.keys()].some((w) => w.startsWith(`${key}\u0000`))) add('D10', 'error', `"${key}": a waiver is not allowed on legal text; only a translation made from the current English confirms it`);
     for (const m of spelling(e.text)) add('D3', 'error', `"${key}": ${m}`);
     if (!uses.has(key)) add('D2', 'error', `en-GB.json: "${key}" is used by no call`);
     const current = sourceHash(e.text);

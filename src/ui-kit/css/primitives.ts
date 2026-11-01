@@ -426,6 +426,7 @@ export const editorPrimitives: CSSResult = css`
   .unit {
     display: flex;
     min-width: 0;
+    direction: ltr; /* a number and its unit read as one left-to-right compound */
   }
   .unit > .input {
     flex: 1 1 auto;

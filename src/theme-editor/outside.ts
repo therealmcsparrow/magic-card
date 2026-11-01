@@ -3,7 +3,7 @@ import type { ThemeDoc } from '../contracts/theme-editor';
 
 // Detects theme values that make the browser contact another host; the picker and editor warn about them.
 
-const HOST = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi;
+const HOST = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[\p{L}\p{N}\p{M}._~%*-]+)/giu;
 
 /** The host names a value points at, after CSS escapes are decoded. */
 export function hostsIn(value: string): string[] {

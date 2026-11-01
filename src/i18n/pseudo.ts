@@ -1,7 +1,7 @@
 // Pseudo right-to-left transform: marks each message and shows digits and separators the Arabic way.
 import type { PseudoWrap } from '../contracts/i18n';
 
-const RLM = '‏';
+const RLM = '\u200f';
 const DIGITS = /\d/g;
 const SEPARATORS = /[.,]/g;
 const toArabicIndic = (s: string) => s.replace(DIGITS, (d) => String.fromCharCode(0x660 + +d));

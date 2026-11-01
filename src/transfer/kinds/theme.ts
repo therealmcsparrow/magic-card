@@ -7,7 +7,7 @@ import type { KindResult, Raw } from '../types';
 
 /** Host names in a value, after CSS escapes: the part after `://`, a leading `//` or `http:`. */
 export function hostsOf(value: string): string[] {
-  const re = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi;
+  const re = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[\p{L}\p{N}\p{M}._~%*-]+)/giu;
   return [...new Set([...value.matchAll(re)].map((m) => m[1].toLowerCase()))];
 }
 

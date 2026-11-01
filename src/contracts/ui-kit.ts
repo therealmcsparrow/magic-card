@@ -190,8 +190,25 @@ export interface KitTopBarOptions {
   help?: KitButtonOptions;
 }
 
+export interface KitLegalTextOptions {
+  /** The text in the user's language. */
+  text: string;
+  /** The English text; shown in place of `text` while `showEnglish` is on. */
+  english: string;
+  /** False in English: the text stands alone, with no label and no button. */
+  translated: boolean;
+  showEnglish: boolean;
+  onToggle: () => void;
+  /** The "English prevails" label and the Show English action text. */
+  prevailsLabel: string;
+  showLabel: string;
+  /** Id of the text element; the button controls it. */
+  id: string;
+}
+
 export interface UiKitTemplates {
   button(o: KitButtonOptions): KitTemplate;
+  legalText(o: KitLegalTextOptions): KitTemplate;
   field(o: KitFieldOptions): KitTemplate;
   switchRow(o: { id: string; label: string; help?: string; checked: boolean; disabled?: boolean; onChange: (v: boolean) => void }): KitTemplate;
   chip(o: { label: string; tone?: 'accent' | 'warn' | 'count'; pressed?: boolean; onClick?: () => void } & KitIcon): KitTemplate;

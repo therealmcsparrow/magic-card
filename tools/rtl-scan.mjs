@@ -5,7 +5,7 @@ import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
-const ROOT = path.resolve(import.meta.dirname, '..');
+const ROOT = realpathSync(path.resolve(import.meta.dirname, '..'));
 
 // Physical property -> prefix of the logical property that answers it later in the same rule.
 const LOGICAL = [
@@ -13,7 +13,6 @@ const LOGICAL = [
   [/^margin-(left|right)$/, 'margin-inline'],
   [/^padding-(left|right)$/, 'padding-inline'],
   [/^border-(left|right)(-(width|style|color))?$/, 'border-inline'],
-  [/^border-(top|bottom)-(left|right)-radius$/, 'border-start-'],
 ];
 const VALUE_SIDES = { 'text-align': /^(left|right)\b/, float: /^(left|right)\b/, clear: /^(left|right)\b/ };
 const VALUE_LOGICAL = { 'text-align': /^(start|end)\b/ };
@@ -144,12 +143,17 @@ function listTs(dir) {
   });
 }
 
+/** True when a path relative to the repo root leaves it, on any drive. */
+function outsideRoot(rel) {
+  return rel === '..' || rel.startsWith('..' + path.sep) || path.isAbsolute(rel);
+}
+
 /** Scans repo files; returns [{ file, line, text }]. A path outside the repo is refused. */
 export function scanFiles(files) {
   const out = [];
   for (const f of files) {
     const abs = path.resolve(ROOT, f);
-    if (path.relative(ROOT, realpathSync(abs)).startsWith('..')) throw new Error(`rtl-scan reads repo files only: ${f}`);
+    if (outsideRoot(path.relative(ROOT, realpathSync(abs)))) throw new Error(`rtl-scan reads repo files only: ${f}`);
     for (const v of scanSource(readFileSync(abs, 'utf8'))) out.push({ file: path.relative(ROOT, abs).split(path.sep).join('/'), ...v });
   }
   return out;

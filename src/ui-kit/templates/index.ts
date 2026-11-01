@@ -6,4 +6,4 @@ export { iconOf } from './icon';
 export { slider, type SliderOptions } from './slider';
 export { topBar, toolbar, sectionHead } from './layout';
 export { row, type RowOptions } from './row';
-export { legalText, isTranslated, englishOf, type LegalTextOptions } from './legal';
+export { legalText, isTranslated, type LegalTextOptions } from './legal';

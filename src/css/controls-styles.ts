@@ -65,8 +65,8 @@ export const controlsViewStyles = css`
   }
 
   .mc-tile-slider[data-mc-rtl] .mc-tile-slider-bar::after {
-    right: auto; /* physical */
-    left: 5px; /* physical */
+    right: auto /* physical */;
+    left: 5px /* physical */;
   }
 
   .mc-tile-slider--vertical .mc-tile-slider-bar {
