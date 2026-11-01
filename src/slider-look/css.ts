@@ -81,7 +81,12 @@ export const SLIDER_LOOK_CSS = `
 .mc-tile-slider--vertical.mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-v{top:auto;bottom:52px}
 .mc-tile-slider.mc-sl.mc-sl--big-fill.mc-tile-slider--vertical{height:12rem;max-height:calc(100% - 3rem);margin-top:1.5rem;margin-bottom:1.5rem}
 .mc-slider-container.mc-slider-container--bigfill{height:max(var(--mc-slider-vertical-height,120px),15rem)}
-/* a right-to-left horizontal track: the fill and its gradient are flipped as a whole, the placed parts count from the right edge */
+.mc-tile-slider[offscreen] .mc-sl-p *{transition:none;animation:none}
+@media (prefers-reduced-motion:reduce){.mc-sl-f,.mc-sl-th,.mc-sl-b{transition:none}.mc-tile-slider.mc-dragging .mc-sl-th{--sc:1}}
+`.replace(/\n/g, '');
+
+// The mirrored rules of a right-to-left horizontal track, adopted by the page only (the track's markup stays the same in both directions).
+export const SLIDER_LOOK_RTL_CSS = `
 .mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}
 .mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}
 .mc-tile-slider[data-mc-rtl] .mc-sl-g{left:auto;right:calc(var(--v) * 100% - 9px)}
@@ -97,6 +102,4 @@ export const SLIDER_LOOK_CSS = `
 .mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-v{right:auto;left:16px}
 .mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-v{left:auto;right:16px}
 .mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-i~.mc-sl-v{left:auto;right:52px}
-.mc-tile-slider[offscreen] .mc-sl-p *{transition:none;animation:none}
-@media (prefers-reduced-motion:reduce){.mc-sl-f,.mc-sl-th,.mc-sl-b{transition:none}.mc-tile-slider.mc-dragging .mc-sl-th{--sc:1}}
 `.replace(/\n/g, '');

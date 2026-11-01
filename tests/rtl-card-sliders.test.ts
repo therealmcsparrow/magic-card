@@ -3,7 +3,7 @@ import { render } from 'lit';
 import { writeFileSync, readFileSync } from 'node:fs';
 import { sliderLookView } from '../src/slider-look/view';
 import { renderTrack } from '../src/utils/slider-track';
-import { SLIDER_LOOK_CSS } from '../src/slider-look/css';
+import { SLIDER_LOOK_RTL_CSS } from '../src/slider-look/css';
 import { controlsViewStyles } from '../src/css/controls-styles';
 import { ShapeBox } from '../src/slider-look/shape';
 import { resolveShape } from '../src/card/shape-resolve';
@@ -226,9 +226,9 @@ describe('card sliders under right-to-left', () => {
   });
 
   it('the sheets mirror on the attribute: fill, gradient, parts and the base bar', () => {
-    expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}');
-    expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}');
-    expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%)');
+    expect(SLIDER_LOOK_RTL_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}');
+    expect(SLIDER_LOOK_RTL_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}');
+    expect(SLIDER_LOOK_RTL_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%)');
     expect(String(controlsViewStyles)).toContain('.mc-tile-slider[data-mc-rtl] .mc-tile-slider-bar');
   });
 });
