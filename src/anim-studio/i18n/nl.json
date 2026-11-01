@@ -991,6 +991,10 @@
     "text": "Animatie {name}",
     "hash": "60df34ee"
   },
+  "anim-studio.icon-start.new-in-this-release": {
+    "text": "Nieuw in deze versie",
+    "hash": "3cec8c47"
+  },
   "anim-studio.icon-start.no-icon-animations-match-query": {
     "text": "Geen pictogramanimaties komen overeen met \"{query}\".",
     "hash": "44b850a2"

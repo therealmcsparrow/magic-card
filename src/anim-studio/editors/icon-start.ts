@@ -307,6 +307,7 @@ export class AnimIconStart extends LitElement {
               (e) => html`<li>
                 <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit(e.build(), 'library')}>
                   <mc-anim-icon-thumb .entry=${e} .hass=${this.hass}></mc-anim-icon-thumb>
+                  ${lib.isNewInRelease(e.id) ? html`<span class="new-mark" aria-hidden="true"></span><span class="sr-only">${t('anim-studio.icon-start.new-in-this-release')}</span>` : nothing}
                   <span class="nm">${e.name}</span>
                   <span class="dm">${domainLabel(e.domain, this.hass)}</span>
                 </button>
@@ -375,6 +376,7 @@ export class AnimIconStart extends LitElement {
         display: flex;
       }
       .entry {
+        position: relative;
         width: 100%;
         align-content: start;
         display: grid;
@@ -395,6 +397,29 @@ export class AnimIconStart extends LitElement {
       .entry:focus-visible {
         outline: 2px solid var(--primary-color, #03a9f4);
         outline-offset: 2px;
+      }
+      .new-mark {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        background: var(--mc-accent-ink, #01579b);
+        box-shadow: 0 0 0 1.5px var(--mc-surface, var(--card-background-color, #fff));
+        transform: rotate(45deg);
+      }
+      @media (forced-colors: active) {
+        .new-mark {
+          background: CanvasText;
+        }
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
       }
       .pick-row {
         align-items: flex-start;

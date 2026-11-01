@@ -1,9 +1,9 @@
 import type { AnimationDoc, LaneId } from '../anim-studio/model';
 
-/** Contract: animated icon library. Version 1.2.1. Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY,
- * LIBRARY_DOMAINS, libraryFor, searchLibrary. `domain` may also be a LIBRARY_CATEGORIES value. */
+/** Contract: animated icon library. Version 1.3.0. Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY,
+ * LIBRARY_DOMAINS, libraryFor, searchLibrary, RELEASE_NOTES, isNewInRelease, ReleaseNotes. `domain` may also be a LIBRARY_CATEGORIES value. */
 
-export const ICON_LIBRARY_CONTRACT_VERSION = '1.2.1';
+export const ICON_LIBRARY_CONTRACT_VERSION = '1.3.0';
 
 /** Pseudo-domains for icons no Home Assistant domain fits (the filter shows them like domains). */
 export const LIBRARY_CATEGORIES = ['animal', 'seasonal', 'transport', 'maker', 'workplace', 'household'] as const;

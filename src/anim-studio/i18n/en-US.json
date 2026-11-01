@@ -991,6 +991,10 @@
     "text": "{name} animation",
     "hash": "60df34ee"
   },
+  "anim-studio.icon-start.new-in-this-release": {
+    "text": "New in this release",
+    "hash": "3cec8c47"
+  },
   "anim-studio.icon-start.no-icon-animations-match-query": {
     "text": "No icon animations match \"{query}\".",
     "hash": "44b850a2"
