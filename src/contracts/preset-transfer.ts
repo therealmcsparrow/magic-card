@@ -63,6 +63,31 @@ export function decodeCssEscapes(value: string): string {
     });
 }
 
+/** Something that looks like an absolute or protocol-relative address, up to the next separator. */
+const ADDRESS_RE = /(?:\b(?:https?|wss?|ftp):|(?<![^\s,("'])\/\/)[^\s)"',;]*/gi;
+/** Characters that must not appear in a host name shown to the user. */
+const HIDDEN_RE = /[^\x21-\x7e]/;
+
+/**
+ * The hosts a theme value points at, as the browser resolves them (ASCII or punycode, lower case). `unknown` is
+ * true when an address-like part could not be read as a host, so callers show the generic warning instead.
+ */
+export function externalHosts(value: string): { hosts: string[]; unknown: boolean } {
+  const hosts = new Set<string>();
+  let unknown = false;
+  for (const m of decodeCssEscapes(value).matchAll(ADDRESS_RE)) {
+    let host = '';
+    try {
+      host = (m[0].startsWith('//') ? new URL(m[0], 'https://invalid.invalid') : new URL(m[0])).hostname;
+    } catch {
+      /* not a readable address */
+    }
+    if (host && !HIDDEN_RE.test(host)) hosts.add(host);
+    else unknown = true;
+  }
+  return { hosts: [...hosts], unknown };
+}
+
 /** Longest value checked; the import already drops values over 1,024 characters, a longer one is refused as suspicious. */
 const CHECK_MAX_CHARS = 4096;
 /** A url() whose argument is unquoted or simply quoted, closed, and holds no space, quote, bracket or backslash. */

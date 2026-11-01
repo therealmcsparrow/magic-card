@@ -1047,8 +1047,8 @@ export class McteEditorView extends LitElement {
       <div class="body">
         <strong>${t('theme-editor.editor-view.contacts-another-website')}</strong>
         <p>${legalText({
-          text: o.hosts.length ? t('theme-editor.editor-view.some-values-load-files-from-hosts-the', { hosts: o.hosts.join(', ') }) : t('theme-editor.editor-view.some-values-load-files-from-another'),
-          english: o.hosts.length ? englishOf(en(m('theme-editor.editor-view.some-values-load-files-from-hosts-the')), { hosts: o.hosts.join(', ') }) : englishOf(en(m('theme-editor.editor-view.some-values-load-files-from-another'))),
+          text: o.hosts.length && !o.unknown ? t('theme-editor.editor-view.some-values-load-files-from-hosts-the', { hosts: o.hosts.join(', ') }) : t('theme-editor.editor-view.some-values-load-files-from-another'),
+          english: o.hosts.length && !o.unknown ? englishOf(en(m('theme-editor.editor-view.some-values-load-files-from-hosts-the')), { hosts: o.hosts.join(', ') }) : englishOf(en(m('theme-editor.editor-view.some-values-load-files-from-another'))),
           translated: isTranslated(locale(), hasWrap()),
           showEnglish: this._english,
           onToggle: () => (this._english = !this._english),

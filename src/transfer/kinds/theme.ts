@@ -1,14 +1,13 @@
-import { CARD_MOD_KEY_RE, contactsOtherHost, decodeCssEscapes, LOCAL_PATH_RE, THEME_PRESET_MAX_BYTES, THEME_VALUE_MAX_CHARS } from '../../contracts/preset-transfer';
+import { CARD_MOD_KEY_RE, contactsOtherHost, externalHosts, LOCAL_PATH_RE, THEME_PRESET_MAX_BYTES, THEME_VALUE_MAX_CHARS } from '../../contracts/preset-transfer';
 import type { TransferDataByKind, TransferNote } from '../../contracts/preset-transfer';
 import { THEME_VAR_RE } from '../../contracts/theme-catalogue';
 import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
 import type { KindResult, Raw } from '../types';
 
-/** Host names in a value, after CSS escapes: the part after `://`, a leading `//` or `http:`. */
+/** Host names in a value, as the browser resolves them. */
 export function hostsOf(value: string): string[] {
-  const re = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[\p{L}\p{N}\p{M}._~%*-]+)/giu;
-  return [...new Set([...value.matchAll(re)].map((m) => m[1].toLowerCase()))];
+  return externalHosts(value).hosts;
 }
 
 /**
@@ -44,7 +43,8 @@ export function readTheme(index: number, data: unknown): KindResult<TransferData
       if (CARD_MOD_KEY_RE.test(k)) notes.push(note('card_mod', index, path, label ? t('transfer.theme.mode-mode-key-is-a-card-mod-style-it-was', { mode: label, key: k }) : t('transfer.theme.key-is-a-card-mod-style-it-was-kept-with', { key: k })));
       if (typeof v === 'string') {
         if (contactsOtherHost(v)) {
-          const hosts = hostsOf(decodeCssEscapes(v));
+          const { hosts: found, unknown } = externalHosts(v);
+          const hosts = unknown ? [] : found;
           notes.push(note('external_ref', index, path, label ? t('transfer.theme.mode-mode-key-points-to-hosts-it-was', { mode: label, key: k, hosts: hosts.length ? hosts.join(', ') : t('transfer.theme.another-website') }) : t('transfer.theme.key-points-to-hosts-it-was-kept-every', { key: k, hosts: hosts.length ? hosts.join(', ') : t('transfer.theme.another-website') }), hosts));
         } else if (LOCAL_PATH_RE.test(v)) {
           notes.push(note('local_path', index, path, label ? t('transfer.theme.mode-mode-key-uses-a-file-on-the-sharer', { mode: label, key: k }) : t('transfer.theme.key-uses-a-file-on-the-sharer-s-home', { key: k })));
