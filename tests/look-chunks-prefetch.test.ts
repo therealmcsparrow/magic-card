@@ -28,7 +28,7 @@ afterEach(() => {
 
 describe('lazy-module 1.2.0 tables', () => {
   it('names the two look chunks', () => {
-    expect(LAZY_MODULE_CONTRACT).toBe('1.12.0');
+    expect(LAZY_MODULE_CONTRACT).toBe('1.11.0');
     expect(LAZY_CHUNK_FILES['flow-look']).toBe('magic-card-flow-look.js');
     expect(LAZY_CHUNK_FILES['slider-look']).toBe('magic-card-slider-look.js');
     expect(LAZY_CHUNK_CEILINGS['flow-look']).toBe(32_768);

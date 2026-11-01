@@ -42,7 +42,7 @@ beforeEach(() => {
   // the contract numbers (tests/setup-lazy-chunks.ts shortens them for every other file)
   Object.assign(TIMING, { timeout: CHUNK_TIMEOUT_MS, silent: SILENT_RETRY_MS, background: BACKGROUND_RETRY_MS });
   webpack.base = 'magic-card-x.abc12345.js';
-  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] });
+  vi.useFakeTimers();
   vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 afterEach(() => {
@@ -68,7 +68,7 @@ function recording(outcomes: Array<'fail' | 'ok' | 'stall'>) {
 const rNumber = (u: string) => Number(/[?&]r=(\d+)/.exec(u)?.[1]);
 
 describe('contract: version, numbers and wording (lazy-module 1.6.0)', () => {
-  it('LAZY_MODULE_CONTRACT is 1.12.0', () => expect(LAZY_MODULE_CONTRACT).toBe('1.12.0'));
+  it('LAZY_MODULE_CONTRACT is 1.11.0', () => expect(LAZY_MODULE_CONTRACT).toBe('1.11.0'));
 
   it('the entry gets its numbers from lazy-module.needs.ts and the contract re-exports them', () => {
     expect([CHUNK_TIMEOUT_MS, SILENT_RETRY_MS, BACKGROUND_RETRY_MS]).toEqual([10_000, 2_000, [30_000, 90_000, 300_000]]);
@@ -443,14 +443,13 @@ describe('config-walk and the needs table', () => {
     expect(LAZY_FEATURES.layers.needs({ rows: [] })).toBe(false);
   });
 
-  it('prefetchLazy loads every needed chunk in parallel and a plain config makes no request', async () => {
+  it('prefetchLazy loads every needed chunk in parallel and a plain config makes no request', () => {
     const importers = Object.fromEntries(Object.keys(LAZY_FEATURES).map((n) => [n, vi.fn(async () => mod())]));
     for (const [n, fn] of Object.entries(importers)) __setLazyImporterForTests(n as never, fn as never);
     try {
       prefetchLazy({ type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'text', text: 'hi' }] }] }] });
       for (const fn of Object.values(importers)) expect(fn).not.toHaveBeenCalled();
       prefetchLazy({ rows: [{ columns: [{ modules: [{ type: 'markdown' }, { type: 'slider-layout' }] }] }], seasonal: 'winter', background_layers: [{ type: 'image', entity: 'camera.door' }] });
-      await vi.advanceTimersByTimeAsync(0);
       expect(importers.markdown).toHaveBeenCalledTimes(1);
       expect(importers.slider).toHaveBeenCalledTimes(1);
       expect(importers.seasonal).toHaveBeenCalledTimes(1);

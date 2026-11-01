@@ -2,10 +2,10 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/** Contract: lazy modules and lazy card chunks. Version 1.12.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+/** Contract: lazy modules and lazy card chunks. Version 1.11.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
  * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
-export const LAZY_MODULE_CONTRACT = '1.12.0';
+export const LAZY_MODULE_CONTRACT = '1.11.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 25;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
@@ -219,12 +219,10 @@ export interface LazyChunkManifest {
 }
 
 /**
- * Idle fetch: the first attempt starts its import on idle (IDLE_TIMEOUT_MS; IDLE_FALLBACK_MS without requestIdleCallback); retries keep
- * their delays. One chunk per frame: an arrived module is queued and each animation frame installs one whole chunk in one task; a hidden
- * tab waits until it shows. CHUNK_TIMEOUT starts with the import and is cleared when the module arrives. The numbers live in
+ * Timing of one chunk's attempts. The numbers live in
  * lazy-module.needs.ts, which magic-card.js may import; this file may not be imported by the entry at run time.
  */
-export { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, IDLE_FALLBACK_MS, IDLE_TIMEOUT_MS, SILENT_RETRY_MS } from './lazy-module.needs';
+export { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, SILENT_RETRY_MS } from './lazy-module.needs';
 
 /**
  * Adoption assigns a new array (`root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...sheets]`), never push (frozen on Chromium
