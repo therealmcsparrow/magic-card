@@ -42,6 +42,8 @@ export const noticeStyles = css`
   }
   .mc-u {
     display: grid;
+    position: relative;
+    z-index: 1;
     min-width: 12em;
     padding: 0;
   }
