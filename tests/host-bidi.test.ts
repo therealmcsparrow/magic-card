@@ -79,7 +79,7 @@ describe('payloads that fooled the host scan', () => {
     ['comma before userinfo @', `url("https://${T},x@${E}/x")`, [E], false],
     ['semicolon before userinfo @', `url("https://${T};x@${E}/x")`, [E], false],
     ['apostrophe before userinfo @', `url("https://${T}'x@${E}/x")`, [E], false],
-    ['bracket before userinfo @', `url("https://${T})x@${E}/x")`, [E], false],
+    ['bracket before userinfo @', `url("https://${T})x@${E}/x")`, [E], true],
     ['escaped bracket before userinfo @', `url(https://${T}${B})x@${E}/x)`, [], true],
     ['no-break space before userinfo @', `url("https://${T}\u00A0x@${E}/x")`, [E], false],
     ['image-set with a comma before @', `image-set("https://${T},x@${E}/x" 1x)`, [E], false],
@@ -109,7 +109,17 @@ describe('payloads that fooled the host scan', () => {
     ['bare address outside any argument', `https://${E}/x`, [], true],
     ['named and unreadable together', `url(https://${T}/y) url("ht${B}tps://${E}/x")`, [], true],
     ['named and unreadable host together', `url(https://${T}/y) url("https://a\u202eb.example/x")`, [T], true],
-    ['data: value contacts nothing', `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>")`, [], false],
+    ['data: png contacts nothing', `url("data:image/png;base64,AAAA")`, [], false],
+    ['data: svg may load files', `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>")`, [], true],
+    ['newline inside a string', `@import url(https://${T}/a);#t{"x\n;background-image:url(https://${E}/x);"}`, [T], true],
+    ['carriage return inside a string', `"a\r{}@import '//${E}/x';"`, [], true],
+    ['form feed inside a string', `"a\f{}@import '//${E}/x';"`, [], true],
+    ['broken url() swallowing the next one', `@import url(https://${T}/a);#t{url(x'y);background-image:url(https://${E}/x);url(z'w)}`, [T], true],
+    ['bracket inside a bare argument', `url(a'b){}@import "//${E}/x";url(c'd){}`, [], true],
+    ['data: css import', `@import url("data:text/css,@import 'https://${E}/x';");@import url(https://${T}/a);`, [T], true],
+    ['data: css import, percent-encoded', `@import url("data:text/css,%40import%20%27https%3A%2F%2F${E}%2Fx%27%3B");`, [], true],
+    ['data: css import, base64', `@import url("data:text/css;base64,QGltcG9ydCAnaHR0cHM6Ly9ldmlsLmV4YW1wbGUveCc7");`, [], true],
+    ['data: css import, upper case', `@import url("DATA:text/css,@import 'https://${E}/x';");`, [], true],
   ];
   it.each(cases)('%s', (_n, value, hosts, unknown) => {
     const r = externalHosts(value);
@@ -118,7 +128,7 @@ describe('payloads that fooled the host scan', () => {
   });
   it('never names the trusted host for a payload that goes elsewhere', () => {
     for (const [n, value] of cases) {
-      if (/decoy|named and|data:/.test(n)) continue;
+      if (/decoy|named and|data:|newline inside|swallowing/.test(n)) continue;
       expect(externalHosts(value).hosts, n).not.toContain(T);
     }
   });

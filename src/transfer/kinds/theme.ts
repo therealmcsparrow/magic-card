@@ -44,7 +44,7 @@ export function readTheme(index: number, data: unknown): KindResult<TransferData
       if (typeof v === 'string') {
         if (contactsOtherHost(v)) {
           const { hosts, unknown } = externalHosts(v);
-          const named = [...hosts, ...(unknown ? [t('transfer.theme.another-website')] : [])].join(', ') || t('transfer.theme.another-website');
+          const named = unknown || !hosts.length ? t('transfer.theme.another-website') : hosts.join(', ');
           notes.push(note('external_ref', index, path, label ? t('transfer.theme.mode-mode-key-points-to-hosts-it-was', { mode: label, key: k, hosts: named }) : t('transfer.theme.key-points-to-hosts-it-was-kept-every', { key: k, hosts: named }), hosts, unknown));
         } else if (LOCAL_PATH_RE.test(v)) {
           notes.push(note('local_path', index, path, label ? t('transfer.theme.mode-mode-key-uses-a-file-on-the-sharer', { mode: label, key: k }) : t('transfer.theme.key-uses-a-file-on-the-sharer-s-home', { key: k })));

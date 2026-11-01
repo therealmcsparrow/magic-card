@@ -6,10 +6,10 @@ import type { ImageBinding, ImageSummary } from './mcu-library-images';
 import type { SanitizeOptions, SvgImageApi } from './svg-image';
 import type { SvgCssResolve } from './svg-safety';
 
-/** Contract: preset files (export / import) and the transfer chunk. Version 1.3.0 (TRANSFER_CONTRACT_VERSION). Kinds:
+/** Contract: preset files (export / import) and the transfer chunk. Version 1.4.0 (TRANSFER_CONTRACT_VERSION). Kinds:
  * animation, theme, shape, icon, image. Image code lives in the image-transfer child chunk (ImageReader). */
 
-export const TRANSFER_CONTRACT_VERSION = '1.3.0';
+export const TRANSFER_CONTRACT_VERSION = '1.4.0';
 /** File format marker value written by this version. */
 export const TRANSFER_FORMAT = '1.0';
 export const TRANSFER_MAJOR = 1;
@@ -75,8 +75,7 @@ const BACKSLASH = String.fromCharCode(92);
  * The hosts a theme value points at, as the browser resolves them (ASCII or punycode, lower case). Each
  * argument is read whole and parsed the way the browser does, never cut at a separator. `unknown` is true when
  * anything cannot be read with certainty (a scheme other than http or https, a stray
- * `:` or `/` outside an argument, an unreadable host), so callers show the generic warning next to any host that was read. A backslash or a comment makes the whole value unreadable: nothing is named. `data:` values
- * contact nothing and are skipped.
+ * `:` or `/` outside an argument, an unreadable host), so callers show the generic warning next to any host that was read. A backslash or a comment makes the whole value unreadable: nothing is named. An argument holding a line break or a bracket makes the value unreadable (a stylesheet resumes inside it). Only `data:image/` values other than SVG contact nothing and are skipped.
  */
 export function externalHosts(value: string): { hosts: string[]; unknown: boolean } {
   if (value.includes(BACKSLASH) || value.includes('/*')) return { hosts: [], unknown: true };
@@ -84,10 +83,12 @@ export function externalHosts(value: string): { hosts: string[]; unknown: boolea
   let unknown = false;
   const rest = value.replace(ARGUMENT_RE, (_m, a?: string, b?: string, c?: string, d?: string, e?: string) => {
     const arg = a ?? b ?? c ?? d ?? e ?? '';
+    if (/[\n\r\f()]/.test(arg)) unknown = true;
     for (const base of BASES) {
       try {
         const u = new URL(arg, base);
-        if (u.protocol === 'data:' || u.hostname === 'invalid.invalid') continue;
+        if (u.protocol === 'data:' && /^\s*data:image\/(?!svg)/i.test(arg)) continue;
+        if (u.hostname === 'invalid.invalid') continue;
         if ((u.protocol === 'https:' || u.protocol === 'http:') && u.hostname && !HIDDEN_RE.test(u.hostname)) hosts.add(u.hostname);
         else unknown = true;
       } catch {

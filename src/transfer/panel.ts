@@ -236,8 +236,10 @@ export class TransferPanel extends LitElement {
     const clashes = r.items.filter((i) => this.taken(r.kind, i.id));
     const blocked = (r.kind === 'theme' || r.kind === 'image') && !this.hasLibrary;
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
-    const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
-    if (kept.some((n) => n.code === 'external_ref' && (n.unknown || !n.hosts?.length))) hosts.push(t('transfer.theme.another-website'));
+    const anyUnknown = kept.some((n) => n.code === 'external_ref' && (n.unknown || !n.hosts?.length));
+    const hosts = anyUnknown ? [] : [...new Set(kept.flatMap((n) => n.hosts ?? []))];
+    const shown = hosts.length ? hosts.join(', ') : anyUnknown ? t('transfer.theme.another-website') : '';
+    const shownEn = hosts.length ? shown : en(m('transfer.theme.another-website'));
     return html`
       <ul>
         ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
@@ -247,9 +249,9 @@ export class TransferPanel extends LitElement {
             ${glyph('help', 20)}
             <div class="body">
               <strong>${t('transfer.panel.n-3', { n: kept.length })}</strong>
-              <span class="help">${hosts.length ? html`${this._legal('every-browser', t('transfer.panel.every-browser-that-shows-a-dashboard', { hosts: hosts.join(', ') }), englishOf(en(m('transfer.panel.every-browser-that-shows-a-dashboard')), { hosts: hosts.join(', ') }))} ` : nothing}${t('transfer.panel.lines-that-start-with-card-mod-only-work')}</span>
+              <span class="help">${shown ? html`${this._legal('every-browser', t('transfer.panel.every-browser-that-shows-a-dashboard', { hosts: shown }), englishOf(en(m('transfer.panel.every-browser-that-shows-a-dashboard')), { hosts: shownEn }))} ` : nothing}${t('transfer.panel.lines-that-start-with-card-mod-only-work')}</span>
               <ul>
-                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.code === 'external_ref' ? ` (${[...(n.hosts ?? []), ...(n.unknown || !n.hosts?.length ? [t('transfer.theme.another-website')] : [])].join(', ')})` : ''}</li>`)}
+                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.code === 'external_ref' ? ` (${n.hosts?.length ? n.hosts.join(', ') : t('transfer.theme.another-website')})` : ''}</li>`)}
               </ul>
             </div>
           </div>`
