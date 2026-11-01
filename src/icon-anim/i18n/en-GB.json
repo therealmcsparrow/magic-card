@@ -44,6 +44,11 @@
     "note": "Heading for the list of animations the user made themselves. Plural. Compare My animation.",
     "max": 25
   },
+  "icon-animator.animated-icon-grid.new-in-this-release": {
+    "text": "New in this release",
+    "note": "Hidden label of the small diamond on an icon library tile that was added in this release; screen readers read it as part of the tile name.",
+    "max": 30
+  },
   "icon-animator.animated-icon-grid.no-icon-animations-match-query": {
     "text": "No icon animations match \"{query}\".",
     "note": "Empty search result. {query} is the text the user typed in the search field.",

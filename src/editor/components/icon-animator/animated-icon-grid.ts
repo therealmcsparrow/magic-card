@@ -1,6 +1,6 @@
 import type { PropertyValues, TemplateResult } from 'lit';
 import type { AnimationDoc } from '../../../anim-studio/model';
-import { ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor, searchLibrary, type LibraryEntry } from '../../../icon-anim/library';
+import { ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor, searchLibrary, isNewInRelease, type LibraryEntry } from '../../../icon-anim/library';
 import type { IconAnimatorHost } from './loader';
 import { DEFAULT_ICON_STYLE, ICON_STYLES, type IconStyle } from '../../../contracts/icon-library';
 import { styleDoc } from '../../../icon-anim/style';
@@ -223,6 +223,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           display: flex;
         }
         .entry {
+          position: relative;
           width: 100%;
           align-content: start;
           display: grid;
@@ -247,6 +248,21 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         .entry[aria-pressed='true'] {
           border-color: var(--mc-accent, var(--primary-color, #03a9f4));
           background: var(--mc-accent-tint, color-mix(in srgb, var(--primary-color, #03a9f4) 12%, transparent));
+        }
+        .new-mark {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          width: 8px;
+          height: 8px;
+          background: var(--mc-accent-ink, #01579b);
+          box-shadow: 0 0 0 1.5px var(--mc-surface, var(--card-background-color, #fff));
+          transform: rotate(45deg);
+        }
+        @media (forced-colors: active) {
+          .new-mark {
+            background: CanvasText;
+          }
         }
         .nm {
           font-size: 0.8125rem;
@@ -421,10 +437,12 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       source: LibraryEntry | AnimationDoc,
       pick: AnimatedIconPick,
       style: IconStyle = DEFAULT_ICON_STYLE,
+      isNew = false,
     ): TemplateResult {
       return html`<li>
         <button type="button" class="entry" data-id=${id} title="${name} (${icon})" aria-pressed=${id === this.current ? 'true' : 'false'} @click=${() => this._emit(pick)}>
           <mc-animated-icon-thumb .source=${source} .icon=${icon} .iconStyle=${style} .hass=${this.hass}></mc-animated-icon-thumb>
+          ${isNew ? html`<span class="new-mark" aria-hidden="true"></span><span class="sr-only">${t('icon-animator.animated-icon-grid.new-in-this-release')}</span>` : nothing}
           <span class="nm">${name}</span>
           <span class="dm">${label}</span>
         </button>
@@ -485,7 +503,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
               <p class="help" id="aig-style-help">${t(STYLE_HELP[this._style])}</p>
               ${intro}
               <ul class="grid" role="list">
-                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain, this.hass), e, { kind: 'library', entry: e, style: this._style }, this._style))}
+                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain, this.hass), e, { kind: 'library', entry: e, style: this._style }, this._style, isNewInRelease(e.id)))}
               </ul>
               ${toggle}
             </section>`
