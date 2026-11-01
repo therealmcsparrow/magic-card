@@ -64,14 +64,15 @@ These are the steps for a release. The version is the tag without the `v`.
 
 1. Set the same version in `package.json` and `src/version.ts`, in one commit.
 2. Add the entry to `CHANGELOG.md`. If the release changes something Magic Card Utils uses, name the minimum Magic Card Utils version in it.
-3. On Linux, run `npm ci` and then `npm run build`, so the committed `dist/` matches the build that CI makes.
-4. Run `npm run size`.
-5. Run `node tools/check-i18n.mjs --ci`.
-6. Run `npm run notices -- --check`.
-7. Open a pull request into `main`. The branch takes pull requests only.
-8. Wait for the required checks to turn green, then merge the pull request into `main`.
-9. Tag the merge commit on `main`, never an unmerged branch, and push the tag `v<version>`. The tag push runs `.github/workflows/release.yml`, which builds the CycloneDX SBOM (`sbom.cdx.json`) and attaches it to the release, together with `THIRD-PARTY-NOTICES.md` and the files in `dist/`.
-10. A tag with a hyphen, such as `v2026.10.12-beta.1`, is published as a pre-release. Only people who turned on the pre-release switch are offered it.
-11. When the release changes something Magic Card Utils uses, a paired Magic Card Utils release follows. Its `.magic-card-ref` is set to the Magic Card release commit, and each changelog names the minimum version of the other.
+3. When the release adds icons to the library, open `src/icon-anim/library/release-notes.ts` and set `release` to this version without any beta suffix and `newEntries` to the ids added since the last Latest tag. Leave it as is when no icons were added. The new-entry mark then shows on those tiles for this release and its betas, and goes away at the next release.
+4. On Linux, run `npm ci` and then `npm run build`, so the committed `dist/` matches the build that CI makes.
+5. Run `npm run size`.
+6. Run `node tools/check-i18n.mjs --ci`.
+7. Run `npm run notices -- --check`.
+8. Open a pull request into `main`. The branch takes pull requests only.
+9. Wait for the required checks to turn green, then merge the pull request into `main`.
+10. Tag the merge commit on `main`, never an unmerged branch, and push the tag `v<version>`. The tag push runs `.github/workflows/release.yml`, which builds the CycloneDX SBOM (`sbom.cdx.json`) and attaches it to the release, together with `THIRD-PARTY-NOTICES.md` and the files in `dist/`.
+11. A tag with a hyphen, such as `v2026.10.12-beta.1`, is published as a pre-release. Only people who turned on the pre-release switch are offered it.
+12. When the release changes something Magic Card Utils uses, a paired Magic Card Utils release follows. Its `.magic-card-ref` is set to the Magic Card release commit, and each changelog names the minimum version of the other.
 
 Published releases and tags are kept. To withdraw a broken version, publish a fixed release.
