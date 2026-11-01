@@ -3,6 +3,7 @@ import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { EASING_LANE_IDS, type Binding, type Clip, type EasingLaneId, type Rig, type Track } from './model-v2-core';
+import type { MirrorFlag } from '../contracts/icon-library';
 import type { ParticlesSim } from '../contracts/particles-v2';
 import { animHooks, useParticlesValidator } from '../utils/anim-hooks';
 import { CUSTOM_PREFIX, customRefId, isCustomRef } from '../utils/custom-ref';
@@ -154,6 +155,8 @@ export interface AnimationDoc {
   clips?: Clip[];
   /** v2 (keyframes): entity values driving target properties. */
   bindings?: Binding[];
+  /** An icon document: `mirror` flips the icon under a right-to-left direction, `keep` never does; absent means unset. */
+  mirror?: MirrorFlag;
 }
 
 /** Size caps (the integration enforces the same). */
@@ -592,6 +595,10 @@ export function validateAnimationDoc(input: unknown, opts: ValidateOptions = {})
   }
   const direction = c.oneOf(o, 'direction', 'direction', DIRECTIONS);
   if (direction && direction !== 'normal') doc.direction = direction;
+  if (Object.prototype.hasOwnProperty.call(o, 'mirror')) {
+    if (o.mirror === 'mirror' || o.mirror === 'keep') doc.mirror = o.mirror;
+    else c.err('mirror', 'Use mirror or keep.');
+  }
   if (o.origin !== undefined && o.origin !== '') {
     if (typeof o.origin === 'string' && ORIGIN_RE.test(o.origin.trim())) doc.origin = o.origin.trim();
     else c.err('origin', 'Use keywords, lengths or percentages, e.g. "50% 100%".');

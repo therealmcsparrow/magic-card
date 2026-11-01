@@ -305,7 +305,7 @@ export class AnimIconStart extends LitElement {
         ? html`<ul class="grid" role="list">
             ${shown.map(
               (e) => html`<li>
-                <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit(e.build(), 'library')}>
+                <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit({ ...e.build(), ...(e.mirror ? { mirror: e.mirror } : {}) }, 'library')}>
                   <mc-anim-icon-thumb .entry=${e} .hass=${this.hass}></mc-anim-icon-thumb>
                   ${lib.isNewInRelease(e.id) ? html`<span class="new-mark" aria-hidden="true"></span><span class="sr-only">${t('anim-studio.icon-start.new-in-this-release')}</span>` : nothing}
                   <span class="nm">${e.name}</span>

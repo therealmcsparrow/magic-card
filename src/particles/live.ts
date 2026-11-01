@@ -183,8 +183,8 @@ const r = (v: number, d: number): number => {
   return Math.round(v * f) / f || 0;
 };
 
-/** Writes one frame into the layer's slots (<i> by position). `still`: and stops their CSS animation. */
-export function writeFrame(layer: HTMLElement, frames: Array<LiveFrame | undefined>, still = false): void {
+/** Writes one frame into the layer's slots (<i> by position). `still`: and stops their CSS animation. `mirror`: x is flipped about the layer's centre. */
+export function writeFrame(layer: HTMLElement, frames: Array<LiveFrame | undefined>, still = false, mirror = false): void {
   const items = layer.children;
   for (let k = 0; k < items.length; k++) {
     const st = (items[k] as HTMLElement).style;
@@ -194,7 +194,7 @@ export function writeFrame(layer: HTMLElement, frames: Array<LiveFrame | undefin
       if (st.getPropertyValue('opacity') !== '0') st.setProperty('opacity', '0');
       continue;
     }
-    st.setProperty('translate', `${r(f.x, 2)}cqw ${r(f.y, 2)}cqh`);
+    st.setProperty('translate', `${r(mirror ? 100 - f.x : f.x, 2)}cqw ${r(f.y, 2)}cqh`);
     st.setProperty('rotate', `${r(f.rotate, 1)}deg`);
     st.setProperty('opacity', String(r(f.opacity, 3)));
     if (f.scale !== 1) st.setProperty('scale', String(r(f.scale, 3)));
