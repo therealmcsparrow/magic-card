@@ -48,8 +48,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 63336,
-      "measured": 63336
+      "cap": 63396,
+      "measured": 63396
     }
   },
   "files": {
@@ -1029,6 +1029,12 @@
       "field": "/files/magic-card-pause.js/raw",
       "from": 4096,
       "to": 6144
+    },
+    {
+      "id": "entry-br-63336-to-63396",
+      "field": "/entry/br/cap",
+      "from": 63336,
+      "to": 63396
     }
   ]
 }
