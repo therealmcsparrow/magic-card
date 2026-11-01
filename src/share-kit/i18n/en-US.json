@@ -2,5 +2,13 @@
   "share-kit.chunk.this-card-could-not-be-read": {
     "text": "This card could not be read.",
     "hash": "47d06482"
+  },
+  "share-kit.notice.author-name-is-optional": {
+    "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
+    "hash": "d28f3b1c"
+  },
+  "share-kit.notice.only-import-files-from-people-you-trust": {
+    "text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
+    "hash": "6ec0a378"
   }
 }

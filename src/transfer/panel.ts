@@ -13,7 +13,7 @@ import { checkCompressed, checkTextSize } from './safe-parse';
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
-import { loadShareKit, shareKit } from './share-kit-loader';
+import { loadNotice, loadShareKit, shareKit } from './share-kit-loader';
 import type { ShareKit } from '../contracts/share-kit';
 import { locale, t } from './i18n';
 
@@ -82,6 +82,8 @@ export class TransferPanel extends LitElement {
   /** The share-kit chunk; import and export are offered only once it has loaded. */
   @state() private _kit?: ShareKit;
   @state() private _kitFailed = false;
+  /** The notice texts, loaded from the same share-kit chunk. */
+  @state() private _words?: typeof import('../share-kit/notice');
 
   private _fileName = '';
 
@@ -93,6 +95,8 @@ export class TransferPanel extends LitElement {
 
   private async _loadKit(): Promise<ShareKit | undefined> {
     this._kit ??= await loadShareKit();
+    if (this._kit) this._words ??= await loadNotice();
+    if (!this._words) this._kit = undefined;
     this._kitFailed = !this._kit;
     return this._kit;
   }
@@ -135,10 +139,10 @@ export class TransferPanel extends LitElement {
     const wantsCss = looksLikeSvg(text, fileName) && (kinds.includes('icon') || onlyImages);
     const [images, css] = await Promise.all([wantsImages ? loadImageTransfer() : undefined, wantsCss ? loadSvgCss() : undefined]);
     this._res = !kit
-      ? { ok: false, refusal: 'limits', message: t('transfer.panel.the-checker-for-shared-values-did-not-load') }
+      ? { ok: false, refusal: 'not_parseable', message: t('transfer.panel.the-checker-for-shared-values-did-not-load') }
       : ok.every(Boolean) && (images || !wantsImages)
         ? parseTransfer(text, { accept: this._kinds(), kit, fileName, images, css })
-        : { ok: false, refusal: 'limits', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
+        : { ok: false, refusal: 'not_parseable', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
     this._choice = 'keep-both';
     this.focusResult();
   }
@@ -245,6 +249,7 @@ export class TransferPanel extends LitElement {
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
     const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
     return html`
+      ${notice({ tone: 'warn', text: this._words!.untrustedNotice() })}
       <ul>
         ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
       </ul>
@@ -347,7 +352,7 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${e.items.some((i) => i.author) ? html`<p class="help">${t('transfer.panel.the-author-name-is-saved-in-the-file')}</p>` : nothing}
+      ${e.items.some((i) => i.author) ? html`<p class="help" role="status">${this._words?.authorNotice()}</p>` : nothing}
       <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}

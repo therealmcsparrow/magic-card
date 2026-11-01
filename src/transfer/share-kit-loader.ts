@@ -44,6 +44,9 @@ export function loadShareKit(): Promise<ShareKit | undefined> {
   return pending;
 }
 
+/** The notice texts, from the same chunk as the kit; undefined when they do not load. */
+export const loadNotice = (): Promise<typeof import('../share-kit/notice') | undefined> => import(/* webpackChunkName: "share-kit" */ '../share-kit/notice').catch(() => undefined);
+
 /** Tests: forget the loaded chunk. */
 export function __resetShareKitForTests(): void {
   pending = undefined;

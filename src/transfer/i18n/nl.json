@@ -595,10 +595,6 @@
     "text": "{n, plural, one {{source} bevat # thema.} other {{source} bevat # thema's.}}",
     "hash": "c69b55de"
   },
-  "transfer.panel.the-author-name-is-saved-in-the-file": {
-    "text": "De naam van de auteur komt in het bestand. Controleer hem voordat je het bestand deelt.",
-    "hash": "767f7f3b"
-  },
   "transfer.panel.the-checker-for-images-did-not-load-so": {
     "text": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
     "hash": "f1d22ef2"
