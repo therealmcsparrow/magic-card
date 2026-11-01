@@ -1,6 +1,7 @@
 import { css, html, nothing } from 'lit';
 import type { RetryableLazyChunk } from '../contracts/lazy-module';
-import { notifyChunks } from '../utils/lazy-chunk';
+import { freshReload, reloadAsked } from '../utils/fresh-reload';
+import { BUILD_VERSION, notifyChunks } from '../utils/lazy-chunk';
 import { t } from './i18n';
 
 /** The failure notice of a lazy chunk: an icon, a message and a 44 px button in the card's shadow root. */
@@ -39,6 +40,43 @@ export const noticeStyles = css`
     outline: 2px solid var(--mc-text, #212121);
     outline-offset: 2px;
   }
+  .mc-u {
+    display: grid;
+    position: relative;
+    z-index: 1;
+    min-width: 12em;
+    padding: 0;
+  }
+  .mc-u p {
+    grid-row: 2;
+    margin: 0;
+    padding: 10px 16px;
+  }
+  .mc-u a {
+    color: inherit;
+  }
+  .mc-u button {
+    grid-row: 2;
+    min-height: 44px;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: start;
+    border: 0;
+    border-radius: var(--mc-radius, 8px);
+  }
+  .mc-u button:focus {
+    outline: 2px solid var(--mc-text, #212121);
+    outline-offset: -4px;
+  }
+  .mc-uv {
+    grid-row: 1;
+    justify-self: end;
+    margin: 4px 8px 0;
+    font-size: 0.75em;
+    user-select: text;
+    -webkit-user-select: text;
+    -webkit-touch-callout: default;
+  }
   .mc-v {
     position: absolute;
     width: 1px;
@@ -71,6 +109,8 @@ const part = (name: string): string => {
 };
 
 const reload = (): void => location.reload();
+
+const CACHE_HELP = 'https://github.com/therealmcsparrow/magic-card/blob/main/documentation/loading-and-size/README.md#clear-the-browser-cache';
 
 /** What one chunk's notice shows right now: shown (past its empty first frame), busy, asked twice, the "loaded" text. */
 interface Seen {
@@ -120,19 +160,27 @@ export function chunkNotice(c: RetryableLazyChunk) {
     requestAnimationFrame(() => ((s.shown = c.failed()), notifyChunks()));
   }
   return html`<div role="status" aria-live="polite" aria-busy=${s.busy ? 'true' : 'false'}>${s.shown && c.failed()
-      ? html`<div class="mc-n">
+      ? mismatch
+        ? html`<div class="mc-n mc-u">
+            ${reloadAsked(BUILD_VERSION)
+              ? html`<p id=${id}>
+                  ${t('card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload')}
+                  <a href=${CACHE_HELP} target="_blank" rel="noopener noreferrer">${t('card.chunk-notice.how-to-clear-the-cache')}</a>
+                </p>`
+              : html`<button type="button" @click=${() => freshReload(BUILD_VERSION)}>${t('card.chunk-notice.magic-card-updated-tap-to-reload')}</button>`}
+            <span class="mc-uv">${BUILD_VERSION}</span>
+          </div>`
+        : html`<div class="mc-n">
           <ha-icon icon="mdi:alert-circle-outline" aria-hidden="true"></ha-icon>
           <span id=${id}
-            >${mismatch
-              ? t('card.chunk-notice.magic-card-was-updated-reload-the-page')
-              : s.again
-                ? t('card.chunk-notice.still-not-loading-try-again-in-a-moment')
-                : t('card.chunk-notice.part-did-not-load-the-rest-of-this-card', { part: part(c.name) })}</span
+            >${s.again
+              ? t('card.chunk-notice.still-not-loading-try-again-in-a-moment')
+              : t('card.chunk-notice.part-did-not-load-the-rest-of-this-card', { part: part(c.name) })}</span
           >
-          <button type="button" aria-describedby=${id} aria-disabled=${s.busy ? 'true' : nothing} @click=${mismatch ? reload : (e: Event) => retry(c, s, e)}>
-            ${mismatch ? t('card.chunk-notice.reload-page') : t('card.chunk-notice.try-again')}
+          <button type="button" aria-describedby=${id} aria-disabled=${s.busy ? 'true' : nothing} @click=${(e: Event) => retry(c, s, e)}>
+            ${t('card.chunk-notice.try-again')}
           </button>
-          ${s.again && !mismatch ? html`<button type="button" aria-describedby=${id} @click=${reload}>${t('card.chunk-notice.reload-page')}</button>` : nothing}
+          ${s.again ? html`<button type="button" aria-describedby=${id} @click=${reload}>${t('card.chunk-notice.reload-page')}</button>` : nothing}
         </div>`
       : s.done
         ? html`<span class="mc-v">${s.done}</span>`

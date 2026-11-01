@@ -1,5 +1,6 @@
 import type { HassEntity } from '../types';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
+import { parseDuration } from '../contracts/card-status.needs';
 
 /** Home Assistant timer entities (timer.*): time left and one shared 1 s ticker. */
 
@@ -14,15 +15,7 @@ export interface TimerProgress {
 
 export const isTimer = (id: string | undefined): boolean => !!id && id.startsWith('timer.');
 
-/** "H:MM:SS", "1 day, 2:00:00" or a number of seconds, in ms; undefined when unreadable. */
-export function parseDuration(v: unknown): number | undefined {
-  if (typeof v === 'number') return Number.isFinite(v) && v >= 0 ? v * 1000 : undefined;
-  if (typeof v !== 'string') return undefined;
-  const m = /^\s*(?:(\d+)\s+days?,\s*)?(\d+):(\d{1,2})(?::(\d{1,2}(?:\.\d+)?))?\s*$/.exec(v);
-  if (!m) return undefined;
-  const [, d, h, mi, s] = m;
-  return ((Number(d || 0) * 24 + Number(h)) * 3600 + Number(mi) * 60 + Number(s || 0)) * 1000;
-}
+export { parseDuration };
 
 /** Progress of a timer entity, or undefined when it is not a timer (or has no readable duration). */
 export function timerProgress(stateObj: HassEntity | undefined, now = Date.now()): TimerProgress | undefined {

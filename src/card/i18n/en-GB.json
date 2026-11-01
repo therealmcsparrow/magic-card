@@ -27,10 +27,15 @@
     "note": "Label of the button that freezes all animations on the card, for people who are bothered by movement. A verb phrase.",
     "max": 20
   },
-  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
-    "text": "Magic Card was updated. Reload the page to see this part. The rest of this card works.",
-    "note": "Notice shown in place of a feature that could not load after an update. Magic Card is the product name. This part refers to the missing feature, such as the animation.",
-    "max": 140
+  "card.chunk-notice.how-to-clear-the-cache": {
+    "text": "How to clear the cache",
+    "note": "Link text to a help page about clearing the browser cache.",
+    "max": 40
+  },
+  "card.chunk-notice.magic-card-updated-tap-to-reload": {
+    "text": "Magic Card updated. Tap to reload.",
+    "note": "The whole tile is one button shown when parts of the card come from another release. Magic Card is the product name.",
+    "max": 60
   },
   "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
     "text": "{part} did not load. The rest of this card works.",
@@ -62,6 +67,11 @@
     "text": "Still not loading. Try again in a moment, or reload the page.",
     "note": "Notice shown after the Try again button was used and the feature still did not load.",
     "max": 100
+  },
+  "card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload": {
+    "text": "Still the old version. Clear the browser cache, then reload.",
+    "note": "Shown when a reload still loaded the old release. Followed by a link to a help page.",
+    "max": 90
   },
   "card.chunk-notice.the-animation": {
     "text": "The animation",
@@ -158,6 +168,11 @@
     "text": "pause_button must be auto, always or hidden",
     "note": "Configuration error for the card's YAML. Keep pause_button and the values auto, always and hidden exactly as written; they are not translated.",
     "max": 70
+  },
+  "card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss": {
+    "text": "quiet_time must be seconds or H:MM:SS",
+    "note": "Configuration error for the card's YAML. Keep quiet_time exactly as written; it is a setting name. H:MM:SS is a time format (hours, minutes, seconds) and stays as written, for example 0:05:00.",
+    "max": 60
   },
   "card.config-validator.row-row-col-col-module-module-layer-must": {
     "text": "Row {row}, Col {col}, Module {module}: layer must be an object",

@@ -1,0 +1,22 @@
+{
+  "card-status.faces.connection-lost": {
+    "text": "Connection lost",
+    "hash": "6c44751e"
+  },
+  "card-status.faces.connection-lost-at-time": {
+    "text": "Connection lost at {time}",
+    "hash": "73652d5e"
+  },
+  "card-status.faces.not-updated": {
+    "text": "Not updated",
+    "hash": "9d6d1499"
+  },
+  "card-status.faces.not-updated-since-time": {
+    "text": "Not updated since {time}",
+    "hash": "5ad77d08"
+  },
+  "card-status.faces.reconnected": {
+    "text": "Reconnected",
+    "hash": "20a447db"
+  }
+}

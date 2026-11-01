@@ -135,7 +135,12 @@ function adopt(styles: CSSResultGroup): void {
 
 // ── the chunk ────────────────────────────────────────────────────────────────────────────────────
 
-export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: LazyChunkName | OnDemandChunkName | EditorLazyChunkName, realImporter: LazyImporter<M>): LazyChunkControl<M> {
+/** silent: a quiet chunk; a failure shows no notice and stays out of failedChunkNames(), the retries are the same. */
+export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(
+  name: LazyChunkName | OnDemandChunkName | EditorLazyChunkName,
+  realImporter: LazyImporter<M>,
+  options: { silent?: boolean } = {},
+): LazyChunkControl<M> {
   // every chunk file is dist/magic-card-<name>.js (LAZY_CHUNK_FILES, EDITOR_LAZY_CHUNK_FILES)
   const file = `magic-card-${name}.js`;
   let importer = realImporter;
@@ -152,7 +157,7 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
     if (g !== generation) return false;
     state = 'failed';
     why = kind;
-    everFailed.add(name);
+    if (!options.silent) everFailed.add(name);
     console.warn(message, ...(err === undefined ? [] : [err]));
     notifyChunks();
     return false;

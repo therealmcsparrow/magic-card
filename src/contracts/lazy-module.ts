@@ -2,11 +2,11 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/** Contract: lazy modules and lazy card chunks. Version 1.10.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
- * and the rarely used modules leave magic-card.js. */
+/** Contract: lazy modules and lazy card chunks. Version 1.11.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+ * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
-export const LAZY_MODULE_CONTRACT = '1.10.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 24;
+export const LAZY_MODULE_CONTRACT = '1.11.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 25;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -138,7 +138,15 @@ export interface SameBuildModule {
  * Chunks a render starts when it meets the need, with no needs() row (only the render knows whether a
  * document has a rig or a particle simulation): dist/magic-card-<name>.js. They load through lazyChunk() too.
  */
-export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image';
+export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image' | 'status';
+
+/** Quiet chunks: each is built with lazyChunk(name, importer, { silent: true }), so a failure shows no notice. */
+export const SILENT_CHUNKS = ['status'] as const;
+
+/** The status chunk (contract card-status 1.0.0): the connection and not-updated faces. */
+export const STATUS_CHUNK_FILE = 'magic-card-status.js';
+/** Same meaning as LAZY_CHUNK_CEILINGS. */
+export const STATUS_CHUNK_CEILING = 16_384;
 
 /** One lazily loaded chunk (src/utils/lazy-chunk.ts). */
 export interface LazyChunk {

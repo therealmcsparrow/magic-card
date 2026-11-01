@@ -19,9 +19,13 @@
     "text": "Beweging pauzeren",
     "hash": "126cf1b7"
   },
-  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
-    "text": "Magic Card is bijgewerkt. Laad de pagina opnieuw om dit onderdeel te zien. De rest van deze kaart werkt.",
-    "hash": "af7bdfe0"
+  "card.chunk-notice.how-to-clear-the-cache": {
+    "text": "Zo wis je de cache",
+    "hash": "fa1fc317"
+  },
+  "card.chunk-notice.magic-card-updated-tap-to-reload": {
+    "text": "Magic Card is bijgewerkt. Tik om te herladen.",
+    "hash": "0595f6cd"
   },
   "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
     "text": "{part} is niet geladen. De rest van deze kaart werkt.",
@@ -42,6 +46,10 @@
   "card.chunk-notice.still-not-loading-try-again-in-a-moment": {
     "text": "Laden lukt nog niet. Probeer het zo opnieuw, of laad de pagina opnieuw.",
     "hash": "fe7252fe"
+  },
+  "card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload": {
+    "text": "Nog steeds de oude versie. Wis de browsercache en herlaad dan.",
+    "hash": "8b3f1dea"
   },
   "card.chunk-notice.the-animation": {
     "text": "De animatie",
@@ -114,6 +122,10 @@
   "card.config-validator.pause-button-must-be-auto-always-or": {
     "text": "pause_button moet auto, always of hidden zijn",
     "hash": "5cf5bba8"
+  },
+  "card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss": {
+    "text": "quiet_time moet seconden of H:MM:SS zijn",
+    "hash": "d75187fa"
   },
   "card.config-validator.row-row-col-col-module-module-layer-must": {
     "text": "Rij {row}, kolom {col}, module {module}: laag moet een object zijn",

@@ -34,6 +34,8 @@ export interface HomeAssistant {
       eventType: string,
     ) => Promise<() => void>;
   };
+  /** False while the websocket is down; a Home Assistant without the field counts as connected. */
+  connected?: boolean;
   /** `state` overrides the entity's own state (e.g. a forecast condition). */
   formatEntityState: (entity: HassEntity, state?: string) => string;
   formatEntityAttributeValue: (entity: HassEntity, attribute: string, value?: unknown) => string;

@@ -86,6 +86,9 @@ import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
 import { defineBgStack } from '../layers/stack/mc-bg-stack';
 import type { CardPause } from './card-pause';
 import { pauseIfLoaded } from './pause-seam';
+import type { StatusController } from '../contracts/card-status';
+import { statusIfLoaded } from './status-seam';
+import { wantsStatus } from '../contracts/card-status.needs';
 import { setCardPaused } from '../icons/offscreen';
 import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.needs';
 import { pauseKey, rememberedPause } from './pause-memory';
@@ -574,6 +577,8 @@ export class MagicCard extends LitElement {
     }
 
     this._wantShapes(this._config);
+    this._status?.config(this._config);
+    if (wantsStatus(config)) this._statusUse();
 
     // Same template: re-merge the new local config (overrides may have changed) without refetching.
     if (this._templateConfig) lazyChunks.templates.whenReady(this._remerge);
@@ -639,6 +644,7 @@ export class MagicCard extends LitElement {
     this._templates.hostConnected();
     this._subscriptions.hostConnected();
     this._media.hostConnected();
+    this._status?.connected();
     if (this.hasUpdated) this._syncTicker();
     if (this.hasUpdated) this._syncTemplateWatch();
     // re-attached (masonry rebuild, cached view): sequences were stopped and the library dropped;
@@ -676,12 +682,18 @@ export class MagicCard extends LitElement {
     // Module texts in the user's language from the first hass on (not only when it changes later).
     if (changedProperties.has('hass') && this.hass) setI18nLocale(this.hass);
     if (changedProperties.has('hass')) {
+      this._statusStep(changedProperties.get('hass') as HomeAssistant | undefined);
       this._popupCtl?.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
     }
     if (this._libDirty || changedProperties.has('_config') || changedProperties.has('_resolvedConfig')) {
       return true;
     }
-    if (changedProperties.has('preview') || changedProperties.has('editMode') || changedProperties.has('previewPaused')) return true;
+    if (changedProperties.has('hass') && (changedProperties.get('hass') as HomeAssistant | undefined)?.connected !== this.hass?.connected) return true;
+    if (changedProperties.has('preview') || changedProperties.has('editMode')) {
+      if (this._status) this._status.preview = this.preview || this.editMode;
+      return true;
+    }
+    if (changedProperties.has('previewPaused')) return true;
 
     if (changedProperties.has('hass') && this.hass) {
       const oldHass = changedProperties.get('hass') as HomeAssistant | undefined;
@@ -729,6 +741,35 @@ export class MagicCard extends LitElement {
 
   /** The pause state of the render to come (set in willUpdate). */
   private _paused = false;
+
+  /** Date.now() of the last connection drop as this card saw it (card-status 1.0.0). */
+  lostAt?: number;
+  private _status?: StatusController;
+  /** Hands the status chunk the connection change; starts the chunk on the first drop. */
+  private _statusStep(prev?: HomeAssistant): void {
+    const gone = this.hass?.connected === false;
+    const drop = gone && prev?.connected !== false && !this.preview && !this.editMode;
+    if (drop) this.lostAt = Date.now();
+    else if (!gone && prev?.connected === false && onDemandChunks.status.failed()) void onDemandChunks.status.retry();
+    if (this._status) this._status.hassChanged(prev, this.hass);
+    else if (drop) this._statusUse();
+  }
+  /** Make the controller once the chunk has installed; until then start the chunk and come back when it lands. */
+  private _statusUse = (): void => {
+    const chunk = onDemandChunks.status;
+    const mod = statusIfLoaded();
+    if (this._status) return;
+    if (!mod) {
+      chunk.whenReady(this._statusUse);
+      void chunk.load();
+      return;
+    }
+    const s = (this._status = mod.api.create(this));
+    s.preview = this.preview || this.editMode;
+    s.config(this._resolvedConfig ?? this._config);
+    s.hassChanged(undefined, this.hass);
+    this.requestUpdate();
+  };
 
   /**
    * Before the render, so before the first paint: the pop-up controller and its host attributes, and the viewer's pause
@@ -879,6 +920,7 @@ export class MagicCard extends LitElement {
     this._unsubShapes?.();
     this._unsubShapes = undefined;
     this._pause?.disconnected();
+    this._status?.disconnected();
     animIfLoaded()?.stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
@@ -1020,7 +1062,7 @@ export class MagicCard extends LitElement {
               data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
-            </div>${renderShape(shape, stroke, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
+            </div>${renderShape(shape, stroke, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}${this._status?.render() ?? nothing}
           </ha-card>
         `, shadow, !!shape);
     if (!popup || !popupCtl) return inline as TemplateResult;

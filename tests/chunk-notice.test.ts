@@ -176,20 +176,14 @@ describe('the notice element', () => {
     expect(q(el, '[role="status"]')!.hasAttribute('tabindex')).toBe(false);
   });
 
-  it('a mismatch shows the Reload page variant at once, with no "Try again"', async () => {
+  it('a mismatch shows the one-tap update tile at once, with no "Try again"', async () => {
     const chunk = await failedChunk(async () => ({ BUILD: 'another-release', install: () => {} }));
     expect(chunk.failure()).toBe('mismatch');
-    const reload = vi.fn();
-    vi.stubGlobal('location', { reload });
     const el = await notice(chunk);
     await frame();
     await el.updateComplete;
-    expect(q(el, '.mc-n span')!.textContent).toContain('Magic Card was updated. Reload the page to see this part. The rest of this card works.');
     const buttons = [...el.shadowRoot!.querySelectorAll('button')];
-    expect(buttons.map((x) => x.textContent!.trim())).toEqual(['Reload page']);
-    buttons[0].click();
-    expect(reload).toHaveBeenCalledTimes(1);
-    vi.unstubAllGlobals();
+    expect(buttons.map((x) => x.textContent!.trim())).toEqual(['Magic Card updated. Tap to reload.']);
   });
 
   it('names no chunk and no key on the card: the chunk name goes to console.warn only', async () => {
@@ -204,7 +198,7 @@ describe('the notice element', () => {
     const read = (f: string) => JSON.parse(readFileSync(resolve(__dirname, `../src/card/i18n/${f}.json`), 'utf8')) as Record<string, { text: string }>;
     const gb = read('en-GB');
     const nl = read('nl');
-    for (const id of ['The animation', 'The custom shape', 'The seasonal effect', 'The background', 'The flow style', 'The slider', 'The text block', 'Part of this card', '{part} loaded.', '{part} did not load. The rest of this card works.', 'Try again', 'Reload page']) {
+    for (const id of ['The animation', 'The custom shape', 'The seasonal effect', 'The background', 'The flow style', 'The slider', 'The text block', 'Part of this card', '{part} loaded.', '{part} did not load. The rest of this card works.', 'Try again', 'Reload page', 'Magic Card updated. Tap to reload.', 'Still the old version. Clear the browser cache, then reload.', 'How to clear the cache']) {
       const key = Object.keys(gb).find((k) => gb[k].text === id);
       expect(key, id).toBeTruthy();
       expect(nl[key!]?.text, id).toBeTruthy();

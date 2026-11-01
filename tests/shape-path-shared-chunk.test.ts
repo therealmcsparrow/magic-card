@@ -16,8 +16,8 @@ const read = (p: string) => readFileSync(resolve(root, p), 'utf8');
 
 describe('shape-path shared chunk (lazy-module 1.10.0)', () => {
   it('the contract names the chunk, its file and its ceiling', () => {
-    expect(LAZY_MODULE_CONTRACT).toBe('1.10.0');
-    expect(LAZY_MODULE_CONTRACT_REVISION).toBe(24);
+    expect(LAZY_MODULE_CONTRACT).toBe('1.11.0');
+    expect(LAZY_MODULE_CONTRACT_REVISION).toBe(25);
     expect(LAZY_SHARED_CHUNK_FILES['shape-path']).toBe('magic-card-shape-path.js');
     expect(LAZY_SHARED_CHUNK_CEILINGS['shape-path']).toBe(20_480);
     expect(read('src/contracts/lazy-module.ts')).toMatch(/\/\*\* src\/utils\/shape-path\.ts only\. \*\/\s*'shape-path': 20_480/);
