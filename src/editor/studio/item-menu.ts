@@ -739,6 +739,7 @@ export class ItemMenu implements ReactiveController {
       aria-haspopup=${e.sub ? 'menu' : nothing}
       aria-keyshortcuts=${e.kbd?.[1] ?? nothing}
       data-kbd=${e.kbd?.[0] ?? nothing}
+      data-arrow=${e.icon.startsWith('mdi:arrow-') ? '' : nothing}
       data-back=${e.back && e.label === t('card-editor.item-menu.back') ? '' : nothing}
       ?disabled=${e.disabled}
       @click=${() => this._run(e)}
@@ -844,6 +845,9 @@ export const itemMenuStyles = css`
   }
   :host([dir='rtl']) .item-menu button[aria-haspopup]::after {
     content: '‹';
+  }
+  :host([dir='rtl']) .item-menu button[data-arrow] ha-icon {
+    transform: scaleX(-1);
   }
   .item-menu .menu-note {
     margin: 4px 8px 8px;

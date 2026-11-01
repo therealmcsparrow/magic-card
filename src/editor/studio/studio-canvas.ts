@@ -1830,7 +1830,8 @@ export class StudioCanvas extends LitElement {
       }
       .canvas-hint {
         position: absolute;
-        inset-inline-start: 16px;
+        left: 16px;
+        inset-inline: 16px auto;
         bottom: 16px;
         z-index: 3;
         max-width: calc(100% - 32px);

@@ -20,7 +20,7 @@ import { moduleEditors } from '../modules';
 import { hasColumnWidths } from '../../utils/column-widths';
 import { editorStyles } from '../../css/editor-css';
 import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
-import { readDirection } from '../../ui-kit/controllers/direction';
+import { DirectionController, readDirection } from '../../ui-kit/controllers/direction';
 import {
   ModuleSelection,
   Selection,
@@ -115,6 +115,7 @@ const KIND_TABS: Record<Exclude<Kind, 'module'>, EditorTab[]> = {
  */
 @customElement('mc-inspector')
 export class Inspector extends LitElement {
+  private readonly _direction = new DirectionController(this);
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ reflect: true }) variant: 'pane' | 'studio' = 'pane';
@@ -932,6 +933,9 @@ export class Inspector extends LitElement {
       }
       .dgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .dgroup-body {
         display: grid;

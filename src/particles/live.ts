@@ -213,6 +213,7 @@ interface Entry {
   key: string;
   on: boolean;
   acc: number;
+  mirror: boolean;
 }
 
 const entries = new Map<HTMLElement, Entry>();
@@ -252,7 +253,7 @@ function frame(ts: number): void {
       for (const s of e.sims) s.step();
       e.acc -= DT;
     }
-    writeFrame(e.el, e.sims.flatMap((s) => s.frame()));
+    writeFrame(e.el, e.sims.flatMap((s) => s.frame()), false, e.mirror);
   }
   if (anyOn() && pageVisible()) raf = requestAnimationFrame(frame);
   else last = 0;
@@ -274,15 +275,19 @@ export function partSims(spec: ParticlesSpecV2, period: number, geometry: BakeGe
  * Runs `layer` (the document's `part`) live, one simulation per emitter of the part. Idempotent: the same
  * `key` (layer name: spec, period, geometry, part) keeps the running simulations; another key starts over.
  */
-export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0): void {
-  if (entries.get(layer)?.key === key) return;
+export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0, mirror = false): void {
+  const live = entries.get(layer);
+  if (live?.key === key) {
+    live.mirror = mirror;
+    return;
+  }
   stopLive(layer);
   if (!listening && typeof document !== 'undefined') {
     document.addEventListener('visibilitychange', onVisibility);
     listening = true;
   }
   const sims = partSims(spec, period, geometry, part);
-  const e: Entry = { el: layer, sims, key, on: false, acc: 0 };
+  const e: Entry = { el: layer, sims, key, on: false, acc: 0, mirror };
   entries.set(layer, e);
   const watched = watchOffscreen(layer, (on) => {
     if (entries.get(layer) !== e) return;

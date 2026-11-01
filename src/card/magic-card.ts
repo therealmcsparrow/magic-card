@@ -1640,6 +1640,7 @@ export class MagicCard extends LitElement {
       pm.apply(el, {
         ...sim,
         reducedMotion: reduced,
+        mirror: animIfLoaded()?.animationLibrary.custom(sim.docId, this._resolvedConfig ?? this._config)?.mirror === 'mirror' && getComputedStyle(w).direction === 'rtl',
         // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
         // content collider: `icon` = this module's own icon hook (not a nested module's; rows, columns
         // and the card have none: off), `text` = the first child that is not a decoration (all aria-hidden)

@@ -22,6 +22,7 @@ import {
 } from './states-utils';
 import { whenLabel } from './states-sim';
 import { t, m } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 
 // States (studio inspector, nothing selected): the document clips as condition cards (When, Play, Transition), reordered
 // by arrows (first match plays), deleted, added up to 12. `.doc` is never mutated: edits emit `doc-change`.
@@ -163,7 +164,8 @@ export class AnimStatesPanel extends LitElement {
     };
     const onKey = (e: KeyboardEvent) => {
       const at = TRANSITIONS.findIndex((x) => x.id === value);
-      const map: Record<string, number> = { ArrowRight: (at + 1) % TRANSITIONS.length, ArrowLeft: (at - 1 + TRANSITIONS.length) % TRANSITIONS.length, Home: 0, End: TRANSITIONS.length - 1 };
+      const rtl = readDirection(e.currentTarget as Element) === 'rtl';
+      const map: Record<string, number> = { [rtl ? 'ArrowLeft' : 'ArrowRight']: (at + 1) % TRANSITIONS.length, [rtl ? 'ArrowRight' : 'ArrowLeft']: (at - 1 + TRANSITIONS.length) % TRANSITIONS.length, Home: 0, End: TRANSITIONS.length - 1 };
       const next = map[e.key];
       if (next === undefined) return;
       e.preventDefault();

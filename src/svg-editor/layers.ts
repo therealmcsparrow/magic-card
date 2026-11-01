@@ -2,6 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { DRAG_EDGE_PX, DRAG_START_PX, type TreePlace } from '../contracts/svg-editor';
 import type { MenuEntry } from '../contracts/path-canvas';
+import { readDirection } from '../ui-kit/controllers/direction';
 import { glyph } from '../ui-kit/glyphs';
 import { arrangeOrder, byId, groupChain, groupItems, layoutRows, outsideSafe, toneOf, tryMove, under, type Doc, type MoveWhy, type TreeRow } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
@@ -236,6 +237,8 @@ function rowKey(e: KeyboardEvent, ed: McSvgEditor, r: TreeRow): void {
   const all = [...(e.currentTarget as HTMLElement).parentElement!.querySelectorAll<HTMLElement>('[role=treeitem]')];
   const i = all.indexOf(e.currentTarget as HTMLElement);
   const go = (j: number): void => all[Math.max(0, Math.min(all.length - 1, j))]?.focus();
+  const rtl = readDirection(e.currentTarget as Element) === 'rtl';
+  const fwd = rtl ? 'ArrowLeft' : 'ArrowRight';
   const eat = (): void => {
     e.preventDefault();
     e.stopPropagation();
@@ -245,7 +248,7 @@ function rowKey(e: KeyboardEvent, ed: McSvgEditor, r: TreeRow): void {
     const ud = e.key === 'ArrowUp' || e.key === 'ArrowDown';
     if ((e.shiftKey && lr) || (!e.shiftKey && ud)) {
       eat();
-      if (lr) stepGroup(ed, r.id, e.key === 'ArrowRight' ? 'in' : 'out');
+      if (lr) stepGroup(ed, r.id, e.key === fwd ? 'in' : 'out');
       else stepOrder(ed, r.id, e.key === 'ArrowUp' ? 1 : -1);
     }
     return;
@@ -275,14 +278,14 @@ function rowKey(e: KeyboardEvent, ed: McSvgEditor, r: TreeRow): void {
       eat();
       go(all.length - 1);
       break;
-    case 'ArrowRight':
+    case fwd:
       if (r.group) {
         eat();
         if (open) go(i + 1);
         else ed.toggleGroup(r.id);
       }
       break;
-    case 'ArrowLeft':
+    case rtl ? 'ArrowRight' : 'ArrowLeft':
       if (open || r.parent) {
         eat();
         if (open) ed.toggleGroup(r.id);

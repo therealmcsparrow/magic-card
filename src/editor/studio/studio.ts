@@ -394,7 +394,7 @@ export class Studio extends LitElement {
       <header class="topbar">
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm" @click=${this._close}>
-            <ha-icon icon="mdi:arrow-left"></ha-icon>${t('card-editor.studio.back-to-dialog')}
+            <ha-icon class="back-arrow" icon="mdi:arrow-left"></ha-icon>${t('card-editor.studio.back-to-dialog')}
           </button>
           <button
             type="button"
@@ -582,6 +582,9 @@ export class Studio extends LitElement {
         }
       }
 
+      :host([dir='rtl']) .back-arrow {
+        transform: scaleX(-1);
+      }
       .grp {
         display: flex;
         align-items: center;
@@ -761,7 +764,8 @@ export class Studio extends LitElement {
           display: none;
           position: absolute;
           z-index: 7;
-          inset-inline-start: 0;
+          left: 0;
+          inset-inline: 0 auto;
           top: 0;
           bottom: 0;
           width: 260px;

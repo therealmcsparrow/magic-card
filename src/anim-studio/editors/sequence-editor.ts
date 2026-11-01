@@ -979,7 +979,8 @@ export class AnimSequenceEditor extends LitElement {
       }
       .pick-search > ha-icon {
         position: absolute;
-        inset-inline-start: 10px;
+        left: 10px;
+        inset-inline: 10px auto;
         --mdc-icon-size: 18px;
         color: var(--mc-text-2);
         pointer-events: none;

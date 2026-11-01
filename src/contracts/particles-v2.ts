@@ -346,6 +346,8 @@ export interface ParticlesApplyCtx {
   period: number;
   /** This layer is part 1 (the emitters on the other side). Missing: part 0. */
   part?: 1;
+  /** The document is flagged to mirror and the layer sits in a right-to-left direction: x flips about the layer's centre. */
+  mirror?: boolean;
 }
 
 /**

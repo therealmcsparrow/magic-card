@@ -27,7 +27,7 @@ import { DEVICES, DRAWS } from './icon-fx-options';
 import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
-import { readDirection } from '../../ui-kit/controllers/direction';
+import { DirectionController, readDirection } from '../../ui-kit/controllers/direction';
 import { inlineSides } from '../../ui-kit/css/rtl';
 import { entityStateColor } from '../../utils/entity-color';
 import { PasteMode, copyDesign, designUpdates, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
@@ -98,6 +98,7 @@ const TEXT_PLACEHOLDERS: Record<string, string> = {
 
 @customElement('mc-design-panel')
 export class DesignPanel extends LitElement {
+  private readonly _direction = new DirectionController(this);
   static styles = [
     editorSystem,
     css`
@@ -216,6 +217,9 @@ export class DesignPanel extends LitElement {
       .subgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
       }
+      :host([dir='rtl']) .subgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
+      }
       .subgroup-body,
       .tab-notes {
         display: grid;
@@ -286,6 +290,9 @@ export class DesignPanel extends LitElement {
       }
       .dgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .dgroup-body {
         display: grid;

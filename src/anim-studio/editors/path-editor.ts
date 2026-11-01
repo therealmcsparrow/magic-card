@@ -20,6 +20,7 @@ import {
   type PathTemplateId,
 } from './path-utils';
 import { t, tx, m, type MessageId } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 
 // mc-unit-field and mc-color-picker are used by tag only: the card bundle defines them and loads before the studio bundle,
 // so this file must not import them.
@@ -282,7 +283,8 @@ export class AnimPathEditor extends LitElement {
   private _seg<T extends string>(label: string, options: Array<{ value: T; label: MessageId; icon?: string }>, value: T, pick: (v: T) => void): TemplateResult {
     const onKey = (e: KeyboardEvent) => {
       const i = options.findIndex((o) => o.value === value);
-      const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      const h = readDirection(e.currentTarget as Element) === 'rtl' ? -1 : 1;
+      const step: Record<string, number> = { ArrowRight: h, ArrowDown: 1, ArrowLeft: -h, ArrowUp: -1 };
       if (!(e.key in step)) return;
       e.preventDefault();
       const next = options[(i + step[e.key] + options.length) % options.length].value;

@@ -32,6 +32,7 @@ import { applyRowLayout, effectiveWidths, widthWeights } from '../../utils/colum
 import { toggleNotSynced } from '../state/template-sync';
 import { renderActionGroups } from '../components/action-editor';
 import { t, m, tl } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 
 const equalLayout = (n: number) => Array.from({ length: Math.max(n, 1) }, () => '1').join('-');
 
@@ -106,7 +107,8 @@ export function renderLayoutPicker(g: RowGrid): TemplateResult {
     if (!keys.includes(e.key)) return;
     e.preventDefault();
     const idx = all.indexOf(current);
-    const delta = e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 1;
+    const back = readDirection(e.currentTarget as Element) === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    const delta = e.key === back || e.key === 'ArrowUp' ? -1 : 1;
     const nextIdx = e.key === 'Home' ? 0 : e.key === 'End' ? all.length - 1 : (idx + delta + all.length) % all.length;
     const next = all[nextIdx];
     choose(next);

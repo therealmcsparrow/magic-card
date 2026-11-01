@@ -137,12 +137,12 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
     }
     if (ctx.reducedMotion) {
       stopLive(layer);
-      writeFrame(layer, stillFrame(e, spec, period, g, part), true);
+      writeFrame(layer, stillFrame(e, spec, period, g, part), true, !!ctx.mirror);
       stills.add(layer);
       return;
     }
     if (stills.delete(layer)) clearFrame(layer);
-    if (spec.sim.mode === 'live') startLive(layer, spec, period, g, c.name, part);
+    if (spec.sim.mode === 'live') startLive(layer, spec, period, g, c.name, part, !!ctx.mirror);
     else stopLive(layer);
   } catch (err) {
     if (!logged) {

@@ -1414,6 +1414,9 @@ export class StructureOutline extends LitElement {
       .caret[aria-expanded='false'] ha-icon {
         transform: rotate(-90deg);
       }
+      :host([dir='rtl']) .caret[aria-expanded='false'] ha-icon {
+        transform: rotate(90deg);
+      }
       .more[aria-expanded='true'] {
         background: var(--mc-surface-2);
         color: var(--mc-text);
