@@ -81,6 +81,21 @@ export const SLIDER_LOOK_CSS = `
 .mc-tile-slider--vertical.mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-v{top:auto;bottom:52px}
 .mc-tile-slider.mc-sl.mc-sl--big-fill.mc-tile-slider--vertical{height:12rem;max-height:calc(100% - 3rem);margin-top:1.5rem;margin-bottom:1.5rem}
 .mc-slider-container.mc-slider-container--bigfill{height:max(var(--mc-slider-vertical-height,120px),15rem)}
+/* a right-to-left horizontal track: the fill and its gradient are flipped as a whole, the placed parts count from the right edge */
+.mc-tile-slider[data-mc-rtl] .mc-sl-f,.mc-tile-slider[data-mc-rtl] .mc-sl-segs{transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-g{left:auto;right:calc(var(--v) * 100% - 9px)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%);transform:translate(50%,-50%) scale(var(--sc,1))}
+.mc-tile-slider[data-mc-rtl] .mc-sl-k{left:auto;right:calc(var(--k) * 100%);margin-left:0;margin-right:-.5px}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l{left:auto;right:calc(var(--k) * 100%);transform:translateX(50%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l[data-edge='0']{transform:none}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l[data-edge='1']{transform:translateX(100%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-b{left:auto;right:calc(var(--v) * 100%);transform:translateX(50%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-v{right:auto;left:8px}
+.mc-tile-slider[data-mc-rtl] .mc-sl-e{right:auto;left:6px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-i{left:auto;right:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-v{right:auto;left:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-v{left:auto;right:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-i~.mc-sl-v{left:auto;right:52px}
 .mc-tile-slider[offscreen] .mc-sl-p *{transition:none;animation:none}
 @media (prefers-reduced-motion:reduce){.mc-sl-f,.mc-sl-th,.mc-sl-b{transition:none}.mc-tile-slider.mc-dragging .mc-sl-th{--sc:1}}
 `.replace(/\n/g, '');

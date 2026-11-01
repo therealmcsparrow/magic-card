@@ -1,10 +1,80 @@
-import { html, nothing, TemplateResult } from 'lit';
+import { html, nothing, TemplateResult, type ElementPart, type Part } from 'lit';
+import { AsyncDirective, directive } from 'lit/async-directive.js';
 import type { TrackOptionsLook } from '../contracts/slider-look';
 import { pauseOffscreen } from '../icons/offscreen';
 import { snapValue } from './entity-control';
 
 /** Events of an interactive control that must not reach the module wrapper (its tap / hold actions). */
 export const stopControlEvent = (e: Event): void => e.stopPropagation();
+
+/** The window event the studio dispatches when it sets or removes `dir` (the name of DIR_CHANGE_EVENT, kept local so this chunk imports no ui-kit). */
+const DIR_EVENT = 'mc-dir-change';
+
+/** Whether the element's computed CSS direction is rtl (a `direction: ltr` canvas inside an rtl page reads ltr). */
+export function elementRtl(el: Element): boolean {
+  try {
+    return getComputedStyle(el).direction === 'rtl';
+  } catch {
+    return false;
+  }
+}
+
+/** Marks a horizontal track `data-mc-rtl` when it runs right to left; the stylesheets mirror on that attribute. */
+export function syncTrackDirection(el: Element | null | undefined): void {
+  if (!el) return;
+  if (!el.classList.contains('mc-tile-slider--vertical') && elementRtl(el)) el.setAttribute('data-mc-rtl', '');
+  else el.removeAttribute('data-mc-rtl');
+}
+
+const tracks = new Set<Element>();
+const syncAll = (): void => tracks.forEach(syncTrackDirection);
+let watcher: MutationObserver | undefined;
+const watch = (el: Element): void => {
+  if (!tracks.size) {
+    window.addEventListener(DIR_EVENT, syncAll);
+    if (typeof MutationObserver === 'function') {
+      watcher = new MutationObserver(syncAll);
+      watcher.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+    }
+  }
+  tracks.add(el);
+};
+const unwatch = (el: Element): void => {
+  tracks.delete(el);
+  if (tracks.size) return;
+  window.removeEventListener(DIR_EVENT, syncAll);
+  watcher?.disconnect();
+  watcher = undefined;
+};
+
+/** Keeps `data-mc-rtl` on its track current: read on render, on mc-dir-change and on `dir` changes of the page; all of it ends when the track disconnects. */
+class TrackDirection extends AsyncDirective {
+  private el?: Element;
+  render(): void {}
+  override update(part: Part): void {
+    const element = (part as ElementPart).element;
+    if (this.el !== element) {
+      if (this.el) unwatch(this.el);
+      this.el = element;
+      if (this.isConnected) watch(this.el);
+    }
+    syncTrackDirection(this.el);
+    queueMicrotask(() => syncTrackDirection(this.el));
+  }
+  protected override disconnected(): void {
+    if (this.el) unwatch(this.el);
+  }
+  protected override reconnected(): void {
+    if (this.el) {
+      watch(this.el);
+      syncTrackDirection(this.el);
+    }
+  }
+}
+const trackDirection = directive(TrackDirection);
+
+/** The key a horizontal rtl track treats as its opposite arrow. */
+const MIRROR_KEY: Record<string, string> = { ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
 
 /** A touch moves this far along the track before the slider follows it (else it may be a scroll). */
 const DRAG_INTENT_PX = 8;
@@ -42,7 +112,8 @@ export function renderTrack(o: TrackOptions): TemplateResult {
   const fromPointer = (el: HTMLElement, e: PointerEvent): number => {
     const rect = el.getBoundingClientRect();
     if (o.vertical) return rect.height ? Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height)) : 0;
-    return rect.width ? Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) : 0;
+    const from = elementRtl(el) ? rect.right - e.clientX : e.clientX - rect.left;
+    return rect.width ? Math.max(0, Math.min(1, from / rect.width)) : 0;
   };
   const clamp = (v: number) => Math.max(o.min, Math.min(o.max, v));
   const toValue = (f: number) => (o.snap ? clamp(o.snap(o.min + f * range)) : snapValue(o.min + f * range, o.min, o.max, o.step));
@@ -112,6 +183,7 @@ export function renderTrack(o: TrackOptions): TemplateResult {
   const onKeyDown = (e: KeyboardEvent) => {
     e.stopPropagation();
     if (o.disabled) return;
+    const key = !o.vertical && e.key in MIRROR_KEY && elementRtl(e.currentTarget as Element) ? MIRROR_KEY[e.key] : e.key;
     const current = o.value ?? o.min;
     const big = Math.max(o.step, range / 10);
     const next: Record<string, number> = {
@@ -124,10 +196,10 @@ export function renderTrack(o: TrackOptions): TemplateResult {
       Home: o.min,
       End: o.max,
     };
-    if (!(e.key in next)) return;
+    if (!(key in next)) return;
     e.preventDefault();
-    const custom = o.nextValue?.(current, e.key);
-    const v = custom === undefined ? snapValue(next[e.key], o.min, o.max, o.step) : clamp(custom);
+    const custom = o.nextValue?.(current, key);
+    const v = custom === undefined ? snapValue(next[key], o.min, o.max, o.step) : clamp(custom);
     if (v !== o.value) o.onCommit(v);
   };
 
@@ -148,6 +220,7 @@ export function renderTrack(o: TrackOptions): TemplateResult {
       @pointerup=${stopControlEvent}
       @click=${stopControlEvent}
       @keydown=${onKeyDown}
+      ${o.vertical ? nothing : trackDirection()}
       ${o.parts ? pauseOffscreen({ counted: false }) : nothing}
     >
       <div class="mc-tile-slider-background"></div>
