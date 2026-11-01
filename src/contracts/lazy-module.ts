@@ -2,11 +2,11 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/** Contract: lazy modules and lazy card chunks. Version 1.10.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
- * and the rarely used modules leave magic-card.js. */
+/** Contract: lazy modules and lazy card chunks. Version 1.11.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+ * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
-export const LAZY_MODULE_CONTRACT = '1.10.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 24;
+export const LAZY_MODULE_CONTRACT = '1.11.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 25;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';

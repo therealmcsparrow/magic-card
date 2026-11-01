@@ -68,7 +68,7 @@ function recording(outcomes: Array<'fail' | 'ok' | 'stall'>) {
 const rNumber = (u: string) => Number(/[?&]r=(\d+)/.exec(u)?.[1]);
 
 describe('contract: version, numbers and wording (lazy-module 1.6.0)', () => {
-  it('LAZY_MODULE_CONTRACT is 1.10.0', () => expect(LAZY_MODULE_CONTRACT).toBe('1.10.0'));
+  it('LAZY_MODULE_CONTRACT is 1.11.0', () => expect(LAZY_MODULE_CONTRACT).toBe('1.11.0'));
 
   it('the entry gets its numbers from lazy-module.needs.ts and the contract re-exports them', () => {
     expect([CHUNK_TIMEOUT_MS, SILENT_RETRY_MS, BACKGROUND_RETRY_MS]).toEqual([10_000, 2_000, [30_000, 90_000, 300_000]]);
