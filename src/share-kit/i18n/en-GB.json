@@ -56,6 +56,37 @@
     "note": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported.",
     "max": 45
   },
+  "share-kit.mapping.map-entities": {
+    "text": "Map entities",
+    "note": "Heading of the optional step in an import where placeholders are linked to the importer's own Home Assistant entities.",
+    "max": 30
+  },
+  "share-kit.mapping.skip-mapping": {
+    "text": "Skip mapping",
+    "note": "Button in the import mapping step that clears all chosen entities so the placeholders stay as they are.",
+    "max": 25
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "text": "That is not an entity ID. Use the form {example}.",
+    "note": "Error under an entity field in the import mapping step. {example} is an example entity ID such as light.name; do not translate it.",
+    "max": 65,
+    "vars": {
+      "example": "An example entity ID, for example light.name."
+    }
+  },
+  "share-kit.mapping.the-preview-shows-value": {
+    "text": "The preview shows {value}",
+    "note": "Shown beside a placeholder: the made-up value the preview uses for it. {value} is a short state such as \"on, 80 %\" or \"21.5 °C\".",
+    "max": 45,
+    "vars": {
+      "value": "The made-up state, for example \"21.5 °C\"."
+    }
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "text": "This file uses placeholders instead of the sender's entities. Type the entity you want for each one, or skip and do it later. A field you leave empty stays a placeholder.",
+    "note": "Help text above the entity mapping fields of an import. A placeholder is a stand-in entity name such as light.mc_placeholder_1. The sender is the person who made the file.",
+    "max": 190
+  },
   "share-kit.notice.actions-in-this-card": {
     "text": "Actions in this card",
     "note": "Heading above the list of actions a shared card can run, shown before the user confirms an import.",

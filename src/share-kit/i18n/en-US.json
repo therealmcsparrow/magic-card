@@ -31,6 +31,26 @@
     "text": "This is not a Magic Card card.",
     "hash": "d853edff"
   },
+  "share-kit.mapping.map-entities": {
+    "text": "Map entities",
+    "hash": "18d3b884"
+  },
+  "share-kit.mapping.skip-mapping": {
+    "text": "Skip mapping",
+    "hash": "52935301"
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "text": "That is not an entity ID. Use the form {example}.",
+    "hash": "923671cb"
+  },
+  "share-kit.mapping.the-preview-shows-value": {
+    "text": "The preview shows {value}",
+    "hash": "d86f815e"
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "text": "This file uses placeholders instead of the sender's entities. Type the entity you want for each one, or skip and do it later. A field you leave empty stays a placeholder.",
+    "hash": "2a874c13"
+  },
   "share-kit.notice.actions-in-this-card": {
     "text": "Actions in this card",
     "hash": "db66b892"

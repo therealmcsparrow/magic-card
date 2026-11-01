@@ -1,6 +1,9 @@
 import { SHARE_KIT_VERSION } from '../contracts/share-kit';
 import type { CreateShareKit, ShareKit } from '../contracts/share-kit';
 import { checkCss, importNoticeOf, readCardWith } from './card';
+import { demoStates } from './demo-states';
+import { applyMapping, findPlaceholders } from './mapping';
+import { previewSafe } from './preview';
 import { toPlaceholders } from './placeholders';
 import { scanMarkers, strictValue, themeValue } from './strict';
 
@@ -19,11 +22,11 @@ export const createShareKit: CreateShareKit = (helpers) => {
     checkCss,
     readCard: readCardWith(helpers),
     placeholderItems: toPlaceholders,
-    findPlaceholders: unavailable('findPlaceholders'),
-    applyMapping: unavailable('applyMapping'),
-    demoStates: unavailable('demoStates'),
+    findPlaceholders,
+    applyMapping,
+    demoStates,
     importNotice: importNoticeOf,
-    previewSafe: unavailable('previewSafe'),
+    previewSafe,
     checkContrast: unavailable('checkContrast'),
   };
   return kit;

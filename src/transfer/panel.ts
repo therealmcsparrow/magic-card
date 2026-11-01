@@ -13,7 +13,7 @@ import { checkCompressed, checkTextSize } from './safe-parse';
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
-import { loadNotice, loadShareKit, shareKit } from './share-kit-loader';
+import { loadMapping, loadNotice, loadShareKit, shareKit } from './share-kit-loader';
 import type { CardKeyLists, ShareKit } from '../contracts/share-kit';
 import { locale, t } from './i18n';
 
@@ -86,6 +86,9 @@ export class TransferPanel extends LitElement {
   @state() private _kitFailed = false;
   /** The notice texts, loaded from the same share-kit chunk. */
   @state() private _words?: typeof import('../share-kit/notice');
+  /** The mapping step, from the same chunk; the entity ids chosen for placeholders. */
+  @state() private _mapper?: typeof import('../share-kit/mapping');
+  @state() private _map: Record<string, string> = {};
 
   private _fileName = '';
 
@@ -97,8 +100,8 @@ export class TransferPanel extends LitElement {
 
   private async _loadKit(): Promise<ShareKit | undefined> {
     this._kit ??= await loadShareKit();
-    if (this._kit) this._words ??= await loadNotice();
-    if (!this._words) this._kit = undefined;
+    if (this._kit) [this._words, this._mapper] = await Promise.all([this._words ?? loadNotice(), this._mapper ?? loadMapping()]);
+    if (!this._words || !this._mapper) this._kit = undefined;
     this._kitFailed = !this._kit;
     return this._kit;
   }
@@ -187,8 +190,10 @@ export class TransferPanel extends LitElement {
       reserved: this.reserved ? (id) => this.reserved!(r.kind, id) : undefined,
       takenName: this.takenName ? (n) => this.takenName!(r.kind, n) : undefined,
     });
-    this.dispatchEvent(new CustomEvent('mc-transfer-import', { bubbles: true, composed: true, detail: { kind: r.kind, items, choice: this._choice } }));
+    const mapped = items.map((i) => ({ ...i, data: this._kit!.applyMapping(i.data, this._map) }));
+    this.dispatchEvent(new CustomEvent('mc-transfer-import', { bubbles: true, composed: true, detail: { kind: r.kind, items: mapped, choice: this._choice } }));
     this._res = undefined;
+    this._map = {};
   }
 
   /** Notes shown to the user: step refs the target already has are not a problem. */
@@ -276,6 +281,7 @@ export class TransferPanel extends LitElement {
       ${run.templates.length
         ? html`<div data-share-templates><strong>${w.templatesHeading()}</strong><p class="help">${w.templatesHelp()}</p><ul>${run.templates.map((x) => html`<li><span class="mono">${x.text}</span></li>`)}</ul></div>`
         : nothing}
+      ${run.placeholders.length ? this._mapper!.mappingView(run.placeholders, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {})) : nothing}
       ${local.length ? html`<p class="help">${t("transfer.panel.n-4", { n: local.length })}</p>` : nothing}
       ${rest.length
         ? html`<details class="cond" ?open=${r.kind === 'image'}>
@@ -306,7 +312,7 @@ export class TransferPanel extends LitElement {
         : nothing}
       <div class="bar">
         ${button({ label: kept.length ? t('transfer.panel.import-anyway') : importLabel(r.items.length, r.kind), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
-        ${button({ label: t('transfer.panel.cancel'), variant: 'text', onClick: () => (this._res = undefined) })}
+        ${button({ label: t('transfer.panel.cancel'), variant: 'text', onClick: () => ((this._res = undefined), (this._map = {})) })}
       </div>
     `;
   }

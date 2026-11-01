@@ -31,6 +31,26 @@
     "text": "Dit is geen Magic Card-kaart.",
     "hash": "d853edff"
   },
+  "share-kit.mapping.map-entities": {
+    "text": "Entiteiten koppelen",
+    "hash": "18d3b884"
+  },
+  "share-kit.mapping.skip-mapping": {
+    "text": "Overslaan",
+    "hash": "52935301"
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "text": "Dat is geen entiteits-ID. Gebruik de vorm {example}.",
+    "hash": "923671cb"
+  },
+  "share-kit.mapping.the-preview-shows-value": {
+    "text": "Het voorbeeld toont {value}",
+    "hash": "d86f815e"
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "text": "Dit bestand gebruikt plaatsaanduidingen in plaats van de entiteiten van de afzender. Typ per plaatsaanduiding de gewenste entiteit, of sla over. Een leeg veld blijft een plaatsaanduiding.",
+    "hash": "2a874c13"
+  },
   "share-kit.notice.actions-in-this-card": {
     "text": "Acties in deze kaart",
     "hash": "db66b892"
