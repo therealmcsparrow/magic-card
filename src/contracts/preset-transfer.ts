@@ -63,28 +63,40 @@ export function decodeCssEscapes(value: string): string {
     });
 }
 
-/** Something that looks like an absolute or protocol-relative address, up to the next separator. */
-const ADDRESS_RE = /(?:\b(?:https?|wss?|ftp):|(?<![^\s,("'])\/\/)[^\s)"',;]*/gi;
+/** The string arguments of a value, read whole: url("…"), url('…'), url(bare) and any other quoted string. */
+const ARGUMENT_RE = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^\s"'()]*))\s*\)|"([^"]*)"|'([^']*)'/gi;
 /** Characters that must not appear in a host name shown to the user. */
 const HIDDEN_RE = /[^\x21-\x7e]/;
+/** A page can load over either scheme, and `https:host` is only an address on a page served over http. */
+const BASES = ['https://invalid.invalid', 'http://invalid.invalid'];
+const BACKSLASH = String.fromCharCode(92);
 
 /**
- * The hosts a theme value points at, as the browser resolves them (ASCII or punycode, lower case). `unknown` is
- * true when an address-like part could not be read as a host, so callers show the generic warning instead.
+ * The hosts a theme value points at, as the browser resolves them (ASCII or punycode, lower case). Each
+ * argument is read whole and parsed the way the browser does, never cut at a separator. `unknown` is true when
+ * anything cannot be read with certainty (a scheme other than http or https, a stray
+ * `:` or `/` outside an argument, an unreadable host), so callers show the generic warning next to any host that was read. A backslash or a comment makes the whole value unreadable: nothing is named. `data:` values
+ * contact nothing and are skipped.
  */
 export function externalHosts(value: string): { hosts: string[]; unknown: boolean } {
+  if (value.includes(BACKSLASH) || value.includes('/*')) return { hosts: [], unknown: true };
   const hosts = new Set<string>();
   let unknown = false;
-  for (const m of decodeCssEscapes(value).matchAll(ADDRESS_RE)) {
-    let host = '';
-    try {
-      host = (m[0].startsWith('//') ? new URL(m[0], 'https://invalid.invalid') : new URL(m[0])).hostname;
-    } catch {
-      /* not a readable address */
+  const rest = value.replace(ARGUMENT_RE, (_m, a?: string, b?: string, c?: string, d?: string, e?: string) => {
+    const arg = a ?? b ?? c ?? d ?? e ?? '';
+    for (const base of BASES) {
+      try {
+        const u = new URL(arg, base);
+        if (u.protocol === 'data:' || u.hostname === 'invalid.invalid') continue;
+        if ((u.protocol === 'https:' || u.protocol === 'http:') && u.hostname && !HIDDEN_RE.test(u.hostname)) hosts.add(u.hostname);
+        else unknown = true;
+      } catch {
+        unknown = true;
+      }
     }
-    if (host && !HIDDEN_RE.test(host)) hosts.add(host);
-    else unknown = true;
-  }
+    return ' ';
+  });
+  if (/[:/]/.test(rest)) unknown = true;
   return { hosts: [...hosts], unknown };
 }
 
@@ -221,6 +233,8 @@ export interface TransferNote {
   message: string;
   /** external_ref: the host names found. */
   hosts?: string[];
+  /** external_ref: part of the value could not be read, so another website may be contacted. */
+  unknown?: boolean;
 }
 
 export type TransferRefusal =

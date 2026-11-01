@@ -64,3 +64,62 @@ describe('hosts as the browser resolves them', () => {
     expect(n?.hosts ?? []).toEqual([]);
   });
 });
+
+describe('payloads that fooled the host scan', () => {
+  const B = String.fromCharCode(92);
+  const T = 'trusted.example';
+  const E = 'evil.example';
+  const decoy = `url(https://${T}/y)`;
+  const cases: Array<[string, string, string[], boolean]> = [
+    ['tab inside the host', `url("https://${T}\t.${E}/x")`, [`${T}.${E}`], false],
+    ['hex line feed inside the host', `url("https://${T}${B}A .${E}/x")`, [], true],
+    ['hex tab inside the host, unquoted', `url(https://${T}${B}9 .${E}/x)`, [], true],
+    ['line continuation inside the host', `url("https://${T}${B}\n.${E}/x")`, [], true],
+    ['space before userinfo @', `url("https://${T} x@${E}/x")`, [E], false],
+    ['comma before userinfo @', `url("https://${T},x@${E}/x")`, [E], false],
+    ['semicolon before userinfo @', `url("https://${T};x@${E}/x")`, [E], false],
+    ['apostrophe before userinfo @', `url("https://${T}'x@${E}/x")`, [E], false],
+    ['bracket before userinfo @', `url("https://${T})x@${E}/x")`, [E], false],
+    ['escaped bracket before userinfo @', `url(https://${T}${B})x@${E}/x)`, [], true],
+    ['no-break space before userinfo @', `url("https://${T}\u00A0x@${E}/x")`, [E], false],
+    ['image-set with a comma before @', `image-set("https://${T},x@${E}/x" 1x)`, [E], false],
+    ['tab inside the slashes beside a decoy', `url("/\t/${E}/x"),${decoy}`, [E, T], false],
+    ['tab inside the scheme beside a decoy', `url("ht\ttps://${E}/x"),${decoy}`, [E, T], false],
+    ['hex line feed inside the scheme beside a decoy', `url("ht${B}A tps://${E}/x"),${decoy}`, [], true],
+    ['hex control before // beside a decoy', `url("${B}1 //${E}/x"),${decoy}`, [], true],
+    ['raw control before // beside a decoy', `url("\x01//${E}/x"),${decoy}`, [E, T], false],
+    ['tab after the colon beside a decoy', `url("https:\t//${E}/x"),${decoy}`, [E, T], false],
+    ['backslashes before the host beside a decoy', `url("/${B}${B}${E}/x"),${decoy}`, [], true],
+    ['backslashes after the scheme', `url("https:${B}${B}${B}${B}${E}/x")`, [], true],
+    ['backslash before @', `url("https://${T}${B}${B}@${E}/x")`, [], true],
+    ['CSS-escaped scheme', `url(${B}68ttps://${E}/x)`, [], true],
+    ['comment after url(', `url(/*c*/"https://${E}/x")`, [], true],
+    ['comment before an image-set string', `image-set(/*c*/"//${E}/x" 1x)`, [], true],
+    ['full-width dot', `url(https://${T}\uFF0E${E}/x)`, [`${T}.${E}`], false],
+    ['ideographic full stop', `url(https://${T}\u3002${E}/x)`, [`${T}.${E}`], false],
+    ['percent-encoded dot', `url(https://${T}%2e${E}/x)`, [`${T}.${E}`], false],
+    ['full-width slash', `url("https://${T}\uFF0F.${E}/x")`, [], true],
+    ['plain userinfo', `url(https://${T}@${E}/x)`, [E], false],
+    ['scheme without slashes', `url(https:${E}/x)`, [E], false],
+    ['upper-case scheme', `url(HTTPS://${E}/x)`, [E], false],
+    ['image-set string', `image-set("https://${E}/x" 1x)`, [E], false],
+    ['prefixed image-set url()', `-webkit-image-set(url(https://${E}/x) 1x)`, [E], false],
+    ['@import string', `@import "https://${E}/x"`, [E], false],
+    ['other scheme', `url(gopher://${E}/x)`, [], true],
+    ['bare address outside any argument', `https://${E}/x`, [], true],
+    ['named and unreadable together', `url(https://${T}/y) url("ht${B}tps://${E}/x")`, [], true],
+    ['named and unreadable host together', `url(https://${T}/y) url("https://a\u202eb.example/x")`, [T], true],
+    ['data: value contacts nothing', `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>")`, [], false],
+  ];
+  it.each(cases)('%s', (_n, value, hosts, unknown) => {
+    const r = externalHosts(value);
+    expect([...r.hosts].sort()).toEqual([...hosts].sort());
+    expect(r.unknown).toBe(unknown);
+  });
+  it('never names the trusted host for a payload that goes elsewhere', () => {
+    for (const [n, value] of cases) {
+      if (/decoy|named and|data:/.test(n)) continue;
+      expect(externalHosts(value).hosts, n).not.toContain(T);
+    }
+  });
+});

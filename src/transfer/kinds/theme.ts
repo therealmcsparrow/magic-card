@@ -43,9 +43,9 @@ export function readTheme(index: number, data: unknown): KindResult<TransferData
       if (CARD_MOD_KEY_RE.test(k)) notes.push(note('card_mod', index, path, label ? t('transfer.theme.mode-mode-key-is-a-card-mod-style-it-was', { mode: label, key: k }) : t('transfer.theme.key-is-a-card-mod-style-it-was-kept-with', { key: k })));
       if (typeof v === 'string') {
         if (contactsOtherHost(v)) {
-          const { hosts: found, unknown } = externalHosts(v);
-          const hosts = unknown ? [] : found;
-          notes.push(note('external_ref', index, path, label ? t('transfer.theme.mode-mode-key-points-to-hosts-it-was', { mode: label, key: k, hosts: hosts.length ? hosts.join(', ') : t('transfer.theme.another-website') }) : t('transfer.theme.key-points-to-hosts-it-was-kept-every', { key: k, hosts: hosts.length ? hosts.join(', ') : t('transfer.theme.another-website') }), hosts));
+          const { hosts, unknown } = externalHosts(v);
+          const named = [...hosts, ...(unknown ? [t('transfer.theme.another-website')] : [])].join(', ') || t('transfer.theme.another-website');
+          notes.push(note('external_ref', index, path, label ? t('transfer.theme.mode-mode-key-points-to-hosts-it-was', { mode: label, key: k, hosts: named }) : t('transfer.theme.key-points-to-hosts-it-was-kept-every', { key: k, hosts: named }), hosts, unknown));
         } else if (LOCAL_PATH_RE.test(v)) {
           notes.push(note('local_path', index, path, label ? t('transfer.theme.mode-mode-key-uses-a-file-on-the-sharer', { mode: label, key: k }) : t('transfer.theme.key-uses-a-file-on-the-sharer-s-home', { key: k })));
         }

@@ -35,10 +35,16 @@ describe('external host detection', () => {
     const ext = r.notes.filter((n) => n.code === 'external_ref');
     expect(ext).toHaveLength(1);
   });
-  it('names the host behind an escaped or slash-less scheme', () => {
-    for (const v of [String.raw`url(ht\74ps://evil.example/t.png)`, String.raw`url("\2f\2f evil.example/t.png")`, 'url(http:evil.example/t.png)']) {
-      const r = parseTransfer(themeFile(v), { accept: ['theme'] }) as { notes: { code: string; hosts?: string[] }[] };
-      expect(r.notes.find((n) => n.code === 'external_ref')?.hosts).toEqual(['evil.example']);
+  it('names the host behind a slash-less scheme', () => {
+    const r = parseTransfer(themeFile('url(http:evil.example/t.png)'), { accept: ['theme'] }) as { notes: { code: string; hosts?: string[] }[] };
+    expect(r.notes.find((n) => n.code === 'external_ref')?.hosts).toEqual(['evil.example']);
+  });
+  it('names nothing behind a CSS-escaped scheme or slashes, and warns generically', () => {
+    for (const v of [String.raw`url(ht\74ps://evil.example/t.png)`, String.raw`url("\2f\2f evil.example/t.png")`]) {
+      const r = parseTransfer(themeFile(v), { accept: ['theme'] }) as { notes: { code: string; hosts?: string[]; unknown?: boolean }[] };
+      const n = r.notes.find((x) => x.code === 'external_ref');
+      expect(n?.hosts ?? []).toEqual([]);
+      expect(n?.unknown).toBe(true);
     }
   });
 });
@@ -61,7 +67,7 @@ describe('theme picker swatches', () => {
 import { outsideOf } from '../src/theme-editor/outside';
 describe('outsideOf (badge and editor note)', () => {
   it('names the host behind each bypass and ignores local values', () => {
-    expect(outsideOf({ 'lovelace-background': String.raw`url(ht\74ps://evil.example/t.png)` } as never)).toEqual({ any: true, unknown: false, hosts: ['evil.example'] });
+    expect(outsideOf({ 'lovelace-background': String.raw`url(ht\74ps://evil.example/t.png)` } as never)).toEqual({ any: true, unknown: true, hosts: [] });
     expect(outsideOf({ modes: { dark: { a: 'url(http:evil.example/t.png)' } } } as never).hosts).toEqual(['evil.example']);
     expect(outsideOf({ a: 'url(/local/a.png)', b: '#fff' } as never)).toEqual({ any: false, unknown: false, hosts: [] });
   });
