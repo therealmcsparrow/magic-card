@@ -48,8 +48,8 @@ rows:
             direction: vertical
             track_style: big-fill
             fill_mode: gradient
-            slider_color: "#38bdf8"
-            slider_color_to: "#0ea5e9"
+            slider_color: "#0369a1"
+            slider_color_to: "#075985"
             icon: mdi:water
             icon_position: center
             thumb: none

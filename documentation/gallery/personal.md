@@ -12,7 +12,7 @@ Calendar, prices and health. Paste a card into the code editor of a new card, th
 
 The next calendar event as a big date tile with title, time and place.
 
-![Up next](images/22-up-next.png)
+![Up next, Home](images/22-up-next.png)
 
 Entities: `calendar.family`
 
@@ -116,7 +116,7 @@ rows:
 
 Two coins with their price, 24-hour change and a sparkline.
 
-![Crypto prices](images/36-crypto.png)
+![Crypto prices, Home](images/36-crypto.png)
 
 Entities: `sensor.btc_price`, `sensor.eth_price`
 
@@ -230,7 +230,7 @@ rows:
 
 Steps toward a goal in a ring, sleep and heart rate.
 
-![Health today](images/39-health.png)
+![Health today, Home](images/39-health.png)
 
 Entities: `sensor.steps`, `sensor.sleep`, `sensor.heart_rate`
 

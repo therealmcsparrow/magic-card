@@ -14,7 +14,7 @@ rows:
       - modules:
           - type: text
             text: Reactor core
-            design: { font_size: 12px, font_weight: "700", color: "#8d99a6", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+            design: { font_size: 12px, font_weight: "700", color: "#c3ccd6", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
       - modules:
           - type: text
             use_entity: true
@@ -38,7 +38,7 @@ rows:
             design: { font_size: 20px, font_weight: "800", color: "#f3f6f9", margin_top: 6px }
           - type: text
             text: Solar
-            design: { font_size: 11px, color: "#8d99a6", text_transform: uppercase, letter_spacing: 1.5px }
+            design: { font_size: 12px, color: "#c3ccd6", text_transform: uppercase, letter_spacing: 1.5px }
       - modules:
           - type: vertical
             gap: 0px
@@ -93,7 +93,7 @@ rows:
             design: { font_size: 20px, font_weight: "800", color: "#f3f6f9", margin_top: 6px }
           - type: text
             text: House
-            design: { font_size: 11px, color: "#8d99a6", text_transform: uppercase, letter_spacing: 1.5px }
+            design: { font_size: 12px, color: "#c3ccd6", text_transform: uppercase, letter_spacing: 1.5px }
   - id: status
     columns:
       - modules:

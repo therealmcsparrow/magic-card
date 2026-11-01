@@ -67,7 +67,7 @@ rows:
           - type: slider
             entity: media_player.living_room
             track_style: thin
-            track_thickness: 6
+            track_thickness: 10
             thumb: circle
             thumb_size: 24
             thumb_glow: 16

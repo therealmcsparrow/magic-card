@@ -2,6 +2,8 @@
 
 Weather, thermostats, room temperatures, air quality and daylight. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Weather hero](#weather-hero)
@@ -20,7 +22,7 @@ Weather, thermostats, room temperatures, air quality and daylight. Paste a card 
 
 A sky gradient with the current conditions, then a 5-day strip.
 
-![Weather hero](images/01-weather-hero.png)
+![Weather hero, Climate](images/01-weather-hero.png)
 
 Entities: `weather.home`, `sensor.outdoor_temperature`
 
@@ -132,7 +134,7 @@ rows:
 
 The room temperature inside a glowing ring that fills with the heat.
 
-![Thermostat](images/02-thermostat-ring.png)
+![Thermostat, Climate](images/02-thermostat-ring.png)
 
 Entities: `climate.living_room`
 
@@ -244,7 +246,7 @@ rows:
 
 A large clock on frosted glass over a dusk gradient. The time and greeting are Home Assistant templates (they update every minute).
 
-![Clock and greeting](images/08-clock-greeting.png)
+![Clock and greeting, Home](images/08-clock-greeting.png)
 
 Entities: `weather.home`, `sensor.outdoor_temperature`
 
@@ -258,7 +260,7 @@ File: [cards/08-clock-greeting.yaml](cards/08-clock-greeting.yaml)
 # Entities: weather.home, sensor.outdoor_temperature
 type: custom:magic-card
 name: Clock
-background: "linear-gradient(135deg, #ff9a8b 0%, #ff6a88 45%, #a35bd6 100%)"
+background: "linear-gradient(135deg, #a3203f 0%, #9d1f5c 45%, #5b1f9e 100%)"
 border_radius: 30px
 padding: 10px
 box_shadow: "0 20px 44px rgba(255, 106, 136, 0.35)"
@@ -277,7 +279,7 @@ rows:
           - type: text
             use_template: true
             text: "{{ 'Good morning' if now().hour < 12 else 'Good afternoon' if now().hour < 18 else 'Good evening' }}, Anna"
-            design: { font_size: 16px, font_weight: "600", color: "rgba(255,255,255,0.92)" }
+            design: { font_size: 16px, font_weight: "600", color: "#ffffff" }
           - type: text
             use_template: true
             text: "{{ now().strftime('%H:%M') }}"
@@ -291,7 +293,7 @@ rows:
           - type: text
             use_template: true
             text: "{{ now().strftime('%A %-d %B') }}"
-            design: { font_size: 15px, color: "rgba(255,255,255,0.85)" }
+            design: { font_size: 15px, color: "#ffffff" }
           - type: horizontal
             gap: 10px
             design: { margin_top: 16px }
@@ -340,7 +342,7 @@ rows:
 
 An index gauge with colour bands, three pollutant readings and a 24-hour CO2 sparkline behind the bottom tile.
 
-![Air quality](images/12-air-quality.png)
+![Air quality, Climate](images/12-air-quality.png)
 
 Entities: `sensor.aqi`, `sensor.co2`, `sensor.pm25`, `sensor.voc`
 
@@ -415,7 +417,7 @@ rows:
             modules:
               - type: text
                 text: CO₂
-                design: &lab { font_size: 11px, color: "#7fa596", text_transform: uppercase, letter_spacing: 1px }
+                design: &lab { font_size: 11px, color: "#b6dccb", text_transform: uppercase, letter_spacing: 1px }
               - type: text
                 use_entity: true
                 entity: sensor.co2
@@ -456,28 +458,28 @@ rows:
               height: 70px
               padding: 10px 12px
               border_radius: 16px
-              background_color: "rgba(255,255,255,0.03)"
+              background_color: "rgba(255,255,255,0.06)"
               value_background:
                 type: sparkline
                 entity: sensor.co2
                 hours: 24
                 color: "#34d399"
-                opacity: 22%
-                line_width: 2
+                opacity: 55%
+                line_width: 3
             modules:
               - type: text
                 text: CO₂ · 24 h
-                design: { font_size: 12px, color: "#7fa596" }
+                design: { font_size: 12px, color: "#b6dccb" }
               - type: text
                 text: max 812 ppm
-                design: { font_size: 12px, color: "#7fa596" }
+                design: { font_size: 12px, color: "#b6dccb" }
 ```
 
 ## Sensor tiles
 
 Four readings, each with its last 24 hours drawn as a sparkline behind the value.
 
-![Sensor tiles](images/14-sensor-sparklines.png)
+![Sensor tiles, Home](images/14-sensor-sparklines.png)
 
 Entities: `sensor.indoor_temperature`, `sensor.indoor_humidity`, `sensor.house_power`, `sensor.co2`
 
@@ -506,7 +508,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.indoor_temperature, min: 17, max: 29, color: "#fb923c", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.indoor_temperature, min: 17, max: 29, color: "#fb923c", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.indoor_temperature }
             modules:
@@ -533,7 +535,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.indoor_humidity, min: 30, max: 80, color: "#38bdf8", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.indoor_humidity, min: 30, max: 80, color: "#38bdf8", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.indoor_humidity }
             modules:
@@ -564,7 +566,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.house_power, min: 0, max: 2600, color: "#facc15", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.house_power, min: 0, max: 2600, color: "#facc15", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.house_power }
             modules:
@@ -591,7 +593,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.co2, min: 300, max: 1300, color: "#4ade80", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.co2, min: 300, max: 1300, color: "#4ade80", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.co2 }
             modules:
@@ -616,7 +618,7 @@ rows:
 
 One row per room with a colour-coded value pill. Cold rooms show blue, comfortable green, warm orange.
 
-![Room temperatures](images/25-room-temperatures.png)
+![Room temperatures, Climate](images/25-room-temperatures.png)
 
 Entities: `sensor.indoor_temperature`, `sensor.kitchen_temperature`, `sensor.bedroom_temperature`, `sensor.office_temperature`, `sensor.bathroom_temperature`
 
@@ -728,7 +730,7 @@ rows:
 
 A dawn-to-dusk gradient with the times and the day length.
 
-![Sunrise and sunset](images/26-sun-times.png)
+![Sunrise and sunset, Climate](images/26-sun-times.png)
 
 Entities: `sensor.sunrise`, `sensor.sunset`, `sensor.day_length`
 
@@ -741,7 +743,7 @@ File: [cards/26-sun-times.yaml](cards/26-sun-times.yaml)
 # Entities: sensor.sunrise, sensor.sunset, sensor.day_length
 type: custom:magic-card
 name: Sun
-background: "linear-gradient(180deg, #1e3a8a 0%, #7c3aed 45%, #f472b6 75%, #fdba74 100%)"
+background: "linear-gradient(180deg, #1e3a8a 0%, #5b21b6 45%, #9d174d 75%, #9a3412 100%)"
 border_radius: 28px
 padding: 22px
 box_shadow: "0 20px 44px rgba(124, 58, 237, 0.3)"
@@ -752,7 +754,7 @@ rows:
         modules:
           - type: text
             text: Daylight
-            design: { font_size: 13px, font_weight: "700", color: "rgba(255,255,255,0.75)", text_transform: uppercase, letter_spacing: 1.5px }
+            design: { font_size: 13px, font_weight: "700", color: "#ffffff", text_transform: uppercase, letter_spacing: 1.5px }
           - type: text
             use_entity: true
             entity: sensor.day_length
@@ -794,7 +796,7 @@ rows:
                 modules:
                   - type: text
                     text: Sunrise
-                    design: &lab { font_size: 11px, color: "rgba(255,255,255,0.8)" }
+                    design: &lab { font_size: 11px, color: "#ffffff" }
                   - type: text
                     use_entity: true
                     entity: sensor.sunrise
@@ -825,7 +827,7 @@ rows:
 
 Tank temperature as a vertical fill with a heat shimmer, set point, mode and a 24-hour sparkline.
 
-![Hot water boiler](images/34-boiler.png)
+![Hot water boiler, Climate](images/34-boiler.png)
 
 Entities: `water_heater.boiler`, `sensor.boiler_temperature`
 
@@ -903,7 +905,7 @@ rows:
 
 A live weather scene with rain and lightning behind the current conditions and three storm readings. The scene follows the weather entity, so the card shows sun, clouds, snow or a night sky on other days.
 
-![Storm watch](images/42-storm-watch.webp)
+[![Storm watch, Climate](images/42-storm-watch.png)](images/42-storm-watch.webp)
 
 Entities: `weather.garden`, `sensor.rain_rate`, `sensor.wind_gust`, `sensor.lightning_distance`
 
@@ -993,7 +995,7 @@ rows:
                 design: &val { font_size: 15px, font_weight: "700", color: "#f1f5f9" }
               - type: text
                 text: Rain
-                design: &lbl { font_size: 11px, color: "#94a3b8" }
+                design: &lbl { font_size: 12px, color: "#cbd5e1" }
       - modules:
           - type: vertical
             gap: 2px
@@ -1040,7 +1042,7 @@ rows:
 
 The fire icon flickers like a flame while the thermostat heats, inside a temperature ring that glows and breathes. The flame comes from the icon's Auto device animation, so it stops by itself when the heating goes idle.
 
-![Heating](images/43-heating.webp)
+[![Heating, Climate](images/43-heating.png)](images/43-heating.webp)
 
 Entities: `climate.living_room`
 
@@ -1159,7 +1161,7 @@ rows:
 
 The air conditioner shows falling snow on its icon while it cools, the fan spins at its own speed, and wind lines drift through the card. Both icons use the Auto device animation, so they react to the entities by themselves.
 
-![Cooling](images/44-cooling.webp)
+[![Cooling, Climate](images/44-cooling.png)](images/44-cooling.webp)
 
 Entities: `climate.bedroom`, `fan.bedroom`
 

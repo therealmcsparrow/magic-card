@@ -80,8 +80,8 @@ rows:
             thumb: none
             value_position: track
             fill_mode: gradient
-            slider_color: "#22d3ee"
-            slider_color_to: "#a7f3d0"
+            slider_color: "#0e7490"
+            slider_color_to: "#0f766e"
             track_color: "rgba(3,26,43,0.5)"
             icon: mdi:lightbulb-on
 flows:
