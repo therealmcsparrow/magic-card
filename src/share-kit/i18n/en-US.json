@@ -31,12 +31,32 @@
     "text": "This is not a Magic Card card.",
     "hash": "d853edff"
   },
+  "share-kit.notice.actions-in-this-card": {
+    "text": "Actions in this card",
+    "hash": "db66b892"
+  },
+  "share-kit.notice.actions-in-this-card-help": {
+    "text": "They run only when someone uses the card. Nothing runs when you import it.",
+    "hash": "4eee9649"
+  },
   "share-kit.notice.author-name-is-optional": {
     "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
     "hash": "d28f3b1c"
   },
+  "share-kit.notice.entity-ids-were-replaced": {
+    "text": "Entity IDs were replaced with placeholders. Whoever imports this file picks their own devices.",
+    "hash": "b747a762"
+  },
   "share-kit.notice.only-import-files-from-people-you-trust": {
     "text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
     "hash": "6ec0a378"
+  },
+  "share-kit.notice.templates-in-this-card": {
+    "text": "Templates in this card",
+    "hash": "a22ad675"
+  },
+  "share-kit.notice.templates-in-this-card-help": {
+    "text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
+    "hash": "6a0f473d"
   }
 }

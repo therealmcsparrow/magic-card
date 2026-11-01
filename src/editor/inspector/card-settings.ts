@@ -45,6 +45,7 @@ import '../components/design-panel';
 import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
+import { cardKeyLists, loadTransfer } from '../transfer-loader';
 import { t as lt } from '../../i18n/labels';
 import { BORDER_STYLE_OPTS } from '../../utils/css-property-options';
 import type { PauseButtonCorner, PauseButtonMode } from '../../contracts/card-pause';
@@ -120,6 +121,27 @@ function renderCardEntity(config: MagicCardConfig, hass: HomeAssistant | undefin
   `;
 }
 
+
+/** Opens the transfer panel in the slot beside the buttons to share the card (export) or read a shared one (import); the open config is replaced after Confirm. */
+async function openShare(e: Event, mode: 'import' | 'export', config: MagicCardConfig, replace: (config: MagicCardConfig) => void): Promise<void> {
+  const slot = (e.currentTarget as HTMLElement).closest('[data-card-share]')!.querySelector('[data-share-slot]')!;
+  slot.replaceChildren();
+  try {
+    await loadTransfer();
+  } catch {
+    slot.textContent = t('card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page');
+    return;
+  }
+  const panel = Object.assign(document.createElement('mc-transfer-panel'), { host: 'card-editor', mode, accept: ['card'], card: cardKeyLists(), hasLibrary: false, exportItems: mode === 'export' ? { kind: 'card', items: [{ id: 'card', name: config.name || 'card', data: config }] } : undefined });
+  panel.addEventListener('mc-transfer-close', () => slot.replaceChildren());
+  panel.addEventListener('mc-transfer-import', (ev) => {
+    ev.stopPropagation();
+    slot.replaceChildren();
+    replace((ev as CustomEvent).detail.items[0].data);
+  });
+  slot.append(panel);
+}
+
 export function renderCardGeneral(
   config: MagicCardConfig,
   update: CardUpdate,
@@ -127,6 +149,7 @@ export function renderCardGeneral(
   hass: HomeAssistant | undefined,
   canvas = false,
   entityField?: CardEntityField,
+  share?: (config: MagicCardConfig) => void,
 ): TemplateResult {
   const usePageTheme = config.use_page_theme !== false;
   const popup = config.popup && typeof config.popup === 'object' ? config.popup : undefined;
@@ -153,6 +176,15 @@ export function renderCardGeneral(
         { disabled: usePageTheme },
       )}
     </div>
+    ${share
+      ? html`<div class="group" data-card-share>
+          <div class="bar">
+            <button type="button" class="btn btn-sm" data-share="export" @click=${(e: Event) => void openShare(e, 'export', config, share)}><ha-icon icon="mdi:export-variant"></ha-icon>${t('card-editor.card-settings.share-this-card')}</button>
+            <button type="button" class="btn btn-sm" data-share="import" @click=${(e: Event) => void openShare(e, 'import', config, share)}><ha-icon icon="mdi:import"></ha-icon>${t('card-editor.card-settings.import-a-shared-card')}</button>
+          </div>
+          <div data-share-slot></div>
+        </div>`
+      : nothing}
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:dock-window"></ha-icon>

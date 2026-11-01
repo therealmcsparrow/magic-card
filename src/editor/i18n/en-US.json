@@ -1151,6 +1151,10 @@
     "text": "Hover",
     "hash": "c76ae86a"
   },
+  "card-editor.card-settings.import-a-shared-card": {
+    "text": "Import a shared card",
+    "hash": "8882a289"
+  },
   "card-editor.card-settings.layers": {
     "text": "Layers",
     "hash": "0bcd66e6"
@@ -1291,6 +1295,10 @@
     "text": "Shape",
     "hash": "e0e49270"
   },
+  "card-editor.card-settings.share-this-card": {
+    "text": "Share this card",
+    "hash": "1b064466"
+  },
   "card-editor.card-settings.show": {
     "text": "Show",
     "hash": "0df6f1ca"
@@ -1314,6 +1322,10 @@
   "card-editor.card-settings.the-device-this-card-is-for-tiles-follow": {
     "text": "The device this card is for. Tiles follow it unless you set one for them.",
     "hash": "a8658227"
+  },
+  "card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page": {
+    "text": "The sharing tools did not load. Reload the page and try again.",
+    "hash": "e4db6eed"
   },
   "card-editor.card-settings.theme-default": {
     "text": "Theme default",

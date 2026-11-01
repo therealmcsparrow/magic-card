@@ -3,6 +3,10 @@
     "text": "The animation data is missing.",
     "hash": "a2d35b9a"
   },
+  "transfer.count.cards": {
+    "text": "{n, plural, one {# card} other {# cards}}",
+    "hash": "2d0d4925"
+  },
   "transfer.count.n": {
     "text": "{n, plural, one {# animation} other {# animations}}",
     "hash": "626cefeb"
@@ -463,6 +467,10 @@
     "text": "{n, plural, one {Export # animation} other {Export # animations}}",
     "hash": "48e5c5a5"
   },
+  "transfer.panel.export-cards": {
+    "text": "{n, plural, one {Export # card} other {Export # cards}}",
+    "hash": "02bd78c5"
+  },
   "transfer.panel.export-icons": {
     "text": "{n, plural, one {Export # icon} other {Export # icons}}",
     "hash": "cc51c0ae"
@@ -498,6 +506,10 @@
   "transfer.panel.import-anyway": {
     "text": "Import anyway",
     "hash": "e06eac7e"
+  },
+  "transfer.panel.import-cards": {
+    "text": "{n, plural, one {Import # card} other {Import # cards}}",
+    "hash": "709027fd"
   },
   "transfer.panel.import-icons": {
     "text": "{n, plural, one {Import # icon} other {Import # icons}}",
@@ -578,6 +590,10 @@
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
     "hash": "cddd5aed"
+  },
+  "transfer.panel.source-holds-cards": {
+    "text": "{n, plural, one {{source} holds # card.} other {{source} holds # cards.}}",
+    "hash": "595f7f59"
   },
   "transfer.panel.source-holds-icons": {
     "text": "{n, plural, one {{source} holds # icon.} other {{source} holds # icons.}}",

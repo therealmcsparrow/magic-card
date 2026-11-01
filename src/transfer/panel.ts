@@ -14,7 +14,7 @@ import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
 import { loadNotice, loadShareKit, shareKit } from './share-kit-loader';
-import type { ShareKit } from '../contracts/share-kit';
+import type { CardKeyLists, ShareKit } from '../contracts/share-kit';
 import { locale, t } from './i18n';
 
 // <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept external values) and export.
@@ -74,6 +74,8 @@ export class TransferPanel extends LitElement {
   /** (optional) Ids another library holds (renamed on import) and names the target already shows (numbered on import). */
   @property({ attribute: false }) reserved?: (kind: TransferKind, id: string) => boolean;
   @property({ attribute: false }) takenName?: (kind: TransferKind, name: string) => boolean;
+  /** The card editor's key lists; needed to read a card. */
+  @property({ attribute: false }) card?: CardKeyLists;
 
   @state() private _res?: ParseResult;
   @state() private _choice: ClashChoice = 'keep-both';
@@ -141,7 +143,7 @@ export class TransferPanel extends LitElement {
     this._res = !kit
       ? { ok: false, refusal: 'not_parseable', message: t('transfer.panel.the-checker-for-shared-values-did-not-load') }
       : ok.every(Boolean) && (images || !wantsImages)
-        ? parseTransfer(text, { accept: this._kinds(), kit, fileName, images, css })
+        ? parseTransfer(text, { accept: this._kinds(), kit, fileName, images, css, card: this.card })
         : { ok: false, refusal: 'not_parseable', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
     this._choice = 'keep-both';
     this.focusResult();
@@ -248,6 +250,9 @@ export class TransferPanel extends LitElement {
     const blocked = (r.kind === 'theme' || r.kind === 'image') && !this.hasLibrary;
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
     const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
+    const run = this._kit!.importNotice(r.kind, r.items);
+    const w = this._words!;
+    const line = (a: (typeof run.actions)[number]): string => [a.action, a.service, a.targets.join(', '), a.host].filter(Boolean).join(' ');
     return html`
       ${notice({ tone: 'warn', text: this._words!.untrustedNotice() })}
       <ul>
@@ -264,6 +269,12 @@ export class TransferPanel extends LitElement {
               </ul>
             </div>
           </div>`
+        : nothing}
+      ${run.actions.length
+        ? html`<div data-share-actions><strong>${w.actionsHeading()}</strong><p class="help">${w.actionsHelp()}</p><ul>${run.actions.map((a) => html`<li><span class="mono">${line(a)}</span></li>`)}</ul></div>`
+        : nothing}
+      ${run.templates.length
+        ? html`<div data-share-templates><strong>${w.templatesHeading()}</strong><p class="help">${w.templatesHelp()}</p><ul>${run.templates.map((x) => html`<li><span class="mono">${x.text}</span></li>`)}</ul></div>`
         : nothing}
       ${local.length ? html`<p class="help">${t("transfer.panel.n-4", { n: local.length })}</p>` : nothing}
       ${rest.length
@@ -337,6 +348,7 @@ export class TransferPanel extends LitElement {
     const e = this.exportItems;
     if (!e?.items.length) return html`<p class="help" role="status">${t('transfer.panel.nothing-to-export')}</p>`;
     const text = this._text();
+    const replaced = this._kit!.placeholderItems(e.kind, e.items).placeholders.length > 0;
     return html`
       <div class="group-head"><h3 tabindex="-1">${exportLabel(e.items.length, e.kind)}</h3></div>
       ${e.kind === 'image'
@@ -355,6 +367,7 @@ export class TransferPanel extends LitElement {
         })}
       </div>`}
       ${e.items.some((i) => i.author) ? html`<p class="help" role="status">${this._words?.authorNotice()}</p>` : nothing}
+      ${replaced ? html`<p class="help" data-ids-replaced role="status">${this._words?.idsReplacedNotice()}</p>` : nothing}
       <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}

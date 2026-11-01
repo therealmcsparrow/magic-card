@@ -3,6 +3,10 @@
     "text": "De animatiegegevens ontbreken.",
     "hash": "a2d35b9a"
   },
+  "transfer.count.cards": {
+    "text": "{n, plural, one {# kaart} other {# kaarten}}",
+    "hash": "2d0d4925"
+  },
   "transfer.count.n": {
     "text": "{n, plural, one {# animatie} other {# animaties}}",
     "hash": "626cefeb"
@@ -463,6 +467,10 @@
     "text": "{n, plural, one {# animatie exporteren} other {# animaties exporteren}}",
     "hash": "48e5c5a5"
   },
+  "transfer.panel.export-cards": {
+    "text": "{n, plural, one {# kaart exporteren} other {# kaarten exporteren}}",
+    "hash": "02bd78c5"
+  },
   "transfer.panel.export-icons": {
     "text": "{n, plural, one {# pictogram exporteren} other {# pictogrammen exporteren}}",
     "hash": "cc51c0ae"
@@ -498,6 +506,10 @@
   "transfer.panel.import-anyway": {
     "text": "Toch importeren",
     "hash": "e06eac7e"
+  },
+  "transfer.panel.import-cards": {
+    "text": "{n, plural, one {# kaart importeren} other {# kaarten importeren}}",
+    "hash": "709027fd"
   },
   "transfer.panel.import-icons": {
     "text": "{n, plural, one {# pictogram importeren} other {# pictogrammen importeren}}",
@@ -578,6 +590,10 @@
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} bevat # animatie.} other {{source} bevat # animaties.}}",
     "hash": "cddd5aed"
+  },
+  "transfer.panel.source-holds-cards": {
+    "text": "{n, plural, one {{source} bevat # kaart.} other {{source} bevat # kaarten.}}",
+    "hash": "595f7f59"
   },
   "transfer.panel.source-holds-icons": {
     "text": "{n, plural, one {{source} bevat # pictogram.} other {{source} bevat # pictogrammen.}}",

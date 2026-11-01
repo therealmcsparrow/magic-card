@@ -114,7 +114,7 @@ export type TransferHost = 'card-editor' | 'shape-editor' | 'svg-editor' | 'anim
 
 /** Kinds each host accepts on import (and offers on export) in its general transfer panel. */
 export const HOST_KINDS: Readonly<Record<TransferHost, readonly TransferKind[]>> = {
-  'card-editor': ['animation', 'shape', 'icon'],
+  'card-editor': ['animation', 'shape', 'icon', 'card'],
   'shape-editor': ['shape'],
   'svg-editor': ['icon'],
   'animation-studio': ['animation'],

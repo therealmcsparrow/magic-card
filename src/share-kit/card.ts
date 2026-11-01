@@ -263,7 +263,7 @@ function listIn(v: unknown, item: number, path: string, key: string, out: { acti
       const targets: string[] = [];
       targetsOf(v, targets);
       const host = v.action === 'url' && typeof v.url_path === 'string' ? hostsIn(v.url_path)[0] : undefined;
-      out.actions.push({ item, path, action: v.action, ...(typeof v.service === 'string' ? { service: v.service } : {}), targets: [...new Set(targets)], ...(host ? { host } : {}) });
+      out.actions.push({ item, path, action: v.action, ...(typeof (v.perform_action ?? v.service) === 'string' ? { service: (v.perform_action ?? v.service) as string } : {}), targets: [...new Set(targets)], ...(host ? { host } : {}) });
     }
     for (const [k, e] of Object.entries(v)) listIn(e, item, rawAt(path, k), k, out, depth + 1);
   }

@@ -31,12 +31,32 @@
     "text": "Dit is geen Magic Card-kaart.",
     "hash": "d853edff"
   },
+  "share-kit.notice.actions-in-this-card": {
+    "text": "Acties in deze kaart",
+    "hash": "db66b892"
+  },
+  "share-kit.notice.actions-in-this-card-help": {
+    "text": "Ze worden alleen uitgevoerd als iemand de kaart gebruikt. Bij het importeren wordt er niets uitgevoerd.",
+    "hash": "4eee9649"
+  },
   "share-kit.notice.author-name-is-optional": {
     "text": "De naam van de maker is optioneel. Een naam is een persoonsgegeven. Als je die invult, wordt die in het bestand geschreven en kan iedereen die het bestand krijgt de naam lezen. Gebruik gerust een bijnaam en voeg geen e-mailadres of contactgegevens toe. Laat het veld leeg om zonder naam te delen.",
     "hash": "d28f3b1c"
   },
+  "share-kit.notice.entity-ids-were-replaced": {
+    "text": "Entiteits-ID's zijn vervangen door plaatshouders. Wie dit bestand importeert, kiest zijn eigen apparaten.",
+    "hash": "b747a762"
+  },
   "share-kit.notice.only-import-files-from-people-you-trust": {
     "text": "Importeer alleen bestanden van mensen die je vertrouwt. Magic Card controleert het bestand en toont een voorbeeld, en er wordt niets opgeslagen voordat je bevestigt. Bekijk het voorbeeld, de acties en de sjablonen voordat je bevestigt.",
     "hash": "6ec0a378"
+  },
+  "share-kit.notice.templates-in-this-card": {
+    "text": "Sjablonen in deze kaart",
+    "hash": "a22ad675"
+  },
+  "share-kit.notice.templates-in-this-card-help": {
+    "text": "Deze draaien op je Home Assistant en kunnen de status van je entiteiten lezen. Hier worden ze alleen als tekst getoond en niet uitgevoerd.",
+    "hash": "6a0f473d"
   }
 }

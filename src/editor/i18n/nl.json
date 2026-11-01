@@ -1151,6 +1151,10 @@
     "text": "Hover",
     "hash": "c76ae86a"
   },
+  "card-editor.card-settings.import-a-shared-card": {
+    "text": "Importeer een gedeelde kaart",
+    "hash": "8882a289"
+  },
   "card-editor.card-settings.layers": {
     "text": "Lagen",
     "hash": "0bcd66e6"
@@ -1291,6 +1295,10 @@
     "text": "Vorm",
     "hash": "e0e49270"
   },
+  "card-editor.card-settings.share-this-card": {
+    "text": "Deel deze kaart",
+    "hash": "1b064466"
+  },
   "card-editor.card-settings.show": {
     "text": "Tonen",
     "hash": "0df6f1ca"
@@ -1314,6 +1322,10 @@
   "card-editor.card-settings.the-device-this-card-is-for-tiles-follow": {
     "text": "Het apparaat waar deze kaart voor is. Tegels volgen dit, tenzij je er een voor instelt.",
     "hash": "a8658227"
+  },
+  "card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page": {
+    "text": "De deelfuncties zijn niet geladen. Laad de pagina opnieuw en probeer het nog eens.",
+    "hash": "e4db6eed"
   },
   "card-editor.card-settings.theme-default": {
     "text": "Standaard van het thema",

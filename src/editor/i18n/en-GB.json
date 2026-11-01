@@ -1486,6 +1486,11 @@
     "note": "Label for the look the card takes while the pointer is over it (mouse hover state).",
     "max": 10
   },
+  "card-editor.card-settings.import-a-shared-card": {
+    "text": "Import a shared card",
+    "note": "Button in Card settings that opens the import of a card someone shared; it replaces this card after confirming.",
+    "max": 30
+  },
   "card-editor.card-settings.layers": {
     "text": "Layers",
     "note": "Section heading for the stacked background layers drawn behind the card content.",
@@ -1685,6 +1690,11 @@
     "note": "Label of the picker for the outline shape of the card or element.",
     "max": 10
   },
+  "card-editor.card-settings.share-this-card": {
+    "text": "Share this card",
+    "note": "Button in Card settings that opens the export of the whole card as a file or text.",
+    "max": 25
+  },
   "card-editor.card-settings.show": {
     "text": "Show",
     "note": "Verb on a button or option that makes the element visible; the opposite of Hide.",
@@ -1714,6 +1724,11 @@
     "text": "The device this card is for. Tiles follow it unless you set one for them.",
     "note": "Hint under the card device field; says tiles inherit the device unless they have their own.",
     "max": 120
+  },
+  "card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page": {
+    "text": "The sharing tools did not load. Reload the page and try again.",
+    "note": "Error line under the share buttons in Card settings when the transfer tools could not be loaded.",
+    "max": 100
   },
   "card-editor.card-settings.theme-default": {
     "text": "Theme default",

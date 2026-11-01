@@ -56,14 +56,39 @@
     "note": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported.",
     "max": 45
   },
+  "share-kit.notice.actions-in-this-card": {
+    "text": "Actions in this card",
+    "note": "Heading above the list of actions a shared card can run, shown before the user confirms an import.",
+    "max": 40
+  },
+  "share-kit.notice.actions-in-this-card-help": {
+    "text": "They run only when someone uses the card. Nothing runs when you import it.",
+    "note": "Help line under the actions heading of a shared card import.",
+    "max": 120
+  },
   "share-kit.notice.author-name-is-optional": {
     "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
     "note": "Privacy note on the export panel when the items carry an author name. It says the name is personal data and is written into the file.",
     "max": 330
   },
+  "share-kit.notice.entity-ids-were-replaced": {
+    "text": "Entity IDs were replaced with placeholders. Whoever imports this file picks their own devices.",
+    "note": "Line under the export text telling the sender that entity IDs were swapped for placeholders.",
+    "max": 110
+  },
   "share-kit.notice.only-import-files-from-people-you-trust": {
     "text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
     "note": "Warning above the preview of every import, before the Confirm button. It tells the user to trust the sender and to look at the preview, actions and templates first.",
     "max": 250
+  },
+  "share-kit.notice.templates-in-this-card": {
+    "text": "Templates in this card",
+    "note": "Heading above the list of Jinja templates a shared card holds, shown before the user confirms an import.",
+    "max": 40
+  },
+  "share-kit.notice.templates-in-this-card-help": {
+    "text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
+    "note": "Help line under the templates heading of a shared card import.",
+    "max": 170
   }
 }

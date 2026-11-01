@@ -7,3 +7,11 @@ export const untrustedNotice = (): string => t('share-kit.notice.only-import-fil
 
 /** The personal-data line shown on export when an item carries an author name. */
 export const authorNotice = (): string => t('share-kit.notice.author-name-is-optional');
+
+export const actionsHeading = (): string => t('share-kit.notice.actions-in-this-card');
+export const actionsHelp = (): string => t('share-kit.notice.actions-in-this-card-help');
+export const templatesHeading = (): string => t('share-kit.notice.templates-in-this-card');
+export const templatesHelp = (): string => t('share-kit.notice.templates-in-this-card-help');
+
+/** Shown under the export text when entity IDs were swapped for placeholders. */
+export const idsReplacedNotice = (): string => t('share-kit.notice.entity-ids-were-replaced');

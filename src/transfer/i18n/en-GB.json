@@ -4,6 +4,14 @@
     "note": "Import error for an animation entry that has no animation data in it. It tells the user that entry was skipped.",
     "max": 50
   },
+  "transfer.count.cards": {
+    "text": "{n, plural, one {# card} other {# cards}}",
+    "note": "Count of shared cards in an import or export summary. {n} is the number of items.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
   "transfer.count.n": {
     "text": "{n, plural, one {# animation} other {# animations}}",
     "note": "Count of animations in an import or export summary. {n} is the number of items. Same pattern as the theme, shape, image and icon counts.",
@@ -712,6 +720,14 @@
       "n": "The count the text is about."
     }
   },
+  "transfer.panel.export-cards": {
+    "text": "{n, plural, one {Export # card} other {Export # cards}}",
+    "note": "Heading and button of the export step; counts the cards that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
   "transfer.panel.export-icons": {
     "text": "{n, plural, one {Export # icon} other {Export # icons}}",
     "note": "Heading and button of the export step; counts the icons that are exported.",
@@ -771,6 +787,14 @@
     "text": "Import anyway",
     "note": "Button that proceeds with the import after the user has read the warnings.",
     "max": 25
+  },
+  "transfer.panel.import-cards": {
+    "text": "{n, plural, one {Import # card} other {Import # cards}}",
+    "note": "Heading and button of the import step; counts the cards that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
   },
   "transfer.panel.import-icons": {
     "text": "{n, plural, one {Import # icon} other {Import # icons}}",
@@ -901,6 +925,15 @@
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
     "note": "Line under the import heading: what the chosen file or pasted text holds (animations).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-cards": {
+    "text": "{n, plural, one {{source} holds # card.} other {{source} holds # cards.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (cards).",
     "max": 40,
     "vars": {
       "n": "The count the text is about.",
