@@ -1,14 +1,6 @@
-import type { HassEntity, HomeAssistant } from '../types';
+import type { HomeAssistant } from '../types';
 
-// Time helpers of the status chunk: the viewer's time format and the age of an entity.
-
-/** Epoch ms of an entity's last report (last_reported, else last_updated); undefined when missing or unreadable. */
-export function lastReport(entity: HassEntity | undefined): number | undefined {
-  if (!entity) return undefined;
-  const raw = entity.last_reported ?? entity.last_updated;
-  const ms = typeof raw === 'string' ? Date.parse(raw) : NaN;
-  return Number.isFinite(ms) ? ms : undefined;
-}
+// Time helpers of the status chunk: the viewer's time format.
 
 /** Time only on the same day, short date plus time otherwise, in hass.locale (language, 12/24 h, server time zone). */
 export function formatWhen(ms: number, hass: HomeAssistant, now: number = Date.now()): string {

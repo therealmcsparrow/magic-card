@@ -174,6 +174,11 @@
     "note": "Configuration error for the card's YAML. Keep pause_button and the values auto, always and hidden exactly as written; they are not translated.",
     "max": 70
   },
+  "card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss": {
+    "text": "quiet_time must be seconds or H:MM:SS",
+    "note": "Configuration error for the card's YAML. Keep quiet_time exactly as written; it is a setting name. H:MM:SS is a time format (hours, minutes, seconds) and stays as written, for example 0:05:00.",
+    "max": 60
+  },
   "card.config-validator.row-row-col-col-module-module-layer-must": {
     "text": "Row {row}, Col {col}, Module {module}: layer must be an object",
     "note": "Configuration error for the card's YAML. {row}, {col} and {module} are the position numbers of the module in the layout. Col is short for column. Object is the technical term.",

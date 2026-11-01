@@ -1,36 +1,12 @@
 import type { TemplateResult } from 'lit';
 import { CONNECTION_GRACE_MS, MAX_TIMER_MS, RECONNECTED_HOLD_MS, type StatusController, type StatusFace, type StatusHost } from '../contracts/card-status';
 import type { HomeAssistant } from '../types';
-import { parseDuration } from '../utils/timer';
 import { statusOverlay } from './faces';
-import { lastReport } from './time';
+import { collectQuiet, nextStaleAt, staleFace, type Quiet } from './stale';
 
 // The status controller: one per card; grace, hold and stale timers; the face to show now.
 
 type Timer = ReturnType<typeof setTimeout> | undefined;
-interface Quiet {
-  entity: string;
-  ms: number;
-}
-
-const MAX_NODES = 5000;
-const MAX_QUIET_CHARS = 32;
-
-/** quiet_time in ms, or undefined when unreadable. */
-function readQuiet(v: unknown): number | undefined {
-  return typeof v === 'string' && v.length > MAX_QUIET_CHARS ? undefined : parseDuration(v);
-}
-
-/** Every `entity` + `quiet_time` pair written on the same node, anywhere in the config. */
-function collect(node: unknown, out: Quiet[], budget: { n: number }): void {
-  if (!node || typeof node !== 'object' || budget.n-- <= 0) return;
-  const o = node as Record<string, unknown>;
-  if (!Array.isArray(node) && typeof o.entity === 'string' && o.quiet_time !== undefined) {
-    const ms = readQuiet(o.quiet_time);
-    if (ms !== undefined) out.push({ entity: o.entity, ms });
-  }
-  for (const v of Object.values(o)) collect(v, out, budget);
-}
 
 class Controller implements StatusController {
   preview = false;
@@ -49,8 +25,7 @@ class Controller implements StatusController {
   constructor(private readonly host: StatusHost) {}
 
   config(config: unknown): void {
-    this.pairs = [];
-    collect(config, this.pairs, { n: MAX_NODES });
+    this.pairs = collectQuiet(config);
     this.sync();
   }
 
@@ -148,12 +123,8 @@ class Controller implements StatusController {
     const h = this.hass;
     if (!h) return;
     const now = Date.now();
-    let next = Infinity;
-    for (const p of this.pairs) {
-      const ts = lastReport(h.states?.[p.entity]);
-      if (ts !== undefined && ts + p.ms >= now) next = Math.min(next, ts + p.ms + 1);
-    }
-    if (next === Infinity) return;
+    const next = nextStaleAt(this.pairs, h, now);
+    if (next === undefined) return;
     this.stale = setTimeout(() => {
       this.stale = undefined;
       this.sync();
@@ -165,14 +136,7 @@ class Controller implements StatusController {
     if (!h) return undefined;
     if (this.backing) return { kind: 'back' };
     if (this.lostShown) return { kind: 'lost', since: this.lostSince };
-    const now = Date.now();
-    let oldest: StatusFace | undefined;
-    for (const p of this.pairs) {
-      const ts = lastReport(h.states?.[p.entity]);
-      if (ts === undefined || ts > now || now - ts <= p.ms) continue;
-      if (!oldest || ts < (oldest as { since: number }).since) oldest = { kind: 'stale', entity: p.entity, since: ts };
-    }
-    return oldest;
+    return staleFace(this.pairs, h);
   }
 
   private publish(): void {

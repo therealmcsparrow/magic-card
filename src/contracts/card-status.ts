@@ -21,7 +21,7 @@ export const MAX_TIMER_MS = 2_147_483_647;
 export const STATUS_FACE_KINDS = ['lost', 'back', 'stale'] as const;
 export type StatusFaceKind = (typeof STATUS_FACE_KINDS)[number];
 
-/** since is epoch ms: the moment of the drop (lost) or the entity's last report, last_reported else last_updated (stale). */
+/** since is epoch ms: the moment of the drop (lost) or the entity's last_updated (stale; Home Assistant never pushes last_reported to cards). */
 export type StatusFace =
   | { kind: 'lost'; since: number }
   | { kind: 'back' }

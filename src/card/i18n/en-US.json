@@ -127,6 +127,10 @@
     "text": "pause_button must be auto, always or hidden",
     "hash": "5cf5bba8"
   },
+  "card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss": {
+    "text": "quiet_time must be seconds or H:MM:SS",
+    "hash": "d75187fa"
+  },
   "card.config-validator.row-row-col-col-module-module-layer-must": {
     "text": "Row {row}, Col {col}, Module {module}: layer must be an object",
     "hash": "f43c1f6a"
