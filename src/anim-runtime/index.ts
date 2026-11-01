@@ -6,6 +6,7 @@ import * as rig from './rig';
 import * as targets from './targets';
 import * as bindings from './bindings';
 import * as clips from './clips';
+import { applyMirror, mirrorOfRun } from './mirror';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
@@ -55,6 +56,14 @@ export function apply(wrapper: HTMLElement, v2: CompiledV2, ctx: ApplyCtx): void
   if (!applied.has(wrapper)) watch(wrapper);
   applied.add(wrapper);
   for (const m of MODULES) guard(m.name, () => m.apply(wrapper, v2, ctx));
+  if (ctx.icon) guard('mirror', () => mirrorIcons(wrapper, mirrorOfRun(ctx.run, ctx.lookup)));
+}
+
+/** The wrapper's own animated icons, flipped or restored for the wrapper's computed direction. */
+function mirrorIcons(wrapper: HTMLElement, flag: ReturnType<typeof mirrorOfRun>): void {
+  const dir = getComputedStyle(wrapper).direction;
+  for (const icon of wrapper.querySelectorAll<HTMLElement>('.mc-anim-icon'))
+    if (icon.closest('.mc-module-wrapper') === wrapper) applyMirror(icon, flag, dir);
 }
 
 /**
@@ -82,4 +91,5 @@ export function release(wrapper: HTMLElement): void {
   applied.delete(wrapper);
   unwatchOffscreen(wrapper);
   for (const m of MODULES) guard(m.name, () => m.release(wrapper));
+  guard('mirror', () => mirrorIcons(wrapper, undefined));
 }

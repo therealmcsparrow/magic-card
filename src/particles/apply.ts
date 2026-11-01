@@ -129,6 +129,9 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
     const g = measured ?? DEFAULT_GEOMETRY;
     const e = entryFor(docId, spec, period, g);
     const part = ctx.part ? 1 : 0;
+    // a mirrored document flips the whole layer, so positions and rotations flip together
+    if (ctx.mirror) layer.style.setProperty('scale', '-1 1');
+    else if (layer.style.getPropertyValue('scale')) layer.style.removeProperty('scale');
     const c = (part ? e.compiled.other : e.compiled)!;
     // the render's unbaked pool (or another geometry's bake): this size's rules; the slots stay
     if (layer.getAttribute('data-fx') !== c.name) {

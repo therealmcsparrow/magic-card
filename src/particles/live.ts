@@ -252,7 +252,7 @@ function frame(ts: number): void {
       for (const s of e.sims) s.step();
       e.acc -= DT;
     }
-    writeFrame(e.el, e.sims.flatMap((s) => s.frame()));
+    writeFrame(e.el, e.sims.flatMap((s) => s.frame()), false);
   }
   if (anyOn() && pageVisible()) raf = requestAnimationFrame(frame);
   else last = 0;
@@ -275,7 +275,8 @@ export function partSims(spec: ParticlesSpecV2, period: number, geometry: BakeGe
  * `key` (layer name: spec, period, geometry, part) keeps the running simulations; another key starts over.
  */
 export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0): void {
-  if (entries.get(layer)?.key === key) return;
+  const live = entries.get(layer);
+  if (live?.key === key) return;
   stopLive(layer);
   if (!listening && typeof document !== 'undefined') {
     document.addEventListener('visibilitychange', onVisibility);

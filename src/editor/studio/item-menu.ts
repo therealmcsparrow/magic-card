@@ -1,6 +1,7 @@
 import { html, css, nothing, TemplateResult, ReactiveController, ReactiveControllerHost } from 'lit';
 import type { CardModule, MagicCardConfig } from '../../types';
 import type { DesignTarget, EditorStateManager } from '../state/editor-state';
+import { DirectionController } from '../../ui-kit/controllers/direction';
 import { MenuOpenAt, MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { copyText } from '../components/copy-text';
 import { ModuleRegistry } from '../../modules/module-registry';
@@ -123,6 +124,7 @@ export class ItemMenu implements ReactiveController {
   private _origin: HTMLElement | null = null;
 
   constructor(private readonly host: Host, private readonly opts: ItemMenuOptions) {
+    new DirectionController(host);
     this._pop = new MenuPopover(host, {
       menu: () => host.shadowRoot?.querySelector<HTMLElement>('.item-menu'),
       onClose: () => {
@@ -737,6 +739,7 @@ export class ItemMenu implements ReactiveController {
       aria-haspopup=${e.sub ? 'menu' : nothing}
       aria-keyshortcuts=${e.kbd?.[1] ?? nothing}
       data-kbd=${e.kbd?.[0] ?? nothing}
+      data-arrow=${e.icon.startsWith('mdi:arrow-') ? '' : nothing}
       data-back=${e.back && e.label === t('card-editor.item-menu.back') ? '' : nothing}
       ?disabled=${e.disabled}
       @click=${() => this._run(e)}
@@ -827,8 +830,8 @@ export const itemMenuStyles = css`
   }
   .item-menu button[data-kbd]::after,
   .item-menu button[aria-haspopup]::after {
-    margin-left: auto;
-    padding-left: 16px;
+    margin-inline-start: auto;
+    padding-inline-start: 16px;
     font-size: 0.75rem;
     color: var(--mc-text-2);
   }
@@ -839,6 +842,12 @@ export const itemMenuStyles = css`
   .item-menu button[aria-haspopup]::after {
     content: '›';
     font-size: 1rem;
+  }
+  :host([dir='rtl']) .item-menu button[aria-haspopup]::after {
+    content: '‹';
+  }
+  :host([dir='rtl']) .item-menu button[data-arrow] ha-icon {
+    transform: scaleX(-1);
   }
   .item-menu .menu-note {
     margin: 4px 8px 8px;

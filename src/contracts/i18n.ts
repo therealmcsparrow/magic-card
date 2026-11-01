@@ -1,7 +1,16 @@
-// Contract: i18n. Version 2.0.0.
+// Contract: i18n. Version 2.1.0.
 
-export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 7;
+export const I18N_CONTRACT_VERSION = '2.1.0';
+export const I18N_CONTRACT_REVISION = 8;
+
+/** Pseudo-localisation hook: wraps one message or one formatted number; the result is used as text only. */
+export type PseudoWrap = (s: string, kind: 'msg' | 'num') => string;
+/** CustomEvent on window, detail `{ wrap: PseudoWrap | null }`; every runtime copy keeps the wrap in its own module. */
+export const I18N_WRAP_EVENT = 'mc-i18n-wrap';
+/** Plain Event a copy dispatches once on start; the copy that last sent a wrap answers with I18N_WRAP_EVENT. */
+export const I18N_WRAP_QUERY_EVENT = 'mc-i18n-wrap-query';
+/** Never in LOCALES and never returned by resolveLocale. */
+export const PSEUDO_LOCALE = { tag: 'x-pseudo-rtl', dir: 'rtl', pseudo: true } as const;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -14,6 +23,7 @@ export const TABLE_SEPARATOR = '|';
 
 /** Id in shipped code: the message's index in the namespace tables, written by tools/i18n-loader.cjs in place of the key. */
 export type MessageIndex = number;
+/** A string argument is wrapped in U+2068/U+2069 when the active locale is rtl, a pseudo wrap is on, or the value holds strong rtl text. Numbers never are. */
 export type MessageArgs = Record<string, string | number>;
 export type RichArgs = Record<string, unknown>;
 /** Three TABLE_SEPARATOR-joined strings in LOCALES order; entry i of each is message i. */
@@ -36,6 +46,8 @@ export interface ModuleI18n {
   /** Current locale of this bundle. */
   locale(): Locale;
   t(id: MessageIndex, args?: MessageArgs): string;
+  /** The en-GB text of message id, unformatted. */
+  en(id: MessageIndex): string;
   tx(id: MessageIndex, args: RichArgs): unknown[];
   /** Identity marker for data literals (the key becomes the index after the loader). */
   m(id: MessageIndex): MessageIndex;

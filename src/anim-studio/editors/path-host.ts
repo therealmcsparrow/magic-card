@@ -81,7 +81,7 @@ export class AnimPathHost extends CanvasHost {
       }
       .hint {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         transform: translate(-50%, -50%);
         margin: 0;

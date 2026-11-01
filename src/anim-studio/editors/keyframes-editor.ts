@@ -955,6 +955,7 @@ export class AnimKeyframesEditor extends LitElement {
         border: 1px solid var(--mc-divider);
         border-radius: var(--mc-radius-lg);
         background: var(--mc-surface);
+        direction: ltr; /* time runs left to right */
         overflow: hidden;
         user-select: none;
         -webkit-user-select: none;
@@ -997,7 +998,7 @@ export class AnimKeyframesEditor extends LitElement {
       }
       .ruler-head {
         position: sticky;
-        left: 0;
+        left: 0; /* physical */
         z-index: 2;
         display: flex;
         align-items: center;
@@ -1007,7 +1008,7 @@ export class AnimKeyframesEditor extends LitElement {
         font-weight: 500;
         color: var(--mc-text-2);
         background: var(--mc-surface-2);
-        border-right: 1px solid var(--mc-divider);
+        border-right: 1px solid var(--mc-divider); /* physical */
       }
       .ruler-track {
         position: relative;
@@ -1024,7 +1025,7 @@ export class AnimKeyframesEditor extends LitElement {
         width: 1px;
         height: 5px;
         background: var(--mc-field-border);
-        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));
+        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at)); /* physical */
       }
       .tick.major {
         height: 9px;
@@ -1034,7 +1035,7 @@ export class AnimKeyframesEditor extends LitElement {
         position: absolute;
         top: 5px;
         transform: translateX(-50%);
-        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));
+        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at)); /* physical */
         font-size: 0.6875rem;
         font-variant-numeric: tabular-nums;
         color: var(--mc-text-2);
@@ -1050,7 +1051,7 @@ export class AnimKeyframesEditor extends LitElement {
       .ph-tag {
         position: absolute;
         top: 3px;
-        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--t));
+        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--t)); /* physical */
         transform: translateX(-50%);
         z-index: 4;
         padding: 2px 6px;
@@ -1067,11 +1068,11 @@ export class AnimKeyframesEditor extends LitElement {
       .ph-tag::after {
         content: '';
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         bottom: -4px;
         width: 8px;
         height: 8px;
-        margin-left: -4px;
+        margin-left: -4px; /* physical */
         background: inherit;
         transform: rotate(45deg);
         border-radius: 1px;
@@ -1082,8 +1083,8 @@ export class AnimKeyframesEditor extends LitElement {
         top: 36px;
         bottom: 0;
         width: 2px;
-        margin-left: -1px;
-        left: calc(var(--head) + var(--inset) + (100% - var(--head) - 2 * var(--inset)) * var(--t));
+        margin-left: -1px; /* physical */
+        left: calc(var(--head) + var(--inset) + (100% - var(--head) - 2 * var(--inset)) * var(--t)); /* physical */
         background: var(--ph);
         z-index: 3;
         pointer-events: none;
@@ -1092,21 +1093,21 @@ export class AnimKeyframesEditor extends LitElement {
         position: absolute;
         top: 36px;
         bottom: 0;
-        left: calc(var(--head) + var(--inset) + (100% - var(--head) - 2 * var(--inset)) * var(--a));
+        left: calc(var(--head) + var(--inset) + (100% - var(--head) - 2 * var(--inset)) * var(--a)); /* physical */
         width: calc((100% - var(--head) - 2 * var(--inset)) * (var(--b) - var(--a)));
         background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--mc-text) 5%, transparent) 0 6px, transparent 6px 12px);
-        border-left: 1px dashed var(--mc-field-border);
-        border-right: 1px dashed var(--mc-field-border);
+        border-left: 1px dashed var(--mc-field-border); /* physical */
+        border-right: 1px dashed var(--mc-field-border); /* physical */
         pointer-events: none;
         z-index: 0;
       }
       .ghost {
         position: absolute;
         bottom: 4px;
-        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));
+        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at)); /* physical */
         width: 10px;
         height: 10px;
-        margin-left: -5px;
+        margin-left: -5px; /* physical */
         border: 1.5px dashed var(--mc-text-2);
         border-radius: 2px;
         transform: rotate(45deg);
@@ -1128,7 +1129,7 @@ export class AnimKeyframesEditor extends LitElement {
       }
       .head {
         position: sticky;
-        left: 0;
+        left: 0; /* physical */
         z-index: 4;
         display: flex;
         align-items: center;
@@ -1136,13 +1137,13 @@ export class AnimKeyframesEditor extends LitElement {
         min-width: 0;
         padding: 0 2px 0 4px;
         background: var(--mc-surface);
-        border-right: 1px solid var(--mc-divider);
+        border-right: 1px solid var(--mc-divider); /* physical */
       }
       .lane.summary .head {
         background: color-mix(in srgb, var(--mc-surface-2) 45%, var(--mc-surface));
       }
       .lane.sub .head {
-        padding-left: 20px;
+        padding-left: 20px; /* physical */
       }
       .lane.active .head {
         background: var(--mc-surface-2);
@@ -1167,7 +1168,7 @@ export class AnimKeyframesEditor extends LitElement {
         border: 0;
         border-radius: 6px;
         background: transparent;
-        text-align: left;
+        text-align: start;
         font-size: 0.8125rem;
         font-weight: 500;
         color: var(--mc-text);
@@ -1239,7 +1240,7 @@ export class AnimKeyframesEditor extends LitElement {
         top: 50%;
         height: 2px;
         margin-top: -1px;
-        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--a));
+        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--a)); /* physical */
         width: calc((100% - 2 * var(--inset)) * (var(--b) - var(--a)));
         background: color-mix(in srgb, var(--mc-text-2) 45%, transparent);
         border-radius: 1px;
@@ -1288,7 +1289,7 @@ export class AnimKeyframesEditor extends LitElement {
       .key {
         position: absolute;
         top: 50%;
-        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));
+        left: calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at)); /* physical */
         width: 24px;
         height: 32px;
         margin: -16px 0 0 -12px;
@@ -1302,7 +1303,7 @@ export class AnimKeyframesEditor extends LitElement {
       .key::before {
         content: '';
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         width: 11px;
         height: 11px;
@@ -1344,7 +1345,7 @@ export class AnimKeyframesEditor extends LitElement {
       .key.onion::after {
         content: '';
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         width: 19px;
         height: 19px;
@@ -1385,10 +1386,10 @@ export class AnimKeyframesEditor extends LitElement {
       }
       .empty-group {
         position: sticky;
-        left: 0;
+        left: 0; /* physical */
         width: max-content;
         max-width: 100cqw;
-        padding-left: 24px;
+        padding-left: 24px; /* physical */
         border-top: 0;
         font-size: 0.75rem;
       }
@@ -1472,7 +1473,7 @@ export class AnimKeyframesEditor extends LitElement {
         border: 0;
         border-top: 1px solid var(--mc-divider);
         background: transparent;
-        text-align: left;
+        text-align: start;
       }
       .kf-list li:first-child .kf-row {
         border-top: 0;

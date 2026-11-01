@@ -8,7 +8,7 @@ import { ICON_LIBRARY } from '../../../icon-anim/library';
 import { styleDoc } from '../../../icon-anim/style';
 import { DEFAULT_ICON_STYLE, type IconStyle } from '../../../contracts/icon-library';
 import { cardState, patchCard } from './card-request';
-import { handEdited, libraryPickOf, withoutPickFields as plainEntry } from './library-pick';
+import { handEdited, libraryPickOf, withLibraryMirror, withoutPickFields as plainEntry } from './library-pick';
 import {
   cardIds,
   iconEntry,
@@ -110,7 +110,7 @@ export function pickAnimatedIcon(
       ? ie.id
       : newQuickId([...cardIds(config, h.customIds(config), tpl), ...lib]);
   const style = pick.style ?? DEFAULT_ICON_STYLE;
-  const v = validateAnimationDoc({ ...styleDoc(pick.entry, style, { id, color: ie?.entry.color }), name: pick.entry.name }, { v2: 'strict' });
+  const v = validateAnimationDoc({ ...withLibraryMirror(styleDoc(pick.entry, style, { id, color: ie?.entry.color }), pick.entry), name: pick.entry.name }, { v2: 'strict' });
   if (!v.ok) return false;
   const doc = v.doc;
   write(pick.entry.icon, withPickFields(withQuickEntry(list, id), pick.entry.id, style));

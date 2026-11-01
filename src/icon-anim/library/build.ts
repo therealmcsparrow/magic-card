@@ -1,5 +1,5 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, RigGroup, RigPart, RigShape, TargetRef, Track } from '../../anim-studio/model';
-import type { IconStyleHints, LibraryEntry } from '../../contracts/icon-library';
+import type { IconStyleHints, LibraryEntry, MirrorFlag } from '../../contracts/icon-library';
 import type { IconGeometry } from '../../icons/icon-source';
 import { splitIcon, type SplitPiece } from '../../icons/icon-split';
 import { anchorOf, piecesBox, type Anchor } from '../icon-doc';
@@ -189,7 +189,7 @@ export const fold = (to: number, extra: KeyframeTransform = {}): AnimationKeyfra
 export const SPIN = (n = 1) => [t(0, { rotate: 0 }, { easing: 'linear' }), t(100, { rotate: 360 * n })];
 
 /** The library entry of a spec (a fresh document per build(), so editing one never changes the library), with its Style hints. */
-export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({
+export const entryOf = (s: Spec, styles?: IconStyleHints, mirror?: MirrorFlag): LibraryEntry => ({
   id: s.id,
   // the tile name in the current language (a getter: the tables are lazy, a language change applies at once)
   get name() {
@@ -200,6 +200,7 @@ export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({
   tags: s.tags,
   build: () => build(s),
   ...(styles ? { styles } : {}),
+  ...(mirror ? { mirror } : {}),
 });
 
 const r3 = (v: number): number => Math.round(v * 1000) / 1000;

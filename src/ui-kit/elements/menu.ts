@@ -3,6 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { UI_KIT_CONTRACT_REVISION, type UiMenuClose, type UiMenuEntry, type UiMenuPick } from '../../contracts/ui-kit';
 import { kitMenuElementCss } from '../css/elements';
 import { isGlyphName, glyph, type GlyphName } from '../glyphs';
+import { DirectionController } from '../controllers/direction';
 import { placeAtPoint, placeAtRect, showTop } from '../place';
 
 // <mc-ui-menu> (contract ui-kit 1.0.0): action, overflow and context menu with the data API and events of <mc-path-menu>.
@@ -27,6 +28,7 @@ export class UiMenu extends LitElement {
   /** Index of the open submenu parent in `items`, or -1. */
   @state() private _sub = -1;
   private _subRow?: HTMLElement;
+  private _dir = new DirectionController(this);
 
   get open(): boolean {
     return this._open;
@@ -103,7 +105,8 @@ export class UiMenu extends LitElement {
         showTop(sub);
         const r = row.getBoundingClientRect();
         const w = sub.getBoundingClientRect().width;
-        const x = r.right + w + M <= window.innerWidth ? r.right : Math.max(M, r.left - w);
+        const room = this._dir.direction === 'rtl' ? r.left - w >= M : r.right + w + M > window.innerWidth;
+        const x = this._dir.direction === 'rtl' ? (room ? r.left - w : r.right) : room ? Math.max(M, r.left - w) : r.right;
         placeAtPoint(sub, [x, r.top]);
       }
       this.focusIn(this.list(), this.firstFree(e.items ?? []));
@@ -127,15 +130,16 @@ export class UiMenu extends LitElement {
     const n = rows.length;
     const go = (i: number): void => rows[(i + n) % n]?.focus();
     const k = ev.key;
+    const rtl = this._dir.direction === 'rtl';
     let handled = true;
     if (k === 'ArrowDown') go(cur + 1);
     else if (k === 'ArrowUp') go(cur < 0 ? n - 1 : cur - 1);
     else if (k === 'Home') go(0);
     else if (k === 'End') go(n - 1);
     else if (k === 'Enter' || k === ' ') this.pick(cur, rows[cur]);
-    else if (k === 'ArrowRight') {
+    else if (k === (rtl ? 'ArrowLeft' : 'ArrowRight')) {
       if (this._sub < 0 && entries[cur]?.items) this.openSub(cur, rows[cur]);
-    } else if (k === 'ArrowLeft' || k === 'Escape') {
+    } else if (k === (rtl ? 'ArrowRight' : 'ArrowLeft') || k === 'Escape') {
       if (this._sub >= 0) {
         const p = this._sub;
         this._sub = -1;
@@ -175,7 +179,7 @@ export class UiMenu extends LitElement {
         aria-expanded=${sub ? String(this._sub === i) : nothing}
         @click=${(ev: Event) => this.pick(i, ev.currentTarget as HTMLElement)}
       >
-        ${this.mark(e)}<span class="label">${e.label}</span>${e.keys ? html`<span class="keys">${e.keys}</span>` : nothing}${sub ? '›' : nothing}${e.reason ? html`<span class="why">${e.reason}</span>` : nothing}${e.sub ? html`<span class="sub-line">${e.sub}</span>` : nothing}
+        ${this.mark(e)}<span class="label">${e.label}</span>${e.keys ? html`<span class="keys">${e.keys}</span>` : nothing}${sub ? (this._dir.direction === 'rtl' ? '‹' : '›') : nothing}${e.reason ? html`<span class="why">${e.reason}</span>` : nothing}${e.sub ? html`<span class="sub-line">${e.sub}</span>` : nothing}
       </div>`;
   }
 

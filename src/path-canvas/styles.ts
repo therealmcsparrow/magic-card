@@ -17,6 +17,7 @@ export const canvasStyles: CSSResult[] = [
       background-size: 16px 16px;
       border-radius: 12px;
       outline: none;
+      direction: ltr;
     }
     :host([hidden]) {
       display: none;
@@ -192,7 +193,7 @@ export const canvasStyles: CSSResult[] = [
       display: block;
       margin-top: 4px;
       transform: translateX(-50%);
-      margin-left: 36px;
+      margin-left: 36px; /* physical */
       width: max-content;
       max-width: 200px;
       padding: 1px 6px;

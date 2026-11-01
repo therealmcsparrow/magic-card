@@ -227,7 +227,7 @@ export const imageStyles = css`
   }
   .ref-pic {
     position: absolute;
-    left: 0;
+    left: 0; /* physical */
     top: 0;
     transform-origin: 0 0;
   }

@@ -6,6 +6,7 @@ import { EMPTY_LAYER_VIEW, LAYER_TOGGLES, type LayerKey, type LayerToggle, type 
 import type { AnimationDoc } from '../model';
 import { hideReason, isLocked, markedBelow, parentKey, toggleLayer } from '../layer-view';
 import { t, m, type MessageId } from '../i18n';
+import { DirectionController } from '../../ui-kit/controllers/direction';
 
 // The shared layer row and its keyboard model: every layers panel renders rows with `LayerRows.row()` and gets a roving
 // tab stop, arrow / Home / End navigation, disclosure keys, Alt+Up / Down to move, H S L toggles, F2 rename, the compact
@@ -118,11 +119,14 @@ export class LayerRows implements ReactiveController {
   private _focus?: { key: LayerKey; ctl?: string };
   private _n = 0;
 
+  private readonly direction: DirectionController;
+
   constructor(
     private readonly host: LayerHost,
     private readonly actions: RowActions,
   ) {
     host.addController(this);
+    this.direction = new DirectionController(host);
   }
 
   hostUpdated(): void {
@@ -213,10 +217,11 @@ export class LayerRows implements ReactiveController {
     if (!e.shiftKey && e.key === 'ArrowDown') return go(at + 1);
     if (e.key === 'Home') return go(0);
     if (e.key === 'End') return go(rows.length - 1);
-    if (e.key === 'ArrowRight' && r.expanded === false) {
+    const rtl = this.direction.direction === 'rtl';
+    if (e.key === (rtl ? 'ArrowLeft' : 'ArrowRight') && r.expanded === false) {
       e.preventDefault();
       this.actions.open?.(r.key, true);
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === (rtl ? 'ArrowRight' : 'ArrowLeft')) {
       if (r.expanded) {
         e.preventDefault();
         this.actions.open?.(r.key, false);
@@ -371,7 +376,7 @@ export class LayerRows implements ReactiveController {
         ${r.expanded === undefined
           ? html`<span class="lcaret-space"></span>`
           : html`<button type="button" class="icon-btn xs lt lcaret" tabindex="-1" aria-label=${r.expanded ? t('anim-studio.layer-row.collapse-name', { name: r.name }) : t('anim-studio.layer-row.expand-name', { name: r.name })} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
-              <ha-icon icon=${r.expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
+              <ha-icon icon=${r.expanded ? 'mdi:chevron-down' : this.direction.direction === 'rtl' ? 'mdi:chevron-left' : 'mdi:chevron-right'}></ha-icon>
             </button>`}
         <button type="button" class="lr-main" data-lk=${r.key} tabindex="-1" aria-pressed=${r.selected ? 'true' : 'false'} aria-expanded=${r.expanded === undefined ? nothing : r.expanded ? 'true' : 'false'} aria-describedby=${said.length ? id : nothing} aria-keyshortcuts="H S L Alt+ArrowUp Alt+ArrowDown" title=${(r.title ?? r.name) + (r.badge && !r.title ? ` (${r.badge})` : '')} @focus=${(e: Event) => ((active = (e.currentTarget as HTMLElement).dataset.lk!), syncTabStops(h))} @click=${(e: MouseEvent) => this.actions.select(r.key, e)}>
           ${r.thumb ?? (r.bare ? nothing : html`<ha-icon class="kind" icon=${r.icon ?? 'mdi:layers-outline'}></ha-icon>`)}
@@ -422,7 +427,7 @@ export const layerRowStyles = css`
     flex-wrap: nowrap;
     gap: 2px;
     min-height: 32px;
-    padding-right: 2px;
+    padding-inline-end: 2px;
     border-radius: var(--mc-radius, 8px);
     --mdc-icon-size: 18px;
   }
@@ -434,10 +439,10 @@ export const layerRowStyles = css`
     color: var(--mc-accent-ink);
   }
   .lr.lvl-2 .lr-in {
-    padding-left: 18px;
+    padding-inline-start: 18px;
   }
   .lr.lvl-3 .lr-in {
-    padding-left: 36px;
+    padding-inline-start: 36px;
   }
   .lr-main {
     all: unset;

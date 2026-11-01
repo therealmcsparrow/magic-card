@@ -14,6 +14,22 @@ Magic Card is built to WCAG 2.2 AA. This is the standard we build to. We have no
 -   **Reduced motion.** Cards turn off most movement when the system asks for reduced motion, and the animation studio has a reduced-motion preview. A flow line becomes a static line with an arrow. Particle layers fade in over 200 ms. With reduced motion, particle simulations appear at once and other particle layers stay hidden.
 -   **Your language.** The editors follow the language of your Home Assistant profile. See [Languages](../languages/README.md).
 
+## Right to left
+
+No right-to-left language ships with Magic Card. The editors and the card are being prepared for one: the editors, the card sliders and the card rings mirror when the direction is right to left, and an icon flips only if it is flagged to. Your card layout is never mirrored.
+
+On a mirrored horizontal slider the Left and Right arrow keys swap, so Right still moves towards the end you read. Screen readers hear the same values as before. See [Slider](../modules/controls/slider.md#right-to-left) and [Ring](../design/ring.md#right-to-left).
+
+To try this, turn on the Pseudo RTL switch in the animation studio. It uses made-up text and is a test aid, not a language. It has been looked at in a desktop browser only.
+
+What has not been done:
+
+-   No screen reader has been run on a right-to-left layout.
+-   No phone or tablet has been tried with it.
+-   No right-to-left translation has been read by a native speaker.
+
+See [Animation studio](../animation-studio/README.md#right-to-left) and [Translating](../translating/README.md#legal-text).
+
 ## What to check on your own device
 
 Some things we have not tested with real hardware:

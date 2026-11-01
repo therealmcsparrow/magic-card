@@ -1,4 +1,4 @@
-// Contract suite: src/contracts/i18n-keys.ts (1.1.0) and src/contracts/i18n.ts (2.0.0), constants and
+// Contract suite: src/contracts/i18n-keys.ts (1.2.0) and src/contracts/i18n.ts (2.0.0), constants and
 // shapes only. Covers the plain facts of the key rules, the catalogues, the stale check and the exchange files.
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
@@ -17,7 +17,7 @@ describe('i18n-keys contract, constants', () => {
   });
 
   it('holds the documented numbers and paths', () => {
-    expect(keys.I18N_KEYS_CONTRACT_VERSION).toBe('1.1.0');
+    expect(keys.I18N_KEYS_CONTRACT_VERSION).toBe('1.2.0');
     expect(keys.KEY_MAX_CHARS).toBe(96);
     expect(keys.SOURCE_HASH_CHARS).toBe(8);
     expect(keys.NOTE_MIN_CHARS).toBe(12);
@@ -72,8 +72,8 @@ describe('source hash reference', () => {
 });
 
 describe('i18n contract', () => {
-  it('is at 2.0.0 (keys replace text ids)', () => {
-    expect(i18n.I18N_CONTRACT_VERSION).toBe('2.0.0');
+  it('is at 2.1.0 (keys replace text ids)', () => {
+    expect(i18n.I18N_CONTRACT_VERSION).toBe('2.1.0');
   });
   it('lists the namespaces of tools/i18n/config.json plus mcu-panel, nothing else', () => {
     const cfg = JSON.parse(read('tools/i18n/config.json')).namespaces as Record<string, unknown>;

@@ -4,6 +4,7 @@ import { ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor, searchLibrary, isNewInReleas
 import type { IconAnimatorHost } from './loader';
 import { DEFAULT_ICON_STYLE, ICON_STYLES, type IconStyle } from '../../../contracts/icon-library';
 import { styleDoc } from '../../../icon-anim/style';
+import { readDirection } from '../../../ui-kit/controllers/direction';
 import { fold } from '../../../i18n/fold';
 import { t, m } from '../../../icon-anim/i18n';
 import type { MessageIndex } from '../../../contracts/i18n';
@@ -253,6 +254,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           position: absolute;
           top: 6px;
           right: 6px;
+          inset-inline: auto 6px;
           width: 8px;
           height: 8px;
           background: var(--mc-accent-ink, #01579b);
@@ -325,6 +327,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           position: absolute;
           top: 6px;
           right: 6px;
+          inset-inline: auto 6px;
           --mdc-icon-size: 16px;
           color: var(--mc-accent-ink, #01579b);
           background: var(--mc-canvas, var(--card-background-color, #fff));
@@ -406,7 +409,9 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       const onKey = (e: KeyboardEvent) => {
         const i = ICON_STYLES.indexOf(this._style);
         const n = ICON_STYLES.length;
-        const to = ({ ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: n - 1 } as Record<string, number>)[e.key];
+        const fwd = readDirection(e.currentTarget as HTMLElement) === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const back = fwd === 'ArrowRight' ? 'ArrowLeft' : 'ArrowRight';
+        const to = ({ [fwd]: i + 1, ArrowDown: i + 1, [back]: i - 1, ArrowUp: i - 1, Home: 0, End: n - 1 } as Record<string, number>)[e.key];
         if (to === undefined) return;
         e.preventDefault();
         const next = ICON_STYLES[(to + n) % n];

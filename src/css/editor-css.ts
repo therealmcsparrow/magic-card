@@ -1,6 +1,7 @@
 import { css } from 'lit';
 import { mcVariables } from './tokens';
 import { editorSystem } from '../css/editor-stack';
+import { inlineSides } from '../ui-kit/css/rtl';
 
 export const componentControlStyles = css`
   :host {
@@ -142,7 +143,7 @@ const editorLocalStyles = css`
   .mc-linked-badge {
     position: absolute;
     top: -4px;
-    right: -4px;
+    ${inlineSides('inset', 'auto', '-4px')}
     min-width: 16px;
     height: 16px;
     padding: 0 4px;
@@ -160,7 +161,7 @@ const editorLocalStyles = css`
   .mc-linked-popup {
     position: absolute;
     top: 100%;
-    left: 0;
+    ${inlineSides('inset', '0', 'auto')}
     margin-top: 4px;
     background: var(--card-background-color, #fff);
     border: 1px solid var(--mc-border);
@@ -246,7 +247,7 @@ const editorLocalStyles = css`
     color: var(--mc-text);
     transition: background 0.15s;
     width: 100%;
-    text-align: left;
+    text-align: start;
   }
 
   .mc-linked-popup-btn:hover {
@@ -272,7 +273,7 @@ const editorLocalStyles = css`
     gap: 10px;
     padding: 8px 12px;
     border: none;
-    border-left: 3px solid var(--mc-primary);
+    border-inline-start: 3px solid var(--mc-primary);
     border-radius: 6px;
     background: var(--mc-primary-light);
     margin-bottom: 12px;
@@ -695,7 +696,7 @@ const editorLocalStyles = css`
   .mc-condition-item .mc-btn-icon {
     position: absolute;
     top: 8px;
-    right: 8px;
+    ${inlineSides('inset', 'auto', '8px')}
   }
 
   .mc-conditions-list {
@@ -944,7 +945,7 @@ const pickerLocalStyles = css`
     border-radius: var(--mc-radius);
     background: var(--mc-surface);
     color: var(--mc-text);
-    text-align: left;
+    text-align: start;
     transition: border-color 0.15s ease-out;
   }
 
@@ -1070,7 +1071,7 @@ const pickerLocalStyles = css`
     border-radius: var(--mc-radius);
     background: transparent;
     color: var(--mc-text);
-    text-align: left;
+    text-align: start;
     cursor: pointer;
     transition: background-color 0.15s ease-out;
   }
@@ -1363,7 +1364,7 @@ export const iconPickerStyles = css`
   }
 
   .mc-picker-footer .clear {
-    margin-left: -8px;
+    margin-inline-start: -8px;
   }
 `;
 
@@ -1625,7 +1626,7 @@ export const colorPickerStyles = css`
   .mc-saved-swatch .mc-remove-btn {
     position: absolute;
     top: -8px;
-    right: -8px;
+    ${inlineSides('inset', 'auto', '-8px')}
     display: none;
     place-items: center;
     width: 18px;

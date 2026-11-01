@@ -33,13 +33,13 @@ const ITEMS: UiChoice[] = [
   { value: 'heat', label: 'Heat', description: 'Warm wave.' },
 ];
 
-describe('ui-kit 1.2.0 r5 definition', () => {
+describe('ui-kit 1.3.0 r6 definition', () => {
   it('has the new version and revision, and defines the three tags once', () => {
-    expect(UI_KIT_CONTRACT_VERSION).toBe('1.2.0');
-    expect(UI_KIT_CONTRACT_REVISION).toBe(5);
+    expect(UI_KIT_CONTRACT_VERSION).toBe('1.3.0');
+    expect(UI_KIT_CONTRACT_REVISION).toBe(6);
     for (const tag of [UI_DISCLOSURE_TAG, UI_TILE_GROUP_TAG, UI_CHIP_GROUP_TAG]) {
       const cls = customElements.get(tag) as unknown as { uiKitRevision: number };
-      expect(cls.uiKitRevision).toBe(5);
+      expect(cls.uiKitRevision).toBe(6);
       expect(() => defineUiKit()).not.toThrow();
       expect(customElements.get(tag)).toBe(cls);
     }

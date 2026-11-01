@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 74387,
+        "cap": 74836,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 74387
+        "measured": 74836
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 63595,
-      "measured": 63595
+      "cap": 63953,
+      "measured": 63953
     }
   },
   "files": {
@@ -214,9 +214,9 @@
       "note": "32 KiB: measured 30,728 plus a margin. Equals the contract ceiling 32,768."
     },
     "magic-card-slider-look.js": {
-      "raw": 25600,
-      "ceiling": 25600,
-      "note": "25 KiB (light-card lift, failed-call chip). The contract ceiling is 28,672 B; the ceiling here is the current cap."
+      "raw": 27648,
+      "ceiling": 27648,
+      "note": "27 KiB (right-to-left slider sheet). The contract ceiling is 28,672 B; the ceiling here is the current cap."
     },
     "magic-card-templates.js": {
       "raw": 10240,
@@ -272,6 +272,12 @@
       "raw": 17408,
       "ceiling": 17408,
       "note": "i18n icon-library table chunk (contract i18n 1.0.0). 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB."
+    },
+    "magic-card-i18n-pseudo.js": {
+      "raw": 289,
+      "ceiling": 289,
+      "optional": true,
+      "note": "Pseudo right-to-left transform, loaded only by the Pseudo RTL switch. Measured 275 + 5 % (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-css.js": {
       "raw": 10240,
@@ -1053,6 +1059,30 @@
       "field": "/entry/br/cap",
       "from": 63396,
       "to": 63595
+    },
+    {
+      "id": "entry-stage4-74387-to-74836",
+      "field": "/entry/stages/3/cap",
+      "from": 74387,
+      "to": 74836
+    },
+    {
+      "id": "entry-br-63595-to-63953",
+      "field": "/entry/br/cap",
+      "from": 63595,
+      "to": 63953
+    },
+    {
+      "id": "slider-look-raw-25600-to-27648",
+      "field": "/files/magic-card-slider-look.js/raw",
+      "from": 25600,
+      "to": 27648
+    },
+    {
+      "id": "slider-look-ceiling-25600-to-27648",
+      "field": "/files/magic-card-slider-look.js/ceiling",
+      "from": 25600,
+      "to": 27648
     }
   ]
 }

@@ -1,9 +1,9 @@
 import type { AnimationDoc, LaneId } from '../anim-studio/model';
 
-/** Contract: animated icon library. Version 1.3.0. Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY,
- * LIBRARY_DOMAINS, libraryFor, searchLibrary, RELEASE_NOTES, isNewInRelease, ReleaseNotes. `domain` may also be a LIBRARY_CATEGORIES value. */
+/** Contract: animated icon library. Version 1.4.0. Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY,
+ * LIBRARY_DOMAINS, libraryFor, searchLibrary, RELEASE_NOTES, isNewInRelease, ReleaseNotes, ICON_MIRROR, mirrorBadge. `domain` may also be a LIBRARY_CATEGORIES value. */
 
-export const ICON_LIBRARY_CONTRACT_VERSION = '1.3.0';
+export const ICON_LIBRARY_CONTRACT_VERSION = '1.4.0';
 
 /** Pseudo-domains for icons no Home Assistant domain fits (the filter shows them like domains). */
 export const LIBRARY_CATEGORIES = ['animal', 'seasonal', 'transport', 'maker', 'workplace', 'household'] as const;
@@ -27,6 +27,9 @@ export interface IconStyleHints {
   glow?: { parts?: string[]; color?: string };
 }
 
+/** Whether the icon flips in a right-to-left layout (mirror) or stays as drawn (keep). */
+export type MirrorFlag = 'mirror' | 'keep';
+
 export interface LibraryEntry {
   /** Unique, [a-z0-9-]. Never renamed once shipped (cards store it in `library_icon`). */
   id: string;
@@ -40,6 +43,8 @@ export interface LibraryEntry {
   build(): AnimationDoc;
   /** 1.2.0: derivation hints (brand artist supplies them in p4-spec.json where the default looks wrong). */
   styles?: IconStyleHints;
+  /** 1.4.0: absent means not set yet; the studio shows it as Not set. */
+  mirror?: MirrorFlag;
 }
 
 /**

@@ -84,3 +84,22 @@ export const SLIDER_LOOK_CSS = `
 .mc-tile-slider[offscreen] .mc-sl-p *{transition:none;animation:none}
 @media (prefers-reduced-motion:reduce){.mc-sl-f,.mc-sl-th,.mc-sl-b{transition:none}.mc-tile-slider.mc-dragging .mc-sl-th{--sc:1}}
 `.replace(/\n/g, '');
+
+// The mirrored rules of a right-to-left horizontal track, adopted by the page only (the track's markup stays the same in both directions).
+export const SLIDER_LOOK_RTL_CSS = `
+.mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-g{left:auto;right:calc(var(--v) * 100% - 9px)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%);transform:translate(50%,-50%) scale(var(--sc,1))}
+.mc-tile-slider[data-mc-rtl] .mc-sl-k{left:auto;right:calc(var(--k) * 100%);margin-left:0;margin-right:-.5px}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l{left:auto;right:calc(var(--k) * 100%);transform:translateX(50%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l[data-edge='0']{transform:none}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l[data-edge='1']{transform:translateX(100%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-b{left:auto;right:calc(var(--v) * 100%);transform:translateX(50%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-v{right:auto;left:8px}
+.mc-tile-slider[data-mc-rtl] .mc-sl-e{right:auto;left:6px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-i{left:auto;right:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-v{right:auto;left:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-v{left:auto;right:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-i~.mc-sl-v{left:auto;right:52px}
+`.replace(/\n/g, '');

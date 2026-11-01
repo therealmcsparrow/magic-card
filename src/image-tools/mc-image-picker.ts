@@ -32,7 +32,7 @@ export class McImagePicker extends LitElement {
         align-items: stretch;
         min-height: 90px;
         padding: 6px;
-        text-align: left;
+        text-align: start;
         font: inherit;
         color: inherit;
         background: var(--mc-surface, transparent);

@@ -29,6 +29,7 @@ import { isCut, selfCrosses, solveSpace } from './space';
 import { setI18nLocale } from '../i18n/runtime';
 import { t, locale } from './i18n';
 import { PanelLips } from '../ui-kit/controllers/panel-lips';
+import { DirectionController } from '../ui-kit/controllers/direction';
 import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
 import { lipSpecs, lipStrings, lipTokens } from './lips';
 import { BOX, CORNER, DIST, EDIT_AT, FAIL, HANDLE, OPS, presetName, PRIM, SAMPLE, SHORT, SHORTCUTS, SIDE, SIZE, STARTER, TYPE, TYPE_HELP } from './names';
@@ -77,6 +78,7 @@ interface Msg {
 
 export class McShapeStudio extends LitElement {
   static styles = studioStyles;
+  private readonly dirCtl = new DirectionController(this);
   /** Contract svg-editor: the Magic Card Utils panel checks this before it creates the element. */
   static contractRevision = 5;
 
@@ -1471,7 +1473,8 @@ ${group(t('shape-editor.mc-shape-studio.shapes'), PRIMITIVE_KINDS.length, shapes
     const cur = els.indexOf(e.composedPath().find((x) => els.includes(x as HTMLElement)) as HTMLElement);
     const row = els.findIndex((el) => el.offsetTop !== els[0].offsetTop);
     const cols = row > 0 ? row : coarse() ? 3 : 4;
-    const to = { ArrowRight: cur + 1, ArrowLeft: cur - 1, ArrowDown: cur + cols, ArrowUp: cur - cols, Home: 0, End: els.length - 1 }[e.key];
+    const rtl = this.dirCtl.direction === 'rtl';
+    const to = { ArrowRight: cur + (rtl ? -1 : 1), ArrowLeft: cur + (rtl ? 1 : -1), ArrowDown: cur + cols, ArrowUp: cur - cols, Home: 0, End: els.length - 1 }[e.key];
     if (to === undefined) return;
     e.preventDefault();
     e.stopPropagation();
@@ -1643,7 +1646,8 @@ ${id === 'custom' ? html`<div class="grid2">${num(t('shape-editor.mc-shape-studi
     const turn = [0, 90, 180, 270];
     const toPct = (on: boolean): number => { const m = Math.min(this.size.w, this.size.h); return c.pct === on ? c.size : on ? r1((c.size / m) * 100) : Math.round((c.size / 100) * m); };
     const arrow = (e: KeyboardEvent, list: readonly string[], at: string, pick: (k: string) => void, sel: string): void => {
-      const to = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+      const fwd = this.dirCtl.direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+      const to = e.key === fwd || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' ? -1 : 0;
       if (!to) return;
       e.preventDefault();
       pick(list[(list.indexOf(at) + to + list.length) % list.length]);

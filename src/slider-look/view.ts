@@ -16,6 +16,7 @@ import { createLive, type Live } from './live';
 import { ShapeBox, trackShape } from './shape';
 import { ERROR_MS, HIT_PX, LINGER_MS, nearestStop, resolveLook, segmentCount, stopKey, stopsIn, tickValues } from './resolve';
 import { SLIDER_LOOK_CSS } from './css';
+import { lookRtlSheet } from './rtl-sheet';
 
 // The slider-look view: the whole slider for a module with look keys. Interaction, ARIA and keys stay in renderTrack; this
 // file draws the parts and keeps transient state. Fill, ticks, thumb and value follow one custom property (--v).
@@ -350,7 +351,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     : nothing;
 
   return html`<style>${SLIDER_LOOK_CSS}</style>
-    <div class="mc-module mc-slider mc-slider-container ${vertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'} ${vertical && bf ? 'mc-slider-container--bigfill' : ''}">
+    <div class="mc-module mc-slider mc-slider-container ${vertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'} ${vertical && bf ? 'mc-slider-container--bigfill' : ''}" ${lookRtlSheet()}>
       ${track}${beside}
       <span class="mc-sl-sr" role="status" ${ref(st.status)} .textContent=${message}></span>
     </div>`;

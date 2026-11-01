@@ -1,4 +1,4 @@
-import type { RingPosition } from '../types';
+import type { RingPosition, RingStart } from '../types';
 import { rangeColor } from '../utils/color-ranges';
 import { colour, withOpacity } from '../utils/ring';
 import type { ResolvedRing, RingTimer } from '../utils/ring';
@@ -20,6 +20,23 @@ export function ringTimerTick(t: RingTimer, now = Date.now()): { fill: number; c
 /** How far the outline sits inside the border edge: half the stroke inside, on it, or half outside. */
 export function ringInset(position: RingPosition, width: number): number {
   return position === 'inside' ? width / 2 : position === 'outside' ? -width / 2 : 0;
+}
+
+const MIRRORED: Record<RingStart, RingStart> = {
+  top: 'top',
+  'top-right': 'top-left',
+  right: 'left',
+  'bottom-right': 'bottom-left',
+  bottom: 'bottom',
+  'bottom-left': 'bottom-right',
+  left: 'right',
+  'top-left': 'top-right',
+};
+
+/** The start point and direction of a ring mirrored on the vertical axis (right to left), so the same outline is walked the mirrored way. */
+export function mirrorSweep(start: RingStart | undefined, direction: 'cw' | 'ccw' | undefined, rtl: boolean): { start: RingStart | undefined; direction: 'cw' | 'ccw' | undefined } {
+  if (!rtl) return { start, direction };
+  return { start: MIRRORED[start ?? 'top'], direction: direction === 'ccw' ? 'cw' : 'ccw' };
 }
 
 export interface RingStroke {

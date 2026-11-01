@@ -355,9 +355,9 @@ export class McteFieldGroup extends LitElement {
         scroll-margin-top: var(--stack-h, 0px);
       }
       .field.bad {
-        margin-left: -12px;
-        padding-left: 9px;
-        border-left: 3px solid var(--mc-error-ink);
+        margin-inline-start: -12px;
+        padding-inline-start: 9px;
+        border-inline-start: 3px solid var(--mc-error-ink);
       }
       .field-head {
         flex-wrap: wrap;
@@ -375,7 +375,7 @@ export class McteFieldGroup extends LitElement {
         cursor: pointer;
         font-size: 0.75rem;
         color: var(--mc-text-2);
-        text-align: left;
+        text-align: start;
         overflow-wrap: anywhere;
         min-height: 24px;
       }

@@ -113,6 +113,9 @@ function isDarkText(el: Element): boolean {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 140;
 }
 
+// Same value as I18N_WRAP_EVENT in the i18n contract.
+const I18N_WRAP_EVENT = 'mc-i18n-wrap';
+
 export class AnimationStage extends LitElement {
   @property({ attribute: false }) doc?: AnimationDoc;
   @property({ attribute: false }) lookup: (id: string) => AnimationDoc | undefined = () => undefined;
@@ -143,6 +146,8 @@ export class AnimationStage extends LitElement {
   @state() private _fh = 0;
   /** Zoomed to the icon: the frame's offset in the canvas (px). */
   @state() private _off?: { x: number; y: number };
+  /** Counts wraps received; a new one makes the preview card build its text again. */
+  @state() private _wraps = 0;
 
   private _card?: CardElement;
   private _raf = 0;
@@ -164,8 +169,13 @@ export class AnimationStage extends LitElement {
   /** The preview's entry is driven by the simulated entity. */
   private _drives = false;
 
+  private _onWrap = (): void => {
+    this._wraps++;
+  };
+
   connectedCallback(): void {
     super.connectedCallback();
+    window.addEventListener(I18N_WRAP_EVENT, this._onWrap);
     // the preview card starts in the page's theme (HA's dark mode, else the text colour's lightness)
     if (!this._themeSet) {
       this._themeSet = true;
@@ -180,6 +190,7 @@ export class AnimationStage extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    window.removeEventListener(I18N_WRAP_EVENT, this._onWrap);
     this._ro?.disconnect();
     this._ro = undefined;
     this._mo?.disconnect();
@@ -429,7 +440,7 @@ export class AnimationStage extends LitElement {
     const drives = drivesPreview(this.doc, this.preview);
     const entityChanged = drives !== this._drives;
     this._drives = drives;
-    if (changed.has('doc') || changed.has('tile') || changed.has('reduced') || changed.has('lookup') || entityChanged || !this._card.shadowRoot) {
+    if (changed.has('doc') || changed.has('tile') || changed.has('reduced') || changed.has('lookup') || changed.has('_wraps') || entityChanged || !this._card.shadowRoot) {
       try {
         this._card.setConfig(
           previewConfig(this.doc, this.lookup, {
@@ -665,8 +676,13 @@ export class AnimationStage extends LitElement {
         align-items: center;
         gap: 8px;
         margin-left: auto;
+        margin-inline: auto 0;
         padding-left: 8px;
+        padding-inline: 8px 0;
         border-left: 1px solid var(--mc-divider);
+        border-inline-width: 1px 0;
+        border-inline-style: solid;
+        border-inline-color: var(--mc-divider);
       }
       .view .seg {
         flex-wrap: wrap;
@@ -795,7 +811,7 @@ export class AnimationStage extends LitElement {
       }
       .frame {
         position: absolute;
-        left: 0;
+        left: 0; /* physical */
         top: 0;
         transform-origin: 0 0;
         color: var(--primary-text-color);
@@ -831,7 +847,7 @@ export class AnimationStage extends LitElement {
       }
       .note {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         bottom: 8px;
         transform: translateX(-50%);
         width: max-content;
@@ -847,6 +863,7 @@ export class AnimationStage extends LitElement {
       .zoom-tag {
         position: absolute;
         right: 8px;
+        inset-inline: auto 8px;
         top: 8px;
         padding: 1px 6px;
         border-radius: 6px;
@@ -890,6 +907,7 @@ export class AnimationStage extends LitElement {
         flex: none;
         min-width: 11ch;
         text-align: right;
+        text-align: end;
         font-size: 0.75rem;
         color: var(--mc-text-2);
         font-variant-numeric: tabular-nums;

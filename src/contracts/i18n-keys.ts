@@ -1,9 +1,9 @@
-// Contract: i18n-keys. Version 1.1.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; text is
+// Contract: i18n-keys. Version 1.2.0. Extends i18n (src/contracts/i18n.ts 2.0.0) with domain keys; text is
 // addressed by key only.
 
 import type { MessageIndex, RichArgs } from './i18n';
 
-export const I18N_KEYS_CONTRACT_VERSION = '1.1.0';
+export const I18N_KEYS_CONTRACT_VERSION = '1.2.0';
 
 /** Namespace, then two to five kebab segments. The prefix check against the namespace is separate. */
 export const KEY_PATTERN = /^[a-z][a-z0-9-]*(\.[a-z0-9]+(-[a-z0-9]+)*){2,5}$/;
@@ -15,6 +15,8 @@ export const EXCHANGE_DIR = 'i18n/flat';
 export const EXCHANGE_MAX_BYTES = 4_194_304;
 export const WAIVERS_FILE = 'i18n/waivers.json';
 export const RENAMES_FILE = 'i18n/renames.json';
+/** English labels shown next to a legal text in another language; the build adds them as `<ns>.legal.<name>` keys. */
+export const LEGAL_LABELS_FILE = 'tools/i18n/legal-labels.json';
 
 /** 'card-editor.design.background.label' */
 export type MessageKey = string;
@@ -25,6 +27,8 @@ export interface SourceEntry {
   note: string;
   max: number;
   vars?: Readonly<Record<string, string>>;
+  /** Legal text: a translation counts only when its hash is the current one; a waiver never confirms it (D10). */
+  legal?: true;
 }
 /** en-GB.json */
 export type SourceCatalogueV2 = Readonly<Record<MessageKey, SourceEntry>>;

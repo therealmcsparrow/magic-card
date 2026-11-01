@@ -1469,6 +1469,7 @@ export class StudioCanvas extends LitElement {
         max-width: none;
       }
       .canvas {
+        direction: ltr; /* frames, handles and drag maths use screen coordinates */
         grid-row: 2;
         overflow: auto;
         min-height: 0;
@@ -1510,12 +1511,12 @@ export class StudioCanvas extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        text-align: right;
+        text-align: end;
       }
       /* the device may be wider than a narrow canvas (it scrolls sideways): the label, with the preview-pause toggle at its end, stays within the screen and pinned to the left edge while scrolled */
       .device-label {
         position: sticky;
-        left: 24px;
+        left: 24px; /* physical */
         max-width: calc(100vw - 48px);
         display: flex;
         flex-wrap: wrap;
@@ -1595,7 +1596,7 @@ export class StudioCanvas extends LitElement {
       .status-capsule {
         position: absolute;
         bottom: 16px;
-        left: 50%;
+        left: 50%; /* physical */
         transform: translateX(-50%);
         z-index: 6;
         max-width: calc(100% - 32px);
@@ -1625,7 +1626,7 @@ export class StudioCanvas extends LitElement {
       .connect-hint {
         position: absolute;
         bottom: 16px;
-        left: 50%;
+        left: 50%; /* physical */
         transform: translateX(-50%);
         z-index: 6;
         display: flex;
@@ -1671,7 +1672,7 @@ export class StudioCanvas extends LitElement {
       }
       .hover-frame .tag {
         position: absolute;
-        left: 0;
+        left: 0; /* physical */
         top: -22px;
         padding: 2px 8px;
         border-radius: 6px;
@@ -1697,13 +1698,25 @@ export class StudioCanvas extends LitElement {
         border: 2px solid var(--k);
         border-radius: 2px;
       }
-      .sel-frame .h.tl { left: -5px; top: -5px; }
-      .sel-frame .h.tr { right: -5px; top: -5px; }
-      .sel-frame .h.bl { left: -5px; bottom: -5px; }
-      .sel-frame .h.br { right: -5px; bottom: -5px; }
+      .sel-frame .h.tl {
+        left: -5px; /* physical */
+        top: -5px;
+      }
+      .sel-frame .h.tr {
+        right: -5px; /* physical */
+        top: -5px;
+      }
+      .sel-frame .h.bl {
+        left: -5px; /* physical */
+        bottom: -5px;
+      }
+      .sel-frame .h.br {
+        right: -5px; /* physical */
+        bottom: -5px;
+      }
       .sel-frame .tag {
         position: absolute;
-        left: -2px;
+        left: -2px; /* physical */
         top: -28px;
         padding: 2px 8px;
         border-radius: 6px;
@@ -1720,7 +1733,7 @@ export class StudioCanvas extends LitElement {
         position: absolute;
         z-index: 5;
         width: var(--col-hit);
-        margin-left: calc(var(--col-hit) / -2);
+        margin-left: calc(var(--col-hit) / -2); /* physical */
         cursor: col-resize;
         touch-action: none;
         border-radius: 6px;
@@ -1733,7 +1746,7 @@ export class StudioCanvas extends LitElement {
         position: absolute;
         top: 0;
         bottom: 0;
-        left: calc(50% - 1px);
+        left: calc(50% - 1px); /* physical */
         width: 2px;
         border-radius: 1px;
         background: color-mix(in srgb, var(--k) 45%, transparent);
@@ -1743,7 +1756,7 @@ export class StudioCanvas extends LitElement {
         content: '';
         position: absolute;
         top: 50%;
-        left: calc(50% - 4px);
+        left: calc(50% - 4px); /* physical */
         width: 8px;
         height: 28px;
         margin-top: -14px;
@@ -1786,6 +1799,9 @@ export class StudioCanvas extends LitElement {
         box-shadow: var(--mc-shadow-float);
         transition: top 0.2s ease-out, left 0.2s ease-out;
       }
+      :host([dir='rtl']) .float-bar {
+        direction: rtl;
+      }
       .float-bar .fb-name {
         align-self: center;
         padding: 0 8px;
@@ -1815,6 +1831,7 @@ export class StudioCanvas extends LitElement {
       .canvas-hint {
         position: absolute;
         left: 16px;
+        inset-inline: 16px auto;
         bottom: 16px;
         z-index: 3;
         max-width: calc(100% - 32px);

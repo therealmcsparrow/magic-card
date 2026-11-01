@@ -186,6 +186,20 @@ Big fill is a large track with the entity's icon and its value. It is for wall t
 - Keyboard: arrows move by one step. Page Up and Page Down move by a tenth of the range. Home and End go to the ends, or to the first and last stop.
 - Touch: on a horizontal slider, a sideways drag on the track moves the value, and the page still scrolls up and down. A vertical slider works the other way round. Start a swipe on the card background, not on the track, to change view.
 
+### Right to left
+
+When the card is shown right to left, a horizontal slider mirrors.
+
+- The fill starts at the right edge, and a drag measures from the right.
+- Gradients run with the reading direction, so a brightness or colour temperature fill gets brighter or warmer towards the left.
+- The handle, ticks, tick labels, bubble, value in the track and error mark sit from the right.
+- The Left and Right arrow keys swap, so Right still moves towards the end you read.
+- A shaped track stays as drawn. The fill is clipped to the same shape, and only the fill direction changes.
+- A vertical slider is unchanged.
+- Home, End, Page Up, Page Down and the values read by screen readers are unchanged.
+
+The slider follows the direction of the page and of its own container, and updates when either changes. Your card layout is never mirrored. See [Accessibility](../../accessibility/README.md#right-to-left).
+
 ## Domains
 
 | Domain | Attribute | Value | Service |

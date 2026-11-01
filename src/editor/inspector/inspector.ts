@@ -19,6 +19,8 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { moduleEditors } from '../modules';
 import { hasColumnWidths } from '../../utils/column-widths';
 import { editorStyles } from '../../css/editor-css';
+import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
+import { DirectionController, readDirection } from '../../ui-kit/controllers/direction';
 import {
   ModuleSelection,
   Selection,
@@ -113,6 +115,7 @@ const KIND_TABS: Record<Exclude<Kind, 'module'>, EditorTab[]> = {
  */
 @customElement('mc-inspector')
 export class Inspector extends LitElement {
+  private readonly _direction = new DirectionController(this);
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ reflect: true }) variant: 'pane' | 'studio' = 'pane';
@@ -175,10 +178,11 @@ export class Inspector extends LitElement {
     if (!tab) return;
     // Keep the active tab visible in the horizontally scrolling tablist (without scrolling the page).
     const list = tab.parentElement!;
-    if (tab.offsetLeft < list.scrollLeft) list.scrollLeft = tab.offsetLeft - 4;
-    else if (tab.offsetLeft + tab.offsetWidth > list.scrollLeft + list.clientWidth) {
-      list.scrollLeft = tab.offsetLeft + tab.offsetWidth - list.clientWidth + 4;
-    }
+    // measured edges, so it holds when the list starts on the right
+    const t = tab.getBoundingClientRect();
+    const l = list.getBoundingClientRect();
+    if (t.left < l.left) list.scrollLeft += t.left - l.left - 4;
+    else if (t.right > l.right) list.scrollLeft += t.right - l.right + 4;
     if (this._focusTab) {
       this._focusTab = false;
       tab.focus();
@@ -287,15 +291,8 @@ export class Inspector extends LitElement {
   }
 
   private _onTabKeydown(e: KeyboardEvent, sel: Selection, tabs: EditorTab[], current: EditorTab): void {
-    const idx = tabs.indexOf(current);
-    const targets: Record<string, number> = {
-      ArrowRight: (idx + 1) % tabs.length,
-      ArrowLeft: (idx - 1 + tabs.length) % tabs.length,
-      Home: 0,
-      End: tabs.length - 1,
-    };
-    const next = targets[e.key];
-    if (next === undefined) return;
+    const next = rovingTarget(e.key, tabs.indexOf(current), tabs.map(() => ({})), 'horizontal', true, readDirection(e.currentTarget as Element) === 'rtl');
+    if (next < 0) return;
     e.preventDefault();
     this._focusTab = true;
     this._tabs = { ...this._tabs, [sel.kind]: tabs[next] };
@@ -779,7 +776,7 @@ export class Inspector extends LitElement {
       .col-widths-foot {
         display: flex;
         justify-content: flex-start;
-        margin-left: -8px;
+        margin-inline-start: -8px;
       }
       :host([variant='pane']) .insp-body {
         padding: 16px 0 0;
@@ -917,7 +914,7 @@ export class Inspector extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: color-mix(in srgb, var(--mc-surface-2) 55%, transparent);
-        text-align: left;
+        text-align: start;
         font-size: 0.875rem;
         font-weight: 600;
         color: var(--mc-text);
@@ -936,6 +933,9 @@ export class Inspector extends LitElement {
       }
       .dgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .dgroup-body {
         display: grid;

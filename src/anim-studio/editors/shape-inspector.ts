@@ -20,6 +20,7 @@ import type { PathDraw } from '../../contracts/path-model';
 import { loadPathCanvas } from '../../path-canvas/loader';
 import { addDrawOnTrack, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn, removeShape, setTrackPath, updateShape } from './draw-utils';
 import { t, tx, m, type MessageId } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 
 // mc-anim-shape-inspector (place 'inspector'): settings of a selected drawn shape (fill, stroke, ends, layer, order,
 // smoothing, draw-on, motion path) or the options of the active draw tool. Every edit is one doc-change.
@@ -158,7 +159,8 @@ export class AnimShapeInspector extends LitElement {
   private _seg<T extends string>(label: string, options: Array<{ value: T; label: MessageId; icon?: string }>, value: T, pick: (v: T) => void, cls = ''): TemplateResult {
     const onKey = (e: KeyboardEvent) => {
       const i = options.findIndex((o) => o.value === value);
-      const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      const h = readDirection(e.currentTarget as Element) === 'rtl' ? -1 : 1;
+      const step: Record<string, number> = { ArrowRight: h, ArrowDown: 1, ArrowLeft: -h, ArrowUp: -1 };
       if (!(e.key in step)) return;
       e.preventDefault();
       const next = options[(i + step[e.key] + options.length) % options.length].value;
