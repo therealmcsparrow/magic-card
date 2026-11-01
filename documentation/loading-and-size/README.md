@@ -56,7 +56,7 @@ If a file is missing from the folder, the feature it belongs to shows its notice
 
 ## Connection and quiet sensors
 
-A card can tell you when what it shows may be out of date. It does this with three faces, each one shown as a small icon in the top-left corner of the card. Tap the icon, or press Enter or Space while it has keyboard focus, to read the full sentence. Press Escape or tap the icon again to close it. The icon floats over the card without moving anything, and the values underneath keep their normal colour. When the card has a pause button in the top-left corner, the icon moves to the right of it. A screen reader announces the text politely.
+A card can tell you when what it shows may be out of date. It does this with three faces, each one shown as a small icon in the top-left corner of the card. Tap the icon, or press Enter or Space while it has keyboard focus, to read the full sentence. Press Escape or tap the icon again to close it. The icon floats over the card without moving anything, and the values underneath keep their normal colour. When the card has a pause button in the top-left corner, the icon moves to the right of it while the card plays. While the card is paused, it moves to the top-right corner instead, so it never covers the "Paused" label. A screen reader announces the text politely.
 
 | Face | Text | When it shows |
 | --- | --- | --- |

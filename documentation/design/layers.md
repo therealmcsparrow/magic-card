@@ -144,7 +144,7 @@ With `auto` or `always`, the card keeps a 24 px strip at the button's edge: the 
 - A card whose padding and gap add up to less than 10 px, for example `padding: 0`, can still be touched by the button, because the button reaches 34 px from its corner. Give such a card a little padding or gap if its modules sit at the edge.
 
 - The button is a small round control in the chosen corner. Its name is always "Pause motion"; a screen reader hears whether it is pressed. Its touch area is 46 by 46 pixels. Tab reaches it after the card's content. Enter or Space toggles it.
-- While the card is paused, a visible "Paused" label sits beside the button. Screen readers do not read the label. The button keeps its one name, "Pause motion", and announces its pressed state.
+- While the card is paused, a visible "Paused" label sits beside the button. Screen readers do not read the label. On a card too narrow for the whole word, the label is hidden instead of being cut off; the pressed button and its icon still show the paused state. When the button is in the top-left corner, the connection status icon moves to the top-right corner while the card is paused, so it never covers the label. The button keeps its one name, "Pause motion", and announces its pressed state.
 - While the card is paused, the button and the label stay visible. A look cannot hide them. While the card plays, hiding the button is your own choice, with `pause_button: hidden` or your own styles.
 - In forced-colours mode (Windows High Contrast), the button and the label use the system colours, and the button keeps a visible border.
 - Pressing it does not trigger the tap action of the card or module under it.
