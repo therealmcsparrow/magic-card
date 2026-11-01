@@ -113,6 +113,9 @@ function isDarkText(el: Element): boolean {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 140;
 }
 
+// Same value as I18N_WRAP_EVENT in the i18n contract.
+const I18N_WRAP_EVENT = 'mc-i18n-wrap';
+
 export class AnimationStage extends LitElement {
   @property({ attribute: false }) doc?: AnimationDoc;
   @property({ attribute: false }) lookup: (id: string) => AnimationDoc | undefined = () => undefined;
@@ -143,6 +146,8 @@ export class AnimationStage extends LitElement {
   @state() private _fh = 0;
   /** Zoomed to the icon: the frame's offset in the canvas (px). */
   @state() private _off?: { x: number; y: number };
+  /** Counts wraps received; a new one makes the preview card build its text again. */
+  @state() private _wraps = 0;
 
   private _card?: CardElement;
   private _raf = 0;
@@ -164,8 +169,13 @@ export class AnimationStage extends LitElement {
   /** The preview's entry is driven by the simulated entity. */
   private _drives = false;
 
+  private _onWrap = (): void => {
+    this._wraps++;
+  };
+
   connectedCallback(): void {
     super.connectedCallback();
+    window.addEventListener(I18N_WRAP_EVENT, this._onWrap);
     // the preview card starts in the page's theme (HA's dark mode, else the text colour's lightness)
     if (!this._themeSet) {
       this._themeSet = true;
@@ -180,6 +190,7 @@ export class AnimationStage extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    window.removeEventListener(I18N_WRAP_EVENT, this._onWrap);
     this._ro?.disconnect();
     this._ro = undefined;
     this._mo?.disconnect();
@@ -429,7 +440,7 @@ export class AnimationStage extends LitElement {
     const drives = drivesPreview(this.doc, this.preview);
     const entityChanged = drives !== this._drives;
     this._drives = drives;
-    if (changed.has('doc') || changed.has('tile') || changed.has('reduced') || changed.has('lookup') || entityChanged || !this._card.shadowRoot) {
+    if (changed.has('doc') || changed.has('tile') || changed.has('reduced') || changed.has('lookup') || changed.has('_wraps') || entityChanged || !this._card.shadowRoot) {
       try {
         this._card.setConfig(
           previewConfig(this.doc, this.lookup, {
