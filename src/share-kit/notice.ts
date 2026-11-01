@@ -1,3 +1,7 @@
+import { html, nothing } from 'lit';
+import type { TemplateResult } from 'lit';
+import { glyph } from '../ui-kit';
+import type { ImportNotice, ShareKit } from '../contracts/share-kit';
 import { t } from './i18n';
 
 // Fixed notice texts of the share-kit chunk, shown as plain text through the bound t.
@@ -15,3 +19,36 @@ export const templatesHelp = (): string => t('share-kit.notice.templates-in-this
 
 /** Shown under the export text when entity IDs were swapped for placeholders. */
 export const idsReplacedNotice = (): string => t('share-kit.notice.entity-ids-were-replaced');
+
+/** The actions and templates of a shared card, listed before Confirm. */
+export function runView(run: ImportNotice): TemplateResult {
+  const line = (a: ImportNotice['actions'][number]): string => [a.action, a.service, a.targets.join(', '), a.host].filter(Boolean).join(' ');
+  return html`${run.actions.length
+    ? html`<div data-share-actions><strong>${actionsHeading()}</strong><p class="help">${actionsHelp()}</p><ul>${run.actions.map((a) => html`<li><span class="mono">${line(a)}</span></li>`)}</ul></div>`
+    : nothing}${run.templates.length
+    ? html`<div data-share-templates><strong>${templatesHeading()}</strong><p class="help">${templatesHelp()}</p><ul>${run.templates.map((x) => html`<li><span class="mono">${x.text}</span></li>`)}</ul></div>`
+    : nothing}`;
+}
+
+/** The contrast warning of imported themes, one list per item. */
+export function contrastView(heading: string, items: { name: string; lines: string[] }[]): TemplateResult | typeof nothing {
+  return items.length
+    ? html`<div class="notice warn" role="status" data-contrast-warning>
+        ${glyph('help', 20)}
+        <div class="body">
+          <strong>${heading}</strong>
+          <ul>
+            ${items.flatMap((i) => i.lines.map((l) => html`<li>${i.name}: ${l}</li>`))}
+          </ul>
+        </div>
+      </div>`
+    : nothing;
+}
+
+/** The animated previews of imported animations. */
+export const animPreviews = (kit: ShareKit, items: readonly { data: unknown }[]): TemplateResult =>
+  html`<div data-share-anim-previews>${items.map((i) => html`<mc-anim-preview .doc=${kit.previewSafe('animation', i.data as never)}></mc-anim-preview>`)}</div>`;
+
+/** The notes under the export text: the author name and replaced entity IDs. */
+export const exportNotes = (hasAuthor: boolean, replaced: boolean): TemplateResult =>
+  html`${hasAuthor ? html`<p class="help" role="status">${authorNotice()}</p>` : nothing}${replaced ? html`<p class="help" data-ids-replaced role="status">${idsReplacedNotice()}</p>` : nothing}`;

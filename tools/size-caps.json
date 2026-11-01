@@ -104,8 +104,8 @@
       "note": "40 KiB, measured 38,670 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-path-canvas.js": {
-      "raw": 73216,
-      "ceiling": 73216,
+      "raw": 69632,
+      "ceiling": 69632,
       "note": "Path canvas with the studio overlay mode. 68 KiB, measured 69,034 (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-editor.js": {
@@ -149,14 +149,14 @@
       "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
-      "raw": 69632,
-      "ceiling": 69632,
-      "note": "Preset transfer. 68 KiB, set to the contract ceiling while the sharing-safety work lands; the final cap is measured + 5 %."
+      "raw": 73216,
+      "ceiling": 73216,
+      "note": "Preset transfer. 71.5 KiB, measured 73,083 (Linux build, docker node 24.22.0); raised by the CEO to 73,216 for the sharing-safety work (TRANSFER_CHUNK_CEILING)."
     },
     "magic-card-share-kit.js": {
-      "raw": 40960,
+      "raw": 36864,
       "ceiling": 40960,
-      "note": "Share kit: strict value checks, entity placeholders, the card reader and previews. A child of the transfer chunk, no SVG sink. Set to the contract ceiling (SHARE_KIT_CHUNK_CEILING) while the sharing-safety work lands; the final cap is measured + 5 %."
+      "note": "Share kit: strict value checks, entity placeholders, the card reader and previews. A child of the transfer chunk, no SVG sink. 36 KiB, measured 34,691 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 40,960 B (SHARE_KIT_CHUNK_CEILING)."
     },
     "magic-card-svg-icon.js": {
       "raw": 47104,

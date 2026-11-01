@@ -20,7 +20,7 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view, svg-css loader). */
-export const TRANSFER_CHUNK_CEILING = 68 * 1024; // 69,632 B
+export const TRANSFER_CHUNK_CEILING = 73_216; // 71.5 KiB
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const IMAGE_TRANSFER_CHUNK = 'image-transfer';

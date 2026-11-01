@@ -281,9 +281,8 @@ export class TransferPanel extends LitElement {
     const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
     const run = this._kit!.importNotice(r.kind, r.items);
     const w = this._words!;
-    const line = (a: (typeof run.actions)[number]): string => [a.action, a.service, a.targets.join(', '), a.host].filter(Boolean).join(' ');
     return html`
-      ${notice({ tone: 'warn', text: this._words!.untrustedNotice() })}
+      ${notice({ tone: 'warn', text: w.untrustedNotice() })}
       <ul>
         ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
       </ul>
@@ -299,26 +298,9 @@ export class TransferPanel extends LitElement {
             </div>
           </div>`
         : nothing}
-      ${this._contrast.length
-        ? html`<div class="notice warn" role="status" data-contrast-warning>
-            ${glyph('help', 20)}
-            <div class="body">
-              <strong>${this._contrastHeading}</strong>
-              <ul>
-                ${this._contrast.flatMap((i) => i.lines.map((l) => html`<li>${i.name}: ${l}</li>`))}
-              </ul>
-            </div>
-          </div>`
-        : nothing}
-      ${r.kind === 'animation' && this._animPreview
-        ? html`<div data-share-anim-previews>${r.items.map((i) => html`<mc-anim-preview .doc=${this._kit!.previewSafe('animation', i.data as never)}></mc-anim-preview>`)}</div>`
-        : nothing}
-      ${run.actions.length
-        ? html`<div data-share-actions><strong>${w.actionsHeading()}</strong><p class="help">${w.actionsHelp()}</p><ul>${run.actions.map((a) => html`<li><span class="mono">${line(a)}</span></li>`)}</ul></div>`
-        : nothing}
-      ${run.templates.length
-        ? html`<div data-share-templates><strong>${w.templatesHeading()}</strong><p class="help">${w.templatesHelp()}</p><ul>${run.templates.map((x) => html`<li><span class="mono">${x.text}</span></li>`)}</ul></div>`
-        : nothing}
+      ${w.contrastView(this._contrastHeading, this._contrast)}
+      ${r.kind === 'animation' && this._animPreview ? w.animPreviews(this._kit!, r.items) : nothing}
+      ${w.runView(run)}
       ${run.placeholders.length ? this._mapper!.mappingView(run.placeholders, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {})) : nothing}
       ${local.length ? html`<p class="help">${t("transfer.panel.n-4", { n: local.length })}</p>` : nothing}
       ${rest.length
@@ -410,8 +392,7 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${e.items.some((i) => i.author) ? html`<p class="help" role="status">${this._words?.authorNotice()}</p>` : nothing}
-      ${replaced ? html`<p class="help" data-ids-replaced role="status">${this._words?.idsReplacedNotice()}</p>` : nothing}
+      ${this._words?.exportNotes(e.items.some((i) => i.author), !!replaced)}
       <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
