@@ -96,7 +96,7 @@ export const layerStyles: CSSResult = css`
         display: grid;
         gap: 4px;
         padding: 6px;
-        text-align: left;
+        text-align: start;
         cursor: pointer;
       }
       .lyr-tile .pv {

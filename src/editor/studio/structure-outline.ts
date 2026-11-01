@@ -37,6 +37,7 @@ import { t } from '../i18n';
 import { moveModuleTo, type DropPlace } from '../state/tree-move';
 import { autoScroll, canDropAt, placeFor, zoneAt, type DropZone, type PlaceTarget } from './tree-dnd';
 import { countLayers, layerChipCss, renderLayerChip, renderLayerCount } from '../layers/tree-chip';
+import { readDirection } from '../../ui-kit/controllers/direction';
 
 type DragState =
   | { type: 'row'; row: number }
@@ -473,7 +474,9 @@ export class StructureOutline extends LitElement {
       return;
     }
 
-    switch (e.key) {
+    const rtl = readDirection(this) === 'rtl';
+    const arrow = e.key === 'ArrowLeft' && rtl ? 'ArrowRight' : e.key === 'ArrowRight' && rtl ? 'ArrowLeft' : e.key;
+    switch (arrow) {
       case 'ArrowDown':
       case 'ArrowUp':
       case 'Home':
@@ -1261,9 +1264,9 @@ export class StructureOutline extends LitElement {
         padding: 0;
       }
       .tree ul {
-        padding-left: 12px;
-        margin-left: 12px;
-        border-left: 1px solid var(--mc-divider);
+        padding-inline-start: 12px;
+        margin-inline-start: 12px;
+        border-inline-start: 1px solid var(--mc-divider);
       }
       .line {
         display: flex;
@@ -1357,8 +1360,8 @@ export class StructureOutline extends LitElement {
       }
       /* layout children, nested under their layout module */
       .mod > ul {
-        padding-left: 8px;
-        margin-left: 18px;
+        padding-inline-start: 8px;
+        margin-inline-start: 18px;
       }
       .sub .mono {
         font-family: var(--mc-mono);
@@ -1367,7 +1370,7 @@ export class StructureOutline extends LitElement {
         padding: 6px 12px;
       }
       .card-item {
-        margin-left: 26px;
+        margin-inline-start: 26px;
       }
       .col-item {
         min-height: 32px;
@@ -1474,8 +1477,8 @@ export class StructureOutline extends LitElement {
       .drop-after::after {
         content: '';
         position: absolute;
-        left: 0;
-        right: 0;
+        left: 0; /* physical */
+        right: 0; /* physical */
         pointer-events: none;
         z-index: 1;
         /* a round dot at the start of the line shows the depth without colour */
@@ -1576,20 +1579,20 @@ export class StructureOutline extends LitElement {
       /* layout children nest deep: Layers (240px) indents them less */
       :host([variant='layers']) .mod > ul,
       :host([variant='layers']) .slot > ul {
-        padding-left: 4px;
-        margin-left: 12px;
+        padding-inline-start: 4px;
+        margin-inline-start: 12px;
       }
 
       /* Narrow pane (phone dialog): reclaim indentation so entity ids keep their width. */
       @container mc-outline (max-width: 419px) {
         .row > ul {
-          padding-left: 0;
-          margin-left: 26px;
-          border-left: 0;
+          padding-inline-start: 0;
+          margin-inline-start: 26px;
+          border-inline-start: 0;
         }
         .col > ul {
-          padding-left: 6px;
-          margin-left: 6px;
+          padding-inline-start: 6px;
+          margin-inline-start: 6px;
         }
         :host([variant='pane']) .mod-item {
           padding: 6px 8px;

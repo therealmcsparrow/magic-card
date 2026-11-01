@@ -185,18 +185,20 @@ export const layerControlCss: CSSResult = css`
     position: absolute;
     top: 3px;
     left: 3px;
+    inset-inline: 3px auto;
     width: 18px;
     height: 18px;
     border-radius: 50%;
     background: var(--mc-on-accent, var(--mc-surface, var(--card-background-color, #fff)));
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    transition: transform 0.15s ease-out;
+    transition: left 0.15s ease-out, inset-inline-start 0.15s ease-out;
   }
   .lyr-switch[aria-checked='true'] .track {
     background: var(--mc-accent-fill, #0277bd);
   }
   .lyr-switch[aria-checked='true'] .track::after {
-    transform: translateX(16px);
+    left: 19px;
+    inset-inline: 19px auto;
   }
   .lyr-switch .state {
     font-size: 0.75rem;

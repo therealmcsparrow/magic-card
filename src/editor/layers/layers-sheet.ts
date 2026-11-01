@@ -50,7 +50,7 @@ export class McLayersSheet extends LitElement {
       :host {
         position: fixed;
         top: 0;
-        left: 0;
+        left: 0; /* physical */
         width: 100%;
         height: 100%;
         z-index: 20;
@@ -59,7 +59,7 @@ export class McLayersSheet extends LitElement {
       .backdrop {
         position: absolute;
         top: 0;
-        left: 0;
+        left: 0; /* physical */
         width: 100%;
         height: 100%;
       }
@@ -101,7 +101,7 @@ export class McLayersSheet extends LitElement {
         gap: 8px;
         padding: 6px 10px;
         white-space: normal;
-        text-align: left;
+        text-align: start;
         cursor: pointer;
       }
       .item[aria-current='true'] {

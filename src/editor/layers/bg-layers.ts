@@ -121,7 +121,7 @@ export class McBgLayers extends LitElement {
         background: transparent;
         color: inherit;
         font: inherit;
-        text-align: left;
+        text-align: start;
         cursor: pointer;
       }
       .rhead .title {
@@ -157,7 +157,7 @@ export class McBgLayers extends LitElement {
         gap: 8px;
       }
       .r2 .del {
-        margin-left: auto;
+        margin-inline-start: auto;
       }
       .editor {
         display: grid;

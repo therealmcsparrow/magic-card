@@ -8,6 +8,7 @@ import type { Selection } from './selection';
 import { selectionKey } from './selection';
 import { kitTopbar } from '../../ui-kit/css/extras';
 import { kitLip } from '../../ui-kit/css/lip';
+import { readDirection } from '../../ui-kit/controllers/direction';
 import { PanelLips } from '../../ui-kit/controllers/panel-lips';
 import { ScrollbarWatch } from '../../ui-kit/controllers/scrollbar-width';
 import type { PanelLipSpec, PanelLipStrings } from '../../contracts/ui-kit';
@@ -66,10 +67,10 @@ function isTyping(e: Event): boolean {
 }
 
 /** Next index for roving-tabindex keys in a tablist / radiogroup, or undefined. */
-function rovingIndex(key: string, idx: number, len: number): number | undefined {
+function rovingIndex(key: string, idx: number, len: number, rtl = false): number | undefined {
   const map: Record<string, number> = {
-    ArrowRight: (idx + 1) % len,
-    ArrowLeft: (idx - 1 + len) % len,
+    [rtl ? 'ArrowLeft' : 'ArrowRight']: (idx + 1) % len,
+    [rtl ? 'ArrowRight' : 'ArrowLeft']: (idx - 1 + len) % len,
     Home: 0,
     End: len - 1,
   };
@@ -366,7 +367,7 @@ export class Studio extends LitElement {
   // ── topbar ──
 
   private _onModeKeydown(e: KeyboardEvent, mode: EditorMode): void {
-    const next = rovingIndex(e.key, MODES.findIndex((m) => m.id === mode), MODES.length);
+    const next = rovingIndex(e.key, MODES.findIndex((m) => m.id === mode), MODES.length, readDirection(e.currentTarget as Element) === 'rtl');
     if (next === undefined) return;
     e.preventDefault();
     this._focusSel = '.mode [aria-selected="true"]';
@@ -379,7 +380,7 @@ export class Studio extends LitElement {
   }
 
   private _onDeviceKeydown(e: KeyboardEvent): void {
-    const next = rovingIndex(e.key, OPTION_IDS.indexOf(this._width.option), OPTION_IDS.length);
+    const next = rovingIndex(e.key, OPTION_IDS.indexOf(this._width.option), OPTION_IDS.length, readDirection(e.currentTarget as Element) === 'rtl');
     if (next === undefined) return;
     e.preventDefault();
     this._setWidth(OPTION_IDS[next]);
@@ -694,11 +695,11 @@ export class Studio extends LitElement {
         overflow-y: auto;
       }
       .layers {
-        border-right: 1px solid var(--mc-divider);
+        border-inline-end: 1px solid var(--mc-divider);
         padding: 12px 8px;
       }
       .inspector {
-        border-left: 1px solid var(--mc-divider);
+        border-inline-start: 1px solid var(--mc-divider);
         overflow: hidden;
       }
       .panel-title {
@@ -760,7 +761,7 @@ export class Studio extends LitElement {
           display: none;
           position: absolute;
           z-index: 7;
-          left: 0;
+          inset-inline-start: 0;
           top: 0;
           bottom: 0;
           width: 260px;
@@ -815,7 +816,7 @@ export class Studio extends LitElement {
           min-height: 320px;
         }
         .inspector {
-          border-left: 0;
+          border-inline-start: 0;
           border-top: 1px solid var(--mc-divider);
           overflow: visible;
         }
