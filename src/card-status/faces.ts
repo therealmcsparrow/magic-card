@@ -1,10 +1,10 @@
-import { css, html, type TemplateResult } from 'lit';
+import { css, html, nothing, type TemplateResult } from 'lit';
 import type { StatusFace } from '../contracts/card-status';
 import type { HomeAssistant } from '../types';
 import { t } from './i18n';
 import { formatWhen } from './time';
 
-// The status badge: a word and an icon in the top-left corner, no layout effect; a tap opens the full sentence.
+// The status badge: an icon in the top-left corner (the word is its label), no layout effect; a tap opens the full sentence.
 
 const SHAPES: Record<StatusFace['kind'], string> = {
   lost: 'M13 13h-2V7h2m0 10h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2z',
@@ -20,9 +20,8 @@ ha-card:has(.mc-pause[data-corner=top-left]) .mc-status{left:calc(40px + var(--m
 span.mc-status-badge{pointer-events:none;cursor:default}
 .mc-status-pill{display:flex;align-items:center;gap:var(--ha-space-1,4px);box-sizing:border-box;min-inline-size:0;max-inline-size:100%;padding:2px var(--ha-space-2,8px);background:var(--ha-card-background,var(--card-background-color,#fff));color:var(--primary-text-color,#212121);border:1px solid var(--divider-color,transparent);border-radius:var(--ha-border-radius-md,8px);font-size:var(--ha-font-size-s,.875rem);line-height:1.3}
 .mc-status-icon{flex:none;inline-size:1.15em;block-size:1.15em;fill:currentColor}
-.mc-status-word{min-inline-size:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .mc-status-badge:focus-visible{outline:0}
-.mc-status-badge:focus-visible .mc-status-pill{outline:2px solid var(--primary-color,currentColor);outline-offset:2px}
+.mc-status-badge:focus-visible .mc-status-pill{outline:2px solid currentColor;outline-offset:2px}
 .mc-status-text{position:absolute;inline-size:1px;block-size:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .mc-status[data-open] .mc-status-text{position:static;inline-size:fit-content;block-size:auto;max-inline-size:calc(100% - 12px);margin:0 0 0 6px;padding:var(--ha-space-2,8px) var(--ha-space-3,12px);box-sizing:border-box;clip-path:none;overflow:visible;white-space:normal;overflow-wrap:anywhere;background:var(--ha-card-background,var(--card-background-color,#fff));color:var(--primary-text-color,#212121);border:1px solid var(--divider-color,transparent);border-radius:var(--ha-border-radius-md,8px);font-size:var(--ha-font-size-s,.875rem);line-height:1.3;pointer-events:auto}
 @media (forced-colors:active){.mc-status-pill,.mc-status[data-open] .mc-status-text{background:Canvas;color:CanvasText;border-color:CanvasText}}
@@ -38,11 +37,18 @@ export function faceText(face: StatusFace, hass: HomeAssistant): string {
 const word = (kind: StatusFace['kind']): string =>
   kind === 'lost' ? t('card-status.faces.connection-lost') : kind === 'back' ? t('card-status.faces.reconnected') : t('card-status.faces.not-updated');
 
-/** The badge (a button except for "Reconnected") and the live region with the full sentence, present from the start so each change is announced once. */
+/** The badge (a button except for "Reconnected") and the live region with the full sentence. One outer template, so the live region is the same element for every face and only its text changes. */
 export function statusOverlay(face: StatusFace | undefined, hass: HomeAssistant | undefined, open = false, toggle?: () => void): TemplateResult {
-  if (!face || !hass) return html`<div class="mc-status"><div role="status" aria-live="polite"></div></div>`;
-  const pill = html`<span class="mc-status-pill"><svg class="mc-status-icon" viewBox="0 0 24 24" aria-hidden="true"><path d=${SHAPES[face.kind]}></path></svg><span class="mc-status-word">${word(face.kind)}</span></span>`;
-  const live = html`<div role="status" aria-live="polite"><span class="mc-status-text" id="mc-status-text">${faceText(face, hass)}</span></div>`;
-  if (face.kind === 'back') return html`<div class="mc-status"><span class="mc-status-badge">${pill}</span>${live}</div>`;
-  return html`<div class="mc-status" ?data-open=${open}><button type="button" class="mc-status-badge" aria-expanded=${open ? 'true' : 'false'} aria-controls="mc-status-text" @click=${toggle}>${pill}</button>${live}</div>`;
+  const shown = face && hass ? face : undefined;
+  let badge: TemplateResult | typeof nothing = nothing;
+  if (shown) {
+    const pill = html`<span class="mc-status-pill"><svg class="mc-status-icon" viewBox="0 0 24 24" aria-hidden="true"><path d=${SHAPES[shown.kind]}></path></svg></span>`;
+    badge =
+      shown.kind === 'back'
+        ? html`<span class="mc-status-badge" role="img" aria-label=${word(shown.kind)}>${pill}</span>`
+        : html`<button type="button" class="mc-status-badge" aria-label=${word(shown.kind)} aria-expanded=${open ? 'true' : 'false'} aria-controls="mc-status-text" @click=${toggle}>${pill}</button>`;
+  }
+  const sentence = shown && hass ? faceText(shown, hass) : '';
+  const isOpen = !!shown && shown.kind !== 'back' && open;
+  return html`<div class="mc-status" ?data-open=${isOpen}>${badge}<div role="status" aria-live="polite"><span class="mc-status-text" id="mc-status-text">${sentence}</span></div></div>`;
 }

@@ -1,7 +1,7 @@
 {
   "card-status.faces.connection-lost": {
     "text": "Connection lost",
-    "note": "Word in the small badge at the top-left corner of the card while the connection to Home Assistant is down. One line; cut with an ellipsis at large text.",
+    "note": "Accessible name of the small icon badge at the top-left corner of the card (not shown as text) while the connection to Home Assistant is down.",
     "max": 20
   },
   "card-status.faces.connection-lost-at-time": {
@@ -14,7 +14,7 @@
   },
   "card-status.faces.not-updated": {
     "text": "Not updated",
-    "note": "Word in the small badge at the top-left corner of the card when an entity with a quiet time has reported nothing for longer than that time. One line; cut with an ellipsis at large text.",
+    "note": "Accessible name of the small icon badge at the top-left corner of the card (not shown as text) when an entity with a quiet time has reported nothing for longer than that time.",
     "max": 20
   },
   "card-status.faces.not-updated-since-time": {
@@ -27,7 +27,7 @@
   },
   "card-status.faces.reconnected": {
     "text": "Reconnected",
-    "note": "Word in the corner badge and the live region for a moment after the connection to Home Assistant returned, when the card had shown that it was lost.",
+    "note": "Accessible name of the corner badge and the live region text for a moment after the connection to Home Assistant returned, when the card had shown that it was lost.",
     "max": 30
   }
 }
