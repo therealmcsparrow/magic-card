@@ -27,10 +27,6 @@
     "text": "Magic Card updated. Tap to reload.",
     "hash": "0595f6cd"
   },
-  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
-    "text": "Magic Card was updated. Reload the page to see this part. The rest of this card works.",
-    "hash": "af7bdfe0"
-  },
   "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
     "text": "{part} did not load. The rest of this card works.",
     "hash": "09fb68de"

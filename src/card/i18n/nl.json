@@ -27,10 +27,6 @@
     "text": "Magic Card is bijgewerkt. Tik om te herladen.",
     "hash": "0595f6cd"
   },
-  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
-    "text": "Magic Card is bijgewerkt. Laad de pagina opnieuw om dit onderdeel te zien. De rest van deze kaart werkt.",
-    "hash": "af7bdfe0"
-  },
   "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
     "text": "{part} is niet geladen. De rest van deze kaart werkt.",
     "hash": "09fb68de"

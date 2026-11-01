@@ -120,6 +120,7 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-path-core.js` | The path parser shared by animations, icons, decorations and slider looks. Plain cards never load it; cards that use those features load it alongside their own file. |
 | `magic-card-history.js` | Cards with a graphs module or a sparkline value background, alongside their own file. Plain cards never load it. |
 | `magic-card-shape-path.js` | Cards with a ring, an outline shape, flow lines, a seasonal scene, a slider look or a custom shape, alongside their own file. Plain cards never load it. |
+| `magic-card-status.js` | Cards with `quiet_time`, and any card when its connection to Home Assistant drops. It adds the connection, reconnected and not-updated lines. Without it the card works as before. |
 | `magic-card-manifest.js` | Read only when a part fails to load, so the card can tell that its file comes from a different release than its parts. |
 | `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
 | `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
@@ -1141,7 +1142,8 @@ Magic Card Utils makes no requests to other websites. Magic Card makes them only
 -   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 -   A card broke after an update. [MAINTAINING.md](MAINTAINING.md) has the steps to roll back to the version that worked, to see which version runs and to stay on one version.
--   A card stands still, or Home Assistant says Magic Card was updated. See the [pause reply](documentation/support/README.md#pause-reply) and the [update reply](documentation/support/README.md#update-reply).
+-   A card shows the tile "Magic Card updated. Tap to reload.". Tap it once. If it then says the old version is still running, follow [Clear the browser cache](documentation/loading-and-size/README.md#clear-the-browser-cache).
+-   A card stands still. See the [pause reply](documentation/support/README.md#pause-reply) and the [update reply](documentation/support/README.md#update-reply).
 -   To report a card that stands still, post in [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports).
 -   How a size claim was measured and which cases we test: see [how we measured](documentation/loading-and-size/README.md#how-we-measured) and [bad cases we test](documentation/loading-and-size/README.md#bad-cases-we-test).
 

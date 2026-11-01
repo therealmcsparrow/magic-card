@@ -34,7 +34,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 
 | Folder | Covers |
 | --- | --- |
-| [Loading and size](loading-and-size/README.md) | Which file loads when, the sizes of the card file, the [how-we-measured box](loading-and-size/README.md#how-we-measured) and the [bad cases we test](loading-and-size/README.md#bad-cases-we-test), the notices a card shows when a part fails, offline and failed loads, and how to undo a remembered pause |
+| [Loading and size](loading-and-size/README.md) | Which file loads when, the sizes of the card file, the [how-we-measured box](loading-and-size/README.md#how-we-measured) and the [bad cases we test](loading-and-size/README.md#bad-cases-we-test), the notices and the one-tap update tile a card shows when a part fails, how to clear the browser cache, the connection and not-updated lines with `quiet_time`, offline and failed loads, and how to undo a remembered pause |
 
 ## Support
 

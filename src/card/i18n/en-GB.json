@@ -37,11 +37,6 @@
     "note": "The whole tile is one button shown when parts of the card come from another release. Magic Card is the product name.",
     "max": 60
   },
-  "card.chunk-notice.magic-card-was-updated-reload-the-page": {
-    "text": "Magic Card was updated. Reload the page to see this part. The rest of this card works.",
-    "note": "Notice shown in place of a feature that could not load after an update. Magic Card is the product name. This part refers to the missing feature, such as the animation.",
-    "max": 140
-  },
   "card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
     "text": "{part} did not load. The rest of this card works.",
     "note": "Notice. {part} is a phrase with a capital letter that names the missing feature, such as The animation or The slider (see the keys that start with The). It starts the sentence.",
