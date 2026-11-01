@@ -191,7 +191,7 @@ rows:                              # required (a list, may be empty)
 | `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. Places the button, and with `auto` or `always` also sets the edge (top or bottom) that keeps the strip for it. |
 | `popup` | object | | See [Pop-up](#pop-up). |
 | `flows` | list | | See [Flows](#flows). |
-| `quiet_time` | string or number | | Seconds, or `H:MM:SS`, up to 32 characters. Applies to the `entity` written on the same node, on the card or on any module. When that entity has not changed for longer, the card shows "Not updated since {time}". A sensor that repeats an unchanged value looks quiet from its last real change. A value set only through a template merge does not start the faces. A value that cannot be read stops the card with "Invalid configuration" on the card, and gives a warning on a module. See [Connection and quiet sensors](../loading-and-size/README.md#connection-and-quiet-sensors). |
+| `quiet_time` | string or number | | Seconds (a number, or a quoted whole number such as `"900"`) or `H:MM:SS`, up to 32 characters. Applies to the `entity` written on the same node, on the card or on any module. When that entity has not changed for longer, the card shows "Not updated since {time}". A sensor that repeats an unchanged value looks quiet from its last real change. A value set only through a template merge does not start the faces. A value that cannot be read, at the top level, in a module or in a nested module, makes the card show a configuration error. See [Connection and quiet sensors](../loading-and-size/README.md#connection-and-quiet-sensors). |
 
 Rows are stacked with a 10px gap. Detail: [Card, rows and columns](../card/README.md).
 

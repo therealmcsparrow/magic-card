@@ -56,7 +56,7 @@ If a file is missing from the folder, the feature it belongs to shows its notice
 
 ## Connection and quiet sensors
 
-A card can tell you when what it shows may be out of date. It does this with three faces, each one sentence on a strip along the top edge of the card. The strip floats over the card without moving anything, and the values underneath keep their normal colour. A screen reader announces the text politely.
+A card can tell you when what it shows may be out of date. It does this with three faces, each one sentence in a small pill on the bottom edge of the card. The pill floats over the card without moving anything, and the values underneath keep their normal colour. While a control in the card has focus, the pill steps aside, so it never covers what you are using. A screen reader announces the text politely.
 
 | Face | Text | When it shows |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ When more than one applies, the card shows the connection face first, then Recon
 
 ### Set quiet_time
 
-Add `quiet_time` next to the `entity` it applies to, on the card or on any module. It takes seconds (`900`) or `H:MM:SS` (`0:15:00`). See [Card](../yaml/schema.md#card).
+Add `quiet_time` next to the `entity` it applies to, on the card or on any module. It takes seconds, as a number (`900`) or a quoted whole number (`"900"`), or `H:MM:SS` (`0:15:00`). See [Card](../yaml/schema.md#card).
 
 ```yaml
 type: custom:magic-card
@@ -78,7 +78,7 @@ rows:
   # your rows as usual
 ```
 
--   A value that cannot be read, such as `soon`, stops the card with the invalid-configuration message on the card's own `quiet_time`, and shows a warning on a module's.
+-   A value that cannot be read, such as `soon`, makes the card show a configuration error. This holds wherever the value is written: on the card, on a module or on a module inside another.
 -   A sensor that sends the same value again does not count as a change. Home Assistant does not pass the time of that report on to cards, so such a sensor looks quiet from its last real change. Use `quiet_time` on entities whose value changes, not on one that mostly repeats itself.
 -   `quiet_time` that exists only after a template is merged into the card does not start the faces. Write it in the card itself.
 
