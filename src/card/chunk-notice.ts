@@ -64,7 +64,6 @@ export const noticeStyles = css`
     justify-self: end;
     margin: 4px 8px;
     font-size: 0.75em;
-    opacity: 1;
     user-select: text;
     -webkit-user-select: text;
     -webkit-touch-callout: default;
@@ -151,23 +150,18 @@ export function chunkNotice(c: RetryableLazyChunk) {
   } else if (c.failed() && !s.shown) {
     requestAnimationFrame(() => ((s.shown = c.failed()), notifyChunks()));
   }
-  const tile = mismatch && s.shown && c.failed();
-  if (tile) {
-    const again = reloadAsked(BUILD_VERSION);
-    return html`<div role="status" aria-live="polite" aria-busy="false"
-      ><div class="mc-n mc-u">
-        ${again
-          ? html`<p id=${id}>
-              ${t('card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload')}
-              <a href=${CACHE_HELP} target="_blank" rel="noopener">${t('card.chunk-notice.how-to-clear-the-cache')}</a>
-            </p>`
-          : html`<button type="button" @click=${() => freshReload(BUILD_VERSION)}>${t('card.chunk-notice.magic-card-updated-tap-to-reload')}</button>`}
-        <span class="mc-uv">${BUILD_VERSION}</span>
-      </div></div
-    >`;
-  }
   return html`<div role="status" aria-live="polite" aria-busy=${s.busy ? 'true' : 'false'}>${s.shown && c.failed()
-      ? html`<div class="mc-n">
+      ? mismatch
+        ? html`<div class="mc-n mc-u">
+            ${reloadAsked(BUILD_VERSION)
+              ? html`<p id=${id}>
+                  ${t('card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload')}
+                  <a href=${CACHE_HELP} target="_blank" rel="noopener">${t('card.chunk-notice.how-to-clear-the-cache')}</a>
+                </p>`
+              : html`<button type="button" @click=${() => freshReload(BUILD_VERSION)}>${t('card.chunk-notice.magic-card-updated-tap-to-reload')}</button>`}
+            <span class="mc-uv">${BUILD_VERSION}</span>
+          </div>`
+        : html`<div class="mc-n">
           <ha-icon icon="mdi:alert-circle-outline" aria-hidden="true"></ha-icon>
           <span id=${id}
             >${s.again

@@ -15,9 +15,6 @@ export function parseDuration(v: unknown): number | undefined {
 /** Longest quiet_time text read; a longer one is unreadable. */
 export const QUIET_TIME_MAX_CHARS = 32;
 
-const MAX_NODES = 5000;
-const has = (o: object, k: string): boolean => Object.prototype.hasOwnProperty.call(o, k);
-
 /** quiet_time in ms: `H:MM:SS` or a number of seconds >= 0; undefined when unreadable. */
 export function quietMs(v: unknown): number | undefined {
   if (typeof v === 'string' && v.length > QUIET_TIME_MAX_CHARS) return undefined;
@@ -25,16 +22,10 @@ export function quietMs(v: unknown): number | undefined {
   return ms !== undefined && Number.isFinite(ms) ? ms : undefined;
 }
 
-/** The status chunk is wanted: some node of the config (card, module or child) has its own `quiet_time`. */
+/** The status chunk is wanted: some node of the config (card, module or child) has its own `quiet_time` key. */
 export function wantsStatus(config: unknown): boolean {
-  const left = { n: MAX_NODES };
-  const walk = (node: unknown): boolean => {
-    if (!node || typeof node !== 'object' || left.n-- <= 0) return false;
-    if (!Array.isArray(node) && has(node, 'quiet_time')) return true;
-    return Object.values(node).some(walk);
-  };
   try {
-    return walk(config);
+    return !!JSON.stringify(config)?.includes('"quiet_time":');
   } catch {
     return false;
   }
