@@ -1,10 +1,11 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { shapeRingPath } from '../src/utils/ring-path';
 import { ringPath } from '../src/utils/ring-outline';
 import { mirrorSweep } from '../src/card/ring-stroke';
 import '../src/card/mc-ring';
 import type { McRing } from '../src/card/mc-ring';
+import { DIR_CHANGE_EVENT } from '../src/contracts/ui-kit';
 import type { ResolvedRing } from '../src/utils/ring';
 
 const golden = JSON.parse(readFileSync('tests/fixtures/rtl-card-ring-ltr-golden.json', 'utf8')) as Record<string, string>;
@@ -103,6 +104,40 @@ describe('<mc-ring> under rtl', () => {
     await new Promise((res) => setTimeout(res, 0));
     await el.updateComplete;
     expect(d(el)).toBe(expected('top-left', 'ccw'));
+  });
+  it('listens to the shared direction event, once for all rings', async () => {
+    expect(DIR_CHANGE_EVENT).toBe('mc-dir-change');
+    const add = vi.spyOn(window, 'addEventListener');
+    const remove = vi.spyOn(window, 'removeEventListener');
+    const Real = MutationObserver;
+    let onRoot = 0;
+    vi.stubGlobal('MutationObserver', class extends Real {
+      override observe(t: Node, o?: MutationObserverInit): void {
+        if (t === document.documentElement) onRoot++;
+        super.observe(t, o);
+      }
+    });
+    const a = await mount('rtl');
+    const first = parent;
+    const b = await mount('rtl');
+    const count = (spy: typeof add) => spy.mock.calls.filter((c) => c[0] === DIR_CHANGE_EVENT).length;
+    expect(count(add)).toBe(1);
+    expect(onRoot).toBe(1);
+    parent.setAttribute('style', 'direction: ltr');
+    window.dispatchEvent(new Event(DIR_CHANGE_EVENT));
+    await b.updateComplete;
+    expect(d(b)).toBe(expected('top-right', 'cw'));
+    b.remove();
+    expect(count(remove)).toBe(0);
+    first.setAttribute('style', 'direction: ltr');
+    window.dispatchEvent(new Event(DIR_CHANGE_EVENT));
+    await a.updateComplete;
+    expect(d(a)).toBe(expected('top-right', 'cw'));
+    a.remove();
+    expect(count(remove)).toBe(1);
+    first.remove();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
   it('removes its listeners on disconnect and restores them on reconnect', async () => {
     const el = await mount('rtl');

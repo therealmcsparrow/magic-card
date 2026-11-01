@@ -8,6 +8,7 @@ import { controlsViewStyles } from '../src/css/controls-styles';
 import { ShapeBox } from '../src/slider-look/shape';
 import { resolveShape } from '../src/card/shape-resolve';
 import type { CardModule } from '../src/types';
+import { DIR_CHANGE_EVENT } from '../src/contracts/ui-kit';
 
 const hass = {
   states: {
@@ -172,6 +173,32 @@ describe('card sliders under right-to-left', () => {
     expect(el.hasAttribute('data-mc-rtl')).toBe(false);
   });
 
+  it('listens to the shared direction event', () => {
+    expect(DIR_CHANGE_EVENT).toBe('mc-dir-change');
+    const add = vi.spyOn(window, 'addEventListener');
+    track({ direction: 'ltr' });
+    expect(add.mock.calls.some((c) => c[0] === DIR_CHANGE_EVENT)).toBe(true);
+  });
+
+  it('clears the mark when a horizontal rtl track becomes vertical', async () => {
+    const host = document.createElement('div');
+    host.style.direction = 'rtl';
+    document.body.appendChild(host);
+    hosts.push(host);
+    const draw = (vertical: boolean) => render(renderTrack({ value: 50, min: 0, max: 100, step: 5, vertical, label: 'L', onCommit: vi.fn() }), host);
+    draw(false);
+    await tick();
+    const el = host.querySelector('.mc-tile-slider')!;
+    expect(el.hasAttribute('data-mc-rtl')).toBe(true);
+    draw(true);
+    await tick();
+    expect(host.querySelector('.mc-tile-slider')).toBe(el);
+    expect(el.hasAttribute('data-mc-rtl')).toBe(false);
+    draw(false);
+    await tick();
+    expect(el.hasAttribute('data-mc-rtl')).toBe(true);
+  });
+
   it('drops its listener when the track goes', () => {
     const add = vi.spyOn(window, 'addEventListener');
     const remove = vi.spyOn(window, 'removeEventListener');
@@ -199,7 +226,8 @@ describe('card sliders under right-to-left', () => {
   });
 
   it('the sheets mirror on the attribute: fill, gradient, parts and the base bar', () => {
-    expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-f,.mc-tile-slider[data-mc-rtl] .mc-sl-segs{transform:scaleX(-1)}');
+    expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}');
+    expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}');
     expect(SLIDER_LOOK_CSS).toContain('.mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%)');
     expect(String(controlsViewStyles)).toContain('.mc-tile-slider[data-mc-rtl] .mc-tile-slider-bar');
   });
