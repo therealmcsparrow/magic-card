@@ -13,6 +13,10 @@ Magic Card is a Home Assistant Lovelace custom card that you build from rows, co
 
 This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of a hundred and thirty-four cards with screenshots, sixty-nine of them animated, and twenty-five [complete dashboards](documentation/gallery/dashboards/README.md). Changes are listed in the [changelog](CHANGELOG.md).
 
+<p align="center"><img src="documentation/gallery/images/families/set.svg" width="720" alt="The eight card families of the gallery, each drawn as one icon: home, climate, power, guard, sound, machines, garden and worlds."></p>
+
+The gallery groups its cards in eight families, shown above. Nothing in the picture moves.
+
 ## Features
 
 -   Rows, columns and modules, with layout modules (horizontal, vertical, row, tabs, slider) that nest other modules. Their children, tabs and columns are managed in the structure tree, where you can drag a module into or out of any container, at any depth. The row module has the layout presets, column widths and per-column settings of a card row.
@@ -1148,6 +1152,8 @@ Magic Card needs Android System WebView 85 (Chromium 85) or newer. It was checke
 -   A card broke after an update. [MAINTAINING.md](MAINTAINING.md) has the steps to roll back to the version that worked, to see which version runs and to stay on one version.
 -   A card shows the tile "Magic Card updated. Tap to reload.". Tap it once. If it then says the old version is still running, follow [Clear the browser cache](documentation/loading-and-size/README.md#clear-the-browser-cache).
 -   The tile on a wall tablet: the tile and its reload have not yet been checked on a real wall tablet. If your tablet keeps showing the tile after you tap it and clear the cache, [tell us which tablet and app you use](https://github.com/therealmcsparrow/magic-card/issues).
+-   A card is blank on an old tablet. Check that Android System WebView is version 85 or newer, then hard refresh. The steps are in [Troubleshooting](documentation/troubleshooting/README.md#a-card-is-blank-on-an-old-tablet).
+-   To post a picture of a card in a forum, use the Forum shot area of the Magic Card Utils panel. Check the picture before you post it, because a card can show names, places and the state of your devices.
 -   A card stands still. See the [pause reply](documentation/support/README.md#pause-reply) and the [update reply](documentation/support/README.md#update-reply).
 -   To report a card that stands still, post in [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports).
 -   How a size claim was measured and which cases we test: see [how we measured](documentation/loading-and-size/README.md#how-we-measured) and [bad cases we test](documentation/loading-and-size/README.md#bad-cases-we-test).
