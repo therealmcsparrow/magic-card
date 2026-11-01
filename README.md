@@ -291,7 +291,7 @@ Every module accepts `entity` where it makes sense, plus `design`, `actions` and
 | --- | --- | --- |
 | `text` | Static text, a template or an entity value | `text`, `use_template` (Jinja in `text`), `use_entity`, `entity`, `attribute`, `entity_display` (`state`, `name`, `name_state`) |
 | `icon` | An icon | `icon`, `size`, `icon_color`, `use_entity_icon`, `use_entity_color`, `entity` |
-| `info` | Name, state and unit of an entity | `entity`, `attribute`, `show_name`, `show_state`, `show_unit`, `show_icon`, `icon`, `prefix`, `suffix`, `secondary_info` (an attribute name) |
+| `info` | Name, state and unit of an entity | `entity`, `attribute`, `show_name`, `show_state`, `show_unit`, `show_icon`, `icon`, `prefix`, `suffix`, `secondary_info` (an attribute name, or `last-changed` to show when the entity last changed, as Home Assistant's relative time) |
 | `image` | An image from a URL, media or an entity | `image`, `entity`, `entity_picture`, `attribute`, `aspect_ratio` (`16:9`, `1.5`, `56.25%`), `fit` (`contain`, `cover`, `fill`, `none`) |
 | `markdown` | Markdown with templates | `content`, `entity`, `attribute` |
 | `bar` | A progress bar | `entity`, `attribute`, `min`, `max`, `severity` (colour ranges), `decimals`, `bar_height`, `bar_color`, `bar_background`, `show_value`, `direction` (`horizontal`, `vertical`) |
@@ -456,7 +456,7 @@ Sharing a card. The YAML only holds the reference. To share a card with someone 
 Icons are animated through the icon picker's Animated icons tab and the animation studio. The Design tab no longer has an Animate icon button. Cards that use an animation made with it keep playing it.
 
 -   A pick from the icon library adds an entry `preset: custom:quick-icon-…` with `target: icon` to the module and stores the animation in the card's `custom_animations`, so it plays without Magic Card Utils.
--   The Style switch above the icon library tiles plays them Quiet (one part moves, a little and slowly), Living (the full animation, the default) or Glow (the full animation with a soft outline round the lit part). The tile you click is stored in that Style.
+-   Above the icon library tiles, three animated swatches set the Style: Quiet (one part moves, a little and slowly), Living (the full animation, the default) or Glow (the full animation with a soft outline round the lit part). The tile you click is stored in that Style.
 -   To split a module's icon into parts, give each part a preset or export an animated SVG file, use the animation studio in Magic Card Utils. Saved icon animations show in the Animated icons tab under My animations.
 -   An animation of the module's own icon follows that icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts. A library animation is removed instead.
 
