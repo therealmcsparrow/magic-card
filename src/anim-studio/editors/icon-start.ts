@@ -310,6 +310,10 @@ export class AnimIconStart extends LitElement {
                   ${lib.isNewInRelease(e.id) ? html`<span class="new-mark" aria-hidden="true"></span><span class="sr-only">${t('anim-studio.icon-start.new-in-this-release')}</span>` : nothing}
                   <span class="nm">${e.name}</span>
                   <span class="dm">${domainLabel(e.domain, this.hass)}</span>
+                  ${(() => {
+                    const b = lib.mirrorBadge(e.mirror);
+                    return html`<span class="mirror-badge ${b.unset ? 'is-unset' : ''}">${b.label}</span>`;
+                  })()}
                 </button>
               </li>`,
             )}
@@ -401,7 +405,7 @@ export class AnimIconStart extends LitElement {
       .new-mark {
         position: absolute;
         top: 6px;
-        right: 6px;
+        inset-inline-end: 6px;
         width: 8px;
         height: 8px;
         background: var(--mc-accent-ink, #01579b);
@@ -412,6 +416,18 @@ export class AnimIconStart extends LitElement {
         .new-mark {
           background: CanvasText;
         }
+      }
+      .mirror-badge {
+        font-size: 0.6875rem;
+        color: var(--mc-text-secondary, var(--secondary-text-color, #727272));
+      }
+      .mirror-badge.is-unset {
+        padding: 0 6px;
+        border-radius: 999px;
+        font-weight: 600;
+        color: var(--mc-accent-ink, #01579b);
+        background: color-mix(in srgb, var(--primary-color, #03a9f4) 16%, transparent);
+        outline: 1px solid currentColor;
       }
       .sr-only {
         position: absolute;
