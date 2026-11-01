@@ -7,6 +7,8 @@ import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMod
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
 import { kitLip } from '../ui-kit/css/lip';
+import { inlineSides } from '../ui-kit/css/rtl';
+import { DirectionController } from '../ui-kit/controllers/direction';
 import { PanelLips } from '../ui-kit/controllers/panel-lips';
 import { lipSpecs, lipStrings } from './lips';
 import { outsideOf } from './outside';
@@ -105,6 +107,7 @@ const clock = (): string => new Date().toLocaleTimeString([], { hour: '2-digit',
  * `mcte-recheck` (include).
  */
 export class McteEditorView extends LitElement {
+  private readonly _dir = new DirectionController(this);
   static properties: PropertyDeclarations = {
     draft: { attribute: false },
     hass: { attribute: false },
@@ -1383,7 +1386,7 @@ export class McteEditorView extends LitElement {
         position: relative;
       }
       .menu {
-        right: 0;
+        ${inlineSides('inset', 'auto', '0')}
         top: calc(100% + 4px);
         min-width: 220px;
         max-width: calc(100vw - 24px);
@@ -1419,7 +1422,7 @@ export class McteEditorView extends LitElement {
         min-height: 0;
       }
       .cols .vars {
-        border-right: 1px solid var(--mc-divider);
+        border-inline-end: 1px solid var(--mc-divider);
       }
       .cols .prev {
         padding: 0;
@@ -1473,7 +1476,7 @@ export class McteEditorView extends LitElement {
         display: flex;
         gap: 4px;
         flex: none;
-        margin-left: auto;
+        margin-inline-start: auto;
       }
       .strip-sample {
         flex: 1 1 220px;
