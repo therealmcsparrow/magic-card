@@ -122,6 +122,10 @@ On a wall tablet or in the Home Assistant app:
 
 If the tile stays after this, check that every file of the release is in the folder next to `magic-card.js`, as under [Offline and failed connections](#offline-and-failed-connections).
 
+### Wall tablets
+
+The tile and its reload have not yet been checked on a real wall tablet. The steps above are the ones to follow, but nobody has confirmed on a tablet that a tap on the tile gets the new version. If your tablet still shows the tile after you tap it and reset the frontend cache, report which tablet and which app or browser you use at https://github.com/therealmcsparrow/magic-card/issues. This section will say what we found once a tablet has been tried.
+
 ## How we word size and speed claims
 
 A claim about size names the release it compares, and gives the gzip and the Brotli bytes. A claim about speed links to a measured run on a named device. Until a timed run exists, Magic Card makes no speed claim. A script, `npm run claims`, reads the README, the changelog and these pages on every push and before every release, and it fails when a claim lacks one of these.
