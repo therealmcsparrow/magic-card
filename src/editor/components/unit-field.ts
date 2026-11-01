@@ -52,21 +52,25 @@ export class UnitField extends LitElement {
         display: block;
         min-width: 0;
       }
+      /* A number and its unit read as one left-to-right compound, so its joined edges and paddings stay physical */
+      .unit {
+        direction: ltr;
+      }
       /* "Custom" needs a wider select than a unit */
       .unit > .select.is-custom {
         width: 92px;
       }
       .unit > .select.is-custom select {
-        padding-right: 28px;
+        padding-right: 28px; /* physical */
       }
       .unit > .select.is-custom > ha-icon {
-        right: 6px;
+        right: 6px; /* physical */
       }
       /* compact (box field sides): a narrower unit select */
       :host([compact]) .unit > .input {
         min-width: 5ch;
-        padding-left: 10px;
-        padding-right: 6px;
+        padding-left: 10px; /* physical */
+        padding-right: 6px; /* physical */
       }
       :host([compact]) .unit > .select {
         width: 64px;
@@ -75,11 +79,11 @@ export class UnitField extends LitElement {
         width: 84px;
       }
       :host([compact]) .unit > .select select {
-        padding-left: 8px;
-        padding-right: 24px;
+        padding-left: 8px; /* physical */
+        padding-right: 24px; /* physical */
       }
       :host([compact]) .unit > .select > ha-icon {
-        right: 4px;
+        right: 4px; /* physical */
       }
     `,
   ];

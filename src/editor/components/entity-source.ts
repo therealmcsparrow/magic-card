@@ -4,6 +4,8 @@ import type { EntitySourceInfo, EntitySourceKind } from '../../contracts/entity-
 import type { CardModule, HomeAssistant } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import { editorKey } from '../../utils/editor-key';
+import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
+import { readDirection } from '../../ui-kit/controllers/direction';
 import { renderEntityField, renderFieldHead, renderToggleField } from '../../utils/form-utils';
 import type { SyncContext } from '../../utils/sync-path';
 import { m, t, type MessageIndex } from '../i18n';
@@ -92,7 +94,7 @@ export class EntitySource extends LitElement {
       }
       .src .sub {
         margin: 0;
-        padding-left: 22px;
+        padding-inline-start: 22px;
         color: var(--mc-text-2);
         overflow-wrap: anywhere;
       }
@@ -242,14 +244,12 @@ export class EntitySource extends LitElement {
   };
 
   private _onKey = (e: KeyboardEvent): void => {
-    const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'];
-    if (!keys.includes(e.key)) return;
-    const btns = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('button')];
+    const group = e.currentTarget as HTMLElement;
+    const btns = [...group.querySelectorAll<HTMLElement>('button')];
     const at = btns.indexOf(e.target as HTMLElement);
-    if (at < 0) return;
+    const next = rovingTarget(e.key, at, btns.map(() => ({})), 'both', true, readDirection(group) === 'rtl');
+    if (at < 0 || next < 0) return;
     e.preventDefault();
-    const n = btns.length;
-    const next = e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : (at + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1) + n) % n;
     btns.forEach((b, i) => (b.tabIndex = i === next ? 0 : -1));
     btns[next].focus();
   };
