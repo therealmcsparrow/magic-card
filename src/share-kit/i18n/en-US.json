@@ -99,6 +99,14 @@
     "text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
     "hash": "6a0f473d"
   },
+  "share-kit.style-drops.a-style-rule-name": {
+    "text": "a style rule ({name})",
+    "hash": "3ecb0c4d"
+  },
+  "share-kit.style-drops.a-stylesheet-link": {
+    "text": "a stylesheet link",
+    "hash": "c91313dc"
+  },
   "share-kit.theme-check.dark": {
     "text": "dark",
     "hash": "e6bb5689"

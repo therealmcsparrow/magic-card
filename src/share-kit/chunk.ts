@@ -5,6 +5,7 @@ import { demoStates } from './demo-states';
 import { applyMapping, findPlaceholders } from './mapping';
 import { previewSafe } from './preview';
 import { toPlaceholders } from './placeholders';
+import { styleDrops } from './style-drops';
 import { scanMarkers, strictValue, themeValue } from './strict';
 import { checkTheme } from './theme-check';
 
@@ -24,6 +25,7 @@ export const createShareKit: CreateShareKit = (helpers) => {
     demoStates,
     importNotice: importNoticeOf,
     previewSafe,
+    styleDrops,
     checkContrast: checkTheme,
   };
   return kit;

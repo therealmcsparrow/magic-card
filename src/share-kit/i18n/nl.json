@@ -99,6 +99,14 @@
     "text": "Deze draaien op je Home Assistant en kunnen de status van je entiteiten lezen. Hier worden ze alleen als tekst getoond en niet uitgevoerd.",
     "hash": "6a0f473d"
   },
+  "share-kit.style-drops.a-style-rule-name": {
+    "text": "een stijlregel ({name})",
+    "hash": "3ecb0c4d"
+  },
+  "share-kit.style-drops.a-stylesheet-link": {
+    "text": "een stijlbladverwijzing",
+    "hash": "c91313dc"
+  },
   "share-kit.theme-check.dark": {
     "text": "donkere",
     "hash": "e6bb5689"

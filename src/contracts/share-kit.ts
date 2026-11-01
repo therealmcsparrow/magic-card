@@ -203,6 +203,8 @@ export interface ShareKit {
   /** A demo state per placeholder, by its domain. */
   demoStates(placeholders: readonly EntityPlaceholder[]): Record<string, DemoState>;
   importNotice<K extends TransferKind>(kind: K, items: readonly TransferItem<K>[]): ImportNotice;
+  /** What the CSS resolver and the parser drop without a trace in the markup: a removed xml-stylesheet line in `input`; with `resolved`, in the style elements and attributes of `elements`, an @import, a url() to another file, expression() or behavior. `what` is worded for Removed {what}. */
+  styleDrops(input: string, elements: readonly Element[], resolved: boolean): { what: string; count: number }[];
   /** A preview copy that makes no request: other images become a neutral pattern, picker fonts their fallback. */
   previewSafe<K extends TransferKind>(kind: K, data: TransferDataByKind[K]): TransferDataByKind[K];
   /** TEXT_PAIRS of a theme in light and dark, resolved on `probe` (a hidden element in the page). */

@@ -86,7 +86,7 @@ function readKind(kind: TransferKind, index: number, id: string, name: string, d
     case 'image':
       return images ? images.readImage(index, data, file ? { file: true, css } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('transfer.envelope.the-checker-for-images-did-not-load-so'))] };
     default:
-      return readIcon(index, data, css);
+      return readIcon(index, data, css, kit);
   }
 }
 

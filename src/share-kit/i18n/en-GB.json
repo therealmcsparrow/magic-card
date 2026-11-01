@@ -147,6 +147,19 @@
     "note": "Help line under the templates heading of a shared card import.",
     "max": 170
   },
+  "share-kit.style-drops.a-style-rule-name": {
+    "text": "a style rule ({name})",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is the CSS part that was dropped, such as @import or url(). Lower case, a noun phrase.",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "share-kit.style-drops.a-stylesheet-link": {
+    "text": "a stylesheet link",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. It is the xml-stylesheet line at the top of the file that points to a style file. Lower case, a noun phrase.",
+    "max": 30
+  },
   "share-kit.theme-check.dark": {
     "text": "dark",
     "note": "The word for dark mode, placed in the sentence \"... in {mode} mode ...\".",
