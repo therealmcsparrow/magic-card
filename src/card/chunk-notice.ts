@@ -42,15 +42,22 @@ export const noticeStyles = css`
   }
   .mc-u {
     display: grid;
+    min-width: 12em;
     padding: 0;
   }
-  .mc-u > * {
-    grid-area: 1 / 1;
+  .mc-u p {
+    grid-row: 2;
+    margin: 0;
+    padding: 10px 16px;
+  }
+  .mc-u a {
+    color: inherit;
   }
   .mc-u button {
+    grid-row: 2;
     min-height: 44px;
     width: 100%;
-    padding: 18px 7em 10px 16px;
+    padding: 10px 16px;
     text-align: start;
     border: 0;
     border-radius: var(--mc-radius, 8px);
@@ -60,9 +67,9 @@ export const noticeStyles = css`
     outline-offset: -4px;
   }
   .mc-uv {
-    align-self: start;
+    grid-row: 1;
     justify-self: end;
-    margin: 4px 8px;
+    margin: 4px 8px 0;
     font-size: 0.75em;
     user-select: text;
     -webkit-user-select: text;
@@ -156,7 +163,7 @@ export function chunkNotice(c: RetryableLazyChunk) {
             ${reloadAsked(BUILD_VERSION)
               ? html`<p id=${id}>
                   ${t('card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload')}
-                  <a href=${CACHE_HELP} target="_blank" rel="noopener">${t('card.chunk-notice.how-to-clear-the-cache')}</a>
+                  <a href=${CACHE_HELP} target="_blank" rel="noopener noreferrer">${t('card.chunk-notice.how-to-clear-the-cache')}</a>
                 </p>`
               : html`<button type="button" @click=${() => freshReload(BUILD_VERSION)}>${t('card.chunk-notice.magic-card-updated-tap-to-reload')}</button>`}
             <span class="mc-uv">${BUILD_VERSION}</span>
