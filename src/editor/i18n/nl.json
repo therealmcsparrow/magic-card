@@ -3739,6 +3739,10 @@
     "text": "Pictogram",
     "hash": "a35abcd6"
   },
+  "card-editor.info-editor.last-changed": {
+    "text": "Laatst gewijzigd",
+    "hash": "d8c5670a"
+  },
   "card-editor.info-editor.prefix": {
     "text": "Voorvoegsel",
     "hash": "74feac5e"

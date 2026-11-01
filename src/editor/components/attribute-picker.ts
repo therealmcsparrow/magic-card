@@ -13,6 +13,8 @@ export class AttributePicker extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) entityId = '';
+  /** Extra choices listed after "no attribute", each a value and its translated label. */
+  @property({ attribute: false }) extras: ReadonlyArray<{ value: string; label: string }> = [];
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
@@ -85,7 +87,7 @@ export class AttributePicker extends LitElement {
     const names = entity ? Object.keys(entity.attributes).sort((a, b) => a.localeCompare(b)) : [];
 
     // A plain select, "State (no attribute)" first. Without a known entity, a text field.
-    if (!names.length) {
+    if (!names.length && !this.extras.length) {
       return html`
         <input
           type="text"
@@ -99,7 +101,8 @@ export class AttributePicker extends LitElement {
         ${this._showModal ? this._renderModal() : ''}
       `;
     }
-    const options = this.value && !names.includes(this.value) ? [this.value, ...names] : names;
+    const isExtra = (v: string) => this.extras.some((x) => x.value === v);
+    const options = this.value && !names.includes(this.value) && !isExtra(this.value) ? [this.value, ...names] : names;
     return html`
       <div class="select">
         <select
@@ -111,6 +114,7 @@ export class AttributePicker extends LitElement {
           }}
         >
           <option value="" ?selected=${!this.value}>${t('card-editor.attribute-picker.state-no-attribute')}</option>
+          ${this.extras.map((x) => html`<option value=${x.value} ?selected=${x.value === this.value}>${x.label}</option>`)}
           ${options.map((n) => html`<option value=${n} ?selected=${n === this.value}>${n}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
