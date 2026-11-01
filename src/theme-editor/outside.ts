@@ -1,4 +1,4 @@
-import { contactsOtherHost, externalHosts } from '../contracts/preset-transfer';
+import { CARD_MOD_KEY_RE, contactsOtherHost, externalHosts } from '../contracts/preset-transfer';
 import type { ThemeDoc } from '../contracts/theme-editor';
 
 // Detects theme values that make the browser contact another host; the picker and editor warn about them.
@@ -14,9 +14,13 @@ export function outsideOf(doc: ThemeDoc | undefined): { any: boolean; unknown: b
   let any = false;
   let unknown = false;
   const scan = (vars: Record<string, unknown> | undefined): void => {
-    for (const v of Object.values(vars ?? {})) {
-      if (typeof v !== 'string' || !contactsOtherHost(v)) continue;
+    for (const [k, v] of Object.entries(vars ?? {})) {
+      if (typeof v !== 'string' || !contactsOtherHost(v, k)) continue;
       any = true;
+      if (CARD_MOD_KEY_RE.test(k)) {
+        unknown = true;
+        continue;
+      }
       const r = externalHosts(v);
       if (r.unknown || !r.hosts.length) unknown = true;
       for (const h of r.hosts) hosts.add(h);

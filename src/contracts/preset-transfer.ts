@@ -113,9 +113,11 @@ const PLAIN_STRING_RE = /"[^"\\:/]*"|'[^'\\:/]*'/g;
 
 /**
  * True when a theme value is not provably safe, i.e. it can make the browser contact another website (strict
- * allow-list, not trick-by-trick detection).
+ * allow-list, not trick-by-trick detection). A `card-mod-` key always counts: card-mod renders its value, so
+ * the text here is not what the browser loads.
  */
-export function contactsOtherHost(value: string): boolean {
+export function contactsOtherHost(value: string, key?: string): boolean {
+  if (key !== undefined && CARD_MOD_KEY_RE.test(key)) return true;
   if (value.length > CHECK_MAX_CHARS || value.includes('\\') || value.includes('/*')) return true;
   if (EXTERNAL_REF_RE.test(value) || /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):/i.test(value)) return true;
   const rest = value.replace(SIMPLE_URL_RE, (m, a?: string, b?: string, c?: string) => {

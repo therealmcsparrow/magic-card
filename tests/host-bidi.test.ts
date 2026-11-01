@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { externalHosts } from '../src/contracts/preset-transfer';
+import { contactsOtherHost, externalHosts } from '../src/contracts/preset-transfer';
 import { hostsOf, readTheme } from '../src/transfer/kinds/theme';
 import { hostsIn, outsideOf } from '../src/theme-editor/outside';
 
@@ -131,5 +131,46 @@ describe('payloads that fooled the host scan', () => {
       if (/decoy|named and|data:|newline inside|swallowing/.test(n)) continue;
       expect(externalHosts(value).hosts, n).not.toContain(T);
     }
+  });
+});
+
+describe('card-mod theme values get the generic warning', () => {
+  const T = 'trusted.example';
+  const E = 'evil.example';
+  const rows: Array<[string, string, string]> = [
+    ['J3 template that adds a second host', 'card-mod-root', `@import url(https://${T}/a);{{ '@import "https://${E}/x";' }}`],
+    ['J4 template that decodes an import', 'card-mod-root', "{{ 'QGltcG9ydCAiaHR0cHM6Ly9ldmlsLmV4YW1wbGUveCI7' | base64_decode }}"],
+    ['J7 yaml value', 'card-mod-root-yaml', `ha-card:\n  background: "{{ 'url(https://${E}/x)' }}"`],
+    ['harmless plain value', 'card-mod-theme', 'ha-card { color: red; }'],
+    ['mixed-case key', 'Card-Mod-Card', 'ha-card { color: red; }'],
+  ];
+  it.each(rows)('%s: import note is generic with no hosts', (_n, key, value) => {
+    const r = readTheme(0, { 'primary-color': '#fff', [key]: value });
+    expect(r.ok).toBe(true);
+    const n = r.notes.filter((x) => x.code === 'external_ref');
+    expect(n).toHaveLength(1);
+    expect(n[0].unknown).toBe(true);
+    expect(n[0].hosts ?? []).toEqual([]);
+  });
+  it.each(rows)('%s: theme editor warns without naming hosts', (_n, key, value) => {
+    for (const doc of [{ [key]: value }, { modes: { light: { [key]: value }, dark: {} } }]) {
+      const o = outsideOf(doc as never);
+      expect(o).toEqual({ any: true, unknown: true, hosts: [] });
+    }
+  });
+  it('a plain value control still names its hosts', () => {
+    const v = `url(https://${T}/a.png) url(https://${E}/b.png)`;
+    const o = outsideOf({ 'ha-card-background': v } as never);
+    expect(o.any).toBe(true);
+    expect(o.unknown).toBe(false);
+    expect([...o.hosts].sort()).toEqual([E, T]);
+    const n = readTheme(0, { 'primary-color': '#fff', 'ha-card-background': v }).notes.find((x) => x.code === 'external_ref');
+    expect([...(n?.hosts ?? [])].sort()).toEqual([E, T]);
+    expect(n?.unknown).toBeFalsy();
+  });
+  it('contactsOtherHost is true for card-mod keys only by key', () => {
+    expect(contactsOtherHost('ha-card { color: red; }', 'card-mod-card-yaml')).toBe(true);
+    expect(contactsOtherHost('ha-card { color: red; }', 'primary-color')).toBe(false);
+    expect(contactsOtherHost('ha-card { color: red; }')).toBe(false);
   });
 });
