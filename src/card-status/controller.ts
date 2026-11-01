@@ -12,7 +12,7 @@ class Controller implements StatusController {
   preview = false;
   private hass?: HomeAssistant;
   private pairs: Quiet[] = [];
-  private attached = true;
+  private attached: boolean;
   private lostShown = false;
   private lostSince = 0;
   private backing = false;
@@ -22,7 +22,9 @@ class Controller implements StatusController {
   private current?: StatusFace;
   private key = '';
 
-  constructor(private readonly host: StatusHost) {}
+  constructor(private readonly host: StatusHost) {
+    this.attached = (host as { isConnected?: boolean }).isConnected !== false;
+  }
 
   config(config: unknown): void {
     this.pairs = collectQuiet(config);

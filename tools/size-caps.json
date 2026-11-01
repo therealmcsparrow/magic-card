@@ -191,7 +191,7 @@
     "magic-card-status.js": {
       "raw": 5120,
       "ceiling": 16384,
-      "note": "5 KiB, measured 4,605 (Windows build, to be re-measured on the Linux reference build) + 5 %, rounded up to 1 KiB. The connection and not-updated faces of the quiet status chunk. The contract ceiling is 16,384 B (lazy-module STATUS_CHUNK_CEILING)."
+      "note": "5 KiB, measured 4,661 (Linux reference build) + 5 %, rounded up to 1 KiB. The connection and not-updated faces of the quiet status chunk. The contract ceiling is 16,384 B (lazy-module STATUS_CHUNK_CEILING)."
     },
     "magic-card-pause.js": {
       "raw": 4096,
