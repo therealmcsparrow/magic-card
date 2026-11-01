@@ -22877,12 +22877,180 @@
     "x-max-length": 15,
     "x-source-hash": "d539f275"
   },
+  "forum-shot.element.admin-only": "Only the default dashboard is listed, because listing the others needs an administrator account.",
+  "@forum-shot.element.admin-only": {
+    "description": "Note for a user who is not an administrator, shown above the list of cards. Max 120 characters.",
+    "source_text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
+    "x-max-length": 120,
+    "x-source-hash": "705163a8"
+  },
+  "forum-shot.element.cards-legend": "Magic Card",
+  "@forum-shot.element.cards-legend": {
+    "description": "Legend of the group of radio buttons where the user picks one card. Max 20 characters.",
+    "source_text": "Magic Card",
+    "x-max-length": 20,
+    "x-source-hash": "4789a1c5"
+  },
+  "forum-shot.element.config-read-failed": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
+  "@forum-shot.element.config-read-failed": {
+    "description": "Error when no dashboard configuration could be read. Max 110 characters.",
+    "source_text": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
+    "x-max-length": 110,
+    "x-source-hash": "f4f5d640"
+  },
+  "forum-shot.element.download": "Download",
+  "@forum-shot.element.download": {
+    "description": "Button that makes the picture and saves it to the user's device. Max 14 characters.",
+    "source_text": "Download",
+    "x-max-length": 14,
+    "x-source-hash": "d6eafe82"
+  },
+  "forum-shot.element.error-capture-failed": "The picture could not be made in this browser. Try again, or use another browser.",
+  "@forum-shot.element.error-capture-failed": {
+    "description": "Error when the capture failed. Max 110 characters.",
+    "source_text": "The picture could not be made in this browser. Try again, or use another browser.",
+    "x-max-length": 110,
+    "x-source-hash": "dd7a86c4"
+  },
+  "forum-shot.element.error-card-not-defined": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
+  "@forum-shot.element.error-card-not-defined": {
+    "description": "Error when the card element is not available. Max 100 characters.",
+    "source_text": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
+    "x-max-length": 100,
+    "x-source-hash": "433ffe34"
+  },
+  "forum-shot.element.error-too-large": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
+  "@forum-shot.element.error-too-large": {
+    "description": "Error when the sheet would exceed the size limit. Max 100 characters.",
+    "source_text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
+    "x-max-length": 100,
+    "x-source-hash": "15a5ec38"
+  },
   "forum-shot.element.forum-shot": "Forum shot",
   "@forum-shot.element.forum-shot": {
     "description": "Accessible name of the forum shot area in the Magic Card Utils panel, where the user turns a Magic Card into one picture to post in a forum. Max 20 characters.",
     "source_text": "Forum shot",
     "x-max-length": 20,
     "x-source-hash": "de9aca8d"
+  },
+  "forum-shot.element.intro": "Pick one of your Magic Cards and save it as a picture to post in a forum.",
+  "@forum-shot.element.intro": {
+    "description": "Short introduction under the heading of the forum shot area. Max 90 characters.",
+    "source_text": "Pick one of your Magic Cards and save it as a picture to post in a forum.",
+    "x-max-length": 90,
+    "x-source-hash": "87c3964a"
+  },
+  "forum-shot.element.loading": "Looking for your Magic Cards…",
+  "@forum-shot.element.loading": {
+    "description": "Status text while the dashboards are read. Max 40 characters.",
+    "source_text": "Looking for your Magic Cards…",
+    "x-max-length": 40,
+    "x-source-hash": "23af3ec6"
+  },
+  "forum-shot.element.local-only": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
+  "@forum-shot.element.local-only": {
+    "description": "Sentence under the privacy warning: the picture is made locally and nothing is stored. Max 120 characters.",
+    "source_text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
+    "x-max-length": 120,
+    "x-source-hash": "b4702d63"
+  },
+  "forum-shot.element.looks": "Show the Quiet, Living and Glow looks of animated icons, one row each",
+  "@forum-shot.element.looks": {
+    "description": "Checkbox: the picture gets three rows, one per look of the animated icons. Max 90 characters.",
+    "source_text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
+    "x-max-length": 90,
+    "x-source-hash": "a44c2916"
+  },
+  "forum-shot.element.making": "Making the picture…",
+  "@forum-shot.element.making": {
+    "description": "Status text while the picture is made. Max 30 characters.",
+    "source_text": "Making the picture…",
+    "x-max-length": 30,
+    "x-source-hash": "608e07ed"
+  },
+  "forum-shot.element.mode-both": "Light and dark",
+  "@forum-shot.element.mode-both": {
+    "description": "Option: the picture holds a light and a dark version of the card side by side. Max 20 characters.",
+    "source_text": "Light and dark",
+    "x-max-length": 20,
+    "x-source-hash": "59644334"
+  },
+  "forum-shot.element.mode-dark": "Dark only",
+  "@forum-shot.element.mode-dark": {
+    "description": "Option: the picture holds only the dark version of the card. Max 20 characters.",
+    "source_text": "Dark only",
+    "x-max-length": 20,
+    "x-source-hash": "0470ad2d"
+  },
+  "forum-shot.element.mode-light": "Light only",
+  "@forum-shot.element.mode-light": {
+    "description": "Option: the picture holds only the light version of the card. Max 20 characters.",
+    "source_text": "Light only",
+    "x-max-length": 20,
+    "x-source-hash": "a5d1af23"
+  },
+  "forum-shot.element.modes-legend": "Colors",
+  "@forum-shot.element.modes-legend": {
+    "description": "Legend of the group where the user chooses light, dark or both. Max 14 characters.",
+    "source_text": "Colours",
+    "x-max-length": 14,
+    "x-source-hash": "88f20221"
+  },
+  "forum-shot.element.no-cards": "No Magic Cards were found on your dashboards.",
+  "@forum-shot.element.no-cards": {
+    "description": "Empty state when no dashboard holds a Magic Card. Max 60 characters.",
+    "source_text": "No Magic Cards were found on your dashboards.",
+    "x-max-length": 60,
+    "x-source-hash": "db9cdd82"
+  },
+  "forum-shot.element.notice-remote-placeholder": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
+  "@forum-shot.element.notice-remote-placeholder": {
+    "description": "Notice under the preview when an image from another server was left out. Max 170 characters.",
+    "source_text": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
+    "x-max-length": 170,
+    "x-source-hash": "4d773277"
+  },
+  "forum-shot.element.pick-first": "Pick a card to continue.",
+  "@forum-shot.element.pick-first": {
+    "description": "Hint shown while no card is picked, so the Download button is not available. Max 40 characters.",
+    "source_text": "Pick a card to continue.",
+    "x-max-length": 40,
+    "x-source-hash": "cb8172e5"
+  },
+  "forum-shot.element.preview-alt": "Preview of the forum shot picture",
+  "@forum-shot.element.preview-alt": {
+    "description": "Text alternative of the preview image. Max 40 characters.",
+    "source_text": "Preview of the forum shot picture",
+    "x-max-length": 40,
+    "x-source-hash": "51beebfe"
+  },
+  "forum-shot.element.privacy-hint": "Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.",
+  "@forum-shot.element.privacy-hint": {
+    "description": "Privacy warning shown before the Download button. Max 190 characters.",
+    "source_text": "Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.",
+    "x-max-length": 190,
+    "x-source-hash": "7be450e3"
+  },
+  "forum-shot.element.remote-asset": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
+  "@forum-shot.element.remote-asset": {
+    "description": "Notice next to a card that cannot be picked because its settings name something outside Home Assistant. Also the error when the picture is refused for that reason. Max 220 characters.",
+    "source_text": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
+    "x-max-length": 220,
+    "x-source-hash": "117a5822"
+  },
+  "forum-shot.element.retry": "Try again",
+  "@forum-shot.element.retry": {
+    "description": "Button that reads the dashboards again after an error. Max 20 characters.",
+    "source_text": "Try again",
+    "x-max-length": 20,
+    "x-source-hash": "d8b8392e"
+  },
+  "forum-shot.element.saved": "The picture was saved to your downloads.",
+  "@forum-shot.element.saved": {
+    "description": "Status text after the picture was saved. Max 50 characters.",
+    "source_text": "The picture was saved to your downloads.",
+    "x-max-length": 50,
+    "x-source-hash": "bc4f343c"
   },
   "icon-animator.animated-icon-grid.all-domains": "All domains",
   "@icon-animator.animated-icon-grid.all-domains": {
