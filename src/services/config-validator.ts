@@ -2,7 +2,7 @@ import { MagicCardConfig, RowConfig, ColumnConfig, CardModule, ModuleType } from
 import { ModuleRegistry } from '../modules/module-registry';
 import { t } from '../card/i18n';
 import { MAX_BACKGROUND_LAYERS } from '../contracts/bg-stack.needs';
-import { quietMs } from '../contracts/card-status.needs';
+import { hasBadQuiet, quietMs } from '../contracts/card-status.needs';
 
 const PLACEMENTS = ['flow', 'background', 'overlay'];
 const LAYER_TYPES = ['image', 'gradient', 'pattern', 'color'];
@@ -86,8 +86,8 @@ export class ConfigValidator {
           if (m.placement !== undefined && !PLACEMENTS.includes(String(m.placement))) {
             warnings.push(t('card.config-validator.row-row-col-col-module-module-unknown', { row: ri, col: ci, module: mi }));
           }
-          if (m.quiet_time !== undefined && quietMs(m.quiet_time) === undefined) {
-            warnings.push(t('card.config-validator.row-row-col-col-module-module-type-error', { row: ri, col: ci, module: mi, type: String(mod.type), error: t('card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss') }));
+          if (hasBadQuiet(m)) {
+            errors.push(t('card.config-validator.row-row-col-col-module-module-type-error', { row: ri, col: ci, module: mi, type: String(mod.type), error: t('card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss') }));
           }
           if (m.layer !== undefined && !isObj(m.layer)) {
             warnings.push(t('card.config-validator.row-row-col-col-module-module-layer-must', { row: ri, col: ci, module: mi }));

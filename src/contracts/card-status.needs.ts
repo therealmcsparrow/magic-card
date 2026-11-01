@@ -15,9 +15,13 @@ export function parseDuration(v: unknown): number | undefined {
 /** Longest quiet_time text read; a longer one is unreadable. */
 export const QUIET_TIME_MAX_CHARS = 32;
 
-/** quiet_time in ms: `H:MM:SS` or a number of seconds >= 0; undefined when unreadable. */
+/** quiet_time in ms: `H:MM:SS` or seconds >= 0, as a number or a quoted number; undefined when unreadable. */
 export function quietMs(v: unknown): number | undefined {
-  if (typeof v === 'string' && v.length > QUIET_TIME_MAX_CHARS) return undefined;
+  if (typeof v === 'string') {
+    if (v.length > QUIET_TIME_MAX_CHARS) return undefined;
+    const n = /^\s*(\d{1,9})\s*$/.exec(v);
+    if (n) return Number(n[1]) * 1000;
+  }
   const ms = parseDuration(v);
   return ms !== undefined && Number.isFinite(ms) ? ms : undefined;
 }
@@ -29,4 +33,11 @@ export function wantsStatus(config: unknown): boolean {
   } catch {
     return false;
   }
+}
+
+/** True when some node of the config has an own `quiet_time` that cannot be read (walk capped at 5000 nodes). */
+export function hasBadQuiet(node: unknown, budget = { n: 5000 }): boolean {
+  if (!node || typeof node !== 'object' || budget.n-- <= 0) return false;
+  if ((node as Record<string, unknown>).quiet_time !== undefined && Object.prototype.hasOwnProperty.call(node, 'quiet_time') && quietMs((node as Record<string, unknown>).quiet_time) === undefined) return true;
+  return Object.values(node).some((v) => hasBadQuiet(v, budget));
 }
