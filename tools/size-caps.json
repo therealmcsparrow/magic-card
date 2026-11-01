@@ -179,9 +179,9 @@
       "note": "Library image field and its picker (editor-only chunk, contract image-editor 1.0.0, child of the card editor). 29 KiB, measured 27,702 + 5 %, rounded up to 1 KiB. The contract ceiling is 32,768 B (IMAGE_TOOLS_CHUNK_CEILING)."
     },
     "magic-card-anim.js": {
-      "raw": 91136,
+      "raw": 92160,
       "ceiling": 94208,
-      "note": "89 KiB, measured 90,746 (Linux build, docker node 24.22.0)."
+      "note": "90 KiB, measured 91,498 (Linux build, docker node 24.22.0), with the particle layer fade-in."
     },
     "magic-card-flows.js": {
       "raw": 27648,
@@ -1035,6 +1035,12 @@
       "field": "/entry/br/cap",
       "from": 63336,
       "to": 63396
+    },
+    {
+      "id": "anim-raw-91136-to-92160",
+      "field": "/files/magic-card-anim.js/raw",
+      "from": 91136,
+      "to": 92160
     }
   ]
 }
