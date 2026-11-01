@@ -5,7 +5,7 @@ import type { ResolvedShape } from './shape-resolve';
 import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 import { linearGradientSvg, parseGradient } from '../utils/gradient';
 import type { ResolvedRing } from '../utils/ring';
-import { ringInset, ringStroke, ringTimerTick } from './ring-stroke';
+import { mirrorSweep, ringInset, ringStroke, ringTimerTick } from './ring-stroke';
 import { TimerTick } from '../utils/timer';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
@@ -78,7 +78,7 @@ export class McRing extends LitElement {
   shape?: ResolvedShape;
 
   /** Parent border box and radii, as measured. */
-  private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii> };
+  private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii>; rtl: boolean };
 
   private _observed?: Element;
   private _mutations?: MutationObserver;
@@ -87,6 +87,8 @@ export class McRing extends LitElement {
   /** Only for a running timer ring: redraws every second while on screen (one shared ticker). */
   private _tick?: TimerTick;
   /** An "On tap" ring preset (data-tap) is hidden again once its lap is over. */
+  private _onDir = () => this.measure();
+  private _dirWatch?: MutationObserver;
   private _onEnd = () => {
     if (this.hasAttribute('data-tap')) this.removeAttribute('data-tapped');
   };
@@ -98,6 +100,11 @@ export class McRing extends LitElement {
     this._media?.addEventListener?.('change', this._onMedia);
     this._observe();
     this._timer();
+    window.addEventListener('mc-dir-change', this._onDir);
+    if (typeof MutationObserver === 'function') {
+      this._dirWatch = new MutationObserver(this._onDir);
+      this._dirWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+    }
   }
 
   disconnectedCallback(): void {
@@ -105,6 +112,9 @@ export class McRing extends LitElement {
     this._tick?.run(false);
     this._unobserve();
     this._media?.removeEventListener?.('change', this._onMedia);
+    window.removeEventListener('mc-dir-change', this._onDir);
+    this._dirWatch?.disconnect();
+    this._dirWatch = undefined;
   }
 
   private _unobserve(): void {
@@ -140,6 +150,7 @@ export class McRing extends LitElement {
       top: parseFloat(cs.borderTopWidth) || 0,
       left: parseFloat(cs.borderLeftWidth) || 0,
       radii: readRadii(cs, w, h),
+      rtl: getComputedStyle(this).direction === 'rtl',
     };
     if (JSON.stringify(box) !== JSON.stringify(this._box)) this._box = box;
   }
@@ -169,7 +180,7 @@ export class McRing extends LitElement {
     const r = this.ring?.timer ? { ...this.ring, ...ringTimerTick(this.ring.timer) } : this.ring;
     const b = this._box;
     if (!r || !b) return nothing;
-    const opts = { inset: ringInset(r.position, r.width), start: r.start, direction: r.direction };
+    const opts = { inset: ringInset(r.position, r.width), ...mirrorSweep(r.start, r.direction, b.rtl) };
     const d = this.shape
       ? shapeRingPath(this.shape.kind, b.w, b.h, this.shape.options, opts)
       : ringPath(b.w, b.h, b.radii, opts);
