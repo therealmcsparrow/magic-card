@@ -266,6 +266,8 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
     padding: 8px 0;
     background: var(--mc-surface);
     border-right: 1px solid var(--mc-divider);
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--mc-divider);
     overflow-y: auto;
   }
   .rail [role='separator'][aria-orientation='horizontal'] {
@@ -295,6 +297,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
       flex-direction: row;
       width: auto;
       border-right: 0;
+      border-inline: 0;
       border-bottom: 1px solid var(--mc-divider);
       padding: 0 8px;
       overflow-x: auto;
