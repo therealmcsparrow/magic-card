@@ -24,7 +24,8 @@ import type {
   TransferRefusal,
   TransferSource,
 } from '../contracts/preset-transfer';
-import type { ValueRefusal } from '../contracts/share-kit';
+import { PLACEHOLDER_ID_RE } from '../contracts/share-kit';
+import type { EntityPlaceholder, ValueRefusal } from '../contracts/share-kit';
 import type { SvgCssResolve } from '../contracts/svg-safety';
 import type { ThemeDoc } from '../contracts/theme-editor';
 import { VERSION } from '../version';
@@ -170,6 +171,21 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
   return out;
 }
 
+const MAX_HEADER_PLACEHOLDERS = 1000;
+
+/** Notes for header placeholder entries that are not `{ id: <domain>.mc_placeholder_<n>, domain }`; looks at a bounded number. */
+function headerPlaceholderNotes(list: unknown): TransferNote[] {
+  const bad = (path: string) => note('dropped_key', -1, path, t('transfer.envelope.key-is-not-a-preset-field-so-it-was-left', { key: path }));
+  if (list === undefined) return [];
+  if (!Array.isArray(list) || list.length > MAX_HEADER_PLACEHOLDERS) return [bad('placeholders')];
+  const out: TransferNote[] = [];
+  list.forEach((e: unknown, i) => {
+    const m = isObj(e) && typeof e.id === 'string' ? PLACEHOLDER_ID_RE.exec(e.id) : null;
+    if (!m || (e as Raw).domain !== m[1]) out.push(bad(`placeholders[${i}]`));
+  });
+  return out;
+}
+
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
 export function parseTransfer(text: string, opts: ParseOptions): ParseResult {
   // images only (the Images tab): an svg text is one image, read by the image checker in file mode
@@ -209,6 +225,7 @@ export function parseTransfer(text: string, opts: ParseOptions): ParseResult {
     const list = Array.isArray(marker.items) ? marker.items : isObj(marker.item) ? [marker.item] : undefined;
     if (!list) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
     for (const k of Object.keys(marker)) if (!HEADER_KEYS.includes(k)) notes.push(note('dropped_key', -1, k, t('transfer.envelope.key-is-not-a-preset-field-so-it-was-left', { key: k })));
+    notes.push(...headerPlaceholderNotes(marker.placeholders));
     found = { kind: kind as TransferKind, source: 'envelope', items: list };
   }
   if (!found) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
@@ -233,11 +250,12 @@ export function parseTransfer(text: string, opts: ParseOptions): ParseResult {
 const plain = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
 /** Writing: always `items`, keys in contract order, no aliases, JSON with 2-space indent. */
-export function serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat): string {
+export function serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat, header?: { placeholders?: readonly EntityPlaceholder[] }): string {
   const out = {
     [TRANSFER_MARKER_KEY]: TRANSFER_FORMAT,
     kind,
     generator: `Magic Card ${VERSION}`,
+    ...(header?.placeholders?.length ? { placeholders: header.placeholders.map((p) => ({ id: p.id, domain: p.domain })) } : {}),
     items: items.map((it) => {
       const data: unknown = kind === 'animation' ? omitIdName(it.data as unknown as Raw) : it.data;
       return {

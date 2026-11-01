@@ -95,7 +95,7 @@ export type CssCheck = { ok: true; css: string; notes: TransferNote[] } | { ok: 
 /** Home Assistant entity domains the free-text scan knows, beside any domain already seen in an entity field. */
 export const ENTITY_DOMAINS = [
   'ai_task', 'air_quality', 'alarm_control_panel', 'assist_satellite', 'automation', 'binary_sensor', 'button', 'calendar',
-  'camera', 'climate', 'conversation', 'counter', 'cover', 'date', 'datetime', 'device_tracker', 'event', 'fan', 'group',
+  'camera', 'climate', 'conversation', 'counter', 'cover', 'date', 'datetime', 'device_tracker', 'event', 'fan', 'geo_location', 'group',
   'humidifier', 'image', 'image_processing', 'input_boolean', 'input_button', 'input_datetime', 'input_number',
   'input_select', 'input_text', 'lawn_mower', 'light', 'lock', 'media_player', 'notify', 'number', 'person', 'remote',
   'scene', 'schedule', 'script', 'select', 'sensor', 'siren', 'stt', 'sun', 'switch', 'text', 'time', 'timer', 'todo',

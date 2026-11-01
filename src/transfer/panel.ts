@@ -303,7 +303,9 @@ export class TransferPanel extends LitElement {
   // ── export ──
   private _text(): string {
     const e = this.exportItems;
-    return e ? serialiseTransfer(e.kind, e.items, this._fmt()) : '';
+    if (!e || !this._kit) return '';
+    const shared = this._kit.placeholderItems(e.kind, e.items);
+    return serialiseTransfer(e.kind, shared.items, this._fmt(), { placeholders: shared.placeholders });
   }
 
   private _name(): string {
