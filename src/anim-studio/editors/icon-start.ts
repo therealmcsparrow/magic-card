@@ -395,7 +395,7 @@ export class AnimIconStart extends LitElement {
         border-color: color-mix(in srgb, var(--primary-color, #03a9f4) 60%, transparent);
       }
       .entry:focus-visible {
-        outline: 2px solid var(--primary-color, #03a9f4);
+        outline: 2px solid var(--mc-accent-ink, #01579b);
         outline-offset: 2px;
       }
       .new-mark {
