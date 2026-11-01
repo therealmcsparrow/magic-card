@@ -38,6 +38,57 @@ export function worstAfterChunk(frames, chunkEnds, windowMs = WINDOW_MS) {
 }
 
 /**
+ * Builds the box snapshotter. It is injected into the trace page as source text (toString), so it must not use
+ * anything outside its own body. getHost returns the card's host element; types is the list of selectors of the
+ * animated elements; measure(el, card) may replace the layout measure (tests do).
+ * Every call lists every element of the card's shadow tree (nested shadow roots included) as
+ * { id, types, box }. An element keeps its id between calls, so a node that exists at the first call is never new
+ * later, whatever attributes it gains. Types are the matching selectors, 'card' for ha-card, and 'wrapper' for
+ * the parent of a typed element.
+ */
+export function createSnapshotter(getHost, types, measure) {
+  const ids = new WeakMap();
+  let nextId = 0;
+  const idOf = function (n) { if (!ids.has(n)) ids.set(n, ++nextId); return ids.get(n); };
+  const walk = function (root, out) {
+    root.querySelectorAll('*').forEach(function (n) { out.push(n); if (n.shadowRoot) walk(n.shadowRoot, out); });
+  };
+  const layoutBox = function (el, stop) {
+    let left = 0; let top = 0; let n = el;
+    for (let i = 0; n && n !== stop && i < 64; i++) {
+      left += n.offsetLeft || 0; top += n.offsetTop || 0;
+      n = n.offsetParent || (n.getRootNode().host || null);
+    }
+    return { left: left, top: top, width: el.offsetWidth || 0, height: el.offsetHeight || 0 };
+  };
+  return function () {
+    const host = getHost();
+    const card = host && host.shadowRoot && host.shadowRoot.querySelector('ha-card');
+    if (!card) return [];
+    const all = [];
+    walk(host.shadowRoot, all);
+    const found = new Map();
+    all.forEach(function (n) { found.set(n, []); });
+    found.get(card).push('card');
+    all.forEach(function (n) {
+      types.forEach(function (sel) {
+        let hit;
+        try { hit = n.matches(sel); } catch { hit = false; }
+        if (!hit) return;
+        found.get(n).push(sel);
+        const p = n.parentElement || (n.getRootNode() && n.getRootNode().host);
+        if (p && p !== card && p !== host && found.has(p) && !found.get(p).includes('wrapper')) found.get(p).push('wrapper');
+      });
+    });
+    const out = [];
+    found.forEach(function (t, n) {
+      out.push({ id: idOf(n), types: t, box: (measure || layoutBox)(n, n === card ? null : card) });
+    });
+    return out;
+  };
+}
+
+/**
  * Compares two snapshots of untransformed layout boxes: [{ id, types, box: { left, top, width, height } }].
  * An element only in the settle snapshot is late, not a shift (its wrapper is in both and is compared). An
  * element only in the first snapshot is gone, which is not a shift either.

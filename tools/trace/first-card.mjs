@@ -38,7 +38,7 @@ import { createHash } from 'node:crypto';
 import * as jsYaml from 'js-yaml';
 /* global window */
 import { launchChromium } from './chromium85-cdp.mjs';
-import { ANIMATED_TYPES, LAYOUT_SHIFT_LIMIT, boxShifts, droppedFrames, maxOf, shiftVerdict, worstAfterChunk, worstFrame } from './frame-stats.mjs';
+import { ANIMATED_TYPES, LAYOUT_SHIFT_LIMIT, boxShifts, createSnapshotter, droppedFrames, maxOf, shiftVerdict, worstAfterChunk, worstFrame } from './frame-stats.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(join(ROOT, 'package.json'));
@@ -93,40 +93,13 @@ const PROFILE = { cpu: 4, down_kbps: 500, up_kbps: 500, latency_ms: 400 };
 const median = (a) => { const s = a.filter((x) => x != null).sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : null; };
 
 // Frame recorder and box snapshot for --profile c85. It runs before the module script, so the first frame is the
-// page's own first. A snapshot lists the animated elements, their parents and ha-card with untransformed boxes.
+// page's own first. A snapshot lists every element of the card's shadow tree with an id and an untransformed box.
 const FRAME_SCRIPT = `
 window.__frames = []; window.__rec = true;
 (function f(t) { if (!window.__rec) return; window.__frames.push(t); requestAnimationFrame(f); })(performance.now());
 window.__ls = [];
 new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__ls.push({ t: e.startTime, v: e.value }); }).observe({ type: 'layout-shift', buffered: true });
-const TYPES = ${JSON.stringify(ANIMATED_TYPES)};
-const ids = new WeakMap(); let nextId = 0;
-const idOf = (n) => { if (!ids.has(n)) ids.set(n, ++nextId); return ids.get(n); };
-const collect = (root, sel, out) => {
-  root.querySelectorAll(sel).forEach((n) => out.push(n));
-  root.querySelectorAll('*').forEach((n) => { if (n.shadowRoot) collect(n.shadowRoot, sel, out); });
-};
-const boxOf = (el, stop) => {
-  let left = 0; let top = 0; let n = el;
-  for (let i = 0; n && n !== stop && i < 64; i++) {
-    left += n.offsetLeft || 0; top += n.offsetTop || 0;
-    n = n.offsetParent || (n.getRootNode().host ?? null);
-  }
-  return { left, top, width: el.offsetWidth || 0, height: el.offsetHeight || 0 };
-};
-window.__snap = () => {
-  const host = document.getElementById('c');
-  const card = host && host.shadowRoot && host.shadowRoot.querySelector('ha-card');
-  if (!card) return [];
-  const found = new Map();
-  const add = (n, type) => { const e = found.get(n) || { n, types: [] }; if (!e.types.includes(type)) e.types.push(type); found.set(n, e); };
-  add(card, 'card');
-  for (const sel of TYPES) {
-    const hits = []; collect(host.shadowRoot, sel, hits);
-    for (const n of hits) { add(n, sel); const p = n.parentElement || n.getRootNode().host; if (p && p !== card && p !== host) add(p, 'wrapper'); }
-  }
-  return [...found.values()].map((e) => ({ id: idOf(e.n), types: e.types, box: boxOf(e.n, e.n === card ? null : card) }));
-};
+window.__snap = (${createSnapshotter.toString()})(() => document.getElementById('c'), ${JSON.stringify(ANIMATED_TYPES)});
 `;
 
 function pageHtml(config, withFrames = false) {
@@ -160,7 +133,7 @@ window.__done = true;
 const ENTRY_URL = `${BASE}/local/magic-card/magic-card.js`;
 
 // The first-card columns of one run, from the page's timings and resource entries.
-function summarise(m, enc) {
+function summarise(m, enc, withEnds = false) {
   const chunks = m.res.filter((e) => /\/magic-card-[^/]*\.js(\?|$)/.test(e.url) && e.url !== ENTRY_URL).sort((a, b) => a.end - b.end);
   const jsAll = m.res.filter((e) => /\.js(\?|$)/.test(e.url));
   const first = chunks[0]?.end ?? null;
@@ -172,7 +145,7 @@ function summarise(m, enc) {
     paint_before_chunk: first == null ? null : m.t.first_card <= first,
     cls: Number(m.cls.toFixed(4)),
     chunks: chunks.length,
-    chunk_ends: chunks.map((c) => c.end),
+    ...(withEnds ? { chunk_ends: chunks.map((c) => c.end) } : {}),
     requests: m.res.length,
     js_bytes: jsAll.reduce((s, e) => s + e.bytes, 0),
     content_encoding: enc[ENTRY_URL] ?? 'unknown',
@@ -266,7 +239,7 @@ async function oneRunC85(browser, config) {
       const cls = window.__ls.reduce((a, e) => a + e.v, 0);
       return { t: window.__t, cls, res, frames: window.__frames, first: window.__first || [], settle: window.__snap(), ls: window.__ls };
     });
-    const run = summarise({ ...m, errors }, enc);
+    const run = summarise({ ...m, errors }, enc, true);
     const lsAfterFirst = m.ls.filter((e) => e.t > m.t.first_card).reduce((a, e) => a + e.v, 0);
     const shifts = boxShifts(m.first, m.settle);
     return {
@@ -314,7 +287,7 @@ async function runC85(out) {
           layout_shift_after_first: maxOf(rs.map((r) => r.layout_shift_after_first)),
           shift: rs.some((r) => r.shift),
           list: rs.flatMap((r) => r.shifts.shifts).slice(0, 20),
-          late: rs[0].shifts.late.map((l) => ({ types: l.types, box: l.box })),
+          late: rs[0].shifts.late.filter((l) => l.types.length).map((l) => ({ types: l.types, box: l.box })),
         },
         pinned_type: need ?? null,
         pinned_missing: need ? !rs.some((r) => r.present.includes(need)) : false,

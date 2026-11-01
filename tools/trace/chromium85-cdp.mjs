@@ -82,7 +82,17 @@ export async function launchChromium({ executablePath, headless = true, timeoutM
       for (const l of listeners) if (l.sessionId === msg.sessionId && l.method === msg.method) l.fn(msg.params);
     }
   });
+  let closedWith = null;
+  const failAll = (reason) => {
+    if (!closedWith) closedWith = new Error(reason);
+    for (const [id, p] of pending) { pending.delete(id); p.reject(new Error(`${p.method}: ${closedWith.message}`)); }
+  };
+  ws.addEventListener('close', () => failAll('the debugging connection closed'));
+  ws.addEventListener('error', () => failAll('the debugging connection failed'));
+  child.once('exit', (code) => failAll(`Chromium exited${code == null ? '' : ` with code ${code}`}`));
+  if (child.exitCode != null) failAll(`Chromium exited with code ${child.exitCode}`);
   const send = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
+    if (closedWith) { reject(new Error(`${method}: ${closedWith.message}`)); return; }
     const id = ++nextId;
     pending.set(id, { resolve, reject, method });
     ws.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }));
