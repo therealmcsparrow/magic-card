@@ -1104,13 +1104,13 @@ Your designs can be shared as files. The [presets page](documentation/presets/RE
 
 When you import a theme file, Magic Card reads it on your computer. It downloads nothing while it reads, and it sends nothing to the author.
 
-Some theme files point to a picture or font on another website, or contain `card-mod-` lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose **Import anyway**, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with `card-mod-` only work when card-mod is installed, and they can restyle any card.
+Share and import presets, themes, icons, animations, shapes, images and cards as plain JSON or YAML files. Entity IDs are replaced by placeholders when you export. Only import files from people you trust: Magic Card checks every file and shows a preview first, and you confirm before anything is saved. See [Sharing safety](documentation/sharing-safety/README.md).
 
-Only import files from people you trust. To avoid all of this, choose **Cancel**, or delete those lines from the file and import it again.
+A picture or font that points to another website is left out of an imported theme or card and listed with the website, so your dashboard never asks that website for it. Files in your own `/local/` folder are kept, with a note that they may not exist on your system. Lines that start with `card-mod-` are kept with a note. They only work when card-mod is installed, and they can restyle any card. If a file has such lines, the button reads **Import anyway**; choose **Cancel** or delete those lines to avoid them.
 
 ### Imported files are untrusted
 
-Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item by item, and cleaned (SVG scripts, links and external references are removed and listed). Theme files are the one exception, as described above, and only after you confirm.
+Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item by item, and cleaned (SVG scripts, links and external references are removed and listed). A value with characters that could break out of its setting makes Magic Card refuse the whole file. Nobody reviews shared files, so read the preview, and for a card its actions and templates, before you confirm.
 
 ### Privacy
 

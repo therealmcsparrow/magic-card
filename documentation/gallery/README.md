@@ -113,6 +113,18 @@ On sixty-nine of the cards something moves, so their pictures are short recordin
 -   With reduced motion turned on in your system, the animations stand still.
 -   A few cards were shot with a theme preset. The note under each of them names the preset and links to its page in the theme examples.
 
+## Sharing a card
+
+A card shared as a file is released under CC0 1.0:
+
+> By sharing this file you release it under CC0 1.0, which means anyone may copy, change and reuse it for any purpose, without asking you and without crediting you. Only share work that is yours to give away. Do not include images, fonts, icons or text that belong to someone else.
+
+The author name in a file is optional:
+
+> Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.
+
+Entity IDs are replaced by placeholders when you export. Names and titles without an ID, and `device_id` and `area_id` targets, stay as written. See [Sharing safety](../sharing-safety/README.md). To show a card you made, post it in the gallery category of [Discussions](https://github.com/therealmcsparrow/magic-card/discussions) with the form there.
+
 ## Related
 
 -   [YAML examples](../yaml/examples/README.md): complete cards that each show one feature in detail
