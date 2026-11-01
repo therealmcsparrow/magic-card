@@ -12,6 +12,8 @@ import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTra
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
+import { loadShareKit, shareKit } from './share-kit-loader';
+import type { ShareKit } from '../contracts/share-kit';
 import { locale, t } from './i18n';
 
 // <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept external values) and export.
@@ -19,7 +21,7 @@ import { locale, t } from './i18n';
 
 type Ok = Extract<ParseResult, { ok: true }>;
 
-const KEPT = (n: TransferNote): boolean => n.code === 'external_ref' || n.code === 'card_mod';
+const KEPT = (n: TransferNote): boolean => n.code === 'card_mod';
 
 @customElement('mc-transfer-panel')
 export class TransferPanel extends LitElement {
@@ -76,8 +78,23 @@ export class TransferPanel extends LitElement {
   @state() private _choice: ClashChoice = 'keep-both';
   @state() private _format: TransferFormat = 'yaml';
   @state() private _done = '';
+  /** The share-kit chunk; import and export are offered only once it has loaded. */
+  @state() private _kit?: ShareKit;
+  @state() private _kitFailed = false;
 
   private _fileName = '';
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this._kit ??= shareKit();
+    void this._loadKit();
+  }
+
+  private async _loadKit(): Promise<ShareKit | undefined> {
+    this._kit ??= await loadShareKit();
+    this._kitFailed = !this._kit;
+    return this._kit;
+  }
 
   private _kinds(): readonly TransferKind[] {
     return this.accept ?? HOST_KINDS[this.host];
@@ -106,7 +123,7 @@ export class TransferPanel extends LitElement {
     this._fileName = fileName ?? '';
     // v2 fields and particle simulations are checked by validators that live in lazy chunks of the card; load them first
     const need = (re: RegExp, load: () => Promise<unknown>): Promise<unknown> => (re.test(text) ? load() : Promise.resolve(true));
-    const ok = await Promise.all([need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
+    const [kit, ...ok] = await Promise.all([this._loadKit(), need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
     // an image file is checked by the image-transfer chunk, so that chunk is loaded before the text is read
     const kinds = this._kinds();
     const onlyImages = kinds.length === 1 && kinds[0] === 'image';
@@ -116,9 +133,10 @@ export class TransferPanel extends LitElement {
     // an SVG text is opened here as an icon or an image, so its styles are resolved; preset files never take the resolver
     const wantsCss = looksLikeSvg(text, fileName) && (kinds.includes('icon') || onlyImages);
     const [images, css] = await Promise.all([wantsImages ? loadImageTransfer() : undefined, wantsCss ? loadSvgCss() : undefined]);
-    this._res =
-      ok.every(Boolean) && (images || !wantsImages)
-        ? parseTransfer(text, { accept: this._kinds(), fileName, images, css })
+    this._res = !kit
+      ? { ok: false, refusal: 'limits', message: t('transfer.panel.the-checker-for-shared-values-did-not-load') }
+      : ok.every(Boolean) && (images || !wantsImages)
+        ? parseTransfer(text, { accept: this._kinds(), kit, fileName, images, css })
         : { ok: false, refusal: 'limits', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
     this._choice = 'keep-both';
     this.focusResult();
@@ -165,7 +183,8 @@ export class TransferPanel extends LitElement {
   }
 
   render(): TemplateResult {
-    return html`<div class="wrap" lang=${locale()} @keydown=${this._key}>${this.mode === 'export' ? this._export() : this._import()}</div>`;
+    const body = this._kit ? (this.mode === 'export' ? this._export() : this._import()) : this._kitFailed ? notice({ tone: 'error', text: t('transfer.panel.the-checker-for-shared-values-did-not-load') }) : nothing;
+    return html`<div class="wrap" lang=${locale()} @keydown=${this._key}>${body}</div>`;
   }
 
   // ── import ──

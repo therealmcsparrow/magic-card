@@ -149,9 +149,14 @@
       "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
-      "raw": 68608,
+      "raw": 69632,
       "ceiling": 69632,
-      "note": "Preset transfer. 67 KiB, measured 68,349 (Linux build, docker node 24.22.0)."
+      "note": "Preset transfer. 68 KiB, set to the contract ceiling while the sharing-safety work lands; the final cap is measured + 5 %."
+    },
+    "magic-card-share-kit.js": {
+      "raw": 40960,
+      "ceiling": 40960,
+      "note": "Share kit: strict value checks, entity placeholders, the card reader and previews. A child of the transfer chunk, no SVG sink. Set to the contract ceiling (SHARE_KIT_CHUNK_CEILING) while the sharing-safety work lands; the final cap is measured + 5 %."
     },
     "magic-card-svg-icon.js": {
       "raw": 47104,

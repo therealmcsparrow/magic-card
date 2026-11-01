@@ -35,6 +35,10 @@
     "text": "Animaties bewaren geen auteur, dus die is niet bewaard.",
     "hash": "497e83e0"
   },
+  "transfer.envelope.card-files-are-imported-in-the-card-editor": {
+    "text": "Kaartbestanden worden geïmporteerd in de kaarteditor.",
+    "hash": "51852ea0"
+  },
   "transfer.envelope.icon-files-are-imported-in-the-card": {
     "text": "Pictogrambestanden importeer je in de kaarteditor (Mijn pictogrammen) of in de SVG-editor.",
     "hash": "49bd2338"
@@ -118,6 +122,10 @@
   "transfer.envelope.this-file-needs-a-newer-magic-card": {
     "text": "Dit bestand heeft een nieuwere Magic Card nodig (indeling {major}.x).",
     "hash": "8ef392f3"
+  },
+  "transfer.envelope.this-file-was-not-imported-item-n-path-holds": {
+    "text": "Dit bestand is niet geïmporteerd. Onderdeel {n}, {path}, bevat tekst die niet is toegestaan ({rule}). Er is niets opgeslagen.",
+    "hash": "f24ac4b4"
   },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": {
     "text": "Dit is geen Magic Card-presetbestand.",
@@ -591,6 +599,10 @@
     "text": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
     "hash": "f1d22ef2"
   },
+  "transfer.panel.the-checker-for-shared-values-did-not-load": {
+    "text": "De controle voor gedeelde waarden is niet geladen, dus er kan niets worden geïmporteerd of geëxporteerd. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "0e2d6e77"
+  },
   "transfer.panel.the-checker-for-these-animations-did-not": {
     "text": "De controle voor deze animaties is niet geladen, dus het bestand is niet gelezen. Controleer je verbinding en probeer het opnieuw.",
     "hash": "f975a0c4"
@@ -723,10 +735,6 @@
     "text": "De afronding is niet geldig, dus is weggelaten.",
     "hash": "2f933801"
   },
-  "transfer.theme.another-website": {
-    "text": "een andere website",
-    "hash": "f55dea2b"
-  },
   "transfer.theme.dark": {
     "text": "Donker",
     "hash": "60acc53f"
@@ -739,9 +747,9 @@
     "text": "\"{key}\" is geen naam van een themavariabele, dus is weggelaten.",
     "hash": "7be0630e"
   },
-  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
-    "text": "\"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
-    "hash": "e60639fa"
+  "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
+    "text": "{key} verwijst naar {hosts}, dus de waarde is weggelaten ({rule}).",
+    "hash": "79e3af4f"
   },
   "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
     "text": "\"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
@@ -754,10 +762,6 @@
   "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
     "text": "Modus {mode}: \"{key}\" is een card-mod-stijl. Hij is bewaard; met card-mod geïnstalleerd voert hij CSS uit op je dashboard.",
     "hash": "ada05ea7"
-  },
-  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
-    "text": "Modus {mode}: \"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
-    "hash": "7f6dadd9"
   },
   "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
     "text": "Modus {mode}: \"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
@@ -782,6 +786,10 @@
   "transfer.theme.the-theme-is-larger-than-kb-kb": {
     "text": "Het thema is groter dan {kb} KB.",
     "hash": "121ee242"
+  },
+  "transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": {
+    "text": "De waarde van {key} past bij geen enkel type dat deze instelling toestaat, dus is weggelaten ({rule}).",
+    "hash": "f17fd44e"
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {
     "text": "{max, plural, one {De waarde van \"{key}\" is langer dan # teken, dus is weggelaten.} other {De waarde van \"{key}\" is langer dan # tekens, dus is weggelaten.}}",

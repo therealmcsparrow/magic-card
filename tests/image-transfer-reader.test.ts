@@ -7,12 +7,15 @@ import { imageTransferKit } from '../src/transfer/image-transfer-loader';
 import { HOST_KINDS, TRANSFER_CHUNK_CEILING } from '../src/contracts/preset-transfer';
 import { IMAGE_MAX_BYTES } from '../src/contracts/mcu-library-images';
 import { MAX_IMAGE_IMPORT_BYTES } from '../src/contracts/image-editor';
+import { createShareKit } from '../src/share-kit/chunk';
+import { shareKitHelpers } from '../src/transfer/share-kit-loader';
+const kit = createShareKit(shareKitHelpers);
 
 const images = createImageTransfer({ sanitizeImage } as never, imageTransferKit);
 const SVG = '<svg viewBox="0 0 100 50"><path id="roof" data-name="Roof" d="M0 0H10V10Z" fill="var(--mc-image-main)"/><circle id="lamp" cx="5" cy="5" r="2" fill="#ff0"/></svg>';
 const env = (items: unknown[], kind = 'image') => JSON.stringify({ magic_card_export: '1.0', kind, items });
 const item = (data: Record<string, unknown>, extra: Record<string, unknown> = {}) => ({ id: 'house', name: 'House', data: { svg: SVG, view_box: '0 0 100 50', ...data }, ...extra });
-const read = (text: string, opts: Record<string, unknown> = {}) => parseTransfer(text, { accept: ['image'], images, ...opts } as never);
+const read = (text: string, opts: Record<string, unknown> = {}) => parseTransfer(text, { kit, accept: ['image'], images, ...opts } as never);
 const ok = (r: ReturnType<typeof read>) => {
   if (!r.ok) throw new Error(r.message);
   return r;
@@ -157,20 +160,20 @@ describe('image kind: reading', () => {
   });
 
   it('refuses when the image checker is not available', () => {
-    const out = parseTransfer(env([item({})]), { accept: ['image'] });
+    const out = parseTransfer(env([item({})]), { kit, accept: ['image'] });
     expect(out.ok).toBe(false);
   });
 
   it('refuses an image file on a host that does not accept images, naming where to import it', () => {
-    const out = parseTransfer(env([item({})]), { accept: ['icon'], images });
+    const out = parseTransfer(env([item({})]), { kit, accept: ['icon'], images });
     expect(!out.ok && out.refusal).toBe('wrong_kind');
     expect(!out.ok && out.message).toMatch(/Images/);
   });
 
   it('reads a plain .svg as one image where only images are accepted, and as an icon elsewhere', () => {
-    const out = parseTransfer(SVG, { accept: ['image'], images, fileName: 'a.svg' });
+    const out = parseTransfer(SVG, { kit, accept: ['image'], images, fileName: 'a.svg' });
     expect(out.ok && out.kind).toBe('image');
-    expect(parseTransfer(SVG, { accept: ['icon'], images, fileName: 'a.svg' }).ok).toBe(true);
+    expect(parseTransfer(SVG, { kit, accept: ['icon'], images, fileName: 'a.svg' }).ok).toBe(true);
   });
 });
 
@@ -199,7 +202,7 @@ describe('image kind: JSON only, large files', () => {
 
   it('refuses a large JSON text of any other kind', () => {
     const items = Array.from({ length: 6 }, (_, i) => ({ id: `i${i}`, name: 'I', data: { svg: bigSvg(200_000), path: '' } }));
-    const out = parseTransfer(env(items, 'icon'), { accept: ['icon', 'image'], images });
+    const out = parseTransfer(env(items, 'icon'), { kit, accept: ['icon', 'image'], images });
     expect(!out.ok && out.refusal).toBe('too_large');
   });
 

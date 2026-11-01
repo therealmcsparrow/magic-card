@@ -35,6 +35,10 @@
     "text": "Animations do not store an author, so it was not kept.",
     "hash": "497e83e0"
   },
+  "transfer.envelope.card-files-are-imported-in-the-card-editor": {
+    "text": "Card files are imported in the card editor.",
+    "hash": "51852ea0"
+  },
   "transfer.envelope.icon-files-are-imported-in-the-card": {
     "text": "Icon files are imported in the card editor (My icons) or the SVG editor.",
     "hash": "49bd2338"
@@ -118,6 +122,10 @@
   "transfer.envelope.this-file-needs-a-newer-magic-card": {
     "text": "This file needs a newer Magic Card (format {major}.x).",
     "hash": "8ef392f3"
+  },
+  "transfer.envelope.this-file-was-not-imported-item-n-path-holds": {
+    "text": "This file was not imported. Item {n}, {path}, holds text that is not allowed ({rule}). Nothing was saved.",
+    "hash": "f24ac4b4"
   },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": {
     "text": "This is not a Magic Card preset file.",
@@ -591,6 +599,10 @@
     "text": "The checker for images did not load, so this image was not read.",
     "hash": "f1d22ef2"
   },
+  "transfer.panel.the-checker-for-shared-values-did-not-load": {
+    "text": "The checker for shared values did not load, so nothing can be imported or exported. Check your connection and try again.",
+    "hash": "0e2d6e77"
+  },
   "transfer.panel.the-checker-for-these-animations-did-not": {
     "text": "The checker for these animations did not load, so the file was not read. Check your connection and try again.",
     "hash": "f975a0c4"
@@ -723,10 +735,6 @@
     "text": "The smoothing is not valid, so it was left out.",
     "hash": "2f933801"
   },
-  "transfer.theme.another-website": {
-    "text": "another website",
-    "hash": "f55dea2b"
-  },
   "transfer.theme.dark": {
     "text": "Dark",
     "hash": "60acc53f"
@@ -739,9 +747,9 @@
     "text": "\"{key}\" is not a theme variable name, so it was left out.",
     "hash": "7be0630e"
   },
-  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
-    "text": "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
-    "hash": "e60639fa"
+  "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
+    "text": "{key} points to {hosts}, so its value was left out ({rule}).",
+    "hash": "79e3af4f"
   },
   "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
     "text": "\"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
@@ -754,10 +762,6 @@
   "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
     "text": "{mode} mode: \"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.",
     "hash": "ada05ea7"
-  },
-  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
-    "text": "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
-    "hash": "7f6dadd9"
   },
   "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
     "text": "{mode} mode: \"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
@@ -782,6 +786,10 @@
   "transfer.theme.the-theme-is-larger-than-kb-kb": {
     "text": "The theme is larger than {kb} KB.",
     "hash": "121ee242"
+  },
+  "transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": {
+    "text": "The value of {key} does not fit any type this setting allows, so it was left out ({rule}).",
+    "hash": "f17fd44e"
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {
     "text": "{max, plural, one {The value of \"{key}\" is longer than # character, so it was left out.} other {The value of \"{key}\" is longer than # characters, so it was left out.}}",

@@ -59,6 +59,11 @@
     "note": "Import report line for an animation file that carries an author. It tells the user the author was dropped.",
     "max": 90
   },
+  "transfer.envelope.card-files-are-imported-in-the-card-editor": {
+    "text": "Card files are imported in the card editor.",
+    "note": "Hint in the import report when a card file is opened in the wrong place. It tells the user where card files are imported.",
+    "max": 70
+  },
   "transfer.envelope.icon-files-are-imported-in-the-card": {
     "text": "Icon files are imported in the card editor (My icons) or the SVG editor.",
     "note": "Hint in the import report when an icon file is opened in the wrong place. It tells the user where icon files are imported.",
@@ -191,6 +196,16 @@
     "max": 90,
     "vars": {
       "major": "The value that replaces major in the text."
+    }
+  },
+  "transfer.envelope.this-file-was-not-imported-item-n-path-holds": {
+    "text": "This file was not imported. Item {n}, {path}, holds text that is not allowed ({rule}). Nothing was saved.",
+    "note": "Import error when a value holds a break-out marker, so the whole file is refused. {n} is the item number, {path} the field path and {rule} the name of the check; the value itself is never shown.",
+    "max": 190,
+    "vars": {
+      "n": "The number of the item in the file, counted from 1.",
+      "path": "The field path of the value, for example data.primary-color.",
+      "rule": "The id of the check that refused the file, for example strict.marker."
     }
   },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": {
@@ -933,6 +948,11 @@
     "note": "Error when the code that validates image files failed to load. 'Checker' is the validator, an internal part.",
     "max": 105
   },
+  "transfer.panel.the-checker-for-shared-values-did-not-load": {
+    "text": "The checker for shared values did not load, so nothing can be imported or exported. Check your connection and try again.",
+    "note": "Error when the code that checks shared values failed to load, usually a network problem. Import and export stay off until it loads. \"Checker\" is the validator.",
+    "max": 195
+  },
   "transfer.panel.the-checker-for-these-animations-did-not": {
     "text": "The checker for these animations did not load, so the file was not read. Check your connection and try again.",
     "note": "Error when the code that validates animation files failed to load, usually a network problem. 'Checker' is the validator.",
@@ -1126,11 +1146,6 @@
     "note": "Import report line for a shape whose smoothing value is invalid. The shape is still imported without that value.",
     "max": 80
   },
-  "transfer.theme.another-website": {
-    "text": "another website",
-    "note": "Fallback wording used in place of a list of domain names when none could be worked out. Lower case, used mid-sentence.",
-    "max": 25
-  },
   "transfer.theme.dark": {
     "text": "Dark",
     "note": "Name of the dark colour mode of a theme, used as {mode} in import notes. Starts a sentence before 'mode:'.",
@@ -1152,13 +1167,14 @@
       "key": "The value that replaces key in the text."
     }
   },
-  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
-    "text": "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
-    "note": "Import warning, whole-theme version. {key} is the variable's name in quotes, {hosts} is a website domain list such as example.com. Do not translate either.",
-    "max": 150,
+  "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
+    "text": "{key} points to {hosts}, so its value was left out ({rule}).",
+    "note": "Import note for a theme value that loads from another website. {key} is the theme variable, {hosts} the website names and {rule} the name of the check.",
+    "max": 110,
     "vars": {
-      "hosts": "The value that replaces hosts in the text.",
-      "key": "The value that replaces key in the text."
+      "hosts": "The website names the value points to, joined by commas.",
+      "key": "The name of the theme variable.",
+      "rule": "The id of the check, for example strict.background."
     }
   },
   "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
@@ -1179,16 +1195,6 @@
     "note": "Import warning for one colour mode. {mode} is the translated word Light or Dark, {key} is the variable's name from the file in quotes. Keep card-mod unchanged.",
     "max": 175,
     "vars": {
-      "key": "The value that replaces key in the text.",
-      "mode": "The value that replaces mode in the text."
-    }
-  },
-  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
-    "text": "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
-    "note": "Import warning for one colour mode. {mode} is Light or Dark, {key} the variable's name in quotes, {hosts} a website domain list. Do not translate key or hosts.",
-    "max": 170,
-    "vars": {
-      "hosts": "The value that replaces hosts in the text.",
       "key": "The value that replaces key in the text.",
       "mode": "The value that replaces mode in the text."
     }
@@ -1231,6 +1237,15 @@
     "max": 55,
     "vars": {
       "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": {
+    "text": "The value of {key} does not fit any type this setting allows, so it was left out ({rule}).",
+    "note": "Import note for a theme value that is not an allowed kind of value for its variable. {key} is the theme variable and {rule} the name of the check; the value is never shown.",
+    "max": 150,
+    "vars": {
+      "key": "The name of the theme variable.",
+      "rule": "The id of the check, for example strict.colour."
     }
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {

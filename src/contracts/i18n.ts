@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.0.0.
 
 export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 7;
+export const I18N_CONTRACT_REVISION = 8;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -103,6 +103,7 @@ export const I18N_MODULES = {
   'image-tools': { bundle: 'magic-card-image-tools.js', folders: ['src/image-tools'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
+  'share-kit': { bundle: 'magic-card-share-kit.js', folders: ['src/share-kit'], tables: 'inline', status: 'complete', slice: 'sharing-safety', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
 // dashboard: false for icon-library and preset-catalogue: checked against the chunk graph, the

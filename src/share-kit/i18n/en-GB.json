@@ -1,0 +1,7 @@
+{
+  "share-kit.chunk.this-card-could-not-be-read": {
+    "text": "This card could not be read.",
+    "note": "Import error when a shared card file cannot be read. It tells the user the card was not imported.",
+    "max": 45
+  }
+}
