@@ -37,7 +37,7 @@ const CASES: Record<string, Record<string, unknown>> = {
 };
 
 const hosts: HTMLElement[] = [];
-const norm = (s: string) => s.replace(/<!--[^>]*-->/g, '').replace(/\s+/g, ' ').replace(/> </g, '><').trim();
+const norm = (s: string) => s.split('<!--').map((p, i) => (i === 0 ? p : p.slice(p.indexOf('-->') + 3))).join('').replace(/\s+/g, ' ').replace(/> </g, '><').trim();
 const draw = (c: Record<string, unknown>) => {
   const host = document.createElement('div');
   document.body.appendChild(host);
