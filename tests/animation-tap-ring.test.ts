@@ -12,7 +12,7 @@ import { styles as animChunkStyles } from '../src/anim-studio/anim-chunk';
 
 const cardCss = () => {
   const ctor = customElements.get('magic-card') as unknown as { elementStyles: Array<{ cssText: string }> };
-  return [...new Set([...ctor.elementStyles, animChunkStyles])].map((s) => s.cssText).join('\n').replace(/\s+/g, ' ');
+  return [...new Set([...ctor.elementStyles, ...animChunkStyles])].map((s) => s.cssText).join('\n').replace(/\s+/g, ' ');
 };
 
 describe('tap trigger', () => {

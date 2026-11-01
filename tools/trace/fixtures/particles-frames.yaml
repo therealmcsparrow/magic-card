@@ -1,0 +1,31 @@
+# A card with a particle simulation: falling leaves behind a text row.
+# Entities: none
+type: custom:magic-card
+name: Particles
+padding: 16px
+custom_animations:
+  leaves:
+    name: Falling leaves
+    kind: particles
+    duration: 9
+    iterations: infinite
+    particles:
+      shape: { icon: "mdi:leaf" }
+      count: 12
+      direction: fall
+      speed: 1
+      size: [10, 16]
+      colors: ["#d9b45a", "#c97b3f", "#9fc4ad"]
+      spin: 260
+      fade: true
+      spread: 100
+      gravity: 0.1
+      layer: back
+rows:
+  - id: head
+    columns:
+      - modules:
+          - { type: text, text: "Sky over the valley" }
+    design:
+      animations:
+        - { id: leaves, preset: "custom:leaves" }

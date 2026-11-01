@@ -42,6 +42,12 @@ This folder documents the Magic Card editor and every option the card supports. 
 | --- | --- |
 | [Support](support/README.md) | Ready replies for a card that stands still after a pause and for the "Magic Card was updated" message |
 
+## Older tablets
+
+| Folder | Covers |
+| --- | --- |
+| [Older Android tablets](old-tablets/README.md) | The browser floor (Android System WebView 85), what was checked on that engine, the [old engine check](old-tablets/old-engine-check.md) with the effects that do not show there, and a guest-network tip |
+
 ## Languages and accessibility
 
 | Folder | Covers |
