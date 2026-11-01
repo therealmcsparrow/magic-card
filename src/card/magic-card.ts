@@ -688,7 +688,12 @@ export class MagicCard extends LitElement {
     if (this._libDirty || changedProperties.has('_config') || changedProperties.has('_resolvedConfig')) {
       return true;
     }
-    if (changedProperties.has('preview') || changedProperties.has('editMode') || changedProperties.has('previewPaused')) return true;
+    if (changedProperties.has('hass') && (changedProperties.get('hass') as HomeAssistant | undefined)?.connected !== this.hass?.connected) return true;
+    if (changedProperties.has('preview') || changedProperties.has('editMode')) {
+      if (this._status) this._status.preview = this.preview || this.editMode;
+      return true;
+    }
+    if (changedProperties.has('previewPaused')) return true;
 
     if (changedProperties.has('hass') && this.hass) {
       const oldHass = changedProperties.get('hass') as HomeAssistant | undefined;
