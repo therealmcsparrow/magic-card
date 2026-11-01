@@ -28,11 +28,16 @@ export function droppedFrames(frames) {
   return frameGaps(frames).reduce((n, g) => n + Math.max(0, Math.round(g.gap / FRAME_MS) - 1), 0);
 }
 
-/** The largest gap that starts within windowMs after any chunk's responseEnd (both ends included). */
+/**
+ * The largest gap that is open at or after a chunk's responseEnd and starts no later than windowMs after it. A gap
+ * [start, start + gap] counts for a chunk end when start + gap > end and start <= end + windowMs. A frame that
+ * starts before the download ends and runs through it is the stall where the chunk runs, so it counts. A gap that
+ * ends exactly at responseEnd, or earlier, does not.
+ */
 export function worstAfterChunk(frames, chunkEnds, windowMs = WINDOW_MS) {
   let worst = 0;
   for (const g of frameGaps(frames)) {
-    if (chunkEnds.some((end) => g.start >= end && g.start <= end + windowMs)) worst = Math.max(worst, g.gap);
+    if (chunkEnds.some((end) => g.start + g.gap > end && g.start <= end + windowMs)) worst = Math.max(worst, g.gap);
   }
   return worst;
 }
@@ -91,7 +96,8 @@ export function createSnapshotter(getHost, types, measure) {
 /**
  * Compares two snapshots of untransformed layout boxes: [{ id, types, box: { left, top, width, height } }].
  * An element only in the settle snapshot is late, not a shift (its wrapper is in both and is compared). An
- * element only in the first snapshot is gone, which is not a shift either.
+ * element only in the first snapshot is gone, which is not a shift either. Only elements that have a type (an
+ * animated type, 'wrapper' or 'card') are compared; a change on any other element is not counted.
  */
 export function boxShifts(first, settle, tolerance = SHIFT_PX) {
   const before = new Map(first.map((e) => [e.id, e]));
@@ -100,6 +106,7 @@ export function boxShifts(first, settle, tolerance = SHIFT_PX) {
   const late = [];
   const byType = {};
   for (const e of settle) {
+    if (!e.types.length) continue;
     const was = before.get(e.id);
     if (!was) { late.push({ id: e.id, types: e.types, box: e.box }); continue; }
     const changes = {};

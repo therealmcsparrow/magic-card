@@ -3,9 +3,9 @@
 //   const browser = await launchChromium({ executablePath });
 //   const page = await browser.newPage();           // own browser context, closed with the page
 //   await page.send('Network.enable');
-//   await page.serve(url, html);                    // answers that one document request, nothing else
+//   await page.serve(url, html);                    // answers that one document; only url's origin is reached, the rest is blocked
 //   await page.send('Page.navigate', { url });
-//   const value = await page.evaluate(fn, arg);     // fn runs in the page, arg goes in as JSON
+//   const value = await page.evaluate(fn);          // fn runs in the page, nothing is pasted into it
 //   await browser.close();
 //
 // The browser starts through spawn with a fixed argument array (no shell), its own throw-away user-data dir
@@ -17,6 +17,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+const originOf = (u) => { try { return new URL(u).origin; } catch { return ''; } };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function waitForEndpoint(userDataDir, child, timeoutMs) {
@@ -48,8 +49,10 @@ export async function launchChromium({ executablePath, headless = true, timeoutM
   const userDataDir = mkdtempSync(join(tmpdir(), 'mc-c85-'));
   const args = [
     '--remote-debugging-port=0', '--remote-debugging-address=127.0.0.1', `--user-data-dir=${userDataDir}`,
-    '--no-first-run', '--no-default-browser-check', '--disable-extensions', '--disable-background-networking', '--no-sandbox',
+    '--no-first-run', '--no-default-browser-check', '--disable-extensions', '--disable-background-networking',
   ];
+  // The sandbox stays on, except for a root user on Linux (containers), where Chromium refuses to start with it.
+  if (process.platform === 'linux' && process.getuid?.() === 0) args.push('--no-sandbox');
   if (headless) args.push('--headless', '--disable-gpu');
   args.push('about:blank');
   const child = spawn(executablePath, args, { stdio: 'ignore', windowsHide: true });
@@ -106,16 +109,17 @@ export async function launchChromium({ executablePath, headless = true, timeoutM
     const page = {
       send: (method, params) => send(method, params, sessionId),
       on(method, fn) { const l = { sessionId, method, fn }; listeners.push(l); own.push(l); },
-      /** Runs fn(arg) in the page and returns its (awaited) value. arg is serialised as JSON. */
-      async evaluate(fn, arg) {
-        const expression = `(${fn.toString()})(${JSON.stringify(arg ?? null)})`;
+      /** Runs fn() in the page and returns its (awaited) value. fn is the only source text sent; it takes no data. */
+      async evaluate(fn) {
+        const expression = `(${fn.toString()})()`;
         const r = await send('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true }, sessionId);
         if (r.exceptionDetails) throw new Error('page evaluation failed: ' + (r.exceptionDetails.exception?.description ?? r.exceptionDetails.text));
         return r.result.value;
       },
-      /** Answers the document request for url with html; every other request continues untouched. */
+      /** Answers the document request for url with html. Requests to url's origin continue; every other request is blocked. */
       async serve(url, html) {
-        await send('Fetch.enable', { patterns: [{ urlPattern: url, requestStage: 'Request' }] }, sessionId);
+        const origin = new URL(url).origin;
+        await send('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] }, sessionId);
         page.on('Fetch.requestPaused', (e) => {
           if (e.request.url === url) {
             send('Fetch.fulfillRequest', {
@@ -123,8 +127,10 @@ export async function launchChromium({ executablePath, headless = true, timeoutM
               responseHeaders: [{ name: 'Content-Type', value: 'text/html; charset=utf-8' }],
               body: Buffer.from(html, 'utf8').toString('base64'),
             }, sessionId).catch(() => {});
-          } else {
+          } else if (originOf(e.request.url) === origin) {
             send('Fetch.continueRequest', { requestId: e.requestId }, sessionId).catch(() => {});
+          } else {
+            send('Fetch.failRequest', { requestId: e.requestId, errorReason: 'BlockedByClient' }, sessionId).catch(() => {});
           }
         });
       },

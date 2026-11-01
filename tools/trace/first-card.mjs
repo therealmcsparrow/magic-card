@@ -50,11 +50,13 @@ const port = Number(opt('port', '18123'));
 const runs = Number(opt('runs', '3'));
 const asJson = args.includes('--json');
 const profileName = opt('profile', '');
-if (profileName && profileName !== 'c85') throw new Error('--profile must be c85');
 const c85 = profileName === 'c85';
 const findFx = args.includes('--find-fx');
-if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('--port must be 1-65535');
-if (!Number.isInteger(runs) || runs < 1 || runs > 15) throw new Error('--runs must be 1-15');
+function checkArgs() {
+  if (profileName && profileName !== 'c85') throw new Error('--profile must be c85');
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('--port must be 1-65535');
+  if (!Number.isInteger(runs) || runs < 1 || runs > 15) throw new Error('--runs must be 1-15');
+}
 
 const FIX_DIR = join(ROOT, 'tools', 'fixtures', 'gallery');
 const cls = JSON.parse(readFileSync(join(FIX_DIR, 'classification.json'), 'utf8'));
@@ -198,6 +200,7 @@ async function oneRun(browser, config) {
 
 
 const FRAME_BUDGET_MS = 50;
+const assertChrome85 = (product) => { if (!/Chrome\/85\./.test(product)) throw new Error(`CHROME85_PATH must be Chromium 85, got ${product}`); };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // One run in the old Chromium build: the first-card columns plus the frame measures and the box snapshots.
@@ -225,6 +228,7 @@ async function oneRunC85(browser, config) {
     await page.send('Page.navigate', { url: PAGE_URL });
     const until = Date.now() + 120000;
     while (!(await page.evaluate(() => window.__done === true))) {
+      if (errors.length) throw new Error(`page error before the card showed: ${errors[0]}`);
       if (Date.now() > until) throw new Error('the card never showed');
       await sleep(100);
     }
@@ -264,6 +268,7 @@ async function runC85(out) {
   const browser = await launchChromium({ executablePath: CHROME85 });
   try {
     out.chrome = await browser.version();
+    assertChrome85(out.chrome);
     for (const id of ids) {
       const config = loadConfig(id);
       const rs = [];
@@ -334,6 +339,7 @@ async function findFxFixture() {
   if (!CHROME85) throw new Error('set CHROME85_PATH to the browser to scan with');
   const browser = await launchChromium({ executablePath: CHROME85 });
   try {
+    assertChrome85(await browser.version());
     for (const f of readdirSync(FIX_DIR).filter((n) => /^\d{3}\.yaml$/.test(n)).sort()) {
       const id = f.slice(0, 3);
       const page = await browser.newPage();
@@ -367,6 +373,7 @@ function printC85(out) {
     if (f.pinned_missing) console.log(`  MISSING: no ${f.pinned_type} element rendered`);
     const errs = f.all_runs.flatMap((r) => r.errors); if (errs.length) console.log('  page errors: ' + [...new Set(errs)].join(' | '));
     if (f.frames.worst_after_chunk_ms > FRAME_BUDGET_MS) console.log(`  warning: worst frame after a chunk is over ${FRAME_BUDGET_MS} ms`);
+    if (f.frames.worst_ms > FRAME_BUDGET_MS) console.log(`  warning: worst frame is over ${FRAME_BUDGET_MS} ms`);
   }
 }
 
@@ -407,15 +414,16 @@ async function main() {
   const missing = fx.some((f) => f.pinned_missing);
   if (!asJson) {
     if (missing) console.log('exit 2: a pinned fixture rendered no element of its type');
-    else if (shifted) console.log(`exit 1: box shift or layout-shift sum above ${LAYOUT_SHIFT_LIMIT}`);
+    else if (shifted) console.log(`exit 1: box shift of an animated element, its wrapper or the card, or layout-shift sum above ${LAYOUT_SHIFT_LIMIT}`);
     else console.log('timing is warn-only; exit 0');
   }
   return missing ? 2 : shifted ? 1 : 0;
 }
 
 try {
+  checkArgs();
   process.exitCode = await main();
 } catch (e) {
   console.error(e instanceof Error ? e.message : String(e));
-  process.exitCode = c85 || findFx ? 3 : 1;
+  process.exitCode = profileName || findFx ? 3 : 1;
 }
