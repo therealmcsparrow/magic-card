@@ -63,6 +63,7 @@ import {
 } from './model';
 import { endDrag, stepOrder, groupBlocked, moveMenu, type DragState } from './layers';
 import { PanelLips } from '../ui-kit/controllers/panel-lips';
+import { DirectionController } from '../ui-kit/controllers/direction';
 import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
 import { lipSpecs, lipStrings } from './lips';
 import { alignItems, combineItems, emptyMenu, pathItems, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
@@ -115,6 +116,7 @@ const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 
 export class McSvgEditor extends LitElement implements StageHost {
   static styles = editorStyles;
+  private readonly _dir = new DirectionController(this);
   static properties = {
     hass: { attribute: false },
     source: { attribute: false },
