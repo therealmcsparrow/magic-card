@@ -55,8 +55,31 @@ describe('pinned-action check', () => {
       expect(out[0]).toContain('cannot read');
     }
   });
-  it('does not read uses inside a run line, a comment or a trailing comment', () => {
-    expect(checkPins('run: echo uses: a/b@v4\n# { uses: a/b@v4 }\n- name: x # "uses": y')).toEqual([]);
+  it('fails closed on every other form that holds the word uses', () => {
+    for (const text of [
+      '- { name: "a #b", uses: a/b@v4 }',
+      `- { name: "a #b", uses: a/b@${sha} # v1 }`,
+      '- ? uses\n  : a/b@v4',
+      '- &k uses: a/b@v4',
+      '- !!str uses: a/b@v4',
+      '- name: x\ruses: a/b@v4',
+      '- name: x\r\n  uses: a/b@v4\r- run: y',
+      '- uses:\n    a/b@v4',
+      '- uses: >\n    a/b@v4',
+      '- uses: *x',
+      '- {\n    uses: a/b@v4\n  }',
+      '- [{ uses: a/b@v4 }]',
+      '- name: this uses a cache',
+      `- uses: a/b@${sha} # v1 uses x`,
+      '- run: |\n    echo hi\n  uses: a/b@v4',
+      `- uses: "a/b@${sha}" # v1`,
+    ]) expect(checkPins(text, 'a.yml'), JSON.stringify(text)).not.toHaveLength(0);
+  });
+  it('reports a bare CR on the same line number as a line feed', () => {
+    expect(checkPins('a: 1\rb: 2\r- uses: a/b@v4', 'a.yml')[0]).toContain('a.yml:3');
+  });
+  it('does not read uses inside a run line, a run block or a whole-line comment', () => {
+    expect(checkPins('run: echo uses: a/b@v4\n# { uses: a/b@v4 }\n- run: |\n    echo uses: a/b@v4\n\n    uses: x\n- name: x')).toEqual([]);
   });
   it('refuses a comment with extra words after the version', () => {
     expect(checkPins(`- uses: a/b@${sha} # v1 and more`)).toHaveLength(1);
