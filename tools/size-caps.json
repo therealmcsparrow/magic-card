@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 74067,
+        "cap": 74225,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 74067
+        "measured": 74225
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 63272,
-      "measured": 63272
+      "cap": 63327,
+      "measured": 63327
     }
   },
   "files": {
@@ -191,7 +191,7 @@
     "magic-card-status.js": {
       "raw": 8192,
       "ceiling": 16384,
-      "note": "8 KiB, measured 7,667 (Windows build, re-measure on the Linux reference build) + 5 %, rounded up to 1 KiB. The corner badge, its icons and the connection and not-updated sentences of the quiet status chunk. The contract ceiling is 16,384 B (lazy-module STATUS_CHUNK_CEILING)."
+      "note": "8 KiB, measured 7,667 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The corner badge, its icons and the connection and not-updated sentences of the quiet status chunk. The contract ceiling is 16,384 B (lazy-module STATUS_CHUNK_CEILING)."
     },
     "magic-card-pause.js": {
       "raw": 4096,
@@ -1023,6 +1023,18 @@
       "field": "/entry/br/cap",
       "from": 62535,
       "to": 63272
+    },
+    {
+      "id": "entry-stage4-74067-to-74225",
+      "field": "/entry/stages/3/cap",
+      "from": 74067,
+      "to": 74225
+    },
+    {
+      "id": "entry-br-63272-to-63327",
+      "field": "/entry/br/cap",
+      "from": 63272,
+      "to": 63327
     }
   ]
 }
