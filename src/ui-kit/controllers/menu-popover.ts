@@ -1,4 +1,6 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { alignedLeft } from '../place';
+import { readDirection } from './direction';
 
 /** True when the browser supports the Popover API (top-layer rendering). */
 export function supportsPopover(): boolean {
@@ -10,7 +12,7 @@ export interface MenuPopoverOptions {
   menu: () => HTMLElement | null | undefined;
   /** Called after the menu closed (host resets its own open state here). */
   onClose?: () => void;
-  /** Horizontal alignment with the trigger: 'start' = left edges, 'end' = right edges. */
+  /** Horizontal alignment with the trigger: 'start' = inline-start edges, 'end' = inline-end edges. */
   align?: 'start' | 'end';
   /**
    * Without the Popover API: still position with fixed viewport coordinates (the menu's own CSS is
@@ -170,7 +172,7 @@ export class MenuPopover implements ReactiveController {
     if (vh > 0 && h > room) el.style.maxHeight = `${Math.max(120, room)}px`;
     const height = Math.min(h, vh > 0 ? Math.max(120, room) : h);
     const top = up ? Math.max(EDGE, r.top - GAP - height) : r.bottom + GAP;
-    let left = this.opts.align === 'end' && !p ? r.right - w : r.left;
+    let left = p ? r.left : alignedLeft(r, w, this.opts.align === 'end' ? 'end' : 'start', readDirection(this.host) === 'rtl');
     if (vw > 0) left = Math.min(left, vw - w - EDGE);
     left = Math.max(EDGE, left);
     Object.assign(el.style, { top: `${Math.round(top)}px`, left: `${Math.round(left)}px`, right: 'auto', bottom: 'auto' });

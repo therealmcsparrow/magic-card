@@ -1,5 +1,7 @@
 /* RovingFocus: arrow keys, Home and End over a group with one tab stop. */
 
+import { readDirection } from './direction';
+
 export type RovingOrientation = 'horizontal' | 'vertical' | 'both';
 
 const KEYS: Record<RovingOrientation, string[]> = {
@@ -8,13 +10,14 @@ const KEYS: Record<RovingOrientation, string[]> = {
   both: ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'],
 };
 
-/** The index the key moves to, or -1 when the key is not a roving key. Disabled items are skipped. */
+/** The index the key moves to, or -1 when the key is not a roving key. Disabled items are skipped; `rtl` swaps ArrowLeft and ArrowRight. */
 export function rovingTarget(
   key: string,
   current: number,
   items: readonly { disabled?: boolean }[],
   orientation: RovingOrientation = 'horizontal',
   wrap = true,
+  rtl = false,
 ): number {
   if (!KEYS[orientation].includes(key) || !items.length) return -1;
   const n = items.length;
@@ -30,7 +33,7 @@ export function rovingTarget(
   };
   if (key === 'Home') return ok(0) ? 0 : step(0, 1);
   if (key === 'End') return ok(n - 1) ? n - 1 : step(n - 1, -1);
-  const back = key === 'ArrowLeft' || key === 'ArrowUp';
+  const back = key === 'ArrowUp' || key === (rtl ? 'ArrowRight' : 'ArrowLeft');
   return step(current < 0 ? (back ? 0 : -1) : current, back ? -1 : 1);
 }
 
@@ -52,7 +55,7 @@ export class RovingFocus {
     const group = e.currentTarget as HTMLElement;
     const els = Array.from(group.querySelectorAll<HTMLElement>(this.opts.items));
     const cur = els.indexOf(e.composedPath().find((n) => els.includes(n as HTMLElement)) as HTMLElement);
-    const to = rovingTarget(e.key, cur, els.map((el) => ({ disabled: el.hasAttribute('disabled') })), this.opts.orientation, this.opts.wrap);
+    const to = rovingTarget(e.key, cur, els.map((el) => ({ disabled: el.hasAttribute('disabled') })), this.opts.orientation, this.opts.wrap, readDirection(group) === 'rtl');
     if (to < 0) return;
     e.preventDefault();
     e.stopPropagation();
