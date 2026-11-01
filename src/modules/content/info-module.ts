@@ -1,7 +1,7 @@
 import { html, TemplateResult, nothing } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HomeAssistant, InfoModuleConfig } from '../../types';
+import { CardModule, HassEntity, HomeAssistant, InfoModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
@@ -11,6 +11,7 @@ import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
+import { notifyChunks } from '../../utils/lazy-chunk';
 
 /**
  * Name and state toggles: both on when neither key is set (new YAML, like the default).
@@ -19,6 +20,28 @@ import { lm } from '../../i18n/labels/mark';
 export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolean } {
   if (c.show_name === undefined && c.show_state === undefined) return { name: true, state: true };
   return { name: !!c.show_name, state: !!c.show_state };
+}
+
+let helpersAsked = false;
+
+/** Asks HA once per page for the card helpers, whose row elements define ha-relative-time, and renders every card again when it arrives. */
+function askForRelativeTime(): void {
+  if (helpersAsked) return;
+  helpersAsked = true;
+  const load = (window as unknown as { loadCardHelpers?: () => Promise<unknown> }).loadCardHelpers;
+  if (typeof load === 'function') void Promise.resolve().then(load).catch(() => undefined);
+  void customElements.whenDefined('ha-relative-time').then(notifyChunks);
+}
+
+/** The entity's last change in words through HA's own element; nothing for an invalid time or while HA has not defined the element. */
+function lastChanged(entity: HassEntity | undefined, hass?: HomeAssistant): TemplateResult | '' {
+  const at: unknown = entity?.last_changed;
+  if (typeof at !== 'string' || Number.isNaN(Date.parse(at))) return '';
+  if (!customElements.get('ha-relative-time')) {
+    askForRelativeTime();
+    return '';
+  }
+  return html`<ha-relative-time .hass=${hass} .datetime=${at}></ha-relative-time>`;
 }
 
 class InfoModule extends BaseMagicModule {
@@ -58,7 +81,12 @@ class InfoModule extends BaseMagicModule {
       const v = formatEntityValue(hass, entity, c.attribute || undefined);
       state = c.show_unit === false ? v.value : v.text;
     }
-    const secondary = entity && c.secondary_info ? formatEntityValue(hass, entity, c.secondary_info).text : '';
+    const secondary =
+      c.secondary_info === 'last-changed'
+        ? lastChanged(entity, hass)
+        : entity && c.secondary_info
+          ? formatEntityValue(hass, entity, c.secondary_info).text
+          : '';
 
     const lines = html`
       ${showName ? html`<span class="mc-info-name" data-mc-part="name">${name}</span>` : nothing}
