@@ -340,3 +340,4 @@ theme-presets	theme-presets.library.low-contrast-sage-on-soft-grey	Low-contrast 
 theme-presets	theme-presets.library.neutral-blue-grey-for-any-room	Neutral blue-gray for any room.
 theme-presets	theme-presets.picker.independent-colour-schemes-made-for	Independent color schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.
 theme-presets	theme-presets.picker.presets-use-genre-and-colour-words-not	Presets use genre and color words, not titles. Try one of these:
+share-kit	share-kit.theme-check.text-on-the-primary-colour	Text on the primary color

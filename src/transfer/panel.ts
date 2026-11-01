@@ -13,8 +13,9 @@ import { checkCompressed, checkTextSize } from './safe-parse';
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
-import { loadMapping, loadNotice, loadShareKit, shareKit } from './share-kit-loader';
+import { loadAnimPreview, loadMapping, loadNotice, loadShareKit, loadThemeCheck, shareKit } from './share-kit-loader';
 import type { CardKeyLists, ShareKit } from '../contracts/share-kit';
+import type { ThemeDoc } from '../contracts/theme-editor';
 import { locale, t } from './i18n';
 
 // <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept external values) and export.
@@ -89,6 +90,11 @@ export class TransferPanel extends LitElement {
   /** The mapping step, from the same chunk; the entity ids chosen for placeholders. */
   @state() private _mapper?: typeof import('../share-kit/mapping');
   @state() private _map: Record<string, string> = {};
+  /** Contrast warnings of an imported theme, one list per item, from the theme check in the same chunk. */
+  @state() private _contrast: Array<{ name: string; lines: string[] }> = [];
+  @state() private _contrastHeading = '';
+  /** True once the animation preview element of the same chunk is defined. */
+  @state() private _animPreview = false;
 
   private _fileName = '';
 
@@ -143,13 +149,30 @@ export class TransferPanel extends LitElement {
     // an SVG text is opened here as an icon or an image, so its styles are resolved; preset files never take the resolver
     const wantsCss = looksLikeSvg(text, fileName) && (kinds.includes('icon') || onlyImages);
     const [images, css] = await Promise.all([wantsImages ? loadImageTransfer() : undefined, wantsCss ? loadSvgCss() : undefined]);
-    this._res = !kit
+    const res: ParseResult = !kit
       ? { ok: false, refusal: 'not_parseable', message: t('transfer.panel.the-checker-for-shared-values-did-not-load') }
       : ok.every(Boolean) && (images || !wantsImages)
         ? parseTransfer(text, { accept: this._kinds(), kit, fileName, images, css, card: this.card })
         : { ok: false, refusal: 'not_parseable', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
+    this._contrast = [];
+    if (res.ok) await this._checkPreviews(res);
+    this._res = res;
     this._choice = 'keep-both';
     this.focusResult();
+  }
+
+  /** A theme's contrast warnings and an animation's preview element, both from the share-kit chunk. */
+  private async _checkPreviews(r: Ok): Promise<void> {
+    if (r.kind === 'animation') {
+      this._animPreview = await loadAnimPreview();
+      return;
+    }
+    const probe = this.renderRoot.querySelector<HTMLElement>('#probe');
+    if (r.kind !== 'theme' || !probe) return;
+    const check = await loadThemeCheck();
+    if (!check) return;
+    this._contrastHeading = check.contrastHeading();
+    this._contrast = r.items.map((i) => ({ name: i.name, lines: check.contrastWarnings(check.checkTheme(i.data as ThemeDoc, probe)) })).filter((i) => i.lines.length);
   }
 
   private async _onFile(e: Event): Promise<void> {
@@ -234,6 +257,7 @@ export class TransferPanel extends LitElement {
       </div>
       ${r?.ok ? html`<p id="res" class="res" tabindex="-1" role="status">${this._summary(r)}</p>` : r ? html`<div id="res" tabindex="-1">${notice({ tone: 'error', text: r.message })}</div>` : nothing}
       ${r?.ok ? this._result(r) : nothing}
+      <span id="probe" hidden aria-hidden="true"></span>
     `;
   }
 
@@ -274,6 +298,20 @@ export class TransferPanel extends LitElement {
               </ul>
             </div>
           </div>`
+        : nothing}
+      ${this._contrast.length
+        ? html`<div class="notice warn" role="status" data-contrast-warning>
+            ${glyph('help', 20)}
+            <div class="body">
+              <strong>${this._contrastHeading}</strong>
+              <ul>
+                ${this._contrast.flatMap((i) => i.lines.map((l) => html`<li>${i.name}: ${l}</li>`))}
+              </ul>
+            </div>
+          </div>`
+        : nothing}
+      ${r.kind === 'animation' && this._animPreview
+        ? html`<div data-share-anim-previews>${r.items.map((i) => html`<mc-anim-preview .doc=${this._kit!.previewSafe('animation', i.data as never)}></mc-anim-preview>`)}</div>`
         : nothing}
       ${run.actions.length
         ? html`<div data-share-actions><strong>${w.actionsHeading()}</strong><p class="help">${w.actionsHelp()}</p><ul>${run.actions.map((a) => html`<li><span class="mono">${line(a)}</span></li>`)}</ul></div>`

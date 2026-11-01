@@ -53,6 +53,12 @@ export const loadMapping = (): Promise<typeof import('../share-kit/mapping') | u
 /** The mapping step on a saved item (defines <mc-map-entities>), from the same chunk; false when it does not load. */
 export const loadMapStep = (): Promise<boolean> => import(/* webpackChunkName: "share-kit" */ '../share-kit/map-step').then(() => true, () => false);
 
+/** The contrast check of an imported theme, from the same chunk; undefined when it does not load. */
+export const loadThemeCheck = (): Promise<typeof import('../share-kit/theme-check') | undefined> => import(/* webpackChunkName: "share-kit" */ '../share-kit/theme-check').catch(() => undefined);
+
+/** The animation preview (defines <mc-anim-preview>), from the same chunk; false when it does not load. */
+export const loadAnimPreview = (): Promise<boolean> => import(/* webpackChunkName: "share-kit" */ '../share-kit/anim-preview').then(() => true, () => false);
+
 /** Tests: forget the loaded chunk. */
 export function __resetShareKitForTests(): void {
   pending = undefined;

@@ -98,5 +98,41 @@
   "share-kit.notice.templates-in-this-card-help": {
     "text": "Deze draaien op je Home Assistant en kunnen de status van je entiteiten lezen. Hier worden ze alleen als tekst getoond en niet uitgevoerd.",
     "hash": "6a0f473d"
+  },
+  "share-kit.theme-check.dark": {
+    "text": "donkere",
+    "hash": "e6bb5689"
+  },
+  "share-kit.theme-check.light": {
+    "text": "lichte",
+    "hash": "99a70261"
+  },
+  "share-kit.theme-check.low-contrast-heading": {
+    "text": "Een deel van de tekst in dit thema is moeilijk te lezen",
+    "hash": "0e5056ee"
+  },
+  "share-kit.theme-check.magic-card-text-on-the-magic-card-background": {
+    "text": "Magic Card-tekst op de Magic Card-achtergrond",
+    "hash": "e28cbb92"
+  },
+  "share-kit.theme-check.main-text-on-the-card-background": {
+    "text": "Hoofdtekst op de kaartachtergrond",
+    "hash": "a54d167d"
+  },
+  "share-kit.theme-check.main-text-on-the-page-background": {
+    "text": "Hoofdtekst op de paginaachtergrond",
+    "hash": "aefcf53a"
+  },
+  "share-kit.theme-check.pair-in-mode": {
+    "text": "{pair} in de {mode} modus heeft een contrast van {ratio}:1. Tekst heeft minstens {min}:1 nodig.",
+    "hash": "e8ef5761"
+  },
+  "share-kit.theme-check.secondary-text-on-the-card-background": {
+    "text": "Secundaire tekst op de kaartachtergrond",
+    "hash": "3866d6bf"
+  },
+  "share-kit.theme-check.text-on-the-primary-colour": {
+    "text": "Tekst op de primaire kleur",
+    "hash": "fc382314"
   }
 }

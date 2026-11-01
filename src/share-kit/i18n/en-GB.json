@@ -146,5 +146,56 @@
     "text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
     "note": "Help line under the templates heading of a shared card import.",
     "max": 170
+  },
+  "share-kit.theme-check.dark": {
+    "text": "dark",
+    "note": "The word for dark mode, placed in the sentence \"... in {mode} mode ...\".",
+    "max": 20
+  },
+  "share-kit.theme-check.light": {
+    "text": "light",
+    "note": "The word for light mode, placed in the sentence \"... in {mode} mode ...\".",
+    "max": 20
+  },
+  "share-kit.theme-check.low-contrast-heading": {
+    "text": "Some text in this theme is hard to read",
+    "note": "Heading of the warning shown before Confirm when an imported theme has a text and background colour pair that is too close in contrast.",
+    "max": 70
+  },
+  "share-kit.theme-check.magic-card-text-on-the-magic-card-background": {
+    "text": "Magic Card text on the Magic Card background",
+    "note": "Name of a colour pair in the contrast warning: the Magic Card text colour on the Magic Card background.",
+    "max": 70
+  },
+  "share-kit.theme-check.main-text-on-the-card-background": {
+    "text": "Main text on the card background",
+    "note": "Name of a colour pair in the contrast warning: the main text colour on the card background.",
+    "max": 60
+  },
+  "share-kit.theme-check.main-text-on-the-page-background": {
+    "text": "Main text on the page background",
+    "note": "Name of a colour pair in the contrast warning: the main text colour on the dashboard page background.",
+    "max": 60
+  },
+  "share-kit.theme-check.pair-in-mode": {
+    "text": "{pair} in {mode} mode has a contrast of {ratio}:1. Text needs at least {min}:1.",
+    "note": "One line of the contrast warning. {pair} is a name such as \"Main text on the card background\", {mode} is \"light\" or \"dark\", {ratio} and {min} are numbers.",
+    "max": 140,
+    "vars": {
+      "min": "The lowest contrast ratio allowed, 4.5.",
+      "mode": "The word for the mode: light or dark.",
+      "pair": "The name of the text and background colour pair, for example Main text on the card background.",
+      "ratio": "The contrast ratio found, a number such as 3.2."
+    }
+  },
+  "share-kit.theme-check.secondary-text-on-the-card-background": {
+    "text": "Secondary text on the card background",
+    "note": "Name of a colour pair in the contrast warning: the secondary text colour on the card background.",
+    "max": 60
+  },
+  "share-kit.theme-check.text-on-the-primary-colour": {
+    "text": "Text on the primary colour",
+    "note": "Name of a colour pair in the contrast warning: the text colour used on top of the theme primary colour.",
+    "max": 60
   }
 }
