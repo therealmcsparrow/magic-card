@@ -48,8 +48,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 63327,
-      "measured": 63327
+      "cap": 63336,
+      "measured": 63336
     }
   },
   "files": {
@@ -1013,28 +1013,16 @@
       "to": 62535
     },
     {
-      "id": "entry-stage4-73082-to-74067",
+      "id": "entry-stage4-73082-to-74225",
       "field": "/entry/stages/3/cap",
       "from": 73082,
-      "to": 74067
-    },
-    {
-      "id": "entry-br-62535-to-63272",
-      "field": "/entry/br/cap",
-      "from": 62535,
-      "to": 63272
-    },
-    {
-      "id": "entry-stage4-74067-to-74225",
-      "field": "/entry/stages/3/cap",
-      "from": 74067,
       "to": 74225
     },
     {
-      "id": "entry-br-63272-to-63327",
+      "id": "entry-br-62535-to-63336",
       "field": "/entry/br/cap",
-      "from": 63272,
-      "to": 63327
+      "from": 62535,
+      "to": 63336
     }
   ]
 }
