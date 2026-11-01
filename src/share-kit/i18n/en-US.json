@@ -1,7 +1,35 @@
 {
-  "share-kit.chunk.this-card-could-not-be-read": {
-    "text": "This card could not be read.",
-    "hash": "47d06482"
+  "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
+    "text": "A module of an unknown type was left out.",
+    "hash": "326212a3"
+  },
+  "share-kit.card.a-style-line-was-left-out-because-its-name-is": {
+    "text": "A style line was left out because its name is not allowed.",
+    "hash": "0960b85d"
+  },
+  "share-kit.card.an-action-was-left-out-because-its-web-address-is": {
+    "text": "An action was left out because its web address is not a web link or a path on this dashboard ({rule}).",
+    "hash": "e5b5c51f"
+  },
+  "share-kit.card.key-is-not-a-card-setting-so-it-was-left": {
+    "text": "{key} is not a card setting, so it was left out.",
+    "hash": "289aff08"
+  },
+  "share-kit.card.name-points-to-another-website-so-it-was-left": {
+    "text": "{name} points to another website, so it was left out ({rule}).",
+    "hash": "c97ab18c"
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "hash": "9551f0e5"
+  },
+  "share-kit.card.name-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{name} was left out because its value is not allowed ({rule}).",
+    "hash": "dd46935d"
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": {
+    "text": "This is not a Magic Card card.",
+    "hash": "d853edff"
   },
   "share-kit.notice.author-name-is-optional": {
     "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",

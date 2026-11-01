@@ -1,7 +1,59 @@
 {
-  "share-kit.chunk.this-card-could-not-be-read": {
-    "text": "This card could not be read.",
-    "note": "Import error when a shared card file cannot be read. It tells the user the card was not imported.",
+  "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
+    "text": "A module of an unknown type was left out.",
+    "note": "Import note for a module in a shared card whose type Magic Card does not know.",
+    "max": 60
+  },
+  "share-kit.card.a-style-line-was-left-out-because-its-name-is": {
+    "text": "A style line was left out because its name is not allowed.",
+    "note": "Import note for a line in the free-form style (CSS) of a shared card whose property name is not valid.",
+    "max": 75
+  },
+  "share-kit.card.an-action-was-left-out-because-its-web-address-is": {
+    "text": "An action was left out because its web address is not a web link or a path on this dashboard ({rule}).",
+    "note": "Import note for a tap, hold or double-tap action in a shared card whose link is not a normal web link, for example one that starts with javascript:. {rule} is the id of the check.",
+    "max": 140,
+    "vars": {
+      "rule": "The id of the check, for example strict.action-url."
+    }
+  },
+  "share-kit.card.key-is-not-a-card-setting-so-it-was-left": {
+    "text": "{key} is not a card setting, so it was left out.",
+    "note": "Import note for a key in a shared card that Magic Card does not know. {key} is the key name.",
+    "max": 85,
+    "vars": {
+      "key": "The name of the key that was left out."
+    }
+  },
+  "share-kit.card.name-points-to-another-website-so-it-was-left": {
+    "text": "{name} points to another website, so it was left out ({rule}).",
+    "note": "Import note for a card value that loads from another website. {name} is the setting, {rule} the id of the check. The website names are listed beside it.",
+    "max": 100,
+    "vars": {
+      "name": "The name of the setting that was left out.",
+      "rule": "The id of the check, for example strict.host."
+    }
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "note": "Import warning for a card value that points to a /local/ file. {name} is the setting in quotes; do not translate it. The sharer is the person who made the file.",
+    "max": 135,
+    "vars": {
+      "name": "The name of the setting that uses the file."
+    }
+  },
+  "share-kit.card.name-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{name} was left out because its value is not allowed ({rule}).",
+    "note": "Import note for a card value that fits no allowed type. {name} is the setting, {rule} the id of the check. The value itself is never shown.",
+    "max": 100,
+    "vars": {
+      "name": "The name of the setting that was left out.",
+      "rule": "The id of the check, for example strict.colour."
+    }
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": {
+    "text": "This is not a Magic Card card.",
+    "note": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported.",
     "max": 45
   },
   "share-kit.notice.author-name-is-optional": {

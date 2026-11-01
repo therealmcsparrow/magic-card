@@ -1,7 +1,35 @@
 {
-  "share-kit.chunk.this-card-could-not-be-read": {
-    "text": "Deze kaart kon niet worden gelezen.",
-    "hash": "47d06482"
+  "share-kit.card.a-module-of-an-unknown-type-was-left-out": {
+    "text": "Een module van een onbekend type is weggelaten.",
+    "hash": "326212a3"
+  },
+  "share-kit.card.a-style-line-was-left-out-because-its-name-is": {
+    "text": "Een stijlregel is weggelaten omdat de naam niet is toegestaan.",
+    "hash": "0960b85d"
+  },
+  "share-kit.card.an-action-was-left-out-because-its-web-address-is": {
+    "text": "Een actie is weggelaten omdat het webadres geen weblink of pad op dit dashboard is ({rule}).",
+    "hash": "e5b5c51f"
+  },
+  "share-kit.card.key-is-not-a-card-setting-so-it-was-left": {
+    "text": "{key} is geen kaartinstelling en is weggelaten.",
+    "hash": "289aff08"
+  },
+  "share-kit.card.name-points-to-another-website-so-it-was-left": {
+    "text": "{name} verwijst naar een andere website en is weggelaten ({rule}).",
+    "hash": "c97ab18c"
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "text": "\"{name}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
+    "hash": "9551f0e5"
+  },
+  "share-kit.card.name-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{name} is weggelaten omdat de waarde niet is toegestaan ({rule}).",
+    "hash": "dd46935d"
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": {
+    "text": "Dit is geen Magic Card-kaart.",
+    "hash": "d853edff"
   },
   "share-kit.notice.author-name-is-optional": {
     "text": "De naam van de maker is optioneel. Een naam is een persoonsgegeven. Als je die invult, wordt die in het bestand geschreven en kan iedereen die het bestand krijgt de naam lezen. Gebruik gerust een bijnaam en voeg geen e-mailadres of contactgegevens toe. Laat het veld leeg om zonder naam te delen.",
