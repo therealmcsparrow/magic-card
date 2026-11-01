@@ -33,31 +33,27 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     color: var(--mc-on-accent);
   }
 
-  /* placement: the physical value first, then the logical one */
+  /* placement: the physical value first, then the two-value logical shorthand; the corners stay physical */
   .lip[data-side='start'] {
     left: var(--mc-lip-at-start, 0);
-    inset-inline-start: var(--mc-lip-at-start, 0);
+    right: auto;
+    inset-inline: var(--mc-lip-at-start, 0) auto;
     border-left-width: 0;
+    border-inline-width: 0 1px;
     border-radius: 0 8px 8px 0;
   }
   .lip[data-side='start'][data-dir='rtl'] {
-    left: auto;
-    right: var(--mc-lip-at-start, 0);
-    border-left-width: 1px;
-    border-right-width: 0;
     border-radius: 8px 0 0 8px;
   }
   .lip[data-side='end'] {
     right: var(--mc-lip-at-end, 0);
-    inset-inline-end: var(--mc-lip-at-end, 0);
+    left: auto;
+    inset-inline: auto var(--mc-lip-at-end, 0);
     border-right-width: 0;
+    border-inline-width: 1px 0;
     border-radius: 8px 0 0 8px;
   }
   .lip[data-side='end'][data-dir='rtl'] {
-    right: auto;
-    left: var(--mc-lip-at-end, 0);
-    border-right-width: 1px;
-    border-left-width: 0;
     border-radius: 0 8px 8px 0;
   }
 
@@ -133,19 +129,15 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     }
     .lip[data-side='start']::after {
       left: 100%;
+      right: auto;
+      inset-inline: 100% auto;
       width: 17px;
     }
     .lip[data-side='end']::after {
       right: 100%;
-      width: 17px;
-    }
-    .lip[data-side='start'][data-dir='rtl']::after {
       left: auto;
-      right: 100%;
-    }
-    .lip[data-side='end'][data-dir='rtl']::after {
-      right: auto;
-      left: 100%;
+      inset-inline: auto 100%;
+      width: 17px;
     }
     .lip[aria-expanded='false']::after {
       width: calc(17px + var(--mc-lip-pull, 0px));
@@ -153,17 +145,13 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     /* a window-edge lip can be inset (iPad edge swipes) */
     .lip[aria-expanded='false'][data-side='start'] {
       left: calc(var(--mc-lip-at-start, 0px) + var(--mc-lip-edge-gap, 0px));
+      right: auto;
+      inset-inline: calc(var(--mc-lip-at-start, 0px) + var(--mc-lip-edge-gap, 0px)) auto;
     }
     .lip[aria-expanded='false'][data-side='end'] {
       right: calc(var(--mc-lip-at-end, 0px) + var(--mc-lip-edge-gap, 0px));
-    }
-    .lip[aria-expanded='false'][data-side='start'][data-dir='rtl'] {
       left: auto;
-      right: calc(var(--mc-lip-at-start, 0px) + var(--mc-lip-edge-gap, 0px));
-    }
-    .lip[aria-expanded='false'][data-side='end'][data-dir='rtl'] {
-      right: auto;
-      left: calc(var(--mc-lip-at-end, 0px) + var(--mc-lip-edge-gap, 0px));
+      inset-inline: auto calc(var(--mc-lip-at-end, 0px) + var(--mc-lip-edge-gap, 0px));
     }
   }
 
@@ -258,38 +246,32 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   .lip-hint[data-side='start'] {
     left: calc(var(--mc-lip-at-start, 0px) + 36px);
-    inset-inline-start: calc(var(--mc-lip-at-start, 0px) + 36px);
+    right: auto;
+    inset-inline: calc(var(--mc-lip-at-start, 0px) + 36px) auto;
   }
   .lip-hint[data-side='start']::before {
     left: -6px;
+    right: auto;
+    inset-inline: -6px auto;
     border-width: 0 0 1px 1px;
     transform: rotate(45deg);
   }
   .lip-hint[data-side='end'] {
     right: calc(var(--mc-lip-at-end, 0px) + 36px);
-    inset-inline-end: calc(var(--mc-lip-at-end, 0px) + 36px);
+    left: auto;
+    inset-inline: auto calc(var(--mc-lip-at-end, 0px) + 36px);
   }
   .lip-hint[data-side='end']::before {
     right: -6px;
+    left: auto;
+    inset-inline: auto -6px;
     border-width: 1px 1px 0 0;
     transform: rotate(45deg);
   }
-  .lip-hint[data-side='start'][data-dir='rtl'] {
-    left: auto;
-    right: calc(var(--mc-lip-at-start, 0px) + 36px);
-  }
   .lip-hint[data-side='start'][data-dir='rtl']::before {
-    left: auto;
-    right: -6px;
     border-width: 1px 1px 0 0;
   }
-  .lip-hint[data-side='end'][data-dir='rtl'] {
-    right: auto;
-    left: calc(var(--mc-lip-at-end, 0px) + 36px);
-  }
   .lip-hint[data-side='end'][data-dir='rtl']::before {
-    right: auto;
-    left: -6px;
     border-width: 0 0 1px 1px;
   }
   @keyframes lip-hint-in {
