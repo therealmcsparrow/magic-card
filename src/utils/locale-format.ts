@@ -1,4 +1,5 @@
 import type { HomeAssistant } from '../types';
+import { wrapText } from '../i18n/pseudo-hook';
 
 /** Dates, times and numbers formatted the way Home Assistant's frontend does, from hass.locale. */
 
@@ -55,11 +56,13 @@ export function numberLocale(hass: LocaleHass): string | undefined {
 export function formatNumber(hass: LocaleHass, value: number, maxDecimals = 1): string {
   const opts: Intl.NumberFormatOptions = { maximumFractionDigits: maxDecimals };
   if (hass?.locale?.number_format === 'none') opts.useGrouping = false;
+  let out: string;
   try {
-    return new Intl.NumberFormat(numberLocale(hass), opts).format(value);
+    out = new Intl.NumberFormat(numberLocale(hass), opts).format(value);
   } catch {
-    return String(value);
+    out = String(value);
   }
+  return wrapText(out, 'num');
 }
 
 /** Intl.DateTimeFormat that falls back to the browser locale on an unknown language tag. */

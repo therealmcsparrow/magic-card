@@ -72,8 +72,8 @@ describe('source hash reference', () => {
 });
 
 describe('i18n contract', () => {
-  it('is at 2.0.0 (keys replace text ids)', () => {
-    expect(i18n.I18N_CONTRACT_VERSION).toBe('2.0.0');
+  it('is at 2.1.0 (keys replace text ids)', () => {
+    expect(i18n.I18N_CONTRACT_VERSION).toBe('2.1.0');
   });
   it('lists the namespaces of tools/i18n/config.json plus mcu-panel, nothing else', () => {
     const cfg = JSON.parse(read('tools/i18n/config.json')).namespaces as Record<string, unknown>;

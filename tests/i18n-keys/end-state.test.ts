@@ -28,8 +28,8 @@ describe('end state: literal dotted keys everywhere, text-id path gone', () => {
     const missing = namespaces().filter(([, dir]) => !fs.existsSync(path.join(REPO, dir, 'en-GB.json'))).map(([ns]) => ns);
     expect(missing).toEqual([]);
   });
-  it('is i18n contract 2.0.0, with no tc() and no text-id path left in the runtime', () => {
-    expect(I18N_CONTRACT_VERSION).toBe('2.0.0');
+  it('is i18n contract 2.1.0, with no tc() and no text-id path left in the runtime', () => {
+    expect(I18N_CONTRACT_VERSION).toBe('2.1.0');
     expect(read('src/i18n/runtime.ts')).not.toMatch(/\btc\b/);
   });
   it('has no tc() call left in src/', () => {
