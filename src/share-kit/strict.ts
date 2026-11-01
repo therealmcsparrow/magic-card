@@ -205,8 +205,8 @@ function inRange(key: string, n: number, percent: boolean): boolean {
 export function themeValue(key: string, value: unknown): ValueVerdict {
   if (/^card-mod-/i.test(key)) {
     if (typeof value !== 'string') return Number.isFinite(value) ? { verdict: 'kept', value: value as number, note: 'card_mod' } : { verdict: 'dropped', rule: 'strict.card-mod' };
-    if (markerIn(value)) return { verdict: 'refused', rule: 'strict.marker' };
-    return /url\s*\(/i.test(value) ? { verdict: 'dropped', rule: 'strict.card-mod' } : { verdict: 'kept', value, note: 'card_mod' };
+    if (markerIn(value) || /url\s*\(/i.test(value)) return { verdict: 'dropped', rule: 'strict.card-mod' };
+    return { verdict: 'kept', value, note: 'card_mod' };
   }
   const rule = THEME_KEY_TYPES.find((r) => r.match.test(key));
   const id: StrictRuleId = rule?.id ?? 'strict.any';
