@@ -266,8 +266,9 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
     padding: 8px 0;
     background: var(--mc-surface);
     border-right: 1px solid var(--mc-divider);
-    border-inline-start: 0;
-    border-inline-end: 1px solid var(--mc-divider);
+    border-inline-width: 0 1px;
+    border-inline-style: solid;
+    border-inline-color: var(--mc-divider);
     overflow-y: auto;
   }
   .rail [role='separator'][aria-orientation='horizontal'] {

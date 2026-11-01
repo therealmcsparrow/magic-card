@@ -1,19 +1,20 @@
 // Fails on a physical left/right declaration in a css`` literal of the files it is given, unless the two-value logical
 // shorthand follows it in the same rule or the declaration ends with the comment /* physical */.
-//   node tools/rtl-scan.mjs [file ...]    default: every .ts file under src/
+//   node tools/rtl-scan.mjs [file ...]    default: the editor folders and src/css/editor-*.ts
 import { readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const ROOT = realpathSync(path.resolve(import.meta.dirname, '..'));
 
-// Physical property -> prefix of the logical property that answers it later in the same rule.
+// Physical property -> the exact logical properties that answer it later in the same rule. A one-side longhand does not.
 const LOGICAL = [
-  [/^(left|right)$/, 'inset-inline'],
-  [/^margin-(left|right)$/, 'margin-inline'],
-  [/^padding-(left|right)$/, 'padding-inline'],
-  [/^border-(left|right)(-(width|style|color))?$/, 'border-inline'],
+  [/^(left|right)$/, ['inset-inline']],
+  [/^margin-(left|right)$/, ['margin-inline']],
+  [/^padding-(left|right)$/, ['padding-inline']],
+  [/^border-(left|right)(-(width|style|color))?$/, ['border-inline', 'border-inline-width', 'border-inline-style', 'border-inline-color']],
 ];
+const EDITOR_DIRS = ['src/ui-kit', 'src/editor', 'src/anim-studio', 'src/theme-editor', 'src/svg-editor', 'src/shape-editor', 'src/path-canvas', 'src/image-editor', 'src/image-tools', 'src/transfer', 'src/look-editor'];
 const VALUE_SIDES = { 'text-align': /^(left|right)\b/, float: /^(left|right)\b/, clear: /^(left|right)\b/ };
 const VALUE_LOGICAL = { 'text-align': /^(start|end)\b/ };
 
@@ -121,7 +122,7 @@ export function scanSource(source) {
       const later = decls.slice(idx + 1).filter((o) => o.rule === d.rule);
       let physical = false;
       for (const [re, logical] of LOGICAL) {
-        if (re.test(d.prop)) physical = !later.some((o) => o.prop.startsWith(logical));
+        if (re.test(d.prop)) physical = !later.some((o) => logical.includes(o.prop));
       }
       const side = VALUE_SIDES[d.prop];
       if (side?.test(d.value)) {
@@ -143,6 +144,13 @@ function listTs(dir) {
   });
 }
 
+/** The default scan list: the editor folders and the src/css/editor-*.ts sheets. */
+export function editorFiles() {
+  const css = path.join(ROOT, 'src/css');
+  const sheets = readdirSync(css).filter((n) => /^editor-.*\.ts$/.test(n)).map((n) => path.join(css, n));
+  return [...EDITOR_DIRS.flatMap((d) => listTs(path.join(ROOT, d))), ...sheets];
+}
+
 /** True when a path relative to the repo root leaves it, on any drive. */
 function outsideRoot(rel) {
   return rel === '..' || rel.startsWith('..' + path.sep) || path.isAbsolute(rel);
@@ -161,7 +169,7 @@ export function scanFiles(files) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
-  const hits = scanFiles(args.length ? args : listTs(path.join(ROOT, 'src')));
+  const hits = scanFiles(args.length ? args : editorFiles());
   for (const h of hits) console.error(`${h.file}:${h.line}: physical ${h.text}`);
   if (hits.length) {
     console.error(`rtl-scan: ${hits.length} physical left/right declaration(s)`);

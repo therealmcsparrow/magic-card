@@ -676,8 +676,13 @@ export class AnimationStage extends LitElement {
         align-items: center;
         gap: 8px;
         margin-left: auto;
+        margin-inline: auto 0;
         padding-left: 8px;
+        padding-inline: 8px 0;
         border-left: 1px solid var(--mc-divider);
+        border-inline-width: 1px 0;
+        border-inline-style: solid;
+        border-inline-color: var(--mc-divider);
       }
       .view .seg {
         flex-wrap: wrap;
@@ -806,7 +811,7 @@ export class AnimationStage extends LitElement {
       }
       .frame {
         position: absolute;
-        left: 0;
+        left: 0; /* physical */
         top: 0;
         transform-origin: 0 0;
         color: var(--primary-text-color);
@@ -842,7 +847,7 @@ export class AnimationStage extends LitElement {
       }
       .note {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         bottom: 8px;
         transform: translateX(-50%);
         width: max-content;
@@ -858,6 +863,7 @@ export class AnimationStage extends LitElement {
       .zoom-tag {
         position: absolute;
         right: 8px;
+        inset-inline: auto 8px;
         top: 8px;
         padding: 1px 6px;
         border-radius: 6px;
@@ -901,6 +907,7 @@ export class AnimationStage extends LitElement {
         flex: none;
         min-width: 11ch;
         text-align: right;
+        text-align: end;
         font-size: 0.75rem;
         color: var(--mc-text-2);
         font-variant-numeric: tabular-nums;

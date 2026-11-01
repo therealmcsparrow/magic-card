@@ -214,7 +214,7 @@ export class AnimDrawHost extends CanvasHost {
       }
       .finish {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         bottom: 12px;
         transform: translateX(-50%);
         min-height: 32px;
