@@ -19064,6 +19064,36 @@
     "x-max-length": 14,
     "x-source-hash": "e159b061"
   },
+  "card-status.faces.connection-lost": "Connection lost",
+  "@card-status.faces.connection-lost": {
+    "description": "Accessible name of the small icon badge at the top-left corner of the card (not shown as text) while the connection to Home Assistant is down. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "6c44751e"
+  },
+  "card-status.faces.connection-lost-at-time": "Connection lost at {time}",
+  "@card-status.faces.connection-lost-at-time": {
+    "description": "Sentence in the live region and under the corner badge once tapped, while the connection to Home Assistant is down. {time} is when it dropped: a time on the same day, a short date and time otherwise. {time}: The moment the connection dropped, formatted for the viewer's language and time format. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "73652d5e"
+  },
+  "card-status.faces.not-updated": "Not updated",
+  "@card-status.faces.not-updated": {
+    "description": "Accessible name of the small icon badge at the top-left corner of the card (not shown as text) when an entity with a quiet time has reported nothing for longer than that time. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "9d6d1499"
+  },
+  "card-status.faces.not-updated-since-time": "Not updated since {time}",
+  "@card-status.faces.not-updated-since-time": {
+    "description": "Sentence in the live region and under the corner badge once tapped, when an entity with a quiet time has reported nothing for longer than that time. {time} is its last report. {time}: The moment of the entity's last report, formatted for the viewer's language and time format. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "5ad77d08"
+  },
+  "card-status.faces.reconnected": "Reconnected",
+  "@card-status.faces.reconnected": {
+    "description": "Accessible name of the corner badge and the live region text for a moment after the connection to Home Assistant returned, when the card had shown that it was lost. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "20a447db"
+  },
   "card.bar-module.min-must-be-less-than-max": "Min must be less than max",
   "@card.bar-module.min-must-be-less-than-max": {
     "description": "Configuration error of the bar module. Min and max are the lowest and highest value of the bar. Same English as in the gauge, slider and spinbox modules. Max 45 characters.",
@@ -19094,11 +19124,17 @@
     "x-max-length": 20,
     "x-source-hash": "126cf1b7"
   },
-  "card.chunk-notice.magic-card-was-updated-reload-the-page": "Magic Card was updated. Reload the page to see this part. The rest of this card works.",
-  "@card.chunk-notice.magic-card-was-updated-reload-the-page": {
-    "description": "Notice shown in place of a feature that could not load after an update. Magic Card is the product name. This part refers to the missing feature, such as the animation. Max 140 characters.",
-    "x-max-length": 140,
-    "x-source-hash": "af7bdfe0"
+  "card.chunk-notice.how-to-clear-the-cache": "How to clear the cache",
+  "@card.chunk-notice.how-to-clear-the-cache": {
+    "description": "Link text to a help page about clearing the browser cache. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "fa1fc317"
+  },
+  "card.chunk-notice.magic-card-updated-tap-to-reload": "Magic Card updated. Tap to reload.",
+  "@card.chunk-notice.magic-card-updated-tap-to-reload": {
+    "description": "The whole tile is one button shown when parts of the card come from another release. Magic Card is the product name. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "0595f6cd"
   },
   "card.chunk-notice.part-did-not-load-the-rest-of-this-card": "{part} did not load. The rest of this card works.",
   "@card.chunk-notice.part-did-not-load-the-rest-of-this-card": {
@@ -19129,6 +19165,12 @@
     "description": "Notice shown after the Try again button was used and the feature still did not load. Max 100 characters.",
     "x-max-length": 100,
     "x-source-hash": "fe7252fe"
+  },
+  "card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload": "Still the old version. Clear the browser cache, then reload.",
+  "@card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload": {
+    "description": "Shown when a reload still loaded the old release. Followed by a link to a help page. Max 90 characters.",
+    "x-max-length": 90,
+    "x-source-hash": "8b3f1dea"
   },
   "card.chunk-notice.the-animation": "The animation",
   "@card.chunk-notice.the-animation": {
@@ -19241,6 +19283,12 @@
     "description": "Configuration error for the card's YAML. Keep pause_button and the values auto, always and hidden exactly as written; they are not translated. Max 70 characters.",
     "x-max-length": 70,
     "x-source-hash": "5cf5bba8"
+  },
+  "card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss": "quiet_time must be seconds or H:MM:SS",
+  "@card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss": {
+    "description": "Configuration error for the card's YAML. Keep quiet_time exactly as written; it is a setting name. H:MM:SS is a time format (hours, minutes, seconds) and stays as written, for example 0:05:00. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "d75187fa"
   },
   "card.config-validator.row-row-col-col-module-module-layer-must": "Row {row}, Col {col}, Module {module}: layer must be an object",
   "@card.config-validator.row-row-col-col-module-module-layer-must": {
