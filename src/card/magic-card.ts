@@ -479,6 +479,7 @@ export class MagicCard extends LitElement {
   /** The <style> holding the hover rules; only created once some element has a hover design. */
   private _hoverStyleEl?: HTMLStyleElement;
   private _hoverKey = '';
+  private _hoverSheet: CSSStyleSheet | null = null;
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
@@ -670,6 +671,7 @@ export class MagicCard extends LitElement {
     this._status?.connected();
     if (this.hasUpdated) this._syncTicker();
     if (this.hasUpdated) this._syncTemplateWatch();
+    if (this.hasUpdated) this._syncHoverStyles();
     // re-attached (masonry rebuild, cached view): sequences were stopped and the library dropped;
     // the render restarts both
     if (this.hasUpdated && this._customRendered) this._onLibrary();
@@ -1731,16 +1733,26 @@ export class MagicCard extends LitElement {
     }
     const sheet = el.sheet;
     const key = JSON.stringify([...this._hoverRules.values()]);
-    if (!sheet || key === this._hoverKey) return;
+    // a re-attached host gets a fresh, empty sheet for the same <style>
+    if (!sheet || (key === this._hoverKey && sheet === this._hoverSheet)) return;
     this._hoverKey = key;
+    this._hoverSheet = sheet;
     while (sheet.cssRules.length) sheet.deleteRule(0);
     if (!this._hoverRules.size) return;
     const put = (to: CSSStyleSheet | CSSMediaRule, selector: string, declarations: string[]) => {
-      const { style } = to.cssRules[to.insertRule(`${selector} {}`, to.cssRules.length)] as CSSStyleRule;
-      declarations.forEach((d) => setDeclaration(style, d));
+      try {
+        const { style } = to.cssRules[to.insertRule(`${selector} {}`, to.cssRules.length)] as CSSStyleRule;
+        declarations.forEach((d) => setDeclaration(style, d));
+      } catch {
+        // a selector this browser cannot parse skips only its own rule
+      }
     };
     for (const [selector, declarations] of [...this._hoverRules.values()].flat()) put(sheet, selector, declarations);
-    put(sheet.cssRules[sheet.insertRule('@media (prefers-reduced-motion: reduce) {}', sheet.cssRules.length)] as CSSMediaRule, '[data-mc-hover]', ['transition: none !important']);
+    try {
+      put(sheet.cssRules[sheet.insertRule('@media (prefers-reduced-motion: reduce) {}', sheet.cssRules.length)] as CSSMediaRule, '[data-mc-hover]', ['transition: none !important']);
+    } catch {
+      // no reduced-motion rule where the browser refuses it
+    }
   }
 
   /**

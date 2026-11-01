@@ -237,19 +237,29 @@ export function tabTypeStyle(design?: Partial<DesignConfig>): string {
   return [designToStyle(type as DesignConfig), type.font_weight && `--mc-design-font-weight: ${type.font_weight}`].filter(Boolean).join('; ');
 }
 
-/** Split a declaration list on `;` outside parentheses and quotes (a data: URL keeps its `;`). */
+/**
+ * Split a declaration list on `;` outside parentheses and quotes (a data: URL keeps its `;`). CSS comments
+ * outside quotes and parentheses are dropped, as the browser does when it reads the same text.
+ */
 export function splitDeclarations(style: string): string[] {
   const out: string[] = [];
   let depth = 0;
   let quote = '';
   let cur = '';
-  for (const ch of style) {
+  for (let i = 0; i < style.length; i++) {
+    const ch = style[i];
     if (quote) {
       if (ch === quote) quote = '';
     } else if (ch === '"' || ch === "'") quote = ch;
     else if (ch === '(') depth++;
     else if (ch === ')') depth = Math.max(0, depth - 1);
-    else if (ch === ';' && depth === 0) {
+    else if (ch === '/' && style[i + 1] === '*' && depth === 0) {
+      const end = style.indexOf('*/', i + 2);
+      if (end < 0) break;
+      i = end + 1;
+      cur += ' ';
+      continue;
+    } else if (ch === ';' && depth === 0) {
       if (cur.trim()) out.push(cur.trim());
       cur = '';
       continue;
@@ -330,8 +340,16 @@ export const hoverRule = (id: string, hover: Partial<DesignConfig> | undefined, 
  * property name sets nothing.
  */
 export function setDeclaration(style: CSSStyleDeclaration, declaration: string): void {
-  const m = /^(--[\w-]+|-?[a-z][a-z-]*)\s*:\s*([^]*?)\s*(!important)?$/i.exec(declaration.trim());
-  if (m) style.setProperty(m[1], m[2], m[3] ? 'important' : '');
+  const colon = declaration.indexOf(':');
+  if (colon < 0) return;
+  const name = declaration.slice(0, colon).trim();
+  if (!/^(--[\w-]+|-?[a-z][a-z-]*)$/i.test(name)) return;
+  let value = declaration.slice(colon + 1).trim();
+  const bang = value.lastIndexOf('!');
+  const important = bang >= 0 && value.slice(bang + 1).trim().toLowerCase() === 'important';
+  if (important) value = value.slice(0, bang).trim();
+  // an empty custom property is valid CSS; an empty string would remove it
+  style.setProperty(name, value || (name.startsWith('--') ? ' ' : ''), important ? 'important' : '');
 }
 
 export function resolveConditionalDesign(
