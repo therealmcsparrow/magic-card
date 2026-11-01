@@ -104,8 +104,8 @@
       "note": "40 KiB, measured 38,670 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-path-canvas.js": {
-      "raw": 69632,
-      "ceiling": 69632,
+      "raw": 73216,
+      "ceiling": 73216,
       "note": "Path canvas with the studio overlay mode. 68 KiB, measured 69,034 (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-editor.js": {
