@@ -53,6 +53,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       source: { attribute: false },
       icon: { attribute: false },
       iconStyle: { attribute: false },
+      size: { type: Number },
       hass: { attribute: false },
       _visible: { state: true },
     };
@@ -61,7 +62,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         :host {
           display: block;
           width: 100%;
-          height: 64px;
+          height: var(--mc-thumb-size, 64px);
         }
         .box {
           width: 100%;
@@ -74,7 +75,6 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1.2px);
           background-size: 8px 8px;
           color: var(--state-icon-color, #44739e);
-          --mdc-icon-size: 40px;
           /* Glow reads light or dark from the card background; the tile card is transparent on this */
           --mc-glow-bg: var(--mc-canvas, var(--card-background-color, #fff));
         }
@@ -95,6 +95,8 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     icon = '';
     /** The Style a library entry previews in. */
     iconStyle: IconStyle = DEFAULT_ICON_STYLE;
+    /** The box height in px; the icon is 5/8 of it. */
+    size = 64;
     hass?: unknown;
     private _visible = typeof IntersectionObserver === 'undefined';
     private _card?: CardElement;
@@ -119,7 +121,8 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     }
 
     protected willUpdate(changed: PropertyValues): void {
-      if (changed.has('source') || changed.has('icon') || changed.has('iconStyle')) this._card = undefined;
+      if (changed.has('size')) this.style.setProperty('--mc-thumb-size', `${this.size}px`);
+      if (changed.has('source') || changed.has('icon') || changed.has('iconStyle') || changed.has('size')) this._card = undefined;
       if (this._card) {
         if (changed.has('hass') && this.hass) this._card.hass = this.hass;
         return;
@@ -138,7 +141,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
                 {
                   id: 'c',
                   vertical_align: 'center',
-                  modules: [{ id: 'm', type: 'icon', icon: this.icon, size: '40px', design: { text_align: 'center', animations: [{ id: 'a', preset: `custom:${doc.id}` }] } }],
+                  modules: [{ id: 'm', type: 'icon', icon: this.icon, size: `${this._iconPx}px`, design: { text_align: 'center', animations: [{ id: 'a', preset: `custom:${doc.id}` }] } }],
                 },
               ],
             },
@@ -151,9 +154,13 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       this._card = card;
     }
 
+    private get _iconPx(): number {
+      return Math.round(this.size * 0.625);
+    }
+
     protected render(): TemplateResult {
       const card = this._visible ? this._card : undefined;
-      return html`<div class="box" aria-hidden="true">${card ?? html`<ha-icon icon=${this.icon}></ha-icon>`}</div>`;
+      return html`<div class="box" aria-hidden="true" style="--mdc-icon-size: ${this._iconPx}px">${card ?? html`<ha-icon icon=${this.icon}></ha-icon>`}</div>`;
     }
   }
   customElements.define(THUMB_TAG, Thumb);
@@ -258,11 +265,54 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         }
         .style {
           display: flex;
+          flex-wrap: wrap;
           align-items: center;
           gap: 8px;
         }
         .style .lbl {
           font-size: 0.8125rem;
+        }
+        .swatches {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .sw {
+          position: relative;
+          display: grid;
+          justify-items: center;
+          gap: 4px;
+          width: 88px;
+          min-height: 24px;
+          padding: 5px;
+          border: 1px solid var(--mc-text-2, var(--secondary-text-color, #727272));
+          border-radius: var(--mc-radius, 8px);
+          background: transparent;
+          color: var(--mc-text, var(--primary-text-color, #212121));
+          font: inherit;
+          font-size: 0.8125rem;
+          cursor: pointer;
+        }
+        .sw[aria-checked='true'] {
+          padding: 4px;
+          border: 2px solid var(--mc-accent-ink, #01579b);
+          font-weight: 700;
+        }
+        .sw:focus-visible {
+          outline: 2px solid var(--mc-accent-ink, #01579b);
+          outline-offset: 2px;
+        }
+        .sw mc-animated-icon-thumb {
+          width: 72px;
+        }
+        .sw ha-icon {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          --mdc-icon-size: 16px;
+          color: var(--mc-accent-ink, #01579b);
+          background: var(--mc-canvas, var(--card-background-color, #fff));
+          border-radius: 50%;
         }
       `,
     ];
@@ -330,7 +380,13 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       if (cur) this._emit({ kind: 'library', entry: cur, style, restyle: true });
     }
 
+    /** The entry the swatches play: the module's own, else the first match, else the first in the library. */
+    private _sample(): LibraryEntry {
+      return ICON_LIBRARY.find((e) => `lib:${e.id}` === this.current) ?? this._matches()[0] ?? ICON_LIBRARY[0];
+    }
+
     private _styleControl(): TemplateResult {
+      const sample = this._sample();
       const onKey = (e: KeyboardEvent) => {
         const i = ICON_STYLES.indexOf(this._style);
         const n = ICON_STYLES.length;
@@ -344,11 +400,13 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       };
       return html`<div class="style">
         <span class="lbl" id="aig-style">${t('icon-animator.animated-icon-grid.style')}</span>
-        <div class="seg" role="radiogroup" aria-labelledby="aig-style" aria-describedby="aig-style-help" @keydown=${onKey}>
+        <div class="swatches" role="radiogroup" aria-labelledby="aig-style" aria-describedby="aig-style-help" @keydown=${onKey}>
           ${ICON_STYLES.map((s) => {
             const on = s === this._style;
-            return html`<button type="button" role="radio" data-val=${s} aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} @click=${() => this._setStyle(s)}>
-              ${t(STYLE_LABELS[s])}
+            return html`<button type="button" class="sw" role="radio" data-val=${s} aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} @click=${() => this._setStyle(s)}>
+              <mc-animated-icon-thumb .source=${sample} .icon=${sample.icon} .iconStyle=${s} .size=${40} .hass=${this.hass}></mc-animated-icon-thumb>
+              ${on ? html`<ha-icon icon="mdi:check" aria-hidden="true"></ha-icon>` : nothing}
+              <span>${t(STYLE_LABELS[s])}</span>
             </button>`;
           })}
         </div>
