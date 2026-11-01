@@ -84,7 +84,7 @@ export class AttributePicker extends LitElement {
 
   protected render(): TemplateResult {
     const entity = this.hass && this.entityId ? this.hass.states[this.entityId] : undefined;
-    const names = entity ? Object.keys(entity.attributes).sort((a, b) => a.localeCompare(b)) : [];
+    const names = entity ? Object.keys(entity.attributes).filter((n) => !this.extras.some((x) => x.value === n)).sort((a, b) => a.localeCompare(b)) : [];
 
     // A plain select, "State (no attribute)" first. Without a known entity, a text field.
     if (!names.length && !this.extras.length) {

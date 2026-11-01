@@ -11,7 +11,6 @@ import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
-import { notifyChunks } from '../../utils/lazy-chunk';
 
 /**
  * Name and state toggles: both on when neither key is set (new YAML, like the default).
@@ -22,25 +21,11 @@ export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolea
   return { name: !!c.show_name, state: !!c.show_state };
 }
 
-let helpersAsked = false;
-
-/** Asks HA once per page for the card helpers, whose row elements define ha-relative-time, and renders every card again when it arrives. */
-function askForRelativeTime(): void {
-  if (helpersAsked) return;
-  helpersAsked = true;
-  const load = (window as unknown as { loadCardHelpers?: () => Promise<unknown> }).loadCardHelpers;
-  if (typeof load === 'function') void Promise.resolve().then(load).catch(() => undefined);
-  void customElements.whenDefined('ha-relative-time').then(notifyChunks);
-}
-
 /** The entity's last change in words through HA's own element; nothing for an invalid time or while HA has not defined the element. */
 function lastChanged(entity: HassEntity | undefined, hass?: HomeAssistant): TemplateResult | '' {
   const at: unknown = entity?.last_changed;
   if (typeof at !== 'string' || Number.isNaN(Date.parse(at))) return '';
-  if (!customElements.get('ha-relative-time')) {
-    askForRelativeTime();
-    return '';
-  }
+  if (!customElements.get('ha-relative-time')) return '';
   return html`<ha-relative-time .hass=${hass} .datetime=${at}></ha-relative-time>`;
 }
 
