@@ -1,5 +1,6 @@
 import { css, html, nothing } from 'lit';
 import type { RetryableLazyChunk } from '../contracts/lazy-module';
+import { freshReload, reloadAsked } from '../utils/fresh-reload';
 import { BUILD_VERSION, notifyChunks } from '../utils/lazy-chunk';
 import { t } from './i18n';
 
@@ -103,32 +104,6 @@ const reload = (): void => location.reload();
 
 const CACHE_HELP = 'https://github.com/therealmcsparrow/magic-card/blob/main/documentation/loading-and-size/README.md#clear-the-browser-cache';
 
-/** True when the last tap on the update tile already reloaded into this same version. */
-const reloadedHere = (): boolean => {
-  try {
-    return sessionStorage.getItem('mc-reload') === BUILD_VERSION;
-  } catch {
-    return false;
-  }
-};
-
-/** Remembers the tap, asks the server for the entry file past the cache (3 s at most), then reloads. */
-async function update(): Promise<void> {
-  try {
-    sessionStorage.setItem('mc-reload', BUILD_VERSION);
-  } catch {
-    /* storage denied: the first wording shows again */
-  }
-  try {
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), 3000);
-    await fetch(import.meta.url, { cache: 'reload', signal: ctl.signal }).finally(() => clearTimeout(timer));
-  } catch {
-    /* offline or slow: reload anyway */
-  }
-  reload();
-}
-
 /** What one chunk's notice shows right now: shown (past its empty first frame), busy, asked twice, the "loaded" text. */
 interface Seen {
   shown?: boolean;
@@ -178,7 +153,7 @@ export function chunkNotice(c: RetryableLazyChunk) {
   }
   const tile = mismatch && s.shown && c.failed();
   if (tile) {
-    const again = reloadedHere();
+    const again = reloadAsked(BUILD_VERSION);
     return html`<div role="status" aria-live="polite" aria-busy="false"
       ><div class="mc-n mc-u">
         ${again
@@ -186,7 +161,7 @@ export function chunkNotice(c: RetryableLazyChunk) {
               ${t('card.chunk-notice.still-the-old-version-clear-the-browser-cache-then-reload')}
               <a href=${CACHE_HELP} target="_blank" rel="noopener">${t('card.chunk-notice.how-to-clear-the-cache')}</a>
             </p>`
-          : html`<button type="button" @click=${update}>${t('card.chunk-notice.magic-card-updated-tap-to-reload')}</button>`}
+          : html`<button type="button" @click=${() => freshReload(BUILD_VERSION)}>${t('card.chunk-notice.magic-card-updated-tap-to-reload')}</button>`}
         <span class="mc-uv">${BUILD_VERSION}</span>
       </div></div
     >`;
