@@ -197,5 +197,38 @@
     "text": "Text on the primary colour",
     "note": "Name of a colour pair in the contrast warning: the text colour used on top of the theme primary colour.",
     "max": 60
+  },
+  "share-kit.wall-tablet.wall-tablet-caption": {
+    "text": "Drawn at one fifth size, as the text looks from 3 metres away.",
+    "note": "Short caption under the Wall tablet preview.",
+    "max": 80
+  },
+  "share-kit.wall-tablet.wall-tablet-card-button": {
+    "text": "Lights on",
+    "note": "Sample button text on the Wall tablet preview card.",
+    "max": 30
+  },
+  "share-kit.wall-tablet.wall-tablet-card-text": {
+    "text": "Temperature",
+    "note": "Label on the sample card on the Wall tablet preview.",
+    "max": 30
+  },
+  "share-kit.wall-tablet.wall-tablet-card-title": {
+    "text": "Living room",
+    "note": "Title of the sample card on the Wall tablet preview.",
+    "max": 30
+  },
+  "share-kit.wall-tablet.wall-tablet-card-value": {
+    "text": "21.5 °C",
+    "note": "Sample temperature shown on the Wall tablet preview card.",
+    "max": 20
+  },
+  "share-kit.wall-tablet.wall-tablet-label": {
+    "text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 metres.",
+    "note": "Accessible name of the Wall tablet preview frame. {mode} is the word light or dark.",
+    "max": 200,
+    "vars": {
+      "mode": "The word for the mode: light or dark."
+    }
   }
 }

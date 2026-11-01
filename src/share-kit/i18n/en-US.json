@@ -134,5 +134,29 @@
   "share-kit.theme-check.text-on-the-primary-colour": {
     "text": "Text on the primary color",
     "hash": "fc382314"
+  },
+  "share-kit.wall-tablet.wall-tablet-caption": {
+    "text": "Drawn at one fifth size, as the text looks from 3 meters away.",
+    "hash": "61e7c62e"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-button": {
+    "text": "Lights on",
+    "hash": "ab2323a5"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-text": {
+    "text": "Temperature",
+    "hash": "b958ce8b"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-title": {
+    "text": "Living room",
+    "hash": "268d40ee"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-value": {
+    "text": "21.5 °C",
+    "hash": "a5db9bd8"
+  },
+  "share-kit.wall-tablet.wall-tablet-label": {
+    "text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 meters.",
+    "hash": "2f6e4db9"
   }
 }

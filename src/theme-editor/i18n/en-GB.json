@@ -3329,6 +3329,44 @@
     "note": "Lower-case name of the Home Assistant Tile card, used inside a sentence in the preview.",
     "max": 15
   },
+  "theme-editor.preview.wall-tablet": {
+    "text": "Wall tablet",
+    "note": "Name of the button that shows the theme on a wall-mounted tablet seen from across the room.",
+    "max": 20
+  },
+  "theme-editor.preview.wall-tablet-caption": {
+    "text": "Drawn at one fifth size, as the text looks from 3 metres away.",
+    "note": "Short caption under the Wall tablet preview.",
+    "max": 80
+  },
+  "theme-editor.preview.wall-tablet-card-button": {
+    "text": "Lights on",
+    "note": "Sample button text on the Wall tablet preview card.",
+    "max": 30
+  },
+  "theme-editor.preview.wall-tablet-card-text": {
+    "text": "Temperature",
+    "note": "Label on the sample card on the Wall tablet preview.",
+    "max": 30
+  },
+  "theme-editor.preview.wall-tablet-card-title": {
+    "text": "Living room",
+    "note": "Title of the sample card on the Wall tablet preview.",
+    "max": 30
+  },
+  "theme-editor.preview.wall-tablet-card-value": {
+    "text": "21.5 °C",
+    "note": "Sample temperature shown on the Wall tablet preview card.",
+    "max": 20
+  },
+  "theme-editor.preview.wall-tablet-label": {
+    "text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 metres.",
+    "note": "Accessible name of the Wall tablet preview frame. {mode} is the word light or dark.",
+    "max": 200,
+    "vars": {
+      "mode": "The word for the mode: light or dark."
+    }
+  },
   "theme-editor.preview.warning-message": {
     "text": "Warning message",
     "note": "Sample alert in the preview that uses the warning colour.",

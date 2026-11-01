@@ -6,12 +6,9 @@ import { applyMapping, findPlaceholders } from './mapping';
 import { previewSafe } from './preview';
 import { toPlaceholders } from './placeholders';
 import { scanMarkers, strictValue, themeValue } from './strict';
+import { checkTheme } from './theme-check';
 
 // Chunk entry of dist/magic-card-share-kit.js (share-kit 1.0.0): the strict value checks the transfer chunk reads files through.
-
-const unavailable = (what: string) => (): never => {
-  throw new Error(`share-kit: ${what} is not available`);
-};
 
 export const createShareKit: CreateShareKit = (helpers) => {
   const kit: ShareKit = {
@@ -27,7 +24,7 @@ export const createShareKit: CreateShareKit = (helpers) => {
     demoStates,
     importNotice: importNoticeOf,
     previewSafe,
-    checkContrast: unavailable('checkContrast'),
+    checkContrast: checkTheme,
   };
   return kit;
 };

@@ -1,4 +1,7 @@
 import type { TransferDataByKind, TransferKind } from '../contracts/preset-transfer';
+import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
+import type { WallTabletLabels } from '../theme-safety/wall-tablet';
+import { t } from './i18n';
 
 // Preview copies of a sanitised item that make no request: every address that is not a data:image URL is swapped for a
 // neutral pattern or removed, so showing the preview never contacts another host.
@@ -29,4 +32,28 @@ function walk(v: unknown, key: string, depth: number): unknown {
 /** A copy of `data` for previewing: images that are not embedded become a neutral pattern or an empty source. */
 export function previewSafe<K extends TransferKind>(_kind: K, data: TransferDataByKind[K]): TransferDataByKind[K] {
   return walk(data, '', 0) as TransferDataByKind[K];
+}
+
+/** The custom properties a theme sets in one mode (base first, then the mode block), taken from its previewSafe copy, for the Wall tablet. */
+export function wallTabletVars(doc: ThemeDoc, mode: ThemeMode): Record<string, string> {
+  const safe = previewSafe('theme', doc) as ThemeDoc;
+  const out: Record<string, string> = {};
+  const add = (bag: Record<string, unknown> | undefined): void => {
+    for (const [k, v] of Object.entries(bag ?? {})) if (k !== 'modes' && (typeof v === 'string' || typeof v === 'number')) out[`--${k}`] = String(v);
+  };
+  add(safe);
+  add(safe.modes?.[mode]);
+  return out;
+}
+
+/** The words of the Wall tablet in the import preview. */
+export function wallTabletLabels(mode: ThemeMode): WallTabletLabels {
+  return {
+    frame: t('share-kit.wall-tablet.wall-tablet-label', { mode: mode === 'dark' ? t('share-kit.theme-check.dark') : t('share-kit.theme-check.light') }),
+    caption: t('share-kit.wall-tablet.wall-tablet-caption'),
+    title: t('share-kit.wall-tablet.wall-tablet-card-title'),
+    text: t('share-kit.wall-tablet.wall-tablet-card-text'),
+    value: t('share-kit.wall-tablet.wall-tablet-card-value'),
+    button: t('share-kit.wall-tablet.wall-tablet-card-button'),
+  };
 }
