@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.0.0.
 
 export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 7;
+export const I18N_CONTRACT_REVISION = 8;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -102,6 +102,7 @@ export const I18N_MODULES = {
   'card-pause': { bundle: 'magic-card-pause.js', folders: ['src/card/card-pause.ts'], tables: 'inline', status: 'complete', slice: 'pause-label', dashboard: true },
   'image-tools': { bundle: 'magic-card-image-tools.js', folders: ['src/image-tools'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
+  'forum-shot': { bundle: 'magic-card-forum-shot.js', folders: ['src/forum-shot'], tables: 'inline', status: 'complete', slice: 'forum-shot', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;

@@ -22877,6 +22877,13 @@
     "x-max-length": 15,
     "x-source-hash": "d539f275"
   },
+  "forum-shot.element.forum-shot": "Forumafbeelding",
+  "@forum-shot.element.forum-shot": {
+    "description": "Accessible name of the forum shot area in the Magic Card Utils panel, where the user turns a Magic Card into one picture to post in a forum. Max 20 characters.",
+    "source_text": "Forum shot",
+    "x-max-length": 20,
+    "x-source-hash": "de9aca8d"
+  },
   "icon-animator.animated-icon-grid.all-domains": "Alle domeinen",
   "@icon-animator.animated-icon-grid.all-domains": {
     "description": "Filter option that shows animations for every Home Assistant domain (the entity type, such as light or switch). Max 20 characters.",

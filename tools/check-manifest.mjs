@@ -2,7 +2,7 @@
 // - the manifest is `export default { build, chunks }`; build is the version in package.json (or --build)
 // - every chunks entry maps magic-card-<name>.js to an existing magic-card-<name>.<hash8>.js, and the names agree
 // - every hashed .js in dist/ is listed (an unlisted one is a leftover of an older build)
-// - the entries (magic-card.js, magic-card-animation-studio.js, magic-card-theme-editor.js) keep fixed names and are not listed
+// - the entries (magic-card.js, magic-card-animation-studio.js, magic-card-theme-editor.js, magic-card-forum-shot.js) keep fixed names and are not listed
 // Only .js names are compared: the .js.br and .js.gz copies next to them are checked by tools/check-dist-size.mjs.
 // Usage: node tools/check-manifest.mjs [--dist <dir>] [--build <version>] | --self-test
 import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const MANIFEST = 'magic-card-manifest.js';
-const ENTRIES = ['magic-card.js', 'magic-card-animation-studio.js', 'magic-card-theme-editor.js', MANIFEST];
+const ENTRIES = ['magic-card.js', 'magic-card-animation-studio.js', 'magic-card-theme-editor.js', 'magic-card-forum-shot.js', MANIFEST];
 const HASHED = /^(magic-card-.+)\.[0-9a-f]{8}\.js$/;
 
 /** Problems found for one dist directory (a list of strings; empty = consistent). */

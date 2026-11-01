@@ -1,0 +1,7 @@
+{
+  "forum-shot.element.forum-shot": {
+    "text": "Forum shot",
+    "note": "Accessible name of the forum shot area in the Magic Card Utils panel, where the user turns a Magic Card into one picture to post in a forum.",
+    "max": 20
+  }
+}

@@ -1,4 +1,8 @@
-/* HA's dark-mode default values for themeable variables (from color.globals.ts darkColorStyles), used when a profile theme sets a key the draft lacks. */
+// Contract: HA's default dark theme variables. Version 1.0.0. Data only, no imports.
+
+export const HA_DARK_DEFAULTS_VERSION = '1.0.0';
+
+/** HA's dark-mode default values for themeable variables (from color.globals.ts darkColorStyles). */
 export const HA_DARK_DEFAULTS: Readonly<Record<string, string>> = {
   'primary-background-color': '#111111',
   'card-background-color': '#1c1c1c',

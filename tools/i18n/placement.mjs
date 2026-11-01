@@ -9,7 +9,7 @@ const lib = createRequire(import.meta.url)('./lib.cjs');
 export const STATS_FILE = path.join(lib.ROOT, 'node_modules/.cache/magic-card/i18n-stats.json');
 
 /** Files that carry their own copy of src/i18n/runtime.ts (three entries; chunks below reuse a copy). */
-const RUNTIME_FILES = ['magic-card.js', 'magic-card-animation-studio.js', 'magic-card-theme-editor.js'];
+const RUNTIME_FILES = ['magic-card.js', 'magic-card-animation-studio.js', 'magic-card-theme-editor.js', 'magic-card-forum-shot.js'];
 
 const fileOf = (name) => name.replace(/\?.*$/, '').replace(/\.[0-9a-f]{8}\.js$/, '.js');
 

@@ -37,8 +37,8 @@ module.exports = (env, argv) => {
     // The ES ceiling of the browser floor (Chromium 85): webpack writes its own runtime and chunk loader in ES2021
     // and Terser's `ecma` below follows it. tools/check-es-syntax.mjs parses every dist .js at 2021.
     target: ['web', 'es2021'],
-    // Three bundles: the card, the animation studio and the theme editor the magic-card-utils panel
-    // loads (each defines only its own elements; the theme editor is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
+    // Four bundles: the card, the animation studio, and the theme editor and forum shot the magic-card-utils panel
+    // loads (each defines only its own elements; the forum shot is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
@@ -49,6 +49,7 @@ module.exports = (env, argv) => {
       'magic-card': './src/index.ts',
       'magic-card-animation-studio': './src/anim-studio/index.ts',
       'magic-card-theme-editor': './src/theme-editor/index.ts',
+      'magic-card-forum-shot': './src/forum-shot/index.ts',
     },
     output: {
       filename: '[name].js',
