@@ -20,6 +20,8 @@ beforeEach(() => {
   warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   TIMING.silent = 0;
   TIMING.background = [];
+  // the notice fills a frame after its container: a real frame, not the microtask frame of the test setup
+  (globalThis as { requestAnimationFrame?: unknown }).requestAnimationFrame = (cb: () => void) => void setTimeout(cb, 16);
 });
 afterEach(() => {
   document.body.replaceChildren();

@@ -1,9 +1,9 @@
 import { supportsAdoptingStyleSheets, type CSSResultGroup, type CSSResultOrNative, type LitElement } from 'lit';
 import { BUILD_VERSION } from './build-version';
-import { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, SILENT_RETRY_MS } from '../contracts/lazy-module.needs';
+import { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, IDLE_FALLBACK_MS, IDLE_TIMEOUT_MS, SILENT_RETRY_MS } from '../contracts/lazy-module.needs';
 import type { EditorLazyChunkName, LazyChunkFailure, LazyChunkModule, LazyChunkName, OnDemandChunkName, RetryableLazyChunk } from '../contracts/lazy-module';
 
-/** The one loader for the lazy chunks (contract lazy-module 1.4.0): memoised load, retries, install, styles. */
+/** The one loader for the lazy chunks (contract lazy-module 1.12.0): memoised load, idle fetch, retries, install per frame, styles. */
 
 /** The release this magic-card.js was built from; chunk entries carry their own copy as BUILD. */
 export { BUILD_VERSION };
@@ -68,6 +68,39 @@ function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModul
 }
 
 const sleep = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
+
+/** Resolves when the browser is idle (at the latest after IDLE_TIMEOUT_MS), or after IDLE_FALLBACK_MS where requestIdleCallback is missing. */
+const idle = (): Promise<void> =>
+  new Promise<void>((done) => (typeof requestIdleCallback === 'function' ? requestIdleCallback(() => done(), { timeout: IDLE_TIMEOUT_MS }) : void setTimeout(done, IDLE_FALLBACK_MS)));
+
+// ── install queue ────────────────────────────────────────────────────────────────────────────────
+
+const installs: Array<() => void> = [];
+let framing = false;
+
+/** Run one queued install per animation frame; while the tab is hidden, wait for it to show. */
+function pump(): void {
+  if (framing || !installs.length) return;
+  framing = true;
+  if (document.hidden) {
+    document.addEventListener('visibilitychange', () => ((framing = false), pump()), { once: true });
+    return;
+  }
+  const run = () => {
+    framing = false;
+    if (document.hidden) return pump();
+    installs.shift()?.();
+    pump();
+  };
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
+  else setTimeout(run, 16);
+}
+
+/** Queue an install; each runs whole, alone in its frame. */
+const enqueue = (job: () => void): void => {
+  installs.push(job);
+  pump();
+};
 
 // ── manifest check ───────────────────────────────────────────────────────────────────────────────
 
@@ -195,14 +228,19 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(
     return true;
   };
 
-  /** One attempt: the import plus install, 10 s at most. A timeout is a failure, but a later success still installs. */
+  /**
+   * One attempt: the import, 10 s at most from the moment it starts; the first attempt waits for idle first. The timeout is
+   * cleared when the module arrives, before it waits for its frame to install. A timeout is a failure, but a later success still installs.
+   */
   const attempt = (g: number, again: boolean): Promise<boolean> =>
     new Promise<boolean>((done) => {
-      const timeout = setTimeout(() => done(false), TIMING.timeout);
-      request(importer, again).then(
-        (m) => (clearTimeout(timeout), done(install(g, m))),
-        (err: unknown) => ((last = err), clearTimeout(timeout), done(false)),
-      );
+      void (again ? Promise.resolve() : idle()).then(() => {
+        const timeout = setTimeout(() => done(false), TIMING.timeout);
+        request(importer, again).then(
+          (m) => (clearTimeout(timeout), enqueue(() => done(install(g, m)))),
+          (err: unknown) => ((last = err), clearTimeout(timeout), done(false)),
+        );
+      });
     });
 
   /** An extra attempt from the failed state (the retry list or the button); one at a time. */
