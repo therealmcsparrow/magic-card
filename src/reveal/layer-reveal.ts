@@ -3,11 +3,23 @@ import { LAYER_REVEAL_ANIMATION, LAYER_REVEAL_MS } from '../contracts/layer-reve
 import { ALL_LAYER_STYLES } from '../css/animations';
 import { PAUSE_ATTRIBUTE } from '../contracts/card-pause.needs';
 
-/** Layers whose preset sets its own `animation` keep it: they get no fade and no pause exemption. */
-const OWN_ANIMATION = Object.entries(ALL_LAYER_STYLES)
-  .filter(([, body]) => /animation/.test(body))
-  .map(([id]) => `:not([data-fx="${id}"])`)
-  .join('');
+/** True when a layer body declares `animation` or `animation-name` as a property of its own. */
+export function setsOwnAnimation(body: string): boolean {
+  return body
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .split(';')
+    .some((declaration) => /^\s*(?:-webkit-)?animation(?:-name)?\s*:/.test(declaration));
+}
+
+/** Builds the reveal rules. Layers whose preset sets its own animation keep it: no fade, no cut, no pause exemption. */
+export function buildLayerReveal(layerStyles: Record<string, string>) {
+  const own = Object.entries(layerStyles)
+    .filter(([, body]) => setsOwnAnimation(body))
+    .map(([id]) => `:not([data-fx="${id}"])`)
+    .join('');
+  const layer = unsafeCSS(`.mc-anim-fx:not([data-tap])${own}`);
+  return css`@keyframes ${unsafeCSS(LAYER_REVEAL_ANIMATION)}{from{opacity:0}}${layer}{animation:${unsafeCSS(LAYER_REVEAL_ANIMATION)} ${unsafeCSS(String(LAYER_REVEAL_MS))}ms linear backwards}ha-card[${unsafeCSS(PAUSE_ATTRIBUTE)}] ${layer}{animation-play-state:running!important}@media (prefers-reduced-motion:reduce){${layer}{animation:none}}`;
+}
 
 /** Fade-in of particle layers from opacity 0, a cut under reduced motion, and the pause exemption that lets it finish. */
-export const layerRevealStyles = css`@keyframes ${unsafeCSS(LAYER_REVEAL_ANIMATION)}{from{opacity:0}}.mc-anim-fx:not([data-tap]){animation:${unsafeCSS(LAYER_REVEAL_ANIMATION)} ${unsafeCSS(String(LAYER_REVEAL_MS))}ms linear backwards}ha-card[${unsafeCSS(PAUSE_ATTRIBUTE)}] .mc-anim-fx:not([data-tap])${unsafeCSS(OWN_ANIMATION)}{animation-play-state:running!important}@media (prefers-reduced-motion:reduce){.mc-anim-fx:not([data-tap]){animation:none}}`;
+export const layerRevealStyles = buildLayerReveal(ALL_LAYER_STYLES);
