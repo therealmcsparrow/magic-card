@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for reporting a bug. Fill in every part of this form. A report without the card configuration and the browser console errors is hard to act on.
+        Thank you for reporting a bug. Fill in every required part of this form. A report without the card configuration and the browser console errors is hard to act on.
 
         Do not report security problems here. Report them privately at https://github.com/therealmcsparrow/magic-card/security/advisories/new
 
@@ -64,21 +64,30 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: dropdown
     id: browser
     attributes:
-      label: "Browser and version"
-      description: "Where the problem happens."
-      placeholder: "for example Chrome 130 on Windows 11"
+      label: "Browser version range (optional)"
+      description: "The browser engine where the problem happens. Pick a range, not an exact version. You can skip this question. Everything you fill in here is public with the issue."
+      options:
+        - "Chrome, Edge, Android WebView or companion app on Android: 85 to 99"
+        - "Chrome, Edge, Android WebView or companion app on Android: 100 to 119"
+        - "Chrome, Edge, Android WebView or companion app on Android: 120 or newer"
+        - "Safari or iOS: 16.4 to 17"
+        - "Safari or iOS: 18 or newer"
+        - "Firefox ESR"
+        - "Firefox (current release)"
+        - "Other"
+        - "Prefer not to say"
     validations:
-      required: true
+      required: false
 
   - type: input
     id: device
     attributes:
-      label: "Device or companion app"
-      description: "Desktop, phone, tablet or wall panel. For the Android or iOS companion app, give the app version. For a kiosk, name it (for example Fully Kiosk Browser)."
-      placeholder: "for example Android 15 with the Home Assistant companion app 2026.10"
+      label: "Device and operating system"
+      description: "Desktop, phone, tablet or wall panel, with the major version of the operating system only. For a kiosk, name it (for example Fully Kiosk Browser). For the Android or iOS companion app, give the app's major version only if you know it. The issue is public, so leave out exact build numbers and anything that identifies you."
+      placeholder: "for example Tablet, Android 15, companion app 2026"
     validations:
       required: true
 
