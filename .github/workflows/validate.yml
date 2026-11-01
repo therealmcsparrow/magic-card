@@ -35,6 +35,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Every action is pinned by a full commit SHA with a version comment
+        run: |
+          node tools/check-action-pins.mjs --selftest
+          node tools/check-action-pins.mjs
       - name: Speed and size claims in the docs have their evidence
         run: |
           npm run claims:selftest
