@@ -281,40 +281,57 @@ const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !importa
 /** No way out of the declaration block: braces and at-rules are dropped. */
 const hoverSafe = (t: string) => t.replace(/[{}@]/g, '');
 
+/** One selector with the declarations it takes. */
+export type HoverPart = [selector: string, declarations: string[]];
+
 /**
- * The scoped `:hover` rule of an element tagged `data-mc-hover="<id>"`, from its hover design.
+ * The scoped `:hover` rules of an element tagged `data-mc-hover="<id>"`, from its hover design.
  * Every declaration is `!important` to beat the inline design. Shaped elements and border-length
  * overlays keep what draws their outline. Empty when the hover design writes nothing.
  */
-export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string {
-  if (!hover || typeof hover !== 'object') return '';
+export function hoverParts(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): HoverPart[] {
+  if (!hover || typeof hover !== 'object') return [];
   const list = (style: string) => splitDeclarations(hoverSafe(style)).filter((d) => d.includes(':')).map(important);
   const decls = list(designToStyle(hover as DesignConfig, target.control, target.parts, target.tabs));
   const bar = target.tabs ? list(tabTypeStyle(hover)) : [];
   const h = (resolveEntityColors(designNumbersToCss(hover as DesignConfig)) || {}) as Record<string, unknown>;
   // the Border width, style and colour of a tabs module draw on its tab buttons, rebuilt by the tab look's own parsers
   const buttons = target.tabs && tabHoverBorder ? list(tabHoverBorder(hover)) : [];
-  if (!decls.length && !bar.length && !buttons.length) return '';
+  if (!decls.length && !bar.length && !buttons.length) return [];
   const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const color = nonEmpty(h.border_color) && hoverSafe(nonEmpty(h.border_color)!.replace(/;/g, ''));
-  const extra: string[] = [];
+  const extra: HoverPart[] = [];
   const { shape, borderLength } = target;
   if (shape) {
     const merged = { ...(shape.design || {}), ...hover } as DesignConfig;
     decls.push(...splitDeclarations(shapeElementStyle(merged, shape.padding)).map(important));
-    if (color) extra.push(`${sel} ${shape.card ? '~' : '>'} mc-shape { --mc-shape-stroke: ${color}; }`);
+    if (color) extra.push([`${sel} ${shape.card ? '~' : '>'} mc-shape`, [`--mc-shape-stroke: ${color}`]]);
     const shadow = nonEmpty(h.box_shadow);
     if (shadow) {
       const filter = hoverSafe(boxShadowToDropShadow(shadow) ?? 'none');
-      extra.push(`.mc-shape-shadow:has(> ${shape.card ? 'ha-card > ' : ''}${sel}) { filter: ${filter} !important; }`);
+      extra.push([`.mc-shape-shadow:has(> ${shape.card ? 'ha-card > ' : ''}${sel})`, [`filter: ${filter} !important`]]);
     }
   } else if (borderLength) {
     decls.push(...splitDeclarations(borderLength.style).map(important));
-    if (color) extra.push(`${sel} > .mc-border-fx > i { border-color: ${color} !important; }`);
+    if (color) extra.push([`${sel} > .mc-border-fx > i`, [`border-color: ${color} !important`]]);
   }
-  if (buttons.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header>.mc-tab-button { ${buttons.join('; ')}; }`);
-  if (bar.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header { ${bar.join('; ')}; }`);
-  return [decls.length && `${sel} { ${decls.join('; ')}; }`, ...extra].filter(Boolean).join(' ');
+  if (buttons.length) extra.push([`${sel}>.mc-tabs>.mc-tabs-header>.mc-tab-button`, buttons]);
+  if (bar.length) extra.push([`${sel}>.mc-tabs>.mc-tabs-header`, bar]);
+  return [decls.length && [sel, decls], ...extra].filter(Boolean) as HoverPart[];
+}
+
+/** The hover parts as one stylesheet text. */
+export const hoverRule = (id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string =>
+  hoverParts(id, hover, target).map(([s, d]) => `${s} { ${d.join('; ')}; }`).join(' ');
+
+/**
+ * Sets one `name: value [!important]` declaration on a CSSStyleDeclaration. The CSS parser takes the
+ * value alone, so a `;}` or `@import` in it cannot start another rule; a name that is not a plain
+ * property name sets nothing.
+ */
+export function setDeclaration(style: CSSStyleDeclaration, declaration: string): void {
+  const m = /^(--[\w-]+|-?[a-z][a-z-]*)\s*:\s*([^]*?)\s*(!important)?$/i.exec(declaration.trim());
+  if (m) style.setProperty(m[1], m[2], m[3] ? 'important' : '');
 }
 
 export function resolveConditionalDesign(
