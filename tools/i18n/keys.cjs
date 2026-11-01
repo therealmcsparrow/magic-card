@@ -61,6 +61,62 @@ const hasKeys = (dir) => fs.existsSync(path.join(dir, 'en-GB.json'));
 
 const text = (entry) => (entry && typeof entry.text === 'string' ? entry.text : '');
 
+const LABEL_NAMES = ['english-prevails', 'show-english'];
+const LABELS_MAX_BYTES = 65536;
+const LABEL_MAX_CHARS = 200;
+let labelsCache;
+
+/** The two generated labels from the legal labels file: Map name -> { text, note }. Read once, size capped, only known names. */
+function readLegalLabels(file = path.join(lib.ROOT, contract().LEGAL_LABELS_FILE)) {
+  const shipped = file === path.join(lib.ROOT, contract().LEGAL_LABELS_FILE);
+  if (shipped && labelsCache) return labelsCache;
+  const labels = new Map();
+  if (fs.existsSync(file)) {
+    if (fs.statSync(file).size > LABELS_MAX_BYTES) throw new Error(`${lib.rel(file)}: larger than ${LABELS_MAX_BYTES} bytes`);
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    } catch (e) {
+      throw new Error(`${lib.rel(file)}: not valid JSON (${e.message})`, { cause: e });
+    }
+    const given = data && typeof data === 'object' && data.labels && typeof data.labels === 'object' ? new Map(Object.entries(data.labels)) : new Map();
+    for (const name of LABEL_NAMES) {
+      const l = given.get(name);
+      if (!l || typeof l.text !== 'string' || l.text.trim() === '' || [...l.text].length > LABEL_MAX_CHARS) throw new Error(`${lib.rel(file)}: labels.${name}.text needs 1 to ${LABEL_MAX_CHARS} characters`);
+      labels.set(name, { text: l.text, note: typeof l.note === 'string' && l.note.length >= contract().NOTE_MIN_CHARS ? l.note : 'Label shown next to a legal text in another language.' });
+    }
+  }
+  const out = { labels, listed: listedKeys(file) };
+  if (shipped) labelsCache = out;
+  return out;
+}
+
+/** The `keys` list of the legal labels file: Set of key strings. */
+function listedKeys(file) {
+  try {
+    const list = JSON.parse(fs.readFileSync(file, 'utf8')).keys;
+    return new Set(Array.isArray(list) ? list.filter((k) => typeof k === 'string') : []);
+  } catch {
+    return new Set();
+  }
+}
+
+const isLegal = (entry) => !!entry && entry.legal === true;
+
+/** The namespace's catalogue with the generated `<ns>.legal.<name>` entries added when it holds a legal key. */
+function withLabels(cat) {
+  const spaces = new Set();
+  for (const [key, e] of cat.gb) if (isLegal(e)) spaces.add(key.split('.')[0]);
+  if (!spaces.size) return cat;
+  const { labels } = readLegalLabels();
+  if (!labels.size) return cat;
+  const gb = new Map(cat.gb);
+  for (const ns of spaces) {
+    for (const [name, l] of labels) if (!gb.has(`${ns}.legal.${name}`)) gb.set(`${ns}.legal.${name}`, { text: l.text, note: l.note, max: LABEL_MAX_CHARS });
+  }
+  return { ...cat, gb };
+}
+
 /** Entries of a key namespace sorted by en-GB text, then key: [{ key, gb, us, nl }] (us and nl fall back to en-GB). */
 function sortedEntries(cat) {
   return [...cat.gb.keys()]
@@ -76,7 +132,8 @@ function sortedEntries(cat) {
  * key -> index map. Keys whose three texts are all equal share one entry; a shipped en-US or nl cell equal to its
  * en-GB cell is written empty (the run time shows en-GB for an empty cell).
  */
-function tablesForKeys(cat) {
+function tablesForKeys(source) {
+  const cat = withLabels(source);
   const gb = [];
   const us = [];
   const nl = [];
@@ -98,7 +155,8 @@ function tablesForKeys(cat) {
 const TS_TYPE = { plain: 'string | number', select: 'string | number', plural: 'number' };
 
 /** Source of keys.gen.ts: `export interface Keys` with the argument types of each message and its English as the doc comment. */
-function typesSource(cat) {
+function typesSource(source) {
+  const cat = withLabels(source);
   const lines = [];
   for (const key of [...cat.gb.keys()].sort(byCode)) {
     const t = text(cat.gb.get(key));
@@ -117,6 +175,7 @@ function canonicalJson(kind, map) {
     if (kind === 'gb') {
       const v = { text: e.text, note: e.note, max: e.max };
       if (e.vars && typeof e.vars === 'object') v.vars = Object.fromEntries(Object.keys(e.vars).sort(byCode).map((k) => [k, e.vars[k]]));
+      if (e.legal !== undefined) v.legal = e.legal;
       out[key] = v;
     } else out[key] = { text: e.text, hash: e.hash };
   }
@@ -235,6 +294,9 @@ function checkNamespace({ ns, cat, uses = new Map(), waivers = new Map(), pendin
       else if (have !== want) add('D8', 'error', `"${key}": vars (${have || 'none'}) must describe exactly the arguments of the text (${want || 'none'})`);
       else if (e.vars !== undefined && Object.values(e.vars).some((d) => typeof d !== 'string' || d.trim() === '')) add('D8', 'error', `"${key}": every vars entry needs a description`);
     }
+    if (e.legal !== undefined && e.legal !== true) add('D8', 'error', `"${key}": legal must be true or left out`);
+    const legal = isLegal(e);
+    if (legal && [...waivers.keys()].some((w) => w.startsWith(`${key} `))) add('D10', 'error', `"${key}": a waiver is not allowed on legal text; only a translation made from the current English confirms it`);
     for (const m of spelling(e.text)) add('D3', 'error', `"${key}": ${m}`);
     if (!uses.has(key)) add('D2', 'error', `en-GB.json: "${key}" is used by no call`);
     const current = sourceHash(e.text);
@@ -249,10 +311,12 @@ function checkNamespace({ ns, cat, uses = new Map(), waivers = new Map(), pendin
       else if (!base.error && lib.argSig(p.args) !== lib.argSig(base.args)) add('D2', slot === 'nl' ? tr : 'error', `"${key}" (${loc}): arguments differ (${lib.argNames(p.args)} vs ${lib.argNames(base.args)})`);
       if (Number.isInteger(e.max) && !p.error && [...longestText(t.text)].length > e.max) add('D8', 'error', `"${key}" (${loc}): ${[...longestText(t.text)].length} characters, max is ${e.max}`);
       if (typeof t.hash !== 'string' || t.hash.length !== contract().SOURCE_HASH_CHARS || !HEX.test(t.hash)) add('D9', 'error', `"${key}" (${loc}): the hash is not ${contract().SOURCE_HASH_CHARS} lower-case hex characters`);
+      else if (t.hash !== current && legal) add('D10', 'error', `"${key}" (${loc}) is stale legal text: made from "${t.hash}", the English is now "${current}"; check the translation again and set its hash; a waiver does not clear it`);
       else if (t.hash !== current && !waivers.has(`${key}\u0000${current}`)) add('D9', strict ? 'error' : 'warn', `"${key}" (${loc}) is stale: made from "${t.hash}", the English is now "${current}"; confirm the translation and set its hash, or add a waiver for a typo or punctuation edit`);
     }
     if (Number.isInteger(e.max) && !base.error && [...longestText(e.text)].length > e.max) add('D8', 'error', `"${key}" (en-GB): ${[...longestText(e.text)].length} characters, max is ${e.max}`);
   }
+  for (const key of readLegalLabels().listed) if (cat.gb.has(key) && !isLegal(cat.gb.get(key))) add('D10', 'error', `"${key}" is listed in ${contract().LEGAL_LABELS_FILE} but has no legal flag`);
   for (const [slot, name] of [['us', 'en-US.json'], ['nl', 'nl.json']]) {
     for (const key of cat[slot].keys()) if (!cat.gb.has(key)) add('D2', slot === 'nl' ? tr : 'error', `${name}: entry "${key}" is not in en-GB.json`);
   }
@@ -272,6 +336,6 @@ function checkWaivers(waivers, catalogues) {
 }
 
 module.exports = {
-  sourceHash, readMap, loadCatalogues, hasKeys, sortedEntries, tablesForKeys, typesSource, canonicalJson, longestText,
+  sourceHash, readLegalLabels, isLegal, readMap, loadCatalogues, hasKeys, sortedEntries, tablesForKeys, typesSource, canonicalJson, longestText,
   readWaivers, checkNamespace, checkWaivers,
 };
