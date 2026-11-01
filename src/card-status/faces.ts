@@ -15,7 +15,8 @@ const SHAPES: Record<StatusFace['kind'], string> = {
 /** Overlay rules; the card adopts them with the chunk. The box stays empty (and zero-sized) until a face shows. */
 export const statusStyles = css`
 .mc-status{position:absolute;inset-block-start:var(--mc-shape-it,0px);left:var(--mc-shape-il,0px);z-index:7;margin:0;padding:0;max-inline-size:calc(100% - var(--mc-shape-il,0px));pointer-events:none}
-ha-card:has(.mc-pause[data-corner=top-left]) .mc-status{left:calc(40px + var(--mc-shape-il,0px))}
+ha-card:not([data-mc-paused]):has(.mc-pause[data-corner=top-left]) .mc-status{left:calc(40px + var(--mc-shape-il,0px))}
+ha-card[data-mc-paused]:has(.mc-pause[data-corner=top-left]) .mc-status{left:auto;right:var(--mc-shape-ir,0px);max-inline-size:calc(100% - var(--mc-shape-ir,0px))}
 .mc-status-badge{display:flex;align-items:center;box-sizing:border-box;min-block-size:44px;min-inline-size:44px;max-inline-size:100%;margin:0;padding:0 0 0 6px;border:0;background:none;color:inherit;font:inherit;cursor:pointer;pointer-events:auto}
 span.mc-status-badge{pointer-events:none;cursor:default}
 .mc-status-pill{display:flex;align-items:center;gap:var(--ha-space-1,4px);box-sizing:border-box;min-inline-size:0;max-inline-size:100%;padding:2px var(--ha-space-2,8px);background:var(--ha-card-background,var(--card-background-color,#fff));color:var(--primary-text-color,#212121);border:1px solid var(--divider-color,transparent);border-radius:var(--ha-border-radius-md,8px);font-size:var(--ha-font-size-s,.875rem);line-height:1.3}

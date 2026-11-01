@@ -48,8 +48,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 63336,
-      "measured": 63336
+      "cap": 63396,
+      "measured": 63396
     }
   },
   "files": {
@@ -194,9 +194,9 @@
       "note": "8 KiB, measured 7,667 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The corner badge, its icons and the connection and not-updated sentences of the quiet status chunk. The contract ceiling is 16,384 B (lazy-module STATUS_CHUNK_CEILING)."
     },
     "magic-card-pause.js": {
-      "raw": 4096,
+      "raw": 6144,
       "ceiling": 16384,
-      "note": "4 KiB, measured 3,763 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The Pause motion button class and its rules. The contract ceiling is 16,384 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "6 KiB, measured 5,371 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The Pause motion button class and its rules. The contract ceiling is 16,384 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-popup.js": {
       "raw": 15360,
@@ -1023,6 +1023,18 @@
       "field": "/entry/br/cap",
       "from": 62535,
       "to": 63336
+    },
+    {
+      "id": "pause-raw-6144",
+      "field": "/files/magic-card-pause.js/raw",
+      "from": 4096,
+      "to": 6144
+    },
+    {
+      "id": "entry-br-63336-to-63396",
+      "field": "/entry/br/cap",
+      "from": 63336,
+      "to": 63396
     }
   ]
 }

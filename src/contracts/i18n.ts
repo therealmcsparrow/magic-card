@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.0.0.
 
 export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 6;
+export const I18N_CONTRACT_REVISION = 7;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -70,7 +70,7 @@ export interface I18nModuleEntry {
 }
 
 export const I18N_MODULES = {
-  card: { bundle: 'magic-card.js (second copy in magic-card-animation-studio.js, accepted)', folders: ['src/card', 'src/modules (dashboard text only)', 'src/icons', 'src/utils (runtime files, dashboard text only)'], tables: 'inline', status: 'complete', slice: 'I1', dashboard: true },
+  card: { bundle: 'magic-card.js (second copy in magic-card-animation-studio.js, accepted)', folders: ['src/card (not src/card/pause-i18n)', 'src/modules (dashboard text only)', 'src/icons', 'src/utils (runtime files, dashboard text only)'], tables: 'inline', status: 'complete', slice: 'I1', dashboard: true },
   labels: {
     bundle: 'magic-card-editor.js, magic-card-animation-studio.js (lm() numbers also in magic-card.js)',
     folders: [
@@ -99,6 +99,7 @@ export const I18N_MODULES = {
   'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'controls': { bundle: 'magic-card-controls.js', folders: ['src/modules/controls/dropdown-view.ts', 'src/modules/controls/light-view.ts', 'src/modules/controls/spinbox-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
   'modules-extra': { bundle: 'magic-card-modules-extra.js', folders: ['src/modules/advanced/custom-card-view.ts', 'src/modules/advanced/forecast-view.ts', 'src/modules/content/camera-view.ts', 'src/modules/content/graphs-view.ts', 'src/modules/layout/tabs-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
+  'card-pause': { bundle: 'magic-card-pause.js', folders: ['src/card/card-pause.ts'], tables: 'inline', status: 'complete', slice: 'pause-label', dashboard: true },
   'image-tools': { bundle: 'magic-card-image-tools.js', folders: ['src/image-tools'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },

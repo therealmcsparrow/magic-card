@@ -9,7 +9,7 @@ import { t } from '../card/i18n';
 /** Small inline error state shown in place of one module; the rest of the card keeps rendering. */
 export function renderModuleError(messages: string[]): TemplateResult {
   const text = messages.join('. ');
-  return html`<div class="mc-module mc-module-error" role="alert" title=${text}>
+  return html`<div class="mc-module mc-module-error" role="status" title=${text}>
     <ha-icon icon="mdi:alert-circle-outline"></ha-icon><span>${text}</span>
   </div>`;
 }
