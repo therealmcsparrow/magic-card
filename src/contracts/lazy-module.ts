@@ -138,7 +138,15 @@ export interface SameBuildModule {
  * Chunks a render starts when it meets the need, with no needs() row (only the render knows whether a
  * document has a rig or a particle simulation): dist/magic-card-<name>.js. They load through lazyChunk() too.
  */
-export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image';
+export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image' | 'status';
+
+/** Quiet chunks: each is built with lazyChunk(name, importer, { silent: true }), so a failure shows no notice. */
+export const SILENT_CHUNKS = ['status'] as const;
+
+/** The status chunk (contract card-status 1.0.0): the connection and not-updated faces. */
+export const STATUS_CHUNK_FILE = 'magic-card-status.js';
+/** Same meaning as LAZY_CHUNK_CEILINGS. */
+export const STATUS_CHUNK_CEILING = 16_384;
 
 /** One lazily loaded chunk (src/utils/lazy-chunk.ts). */
 export interface LazyChunk {

@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.0.0.
 
 export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 5;
+export const I18N_CONTRACT_REVISION = 6;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -81,6 +81,7 @@ export const I18N_MODULES = {
     ],
     tables: 'chunk', chunk: 'magic-card-i18n-labels.js', status: 'complete', slice: 'I0b, I2c, I7, I10', dashboard: false,
   },
+  'card-status': { bundle: 'magic-card-status.js', folders: ['src/card-status'], tables: 'inline', status: 'complete', slice: 'status', dashboard: true },
   'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator and files the studio also compiles)'], tables: 'inline', status: 'complete', slice: 'I2', dashboard: false },
   'layer-editor': { bundle: 'magic-card-layer-editor.js', folders: ['src/editor/layers (the panels: layer-groups, layer-styles, tokens, controls, cost, looks, bg-layers, bg-layer-editor, bg-layers-ops, layers-sheet)', 'src/editor/components/mc-anchor-grid.ts'], tables: 'inline', status: 'complete', slice: 'T13', dashboard: false },
   'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'complete', slice: 'I3', dashboard: false },

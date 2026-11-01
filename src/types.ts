@@ -33,7 +33,12 @@ export interface HomeAssistant {
       callback: (event: T) => void,
       eventType: string,
     ) => Promise<() => void>;
+    /** Connection events ('ready', 'disconnected', 'reconnect-error'); present in the websocket library, read by feature detection. */
+    addEventListener?: (event: string, listener: () => void) => void;
+    removeEventListener?: (event: string, listener: () => void) => void;
   };
+  /** False while the websocket is down; a Home Assistant without the field counts as connected. */
+  connected?: boolean;
   /** `state` overrides the entity's own state (e.g. a forecast condition). */
   formatEntityState: (entity: HassEntity, state?: string) => string;
   formatEntityAttributeValue: (entity: HassEntity, attribute: string, value?: unknown) => string;
@@ -48,6 +53,8 @@ export interface HassEntity {
   attributes: Record<string, unknown>;
   last_changed: string;
   last_updated: string;
+  /** The last report, even with an unchanged value; absent on older Home Assistant. */
+  last_reported?: string;
   context: { id: string; parent_id: string | null; user_id: string | null };
 }
 

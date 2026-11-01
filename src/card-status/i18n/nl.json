@@ -1,0 +1,14 @@
+{
+  "card-status.faces.connection-lost-at-time": {
+    "text": "Verbinding verbroken om {time}",
+    "hash": "73652d5e"
+  },
+  "card-status.faces.not-updated-since-time": {
+    "text": "Niet bijgewerkt sinds {time}",
+    "hash": "5ad77d08"
+  },
+  "card-status.faces.reconnected": {
+    "text": "Opnieuw verbonden",
+    "hash": "20a447db"
+  }
+}

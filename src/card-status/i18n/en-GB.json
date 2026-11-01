@@ -1,0 +1,23 @@
+{
+  "card-status.faces.connection-lost-at-time": {
+    "text": "Connection lost at {time}",
+    "note": "Line on the top edge of the card while the connection to Home Assistant is down. {time} is when it dropped: a time on the same day, a short date and time otherwise.",
+    "max": 60,
+    "vars": {
+      "time": "The moment the connection dropped, formatted for the viewer's language and time format."
+    }
+  },
+  "card-status.faces.not-updated-since-time": {
+    "text": "Not updated since {time}",
+    "note": "Line on the top edge of the card when an entity with a quiet time has reported nothing for longer than that time. {time} is its last report.",
+    "max": 60,
+    "vars": {
+      "time": "The moment of the entity's last report, formatted for the viewer's language and time format."
+    }
+  },
+  "card-status.faces.reconnected": {
+    "text": "Reconnected",
+    "note": "Line on the top edge of the card for a moment after the connection to Home Assistant returned, when the card had shown that it was lost.",
+    "max": 30
+  }
+}
