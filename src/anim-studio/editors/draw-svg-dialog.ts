@@ -152,7 +152,7 @@ export class AnimSvgDialog extends LitElement {
       }
       .warn {
         margin: 0;
-        padding-left: 18px;
+        padding-inline-start: 18px;
         font-size: 0.8125rem;
         color: color-mix(in srgb, var(--warning-color, #ff9800) 65%, var(--primary-text-color, #212121));
       }

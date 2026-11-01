@@ -446,11 +446,12 @@ export class AnimPartInspector extends LitElement {
       .unit .input {
         flex: 1;
         min-width: 0;
-        padding-right: 52px;
+        padding-inline-end: 52px;
       }
       .suffix {
         position: absolute;
         right: 12px;
+        inset-inline: auto 12px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--mc-text-2);

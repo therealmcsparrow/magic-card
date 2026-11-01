@@ -719,6 +719,7 @@ export class AnimSequenceEditor extends LitElement {
       .sched {
         display: grid;
         gap: 6px;
+        direction: ltr; /* the schedule runs left to right */
       }
       .bar {
         position: relative;
@@ -763,7 +764,7 @@ export class AnimSequenceEditor extends LitElement {
         top: 2px;
         bottom: 2px;
         width: 6px;
-        margin-left: -3px;
+        margin-left: -3px; /* physical */
         border-radius: 3px;
         cursor: pointer;
         background: repeating-linear-gradient(45deg, var(--mc-error-ink) 0 2px, transparent 2px 4px);
@@ -774,7 +775,7 @@ export class AnimSequenceEditor extends LitElement {
         top: -5px;
         bottom: -5px;
         width: 2px;
-        margin-left: -1px;
+        margin-left: -1px; /* physical */
         background: var(--mc-accent);
         border-radius: 1px;
         pointer-events: none;
@@ -783,7 +784,7 @@ export class AnimSequenceEditor extends LitElement {
         content: '';
         position: absolute;
         top: -3px;
-        left: -4px;
+        left: -4px; /* physical */
         width: 10px;
         height: 10px;
         border-radius: 50%;
@@ -856,7 +857,7 @@ export class AnimSequenceEditor extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: transparent;
-        text-align: left;
+        text-align: start;
       }
       .toggle:hover {
         background: var(--mc-surface-2);
@@ -938,7 +939,7 @@ export class AnimSequenceEditor extends LitElement {
         display: flex;
         align-items: center;
         gap: 8px;
-        text-align: left;
+        text-align: start;
         cursor: pointer;
       }
       .pick-btn .pick-val {
@@ -978,13 +979,13 @@ export class AnimSequenceEditor extends LitElement {
       }
       .pick-search > ha-icon {
         position: absolute;
-        left: 10px;
+        inset-inline-start: 10px;
         --mdc-icon-size: 18px;
         color: var(--mc-text-2);
         pointer-events: none;
       }
       .pick-search .input {
-        padding-left: 36px;
+        padding-inline-start: 36px;
       }
       .pick-list {
         display: grid;
@@ -1014,7 +1015,7 @@ export class AnimSequenceEditor extends LitElement {
         background: transparent;
         color: inherit;
         font: inherit;
-        text-align: left;
+        text-align: start;
         cursor: pointer;
       }
       .pick-item:hover,
