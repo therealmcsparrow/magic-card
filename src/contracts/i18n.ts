@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.0.0.
 
 export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 6;
+export const I18N_CONTRACT_REVISION = 7;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */

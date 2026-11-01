@@ -86,7 +86,7 @@ export class CardPause {
 
   private _stop = (e: Event): void => e.stopPropagation();
 
-  /** Last child of ha-card, followed by the aria-hidden Paused label while pressed. Under `auto` the observer count has no change event: look again after the render. */
+  /** The button is a last child of ha-card; while paused the aria-hidden Paused label follows it. Under `auto` the observer count has no change event: look again after the render. */
   button(c: CardPauseKeys, on: boolean): TemplateResult | typeof nothing {
     const auto = this._mode === 'auto';
     const show = this._mode === 'always' || (auto && this._wants(on));
@@ -98,7 +98,7 @@ export class CardPause {
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button
-      >${on ? html`<span class="mc-pause-label" data-corner=${corner} aria-hidden="true">${tp('card-pause.card-pause.paused')}</span>` : nothing}`;
+      >${on ? html`<span class="mc-pause-label" data-corner=${corner} aria-hidden="true"><span>${tp('card-pause.card-pause.paused')}</span></span>` : nothing}`;
   }
 
   private _wants(on: boolean): boolean {
