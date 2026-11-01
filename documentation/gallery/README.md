@@ -1,6 +1,6 @@
 # Card gallery
 
-One hundred and thirty-four complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
+One hundred and thirty-four complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card. Three more cards, on a page of their own, show when a card may be out of date: [Is this still true?](still-true.md).
 
 ![All one hundred and thirty-four cards](images/all-cards.png)
 
@@ -20,6 +20,7 @@ One hundred and thirty-four complete cards to copy and adapt, from a weather car
 | [Seasonal](seasonal.md) | Autumn garden, Halloween porch, Christmas countdown |
 | [Personal](personal.md) | Up next, Crypto prices, Health today |
 | [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board, Operations console, Operations console, phone-width |
+| [Is this still true?](still-true.md) | Connection lost, Reconnected, Not updated |
 | [Showcase](showcase.md) | Whole-home energy, Living room, Bedroom at night, Heating, Rain water tank, Car charging, Garden irrigation, Kitchen power, Media room, Front door, Reactor bay, Potion lab, Engine room, Dragon vault, Winter cabin, Haunted attic, Synthwave deck, Reef tank, Station oxygen, Steam boiler |
 
 ## Complete dashboards

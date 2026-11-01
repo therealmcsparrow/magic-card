@@ -1,10 +1,10 @@
 {
   "description": "Allowlist of config keys that load no chunk (plain keys), with the feature and host keys",
   "plain_keys_sha256": "824c8f7d042f34bd14ce4e2e9206d468e47e2d48d2e92d3f043389349a135913",
-  "count": 137,
+  "count": 140,
   "plain": 13,
-  "feature": 124,
-  "plain_share_percent": 9.5,
+  "feature": 127,
+  "plain_share_percent": 9.3,
   "trace_fixtures": {
     "plain": "080",
     "effect": "063"
@@ -18,11 +18,12 @@
     "modules-extra": 20,
     "pause": 20,
     "seasonal": 5,
+    "status": 3,
     "svg-icon": 18
   },
   "reserve_counts": {
     "none": 13,
-    "overlay": 45,
+    "overlay": 48,
     "configured": 24,
     "default": 55
   },
@@ -2401,6 +2402,54 @@
       "reserve_kind": "none",
       "grid_rows": false,
       "features": [],
+      "unknown_keys": [],
+      "modules": 3
+    },
+    {
+      "id": "138",
+      "source": "connection-lost",
+      "sha256": "d0f92d78ce83cde8459dc454b676891bb7cb91eafdb3e762aec58cf4511291e3",
+      "class": "feature",
+      "chunks": [
+        "status"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "module.quiet_time"
+      ],
+      "unknown_keys": [],
+      "modules": 3
+    },
+    {
+      "id": "139",
+      "source": "reconnected",
+      "sha256": "5886f657d6acbdafa400090b895d0251d6123b45c8eb18966d5703a355ec4f91",
+      "class": "feature",
+      "chunks": [
+        "status"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "module.quiet_time"
+      ],
+      "unknown_keys": [],
+      "modules": 3
+    },
+    {
+      "id": "140",
+      "source": "not-updated",
+      "sha256": "82aa623b55ead7b3cbd07afa9cf7b719751b92d3ca3a33f73b434c0ae59a3e05",
+      "class": "feature",
+      "chunks": [
+        "status"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "module.quiet_time"
+      ],
       "unknown_keys": [],
       "modules": 3
     }

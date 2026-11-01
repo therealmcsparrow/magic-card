@@ -1,7 +1,7 @@
 // Gates the kernel levers must keep while the main file shrinks. Everything here runs without a browser and without
 // a rebuilt dist (the committed dist is rebuilt only at release, so no test here reads it):
 //  - the entry caps only go down, never through an approved_raises entry of their own
-//  - the plain-key allowlist, the classification of the 137 gallery fixtures and the needs table agree
+//  - the plain-key allowlist, the classification of the 140 gallery fixtures and the needs table agree
 //  - an allowlist-only card renders without asking for a chunk and without a notice, placeholder or status container
 //  - the retry timing and the manifest URL stay as the loader documents them
 //  - the DOM-diff and size tooling the levers are measured with still pass their own checks
@@ -86,9 +86,9 @@ describe('plain cards and the needs table', () => {
   const feature = classification.cards.filter((c) => c.class === 'feature');
   const plain = classification.cards.filter((c) => c.class === 'plain');
 
-  it('the gallery has 137 fixtures and the committed classification was made from the current allowlist', () => {
-    expect(classification.cards).toHaveLength(137);
-    expect(classification.count).toBe(137);
+  it('the gallery has 140 fixtures and the committed classification was made from the current allowlist', () => {
+    expect(classification.cards).toHaveLength(140);
+    expect(classification.count).toBe(140);
     expect(classification.plain_keys_sha256).toBe(sha256(keysText));
     expect(plain.length).toBe(classification.plain);
   });
