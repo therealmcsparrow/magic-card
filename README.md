@@ -1132,6 +1132,10 @@ Magic Card Utils makes no requests to other websites. Magic Card makes them only
 -   Sections view: the card supplies no fixed size, so the Layout tab of the card (`grid_options`) controls its columns and rows as usual. A live pop-up asks for a full-width, auto-height cell with no minimum rows and takes itself out of the flow. The older `layout_options` are supported as well.
 -   The `grid_options`, `layout_options`, `visibility` and `view_layout` keys that Home Assistant stores in the card config are kept when you edit the card or link it to a template.
 
+### Older Android tablets
+
+Magic Card needs Android System WebView 85 (Chromium 85) or newer. It was checked on a desktop copy of that engine, not on a tablet. On it, the bell swing, the glow and the ripple rings of some animated cards do not show, and the card can stutter when an extra file arrives. See [Older Android tablets](documentation/old-tablets/README.md) and the [old engine check](documentation/old-tablets/old-engine-check.md).
+
 ## Troubleshooting
 
 -   A new option or the editor looks outdated. The browser still runs an old copy. Hard refresh (Ctrl+Shift+R) and, in the companion app, clear the frontend cache. Open the browser console and look for the line `MAGIC-CARD v<version>` to see which version is loaded. It must match the version you installed.

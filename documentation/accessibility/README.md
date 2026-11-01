@@ -11,7 +11,7 @@ Magic Card is built to WCAG 2.2 AA. This is the standard we build to. We have no
 -   **Labels on every field.** Every value in the shape editor and the SVG editor is a labelled field.
 -   **Changes are announced.** When a layer moves, the new position is announced. An import summary is announced when it appears.
 -   **Colour is not the only signal.** The tone of a layer in the SVG editor is shown as text.
--   **Reduced motion.** Cards turn off most movement when the system asks for reduced motion, and the animation studio has a reduced-motion preview. A flow line becomes a static line with an arrow.
+-   **Reduced motion.** Cards turn off most movement when the system asks for reduced motion, and the animation studio has a reduced-motion preview. A flow line becomes a static line with an arrow. Particle layers fade in over 200 ms, and appear at once with reduced motion.
 -   **Your language.** The editors follow the language of your Home Assistant profile. See [Languages](../languages/README.md).
 
 ## What to check on your own device
