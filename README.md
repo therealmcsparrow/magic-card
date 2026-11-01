@@ -1136,6 +1136,10 @@ Magic Card Utils makes no requests to other websites. Magic Card makes them only
 
 Magic Card needs Android System WebView 85 (Chromium 85) or newer. It was checked on a desktop copy of that engine, not on a tablet. On it, the bell swing, the glow and the ripple rings of some animated cards do not show, and the card can stutter when an extra file arrives. See [Older Android tablets](documentation/old-tablets/README.md) and the [old engine check](documentation/old-tablets/old-engine-check.md).
 
+### Check a genuine release
+
+Releases are built by a GitHub Actions workflow. You can check a download by looking at the release author and the attached SBOM, or with the GitHub CLI. Signed attestations exist only for releases built after they were added, so older releases pass the quick check only. See [Check a genuine release](documentation/security/check-a-genuine-release.md).
+
 ## Troubleshooting
 
 -   A new option or the editor looks outdated. The browser still runs an old copy. Hard refresh (Ctrl+Shift+R) and, in the companion app, clear the frontend cache. Open the browser console and look for the line `MAGIC-CARD v<version>` to see which version is loaded. It must match the version you installed.
