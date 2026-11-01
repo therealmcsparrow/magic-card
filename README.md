@@ -1138,7 +1138,7 @@ Magic Card needs Android System WebView 85 (Chromium 85) or newer. It was checke
 
 ### Check a genuine release
 
-Releases are built by a GitHub Actions workflow. You can check a download by looking at the release author and the attached SBOM, or with the GitHub CLI. Signed attestations exist only for releases built after they were added, so older releases pass the quick check only. See [Check a genuine release](documentation/security/check-a-genuine-release.md).
+Releases are built by a GitHub Actions workflow. You can check a download by looking at the release author and the attached SBOM, or with the GitHub CLI. Signed attestations exist from version 2026.10.12-beta.14 on. A release before that has no attestation and can only get the quick check. See [Check a genuine release](documentation/security/check-a-genuine-release.md).
 
 ## Troubleshooting
 

@@ -38,6 +38,30 @@ describe('pinned-action check', () => {
     expect(checkPins(`- uses: docker://alpine@sha256:${'b'.repeat(64)}`)).toEqual([]);
     expect(checkPins('- uses: docker://alpine:3.20')).toHaveLength(1);
   });
+  it('fails closed on a uses key in a form it cannot read', () => {
+    for (const line of [
+      '- uses : a/b@v4',
+      `- uses : a/b@${sha} # v1`,
+      '- "uses": a/b@v4',
+      "- 'uses': a/b@v4",
+      '- { uses: a/b@v4 }',
+      `- {uses: a/b@${sha}}`,
+      '- { name: x, uses: a/b@v4 }',
+      '  "uses": a/b@v4',
+      "  'uses' : a/b@v4",
+    ]) {
+      const out = checkPins(line, 'a.yml');
+      expect(out, line).toHaveLength(1);
+      expect(out[0]).toContain('cannot read');
+    }
+  });
+  it('does not read uses inside a run line, a comment or a trailing comment', () => {
+    expect(checkPins('run: echo uses: a/b@v4\n# { uses: a/b@v4 }\n- name: x # "uses": y')).toEqual([]);
+  });
+  it('refuses a comment with extra words after the version', () => {
+    expect(checkPins(`- uses: a/b@${sha} # v1 and more`)).toHaveLength(1);
+    expect(checkPins(`- uses: a/b@${sha} # v1+2`)).toHaveLength(1);
+  });
   it('reports the line of each unpinned action', () => {
     const out = checkPins(`a: 1\n- uses: x/y@v1\n- uses: x/z@${sha} # v2\n- uses: x/w@v3`);
     expect(out.map((m: string) => m.split(':')[1])).toEqual(['2', '4']);

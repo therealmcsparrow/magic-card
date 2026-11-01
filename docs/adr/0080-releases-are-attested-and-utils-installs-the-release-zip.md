@@ -1,6 +1,6 @@
 # 0080 Releases are attested and Utils installs the release zip
 
-Status: accepted (Plan Gate, cooler-theme-08-release-security-draft, 2026-11-01)
+Status: accepted
 
 ## Decision
 

@@ -4,17 +4,17 @@ Magic Card releases are built by a GitHub Actions workflow in the Magic Card rep
 
 ## Which releases can be checked
 
-Signed attestations (the proof the full check reads) exist only for releases built after they were added to the release workflow. The release notes of the first such release say so. Earlier releases have no attestations, so the full check fails on them, and only the quick check applies. A failed full check on an older release does not mean the file is bad.
+Signed attestations (the proof the full check reads) exist from version 2026.10.12-beta.14 on. For that version and every later one, a failed full check means the file is not genuine: do not install it. A release before that version has no attestation, so the full check fails on it and only the quick check applies. Its author may be a person's name, because those releases were not all made by the workflow.
 
 ## Quick check, no tools
 
 1. Open the [Magic Card releases](https://github.com/therealmcsparrow/magic-card/releases) page and pick the release you installed.
-2. Look at the author shown next to the release. It should be `github-actions[bot]`. The workflow creates every release, so a release made by hand shows a person's name.
+2. Look at the author shown next to the release. From version 2026.10.12-beta.14 on it should be `github-actions[bot]`, because the workflow creates the release. A person's name on that version or a later one is a warning sign. Earlier releases may show a person's name.
 3. Look at the list of files under Assets. It should hold `sbom.cdx.json` next to the `.js` files. The SBOM is the list of the parts the card is built from.
 
-Expected result: the author is `github-actions[bot]` and `sbom.cdx.json` is attached.
+Expected result for version 2026.10.12-beta.14 or later: the author is `github-actions[bot]` and `sbom.cdx.json` is attached.
 
-This check only reads what the releases page shows. It cannot catch someone who has taken over the maintainer's GitHub sign-in, because that person could still publish through the workflow, or edit a release and its notes afterwards. If that matters to you, use the full check.
+This check only reads what the releases page shows. It does not read the file itself, so it cannot catch a file that was replaced or uploaded outside the workflow, and a release and its notes can be edited afterwards. The full check catches a file that was replaced or uploaded outside the workflow. Neither check catches a release that someone ran through the workflow, such as a person who has taken over the maintainer's GitHub sign-in.
 
 ## Full check with the GitHub CLI
 

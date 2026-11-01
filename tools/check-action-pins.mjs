@@ -14,7 +14,9 @@ const USES_LINE = /^\s*(?:-\s+)?uses:\s*(.*)$/;
 const VALUE = /^(?:"([^"]*)"|'([^']*)'|([^\s#]+))\s*(?:#\s*(.*\S))?\s*$/;
 const SHA_REF = /^[^@\s]+@[0-9a-f]{40}$/;
 const DOCKER_DIGEST = /^docker:\/\/[^@\s]+@sha256:[0-9a-f]{64}$/;
-const COMMENT = /^[A-Za-z0-9][A-Za-z0-9._/+-]*(?:\s.*)?$/;
+const COMMENT = /^[A-Za-z0-9][A-Za-z0-9._/-]*$/;
+// `uses` as a key in any shape the line check above does not read: quoted, a space before the colon, or inside `{ }`.
+const ODD_KEY = /(?:^\s*(?:-\s+)*|[{,]\s*)(["']?)uses\1\s*:/;
 
 /**
  * Check the text of one workflow or action file.
@@ -26,9 +28,13 @@ export function checkPins(text, file = 'workflow') {
   const problems = [];
   const lines = text.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
-    const hit = USES_LINE.exec(lines[i]);
-    if (!hit) continue;
+    if (/^\s*#/.test(lines[i])) continue;
     const where = `${file}:${i + 1}`;
+    const hit = USES_LINE.exec(lines[i]);
+    if (!hit) {
+      if (ODD_KEY.test(lines[i].replace(/\s#.*$/, ''))) problems.push(`${where}: uses key is written in a form this check cannot read`);
+      continue;
+    }
     const parsed = VALUE.exec(hit[1].trim());
     if (!parsed) {
       problems.push(`${where}: uses: value cannot be read`);
@@ -100,6 +106,14 @@ function selftest() {
     ['sha with empty comment', `- uses: actions/checkout@${sha} #`, 1],
     ['docker by tag', '- uses: docker://alpine:3.20', 1],
     ['no ref at all', '- uses: actions/checkout', 1],
+    ['comment with extra words', `- uses: actions/checkout@${sha} # v1 and more`, 1],
+    ['space before the colon', '- uses : a/b@v4', 1],
+    ['double-quoted key', '- "uses": a/b@v4', 1],
+    ['single-quoted key', "- 'uses': a/b@v4", 1],
+    ['flow mapping', '- { uses: a/b@v4 }', 1],
+    ['flow mapping after another key', '- { name: x, uses: a/b@v4 }', 1],
+    ['quoted key under a name line', '  "uses": a/b@v4', 1],
+    ['uses in a run line', '  run: echo uses: a/b@v4', 0],
   ];
   let bad = 0;
   for (const [name, text, expected] of cases) {
@@ -118,6 +132,10 @@ function main(argv) {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const root = path.resolve(argv.find((a) => !a.startsWith('--')) ?? path.join(here, '..'));
   const { files, problems } = scan(root);
+  if (!files) {
+    process.stderr.write(`check-action-pins: no workflow files found under ${root}\n`);
+    process.exit(1);
+  }
   if (problems.length) {
     for (const p of problems) process.stderr.write(`${p}\n`);
     process.stderr.write(`check-action-pins: ${problems.length} unpinned action(s) in ${files} file(s)\n`);
