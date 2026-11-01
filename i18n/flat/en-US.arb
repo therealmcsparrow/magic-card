@@ -1776,6 +1776,13 @@
     "x-max-length": 30,
     "x-source-hash": "60df34ee"
   },
+  "anim-studio.icon-start.new-in-this-release": "New in this release",
+  "@anim-studio.icon-start.new-in-this-release": {
+    "description": "Hidden label of the small diamond on an icon library tile that was added in this release; screen readers read it as part of the tile name. Max 30 characters.",
+    "source_text": "New in this release",
+    "x-max-length": 30,
+    "x-source-hash": "3cec8c47"
+  },
   "anim-studio.icon-start.no-icon-animations-match-query": "No icon animations match \"{query}\".",
   "@anim-studio.icon-start.no-icon-animations-match-query": {
     "description": "Empty-search message in the icon animation list. {query} is the text the user typed in the search box. {query}: The value that replaces query in the text. Max 60 characters.",
@@ -16890,6 +16897,13 @@
     "x-max-length": 10,
     "x-source-hash": "a35abcd6"
   },
+  "card-editor.info-editor.last-changed": "Last changed",
+  "@card-editor.info-editor.last-changed": {
+    "description": "Option in the Secondary info dropdown: shows when the entity last changed. Max 20 characters.",
+    "source_text": "Last changed",
+    "x-max-length": 20,
+    "x-source-hash": "d8c5670a"
+  },
   "card-editor.info-editor.prefix": "Prefix",
   "@card-editor.info-editor.prefix": {
     "description": "Label of the text field for words placed before the value, such as a currency sign. Max 15 characters.",
@@ -22925,6 +22939,13 @@
     "source_text": "My animations",
     "x-max-length": 25,
     "x-source-hash": "7dcbf5cd"
+  },
+  "icon-animator.animated-icon-grid.new-in-this-release": "New in this release",
+  "@icon-animator.animated-icon-grid.new-in-this-release": {
+    "description": "Hidden label of the small diamond on an icon library tile that was added in this release; screen readers read it as part of the tile name. Max 30 characters.",
+    "source_text": "New in this release",
+    "x-max-length": 30,
+    "x-source-hash": "3cec8c47"
   },
   "icon-animator.animated-icon-grid.no-icon-animations-match-query": "No icon animations match \"{query}\".",
   "@icon-animator.animated-icon-grid.no-icon-animations-match-query": {
