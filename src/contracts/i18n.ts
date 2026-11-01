@@ -72,7 +72,7 @@ export interface I18nModuleEntry {
 export const I18N_MODULES = {
   card: { bundle: 'magic-card.js (second copy in magic-card-animation-studio.js, accepted)', folders: ['src/card (not src/card/pause-i18n)', 'src/modules (dashboard text only)', 'src/icons', 'src/utils (runtime files, dashboard text only)'], tables: 'inline', status: 'complete', slice: 'I1', dashboard: true },
   labels: {
-    bundle: 'magic-card-editor.js, magic-card-animation-studio.js (lm() numbers also in magic-card.js)',
+    bundle: 'magic-card-editor.js, magic-card-animation-studio.js, magic-card-icon-library.js (lm() numbers also in magic-card.js)',
     folders: [
       'src/utils/css-properties.ts', 'src/utils/css-property-options.ts', 'src/utils/animation-presets.ts',
       'src/editor/components/font-picker.ts (group names; family names are not messages)', 'src/utils/seasonal-scenes.ts',
@@ -92,10 +92,10 @@ export const I18N_MODULES = {
   transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], tables: 'inline', status: 'complete', slice: 'I6', dashboard: false },
   'image-transfer': { bundle: 'magic-card-image-transfer.js', folders: ['src/image-transfer'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
-  'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
+  'icon-animator': { bundle: 'magic-card-icon-animator.js, magic-card-forum-shot.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
   'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'complete', slice: 'I8', dashboard: false },
   'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], tables: 'inline', status: 'complete', slice: 'I9', dashboard: false },
-  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
+  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js, magic-card-forum-shot.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
   'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'controls': { bundle: 'magic-card-controls.js', folders: ['src/modules/controls/dropdown-view.ts', 'src/modules/controls/light-view.ts', 'src/modules/controls/spinbox-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
   'modules-extra': { bundle: 'magic-card-modules-extra.js', folders: ['src/modules/advanced/custom-card-view.ts', 'src/modules/advanced/forecast-view.ts', 'src/modules/content/camera-view.ts', 'src/modules/content/graphs-view.ts', 'src/modules/layout/tabs-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },

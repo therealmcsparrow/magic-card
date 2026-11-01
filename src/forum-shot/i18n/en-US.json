@@ -1,6 +1,102 @@
 {
+  "forum-shot.element.admin-only": {
+    "text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
+    "hash": "705163a8"
+  },
+  "forum-shot.element.cards-legend": {
+    "text": "Magic Card",
+    "hash": "4789a1c5"
+  },
+  "forum-shot.element.config-read-failed": {
+    "text": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
+    "hash": "f4f5d640"
+  },
+  "forum-shot.element.download": {
+    "text": "Download",
+    "hash": "d6eafe82"
+  },
+  "forum-shot.element.error-capture-failed": {
+    "text": "The picture could not be made in this browser. Try again, or use another browser.",
+    "hash": "dd7a86c4"
+  },
+  "forum-shot.element.error-card-not-defined": {
+    "text": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
+    "hash": "433ffe34"
+  },
+  "forum-shot.element.error-too-large": {
+    "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
+    "hash": "15a5ec38"
+  },
   "forum-shot.element.forum-shot": {
     "text": "Forum shot",
     "hash": "de9aca8d"
+  },
+  "forum-shot.element.intro": {
+    "text": "Pick one of your Magic Cards and save it as a picture to post in a forum.",
+    "hash": "87c3964a"
+  },
+  "forum-shot.element.loading": {
+    "text": "Looking for your Magic Cards…",
+    "hash": "23af3ec6"
+  },
+  "forum-shot.element.local-only": {
+    "text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
+    "hash": "b4702d63"
+  },
+  "forum-shot.element.looks": {
+    "text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
+    "hash": "a44c2916"
+  },
+  "forum-shot.element.making": {
+    "text": "Making the picture…",
+    "hash": "608e07ed"
+  },
+  "forum-shot.element.mode-both": {
+    "text": "Light and dark",
+    "hash": "59644334"
+  },
+  "forum-shot.element.mode-dark": {
+    "text": "Dark only",
+    "hash": "0470ad2d"
+  },
+  "forum-shot.element.mode-light": {
+    "text": "Light only",
+    "hash": "a5d1af23"
+  },
+  "forum-shot.element.modes-legend": {
+    "text": "Colors",
+    "hash": "88f20221"
+  },
+  "forum-shot.element.no-cards": {
+    "text": "No Magic Cards were found on your dashboards.",
+    "hash": "db9cdd82"
+  },
+  "forum-shot.element.notice-remote-placeholder": {
+    "text": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
+    "hash": "4d773277"
+  },
+  "forum-shot.element.pick-first": {
+    "text": "Pick a card to continue.",
+    "hash": "cb8172e5"
+  },
+  "forum-shot.element.preview-alt": {
+    "text": "Preview of the forum shot picture",
+    "hash": "51beebfe"
+  },
+  "forum-shot.element.privacy-hint": {
+    "text": "Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.",
+    "hash": "7be450e3"
+  },
+  "forum-shot.element.remote-asset": {
+    "text": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
+    "hash": "117a5822"
+  },
+  "forum-shot.element.retry": {
+    "text": "Try again",
+    "hash": "d8b8392e"
+  },
+  "forum-shot.element.saved": {
+    "text": "The picture was saved to your downloads.",
+    "hash": "bc4f343c"
   }
 }

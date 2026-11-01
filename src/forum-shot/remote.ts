@@ -17,10 +17,13 @@ export function isOffOrigin(value: string, origin: string): boolean {
   }
 }
 
+// XML namespace names inside inline SVG (the card's icon documents carry them); they name a vocabulary and are never fetched.
+const XML_NAMESPACE = /^http:\/\/www\.w3\.org\/(?:2000\/svg|1999\/xlink|1999\/xhtml)$/;
+
 /** Every off-origin URL inside one string. */
 function urlsIn(text: string, origin: string): string[] {
   if (text.length > MAX_STRING) return [];
-  return (text.match(URL_IN_TEXT) ?? []).filter((u) => isOffOrigin(u, origin));
+  return (text.match(URL_IN_TEXT) ?? []).filter((u) => !XML_NAMESPACE.test(u) && isOffOrigin(u, origin));
 }
 
 /**

@@ -1,6 +1,102 @@
 {
+  "forum-shot.element.admin-only": {
+    "text": "Alleen het standaarddashboard wordt getoond, omdat het tonen van de andere dashboards een beheerdersaccount vraagt.",
+    "hash": "705163a8"
+  },
+  "forum-shot.element.cards-legend": {
+    "text": "Magic Card",
+    "hash": "4789a1c5"
+  },
+  "forum-shot.element.config-read-failed": {
+    "text": "Je dashboards konden niet worden gelezen. Controleer of het geen YAML-dashboards zijn en probeer het opnieuw.",
+    "hash": "f4f5d640"
+  },
+  "forum-shot.element.download": {
+    "text": "Downloaden",
+    "hash": "d6eafe82"
+  },
+  "forum-shot.element.error-capture-failed": {
+    "text": "De afbeelding kon in deze browser niet worden gemaakt. Probeer het opnieuw of gebruik een andere browser.",
+    "hash": "dd7a86c4"
+  },
+  "forum-shot.element.error-card-not-defined": {
+    "text": "De Magic Card is niet geladen in dit browsertabblad. Laad de pagina opnieuw en probeer het opnieuw.",
+    "hash": "433ffe34"
+  },
+  "forum-shot.element.error-too-large": {
+    "text": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
+    "hash": "15a5ec38"
+  },
   "forum-shot.element.forum-shot": {
     "text": "Forumafbeelding",
     "hash": "de9aca8d"
+  },
+  "forum-shot.element.intro": {
+    "text": "Kies een van je Magic Cards en bewaar die als afbeelding om op een forum te plaatsen.",
+    "hash": "87c3964a"
+  },
+  "forum-shot.element.loading": {
+    "text": "Je Magic Cards worden gezocht…",
+    "hash": "23af3ec6"
+  },
+  "forum-shot.element.local-only": {
+    "text": "De afbeelding wordt in je browser gemaakt. Er verlaat niets Home Assistant en Magic Card bewaart geen kopie.",
+    "hash": "b4702d63"
+  },
+  "forum-shot.element.looks": {
+    "text": "Toon de looks Rustig, Levendig en Gloed van geanimeerde iconen, elk op een eigen rij",
+    "hash": "a44c2916"
+  },
+  "forum-shot.element.making": {
+    "text": "De afbeelding wordt gemaakt…",
+    "hash": "608e07ed"
+  },
+  "forum-shot.element.mode-both": {
+    "text": "Licht en donker",
+    "hash": "59644334"
+  },
+  "forum-shot.element.mode-dark": {
+    "text": "Alleen donker",
+    "hash": "0470ad2d"
+  },
+  "forum-shot.element.mode-light": {
+    "text": "Alleen licht",
+    "hash": "a5d1af23"
+  },
+  "forum-shot.element.modes-legend": {
+    "text": "Kleuren",
+    "hash": "88f20221"
+  },
+  "forum-shot.element.no-cards": {
+    "text": "Er zijn geen Magic Cards gevonden op je dashboards.",
+    "hash": "db9cdd82"
+  },
+  "forum-shot.element.notice-remote-placeholder": {
+    "text": "Een afbeelding van buiten Home Assistant is vervangen door een plaatshouder, zodat er geen andere server is benaderd. Je kaart kan er op je dashboard anders uitzien.",
+    "hash": "4d773277"
+  },
+  "forum-shot.element.pick-first": {
+    "text": "Kies een kaart om verder te gaan.",
+    "hash": "cb8172e5"
+  },
+  "forum-shot.element.preview-alt": {
+    "text": "Voorbeeld van de forumafbeelding",
+    "hash": "51beebfe"
+  },
+  "forum-shot.element.privacy-hint": {
+    "text": "Controleer de afbeelding voordat je hem plaatst. Een kaart kan namen, plaatsen, camerabeelden en de status van je apparaten laten zien, en iedereen die je bericht ziet, ziet ze ook.",
+    "hash": "7be450e3"
+  },
+  "forum-shot.element.remote-asset": {
+    "text": "Deze kaart laadt een afbeelding, een webadres of een Google-lettertype van buiten Home Assistant. Hij kan niet voor een forumafbeelding worden gebruikt, omdat het maken van de afbeelding een andere server zou benaderen.",
+    "hash": "117a5822"
+  },
+  "forum-shot.element.retry": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "forum-shot.element.saved": {
+    "text": "De afbeelding is bewaard in je downloads.",
+    "hash": "bc4f343c"
   }
 }
