@@ -56,7 +56,7 @@ If a file is missing from the folder, the feature it belongs to shows its notice
 
 ## Connection and quiet sensors
 
-A card can tell you when what it shows may be out of date. It does this with three faces, each one sentence in a small pill on the bottom edge of the card. The pill floats over the card without moving anything, and the values underneath keep their normal colour. While a control in the card has focus, the pill steps aside, so it never covers what you are using. A screen reader announces the text politely.
+A card can tell you when what it shows may be out of date. It does this with three faces, each one shown as a small badge in the top-left corner of the card, with an icon and one word. Tap the badge, or focus it with the keyboard, to read the full sentence. Press Escape or tap the badge again to close it. The badge floats over the card without moving anything, and the values underneath keep their normal colour. When the card has a pause button in the top-left corner, the badge steps to the right of it. A screen reader announces the text politely.
 
 | Face | Text | When it shows |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ rows:
   # your rows as usual
 ```
 
--   A value that cannot be read, such as `soon`, makes the card show a configuration error. This holds wherever the value is written: on the card, on a module or on a module inside another.
+-   A value that cannot be read, such as `soon`, makes the card show a configuration error. This holds wherever the value is written: on the card, in rows, columns, flows or modules, or in `value_bg`.
 -   A sensor that sends the same value again does not count as a change. Home Assistant does not pass the time of that report on to cards, so such a sensor looks quiet from its last real change. Use `quiet_time` on entities whose value changes, not on one that mostly repeats itself.
 -   `quiet_time` that exists only after a template is merged into the card does not start the faces. Write it in the card itself.
 
