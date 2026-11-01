@@ -84,9 +84,9 @@
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-forum-shot.js": {
-      "raw": 29696,
-      "ceiling": 29696,
-      "note": "29 KiB, measured 27,397 + 5 %, rounded up to 1 KiB."
+      "raw": 34816,
+      "ceiling": 34816,
+      "note": "34 KiB, measured 32,528 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-theme-editor.js": {
       "raw": 286720,
