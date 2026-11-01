@@ -4,12 +4,13 @@ import type { HomeAssistant } from '../types';
 import { statusOverlay } from './faces';
 import { collectQuiet, nextStaleAt, staleFace, type Quiet } from './stale';
 
-// The status controller: one per card; grace, hold and stale timers; the face to show now.
+// The status controller: one per card; grace, hold and stale timers; the face to show now and whether its sentence is open.
 
 type Timer = ReturnType<typeof setTimeout> | undefined;
 
 class Controller implements StatusController {
-  preview = false;
+  private shut = false;
+  private open = false;
   private hass?: HomeAssistant;
   private pairs: Quiet[] = [];
   private attached: boolean;
@@ -24,6 +25,16 @@ class Controller implements StatusController {
 
   constructor(private readonly host: StatusHost) {
     this.attached = (host as { isConnected?: boolean }).isConnected !== false;
+  }
+
+  get preview(): boolean {
+    return this.shut;
+  }
+
+  set preview(v: boolean) {
+    if (v === this.shut) return;
+    this.shut = v;
+    this.sync();
   }
 
   config(config: unknown): void {
@@ -41,7 +52,7 @@ class Controller implements StatusController {
   }
 
   render(): TemplateResult {
-    return statusOverlay(this.current, this.hass);
+    return statusOverlay(this.current, this.hass, this.open, this.toggle);
   }
 
   connected(): void {
@@ -49,8 +60,27 @@ class Controller implements StatusController {
     this.sync();
   }
 
+  private toggle = (): void => {
+    this.setOpen(!this.open);
+    this.host.requestUpdate();
+  };
+
+  private onKey = (e: KeyboardEvent): void => {
+    if (e.key !== 'Escape') return;
+    this.setOpen(false);
+    this.host.requestUpdate();
+  };
+
+  private setOpen(v: boolean): void {
+    if (v === this.open) return;
+    this.open = v;
+    if (v) document.addEventListener('keydown', this.onKey);
+    else document.removeEventListener('keydown', this.onKey);
+  }
+
   disconnected(): void {
     this.attached = false;
+    this.setOpen(false);
     this.stop();
     this.lostShown = false;
     this.backing = false;
@@ -68,7 +98,7 @@ class Controller implements StatusController {
   private sync(): void {
     if (!this.attached) return;
     const h = this.hass;
-    if (!h || this.preview) {
+    if (!h || this.shut) {
       clearTimeout(this.grace);
       clearTimeout(this.hold);
       this.grace = this.hold = undefined;
@@ -146,6 +176,7 @@ class Controller implements StatusController {
     const key = f ? `${f.kind}|${'entity' in f ? f.entity : ''}|${'since' in f ? f.since : ''}` : '';
     if (key === this.key) return;
     this.key = key;
+    this.setOpen(false);
     this.host.requestUpdate();
   }
 }
