@@ -59,4 +59,12 @@ Open pull requests against `main`. The pull request template asks for a summary,
 
 ## Licence
 
-Magic Card is released under the MIT Licence (see [LICENSE](LICENSE)). By sending a contribution, you agree that it is released under the same licence. Third-party code and icons keep their own licences, listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+Magic Card is released under the MIT Licence (see [LICENSE](LICENSE)). By sending a contribution, you agree that it is released under the same licence. This includes translations. Third-party code and icons keep their own licences, listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+### Legal text
+
+Legal text is text that tells a user about privacy, licences or their rights, such as the privacy warnings in the theme editor and the transfer panel. The maintainer lists it in `tools/i18n/legal-labels.json`. The English (UK) text is the authoritative version, and the English text prevails over any translation.
+
+-   Do not machine-translate legal text, and do not submit a translation of it that nobody has checked. A translation of legal text is accepted only after a qualified lawyer has checked it, and you should say so in your pull request.
+-   When the English text of a legal entry changes, every translation of it counts as out of date until it is checked and confirmed again. A waiver does not clear it.
+-   Magic Card is not legal advice, and neither is a translation of it.

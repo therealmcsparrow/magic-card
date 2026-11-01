@@ -1,5 +1,7 @@
 <p align="center"><img src="https://raw.githubusercontent.com/therealmcsparrow/magic-card/main/images/magic-card-icon.png" width="160" alt="Magic Card logo"></p>
 
+<p align="center">Free, non-commercial open source software under the <a href="LICENSE">MIT Licence</a>.</p>
+
 # Magic Card
 
 [![HACS][hacs-badge]][hacs-url]
@@ -50,7 +52,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
 -   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
 -   Library images (needs Magic Card Utils): draw pictures in the image editor, trace over a photo or floor plan, open or import SVG files, and show a library image in an image module or as a background behind the content. See [Images](documentation/images/README.md).
--   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. See [Languages](documentation/languages/README.md). To help translate, see [Translating](documentation/translating/README.md).
+-   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. Translations you contribute come under the project's MIT Licence. Legal text, such as the privacy warnings, is written in English, and the English text prevails over any translation. A translation of legal text is published only after a qualified lawyer has checked it. The animation studio has a Pseudo RTL switch that shows the editors and the card's sliders and rings mirrored for right-to-left reading. It is a testing aid that uses made-up text. Magic Card ships no right-to-left language yet, and the mirrored layout has not been tested with a screen reader or on real right-to-left devices. See [Languages](documentation/languages/README.md). To help translate, see [Translating](documentation/translating/README.md).
 -   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
 ## Installation
