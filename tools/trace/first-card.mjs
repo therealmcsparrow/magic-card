@@ -109,6 +109,7 @@ function pageHtml(config, withFrames = false) {
 <body>${withFrames ? `<script>${FRAME_SCRIPT}</script>` : ''}<magic-card id="c"></magic-card>
 <script type="application/json" id="cfg">${json}</script>
 <script type="module">
+(async () => {
 window.__cls = 0;
 new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value; }).observe({ type: 'layout-shift', buffered: true });
 const mk = (id) => ({ entity_id: id, state: id.startsWith('climate.') ? 'heat' : ${withFrames ? "id.startsWith('weather.') ? 'rainy' : " : ''}'21', last_changed: new Date().toISOString(), last_updated: new Date().toISOString(), context: {}, attributes: { friendly_name: id, unit_of_measurement: '', current_temperature: 21, temperature: 21, hvac_action: 'heating' } });
@@ -127,6 +128,7 @@ const shown = () => { const h = c.shadowRoot && c.shadowRoot.querySelector('ha-c
 await new Promise((res) => { const f = () => { if (shown()) { t.first_card = performance.now(); ${withFrames ? 'window.__first = window.__snap();' : ''} res(); } else requestAnimationFrame(f); }; f(); });
 window.__t = t;
 window.__done = true;
+})().catch((e) => { window.__err = String(e); throw e; });
 </script></body></html>`;
 }
 
