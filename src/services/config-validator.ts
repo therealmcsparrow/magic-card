@@ -105,6 +105,9 @@ export class ConfigValidator {
       });
     });
 
+    // Rows, columns, flows, typeless modules and value_bg: one capped walk of the whole config.
+    if (!errors.length && hasBadQuiet(c)) errors.push(t('card.config-validator.quiet-time-must-be-seconds-or-h-mm-ss'));
+
     return {
       valid: errors.length === 0,
       errors,
