@@ -1,14 +1,16 @@
-// Emitted-syntax gate. The browser floor is Chromium 85, so every shipped dist/*.js
+// Emitted-syntax gate. The browser floor is Chromium 85, which is also Android System WebView 85 (the Home Assistant
+// companion app on Android). The versions below are from the Android WebView column of MDN's browser-compat-data, which
+// mirrors Chrome, so each one is the Chrome and the WebView version. Every shipped dist/*.js
 // must be ES2021, and must not call the built-ins that arrived after it. Minifiers and bundler runtimes can write syntax the
 // source never had, and tsc does not check DOM or newer built-ins, so this reads the output.
 //
 // 1. Syntax. Every dist .js is parsed with acorn at ecmaVersion 2021, sourceType "module" (HA loads magic-card.js as a module
 //    script, the entries use import.meta, and the chunks are ES modules). If that fails, the file is parsed again at 2022 and
-//    walked: class fields and private members (marked, swiper and js-yaml ship them; Chromium 72-84 runs them) are accepted,
+//    walked: class fields and private members (marked, swiper and js-yaml ship them; WebView 72-84 runs them) are accepted,
 //    and everything else that is new in ES2022 is rejected: StaticBlock (Chromium 94), `#x in o` (91), top-level await (89)
 //    and the regex `d` flag (90). A file that fails both parses, or fails the walk, is an error.
 // 2. Built-ins. A token scan (acorn tokens, so strings and comments never match) counts `.at(`, `Object.hasOwn`,
-//    `structuredClone` and `.findLast(` / `.findLastIndex(`. On magic-card.js and every card chunk any use fails, because
+//    `structuredClone` and `.findLast(` / `.findLastIndex(` (WebView 92, 93, 98 and 97). On magic-card.js and every card chunk any use fails, because
 //    the card runs on the oldest browser. On the editor side (studio, theme editor, editor chunks) the counts start from
 //    tools/es-syntax-debt.json ({file, token, count}): a count above the recorded one fails, a count below it fails too (lower
 //    the number, so the debt only shrinks), and with a base ref the debt file may not grow against it.
