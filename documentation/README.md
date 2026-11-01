@@ -48,6 +48,12 @@ This folder documents the Magic Card editor and every option the card supports. 
 | --- | --- |
 | [Older Android tablets](old-tablets/README.md) | The browser floor (Android System WebView 85), what was checked on that engine, the [old engine check](old-tablets/old-engine-check.md) with the effects that do not show there, and a guest-network tip |
 
+## Security
+
+| Page | Covers |
+| --- | --- |
+| [Check a genuine release](security/check-a-genuine-release.md) | A quick check in the browser and a GitHub CLI check of `magic-card.js` and the SBOM, which releases have attestations, and what the checks cannot tell you |
+
 ## Languages and accessibility
 
 | Folder | Covers |

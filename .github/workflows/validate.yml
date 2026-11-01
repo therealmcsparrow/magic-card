@@ -35,6 +35,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Every action is pinned by a full commit SHA with a version comment
+        run: |
+          node tools/check-action-pins.mjs --selftest
+          node tools/check-action-pins.mjs
       - name: Speed and size claims in the docs have their evidence
         run: |
           npm run claims:selftest
@@ -116,7 +120,7 @@ jobs:
         run: |
           npm run manifest:selftest
           npm run manifest
-      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
+      - name: Emitted syntax is ES2021 and needs no post-Chromium-85 built-in
         # The debt file (tools/es-syntax-debt.json, editor side only) may not grow against the base: the commit before the push, or the PR
         # base branch, the same as the entry graph step. A base that does not resolve fails (--require-base); only a new branch (no commit
         # before) skips the growth check, with a notice.
