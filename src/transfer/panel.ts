@@ -54,7 +54,7 @@ export class TransferPanel extends LitElement {
       }
       ul {
         margin: 0;
-        padding-left: 18px;
+        padding-inline-start: 18px;
         font-size: 0.8125rem;
         overflow-wrap: anywhere;
       }
