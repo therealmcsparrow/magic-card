@@ -51,7 +51,7 @@ describe('a card with a tabs module', () => {
       design: { hover: { border_width: '2px', border_style: 'solid', border_color: 'red' } },
     };
     const c = await mountCard(cardConfig([tabs]), makeHass({}));
-    const hoverCss = () => [...c.shadowRoot!.querySelectorAll('style[data-mc-hover-styles]')].map((s) => s.textContent).join(' ');
+    const hoverCss = () => [...c.shadowRoot!.querySelectorAll<HTMLStyleElement>('style[data-mc-hover-styles]')].map((s) => [...(s.sheet?.cssRules ?? [])].map((r) => r.cssText).join(' ')).join(' ');
     expect(hoverCss()).toBe('');
     extras.install();
     (c as unknown as { requestUpdate(): void }).requestUpdate();
