@@ -7,6 +7,8 @@ export const RUN_BYTES = 25_165_824;
 export const FETCH_MS = 8000;
 export const MAX_REQUESTS = 128;
 export const MAX_PARALLEL = 6;
+export const MAX_FACES = 256;
+export const FACE_BYTES = 16_777_216;
 const MAX_ADDRESS = 2048;
 const MAX_FAMILY = 64;
 const MAX_UNICODE_RANGE = 4096;
@@ -436,12 +438,14 @@ export async function prepareFonts(plan: FontPlan, seams: FontSeams = defaultSea
       found.push(...own);
     }
     if (found.length === 0) fail('no font faces');
+    if (found.length > MAX_FACES) fail('too many font faces');
     const urls = [...new Set(found.map((d) => d.url))];
     if (urls.length > MAX_REQUESTS) fail('too many font faces');
     const files = new Map<string, FontFile>();
     await pool(urls, async (url) => {
       files.set(url, await fetchFile(url, run));
     });
+    if (found.reduce((sum, d) => sum + (files.get(d.url) as FontFile).bytes.length, 0) > FACE_BYTES) fail('too much font data');
     return { ok: true, faces: await pool(found, (d) => prepareFace(d, files.get(d.url) as FontFile, run)) };
   } catch (e) {
     run.failed = true;

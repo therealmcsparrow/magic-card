@@ -218,6 +218,34 @@ describe('plan edges', () => {
     expect(out.ok && out.faces[199].weight).toBe('299');
   });
 
+  it('thousands of faces on one file stop the run before any font loads', async () => {
+    const face = (i: number) => `@font-face{font-family:Lora;font-weight:${i};src:url(https://fonts.example.com/same.woff2);}`;
+    const css = Array.from({ length: 3000 }, (_, i) => face(i)).join('');
+    const { s } = seams(() => fontReply);
+    const loadFace = vi.fn(async () => true);
+    const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css }] }, { ...s, loadFace });
+    expect(out).toMatchObject({ ok: false, code: 'font_unavailable', reason: 'too many font faces' });
+    expect(loadFace).not.toHaveBeenCalled();
+  });
+
+  it('a few faces that add up to more prepared data than the cap stop the run', async () => {
+    const big = new Uint8Array(5_000_000);
+    big.set(woff2);
+    const css = Array.from({ length: 4 }, (_, i) => `@font-face{font-family:Lora;font-weight:${100 * (i + 1)};src:url(https://fonts.example.com/big.woff2);}`).join('');
+    const { s } = seams(() => ({ type: 'font/woff2', bytes: big }));
+    const loadFace = vi.fn(async () => true);
+    const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css }] }, { ...s, loadFace });
+    expect(out).toMatchObject({ ok: false, code: 'font_unavailable', reason: 'too much font data' });
+    expect(loadFace).not.toHaveBeenCalled();
+  });
+
+  it('a four-family answer of 160 faces on 40 files passes', async () => {
+    const css = Array.from({ length: 160 }, (_, i) => `@font-face{font-family:F${i % 4};font-weight:${100 + i};src:url(https://fonts.example.com/f${i % 40}.woff2);}`).join('');
+    const { s } = seams(() => fontReply);
+    const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css }] }, s);
+    expect(out.ok && out.faces).toHaveLength(160);
+  });
+
   it('more than the cap of different files still stops the run', async () => {
     const css = Array.from({ length: 129 }, (_, i) => `@font-face{font-family:Lora;src:url(https://fonts.example.com/f${i}.woff2);}`).join('');
     const { s } = seams(() => fontReply);
