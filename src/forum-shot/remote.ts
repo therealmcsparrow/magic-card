@@ -284,14 +284,21 @@ const mapResult = (result: unknown, fn: (v: unknown) => unknown): unknown => (re
 /**
  * The hass copy the forum shot hands its card: state attributes, themes, config, every call result and every subscription result lose
  * their off-origin addresses before the card sees them, so the browser never requests them. `auth` is not copied.
- * `removed()` says whether anything was dropped.
+ * `removed()` says whether anything was dropped. `renameText`, when given, rewrites every string in a call or subscription result (a template family).
  */
-export function scrubHass<H extends object>(hass: H, origin: string): { hass: H; removed: () => boolean } {
+export function scrubHass<H extends object>(hass: H, origin: string, renameText?: (text: string) => string): { hass: H; removed: () => boolean } {
   let removed = false;
   const mark = () => {
     removed = true;
   };
   const clean = <V>(v: V): V => scrubValue(v, origin, mark);
+  const renamed = (v: unknown, depth = 0): unknown => {
+    if (typeof v === 'string') return renameText ? renameText(v) : v;
+    if (!renameText || !v || typeof v !== 'object' || depth > MAX_DEPTH) return v;
+    if (Array.isArray(v)) return v.map((x) => renamed(x, depth + 1));
+    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, renamed(x, depth + 1)]));
+  };
+  const result = (v: unknown): unknown => renamed(clean(v));
   const src = hass as HassLike;
   const copy: Record<string, unknown> = {};
   for (const k of Object.keys(src)) if (k !== 'auth') copy[k] = UNSCRUBBED.has(k) || typeof src[k] === 'function' ? src[k] : clean(src[k]);
@@ -307,7 +314,7 @@ export function scrubHass<H extends object>(hass: H, origin: string): { hass: H;
   }
   for (const name of WRAPPED_CALLS) {
     const fn = src[name];
-    if (typeof fn === 'function') copy[name] = (...args: unknown[]) => mapResult((fn as Fn).apply(hass, args), clean);
+    if (typeof fn === 'function') copy[name] = (...args: unknown[]) => mapResult((fn as Fn).apply(hass, args), result);
   }
   const conn = src.connection;
   if (conn && typeof conn === 'object') {
@@ -317,9 +324,9 @@ export function scrubHass<H extends object>(hass: H, origin: string): { hass: H;
         if (typeof value !== 'function') return value;
         if (prop === 'subscribeMessage') {
           return (cb: (m: unknown) => void, msg: Record<string, unknown>, ...rest: unknown[]) =>
-            (value as Fn).call(target, (m: unknown) => cb(clean(m)), msg, ...rest);
+            (value as Fn).call(target, (m: unknown) => cb(result(m)), msg, ...rest);
         }
-        if (prop === 'sendMessagePromise') return (...args: unknown[]) => mapResult((value as Fn).apply(target, args), clean);
+        if (prop === 'sendMessagePromise') return (...args: unknown[]) => mapResult((value as Fn).apply(target, args), result);
         return (value as Fn).bind(target);
       },
     });

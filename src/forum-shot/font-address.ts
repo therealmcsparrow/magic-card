@@ -1,6 +1,7 @@
 // Which font addresses a card config names, and whether the card can be picked. Reads nothing from the network.
 import type { ForumShotLockReason } from '../contracts/forum-shot';
-import { configGoogleFonts } from '../utils/google-fonts';
+import { configGoogleFonts, googleFontFamilies, googleFontUrl } from '../utils/google-fonts';
+import type { FontPlan, PreparedFace } from './font-fetch';
 import { CUSTOM_CARD, LIMIT, MAX_DEPTH, MAX_NODES, MAX_STRING, decodeEntities, findRemoteAssets } from './remote';
 
 /** A stylesheet host and the font hosts it may send fonts to without the config naming them. */
@@ -214,9 +215,14 @@ interface CssRead {
   cannot: boolean;
   /** The text without the plain addresses that were judged, as parts joined by a space, for the scan of every other address. */
   rest: string;
+  /** The judged `@import` addresses, and the text of each top-level `@font-face` rule. */
+  imports: string[];
+  faces: string[];
+  /** The text without any top-level `@import` and `@font-face` rule. */
+  pure: string;
 }
 
-const FAILED: CssRead = { fail: true, hosts: [], outside: false, cannot: false, rest: '' };
+const FAILED: CssRead = { fail: true, hosts: [], outside: false, cannot: false, rest: '', imports: [], faces: [], pure: '' };
 
 /** Judges the plain font forms of a `css` text (`@import`, and `src` of a top-level `@font-face`); every other address stays in `rest`. */
 function readCss(css: string, origin: string): CssRead {
@@ -226,6 +232,9 @@ function readCss(css: string, origin: string): CssRead {
   const len = toks.length;
   const hosts = new Set<string>();
   const cuts: [number, number][] = [];
+  const drops: [number, number][] = [];
+  const imports: string[] = [];
+  const faces: string[] = [];
   let outside = false;
   let cannot = false;
   const judge = (a: number, b: number) => {
@@ -254,6 +263,7 @@ function readCss(css: string, origin: string): CssRead {
       if (m.k !== 'ws' && m.k !== 'word' && !(m.k === 'delim' && css[starts[k]] === ',')) return;
     }
     judge(t.a as number, t.b as number);
+    imports.push(css.slice(t.a, t.b));
   };
   /** The `src` descriptor of the `@font-face` block opened at token `open`. */
   const fontFace = (open: number) => {
@@ -300,8 +310,15 @@ function readCss(css: string, origin: string): CssRead {
     while (q < len && toks[q].k !== 'semi' && toks[q].k !== 'open') q++;
     if (t.k === 'at') {
       if (q >= len) return FAILED;
-      if (t.name === 'import' && toks[q].k === 'semi') importForm(p, q);
-      else if (t.name === 'font-face' && toks[q].k === 'open' && toks.slice(p + 1, q).every((x) => x.k === 'ws')) fontFace(q);
+      if (t.name === 'import' && toks[q].k === 'semi') {
+        importForm(p, q);
+        drops.push([starts[p], starts[q] + 1]);
+      } else if (t.name === 'font-face' && toks[q].k === 'open' && toks.slice(p + 1, q).every((x) => x.k === 'ws')) {
+        fontFace(q);
+        const end = starts[skipBlock(q) - 1] + 1;
+        faces.push(css.slice(starts[p], end));
+        drops.push([starts[p], end]);
+      }
     }
     p = q >= len ? q : toks[q].k === 'semi' ? q + 1 : skipBlock(q);
   }
@@ -313,7 +330,14 @@ function readCss(css: string, origin: string): CssRead {
     from = b;
   }
   parts.push(css.slice(from));
-  return { fail: false, hosts: [...hosts], outside, cannot, rest: parts.join(' ') };
+  const kept: string[] = [];
+  from = 0;
+  for (const [a, b] of drops) {
+    kept.push(css.slice(from, a));
+    from = b;
+  }
+  kept.push(css.slice(from));
+  return { fail: false, hosts: [...hosts], outside, cannot, rest: parts.join(' '), imports, faces, pure: kept.join(' ') };
 }
 
 /** Whether a card can be picked and which hosts a Download would contact for its fonts. Makes no request. */
@@ -356,4 +380,103 @@ export function classifyCard(config: unknown, origin: string): CardClass {
   else if (remote.length || outside) lock = 'outside_address';
   else if (cannot) lock = 'cannot_judge';
   return { lock, fontHosts: lock ? [] : [...hosts] };
+}
+
+/** The name a Google family goes by on the mounted copy, so the card's own loader finds nothing to request. */
+export const aliasOf = (family: string): string => `mc-shot-${family.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+
+const FONT_KEYS = new Set(['font_family', 'tab_font_family', 'label_font_family']);
+const CSS_FONT_FAMILY = /(font-family\s*:\s*)([^;}]+)/gi;
+
+/** `value` with each listed Google family (Roboto excepted) swapped for its alias. */
+export function aliasFamilies(value: string): string {
+  return value
+    .split(',')
+    .map((part) => {
+      const f = googleFontFamilies(part)[0];
+      return f && f !== SYSTEM_FAMILY ? ` "${aliasOf(f)}"` : part;
+    })
+    .join(',')
+    .replace(/^ /, '');
+}
+
+/** A text from a template result with its Google families under their aliases; `onMissing` is called for a family no face was prepared for. */
+export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
+  return text.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => {
+    for (const f of googleFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
+    return head + aliasFamilies(v);
+  });
+}
+
+export interface CardKit {
+  lock: CardClass['lock'];
+  /** What a Download must fetch; no sheets means no request at all. */
+  plan: FontPlan;
+  /** The config the card mounts on: font addresses gone, Google families under their aliases. */
+  mount: Record<string, unknown>;
+  /** Lower-case real family to alias, for each Google family in use. */
+  aliases: Map<string, string>;
+}
+
+/** Judges a freshly read config and builds what a Download needs for its fonts. Makes no request. */
+export function prepareCard(config: Record<string, unknown>, origin: string): CardKit {
+  const { lock, fontHosts } = classifyCard(config, origin);
+  const imports: string[] = [];
+  const faces: string[] = [];
+  const aliases = new Map<string, string>();
+  for (const f of configGoogleFonts(config)) if (f !== SYSTEM_FAMILY) aliases.set(f.toLowerCase(), aliasOf(f));
+  const mountCss = (css: string): string => {
+    const r = css.length > MAX_STRING ? null : readCss(css, origin);
+    if (!r || r.fail) return css;
+    imports.push(...r.imports);
+    faces.push(...r.faces);
+    return r.pure.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => head + aliasFamilies(v));
+  };
+  let nodes = 0;
+  const rewrite = (v: unknown, depth: number): unknown => {
+    if (++nodes > MAX_NODES || depth > MAX_DEPTH) return v;
+    if (Array.isArray(v)) return v.map((x) => rewrite(x, depth + 1));
+    if (v && typeof v === 'object') {
+      const out: Record<string, unknown> = {};
+      for (const [k, x] of Object.entries(v)) {
+        if (typeof x === 'string' && k === 'css') out[k] = mountCss(x);
+        else if (typeof x === 'string' && FONT_KEYS.has(k)) out[k] = aliasFamilies(x);
+        else out[k] = rewrite(x, depth + 1);
+      }
+      return out;
+    }
+    return v;
+  };
+  const mount = rewrite(config, 0) as Record<string, unknown>;
+  const sheets = [
+    ...imports.map((url) => ({ url })),
+    ...faces.map((css) => ({ css })),
+    ...[...aliases.keys()].map((k) => ({ url: googleFontUrl(configGoogleFonts(config).find((f) => f.toLowerCase() === k) as string) })),
+  ];
+  return { lock, plan: { fontHosts, sheets: lock ? [] : sheets }, mount, aliases };
+}
+
+const SAFE_DATA = /^data:[a-z0-9/+.-]+;base64,[A-Za-z0-9+/=]*$/;
+const SAFE_RANGE = /^[Uu+0-9A-Fa-f?,\s-]+$/;
+const SAFE_TOKEN = /^[A-Za-z0-9 .%-]+$/;
+const cssName = (v: string): string => v.replace(/[^A-Za-z0-9 _.-]/g, '');
+
+/** `@font-face` rules for the prepared faces, built from checked values only: each face under its real name and, for a Google family, under its alias. Null when any value is not safe to write. */
+export function faceRules(faces: readonly PreparedFace[], aliases: ReadonlyMap<string, string>): string | null {
+  let out = '';
+  for (const f of faces) {
+    if (!SAFE_DATA.test(f.dataUrl) || (f.unicodeRange && !SAFE_RANGE.test(f.unicodeRange))) return null;
+    let tail = `src:url("${f.dataUrl}");`;
+    for (const [prop, v] of [['font-weight', f.weight], ['font-style', f.style], ['font-stretch', f.stretch]] as const) {
+      if (!v) continue;
+      if (!SAFE_TOKEN.test(v)) return null;
+      tail += `${prop}:${v};`;
+    }
+    if (f.unicodeRange) tail += `unicode-range:${f.unicodeRange};`;
+    const names = [cssName(f.family)];
+    const alias = aliases.get(f.family.toLowerCase());
+    if (alias) names.push(alias);
+    for (const n of names) out += `@font-face{font-family:"${n}";${tail}}`;
+  }
+  return out;
 }

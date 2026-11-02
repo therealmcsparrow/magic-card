@@ -3,6 +3,7 @@ import '../src/index';
 import { FORUM_SHOT_MAX_PIXELS } from '../src/contracts/forum-shot';
 import { captureFrame, checkCaptureSupport } from '../src/forum-shot/capture';
 import type { CaptureSeams } from '../src/forum-shot/capture';
+import { aliasInText } from '../src/forum-shot/font-address';
 import { deepElements, findRemoteAssets, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
@@ -110,6 +111,45 @@ describe('settleCard', () => {
     await expect(settleCard(baseHass(), config, { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
     expect(create).not.toHaveBeenCalled();
     expect(document.body.children.length).toBe(0);
+  });
+
+  describe('a family that arrives through a template result', () => {
+    const family = (name: string) => ({
+      subscribeMessage: (cb: (m: unknown) => void) => {
+        queueMicrotask(() => cb({ result: `font-family: ${name}` }));
+        return Promise.resolve(() => undefined);
+      },
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    });
+    const withState = (h: ReturnType<typeof baseHass>) => ((h.states as Record<string, unknown>)['media_player.a'] = { state: 'on', attributes: { entity_picture: 'x' } }, h);
+    const config = {
+      type: 'custom:magic-card',
+      rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'markdown', content: '{{ state_attr("media_player.a", "entity_picture") }}' }] }] }],
+    };
+
+    it('is aliased in the scrubbed copy when a face was prepared for it, and Roboto is left alone', async () => {
+      const missing = vi.fn();
+      const received: unknown[] = [];
+      const { hass } = scrubHass(
+        { connection: family('Lora'), states: {} } as { connection: ReturnType<typeof family>; states: object },
+        ORIGIN,
+        (text) => aliasInText(text, new Set(['lora']), missing),
+      );
+      void hass.connection.subscribeMessage((m: unknown) => received.push(m));
+      await Promise.resolve();
+      expect(received).toEqual([{ result: 'font-family: "mc-shot-lora"' }]);
+      const roboto = scrubHass({ connection: family('Roboto'), states: {} } as { connection: ReturnType<typeof family>; states: object }, ORIGIN, (t) => aliasInText(t, new Set(), missing));
+      void roboto.hass.connection.subscribeMessage((m: unknown) => received.push(m));
+      await Promise.resolve();
+      expect(received[1]).toEqual({ result: 'font-family: Roboto' });
+      expect(missing).not.toHaveBeenCalled();
+    });
+
+    it('stops with font_unavailable when no face was prepared for it', async () => {
+      await expect(settleCard(withState(baseHass(family('Lora'))), config, { settleMs: 20, preparedFamilies: new Set(['open sans']) })).rejects.toMatchObject({ code: 'font_unavailable' });
+      expect(document.body.children.length).toBe(0);
+    });
   });
 
   it('builds a template image with zero off-origin URLs reaching the card', async () => {

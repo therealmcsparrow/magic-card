@@ -1,12 +1,14 @@
 // The sheet: one PNG of settled frames in a fixed grid, one column per mode (light left) and one row per look.
 import { FORUM_SHOT_MAX_PIXELS, FORUM_SHOT_SCALE } from '../contracts/forum-shot';
 import type { ForumShotLook, ForumShotMode, ForumShotNotice, ForumShotRequest, ForumShotSheet } from '../contracts/forum-shot';
-import { captureFrame } from './capture';
+import { captureFrame, FONT_STYLE_MARK } from './capture';
 import type { CaptureSeams } from './capture';
+import { faceRules, prepareCard } from './font-address';
+import { prepareFonts } from './font-fetch';
+import type { FontSeams } from './font-fetch';
 import { withLook } from './looks';
 import type { LookSource } from './looks';
 import { modeWrapper } from './modes';
-import { findRemoteAssets } from './remote';
 import { forumShotError, settleCard } from './settle';
 
 /** Gap between frames in CSS px. */
@@ -33,6 +35,8 @@ export interface SheetSeams {
   /** Supplies the library for the Quiet, Living and Glow looks; without it those looks leave icons as they are. */
   lookSource?: () => Promise<LookSource | undefined>;
   settleMs?: number;
+  /** Replaces the network and the font loader of the font step. */
+  fonts?: FontSeams;
 }
 
 /** Draws the frames onto a canvas with no text and returns a plain PNG (no metadata chunks are written by the canvas encoder). */
@@ -57,58 +61,80 @@ const inOrder = <T>(order: T[], wanted: T[]): T[] => order.filter((v) => wanted.
  * into one PNG. Throws `remote_asset` before any card mounts, and `too_large` before the frames are drawn together.
  */
 export async function renderSheet(hass: object, request: ForumShotRequest, seams: SheetSeams = {}): Promise<ForumShotSheet> {
-  if (findRemoteAssets(request.config, location.origin).length) throw forumShotError('remote_asset');
+  const kit = prepareCard(request.config, location.origin);
+  if (kit.lock) throw forumShotError('remote_asset');
   const modes = inOrder(MODE_ORDER, request.modes);
   const looks = inOrder(LOOK_ORDER, request.looks);
   if (!modes.length || !looks.length) throw forumShotError('capture_failed');
   const needsSource = looks.some((l) => l !== 'as-configured');
   const source = needsSource ? await seams.lookSource?.() : undefined;
 
-  const notices = new Set<ForumShotNotice>();
-  const shots: { mode: ForumShotMode; look: ForumShotLook; blob: Blob; width: number; height: number }[] = [];
-  for (const look of looks) {
-    for (const mode of modes) {
-      const wrap = modeWrapper(hass, mode, () => notices.add('remote_placeholder'));
-      document.body.append(wrap);
-      let settled;
-      try {
-        settled = await settleCard(hass, withLook(request.config, look, source), { container: wrap, settleMs: seams.settleMs });
-        const shot = await captureFrame(settled.card, seams.capture);
-        for (const n of settled.notices) notices.add(n);
-        if (shot.replaced) notices.add('remote_placeholder');
-        shots.push({ mode, look, blob: shot.blob, width: shot.width, height: shot.height });
-      } finally {
-        settled?.dispose();
-        wrap.remove();
-      }
-    }
+  let fontStyle: HTMLStyleElement | undefined;
+  const prepared = new Set<string>();
+  if (kit.plan.sheets.length) {
+    const fonts = await prepareFonts(kit.plan, seams.fonts);
+    if (!fonts.ok) throw forumShotError(fonts.code);
+    for (const f of fonts.faces) prepared.add(f.family.toLowerCase());
+    const rules = faceRules(fonts.faces, kit.aliases);
+    if (rules === null) throw forumShotError('font_unavailable');
+    fontStyle = document.createElement('style');
+    fontStyle.setAttribute(FONT_STYLE_MARK, '');
+    fontStyle.textContent = rules;
+    document.head.append(fontStyle);
+  }
+  try {
+    return await draw();
+  } finally {
+    fontStyle?.remove();
   }
 
-  const gap = SHEET_GAP * FORUM_SHOT_SCALE;
-  const cellW = Math.max(...shots.map((s) => s.width));
-  const cellH = Math.max(...shots.map((s) => s.height));
-  const width = modes.length * cellW + (modes.length - 1) * gap;
-  const height = looks.length * cellH + (looks.length - 1) * gap;
-  if (width * height > FORUM_SHOT_MAX_PIXELS) throw forumShotError('too_large');
-  const placed: Placed[] = shots.map((s) => ({
-    blob: s.blob,
-    x: modes.indexOf(s.mode) * (cellW + gap),
-    y: looks.indexOf(s.look) * (cellH + gap),
-    width: s.width,
-    height: s.height,
-  }));
-  let blob: Blob;
-  try {
-    blob = await (seams.compose ?? composeOnCanvas)(placed, width, height);
-  } catch (e) {
-    throw (e as { code?: string }).code ? e : forumShotError('capture_failed');
+  async function draw(): Promise<ForumShotSheet> {
+    const notices = new Set<ForumShotNotice>();
+    const shots: { mode: ForumShotMode; look: ForumShotLook; blob: Blob; width: number; height: number }[] = [];
+    for (const look of looks) {
+      for (const mode of modes) {
+        const wrap = modeWrapper(hass, mode, () => notices.add('remote_placeholder'));
+        document.body.append(wrap);
+        let settled;
+        try {
+          settled = await settleCard(hass, withLook(kit.mount, look, source), { container: wrap, settleMs: seams.settleMs, preparedFamilies: fontStyle ? prepared : undefined });
+          const shot = await captureFrame(settled.card, seams.capture);
+          for (const n of settled.notices) notices.add(n);
+          if (shot.replaced) notices.add('remote_placeholder');
+          shots.push({ mode, look, blob: shot.blob, width: shot.width, height: shot.height });
+        } finally {
+          settled?.dispose();
+          wrap.remove();
+        }
+      }
+    }
+
+    const gap = SHEET_GAP * FORUM_SHOT_SCALE;
+    const cellW = Math.max(...shots.map((s) => s.width));
+    const cellH = Math.max(...shots.map((s) => s.height));
+    const width = modes.length * cellW + (modes.length - 1) * gap;
+    const height = looks.length * cellH + (looks.length - 1) * gap;
+    if (width * height > FORUM_SHOT_MAX_PIXELS) throw forumShotError('too_large');
+    const placed: Placed[] = shots.map((s) => ({
+      blob: s.blob,
+      x: modes.indexOf(s.mode) * (cellW + gap),
+      y: looks.indexOf(s.look) * (cellH + gap),
+      width: s.width,
+      height: s.height,
+    }));
+    let blob: Blob;
+    try {
+      blob = await (seams.compose ?? composeOnCanvas)(placed, width, height);
+    } catch (e) {
+      throw (e as { code?: string }).code ? e : forumShotError('capture_failed');
+    }
+    return {
+      blob,
+      width,
+      height,
+      fileName: SHEET_FILE_NAME,
+      frames: shots.map(({ mode, look }) => ({ mode, look })),
+      notices: [...notices],
+    };
   }
-  return {
-    blob,
-    width,
-    height,
-    fileName: SHEET_FILE_NAME,
-    frames: shots.map(({ mode, look }) => ({ mode, look })),
-    notices: [...notices],
-  };
 }
