@@ -121,7 +121,7 @@ function remoteHost(token: string, origin: string): string | undefined {
 }
 
 // An http(s) address whose authority a `/`, `?` or `#` closes inside the token: what follows can no longer change its host.
-const CLOSED_AUTHORITY = /^https?:\/*[^/?#]+[/?#]/i;
+const CLOSED_AUTHORITY = /^https?:\/{0,}[^/?#]+[/?#]/i;
 // A separator run that ends a quoted or marked-up value, so the namespace before it is the whole address.
 const VALUE_END = /["'<>\s]/;
 // One raster picture inline, as a whole token: no network request, whatever slashes its base64 holds.
