@@ -69,7 +69,7 @@ export class WallTablet extends LitElement {
       font-size: 20px;
       font-weight: 500;
     }
-    .row {
+    .tablet-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
@@ -80,7 +80,7 @@ export class WallTablet extends LitElement {
       color: var(--primary-text-color, #212121);
       font-size: 28px;
     }
-    .btn {
+    .tablet-button {
       margin-top: 12px;
       padding: 8px 16px;
       border-radius: 18px;
@@ -114,8 +114,8 @@ export class WallTablet extends LitElement {
         <div data-tablet style=${styleMap({ width: `${width}px`, height: `${height}px`, transform: `scale(${WALL_TABLET_SCALE})` })}>
           <div data-card style=${styleMap({ width: `${WALL_TABLET_CARD_WIDTH}px` })}>
             <h3>${l.title}</h3>
-            <div class="row"><span>${l.text}</span><span class="value">${l.value}</span></div>
-            <span class="btn">${l.button}</span>
+            <div class="tablet-row"><span>${l.text}</span><span class="value">${l.value}</span></div>
+            <span class="tablet-button">${l.button}</span>
           </div>
         </div>
       </div>

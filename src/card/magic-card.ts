@@ -215,9 +215,12 @@ const cssProps = directive(
     }
     update(part: AttributePart, [css]: [string]) {
       if (css !== this.css) {
-        const { style } = part.element as HTMLElement;
-        style.cssText = '';
+        const el = part.element as HTMLElement;
+        const { style } = el;
+        if (el.hasAttribute('style')) style.cssText = '';
         splitDeclarations((this.css = css)).forEach((d) => setDeclaration(style, d));
+        // an element with nothing to set carries no empty style attribute, as before
+        if (!style.length) el.removeAttribute('style');
       }
       return noChange;
     }
