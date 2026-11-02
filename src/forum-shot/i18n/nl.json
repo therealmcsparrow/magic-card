@@ -32,8 +32,8 @@
     "hash": "f37f797c"
   },
   "forum-shot.card-table.reason-limit": {
-    "text": "Er staan meer externe websites in dan een forumafbeelding toestaat.",
-    "hash": "04436b45"
+    "text": "Er staan te veel externe websites in, of de kaart is te groot om te controleren.",
+    "hash": "cec07c66"
   },
   "forum-shot.card-table.reason-outside-address": {
     "text": "Er wordt iets van buiten Home Assistant geladen.",
@@ -88,8 +88,8 @@
     "hash": "15a5ec38"
   },
   "forum-shot.element.font-host-contact": {
-    "text": "Om de lettertypen te tekenen vraagt je browser ze op bij {hosts}. Die sites kunnen je IP-adres zien, het tijdstip van het verzoek, welke lettertypen je opvraagt en de gewone gegevens die elke browser meestuurt, zoals het type en de taal. Je kaarten en instellingen worden niet verstuurd.",
-    "hash": "d246ba7e"
+    "text": "Om de lettertypen te tekenen vraagt je browser ze op bij {hosts}. Elk verzoek laat die sites je IP-adres zien, het tijdstip, de lettertypen die je opvraagt en het adres van je Home Assistant (een DuckDNS-naam, een Nabu Casa-adres of een adres op je lokale netwerk), plus het type en de taal van je browser. Je kaarten en instellingen worden niet verstuurd.",
+    "hash": "e4e8bf0b"
   },
   "forum-shot.element.forum-shot": {
     "text": "Forumafbeelding",

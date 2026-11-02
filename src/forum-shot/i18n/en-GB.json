@@ -43,7 +43,7 @@
     "max": 90
   },
   "forum-shot.card-table.reason-limit": {
-    "text": "It names more outside websites than a forum shot allows.",
+    "text": "It names too many outside websites, or it is too large to check.",
     "note": "Reason a card is locked: it names too many outside websites or is too large to check.",
     "max": 80
   },
@@ -113,9 +113,9 @@
     "max": 100
   },
   "forum-shot.element.font-host-contact": {
-    "text": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
+    "text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
     "note": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
-    "max": 290,
+    "max": 380,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
     },

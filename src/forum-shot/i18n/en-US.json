@@ -32,8 +32,8 @@
     "hash": "f37f797c"
   },
   "forum-shot.card-table.reason-limit": {
-    "text": "It names more outside websites than a forum shot allows.",
-    "hash": "04436b45"
+    "text": "It names too many outside websites, or it is too large to check.",
+    "hash": "cec07c66"
   },
   "forum-shot.card-table.reason-outside-address": {
     "text": "It loads something from outside Home Assistant.",
@@ -88,8 +88,8 @@
     "hash": "15a5ec38"
   },
   "forum-shot.element.font-host-contact": {
-    "text": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
-    "hash": "d246ba7e"
+    "text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "hash": "e4e8bf0b"
   },
   "forum-shot.element.forum-shot": {
     "text": "Forum shot",
