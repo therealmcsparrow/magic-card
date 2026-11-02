@@ -107,10 +107,14 @@ export interface Wire {
   host: string;
   method: string;
   url: string;
+  /** The Origin header as received (undefined when the browser sent none). */
+  origin: string | undefined;
   headers: http.IncomingHttpHeaders;
 }
 export interface Servers {
   pageUrl: string;
+  /** The page's origin (scheme, host, port), the value every cross-origin font request should carry as Origin. */
+  pageOrigin: string;
   wire: Wire[];
   /** Replaces what the stylesheet host answers for a family; default is two faces with unicode-range. */
   css: (family: string) => string;
@@ -132,7 +136,7 @@ export async function startServers(pageDir: string): Promise<Servers> {
   const pems = await generate([{ name: 'commonName', value: SHEET_HOST }], { days: 2, keySize: 2048, algorithm: 'sha256', extensions: [{ name: 'subjectAltName', altNames: [{ type: 2, value: SHEET_HOST }, { type: 2, value: FONT_HOST }] }] });
   const secure = https.createServer({ key: pems.private, cert: pems.cert }, (req, res) => {
     const host = String(req.headers.host ?? '').split(':')[0];
-    wire.push({ host, method: req.method ?? '', url: req.url ?? '', headers: { ...req.headers } });
+    wire.push({ host, method: req.method ?? '', url: req.url ?? '', origin: req.headers.origin, headers: { ...req.headers } });
     const cors = { 'access-control-allow-origin': '*', 'cache-control': 'no-store' };
     const url = new URL(req.url ?? '/', 'https://x');
     if (host === SHEET_HOST && url.pathname === '/css2') {
@@ -164,6 +168,7 @@ export async function startServers(pageDir: string): Promise<Servers> {
   const plainPort = (plain.address() as AddressInfo).port;
   return {
     pageUrl: `http://127.0.0.1:${plainPort}/page.html?secret=1`,
+    pageOrigin: `http://127.0.0.1:${plainPort}`,
     wire,
     get css() {
       return state.css;
@@ -281,7 +286,7 @@ async function drive(exe: string, servers: Servers, fn: (b: Browser) => Promise<
         m.error ? p.rej(new Error(m.error.message)) : p.res(m.result);
       } else if (m.method === 'Network.requestWillBeSent' && !/^(data|blob|about):/.test(m.params.request.url)) {
         requests.push({ url: m.params.request.url, headers: m.params.request.headers });
-        byId.set(m.params.requestId, m.params.request.url);
+        byId.set(m.params.requestId, `${m.params.request.url} [${m.params.type ?? '?'} from ${m.params.initiator?.type ?? '?'}]`);
       } else if (m.method === 'Runtime.exceptionThrown') errors.push(String(m.params.exceptionDetails.exception?.description ?? m.params.exceptionDetails.text).slice(0, 900));
       else if (m.method === 'Log.entryAdded') logs.push(String(m.params.entry.text).slice(0, 300));
       else if (m.method === 'Network.loadingFailed') failed.push(`${byId.get(m.params.requestId) ?? '?'} ${m.params.errorText}`);

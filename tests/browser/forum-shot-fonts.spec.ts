@@ -25,11 +25,14 @@ const tplCard = () => ({
   ] }] }],
 });
 
+// the two hosts the disclosure names for a card with an outside Google font (the request's fontHosts)
+const GOOGLE = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+
 // runs one sheet and reports the code (or 'ok'), the PNG as a data URL and the count of dark pixels
-const run = (config: unknown, tpl = ''): string => `(async () => {
+const run = (config: unknown, tpl = '', hosts: string[] | null = GOOGLE): string => `(async () => {
   window.__tpl = ${JSON.stringify(tpl)};
   try {
-    const s = await F.renderSheet(${HASS}, { config: ${JSON.stringify(config)}, modes: ['light'], looks: ['as-configured'] }, { settleMs: 200 });
+    const s = await F.renderSheet(${HASS}, { config: ${JSON.stringify(config)}, modes: ['light'], looks: ['as-configured']${hosts ? `, fontHosts: ${JSON.stringify(hosts)}` : ''} }, { settleMs: 200 });
     const url = await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(s.blob); });
     const img = new Image(); img.src = url; await img.decode();
     const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
@@ -73,6 +76,8 @@ for (const engine of engines()) {
         expect(servers.wire.filter((w) => w.host === 'fonts.googleapis.com')).toHaveLength(1);
         for (const w of servers.wire) {
           expect(w.method).toBe('GET');
+          // AC2 the only identity a font host sees is the page's own origin (a request that carries Origin carries exactly that)
+          if (w.origin !== undefined) expect(w.origin, `${w.url} origin`).toBe(servers.pageOrigin);
           expect(w.headers.cookie, `${w.url} cookie`).toBeUndefined();
           expect(w.headers.referer, `${w.url} referer`).toBeUndefined();
         }
@@ -81,6 +86,63 @@ for (const engine of engines()) {
         expect([...new Set(outside.map((u) => u.hostname))].sort()).toEqual(['fonts.googleapis.com', 'fonts.gstatic.com']);
         expect(b.failed, 'no failed request').toEqual([]);
         expect(b.errors).toEqual([]);
+        // the font files are cross-origin CORS fetches: each one names the page's origin, none a different one
+        const files = servers.wire.filter((w) => w.host === 'fonts.gstatic.com');
+        expect(files.length).toBeGreaterThan(0);
+        for (const w of files) expect(w.origin, `${w.url} origin`).toBe(servers.pageOrigin);
+      });
+    });
+
+    it('a request without the disclosed hosts stops a font card before any request', async () => {
+      servers.wire.length = 0;
+      await engine.run(servers, async (b) => {
+        const r = await b.eval<Out>(run(card('Open Sans'), '', null));
+        expect(r.code).toBe('hosts_changed');
+        expect(r.url).toBe('');
+        expect(r.links).toBe(0);
+        expect(b.requests.filter((q) => new URL(q.url).hostname !== '127.0.0.1')).toEqual([]);
+      });
+      expect(servers.wire).toEqual([]);
+    });
+
+    it('hostile: a template naming a Google font adds no link and asks Google for nothing outside the prepared path', async () => {
+      // a card with no outside font: the hosts are never contacted, whatever the template result names
+      servers.wire.length = 0;
+      await engine.run(servers, async (b) => {
+        await b.eval(`(() => { window.__added = []; new MutationObserver((ms) => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1) window.__added.push(n.tagName + ':' + (n.getAttribute('data-mc-font') ?? n.getAttribute('href') ?? '')); }).observe(document.head, { childList: true }); return true; })()`);
+        const plainCard = { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'b', type: 'text', text: '{{ shown }}', use_template: true, design: { font_size: 48 } }] }] }] };
+        for (const tpl of [`font-family: Lato`, `font-family: 'Lato', serif; color: red`, `<style>@import url(https://fonts.googleapis.com/css2?family=Lato)</style>`]) {
+          const r = await b.eval<Out>(run(plainCard, tpl, []));
+          expect(['ok', 'font_unavailable'], `${tpl}: a stop or a plain picture`).toContain(r.code);
+          if (r.code !== 'ok') expect(r.url).toBe('');
+          expect(r.links).toBe(0);
+        }
+        const named = await b.eval<Out>(run(plainCard, `font-family: Lato`, []));
+        expect(named.code, 'AC12 an unprepared Google family stops the run').toBe('font_unavailable');
+        expect(await b.eval<string[]>('window.__added'), 'nothing was added to document.head').toEqual([]);
+        expect(await b.eval<number>(`document.querySelectorAll('link[data-mc-font]').length`)).toBe(0);
+        expect(b.requests.filter((q) => new URL(q.url).hostname !== '127.0.0.1'), 'no request left the page').toEqual([]);
+        expect(b.failed).toEqual([]);
+      });
+      expect(servers.wire, 'the font hosts saw nothing').toEqual([]);
+
+      // a card with a prepared family: the only Google traffic is the one stylesheet and the files for that family, never the template's
+      servers.wire.length = 0;
+      await engine.run(servers, async (b) => {
+        await b.eval(`(() => { window.__added = []; new MutationObserver((ms) => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1) window.__added.push(n.tagName + ':' + (n.getAttribute('data-mc-font') ?? '')); }).observe(document.head, { childList: true }); return true; })()`);
+        const r = await b.eval<Out>(run(tplCard(), `font-family: Lato`));
+        expect(r.code).toBe('font_unavailable');
+        expect(r.url).toBe('');
+        expect(r.links).toBe(0);
+        const added = await b.eval<string[]>('window.__added');
+        expect(added.filter((a) => a.startsWith('LINK:')), 'no link element for any family').toEqual([]);
+        const calls = [...servers.wire, ...b.requests.map((q) => ({ host: new URL(q.url).hostname, url: new URL(q.url).pathname + new URL(q.url).search }))].filter((w) => w.host !== '127.0.0.1');
+        for (const w of calls) {
+          const ok = (w.host === 'fonts.googleapis.com' && w.url.startsWith('/css2?') && /family=Open(\+|%20| )Sans/.test(w.url)) || (w.host === 'fonts.gstatic.com' && /^\/s\/(wide|tall)\.ttf$/.test(w.url));
+          expect(ok, `${w.host}${w.url} is on the prepared path`).toBe(true);
+          expect(w.url).not.toMatch(/Lato/i);
+        }
+        expect(b.failed).toEqual([]);
       });
     });
 
