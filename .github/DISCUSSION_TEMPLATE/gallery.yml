@@ -5,7 +5,7 @@ body:
       value: |
         This form creates a public post. Anyone can read it, and it shows your GitHub username. Do not share access tokens, passwords, URLs with credentials in them, your Home Assistant web address, your location, or real entity IDs. Replace entity IDs with placeholders, or export the card with Magic Card, which does it for you. Cut private details out of screenshots first. You can edit or delete your post at any time.
 
-        Only share work that is yours to give away. By sharing a file here you release it under CC0 1.0, which means anyone may copy, change and reuse it for any purpose, without asking you and without crediting you. Do not include images, fonts, icons or text that belong to someone else.
+        By sharing this file you release it under CC0 1.0, which means anyone may copy, change and reuse it for any purpose, without asking you and without crediting you. Only share work that is yours to give away. Do not include images, fonts, icons or text that belong to someone else.
 
   - type: input
     id: name
