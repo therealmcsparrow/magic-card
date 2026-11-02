@@ -19746,6 +19746,12 @@
     "x-max-length": 100,
     "x-source-hash": "15a5ec38"
   },
+  "forum-shot.element.font-host-contact": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
+  "@forum-shot.element.font-host-contact": {
+    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 290 characters.",
+    "x-max-length": 290,
+    "x-source-hash": "d246ba7e"
+  },
   "forum-shot.element.forum-shot": "Forum shot",
   "@forum-shot.element.forum-shot": {
     "description": "Accessible name of the forum shot area in the Magic Card Utils panel, where the user turns a Magic Card into one picture to post in a forum. Max 20 characters.",
@@ -19769,6 +19775,12 @@
     "description": "Sentence under the privacy warning: the picture is made locally and nothing is stored. Max 120 characters.",
     "x-max-length": 120,
     "x-source-hash": "b4702d63"
+  },
+  "forum-shot.element.local-only-font": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+  "@forum-shot.element.local-only-font": {
+    "description": "Sentence under the privacy warning for a card that uses fonts from other websites: the picture is made locally, nothing is stored, and the fonts come from outside. Max 200 characters.",
+    "x-max-length": 200,
+    "x-source-hash": "85ee4021"
   },
   "forum-shot.element.looks": "Show the Quiet, Living and Glow looks of animated icons, one row each",
   "@forum-shot.element.looks": {
@@ -19818,6 +19830,12 @@
     "x-max-length": 170,
     "x-source-hash": "4d773277"
   },
+  "forum-shot.element.notice-remote-placeholder-font": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+  "@forum-shot.element.notice-remote-placeholder-font": {
+    "description": "Notice under the preview of a card that uses fonts from other websites, when an image from another server was left out. Max 170 characters.",
+    "x-max-length": 170,
+    "x-source-hash": "95051ca3"
+  },
   "forum-shot.element.pick-first": "Pick a card to continue.",
   "@forum-shot.element.pick-first": {
     "description": "Hint shown while no card is picked, so the Download button is not available. Max 40 characters.",
@@ -19836,11 +19854,11 @@
     "x-max-length": 190,
     "x-source-hash": "7be450e3"
   },
-  "forum-shot.element.remote-asset": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
+  "forum-shot.element.remote-asset": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
   "@forum-shot.element.remote-asset": {
     "description": "Notice next to a card that cannot be picked because its settings name something outside Home Assistant. Also the error when the picture is refused for that reason. Max 220 characters.",
     "x-max-length": 220,
-    "x-source-hash": "117a5822"
+    "x-source-hash": "24f49698"
   },
   "forum-shot.element.retry": "Try again",
   "@forum-shot.element.retry": {

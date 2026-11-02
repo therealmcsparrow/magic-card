@@ -31,6 +31,10 @@
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "hash": "15a5ec38"
   },
+  "forum-shot.element.font-host-contact": {
+    "text": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
+    "hash": "d246ba7e"
+  },
   "forum-shot.element.forum-shot": {
     "text": "Forum shot",
     "hash": "de9aca8d"
@@ -46,6 +50,10 @@
   "forum-shot.element.local-only": {
     "text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
     "hash": "b4702d63"
+  },
+  "forum-shot.element.local-only-font": {
+    "text": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+    "hash": "85ee4021"
   },
   "forum-shot.element.looks": {
     "text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
@@ -79,6 +87,10 @@
     "text": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
     "hash": "4d773277"
   },
+  "forum-shot.element.notice-remote-placeholder-font": {
+    "text": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+    "hash": "95051ca3"
+  },
   "forum-shot.element.pick-first": {
     "text": "Pick a card to continue.",
     "hash": "cb8172e5"
@@ -92,8 +104,8 @@
     "hash": "7be450e3"
   },
   "forum-shot.element.remote-asset": {
-    "text": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
-    "hash": "117a5822"
+    "text": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
+    "hash": "24f49698"
   },
   "forum-shot.element.retry": {
     "text": "Try again",

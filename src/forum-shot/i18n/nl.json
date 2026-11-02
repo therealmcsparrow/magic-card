@@ -31,6 +31,10 @@
     "text": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
     "hash": "15a5ec38"
   },
+  "forum-shot.element.font-host-contact": {
+    "text": "Om de lettertypen te tekenen vraagt je browser ze op bij {hosts}. Die sites kunnen je IP-adres zien, het tijdstip van het verzoek, welke lettertypen je opvraagt en de gewone gegevens die elke browser meestuurt, zoals het type en de taal. Je kaarten en instellingen worden niet verstuurd.",
+    "hash": "d246ba7e"
+  },
   "forum-shot.element.forum-shot": {
     "text": "Forumafbeelding",
     "hash": "de9aca8d"
@@ -46,6 +50,10 @@
   "forum-shot.element.local-only": {
     "text": "De afbeelding wordt in je browser gemaakt. Er verlaat niets Home Assistant en Magic Card bewaart geen kopie.",
     "hash": "b4702d63"
+  },
+  "forum-shot.element.local-only-font": {
+    "text": "De afbeelding wordt in je browser gemaakt en Magic Card bewaart geen kopie. Je kaarten en instellingen blijven in Home Assistant, maar de lettertypen worden opgehaald bij de sites die hier staan.",
+    "hash": "85ee4021"
   },
   "forum-shot.element.looks": {
     "text": "Toon de looks Rustig, Levendig en Gloed van geanimeerde iconen, elk op een eigen rij",
@@ -79,6 +87,10 @@
     "text": "Een afbeelding van buiten Home Assistant is vervangen door een plaatshouder, zodat er geen andere server is benaderd. Je kaart kan er op je dashboard anders uitzien.",
     "hash": "4d773277"
   },
+  "forum-shot.element.notice-remote-placeholder-font": {
+    "text": "Een afbeelding van buiten Home Assistant is vervangen door een plaatshouder en daarvoor is geen server benaderd. Je kaart kan er op je dashboard anders uitzien.",
+    "hash": "95051ca3"
+  },
   "forum-shot.element.pick-first": {
     "text": "Kies een kaart om verder te gaan.",
     "hash": "cb8172e5"
@@ -92,8 +104,8 @@
     "hash": "7be450e3"
   },
   "forum-shot.element.remote-asset": {
-    "text": "Deze kaart laadt een afbeelding, een webadres of een Google-lettertype van buiten Home Assistant. Hij kan niet voor een forumafbeelding worden gebruikt, omdat het maken van de afbeelding een andere server zou benaderen.",
-    "hash": "117a5822"
+    "text": "Deze kaart laadt een afbeelding, webadres of bestand van buiten Home Assistant dat niet te controleren is. Hij kan niet voor een forumafbeelding dienen: het maken ervan zou een ongecontroleerde server benaderen.",
+    "hash": "24f49698"
   },
   "forum-shot.element.retry": {
     "text": "Opnieuw proberen",
