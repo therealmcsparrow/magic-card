@@ -28,14 +28,18 @@ See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/
 
 ## A card is locked in the Forum shot tab
 
-A card stays locked when it holds a custom-card module or an outside address that is not a font address. To make a picture of it:
+A locked row gives one of four reasons. The tab does not show the address itself, so look for it in the card's settings and CSS. To make a picture of the card:
 
-1. Open the card in the editor.
-2. Remove the custom-card module, or the image or web address the tab names.
-3. Save the card and reopen the Forum shot tab. The card is no longer locked.
+1. Read the reason on the locked row.
+2. Open the card in the editor and change what the reason points to:
+    - "It loads something from outside Home Assistant." Look in the card's settings and CSS for an image or web address that is not on your Home Assistant, and remove it.
+    - "It holds another card (a custom-card module) that nothing here can check." Remove the custom-card module.
+    - "It names too many outside websites, or it is too large to check." Remove outside web addresses, or cut very long text, deep nesting or many nested items from the card.
+    - "Its settings could not be checked for outside addresses." Simplify the card, for example by removing unusual or very large settings, then try again.
+3. Save the card and reopen the Forum shot tab. If no other reason remains for that card, it is no longer locked. If it is still locked, read the new reason and repeat.
 
-## A font stylesheet is not accepted
+## A font could not be loaded
 
-A stylesheet may list fonts on a host the card does not name. The tab only contacts the hosts shown on the tab, so a card whose stylesheet points to another host stays locked, or the run stops. Use a stylesheet whose fonts sit on the host you gave, or remove the stylesheet from the card's CSS.
+If Download stops with "A font could not be loaded, so no picture was made. Check your connection and try again.", try once more. No picture is saved when a font fails.
 
-If you see "A font could not be loaded, so no picture was made. Check your connection and try again.", check your connection and try again. No picture is saved when a font fails.
+If it fails again, the card's font stylesheet may list fonts on a host the card does not name. The tab only contacts the font sites it shows, and such a stylesheet does not lock the row. Instead, Download stops with this message. Use a stylesheet whose fonts sit on a site the tab shows, or remove the stylesheet from the card's CSS.
