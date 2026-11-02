@@ -183,7 +183,9 @@ import '${src('modules')}';
 import '${src('forum-shot/index')}';
 import { renderSheet } from '${src('forum-shot/sheet')}';
 import { prepareFonts, defaultSeams } from '${src('forum-shot/font-fetch')}';
-window.F = { renderSheet, prepareFonts, defaultSeams };
+import { settleCard } from '${src('forum-shot/settle')}';
+import { scrubHass } from '${src('forum-shot/remote')}';
+window.F = { renderSheet, prepareFonts, defaultSeams, settleCard, scrubHass };
 window.__ready = true;
 `;
 

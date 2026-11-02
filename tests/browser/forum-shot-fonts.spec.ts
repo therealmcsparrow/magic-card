@@ -16,6 +16,15 @@ const card = (family: string, text = 'AAAA NNNN') => ({
   rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text, design: { font_family: family, font_size: 48 } }] }] }],
 });
 
+// a card whose Open Sans text is tiny and whose second text module shows a template result (a result holding markup is blanked by the hass copy, so results here are plain text)
+const tplCard = () => ({
+  type: 'custom:magic-card',
+  rows: [{ id: 'r', columns: [{ id: 'c', modules: [
+    { id: 'a', type: 'text', text: '.', design: { font_family: 'Open Sans', font_size: 8 } },
+    { id: 'b', type: 'text', text: '{{ shown }}', use_template: true, design: { font_size: 48 } },
+  ] }] }],
+});
+
 // runs one sheet and reports the code (or 'ok'), the PNG as a data URL and the count of dark pixels
 const run = (config: unknown, tpl = ''): string => `(async () => {
   window.__tpl = ${JSON.stringify(tpl)};
@@ -80,7 +89,7 @@ for (const engine of engines()) {
       servers.setCss((f) => (f === 'Open Sans' ? prev(f) : '@font-face{font-family:Broken;src:url(https://fonts.gstatic.com/missing.ttf) format("truetype");}'));
       try {
         await engine.run(servers, async (b) => {
-          const r = await b.eval<Out>(run(card('Lobster')));
+          const r = await b.eval<Out>(run(card('Lato')));
           expect(r.code).toBe('font_unavailable');
           expect(r.url).toBe('');
           expect(r.links).toBe(0);
@@ -125,18 +134,21 @@ for (const engine of engines()) {
       });
     });
 
-    it('a template result naming the card font draws with it; one naming another family stops the run', async () => {
+    it('a template result naming the prepared family finishes; one naming another family stops the run', async () => {
       await engine.run(servers, async (b) => {
-        const cfg = card('Open Sans', '{{ shown }}');
-        const named = await b.eval<Out>(run(cfg, `<span style="font-family: 'Open Sans'">AAAA NNNN</span>`));
-        expect(named.code).toBe('ok');
+        const cfg = tplCard();
+        const named = await b.eval<Out>(run(cfg, `font-family: 'Open Sans'`));
+        expect(named.code, 'the prepared family in a template result is aliased, not refused').toBe('ok');
+        expect(named.links).toBe(0);
         await b.eval(show(named.url));
         await b.shot(path.join(SHOTS, `${engine.name}-template-family.png`));
-        const plain = await b.eval<Out>(run(card('sans-serif', '{{ shown }}'), `<span>AAAA NNNN</span>`));
-        expect(named.dark, 'the template family resolves to the fetched face').toBeGreaterThan(plain.dark * 2);
-        const other = await b.eval<Out>(run(cfg, `<span style="font-family: Lobster">AAAA</span>`));
-        expect(other.code).toBe('font_unavailable');
+        const other = await b.eval<Out>(run(cfg, `font-family: Lato`));
+        expect(other.code, 'AC12 a family with no prepared face never falls back').toBe('font_unavailable');
+        expect(other.url).toBe('');
         expect(other.links).toBe(0);
+        // a result without a font-family declaration is not a font request
+        const none = await b.eval<Out>(run(cfg, 'plain words'));
+        expect(none.code).toBe('ok');
       });
     });
   });
