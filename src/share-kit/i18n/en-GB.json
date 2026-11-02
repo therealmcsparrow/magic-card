@@ -27,6 +27,16 @@
       "rule": "The id of the check, for example strict.css."
     }
   },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "text": "A template in {path} was left out because shared text does not run templates: {text} ({rule}).",
+    "note": "Import note for a template removed from the text of a shared card. {path} is the place of the text, {text} the start of the removed template and {rule} the id of the check.",
+    "max": 160,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[0].content.",
+      "rule": "The id of the check, for example strict.any.",
+      "text": "The start of the removed template, copied as written; do not translate it."
+    }
+  },
   "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
     "text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
     "note": "Import warning for a card value that points to a /local/ file. {name} is the setting in quotes; do not translate it. The sharer is the person who made the file.",
@@ -184,7 +194,8 @@
   "share-kit.notice.author-name-is-optional": {
     "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
     "note": "Privacy note on the export panel when the items carry an author name. It says the name is personal data and is written into the file.",
-    "max": 330
+    "max": 330,
+    "legal": true
   },
   "share-kit.notice.entity-ids-were-replaced": {
     "text": "Entity IDs were replaced with placeholders. Whoever imports this file picks their own devices.",
@@ -194,7 +205,8 @@
   "share-kit.notice.only-import-files-from-people-you-trust": {
     "text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
     "note": "Warning above the preview of every import, before the Confirm button. It tells the user to trust the sender and to look at the preview, actions and templates first.",
-    "max": 250
+    "max": 250,
+    "legal": true
   },
   "share-kit.notice.templates-in-this-card": {
     "text": "Templates in this card",

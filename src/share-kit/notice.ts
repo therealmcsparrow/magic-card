@@ -2,7 +2,8 @@ import { html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { glyph } from '../ui-kit';
 import type { ImportNotice } from '../contracts/share-kit';
-import { t } from './i18n';
+import type { LegalLine } from '../contracts/share-kit';
+import { en, m, t } from './i18n';
 
 // Fixed notice texts of the share-kit chunk, shown as plain text through the bound t.
 
@@ -11,6 +12,10 @@ export const untrustedNotice = (): string => t('share-kit.notice.only-import-fil
 
 /** The personal-data line shown on export when an item carries an author name. */
 export const authorNotice = (): string => t('share-kit.notice.author-name-is-optional');
+
+/** The untrusted-import line as a warning, through the host's legal text (English-prevails label and Show English). */
+export const untrustedView = (legal: LegalLine): TemplateResult =>
+  html`<div class="notice warn" role="status">${glyph('help', 20)}<div class="body"><p>${legal('untrusted', untrustedNotice(), en(m('share-kit.notice.only-import-files-from-people-you-trust')))}</p></div></div>`;
 
 export const actionsHeading = (): string => t('share-kit.notice.actions-in-this-card');
 export const actionsHelp = (): string => t('share-kit.notice.actions-in-this-card-help');
@@ -49,5 +54,5 @@ export function contrastView(heading: string, items: { name: string; lines: stri
 export const removedHostsNotice = (hosts: readonly string[]): string => t('share-kit.notice.addresses-on-other-websites-were-removed', { hosts: hosts.join(', ') });
 
 /** The notes under the export text: the author name, replaced entity IDs and removed addresses. */
-export const exportNotes = (hasAuthor: boolean, replaced: boolean, removedHosts: readonly string[] = []): TemplateResult =>
-  html`${hasAuthor ? html`<p class="help" role="status">${authorNotice()}</p>` : nothing}${replaced ? html`<p class="help" data-ids-replaced role="status">${idsReplacedNotice()}</p>` : nothing}${removedHosts.length ? html`<p class="help" data-hosts-removed role="status">${removedHostsNotice(removedHosts)}</p>` : nothing}`;
+export const exportNotes = (hasAuthor: boolean, replaced: boolean, removedHosts: readonly string[] = [], legal?: LegalLine): TemplateResult =>
+  html`${hasAuthor ? html`<p class="help" role="status">${legal ? legal('author', authorNotice(), en(m('share-kit.notice.author-name-is-optional'))) : authorNotice()}</p>` : nothing}${replaced ? html`<p class="help" data-ids-replaced role="status">${idsReplacedNotice()}</p>` : nothing}${removedHosts.length ? html`<p class="help" data-hosts-removed role="status">${removedHostsNotice(removedHosts)}</p>` : nothing}`;

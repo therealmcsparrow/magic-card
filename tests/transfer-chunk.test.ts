@@ -163,7 +163,7 @@ describe('<mc-transfer-panel> import', () => {
     const closed = vi.fn();
     el.addEventListener('mc-transfer-close', closed);
     await paste(el, '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><script>alert(1)</script><path d="M1 1h4v4z"/></svg>');
-    expect(q(el, 'details')!.textContent).toContain('script');
+    await vi.waitFor(() => expect(q(el, 'details')?.textContent).toContain('script'), { timeout: 3000 });
     const outer = vi.fn();
     document.body.addEventListener('keydown', outer);
     q(el, '.wrap')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));

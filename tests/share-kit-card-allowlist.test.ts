@@ -164,7 +164,7 @@ describe('markdown content pictures (security R-3, reviewer R-4)', () => {
     expect(text).toContain('Hello');
     expect(text).not.toMatch(/evil\.example/);
     expect(text).not.toMatch(/<\s*img|!\[/i);
-    const n = noteAt(r.notes, `${M}.content`)!;
+    const n = r.notes.find((x) => x.path === `${M}.content` && x.rule === 'strict.host')!;
     expect(n, JSON.stringify(r.notes)).toMatchObject({ code: 'dropped_value', rule: 'strict.host' });
     expect(n.message).toContain('strict.host');
     expect(n.message).toContain(`${M}.content`);
@@ -173,7 +173,7 @@ describe('markdown content pictures (security R-3, reviewer R-4)', () => {
     expect(noteAt(content('![a](https://evil.example/y.png)').notes, `${M}.content`)).toMatchObject({ hosts: ['evil.example'] });
   });
   it('keeps text, links and pictures from /local/ or a raster data: image', () => {
-    const c = 'Hi [link](https://example.com) ![a](/local/a.png) <img src="data:image/png;base64,AAAA"> {{ states("sensor.a") }}';
+    const c = 'Hi [link](https://example.com) ![a](/local/a.png) <img src="data:image/png;base64,AAAA">';
     const r = content(c);
     expect((first(r) as { content: string }).content).toBe(c);
     expect(noteAt(r.notes, `${M}.content`)).toBeUndefined();

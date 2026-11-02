@@ -15,6 +15,10 @@
     "text": "Een stijlregel in {path} is weggelaten omdat de naam niet is toegestaan ({rule}).",
     "hash": "736395ce"
   },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "text": "Een sjabloon in {path} is weggelaten omdat gedeelde tekst geen sjablonen uitvoert: {text} ({rule}).",
+    "hash": "a8c8ddeb"
+  },
   "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
     "text": "\"{name}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
     "hash": "9551f0e5"

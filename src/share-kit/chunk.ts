@@ -9,7 +9,7 @@ import { styleDrops } from './style-drops';
 import { scanMarkers, strictValue, themeValue } from './strict';
 import { checkTheme, contrastHeading, contrastWarnings } from './theme-check';
 import { importPreview } from './import-preview';
-import { contrastView, exportNotes, runView, untrustedNotice } from './notice';
+import { contrastView, exportNotes, runView, untrustedNotice, untrustedView } from './notice';
 import { mappingView } from './mapping';
 import './anim-preview';
 import './map-step';
@@ -32,7 +32,7 @@ export const createShareKit: CreateShareKit = (helpers) => {
     previewSafe,
     styleDrops,
     checkContrast: checkTheme,
-    views: { untrustedNotice, exportNotes, runView, contrastHeading, contrastWarnings, contrastView, mappingView, importPreview },
+    views: { untrustedNotice, untrustedView, exportNotes, runView, contrastHeading, contrastWarnings, contrastView, mappingView, importPreview },
   };
   return kit;
 };

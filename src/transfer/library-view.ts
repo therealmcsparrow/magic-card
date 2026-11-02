@@ -485,6 +485,9 @@ export class LibraryView extends LitElement {
     await this._after([t('transfer.library-view.imported-ok-of-total', { ok, total: items.length }), full ? t('transfer.library-view.n-did-not-fit-the-library-is-full', { n: full }) : '', bad ? t('transfer.library-view.n-could-not-be-saved', { n: bad }) : ''].filter(Boolean).join(' '));
   }
 
+  /** The entity ids of hass, offered by the mapping step. */
+  private _entityIds = (): string[] => Object.keys((this.hass as { states?: Record<string, unknown> } | undefined)?.states ?? {});
+
   private _closePanel = (e?: Event): void => {
     e?.stopPropagation();
     this._panel = undefined;
@@ -554,6 +557,7 @@ export class LibraryView extends LitElement {
               .mode=${p.mode}
               .exportItems=${p.exportItems}
               .taken=${this._taken}
+              .entities=${this._entityIds()}
               .reserved=${this._reserved}
               .takenName=${this._takenName}
               .hasLibrary=${this._kind === 'theme' ? !!this.presets : this._intoCard || this._status !== 'missing'}
@@ -627,7 +631,7 @@ export class LibraryView extends LitElement {
       check,
       content:
         this._mapping?.id === r.id
-          ? html`<mc-map-entities .value=${this._mapping.data} @mc-map-apply=${(ev: CustomEvent<{ data: unknown }>) => void this._mapSave(r, this._mapping!.item, ev.detail.data)} @mc-map-cancel=${() => (this._mapping = undefined)}></mc-map-entities>`
+          ? html`<mc-map-entities .value=${this._mapping.data} .entities=${this._entityIds()} @mc-map-apply=${(ev: CustomEvent<{ data: unknown }>) => void this._mapSave(r, this._mapping!.item, ev.detail.data)} @mc-map-cancel=${() => (this._mapping = undefined)}></mc-map-entities>`
           : e === 'rename'
           ? input(t('transfer.library-view.new-name-for-name', { name: r.name }), r.name, (v) => void this._rename(r, v))
           : e === 'duplicate'

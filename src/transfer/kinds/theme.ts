@@ -8,7 +8,8 @@ import type { KindResult, Raw } from '../types';
 
 /** Host names in a value, as the browser resolves them. */
 export function hostsOf(value: string): string[] {
-  return externalHosts(value).hosts;
+  const hosts = externalHosts(value).hosts;
+  return hosts.length || !/^\s*(?:https?:)?\/\/[^\s"'()]+\s*$/i.test(value) ? hosts : externalHosts(`url(${value.trim()})`).hosts;
 }
 
 /**

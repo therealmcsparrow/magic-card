@@ -373,7 +373,7 @@ export class McteThemePreview extends LitElement {
       font-weight: 600;
     }
     .tablet-toggle[aria-pressed='true']::before {
-      content: '¹3 a0';
+      content: '\\2713\\00a0';
     }
     .tablet-toggle:focus-visible {
       outline: 2px solid var(--primary-color);

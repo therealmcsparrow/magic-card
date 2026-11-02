@@ -1,4 +1,5 @@
-import { CSS_BREAKOUT_MARKERS, CSS_PAINT_PROPERTIES, CSS_PROPERTY_RE, PLACEHOLDER_ID_RE, SHARED_CARD_TYPE, STRICT_ANY_TYPES, THEME_KEY_TYPES } from '../contracts/share-kit';
+import { decodeCssEscapes } from '../contracts/preset-transfer';
+import { CSS_BREAKOUT_MARKERS, CSS_PAINT_PROPERTIES, PAINT_DATA_URL_RE, PAINT_LOCAL_PATH_RE,CSS_PROPERTY_RE, PLACEHOLDER_ID_RE, SHARED_CARD_TYPE, STRICT_ANY_TYPES, THEME_KEY_TYPES } from '../contracts/share-kit';
 import type { CardKeyLists, CardReadResult, CssCheck, ImportNotice, SharedAction, SharedCardConfig, SharedTemplate, ShareKitHelpers, StrictRuleId, StrictType, ValueRefusal } from '../contracts/share-kit';
 import type { TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
 import { splitDeclarations } from '../utils/css-utils';
@@ -20,6 +21,11 @@ const MD_DEFINITION_RE = /^[ ]{0,3}\[[^\]]+\]:[ \t]*<?([^\s>]+)>?.*$/gm;
 const MD_IMAGE_RE = /!\[[^\]]*\](?:\(\s*<?([^)\s>]*)>?[^)]*\)|\[[^\]]*\])?/g;
 const DESIGN_KEYS: ReadonlySet<string> = new Set(['design', 'hover', 'custom_animations', 'custom_shapes']);
 const TEMPLATE_RE = /\{\{|\{%|\{#/;
+const TEMPLATE_SPAN_RE = /\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}/g;
+/** The only exact form of picture a shared text may hold: a local or raster data: source and an optional plain alt. */
+const IMG_RE = /^<img src="([^"&<>]*)"(?: alt="[\w .,'-]*")?\s?\/?>$/i;
+/** Keys read as a template whose result is shown as text or picked as an icon or entity, never put into a style. */
+const TEMPLATE_KEYS: ReadonlySet<string> = new Set(['entity', 'icon', 'value', 'template']);
 const ENTITY_COLOUR_RE = /^entity(?: \d{1,3}%)?$/;
 const FUNCTION_RE = /([a-z][a-z0-9-]*)\s*\(/gi;
 const PLACEHOLDER_SCAN_RE = /(?<![a-z0-9_])[a-z][a-z0-9_]*\.mc_placeholder_[1-9][0-9]*(?![a-z0-9_])/g;
@@ -79,12 +85,11 @@ function stripPictures(v: string): { text: string; gone: string[] } {
   for (let pass = 0; pass < 4; pass++) {
     const before = text;
     text = text
-      .replace(MD_IMAGE_RE, (m, dest: string | undefined) => (dest !== undefined && !TEMPLATE_RE.test(dest) && urlAllowed(dest) ? keep(m) : (gone.push(m), '')))
-      .replace(MD_DEFINITION_RE, (m, dest: string) => (urlAllowed(dest) ? m : (gone.push(m), '')))
+      .replace(MD_IMAGE_RE, (m, dest: string | undefined) => (dest !== undefined && !TEMPLATE_RE.test(dest) && !dest.includes('&') && urlAllowed(dest) ? keep(m) : (gone.push(m), '')))
+      .replace(MD_DEFINITION_RE, (m, dest: string) => (!dest.includes('&') && urlAllowed(dest) ? m : (gone.push(m), '')))
       .replace(HTML_MEDIA_RE, (m) => {
-        const src = /\ssrc\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*))/i.exec(m);
-        const ok = /^<\s*img\b/i.test(m) && m.endsWith('>') && !/srcset|style\s*=|\\/i.test(m) && !!src && !TEMPLATE_RE.test(m) && urlAllowed(src[1] ?? src[2] ?? src[3] ?? '');
-        return ok ? keep(m) : (gone.push(m), '');
+        const src = IMG_RE.exec(m)?.[1];
+        return src !== undefined && (PAINT_LOCAL_PATH_RE.test(src) || PAINT_DATA_URL_RE.test(src)) ? keep(m) : (gone.push(m), '');
       })
       .replace(/url\s*\(\s*(?:"[^"]*"|'[^']*'|[^"'()\s]*)\s*\)/gi, (m) => (urlsOk(m) ? keep(m) : (gone.push(m), '')));
     if (text === before) break;
@@ -269,8 +274,9 @@ function walkString(v: string, key: string, path: string, c: Ctx, design: boolea
   }
   if (PLAIN_KEYS.has(base) || c.loose > 0) return v;
   if (urlLike(v)) return urlAllowed(v) ? kept(v, path, c) : drop(c, path, 'strict.host', hostsIn(v));
-  if ((design || !TEMPLATE_RE.test(v)) && markerIn(v)) return refuse(c, path);
-  if (FETCH_FN_RE.test(v) || !urlsOk(v) || hostsIn(v).length) return drop(c, path, 'strict.host', hostsIn(v));
+  const d = decodeCssEscapes(v);
+  if ((design || !(TEMPLATE_KEYS.has(base) && TEMPLATE_RE.test(v))) && markerIn(d)) return refuse(c, path);
+  if (FETCH_FN_RE.test(d) || !urlsOk(d) || hostsIn(d).length) return drop(c, path, 'strict.host', hostsIn(d));
   if (design && !functionsOk(v)) return drop(c, path, 'strict.any');
   return kept(v, path, c);
 }
@@ -283,7 +289,10 @@ function kept(v: string, path: string, c: Ctx): string {
 
 /** Markdown or HTML `content`: pictures that load from another website, or that cannot be told apart from one, are removed and listed. */
 function readContent(v: string, path: string, c: Ctx): string {
-  const r = stripPictures(v);
+  let plain = v;
+  const cut = (m: string): string => (c.notes.push(dropped(c.item, path, 'strict.any', t('share-kit.card.a-template-in-path-was-left-out-because-shared-text', { path, rule: 'strict.any', text: m.slice(0, 80) }))), '');
+  while (TEMPLATE_RE.test(plain)) plain = plain.replace(TEMPLATE_SPAN_RE, cut).replace(/\{[{%#][\s\S]*/, cut);
+  const r = stripPictures(plain);
   if (r.gone.length) c.notes.push(dropped(c.item, path, 'strict.host', t('share-kit.card.a-picture-in-path-was-left-out-because-it-may', { path, rule: 'strict.host' }), [...new Set(r.gone.flatMap(hostsIn))]));
   return r.text;
 }

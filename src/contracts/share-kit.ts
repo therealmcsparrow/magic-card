@@ -187,6 +187,9 @@ export interface ShareKitHelpers {
   sanitizeIcon(item: number, path: string, svg: string): { svg?: string; notes: TransferNote[] };
 }
 
+/** Sets a legal-drafted text for the host: `id` names it, `text` is the shown text and `english` the English original. */
+export type LegalLine = (id: string, text: string, english: string) => TemplateResult;
+
 /**
  * The views and texts the transfer panel shows, so it reaches the chunk through the kit alone. They render names and
  * values as text and make no request.
@@ -194,7 +197,10 @@ export interface ShareKitHelpers {
 export interface ShareKitViews {
   /** The line above the preview of every import. */
   untrustedNotice(): string;
-  exportNotes(hasAuthor: boolean, replaced: boolean, removedHosts?: readonly string[]): TemplateResult;
+  /** That line as a warning, set through `legal` (the host's legal text: English-prevails label and Show English). */
+  untrustedView(legal: LegalLine): TemplateResult;
+  /** `legal` sets the author line the same way. */
+  exportNotes(hasAuthor: boolean, replaced: boolean, removedHosts?: readonly string[], legal?: LegalLine): TemplateResult;
   /** The actions and templates of a shared card. */
   runView(run: ImportNotice): TemplateResult;
   contrastHeading(): string;
@@ -205,6 +211,16 @@ export interface ShareKitViews {
   mappingView(placeholders: readonly EntityPlaceholder[], values: Readonly<Record<string, string>>, onChange: (id: string, value: string) => void, onSkip: () => void, entities?: readonly string[]): TemplateResult;
   /** The import preview of the items, from previewSafe copies and demo states; a theme gets the Wall tablet, an animation <mc-anim-preview>. The chunk defines <mc-anim-preview> and <mc-map-entities> when it loads. */
   importPreview(kind: TransferKind, items: readonly TransferItem[], placeholders: readonly EntityPlaceholder[], wallTablet: boolean, onWallTablet: () => void): TemplateResult;
+}
+
+/**
+ * <mc-map-entities> (defined when the share-kit chunk loads): the mapping step of an item that is already saved.
+ * Properties: `value` (the saved data) and `entities?` (entity ids offered by domain). Events (bubbling, composed):
+ * `mc-map-apply` with detail { data } (the data with the chosen entity ids in; the host saves it) and `mc-map-cancel`.
+ */
+export interface MapEntitiesEvents {
+  'mc-map-apply': CustomEvent<{ data: unknown }>;
+  'mc-map-cancel': CustomEvent<undefined>;
 }
 
 /** What the share-kit chunk gives the transfer chunk. Pure and synchronous, except where an element is passed in. */

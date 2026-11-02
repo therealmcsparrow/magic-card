@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../src/index';
 import '../src/transfer/panel';
+import { render } from 'lit';
+import { importPreview } from '../src/share-kit/import-preview';
 import { cardKeyLists } from '../src/editor/transfer-loader';
 import type { TransferPanel } from '../src/transfer/panel';
 import { cardConfig, makeHass, mountCard } from './helpers/fake-hass';
@@ -128,6 +130,46 @@ describe('import preview', () => {
     confirmButton(el).click();
     expect(JSON.stringify(imported[0].items[0].data)).toContain('light.mc_placeholder_1');
     expect(JSON.stringify(imported[0].items[0].data)).not.toContain('light.kitchen');
+  });
+});
+
+describe('previews of card, shape, theme and path-only icon', () => {
+  const file = (kind: string, data: unknown) => JSON.stringify({ magic_card_export: '1.1', kind, items: [{ id: 'x', name: 'X', data }] });
+
+  it('mounts the real card from the previewSafe copy with demo states, and makes no request', async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal('fetch', fetchSpy);
+    const el = await open({ host: 'card-editor', accept: ['card'], card: cardKeyLists() }, cardFile);
+    const c = q<HTMLElement & { hass?: { states: Record<string, { state: string }> } }>(el, '[data-import-preview] magic-card')!;
+    expect(c).toBeTruthy();
+    expect(c.hass!.states['light.mc_placeholder_1'].state).toBe('on');
+    expect(c.hasAttribute('inert')).toBe(true);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('draws a shape on a real card', async () => {
+    const el = await open({ host: 'shape-editor', accept: ['shape'] }, file('shape', { corner: 18 }));
+    const c = q<HTMLElement>(el, '[data-import-preview] magic-card')!;
+    expect(c).toBeTruthy();
+    expect(c.hasAttribute('inert')).toBe(true);
+  });
+
+  it('shows the colours of a theme while the Wall tablet is off', async () => {
+    const el = await open({ host: 'theme-editor', accept: ['theme'] }, JSON.stringify(hostileTheme));
+    const sw = [...el.shadowRoot!.querySelectorAll<HTMLElement>('[data-theme-swatch]')];
+    expect(sw.length).toBeGreaterThan(0);
+    expect(sw.map((x) => x.getAttribute('style')).join()).toContain('#336699');
+    expect(el.shadowRoot!.querySelector('mc-wall-tablet')).toBeNull();
+  });
+
+  it('draws a path-only icon as an inline path, and nothing from a bad path', () => {
+    const host = document.createElement('div');
+    const draw = (path: string) => {
+      render(importPreview('icon', [{ id: 'i', name: 'I', data: { svg: '', path } }], [], false, () => undefined), host);
+      return host.querySelector('[data-import-preview] svg path')?.getAttribute('d');
+    };
+    expect(draw('M2 2h20v20H2z')).toBe('M2 2h20v20H2z');
+    expect(draw('M2 2" onload="x')).toBeUndefined();
   });
 });
 

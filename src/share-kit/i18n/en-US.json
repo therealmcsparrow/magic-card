@@ -15,6 +15,10 @@
     "text": "A style line in {path} was left out because its name is not allowed ({rule}).",
     "hash": "736395ce"
   },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "text": "A template in {path} was left out because shared text does not run templates: {text} ({rule}).",
+    "hash": "a8c8ddeb"
+  },
   "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
     "text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
     "hash": "9551f0e5"

@@ -325,7 +325,7 @@ export class TransferPanel extends LitElement {
     const shown = hosts.length ? hosts.join(', ') : anyUnknown ? t('transfer.theme.another-website') : '';
     const shownEn = hosts.length ? shown : en(m('transfer.theme.another-website'));
     return html`
-      ${notice({ tone: 'warn', text: w.untrustedNotice() })}
+      ${w.untrustedView((id, text, english) => this._legal(id, text, english))}
       <ul>
         ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
       </ul>
@@ -437,7 +437,7 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${this._kit!.views.exportNotes(e.items.some((i) => i.author), !!replaced, shared.removedHosts)}
+      ${this._kit!.views.exportNotes(e.items.some((i) => i.author), !!replaced, shared.removedHosts, (id, text, english) => this._legal(id, text, english))}
       <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
