@@ -7,6 +7,13 @@ const MAX_NODES = 40_000;
 const SKIP = new Set(['style', 'script', 'link', 'template', 'meta', 'iframe', 'object', 'embed', 'video', 'audio']);
 const URL_PROPS = ['background-image', 'mask-image', '-webkit-mask-image', 'border-image-source', 'list-style-image', 'content'];
 const CSS_URL = /url\((["']?)(.*?)\1\)/g;
+// Only pictures and fonts are fetched, each within a byte and a time limit.
+const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_RUN_BYTES = 24 * 1024 * 1024;
+const FETCH_MS = 8000;
+const INLINE_TYPE = /^(?:image\/|font\/|application\/(?:font|x-font|vnd\.ms-fontobject))/i;
+// Elements whose href is a picture or a part of one; on any other element (a link) it is removed, not fetched.
+const HREF_PICTURES = new Set(['image', 'use', 'feimage']);
 const TAINT_PROBE =
   '<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><foreignObject width="2" height="2"><div xmlns="http://www.w3.org/1999/xhtml" style="background:#000">.</div></foreignObject></svg>';
 
@@ -92,7 +99,52 @@ interface Run {
   replaced: boolean;
   nodes: number;
   families: Set<string>;
+  /** Bytes inlined so far. */
+  bytes: number;
   cache: Map<string, string>;
+}
+
+/** The body of a picture or font response, or `undefined` when it is not one or is over `cap` bytes; the stream is cancelled at the cap. */
+async function readCapped(res: Response, cap: number): Promise<Blob | undefined> {
+  const type = res.headers.get('content-type') ?? '';
+  if (!INLINE_TYPE.test(type)) return undefined;
+  if (Number(res.headers.get('content-length')) > cap) return undefined;
+  if (!res.body) {
+    const whole = await res.blob();
+    return whole.size <= cap ? whole : undefined;
+  }
+  const reader = res.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > cap) {
+      await reader.cancel().catch(() => undefined);
+      return undefined;
+    }
+    chunks.push(value);
+  }
+  return new Blob(chunks as BlobPart[], { type });
+}
+
+/** One same-origin GET within `cap` bytes and FETCH_MS; `undefined` when it fails, is too big, is too slow or is not a picture or font. */
+async function fetchCapped(abs: string, cap: number): Promise<Blob | undefined> {
+  const ctl = new AbortController();
+  const timedOut = new Promise<undefined>((res) => ctl.signal.addEventListener('abort', () => res(undefined)));
+  const timer = setTimeout(() => ctl.abort(), FETCH_MS);
+  const work = (async () => {
+    const res = await fetch(abs, { credentials: 'same-origin', signal: ctl.signal });
+    return res.ok ? readCapped(res, cap) : undefined;
+  })();
+  work.catch(() => undefined);
+  try {
+    return await Promise.race([work, timedOut]);
+  } finally {
+    clearTimeout(timer);
+    ctl.abort();
+  }
 }
 
 async function toDataUrl(url: string, run: Run): Promise<string> {
@@ -105,9 +157,10 @@ async function toDataUrl(url: string, run: Run): Promise<string> {
   const hit = run.cache.get(abs);
   if (hit) return hit;
   try {
-    const res = await fetch(abs, { credentials: 'same-origin' });
-    if (!res.ok) return PIXEL;
-    const data = await readAsDataUrl(await res.blob());
+    const blob = await fetchCapped(abs, Math.min(MAX_FILE_BYTES, MAX_RUN_BYTES - run.bytes));
+    if (!blob) return PIXEL;
+    run.bytes += blob.size;
+    const data = await readAsDataUrl(blob);
     run.cache.set(abs, data);
     return data;
   } catch {
@@ -173,7 +226,10 @@ async function cloneInto(node: Node, out: Node, run: Run): Promise<void> {
   const clone = el.cloneNode(false) as Element;
   for (const a of Array.from(clone.attributes)) {
     if (a.name === 'style' || a.name === 'class' || a.name === 'srcset' || a.name.startsWith('on')) clone.removeAttribute(a.name);
-    else if ((a.name === 'href' || a.name === 'xlink:href') && !a.value.startsWith('#')) clone.setAttribute(a.name, await toDataUrl(a.value, run));
+    else if ((a.name === 'href' || a.name === 'xlink:href') && !a.value.startsWith('#')) {
+      if (HREF_PICTURES.has(el.localName.toLowerCase())) clone.setAttribute(a.name, await toDataUrl(a.value, run));
+      else clone.removeAttribute(a.name);
+    }
   }
   clone.setAttribute('style', await styleOf(el, run));
   for (const ps of ['::before', '::after']) {
@@ -229,7 +285,7 @@ export async function captureFrame(el: HTMLElement, seams?: CaptureSeams): Promi
   const height = h * FORUM_SHOT_SCALE;
   if (width * height > FORUM_SHOT_MAX_PIXELS) throw forumShotError('too_large');
   if (document.fonts?.ready) await document.fonts.ready;
-  const run: Run = { replaced: false, nodes: 0, families: new Set(), cache: new Map() };
+  const run: Run = { replaced: false, nodes: 0, families: new Set(), bytes: 0, cache: new Map() };
   const holder = document.createElement('div');
   await cloneInto(el, holder, run);
   const root = holder.firstElementChild;

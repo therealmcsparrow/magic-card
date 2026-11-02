@@ -68,7 +68,7 @@ export async function renderSheet(hass: object, request: ForumShotRequest, seams
   const shots: { mode: ForumShotMode; look: ForumShotLook; blob: Blob; width: number; height: number }[] = [];
   for (const look of looks) {
     for (const mode of modes) {
-      const wrap = modeWrapper(hass, mode);
+      const wrap = modeWrapper(hass, mode, () => notices.add('remote_placeholder'));
       document.body.append(wrap);
       let settled;
       try {
