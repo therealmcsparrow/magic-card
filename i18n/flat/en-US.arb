@@ -22975,12 +22975,12 @@
     "x-max-length": 90,
     "x-source-hash": "f37f797c"
   },
-  "forum-shot.card-table.reason-limit": "It names more outside websites than a forum shot allows.",
+  "forum-shot.card-table.reason-limit": "It names too many outside websites, or it is too large to check.",
   "@forum-shot.card-table.reason-limit": {
     "description": "Reason a card is locked: it names too many outside websites or is too large to check. Max 80 characters.",
-    "source_text": "It names more outside websites than a forum shot allows.",
+    "source_text": "It names too many outside websites, or it is too large to check.",
     "x-max-length": 80,
-    "x-source-hash": "04436b45"
+    "x-source-hash": "cec07c66"
   },
   "forum-shot.card-table.reason-outside-address": "It loads something from outside Home Assistant.",
   "@forum-shot.card-table.reason-outside-address": {
@@ -23059,6 +23059,13 @@
     "x-max-length": 130,
     "x-source-hash": "9924ac84"
   },
+  "forum-shot.element.error-hosts-changed": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+  "@forum-shot.element.error-hosts-changed": {
+    "description": "Error when the font sites of the card differ from those shown before Download; the card list has been read again. Max 200 characters.",
+    "source_text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "x-max-length": 200,
+    "x-source-hash": "198f0eb0"
+  },
   "forum-shot.element.error-too-large": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
   "@forum-shot.element.error-too-large": {
     "description": "Error when the sheet would exceed the size limit. Max 100 characters.",
@@ -23066,12 +23073,12 @@
     "x-max-length": 100,
     "x-source-hash": "15a5ec38"
   },
-  "forum-shot.element.font-host-contact": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
+  "forum-shot.element.font-host-contact": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
   "@forum-shot.element.font-host-contact": {
-    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 290 characters.",
-    "source_text": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
-    "x-max-length": 290,
-    "x-source-hash": "d246ba7e"
+    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 380 characters.",
+    "source_text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "x-max-length": 380,
+    "x-source-hash": "e4e8bf0b"
   },
   "forum-shot.element.forum-shot": "Forum shot",
   "@forum-shot.element.forum-shot": {

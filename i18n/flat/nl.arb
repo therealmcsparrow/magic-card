@@ -22975,12 +22975,12 @@
     "x-max-length": 90,
     "x-source-hash": "f37f797c"
   },
-  "forum-shot.card-table.reason-limit": "Er staan meer externe websites in dan een forumafbeelding toestaat.",
+  "forum-shot.card-table.reason-limit": "Er staan te veel externe websites in, of de kaart is te groot om te controleren.",
   "@forum-shot.card-table.reason-limit": {
     "description": "Reason a card is locked: it names too many outside websites or is too large to check. Max 80 characters.",
-    "source_text": "It names more outside websites than a forum shot allows.",
+    "source_text": "It names too many outside websites, or it is too large to check.",
     "x-max-length": 80,
-    "x-source-hash": "04436b45"
+    "x-source-hash": "cec07c66"
   },
   "forum-shot.card-table.reason-outside-address": "Er wordt iets van buiten Home Assistant geladen.",
   "@forum-shot.card-table.reason-outside-address": {
@@ -23059,6 +23059,13 @@
     "x-max-length": 130,
     "x-source-hash": "9924ac84"
   },
+  "forum-shot.element.error-hosts-changed": "De lettertypen die deze kaart vraagt zijn veranderd sinds de lijst is gemaakt, en er is niets opgehaald. De lijst is nu bijgewerkt. Controleer de genoemde sites en kies daarna opnieuw Downloaden.",
+  "@forum-shot.element.error-hosts-changed": {
+    "description": "Error when the font sites of the card differ from those shown before Download; the card list has been read again. Max 200 characters.",
+    "source_text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "x-max-length": 200,
+    "x-source-hash": "198f0eb0"
+  },
   "forum-shot.element.error-too-large": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
   "@forum-shot.element.error-too-large": {
     "description": "Error when the sheet would exceed the size limit. Max 100 characters.",
@@ -23066,12 +23073,12 @@
     "x-max-length": 100,
     "x-source-hash": "15a5ec38"
   },
-  "forum-shot.element.font-host-contact": "Om de lettertypen te tekenen vraagt je browser ze op bij {hosts}. Die sites kunnen je IP-adres zien, het tijdstip van het verzoek, welke lettertypen je opvraagt en de gewone gegevens die elke browser meestuurt, zoals het type en de taal. Je kaarten en instellingen worden niet verstuurd.",
+  "forum-shot.element.font-host-contact": "Om de lettertypen te tekenen vraagt je browser ze op bij {hosts}. Elk verzoek laat die sites je IP-adres zien, het tijdstip, de lettertypen die je opvraagt en het adres van je Home Assistant (een DuckDNS-naam, een Nabu Casa-adres of een adres op je lokale netwerk), plus het type en de taal van je browser. Je kaarten en instellingen worden niet verstuurd.",
   "@forum-shot.element.font-host-contact": {
-    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 290 characters.",
-    "source_text": "To draw the fonts, your browser asks {hosts} for them. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language. Your cards and settings are not sent.",
-    "x-max-length": 290,
-    "x-source-hash": "d246ba7e"
+    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 380 characters.",
+    "source_text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "x-max-length": 380,
+    "x-source-hash": "e4e8bf0b"
   },
   "forum-shot.element.forum-shot": "Forumafbeelding",
   "@forum-shot.element.forum-shot": {
