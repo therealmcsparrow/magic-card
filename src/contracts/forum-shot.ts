@@ -46,13 +46,13 @@ export interface MagicCardRef {
   /** Cross-origin hosts and Google font families the config names; empty when none. */
   remote: string[];
   /** Why the card cannot be picked; null when it can. */
-  lock?: ForumShotLockReason | null;
+  lock: ForumShotLockReason | null;
   /** Hosts the config names that a Download contacts for fonts; empty when it fetches none, as on a locked card. */
-  fontHosts?: string[];
+  fontHosts: string[];
   /** Title of the dashboard, for display. */
-  dashboardTitle?: string;
+  dashboardTitle: string;
   /** Name of the card, or its position in the view when it has none. */
-  cardName?: string;
+  cardName: string;
 }
 
 /**

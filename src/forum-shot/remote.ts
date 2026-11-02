@@ -1,11 +1,11 @@
 // Remote assets for the forum shot: finds addresses outside the Home Assistant origin in a card config, hass data and theme values, and removes them before anything mounts.
 import { configGoogleFonts } from '../utils/google-fonts';
 
-const MAX_NODES = 50_000;
-const MAX_DEPTH = 24;
-const MAX_STRING = 1_000_000;
+export const MAX_NODES = 50_000;
+export const MAX_DEPTH = 24;
+export const MAX_STRING = 1_000_000;
 /** Reported in place of a host when a limit was hit: the value could not be judged, so it counts as remote. */
-const LIMIT = 'limit';
+export const LIMIT = 'limit';
 /** Reported for a card with a `custom-card` module at any depth: a third-party card makes requests nothing here can scrub. Holds a space, so it is never a host. */
 export const CUSTOM_CARD = 'custom-card module';
 
@@ -49,7 +49,7 @@ const NAMED: Record<string, string> = {
 const codePoint = (n: number): string => (n > 0 && n <= 0x10ffff && !(n >= 0xd800 && n <= 0xdfff) ? String.fromCodePoint(n) : '�');
 
 /** HTML character references the way a browser reads them (a missing semicolon allowed); repeated so `&amp;#104;` is seen too. */
-function decodeEntities(text: string): string {
+export function decodeEntities(text: string): string {
   let cur = text;
   for (let i = 0; i < 3 && cur.includes('&'); i++) {
     const next = cur.replace(/&(?:#(\d{1,8})|#[xX]([0-9a-fA-F]{1,6})|([A-Za-z][A-Za-z0-9]*));?/g, (m, dec?: string, hex?: string, name?: string) => {

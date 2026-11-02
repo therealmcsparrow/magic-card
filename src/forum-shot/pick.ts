@@ -4,6 +4,7 @@ import type { IconStyle } from '../contracts/icon-library';
 import { loadIconLibrary } from '../anim-studio/icon-library-loader';
 import { styleDoc } from '../icon-anim/style';
 import type { LookSource } from './looks';
+import { classifyCard } from './font-address';
 import { findRemoteAssets } from './remote';
 import { forumShotError } from './settle';
 
@@ -66,8 +67,19 @@ export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
     const walk = (node: unknown, path: number[], view: string): void => {
       if (!isObj(node) || ++nodes > MAX_NODES || refs.length >= MAX_CARDS) return;
       if (node.type === CARD_TYPE) {
-        const label = [dash.title, view, text(node.name) || `#${refs.filter((r) => r.dashboard === dash.path && r.view === view).length + 1}`];
-        refs.push({ dashboard: dash.path, view, path, label: label.filter(Boolean).join(' / '), remote: findRemoteAssets(node, location.origin) });
+        const cardName = text(node.name) || `#${refs.filter((r) => r.dashboard === dash.path && r.view === view).length + 1}`;
+        const { lock, fontHosts } = classifyCard(node, location.origin);
+        refs.push({
+          dashboard: dash.path,
+          view,
+          path,
+          label: [dash.title, view, cardName].filter(Boolean).join(' / '),
+          remote: findRemoteAssets(node, location.origin),
+          lock,
+          fontHosts,
+          dashboardTitle: dash.title,
+          cardName,
+        });
         return;
       }
       childrenOf(node).forEach((c, i) => walk(c, [...path, i], view));
