@@ -128,7 +128,7 @@ describe('picker', () => {
     expect(radios[2].disabled).toBe(true);
     expect(radios.filter((r) => r.disabled).length).toBe(1);
     const described = radios[2].getAttribute('aria-describedby')!;
-    expect($(el, `#${described}`)!.textContent).toContain('cannot be used for a forum shot');
+    expect($(el, `#${described}`)!.textContent).toContain('outside Home Assistant');
     expect(el.shadowRoot!.textContent).not.toContain('example.com');
   });
 

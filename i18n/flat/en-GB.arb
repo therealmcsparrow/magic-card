@@ -19698,6 +19698,78 @@
     "x-max-length": 15,
     "x-source-hash": "d539f275"
   },
+  "forum-shot.card-table.column-card": "Card",
+  "@forum-shot.card-table.column-card": {
+    "description": "Column header of the card table: the name of the Magic Card. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "be3702e3"
+  },
+  "forum-shot.card-table.column-dashboard": "Dashboard",
+  "@forum-shot.card-table.column-dashboard": {
+    "description": "Column header of the card table: the dashboard a card is on. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "67b69646"
+  },
+  "forum-shot.card-table.column-status": "Status",
+  "@forum-shot.card-table.column-status": {
+    "description": "Column header of the card table: whether the card can be used. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "920e413c"
+  },
+  "forum-shot.card-table.column-view": "View",
+  "@forum-shot.card-table.column-view": {
+    "description": "Column header of the card table: the view (tab) of the dashboard a card is on. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "dcc839a4"
+  },
+  "forum-shot.card-table.default-dashboard": "Default dashboard",
+  "@forum-shot.card-table.default-dashboard": {
+    "description": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "4913c670"
+  },
+  "forum-shot.card-table.fonts-from": "Fonts from {hosts}",
+  "@forum-shot.card-table.fonts-from": {
+    "description": "Line under a usable card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 120 characters.",
+    "x-max-length": 120,
+    "x-source-hash": "9f44f4ca"
+  },
+  "forum-shot.card-table.reason-cannot-judge": "Its settings could not be checked for outside addresses.",
+  "@forum-shot.card-table.reason-cannot-judge": {
+    "description": "Reason a card is locked: the check could not tell whether an address is safe. Max 80 characters.",
+    "x-max-length": 80,
+    "x-source-hash": "a7009139"
+  },
+  "forum-shot.card-table.reason-custom-card": "It holds another card (a custom-card module) that nothing here can check.",
+  "@forum-shot.card-table.reason-custom-card": {
+    "description": "Reason a card is locked: it contains a custom-card module. Max 90 characters.",
+    "x-max-length": 90,
+    "x-source-hash": "f37f797c"
+  },
+  "forum-shot.card-table.reason-limit": "It names more outside websites than a forum shot allows.",
+  "@forum-shot.card-table.reason-limit": {
+    "description": "Reason a card is locked: it names too many outside websites or is too large to check. Max 80 characters.",
+    "x-max-length": 80,
+    "x-source-hash": "04436b45"
+  },
+  "forum-shot.card-table.reason-outside-address": "It loads something from outside Home Assistant.",
+  "@forum-shot.card-table.reason-outside-address": {
+    "description": "Reason a card is locked: it names an address outside Home Assistant that is not an allowed font. Max 70 characters.",
+    "x-max-length": 70,
+    "x-source-hash": "56e035ab"
+  },
+  "forum-shot.card-table.status-available": "Available",
+  "@forum-shot.card-table.status-available": {
+    "description": "Status of a card that can be picked for a forum shot. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "e6744473"
+  },
+  "forum-shot.card-table.status-locked": "Locked",
+  "@forum-shot.card-table.status-locked": {
+    "description": "Status of a card that cannot be picked. A reason follows it. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "a424e33d"
+  },
   "forum-shot.element.admin-only": "Only the default dashboard is listed, because listing the others needs an administrator account.",
   "@forum-shot.element.admin-only": {
     "description": "Note for a user who is not an administrator, shown above the list of cards. Max 120 characters.",

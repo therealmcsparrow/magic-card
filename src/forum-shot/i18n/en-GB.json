@@ -1,4 +1,67 @@
 {
+  "forum-shot.card-table.column-card": {
+    "text": "Card",
+    "note": "Column header of the card table: the name of the Magic Card.",
+    "max": 20
+  },
+  "forum-shot.card-table.column-dashboard": {
+    "text": "Dashboard",
+    "note": "Column header of the card table: the dashboard a card is on.",
+    "max": 20
+  },
+  "forum-shot.card-table.column-status": {
+    "text": "Status",
+    "note": "Column header of the card table: whether the card can be used.",
+    "max": 20
+  },
+  "forum-shot.card-table.column-view": {
+    "text": "View",
+    "note": "Column header of the card table: the view (tab) of the dashboard a card is on.",
+    "max": 20
+  },
+  "forum-shot.card-table.default-dashboard": {
+    "text": "Default dashboard",
+    "note": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own.",
+    "max": 30
+  },
+  "forum-shot.card-table.fonts-from": {
+    "text": "Fonts from {hosts}",
+    "note": "Line under a usable card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "max": 120,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "forum-shot.card-table.reason-cannot-judge": {
+    "text": "Its settings could not be checked for outside addresses.",
+    "note": "Reason a card is locked: the check could not tell whether an address is safe.",
+    "max": 80
+  },
+  "forum-shot.card-table.reason-custom-card": {
+    "text": "It holds another card (a custom-card module) that nothing here can check.",
+    "note": "Reason a card is locked: it contains a custom-card module.",
+    "max": 90
+  },
+  "forum-shot.card-table.reason-limit": {
+    "text": "It names more outside websites than a forum shot allows.",
+    "note": "Reason a card is locked: it names too many outside websites or is too large to check.",
+    "max": 80
+  },
+  "forum-shot.card-table.reason-outside-address": {
+    "text": "It loads something from outside Home Assistant.",
+    "note": "Reason a card is locked: it names an address outside Home Assistant that is not an allowed font.",
+    "max": 70
+  },
+  "forum-shot.card-table.status-available": {
+    "text": "Available",
+    "note": "Status of a card that can be picked for a forum shot.",
+    "max": 20
+  },
+  "forum-shot.card-table.status-locked": {
+    "text": "Locked",
+    "note": "Status of a card that cannot be picked. A reason follows it.",
+    "max": 20
+  },
   "forum-shot.element.admin-only": {
     "text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
     "note": "Note for a user who is not an administrator, shown above the list of cards.",

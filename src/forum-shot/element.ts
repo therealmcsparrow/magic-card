@@ -1,4 +1,5 @@
-import { LitElement, html, nothing } from 'lit';
+import { LitElement, html, nothing, svg } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import type { PropertyDeclarations, PropertyValues, TemplateResult } from 'lit';
 import { FORUM_SHOT_CONTRACT_VERSION } from '../contracts/forum-shot';
 import type { ForumShotErrorCode, ForumShotLook, ForumShotMode, ForumShotSheet, MagicCardRef } from '../contracts/forum-shot';
@@ -7,6 +8,8 @@ import { setI18nLocale } from '../i18n/runtime';
 import { t } from './i18n';
 import { cardConfigOf, codeOf, iconLibraryLookSource, listMagicCards } from './pick';
 import type { WsHass } from './pick';
+import { dashboardName, rowKey, SORT_KEYS, sortedRows } from './card-table';
+import type { Sort, SortKey } from './card-table';
 import { renderSheet } from './sheet';
 import { CUSTOM_CARD } from './remote';
 import { forumShotStyles } from './styles';
@@ -32,7 +35,7 @@ export class MagicCardForumShot extends LitElement {
     narrow: { type: Boolean, reflect: true },
   };
 
-  hass?: LocaleHassLike & WsHass & { user?: { is_admin?: boolean } };
+  hass?: LocaleHassLike & WsHass & { user?: { is_admin?: boolean }; panels?: Record<string, { title?: string | null } | undefined> };
   narrow = false;
 
   static styles = forumShotStyles;
@@ -40,7 +43,8 @@ export class MagicCardForumShot extends LitElement {
   private _load: Load = 'loading';
   private _loadError?: ForumShotErrorCode;
   private _cards: MagicCardRef[] = [];
-  private _pick = -1;
+  private _pick = '';
+  private _sort: Sort | null = null;
   private _mode: ModeChoice = 'both';
   private _looks = false;
   private _busy = false;
@@ -54,6 +58,8 @@ export class MagicCardForumShot extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this._started = false;
+    this._sort = null;
+    this.requestUpdate();
   }
 
   disconnectedCallback(): void {
@@ -80,7 +86,7 @@ export class MagicCardForumShot extends LitElement {
     try {
       this._cards = await listMagicCards(this.hass ?? {});
       this._load = 'ready';
-      if (this._pick >= this._cards.length || this._cards[this._pick]?.remote.length) this._pick = -1;
+      if (!this._cards.some((c) => rowKey(c) === this._pick && c.lock === null)) this._pick = '';
     } catch (e) {
       const code = codeOf(e);
       this._load = code === 'no_cards' ? 'empty' : 'error';
@@ -109,7 +115,7 @@ export class MagicCardForumShot extends LitElement {
   }
 
   private async _download(): Promise<void> {
-    const ref = this._cards[this._pick];
+    const ref = this._picked();
     if (!ref || this._busy) return;
     this._busy = true;
     this._error = undefined;
@@ -135,7 +141,7 @@ export class MagicCardForumShot extends LitElement {
   private _errorText(code: ForumShotErrorCode): string {
     switch (code) {
       case 'remote_asset':
-        return this._cards[this._pick]?.remote.includes(CUSTOM_CARD) ? t('forum-shot.element.custom-card') : t('forum-shot.element.remote-asset');
+        return this._picked()?.remote.includes(CUSTOM_CARD) ? t('forum-shot.element.custom-card') : t('forum-shot.element.remote-asset');
       case 'card_not_defined':
         return t('forum-shot.element.error-card-not-defined');
       case 'too_large':
@@ -147,31 +153,119 @@ export class MagicCardForumShot extends LitElement {
     }
   }
 
+  private _picked(): MagicCardRef | undefined {
+    return this._cards.find((c) => rowKey(c) === this._pick);
+  }
+
+  private _locale(): string {
+    return this.hass?.locale?.language ?? this.hass?.language ?? 'en';
+  }
+
+  private _defaultName(): string {
+    const title = this.hass?.panels?.lovelace?.title;
+    return typeof title === 'string' && title.trim() ? title.trim() : t('forum-shot.card-table.default-dashboard');
+  }
+
+  private _select(key: string): void {
+    this._pick = key;
+    this._error = undefined;
+    this.requestUpdate();
+  }
+
+  private _sortBy(key: SortKey): void {
+    const same = this._sort?.key === key;
+    this._sort = { key, dir: same && this._sort?.dir === 'ascending' ? 'descending' : 'ascending' };
+    this.requestUpdate();
+  }
+
+  private _columnLabel(key: SortKey): string {
+    switch (key) {
+      case 'dashboard':
+        return t('forum-shot.card-table.column-dashboard');
+      case 'view':
+        return t('forum-shot.card-table.column-view');
+      case 'card':
+        return t('forum-shot.card-table.column-card');
+      default:
+        return t('forum-shot.card-table.column-status');
+    }
+  }
+
+  private _reason(lock: NonNullable<MagicCardRef['lock']>): string {
+    switch (lock) {
+      case 'custom_card':
+        return t('forum-shot.card-table.reason-custom-card');
+      case 'limit':
+        return t('forum-shot.card-table.reason-limit');
+      case 'outside_address':
+        return t('forum-shot.card-table.reason-outside-address');
+      default:
+        return t('forum-shot.card-table.reason-cannot-judge');
+    }
+  }
+
+  private _status(c: MagicCardRef, i: number): TemplateResult {
+    if (c.lock === null) {
+      return html`<span class="status ok"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M5 12.5l4.5 4.5L19 7.5" />`}</svg>${t('forum-shot.card-table.status-available')}</span
+        >${c.fontHosts.length ? html`<span class="hint">${t('forum-shot.card-table.fonts-from', { hosts: c.fontHosts.join(', ') })}</span>` : nothing}`;
+    }
+    return html`<span class="status locked"
+        ><svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z" />`}</svg>${t('forum-shot.card-table.status-locked')}</span
+      ><span class="hint" id="card-note-${i}">${this._reason(c.lock)}</span>`;
+  }
+
   private _renderCards(): TemplateResult {
-    return html`<fieldset>
-      <legend>${t('forum-shot.element.cards-legend')}</legend>
-      ${this._cards.map((c, i) => {
-        const off = c.remote.length > 0;
-        return html`<div class="choice ${off ? 'off' : ''}">
-          <input
-            type="radio"
-            name="card"
-            id="card-${i}"
-            .checked=${this._pick === i}
-            ?disabled=${off}
-            aria-describedby=${off ? `card-note-${i}` : nothing}
-            @change=${() => {
-              this._pick = i;
-              this._error = undefined;
-              this.requestUpdate();
-            }}
-          />
-          <label for="card-${i}"
-            >${c.label}${off ? html`<span class="hint" id="card-note-${i}">${c.remote.includes(CUSTOM_CARD) ? t('forum-shot.element.custom-card') : t('forum-shot.element.remote-asset')}</span>` : nothing}</label
-          >
-        </div>`;
-      })}
-    </fieldset>`;
+    const fallback = this._defaultName();
+    const rows = sortedRows(this._cards, this._sort, this._locale(), fallback);
+    return html`<table role="table" aria-label=${t('forum-shot.element.cards-legend')}>
+      <thead role="rowgroup">
+        <tr role="row">
+          ${SORT_KEYS.map((k) => {
+            const sort = this._sort?.key === k ? this._sort.dir : 'none';
+            return html`<th role="columnheader" scope="col" aria-sort=${sort}>
+              <button type="button" class="sort" @click=${() => this._sortBy(k)}>${this._columnLabel(k)}</button>
+            </th>`;
+          })}
+        </tr>
+      </thead>
+      <tbody role="rowgroup">
+        ${repeat(
+          rows,
+          (c) => rowKey(c),
+          (c) => {
+            const i = this._cards.indexOf(c);
+            const off = c.lock !== null;
+            const key = rowKey(c);
+            return html`<tr
+              role="row"
+              class=${off ? 'off' : this._pick === key ? 'picked' : ''}
+              @click=${(e: Event) => {
+                if (!off && !(e.target as Element).closest('input, label, button')) this._select(key);
+              }}
+            >
+              <td role="cell" data-label=${t('forum-shot.card-table.column-dashboard')}>${dashboardName(c, fallback)}</td>
+              <td role="cell" data-label=${t('forum-shot.card-table.column-view')}>${c.view}</td>
+              <td role="cell" data-label=${t('forum-shot.card-table.column-card')}>
+                <span class="choice">
+                  <input
+                    type="radio"
+                    name="card"
+                    id="card-${i}"
+                    .checked=${this._pick === key}
+                    ?disabled=${off}
+                    aria-describedby=${off ? `card-note-${i}` : nothing}
+                    @change=${() => this._select(key)}
+                  />
+                  <label for="card-${i}">${c.cardName}</label>
+                </span>
+              </td>
+              <td role="cell" data-label=${t('forum-shot.card-table.column-status')}>${this._status(c, i)}</td>
+            </tr>`;
+          },
+        )}
+      </tbody>
+    </table>`;
   }
 
   private _modeOption(value: ModeChoice, label: string): TemplateResult {
@@ -198,7 +292,7 @@ export class MagicCardForumShot extends LitElement {
       return html`<p role="alert" class="error">${this._errorText(this._loadError ?? 'config_read_failed')}</p>
         <button type="button" class="retry" @click=${() => void this._read()}>${t('forum-shot.element.retry')}</button>`;
     }
-    const blocked = this._pick < 0;
+    const blocked = !this._picked();
     return html`
       ${this.hass?.user?.is_admin === false ? html`<p class="admin-note">${t('forum-shot.element.admin-only')}</p>` : nothing}
       ${this._renderCards()}

@@ -1,4 +1,52 @@
 {
+  "forum-shot.card-table.column-card": {
+    "text": "Card",
+    "hash": "be3702e3"
+  },
+  "forum-shot.card-table.column-dashboard": {
+    "text": "Dashboard",
+    "hash": "67b69646"
+  },
+  "forum-shot.card-table.column-status": {
+    "text": "Status",
+    "hash": "920e413c"
+  },
+  "forum-shot.card-table.column-view": {
+    "text": "View",
+    "hash": "dcc839a4"
+  },
+  "forum-shot.card-table.default-dashboard": {
+    "text": "Default dashboard",
+    "hash": "4913c670"
+  },
+  "forum-shot.card-table.fonts-from": {
+    "text": "Fonts from {hosts}",
+    "hash": "9f44f4ca"
+  },
+  "forum-shot.card-table.reason-cannot-judge": {
+    "text": "Its settings could not be checked for outside addresses.",
+    "hash": "a7009139"
+  },
+  "forum-shot.card-table.reason-custom-card": {
+    "text": "It holds another card (a custom-card module) that nothing here can check.",
+    "hash": "f37f797c"
+  },
+  "forum-shot.card-table.reason-limit": {
+    "text": "It names more outside websites than a forum shot allows.",
+    "hash": "04436b45"
+  },
+  "forum-shot.card-table.reason-outside-address": {
+    "text": "It loads something from outside Home Assistant.",
+    "hash": "56e035ab"
+  },
+  "forum-shot.card-table.status-available": {
+    "text": "Available",
+    "hash": "e6744473"
+  },
+  "forum-shot.card-table.status-locked": {
+    "text": "Locked",
+    "hash": "a424e33d"
+  },
   "forum-shot.element.admin-only": {
     "text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
     "hash": "705163a8"

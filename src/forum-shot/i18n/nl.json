@@ -1,4 +1,52 @@
 {
+  "forum-shot.card-table.column-card": {
+    "text": "Kaart",
+    "hash": "be3702e3"
+  },
+  "forum-shot.card-table.column-dashboard": {
+    "text": "Dashboard",
+    "hash": "67b69646"
+  },
+  "forum-shot.card-table.column-status": {
+    "text": "Status",
+    "hash": "920e413c"
+  },
+  "forum-shot.card-table.column-view": {
+    "text": "Weergave",
+    "hash": "dcc839a4"
+  },
+  "forum-shot.card-table.default-dashboard": {
+    "text": "Standaarddashboard",
+    "hash": "4913c670"
+  },
+  "forum-shot.card-table.fonts-from": {
+    "text": "Lettertypen van {hosts}",
+    "hash": "9f44f4ca"
+  },
+  "forum-shot.card-table.reason-cannot-judge": {
+    "text": "De instellingen konden niet worden gecontroleerd op externe adressen.",
+    "hash": "a7009139"
+  },
+  "forum-shot.card-table.reason-custom-card": {
+    "text": "Er zit een andere kaart in (een custom-card-module) die hier niet te controleren is.",
+    "hash": "f37f797c"
+  },
+  "forum-shot.card-table.reason-limit": {
+    "text": "Er staan meer externe websites in dan een forumafbeelding toestaat.",
+    "hash": "04436b45"
+  },
+  "forum-shot.card-table.reason-outside-address": {
+    "text": "Er wordt iets van buiten Home Assistant geladen.",
+    "hash": "56e035ab"
+  },
+  "forum-shot.card-table.status-available": {
+    "text": "Beschikbaar",
+    "hash": "e6744473"
+  },
+  "forum-shot.card-table.status-locked": {
+    "text": "Vergrendeld",
+    "hash": "a424e33d"
+  },
   "forum-shot.element.admin-only": {
     "text": "Alleen het standaarddashboard wordt getoond, omdat het tonen van de andere dashboards een beheerdersaccount vraagt.",
     "hash": "705163a8"
