@@ -15,7 +15,7 @@ The panel has six tabs:
 -   **Icons**: your saved icons, with New icon, Edit, Rename, Delete and Export. New icon opens the [SVG editor](../svg-editor/README.md) without a card.
 -   **Shapes**: your saved shapes, for the `ref` key in a card. New shape opens the [shape editor](../shape-editor/README.md) without a card.
 
-The panel also has a Forum shot tab. It turns one of your Magic Cards into a picture to post in a forum, in light, dark or both. Check the picture before you post it, because a card can show names, places and the state of your devices. See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md) in the Magic Card Utils repository.
+The panel also has a Forum shot tab. It turns one of your Magic Cards into a picture to post in a forum, in light, dark or both. Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too. See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md) in the Magic Card Utils repository.
 
 The editors need Magic Card 2026.10.11-beta.1 or newer. When the card is older, the panel says which version you need, and it does not open the editor.
 
