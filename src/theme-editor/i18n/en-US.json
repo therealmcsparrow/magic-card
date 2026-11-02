@@ -2459,6 +2459,34 @@
     "text": "tile card",
     "hash": "7af533e6"
   },
+  "theme-editor.preview.wall-tablet": {
+    "text": "Wall tablet",
+    "hash": "bedf15b0"
+  },
+  "theme-editor.preview.wall-tablet-caption": {
+    "text": "Drawn at one fifth size, as the text looks from 3 meters away.",
+    "hash": "61e7c62e"
+  },
+  "theme-editor.preview.wall-tablet-card-button": {
+    "text": "Lights on",
+    "hash": "ab2323a5"
+  },
+  "theme-editor.preview.wall-tablet-card-text": {
+    "text": "Temperature",
+    "hash": "b958ce8b"
+  },
+  "theme-editor.preview.wall-tablet-card-title": {
+    "text": "Living room",
+    "hash": "268d40ee"
+  },
+  "theme-editor.preview.wall-tablet-card-value": {
+    "text": "21.5 °C",
+    "hash": "a5db9bd8"
+  },
+  "theme-editor.preview.wall-tablet-label": {
+    "text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 meters.",
+    "hash": "2f6e4db9"
+  },
   "theme-editor.preview.warning-message": {
     "text": "Warning message",
     "hash": "d8ce812c"

@@ -15,7 +15,7 @@ import {
 } from '../contracts/preset-transfer';
 import type {
   ClashChoice,
-  ImageReader,
+  ParseOptions,
   ParseResult,
   TransferFormat,
   TransferItem,
@@ -24,6 +24,8 @@ import type {
   TransferRefusal,
   TransferSource,
 } from '../contracts/preset-transfer';
+import { PLACEHOLDER_ID_RE } from '../contracts/share-kit';
+import type { EntityPlaceholder, ValueRefusal } from '../contracts/share-kit';
 import type { SvgCssResolve } from '../contracts/svg-safety';
 import type { ThemeDoc } from '../contracts/theme-editor';
 import { VERSION } from '../version';
@@ -42,9 +44,9 @@ import type { KindResult, Raw } from './types';
 
 export { checkFileSize } from './safe-parse';
 
-const KINDS: readonly TransferKind[] = ['animation', 'theme', 'shape', 'icon', 'image'];
+const KINDS: readonly TransferKind[] = ['animation', 'theme', 'shape', 'icon', 'image', 'card'];
 const ITEM_KEYS = ['id', 'name', 'author', 'description', 'keywords', 'data'];
-const HEADER_KEYS = [TRANSFER_MARKER_KEY, 'kind', 'generator', 'items', 'item'];
+const HEADER_KEYS = [TRANSFER_MARKER_KEY, 'kind', 'generator', 'placeholders', 'items', 'item'];
 
 const WHERE = (kind: TransferKind): string =>
   kind === 'animation'
@@ -55,7 +57,9 @@ const WHERE = (kind: TransferKind): string =>
         ? t('transfer.envelope.shape-files-are-imported-in-the-card')
         : kind === 'image'
           ? t('transfer.envelope.image-files-are-imported-in-magic-card')
-          : t('transfer.envelope.icon-files-are-imported-in-the-card');
+          : kind === 'card'
+            ? t('transfer.envelope.card-files-are-imported-in-the-card-editor')
+            : t('transfer.envelope.icon-files-are-imported-in-the-card');
 
 const refuse = (refusal: TransferRefusal, message: string): ParseResult => ({ ok: false, refusal, message });
 
@@ -65,27 +69,35 @@ function formatOf(v: unknown): { major: number; minor: number } | undefined {
   return m ? { major: +m[1], minor: +(m[2] ?? 0) } : undefined;
 }
 
-function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: ImageReader, file = false, css?: SvgCssResolve): KindResult {
+function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, o: ParseOptions, file = false, css?: SvgCssResolve): KindResult {
+  const { images, kit } = o;
   switch (kind) {
     case 'animation':
       return readAnimation(index, id, name, data);
     case 'theme':
-      return readTheme(index, data);
+      return readTheme(index, data, kit);
     case 'shape':
       return readShape(index, data);
+    case 'card': {
+      if (!o.card) return { ok: false, notes: [note('invalid_item', index, 'data', t('transfer.envelope.card-files-are-imported-in-the-card-editor'))] };
+      const r = kit.readCard(index, data, o.card);
+      return r.ok ? { ok: true, data: r.data, notes: r.notes } : { ok: false, notes: r.notes, refusal: r.refusal };
+    }
     case 'image':
       return images ? images.readImage(index, data, file ? { file: true, css } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('transfer.envelope.the-checker-for-images-did-not-load-so'))] };
     default:
-      return readIcon(index, data, css);
+      return readIcon(index, data, css, kit);
   }
 }
 
-function buildItems(found: Detected, images?: ImageReader, css?: SvgCssResolve): { items: TransferItem[]; notes: TransferNote[] } {
+function buildItems(found: Detected, o: ParseOptions, css?: SvgCssResolve): { items: TransferItem[]; notes: TransferNote[]; refused?: ValueRefusal } {
   const { kind } = found;
   const items: TransferItem[] = [];
   const notes: TransferNote[] = [];
   const ids = new Set<string>();
+  let refused: ValueRefusal | undefined;
   found.items.forEach((raw, i) => {
+    if (refused) return;
     if (!isObj(raw)) {
       notes.push(note('invalid_item', i, '', t('transfer.envelope.this-entry-is-not-an-object')));
       return;
@@ -130,8 +142,9 @@ function buildItems(found: Detected, images?: ImageReader, css?: SvgCssResolve):
         if (keep.length) item.keywords = keep;
       }
     }
-    const r = readKind(kind, i, id, name, raw.data, images, found.source === 'svg', found.source === 'svg' ? css : undefined);
-    if (!r.ok) {
+    const r = readKind(kind, i, id, name, raw.data, o, found.source === 'svg', found.source === 'svg' ? css : undefined);
+    refused = r.ok ? (kind === 'animation' || kind === 'shape' ? o.kit.scanMarkers(i, 'data', r.data) : undefined) : r.refusal;
+    if (!r.ok || refused) {
       notes.push(...itemNotes, ...r.notes);
       return;
     }
@@ -140,7 +153,7 @@ function buildItems(found: Detected, images?: ImageReader, css?: SvgCssResolve):
     items.push(item);
     notes.push(...itemNotes, ...r.notes);
   });
-  return { items, notes };
+  return { items, notes, refused };
 }
 
 /** Sequence steps naming a custom animation that is not in the file (the target may have it). */
@@ -158,8 +171,23 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
   return out;
 }
 
+const MAX_HEADER_PLACEHOLDERS = 1000;
+
+/** Notes for header placeholder entries that are not `{ id: <domain>.mc_placeholder_<n>, domain }`; looks at a bounded number. */
+function headerPlaceholderNotes(list: unknown): TransferNote[] {
+  const bad = (path: string) => note('dropped_key', -1, path, t('transfer.envelope.key-is-not-a-preset-field-so-it-was-left', { key: path }));
+  if (list === undefined) return [];
+  if (!Array.isArray(list) || list.length > MAX_HEADER_PLACEHOLDERS) return [bad('placeholders')];
+  const out: TransferNote[] = [];
+  list.forEach((e: unknown, i) => {
+    const m = isObj(e) && typeof e.id === 'string' ? PLACEHOLDER_ID_RE.exec(e.id) : null;
+    if (!m || (e as Raw).domain !== m[1]) out.push(bad(`placeholders[${i}]`));
+  });
+  return out;
+}
+
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
-export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader; css?: SvgCssResolve }): ParseResult {
+export function parseTransfer(text: string, opts: ParseOptions): ParseResult {
   // images only (the Images tab): an svg text is one image, read by the image checker in file mode
   const imagesOnly = opts.accept.length === 1 && opts.accept[0] === 'image';
   if (typeof text === 'string' && imagesOnly && text.length > MAX_IMAGE_IMPORT_BYTES) return refuse('too_large', t('transfer.envelope.this-file-is-larger-than-8-mb-so-it-was'));
@@ -197,6 +225,7 @@ export function parseTransfer(text: string, opts: { accept: readonly TransferKin
     const list = Array.isArray(marker.items) ? marker.items : isObj(marker.item) ? [marker.item] : undefined;
     if (!list) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
     for (const k of Object.keys(marker)) if (!HEADER_KEYS.includes(k)) notes.push(note('dropped_key', -1, k, t('transfer.envelope.key-is-not-a-preset-field-so-it-was-left', { key: k })));
+    notes.push(...headerPlaceholderNotes(marker.placeholders));
     found = { kind: kind as TransferKind, source: 'envelope', items: list };
   }
   if (!found) return refuse('not_a_preset_file', t('transfer.envelope.this-is-not-a-magic-card-preset-file'));
@@ -204,7 +233,11 @@ export function parseTransfer(text: string, opts: { accept: readonly TransferKin
   if (!opts.accept.includes(found.kind)) return refuse('wrong_kind', WHERE(found.kind));
   if (found.items.length > MAX_IMPORT_ITEMS) return refuse('too_many_items', t('transfer.envelope.this-file-holds-more-than-max-items-so', { max: MAX_IMPORT_ITEMS }));
 
-  const built = buildItems(found, opts.images, opts.css);
+  const built = buildItems(found, opts, opts.css);
+  if (built.refused) {
+    const { item, path, rule } = built.refused;
+    return { ok: false, refusal: 'invalid_value', refused: built.refused, message: t('transfer.envelope.this-file-was-not-imported-item-n-path-holds', { n: item + 1, path, rule }) };
+  }
   notes.push(...built.notes);
   if (!built.items.length) {
     const why = notes.filter((n) => n.code === 'invalid_item').slice(0, 3).map((n) => n.message).join(' ');
@@ -217,11 +250,12 @@ export function parseTransfer(text: string, opts: { accept: readonly TransferKin
 const plain = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
 /** Writing: always `items`, keys in contract order, no aliases, JSON with 2-space indent. */
-export function serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat): string {
+export function serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat, header?: { placeholders?: readonly EntityPlaceholder[] }): string {
   const out = {
     [TRANSFER_MARKER_KEY]: TRANSFER_FORMAT,
     kind,
     generator: `Magic Card ${VERSION}`,
+    ...(header?.placeholders?.length ? { placeholders: header.placeholders.map((p) => ({ id: p.id, domain: p.domain })) } : {}),
     items: items.map((it) => {
       const data: unknown = kind === 'animation' ? omitIdName(it.data as unknown as Raw) : it.data;
       return {

@@ -29,6 +29,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/svg-editor/loader.ts',
   'src/svg-safety/css-loader.ts',
   'src/transfer/image-transfer-loader.ts',
+  'src/transfer/share-kit-loader.ts',
   'src/theme-editor/presets/loader.ts',
 ];
 

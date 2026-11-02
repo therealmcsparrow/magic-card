@@ -12,6 +12,8 @@ export function count(n: number, kind: TransferKind): string {
       return t('transfer.count.n-3', { n });
     case 'image':
       return t('transfer.count.n-4', { n });
+    case 'card':
+      return t('transfer.count.cards', { n });
     default:
       return t('transfer.count.n-5', { n });
   }
@@ -28,6 +30,8 @@ export function exportLabel(n: number, kind: TransferKind): string {
       return t('transfer.panel.export-shapes', { n });
     case 'image':
       return t('transfer.panel.export-images', { n });
+    case 'card':
+      return t('transfer.panel.export-cards', { n });
     default:
       return t('transfer.panel.export-icons', { n });
   }
@@ -44,6 +48,8 @@ export function importLabel(n: number, kind: TransferKind): string {
       return t('transfer.panel.import-shapes', { n });
     case 'image':
       return t('transfer.panel.import-images', { n });
+    case 'card':
+      return t('transfer.panel.import-cards', { n });
     default:
       return t('transfer.panel.import-icons', { n });
   }
@@ -60,6 +66,8 @@ export function sourceHolds(source: string, n: number, kind: TransferKind): stri
       return t('transfer.panel.source-holds-shapes', { source, n });
     case 'image':
       return t('transfer.panel.source-holds-images', { source, n });
+    case 'card':
+      return t('transfer.panel.source-holds-cards', { source, n });
     default:
       return t('transfer.panel.source-holds-icons', { source, n });
   }

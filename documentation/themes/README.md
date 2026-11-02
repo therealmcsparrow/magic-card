@@ -20,6 +20,10 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 -   [Try, revert and use](trying-and-using.md): Try on dashboard, Revert, and Use this theme.
 -   [Files and limits](files.md): where files go, names, read-only themes and Copy to edit, deleting, and what the editor does not do yet.
 
+## Sharing and importing themes
+
+Imported theme values are checked against the kind of value each key takes, and a value that points to another website is left out and listed. Fonts are limited, text contrast is checked in light and dark mode, and the Wall tablet preview shows how the text reads from across a room. See [Sharing safety](../sharing-safety/README.md).
+
 ## Hiding the Variables pane
 
 At 1024 px wide and more, the Variables pane sits beside the preview. Its edge button on the inner side hides the pane, so the preview takes its width; press it again to show the pane as it was. Ctrl+\ (Cmd+\ on a Mac) hides or shows the pane. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons. The editor remembers the choice on this device, and a hidden pane opens hidden with a short hint. Below 1024 px, Variables and Preview are tabs, and there is no button.

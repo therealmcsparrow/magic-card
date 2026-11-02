@@ -1,10 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { contactsOtherHost, externalHosts } from '../src/contracts/preset-transfer';
 import { hostsOf, readTheme } from '../src/transfer/kinds/theme';
+import { createShareKit } from '../src/share-kit/chunk';
+import { shareKitHelpers } from '../src/transfer/share-kit-loader';
 import { hostsIn, outsideOf } from '../src/theme-editor/outside';
 
 const FAKE = 'url(https://a\u2069\u202eb.example/x.png) url(https://real.example/y.png)';
 const CONTROLS = /[\u200e\u200f\u202a-\u202e\u2066-\u2069]/;
+
+const kit = createShareKit(shareKitHelpers);
 
 describe('host names from an imported theme', () => {
   it.each([
@@ -57,9 +61,9 @@ describe('hosts as the browser resolves them', () => {
     expect(lone.any).toBe(true);
     expect(lone.unknown).toBe(true);
   });
-  it('an address that cannot be read gives the generic warning in the transfer note', () => {
-    const r = readTheme(0, { a: 'url(https://a\u202eb.example/x)' });
-    const n = (r.notes as Array<{ code: string; hosts?: string[] }>).find((x) => x.code === 'external_ref');
+  it('an address that cannot be read is left out of a plain value and names no host', () => {
+    const r = readTheme(0, { a: 'url(https://a\u202eb.example/x)' }, kit);
+    const n = (r.notes as Array<{ code: string; hosts?: string[] }>).find((x) => x.code === 'dropped_value');
     expect(n).toBeDefined();
     expect(n?.hosts ?? []).toEqual([]);
   });
@@ -138,21 +142,30 @@ describe('card-mod theme values get the generic warning', () => {
   const T = 'trusted.example';
   const E = 'evil.example';
   const rows: Array<[string, string, string]> = [
+    ['plain value', 'card-mod-theme', 'dusk'],
+    ['harmless plain value', 'card-mod-card', 'color: red'],
+    ['mixed-case key', 'Card-Mod-Card', 'dusk'],
+  ];
+  const leftOut: Array<[string, string, string]> = [
     ['J3 template that adds a second host', 'card-mod-root', `@import url(https://${T}/a);{{ '@import "https://${E}/x";' }}`],
     ['J4 template that decodes an import', 'card-mod-root', "{{ 'QGltcG9ydCAiaHR0cHM6Ly9ldmlsLmV4YW1wbGUveCI7' | base64_decode }}"],
-    ['J7 yaml value', 'card-mod-root-yaml', `ha-card:\n  background: "{{ 'url(https://${E}/x)' }}"`],
-    ['harmless plain value', 'card-mod-theme', 'ha-card { color: red; }'],
-    ['mixed-case key', 'Card-Mod-Card', 'ha-card { color: red; }'],
+    ['J7 yaml value', 'card-mod-root-yaml', `ha-card:
+  background: "{{ 'url(https://${E}/x)' }}"`],
   ];
   it.each(rows)('%s: import note is generic with no hosts', (_n, key, value) => {
-    const r = readTheme(0, { 'primary-color': '#fff', [key]: value });
+    const r = readTheme(0, { 'primary-color': '#fff', [key]: value }, kit);
     expect(r.ok).toBe(true);
     const n = r.notes.filter((x) => x.code === 'external_ref');
     expect(n).toHaveLength(1);
     expect(n[0].unknown).toBe(true);
     expect(n[0].hosts ?? []).toEqual([]);
   });
-  it.each(rows)('%s: theme editor warns without naming hosts', (_n, key, value) => {
+  it.each(leftOut)('%s: the strict check leaves the value out', (_n, key, value) => {
+    const r = readTheme(0, { 'primary-color': '#fff', [key]: value }, kit);
+    expect(r.notes.filter((x) => x.code === 'external_ref')).toHaveLength(0);
+    expect(r.notes.some((x) => x.code === 'dropped_value')).toBe(true);
+  });
+  it.each([...rows, ...leftOut])('%s: theme editor warns without naming hosts', (_n, key, value) => {
     for (const doc of [{ [key]: value }, { modes: { light: { [key]: value }, dark: {} } }]) {
       const o = outsideOf(doc as never);
       expect(o).toEqual({ any: true, unknown: true, hosts: [] });
@@ -164,7 +177,7 @@ describe('card-mod theme values get the generic warning', () => {
     expect(o.any).toBe(true);
     expect(o.unknown).toBe(false);
     expect([...o.hosts].sort()).toEqual([E, T]);
-    const n = readTheme(0, { 'primary-color': '#fff', 'ha-card-background': v }).notes.find((x) => x.code === 'external_ref');
+    const n = readTheme(0, { 'primary-color': '#fff', 'ha-card-background': v }, kit).notes.find((x) => x.code === 'dropped_value');
     expect([...(n?.hosts ?? [])].sort()).toEqual([E, T]);
     expect(n?.unknown).toBeFalsy();
   });

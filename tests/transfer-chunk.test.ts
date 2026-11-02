@@ -43,7 +43,7 @@ describe('transfer loader', () => {
     });
     await expect(loadTransfer()).rejects.toThrow('offline');
     await expect(loadTransfer()).resolves.toBe(TRANSFER);
-    __setTransferImportForTests(async () => ({ TRANSFER: { ...TRANSFER, version: '2.0.0' } }));
+    __setTransferImportForTests(async () => ({ TRANSFER: { ...TRANSFER, version: '3.0.0' } }));
     await expect(loadTransfer()).rejects.toThrow(/version/);
     __setTransferImportForTests(async () => ({ TRANSFER }));
     await expect(loadTransfer()).resolves.toBe(TRANSFER);
@@ -96,17 +96,17 @@ describe('<mc-transfer-panel> import', () => {
     document.body.innerHTML = '';
   });
 
-  it('keeps and lists external urls and card-mod keys with hosts, and confirms with "Import anyway"', async () => {
+  it('leaves out an external url, lists card-mod keys with the generic warning, and confirms with "Import anyway"', async () => {
     const el = await panel({ host: 'theme-editor' });
     const seen: unknown[] = [];
     el.addEventListener('mc-transfer-import', (e) => seen.push((e as CustomEvent).detail));
     await paste(el, THEME_FILE);
     const status = q(el, '[role=status]')!;
     expect(status.textContent).toContain('holds 1 theme');
-    expect(status.textContent).toContain('3 values are kept');
-    const warn = q(el, '.notice.warn')!;
-    expect(warn.textContent).toContain('x.example');
-    expect(warn.textContent).toContain('lovelace-background');
+    expect(status.textContent).toContain('2 values are kept');
+    const warn = [...el.shadowRoot!.querySelectorAll<HTMLElement>('.notice.warn')].find((n) => n.querySelector('ul'))!;
+    expect(warn.textContent).toContain('another website');
+    expect(warn.textContent).not.toContain('x.example');
     expect(warn.textContent).toContain('card-mod-theme');
     expect(btn(el, 'Import anyway')).toBeTruthy();
     expect(btn(el, 'Import 1 theme')).toBeUndefined();
@@ -114,7 +114,7 @@ describe('<mc-transfer-panel> import', () => {
     expect(seen).toHaveLength(1);
     const d = seen[0] as { kind: string; items: TransferItem<'theme'>[] };
     expect(d.kind).toBe('theme');
-    expect(d.items[0].data.modes?.dark?.['lovelace-background']).toContain('https://x.example/a.png');
+    expect(d.items[0].data.modes?.dark?.['lovelace-background']).toBeUndefined();
     expect(d.items[0].data.modes?.dark?.['card-mod-theme']).toBe('dusk');
   });
 
@@ -163,7 +163,7 @@ describe('<mc-transfer-panel> import', () => {
     const closed = vi.fn();
     el.addEventListener('mc-transfer-close', closed);
     await paste(el, '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><script>alert(1)</script><path d="M1 1h4v4z"/></svg>');
-    expect(q(el, 'details')!.textContent).toContain('script');
+    await vi.waitFor(() => expect(q(el, 'details')?.textContent).toContain('script'), { timeout: 3000 });
     const outer = vi.fn();
     document.body.addEventListener('keydown', outer);
     q(el, '.wrap')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }));
