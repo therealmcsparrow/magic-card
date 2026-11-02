@@ -238,8 +238,8 @@ export const importedSanitizer = (text, module = './src/x.ts') => {
   return got.includes(SANITIZER_BASE.image) ? IMAGE_SANITIZER : got.includes(SANITIZER_BASE.icon) ? SANITIZER : undefined;
 };
 
-/** True when a source text creates a Blob of type image/svg+xml. */
-export const makesSvgBlob = (text) => /\bnew\s+Blob\s*\(/.test(text) && text.includes('image/svg+xml');
+/** True when a source text creates a Blob and names image/svg+xml other than as a data: URL. A type held in a constant or default parameter still counts. */
+export const makesSvgBlob = (text) => /\bnew\s+Blob\s*\(/.test(text) && text.replace(/data:image\/svg\+xml/g, '').includes('image/svg+xml');
 
 /** True when a source text is an SVG sink: unsafeSVG, a value import of a sanitiser, or an image/svg+xml Blob. */
 export const isSinkSource = (text, module) =>
@@ -488,6 +488,10 @@ const selfTest = () => {
     ["import { sanitize } from './sanitize';", './src/other/a.ts', false, SANITIZER],
     ["const u = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));", './src/a.ts', true, SANITIZER],
     ["const b = new Blob([text], { type: 'application/json' });", './src/a.ts', false, SANITIZER],
+    ["const u = `data:image/svg+xml;charset=utf-8,${x}`; const b = new Blob(c, { type });", './src/a.ts', false, SANITIZER],
+    ["const u = 'data:image/svg+xml,x'; const b = new Blob([s], { type: 'image/svg+xml' });", './src/a.ts', true, SANITIZER],
+    ["function d(s, type = 'image/svg+xml') { return new Blob([s], { type }); }", './src/a.ts', true, SANITIZER],
+    ["const SVG = 'image/svg+xml'; const b = new Blob([s], { type: SVG });", './src/a.ts', true, SANITIZER],
     ["const t = 'image/svg+xml';", './src/a.ts', false, SANITIZER],
   ];
   for (const [text, module, want, san] of scan) {

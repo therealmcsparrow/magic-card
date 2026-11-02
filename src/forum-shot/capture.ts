@@ -270,7 +270,7 @@ async function embeddedFonts(run: Run): Promise<string> {
       if (!m) continue;
       const data = await toDataUrl(new URL(m[2], sheet.href ?? location.href).href, run);
       if (data === PIXEL) continue;
-      css += `@font-face{font-family:"${family.replace(/"/g, '')}";font-weight:${rule.style.getPropertyValue('font-weight') || 'normal'};font-style:${rule.style.getPropertyValue('font-style') || 'normal'};src:url("${data}");}`;
+      css += `@font-face{font-family:"${family.replace(/"/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}";font-weight:${rule.style.getPropertyValue('font-weight') || 'normal'};font-style:${rule.style.getPropertyValue('font-style') || 'normal'};src:url("${data}");}`;
     }
   }
   return css;

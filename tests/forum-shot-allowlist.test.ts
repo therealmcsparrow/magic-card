@@ -67,6 +67,15 @@ describe('allow-list for strings the card reads', () => {
     expect(keepsText(v)).toBe(false);
   });
 
+  it.each(['/\t/h.test/x.png', '/\n/h.test/x.png', '/\r/h.test/x.png', '\t/\t/h.test/x.png', 'image-set("/\t/h.test/x.png" 1x)', '![a](/\t/h.test/x.png)'])('blanks the address split by a tab or line break %j', (v) => {
+    expect(keepsText(v)).toBe(false);
+    expect(scrubText(v, ORIGIN)).toBe('');
+  });
+
+  it('keeps multi-line ordinary text', () => {
+    expect(keepsText('Status: ok\nNext: later')).toBe(true);
+  });
+
   it('reports a blank only when it looked like an address', () => {
     const onRemove = vi.fn();
     scrubValue({ a: '<b>bold</b>', b: 'x'.repeat(1_000_001), c: 'a'.repeat(5) }, ORIGIN, onRemove);

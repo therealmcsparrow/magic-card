@@ -167,13 +167,14 @@ export function findRemoteAssets(config: unknown, origin: string): string[] {
 }
 
 // A string the card may read: no markup, no escapes, no `//`, no `url(`, no `scheme:`.
+const flatten = (text: string): string => text.replace(/[\t\n\r]/g, '');
 const MARKUP_OR_ADDRESS = /[<&\\]|\/\/|url\(/i;
 // A letter-run before `:` is a scheme when it can fetch, or when the `:` is not followed by a space (`Status: ok` stays).
 const SCHEME_FORM = /(?<![A-Za-z0-9+.-])([A-Za-z][A-Za-z0-9+.-]*):/g;
 const FETCHING = new Set(['http', 'https', 'ftp', 'ws', 'wss', 'blob', 'data', 'filesystem', 'javascript']);
 
 function hasSchemeForm(text: string): boolean {
-  const flat = text.replace(/[\t\n\r]/g, '');
+  const flat = flatten(text);
   for (const m of flat.matchAll(SCHEME_FORM)) {
     const end = (m.index ?? 0) + m[0].length;
     if (FETCHING.has(m[1].toLowerCase())) return true;
@@ -184,7 +185,7 @@ function hasSchemeForm(text: string): boolean {
 
 /** True for a text that holds an address, a scheme or an escape for one; markup alone and size limits are not. */
 function addressLike(text: string): boolean {
-  return /[\\&]|\/\/|url\(/i.test(text) || hasSchemeForm(text);
+  return /[\\&]|\/\/|url\(/i.test(flatten(text)) || hasSchemeForm(text);
 }
 // One plain path on the page's own origin, or one raster picture inline; nothing else may carry an address.
 const PLAIN_PATH = /^\/(?!\/)(?!.*\/\/)[A-Za-z0-9_\-.~%+,=@/?#]*$/;
@@ -196,7 +197,7 @@ const ICON_NAME = /^(?:mdi|hass|phu|fas|far|fab):[a-z0-9_-]+$/i;
 export function keepsText(text: string): boolean {
   if (text.length > MAX_STRING) return false;
   if (PLAIN_PATH.test(text) || RASTER_DATA.test(text) || ICON_NAME.test(text)) return true;
-  if (MARKUP_OR_ADDRESS.test(text)) return false;
+  if (MARKUP_OR_ADDRESS.test(flatten(text))) return false;
   return !hasSchemeForm(text);
 }
 
