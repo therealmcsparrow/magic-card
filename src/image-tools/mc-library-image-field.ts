@@ -115,10 +115,11 @@ export class McLibraryImageField extends LitElement {
       }
       .count {
         font-size: 0.85em;
-        text-align: right;
+        text-align: end;
       }
       .uses-list {
-        margin: 4px 0 4px 20px;
+        margin: 4px 0;
+        margin-inline-start: 20px;
         padding: 0;
       }
       .colours {

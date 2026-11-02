@@ -83,6 +83,7 @@ export const editorLegacy: CSSResult = /* @__PURE__ */ css`
     appearance: none;
     -webkit-appearance: none;
     padding-right: 36px;
+    padding-inline: 12px 36px;
     cursor: pointer;
   }
   ${LEGACY_INPUT}:is(select):not(.input):not([multiple]):not([size]) {
@@ -90,6 +91,10 @@ export const editorLegacy: CSSResult = /* @__PURE__ */ css`
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 18px 18px;
+  }
+  :host([dir='rtl']) ${LEGACY_INPUT}:is(select):not(.input):not([multiple]):not([size]),
+  [dir='rtl'] ${LEGACY_INPUT}:is(select):not(.input):not([multiple]):not([size]) {
+    background-position: left 10px center;
   }
   /* textareas: textarea.input */
   ${LEGACY_INPUT}:is(textarea) {

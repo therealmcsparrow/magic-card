@@ -25,6 +25,15 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Theme checks.** An imported theme is checked for text contrast in light and dark mode, and a Wall tablet preview shows how its text reads from 3 metres.
 -   **Gallery rules.** The [gallery](documentation/gallery/README.md) page states the CC0 rule and the author-name note, and a gallery form in Discussions asks for no tokens, credentials or real entity IDs.
 
+### Right to left and translations
+-   **Pseudo RTL switch in the animation studio.** A switch in the top bar shows the studio and its preview card right to left, with Arabic-Indic digits and direction marks around each message. It is a test aid with made-up text. No right-to-left language ships, and no profile language can select it. See [Right to left](documentation/animation-studio/README.md#right-to-left).
+-   **Mirroring.** The studio, the card sliders and the card rings mirror in a right-to-left layout. Drawing surfaces, the card canvas, timelines and curve plots keep their direction, and your card layout is never mirrored. The ltr layout is unchanged.
+-   **Card sliders and rings in right to left.** A horizontal slider fills from the right, and its gradients (including brightness and colour temperature) run with the reading direction. The handle, ticks, labels and value are placed from the right, a drag measures from the right edge, and the Left and Right arrow keys swap so Right still means towards the end you read. A shaped track stays as drawn. A vertical slider is unchanged. A ring starts at the mirrored point (Left and Right swap, Top and Bottom stay) and runs the other way round, so clockwise reads as counter-clockwise on screen. Ring gradients and the timer ring are unchanged. See [Slider](documentation/modules/controls/slider.md#right-to-left) and [Ring](documentation/design/ring.md#right-to-left).
+-   **Mirror flag for icons.** An animation can carry `mirror: mirror` or `mirror: keep`, and the icon library shows Mirrors, Keeps or Not set per entry. Existing animations stay unset and are not flipped. See [Icon library](documentation/animation-studio/icon-library.md).
+-   **Maximum length.** A translation longer than the `max` of its key is refused on import and fails the check, in every language. See [Translating](documentation/translating/README.md).
+-   **Legal text.** A key can be tagged `legal`. Translations of it show that the English prevails, with a Show English action. When the English changes, the check fails until a translation is checked again. A waiver does not clear it. Translations of legal text are published only after a qualified lawyer has checked them. See [Legal text](documentation/translating/README.md#legal-text).
+-   **Accessibility page.** It now says what the right-to-left work covers and what is not done: no screen reader run, no device or tablet run and no real right-to-left translation. See [Accessibility](documentation/accessibility/README.md#right-to-left).
+
 ## 2026.10.12-beta.13 (2026-10-30)
 
 ### Fixed

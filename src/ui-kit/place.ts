@@ -1,11 +1,18 @@
 /* Viewport placement shared by the menu and the popover element. */
 
+import { readDirection } from './controllers/direction';
+
 export const PLACE_EDGE = 8;
 const GAP = 4;
 
 type Box = { left: number; right: number; top: number; bottom: number };
 
-/** Put `el` (position: fixed) under `r`, flipped above when there is no room, clamped into the viewport. */
+/** The left coordinate that lines a box of width `w` up with the inline-start ('start') or inline-end edge of `r`. */
+export function alignedLeft(r: Box, w: number, align: 'start' | 'end', rtl: boolean): number {
+  return (align === 'end') !== rtl ? r.right - w : r.left;
+}
+
+/** Put `el` (position: fixed) under `r`, flipped above when there is no room, clamped into the viewport. 'start' is the inline-start edge. */
 export function placeAtRect(el: HTMLElement, r: Box, align: 'start' | 'end' = 'start'): 'top' | 'bottom' {
   const vw = window.innerWidth || document.documentElement.clientWidth || 0;
   const vh = window.innerHeight || document.documentElement.clientHeight || 0;
@@ -19,7 +26,7 @@ export function placeAtRect(el: HTMLElement, r: Box, align: 'start' | 'end' = 's
   if (vh > 0 && h > room) el.style.maxHeight = `${Math.max(120, room)}px`;
   const height = Math.min(h, vh > 0 ? Math.max(120, room) : h);
   const top = up ? Math.max(PLACE_EDGE, r.top - GAP - height) : r.bottom + GAP;
-  let left = align === 'end' ? r.right - w : r.left;
+  let left = alignedLeft(r, w, align, readDirection(el) === 'rtl');
   if (vw > 0) left = Math.min(left, vw - w - PLACE_EDGE);
   left = Math.max(PLACE_EDGE, left);
   Object.assign(el.style, { top: `${Math.round(top)}px`, left: `${Math.round(left)}px`, right: 'auto', bottom: 'auto' });

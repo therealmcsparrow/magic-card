@@ -36,7 +36,7 @@ const action = (a: KitButtonOptions): TemplateResult => {
 export function row(o: RowOptions): TemplateResult {
   const tree = o.level !== undefined;
   const checkId = `row-${o.id}-check`;
-  const label = html`${o.name}${o.sub ? html`<small>${o.sub}</small>` : nothing}`;
+  const label = html`<bdi>${o.name}</bdi>${o.sub ? html`<small>${o.sub}</small>` : nothing}`;
   const name = o.content
     ? o.content
     : o.check

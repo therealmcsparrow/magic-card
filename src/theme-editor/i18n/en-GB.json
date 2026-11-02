@@ -916,7 +916,8 @@
   "theme-editor.editor-view.some-values-load-files-from-another": {
     "text": "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.",
     "note": "Privacy warning used when only one external site is involved; says the site can see the user's IP address. Try on dashboard is a button label.",
-    "max": 225
+    "max": 225,
+    "legal": true
   },
   "theme-editor.editor-view.some-values-load-files-from-hosts-the": {
     "text": "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.",
@@ -924,7 +925,8 @@
     "max": 230,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
-    }
+    },
+    "legal": true
   },
   "theme-editor.editor-view.stop-trying": {
     "text": "Stop trying",

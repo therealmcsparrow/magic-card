@@ -9311,6 +9311,13 @@
     "x-max-length": 55,
     "x-source-hash": "36d48524"
   },
+  "anim-studio.studio.pseudo-rtl": "Pseudo RTL",
+  "@anim-studio.studio.pseudo-rtl": {
+    "description": "Label of the switch in the studio top bar that shows the studio and preview with pseudo text, Arabic-Indic digits and right-to-left layout, to check mirroring. Max 16 characters.",
+    "source_text": "Pseudo RTL",
+    "x-max-length": 16,
+    "x-source-hash": "3a83f974"
+  },
   "anim-studio.studio.redo-ctrl-y": "Redo (Ctrl+Y)",
   "@anim-studio.studio.redo-ctrl-y": {
     "description": "Tooltip of the redo button in the studio header; keep the shortcut in brackets. Max 25 characters.",
@@ -26506,6 +26513,27 @@
     "source_text": "Track light",
     "x-max-length": 20,
     "x-source-hash": "e35875d4"
+  },
+  "icon-library.mirror-badge.keeps": "Keeps",
+  "@icon-library.mirror-badge.keeps": {
+    "description": "Label on an icon in the studio list: the icon keeps its drawing in right-to-left layouts. Max 10 characters.",
+    "source_text": "Keeps",
+    "x-max-length": 10,
+    "x-source-hash": "16aebc8d"
+  },
+  "icon-library.mirror-badge.mirrors": "Mirrors",
+  "@icon-library.mirror-badge.mirrors": {
+    "description": "Label on an icon in the studio list: the icon flips in right-to-left layouts. Max 10 characters.",
+    "source_text": "Mirrors",
+    "x-max-length": 10,
+    "x-source-hash": "239a80c2"
+  },
+  "icon-library.mirror-badge.not-set": "Not set",
+  "@icon-library.mirror-badge.not-set": {
+    "description": "Label on an icon in the studio list: nobody has decided yet whether the icon flips in right-to-left layouts. Max 15 characters.",
+    "source_text": "Not set",
+    "x-max-length": 15,
+    "x-source-hash": "4895f731"
   },
   "icon-library.nature.back-left-leg": "Back left leg",
   "@icon-library.nature.back-left-leg": {

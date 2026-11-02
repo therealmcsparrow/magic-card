@@ -767,6 +767,10 @@
     "text": "De afronding is niet geldig, dus is weggelaten.",
     "hash": "2f933801"
   },
+  "transfer.theme.another-website": {
+    "text": "een andere website",
+    "hash": "f55dea2b"
+  },
   "transfer.theme.dark": {
     "text": "Donker",
     "hash": "60acc53f"
@@ -778,6 +782,10 @@
   "transfer.theme.key-is-not-a-theme-variable-name-so-it": {
     "text": "\"{key}\" is geen naam van een themavariabele, dus is weggelaten.",
     "hash": "7be0630e"
+  },
+  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
+    "text": "\"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
+    "hash": "e60639fa"
   },
   "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
     "text": "{key} verwijst naar {hosts}, dus de waarde is weggelaten ({rule}).",
@@ -794,6 +802,10 @@
   "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
     "text": "Modus {mode}: \"{key}\" is een card-mod-stijl. Hij is bewaard; met card-mod geïnstalleerd voert hij CSS uit op je dashboard.",
     "hash": "ada05ea7"
+  },
+  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
+    "text": "Modus {mode}: \"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
+    "hash": "7f6dadd9"
   },
   "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
     "text": "Modus {mode}: \"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",

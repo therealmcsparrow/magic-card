@@ -1,6 +1,8 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
 import { glyph } from '../ui-kit/glyphs';
+import { inlineSides, rtlSheet } from '../ui-kit/css/rtl';
+import { DirectionController } from '../ui-kit/controllers/direction';
 import { THEME_TRIAL_BAR_TAG } from '../contracts/theme-editor';
 import { getTrial, openEditor, stopTrial, subscribeTrial } from './trial';
 import type { TrialState } from './trial';
@@ -52,6 +54,7 @@ const readEdge = (): Edge => {
 };
 
 export class McThemeTrialBar extends LitElement {
+  private readonly _dir = new DirectionController(this);
   @state() private _trial: TrialState | null = getTrial();
   @state() private _edge: Edge = readEdge();
   @state() private _short = false;
@@ -171,6 +174,7 @@ export class McThemeTrialBar extends LitElement {
   }
 
   static styles = css`
+    ${rtlSheet}
     svg.gl {
       display: block;
       flex: none;
@@ -179,8 +183,7 @@ export class McThemeTrialBar extends LitElement {
     :host([popover]) {
       position: fixed;
       inset: auto;
-      left: 0;
-      right: 0;
+      ${inlineSides('inset', '0', '0')}
       margin: 0;
       padding: 0;
       border: 0;
@@ -194,7 +197,7 @@ export class McThemeTrialBar extends LitElement {
       pointer-events: auto;
       box-sizing: border-box;
       position: fixed;
-      left: 50%;
+      left: 50%; /* physical */
       transform: translateX(-50%);
       display: flex;
       align-items: center;
@@ -219,8 +222,7 @@ export class McThemeTrialBar extends LitElement {
       padding: 0;
       border-radius: 22px;
       height: 44px;
-      left: auto;
-      right: 16px;
+      ${inlineSides('inset', 'auto', '16px')}
       transform: none;
     }
     .msg {

@@ -2,6 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import type { Pt } from '../contracts/path-model';
 import { IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import { button } from '../ui-kit/templates';
+import { textDir } from '../ui-kit/templates/field';
 import type { ImageExt } from './chunk';
 import { t } from './i18n';
 import { cleanText } from './text';
@@ -82,6 +83,7 @@ export function textField(x: ImageExt): TemplateResult | typeof nothing {
     <textarea
       id="tx-field"
       class="input"
+      dir=${textDir(undefined)}
       rows="3"
       maxlength=${IMAGE_MAX_TEXT_CHARS}
       aria-label=${t('image-editor.text-tool.text-on-the-canvas')}

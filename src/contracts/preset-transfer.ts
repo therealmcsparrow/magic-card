@@ -20,7 +20,7 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view, svg-css loader). */
-export const TRANSFER_CHUNK_CEILING = 73_216; // 71.5 KiB
+export const TRANSFER_CHUNK_CEILING = 74_752; // 73 KiB
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const IMAGE_TRANSFER_CHUNK = 'image-transfer';
@@ -79,6 +79,44 @@ export function decodeCssEscapes(value: string): string {
     });
 }
 
+/** The string arguments of a value, read whole: url("…"), url('…'), url(bare) and any other quoted string. */
+const ARGUMENT_RE = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^\s"'()]*))\s*\)|"([^"]*)"|'([^']*)'/gi;
+/** Characters that must not appear in a host name shown to the user. */
+const HIDDEN_RE = /[^\x21-\x7e]/;
+/** A page can load over either scheme, and `https:host` is only an address on a page served over http. */
+const BASES = ['https://invalid.invalid', 'http://invalid.invalid'];
+const BACKSLASH = String.fromCharCode(92);
+
+/**
+ * The hosts a theme value points at, as the browser resolves them (ASCII or punycode, lower case). Each
+ * argument is read whole and parsed the way the browser does, never cut at a separator. `unknown` is true when
+ * anything cannot be read with certainty (a scheme other than http or https, a stray
+ * `:` or `/` outside an argument, an unreadable host), so callers show the generic warning next to any host that was read. A backslash or a comment makes the whole value unreadable: nothing is named. An argument holding a line break or a bracket makes the value unreadable (a stylesheet resumes inside it). Only `data:image/` values other than SVG contact nothing and are skipped.
+ */
+export function externalHosts(value: string): { hosts: string[]; unknown: boolean } {
+  if (value.includes(BACKSLASH) || value.includes('/*')) return { hosts: [], unknown: true };
+  const hosts = new Set<string>();
+  let unknown = false;
+  const rest = value.replace(ARGUMENT_RE, (_m, a?: string, b?: string, c?: string, d?: string, e?: string) => {
+    const arg = a ?? b ?? c ?? d ?? e ?? '';
+    if (/[\n\r\f()]/.test(arg)) unknown = true;
+    for (const base of BASES) {
+      try {
+        const u = new URL(arg, base);
+        if (u.protocol === 'data:' && /^\s*data:image\/(?!svg)/i.test(arg)) continue;
+        if (u.hostname === 'invalid.invalid') continue;
+        if ((u.protocol === 'https:' || u.protocol === 'http:') && u.hostname && !HIDDEN_RE.test(u.hostname)) hosts.add(u.hostname);
+        else unknown = true;
+      } catch {
+        unknown = true;
+      }
+    }
+    return ' ';
+  });
+  if (/[:/]/.test(rest)) unknown = true;
+  return { hosts: [...hosts], unknown };
+}
+
 /** Longest value checked; the import already drops values over 1,024 characters, a longer one is refused as suspicious. */
 const CHECK_MAX_CHARS = 4096;
 /** A url() whose argument is unquoted or simply quoted, closed, and holds no space, quote, bracket or backslash. */
@@ -91,9 +129,11 @@ const PLAIN_STRING_RE = /"[^"\\:/]*"|'[^'\\:/]*'/g;
 
 /**
  * True when a theme value is not provably safe, i.e. it can make the browser contact another website (strict
- * allow-list, not trick-by-trick detection).
+ * allow-list, not trick-by-trick detection). A `card-mod-` key always counts: card-mod renders its value, so
+ * the text here is not what the browser loads.
  */
-export function contactsOtherHost(value: string): boolean {
+export function contactsOtherHost(value: string, key?: string): boolean {
+  if (key !== undefined && CARD_MOD_KEY_RE.test(key)) return true;
   if (value.length > CHECK_MAX_CHARS || value.includes('\\') || value.includes('/*')) return true;
   if (EXTERNAL_REF_RE.test(value) || /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):/i.test(value)) return true;
   const rest = value.replace(SIMPLE_URL_RE, (m, a?: string, b?: string, c?: string) => {
@@ -202,6 +242,7 @@ export type TransferNoteCode =
   | 'svg_removed'
   | 'path_missing'
   | 'card_mod'
+  | 'external_ref'
   | 'local_path'
   | 'missing_step_ref'
   | 'not_stored'
@@ -219,6 +260,8 @@ export interface TransferNote {
   rule?: StrictRuleId;
   /** dropped_value of a URL to another host: the host names found. */
   hosts?: string[];
+  /** external_ref: part of the value could not be read (or it is a card-mod value), so another website may be contacted. */
+  unknown?: boolean;
 }
 
 export type TransferRefusal =

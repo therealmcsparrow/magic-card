@@ -95,6 +95,13 @@ export class BoxField extends LitElement {
         clip-path: inset(50%);
         white-space: nowrap;
       }
+      /* The sides sit where their names say, so the grid reads left to right in any direction */
+      .box-grid {
+        direction: ltr;
+      }
+      .box-side-label {
+        unicode-bidi: plaintext;
+      }
       .box-grid.one-col {
         grid-template-columns: minmax(0, 1fr);
       }

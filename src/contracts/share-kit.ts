@@ -15,7 +15,7 @@ export const SHARE_KIT_CHUNK_FILE = 'magic-card-share-kit.js';
 export const SHARE_TABLET_CHUNK = 'share-tablet';
 export const SHARE_TABLET_CHUNK_FILE = 'magic-card-share-tablet.js';
 /** Hard ceiling of the chunk's raw size; the enforced cap lives in tools/size-caps.json. Raising it changes this contract. */
-export const SHARE_KIT_CHUNK_CEILING = 40 * 1024; // 40,960 B
+export const SHARE_KIT_CHUNK_CEILING = 41 * 1024; // 41,984 B
 /**
  * The one import() site of the share-kit chunk. It resolves undefined on a failed load, after LOAD_TIMEOUT_MS or for
  * another major version, and the transfer panel then offers neither import nor export.

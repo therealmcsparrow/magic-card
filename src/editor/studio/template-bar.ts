@@ -189,7 +189,7 @@ export class TemplateBar extends LitElement {
         display: flex;
         flex-wrap: wrap;
         gap: 4px;
-        margin-left: auto;
+        margin-inline-start: auto;
       }
       /* The chips stay together; when space runs out the "Template" label moves above them. */
       .chips {
@@ -212,6 +212,7 @@ export class TemplateBar extends LitElement {
       .menu {
         top: calc(100% + 6px);
         left: 0;
+        inset-inline: 0 auto;
         width: min(320px, 100%);
       }
       :host([compact]) .tpl-bar {
@@ -224,7 +225,7 @@ export class TemplateBar extends LitElement {
         flex: 0 1 auto;
       }
       :host([compact]) .tpl-actions {
-        margin-left: 0;
+        margin-inline-start: 0;
       }
       :host([compact]) .menu {
         width: 320px;

@@ -1,11 +1,24 @@
-// Contract: ui kit. Version 1.2.0. The card editor (src/editor/ + src/css/editor-system) is the base look; the kit
+// Contract: ui kit. Version 1.3.0. The card editor (src/editor/ + src/css/editor-system) is the base look; the kit
 // is extracted FROM it (single source), not designed in parallel, so every screen has the same look and feel.
 // Tags are `mc-ui-*`; `mc-*` alone is the namespace of the card's own elements such as mc-path-menu.
 
 export * from './ui-kit-lips';
 
-export const UI_KIT_CONTRACT_VERSION = '1.2.0';
-export const UI_KIT_CONTRACT_REVISION = 5;
+export const UI_KIT_CONTRACT_VERSION = '1.3.0';
+export const UI_KIT_CONTRACT_REVISION = 6;
+
+/**
+ * Plain Event on window that the Pseudo RTL switch dispatches right after it sets or removes `dir` on the studio and
+ * its preview. Nothing else dispatches it: a Home Assistant language change reaches listeners through the `dir`
+ * attribute of document.documentElement. The DirectionController, the card slider track and the card ring listen.
+ */
+export const DIR_CHANGE_EVENT = 'mc-dir-change';
+
+/** Text direction as the kit reads it. Anything that is not 'rtl' reads as 'ltr'. */
+export type KitDirection = 'ltr' | 'rtl';
+
+/** Whether a glyph turns with the reading direction (arrows, chevrons) or keeps its drawing (clocks, media, brand marks). */
+export type GlyphDirection = 'mirror' | 'keep';
 
 export const UI_MENU_TAG = 'mc-ui-menu';
 export const UI_WINDOW_TAG = 'mc-ui-window';
@@ -177,8 +190,25 @@ export interface KitTopBarOptions {
   help?: KitButtonOptions;
 }
 
+export interface KitLegalTextOptions {
+  /** The text in the user's language. */
+  text: string;
+  /** The English text; shown in place of `text` while `showEnglish` is on. */
+  english: string;
+  /** False in English: the text stands alone, with no label and no button. */
+  translated: boolean;
+  showEnglish: boolean;
+  onToggle: () => void;
+  /** The "English prevails" label and the Show English action text. */
+  prevailsLabel: string;
+  showLabel: string;
+  /** Id of the text element; the button controls it. */
+  id: string;
+}
+
 export interface UiKitTemplates {
   button(o: KitButtonOptions): KitTemplate;
+  legalText(o: KitLegalTextOptions): KitTemplate;
   field(o: KitFieldOptions): KitTemplate;
   switchRow(o: { id: string; label: string; help?: string; checked: boolean; disabled?: boolean; onChange: (v: boolean) => void }): KitTemplate;
   chip(o: { label: string; tone?: 'accent' | 'warn' | 'count'; pressed?: boolean; onClick?: () => void } & KitIcon): KitTemplate;

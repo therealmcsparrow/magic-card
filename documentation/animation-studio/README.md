@@ -33,6 +33,16 @@ The studio starts on the library. Opening an animation switches to the editor, a
 
 The preview plays on a real `magic-card`, so Magic Card has to be loaded on the page. When it is missing, the stage shows "Magic Card is not loaded on this page".
 
+## Right to left
+
+No right-to-left language ships with Magic Card yet. The studio can still show you how it would look, so the layout can be checked before one does.
+
+-   **Pseudo RTL switch.** The top bar of the library and of the editor has a switch called Pseudo RTL. While it is on, the studio and the preview card run right to left, digits show as Arabic-Indic digits, and each message is wrapped in direction marks. The text stays English-like, so it is a test aid and not a translation. Turn it off and everything goes back. If the part that does this fails to load, the switch changes nothing.
+-   **Mirror flag.** An icon animation can carry `mirror: mirror` or `mirror: keep`. With `mirror`, the card flips the animated icon in a right-to-left layout. With `keep`, it never does. Without the field, the icon is not flipped. In the icon library each entry shows Mirrors, Keeps or Not set. Only clear cases are set: arrows, vehicles and pointing hands mirror, while clocks, play and pause, media controls, text, brand marks and symmetric icons keep. The rest stay Not set. Starting from a library icon copies its flag into your animation. Animations you made earlier stay unset. See [Animation YAML](yaml.md).
+-   **What is not mirrored.** Drawing surfaces, the card canvas, timelines and curve plots keep their direction, because they show geometry and your card layout is never mirrored.
+
+This has been checked in a desktop browser only. No screen reader, phone or tablet has been tried.
+
 ## Pages
 
 -   [Library](library.md): search, new animations, customising a preset from a grid of live preset tiles, duplicate, rename, delete, export and import YAML, and the used-by count.

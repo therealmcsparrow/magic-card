@@ -12,6 +12,7 @@ import './unit-field';
 import './entity-picker';
 import './attribute-picker';
 import { t, m, type MessageIndex } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 
 type Opt = { value: string; label: MessageIndex };
 
@@ -145,7 +146,8 @@ export class RingEditor extends LitElement {
   private _seg(label: string, value: string, options: Opt[], onPick: (v: string) => void): TemplateResult {
     const onKey = (e: KeyboardEvent) => {
       const i = options.findIndex((o) => o.value === value);
-      const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      const h = readDirection(e.currentTarget as Element) === 'rtl' ? -1 : 1;
+      const step: Record<string, number> = { ArrowRight: h, ArrowDown: 1, ArrowLeft: -h, ArrowUp: -1 };
       if (!(e.key in step)) return;
       e.preventDefault();
       const next = options[(i + step[e.key] + options.length) % options.length].value;

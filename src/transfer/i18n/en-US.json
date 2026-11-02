@@ -767,6 +767,10 @@
     "text": "The smoothing is not valid, so it was left out.",
     "hash": "2f933801"
   },
+  "transfer.theme.another-website": {
+    "text": "another website",
+    "hash": "f55dea2b"
+  },
   "transfer.theme.dark": {
     "text": "Dark",
     "hash": "60acc53f"
@@ -778,6 +782,10 @@
   "transfer.theme.key-is-not-a-theme-variable-name-so-it": {
     "text": "\"{key}\" is not a theme variable name, so it was left out.",
     "hash": "7be0630e"
+  },
+  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
+    "text": "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "hash": "e60639fa"
   },
   "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
     "text": "{key} points to {hosts}, so its value was left out ({rule}).",
@@ -794,6 +802,10 @@
   "transfer.theme.mode-mode-key-is-a-card-mod-style-it-was": {
     "text": "{mode} mode: \"{key}\" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.",
     "hash": "ada05ea7"
+  },
+  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
+    "text": "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "hash": "7f6dadd9"
   },
   "transfer.theme.mode-mode-key-uses-a-file-on-the-sharer": {
     "text": "{mode} mode: \"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",

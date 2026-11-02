@@ -5,7 +5,7 @@ import type { ResolvedShape } from './shape-resolve';
 import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 import { linearGradientSvg, parseGradient } from '../utils/gradient';
 import type { ResolvedRing } from '../utils/ring';
-import { ringInset, ringStroke, ringTimerTick } from './ring-stroke';
+import { mirrorSweep, ringInset, ringStroke, ringTimerTick } from './ring-stroke';
 import { TimerTick } from '../utils/timer';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
@@ -17,6 +17,26 @@ function sameRing(a: ResolvedRing | undefined, b: ResolvedRing | undefined): boo
   const ka = Object.keys(a) as Array<keyof ResolvedRing>;
   return ka.length === Object.keys(b).length && ka.every((k) => a[k] === b[k] || (k === 'timer' && JSON.stringify(a[k]) === JSON.stringify(b[k])));
 }
+
+const rings = new Set<McRing>();
+const remeasureAll = (): void => rings.forEach((r) => r.measure());
+let dirWatch: MutationObserver | undefined;
+const watchDirection = (r: McRing): void => {
+  if (!rings.size) {
+    window.addEventListener('mc-dir-change', remeasureAll);
+    if (typeof MutationObserver === 'function') {
+      dirWatch = new MutationObserver(remeasureAll);
+      dirWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['dir'] });
+    }
+  }
+  rings.add(r);
+};
+const unwatchDirection = (r: McRing): void => {
+  if (!rings.delete(r) || rings.size) return;
+  window.removeEventListener('mc-dir-change', remeasureAll);
+  dirWatch?.disconnect();
+  dirWatch = undefined;
+};
 
 /**
  * The ring overlay of a card / row / column / module: an aria-hidden SVG over the parent's border
@@ -78,7 +98,7 @@ export class McRing extends LitElement {
   shape?: ResolvedShape;
 
   /** Parent border box and radii, as measured. */
-  private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii> };
+  private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii>; rtl: boolean };
 
   private _observed?: Element;
   private _mutations?: MutationObserver;
@@ -98,6 +118,7 @@ export class McRing extends LitElement {
     this._media?.addEventListener?.('change', this._onMedia);
     this._observe();
     this._timer();
+    watchDirection(this);
   }
 
   disconnectedCallback(): void {
@@ -105,6 +126,7 @@ export class McRing extends LitElement {
     this._tick?.run(false);
     this._unobserve();
     this._media?.removeEventListener?.('change', this._onMedia);
+    unwatchDirection(this);
   }
 
   private _unobserve(): void {
@@ -140,6 +162,7 @@ export class McRing extends LitElement {
       top: parseFloat(cs.borderTopWidth) || 0,
       left: parseFloat(cs.borderLeftWidth) || 0,
       radii: readRadii(cs, w, h),
+      rtl: getComputedStyle(this).direction === 'rtl',
     };
     if (JSON.stringify(box) !== JSON.stringify(this._box)) this._box = box;
   }
@@ -169,7 +192,7 @@ export class McRing extends LitElement {
     const r = this.ring?.timer ? { ...this.ring, ...ringTimerTick(this.ring.timer) } : this.ring;
     const b = this._box;
     if (!r || !b) return nothing;
-    const opts = { inset: ringInset(r.position, r.width), start: r.start, direction: r.direction };
+    const opts = { inset: ringInset(r.position, r.width), ...mirrorSweep(r.start, r.direction, b.rtl) };
     const d = this.shape
       ? shapeRingPath(this.shape.kind, b.w, b.h, this.shape.options, opts)
       : ringPath(b.w, b.h, b.radii, opts);

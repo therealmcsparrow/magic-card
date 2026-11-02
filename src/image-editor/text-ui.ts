@@ -3,6 +3,7 @@ import type { Pt } from '../contracts/path-model';
 import { IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import type { Shape } from '../svg-editor/model';
 import { button, field, fieldHelpId, sectionHead, seg } from '../ui-kit/templates';
+import { textDir } from '../ui-kit/templates/field';
 import type { ImageExt } from './chunk';
 import { t } from './i18n';
 import { K } from './kit';
@@ -132,6 +133,7 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
       control: html`<textarea
         id="tx-content"
         class="input"
+        dir=${textDir(undefined)}
         rows="3"
         maxlength=${IMAGE_MAX_TEXT_CHARS}
         aria-describedby=${`${fieldHelpId('tx-content')}${left <= IMAGE_MAX_TEXT_CHARS - COUNT_FROM ? ` ${countId}` : ''}`}

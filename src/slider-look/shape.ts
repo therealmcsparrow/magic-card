@@ -3,6 +3,7 @@ import { shapeClip } from '../card/shape-clip';
 import { resolveShape, type ResolvedShape } from '../card/shape-resolve';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { shapePath } from '../utils/shape-path';
+import { syncTrackDirection } from '../utils/slider-track';
 
 // track_shape: the track box (.mc-sl-box) is clipped to the shape from the card shape system, on the inner box only so the
 // focus ring stays whole. The outline is a 2 px stroke in the track colour at 40 %. The box size is measured on mount,
@@ -46,6 +47,8 @@ export class ShapeBox {
   paint(): void {
     const box = this.box as HTMLElement | undefined;
     if (!box) return;
+    // the shape stays physical; only the fill on top of it follows the direction, which is re-read with each measure
+    syncTrackDirection(box.closest('.mc-tile-slider'));
     const r = box.getBoundingClientRect();
     const w = Math.round(r.width * 100) / 100;
     const h = Math.round(r.height * 100) / 100;

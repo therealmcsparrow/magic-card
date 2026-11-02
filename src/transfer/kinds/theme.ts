@@ -1,4 +1,4 @@
-import { contactsOtherHost, decodeCssEscapes, THEME_PRESET_MAX_BYTES, THEME_VALUE_MAX_CHARS } from '../../contracts/preset-transfer';
+import { CARD_MOD_KEY_RE, contactsOtherHost, decodeCssEscapes, externalHosts, THEME_PRESET_MAX_BYTES, THEME_VALUE_MAX_CHARS } from '../../contracts/preset-transfer';
 import type { TransferDataByKind, TransferNote } from '../../contracts/preset-transfer';
 import type { ShareKit, ValueRefusal } from '../../contracts/share-kit';
 import { THEME_VAR_RE } from '../../contracts/theme-catalogue';
@@ -6,10 +6,9 @@ import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
 import type { KindResult, Raw } from '../types';
 
-/** Host names in a value, after CSS escapes: the part after `://`, a leading `//` or `http:`. */
+/** Host names in a value, as the browser resolves them. */
 export function hostsOf(value: string): string[] {
-  const re = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi;
-  return [...new Set([...value.matchAll(re)].map((m) => m[1].toLowerCase()))];
+  return externalHosts(value).hosts;
 }
 
 /**
@@ -56,8 +55,16 @@ export function readTheme(index: number, data: unknown, kit: ShareKit): KindResu
       }
       out[k] = v as string | number;
       kept++;
-      if (verdict.note === 'card_mod') notes.push(note('card_mod', index, path, label ? t('transfer.theme.mode-mode-key-is-a-card-mod-style-it-was', { mode: label, key: k }) : t('transfer.theme.key-is-a-card-mod-style-it-was-kept-with', { key: k })));
-      else if (verdict.note === 'local_path') notes.push(note('local_path', index, path, label ? t('transfer.theme.mode-mode-key-uses-a-file-on-the-sharer', { mode: label, key: k }) : t('transfer.theme.key-uses-a-file-on-the-sharer-s-home', { key: k })));
+      if (CARD_MOD_KEY_RE.test(k)) notes.push(note('card_mod', index, path, label ? t('transfer.theme.mode-mode-key-is-a-card-mod-style-it-was', { mode: label, key: k }) : t('transfer.theme.key-is-a-card-mod-style-it-was-kept-with', { key: k })));
+      if (typeof v === 'string') {
+        if (contactsOtherHost(v, k)) {
+          const { hosts, unknown } = CARD_MOD_KEY_RE.test(k) ? { hosts: [], unknown: true } : externalHosts(v);
+          const named = unknown || !hosts.length ? t('transfer.theme.another-website') : hosts.join(', ');
+          notes.push(note('external_ref', index, path, label ? t('transfer.theme.mode-mode-key-points-to-hosts-it-was', { mode: label, key: k, hosts: named }) : t('transfer.theme.key-points-to-hosts-it-was-kept-every', { key: k, hosts: named }), hosts, unknown));
+        } else if (verdict.note === 'local_path') {
+          notes.push(note('local_path', index, path, label ? t('transfer.theme.mode-mode-key-uses-a-file-on-the-sharer', { mode: label, key: k }) : t('transfer.theme.key-uses-a-file-on-the-sharer-s-home', { key: k })));
+        }
+      }
     }
     return out;
   };

@@ -16,6 +16,7 @@ import {
   type PanelLipsOptions,
   type PanelState,
 } from '../../contracts/ui-kit';
+import { DirectionController } from './direction';
 
 type Host = ReactiveControllerHost & HTMLElement;
 
@@ -49,7 +50,7 @@ function storage(): Storage | null {
  */
 export class PanelLips implements ReactiveController, PanelLipsController {
   readonly editor: PanelEditorId;
-  dir: PanelDir = 'ltr';
+  readonly direction: DirectionController;
   restoredFrom: 'none' | 'stored' | 'fallback' = 'none';
 
   private panels: readonly PanelLipSpec[];
@@ -70,7 +71,13 @@ export class PanelLips implements ReactiveController, PanelLipsController {
     this.strings = options.strings;
     this.keys = options.keys ?? 'host';
     this.fallback = options.fallback;
+    this.direction = new DirectionController(host);
     host.addController(this);
+  }
+
+  /** Text direction of the host; follows the page direction and the mc-dir-change event. */
+  get dir(): PanelDir {
+    return this.direction.direction;
   }
 
   // ── lifecycle ──
@@ -90,7 +97,7 @@ export class PanelLips implements ReactiveController, PanelLipsController {
 
   restore(): void {
     this.remembered = null;
-    this.readDir();
+    this.direction.sync();
     this.readMemory();
     this.hintDone = this.readFlag();
     this.host.requestUpdate();
@@ -99,7 +106,7 @@ export class PanelLips implements ReactiveController, PanelLipsController {
   setPanels(panels: readonly PanelLipSpec[], strings: PanelLipStrings): void {
     this.panels = panels;
     this.strings = strings;
-    this.readDir();
+    this.direction.sync();
     this.host.requestUpdate();
   }
 
@@ -252,14 +259,6 @@ export class PanelLips implements ReactiveController, PanelLipsController {
   }
 
   // ── memory ──
-
-  private readDir(): void {
-    try {
-      this.dir = getComputedStyle(this.host).direction === 'rtl' ? 'rtl' : 'ltr';
-    } catch {
-      this.dir = 'ltr';
-    }
-  }
 
   private allowed(ids: readonly unknown[]): Set<string> {
     const allow = new Set<string>(PANEL_IDS[this.editor]);

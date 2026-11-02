@@ -726,7 +726,8 @@
     "max": 205,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
-    }
+    },
+    "legal": true
   },
   "transfer.panel.export-animations": {
     "text": "{n, plural, one {Export # animation} other {Export # animations}}",
@@ -1205,6 +1206,11 @@
     "note": "Import report line for a shape whose smoothing value is invalid. The shape is still imported without that value.",
     "max": 80
   },
+  "transfer.theme.another-website": {
+    "text": "another website",
+    "note": "Fallback wording used in place of a list of domain names when none could be worked out. Lower case, used mid-sentence.",
+    "max": 25
+  },
   "transfer.theme.dark": {
     "text": "Dark",
     "note": "Name of the dark colour mode of a theme, used as {mode} in import notes. Starts a sentence before 'mode:'.",
@@ -1223,6 +1229,15 @@
     "note": "Import note. {key} is the entry's name from the file, in quotes; do not translate it. Theme variables are CSS custom properties that start with two hyphens or a known prefix.",
     "max": 95,
     "vars": {
+      "key": "The value that replaces key in the text."
+    }
+  },
+  "transfer.theme.key-points-to-hosts-it-was-kept-every": {
+    "text": "\"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "note": "Import warning, whole-theme version. {key} is the variable's name in quotes, {hosts} is a website domain list such as example.com. Do not translate either.",
+    "max": 150,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text.",
       "key": "The value that replaces key in the text."
     }
   },
@@ -1254,6 +1269,16 @@
     "note": "Import warning for one colour mode. {mode} is the translated word Light or Dark, {key} is the variable's name from the file in quotes. Keep card-mod unchanged.",
     "max": 175,
     "vars": {
+      "key": "The value that replaces key in the text.",
+      "mode": "The value that replaces mode in the text."
+    }
+  },
+  "transfer.theme.mode-mode-key-points-to-hosts-it-was": {
+    "text": "{mode} mode: \"{key}\" points to {hosts}. It was kept; every browser that shows this theme will contact it.",
+    "note": "Import warning for one colour mode. {mode} is Light or Dark, {key} the variable's name in quotes, {hosts} a website domain list. Do not translate key or hosts.",
+    "max": 170,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text.",
       "key": "The value that replaces key in the text.",
       "mode": "The value that replaces mode in the text."
     }
