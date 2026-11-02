@@ -63,6 +63,8 @@ const inOrder = <T>(order: T[], wanted: T[]): T[] => order.filter((v) => wanted.
 export async function renderSheet(hass: object, request: ForumShotRequest, seams: SheetSeams = {}): Promise<ForumShotSheet> {
   const kit = prepareCard(request.config, location.origin);
   if (kit.lock) throw forumShotError('remote_asset');
+  const shown = request.fontHosts ?? [];
+  if (kit.plan.fontHosts.some((h) => !shown.includes(h))) throw forumShotError('hosts_changed');
   const modes = inOrder(MODE_ORDER, request.modes);
   const looks = inOrder(LOOK_ORDER, request.looks);
   if (!modes.length || !looks.length) throw forumShotError('capture_failed');
@@ -75,6 +77,7 @@ export async function renderSheet(hass: object, request: ForumShotRequest, seams
     const fonts = await prepareFonts(kit.plan, seams.fonts);
     if (!fonts.ok) throw forumShotError(fonts.code);
     for (const f of fonts.faces) prepared.add(f.family.toLowerCase());
+    for (const family of kit.aliases.keys()) if (!prepared.has(family)) throw forumShotError('font_unavailable');
     const rules = faceRules(fonts.faces, kit.aliases);
     if (rules === null) throw forumShotError('font_unavailable');
     fontStyle = document.createElement('style');
@@ -97,7 +100,7 @@ export async function renderSheet(hass: object, request: ForumShotRequest, seams
         document.body.append(wrap);
         let settled;
         try {
-          settled = await settleCard(hass, withLook(kit.mount, look, source), { container: wrap, settleMs: seams.settleMs, preparedFamilies: fontStyle ? prepared : undefined });
+          settled = await settleCard(hass, withLook(kit.mount, look, source), { container: wrap, settleMs: seams.settleMs, preparedFamilies: prepared });
           const shot = await captureFrame(settled.card, seams.capture);
           for (const n of settled.notices) notices.add(n);
           if (shot.replaced) notices.add('remote_placeholder');

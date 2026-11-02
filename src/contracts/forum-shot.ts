@@ -20,6 +20,8 @@ export interface ForumShotRequest {
   config: Record<string, unknown>;
   modes: ForumShotMode[];
   looks: ForumShotLook[];
+  /** The font hosts the person was shown (`MagicCardRef.fontHosts`); absent means none. A card whose fresh config needs a host outside them fails with `hosts_changed` before any request. */
+  fontHosts?: string[];
 }
 
 export interface ForumShotSheet {
@@ -58,5 +60,14 @@ export interface MagicCardRef {
 /**
  * Error codes of listMagicCards and renderSheet (the `code` of the Error).
  * `remote_asset`: the card is locked. `font_unavailable`: a font the card needs could not be prepared or embedded, and no picture is made.
+ * `hosts_changed`: the card now needs a font host that was not in the request's `fontHosts`; nothing was requested.
  */
-export type ForumShotErrorCode = 'no_cards' | 'config_read_failed' | 'card_not_defined' | 'remote_asset' | 'capture_failed' | 'too_large' | 'font_unavailable';
+export type ForumShotErrorCode =
+  | 'no_cards'
+  | 'config_read_failed'
+  | 'card_not_defined'
+  | 'remote_asset'
+  | 'capture_failed'
+  | 'too_large'
+  | 'font_unavailable'
+  | 'hosts_changed';

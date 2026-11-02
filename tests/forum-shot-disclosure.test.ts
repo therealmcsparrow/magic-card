@@ -89,6 +89,24 @@ describe('font hosts before Download', () => {
   });
 });
 
+describe('hosts changed between the list and Download', () => {
+  it('sends the shown hosts, then re-reads the list and says the hosts changed', async () => {
+    render.mockRejectedValueOnce(forumShotError('hosts_changed'));
+    const hass = ws([font, plain]);
+    const el = await mount(hass);
+    await pick(el, 0);
+    const reads = hass.callWS.mock.calls.length;
+    $<HTMLButtonElement>(el, 'button.download')!.click();
+    await flush(el);
+    expect(render.mock.calls[0][1]).toMatchObject({ fontHosts: ['fonts.googleapis.com', 'fonts.gstatic.com'] });
+    expect(hass.callWS.mock.calls.length).toBeGreaterThan(reads);
+    const alert = el.shadowRoot!.querySelector('p.error[role=alert]')!;
+    expect(alert.textContent).toContain('fonts this card asks for changed');
+    expect(text(el)).not.toContain('Saved');
+    expect($(el, 'img.preview')).toBeNull();
+  });
+});
+
 describe('a failed font', () => {
   it('stops with a clear error and drops any earlier preview', async () => {
     render.mockResolvedValueOnce(sheet()).mockRejectedValueOnce(forumShotError('font_unavailable'));

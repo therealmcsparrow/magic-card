@@ -2,7 +2,7 @@
 import type { ForumShotLockReason } from '../contracts/forum-shot';
 import { configGoogleFonts, googleFontFamilies, googleFontUrl } from '../utils/google-fonts';
 import type { FontPlan, PreparedFace } from './font-fetch';
-import { CUSTOM_CARD, LIMIT, MAX_DEPTH, MAX_NODES, MAX_STRING, decodeEntities, findRemoteAssets } from './remote';
+import { CUSTOM_CARD, FONT_KEYS, LIMIT, MAX_DEPTH, MAX_NODES, MAX_STRING, decodeEntities, findRemoteAssets } from './remote';
 
 /** A stylesheet host and the font hosts it may send fonts to without the config naming them. */
 export const FONT_HOST_PAIRS: Readonly<Record<string, readonly string[]>> = { 'fonts.googleapis.com': ['fonts.gstatic.com'] };
@@ -388,7 +388,6 @@ export function classifyCard(config: unknown, origin: string): CardClass {
 /** The name a Google family goes by on the mounted copy, so the card's own loader finds nothing to request. */
 export const aliasOf = (family: string): string => `mc-shot-${family.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 
-const FONT_KEYS = new Set(['font_family', 'tab_font_family', 'label_font_family']);
 const CSS_FONT_FAMILY = /(font-family\s*:\s*)([^;}]+)/gi;
 
 /** `value` with each listed Google family swapped for its alias when `has` accepts it (Roboto excepted). */
@@ -409,6 +408,12 @@ export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissi
     for (const f of googleFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
     return head + aliasFamilies(v, (l) => prepared.has(l));
   });
+}
+
+/** The value of a font key from a template result with its Google families under their aliases; `onMissing` is called for a family no face was prepared for. */
+export function aliasFontValue(value: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
+  for (const f of googleFontFamilies(value)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
+  return aliasFamilies(value, (l) => prepared.has(l));
 }
 
 export interface CardKit {

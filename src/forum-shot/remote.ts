@@ -1,6 +1,8 @@
 // Remote assets for the forum shot: finds addresses outside the Home Assistant origin in a card config, hass data and theme values, and removes them before anything mounts.
 import { configGoogleFonts } from '../utils/google-fonts';
 
+/** Config keys whose string value names font families. */
+export const FONT_KEYS: ReadonlySet<string> = new Set(['font_family', 'tab_font_family', 'label_font_family']);
 export const MAX_NODES = 50_000;
 export const MAX_DEPTH = 24;
 export const MAX_STRING = 1_000_000;
@@ -285,9 +287,15 @@ const mapResult = (result: unknown, fn: (v: unknown) => unknown): unknown => (re
 /**
  * The hass copy the forum shot hands its card: state attributes, themes, config, every call result and every subscription result lose
  * their off-origin addresses before the card sees them, so the browser never requests them. `auth` is not copied.
- * `removed()` says whether anything was dropped. `renameText`, when given, rewrites every string in a call or subscription result (a template family).
+ * `removed()` says whether anything was dropped. `renameText`, when given, rewrites every string in a call or subscription result (a template family),
+ * and `renameFont` the value of each font key in it.
  */
-export function scrubHass<H extends object>(hass: H, origin: string, renameText?: (text: string) => string): { hass: H; removed: () => boolean } {
+export function scrubHass<H extends object>(
+  hass: H,
+  origin: string,
+  renameText?: (text: string) => string,
+  renameFont?: (value: string) => string,
+): { hass: H; removed: () => boolean } {
   let removed = false;
   const mark = () => {
     removed = true;
@@ -295,9 +303,12 @@ export function scrubHass<H extends object>(hass: H, origin: string, renameText?
   const clean = <V>(v: V): V => scrubValue(v, origin, mark);
   const renamed = (v: unknown, depth = 0): unknown => {
     if (typeof v === 'string') return renameText ? renameText(v) : v;
-    if (!renameText || !v || typeof v !== 'object' || depth > MAX_DEPTH) return v;
+    if ((!renameText && !renameFont) || !v || typeof v !== 'object' || depth > MAX_DEPTH) return v;
     if (Array.isArray(v)) return v.map((x) => renamed(x, depth + 1));
-    return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, renamed(x, depth + 1)]));
+    if (!isPlain(v)) return v;
+    return Object.fromEntries(
+      Object.entries(v).map(([k, x]) => [k, renameFont && typeof x === 'string' && FONT_KEYS.has(k) ? renameFont(renameText ? renameText(x) : x) : renamed(x, depth + 1)]),
+    );
   };
   const result = (v: unknown): unknown => renamed(clean(v));
   const src = hass as HassLike;

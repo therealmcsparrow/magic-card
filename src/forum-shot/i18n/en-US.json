@@ -79,6 +79,10 @@
     "text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
     "hash": "9924ac84"
   },
+  "forum-shot.element.error-hosts-changed": {
+    "text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "hash": "198f0eb0"
+  },
   "forum-shot.element.error-too-large": {
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "hash": "15a5ec38"

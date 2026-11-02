@@ -128,7 +128,7 @@ export class MagicCardForumShot extends LitElement {
       const config = await cardConfigOf(this.hass ?? {}, ref);
       const modes: ForumShotMode[] = this._mode === 'both' ? ['light', 'dark'] : [this._mode];
       const looks: ForumShotLook[] = this._looks ? ALL_LOOKS : ['as-configured'];
-      const sheet = await renderSheet(this.hass ?? {}, { config, modes, looks }, { lookSource: iconLibraryLookSource });
+      const sheet = await renderSheet(this.hass ?? {}, { config, modes, looks, fontHosts: ref.fontHosts }, { lookSource: iconLibraryLookSource });
       this._dropPreview();
       this._previewUrl = URL.createObjectURL(sheet.blob);
       this._sheet = sheet;
@@ -136,7 +136,9 @@ export class MagicCardForumShot extends LitElement {
       this._save(sheet);
       this._saved = true;
     } catch (e) {
-      this._error = codeOf(e);
+      const code = codeOf(e);
+      if (code === 'hosts_changed') await this._read();
+      this._error = code;
     }
     this._busy = false;
     this.requestUpdate();
@@ -152,6 +154,8 @@ export class MagicCardForumShot extends LitElement {
         return t('forum-shot.element.error-too-large');
       case 'font_unavailable':
         return t('forum-shot.element.error-font-unavailable');
+      case 'hosts_changed':
+        return t('forum-shot.element.error-hosts-changed');
       case 'config_read_failed':
         return t('forum-shot.element.config-read-failed');
       default:

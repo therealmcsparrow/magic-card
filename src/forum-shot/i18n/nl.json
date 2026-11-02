@@ -79,6 +79,10 @@
     "text": "Een lettertype kon niet worden geladen, dus er is geen afbeelding gemaakt. Controleer je verbinding en probeer het opnieuw.",
     "hash": "9924ac84"
   },
+  "forum-shot.element.error-hosts-changed": {
+    "text": "De lettertypen die deze kaart vraagt zijn veranderd sinds de lijst is gemaakt, en er is niets opgehaald. De lijst is nu bijgewerkt. Controleer de genoemde sites en kies daarna opnieuw Downloaden.",
+    "hash": "198f0eb0"
+  },
   "forum-shot.element.error-too-large": {
     "text": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
     "hash": "15a5ec38"

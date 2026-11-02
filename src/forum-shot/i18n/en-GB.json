@@ -102,6 +102,11 @@
     "note": "Error when a font from another website could not be fetched or was not a usable font file.",
     "max": 130
   },
+  "forum-shot.element.error-hosts-changed": {
+    "text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "note": "Error when the font sites of the card differ from those shown before Download; the card list has been read again.",
+    "max": 200
+  },
   "forum-shot.element.error-too-large": {
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "note": "Error when the sheet would exceed the size limit.",

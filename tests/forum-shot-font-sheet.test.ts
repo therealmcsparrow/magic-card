@@ -48,12 +48,12 @@ function fonts(route: (url: string) => FontResponse | null = (url) => (url.inclu
   return { s, urls };
 }
 
-function run(config: Record<string, unknown>, f: FontSeams) {
+function run(config: Record<string, unknown>, f: FontSeams, fontHosts: string[] = prepareCard(config, ORIGIN).plan.fontHosts, h: object = hass) {
   const svgs: string[] = [];
   const compose = vi.fn(async () => PNG);
   const seams: SheetSeams = { capture: { rasterise: async (url) => (url.includes('foreignObject') || decodeURIComponent(url).includes('foreignObject') ? svgs.push(decodeURIComponent(url)) : 0, PNG) }, compose, settleMs: 0, fonts: f };
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 100, top: 0, left: 0, right: 400, bottom: 100, x: 0, y: 0, toJSON: () => ({}) });
-  return { svgs, compose, go: () => renderSheet(hass, { config, modes: ['light'], looks: ['as-configured'] }, seams) };
+  return { svgs, compose, go: () => renderSheet(h, { config, modes: ['light'], looks: ['as-configured'], fontHosts }, seams) };
 }
 
 afterEach(() => {
@@ -92,6 +92,54 @@ describe('the picture carries the real font', () => {
     expect(r.compose).not.toHaveBeenCalled();
     expect(r.svgs).toEqual([]);
     expect(document.head.querySelector('style[data-mc-shot-font]')).toBeNull();
+  });
+
+  it('makes no request when the fresh config names a host outside the disclosed ones', async () => {
+    const { s, urls } = fonts();
+    const r = run(cardWith(), s, ['fonts.example.com']);
+    const append = vi.spyOn(document.body, 'append');
+    await expect(r.go()).rejects.toMatchObject({ code: 'hosts_changed' });
+    expect(urls).toEqual([]);
+    expect(append).not.toHaveBeenCalled();
+  });
+
+  it('treats no disclosed hosts as none: a font card stops with hosts_changed', async () => {
+    const { s, urls } = fonts();
+    await expect(run(cardWith(), s, []).go()).rejects.toMatchObject({ code: 'hosts_changed' });
+    expect(urls).toEqual([]);
+  });
+
+  it('fetches when the disclosed hosts cover the fresh ones, and when fewer are needed', async () => {
+    const { s, urls } = fonts();
+    await run(cardWith(), s, ['fonts.googleapis.com', 'fonts.gstatic.com', 'extra.example.com']).go();
+    expect(urls.length).toBe(2);
+  });
+
+  it('stops with font_unavailable when a listed family has no prepared face', async () => {
+    const other = SHEET.replace('Open Sans', 'Lora');
+    const { s } = fonts((url) => (url.includes('googleapis') ? body(new TextEncoder().encode(other), 'text/css') : body(WOFF2, 'font/woff2')));
+    const r = run(cardWith(), s);
+    const append = vi.spyOn(document.body, 'append');
+    await expect(r.go()).rejects.toMatchObject({ code: 'font_unavailable' });
+    expect(append).not.toHaveBeenCalled();
+    expect(document.head.querySelector('style[data-mc-shot-font]')).toBeNull();
+  });
+
+  it('stops with font_unavailable for a template family on a card with no font sheets, and adds no link', async () => {
+    const { s, urls } = fonts();
+    const connection = {
+      subscribeMessage: (cb: (m: unknown) => void) => {
+        queueMicrotask(() => cb({ result: 'font-family: Lora' }));
+        return Promise.resolve(() => undefined);
+      },
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    };
+    const states = { 'media_player.a': { state: 'on', attributes: { entity_picture: 'x' } } };
+    const config = { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'markdown', content: '{{ state_attr("media_player.a", "entity_picture") }}' }] }] }] };
+    await expect(run(config, s, [], { ...hass, states, connection }).go()).rejects.toMatchObject({ code: 'font_unavailable' });
+    expect(urls).toEqual([]);
+    expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
   });
 
   it('rejects a locked card as remote_asset without any request', async () => {

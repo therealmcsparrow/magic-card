@@ -28,9 +28,13 @@ describe('forum-shot 1.1.0 constants', () => {
     expect(contract.FORUM_SHOT_MAX_PIXELS).toBe(16_777_216);
   });
 
-  it('keeps the six old error codes and adds font_unavailable', () => {
-    const codes: ForumShotErrorCode[] = ['no_cards', 'config_read_failed', 'card_not_defined', 'remote_asset', 'capture_failed', 'too_large', 'font_unavailable'];
+  it('keeps the six old error codes and adds font_unavailable and hosts_changed', () => {
+    const codes: ForumShotErrorCode[] = ['no_cards', 'config_read_failed', 'card_not_defined', 'remote_asset', 'capture_failed', 'too_large', 'font_unavailable', 'hosts_changed'];
     expect(unionOf('ForumShotErrorCode')).toEqual(codes);
+  });
+
+  it('adds the disclosed hosts to the request as an optional member', () => {
+    expect(read('src/contracts/forum-shot.ts')).toMatch(/interface ForumShotRequest \{[^}]*fontHosts\?: string\[\];/);
   });
 
   it('names the lock reasons in priority order', () => {

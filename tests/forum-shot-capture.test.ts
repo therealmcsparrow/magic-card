@@ -3,7 +3,7 @@ import '../src/index';
 import { FORUM_SHOT_MAX_PIXELS } from '../src/contracts/forum-shot';
 import { captureFrame, checkCaptureSupport } from '../src/forum-shot/capture';
 import type { CaptureSeams } from '../src/forum-shot/capture';
-import { aliasInText } from '../src/forum-shot/font-address';
+import { aliasFontValue, aliasInText } from '../src/forum-shot/font-address';
 import { deepElements, findRemoteAssets, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
@@ -149,6 +149,40 @@ describe('settleCard', () => {
     it('stops with font_unavailable when no face was prepared for it', async () => {
       await expect(settleCard(withState(baseHass(family('Lora'))), config, { settleMs: 20, preparedFamilies: new Set(['open sans']) })).rejects.toMatchObject({ code: 'font_unavailable' });
       expect(document.body.children.length).toBe(0);
+    });
+
+    it('stops with font_unavailable when no set was given at all, and adds no font link', async () => {
+      await expect(settleCard(withState(baseHass(family('Lora'))), config, { settleMs: 20 })).rejects.toMatchObject({ code: 'font_unavailable' });
+      expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+      expect(document.body.children.length).toBe(0);
+    });
+
+    it('renames a font key inside a result, and stops for a Google family with no face', async () => {
+      const keyed = (value: string) => ({
+        subscribeMessage: (cb: (m: unknown) => void) => {
+          queueMicrotask(() => cb({ result: { font_family: value, nested: [{ label_font_family: value }] } }));
+          return Promise.resolve(() => undefined);
+        },
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      });
+      const received: unknown[] = [];
+      const { hass } = scrubHass({ connection: keyed('Lato, sans-serif'), states: {} } as { connection: ReturnType<typeof keyed>; states: object }, ORIGIN, undefined, (v) =>
+        aliasFontValue(v, new Set(['lato']), () => undefined),
+      );
+      void hass.connection.subscribeMessage((m: unknown) => received.push(m));
+      await Promise.resolve();
+      expect(JSON.stringify(received)).toContain('mc-shot-lato');
+      expect(JSON.stringify(received)).not.toContain('"Lato');
+      await expect(settleCard(withState(baseHass(keyed('Lato'))), config, { settleMs: 20, preparedFamilies: new Set() })).rejects.toMatchObject({ code: 'font_unavailable' });
+      expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+    });
+
+    it('leaves a non-plain object in a result as it is', async () => {
+      const when = new Date(0);
+      const { hass } = scrubHass({ callWS: async () => ({ when, text: 'font-family: Roboto' }), states: {} }, ORIGIN, (t) => t, (v) => v);
+      const r = (await hass.callWS()) as { when: Date };
+      expect(r.when).toBe(when);
     });
   });
 

@@ -1,7 +1,7 @@
 // Settled card for the forum shot: mounts a Magic Card paused and offscreen on a scrubbed hass copy, waits until it is still.
 import { FORUM_SHOT_WIDTH } from '../contracts/forum-shot';
 import type { ForumShotErrorCode, ForumShotNotice } from '../contracts/forum-shot';
-import { aliasInText } from './font-address';
+import { aliasFontValue, aliasInText } from './font-address';
 import { deepElements, findRemoteAssets, scrubHass, sweepRemote } from './remote';
 
 const CARD_TAG = 'magic-card';
@@ -19,7 +19,7 @@ export interface SettleOptions {
   settleMs?: number;
   /** CSS width of the card (default FORUM_SHOT_WIDTH). */
   width?: number;
-  /** Real (lower-case) Google families a face was prepared for; a template result naming another stops the run with `font_unavailable`. */
+  /** Real (lower-case) Google families a face was prepared for (none when omitted); a template result naming another stops the run with `font_unavailable`. */
   preparedFamilies?: ReadonlySet<string>;
 }
 
@@ -89,8 +89,13 @@ export async function settleCard(hass: object, config: Record<string, unknown>, 
   if (!Ctor) throw forumShotError('card_not_defined');
 
   let fontMissing = false;
-  const prepared = options.preparedFamilies;
-  const scrubbed = scrubHass(hass, origin, prepared && ((text) => aliasInText(text, prepared, () => (fontMissing = true))));
+  const prepared = options.preparedFamilies ?? new Set<string>();
+  const scrubbed = scrubHass(
+    hass,
+    origin,
+    (text) => aliasInText(text, prepared, () => (fontMissing = true)),
+    (value) => aliasFontValue(value, prepared, () => (fontMissing = true)),
+  );
   const box = document.createElement('div');
   box.setAttribute('aria-hidden', 'true');
   box.setAttribute('inert', '');
