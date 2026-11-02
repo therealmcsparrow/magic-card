@@ -78,7 +78,7 @@ describe('entry caps', () => {
       { id: 'entry-stage4-74387-to-74836', field: '/entry/stages/3/cap', from: 74387, to: 74836 },
       { id: 'entry-br-63595-to-63953', field: '/entry/br/cap', from: 63595, to: 63953 },
       { id: 'entry-stage4-74836-to-75348', field: '/entry/stages/3/cap', from: 74836, to: 75348 },
-      { id: 'entry-br-63953-to-64284', field: '/entry/br/cap', from: 63953, to: 64284 },
+      { id: 'entry-br-63953-to-64465', field: '/entry/br/cap', from: 63953, to: 64465 },
     ];
     expect(added.filter((r) => r.field.startsWith('/entry/')), 'entry raises').toEqual(approved);
     expect(stage(now).cap, 'the raised cap is still below the cap the run started with').toBeLessThan(stage(base).cap);

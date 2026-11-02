@@ -48,8 +48,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 64284,
-      "measured": 64284
+      "cap": 64465,
+      "measured": 64375
     }
   },
   "files": {
@@ -1113,10 +1113,10 @@
       "to": 75348
     },
     {
-      "id": "entry-br-63953-to-64284",
+      "id": "entry-br-63953-to-64465",
       "field": "/entry/br/cap",
       "from": 63953,
-      "to": 64284
+      "to": 64465
     }
   ]
 }
