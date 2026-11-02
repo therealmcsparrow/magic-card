@@ -24,14 +24,17 @@ const TEMPLATE_RE = /\{\{|\{%|\{#/;
 const TEMPLATE_SPAN_RE = /\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}/g;
 /** The only exact form of picture a shared text may hold: a local or raster data: source and an optional plain alt. */
 const IMG_RE = /^<img src="([^"&<>]*)"(?: alt="[\w .,'-]*")?\s?\/?>$/i;
-/** Keys read as a template whose result is shown as text or picked as an icon or entity, never put into a style. */
-const TEMPLATE_KEYS: ReadonlySet<string> = new Set(['entity', 'icon', 'value', 'template']);
+/** The template of a condition (`conditions[].template`): Home Assistant answers true or false, the text is never shown or put into a style. */
+const isConditionTemplate = (key: string, parentPath: string): boolean => key === 'template' && /\.conditions\[\d+\]$/.test(parentPath);
+/** A single quoted url() of an SVG data: image; it cannot be a picture here, so it is left out and listed, not a reason to refuse the file. */
+const SVG_DATA_URL_RE = /^url\(\s*(?:"([^"]*)"|'([^']*)')\s*\)$/i;
+const SVG_DATA_BODY_RE = /^\s*data:image\/svg\+xml[^{}@\\]*$/i;
 const ENTITY_COLOUR_RE = /^entity(?: \d{1,3}%)?$/;
 const FUNCTION_RE = /([a-z][a-z0-9-]*)\s*\(/gi;
 const PLACEHOLDER_SCAN_RE = /(?<![a-z0-9_])[a-z][a-z0-9_]*\.mc_placeholder_[1-9][0-9]*(?![a-z0-9_])/g;
 /** Functions a free-form css value may use besides the colour and calc() forms of the strict types. */
 const CSS_FUNCTIONS: ReadonlySet<string> = new Set(
-  'translate translatex translatey translatez translate3d rotate rotatex rotatey rotatez rotate3d scale scalex scaley scalez scale3d skew skewx skewy matrix matrix3d perspective blur brightness contrast grayscale hue-rotate invert opacity saturate sepia drop-shadow repeat minmax fit-content cubic-bezier steps var calc min max clamp rgb rgba hsl hsla hwb lab lch oklab oklch color color-mix light-dark linear-gradient radial-gradient conic-gradient repeating-linear-gradient repeating-radial-gradient repeating-conic-gradient'.split(' '),
+  'translate translatex translatey translatez translate3d rotate rotatex rotatey rotatez rotate3d scale scalex scaley scalez scale3d skew skewx skewy matrix matrix3d perspective blur brightness contrast grayscale hue-rotate invert opacity saturate sepia drop-shadow polygon circle ellipse inset repeat minmax fit-content cubic-bezier steps var calc min max clamp rgb rgba hsl hsla hwb lab lch oklab oklch color color-mix light-dark linear-gradient radial-gradient conic-gradient repeating-linear-gradient repeating-radial-gradient repeating-conic-gradient'.split(' '),
 );
 
 const hasOwn = (o: object, k: string): boolean => Object.prototype.hasOwnProperty.call(o, k);
@@ -208,6 +211,10 @@ function walkObject(o: Raw, path: string, c: Ctx, design: boolean, depth: number
       c.notes.push(dropped(c.item, rawAt(path, k), 'strict.card-mod', t('share-kit.card.path-is-a-card-mod-style-so-it-was-left-out', { path: rawAt(path, k), rule: 'strict.card-mod' })));
       continue;
     }
+    if ((design || DESIGN_KEYS.has(k)) && markerIn(k)) {
+      c.refusal = { item: c.item, path: rawAt(path, k), rule: 'strict.marker' };
+      break;
+    }
     const r = walk(v, k, rawAt(path, k), c, design || DESIGN_KEYS.has(k), depth + 1, path);
     if (r !== DROP) out[k] = r;
   }
@@ -227,7 +234,7 @@ function walk(v: unknown, key: string, path: string, c: Ctx, design: boolean, de
     return types && !types.includes('number') ? drop(c, path, `strict.${types[0]}`) : v;
   }
   if (Array.isArray(v)) {
-    if (design && key !== 'modules') {
+    if (design && (key === 'custom_animations' || key === 'custom_shapes')) {
       const hit = scanMarkers(c.item, path, v);
       if (hit && (c.refusal = hit)) return DROP;
     }
@@ -264,6 +271,8 @@ function walkString(v: string, key: string, path: string, c: Ctx, design: boolea
   const base = key.endsWith('[]') ? key.slice(0, -2) : key;
   if (base === 'content') return readContent(v, path, c);
   const types = typesOf(c, key);
+  const svg = PLAIN_KEYS.has(base) || c.loose > 0 ? null : SVG_DATA_URL_RE.exec(v.trim());
+  if (svg && SVG_DATA_BODY_RE.test(svg[1] ?? svg[2]) && !hasControl(svg[1] ?? svg[2], false)) return drop(c, path, `strict.${types?.includes('paint-image') ? 'paint-image' : (types?.[0] ?? 'any')}`);
   if (types) {
     if (types.includes('colour') && ENTITY_COLOUR_RE.test(v.trim())) return v;
     if (types.includes('paint-image') && urlLike(v)) return urlAllowed(v) ? kept(v, path, c) : drop(c, path, 'strict.host', hostsIn(v));
@@ -275,9 +284,10 @@ function walkString(v: string, key: string, path: string, c: Ctx, design: boolea
   if (PLAIN_KEYS.has(base) || c.loose > 0) return v;
   if (urlLike(v)) return urlAllowed(v) ? kept(v, path, c) : drop(c, path, 'strict.host', hostsIn(v));
   const d = decodeCssEscapes(v);
-  if ((design || !(TEMPLATE_KEYS.has(base) && TEMPLATE_RE.test(v))) && markerIn(d)) return refuse(c, path);
+  const template = isConditionTemplate(key, parentPath) && TEMPLATE_RE.test(v);
+  if (!template && markerIn(d)) return refuse(c, path);
   if (FETCH_FN_RE.test(d) || !urlsOk(d) || hostsIn(d).length) return drop(c, path, 'strict.host', hostsIn(d));
-  if (design && !functionsOk(v)) return drop(c, path, 'strict.any');
+  if (design && !template && !functionsOk(v)) return drop(c, path, 'strict.any');
   return kept(v, path, c);
 }
 

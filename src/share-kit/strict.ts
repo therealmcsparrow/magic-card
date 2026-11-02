@@ -13,14 +13,17 @@ const isControl = (c: string): boolean => c.charCodeAt(0) < 32 || c.charCodeAt(0
 const GLOBAL_KEYWORDS = new Set(['inherit', 'initial', 'unset']);
 const COLOR_FUNCTIONS = new Set(['rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'color', 'color-mix', 'var', 'light-dark', 'calc', 'min', 'max', 'clamp']);
 const NUM = '(?:\\d+(?:\\.\\d+)?|\\.\\d+)';
-const LENGTH_RE = new RegExp(`^-?${NUM}(?:px|em|rem|%|vw|vh)?$`);
+const UNITS = 'px|em|rem|%|vw|vh|vmin|vmax|dvw|dvh|svw|svh|lvw|lvh|cqw|cqh|cqi|cqb|cqmin|cqmax|ch|ex';
+const LENGTH_RE = new RegExp(`^-?${NUM}(?:${UNITS})?$`);
+const NUM_UNIT_RE = new RegExp(`${NUM}(?:${UNITS})?`, 'g');
 const NUMBER_RE = new RegExp(`^-?${NUM}%?$`);
 const TIME_RE = new RegExp(`^${NUM}(?:ms|s)?$`);
 const ANGLE_RE = new RegExp(`^-?${NUM}(?:deg|grad|rad|turn)$`);
 const VAR_RE = /^var\(\s*(--[A-Za-z0-9_-]{1,64})\s*(?:,([\s\S]*))?\)$/;
 const GRADIENT_RE = /^(?:repeating-)?(?:linear|radial|conic)-gradient\(([\s\S]*)\)$/;
 const GRADIENT_WORDS = new Set(['to', 'top', 'bottom', 'left', 'right', 'center', 'circle', 'ellipse', 'closest-side', 'farthest-side', 'closest-corner', 'farthest-corner', 'at', 'from', 'in', 'srgb', 'hsl', 'oklab', 'oklch', 'shorter', 'longer', 'increasing', 'decreasing', 'hue']);
-const CALC_RE = /^calc\(([^()]*(?:\([^()]*\)[^()]*)*)\)$/;
+const CALC_RE = /^(?:calc|clamp|min|max)\(([^()]*(?:\([^()]*\)[^()]*)*)\)$/i;
+const MATH_NAME_RE = /(?:calc|clamp|min|max)(?=\()/gi;
 const URL_RE = /^url\(\s*(?:"([^"]*)"|'([^']*)'|([^"'()\s]*))\s*\)$/;
 
 /** True when `s` holds a break-out or escape marker: BREAKOUT_MARKERS, a control character or a `;` outside quotes and parentheses. */
@@ -139,16 +142,25 @@ function colour(s: string): boolean {
   return fns.length === (s.match(/\(/g)?.length ?? 0) && fns.every((m) => COLOR_FUNCTIONS.has(m[1].toLowerCase()));
 }
 
-function lengthOf(s: string, max: number): boolean {
-  const tokens = s.length <= MAX_SHORT ? s.split(/\s+/) : [];
-  return tokens.length >= 1 && tokens.length <= max && tokens.every((t) => LENGTH_RE.test(t));
+/** One length token: a number with a unit, `auto`, or a calc(), clamp(), min() or max() of numbers with units. */
+function lengthToken(t: string): boolean {
+  if (LENGTH_RE.test(t) || t.toLowerCase() === 'auto') return true;
+  const calc = CALC_RE.exec(t);
+  if (!calc || t.length > 2 * MAX_SHORT) return false;
+  const rest = calc[1].replace(NUM_UNIT_RE, 'N').replace(MATH_NAME_RE, '');
+  return /^[N\s+\-*/(),]+$/.test(rest) && rest.includes('N');
 }
 
+/** 1 to `max` length tokens separated by spaces (a calc(), clamp(), min() or max() counts as one). */
+function lengthOf(s: string, max: number): boolean {
+  const tokens = s.length <= MAX_SHORT ? splitTop(s, false) : undefined;
+  return !!tokens && tokens.length >= 1 && tokens.length <= max && tokens.every(lengthToken);
+}
+
+/** Lengths for margin, padding, radius and sizes: up to four values, and the slash form of a border radius (`50% / 4px`). */
 function length(s: string): boolean {
-  const calc = CALC_RE.exec(s);
-  if (!calc) return lengthOf(s, 4);
-  const rest = calc[1].replace(new RegExp(`${NUM}(?:px|em|rem|%|vw|vh)?`, 'g'), 'N');
-  return s.length <= 2 * MAX_SHORT && /^[N\s+\-*/()]+$/.test(rest) && rest.includes('N');
+  const sides = s.split(/\s*\/\s*(?![^()]*\))/);
+  return sides.length <= 2 && sides.every((side) => lengthOf(side.trim(), 4));
 }
 
 const rgb = (s: string): boolean => /^\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}$/.test(s) && s.split(',').every((p) => +p <= 255);
