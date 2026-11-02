@@ -25,3 +25,17 @@ See [Loading and size](../loading-and-size/README.md) for which file loads when 
 ## A forum shot does not work
 
 See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md#if-something-goes-wrong) in the Magic Card Utils repository.
+
+## A card is locked in the Forum shot tab
+
+A card stays locked when it holds a custom-card module or an outside address that is not a font address. To make a picture of it:
+
+1. Open the card in the editor.
+2. Remove the custom-card module, or the image or web address the tab names.
+3. Save the card and reopen the Forum shot tab. The card is no longer locked.
+
+## A font stylesheet is not accepted
+
+A stylesheet may list fonts on a host the card does not name. The tab only contacts the hosts shown on the tab, so a card whose stylesheet points to another host stays locked, or the run stops. Use a stylesheet whose fonts sit on the host you gave, or remove the stylesheet from the card's CSS.
+
+If you see "A font could not be loaded, so no picture was made. Check your connection and try again.", check your connection and try again. No picture is saved when a font fails.
