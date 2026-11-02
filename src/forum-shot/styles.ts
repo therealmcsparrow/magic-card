@@ -54,9 +54,6 @@ export const forumShotStyles = css`
     padding-top: 10px;
     overflow-wrap: anywhere;
   }
-  .choice.off label {
-    color: var(--secondary-text-color, #5f5f5f);
-  }
   table {
     width: 100%;
     margin: 0 0 16px;
