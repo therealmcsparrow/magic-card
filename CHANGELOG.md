@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.14 (2026-11-02)
 
 ### Fixed
 -   **Pause now stops animated icons.** The Pause motion button, and a card shown in a preview, now also hold animated icons still. Before, an animated icon could keep moving on a paused card.
