@@ -37,7 +37,7 @@ const pick = async (el: MagicCardForumShot, i: number) => {
 const text = (el: Element) => el.shadowRoot!.textContent!.replace(/\s+/g, ' ');
 const sheet = () => ({ blob: new Blob([new Uint8Array([1])], { type: 'image/png' }), width: 840, height: 200, fileName: 'x.png', frames: [], notices: ['remote_placeholder'] });
 
-const CONTACT = /To draw the fonts, your browser asks fonts\.googleapis\.com, fonts\.gstatic\.com for them\. Those sites can see your IP address, the time of the request, which fonts you ask for and the ordinary details every browser sends, such as its type and language\. Your cards and settings are not sent\./;
+const CONTACT = /To draw the fonts, your browser asks fonts\.googleapis\.com, fonts\.gstatic\.com for them\. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant \(a DuckDNS name, a Nabu Casa address or a local network address\), plus your browser's type and language\. Your cards and settings are not sent\./;
 const LOCAL_FONT = 'The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.';
 const LOCAL = 'Nothing leaves Home Assistant';
 

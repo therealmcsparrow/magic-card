@@ -402,18 +402,18 @@ export function aliasFamilies(value: string, has: (lower: string) => boolean): s
     .replace(/^ /, '');
 }
 
-/** A text from a template result with its Google families under their aliases; `onMissing` is called for a family no face was prepared for. */
+/** A text from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
   return text.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => {
     for (const f of googleFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
-    return head + aliasFamilies(v, (l) => prepared.has(l));
+    return head + aliasFamilies(v, () => true);
   });
 }
 
-/** The value of a font key from a template result with its Google families under their aliases; `onMissing` is called for a family no face was prepared for. */
+/** The value of a font key from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasFontValue(value: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
   for (const f of googleFontFamilies(value)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
-  return aliasFamilies(value, (l) => prepared.has(l));
+  return aliasFamilies(value, () => true);
 }
 
 export interface CardKit {

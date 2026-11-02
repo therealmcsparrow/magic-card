@@ -47,6 +47,39 @@ describe('findRemoteAssets', () => {
   });
 });
 
+describe('a protocol-relative address behind a delimiter', () => {
+  const forms = ['//*.evil.example/x.png', '//=evil.example/x.png', '//,evil.example/x.png', '//;evil.example/x.png', '//{a}.evil.example/x.png', "//'a'.evil.example/x.png", '//(a).evil.example/x.png', '//`a`.evil.example/x.png', '//|evil.example/x.png', '//^evil.example/x.png', '//[a].evil.example/x.png', '//{{x}}.evil.example/x.png'];
+
+  it.each(forms)('counts %s as remote in a module value', (form) => {
+    expect(findRemoteAssets({ rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] }, ORIGIN)).not.toEqual([]);
+  });
+
+  it.each(forms)('counts %s as remote inside css url()', (form) => {
+    expect(findRemoteAssets({ css: `.a{background:url(${form})}` }, ORIGIN)).not.toEqual([]);
+    expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
+  });
+
+  it.each(forms)('sweeps %s from an img and a style', (form) => {
+    const root = document.createElement('div');
+    root.innerHTML = '<img><i></i>';
+    root.querySelector('img')!.setAttribute('src', form);
+    root.querySelector('i')!.setAttribute('style', `background:url(${form})`);
+    expect(sweepRemote(root, ORIGIN)).toBe(true);
+    expect(root.querySelector('img')!.hasAttribute('src')).toBe(false);
+    expect(root.querySelector('i')!.getAttribute('style') ?? '').not.toContain('//');
+  });
+
+  it.each(forms)('stops settleCard on %s before anything mounts', async (form) => {
+    const config = { type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] };
+    await expect(settleCard({ states: {}, language: 'en', themes: { themes: {} } }, config, { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
+    expect(document.body.children.length).toBe(0);
+  });
+
+  it('keeps ordinary double slashes clean', () => {
+    expect(findRemoteAssets({ a: 'Hello // there', b: 'a//b.c', c: 'x // (y)', d: 'ends //' }, ORIGIN)).toEqual([]);
+  });
+});
+
 describe('scrubbing before mount (R-12)', () => {
   it('blanks every state attribute holding an address, even a same-origin absolute one', () => {
     const hass = {
@@ -176,6 +209,35 @@ describe('settleCard', () => {
       expect(JSON.stringify(received)).not.toContain('"Lato');
       await expect(settleCard(withState(baseHass(keyed('Lato'))), config, { settleMs: 20, preparedFamilies: new Set() })).rejects.toMatchObject({ code: 'font_unavailable' });
       expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+    });
+
+    describe('a card whose template holds the family', () => {
+      const viaTemplate = (templateConfig: Record<string, unknown>) => ({
+        subscribeMessage: (cb: (m: unknown) => void, msg: { name?: string }) => {
+          queueMicrotask(() => cb({ action: 'saved', name: msg.name, template: { config: templateConfig } }));
+          return Promise.resolve(() => undefined);
+        },
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      });
+      const templated = { type: 'custom:magic-card', template: 'x', rows: [] };
+      const forms: Array<[string, Record<string, unknown>]> = [
+        ['a font key', { font_family: 'Lato' }],
+        ['a font key in a nested design', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', font_family: 'Poppins' }] }] }] }],
+        ['a css rule', { css: '.a{font-family: Lora;}' }],
+        ['a family beside a prepared one', { font_family: 'Oswald' }],
+      ];
+
+      it.each(forms)('adds no font link and stops with font_unavailable for %s with no face', async (_n, tpl) => {
+        await expect(settleCard(baseHass(viaTemplate(tpl)), templated, { settleMs: 20, preparedFamilies: new Set(['open sans']) })).rejects.toMatchObject({ code: 'font_unavailable' });
+        expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+        expect(document.body.children.length).toBe(0);
+      });
+
+      it('renames a prepared family and adds no link', async () => {
+        settled = await settleCard(baseHass(viaTemplate({ font_family: 'Ubuntu' })), templated, { settleMs: 20, preparedFamilies: new Set(['ubuntu']) });
+        expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+      });
     });
 
     it('leaves a non-plain object in a result as it is', async () => {

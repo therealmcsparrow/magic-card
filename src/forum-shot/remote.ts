@@ -18,7 +18,8 @@ const XML_NAMESPACE = /^http:\/\/www\.w3\.org\/(?:2000\/svg|1999\/xlink|1999\/xh
 // Only a string holding one of these can form an address (`&` for character references, `\` for CSS escapes and backslash slashes).
 const MAY_HOLD_ADDRESS = /[:/\\&]/;
 // Where one address ends inside a decoded text.
-const SUB_TOKEN = /[\s"'`()<>[\]{}=,;|^*]+/;
+const SUB_TOKEN = /([\s"'`()<>[\]{}=,;|^*]+)/;
+const LONE_SLASHES = /^\/{2,}$/;
 // Where one address ends inside the raw text (`;` stays: it ends character references).
 const RAW_TOKEN = /([ "'`()<>=,]+)/;
 
@@ -122,9 +123,13 @@ function remoteHosts(text: string, origin: string, all: boolean): string[] {
   if (!MAY_HOLD_ADDRESS.test(text)) return [];
   const found: string[] = [];
   for (const reading of readings(text)) {
-    for (const token of reading.split(SUB_TOKEN)) {
+    const parts = reading.split(SUB_TOKEN);
+    for (let i = 0; i < parts.length; i += 2) {
+      const token = parts[i];
       if (!token) continue;
-      const host = remoteHost(token, origin);
+      // A lone `//` joined to a delimiter (`//(a).host/x`) still starts an address; only `//` before a space or the end stays text.
+      const next = parts[i + 1];
+      const host = LONE_SLASHES.test(token.replace(/\\/g, '/')) && next && !/^\s/.test(next) ? 'unknown' : remoteHost(token, origin);
       if (host === undefined) continue;
       found.push(host);
       if (!all) return found;
