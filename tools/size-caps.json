@@ -40,10 +40,10 @@
       },
       {
         "id": "stage-4",
-        "cap": 75299,
+        "cap": 75348,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 75299
+        "measured": 75321
       }
     ],
     "br": {
@@ -1107,10 +1107,10 @@
       "to": 76800
     },
     {
-      "id": "entry-stage4-74836-to-75299",
+      "id": "entry-stage4-74836-to-75348",
       "field": "/entry/stages/3/cap",
       "from": 74836,
-      "to": 75299
+      "to": 75348
     },
     {
       "id": "entry-br-63953-to-64284",
