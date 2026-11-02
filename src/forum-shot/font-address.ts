@@ -363,7 +363,10 @@ export function classifyCard(config: unknown, origin: string): CardClass {
     if (Array.isArray(v)) return v.map((x) => rewrite(x, depth + 1));
     if (v && typeof v === 'object') {
       const out: Record<string, unknown> = {};
-      for (const [k, x] of Object.entries(v)) out[k] = k === 'css' && typeof x === 'string' ? cssRest(x) : rewrite(x, depth + 1);
+      for (const [k, x] of Object.entries(v)) {
+        if (k === '__proto__') cannot = true;
+        else out[k] = k === 'css' && typeof x === 'string' ? cssRest(x) : rewrite(x, depth + 1);
+      }
       return out;
     }
     return v;
@@ -388,13 +391,13 @@ export const aliasOf = (family: string): string => `mc-shot-${family.toLowerCase
 const FONT_KEYS = new Set(['font_family', 'tab_font_family', 'label_font_family']);
 const CSS_FONT_FAMILY = /(font-family\s*:\s*)([^;}]+)/gi;
 
-/** `value` with each listed Google family (Roboto excepted) swapped for its alias. */
-export function aliasFamilies(value: string): string {
+/** `value` with each listed Google family swapped for its alias when `has` accepts it (Roboto excepted). */
+export function aliasFamilies(value: string, has: (lower: string) => boolean): string {
   return value
     .split(',')
     .map((part) => {
       const f = googleFontFamilies(part)[0];
-      return f && f !== SYSTEM_FAMILY ? ` "${aliasOf(f)}"` : part;
+      return f && f !== SYSTEM_FAMILY && has(f.toLowerCase()) ? ` "${aliasOf(f)}"` : part;
     })
     .join(',')
     .replace(/^ /, '');
@@ -404,7 +407,7 @@ export function aliasFamilies(value: string): string {
 export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
   return text.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => {
     for (const f of googleFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
-    return head + aliasFamilies(v);
+    return head + aliasFamilies(v, (l) => prepared.has(l));
   });
 }
 
@@ -425,12 +428,13 @@ export function prepareCard(config: Record<string, unknown>, origin: string): Ca
   const faces: string[] = [];
   const aliases = new Map<string, string>();
   for (const f of configGoogleFonts(config)) if (f !== SYSTEM_FAMILY) aliases.set(f.toLowerCase(), aliasOf(f));
+  const hasAlias = (lower: string) => aliases.has(lower);
   const mountCss = (css: string): string => {
     const r = css.length > MAX_STRING ? null : readCss(css, origin);
     if (!r || r.fail) return css;
     imports.push(...r.imports);
     faces.push(...r.faces);
-    return r.pure.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => head + aliasFamilies(v));
+    return r.pure.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => head + aliasFamilies(v, hasAlias));
   };
   let nodes = 0;
   const rewrite = (v: unknown, depth: number): unknown => {
@@ -439,8 +443,9 @@ export function prepareCard(config: Record<string, unknown>, origin: string): Ca
     if (v && typeof v === 'object') {
       const out: Record<string, unknown> = {};
       for (const [k, x] of Object.entries(v)) {
+        if (k === '__proto__') continue;
         if (typeof x === 'string' && k === 'css') out[k] = mountCss(x);
-        else if (typeof x === 'string' && FONT_KEYS.has(k)) out[k] = aliasFamilies(x);
+        else if (typeof x === 'string' && FONT_KEYS.has(k)) out[k] = aliasFamilies(x, hasAlias);
         else out[k] = rewrite(x, depth + 1);
       }
       return out;

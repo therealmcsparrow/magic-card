@@ -3,7 +3,7 @@ import '../src/index';
 import { renderSheet } from '../src/forum-shot/sheet';
 import type { SheetSeams } from '../src/forum-shot/sheet';
 import type { FontResponse, FontSeams } from '../src/forum-shot/font-fetch';
-import { faceRules, prepareCard } from '../src/forum-shot/font-address';
+import { classifyCard, faceRules, prepareCard } from '../src/forum-shot/font-address';
 
 const PNG = new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' });
 const ORIGIN = location.origin;
@@ -125,6 +125,26 @@ describe('the picture carries the real font', () => {
     expect(text).toContain('Roboto');
     expect(JSON.stringify(config)).toContain('Open Sans');
     expect(kit.aliases.get('open sans')).toBe('mc-shot-open-sans');
+  });
+
+  it('renames only the families it detects: an undetected css family and a label font outside a button keep their names', () => {
+    const kit = prepareCard({ type: 'custom:magic-card', css: '.a{font-family:Open Sans}', rows: [{ label_font_family: 'Lora' }] }, ORIGIN);
+    const text = JSON.stringify(kit.mount);
+    expect(text).toContain('Open Sans');
+    expect(text).toContain('Lora');
+    expect(text).not.toContain('mc-shot-');
+    expect(kit.aliases.size).toBe(0);
+  });
+
+  it('renames a label font inside a button because it is detected', () => {
+    const kit = prepareCard({ type: 'custom:magic-card', rows: [{ type: 'button', label_font_family: 'Lora' }] }, ORIGIN);
+    expect(JSON.stringify(kit.mount)).toContain('mc-shot-lora');
+  });
+
+  it('locks a card with an own __proto__ key as cannot_judge', () => {
+    const config = JSON.parse('{"type":"custom:magic-card","rows":[{"__proto__":{"image":"https://evil.example/x.png"}}]}');
+    expect(prepareCard(config, ORIGIN).lock).toBe('cannot_judge');
+    expect(classifyCard(config, ORIGIN).lock).toBe('cannot_judge');
   });
 
   it('writes only checked values into the prepared style, and refuses a face it cannot write safely', () => {
