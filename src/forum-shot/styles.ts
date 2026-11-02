@@ -116,11 +116,13 @@ export const forumShotStyles = css`
     text-align: start;
   }
   th[aria-sort='ascending'] button.sort::after {
-    content: 'B2';
+    content: '\\25B2';
+    content: '\\25B2' / '';
     font-size: 0.7em;
   }
   th[aria-sort='descending'] button.sort::after {
-    content: 'BC';
+    content: '\\25BC';
+    content: '\\25BC' / '';
     font-size: 0.7em;
   }
   @media (max-width: 600px) {
