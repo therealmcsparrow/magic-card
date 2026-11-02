@@ -2,7 +2,7 @@ import { THEME_TRIAL_BAR_TAG, TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { hexToRgb, previewVars, validateValue } from './model';
-import { HA_DARK_DEFAULTS } from './dark-defaults';
+import { HA_DARK_DEFAULTS } from '../contracts/ha-dark-defaults';
 import { readHaDefaults } from './preview';
 import { t } from './i18n';
 import { browserMode, docFromHass, hassOf } from './util';

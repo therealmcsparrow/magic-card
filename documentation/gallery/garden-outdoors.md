@@ -2,6 +2,8 @@
 
 Plants, the pool, bin day, irrigation and an aquarium. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Plant care](#plant-care)
@@ -14,7 +16,7 @@ Plants, the pool, bin day, irrigation and an aquarium. Paste a card into the cod
 
 Soil moisture per plant as coloured bars. Dry plants turn their row red.
 
-![Plant care](images/16-plants.png)
+![Plant care, Garden](images/16-plants.png)
 
 Entities: `sensor.monstera_moisture`, `sensor.ficus_moisture`, `sensor.basil_moisture`, `sensor.calathea_moisture`
 
@@ -163,7 +165,7 @@ rows:
 
 Water temperature over a rippling water background, pH and chlorine, and the pump state.
 
-![Pool](images/29-pool.png)
+![Pool, Garden](images/29-pool.png)
 
 Entities: `sensor.pool_temperature`, `sensor.pool_ph`, `sensor.pool_chlorine`, `switch.pool_pump`
 
@@ -273,7 +275,7 @@ rows:
 
 The next pickup per bin type. The bin that goes out today pulses.
 
-![Bin day](images/31-trash-pickup.png)
+![Bin day, Garden](images/31-trash-pickup.png)
 
 Entities: `sensor.trash_organic`, `sensor.trash_paper`, `sensor.trash_plastic`, `sensor.trash_rest`
 
@@ -382,7 +384,7 @@ rows:
 
 Soil moisture and rain today, and a toggle per zone. Running zones turn blue with a ripple.
 
-![Garden irrigation](images/38-irrigation.png)
+![Garden irrigation, Garden](images/38-irrigation.png)
 
 Entities: `switch.zone_lawn`, `switch.zone_beds`, `switch.zone_hedge`, `sensor.soil_moisture`, `sensor.rain_today`
 
@@ -525,7 +527,7 @@ rows:
 
 Fish swim back and forth through a tank with waves and bubbles, above the water temperature, pH and a spinning filter. The swim is a keyframes animation stored in the card; the two fish play it at different speeds.
 
-![Aquarium](images/58-aquarium.webp)
+[![Aquarium, Garden](images/58-aquarium.png)](images/58-aquarium.webp)
 
 Entities: `sensor.aquarium_temperature`, `sensor.aquarium_ph`, `switch.aquarium_pump`, `switch.aquarium_light`
 

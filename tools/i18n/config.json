@@ -23,6 +23,7 @@
     "image-tools": { "dir": "src/image-tools/i18n", "roots": ["src/image-tools"] },
     "look-editor": { "dir": "src/look-editor/i18n", "roots": ["src/look-editor"] },
     "card-status": { "dir": "src/card-status/i18n", "roots": ["src/card-status"] },
+    "forum-shot": { "dir": "src/forum-shot/i18n", "roots": ["src/forum-shot"] },
     "theme-presets": { "dir": "src/theme-editor/presets/i18n", "roots": ["src/theme-editor/presets"] },
     "share-kit": { "dir": "src/share-kit/i18n", "roots": ["src/share-kit"] }
   }

@@ -2,6 +2,8 @@
 
 Cards that combine the newer features in everyday homes: tube, neon, cable, double and wave flow lines, slider looks, modules in layers and card backdrops. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   Everyday
@@ -31,7 +33,7 @@ Cards that combine the newer features in everyday homes: tube, neon, cable, doub
 
 Glass tubes fill with the power they carry, with a battery level below as a large fill.
 
-![Whole-home energy](images/115-home-energy-tubes.webp)
+[![Whole-home energy, Power](images/115-home-energy-tubes.png)](images/115-home-energy-tubes.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -131,7 +133,7 @@ flows:
 
 The room camera fills the card behind the other modules, with a temperature badge on top and two glass light sliders in front.
 
-![Living room](images/116-living-room-camera.png)
+![Living room, Home](images/116-living-room-camera.png)
 
 Entities: `camera.living_room`, `light.living_room`, `light.desk`, `sensor.indoor_temperature`
 
@@ -225,7 +227,7 @@ rows:
 
 The backdrop follows the sun, a moonlit skyline after dark and a day skyline before it, with glass sliders for the bedside lamp and the blinds in front.
 
-![Bedroom at night](images/117-bedroom-night.png)
+![Bedroom at night, Home](images/117-bedroom-night.png)
 
 Entities: `sun.sun`, `light.bedside`, `cover.living_blinds`, `sensor.bedroom_temperature`
 
@@ -319,7 +321,7 @@ rows:
 
 Neon flow lines run from the boiler to each room, brighter and faster for the radiators that draw more, with a neon slider for the living room target.
 
-![Heating](images/118-heating-neon.webp)
+[![Heating, Climate](images/118-heating-neon.png)](images/118-heating-neon.webp)
 
 Entities: `sensor.boiler_temperature`, `sensor.radiator_living`, `sensor.radiator_bedroom`, `sensor.radiator_bathroom`, `climate.living_room`
 
@@ -458,7 +460,7 @@ flows:
 
 Tubes carry the water from the roof into the tank and out to the garden and the house, and the tank level is a tall fill.
 
-![Rain water tank](images/119-rain-water-tank.webp)
+[![Rain water tank, Garden](images/119-rain-water-tank.png)](images/119-rain-water-tank.webp)
 
 Entities: `sensor.water_tank`, `sensor.tank_inflow`, `sensor.tank_garden_flow`, `sensor.tank_house_flow`
 
@@ -515,8 +517,8 @@ rows:
             direction: vertical
             track_style: big-fill
             fill_mode: gradient
-            slider_color: "#38bdf8"
-            slider_color_to: "#0ea5e9"
+            slider_color: "#0369a1"
+            slider_color_to: "#075985"
             icon: mdi:water
             icon_position: center
             thumb: none
@@ -561,7 +563,7 @@ flows:
 
 A twisted cable carries lightning bolts from the house to the charger and on to the car, with the battery as a large fill and a charge limit slider with named stops.
 
-![Car charging](images/120-car-charging-cable.webp)
+[![Car charging, Power](images/120-car-charging-cable.png)](images/120-car-charging-cable.webp)
 
 Entities: `sensor.house_power`, `sensor.ev_charger_power`, `sensor.car_charge_power`, `sensor.car_battery`, `input_number.ev_charge_limit`
 
@@ -690,7 +692,7 @@ flows:
 
 Wave lines carry water from the tap to each zone, thicker for the zone that uses more, with a minimal slider for the run time.
 
-![Garden irrigation](images/121-garden-irrigation-waves.webp)
+[![Garden irrigation, Garden](images/121-garden-irrigation-waves.png)](images/121-garden-irrigation-waves.webp)
 
 Entities: `sensor.irrigation_flow`, `sensor.zone_lawn_flow`, `sensor.zone_beds_flow`, `sensor.zone_hedge_flow`, `input_number.zone_minutes`
 
@@ -826,7 +828,7 @@ flows:
 
 Double rails run from the kitchen circuit to each appliance, red for a hungry oven and green for a quiet fridge, with a kitchen light slider underneath.
 
-![Kitchen power](images/122-kitchen-power-rails.webp)
+[![Kitchen power, Power](images/122-kitchen-power-rails.png)](images/122-kitchen-power-rails.webp)
 
 Entities: `sensor.kitchen_power`, `sensor.oven_power`, `sensor.dishwasher_power`, `sensor.fridge_power`, `sensor.kettle_power`, `light.kitchen`
 
@@ -959,7 +961,7 @@ flows:
 
 The album art, blurred and slowly zooming, glows behind the player, and the volume is a large live fill.
 
-![Media room](images/123-media-room-album-glow.webp)
+[![Media room, Sound](images/123-media-room-album-glow.png)](images/123-media-room-album-glow.webp)
 
 Entities: `media_player.media_room`
 
@@ -1035,7 +1037,7 @@ rows:
             track_thickness: 56
             icon: mdi:volume-high
             fill_mode: solid
-            slider_color: "#ff8fa3"
+            slider_color: "#be123c"
             track_color: "rgba(255,255,255,0.14)"
             thumb: none
             value_position: track
@@ -1046,7 +1048,7 @@ rows:
 
 The camera fills the card behind the other modules, with a doorbell badge and a lock badge on top, a fade for the text and a glass slider for the porch light.
 
-![Front door](images/124-doorbell-security.png)
+![Front door, Guard](images/124-doorbell-security.png)
 
 Entities: `camera.front_door`, `binary_sensor.front_doorbell`, `lock.front_door`, `light.porch`
 
@@ -1139,7 +1141,7 @@ rows:
 
 Neon flows with a glow and a flicker link the solar array, the core and the cell bank, and a hexagon Big fill slider sets the output limit. A grid pattern over a deep gradient sits behind it all.
 
-![Reactor bay](images/125-reactor-bay.webp)
+[![Reactor bay, Worlds](images/125-reactor-bay.png)](images/125-reactor-bay.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.battery_power`, `light.living_room`
 
@@ -1244,7 +1246,7 @@ flows:
 
 Glass tubes between flasks with rising bubbles. The liquid level follows the value, drops splash into each flask, and a Glass slider with blur sets the burner heat over a bubble pattern.
 
-![Potion lab](images/126-potion-lab.webp)
+[![Potion lab, Worlds](images/126-potion-lab.png)](images/126-potion-lab.webp)
 
 Entities: `sensor.home_battery`, `sensor.solar_power`, `sensor.house_power`, `light.desk`
 
@@ -1345,7 +1347,7 @@ flows:
 
 Electric zigzag flows crackle between the reactor, the drive and the shields, with spinning stars as the charge. A slider with named stops and snapping sets the burn, over a faint scanline pattern.
 
-![Engine room](images/127-engine-room.webp)
+[![Engine room, Worlds](images/127-engine-room.png)](images/127-engine-room.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `fan.bedroom`
 
@@ -1452,7 +1454,7 @@ flows:
 
 Gold flows from the mine, through the vault and out to the market, with spinning gold stars and diamonds. A cave picture sits behind a pattern and a warm gradient, slowly zooming, and a ticket-shaped slider sets the price.
 
-![Dragon vault](images/128-dragon-vault.webp)
+[![Dragon vault, Worlds](images/128-dragon-vault.png)](images/128-dragon-vault.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.battery_power`, `light.kitchen`
 
@@ -1571,8 +1573,8 @@ rows:
             thumb: none
             value_position: track
             fill_mode: gradient
-            slider_color: "#a16207"
-            slider_color_to: "#ffd25a"
+            slider_color: "#854d0e"
+            slider_color_to: "#a16207"
             track_color: "rgba(13,8,4,0.6)"
             icon: mdi:gold
 flows:
@@ -1584,7 +1586,7 @@ flows:
 
 A snowy night picture slowly zooms behind falling-snow dots and a dark fade. Wave flows carry warmth from the woodpile through the stove to the thermometer, and a Glass slider with blur sets the target temperature.
 
-![Winter cabin](images/129-winter-cabin.webp)
+[![Winter cabin, Worlds](images/129-winter-cabin.png)](images/129-winter-cabin.webp)
 
 Entities: `sensor.indoor_temperature`, `climate.living_room`, `sensor.solar_power`, `sensor.house_power`
 
@@ -1685,7 +1687,7 @@ flows:
 
 Two tiles with the same hill picture blended in different modes, and Darken behind text on the right one. A neon flow sends a ghost across, and a neon slider sets the spookiness.
 
-![Haunted attic](images/130-haunted-attic.webp)
+[![Haunted attic, Worlds](images/130-haunted-attic.png)](images/130-haunted-attic.webp)
 
 Entities: `light.living_room`
 
@@ -1785,7 +1787,7 @@ flows:
 
 A retro sunset picture over a magenta gradient, a neon wave flow with music notes from the deck to the speaker, and a Neon slider for the volume.
 
-![Synthwave deck](images/131-synthwave-deck.webp)
+[![Synthwave deck, Worlds](images/131-synthwave-deck.png)](images/131-synthwave-deck.webp)
 
 Entities: `media_player.living_room`, `sensor.house_power`
 
@@ -1861,7 +1863,7 @@ rows:
           - type: slider
             entity: media_player.living_room
             track_style: thin
-            track_thickness: 6
+            track_thickness: 10
             thumb: circle
             thumb_size: 24
             thumb_glow: 16
@@ -1880,7 +1882,7 @@ flows:
 
 A reef picture slowly zooms behind a blue fade. Glass tubes with bubbles carry the water from the pump through the filter into the tank, the level following the value, and a wave-shaped Big fill slider dims the reef light.
 
-![Reef tank](images/132-reef-tank.webp)
+[![Reef tank, Worlds](images/132-reef-tank.png)](images/132-reef-tank.webp)
 
 Entities: `sensor.home_battery`, `sensor.house_power`, `sensor.aquarium_temperature`, `light.garden`
 
@@ -1969,8 +1971,8 @@ rows:
             thumb: none
             value_position: track
             fill_mode: gradient
-            slider_color: "#22d3ee"
-            slider_color_to: "#a7f3d0"
+            slider_color: "#0e7490"
+            slider_color_to: "#0f766e"
             track_color: "rgba(3,26,43,0.5)"
             icon: mdi:lightbulb-on
 flows:
@@ -1982,7 +1984,7 @@ flows:
 
 A nebula picture drifts behind a star pattern. Tubes carry the air from the tank through the hub to the crew deck with the level following the value, and a segmented fan slider with a badge on top shows the circulation.
 
-![Station oxygen](images/133-station-oxygen.webp)
+[![Station oxygen, Worlds](images/133-station-oxygen.png)](images/133-station-oxygen.webp)
 
 Entities: `sensor.home_battery`, `sensor.house_power`, `fan.bedroom`
 
@@ -2102,7 +2104,7 @@ flows:
 
 Twisted brass cables with turning cogs carry the heat from the firebox to the boiler and out to the radiators, with a splash of steam on arrival. Darken behind text fades a glowing picture behind the title, and a notch-shaped Big fill slider with stops sets the valve.
 
-![Steam boiler](images/134-steam-boiler.webp)
+[![Steam boiler, Worlds](images/134-steam-boiler.png)](images/134-steam-boiler.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.boiler_temperature`, `cover.living_blinds`
 
@@ -2211,7 +2213,7 @@ rows:
             value_position: track
             fill_mode: gradient
             slider_color: "#8a5a1a"
-            slider_color_to: "#f3c76b"
+            slider_color_to: "#a8641a"
             track_color: "rgba(255,255,255,0.07)"
             icon: mdi:valve
             snap: true

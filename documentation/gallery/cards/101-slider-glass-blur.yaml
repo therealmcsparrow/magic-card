@@ -13,10 +13,10 @@ rows:
         modules:
           - type: text
             text: "Glass, blur behind"
-            design: { font_size: 17px, font_weight: "700", color: "#ffffff" }
+            design: { font_size: 17px, font_weight: "700", color: "#ffffff", background_color: "rgba(12,10,28,0.62)", padding: 6px 10px, border_radius: 10px }
           - type: text
             text: "The same track with glass_blur on: what is behind it blurs."
-            design: { font_size: 12px, color: "#ffffff" }
+            design: { font_size: 12px, color: "#ffffff", background_color: "rgba(12,10,28,0.62)", padding: 6px 10px, border_radius: 10px }
   - id: s0
     padding: 18px 0 0
     columns:
@@ -31,6 +31,8 @@ rows:
             track_thickness: 28
             thumb: pill
             thumb_size: 28
+            thumb_border: 2
+            thumb_border_color: "#ffffff"
             value_position: track
             slider_color: "#ffffff"
   - id: s1

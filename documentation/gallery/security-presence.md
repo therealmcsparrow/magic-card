@@ -2,6 +2,8 @@
 
 Alarm, doors, people, the garage, the doorbell and a leak alert. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Security](#security)
@@ -16,7 +18,7 @@ Alarm, doors, people, the garage, the doorbell and a leak alert. Paste a card in
 
 Alarm state with a rippling shield, and sensor tiles that turn red when a door or window is open or the lock is unlocked.
 
-![Security](images/09-security.png)
+![Security, Guard](images/09-security.png)
 
 Entities: `alarm_control_panel.home`, `lock.front_door`, `binary_sensor.back_door`, `binary_sensor.garage_window`, `binary_sensor.hall_motion`
 
@@ -209,7 +211,7 @@ rows:
 
 Round avatars with a coloured presence ring and a status pill. Avatars come from the person entities' pictures.
 
-![Who's home](images/13-people.png)
+![Who's home, Guard](images/13-people.png)
 
 Entities: `person.anna`, `person.ben`, `person.lisa`
 
@@ -333,7 +335,7 @@ rows:
 
 Big door icon, state, and one action button that opens or closes. The card turns amber while the door is open.
 
-![Garage door](images/15-garage-door.png)
+![Garage door, Guard](images/15-garage-door.png)
 
 Entities: `cover.garage_door`
 
@@ -424,7 +426,7 @@ rows:
 
 The camera snapshot with a live badge and the door name laid over it, and two actions underneath.
 
-![Doorbell](images/17-doorbell-camera.png)
+![Doorbell, Guard](images/17-doorbell-camera.png)
 
 Entities: `camera.front_door`, `lock.front_door`
 
@@ -539,7 +541,7 @@ rows:
 
 A red banner card that only shows while water is detected. It shakes for attention and offers to close the main valve.
 
-![Leak alert](images/32-leak-alert.png)
+![Leak alert, Guard](images/32-leak-alert.png)
 
 Entities: `binary_sensor.kitchen_leak`, `valve.main_water`
 
@@ -633,7 +635,7 @@ rows:
 
 The bell swings and its sound waves draw on while someone is at the door, with ripples behind it. The bell is an icon animation stored in the card, so it plays without the Magic Card Utils integration.
 
-![Ringing doorbell](images/41-doorbell-ring.webp)
+[![Ringing doorbell, Guard](images/41-doorbell-ring.png)](images/41-doorbell-ring.webp)
 
 Entities: `binary_sensor.front_doorbell`, `camera.front_door`, `lock.front_door`
 
@@ -791,7 +793,7 @@ rows:
 
 A shaking shield over pinging rings, a red neon border and a pulsing disarm button. Calm and grey once the alarm is disarmed.
 
-![Alarm triggered](images/52-alarm-triggered.webp)
+[![Alarm triggered, Guard](images/52-alarm-triggered.png)](images/52-alarm-triggered.webp)
 
 Entities: `alarm_control_panel.backyard`, `binary_sensor.patio_motion`, `siren.outdoor`
 

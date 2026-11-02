@@ -334,6 +334,7 @@ look-editor	look-editor.mc-slider-look-editor.slider-colour	Slider color
 look-editor	look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or	The light's color, if that is on, or Slider color is where the fill starts. Gradient and Auto build on it.
 look-editor	look-editor.mc-slider-look-editor.use-own-colour	Use own color
 look-editor	look-editor.mc-slider-look-editor.use-the-light-s-colour	Use the light's color
+forum-shot	forum-shot.element.modes-legend	Colors
 theme-presets	theme-presets.library.amber-on-blue-grey-mirage	Amber on blue-gray mirage.
 theme-presets	theme-presets.library.clean-primer-blues-and-neutral-greys	Clean Primer blues and neutral grays.
 theme-presets	theme-presets.library.deep-petrol-and-steel-grey-with-a	Deep petrol and steel-gray with a coolant-cyan accent; copper at night.

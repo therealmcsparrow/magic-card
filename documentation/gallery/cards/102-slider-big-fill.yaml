@@ -28,11 +28,11 @@ rows:
           - type: slider
             entity: light.living_room
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#f59e0b"
+            slider_color: "#b45309"
   - id: s1
     padding: 16px 0 0
     columns:
@@ -44,7 +44,8 @@ rows:
           - type: slider
             entity: light.desk
             track_style: big-fill
-            use_entity_color: true
+            fill_mode: solid
+            slider_color: "#7e22ce"
             thumb: none
             value_position: track
             live: true
@@ -62,11 +63,11 @@ rows:
             direction: vertical
             design: { css: "--mc-slider-vertical-height: 15rem;" }
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#f59e0b"
+            slider_color: "#b45309"
       - gap: 6px
         modules:
           - type: text
@@ -77,11 +78,11 @@ rows:
             direction: vertical
             design: { css: "--mc-slider-vertical-height: 15rem;" }
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#22d3ee"
+            slider_color: "#0e7490"
       - gap: 6px
         modules:
           - type: text
@@ -92,8 +93,8 @@ rows:
             direction: vertical
             design: { css: "--mc-slider-vertical-height: 15rem;" }
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#c084fc"
+            slider_color: "#7e22ce"

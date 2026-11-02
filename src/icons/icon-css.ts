@@ -253,7 +253,22 @@ export const iconBaseStyles = css`
   /* Off-screen (shared IntersectionObserver): looping animations pause. */
   :host([offscreen]) svg,
   :host([offscreen]) svg * {
-    animation-play-state: paused;
+    animation-play-state: paused !important;
+  }
+
+  /* A paused card (the viewer button or the editor preview) holds every track, rig tracks included. */
+  svg,
+  svg * {
+    animation-play-state: var(--mc-card-play, running) !important;
+  }
+
+  /* One-shot tracks end on timers, so they finish under a card pause; looping tracks stay held. */
+  .mc-draw .draw path,
+  .mc-draw .body,
+  .xfade-in,
+  .xfade-out,
+  .morph-in {
+    animation-play-state: running !important;
   }
 
   /* Reduced motion: nothing moves; glow, the open-door pose, ring and flakes stay as a still frame. */

@@ -2,6 +2,8 @@
 
 Players, a record player and speaker volumes. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Now playing](#now-playing)
@@ -13,7 +15,7 @@ Players, a record player and speaker volumes. Paste a card into the code editor 
 
 Album art, title and artist, transport controls and a volume slider.
 
-![Now playing](images/04-now-playing.png)
+![Now playing, Sound](images/04-now-playing.png)
 
 Entities: `media_player.living_room`
 
@@ -147,7 +149,7 @@ rows:
 
 A slim pill with cover art, title, artist and a play/pause button.
 
-![Mini player](images/35-mini-player.png)
+![Mini player, Sound](images/35-mini-player.png)
 
 Entities: `media_player.living_room`
 
@@ -221,7 +223,7 @@ rows:
 
 One volume bar per room. Playing rooms get a moving equaliser and a coloured bar; idle rooms are greyed out.
 
-![Speaker group](images/37-speaker-volumes.png)
+![Speaker group, Sound](images/37-speaker-volumes.png)
 
 Entities: `media_player.kitchen`, `media_player.bedroom`, `media_player.office`
 
@@ -305,14 +307,14 @@ rows:
                       - type: icon
                         icon: mdi:music-note-off
                         size: 16px
-                        design: { color: "#94a3b8" }
+                        design: { color: "#cbd5e1" }
                       - type: text
                         text: Bedroom
                         design: *room
                   - type: text
                     use_entity: true
                     entity: media_player.bedroom
-                    design: { font_size: 12px, color: "#94a3b8" }
+                    design: { font_size: 12px, color: "#cbd5e1" }
               - type: bar
                 entity: media_player.bedroom
                 attribute: volume_level
@@ -320,7 +322,7 @@ rows:
                 max: 1
                 show_value: false
                 bar_height: 8px
-                bar_color: "#94a3b8"
+                bar_color: "#cbd5e1"
                 bar_background: "rgba(255,255,255,0.07)"
                 design: { border_radius: 999px }
           - type: vertical
@@ -361,7 +363,7 @@ rows:
 
 The album art turns like a record while music plays, over a slow aurora, with an equalizer under the title.
 
-![Vinyl player](images/51-vinyl-player.webp)
+[![Vinyl player, Sound](images/51-vinyl-player.png)](images/51-vinyl-player.webp)
 
 Entities: `media_player.living_room`
 

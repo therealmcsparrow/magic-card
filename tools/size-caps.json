@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 75348,
+        "cap": 75460,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 75321
+        "measured": 75393
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 64465,
-      "measured": 64375
+      "cap": 64560,
+      "measured": 64393
     }
   },
   "files": {
@@ -73,6 +73,11 @@
       "ceiling": 175104,
       "note": "171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB."
     },
+    "magic-card-icon-shared.js": {
+      "raw": 10240,
+      "ceiling": 10240,
+      "note": "10 KiB. The studio modules the icon-library chunk reuses (src/i18n/fold.ts, src/icon-anim/part-presets.ts), kept out of that chunk because the forum shot also loads it. Measured 7,808 + 5 %, rounded up to 1 KiB."
+    },
     "magic-card-particles.js": {
       "raw": 38912,
       "ceiling": 38912,
@@ -82,6 +87,11 @@
       "raw": 26624,
       "ceiling": 26624,
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
+    },
+    "magic-card-forum-shot.js": {
+      "raw": 79872,
+      "ceiling": 98304,
+      "note": "73 KiB, measured 70,149 + 5 %, rounded up to 1 KiB; it bundles its own copy of the icon style derivation."
     },
     "magic-card-theme-editor.js": {
       "raw": 286720,
@@ -1117,6 +1127,18 @@
       "field": "/entry/br/cap",
       "from": 63953,
       "to": 64465
+    },
+    {
+      "id": "entry-stage4-75348-to-75460",
+      "field": "/entry/stages/3/cap",
+      "from": 75348,
+      "to": 75460
+    },
+    {
+      "id": "entry-br-64465-to-64560",
+      "field": "/entry/br/cap",
+      "from": 64465,
+      "to": 64560
     }
   ]
 }

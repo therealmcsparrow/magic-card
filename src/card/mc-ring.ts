@@ -64,6 +64,7 @@ export class McRing extends LitElement {
     }
     path {
       fill: none;
+      animation-play-state: var(--mc-card-play, running) !important;
     }
     @keyframes mc-ring-run {
       from {

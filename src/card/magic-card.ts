@@ -417,10 +417,11 @@ export class MagicCard extends LitElement {
   }
   /**
    * The pause before the `pause` chunk has installed (or when it never does): a pause the viewer left on holds from the
-   * first paint, only while the card shows the button, and stays if the chunk fails. The editor preview pause waits for the chunk.
+   * first paint, only while the card shows the button, and stays if the chunk fails. The editor preview pause holds
+   * from the first render too, so an animated icon never starts moving before the chunk lands.
    */
   private _earlyPause(c: MagicCardConfig): boolean {
-    const on = this._remembered && wantsPause(c);
+    const on = this._preview || (this._remembered && wantsPause(c));
     this.toggleAttribute(PAUSE_ATTRIBUTE, on);
     setCardPaused(this, on);
     return on;

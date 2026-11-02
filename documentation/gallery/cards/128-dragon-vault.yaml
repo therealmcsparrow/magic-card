@@ -110,8 +110,8 @@ rows:
             thumb: none
             value_position: track
             fill_mode: gradient
-            slider_color: "#a16207"
-            slider_color_to: "#ffd25a"
+            slider_color: "#854d0e"
+            slider_color_to: "#a16207"
             track_color: "rgba(13,8,4,0.6)"
             icon: mdi:gold
 flows:

@@ -37,8 +37,8 @@ module.exports = (env, argv) => {
     // The ES ceiling of the browser floor (Chromium 85): webpack writes its own runtime and chunk loader in ES2021
     // and Terser's `ecma` below follows it. tools/check-es-syntax.mjs parses every dist .js at 2021.
     target: ['web', 'es2021'],
-    // Three bundles: the card, the animation studio and the theme editor the magic-card-utils panel
-    // loads (each defines only its own elements; the theme editor is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
+    // Four bundles: the card, the animation studio, and the theme editor and forum shot the magic-card-utils panel
+    // loads (each defines only its own elements; the forum shot is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
@@ -49,6 +49,7 @@ module.exports = (env, argv) => {
       'magic-card': './src/index.ts',
       'magic-card-animation-studio': './src/anim-studio/index.ts',
       'magic-card-theme-editor': './src/theme-editor/index.ts',
+      'magic-card-forum-shot': './src/forum-shot/index.ts',
     },
     output: {
       filename: '[name].js',
@@ -159,6 +160,18 @@ module.exports = (env, argv) => {
           default: false,
           defaultVendors: false,
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
+          // The modules only the forum shot and the icon-library chunk share. Two bundles load that chunk (the studio and the forum shot),
+          // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead (not src/i18n/labels/index.ts, which import()s its tables where a shared chunk loads nothing, nor src/icon-anim/icon-doc.ts, which reads those labels).
+          // Only the icon-library chunk is split: the editor, icon-animator, transfer and svg-editor chunks keep their own copies.
+          'icon-shared': {
+            test: (module, { chunkGraph }) => {
+              const names = Array.from(chunkGraph.getModuleChunks(module), (c) => c.name);
+              return names.includes('icon-library') && names.includes('magic-card-animation-studio') && !/[\\/](?:i18n[\\/]labels[\\/]index|icon-anim[\\/]icon-doc)\.ts$/.test(module.resource ?? '');
+            },
+            name: 'icon-shared',
+            chunks: (chunk) => chunk.name === 'icon-library',
+            enforce: true,
+          },
           // the one copy of the recorded-history cache that <mc-value-bg> (decor) and the graphs view (modules-extra) read
           history: { test: /[\\/]src[\\/]services[\\/]history-cache\.ts$/, name: 'history', chunks: 'async', enforce: true },
           // the one copy of the shape outline maths and its memo, read by decor, flows, seasonal, slider-look, shape-custom and the editor
