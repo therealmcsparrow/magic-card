@@ -97,6 +97,11 @@
     "note": "Error when the card element is not available.",
     "max": 100
   },
+  "forum-shot.element.error-font-unavailable": {
+    "text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "note": "Error when a font from another website could not be fetched or was not a usable font file.",
+    "max": 130
+  },
   "forum-shot.element.error-too-large": {
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "note": "Error when the sheet would exceed the size limit.",

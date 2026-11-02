@@ -75,6 +75,10 @@
     "text": "De Magic Card is niet geladen in dit browsertabblad. Laad de pagina opnieuw en probeer het opnieuw.",
     "hash": "433ffe34"
   },
+  "forum-shot.element.error-font-unavailable": {
+    "text": "Een lettertype kon niet worden geladen, dus er is geen afbeelding gemaakt. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "9924ac84"
+  },
   "forum-shot.element.error-too-large": {
     "text": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
     "hash": "15a5ec38"

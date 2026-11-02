@@ -75,6 +75,10 @@
     "text": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
     "hash": "433ffe34"
   },
+  "forum-shot.element.error-font-unavailable": {
+    "text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "hash": "9924ac84"
+  },
   "forum-shot.element.error-too-large": {
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "hash": "15a5ec38"

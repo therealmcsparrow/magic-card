@@ -19812,6 +19812,12 @@
     "x-max-length": 100,
     "x-source-hash": "433ffe34"
   },
+  "forum-shot.element.error-font-unavailable": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+  "@forum-shot.element.error-font-unavailable": {
+    "description": "Error when a font from another website could not be fetched or was not a usable font file. Max 130 characters.",
+    "x-max-length": 130,
+    "x-source-hash": "9924ac84"
+  },
   "forum-shot.element.error-too-large": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
   "@forum-shot.element.error-too-large": {
     "description": "Error when the sheet would exceed the size limit. Max 100 characters.",

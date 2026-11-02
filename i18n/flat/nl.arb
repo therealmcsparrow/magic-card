@@ -23052,6 +23052,13 @@
     "x-max-length": 100,
     "x-source-hash": "433ffe34"
   },
+  "forum-shot.element.error-font-unavailable": "Een lettertype kon niet worden geladen, dus er is geen afbeelding gemaakt. Controleer je verbinding en probeer het opnieuw.",
+  "@forum-shot.element.error-font-unavailable": {
+    "description": "Error when a font from another website could not be fetched or was not a usable font file. Max 130 characters.",
+    "source_text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "x-max-length": 130,
+    "x-source-hash": "9924ac84"
+  },
   "forum-shot.element.error-too-large": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
   "@forum-shot.element.error-too-large": {
     "description": "Error when the sheet would exceed the size limit. Max 100 characters.",

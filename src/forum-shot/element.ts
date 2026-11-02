@@ -50,6 +50,7 @@ export class MagicCardForumShot extends LitElement {
   private _busy = false;
   private _error?: ForumShotErrorCode;
   private _sheet?: ForumShotSheet;
+  private _sheetFont = false;
   private _previewUrl?: string;
   private _saved = false;
   private _started = false;
@@ -120,6 +121,8 @@ export class MagicCardForumShot extends LitElement {
     this._busy = true;
     this._error = undefined;
     this._saved = false;
+    this._dropPreview();
+    this._sheet = undefined;
     this.requestUpdate();
     try {
       const config = await cardConfigOf(this.hass ?? {}, ref);
@@ -129,6 +132,7 @@ export class MagicCardForumShot extends LitElement {
       this._dropPreview();
       this._previewUrl = URL.createObjectURL(sheet.blob);
       this._sheet = sheet;
+      this._sheetFont = ref.fontHosts.length > 0;
       this._save(sheet);
       this._saved = true;
     } catch (e) {
@@ -146,6 +150,8 @@ export class MagicCardForumShot extends LitElement {
         return t('forum-shot.element.error-card-not-defined');
       case 'too_large':
         return t('forum-shot.element.error-too-large');
+      case 'font_unavailable':
+        return t('forum-shot.element.error-font-unavailable');
       case 'config_read_failed':
         return t('forum-shot.element.config-read-failed');
       default:
@@ -293,6 +299,7 @@ export class MagicCardForumShot extends LitElement {
         <button type="button" class="retry" @click=${() => void this._read()}>${t('forum-shot.element.retry')}</button>`;
     }
     const blocked = !this._picked();
+    const fontHosts = this._picked()?.fontHosts ?? [];
     return html`
       ${this.hass?.user?.is_admin === false ? html`<p class="admin-note">${t('forum-shot.element.admin-only')}</p>` : nothing}
       ${this._renderCards()}
@@ -315,7 +322,10 @@ export class MagicCardForumShot extends LitElement {
         <label for="looks">${t('forum-shot.element.looks')}</label>
       </div>
       <p class="privacy">${t('forum-shot.element.privacy-hint')}</p>
-      <p>${t('forum-shot.element.local-only')}</p>
+      ${fontHosts.length
+        ? html`<p class="font-contact">${t('forum-shot.element.font-host-contact', { hosts: fontHosts.join(', ') })}</p>
+            <p>${t('forum-shot.element.local-only-font')}</p>`
+        : html`<p>${t('forum-shot.element.local-only')}</p>`}
       <button
         type="button"
         class="download"
@@ -334,7 +344,7 @@ export class MagicCardForumShot extends LitElement {
       ${this._saved && !this._busy ? html`<p role="status" class="done">${t('forum-shot.element.saved')}</p>` : nothing}
       ${this._previewUrl && this._sheet
         ? html`<img class="preview" src=${this._previewUrl} width=${this._sheet.width / 2} height=${this._sheet.height / 2} alt=${t('forum-shot.element.preview-alt')} />
-            ${this._sheet.notices.includes('remote_placeholder') ? html`<p class="notices">${t('forum-shot.element.notice-remote-placeholder')}</p>` : nothing}`
+            ${this._sheet.notices.includes('remote_placeholder') ? html`<p class="notices">${this._sheetFont ? t('forum-shot.element.notice-remote-placeholder-font') : t('forum-shot.element.notice-remote-placeholder')}</p>` : nothing}`
         : nothing}
     `;
   }
