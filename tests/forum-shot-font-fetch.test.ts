@@ -191,6 +191,39 @@ describe('plan edges', () => {
     expect(out).toMatchObject({ ok: false, code: 'font_unavailable' });
   });
 
+  it('a stylesheet that yields no face stops the run even when another sheet has faces', async () => {
+    const good = '@font-face{font-family:Lora;src:url(https://fonts.example.com/a.woff2);}';
+    for (const empty of ['', '@font-face{font-family:Bad Name!;src:url(https://fonts.example.com/b.woff2);}']) {
+      const { s } = seams(() => fontReply);
+      const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css: good }, { css: empty }] }, s);
+      expect(out).toMatchObject({ ok: false, code: 'font_unavailable', reason: 'no font faces' });
+    }
+  });
+
+  it('a descriptor named like an object member is read as a plain value', async () => {
+    const css = '@font-face{__proto__:x;constructor:y;font-family:Lora;src:url(https://fonts.example.com/a.woff2);}';
+    const { s } = seams(() => fontReply);
+    const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css }] }, s);
+    expect(out.ok && out.faces[0].family).toBe('Lora');
+  });
+
+  it('faces that share one file fetch it once and count once toward the cap', async () => {
+    const face = (i: number) =>
+      `@font-face{font-family:Lora;font-weight:${100 + i};unicode-range:U+${(i + 1).toString(16)};src:url(https://fonts.example.com/same.woff2);}`;
+    const css = Array.from({ length: 200 }, (_, i) => face(i)).join('');
+    const { s, calls } = seams(() => fontReply);
+    const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css }] }, s);
+    expect(calls).toHaveLength(1);
+    expect(out.ok && out.faces).toHaveLength(200);
+    expect(out.ok && out.faces[199].weight).toBe('299');
+  });
+
+  it('more than the cap of different files still stops the run', async () => {
+    const css = Array.from({ length: 129 }, (_, i) => `@font-face{font-family:Lora;src:url(https://fonts.example.com/f${i}.woff2);}`).join('');
+    const { s } = seams(() => fontReply);
+    expect(await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ css }] }, s)).toMatchObject({ ok: false, reason: 'too many font faces' });
+  });
+
   it('prepared faces carry a data address and the proven bytes', async () => {
     const { s } = seams((url) => (url === defaults.stylesheetUrl ? { type: 'text/css', bytes: new TextEncoder().encode('@font-face{font-family:Lora;src:url(lora.woff2);}') } : fontReply));
     const out = await prepareFonts({ fontHosts: defaults.fontHosts, sheets: [{ url: defaults.stylesheetUrl }] }, s);

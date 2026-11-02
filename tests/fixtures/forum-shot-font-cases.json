@@ -204,7 +204,6 @@
     { "id": "unterminated-block", "type": "text/css", "css": "@font-face{font-family:Lora;src:url(lora.woff2);", "expect": { "result": "failed_fetch", "fetches": [] } },
     { "id": "no-usable-source", "type": "text/css", "css": "@font-face{font-family:Lora;src:url(lora.svg) format(\"svg\");}", "why": "No face comes out of it, and a font with no face stops the run.", "expect": { "result": "failed_fetch", "fetches": [] } },
     { "id": "no-faces-at-all", "type": "text/css", "css": ".a{color:red}", "expect": { "result": "failed_fetch", "fetches": [] } },
-    { "id": "too-many-faces", "type": "text/css", "generate": { "prefix": "", "repeat": "@font-face{font-family:Lora;src:url(lora.woff2);}", "count": 129, "suffix": "" }, "expect": { "result": "failed_fetch", "fetches": [] } },
 
     { "id": "type-html", "type": "text/html", "css": "@font-face{font-family:Lora;src:url(lora.woff2);}", "expect": { "result": "failed_fetch", "fetches": [] } },
     { "id": "type-plain", "type": "text/plain", "css": "@font-face{font-family:Lora;src:url(lora.woff2);}", "expect": { "result": "failed_fetch", "fetches": [] } },

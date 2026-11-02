@@ -231,7 +231,7 @@ function firstSource(v: string): string | undefined | null {
 
 /** One `@font-face` body as a draft with an unresolved source, or null when any value is outside its grammar. */
 function faceDraft(body: string): (Omit<Draft, 'url'> & { src: string }) | null {
-  const d: Record<string, string> = {};
+  const d: Record<string, string> = Object.create(null);
   for (const decl of splitTop(body, ';')) {
     if (!decl.trim()) continue;
     const at = decl.indexOf(':');
@@ -380,11 +380,21 @@ function toBase64(bytes: Uint8Array): string {
   return btoa(s);
 }
 
-async function fetchFace(d: Draft, run: Run): Promise<PreparedFace> {
-  const bytes = await request(d.url, 'font', run);
+interface FontFile {
+  mime: string;
+  bytes: Uint8Array;
+  dataUrl: string;
+}
+
+async function fetchFile(url: string, run: Run): Promise<FontFile> {
+  const bytes = await request(url, 'font', run);
   const mime = sniff(bytes);
   if (!mime) return fail('bytes are not a font');
-  const face: PreparedFace = { ...d, mime, bytes, dataUrl: `data:${mime};base64,${toBase64(bytes)}` };
+  return { mime, bytes, dataUrl: `data:${mime};base64,${toBase64(bytes)}` };
+}
+
+async function prepareFace(d: Draft, file: FontFile, run: Run): Promise<PreparedFace> {
+  const face: PreparedFace = { ...d, ...file };
   if (!(await run.seams.loadFace(face))) fail('the browser cannot load the font');
   return face;
 }
@@ -414,17 +424,25 @@ export async function prepareFonts(plan: FontPlan, seams: FontSeams = defaultSea
   try {
     const found: Draft[] = [];
     for (const sheet of plan.sheets) {
+      let own: Draft[];
       if (sheet.css !== undefined) {
-        found.push(...drafts(sheet.css, sheet.url, run));
-        continue;
+        own = drafts(sheet.css, sheet.url, run);
+      } else {
+        const url = judge(sheet.url ?? '', undefined, run);
+        const bytes = await request(url, 'css', run);
+        own = drafts(new TextDecoder('utf-8', { fatal: true }).decode(bytes), url, run);
       }
-      const url = judge(sheet.url ?? '', undefined, run);
-      const bytes = await request(url, 'css', run);
-      found.push(...drafts(new TextDecoder('utf-8', { fatal: true }).decode(bytes), url, run));
+      if (own.length === 0) fail('no font faces');
+      found.push(...own);
     }
     if (found.length === 0) fail('no font faces');
-    if (found.length > MAX_REQUESTS) fail('too many font faces');
-    return { ok: true, faces: await pool(found, (d) => fetchFace(d, run)) };
+    const urls = [...new Set(found.map((d) => d.url))];
+    if (urls.length > MAX_REQUESTS) fail('too many font faces');
+    const files = new Map<string, FontFile>();
+    await pool(urls, async (url) => {
+      files.set(url, await fetchFile(url, run));
+    });
+    return { ok: true, faces: await pool(found, (d) => prepareFace(d, files.get(d.url) as FontFile, run)) };
   } catch (e) {
     run.failed = true;
     for (const c of run.controllers) c.abort();
