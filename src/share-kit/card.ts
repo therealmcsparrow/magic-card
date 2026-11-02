@@ -79,24 +79,37 @@ function functionsOk(s: string): boolean {
   return names.length === open && names.every((n) => CSS_FUNCTIONS.has(n)) && (open === 0 || !/["'`]/.test(s));
 }
 
-/** `content` without its pictures: an image whose address is not on this origin or a raster data: image is removed. */
+/** Rebuilds text around each media tag, so a piece left after removal is judged on the next pass. */
+function withoutMedia(text: string, swap: (tag: string) => string): string {
+  let out = '';
+  let at = 0;
+  for (const m of text.matchAll(HTML_MEDIA_RE)) {
+    out += text.slice(at, m.index) + swap(m[0]);
+    at = m.index + m[0].length;
+  }
+  return out + text.slice(at);
+}
+
+/** `content` without its pictures: an image whose address is not on this origin or a raster data: image is removed. Text still changing after the last pass is removed whole. */
 function stripPictures(v: string): { text: string; gone: string[] } {
   const gone: string[] = [];
   const safe: string[] = [];
   const keep = (m: string): string => `\uE000${safe.push(m) - 1}\uE001`;
   let text = v.replace(/[\uE000\uE001]/g, '');
+  let settled = false;
   for (let pass = 0; pass < 4; pass++) {
     const before = text;
     text = text
       .replace(MD_IMAGE_RE, (m, dest: string | undefined) => (dest !== undefined && !TEMPLATE_RE.test(dest) && !dest.includes('&') && urlAllowed(dest) ? keep(m) : (gone.push(m), '')))
-      .replace(MD_DEFINITION_RE, (m, dest: string) => (!dest.includes('&') && urlAllowed(dest) ? m : (gone.push(m), '')))
-      .replace(HTML_MEDIA_RE, (m) => {
-        const src = IMG_RE.exec(m)?.[1];
-        return src !== undefined && (PAINT_LOCAL_PATH_RE.test(src) || PAINT_DATA_URL_RE.test(src)) ? keep(m) : (gone.push(m), '');
-      })
-      .replace(/url\s*\(\s*(?:"[^"]*"|'[^']*'|[^"'()\s]*)\s*\)/gi, (m) => (urlsOk(m) ? keep(m) : (gone.push(m), '')));
-    if (text === before) break;
+      .replace(MD_DEFINITION_RE, (m, dest: string) => (!dest.includes('&') && urlAllowed(dest) ? m : (gone.push(m), '')));
+    text = withoutMedia(text, (m) => {
+      const src = IMG_RE.exec(m)?.[1];
+      return src !== undefined && (PAINT_LOCAL_PATH_RE.test(src) || PAINT_DATA_URL_RE.test(src)) ? keep(m) : (gone.push(m), '');
+    });
+    text = text.replace(/url\s*\(\s*(?:"[^"]*"|'[^']*'|[^"'()\s]*)\s*\)/gi, (m) => (urlsOk(m) ? keep(m) : (gone.push(m), '')));
+    if (text === before) { settled = true; break; }
   }
+  if (!settled) return { text: '', gone: [...gone, v] };
   text = text.replace(/!\[/g, '[').replace(/\uE000(\d+)\uE001/g, (_, i: string) => safe[+i]);
   return { text, gone };
 }

@@ -253,3 +253,11 @@ describe('free-form css comment opener (senior R-6)', () => {
     expect(r.ok && r.css).not.toContain('color: red');
   });
 });
+
+describe('nested media tags in shared markdown', () => {
+  it('leaves no tag behind however deeply it is nested', () => {
+    const hostile = '<ifr'.repeat(6) + 'ame src=https://evil.example/x>'.repeat(6);
+    const out = JSON.stringify(read({ type: 'custom:magic-card', modules: [{ id: 'm', type: 'markdown', content: hostile }] }));
+    expect(out.toLowerCase()).not.toContain("<iframe");
+  });
+});
