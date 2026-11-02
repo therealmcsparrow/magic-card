@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.1.0.
 
 export const I18N_CONTRACT_VERSION = '2.1.0';
-export const I18N_CONTRACT_REVISION = 8;
+export const I18N_CONTRACT_REVISION = 9;
 
 /** Pseudo-localisation hook: wraps one message or one formatted number; the result is used as text only. */
 export type PseudoWrap = (s: string, kind: 'msg' | 'num') => string;
@@ -84,7 +84,7 @@ export interface I18nModuleEntry {
 export const I18N_MODULES = {
   card: { bundle: 'magic-card.js (second copy in magic-card-animation-studio.js, accepted)', folders: ['src/card (not src/card/pause-i18n)', 'src/modules (dashboard text only)', 'src/icons', 'src/utils (runtime files, dashboard text only)'], tables: 'inline', status: 'complete', slice: 'I1', dashboard: true },
   labels: {
-    bundle: 'magic-card-editor.js, magic-card-animation-studio.js, magic-card-icon-library.js (lm() numbers also in magic-card.js)',
+    bundle: 'magic-card-editor.js, magic-card-animation-studio.js, magic-card-icon-library.js, magic-card-icon-shared.js (lm() numbers also in magic-card.js)',
     folders: [
       'src/utils/css-properties.ts', 'src/utils/css-property-options.ts', 'src/utils/animation-presets.ts',
       'src/editor/components/font-picker.ts (group names; family names are not messages)', 'src/utils/seasonal-scenes.ts',

@@ -11,6 +11,10 @@
     "text": "Je dashboards konden niet worden gelezen. Controleer of het geen YAML-dashboards zijn en probeer het opnieuw.",
     "hash": "f4f5d640"
   },
+  "forum-shot.element.custom-card": {
+    "text": "Deze kaart bevat een andere kaart (een custom-card-module). Die kaart kan afbeeldingen van buiten Home Assistant laden en dat valt niet te controleren, dus deze kaart kan niet voor een forumafbeelding worden gebruikt.",
+    "hash": "78df6dc2"
+  },
   "forum-shot.element.download": {
     "text": "Downloaden",
     "hash": "d6eafe82"

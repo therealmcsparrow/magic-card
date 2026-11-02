@@ -14,6 +14,11 @@
     "note": "Error when no dashboard configuration could be read.",
     "max": 110
   },
+  "forum-shot.element.custom-card": {
+    "text": "This card holds another card inside it (a custom-card module). That card can load pictures from outside Home Assistant and nothing here can check it, so this card cannot be used for a forum shot.",
+    "note": "Notice next to a card that cannot be picked because it holds a custom-card module. Also the error when the picture is refused for that reason.",
+    "max": 220
+  },
   "forum-shot.element.download": {
     "text": "Download",
     "note": "Button that makes the picture and saves it to the user's device.",

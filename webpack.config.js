@@ -160,15 +160,16 @@ module.exports = (env, argv) => {
           default: false,
           defaultVendors: false,
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
-          // The modules the icon-library chunk shares with the studio bundle. Two bundles load that chunk (the studio and the forum shot),
-          // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead.
+          // The modules only the forum shot and the icon-library chunk share. Two bundles load that chunk (the studio and the forum shot),
+          // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead (not src/i18n/labels/index.ts, which import()s its tables where a shared chunk loads nothing, nor src/icon-anim/icon-doc.ts, which reads those labels).
+          // Only the icon-library chunk is split: the editor, icon-animator, transfer and svg-editor chunks keep their own copies.
           'icon-shared': {
             test: (module, { chunkGraph }) => {
               const names = Array.from(chunkGraph.getModuleChunks(module), (c) => c.name);
-              return names.includes('icon-library') && names.includes('magic-card-animation-studio');
+              return names.includes('icon-library') && names.includes('magic-card-animation-studio') && !/[\\/](?:i18n[\\/]labels[\\/]index|icon-anim[\\/]icon-doc)\.ts$/.test(module.resource ?? '');
             },
             name: 'icon-shared',
-            chunks: 'async',
+            chunks: (chunk) => chunk.name === 'icon-library',
             enforce: true,
           },
           // the one copy of the recorded-history cache that <mc-value-bg> (decor) and the graphs view (modules-extra) read

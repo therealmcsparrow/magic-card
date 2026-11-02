@@ -99,10 +99,8 @@ describe('scrubbing is complete and fails closed', () => {
     expect(hasRemote(out, ORIGIN)).toBe(false);
   });
 
-  it('keeps the rest of a text when one address goes', () => {
-    const out = scrubText('![a](https://evil.com/x.png) ![b](/local/ok.png)', ORIGIN);
-    expect(out).toContain('/local/ok.png');
-    expect(out).not.toContain('evil');
+  it('blanks a whole text when one address is in it', () => {
+    expect(scrubText('![a](https://evil.com/x.png) ![b](/local/ok.png)', ORIGIN)).toBe('');
   });
 
   it('empties a string over the size limit and reports it', () => {
@@ -184,14 +182,14 @@ describe('theme and modes values (R-2)', () => {
     const v = themeVars(
       hassOf({
         'ha-card-background': 'url(https://evil.com/x.png)',
-        'card-background-color': 'url(/local/ok.png)',
+        'card-background-color': '/local/ok.png',
         'primary-text-color': 'url(\\68ttps://evil.com/y.png)',
         modes: { dark: { 'secondary-background-color': 'url(https:evil.com/z.png)', 'text-primary-color': '#111' } },
       }),
       'dark',
     );
     expect(JSON.stringify(v)).not.toContain('evil');
-    expect(v['card-background-color']).toBe('url(/local/ok.png)');
+    expect(v['card-background-color']).toBe('/local/ok.png');
     expect(v['text-primary-color']).toBe('#111');
   });
 

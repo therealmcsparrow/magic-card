@@ -8,6 +8,7 @@ import { t } from './i18n';
 import { cardConfigOf, codeOf, iconLibraryLookSource, listMagicCards } from './pick';
 import type { WsHass } from './pick';
 import { renderSheet } from './sheet';
+import { CUSTOM_CARD } from './remote';
 import { forumShotStyles } from './styles';
 
 type ModeChoice = 'both' | ForumShotMode;
@@ -134,7 +135,7 @@ export class MagicCardForumShot extends LitElement {
   private _errorText(code: ForumShotErrorCode): string {
     switch (code) {
       case 'remote_asset':
-        return t('forum-shot.element.remote-asset');
+        return this._cards[this._pick]?.remote.includes(CUSTOM_CARD) ? t('forum-shot.element.custom-card') : t('forum-shot.element.remote-asset');
       case 'card_not_defined':
         return t('forum-shot.element.error-card-not-defined');
       case 'too_large':
@@ -166,7 +167,7 @@ export class MagicCardForumShot extends LitElement {
             }}
           />
           <label for="card-${i}"
-            >${c.label}${off ? html`<span class="hint" id="card-note-${i}">${t('forum-shot.element.remote-asset')}</span>` : nothing}</label
+            >${c.label}${off ? html`<span class="hint" id="card-note-${i}">${c.remote.includes(CUSTOM_CARD) ? t('forum-shot.element.custom-card') : t('forum-shot.element.remote-asset')}</span>` : nothing}</label
           >
         </div>`;
       })}

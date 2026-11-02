@@ -76,7 +76,7 @@
     "magic-card-icon-shared.js": {
       "raw": 10240,
       "ceiling": 10240,
-      "note": "10 KiB. The modules the icon-library chunk shares with the studio bundle (icon-doc, part-presets, the label tables), kept out of that chunk because the forum shot also loads it. Measured 9,373 + 5 %, rounded up to 1 KiB."
+      "note": "10 KiB. The studio modules the icon-library chunk reuses (src/i18n/fold.ts, src/icon-anim/part-presets.ts), kept out of that chunk because the forum shot also loads it. Measured 7,808 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-particles.js": {
       "raw": 38912,
@@ -89,7 +89,7 @@
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-forum-shot.js": {
-      "raw": 74752,
+      "raw": 79872,
       "ceiling": 98304,
       "note": "73 KiB, measured 70,149 + 5 %, rounded up to 1 KiB; it bundles its own copy of the icon style derivation."
     },

@@ -11,6 +11,10 @@
     "text": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
     "hash": "f4f5d640"
   },
+  "forum-shot.element.custom-card": {
+    "text": "This card holds another card inside it (a custom-card module). That card can load pictures from outside Home Assistant and nothing here can check it, so this card cannot be used for a forum shot.",
+    "hash": "78df6dc2"
+  },
   "forum-shot.element.download": {
     "text": "Download",
     "hash": "d6eafe82"

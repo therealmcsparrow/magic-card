@@ -459,12 +459,12 @@ const selfTest = () => {
   // the shared chunk list is read from the declaration, not from a mention of its name
   const decl = "export const LAZY_SHARED_CHUNK_FILES: Record<X, string> = {\n  'path-core': 'magic-card-path-core.js',\n};";
   const parseCases = [
-    ['the real contract lists path-core, history and shape-path', JSON.stringify(sharedChunkFiles()) === JSON.stringify(['magic-card-path-core.js', 'magic-card-history.js', 'magic-card-shape-path.js'])],
+    ['the real contract lists path-core, history, shape-path and icon-shared', JSON.stringify(sharedChunkFiles()) === JSON.stringify(['magic-card-path-core.js', 'magic-card-history.js', 'magic-card-shape-path.js', 'magic-card-icon-shared.js'])],
     ['a comment naming the table above another `= {` is skipped', JSON.stringify(parseSharedChunkFiles(`// see LAZY_SHARED_CHUNK_FILES = {\nconst Z = { a: 'magic-card-z.js' };\n${decl}`)) === JSON.stringify(['magic-card-path-core.js'])],
     ['import( is found, a method call .import( is not', hasDynamicImport("x = import('./a')") && hasDynamicImport('await import (y)') && !hasDynamicImport('obj.import(y)') && !hasDynamicImport('// import statement')],
     ['the shared modules are read from the contract doc comments', JSON.stringify(parseSharedChunkModules("export const LAZY_SHARED_CHUNK_FILES: R = {\n  'path-core': 'magic-card-path-core.js',\n  lit: 'magic-card-lit.js',\n};\nexport const LAZY_SHARED_CHUNK_CEILINGS: R = {\n  /** src/path/core.ts only. */\n  'path-core': 10_240,\n  /** src/a/b.ts and src/a/c.ts only. */\n  lit: 8_192,\n};")) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-lit.js': ['./src/a/b.ts', './src/a/c.ts'] })],
     ['a shared chunk without a module line in the contract throws', (() => { try { parseSharedChunkModules("export const LAZY_SHARED_CHUNK_FILES: R = {\n  x: 'magic-card-x.js',\n};\nexport const LAZY_SHARED_CHUNK_CEILINGS: R = {\n  x: 1,\n};"); return false; } catch { return true; } })()],
-    ['the real contract gives each shared chunk its module', JSON.stringify(sharedChunkModules()) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-history.js': ['./src/services/history-cache.ts'], 'magic-card-shape-path.js': ['./src/utils/shape-path.ts'] })],
+    ['the real contract gives each shared chunk its module', JSON.stringify(sharedChunkModules()) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-history.js': ['./src/services/history-cache.ts'], 'magic-card-shape-path.js': ['./src/utils/shape-path.ts'], 'magic-card-icon-shared.js': ['./src/i18n/fold.ts', './src/icon-anim/part-presets.ts'] })],
     ['the real shared modules have no import()', sharedChunkProblems({ chunks: [] }).length === 0],
   ];
   for (const [name, ok] of parseCases) {

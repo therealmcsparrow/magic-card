@@ -148,7 +148,13 @@ async function fetchCapped(abs: string, cap: number): Promise<Blob | undefined> 
 }
 
 async function toDataUrl(url: string, run: Run): Promise<string> {
-  const abs = new URL(url, location.href).href;
+  let abs: string;
+  try {
+    abs = new URL(url, location.href).href;
+  } catch {
+    run.replaced = true;
+    return PIXEL;
+  }
   if (abs.startsWith('data:')) return abs;
   if (!sameOrigin(abs)) {
     run.replaced = true;

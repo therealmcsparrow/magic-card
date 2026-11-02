@@ -58,6 +58,23 @@ async function picturesReady(root: ParentNode): Promise<void> {
   for (const off of cleanups) off();
 }
 
+/** Ends every finite animation inside `root` (a line draw, a cross-fade) at its end state, so the picture never shows an icon part-drawn; looping ones stay as they are. */
+function finishOneShots(root: ParentNode): void {
+  const all = (document as { getAnimations?: () => Animation[] }).getAnimations?.() ?? [];
+  if (!all.length) return;
+  const inside = new Set<Element>(deepElements(root));
+  for (const anim of all) {
+    const target = (anim.effect as { target?: Element | null } | null)?.target;
+    const end = anim.effect?.getComputedTiming().endTime;
+    if (!target || !inside.has(target) || typeof end !== 'number' || !Number.isFinite(end)) continue;
+    try {
+      anim.finish();
+    } catch {
+      // an animation that cannot finish stays as it is
+    }
+  }
+}
+
 /**
  * Mounts the card with previewPaused set before its first render, hands it a hass copy without off-origin URLs, and waits for
  * fonts, pictures and one quiet period. A config naming a remote asset throws `remote_asset` before anything mounts.
@@ -87,6 +104,9 @@ export async function settleCard(hass: object, config: Record<string, unknown>, 
     await picturesReady(card.shadowRoot ?? card);
     await wait(options.settleMs ?? 300);
     await frame();
+    finishOneShots(card.shadowRoot ?? card);
+    await frame();
+    finishOneShots(card.shadowRoot ?? card);
     const swept = sweepRemote(card.shadowRoot ?? card, origin);
     return { card, notices: scrubbed.removed() || swept ? ['remote_placeholder'] : [], dispose };
   } catch (e) {

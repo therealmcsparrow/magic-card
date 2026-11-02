@@ -6,7 +6,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
 export const LAZY_MODULE_CONTRACT = '1.11.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 25;
+export const LAZY_MODULE_CONTRACT_REVISION = 26;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -62,12 +62,13 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
 };
 
 /** Chunks that only hold shared source: no install, no BUILD, no notice. */
-export type LazySharedChunkName = 'path-core' | 'history' | 'shape-path';
+export type LazySharedChunkName = 'path-core' | 'history' | 'shape-path' | 'icon-shared';
 
 export const LAZY_SHARED_CHUNK_FILES: Record<LazySharedChunkName, string> = {
   'path-core': 'magic-card-path-core.js',
   history: 'magic-card-history.js',
   'shape-path': 'magic-card-shape-path.js',
+  'icon-shared': 'magic-card-icon-shared.js',
 };
 
 /** Sanity ceilings (B, minified), as LAZY_CHUNK_CEILINGS. */
@@ -78,6 +79,8 @@ export const LAZY_SHARED_CHUNK_CEILINGS: Record<LazySharedChunkName, number> = {
   history: 4_096,
   /** src/utils/shape-path.ts only. */
   'shape-path': 20_480,
+  /** src/i18n/fold.ts and src/icon-anim/part-presets.ts only (the studio's modules the icon-library chunk reuses, now that the forum shot loads that chunk too). */
+  'icon-shared': 10_240,
 };
 
 /** Which module types each chunk serves (seasonal, flows, pause, popup, decor, flow-look, slider-look, layers, svg-icon, anim and templates serve no module type). */

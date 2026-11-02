@@ -6,6 +6,8 @@ const MAX_DEPTH = 24;
 const MAX_STRING = 1_000_000;
 /** Reported in place of a host when a limit was hit: the value could not be judged, so it counts as remote. */
 const LIMIT = 'limit';
+/** Reported for a card with a `custom-card` module at any depth: a third-party card makes requests nothing here can scrub. Holds a space, so it is never a host. */
+export const CUSTOM_CARD = 'custom-card module';
 
 /** Schemes a browser fetches from a network host. Others (mailto:, data:, blob:) never reach another server from a picture. */
 const FETCH_SCHEMES = new Set(['http', 'https', 'ws', 'wss', 'ftp']);
@@ -155,6 +157,7 @@ export function findRemoteAssets(config: unknown, origin: string): string[] {
     } else if (Array.isArray(v)) {
       for (const x of v) walk(x, depth + 1);
     } else if (v && typeof v === 'object') {
+      if ((v as { type?: unknown }).type === 'custom-card') add(CUSTOM_CARD);
       for (const x of Object.values(v)) walk(x, depth + 1);
     }
   };
@@ -163,14 +166,56 @@ export function findRemoteAssets(config: unknown, origin: string): string[] {
   return out;
 }
 
-/** `text` without the addresses that leave `origin`; `onRemove` is told when anything was dropped. A text that cannot be cleaned part by part becomes ''. */
-export function scrubText(text: string, origin: string, onRemove?: () => void): string {
-  if (text.length > MAX_STRING) {
-    onRemove?.();
-    return '';
+// A string the card may read: no markup, no escapes, no `//`, no `url(`, no `scheme:`.
+const MARKUP_OR_ADDRESS = /[<&\\]|\/\/|url\(/i;
+// A letter-run before `:` is a scheme when it can fetch, or when the `:` is not followed by a space (`Status: ok` stays).
+const SCHEME_FORM = /(?<![A-Za-z0-9+.-])([A-Za-z][A-Za-z0-9+.-]*):/g;
+const FETCHING = new Set(['http', 'https', 'ftp', 'ws', 'wss', 'blob', 'data', 'filesystem', 'javascript']);
+
+function hasSchemeForm(text: string): boolean {
+  const flat = text.replace(/[\t\n\r]/g, '');
+  for (const m of flat.matchAll(SCHEME_FORM)) {
+    const end = (m.index ?? 0) + m[0].length;
+    if (FETCHING.has(m[1].toLowerCase())) return true;
+    if (end < flat.length && !/\s/.test(flat[end])) return true;
   }
+  return false;
+}
+
+/** True for a text that holds an address, a scheme or an escape for one; markup alone and size limits are not. */
+function addressLike(text: string): boolean {
+  return /[\\&]|\/\/|url\(/i.test(text) || hasSchemeForm(text);
+}
+// One plain path on the page's own origin, or one raster picture inline; nothing else may carry an address.
+const PLAIN_PATH = /^\/(?!\/)(?!.*\/\/)[A-Za-z0-9_\-.~%+,=@/?#]*$/;
+const RASTER_DATA = /^data:image\/(?:png|jpe?g|gif|webp|avif|bmp);base64,[A-Za-z0-9+/]*={0,2}$/i;
+// Icon names (`mdi:lightbulb`) read like a scheme but name no address.
+const ICON_NAME = /^(?:mdi|hass|phu|fas|far|fab):[a-z0-9_-]+$/i;
+
+/** True when `text` may reach the card: it holds no markup and no address, or it is wholly one plain same-origin path or raster data image. */
+export function keepsText(text: string): boolean {
+  if (text.length > MAX_STRING) return false;
+  if (PLAIN_PATH.test(text) || RASTER_DATA.test(text) || ICON_NAME.test(text)) return true;
+  if (MARKUP_OR_ADDRESS.test(text)) return false;
+  return !hasSchemeForm(text);
+}
+
+/** True when `text` fails the allow-list and looks like an address, so the picture swapped something from another server. */
+export function blankedAddress(text: string): boolean {
+  return !keepsText(text) && addressLike(text);
+}
+
+/** `text` when it passes the allow-list, else ''; `onRemove` is told when it was blanked. `origin` is the page's own. */
+export function scrubText(text: string, _origin: string, onRemove?: () => void): string {
+  if (keepsText(text)) return text;
+  if (blankedAddress(text)) onRemove?.();
+  return '';
+}
+
+/** `text` without the addresses that leave `origin`, part by part; for the safety net, which works on markup. */
+function stripRemote(text: string, origin: string): string {
+  if (text.length > MAX_STRING) return '';
   if (!hasRemote(text, origin)) return text;
-  onRemove?.();
   const parts = text.split(RAW_TOKEN);
   const cleaned = parts.map((p, i) => (i % 2 === 0 && hasRemote(p, origin) ? '' : p)).join('');
   return hasRemote(cleaned, origin) ? '' : cleaned;
@@ -188,7 +233,7 @@ const isPlain = (v: object): boolean => {
 function scrubWalk<T>(value: T, origin: string, onRemove: (() => void) | undefined, depth: number, budget: Budget): T {
   if (++budget.nodes > MAX_NODES || depth > MAX_DEPTH) {
     if (value === undefined || value === null || typeof value === 'number' || typeof value === 'boolean') return value;
-    onRemove?.();
+    if (typeof value !== 'string' || addressLike(value)) onRemove?.();
     return '' as T;
   }
   if (typeof value === 'string') return scrubText(value, origin, onRemove) as T;
@@ -226,7 +271,7 @@ interface ConnectionLike {
   subscribeMessage?: (cb: (m: unknown) => void, msg: Record<string, unknown>, ...rest: unknown[]) => unknown;
   sendMessagePromise?: Fn;
 }
-type HassLike = Record<string, unknown> & { states?: Record<string, { attributes?: Record<string, unknown> }>; connection?: ConnectionLike };
+type HassLike = Record<string, unknown> & { states?: Record<string, { state?: unknown; attributes?: Record<string, unknown> }>; connection?: ConnectionLike };
 
 // Static tables the card does not display and that hold thousands of strings.
 const UNSCRUBBED = new Set(['auth', 'connection', 'states', 'resources', 'translationMetadata', 'services', 'panels', 'localize']);
@@ -254,7 +299,8 @@ export function scrubHass<H extends object>(hass: H, origin: string): { hass: H;
     for (const id of Object.keys(src.states)) {
       const s = src.states[id];
       const attributes = s?.attributes ? clean(s.attributes) : s?.attributes;
-      states[id] = attributes === s?.attributes ? s : { ...s, attributes };
+      const state = typeof s?.state === 'string' ? clean(s.state) : s?.state;
+      states[id] = attributes === s?.attributes && state === s?.state ? s : { ...s, state, attributes };
     }
     copy.states = states;
   }
@@ -312,12 +358,12 @@ export function sweepRemote(root: ParentNode, origin: string): boolean {
     }
     const style = el.getAttribute('style');
     if (style && hasRemote(style, origin)) {
-      const next = scrubText(style.replace(CSS_URL, (m, _q, u: string) => (hasRemote(u, origin) ? 'none' : m)), origin);
+      const next = stripRemote(style.replace(CSS_URL, (m, _q, u: string) => (hasRemote(u, origin) ? 'none' : m)), origin);
       el.setAttribute('style', next);
       removed = true;
     }
     if (el.localName === 'style' && el.textContent && hasRemote(el.textContent, origin)) {
-      el.textContent = scrubText(el.textContent, origin);
+      el.textContent = stripRemote(el.textContent, origin);
       removed = true;
     }
   }
