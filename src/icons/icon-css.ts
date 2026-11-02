@@ -262,6 +262,15 @@ export const iconBaseStyles = css`
     animation-play-state: var(--mc-card-play, running) !important;
   }
 
+  /* One-shot tracks end on timers, so they finish under a card pause; looping tracks stay held. */
+  .mc-draw .draw path,
+  .mc-draw .body,
+  .xfade-in,
+  .xfade-out,
+  .morph-in {
+    animation-play-state: running !important;
+  }
+
   /* Reduced motion: nothing moves; glow, the open-door pose, ring and flakes stay as a still frame. */
   @media (prefers-reduced-motion: reduce) {
     .liquid {

@@ -160,6 +160,17 @@ module.exports = (env, argv) => {
           default: false,
           defaultVendors: false,
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
+          // The modules the icon-library chunk shares with the studio bundle. Two bundles load that chunk (the studio and the forum shot),
+          // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead.
+          'icon-shared': {
+            test: (module, { chunkGraph }) => {
+              const names = Array.from(chunkGraph.getModuleChunks(module), (c) => c.name);
+              return names.includes('icon-library') && names.includes('magic-card-animation-studio');
+            },
+            name: 'icon-shared',
+            chunks: 'async',
+            enforce: true,
+          },
           // the one copy of the recorded-history cache that <mc-value-bg> (decor) and the graphs view (modules-extra) read
           history: { test: /[\\/]src[\\/]services[\\/]history-cache\.ts$/, name: 'history', chunks: 'async', enforce: true },
           // the one copy of the shape outline maths and its memo, read by decor, flows, seasonal, slider-look, shape-custom and the editor

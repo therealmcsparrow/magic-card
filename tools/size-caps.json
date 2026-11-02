@@ -73,6 +73,11 @@
       "ceiling": 175104,
       "note": "171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB."
     },
+    "magic-card-icon-shared.js": {
+      "raw": 10240,
+      "ceiling": 10240,
+      "note": "10 KiB. The modules the icon-library chunk shares with the studio bundle (icon-doc, part-presets, the label tables), kept out of that chunk because the forum shot also loads it. Measured 9,373 + 5 %, rounded up to 1 KiB."
+    },
     "magic-card-particles.js": {
       "raw": 38912,
       "ceiling": 38912,
