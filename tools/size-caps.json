@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 74836,
+        "cap": 75348,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 74836
+        "measured": 75321
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 63953,
-      "measured": 63953
+      "cap": 64465,
+      "measured": 64375
     }
   },
   "files": {
@@ -159,9 +159,19 @@
       "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
-      "raw": 68608,
-      "ceiling": 69632,
-      "note": "Preset transfer. 67 KiB, measured 68,349 (Linux build, docker node 24.22.0)."
+      "raw": 76800,
+      "ceiling": 76800,
+      "note": "Preset transfer with the import allow-list and legal text. 75 KiB, measured 75,490 (Linux build)."
+    },
+    "magic-card-share-kit.js": {
+      "raw": 45056,
+      "ceiling": 45056,
+      "note": "Share kit: strict value checks, entity placeholders, the card reader and previews. A child of the transfer chunk, no SVG sink. 41 KiB, raised for the strict checks and the card reader. The contract ceiling is 41,984 B (SHARE_KIT_CHUNK_CEILING)."
+    },
+    "magic-card-share-tablet.js": {
+      "raw": 5120,
+      "ceiling": 5120,
+      "note": "Wall tablet of the import preview: defines <mc-wall-tablet>, loaded when the toggle is pressed. 5 KiB, measured 4,236 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-icon.js": {
       "raw": 47104,
@@ -1093,6 +1103,30 @@
       "field": "/files/magic-card-slider-look.js/ceiling",
       "from": 25600,
       "to": 27648
+    },
+    {
+      "id": "transfer-raw-68608-to-76800",
+      "field": "/files/magic-card-transfer.js/raw",
+      "from": 68608,
+      "to": 76800
+    },
+    {
+      "id": "transfer-ceiling-69632-to-76800",
+      "field": "/files/magic-card-transfer.js/ceiling",
+      "from": 69632,
+      "to": 76800
+    },
+    {
+      "id": "entry-stage4-74836-to-75348",
+      "field": "/entry/stages/3/cap",
+      "from": 74836,
+      "to": 75348
+    },
+    {
+      "id": "entry-br-63953-to-64465",
+      "field": "/entry/br/cap",
+      "from": 63953,
+      "to": 64465
     }
   ]
 }

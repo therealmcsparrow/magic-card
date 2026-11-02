@@ -611,7 +611,7 @@ export class Inspector extends LitElement {
         sm.updateConfig(next as unknown as MagicCardConfig);
       },
     };
-    return renderCardGeneral(config, update, syncCtx, this.hass, this.variant === 'studio', entityField);
+    return renderCardGeneral(config, update, syncCtx, this.hass, this.variant === 'studio', entityField, (next) => sm.updateConfig(next));
   }
 
   /** A tab (General) or a row-module column (General, Conditions, Design). */

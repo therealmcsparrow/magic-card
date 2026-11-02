@@ -1,4 +1,8 @@
 import { LOAD_TIMEOUT_MS, TRANSFER_CHUNK, TRANSFER_CONTRACT_VERSION, type TransferChunk } from '../contracts/preset-transfer';
+import type { CardKeyLists, StrictType } from '../contracts/share-kit';
+import type { MagicCardConfig } from '../types';
+import { COLOR_KEYS, IMAGE_KEYS, NUMBER_UNITS } from '../utils/css-design-map';
+import { COMMON_MODULE_KEYS, MODULE_KEYS } from './state/module-keys';
 
 // The only importer of the transfer chunk; set as window.MagicCard.loadTransfer().
 
@@ -31,4 +35,20 @@ export function loadTransfer(): Promise<TransferChunk> {
 export function __setTransferImportForTests(load?: () => Promise<unknown>): void {
   pending = undefined;
   importer = load ?? (() => import(/* webpackChunkName: "transfer" */ '../transfer/chunk'));
+}
+
+const CARD_KEYS = [
+  'type', 'name', 'template', 'entity', 'not_synced', 'rows', 'use_page_theme', 'theme', 'background', 'background_image', 'border_radius', 'padding',
+  'border_width', 'border_style', 'border_color', 'opacity', 'backdrop_filter', 'margin', 'box_shadow', 'card_height', 'overflow', 'css', 'hover', 'display',
+  'conditional_appearance', 'animations', 'custom_animations', 'hidden_animations', 'background_layers', 'layers_low_power', 'pause_button',
+  'pause_button_corner', 'ring', 'shape', 'shape_options', 'custom_shapes', 'custom_icons', 'value_background', 'popup', 'flows', 'seasonal',
+] as const satisfies readonly (keyof MagicCardConfig)[];
+
+/** What the share-kit card reader checks a shared card against: its keys, the module keys and the strict type of each design key. */
+export function cardKeyLists(): CardKeyLists {
+  const designTypes: Record<string, StrictType[]> = Object.create(null) as Record<string, StrictType[]>;
+  for (const [k, unit] of Object.entries(NUMBER_UNITS)) designTypes[k] = [unit === 's' ? 'time' : 'length', 'number', 'keyword'];
+  for (const k of COLOR_KEYS) designTypes[k] = ['colour', 'gradient'];
+  for (const k of IMAGE_KEYS) designTypes[k] = ['paint-image', 'gradient', 'colour'];
+  return { cardKeys: CARD_KEYS, moduleKeys: MODULE_KEYS, commonModuleKeys: COMMON_MODULE_KEYS, designTypes };
 }

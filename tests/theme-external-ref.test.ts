@@ -3,6 +3,12 @@ import { render } from 'lit';
 import { contactsOtherHost, decodeCssEscapes } from '../src/contracts/preset-transfer';
 import { parseTransfer } from '../src/transfer/envelope';
 import { renderPicker } from '../src/theme-editor/presets/picker';
+import { createShareKit } from '../src/share-kit/chunk';
+import { shareKitHelpers } from '../src/transfer/share-kit-loader';
+
+const kit = createShareKit(shareKitHelpers);
+/** The strict import keeps no value that can reach another website: it is left out and listed, or the file is refused. */
+const leftOut = (r: { ok?: boolean; notes?: { code: string }[] }): boolean => r.ok === false || (r.notes ?? []).some((n) => n.code === 'dropped_value');
 
 const BAD = [
   'url(data:image/png;base64,AAAA)',
@@ -30,21 +36,19 @@ describe('external host detection', () => {
   it('flags any value holding a backslash', () => expect(contactsOtherHost(String.raw`#ff\00 0`)).toBe(true));
 
   const themeFile = (v: string): string => `magic_card_export: "1.0"\nkind: theme\nitems:\n  - id: t\n    name: T\n    data:\n      primary-color: "#fff"\n      lovelace-background: ${JSON.stringify(v)}\n`;
-  it.each(BAD.filter((v) => !v.startsWith('@')))('the import lists %s as external_ref with a host', (v) => {
-    const r = parseTransfer(themeFile(v), { accept: ['theme'] }) as { ok: boolean; notes: { code: string; hosts?: string[] }[] };
-    const ext = r.notes.filter((n) => n.code === 'external_ref');
-    expect(ext).toHaveLength(1);
+  it.each(BAD.filter((v) => !v.startsWith('@') && !v.startsWith('url(data:image/png')))('the import lists %s is not kept', (v) => {
+    const r = parseTransfer(themeFile(v), { kit, accept: ['theme'] }) as { ok: boolean; notes: { code: string; hosts?: string[] }[] };
+    expect(leftOut(r)).toBe(true);
   });
-  it('names the host behind a slash-less scheme', () => {
-    const r = parseTransfer(themeFile('url(http:evil.example/t.png)'), { accept: ['theme'] }) as { notes: { code: string; hosts?: string[] }[] };
-    expect(r.notes.find((n) => n.code === 'external_ref')?.hosts).toEqual(['evil.example']);
+  it('names the host behind a slash-less scheme in the left-out note', () => {
+    const r = parseTransfer(themeFile('url(http:evil.example/t.png)'), { kit, accept: ['theme'] }) as { notes: { code: string; hosts?: string[] }[] };
+    expect(r.notes.find((n) => n.code === 'dropped_value')?.hosts).toEqual(['evil.example']);
   });
-  it('names nothing behind a CSS-escaped scheme or slashes, and warns generically', () => {
+  it('names nothing behind a CSS-escaped scheme or slashes', () => {
     for (const v of [String.raw`url(ht\74ps://evil.example/t.png)`, String.raw`url("\2f\2f evil.example/t.png")`]) {
-      const r = parseTransfer(themeFile(v), { accept: ['theme'] }) as { notes: { code: string; hosts?: string[]; unknown?: boolean }[] };
-      const n = r.notes.find((x) => x.code === 'external_ref');
-      expect(n?.hosts ?? []).toEqual([]);
-      expect(n?.unknown).toBe(true);
+      const r = parseTransfer(themeFile(v), { kit, accept: ['theme'] }) as { notes: { code: string; hosts?: string[]; unknown?: boolean }[] };
+      expect(leftOut(r)).toBe(true);
+      expect((r.notes ?? []).find((x) => x.code === 'dropped_value')?.hosts ?? []).toEqual([]);
     }
   });
 });
@@ -97,8 +101,8 @@ describe('further vectors', () => {
   it('flags image functions even with local paths (allow-list)', () => expect(contactsOtherHost('image-set("/local/a.png" 1x, "/local/b.png" 2x)')).toBe(true));
   it.each(R2.filter((v) => !v.includes('/*') || v.startsWith('url("/a')))('import note for %j', (v) => {
     const themeFile = `magic_card_export: "1.0"\nkind: theme\nitems:\n  - id: t\n    name: T\n    data:\n      primary-color: "#fff"\n      lovelace-background: ${JSON.stringify(v)}\n`;
-    const r = parseTransfer(themeFile, { accept: ['theme'] }) as { notes: { code: string }[] };
-    expect(r.notes.filter((n) => n.code === 'external_ref')).toHaveLength(1);
+    const r = parseTransfer(themeFile, { kit, accept: ['theme'] }) as { notes: { code: string }[] };
+    expect(leftOut(r)).toBe(true);
   });
 });
 
@@ -134,8 +138,8 @@ describe('more vectors', () => {
   });
   it.each(R3.slice(0, 7))('import note for %j', (v) => {
     const themeFile = `magic_card_export: "1.0"\nkind: theme\nitems:\n  - id: t\n    name: T\n    data:\n      primary-color: "#fff"\n      lovelace-background: ${JSON.stringify(v)}\n`;
-    const r = parseTransfer(themeFile, { accept: ['theme'] }) as { notes: { code: string }[] };
-    expect(r.notes.filter((n) => n.code === 'external_ref')).toHaveLength(1);
+    const r = parseTransfer(themeFile, { kit, accept: ['theme'] }) as { notes: { code: string }[] };
+    expect(leftOut(r)).toBe(true);
   });
 });
 
@@ -169,7 +173,7 @@ describe('strict allow-list (158)', () => {
   it.each(R4)('flags %j', (v) => expect(contactsOtherHost(v)).toBe(true));
   const OK = ['#fff', 'rgba(1, 2, 3, 0.4)', '12px', '0.5', 'linear-gradient(135deg, #111, #222)', 'var(--x)', 'var(--x, #fff)', 'Roboto, sans-serif', '"Segoe UI", Roboto, sans-serif', "'Segoe UI'", 'url(/local/bg.png)', 'url("/local/bg.png")', "url('/local/img/bg-1.png')", 'url( /local/bg.png )', 'url(#grad)', 'center / cover url(/local/bg.png) no-repeat'];
   it.each(OK)('keeps %j', (v) => expect(contactsOtherHost(v), v).toBe(false));
-  it('names the host or says another host in the import', () => {
+  it('leaves out an unterminated address in the import', () => {
     for (const v of ['url("///evil.example/x', 'image-set("///evil.example/x" 1x)']) {
       const f = `magic_card_export: "1.0"
 kind: theme
@@ -180,8 +184,8 @@ items:
       primary-color: "#fff"
       lovelace-background: ${JSON.stringify(v)}
 `;
-      const r = parseTransfer(f, { accept: ['theme'] }) as { notes: { code: string }[] };
-      expect(r.notes.filter((n) => n.code === 'external_ref')).toHaveLength(1);
+      const r = parseTransfer(f, { kit, accept: ['theme'] }) as { notes: { code: string }[] };
+      expect(leftOut(r)).toBe(true);
     }
   });
 });

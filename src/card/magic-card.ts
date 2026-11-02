@@ -1,5 +1,7 @@
 import { t } from './i18n';
-import { LitElement, html, TemplateResult, nothing, PropertyValues } from 'lit';
+import { LitElement, html, TemplateResult, nothing, noChange, PropertyValues } from 'lit';
+import { directive, Directive } from 'lit/directive.js';
+import type { AttributePart } from 'lit';
 import {
   ActionsConfig,
   MagicCardConfig,
@@ -23,7 +25,9 @@ import {
   boxShadowToDropShadow,
   shapeElementStyle,
   insetPaddingStyle,
-  hoverRule,
+  hoverParts,
+  HoverPart,
+  setDeclaration,
   splitDeclarations,
   HoverTarget,
   ShapeStroke,
@@ -201,6 +205,27 @@ function withConfigIds(config: MagicCardConfig): MagicCardConfig {
 }
 
 defineBgStack();
+
+/** Sets an element's inline style one property at a time, so no value can end the declaration and add a rule. */
+const cssProps = directive(
+  class extends Directive {
+    private css?: string;
+    render(_css: string) {
+      return noChange;
+    }
+    update(part: AttributePart, [css]: [string]) {
+      if (css !== this.css) {
+        const el = part.element as HTMLElement;
+        const { style } = el;
+        if (el.hasAttribute('style')) style.cssText = '';
+        splitDeclarations((this.css = css)).forEach((d) => setDeclaration(style, d));
+        // an element with nothing to set carries no empty style attribute, as before
+        if (!style.length) el.removeAttribute('style');
+      }
+      return noChange;
+    }
+  },
+);
 
 export class MagicCard extends LitElement {
   static styles = [...magicCardStyles, noticeStyles];
@@ -454,9 +479,11 @@ export class MagicCard extends LitElement {
     editMode: false,
   };
   /** Scoped `:hover` rules of the last render, by data-mc-hover id (empty: no hover anywhere). */
-  private _hoverRules = new Map<string, string>();
+  private _hoverRules = new Map<string, HoverPart[]>();
   /** The <style> holding the hover rules; only created once some element has a hover design. */
   private _hoverStyleEl?: HTMLStyleElement;
+  private _hoverKey = '';
+  private _hoverSheet: CSSStyleSheet | null = null;
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
@@ -648,6 +675,7 @@ export class MagicCard extends LitElement {
     this._status?.connected();
     if (this.hasUpdated) this._syncTicker();
     if (this.hasUpdated) this._syncTemplateWatch();
+    if (this.hasUpdated) this._syncHoverStyles();
     // re-attached (masonry rebuild, cached view): sequences were stopped and the library dropped;
     // the render restarts both
     if (this.hasUpdated && this._customRendered) this._onLibrary();
@@ -1055,9 +1083,9 @@ export class MagicCard extends LitElement {
     const inline = popupHere
       ? nothing
       : withShapeShadow(html`
-          <ha-card style=${haCardStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
+          <ha-card style=${cssProps(haCardStyle)} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
+            ${layerCss}<div class="mc-card-content" style=${cssProps(inlineContentStyle)} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-pause-gap=${pauseGap(config) ?? nothing}
               data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
@@ -1079,11 +1107,11 @@ export class MagicCard extends LitElement {
     ].filter(Boolean).join('; ');
     const surface = popupCtl.isOpen
       ? html`
-          <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
+          <ha-card class="mc-popup-surface" tabindex="-1" style=${cssProps(surfaceStyle)} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
             ${layerCss}${popupCtl.renderHead(titleId)}
             <div class="mc-popup-body">
-              <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
+              <div class="mc-card-content" style=${cssProps(contentStyle)} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-pause-gap=${pauseGap(config) ?? nothing}
                 data-mc-flows=${hasFlowList ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
@@ -1686,8 +1714,8 @@ export class MagicCard extends LitElement {
    */
   private _hover(id: string, hover: Partial<DesignConfig> | undefined, target?: HoverTarget): string | typeof nothing {
     if (!hover) return nothing;
-    const rule = hoverRule(id, hover, target);
-    if (!rule) return nothing;
+    const rule = hoverParts(id, hover, target);
+    if (!rule.length) return nothing;
     this._hoverRules.set(id, rule);
     return id;
   }
@@ -1699,21 +1727,37 @@ export class MagicCard extends LitElement {
   private _syncHoverStyles(): void {
     const root = this.renderRoot as ShadowRoot | undefined;
     if (!root) return;
-    const css = this._hoverRules.size
-      ? [...this._hoverRules.values(), '@media (prefers-reduced-motion: reduce) { [data-mc-hover] { transition: none !important; } }'].join(' ')
-      : '';
     let el = this._hoverStyleEl;
-    if (!css) {
-      if (el && el.textContent) el.textContent = '';
-      return;
-    }
+    if (!this._hoverRules.size && !el) return;
     if (!el || el.getRootNode() !== root) {
       el = document.createElement('style');
       el.setAttribute('data-mc-hover-styles', '');
       root.prepend(el);
       this._hoverStyleEl = el;
+      this._hoverKey = '';
     }
-    if (el.textContent !== css) el.textContent = css;
+    const sheet = el.sheet;
+    const key = JSON.stringify([...this._hoverRules.values()]);
+    // a re-attached host gets a fresh, empty sheet for the same <style>
+    if (!sheet || (key === this._hoverKey && sheet === this._hoverSheet)) return;
+    this._hoverKey = key;
+    this._hoverSheet = sheet;
+    while (sheet.cssRules.length) sheet.deleteRule(0);
+    if (!this._hoverRules.size) return;
+    const put = (to: CSSStyleSheet | CSSMediaRule, selector: string, declarations: string[]) => {
+      try {
+        const { style } = to.cssRules[to.insertRule(`${selector} {}`, to.cssRules.length)] as CSSStyleRule;
+        declarations.forEach((d) => setDeclaration(style, d));
+      } catch {
+        // a selector this browser cannot parse skips only its own rule
+      }
+    };
+    for (const [selector, declarations] of [...this._hoverRules.values()].flat()) put(sheet, selector, declarations);
+    try {
+      put(sheet.cssRules[sheet.insertRule('@media (prefers-reduced-motion: reduce) {}', sheet.cssRules.length)] as CSSMediaRule, '[data-mc-hover]', ['transition: none !important']);
+    } catch {
+      // no reduced-motion rule where the browser refuses it
+    }
   }
 
   /**

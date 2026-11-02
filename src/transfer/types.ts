@@ -1,7 +1,8 @@
 import type { TransferNote, TransferNoteCode } from '../contracts/preset-transfer';
+import type { ValueRefusal } from '../contracts/share-kit';
 
 /** What a per-kind validator returns for one item: the cleaned data, or the reasons it was refused. */
-export type KindResult<D = unknown> = { ok: true; data: D; notes: TransferNote[] } | { ok: false; notes: TransferNote[] };
+export type KindResult<D = unknown> = { ok: true; data: D; notes: TransferNote[] } | { ok: false; notes: TransferNote[]; refusal?: ValueRefusal };
 
 export type Raw = Record<string, unknown>;
 
