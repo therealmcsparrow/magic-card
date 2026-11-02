@@ -141,14 +141,15 @@ export function hasRemote(text: string, origin: string): boolean {
 
 /**
  * The cross-origin hosts every string of the config names (nested modules included), then each Google font family the
- * config uses. A string, depth or node limit adds `limit`. Empty when the card makes no outside request.
+ * config uses. A string, depth or node limit adds `limit`; a number, boolean or null past the depth limit holds no address and adds nothing.
+ * Empty when the card makes no outside request.
  */
 export function findRemoteAssets(config: unknown, origin: string): string[] {
   const out: string[] = [];
   const add = (v: string) => out.includes(v) || out.push(v);
   let nodes = 0;
   const walk = (v: unknown, depth: number): void => {
-    if (++nodes > MAX_NODES || depth > MAX_DEPTH) {
+    if (++nodes > MAX_NODES || (depth > MAX_DEPTH && (typeof v === 'string' || (v && typeof v === 'object')))) {
       add(LIMIT);
       return;
     }
