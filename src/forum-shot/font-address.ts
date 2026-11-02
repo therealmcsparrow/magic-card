@@ -26,7 +26,7 @@ type Verdict = { kind: 'host'; host: string } | { kind: 'outside' } | { kind: 'c
 const CANNOT: Verdict = { kind: 'cannot' };
 const OUTSIDE: Verdict = { kind: 'outside' };
 
-function isPublicHost(host: string): boolean {
+export function isPublicHost(host: string): boolean {
   if (host.length > 253) return false;
   const labels = host.split('.');
   if (labels.length < 2) return false;
