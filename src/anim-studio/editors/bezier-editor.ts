@@ -62,7 +62,7 @@ export class AnimBezierEditor extends LitElement {
         color: var(--mc-text-2);
         font-size: 0.75rem;
         font-weight: 500;
-        text-align: left;
+        text-align: start;
         min-width: 0;
         transition: border-color 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
       }
@@ -118,6 +118,7 @@ export class AnimBezierEditor extends LitElement {
         border-radius: var(--mc-radius);
         background: var(--mc-surface-2);
         border: 1px solid var(--mc-divider);
+        direction: ltr; /* x is time, y is progress */
         touch-action: none;
         user-select: none;
       }
@@ -230,12 +231,13 @@ export class AnimBezierEditor extends LitElement {
         height: 24px;
         border-radius: 9999px;
         background: var(--mc-surface-2);
+        direction: ltr; /* the run goes from start to end of time */
         overflow: hidden;
       }
       .preview i {
         position: absolute;
         top: 4px;
-        left: 4px;
+        left: 4px; /* physical */
         width: 16px;
         height: 16px;
         border-radius: 50%;
@@ -244,7 +246,7 @@ export class AnimBezierEditor extends LitElement {
       }
       @keyframes mc-ease-run {
         to {
-          left: calc(100% - 20px);
+          left: calc(100% - 20px); /* physical */
         }
       }
       @media (prefers-reduced-motion: reduce) {

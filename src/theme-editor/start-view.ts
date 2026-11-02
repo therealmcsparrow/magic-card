@@ -631,7 +631,7 @@ export class McteStartView extends LitElement {
         font-size: 1rem;
         font-weight: 500;
         color: var(--mc-text);
-        text-align: left;
+        text-align: start;
         overflow-wrap: anywhere;
       }
       .title:hover {
@@ -694,7 +694,7 @@ export class McteStartView extends LitElement {
       }
       .foot .help {
         align-self: center;
-        margin-right: auto;
+        margin-inline-end: auto;
       }
     `,
   ];

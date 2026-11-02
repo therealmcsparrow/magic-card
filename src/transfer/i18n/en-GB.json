@@ -682,7 +682,8 @@
     "max": 205,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
-    }
+    },
+    "legal": true
   },
   "transfer.panel.export-animations": {
     "text": "{n, plural, one {Export # animation} other {Export # animations}}",
@@ -926,7 +927,8 @@
   "transfer.panel.the-author-name-is-saved-in-the-file": {
     "text": "The author name is saved in the file. Check it before you share the file.",
     "note": "Privacy hint on the export panel. The author name is the one stored in the card's settings.",
-    "max": 120
+    "max": 120,
+    "legal": true
   },
   "transfer.panel.the-checker-for-images-did-not-load-so": {
     "text": "The checker for images did not load, so this image was not read.",

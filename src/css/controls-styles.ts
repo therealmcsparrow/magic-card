@@ -60,6 +60,15 @@ export const controlsViewStyles = css`
     background-color: var(--text-primary-color, #fff);
   }
 
+  .mc-tile-slider[data-mc-rtl] .mc-tile-slider-bar {
+    transform: translate3d(calc((1 - var(--slider-value, 0)) * 100%), 0, 0);
+  }
+
+  .mc-tile-slider[data-mc-rtl] .mc-tile-slider-bar::after {
+    right: auto /* physical */;
+    left: 5px /* physical */;
+  }
+
   .mc-tile-slider--vertical .mc-tile-slider-bar {
     top: auto;
     bottom: 0;

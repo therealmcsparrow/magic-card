@@ -6,6 +6,9 @@ import { iconOf } from './icon';
 export const fieldHelpId = (id: string): string => `${id}-help`;
 export const fieldErrorId = (id: string): string => `${id}-error`;
 
+/** The `dir` of a control that holds text the user typed: auto, ltr or rtl, anything else reads as auto. */
+export const textDir = (v: unknown): 'auto' | 'ltr' | 'rtl' => (v === 'ltr' || v === 'rtl' ? v : 'auto');
+
 export function field(o: KitFieldOptions): TemplateResult {
   return html`<div class="field">
     <div class="field-head">

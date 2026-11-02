@@ -47,6 +47,7 @@ import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../con
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
 import { t, tr, m, locale, type MessageId } from './i18n';
+import { setPseudoRtl } from './pseudo-toggle';
 
 // The animation studio `<magic-card-animation-studio>`: library and editor. The host does the storage; the studio emits
 // mc-anim-save, mc-anim-duplicate, mc-anim-delete and mc-anim-select (bubbling, composed) with `detail.result` a promise.
@@ -311,6 +312,8 @@ export class AnimationStudio extends LitElement {
   @state() private _saveError = '';
   @state() private _busy = false;
   @state() private _status = '';
+  /** The Pseudo RTL switch is on. */
+  @state() private _pseudo = false;
   @state() private _presetQuery = '';
   /** Catalogue presets once the chunk has loaded (preset-catalogue 1.1.0); undefined until then. */
   @state() private _catalogue?: CataloguePreset[];
@@ -1042,6 +1045,24 @@ export class AnimationStudio extends LitElement {
     }
   }
 
+  /** Switch in the top bar: pseudo text, fake digits and dir=rtl on the studio and its preview. */
+  private _pseudoSwitch(): TemplateResult {
+    return html`<button
+      type="button"
+      class="btn ${this._pseudo ? 'btn-primary' : 'btn-secondary'} btn-sm pseudo-switch"
+      role="switch"
+      aria-checked=${this._pseudo ? 'true' : 'false'}
+      @click=${() => void this._togglePseudo()}
+    >
+      <ha-icon icon="mdi:format-textdirection-r-to-l"></ha-icon>${t('anim-studio.studio.pseudo-rtl')}
+    </button>`;
+  }
+
+  private async _togglePseudo(): Promise<void> {
+    const on = !this._pseudo;
+    if (await setPseudoRtl(on, [this, this._stage()])) this._pseudo = on;
+  }
+
   private _stage(): AnimationStage | null {
     return this.shadowRoot?.querySelector('mcas-stage') ?? null;
   }
@@ -1263,6 +1284,7 @@ export class AnimationStudio extends LitElement {
         </div>
         <span class="spacer"></span>
         <div class="grp">
+          ${this._pseudoSwitch()}
           <button
             type="button"
             class="btn btn-secondary btn-sm"
@@ -2013,6 +2035,7 @@ export class AnimationStudio extends LitElement {
         </div>
         <span class="spacer"></span>
         <div class="grp">
+          ${this._pseudoSwitch()}
           <button
             type="button"
             class="icon-btn"
@@ -2069,6 +2092,7 @@ export class AnimationStudio extends LitElement {
         ${this._renderLayers(d)}
         <div class="center ${panel ? 'with-panel' : ''}" style="--split: ${this._split}">
           <mcas-stage
+            dir=${this._pseudo ? 'rtl' : nothing}
             .doc=${this._previewDoc(playing, lv)}
             .layerView=${lv}
             .hiddenLayers=${hidden}

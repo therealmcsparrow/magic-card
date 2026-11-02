@@ -92,6 +92,8 @@ const magicCardLocalStyles = css`
     font-size: var(--mc-font-size, inherit);
   }
 
+  .mc-text, .mc-info-name, .mc-info-secondary { unicode-bidi: plaintext; }
+
   /* "unavailable" after a missing entity's id */
   .mc-text-muted {
     color: var(--mc-design-color, var(--secondary-text-color));

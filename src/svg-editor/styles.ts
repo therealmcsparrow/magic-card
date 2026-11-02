@@ -36,6 +36,7 @@ export const editorStyles: CSSResult[] = [
       z-index: 20;
       top: 8px;
       left: 8px;
+      inset-inline: 8px auto;
       display: flex;
       gap: 4px;
     }
@@ -67,6 +68,7 @@ export const editorStyles: CSSResult[] = [
       z-index: 4;
       left: 12px;
       right: 12px;
+      inset-inline: 12px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -361,6 +363,10 @@ export const editorStyles: CSSResult[] = [
       background-color: var(--mc-canvas);
       background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1px);
       background-size: 16px 16px;
+      direction: ltr;
+    }
+    :host([dir='rtl']) .stage > .hint {
+      direction: rtl;
     }
     .stage.tool-hand {
       cursor: grab;

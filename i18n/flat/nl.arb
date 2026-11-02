@@ -9311,6 +9311,13 @@
     "x-max-length": 55,
     "x-source-hash": "36d48524"
   },
+  "anim-studio.studio.pseudo-rtl": "Pseudo-RTL",
+  "@anim-studio.studio.pseudo-rtl": {
+    "description": "Label of the switch in the studio top bar that shows the studio and preview with pseudo text, Arabic-Indic digits and right-to-left layout, to check mirroring. Max 16 characters.",
+    "source_text": "Pseudo RTL",
+    "x-max-length": 16,
+    "x-source-hash": "3a83f974"
+  },
   "anim-studio.studio.redo-ctrl-y": "Opnieuw (Ctrl+Y)",
   "@anim-studio.studio.redo-ctrl-y": {
     "description": "Tooltip of the redo button in the studio header; keep the shortcut in brackets. Max 25 characters.",
@@ -26682,6 +26689,27 @@
     "x-max-length": 20,
     "x-source-hash": "e35875d4"
   },
+  "icon-library.mirror-badge.keeps": "Blijft",
+  "@icon-library.mirror-badge.keeps": {
+    "description": "Label on an icon in the studio list: the icon keeps its drawing in right-to-left layouts. Max 10 characters.",
+    "source_text": "Keeps",
+    "x-max-length": 10,
+    "x-source-hash": "16aebc8d"
+  },
+  "icon-library.mirror-badge.mirrors": "Spiegelt",
+  "@icon-library.mirror-badge.mirrors": {
+    "description": "Label on an icon in the studio list: the icon flips in right-to-left layouts. Max 10 characters.",
+    "source_text": "Mirrors",
+    "x-max-length": 10,
+    "x-source-hash": "239a80c2"
+  },
+  "icon-library.mirror-badge.not-set": "Niet ingesteld",
+  "@icon-library.mirror-badge.not-set": {
+    "description": "Label on an icon in the studio list: nobody has decided yet whether the icon flips in right-to-left layouts. Max 15 characters.",
+    "source_text": "Not set",
+    "x-max-length": 15,
+    "x-source-hash": "4895f731"
+  },
   "icon-library.nature.back-left-leg": "Linkerachterpoot",
   "@icon-library.nature.back-left-leg": {
     "description": "Part name in an animated icon: the rear leg on the left of an animal. Max 25 characters.",
@@ -38323,6 +38351,13 @@
     "x-max-length": 45,
     "x-source-hash": "aeade066"
   },
+  "mcu-panel.panel.forum-shot": "Forumplaatje",
+  "@mcu-panel.panel.forum-shot": {
+    "description": "Label of the Forum shot tab in the panel tab bar. Max 15 characters.",
+    "source_text": "Forum shot",
+    "x-max-length": 15,
+    "x-source-hash": "de9aca8d"
+  },
   "mcu-panel.panel.icons": "Pictogrammen",
   "@mcu-panel.panel.icons": {
     "description": "Label of the Icons tab in the panel tab bar. Max 15 characters.",
@@ -38378,6 +38413,13 @@
     "source_text": "Linked Cards",
     "x-max-length": 20,
     "x-source-hash": "1b795cc6"
+  },
+  "mcu-panel.panel.loading-the-forum-shot": "Forumplaatje wordt geladen",
+  "@mcu-panel.panel.loading-the-forum-shot": {
+    "description": "Spoken label of the progress indicator while the Forum shot tab loads. Max 35 characters.",
+    "source_text": "Loading the forum shot",
+    "x-max-length": 35,
+    "x-source-hash": "a2cc7b19"
   },
   "mcu-panel.panel.lovelace-card-helpers-are-unavailable": "De Lovelace-kaarthulpmiddelen zijn pas beschikbaar nadat een dashboard is geopend.",
   "@mcu-panel.panel.lovelace-card-helpers-are-unavailable": {
@@ -38620,6 +38662,20 @@
     "source_text": "The editor files could not be loaded from Magic Card. Reload the page and try again.",
     "x-max-length": 135,
     "x-source-hash": "dd90f518"
+  },
+  "mcu-panel.panel.the-forum-shot-could-not-be-loaded-it": "Het forumplaatje kon niet worden geladen. Het wordt met Magic Card meegeleverd als {file}: werk Magic Card bij naar {version} of nieuwer.",
+  "@mcu-panel.panel.the-forum-shot-could-not-be-loaded-it": {
+    "description": "Notice in the Forum shot tab when the forum shot file is missing or will not load. {file} is the name of that file, {version} the lowest Magic Card version that has it. {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
+    "source_text": "The forum shot could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
+    "x-max-length": 185,
+    "x-source-hash": "510fe6ba"
+  },
+  "mcu-panel.panel.the-forum-shot-needs-magic-card-or": "Voor het forumplaatje is Magic Card {version} of nieuwer nodig. Werk Magic Card bij.",
+  "@mcu-panel.panel.the-forum-shot-needs-magic-card-or": {
+    "description": "Notice in the Forum shot tab when the installed Magic Card is too old or does not work with this panel. {version} is the lowest Magic Card version that has the forum shot. {version}: The value that replaces version in the text. Max 100 characters.",
+    "source_text": "The forum shot needs Magic Card {version} or newer. Update Magic Card.",
+    "x-max-length": 100,
+    "x-source-hash": "2db60bfd"
   },
   "mcu-panel.panel.the-magic-card-editor-could-not-be": "De Magic Card-editor kon niet worden geladen.",
   "@mcu-panel.panel.the-magic-card-editor-could-not-be": {

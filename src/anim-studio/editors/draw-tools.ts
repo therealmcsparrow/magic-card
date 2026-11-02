@@ -35,8 +35,8 @@ export class AnimDrawToolbar extends LitElement {
       :host {
         position: absolute;
         top: 8px;
-        left: 8px;
-        right: 8px;
+        left: 8px; /* physical */
+        right: 8px; /* physical */
         z-index: 2;
         display: flex;
         flex-direction: column;

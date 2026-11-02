@@ -26,7 +26,10 @@ export class UiToast extends LitElement {
         place-items: center;
         width: 44px;
         height: 44px;
-        margin: -10px -10px -10px -4px;
+        margin: -10px;
+        margin-left: -4px;
+        margin-right: -10px;
+        margin-inline: -4px -10px;
         padding: 0;
         border: 0;
         border-radius: var(--mc-radius, 8px);

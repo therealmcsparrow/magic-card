@@ -562,7 +562,7 @@ export class McteThemePreview extends LitElement {
     .alert {
       padding: 10px 12px;
       border-radius: 4px;
-      border-left: 4px solid currentColor;
+      border-left: 4px solid currentColor; /* physical */
       background: var(--card-background-color, #fff);
     }
     .a-info {

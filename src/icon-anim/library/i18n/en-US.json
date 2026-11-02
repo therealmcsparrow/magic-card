@@ -1963,6 +1963,18 @@
     "text": "Track light",
     "hash": "e35875d4"
   },
+  "icon-library.mirror-badge.keeps": {
+    "text": "Keeps",
+    "hash": "16aebc8d"
+  },
+  "icon-library.mirror-badge.mirrors": {
+    "text": "Mirrors",
+    "hash": "239a80c2"
+  },
+  "icon-library.mirror-badge.not-set": {
+    "text": "Not set",
+    "hash": "4895f731"
+  },
   "icon-library.nature.back-left-leg": {
     "text": "Back left leg",
     "hash": "5279161c"

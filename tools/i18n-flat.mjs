@@ -341,8 +341,9 @@ function textProblem(text, locale, row) {
   if (p.error) return `(${locale}): ${p.error}`;
   const base = lib.parseMessage(row.gb.text, false, new Map(), { locale: BASE, quotes: true });
   if (!base.error && lib.argSig(p.args) !== lib.argSig(base.args)) return `(${locale}): arguments differ (${lib.argNames(p.args) || 'none'} vs ${lib.argNames(base.args) || 'none'})`;
+  if (!Number.isInteger(row.gb.max) || row.gb.max < 1) return `(${locale}): the English entry has no valid max length (a whole number of at least 1), so no text fits it`;
   const longest = [...keys.longestText(text)].length;
-  if (Number.isInteger(row.gb.max) && longest > row.gb.max) return `(${locale}): ${longest} characters, max is ${row.gb.max}`;
+  if (longest > row.gb.max) return `(${locale}): ${longest} characters, max is ${row.gb.max}`;
   return '';
 }
 

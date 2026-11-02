@@ -54,6 +54,12 @@ This folder documents the Magic Card editor and every option the card supports. 
 | --- | --- |
 | [Troubleshooting](troubleshooting/README.md) | A blank card on an old tablet, a card that stands still, a missing file and the forum shot |
 
+## Security
+
+| Page | Covers |
+| --- | --- |
+| [Check a genuine release](security/check-a-genuine-release.md) | A quick check in the browser and a GitHub CLI check of `magic-card.js` and the SBOM, which releases have attestations, and what the checks cannot tell you |
+
 ## Languages and accessibility
 
 | Folder | Covers |

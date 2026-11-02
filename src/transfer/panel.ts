@@ -2,7 +2,8 @@ import { LitElement, html, css, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorTokens } from '../css/editor-system';
-import { button, editorPrimitives, glyph, kitCss, notice, seg } from '../ui-kit';
+import { englishOf } from '../i18n/english-of';
+import { button, editorPrimitives, glyph, isTranslated, kitCss, legalText, notice, seg } from '../ui-kit';
 import { HOST_KINDS } from '../contracts/preset-transfer';
 import type { ClashChoice, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
 import { loadSvgCss } from '../svg-safety/css-loader';
@@ -12,7 +13,8 @@ import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTra
 import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
-import { locale, t } from './i18n';
+import { hasWrap } from '../i18n/pseudo-hook';
+import { en, locale, m, t } from './i18n';
 
 // <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept external values) and export.
 // It never writes: after the user confirms it dispatches `mc-transfer-import` { kind, items, choice }; `mc-transfer-close` on Escape and Close.
@@ -54,7 +56,7 @@ export class TransferPanel extends LitElement {
       }
       ul {
         margin: 0;
-        padding-left: 18px;
+        padding-inline-start: 18px;
         font-size: 0.8125rem;
         overflow-wrap: anywhere;
       }
@@ -76,8 +78,29 @@ export class TransferPanel extends LitElement {
   @state() private _choice: ClashChoice = 'keep-both';
   @state() private _format: TransferFormat = 'yaml';
   @state() private _done = '';
+  @state() private _english: ReadonlySet<string> = new Set();
 
   private _fileName = '';
+
+  /** A legal text with its English-prevails label and Show English action. */
+  private _legal(id: string, text: string, english: string): TemplateResult {
+    const on = this._english.has(id);
+    return legalText({
+      text,
+      english,
+      translated: isTranslated(locale(), hasWrap()),
+      showEnglish: on,
+      onToggle: () => {
+        const next = new Set(this._english);
+        if (on) next.delete(id);
+        else next.add(id);
+        this._english = next;
+      },
+      prevailsLabel: t('transfer.legal.english-prevails'),
+      showLabel: t('transfer.legal.show-english'),
+      id: `legal-${id}`,
+    });
+  }
 
   private _kinds(): readonly TransferKind[] {
     return this.accept ?? HOST_KINDS[this.host];
@@ -213,7 +236,10 @@ export class TransferPanel extends LitElement {
     const clashes = r.items.filter((i) => this.taken(r.kind, i.id));
     const blocked = (r.kind === 'theme' || r.kind === 'image') && !this.hasLibrary;
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
-    const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
+    const anyUnknown = kept.some((n) => n.code === 'external_ref' && (n.unknown || !n.hosts?.length));
+    const hosts = anyUnknown ? [] : [...new Set(kept.flatMap((n) => n.hosts ?? []))];
+    const shown = hosts.length ? hosts.join(', ') : anyUnknown ? t('transfer.theme.another-website') : '';
+    const shownEn = hosts.length ? shown : en(m('transfer.theme.another-website'));
     return html`
       <ul>
         ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
@@ -223,9 +249,9 @@ export class TransferPanel extends LitElement {
             ${glyph('help', 20)}
             <div class="body">
               <strong>${t('transfer.panel.n-3', { n: kept.length })}</strong>
-              <span class="help">${hosts.length ? `${t('transfer.panel.every-browser-that-shows-a-dashboard', { hosts: hosts.join(', ') })} ` : ''}${t('transfer.panel.lines-that-start-with-card-mod-only-work')}</span>
+              <span class="help">${shown ? html`${this._legal('every-browser', t('transfer.panel.every-browser-that-shows-a-dashboard', { hosts: shown }), englishOf(en(m('transfer.panel.every-browser-that-shows-a-dashboard')), { hosts: shownEn }))} ` : nothing}${t('transfer.panel.lines-that-start-with-card-mod-only-work')}</span>
               <ul>
-                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.hosts?.length ? ` (${n.hosts.join(', ')})` : ''}</li>`)}
+                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.code === 'external_ref' ? ` (${n.hosts?.length ? n.hosts.join(', ') : t('transfer.theme.another-website')})` : ''}</li>`)}
               </ul>
             </div>
           </div>`
@@ -317,7 +343,7 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${e.items.some((i) => i.author) ? html`<p class="help">${t('transfer.panel.the-author-name-is-saved-in-the-file')}</p>` : nothing}
+      ${e.items.some((i) => i.author) ? html`<p class="help">${this._legal('author-name', t('transfer.panel.the-author-name-is-saved-in-the-file'), en(m('transfer.panel.the-author-name-is-saved-in-the-file')))}</p>` : nothing}
       <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}

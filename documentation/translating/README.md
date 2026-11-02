@@ -24,6 +24,16 @@ Each key in `en-GB.json` carries a note that tells you where the text shows and 
 
 In the exchange files described below, these three become one `description`, for example "Shown on the Save button. {count}: How many items. Max 40 characters."
 
+A text longer than its `max` is refused when you import it and fails the check, in every language. Size `max` for the longest language that will use the place, and leave room: Dutch runs longer than English, and an Arabic or Hebrew text can differ again.
+
+## Legal text
+
+A key can carry `"legal": true` in `en-GB.json`. Legal text is English only in force: the English prevails, and a translation is published only after a qualified lawyer has checked it. Magic Card gives no legal advice.
+
+-   Next to a translated legal text, Magic Card shows a line that the English prevails and a Show English action. They are generated for every language that is not English, as `<namespace>.legal.english-prevails` and `<namespace>.legal.show-english`. Their English comes from `tools/i18n/legal-labels.json`. You translate them like any other key.
+-   When the English of a legal key changes, its translations are stale and the check fails with rule D10, with no way round it. A waiver does not clear a legal key, and adding one for it is itself an error. Only a translation whose hash matches the new English does, which means the text was checked again and imported.
+-   Keys in that file that have no `legal` flag in the source also fail D10.
+
 ## Plurals and arguments
 
 A message may use arguments in braces, such as `{name}`, and plural forms in ICU style:
@@ -101,6 +111,14 @@ Two ways to clear it:
 -   For a typo or punctuation fix that does not change the meaning, add a waiver to `i18n/waivers.json` with the key, the hash of the new English and a reason. Waivers are not for changes of meaning. Once the Dutch text is confirmed, the waiver can go.
 
 The `x-stale` mark in the Dutch exchange file ignores waivers, so you still see every text that was not confirmed.
+
+Legal-tagged keys follow a stricter drift rule: no waiver, only a re-checked translation. See [Legal text](#legal-text).
+
+## Checking a layout without a right-to-left language
+
+No right-to-left language ships. To see how a screen behaves in one, open the animation studio and turn on Pseudo RTL. It mirrors the studio and its preview, swaps in Arabic-Indic digits and wraps each message in direction marks. It is for testing only, and no profile language can select it. Real right-to-left translations, a screen reader run and a device run are still to do. See [Animation studio](../animation-studio/README.md#right-to-left).
+
+When a message has an argument that may hold a name or other text, Magic Card isolates the value with direction marks under a right-to-left or pseudo setting, or when the value itself has right-to-left letters. Numbers are never isolated.
 
 ## Renamed keys
 
