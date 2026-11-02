@@ -388,7 +388,16 @@ export function classifyCard(config: unknown, origin: string): CardClass {
 /** The name a Google family goes by on the mounted copy, so the card's own loader finds nothing to request. */
 export const aliasOf = (family: string): string => `mc-shot-${family.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 
-const CSS_FONT_FAMILY = /(font-family\s*:\s*)([^;}]+)/gi;
+// The card's own loader reads a font-family value up to `;` (src/utils/google-fonts.ts), so a family after a `}` is loaded and must be renamed too.
+const LOADER_FONT_FAMILY = /(font-family\s*:\s*)([^;]+)/gi;
+
+/** Every `font-family` value of `css` the way the loader reads it, and its shorter reading up to a `}`; `fn` returns the new value. */
+function mapFontFamilies(css: string, fn: (value: string) => string): string {
+  return css.replace(LOADER_FONT_FAMILY, (_m, head: string, v: string) => {
+    const brace = v.indexOf('}');
+    return head + (brace < 0 ? fn(v) : fn(v.slice(0, brace)) + fn(v.slice(brace)));
+  });
+}
 
 /** `value` with each listed Google family swapped for its alias when `has` accepts it (Roboto excepted). */
 export function aliasFamilies(value: string, has: (lower: string) => boolean): string {
@@ -404,9 +413,9 @@ export function aliasFamilies(value: string, has: (lower: string) => boolean): s
 
 /** A text from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
-  return text.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => {
+  return mapFontFamilies(text, (v) => {
     for (const f of googleFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
-    return head + aliasFamilies(v, () => true);
+    return aliasFamilies(v, () => true);
   });
 }
 
@@ -436,10 +445,11 @@ export function prepareCard(config: Record<string, unknown>, origin: string): Ca
   const hasAlias = (lower: string) => aliases.has(lower);
   const mountCss = (css: string): string => {
     const r = css.length > MAX_STRING ? null : readCss(css, origin);
-    if (!r || r.fail) return css;
+    if (!r) return css;
+    if (r.fail) return mapFontFamilies(css, (v) => aliasFamilies(v, hasAlias));
     imports.push(...r.imports);
     faces.push(...r.faces);
-    return r.pure.replace(CSS_FONT_FAMILY, (_m, head: string, v: string) => head + aliasFamilies(v, hasAlias));
+    return mapFontFamilies(r.pure, (v) => aliasFamilies(v, hasAlias));
   };
   let nodes = 0;
   const rewrite = (v: unknown, depth: number): unknown => {

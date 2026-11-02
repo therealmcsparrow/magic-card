@@ -18,7 +18,9 @@ const XML_NAMESPACE = /^http:\/\/www\.w3\.org\/(?:2000\/svg|1999\/xlink|1999\/xh
 // Only a string holding one of these can form an address (`&` for character references, `\` for CSS escapes and backslash slashes).
 const MAY_HOLD_ADDRESS = /[:/\\&]/;
 // Where one address ends inside a decoded text.
-const SUB_TOKEN = /([\s"'`()<>[\]{}=,;|^*]+)/;
+// White space is what the URL parser counts as such: U+FEFF is not, it stays inside an address.
+const SUB_TOKEN = /([\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000"'`()<>[\]{}=,;|^*]+)/;
+const SPACE_START = /^[\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]/;
 const LONE_SLASHES = /^\/{2,}$/;
 // Where one address ends inside the raw text (`;` stays: it ends character references).
 const RAW_TOKEN = /([ "'`()<>=,]+)/;
@@ -86,18 +88,19 @@ function readings(text: string): Set<string> {
 
 const other = (origin: string) => (origin.startsWith('https:') ? 'http://mc-other.invalid' : 'https://mc-other.invalid');
 
-/** `s` without the control characters and spaces the URL parser strips from both ends. */
-function trimControl(s: string): string {
+/** `s` the way the URL parser reads it before it looks at the scheme or the slashes: `\` as `/`, tabs and line breaks dropped, control characters and spaces cut from both ends. */
+function urlText(s: string): string {
+  const flat = s.replace(/\\/g, '/').replace(/[\t\n\r]/g, '');
   let a = 0;
-  let b = s.length;
-  while (a < b && s.charCodeAt(a) <= 0x20) a++;
-  while (b > a && s.charCodeAt(b - 1) <= 0x20) b--;
-  return s.slice(a, b);
+  let b = flat.length;
+  while (a < b && flat.charCodeAt(a) <= 0x20) a++;
+  while (b > a && flat.charCodeAt(b - 1) <= 0x20) b--;
+  return flat.slice(a, b);
 }
 
 /** The host of the address that leaves the origin, or `undefined` when the token stays on it. An unparsable address counts as remote. */
 function remoteHost(token: string, origin: string): string | undefined {
-  const t = trimControl(token.replace(/\\/g, '/'));
+  const t = urlText(token);
   const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(t);
   if (scheme) {
     if (!FETCH_SCHEMES.has(scheme[1].toLowerCase()) || XML_NAMESPACE.test(t)) return undefined;
@@ -129,7 +132,7 @@ function remoteHosts(text: string, origin: string, all: boolean): string[] {
       if (!token) continue;
       // A lone `//` joined to a delimiter (`//(a).host/x`) still starts an address; only `//` before a space or the end stays text.
       const next = parts[i + 1];
-      const host = LONE_SLASHES.test(token.replace(/\\/g, '/')) && next && !/^\s/.test(next) ? 'unknown' : remoteHost(token, origin);
+      const host = LONE_SLASHES.test(urlText(token)) && next && !SPACE_START.test(next) ? 'unknown' : remoteHost(token, origin);
       if (host === undefined) continue;
       found.push(host);
       if (!all) return found;
@@ -186,7 +189,7 @@ function hasSchemeForm(text: string): boolean {
   for (const m of flat.matchAll(SCHEME_FORM)) {
     const end = (m.index ?? 0) + m[0].length;
     if (FETCHING.has(m[1].toLowerCase())) return true;
-    if (end < flat.length && !/\s/.test(flat[end])) return true;
+    if (end < flat.length && !SPACE_START.test(flat[end])) return true;
   }
   return false;
 }

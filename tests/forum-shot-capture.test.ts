@@ -3,7 +3,7 @@ import '../src/index';
 import { FORUM_SHOT_MAX_PIXELS } from '../src/contracts/forum-shot';
 import { captureFrame, checkCaptureSupport } from '../src/forum-shot/capture';
 import type { CaptureSeams } from '../src/forum-shot/capture';
-import { aliasFontValue, aliasInText } from '../src/forum-shot/font-address';
+import { aliasFontValue, aliasInText, classifyCard } from '../src/forum-shot/font-address';
 import { deepElements, findRemoteAssets, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
@@ -25,6 +25,7 @@ let settled: SettledCard | undefined;
 afterEach(() => {
   settled?.dispose();
   settled = undefined;
+  document.head.querySelectorAll('link[data-mc-font]').forEach((l) => l.remove());
   vi.restoreAllMocks();
   document.body.innerHTML = '';
 });
@@ -48,18 +49,29 @@ describe('findRemoteAssets', () => {
 });
 
 describe('a protocol-relative address behind a delimiter', () => {
-  const forms = ['//*.evil.example/x.png', '//=evil.example/x.png', '//,evil.example/x.png', '//;evil.example/x.png', '//{a}.evil.example/x.png', "//'a'.evil.example/x.png", '//(a).evil.example/x.png', '//`a`.evil.example/x.png', '//|evil.example/x.png', '//^evil.example/x.png', '//[a].evil.example/x.png', '//{{x}}.evil.example/x.png'];
+  // The URL parser strips leading and trailing C0 controls and spaces, drops tabs and line breaks, and ignores U+FEFF in a host.
+  const raw = [
+    '//*.evil.example/x.png', '//=evil.example/x.png', '//,evil.example/x.png', '//;evil.example/x.png', '//{a}.evil.example/x.png', "//'a'.evil.example/x.png", '//(a).evil.example/x.png', '//`a`.evil.example/x.png', '//|evil.example/x.png', '//^evil.example/x.png', '//[a].evil.example/x.png', '//{{x}}.evil.example/x.png',
+    '\u0001//(a).evil.example/x.png', '\u001f//*.evil.example/x.png', '\u0001//,evil.example/x.png', '\u0000//(a).evil.example/x.png', '\u0001\u001f//(a).evil.example/x.png', '//\uFEFFevil.example/x.png', '//\uFEFF(a).evil.example/x.png', '\u0001//\uFEFFevil.example/x.png', '/\t/(a).evil.example/x.png', '\t//(a).evil.example/x.png', '/\n/*.evil.example/x.png', '\r\n//,evil.example/x.png',
+  ];
+  const forms = raw.map((f) => [JSON.stringify(f), f] as const);
+  const clean = ['Hello // there', 'a//b.c', 'x // (y)', 'ends //', 'Hello \u0001// there', '// there'];
+  const nested = (form: string) => ({ type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] });
 
-  it.each(forms)('counts %s as remote in a module value', (form) => {
-    expect(findRemoteAssets({ rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] }, ORIGIN)).not.toEqual([]);
+  it.each(forms)('counts %s as remote in a module value', (_l, form) => {
+    expect(findRemoteAssets(nested(form), ORIGIN)).not.toEqual([]);
   });
 
-  it.each(forms)('counts %s as remote inside css url()', (form) => {
+  it.each(forms)('counts %s as remote inside css url()', (_l, form) => {
     expect(findRemoteAssets({ css: `.a{background:url(${form})}` }, ORIGIN)).not.toEqual([]);
     expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
   });
 
-  it.each(forms)('sweeps %s from an img and a style', (form) => {
+  it.each(forms)('locks %s in classifyCard', (_l, form) => {
+    expect(classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
+  });
+
+  it.each(forms)('sweeps %s from an img and a style', (_l, form) => {
     const root = document.createElement('div');
     root.innerHTML = '<img><i></i>';
     root.querySelector('img')!.setAttribute('src', form);
@@ -69,14 +81,21 @@ describe('a protocol-relative address behind a delimiter', () => {
     expect(root.querySelector('i')!.getAttribute('style') ?? '').not.toContain('//');
   });
 
-  it.each(forms)('stops settleCard on %s before anything mounts', async (form) => {
-    const config = { type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] };
-    await expect(settleCard({ states: {}, language: 'en', themes: { themes: {} } }, config, { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
+  it.each(forms)('stops settleCard on %s before anything mounts', async (_l, form) => {
+    await expect(settleCard({ states: {}, language: 'en', themes: { themes: {} } }, nested(form), { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
     expect(document.body.children.length).toBe(0);
   });
 
-  it('keeps ordinary double slashes clean', () => {
-    expect(findRemoteAssets({ a: 'Hello // there', b: 'a//b.c', c: 'x // (y)', d: 'ends //' }, ORIGIN)).toEqual([]);
+  it('keeps ordinary double slashes clean everywhere', async () => {
+    for (const text of clean) {
+      expect(findRemoteAssets({ a: text }, ORIGIN), text).toEqual([]);
+      expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock, text).toBeNull();
+      const root = document.createElement('div');
+      root.innerHTML = '<p></p>';
+      root.querySelector('p')!.setAttribute('title', text);
+      expect(sweepRemote(root, ORIGIN), text).toBe(false);
+    }
+    settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello // there' }] }] }] }, { settleMs: 0 });
   });
 });
 
@@ -225,6 +244,8 @@ describe('settleCard', () => {
         ['a font key', { font_family: 'Lato' }],
         ['a font key in a nested design', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', font_family: 'Poppins' }] }] }] }],
         ['a css rule', { css: '.a{font-family: Lora;}' }],
+        ['a css rule in a module', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: '.a{font-family: Lora;}' }] }] }] }],
+        ['a family after a closing brace in a module css', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: '.a{font-family: x}, Nunito;}' }] }] }] }],
         ['a family beside a prepared one', { font_family: 'Oswald' }],
       ];
 

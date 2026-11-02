@@ -1,7 +1,7 @@
 import path from 'node:path';
 import os from 'node:os';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { bundlePage, engines, startServers, type Servers } from '../fixtures/forum-shot-font-server';
+import { bundlePage, engines, startServers, type Browser, type Servers } from '../fixtures/forum-shot-font-server';
 
 // AC1, AC2, AC11, AC12 (and AC19 for the notice) in a real browser: a card with an outside Google font is drawn with the fetched font file,
 // the wire holds only the two allowed hosts and carries no cookie and no referrer, and a face with unicode-range draws inside the SVG
@@ -46,6 +46,38 @@ const run = (config: unknown, tpl = '', hosts: string[] | null = GOOGLE): string
 interface Out { code: string; url: string; dark: number; notices: string[]; links: number }
 const show = (url: string): string => `(() => { document.body.innerHTML = ''; const i = new Image(); i.src = ${JSON.stringify(url)}; i.style.cssText = 'display:block;background:#ccc'; document.body.append(i); return i.decode().then(() => true); })()`;
 
+// Watches every fetch the page makes: how many started, answered and had their body read to the end, and any abort, reader cancel or read error.
+// Chromium 85 reports a font file whose body was read in full as `net::ERR_ABORTED`; the product never aborts or cancels on those runs, which this proves.
+const WATCH = `(() => {
+  const n = window.__net = { started: 0, answered: 0, done: 0, bad: [] };
+  const abort = AbortController.prototype.abort;
+  AbortController.prototype.abort = function () { n.bad.push('abort'); return abort.apply(this, arguments); };
+  const R = ReadableStreamDefaultReader.prototype;
+  const read = R.read;
+  R.read = function () { return read.apply(this, arguments).then((x) => { if (x.done) n.done++; return x; }, (e) => { n.bad.push('read ' + e); throw e; }); };
+  const cancel = R.cancel;
+  R.cancel = function () { n.bad.push('cancel'); return cancel.apply(this, arguments); };
+  const fetch = window.fetch;
+  window.fetch = function () { n.started++; return fetch.apply(this, arguments).then((r) => { n.answered++; return r; }, (e) => { n.answered++; n.bad.push('fetch ' + e); throw e; }); };
+  return true;
+})()`;
+const ABORTED_FILE = /^https:\/\/fonts\.gstatic\.com\/s\/(?:wide|tall)\.ttf \[Fetch from script\] net::ERR_ABORTED$/;
+const wait = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+
+/** Waits until every fetch of the page has been answered and read, then returns the failed requests; an aborted font file counts only when its body was read in full and nothing aborted or cancelled. */
+async function failedAfterSettle(b: Browser): Promise<string[]> {
+  type Net = { started: number; answered: number; done: number; bad: string[] };
+  let net = await b.eval<Net>('window.__net');
+  for (let i = 0; i < 60 && (net.started !== net.answered || net.answered !== net.done); i++) {
+    await wait(50);
+    net = await b.eval<Net>('window.__net');
+  }
+  await wait(300);
+  net = await b.eval<Net>('window.__net');
+  const complete = net.started === net.answered && net.answered === net.done && net.bad.length === 0;
+  return b.failed.filter((f) => !(complete && ABORTED_FILE.test(f)));
+}
+
 let servers: Servers;
 beforeAll(async () => {
   servers = await startServers(await bundlePage());
@@ -59,6 +91,7 @@ for (const engine of engines()) {
     it('real font and only allowed requests', async () => {
       servers.wire.length = 0;
       await engine.run(servers, async (b) => {
+        await b.eval(WATCH);
         const real = await b.eval<Out>(run(card('Open Sans')));
         const control = await b.eval<Out>(run(card('sans-serif')));
         expect(real.code, 'AC1 the run finishes').toBe('ok');
@@ -84,7 +117,7 @@ for (const engine of engines()) {
         // the browser's own view: nothing but the page, its script and the two hosts was asked for, and nothing failed
         const outside = b.requests.map((r) => new URL(r.url)).filter((u) => u.hostname !== '127.0.0.1');
         expect([...new Set(outside.map((u) => u.hostname))].sort()).toEqual(['fonts.googleapis.com', 'fonts.gstatic.com']);
-        expect(b.failed, 'no failed request').toEqual([]);
+        expect(await failedAfterSettle(b), 'no failed request').toEqual([]);
         expect(b.errors).toEqual([]);
         // the font files are cross-origin CORS fetches: each one names the page's origin, none a different one
         const files = servers.wire.filter((w) => w.host === 'fonts.gstatic.com');
@@ -129,6 +162,7 @@ for (const engine of engines()) {
       // a card with a prepared family: the only Google traffic is the one stylesheet and the files for that family, never the template's
       servers.wire.length = 0;
       await engine.run(servers, async (b) => {
+        await b.eval(WATCH);
         await b.eval(`(() => { window.__added = []; new MutationObserver((ms) => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1) window.__added.push(n.tagName + ':' + (n.getAttribute('data-mc-font') ?? '')); }).observe(document.head, { childList: true }); return true; })()`);
         const r = await b.eval<Out>(run(tplCard(), `font-family: Lato`));
         expect(r.code).toBe('font_unavailable');
@@ -142,7 +176,7 @@ for (const engine of engines()) {
           expect(ok, `${w.host}${w.url} is on the prepared path`).toBe(true);
           expect(w.url).not.toMatch(/Lato/i);
         }
-        expect(b.failed).toEqual([]);
+        expect(await failedAfterSettle(b), 'no failed request').toEqual([]);
       });
     });
 

@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ForumShotLockReason, MagicCardRef } from '../src/contracts/forum-shot';
-import { classifyCard } from '../src/forum-shot/font-address';
+import { aliasInText, classifyCard, prepareCard } from '../src/forum-shot/font-address';
+import { configGoogleFonts } from '../src/utils/google-fonts';
 import { listMagicCards } from '../src/forum-shot/pick';
 
 interface AddressCase {
@@ -68,5 +69,26 @@ describe('listMagicCards fills the lock and the font hosts without a request', (
     expect(refs[0].dashboardTitle).toBe('');
     expect(refs[4].cardName).toBe('#5');
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('a font-family value is read the way the card loader reads it', () => {
+  const probe = '.a{font-family: x}, Nunito;}';
+  const config = { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: probe }] }] }] };
+
+  it('finds the family the loader finds, and renames it in a template text and in the mounted css', () => {
+    expect(configGoogleFonts(config)).toEqual(['Nunito']);
+    const missing = vi.fn();
+    expect(aliasInText(probe, new Set(), missing)).toBe('.a{font-family: x}, "mc-shot-nunito";}');
+    expect(missing).toHaveBeenCalledTimes(1);
+    const kit = prepareCard(config, 'http://localhost:3000');
+    const css = JSON.stringify(kit.mount);
+    expect(css).toContain('mc-shot-nunito');
+    expect(configGoogleFonts(kit.mount)).toEqual([]);
+  });
+
+  it.each(['.a{font-family: Lora}', '.a{font-family: Lora } .b{x:1}', 'p{font-family: Lora, serif;}'])('renames the family in %s', (text) => {
+    expect(configGoogleFonts({ css: aliasInText(text, new Set(['lora']), () => undefined) })).toEqual([]);
+    expect(aliasInText(text, new Set(['lora']), () => undefined)).toContain('mc-shot-lora');
   });
 });
