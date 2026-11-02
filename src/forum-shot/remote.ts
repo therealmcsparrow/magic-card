@@ -120,22 +120,36 @@ function remoteHost(token: string, origin: string): string | undefined {
   }
 }
 
-/** True when the whole token is an http(s) address the URL parser places on `origin`, or an allowed XML namespace. */
-function plainlySafe(token: string, origin: string): boolean {
+// An http(s) address whose authority a `/`, `?` or `#` closes inside the token: what follows can no longer change its host.
+const CLOSED_AUTHORITY = /^https?:\/*[^/?#]+[/?#]/i;
+// A separator run that ends a quoted or marked-up value, so the namespace before it is the whole address.
+const VALUE_END = /["'<>\s]/;
+// One raster picture inline, as a whole token: no network request, whatever slashes its base64 holds.
+const RASTER_TOKEN = /(?<=^|[\s"'`()<>])data:image\/(?:png|jpe?g|gif|webp|avif|bmp);base64,[A-Za-z0-9+/]*={0,2}(?=$|[\s"'`()<>])/gi;
+
+/**
+ * True when the token is an allowed XML namespace that ends where its value ends, or an http(s) address the URL parser places on `origin`
+ * whose authority is closed inside the token. A token cut at a separator is not judged by itself, since the parser reads on to the next `/`, `?` or `#`:
+ * it counts only when it is the whole text.
+ */
+function plainlySafe(token: string, origin: string, next: string | undefined, whole: boolean): boolean {
   const t = urlText(token);
-  return XML_NAMESPACE.test(t) || (/^https?:/i.test(t) && remoteHost(token, origin) === undefined);
+  if (XML_NAMESPACE.test(t)) return whole || next === undefined || VALUE_END.test(next);
+  return /^https?:/i.test(t) && (whole || CLOSED_AUTHORITY.test(t)) && remoteHost(token, origin) === undefined;
 }
 
 /**
  * Hosts of every address in `text` that is not on `origin`; stops at the first when `all` is false. Beyond the addresses a token names,
- * two slashes in any spelling count as remote (host `unknown`) unless the whole token holding them is plainly safe.
+ * two slashes in any spelling count as remote (host `unknown`) unless the whole token holding them is plainly safe or is one raster data image.
  */
 function remoteHosts(text: string, origin: string, all: boolean): string[] {
   if (text.length > MAX_STRING) return [LIMIT];
   if (!MAY_HOLD_ADDRESS.test(text)) return [];
   const found: string[] = [];
-  for (const reading of readings(text)) {
+  for (const full of readings(text)) {
+    const reading = full.replace(RASTER_TOKEN, 'x');
     const parts = reading.split(SUB_TOKEN);
+    const whole = urlText(reading);
     for (let i = 0; i < parts.length; i += 2) {
       const token = parts[i];
       if (!token) continue;
@@ -144,7 +158,7 @@ function remoteHosts(text: string, origin: string, all: boolean): string[] {
         found.push(host);
         if (!all) return found;
         parts[i] = '';
-      } else if (SLASH_PAIR.test(token) && plainlySafe(token, origin)) {
+      } else if (SLASH_PAIR.test(token) && plainlySafe(token, origin, parts[i + 1], whole === urlText(token))) {
         parts[i] = '';
       }
     }
@@ -158,7 +172,8 @@ function remoteHosts(text: string, origin: string, all: boolean): string[] {
 
 /**
  * True when any address in `text` (read the way the browser's URL parser reads it, after character references and CSS escapes
- * are resolved, with `\` as `/`) leaves `origin`, cannot be parsed, or the text is over the size limit.
+ * are resolved, with `\` as `/`) leaves `origin`, cannot be parsed, or the text is over the size limit; or when it holds two slashes in any spelling
+ * outside a plainly safe address or a raster data image.
  */
 export function hasRemote(text: string, origin: string): boolean {
   return remoteHosts(text, origin, false).length > 0;

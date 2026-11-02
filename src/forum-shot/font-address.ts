@@ -330,9 +330,16 @@ function readCss(css: string, origin: string): CssRead {
     from = b;
   }
   parts.push(css.slice(from));
+  // Comments go too: a space where a rule was removed must not turn the comments around it into a slash pair the source did not hold.
+  const gone = [...drops];
+  toks.forEach((t, k) => {
+    if (t.k === 'comment') gone.push([starts[k], k + 1 < len ? starts[k + 1] : css.length]);
+  });
+  gone.sort((x, y) => x[0] - y[0]);
   const kept: string[] = [];
   from = 0;
-  for (const [a, b] of drops) {
+  for (const [a, b] of gone) {
+    if (a < from) continue;
     kept.push(css.slice(from, a));
     from = b;
   }
@@ -393,21 +400,21 @@ const LOADER_FONT_FAMILY = /(font-family\s*:\s*)([^;]+)/gi;
 
 /** One loader value: its reading up to a `}`, then the rest, where a later `font-family` (minified css) is a value of its own. */
 function mapValue(v: string, fn: (value: string) => string): string {
-  const brace = v.indexOf('}');
-  if (brace < 0) return fn(v);
-  const tail = v.slice(brace);
-  const next = /(font-family\s*:\s*)/i.exec(tail);
-  if (!next) return fn(v.slice(0, brace)) + fn(tail);
-  return fn(v.slice(0, brace)) + fn(tail.slice(0, next.index)) + next[1] + mapFontFamilies(tail.slice(next.index + next[1].length), fn, true);
+  let out = '';
+  let cur = v;
+  for (;;) {
+    const brace = cur.indexOf('}');
+    if (brace < 0) return out + fn(cur);
+    const tail = cur.slice(brace);
+    const next = /(font-family\s*:\s*)/i.exec(tail);
+    if (!next) return out + fn(cur.slice(0, brace)) + fn(tail);
+    out += fn(cur.slice(0, brace)) + fn(tail.slice(0, next.index)) + next[1];
+    cur = tail.slice(next.index + next[1].length);
+  }
 }
 
-/** Every `font-family` value of `css` the way the loader reads it; `fn` returns the new value. `valueFirst` treats the start of `css` as a value. */
-function mapFontFamilies(css: string, fn: (value: string) => string, valueFirst = false): string {
-  if (valueFirst) {
-    const end = css.indexOf(';');
-    const value = end < 0 ? css : css.slice(0, end);
-    return mapValue(value, fn) + (end < 0 ? '' : mapFontFamilies(css.slice(end), fn));
-  }
+/** Every `font-family` value of `css` the way the loader reads it; `fn` returns the new value. */
+function mapFontFamilies(css: string, fn: (value: string) => string): string {
   return css.replace(LOADER_FONT_FAMILY, (_m, head: string, v: string) => head + mapValue(v, fn));
 }
 

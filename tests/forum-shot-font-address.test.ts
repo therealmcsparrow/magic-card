@@ -4,6 +4,7 @@ import type { ForumShotLockReason, MagicCardRef } from '../src/contracts/forum-s
 import { aliasInText, classifyCard, prepareCard } from '../src/forum-shot/font-address';
 import { configGoogleFonts } from '../src/utils/google-fonts';
 import { listMagicCards } from '../src/forum-shot/pick';
+import { findRemoteAssets } from '../src/forum-shot/remote';
 
 interface AddressCase {
   id: string;
@@ -109,5 +110,56 @@ describe('a font-family value is read the way the card loader reads it', () => {
   it.each(['.a{font-family: Lora}', '.a{font-family: Lora } .b{x:1}', 'p{font-family: Lora, serif;}'])('renames the family in %s', (text) => {
     expect(configGoogleFonts({ css: aliasInText(text, new Set(['lora']), () => undefined) })).toEqual([]);
     expect(aliasInText(text, new Set(['lora']), () => undefined)).toContain('mc-shot-lora');
+  });
+});
+
+describe('removing an accepted font rule leaves no slash pair on the mount', () => {
+  const ORIGIN = fixture.origin;
+  const IMPORT = '@import url("https://fonts.googleapis.com/css2?family=Lora");';
+  const FACE = '@font-face{font-family:"X";src:url("https://fonts.gstatic.com/s/x.woff2")}';
+  const cases = [
+    `/* fonts */\n${IMPORT}\n/* rest */\n.a{color:red}`,
+    `${IMPORT}/* a */${IMPORT}/* b */`,
+    `/* a */${FACE}/* b */`,
+    `/* a */ ${IMPORT} /* b */ ${FACE} /* c */ .a{color:red}`,
+    `.a{color:red}/**/${IMPORT}/**/.b{color:blue}`,
+  ];
+
+  it.each(cases.map((c) => [JSON.stringify(c), c] as const))('classify and mount agree on %s', (_l, css) => {
+    const config = { type: 'custom:magic-card', css };
+    const kit = prepareCard(config, ORIGIN);
+    expect(kit.lock).toBeNull();
+    expect(findRemoteAssets(kit.mount, ORIGIN)).toEqual([]);
+    expect(classifyCard(config, ORIGIN).lock).toBeNull();
+    expect(kit.plan.sheets.length).toBeGreaterThan(0);
+  });
+
+  it('keeps the rules around the removed one', () => {
+    const kit = prepareCard({ type: 'custom:magic-card', css: `/* a */${IMPORT}/* b */.a{color:red}` }, ORIGIN);
+    expect(kit.mount.css).toContain('.a{color:red}');
+    expect(kit.mount.css).not.toContain('@import');
+  });
+});
+
+describe('a long run of font-family rules (R-26)', () => {
+  it('renames every family in 50,000 rules without recursion', () => {
+    const text = '.a{font-family:Lora}'.repeat(50_000);
+    let missing = 0;
+    const out = aliasInText(text, new Set(['lora']), () => missing++);
+    expect(out.split('mc-shot-lora').length - 1).toBe(50_000);
+    expect(out).not.toContain('Lora');
+    expect(missing).toBe(0);
+  });
+
+  it('counts a missing family once per rule', () => {
+    let missing = 0;
+    aliasInText('.a{font-family:Lora}'.repeat(3000), new Set(), () => missing++);
+    expect(missing).toBe(3000);
+  });
+
+  it('renames every family in prepareCard css', () => {
+    const config = { type: 'custom:magic-card', font_family: 'Lora', css: '.a{font-family:Lora}'.repeat(20_000) };
+    const kit = prepareCard(config, fixture.origin);
+    expect((kit.mount.css as string).split('mc-shot-lora').length - 1).toBe(20_000);
   });
 });

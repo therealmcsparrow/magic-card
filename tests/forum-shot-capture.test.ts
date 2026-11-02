@@ -3,7 +3,7 @@ import '../src/index';
 import { FORUM_SHOT_MAX_PIXELS } from '../src/contracts/forum-shot';
 import { captureFrame, checkCaptureSupport } from '../src/forum-shot/capture';
 import type { CaptureSeams } from '../src/forum-shot/capture';
-import { aliasFontValue, aliasInText, classifyCard } from '../src/forum-shot/font-address';
+import { aliasFontValue, aliasInText, classifyCard, prepareCard } from '../src/forum-shot/font-address';
 import { deepElements, findRemoteAssets, hasRemote, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
@@ -119,6 +119,91 @@ describe('a protocol-relative address behind a delimiter', () => {
       expect(sweepRemote(root, ORIGIN), text).toBe(false);
     }
     settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello there' }] }] }] }, { settleMs: 0 });
+  });
+});
+
+describe('an origin address cut at a separator', () => {
+  // The URL parser reads on past the separator until `/`, `?` or `#`, so the text after it names the host.
+  const seps = [' ', ' ', '　', '(', ')', ',', '=', ';', '|', '^', '*', '{', '}', '[', ']', '`', "'", '<', '>'];
+  const forms = seps.map((sep) => [JSON.stringify(sep), `${ORIGIN}${sep}@evil.example/x.png`] as const);
+  const nested = (form: string) => ({ type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] });
+
+  it.each(forms)('counts a cut at %s as remote in a module value and in css', (_l, form) => {
+    expect(findRemoteAssets(nested(form), ORIGIN)).not.toEqual([]);
+    expect(findRemoteAssets({ css: `.a{background:url(${form})}` }, ORIGIN)).not.toEqual([]);
+    expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
+  });
+
+  it.each(forms)('locks a cut at %s in classifyCard', (_l, form) => {
+    expect(classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
+  });
+
+  it.each(forms)('sweeps a cut at %s from an img and a style', (_l, form) => {
+    const root = document.createElement('div');
+    root.innerHTML = '<img><i></i>';
+    root.querySelector('img')!.setAttribute('src', form);
+    root.querySelector('i')!.setAttribute('style', `background:url(${form})`);
+    expect(sweepRemote(root, ORIGIN)).toBe(true);
+    expect(root.querySelector('img')!.hasAttribute('src')).toBe(false);
+  });
+
+  it.each(forms)('stops settleCard on a cut at %s before anything mounts', async (_l, form) => {
+    await expect(settleCard({ states: {}, language: 'en', themes: { themes: {} } }, nested(form), { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
+    expect(document.body.children.length).toBe(0);
+  });
+
+  it('counts a cut namespace as remote and keeps a namespace that ends its value', () => {
+    expect(hasRemote('http://www.w3.org/2000/svg(/../../x.png', ORIGIN)).toBe(true);
+    expect(hasRemote('http://www.w3.org/2000/svg,/../x.png', ORIGIN)).toBe(true);
+    expect(hasRemote('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink=\'http://www.w3.org/1999/xlink\'></svg>', ORIGIN)).toBe(false);
+    expect(hasRemote('http://www.w3.org/2000/svg', ORIGIN)).toBe(false);
+  });
+
+  it('keeps a closed origin address and a bare one that is the whole text', () => {
+    for (const text of [`${ORIGIN}/x.png`, `${ORIGIN}/x(@evil.example/`, `${ORIGIN}?a=b`, `${ORIGIN}#f`, `${ORIGIN}`, ` ${ORIGIN} `, `url("${ORIGIN}/a//b.png")`]) expect(hasRemote(text, ORIGIN), text).toBe(false);
+  });
+});
+
+describe('a raster data image as a whole token', () => {
+  const rasters = ['data:image/png;base64,AA//BB==', 'data:image/jpeg;base64,/9j//gA7', 'data:image/webp;base64,//8AAAA='];
+  const around = (r: string) => [r, `"${r}"`, `url(${r})`, `url("${r}")`, `.a{background:url('${r}')} .b{color:red}`, `a ${r} b`];
+
+  it.each(rasters.flatMap((r) => around(r).map((t) => [JSON.stringify(t), t] as const)))('keeps %s clean', (_l, text) => {
+    expect(hasRemote(text, ORIGIN)).toBe(false);
+    expect(findRemoteAssets({ a: text }, ORIGIN)).toEqual([]);
+    expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock).toBeNull();
+    const root = document.createElement('div');
+    root.innerHTML = '<img><i></i>';
+    root.querySelector('img')!.setAttribute('src', text);
+    root.querySelector('i')!.setAttribute('style', `background:url(${text})`);
+    expect(sweepRemote(root, ORIGIN)).toBe(false);
+    expect(root.querySelector('img')!.getAttribute('src')).toBe(text);
+  });
+
+  it.each([
+    'data:image/svg+xml;base64,AA//BB==',
+    'data:text/html;base64,AA//BB==',
+    'data:image/png;base64,AA//BB==;//evil.example/x.png',
+    'data:image/png;base64,AA//BB==//evil.example/x.png',
+    'data:image/png;base64,AA//BB==x//y',
+    'data:image/png,AA//BB==',
+    'x/data:image/png;base64,AA//BB==',
+    'data:image/png;base64,AA//BB== // x',
+    '/data:image/png;base64,AA//BB== /',
+    'http://localhost:3000(data:image/png;base64,AA//BB==',
+  ])('still counts %s as remote', (text) => {
+    expect(hasRemote(text, ORIGIN)).toBe(true);
+  });
+});
+
+describe('a card whose accepted font rule sits between comments', () => {
+  it('passes the remote gate on the mount the picker offered', async () => {
+    const css = '/* fonts */\n@import url("https://fonts.googleapis.com/css2?family=Lora");\n/* rest */\n.a{color:red}';
+    const rows = [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello there' }] }] }];
+    const kit = prepareCard({ type: 'custom:magic-card', rows, css }, ORIGIN);
+    expect(kit.lock).toBeNull();
+    settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, kit.mount, { settleMs: 0 });
+    expect(settled).toBeDefined();
   });
 });
 
