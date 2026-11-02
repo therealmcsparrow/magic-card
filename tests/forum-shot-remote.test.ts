@@ -33,12 +33,16 @@ const HOSTILE = [
   'HTTPS://EVIL.COM',
   'wss://evil.com/socket',
   'http://',
+  // The rule judges characters, not meaning: a harmless text holding two slashes locks too.
+  'Hello // there',
+  'a//b.c and /local/x.png',
+  'x \\\\ y',
 ];
 
 const CLEAN = [
   '',
-  'Hello // there',
-  'a//b.c and /local/x.png',
+  'Hello there',
+  'a / b and /local/x.png',
   '/local/y.png',
   `${ORIGIN}/api/image/x?token=abc`,
   'data:image/png;base64,AAAA==',

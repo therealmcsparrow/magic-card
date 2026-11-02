@@ -17,11 +17,11 @@ const FETCH_SCHEMES = new Set(['http', 'https', 'ws', 'wss', 'ftp']);
 const XML_NAMESPACE = /^http:\/\/www\.w3\.org\/(?:2000\/svg|1999\/xlink|1999\/xhtml)$/;
 // Only a string holding one of these can form an address (`&` for character references, `\` for CSS escapes and backslash slashes).
 const MAY_HOLD_ADDRESS = /[:/\\&]/;
-// Where one address ends inside a decoded text.
-// White space is what the URL parser counts as such: U+FEFF is not, it stays inside an address.
+// Where one address ends inside a decoded text (separators and quoting characters; U+FEFF is not one).
 const SUB_TOKEN = /([\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000"'`()<>[\]{}=,;|^*]+)/;
 const SPACE_START = /^[\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]/;
-const LONE_SLASHES = /^\/{2,}$/;
+// Two slashes in any spelling (`//`, `\\`, `/\`, `\/`), with white space, control characters and U+FEFF allowed between them.
+const SLASH_PAIR = /[/\\][\s\p{Cc}\ufeff]*[/\\]/u;
 // Where one address ends inside the raw text (`;` stays: it ends character references).
 const RAW_TOKEN = /([ "'`()<>=,]+)/;
 
@@ -120,7 +120,16 @@ function remoteHost(token: string, origin: string): string | undefined {
   }
 }
 
-/** Hosts of every address in `text` that is not on `origin`; stops at the first when `all` is false. */
+/** True when the whole token is an http(s) address the URL parser places on `origin`, or an allowed XML namespace. */
+function plainlySafe(token: string, origin: string): boolean {
+  const t = urlText(token);
+  return XML_NAMESPACE.test(t) || (/^https?:/i.test(t) && remoteHost(token, origin) === undefined);
+}
+
+/**
+ * Hosts of every address in `text` that is not on `origin`; stops at the first when `all` is false. Beyond the addresses a token names,
+ * two slashes in any spelling count as remote (host `unknown`) unless the whole token holding them is plainly safe.
+ */
 function remoteHosts(text: string, origin: string, all: boolean): string[] {
   if (text.length > MAX_STRING) return [LIMIT];
   if (!MAY_HOLD_ADDRESS.test(text)) return [];
@@ -130,11 +139,17 @@ function remoteHosts(text: string, origin: string, all: boolean): string[] {
     for (let i = 0; i < parts.length; i += 2) {
       const token = parts[i];
       if (!token) continue;
-      // A lone `//` joined to a delimiter (`//(a).host/x`) still starts an address; only `//` before a space or the end stays text.
-      const next = parts[i + 1];
-      const host = LONE_SLASHES.test(urlText(token)) && next && !SPACE_START.test(next) ? 'unknown' : remoteHost(token, origin);
-      if (host === undefined) continue;
-      found.push(host);
+      const host = remoteHost(token, origin);
+      if (host !== undefined) {
+        found.push(host);
+        if (!all) return found;
+        parts[i] = '';
+      } else if (SLASH_PAIR.test(token) && plainlySafe(token, origin)) {
+        parts[i] = '';
+      }
+    }
+    if (SLASH_PAIR.test(parts.join(''))) {
+      found.push('unknown');
       if (!all) return found;
     }
   }

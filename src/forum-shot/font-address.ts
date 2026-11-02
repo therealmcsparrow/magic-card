@@ -391,12 +391,24 @@ export const aliasOf = (family: string): string => `mc-shot-${family.toLowerCase
 // The card's own loader reads a font-family value up to `;` (src/utils/google-fonts.ts), so a family after a `}` is loaded and must be renamed too.
 const LOADER_FONT_FAMILY = /(font-family\s*:\s*)([^;]+)/gi;
 
-/** Every `font-family` value of `css` the way the loader reads it, and its shorter reading up to a `}`; `fn` returns the new value. */
-function mapFontFamilies(css: string, fn: (value: string) => string): string {
-  return css.replace(LOADER_FONT_FAMILY, (_m, head: string, v: string) => {
-    const brace = v.indexOf('}');
-    return head + (brace < 0 ? fn(v) : fn(v.slice(0, brace)) + fn(v.slice(brace)));
-  });
+/** One loader value: its reading up to a `}`, then the rest, where a later `font-family` (minified css) is a value of its own. */
+function mapValue(v: string, fn: (value: string) => string): string {
+  const brace = v.indexOf('}');
+  if (brace < 0) return fn(v);
+  const tail = v.slice(brace);
+  const next = /(font-family\s*:\s*)/i.exec(tail);
+  if (!next) return fn(v.slice(0, brace)) + fn(tail);
+  return fn(v.slice(0, brace)) + fn(tail.slice(0, next.index)) + next[1] + mapFontFamilies(tail.slice(next.index + next[1].length), fn, true);
+}
+
+/** Every `font-family` value of `css` the way the loader reads it; `fn` returns the new value. `valueFirst` treats the start of `css` as a value. */
+function mapFontFamilies(css: string, fn: (value: string) => string, valueFirst = false): string {
+  if (valueFirst) {
+    const end = css.indexOf(';');
+    const value = end < 0 ? css : css.slice(0, end);
+    return mapValue(value, fn) + (end < 0 ? '' : mapFontFamilies(css.slice(end), fn));
+  }
+  return css.replace(LOADER_FONT_FAMILY, (_m, head: string, v: string) => head + mapValue(v, fn));
 }
 
 /** `value` with each listed Google family swapped for its alias when `has` accepts it (Roboto excepted). */

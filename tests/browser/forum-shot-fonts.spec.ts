@@ -62,10 +62,11 @@ const WATCH = `(() => {
   return true;
 })()`;
 const ABORTED_FILE = /^https:\/\/fonts\.gstatic\.com\/s\/(?:wide|tall)\.ttf \[Fetch from script\] net::ERR_ABORTED$/;
+const CHROMIUM_85 = 'chromium85';
 const wait = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
-/** Waits until every fetch of the page has been answered and read, then returns the failed requests; an aborted font file counts only when its body was read in full and nothing aborted or cancelled. */
-async function failedAfterSettle(b: Browser): Promise<string[]> {
+/** Waits until every fetch of the page has been answered and read, then returns the failed requests; an aborted font file counts only on Chromium 85, and only when its body was read in full and nothing aborted or cancelled. */
+async function failedAfterSettle(b: Browser, engineName: string): Promise<string[]> {
   type Net = { started: number; answered: number; done: number; bad: string[] };
   let net = await b.eval<Net>('window.__net');
   for (let i = 0; i < 60 && (net.started !== net.answered || net.answered !== net.done); i++) {
@@ -74,7 +75,7 @@ async function failedAfterSettle(b: Browser): Promise<string[]> {
   }
   await wait(300);
   net = await b.eval<Net>('window.__net');
-  const complete = net.started === net.answered && net.answered === net.done && net.bad.length === 0;
+  const complete = engineName === CHROMIUM_85 && net.started === net.answered && net.answered === net.done && net.bad.length === 0;
   return b.failed.filter((f) => !(complete && ABORTED_FILE.test(f)));
 }
 
@@ -117,7 +118,7 @@ for (const engine of engines()) {
         // the browser's own view: nothing but the page, its script and the two hosts was asked for, and nothing failed
         const outside = b.requests.map((r) => new URL(r.url)).filter((u) => u.hostname !== '127.0.0.1');
         expect([...new Set(outside.map((u) => u.hostname))].sort()).toEqual(['fonts.googleapis.com', 'fonts.gstatic.com']);
-        expect(await failedAfterSettle(b), 'no failed request').toEqual([]);
+        expect(await failedAfterSettle(b, engine.name), 'no failed request').toEqual([]);
         expect(b.errors).toEqual([]);
         // the font files are cross-origin CORS fetches: each one names the page's origin, none a different one
         const files = servers.wire.filter((w) => w.host === 'fonts.gstatic.com');
@@ -176,7 +177,7 @@ for (const engine of engines()) {
           expect(ok, `${w.host}${w.url} is on the prepared path`).toBe(true);
           expect(w.url).not.toMatch(/Lato/i);
         }
-        expect(await failedAfterSettle(b), 'no failed request').toEqual([]);
+        expect(await failedAfterSettle(b, engine.name), 'no failed request').toEqual([]);
       });
     });
 

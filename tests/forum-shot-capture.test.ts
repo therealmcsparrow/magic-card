@@ -4,7 +4,7 @@ import { FORUM_SHOT_MAX_PIXELS } from '../src/contracts/forum-shot';
 import { captureFrame, checkCaptureSupport } from '../src/forum-shot/capture';
 import type { CaptureSeams } from '../src/forum-shot/capture';
 import { aliasFontValue, aliasInText, classifyCard } from '../src/forum-shot/font-address';
-import { deepElements, findRemoteAssets, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
+import { deepElements, findRemoteAssets, hasRemote, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
 
@@ -34,7 +34,7 @@ describe('findRemoteAssets', () => {
   it('names off-origin hosts in nested modules and ignores same-origin and data URLs', () => {
     const config = {
       rows: [{ columns: [{ modules: [{ type: 'image', url: 'https://cdn.example.org/a.png' }, { type: 'image', url: '//img.example.net/b.png' }] }] }],
-      ok: [`${ORIGIN}/local/x.png`, '/local/y.png', 'data:image/png;base64,AAAA', 'a//b.c'],
+      ok: [`${ORIGIN}/local/x.png`, '/local/y.png', 'data:image/png;base64,AAAA'],
     };
     expect(findRemoteAssets(config, ORIGIN)).toEqual(['cdn.example.org', 'img.example.net']);
   });
@@ -44,7 +44,12 @@ describe('findRemoteAssets', () => {
   });
 
   it('is empty for a config with no remote asset', () => {
-    expect(findRemoteAssets({ rows: [{ text: 'Hello // there' }] }, ORIGIN)).toEqual([]);
+    expect(findRemoteAssets({ rows: [{ text: 'Hello there' }] }, ORIGIN)).toEqual([]);
+  });
+
+  it('counts a harmless double slash as remote: the rule judges the characters, not the meaning', () => {
+    expect(findRemoteAssets({ rows: [{ text: 'Hello // there' }] }, ORIGIN)).toEqual(['unknown']);
+    expect(findRemoteAssets({ ok: 'a//b.c' }, ORIGIN)).toEqual(['unknown']);
   });
 });
 
@@ -53,9 +58,14 @@ describe('a protocol-relative address behind a delimiter', () => {
   const raw = [
     '//*.evil.example/x.png', '//=evil.example/x.png', '//,evil.example/x.png', '//;evil.example/x.png', '//{a}.evil.example/x.png', "//'a'.evil.example/x.png", '//(a).evil.example/x.png', '//`a`.evil.example/x.png', '//|evil.example/x.png', '//^evil.example/x.png', '//[a].evil.example/x.png', '//{{x}}.evil.example/x.png',
     '\u0001//(a).evil.example/x.png', '\u001f//*.evil.example/x.png', '\u0001//,evil.example/x.png', '\u0000//(a).evil.example/x.png', '\u0001\u001f//(a).evil.example/x.png', '//\uFEFFevil.example/x.png', '//\uFEFF(a).evil.example/x.png', '\u0001//\uFEFFevil.example/x.png', '/\t/(a).evil.example/x.png', '\t//(a).evil.example/x.png', '/\n/*.evil.example/x.png', '\r\n//,evil.example/x.png',
+    '// @evil.example/x.png', '//\u00a0@evil.example/x.png', '//\u3000@evil.example/x.png', '\u0001// @evil.example/x.png', '//\t @evil.example/x.png', '//\u00a0evil.example/x.png',
+    '\uFEFF//evil.example/x.png', '\uFEFFhttp://evil.example/x.png', '\uFEFF//(a).evil.example/x.png', '\\\\(a).evil.example/x.png', '\u0001\\\\(a).evil.example/x.png', '/\\(a).evil.example/x.png', '\\/(a).evil.example/x.png', '/ /(a).evil.example/x.png', '/\u0001/(a).evil.example/x.png', '/\uFEFF/(a).evil.example/x.png',
+    'a//b.c', '&#47;&#47;(a).evil.example/x.png', '\\2f \\2f (a).evil.example/x.png',
   ];
   const forms = raw.map((f) => [JSON.stringify(f), f] as const);
-  const clean = ['Hello // there', 'a//b.c', 'x // (y)', 'ends //', 'Hello \u0001// there', '// there'];
+  // Harmless texts holding a double slash lock as well: the rule does not judge what the text means.
+  const harmless = ['Hello // there', 'x // (y)', 'ends //', 'Hello \u0001// there', '// there', '/* a */ /* b */'];
+  const clean = ['Hello there', 'x (y)', 'a / b', '/local/x.png', 'ends /', `${ORIGIN}/a//b`, 'http://www.w3.org/2000/svg', 'http://www.w3.org/1999/xlink', 'mdi:lightbulb'];
   const nested = (form: string) => ({ type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] });
 
   it.each(forms)('counts %s as remote in a module value', (_l, form) => {
@@ -86,7 +96,20 @@ describe('a protocol-relative address behind a delimiter', () => {
     expect(document.body.children.length).toBe(0);
   });
 
-  it('keeps ordinary double slashes clean everywhere', async () => {
+  it.each(harmless.map((f) => [JSON.stringify(f), f] as const))('locks the harmless text %s everywhere', async (_l, text) => {
+    expect(findRemoteAssets({ a: text }, ORIGIN)).toEqual(['unknown']);
+    expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock).toBe('outside_address');
+    const root = document.createElement('div');
+    root.innerHTML = '<p></p>';
+    root.querySelector('p')!.setAttribute('title', text);
+    expect(hasRemote(text, ORIGIN)).toBe(true);
+    expect(sweepRemote(root, ORIGIN)).toBe(false);
+    root.innerHTML = '<img>';
+    root.querySelector('img')!.setAttribute('src', text);
+    expect(sweepRemote(root, ORIGIN)).toBe(true);
+  });
+
+  it('keeps plain addresses and texts clean everywhere', async () => {
     for (const text of clean) {
       expect(findRemoteAssets({ a: text }, ORIGIN), text).toEqual([]);
       expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock, text).toBeNull();
@@ -95,7 +118,7 @@ describe('a protocol-relative address behind a delimiter', () => {
       root.querySelector('p')!.setAttribute('title', text);
       expect(sweepRemote(root, ORIGIN), text).toBe(false);
     }
-    settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello // there' }] }] }] }, { settleMs: 0 });
+    settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello there' }] }] }] }, { settleMs: 0 });
   });
 });
 
@@ -247,6 +270,7 @@ describe('settleCard', () => {
         ['a css rule in a module', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: '.a{font-family: Lora;}' }] }] }] }],
         ['a family after a closing brace in a module css', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: '.a{font-family: x}, Nunito;}' }] }] }] }],
         ['a family beside a prepared one', { font_family: 'Oswald' }],
+        ['a family in the second rule of minified css', { css: '.a{font-family: Arial}.b{font-family: Lora}' }],
       ];
 
       it.each(forms)('adds no font link and stops with font_unavailable for %s with no face', async (_n, tpl) => {

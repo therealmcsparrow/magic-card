@@ -87,6 +87,25 @@ describe('a font-family value is read the way the card loader reads it', () => {
     expect(configGoogleFonts(kit.mount)).toEqual([]);
   });
 
+  it.each([
+    ['.a{font-family:Arial}.b{font-family:Lora}', '.a{font-family:Arial}.b{font-family:"mc-shot-lora"}', 0],
+    ['.a{font-family: Oswald}.b{font-family: Lora}', '.a{font-family: "mc-shot-oswald"}.b{font-family: "mc-shot-lora"}', 0],
+    ['.a{font-family:Arial}.b{font-family:Lora}', '.a{font-family:Arial}.b{font-family:"mc-shot-lora"}', 1],
+    ['.a{font-family: x}, Nunito;}', '.a{font-family: x}, "mc-shot-nunito";}', 1],
+  ])('renames every rule of minified css %s', (text, expected, missingCount) => {
+    const missing = vi.fn();
+    expect(aliasInText(text, new Set(missingCount ? [] : ['lora', 'oswald', 'nunito']), missing)).toBe(expected);
+    expect(missing).toHaveBeenCalledTimes(missingCount);
+    expect(configGoogleFonts({ css: aliasInText(text, new Set(['lora', 'oswald']), () => undefined) })).toEqual([]);
+  });
+
+  it('gives the mounted copy an alias for the family of a later rule', () => {
+    const cfg = { type: 'custom:magic-card', font_family: 'Lora', css: '.a{font-family:Arial}.b{font-family:Lora}', rows: [] };
+    const kit = prepareCard(cfg, 'http://localhost:3000');
+    expect(kit.aliases.get('lora')).toBe('mc-shot-lora');
+    expect(JSON.stringify(kit.mount)).toContain('.b{font-family:\\"mc-shot-lora\\"}');
+  });
+
   it.each(['.a{font-family: Lora}', '.a{font-family: Lora } .b{x:1}', 'p{font-family: Lora, serif;}'])('renames the family in %s', (text) => {
     expect(configGoogleFonts({ css: aliasInText(text, new Set(['lora']), () => undefined) })).toEqual([]);
     expect(aliasInText(text, new Set(['lora']), () => undefined)).toContain('mc-shot-lora');
