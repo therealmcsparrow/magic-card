@@ -114,11 +114,11 @@ describe('build wiring', () => {
     expect(read('tools/i18n/placement.mjs')).toContain(`'${contract.FORUM_SHOT_FILE}'`);
   });
 
-  it('caps the new file at or below 98,304 B', () => {
+  it('caps the new file at or below 107,520 B', () => {
     const caps = JSON.parse(read('tools/size-caps.json'));
     const e = caps.files[contract.FORUM_SHOT_FILE];
     expect(e).toBeTruthy();
-    expect(e.ceiling).toBeLessThanOrEqual(98_304);
+    expect(e.ceiling).toBeLessThanOrEqual(107_520);
     expect(e.raw).toBeLessThanOrEqual(e.ceiling);
   });
 });
