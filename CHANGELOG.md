@@ -8,7 +8,8 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ### Changed
 -   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
--   **Status column.** Each card row has one Status icon. Select it to open a note that says why the card is available or locked, and which font sites it asks for. Press Escape, select Close, select outside the note, or press Tab to move on, and the note closes.
+-   **Status column.** Each card row shows its status, Available or Locked, with an icon. Select it to open a note that says why, and which font sites the card asks for. Press Escape, select Close, select outside the note, or press Tab to move on, and the note closes.
+-   **Card table width.** The forum shot page now uses the full width of the panel, so the card table is no longer squeezed into a narrow box.
 
 ## 2026.10.12-beta.15 (2026-11-03)
 

@@ -14,8 +14,6 @@ export const forumShotStyles = css`
   }
   section {
     position: relative;
-    max-width: 720px;
-    margin: 0 auto;
   }
   h2 {
     margin: 0 0 8px;
@@ -97,11 +95,10 @@ export const forumShotStyles = css`
   button.tip {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    border-radius: 50%;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 12px 0 8px;
+    border-radius: 22px;
     background: transparent;
     color: inherit;
   }
@@ -141,9 +138,6 @@ export const forumShotStyles = css`
   }
   .pop p {
     margin: 0 0 8px;
-  }
-  .pop .pop-h {
-    font-weight: 700;
   }
   .pop .fonts {
     font-size: 0.9em;
