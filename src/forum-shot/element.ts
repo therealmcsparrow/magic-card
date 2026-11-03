@@ -69,7 +69,10 @@ export class MagicCardForumShot extends LitElement {
   private _watching = false;
   private readonly _onPointerDown = (e: Event): void => {
     const row = this.renderRoot.querySelector('.pop')?.closest('tr');
-    if (!row || !e.composedPath().includes(row)) this._close();
+    const path = e.composedPath();
+    const tip = (n: EventTarget) => (n as Element).matches?.('.pop, button.tip');
+    if (!row || !path.includes(row) || (row.className !== 'off' && !path.some(tip)))
+      this._close();
   };
   private readonly _onResize = (): void => this._place();
 
@@ -334,8 +337,8 @@ export class MagicCardForumShot extends LitElement {
               role="dialog"
               aria-labelledby="card-pop-${i}-h"
               @focusout=${(e: FocusEvent) => {
-                const to = e.relatedTarget as Node | null;
-                if (to && !(e.currentTarget as Element).contains(to) && this._tip === key)
+                const to = e.relatedTarget as Element | null;
+                if (to && !to.matches('.pop *, .scroll, button.tip') && this._tip === key)
                   this._close();
               }}
             >

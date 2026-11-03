@@ -221,7 +221,7 @@ describe('the card table', () => {
     expect(wrap.querySelector('table')!.hasAttribute('aria-label')).toBe(false);
   });
 
-  it('AC1: one header row Dashboard, View, Card, Status and one row per card, with no label inside a cell', async () => {
+  it('one header row Dashboard, View, Card, Status and one row per card, with no label inside a cell', async () => {
     const el = await mount(ws(cards));
     expect($$(el, 'thead tr')).toHaveLength(1);
     expect($$(el, 'thead th').map((h) => h.textContent!.trim().replace(/[^\p{L}]/gu, ''))).toEqual(['Dashboard', 'View', 'Card', 'Status']);
@@ -229,7 +229,7 @@ describe('the card table', () => {
     expect($$(el, 'td [data-label], td > .status, td > .hint')).toEqual([]);
   });
 
-  it('AC9: sorted by Status the order is available first, and each popup shows its own row', async () => {
+  it('sorted by Status the order is available first, and each popup shows its own row', async () => {
     const el = await mount(ws(cards));
     $$<HTMLButtonElement>(el, 'thead th button')[3].click();
     await flush(el);
@@ -247,7 +247,7 @@ describe('the card table', () => {
     expect($(el, '.pop')!.textContent).toContain('fonts.googleapis.com');
   });
 
-  it('AC10: the four new keys exist in en-GB, en-US and nl, and the popup text comes from them', async () => {
+  it('the four new keys exist in en-GB, en-US and nl, and the popup text comes from them', async () => {
     const fs = await import('node:fs');
     const keys = ['status-button-available', 'status-button-locked', 'status-detail-available', 'status-close'].map(
       (k) => `forum-shot.card-table.${k}`,
@@ -402,17 +402,64 @@ describe('the card table', () => {
       expect($(el, '.pop')).toBeNull();
     });
 
-    it('removes its document listener on close and on disconnect', async () => {
-      const add = vi.spyOn(document, 'addEventListener');
-      const remove = vi.spyOn(document, 'removeEventListener');
+    it('a pointerdown on a cell of an available row closes the popup, and one on the open button or on a locked row keeps it', async () => {
       const el = await mount(ws(cards));
       btn(el, 2).click();
       await flush(el);
-      expect(add.mock.calls.filter((c) => c[0] === 'pointerdown').length).toBe(1);
+      const rows = $$<HTMLElement>(el, 'tbody tr');
+      const down = () => new Event('pointerdown', { bubbles: true, composed: true });
+      btn(el, 2).dispatchEvent(down());
+      rows[2].querySelector('td')!.dispatchEvent(down());
+      await flush(el);
+      expect($(el, '.pop')).not.toBeNull();
+      const cell = rows[1].querySelector('td')!;
+      cell.dispatchEvent(down());
+      cell.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+      expect(rows[1].className).toBe('picked');
+    });
+
+    it('keeps the popup open when focus moves to the scroll region or the open button', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      const pop = $<HTMLElement>(el, '.pop')!;
+      for (const to of [$(el, '.scroll'), btn(el, 2)]) {
+        pop.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: to }));
+        await flush(el);
+        expect($(el, '.pop')).not.toBeNull();
+      }
+    });
+
+    it('removes its document and window listeners on Close, on Escape and on disconnect', async () => {
+      const spies = [
+        vi.spyOn(document, 'addEventListener'),
+        vi.spyOn(document, 'removeEventListener'),
+        vi.spyOn(window, 'addEventListener'),
+        vi.spyOn(window, 'removeEventListener'),
+      ];
+      const [dAdd, dRemove, wAdd, wRemove] = spies;
+      const el = await mount(ws(cards));
+      const open = async () => {
+        btn(el, 2).click();
+        await flush(el);
+      };
+      await open();
+      $<HTMLButtonElement>(el, '.pop .close')!.click();
+      await flush(el);
+      await open();
+      $<HTMLElement>(el, '.scroll')!.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      );
+      await flush(el);
+      await open();
       el.remove();
-      expect(remove.mock.calls.filter((c) => c[0] === 'pointerdown').length).toBe(1);
-      add.mockRestore();
-      remove.mockRestore();
+      expect(dAdd.mock.calls.filter((c) => c[0] === 'pointerdown').length).toBe(3);
+      expect(dRemove.mock.calls.filter((c) => c[0] === 'pointerdown').length).toBe(3);
+      expect(wAdd.mock.calls.filter((c) => c[0] === 'resize').length).toBe(3);
+      expect(wRemove.mock.calls.filter((c) => c[0] === 'resize').length).toBe(3);
+      spies.forEach((spy) => spy.mockRestore());
     });
   });
 

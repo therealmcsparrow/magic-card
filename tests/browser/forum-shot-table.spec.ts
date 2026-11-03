@@ -3,7 +3,7 @@ import os from 'node:os';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { bundlePage, engines, startServers, type Browser, type Servers } from '../fixtures/forum-shot-font-server';
 
-// AC11 (keyboard and screen-reader use: reach, sort, select, download; locked rows and reasons announced) and AC12 (phone width: the table stays a table in a
+// Keyboard and screen-reader use (reach, sort, select, download; locked rows and reasons announced) and phone width (the table stays a table in a
 // scrolling region, and the Status button opens its details) for the card table of <magic-card-forum-shot>, in a real browser. Pointer input is real (Input.dispatchMouseEvent
 // at centres read from getBoundingClientRect), keys are real (Input.dispatchKeyEvent), the accessibility tree is the browser's own
 // (Accessibility.getFullAXTree). Engines: current Chrome and the Chromium 85 floor. Safari and Firefox are not run.
@@ -119,7 +119,7 @@ afterAll(async () => {
 
 for (const engine of engines()) {
   describe(`forum shot table on ${engine.name}`, () => {
-    it('AC11: a click on a header sorts ascending, a second click descending, and the selection stays', async () => {
+    it('a click on a header sorts ascending, a second click descending, and the selection stays', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         expect(await order(b)).toEqual(DASHBOARD_ORDER);
@@ -156,7 +156,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: Tab reaches each sort button and the radio; Enter and Space sort; the focus ring shows', async () => {
+    it('Tab reaches each sort button and the radio; Enter and Space sort; the focus ring shows', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const names = await headers(b);
@@ -196,7 +196,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: Space and the arrow keys select a row, locked rows are skipped, Download works from the keyboard', async () => {
+    it('Space and the arrow keys select a row, locked rows are skipped, Download works from the keyboard', async () => {
       await engine.run(servers, async (b) => {
         await b.send('Browser.setDownloadBehavior', { behavior: 'deny' }).catch(() => undefined);
         expect(await mount(b)).toBe(true);
@@ -247,7 +247,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: a click on a row cell selects its radio, a locked row does nothing', async () => {
+    it('a click on a row cell selects its radio, a locked row does nothing', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         for (const [name, cell] of [['Alpha', 0], ['Fonty', 1], ['Beta', 1]] as const) {
@@ -270,7 +270,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: the accessibility tree has the table, the sort state, and each locked row with its reason', async () => {
+    it('the accessibility tree has the table, the sort state, and each locked row with its reason', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const reasons = await b.eval<Record<string, string>>(`(() => {
@@ -317,7 +317,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: the sorted column shows an arrow glyph, not stray characters', async () => {
+    it('the sorted column shows an arrow glyph, not stray characters', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const after = (): Promise<string> => b.eval(`getComputedStyle(${ROOT}.querySelectorAll('thead button.sort')[2], '::after').content`);
@@ -334,7 +334,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: sort buttons and radio rows are at least 44 px', async () => {
+    it('sort buttons and radio rows are at least 44 px', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const sizes = await b.eval<{ buttons: number[][]; rows: number[][]; choices: number[][]; radios: number[][] }>(`(() => {
@@ -403,7 +403,7 @@ for (const engine of engines()) {
       })()`);
 
     for (const [width, narrow] of [[375, false], [768, false], [1000, true]] as const) {
-      it(`AC12: at ${width} px${narrow ? ' with narrow' : ''} the table stays a table, the page does not scroll sideways, the Status buttons are 44 px`, async () => {
+      it(`at ${width} px${narrow ? ' with narrow' : ''} the table stays a table, the page does not scroll sideways, the Status buttons are 44 px`, async () => {
         await engine.run(servers, async (b) => {
           await b.viewport(width, 800);
           expect(await mount(b, narrow)).toBe(true);
@@ -441,7 +441,7 @@ for (const engine of engines()) {
 
     for (const width of [320, 768, 1280]) {
       for (const narrow of [false, true]) {
-        it(`AC1/AC2/AC3/AC5/AC8: at ${width} px narrow ${narrow ? 'on' : 'off'} the table is a table, Status holds only an icon, and the popup stays on screen while the table is scrolled sideways`, async () => {
+        it(`at ${width} px narrow ${narrow ? 'on' : 'off'} the table is a table, Status holds only an icon, and the popup stays on screen while the table is scrolled sideways`, async () => {
           await engine.run(servers, async (b) => {
             await b.viewport(width, 800);
             expect(await mount(b, narrow)).toBe(true);
@@ -483,7 +483,7 @@ for (const engine of engines()) {
       }
     }
 
-    it('AC9: sorted by Status the order matches beta.15 and a popup shows its own row in the browser', async () => {
+    it('sorted by Status the order matches beta.15 and a popup shows its own row in the browser', async () => {
       await engine.run(servers, async (b) => {
         await b.viewport(1280, 800);
         expect(await mount(b)).toBe(true);
@@ -498,7 +498,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC4/AC7: the Status button is named for its state, and a locked radio is still described without opening the popup', async () => {
+    it('the Status button is named for its state, and a locked radio is still described without opening the popup', async () => {
       await engine.run(servers, async (b) => {
         await b.viewport(1280, 800);
         expect(await mount(b)).toBe(true);
@@ -514,7 +514,75 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC6: Escape, outside click and Close close the popup and focus returns to the icon', async () => {
+    it('real mouse clicks: popup text keeps the popup open, the same button and a second tap on a locked row close it', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const pops = () => b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`);
+        await openTip(b, 'Custom');
+        expect(await pops()).toBe(1);
+        const text = await boxOf(b, `root.querySelector('.pop .pop-h')`);
+        await b.click(text.x, text.y);
+        await sleep(100);
+        expect(await pops()).toBe(1);
+        await openTip(b, 'Custom');
+        expect(await pops()).toBe(0);
+        await tap(b, await cellBox(b, 'Custom', 0));
+        expect(await pops()).toBe(1);
+        await tap(b, await cellBox(b, 'Custom', 0));
+        expect(await pops()).toBe(0);
+        await openTip(b, 'Custom');
+        const out = await boxOf(b, `root.querySelector('h1, p, section')`);
+        await b.click(out.x, 2);
+        await sleep(100);
+        expect(await pops()).toBe(0);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('a click on a cell of an available row closes the open popup and selects the row', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        await openTip(b, 'Custom');
+        await tap(b, await cellBox(b, 'Alpha', 1));
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return (${rowOf('Alpha')}).querySelector('input').checked; })()`)).toBe(true);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('at 200% zoom Tab reaches each Status button in row order with a visible outline inside the scroll region', async () => {
+      await engine.run(servers, async (b) => {
+        await b.send('Emulation.setDeviceMetricsOverride', { width: 640, height: 400, deviceScaleFactor: 2, mobile: false });
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const seen: string[] = [];
+        await b.eval(`${ROOT}.querySelector('.scroll').focus()`);
+        for (let i = 0; i < 40 && seen.length < DASHBOARD_ORDER.length; i++) {
+          await b.tab();
+          const hit = await b.eval<{ name: string; style: string; width: number; inside: boolean } | null>(`(() => {
+            const root = ${ROOT}; const a = root.activeElement;
+            if (!a || !a.matches('button.tip')) return null;
+            const s = getComputedStyle(a); const r = a.getBoundingClientRect(); const w = root.querySelector('.scroll').getBoundingClientRect();
+            const o = parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset || '0');
+            return { name: a.closest('tr').querySelector('label').textContent.trim(), style: s.outlineStyle, width: parseFloat(s.outlineWidth),
+              inside: r.top - o >= w.top && r.bottom + o <= w.bottom && r.left - o >= w.left - 1 };
+          })()`);
+          if (!hit) continue;
+          seen.push(hit.name);
+          expect(['solid', 'auto']).toContain(hit.style);
+          expect(hit.width).toBeGreaterThan(0);
+          expect(hit.inside, `${hit.name} outline inside the scroll region`).toBe(true);
+        }
+        expect(seen).toEqual(DASHBOARD_ORDER);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('Escape, a click outside and Close close the popup and focus returns to the icon', async () => {
       await engine.run(servers, async (b) => {
         await b.viewport(1280, 800);
         expect(await mount(b)).toBe(true);
@@ -536,7 +604,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC12: the Status button opens details inside the screen, flips above on the last row, and one click on another button switches', async () => {
+    it('the Status button opens details inside the screen, flips above on the last row, and one click on another button switches', async () => {
       await engine.run(servers, async (b) => {
         await b.viewport(375, 700);
         expect(await mount(b)).toBe(true);

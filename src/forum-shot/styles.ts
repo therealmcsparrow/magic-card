@@ -29,7 +29,6 @@ export const forumShotStyles = css`
   fieldset {
     margin: 0 0 16px;
     padding: 8px 12px 12px;
-    border: 1px solid var(--divider-color, #727272);
     border-radius: 8px;
   }
   legend {
@@ -89,6 +88,12 @@ export const forumShotStyles = css`
   tbody tr.off td {
     color: var(--secondary-text-color, #5f5f5f);
   }
+  fieldset,
+  .preview,
+  button.tip,
+  .pop {
+    border: 1px solid var(--divider-color, #727272);
+  }
   button.tip {
     display: inline-flex;
     align-items: center;
@@ -96,14 +101,17 @@ export const forumShotStyles = css`
     width: 44px;
     height: 44px;
     padding: 0;
-    border: 1px solid var(--divider-color, #727272);
     border-radius: 50%;
     background: transparent;
     color: inherit;
   }
-  button.tip:hover,
   button.tip[aria-expanded='true'] {
     background: var(--secondary-background-color, #f3f3f3);
+  }
+  @media (hover: hover) {
+    button.tip:hover {
+      background: var(--secondary-background-color, #f3f3f3);
+    }
   }
   button.tip svg {
     flex: none;
@@ -123,9 +131,8 @@ export const forumShotStyles = css`
     box-sizing: border-box;
     width: max-content;
     max-width: min(20rem, 100%);
-    padding: 12px;
-    border: 1px solid var(--divider-color, #727272);
-    border-radius: 8px;
+    padding: var(--ha-space-3, 12px);
+    border-radius: var(--ha-border-radius-md, 8px);
     background: var(--card-background-color, #fff);
     color: var(--primary-text-color, #212121);
     font-weight: 400;
@@ -214,7 +221,6 @@ export const forumShotStyles = css`
     max-width: 100%;
     height: auto;
     margin: 12px 0;
-    border: 1px solid var(--divider-color, #727272);
   }
   @media (prefers-reduced-motion: reduce) {
     * {
