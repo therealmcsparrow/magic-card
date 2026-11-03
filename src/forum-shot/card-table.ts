@@ -8,7 +8,7 @@ export interface Sort {
   dir: SortDir;
 }
 
-export const SORT_KEYS: readonly SortKey[] = ['dashboard', 'view', 'card', 'status'];
+export const SORT_KEYS: readonly SortKey[] = ['card', 'dashboard', 'view', 'status'];
 
 const LOCK_ORDER: readonly ForumShotLockReason[] = ['custom_card', 'limit', 'outside_address', 'cannot_judge'];
 
@@ -51,4 +51,11 @@ export function sortedRows(rows: readonly MagicCardRef[], sort: Sort | null, loc
   };
   const index = new Map(rows.map((r, i) => [r, i]));
   return out.sort((a, b) => sign * compare(a, b) || (index.get(a) ?? 0) - (index.get(b) ?? 0));
+}
+
+/** Rows whose card, dashboard or view name holds `query`, ignoring case; a blank query keeps every row. */
+export function filteredRows(rows: readonly MagicCardRef[], query: string, defaultName = ''): MagicCardRef[] {
+  const q = query.trim().toLocaleLowerCase();
+  if (!q) return rows.slice();
+  return rows.filter((r) => [r.cardName, dashboardName(r, defaultName), r.view].some((s) => s.toLocaleLowerCase().includes(q)));
 }

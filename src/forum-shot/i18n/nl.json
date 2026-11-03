@@ -19,6 +19,14 @@
     "text": "Standaarddashboard",
     "hash": "4913c670"
   },
+  "forum-shot.card-table.filter-label": {
+    "text": "Kaarten zoeken",
+    "hash": "8d0b0964"
+  },
+  "forum-shot.card-table.filter-none": {
+    "text": "Geen kaarten gevonden voor je zoekopdracht.",
+    "hash": "df2d1a4f"
+  },
   "forum-shot.card-table.fonts-from": {
     "text": "Lettertypen van {hosts}",
     "hash": "9f44f4ca"

@@ -89,9 +89,9 @@
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-forum-shot.js": {
-      "raw": 107520,
-      "ceiling": 107520,
-      "note": "105 KiB, measured 102,339 + 5 %, rounded up to 1 KiB; it holds the font fetch and the card table, and bundles its own copy of the icon style derivation."
+      "raw": 108544,
+      "ceiling": 108544,
+      "note": "106 KiB; it holds the font fetch and the card table with its search field, and bundles its own copy of the icon style derivation."
     },
     "magic-card-theme-editor.js": {
       "raw": 286720,
@@ -1151,6 +1151,18 @@
       "field": "/files/magic-card-forum-shot.js/ceiling",
       "from": 98304,
       "to": 107520
+    },
+    {
+      "id": "forum-shot-raw-107520-to-108544",
+      "field": "/files/magic-card-forum-shot.js/raw",
+      "from": 107520,
+      "to": 108544
+    },
+    {
+      "id": "forum-shot-ceiling-107520-to-108544",
+      "field": "/files/magic-card-forum-shot.js/ceiling",
+      "from": 107520,
+      "to": 108544
     }
   ]
 }

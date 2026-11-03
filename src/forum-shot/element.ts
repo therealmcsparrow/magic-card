@@ -14,7 +14,7 @@ import { setI18nLocale } from '../i18n/runtime';
 import { t } from './i18n';
 import { cardConfigOf, codeOf, iconLibraryLookSource, listMagicCards } from './pick';
 import type { WsHass } from './pick';
-import { dashboardName, rowKey, SORT_KEYS, sortedRows } from './card-table';
+import { dashboardName, filteredRows, rowKey, SORT_KEYS, sortedRows } from './card-table';
 import type { Sort, SortKey } from './card-table';
 import { renderSheet } from './sheet';
 import { CUSTOM_CARD } from './remote';
@@ -55,6 +55,7 @@ export class MagicCardForumShot extends LitElement {
   private _cards: MagicCardRef[] = [];
   private _pick = '';
   private _sort: Sort | null = null;
+  private _filter = '';
   private _mode: ModeChoice = 'both';
   private _looks = false;
   private _busy = false;
@@ -80,6 +81,7 @@ export class MagicCardForumShot extends LitElement {
     super.connectedCallback();
     this._started = false;
     this._sort = null;
+    this._filter = '';
     this._forget();
     this.requestUpdate();
   }
@@ -355,8 +357,21 @@ export class MagicCardForumShot extends LitElement {
 
   private _renderCards(): TemplateResult {
     const fallback = this._defaultName();
-    const rows = sortedRows(this._cards, this._sort, this._locale(), fallback);
-    return html`<div
+    const rows = sortedRows(filteredRows(this._cards, this._filter, fallback), this._sort, this._locale(), fallback);
+    return html`<div class="filter">
+        <label for="card-filter">${t('forum-shot.card-table.filter-label')}</label>
+        <input
+          type="search"
+          id="card-filter"
+          .value=${this._filter}
+          @input=${(e: Event) => {
+            this._filter = (e.target as HTMLInputElement).value;
+            this._close();
+            this.requestUpdate();
+          }}
+        />
+      </div>
+      <div
       class="scroll"
       role="region"
       tabindex="0"
@@ -397,8 +412,6 @@ export class MagicCardForumShot extends LitElement {
                   } else if (!hit.closest('input, label, button, .pop')) this._select(key);
                 }}
               >
-                <td role="cell">${dashboardName(c, fallback)}</td>
-                <td role="cell">${c.view}</td>
                 <td role="cell">
                   <span class="choice">
                     <input
@@ -413,10 +426,13 @@ export class MagicCardForumShot extends LitElement {
                     <label for="card-${i}">${c.cardName}</label>
                   </span>
                 </td>
+                <td role="cell">${dashboardName(c, fallback)}</td>
+                <td role="cell">${c.view}</td>
                 <td role="cell" class="state">${this._status(c, i, key)}</td>
               </tr>`;
             },
           )}
+          ${rows.length ? nothing : html`<tr role="row"><td role="cell" colspan="4">${t('forum-shot.card-table.filter-none')}</td></tr>`}
         </tbody>
       </table>
     </div>`;

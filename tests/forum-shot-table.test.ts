@@ -154,28 +154,28 @@ describe('the card table', () => {
 
   it('shows the readable name of the default dashboard', async () => {
     const el = await mount(ws(cards));
-    expect($$(el, 'tbody tr')[0].querySelector('td')!.textContent).toContain('Overview');
+    expect($$(el, 'tbody tr')[0].querySelector('td:nth-child(2)')!.textContent).toContain('Overview');
   });
 
   it('sorts ascending on the first click, descending on the second, and marks the column', async () => {
     const el = await mount(ws(cards));
-    const btn = () => $$<HTMLButtonElement>(el, 'thead th button')[2];
+    const btn = () => $$<HTMLButtonElement>(el, 'thead th button')[0];
     btn().click();
     await flush(el);
     expect(names(el)).toEqual(['Alpha', 'Beta', 'Gamma']);
-    expect($$(el, 'thead th')[2].getAttribute('aria-sort')).toBe('ascending');
+    expect($$(el, 'thead th')[0].getAttribute('aria-sort')).toBe('ascending');
     btn().click();
     await flush(el);
     expect(names(el)).toEqual(['Gamma', 'Beta', 'Alpha']);
-    expect($$(el, 'thead th')[2].getAttribute('aria-sort')).toBe('descending');
-    expect($$(el, 'thead th')[0].getAttribute('aria-sort')).toBe('none');
+    expect($$(el, 'thead th')[0].getAttribute('aria-sort')).toBe('descending');
+    expect($$(el, 'thead th')[1].getAttribute('aria-sort')).toBe('none');
   });
 
   it('selection stays on the card after a sort', async () => {
     const el = await mount(ws(cards));
     $$<HTMLInputElement>(el, 'input[name=card]')[0].click();
     await flush(el);
-    $$<HTMLButtonElement>(el, 'thead th button')[2].click();
+    $$<HTMLButtonElement>(el, 'thead th button')[0].click();
     await flush(el);
     const checked = $$<HTMLInputElement>(el, 'input[name=card]:checked');
     expect(checked.length).toBe(1);
@@ -221,10 +221,10 @@ describe('the card table', () => {
     expect(wrap.querySelector('table')!.hasAttribute('aria-label')).toBe(false);
   });
 
-  it('one header row Dashboard, View, Card, Status and one row per card, with no label inside a cell', async () => {
+  it('one header row Card, Dashboard, View, Status and one row per card, with no label inside a cell', async () => {
     const el = await mount(ws(cards));
     expect($$(el, 'thead tr')).toHaveLength(1);
-    expect($$(el, 'thead th').map((h) => h.textContent!.trim().replace(/[^\p{L}]/gu, ''))).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+    expect($$(el, 'thead th').map((h) => h.textContent!.trim().replace(/[^\p{L}]/gu, ''))).toEqual(['Card', 'Dashboard', 'View', 'Status']);
     expect($$(el, 'tbody tr')).toHaveLength(cards.length);
     expect($$(el, 'td [data-label], td > .status, td > .hint')).toEqual([]);
   });
@@ -492,9 +492,30 @@ describe('the card table', () => {
     });
   });
 
+  it('the search field keeps the rows whose card, dashboard or view name holds the text, ignoring case', async () => {
+    const el = await mount(ws(cards));
+    const input = $<HTMLInputElement>(el, '#card-filter')!;
+    expect(input.type).toBe('search');
+    expect($(el, 'label[for=card-filter]')!.textContent!.trim()).toBe('Search cards');
+    const type = async (v: string) => {
+      input.value = v;
+      input.dispatchEvent(new Event('input'));
+      await flush(el);
+    };
+    await type('alp');
+    expect(names(el)).toEqual(['Alpha']);
+    await type('OVERVIEW');
+    expect(names(el)).toEqual(['Beta', 'Alpha', 'Gamma']);
+    await type('nothing like it');
+    expect($$(el, 'tbody tr')).toHaveLength(1);
+    expect($(el, 'tbody td')!.textContent!.trim()).toBe('No cards match your search.');
+    await type('  ');
+    expect(names(el)).toEqual(['Beta', 'Alpha', 'Gamma']);
+  });
+
   it('opening the tab again returns to dashboard order', async () => {
     const el = await mount(ws(cards));
-    $$<HTMLButtonElement>(el, 'thead th button')[2].click();
+    $$<HTMLButtonElement>(el, 'thead th button')[0].click();
     await flush(el);
     el.remove();
     document.body.append(el);
