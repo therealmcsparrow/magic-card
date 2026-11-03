@@ -19728,6 +19728,18 @@
     "x-max-length": 30,
     "x-source-hash": "4913c670"
   },
+  "forum-shot.card-table.filter-label": "Search cards",
+  "@forum-shot.card-table.filter-label": {
+    "description": "Label of the search field above the card table. It filters rows by card, dashboard or view name. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "8d0b0964"
+  },
+  "forum-shot.card-table.filter-none": "No cards match your search.",
+  "@forum-shot.card-table.filter-none": {
+    "description": "Shown in place of the table rows when the search matches no card. Max 80 characters.",
+    "x-max-length": 80,
+    "x-source-hash": "df2d1a4f"
+  },
   "forum-shot.card-table.fonts-from": "Fonts from {hosts}",
   "@forum-shot.card-table.fonts-from": {
     "description": "Line in the status details of a card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 120 characters.",

@@ -166,6 +166,11 @@ export const forumShotStyles = css`
     content: '\\25BC' / '';
     font-size: 0.7em;
   }
+  .filter input {
+    min-height: 44px;
+    margin: 0 8px 8px;
+    font: inherit;
+  }
   .hint {
     display: block;
     margin-top: 4px;

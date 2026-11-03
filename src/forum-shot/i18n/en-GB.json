@@ -24,6 +24,16 @@
     "note": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own.",
     "max": 30
   },
+  "forum-shot.card-table.filter-label": {
+    "text": "Search cards",
+    "note": "Label of the search field above the card table. It filters rows by card, dashboard or view name.",
+    "max": 30
+  },
+  "forum-shot.card-table.filter-none": {
+    "text": "No cards match your search.",
+    "note": "Shown in place of the table rows when the search matches no card.",
+    "max": 80
+  },
   "forum-shot.card-table.fonts-from": {
     "text": "Fonts from {hosts}",
     "note": "Line in the status details of a card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",

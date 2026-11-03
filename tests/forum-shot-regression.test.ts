@@ -54,7 +54,7 @@ describe('the card list is a table', () => {
     document.body.innerHTML = '';
   });
 
-  it('has Dashboard, View, Card and Status columns and one row per card', async () => {
+  it('has Card, Dashboard, View and Status columns and one row per card', async () => {
     const el = document.createElement('magic-card-forum-shot') as MagicCardForumShot;
     el.hass = wsOf([mc({ name: 'One' }), mc({ name: 'Two' })]) as never;
     document.body.append(el);
@@ -66,7 +66,7 @@ describe('the card list is a table', () => {
     const table = root.querySelector('table, [role=table]');
     expect(table, 'the card list renders a table').not.toBeNull();
     const heads = [...table!.querySelectorAll('th, [role=columnheader]')].map((h) => h.textContent!.trim());
-    expect(heads).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+    expect(heads).toEqual(['Card', 'Dashboard', 'View', 'Status']);
     expect(table!.querySelectorAll('tbody tr, [role=row]:not(:has([role=columnheader]))').length).toBe(2);
   });
 });

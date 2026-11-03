@@ -126,17 +126,17 @@ for (const engine of engines()) {
         expect(await sorts(b)).toEqual(['none', 'none', 'none', 'none']);
         expect(await b.eval<number>(`${ROOT}.querySelectorAll('thead button.sort').length`)).toBe(4);
 
-        // pick Beta first with a real click on its dashboard cell, so a sort has a selection to keep
+        // pick Beta first with a real click on its card cell, so a sort has a selection to keep
         await tap(b, await cellBox(b, 'Beta', 0));
         expect(await checkedCard(b)).toBe('Beta');
 
-        await tap(b, await sortBox(b, 2)); // Card
-        expect(await sorts(b)).toEqual(['none', 'none', 'ascending', 'none']);
+        await tap(b, await sortBox(b, 0)); // Card
+        expect(await sorts(b)).toEqual(['ascending', 'none', 'none', 'none']);
         expect(await order(b)).toEqual(BY_CARD);
         expect(await checkedCard(b)).toBe('Beta');
 
-        await tap(b, await sortBox(b, 2));
-        expect(await sorts(b)).toEqual(['none', 'none', 'descending', 'none']);
+        await tap(b, await sortBox(b, 0));
+        expect(await sorts(b)).toEqual(['descending', 'none', 'none', 'none']);
         expect(await order(b)).toEqual([...BY_CARD].reverse());
         expect(await checkedCard(b)).toBe('Beta');
 
@@ -148,8 +148,8 @@ for (const engine of engines()) {
         expect(await sorts(b)).toEqual(['none', 'none', 'none', 'descending']);
         expect(await order(b)).toEqual([...LOCKED].reverse().concat(OPEN));
 
-        await tap(b, await sortBox(b, 0)); // Dashboard: "Garage" before "Home" (the default dashboard's title)
-        expect(await sorts(b)).toEqual(['ascending', 'none', 'none', 'none']);
+        await tap(b, await sortBox(b, 1)); // Dashboard: "Garage" before "Home" (the default dashboard's title)
+        expect(await sorts(b)).toEqual(['none', 'ascending', 'none', 'none']);
         expect((await order(b))[0]).toBe('Beta');
         expect(await checkedCard(b)).toBe('Beta');
         expect(b.errors).toEqual([]);
@@ -162,7 +162,9 @@ for (const engine of engines()) {
         const names = await headers(b);
         expect(names).toHaveLength(4);
         await b.tab();
-        expect(await active(b)).toBe('div.scroll'); // the labelled region is the first stop
+        expect(await active(b)).toBe('input.'); // the search field is the first stop
+        await b.tab();
+        expect(await active(b)).toBe('div.scroll'); // then the labelled region
         for (const n of names) {
           await b.tab();
           expect(await active(b)).toBe(`sort:${n}`);
@@ -181,17 +183,17 @@ for (const engine of engines()) {
         expect(focused === blurred, 'the focus ring changes what is drawn').toBe(false);
 
         // back to the Card button: Enter sorts ascending, Space descending, focus stays on the button
-        await b.eval(`${ROOT}.querySelectorAll('thead button.sort')[2].focus()`);
+        await b.eval(`${ROOT}.querySelectorAll('thead button.sort')[0].focus()`);
         await b.key('Enter', 'Enter', 13);
         await sleep(60);
-        expect(await sorts(b)).toEqual(['none', 'none', 'ascending', 'none']);
+        expect(await sorts(b)).toEqual(['ascending', 'none', 'none', 'none']);
         expect(await order(b)).toEqual(BY_CARD);
-        expect(await active(b)).toBe(`sort:${names[2]}`);
+        expect(await active(b)).toBe(`sort:${names[0]}`);
         await b.key(' ', 'Space', 32);
         await sleep(60);
-        expect(await sorts(b)).toEqual(['none', 'none', 'descending', 'none']);
+        expect(await sorts(b)).toEqual(['descending', 'none', 'none', 'none']);
         expect(await order(b)).toEqual([...BY_CARD].reverse());
-        expect(await active(b)).toBe(`sort:${names[2]}`);
+        expect(await active(b)).toBe(`sort:${names[0]}`);
         expect(b.errors).toEqual([]);
       });
     });
@@ -201,7 +203,7 @@ for (const engine of engines()) {
         await b.send('Browser.setDownloadBehavior', { behavior: 'deny' }).catch(() => undefined);
         expect(await mount(b)).toBe(true);
         expect(await b.eval<string>(`${ROOT}.querySelector('button.download').getAttribute('aria-disabled')`)).toBe('true');
-        for (let i = 0; i < 5; i++) await b.tab(); // region, then the four sort buttons
+        for (let i = 0; i < 6; i++) await b.tab(); // search field, region, then the four sort buttons
         await b.tab();
         expect(await active(b)).toBe('radio:card:Zebra'); // the first enabled radio of the group
         expect(await checkedCard(b)).toBeNull();
@@ -432,7 +434,7 @@ for (const engine of engines()) {
           expect(await checkedCard(b)).toBe('Beta');
           await tap(b, await cellBox(b, 'Custom', 0));
           expect(await checkedCard(b)).toBe('Beta');
-          await tap(b, await sortBox(b, 2));
+          await tap(b, await sortBox(b, 0));
           expect(await order(b)).toEqual(BY_CARD);
           expect(b.errors).toEqual([]);
         });
@@ -452,7 +454,7 @@ for (const engine of engines()) {
             expect(g.labels).toBe(0);
             expect(g.scrollW, 'the page does not scroll sideways').toBeLessThanOrEqual(width);
             const head = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('thead th')].map((t) => t.textContent.replace(/[^\\p{L}]/gu, ''))`);
-            expect(head).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+            expect(head).toEqual(['Card', 'Dashboard', 'View', 'Status']);
             // the Status cell holds one button with the icon and the word
             const cells = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('tbody tr')].map((tr) => { const c = tr.lastElementChild; return c.querySelectorAll('button').length + ':' + [...c.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent.trim()).join('') + ':' + c.querySelectorAll('svg').length; })`);
             expect(new Set(cells)).toEqual(new Set(['1::1']));
