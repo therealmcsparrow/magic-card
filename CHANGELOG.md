@@ -8,7 +8,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ### Changed
 -   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
--   **Status column.** Each card has a 44 px status button. Select it to read why a card is available or locked, and which font sites a card asks for. Escape, the Close button or a tap outside closes the note.
+-   **Status column.** Each card row has one Status icon. Select it to open a note that says why the card is available or locked, and which font sites it asks for. Press Escape, select Close, select outside the note, or press Tab to move on, and the note closes.
 
 ## 2026.10.12-beta.15 (2026-11-03)
 

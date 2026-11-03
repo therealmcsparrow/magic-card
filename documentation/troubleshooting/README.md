@@ -30,7 +30,7 @@ See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/
 
 A locked row gives one of four reasons. The tab does not show the address itself, so look for it in the card's settings and CSS. To make a picture of the card:
 
-1. Select the padlock in the Status column to read the reason.
+1. Select the Status icon on the card's row. A note opens with the reason. Press Escape or select Close to dismiss it.
 2. Open the card in the editor and change what the reason points to:
     - "It loads something from outside Home Assistant." Look in the card's settings and CSS for an image or web address that is not on your Home Assistant, and remove it.
     - "It holds another card (a custom-card module) that nothing here can check." Remove the custom-card module.
