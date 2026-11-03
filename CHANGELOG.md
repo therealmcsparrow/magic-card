@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.15 (2026-11-03)
 
 ### Added
 -   **Forum shot works with web fonts.** A card with fonts from Google Fonts or another font site can now be turned into a picture. To draw the fonts, your browser asks the font sites for them, and the tab names those sites. Your cards and settings are not sent.
