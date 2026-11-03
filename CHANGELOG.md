@@ -4,6 +4,12 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Changed
+-   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
+-   **Status column.** Each card has a 44 px status button. Select it to read why a card is available or locked, and which font sites a card asks for. Escape, the Close button or a tap outside closes the note.
+
 ## 2026.10.12-beta.15 (2026-11-03)
 
 ### Added
