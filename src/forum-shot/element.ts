@@ -314,6 +314,7 @@ export class MagicCardForumShot extends LitElement {
       ? t('forum-shot.card-table.status-button-locked')
       : t('forum-shot.card-table.status-button-available');
     const reason = c.lock === null ? '' : this._reason(c.lock);
+    const state = locked ? t('forum-shot.card-table.status-locked') : t('forum-shot.card-table.status-available');
     const icon = locked
       ? svg`<path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z" />`
       : svg`<path d="M5 12.5l4.5 4.5L19 7.5" />`;
@@ -326,7 +327,7 @@ export class MagicCardForumShot extends LitElement {
         aria-controls=${open ? `card-pop-${i}` : nothing}
         @click=${() => this._toggle(key)}
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg>${state}
       </button>
       ${locked ? html`<span id="card-note-${i}" hidden>${reason}</span>` : nothing}
       ${
@@ -335,16 +336,13 @@ export class MagicCardForumShot extends LitElement {
               class="pop"
               id="card-pop-${i}"
               role="dialog"
-              aria-labelledby="card-pop-${i}-h"
+              aria-label=${state}
               @focusout=${(e: FocusEvent) => {
                 const to = e.relatedTarget as Element | null;
                 if (to && !to.matches('.scroll') && !(e.currentTarget as Element).parentNode!.contains(to) && this._tip === key)
                   this._close();
               }}
             >
-              <p class="pop-h" id="card-pop-${i}-h">
-                ${locked ? t('forum-shot.card-table.status-locked') : t('forum-shot.card-table.status-available')}
-              </p>
               <p>${locked ? reason : t('forum-shot.card-table.status-detail-available')}</p>
               ${c.fontHosts.length ? html`<p class="fonts">${t('forum-shot.card-table.fonts-from', { hosts: c.fontHosts.join(', ') })}</p>` : nothing}
               <button type="button" class="close" @click=${() => this._close()}>

@@ -453,7 +453,7 @@ for (const engine of engines()) {
             expect(g.scrollW, 'the page does not scroll sideways').toBeLessThanOrEqual(width);
             const head = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('thead th')].map((t) => t.textContent.replace(/[^\\p{L}]/gu, ''))`);
             expect(head).toEqual(['Dashboard', 'View', 'Card', 'Status']);
-            // the Status cell holds one button and no visible text
+            // the Status cell holds one button with the icon and the word
             const cells = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('tbody tr')].map((tr) => { const c = tr.lastElementChild; return c.querySelectorAll('button').length + ':' + [...c.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent.trim()).join('') + ':' + c.querySelectorAll('svg').length; })`);
             expect(new Set(cells)).toEqual(new Set(['1::1']));
             for (const [w, h] of g.tips) {
@@ -522,7 +522,7 @@ for (const engine of engines()) {
         const pops = () => b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`);
         await openTip(b, 'Custom');
         expect(await pops()).toBe(1);
-        const text = await boxOf(b, `root.querySelector('.pop .pop-h')`);
+        const text = await boxOf(b, `root.querySelector('.pop p')`);
         await b.click(text.x, text.y);
         await sleep(100);
         expect(await pops()).toBe(1);

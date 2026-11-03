@@ -237,7 +237,7 @@ describe('the card table', () => {
     const rows = $$<HTMLElement>(el, 'tbody tr');
     rows[2].querySelector<HTMLButtonElement>('button.tip')!.click();
     await flush(el);
-    expect($(el, '.pop-h')!.textContent!.trim()).toBe('Locked');
+    expect($(el, '.pop')!.getAttribute('aria-label')).toBe('Locked');
     expect($(el, '.pop')!.textContent).toContain('custom-card');
     expect(rows[2].contains($(el, '.pop'))).toBe(true);
     rows[1].querySelector<HTMLButtonElement>('button.tip')!.click();
@@ -265,7 +265,7 @@ describe('the card table', () => {
       $$<HTMLElement>(el, 'tbody tr')[row].querySelector<HTMLButtonElement>('button.tip')!;
     const active = (el: Element) => el.shadowRoot!.activeElement;
 
-    it('is one named button per row with no visible text in the cell', async () => {
+    it('is one named button per row showing the status word next to the icon', async () => {
       const el = await mount(ws(cards));
       expect(btn(el, 1).getAttribute('aria-label')).toBe('Available, show details');
       expect(btn(el, 2).getAttribute('aria-label')).toBe('Locked, show details');
@@ -273,10 +273,11 @@ describe('the card table', () => {
       expect(btn(el, 2).hasAttribute('aria-controls')).toBe(false);
       expect(btn(el, 2).getAttribute('type')).toBe('button');
       expect($$(el, '.pop')).toEqual([]);
-      expect(btn(el, 1).textContent!.trim()).toBe('');
+      expect(btn(el, 1).textContent!.trim()).toBe('Available');
+      expect(btn(el, 2).textContent!.trim()).toBe('Locked');
     });
 
-    it('opens a dialog with the word, the reason and a Close button holding focus, and tells the button', async () => {
+    it('opens a dialog named by the word, with only the reason and a Close button holding focus, and tells the button', async () => {
       const el = await mount(ws(cards));
       btn(el, 2).click();
       await flush(el);
@@ -284,19 +285,20 @@ describe('the card table', () => {
       expect(pop.getAttribute('role')).toBe('dialog');
       expect(btn(el, 2).getAttribute('aria-expanded')).toBe('true');
       expect(btn(el, 2).getAttribute('aria-controls')).toBe(pop.id);
-      expect(pop.getAttribute('aria-labelledby')).toBe(pop.querySelector('.pop-h')!.id);
-      expect(pop.querySelector('.pop-h')!.textContent!.trim()).toBe('Locked');
+      expect(pop.getAttribute('aria-label')).toBe('Locked');
+      expect(pop.textContent).not.toContain('Locked');
       expect(pop.textContent).toContain('custom-card');
       expect(active(el)).toBe(pop.querySelector('button'));
       expect(pop.querySelector('button')!.textContent!.trim()).toBe('Close');
     });
 
-    it('shows the available word, its line and the font hosts', async () => {
+    it('shows the available line and the font hosts, named by the word', async () => {
       const el = await mount(ws(cards));
       btn(el, 1).click();
       await flush(el);
       const pop = $<HTMLElement>(el, '.pop')!;
-      expect(pop.querySelector('.pop-h')!.textContent!.trim()).toBe('Available');
+      expect(pop.getAttribute('aria-label')).toBe('Available');
+      expect(pop.textContent).not.toContain('Available');
       expect(pop.textContent).toContain('You can pick this card for a forum shot.');
       expect(pop.textContent).toContain('Fonts from fonts.googleapis.com');
       btn(el, 0).click();
