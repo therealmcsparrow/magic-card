@@ -421,9 +421,9 @@ describe('the card table', () => {
     });
 
     it('a pointerdown and click on a cell or the label of the open available row close the popup and pick the row', async () => {
-      const el = await mount(ws(cards));
       const down = () => new Event('pointerdown', { bubbles: true, composed: true });
       for (const sel of ['td', 'label']) {
+        const el = await mount(ws(cards));
         btn(el, 1).click();
         await flush(el);
         expect($(el, '.pop')).not.toBeNull();

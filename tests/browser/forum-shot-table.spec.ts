@@ -567,15 +567,19 @@ for (const engine of engines()) {
       });
     });
 
-    it('Tab from Close closes the popup', async () => {
+    it('Tab from Close closes the popup and lands on the Status button of the next row', async () => {
       await engine.run(servers, async (b) => {
         await b.viewport(1280, 800);
         expect(await mount(b)).toBe(true);
         await sleep(100);
+        // with a card picked the other radios leave the tab order, so Tab from Close reaches the next row's Status button
+        await tap(b, await cellBox(b, 'Zebra', 1));
+        expect(await checkedCard(b)).toBe('Zebra');
         await openTip(b, 'Alpha');
         expect(await b.eval<string>(`${ROOT}.activeElement.textContent.trim()`)).toBe('Close');
         await b.tab();
         await sleep(80);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return root.activeElement === (${rowOf('Fonty')}).querySelector('button.tip'); })()`)).toBe(true);
         expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
         expect(b.errors).toEqual([]);
       });
