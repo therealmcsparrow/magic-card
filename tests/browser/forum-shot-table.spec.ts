@@ -439,6 +439,103 @@ for (const engine of engines()) {
       });
     }
 
+    for (const width of [320, 768, 1280]) {
+      for (const narrow of [false, true]) {
+        it(`AC1/AC2/AC3/AC5/AC8: at ${width} px narrow ${narrow ? 'on' : 'off'} the table is a table, Status holds only an icon, and the popup stays on screen while the table is scrolled sideways`, async () => {
+          await engine.run(servers, async (b) => {
+            await b.viewport(width, 800);
+            expect(await mount(b, narrow)).toBe(true);
+            await sleep(150);
+            const g = await geometry(b);
+            expect(g.table).toBe('table');
+            expect(new Set(g.tr)).toEqual(new Set(['table-row']));
+            expect(g.labels).toBe(0);
+            expect(g.scrollW, 'the page does not scroll sideways').toBeLessThanOrEqual(width);
+            const head = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('thead th')].map((t) => t.textContent.replace(/[^\\p{L}]/gu, ''))`);
+            expect(head).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+            // the Status cell holds one button and no visible text
+            const cells = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('tbody tr')].map((tr) => { const c = tr.lastElementChild; return c.querySelectorAll('button').length + ':' + [...c.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent.trim()).join('') + ':' + c.querySelectorAll('svg').length; })`);
+            expect(new Set(cells)).toEqual(new Set(['1::1']));
+            for (const [w, h] of g.tips) {
+              expect(w).toBeGreaterThanOrEqual(24);
+              expect(h).toBeGreaterThanOrEqual(44);
+            }
+            // scrolled fully sideways, then a popup on the first and the last row
+            await b.eval(`${ROOT}.querySelector('.scroll').scrollLeft = 9999`);
+            await sleep(80);
+            for (const name of ['Zebra', 'Outside']) {
+              await openTip(b, name);
+              const r = await popRect(b);
+              expect(r, `popup for ${name}`).not.toBeNull();
+              expect(r.left).toBeGreaterThanOrEqual(0 - 0.5);
+              expect(r.right).toBeLessThanOrEqual(r.vw + 0.5);
+              expect(r.left).toBeGreaterThanOrEqual(r.secLeft - 0.5);
+              expect(r.right).toBeLessThanOrEqual(r.secRight + 0.5);
+              expect(r.top >= r.tipBottom - 0.5 || r.bottom <= r.tipTop + 0.5, 'popup does not cover its icon').toBe(true);
+              expect(r.focus).toBe('Close');
+              await b.eval(`${ROOT}.querySelector('.pop button').click()`);
+              await sleep(60);
+            }
+            expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+            expect(b.errors).toEqual([]);
+          });
+        });
+      }
+    }
+
+    it('AC9: sorted by Status the order matches beta.15 and a popup shows its own row in the browser', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        await tap(b, await sortBox(b, 3));
+        expect(await order(b)).toEqual(['Zebra', 'Alpha', 'Fonty', 'Beta', 'Custom', 'Outside']);
+        await openTip(b, 'Custom');
+        const t = await b.eval<string>(`${ROOT}.querySelector('.pop').closest('tr').querySelector('label').textContent.trim() + '|' + ${ROOT}.querySelector('.pop').textContent`);
+        expect(t.startsWith('Custom|')).toBe(true);
+        expect(t).toContain('custom-card');
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('AC4/AC7: the Status button is named for its state, and a locked radio is still described without opening the popup', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const nodes = await axTree(b);
+        const names = nodes.filter((n) => n.role === 'button' && /show details$/.test(n.name)).map((n) => n.name);
+        expect(names.filter((n) => n === 'Available, show details')).toHaveLength(OPEN.length);
+        expect(names.filter((n) => n === 'Locked, show details')).toHaveLength(LOCKED.length);
+        const locked = nodes.filter((n) => n.role === 'radio' && n.disabled);
+        expect(locked).toHaveLength(LOCKED.length);
+        for (const n of locked) expect(n.description.length).toBeGreaterThan(0);
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+      });
+    });
+
+    it('AC6: Escape, outside click and Close close the popup and focus returns to the icon', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const focusOnTip = (name: string) => b.eval<boolean>(`(() => { const root = ${ROOT}; return root.activeElement === (${rowOf(name)}).querySelector('button.tip'); })()`);
+        const pops = () => b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`);
+        await openTip(b, 'Alpha');
+        await b.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await b.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await sleep(80);
+        expect(await pops()).toBe(0);
+        expect(await focusOnTip('Alpha')).toBe(true);
+        await openTip(b, 'Alpha');
+        await b.eval(`${ROOT}.querySelector('.pop button').click()`);
+        await sleep(80);
+        expect(await pops()).toBe(0);
+        expect(await focusOnTip('Alpha')).toBe(true);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
     it('AC12: the Status button opens details inside the screen, flips above on the last row, and one click on another button switches', async () => {
       await engine.run(servers, async (b) => {
         await b.viewport(375, 700);

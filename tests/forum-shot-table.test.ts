@@ -221,6 +221,45 @@ describe('the card table', () => {
     expect(wrap.querySelector('table')!.hasAttribute('aria-label')).toBe(false);
   });
 
+  it('AC1: one header row Dashboard, View, Card, Status and one row per card, with no label inside a cell', async () => {
+    const el = await mount(ws(cards));
+    expect($$(el, 'thead tr')).toHaveLength(1);
+    expect($$(el, 'thead th').map((h) => h.textContent!.trim().replace(/[^\p{L}]/gu, ''))).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+    expect($$(el, 'tbody tr')).toHaveLength(cards.length);
+    expect($$(el, 'td [data-label], td > .status, td > .hint')).toEqual([]);
+  });
+
+  it('AC9: sorted by Status the order is available first, and each popup shows its own row', async () => {
+    const el = await mount(ws(cards));
+    $$<HTMLButtonElement>(el, 'thead th button')[3].click();
+    await flush(el);
+    expect(names(el)).toEqual(['Beta', 'Alpha', 'Gamma']);
+    const rows = $$<HTMLElement>(el, 'tbody tr');
+    rows[2].querySelector<HTMLButtonElement>('button.tip')!.click();
+    await flush(el);
+    expect($(el, '.pop-h')!.textContent!.trim()).toBe('Locked');
+    expect($(el, '.pop')!.textContent).toContain('custom-card');
+    expect(rows[2].contains($(el, '.pop'))).toBe(true);
+    rows[1].querySelector<HTMLButtonElement>('button.tip')!.click();
+    await flush(el);
+    expect($$(el, '.pop')).toHaveLength(1);
+    expect(rows[1].contains($(el, '.pop'))).toBe(true);
+    expect($(el, '.pop')!.textContent).toContain('fonts.googleapis.com');
+  });
+
+  it('AC10: the four new keys exist in en-GB, en-US and nl, and the popup text comes from them', async () => {
+    const fs = await import('node:fs');
+    const keys = ['status-button-available', 'status-button-locked', 'status-detail-available', 'status-close'].map(
+      (k) => `forum-shot.card-table.${k}`,
+    );
+    for (const loc of ['en-GB', 'en-US', 'nl']) {
+      const j = JSON.parse(fs.readFileSync(`src/forum-shot/i18n/${loc}.json`, 'utf8'));
+      for (const k of keys) expect(j[k]?.text, `${loc} ${k}`).toBeTruthy();
+    }
+    const src = fs.readFileSync('src/forum-shot/element.ts', 'utf8');
+    expect(src).not.toMatch(/show details|Close<\/button>/);
+  });
+
   describe('the status button', () => {
     const btn = (el: Element, row: number) =>
       $$<HTMLElement>(el, 'tbody tr')[row].querySelector<HTMLButtonElement>('button.tip')!;
