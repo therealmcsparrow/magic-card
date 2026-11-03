@@ -26,7 +26,7 @@
   },
   "forum-shot.card-table.fonts-from": {
     "text": "Fonts from {hosts}",
-    "note": "Line under a usable card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "note": "Line in the status details of a card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
     "max": 120,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
@@ -56,6 +56,26 @@
     "text": "Available",
     "note": "Status of a card that can be picked for a forum shot.",
     "max": 20
+  },
+  "forum-shot.card-table.status-button-available": {
+    "text": "Available, show details",
+    "note": "Accessible name of the button in the Status column of a card that can be picked. Selecting it opens the status details.",
+    "max": 40
+  },
+  "forum-shot.card-table.status-button-locked": {
+    "text": "Locked, show details",
+    "note": "Accessible name of the button in the Status column of a card that cannot be picked. Selecting it opens the status details.",
+    "max": 40
+  },
+  "forum-shot.card-table.status-close": {
+    "text": "Close",
+    "note": "Button that closes the status details of a card.",
+    "max": 20
+  },
+  "forum-shot.card-table.status-detail-available": {
+    "text": "You can pick this card for a forum shot.",
+    "note": "Line in the status details of a card that can be picked.",
+    "max": 60
   },
   "forum-shot.card-table.status-locked": {
     "text": "Locked",

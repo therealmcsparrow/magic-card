@@ -3,8 +3,8 @@ import os from 'node:os';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { bundlePage, engines, startServers, type Browser, type Servers } from '../fixtures/forum-shot-font-server';
 
-// AC11 (keyboard and screen-reader use: reach, sort, select, download; locked rows and reasons announced) and AC12 (phone width: the columns
-// stack and rows stay selectable) for the card table of <magic-card-forum-shot>, in a real browser. Pointer input is real (Input.dispatchMouseEvent
+// Keyboard and screen-reader use (reach, sort, select, download; locked rows and reasons announced) and phone width (the table stays a table in a
+// scrolling region, and the Status button opens its details) for the card table of <magic-card-forum-shot>, in a real browser. Pointer input is real (Input.dispatchMouseEvent
 // at centres read from getBoundingClientRect), keys are real (Input.dispatchKeyEvent), the accessibility tree is the browser's own
 // (Accessibility.getFullAXTree). Engines: current Chrome and the Chromium 85 floor. Safari and Firefox are not run.
 
@@ -119,7 +119,7 @@ afterAll(async () => {
 
 for (const engine of engines()) {
   describe(`forum shot table on ${engine.name}`, () => {
-    it('AC11: a click on a header sorts ascending, a second click descending, and the selection stays', async () => {
+    it('a click on a header sorts ascending, a second click descending, and the selection stays', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         expect(await order(b)).toEqual(DASHBOARD_ORDER);
@@ -156,11 +156,13 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: Tab reaches each sort button and the radio; Enter and Space sort; the focus ring shows', async () => {
+    it('Tab reaches each sort button and the radio; Enter and Space sort; the focus ring shows', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const names = await headers(b);
         expect(names).toHaveLength(4);
+        await b.tab();
+        expect(await active(b)).toBe('div.scroll'); // the labelled region is the first stop
         for (const n of names) {
           await b.tab();
           expect(await active(b)).toBe(`sort:${n}`);
@@ -194,12 +196,12 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: Space and the arrow keys select a row, locked rows are skipped, Download works from the keyboard', async () => {
+    it('Space and the arrow keys select a row, locked rows are skipped, Download works from the keyboard', async () => {
       await engine.run(servers, async (b) => {
         await b.send('Browser.setDownloadBehavior', { behavior: 'deny' }).catch(() => undefined);
         expect(await mount(b)).toBe(true);
         expect(await b.eval<string>(`${ROOT}.querySelector('button.download').getAttribute('aria-disabled')`)).toBe('true');
-        for (let i = 0; i < 4; i++) await b.tab();
+        for (let i = 0; i < 5; i++) await b.tab(); // region, then the four sort buttons
         await b.tab();
         expect(await active(b)).toBe('radio:card:Zebra'); // the first enabled radio of the group
         expect(await checkedCard(b)).toBeNull();
@@ -226,7 +228,7 @@ for (const engine of engines()) {
 
         // on to Download by Tab only, then Enter makes the picture without a pointer
         let on = await active(b);
-        for (let i = 0; i < 12 && on !== 'button.download'; i++) {
+        for (let i = 0; i < 30 && on !== 'button.download'; i++) {
           await b.tab();
           on = await active(b);
         }
@@ -245,10 +247,10 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: a click on a row cell selects its radio, a locked row does nothing', async () => {
+    it('a click on a row cell selects its radio, a locked row does nothing', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
-        for (const [name, cell] of [['Alpha', 0], ['Fonty', 1], ['Beta', 3]] as const) {
+        for (const [name, cell] of [['Alpha', 0], ['Fonty', 1], ['Beta', 1]] as const) {
           await tap(b, await cellBox(b, name, cell));
           expect(await checkedCard(b)).toBe(name);
           expect(await b.eval<string>(`${ROOT}.querySelector('tbody tr.picked label').textContent.trim()`)).toBe(name);
@@ -257,7 +259,7 @@ for (const engine of engines()) {
         await tap(b, await boxOf(b, `(${rowOf('Zebra')}).querySelector('label')`));
         expect(await checkedCard(b)).toBe('Zebra');
         for (const name of LOCKED) {
-          for (const cell of [0, 2, 3]) {
+          for (const cell of [0, 2]) {
             await tap(b, await cellBox(b, name, cell));
             expect(await checkedCard(b), `${name} cell ${cell} must not select`).toBe('Zebra');
           }
@@ -268,7 +270,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: the accessibility tree has the table, the sort state, and each locked row with its reason', async () => {
+    it('the accessibility tree has the table, the sort state, and each locked row with its reason', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const reasons = await b.eval<Record<string, string>>(`(() => {
@@ -303,7 +305,7 @@ for (const engine of engines()) {
           expect(r!.disabled, `${n} is disabled`).toBe(true);
           expect(r!.description, `${n} announces its reason`).toContain(reasons[n]);
         }
-        expect(await b.eval<boolean>(`${ROOT}.querySelector('table').getAttribute('role') === 'table' && !!${ROOT}.querySelector('table').getAttribute('aria-label')`)).toBe(true);
+        expect(await b.eval<boolean>(`${ROOT}.querySelector('table').getAttribute('role') === 'table' && ${ROOT}.querySelector('.scroll').getAttribute('role') === 'region' && !!${ROOT}.querySelector('.scroll').getAttribute('aria-label')`)).toBe(true);
 
         // the sort state is on the column header in the DOM and the sort button keeps its name in the tree
         await tap(b, await sortBox(b, 2));
@@ -315,7 +317,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: the sorted column shows an arrow glyph, not stray characters', async () => {
+    it('the sorted column shows an arrow glyph, not stray characters', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const after = (): Promise<string> => b.eval(`getComputedStyle(${ROOT}.querySelectorAll('thead button.sort')[2], '::after').content`);
@@ -332,7 +334,7 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC11: sort buttons and radio rows are at least 44 px', async () => {
+    it('sort buttons and radio rows are at least 44 px', async () => {
       await engine.run(servers, async (b) => {
         expect(await mount(b)).toBe(true);
         const sizes = await b.eval<{ buttons: number[][]; rows: number[][]; choices: number[][]; radios: number[][] }>(`(() => {
@@ -375,77 +377,308 @@ for (const engine of engines()) {
       });
     });
 
-    it('AC12: at 375 px the rows stack, each value carries its label, rows stay selectable', async () => {
+    const geometry = (b: Browser) =>
+      b.eval<any>(`(() => {
+        const root = ${ROOT}; const d = (e) => getComputedStyle(e).display;
+        const wrap = root.querySelector('.scroll'); const table = root.querySelector('table');
+        return {
+          table: d(table), tr: [...root.querySelectorAll('tbody tr')].map(d), td: [...root.querySelectorAll('tbody td')].map(d),
+          roles: [table.getAttribute('role'), root.querySelector('tbody tr').getAttribute('role'), root.querySelector('tbody td').getAttribute('role')],
+          labels: root.querySelectorAll('[data-label]').length,
+          scrollW: document.documentElement.scrollWidth, wrapScrolls: wrap.scrollWidth > wrap.clientWidth,
+          tips: [...root.querySelectorAll('button.tip')].map((x) => { const r = x.getBoundingClientRect(); return [r.width, r.height]; }),
+        };
+      })()`);
+    const openTip = async (b: Browser, name: string): Promise<void> => {
+      const r = await b.eval<Box>(`(() => { const root = ${ROOT}; const e = (${rowOf(name)}).querySelector('button.tip'); const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2, w: r.width, h: r.height }; })()`);
+      await b.click(r.x, r.y);
+      await sleep(80);
+    };
+    const popRect = (b: Browser) =>
+      b.eval<any>(`(() => {
+        const root = ${ROOT}; const p = root.querySelector('.pop'); if (!p) return null;
+        const r = p.getBoundingClientRect(); const s = root.querySelector('section').getBoundingClientRect();
+        const t = root.querySelector('button.tip[aria-expanded=true]').getBoundingClientRect();
+        return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, secLeft: s.left, secRight: s.right, tipTop: t.top, tipBottom: t.bottom, vh: innerHeight, vw: document.documentElement.clientWidth, focus: root.activeElement && root.activeElement.textContent.trim() };
+      })()`);
+
+    for (const [width, narrow] of [[375, false], [768, false], [1000, true]] as const) {
+      it(`at ${width} px${narrow ? ' with narrow' : ''} the table stays a table, the page does not scroll sideways, the Status buttons are 44 px`, async () => {
+        await engine.run(servers, async (b) => {
+          await b.viewport(width, 800);
+          expect(await mount(b, narrow)).toBe(true);
+          await sleep(150);
+          const g = await geometry(b);
+          expect(g.table).toBe('table');
+          expect(new Set(g.tr)).toEqual(new Set(['table-row']));
+          expect(new Set(g.td)).toEqual(new Set(['table-cell']));
+          expect(g.roles).toEqual(['table', 'row', 'cell']);
+          expect(g.labels).toBe(0);
+          expect(g.scrollW).toBeLessThanOrEqual(width);
+          if (width === 375) expect(g.wrapScrolls, 'the region scrolls instead of the page').toBe(true);
+          expect(g.tips).toHaveLength(DASHBOARD_ORDER.length);
+          for (const [w, h] of g.tips) {
+            expect(w).toBeGreaterThanOrEqual(44);
+            expect(h).toBeGreaterThanOrEqual(44);
+          }
+          const nodes = await axTree(b);
+          expect(nodes.filter((n) => n.role === 'table')).toHaveLength(1);
+          expect(nodes.filter((n) => n.role === 'row')).toHaveLength(1 + DASHBOARD_ORDER.length);
+          expect(nodes.filter((n) => n.role === 'button' && /show details$/.test(n.name))).toHaveLength(DASHBOARD_ORDER.length);
+          await b.shot(path.join(SHOTS, `table-${width}${narrow ? '-narrow' : ''}-${engine.name}.png`));
+
+          // rows stay selectable by a real tap, locked rows do not; a sort works by tap
+          await tap(b, await cellBox(b, 'Beta', 1));
+          expect(await checkedCard(b)).toBe('Beta');
+          await tap(b, await cellBox(b, 'Custom', 0));
+          expect(await checkedCard(b)).toBe('Beta');
+          await tap(b, await sortBox(b, 2));
+          expect(await order(b)).toEqual(BY_CARD);
+          expect(b.errors).toEqual([]);
+        });
+      });
+    }
+
+    for (const width of [320, 768, 1280]) {
+      for (const narrow of [false, true]) {
+        it(`at ${width} px narrow ${narrow ? 'on' : 'off'} the table is a table, Status holds only an icon, and the popup stays on screen while the table is scrolled sideways`, async () => {
+          await engine.run(servers, async (b) => {
+            await b.viewport(width, 800);
+            expect(await mount(b, narrow)).toBe(true);
+            await sleep(150);
+            const g = await geometry(b);
+            expect(g.table).toBe('table');
+            expect(new Set(g.tr)).toEqual(new Set(['table-row']));
+            expect(g.labels).toBe(0);
+            expect(g.scrollW, 'the page does not scroll sideways').toBeLessThanOrEqual(width);
+            const head = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('thead th')].map((t) => t.textContent.replace(/[^\\p{L}]/gu, ''))`);
+            expect(head).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+            // the Status cell holds one button and no visible text
+            const cells = await b.eval<string[]>(`[...${ROOT}.querySelectorAll('tbody tr')].map((tr) => { const c = tr.lastElementChild; return c.querySelectorAll('button').length + ':' + [...c.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent.trim()).join('') + ':' + c.querySelectorAll('svg').length; })`);
+            expect(new Set(cells)).toEqual(new Set(['1::1']));
+            for (const [w, h] of g.tips) {
+              expect(w).toBeGreaterThanOrEqual(24);
+              expect(h).toBeGreaterThanOrEqual(44);
+            }
+            // scrolled fully sideways, then a popup on the first and the last row
+            await b.eval(`${ROOT}.querySelector('.scroll').scrollLeft = 9999`);
+            await sleep(80);
+            for (const name of ['Zebra', 'Outside']) {
+              await openTip(b, name);
+              const r = await popRect(b);
+              expect(r, `popup for ${name}`).not.toBeNull();
+              expect(r.left).toBeGreaterThanOrEqual(0 - 0.5);
+              expect(r.right).toBeLessThanOrEqual(r.vw + 0.5);
+              expect(r.left).toBeGreaterThanOrEqual(r.secLeft - 0.5);
+              expect(r.right).toBeLessThanOrEqual(r.secRight + 0.5);
+              expect(r.top >= r.tipBottom - 0.5 || r.bottom <= r.tipTop + 0.5, 'popup does not cover its icon').toBe(true);
+              expect(r.focus).toBe('Close');
+              await b.eval(`${ROOT}.querySelector('.pop button').click()`);
+              await sleep(60);
+            }
+            expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+            expect(b.errors).toEqual([]);
+          });
+        });
+      }
+    }
+
+    it('sorted by Status the order matches beta.15 and a popup shows its own row in the browser', async () => {
       await engine.run(servers, async (b) => {
-        await b.viewport(375, 800);
+        await b.viewport(1280, 800);
         expect(await mount(b)).toBe(true);
-        await sleep(150);
-        const layout = await b.eval<any>(`(() => {
-          const root = ${ROOT}; const d = (e, p) => getComputedStyle(e, p).display;
-          const heads = [...root.querySelectorAll('thead button.sort')].map((x) => x.textContent.trim());
-          const rows = [...root.querySelectorAll('tbody tr')];
-          const labelled = rows.every((tr) => [...tr.children].every((td, i) => td.getAttribute('data-label') === heads[i] && getComputedStyle(td, '::before').content.replace(/^["']|["']$/g, '') === heads[i] && d(td, '::before') === 'block'));
-          const stacked = rows.every((tr) => { const t = [...tr.children].map((td) => td.getBoundingClientRect().top); return t.every((v, i) => i === 0 || v > t[i - 1]); });
-          const left = rows.every((tr) => [...tr.children].every((td) => { const r = td.getBoundingClientRect(); return r.left >= 0 && r.right <= 375; }));
-          return {
-            table: d(root.querySelector('table')), tbody: d(root.querySelector('tbody')), tr: rows.map((x) => d(x)), td: rows.flatMap((x) => [...x.children].map((c) => d(c))),
-            headRow: d(root.querySelector('thead tr')), labelled, stacked, left, scrollW: document.documentElement.scrollWidth,
-            buttons: [...root.querySelectorAll('thead button.sort')].map((x) => { const r = x.getBoundingClientRect(); return [r.left >= 0 && r.right <= 375, r.height]; }),
-            roles: [root.querySelector('table').getAttribute('role'), root.querySelector('tbody tr').getAttribute('role'), root.querySelector('tbody td').getAttribute('role')],
-          };
-        })()`);
-        expect(layout.table).toBe('block');
-        expect(layout.tbody).toBe('block');
-        expect(new Set(layout.tr)).toEqual(new Set(['block']));
-        expect(new Set(layout.td)).toEqual(new Set(['block']));
-        expect(layout.headRow).toBe('flex');
-        expect(layout.labelled, 'every value shows its column name').toBe(true);
-        expect(layout.stacked, 'the values of a row sit one under the other').toBe(true);
-        expect(layout.left, 'no value leaves the 375 px screen').toBe(true);
-        expect(layout.scrollW).toBeLessThanOrEqual(375);
-        expect(layout.roles).toEqual(['table', 'row', 'cell']);
-        for (const [inside, h] of layout.buttons) {
-          expect(inside).toBe(true);
-          expect(h).toBeGreaterThanOrEqual(44);
-        }
-
-        // the table roles survive display:block in the browser's tree
-        const nodes = await axTree(b);
-        expect(nodes.filter((n) => n.role === 'table')).toHaveLength(1);
-        expect(nodes.filter((n) => n.role === 'row')).toHaveLength(1 + DASHBOARD_ORDER.length);
-        expect(nodes.filter((n) => n.role === 'cell' || n.role === 'gridcell')).toHaveLength(4 * DASHBOARD_ORDER.length);
-        const locked = nodes.filter((n) => n.role === 'radio' && LOCKED.includes(n.name));
-        expect(locked.map((n) => [n.disabled, n.description.length > 3])).toEqual([[true, true], [true, true]]);
-
-        await b.shot(path.join(SHOTS, `table-stacked-${engine.name}.png`));
-
-        // rows stay selectable by a real tap, locked rows do not; a sort works by tap
-        await tap(b, await cellBox(b, 'Beta', 1));
-        expect(await checkedCard(b)).toBe('Beta');
-        await tap(b, await cellBox(b, 'Custom', 0));
-        expect(await checkedCard(b)).toBe('Beta');
-        await tap(b, await sortBox(b, 2));
-        expect(await order(b)).toEqual(BY_CARD);
-        expect(await checkedCard(b)).toBe('Beta');
-        const rowHeights = await b.eval<number[]>(`[...${ROOT}.querySelectorAll('tbody tr')].map((t) => t.getBoundingClientRect().height)`);
-        for (const h of rowHeights) expect(h).toBeGreaterThanOrEqual(44);
+        await sleep(100);
+        await tap(b, await sortBox(b, 3));
+        expect(await order(b)).toEqual(['Zebra', 'Alpha', 'Fonty', 'Beta', 'Custom', 'Outside']);
+        await openTip(b, 'Custom');
+        const t = await b.eval<string>(`${ROOT}.querySelector('.pop').closest('tr').querySelector('label').textContent.trim() + '|' + ${ROOT}.querySelector('.pop').textContent`);
+        expect(t.startsWith('Custom|')).toBe(true);
+        expect(t).toContain('custom-card');
         expect(b.errors).toEqual([]);
       });
     });
 
-    it('AC12: the narrow property stacks the table on a wide screen, and a wide screen without it stays a table', async () => {
+    it('the Status button is named for its state, and a locked radio is still described without opening the popup', async () => {
       await engine.run(servers, async (b) => {
-        await b.viewport(1000, 800);
-        expect(await mount(b, false)).toBe(true);
-        const wide = await b.eval<string[]>(`(() => { const r = ${ROOT}; return [getComputedStyle(r.querySelector('table')).display, getComputedStyle(r.querySelector('tbody tr')).display, getComputedStyle(r.querySelector('tbody td')).display]; })()`);
-        expect(wide).toEqual(['table', 'table-row', 'table-cell']);
-        expect(await mount(b, true)).toBe(true);
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
         await sleep(100);
-        const narrow = await b.eval<string[]>(`(() => { const r = ${ROOT}; return [getComputedStyle(r.querySelector('table')).display, getComputedStyle(r.querySelector('tbody tr')).display, getComputedStyle(r.querySelector('tbody td')).display, getComputedStyle(r.querySelector('tbody td'), '::before').content]; })()`);
-        expect(narrow.slice(0, 3)).toEqual(['block', 'block', 'block']);
-        expect(narrow[3]).not.toBe('none');
-        await tap(b, await cellBox(b, 'Alpha', 2));
-        expect(await checkedCard(b)).toBe('Alpha');
+        const nodes = await axTree(b);
+        const names = nodes.filter((n) => n.role === 'button' && /show details$/.test(n.name)).map((n) => n.name);
+        expect(names.filter((n) => n === 'Available, show details')).toHaveLength(OPEN.length);
+        expect(names.filter((n) => n === 'Locked, show details')).toHaveLength(LOCKED.length);
+        const locked = nodes.filter((n) => n.role === 'radio' && n.disabled);
+        expect(locked).toHaveLength(LOCKED.length);
+        for (const n of locked) expect(n.description.length).toBeGreaterThan(0);
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+      });
+    });
+
+    it('real mouse clicks: popup text keeps the popup open, the same button and a second tap on a locked row close it', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const pops = () => b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`);
+        await openTip(b, 'Custom');
+        expect(await pops()).toBe(1);
+        const text = await boxOf(b, `root.querySelector('.pop .pop-h')`);
+        await b.click(text.x, text.y);
+        await sleep(100);
+        expect(await pops()).toBe(1);
+        await openTip(b, 'Custom');
+        expect(await pops()).toBe(0);
+        await tap(b, await cellBox(b, 'Custom', 0));
+        expect(await pops()).toBe(1);
+        await tap(b, await cellBox(b, 'Custom', 0));
+        expect(await pops()).toBe(0);
+        await openTip(b, 'Custom');
+        const out = await boxOf(b, `root.querySelector('h1, p, section')`);
+        await b.click(out.x, 2);
+        await sleep(100);
+        expect(await pops()).toBe(0);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('a click on a cell of an available row closes the open popup and selects the row', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        await openTip(b, 'Custom');
+        await tap(b, await cellBox(b, 'Alpha', 1));
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return (${rowOf('Alpha')}).querySelector('input').checked; })()`)).toBe(true);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('a click on a cell of the open available row closes its popup and picks that row', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        await openTip(b, 'Alpha');
+        await tap(b, await cellBox(b, 'Alpha', 1));
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return (${rowOf('Alpha')}).querySelector('input').checked; })()`)).toBe(true);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('Tab from Close closes the popup and lands on the Status button of the next row', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        // with a card picked the other radios leave the tab order, so Tab from Close reaches the next row's Status button
+        await tap(b, await cellBox(b, 'Zebra', 1));
+        expect(await checkedCard(b)).toBe('Zebra');
+        await openTip(b, 'Alpha');
+        expect(await b.eval<string>(`${ROOT}.activeElement.textContent.trim()`)).toBe('Close');
+        await b.tab();
+        await sleep(80);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return root.activeElement === (${rowOf('Fonty')}).querySelector('button.tip'); })()`)).toBe(true);
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('at 200% zoom Tab reaches each Status button in row order with a visible outline inside the scroll region', async () => {
+      await engine.run(servers, async (b) => {
+        await b.send('Emulation.setDeviceMetricsOverride', { width: 640, height: 400, deviceScaleFactor: 2, mobile: false });
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const seen: string[] = [];
+        await b.eval(`${ROOT}.querySelector('.scroll').focus()`);
+        for (let i = 0; i < 40 && seen.length < DASHBOARD_ORDER.length; i++) {
+          await b.tab();
+          const hit = await b.eval<{ name: string; style: string; width: number; inside: boolean } | null>(`(() => {
+            const root = ${ROOT}; const a = root.activeElement;
+            if (!a || !a.matches('button.tip')) return null;
+            const s = getComputedStyle(a); const r = a.getBoundingClientRect(); const w = root.querySelector('.scroll').getBoundingClientRect();
+            const o = parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset || '0');
+            return { name: a.closest('tr').querySelector('label').textContent.trim(), style: s.outlineStyle, width: parseFloat(s.outlineWidth),
+              inside: r.top - o >= w.top && r.bottom + o <= w.bottom && r.left - o >= w.left - 1 };
+          })()`);
+          if (!hit) continue;
+          seen.push(hit.name);
+          expect(['solid', 'auto']).toContain(hit.style);
+          expect(hit.width).toBeGreaterThan(0);
+          expect(hit.inside, `${hit.name} outline inside the scroll region`).toBe(true);
+        }
+        expect(seen).toEqual(DASHBOARD_ORDER);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('Escape, a click outside and Close close the popup and focus returns to the icon', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        const focusOnTip = (name: string) => b.eval<boolean>(`(() => { const root = ${ROOT}; return root.activeElement === (${rowOf(name)}).querySelector('button.tip'); })()`);
+        const pops = () => b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`);
+        await openTip(b, 'Alpha');
+        await b.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await b.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await sleep(80);
+        expect(await pops()).toBe(0);
+        expect(await focusOnTip('Alpha')).toBe(true);
+        await openTip(b, 'Alpha');
+        await b.eval(`${ROOT}.querySelector('.pop button').click()`);
+        await sleep(80);
+        expect(await pops()).toBe(0);
+        expect(await focusOnTip('Alpha')).toBe(true);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('the Status button opens details inside the screen, flips above on the last row, and one click on another button switches', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(375, 700);
+        expect(await mount(b)).toBe(true);
+        await sleep(150);
+        await b.eval(`${ROOT}.querySelector('.scroll').scrollLeft = 9999`);
+        await sleep(80);
+        await openTip(b, 'Outside');
+        let r = await popRect(b);
+        expect(r).not.toBeNull();
+        expect(r.left).toBeGreaterThanOrEqual(r.secLeft - 0.5);
+        expect(r.right).toBeLessThanOrEqual(r.secRight + 0.5);
+        expect(r.top).toBeGreaterThanOrEqual(r.tipBottom);
+        expect(r.focus).toBe('Close');
+        expect(await b.eval<string>(`${ROOT}.querySelector('.pop').textContent`)).toContain('outside Home Assistant');
+        await b.shot(path.join(SHOTS, `status-open-${engine.name}.png`));
+
+        // a click on another Status button closes this one and opens that one in the same click
+        await openTip(b, 'Custom');
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(1);
+        expect(await b.eval<string>(`${ROOT}.querySelector('.pop').textContent`)).toContain('custom-card');
+
+        await b.eval(`${ROOT}.querySelector('.pop button').click()`); // the open details cover the rows below
+        // the last row near the bottom of the screen: the details sit above the button
+        await b.eval(`window.scrollTo(0, document.documentElement.scrollHeight)`);
+        await b.viewport(375, 420);
+        await sleep(120);
+        await b.eval(`(() => { const root = ${ROOT}; (${rowOf('Beta')}).querySelector('button.tip').scrollIntoView({ block: 'end' }); })()`);
+        await sleep(80);
+        await openTip(b, 'Beta');
+        r = await popRect(b);
+        expect(r.bottom).toBeLessThanOrEqual(r.tipTop + 0.5);
+        expect(r.top).toBeGreaterThanOrEqual(0);
+
+        // Escape closes and returns focus to the button; an outside tap closes too
+        await b.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await b.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await sleep(80);
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return root.activeElement === (${rowOf('Beta')}).querySelector('button.tip'); })()`)).toBe(true);
+        await openTip(b, 'Beta');
+        await b.click(5, 5);
+        await sleep(80);
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
         expect(b.errors).toEqual([]);
       });
     });

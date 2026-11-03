@@ -22956,7 +22956,7 @@
   },
   "forum-shot.card-table.fonts-from": "Fonts from {hosts}",
   "@forum-shot.card-table.fonts-from": {
-    "description": "Line under a usable card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 120 characters.",
+    "description": "Line in the status details of a card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 120 characters.",
     "source_text": "Fonts from {hosts}",
     "x-max-length": 120,
     "x-source-hash": "9f44f4ca"
@@ -22995,6 +22995,34 @@
     "source_text": "Available",
     "x-max-length": 20,
     "x-source-hash": "e6744473"
+  },
+  "forum-shot.card-table.status-button-available": "Available, show details",
+  "@forum-shot.card-table.status-button-available": {
+    "description": "Accessible name of the button in the Status column of a card that can be picked. Selecting it opens the status details. Max 40 characters.",
+    "source_text": "Available, show details",
+    "x-max-length": 40,
+    "x-source-hash": "232b6609"
+  },
+  "forum-shot.card-table.status-button-locked": "Locked, show details",
+  "@forum-shot.card-table.status-button-locked": {
+    "description": "Accessible name of the button in the Status column of a card that cannot be picked. Selecting it opens the status details. Max 40 characters.",
+    "source_text": "Locked, show details",
+    "x-max-length": 40,
+    "x-source-hash": "cd77ec2c"
+  },
+  "forum-shot.card-table.status-close": "Close",
+  "@forum-shot.card-table.status-close": {
+    "description": "Button that closes the status details of a card. Max 20 characters.",
+    "source_text": "Close",
+    "x-max-length": 20,
+    "x-source-hash": "7d9eb7ac"
+  },
+  "forum-shot.card-table.status-detail-available": "You can pick this card for a forum shot.",
+  "@forum-shot.card-table.status-detail-available": {
+    "description": "Line in the status details of a card that can be picked. Max 60 characters.",
+    "source_text": "You can pick this card for a forum shot.",
+    "x-max-length": 60,
+    "x-source-hash": "db25542b"
   },
   "forum-shot.card-table.status-locked": "Locked",
   "@forum-shot.card-table.status-locked": {
