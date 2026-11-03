@@ -4,6 +4,17 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Forum shot works with web fonts.** A card with fonts from Google Fonts or another font site can now be turned into a picture. To draw the fonts, your browser asks the font sites for them, and the tab names those sites. Your cards and settings are not sent.
+-   **Forum shot card table.** The Forum shot tab lists your cards in a table you can sort by clicking a column header.
+
+### Changed
+-   **Locked cards.** A card stays locked when it holds a custom-card module or an outside address that is not a font address the tab can check.
+-   **Font failures.** If a font cannot be loaded, no picture is made. The tab says: "A font could not be loaded, so no picture was made. Check your connection and try again."
+-   **Changed font sites.** If a card's font sites changed since the tab opened, Download stops before anything is fetched. The tab says: "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again."
+
 ## 2026.10.12-beta.14 (2026-11-02)
 
 ### Fixed

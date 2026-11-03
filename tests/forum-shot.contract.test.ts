@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import * as contract from '../src/contracts/forum-shot';
+import type { ForumShotErrorCode, ForumShotLockReason } from '../src/contracts/forum-shot';
 import { HA_DARK_DEFAULTS, HA_DARK_DEFAULTS_VERSION } from '../src/contracts/ha-dark-defaults';
 import { I18N_MODULES, I18N_CONTRACT_VERSION } from '../src/contracts/i18n';
 import { MagicCardForumShot } from '../src/forum-shot';
@@ -11,10 +12,15 @@ const read = (rel: string) => readFileSync(path.join(ROOT, rel), 'utf8');
 const walk = (d: string): string[] =>
   readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.ts') ? [path.join(d, e.name)] : []));
 const specs = (src: string) => [...src.matchAll(/^\s*(?:import|export)\s+(?:type\s+)?(?:[^'";]*?\sfrom\s+)?['"]([^'"]+)['"]/gm)].map((m) => m[1]);
+/** The string members of an exported union, in source order; types do not exist at run time. */
+const unionOf = (name: string): string[] => {
+  const body = read('src/contracts/forum-shot.ts').match(new RegExp(`export type ${name} =([^;]+);`))?.[1] ?? '';
+  return [...body.matchAll(/'([^']+)'/g)].map((m) => m[1]);
+};
 
-describe('forum-shot 1.0.0 constants', () => {
+describe('forum-shot 1.1.0 constants', () => {
   it('holds the Contract values', () => {
-    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.0.0');
+    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.1.0');
     expect(contract.FORUM_SHOT_FILE).toBe('magic-card-forum-shot.js');
     expect(contract.FORUM_SHOT_TAG).toBe('magic-card-forum-shot');
     expect(contract.FORUM_SHOT_WIDTH).toBe(420);
@@ -22,11 +28,38 @@ describe('forum-shot 1.0.0 constants', () => {
     expect(contract.FORUM_SHOT_MAX_PIXELS).toBe(16_777_216);
   });
 
+  it('keeps the six old error codes and adds font_unavailable and hosts_changed', () => {
+    const codes: ForumShotErrorCode[] = ['no_cards', 'config_read_failed', 'card_not_defined', 'remote_asset', 'capture_failed', 'too_large', 'font_unavailable', 'hosts_changed'];
+    expect(unionOf('ForumShotErrorCode')).toEqual(codes);
+  });
+
+  it('adds the disclosed hosts to the request as an optional member', () => {
+    expect(read('src/contracts/forum-shot.ts')).toMatch(/interface ForumShotRequest \{[^}]*fontHosts\?: string\[\];/);
+  });
+
+  it('names the lock reasons in priority order', () => {
+    const reasons: ForumShotLockReason[] = ['custom_card', 'limit', 'outside_address', 'cannot_judge'];
+    expect(unionOf('ForumShotLockReason')).toEqual(reasons);
+  });
+
   it('exports constants only and imports nothing', () => {
     const src = read('src/contracts/forum-shot.ts');
     expect(specs(src)).toEqual([]);
     expect(src).not.toMatch(/\bfunction\b|=>|\bclass\b/);
     expect(Object.keys(contract).every((k) => k.startsWith('FORUM_SHOT_'))).toBe(true);
+  });
+});
+
+describe('forum-shot font decision records', () => {
+  it('points the Remote assets section of 0085 at 0086', () => {
+    const section = read('docs/adr/0085-forum-shot-is-its-own-lazy-entry.md').split('## Remote assets')[1];
+    expect(section.trimStart().split('\n')[0]).toContain('0086-forum-shot-fetches-fonts-from-any-https-host.md');
+  });
+
+  it('records the new contract and error code in 0086', () => {
+    const adr = read('docs/adr/0086-forum-shot-fetches-fonts-from-any-https-host.md');
+    expect(adr).toContain(`forum-shot ${contract.FORUM_SHOT_CONTRACT_VERSION}`);
+    expect(adr).toContain('`font_unavailable`');
   });
 });
 
@@ -85,11 +118,11 @@ describe('build wiring', () => {
     expect(read('tools/i18n/placement.mjs')).toContain(`'${contract.FORUM_SHOT_FILE}'`);
   });
 
-  it('caps the new file at or below 98,304 B', () => {
+  it('caps the new file at or below 107,520 B', () => {
     const caps = JSON.parse(read('tools/size-caps.json'));
     const e = caps.files[contract.FORUM_SHOT_FILE];
     expect(e).toBeTruthy();
-    expect(e.ceiling).toBeLessThanOrEqual(98_304);
+    expect(e.ceiling).toBeLessThanOrEqual(107_520);
     expect(e.raw).toBeLessThanOrEqual(e.ceiling);
   });
 });

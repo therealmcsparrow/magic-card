@@ -1,6 +1,7 @@
 // Settled card for the forum shot: mounts a Magic Card paused and offscreen on a scrubbed hass copy, waits until it is still.
 import { FORUM_SHOT_WIDTH } from '../contracts/forum-shot';
 import type { ForumShotErrorCode, ForumShotNotice } from '../contracts/forum-shot';
+import { aliasFontValue, aliasInText } from './font-address';
 import { deepElements, findRemoteAssets, scrubHass, sweepRemote } from './remote';
 
 const CARD_TAG = 'magic-card';
@@ -18,6 +19,8 @@ export interface SettleOptions {
   settleMs?: number;
   /** CSS width of the card (default FORUM_SHOT_WIDTH). */
   width?: number;
+  /** Real (lower-case) Google families a face was prepared for (none when omitted); a template result naming another stops the run with `font_unavailable`. */
+  preparedFamilies?: ReadonlySet<string>;
 }
 
 export interface SettledCard {
@@ -81,11 +84,18 @@ function finishOneShots(root: ParentNode): void {
  */
 export async function settleCard(hass: object, config: Record<string, unknown>, options: SettleOptions = {}): Promise<SettledCard> {
   const origin = location.origin;
-  if (findRemoteAssets(config, origin).length) throw forumShotError('remote_asset');
+  if (findRemoteAssets(config, origin).some((r) => r !== 'Roboto')) throw forumShotError('remote_asset');
   const Ctor = customElements.get(CARD_TAG);
   if (!Ctor) throw forumShotError('card_not_defined');
 
-  const scrubbed = scrubHass(hass, origin);
+  let fontMissing = false;
+  const prepared = options.preparedFamilies ?? new Set<string>();
+  const scrubbed = scrubHass(
+    hass,
+    origin,
+    (text) => aliasInText(text, prepared, () => (fontMissing = true)),
+    (value) => aliasFontValue(value, prepared, () => (fontMissing = true)),
+  );
   const box = document.createElement('div');
   box.setAttribute('aria-hidden', 'true');
   box.setAttribute('inert', '');
@@ -107,6 +117,7 @@ export async function settleCard(hass: object, config: Record<string, unknown>, 
     finishOneShots(card.shadowRoot ?? card);
     await frame();
     finishOneShots(card.shadowRoot ?? card);
+    if (fontMissing) throw forumShotError('font_unavailable');
     const swept = sweepRemote(card.shadowRoot ?? card, origin);
     return { card, notices: scrubbed.removed() || swept ? ['remote_placeholder'] : [], dispose };
   } catch (e) {

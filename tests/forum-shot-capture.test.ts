@@ -3,7 +3,8 @@ import '../src/index';
 import { FORUM_SHOT_MAX_PIXELS } from '../src/contracts/forum-shot';
 import { captureFrame, checkCaptureSupport } from '../src/forum-shot/capture';
 import type { CaptureSeams } from '../src/forum-shot/capture';
-import { deepElements, findRemoteAssets, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
+import { aliasFontValue, aliasInText, classifyCard, prepareCard } from '../src/forum-shot/font-address';
+import { deepElements, findRemoteAssets, hasRemote, scrubHass, scrubText, sweepRemote } from '../src/forum-shot/remote';
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
 
@@ -24,6 +25,7 @@ let settled: SettledCard | undefined;
 afterEach(() => {
   settled?.dispose();
   settled = undefined;
+  document.head.querySelectorAll('link[data-mc-font]').forEach((l) => l.remove());
   vi.restoreAllMocks();
   document.body.innerHTML = '';
 });
@@ -32,7 +34,7 @@ describe('findRemoteAssets', () => {
   it('names off-origin hosts in nested modules and ignores same-origin and data URLs', () => {
     const config = {
       rows: [{ columns: [{ modules: [{ type: 'image', url: 'https://cdn.example.org/a.png' }, { type: 'image', url: '//img.example.net/b.png' }] }] }],
-      ok: [`${ORIGIN}/local/x.png`, '/local/y.png', 'data:image/png;base64,AAAA', 'a//b.c'],
+      ok: [`${ORIGIN}/local/x.png`, '/local/y.png', 'data:image/png;base64,AAAA'],
     };
     expect(findRemoteAssets(config, ORIGIN)).toEqual(['cdn.example.org', 'img.example.net']);
   });
@@ -42,7 +44,166 @@ describe('findRemoteAssets', () => {
   });
 
   it('is empty for a config with no remote asset', () => {
-    expect(findRemoteAssets({ rows: [{ text: 'Hello // there' }] }, ORIGIN)).toEqual([]);
+    expect(findRemoteAssets({ rows: [{ text: 'Hello there' }] }, ORIGIN)).toEqual([]);
+  });
+
+  it('counts a harmless double slash as remote: the rule judges the characters, not the meaning', () => {
+    expect(findRemoteAssets({ rows: [{ text: 'Hello // there' }] }, ORIGIN)).toEqual(['unknown']);
+    expect(findRemoteAssets({ ok: 'a//b.c' }, ORIGIN)).toEqual(['unknown']);
+  });
+});
+
+describe('a protocol-relative address behind a delimiter', () => {
+  // The URL parser strips leading and trailing C0 controls and spaces, drops tabs and line breaks, and ignores U+FEFF in a host.
+  const raw = [
+    '//*.evil.example/x.png', '//=evil.example/x.png', '//,evil.example/x.png', '//;evil.example/x.png', '//{a}.evil.example/x.png', "//'a'.evil.example/x.png", '//(a).evil.example/x.png', '//`a`.evil.example/x.png', '//|evil.example/x.png', '//^evil.example/x.png', '//[a].evil.example/x.png', '//{{x}}.evil.example/x.png',
+    '\u0001//(a).evil.example/x.png', '\u001f//*.evil.example/x.png', '\u0001//,evil.example/x.png', '\u0000//(a).evil.example/x.png', '\u0001\u001f//(a).evil.example/x.png', '//\uFEFFevil.example/x.png', '//\uFEFF(a).evil.example/x.png', '\u0001//\uFEFFevil.example/x.png', '/\t/(a).evil.example/x.png', '\t//(a).evil.example/x.png', '/\n/*.evil.example/x.png', '\r\n//,evil.example/x.png',
+    '// @evil.example/x.png', '//\u00a0@evil.example/x.png', '//\u3000@evil.example/x.png', '\u0001// @evil.example/x.png', '//\t @evil.example/x.png', '//\u00a0evil.example/x.png',
+    '\uFEFF//evil.example/x.png', '\uFEFFhttp://evil.example/x.png', '\uFEFF//(a).evil.example/x.png', '\\\\(a).evil.example/x.png', '\u0001\\\\(a).evil.example/x.png', '/\\(a).evil.example/x.png', '\\/(a).evil.example/x.png', '/ /(a).evil.example/x.png', '/\u0001/(a).evil.example/x.png', '/\uFEFF/(a).evil.example/x.png',
+    'a//b.c', '&#47;&#47;(a).evil.example/x.png', '\\2f \\2f (a).evil.example/x.png',
+  ];
+  const forms = raw.map((f) => [JSON.stringify(f), f] as const);
+  // Harmless texts holding a double slash lock as well: the rule does not judge what the text means.
+  const harmless = ['Hello // there', 'x // (y)', 'ends //', 'Hello \u0001// there', '// there', '/* a */ /* b */'];
+  const clean = ['Hello there', 'x (y)', 'a / b', '/local/x.png', 'ends /', `${ORIGIN}/a//b`, 'http://www.w3.org/2000/svg', 'http://www.w3.org/1999/xlink', 'mdi:lightbulb'];
+  const nested = (form: string) => ({ type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] });
+
+  it.each(forms)('counts %s as remote in a module value', (_l, form) => {
+    expect(findRemoteAssets(nested(form), ORIGIN)).not.toEqual([]);
+  });
+
+  it.each(forms)('counts %s as remote inside css url()', (_l, form) => {
+    expect(findRemoteAssets({ css: `.a{background:url(${form})}` }, ORIGIN)).not.toEqual([]);
+    expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
+  });
+
+  it.each(forms)('locks %s in classifyCard', (_l, form) => {
+    expect(classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
+  });
+
+  it.each(forms)('sweeps %s from an img and a style', (_l, form) => {
+    const root = document.createElement('div');
+    root.innerHTML = '<img><i></i>';
+    root.querySelector('img')!.setAttribute('src', form);
+    root.querySelector('i')!.setAttribute('style', `background:url(${form})`);
+    expect(sweepRemote(root, ORIGIN)).toBe(true);
+    expect(root.querySelector('img')!.hasAttribute('src')).toBe(false);
+    expect(root.querySelector('i')!.getAttribute('style') ?? '').not.toContain('//');
+  });
+
+  it.each(forms)('stops settleCard on %s before anything mounts', async (_l, form) => {
+    await expect(settleCard({ states: {}, language: 'en', themes: { themes: {} } }, nested(form), { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
+    expect(document.body.children.length).toBe(0);
+  });
+
+  it.each(harmless.map((f) => [JSON.stringify(f), f] as const))('locks the harmless text %s everywhere', async (_l, text) => {
+    expect(findRemoteAssets({ a: text }, ORIGIN)).toEqual(['unknown']);
+    expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock).toBe('outside_address');
+    const root = document.createElement('div');
+    root.innerHTML = '<p></p>';
+    root.querySelector('p')!.setAttribute('title', text);
+    expect(hasRemote(text, ORIGIN)).toBe(true);
+    expect(sweepRemote(root, ORIGIN)).toBe(false);
+    root.innerHTML = '<img>';
+    root.querySelector('img')!.setAttribute('src', text);
+    expect(sweepRemote(root, ORIGIN)).toBe(true);
+  });
+
+  it('keeps plain addresses and texts clean everywhere', async () => {
+    for (const text of clean) {
+      expect(findRemoteAssets({ a: text }, ORIGIN), text).toEqual([]);
+      expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock, text).toBeNull();
+      const root = document.createElement('div');
+      root.innerHTML = '<p></p>';
+      root.querySelector('p')!.setAttribute('title', text);
+      expect(sweepRemote(root, ORIGIN), text).toBe(false);
+    }
+    settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello there' }] }] }] }, { settleMs: 0 });
+  });
+});
+
+describe('an origin address cut at a separator', () => {
+  // The URL parser reads on past the separator until `/`, `?` or `#`, so the text after it names the host.
+  const seps = [' ', ' ', '　', '(', ')', ',', '=', ';', '|', '^', '*', '{', '}', '[', ']', '`', "'", '<', '>'];
+  const forms = seps.map((sep) => [JSON.stringify(sep), `${ORIGIN}${sep}@evil.example/x.png`] as const);
+  const nested = (form: string) => ({ type: 'custom:magic-card', rows: [{ columns: [{ modules: [{ type: 'image', url: form }] }] }] });
+
+  it.each(forms)('counts a cut at %s as remote in a module value and in css', (_l, form) => {
+    expect(findRemoteAssets(nested(form), ORIGIN)).not.toEqual([]);
+    expect(findRemoteAssets({ css: `.a{background:url(${form})}` }, ORIGIN)).not.toEqual([]);
+    expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
+  });
+
+  it.each(forms)('locks a cut at %s in classifyCard', (_l, form) => {
+    expect(classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
+  });
+
+  it.each(forms)('sweeps a cut at %s from an img and a style', (_l, form) => {
+    const root = document.createElement('div');
+    root.innerHTML = '<img><i></i>';
+    root.querySelector('img')!.setAttribute('src', form);
+    root.querySelector('i')!.setAttribute('style', `background:url(${form})`);
+    expect(sweepRemote(root, ORIGIN)).toBe(true);
+    expect(root.querySelector('img')!.hasAttribute('src')).toBe(false);
+  });
+
+  it.each(forms)('stops settleCard on a cut at %s before anything mounts', async (_l, form) => {
+    await expect(settleCard({ states: {}, language: 'en', themes: { themes: {} } }, nested(form), { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
+    expect(document.body.children.length).toBe(0);
+  });
+
+  it('counts a cut namespace as remote and keeps a namespace that ends its value', () => {
+    expect(hasRemote('http://www.w3.org/2000/svg(/../../x.png', ORIGIN)).toBe(true);
+    expect(hasRemote('http://www.w3.org/2000/svg,/../x.png', ORIGIN)).toBe(true);
+    expect(hasRemote('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink=\'http://www.w3.org/1999/xlink\'></svg>', ORIGIN)).toBe(false);
+    expect(hasRemote('http://www.w3.org/2000/svg', ORIGIN)).toBe(false);
+  });
+
+  it('keeps a closed origin address and a bare one that is the whole text', () => {
+    for (const text of [`${ORIGIN}/x.png`, `${ORIGIN}/x(@evil.example/`, `${ORIGIN}?a=b`, `${ORIGIN}#f`, `${ORIGIN}`, ` ${ORIGIN} `, `url("${ORIGIN}/a//b.png")`]) expect(hasRemote(text, ORIGIN), text).toBe(false);
+  });
+});
+
+describe('a raster data image as a whole token', () => {
+  const rasters = ['data:image/png;base64,AA//BB==', 'data:image/jpeg;base64,/9j//gA7', 'data:image/webp;base64,//8AAAA='];
+  const around = (r: string) => [r, `"${r}"`, `url(${r})`, `url("${r}")`, `.a{background:url('${r}')} .b{color:red}`, `a ${r} b`];
+
+  it.each(rasters.flatMap((r) => around(r).map((t) => [JSON.stringify(t), t] as const)))('keeps %s clean', (_l, text) => {
+    expect(hasRemote(text, ORIGIN)).toBe(false);
+    expect(findRemoteAssets({ a: text }, ORIGIN)).toEqual([]);
+    expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock).toBeNull();
+    const root = document.createElement('div');
+    root.innerHTML = '<img><i></i>';
+    root.querySelector('img')!.setAttribute('src', text);
+    root.querySelector('i')!.setAttribute('style', `background:url(${text})`);
+    expect(sweepRemote(root, ORIGIN)).toBe(false);
+    expect(root.querySelector('img')!.getAttribute('src')).toBe(text);
+  });
+
+  it.each([
+    'data:image/svg+xml;base64,AA//BB==',
+    'data:text/html;base64,AA//BB==',
+    'data:image/png;base64,AA//BB==;//evil.example/x.png',
+    'data:image/png;base64,AA//BB==//evil.example/x.png',
+    'data:image/png;base64,AA//BB==x//y',
+    'data:image/png,AA//BB==',
+    'x/data:image/png;base64,AA//BB==',
+    'data:image/png;base64,AA//BB== // x',
+    '/data:image/png;base64,AA//BB== /',
+    'http://localhost:3000(data:image/png;base64,AA//BB==',
+  ])('still counts %s as remote', (text) => {
+    expect(hasRemote(text, ORIGIN)).toBe(true);
+  });
+});
+
+describe('a card whose accepted font rule sits between comments', () => {
+  it('passes the remote gate on the mount the picker offered', async () => {
+    const css = '/* fonts */\n@import url("https://fonts.googleapis.com/css2?family=Lora");\n/* rest */\n.a{color:red}';
+    const rows = [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello there' }] }] }];
+    const kit = prepareCard({ type: 'custom:magic-card', rows, css }, ORIGIN);
+    expect(kit.lock).toBeNull();
+    settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, kit.mount, { settleMs: 0 });
+    expect(settled).toBeDefined();
   });
 });
 
@@ -110,6 +271,111 @@ describe('settleCard', () => {
     await expect(settleCard(baseHass(), config, { settleMs: 0 })).rejects.toMatchObject({ code: 'remote_asset' });
     expect(create).not.toHaveBeenCalled();
     expect(document.body.children.length).toBe(0);
+  });
+
+  describe('a family that arrives through a template result', () => {
+    const family = (name: string) => ({
+      subscribeMessage: (cb: (m: unknown) => void) => {
+        queueMicrotask(() => cb({ result: `font-family: ${name}` }));
+        return Promise.resolve(() => undefined);
+      },
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    });
+    const withState = (h: ReturnType<typeof baseHass>) => ((h.states as Record<string, unknown>)['media_player.a'] = { state: 'on', attributes: { entity_picture: 'x' } }, h);
+    const config = {
+      type: 'custom:magic-card',
+      rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'markdown', content: '{{ state_attr("media_player.a", "entity_picture") }}' }] }] }],
+    };
+
+    it('is aliased in the scrubbed copy when a face was prepared for it, and Roboto is left alone', async () => {
+      const missing = vi.fn();
+      const received: unknown[] = [];
+      const { hass } = scrubHass(
+        { connection: family('Lora'), states: {} } as { connection: ReturnType<typeof family>; states: object },
+        ORIGIN,
+        (text) => aliasInText(text, new Set(['lora']), missing),
+      );
+      void hass.connection.subscribeMessage((m: unknown) => received.push(m));
+      await Promise.resolve();
+      expect(received).toEqual([{ result: 'font-family: "mc-shot-lora"' }]);
+      const roboto = scrubHass({ connection: family('Roboto'), states: {} } as { connection: ReturnType<typeof family>; states: object }, ORIGIN, (t) => aliasInText(t, new Set(), missing));
+      void roboto.hass.connection.subscribeMessage((m: unknown) => received.push(m));
+      await Promise.resolve();
+      expect(received[1]).toEqual({ result: 'font-family: Roboto' });
+      expect(missing).not.toHaveBeenCalled();
+    });
+
+    it('stops with font_unavailable when no face was prepared for it', async () => {
+      await expect(settleCard(withState(baseHass(family('Lora'))), config, { settleMs: 20, preparedFamilies: new Set(['open sans']) })).rejects.toMatchObject({ code: 'font_unavailable' });
+      expect(document.body.children.length).toBe(0);
+    });
+
+    it('stops with font_unavailable when no set was given at all, and adds no font link', async () => {
+      await expect(settleCard(withState(baseHass(family('Lora'))), config, { settleMs: 20 })).rejects.toMatchObject({ code: 'font_unavailable' });
+      expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+      expect(document.body.children.length).toBe(0);
+    });
+
+    it('renames a font key inside a result, and stops for a Google family with no face', async () => {
+      const keyed = (value: string) => ({
+        subscribeMessage: (cb: (m: unknown) => void) => {
+          queueMicrotask(() => cb({ result: { font_family: value, nested: [{ label_font_family: value }] } }));
+          return Promise.resolve(() => undefined);
+        },
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      });
+      const received: unknown[] = [];
+      const { hass } = scrubHass({ connection: keyed('Lato, sans-serif'), states: {} } as { connection: ReturnType<typeof keyed>; states: object }, ORIGIN, undefined, (v) =>
+        aliasFontValue(v, new Set(['lato']), () => undefined),
+      );
+      void hass.connection.subscribeMessage((m: unknown) => received.push(m));
+      await Promise.resolve();
+      expect(JSON.stringify(received)).toContain('mc-shot-lato');
+      expect(JSON.stringify(received)).not.toContain('"Lato');
+      await expect(settleCard(withState(baseHass(keyed('Lato'))), config, { settleMs: 20, preparedFamilies: new Set() })).rejects.toMatchObject({ code: 'font_unavailable' });
+      expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+    });
+
+    describe('a card whose template holds the family', () => {
+      const viaTemplate = (templateConfig: Record<string, unknown>) => ({
+        subscribeMessage: (cb: (m: unknown) => void, msg: { name?: string }) => {
+          queueMicrotask(() => cb({ action: 'saved', name: msg.name, template: { config: templateConfig } }));
+          return Promise.resolve(() => undefined);
+        },
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+      });
+      const templated = { type: 'custom:magic-card', template: 'x', rows: [] };
+      const forms: Array<[string, Record<string, unknown>]> = [
+        ['a font key', { font_family: 'Lato' }],
+        ['a font key in a nested design', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', font_family: 'Poppins' }] }] }] }],
+        ['a css rule', { css: '.a{font-family: Lora;}' }],
+        ['a css rule in a module', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: '.a{font-family: Lora;}' }] }] }] }],
+        ['a family after a closing brace in a module css', { rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: '.a{font-family: x}, Nunito;}' }] }] }] }],
+        ['a family beside a prepared one', { font_family: 'Oswald' }],
+        ['a family in the second rule of minified css', { css: '.a{font-family: Arial}.b{font-family: Lora}' }],
+      ];
+
+      it.each(forms)('adds no font link and stops with font_unavailable for %s with no face', async (_n, tpl) => {
+        await expect(settleCard(baseHass(viaTemplate(tpl)), templated, { settleMs: 20, preparedFamilies: new Set(['open sans']) })).rejects.toMatchObject({ code: 'font_unavailable' });
+        expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+        expect(document.body.children.length).toBe(0);
+      });
+
+      it('renames a prepared family and adds no link', async () => {
+        settled = await settleCard(baseHass(viaTemplate({ font_family: 'Ubuntu' })), templated, { settleMs: 20, preparedFamilies: new Set(['ubuntu']) });
+        expect(document.head.querySelector('link[data-mc-font]')).toBeNull();
+      });
+    });
+
+    it('leaves a non-plain object in a result as it is', async () => {
+      const when = new Date(0);
+      const { hass } = scrubHass({ callWS: async () => ({ when, text: 'font-family: Roboto' }), states: {} }, ORIGIN, (t) => t, (v) => v);
+      const r = (await hass.callWS()) as { when: Date };
+      expect(r.when).toBe(when);
+    });
   });
 
   it('builds a template image with zero off-origin URLs reaching the card', async () => {

@@ -1,4 +1,67 @@
 {
+  "forum-shot.card-table.column-card": {
+    "text": "Card",
+    "note": "Column header of the card table: the name of the Magic Card.",
+    "max": 20
+  },
+  "forum-shot.card-table.column-dashboard": {
+    "text": "Dashboard",
+    "note": "Column header of the card table: the dashboard a card is on.",
+    "max": 20
+  },
+  "forum-shot.card-table.column-status": {
+    "text": "Status",
+    "note": "Column header of the card table: whether the card can be used.",
+    "max": 20
+  },
+  "forum-shot.card-table.column-view": {
+    "text": "View",
+    "note": "Column header of the card table: the view (tab) of the dashboard a card is on.",
+    "max": 20
+  },
+  "forum-shot.card-table.default-dashboard": {
+    "text": "Default dashboard",
+    "note": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own.",
+    "max": 30
+  },
+  "forum-shot.card-table.fonts-from": {
+    "text": "Fonts from {hosts}",
+    "note": "Line under a usable card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "max": 120,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "forum-shot.card-table.reason-cannot-judge": {
+    "text": "Its settings could not be checked for outside addresses.",
+    "note": "Reason a card is locked: the check could not tell whether an address is safe.",
+    "max": 80
+  },
+  "forum-shot.card-table.reason-custom-card": {
+    "text": "It holds another card (a custom-card module) that nothing here can check.",
+    "note": "Reason a card is locked: it contains a custom-card module.",
+    "max": 90
+  },
+  "forum-shot.card-table.reason-limit": {
+    "text": "It names too many outside websites, or it is too large to check.",
+    "note": "Reason a card is locked: it names too many outside websites or is too large to check.",
+    "max": 80
+  },
+  "forum-shot.card-table.reason-outside-address": {
+    "text": "It loads something from outside Home Assistant.",
+    "note": "Reason a card is locked: it names an address outside Home Assistant that is not an allowed font.",
+    "max": 70
+  },
+  "forum-shot.card-table.status-available": {
+    "text": "Available",
+    "note": "Status of a card that can be picked for a forum shot.",
+    "max": 20
+  },
+  "forum-shot.card-table.status-locked": {
+    "text": "Locked",
+    "note": "Status of a card that cannot be picked. A reason follows it.",
+    "max": 20
+  },
   "forum-shot.element.admin-only": {
     "text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
     "note": "Note for a user who is not an administrator, shown above the list of cards.",
@@ -34,10 +97,29 @@
     "note": "Error when the card element is not available.",
     "max": 100
   },
+  "forum-shot.element.error-font-unavailable": {
+    "text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "note": "Error when a font from another website could not be fetched or was not a usable font file.",
+    "max": 130
+  },
+  "forum-shot.element.error-hosts-changed": {
+    "text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "note": "Error when the font sites of the card differ from those shown before Download; the card list has been read again.",
+    "max": 200
+  },
   "forum-shot.element.error-too-large": {
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "note": "Error when the sheet would exceed the size limit.",
     "max": 100
+  },
+  "forum-shot.element.font-host-contact": {
+    "text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "note": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "max": 380,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    },
+    "legal": true
   },
   "forum-shot.element.forum-shot": {
     "text": "Forum shot",
@@ -58,6 +140,12 @@
     "text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
     "note": "Sentence under the privacy warning: the picture is made locally and nothing is stored.",
     "max": 120
+  },
+  "forum-shot.element.local-only-font": {
+    "text": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+    "note": "Sentence under the privacy warning for a card that uses fonts from other websites: the picture is made locally, nothing is stored, and the fonts come from outside.",
+    "max": 200,
+    "legal": true
   },
   "forum-shot.element.looks": {
     "text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
@@ -99,6 +187,11 @@
     "note": "Notice under the preview when an image from another server was left out.",
     "max": 170
   },
+  "forum-shot.element.notice-remote-placeholder-font": {
+    "text": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+    "note": "Notice under the preview of a card that uses fonts from other websites, when an image from another server was left out.",
+    "max": 170
+  },
   "forum-shot.element.pick-first": {
     "text": "Pick a card to continue.",
     "note": "Hint shown while no card is picked, so the Download button is not available.",
@@ -115,7 +208,7 @@
     "max": 190
   },
   "forum-shot.element.remote-asset": {
-    "text": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
+    "text": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
     "note": "Notice next to a card that cannot be picked because its settings name something outside Home Assistant. Also the error when the picture is refused for that reason.",
     "max": 220
   },

@@ -1,4 +1,52 @@
 {
+  "forum-shot.card-table.column-card": {
+    "text": "Card",
+    "hash": "be3702e3"
+  },
+  "forum-shot.card-table.column-dashboard": {
+    "text": "Dashboard",
+    "hash": "67b69646"
+  },
+  "forum-shot.card-table.column-status": {
+    "text": "Status",
+    "hash": "920e413c"
+  },
+  "forum-shot.card-table.column-view": {
+    "text": "View",
+    "hash": "dcc839a4"
+  },
+  "forum-shot.card-table.default-dashboard": {
+    "text": "Default dashboard",
+    "hash": "4913c670"
+  },
+  "forum-shot.card-table.fonts-from": {
+    "text": "Fonts from {hosts}",
+    "hash": "9f44f4ca"
+  },
+  "forum-shot.card-table.reason-cannot-judge": {
+    "text": "Its settings could not be checked for outside addresses.",
+    "hash": "a7009139"
+  },
+  "forum-shot.card-table.reason-custom-card": {
+    "text": "It holds another card (a custom-card module) that nothing here can check.",
+    "hash": "f37f797c"
+  },
+  "forum-shot.card-table.reason-limit": {
+    "text": "It names too many outside websites, or it is too large to check.",
+    "hash": "cec07c66"
+  },
+  "forum-shot.card-table.reason-outside-address": {
+    "text": "It loads something from outside Home Assistant.",
+    "hash": "56e035ab"
+  },
+  "forum-shot.card-table.status-available": {
+    "text": "Available",
+    "hash": "e6744473"
+  },
+  "forum-shot.card-table.status-locked": {
+    "text": "Locked",
+    "hash": "a424e33d"
+  },
   "forum-shot.element.admin-only": {
     "text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
     "hash": "705163a8"
@@ -27,9 +75,21 @@
     "text": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
     "hash": "433ffe34"
   },
+  "forum-shot.element.error-font-unavailable": {
+    "text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "hash": "9924ac84"
+  },
+  "forum-shot.element.error-hosts-changed": {
+    "text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "hash": "198f0eb0"
+  },
   "forum-shot.element.error-too-large": {
     "text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
     "hash": "15a5ec38"
+  },
+  "forum-shot.element.font-host-contact": {
+    "text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "hash": "e4e8bf0b"
   },
   "forum-shot.element.forum-shot": {
     "text": "Forum shot",
@@ -46,6 +106,10 @@
   "forum-shot.element.local-only": {
     "text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
     "hash": "b4702d63"
+  },
+  "forum-shot.element.local-only-font": {
+    "text": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+    "hash": "85ee4021"
   },
   "forum-shot.element.looks": {
     "text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
@@ -79,6 +143,10 @@
     "text": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
     "hash": "4d773277"
   },
+  "forum-shot.element.notice-remote-placeholder-font": {
+    "text": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+    "hash": "95051ca3"
+  },
   "forum-shot.element.pick-first": {
     "text": "Pick a card to continue.",
     "hash": "cb8172e5"
@@ -92,8 +160,8 @@
     "hash": "7be450e3"
   },
   "forum-shot.element.remote-asset": {
-    "text": "This card loads an image, a web address or a Google font from outside Home Assistant. It cannot be used for a forum shot, because making the picture would contact another server.",
-    "hash": "117a5822"
+    "text": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
+    "hash": "24f49698"
   },
   "forum-shot.element.retry": {
     "text": "Try again",

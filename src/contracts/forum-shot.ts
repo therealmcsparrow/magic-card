@@ -1,7 +1,7 @@
-// Contract: forum shot (one PNG of a dashboard's Magic Cards for a forum post). Version 1.0.0.
+// Contract: forum shot (one PNG of a dashboard's Magic Cards for a forum post). Version 1.1.0.
 // Types and constants only; the module is the lazy entry magic-card-forum-shot.js.
 
-export const FORUM_SHOT_CONTRACT_VERSION = '1.0.0';
+export const FORUM_SHOT_CONTRACT_VERSION = '1.1.0';
 export const FORUM_SHOT_FILE = 'magic-card-forum-shot.js';
 export const FORUM_SHOT_TAG = 'magic-card-forum-shot';
 /** Width of one frame in CSS px. */
@@ -20,6 +20,8 @@ export interface ForumShotRequest {
   config: Record<string, unknown>;
   modes: ForumShotMode[];
   looks: ForumShotLook[];
+  /** The font hosts the person was shown (`MagicCardRef.fontHosts`); absent means none. A card whose fresh config needs a host outside them fails with `hosts_changed` before any request. */
+  fontHosts?: string[];
 }
 
 export interface ForumShotSheet {
@@ -32,6 +34,9 @@ export interface ForumShotSheet {
   notices: ForumShotNotice[];
 }
 
+/** Why a card cannot be picked. A card with several reasons reports the first in the order listed here. */
+export type ForumShotLockReason = 'custom_card' | 'limit' | 'outside_address' | 'cannot_judge';
+
 /** One Magic Card found in a dashboard config. */
 export interface MagicCardRef {
   /** url_path of the dashboard, or null for the default one. */
@@ -42,7 +47,27 @@ export interface MagicCardRef {
   label: string;
   /** Cross-origin hosts and Google font families the config names; empty when none. */
   remote: string[];
+  /** Why the card cannot be picked; null when it can. */
+  lock: ForumShotLockReason | null;
+  /** Hosts the config names that a Download contacts for fonts; empty when it fetches none, as on a locked card. */
+  fontHosts: string[];
+  /** Title of the dashboard, for display. */
+  dashboardTitle: string;
+  /** Name of the card, or its position in the view when it has none. */
+  cardName: string;
 }
 
-/** Error codes of listMagicCards and renderSheet (the `code` of the Error). */
-export type ForumShotErrorCode = 'no_cards' | 'config_read_failed' | 'card_not_defined' | 'remote_asset' | 'capture_failed' | 'too_large';
+/**
+ * Error codes of listMagicCards and renderSheet (the `code` of the Error).
+ * `remote_asset`: the card is locked. `font_unavailable`: a font the card needs could not be prepared or embedded, and no picture is made.
+ * `hosts_changed`: the card now needs a font host that was not in the request's `fontHosts`; nothing was requested.
+ */
+export type ForumShotErrorCode =
+  | 'no_cards'
+  | 'config_read_failed'
+  | 'card_not_defined'
+  | 'remote_asset'
+  | 'capture_failed'
+  | 'too_large'
+  | 'font_unavailable'
+  | 'hosts_changed';

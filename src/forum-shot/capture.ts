@@ -252,14 +252,22 @@ async function cloneInto(node: Node, out: Node, run: Run): Promise<void> {
   out.appendChild(clone);
 }
 
-/** @font-face rules of the page for the families the clone uses, with a same-origin face embedded as a data: URL. */
+export const FONT_STYLE_MARK = 'data-mc-shot-font';
+const SAFE_RANGE = /^[Uu+0-9A-Fa-f?,\s-]+$/;
+
+/**
+ * @font-face rules of the page for the families the clone uses, with a same-origin face embedded as a data: URL. A face from the
+ * shot's own prepared style that is in use and cannot be embedded stops the run with `font_unavailable`.
+ */
 async function embeddedFonts(run: Run): Promise<string> {
   let css = '';
   for (const sheet of Array.from(document.styleSheets)) {
+    const prepared = (sheet.ownerNode as Element | null)?.hasAttribute?.(FONT_STYLE_MARK) === true;
     let rules: CSSRuleList;
     try {
       rules = sheet.cssRules;
     } catch {
+      if (prepared) throw forumShotError('font_unavailable');
       continue;
     }
     for (const rule of Array.from(rules)) {
@@ -267,10 +275,14 @@ async function embeddedFonts(run: Run): Promise<string> {
       const family = rule.style.getPropertyValue('font-family').trim().replace(/^["']|["']$/g, '');
       if (!run.families.has(family.toLowerCase())) continue;
       const m = /url\((["']?)(.*?)\1\)/.exec(rule.style.getPropertyValue('src'));
-      if (!m) continue;
-      const data = await toDataUrl(new URL(m[2], sheet.href ?? location.href).href, run);
-      if (data === PIXEL) continue;
-      css += `@font-face{font-family:"${family.replace(/"/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}";font-weight:${rule.style.getPropertyValue('font-weight') || 'normal'};font-style:${rule.style.getPropertyValue('font-style') || 'normal'};src:url("${data}");}`;
+      const data = m ? await toDataUrl(new URL(m[2], sheet.href ?? location.href).href, run) : PIXEL;
+      if (data === PIXEL) {
+        if (prepared) throw forumShotError('font_unavailable');
+        continue;
+      }
+      const range = rule.style.getPropertyValue('unicode-range').trim();
+      const unicode = range && SAFE_RANGE.test(range) ? `unicode-range:${range};` : '';
+      css += `@font-face{font-family:"${family.replace(/"/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}";font-weight:${rule.style.getPropertyValue('font-weight') || 'normal'};font-style:${rule.style.getPropertyValue('font-style') || 'normal'};${unicode}src:url("${data}");}`;
     }
   }
   return css;
