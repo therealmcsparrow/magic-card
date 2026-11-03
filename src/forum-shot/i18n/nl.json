@@ -43,6 +43,22 @@
     "text": "Beschikbaar",
     "hash": "e6744473"
   },
+  "forum-shot.card-table.status-button-available": {
+    "text": "Beschikbaar, details tonen",
+    "hash": "232b6609"
+  },
+  "forum-shot.card-table.status-button-locked": {
+    "text": "Vergrendeld, details tonen",
+    "hash": "cd77ec2c"
+  },
+  "forum-shot.card-table.status-close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "forum-shot.card-table.status-detail-available": {
+    "text": "Je kunt deze kaart kiezen voor een forumafbeelding.",
+    "hash": "db25542b"
+  },
   "forum-shot.card-table.status-locked": {
     "text": "Vergrendeld",
     "hash": "a424e33d"

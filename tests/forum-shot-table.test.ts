@@ -17,7 +17,11 @@ const ref = (o: Partial<MagicCardRef> & { cardName: string }): MagicCardRef => (
 });
 
 describe('sortedRows', () => {
-  const rows = [ref({ cardName: 'b', path: [0, 0] }), ref({ cardName: 'a', path: [0, 1], lock: 'limit' }), ref({ cardName: 'C', path: [0, 2] })];
+  const rows = [
+    ref({ cardName: 'b', path: [0, 0] }),
+    ref({ cardName: 'a', path: [0, 1], lock: 'limit' }),
+    ref({ cardName: 'C', path: [0, 2] }),
+  ];
 
   it('keeps dashboard order with no sort and never changes its input', () => {
     expect(sortedRows(rows, null, 'en').map((r) => r.cardName)).toEqual(['b', 'a', 'C']);
@@ -25,43 +29,82 @@ describe('sortedRows', () => {
   });
 
   it('sorts by the card name in the locale, case-blind, and descending on request', () => {
-    expect(sortedRows(rows, { key: 'card', dir: 'ascending' }, 'en').map((r) => r.cardName)).toEqual(['a', 'b', 'C']);
-    expect(sortedRows(rows, { key: 'card', dir: 'descending' }, 'en').map((r) => r.cardName)).toEqual(['C', 'b', 'a']);
+    expect(
+      sortedRows(rows, { key: 'card', dir: 'ascending' }, 'en').map((r) => r.cardName),
+    ).toEqual(['a', 'b', 'C']);
+    expect(
+      sortedRows(rows, { key: 'card', dir: 'descending' }, 'en').map((r) => r.cardName),
+    ).toEqual(['C', 'b', 'a']);
   });
 
   it('sorts numbers inside names by value and accents by the locale', () => {
-    const r = [ref({ cardName: 'Card 10' }), ref({ cardName: 'Card 2' }), ref({ cardName: 'Zebra' }), ref({ cardName: 'Ärger' })];
-    expect(sortedRows(r, { key: 'card', dir: 'ascending' }, 'sv').map((x) => x.cardName)).toEqual(['Card 2', 'Card 10', 'Zebra', 'Ärger']);
-    expect(sortedRows(r, { key: 'card', dir: 'ascending' }, 'de').map((x) => x.cardName)).toEqual(['Ärger', 'Card 2', 'Card 10', 'Zebra']);
+    const r = [
+      ref({ cardName: 'Card 10' }),
+      ref({ cardName: 'Card 2' }),
+      ref({ cardName: 'Zebra' }),
+      ref({ cardName: 'Ärger' }),
+    ];
+    expect(sortedRows(r, { key: 'card', dir: 'ascending' }, 'sv').map((x) => x.cardName)).toEqual([
+      'Card 2',
+      'Card 10',
+      'Zebra',
+      'Ärger',
+    ]);
+    expect(sortedRows(r, { key: 'card', dir: 'ascending' }, 'de').map((x) => x.cardName)).toEqual([
+      'Ärger',
+      'Card 2',
+      'Card 10',
+      'Zebra',
+    ]);
   });
 
   it('puts available cards before locked ones, and keeps dashboard order among equals', () => {
-    const r = [ref({ cardName: 'x', lock: 'cannot_judge' }), ref({ cardName: 'y' }), ref({ cardName: 'z', lock: 'custom_card' }), ref({ cardName: 'w' })];
-    expect(sortedRows(r, { key: 'status', dir: 'ascending' }, 'en').map((x) => x.cardName)).toEqual(['y', 'w', 'z', 'x']);
+    const r = [
+      ref({ cardName: 'x', lock: 'cannot_judge' }),
+      ref({ cardName: 'y' }),
+      ref({ cardName: 'z', lock: 'custom_card' }),
+      ref({ cardName: 'w' }),
+    ];
+    expect(sortedRows(r, { key: 'status', dir: 'ascending' }, 'en').map((x) => x.cardName)).toEqual(
+      ['y', 'w', 'z', 'x'],
+    );
   });
 
   it('sorts the default dashboard under its readable name', () => {
-    const r = [ref({ cardName: '1', dashboard: 'k', dashboardTitle: 'Kitchen' }), ref({ cardName: '2' })];
-    expect(sortedRows(r, { key: 'dashboard', dir: 'ascending' }, 'en', 'Aardvark').map((x) => x.cardName)).toEqual(['2', '1']);
+    const r = [
+      ref({ cardName: '1', dashboard: 'k', dashboardTitle: 'Kitchen' }),
+      ref({ cardName: '2' }),
+    ];
+    expect(
+      sortedRows(r, { key: 'dashboard', dir: 'ascending' }, 'en', 'Aardvark').map(
+        (x) => x.cardName,
+      ),
+    ).toEqual(['2', '1']);
   });
 });
 
 describe('dashboardName and rowKey', () => {
   it('names the default dashboard, whose title is empty, and a titleless one by its path', () => {
     expect(dashboardName(ref({ cardName: 'a' }), 'Overview')).toBe('Overview');
-    expect(dashboardName(ref({ cardName: 'a', dashboard: 'k', dashboardTitle: 'Kitchen' }), 'Overview')).toBe('Kitchen');
+    expect(
+      dashboardName(ref({ cardName: 'a', dashboard: 'k', dashboardTitle: 'Kitchen' }), 'Overview'),
+    ).toBe('Kitchen');
     expect(dashboardName(ref({ cardName: 'a', dashboard: 'k' }), 'Overview')).toBe('k');
   });
 
   it('keys a row on dashboard and index path', () => {
-    expect(rowKey(ref({ cardName: 'a', path: [0, 1] }))).not.toBe(rowKey(ref({ cardName: 'a', path: [0, 2] })));
+    expect(rowKey(ref({ cardName: 'a', path: [0, 1] }))).not.toBe(
+      rowKey(ref({ cardName: 'a', path: [0, 2] })),
+    );
     expect(rowKey(ref({ cardName: 'a', dashboard: 'k' }))).not.toBe(rowKey(ref({ cardName: 'a' })));
   });
 });
 
 const mc = (extra: Record<string, unknown> = {}) => ({ type: 'custom:magic-card', ...extra });
 function ws(cards: Record<string, unknown>[]) {
-  const callWS = vi.fn(async (msg: Record<string, unknown>) => (msg.type === 'lovelace/dashboards/list' ? [] : { views: [{ title: 'Home', cards }] }));
+  const callWS = vi.fn(async (msg: Record<string, unknown>) =>
+    msg.type === 'lovelace/dashboards/list' ? [] : { views: [{ title: 'Home', cards }] },
+  );
   return { callWS, language: 'en', panels: { lovelace: { title: 'Overview' } } };
 }
 async function mount(hass: unknown, narrow = false) {
@@ -76,21 +119,28 @@ async function mount(hass: unknown, narrow = false) {
   return el;
 }
 const $ = <T extends Element>(el: Element, s: string) => el.shadowRoot!.querySelector<T>(s);
-const $$ = <T extends Element>(el: Element, s: string) => [...el.shadowRoot!.querySelectorAll<T>(s)];
+const $$ = <T extends Element>(el: Element, s: string) => [
+  ...el.shadowRoot!.querySelectorAll<T>(s),
+];
 const flush = async (el: MagicCardForumShot) => {
   for (let i = 0; i < 4; i++) {
     await new Promise((r) => setTimeout(r, 0));
     await el.updateComplete;
   }
 };
-const names = (el: Element) => $$<HTMLTableRowElement>(el, 'tbody tr').map((r) => r.querySelector('label')!.textContent!.trim());
+const names = (el: Element) =>
+  $$<HTMLTableRowElement>(el, 'tbody tr').map((r) => r.querySelector('label')!.textContent!.trim());
 
 afterEach(() => {
   document.body.innerHTML = '';
 });
 
 describe('the card table', () => {
-  const cards = [mc({ name: 'Beta' }), mc({ name: 'Alpha', css: '@import url(https://fonts.googleapis.com/css2?family=Lora);' }), mc({ name: 'Gamma', rows: [{ type: 'custom-card' }] })];
+  const cards = [
+    mc({ name: 'Beta' }),
+    mc({ name: 'Alpha', css: '@import url(https://fonts.googleapis.com/css2?family=Lora);' }),
+    mc({ name: 'Gamma', rows: [{ type: 'custom-card' }] }),
+  ];
 
   it('has explicit table roles, sortable headers as buttons with aria-sort, and none sorted on opening', async () => {
     const el = await mount(ws(cards));
@@ -130,13 +180,17 @@ describe('the card table', () => {
     const checked = $$<HTMLInputElement>(el, 'input[name=card]:checked');
     expect(checked.length).toBe(1);
     expect(checked[0].closest('tr')!.querySelector('label')!.textContent!.trim()).toBe('Beta');
-    expect($<HTMLButtonElement>(el, 'button.download')!.getAttribute('aria-disabled')).toBe('false');
+    expect($<HTMLButtonElement>(el, 'button.download')!.getAttribute('aria-disabled')).toBe(
+      'false',
+    );
   });
 
   it('a click on the row selects through its radio; a locked row stays unselectable', async () => {
     const el = await mount(ws(cards));
     const rows = $$<HTMLTableRowElement>(el, 'tbody tr');
-    rows[1].querySelector('td:nth-child(2)')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    rows[1]
+      .querySelector('td:nth-child(2)')!
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
     await flush(el);
     expect(rows[1].querySelector<HTMLInputElement>('input')!.checked).toBe(true);
     rows[2].querySelector('td')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -145,24 +199,182 @@ describe('the card table', () => {
     expect(rows[1].querySelector<HTMLInputElement>('input')!.checked).toBe(true);
   });
 
-  it('locks a row on lock only: a Google font row is available, and a locked row says Locked, the reason and no host', async () => {
+  it('locks a row on lock only: a Google font row is available, and a locked row keeps its radio disabled and described', async () => {
     const el = await mount(ws(cards));
     const rows = $$<HTMLTableRowElement>(el, 'tbody tr');
     expect(rows[1].querySelector<HTMLInputElement>('input')!.disabled).toBe(false);
-    expect(rows[1].lastElementChild!.textContent).toContain('Available');
     const locked = rows[2];
     expect(locked.querySelector<HTMLInputElement>('input')!.disabled).toBe(true);
-    const status = locked.lastElementChild!.textContent!;
-    expect(status).toContain('Locked');
-    expect(status).not.toContain('googleapis');
-    expect(locked.querySelector('input')!.getAttribute('aria-describedby')).toBeTruthy();
+    const note = $(el, `#${locked.querySelector('input')!.getAttribute('aria-describedby')}`)!;
+    expect(note.hasAttribute('hidden')).toBe(true);
+    expect(note.textContent).toContain('custom-card');
   });
 
-  it('labels each stacked value, and the narrow property reaches the host', async () => {
+  it('stays a real table at every width: no stacked labels, the table sits in a focusable labelled region', async () => {
     const el = await mount(ws(cards), true);
     expect(el.hasAttribute('narrow')).toBe(true);
-    const cells = $$<HTMLElement>(el, 'tbody tr:first-child td');
-    expect(cells.map((c) => c.dataset.label)).toEqual(['Dashboard', 'View', 'Card', 'Status']);
+    expect($$(el, '[data-label]')).toEqual([]);
+    const wrap = $<HTMLElement>(el, 'div.scroll')!;
+    expect(wrap.getAttribute('role')).toBe('region');
+    expect(wrap.getAttribute('tabindex')).toBe('0');
+    expect(wrap.getAttribute('aria-label')).toBe('Magic Card');
+    expect(wrap.querySelector('table')!.hasAttribute('aria-label')).toBe(false);
+  });
+
+  describe('the status button', () => {
+    const btn = (el: Element, row: number) =>
+      $$<HTMLElement>(el, 'tbody tr')[row].querySelector<HTMLButtonElement>('button.tip')!;
+    const active = (el: Element) => el.shadowRoot!.activeElement;
+
+    it('is one named button per row with no visible text in the cell', async () => {
+      const el = await mount(ws(cards));
+      expect(btn(el, 1).getAttribute('aria-label')).toBe('Available, show details');
+      expect(btn(el, 2).getAttribute('aria-label')).toBe('Locked, show details');
+      expect(btn(el, 2).getAttribute('aria-expanded')).toBe('false');
+      expect(btn(el, 2).hasAttribute('aria-controls')).toBe(false);
+      expect(btn(el, 2).getAttribute('type')).toBe('button');
+      expect($$(el, '.pop')).toEqual([]);
+      expect(btn(el, 1).textContent!.trim()).toBe('');
+    });
+
+    it('opens a dialog with the word, the reason and a Close button holding focus, and tells the button', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      const pop = $<HTMLElement>(el, '.pop')!;
+      expect(pop.getAttribute('role')).toBe('dialog');
+      expect(btn(el, 2).getAttribute('aria-expanded')).toBe('true');
+      expect(btn(el, 2).getAttribute('aria-controls')).toBe(pop.id);
+      expect(pop.getAttribute('aria-labelledby')).toBe(pop.querySelector('.pop-h')!.id);
+      expect(pop.querySelector('.pop-h')!.textContent!.trim()).toBe('Locked');
+      expect(pop.textContent).toContain('custom-card');
+      expect(active(el)).toBe(pop.querySelector('button'));
+      expect(pop.querySelector('button')!.textContent!.trim()).toBe('Close');
+    });
+
+    it('shows the available word, its line and the font hosts', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 1).click();
+      await flush(el);
+      const pop = $<HTMLElement>(el, '.pop')!;
+      expect(pop.querySelector('.pop-h')!.textContent!.trim()).toBe('Available');
+      expect(pop.textContent).toContain('You can pick this card for a forum shot.');
+      expect(pop.textContent).toContain('Fonts from fonts.googleapis.com');
+      btn(el, 0).click();
+      await flush(el);
+      const plain = $<HTMLElement>(el, '.pop')!.textContent!;
+      expect(plain).toContain('You can pick this card for a forum shot.');
+      expect(plain).not.toContain('Fonts from');
+    });
+
+    it('closes on the same button, on Close, and on Escape, and gives focus back to the button', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      btn(el, 2).click();
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+      btn(el, 2).click();
+      await flush(el);
+      $<HTMLButtonElement>(el, '.pop button')!.click();
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+      expect(active(el)).toBe(btn(el, 2));
+      btn(el, 2).click();
+      await flush(el);
+      $(el, 'div.scroll')!.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      );
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+      expect(active(el)).toBe(btn(el, 2));
+    });
+
+    it('opens one popup at a time', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 1).click();
+      await flush(el);
+      btn(el, 2).click();
+      await flush(el);
+      expect($$(el, '.pop').length).toBe(1);
+      expect(btn(el, 1).getAttribute('aria-expanded')).toBe('false');
+      expect(btn(el, 2).getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('closes on a pointerdown outside its row, and not on one inside it', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      $<HTMLElement>(el, '.pop')!.dispatchEvent(
+        new Event('pointerdown', { bubbles: true, composed: true }),
+      );
+      await flush(el);
+      expect($(el, '.pop')).not.toBeNull();
+      document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, composed: true }));
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+    });
+
+    it('closes when focus leaves the popup for another element, and ignores a null target', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      const pop = $<HTMLElement>(el, '.pop')!;
+      pop.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+      await flush(el);
+      expect($(el, '.pop')).not.toBeNull();
+      pop.dispatchEvent(
+        new FocusEvent('focusout', { bubbles: true, relatedTarget: $(el, 'button.download') }),
+      );
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+    });
+
+    it('closes when the wrapper scrolls and when the tab is opened again', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      $(el, 'div.scroll')!.dispatchEvent(new Event('scroll'));
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+      btn(el, 2).click();
+      await flush(el);
+      el.remove();
+      document.body.append(el);
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+    });
+
+    it('a click inside the popup never selects the row, and a tap on a locked row toggles its popup', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 1).click();
+      await flush(el);
+      $<HTMLElement>(el, '.pop')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await flush(el);
+      expect($$<HTMLInputElement>(el, 'input[name=card]:checked')).toEqual([]);
+      btn(el, 1).click();
+      await flush(el);
+      const locked = $$<HTMLElement>(el, 'tbody tr')[2];
+      locked.querySelector('td')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await flush(el);
+      expect($(el, '.pop')).not.toBeNull();
+      locked.querySelector('td')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+    });
+
+    it('removes its document listener on close and on disconnect', async () => {
+      const add = vi.spyOn(document, 'addEventListener');
+      const remove = vi.spyOn(document, 'removeEventListener');
+      const el = await mount(ws(cards));
+      btn(el, 2).click();
+      await flush(el);
+      expect(add.mock.calls.filter((c) => c[0] === 'pointerdown').length).toBe(1);
+      el.remove();
+      expect(remove.mock.calls.filter((c) => c[0] === 'pointerdown').length).toBe(1);
+      add.mockRestore();
+      remove.mockRestore();
+    });
   });
 
   it('opening the tab again returns to dashboard order', async () => {
