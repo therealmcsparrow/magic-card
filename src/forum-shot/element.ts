@@ -338,7 +338,7 @@ export class MagicCardForumShot extends LitElement {
               aria-labelledby="card-pop-${i}-h"
               @focusout=${(e: FocusEvent) => {
                 const to = e.relatedTarget as Element | null;
-                if (to && !to.matches('.pop *, .scroll, button.tip') && this._tip === key)
+                if (to && !to.matches('.scroll') && !(e.currentTarget as Element).parentNode!.contains(to) && this._tip === key)
                   this._close();
               }}
             >

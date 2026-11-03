@@ -420,6 +420,33 @@ describe('the card table', () => {
       expect(rows[1].className).toBe('picked');
     });
 
+    it('a pointerdown and click on a cell or the label of the open available row close the popup and pick the row', async () => {
+      const el = await mount(ws(cards));
+      const down = () => new Event('pointerdown', { bubbles: true, composed: true });
+      for (const sel of ['td', 'label']) {
+        btn(el, 1).click();
+        await flush(el);
+        expect($(el, '.pop')).not.toBeNull();
+        const target = $$<HTMLElement>(el, 'tbody tr')[1].querySelector<HTMLElement>(sel)!;
+        target.dispatchEvent(down());
+        target.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await flush(el);
+        expect($(el, '.pop')).toBeNull();
+        expect($$<HTMLElement>(el, 'tbody tr')[1].className).toBe('picked');
+      }
+    });
+
+    it('closes when focus moves from the popup to the Status button of another row', async () => {
+      const el = await mount(ws(cards));
+      btn(el, 1).click();
+      await flush(el);
+      $<HTMLElement>(el, '.pop')!.dispatchEvent(
+        new FocusEvent('focusout', { bubbles: true, relatedTarget: btn(el, 2) }),
+      );
+      await flush(el);
+      expect($(el, '.pop')).toBeNull();
+    });
+
     it('keeps the popup open when focus moves to the scroll region or the open button', async () => {
       const el = await mount(ws(cards));
       btn(el, 2).click();

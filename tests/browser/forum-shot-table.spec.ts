@@ -554,6 +554,33 @@ for (const engine of engines()) {
       });
     });
 
+    it('a click on a cell of the open available row closes its popup and picks that row', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        await openTip(b, 'Alpha');
+        await tap(b, await cellBox(b, 'Alpha', 1));
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(await b.eval<boolean>(`(() => { const root = ${ROOT}; return (${rowOf('Alpha')}).querySelector('input').checked; })()`)).toBe(true);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
+    it('Tab from Close closes the popup', async () => {
+      await engine.run(servers, async (b) => {
+        await b.viewport(1280, 800);
+        expect(await mount(b)).toBe(true);
+        await sleep(100);
+        await openTip(b, 'Alpha');
+        expect(await b.eval<string>(`${ROOT}.activeElement.textContent.trim()`)).toBe('Close');
+        await b.tab();
+        await sleep(80);
+        expect(await b.eval<number>(`${ROOT}.querySelectorAll('.pop').length`)).toBe(0);
+        expect(b.errors).toEqual([]);
+      });
+    });
+
     it('at 200% zoom Tab reaches each Status button in row order with a visible outline inside the scroll region', async () => {
       await engine.run(servers, async (b) => {
         await b.send('Emulation.setDeviceMetricsOverride', { width: 640, height: 400, deviceScaleFactor: 2, mobile: false });
