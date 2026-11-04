@@ -60,27 +60,42 @@ export const forumShotStyles = css`
   table {
     width: 100%;
     min-width: 30rem;
-    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid var(--divider-color, #727272);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  tr:last-child td {
+    border-bottom: 0;
+  }
+  table,
+  .filter input,
+  .pop {
+    background: var(--card-background-color, #fff);
   }
   th,
   td {
-    padding: 4px 8px;
+    padding: 8px 16px;
     border-bottom: 1px solid var(--divider-color, #727272);
     text-align: start;
     vertical-align: middle;
     overflow-wrap: break-word;
   }
+  th {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--secondary-text-color, #5f5f5f);
+  }
   td.state {
     width: 1%;
     white-space: nowrap;
   }
-  td .choice {
-    min-height: 44px;
-  }
   tbody tr:not(.off) {
     cursor: pointer;
   }
-  tbody tr.picked {
+  th,
+  tbody tr.picked,
+  button.tip[aria-expanded='true'] {
     background: var(--secondary-background-color, #f3f3f3);
   }
   tbody tr.off td {
@@ -101,9 +116,6 @@ export const forumShotStyles = css`
     border-radius: 22px;
     background: transparent;
     color: inherit;
-  }
-  button.tip[aria-expanded='true'] {
-    background: var(--secondary-background-color, #f3f3f3);
   }
   @media (hover: hover) {
     button.tip:hover {
@@ -130,7 +142,6 @@ export const forumShotStyles = css`
     max-width: min(20rem, 100%);
     padding: var(--ha-space-3, 12px);
     border-radius: var(--ha-border-radius-md, 8px);
-    background: var(--card-background-color, #fff);
     color: var(--primary-text-color, #212121);
     font-weight: 400;
     text-align: start;
@@ -148,12 +159,12 @@ export const forumShotStyles = css`
     align-items: center;
     gap: 4px;
     min-height: 44px;
-    padding: 4px 8px;
+    padding: 4px 0;
     border: 2px solid transparent;
     border-radius: 8px;
     background: transparent;
-    color: var(--primary-text-color, #212121);
-    font-weight: 600;
+    color: inherit;
+    font-weight: inherit;
     text-align: start;
   }
   th[aria-sort='ascending'] button.sort::after {
@@ -166,10 +177,22 @@ export const forumShotStyles = css`
     content: '\\25BC' / '';
     font-size: 0.7em;
   }
+  .filter {
+    display: grid;
+    gap: 6px;
+    max-width: 360px;
+    margin: 0 0 12px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
   .filter input {
     min-height: 44px;
-    margin: 0 8px 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--secondary-text-color, #727272);
+    border-radius: 8px;
+    color: inherit;
     font: inherit;
+    font-weight: 400;
   }
   .hint {
     display: block;
