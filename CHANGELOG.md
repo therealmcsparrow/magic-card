@@ -12,6 +12,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Card table width.** The forum shot page now uses the full width of the panel, so the card table is no longer squeezed into a narrow box.
 -   **Card column first.** The card table now starts with the Card column, followed by Dashboard, View and Status.
 -   **Search cards.** A search field above the card table keeps only the rows whose card, dashboard or view name holds the text you type. When nothing matches, the table says so.
+-   **Card table look.** The card table now looks like the Templates table in Magic Card Utils: a rounded frame, a shaded header row and roomier cells. The search field has its label above it and a rounded frame.
 
 ## 2026.10.12-beta.15 (2026-11-03)
 

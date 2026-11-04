@@ -38708,6 +38708,13 @@
     "x-max-length": 35,
     "x-source-hash": "2280220b"
   },
+  "mcu-panel.panel.no-templates-match-search": "No templates match your search.",
+  "@mcu-panel.panel.no-templates-match-search": {
+    "description": "Shown in the templates table when the search matches no template. Max 80 characters.",
+    "source_text": "No templates match your search.",
+    "x-max-length": 80,
+    "x-source-hash": "daae35aa"
+  },
   "mcu-panel.panel.no-templates-saved-yet": "No templates saved yet.",
   "@mcu-panel.panel.no-templates-saved-yet": {
     "description": "Empty state of the Templates tab when no template exists. Max 40 characters.",
@@ -38788,6 +38795,13 @@
     "source_text": "Saving…",
     "x-max-length": 20,
     "x-source-hash": "23e39291"
+  },
+  "mcu-panel.panel.search-templates": "Search templates",
+  "@mcu-panel.panel.search-templates": {
+    "description": "Label of the search field above the templates table. It filters rows by name, description or card type. Max 30 characters.",
+    "source_text": "Search templates",
+    "x-max-length": 30,
+    "x-source-hash": "04b9835b"
   },
   "mcu-panel.panel.shapes": "Shapes",
   "@mcu-panel.panel.shapes": {

@@ -639,7 +639,7 @@ for (const engine of engines()) {
 
     it('the Status button opens details inside the screen, flips above on the last row, and one click on another button switches', async () => {
       await engine.run(servers, async (b) => {
-        await b.viewport(375, 700);
+        await b.viewport(375, 900);
         expect(await mount(b)).toBe(true);
         await sleep(150);
         await b.eval(`${ROOT}.querySelector('.scroll').scrollLeft = 9999`);
