@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.16 (2026-11-04)
 
 ### Changed
 -   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
