@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.17 (2026-11-05)
 
 ### Changed
 -   **Home Assistant Marketplace.** The install, update, pre-release and troubleshooting steps now cover the Marketplace in Home Assistant 2026.11 next to HACS, and the bug report form lists it as an install method. See [Installation](README.md#installation).
