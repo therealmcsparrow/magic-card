@@ -6,7 +6,7 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 
 ## Requirements
 
--   Magic Card 2026.10.07 or newer, added as a dashboard resource of type JavaScript module. The Themes tab loads `magic-card-theme-editor.js` from the same folder as `magic-card.js`, and `magic-card-theme-presets.js` when you open the create dialog. HACS installs both there.
+-   Magic Card 2026.10.07 or newer, added as a dashboard resource of type JavaScript module. The Themes tab loads `magic-card-theme-editor.js` from the same folder as `magic-card.js`, and `magic-card-theme-presets.js` when you open the create dialog. The Marketplace and HACS install both there.
 -   The [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration, version 2026.10.08 or newer.
 -   An admin user. The panel is only in the sidebar of admin users, and saving or deleting a theme needs an admin.
 -   The include lines in `configuration.yaml`, described in [Getting started](getting-started.md#add-the-include-lines).

@@ -4,6 +4,12 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Changed
+-   **Home Assistant Marketplace.** The install, update, pre-release and troubleshooting steps now cover the Marketplace in Home Assistant 2026.11 next to HACS, and the bug report form lists it as an install method. See [Installation](README.md#installation).
+-   **Install messages.** Messages in the editor that named HACS now mention the Marketplace too, or say to install Magic Card Utils the same way as Magic Card. The card picker group is now called Custom cards.
+
 ## 2026.10.12-beta.16 (2026-11-04)
 
 ### Changed

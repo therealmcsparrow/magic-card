@@ -30,7 +30,7 @@ Font: Antonio, loaded by the card from Google Fonts. Text is in capitals.
    ```
 
 3. Reload themes (Developer tools → Actions → `frontend.reload_themes`) or restart Home Assistant.
-4. Install Magic Card if you haven't already (HACS, or `magic-card.js` as a dashboard resource).
+4. Install Magic Card if you haven't already (Marketplace, HACS, or `magic-card.js` as a dashboard resource).
 5. Settings → Dashboards → Add dashboard → New dashboard from scratch. Open it, then three dots → Edit dashboard → three dots → Raw configuration editor. Replace everything with the contents of `dashboard.yaml` and save.
 6. Swap the entity ids for your own (table below). The view picks the "Starship Console" theme by itself.
 

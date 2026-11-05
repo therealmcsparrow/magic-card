@@ -64,8 +64,8 @@
     "hash": "7871f325"
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": {
-    "text": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt geïnstalleerd via HACS, net als Magic Card.",
-    "hash": "62625dad"
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
+    "hash": "94d5c5c4"
   },
   "image-editor.chunk.import-an-svg-file": {
     "text": "SVG-bestand importeren…",

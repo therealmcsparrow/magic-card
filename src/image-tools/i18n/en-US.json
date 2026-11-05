@@ -20,8 +20,8 @@
     "hash": "be7e2f20"
   },
   "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "hash": "62625dad"
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "hash": "94d5c5c4"
   },
   "image-tools.mc-image-picker.in-use": {
     "text": "In use",
@@ -152,8 +152,8 @@
     "hash": "d8f48be1"
   },
   "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "hash": "62625dad"
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "hash": "94d5c5c4"
   },
   "image-tools.mc-library-image-field.library-image": {
     "text": "Library image",

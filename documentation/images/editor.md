@@ -144,7 +144,7 @@ If a save fails, the Save window shows the reason in words and stays open, so yo
 - **The library refused this image: {reason}.** The library gave a reason. If it gave none, the editor says "The library refused this image. Use Export file to keep a copy."
 - **Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.** The library reported an error the editor does not know.
 - **Could not reach Magic Card Utils. Your work is safe.** The editor could not reach the library at all.
-- **Images need Magic Card Utils. It is installed through HACS, like Magic Card.** Install Magic Card Utils first.
+- **Images need Magic Card Utils. Install it the same way as Magic Card.** Install Magic Card Utils first.
 
 ## View only
 

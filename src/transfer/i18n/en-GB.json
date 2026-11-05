@@ -455,8 +455,8 @@
     "max": 15
   },
   "transfer.library-view.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep HACS, Magic Card and Magic Card Utils unchanged.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "note": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep Magic Card and Magic Card Utils unchanged.",
     "max": 125
   },
   "transfer.library-view.import": {
@@ -788,8 +788,8 @@
     "max": 20
   },
   "transfer.panel.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep HACS and product names unchanged.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "note": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep product names unchanged.",
     "max": 125
   },
   "transfer.panel.import-animations": {

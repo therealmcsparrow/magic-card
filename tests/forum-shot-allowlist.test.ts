@@ -84,7 +84,7 @@ describe('allow-list for strings the card reads', () => {
     expect(onRemove).toHaveBeenCalledTimes(1);
   });
 
-  it.each(['/local/ok.png', '/api/image_proxy/media_player.a?token=abc', '/local/a%20b', '/hacsfiles/x/y.svg#frag'])('keeps the same-origin path %j', (v) => {
+  it.each(['/local/ok.png', '/local/community/magic-card/ok.png', '/api/image_proxy/media_player.a?token=abc', '/local/a%20b', '/hacsfiles/x/y.svg#frag'])('keeps the same-origin path %j', (v) => {
     expect(keepsText(v)).toBe(true);
   });
 

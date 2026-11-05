@@ -61,13 +61,25 @@ The gallery groups its cards in eight families, shown above. Nothing in the pict
 
 ## Installation
 
-### HACS (recommended)
+The current release is 2026.10.11.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=therealmcsparrow&repository=magic-card&category=plugin)
 
-Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must be installed).
+Click the badge to open Magic Card on your own Home Assistant. On 2026.11 or newer it opens the Marketplace. On older versions it opens HACS, which must be installed.
 
-The current release is 2026.10.11.
+### Marketplace (Home Assistant 2026.11 or newer)
+
+Magic Card isn't in the Marketplace catalogue, so you add it by its link.
+
+1.  Go to Settings, Marketplace.
+2.  Choose **Add from link** and enter `https://github.com/therealmcsparrow/magic-card`. The first time, Home Assistant asks you to accept its risk notice and to connect GitHub.
+3.  Install Magic Card. The Marketplace adds it to your dashboard resources as `/local/community/magic-card/magic-card.js`.
+
+The Marketplace downloads every file of the release into the folder `www/community/magic-card/`. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
+
+With dashboards in YAML mode, the install dialog asks you to add the resource yourself. Use `url: /local/community/magic-card/magic-card.js?v=2026.10.11` with `type: module`, and change the version at every update, because browsers can keep a `/local/` file for 31 days. The older path `/hacsfiles/magic-card/magic-card.js` also works while the Marketplace is set up.
+
+### HACS (Home Assistant before 2026.11)
 
 1.  Install [HACS](https://hacs.xyz/) if you do not have it.
 2.  Open HACS, then Frontend.
@@ -135,11 +147,13 @@ Keep every file of the release in one folder. `magic-card.js` is the only file a
 
 ### Loading
 
-`magic-card.js` must be loaded as a JavaScript module (`type: module`). HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work: the card does not appear. Change the resource type to JavaScript module under Settings, Dashboards, Resources.
+`magic-card.js` must be loaded as a JavaScript module (`type: module`). The Marketplace, HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work: the card does not appear. Change the resource type to JavaScript module under Settings, Dashboards, Resources.
 
 ### Updating
 
-Update through HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
+Update through the Marketplace or HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
+
+The Marketplace replaces the whole folder on an update, so there is nothing to clean up. If the update fails, it puts the earlier files back. A browser tab still open on the earlier release can no longer find those files, so the card or editor asks you to reload the page.
 
 HACS does not delete the files of an earlier release. After an update you can delete the older files in the folder HACS manages (the folder behind `/hacsfiles/magic-card/`) that the new release no longer uses. Keep every file of the new release. For a manual install, the same applies to the folder `config/www/`.
 
@@ -1098,7 +1112,7 @@ rows:
 
 Library images are drawings you make in the Magic Card image editor and save to the Magic Card Utils library. A dashboard can show one in an image module, or as a background behind the content. The library holds up to 200 images, and each image can be up to 256 KiB.
 
-Library images need the Magic Card Utils integration, installed through HACS like Magic Card. Everyone who can log in to Home Assistant can see them. Only administrators can create or change them.
+Library images need the Magic Card Utils integration, installed the same way as Magic Card. Everyone who can log in to Home Assistant can see them. Only administrators can create or change them.
 
 The [Images](documentation/images/README.md) section covers the editor, the image and background options, the YAML form `mcu-image:<id>`, and [privacy](documentation/images/privacy.md).
 
@@ -1149,7 +1163,7 @@ Releases are built by a GitHub Actions workflow. You can check a download by loo
 ## Troubleshooting
 
 -   A new option or the editor looks outdated. The browser still runs an old copy. Hard refresh (Ctrl+Shift+R) and, in the companion app, clear the frontend cache. Open the browser console and look for the line `MAGIC-CARD v<version>` to see which version is loaded. It must match the version you installed.
--   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
+-   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/local/community/magic-card/magic-card.js` (Marketplace), `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
 -   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 46 `.js` files, each with a `.br` and `.gz` copy. [Loading the other files](#loading-the-other-files) lists the main ones. With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.

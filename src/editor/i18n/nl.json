@@ -700,8 +700,8 @@
     "hash": "9ec14117"
   },
   "card-editor.card-picker.custom-cards-hacs": {
-    "text": "Eigen kaarten (HACS)",
-    "hash": "e923dd09"
+    "text": "Eigen kaarten",
+    "hash": "5987c6e6"
   },
   "card-editor.card-picker.display-an-image": {
     "text": "Een afbeelding tonen",
@@ -6284,8 +6284,8 @@
     "hash": "8b316924"
   },
   "card-editor.template-picker.magic-card-integration-not-found-please": {
-    "text": "Magic Card-integratie niet gevonden. Installeer die via HACS en voeg de integratie toe.",
-    "hash": "f2d62469"
+    "text": "Magic Card-integratie niet gevonden. Installeer die via de Marketplace of HACS en voeg de integratie toe.",
+    "hash": "182acc35"
   },
   "card-editor.template-picker.no-config-available-to-save": {
     "text": "Geen configuratie beschikbaar om op te slaan.",

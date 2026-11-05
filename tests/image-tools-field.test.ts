@@ -114,7 +114,7 @@ describe('the choice', () => {
     const { el } = await mount({ value: '' }, { fail: 'unknown_command' });
     expect(($(el, 'input[type=radio][value=library]') as HTMLInputElement).disabled).toBe(true);
     expect(($(el, 'input[type=radio][value=url]') as HTMLInputElement).checked).toBe(true);
-    expect(text(el)).toContain('Images need Magic Card Utils. It is installed through HACS, like Magic Card.');
+    expect(text(el)).toContain('Images need Magic Card Utils. Install it the same way as Magic Card.');
   });
 
   it('says so when the image is no longer in the library, with Pick another', async () => {

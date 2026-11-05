@@ -148,4 +148,4 @@ The animation document goes into the card's own `custom_animations`, which merge
 
 ## The editor file
 
-The Animated icons tab and the icon follow described above live in their own file, `magic-card-icon-animator.js`, next to `magic-card.js`. The editor loads it the first time you open the tab or change an animated module's icon. Dashboards never load it. HACS installs it with the card; with a manual install, copy it next to `magic-card.js` as well. Without the file, the tab shows "The animated icons could not be loaded. Try again." and everything else works.
+The Animated icons tab and the icon follow described above live in their own file, `magic-card-icon-animator.js`, next to `magic-card.js`. The editor loads it the first time you open the tab or change an animated module's icon. Dashboards never load it. The Marketplace and HACS install it with the card; with a manual install, copy it next to `magic-card.js` as well. Without the file, the tab shows "The animated icons could not be loaded. Try again." and everything else works.
