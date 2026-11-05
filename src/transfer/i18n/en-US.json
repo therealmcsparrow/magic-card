@@ -288,8 +288,8 @@
     "hash": "be7e2f20"
   },
   "transfer.library-view.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "hash": "62625dad"
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "hash": "94d5c5c4"
   },
   "transfer.library-view.import": {
     "text": "Import",
@@ -504,8 +504,8 @@
     "hash": "d63b2b69"
   },
   "transfer.panel.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "hash": "62625dad"
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "hash": "94d5c5c4"
   },
   "transfer.panel.import-animations": {
     "text": "{n, plural, one {Import # animation} other {Import # animations}}",

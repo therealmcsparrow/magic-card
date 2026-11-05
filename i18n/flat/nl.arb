@@ -11548,12 +11548,12 @@
     "x-max-length": 20,
     "x-source-hash": "9ec14117"
   },
-  "card-editor.card-picker.custom-cards-hacs": "Eigen kaarten (HACS)",
+  "card-editor.card-picker.custom-cards-hacs": "Eigen kaarten",
   "@card-editor.card-picker.custom-cards-hacs": {
-    "description": "Heading of the card picker group that lists cards installed through HACS. Max 35 characters.",
-    "source_text": "Custom cards (HACS)",
+    "description": "Heading of the card picker group that lists cards installed from outside Home Assistant, for example through the Marketplace or HACS. Max 35 characters.",
+    "source_text": "Custom cards",
     "x-max-length": 35,
-    "x-source-hash": "e923dd09"
+    "x-source-hash": "5987c6e6"
   },
   "card-editor.card-picker.display-an-image": "Een afbeelding tonen",
   "@card-editor.card-picker.display-an-image": {
@@ -21412,12 +21412,12 @@
     "x-max-length": 35,
     "x-source-hash": "8b316924"
   },
-  "card-editor.template-picker.magic-card-integration-not-found-please": "Magic Card-integratie niet gevonden. Installeer die via HACS en voeg de integratie toe.",
+  "card-editor.template-picker.magic-card-integration-not-found-please": "Magic Card-integratie niet gevonden. Installeer die via de Marketplace of HACS en voeg de integratie toe.",
   "@card-editor.template-picker.magic-card-integration-not-found-please": {
-    "description": "Error in the template picker when the Magic Card integration is missing; tells the user to install it through HACS and add it. Max 140 characters.",
-    "source_text": "Magic Card integration not found. Please install it via HACS and add the integration.",
+    "description": "Error in the template picker when the Magic Card integration is missing; tells the user to install it through the Marketplace or HACS and add it. Keep the names Marketplace and HACS. Max 140 characters.",
+    "source_text": "Magic Card integration not found. Please install it from the Marketplace or HACS and add the integration.",
     "x-max-length": 140,
-    "x-source-hash": "f2d62469"
+    "x-source-hash": "182acc35"
   },
   "card-editor.template-picker.no-config-available-to-save": "Geen configuratie beschikbaar om op te slaan.",
   "@card-editor.template-picker.no-config-available-to-save": {
@@ -27893,12 +27893,12 @@
     "x-max-length": 85,
     "x-source-hash": "7871f325"
   },
-  "image-editor.chunk.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt geïnstalleerd via HACS, net als Magic Card.",
+  "image-editor.chunk.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-editor.chunk.images-need-magic-card-utils-it-is": {
     "description": "Message in the image editor when the companion integration is missing. It tells the user what to install and how. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "image-editor.chunk.import-an-svg-file": "SVG-bestand importeren…",
   "@image-editor.chunk.import-an-svg-file": {
@@ -29641,12 +29641,12 @@
     "x-max-length": 15,
     "x-source-hash": "be7e2f20"
   },
-  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
+  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
-    "description": "Message inside the image picker window when the companion integration is missing. HACS is a Home Assistant add-on store; keep the name. Magic Card and Magic Card Utils are product names. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Message inside the image picker window when the companion integration is missing. Magic Card and Magic Card Utils are product names. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "image-tools.mc-image-picker.in-use": "In gebruik",
   "@image-tools.mc-image-picker.in-use": {
@@ -29880,12 +29880,12 @@
     "x-max-length": 30,
     "x-source-hash": "d8f48be1"
   },
-  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
+  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
-    "description": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window. HACS is a Home Assistant add-on store; keep the name. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "image-tools.mc-library-image-field.library-image": "Afbeelding uit de bibliotheek",
   "@image-tools.mc-library-image-field.library-image": {
@@ -38456,19 +38456,19 @@
     "x-max-length": 15,
     "x-source-hash": "48845bff"
   },
-  "mcu-panel.panel.drawing-icons-and-shapes-here-needs": "Om hier pictogrammen en vormen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij in HACS.",
+  "mcu-panel.panel.drawing-icons-and-shapes-here-needs": "Om hier pictogrammen en vormen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij.",
   "@mcu-panel.panel.drawing-icons-and-shapes-here-needs": {
     "description": "Notice in the Icons and Shapes tabs when the installed Magic Card is too old. {version} is the lowest Magic Card version that can draw them. {version}: The value that replaces version in the text. Max 150 characters.",
-    "source_text": "Drawing icons and shapes here needs Magic Card {version} or newer. Update Magic Card in HACS.",
+    "source_text": "Drawing icons and shapes here needs Magic Card {version} or newer. Update Magic Card.",
     "x-max-length": 150,
-    "x-source-hash": "7bd8082a"
+    "x-source-hash": "c4aa6503"
   },
-  "mcu-panel.panel.drawing-images-here-needs-magic-card": "Om hier afbeeldingen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij in HACS.",
+  "mcu-panel.panel.drawing-images-here-needs-magic-card": "Om hier afbeeldingen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij.",
   "@mcu-panel.panel.drawing-images-here-needs-magic-card": {
     "description": "Notice in the Images tab when the installed Magic Card is too old. {version} is the lowest Magic Card version that can draw images. {version}: The value that replaces version in the text. Max 135 characters.",
-    "source_text": "Drawing images here needs Magic Card {version} or newer. Update Magic Card in HACS.",
+    "source_text": "Drawing images here needs Magic Card {version} or newer. Update Magic Card.",
     "x-max-length": 135,
-    "x-source-hash": "3be5111c"
+    "x-source-hash": "0dcdf007"
   },
   "mcu-panel.panel.duplicate": "Dupliceren",
   "@mcu-panel.panel.duplicate": {
@@ -38638,12 +38638,12 @@
     "x-max-length": 70,
     "x-source-hash": "a1a97249"
   },
-  "mcu-panel.panel.magic-card-isn-t-installed-install-it": "Magic Card is niet geïnstalleerd. Installeer het via HACS en voeg het toe als dashboardresource.",
+  "mcu-panel.panel.magic-card-isn-t-installed-install-it": "Magic Card is niet geïnstalleerd. Installeer het via de Marketplace of HACS en voeg het toe als dashboardresource.",
   "@mcu-panel.panel.magic-card-isn-t-installed-install-it": {
     "description": "Notice in the template editor and preview when Magic Card is not installed. Max 135 characters.",
-    "source_text": "Magic Card isn't installed. Install it from HACS and add it as a dashboard resource.",
+    "source_text": "Magic Card isn't installed. Install it from the Marketplace or HACS and add it as a dashboard resource.",
     "x-max-length": 135,
-    "x-source-hash": "cd61b1ec"
+    "x-source-hash": "3de2c996"
   },
   "mcu-panel.panel.magic-card-utils": "Magic Card Utils",
   "@mcu-panel.panel.magic-card-utils": {
@@ -53091,12 +53091,12 @@
     "x-max-length": 15,
     "x-source-hash": "be7e2f20"
   },
-  "transfer.library-view.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
+  "transfer.library-view.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@transfer.library-view.images-need-magic-card-utils-it-is": {
-    "description": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep HACS, Magic Card and Magic Card Utils unchanged. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep Magic Card and Magic Card Utils unchanged. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "transfer.library-view.import": "Importeren",
   "@transfer.library-view.import": {
@@ -53493,12 +53493,12 @@
     "x-max-length": 20,
     "x-source-hash": "d63b2b69"
   },
-  "transfer.panel.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
+  "transfer.panel.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@transfer.panel.images-need-magic-card-utils-it-is": {
-    "description": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep HACS and product names unchanged. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep product names unchanged. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "transfer.panel.import-animations": "{n, plural, one {# animatie importeren} other {# animaties importeren}}",
   "@transfer.panel.import-animations": {

@@ -5,7 +5,7 @@ A library image is a drawing you make in the Magic Card image editor and save to
 Library images need two parts:
 
 - **Magic Card** (this card), which draws the image and holds the editor.
-- **Magic Card Utils**, installed through HACS like Magic Card, which keeps the saved images in Home Assistant.
+- **Magic Card Utils**, installed the same way as Magic Card, which keeps the saved images in Home Assistant.
 
 ## What you can do
 

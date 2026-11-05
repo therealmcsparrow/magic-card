@@ -700,8 +700,8 @@
     "hash": "9ec14117"
   },
   "card-editor.card-picker.custom-cards-hacs": {
-    "text": "Custom cards (HACS)",
-    "hash": "e923dd09"
+    "text": "Custom cards",
+    "hash": "5987c6e6"
   },
   "card-editor.card-picker.display-an-image": {
     "text": "Display an image",
@@ -6284,8 +6284,8 @@
     "hash": "8b316924"
   },
   "card-editor.template-picker.magic-card-integration-not-found-please": {
-    "text": "Magic Card integration not found. Please install it via HACS and add the integration.",
-    "hash": "f2d62469"
+    "text": "Magic Card integration not found. Please install it from the Marketplace or HACS and add the integration.",
+    "hash": "182acc35"
   },
   "card-editor.template-picker.no-config-available-to-save": {
     "text": "No config available to save.",

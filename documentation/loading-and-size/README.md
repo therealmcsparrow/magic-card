@@ -48,7 +48,7 @@ Parts that depend on a file behave in a fixed way while they wait:
 
 ## Offline and failed connections
 
-The files come from the same Home Assistant server as `magic-card.js`, through `/hacsfiles/magic-card/` or `/local/`. A part can load only while the browser can reach Home Assistant. If the connection drops, the notice appears, and **Try again** asks for the file once the connection is back.
+The files come from the same Home Assistant server as `magic-card.js`, through `/local/community/magic-card/` (Marketplace), `/hacsfiles/magic-card/` (HACS) or `/local/` (manual). A part can load only while the browser can reach Home Assistant. If the connection drops, the notice appears, and **Try again** asks for the file once the connection is back.
 
 When a card needs a part, it asks for the file once and reuses that one request. Cards on the same page that need the same part share it, and a part that has loaded is not requested again. Nothing in the card unloads a part. A reload of the page starts again from the card file.
 
@@ -100,7 +100,7 @@ If the browser does not allow the card to use storage, a pause lasts only for th
 
 ## After an update
 
-Update through HACS, then hard refresh the browser. HACS does not delete the files of an earlier release. Once the update is done, you can delete the older files that the new release no longer uses. Keep every file of the new release.
+Update through the Marketplace or HACS, then hard refresh the browser. The Marketplace replaces the whole folder, so there is nothing to clean up, and a tab still open on the earlier release asks you to reload the page. HACS does not delete the files of an earlier release. Once the update is done, you can delete the older files that the new release no longer uses. Keep every file of the new release.
 
 For a manual install, copy the whole new release, including the `.br` and `.gz` copies. When you replace a file, replace or delete its three copies together, because an old `.br` file is sent in place of a new `.js` file.
 

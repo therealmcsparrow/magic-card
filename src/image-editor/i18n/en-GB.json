@@ -96,7 +96,7 @@
     }
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "note": "Message in the image editor when the companion integration is missing. It tells the user what to install and how.",
     "max": 125
   },
