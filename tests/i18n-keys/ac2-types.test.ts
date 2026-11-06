@@ -38,7 +38,7 @@ function tsc(p: Project, usage: string): RunResult {
     compilerOptions: { strict: true, noEmit: true, target: 'ES2021', module: 'ESNext', moduleResolution: 'bundler', skipLibCheck: true, types: [], lib: ['ES2021', 'DOM'] },
     files: ['src/demo/usage.ts'],
   });
-  const r = spawnSync(process.execPath, [path.join(REPO, 'node_modules/typescript/bin/tsc'), '-p', 'tsconfig.json'], { cwd: p.root, encoding: 'utf8', timeout: 120_000 });
+  const r = spawnSync(process.execPath, [path.join(REPO, 'node_modules/@typescript/native/bin/tsc'), '-p', 'tsconfig.json'], { cwd: p.root, encoding: 'utf8', timeout: 120_000 });
   return { code: r.status ?? -1, out: r.stdout ?? '', err: r.stderr ?? '', all: `${r.stdout}\n${r.stderr}` };
 }
 
