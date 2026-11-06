@@ -32,21 +32,20 @@ export const forumShotStyles = css`
   }
   .choice {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
-    min-height: 44px;
+    min-height: 32px;
     padding: 4px 0;
     line-height: 1.4;
   }
   .choice input {
     flex: none;
-    width: 24px;
-    height: 24px;
-    margin: 8px 0 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
     accent-color: var(--primary-text-color, #212121);
   }
   .choice label {
-    padding-top: 10px;
     overflow-wrap: anywhere;
   }
   .scroll {
