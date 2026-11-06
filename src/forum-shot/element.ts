@@ -360,7 +360,7 @@ export class MagicCardForumShot extends LitElement {
     const rows = sortedRows(filteredRows(this._cards, this._filter, fallback), this._sort, this._locale(), fallback);
     return html`<div class="filter">
         <label for="card-filter">${t('forum-shot.card-table.filter-label')}</label>
-        <input
+        <span class="box"><ha-icon icon="mdi:magnify"></ha-icon><input
           type="search"
           id="card-filter"
           .value=${this._filter}
@@ -369,8 +369,10 @@ export class MagicCardForumShot extends LitElement {
             this._close();
             this.requestUpdate();
           }}
-        />
+        /></span>
       </div>
+      ${this._renderAction()}
+      <p role="status" class="hint">${t('forum-shot.card-table.count', { n: rows.length })}</p>
       <div
       class="scroll"
       role="region"
@@ -455,6 +457,28 @@ export class MagicCardForumShot extends LitElement {
     </div>`;
   }
 
+  private _renderAction(): TemplateResult {
+    const blocked = !this._picked();
+    return html`<div class="bar">
+        <button
+          type="button"
+          class="download"
+          aria-disabled=${blocked ? 'true' : 'false'}
+          aria-busy=${this._busy ? 'true' : 'false'}
+          aria-describedby=${blocked ? 'pick-hint' : nothing}
+          @click=${() => {
+            if (!blocked && !this._busy) void this._download();
+          }}
+        >
+          <ha-icon icon="mdi:download"></ha-icon>${t('forum-shot.element.download')}
+        </button>
+        ${blocked ? html`<span class="hint" id="pick-hint">${t('forum-shot.element.pick-first')}</span>` : nothing}
+      </div>
+      ${this._busy ? html`<p role="status" class="busy">${t('forum-shot.element.making')}</p>` : nothing}
+      ${this._error ? html`<p role="alert" class="error">${this._errorText(this._error)}</p>` : nothing}
+      ${this._saved && !this._busy ? html`<p role="status" class="done">${t('forum-shot.element.saved')}</p>` : nothing}`;
+  }
+
   private _renderBody(): TemplateResult {
     if (this._load === 'loading')
       return html`<p role="status" class="loading">${t('forum-shot.element.loading')}</p>`;
@@ -468,10 +492,18 @@ export class MagicCardForumShot extends LitElement {
           ${t('forum-shot.element.retry')}
         </button>`;
     }
-    const blocked = !this._picked();
     const fontHosts = this._picked()?.fontHosts ?? [];
     return html`
       ${this.hass?.user?.is_admin === false ? html`<p class="admin-note">${t('forum-shot.element.admin-only')}</p>` : nothing}
+      <p class="privacy">${t('forum-shot.element.privacy-hint')}</p>
+      ${
+        fontHosts.length
+          ? html`<p class="font-contact">
+                ${t('forum-shot.element.font-host-contact', { hosts: fontHosts.join(', ') })}
+              </p>
+              <p>${t('forum-shot.element.local-only-font')}</p>`
+          : html`<p>${t('forum-shot.element.local-only')}</p>`
+      }
       ${this._renderCards()}
       <fieldset>
         <legend>${t('forum-shot.element.modes-legend')}</legend>
@@ -492,31 +524,6 @@ export class MagicCardForumShot extends LitElement {
         />
         <label for="looks">${t('forum-shot.element.looks')}</label>
       </div>
-      <p class="privacy">${t('forum-shot.element.privacy-hint')}</p>
-      ${
-        fontHosts.length
-          ? html`<p class="font-contact">
-                ${t('forum-shot.element.font-host-contact', { hosts: fontHosts.join(', ') })}
-              </p>
-              <p>${t('forum-shot.element.local-only-font')}</p>`
-          : html`<p>${t('forum-shot.element.local-only')}</p>`
-      }
-      <button
-        type="button"
-        class="download"
-        aria-disabled=${blocked ? 'true' : 'false'}
-        aria-busy=${this._busy ? 'true' : 'false'}
-        aria-describedby=${blocked ? 'pick-hint' : nothing}
-        @click=${() => {
-          if (!blocked && !this._busy) void this._download();
-        }}
-      >
-        ${t('forum-shot.element.download')}
-      </button>
-      ${blocked ? html`<span class="hint" id="pick-hint">${t('forum-shot.element.pick-first')}</span>` : nothing}
-      ${this._busy ? html`<p role="status" class="busy">${t('forum-shot.element.making')}</p>` : nothing}
-      ${this._error ? html`<p role="alert" class="error">${this._errorText(this._error)}</p>` : nothing}
-      ${this._saved && !this._busy ? html`<p role="status" class="done">${t('forum-shot.element.saved')}</p>` : nothing}
       ${
         this._previewUrl && this._sheet
           ? html`<img
@@ -534,7 +541,6 @@ export class MagicCardForumShot extends LitElement {
 
   protected render(): TemplateResult {
     return html`<section role="region" aria-label=${t('forum-shot.element.forum-shot')}>
-      <h2>${t('forum-shot.element.forum-shot')}</h2>
       <p>${t('forum-shot.element.intro')}</p>
       ${this._renderBody()}
     </section>`;

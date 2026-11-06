@@ -1,6 +1,6 @@
 # Library
 
-The library is the studio's start page. The top bar shows "Animation studio" with the number of animations, and the Import, Export all and New animation buttons.
+The library is the studio's start page. It has a search field and kind filters, then the Export, New animation and Import buttons, and a count of the animations shown. Tick rows to export only those; the button then says how many. Open an animation by its name.
 
 -   [The list](#the-list)
 -   [Search and kind filter](#search-and-kind-filter)
@@ -24,7 +24,7 @@ Animations are sorted by name. Each row has:
 -   The used-by count, when the panel provides it (see [Used by](#used-by)).
 -   Buttons for Duplicate, Rename, Export YAML and Delete.
 
-An empty library shows "No animations yet" with one starter button per kind, a From a preset button and an Icon animation button.
+An empty library shows "No animations yet". Start one from the New animation menu.
 
 ## Search and kind filter
 
@@ -51,7 +51,7 @@ A new animation is not in the library until you save it. The editor marks it wit
 
 ## Customise a preset
 
-Customise a preset… (or From a preset on the empty page) opens a window with every preset as a tile. Each tile holds a small Magic Card (icon, name and background) that plays the preset, with its glow, border or particles. The tiles are grouped as in the card editor's Preset list: the built-in groups first, then the catalogue themes (Fire & heat, Cleaning, Christmas, Halloween, Valentine and Home automation). Catalogue presets in Light & colour sit in the built-in Light & colour group. Each heading shows how many tiles it holds.
+Customise a preset… opens a window with every preset as a tile. Each tile holds a small Magic Card (icon, name and background) that plays the preset, with its glow, border or particles. The tiles are grouped as in the card editor's Preset list: the built-in groups first, then the catalogue themes (Fire & heat, Cleaning, Christmas, Halloween, Valentine and Home automation). Catalogue presets in Light & colour sit in the built-in Light & colour group. Each heading shows how many tiles it holds.
 
 -   Search presets filters the tiles by name, id and group name, and for catalogue presets also by their tags. With several words, every word has to match. Groups without a match are hidden. When nothing matches, the window says "No presets match "…"" with a Clear search button.
 -   Only tiles on screen play. Tap presets (marked Tap) and heavy scenes, such as the seasonal scenes, stay still until you hover or focus the tile. The play button in the corner of such a tile plays it once, which helps on a touch screen.
@@ -86,7 +86,7 @@ When the panel reports that no card uses it and no sequence plays it, it is dele
 
 ## Export YAML
 
-The Export YAML button on a row exports that animation. Export all in the top bar exports the whole library. Both open a window with the YAML, a Copy YAML button and a Download button. Download saves `<id>.yaml` for one animation and `my-animations.yaml` for all of them.
+The Export YAML button on a row exports that animation. Export above the list exports the ticked animations, or the whole library when none are ticked. Both open a window with the YAML, a Copy YAML button and a Download button. Download saves `<id>.yaml` for one animation and `my-animations.yaml` for all of them.
 
 The YAML is a list of animation documents, the same format the library stores. See [Animation YAML](yaml.md). You can import it in another animation studio, or paste it into a card under `custom_animations:`.
 

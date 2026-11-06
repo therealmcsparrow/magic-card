@@ -4783,10 +4783,6 @@
     "text": "Alternate reverse",
     "hash": "4ee31d04"
   },
-  "anim-studio.studio.animate-an-icon-s-parts": {
-    "text": "Animate an icon's parts",
-    "hash": "423a4cea"
-  },
   "anim-studio.studio.animation": {
     "text": "Animation",
     "hash": "1dd10f24"
@@ -4794,10 +4790,6 @@
   "anim-studio.studio.animation-settings-esc": {
     "text": "Animation settings (Esc)",
     "hash": "38f19123"
-  },
-  "anim-studio.studio.animation-studio": {
-    "text": "Animation studio",
-    "hash": "c98a7b94"
   },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
@@ -4835,6 +4827,10 @@
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
     "hash": "bb6b3c12"
   },
+  "anim-studio.studio.count-animations": {
+    "text": "{n, plural, one {# animation} other {# animations}}",
+    "hash": "626cefeb"
+  },
   "anim-studio.studio.count-selected": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}} selected.",
     "hash": "5dc651c3"
@@ -4858,10 +4854,6 @@
   "anim-studio.studio.customise-a-preset-2": {
     "text": "Customize a preset",
     "hash": "46ff9ff7"
-  },
-  "anim-studio.studio.customise-one-of-count": {
-    "text": "Customize one of {count}",
-    "hash": "676adb9a"
   },
   "anim-studio.studio.delete": {
     "text": "Delete",
@@ -4935,6 +4927,10 @@
     "text": "Export animations",
     "hash": "cc51c689"
   },
+  "anim-studio.studio.export-n-selected": {
+    "text": "Export {n} selected",
+    "hash": "32abc6cb"
+  },
   "anim-studio.studio.export-name": {
     "text": "Export {name}",
     "hash": "0b3c8c46"
@@ -4946,10 +4942,6 @@
   "anim-studio.studio.follow-a-drawn-path": {
     "text": "Follow a drawn path",
     "hash": "e32896a6"
-  },
-  "anim-studio.studio.from-a-preset": {
-    "text": "From a preset",
-    "hash": "5b7cfad6"
   },
   "anim-studio.studio.got-it": {
     "text": "Got it",
@@ -5262,6 +5254,10 @@
   "anim-studio.studio.search-presets": {
     "text": "Search presets",
     "hash": "b2e5d6ff"
+  },
+  "anim-studio.studio.select-name": {
+    "text": "Select {name}",
+    "hash": "cbe2f067"
   },
   "anim-studio.studio.sequences-that-play-it-skip-that-step": {
     "text": "Sequences that play it skip that step: {names}.",

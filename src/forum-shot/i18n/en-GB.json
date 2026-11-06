@@ -19,6 +19,14 @@
     "note": "Column header of the card table: the view (tab) of the dashboard a card is on.",
     "max": 20
   },
+  "forum-shot.card-table.count": {
+    "text": "{n, plural, one {# card} other {# cards}}",
+    "note": "Line above the card table. {n} is how many cards are listed.",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
   "forum-shot.card-table.default-dashboard": {
     "text": "Default dashboard",
     "note": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own.",

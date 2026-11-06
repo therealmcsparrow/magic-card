@@ -2603,9 +2603,9 @@
     "text": "Kopieert de variabelen van het geïnstalleerde thema. Het origineel verandert niet. Ingebouwde thema's tonen slechts een deel van hun variabelen.",
     "hash": "b55161db"
   },
-  "theme-editor.start-view.copy-to-edit": {
-    "text": "Kopiëren om te bewerken",
-    "hash": "3bf53c98"
+  "theme-editor.start-view.copy-to-edit-name": {
+    "text": "{name} kopiëren om te bewerken",
+    "hash": "73fdfdd9"
   },
   "theme-editor.start-view.could-not-delete-name-reason": {
     "text": "Kon {name} niet verwijderen. {reason}",
@@ -2618,6 +2618,14 @@
   "theme-editor.start-view.could-not-read-name-reason": {
     "text": "Kon {name} niet lezen. {reason}",
     "hash": "805b41a9"
+  },
+  "theme-editor.start-view.could-not-read-themes": {
+    "text": "De thema's konden niet worden gelezen om te exporteren. Probeer het opnieuw.",
+    "hash": "7d2ae880"
+  },
+  "theme-editor.start-view.count-themes": {
+    "text": "{n, plural, one {# thema} other {# thema's}}",
+    "hash": "ded85d0d"
   },
   "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
     "text": "Maak een thema vanuit een voorinstelling of kopieer een thema dat je hebt geïnstalleerd.",
@@ -2639,9 +2647,29 @@
     "text": "{name} verwijderen?",
     "hash": "a4b982a9"
   },
-  "theme-editor.start-view.duplicate": {
-    "text": "Dupliceren",
-    "hash": "02cdaabf"
+  "theme-editor.start-view.delete-row-name": {
+    "text": "{name} verwijderen",
+    "hash": "3cf8146e"
+  },
+  "theme-editor.start-view.duplicate-name": {
+    "text": "{name} dupliceren",
+    "hash": "fe06d16b"
+  },
+  "theme-editor.start-view.edit-name": {
+    "text": "{name} bewerken",
+    "hash": "2313fe21"
+  },
+  "theme-editor.start-view.export-all": {
+    "text": "Alles exporteren",
+    "hash": "51427688"
+  },
+  "theme-editor.start-view.export-n-selected": {
+    "text": "{n} geselecteerde exporteren",
+    "hash": "32abc6cb"
+  },
+  "theme-editor.start-view.export-name": {
+    "text": "{name} exporteren",
+    "hash": "0b3c8c46"
   },
   "theme-editor.start-view.file-file": {
     "text": "Bestand {file}.",
@@ -2751,6 +2779,10 @@
     "text": "Thema's zoeken",
     "hash": "22da14c0"
   },
+  "theme-editor.start-view.select-name": {
+    "text": "{name} selecteren",
+    "hash": "cbe2f067"
+  },
   "theme-editor.start-view.start-from": {
     "text": "Beginnen met",
     "hash": "eb3f51dc"
@@ -2774,10 +2806,6 @@
   "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
     "text": "De themanaam komt niet overeen met de bestandsnaam.",
     "hash": "9106c5da"
-  },
-  "theme-editor.start-view.themes": {
-    "text": "Thema's",
-    "hash": "43ae3265"
   },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Thema's konden niet worden gelezen",

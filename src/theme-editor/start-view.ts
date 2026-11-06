@@ -6,6 +6,10 @@ import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, OwnThemePreset, ThemeFileEntry, ThemePreset } from '../contracts/theme-editor';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import { glyph } from '../ui-kit/glyphs';
+import { kitRow } from '../ui-kit/css/rows';
+import { button } from '../ui-kit/templates/button';
+import { field } from '../ui-kit/templates/field';
+import { row } from '../ui-kit/templates/row';
 import { cloneDoc } from './model';
 import type { PickerView } from './presets/picker';
 import { loadPresetLibrary, presetLibraryIfLoaded, type PresetChunk } from './presets/loader';
@@ -75,6 +79,7 @@ export class McteStartView extends LitElement {
     checking: { type: Boolean },
     checkResult: {},
     _query: { state: true },
+    _ticked: { state: true },
     _dlg: { state: true },
     _kind: { state: true },
     _preset: { state: true },
@@ -109,6 +114,7 @@ export class McteStartView extends LitElement {
   checkResult = '';
 
   private _query = '';
+  private _ticked: ReadonlySet<string> = new Set();
   private _dlg: 'create' | 'delete' | null = null;
   // create dialog
   private _kind: StartKind = 'preset';
@@ -168,7 +174,7 @@ export class McteStartView extends LitElement {
   // ── create dialog ──
 
   openCreate(opts: { kind?: StartKind; installed?: string } = {}): void {
-    this._opener = (this.renderRoot.querySelector('.new') as HTMLElement | null) ?? null;
+    this._opener = (this.renderRoot.querySelector('.bar .btn-primary') as HTMLElement | null) ?? null;
     this._kind = opts.kind ?? 'preset';
     this._preset = '';
     this._pq = '';
@@ -498,23 +504,55 @@ export class McteStartView extends LitElement {
 
   // ── list ──
 
+  private _pick(name: string, on: boolean): void {
+    const next = new Set(this._ticked);
+    if (on) next.add(name);
+    else next.delete(name);
+    this._ticked = next;
+  }
+
+  private _shown(): ThemeFileEntry[] {
+    const q = this._query.trim().toLowerCase();
+    return [...this.files].sort((a, b) => a.name.localeCompare(b.name)).filter((f) => !q || f.name.toLowerCase().includes(q));
+  }
+
+  /** The themes as export items: the file list holds no colours, so each one is read first. */
+  private async _exportThemes(list: ThemeFileEntry[]): Promise<void> {
+    const backend = this.backend;
+    if (!backend) return;
+    try {
+      const got = await Promise.all(list.map((f) => backend.get(f.name)));
+      this._dlgEl?.open('export', { name: '', items: got.map((r) => ({ id: slugName(r.name) || 'theme', name: r.name, data: r.theme })) });
+    } catch {
+      fire(this, 'mcte-notice', { text: t('theme-editor.start-view.could-not-read-themes') });
+    }
+  }
+
   private _row(f: ThemeFileEntry): TemplateResult {
+    const name = f.name;
     const multi = this.files.filter((x) => x.file === f.file).length > 1;
-    return html`<li class="theme-item">
-      <div class="top">
-        <button type="button" class="title" @click=${() => fire(this, 'mcte-open', { name: f.name })}>${f.name}</button>
-        <span class="chip">${f.has_modes ? t('theme-editor.start-view.light-dark') : t('theme-editor.start-view.same-in-light-and-dark')}</span>
-        ${f.editable ? nothing : html`<span class="chip is-warn">${t('theme-editor.start-view.read-only')}</span>`}
-        <span class="help">${t('theme-editor.start-view.c', { c: f.var_count })}</span>
-      </div>
-      ${multi || !f.editable ? html`<p class="help">${t('theme-editor.start-view.file-file', { file: f.file })}${!f.editable && f.reason ? ` ${reasonText(f.reason)}` : ''}</p>` : nothing}
-      <div class="acts">
-        ${f.editable
-          ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${glyph('contentCopy')} ${t('theme-editor.start-view.duplicate')}<span class="sr-only"> ${f.name}</span></button>
-              <button type="button" class="btn btn-text btn-sm danger" @click=${(e: Event) => this._askDelete(f, e)}>${glyph('delete')} ${t('theme-editor.start-view.delete')}<span class="sr-only"> ${f.name}</span></button>`
-          : html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${t('theme-editor.start-view.copy-to-edit')}<span class="sr-only"> ${f.name}</span></button>`}
-      </div>
-    </li>`;
+    const sub = [
+      ...(f.editable ? [] : [t('theme-editor.start-view.read-only')]),
+      f.has_modes ? t('theme-editor.start-view.light-dark') : t('theme-editor.start-view.same-in-light-and-dark'),
+      t('theme-editor.start-view.c', { c: f.var_count }),
+      ...(multi || !f.editable ? [t('theme-editor.start-view.file-file', { file: f.file })] : []),
+      ...(!f.editable && f.reason ? [reasonText(f.reason)] : []),
+    ].join(' · ');
+    const copy = () => this.openCreate({ kind: 'installed', installed: name });
+    return row({
+      id: name,
+      name,
+      sub,
+      check: { label: t('theme-editor.start-view.select-name', { name }), checked: this._ticked.has(name), onChange: (v) => this._pick(name, v) },
+      actions: [
+        { label: t('theme-editor.start-view.edit-name', { name }), icon: 'mdi:pencil-outline', onClick: () => fire(this, 'mcte-open', { name }) },
+        f.editable
+          ? { label: t('theme-editor.start-view.duplicate-name', { name }), icon: 'mdi:content-copy', onClick: copy }
+          : { label: t('theme-editor.start-view.copy-to-edit-name', { name }), icon: 'mdi:content-copy', onClick: copy },
+        { label: t('theme-editor.start-view.export-name', { name }), icon: 'mdi:export-variant', onClick: () => void this._exportThemes([f]) },
+        ...(f.editable ? [{ label: t('theme-editor.start-view.delete-row-name', { name }), icon: 'mdi:delete-outline', variant: 'danger' as const, onClick: (e: MouseEvent) => this._askDelete(f, e) }] : []),
+      ],
+    });
   }
 
   private _list(): TemplateResult {
@@ -528,40 +566,41 @@ export class McteStartView extends LitElement {
         <button type="button" class="btn btn-secondary" @click=${() => fire(this, 'mcte-reload')}>${t('theme-editor.start-view.try-again')}</button>
       </div>`;
     }
-    const q = this._query.trim().toLowerCase();
-    const rows = [...this.files].sort((a, b) => a.name.localeCompare(b.name)).filter((f) => !q || f.name.toLowerCase().includes(q));
     if (!this.files.length) {
       return html`<div class="empty">
         <h2>${t('theme-editor.start-view.no-themes-yet')}</h2>
         <p>${this.mine?.length ? t('theme-editor.start-view.n-saved-under-my-presets-but-a-preset-is', { n: this.mine.length }) : t('theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one')}</p>
-        <button type="button" class="btn btn-primary" @click=${() => this.openCreate()}>${t('theme-editor.start-view.new-theme')}</button>
       </div>`;
     }
-    return html`
-      ${this.files.length >= 8
-        ? html`<div class="search">
-            <label class="sr-only" for="q">${t('theme-editor.start-view.search-themes')}</label>
-            <input id="q" class="input" type="search" placeholder=${t('theme-editor.start-view.search-themes')} .value=${this._query} @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)} />
-          </div>`
-        : nothing}
-      ${rows.length ? html`<ul class="theme-list">${rows.map((f) => this._row(f))}</ul>` : html`<p class="help">${t('theme-editor.start-view.no-theme-called-query', { query: this._query })}</p>`}
-    `;
+    const rows = this._shown();
+    return html`<div role="status" aria-live="polite" class="help">${t('theme-editor.start-view.count-themes', { n: rows.length })}</div>
+      ${rows.length ? html`<div class="rows" role="list">${rows.map((f) => this._row(f))}</div>` : html`<p class="help">${t('theme-editor.start-view.no-theme-called-query', { query: this._query })}</p>`}`;
   }
 
   protected render(): TemplateResult {
+    const shown = this._shown();
+    const picked = this.files.filter((f) => this._ticked.has(f.name));
     return html`
       <div class="wrap">
-        <header class="bar">
-          <div>
-            <h2>${t('theme-editor.start-view.themes')}</h2>
-            <p class="help">${t('theme-editor.start-view.your-themes-live-in-config-themes')}</p>
-          </div>
-          <div class="barbtns">
-            <button type="button" class="btn btn-secondary" @click=${() => this._dlgEl?.open('import', { name: '' })}>${t('theme-editor.start-view.import')}</button>
-            <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${glyph('add')} ${t('theme-editor.start-view.new-theme')} ${glyph('chevronDown')}</button>
-          </div>
-        </header>
+        <p class="help">${t('theme-editor.start-view.your-themes-live-in-config-themes')}</p>
         <mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>
+        ${this.files.length
+          ? field({
+              id: 'q',
+              label: t('theme-editor.start-view.search-themes'),
+              control: html`<div class="with-icon"><ha-icon icon="mdi:magnify"></ha-icon><input id="q" class="input" type="search" .value=${this._query} @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)} /></div>`,
+            })
+          : nothing}
+        <div class="bar">
+          ${button({
+            label: picked.length ? t('theme-editor.start-view.export-n-selected', { n: picked.length }) : t('theme-editor.start-view.export-all'),
+            icon: 'mdi:export-variant',
+            disabled: !shown.length,
+            onClick: () => void this._exportThemes(picked.length ? picked : shown),
+          })}
+          ${button({ label: t('theme-editor.start-view.new-theme'), variant: 'primary', icon: 'mdi:plus', onClick: () => this.openCreate() })}
+          ${button({ label: t('theme-editor.start-view.import'), icon: 'mdi:import', onClick: () => this._dlgEl?.open('import', { name: '' }) })}
+        </div>
         ${this._list()}
       </div>
       ${this._dlg === 'create' ? this._createDialog() : this._dlg === 'delete' ? this._deleteDialog() : nothing}
@@ -570,80 +609,25 @@ export class McteStartView extends LitElement {
   }
 
   static styles = [
-    base,
+    base, kitRow,
     css`
       :host {
         display: block;
         height: 100%;
         overflow: auto;
-        background: var(--mc-ground);
       }
       .wrap {
-        max-width: 860px;
-        margin: 0 auto;
         padding: 16px;
         display: grid;
-        gap: 16px;
+        gap: 12px;
+        min-width: 0;
       }
       .bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .barbtns {
-        display: flex;
-        flex-wrap: wrap;
         gap: 8px;
-      }
-      .bar h2 {
-        font-size: 1.375rem;
-        font-weight: 500;
-      }
-      .theme-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 8px;
-      }
-      .theme-item {
-        display: grid;
-        gap: 6px;
-        padding: 12px;
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius-lg);
-        background: var(--mc-surface);
-      }
-      .top {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px 10px;
         align-items: center;
-      }
-      .title {
-        border: 0;
-        background: transparent;
-        padding: 0;
-        min-height: 32px;
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: 500;
-        color: var(--mc-text);
-        text-align: start;
-        overflow-wrap: anywhere;
-      }
-      .title:hover {
-        text-decoration: underline;
-      }
-      .acts {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-      }
-      .danger {
-        color: var(--mc-error-ink);
+        --mc-accent-fill: color-mix(in srgb, var(--primary-color, #03a9f4) 70%, #000);
       }
       .skel {
         height: 76px;

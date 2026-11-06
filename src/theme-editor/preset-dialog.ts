@@ -22,6 +22,8 @@ export interface PresetDlgOpts {
   target?: SavedThemePreset;
   /** Id of the exported item (the file's item id). */
   id?: string;
+  /** Several themes to export; replaces `doc` and `id`. */
+  items?: Array<{ id: string; name: string; data: ThemeDoc }>;
 }
 
 const known = (code: string): string | undefined =>
@@ -211,9 +213,9 @@ export class MctePresetDialog extends LitElement {
         <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._loadTx()}>${t('theme-editor.preset-dialog.try-again')}</button>`;
     }
     const o = this._opts;
-    const item = o.doc
+    const item = o.items ?? (o.doc
       ? [{ id: o.id ?? (slugName(o.name ?? '') || 'theme'), name: o.name ?? 'theme', ...(o.description ? { description: o.description } : {}), ...(o.author ? { author: o.author } : {}), data: o.doc }]
-      : [];
+      : []);
     return html`<mc-transfer-panel
       .host=${'theme-editor'}
       .mode=${mode}

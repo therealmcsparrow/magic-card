@@ -1,16 +1,14 @@
 import { css, CSSResult, unsafeCSS } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
-import { kitTopbar } from '../ui-kit/css/extras';
+import { kitTopbar, kitButtonExtras, kitCheck } from '../ui-kit/css/extras';
 
 /** The stage and the timeline each keep at least this height (px); studio.ts SPLIT_MIN_PX. */
 const SPLIT_MIN_PX = 160;
 
 /** The animation studio's own layout, on the editor design system (DESIGN.md). */
 export const studioStyles: CSSResult[] = [
-  editorTokens,
-  editorPrimitives,
-  kitTopbar,
+  editorTokens, editorPrimitives, kitTopbar, kitButtonExtras, kitCheck,
   css`
     :host {
       display: block;
@@ -118,27 +116,34 @@ export const studioStyles: CSSResult[] = [
     }
 
     /* library */
+    :host([editing]) {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      height: auto;
+    }
+    :host(:not([editing])) {
+      background: transparent;
+    }
+    .shell[data-view='library'] {
+      grid-template-rows: minmax(0, 1fr);
+    }
     .lib {
       overflow: auto;
       min-height: 0;
-      padding: 24px;
+      padding: 16px;
     }
     .lib-inner {
-      max-width: 1040px;
-      margin: 0 auto;
       display: grid;
-      gap: 16px;
+      gap: 12px;
       align-content: start;
+      min-width: 0;
     }
-    .lib-tools {
+    .bar {
       display: flex;
       flex-wrap: wrap;
+      gap: 8px;
       align-items: center;
-      gap: 12px 16px;
-    }
-    .search {
-      flex: 1 1 280px;
-      max-width: 420px;
     }
     .search input::-webkit-search-cancel-button {
       cursor: pointer;
@@ -147,124 +152,89 @@ export const studioStyles: CSSResult[] = [
       list-style: none;
       margin: 0;
       padding: 0;
-      background: var(--mc-surface);
-      border: 1px solid var(--mc-divider);
-      border-radius: var(--mc-radius-lg);
-      overflow: hidden;
+      display: grid;
+      gap: 2px;
+      min-width: 0;
     }
     .lib-row {
-      display: grid;
-      grid-template-columns: 88px minmax(0, 1fr) 120px auto;
+      display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 16px;
-      padding: 10px 12px 10px 12px;
-      transition: background-color 0.15s ease-out;
-    }
-    .has-usage .lib-row {
-      grid-template-columns: 88px minmax(0, 1fr) 120px 130px auto;
-    }
-    .lib-row + .lib-row {
-      border-top: 1px solid var(--mc-divider);
+      gap: 4px 8px;
+      min-height: var(--mc-hit, 40px);
+      padding: 2px 4px 2px 8px;
+      border-radius: var(--mc-radius, 8px);
+      font-size: 0.875rem;
     }
     .lib-row:hover {
       background: var(--mc-surface-2);
     }
+    .lib-row.selected {
+      background: var(--mc-accent-tint);
+    }
     .name-cell {
-      display: grid;
+      flex: 1 1 120px;
       min-width: 0;
-      gap: 2px;
     }
     .open {
-      text-align: start;
+      display: block;
       border: 0;
       background: transparent;
-      padding: 6px 8px;
-      margin: -6px -8px;
-      border-radius: var(--mc-radius);
+      padding: 0;
+      font: inherit;
       color: inherit;
+      text-align: start;
+      cursor: pointer;
+      border-radius: 4px;
     }
     .open:focus-visible {
-      outline-offset: 0;
+      outline: 2px solid var(--mc-focus);
+      outline-offset: 2px;
     }
-    .open .nm {
-      font-weight: 500;
+    .open .nm,
+    .open .id {
+      display: block;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .open:hover .nm {
-      color: var(--mc-accent-ink);
+      text-decoration: underline;
     }
     .open .id {
       font-size: 0.75rem;
       color: var(--mc-text-2);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
     .lib-row .chip.kind {
-      justify-self: start;
+      flex: none;
     }
     .used {
       font-size: 0.8125rem;
-      color: var(--mc-text);
-    }
-    .used.none {
       color: var(--mc-text-2);
+      white-space: nowrap;
     }
     .acts {
       display: flex;
       gap: 2px;
-      justify-content: flex-end;
+      margin-inline-start: auto;
     }
     .rename {
-      min-height: 36px;
+      width: 100%;
     }
     .no-results {
-      text-align: center;
-      padding: 32px 12px;
+      margin: 0;
+      color: var(--mc-text-2);
     }
     .lib-empty {
-      padding: 48px 24px;
-      gap: 12px;
+      padding: 32px 16px;
+      text-align: center;
     }
     .lib-empty > ha-icon {
-      --mdc-icon-size: 40px;
+      --mdc-icon-size: 32px;
+      color: var(--mc-text-2);
     }
     .lib-empty p {
-      max-width: 52ch;
-    }
-    .starters {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-      width: 100%;
-      max-width: 640px;
-      margin-top: 12px;
-    }
-    .starter {
-      display: grid;
-      justify-items: start;
-      align-content: start;
-      gap: 4px;
-      padding: 14px;
-      text-align: start;
-      border: 1px solid var(--mc-divider);
-      border-radius: var(--mc-radius-lg);
-      background: var(--mc-surface);
-      color: var(--mc-text);
-      transition:
-        border-color 0.15s ease-out,
-        background-color 0.15s ease-out;
-    }
-    .starter:hover {
-      border-color: var(--mc-field-border);
-      background: var(--mc-surface-2);
-    }
-    .starter ha-icon {
-      --mdc-icon-size: 22px;
-      color: var(--mc-text-2);
-      margin-bottom: 4px;
+      margin: 8px 0 0;
     }
 
     /* editor (layout v2): layers | centre (stage, splitter, timeline) | inspector, exactly the
@@ -714,16 +684,7 @@ export const studioStyles: CSSResult[] = [
       pointer-events: none;
     }
 
-    @media (max-width: 1180px) {
-      .lib {
-        padding: 16px;
-      }
-    }
     @media (max-width: 760px) {
-      .lib-row,
-      .has-usage .lib-row {
-        grid-template-columns: 88px minmax(0, 1fr) auto;
-      }
       .lib-row .chip.kind,
       .used {
         display: none;

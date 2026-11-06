@@ -3534,10 +3534,13 @@
     "note": "Description of the copy option on the start screen. Says the original theme is unchanged and built-in themes only expose part of their variables.",
     "max": 205
   },
-  "theme-editor.start-view.copy-to-edit": {
-    "text": "Copy to edit",
-    "note": "Button on the start screen that copies the picked installed theme into a new theme you can edit.",
-    "max": 25
+  "theme-editor.start-view.copy-to-edit-name": {
+    "text": "Copy {name} to edit",
+    "note": "Icon button on a read-only theme row. {name} is the theme name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
   },
   "theme-editor.start-view.could-not-delete-name-reason": {
     "text": "Could not delete {name}. {reason}",
@@ -3563,6 +3566,19 @@
     "vars": {
       "name": "The value that replaces name in the text.",
       "reason": "The value that replaces reason in the text."
+    }
+  },
+  "theme-editor.start-view.could-not-read-themes": {
+    "text": "The themes could not be read for export. Try again.",
+    "note": "Short notice when reading themes for an export fails.",
+    "max": 100
+  },
+  "theme-editor.start-view.count-themes": {
+    "text": "{n, plural, one {# theme} other {# themes}}",
+    "note": "Line above the theme list. {n} is how many themes are listed.",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
     }
   },
   "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
@@ -3596,10 +3612,50 @@
       "name": "The value that replaces name in the text."
     }
   },
-  "theme-editor.start-view.duplicate": {
-    "text": "Duplicate",
-    "note": "Button on a theme card that makes a copy of that theme. Verb.",
-    "max": 15
+  "theme-editor.start-view.delete-row-name": {
+    "text": "Delete {name}",
+    "note": "Icon button on a theme row. {name} is the theme name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.duplicate-name": {
+    "text": "Duplicate {name}",
+    "note": "Icon button on a theme row. {name} is the theme name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.edit-name": {
+    "text": "Edit {name}",
+    "note": "Icon button on a theme row that opens the theme. {name} is the theme name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.start-view.export-all": {
+    "text": "Export all",
+    "note": "Button above the theme list that exports every listed theme. Shown when nothing is ticked.",
+    "max": 60
+  },
+  "theme-editor.start-view.export-n-selected": {
+    "text": "Export {n} selected",
+    "note": "Button shown when themes are ticked. {n} is how many are selected.",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "theme-editor.start-view.export-name": {
+    "text": "Export {name}",
+    "note": "Icon button on a theme row. {name} is the theme name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
   },
   "theme-editor.start-view.file-file": {
     "text": "File {file}.",
@@ -3745,6 +3801,14 @@
     "note": "Placeholder of the search box that filters the list of themes.",
     "max": 25
   },
+  "theme-editor.start-view.select-name": {
+    "text": "Select {name}",
+    "note": "Screen reader label of the checkbox on a theme row. {name} is the theme name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
   "theme-editor.start-view.start-from": {
     "text": "Start from",
     "note": "Label above the choices Blank, A preset and Installed theme in the new theme dialog.",
@@ -3774,11 +3838,6 @@
     "text": "The theme name does not match the file name.",
     "note": "Reason on the start screen why an installed theme cannot be edited: the theme name inside the file differs from the file name.",
     "max": 75
-  },
-  "theme-editor.start-view.themes": {
-    "text": "Themes",
-    "note": "Main heading of the start view above the list of themes. Same English as the editor breadcrumb.",
-    "max": 10
   },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",

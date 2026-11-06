@@ -8584,13 +8584,6 @@
     "x-max-length": 30,
     "x-source-hash": "4ee31d04"
   },
-  "anim-studio.studio.animate-an-icon-s-parts": "De onderdelen van een pictogram animeren",
-  "@anim-studio.studio.animate-an-icon-s-parts": {
-    "description": "Description of the parts animation type on the studio new animation screen. Max 40 characters.",
-    "source_text": "Animate an icon's parts",
-    "x-max-length": 40,
-    "x-source-hash": "423a4cea"
-  },
   "anim-studio.studio.animation": "Animatie",
   "@anim-studio.studio.animation": {
     "description": "Label in the studio header or form for the animation being edited, as a noun. Max 15 characters.",
@@ -8604,13 +8597,6 @@
     "source_text": "Animation settings (Esc)",
     "x-max-length": 40,
     "x-source-hash": "38f19123"
-  },
-  "anim-studio.studio.animation-studio": "Animatiestudio",
-  "@anim-studio.studio.animation-studio": {
-    "description": "Title of the whole animation studio dialogue. Max 30 characters.",
-    "source_text": "Animation studio",
-    "x-max-length": 30,
-    "x-source-hash": "c98a7b94"
   },
   "anim-studio.studio.blank-keyframes": "Lege keyframes",
   "@anim-studio.studio.blank-keyframes": {
@@ -8679,6 +8665,17 @@
       "other"
     ]
   },
+  "anim-studio.studio.count-animations": "{n, plural, one {# animatie} other {# animaties}}",
+  "@anim-studio.studio.count-animations": {
+    "description": "Line above the animation list. {n} is how many animations are listed. {n}: The value that replaces n in the text. Max 60 characters.",
+    "source_text": "{n, plural, one {# animation} other {# animations}}",
+    "x-max-length": 60,
+    "x-source-hash": "626cefeb",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "anim-studio.studio.count-selected": "{count, plural, one {# keyframe} other {# keyframes}} geselecteerd.",
   "@anim-studio.studio.count-selected": {
     "description": "Screen reader announcement of how many keyframes are selected, with plural forms. {count}: The count the text is about. Max 35 characters.",
@@ -8728,13 +8725,6 @@
     "source_text": "Customise a preset",
     "x-max-length": 30,
     "x-source-hash": "46ff9ff7"
-  },
-  "anim-studio.studio.customise-one-of-count": "Een van de {count} aanpassen",
-  "@anim-studio.studio.customise-one-of-count": {
-    "description": "Heading above the list of built-in animations that can be copied and edited. Count is how many there are. {count}: The value that replaces count in the text. Max 40 characters.",
-    "source_text": "Customise one of {count}",
-    "x-max-length": 40,
-    "x-source-hash": "676adb9a"
   },
   "anim-studio.studio.delete": "Verwijderen",
   "@anim-studio.studio.delete": {
@@ -8862,6 +8852,13 @@
     "x-max-length": 30,
     "x-source-hash": "cc51c689"
   },
+  "anim-studio.studio.export-n-selected": "{n} geselecteerde exporteren",
+  "@anim-studio.studio.export-n-selected": {
+    "description": "Button shown when animations are ticked. {n} is how many are selected. {n}: The value that replaces n in the text. Max 60 characters.",
+    "source_text": "Export {n} selected",
+    "x-max-length": 60,
+    "x-source-hash": "32abc6cb"
+  },
   "anim-studio.studio.export-name": "{name} exporteren",
   "@anim-studio.studio.export-name": {
     "description": "Button label that saves an animation to a file. Name is the animation's name. {name}: The value that replaces name in the text. Max 25 characters.",
@@ -8882,13 +8879,6 @@
     "source_text": "Follow a drawn path",
     "x-max-length": 35,
     "x-source-hash": "e32896a6"
-  },
-  "anim-studio.studio.from-a-preset": "Van een voorinstelling",
-  "@anim-studio.studio.from-a-preset": {
-    "description": "Heading of the new-animation group that starts from a built-in preset. Max 25 characters.",
-    "source_text": "From a preset",
-    "x-max-length": 25,
-    "x-source-hash": "5b7cfad6"
   },
   "anim-studio.studio.got-it": "Begrepen",
   "@anim-studio.studio.got-it": {
@@ -9443,6 +9433,13 @@
     "source_text": "Search presets",
     "x-max-length": 25,
     "x-source-hash": "b2e5d6ff"
+  },
+  "anim-studio.studio.select-name": "{name} selecteren",
+  "@anim-studio.studio.select-name": {
+    "description": "Screen reader label of the checkbox on an animation row. {name} is the animation name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Select {name}",
+    "x-max-length": 60,
+    "x-source-hash": "cbe2f067"
   },
   "anim-studio.studio.sequences-that-play-it-skip-that-step": "Reeksen die hem afspelen, slaan die stap over: {names}.",
   "@anim-studio.studio.sequences-that-play-it-skip-that-step": {
@@ -22946,6 +22943,17 @@
     "source_text": "View",
     "x-max-length": 20,
     "x-source-hash": "dcc839a4"
+  },
+  "forum-shot.card-table.count": "{n, plural, one {# kaart} other {# kaarten}}",
+  "@forum-shot.card-table.count": {
+    "description": "Line above the card table. {n} is how many cards are listed. {n}: The value that replaces n in the text. Max 60 characters.",
+    "source_text": "{n, plural, one {# card} other {# cards}}",
+    "x-max-length": 60,
+    "x-source-hash": "2d0d4925",
+    "x-plural": [
+      "one",
+      "other"
+    ]
   },
   "forum-shot.card-table.default-dashboard": "Standaarddashboard",
   "@forum-shot.card-table.default-dashboard": {
@@ -38304,13 +38312,6 @@
     "x-max-length": 70,
     "x-source-hash": "bd93b912"
   },
-  "mcu-panel.panel.actions": "Acties",
-  "@mcu-panel.panel.actions": {
-    "description": "Column heading in the templates table, above the open, edit, duplicate and delete buttons. Max 15 characters.",
-    "source_text": "Actions",
-    "x-max-length": 15,
-    "x-source-hash": "ff8059dc"
-  },
   "mcu-panel.panel.animations": "Animaties",
   "@mcu-panel.panel.animations": {
     "description": "Label of the Animations tab in the panel tab bar. Max 20 characters.",
@@ -38393,12 +38394,16 @@
     "x-max-length": 20,
     "x-source-hash": "7833e955"
   },
-  "mcu-panel.panel.created": "Aangemaakt",
-  "@mcu-panel.panel.created": {
-    "description": "Column heading in the templates table for the date a template was created. Max 15 characters.",
-    "source_text": "Created",
-    "x-max-length": 15,
-    "x-source-hash": "d70b9e24"
+  "mcu-panel.panel.count-templates": "{n, plural, one {# sjabloon} other {# sjablonen}}",
+  "@mcu-panel.panel.count-templates": {
+    "description": "Count above the template list, updated as you search. {n}: How many templates are shown. Max 30 characters.",
+    "source_text": "{n, plural, one {# template} other {# templates}}",
+    "x-max-length": 30,
+    "x-source-hash": "2343a9e7",
+    "x-plural": [
+      "one",
+      "other"
+    ]
   },
   "mcu-panel.panel.delete": "Verwijderen",
   "@mcu-panel.panel.delete": {
@@ -38547,6 +38552,20 @@
     "x-max-length": 10,
     "x-source-hash": "936a161c"
   },
+  "mcu-panel.panel.export-all": "Alles exporteren",
+  "@mcu-panel.panel.export-all": {
+    "description": "Button above the template list when no row is ticked: downloads every template as a file. Max 24 characters.",
+    "source_text": "Export all",
+    "x-max-length": 24,
+    "x-source-hash": "51427688"
+  },
+  "mcu-panel.panel.export-n-selected": "{n} geselecteerde exporteren",
+  "@mcu-panel.panel.export-n-selected": {
+    "description": "Button above the template list when rows are ticked: downloads those templates as a file. {n}: How many rows are ticked. Max 30 characters.",
+    "source_text": "Export {n} selected",
+    "x-max-length": 30,
+    "x-source-hash": "32abc6cb"
+  },
   "mcu-panel.panel.failed-to-render-preview": "Het voorbeeld kon niet worden weergegeven.",
   "@mcu-panel.panel.failed-to-render-preview": {
     "description": "Error in the template preview when the card could not be drawn and gave no message of its own. Max 45 characters.",
@@ -38582,6 +38601,31 @@
     "x-max-length": 150,
     "x-source-hash": "ae2b9610"
   },
+  "mcu-panel.panel.import": "Importeren",
+  "@mcu-panel.panel.import": {
+    "description": "Button above the template list: reads templates from a file exported earlier. Max 16 characters.",
+    "source_text": "Import",
+    "x-max-length": 16,
+    "x-source-hash": "2cff9baa"
+  },
+  "mcu-panel.panel.imported-n-of-total-templates": "{n} van {total} sjablonen geïmporteerd. De andere konden niet worden opgeslagen.",
+  "@mcu-panel.panel.imported-n-of-total-templates": {
+    "description": "Error after an import where some templates failed to save. {n}: How many were saved. {total}: How many the file held. Max 90 characters.",
+    "source_text": "Imported {n} of {total} templates. The others could not be saved.",
+    "x-max-length": 90,
+    "x-source-hash": "a2cfbf16"
+  },
+  "mcu-panel.panel.imported-n-templates": "{n, plural, one {# sjabloon geïmporteerd} other {# sjablonen geïmporteerd}}",
+  "@mcu-panel.panel.imported-n-templates": {
+    "description": "Message after a successful template import. A name already in use gets a copy suffix. {n}: How many were saved. Max 50 characters.",
+    "source_text": "{n, plural, one {Imported # template} other {Imported # templates}}",
+    "x-max-length": 50,
+    "x-source-hash": "9166b2de",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "mcu-panel.panel.install-magic-card-to-draw-icons-and": "Installeer Magic Card om hier pictogrammen en vormen te tekenen.",
   "@mcu-panel.panel.install-magic-card-to-draw-icons-and": {
     "description": "Notice in the Icons and Shapes tabs when Magic Card is not installed. Max 80 characters.",
@@ -38596,26 +38640,12 @@
     "x-max-length": 65,
     "x-source-hash": "0fdc1e5b"
   },
-  "mcu-panel.panel.last-updated": "Laatst bijgewerkt",
-  "@mcu-panel.panel.last-updated": {
-    "description": "Column heading in the templates table for the date a template was last changed. Max 20 characters.",
-    "source_text": "Last Updated",
-    "x-max-length": 20,
-    "x-source-hash": "048c7f2e"
-  },
   "mcu-panel.panel.library": "Bibliotheek",
   "@mcu-panel.panel.library": {
     "description": "Label of the Library tab in the panel tab bar. Max 15 characters.",
     "source_text": "Library",
     "x-max-length": 15,
     "x-source-hash": "dc20b3d5"
-  },
-  "mcu-panel.panel.linked-cards": "Gekoppelde kaarten",
-  "@mcu-panel.panel.linked-cards": {
-    "description": "Column heading in the templates table for how many cards use each template. Max 20 characters.",
-    "source_text": "Linked Cards",
-    "x-max-length": 20,
-    "x-source-hash": "1b795cc6"
   },
   "mcu-panel.panel.loading-the-forum-shot": "Forumplaatje wordt geladen",
   "@mcu-panel.panel.loading-the-forum-shot": {
@@ -38659,6 +38689,17 @@
     "x-max-length": 175,
     "x-source-hash": "ecaa55e6"
   },
+  "mcu-panel.panel.n-linked-cards": "{n, plural, one {# gekoppelde kaart} other {# gekoppelde kaarten}}",
+  "@mcu-panel.panel.n-linked-cards": {
+    "description": "Part of the second line of a template row: how many cards use the template. {n}: How many cards use the template. Max 30 characters.",
+    "source_text": "{n, plural, one {# linked card} other {# linked cards}}",
+    "x-max-length": 30,
+    "x-source-hash": "72f415cb",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "mcu-panel.panel.name": "Naam",
   "@mcu-panel.panel.name": {
     "description": "Column heading in the templates table and label of the name field in the template editor. Max 10 characters.",
@@ -38686,6 +38727,13 @@
     "source_text": "Name is required.",
     "x-max-length": 30,
     "x-source-hash": "f83a4bc1"
+  },
+  "mcu-panel.panel.new-template": "Nieuw sjabloon",
+  "@mcu-panel.panel.new-template": {
+    "description": "Primary button above the template list, and the dialog title until the new template has a name. Max 24 characters.",
+    "source_text": "New template",
+    "x-max-length": 24,
+    "x-source-hash": "30d87ec4"
   },
   "mcu-panel.panel.new-template-name": "Naam van het nieuwe sjabloon",
   "@mcu-panel.panel.new-template-name": {
@@ -38803,6 +38851,13 @@
     "x-max-length": 30,
     "x-source-hash": "04b9835b"
   },
+  "mcu-panel.panel.select-name": "{name} selecteren",
+  "@mcu-panel.panel.select-name": {
+    "description": "Screen reader label of the checkbox on a template row. {name} is the template name. {name}: The template name. Max 60 characters.",
+    "source_text": "Select {name}",
+    "x-max-length": 60,
+    "x-source-hash": "cbe2f067"
+  },
   "mcu-panel.panel.shapes": "Vormen",
   "@mcu-panel.panel.shapes": {
     "description": "Label of the Shapes tab in the panel tab bar. Max 10 characters.",
@@ -38830,6 +38885,20 @@
     "source_text": "Templates",
     "x-max-length": 15,
     "x-source-hash": "56b564b7"
+  },
+  "mcu-panel.panel.that-file-has-no-templates-to-import": "Dat bestand bevat geen sjablonen om te importeren.",
+  "@mcu-panel.panel.that-file-has-no-templates-to-import": {
+    "description": "Error when the chosen file is not a template export or holds no usable template. Max 60 characters.",
+    "source_text": "That file has no templates to import.",
+    "x-max-length": 60,
+    "x-source-hash": "3f0dea95"
+  },
+  "mcu-panel.panel.that-file-is-too-big-to-import": "Dat bestand is te groot om te importeren.",
+  "@mcu-panel.panel.that-file-is-too-big-to-import": {
+    "description": "Error when the chosen template file is over the size limit. Max 50 characters.",
+    "source_text": "That file is too big to import.",
+    "x-max-length": 50,
+    "x-source-hash": "27a6049b"
   },
   "mcu-panel.panel.that-shape-could-not-be-read-try-again": "Die vorm kon niet worden gelezen. Probeer het opnieuw.",
   "@mcu-panel.panel.that-shape-could-not-be-read-try-again": {
@@ -38946,6 +39015,13 @@
     "source_text": "Try again",
     "x-max-length": 20,
     "x-source-hash": "d8b8392e"
+  },
+  "mcu-panel.panel.updated-date": "Bijgewerkt {date}",
+  "@mcu-panel.panel.updated-date": {
+    "description": "Part of the second line of a template row: when the template last changed. {date} is a formatted date. {date}: The formatted date. Max 40 characters.",
+    "source_text": "Updated {date}",
+    "x-max-length": 40,
+    "x-source-hash": "328a4d4c"
   },
   "modules-extra.camera-view.no-camera": "Geen camera",
   "@modules-extra.camera-view.no-camera": {
@@ -50606,12 +50682,12 @@
     "x-max-length": 205,
     "x-source-hash": "b55161db"
   },
-  "theme-editor.start-view.copy-to-edit": "Kopiëren om te bewerken",
-  "@theme-editor.start-view.copy-to-edit": {
-    "description": "Button on the start screen that copies the picked installed theme into a new theme you can edit. Max 25 characters.",
-    "source_text": "Copy to edit",
-    "x-max-length": 25,
-    "x-source-hash": "3bf53c98"
+  "theme-editor.start-view.copy-to-edit-name": "{name} kopiëren om te bewerken",
+  "@theme-editor.start-view.copy-to-edit-name": {
+    "description": "Icon button on a read-only theme row. {name} is the theme name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Copy {name} to edit",
+    "x-max-length": 60,
+    "x-source-hash": "73fdfdd9"
   },
   "theme-editor.start-view.could-not-delete-name-reason": "Kon {name} niet verwijderen. {reason}",
   "@theme-editor.start-view.could-not-delete-name-reason": {
@@ -50633,6 +50709,24 @@
     "source_text": "Could not read {name}. {reason}",
     "x-max-length": 50,
     "x-source-hash": "805b41a9"
+  },
+  "theme-editor.start-view.could-not-read-themes": "De thema's konden niet worden gelezen om te exporteren. Probeer het opnieuw.",
+  "@theme-editor.start-view.could-not-read-themes": {
+    "description": "Short notice when reading themes for an export fails. Max 100 characters.",
+    "source_text": "The themes could not be read for export. Try again.",
+    "x-max-length": 100,
+    "x-source-hash": "7d2ae880"
+  },
+  "theme-editor.start-view.count-themes": "{n, plural, one {# thema} other {# thema's}}",
+  "@theme-editor.start-view.count-themes": {
+    "description": "Line above the theme list. {n} is how many themes are listed. {n}: The value that replaces n in the text. Max 60 characters.",
+    "source_text": "{n, plural, one {# theme} other {# themes}}",
+    "x-max-length": 60,
+    "x-source-hash": "ded85d0d",
+    "x-plural": [
+      "one",
+      "other"
+    ]
   },
   "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": "Maak een thema vanuit een voorinstelling of kopieer een thema dat je hebt geïnstalleerd.",
   "@theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
@@ -50669,12 +50763,47 @@
     "x-max-length": 25,
     "x-source-hash": "a4b982a9"
   },
-  "theme-editor.start-view.duplicate": "Dupliceren",
-  "@theme-editor.start-view.duplicate": {
-    "description": "Button on a theme card that makes a copy of that theme. Verb. Max 15 characters.",
-    "source_text": "Duplicate",
-    "x-max-length": 15,
-    "x-source-hash": "02cdaabf"
+  "theme-editor.start-view.delete-row-name": "{name} verwijderen",
+  "@theme-editor.start-view.delete-row-name": {
+    "description": "Icon button on a theme row. {name} is the theme name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Delete {name}",
+    "x-max-length": 60,
+    "x-source-hash": "3cf8146e"
+  },
+  "theme-editor.start-view.duplicate-name": "{name} dupliceren",
+  "@theme-editor.start-view.duplicate-name": {
+    "description": "Icon button on a theme row. {name} is the theme name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Duplicate {name}",
+    "x-max-length": 60,
+    "x-source-hash": "fe06d16b"
+  },
+  "theme-editor.start-view.edit-name": "{name} bewerken",
+  "@theme-editor.start-view.edit-name": {
+    "description": "Icon button on a theme row that opens the theme. {name} is the theme name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Edit {name}",
+    "x-max-length": 60,
+    "x-source-hash": "2313fe21"
+  },
+  "theme-editor.start-view.export-all": "Alles exporteren",
+  "@theme-editor.start-view.export-all": {
+    "description": "Button above the theme list that exports every listed theme. Shown when nothing is ticked. Max 60 characters.",
+    "source_text": "Export all",
+    "x-max-length": 60,
+    "x-source-hash": "51427688"
+  },
+  "theme-editor.start-view.export-n-selected": "{n} geselecteerde exporteren",
+  "@theme-editor.start-view.export-n-selected": {
+    "description": "Button shown when themes are ticked. {n} is how many are selected. {n}: The value that replaces n in the text. Max 60 characters.",
+    "source_text": "Export {n} selected",
+    "x-max-length": 60,
+    "x-source-hash": "32abc6cb"
+  },
+  "theme-editor.start-view.export-name": "{name} exporteren",
+  "@theme-editor.start-view.export-name": {
+    "description": "Icon button on a theme row. {name} is the theme name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Export {name}",
+    "x-max-length": 60,
+    "x-source-hash": "0b3c8c46"
   },
   "theme-editor.start-view.file-file": "Bestand {file}.",
   "@theme-editor.start-view.file-file": {
@@ -50869,6 +50998,13 @@
     "x-max-length": 25,
     "x-source-hash": "22da14c0"
   },
+  "theme-editor.start-view.select-name": "{name} selecteren",
+  "@theme-editor.start-view.select-name": {
+    "description": "Screen reader label of the checkbox on a theme row. {name} is the theme name. {name}: The value that replaces name in the text. Max 60 characters.",
+    "source_text": "Select {name}",
+    "x-max-length": 60,
+    "x-source-hash": "cbe2f067"
+  },
   "theme-editor.start-view.start-from": "Beginnen met",
   "@theme-editor.start-view.start-from": {
     "description": "Label above the choices Blank, A preset and Installed theme in the new theme dialog. Max 20 characters.",
@@ -50910,13 +51046,6 @@
     "source_text": "The theme name does not match the file name.",
     "x-max-length": 75,
     "x-source-hash": "9106c5da"
-  },
-  "theme-editor.start-view.themes": "Thema's",
-  "@theme-editor.start-view.themes": {
-    "description": "Main heading of the start view above the list of themes. Same English as the editor breadcrumb. Max 10 characters.",
-    "source_text": "Themes",
-    "x-max-length": 10,
-    "x-source-hash": "43ae3265"
   },
   "theme-editor.start-view.themes-could-not-be-read": "Thema's konden niet worden gelezen",
   "@theme-editor.start-view.themes-could-not-be-read": {

@@ -8,17 +8,14 @@ export const forumShotStyles = css`
     padding: 16px;
     color: var(--primary-text-color, #212121);
     font-family: var(--paper-font-body1_-_font-family, inherit);
+    font-size: 0.875rem;
+    --mdc-icon-size: 18px;
   }
   :host([narrow]) {
     padding: 8px;
   }
   section {
     position: relative;
-  }
-  h2 {
-    margin: 0 0 8px;
-    font-size: 1.4em;
-    font-weight: 500;
   }
   p {
     margin: 0 0 12px;
@@ -35,21 +32,20 @@ export const forumShotStyles = css`
   }
   .choice {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
-    min-height: 44px;
+    min-height: 32px;
     padding: 4px 0;
     line-height: 1.4;
   }
   .choice input {
     flex: none;
-    width: 24px;
-    height: 24px;
-    margin: 8px 0 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
     accent-color: var(--primary-text-color, #212121);
   }
   .choice label {
-    padding-top: 10px;
     overflow-wrap: anywhere;
   }
   .scroll {
@@ -61,22 +57,14 @@ export const forumShotStyles = css`
     width: 100%;
     min-width: 30rem;
     border-spacing: 0;
-    border: 1px solid var(--divider-color, #727272);
-    border-radius: 12px;
-    overflow: hidden;
   }
-  tr:last-child td {
-    border-bottom: 0;
-  }
-  table,
   .filter input,
   .pop {
     background: var(--card-background-color, #fff);
   }
   th,
   td {
-    padding: 8px 16px;
-    border-bottom: 1px solid var(--divider-color, #727272);
+    padding: 2px 8px;
     text-align: start;
     vertical-align: middle;
     overflow-wrap: break-word;
@@ -84,7 +72,6 @@ export const forumShotStyles = css`
   th {
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--secondary-text-color, #5f5f5f);
   }
   td.state {
     width: 1%;
@@ -93,13 +80,10 @@ export const forumShotStyles = css`
   tbody tr:not(.off) {
     cursor: pointer;
   }
-  th,
+  tbody tr:not(.off):hover,
   tbody tr.picked,
   button.tip[aria-expanded='true'] {
     background: var(--secondary-background-color, #f3f3f3);
-  }
-  tbody tr.off td {
-    color: var(--secondary-text-color, #5f5f5f);
   }
   fieldset,
   .preview,
@@ -108,12 +92,10 @@ export const forumShotStyles = css`
     border: 1px solid var(--divider-color, #727272);
   }
   button.tip {
-    display: inline-flex;
-    align-items: center;
     gap: 6px;
-    min-height: 44px;
-    padding: 0 12px 0 8px;
-    border-radius: 22px;
+    min-height: 32px;
+    padding: 0 10px 0 6px;
+    border-radius: 16px;
     background: transparent;
     color: inherit;
   }
@@ -124,8 +106,8 @@ export const forumShotStyles = css`
   }
   button.tip svg {
     flex: none;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     fill: none;
     stroke: currentcolor;
     stroke-width: 2;
@@ -152,20 +134,13 @@ export const forumShotStyles = css`
   }
   .pop .fonts {
     font-size: 0.9em;
-    color: var(--secondary-text-color, #5f5f5f);
   }
   button.sort {
-    display: inline-flex;
-    align-items: center;
     gap: 4px;
-    min-height: 44px;
+    min-height: 32px;
     padding: 4px 0;
-    border: 2px solid transparent;
-    border-radius: 8px;
     background: transparent;
     color: inherit;
-    font-weight: inherit;
-    text-align: start;
   }
   th[aria-sort='ascending'] button.sort::after {
     content: '\\25B2';
@@ -177,58 +152,80 @@ export const forumShotStyles = css`
     content: '\\25BC' / '';
     font-size: 0.7em;
   }
+  .filter,
+  .bar {
+    margin: 0 0 12px;
+  }
   .filter {
     display: grid;
     gap: 6px;
-    max-width: 360px;
-    margin: 0 0 12px;
     font-size: 0.8125rem;
     font-weight: 500;
   }
+  .box {
+    position: relative;
+    display: grid;
+  }
+  .box ha-icon {
+    position: absolute;
+    margin: 8px 10px;
+  }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
   .filter input {
-    min-height: 44px;
-    padding: 8px 12px;
+    min-height: 40px;
+    padding: 8px 12px 8px 36px;
     border: 1px solid var(--secondary-text-color, #727272);
     border-radius: 8px;
     color: inherit;
     font: inherit;
+    font-size: 0.875rem;
     font-weight: 400;
   }
-  .hint {
-    display: block;
-    margin-top: 4px;
-    font-size: 0.9em;
+  .hint,
+  .box ha-icon,
+  th,
+  tbody tr.off td,
+  .pop .fonts {
     color: var(--secondary-text-color, #5f5f5f);
   }
-  .privacy {
+  .hint {
+    font-size: 0.9em;
+  }
+  .privacy,
+  .error {
     padding: 8px 12px;
     border-left: 4px solid var(--warning-color, #b26a00);
     background: var(--secondary-background-color, #f3f3f3);
   }
   .error {
-    padding: 8px 12px;
-    border-left: 4px solid var(--error-color, #b3261e);
-    background: var(--secondary-background-color, #f3f3f3);
+    border-color: var(--error-color, #b3261e);
   }
   button {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 8px 20px;
-    border: 2px solid var(--primary-text-color, #212121);
-    border-radius: 22px;
-    background: var(--primary-text-color, #212121);
-    color: var(--primary-background-color, #fff);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--primary-color, #03a9f4) 70%, #000);
+    color: #fff;
     font: inherit;
     font-weight: 500;
     cursor: pointer;
   }
-  button.retry {
+  button.retry,
+  button[aria-disabled='true'] {
+    border-color: var(--divider-color, #727272);
     background: transparent;
     color: var(--primary-text-color, #212121);
   }
   button[aria-disabled='true'] {
-    border-style: dashed;
-    background: transparent;
     color: var(--secondary-text-color, #5f5f5f);
     cursor: not-allowed;
   }

@@ -6746,11 +6746,6 @@
     "note": "Direction option: like Alternate, but the first cycle runs backwards.",
     "max": 30
   },
-  "anim-studio.studio.animate-an-icon-s-parts": {
-    "text": "Animate an icon's parts",
-    "note": "Description of the parts animation type on the studio new animation screen.",
-    "max": 40
-  },
   "anim-studio.studio.animation": {
     "text": "Animation",
     "note": "Label in the studio header or form for the animation being edited, as a noun.",
@@ -6760,11 +6755,6 @@
     "text": "Animation settings (Esc)",
     "note": "Tooltip of the button that opens the animation settings; Esc is the keyboard shortcut.",
     "max": 40
-  },
-  "anim-studio.studio.animation-studio": {
-    "text": "Animation studio",
-    "note": "Title of the whole animation studio dialogue.",
-    "max": 30
   },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
@@ -6814,6 +6804,14 @@
       "count": "The count the text is about."
     }
   },
+  "anim-studio.studio.count-animations": {
+    "text": "{n, plural, one {# animation} other {# animations}}",
+    "note": "Line above the animation list. {n} is how many animations are listed.",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
   "anim-studio.studio.count-selected": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}} selected.",
     "note": "Screen reader announcement of how many keyframes are selected, with plural forms.",
@@ -6852,14 +6850,6 @@
     "text": "Customise a preset",
     "note": "Heading of the preset list, without an ellipsis because it is a title, not a menu item.",
     "max": 30
-  },
-  "anim-studio.studio.customise-one-of-count": {
-    "text": "Customise one of {count}",
-    "note": "Heading above the list of built-in animations that can be copied and edited. Count is how many there are.",
-    "max": 40,
-    "vars": {
-      "count": "The value that replaces count in the text."
-    }
   },
   "anim-studio.studio.delete": {
     "text": "Delete",
@@ -6972,6 +6962,14 @@
     "note": "Tooltip and heading of the export action in the studio library toolbar.",
     "max": 30
   },
+  "anim-studio.studio.export-n-selected": {
+    "text": "Export {n} selected",
+    "note": "Button shown when animations are ticked. {n} is how many are selected.",
+    "max": 60,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
   "anim-studio.studio.export-name": {
     "text": "Export {name}",
     "note": "Button label that saves an animation to a file. Name is the animation's name.",
@@ -6989,11 +6987,6 @@
     "text": "Follow a drawn path",
     "note": "Description of the motion path start option: the icon travels along a line the user draws.",
     "max": 35
-  },
-  "anim-studio.studio.from-a-preset": {
-    "text": "From a preset",
-    "note": "Heading of the new-animation group that starts from a built-in preset.",
-    "max": 25
   },
   "anim-studio.studio.got-it": {
     "text": "Got it",
@@ -7447,6 +7440,14 @@
     "text": "Search presets",
     "note": "Placeholder and accessible label of the search box in the preset picker.",
     "max": 25
+  },
+  "anim-studio.studio.select-name": {
+    "text": "Select {name}",
+    "note": "Screen reader label of the checkbox on an animation row. {name} is the animation name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
   },
   "anim-studio.studio.sequences-that-play-it-skip-that-step": {
     "text": "Sequences that play it skip that step: {names}.",

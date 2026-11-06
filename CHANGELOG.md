@@ -6,6 +6,11 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Changed
+-   **Full-screen editors in the Utils panel.** In the Magic Card Utils panel, the animation editor and the theme editor now cover the whole screen, like the icon, shape and image editors. Their lists stay inside the tab. While you use Try on dashboard, the theme editor returns to the tab so the sidebar stays reachable.
+-   **Animation and theme lists.** Both lists now look like the Images list: a search field, then Export, New and Import above the rows, a count, and a tick box on each row. Export takes the ticked rows, or everything when none are ticked. Icon animation moved from the empty page into the New menu.
+-   **Forum shot layout.** The search field, the Download button and the card count now sit above the card table, and the privacy notes sit above them. Download uses the primary button style, and the tab uses the same text and control sizes as the other tabs.
+
 ### Fixed
 -   **Markdown module.** The bundled `marked` library is updated to 18.1.2, which has bug fixes in markdown parsing.
 
