@@ -3,6 +3,8 @@ import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant, IconColorsConfig, IconFillConfig, IconFxConfig, IconFxKeys } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
+import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
+import { readDirection } from '../../ui-kit/controllers/direction';
 import { entityStateColor } from '../../utils/entity-color';
 import { hasIconFx } from '../../icons/render-icon';
 import { autoDeviceAnim, autoDeviceRule } from '../../icons/device-anim';
@@ -126,7 +128,7 @@ export class IconFxEditor extends LitElement {
         min-width: 0;
       }
       .sector-head mc-sync-indicator {
-        margin-right: 8px;
+        margin-inline-end: 8px;
       }
       .sector-reset-row {
         display: flex;
@@ -429,12 +431,11 @@ export class IconFxEditor extends LitElement {
 
   private _seg(label: string, value: string, options: Opt[], onPick: (v: string) => void): TemplateResult {
     const onKey = (e: KeyboardEvent) => {
-      const i = options.findIndex((o) => o.value === value);
-      const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-      if (!(e.key in step)) return;
-      e.preventDefault();
-      const next = options[(i + step[e.key] + options.length) % options.length].value;
       const group = e.currentTarget as HTMLElement;
+      const at = rovingTarget(e.key, options.findIndex((o) => o.value === value), options.map(() => ({})), 'both', true, readDirection(group) === 'rtl');
+      if (at < 0 || e.key === 'Home' || e.key === 'End') return;
+      e.preventDefault();
+      const next = options[at].value;
       onPick(next);
       requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
     };

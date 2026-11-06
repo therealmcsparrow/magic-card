@@ -90,7 +90,7 @@ export class AnimationThumb extends LitElement {
       }
       .scale {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         width: 176px;
         transform: translate(-50%, -50%) scale(0.5);

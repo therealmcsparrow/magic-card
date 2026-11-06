@@ -2,6 +2,7 @@ import { sanitizeSvg } from '../../icons/svg-sanitize';
 import { svgErrorKind } from '../../icons/svg-error';
 import { ICON_MAX_BYTES } from '../../contracts/mcu-library';
 import type { IconData, TransferNote } from '../../contracts/preset-transfer';
+import type { ShareKit } from '../../contracts/share-kit';
 import type { SvgCssResolve } from '../../contracts/svg-safety';
 import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
@@ -37,7 +38,7 @@ export const removedNote = (index: number, count: number, what: string): Transfe
 const GRADIENTS = new Set(['lineargradient', 'radialgradient']);
 
 /** What the sanitiser took out: element and attribute names present in the input but not in its result. With `resolved`, the parts the CSS resolver consumed (styles, gradient href) are not listed. */
-export function svgRemovals(input: string, markup: string, index: number, resolved = false): TransferNote[] {
+export function svgRemovals(input: string, markup: string, index: number, resolved = false, kit?: ShareKit): TransferNote[] {
   const before = parseSvg(input);
   const after = parseSvg(markup);
   const keptEls = new Set(after.map((e) => e.localName.toLowerCase()));
@@ -54,6 +55,7 @@ export function svgRemovals(input: string, markup: string, index: number, resolv
     }
   }
   const notes: TransferNote[] = [];
+  for (const d of kit?.styleDrops(input, before, resolved) ?? []) notes.push(removedNote(index, d.count, d.what));
   for (const [n, c] of els) notes.push(removedNote(index, c, elementWhat(n)));
   for (const [n, c] of attrs) notes.push(removedNote(index, c, attributeWhat(n)));
   return notes;
@@ -76,20 +78,20 @@ function svgReason(error: string | undefined): string {
 }
 
 /** Sanitise an icon's markup: the result and everything that was removed. */
-export function cleanSvg(index: number, svg: string, css?: SvgCssResolve): { ok: true; markup: string; viewBox: string; notes: TransferNote[] } | { ok: false; notes: TransferNote[] } {
+export function cleanSvg(index: number, svg: string, css?: SvgCssResolve, kit?: ShareKit): { ok: true; markup: string; viewBox: string; notes: TransferNote[] } | { ok: false; notes: TransferNote[] } {
   // mc-f / mc-s are the sanitiser's own marks: strip them first so an exported icon re-imports unchanged
   const s = sanitizeSvg(svg.replace(/\bclass\s*=\s*(["'])([^"']*)\1/gi, (_m, q: string, v: string) => `class=${q}${v.split(/\s+/).filter((t) => t !== 'mc-f' && t !== 'mc-s').join(' ')}${q}`), { css });
   if (s.error || !s.markup) return { ok: false, notes: [note('invalid_item', index, 'data.svg', svgReason(s.error))] };
   if (new TextEncoder().encode(s.markup).length > ICON_MAX_BYTES) {
     return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('transfer.icon.the-icon-is-larger-than-kb-kb', { kb: ICON_MAX_BYTES / 1024 }))] };
   }
-  return { ok: true, markup: s.markup, viewBox: s.viewBox, notes: svgRemovals(svg, s.markup, index, !!css) };
+  return { ok: true, markup: s.markup, viewBox: s.viewBox, notes: svgRemovals(svg, s.markup, index, !!css, kit) };
 }
 
 /** An icon item: svg sanitised (removals listed), path patterns and view box checked. */
-export function readIcon(index: number, data: unknown, css?: SvgCssResolve): KindResult<IconData> {
+export function readIcon(index: number, data: unknown, css?: SvgCssResolve, kit?: ShareKit): KindResult<IconData> {
   if (!isObj(data) || typeof data.svg !== 'string') return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('transfer.icon.the-icon-has-no-svg'))] };
-  const c = cleanSvg(index, data.svg, css);
+  const c = cleanSvg(index, data.svg, css, kit);
   if (!c.ok) return c;
   const notes = [...c.notes];
   const out: IconData = { svg: c.markup };

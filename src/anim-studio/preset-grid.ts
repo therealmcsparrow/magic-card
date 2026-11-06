@@ -223,7 +223,7 @@ export class PresetThumb extends LitElement {
       /* a fixed 200px card scaled to 120px: the type never reflows per tile; 8px of canvas around it for glows and borders */
       .scale {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         width: 200px;
         transform: translate(-50%, -50%) scale(0.6);
@@ -366,7 +366,7 @@ export class PresetGrid extends LitElement {
         overflow: auto;
         /* sticky group headings never cover the focused tile (WCAG 2.4.11) */
         scroll-padding-top: 32px;
-        padding-right: 4px;
+        padding-inline-end: 4px;
       }
       .pg + .pg {
         margin-top: 12px;
@@ -431,6 +431,7 @@ export class PresetGrid extends LitElement {
         position: absolute;
         top: 12px;
         right: 12px;
+        inset-inline: auto 12px;
         width: 24px;
         height: 24px;
         display: grid;

@@ -19,12 +19,12 @@ Which screen you use depends on your Home Assistant version. Each step says whic
 **Settings > Marketplace (Home Assistant 2026.11 and later)**
 
 1. (Marketplace) Go to **Settings > Marketplace**. (unverified)
-2. (Marketplace) Find **Magic Card** in the list and open it. (unverified)
-3. (Marketplace) Open the three dots at the top right and choose **Redownload**. (unverified)
+2. (Marketplace) Find **Magic Card** on the **Installed** tab and open it. (unverified)
+3. (Marketplace) Open the three dots at the top right and choose **Install another version**. (unverified)
 4. (Marketplace) In the version list, pick the last version that worked and confirm. (unverified)
 5. (Marketplace) Restart Home Assistant, then hard refresh the browser with Ctrl+Shift+R. (unverified)
 
-The list shows the most recent releases. A version marked as a pre-release only appears if you turned on the pre-release switch for Magic Card.
+The Marketplace lists the newest 30 releases. A pre-release only appears after you choose **Include pre-releases** in the same menu. In HACS, turn on **Show beta versions** instead.
 
 After the restart your cards should work again. If they do not, open an issue and say which version you went back to.
 
@@ -38,7 +38,7 @@ The installer and the browser each tell you something.
 
 ## How to stay on one version
 
-Install the version you want with the **Redownload** steps above. Then stop Home Assistant from offering the next update.
+Install the version you want with the steps under [My card broke, what now?](#my-card-broke-what-now). Then stop Home Assistant from offering the next update.
 
 1. Open **Settings > System > Updates**.
 2. Find the Magic Card update and open it. (unverified)
@@ -72,7 +72,7 @@ These are the steps for a release. The version is the tag without the `v`.
 8. Open a pull request into `main`. The branch takes pull requests only.
 9. Wait for the required checks to turn green, then merge the pull request into `main`.
 10. Tag the merge commit on `main`, never an unmerged branch, and push the tag `v<version>`. The tag push runs `.github/workflows/release.yml`, which builds the CycloneDX SBOM (`sbom.cdx.json`) and attaches it to the release, together with `THIRD-PARTY-NOTICES.md` and the files in `dist/`.
-11. A tag with a hyphen, such as `v2026.10.12-beta.1`, is published as a pre-release. Only people who turned on the pre-release switch are offered it.
+11. A tag with a hyphen, such as `v2026.10.12-beta.1`, is published as a pre-release. Only people who chose **Include pre-releases** in the Marketplace, or turned on **Show beta versions** in HACS, are offered it. The Marketplace reads the newest 30 releases only, so publish a stable release before 30 pre-releases follow the last one.
 12. When the release changes something Magic Card Utils uses, a paired Magic Card Utils release follows. Its `.magic-card-ref` is set to the Magic Card release commit, and each changelog names the minimum version of the other.
 
 Published releases and tags are kept. To withdraw a broken version, publish a fixed release.

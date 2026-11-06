@@ -7341,6 +7341,11 @@
     "note": "Description of the sequence type in the new animation chooser.",
     "max": 55
   },
+  "anim-studio.studio.pseudo-rtl": {
+    "text": "Pseudo RTL",
+    "note": "Label of the switch in the studio top bar that shows the studio and preview with pseudo text, Arabic-Indic digits and right-to-left layout, to check mirroring.",
+    "max": 16
+  },
   "anim-studio.studio.redo-ctrl-y": {
     "text": "Redo (Ctrl+Y)",
     "note": "Tooltip of the redo button in the studio header; keep the shortcut in brackets.",

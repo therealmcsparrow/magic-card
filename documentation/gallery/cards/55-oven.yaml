@@ -18,7 +18,7 @@ rows:
             design: { font_size: 18px, font_weight: "800", color: "#fafaf9" }
           - type: text
             text: Fan oven · top and bottom
-            design: { font_size: 12px, color: "#a8a29e" }
+            design: { font_size: 12px, color: "#d6d3d1" }
       - vertical_align: center
         modules:
           - type: text
@@ -72,4 +72,4 @@ rows:
                 design: { font_size: 24px, font_weight: "800", color: "#ffffff", font_variant: tabular-nums }
               - type: text
                 text: left
-                design: { font_size: 11px, color: "#a8a29e", text_transform: uppercase, letter_spacing: 1.5px }
+                design: { font_size: 11px, color: "#d6d3d1", text_transform: uppercase, letter_spacing: 1.5px }

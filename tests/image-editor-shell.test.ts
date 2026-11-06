@@ -419,7 +419,7 @@ describe('image editor: view-only', () => {
     mounted.push(e2);
     await until(() => e2.stage !== 'loading');
     await settle(e2);
-    expect(text(e2)).toContain('Images need Magic Card Utils. It is installed through HACS, like Magic Card.');
+    expect(text(e2)).toContain('Images need Magic Card Utils. Install it the same way as Magic Card.');
   });
 });
 

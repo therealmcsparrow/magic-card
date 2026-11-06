@@ -26,6 +26,9 @@ import { fieldReset } from './field-reset';
 import { DEVICES, DRAWS } from './icon-fx-options';
 import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
+import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
+import { DirectionController, readDirection } from '../../ui-kit/controllers/direction';
+import { inlineSides } from '../../ui-kit/css/rtl';
 import { entityStateColor } from '../../utils/entity-color';
 import { PasteMode, copyDesign, designUpdates, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 
@@ -95,6 +98,7 @@ const TEXT_PLACEHOLDERS: Record<string, string> = {
 
 @customElement('mc-design-panel')
 export class DesignPanel extends LitElement {
+  private readonly _direction = new DirectionController(this);
   static styles = [
     editorSystem,
     css`
@@ -160,7 +164,7 @@ export class DesignPanel extends LitElement {
       }
       .design-clip .menu {
         top: calc(100% + 4px);
-        left: 0;
+        ${inlineSides('inset', '0', 'auto')}
         min-width: 200px;
       }
       .design-clip .clip-status {
@@ -193,7 +197,7 @@ export class DesignPanel extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: transparent;
-        text-align: left;
+        text-align: start;
         font-size: 0.8125rem;
         font-weight: 600;
         color: var(--mc-text);
@@ -212,6 +216,9 @@ export class DesignPanel extends LitElement {
       }
       .subgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .subgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .subgroup-body,
       .tab-notes {
@@ -264,7 +271,7 @@ export class DesignPanel extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: color-mix(in srgb, var(--mc-surface-2) 55%, transparent);
-        text-align: left;
+        text-align: start;
         font-size: 0.875rem;
         font-weight: 600;
         color: var(--mc-text);
@@ -283,6 +290,9 @@ export class DesignPanel extends LitElement {
       }
       .dgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .dgroup-body {
         display: grid;
@@ -1167,12 +1177,10 @@ export class DesignPanel extends LitElement {
         const opts = p.options || [];
         const current = opts.some((o) => o.value === value) ? value : (p.defaultValue ?? opts[0]?.value);
         const onKey = (e: KeyboardEvent) => {
-          const idx = opts.findIndex((o) => o.value === current);
-          const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-          const next = e.key === 'Home' ? 0 : e.key === 'End' ? opts.length - 1 : step[e.key] !== undefined ? (idx + step[e.key] + opts.length) % opts.length : -1;
+          const group = e.currentTarget as HTMLElement;
+          const next = rovingTarget(e.key, opts.findIndex((o) => o.value === current), opts.map(() => ({})), 'both', true, readDirection(group) === 'rtl');
           if (next < 0) return;
           e.preventDefault();
-          const group = e.currentTarget as HTMLElement;
           this._handlePropertyChange(p.key, opts[next].value);
           requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${opts[next].value}"]`)?.focus());
         };

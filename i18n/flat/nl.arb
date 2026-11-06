@@ -9311,6 +9311,13 @@
     "x-max-length": 55,
     "x-source-hash": "36d48524"
   },
+  "anim-studio.studio.pseudo-rtl": "Pseudo-RTL",
+  "@anim-studio.studio.pseudo-rtl": {
+    "description": "Label of the switch in the studio top bar that shows the studio and preview with pseudo text, Arabic-Indic digits and right-to-left layout, to check mirroring. Max 16 characters.",
+    "source_text": "Pseudo RTL",
+    "x-max-length": 16,
+    "x-source-hash": "3a83f974"
+  },
   "anim-studio.studio.redo-ctrl-y": "Opnieuw (Ctrl+Y)",
   "@anim-studio.studio.redo-ctrl-y": {
     "description": "Tooltip of the redo button in the studio header; keep the shortcut in brackets. Max 25 characters.",
@@ -11541,12 +11548,12 @@
     "x-max-length": 20,
     "x-source-hash": "9ec14117"
   },
-  "card-editor.card-picker.custom-cards-hacs": "Eigen kaarten (HACS)",
+  "card-editor.card-picker.custom-cards-hacs": "Eigen kaarten",
   "@card-editor.card-picker.custom-cards-hacs": {
-    "description": "Heading of the card picker group that lists cards installed through HACS. Max 35 characters.",
-    "source_text": "Custom cards (HACS)",
+    "description": "Heading of the card picker group that lists cards installed from outside Home Assistant, for example through the Marketplace or HACS. Max 35 characters.",
+    "source_text": "Custom cards",
     "x-max-length": 35,
-    "x-source-hash": "e923dd09"
+    "x-source-hash": "5987c6e6"
   },
   "card-editor.card-picker.display-an-image": "Een afbeelding tonen",
   "@card-editor.card-picker.display-an-image": {
@@ -12332,6 +12339,13 @@
     "x-max-length": 10,
     "x-source-hash": "c76ae86a"
   },
+  "card-editor.card-settings.import-a-shared-card": "Importeer een gedeelde kaart",
+  "@card-editor.card-settings.import-a-shared-card": {
+    "description": "Button in Card settings that opens the import of a card someone shared; it replaces this card after confirming. Max 30 characters.",
+    "source_text": "Import a shared card",
+    "x-max-length": 30,
+    "x-source-hash": "8882a289"
+  },
   "card-editor.card-settings.layers": "Lagen",
   "@card-editor.card-settings.layers": {
     "description": "Section heading for the stacked background layers drawn behind the card content. Max 10 characters.",
@@ -12352,6 +12366,13 @@
     "source_text": "Magic Card Utils templates never include it. Applying one keeps this card's entity.",
     "x-max-length": 135,
     "x-source-hash": "e7f24b6a"
+  },
+  "card-editor.card-settings.map-entities": "Entiteiten koppelen",
+  "@card-editor.card-settings.map-entities": {
+    "description": "Button in Card settings that opens the step linking the placeholders of an imported card to the user's own entities. Max 25 characters.",
+    "source_text": "Map entities",
+    "x-max-length": 25,
+    "x-source-hash": "18d3b884"
   },
   "card-editor.card-settings.match": "Overeenkomst",
   "@card-editor.card-settings.match": {
@@ -12593,6 +12614,13 @@
     "x-max-length": 10,
     "x-source-hash": "e0e49270"
   },
+  "card-editor.card-settings.share-this-card": "Deel deze kaart",
+  "@card-editor.card-settings.share-this-card": {
+    "description": "Button in Card settings that opens the export of the whole card as a file or text. Max 25 characters.",
+    "source_text": "Share this card",
+    "x-max-length": 25,
+    "x-source-hash": "1b064466"
+  },
   "card-editor.card-settings.show": "Tonen",
   "@card-editor.card-settings.show": {
     "description": "Verb on a button or option that makes the element visible; the opposite of Hide. Max 10 characters.",
@@ -12635,12 +12663,26 @@
     "x-max-length": 120,
     "x-source-hash": "a8658227"
   },
+  "card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page": "De deelfuncties zijn niet geladen. Laad de pagina opnieuw en probeer het nog eens.",
+  "@card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page": {
+    "description": "Error line under the share buttons in Card settings when the transfer tools could not be loaded. Max 100 characters.",
+    "source_text": "The sharing tools did not load. Reload the page and try again.",
+    "x-max-length": 100,
+    "x-source-hash": "e4db6eed"
+  },
   "card-editor.card-settings.theme-default": "Standaard van het thema",
   "@card-editor.card-settings.theme-default": {
     "description": "Dropdown option: use the value from the active Home Assistant theme, with no override. Max 25 characters.",
     "source_text": "Theme default",
     "x-max-length": 25,
     "x-source-hash": "689a15ad"
+  },
+  "card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your": "Deze kaart gebruikt nog plaatshouders in plaats van jouw entiteiten. Pas na het koppelen toont hij live waarden.",
+  "@card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your": {
+    "description": "Notice in Card settings above the Map entities button. A placeholder is a stand-in entity name such as light.mc_placeholder_1 from a shared card. Max 130 characters.",
+    "source_text": "This card still uses placeholders instead of your entities. It will not show live values until you map them.",
+    "x-max-length": 130,
+    "x-source-hash": "cf58dce1"
   },
   "card-editor.card-settings.this-card-uses-only-its-own-custom": "Deze kaart gebruikt alleen zijn eigen custom_animations.",
   "@card-editor.card-settings.this-card-uses-only-its-own-custom": {
@@ -21370,12 +21412,12 @@
     "x-max-length": 35,
     "x-source-hash": "8b316924"
   },
-  "card-editor.template-picker.magic-card-integration-not-found-please": "Magic Card-integratie niet gevonden. Installeer die via HACS en voeg de integratie toe.",
+  "card-editor.template-picker.magic-card-integration-not-found-please": "Magic Card-integratie niet gevonden. Installeer die via de Marketplace of HACS en voeg de integratie toe.",
   "@card-editor.template-picker.magic-card-integration-not-found-please": {
-    "description": "Error in the template picker when the Magic Card integration is missing; tells the user to install it through HACS and add it. Max 140 characters.",
-    "source_text": "Magic Card integration not found. Please install it via HACS and add the integration.",
+    "description": "Error in the template picker when the Magic Card integration is missing; tells the user to install it through the Marketplace or HACS and add it. Keep the names Marketplace and HACS. Max 140 characters.",
+    "source_text": "Magic Card integration not found. Please install it from the Marketplace or HACS and add the integration.",
     "x-max-length": 140,
-    "x-source-hash": "f2d62469"
+    "x-source-hash": "182acc35"
   },
   "card-editor.template-picker.no-config-available-to-save": "Geen configuratie beschikbaar om op te slaan.",
   "@card-editor.template-picker.no-config-available-to-save": {
@@ -22876,6 +22918,349 @@
     "source_text": "Spinbox",
     "x-max-length": 15,
     "x-source-hash": "d539f275"
+  },
+  "forum-shot.card-table.column-card": "Kaart",
+  "@forum-shot.card-table.column-card": {
+    "description": "Column header of the card table: the name of the Magic Card. Max 20 characters.",
+    "source_text": "Card",
+    "x-max-length": 20,
+    "x-source-hash": "be3702e3"
+  },
+  "forum-shot.card-table.column-dashboard": "Dashboard",
+  "@forum-shot.card-table.column-dashboard": {
+    "description": "Column header of the card table: the dashboard a card is on. Max 20 characters.",
+    "source_text": "Dashboard",
+    "x-max-length": 20,
+    "x-source-hash": "67b69646"
+  },
+  "forum-shot.card-table.column-status": "Status",
+  "@forum-shot.card-table.column-status": {
+    "description": "Column header of the card table: whether the card can be used. Max 20 characters.",
+    "source_text": "Status",
+    "x-max-length": 20,
+    "x-source-hash": "920e413c"
+  },
+  "forum-shot.card-table.column-view": "Weergave",
+  "@forum-shot.card-table.column-view": {
+    "description": "Column header of the card table: the view (tab) of the dashboard a card is on. Max 20 characters.",
+    "source_text": "View",
+    "x-max-length": 20,
+    "x-source-hash": "dcc839a4"
+  },
+  "forum-shot.card-table.default-dashboard": "Standaarddashboard",
+  "@forum-shot.card-table.default-dashboard": {
+    "description": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own. Max 30 characters.",
+    "source_text": "Default dashboard",
+    "x-max-length": 30,
+    "x-source-hash": "4913c670"
+  },
+  "forum-shot.card-table.filter-label": "Kaarten zoeken",
+  "@forum-shot.card-table.filter-label": {
+    "description": "Label of the search field above the card table. It filters rows by card, dashboard or view name. Max 30 characters.",
+    "source_text": "Search cards",
+    "x-max-length": 30,
+    "x-source-hash": "8d0b0964"
+  },
+  "forum-shot.card-table.filter-none": "Geen kaarten gevonden voor je zoekopdracht.",
+  "@forum-shot.card-table.filter-none": {
+    "description": "Shown in place of the table rows when the search matches no card. Max 80 characters.",
+    "source_text": "No cards match your search.",
+    "x-max-length": 80,
+    "x-source-hash": "df2d1a4f"
+  },
+  "forum-shot.card-table.fonts-from": "Lettertypen van {hosts}",
+  "@forum-shot.card-table.fonts-from": {
+    "description": "Line in the status details of a card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 120 characters.",
+    "source_text": "Fonts from {hosts}",
+    "x-max-length": 120,
+    "x-source-hash": "9f44f4ca"
+  },
+  "forum-shot.card-table.reason-cannot-judge": "De instellingen konden niet worden gecontroleerd op externe adressen.",
+  "@forum-shot.card-table.reason-cannot-judge": {
+    "description": "Reason a card is locked: the check could not tell whether an address is safe. Max 80 characters.",
+    "source_text": "Its settings could not be checked for outside addresses.",
+    "x-max-length": 80,
+    "x-source-hash": "a7009139"
+  },
+  "forum-shot.card-table.reason-custom-card": "Er zit een andere kaart in (een custom-card-module) die hier niet te controleren is.",
+  "@forum-shot.card-table.reason-custom-card": {
+    "description": "Reason a card is locked: it contains a custom-card module. Max 90 characters.",
+    "source_text": "It holds another card (a custom-card module) that nothing here can check.",
+    "x-max-length": 90,
+    "x-source-hash": "f37f797c"
+  },
+  "forum-shot.card-table.reason-limit": "Er staan te veel externe websites in, of de kaart is te groot om te controleren.",
+  "@forum-shot.card-table.reason-limit": {
+    "description": "Reason a card is locked: it names too many outside websites or is too large to check. Max 80 characters.",
+    "source_text": "It names too many outside websites, or it is too large to check.",
+    "x-max-length": 80,
+    "x-source-hash": "cec07c66"
+  },
+  "forum-shot.card-table.reason-outside-address": "Er wordt iets van buiten Home Assistant geladen.",
+  "@forum-shot.card-table.reason-outside-address": {
+    "description": "Reason a card is locked: it names an address outside Home Assistant that is not an allowed font. Max 70 characters.",
+    "source_text": "It loads something from outside Home Assistant.",
+    "x-max-length": 70,
+    "x-source-hash": "56e035ab"
+  },
+  "forum-shot.card-table.status-available": "Beschikbaar",
+  "@forum-shot.card-table.status-available": {
+    "description": "Status of a card that can be picked for a forum shot. Max 20 characters.",
+    "source_text": "Available",
+    "x-max-length": 20,
+    "x-source-hash": "e6744473"
+  },
+  "forum-shot.card-table.status-button-available": "Beschikbaar, details tonen",
+  "@forum-shot.card-table.status-button-available": {
+    "description": "Accessible name of the button in the Status column of a card that can be picked. Selecting it opens the status details. Max 40 characters.",
+    "source_text": "Available, show details",
+    "x-max-length": 40,
+    "x-source-hash": "232b6609"
+  },
+  "forum-shot.card-table.status-button-locked": "Vergrendeld, details tonen",
+  "@forum-shot.card-table.status-button-locked": {
+    "description": "Accessible name of the button in the Status column of a card that cannot be picked. Selecting it opens the status details. Max 40 characters.",
+    "source_text": "Locked, show details",
+    "x-max-length": 40,
+    "x-source-hash": "cd77ec2c"
+  },
+  "forum-shot.card-table.status-close": "Sluiten",
+  "@forum-shot.card-table.status-close": {
+    "description": "Button that closes the status details of a card. Max 20 characters.",
+    "source_text": "Close",
+    "x-max-length": 20,
+    "x-source-hash": "7d9eb7ac"
+  },
+  "forum-shot.card-table.status-detail-available": "Je kunt deze kaart kiezen voor een forumafbeelding.",
+  "@forum-shot.card-table.status-detail-available": {
+    "description": "Line in the status details of a card that can be picked. Max 60 characters.",
+    "source_text": "You can pick this card for a forum shot.",
+    "x-max-length": 60,
+    "x-source-hash": "db25542b"
+  },
+  "forum-shot.card-table.status-locked": "Vergrendeld",
+  "@forum-shot.card-table.status-locked": {
+    "description": "Status of a card that cannot be picked. A reason follows it. Max 20 characters.",
+    "source_text": "Locked",
+    "x-max-length": 20,
+    "x-source-hash": "a424e33d"
+  },
+  "forum-shot.element.admin-only": "Alleen het standaarddashboard wordt getoond, omdat het tonen van de andere dashboards een beheerdersaccount vraagt.",
+  "@forum-shot.element.admin-only": {
+    "description": "Note for a user who is not an administrator, shown above the list of cards. Max 120 characters.",
+    "source_text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
+    "x-max-length": 120,
+    "x-source-hash": "705163a8"
+  },
+  "forum-shot.element.cards-legend": "Magic Card",
+  "@forum-shot.element.cards-legend": {
+    "description": "Legend of the group of radio buttons where the user picks one card. Max 20 characters.",
+    "source_text": "Magic Card",
+    "x-max-length": 20,
+    "x-source-hash": "4789a1c5"
+  },
+  "forum-shot.element.config-read-failed": "Je dashboards konden niet worden gelezen. Controleer of het geen YAML-dashboards zijn en probeer het opnieuw.",
+  "@forum-shot.element.config-read-failed": {
+    "description": "Error when no dashboard configuration could be read. Max 110 characters.",
+    "source_text": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
+    "x-max-length": 110,
+    "x-source-hash": "f4f5d640"
+  },
+  "forum-shot.element.custom-card": "Deze kaart bevat een andere kaart (een custom-card-module). Die kaart kan afbeeldingen van buiten Home Assistant laden en dat valt niet te controleren, dus deze kaart kan niet voor een forumafbeelding worden gebruikt.",
+  "@forum-shot.element.custom-card": {
+    "description": "Notice next to a card that cannot be picked because it holds a custom-card module. Also the error when the picture is refused for that reason. Max 220 characters.",
+    "source_text": "This card holds another card inside it (a custom-card module). That card can load pictures from outside Home Assistant and nothing here can check it, so this card cannot be used for a forum shot.",
+    "x-max-length": 220,
+    "x-source-hash": "78df6dc2"
+  },
+  "forum-shot.element.download": "Downloaden",
+  "@forum-shot.element.download": {
+    "description": "Button that makes the picture and saves it to the user's device. Max 14 characters.",
+    "source_text": "Download",
+    "x-max-length": 14,
+    "x-source-hash": "d6eafe82"
+  },
+  "forum-shot.element.error-capture-failed": "De afbeelding kon in deze browser niet worden gemaakt. Probeer het opnieuw of gebruik een andere browser.",
+  "@forum-shot.element.error-capture-failed": {
+    "description": "Error when the capture failed. Max 110 characters.",
+    "source_text": "The picture could not be made in this browser. Try again, or use another browser.",
+    "x-max-length": 110,
+    "x-source-hash": "dd7a86c4"
+  },
+  "forum-shot.element.error-card-not-defined": "De Magic Card is niet geladen in dit browsertabblad. Laad de pagina opnieuw en probeer het opnieuw.",
+  "@forum-shot.element.error-card-not-defined": {
+    "description": "Error when the card element is not available. Max 100 characters.",
+    "source_text": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
+    "x-max-length": 100,
+    "x-source-hash": "433ffe34"
+  },
+  "forum-shot.element.error-font-unavailable": "Een lettertype kon niet worden geladen, dus er is geen afbeelding gemaakt. Controleer je verbinding en probeer het opnieuw.",
+  "@forum-shot.element.error-font-unavailable": {
+    "description": "Error when a font from another website could not be fetched or was not a usable font file. Max 130 characters.",
+    "source_text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "x-max-length": 130,
+    "x-source-hash": "9924ac84"
+  },
+  "forum-shot.element.error-hosts-changed": "De lettertypen die deze kaart vraagt zijn veranderd sinds de lijst is gemaakt, en er is niets opgehaald. De lijst is nu bijgewerkt. Controleer de genoemde sites en kies daarna opnieuw Downloaden.",
+  "@forum-shot.element.error-hosts-changed": {
+    "description": "Error when the font sites of the card differ from those shown before Download; the card list has been read again. Max 200 characters.",
+    "source_text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "x-max-length": 200,
+    "x-source-hash": "198f0eb0"
+  },
+  "forum-shot.element.error-too-large": "De afbeelding zou te groot worden. Kies alleen licht of donker, of zet de drie looks uit.",
+  "@forum-shot.element.error-too-large": {
+    "description": "Error when the sheet would exceed the size limit. Max 100 characters.",
+    "source_text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
+    "x-max-length": 100,
+    "x-source-hash": "15a5ec38"
+  },
+  "forum-shot.element.font-host-contact": "Om de lettertypen te tekenen vraagt je browser ze op bij {hosts}. Elk verzoek laat die sites je IP-adres zien, het tijdstip, de lettertypen die je opvraagt en het adres van je Home Assistant (een DuckDNS-naam, een Nabu Casa-adres of een adres op je lokale netwerk), plus het type en de taal van je browser. Je kaarten en instellingen worden niet verstuurd.",
+  "@forum-shot.element.font-host-contact": {
+    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 380 characters.",
+    "source_text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "x-max-length": 380,
+    "x-source-hash": "e4e8bf0b"
+  },
+  "forum-shot.element.forum-shot": "Forumafbeelding",
+  "@forum-shot.element.forum-shot": {
+    "description": "Accessible name of the forum shot area in the Magic Card Utils panel, where the user turns a Magic Card into one picture to post in a forum. Max 20 characters.",
+    "source_text": "Forum shot",
+    "x-max-length": 20,
+    "x-source-hash": "de9aca8d"
+  },
+  "forum-shot.element.intro": "Kies een van je Magic Cards en bewaar die als afbeelding om op een forum te plaatsen.",
+  "@forum-shot.element.intro": {
+    "description": "Short introduction under the heading of the forum shot area. Max 90 characters.",
+    "source_text": "Pick one of your Magic Cards and save it as a picture to post in a forum.",
+    "x-max-length": 90,
+    "x-source-hash": "87c3964a"
+  },
+  "forum-shot.element.loading": "Je Magic Cards worden gezocht…",
+  "@forum-shot.element.loading": {
+    "description": "Status text while the dashboards are read. Max 40 characters.",
+    "source_text": "Looking for your Magic Cards…",
+    "x-max-length": 40,
+    "x-source-hash": "23af3ec6"
+  },
+  "forum-shot.element.local-only": "De afbeelding wordt in je browser gemaakt. Er verlaat niets Home Assistant en Magic Card bewaart geen kopie.",
+  "@forum-shot.element.local-only": {
+    "description": "Sentence under the privacy warning: the picture is made locally and nothing is stored. Max 120 characters.",
+    "source_text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
+    "x-max-length": 120,
+    "x-source-hash": "b4702d63"
+  },
+  "forum-shot.element.local-only-font": "De afbeelding wordt in je browser gemaakt en Magic Card bewaart geen kopie. Je kaarten en instellingen blijven in Home Assistant, maar de lettertypen worden opgehaald bij de sites die hier staan.",
+  "@forum-shot.element.local-only-font": {
+    "description": "Sentence under the privacy warning for a card that uses fonts from other websites: the picture is made locally, nothing is stored, and the fonts come from outside. Max 200 characters.",
+    "source_text": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+    "x-max-length": 200,
+    "x-source-hash": "85ee4021"
+  },
+  "forum-shot.element.looks": "Toon de looks Rustig, Levendig en Gloed van geanimeerde iconen, elk op een eigen rij",
+  "@forum-shot.element.looks": {
+    "description": "Checkbox: the picture gets three rows, one per look of the animated icons. Max 90 characters.",
+    "source_text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
+    "x-max-length": 90,
+    "x-source-hash": "a44c2916"
+  },
+  "forum-shot.element.making": "De afbeelding wordt gemaakt…",
+  "@forum-shot.element.making": {
+    "description": "Status text while the picture is made. Max 30 characters.",
+    "source_text": "Making the picture…",
+    "x-max-length": 30,
+    "x-source-hash": "608e07ed"
+  },
+  "forum-shot.element.mode-both": "Licht en donker",
+  "@forum-shot.element.mode-both": {
+    "description": "Option: the picture holds a light and a dark version of the card side by side. Max 20 characters.",
+    "source_text": "Light and dark",
+    "x-max-length": 20,
+    "x-source-hash": "59644334"
+  },
+  "forum-shot.element.mode-dark": "Alleen donker",
+  "@forum-shot.element.mode-dark": {
+    "description": "Option: the picture holds only the dark version of the card. Max 20 characters.",
+    "source_text": "Dark only",
+    "x-max-length": 20,
+    "x-source-hash": "0470ad2d"
+  },
+  "forum-shot.element.mode-light": "Alleen licht",
+  "@forum-shot.element.mode-light": {
+    "description": "Option: the picture holds only the light version of the card. Max 20 characters.",
+    "source_text": "Light only",
+    "x-max-length": 20,
+    "x-source-hash": "a5d1af23"
+  },
+  "forum-shot.element.modes-legend": "Kleuren",
+  "@forum-shot.element.modes-legend": {
+    "description": "Legend of the group where the user chooses light, dark or both. Max 14 characters.",
+    "source_text": "Colours",
+    "x-max-length": 14,
+    "x-source-hash": "88f20221"
+  },
+  "forum-shot.element.no-cards": "Er zijn geen Magic Cards gevonden op je dashboards.",
+  "@forum-shot.element.no-cards": {
+    "description": "Empty state when no dashboard holds a Magic Card. Max 60 characters.",
+    "source_text": "No Magic Cards were found on your dashboards.",
+    "x-max-length": 60,
+    "x-source-hash": "db9cdd82"
+  },
+  "forum-shot.element.notice-remote-placeholder": "Een afbeelding van buiten Home Assistant is vervangen door een plaatshouder, zodat er geen andere server is benaderd. Je kaart kan er op je dashboard anders uitzien.",
+  "@forum-shot.element.notice-remote-placeholder": {
+    "description": "Notice under the preview when an image from another server was left out. Max 170 characters.",
+    "source_text": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
+    "x-max-length": 170,
+    "x-source-hash": "4d773277"
+  },
+  "forum-shot.element.notice-remote-placeholder-font": "Een afbeelding van buiten Home Assistant is vervangen door een plaatshouder en daarvoor is geen server benaderd. Je kaart kan er op je dashboard anders uitzien.",
+  "@forum-shot.element.notice-remote-placeholder-font": {
+    "description": "Notice under the preview of a card that uses fonts from other websites, when an image from another server was left out. Max 170 characters.",
+    "source_text": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+    "x-max-length": 170,
+    "x-source-hash": "95051ca3"
+  },
+  "forum-shot.element.pick-first": "Kies een kaart om verder te gaan.",
+  "@forum-shot.element.pick-first": {
+    "description": "Hint shown while no card is picked, so the Download button is not available. Max 40 characters.",
+    "source_text": "Pick a card to continue.",
+    "x-max-length": 40,
+    "x-source-hash": "cb8172e5"
+  },
+  "forum-shot.element.preview-alt": "Voorbeeld van de forumafbeelding",
+  "@forum-shot.element.preview-alt": {
+    "description": "Text alternative of the preview image. Max 40 characters.",
+    "source_text": "Preview of the forum shot picture",
+    "x-max-length": 40,
+    "x-source-hash": "51beebfe"
+  },
+  "forum-shot.element.privacy-hint": "Controleer de afbeelding voordat je hem plaatst. Een kaart kan namen, plaatsen, camerabeelden en de status van je apparaten laten zien, en iedereen die je bericht ziet, ziet ze ook.",
+  "@forum-shot.element.privacy-hint": {
+    "description": "Privacy warning shown before the Download button. Max 190 characters.",
+    "source_text": "Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.",
+    "x-max-length": 190,
+    "x-source-hash": "7be450e3"
+  },
+  "forum-shot.element.remote-asset": "Deze kaart laadt een afbeelding, webadres of bestand van buiten Home Assistant dat niet te controleren is. Hij kan niet voor een forumafbeelding dienen: het maken ervan zou een ongecontroleerde server benaderen.",
+  "@forum-shot.element.remote-asset": {
+    "description": "Notice next to a card that cannot be picked because its settings name something outside Home Assistant. Also the error when the picture is refused for that reason. Max 220 characters.",
+    "source_text": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
+    "x-max-length": 220,
+    "x-source-hash": "24f49698"
+  },
+  "forum-shot.element.retry": "Opnieuw proberen",
+  "@forum-shot.element.retry": {
+    "description": "Button that reads the dashboards again after an error. Max 20 characters.",
+    "source_text": "Try again",
+    "x-max-length": 20,
+    "x-source-hash": "d8b8392e"
+  },
+  "forum-shot.element.saved": "De afbeelding is bewaard in je downloads.",
+  "@forum-shot.element.saved": {
+    "description": "Status text after the picture was saved. Max 50 characters.",
+    "source_text": "The picture was saved to your downloads.",
+    "x-max-length": 50,
+    "x-source-hash": "bc4f343c"
   },
   "icon-animator.animated-icon-grid.all-domains": "Alle domeinen",
   "@icon-animator.animated-icon-grid.all-domains": {
@@ -26507,6 +26892,27 @@
     "x-max-length": 20,
     "x-source-hash": "e35875d4"
   },
+  "icon-library.mirror-badge.keeps": "Blijft",
+  "@icon-library.mirror-badge.keeps": {
+    "description": "Label on an icon in the studio list: the icon keeps its drawing in right-to-left layouts. Max 10 characters.",
+    "source_text": "Keeps",
+    "x-max-length": 10,
+    "x-source-hash": "16aebc8d"
+  },
+  "icon-library.mirror-badge.mirrors": "Spiegelt",
+  "@icon-library.mirror-badge.mirrors": {
+    "description": "Label on an icon in the studio list: the icon flips in right-to-left layouts. Max 10 characters.",
+    "source_text": "Mirrors",
+    "x-max-length": 10,
+    "x-source-hash": "239a80c2"
+  },
+  "icon-library.mirror-badge.not-set": "Niet ingesteld",
+  "@icon-library.mirror-badge.not-set": {
+    "description": "Label on an icon in the studio list: nobody has decided yet whether the icon flips in right-to-left layouts. Max 15 characters.",
+    "source_text": "Not set",
+    "x-max-length": 15,
+    "x-source-hash": "4895f731"
+  },
   "icon-library.nature.back-left-leg": "Linkerachterpoot",
   "@icon-library.nature.back-left-leg": {
     "description": "Part name in an animated icon: the rear leg on the left of an animal. Max 25 characters.",
@@ -27487,12 +27893,12 @@
     "x-max-length": 85,
     "x-source-hash": "7871f325"
   },
-  "image-editor.chunk.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt geïnstalleerd via HACS, net als Magic Card.",
+  "image-editor.chunk.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-editor.chunk.images-need-magic-card-utils-it-is": {
     "description": "Message in the image editor when the companion integration is missing. It tells the user what to install and how. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "image-editor.chunk.import-an-svg-file": "SVG-bestand importeren…",
   "@image-editor.chunk.import-an-svg-file": {
@@ -29235,12 +29641,12 @@
     "x-max-length": 15,
     "x-source-hash": "be7e2f20"
   },
-  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
+  "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
-    "description": "Message inside the image picker window when the companion integration is missing. HACS is a Home Assistant add-on store; keep the name. Magic Card and Magic Card Utils are product names. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Message inside the image picker window when the companion integration is missing. Magic Card and Magic Card Utils are product names. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "image-tools.mc-image-picker.in-use": "In gebruik",
   "@image-tools.mc-image-picker.in-use": {
@@ -29474,12 +29880,12 @@
     "x-max-length": 30,
     "x-source-hash": "d8f48be1"
   },
-  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Het wordt via HACS geïnstalleerd, net als Magic Card.",
+  "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
-    "description": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window. HACS is a Home Assistant add-on store; keep the name. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "image-tools.mc-library-image-field.library-image": "Afbeelding uit de bibliotheek",
   "@image-tools.mc-library-image-field.library-image": {
@@ -38050,19 +38456,19 @@
     "x-max-length": 15,
     "x-source-hash": "48845bff"
   },
-  "mcu-panel.panel.drawing-icons-and-shapes-here-needs": "Om hier pictogrammen en vormen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij in HACS.",
+  "mcu-panel.panel.drawing-icons-and-shapes-here-needs": "Om hier pictogrammen en vormen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij.",
   "@mcu-panel.panel.drawing-icons-and-shapes-here-needs": {
     "description": "Notice in the Icons and Shapes tabs when the installed Magic Card is too old. {version} is the lowest Magic Card version that can draw them. {version}: The value that replaces version in the text. Max 150 characters.",
-    "source_text": "Drawing icons and shapes here needs Magic Card {version} or newer. Update Magic Card in HACS.",
+    "source_text": "Drawing icons and shapes here needs Magic Card {version} or newer. Update Magic Card.",
     "x-max-length": 150,
-    "x-source-hash": "7bd8082a"
+    "x-source-hash": "c4aa6503"
   },
-  "mcu-panel.panel.drawing-images-here-needs-magic-card": "Om hier afbeeldingen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij in HACS.",
+  "mcu-panel.panel.drawing-images-here-needs-magic-card": "Om hier afbeeldingen te tekenen is Magic Card {version} of nieuwer nodig. Werk Magic Card bij.",
   "@mcu-panel.panel.drawing-images-here-needs-magic-card": {
     "description": "Notice in the Images tab when the installed Magic Card is too old. {version} is the lowest Magic Card version that can draw images. {version}: The value that replaces version in the text. Max 135 characters.",
-    "source_text": "Drawing images here needs Magic Card {version} or newer. Update Magic Card in HACS.",
+    "source_text": "Drawing images here needs Magic Card {version} or newer. Update Magic Card.",
     "x-max-length": 135,
-    "x-source-hash": "3be5111c"
+    "x-source-hash": "0dcdf007"
   },
   "mcu-panel.panel.duplicate": "Dupliceren",
   "@mcu-panel.panel.duplicate": {
@@ -38148,6 +38554,13 @@
     "x-max-length": 45,
     "x-source-hash": "aeade066"
   },
+  "mcu-panel.panel.forum-shot": "Forumplaatje",
+  "@mcu-panel.panel.forum-shot": {
+    "description": "Label of the Forum shot tab in the panel tab bar. Max 15 characters.",
+    "source_text": "Forum shot",
+    "x-max-length": 15,
+    "x-source-hash": "de9aca8d"
+  },
   "mcu-panel.panel.icons": "Pictogrammen",
   "@mcu-panel.panel.icons": {
     "description": "Label of the Icons tab in the panel tab bar. Max 15 characters.",
@@ -38204,6 +38617,13 @@
     "x-max-length": 20,
     "x-source-hash": "1b795cc6"
   },
+  "mcu-panel.panel.loading-the-forum-shot": "Forumplaatje wordt geladen",
+  "@mcu-panel.panel.loading-the-forum-shot": {
+    "description": "Spoken label of the progress indicator while the Forum shot tab loads. Max 35 characters.",
+    "source_text": "Loading the forum shot",
+    "x-max-length": 35,
+    "x-source-hash": "a2cc7b19"
+  },
   "mcu-panel.panel.lovelace-card-helpers-are-unavailable": "De Lovelace-kaarthulpmiddelen zijn pas beschikbaar nadat een dashboard is geopend.",
   "@mcu-panel.panel.lovelace-card-helpers-are-unavailable": {
     "description": "Error in the template preview when Home Assistant has not yet loaded the helpers for drawing cards. Opening any dashboard fixes it. Max 120 characters.",
@@ -38218,12 +38638,12 @@
     "x-max-length": 70,
     "x-source-hash": "a1a97249"
   },
-  "mcu-panel.panel.magic-card-isn-t-installed-install-it": "Magic Card is niet geïnstalleerd. Installeer het via HACS en voeg het toe als dashboardresource.",
+  "mcu-panel.panel.magic-card-isn-t-installed-install-it": "Magic Card is niet geïnstalleerd. Installeer het via de Marketplace of HACS en voeg het toe als dashboardresource.",
   "@mcu-panel.panel.magic-card-isn-t-installed-install-it": {
     "description": "Notice in the template editor and preview when Magic Card is not installed. Max 135 characters.",
-    "source_text": "Magic Card isn't installed. Install it from HACS and add it as a dashboard resource.",
+    "source_text": "Magic Card isn't installed. Install it from the Marketplace or HACS and add it as a dashboard resource.",
     "x-max-length": 135,
-    "x-source-hash": "cd61b1ec"
+    "x-source-hash": "3de2c996"
   },
   "mcu-panel.panel.magic-card-utils": "Magic Card Utils",
   "@mcu-panel.panel.magic-card-utils": {
@@ -38287,6 +38707,13 @@
     "source_text": "No config to preview.",
     "x-max-length": 35,
     "x-source-hash": "2280220b"
+  },
+  "mcu-panel.panel.no-templates-match-search": "Geen sjablonen gevonden voor je zoekopdracht.",
+  "@mcu-panel.panel.no-templates-match-search": {
+    "description": "Shown in the templates table when the search matches no template. Max 80 characters.",
+    "source_text": "No templates match your search.",
+    "x-max-length": 80,
+    "x-source-hash": "daae35aa"
   },
   "mcu-panel.panel.no-templates-saved-yet": "Nog geen sjablonen opgeslagen.",
   "@mcu-panel.panel.no-templates-saved-yet": {
@@ -38369,6 +38796,13 @@
     "x-max-length": 20,
     "x-source-hash": "23e39291"
   },
+  "mcu-panel.panel.search-templates": "Sjablonen zoeken",
+  "@mcu-panel.panel.search-templates": {
+    "description": "Label of the search field above the templates table. It filters rows by name, description or card type. Max 30 characters.",
+    "source_text": "Search templates",
+    "x-max-length": 30,
+    "x-source-hash": "04b9835b"
+  },
   "mcu-panel.panel.shapes": "Vormen",
   "@mcu-panel.panel.shapes": {
     "description": "Label of the Shapes tab in the panel tab bar. Max 10 characters.",
@@ -38445,6 +38879,20 @@
     "source_text": "The editor files could not be loaded from Magic Card. Reload the page and try again.",
     "x-max-length": 135,
     "x-source-hash": "dd90f518"
+  },
+  "mcu-panel.panel.the-forum-shot-could-not-be-loaded-it": "Het forumplaatje kon niet worden geladen. Het wordt met Magic Card meegeleverd als {file}: werk Magic Card bij naar {version} of nieuwer.",
+  "@mcu-panel.panel.the-forum-shot-could-not-be-loaded-it": {
+    "description": "Notice in the Forum shot tab when the forum shot file is missing or will not load. {file} is the name of that file, {version} the lowest Magic Card version that has it. {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
+    "source_text": "The forum shot could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
+    "x-max-length": 185,
+    "x-source-hash": "510fe6ba"
+  },
+  "mcu-panel.panel.the-forum-shot-needs-magic-card-or": "Voor het forumplaatje is Magic Card {version} of nieuwer nodig. Werk Magic Card bij.",
+  "@mcu-panel.panel.the-forum-shot-needs-magic-card-or": {
+    "description": "Notice in the Forum shot tab when the installed Magic Card is too old or does not work with this panel. {version} is the lowest Magic Card version that has the forum shot. {version}: The value that replaces version in the text. Max 100 characters.",
+    "source_text": "The forum shot needs Magic Card {version} or newer. Update Magic Card.",
+    "x-max-length": 100,
+    "x-source-hash": "2db60bfd"
   },
   "mcu-panel.panel.the-magic-card-editor-could-not-be": "De Magic Card-editor kon niet worden geladen.",
   "@mcu-panel.panel.the-magic-card-editor-could-not-be": {
@@ -41724,6 +42172,356 @@
     "source_text": "Your account can use the library but not change it. Ask an admin, or keep this shape in the card only.",
     "x-max-length": 165,
     "x-source-hash": "9a720207"
+  },
+  "share-kit.anim-preview.animation-preview": "Voorbeeld van de animatie",
+  "@share-kit.anim-preview.animation-preview": {
+    "description": "Accessible name of the small box that shows an imported animation before it is saved. Max 40 characters.",
+    "source_text": "Animation preview",
+    "x-max-length": 40,
+    "x-source-hash": "d2ecb96a"
+  },
+  "share-kit.anim-preview.play": "Afspelen",
+  "@share-kit.anim-preview.play": {
+    "description": "Button that plays or pauses the animated preview of an imported animation. Shown pressed while it plays. Max 20 characters.",
+    "source_text": "Play",
+    "x-max-length": 20,
+    "x-source-hash": "436e6101"
+  },
+  "share-kit.card.a-picture-in-path-was-left-out-because-it-may": "Een afbeelding in {path} is weggelaten omdat die van een andere website kan laden ({rule}).",
+  "@share-kit.card.a-picture-in-path-was-left-out-because-it-may": {
+    "description": "Import note for a picture in the text of a shared card (markdown or HTML) that is not a file on this Home Assistant. {path} is the place of the text, {rule} the id of the check. The website names are listed beside it. {path}: The path of the setting, for example data.rows[0].columns[0].modules[0].content. {rule}: The id of the check, for example strict.host. Max 120 characters.",
+    "source_text": "A picture in {path} was left out because it may load from another website ({rule}).",
+    "x-max-length": 120,
+    "x-source-hash": "4e4dc736"
+  },
+  "share-kit.card.a-style-line-in-path-was-left-out-because-its-name": "Een stijlregel in {path} is weggelaten omdat de naam niet is toegestaan ({rule}).",
+  "@share-kit.card.a-style-line-in-path-was-left-out-because-its-name": {
+    "description": "Import note for a line in the free-form style (CSS) of a shared card whose property name is not valid. {path} is the place of the line, {rule} the id of the check. {path}: The path of the setting, for example data.css[0]. {rule}: The id of the check, for example strict.css. Max 115 characters.",
+    "source_text": "A style line in {path} was left out because its name is not allowed ({rule}).",
+    "x-max-length": 115,
+    "x-source-hash": "736395ce"
+  },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": "Een sjabloon in {path} is weggelaten omdat gedeelde tekst geen sjablonen uitvoert: {text} ({rule}).",
+  "@share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "description": "Import note for a template removed from the text of a shared card. {path} is the place of the text, {text} the start of the removed template and {rule} the id of the check. {path}: The path of the setting, for example data.rows[0].columns[0].modules[0].content. {rule}: The id of the check, for example strict.any. {text}: The start of the removed template, copied as written; do not translate it. Max 160 characters.",
+    "source_text": "A template in {path} was left out because shared text does not run templates: {text} ({rule}).",
+    "x-max-length": 160,
+    "x-source-hash": "a8c8ddeb"
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": "\"{name}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
+  "@share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "description": "Import warning for a card value that points to a /local/ file. {name} is the setting in quotes; do not translate it. The sharer is the person who made the file. {name}: The name of the setting that uses the file. Max 135 characters.",
+    "source_text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "x-max-length": 135,
+    "x-source-hash": "9551f0e5"
+  },
+  "share-kit.card.path-is-a-card-mod-style-so-it-was-left-out": "{path} is een card-mod-stijl en is weggelaten ({rule}).",
+  "@share-kit.card.path-is-a-card-mod-style-so-it-was-left-out": {
+    "description": "Import note for a card-mod style inside a shared card. Card-mod styles are not imported with a card. {path} is the place of the style, {rule} the id of the check. {path}: The path of the setting, for example data.design.card-mod-card. {rule}: The id of the check, for example strict.card-mod. Max 100 characters.",
+    "source_text": "{path} is a card-mod style, so it was left out ({rule}).",
+    "x-max-length": 100,
+    "x-source-hash": "240bca33"
+  },
+  "share-kit.card.path-is-a-module-of-an-unknown-type-so-it-was": "{path} is een module van een onbekend type en is weggelaten ({rule}).",
+  "@share-kit.card.path-is-a-module-of-an-unknown-type-so-it-was": {
+    "description": "Import note for a module in a shared card whose type Magic Card does not know. {path} is the place of the module, {rule} the id of the check. {path}: The path of the setting, for example data.rows[0].columns[0].modules[1]. {rule}: The id of the check, for example strict.module. Max 105 characters.",
+    "source_text": "{path} is a module of an unknown type, so it was left out ({rule}).",
+    "x-max-length": 105,
+    "x-source-hash": "83119f66"
+  },
+  "share-kit.card.path-is-not-a-card-setting-so-it-was-left-out": "{path} is geen kaartinstelling en is weggelaten ({rule}).",
+  "@share-kit.card.path-is-not-a-card-setting-so-it-was-left-out": {
+    "description": "Import note for a key in a shared card that Magic Card does not know. {path} is the place of the key, {rule} the id of the check. {path}: The path of the setting, for example data.pwn. {rule}: The id of the check, for example strict.key. Max 100 characters.",
+    "source_text": "{path} is not a card setting, so it was left out ({rule}).",
+    "x-max-length": 100,
+    "x-source-hash": "617acc58"
+  },
+  "share-kit.card.path-points-to-another-website-so-it-was-left-out": "{path} verwijst naar een andere website, of naar een adres dat niet te controleren is, en is weggelaten ({rule}).",
+  "@share-kit.card.path-points-to-another-website-so-it-was-left-out": {
+    "description": "Import note for a card value that loads from another website or whose address cannot be told apart from one. {path} is the place of the setting, {rule} the id of the check. The website names are listed beside it. {path}: The path of the setting, for example data.background_image. {rule}: The id of the check, for example strict.host. Max 150 characters.",
+    "source_text": "{path} points to another website, or to an address that cannot be checked, so it was left out ({rule}).",
+    "x-max-length": 150,
+    "x-source-hash": "575ff23c"
+  },
+  "share-kit.card.path-was-left-out-because-its-value-is-not-allowed": "{path} is weggelaten omdat de waarde niet is toegestaan ({rule}).",
+  "@share-kit.card.path-was-left-out-because-its-value-is-not-allowed": {
+    "description": "Import note for a card value that fits no allowed type. {path} is the place of the setting, {rule} the id of the check. The value itself is never shown. {path}: The path of the setting, for example data.border_radius. {rule}: The id of the check, for example strict.length. Max 110 characters.",
+    "source_text": "{path} was left out because its value is not allowed ({rule}).",
+    "x-max-length": 110,
+    "x-source-hash": "194bb6c6"
+  },
+  "share-kit.card.the-action-in-path-was-left-out-because-its-web-address": "De actie in {path} is weggelaten omdat het webadres geen weblink of pad op dit dashboard is ({rule}).",
+  "@share-kit.card.the-action-in-path-was-left-out-because-its-web-address": {
+    "description": "Import note for a tap, hold or double-tap action in a shared card whose link is not a normal web link, for example one that starts with javascript:. {path} is the place of the action, {rule} the id of the check. {path}: The path of the setting, for example data.rows[0].columns[0].modules[0].actions.tap_action. {rule}: The id of the check, for example strict.action-url. Max 170 characters.",
+    "source_text": "The action in {path} was left out because its web address is not a web link or a path on this dashboard ({rule}).",
+    "x-max-length": 170,
+    "x-source-hash": "a7999a00"
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": "Dit is geen Magic Card-kaart.",
+  "@share-kit.card.this-is-not-a-magic-card-card": {
+    "description": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported. Max 45 characters.",
+    "source_text": "This is not a Magic Card card.",
+    "x-max-length": 45,
+    "x-source-hash": "d853edff"
+  },
+  "share-kit.import-preview.demo-states-help": "Verzonnen waarden vervangen je entiteiten.",
+  "@share-kit.import-preview.demo-states-help": {
+    "description": "Help line under a card preview that lists demo values. Max 80 characters.",
+    "source_text": "Made-up values stand in for your entities.",
+    "x-max-length": 80,
+    "x-source-hash": "d453aceb"
+  },
+  "share-kit.import-preview.preview-heading": "Voorbeeld",
+  "@share-kit.import-preview.preview-heading": {
+    "description": "Heading above the preview of what was read from the file. Max 20 characters.",
+    "source_text": "Preview",
+    "x-max-length": 20,
+    "x-source-hash": "324b134f"
+  },
+  "share-kit.import-preview.preview-of-name": "Voorbeeld van {name}. Er wordt niets van internet geladen.",
+  "@share-kit.import-preview.preview-of-name": {
+    "description": "Accessible name of the preview of one item. {name} is the item name. {name}: The item name. Max 120 characters.",
+    "source_text": "Preview of {name}. Nothing is loaded from the internet.",
+    "x-max-length": 120,
+    "x-source-hash": "da53a4f1"
+  },
+  "share-kit.import-preview.wall-tablet-toggle": "Wandtablet",
+  "@share-kit.import-preview.wall-tablet-toggle": {
+    "description": "Button that shows or hides the Wall tablet preview of an imported theme. Max 24 characters.",
+    "source_text": "Wall tablet",
+    "x-max-length": 24,
+    "x-source-hash": "bedf15b0"
+  },
+  "share-kit.mapping.cancel": "Annuleren",
+  "@share-kit.mapping.cancel": {
+    "description": "Button that closes the mapping step without saving. Max 20 characters.",
+    "source_text": "Cancel",
+    "x-max-length": 20,
+    "x-source-hash": "19766ed6"
+  },
+  "share-kit.mapping.map-entities": "Entiteiten koppelen",
+  "@share-kit.mapping.map-entities": {
+    "description": "Heading of the optional step in an import where placeholders are linked to the importer's own Home Assistant entities. Max 30 characters.",
+    "source_text": "Map entities",
+    "x-max-length": 30,
+    "x-source-hash": "18d3b884"
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": "Hier hoeft niets gekoppeld te worden.",
+  "@share-kit.mapping.nothing-here-needs-mapping": {
+    "description": "Shown in the mapping step when the saved item holds no placeholders any more. Max 45 characters.",
+    "source_text": "Nothing here needs mapping.",
+    "x-max-length": 45,
+    "x-source-hash": "e9c28eb4"
+  },
+  "share-kit.mapping.save-mapping": "Koppeling opslaan",
+  "@share-kit.mapping.save-mapping": {
+    "description": "Button that saves the entities chosen in the mapping step into the saved image or card. Max 25 characters.",
+    "source_text": "Save mapping",
+    "x-max-length": 25,
+    "x-source-hash": "bb40e390"
+  },
+  "share-kit.mapping.skip-mapping": "Overslaan",
+  "@share-kit.mapping.skip-mapping": {
+    "description": "Button in the import mapping step that clears all chosen entities so the placeholders stay as they are. Max 25 characters.",
+    "source_text": "Skip mapping",
+    "x-max-length": 25,
+    "x-source-hash": "52935301"
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": "Dat is geen entiteits-ID. Gebruik de vorm {example}.",
+  "@share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "description": "Error under an entity field in the import mapping step. {example} is an example entity ID such as light.name; do not translate it. {example}: An example entity ID, for example light.name. Max 65 characters.",
+    "source_text": "That is not an entity ID. Use the form {example}.",
+    "x-max-length": 65,
+    "x-source-hash": "923671cb"
+  },
+  "share-kit.mapping.the-preview-shows-value": "Het voorbeeld toont {value}",
+  "@share-kit.mapping.the-preview-shows-value": {
+    "description": "Shown beside a placeholder: the made-up value the preview uses for it. {value} is a short state such as \"on, 80 %\" or \"21.5 °C\". {value}: The made-up state, for example \"21.5 °C\". Max 45 characters.",
+    "source_text": "The preview shows {value}",
+    "x-max-length": 45,
+    "x-source-hash": "d86f815e"
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": "Dit bestand gebruikt plaatsaanduidingen in plaats van de entiteiten van de afzender. Typ per plaatsaanduiding de gewenste entiteit, of sla over. Een leeg veld blijft een plaatsaanduiding.",
+  "@share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "description": "Help text above the entity mapping fields of an import. A placeholder is a stand-in entity name such as light.mc_placeholder_1. The sender is the person who made the file. Max 190 characters.",
+    "source_text": "This file uses placeholders instead of the sender's entities. Type the entity you want for each one, or skip and do it later. A field you leave empty stays a placeholder.",
+    "x-max-length": 190,
+    "x-source-hash": "2a874c13"
+  },
+  "share-kit.notice.actions-in-this-card": "Acties in deze kaart",
+  "@share-kit.notice.actions-in-this-card": {
+    "description": "Heading above the list of actions a shared card can run, shown before the user confirms an import. Max 40 characters.",
+    "source_text": "Actions in this card",
+    "x-max-length": 40,
+    "x-source-hash": "db66b892"
+  },
+  "share-kit.notice.actions-in-this-card-help": "Ze worden alleen uitgevoerd als iemand de kaart gebruikt. Bij het importeren wordt er niets uitgevoerd.",
+  "@share-kit.notice.actions-in-this-card-help": {
+    "description": "Help line under the actions heading of a shared card import. Max 120 characters.",
+    "source_text": "They run only when someone uses the card. Nothing runs when you import it.",
+    "x-max-length": 120,
+    "x-source-hash": "4eee9649"
+  },
+  "share-kit.notice.addresses-on-other-websites-were-removed": "Adressen op andere websites zijn uit deze export verwijderd: {hosts}. Wie dit importeert, ziet ze niet.",
+  "@share-kit.notice.addresses-on-other-websites-were-removed": {
+    "description": "Line under the export text. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 130 characters.",
+    "source_text": "Addresses on other websites were removed from this export: {hosts}. Whoever imports it will not see them.",
+    "x-max-length": 130,
+    "x-source-hash": "8a78e3e7"
+  },
+  "share-kit.notice.author-name-is-optional": "De naam van de maker is optioneel. Een naam is een persoonsgegeven. Als je die invult, wordt die in het bestand geschreven en kan iedereen die het bestand krijgt de naam lezen. Gebruik gerust een bijnaam en voeg geen e-mailadres of contactgegevens toe. Laat het veld leeg om zonder naam te delen.",
+  "@share-kit.notice.author-name-is-optional": {
+    "description": "Privacy note on the export panel when the items carry an author name. It says the name is personal data and is written into the file. Max 330 characters.",
+    "source_text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
+    "x-max-length": 330,
+    "x-source-hash": "d28f3b1c"
+  },
+  "share-kit.notice.entity-ids-were-replaced": "Entiteits-ID's zijn vervangen door plaatshouders. Wie dit bestand importeert, kiest zijn eigen apparaten.",
+  "@share-kit.notice.entity-ids-were-replaced": {
+    "description": "Line under the export text telling the sender that entity IDs were swapped for placeholders. Max 110 characters.",
+    "source_text": "Entity IDs were replaced with placeholders. Whoever imports this file picks their own devices.",
+    "x-max-length": 110,
+    "x-source-hash": "b747a762"
+  },
+  "share-kit.notice.only-import-files-from-people-you-trust": "Importeer alleen bestanden van mensen die je vertrouwt. Magic Card controleert het bestand en toont een voorbeeld, en er wordt niets opgeslagen voordat je bevestigt. Bekijk het voorbeeld, de acties en de sjablonen voordat je bevestigt.",
+  "@share-kit.notice.only-import-files-from-people-you-trust": {
+    "description": "Warning above the preview of every import, before the Confirm button. It tells the user to trust the sender and to look at the preview, actions and templates first. Max 250 characters.",
+    "source_text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
+    "x-max-length": 250,
+    "x-source-hash": "6ec0a378"
+  },
+  "share-kit.notice.templates-in-this-card": "Sjablonen in deze kaart",
+  "@share-kit.notice.templates-in-this-card": {
+    "description": "Heading above the list of Jinja templates a shared card holds, shown before the user confirms an import. Max 40 characters.",
+    "source_text": "Templates in this card",
+    "x-max-length": 40,
+    "x-source-hash": "a22ad675"
+  },
+  "share-kit.notice.templates-in-this-card-help": "Deze draaien op je Home Assistant en kunnen de status van je entiteiten lezen. Hier worden ze alleen als tekst getoond en niet uitgevoerd.",
+  "@share-kit.notice.templates-in-this-card-help": {
+    "description": "Help line under the templates heading of a shared card import. Max 170 characters.",
+    "source_text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
+    "x-max-length": 170,
+    "x-source-hash": "6a0f473d"
+  },
+  "share-kit.style-drops.a-style-rule-name": "een stijlregel ({name})",
+  "@share-kit.style-drops.a-style-rule-name": {
+    "description": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is the CSS part that was dropped, such as @import or url(). Lower case, a noun phrase. {name}: The value that replaces name in the text. Max 40 characters.",
+    "source_text": "a style rule ({name})",
+    "x-max-length": 40,
+    "x-source-hash": "3ecb0c4d"
+  },
+  "share-kit.style-drops.a-stylesheet-link": "een stijlbladverwijzing",
+  "@share-kit.style-drops.a-stylesheet-link": {
+    "description": "Names what was removed from an imported SVG, used inside Removed {what}. It is the xml-stylesheet line at the top of the file that points to a style file. Lower case, a noun phrase. Max 30 characters.",
+    "source_text": "a stylesheet link",
+    "x-max-length": 30,
+    "x-source-hash": "c91313dc"
+  },
+  "share-kit.theme-check.dark": "donkere",
+  "@share-kit.theme-check.dark": {
+    "description": "The word for dark mode, placed in the sentence \"... in {mode} mode ...\". Max 20 characters.",
+    "source_text": "dark",
+    "x-max-length": 20,
+    "x-source-hash": "e6bb5689"
+  },
+  "share-kit.theme-check.light": "lichte",
+  "@share-kit.theme-check.light": {
+    "description": "The word for light mode, placed in the sentence \"... in {mode} mode ...\". Max 20 characters.",
+    "source_text": "light",
+    "x-max-length": 20,
+    "x-source-hash": "99a70261"
+  },
+  "share-kit.theme-check.low-contrast-heading": "Een deel van de tekst in dit thema is moeilijk te lezen",
+  "@share-kit.theme-check.low-contrast-heading": {
+    "description": "Heading of the warning shown before Confirm when an imported theme has a text and background colour pair that is too close in contrast. Max 70 characters.",
+    "source_text": "Some text in this theme is hard to read",
+    "x-max-length": 70,
+    "x-source-hash": "0e5056ee"
+  },
+  "share-kit.theme-check.magic-card-text-on-the-magic-card-background": "Magic Card-tekst op de Magic Card-achtergrond",
+  "@share-kit.theme-check.magic-card-text-on-the-magic-card-background": {
+    "description": "Name of a colour pair in the contrast warning: the Magic Card text colour on the Magic Card background. Max 70 characters.",
+    "source_text": "Magic Card text on the Magic Card background",
+    "x-max-length": 70,
+    "x-source-hash": "e28cbb92"
+  },
+  "share-kit.theme-check.main-text-on-the-card-background": "Hoofdtekst op de kaartachtergrond",
+  "@share-kit.theme-check.main-text-on-the-card-background": {
+    "description": "Name of a colour pair in the contrast warning: the main text colour on the card background. Max 60 characters.",
+    "source_text": "Main text on the card background",
+    "x-max-length": 60,
+    "x-source-hash": "a54d167d"
+  },
+  "share-kit.theme-check.main-text-on-the-page-background": "Hoofdtekst op de paginaachtergrond",
+  "@share-kit.theme-check.main-text-on-the-page-background": {
+    "description": "Name of a colour pair in the contrast warning: the main text colour on the dashboard page background. Max 60 characters.",
+    "source_text": "Main text on the page background",
+    "x-max-length": 60,
+    "x-source-hash": "aefcf53a"
+  },
+  "share-kit.theme-check.pair-in-mode": "{pair} in de {mode} modus heeft een contrast van {ratio}:1. Tekst heeft minstens {min}:1 nodig.",
+  "@share-kit.theme-check.pair-in-mode": {
+    "description": "One line of the contrast warning. {pair} is a name such as \"Main text on the card background\", {mode} is \"light\" or \"dark\", {ratio} and {min} are numbers. {min}: The lowest contrast ratio allowed, 4.5. {mode}: The word for the mode: light or dark. {pair}: The name of the text and background colour pair, for example Main text on the card background. {ratio}: The contrast ratio found, a number such as 3.2. Max 140 characters.",
+    "source_text": "{pair} in {mode} mode has a contrast of {ratio}:1. Text needs at least {min}:1.",
+    "x-max-length": 140,
+    "x-source-hash": "e8ef5761"
+  },
+  "share-kit.theme-check.secondary-text-on-the-card-background": "Secundaire tekst op de kaartachtergrond",
+  "@share-kit.theme-check.secondary-text-on-the-card-background": {
+    "description": "Name of a colour pair in the contrast warning: the secondary text colour on the card background. Max 60 characters.",
+    "source_text": "Secondary text on the card background",
+    "x-max-length": 60,
+    "x-source-hash": "3866d6bf"
+  },
+  "share-kit.theme-check.text-on-the-primary-colour": "Tekst op de primaire kleur",
+  "@share-kit.theme-check.text-on-the-primary-colour": {
+    "description": "Name of a colour pair in the contrast warning: the text colour used on top of the theme primary colour. Max 60 characters.",
+    "source_text": "Text on the primary colour",
+    "x-max-length": 60,
+    "x-source-hash": "fc382314"
+  },
+  "share-kit.wall-tablet.wall-tablet-caption": "Op een vijfde van de grootte, zoals tekst er op 3 meter afstand uitziet.",
+  "@share-kit.wall-tablet.wall-tablet-caption": {
+    "description": "Short caption under the Wall tablet preview. Max 80 characters.",
+    "source_text": "Drawn at one fifth size, as the text looks from 3 metres away.",
+    "x-max-length": 80,
+    "x-source-hash": "61e7c62e"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-button": "Lampen aan",
+  "@share-kit.wall-tablet.wall-tablet-card-button": {
+    "description": "Sample button text on the Wall tablet preview card. Max 30 characters.",
+    "source_text": "Lights on",
+    "x-max-length": 30,
+    "x-source-hash": "ab2323a5"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-text": "Temperatuur",
+  "@share-kit.wall-tablet.wall-tablet-card-text": {
+    "description": "Label on the sample card on the Wall tablet preview. Max 30 characters.",
+    "source_text": "Temperature",
+    "x-max-length": 30,
+    "x-source-hash": "b958ce8b"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-title": "Woonkamer",
+  "@share-kit.wall-tablet.wall-tablet-card-title": {
+    "description": "Title of the sample card on the Wall tablet preview. Max 30 characters.",
+    "source_text": "Living room",
+    "x-max-length": 30,
+    "x-source-hash": "268d40ee"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-value": "21,5 °C",
+  "@share-kit.wall-tablet.wall-tablet-card-value": {
+    "description": "Sample temperature shown on the Wall tablet preview card. Max 20 characters.",
+    "source_text": "21.5 °C",
+    "x-max-length": 20,
+    "x-source-hash": "a5db9bd8"
+  },
+  "share-kit.wall-tablet.wall-tablet-label": "Wandtabletvoorbeeld, {mode}modus. Een tablet van 1280 bij 800 pixels met één voorbeeldkaart, op een vijfde van de grootte getekend om te laten zien hoe tekst er op 3 meter uitziet.",
+  "@share-kit.wall-tablet.wall-tablet-label": {
+    "description": "Accessible name of the Wall tablet preview frame. {mode} is the word light or dark. {mode}: The word for the mode: light or dark. Max 200 characters.",
+    "source_text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 metres.",
+    "x-max-length": 200,
+    "x-source-hash": "2f6e4db9"
   },
   "svg-editor.combine.c": "{c, plural, one {1 open lijn is weggelaten.} other {# open lijnen zijn weggelaten.}}",
   "@svg-editor.combine.c": {
@@ -49548,6 +50346,55 @@
     "x-max-length": 15,
     "x-source-hash": "7af533e6"
   },
+  "theme-editor.preview.wall-tablet": "Wandtablet",
+  "@theme-editor.preview.wall-tablet": {
+    "description": "Name of the button that shows the theme on a wall-mounted tablet seen from across the room. Max 20 characters.",
+    "source_text": "Wall tablet",
+    "x-max-length": 20,
+    "x-source-hash": "bedf15b0"
+  },
+  "theme-editor.preview.wall-tablet-caption": "Op een vijfde van de grootte, zoals tekst er op 3 meter afstand uitziet.",
+  "@theme-editor.preview.wall-tablet-caption": {
+    "description": "Short caption under the Wall tablet preview. Max 80 characters.",
+    "source_text": "Drawn at one fifth size, as the text looks from 3 metres away.",
+    "x-max-length": 80,
+    "x-source-hash": "61e7c62e"
+  },
+  "theme-editor.preview.wall-tablet-card-button": "Lampen aan",
+  "@theme-editor.preview.wall-tablet-card-button": {
+    "description": "Sample button text on the Wall tablet preview card. Max 30 characters.",
+    "source_text": "Lights on",
+    "x-max-length": 30,
+    "x-source-hash": "ab2323a5"
+  },
+  "theme-editor.preview.wall-tablet-card-text": "Temperatuur",
+  "@theme-editor.preview.wall-tablet-card-text": {
+    "description": "Label on the sample card on the Wall tablet preview. Max 30 characters.",
+    "source_text": "Temperature",
+    "x-max-length": 30,
+    "x-source-hash": "b958ce8b"
+  },
+  "theme-editor.preview.wall-tablet-card-title": "Woonkamer",
+  "@theme-editor.preview.wall-tablet-card-title": {
+    "description": "Title of the sample card on the Wall tablet preview. Max 30 characters.",
+    "source_text": "Living room",
+    "x-max-length": 30,
+    "x-source-hash": "268d40ee"
+  },
+  "theme-editor.preview.wall-tablet-card-value": "21,5 °C",
+  "@theme-editor.preview.wall-tablet-card-value": {
+    "description": "Sample temperature shown on the Wall tablet preview card. Max 20 characters.",
+    "source_text": "21.5 °C",
+    "x-max-length": 20,
+    "x-source-hash": "a5db9bd8"
+  },
+  "theme-editor.preview.wall-tablet-label": "Wandtabletvoorbeeld, {mode}modus. Een tablet van 1280 bij 800 pixels met één voorbeeldkaart, op een vijfde van de grootte getekend om te laten zien hoe tekst er op 3 meter uitziet.",
+  "@theme-editor.preview.wall-tablet-label": {
+    "description": "Accessible name of the Wall tablet preview frame. {mode} is the word light or dark. {mode}: The word for the mode: light or dark. Max 200 characters.",
+    "source_text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 metres.",
+    "x-max-length": 200,
+    "x-source-hash": "2f6e4db9"
+  },
   "theme-editor.preview.warning-message": "Waarschuwingsbericht",
   "@theme-editor.preview.warning-message": {
     "description": "Sample alert in the preview that uses the warning colour. Max 25 characters.",
@@ -51707,6 +52554,17 @@
     "x-max-length": 50,
     "x-source-hash": "a2d35b9a"
   },
+  "transfer.count.cards": "{n, plural, one {# kaart} other {# kaarten}}",
+  "@transfer.count.cards": {
+    "description": "Count of shared cards in an import or export summary. {n} is the number of items. {n}: The count the text is about. Max 15 characters.",
+    "source_text": "{n, plural, one {# card} other {# cards}}",
+    "x-max-length": 15,
+    "x-source-hash": "2d0d4925",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "transfer.count.n": "{n, plural, one {# animatie} other {# animaties}}",
   "@transfer.count.n": {
     "description": "Count of animations in an import or export summary. {n} is the number of items. Same pattern as the theme, shape, image and icon counts. {n}: The count the text is about. Max 20 characters.",
@@ -51782,6 +52640,13 @@
     "source_text": "Animations do not store an author, so it was not kept.",
     "x-max-length": 90,
     "x-source-hash": "497e83e0"
+  },
+  "transfer.envelope.card-files-are-imported-in-the-card-editor": "Kaartbestanden worden geïmporteerd in de kaarteditor.",
+  "@transfer.envelope.card-files-are-imported-in-the-card-editor": {
+    "description": "Hint in the import report when a card file is opened in the wrong place. It tells the user where card files are imported. Max 70 characters.",
+    "source_text": "Card files are imported in the card editor.",
+    "x-max-length": 70,
+    "x-source-hash": "51852ea0"
   },
   "transfer.envelope.icon-files-are-imported-in-the-card": "Pictogrambestanden importeer je in de kaarteditor (Mijn pictogrammen) of in de SVG-editor.",
   "@transfer.envelope.icon-files-are-imported-in-the-card": {
@@ -51942,6 +52807,13 @@
     "x-max-length": 90,
     "x-source-hash": "8ef392f3"
   },
+  "transfer.envelope.this-file-was-not-imported-item-n-path-holds": "Dit bestand is niet geïmporteerd. Onderdeel {n}, {path}, bevat tekst die niet is toegestaan ({rule}). Er is niets opgeslagen.",
+  "@transfer.envelope.this-file-was-not-imported-item-n-path-holds": {
+    "description": "Import error when a value holds a break-out marker, so the whole file is refused. {n} is the item number, {path} the field path and {rule} the name of the check; the value itself is never shown. {n}: The number of the item in the file, counted from 1. {path}: The field path of the value, for example data.primary-color. {rule}: The id of the check that refused the file, for example strict.marker. Max 190 characters.",
+    "source_text": "This file was not imported. Item {n}, {path}, holds text that is not allowed ({rule}). Nothing was saved.",
+    "x-max-length": 190,
+    "x-source-hash": "f24ac4b4"
+  },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": "Dit is geen Magic Card-presetbestand.",
   "@transfer.envelope.this-is-not-a-magic-card-preset-file": {
     "description": "Import error when the pasted or chosen file lacks the preset file markers. It tells the user the file is of another kind. Max 60 characters.",
@@ -52093,6 +52965,13 @@
     "x-max-length": 80,
     "x-source-hash": "df0ade5b"
   },
+  "transfer.import.compressed-file": "Dit bestand is gecomprimeerd. Magic Card leest alleen gewone JSON of YAML; pak het eerst uit.",
+  "@transfer.import.compressed-file": {
+    "description": "Import error when the chosen file starts like a gzip, zip, brotli or zstd archive. It tells the user to unpack the file first; the file is never decompressed. Keep JSON and YAML unchanged. Max 110 characters.",
+    "source_text": "This file is compressed. Magic Card reads only plain JSON or YAML; unpack it first.",
+    "x-max-length": 110,
+    "x-source-hash": "77e1407c"
+  },
   "transfer.library-view.added-n-to-this-card": "{n} toegevoegd aan deze kaart.",
   "@transfer.library-view.added-n-to-this-card": {
     "description": "Confirmation after an import into the card's own library. {n} is how many items were added, as a number. {n}: The value that replaces n in the text. Max 40 characters.",
@@ -52212,12 +53091,12 @@
     "x-max-length": 15,
     "x-source-hash": "be7e2f20"
   },
-  "transfer.library-view.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
+  "transfer.library-view.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@transfer.library-view.images-need-magic-card-utils-it-is": {
-    "description": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep HACS, Magic Card and Magic Card Utils unchanged. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep Magic Card and Magic Card Utils unchanged. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "transfer.library-view.import": "Importeren",
   "@transfer.library-view.import": {
@@ -52295,6 +53174,20 @@
     "source_text": "Magic Card Utils",
     "x-max-length": 30,
     "x-source-hash": "b19971b3"
+  },
+  "transfer.library-view.map-entities-for-name": "Entiteiten koppelen voor {name}",
+  "@transfer.library-view.map-entities-for-name": {
+    "description": "Tooltip and screen-reader name of the row button that opens the entity mapping step for one saved image. {name} is the image name. {name}: The name of the saved image. Max 45 characters.",
+    "source_text": "Map entities for {name}",
+    "x-max-length": 45,
+    "x-source-hash": "4525b461"
+  },
+  "transfer.library-view.mapped-the-entities-in-name": "De entiteiten in {name} zijn gekoppeld.",
+  "@transfer.library-view.mapped-the-entities-in-name": {
+    "description": "Confirmation after the mapping of a saved image was saved. {name} is the image name. {name}: The name of the saved image. Max 60 characters.",
+    "source_text": "Mapped the entities in {name}.",
+    "x-max-length": 60,
+    "x-source-hash": "be25d33c"
   },
   "transfer.library-view.maximise": "Maximaliseren",
   "@transfer.library-view.maximise": {
@@ -52531,6 +53424,17 @@
       "other"
     ]
   },
+  "transfer.panel.export-cards": "{n, plural, one {# kaart exporteren} other {# kaarten exporteren}}",
+  "@transfer.panel.export-cards": {
+    "description": "Heading and button of the export step; counts the cards that are exported. {n}: The count the text is about. Max 25 characters.",
+    "source_text": "{n, plural, one {Export # card} other {Export # cards}}",
+    "x-max-length": 25,
+    "x-source-hash": "02bd78c5",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "transfer.panel.export-icons": "{n, plural, one {# pictogram exporteren} other {# pictogrammen exporteren}}",
   "@transfer.panel.export-icons": {
     "description": "Heading and button of the export step; counts the icons that are exported. {n}: The count the text is about. Max 25 characters.",
@@ -52589,12 +53493,12 @@
     "x-max-length": 20,
     "x-source-hash": "d63b2b69"
   },
-  "transfer.panel.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
+  "transfer.panel.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@transfer.panel.images-need-magic-card-utils-it-is": {
-    "description": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep HACS and product names unchanged. Max 125 characters.",
-    "source_text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
+    "description": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep product names unchanged. Max 125 characters.",
+    "source_text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
     "x-max-length": 125,
-    "x-source-hash": "62625dad"
+    "x-source-hash": "94d5c5c4"
   },
   "transfer.panel.import-animations": "{n, plural, one {# animatie importeren} other {# animaties importeren}}",
   "@transfer.panel.import-animations": {
@@ -52613,6 +53517,17 @@
     "source_text": "Import anyway",
     "x-max-length": 25,
     "x-source-hash": "e06eac7e"
+  },
+  "transfer.panel.import-cards": "{n, plural, one {# kaart importeren} other {# kaarten importeren}}",
+  "@transfer.panel.import-cards": {
+    "description": "Heading and button of the import step; counts the cards that are imported. {n}: The count the text is about. Max 25 characters.",
+    "source_text": "{n, plural, one {Import # card} other {Import # cards}}",
+    "x-max-length": 25,
+    "x-source-hash": "709027fd",
+    "x-plural": [
+      "one",
+      "other"
+    ]
   },
   "transfer.panel.import-icons": "{n, plural, one {# pictogram importeren} other {# pictogrammen importeren}}",
   "@transfer.panel.import-icons": {
@@ -52787,12 +53702,30 @@
     "x-max-length": 20,
     "x-source-hash": "f199ad2e"
   },
+  "transfer.panel.something-went-wrong-while-reading-this-file": "Er ging iets mis bij het lezen. Er is niets geïmporteerd.",
+  "@transfer.panel.something-went-wrong-while-reading-this-file": {
+    "description": "Refusal shown when reading pasted text or a file failed unexpectedly. Nothing is saved. Max 80 characters.",
+    "source_text": "Something went wrong while reading this. Nothing was imported.",
+    "x-max-length": 80,
+    "x-source-hash": "2d04efbc"
+  },
   "transfer.panel.source-holds-animations": "{n, plural, one {{source} bevat # animatie.} other {{source} bevat # animaties.}}",
   "@transfer.panel.source-holds-animations": {
     "description": "Line under the import heading: what the chosen file or pasted text holds (animations). {n}: The count the text is about. {source}: The file name, or a word for the pasted text. Max 40 characters.",
     "source_text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
     "x-max-length": 40,
     "x-source-hash": "cddd5aed",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "transfer.panel.source-holds-cards": "{n, plural, one {{source} bevat # kaart.} other {{source} bevat # kaarten.}}",
+  "@transfer.panel.source-holds-cards": {
+    "description": "Line under the import heading: what the chosen file or pasted text holds (cards). {n}: The count the text is about. {source}: The file name, or a word for the pasted text. Max 40 characters.",
+    "source_text": "{n, plural, one {{source} holds # card.} other {{source} holds # cards.}}",
+    "x-max-length": 40,
+    "x-source-hash": "595f7f59",
     "x-plural": [
       "one",
       "other"
@@ -52842,19 +53775,19 @@
       "other"
     ]
   },
-  "transfer.panel.the-author-name-is-saved-in-the-file": "De naam van de auteur komt in het bestand. Controleer hem voordat je het bestand deelt.",
-  "@transfer.panel.the-author-name-is-saved-in-the-file": {
-    "description": "Privacy hint on the export panel. The author name is the one stored in the card's settings. Max 120 characters.",
-    "source_text": "The author name is saved in the file. Check it before you share the file.",
-    "x-max-length": 120,
-    "x-source-hash": "767f7f3b"
-  },
   "transfer.panel.the-checker-for-images-did-not-load-so": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
   "@transfer.panel.the-checker-for-images-did-not-load-so": {
     "description": "Error when the code that validates image files failed to load. 'Checker' is the validator, an internal part. Max 105 characters.",
     "source_text": "The checker for images did not load, so this image was not read.",
     "x-max-length": 105,
     "x-source-hash": "f1d22ef2"
+  },
+  "transfer.panel.the-checker-for-shared-values-did-not-load": "De controle voor gedeelde waarden is niet geladen, dus er kan niets worden geïmporteerd of geëxporteerd. Controleer je verbinding en probeer het opnieuw.",
+  "@transfer.panel.the-checker-for-shared-values-did-not-load": {
+    "description": "Error when the code that checks shared values failed to load, usually a network problem. Import and export stay off until it loads. \"Checker\" is the validator. Max 195 characters.",
+    "source_text": "The checker for shared values did not load, so nothing can be imported or exported. Check your connection and try again.",
+    "x-max-length": 195,
+    "x-source-hash": "0e2d6e77"
   },
   "transfer.panel.the-checker-for-these-animations-did-not": "De controle voor deze animaties is niet geladen, dus het bestand is niet gelezen. Controleer je verbinding en probeer het opnieuw.",
   "@transfer.panel.the-checker-for-these-animations-did-not": {
@@ -52883,6 +53816,13 @@
     "source_text": "The text",
     "x-max-length": 15,
     "x-source-hash": "27364d4e"
+  },
+  "transfer.panel.the-wall-tablet-preview-did-not-load": "De Wall tablet-weergave is niet geladen. Controleer je verbinding.",
+  "@transfer.panel.the-wall-tablet-preview-did-not-load": {
+    "description": "Error under the import preview of a theme when the code for the Wall tablet preview failed to load, usually a network problem. Max 90 characters.",
+    "source_text": "The Wall tablet preview did not load. Check your connection and try again.",
+    "x-max-length": 90,
+    "x-source-hash": "f8e960e1"
   },
   "transfer.panel.this-file-was-not-imported": "Dit bestand is niet geïmporteerd",
   "@transfer.panel.this-file-was-not-imported": {
@@ -53126,6 +54066,13 @@
     "x-max-length": 150,
     "x-source-hash": "e60639fa"
   },
+  "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": "{key} verwijst naar {hosts}, dus de waarde is weggelaten ({rule}).",
+  "@transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
+    "description": "Import note for a theme value that loads from another website. {key} is the theme variable, {hosts} the website names and {rule} the name of the check. {hosts}: The website names the value points to, joined by commas. {key}: The name of the theme variable. {rule}: The id of the check, for example strict.background. Max 110 characters.",
+    "source_text": "{key} points to {hosts}, so its value was left out ({rule}).",
+    "x-max-length": 110,
+    "x-source-hash": "79e3af4f"
+  },
   "transfer.theme.key-uses-a-file-on-the-sharer-s-home": "\"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
   "@transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
     "description": "Import warning, whole-theme version. {key} is the variable's name in quotes; do not translate it. 'Sharer' is the person who made the file. {key}: The value that replaces key in the text. Max 135 characters.",
@@ -53195,6 +54142,13 @@
     "source_text": "The theme is larger than {kb} KB.",
     "x-max-length": 55,
     "x-source-hash": "121ee242"
+  },
+  "transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": "De waarde van {key} past bij geen enkel type dat deze instelling toestaat, dus is weggelaten ({rule}).",
+  "@transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": {
+    "description": "Import note for a theme value that is not an allowed kind of value for its variable. {key} is the theme variable and {rule} the name of the check; the value is never shown. {key}: The name of the theme variable. {rule}: The id of the check, for example strict.colour. Max 150 characters.",
+    "source_text": "The value of {key} does not fit any type this setting allows, so it was left out ({rule}).",
+    "x-max-length": 150,
+    "x-source-hash": "f17fd44e"
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": "{max, plural, one {De waarde van \"{key}\" is langer dan # teken, dus is weggelaten.} other {De waarde van \"{key}\" is langer dan # tekens, dus is weggelaten.}}",
   "@transfer.theme.the-value-of-key-is-longer-than-max": {

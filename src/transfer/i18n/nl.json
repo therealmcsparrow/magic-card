@@ -3,6 +3,10 @@
     "text": "De animatiegegevens ontbreken.",
     "hash": "a2d35b9a"
   },
+  "transfer.count.cards": {
+    "text": "{n, plural, one {# kaart} other {# kaarten}}",
+    "hash": "2d0d4925"
+  },
   "transfer.count.n": {
     "text": "{n, plural, one {# animatie} other {# animaties}}",
     "hash": "626cefeb"
@@ -34,6 +38,10 @@
   "transfer.envelope.animations-do-not-store-an-author-so-it": {
     "text": "Animaties bewaren geen auteur, dus die is niet bewaard.",
     "hash": "497e83e0"
+  },
+  "transfer.envelope.card-files-are-imported-in-the-card-editor": {
+    "text": "Kaartbestanden worden geïmporteerd in de kaarteditor.",
+    "hash": "51852ea0"
   },
   "transfer.envelope.icon-files-are-imported-in-the-card": {
     "text": "Pictogrambestanden importeer je in de kaarteditor (Mijn pictogrammen) of in de SVG-editor.",
@@ -119,6 +127,10 @@
     "text": "Dit bestand heeft een nieuwere Magic Card nodig (indeling {major}.x).",
     "hash": "8ef392f3"
   },
+  "transfer.envelope.this-file-was-not-imported-item-n-path-holds": {
+    "text": "Dit bestand is niet geïmporteerd. Onderdeel {n}, {path}, bevat tekst die niet is toegestaan ({rule}). Er is niets opgeslagen.",
+    "hash": "f24ac4b4"
+  },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": {
     "text": "Dit is geen Magic Card-presetbestand.",
     "hash": "0e6922be"
@@ -203,6 +215,10 @@
     "text": "\"{key}\" is geen preset-veld, dus is weggelaten.",
     "hash": "df0ade5b"
   },
+  "transfer.import.compressed-file": {
+    "text": "Dit bestand is gecomprimeerd. Magic Card leest alleen gewone JSON of YAML; pak het eerst uit.",
+    "hash": "77e1407c"
+  },
   "transfer.library-view.added-n-to-this-card": {
     "text": "{n} toegevoegd aan deze kaart.",
     "hash": "54d82490"
@@ -272,8 +288,8 @@
     "hash": "be7e2f20"
   },
   "transfer.library-view.images-need-magic-card-utils-it-is": {
-    "text": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
-    "hash": "62625dad"
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
+    "hash": "94d5c5c4"
   },
   "transfer.library-view.import": {
     "text": "Importeren",
@@ -318,6 +334,14 @@
   "transfer.library-view.magic-card-utils": {
     "text": "Magic Card Utils",
     "hash": "b19971b3"
+  },
+  "transfer.library-view.map-entities-for-name": {
+    "text": "Entiteiten koppelen voor {name}",
+    "hash": "4525b461"
+  },
+  "transfer.library-view.mapped-the-entities-in-name": {
+    "text": "De entiteiten in {name} zijn gekoppeld.",
+    "hash": "be25d33c"
   },
   "transfer.library-view.maximise": {
     "text": "Maximaliseren",
@@ -451,6 +475,10 @@
     "text": "{n, plural, one {# animatie exporteren} other {# animaties exporteren}}",
     "hash": "48e5c5a5"
   },
+  "transfer.panel.export-cards": {
+    "text": "{n, plural, one {# kaart exporteren} other {# kaarten exporteren}}",
+    "hash": "02bd78c5"
+  },
   "transfer.panel.export-icons": {
     "text": "{n, plural, one {# pictogram exporteren} other {# pictogrammen exporteren}}",
     "hash": "cc51c0ae"
@@ -476,8 +504,8 @@
     "hash": "d63b2b69"
   },
   "transfer.panel.images-need-magic-card-utils-it-is": {
-    "text": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
-    "hash": "62625dad"
+    "text": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
+    "hash": "94d5c5c4"
   },
   "transfer.panel.import-animations": {
     "text": "{n, plural, one {# animatie importeren} other {# animaties importeren}}",
@@ -486,6 +514,10 @@
   "transfer.panel.import-anyway": {
     "text": "Toch importeren",
     "hash": "e06eac7e"
+  },
+  "transfer.panel.import-cards": {
+    "text": "{n, plural, one {# kaart importeren} other {# kaarten importeren}}",
+    "hash": "709027fd"
   },
   "transfer.panel.import-icons": {
     "text": "{n, plural, one {# pictogram importeren} other {# pictogrammen importeren}}",
@@ -563,9 +595,17 @@
     "text": "Vervang ze",
     "hash": "f199ad2e"
   },
+  "transfer.panel.something-went-wrong-while-reading-this-file": {
+    "text": "Er ging iets mis bij het lezen. Er is niets geïmporteerd.",
+    "hash": "2d04efbc"
+  },
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} bevat # animatie.} other {{source} bevat # animaties.}}",
     "hash": "cddd5aed"
+  },
+  "transfer.panel.source-holds-cards": {
+    "text": "{n, plural, one {{source} bevat # kaart.} other {{source} bevat # kaarten.}}",
+    "hash": "595f7f59"
   },
   "transfer.panel.source-holds-icons": {
     "text": "{n, plural, one {{source} bevat # pictogram.} other {{source} bevat # pictogrammen.}}",
@@ -583,13 +623,13 @@
     "text": "{n, plural, one {{source} bevat # thema.} other {{source} bevat # thema's.}}",
     "hash": "c69b55de"
   },
-  "transfer.panel.the-author-name-is-saved-in-the-file": {
-    "text": "De naam van de auteur komt in het bestand. Controleer hem voordat je het bestand deelt.",
-    "hash": "767f7f3b"
-  },
   "transfer.panel.the-checker-for-images-did-not-load-so": {
     "text": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
     "hash": "f1d22ef2"
+  },
+  "transfer.panel.the-checker-for-shared-values-did-not-load": {
+    "text": "De controle voor gedeelde waarden is niet geladen, dus er kan niets worden geïmporteerd of geëxporteerd. Controleer je verbinding en probeer het opnieuw.",
+    "hash": "0e2d6e77"
   },
   "transfer.panel.the-checker-for-these-animations-did-not": {
     "text": "De controle voor deze animaties is niet geladen, dus het bestand is niet gelezen. Controleer je verbinding en probeer het opnieuw.",
@@ -606,6 +646,10 @@
   "transfer.panel.the-text": {
     "text": "De tekst",
     "hash": "27364d4e"
+  },
+  "transfer.panel.the-wall-tablet-preview-did-not-load": {
+    "text": "De Wall tablet-weergave is niet geladen. Controleer je verbinding.",
+    "hash": "f8e960e1"
   },
   "transfer.panel.this-file-was-not-imported": {
     "text": "Dit bestand is niet geïmporteerd",
@@ -743,6 +787,10 @@
     "text": "\"{key}\" verwijst naar {hosts}. Hij is bewaard; elke browser die dit thema toont, maakt er contact mee.",
     "hash": "e60639fa"
   },
+  "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
+    "text": "{key} verwijst naar {hosts}, dus de waarde is weggelaten ({rule}).",
+    "hash": "79e3af4f"
+  },
   "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
     "text": "\"{key}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
     "hash": "e7700a33"
@@ -782,6 +830,10 @@
   "transfer.theme.the-theme-is-larger-than-kb-kb": {
     "text": "Het thema is groter dan {kb} KB.",
     "hash": "121ee242"
+  },
+  "transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": {
+    "text": "De waarde van {key} past bij geen enkel type dat deze instelling toestaat, dus is weggelaten ({rule}).",
+    "hash": "f17fd44e"
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {
     "text": "{max, plural, one {De waarde van \"{key}\" is langer dan # teken, dus is weggelaten.} other {De waarde van \"{key}\" is langer dan # tekens, dus is weggelaten.}}",

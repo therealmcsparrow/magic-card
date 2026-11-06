@@ -700,8 +700,8 @@
     "hash": "9ec14117"
   },
   "card-editor.card-picker.custom-cards-hacs": {
-    "text": "Eigen kaarten (HACS)",
-    "hash": "e923dd09"
+    "text": "Eigen kaarten",
+    "hash": "5987c6e6"
   },
   "card-editor.card-picker.display-an-image": {
     "text": "Een afbeelding tonen",
@@ -1151,6 +1151,10 @@
     "text": "Hover",
     "hash": "c76ae86a"
   },
+  "card-editor.card-settings.import-a-shared-card": {
+    "text": "Importeer een gedeelde kaart",
+    "hash": "8882a289"
+  },
   "card-editor.card-settings.layers": {
     "text": "Lagen",
     "hash": "0bcd66e6"
@@ -1162,6 +1166,10 @@
   "card-editor.card-settings.magic-card-utils-templates-never-include": {
     "text": "Magic Card Utils-sjablonen bevatten deze nooit. Een sjabloon toepassen laat de entiteit van deze kaart staan.",
     "hash": "e7f24b6a"
+  },
+  "card-editor.card-settings.map-entities": {
+    "text": "Entiteiten koppelen",
+    "hash": "18d3b884"
   },
   "card-editor.card-settings.match": {
     "text": "Overeenkomst",
@@ -1291,6 +1299,10 @@
     "text": "Vorm",
     "hash": "e0e49270"
   },
+  "card-editor.card-settings.share-this-card": {
+    "text": "Deel deze kaart",
+    "hash": "1b064466"
+  },
   "card-editor.card-settings.show": {
     "text": "Tonen",
     "hash": "0df6f1ca"
@@ -1315,9 +1327,17 @@
     "text": "Het apparaat waar deze kaart voor is. Tegels volgen dit, tenzij je er een voor instelt.",
     "hash": "a8658227"
   },
+  "card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page": {
+    "text": "De deelfuncties zijn niet geladen. Laad de pagina opnieuw en probeer het nog eens.",
+    "hash": "e4db6eed"
+  },
   "card-editor.card-settings.theme-default": {
     "text": "Standaard van het thema",
     "hash": "689a15ad"
+  },
+  "card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your": {
+    "text": "Deze kaart gebruikt nog plaatshouders in plaats van jouw entiteiten. Pas na het koppelen toont hij live waarden.",
+    "hash": "cf58dce1"
   },
   "card-editor.card-settings.this-card-uses-only-its-own-custom": {
     "text": "Deze kaart gebruikt alleen zijn eigen custom_animations.",
@@ -6264,8 +6284,8 @@
     "hash": "8b316924"
   },
   "card-editor.template-picker.magic-card-integration-not-found-please": {
-    "text": "Magic Card-integratie niet gevonden. Installeer die via HACS en voeg de integratie toe.",
-    "hash": "f2d62469"
+    "text": "Magic Card-integratie niet gevonden. Installeer die via de Marketplace of HACS en voeg de integratie toe.",
+    "hash": "182acc35"
   },
   "card-editor.template-picker.no-config-available-to-save": {
     "text": "Geen configuratie beschikbaar om op te slaan.",

@@ -201,7 +201,7 @@ describe('<mc-library-view kinds=["image"]>', () => {
     const out = JSON.parse(p.shadowRoot!.querySelector<HTMLTextAreaElement>('#out')!.value);
     expect(out.kind).toBe('image');
     expect(out.items).toHaveLength(20);
-    expect(out.items[3].data.bindings).toEqual(BINDINGS);
+    expect(out.items[3].data.bindings).toEqual([{ ...BINDINGS[0], entity: 'light.mc_placeholder_1' }, { ...BINDINGS[1], entity: 'sun.mc_placeholder_2' }]);
     expect(JSON.stringify(out)).not.toContain('thumb');
     expect(out.items[0].data).toEqual({ svg: SVG, view_box: '0 0 100 50' });
   });

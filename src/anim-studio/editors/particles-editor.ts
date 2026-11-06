@@ -92,6 +92,7 @@ import {
 import './draw-svg-dialog';
 import type { AnimSvgDialog } from './draw-svg-dialog';
 import { t, m } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 import type { MessageIndex as LabelId } from '../../contracts/i18n';
 
 /** The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx); mc-ring / mc-seasonal are used by tag only. */
@@ -264,6 +265,7 @@ export class AnimParticlesEditor extends LitElement {
         align-items: center;
         gap: 8px;
         padding: 8px 14px 8px 10px;
+        padding-inline: 10px 14px;
         border-radius: 12px;
         background: var(--mc-surface);
         border: 1px solid var(--mc-divider);
@@ -450,6 +452,7 @@ export class AnimParticlesEditor extends LitElement {
       }
       .chip-edit-head .icon-btn {
         margin: -4px -6px -4px 0;
+        margin-inline: 0 -6px;
       }
       .emoji-grid {
         display: grid;
@@ -583,22 +586,22 @@ export class AnimParticlesEditor extends LitElement {
       .dir-pv i:nth-child(1) { --n: 0; }
       .dir-pv i:nth-child(2) { --n: 1; }
       .dir-pv i:nth-child(3) { --n: 2; }
-      .dir-pv.fall i, .dir-pv.rise i, .dir-pv.zigzag i, .dir-pv.rain i { left: calc(25% + var(--n) * 25%); top: 0; }
+      .dir-pv.fall i, .dir-pv.rise i, .dir-pv.zigzag i, .dir-pv.rain i { left: calc(25% + var(--n) * 25%); /* physical */ top: 0; }
       .dir-pv.fall i { --a: pv-fall; }
       .dir-pv.rise i { --a: pv-rise; }
       .dir-pv.zigzag i { --a: pv-zigzag; animation-duration: 2.2s; animation-delay: calc(var(--n) * -0.73s); }
       .dir-pv.rain i { --a: pv-rain; width: 2px; height: 7px; border-radius: 1px; animation-duration: 0.9s; animation-delay: calc(var(--n) * -0.3s); }
-      .dir-pv.drift i, .dir-pv.wave i { left: 0; top: calc(30% + var(--n) * 20%); animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
+      .dir-pv.drift i, .dir-pv.wave i { left: 0; /* physical */ top: calc(30% + var(--n) * 20%); animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
       .dir-pv.drift i { --a: pv-drift; }
       .dir-pv.wave i { --a: pv-wave; }
-      .dir-pv.burst i, .dir-pv.orbit i, .dir-pv.spiral i, .dir-pv.vortex i, .dir-pv.explode i { left: 50%; top: 50%; }
+      .dir-pv.burst i, .dir-pv.orbit i, .dir-pv.spiral i, .dir-pv.vortex i, .dir-pv.explode i { left: 50%; /* physical */ top: 50%; }
       .dir-pv.burst i { --a: pv-burst; animation-delay: calc(var(--n) * -0.15s); animation-timing-function: ease-out; }
       .dir-pv.orbit i { --a: pv-orbit; animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
       .dir-pv.spiral i { --a: pv-spiral; animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
       .dir-pv.vortex i { --a: pv-vortex; animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
       .dir-pv.explode i { top: 30%; --a: pv-explode; animation-duration: 2s; animation-delay: calc(var(--n) * -0.1s); }
-      .dir-pv.fountain i { left: 50%; top: 100%; --a: pv-fountain; animation-duration: 1.8s; }
-      .dir-pv.wander i { left: calc(25% + var(--n) * 25%); top: 50%; --a: pv-wander; animation-duration: 3s; animation-delay: calc(var(--n) * -1s); }
+      .dir-pv.fountain i { left: 50%; /* physical */ top: 100%; --a: pv-fountain; animation-duration: 1.8s; }
+      .dir-pv.wander i { left: calc(25% + var(--n) * 25%); /* physical */ top: 50%; --a: pv-wander; animation-duration: 3s; animation-delay: calc(var(--n) * -1s); }
       @keyframes pv-fall {
         from { translate: 0 -4px; opacity: 0; }
         20%, 80% { opacity: 1; }
@@ -793,6 +796,7 @@ export class AnimParticlesEditor extends LitElement {
       }
       .color-edit-head .icon-btn {
         margin: -4px -6px -4px 0;
+        margin-inline: 0 -6px;
       }
 
       /* ── closed sections ── */
@@ -1209,8 +1213,9 @@ export class AnimParticlesEditor extends LitElement {
   private _radioKeys(e: KeyboardEvent, ids: readonly string[], current: string, pick: (id: string) => void, grid = 0): void {
     const i = Math.max(0, ids.indexOf(current));
     let j: number;
-    if (e.key === 'ArrowRight') j = i + 1;
-    else if (e.key === 'ArrowLeft') j = i - 1;
+    const rtl = readDirection(this) === 'rtl';
+    if (e.key === (rtl ? 'ArrowLeft' : 'ArrowRight')) j = i + 1;
+    else if (e.key === (rtl ? 'ArrowRight' : 'ArrowLeft')) j = i - 1;
     else if (e.key === 'ArrowDown') j = i + (grid || 1);
     else if (e.key === 'ArrowUp') j = i - (grid || 1);
     else if (e.key === 'Home') j = 0;

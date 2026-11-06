@@ -4,6 +4,14 @@
     "note": "Import error for an animation entry that has no animation data in it. It tells the user that entry was skipped.",
     "max": 50
   },
+  "transfer.count.cards": {
+    "text": "{n, plural, one {# card} other {# cards}}",
+    "note": "Count of shared cards in an import or export summary. {n} is the number of items.",
+    "max": 15,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
   "transfer.count.n": {
     "text": "{n, plural, one {# animation} other {# animations}}",
     "note": "Count of animations in an import or export summary. {n} is the number of items. Same pattern as the theme, shape, image and icon counts.",
@@ -58,6 +66,11 @@
     "text": "Animations do not store an author, so it was not kept.",
     "note": "Import report line for an animation file that carries an author. It tells the user the author was dropped.",
     "max": 90
+  },
+  "transfer.envelope.card-files-are-imported-in-the-card-editor": {
+    "text": "Card files are imported in the card editor.",
+    "note": "Hint in the import report when a card file is opened in the wrong place. It tells the user where card files are imported.",
+    "max": 70
   },
   "transfer.envelope.icon-files-are-imported-in-the-card": {
     "text": "Icon files are imported in the card editor (My icons) or the SVG editor.",
@@ -193,6 +206,16 @@
       "major": "The value that replaces major in the text."
     }
   },
+  "transfer.envelope.this-file-was-not-imported-item-n-path-holds": {
+    "text": "This file was not imported. Item {n}, {path}, holds text that is not allowed ({rule}). Nothing was saved.",
+    "note": "Import error when a value holds a break-out marker, so the whole file is refused. {n} is the item number, {path} the field path and {rule} the name of the check; the value itself is never shown.",
+    "max": 190,
+    "vars": {
+      "n": "The number of the item in the file, counted from 1.",
+      "path": "The field path of the value, for example data.primary-color.",
+      "rule": "The id of the check that refused the file, for example strict.marker."
+    }
+  },
   "transfer.envelope.this-is-not-a-magic-card-preset-file": {
     "text": "This is not a Magic Card preset file.",
     "note": "Import error when the pasted or chosen file lacks the preset file markers. It tells the user the file is of another kind.",
@@ -320,6 +343,11 @@
       "key": "The value that replaces key in the text."
     }
   },
+  "transfer.import.compressed-file": {
+    "text": "This file is compressed. Magic Card reads only plain JSON or YAML; unpack it first.",
+    "note": "Import error when the chosen file starts like a gzip, zip, brotli or zstd archive. It tells the user to unpack the file first; the file is never decompressed. Keep JSON and YAML unchanged.",
+    "max": 110
+  },
   "transfer.library-view.added-n-to-this-card": {
     "text": "Added {n} to this card.",
     "note": "Confirmation after an import into the card's own library. {n} is how many items were added, as a number.",
@@ -427,8 +455,8 @@
     "max": 15
   },
   "transfer.library-view.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep HACS, Magic Card and Magic Card Utils unchanged.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "note": "Hint in the library window's Images tab when the add-on is missing. Same English as the panel hint. Keep Magic Card and Magic Card Utils unchanged.",
     "max": 125
   },
   "transfer.library-view.import": {
@@ -499,6 +527,22 @@
     "text": "Magic Card Utils",
     "note": "Product name of the companion add-on, used as the label of the storage source. Do not translate.",
     "max": 30
+  },
+  "transfer.library-view.map-entities-for-name": {
+    "text": "Map entities for {name}",
+    "note": "Tooltip and screen-reader name of the row button that opens the entity mapping step for one saved image. {name} is the image name.",
+    "max": 45,
+    "vars": {
+      "name": "The name of the saved image."
+    }
+  },
+  "transfer.library-view.mapped-the-entities-in-name": {
+    "text": "Mapped the entities in {name}.",
+    "note": "Confirmation after the mapping of a saved image was saved. {name} is the image name.",
+    "max": 60,
+    "vars": {
+      "name": "The name of the saved image."
+    }
   },
   "transfer.library-view.maximise": {
     "text": "Maximise",
@@ -682,11 +726,20 @@
     "max": 205,
     "vars": {
       "hosts": "The value that replaces hosts in the text."
-    }
+    },
+    "legal": true
   },
   "transfer.panel.export-animations": {
     "text": "{n, plural, one {Export # animation} other {Export # animations}}",
     "note": "Heading and button of the export step; counts the animations that are exported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
+  },
+  "transfer.panel.export-cards": {
+    "text": "{n, plural, one {Export # card} other {Export # cards}}",
+    "note": "Heading and button of the export step; counts the cards that are exported.",
     "max": 25,
     "vars": {
       "n": "The count the text is about."
@@ -735,8 +788,8 @@
     "max": 20
   },
   "transfer.panel.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep HACS and product names unchanged.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "note": "Error notice in the import panel when an image file is read but the add-on is missing. Same English as the library window hint. Keep product names unchanged.",
     "max": 125
   },
   "transfer.panel.import-animations": {
@@ -751,6 +804,14 @@
     "text": "Import anyway",
     "note": "Button that proceeds with the import after the user has read the warnings.",
     "max": 25
+  },
+  "transfer.panel.import-cards": {
+    "text": "{n, plural, one {Import # card} other {Import # cards}}",
+    "note": "Heading and button of the import step; counts the cards that are imported.",
+    "max": 25,
+    "vars": {
+      "n": "The count the text is about."
+    }
   },
   "transfer.panel.import-icons": {
     "text": "{n, plural, one {Import # icon} other {Import # icons}}",
@@ -878,9 +939,23 @@
     "note": "Choice when imported names clash: overwrite the saved items. 'Them' means the clashing items. Pairs with 'Keep both'.",
     "max": 20
   },
+  "transfer.panel.something-went-wrong-while-reading-this-file": {
+    "text": "Something went wrong while reading this. Nothing was imported.",
+    "note": "Refusal shown when reading pasted text or a file failed unexpectedly. Nothing is saved.",
+    "max": 80
+  },
   "transfer.panel.source-holds-animations": {
     "text": "{n, plural, one {{source} holds # animation.} other {{source} holds # animations.}}",
     "note": "Line under the import heading: what the chosen file or pasted text holds (animations).",
+    "max": 40,
+    "vars": {
+      "n": "The count the text is about.",
+      "source": "The file name, or a word for the pasted text."
+    }
+  },
+  "transfer.panel.source-holds-cards": {
+    "text": "{n, plural, one {{source} holds # card.} other {{source} holds # cards.}}",
+    "note": "Line under the import heading: what the chosen file or pasted text holds (cards).",
     "max": 40,
     "vars": {
       "n": "The count the text is about.",
@@ -923,15 +998,15 @@
       "source": "The file name, or a word for the pasted text."
     }
   },
-  "transfer.panel.the-author-name-is-saved-in-the-file": {
-    "text": "The author name is saved in the file. Check it before you share the file.",
-    "note": "Privacy hint on the export panel. The author name is the one stored in the card's settings.",
-    "max": 120
-  },
   "transfer.panel.the-checker-for-images-did-not-load-so": {
     "text": "The checker for images did not load, so this image was not read.",
     "note": "Error when the code that validates image files failed to load. 'Checker' is the validator, an internal part.",
     "max": 105
+  },
+  "transfer.panel.the-checker-for-shared-values-did-not-load": {
+    "text": "The checker for shared values did not load, so nothing can be imported or exported. Check your connection and try again.",
+    "note": "Error when the code that checks shared values failed to load, usually a network problem. Import and export stay off until it loads. \"Checker\" is the validator.",
+    "max": 195
   },
   "transfer.panel.the-checker-for-these-animations-did-not": {
     "text": "The checker for these animations did not load, so the file was not read. Check your connection and try again.",
@@ -952,6 +1027,11 @@
     "text": "The text",
     "note": "Stands in for a file name as {source} in 'holds' when the user pasted text. Must work at the start of a sentence.",
     "max": 15
+  },
+  "transfer.panel.the-wall-tablet-preview-did-not-load": {
+    "text": "The Wall tablet preview did not load. Check your connection and try again.",
+    "note": "Error under the import preview of a theme when the code for the Wall tablet preview failed to load, usually a network problem.",
+    "max": 90
   },
   "transfer.panel.this-file-was-not-imported": {
     "text": "This file was not imported",
@@ -1161,6 +1241,16 @@
       "key": "The value that replaces key in the text."
     }
   },
+  "transfer.theme.key-points-to-hosts-so-its-value-was-left-out-rule": {
+    "text": "{key} points to {hosts}, so its value was left out ({rule}).",
+    "note": "Import note for a theme value that loads from another website. {key} is the theme variable, {hosts} the website names and {rule} the name of the check.",
+    "max": 110,
+    "vars": {
+      "hosts": "The website names the value points to, joined by commas.",
+      "key": "The name of the theme variable.",
+      "rule": "The id of the check, for example strict.background."
+    }
+  },
   "transfer.theme.key-uses-a-file-on-the-sharer-s-home": {
     "text": "\"{key}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
     "note": "Import warning, whole-theme version. {key} is the variable's name in quotes; do not translate it. 'Sharer' is the person who made the file.",
@@ -1231,6 +1321,15 @@
     "max": 55,
     "vars": {
       "kb": "The value that replaces kb in the text."
+    }
+  },
+  "transfer.theme.the-value-of-key-fits-no-allowed-type-so-it": {
+    "text": "The value of {key} does not fit any type this setting allows, so it was left out ({rule}).",
+    "note": "Import note for a theme value that is not an allowed kind of value for its variable. {key} is the theme variable and {rule} the name of the check; the value is never shown.",
+    "max": 150,
+    "vars": {
+      "key": "The name of the theme variable.",
+      "rule": "The id of the check, for example strict.colour."
     }
   },
   "transfer.theme.the-value-of-key-is-longer-than-max": {

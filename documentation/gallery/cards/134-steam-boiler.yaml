@@ -100,7 +100,7 @@ rows:
             value_position: track
             fill_mode: gradient
             slider_color: "#8a5a1a"
-            slider_color_to: "#f3c76b"
+            slider_color_to: "#a8641a"
             track_color: "rgba(255,255,255,0.07)"
             icon: mdi:valve
             snap: true

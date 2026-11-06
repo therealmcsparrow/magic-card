@@ -11,6 +11,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/card/flows-chunk.ts',
   'src/anim-studio/icon-library-loader.ts',
   'src/anim-studio/preset-catalogue-loader.ts',
+  'src/anim-studio/pseudo-toggle.ts',
   'src/editor/components/icon-animator/loader.ts',
   'src/editor/components/preset-catalogue-loader.ts',
   'src/editor/custom/icon-host.ts',
@@ -28,6 +29,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/svg-editor/loader.ts',
   'src/svg-safety/css-loader.ts',
   'src/transfer/image-transfer-loader.ts',
+  'src/transfer/share-kit-loader.ts',
   'src/theme-editor/presets/loader.ts',
 ];
 

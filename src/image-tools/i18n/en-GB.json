@@ -25,8 +25,8 @@
     "max": 15
   },
   "image-tools.mc-image-picker.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Message inside the image picker window when the companion integration is missing. HACS is a Home Assistant add-on store; keep the name. Magic Card and Magic Card Utils are product names.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "note": "Message inside the image picker window when the companion integration is missing. Magic Card and Magic Card Utils are product names.",
     "max": 125
   },
   "image-tools.mc-image-picker.in-use": {
@@ -214,8 +214,8 @@
     }
   },
   "image-tools.mc-library-image-field.images-need-magic-card-utils-it-is": {
-    "text": "Images need Magic Card Utils. It is installed through HACS, like Magic Card.",
-    "note": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window. HACS is a Home Assistant add-on store; keep the name.",
+    "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
+    "note": "Message in the image field when the companion integration is missing. Same English as the message inside the picker window.",
     "max": 125
   },
   "image-tools.mc-library-image-field.library-image": {

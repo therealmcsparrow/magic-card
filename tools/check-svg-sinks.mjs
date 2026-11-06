@@ -238,8 +238,8 @@ export const importedSanitizer = (text, module = './src/x.ts') => {
   return got.includes(SANITIZER_BASE.image) ? IMAGE_SANITIZER : got.includes(SANITIZER_BASE.icon) ? SANITIZER : undefined;
 };
 
-/** True when a source text creates a Blob of type image/svg+xml. */
-export const makesSvgBlob = (text) => /\bnew\s+Blob\s*\(/.test(text) && text.includes('image/svg+xml');
+/** True when a source text creates a Blob and names image/svg+xml other than as a data: URL. A type held in a constant or default parameter still counts. */
+export const makesSvgBlob = (text) => /\bnew\s+Blob\s*\(/.test(text) && text.replace(/data:image\/svg\+xml/g, '').includes('image/svg+xml');
 
 /** True when a source text is an SVG sink: unsafeSVG, a value import of a sanitiser, or an image/svg+xml Blob. */
 export const isSinkSource = (text, module) =>
@@ -459,12 +459,12 @@ const selfTest = () => {
   // the shared chunk list is read from the declaration, not from a mention of its name
   const decl = "export const LAZY_SHARED_CHUNK_FILES: Record<X, string> = {\n  'path-core': 'magic-card-path-core.js',\n};";
   const parseCases = [
-    ['the real contract lists path-core, history and shape-path', JSON.stringify(sharedChunkFiles()) === JSON.stringify(['magic-card-path-core.js', 'magic-card-history.js', 'magic-card-shape-path.js'])],
+    ['the real contract lists path-core, history, shape-path and icon-shared', JSON.stringify(sharedChunkFiles()) === JSON.stringify(['magic-card-path-core.js', 'magic-card-history.js', 'magic-card-shape-path.js', 'magic-card-icon-shared.js'])],
     ['a comment naming the table above another `= {` is skipped', JSON.stringify(parseSharedChunkFiles(`// see LAZY_SHARED_CHUNK_FILES = {\nconst Z = { a: 'magic-card-z.js' };\n${decl}`)) === JSON.stringify(['magic-card-path-core.js'])],
     ['import( is found, a method call .import( is not', hasDynamicImport("x = import('./a')") && hasDynamicImport('await import (y)') && !hasDynamicImport('obj.import(y)') && !hasDynamicImport('// import statement')],
     ['the shared modules are read from the contract doc comments', JSON.stringify(parseSharedChunkModules("export const LAZY_SHARED_CHUNK_FILES: R = {\n  'path-core': 'magic-card-path-core.js',\n  lit: 'magic-card-lit.js',\n};\nexport const LAZY_SHARED_CHUNK_CEILINGS: R = {\n  /** src/path/core.ts only. */\n  'path-core': 10_240,\n  /** src/a/b.ts and src/a/c.ts only. */\n  lit: 8_192,\n};")) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-lit.js': ['./src/a/b.ts', './src/a/c.ts'] })],
     ['a shared chunk without a module line in the contract throws', (() => { try { parseSharedChunkModules("export const LAZY_SHARED_CHUNK_FILES: R = {\n  x: 'magic-card-x.js',\n};\nexport const LAZY_SHARED_CHUNK_CEILINGS: R = {\n  x: 1,\n};"); return false; } catch { return true; } })()],
-    ['the real contract gives each shared chunk its module', JSON.stringify(sharedChunkModules()) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-history.js': ['./src/services/history-cache.ts'], 'magic-card-shape-path.js': ['./src/utils/shape-path.ts'] })],
+    ['the real contract gives each shared chunk its module', JSON.stringify(sharedChunkModules()) === JSON.stringify({ 'magic-card-path-core.js': ['./src/path/core.ts'], 'magic-card-history.js': ['./src/services/history-cache.ts'], 'magic-card-shape-path.js': ['./src/utils/shape-path.ts'], 'magic-card-icon-shared.js': ['./src/i18n/fold.ts', './src/icon-anim/part-presets.ts'] })],
     ['the real shared modules have no import()', sharedChunkProblems({ chunks: [] }).length === 0],
   ];
   for (const [name, ok] of parseCases) {
@@ -488,6 +488,10 @@ const selfTest = () => {
     ["import { sanitize } from './sanitize';", './src/other/a.ts', false, SANITIZER],
     ["const u = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));", './src/a.ts', true, SANITIZER],
     ["const b = new Blob([text], { type: 'application/json' });", './src/a.ts', false, SANITIZER],
+    ["const u = `data:image/svg+xml;charset=utf-8,${x}`; const b = new Blob(c, { type });", './src/a.ts', false, SANITIZER],
+    ["const u = 'data:image/svg+xml,x'; const b = new Blob([s], { type: 'image/svg+xml' });", './src/a.ts', true, SANITIZER],
+    ["function d(s, type = 'image/svg+xml') { return new Blob([s], { type }); }", './src/a.ts', true, SANITIZER],
+    ["const SVG = 'image/svg+xml'; const b = new Blob([s], { type: SVG });", './src/a.ts', true, SANITIZER],
     ["const t = 'image/svg+xml';", './src/a.ts', false, SANITIZER],
   ];
   for (const [text, module, want, san] of scan) {

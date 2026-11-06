@@ -305,11 +305,15 @@ export class AnimIconStart extends LitElement {
         ? html`<ul class="grid" role="list">
             ${shown.map(
               (e) => html`<li>
-                <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit(e.build(), 'library')}>
+                <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit({ ...e.build(), ...(e.mirror ? { mirror: e.mirror } : {}) }, 'library')}>
                   <mc-anim-icon-thumb .entry=${e} .hass=${this.hass}></mc-anim-icon-thumb>
                   ${lib.isNewInRelease(e.id) ? html`<span class="new-mark" aria-hidden="true"></span><span class="sr-only">${t('anim-studio.icon-start.new-in-this-release')}</span>` : nothing}
                   <span class="nm">${e.name}</span>
                   <span class="dm">${domainLabel(e.domain, this.hass)}</span>
+                  ${(() => {
+                    const b = lib.mirrorBadge(e.mirror);
+                    return html`<span class="mirror-badge ${b.unset ? 'is-unset' : ''}">${b.label}</span>`;
+                  })()}
                 </button>
               </li>`,
             )}
@@ -402,6 +406,7 @@ export class AnimIconStart extends LitElement {
         position: absolute;
         top: 6px;
         right: 6px;
+        inset-inline: auto 6px;
         width: 8px;
         height: 8px;
         background: var(--mc-accent-ink, #01579b);
@@ -412,6 +417,18 @@ export class AnimIconStart extends LitElement {
         .new-mark {
           background: CanvasText;
         }
+      }
+      .mirror-badge {
+        font-size: 0.6875rem;
+        color: var(--mc-text-secondary, var(--secondary-text-color, #727272));
+      }
+      .mirror-badge.is-unset {
+        padding: 0 6px;
+        border-radius: 999px;
+        font-weight: 600;
+        color: var(--mc-accent-ink, #01579b);
+        background: color-mix(in srgb, var(--primary-color, #03a9f4) 16%, transparent);
+        outline: 1px solid currentColor;
       }
       .sr-only {
         position: absolute;

@@ -1,8 +1,8 @@
 # Card gallery
 
-One hundred and thirty-four complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card. Three more cards, on a page of their own, show when a card may be out of date: [Is this still true?](still-true.md).
+One hundred and thirty-eight complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card. Three more cards, on a page of their own, show when a card may be out of date: [Is this still true?](still-true.md).
 
-![All one hundred and thirty-four cards](images/all-cards.png)
+![All one hundred and thirty-eight cards](images/all-cards.png)
 
 ## Pages
 
@@ -22,6 +22,7 @@ One hundred and thirty-four complete cards to copy and adapt, from a weather car
 | [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board, Operations console, Operations console, phone-width |
 | [Is this still true?](still-true.md) | Connection lost, Reconnected, Not updated |
 | [Showcase](showcase.md) | Whole-home energy, Living room, Bedroom at night, Heating, Rain water tank, Car charging, Garden irrigation, Kitchen power, Media room, Front door, Reactor bay, Potion lab, Engine room, Dragon vault, Winter cabin, Haunted attic, Synthwave deck, Reef tank, Station oxygen, Steam boiler |
+| [Wall tablet cards](tablet.md) | Front door, Kitchen door, Hallway lights, Alarm |
 
 ## Complete dashboards
 
@@ -29,7 +30,7 @@ Twenty-five whole dashboards in sci-fi, fantasy, western, steampunk and dystopia
 
 ## Animated cards
 
-On sixty-nine of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
+On sixty-nine of the cards something moves. The first picture of each card is paused. Tap it or press Enter to watch it move. Each picture links to a short recording that loops. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
 
 | Card | Page |
 | --- | --- |
@@ -112,6 +113,18 @@ On sixty-nine of the cards something moves, so their pictures are short recordin
 -   Many animations only play in a given state, for example while a light is on or a vacuum is cleaning. The notes under each card say which.
 -   With reduced motion turned on in your system, the animations stand still.
 -   A few cards were shot with a theme preset. The note under each of them names the preset and links to its page in the theme examples.
+
+## Sharing a card
+
+A card shared as a file is released under CC0 1.0:
+
+> By sharing this file you release it under CC0 1.0, which means anyone may copy, change and reuse it for any purpose, without asking you and without crediting you. Only share work that is yours to give away. Do not include images, fonts, icons or text that belong to someone else.
+
+The author name in a file is optional:
+
+> Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.
+
+Entity IDs are replaced by placeholders when you export. Names and titles without an ID, and `device_id` and `area_id` targets, stay as written. See [Sharing safety](../sharing-safety/README.md). To show a card you made, post it in the gallery category of [Discussions](https://github.com/therealmcsparrow/magic-card/discussions) with the form there.
 
 ## Related
 

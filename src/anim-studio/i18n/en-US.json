@@ -5187,6 +5187,10 @@
     "text": "Play animations one after another",
     "hash": "36d48524"
   },
+  "anim-studio.studio.pseudo-rtl": {
+    "text": "Pseudo RTL",
+    "hash": "3a83f974"
+  },
   "anim-studio.studio.redo-ctrl-y": {
     "text": "Redo (Ctrl+Y)",
     "hash": "32310904"

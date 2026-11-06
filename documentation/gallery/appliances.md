@@ -2,6 +2,8 @@
 
 Washer, dishwasher, oven, robot vacuum, 3D printer, coffee machine, kitchen timer, a home server and the network. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Washing machine](#washing-machine)
@@ -19,7 +21,7 @@ Washer, dishwasher, oven, robot vacuum, 3D printer, coffee machine, kitchen time
 
 Progress ring around a shaking washer, cycle phase and time left. The ring and the shake only show while the washer runs.
 
-![Washing machine](images/11-washing-machine.png)
+![Washing machine, Machines](images/11-washing-machine.png)
 
 Entities: `switch.washer`, `sensor.washer_state`, `sensor.washer_progress`, `sensor.washer_remaining`
 
@@ -134,7 +136,7 @@ rows:
 
 CPU, memory and disk rings, temperature, uptime and network speeds. Rings change colour as the load climbs.
 
-![Home server](images/18-server-stats.png)
+![Home server, Machines](images/18-server-stats.png)
 
 Entities: `sensor.server_cpu`, `sensor.server_ram`, `sensor.server_disk`, `sensor.server_temp`, `sensor.server_uptime`, `sensor.net_down`, `sensor.net_up`
 
@@ -325,7 +327,7 @@ rows:
 
 Status with orbiting dots while cleaning, battery, area and time, and start / dock buttons.
 
-![Robot vacuum](images/21-robot-vacuum.png)
+![Robot vacuum, Machines](images/21-robot-vacuum.png)
 
 Entities: `vacuum.robot`, `sensor.vacuum_area`, `sensor.vacuum_time`
 
@@ -469,7 +471,7 @@ rows:
 
 Job progress in a ring, file name, time left and temperatures.
 
-![3D printer](images/27-3d-printer.png)
+![3D printer, Machines](images/27-3d-printer.png)
 
 Entities: `sensor.printer_progress`, `sensor.printer_time_left`, `sensor.printer_file`, `sensor.printer_nozzle`, `sensor.printer_bed`
 
@@ -588,7 +590,7 @@ rows:
 
 A steaming cup while it's on, boiler temperature, cups today, and one big brew button.
 
-![Coffee machine](images/28-coffee-machine.png)
+![Coffee machine, Machines](images/28-coffee-machine.png)
 
 Entities: `switch.coffee_machine`, `sensor.coffee_boiler`, `sensor.coffee_count`
 
@@ -711,7 +713,7 @@ rows:
 
 A countdown inside a ring that empties as the timer runs.
 
-![Kitchen timer](images/33-kitchen-timer.png)
+![Kitchen timer, Machines](images/33-kitchen-timer.png)
 
 Entities: `timer.pasta`
 
@@ -803,7 +805,7 @@ rows:
 
 Matrix rain behind the header, data flowing between the router and the internet in both directions, and sparklines of the last hours.
 
-![Network](images/53-network.webp)
+[![Network, Machines](images/53-network.png)](images/53-network.webp)
 
 Entities: `sensor.net_down`, `sensor.net_up`, `sensor.wan_ping`, `sensor.connected_devices`
 
@@ -938,7 +940,7 @@ flows:
 
 The icon tumbles like a drum while it washes, steam rises from the top, and a ring round the card fills with the progress.
 
-![Dishwasher](images/54-dishwasher.webp)
+[![Dishwasher, Machines](images/54-dishwasher.png)](images/54-dishwasher.webp)
 
 Entities: `sensor.dishwasher_state`, `sensor.dishwasher_progress`, `sensor.dishwasher_remaining`
 
@@ -1034,7 +1036,7 @@ rows:
 
 A flickering fire over a shimmering hot window, a timer ring that empties live, and the oven temperature.
 
-![Oven](images/55-oven.webp)
+[![Oven, Machines](images/55-oven.png)](images/55-oven.webp)
 
 Entities: `sensor.oven_temperature`, `timer.oven`
 
@@ -1063,7 +1065,7 @@ rows:
             design: { font_size: 18px, font_weight: "800", color: "#fafaf9" }
           - type: text
             text: Fan oven · top and bottom
-            design: { font_size: 12px, color: "#a8a29e" }
+            design: { font_size: 12px, color: "#d6d3d1" }
       - vertical_align: center
         modules:
           - type: text
@@ -1117,14 +1119,14 @@ rows:
                 design: { font_size: 24px, font_weight: "800", color: "#ffffff", font_variant: tabular-nums }
               - type: text
                 text: left
-                design: { font_size: 11px, color: "#a8a29e", text_transform: uppercase, letter_spacing: 1.5px }
+                design: { font_size: 11px, color: "#d6d3d1", text_transform: uppercase, letter_spacing: 1.5px }
 ```
 
 ## Robot vacuum map
 
 The robot drives a cleaning pattern across a little floor plan while it cleans, leaving a sparkle behind. The route is a path animation stored in the card. It plays while the vacuum is cleaning.
 
-![Robot vacuum map](images/56-vacuum-map.webp)
+[![Robot vacuum map, Machines](images/56-vacuum-map.png)](images/56-vacuum-map.webp)
 
 Entities: `vacuum.robot`, `sensor.vacuum_area`, `sensor.vacuum_time`
 

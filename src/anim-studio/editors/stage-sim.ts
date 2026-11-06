@@ -132,6 +132,7 @@ export class AnimStageSim extends LitElement {
         position: absolute;
         left: 12px;
         right: 12px;
+        inset-inline: 12px;
         bottom: 12px;
         display: flex;
         justify-content: center;
@@ -179,6 +180,7 @@ export class AnimStageSim extends LitElement {
         font-variant-numeric: tabular-nums;
         color: var(--mc-text-2);
         text-align: right;
+        text-align: end;
       }
       input[type='range']:focus-visible {
         outline: 2px solid var(--mc-accent);

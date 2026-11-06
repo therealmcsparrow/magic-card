@@ -97,7 +97,7 @@ export abstract class CanvasHost extends LitElement {
     }
     .host-notice {
       position: absolute;
-      left: 50%;
+      left: 50%; /* physical */
       top: 50%;
       transform: translate(-50%, -50%);
       display: flex;
@@ -106,6 +106,7 @@ export abstract class CanvasHost extends LitElement {
       max-width: calc(100% - 24px);
       margin: 0;
       padding: 6px 6px 6px 12px;
+      padding-inline: 12px 6px;
       border: 1px solid var(--divider-color, rgba(0, 0, 0, 0.12));
       border-radius: 9999px;
       background: var(--ch-surface);

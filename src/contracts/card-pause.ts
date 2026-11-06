@@ -2,7 +2,7 @@
 // stops every moving thing on the card. watchOffscreen and the pauseOffscreen directive take a `counted` option.
 
 export const CARD_PAUSE_CONTRACT = '2.0.0';
-export const CARD_PAUSE_CONTRACT_REVISION = 5;
+export const CARD_PAUSE_CONTRACT_REVISION = 6;
 
 export type PauseButtonMode = 'auto' | 'always' | 'hidden';
 export type PauseButtonCorner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';

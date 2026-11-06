@@ -4,9 +4,42 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.17 (2026-11-05)
+
+### Changed
+-   **Home Assistant Marketplace.** The install, update, pre-release and troubleshooting steps now cover the Marketplace in Home Assistant 2026.11 next to HACS, and the bug report form lists it as an install method. See [Installation](README.md#installation).
+-   **Install messages.** Messages in the editor that named HACS now mention the Marketplace too, or say to install Magic Card Utils the same way as Magic Card. The card picker group is now called Custom cards.
+
+## 2026.10.12-beta.16 (2026-11-04)
+
+### Changed
+-   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
+-   **Status column.** Each card row shows its status, Available or Locked, with an icon. Select it to open a note that says why, and which font sites the card asks for. Press Escape, select Close, select outside the note, or press Tab to move on, and the note closes.
+-   **Card table width.** The forum shot page now uses the full width of the panel, so the card table is no longer squeezed into a narrow box.
+-   **Card column first.** The card table now starts with the Card column, followed by Dashboard, View and Status.
+-   **Search cards.** A search field above the card table keeps only the rows whose card, dashboard or view name holds the text you type. When nothing matches, the table says so.
+-   **Card table look.** The card table now looks like the Templates table in Magic Card Utils: a rounded frame, a shaded header row and roomier cells. The search field has its label above it and a rounded frame.
+
+## 2026.10.12-beta.15 (2026-11-03)
 
 ### Added
+-   **Forum shot works with web fonts.** A card with fonts from Google Fonts or another font site can now be turned into a picture. To draw the fonts, your browser asks the font sites for them, and the tab names those sites. Your cards and settings are not sent.
+-   **Forum shot card table.** The Forum shot tab lists your cards in a table you can sort by clicking a column header.
+
+### Changed
+-   **Locked cards.** A card stays locked when it holds a custom-card module or an outside address that is not a font address the tab can check.
+-   **Font failures.** If a font cannot be loaded, no picture is made. The tab says: "A font could not be loaded, so no picture was made. Check your connection and try again."
+-   **Changed font sites.** If a card's font sites changed since the tab opened, Download stops before anything is fetched. The tab says: "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again."
+
+## 2026.10.12-beta.14 (2026-11-02)
+
+### Fixed
+-   **Pause now stops animated icons.** The Pause motion button, and a card shown in a preview, now also hold animated icons still. Before, an animated icon could keep moving on a paused card.
+
+### Added
+-   **Forum shot.** The Magic Card Utils panel can turn one of your cards into a single picture to post in a forum, in light, dark or both, with an option for the Quiet, Living and Glow looks of animated icons. Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too. The picture is made in your browser and nothing leaves Home Assistant. The Forum shot area itself makes only two read calls, both to your own Home Assistant, and refuses a card that names a picture, a web address or a Google font on another server. The card inside the picture still asks Home Assistant for its own data, as it does on a dashboard. See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md).
+-   **Four wall tablet cards in the gallery.** Front door, kitchen door, hallway lights and alarm, each with open, closed, paused and dimmed pictures. See [Wall tablet cards](documentation/gallery/tablet.md).
+-   **A troubleshooting page.** [Troubleshooting](documentation/troubleshooting/README.md) starts with what to do when a card is blank on an old tablet. The README header shows the eight card families of the gallery.
 -   **Last changed on the Info module.** Choose Last changed in the Secondary info list, or write `secondary_info: last-changed`, to show how long ago the entity last changed. Home Assistant words the time and keeps it current. See [Info](documentation/modules/content/info.md#last-changed).
 -   **Style swatches in the Animated icons tab.** Quiet, Living and Glow are now three swatches, each with a small preview of your icon in that Style. See [Styles](documentation/design/quick-icon-animator.md#styles-quiet-living-and-glow).
 -   **A mark for new library icons.** The icon library can now mark entries added in the current release with a small diamond. No icons are added in this release, so you will not see it yet. It first shows in a release that adds icons. See [Icon library](documentation/animation-studio/icon-library.md#new-entries).
@@ -17,6 +50,22 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Report a paused card in Discussions.** The [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports) category has a form for a card that stands still or a focus problem. It asks for your Magic Card version, what you saw and what you did.
 -   **Size claims show how they were measured.** The [Loading and size](documentation/loading-and-size/README.md#how-we-measured) page now has a box that says which two releases were compared and how. A check that runs before every release makes sure a size claim in the README, this changelog or those pages names a release and gives both gzip and Brotli bytes, and that a speed claim links the tablet baseline. Until a timed run on a real device exists, Magic Card makes no claim about speed.
 -   **Older Android tablets page.** The new [Older Android tablets](documentation/old-tablets/README.md) page gives the browser floor (Android System WebView 85) and the result of an [old engine check](documentation/old-tablets/old-engine-check.md) on a desktop copy of Chromium 85: the bell swing, the glow and the ripple rings do not show there. On that engine the worst frame after an extra file arrives was 100 to 183 ms, over the 50 ms target, so a card can stutter at that moment. Particle layers now fade in over 200 ms. With reduced motion, particle simulations appear at once and other particle layers stay hidden. The bug report form asks for your browser version as an optional range.
+
+### Changed
+-   **Stricter imports.** Theme and card values are checked against the kind of value their key takes. A value that fits none is left out and listed, with the host where there is one. Only a real break-out refuses the whole file, and a picture or font on another website is left out instead of being offered with **Import anyway**. A shared card drops card-mod keys. A theme keeps its card-mod values and warns that the browser may contact another website. Shared markdown loses its templates and remote pictures. Every kind has a preview, and previews make no requests. See [Sharing safety](documentation/sharing-safety/README.md).
+-   **Entity placeholders on export.** Every export replaces entity IDs with placeholders, and after an import a **Map entities** step links them to your own entities. Names without an ID and `device_id` or `area_id` targets stay as written.
+-   **Share a card.** **Share this card** and **Import a shared card** in the card editor. Before Confirm, the import lists the card's actions and templates. A shared card keeps its `text` and condition templates.
+-   **Theme checks.** An imported theme is checked for text contrast in light and dark mode, and a Wall tablet preview, in the import preview and in the theme editor, shows how its text reads from 3 metres.
+-   **Gallery rules.** The [gallery](documentation/gallery/README.md) page states the CC0 rule and the author-name note, and a gallery form in Discussions asks for no tokens, credentials or real entity IDs.
+
+### Right to left and translations
+-   **Pseudo RTL switch in the animation studio.** A switch in the top bar shows the studio and its preview card right to left, with Arabic-Indic digits and direction marks around each message. It is a test aid with made-up text. No right-to-left language ships, and no profile language can select it. See [Right to left](documentation/animation-studio/README.md#right-to-left).
+-   **Mirroring.** The studio, the card sliders and the card rings mirror in a right-to-left layout. Drawing surfaces, the card canvas, timelines and curve plots keep their direction, and your card layout is never mirrored. The ltr layout is unchanged.
+-   **Card sliders and rings in right to left.** A horizontal slider fills from the right, and its gradients (including brightness and colour temperature) run with the reading direction. The handle, ticks, labels and value are placed from the right, a drag measures from the right edge, and the Left and Right arrow keys swap so Right still means towards the end you read. A shaped track stays as drawn. A vertical slider is unchanged. A ring starts at the mirrored point (Left and Right swap, Top and Bottom stay) and runs the other way round, so clockwise reads as counter-clockwise on screen. Ring gradients and the timer ring are unchanged. See [Slider](documentation/modules/controls/slider.md#right-to-left) and [Ring](documentation/design/ring.md#right-to-left).
+-   **Mirror flag for icons.** An animation can carry `mirror: mirror` or `mirror: keep`, and the icon library shows Mirrors, Keeps or Not set per entry. Existing animations stay unset and are not flipped. See [Icon library](documentation/animation-studio/icon-library.md).
+-   **Maximum length.** A translation longer than the `max` of its key is refused on import and fails the check, in every language. See [Translating](documentation/translating/README.md).
+-   **Legal text.** A key can be tagged `legal`. Translations of it show that the English prevails, with a Show English action. When the English changes, the check fails until a translation is checked again. A waiver does not clear it. Translations of legal text are published only after a qualified lawyer has checked them. See [Legal text](documentation/translating/README.md#legal-text).
+-   **Accessibility page.** It now says what the right-to-left work covers and what is not done: no screen reader run, no device or tablet run and no real right-to-left translation. See [Accessibility](documentation/accessibility/README.md#right-to-left).
 
 ## 2026.10.12-beta.13 (2026-10-30)
 

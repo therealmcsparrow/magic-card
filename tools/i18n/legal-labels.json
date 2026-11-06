@@ -1,0 +1,23 @@
+{
+  "_note": "Legal text. The en-GB wording below is authoritative and written by hand. Do not machine-translate it. A translation is published only after a qualified lawyer has checked it.",
+  "keys": [
+    "transfer.panel.every-browser-that-shows-a-dashboard",
+    "transfer.panel.the-author-name-is-saved-in-the-file",
+    "theme-editor.editor-view.some-values-load-files-from-another",
+    "theme-editor.editor-view.some-values-load-files-from-hosts-the"
+  ],
+  "labels": {
+    "english-prevails": {
+      "text": "This is a translation. If it differs from the English text, the English text prevails.",
+      "note": "Shown next to a legal text in any language other than English."
+    },
+    "show-english": {
+      "text": "Show English",
+      "note": "Action that replaces a translated legal text with the English text."
+    }
+  },
+  "notices": {
+    "licence": "Free, non-commercial open source software under the MIT Licence.",
+    "translations": "Translations you contribute come under the project's MIT Licence."
+  }
+}

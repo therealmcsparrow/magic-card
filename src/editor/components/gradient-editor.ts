@@ -6,6 +6,7 @@ import { slider } from '../../ui-kit/templates/slider';
 import { gradientHeadAngle, parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/safe-css';
 import { t } from '../i18n';
+import { readDirection } from '../../ui-kit/controllers/direction';
 // the stops use <mc-color-picker> by tag: color-picker.ts imports this file and defines it
 
 /** What the editor can write: a linear (`<n>deg`) or radial (`circle`) gradient of 2 to 5 stops, no positions. */
@@ -44,7 +45,8 @@ export interface SegOption {
 /** A segmented radiogroup with roving tabindex and arrow keys, the same markup the other editors use. */
 export function renderSeg(label: string, value: string, options: SegOption[], onPick: (v: string) => void, disabled = false): TemplateResult {
   const onKey = (e: KeyboardEvent) => {
-    const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    const h = readDirection(e.currentTarget as Element) === 'rtl' ? -1 : 1;
+    const step: Record<string, number> = { ArrowRight: h, ArrowDown: 1, ArrowLeft: -h, ArrowUp: -1 };
     if (!(e.key in step)) return;
     e.preventDefault();
     const i = options.findIndex((o) => o.value === value);

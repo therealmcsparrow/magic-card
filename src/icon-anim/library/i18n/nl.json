@@ -1963,6 +1963,18 @@
     "text": "Railspot",
     "hash": "e35875d4"
   },
+  "icon-library.mirror-badge.keeps": {
+    "text": "Blijft",
+    "hash": "16aebc8d"
+  },
+  "icon-library.mirror-badge.mirrors": {
+    "text": "Spiegelt",
+    "hash": "239a80c2"
+  },
+  "icon-library.mirror-badge.not-set": {
+    "text": "Niet ingesteld",
+    "hash": "4895f731"
+  },
   "icon-library.nature.back-left-leg": {
     "text": "Linkerachterpoot",
     "hash": "5279161c"

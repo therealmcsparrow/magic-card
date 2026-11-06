@@ -11,6 +11,7 @@ import './structure-outline';
 import './template-bar';
 import '../inspector/inspector';
 import '../modes/yaml-editor';
+import { readDirection } from '../../ui-kit/controllers/direction';
 import { t, m, type MessageIndex } from '../i18n';
 
 const MODES: Array<{ id: EditorMode; label: MessageIndex }> = [
@@ -71,9 +72,10 @@ export class PaneEditor extends LitElement {
 
   private _onModeKeydown(e: KeyboardEvent, mode: EditorMode): void {
     const idx = MODES.findIndex((m) => m.id === mode);
+    const rtl = readDirection(e.currentTarget as Element) === 'rtl';
     const targets: Record<string, number> = {
-      ArrowRight: (idx + 1) % MODES.length,
-      ArrowLeft: (idx - 1 + MODES.length) % MODES.length,
+      [rtl ? 'ArrowLeft' : 'ArrowRight']: (idx + 1) % MODES.length,
+      [rtl ? 'ArrowRight' : 'ArrowLeft']: (idx - 1 + MODES.length) % MODES.length,
       Home: 0,
       End: MODES.length - 1,
     };
@@ -224,7 +226,7 @@ export class PaneEditor extends LitElement {
         border-bottom: 1px solid var(--mc-divider);
       }
       .pane-head .seg {
-        margin-right: auto;
+        margin-inline-end: auto;
       }
       .pane-inner {
         padding: 16px;

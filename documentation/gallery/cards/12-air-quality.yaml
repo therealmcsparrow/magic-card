@@ -64,7 +64,7 @@ rows:
             modules:
               - type: text
                 text: CO₂
-                design: &lab { font_size: 11px, color: "#7fa596", text_transform: uppercase, letter_spacing: 1px }
+                design: &lab { font_size: 11px, color: "#b6dccb", text_transform: uppercase, letter_spacing: 1px }
               - type: text
                 use_entity: true
                 entity: sensor.co2
@@ -105,18 +105,18 @@ rows:
               height: 70px
               padding: 10px 12px
               border_radius: 16px
-              background_color: "rgba(255,255,255,0.03)"
+              background_color: "rgba(255,255,255,0.06)"
               value_background:
                 type: sparkline
                 entity: sensor.co2
                 hours: 24
                 color: "#34d399"
-                opacity: 22%
-                line_width: 2
+                opacity: 55%
+                line_width: 3
             modules:
               - type: text
                 text: CO₂ · 24 h
-                design: { font_size: 12px, color: "#7fa596" }
+                design: { font_size: 12px, color: "#b6dccb" }
               - type: text
                 text: max 812 ppm
-                design: { font_size: 12px, color: "#7fa596" }
+                design: { font_size: 12px, color: "#b6dccb" }

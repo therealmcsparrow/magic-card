@@ -2,6 +2,8 @@
 
 Power flows, solar, storage, batteries and car charging. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Energy flow](#energy-flow)
@@ -17,7 +19,7 @@ Power flows, solar, storage, batteries and car charging. Paste a card into the c
 
 Solar, grid, home and battery, with animated power lines between them.
 
-![Energy flow](images/03-energy-flow.png)
+![Energy flow, Power](images/03-energy-flow.png)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`, `sensor.energy_today`
 
@@ -194,7 +196,7 @@ flows:
 
 A big phone battery that fills with the charge (liquid wave), and mini bars for the watch and earbuds.
 
-![Device batteries](images/06-phone-battery.png)
+![Device batteries, Power](images/06-phone-battery.png)
 
 Entities: `sensor.phone_battery`, `binary_sensor.phone_charging`, `sensor.watch_battery`, `sensor.earbuds_battery`
 
@@ -333,7 +335,7 @@ rows:
 
 The whole card fills up like the tank, with a moving wave on top.
 
-![Water tank](images/07-water-tank.png)
+![Water tank, Garden](images/07-water-tank.png)
 
 Entities: `sensor.water_tank`, `sensor.water_tank_litres`
 
@@ -349,13 +351,13 @@ name: Water tank
 background: "linear-gradient(180deg, #0b1e33 0%, #08172a 100%)"
 border_radius: 30px
 padding: 22px
-card_height: 260px
+card_height: 224px
 box_shadow: "0 18px 40px rgba(2, 132, 199, 0.25)"
 value_background:
   type: fill
   entity: sensor.water_tank
   color: "#38bdf8"
-  opacity: 45%
+  opacity: 62%
   wave: true
 rows:
   - id: top
@@ -389,14 +391,14 @@ rows:
           - type: text
             use_entity: true
             entity: sensor.water_tank_litres
-            design: { font_size: 15px, font_weight: "500", color: "#e0f2fe" }
+            design: { font_size: 15px, font_weight: "600", color: "#ffffff" }
 ```
 
 ## Electric car
 
 Charge level as a glowing ring, range, charging power (only while charging) and a glowing charge bar.
 
-![Electric car](images/20-ev-charging.png)
+![Electric car, Power](images/20-ev-charging.png)
 
 Entities: `sensor.car_battery`, `sensor.car_range`, `sensor.car_charge_power`, `binary_sensor.car_charging`, `switch.car_charger`
 
@@ -517,7 +519,7 @@ rows:
 
 Big production number, live power, and a 24-hour graph.
 
-![Solar today](images/24-solar-today.png)
+![Solar today, Power](images/24-solar-today.png)
 
 Entities: `sensor.energy_today`, `sensor.solar_power`
 
@@ -586,7 +588,7 @@ rows:
 
 A sunny sky with turning rays over the panels, and dashed power lines with live values running to the house, the battery and the grid.
 
-![Solar house](images/45-solar-house.webp)
+[![Solar house, Power](images/45-solar-house.png)](images/45-solar-house.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -708,7 +710,7 @@ flows:
 
 The car's charge fills the card from the left with moving charging stripes, and a green snake runs round the card while it charges.
 
-![EV charger](images/46-ev-charger.webp)
+[![EV charger, Power](images/46-ev-charger.png)](images/46-ev-charger.webp)
 
 Entities: `sensor.car_battery`, `binary_sensor.car_charging`, `sensor.ev_charger_power`, `sensor.ev_session_energy`, `sensor.car_range`
 
@@ -832,7 +834,7 @@ rows:
 
 A tall battery that fills to the charge level with a moving wave and rising bubbles, next to its power, cycles and temperature.
 
-![Home battery](images/47-home-battery.webp)
+[![Home battery, Power](images/47-home-battery.png)](images/47-home-battery.webp)
 
 Entities: `sensor.home_battery`, `sensor.battery_power`, `sensor.battery_cycles`, `sensor.battery_temperature`
 

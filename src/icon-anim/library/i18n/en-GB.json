@@ -2454,6 +2454,21 @@
     "note": "Icon animation name: spotlights on a ceiling rail.",
     "max": 20
   },
+  "icon-library.mirror-badge.keeps": {
+    "text": "Keeps",
+    "note": "Label on an icon in the studio list: the icon keeps its drawing in right-to-left layouts.",
+    "max": 10
+  },
+  "icon-library.mirror-badge.mirrors": {
+    "text": "Mirrors",
+    "note": "Label on an icon in the studio list: the icon flips in right-to-left layouts.",
+    "max": 10
+  },
+  "icon-library.mirror-badge.not-set": {
+    "text": "Not set",
+    "note": "Label on an icon in the studio list: nobody has decided yet whether the icon flips in right-to-left layouts.",
+    "max": 15
+  },
   "icon-library.nature.back-left-leg": {
     "text": "Back left leg",
     "note": "Part name in an animated icon: the rear leg on the left of an animal.",

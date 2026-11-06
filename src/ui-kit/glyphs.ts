@@ -1,4 +1,5 @@
-import { html, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
+import { html, nothing, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
+import type { GlyphDirection } from '../contracts/ui-kit';
 
 /* The kit glyph set: 24 x 24 outlines drawn with currentColor, so they follow the button colour. The SVG editor's own set (src/svg-editor/icons.ts) is gone: it draws with the MDI names below. */
 
@@ -137,10 +138,20 @@ export type GlyphName = keyof typeof G | keyof typeof M;
 
 const isMdi = (n: string): n is keyof typeof M => Object.prototype.hasOwnProperty.call(M, n);
 
-export const glyph = (n: GlyphName, size = 20): TemplateResult =>
-  isMdi(n)
-    ? html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${M[n]} fill="currentColor"></path></svg>`
-    : html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${G[n as keyof typeof G]} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
+/* Glyphs that point along the reading direction. Every other glyph keeps its drawing: clocks, play, pause, media, brand marks and the shapes of geometry tools. */
+const MIRRORED = ['left', 'right', 'back', 'arrowLeft', 'arrowRight', 'chevronRight', 'undo', 'redo'] as const;
+
+/** Per glyph: 'mirror' flips under dir=rtl, 'keep' stays. */
+export const GLYPH_DIRECTION = Object.fromEntries(
+  [...Object.keys(G), ...Object.keys(M)].map((n) => [n, (MIRRORED as readonly string[]).includes(n) ? 'mirror' : 'keep']),
+) as Record<GlyphName, GlyphDirection>;
+
+export const glyph = (n: GlyphName, size = 20): TemplateResult => {
+  const flip = GLYPH_DIRECTION[n] === 'mirror' ? 'mirror' : nothing;
+  return isMdi(n)
+    ? html`<svg class="gl" data-dir=${flip} viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${M[n]} fill="currentColor"></path></svg>`
+    : html`<svg class="gl" data-dir=${flip} viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${G[n as keyof typeof G]} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
+};
 
 /* ---- shape additions ------------------------------------------------------------------------ */
 

@@ -7,6 +7,8 @@ import { previewVars, validateValue } from './model';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
+import '../theme-safety/wall-tablet';
+import type { WallTabletLabels } from '../theme-safety/wall-tablet';
 import type { SwitchOption } from './mode-switch';
 import { t, tx } from './i18n';
 import { browserMode, scopeLabel } from './util';
@@ -142,6 +144,7 @@ export class McteThemePreview extends LitElement {
   @state() private _skipped = 0;
   @state() private _samples = new Map<SampleId, SampleState>();
   @state() private _third: SampleId[] = [];
+  @state() private _tablet = false;
 
   private _scope?: ScopedVars;
   private _timer?: ReturnType<typeof setTimeout>;
@@ -268,6 +271,8 @@ export class McteThemePreview extends LitElement {
               : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
             <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
           </div>`}
+      <button type="button" class="tablet-toggle" data-wall-tablet-toggle aria-pressed=${this._tablet ? 'true' : 'false'} @click=${() => (this._tablet = !this._tablet)}>${t('theme-editor.preview.wall-tablet')}</button>
+      ${this._tablet ? html`<mc-wall-tablet .vars=${this._tabletVars(mode)} .labels=${this._tabletLabels(mode)}></mc-wall-tablet>` : nothing}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
       <section class="stage" aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })} tabindex="0">
         <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
@@ -313,6 +318,21 @@ export class McteThemePreview extends LitElement {
     `;
   }
 
+  private _tabletVars(mode: ThemeMode): Record<string, string> {
+    return Object.fromEntries(Object.entries(previewVars(this.doc, mode)).map(([k, v]) => [`--${k}`, v]));
+  }
+
+  private _tabletLabels(mode: ThemeMode): WallTabletLabels {
+    return {
+      frame: t('theme-editor.preview.wall-tablet-label', { mode: scopeLabel(mode) }),
+      caption: t('theme-editor.preview.wall-tablet-caption'),
+      title: t('theme-editor.preview.wall-tablet-card-title'),
+      text: t('theme-editor.preview.wall-tablet-card-text'),
+      value: t('theme-editor.preview.wall-tablet-card-value'),
+      button: t('theme-editor.preview.wall-tablet-card-button'),
+    };
+  }
+
   private _alerts(): TemplateResult {
     const types: Array<[string, string]> = [
       ['info', t('theme-editor.preview.info-message')],
@@ -335,6 +355,29 @@ export class McteThemePreview extends LitElement {
     :host {
       display: block;
       color: var(--primary-text-color);
+    }
+    .tablet-toggle {
+      min-height: 32px;
+      margin: 8px 0;
+      padding: 4px 12px;
+      border: 1px solid var(--divider-color);
+      border-radius: 16px;
+      background: transparent;
+      color: var(--primary-text-color);
+      font: inherit;
+      cursor: pointer;
+    }
+    .tablet-toggle[aria-pressed='true'] {
+      border-color: var(--primary-color);
+      box-shadow: inset 0 0 0 1px var(--primary-color);
+      font-weight: 600;
+    }
+    .tablet-toggle[aria-pressed='true']::before {
+      content: '\\2713\\00a0';
+    }
+    .tablet-toggle:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
     }
     .toolbar {
       display: flex;
@@ -562,7 +605,7 @@ export class McteThemePreview extends LitElement {
     .alert {
       padding: 10px 12px;
       border-radius: 4px;
-      border-left: 4px solid currentColor;
+      border-left: 4px solid currentColor; /* physical */
       background: var(--card-background-color, #fff);
     }
     .a-info {

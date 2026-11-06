@@ -8,7 +8,7 @@ import { kitLip } from '../ui-kit/css/lip';
 const layout: CSSResult = css`
 :host{position:fixed;inset:0;z-index:1000;display:block;color:var(--mc-text);font:.875rem/1.4 var(--mc-font)}
 *,::before,::after{box-sizing:border-box}
-.skips{position:absolute;z-index:20;top:8px;left:8px;display:flex;gap:4px}
+.skips{position:absolute;z-index:20;top:8px;left:8px;inset-inline:8px auto;display:flex;gap:4px}
 .skips button:focus{background:var(--mc-surface);box-shadow:var(--mc-shadow-float)}
 .sentinel{position:absolute}
 .skips button:not(:focus){position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -34,28 +34,30 @@ h2,h3,h4,p,ul{margin:0}
 [data-layout=stacked] .left{order:2}
 [data-layout=stacked] .insp{order:3}
 .left,.insp{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}
-.left{grid-area:left;border-right:1px solid var(--mc-divider)}
+.left{grid-area:left;border-inline-end:1px solid var(--mc-divider)}
 [data-layout=compact] .left{display:none}
 [data-layout=compact] .topbar .title,[data-layout=stacked] .topbar .title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-[data-layout=compact] .left.sheet{display:flex;position:absolute;z-index:10;top:0;bottom:0;left:0;width:min(80vw,280px);box-shadow:var(--mc-shadow-float)}
-.insp{grid-area:insp;border-left:1px solid var(--mc-divider)}
+[data-layout=compact] .left.sheet{display:flex;position:absolute;z-index:10;top:0;bottom:0;left:0;inset-inline:0 auto;width:min(80vw,280px);box-shadow:var(--mc-shadow-float)}
+.insp{grid-area:insp;border-inline-start:1px solid var(--mc-divider)}
 .center{grid-area:center;display:flex;flex-direction:column;min-width:0;min-height:0}
 .stagewrap{flex:1;min-height:0;display:flex}
 @media(max-width:799px){.stagewrap{flex-direction:column}}
 .stage{position:relative;flex:1 1 auto;min-width:0;min-height:260px;overflow:hidden;background:var(--mc-canvas)}
 [data-layout=stacked] .stage{flex:none;min-height:max(320px,45vh)}
+.stage{direction:ltr}
+:host([dir=rtl]) .float,:host([dir=rtl]) .dock,:host([dir=rtl]) .scale,:host([dir=rtl]) .empty-stage{direction:rtl}
 .stage>svg,.stage>mc-path-canvas{position:absolute;inset:52px 0 0;width:100%;height:calc(100% - 52px)}
 .stage>.empty-stage{position:absolute;inset:52px 0 0;display:grid;place-items:center;padding:16px;text-align:center}
-.float{position:absolute;z-index:3;top:10px;left:10px;right:10px;pointer-events:none}
+.float{position:absolute;z-index:3;top:10px;left:10px;right:10px;inset-inline:10px;pointer-events:none}
 .float>*{pointer-events:auto}
-.dock{position:absolute;z-index:3;left:12px;right:12px;bottom:12px;display:grid;gap:8px;justify-items:start}
+.dock{position:absolute;z-index:3;left:12px;right:12px;inset-inline:12px;bottom:12px;display:grid;gap:8px;justify-items:start}
 .dock>*{max-width:min(100%,520px)}
 .mlist{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
-.mrow{align-items:center;padding:4px 4px 4px 8px}
+.mrow{align-items:center;padding:4px;padding-inline-start:8px}
 .mrow .ell{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pen{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;background:var(--mc-surface);border:1px solid var(--mc-divider);border-radius:var(--mc-radius-lg);box-shadow:var(--mc-shadow-float)}
 .pen .why{flex:1 1 200px}
-.scale{position:absolute;left:12px;bottom:8px;z-index:1;font-size:.75rem;color:var(--mc-text-2)}
+.scale{position:absolute;left:12px;inset-inline:12px auto;bottom:8px;z-index:1;font-size:.75rem;color:var(--mc-text-2)}
 .stage text,.pv text{font:14px var(--mc-font);fill:var(--mc-text);pointer-events:none}
 .pv text{font-size:12px}
 .shape{fill:var(--mc-surface);stroke:var(--mc-text-2);stroke-width:1.5}
@@ -78,14 +80,14 @@ h2,h3,h4,p,ul{margin:0}
 .pv-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .pv-head .grow,.grow{flex:1}
 .pv-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
-.pv{display:flex;flex-direction:column;gap:2px;padding:4px;color:inherit;background:none;border:2px solid transparent;border-radius:10px;font:inherit;text-align:left;cursor:pointer}
+.pv{display:flex;flex-direction:column;gap:2px;padding:4px;color:inherit;background:none;border:2px solid transparent;border-radius:10px;font:inherit;text-align:start;cursor:pointer}
 .pv:hover{background:var(--mc-surface-2)}
 .pv[aria-pressed=true]{border-color:var(--mc-accent)}
 .pv.cut{outline:1px solid var(--mc-error-ink)}
 .pv svg{display:block;min-width:96px;background:var(--mc-canvas);border-radius:6px}
 .pv.card .shape{filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
 .pop-body{display:grid;gap:8px;min-width:min(320px,70vw)}
-.keys{display:grid;gap:6px;padding-left:18px;font-size:.8125rem}
+.keys{display:grid;gap:6px;padding-inline-start:18px;font-size:.8125rem}
 .ctiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .ctiles button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;padding:4px;color:var(--mc-text);background:var(--mc-surface);border:1px solid var(--mc-field-border);border-radius:var(--mc-radius);font:inherit;font-size:.75rem;cursor:pointer;transition:border-color var(--mc-ease,.15s ease-out),background-color var(--mc-ease,.15s ease-out)}
 .ctiles button:hover{border-color:var(--mc-accent)}

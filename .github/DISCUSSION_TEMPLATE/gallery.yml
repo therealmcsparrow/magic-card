@@ -1,0 +1,47 @@
+title: "Gallery: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form creates a public post. Anyone can read it, and it shows your GitHub username. Do not share access tokens, passwords, URLs with credentials in them, your Home Assistant web address, your location, or real entity IDs. Replace entity IDs with placeholders, or export the card with Magic Card, which does it for you. Cut private details out of screenshots first. You can edit or delete your post at any time.
+
+        By sharing this file you release it under CC0 1.0, which means anyone may copy, change and reuse it for any purpose, without asking you and without crediting you. Only share work that is yours to give away. Do not include images, fonts, icons or text that belong to someone else.
+
+  - type: input
+    id: name
+    attributes:
+      label: "Card name (required)"
+      description: "A short name for your card."
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: "Author name"
+      description: "Optional. A name is personal data. If you fill it in, everyone who reads this post can read it. Use a nickname if you prefer, and do not add an email address or contact details."
+
+  - type: textarea
+    id: file
+    attributes:
+      label: "Card file (required)"
+      description: "Paste the file from Share this card in the card editor. Check that it holds no tokens, no URLs with credentials and no real entity IDs."
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: about
+    attributes:
+      label: "What it shows"
+      description: "Optional. Which entities it expects and what it is for."
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "Before you post"
+      options:
+        - label: "I release this file under CC0 1.0 and it holds nothing that belongs to someone else."
+          required: true
+        - label: "It holds no tokens, no URLs with credentials and no real entity IDs."
+          required: true

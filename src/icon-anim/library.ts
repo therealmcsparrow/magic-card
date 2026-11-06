@@ -9,6 +9,7 @@ import { LIGHTS } from './library/lights';
 import { NATURE } from './library/nature';
 import { STYLE_HINTS } from './library/style-hints';
 import { m } from './library/i18n';
+import { ICON_MIRROR } from './library/mirror';
 import { fold as foldText } from '../i18n/fold';
 
 // The animated icon library (contract icon-library): ready animations for the icons of most Home Assistant domains plus
@@ -17,6 +18,8 @@ import { fold as foldText } from '../i18n/fold';
 
 export type { LibraryEntry } from '../contracts/icon-library';
 export { padKeys, svgOf } from './library/build';
+export { ICON_MIRROR } from './library/mirror';
+export { mirrorBadge } from './library/mirror-badge';
 export { RELEASE_NOTES, isNewInRelease, type ReleaseNotes } from './library/release-notes';
 
 // ── the library ──
@@ -1459,7 +1462,7 @@ const SPECS: Spec[] = [
 ];
 
 /** The library: ready icon animations for the icons of most Home Assistant domains. */
-export const ICON_LIBRARY: LibraryEntry[] = [...SPECS, ...LIGHTS, ...HOME, ...FIRE_AND_CLEANING, ...SEASONAL, ...NATURE].map((s) => entryOf(s, STYLE_HINTS[s.id]));
+export const ICON_LIBRARY: LibraryEntry[] = [...SPECS, ...LIGHTS, ...HOME, ...FIRE_AND_CLEANING, ...SEASONAL, ...NATURE].map((s) => entryOf(s, STYLE_HINTS[s.id], ICON_MIRROR[s.id]));
 
 /** The library's domains, in first-seen order. */
 export const LIBRARY_DOMAINS: string[] = [...new Set(ICON_LIBRARY.map((e) => e.domain))];

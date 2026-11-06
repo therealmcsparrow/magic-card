@@ -2,6 +2,7 @@ import { css } from 'lit';
 import type { CSSResult } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
+import { rtlSheet } from '../ui-kit/css/rtl';
 import { kitButtonExtras, kitChipExtras, kitCheck, kitNotice, kitTokens } from '../ui-kit/css/extras';
 
 // The theme editor's stylesheet (theme-editor 1.2.0, ui-kit 1.0.0), built on the kit with a fixed accent.
@@ -77,7 +78,7 @@ const local: CSSResult = css`
     height: 16px;
     border-radius: 50%;
     border: 2px solid currentColor;
-    border-right-color: transparent;
+    border-right-color: transparent; /* physical */
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin {
@@ -87,4 +88,4 @@ const local: CSSResult = css`
   }
 `;
 
-export const base: CSSResult[] = [editorTokens, editorPrimitives, kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitCheck, themeAccent, local];
+export const base: CSSResult[] = [editorTokens, editorPrimitives, kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitCheck, themeAccent, rtlSheet, local];

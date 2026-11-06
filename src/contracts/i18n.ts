@@ -1,7 +1,16 @@
-// Contract: i18n. Version 2.0.0.
+// Contract: i18n. Version 2.1.0.
 
-export const I18N_CONTRACT_VERSION = '2.0.0';
-export const I18N_CONTRACT_REVISION = 7;
+export const I18N_CONTRACT_VERSION = '2.1.0';
+export const I18N_CONTRACT_REVISION = 9;
+
+/** Pseudo-localisation hook: wraps one message or one formatted number; the result is used as text only. */
+export type PseudoWrap = (s: string, kind: 'msg' | 'num') => string;
+/** CustomEvent on window, detail `{ wrap: PseudoWrap | null }`; every runtime copy keeps the wrap in its own module. */
+export const I18N_WRAP_EVENT = 'mc-i18n-wrap';
+/** Plain Event a copy dispatches once on start; the copy that last sent a wrap answers with I18N_WRAP_EVENT. */
+export const I18N_WRAP_QUERY_EVENT = 'mc-i18n-wrap-query';
+/** Never in LOCALES and never returned by resolveLocale. */
+export const PSEUDO_LOCALE = { tag: 'x-pseudo-rtl', dir: 'rtl', pseudo: true } as const;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -14,6 +23,7 @@ export const TABLE_SEPARATOR = '|';
 
 /** Id in shipped code: the message's index in the namespace tables, written by tools/i18n-loader.cjs in place of the key. */
 export type MessageIndex = number;
+/** A string argument is wrapped in U+2068/U+2069 when the active locale is rtl, a pseudo wrap is on, or the value holds strong rtl text. Numbers never are. */
 export type MessageArgs = Record<string, string | number>;
 export type RichArgs = Record<string, unknown>;
 /** Three TABLE_SEPARATOR-joined strings in LOCALES order; entry i of each is message i. */
@@ -36,6 +46,8 @@ export interface ModuleI18n {
   /** Current locale of this bundle. */
   locale(): Locale;
   t(id: MessageIndex, args?: MessageArgs): string;
+  /** The en-GB text of message id, unformatted. */
+  en(id: MessageIndex): string;
   tx(id: MessageIndex, args: RichArgs): unknown[];
   /** Identity marker for data literals (the key becomes the index after the loader). */
   m(id: MessageIndex): MessageIndex;
@@ -72,7 +84,7 @@ export interface I18nModuleEntry {
 export const I18N_MODULES = {
   card: { bundle: 'magic-card.js (second copy in magic-card-animation-studio.js, accepted)', folders: ['src/card (not src/card/pause-i18n)', 'src/modules (dashboard text only)', 'src/icons', 'src/utils (runtime files, dashboard text only)'], tables: 'inline', status: 'complete', slice: 'I1', dashboard: true },
   labels: {
-    bundle: 'magic-card-editor.js, magic-card-animation-studio.js (lm() numbers also in magic-card.js)',
+    bundle: 'magic-card-editor.js, magic-card-animation-studio.js, magic-card-icon-library.js, magic-card-icon-shared.js (lm() numbers also in magic-card.js)',
     folders: [
       'src/utils/css-properties.ts', 'src/utils/css-property-options.ts', 'src/utils/animation-presets.ts',
       'src/editor/components/font-picker.ts (group names; family names are not messages)', 'src/utils/seasonal-scenes.ts',
@@ -92,17 +104,19 @@ export const I18N_MODULES = {
   transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], tables: 'inline', status: 'complete', slice: 'I6', dashboard: false },
   'image-transfer': { bundle: 'magic-card-image-transfer.js', folders: ['src/image-transfer'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
-  'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
+  'icon-animator': { bundle: 'magic-card-icon-animator.js, magic-card-forum-shot.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
   'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'complete', slice: 'I8', dashboard: false },
   'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], tables: 'inline', status: 'complete', slice: 'I9', dashboard: false },
-  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
+  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js, magic-card-forum-shot.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
   'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'controls': { bundle: 'magic-card-controls.js', folders: ['src/modules/controls/dropdown-view.ts', 'src/modules/controls/light-view.ts', 'src/modules/controls/spinbox-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
   'modules-extra': { bundle: 'magic-card-modules-extra.js', folders: ['src/modules/advanced/custom-card-view.ts', 'src/modules/advanced/forecast-view.ts', 'src/modules/content/camera-view.ts', 'src/modules/content/graphs-view.ts', 'src/modules/layout/tabs-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
   'card-pause': { bundle: 'magic-card-pause.js', folders: ['src/card/card-pause.ts'], tables: 'inline', status: 'complete', slice: 'pause-label', dashboard: true },
   'image-tools': { bundle: 'magic-card-image-tools.js', folders: ['src/image-tools'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
+  'forum-shot': { bundle: 'magic-card-forum-shot.js', folders: ['src/forum-shot'], tables: 'inline', status: 'complete', slice: 'forum-shot', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
+  'share-kit': { bundle: 'magic-card-share-kit.js', folders: ['src/share-kit'], tables: 'inline', status: 'complete', slice: 'sharing-safety', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
 // dashboard: false for icon-library and preset-catalogue: checked against the chunk graph, the

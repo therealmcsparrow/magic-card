@@ -3,7 +3,7 @@
 # Entities: weather.home, sensor.outdoor_temperature
 type: custom:magic-card
 name: Clock
-background: "linear-gradient(135deg, #ff9a8b 0%, #ff6a88 45%, #a35bd6 100%)"
+background: "linear-gradient(135deg, #a3203f 0%, #9d1f5c 45%, #5b1f9e 100%)"
 border_radius: 30px
 padding: 10px
 box_shadow: "0 20px 44px rgba(255, 106, 136, 0.35)"
@@ -22,7 +22,7 @@ rows:
           - type: text
             use_template: true
             text: "{{ 'Good morning' if now().hour < 12 else 'Good afternoon' if now().hour < 18 else 'Good evening' }}, Anna"
-            design: { font_size: 16px, font_weight: "600", color: "rgba(255,255,255,0.92)" }
+            design: { font_size: 16px, font_weight: "600", color: "#ffffff" }
           - type: text
             use_template: true
             text: "{{ now().strftime('%H:%M') }}"
@@ -36,7 +36,7 @@ rows:
           - type: text
             use_template: true
             text: "{{ now().strftime('%A %-d %B') }}"
-            design: { font_size: 15px, color: "rgba(255,255,255,0.85)" }
+            design: { font_size: 15px, color: "#ffffff" }
           - type: horizontal
             gap: 10px
             design: { margin_top: 16px }

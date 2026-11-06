@@ -14,6 +14,7 @@ import type {
   SeasonalSetting,
   ValueBackgroundConfig,
 } from '../../types';
+import type { LibraryViewStatics } from '../../contracts/preset-transfer';
 import type { FlowBudget } from '../../contracts/flow-look';
 import type { ShapePatch } from '../components/shape-editor';
 import type { SyncContext } from '../../utils/sync-path';
@@ -45,6 +46,7 @@ import '../components/design-panel';
 import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
+import { cardKeyLists, loadTransfer } from '../transfer-loader';
 import { t as lt } from '../../i18n/labels';
 import { BORDER_STYLE_OPTS } from '../../utils/css-property-options';
 import type { PauseButtonCorner, PauseButtonMode } from '../../contracts/card-pause';
@@ -120,6 +122,49 @@ function renderCardEntity(config: MagicCardConfig, hass: HomeAssistant | undefin
   `;
 }
 
+
+/** Opens the transfer panel in the slot beside the buttons to share the card (export) or read a shared one (import); the open config is replaced after Confirm. */
+async function openShare(e: Event, mode: 'import' | 'export', config: MagicCardConfig, replace: (config: MagicCardConfig) => void, entities: string[]): Promise<void> {
+  const slot = (e.currentTarget as HTMLElement).closest('[data-card-share]')!.querySelector('[data-share-slot]')!;
+  slot.replaceChildren();
+  try {
+    await loadTransfer();
+  } catch {
+    slot.textContent = t('card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page');
+    return;
+  }
+  const panel = Object.assign(document.createElement('mc-transfer-panel'), { host: 'card-editor', mode, accept: ['card'], card: cardKeyLists(), entities, hasLibrary: false, exportItems: mode === 'export' ? { kind: 'card', items: [{ id: 'card', name: config.name || 'card', data: config }] } : undefined });
+  panel.addEventListener('mc-transfer-close', () => slot.replaceChildren());
+  panel.addEventListener('mc-transfer-import', (ev) => {
+    ev.stopPropagation();
+    slot.replaceChildren();
+    replace((ev as CustomEvent).detail.items[0].data);
+  });
+  slot.append(panel);
+}
+
+const PLACEHOLDER_IN_CARD = /(?<![a-z0-9_/-])[a-z][a-z0-9_]{0,63}\.mc_placeholder_[1-9][0-9]{0,5}(?![a-z0-9_])/;
+
+/** Finish later: the mapping step of an import, opened on the open config; the mapped config replaces it. */
+async function openMap(e: Event, config: MagicCardConfig, replace: (config: MagicCardConfig) => void, entities: string[]): Promise<void> {
+  const slot = (e.currentTarget as HTMLElement).closest('[data-card-share]')!.querySelector('[data-share-slot]')!;
+  slot.replaceChildren();
+  try {
+    const chunk = await loadTransfer();
+    if (!(await (customElements.get(chunk.tags.library) as unknown as LibraryViewStatics).mapStep())) throw new Error('map');
+  } catch {
+    slot.textContent = t('card-editor.card-settings.the-sharing-tools-did-not-load-reload-the-page');
+    return;
+  }
+  const step = Object.assign(document.createElement('mc-map-entities'), { value: config, entities });
+  step.addEventListener('mc-map-cancel', () => slot.replaceChildren());
+  step.addEventListener('mc-map-apply', (ev) => {
+    slot.replaceChildren();
+    replace((ev as CustomEvent).detail.data);
+  });
+  slot.append(step);
+}
+
 export function renderCardGeneral(
   config: MagicCardConfig,
   update: CardUpdate,
@@ -127,6 +172,7 @@ export function renderCardGeneral(
   hass: HomeAssistant | undefined,
   canvas = false,
   entityField?: CardEntityField,
+  share?: (config: MagicCardConfig) => void,
 ): TemplateResult {
   const usePageTheme = config.use_page_theme !== false;
   const popup = config.popup && typeof config.popup === 'object' ? config.popup : undefined;
@@ -153,6 +199,21 @@ export function renderCardGeneral(
         { disabled: usePageTheme },
       )}
     </div>
+    ${share
+      ? html`<div class="group" data-card-share>
+          <div class="bar">
+            <button type="button" class="btn btn-sm" data-share="export" @click=${(e: Event) => void openShare(e, 'export', config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:export-variant"></ha-icon>${t('card-editor.card-settings.share-this-card')}</button>
+            <button type="button" class="btn btn-sm" data-share="import" @click=${(e: Event) => void openShare(e, 'import', config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:import"></ha-icon>${t('card-editor.card-settings.import-a-shared-card')}</button>
+          </div>
+          ${PLACEHOLDER_IN_CARD.test(JSON.stringify(config))
+            ? html`<div class="bar" data-map-later>
+                <span class="help">${t('card-editor.card-settings.this-card-still-uses-placeholders-instead-of-your')}</span>
+                <button type="button" class="btn btn-sm" @click=${(e: Event) => void openMap(e, config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:link-variant"></ha-icon>${t('card-editor.card-settings.map-entities')}</button>
+              </div>`
+            : nothing}
+          <div data-share-slot></div>
+        </div>`
+      : nothing}
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:dock-window"></ha-icon>
