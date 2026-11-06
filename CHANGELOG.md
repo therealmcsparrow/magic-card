@@ -4,6 +4,21 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.01 (2026-11-06)
+
+This stable release holds everything from the 2026.10.12 pre-releases, which are listed below. The code is the same as 2026.10.12-beta.18. If you stayed on 2026.10.11, these are the main changes:
+
+-   **Image editor.** Draw full images, open or paste an SVG file, and use library images in image modules and background layers.
+-   **Tabs module.** Every tab setting per tab state, including icons and animations, with borders and corners per side and the font on the tab buttons.
+-   **Card and button design.** Card border, opacity, backdrop filter and margin, and icon and text controls and resizing for buttons.
+-   **Editor.** Drag modules into and out of containers in the tree, Replace with…, grouped item menus, side panels that hide, Studio Preview, and a pipette and more formats in the colour picker.
+-   **Magic Card Utils panel.** Forum shot makes one picture of a card to post in a forum. The animation and theme editors open full screen, and their lists look like the Images list.
+-   **Cards after an update.** A card shows when its data may be old, and offers one tap to reload when its parts come from different releases.
+-   **Pause motion.** Pause also holds animated icons still, shows a clearer paused state and has a bigger button on touch screens.
+-   **Home Assistant Marketplace.** The install, update and troubleshooting steps cover the Marketplace in Home Assistant 2026.11.
+
+Use Magic Card Utils 2026.11.01 with this release.
+
 ## 2026.10.12-beta.18 (2026-11-06)
 
 ### Changed
