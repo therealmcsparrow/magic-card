@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   **Markdown module.** The bundled `marked` library is updated to 18.1.2, which has bug fixes in markdown parsing.
+
 ## 2026.10.12-beta.17 (2026-11-05)
 
 ### Changed

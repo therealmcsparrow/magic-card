@@ -149,9 +149,9 @@
       "note": "71 KiB: measured 69,155 plus a margin. Ceiling 81,920."
     },
     "magic-card-markdown.js": {
-      "raw": 57344,
-      "ceiling": 57344,
-      "note": "56 KiB, sized for the style allow-list tokenizer."
+      "raw": 57600,
+      "ceiling": 57600,
+      "note": "56.25 KiB, sized for the style allow-list tokenizer."
     },
     "magic-card-manifest.js": {
       "raw": 3072,
@@ -1163,6 +1163,18 @@
       "field": "/files/magic-card-forum-shot.js/ceiling",
       "from": 107520,
       "to": 108544
+    },
+    {
+      "id": "markdown-raw-57344-to-57600",
+      "field": "/files/magic-card-markdown.js/raw",
+      "from": 57344,
+      "to": 57600
+    },
+    {
+      "id": "markdown-ceiling-57344-to-57600",
+      "field": "/files/magic-card-markdown.js/ceiling",
+      "from": 57344,
+      "to": 57600
     }
   ]
 }
