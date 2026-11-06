@@ -627,6 +627,7 @@ export class McteStartView extends LitElement {
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
+        --mc-accent-fill: color-mix(in srgb, var(--primary-color, #03a9f4) 70%, #000);
       }
       .skel {
         height: 76px;

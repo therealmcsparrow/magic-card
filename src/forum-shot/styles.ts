@@ -8,6 +8,8 @@ export const forumShotStyles = css`
     padding: 16px;
     color: var(--primary-text-color, #212121);
     font-family: var(--paper-font-body1_-_font-family, inherit);
+    font-size: 0.875rem;
+    --mdc-icon-size: 18px;
   }
   :host([narrow]) {
     padding: 8px;
@@ -91,12 +93,10 @@ export const forumShotStyles = css`
     border: 1px solid var(--divider-color, #727272);
   }
   button.tip {
-    display: inline-flex;
-    align-items: center;
     gap: 6px;
-    min-height: 44px;
-    padding: 0 12px 0 8px;
-    border-radius: 22px;
+    min-height: 32px;
+    padding: 0 10px 0 6px;
+    border-radius: 16px;
     background: transparent;
     color: inherit;
   }
@@ -107,8 +107,8 @@ export const forumShotStyles = css`
   }
   button.tip svg {
     flex: none;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     fill: none;
     stroke: currentcolor;
     stroke-width: 2;
@@ -137,17 +137,11 @@ export const forumShotStyles = css`
     font-size: 0.9em;
   }
   button.sort {
-    display: inline-flex;
-    align-items: center;
     gap: 4px;
-    min-height: 44px;
+    min-height: 32px;
     padding: 4px 0;
-    border: 2px solid transparent;
-    border-radius: 8px;
     background: transparent;
     color: inherit;
-    font-weight: inherit;
-    text-align: start;
   }
   th[aria-sort='ascending'] button.sort::after {
     content: '\\25B2';
@@ -175,7 +169,7 @@ export const forumShotStyles = css`
   }
   .box ha-icon {
     position: absolute;
-    margin: 10px;
+    margin: 8px 10px;
   }
   .bar {
     display: flex;
@@ -184,12 +178,13 @@ export const forumShotStyles = css`
     gap: 8px;
   }
   .filter input {
-    min-height: 44px;
-    padding: 8px 12px 8px 44px;
+    min-height: 40px;
+    padding: 8px 12px 8px 36px;
     border: 1px solid var(--secondary-text-color, #727272);
     border-radius: 8px;
     color: inherit;
     font: inherit;
+    font-size: 0.875rem;
     font-weight: 400;
   }
   .hint,
@@ -212,24 +207,26 @@ export const forumShotStyles = css`
     border-color: var(--error-color, #b3261e);
   }
   button {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 8px 20px;
-    border: 2px solid var(--primary-color, #03a9f4);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid transparent;
     border-radius: 8px;
-    background: var(--primary-color, #03a9f4);
-    color: var(--text-primary-color, #fff);
+    background: color-mix(in srgb, var(--primary-color, #03a9f4) 70%, #000);
+    color: #fff;
     font: inherit;
     font-weight: 500;
     cursor: pointer;
   }
-  button.retry {
+  button.retry,
+  button[aria-disabled='true'] {
+    border-color: var(--divider-color, #727272);
     background: transparent;
     color: var(--primary-text-color, #212121);
   }
   button[aria-disabled='true'] {
-    border-style: dashed;
-    background: transparent;
     color: var(--secondary-text-color, #5f5f5f);
     cursor: not-allowed;
   }

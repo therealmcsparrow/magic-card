@@ -470,7 +470,7 @@ export class MagicCardForumShot extends LitElement {
             if (!blocked && !this._busy) void this._download();
           }}
         >
-          ${t('forum-shot.element.download')}
+          <ha-icon icon="mdi:download"></ha-icon>${t('forum-shot.element.download')}
         </button>
         ${blocked ? html`<span class="hint" id="pick-hint">${t('forum-shot.element.pick-first')}</span>` : nothing}
       </div>
