@@ -69,8 +69,8 @@ export class AnimationThumb extends LitElement {
     css`
       :host {
         display: block;
-        width: 88px;
-        height: 56px;
+        width: 64px;
+        height: 40px;
         flex: none;
       }
       .box {
@@ -93,7 +93,7 @@ export class AnimationThumb extends LitElement {
         left: 50%; /* physical */
         top: 50%;
         width: 176px;
-        transform: translate(-50%, -50%) scale(0.5);
+        transform: translate(-50%, -50%) scale(0.36);
         pointer-events: none;
       }
       .scale magic-card {

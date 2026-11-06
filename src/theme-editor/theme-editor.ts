@@ -1,3 +1,4 @@
+import { isTrialActive, subscribeTrial } from './trial';
 import { LitElement, html, css, PropertyValues, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { THEME_EDITOR_CONTRACT_VERSION } from '../contracts/theme-editor';
@@ -64,6 +65,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   private _mine: SavedThemePreset[] | undefined;
   private _loading?: Promise<void>;
   private _opened: string | null = null;
+  private _offTrial?: () => void;
   private readonly _beforeUnload = (e: BeforeUnloadEvent): void => {
     if (!this._dirty) return;
     e.preventDefault();
@@ -80,10 +82,12 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('beforeunload', this._beforeUnload);
+    this._offTrial = subscribeTrial(() => this.requestUpdate());
   }
 
   disconnectedCallback(): void {
     window.removeEventListener('beforeunload', this._beforeUnload);
+    this._offTrial?.();
     super.disconnectedCallback();
   }
 
@@ -99,6 +103,12 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   }
 
   protected updated(changed: PropertyValues): void {
+    // A trial needs the sidebar to reach a dashboard, so the editor is only full screen without one.
+    const full = !!this._draft && !isTrialActive();
+    if (full !== this.hasAttribute('editing')) {
+      this.toggleAttribute('editing', full);
+      this.dispatchEvent(new CustomEvent('mc-editor-fullscreen', { detail: { open: full }, bubbles: true, composed: true }));
+    }
     if (changed.has('selectedName') && this._phase === 'ready' && this._listPhase === 'ready') void this._openSelected();
   }
 
@@ -298,7 +308,14 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       .note {
         margin: 16px;
       }
-      mcte-start-view,
+      :host([editing]) {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      height: auto;
+      background: var(--primary-background-color, #fafafa);
+    }
+    mcte-start-view,
       mcte-editor-view {
         height: 100%;
       }

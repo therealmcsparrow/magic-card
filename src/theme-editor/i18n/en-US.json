@@ -2603,9 +2603,9 @@
     "text": "Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.",
     "hash": "b55161db"
   },
-  "theme-editor.start-view.copy-to-edit": {
-    "text": "Copy to edit",
-    "hash": "3bf53c98"
+  "theme-editor.start-view.copy-to-edit-name": {
+    "text": "Copy {name} to edit",
+    "hash": "73fdfdd9"
   },
   "theme-editor.start-view.could-not-delete-name-reason": {
     "text": "Could not delete {name}. {reason}",
@@ -2618,6 +2618,14 @@
   "theme-editor.start-view.could-not-read-name-reason": {
     "text": "Could not read {name}. {reason}",
     "hash": "805b41a9"
+  },
+  "theme-editor.start-view.could-not-read-themes": {
+    "text": "The themes could not be read for export. Try again.",
+    "hash": "7d2ae880"
+  },
+  "theme-editor.start-view.count-themes": {
+    "text": "{n, plural, one {# theme} other {# themes}}",
+    "hash": "ded85d0d"
   },
   "theme-editor.start-view.create-a-theme-from-a-preset-or-copy-one": {
     "text": "Create a theme from a preset or copy one you have installed.",
@@ -2639,9 +2647,29 @@
     "text": "Delete {name}?",
     "hash": "a4b982a9"
   },
-  "theme-editor.start-view.duplicate": {
-    "text": "Duplicate",
-    "hash": "02cdaabf"
+  "theme-editor.start-view.delete-row-name": {
+    "text": "Delete {name}",
+    "hash": "3cf8146e"
+  },
+  "theme-editor.start-view.duplicate-name": {
+    "text": "Duplicate {name}",
+    "hash": "fe06d16b"
+  },
+  "theme-editor.start-view.edit-name": {
+    "text": "Edit {name}",
+    "hash": "2313fe21"
+  },
+  "theme-editor.start-view.export-all": {
+    "text": "Export all",
+    "hash": "51427688"
+  },
+  "theme-editor.start-view.export-n-selected": {
+    "text": "Export {n} selected",
+    "hash": "32abc6cb"
+  },
+  "theme-editor.start-view.export-name": {
+    "text": "Export {name}",
+    "hash": "0b3c8c46"
   },
   "theme-editor.start-view.file-file": {
     "text": "File {file}.",
@@ -2751,6 +2779,10 @@
     "text": "Search themes",
     "hash": "22da14c0"
   },
+  "theme-editor.start-view.select-name": {
+    "text": "Select {name}",
+    "hash": "cbe2f067"
+  },
   "theme-editor.start-view.start-from": {
     "text": "Start from",
     "hash": "eb3f51dc"
@@ -2774,10 +2806,6 @@
   "theme-editor.start-view.the-theme-name-does-not-match-the-file": {
     "text": "The theme name does not match the file name.",
     "hash": "9106c5da"
-  },
-  "theme-editor.start-view.themes": {
-    "text": "Themes",
-    "hash": "43ae3265"
   },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",

@@ -15,6 +15,10 @@
     "text": "Weergave",
     "hash": "dcc839a4"
   },
+  "forum-shot.card-table.count": {
+    "text": "{n, plural, one {# kaart} other {# kaarten}}",
+    "hash": "2d0d4925"
+  },
   "forum-shot.card-table.default-dashboard": {
     "text": "Standaarddashboard",
     "hash": "4913c670"

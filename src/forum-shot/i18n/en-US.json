@@ -15,6 +15,10 @@
     "text": "View",
     "hash": "dcc839a4"
   },
+  "forum-shot.card-table.count": {
+    "text": "{n, plural, one {# card} other {# cards}}",
+    "hash": "2d0d4925"
+  },
   "forum-shot.card-table.default-dashboard": {
     "text": "Default dashboard",
     "hash": "4913c670"

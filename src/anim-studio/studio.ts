@@ -5,7 +5,7 @@ import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 import { setI18nLocale } from '../i18n/runtime';
 import type { LocaleHassLike } from '../contracts/i18n';
 import { ready as labelsReady, t as tl } from '../i18n/labels';
-import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
+import { EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { docFromPreset, presetDocId } from './from-preset';
 import { ANIMATION_CAPS, ANIMATION_KINDS, newAnimationDoc, validateAnimationDoc, type AnimationDoc, type AnimationKind, type FieldError } from './model';
@@ -43,6 +43,7 @@ import { PanelLips } from '../ui-kit/controllers/panel-lips';
 import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
 import type { PanelLipSpec, PanelLipStrings } from '../contracts/ui-kit';
 import { seg } from '../ui-kit/templates/choice';
+import { field } from '../ui-kit/templates/field';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
@@ -298,6 +299,7 @@ export class AnimationStudio extends LitElement {
   @state() private _docs = new Map<string, AnimationDoc>();
   @state() private _view: 'library' | 'editor' = 'library';
   @state() private _query = '';
+  @state() private _picked: ReadonlySet<string> = new Set();
   @state() private _kind: AnimationKind | 'all' = 'all';
   @state() private _menu = false;
   private _menuClosedAt = 0;
@@ -425,6 +427,11 @@ export class AnimationStudio extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    const full = this._view === 'editor';
+    if (full !== this.hasAttribute('editing')) {
+      this.toggleAttribute('editing', full);
+      this.dispatchEvent(new CustomEvent('mc-editor-fullscreen', { detail: { open: full }, bubbles: true, composed: true }));
+    }
     // the automatic split: on open and resize; an edit only grows the timeline (no jumping stage)
     const prev = changed.get('_doc') as AnimationDoc | undefined;
     // (the layers column opening or closing changes the timeline's width: lanes or its keyframe list)
@@ -1159,7 +1166,7 @@ export class AnimationStudio extends LitElement {
     return html`<div class="menu-anchor">
       <button
         type="button"
-        class="btn btn-primary btn-sm new-btn"
+        class="btn btn-primary new-btn"
         aria-haspopup="menu"
         aria-expanded=${this._menu ? 'true' : 'false'}
         @click=${() => this._toggleNewMenu()}
@@ -1176,11 +1183,25 @@ export class AnimationStudio extends LitElement {
     return html`<span class="used ${n ? '' : 'none'}">${n ? t('anim-studio.studio.used-by-count', { count: n }) : t('anim-studio.studio.not-used')}</span>`;
   }
 
+  private _pick(id: string, on: boolean): void {
+    const next = new Set(this._picked);
+    if (on) next.add(id);
+    else next.delete(id);
+    this._picked = next;
+  }
+
   private _renderRow(d: AnimationDoc): TemplateResult {
     const renaming = this._renaming === d.id;
     const commit = (e: Event) => void this._rename(d, (e.target as HTMLInputElement).value);
     return html`
-      <li class="lib-row" data-id=${d.id}>
+      <li class="lib-row${this._picked.has(d.id) ? ' selected' : ''}" data-id=${d.id}>
+        <input
+          type="checkbox"
+          class="check"
+          aria-label=${t('anim-studio.studio.select-name', { name: d.name })}
+          .checked=${this._picked.has(d.id)}
+          @change=${(e: Event) => this._pick(d.id, (e.target as HTMLInputElement).checked)}
+        />
         <mcas-thumb .doc=${d} .lookup=${this._lookup} .hass=${this.hass}></mcas-thumb>
         ${
           renaming
@@ -1210,12 +1231,12 @@ export class AnimationStudio extends LitElement {
         <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${t(KIND_LABEL[d.kind])}</span>
         ${this._usedBy(d.id)}
         <span class="acts">
-          <button type="button" class="icon-btn sm" title=${t('anim-studio.studio.duplicate')} aria-label=${t('anim-studio.studio.duplicate-name', { name: d.name })} @click=${() => this._duplicate(d)}>
+          <button type="button" class="icon-btn xs" title=${t('anim-studio.studio.duplicate')} aria-label=${t('anim-studio.studio.duplicate-name', { name: d.name })} @click=${() => this._duplicate(d)}>
             <ha-icon icon="mdi:content-copy"></ha-icon>
           </button>
           <button
             type="button"
-            class="icon-btn sm rename-btn"
+            class="icon-btn xs rename-btn"
             title=${t('anim-studio.studio.rename')}
             aria-label=${t('anim-studio.studio.rename-name', { name: d.name })}
             @click=${() => {
@@ -1227,14 +1248,14 @@ export class AnimationStudio extends LitElement {
           </button>
           <button
             type="button"
-            class="icon-btn sm"
+            class="icon-btn xs"
             title=${t('anim-studio.studio.export')}
             aria-label=${t('anim-studio.studio.export-name', { name: d.name })}
             @click=${() => this._export([d])}
           >
             <ha-icon icon="mdi:export-variant"></ha-icon>
           </button>
-          <button type="button" class="icon-btn sm danger" title=${t('anim-studio.studio.delete')} aria-label=${t('anim-studio.studio.delete-name', { name: d.name })} @click=${() => this._askDelete(d)}>
+          <button type="button" class="icon-btn xs danger" title=${t('anim-studio.studio.delete')} aria-label=${t('anim-studio.studio.delete-name', { name: d.name })} @click=${() => this._askDelete(d)}>
             <ha-icon icon="mdi:delete-outline"></ha-icon>
           </button>
         </span>
@@ -1247,24 +1268,6 @@ export class AnimationStudio extends LitElement {
       <ha-icon icon="mdi:animation-play-outline"></ha-icon>
       <strong>${t('anim-studio.studio.no-animations-yet')}</strong>
       <p>${t("anim-studio.studio.build-one-from-scratch-or-customise-one")}</p>
-      <div class="starters">
-        ${ANIMATION_KINDS.map(
-          (k) =>
-            html`<button type="button" class="starter" @click=${() => this._new(k)}>
-              <ha-icon icon=${KIND_ICON[k]}></ha-icon><span class="mi-t">${t(KIND_LABEL[k])}</span><span class="mi-s">${t(NEW_HELP[k])}</span>
-            </button>`,
-        )}
-        <button
-          type="button"
-          class="starter"
-          @click=${() => this._openPresets()}
-        >
-          <ha-icon icon="mdi:auto-fix"></ha-icon><span class="mi-t">${t('anim-studio.studio.from-a-preset')}</span><span class="mi-s">${t('anim-studio.studio.customise-one-of-count', { count: ANIMATION_PRESETS.length })}</span>
-        </button>
-        <button type="button" class="starter" data-kind="icon" @click=${() => this._openIconStart()}>
-          <ha-icon icon="mdi:motion-play-outline"></ha-icon><span class="mi-t">${t('anim-studio.studio.icon-animation-2')}</span><span class="mi-s">${t("anim-studio.studio.animate-an-icon-s-parts")}</span>
-        </button>
-      </div>
     </div>`;
   }
 
@@ -1275,62 +1278,49 @@ export class AnimationStudio extends LitElement {
       ...ANIMATION_KINDS.map((k) => ({ id: k, label: t(KIND_LABEL[k]) })),
     ];
     const shown = filterDocs(all, this._query).filter((d) => this._kind === 'all' || d.kind === this._kind);
+    const picked = all.filter((d) => this._picked.has(d.id));
     return html`
-      <header class="topbar">
-        <div class="grp title">
-          <ha-icon class="title-icon" icon="mdi:animation-play-outline"></ha-icon>
-          <h1>${t('anim-studio.studio.animation-studio')}</h1>
-          <span class="chip is-count">${all.length}</span>
-        </div>
-        <span class="spacer"></span>
-        <div class="grp">
-          ${this._pseudoSwitch()}
-          <button
-            type="button"
-            class="btn btn-secondary btn-sm"
-            @click=${() => void this._openTransfer({ type: 'import' })}
-          >
-            <ha-icon icon="mdi:import"></ha-icon>${t('anim-studio.studio.import')}
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary btn-sm"
-            ?disabled=${!all.length}
-            @click=${() => this._export(all)}
-          >
-            <ha-icon icon="mdi:export-variant"></ha-icon>${t('anim-studio.studio.export-all')}
-          </button>
-          ${this._renderNewButton()}
-        </div>
-      </header>
       <main class="lib">
         <div class="lib-inner">
           ${
             all.length
-              ? html`
-                  <div class="lib-tools">
-                    <div class="with-icon search">
-                      <ha-icon icon="mdi:magnify"></ha-icon>
-                      <input
-                        class="input"
-                        type="search"
-                        placeholder=${t('anim-studio.studio.search-animations')}
-                        aria-label=${t('anim-studio.studio.search-animations')}
-                        aria-keyshortcuts="/"
-                        .value=${live(this._query)}
-                        @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
-                      />
-                    </div>
-                    <div class="kinds">${seg({ role: 'radiogroup', label: t('anim-studio.studio.kind'), value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>
-                  </div>
+              ? html`${field({
+                  id: 'lib-search',
+                  label: t('anim-studio.studio.search-animations'),
+                  control: html`<div class="with-icon search">
+                    <ha-icon icon="mdi:magnify"></ha-icon>
+                    <input
+                      id="lib-search"
+                      class="input"
+                      type="search"
+                      aria-keyshortcuts="/"
+                      .value=${live(this._query)}
+                      @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
+                    />
+                  </div>`,
+                })}
+                <div class="kinds">${seg({ role: 'radiogroup', label: t('anim-studio.studio.kind'), value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>`
+              : nothing
+          }
+          <div class="bar">
+            <button type="button" class="btn btn-secondary" ?disabled=${!shown.length} @click=${() => this._export(picked.length ? picked : shown)}>
+              <ha-icon icon="mdi:export-variant"></ha-icon>${picked.length ? t('anim-studio.studio.export-n-selected', { n: picked.length }) : t('anim-studio.studio.export-all')}
+            </button>
+            ${this._renderNewButton()}
+            <button type="button" class="btn btn-secondary" @click=${() => void this._openTransfer({ type: 'import' })}>
+              <ha-icon icon="mdi:import"></ha-icon>${t('anim-studio.studio.import')}
+            </button>
+          </div>
+          ${
+            all.length
+              ? html`<div role="status" aria-live="polite" class="help">${t('anim-studio.studio.count-animations', { n: shown.length })}</div>
                   ${
                     shown.length
-                      ? html`<ul class="lib-list ${this.usage ? 'has-usage' : ''}" aria-label=${t('anim-studio.studio.my-animations')}>
+                      ? html`<ul class="lib-list" aria-label=${t('anim-studio.studio.my-animations')}>
                           ${shown.map((d) => this._renderRow(d))}
                         </ul>`
                       : html`<p class="no-results">${this._query ? t('anim-studio.studio.no-animations-match-query', { query: this._query }) : t('anim-studio.studio.no-animations-match')}</p>`
-                  }
-                `
+                  }`
               : this._renderEmpty()
           }
         </div>

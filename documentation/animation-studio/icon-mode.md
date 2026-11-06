@@ -15,8 +15,7 @@ An icon animation makes the parts of an icon move: a bell swings, its waves draw
 
 Two places open the Icon animation window:
 
--   New animation in the library's top bar, then Icon animation… ("Split an icon into parts, or start from the icon library").
--   On an empty library, the Icon animation starter ("Animate an icon's parts").
+-   New animation above the library's list, then Icon animation… ("Split an icon into parts, or start from the icon library").
 
 The window has two ways in: an icon of your choice, or an entry from the icon library. Cancel closes it.
 
