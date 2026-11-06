@@ -58,7 +58,7 @@ describe('end state: literal dotted keys everywhere, text-id path gone', () => {
 
 describe('end state: the tree typechecks against the generated key types', () => {
   it('passes tsc --noEmit', () => {
-    const r = run(['node_modules/typescript/bin/tsc', '--noEmit']);
+    const r = run(['node_modules/@typescript/native/bin/tsc', '--noEmit']);
     expect(r.all.trim()).toBe('');
     expect(r.code).toBe(0);
   });
