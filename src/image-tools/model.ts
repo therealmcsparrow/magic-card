@@ -1,12 +1,8 @@
 import type { ImageBinding } from '../contracts/mcu-library-images';
 import { cssAspectRatio } from '../utils/aspect-ratio';
 
-/*
- * The plain logic of the library image field: reading a reference, the drawing's shape against the card's
- * aspect_ratio, and the keys a pick writes. No DOM and no hass, so it is cheap to test.
- * REF_PREFIX, REF_RE, THUMB_RE and the two commands are the same text as in contracts/svg-image.ts and
- * contracts/mcu-library-images.ts, written out so this chunk does not carry those files' constant lists; a test keeps them equal.
- */
+// The plain logic of the library image field: reading a reference, the drawing shape against the card aspect_ratio, and the keys a pick writes.
+// No DOM and no hass.
 
 export const THUMB_RE = /^data:image\/(png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
 export const CMD_LIST = 'magic_card_utils/images_list';

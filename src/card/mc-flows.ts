@@ -73,11 +73,9 @@ const LABEL_GAP = 4;
 const arrowSize = (width: number) => Math.max(8, width * 3);
 
 /**
- * Where a flow's label goes (its centre, content px), or undefined to hide it. `auto`: on the line
- * when the stretch around `mid` leaves room (its length minus 2 x (arrowhead + 6) holds the label
- * plus 16 px), else beside the line (above a horizontal line, right of a vertical one), else on the
- * other side; a spot is taken only when the label (+2 px) misses the modules, the labels already
- * placed and the content's edges. Nothing fits: hidden. `line` / `side`: always there.
+ * Where a flow's label goes (centre, content px), or undefined to hide it. `auto` picks on the
+ * line, beside it or the other side, whichever misses modules and placed labels; `line` / `side`
+ * are always shown.
  */
 export function placeLabel(
   geo: FlowGeometry,
@@ -122,11 +120,8 @@ function intersect(a: Rect, b: Rect): Rect | undefined {
 }
 
 /**
- * An endpoint's layout box (content px) without its own transform: a module animation or the tap
- * scale must not make the lines jitter. Its parent's screen box (all the ancestors' transforms
- * included: a slider's translate, the studio scale) + the element's layout offset inside the parent
- * (offsetLeft / offsetTop, minus the parent's scroll). Falls back to the element's screen box when
- * the offsets can't be related (no offsetParent: jsdom, display: contents parents, other trees).
+ * An endpoint's layout box (content px) without its own transform, so animations and the tap
+ * scale do not make the lines jitter. Falls back to the screen box when offsets cannot be related.
  */
 function layoutBox(el: HTMLElement, fromScreen: (r: DOMRect) => Rect, sx: number, sy: number): Rect | undefined {
   const op = el.offsetParent;
@@ -160,11 +155,9 @@ function layoutBox(el: HTMLElement, fromScreen: (r: DOMRect) => Rect, sx: number
 }
 
 /**
- * A module's main visual (flow-anchor 1.0.0) as a rect in content px, or undefined (the box is used).
- * `full` is the wrapper's unclipped layout box, `box` the same cut to the clipping ancestors. Measured
- * from layout offsets scaled by the wrapper box (k), never from the visual's own transform, so a spin,
- * a bounce or the tap scale cannot move the end. An SVG root has no offsetParent: its centre comes
- * from the screen boxes, divided by the wrapper's own screen scale. Every number must be finite.
+ * A module's main visual (flow-anchor 1.0.0) as a rect in content px, or undefined (the box is
+ * used). Measured from layout offsets, never the visual's own transform, so animations do not
+ * move the end.
  */
 function visualRect(w: HTMLElement, v: Element, full: Rect, box: Rect): Rect | undefined {
   const k = full.w / w.offsetWidth;
@@ -202,20 +195,10 @@ function visualRect(w: HTMLElement, v: Element, full: Rect, box: Rect): Rect | u
 }
 
 /**
- * Flow lines of a card: one overlay over the card content (`inset: 0`, aria-hidden, never takes
- * pointer events) with a back SVG layer (behind module content), a front one and the labels.
- *
- * Module rects are measured relative to the card content box (screen px divided by any ancestor
- * transform scale, like the studio frames), by `data-mc-id`. Measuring happens when the content or
- * an endpoint resizes (one ResizeObserver per overlay, measured right in its callback so the lines
- * move in the same frame) or the content subtree changes (MutationObserver, batched per frame), and
- * the overlay only re-renders when a rect really changed. A flow whose endpoint is not rendered,
- * has no size or lies outside the content is not drawn.
- *
- * Motion is CSS only: dots play transform keyframes sampled from the line (compositor animations: no
- * main-thread work per frame; staggered negative delays, reverse direction), or a
- * dashed stroke moves (`dots: 0`). Reduced motion: a static line with an
- * arrowhead in the flow direction. Off-screen overlays pause (src/icons/offscreen.ts).
+ * Flow lines of a card: one aria-hidden overlay over the card content with a back SVG layer, a
+ * front one and the labels. It measures module rects by `data-mc-id` when the content or an
+ * endpoint resizes or changes, and re-renders only when a rect changed. Motion is CSS only; a
+ * static arrowed line under reduced motion; off-screen overlays pause.
  */
 export class McFlows extends LitElement {
   static properties = {

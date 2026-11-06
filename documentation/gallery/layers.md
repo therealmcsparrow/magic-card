@@ -2,6 +2,8 @@
 
 A camera or picture behind other modules, a badge on top, a stacked card backdrop that follows a state or slowly pans and zooms, blend modes, low-power mode and the Pause motion button, also on a shaped card. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   Modules in layers
@@ -22,7 +24,7 @@ A camera or picture behind other modules, a badge on top, a stacked card backdro
 
 The door camera fills the card behind the other modules, darkened from the bottom, and a temperature gauge sits in front.
 
-![Camera behind a gauge](images/105-camera-behind-gauge.png)
+![Camera behind a gauge, Guard](images/105-camera-behind-gauge.png)
 
 Entities: `camera.front_door`, `sensor.outdoor_temperature`
 
@@ -83,7 +85,7 @@ rows:
 
 A bright meadow picture sits behind the text, and a dark fade from the bottom keeps the white text readable.
 
-![Darken behind text](images/106-backdrop-darken-text.png)
+![Darken behind text, Home](images/106-backdrop-darken-text.png)
 
 The picture is an image module set to Behind others. `/local/meadow.svg` stands in for a picture in your `www` folder. The title and the text are typed. At 60 %, white text stays readable even on a white picture.
 
@@ -125,7 +127,7 @@ rows:
 
 A dot pattern in front of a picture in front of a gradient. The first entry is the front layer.
 
-![Stacked backdrop](images/107-stacked-backdrop.png)
+![Stacked backdrop, Home](images/107-stacked-backdrop.png)
 
 The first entry in `background_layers` is the front layer, and a card holds up to four. `/local/hills.svg` stands in for a picture in your `www` folder. The title and the line under it are typed text.
 
@@ -143,15 +145,15 @@ background: "#14161c"
 background_layers:
   - type: pattern
     pattern: dots
-    color: "rgba(255,255,255,0.22)"
+    color: "rgba(255,255,255,0.1)"
     size: 14
     thickness: 2
   - type: image
     image: /local/hills.svg
     size: cover
-    opacity: 55
+    opacity: 35
   - type: gradient
-    gradient: "linear-gradient(160deg, #1f2a6b 0%, #7a3b8f 55%, #f08a5d 100%)"
+    gradient: "linear-gradient(160deg, #1f2a6b 0%, #7a3b8f 55%, #8f3f4a 100%)"
 rows:
   - id: copy
     padding: 40px 0 70px
@@ -163,14 +165,14 @@ rows:
             design: { font_size: 26px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 14px rgba(0,0,0,0.45)" }
           - type: text
             text: "A gradient at the back, a picture over it and a pattern on top."
-            design: { font_size: 13px, color: "rgba(255,255,255,0.9)", text_shadow: "0 2px 10px rgba(0,0,0,0.45)" }
+            design: { font_size: 13px, color: "#ffffff", text_shadow: "0 1px 8px rgba(0,0,0,0.7)" }
 ```
 
 ## A picture chosen by state
 
 The backdrop follows sun.sun, a daytime skyline above the horizon and a night skyline below it. Any other state uses the image key.
 
-![A picture chosen by state](images/108-backdrop-by-state.png)
+![A picture chosen by state, Home](images/108-backdrop-by-state.png)
 
 Entities: `sun.sun`
 
@@ -215,7 +217,7 @@ rows:
 
 A slow push in on a wide picture, back and forth. Pause motion appears in the bottom-left corner because the backdrop moves.
 
-![Pan and zoom](images/109-backdrop-pan-zoom.webp)
+[![Pan and zoom, Home](images/109-backdrop-pan-zoom.png)](images/109-backdrop-pan-zoom.webp)
 
 The picture moves, so the Pause motion button shows in the bottom-left corner. With `pause_when_idle` the picture rests after two minutes without input, and under reduced motion it rests at its start. `/local/hills.svg` stands in for a picture in your `www` folder.
 
@@ -260,7 +262,7 @@ rows:
 
 A temperature chip anchored top-right, 12 px from the edges, on top of a picture backdrop. Taps go through it.
 
-![An overlay badge](images/110-overlay-badge.png)
+![An overlay badge, Home](images/110-overlay-badge.png)
 
 Entities: `sensor.indoor_temperature`
 
@@ -317,7 +319,7 @@ rows:
 
 Layers_low_power drops blur, blend and pan and zoom, so a wall tablet draws a still picture. The picture, the darkening and the opacity stay.
 
-![Low-power mode](images/111-low-power.png)
+![Low-power mode, Power](images/111-low-power.png)
 
 The blur, blend and pan and zoom are all in the YAML, and `layers_low_power: true` switches them off for the whole card. Remove that line to see them. The picture, the darkening and the opacity stay.
 
@@ -362,7 +364,7 @@ rows:
 
 The same picture over the same pink tile in six blend modes. A blend mixes with what is painted behind the layer in its own container, here the column.
 
-![Blend modes](images/112-blend-modes.png)
+![Blend modes, Home](images/112-blend-modes.png)
 
 Each tile is a column with a pink background. The picture is set to Behind others with a `blend`, and it mixes with what is behind it in its own column. A card without a colour behind the layer shows no effect.
 
@@ -453,7 +455,7 @@ rows:
 
 Pause_button: always puts the Pause motion button top-right instead of the default bottom-left.
 
-![Pause button in another corner](images/113-pause-corner.png)
+![Pause button in another corner, Home](images/113-pause-corner.png)
 
 The button is always shown here (`pause_button: always`). The default is `hidden`. With `auto` it shows only on cards that have motion; set `auto` or `always` on any card that moves for more than 5 seconds. Corners: `bottom-left` (default), `bottom-right`, `top-left` and `top-right`.
 
@@ -494,7 +496,7 @@ rows:
 
 The card is a hexagon and the button keeps inside the shape's safe area, so the clip never cuts it.
 
-![Pause button on a shaped card](images/114-pause-shaped-card.png)
+![Pause button on a shaped card, Home](images/114-pause-shaped-card.png)
 
 The card is a `hexagon`. On a shaped card the button keeps inside the shape, so the clip never cuts it off.
 

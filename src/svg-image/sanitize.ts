@@ -14,18 +14,7 @@ import { parseLenient } from '../svg-safety/parse';
 import { IMAGE_POLICY } from '../svg-safety/policy-image';
 import { byteLength, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
 
-/*
- * The image sanitiser (contract svg-image 1.0.0, "Image sanitiser"). User and library markup is reduced to an allow-list
- * of drawing elements and attributes; nothing that runs or fetches survives. The text is capped by length before any
- * pattern runs, the markup items of IMAGE_TEXT_DENY are refused before the parser sees the text, and every value check
- * is a scan or a regular expression over a value of bounded length. The parse is the browser's own (XML first, then an
- * inert text/html document) and the values go through the shared rules of src/svg-safety. Threats covered: script and
- * event execution, external loads through url() or href, entity and DOCTYPE tricks, CDATA and comments that hide markup,
- * CSS escapes inside style text, and resource exhaustion by size, nesting, node count or style amplification. Style
- * attributes and <style> rules are not kept. When an editor opens a file it passes the CSS resolver (`css`, with
- * `file: true`; src/svg-safety/css-loader.ts) and their paint declarations become plain attributes first; without it they
- * are dropped and listed, and a CDATA section is refused. The markup this module returns is the only branded markup.
- */
+// The image sanitiser: reduces markup to an allow-list of drawing elements and attributes; its output is the only branded markup.
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const ELEMENTS = new Set(IMAGE_POLICY.elements);

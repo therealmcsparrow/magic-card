@@ -1,5 +1,7 @@
 import { t } from './i18n';
-import { LitElement, html, TemplateResult, nothing, PropertyValues } from 'lit';
+import { LitElement, html, TemplateResult, nothing, noChange, PropertyValues } from 'lit';
+import { directive, Directive } from 'lit/directive.js';
+import type { AttributePart } from 'lit';
 import {
   ActionsConfig,
   MagicCardConfig,
@@ -23,7 +25,9 @@ import {
   boxShadowToDropShadow,
   shapeElementStyle,
   insetPaddingStyle,
-  hoverRule,
+  hoverParts,
+  HoverPart,
+  setDeclaration,
   splitDeclarations,
   HoverTarget,
   ShapeStroke,
@@ -42,7 +46,7 @@ import { loadEditor } from '../utils/editor-loader';
 import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
 import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
 import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
-import { chunkNotice, noticeStyles } from './chunk-notice';
+import { chunkNotice, noticeStyles, retried } from './chunk-notice';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import type { SeasonalBudget } from '../utils/seasonal-scenes';
@@ -76,7 +80,7 @@ import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
 import type { PopupController } from './popup-controller';
-import { EditorPlace, holdOutOfFlow, navigateToPopup, popupHidden } from './popup-nav';
+import { EditorPlace, holdOutOfFlow, popupHidden } from './popup-nav';
 import { popupIfLoaded } from './popup-seam';
 import { isPopupEnabled, wantsPopup } from '../utils/popup';
 import type { AnimationDoc } from '../anim-studio/model';
@@ -86,17 +90,15 @@ import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
 import { defineBgStack } from '../layers/stack/mc-bg-stack';
 import type { CardPause } from './card-pause';
 import { pauseIfLoaded } from './pause-seam';
+import type { StatusController } from '../contracts/card-status';
+import { statusIfLoaded } from './status-seam';
+import { wantsStatus } from '../contracts/card-status.needs';
 import { setCardPaused } from '../icons/offscreen';
 import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.needs';
 import { pauseKey, rememberedPause } from './pause-memory';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
-/**
- * A module with an id, and the same for every nested layout child (graph history and other per-module
- * state is keyed by id). A missing id is derived from the module's place, `${parentId}~${slot}.${index}`
- * for a child, so it is the same on every setConfig and every render. Copies only what it changes; the
- * caller's config is never mutated (and the card never writes ids back to the user's config).
- */
+/** Gives every module and nested layout child an id, derived from its place when missing; copies only what it changes. */
 function withModuleIds(mod: CardModule, fallbackId: string): CardModule {
   if (!mod || typeof mod !== 'object') return mod;
   const id = mod.id || fallbackId;
@@ -203,6 +205,27 @@ function withConfigIds(config: MagicCardConfig): MagicCardConfig {
 }
 
 defineBgStack();
+
+/** Sets an element's inline style one property at a time, so no value can end the declaration and add a rule. */
+const cssProps = directive(
+  class extends Directive {
+    private css?: string;
+    render(_css: string) {
+      return noChange;
+    }
+    update(part: AttributePart, [css]: [string]) {
+      if (css !== this.css) {
+        const el = part.element as HTMLElement;
+        const { style } = el;
+        if (el.hasAttribute('style')) style.cssText = '';
+        splitDeclarations((this.css = css)).forEach((d) => setDeclaration(style, d));
+        // an element with nothing to set carries no empty style attribute, as before
+        if (!style.length) el.removeAttribute('style');
+      }
+      return noChange;
+    }
+  },
+);
 
 export class MagicCard extends LitElement {
   static styles = [...magicCardStyles, noticeStyles];
@@ -394,10 +417,11 @@ export class MagicCard extends LitElement {
   }
   /**
    * The pause before the `pause` chunk has installed (or when it never does): a pause the viewer left on holds from the
-   * first paint, only while the card shows the button, and stays if the chunk fails. The editor preview pause waits for the chunk.
+   * first paint, only while the card shows the button, and stays if the chunk fails. The editor preview pause holds
+   * from the first render too, so an animated icon never starts moving before the chunk lands.
    */
   private _earlyPause(c: MagicCardConfig): boolean {
-    const on = this._remembered && wantsPause(c);
+    const on = this._preview || (this._remembered && wantsPause(c));
     this.toggleAttribute(PAUSE_ATTRIBUTE, on);
     setCardPaused(this, on);
     return on;
@@ -455,9 +479,11 @@ export class MagicCard extends LitElement {
     editMode: false,
   };
   /** Scoped `:hover` rules of the last render, by data-mc-hover id (empty: no hover anywhere). */
-  private _hoverRules = new Map<string, string>();
+  private _hoverRules = new Map<string, HoverPart[]>();
   /** The <style> holding the hover rules; only created once some element has a hover design. */
   private _hoverStyleEl?: HTMLStyleElement;
+  private _hoverKey = '';
+  private _hoverSheet: CSSStyleSheet | null = null;
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
@@ -523,7 +549,7 @@ export class MagicCard extends LitElement {
 
   /** The editor is a lazy chunk; a rejection makes HA open its YAML editor instead. */
   static async getConfigElement(): Promise<HTMLElement> {
-    if (!(await loadEditor())) throw new Error(t('Magic Card: the visual editor could not be loaded.'));
+    if (!(await loadEditor())) throw new Error(t('card.magic-card.magic-card-the-visual-editor-could-not'));
     return document.createElement(EDITOR_TAG);
   }
 
@@ -555,12 +581,12 @@ export class MagicCard extends LitElement {
 
   setConfig(config: MagicCardConfig): void {
     if (!config) {
-      throw new Error(t('No configuration provided'));
+      throw new Error(t('card.magic-card.no-configuration-provided'));
     }
 
     const validation = ConfigValidator.validate(config);
     if (!validation.valid) {
-      throw new Error(t('Invalid configuration: {errors}', { errors: validation.errors.join('; ') }));
+      throw new Error(t('card.magic-card.invalid-configuration-errors', { errors: validation.errors.join('; ') }));
     }
 
     const prevTemplate = this._config?.template;
@@ -579,6 +605,8 @@ export class MagicCard extends LitElement {
     }
 
     this._wantShapes(this._config);
+    this._status?.config(this._config);
+    if (wantsStatus(config)) this._statusUse();
 
     // Same template: re-merge the new local config (overrides may have changed) without refetching.
     if (this._templateConfig) lazyChunks.templates.whenReady(this._remerge);
@@ -644,8 +672,10 @@ export class MagicCard extends LitElement {
     this._templates.hostConnected();
     this._subscriptions.hostConnected();
     this._media.hostConnected();
+    this._status?.connected();
     if (this.hasUpdated) this._syncTicker();
     if (this.hasUpdated) this._syncTemplateWatch();
+    if (this.hasUpdated) this._syncHoverStyles();
     // re-attached (masonry rebuild, cached view): sequences were stopped and the library dropped;
     // the render restarts both
     if (this.hasUpdated && this._customRendered) this._onLibrary();
@@ -681,12 +711,18 @@ export class MagicCard extends LitElement {
     // Module texts in the user's language from the first hass on (not only when it changes later).
     if (changedProperties.has('hass') && this.hass) setI18nLocale(this.hass);
     if (changedProperties.has('hass')) {
+      this._statusStep(changedProperties.get('hass') as HomeAssistant | undefined);
       this._popupCtl?.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
     }
     if (this._libDirty || changedProperties.has('_config') || changedProperties.has('_resolvedConfig')) {
       return true;
     }
-    if (changedProperties.has('preview') || changedProperties.has('editMode') || changedProperties.has('previewPaused')) return true;
+    if (changedProperties.has('hass') && (changedProperties.get('hass') as HomeAssistant | undefined)?.connected !== this.hass?.connected) return true;
+    if (changedProperties.has('preview') || changedProperties.has('editMode')) {
+      if (this._status) this._status.preview = this.preview || this.editMode;
+      return true;
+    }
+    if (changedProperties.has('previewPaused')) return true;
 
     if (changedProperties.has('hass') && this.hass) {
       const oldHass = changedProperties.get('hass') as HomeAssistant | undefined;
@@ -734,6 +770,35 @@ export class MagicCard extends LitElement {
 
   /** The pause state of the render to come (set in willUpdate). */
   private _paused = false;
+
+  /** Date.now() of the last connection drop as this card saw it (card-status 1.0.0). */
+  lostAt?: number;
+  private _status?: StatusController;
+  /** Hands the status chunk the connection change; starts the chunk on the first drop. */
+  private _statusStep(prev?: HomeAssistant): void {
+    const gone = this.hass?.connected === false;
+    const drop = gone && prev?.connected !== false && !this.preview && !this.editMode;
+    if (drop) this.lostAt = Date.now();
+    else if (!gone && prev?.connected === false && onDemandChunks.status.failed()) void onDemandChunks.status.retry();
+    if (this._status) this._status.hassChanged(prev, this.hass);
+    else if (drop) this._statusUse();
+  }
+  /** Make the controller once the chunk has installed; until then start the chunk and come back when it lands. */
+  private _statusUse = (): void => {
+    const chunk = onDemandChunks.status;
+    const mod = statusIfLoaded();
+    if (this._status) return;
+    if (!mod) {
+      chunk.whenReady(this._statusUse);
+      void chunk.load();
+      return;
+    }
+    const s = (this._status = mod.api.create(this));
+    s.preview = this.preview || this.editMode;
+    s.config(this._resolvedConfig ?? this._config);
+    s.hassChanged(undefined, this.hass);
+    this.requestUpdate();
+  };
 
   /**
    * Before the render, so before the first paint: the pop-up controller and its host attributes, and the viewer's pause
@@ -884,6 +949,7 @@ export class MagicCard extends LitElement {
     this._unsubShapes?.();
     this._unsubShapes = undefined;
     this._pause?.disconnected();
+    this._status?.disconnected();
     animIfLoaded()?.stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
@@ -919,14 +985,14 @@ export class MagicCard extends LitElement {
     const name = this._config?.template;
     if (!name || !this._templateNotice) return nothing;
     return html`<div class="mc-template-notice" role="status" style="padding-block: 4px; font-size: 0.85em; line-height: 1.3; color: var(--secondary-text-color)">${this._templateNotice === 'missing'
-      ? t('Template "{name}" wasn\'t found. Showing this card\'s own settings.', { name })
-      : t('Template "{name}" couldn\'t be loaded. Showing this card\'s own settings.', { name })}</div>`;
+      ? t('card.magic-card.template-name-wasn-t-found-showing-this', { name })
+      : t('card.magic-card.template-name-couldn-t-be-loaded-showing', { name })}</div>`;
   }
 
   private _renderCard(): TemplateResult {
     const config = this._resolvedConfig ?? this._config;
     if (!config) {
-      return html`<ha-card><div class="mc-error">${t('No configuration')}</div></ha-card>`;
+      return html`<ha-card><div class="mc-error">${t('card.magic-card.no-configuration')}</div></ha-card>`;
     }
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
@@ -1017,15 +1083,15 @@ export class MagicCard extends LitElement {
     const inline = popupHere
       ? nothing
       : withShapeShadow(html`
-          <ha-card style=${haCardStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
+          <ha-card style=${cssProps(haCardStyle)} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
+            ${layerCss}<div class="mc-card-content" style=${cssProps(inlineContentStyle)} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-pause-gap=${pauseGap(config) ?? nothing}
               data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
-            </div>${renderShape(shape, stroke, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
+            </div>${renderShape(shape, stroke, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}${this._status?.render() ?? nothing}
           </ha-card>
         `, shadow, !!shape);
     if (!popup || !popupCtl) return inline as TemplateResult;
@@ -1041,11 +1107,11 @@ export class MagicCard extends LitElement {
     ].filter(Boolean).join('; ');
     const surface = popupCtl.isOpen
       ? html`
-          <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
+          <ha-card class="mc-popup-surface" tabindex="-1" style=${cssProps(surfaceStyle)} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
             ${layerCss}${popupCtl.renderHead(titleId)}
             <div class="mc-popup-body">
-              <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
+              <div class="mc-card-content" style=${cssProps(contentStyle)} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-pause-gap=${pauseGap(config) ?? nothing}
                 data-mc-flows=${hasFlowList ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
@@ -1054,14 +1120,14 @@ export class MagicCard extends LitElement {
           </ha-card>
         `
       : nothing;
-    const label = config.popup?.title?.trim() || config.name || t('Pop-up');
+    const label = config.popup?.title?.trim() || config.name || t('card.magic-card.pop-up');
     const dialog = popupCtl.renderDialog(surface, label, titleId, resolved.border_radius);
     if (popupHere) return dialog;
     // in an editor the card stays inline, marked as a pop-up
     const id = popupCtl.popupId();
     return html`
       <div class="mc-popup-badge" aria-hidden="true">
-        <ha-icon icon="mdi:dock-window"></ha-icon>${t('Pop-up')}${id ? html` · #${id}` : nothing}
+        <ha-icon icon="mdi:dock-window"></ha-icon>${t('card.magic-card.pop-up')}${id ? html` · #${id}` : nothing}
       </div>
       ${inline}${dialog}
     `;
@@ -1421,7 +1487,7 @@ export class MagicCard extends LitElement {
 
     const design = resolveConditionalDesign(mod.design as DesignConfig, this.hass, mod.entity);
     const stateObj = mod.entity ? this.hass?.states[mod.entity] : undefined;
-    const anim = this._resolveAnim(design, stateObj);
+    const anim = this._resolveAnim(design, stateObj, { spinIcon: mod.type === 'icon' });
     const v2Index = this._v2(anim, stateObj, mod.entity);
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(design), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: mod.entity, clipped: !!shape, shaped: !!shape });
@@ -1475,7 +1541,7 @@ export class MagicCard extends LitElement {
         data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control, parts: mod.type === 'button' ? design : undefined, tabs })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
-        data-mc-needs=${needs ? t('Needs another device') : nothing}
+        data-mc-needs=${needs ? t('card.magic-card.needs-another-device') : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
         data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing}
         data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}
@@ -1505,7 +1571,7 @@ export class MagicCard extends LitElement {
    * when the chunk cannot load. The needs table starts the load from the config; a design that only shows up at render
    * time (a rule that resolves now) starts it here, once per card, and the card renders again when it has installed.
    */
-  private _resolveAnim(design: DesignConfig | undefined, stateObj: HassEntity | undefined, opts: { allowIcon?: boolean } = {}): ResolvedAnimations | undefined {
+  private _resolveAnim(design: DesignConfig | undefined, stateObj: HassEntity | undefined, opts: { allowIcon?: boolean; spinIcon?: boolean } = {}): ResolvedAnimations | undefined {
     const mod = animIfLoaded();
     if (mod) return mod.resolveAnimations(design, stateObj, { ...opts, states: this.hass?.states, custom: this._customLookup });
     if (!this._animWait && hasAnimations(design)) {
@@ -1603,6 +1669,7 @@ export class MagicCard extends LitElement {
       pm.apply(el, {
         ...sim,
         reducedMotion: reduced,
+        mirror: animIfLoaded()?.animationLibrary.custom(sim.docId, this._resolvedConfig ?? this._config)?.mirror === 'mirror' && getComputedStyle(w).direction === 'rtl',
         // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
         // content collider: `icon` = this module's own icon hook (not a nested module's; rows, columns
         // and the card have none: off), `text` = the first child that is not a decoration (all aria-hidden)
@@ -1623,11 +1690,8 @@ export class MagicCard extends LitElement {
   }
 
   /**
-   * The failure notices of this card (lazy-module 1.4.0 "Failure"): one per chunk that failed on this page and that
-   * this card needs, in flow as the last child of the content. The lazy modules show theirs in their own slot. A
-   * chunk that has failed keeps its element (empty once it recovered) for the "loaded" message. Nothing is rendered
-   * until a chunk fails, so a healthy or plain card has no notice, no status container. They share the part of
-   * `rest` (the last thing in the content): a template part of their own would add a marker node to every card.
+   * The failure notices of this card: one per failed chunk it needs, as the last child of the
+   * content. Nothing renders until a chunk fails. They share the part of `rest`.
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {
@@ -1650,8 +1714,8 @@ export class MagicCard extends LitElement {
    */
   private _hover(id: string, hover: Partial<DesignConfig> | undefined, target?: HoverTarget): string | typeof nothing {
     if (!hover) return nothing;
-    const rule = hoverRule(id, hover, target);
-    if (!rule) return nothing;
+    const rule = hoverParts(id, hover, target);
+    if (!rule.length) return nothing;
     this._hoverRules.set(id, rule);
     return id;
   }
@@ -1663,21 +1727,37 @@ export class MagicCard extends LitElement {
   private _syncHoverStyles(): void {
     const root = this.renderRoot as ShadowRoot | undefined;
     if (!root) return;
-    const css = this._hoverRules.size
-      ? [...this._hoverRules.values(), '@media (prefers-reduced-motion: reduce) { [data-mc-hover] { transition: none !important; } }'].join(' ')
-      : '';
     let el = this._hoverStyleEl;
-    if (!css) {
-      if (el && el.textContent) el.textContent = '';
-      return;
-    }
+    if (!this._hoverRules.size && !el) return;
     if (!el || el.getRootNode() !== root) {
       el = document.createElement('style');
       el.setAttribute('data-mc-hover-styles', '');
       root.prepend(el);
       this._hoverStyleEl = el;
+      this._hoverKey = '';
     }
-    if (el.textContent !== css) el.textContent = css;
+    const sheet = el.sheet;
+    const key = JSON.stringify([...this._hoverRules.values()]);
+    // a re-attached host gets a fresh, empty sheet for the same <style>
+    if (!sheet || (key === this._hoverKey && sheet === this._hoverSheet)) return;
+    this._hoverKey = key;
+    this._hoverSheet = sheet;
+    while (sheet.cssRules.length) sheet.deleteRule(0);
+    if (!this._hoverRules.size) return;
+    const put = (to: CSSStyleSheet | CSSMediaRule, selector: string, declarations: string[]) => {
+      try {
+        const { style } = to.cssRules[to.insertRule(`${selector} {}`, to.cssRules.length)] as CSSStyleRule;
+        declarations.forEach((d) => setDeclaration(style, d));
+      } catch {
+        // a selector this browser cannot parse skips only its own rule
+      }
+    };
+    for (const [selector, declarations] of [...this._hoverRules.values()].flat()) put(sheet, selector, declarations);
+    try {
+      put(sheet.cssRules[sheet.insertRule('@media (prefers-reduced-motion: reduce) {}', sheet.cssRules.length)] as CSSMediaRule, '[data-mc-hover]', ['transition: none !important']);
+    } catch {
+      // no reduced-motion rule where the browser refuses it
+    }
   }
 
   /**
@@ -1704,7 +1784,7 @@ export class MagicCard extends LitElement {
 
   private _getActionLabel(mod: CardModule): string {
     const customLabel = (mod.label as string | undefined) || (mod.name as string | undefined);
-    return customLabel ? t('Activate {name}', { name: customLabel }) : t('Activate {type} module', { type: mod.type });
+    return customLabel ? t('card.magic-card.activate-name', { name: customLabel }) : t('card.magic-card.activate-type-module', { type: mod.type });
   }
 
   private _onPointerDown(e: PointerEvent, mod: Actor): void {
@@ -1904,10 +1984,22 @@ export class MagicCard extends LitElement {
         );
         break;
 
-      case 'popup':
-        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens
-        navigateToPopup(action.hash);
+      case 'popup': {
+        // through the URL like HA's navigate to "#id": any Magic Card with that pop-up ID opens. A card that is itself a
+        // pop-up has the chunk loading already; an opener card fetches it on this tap, and if that fails the card shows
+        // the chunk's failure notice with its retry button. The pop-up opens when the chunk arrives within a minute of
+        // the tap or of a Try again; one that turns up later from a background retry opens nothing.
+        const open = popupIfLoaded();
+        if (open) open.api.navigate(action.hash);
+        else {
+          this._met.add('popup');
+          this.requestUpdate();
+          const at = Date.now();
+          lazyChunks.popup.whenReady(() => this.isConnected && Date.now() - Math.max(at, retried) < 6e4 && popupIfLoaded()?.api.navigate(action.hash));
+          void lazyChunks.popup.load();
+        }
         break;
+      }
 
       case 'close-popup':
         // no chunk loaded: no pop-up can be open

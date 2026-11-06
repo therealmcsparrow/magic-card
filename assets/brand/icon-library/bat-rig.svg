@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Magic Card icon rig: Bat. Cut from MDI "bat" (Pictogrammers, Apache-2.0) at the shoulders.
+       piece 0 body (drawn last would hide seams; it is drawn first so the wings overlap it and the seam stays inside the wing)
+       piece 1 wing_l, pivot [10.5, 12.5]; piece 2 wing_r, pivot [13.5, 12.5].
+       Flap: wing_l rotate +18 -> -12, wing_r mirrored, 0.5 s; body bob y +-0.6 a quarter cycle late. -->
+  <path id="body" d="M10.5 11C10.5 11 11 12 12 12C13 12 13.5 11 13.5 11V12.75C13.5 14 13.4 15 12.9 15.9C12.5 16.7 12 18.5 12 18.5C12 18.5 11.5 16.7 11.1 15.9C10.6 15 10.5 14 10.5 12.75Z"/>
+  <path id="wing-l" data-pivot="10.5 12.5" d="M0.75 8C0.75 8 5 7 8 9C8 9 8.5 12.75 10.5 12.75L11 15.2C9.9 14.95 8.4 15.45 7 15.75C7 15.75 7 12.5 3 12.5C3 12.5 2.75 9 0.75 8Z"/>
+  <path id="wing-r" data-pivot="13.5 12.5" d="M23.25 8C23.25 8 19 7 16 9C16 9 15.5 12.75 13.5 12.75L13 15.2C14.1 14.95 15.6 15.45 17 15.75C17 15.75 17 12.5 21 12.5C21 12.5 21.25 9 23.25 8Z"/>
+</svg>

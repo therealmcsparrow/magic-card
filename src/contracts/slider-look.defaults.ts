@@ -1,7 +1,5 @@
-/*
- * The numbers of the slider looks (contract slider-look.ts, which re-exports them).
- * A stateless leaf with no imports: the look editor takes them from here.
- */
+// The numbers of the slider looks (contract slider-look.ts, which re-exports them). A stateless leaf with no
+// imports: the look editor takes them from here.
 
 export const SLIDER_LOOK_DEFAULTS = {
   track_style: 'standard',

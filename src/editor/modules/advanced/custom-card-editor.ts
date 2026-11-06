@@ -10,7 +10,7 @@ import {
   getCardHelpers,
   stableJson,
   whenDefined,
-} from '../../../modules/advanced/custom-card-module';
+} from '../../../utils/card-helpers';
 import { buildSyncContext } from '../base-editor';
 import { t, tx } from '../../i18n';
 
@@ -136,12 +136,8 @@ async function formEditor(form: CardConfigForm): Promise<ConfigurableElement | u
 }
 
 /**
- * The embedded card's own editor, one per place it is shown (pane and studio inspectors, inline
- * layout editors), so two hosts never fight over one element. Like HA's card editor it comes from
- * the card's class: getConfigElement() (the card's editor element) or getConfigForm() (a form);
- * a code editor toggle switches to YAML, and a card without either (or a config the visual editor
- * cannot show) gets YAML. The editor's `config-changed` is stopped here and written into the module
- * through the `onChange` of the latest render, so it can never write back an outdated module config.
+ * The embedded card's own editor, one per place it is shown: from getConfigElement() or getConfigForm(), YAML otherwise.
+ * Its `config-changed` is stopped and written through the latest `onChange`.
  */
 @customElement('mc-custom-card-editor')
 export class CustomCardEditor extends LitElement {
@@ -286,11 +282,11 @@ export class CustomCardEditor extends LitElement {
         ></textarea>
         ${!valid
           ? html`<div class="mc-yaml-fallback-error">
-              ${t('Invalid YAML - card will use last valid configuration')}
+              ${t('card-editor.custom-card-editor.invalid-yaml-card-will-use-last-valid')}
             </div>`
           : nothing}
         <div class="mc-yaml-fallback-help">
-          ${tx('The {key} key is set automatically from Card Type. Do not include it here.', { key: html`<code>type</code>` })}
+          ${tx('card-editor.custom-card-editor.the-key-key-is-set-automatically-from', { key: html`<code>type</code>` })}
         </div>
       </div>
     `;
@@ -306,7 +302,7 @@ export class CustomCardEditor extends LitElement {
           this._yamlMode = gui;
         }}
       >
-        ${gui ? t('Show code editor') : t('Show visual editor')}
+        ${gui ? t('card-editor.custom-card-editor.show-code-editor') : t('card-editor.custom-card-editor.show-visual-editor')}
       </button>
     </div>`;
   }
@@ -314,12 +310,12 @@ export class CustomCardEditor extends LitElement {
   protected render(): TemplateResult | typeof nothing {
     const c = this.config;
     if (!c?.card_type) return nothing;
-    if (this._status !== 'ready') return html`<div class="mc-editor-loading">${t('Loading editor...')}</div>`;
-    if (!this._editor) return this._renderYaml(c, t('No visual editor available for this card type. Configure using YAML:'));
+    if (this._status !== 'ready') return html`<div class="mc-editor-loading">${t('card-editor.custom-card-editor.loading-editor')}</div>`;
+    if (!this._editor) return this._renderYaml(c, t('card-editor.custom-card-editor.no-visual-editor-available-for-this-card'));
     if (!this._yamlMode && !this._guiError) return html`${this._renderToggle(true)}${this._editor}`;
     return html`${this._renderToggle(false)}${this._renderYaml(
       c,
-      this._guiError ? t('The visual editor does not support this configuration: {error}', { error: this._guiError }) : undefined,
+      this._guiError ? t('card-editor.custom-card-editor.the-visual-editor-does-not-support-this', { error: this._guiError }) : undefined,
     )}`;
   }
 }
@@ -333,18 +329,18 @@ export const customCardEditor: ModuleEditor = {
 
     return html`
       <div class="mc-tab-content">
-        ${renderTextField(t('Name'), c.name, (v) => onChange({ ...c, name: v }), 'name', syncCtx)}
+        ${renderTextField(t('card-editor.custom-card-editor.name'), c.name, (v) => onChange({ ...c, name: v }), 'name', syncCtx)}
         ${renderFieldHint(
-          t('An optional label to help you identify this card in the editor.'),
+          t('card-editor.custom-card-editor.an-optional-label-to-help-you-identify'),
           'mc-field-hint-tight',
         )}
-        ${renderCardField(t('Card type'), c.card_type, (v) => onChange({ ...c, card_type: v }))}
+        ${renderCardField(t('card-editor.custom-card-editor.card-type'), c.card_type, (v) => onChange({ ...c, card_type: v }))}
         ${c.card_type
           ? html`
             <div class="mc-card-editor-section">
               <div class="mc-card-editor-header">
                 <ha-icon class="mc-card-editor-icon" icon="mdi:cog"></ha-icon>
-                ${t('Card configuration')}
+                ${t('card-editor.custom-card-editor.card-configuration')}
               </div>
               <div class="mc-card-editor-body">
                 <mc-custom-card-editor .config=${c} .hass=${hass} .onChange=${onChange}></mc-custom-card-editor>

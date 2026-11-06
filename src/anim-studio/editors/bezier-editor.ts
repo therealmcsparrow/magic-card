@@ -18,7 +18,7 @@ const py = (y: number): number => PAD + ((Y_MAX - y) / (Y_MAX - Y_MIN)) * W;
 const curvePath = (b: Bezier, x0 = px, y0 = py): string => `M${x0(0)} ${y0(0)} C${x0(b[0])} ${y0(b[1])} ${x0(b[2])} ${y0(b[3])} ${x0(1)} ${y0(1)}`;
 
 /** Tile labels that would not fit (the full name is the tile's title). */
-const SHORT: Record<string, MessageId> = { 'ease-in-out': m('In-out') };
+const SHORT: Record<string, MessageId> = { 'ease-in-out': m('anim-studio.bezier-editor.in-out') };
 
 /** A small glyph of a curve (preset tiles). */
 function glyph(b: Bezier | undefined): TemplateResult {
@@ -31,11 +31,9 @@ function glyph(b: Bezier | undefined): TemplateResult {
 }
 
 /**
- * Cubic-bezier easing editor: preset tiles, a curve with two draggable handles (pointer and
- * keyboard: arrows move a handle by 0.01, Shift by 0.1), the four numbers, and a text field that
- * takes any easing (steps() too). An empty value is "Default": the animation's own easing.
- * Emits `easing-change` { value: string | undefined, transient?: true } — transient while dragging,
- * one final event on release.
+ * Cubic-bezier easing editor: preset tiles, a curve with two draggable handles (arrows 0.01, Shift 0.1), four numbers and
+ * a text field that takes any easing. Empty means Default. Emits `easing-change` { value, transient? }: transient while
+ * dragging, one final event on release.
  */
 @customElement('mc-anim-bezier-editor')
 export class AnimBezierEditor extends LitElement {
@@ -64,7 +62,7 @@ export class AnimBezierEditor extends LitElement {
         color: var(--mc-text-2);
         font-size: 0.75rem;
         font-weight: 500;
-        text-align: left;
+        text-align: start;
         min-width: 0;
         transition: border-color 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
       }
@@ -120,6 +118,7 @@ export class AnimBezierEditor extends LitElement {
         border-radius: var(--mc-radius);
         background: var(--mc-surface-2);
         border: 1px solid var(--mc-divider);
+        direction: ltr; /* x is time, y is progress */
         touch-action: none;
         user-select: none;
       }
@@ -232,12 +231,13 @@ export class AnimBezierEditor extends LitElement {
         height: 24px;
         border-radius: 9999px;
         background: var(--mc-surface-2);
+        direction: ltr; /* the run goes from start to end of time */
         overflow: hidden;
       }
       .preview i {
         position: absolute;
         top: 4px;
-        left: 4px;
+        left: 4px; /* physical */
         width: 16px;
         height: 16px;
         border-radius: 50%;
@@ -246,7 +246,7 @@ export class AnimBezierEditor extends LitElement {
       }
       @keyframes mc-ease-run {
         to {
-          left: calc(100% - 20px);
+          left: calc(100% - 20px); /* physical */
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -345,7 +345,7 @@ export class AnimBezierEditor extends LitElement {
     }
     if (s === (this.value ?? '')) return;
     if (!validEasing(s)) {
-      this._textError = t('Use a preset name, cubic-bezier(x1, y1, x2, y2) or steps(n).');
+      this._textError = t('anim-studio.bezier-editor.use-a-preset-name-cubic-bezier-x1-y1-x2');
       return;
     }
     this._textError = '';
@@ -360,15 +360,15 @@ export class AnimBezierEditor extends LitElement {
     const checked = current ? (presetIds.includes(current) ? current : 'custom') : '';
     const curveCss = current ? (bezierOf(current) ? `cubic-bezier(${bezierOf(current)!.join(',')})` : current) : b ? `cubic-bezier(${b.join(',')})` : 'linear';
     return html`
-      <div class="presets" role="radiogroup" aria-label=${t('{label} preset', { label: this.label || t('Easing') })}>
-        ${[{ id: '', label: t('Default'), bezier: bezierOf(this.inherited) }, ...BEZIER_PRESETS.map((q) => ({ ...q, label: tl(q.label) }))].map(
+      <div class="presets" role="radiogroup" aria-label=${t('anim-studio.bezier-editor.label-preset', { label: this.label || t('anim-studio.bezier-editor.easing') })}>
+        ${[{ id: '', label: t('anim-studio.bezier-editor.default'), bezier: bezierOf(this.inherited) }, ...BEZIER_PRESETS.map((q) => ({ ...q, label: tl(q.label) }))].map(
           (p) => html`<button
             type="button"
             class="preset"
             role="radio"
             data-easing=${p.id || 'default'}
             aria-checked=${checked === p.id ? 'true' : 'false'}
-            title=${p.id ? p.label : t("The animation's easing ({easingLabel})", { easingLabel: easingLabel(this.inherited).toLowerCase() })}
+            title=${p.id ? p.label : t("anim-studio.bezier-editor.the-animation-s-easing-easinglabel", { easingLabel: easingLabel(this.inherited).toLowerCase() })}
             ?disabled=${this.disabled}
             @click=${() => this._emit(p.id || undefined)}
           >
@@ -408,7 +408,7 @@ export class AnimBezierEditor extends LitElement {
                     data-handle=${h}
                     style="left: ${(px(b[h * 2]) / SIZE) * 100}%; top: ${(py(b[h * 2 + 1]) / SIZE) * 100}%"
                     role="slider"
-                    aria-label=${h === 0 ? t('Start handle') : t('End handle')}
+                    aria-label=${h === 0 ? t('anim-studio.bezier-editor.start-handle') : t('anim-studio.bezier-editor.end-handle')}
                     aria-valuemin="-1"
                     aria-valuemax="2"
                     aria-valuenow=${b[h * 2 + 1]}
@@ -418,7 +418,7 @@ export class AnimBezierEditor extends LitElement {
                     @keydown=${(e: KeyboardEvent) => this._key(e, h)}
                   ></button>`,
                 )
-              : html`<p class="steps-note">${current?.startsWith('steps') ? t('Steps jump between values; there is no curve to edit.') : ''}</p>`}
+              : html`<p class="steps-note">${current?.startsWith('steps') ? t('anim-studio.bezier-editor.steps-jump-between-values-there-is-no') : ''}</p>`}
           </div>
           <div class="nums">
             ${(['x1', 'y1', 'x2', 'y2'] as const).map(
@@ -439,14 +439,14 @@ export class AnimBezierEditor extends LitElement {
               </div>`,
             )}
             <div class="num text">
-              <label for="bz-text">${t('Easing value')}</label>
+              <label for="bz-text">${t('anim-studio.bezier-editor.easing-value')}</label>
               <input
                 class="input mono"
                 id="bz-text"
                 type="text"
                 spellcheck="false"
                 autocomplete="off"
-                placeholder=${t('Default ({inherited})', { inherited: this.inherited })}
+                placeholder=${t('anim-studio.bezier-editor.default-inherited', { inherited: this.inherited })}
                 aria-invalid=${this._textError ? 'true' : 'false'}
                 aria-describedby=${this._textError ? 'bz-err' : nothing}
                 .value=${current ?? ''}

@@ -1,10 +1,6 @@
 import type { CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape';
 
-/*
- * `shape: custom` reference resolution and the option merge. These stay in magic-card.js (the template
- * merge and the first-paint inline copy need them synchronously); the builder is a lazy chunk
- * (src/utils/shape-custom.ts).
- */
+/** `shape: custom` reference resolution and the option merge. */
 
 /** The last merge per local options object: the same (options, base) pair gives the same object, so memo keys can be cached. */
 const merged = new WeakMap<object, [base: CustomShapeOptions, out: CustomShapeOptions]>();

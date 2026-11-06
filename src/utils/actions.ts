@@ -1,10 +1,6 @@
 import type { ActionConfig } from '../types';
 
-/**
- * Whether an action would do something when run: its type is set (not `none`) and it has what that
- * type needs (navigate a path, url a URL, perform-action a service, toggle / more-info an entity,
- * the action's own or `entity` when `use_module_entity` allows it, popup an ID).
- */
+/** Whether an action would do something when run: its type is set and it has what that type needs. */
 export function isRunnableAction(action: ActionConfig | undefined, entity?: string): boolean {
   if (!action || typeof action !== 'object' || !action.action || action.action === 'none') return false;
   const has = (v: unknown) => typeof v === 'string' && v.trim() !== '';

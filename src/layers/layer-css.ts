@@ -1,21 +1,6 @@
-/*
- * Layer CSS (contract layer-placement 1.0.0). Part of magic-card.js, handed to the card as
- * text by the layer slot and injected once per shadow root as <style data-mc-layer-css>. Chromium 85 floor: top / right / bottom / left, never the `inset`
- * shorthand; no color-mix(). Nothing here animates: filter, offsets and background-position stay
- * still. Every rule hangs on a data attribute the render hook sets only for layered
- * cards, so a card without layers is untouched.
- *
- * - ha-card[data-mc-layers] is the isolated clip box, .mc-card-content the containing
- *   block and blend group; a layered container is positioned and isolated.
- * - In a flows card a layered container is lifted to z 1, so flows "back" pass under it.
- * - A background fills its container's padding box behind the others; --mc-bleed is 3 x blur, so the
- *   blurred box (never animated) outgrows the clip and no soft edge shows.
- * - An overlay is pinned by its offsets, no transform. A centred axis (top, center, bottom for x;
- *   left, center, right for y): both sides 0, auto margins, the signed offset moves the box.
- * - Click-through reaches the taps under it, also from inner controls; the studio canvas
- *   (data-mc-path) keeps them to select. A wrapper with focus rises above the overlays.
- * - Low power: no blur, no blend; pictures, opacity and scrims stay.
- */
+// Layer CSS: handed to the card as text and injected once per shadow root as <style data-mc-layer-css>.
+// Every rule hangs on a data attribute set only for layered cards. Chromium 85 floor: no `inset`
+// shorthand, no color-mix(). Nothing here animates.
 const BOX_LIST = ['.mc-column', '.mc-row', '.mc-horizontal', '.mc-vertical', '.mc-tabs-content', '.mc-nested-row'];
 /** The layered containers, spelled out per selector (no :is(), Chromium 85 floor). */
 const boxes = (prefix: string, suffix: string) => BOX_LIST.map((b) => `${prefix}${b}${suffix}`).join(',');

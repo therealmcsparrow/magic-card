@@ -43,7 +43,7 @@ export class MediaPicker extends LitElement {
     this._showModal = true;
     this._searchQuery = '';
     this._selectedItem = null;
-    this._breadcrumbs = [{ title: t('Media'), media_content_id: '' }];
+    this._breadcrumbs = [{ title: t('card-editor.media-picker.media'), media_content_id: '' }];
     this._browseMedia('');
   }
 
@@ -67,7 +67,7 @@ export class MediaPicker extends LitElement {
       const result = await this.hass.callWS<MediaBrowseItem>(msg);
       this._items = result.children || [];
     } catch {
-      this._error = t('No media sources available');
+      this._error = t('card-editor.media-picker.no-media-sources-available');
       this._items = [];
     }
 
@@ -161,15 +161,15 @@ export class MediaPicker extends LitElement {
           class="input"
           .value=${this.value}
           placeholder="/local/images/background.jpg"
-          aria-label=${t('Media URL or path')}
+          aria-label=${t('card-editor.media-picker.media-url-or-path')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label=${t('Browse media')}
-          title=${t('Browse media')}
+          aria-label=${t('card-editor.media-picker.browse-media')}
+          title=${t('card-editor.media-picker.browse-media')}
           @click=${this._openModal}
         >
           <ha-icon icon="mdi:folder-open-outline"></ha-icon>
@@ -183,27 +183,27 @@ export class MediaPicker extends LitElement {
     const items = this._getFilteredItems();
 
     return html`
-      ${renderPickerWindow(t('Select media'), () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('card-editor.media-picker.select-media'), () => this._closeModal(), 'm', html`
 
           ${this._renderBreadcrumbs()}
 
           <div class="mc-picker-search">
-            ${renderPickerSearch(t('Filter items'), this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('card-editor.media-picker.filter-items'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
 
-          <div class="mc-picker-list" role="listbox" aria-label=${t('Media')}>
+          <div class="mc-picker-list" role="listbox" aria-label=${t('card-editor.media-picker.media')}>
             ${this._loading
-              ? html`<div class="mc-picker-loading">${t('Loading...')}</div>`
+              ? html`<div class="mc-picker-loading">${t('card-editor.media-picker.loading')}</div>`
               : this._error
                 ? html`<div class="mc-picker-empty">${this._error}</div>`
                 : items.length > 0
                   ? items.map((item) => this._renderItem(item))
-                  : html`<div class="mc-picker-empty">${t('No items found')}</div>`
+                  : html`<div class="mc-picker-empty">${t('card-editor.media-picker.no-items-found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedItem}>${t('Save')}</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.media-picker.cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedItem}>${t('card-editor.media-picker.save')}</button>
           </div>
       `)}
     `;
@@ -213,7 +213,7 @@ export class MediaPicker extends LitElement {
     if (this._breadcrumbs.length <= 1) return html``;
 
     return html`
-      <nav class="mc-picker-breadcrumbs" aria-label=${t('Media folders')}>
+      <nav class="mc-picker-breadcrumbs" aria-label=${t('card-editor.media-picker.media-folders')}>
         ${this._breadcrumbs.map((entry, i) => {
           const isLast = i === this._breadcrumbs.length - 1;
           if (isLast) {

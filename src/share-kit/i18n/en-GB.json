@@ -1,0 +1,318 @@
+{
+  "share-kit.anim-preview.animation-preview": {
+    "text": "Animation preview",
+    "note": "Accessible name of the small box that shows an imported animation before it is saved.",
+    "max": 40
+  },
+  "share-kit.anim-preview.play": {
+    "text": "Play",
+    "note": "Button that plays or pauses the animated preview of an imported animation. Shown pressed while it plays.",
+    "max": 20
+  },
+  "share-kit.card.a-picture-in-path-was-left-out-because-it-may": {
+    "text": "A picture in {path} was left out because it may load from another website ({rule}).",
+    "note": "Import note for a picture in the text of a shared card (markdown or HTML) that is not a file on this Home Assistant. {path} is the place of the text, {rule} the id of the check. The website names are listed beside it.",
+    "max": 120,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[0].content.",
+      "rule": "The id of the check, for example strict.host."
+    }
+  },
+  "share-kit.card.a-style-line-in-path-was-left-out-because-its-name": {
+    "text": "A style line in {path} was left out because its name is not allowed ({rule}).",
+    "note": "Import note for a line in the free-form style (CSS) of a shared card whose property name is not valid. {path} is the place of the line, {rule} the id of the check.",
+    "max": 115,
+    "vars": {
+      "path": "The path of the setting, for example data.css[0].",
+      "rule": "The id of the check, for example strict.css."
+    }
+  },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "text": "A template in {path} was left out because shared text does not run templates: {text} ({rule}).",
+    "note": "Import note for a template removed from the text of a shared card. {path} is the place of the text, {text} the start of the removed template and {rule} the id of the check.",
+    "max": 160,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[0].content.",
+      "rule": "The id of the check, for example strict.any.",
+      "text": "The start of the removed template, copied as written; do not translate it."
+    }
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "note": "Import warning for a card value that points to a /local/ file. {name} is the setting in quotes; do not translate it. The sharer is the person who made the file.",
+    "max": 135,
+    "vars": {
+      "name": "The name of the setting that uses the file."
+    }
+  },
+  "share-kit.card.path-is-a-card-mod-style-so-it-was-left-out": {
+    "text": "{path} is a card-mod style, so it was left out ({rule}).",
+    "note": "Import note for a card-mod style inside a shared card. Card-mod styles are not imported with a card. {path} is the place of the style, {rule} the id of the check.",
+    "max": 100,
+    "vars": {
+      "path": "The path of the setting, for example data.design.card-mod-card.",
+      "rule": "The id of the check, for example strict.card-mod."
+    }
+  },
+  "share-kit.card.path-is-a-module-of-an-unknown-type-so-it-was": {
+    "text": "{path} is a module of an unknown type, so it was left out ({rule}).",
+    "note": "Import note for a module in a shared card whose type Magic Card does not know. {path} is the place of the module, {rule} the id of the check.",
+    "max": 105,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[1].",
+      "rule": "The id of the check, for example strict.module."
+    }
+  },
+  "share-kit.card.path-is-not-a-card-setting-so-it-was-left-out": {
+    "text": "{path} is not a card setting, so it was left out ({rule}).",
+    "note": "Import note for a key in a shared card that Magic Card does not know. {path} is the place of the key, {rule} the id of the check.",
+    "max": 100,
+    "vars": {
+      "path": "The path of the setting, for example data.pwn.",
+      "rule": "The id of the check, for example strict.key."
+    }
+  },
+  "share-kit.card.path-points-to-another-website-so-it-was-left-out": {
+    "text": "{path} points to another website, or to an address that cannot be checked, so it was left out ({rule}).",
+    "note": "Import note for a card value that loads from another website or whose address cannot be told apart from one. {path} is the place of the setting, {rule} the id of the check. The website names are listed beside it.",
+    "max": 150,
+    "vars": {
+      "path": "The path of the setting, for example data.background_image.",
+      "rule": "The id of the check, for example strict.host."
+    }
+  },
+  "share-kit.card.path-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{path} was left out because its value is not allowed ({rule}).",
+    "note": "Import note for a card value that fits no allowed type. {path} is the place of the setting, {rule} the id of the check. The value itself is never shown.",
+    "max": 110,
+    "vars": {
+      "path": "The path of the setting, for example data.border_radius.",
+      "rule": "The id of the check, for example strict.length."
+    }
+  },
+  "share-kit.card.the-action-in-path-was-left-out-because-its-web-address": {
+    "text": "The action in {path} was left out because its web address is not a web link or a path on this dashboard ({rule}).",
+    "note": "Import note for a tap, hold or double-tap action in a shared card whose link is not a normal web link, for example one that starts with javascript:. {path} is the place of the action, {rule} the id of the check.",
+    "max": 170,
+    "vars": {
+      "path": "The path of the setting, for example data.rows[0].columns[0].modules[0].actions.tap_action.",
+      "rule": "The id of the check, for example strict.action-url."
+    }
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": {
+    "text": "This is not a Magic Card card.",
+    "note": "Import error when a shared file holds something other than a Magic Card card. It tells the user nothing was imported.",
+    "max": 45
+  },
+  "share-kit.import-preview.demo-states-help": {
+    "text": "Made-up values stand in for your entities.",
+    "note": "Help line under a card preview that lists demo values.",
+    "max": 80
+  },
+  "share-kit.import-preview.preview-heading": {
+    "text": "Preview",
+    "note": "Heading above the preview of what was read from the file.",
+    "max": 20
+  },
+  "share-kit.import-preview.preview-of-name": {
+    "text": "Preview of {name}. Nothing is loaded from the internet.",
+    "note": "Accessible name of the preview of one item. {name} is the item name.",
+    "max": 120,
+    "vars": {
+      "name": "The item name."
+    }
+  },
+  "share-kit.import-preview.wall-tablet-toggle": {
+    "text": "Wall tablet",
+    "note": "Button that shows or hides the Wall tablet preview of an imported theme.",
+    "max": 24
+  },
+  "share-kit.mapping.cancel": {
+    "text": "Cancel",
+    "note": "Button that closes the mapping step without saving.",
+    "max": 20
+  },
+  "share-kit.mapping.map-entities": {
+    "text": "Map entities",
+    "note": "Heading of the optional step in an import where placeholders are linked to the importer's own Home Assistant entities.",
+    "max": 30
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": {
+    "text": "Nothing here needs mapping.",
+    "note": "Shown in the mapping step when the saved item holds no placeholders any more.",
+    "max": 45
+  },
+  "share-kit.mapping.save-mapping": {
+    "text": "Save mapping",
+    "note": "Button that saves the entities chosen in the mapping step into the saved image or card.",
+    "max": 25
+  },
+  "share-kit.mapping.skip-mapping": {
+    "text": "Skip mapping",
+    "note": "Button in the import mapping step that clears all chosen entities so the placeholders stay as they are.",
+    "max": 25
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "text": "That is not an entity ID. Use the form {example}.",
+    "note": "Error under an entity field in the import mapping step. {example} is an example entity ID such as light.name; do not translate it.",
+    "max": 65,
+    "vars": {
+      "example": "An example entity ID, for example light.name."
+    }
+  },
+  "share-kit.mapping.the-preview-shows-value": {
+    "text": "The preview shows {value}",
+    "note": "Shown beside a placeholder: the made-up value the preview uses for it. {value} is a short state such as \"on, 80 %\" or \"21.5 °C\".",
+    "max": 45,
+    "vars": {
+      "value": "The made-up state, for example \"21.5 °C\"."
+    }
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "text": "This file uses placeholders instead of the sender's entities. Type the entity you want for each one, or skip and do it later. A field you leave empty stays a placeholder.",
+    "note": "Help text above the entity mapping fields of an import. A placeholder is a stand-in entity name such as light.mc_placeholder_1. The sender is the person who made the file.",
+    "max": 190
+  },
+  "share-kit.notice.actions-in-this-card": {
+    "text": "Actions in this card",
+    "note": "Heading above the list of actions a shared card can run, shown before the user confirms an import.",
+    "max": 40
+  },
+  "share-kit.notice.actions-in-this-card-help": {
+    "text": "They run only when someone uses the card. Nothing runs when you import it.",
+    "note": "Help line under the actions heading of a shared card import.",
+    "max": 120
+  },
+  "share-kit.notice.addresses-on-other-websites-were-removed": {
+    "text": "Addresses on other websites were removed from this export: {hosts}. Whoever imports it will not see them.",
+    "note": "Line under the export text. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it.",
+    "max": 130,
+    "vars": {
+      "hosts": "The value that replaces hosts in the text."
+    }
+  },
+  "share-kit.notice.author-name-is-optional": {
+    "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
+    "note": "Privacy note on the export panel when the items carry an author name. It says the name is personal data and is written into the file.",
+    "max": 330,
+    "legal": true
+  },
+  "share-kit.notice.entity-ids-were-replaced": {
+    "text": "Entity IDs were replaced with placeholders. Whoever imports this file picks their own devices.",
+    "note": "Line under the export text telling the sender that entity IDs were swapped for placeholders.",
+    "max": 110
+  },
+  "share-kit.notice.only-import-files-from-people-you-trust": {
+    "text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
+    "note": "Warning above the preview of every import, before the Confirm button. It tells the user to trust the sender and to look at the preview, actions and templates first.",
+    "max": 250,
+    "legal": true
+  },
+  "share-kit.notice.templates-in-this-card": {
+    "text": "Templates in this card",
+    "note": "Heading above the list of Jinja templates a shared card holds, shown before the user confirms an import.",
+    "max": 40
+  },
+  "share-kit.notice.templates-in-this-card-help": {
+    "text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
+    "note": "Help line under the templates heading of a shared card import.",
+    "max": 170
+  },
+  "share-kit.style-drops.a-style-rule-name": {
+    "text": "a style rule ({name})",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. {name} is the CSS part that was dropped, such as @import or url(). Lower case, a noun phrase.",
+    "max": 40,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "share-kit.style-drops.a-stylesheet-link": {
+    "text": "a stylesheet link",
+    "note": "Names what was removed from an imported SVG, used inside Removed {what}. It is the xml-stylesheet line at the top of the file that points to a style file. Lower case, a noun phrase.",
+    "max": 30
+  },
+  "share-kit.theme-check.dark": {
+    "text": "dark",
+    "note": "The word for dark mode, placed in the sentence \"... in {mode} mode ...\".",
+    "max": 20
+  },
+  "share-kit.theme-check.light": {
+    "text": "light",
+    "note": "The word for light mode, placed in the sentence \"... in {mode} mode ...\".",
+    "max": 20
+  },
+  "share-kit.theme-check.low-contrast-heading": {
+    "text": "Some text in this theme is hard to read",
+    "note": "Heading of the warning shown before Confirm when an imported theme has a text and background colour pair that is too close in contrast.",
+    "max": 70
+  },
+  "share-kit.theme-check.magic-card-text-on-the-magic-card-background": {
+    "text": "Magic Card text on the Magic Card background",
+    "note": "Name of a colour pair in the contrast warning: the Magic Card text colour on the Magic Card background.",
+    "max": 70
+  },
+  "share-kit.theme-check.main-text-on-the-card-background": {
+    "text": "Main text on the card background",
+    "note": "Name of a colour pair in the contrast warning: the main text colour on the card background.",
+    "max": 60
+  },
+  "share-kit.theme-check.main-text-on-the-page-background": {
+    "text": "Main text on the page background",
+    "note": "Name of a colour pair in the contrast warning: the main text colour on the dashboard page background.",
+    "max": 60
+  },
+  "share-kit.theme-check.pair-in-mode": {
+    "text": "{pair} in {mode} mode has a contrast of {ratio}:1. Text needs at least {min}:1.",
+    "note": "One line of the contrast warning. {pair} is a name such as \"Main text on the card background\", {mode} is \"light\" or \"dark\", {ratio} and {min} are numbers.",
+    "max": 140,
+    "vars": {
+      "min": "The lowest contrast ratio allowed, 4.5.",
+      "mode": "The word for the mode: light or dark.",
+      "pair": "The name of the text and background colour pair, for example Main text on the card background.",
+      "ratio": "The contrast ratio found, a number such as 3.2."
+    }
+  },
+  "share-kit.theme-check.secondary-text-on-the-card-background": {
+    "text": "Secondary text on the card background",
+    "note": "Name of a colour pair in the contrast warning: the secondary text colour on the card background.",
+    "max": 60
+  },
+  "share-kit.theme-check.text-on-the-primary-colour": {
+    "text": "Text on the primary colour",
+    "note": "Name of a colour pair in the contrast warning: the text colour used on top of the theme primary colour.",
+    "max": 60
+  },
+  "share-kit.wall-tablet.wall-tablet-caption": {
+    "text": "Drawn at one fifth size, as the text looks from 3 metres away.",
+    "note": "Short caption under the Wall tablet preview.",
+    "max": 80
+  },
+  "share-kit.wall-tablet.wall-tablet-card-button": {
+    "text": "Lights on",
+    "note": "Sample button text on the Wall tablet preview card.",
+    "max": 30
+  },
+  "share-kit.wall-tablet.wall-tablet-card-text": {
+    "text": "Temperature",
+    "note": "Label on the sample card on the Wall tablet preview.",
+    "max": 30
+  },
+  "share-kit.wall-tablet.wall-tablet-card-title": {
+    "text": "Living room",
+    "note": "Title of the sample card on the Wall tablet preview.",
+    "max": 30
+  },
+  "share-kit.wall-tablet.wall-tablet-card-value": {
+    "text": "21.5 °C",
+    "note": "Sample temperature shown on the Wall tablet preview card.",
+    "max": 20
+  },
+  "share-kit.wall-tablet.wall-tablet-label": {
+    "text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 metres.",
+    "note": "Accessible name of the Wall tablet preview frame. {mode} is the word light or dark.",
+    "max": 200,
+    "vars": {
+      "mode": "The word for the mode: light or dark."
+    }
+  }
+}

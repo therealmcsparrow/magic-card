@@ -83,7 +83,8 @@
       "popup": { "chunk": "popup", "reserve": "none" },
       "template": { "chunk": "templates", "reserve": "none" },
       "custom_icons": { "chunk": "svg-icon", "reserve": "none" },
-      "layers_low_power": { "chunk": "layers", "reserve": "none" }
+      "layers_low_power": { "chunk": "layers", "reserve": "none" },
+      "quiet_time": { "chunk": "status", "reserve": "overlay" }
     },
     "design": {
       "animations": { "chunk": "anim", "reserve": "overlay" },
@@ -101,7 +102,8 @@
     },
     "module_keys": {
       "icon_fx": { "chunk": "svg-icon", "reserve": "default" },
-      "svg": { "chunk": "svg-icon", "reserve": "default" }
+      "svg": { "chunk": "svg-icon", "reserve": "default" },
+      "quiet_time": { "chunk": "status", "reserve": "overlay" }
     },
     "module_types": {
       "markdown": { "chunk": "markdown", "reserve": "default" },

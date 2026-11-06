@@ -5,14 +5,7 @@ import type { MagicCardConfig } from '../../types';
 import { animationDocList } from '../../utils/custom-animations';
 import type { CardState } from './bridge';
 
-/*
- * "Keep a copy in this card" for a library animation (mcu-library 1.0.0): the document goes into
- * the card's `custom_animations` under its library id, so the card still plays it when Magic Card
- * Utils or the item is gone. On when the document's compact JSON is at most
- * KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES (rigs and particles get large), off above; the Animations
- * list shows the size and lets the user switch it either way. A sequence brings the library
- * documents its steps play. The copy goes when nothing uses it any more (prune.ts).
- */
+// "Keep a copy in this card" for a library animation: the document goes into `custom_animations` under its library id.
 
 export const docBytes = (doc: unknown): number => new TextEncoder().encode(JSON.stringify(doc)).length;
 

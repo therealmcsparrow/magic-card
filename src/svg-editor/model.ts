@@ -5,12 +5,7 @@ import { MAX_GROUP_DEPTH, type SvgArrange, type TreePlace } from '../contracts/s
 import { D, E, T } from './bind';
 import type { Look } from '../image-editor/paint';
 
-/*
- * The icon document: layers (shapes) over one artboard. Shapes are immutable values (every edit makes a
- * new one), so the history is a list of whole documents and a drag is one step. A shape holds one or
- * more subpaths as anchors (path-model EditPath) and the semantic paint of the card: None, Main (the
- * entity colour) or Accent (the second colour). Pure: no DOM, no lit.
- */
+// The icon document: immutable layers (shapes) over one artboard, each with subpaths as anchors and a semantic paint. Pure: no DOM, no lit.
 
 export type Paint = 'none' | 'main' | 'accent';
 export type ShapeType = 'path' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'star';
@@ -88,17 +83,17 @@ export function newShape(type: ShapeType, paths: EditPath[], over: Partial<Shape
 const baseName = (type: ShapeType): string => {
   switch (type) {
     case 'rect':
-      return t('Rectangle');
+      return t('svg-editor.model.rectangle');
     case 'ellipse':
-      return t('Ellipse');
+      return t('svg-editor.model.ellipse');
     case 'line':
-      return t('Line');
+      return t('svg-editor.model.line');
     case 'polygon':
-      return t('Polygon');
+      return t('svg-editor.model.polygon');
     case 'star':
-      return t('Star');
+      return t('svg-editor.model.star');
     default:
-      return t('Path');
+      return t('svg-editor.model.path');
   }
 };
 export function nameFor(d: Doc, type: ShapeType, plain?: string): string {

@@ -29,7 +29,7 @@ Other scripts you will use:
 -   `npm run dups` fails when a module that holds state (a top-level `let`, a mutated `const`, a `customElements.define`) ends up in two chunks of the card bundle. Run it after `npm run build` when you move a module between chunks.
 -   `npm run notices` rebuilds the third-party notices. Run it after you add or update a dependency, or CI fails.
 
-Pull requests normally leave `dist/` alone. The maintainer rebuilds it in the release commit.
+Pull requests normally leave `dist/` alone. The maintainer rebuilds it in the release commit. The release steps are in [MAINTAINING.md](MAINTAINING.md#release-steps).
 
 ## Text and translations
 
@@ -45,14 +45,26 @@ Fix every message it reports.
 
 Add or update tests for every change in behaviour. In the same pull request, update the README, the [CHANGELOG](CHANGELOG.md) and the pages in the [documentation](documentation/README.md) folder that the change affects. A new option needs a line in the options reference, and a changed screen needs its page updated.
 
+## Screenshots
+
+Anything you attach to an issue or pull request is public. Before you add a screenshot, read [how to take and clean screenshots](documentation/contributing/screenshots.md). It lists what must not be visible and how to strip the metadata from the file.
+
 ## Commit messages
 
 Write a plain description of what the commit does, with no prefix such as `feat:` or `fix:`. For example: `Keep the studio canvas width when the view changes`.
 
 ## Pull requests
 
-Open pull requests against `main`. The pull request template asks for a summary, the linked issue, the checks you ran and screenshots of UI changes in light and dark mode. Keep each pull request to one change where you can.
+Open pull requests against `main`. The pull request template asks for a summary, the linked issue, the checks you ran and screenshots of UI changes in light and dark mode, plus the [screenshot checklist](documentation/contributing/screenshots.md). Keep each pull request to one change where you can.
 
 ## Licence
 
-Magic Card is released under the MIT Licence (see [LICENSE](LICENSE)). By sending a contribution, you agree that it is released under the same licence. Third-party code and icons keep their own licences, listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+Magic Card is released under the MIT Licence (see [LICENSE](LICENSE)). By sending a contribution, you agree that it is released under the same licence. This includes translations. Third-party code and icons keep their own licences, listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+### Legal text
+
+Legal text is text that tells a user about privacy, licences or their rights, such as the privacy warnings in the theme editor and the transfer panel. The maintainer lists it in `tools/i18n/legal-labels.json`. The English (UK) text is the authoritative version, and the English text prevails over any translation.
+
+-   Do not machine-translate legal text, and do not submit a translation of it that nobody has checked. A translation of legal text is accepted only after a qualified lawyer has checked it, and you should say so in your pull request.
+-   When the English text of a legal entry changes, every translation of it counts as out of date until it is checked and confirmed again. A waiver does not clear it.
+-   Magic Card is not legal advice, and neither is a translation of it.

@@ -1,16 +1,58 @@
 {
-  "Home Assistant card helpers are not available": "De kaarthulpfuncties van Home Assistant zijn niet beschikbaar",
-  "Failed to load \"{type}\": {error}": "Laden van \"{type}\" mislukt: {error}",
-  "Day": "Dag",
-  "Night": "Nacht",
-  "This entity has no forecast": "Deze entiteit heeft geen weersverwachting",
-  "Forecast not available: {error}": "Weersverwachting niet beschikbaar: {error}",
-  "No forecast data": "Geen weersverwachting",
-  "No camera": "Geen camera",
-  "{name}: last {hours, plural, one {# hour} other {# hours}}": "{name}: afgelopen {hours, plural, one {# uur} other {# uur}}",
-  "Loading history…": "Geschiedenis laden…",
-  "History unavailable": "Geschiedenis niet beschikbaar",
-  "No numeric history": "Geen numerieke geschiedenis",
-  "Empty tab": "Leeg tabblad",
-  "Picture not available": "Afbeelding niet beschikbaar"
+  "modules-extra.camera-view.no-camera": {
+    "text": "Geen camera",
+    "hash": "42a456cf"
+  },
+  "modules-extra.custom-card-view.failed-to-load-type-error": {
+    "text": "Laden van \"{type}\" mislukt: {error}",
+    "hash": "9619858c"
+  },
+  "modules-extra.custom-card-view.home-assistant-card-helpers-are-not": {
+    "text": "De kaarthulpfuncties van Home Assistant zijn niet beschikbaar",
+    "hash": "f76bac10"
+  },
+  "modules-extra.forecast-view.day": {
+    "text": "Dag",
+    "hash": "8f2364e1"
+  },
+  "modules-extra.forecast-view.forecast-not-available-error": {
+    "text": "Weersverwachting niet beschikbaar: {error}",
+    "hash": "d40ff3c8"
+  },
+  "modules-extra.forecast-view.night": {
+    "text": "Nacht",
+    "hash": "4e9f8db8"
+  },
+  "modules-extra.forecast-view.no-forecast-data": {
+    "text": "Geen weersverwachting",
+    "hash": "2d44cf3c"
+  },
+  "modules-extra.forecast-view.this-entity-has-no-forecast": {
+    "text": "Deze entiteit heeft geen weersverwachting",
+    "hash": "2cffeac5"
+  },
+  "modules-extra.graphs-view.history-unavailable": {
+    "text": "Geschiedenis niet beschikbaar",
+    "hash": "cf319f4d"
+  },
+  "modules-extra.graphs-view.loading-history": {
+    "text": "Geschiedenis laden…",
+    "hash": "a960c435"
+  },
+  "modules-extra.graphs-view.name-last-hours": {
+    "text": "{name}: afgelopen {hours, plural, one {# uur} other {# uur}}",
+    "hash": "cb7bd057"
+  },
+  "modules-extra.graphs-view.no-numeric-history": {
+    "text": "Geen numerieke geschiedenis",
+    "hash": "53a44fd4"
+  },
+  "modules-extra.image-view.picture-not-available": {
+    "text": "Afbeelding niet beschikbaar",
+    "hash": "ddeb75ef"
+  },
+  "modules-extra.tabs-view.empty-tab": {
+    "text": "Leeg tabblad",
+    "hash": "c5d4f9be"
+  }
 }

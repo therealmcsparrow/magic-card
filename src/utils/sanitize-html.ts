@@ -1,8 +1,5 @@
-/**
- * Allowlist HTML sanitizer for rendered markdown (no runtime dependency). Parses into an inert
- * <template> (no scripts run, no resources load), keeps known-safe tags and attributes, unwraps
- * unknown tags (their text stays) and drops dangerous ones with their content.
- */
+// Allowlist HTML sanitizer for rendered markdown. Parses into an inert <template>, keeps known-safe
+// tags and attributes, unwraps unknown tags and drops dangerous ones with their content.
 
 import { declarations, tokenize, type Tok } from './css-tokens';
 
@@ -149,11 +146,9 @@ function safeDeclaration(toks: Tok[]): string {
 }
 
 /**
- * The allowed declarations of a style attribute ('' when none is left). Allow-list, not block-list: the
- * input is tokenized like a browser does (strings, escapes, comments, brackets), and the output is rebuilt
- * from the allowed tokens only, so what the browser parses later is exactly what was checked here.
- * Threats: url() and image functions that load a resource (also hidden by escapes or comments), an unclosed
- * string or paren that swallows the next declaration, overlays through viewport units and negative margins.
+ * The allowed declarations of a style attribute ('' when none is left). Allow-list: the input is
+ * tokenized like a browser does and the output rebuilt from allowed tokens only. Resource-loading
+ * functions, unclosed strings and viewport overlays are dropped.
  */
 export function sanitizeStyle(style: string): string {
   if (style.length > MAX_STYLE) return '';

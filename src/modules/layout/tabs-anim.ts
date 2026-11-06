@@ -3,12 +3,9 @@ import { currentRenderContext } from '../../services/render-context';
 import type { AnimationConfig, HomeAssistant, IconFxConfig } from '../../types';
 import { lazyChunks } from '../../utils/lazy-chunks';
 
-/*
- * Animations and icon effects of the tabs. `tab_animations` lists are design animation entries; the animation
- * chunk's resolver turns them into the attributes the card already uses on a module (`data-mc-anim` plus inline
- * custom properties), so its rules, reduced motion and the card's pause button apply to a tab button as they do to
- * any module. Until the chunk has installed the tabs draw plain and render again when it has.
- */
+// Animations and icon effects of the tabs. `tab_animations` lists are design animation entries; the animation chunk's
+// resolver turns them into the attributes the card uses on a module (`data-mc-anim` plus inline custom properties).
+// Until the chunk has installed the tabs draw plain and render again when it has.
 
 type AnimModule = typeof AnimChunk;
 

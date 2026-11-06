@@ -2,12 +2,12 @@ import { html, nothing, type TemplateResult } from 'lit';
 import type { KitFieldOptions } from '../../contracts/ui-kit';
 import { iconOf } from './icon';
 
-/*
- * Field shell: head (label, optional reset), the caller's control, then help or error. The control is rendered by
- * the caller with kit classes; point its aria-describedby at fieldHelpId(id) or fieldErrorId(id).
- */
+// Field shell: head (label, optional reset), the control of the caller, then help or error.
 export const fieldHelpId = (id: string): string => `${id}-help`;
 export const fieldErrorId = (id: string): string => `${id}-error`;
+
+/** The `dir` of a control that holds text the user typed: auto, ltr or rtl, anything else reads as auto. */
+export const textDir = (v: unknown): 'auto' | 'ltr' | 'rtl' => (v === 'ltr' || v === 'rtl' ? v : 'auto');
 
 export function field(o: KitFieldOptions): TemplateResult {
   return html`<div class="field">

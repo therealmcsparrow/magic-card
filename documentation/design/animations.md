@@ -52,7 +52,7 @@ The channels are rotation, position, scale, opacity, filter and glow. A glow is 
 
 | UI label | YAML key | Values | Default |
 | --- | --- | --- | --- |
-| Preset | `preset` | A preset id (see [Presets](#presets)), or `custom:<id>` for an animation from the library | Required |
+| Target | `target` | `module`, `icon`, `label` (buttons only) | `module`; on an icon module a rotating preset (Spin, Sway, Flip and the like) plays on the icon, so it turns in place. Set `target: module` to turn the whole module |
 | Target | `target` | `module`, `icon`, `label` (buttons only) | `module` |
 | Entity for play condition | `trigger_entity` | An entity id | The module's entity |
 | Play | `trigger` | `always`, `entity_on`, `state`, `tap` | `always` |

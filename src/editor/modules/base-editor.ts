@@ -17,10 +17,7 @@ import { renderConditionsList } from '../inspector/conditions-list';
 import '../components/design-panel';
 import { t } from '../i18n';
 
-/*
- * Default module tab renderers (module-editor 1.0.0): what a listed tab uses when its ModuleEditor
- * has no function for it. Moved from BaseMagicModule, behaviour unchanged.
- */
+// Default module tab renderers (module-editor 1.0.0): used when a listed tab has no function for it.
 
 /** SyncContext for a module's fields; undefined unless the card is linked to a template. */
 export function buildSyncContext(config: CardModule, template?: string): SyncContext | undefined {
@@ -199,4 +196,4 @@ export const DEFAULT_TAB_RENDERERS: Partial<Record<EditorTab, ModuleTabRender>> 
 };
 
 /** Shown for an unknown module type and for a tab its editor does not list. */
-export const renderNoSettings = (): TemplateResult => html`<p class="help">${t('No settings for this module.')}</p>`;
+export const renderNoSettings = (): TemplateResult => html`<p class="help">${t('card-editor.base-editor.no-settings-for-this-module')}</p>`;

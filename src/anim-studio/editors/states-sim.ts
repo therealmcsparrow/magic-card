@@ -4,14 +4,8 @@ import type { Binding, ClipWhen } from '../model-v2-core';
 import type { PreviewChangeDetail } from '../slots';
 import { t } from '../i18n';
 
-/*
- * The preview's simulated entity: the studio has no real entity behind the preview card, so its
- * animation entry drives clips and bindings from this one (`entity: SIM_ENTITY` on the entry, see
- * previewConfig's `entity` option) and the stage merges the simulated state into the hass it hands
- * the card (withSimEntity). The stage tool (editors/stage-sim.ts) picks the state (on, off,
- * unavailable, a custom text, or a number) and a value 0..1 across each binding's input range;
- * it emits `preview-change` { state, value, attributes } with the attributes already computed.
- */
+// The preview's simulated entity: its animation entry drives clips and bindings from SIM_ENTITY, and the stage merges the
+// simulated state into the hass it hands the card (withSimEntity). Fed by `preview-change` from stage-sim.ts.
 
 /** Entity id of the preview's simulated entity (a light: on / off are its active states). */
 export const SIM_ENTITY = 'light.mc_studio_preview';
@@ -66,7 +60,7 @@ export function simEntity(sim: Partial<PreviewSim>): HassEntity {
   return {
     entity_id: SIM_ENTITY,
     state: sim.state ?? DEFAULT_SIM.state,
-    attributes: { friendly_name: t('Preview'), ...(sim.attributes ?? {}) },
+    attributes: { friendly_name: t('anim-studio.states-sim.preview'), ...(sim.attributes ?? {}) },
     last_changed: now,
     last_updated: now,
     context: { id: 'mc-studio-preview', parent_id: null, user_id: null },
@@ -90,9 +84,9 @@ export function applyPreviewChange(sim: PreviewSim, d: PreviewChangeDetail): Pre
 
 /** A clip condition in words ("State is on", "Value above 20"). */
 export function whenLabel(w: ClipWhen): string {
-  if ('state' in w) return t('State is {state}', { state: w.state });
-  if ('state_not' in w) return t('State is not {state_not}', { state_not: w.state_not });
-  if ('entity_on' in w) return w.entity_on ? t('Entity is on') : t('Entity is off');
-  if ('above' in w) return t('Value above {above}', { above: w.above });
-  return t('Value below {below}', { below: w.below });
+  if ('state' in w) return t('anim-studio.states-sim.state-is-state', { state: w.state });
+  if ('state_not' in w) return t('anim-studio.states-sim.state-is-not-state-not', { state_not: w.state_not });
+  if ('entity_on' in w) return w.entity_on ? t('anim-studio.states-sim.entity-is-on') : t('anim-studio.states-sim.entity-is-off');
+  if ('above' in w) return t('anim-studio.states-sim.value-above-above', { above: w.above });
+  return t('anim-studio.states-sim.value-below-below', { below: w.below });
 }

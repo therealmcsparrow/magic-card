@@ -1,11 +1,7 @@
 import type { Anchor, AnchorKind, EditPath, Pt } from '../contracts/path-model';
 import { copyPath, isSmooth, setHandle, setKind, toggleSmooth } from '../path/edit';
 
-/*
- * Edit operations the canvas needs on top of src/path/edit.ts: moving or removing several anchors in
- * one copy (a 1,000-anchor path is copied once per frame, not once per anchor), the keyboard focus
- * order, and the corner <-> smooth toggle. Pure; the input is never changed.
- */
+// Edit operations the canvas needs on top of src/path/edit.ts: multi-anchor move and remove, keyboard focus order, corner/smooth toggle. Pure.
 
 export const effectiveKind = (a: Anchor): AnchorKind => a.kind ?? (isSmooth(a) ? 'smooth' : 'corner');
 

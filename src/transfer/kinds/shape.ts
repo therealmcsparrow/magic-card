@@ -19,37 +19,37 @@ const isPair = (v: unknown): v is [number, number] => Array.isArray(v) && v.leng
 
 /** A shape item: known keys only, values checked one by one (invalid ones dropped and listed). */
 export function readShape(index: number, data: unknown): KindResult<TransferDataByKind['shape']> {
-  if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('The shape data is missing.'))] };
+  if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('transfer.shape.the-shape-data-is-missing'))] };
   const notes: TransferNote[] = [];
   const bad = (path: string, message: string) => notes.push(note('dropped_value', index, `data.${path}`, message));
   const out: Raw = {};
 
   for (const [k, v] of Object.entries(data)) {
     if (!(SHAPE_KEYS as readonly string[]).includes(k)) {
-      notes.push(note('dropped_key', index, `data.${k}`, t('"{key}" is not a shape setting, so it was left out.', { key: k })));
+      notes.push(note('dropped_key', index, `data.${k}`, t('transfer.shape.key-is-not-a-shape-setting-so-it-was', { key: k })));
       continue;
     }
     if (k === 'corner') {
       if (isLength(v)) out.corner = v;
-      else bad(k, t('The corner size is not valid, so it was left out.'));
+      else bad(k, t('transfer.shape.the-corner-size-is-not-valid-so-it-was'));
     } else if (k === 'corner_type') {
       if (isType(v)) out.corner_type = v;
-      else bad(k, t('The corner type is not valid, so it was left out.'));
+      else bad(k, t('transfer.shape.the-corner-type-is-not-valid-so-it-was'));
     } else if (k === 'smoothing') {
       if (num(v) || (typeof v === 'string' && /^\s*(?:\d*\.)?\d+\s*$/.test(v))) out.smoothing = v;
-      else bad(k, t('The smoothing is not valid, so it was left out.'));
+      else bad(k, t('transfer.shape.the-smoothing-is-not-valid-so-it-was'));
     } else if (k === 'corners') {
       if (!isObj(v)) {
-        bad(k, t('The corners setting is not valid, so it was left out.'));
+        bad(k, t('transfer.shape.the-corners-setting-is-not-valid-so-it'));
         continue;
       }
       const corners: Raw = {};
       for (const [c, spec] of Object.entries(v)) {
-        if (!['tl', 'tr', 'br', 'bl'].includes(c)) notes.push(note('dropped_key', index, `data.corners.${c}`, t('"{key}" is not a corner, so it was left out.', { key: c })));
+        if (!['tl', 'tr', 'br', 'bl'].includes(c)) notes.push(note('dropped_key', index, `data.corners.${c}`, t('transfer.shape.key-is-not-a-corner-so-it-was-left-out', { key: c })));
         else if (isType(spec) || isLength(spec)) corners[c] = spec;
         else if (isObj(spec) && (spec.type === undefined || isType(spec.type)) && (spec.size === undefined || isLength(spec.size))) {
           corners[c] = { ...(spec.type !== undefined ? { type: spec.type } : {}), ...(spec.size !== undefined ? { size: spec.size } : {}) };
-        } else bad(`corners.${c}`, t('Corner {name} is not valid, so it was left out.', { name: c }));
+        } else bad(`corners.${c}`, t('transfer.shape.corner-name-is-not-valid-so-it-was-left', { name: c }));
       }
       if (Object.keys(corners).length) out.corners = corners;
     } else if (k === 'padding') {
@@ -58,20 +58,20 @@ export function readShape(index: number, data: unknown): KindResult<TransferData
         const pad: Raw = {};
         for (const [side, sv] of Object.entries(v)) {
           if (['top', 'right', 'bottom', 'left'].includes(side) && isLength(sv)) pad[side] = sv;
-          else bad(`padding.${side}`, t('Padding "{name}" is not valid, so it was left out.', { name: side }));
+          else bad(`padding.${side}`, t('transfer.shape.padding-name-is-not-valid-so-it-was-left', { name: side }));
         }
         if (Object.keys(pad).length) out.padding = pad;
-      } else bad(k, t('The padding is not valid, so it was left out.'));
+      } else bad(k, t('transfer.shape.the-padding-is-not-valid-so-it-was-left'));
     } else if (k === 'points') {
       if (!Array.isArray(v)) {
-        bad(k, t('The points list is not valid, so it was left out.'));
+        bad(k, t('transfer.shape.the-points-list-is-not-valid-so-it-was'));
         continue;
       }
-      if (v.length > MAX_SHAPE_POINTS) return { ok: false, notes: [note('invalid_item', index, 'data.points', t('A shape holds at most {max} points (this one has {n}).', { max: MAX_SHAPE_POINTS, n: v.length }))] };
+      if (v.length > MAX_SHAPE_POINTS) return { ok: false, notes: [note('invalid_item', index, 'data.points', t('transfer.shape.a-shape-holds-at-most-max-points-this', { max: MAX_SHAPE_POINTS, n: v.length }))] };
       const points: Raw[] = [];
       v.forEach((pt, i) => {
         if (!isObj(pt) || !isCoord(pt.x) || !isCoord(pt.y) || (pt.in !== undefined && !isPair(pt.in)) || (pt.out !== undefined && !isPair(pt.out))) {
-          bad(`points[${i}]`, t('Point {n} is not valid, so it was left out.', { n: i + 1 }));
+          bad(`points[${i}]`, t('transfer.shape.point-n-is-not-valid-so-it-was-left-out', { n: i + 1 }));
           return;
         }
         const keep: Raw = { x: pt.x, y: pt.y };
@@ -83,7 +83,7 @@ export function readShape(index: number, data: unknown): KindResult<TransferData
       if (points.length) out.points = points;
     }
   }
-  if (!Object.keys(out).length) return { ok: false, notes: [...notes, note('invalid_item', index, 'data', t('The shape has no valid settings.'))] };
-  if (compactBytes(out) > SHAPE_MAX_BYTES) return { ok: false, notes: [note('invalid_item', index, 'data', t('The shape is larger than {kb} KB.', { kb: SHAPE_MAX_BYTES / 1024 }))] };
+  if (!Object.keys(out).length) return { ok: false, notes: [...notes, note('invalid_item', index, 'data', t('transfer.shape.the-shape-has-no-valid-settings'))] };
+  if (compactBytes(out) > SHAPE_MAX_BYTES) return { ok: false, notes: [note('invalid_item', index, 'data', t('transfer.shape.the-shape-is-larger-than-kb-kb', { kb: SHAPE_MAX_BYTES / 1024 }))] };
   return { ok: true, data: out as Omit<CustomShapeOptions, 'ref'>, notes };
 }

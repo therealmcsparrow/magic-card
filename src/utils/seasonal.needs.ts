@@ -1,14 +1,6 @@
-/*
- * What magic-card.js needs at run time about seasonal scenes without loading the seasonal chunk, so the
- * card entry need not carry the animation preset table or the scene tables . Plain
- * data and pure functions of the card config: no imports, no hass, no date, no DOM, no chunk state.
- * tests/seasonal-needs-drift.test.ts compares the preset list with the preset table; tests/seasonal-split.test.ts the inset table with the scene table.
- *
- * The inset table is the layout reserve. A scene with border decorations (icicles, lights, a pumpkin, a vine) needs the
- * content to keep a band clear of the edge. The card renders before the chunk is there, so the band cannot wait for the
- * resolved scene (that depends on the date, the weather entity and the off switch). It comes from the config: the widest
- * band any scene the config can show would need, so the box is the same before and after the chunk lands.
- */
+// What magic-card.js needs about seasonal scenes without loading the seasonal chunk: plain data
+// and pure functions of the card config. The inset table is the layout reserve: the widest band
+// any scene the config can show needs, so the box is the same before and after the chunk lands.
 
 /** The window event the seasonal chunk fires when the editor's preview date changes (state: src/utils/seasonal-preview.ts, seasonal chunk only). */
 export const SEASONAL_PREVIEW_EVENT = 'mc-seasonal-preview';

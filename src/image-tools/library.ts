@@ -2,11 +2,7 @@ import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library.needs';
 import type { ImageSummary, SavedImage } from '../contracts/mcu-library-images';
 import { CMD_GET, CMD_LIST } from './model';
 
-/*
- * The card editor's side of the image library (mcu-library 1.1.0, images part): the list for the picker and one
- * image with its connections. Both are cached for the page and dropped when the library changes. A missing command
- * (`unknown_command`) means Magic Card Utils is not installed and is remembered for the page.
- */
+// The card editor side of the image library (mcu-library 1.1.0, images part): the picker list and one image with its connections, cached for the page.
 
 interface Hass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;

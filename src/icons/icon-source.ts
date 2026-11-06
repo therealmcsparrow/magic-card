@@ -1,13 +1,6 @@
-/**
- * Icon geometry source: resolves an icon reference (`mdi:fan`, `phu:fridge`, `si:github`…) to its
- * SVG path data so the icon engine can draw, mask and morph it. Order:
- * 1. Third-party icon packs registered on `window.customIcons[prefix].getIcon` (HA's current API; also
- *    `mcu:`, the Magic Card Utils library) or `window.customIconsets[prefix]` (older API).
- * 2. A hidden `<ha-icon>` probe in a shared off-screen holder: HA's own route to its icon DB
- *    (only for the prefixes HA resolves itself: mdi, hass, hassio, hademo).
- * 3. `svg:<hash>` refs registered with registerSvgGeometry (own SVG).
- * Anything unresolvable gives `undefined`: the caller keeps rendering `<ha-icon>` (never blank).
- */
+// Icon geometry source: resolves an icon reference to its SVG path data, from `window.customIcons`
+// / `customIconsets`, a hidden `<ha-icon>` probe (mdi, hass, hassio, hademo) or a registered
+// `svg:<hash>`. Unresolvable gives `undefined` and the caller keeps `<ha-icon>`.
 
 import { sanitizeSvg, SanitizedSvg, StrokeShape, svgFailure, TOO_COMPLEX } from './svg-sanitize';
 
@@ -162,11 +155,9 @@ function sanitize(svgText: string): SanitizedSvg {
 }
 
 /**
- * Own SVG: sanitises the markup once and registers its shapes as the geometry of `svg:<hash>`
- * (paths, `mc-accent` shapes as the secondary paths, strokes). Returns the ref; a rejected SVG has
- * no geometry (svgError tells why) and draws the fallback icon. A ref is only reused for the very same
- * text: a hash collision gets the next free `svg:<hash>.<n>`. `as` registers it under that ref instead
- * (an `mcu:` icon the library answered with its full markup: `mc_svg`), replacing what was there.
+ * Own SVG: sanitises the markup once and registers its shapes as the geometry of `svg:<hash>`.
+ * Returns the ref; a rejected SVG has no geometry (svgError tells why). `as` registers it under
+ * that ref instead, replacing what was there.
  */
 export function registerSvgGeometry(svgText: string, as?: string): string {
   if (as) ownSvgs.delete(as);

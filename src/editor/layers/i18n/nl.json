@@ -1,245 +1,1082 @@
 {
-  "A live camera behind other modules keeps video running all day, which is heavy for a wall tablet. For a quiet backdrop, use a still picture in Card backdrop.": "Een live camera achter andere modules laat video de hele dag doorlopen, wat zwaar is voor een wandtablet. Gebruik voor een rustige achtergrond een stilstaande foto bij Achtergrond van de kaart.",
-  "Add a colour at the back to blend with.": "Voeg achteraan een kleur toe om mee te mengen.",
-  "Add layer": "Laag toevoegen",
-  "Add layer ({n} left)": "Laag toevoegen ({n} over)",
-  "Add state": "Status toevoegen",
-  "Added {name}.": "{name} toegevoegd.",
-  "Adds a dark fade over this picture so text stays readable. Also called a scrim.": "Voegt een donkere overgang over deze afbeelding toe, zodat de tekst leesbaar blijft. Ook wel scrim genoemd.",
-  "Another attribute…": "Een ander attribuut…",
-  "Any other state": "Elke andere status",
-  "Applied {name}.": "{name} toegepast.",
-  "Automatic": "Automatisch",
-  "Back": "Terug",
-  "Back and forth": "Heen en weer",
-  "Backward": "Naar achteren",
-  "Behind others": "Achter andere modules",
-  "Black": "Zwart",
-  "Blend": "Mengmodus",
-  "Blur": "Vervaging",
-  "Camera still picture": "Stilstaande foto van camera",
-  "Can't reach it? Pick it in the structure list.": "Kom je er niet bij? Kies het in de structuurlijst.",
-  "Card backdrop layers, front first": "Achtergrondlagen van de kaart, voorste eerst",
-  "Card colour": "Kaartkleur",
-  "Change backgrounds in this rule": "Achtergronden in deze regel wijzigen",
-  "Change position": "Positie wijzigen",
-  "Changes with state": "Verandert met de status",
-  "Check the text yourself.": "Controleer de tekst zelf.",
-  "Checks": "Ruitjes",
-  "Choose a picture or a device.": "Kies een afbeelding of een apparaat.",
-  "Clicks and taps go through": "Klikken en tikken gaan erdoorheen",
-  "Clicks go to whatever is under this module.": "Klikken gaan naar wat er onder deze module ligt.",
-  "Clicks reach the modules in front. This module's own action is off while this is on.": "Klikken bereiken de modules ervoor. De eigen actie van deze module is uit zolang dit aan staat.",
-  "Colour": "Kleur",
-  "Colour wash": "Kleurwaas",
-  "Copied": "Gekopieerd",
-  "Copy YAML": "YAML kopiëren",
-  "Corner badge": "Hoekbadge",
-  "Cost on older tablets:": "Belasting op oudere tablets:",
-  "Covers {name} at this width. Taps on the overlap go to this module.": "Bedekt {name} bij deze breedte. Tikken op de overlap gaan naar deze module.",
-  "Custom": "Aangepast",
-  "Custom colour": "Eigen kleur",
-  "Custom size": "Eigen grootte",
-  "Darken": "Verdonkeren",
-  "Darken behind text": "Verduisteren achter tekst",
-  "Darker where layers overlap": "Donkerder waar lagen elkaar overlappen",
-  "Delete": "Verwijderen",
-  "Delete {name}": "{name} verwijderen",
-  "Device": "Apparaat",
-  "Diagonal lines": "Diagonale lijnen",
-  "Dim from bottom": "Van onderaf verduisteren",
-  "Dim from top": "Van bovenaf verduisteren",
-  "Dimmed backdrop": "Verduisterde achtergrond",
-  "Dims the frame and shows how long ago the last good picture arrived.": "Verduistert het kader en toont hoe lang geleden de laatste goede afbeelding binnenkwam.",
-  "Distance from the centre. Negative values move it left or up.": "Afstand van het midden. Negatieve waarden verschuiven naar links of omhoog.",
-  "Distance from the {anchor} position. Enter 0 or more: the module stays inside the card.": "Afstand vanaf de positie {anchor}. Vul 0 of meer in: de module blijft binnen de kaart.",
-  "Do not repeat": "Niet herhalen",
-  "Dot size": "Puntgrootte",
-  "Dots": "Stippen",
-  "Dotted texture": "Gestippelde textuur",
-  "Drops blur, blend and pan and zoom for this card and keeps the pictures.": "Schakelt vervaging, mengen en pannen en zoomen voor deze kaart uit en behoudt de afbeeldingen.",
-  "Duration": "Duur",
-  "Effects and darkening": "Effecten en verduistering",
-  "End": "Einde",
-  "Enter 0 or more: the module stays inside the card.": "Vul 0 of meer in: de module blijft binnen de kaart.",
-  "Enter a distance in px or %.": "Vul een afstand in px of % in.",
-  "Entity not found: {id}. The next layer is shown instead.": "Entiteit niet gevonden: {id}. De volgende laag wordt in plaats daarvan getoond.",
-  "Even": "Gelijkmatig",
-  "Fill the card": "Vul de kaart",
-  "Fills": "Vulling",
-  "Fills the whole container behind the other modules and takes no space. To put a picture behind the whole card, use Card backdrop on the card's Design tab.": "Vult de hele container achter de andere modules en neemt geen ruimte in. Wil je een afbeelding achter de hele kaart, gebruik dan Achtergrond van de kaart op het tabblad Ontwerp van de kaart.",
-  "Fit inside": "Binnen passen",
-  "Floats over the container at a fixed spot and takes no space.": "Zweeft op een vaste plek over de container en neemt geen ruimte in.",
-  "Focus point": "Focuspunt",
-  "Follows a device": "Volgt een apparaat",
-  "Forward": "Naar voren",
-  "From bottom": "Van onderen",
-  "From left": "Van links",
-  "From right": "Van rechts",
-  "From the bottom": "Vanaf onderen",
-  "From the centre": "Vanuit het midden",
-  "From the left": "Vanaf links",
-  "From the right": "Vanaf rechts",
-  "From the top": "Vanaf boven",
-  "From top": "Van boven",
-  "Front": "Voor",
-  "Front first. Tap one to select it.": "Voorste eerst. Tik op een laag om die te selecteren.",
-  "Frosted": "Matglas",
-  "Gentle contrast": "Zacht contrast",
-  "Gradient": "Kleurverloop",
-  "Gradient (CSS)": "Kleurverloop (CSS)",
-  "Grid": "Raster",
-  "Hidden": "Verborgen",
-  "Hide": "Verbergen",
-  "Hide {name}": "{name} verbergen",
-  "If this browser cannot blend, the layer shows normally.": "Als deze browser niet kan mengen, wordt de laag normaal getoond.",
-  "Its container": "Zijn container",
-  "Its row": "Zijn rij",
-  "Keeps the darker colour": "Houdt de donkerdere kleur",
-  "Keeps the lighter colour": "Houdt de lichtere kleur",
-  "Keyboard order: top positions come first, bottom positions after the normal modules. For touch, aim for 44 px or more.": "Toetsenbordvolgorde: bovenste posities komen eerst, onderste posities na de gewone modules. Voor aanraken: mik op 44 px of meer.",
-  "Large text only (3:1).": "Alleen grote tekst (3:1).",
-  "Layer": "Laag",
-  "Layer added. {n} of {max}.": "Laag toegevoegd. {n} van {max}.",
-  "Layer type": "Lagetype",
-  "Layer type changed.": "Lagetype gewijzigd.",
-  "Layers here": "Lagen hier",
-  "Leave empty to use the card's device": "Leeg laten om het apparaat van de kaart te gebruiken",
-  "Let clicks and taps go through": "Klikken en tikken laten doorgaan",
-  "Light": "Lamp",
-  "Lighten": "Verlichten",
-  "Lighter, like projected light": "Lichter, zoals geprojecteerd licht",
-  "Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.": "Limiet van {max} lagen bereikt. Meer lagen vertragen oudere wandtablets. Verwijder een laag om een andere toe te voegen.",
-  "Lines": "Lijnen",
-  "Looks": "Uitstraling",
-  "Low-power mode": "Zuinige modus",
-  "Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.": "Zuinige modus schakelt vervaging, mengen en pannen en zoomen voor deze kaart uit en behoudt de afbeeldingen.",
-  "Medium": "Gemiddeld",
-  "More contrast": "Meer contrast",
-  "Motion stops 2 minutes after the last touch, which saves power on a wall tablet.": "Beweging stopt 2 minuten na de laatste aanraking, wat stroom bespaart op een wandtablet.",
-  "Move {name} backward": "{name} naar achteren verplaatsen",
-  "Move {name} forward": "{name} naar voren verplaatsen",
-  "Move {name} to the back": "{name} helemaal naar achteren verplaatsen",
-  "Move {name} to the front": "{name} helemaal naar voren verplaatsen",
-  "Moved to layer {n} of {count}.": "Verplaatst naar laag {n} van {count}.",
-  "Moves slowly, pauses when the card is off screen and stays still when the device asks for reduced motion.": "Beweegt langzaam, pauzeert als de kaart buiten beeld is en blijft stil als het apparaat om verminderde beweging vraagt.",
-  "Multiply": "Vermenigvuldigen",
-  "Needs {n} free layers.": "Heeft {n} vrije lagen nodig.",
-  "No blending": "Niet mengen",
-  "No layers yet. Add an image, gradient, pattern or colour behind the card content.": "Nog geen lagen. Voeg een afbeelding, kleurverloop, patroon of kleur toe achter de inhoud van de kaart.",
-  "No picture for state {state}. No \"Any other state\" picture is set, so the next layer is shown.": "Geen afbeelding voor status {state}. Er is geen \"Elke andere status\"-afbeelding ingesteld, dus de volgende laag wordt getoond.",
-  "No picture for state {state}. The Any other state picture is used.": "Geen afbeelding voor status {state}. De afbeelding voor Elke andere status wordt gebruikt.",
-  "No picture yet": "Nog geen afbeelding",
-  "Normal": "Normaal",
-  "Not updated {n} min": "{n} min niet bijgewerkt",
-  "Nothing else is in this container, so this module shows in the normal place until you add one.": "Er staat verder niets in deze container, dus deze module wordt op de gewone plek getoond totdat je er een toevoegt.",
-  "Nothing here.": "Hier staat niets.",
-  "Off": "Uit",
-  "On": "Aan",
-  "On top": "Bovenop",
-  "One picture": "Eén afbeelding",
-  "Opacity": "Dekking",
-  "Order": "Volgorde",
-  "Original size": "Oorspronkelijke grootte",
-  "Overlay": "Overlay",
-  "Pan and zoom": "Pannen en zoomen",
-  "Pan and zoom work on a still picture from a camera, not on live video.": "Pannen en zoomen werkt op een stilstaande foto van een camera, niet op live video.",
-  "Pattern": "Patroon",
-  "Pattern colour": "Patroonkleur",
-  "Photo, dark at the bottom": "Foto, donker onderaan",
-  "Picture behind buttons": "Afbeelding achter knoppen",
-  "Pictures change but text stays. Darken behind text works for all of them. On a wall tablet seen from across the room, use large text.": "Afbeeldingen veranderen, maar de tekst blijft. Verduisteren achter tekst werkt voor alle afbeeldingen. Op een wandtablet die je van de andere kant van de kamer ziet, gebruik je grote tekst.",
-  "Placement": "Plaatsing",
-  "Play": "Afspelen",
-  "Position": "Positie",
-  "Position of the picture": "Positie van de afbeelding",
-  "Preview": "Voorbeeld",
-  "Preview (not saved)": "Voorbeeld (niet opgeslagen)",
-  "Problem": "Probleem",
-  "Quick gradients": "Snelle kleurverlopen",
-  "Refresh every": "Vernieuwen elke",
-  "Remove": "Verwijderen",
-  "Remove state {state}": "Status {state} verwijderen",
-  "Repeat": "Herhalen",
-  "Repeat both": "Beide herhalen",
-  "Repeat downwards": "Omlaag herhalen",
-  "Repeat sideways": "Zijwaarts herhalen",
-  "Rest when nobody is there": "Rust wanneer niemand aanwezig is",
-  "Screen": "Negatief vermenigvuldigen",
-  "Show": "Tonen",
-  "Show \"Not updated\" when snapshots fail": "\"Niet bijgewerkt\" tonen wanneer momentopnamen mislukken",
-  "Show YAML": "YAML tonen",
-  "Show {name}": "{name} tonen",
-  "Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.": "Toont de kadrering in het voorbeeld. Het speelt af, ook als het apparaat om verminderde beweging vraagt, omdat je dat zelf hebt gevraagd.",
-  "Size": "Grootte",
-  "Size in %": "Grootte in %",
-  "Smaller than a fingertip (44 px). Add padding in Design.": "Kleiner dan een vingertop (44 px). Voeg opvulling toe bij Ontwerp.",
-  "Snapshot failed. The last good frame stays visible.": "Momentopname mislukt. Het laatste goede beeld blijft zichtbaar.",
-  "Soft glow": "Zachte gloed",
-  "Soft light": "Zacht licht",
-  "Soft vignette": "Zachte vignet",
-  "Source": "Bron",
-  "Source changed.": "Bron gewijzigd.",
-  "Start": "Begin",
-  "Start again from the normal ones": "Begin opnieuw met de gewone",
-  "State renamed.": "Status hernoemd.",
-  "Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.": "Stilstaande foto, elke {n} s ververst: de lichte keuze voor een rustige achtergrond. Gebruik een live camera achter andere modules alleen als live video echt nodig is.",
-  "Strength": "Sterkte",
-  "Strong": "Sterk",
-  "Strong blur can make older tablets slow.": "Sterke vervaging kan oudere tablets traag maken.",
-  "Style": "Stijl",
-  "Takes its normal place in the column.": "Neemt zijn gewone plek in de kolom in.",
-  "Tapping {name} will do nothing while this is on.": "Tikken op {name} doet niets zolang dit aan staat.",
-  "Text hard to read? Darken behind text": "Tekst moeilijk leesbaar? Verduisteren achter tekst",
-  "Text is readable.": "Tekst is leesbaar.",
-  "The device's own picture": "De eigen afbeelding van het apparaat",
-  "The picture could not be loaded. The next layer is shown.": "De afbeelding kon niet worden geladen. De volgende laag wordt getoond.",
-  "The whole card": "De hele kaart",
-  "Thickness": "Dikte",
-  "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).": "Dit kleurverloop kan niet worden getoond. Gebruik linear-gradient(180deg, red, blue) of radial-gradient(circle, red, blue).",
-  "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.": "Dit kleurverloop heeft CSS die de editor niet kan tekenen. Kies hierboven een snel kleurverloop om de editor te gebruiken.",
-  "This image is no longer in the library.": "Deze afbeelding staat niet meer in de bibliotheek.",
-  "This layer has no action, so it only blocks taps.": "Deze laag heeft geen actie en blokkeert dus alleen tikken.",
-  "This module keeps its own action.": "Deze module behoudt zijn eigen actie.",
-  "This rule does not change the backgrounds.": "Deze regel verandert de achtergronden niet.",
-  "This rule uses its own backgrounds instead of the normal ones.": "Deze regel gebruikt eigen achtergronden in plaats van de gewone.",
-  "This video background sits behind its siblings on its own, as before. Choose an option to set it.": "Deze videoachtergrond ligt, zoals voorheen, op zichzelf achter de andere modules in dezelfde container. Kies een optie om hem in te stellen.",
-  "Tint only. Not for text.": "Alleen tint. Niet voor tekst.",
-  "To back": "Helemaal naar achteren",
-  "To front": "Helemaal naar voren",
-  "To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.": "Om een module achter andere modules te zetten, gebruik je Plaatsing bij die module. Lagen hier liggen bovenop de kleur en afbeelding bij Stijl.",
-  "Top banner": "Bovenbanner",
-  "Turn on Low-power mode": "Zuinige modus inschakelen",
-  "Undo": "Ongedaan maken",
-  "Undone.": "Ongedaan gemaakt.",
-  "Use the normal backgrounds": "Gebruik de gewone achtergronden",
-  "Very strong": "Zeer sterk",
-  "Weather backdrop": "Weerachtergrond",
-  "When state is": "Wanneer status is",
-  "Where the framing ends": "Waar de kadrering eindigt",
-  "Which picture?": "Welke afbeelding?",
-  "White": "Wit",
-  "With a black darkening of 60 % or more, white text stays readable on any picture. This holds for the fully dark part. With a fade, text must sit in the strongest third from that edge.": "Met een zwarte verduistering van 60 % of meer blijft witte tekst op elke afbeelding leesbaar. Dit geldt voor het volledig donkere deel. Bij een overgang moet de tekst in het sterkste derde deel vanaf die rand staan.",
-  "Zoom from": "Zoomen vanaf",
-  "Zoom to": "Zoomen naar",
-  "blend": "mengen",
-  "blur {px} px": "vervaging {px} px",
-  "heavy": "zwaar",
-  "light": "licht",
-  "live camera": "live camera",
-  "medium": "gemiddeld",
-  "pan and zoom": "pannen en zoomen",
-  "seconds": "seconden",
-  "this module": "deze module",
-  "{id} has no picture attribute. Try another attribute.": "{id} heeft geen afbeeldingsattribuut. Probeer een ander attribuut.",
-  "{label} value": "Waarde van {label}",
-  "{n, select, 1 {1st from the front, of {count}} 2 {2nd from the front, of {count}} 3 {3rd from the front, of {count}} other {{n}th from the front, of {count}}}": "{n, select, 1 {1e van voren, van {count}} 2 {2e van voren, van {count}} 3 {3e van voren, van {count}} other {{n}e van voren, van {count}}}",
-  "{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here": "{n, select, 1 {1e} 2 {2e} 3 {3e} other {{n}e}} van voren hier",
-  "{name} deleted.": "{name} verwijderd.",
-  "{name} deleted. Undo is the next button.": "{name} verwijderd. Ongedaan maken is de volgende knop.",
-  "{name} restored.": "{name} hersteld.",
-  "{n} of {max}": "{n} van {max}",
-  "{n} set": "{n} ingesteld",
-  "{type}, layer {n}": "{type}, laag {n}",
-  "Stop preview": "Voorbeeld stoppen"
+  "layer-editor.bg-layer-editor.add-state": {
+    "text": "Status toevoegen",
+    "hash": "d4871096"
+  },
+  "layer-editor.bg-layer-editor.another-attribute": {
+    "text": "Een ander attribuut…",
+    "hash": "2db88cc0"
+  },
+  "layer-editor.bg-layer-editor.any-other-state": {
+    "text": "Elke andere status",
+    "hash": "87beb720"
+  },
+  "layer-editor.bg-layer-editor.back-and-forth": {
+    "text": "Heen en weer",
+    "hash": "c1c1cc53"
+  },
+  "layer-editor.bg-layer-editor.blur": {
+    "text": "Vervaging",
+    "hash": "cd83e673"
+  },
+  "layer-editor.bg-layer-editor.changes-with-state": {
+    "text": "Verandert met de status",
+    "hash": "f5f28b40"
+  },
+  "layer-editor.bg-layer-editor.checks": {
+    "text": "Ruitjes",
+    "hash": "de07d072"
+  },
+  "layer-editor.bg-layer-editor.colour": {
+    "text": "Kleur",
+    "hash": "3a9dfa58"
+  },
+  "layer-editor.bg-layer-editor.copied": {
+    "text": "Gekopieerd",
+    "hash": "8d525e5f"
+  },
+  "layer-editor.bg-layer-editor.copy-yaml": {
+    "text": "YAML kopiëren",
+    "hash": "e5a88d42"
+  },
+  "layer-editor.bg-layer-editor.custom-size": {
+    "text": "Eigen grootte",
+    "hash": "d432bb2b"
+  },
+  "layer-editor.bg-layer-editor.device": {
+    "text": "Apparaat",
+    "hash": "6ba0bdec"
+  },
+  "layer-editor.bg-layer-editor.diagonal-lines": {
+    "text": "Diagonale lijnen",
+    "hash": "5e6e8699"
+  },
+  "layer-editor.bg-layer-editor.dim-from-bottom": {
+    "text": "Van onderaf verduisteren",
+    "hash": "e5365c53"
+  },
+  "layer-editor.bg-layer-editor.dim-from-top": {
+    "text": "Van bovenaf verduisteren",
+    "hash": "87d6ec7e"
+  },
+  "layer-editor.bg-layer-editor.dims-the-frame-and-shows-how-long-ago": {
+    "text": "Verduistert het kader en toont hoe lang geleden de laatste goede afbeelding binnenkwam.",
+    "hash": "31eb04f1"
+  },
+  "layer-editor.bg-layer-editor.do-not-repeat": {
+    "text": "Niet herhalen",
+    "hash": "5e3eb65f"
+  },
+  "layer-editor.bg-layer-editor.dot-size": {
+    "text": "Puntgrootte",
+    "hash": "97c5bc43"
+  },
+  "layer-editor.bg-layer-editor.dots": {
+    "text": "Stippen",
+    "hash": "6de335fa"
+  },
+  "layer-editor.bg-layer-editor.duration": {
+    "text": "Duur",
+    "hash": "4fc52a3c"
+  },
+  "layer-editor.bg-layer-editor.end": {
+    "text": "Einde",
+    "hash": "f4db1e48"
+  },
+  "layer-editor.bg-layer-editor.fill-the-card": {
+    "text": "Vul de kaart",
+    "hash": "c289861f"
+  },
+  "layer-editor.bg-layer-editor.fit-inside": {
+    "text": "Binnen passen",
+    "hash": "9114cc92"
+  },
+  "layer-editor.bg-layer-editor.focus-point": {
+    "text": "Focuspunt",
+    "hash": "82b819ec"
+  },
+  "layer-editor.bg-layer-editor.follows-a-device": {
+    "text": "Volgt een apparaat",
+    "hash": "4dab3ea9"
+  },
+  "layer-editor.bg-layer-editor.gradient": {
+    "text": "Kleurverloop",
+    "hash": "2523561c"
+  },
+  "layer-editor.bg-layer-editor.gradient-css": {
+    "text": "Kleurverloop (CSS)",
+    "hash": "441f5d46"
+  },
+  "layer-editor.bg-layer-editor.grid": {
+    "text": "Raster",
+    "hash": "0d7d12ac"
+  },
+  "layer-editor.bg-layer-editor.layer-type": {
+    "text": "Lagetype",
+    "hash": "5493a0d9"
+  },
+  "layer-editor.bg-layer-editor.layer-type-changed": {
+    "text": "Lagetype gewijzigd.",
+    "hash": "e043fd41"
+  },
+  "layer-editor.bg-layer-editor.leave-empty-to-use-the-card-s-device": {
+    "text": "Leeg laten om het apparaat van de kaart te gebruiken",
+    "hash": "654e15c4"
+  },
+  "layer-editor.bg-layer-editor.lines": {
+    "text": "Lijnen",
+    "hash": "3b26a542"
+  },
+  "layer-editor.bg-layer-editor.motion-stops-2-minutes-after-the-last": {
+    "text": "Beweging stopt 2 minuten na de laatste aanraking, wat stroom bespaart op een wandtablet.",
+    "hash": "2e354fec"
+  },
+  "layer-editor.bg-layer-editor.moves-slowly-pauses-when-the-card-is-off": {
+    "text": "Beweegt langzaam, pauzeert als de kaart buiten beeld is en blijft stil als het apparaat om verminderde beweging vraagt.",
+    "hash": "f6556c51"
+  },
+  "layer-editor.bg-layer-editor.on": {
+    "text": "Aan",
+    "hash": "13001175"
+  },
+  "layer-editor.bg-layer-editor.one-picture": {
+    "text": "Eén afbeelding",
+    "hash": "4f7aca5f"
+  },
+  "layer-editor.bg-layer-editor.opacity": {
+    "text": "Dekking",
+    "hash": "6062652e"
+  },
+  "layer-editor.bg-layer-editor.original-size": {
+    "text": "Oorspronkelijke grootte",
+    "hash": "097c5b76"
+  },
+  "layer-editor.bg-layer-editor.pan-and-zoom": {
+    "text": "Pannen en zoomen",
+    "hash": "0803a4fe"
+  },
+  "layer-editor.bg-layer-editor.pan-and-zoom-work-on-a-still-picture": {
+    "text": "Pannen en zoomen werkt op een stilstaande foto van een camera, niet op live video.",
+    "hash": "77ace550"
+  },
+  "layer-editor.bg-layer-editor.pattern": {
+    "text": "Patroon",
+    "hash": "4288ade7"
+  },
+  "layer-editor.bg-layer-editor.pattern-colour": {
+    "text": "Patroonkleur",
+    "hash": "db9a36f6"
+  },
+  "layer-editor.bg-layer-editor.pictures-change-but-text-stays-darken": {
+    "text": "Afbeeldingen veranderen, maar de tekst blijft. Verduisteren achter tekst werkt voor alle afbeeldingen. Op een wandtablet die je van de andere kant van de kamer ziet, gebruik je grote tekst.",
+    "hash": "e5602285"
+  },
+  "layer-editor.bg-layer-editor.play": {
+    "text": "Afspelen",
+    "hash": "436e6101"
+  },
+  "layer-editor.bg-layer-editor.position": {
+    "text": "Positie",
+    "hash": "6d031af1"
+  },
+  "layer-editor.bg-layer-editor.position-of-the-picture": {
+    "text": "Positie van de afbeelding",
+    "hash": "1ce1a581"
+  },
+  "layer-editor.bg-layer-editor.preview": {
+    "text": "Voorbeeld",
+    "hash": "324b134f"
+  },
+  "layer-editor.bg-layer-editor.preview-not-saved": {
+    "text": "Voorbeeld (niet opgeslagen)",
+    "hash": "cf58ef7f"
+  },
+  "layer-editor.bg-layer-editor.quick-gradients": {
+    "text": "Snelle kleurverlopen",
+    "hash": "c87a5d72"
+  },
+  "layer-editor.bg-layer-editor.refresh-every": {
+    "text": "Vernieuwen elke",
+    "hash": "8ac11280"
+  },
+  "layer-editor.bg-layer-editor.remove": {
+    "text": "Verwijderen",
+    "hash": "c3812fc4"
+  },
+  "layer-editor.bg-layer-editor.remove-state-state": {
+    "text": "Status {state} verwijderen",
+    "hash": "40e1dd78"
+  },
+  "layer-editor.bg-layer-editor.repeat": {
+    "text": "Herhalen",
+    "hash": "b6b7a006"
+  },
+  "layer-editor.bg-layer-editor.repeat-both": {
+    "text": "Beide herhalen",
+    "hash": "d7528318"
+  },
+  "layer-editor.bg-layer-editor.repeat-downwards": {
+    "text": "Omlaag herhalen",
+    "hash": "49943b93"
+  },
+  "layer-editor.bg-layer-editor.repeat-sideways": {
+    "text": "Zijwaarts herhalen",
+    "hash": "d740d050"
+  },
+  "layer-editor.bg-layer-editor.rest-when-nobody-is-there": {
+    "text": "Rust wanneer niemand aanwezig is",
+    "hash": "77e8038c"
+  },
+  "layer-editor.bg-layer-editor.seconds": {
+    "text": "seconden",
+    "hash": "59f006d6"
+  },
+  "layer-editor.bg-layer-editor.show-not-updated-when-snapshots-fail": {
+    "text": "\"Niet bijgewerkt\" tonen wanneer momentopnamen mislukken",
+    "hash": "55783830"
+  },
+  "layer-editor.bg-layer-editor.show-yaml": {
+    "text": "YAML tonen",
+    "hash": "97bd3a2f"
+  },
+  "layer-editor.bg-layer-editor.shows-the-framing-in-the-preview-it": {
+    "text": "Toont de kadrering in het voorbeeld. Het speelt af, ook als het apparaat om verminderde beweging vraagt, omdat je dat zelf hebt gevraagd.",
+    "hash": "529452d4"
+  },
+  "layer-editor.bg-layer-editor.size": {
+    "text": "Grootte",
+    "hash": "1af85190"
+  },
+  "layer-editor.bg-layer-editor.size-in": {
+    "text": "Grootte in %",
+    "hash": "e07304d1"
+  },
+  "layer-editor.bg-layer-editor.source": {
+    "text": "Bron",
+    "hash": "0e570ca6"
+  },
+  "layer-editor.bg-layer-editor.source-changed": {
+    "text": "Bron gewijzigd.",
+    "hash": "401e787f"
+  },
+  "layer-editor.bg-layer-editor.start": {
+    "text": "Begin",
+    "hash": "e4bb9f1e"
+  },
+  "layer-editor.bg-layer-editor.state-renamed": {
+    "text": "Status hernoemd.",
+    "hash": "e23231eb"
+  },
+  "layer-editor.bg-layer-editor.still-picture-refreshed-every-n-s-the": {
+    "text": "Stilstaande foto, elke {n} s ververst: de lichte keuze voor een rustige achtergrond. Gebruik een live camera achter andere modules alleen als live video echt nodig is.",
+    "hash": "f98cbe58"
+  },
+  "layer-editor.bg-layer-editor.stop-preview": {
+    "text": "Voorbeeld stoppen",
+    "hash": "178940d0"
+  },
+  "layer-editor.bg-layer-editor.strong-blur-can-make-older-tablets-slow": {
+    "text": "Sterke vervaging kan oudere tablets traag maken.",
+    "hash": "31ccfea6"
+  },
+  "layer-editor.bg-layer-editor.the-device-s-own-picture": {
+    "text": "De eigen afbeelding van het apparaat",
+    "hash": "b6e8ef44"
+  },
+  "layer-editor.bg-layer-editor.thickness": {
+    "text": "Dikte",
+    "hash": "7b594414"
+  },
+  "layer-editor.bg-layer-editor.this-gradient-cannot-be-shown-use-linear": {
+    "text": "Dit kleurverloop kan niet worden getoond. Gebruik linear-gradient(180deg, red, blue) of radial-gradient(circle, red, blue).",
+    "hash": "a9cb907d"
+  },
+  "layer-editor.bg-layer-editor.this-gradient-has-css-the-editor-cannot": {
+    "text": "Dit kleurverloop heeft CSS die de editor niet kan tekenen. Kies hierboven een snel kleurverloop om de editor te gebruiken.",
+    "hash": "e0d32fae"
+  },
+  "layer-editor.bg-layer-editor.when-state-is": {
+    "text": "Wanneer status is",
+    "hash": "cc9d5c7c"
+  },
+  "layer-editor.bg-layer-editor.where-the-framing-ends": {
+    "text": "Waar de kadrering eindigt",
+    "hash": "505c029e"
+  },
+  "layer-editor.bg-layer-editor.which-picture": {
+    "text": "Welke afbeelding?",
+    "hash": "b00db570"
+  },
+  "layer-editor.bg-layer-editor.zoom-from": {
+    "text": "Zoomen vanaf",
+    "hash": "dc3222ab"
+  },
+  "layer-editor.bg-layer-editor.zoom-to": {
+    "text": "Zoomen naar",
+    "hash": "d4a13c81"
+  },
+  "layer-editor.bg-layers-ops.entity-not-found-id-the-next-layer-is": {
+    "text": "Entiteit niet gevonden: {id}. De volgende laag wordt in plaats daarvan getoond.",
+    "hash": "500c7947"
+  },
+  "layer-editor.bg-layers-ops.id-has-no-picture-attribute-try-another": {
+    "text": "{id} heeft geen afbeeldingsattribuut. Probeer een ander attribuut.",
+    "hash": "07096aea"
+  },
+  "layer-editor.bg-layers-ops.limit-of-max-layers-reached-more-layers": {
+    "text": "{max, plural, one {Limiet van # laag bereikt. Meer lagen vertragen oudere wandtablets. Verwijder de laag om een andere toe te voegen.} other {Limiet van # lagen bereikt. Meer lagen vertragen oudere wandtablets. Verwijder een laag om een andere toe te voegen.}}",
+    "hash": "679666f6"
+  },
+  "layer-editor.bg-layers-ops.no-picture-for-state-state-no-any-other": {
+    "text": "Geen afbeelding voor status {state}. Er is geen \"Elke andere status\"-afbeelding ingesteld, dus de volgende laag wordt getoond.",
+    "hash": "66f6d855"
+  },
+  "layer-editor.bg-layers-ops.no-picture-for-state-state-the-any-other": {
+    "text": "Geen afbeelding voor status {state}. De afbeelding voor Elke andere status wordt gebruikt.",
+    "hash": "821e3f9e"
+  },
+  "layer-editor.bg-layers-ops.not-updated-n-min": {
+    "text": "{n} min niet bijgewerkt",
+    "hash": "bc146dc3"
+  },
+  "layer-editor.bg-layers-ops.snapshot-failed-the-last-good-frame": {
+    "text": "Momentopname mislukt. Het laatste goede beeld blijft zichtbaar.",
+    "hash": "6251ab69"
+  },
+  "layer-editor.bg-layers-ops.the-picture-could-not-be-loaded-the-next": {
+    "text": "De afbeelding kon niet worden geladen. De volgende laag wordt getoond.",
+    "hash": "6b026c63"
+  },
+  "layer-editor.bg-layers-ops.this-image-is-no-longer-in-the-library": {
+    "text": "Deze afbeelding staat niet meer in de bibliotheek.",
+    "hash": "ba95db40"
+  },
+  "layer-editor.bg-layers.add-layer": {
+    "text": "Laag toevoegen",
+    "hash": "3fc8b134"
+  },
+  "layer-editor.bg-layers.add-layer-n-left": {
+    "text": "Laag toevoegen ({n} over)",
+    "hash": "197d76f7"
+  },
+  "layer-editor.bg-layers.added-name": {
+    "text": "{name} toegevoegd.",
+    "hash": "a73d8b5a"
+  },
+  "layer-editor.bg-layers.backward": {
+    "text": "Naar achteren",
+    "hash": "21132d57"
+  },
+  "layer-editor.bg-layers.blend": {
+    "text": "mengen",
+    "hash": "727c1e41"
+  },
+  "layer-editor.bg-layers.blur-px-px": {
+    "text": "vervaging {px} px",
+    "hash": "005f8394"
+  },
+  "layer-editor.bg-layers.can-t-reach-it-pick-it-in-the-structure": {
+    "text": "Kom je er niet bij? Kies het in de structuurlijst.",
+    "hash": "53a36450"
+  },
+  "layer-editor.bg-layers.card-backdrop-layers-front-first": {
+    "text": "Achtergrondlagen van de kaart, voorste eerst",
+    "hash": "b0c0574b"
+  },
+  "layer-editor.bg-layers.change-backgrounds-in-this-rule": {
+    "text": "Achtergronden in deze regel wijzigen",
+    "hash": "56b8e0aa"
+  },
+  "layer-editor.bg-layers.choose-a-picture-or-a-device": {
+    "text": "Kies een afbeelding of een apparaat.",
+    "hash": "cfd300e5"
+  },
+  "layer-editor.bg-layers.cost-on-older-tablets": {
+    "text": "Belasting op oudere tablets:",
+    "hash": "cf92b3ab"
+  },
+  "layer-editor.bg-layers.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "layer-editor.bg-layers.delete-name": {
+    "text": "{name} verwijderen",
+    "hash": "3cf8146e"
+  },
+  "layer-editor.bg-layers.drops-blur-blend-and-pan-and-zoom-for": {
+    "text": "Schakelt vervaging, mengen en pannen en zoomen voor deze kaart uit en behoudt de afbeeldingen.",
+    "hash": "29fcb910"
+  },
+  "layer-editor.bg-layers.forward": {
+    "text": "Naar voren",
+    "hash": "f1c65e14"
+  },
+  "layer-editor.bg-layers.heavy": {
+    "text": "zwaar",
+    "hash": "22d5925e"
+  },
+  "layer-editor.bg-layers.hidden": {
+    "text": "Verborgen",
+    "hash": "7e6fefff"
+  },
+  "layer-editor.bg-layers.hide": {
+    "text": "Verbergen",
+    "hash": "ac20a57b"
+  },
+  "layer-editor.bg-layers.hide-name": {
+    "text": "{name} verbergen",
+    "hash": "9d8adcdc"
+  },
+  "layer-editor.bg-layers.layer-added-n-of-max": {
+    "text": "Laag toegevoegd. {n} van {max}.",
+    "hash": "f76736a7"
+  },
+  "layer-editor.bg-layers.layer-type": {
+    "text": "Lagetype",
+    "hash": "5493a0d9"
+  },
+  "layer-editor.bg-layers.light": {
+    "text": "licht",
+    "hash": "99a70261"
+  },
+  "layer-editor.bg-layers.live-camera": {
+    "text": "live camera",
+    "hash": "3ae6e4d2"
+  },
+  "layer-editor.bg-layers.looks": {
+    "text": "Uitstraling",
+    "hash": "c64fb087"
+  },
+  "layer-editor.bg-layers.low-power-mode": {
+    "text": "Zuinige modus",
+    "hash": "a53d2c7e"
+  },
+  "layer-editor.bg-layers.medium": {
+    "text": "gemiddeld",
+    "hash": "c082456a"
+  },
+  "layer-editor.bg-layers.move-name-backward": {
+    "text": "{name} naar achteren verplaatsen",
+    "hash": "e1542499"
+  },
+  "layer-editor.bg-layers.move-name-forward": {
+    "text": "{name} naar voren verplaatsen",
+    "hash": "1105dd4b"
+  },
+  "layer-editor.bg-layers.moved-to-layer-n-of-count": {
+    "text": "Verplaatst naar laag {n} van {count}.",
+    "hash": "d068118f"
+  },
+  "layer-editor.bg-layers.n-of-max": {
+    "text": "{n} van {max}",
+    "hash": "318b15d8"
+  },
+  "layer-editor.bg-layers.name-deleted": {
+    "text": "{name} verwijderd.",
+    "hash": "ad6f2978"
+  },
+  "layer-editor.bg-layers.name-deleted-undo-is-the-next-button": {
+    "text": "{name} verwijderd. Ongedaan maken is de volgende knop.",
+    "hash": "1a65b00d"
+  },
+  "layer-editor.bg-layers.name-restored": {
+    "text": "{name} hersteld.",
+    "hash": "13aa2a07"
+  },
+  "layer-editor.bg-layers.needs-n-free-layers": {
+    "text": "{n, plural, one {Heeft # vrije laag nodig.} other {Heeft # vrije lagen nodig.}}",
+    "hash": "8e2b9d8e"
+  },
+  "layer-editor.bg-layers.no-layers-yet-add-an-image-gradient": {
+    "text": "Nog geen lagen. Voeg een afbeelding, kleurverloop, patroon of kleur toe achter de inhoud van de kaart.",
+    "hash": "d3de939c"
+  },
+  "layer-editor.bg-layers.no-picture-yet": {
+    "text": "Nog geen afbeelding",
+    "hash": "e83dfa18"
+  },
+  "layer-editor.bg-layers.pan-and-zoom": {
+    "text": "pannen en zoomen",
+    "hash": "4f9cd30b"
+  },
+  "layer-editor.bg-layers.problem": {
+    "text": "Probleem",
+    "hash": "a1c5ae7b"
+  },
+  "layer-editor.bg-layers.show": {
+    "text": "Tonen",
+    "hash": "0df6f1ca"
+  },
+  "layer-editor.bg-layers.show-name": {
+    "text": "{name} tonen",
+    "hash": "94cf7a93"
+  },
+  "layer-editor.bg-layers.start-again-from-the-normal-ones": {
+    "text": "Begin opnieuw met de gewone",
+    "hash": "352f2713"
+  },
+  "layer-editor.bg-layers.this-rule-does-not-change-the": {
+    "text": "Deze regel verandert de achtergronden niet.",
+    "hash": "f6687d92"
+  },
+  "layer-editor.bg-layers.this-rule-uses-its-own-backgrounds": {
+    "text": "Deze regel gebruikt eigen achtergronden in plaats van de gewone.",
+    "hash": "ab8ff8cd"
+  },
+  "layer-editor.bg-layers.to-put-a-module-behind-others-use": {
+    "text": "Om een module achter andere modules te zetten, gebruik je Plaatsing bij die module. Lagen hier liggen bovenop de kleur en afbeelding bij Stijl.",
+    "hash": "3cb78a11"
+  },
+  "layer-editor.bg-layers.type-layer-n": {
+    "text": "{type}, laag {n}",
+    "hash": "33336567"
+  },
+  "layer-editor.bg-layers.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "layer-editor.bg-layers.undone": {
+    "text": "Ongedaan gemaakt.",
+    "hash": "dc166766"
+  },
+  "layer-editor.bg-layers.use-the-normal-backgrounds": {
+    "text": "Gebruik de gewone achtergronden",
+    "hash": "8242721e"
+  },
+  "layer-editor.controls.add-a-colour-at-the-back-to-blend-with": {
+    "text": "Voeg achteraan een kleur toe om mee te mengen.",
+    "hash": "77a6a2a2"
+  },
+  "layer-editor.controls.blend": {
+    "text": "Mengmodus",
+    "hash": "ee6cfb23"
+  },
+  "layer-editor.controls.darken": {
+    "text": "Verdonkeren",
+    "hash": "d540e534"
+  },
+  "layer-editor.controls.darker-where-layers-overlap": {
+    "text": "Donkerder waar lagen elkaar overlappen",
+    "hash": "e293cabe"
+  },
+  "layer-editor.controls.gentle-contrast": {
+    "text": "Zacht contrast",
+    "hash": "6e3756e0"
+  },
+  "layer-editor.controls.if-this-browser-cannot-blend-the-layer": {
+    "text": "Als deze browser niet kan mengen, wordt de laag normaal getoond.",
+    "hash": "c90c6878"
+  },
+  "layer-editor.controls.keeps-the-darker-colour": {
+    "text": "Houdt de donkerdere kleur",
+    "hash": "a61fb524"
+  },
+  "layer-editor.controls.keeps-the-lighter-colour": {
+    "text": "Houdt de lichtere kleur",
+    "hash": "4d8e0c3f"
+  },
+  "layer-editor.controls.label-value": {
+    "text": "Waarde van {label}",
+    "hash": "34dffb96"
+  },
+  "layer-editor.controls.lighten": {
+    "text": "Verlichten",
+    "hash": "c1d5c40b"
+  },
+  "layer-editor.controls.lighter-like-projected-light": {
+    "text": "Lichter, zoals geprojecteerd licht",
+    "hash": "ce7b997b"
+  },
+  "layer-editor.controls.more-contrast": {
+    "text": "Meer contrast",
+    "hash": "0e20f694"
+  },
+  "layer-editor.controls.multiply": {
+    "text": "Vermenigvuldigen",
+    "hash": "33bcea63"
+  },
+  "layer-editor.controls.no-blending": {
+    "text": "Niet mengen",
+    "hash": "aebd033e"
+  },
+  "layer-editor.controls.normal": {
+    "text": "Normaal",
+    "hash": "a7248eeb"
+  },
+  "layer-editor.controls.off": {
+    "text": "Uit",
+    "hash": "ca7981b4"
+  },
+  "layer-editor.controls.on": {
+    "text": "Aan",
+    "hash": "13001175"
+  },
+  "layer-editor.controls.overlay": {
+    "text": "Overlay",
+    "hash": "2af93aeb"
+  },
+  "layer-editor.controls.screen": {
+    "text": "Negatief vermenigvuldigen",
+    "hash": "6e56137e"
+  },
+  "layer-editor.controls.soft-light": {
+    "text": "Zacht licht",
+    "hash": "5d4a886d"
+  },
+  "layer-editor.layer-groups.a-live-camera-behind-other-modules-keeps": {
+    "text": "Een live camera achter andere modules laat video de hele dag doorlopen, wat zwaar is voor een wandtablet. Gebruik voor een rustige achtergrond een stilstaande foto bij Achtergrond van de kaart.",
+    "hash": "152ef435"
+  },
+  "layer-editor.layer-groups.adds-a-dark-fade-over-this-picture-so": {
+    "text": "Voegt een donkere overgang over deze afbeelding toe, zodat de tekst leesbaar blijft. Ook wel scrim genoemd.",
+    "hash": "f08ca9a4"
+  },
+  "layer-editor.layer-groups.applied-name": {
+    "text": "{name} toegepast.",
+    "hash": "db564166"
+  },
+  "layer-editor.layer-groups.automatic": {
+    "text": "Automatisch",
+    "hash": "d461a493"
+  },
+  "layer-editor.layer-groups.back": {
+    "text": "Terug",
+    "hash": "76900f1b"
+  },
+  "layer-editor.layer-groups.backward": {
+    "text": "Naar achteren",
+    "hash": "21132d57"
+  },
+  "layer-editor.layer-groups.behind-others": {
+    "text": "Achter andere modules",
+    "hash": "a221bc3f"
+  },
+  "layer-editor.layer-groups.black": {
+    "text": "Zwart",
+    "hash": "c6cfe6e4"
+  },
+  "layer-editor.layer-groups.blend": {
+    "text": "mengen",
+    "hash": "727c1e41"
+  },
+  "layer-editor.layer-groups.blur": {
+    "text": "Vervaging",
+    "hash": "cd83e673"
+  },
+  "layer-editor.layer-groups.blur-px-px": {
+    "text": "vervaging {px} px",
+    "hash": "005f8394"
+  },
+  "layer-editor.layer-groups.can-t-reach-it-pick-it-in-the-structure": {
+    "text": "Kom je er niet bij? Kies het in de structuurlijst.",
+    "hash": "53a36450"
+  },
+  "layer-editor.layer-groups.card-colour": {
+    "text": "Kaartkleur",
+    "hash": "32fcd150"
+  },
+  "layer-editor.layer-groups.change-position": {
+    "text": "Positie wijzigen",
+    "hash": "979b9615"
+  },
+  "layer-editor.layer-groups.check-the-text-yourself": {
+    "text": "Controleer de tekst zelf.",
+    "hash": "4963a778"
+  },
+  "layer-editor.layer-groups.clicks-and-taps-go-through": {
+    "text": "Klikken en tikken gaan erdoorheen",
+    "hash": "d4c162b9"
+  },
+  "layer-editor.layer-groups.clicks-go-to-whatever-is-under-this": {
+    "text": "Klikken gaan naar wat er onder deze module ligt.",
+    "hash": "e99e7844"
+  },
+  "layer-editor.layer-groups.clicks-reach-the-modules-in-front-this": {
+    "text": "Klikken bereiken de modules ervoor. De eigen actie van deze module is uit zolang dit aan staat.",
+    "hash": "0db088e7"
+  },
+  "layer-editor.layer-groups.colour": {
+    "text": "Kleur",
+    "hash": "3a9dfa58"
+  },
+  "layer-editor.layer-groups.copied": {
+    "text": "Gekopieerd",
+    "hash": "8d525e5f"
+  },
+  "layer-editor.layer-groups.copy-yaml": {
+    "text": "YAML kopiëren",
+    "hash": "e5a88d42"
+  },
+  "layer-editor.layer-groups.cost-on-older-tablets": {
+    "text": "Belasting op oudere tablets:",
+    "hash": "cf92b3ab"
+  },
+  "layer-editor.layer-groups.covers-name-at-this-width-taps-on-the": {
+    "text": "Bedekt {name} bij deze breedte. Tikken op de overlap gaan naar deze module.",
+    "hash": "484b6c78"
+  },
+  "layer-editor.layer-groups.custom": {
+    "text": "Aangepast",
+    "hash": "494ca78f"
+  },
+  "layer-editor.layer-groups.custom-colour": {
+    "text": "Eigen kleur",
+    "hash": "c31a3f15"
+  },
+  "layer-editor.layer-groups.darken-behind-text": {
+    "text": "Verduisteren achter tekst",
+    "hash": "2fa4c5c6"
+  },
+  "layer-editor.layer-groups.distance-from-the-anchor-position-enter": {
+    "text": "Afstand vanaf de positie {anchor}. Vul 0 of meer in: de module blijft binnen de kaart.",
+    "hash": "c3c00371"
+  },
+  "layer-editor.layer-groups.distance-from-the-centre-negative-values": {
+    "text": "Afstand van het midden. Negatieve waarden verschuiven naar links of omhoog.",
+    "hash": "408924ad"
+  },
+  "layer-editor.layer-groups.effects-and-darkening": {
+    "text": "Effecten en verduistering",
+    "hash": "a5a41cf1"
+  },
+  "layer-editor.layer-groups.enter-0-or-more-the-module-stays-inside": {
+    "text": "Vul 0 of meer in: de module blijft binnen de kaart.",
+    "hash": "e85eea22"
+  },
+  "layer-editor.layer-groups.enter-a-distance-in-px-or": {
+    "text": "Vul een afstand in px of % in.",
+    "hash": "188003b7"
+  },
+  "layer-editor.layer-groups.even": {
+    "text": "Gelijkmatig",
+    "hash": "8c29bf34"
+  },
+  "layer-editor.layer-groups.fills": {
+    "text": "Vulling",
+    "hash": "72e34eed"
+  },
+  "layer-editor.layer-groups.fills-the-whole-container-behind-the": {
+    "text": "Vult de hele container achter de andere modules en neemt geen ruimte in. Wil je een afbeelding achter de hele kaart, gebruik dan Achtergrond van de kaart op het tabblad Ontwerp van de kaart.",
+    "hash": "4966b43d"
+  },
+  "layer-editor.layer-groups.floats-over-the-container-at-a-fixed": {
+    "text": "Zweeft op een vaste plek over de container en neemt geen ruimte in.",
+    "hash": "929e80e7"
+  },
+  "layer-editor.layer-groups.forward": {
+    "text": "Naar voren",
+    "hash": "f1c65e14"
+  },
+  "layer-editor.layer-groups.from-bottom": {
+    "text": "Van onderen",
+    "hash": "9104dda2"
+  },
+  "layer-editor.layer-groups.from-left": {
+    "text": "Van links",
+    "hash": "e1880352"
+  },
+  "layer-editor.layer-groups.from-right": {
+    "text": "Van rechts",
+    "hash": "52993346"
+  },
+  "layer-editor.layer-groups.from-the-bottom": {
+    "text": "Vanaf onderen",
+    "hash": "74814072"
+  },
+  "layer-editor.layer-groups.from-the-centre": {
+    "text": "Vanuit het midden",
+    "hash": "1e213233"
+  },
+  "layer-editor.layer-groups.from-the-left": {
+    "text": "Vanaf links",
+    "hash": "b248f7ae"
+  },
+  "layer-editor.layer-groups.from-the-right": {
+    "text": "Vanaf rechts",
+    "hash": "9d8480c0"
+  },
+  "layer-editor.layer-groups.from-the-top": {
+    "text": "Vanaf boven",
+    "hash": "7932ab67"
+  },
+  "layer-editor.layer-groups.from-top": {
+    "text": "Van boven",
+    "hash": "f8d1a767"
+  },
+  "layer-editor.layer-groups.front": {
+    "text": "Voor",
+    "hash": "a6175902"
+  },
+  "layer-editor.layer-groups.heavy": {
+    "text": "zwaar",
+    "hash": "22d5925e"
+  },
+  "layer-editor.layer-groups.its-container": {
+    "text": "Zijn container",
+    "hash": "46af4912"
+  },
+  "layer-editor.layer-groups.its-row": {
+    "text": "Zijn rij",
+    "hash": "42b21f06"
+  },
+  "layer-editor.layer-groups.keyboard-order-top-positions-come-first": {
+    "text": "Toetsenbordvolgorde: bovenste posities komen eerst, onderste posities na de gewone modules. Voor aanraken: mik op 44 px of meer.",
+    "hash": "893728f3"
+  },
+  "layer-editor.layer-groups.large-text-only-3-1": {
+    "text": "Alleen grote tekst (3:1).",
+    "hash": "4ea56bd7"
+  },
+  "layer-editor.layer-groups.layer": {
+    "text": "Laag",
+    "hash": "ac9ffcb2"
+  },
+  "layer-editor.layer-groups.let-clicks-and-taps-go-through": {
+    "text": "Klikken en tikken laten doorgaan",
+    "hash": "5e7be45f"
+  },
+  "layer-editor.layer-groups.light": {
+    "text": "Lamp",
+    "hash": "dbcd5e7b"
+  },
+  "layer-editor.layer-groups.light-2": {
+    "text": "licht",
+    "hash": "99a70261"
+  },
+  "layer-editor.layer-groups.live-camera": {
+    "text": "live camera",
+    "hash": "3ae6e4d2"
+  },
+  "layer-editor.layer-groups.looks": {
+    "text": "Uitstraling",
+    "hash": "c64fb087"
+  },
+  "layer-editor.layer-groups.low-power-mode-drops-blur-blend-and-pan": {
+    "text": "Zuinige modus schakelt vervaging, mengen en pannen en zoomen voor deze kaart uit en behoudt de afbeeldingen.",
+    "hash": "e01078fc"
+  },
+  "layer-editor.layer-groups.medium": {
+    "text": "Gemiddeld",
+    "hash": "8e588cd1"
+  },
+  "layer-editor.layer-groups.medium-2": {
+    "text": "gemiddeld",
+    "hash": "c082456a"
+  },
+  "layer-editor.layer-groups.move-name-backward": {
+    "text": "{name} naar achteren verplaatsen",
+    "hash": "e1542499"
+  },
+  "layer-editor.layer-groups.move-name-forward": {
+    "text": "{name} naar voren verplaatsen",
+    "hash": "1105dd4b"
+  },
+  "layer-editor.layer-groups.move-name-to-the-back": {
+    "text": "{name} helemaal naar achteren verplaatsen",
+    "hash": "3a98c7ca"
+  },
+  "layer-editor.layer-groups.move-name-to-the-front": {
+    "text": "{name} helemaal naar voren verplaatsen",
+    "hash": "3415ab93"
+  },
+  "layer-editor.layer-groups.n": {
+    "text": "{n, select, 1 {1e van voren, van {count}} 2 {2e van voren, van {count}} 3 {3e van voren, van {count}} other {{n}e van voren, van {count}}}",
+    "hash": "6a04e13c"
+  },
+  "layer-editor.layer-groups.n-set": {
+    "text": "{n} ingesteld",
+    "hash": "1f3be422"
+  },
+  "layer-editor.layer-groups.normal": {
+    "text": "Normaal",
+    "hash": "a7248eeb"
+  },
+  "layer-editor.layer-groups.nothing-else-is-in-this-container-so": {
+    "text": "Er staat verder niets in deze container, dus deze module wordt op de gewone plek getoond totdat je er een toevoegt.",
+    "hash": "a1176004"
+  },
+  "layer-editor.layer-groups.on-top": {
+    "text": "Bovenop",
+    "hash": "287c3e34"
+  },
+  "layer-editor.layer-groups.opacity": {
+    "text": "Dekking",
+    "hash": "6062652e"
+  },
+  "layer-editor.layer-groups.order": {
+    "text": "Volgorde",
+    "hash": "6be09082"
+  },
+  "layer-editor.layer-groups.pan-and-zoom": {
+    "text": "pannen en zoomen",
+    "hash": "4f9cd30b"
+  },
+  "layer-editor.layer-groups.placement": {
+    "text": "Plaatsing",
+    "hash": "4df99399"
+  },
+  "layer-editor.layer-groups.position": {
+    "text": "Positie",
+    "hash": "6d031af1"
+  },
+  "layer-editor.layer-groups.show-yaml": {
+    "text": "YAML tonen",
+    "hash": "97bd3a2f"
+  },
+  "layer-editor.layer-groups.smaller-than-a-fingertip-44-px-add": {
+    "text": "Kleiner dan een vingertop (44 px). Voeg opvulling toe bij Ontwerp.",
+    "hash": "df2a2013"
+  },
+  "layer-editor.layer-groups.strength": {
+    "text": "Sterkte",
+    "hash": "63ee3a1b"
+  },
+  "layer-editor.layer-groups.strong": {
+    "text": "Sterk",
+    "hash": "30a04fdc"
+  },
+  "layer-editor.layer-groups.strong-blur-can-make-older-tablets-slow": {
+    "text": "Sterke vervaging kan oudere tablets traag maken.",
+    "hash": "31ccfea6"
+  },
+  "layer-editor.layer-groups.style": {
+    "text": "Stijl",
+    "hash": "7e744141"
+  },
+  "layer-editor.layer-groups.takes-its-normal-place-in-the-column": {
+    "text": "Neemt zijn gewone plek in de kolom in.",
+    "hash": "49b69bb0"
+  },
+  "layer-editor.layer-groups.tapping-name-will-do-nothing-while-this": {
+    "text": "Tikken op {name} doet niets zolang dit aan staat.",
+    "hash": "7c982dfb"
+  },
+  "layer-editor.layer-groups.text-hard-to-read-darken-behind-text": {
+    "text": "Tekst moeilijk leesbaar? Verduisteren achter tekst",
+    "hash": "15d3ce73"
+  },
+  "layer-editor.layer-groups.text-is-readable": {
+    "text": "Tekst is leesbaar.",
+    "hash": "a6376926"
+  },
+  "layer-editor.layer-groups.the-whole-card": {
+    "text": "De hele kaart",
+    "hash": "ce911af7"
+  },
+  "layer-editor.layer-groups.this-layer-has-no-action-so-it-only": {
+    "text": "Deze laag heeft geen actie en blokkeert dus alleen tikken.",
+    "hash": "9c8a6cb9"
+  },
+  "layer-editor.layer-groups.this-module": {
+    "text": "deze module",
+    "hash": "3ea86d89"
+  },
+  "layer-editor.layer-groups.this-module-keeps-its-own-action": {
+    "text": "Deze module behoudt zijn eigen actie.",
+    "hash": "06cb12e8"
+  },
+  "layer-editor.layer-groups.this-video-background-sits-behind-its": {
+    "text": "Deze videoachtergrond ligt, zoals voorheen, op zichzelf achter de andere modules in dezelfde container. Kies een optie om hem in te stellen.",
+    "hash": "f835b86f"
+  },
+  "layer-editor.layer-groups.tint-only-not-for-text": {
+    "text": "Alleen tint. Niet voor tekst.",
+    "hash": "1245002c"
+  },
+  "layer-editor.layer-groups.to-back": {
+    "text": "Helemaal naar achteren",
+    "hash": "03be3bf5"
+  },
+  "layer-editor.layer-groups.to-front": {
+    "text": "Helemaal naar voren",
+    "hash": "2cc7f0ea"
+  },
+  "layer-editor.layer-groups.turn-on-low-power-mode": {
+    "text": "Zuinige modus inschakelen",
+    "hash": "b19ee92b"
+  },
+  "layer-editor.layer-groups.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
+  },
+  "layer-editor.layer-groups.very-strong": {
+    "text": "Zeer sterk",
+    "hash": "79d9108c"
+  },
+  "layer-editor.layer-groups.white": {
+    "text": "Wit",
+    "hash": "3495e757"
+  },
+  "layer-editor.layer-groups.with-a-black-darkening-of-60-or-more": {
+    "text": "Met een zwarte verduistering van 60 % of meer blijft witte tekst op elke afbeelding leesbaar. Dit geldt voor het volledig donkere deel. Bij een overgang moet de tekst in het sterkste derde deel vanaf die rand staan.",
+    "hash": "3685519f"
+  },
+  "layer-editor.layers-sheet.front-first-tap-one-to-select-it": {
+    "text": "Voorste eerst. Tik op een laag om die te selecteren.",
+    "hash": "ddce2d1b"
+  },
+  "layer-editor.layers-sheet.layers-here": {
+    "text": "Lagen hier",
+    "hash": "dfee078f"
+  },
+  "layer-editor.layers-sheet.n-from-the-front-here": {
+    "text": "{n, select, 1 {1e} 2 {2e} 3 {3e} other {{n}e}} van voren hier",
+    "hash": "b9092530"
+  },
+  "layer-editor.layers-sheet.nothing-here": {
+    "text": "Hier staat niets.",
+    "hash": "eb38ca40"
+  },
+  "layer-editor.looks.camera-still-picture": {
+    "text": "Stilstaande foto van camera",
+    "hash": "e93dc411"
+  },
+  "layer-editor.looks.colour-wash": {
+    "text": "Kleurwaas",
+    "hash": "43937611"
+  },
+  "layer-editor.looks.corner-badge": {
+    "text": "Hoekbadge",
+    "hash": "db117955"
+  },
+  "layer-editor.looks.dimmed-backdrop": {
+    "text": "Verduisterde achtergrond",
+    "hash": "0845af1a"
+  },
+  "layer-editor.looks.dotted-texture": {
+    "text": "Gestippelde textuur",
+    "hash": "d2cc9b08"
+  },
+  "layer-editor.looks.frosted": {
+    "text": "Matglas",
+    "hash": "fd018148"
+  },
+  "layer-editor.looks.photo-dark-at-the-bottom": {
+    "text": "Foto, donker onderaan",
+    "hash": "0d8d2bf9"
+  },
+  "layer-editor.looks.picture-behind-buttons": {
+    "text": "Afbeelding achter knoppen",
+    "hash": "c9ec338e"
+  },
+  "layer-editor.looks.soft-glow": {
+    "text": "Zachte gloed",
+    "hash": "6c353e37"
+  },
+  "layer-editor.looks.soft-vignette": {
+    "text": "Zachte vignet",
+    "hash": "5bdc8361"
+  },
+  "layer-editor.looks.top-banner": {
+    "text": "Bovenbanner",
+    "hash": "f4774a5d"
+  },
+  "layer-editor.looks.weather-backdrop": {
+    "text": "Weerachtergrond",
+    "hash": "cc4bc56f"
+  },
+  "layer-editor.mc-anchor-grid.position": {
+    "text": "Positie",
+    "hash": "6d031af1"
+  }
 }

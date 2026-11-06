@@ -1,9 +1,10 @@
 import { html, nothing, TemplateResult, ReactiveController, ReactiveControllerHost } from 'lit';
 import type { HomeAssistant, PopupConfig } from '../types';
-import { isPopupEnabled, popupHash, urlWithHash } from '../utils/popup';
-import { SwipeTracker, autoCloseMs, hashMatches, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
+import { isPopupEnabled } from '../utils/popup';
+import { popupHash, urlWithHash } from '../utils/popup-hash';
+import { SwipeTracker, autoCloseMs, hashMatches, navigateToPopup, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
 import { popupCoordinator } from './popup-coordinator';
-import { EditorPlace, LocationChange, PopupHandle, navigateToPopup, popupHidden } from './popup-nav';
+import { EditorPlace, LocationChange, PopupHandle, popupHidden } from './popup-nav';
 import { t } from './i18n';
 
 export type PopupPhase = 'closed' | 'open' | 'closing';
@@ -32,15 +33,9 @@ function reducedMotion(): boolean {
 }
 
 /**
- * The pop-up of a Magic Card (card `popup.enabled`): on a live dashboard the card takes no room
- * and shows in a native modal `<dialog>` (browser top layer: HA's transforms and overflow never clip
- * it) while `location.hash` is `#<popup.hash>`, after an open trigger or an "Open pop-up" action.
- * In an editor the card stays inline; "Preview pop-up" opens the real pop-up.
- *
- * History like HA's dialogs and Bubble Card: closing (button, backdrop, Escape, swipe down, auto
- * close, close trigger) removes the hash with history.back() when the hash came with a new history
- * entry, else with replaceState; the back button closes it. Only one Magic Card pop-up is open at a
- * time (src/card/popup-coordinator.ts).
+ * The pop-up of a Magic Card (`popup.enabled`): on a live dashboard the card shows in a native
+ * modal `<dialog>` while `location.hash` is `#<popup.hash>`; in an editor it stays inline.
+ * Closing removes the hash with history.back() or replaceState; one pop-up is open at a time.
  */
 export class PopupController implements ReactiveController, PopupHandle {
   phase: PopupPhase = 'closed';
@@ -342,7 +337,7 @@ export class PopupController implements ReactiveController, PopupHandle {
         ${sheet ? html`<div class="mc-popup-handle" aria-hidden="true"></div>` : nothing}
         ${title ? html`<h2 class="mc-popup-title" id=${titleId}>${title}</h2>` : html`<span class="mc-popup-title"></span>`}
         ${showClose
-          ? html`<button type="button" class="mc-popup-close" aria-label=${t('Close')} title=${t('Close')} @click=${this._onCloseClick}>
+          ? html`<button type="button" class="mc-popup-close" aria-label=${t('card.popup-controller.close')} title=${t('card.popup-controller.close')} @click=${this._onCloseClick}>
               <ha-icon icon="mdi:close"></ha-icon>
             </button>`
           : nothing}

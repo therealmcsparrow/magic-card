@@ -1,9 +1,6 @@
 import type { IntakeFile, IntakeKind, IntakePolicy, IntakeRead, IntakeRefusal } from '../contracts/svg-intake';
 
-/*
- * File and pasted-text intake for SVG and preset files: the type and the size are checked before anything is read, and
- * the result is a code. The text is not sanitised here, and no message is worded here.
- */
+// File and pasted-text intake for SVG and preset files: type and size are checked before reading, and the result is a code.
 
 type Matched = { kind: IntakeKind; maxBytes: number };
 

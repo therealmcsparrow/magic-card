@@ -11,10 +11,7 @@ import {
   type SceneLayout,
 } from '../utils/seasonal-scenes';
 
-/*
- * Particle layout of the seasonal scenes. Chunk-only (dist/magic-card-seasonal.js): the card never
- * needs it until a <mc-seasonal> is rendered.
- */
+/** Particle layout of the seasonal scenes. Chunk-only (dist/magic-card-seasonal.js). */
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;

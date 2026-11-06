@@ -16,14 +16,10 @@ import { createLive, type Live } from './live';
 import { ShapeBox, trackShape } from './shape';
 import { ERROR_MS, HIT_PX, LINGER_MS, nearestStop, resolveLook, segmentCount, stopKey, stopsIn, tickValues } from './resolve';
 import { SLIDER_LOOK_CSS } from './css';
+import { lookRtlSheet } from './rtl-sheet';
 
-/*
- * The slider-look view (slider-look 1.0.0): the whole slider for a module with look keys. The
- * interaction, ARIA and keys stay in renderTrack (src/utils/slider-track.ts); this file only draws
- * the parts and keeps the transient state (bubble linger, failed-call hint). The renderTrack bar and
- * background are hidden by the css; the fill, ticks, thumb and value are drawn here from one custom
- * property (--v) on .mc-sl-p, which the drag hooks update without a render.
- */
+// The slider-look view: the whole slider for a module with look keys. Interaction, ARIA and keys stay in renderTrack; this
+// file draws the parts and keeps transient state. Fill, ticks, thumb and value follow one custom property (--v).
 
 const DEFAULT_FILL = 'var(--primary-color, #03a9f4)';
 const ALERT = 'M13 14H11V10H13M13 18H11V16H13M1 21H23L12 2L1 21Z';
@@ -126,7 +122,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     : stateObj
       ? formatEntityValue(hass, stateObj).text
       : '';
-  const name = (stateObj ? entityDisplayName(hass, stateObj) : t('Slider')).slice(0, MAX_NAME);
+  const name = (stateObj ? entityDisplayName(hass, stateObj) : t('card.view.slider')).slice(0, MAX_NAME);
   const frac = value === undefined || range <= 0 ? 0 : Math.max(0, Math.min(1, (value - min) / range));
   st.frac = frac;
   st.text = valueText;
@@ -233,7 +229,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   if (labels.length) vars.push(`--nl: ${labels.length}`);
 
   // ── the failed call: snap back, show the hint, say it
-  const couldnt = () => t("Couldn't set {name}", { name });
+  const couldnt = () => t("card.view.couldn-t-set-name", { name });
   const message = st.err ? couldnt() : '';
   const trackEl = () => st.wrap.value?.closest('.mc-tile-slider');
   /** The failed-call text: spoken (the status line) and shown for the same few seconds (under the track). */
@@ -355,7 +351,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     : nothing;
 
   return html`<style>${SLIDER_LOOK_CSS}</style>
-    <div class="mc-module mc-slider mc-slider-container ${vertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'} ${vertical && bf ? 'mc-slider-container--bigfill' : ''}">
+    <div class="mc-module mc-slider mc-slider-container ${vertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'} ${vertical && bf ? 'mc-slider-container--bigfill' : ''}" ${lookRtlSheet()}>
       ${track}${beside}
       <span class="mc-sl-sr" role="status" ${ref(st.status)} .textContent=${message}></span>
     </div>`;

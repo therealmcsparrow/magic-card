@@ -1,7 +1,4 @@
-/*
- * Knife (contract path-tools 1.0.0): a straight cut along the infinite line through a and b. Closed areas become
- * the two sides (booleans intersect with a half-plane each), open subpaths are split at every crossing. Pure.
- */
+/* Knife: a straight cut along the line through a and b; closed areas become two sides, open subpaths split at crossings. Pure. */
 import { MAX_TOOL_SEGMENTS } from '../contracts/path-tools';
 import type { KnifePiece, KnifeResult, PathToolsDeps, ToolOptions } from '../contracts/path-tools';
 import type { Anchor, Cubic, EditPath, Pt } from '../contracts/path-model';

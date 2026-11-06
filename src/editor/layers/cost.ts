@@ -3,12 +3,7 @@ import type { BackgroundLayerConfig } from '../../contracts/bg-stack';
 import type { CardModule } from '../../types';
 import { layerOf, placementOf } from './placement-model';
 
-/*
- * Cost meter: "Cost on older tablets: light / medium / heavy", with the reasons.
- * Heavy: blur over BLUR_LIGHT_MAX (12 px), two or more costly factors, or three or more layers with any
- * factor. Medium: exactly one factor. Light otherwise. Factors: a non-normal blend, pan and zoom, a live
- * camera behind others.
- */
+// Cost meter: "Cost on older tablets: light / medium / heavy", with the reasons.
 
 export type CostLevel = 'light' | 'medium' | 'heavy';
 export type CostReason = { code: 'blur'; px: number } | { code: 'blend' } | { code: 'panzoom' } | { code: 'camera' };

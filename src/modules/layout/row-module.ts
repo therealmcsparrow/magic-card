@@ -13,8 +13,8 @@ import { lm } from '../../i18n/labels/mark';
 class RowModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'row',
-    name: lm('Row'),
-    description: lm('Grid row with columns, nestable inside any column'),
+    name: lm('labels.row-module.row'),
+    description: lm('labels.row-module.grid-row-with-columns-nestable-inside'),
     category: 'layout',
     icon: 'mdi:view-sequential-outline',
   };

@@ -4,10 +4,7 @@ import { deepClone } from './deep-merge';
 import { generateId } from './id-generator';
 import { toYaml } from './yaml-utils';
 
-/**
- * Copy / paste of a whole design (module, row or column) between cards and dialogs: the editor
- * clipboard lives in localStorage; a copy also goes to the system clipboard as YAML.
- */
+/** Copy / paste of a whole design (module, row or column) between cards and dialogs. */
 export const DESIGN_CLIPBOARD_KEY = 'magic-card:design-clipboard';
 
 export type PasteMode = 'replace' | 'merge';

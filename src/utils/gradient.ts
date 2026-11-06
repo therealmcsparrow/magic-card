@@ -1,12 +1,7 @@
 import { svg, SVGTemplateResult } from 'lit';
 import { safeColor } from './safe-css';
 
-/*
- * A gradient colour value: `linear-gradient(<n>deg, c1, c2[, ...])` or
- * `radial-gradient(circle, c1, ...)`. CSS targets (backgrounds) take the string as is; SVG and CSS
- * variable targets read it here, and every stop has to be a safe colour (2 to 8, up to two levels
- * of parentheses each, like color-mix(in srgb, rgb(1, 2, 3), red)).
- */
+/** A gradient colour value (`linear-gradient` / `radial-gradient`) and its safe-stop parsing. */
 
 export interface Gradient {
   radial: boolean;

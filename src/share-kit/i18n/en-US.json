@@ -1,0 +1,202 @@
+{
+  "share-kit.anim-preview.animation-preview": {
+    "text": "Animation preview",
+    "hash": "d2ecb96a"
+  },
+  "share-kit.anim-preview.play": {
+    "text": "Play",
+    "hash": "436e6101"
+  },
+  "share-kit.card.a-picture-in-path-was-left-out-because-it-may": {
+    "text": "A picture in {path} was left out because it may load from another website ({rule}).",
+    "hash": "4e4dc736"
+  },
+  "share-kit.card.a-style-line-in-path-was-left-out-because-its-name": {
+    "text": "A style line in {path} was left out because its name is not allowed ({rule}).",
+    "hash": "736395ce"
+  },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "text": "A template in {path} was left out because shared text does not run templates: {text} ({rule}).",
+    "hash": "a8c8ddeb"
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "text": "\"{name}\" uses a file on the sharer's Home Assistant. It may not exist on your system.",
+    "hash": "9551f0e5"
+  },
+  "share-kit.card.path-is-a-card-mod-style-so-it-was-left-out": {
+    "text": "{path} is a card-mod style, so it was left out ({rule}).",
+    "hash": "240bca33"
+  },
+  "share-kit.card.path-is-a-module-of-an-unknown-type-so-it-was": {
+    "text": "{path} is a module of an unknown type, so it was left out ({rule}).",
+    "hash": "83119f66"
+  },
+  "share-kit.card.path-is-not-a-card-setting-so-it-was-left-out": {
+    "text": "{path} is not a card setting, so it was left out ({rule}).",
+    "hash": "617acc58"
+  },
+  "share-kit.card.path-points-to-another-website-so-it-was-left-out": {
+    "text": "{path} points to another website, or to an address that cannot be checked, so it was left out ({rule}).",
+    "hash": "575ff23c"
+  },
+  "share-kit.card.path-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{path} was left out because its value is not allowed ({rule}).",
+    "hash": "194bb6c6"
+  },
+  "share-kit.card.the-action-in-path-was-left-out-because-its-web-address": {
+    "text": "The action in {path} was left out because its web address is not a web link or a path on this dashboard ({rule}).",
+    "hash": "a7999a00"
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": {
+    "text": "This is not a Magic Card card.",
+    "hash": "d853edff"
+  },
+  "share-kit.import-preview.demo-states-help": {
+    "text": "Made-up values stand in for your entities.",
+    "hash": "d453aceb"
+  },
+  "share-kit.import-preview.preview-heading": {
+    "text": "Preview",
+    "hash": "324b134f"
+  },
+  "share-kit.import-preview.preview-of-name": {
+    "text": "Preview of {name}. Nothing is loaded from the internet.",
+    "hash": "da53a4f1"
+  },
+  "share-kit.import-preview.wall-tablet-toggle": {
+    "text": "Wall tablet",
+    "hash": "bedf15b0"
+  },
+  "share-kit.mapping.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "share-kit.mapping.map-entities": {
+    "text": "Map entities",
+    "hash": "18d3b884"
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": {
+    "text": "Nothing here needs mapping.",
+    "hash": "e9c28eb4"
+  },
+  "share-kit.mapping.save-mapping": {
+    "text": "Save mapping",
+    "hash": "bb40e390"
+  },
+  "share-kit.mapping.skip-mapping": {
+    "text": "Skip mapping",
+    "hash": "52935301"
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "text": "That is not an entity ID. Use the form {example}.",
+    "hash": "923671cb"
+  },
+  "share-kit.mapping.the-preview-shows-value": {
+    "text": "The preview shows {value}",
+    "hash": "d86f815e"
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "text": "This file uses placeholders instead of the sender's entities. Type the entity you want for each one, or skip and do it later. A field you leave empty stays a placeholder.",
+    "hash": "2a874c13"
+  },
+  "share-kit.notice.actions-in-this-card": {
+    "text": "Actions in this card",
+    "hash": "db66b892"
+  },
+  "share-kit.notice.actions-in-this-card-help": {
+    "text": "They run only when someone uses the card. Nothing runs when you import it.",
+    "hash": "4eee9649"
+  },
+  "share-kit.notice.addresses-on-other-websites-were-removed": {
+    "text": "Addresses on other websites were removed from this export: {hosts}. Whoever imports it will not see them.",
+    "hash": "8a78e3e7"
+  },
+  "share-kit.notice.author-name-is-optional": {
+    "text": "Author name is optional. A name is personal data. If you fill it in, it is written into the file and everyone who gets the file can read it. Use a nickname if you prefer, and do not add an email address or contact details. Leave it empty to share without a name.",
+    "hash": "d28f3b1c"
+  },
+  "share-kit.notice.entity-ids-were-replaced": {
+    "text": "Entity IDs were replaced with placeholders. Whoever imports this file picks their own devices.",
+    "hash": "b747a762"
+  },
+  "share-kit.notice.only-import-files-from-people-you-trust": {
+    "text": "Only import files from people you trust. Magic Card checks the file and shows a preview, and nothing is saved until you confirm. Look at the preview, the actions and the templates before you confirm.",
+    "hash": "6ec0a378"
+  },
+  "share-kit.notice.templates-in-this-card": {
+    "text": "Templates in this card",
+    "hash": "a22ad675"
+  },
+  "share-kit.notice.templates-in-this-card-help": {
+    "text": "These run on your Home Assistant and can read the state of your entities. They are shown as text here and not run.",
+    "hash": "6a0f473d"
+  },
+  "share-kit.style-drops.a-style-rule-name": {
+    "text": "a style rule ({name})",
+    "hash": "3ecb0c4d"
+  },
+  "share-kit.style-drops.a-stylesheet-link": {
+    "text": "a stylesheet link",
+    "hash": "c91313dc"
+  },
+  "share-kit.theme-check.dark": {
+    "text": "dark",
+    "hash": "e6bb5689"
+  },
+  "share-kit.theme-check.light": {
+    "text": "light",
+    "hash": "99a70261"
+  },
+  "share-kit.theme-check.low-contrast-heading": {
+    "text": "Some text in this theme is hard to read",
+    "hash": "0e5056ee"
+  },
+  "share-kit.theme-check.magic-card-text-on-the-magic-card-background": {
+    "text": "Magic Card text on the Magic Card background",
+    "hash": "e28cbb92"
+  },
+  "share-kit.theme-check.main-text-on-the-card-background": {
+    "text": "Main text on the card background",
+    "hash": "a54d167d"
+  },
+  "share-kit.theme-check.main-text-on-the-page-background": {
+    "text": "Main text on the page background",
+    "hash": "aefcf53a"
+  },
+  "share-kit.theme-check.pair-in-mode": {
+    "text": "{pair} in {mode} mode has a contrast of {ratio}:1. Text needs at least {min}:1.",
+    "hash": "e8ef5761"
+  },
+  "share-kit.theme-check.secondary-text-on-the-card-background": {
+    "text": "Secondary text on the card background",
+    "hash": "3866d6bf"
+  },
+  "share-kit.theme-check.text-on-the-primary-colour": {
+    "text": "Text on the primary color",
+    "hash": "fc382314"
+  },
+  "share-kit.wall-tablet.wall-tablet-caption": {
+    "text": "Drawn at one fifth size, as the text looks from 3 meters away.",
+    "hash": "61e7c62e"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-button": {
+    "text": "Lights on",
+    "hash": "ab2323a5"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-text": {
+    "text": "Temperature",
+    "hash": "b958ce8b"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-title": {
+    "text": "Living room",
+    "hash": "268d40ee"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-value": {
+    "text": "21.5 °C",
+    "hash": "a5db9bd8"
+  },
+  "share-kit.wall-tablet.wall-tablet-label": {
+    "text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 meters.",
+    "hash": "2f6e4db9"
+  }
+}

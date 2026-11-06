@@ -3,11 +3,7 @@ import { REFERENCE_ALIGN_KEY_PREFIX, REFERENCE_MAX_FILE_BYTES, REFERENCE_MAX_SID
 import { t } from './i18n';
 import type { ImageExt } from './chunk';
 
-/*
- * The reference picture: a photo or plan behind the canvas for tracing, while editing only. It is drawn from a <canvas>
- * held in page memory, so nothing about it is ever a URL, a markup string or part of the document. Only five alignment
- * numbers are kept on this device, per image.
- */
+// The reference picture: a photo or plan behind the canvas for tracing, drawn from a <canvas> in page memory while editing only.
 
 export interface Align {
   /** Offset of the picture's middle from the canvas middle, in drawing units. */
@@ -183,7 +179,7 @@ export function remove(x: ImageExt): void {
 export async function pick(x: ImageExt, file: File): Promise<void> {
   x.msg = x.note = undefined;
   const bad = checkFile(file);
-  if (bad) x.msg = bad === 'type' ? t('Choose a PNG, JPEG, WebP, GIF, AVIF or BMP picture.') : t('That file is too big to open (over 64 MB). Try a smaller copy.');
+  if (bad) x.msg = bad === 'type' ? t('image-editor.reference.choose-a-png-jpeg-webp-gif-avif-or-bmp') : t('image-editor.reference.that-file-is-too-big-to-open-over-64-mb');
   else
     try {
       const pic = await x.decode(file);
@@ -192,11 +188,11 @@ export async function pick(x: ImageExt, file: File): Promise<void> {
       x.shown = true;
       const kept = readAlign(x.id);
       x.align = kept ?? FRESH;
-      if (kept) x.note = t('Your last alignment for this image was applied.');
+      if (kept) x.note = t('image-editor.reference.your-last-alignment-for-this-image-was');
       else writeAlign(x.id, x.align);
-      say(x, x.note ?? t('Reference picture on. Not saved.'));
+      say(x, x.note ?? t('image-editor.reference.reference-picture-on-not-saved'));
     } catch {
-      x.msg = t('This browser cannot open that picture. Save it as a JPEG and try again.');
+      x.msg = t('image-editor.reference.this-browser-cannot-open-that-picture');
     }
   x.shell.requestUpdate();
 }

@@ -2,13 +2,7 @@ import type { EditPath } from '../contracts/path-model';
 import { IMAGE_FONT_FAMILIES, IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import type { Box, Flag } from './paint';
 
-/*
- * Text layers. A text layer is a layer like any other (its placeholder path is the rectangle the text occupies, so moving,
- * aligning, selecting and the layer list work unchanged) that keeps its words in `look.text`. The text sits on its anchor,
- * which is read from the rectangle: its left edge, middle or right edge by alignment, and the first baseline a fixed share
- * of the size below its top. The markup written is plain <text> with <tspan> lines, so the editor canvas, the saved file and
- * the card draw the same thing with fonts the device already has.
- */
+// Text layers: a layer whose placeholder path is the text rectangle and whose words are in `look.text`, written as <text> with <tspan> lines.
 
 export interface TextData {
   /** The words; a new line is "\n". */

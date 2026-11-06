@@ -67,7 +67,7 @@ rows:
             track_thickness: 56
             icon: mdi:volume-high
             fill_mode: solid
-            slider_color: "#ff8fa3"
+            slider_color: "#be123c"
             track_color: "rgba(255,255,255,0.14)"
             thumb: none
             value_position: track

@@ -1,10 +1,7 @@
 import type { AnimationDoc } from '../anim-studio/model';
 import { CUSTOM_PREFIX, customRefId, isCustomRef } from './custom-ref';
 
-/*
- * Card-editor helper for animations from the library (`preset: custom:<id>`): the export that embeds
- * the documents a card uses (`custom_animations`, the inline fallback a card reads when the library lacks an id, so shared YAML keeps working on another install).
- */
+/** Card-editor helper for library animations (`preset: custom:<id>`): exports the documents a card uses. */
 
 /** Every `custom:<id>` a card config references (design animations at any level), in order. */
 export function customAnimationIds(config: unknown): string[] {

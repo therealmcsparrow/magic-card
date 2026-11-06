@@ -1,573 +1,2514 @@
 {
-  "100": "100",
-  "200": "200",
-  "300": "300",
-  "400": "400",
-  "500": "500",
-  "600": "600",
-  "700": "700",
-  "800": "800",
-  "900": "900",
-  "3D rotate": "3D-rotatie",
-  "A truncated label ends in an ellipsis and shows in full as a tooltip.": "Een afgekapt label eindigt op drie puntjes en staat volledig in de tooltip.",
-  "Above": "Boven",
-  "Absolute": "Absoluut",
-  "Advanced": "Geavanceerd",
-  "Align content": "Inhoud uitlijnen",
-  "Align items": "Items uitlijnen",
-  "Align self": "Zichzelf uitlijnen",
-  "Alignment": "Uitlijning",
-  "All": "Alle",
-  "Alternate": "Afwisselend",
-  "Alternate-reverse": "Afwisselend omgekeerd",
-  "Angle": "Hoek",
-  "Animation delay": "Animatievertraging",
-  "Animation direction": "Animatierichting",
-  "Animation duration": "Animatieduur",
-  "Animation name": "Animatienaam",
-  "Animation timing": "Animatietiming",
-  "Animations": "Animaties",
-  "Anywhere": "Overal",
-  "Arc gauge for displaying numeric sensor values": "Boogmeter voor numerieke sensorwaarden",
-  "Area": "Gebied",
-  "Arrange child modules in a column": "Rangschik onderliggende modules in een kolom",
-  "Arrange child modules in a row": "Rangschik onderliggende modules in een rij",
-  "Arrange child modules in a slider": "Rangschik onderliggende modules in een schuifindeling",
-  "Aura": "Aura",
-  "Aurora": "Noorderlicht",
-  "Auto": "Automatisch",
-  "Auto columns": "Automatische kolommen",
-  "Auto flow": "Automatische stroom",
-  "Auto rows": "Automatische rijen",
-  "Autumn": "Herfst",
-  "Backdrop filter": "Achtergrondfilter",
-  "Background": "Achtergrond",
-  "Background attachment": "Achtergrondbevestiging",
-  "Background clip": "Achtergrondbegrenzing",
-  "Background colour": "Achtergrondkleur",
-  "Background image": "Achtergrondafbeelding",
-  "Background origin": "Achtergrondoorsprong",
-  "Background position": "Achtergrondpositie",
-  "Background repeat": "Achtergrond herhalen",
-  "Background size": "Achtergrondgrootte",
-  "Backgrounds": "Achtergronden",
-  "Backwards": "Achterwaarts",
-  "Bar": "Balk",
-  "Bar background": "Achtergrond tabbalk",
-  "Bar border colour": "Randkleur tabbalk",
-  "Bar border style": "Randstijl tabbalk",
-  "Bar border width": "Randdikte tabbalk",
-  "Bar padding": "Opvulling tabbalk",
-  "Bar position": "Positie tabbalk",
-  "Bars": "Balken",
-  "Baseline": "Basislijn",
-  "Beam width": "Straalbreedte",
-  "Below": "Onder",
-  "Beside": "Ernaast",
-  "Blink": "Knipperen",
-  "Blinks twice": "Knippert twee keer",
-  "Block": "Blok",
-  "Bokeh": "Bokeh",
-  "Bold": "Vet",
-  "Border": "Rand",
-  "Border bottom": "Onderrand",
-  "Border collapse": "Randen samenvoegen",
-  "Border colour": "Randkleur",
-  "Border left": "Linkerrand",
-  "Border length": "Randlengte",
-  "Border radius": "Randafronding",
-  "Border right": "Rechterrand",
-  "Border snake": "Randslang",
-  "Border spacing": "Randafstand",
-  "Border style": "Randstijl",
-  "Border top": "Bovenrand",
-  "Border width": "Randbreedte",
-  "Border-box": "Border-box",
-  "Borders": "Randen",
-  "Borders & outlines": "Randen en omlijningen",
-  "Both": "Beide",
-  "Bottom": "Onder",
-  "Bounce": "Stuiteren",
-  "Box shadow": "Slagschaduw",
-  "Box sizing": "Boxgrootte",
-  "Break-all": "Break-all",
-  "Break-spaces": "Break-spaces",
-  "Break-word": "Break-word",
-  "Breathe": "Ademen",
-  "Breathing border": "Ademende rand",
-  "Brightness": "Helderheid",
-  "Bubbles": "Bellen",
-  "Button": "Knop",
-  "CSS grid": "CSS-raster",
-  "Camera": "Camera",
-  "Capitalize": "Hoofdletter per woord",
-  "Caption side": "Bijschriftzijde",
-  "Centre": "Midden",
-  "Charging stripes": "Oplaadstrepen",
-  "Christmas": "Kerst",
-  "Circle": "Cirkel",
-  "Clear": "Wissen",
-  "Clip": "Afknippen",
-  "Clock": "Klok",
-  "Clouds": "Wolken",
-  "Clouds drift": "Drijvende wolken",
-  "Cloudy": "Bewolkt",
-  "Coin spin": "Draaiende munt",
-  "Collapse": "Samenvoegen",
-  "Colour": "Kleur",
-  "Colour cycle background": "Kleurwisselende achtergrond",
-  "Column": "Kolom",
-  "Column dense": "Kolom compact",
-  "Column gap": "Kolomafstand",
-  "Column-reverse": "Kolom omgekeerd",
-  "Confetti": "Confetti",
-  "Conic border spin": "Draaiende kegelrand",
-  "Contain": "Passend",
-  "Content alignment": "Uitlijning van inhoud",
-  "Content-box": "Content-box",
-  "Contents": "Contents",
-  "Cover": "Bedekkend",
-  "Crosshair": "Draadkruis",
-  "Cursor": "Cursor",
-  "Custom card": "Eigen kaart",
-  "Dashed": "Gestreept",
-  "Day and night": "Dag en nacht",
-  "Decimal": "Decimaal",
-  "Default": "Standaard",
-  "Delay": "Vertraging",
-  "Dense": "Compact",
-  "Density": "Dichtheid",
-  "Depth": "Diepte",
-  "Dim": "Dimmen",
-  "Direction": "Richting",
-  "Disabled tabs": "Uitgeschakelde tabbladen",
-  "Disc": "Schijf",
-  "Display": "Weergave",
-  "Display a camera entity stream": "Toon de stream van een camera-entiteit",
-  "Display a progress bar based on entity state": "Toon een voortgangsbalk op basis van de entiteitstoestand",
-  "Display a static image or entity picture": "Toon een vaste afbeelding of entiteitsafbeelding",
-  "Display an icon from MDI or entity": "Toon een MDI-pictogram of het pictogram van een entiteit",
-  "Display current time and date": "Toon de huidige tijd en datum",
-  "Display entity history as a line graph": "Toon de entiteitsgeschiedenis als lijngrafiek",
-  "Display entity name, state, and attributes": "Toon de naam, toestand en attributen van een entiteit",
-  "Display static or template text": "Toon vaste tekst of tekst uit een template",
-  "Display weather entity information": "Toon informatie van een weerentiteit",
-  "Display weather forecast data": "Toon weersverwachtingsgegevens",
-  "Distance": "Afstand",
-  "Dot size": "Puntgrootte",
-  "Dots": "Stippen",
-  "Dotted": "Gestippeld",
-  "Double": "Dubbel",
-  "Draw loop": "Tekenlus",
-  "Draw on": "Intekenen",
-  "Draws its outline, then fills (direction -1 draws it off)": "Tekent zijn omtrek en vult dan (richting -1 tekent hem weg)",
-  "Draws on, holds, and draws off again": "Tekent in, houdt vast en tekent weer weg",
-  "Drifts up and down": "Drijft omhoog en omlaag",
-  "Drip": "Druppelen",
-  "Dropdown": "Keuzelijst",
-  "Drum while cleaning": "Trommel tijdens het schoonmaken",
-  "Drum while running": "Trommel tijdens het draaien",
-  "Drum while the state is running, washing or drying": "Trommel zolang de toestand draaien, wassen of drogen is",
-  "Duration share": "Aandeel van de duur",
-  "Dusk": "Schemering",
-  "Dusk glow": "Schemerglans",
-  "Ease": "Ease",
-  "Ease in": "Ease in",
-  "Ease in-out": "Ease in-out",
-  "Ease out": "Ease out",
-  "Easter": "Pasen",
-  "Effects": "Effecten",
-  "Ellipsis": "Weglatingspunten",
-  "Embed any 3rd party Lovelace card": "Sluit een Lovelace-kaart van een andere maker in",
-  "End": "Einde",
-  "Equalizer bars": "Equalizerbalken",
-  "Equalizer while playing": "Equalizer tijdens het afspelen",
-  "Fade": "Vervagen",
-  "Fade pulse": "Vervagende puls",
-  "Fades out and back in": "Vervaagt en komt weer terug",
-  "Falling leaves": "Vallende bladeren",
-  "Fast spin": "Snel draaien",
-  "Fill level": "Vulniveau",
-  "Fill mode": "Vulmodus",
-  "Filter": "Filter",
-  "Fireflies": "Vuurvliegjes",
-  "Fireworks": "Vuurwerk",
-  "Fixed": "Vast",
-  "Flame flicker": "Flikkerende vlam",
-  "Flame while heating, Snow while cooling, Spin while only the fan runs": "Vlam tijdens verwarmen, sneeuw tijdens koelen, draaien wanneer alleen de ventilator werkt",
-  "Flex": "Flex",
-  "Flex basis": "Flex-basis",
-  "Flex grow": "Flex-groei",
-  "Flex shrink": "Flex-krimp",
-  "Flex-end": "Flex-end",
-  "Flex-start": "Flex-start",
-  "Flexbox": "Flexbox",
-  "Flicker": "Flikkering",
-  "Flickers like a flame": "Flikkert als een vlam",
-  "Flip": "Omklappen",
-  "Float": "Zweven",
-  "Fog": "Mist",
-  "Foggy": "Mistig",
-  "Font family": "Lettertype",
-  "Font size": "Lettergrootte",
-  "Font style": "Letterstijl",
-  "Font variant": "Letter-variant",
-  "Font weight": "Letterdikte",
-  "Forecast": "Weersverwachting",
-  "Forwards": "Voorwaarts",
-  "Gap": "Tussenruimte",
-  "Gap between tabs": "Ruimte tussen tabbladen",
-  "Gauge": "Meter",
-  "Glitch": "Storing",
-  "Glow": "Gloed",
-  "Glow & pulse": "Gloed en puls",
-  "Glow pulse": "Gloedpuls",
-  "Glow size": "Gloedgrootte",
-  "Glow while on, in the light's colour and brightness": "Gloeien zolang het licht aan is, in de kleur en helderheid van het licht",
-  "Grab": "Pakken",
-  "Gradient flow": "Stromend kleurverloop",
-  "Graph": "Grafiek",
-  "Grid": "Raster",
-  "Grid row with columns, nestable inside any column": "Rasterrij met kolommen, te nesten in elke kolom",
-  "Groove": "Groef",
-  "Grows and shrinks back (direction -1 shrinks)": "Groeit en krimpt terug (richting -1 krimpt)",
-  "Halloween": "Halloween",
-  "Halo ripple": "Halogolf",
-  "Head shake": "Hoofdschudden",
-  "Heartbeat": "Hartslag",
-  "Heat shimmer": "Hittegolving",
-  "Height": "Hoogte",
-  "Hidden": "Verborgen",
-  "Holographic shimmer": "Holografische glans",
-  "Horizontal": "Horizontaal",
-  "Hue range": "Tintbereik",
-  "Icon": "Pictogram",
-  "Icon & text": "Pictogram en tekst",
-  "Icon background": "Pictogramachtergrond",
-  "Icon background shape": "Vorm van pictogramachtergrond",
-  "Icon colour": "Pictogramkleur",
-  "Icon gap": "Ruimte om pictogram",
-  "Icon position": "Positie van pictogram",
-  "Icon size": "Grootte van pictogram",
-  "Ignored when the viewer prefers reduced motion.": "Wordt genegeerd als de kijker minder beweging verkiest.",
-  "Image": "Afbeelding",
-  "Info": "Info",
-  "Inline": "Inline",
-  "Inline-block": "Inline-block",
-  "Inline-flex": "Inline-flex",
-  "Inline-grid": "Inline-grid",
-  "Inset": "Inset",
-  "Offsets": "Afstanden",
-  "Inside": "Binnen",
-  "Intensity": "Intensiteit",
-  "Interaction": "Interactie",
-  "Interactive button with icon, label, and optional state display": "Interactieve knop met pictogram, label en optioneel de toestand",
-  "Italic": "Cursief",
-  "Iteration count": "Aantal herhalingen",
-  "Jello": "Jello",
-  "Justify": "Uitvullen",
-  "Justify content": "Inhoud verdelen",
-  "Keep-all": "Keep-all",
-  "Label colour": "Labelkleur",
-  "Label font family": "Lettertype van label",
-  "Label font size": "Lettergrootte van label",
-  "Label font weight": "Letterdikte van label",
-  "Label overflow": "Overloop van label",
-  "Label text transform": "Teksttransformatie van label",
-  "Lava lamp": "Lavalamp",
-  "Layout": "Indeling",
-  "Left": "Links",
-  "Left and right follow the text direction.": "Links en rechts volgen de tekstrichting.",
-  "Letter spacing": "Letterafstand",
-  "Lift": "Optillen",
-  "Light": "Licht",
-  "Light & colour": "Licht en kleur",
-  "Light control with brightness, colour temperature, and colour options": "Lichtbediening met helderheid, kleurtemperatuur en kleuropties",
-  "Lightning": "Bliksem",
-  "Lights up one part after another (on a group or several parts)": "Laat het ene onderdeel na het andere oplichten (op een groep of meerdere onderdelen)",
-  "Line height": "Regelhoogte",
-  "Line-through": "Doorgehaald",
-  "Linear": "Lineair",
-  "Liquid wave": "Vloeistofgolf",
-  "List style": "Lijststijl",
-  "List style image": "Lijststijl-afbeelding",
-  "List style position": "Lijststijl-positie",
-  "List style type": "Lijststijl-type",
-  "Lists & tables": "Lijsten en tabellen",
-  "Live weather": "Actueel weer",
-  "Local": "Lokaal",
-  "Lower-alpha": "a, b, c",
-  "Lower-roman": "i, ii, iii",
-  "Lowercase": "Kleine letters",
-  "Marching ants": "Marcherende mieren",
-  "Margin": "Marge",
-  "Markdown": "Markdown",
-  "Matrix rain": "Matrixregen",
-  "Max height": "Maximale hoogte",
-  "Max width": "Maximale breedte",
-  "Meteor shower": "Meteorenregen",
-  "Min height": "Minimale hoogte",
-  "Min width": "Minimale breedte",
-  "Motion": "Beweging",
-  "Move": "Verplaatsen",
-  "Moves down and back": "Beweegt omlaag en terug",
-  "Moves left and back": "Beweegt naar links en terug",
-  "Moves right and back": "Beweegt naar rechts en terug",
-  "Moves up and back": "Beweegt omhoog en terug",
-  "Neon border": "Neonrand",
-  "Neon flicker": "Neonflikkering",
-  "New Year": "Nieuwjaar",
-  "Night": "Nacht",
-  "Night sky": "Nachtelijke hemel",
-  "No-repeat": "Niet herhalen",
-  "None": "Geen",
-  "Normal": "Normaal",
-  "Not-allowed": "Niet toegestaan",
-  "Nowrap": "Niet afbreken",
-  "Numeric input with increment and decrement buttons": "Getalinvoer met knoppen om te verhogen en te verlagen",
-  "Oblique": "Schuin",
-  "Ocean waves": "Oceaangolven",
-  "Offset": "Verschuiving",
-  "One to four lengths, for example 4px 8px.": "Een tot vier maten, bijvoorbeeld 4px 8px.",
-  "Opacity": "Dekking",
-  "Orbit": "Baan",
-  "Orbit dots": "Banende stippen",
-  "Order": "Volgorde",
-  "Outline": "Omlijning",
-  "Outline colour": "Omlijningskleur",
-  "Outline offset": "Omlijningsafstand",
-  "Outline style": "Omlijningsstijl",
-  "Outline width": "Omlijningsbreedte",
-  "Outset": "Uitgestoken",
-  "Outside": "Buiten",
-  "Overflow": "Overloop",
-  "Overflow X": "Overloop X",
-  "Overflow Y": "Overloop Y",
-  "Overflow wrap": "Overloop afbreken",
-  "Overline": "Bovenlijn",
-  "Overrides {name}: both animate the {what}": "Overschrijft {name}: beide animeren de {what}",
-  "Padding": "Opvulling",
-  "Padding-box": "Padding-box",
-  "Part {n}": "Onderdeel {n}",
-  "Particles": "Deeltjes",
-  "Paused": "Gepauzeerd",
-  "Pendulum": "Slinger",
-  "Ping": "Ping",
-  "Plasma gradient": "Plasmaverloop",
-  "Play state": "Afspeelstatus",
-  "Playful": "Speels",
-  "Plays on the tab button. The content fade or slide is set under Bar.": "Wordt afgespeeld op de knop van het tabblad. Het vervagen of schuiven van de inhoud stel je in onder Balk.",
-  "Pointer": "Wijzer",
-  "Pointer events": "Aanwijzergebeurtenissen",
-  "Pop": "Knal",
-  "Pops in from nothing with an overshoot": "Verschijnt uit het niets met een uitschieter",
-  "Position": "Positie",
-  "Positioning & layout": "Positionering en indeling",
-  "Power flow dots": "Stroomstippen",
-  "Pre": "Pre",
-  "Pre-line": "Pre-line",
-  "Pre-wrap": "Pre-wrap",
-  "Press": "Indrukken",
-  "Pulse": "Puls",
-  "Pulse in the alert colour while on": "Pulseren in de waarschuwingskleur zolang het aan is",
-  "Pulse in the alert colour while triggered": "Pulseren in de waarschuwingskleur zolang het is afgegaan",
-  "Radar sweep": "Radarveeg",
-  "Radius": "Straal",
-  "Rain": "Regen",
-  "Rain fall": "Vallende regen",
-  "Rainbow hue": "Regenboogtint",
-  "Rainy": "Regenachtig",
-  "Range slider for controlling numeric values": "Schuifregelaar voor numerieke waarden",
-  "Ray width": "Straalbreedte",
-  "Relative": "Relatief",
-  "Render markdown-formatted content": "Toon inhoud met markdown-opmaak",
-  "Repeat": "Herhalen",
-  "Repeat-x": "Horizontaal herhalen",
-  "Repeat-y": "Verticaal herhalen",
-  "Reset to default": "Terugzetten naar standaard",
-  "Reset {label}": "{label} terugzetten",
-  "Reverse": "Omgekeerd",
-  "Ridge": "Rug",
-  "Right": "Rechts",
-  "Ring": "Ring",
-  "Ring size": "Ringgrootte",
-  "Rings": "Ringen",
-  "Rings & sweeps": "Ringen en vegen",
-  "Rings like a bell: quick swings that die down": "Rinkelt als een bel: snelle zwaaien die uitsterven",
-  "Ripple rings": "Rimpelringen",
-  "Ripples": "Rimpelingen",
-  "Rocks on its base": "Wiegt op zijn voet",
-  "Rotation": "Rotatie",
-  "Round": "Rond",
-  "Rounded": "Afgerond",
-  "Row": "Rij",
-  "Row dense": "Rij compact",
-  "Row gap": "Rijafstand",
-  "Row-reverse": "Rij omgekeerd",
-  "Rubber band": "Elastiekje",
-  "Rumble": "Rommelen",
-  "Running": "Actief",
-  "Scale": "Schaal",
-  "Scanline": "Scanlijn",
-  "Scenes": "Taferelen",
-  "Scroll": "Scrollen",
-  "Seasonal": "Seizoen",
-  "Select dropdown for choosing from a list of options": "Keuzelijst om uit een lijst met opties te kiezen",
-  "Separate": "Gescheiden",
-  "Separator": "Scheidingslijn",
-  "Shadow lift": "Schaduwlift",
-  "Shake": "Schudden",
-  "Shake alert": "Schudalarm",
-  "Shake while jammed, Pulse while locking or unlocking": "Schudden bij een klem, pulseren tijdens het vergrendelen of ontgrendelen",
-  "Shakes from side to side": "Schudt van links naar rechts",
-  "Shape": "Vorm",
-  "Shine": "Glans",
-  "Shine sweep": "Glansveeg",
-  "Shorten the border line, e.g. 40% for a short accent line.": "Verkort de randlijn, bijvoorbeeld 40% voor een korte accentlijn.",
-  "Sides": "Zijden",
-  "Slide": "Schuiven",
-  "Slide down": "Naar beneden schuiven",
-  "Slide left": "Naar links schuiven",
-  "Slide right": "Naar rechts schuiven",
-  "Slide up": "Naar boven schuiven",
-  "Slider": "Schuifregelaar",
-  "Slider layout": "Schuifindeling",
-  "Smoke": "Rook",
-  "Smooth": "Vloeiend",
-  "Snap": "Snel",
-  "Snow": "Sneeuw",
-  "Snow fall": "Vallende sneeuw",
-  "Snowy": "Sneeuwachtig",
-  "Solid": "Ononderbroken",
-  "Space": "Ruimte",
-  "Space-around": "Ruimte eromheen",
-  "Space-between": "Ruimte ertussen",
-  "Space-evenly": "Gelijke ruimte",
-  "Spacing & box model": "Afstand en boxmodel",
-  "Sparks": "Vonken",
-  "Spin": "Draaien",
-  "Spin while on, faster at a higher speed": "Draaien zolang het aan is, sneller bij een hogere stand",
-  "Spinbox": "Getalkiezer",
-  "Spotlight": "Schijnwerper",
-  "Spring": "Lente",
-  "Square": "Vierkant",
-  "Squash": "Platdrukken",
-  "Squash & stretch": "Indrukken en rekken",
-  "Squashes, jumps and lands": "Perst samen, springt en landt",
-  "Starfield": "Sterrenveld",
-  "Start": "Begin",
-  "State colour": "Statuskleur",
-  "State font size": "Lettergrootte van status",
-  "State position": "Positie van status",
-  "Static": "Statisch",
-  "Steam rise": "Opstijgende stoom",
-  "Sticky": "Plakkend",
-  "Storm flash": "Onweersflits",
-  "Streams": "Stromen",
-  "Strength": "Sterkte",
-  "Stretch": "Rekken",
-  "Stripe strength": "Streepsterkte",
-  "Style": "Stijl",
-  "Summer": "Zomer",
-  "Sun rays": "Zonnestralen",
-  "Sunny": "Zonnig",
-  "Sway": "Wiegen",
-  "Swing": "Schommelen",
-  "Swing while opening or closing, a slightly opened pose while open": "Schommelen tijdens het openen of sluiten, een iets geopende stand zolang het open is",
-  "Swing: a slightly opened pose while open": "Schommelen: een iets geopende stand zolang het open is",
-  "Swings from its top, settling back": "Zwaait vanaf de bovenkant en komt tot rust",
-  "Tab alignment": "Uitlijning tabbladen",
-  "Tab animations": "Animaties tabblad",
-  "Tab background": "Achtergrond tabblad",
-  "Tab bar": "Tabbalk",
-  "Tab border colour": "Randkleur tabblad",
-  "Tab border style": "Randstijl tabblad",
-  "Tab border width": "Randdikte tabblad",
-  "Tab corner radius": "Hoekafronding tabblad",
-  "Tab font family": "Lettertype tabblad",
-  "Tab font size": "Lettergrootte tabblad",
-  "Tab font weight": "Letterdikte tabblad",
-  "Tab icon animation": "Pictogramanimatie tabblad",
-  "Tab icon colour": "Pictogramkleur tabblad",
-  "Tab icon position": "Positie pictogram tabblad",
-  "Tab icon size": "Grootte pictogram tabblad",
-  "Tab letter spacing": "Letterafstand tabblad",
-  "Tab opacity": "Dekking tabblad",
-  "Tab padding": "Opvulling tabblad",
-  "Tab shadow": "Schaduw tabblad",
-  "Tab switch animation": "Animatie bij wisselen van tabblad",
-  "Tab text colour": "Tekstkleur tabblad",
-  "Tab text transform": "Tekstomzetting tabblad",
-  "Tabbed container for groups of modules": "Container met tabbladen voor groepen modules",
-  "Table layout": "Tabelindeling",
-  "Tabs": "Tabbladen",
-  "Tada": "Tada",
-  "Tap ripple": "Tikrimpel",
-  "Template areas": "Sjabloongebieden",
-  "Template columns": "Sjabloonkolommen",
-  "Template rows": "Sjabloonrijen",
-  "Text": "Tekst",
-  "Text align": "Tekstuitlijning",
-  "Text decoration": "Tekstopmaak",
-  "Text indent": "Tekstinspringing",
-  "Text overflow": "Tekstoverloop",
-  "Text shadow": "Tekstschaduw",
-  "Text transform": "Teksttransformatie",
-  "Thunderstorm": "Onweer",
-  "Tick the tabs that cannot be opened.": "Vink de tabbladen aan die niet geopend kunnen worden.",
-  "Tilt": "Kantelen",
-  "Top": "Boven",
-  "Transform": "Transformatie",
-  "Transform origin": "Transformatie-oorsprong",
-  "Transition": "Overgang",
-  "Transition delay": "Overgangsvertraging",
-  "Transition duration": "Overgangsduur",
-  "Transition property": "Overgangseigenschap",
-  "Transition timing": "Overgangstiming",
-  "Transitions & animations": "Overgangen en animaties",
-  "Truncate": "Afkappen",
-  "Turns": "Draait",
-  "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)": "Draait rond met een constante snelheid (hele rondes per cyclus, zodat hij naadloos loopt)",
-  "Twinkle": "Twinkelen",
-  "Typing dots": "Typende stippen",
-  "Typography": "Typografie",
-  "Underline": "Onderstreept",
-  "Upper-alpha": "A, B, C",
-  "Upper-roman": "I, II, III",
-  "Uppercase": "Hoofdletters",
-  "Valentine": "Valentijn",
-  "Value background": "Waarde-achtergrond",
-  "Vertical": "Verticaal",
-  "Vertical content alignment": "Verticale uitlijning van inhoud",
-  "Video background": "Video-achtergrond",
-  "Video playing behind the other modules of its column or layout": "Video die achter de andere modules van de kolom of indeling speelt",
-  "Visibility": "Zichtbaarheid",
-  "Visible": "Zichtbaar",
-  "Visual divider between modules": "Zichtbare scheiding tussen modules",
-  "Wait": "Wachten",
-  "Water ripple": "Waterrimpel",
-  "Wave": "Golf",
-  "Wave height": "Golfhoogte",
-  "Weather": "Weer",
-  "Weather & device": "Weer en apparaat",
-  "White space": "Witruimte",
-  "Width": "Breedte",
-  "Wiggle": "Kronkelen",
-  "Wind lines": "Windlijnen",
-  "Windy": "Winderig",
-  "Winter": "Winter",
-  "Wobble": "Waggelen",
-  "Word break": "Woordafbreking",
-  "Word spacing": "Woordafstand",
-  "Wrap": "Afbreken",
-  "Wrap-reverse": "Omgekeerd afbreken",
-  "Z-index": "Z-index",
-  "filter": "filter",
-  "glow": "gloed",
-  "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).": "none, of maximaal twee schaduwen, bijvoorbeeld 0 2px 6px rgba(0, 0, 0, .25).",
-  "normal, or one length, for example 0.05em.": "normal, of één lengte, bijvoorbeeld 0.05em.",
-  "opacity": "dekking",
-  "position": "positie",
-  "rotation": "rotatie",
-  "scale": "schaal"
+  "labels.animation-conflicts.filter": {
+    "text": "filter",
+    "hash": "dfc3376b"
+  },
+  "labels.animation-conflicts.glow": {
+    "text": "gloed",
+    "hash": "d27608cc"
+  },
+  "labels.animation-conflicts.opacity": {
+    "text": "dekking",
+    "hash": "ad9a0b2e"
+  },
+  "labels.animation-conflicts.position": {
+    "text": "positie",
+    "hash": "5a452459"
+  },
+  "labels.animation-conflicts.rotation": {
+    "text": "rotatie",
+    "hash": "224610f1"
+  },
+  "labels.animation-conflicts.scale": {
+    "text": "schaal",
+    "hash": "f469802a"
+  },
+  "labels.animation-list.overrides-name-both-animate-the-what": {
+    "text": "Overschrijft {name}: beide animeren de {what}",
+    "hash": "474f9007"
+  },
+  "labels.animation-presets.3d-rotate": {
+    "text": "3D-rotatie",
+    "hash": "48f85358"
+  },
+  "labels.animation-presets.angle": {
+    "text": "Hoek",
+    "hash": "1968034b"
+  },
+  "labels.animation-presets.aura": {
+    "text": "Aura",
+    "hash": "224ea01e"
+  },
+  "labels.animation-presets.aurora": {
+    "text": "Noorderlicht",
+    "hash": "e9de098c"
+  },
+  "labels.animation-presets.autumn": {
+    "text": "Herfst",
+    "hash": "e0906c2d"
+  },
+  "labels.animation-presets.backgrounds": {
+    "text": "Achtergronden",
+    "hash": "16a0b5fa"
+  },
+  "labels.animation-presets.bars": {
+    "text": "Balken",
+    "hash": "f2c35269"
+  },
+  "labels.animation-presets.beam-width": {
+    "text": "Straalbreedte",
+    "hash": "5d37caea"
+  },
+  "labels.animation-presets.blink": {
+    "text": "Knipperen",
+    "hash": "a37430e2"
+  },
+  "labels.animation-presets.bokeh": {
+    "text": "Bokeh",
+    "hash": "6b70f7a0"
+  },
+  "labels.animation-presets.border-snake": {
+    "text": "Randslang",
+    "hash": "04a8bbe1"
+  },
+  "labels.animation-presets.border-width": {
+    "text": "Randbreedte",
+    "hash": "182ee0a2"
+  },
+  "labels.animation-presets.borders": {
+    "text": "Randen",
+    "hash": "0de9f358"
+  },
+  "labels.animation-presets.bounce": {
+    "text": "Stuiteren",
+    "hash": "24b6ed11"
+  },
+  "labels.animation-presets.breathe": {
+    "text": "Ademen",
+    "hash": "f761a83f"
+  },
+  "labels.animation-presets.breathing-border": {
+    "text": "Ademende rand",
+    "hash": "6a404b36"
+  },
+  "labels.animation-presets.brightness": {
+    "text": "Helderheid",
+    "hash": "ec811d30"
+  },
+  "labels.animation-presets.bubbles": {
+    "text": "Bellen",
+    "hash": "d0bba2c5"
+  },
+  "labels.animation-presets.charging-stripes": {
+    "text": "Oplaadstrepen",
+    "hash": "f50bdd64"
+  },
+  "labels.animation-presets.christmas": {
+    "text": "Kerst",
+    "hash": "a09948e8"
+  },
+  "labels.animation-presets.clouds": {
+    "text": "Wolken",
+    "hash": "e45347b0"
+  },
+  "labels.animation-presets.clouds-drift": {
+    "text": "Drijvende wolken",
+    "hash": "7df8f8d4"
+  },
+  "labels.animation-presets.cloudy": {
+    "text": "Bewolkt",
+    "hash": "c63401ab"
+  },
+  "labels.animation-presets.coin-spin": {
+    "text": "Draaiende munt",
+    "hash": "09dc12f6"
+  },
+  "labels.animation-presets.colour-cycle-background": {
+    "text": "Kleurwisselende achtergrond",
+    "hash": "05a7053d"
+  },
+  "labels.animation-presets.confetti": {
+    "text": "Confetti",
+    "hash": "2b54343f"
+  },
+  "labels.animation-presets.conic-border-spin": {
+    "text": "Draaiende kegelrand",
+    "hash": "7f9ab043"
+  },
+  "labels.animation-presets.day-and-night": {
+    "text": "Dag en nacht",
+    "hash": "8b1a00de"
+  },
+  "labels.animation-presets.density": {
+    "text": "Dichtheid",
+    "hash": "77a283d6"
+  },
+  "labels.animation-presets.depth": {
+    "text": "Diepte",
+    "hash": "f1dbc339"
+  },
+  "labels.animation-presets.dim": {
+    "text": "Dimmen",
+    "hash": "ea53b1cb"
+  },
+  "labels.animation-presets.distance": {
+    "text": "Afstand",
+    "hash": "b7bdf7a2"
+  },
+  "labels.animation-presets.dot-size": {
+    "text": "Puntgrootte",
+    "hash": "97c5bc43"
+  },
+  "labels.animation-presets.dots": {
+    "text": "Stippen",
+    "hash": "6de335fa"
+  },
+  "labels.animation-presets.drip": {
+    "text": "Druppelen",
+    "hash": "4b841ee3"
+  },
+  "labels.animation-presets.dusk-glow": {
+    "text": "Schemerglans",
+    "hash": "b34edf71"
+  },
+  "labels.animation-presets.ease": {
+    "text": "Ease",
+    "hash": "9da61502"
+  },
+  "labels.animation-presets.ease-in": {
+    "text": "Ease in",
+    "hash": "4980c07a"
+  },
+  "labels.animation-presets.ease-in-out": {
+    "text": "Ease in-out",
+    "hash": "035db650"
+  },
+  "labels.animation-presets.ease-out": {
+    "text": "Ease out",
+    "hash": "c0eb732d"
+  },
+  "labels.animation-presets.easter": {
+    "text": "Pasen",
+    "hash": "56277ffc"
+  },
+  "labels.animation-presets.equalizer-bars": {
+    "text": "Equalizerbalken",
+    "hash": "4bf0dfae"
+  },
+  "labels.animation-presets.fade": {
+    "text": "Vervagen",
+    "hash": "9efb597c"
+  },
+  "labels.animation-presets.fade-pulse": {
+    "text": "Vervagende puls",
+    "hash": "04dcdc05"
+  },
+  "labels.animation-presets.falling-leaves": {
+    "text": "Vallende bladeren",
+    "hash": "c813430d"
+  },
+  "labels.animation-presets.fast-spin": {
+    "text": "Snel draaien",
+    "hash": "6d36dd34"
+  },
+  "labels.animation-presets.fill-level": {
+    "text": "Vulniveau",
+    "hash": "3075e8a1"
+  },
+  "labels.animation-presets.fireflies": {
+    "text": "Vuurvliegjes",
+    "hash": "b553e429"
+  },
+  "labels.animation-presets.fireworks": {
+    "text": "Vuurwerk",
+    "hash": "f9896d55"
+  },
+  "labels.animation-presets.flame-flicker": {
+    "text": "Flikkerende vlam",
+    "hash": "119f42b3"
+  },
+  "labels.animation-presets.flicker": {
+    "text": "Flikkering",
+    "hash": "ba3baf3d"
+  },
+  "labels.animation-presets.flip": {
+    "text": "Omklappen",
+    "hash": "2449d137"
+  },
+  "labels.animation-presets.float": {
+    "text": "Zweven",
+    "hash": "1a693c00"
+  },
+  "labels.animation-presets.foggy": {
+    "text": "Mistig",
+    "hash": "fa5abf9d"
+  },
+  "labels.animation-presets.glitch": {
+    "text": "Storing",
+    "hash": "14980158"
+  },
+  "labels.animation-presets.glow": {
+    "text": "Gloed",
+    "hash": "f534ed97"
+  },
+  "labels.animation-presets.glow-pulse": {
+    "text": "Gloedpuls",
+    "hash": "b00ea7bf"
+  },
+  "labels.animation-presets.glow-pulse-2": {
+    "text": "Gloed en puls",
+    "hash": "928d47d5"
+  },
+  "labels.animation-presets.glow-size": {
+    "text": "Gloedgrootte",
+    "hash": "9ddd0e70"
+  },
+  "labels.animation-presets.gradient-flow": {
+    "text": "Stromend kleurverloop",
+    "hash": "cf0acd5f"
+  },
+  "labels.animation-presets.halloween": {
+    "text": "Halloween",
+    "hash": "049566b6"
+  },
+  "labels.animation-presets.halo-ripple": {
+    "text": "Halogolf",
+    "hash": "666805c0"
+  },
+  "labels.animation-presets.head-shake": {
+    "text": "Hoofdschudden",
+    "hash": "f7cb7ed5"
+  },
+  "labels.animation-presets.heartbeat": {
+    "text": "Hartslag",
+    "hash": "9df89427"
+  },
+  "labels.animation-presets.heat-shimmer": {
+    "text": "Hittegolving",
+    "hash": "cf56cc06"
+  },
+  "labels.animation-presets.height": {
+    "text": "Hoogte",
+    "hash": "bfe2eca4"
+  },
+  "labels.animation-presets.holographic-shimmer": {
+    "text": "Holografische glans",
+    "hash": "cd507b40"
+  },
+  "labels.animation-presets.hue-range": {
+    "text": "Tintbereik",
+    "hash": "3cda0f66"
+  },
+  "labels.animation-presets.interaction": {
+    "text": "Interactie",
+    "hash": "b7d28632"
+  },
+  "labels.animation-presets.jello": {
+    "text": "Jello",
+    "hash": "2c5cccf6"
+  },
+  "labels.animation-presets.lava-lamp": {
+    "text": "Lavalamp",
+    "hash": "b6146f1b"
+  },
+  "labels.animation-presets.lift": {
+    "text": "Optillen",
+    "hash": "871eee33"
+  },
+  "labels.animation-presets.light-colour": {
+    "text": "Licht en kleur",
+    "hash": "8026d9d7"
+  },
+  "labels.animation-presets.lightning": {
+    "text": "Bliksem",
+    "hash": "41e68f2c"
+  },
+  "labels.animation-presets.linear": {
+    "text": "Lineair",
+    "hash": "e6950b45"
+  },
+  "labels.animation-presets.liquid-wave": {
+    "text": "Vloeistofgolf",
+    "hash": "4161e5a2"
+  },
+  "labels.animation-presets.live-weather": {
+    "text": "Actueel weer",
+    "hash": "3bc3a9ab"
+  },
+  "labels.animation-presets.marching-ants": {
+    "text": "Marcherende mieren",
+    "hash": "61457667"
+  },
+  "labels.animation-presets.matrix-rain": {
+    "text": "Matrixregen",
+    "hash": "98d87c8c"
+  },
+  "labels.animation-presets.meteor-shower": {
+    "text": "Meteorenregen",
+    "hash": "5a17e573"
+  },
+  "labels.animation-presets.motion": {
+    "text": "Beweging",
+    "hash": "8ca34424"
+  },
+  "labels.animation-presets.neon-border": {
+    "text": "Neonrand",
+    "hash": "aa89604c"
+  },
+  "labels.animation-presets.neon-flicker": {
+    "text": "Neonflikkering",
+    "hash": "8f57fb07"
+  },
+  "labels.animation-presets.new-year": {
+    "text": "Nieuwjaar",
+    "hash": "1353c72b"
+  },
+  "labels.animation-presets.night-sky": {
+    "text": "Nachtelijke hemel",
+    "hash": "14deec23"
+  },
+  "labels.animation-presets.ocean-waves": {
+    "text": "Oceaangolven",
+    "hash": "48652ee0"
+  },
+  "labels.animation-presets.offset": {
+    "text": "Verschuiving",
+    "hash": "b1a1e8e3"
+  },
+  "labels.animation-presets.orbit": {
+    "text": "Baan",
+    "hash": "29ac7e56"
+  },
+  "labels.animation-presets.orbit-dots": {
+    "text": "Banende stippen",
+    "hash": "dd0c7e8c"
+  },
+  "labels.animation-presets.particles": {
+    "text": "Deeltjes",
+    "hash": "e73735cf"
+  },
+  "labels.animation-presets.pendulum": {
+    "text": "Slinger",
+    "hash": "0ea95b82"
+  },
+  "labels.animation-presets.ping": {
+    "text": "Ping",
+    "hash": "6a4c3a44"
+  },
+  "labels.animation-presets.plasma-gradient": {
+    "text": "Plasmaverloop",
+    "hash": "3d0f137a"
+  },
+  "labels.animation-presets.playful": {
+    "text": "Speels",
+    "hash": "dde9ac29"
+  },
+  "labels.animation-presets.pop": {
+    "text": "Knal",
+    "hash": "4d616d53"
+  },
+  "labels.animation-presets.power-flow-dots": {
+    "text": "Stroomstippen",
+    "hash": "806dfbfb"
+  },
+  "labels.animation-presets.press": {
+    "text": "Indrukken",
+    "hash": "9ed1273e"
+  },
+  "labels.animation-presets.radar-sweep": {
+    "text": "Radarveeg",
+    "hash": "f97797a8"
+  },
+  "labels.animation-presets.radius": {
+    "text": "Straal",
+    "hash": "6fe0661c"
+  },
+  "labels.animation-presets.rain-fall": {
+    "text": "Vallende regen",
+    "hash": "215e6d1e"
+  },
+  "labels.animation-presets.rainbow-hue": {
+    "text": "Regenboogtint",
+    "hash": "be5dc907"
+  },
+  "labels.animation-presets.rainy": {
+    "text": "Regenachtig",
+    "hash": "8f98c959"
+  },
+  "labels.animation-presets.ray-width": {
+    "text": "Straalbreedte",
+    "hash": "18488f63"
+  },
+  "labels.animation-presets.ring-size": {
+    "text": "Ringgrootte",
+    "hash": "bd3eef41"
+  },
+  "labels.animation-presets.rings": {
+    "text": "Ringen",
+    "hash": "bab4c75d"
+  },
+  "labels.animation-presets.rings-sweeps": {
+    "text": "Ringen en vegen",
+    "hash": "506737c7"
+  },
+  "labels.animation-presets.ripple-rings": {
+    "text": "Rimpelringen",
+    "hash": "42fb77d3"
+  },
+  "labels.animation-presets.ripples": {
+    "text": "Rimpelingen",
+    "hash": "6f0d79ac"
+  },
+  "labels.animation-presets.rotation": {
+    "text": "Rotatie",
+    "hash": "57b5e2fc"
+  },
+  "labels.animation-presets.rubber-band": {
+    "text": "Elastiekje",
+    "hash": "0dfe3ea3"
+  },
+  "labels.animation-presets.rumble": {
+    "text": "Rommelen",
+    "hash": "78b3cc36"
+  },
+  "labels.animation-presets.scale": {
+    "text": "Schaal",
+    "hash": "f102986b"
+  },
+  "labels.animation-presets.scanline": {
+    "text": "Scanlijn",
+    "hash": "a7c2ae1a"
+  },
+  "labels.animation-presets.scenes": {
+    "text": "Taferelen",
+    "hash": "160c0535"
+  },
+  "labels.animation-presets.seasonal": {
+    "text": "Seizoen",
+    "hash": "7237db5b"
+  },
+  "labels.animation-presets.shadow-lift": {
+    "text": "Schaduwlift",
+    "hash": "aca41ccb"
+  },
+  "labels.animation-presets.shake-alert": {
+    "text": "Schudalarm",
+    "hash": "2de78168"
+  },
+  "labels.animation-presets.shine": {
+    "text": "Glans",
+    "hash": "fcdb859f"
+  },
+  "labels.animation-presets.shine-sweep": {
+    "text": "Glansveeg",
+    "hash": "adec8af9"
+  },
+  "labels.animation-presets.smoke": {
+    "text": "Rook",
+    "hash": "29b52bfc"
+  },
+  "labels.animation-presets.smooth": {
+    "text": "Vloeiend",
+    "hash": "da519387"
+  },
+  "labels.animation-presets.snap": {
+    "text": "Snel",
+    "hash": "98df9a59"
+  },
+  "labels.animation-presets.snow-fall": {
+    "text": "Vallende sneeuw",
+    "hash": "92177330"
+  },
+  "labels.animation-presets.snowy": {
+    "text": "Sneeuwachtig",
+    "hash": "2a3fb91a"
+  },
+  "labels.animation-presets.sparks": {
+    "text": "Vonken",
+    "hash": "6905661c"
+  },
+  "labels.animation-presets.spin": {
+    "text": "Draaien",
+    "hash": "b9e96ae5"
+  },
+  "labels.animation-presets.spotlight": {
+    "text": "Schijnwerper",
+    "hash": "fca7aa83"
+  },
+  "labels.animation-presets.spring": {
+    "text": "Lente",
+    "hash": "db29e82a"
+  },
+  "labels.animation-presets.squash": {
+    "text": "Platdrukken",
+    "hash": "9f9a8456"
+  },
+  "labels.animation-presets.squash-stretch": {
+    "text": "Indrukken en rekken",
+    "hash": "c2f66f23"
+  },
+  "labels.animation-presets.starfield": {
+    "text": "Sterrenveld",
+    "hash": "daad7f70"
+  },
+  "labels.animation-presets.steam-rise": {
+    "text": "Opstijgende stoom",
+    "hash": "f38c5a74"
+  },
+  "labels.animation-presets.storm-flash": {
+    "text": "Onweersflits",
+    "hash": "2b7eca08"
+  },
+  "labels.animation-presets.streams": {
+    "text": "Stromen",
+    "hash": "bfd297af"
+  },
+  "labels.animation-presets.strength": {
+    "text": "Sterkte",
+    "hash": "63ee3a1b"
+  },
+  "labels.animation-presets.stretch": {
+    "text": "Rekken",
+    "hash": "a33fbcf8"
+  },
+  "labels.animation-presets.stripe-strength": {
+    "text": "Streepsterkte",
+    "hash": "d1ef97d5"
+  },
+  "labels.animation-presets.summer": {
+    "text": "Zomer",
+    "hash": "c0de243c"
+  },
+  "labels.animation-presets.sun-rays": {
+    "text": "Zonnestralen",
+    "hash": "2f39e8c8"
+  },
+  "labels.animation-presets.sunny": {
+    "text": "Zonnig",
+    "hash": "adf259f6"
+  },
+  "labels.animation-presets.sway": {
+    "text": "Wiegen",
+    "hash": "b1af92ac"
+  },
+  "labels.animation-presets.swing": {
+    "text": "Schommelen",
+    "hash": "816f0656"
+  },
+  "labels.animation-presets.tada": {
+    "text": "Tada",
+    "hash": "a16d4658"
+  },
+  "labels.animation-presets.tap-ripple": {
+    "text": "Tikrimpel",
+    "hash": "acb97c65"
+  },
+  "labels.animation-presets.thunderstorm": {
+    "text": "Onweer",
+    "hash": "31a9beb9"
+  },
+  "labels.animation-presets.tilt": {
+    "text": "Kantelen",
+    "hash": "9498a187"
+  },
+  "labels.animation-presets.twinkle": {
+    "text": "Twinkelen",
+    "hash": "114fcc55"
+  },
+  "labels.animation-presets.typing-dots": {
+    "text": "Typende stippen",
+    "hash": "2e4376d7"
+  },
+  "labels.animation-presets.valentine": {
+    "text": "Valentijn",
+    "hash": "cef5c43e"
+  },
+  "labels.animation-presets.water-ripple": {
+    "text": "Waterrimpel",
+    "hash": "8572d5f7"
+  },
+  "labels.animation-presets.wave-height": {
+    "text": "Golfhoogte",
+    "hash": "b639122e"
+  },
+  "labels.animation-presets.weather-device": {
+    "text": "Weer en apparaat",
+    "hash": "66e7b772"
+  },
+  "labels.animation-presets.width": {
+    "text": "Breedte",
+    "hash": "3019947b"
+  },
+  "labels.animation-presets.wiggle": {
+    "text": "Kronkelen",
+    "hash": "715c1476"
+  },
+  "labels.animation-presets.wind-lines": {
+    "text": "Windlijnen",
+    "hash": "eb860878"
+  },
+  "labels.animation-presets.windy": {
+    "text": "Winderig",
+    "hash": "cdcaccab"
+  },
+  "labels.animation-presets.winter": {
+    "text": "Winter",
+    "hash": "1b17869e"
+  },
+  "labels.animation-presets.wobble": {
+    "text": "Waggelen",
+    "hash": "d1c4fb8a"
+  },
+  "labels.bar-module.bar": {
+    "text": "Balk",
+    "hash": "95d64cac"
+  },
+  "labels.bar-module.display-a-progress-bar-based-on-entity": {
+    "text": "Toon een voortgangsbalk op basis van de entiteitstoestand",
+    "hash": "f68c51ac"
+  },
+  "labels.button-module.button": {
+    "text": "Knop",
+    "hash": "707eab0c"
+  },
+  "labels.button-module.interactive-button-with-icon-label-and": {
+    "text": "Interactieve knop met pictogram, label en optioneel de toestand",
+    "hash": "33d7bc6b"
+  },
+  "labels.card-settings.backdrop-filter": {
+    "text": "Achtergrondfilter",
+    "hash": "5e830d43"
+  },
+  "labels.card-settings.border-colour": {
+    "text": "Randkleur",
+    "hash": "6c9e0b99"
+  },
+  "labels.card-settings.border-style": {
+    "text": "Randstijl",
+    "hash": "911cb22e"
+  },
+  "labels.card-settings.border-width": {
+    "text": "Randbreedte",
+    "hash": "182ee0a2"
+  },
+  "labels.card-settings.margin": {
+    "text": "Marge",
+    "hash": "2bf63d81"
+  },
+  "labels.css-properties.a-truncated-label-ends-in-an-ellipsis": {
+    "text": "Een afgekapt label eindigt op drie puntjes en staat volledig in de tooltip.",
+    "hash": "63ccd7c9"
+  },
+  "labels.css-properties.above": {
+    "text": "Boven",
+    "hash": "80792346"
+  },
+  "labels.css-properties.advanced": {
+    "text": "Geavanceerd",
+    "hash": "9f088dbe"
+  },
+  "labels.css-properties.align-content": {
+    "text": "Inhoud uitlijnen",
+    "hash": "3e17da4a"
+  },
+  "labels.css-properties.align-items": {
+    "text": "Items uitlijnen",
+    "hash": "6cfac96d"
+  },
+  "labels.css-properties.align-self": {
+    "text": "Zichzelf uitlijnen",
+    "hash": "5eaf5d54"
+  },
+  "labels.css-properties.alignment": {
+    "text": "Uitlijning",
+    "hash": "9d597870"
+  },
+  "labels.css-properties.all": {
+    "text": "Alle",
+    "hash": "a52ace42"
+  },
+  "labels.css-properties.animation-delay": {
+    "text": "Animatievertraging",
+    "hash": "ba603cce"
+  },
+  "labels.css-properties.animation-direction": {
+    "text": "Animatierichting",
+    "hash": "668cd430"
+  },
+  "labels.css-properties.animation-duration": {
+    "text": "Animatieduur",
+    "hash": "78e85e85"
+  },
+  "labels.css-properties.animation-name": {
+    "text": "Animatienaam",
+    "hash": "89425e25"
+  },
+  "labels.css-properties.animation-timing": {
+    "text": "Animatietiming",
+    "hash": "7c950144"
+  },
+  "labels.css-properties.animations": {
+    "text": "Animaties",
+    "hash": "7f7c3306"
+  },
+  "labels.css-properties.area": {
+    "text": "Gebied",
+    "hash": "024dc204"
+  },
+  "labels.css-properties.auto": {
+    "text": "Automatisch",
+    "hash": "02862497"
+  },
+  "labels.css-properties.auto-columns": {
+    "text": "Automatische kolommen",
+    "hash": "553c4186"
+  },
+  "labels.css-properties.auto-flow": {
+    "text": "Automatische stroom",
+    "hash": "98c3b26e"
+  },
+  "labels.css-properties.auto-rows": {
+    "text": "Automatische rijen",
+    "hash": "6985b4f9"
+  },
+  "labels.css-properties.backdrop-filter": {
+    "text": "Achtergrondfilter",
+    "hash": "5e830d43"
+  },
+  "labels.css-properties.background": {
+    "text": "Achtergrond",
+    "hash": "ea2b8a87"
+  },
+  "labels.css-properties.background-attachment": {
+    "text": "Achtergrondbevestiging",
+    "hash": "a50771e5"
+  },
+  "labels.css-properties.background-clip": {
+    "text": "Achtergrondbegrenzing",
+    "hash": "6bb6f3ef"
+  },
+  "labels.css-properties.background-colour": {
+    "text": "Achtergrondkleur",
+    "hash": "743baa30"
+  },
+  "labels.css-properties.background-image": {
+    "text": "Achtergrondafbeelding",
+    "hash": "f52a6826"
+  },
+  "labels.css-properties.background-origin": {
+    "text": "Achtergrondoorsprong",
+    "hash": "ffa3b6d6"
+  },
+  "labels.css-properties.background-position": {
+    "text": "Achtergrondpositie",
+    "hash": "4358be6e"
+  },
+  "labels.css-properties.background-repeat": {
+    "text": "Achtergrond herhalen",
+    "hash": "ace01eab"
+  },
+  "labels.css-properties.background-size": {
+    "text": "Achtergrondgrootte",
+    "hash": "5560a58b"
+  },
+  "labels.css-properties.backgrounds": {
+    "text": "Achtergronden",
+    "hash": "16a0b5fa"
+  },
+  "labels.css-properties.bar": {
+    "text": "Balk",
+    "hash": "95d64cac"
+  },
+  "labels.css-properties.bar-background": {
+    "text": "Achtergrond tabbalk",
+    "hash": "b4efb545"
+  },
+  "labels.css-properties.bar-border-colour": {
+    "text": "Randkleur tabbalk",
+    "hash": "b546abdd"
+  },
+  "labels.css-properties.bar-border-style": {
+    "text": "Randstijl tabbalk",
+    "hash": "028260a4"
+  },
+  "labels.css-properties.bar-border-width": {
+    "text": "Randdikte tabbalk",
+    "hash": "a3767c23"
+  },
+  "labels.css-properties.bar-padding": {
+    "text": "Opvulling tabbalk",
+    "hash": "b5f34049"
+  },
+  "labels.css-properties.bar-position": {
+    "text": "Positie tabbalk",
+    "hash": "512d0de6"
+  },
+  "labels.css-properties.below": {
+    "text": "Onder",
+    "hash": "a53dffff"
+  },
+  "labels.css-properties.beside": {
+    "text": "Ernaast",
+    "hash": "52a9786e"
+  },
+  "labels.css-properties.border": {
+    "text": "Rand",
+    "hash": "3b4bdff3"
+  },
+  "labels.css-properties.border-bottom": {
+    "text": "Onderrand",
+    "hash": "a81db178"
+  },
+  "labels.css-properties.border-collapse": {
+    "text": "Randen samenvoegen",
+    "hash": "0ff48517"
+  },
+  "labels.css-properties.border-colour": {
+    "text": "Randkleur",
+    "hash": "6c9e0b99"
+  },
+  "labels.css-properties.border-left": {
+    "text": "Linkerrand",
+    "hash": "f84e8fa0"
+  },
+  "labels.css-properties.border-length": {
+    "text": "Randlengte",
+    "hash": "2b46f521"
+  },
+  "labels.css-properties.border-radius": {
+    "text": "Randafronding",
+    "hash": "110e5e72"
+  },
+  "labels.css-properties.border-right": {
+    "text": "Rechterrand",
+    "hash": "02d8b109"
+  },
+  "labels.css-properties.border-spacing": {
+    "text": "Randafstand",
+    "hash": "a247534e"
+  },
+  "labels.css-properties.border-style": {
+    "text": "Randstijl",
+    "hash": "911cb22e"
+  },
+  "labels.css-properties.border-top": {
+    "text": "Bovenrand",
+    "hash": "cb0a6251"
+  },
+  "labels.css-properties.border-width": {
+    "text": "Randbreedte",
+    "hash": "182ee0a2"
+  },
+  "labels.css-properties.borders-outlines": {
+    "text": "Randen en omlijningen",
+    "hash": "935e29dc"
+  },
+  "labels.css-properties.both": {
+    "text": "Beide",
+    "hash": "b6c1d862"
+  },
+  "labels.css-properties.bottom": {
+    "text": "Onder",
+    "hash": "479ad21a"
+  },
+  "labels.css-properties.box-shadow": {
+    "text": "Slagschaduw",
+    "hash": "e9bee6de"
+  },
+  "labels.css-properties.box-sizing": {
+    "text": "Boxgrootte",
+    "hash": "5bf8dae7"
+  },
+  "labels.css-properties.caption-side": {
+    "text": "Bijschriftzijde",
+    "hash": "80f97592"
+  },
+  "labels.css-properties.centre": {
+    "text": "Midden",
+    "hash": "45c19322"
+  },
+  "labels.css-properties.circle": {
+    "text": "Cirkel",
+    "hash": "b93d3bce"
+  },
+  "labels.css-properties.clear": {
+    "text": "Wissen",
+    "hash": "83b12c22"
+  },
+  "labels.css-properties.colour": {
+    "text": "Kleur",
+    "hash": "3a9dfa58"
+  },
+  "labels.css-properties.column": {
+    "text": "Kolom",
+    "hash": "3fdc9a58"
+  },
+  "labels.css-properties.column-gap": {
+    "text": "Kolomafstand",
+    "hash": "7713e65e"
+  },
+  "labels.css-properties.content-alignment": {
+    "text": "Uitlijning van inhoud",
+    "hash": "fc3e3104"
+  },
+  "labels.css-properties.css-grid": {
+    "text": "CSS-raster",
+    "hash": "e4b6210a"
+  },
+  "labels.css-properties.cursor": {
+    "text": "Cursor",
+    "hash": "2c014f8f"
+  },
+  "labels.css-properties.direction": {
+    "text": "Richting",
+    "hash": "9c8a9579"
+  },
+  "labels.css-properties.disabled-tabs": {
+    "text": "Uitgeschakelde tabbladen",
+    "hash": "10c57209"
+  },
+  "labels.css-properties.display": {
+    "text": "Weergave",
+    "hash": "34e108c0"
+  },
+  "labels.css-properties.effects": {
+    "text": "Effecten",
+    "hash": "358511c8"
+  },
+  "labels.css-properties.end": {
+    "text": "Einde",
+    "hash": "f4db1e48"
+  },
+  "labels.css-properties.fade": {
+    "text": "Vervagen",
+    "hash": "9efb597c"
+  },
+  "labels.css-properties.fill-mode": {
+    "text": "Vulmodus",
+    "hash": "be564fc1"
+  },
+  "labels.css-properties.filter": {
+    "text": "Filter",
+    "hash": "638e249f"
+  },
+  "labels.css-properties.flex": {
+    "text": "Flex",
+    "hash": "c2a520b8"
+  },
+  "labels.css-properties.flex-basis": {
+    "text": "Flex-basis",
+    "hash": "8427d580"
+  },
+  "labels.css-properties.flex-grow": {
+    "text": "Flex-groei",
+    "hash": "b96b1dc5"
+  },
+  "labels.css-properties.flex-shrink": {
+    "text": "Flex-krimp",
+    "hash": "74d77194"
+  },
+  "labels.css-properties.flexbox": {
+    "text": "Flexbox",
+    "hash": "d3572031"
+  },
+  "labels.css-properties.float": {
+    "text": "Zweven",
+    "hash": "1a693c00"
+  },
+  "labels.css-properties.font-family": {
+    "text": "Lettertype",
+    "hash": "119ef3fa"
+  },
+  "labels.css-properties.font-size": {
+    "text": "Lettergrootte",
+    "hash": "6d784d95"
+  },
+  "labels.css-properties.font-style": {
+    "text": "Letterstijl",
+    "hash": "bf9a32d3"
+  },
+  "labels.css-properties.font-variant": {
+    "text": "Letter-variant",
+    "hash": "537b0688"
+  },
+  "labels.css-properties.font-weight": {
+    "text": "Letterdikte",
+    "hash": "d05ad818"
+  },
+  "labels.css-properties.gap": {
+    "text": "Tussenruimte",
+    "hash": "cb129306"
+  },
+  "labels.css-properties.gap-between-tabs": {
+    "text": "Ruimte tussen tabbladen",
+    "hash": "a1584632"
+  },
+  "labels.css-properties.height": {
+    "text": "Hoogte",
+    "hash": "bfe2eca4"
+  },
+  "labels.css-properties.hidden": {
+    "text": "Verborgen",
+    "hash": "7e6fefff"
+  },
+  "labels.css-properties.icon": {
+    "text": "Pictogram",
+    "hash": "a35abcd6"
+  },
+  "labels.css-properties.icon-background": {
+    "text": "Pictogramachtergrond",
+    "hash": "49eeaa4e"
+  },
+  "labels.css-properties.icon-background-shape": {
+    "text": "Vorm van pictogramachtergrond",
+    "hash": "add8f90d"
+  },
+  "labels.css-properties.icon-colour": {
+    "text": "Pictogramkleur",
+    "hash": "691d6a25"
+  },
+  "labels.css-properties.icon-gap": {
+    "text": "Ruimte om pictogram",
+    "hash": "b52cac7a"
+  },
+  "labels.css-properties.icon-position": {
+    "text": "Positie van pictogram",
+    "hash": "aa62e053"
+  },
+  "labels.css-properties.icon-size": {
+    "text": "Grootte van pictogram",
+    "hash": "a86cafc7"
+  },
+  "labels.css-properties.icon-text": {
+    "text": "Pictogram en tekst",
+    "hash": "6616e10b"
+  },
+  "labels.css-properties.ignored-when-the-viewer-prefers-reduced": {
+    "text": "Wordt genegeerd als de kijker minder beweging verkiest.",
+    "hash": "c33a7772"
+  },
+  "labels.css-properties.inset": {
+    "text": "Inset",
+    "hash": "145824df"
+  },
+  "labels.css-properties.iteration-count": {
+    "text": "Aantal herhalingen",
+    "hash": "6342efeb"
+  },
+  "labels.css-properties.justify-content": {
+    "text": "Inhoud verdelen",
+    "hash": "ee02c355"
+  },
+  "labels.css-properties.label-colour": {
+    "text": "Labelkleur",
+    "hash": "b6bd2daa"
+  },
+  "labels.css-properties.label-font-family": {
+    "text": "Lettertype van label",
+    "hash": "c92bf8d1"
+  },
+  "labels.css-properties.label-font-size": {
+    "text": "Lettergrootte van label",
+    "hash": "ff0fa039"
+  },
+  "labels.css-properties.label-font-weight": {
+    "text": "Letterdikte van label",
+    "hash": "9ff4e927"
+  },
+  "labels.css-properties.label-overflow": {
+    "text": "Overloop van label",
+    "hash": "fc5e3042"
+  },
+  "labels.css-properties.label-text-transform": {
+    "text": "Teksttransformatie van label",
+    "hash": "49bbd871"
+  },
+  "labels.css-properties.layout": {
+    "text": "Indeling",
+    "hash": "a5119091"
+  },
+  "labels.css-properties.left": {
+    "text": "Links",
+    "hash": "58eb9032"
+  },
+  "labels.css-properties.left-and-right-follow-the-text-direction": {
+    "text": "Links en rechts volgen de tekstrichting.",
+    "hash": "478ca3d6"
+  },
+  "labels.css-properties.letter-spacing": {
+    "text": "Letterafstand",
+    "hash": "4b2eb7f7"
+  },
+  "labels.css-properties.line-height": {
+    "text": "Regelhoogte",
+    "hash": "127166f7"
+  },
+  "labels.css-properties.list-style": {
+    "text": "Lijststijl",
+    "hash": "42fe9016"
+  },
+  "labels.css-properties.list-style-image": {
+    "text": "Lijststijl-afbeelding",
+    "hash": "789a9f3e"
+  },
+  "labels.css-properties.list-style-position": {
+    "text": "Lijststijl-positie",
+    "hash": "d4ebb3cf"
+  },
+  "labels.css-properties.list-style-type": {
+    "text": "Lijststijl-type",
+    "hash": "2742a094"
+  },
+  "labels.css-properties.lists-tables": {
+    "text": "Lijsten en tabellen",
+    "hash": "ae0f38c0"
+  },
+  "labels.css-properties.margin": {
+    "text": "Marge",
+    "hash": "2bf63d81"
+  },
+  "labels.css-properties.max-height": {
+    "text": "Maximale hoogte",
+    "hash": "dd81ce67"
+  },
+  "labels.css-properties.max-width": {
+    "text": "Maximale breedte",
+    "hash": "361239d8"
+  },
+  "labels.css-properties.min-height": {
+    "text": "Minimale hoogte",
+    "hash": "bf5066be"
+  },
+  "labels.css-properties.min-width": {
+    "text": "Minimale breedte",
+    "hash": "97c4bc49"
+  },
+  "labels.css-properties.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "labels.css-properties.none-or-up-to-two-shadows-for-example-0": {
+    "text": "none, of maximaal twee schaduwen, bijvoorbeeld 0 2px 6px rgba(0, 0, 0, .25).",
+    "hash": "455e8cf2"
+  },
+  "labels.css-properties.normal-or-one-length-for-example-0-05em": {
+    "text": "normal, of één lengte, bijvoorbeeld 0.05em.",
+    "hash": "463e6515"
+  },
+  "labels.css-properties.offsets": {
+    "text": "Afstanden",
+    "hash": "8807635f"
+  },
+  "labels.css-properties.one-to-four-lengths-for-example-4px-8px": {
+    "text": "Een tot vier maten, bijvoorbeeld 4px 8px.",
+    "hash": "6cf9b98c"
+  },
+  "labels.css-properties.opacity": {
+    "text": "Dekking",
+    "hash": "6062652e"
+  },
+  "labels.css-properties.order": {
+    "text": "Volgorde",
+    "hash": "6be09082"
+  },
+  "labels.css-properties.outline": {
+    "text": "Omlijning",
+    "hash": "eabbf3ab"
+  },
+  "labels.css-properties.outline-colour": {
+    "text": "Omlijningskleur",
+    "hash": "6dd4dd03"
+  },
+  "labels.css-properties.outline-offset": {
+    "text": "Omlijningsafstand",
+    "hash": "9794d3a0"
+  },
+  "labels.css-properties.outline-style": {
+    "text": "Omlijningsstijl",
+    "hash": "956b8781"
+  },
+  "labels.css-properties.outline-width": {
+    "text": "Omlijningsbreedte",
+    "hash": "ce044329"
+  },
+  "labels.css-properties.overflow": {
+    "text": "Overloop",
+    "hash": "17b8dcf5"
+  },
+  "labels.css-properties.overflow-wrap": {
+    "text": "Overloop afbreken",
+    "hash": "06ee970f"
+  },
+  "labels.css-properties.overflow-x": {
+    "text": "Overloop X",
+    "hash": "090ecd03"
+  },
+  "labels.css-properties.overflow-y": {
+    "text": "Overloop Y",
+    "hash": "6ba9dc15"
+  },
+  "labels.css-properties.padding": {
+    "text": "Opvulling",
+    "hash": "ee0d7af0"
+  },
+  "labels.css-properties.play-state": {
+    "text": "Afspeelstatus",
+    "hash": "6f423d16"
+  },
+  "labels.css-properties.plays-on-the-tab-button-the-content-fade": {
+    "text": "Wordt afgespeeld op de knop van het tabblad. Het vervagen of schuiven van de inhoud stel je in onder Balk.",
+    "hash": "b014bee3"
+  },
+  "labels.css-properties.pointer-events": {
+    "text": "Aanwijzergebeurtenissen",
+    "hash": "14236fdd"
+  },
+  "labels.css-properties.position": {
+    "text": "Positie",
+    "hash": "6d031af1"
+  },
+  "labels.css-properties.positioning-layout": {
+    "text": "Positionering en indeling",
+    "hash": "bcb70809"
+  },
+  "labels.css-properties.right": {
+    "text": "Rechts",
+    "hash": "883361d5"
+  },
+  "labels.css-properties.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "labels.css-properties.rounded": {
+    "text": "Afgerond",
+    "hash": "0a62cd80"
+  },
+  "labels.css-properties.row": {
+    "text": "Rij",
+    "hash": "95110d74"
+  },
+  "labels.css-properties.row-gap": {
+    "text": "Rijafstand",
+    "hash": "7af40c9c"
+  },
+  "labels.css-properties.shape": {
+    "text": "Vorm",
+    "hash": "e0e49270"
+  },
+  "labels.css-properties.shorten-the-border-line-e-g-40-for-a": {
+    "text": "Verkort de randlijn, bijvoorbeeld 40% voor een korte accentlijn.",
+    "hash": "67828dee"
+  },
+  "labels.css-properties.sides": {
+    "text": "Zijden",
+    "hash": "1c3607d5"
+  },
+  "labels.css-properties.slide": {
+    "text": "Schuiven",
+    "hash": "6bb4c117"
+  },
+  "labels.css-properties.spacing-box-model": {
+    "text": "Afstand en boxmodel",
+    "hash": "99227ea4"
+  },
+  "labels.css-properties.start": {
+    "text": "Begin",
+    "hash": "e4bb9f1e"
+  },
+  "labels.css-properties.state-colour": {
+    "text": "Statuskleur",
+    "hash": "960d659e"
+  },
+  "labels.css-properties.state-font-size": {
+    "text": "Lettergrootte van status",
+    "hash": "e76f8350"
+  },
+  "labels.css-properties.state-position": {
+    "text": "Positie van status",
+    "hash": "1bed3e48"
+  },
+  "labels.css-properties.stretch": {
+    "text": "Rekken",
+    "hash": "a33fbcf8"
+  },
+  "labels.css-properties.style": {
+    "text": "Stijl",
+    "hash": "7e744141"
+  },
+  "labels.css-properties.tab-alignment": {
+    "text": "Uitlijning tabbladen",
+    "hash": "290d9231"
+  },
+  "labels.css-properties.tab-animations": {
+    "text": "Animaties tabblad",
+    "hash": "479d5f48"
+  },
+  "labels.css-properties.tab-background": {
+    "text": "Achtergrond tabblad",
+    "hash": "5800bafa"
+  },
+  "labels.css-properties.tab-bar": {
+    "text": "Tabbalk",
+    "hash": "a5f4ef8a"
+  },
+  "labels.css-properties.tab-border-colour": {
+    "text": "Randkleur tabblad",
+    "hash": "2d33ee09"
+  },
+  "labels.css-properties.tab-border-style": {
+    "text": "Randstijl tabblad",
+    "hash": "527a8e2f"
+  },
+  "labels.css-properties.tab-border-width": {
+    "text": "Randdikte tabblad",
+    "hash": "ee78d066"
+  },
+  "labels.css-properties.tab-corner-radius": {
+    "text": "Hoekafronding tabblad",
+    "hash": "db7eb9d1"
+  },
+  "labels.css-properties.tab-font-family": {
+    "text": "Lettertype tabblad",
+    "hash": "fbe7c291"
+  },
+  "labels.css-properties.tab-font-size": {
+    "text": "Lettergrootte tabblad",
+    "hash": "0ae57927"
+  },
+  "labels.css-properties.tab-font-weight": {
+    "text": "Letterdikte tabblad",
+    "hash": "2a8ac8bd"
+  },
+  "labels.css-properties.tab-icon-animation": {
+    "text": "Pictogramanimatie tabblad",
+    "hash": "840d3803"
+  },
+  "labels.css-properties.tab-icon-colour": {
+    "text": "Pictogramkleur tabblad",
+    "hash": "7dadce30"
+  },
+  "labels.css-properties.tab-icon-position": {
+    "text": "Positie pictogram tabblad",
+    "hash": "bdd8a2f6"
+  },
+  "labels.css-properties.tab-icon-size": {
+    "text": "Grootte pictogram tabblad",
+    "hash": "93bb710c"
+  },
+  "labels.css-properties.tab-letter-spacing": {
+    "text": "Letterafstand tabblad",
+    "hash": "2bb26daa"
+  },
+  "labels.css-properties.tab-opacity": {
+    "text": "Dekking tabblad",
+    "hash": "76c3e738"
+  },
+  "labels.css-properties.tab-padding": {
+    "text": "Opvulling tabblad",
+    "hash": "1033946a"
+  },
+  "labels.css-properties.tab-shadow": {
+    "text": "Schaduw tabblad",
+    "hash": "02b3c1cc"
+  },
+  "labels.css-properties.tab-switch-animation": {
+    "text": "Animatie bij wisselen van tabblad",
+    "hash": "ba987516"
+  },
+  "labels.css-properties.tab-text-colour": {
+    "text": "Tekstkleur tabblad",
+    "hash": "f99e41fa"
+  },
+  "labels.css-properties.tab-text-transform": {
+    "text": "Tekstomzetting tabblad",
+    "hash": "3861ceb5"
+  },
+  "labels.css-properties.table-layout": {
+    "text": "Tabelindeling",
+    "hash": "b7e83409"
+  },
+  "labels.css-properties.template-areas": {
+    "text": "Sjabloongebieden",
+    "hash": "85d812c0"
+  },
+  "labels.css-properties.template-columns": {
+    "text": "Sjabloonkolommen",
+    "hash": "251981a5"
+  },
+  "labels.css-properties.template-rows": {
+    "text": "Sjabloonrijen",
+    "hash": "d60889c0"
+  },
+  "labels.css-properties.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "labels.css-properties.text-align": {
+    "text": "Tekstuitlijning",
+    "hash": "013ca441"
+  },
+  "labels.css-properties.text-decoration": {
+    "text": "Tekstopmaak",
+    "hash": "fb53f5cf"
+  },
+  "labels.css-properties.text-indent": {
+    "text": "Tekstinspringing",
+    "hash": "a1281f40"
+  },
+  "labels.css-properties.text-overflow": {
+    "text": "Tekstoverloop",
+    "hash": "934a11cd"
+  },
+  "labels.css-properties.text-shadow": {
+    "text": "Tekstschaduw",
+    "hash": "ced1d885"
+  },
+  "labels.css-properties.text-transform": {
+    "text": "Teksttransformatie",
+    "hash": "1ab8834e"
+  },
+  "labels.css-properties.tick-the-tabs-that-cannot-be-opened": {
+    "text": "Vink de tabbladen aan die niet geopend kunnen worden.",
+    "hash": "2210b765"
+  },
+  "labels.css-properties.top": {
+    "text": "Boven",
+    "hash": "d5cdfcf7"
+  },
+  "labels.css-properties.transform": {
+    "text": "Transformatie",
+    "hash": "d2d68041"
+  },
+  "labels.css-properties.transform-origin": {
+    "text": "Transformatie-oorsprong",
+    "hash": "e2151196"
+  },
+  "labels.css-properties.transition": {
+    "text": "Overgang",
+    "hash": "2fe70464"
+  },
+  "labels.css-properties.transition-delay": {
+    "text": "Overgangsvertraging",
+    "hash": "0baf9d7e"
+  },
+  "labels.css-properties.transition-duration": {
+    "text": "Overgangsduur",
+    "hash": "e17611b0"
+  },
+  "labels.css-properties.transition-property": {
+    "text": "Overgangseigenschap",
+    "hash": "d17ffe99"
+  },
+  "labels.css-properties.transition-timing": {
+    "text": "Overgangstiming",
+    "hash": "3fb97430"
+  },
+  "labels.css-properties.transitions-animations": {
+    "text": "Overgangen en animaties",
+    "hash": "42cb3ced"
+  },
+  "labels.css-properties.truncate": {
+    "text": "Afkappen",
+    "hash": "a24ba93b"
+  },
+  "labels.css-properties.typography": {
+    "text": "Typografie",
+    "hash": "cab94aba"
+  },
+  "labels.css-properties.value-background": {
+    "text": "Waarde-achtergrond",
+    "hash": "82d87c4c"
+  },
+  "labels.css-properties.vertical-content-alignment": {
+    "text": "Verticale uitlijning van inhoud",
+    "hash": "fef8fde3"
+  },
+  "labels.css-properties.visibility": {
+    "text": "Zichtbaarheid",
+    "hash": "7448611d"
+  },
+  "labels.css-properties.white-space": {
+    "text": "Witruimte",
+    "hash": "9d01e595"
+  },
+  "labels.css-properties.width": {
+    "text": "Breedte",
+    "hash": "3019947b"
+  },
+  "labels.css-properties.word-break": {
+    "text": "Woordafbreking",
+    "hash": "18e37c1e"
+  },
+  "labels.css-properties.word-spacing": {
+    "text": "Woordafstand",
+    "hash": "dd832835"
+  },
+  "labels.css-properties.wrap": {
+    "text": "Afbreken",
+    "hash": "70bfd7fb"
+  },
+  "labels.css-properties.z-index": {
+    "text": "Z-index",
+    "hash": "7ad9ae63"
+  },
+  "labels.css-property-options.100": {
+    "text": "100",
+    "hash": "ad573668"
+  },
+  "labels.css-property-options.200": {
+    "text": "200",
+    "hash": "27badc98"
+  },
+  "labels.css-property-options.300": {
+    "text": "300",
+    "hash": "983bd614"
+  },
+  "labels.css-property-options.400": {
+    "text": "400",
+    "hash": "26d22866"
+  },
+  "labels.css-property-options.500": {
+    "text": "500",
+    "hash": "0604cd31"
+  },
+  "labels.css-property-options.600": {
+    "text": "600",
+    "hash": "284b7e6d"
+  },
+  "labels.css-property-options.700": {
+    "text": "700",
+    "hash": "99ee5022"
+  },
+  "labels.css-property-options.800": {
+    "text": "800",
+    "hash": "1a1cf797"
+  },
+  "labels.css-property-options.900": {
+    "text": "900",
+    "hash": "bdc5d8a4"
+  },
+  "labels.css-property-options.absolute": {
+    "text": "Absoluut",
+    "hash": "f288738f"
+  },
+  "labels.css-property-options.alternate": {
+    "text": "Afwisselend",
+    "hash": "1b99710f"
+  },
+  "labels.css-property-options.alternate-reverse": {
+    "text": "Afwisselend omgekeerd",
+    "hash": "75574a19"
+  },
+  "labels.css-property-options.anywhere": {
+    "text": "Overal",
+    "hash": "911b14a9"
+  },
+  "labels.css-property-options.auto": {
+    "text": "Automatisch",
+    "hash": "02862497"
+  },
+  "labels.css-property-options.backwards": {
+    "text": "Achterwaarts",
+    "hash": "19483bcb"
+  },
+  "labels.css-property-options.baseline": {
+    "text": "Basislijn",
+    "hash": "cc9ea7f7"
+  },
+  "labels.css-property-options.block": {
+    "text": "Blok",
+    "hash": "211d0bb8"
+  },
+  "labels.css-property-options.bold": {
+    "text": "Vet",
+    "hash": "94fee62e"
+  },
+  "labels.css-property-options.border-box": {
+    "text": "Border-box",
+    "hash": "c9bdade6"
+  },
+  "labels.css-property-options.both": {
+    "text": "Beide",
+    "hash": "b6c1d862"
+  },
+  "labels.css-property-options.bottom": {
+    "text": "Onder",
+    "hash": "479ad21a"
+  },
+  "labels.css-property-options.break-all": {
+    "text": "Break-all",
+    "hash": "9b7d8c6a"
+  },
+  "labels.css-property-options.break-spaces": {
+    "text": "Break-spaces",
+    "hash": "aed763ff"
+  },
+  "labels.css-property-options.break-word": {
+    "text": "Break-word",
+    "hash": "38d922e8"
+  },
+  "labels.css-property-options.capitalize": {
+    "text": "Hoofdletter per woord",
+    "hash": "c27a7a58"
+  },
+  "labels.css-property-options.centre": {
+    "text": "Midden",
+    "hash": "45c19322"
+  },
+  "labels.css-property-options.circle": {
+    "text": "Cirkel",
+    "hash": "b93d3bce"
+  },
+  "labels.css-property-options.clip": {
+    "text": "Afknippen",
+    "hash": "82337888"
+  },
+  "labels.css-property-options.collapse": {
+    "text": "Samenvoegen",
+    "hash": "be6eb1fc"
+  },
+  "labels.css-property-options.column": {
+    "text": "Kolom",
+    "hash": "3fdc9a58"
+  },
+  "labels.css-property-options.column-dense": {
+    "text": "Kolom compact",
+    "hash": "15a1e341"
+  },
+  "labels.css-property-options.column-reverse": {
+    "text": "Kolom omgekeerd",
+    "hash": "d56d7b71"
+  },
+  "labels.css-property-options.contain": {
+    "text": "Passend",
+    "hash": "e534a2c2"
+  },
+  "labels.css-property-options.content-box": {
+    "text": "Content-box",
+    "hash": "cfaea05b"
+  },
+  "labels.css-property-options.contents": {
+    "text": "Contents",
+    "hash": "437aea62"
+  },
+  "labels.css-property-options.cover": {
+    "text": "Bedekkend",
+    "hash": "fa8d8456"
+  },
+  "labels.css-property-options.crosshair": {
+    "text": "Draadkruis",
+    "hash": "8b3214b0"
+  },
+  "labels.css-property-options.dashed": {
+    "text": "Gestreept",
+    "hash": "2fe14ade"
+  },
+  "labels.css-property-options.decimal": {
+    "text": "Decimaal",
+    "hash": "18517d33"
+  },
+  "labels.css-property-options.default": {
+    "text": "Standaard",
+    "hash": "21b111cb"
+  },
+  "labels.css-property-options.dense": {
+    "text": "Compact",
+    "hash": "0710262c"
+  },
+  "labels.css-property-options.disc": {
+    "text": "Schijf",
+    "hash": "0c3ae2c7"
+  },
+  "labels.css-property-options.dotted": {
+    "text": "Gestippeld",
+    "hash": "be454f3c"
+  },
+  "labels.css-property-options.double": {
+    "text": "Dubbel",
+    "hash": "52944152"
+  },
+  "labels.css-property-options.ellipsis": {
+    "text": "Weglatingspunten",
+    "hash": "4637e99b"
+  },
+  "labels.css-property-options.fixed": {
+    "text": "Vast",
+    "hash": "1246fc93"
+  },
+  "labels.css-property-options.flex": {
+    "text": "Flex",
+    "hash": "c2a520b8"
+  },
+  "labels.css-property-options.flex-end": {
+    "text": "Flex-end",
+    "hash": "c1617b22"
+  },
+  "labels.css-property-options.flex-start": {
+    "text": "Flex-start",
+    "hash": "9cf84432"
+  },
+  "labels.css-property-options.forwards": {
+    "text": "Voorwaarts",
+    "hash": "e0786044"
+  },
+  "labels.css-property-options.grab": {
+    "text": "Pakken",
+    "hash": "7d935f25"
+  },
+  "labels.css-property-options.grid": {
+    "text": "Raster",
+    "hash": "0d7d12ac"
+  },
+  "labels.css-property-options.groove": {
+    "text": "Groef",
+    "hash": "e1701d4f"
+  },
+  "labels.css-property-options.hidden": {
+    "text": "Verborgen",
+    "hash": "7e6fefff"
+  },
+  "labels.css-property-options.inline": {
+    "text": "Inline",
+    "hash": "99ed40ac"
+  },
+  "labels.css-property-options.inline-block": {
+    "text": "Inline-block",
+    "hash": "deadbe6c"
+  },
+  "labels.css-property-options.inline-flex": {
+    "text": "Inline-flex",
+    "hash": "456cdb05"
+  },
+  "labels.css-property-options.inline-grid": {
+    "text": "Inline-grid",
+    "hash": "7020bad0"
+  },
+  "labels.css-property-options.inset": {
+    "text": "Inset",
+    "hash": "145824df"
+  },
+  "labels.css-property-options.inside": {
+    "text": "Binnen",
+    "hash": "123a3ebc"
+  },
+  "labels.css-property-options.italic": {
+    "text": "Cursief",
+    "hash": "9bf37cb5"
+  },
+  "labels.css-property-options.justify": {
+    "text": "Uitvullen",
+    "hash": "f3bd3473"
+  },
+  "labels.css-property-options.keep-all": {
+    "text": "Keep-all",
+    "hash": "e3d7857f"
+  },
+  "labels.css-property-options.left": {
+    "text": "Links",
+    "hash": "58eb9032"
+  },
+  "labels.css-property-options.line-through": {
+    "text": "Doorgehaald",
+    "hash": "d1dc7735"
+  },
+  "labels.css-property-options.local": {
+    "text": "Lokaal",
+    "hash": "8c31e6e7"
+  },
+  "labels.css-property-options.lower-alpha": {
+    "text": "a, b, c",
+    "hash": "a76f574b"
+  },
+  "labels.css-property-options.lower-roman": {
+    "text": "i, ii, iii",
+    "hash": "ccd3324d"
+  },
+  "labels.css-property-options.lowercase": {
+    "text": "Kleine letters",
+    "hash": "3b677a18"
+  },
+  "labels.css-property-options.move": {
+    "text": "Verplaatsen",
+    "hash": "6ecc3df6"
+  },
+  "labels.css-property-options.no-repeat": {
+    "text": "Niet herhalen",
+    "hash": "10cf2c77"
+  },
+  "labels.css-property-options.none": {
+    "text": "Geen",
+    "hash": "dc937b59"
+  },
+  "labels.css-property-options.normal": {
+    "text": "Normaal",
+    "hash": "a7248eeb"
+  },
+  "labels.css-property-options.not-allowed": {
+    "text": "Niet toegestaan",
+    "hash": "bcf84a00"
+  },
+  "labels.css-property-options.nowrap": {
+    "text": "Niet afbreken",
+    "hash": "b45cb76a"
+  },
+  "labels.css-property-options.oblique": {
+    "text": "Schuin",
+    "hash": "a8ee6b4d"
+  },
+  "labels.css-property-options.outset": {
+    "text": "Uitgestoken",
+    "hash": "a6920036"
+  },
+  "labels.css-property-options.outside": {
+    "text": "Buiten",
+    "hash": "dacf1516"
+  },
+  "labels.css-property-options.overline": {
+    "text": "Bovenlijn",
+    "hash": "cca38a8f"
+  },
+  "labels.css-property-options.padding-box": {
+    "text": "Padding-box",
+    "hash": "08983c0c"
+  },
+  "labels.css-property-options.paused": {
+    "text": "Gepauzeerd",
+    "hash": "e159b061"
+  },
+  "labels.css-property-options.pointer": {
+    "text": "Wijzer",
+    "hash": "d00f1e4d"
+  },
+  "labels.css-property-options.pre": {
+    "text": "Pre",
+    "hash": "ec5fdb2c"
+  },
+  "labels.css-property-options.pre-line": {
+    "text": "Pre-line",
+    "hash": "9aad493d"
+  },
+  "labels.css-property-options.pre-wrap": {
+    "text": "Pre-wrap",
+    "hash": "49cf0e4c"
+  },
+  "labels.css-property-options.relative": {
+    "text": "Relatief",
+    "hash": "8e99cd98"
+  },
+  "labels.css-property-options.repeat": {
+    "text": "Herhalen",
+    "hash": "b6b7a006"
+  },
+  "labels.css-property-options.repeat-x": {
+    "text": "Horizontaal herhalen",
+    "hash": "abe6e080"
+  },
+  "labels.css-property-options.repeat-y": {
+    "text": "Verticaal herhalen",
+    "hash": "0264755d"
+  },
+  "labels.css-property-options.reverse": {
+    "text": "Omgekeerd",
+    "hash": "fae1c6f1"
+  },
+  "labels.css-property-options.ridge": {
+    "text": "Rug",
+    "hash": "8f5db5c7"
+  },
+  "labels.css-property-options.right": {
+    "text": "Rechts",
+    "hash": "883361d5"
+  },
+  "labels.css-property-options.round": {
+    "text": "Rond",
+    "hash": "cd9558ac"
+  },
+  "labels.css-property-options.row": {
+    "text": "Rij",
+    "hash": "95110d74"
+  },
+  "labels.css-property-options.row-dense": {
+    "text": "Rij compact",
+    "hash": "be385f20"
+  },
+  "labels.css-property-options.row-reverse": {
+    "text": "Rij omgekeerd",
+    "hash": "b4f83346"
+  },
+  "labels.css-property-options.running": {
+    "text": "Actief",
+    "hash": "f4ccae29"
+  },
+  "labels.css-property-options.scroll": {
+    "text": "Scrollen",
+    "hash": "291873e3"
+  },
+  "labels.css-property-options.separate": {
+    "text": "Gescheiden",
+    "hash": "726c1269"
+  },
+  "labels.css-property-options.solid": {
+    "text": "Ononderbroken",
+    "hash": "b8b311b0"
+  },
+  "labels.css-property-options.space": {
+    "text": "Ruimte",
+    "hash": "20eac5aa"
+  },
+  "labels.css-property-options.space-around": {
+    "text": "Ruimte eromheen",
+    "hash": "93662eb2"
+  },
+  "labels.css-property-options.space-between": {
+    "text": "Ruimte ertussen",
+    "hash": "8fd30542"
+  },
+  "labels.css-property-options.space-evenly": {
+    "text": "Gelijke ruimte",
+    "hash": "cda68f3c"
+  },
+  "labels.css-property-options.square": {
+    "text": "Vierkant",
+    "hash": "c11092bc"
+  },
+  "labels.css-property-options.static": {
+    "text": "Statisch",
+    "hash": "1d2c73dc"
+  },
+  "labels.css-property-options.sticky": {
+    "text": "Plakkend",
+    "hash": "87471768"
+  },
+  "labels.css-property-options.stretch": {
+    "text": "Rekken",
+    "hash": "a33fbcf8"
+  },
+  "labels.css-property-options.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "labels.css-property-options.top": {
+    "text": "Boven",
+    "hash": "d5cdfcf7"
+  },
+  "labels.css-property-options.underline": {
+    "text": "Onderstreept",
+    "hash": "02f84326"
+  },
+  "labels.css-property-options.upper-alpha": {
+    "text": "A, B, C",
+    "hash": "23ac17f9"
+  },
+  "labels.css-property-options.upper-roman": {
+    "text": "I, II, III",
+    "hash": "7b204001"
+  },
+  "labels.css-property-options.uppercase": {
+    "text": "Hoofdletters",
+    "hash": "b463d690"
+  },
+  "labels.css-property-options.visible": {
+    "text": "Zichtbaar",
+    "hash": "8411f5ab"
+  },
+  "labels.css-property-options.wait": {
+    "text": "Wachten",
+    "hash": "26b83994"
+  },
+  "labels.css-property-options.wrap": {
+    "text": "Afbreken",
+    "hash": "70bfd7fb"
+  },
+  "labels.css-property-options.wrap-reverse": {
+    "text": "Omgekeerd afbreken",
+    "hash": "e309d109"
+  },
+  "labels.device-anim.drum-while-cleaning": {
+    "text": "Trommel tijdens het schoonmaken",
+    "hash": "9d8e10cc"
+  },
+  "labels.device-anim.drum-while-running": {
+    "text": "Trommel tijdens het draaien",
+    "hash": "2145701e"
+  },
+  "labels.device-anim.drum-while-the-state-is-running-washing": {
+    "text": "Trommel zolang de toestand draaien, wassen of drogen is",
+    "hash": "ca219718"
+  },
+  "labels.device-anim.equalizer-while-playing": {
+    "text": "Equalizer tijdens het afspelen",
+    "hash": "1cf4a2d0"
+  },
+  "labels.device-anim.flame-while-heating-snow-while-cooling": {
+    "text": "Vlam tijdens verwarmen, sneeuw tijdens koelen, draaien wanneer alleen de ventilator werkt",
+    "hash": "29f5707f"
+  },
+  "labels.device-anim.glow-while-on-in-the-light-s-colour-and": {
+    "text": "Gloeien zolang het licht aan is, in de kleur en helderheid van het licht",
+    "hash": "1cf4fbe5"
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while": {
+    "text": "Pulseren in de waarschuwingskleur zolang het is afgegaan",
+    "hash": "b7571561"
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while-on": {
+    "text": "Pulseren in de waarschuwingskleur zolang het aan is",
+    "hash": "c05331c1"
+  },
+  "labels.device-anim.shake-while-jammed-pulse-while-locking": {
+    "text": "Schudden bij een klem, pulseren tijdens het vergrendelen of ontgrendelen",
+    "hash": "420cacfb"
+  },
+  "labels.device-anim.spin-while-on-faster-at-a-higher-speed": {
+    "text": "Draaien zolang het aan is, sneller bij een hogere stand",
+    "hash": "970e0027"
+  },
+  "labels.device-anim.swing-a-slightly-opened-pose-while-open": {
+    "text": "Schommelen: een iets geopende stand zolang het open is",
+    "hash": "2d88a379"
+  },
+  "labels.device-anim.swing-while-opening-or-closing-a": {
+    "text": "Schommelen tijdens het openen of sluiten, een iets geopende stand zolang het open is",
+    "hash": "dce1618e"
+  },
+  "labels.field-reset.reset-label": {
+    "text": "{label} terugzetten",
+    "hash": "3a375ef7"
+  },
+  "labels.field-reset.reset-to-default": {
+    "text": "Terugzetten naar standaard",
+    "hash": "bc5b45ae"
+  },
+  "labels.horizontal-module.arrange-child-modules-in-a-row": {
+    "text": "Rangschik onderliggende modules in een rij",
+    "hash": "2ee49795"
+  },
+  "labels.horizontal-module.horizontal": {
+    "text": "Horizontaal",
+    "hash": "0abba441"
+  },
+  "labels.icon-doc.part-n": {
+    "text": "Onderdeel {n}",
+    "hash": "173073e6"
+  },
+  "labels.icon-module.display-an-icon-from-mdi-or-entity": {
+    "text": "Toon een MDI-pictogram of het pictogram van een entiteit",
+    "hash": "b9991e17"
+  },
+  "labels.icon-module.icon": {
+    "text": "Pictogram",
+    "hash": "a35abcd6"
+  },
+  "labels.info-module.display-entity-name-state-and-attributes": {
+    "text": "Toon de naam, toestand en attributen van een entiteit",
+    "hash": "654b8a05"
+  },
+  "labels.info-module.info": {
+    "text": "Info",
+    "hash": "170322a3"
+  },
+  "labels.lazy-metadata.arc-gauge-for-displaying-numeric-sensor": {
+    "text": "Boogmeter voor numerieke sensorwaarden",
+    "hash": "e11b766c"
+  },
+  "labels.lazy-metadata.arrange-child-modules-in-a-slider": {
+    "text": "Rangschik onderliggende modules in een schuifindeling",
+    "hash": "44652a90"
+  },
+  "labels.lazy-metadata.camera": {
+    "text": "Camera",
+    "hash": "03494b0d"
+  },
+  "labels.lazy-metadata.clock": {
+    "text": "Klok",
+    "hash": "93ff9273"
+  },
+  "labels.lazy-metadata.custom-card": {
+    "text": "Eigen kaart",
+    "hash": "9ec14117"
+  },
+  "labels.lazy-metadata.display-a-camera-entity-stream": {
+    "text": "Toon de stream van een camera-entiteit",
+    "hash": "f2d8bc07"
+  },
+  "labels.lazy-metadata.display-a-static-image-or-entity-picture": {
+    "text": "Toon een vaste afbeelding of entiteitsafbeelding",
+    "hash": "cb97c355"
+  },
+  "labels.lazy-metadata.display-current-time-and-date": {
+    "text": "Toon de huidige tijd en datum",
+    "hash": "5fe916f2"
+  },
+  "labels.lazy-metadata.display-entity-history-as-a-line-graph": {
+    "text": "Toon de entiteitsgeschiedenis als lijngrafiek",
+    "hash": "691ef58f"
+  },
+  "labels.lazy-metadata.display-weather-entity-information": {
+    "text": "Toon informatie van een weerentiteit",
+    "hash": "a6b43b11"
+  },
+  "labels.lazy-metadata.display-weather-forecast-data": {
+    "text": "Toon weersverwachtingsgegevens",
+    "hash": "fcf83a99"
+  },
+  "labels.lazy-metadata.dropdown": {
+    "text": "Keuzelijst",
+    "hash": "2c84dd8d"
+  },
+  "labels.lazy-metadata.embed-any-3rd-party-lovelace-card": {
+    "text": "Sluit een Lovelace-kaart van een andere maker in",
+    "hash": "0ad30fbc"
+  },
+  "labels.lazy-metadata.forecast": {
+    "text": "Weersverwachting",
+    "hash": "75205de8"
+  },
+  "labels.lazy-metadata.gauge": {
+    "text": "Meter",
+    "hash": "f6d8f4c8"
+  },
+  "labels.lazy-metadata.graph": {
+    "text": "Grafiek",
+    "hash": "32ab018f"
+  },
+  "labels.lazy-metadata.image": {
+    "text": "Afbeelding",
+    "hash": "1aa4cb0b"
+  },
+  "labels.lazy-metadata.light": {
+    "text": "Licht",
+    "hash": "dbcd5e7b"
+  },
+  "labels.lazy-metadata.light-control-with-brightness-colour": {
+    "text": "Lichtbediening met helderheid, kleurtemperatuur en kleuropties",
+    "hash": "0f80ba40"
+  },
+  "labels.lazy-metadata.markdown": {
+    "text": "Markdown",
+    "hash": "0e52f6b9"
+  },
+  "labels.lazy-metadata.numeric-input-with-increment-and": {
+    "text": "Getalinvoer met knoppen om te verhogen en te verlagen",
+    "hash": "ebb1ee56"
+  },
+  "labels.lazy-metadata.range-slider-for-controlling-numeric": {
+    "text": "Schuifregelaar voor numerieke waarden",
+    "hash": "e1b4bfa7"
+  },
+  "labels.lazy-metadata.render-markdown-formatted-content": {
+    "text": "Toon inhoud met markdown-opmaak",
+    "hash": "64af3f87"
+  },
+  "labels.lazy-metadata.select-dropdown-for-choosing-from-a-list": {
+    "text": "Keuzelijst om uit een lijst met opties te kiezen",
+    "hash": "1791f066"
+  },
+  "labels.lazy-metadata.slider": {
+    "text": "Schuifregelaar",
+    "hash": "14f34284"
+  },
+  "labels.lazy-metadata.slider-layout": {
+    "text": "Schuifindeling",
+    "hash": "1fd9d8ff"
+  },
+  "labels.lazy-metadata.spinbox": {
+    "text": "Getalkiezer",
+    "hash": "d539f275"
+  },
+  "labels.lazy-metadata.tabbed-container-for-groups-of-modules": {
+    "text": "Container met tabbladen voor groepen modules",
+    "hash": "ff20ae46"
+  },
+  "labels.lazy-metadata.tabs": {
+    "text": "Tabbladen",
+    "hash": "8e5ea509"
+  },
+  "labels.lazy-metadata.video-background": {
+    "text": "Video-achtergrond",
+    "hash": "e5427ebc"
+  },
+  "labels.lazy-metadata.video-playing-behind-the-other-modules": {
+    "text": "Video die achter de andere modules van de kolom of indeling speelt",
+    "hash": "f088e661"
+  },
+  "labels.lazy-metadata.weather": {
+    "text": "Weer",
+    "hash": "a0bba638"
+  },
+  "labels.part-presets.blink": {
+    "text": "Knipperen",
+    "hash": "a37430e2"
+  },
+  "labels.part-presets.blinks-twice": {
+    "text": "Knippert twee keer",
+    "hash": "e67d0856"
+  },
+  "labels.part-presets.bounce": {
+    "text": "Stuiteren",
+    "hash": "24b6ed11"
+  },
+  "labels.part-presets.delay": {
+    "text": "Vertraging",
+    "hash": "fd9b6df3"
+  },
+  "labels.part-presets.direction": {
+    "text": "Richting",
+    "hash": "9c8a9579"
+  },
+  "labels.part-presets.draw-loop": {
+    "text": "Tekenlus",
+    "hash": "b55f179c"
+  },
+  "labels.part-presets.draw-on": {
+    "text": "Intekenen",
+    "hash": "62766a9c"
+  },
+  "labels.part-presets.draws-its-outline-then-fills-direction-1": {
+    "text": "Tekent zijn omtrek en vult dan (richting -1 tekent hem weg)",
+    "hash": "106901f0"
+  },
+  "labels.part-presets.draws-on-holds-and-draws-off-again": {
+    "text": "Tekent in, houdt vast en tekent weer weg",
+    "hash": "7c231c43"
+  },
+  "labels.part-presets.drifts-up-and-down": {
+    "text": "Drijft omhoog en omlaag",
+    "hash": "f8d343f8"
+  },
+  "labels.part-presets.duration-share": {
+    "text": "Aandeel van de duur",
+    "hash": "cbcfa77c"
+  },
+  "labels.part-presets.fade": {
+    "text": "Vervagen",
+    "hash": "9efb597c"
+  },
+  "labels.part-presets.fades-out-and-back-in": {
+    "text": "Vervaagt en komt weer terug",
+    "hash": "c295689c"
+  },
+  "labels.part-presets.flicker": {
+    "text": "Flikkering",
+    "hash": "ba3baf3d"
+  },
+  "labels.part-presets.flickers-like-a-flame": {
+    "text": "Flikkert als een vlam",
+    "hash": "56280c44"
+  },
+  "labels.part-presets.float": {
+    "text": "Zweven",
+    "hash": "1a693c00"
+  },
+  "labels.part-presets.grows-and-shrinks-back-direction-1": {
+    "text": "Groeit en krimpt terug (richting -1 krimpt)",
+    "hash": "0af46f09"
+  },
+  "labels.part-presets.intensity": {
+    "text": "Intensiteit",
+    "hash": "a6d01dcf"
+  },
+  "labels.part-presets.lights-up-one-part-after-another-on-a": {
+    "text": "Laat het ene onderdeel na het andere oplichten (op een groep of meerdere onderdelen)",
+    "hash": "40f44ef1"
+  },
+  "labels.part-presets.moves-down-and-back": {
+    "text": "Beweegt omlaag en terug",
+    "hash": "eb32e347"
+  },
+  "labels.part-presets.moves-left-and-back": {
+    "text": "Beweegt naar links en terug",
+    "hash": "dd218747"
+  },
+  "labels.part-presets.moves-right-and-back": {
+    "text": "Beweegt naar rechts en terug",
+    "hash": "1aa7596b"
+  },
+  "labels.part-presets.moves-up-and-back": {
+    "text": "Beweegt omhoog en terug",
+    "hash": "17a78261"
+  },
+  "labels.part-presets.pop": {
+    "text": "Knal",
+    "hash": "4d616d53"
+  },
+  "labels.part-presets.pops-in-from-nothing-with-an-overshoot": {
+    "text": "Verschijnt uit het niets met een uitschieter",
+    "hash": "bf74448f"
+  },
+  "labels.part-presets.pulse": {
+    "text": "Puls",
+    "hash": "f7a403c6"
+  },
+  "labels.part-presets.ring": {
+    "text": "Ring",
+    "hash": "b3f952e8"
+  },
+  "labels.part-presets.rings-like-a-bell-quick-swings-that-die": {
+    "text": "Rinkelt als een bel: snelle zwaaien die uitsterven",
+    "hash": "4841358b"
+  },
+  "labels.part-presets.rocks-on-its-base": {
+    "text": "Wiegt op zijn voet",
+    "hash": "f5c085d9"
+  },
+  "labels.part-presets.shake": {
+    "text": "Schudden",
+    "hash": "c2a6ed6c"
+  },
+  "labels.part-presets.shakes-from-side-to-side": {
+    "text": "Schudt van links naar rechts",
+    "hash": "4915061f"
+  },
+  "labels.part-presets.slide-down": {
+    "text": "Naar beneden schuiven",
+    "hash": "9a92bf81"
+  },
+  "labels.part-presets.slide-left": {
+    "text": "Naar links schuiven",
+    "hash": "667e27d7"
+  },
+  "labels.part-presets.slide-right": {
+    "text": "Naar rechts schuiven",
+    "hash": "c21b5129"
+  },
+  "labels.part-presets.slide-up": {
+    "text": "Naar boven schuiven",
+    "hash": "d081156f"
+  },
+  "labels.part-presets.spin": {
+    "text": "Draaien",
+    "hash": "b9e96ae5"
+  },
+  "labels.part-presets.squashes-jumps-and-lands": {
+    "text": "Perst samen, springt en landt",
+    "hash": "c98b9684"
+  },
+  "labels.part-presets.swing": {
+    "text": "Schommelen",
+    "hash": "816f0656"
+  },
+  "labels.part-presets.swings-from-its-top-settling-back": {
+    "text": "Zwaait vanaf de bovenkant en komt tot rust",
+    "hash": "0dd9206a"
+  },
+  "labels.part-presets.turns": {
+    "text": "Draait",
+    "hash": "53cf0c9b"
+  },
+  "labels.part-presets.turns-round-at-a-steady-speed-whole": {
+    "text": "Draait rond met een constante snelheid (hele rondes per cyclus, zodat hij naadloos loopt)",
+    "hash": "5e6ad3c9"
+  },
+  "labels.part-presets.wave": {
+    "text": "Golf",
+    "hash": "43eb1b14"
+  },
+  "labels.part-presets.wobble": {
+    "text": "Waggelen",
+    "hash": "d1c4fb8a"
+  },
+  "labels.row-module.grid-row-with-columns-nestable-inside": {
+    "text": "Rasterrij met kolommen, te nesten in elke kolom",
+    "hash": "a321e886"
+  },
+  "labels.row-module.row": {
+    "text": "Rij",
+    "hash": "95110d74"
+  },
+  "labels.seasonal-labels.autumn": {
+    "text": "Herfst",
+    "hash": "e0906c2d"
+  },
+  "labels.seasonal-labels.christmas": {
+    "text": "Kerst",
+    "hash": "a09948e8"
+  },
+  "labels.seasonal-labels.cloudy": {
+    "text": "Bewolkt",
+    "hash": "c63401ab"
+  },
+  "labels.seasonal-labels.dusk": {
+    "text": "Schemering",
+    "hash": "abd7160c"
+  },
+  "labels.seasonal-labels.easter": {
+    "text": "Pasen",
+    "hash": "56277ffc"
+  },
+  "labels.seasonal-labels.fog": {
+    "text": "Mist",
+    "hash": "14394e97"
+  },
+  "labels.seasonal-labels.halloween": {
+    "text": "Halloween",
+    "hash": "049566b6"
+  },
+  "labels.seasonal-labels.new-year": {
+    "text": "Nieuwjaar",
+    "hash": "1353c72b"
+  },
+  "labels.seasonal-labels.night": {
+    "text": "Nacht",
+    "hash": "4e9f8db8"
+  },
+  "labels.seasonal-labels.rain": {
+    "text": "Regen",
+    "hash": "a6d20aa6"
+  },
+  "labels.seasonal-labels.snow": {
+    "text": "Sneeuw",
+    "hash": "4f946da9"
+  },
+  "labels.seasonal-labels.spring": {
+    "text": "Lente",
+    "hash": "db29e82a"
+  },
+  "labels.seasonal-labels.summer": {
+    "text": "Zomer",
+    "hash": "c0de243c"
+  },
+  "labels.seasonal-labels.sunny": {
+    "text": "Zonnig",
+    "hash": "adf259f6"
+  },
+  "labels.seasonal-labels.thunderstorm": {
+    "text": "Onweer",
+    "hash": "31a9beb9"
+  },
+  "labels.seasonal-labels.valentine": {
+    "text": "Valentijn",
+    "hash": "cef5c43e"
+  },
+  "labels.seasonal-labels.windy": {
+    "text": "Winderig",
+    "hash": "cdcaccab"
+  },
+  "labels.seasonal-labels.winter": {
+    "text": "Winter",
+    "hash": "1b17869e"
+  },
+  "labels.separator-module.separator": {
+    "text": "Scheidingslijn",
+    "hash": "be237eda"
+  },
+  "labels.separator-module.visual-divider-between-modules": {
+    "text": "Zichtbare scheiding tussen modules",
+    "hash": "babd9e27"
+  },
+  "labels.text-module.display-static-or-template-text": {
+    "text": "Toon vaste tekst of tekst uit een template",
+    "hash": "c14b69e1"
+  },
+  "labels.text-module.text": {
+    "text": "Tekst",
+    "hash": "71988c4d"
+  },
+  "labels.vertical-module.arrange-child-modules-in-a-column": {
+    "text": "Rangschik onderliggende modules in een kolom",
+    "hash": "e2308ee8"
+  },
+  "labels.vertical-module.vertical": {
+    "text": "Verticaal",
+    "hash": "727cd3a6"
+  }
 }

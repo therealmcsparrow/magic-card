@@ -1,11 +1,6 @@
 import type { EditorPlace, LocationChange, PopupHandle } from './popup-nav';
 
-/**
- * The one coordinator of every Magic Card pop-up on the page: one set of window listeners for the
- * URL (hashchange, popstate and HA's `location-changed`, fired by its navigate action after
- * pushState), and at most one open pop-up (opening another closes the first). It lives in the `popup` chunk and nowhere
- * else: a second copy would be a second, empty coordinator.
- */
+/** The one coordinator of every Magic Card pop-up on the page; lives in the `popup` chunk only. */
 class PopupCoordinator {
   private readonly _handles = new Set<PopupHandle>();
   private _open?: PopupHandle;

@@ -1,11 +1,6 @@
 import { css } from 'lit';
 
-/**
- * Card side of shapes (src/card/mc-shape.ts): a shaped element (`data-mc-shape`) is the positioning
- * box of its mc-shape layer and sized as a border box; its own inset vars start at 0 (a shaped row's values must not reach a
- * shaped module inside it before that one is measured). A shaped element with a box-shadow sits in
- * a `.mc-shape-shadow` wrapper drawing the shadow as a drop-shadow (a clip-path would cut it off).
- */
+/** Card side of shapes (src/card/mc-shape.ts): positioning box and shadow wrapper of a shaped element. */
 export const shapeCardStyles = css`
   [data-mc-shape] {
     position: relative;

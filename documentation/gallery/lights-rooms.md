@@ -2,6 +2,8 @@
 
 Room overviews, light tiles, a dimmer, scenes, blinds, a fan, house modes, party lights, a night light and a sunrise alarm. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Room card](#room-card)
@@ -18,7 +20,7 @@ Room overviews, light tiles, a dimmer, scenes, blinds, a fan, house modes, party
 
 Room name with climate readings, and light tiles that glow when on. Tap a tile to toggle that light.
 
-![Room card](images/05-room-living.png)
+![Room card, Home](images/05-room-living.png)
 
 Entities: `sensor.indoor_temperature`, `sensor.indoor_humidity`, `light.living_room`, `light.desk`, `light.hallway`
 
@@ -209,7 +211,7 @@ rows:
 
 Four large gradient tiles, one tap each.
 
-![Scenes](images/10-scenes.png)
+![Scenes, Home](images/10-scenes.png)
 
 Entities: `scene.relax`, `scene.movie`, `scene.dinner`, `scene.focus`
 
@@ -241,7 +243,7 @@ rows:
             design:
               padding: 16px
               border_radius: 22px
-              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+              background: "linear-gradient(135deg, #86198f 0%, #9f1239 100%)"
               box_shadow: "0 10px 24px rgba(245,87,108,0.35)"
               transition: transform 0.2s
               hover: { transform: translateY(-2px) }
@@ -268,14 +270,14 @@ rows:
                     design: &label { font_size: 16px, font_weight: "800", color: "#ffffff" }
                   - type: text
                     text: Warm, 40%
-                    design: &hint { font_size: 12px, color: "rgba(255,255,255,0.8)" }
+                    design: &hint { font_size: 12px, color: "#ffffff" }
       - modules:
           - type: vertical
             gap: 26px
             design:
               padding: 16px
               border_radius: 22px
-              background: "linear-gradient(135deg, #4facfe 0%, #6a3ef7 100%)"
+              background: "linear-gradient(135deg, #1e40af 0%, #4c1d95 100%)"
               box_shadow: "0 10px 24px rgba(106,62,247,0.35)"
               transition: transform 0.2s
               hover: { transform: translateY(-2px) }
@@ -305,7 +307,7 @@ rows:
             design:
               padding: 16px
               border_radius: 22px
-              background: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)"
+              background: "linear-gradient(135deg, #9a3412 0%, #7c2d12 100%)"
               box_shadow: "0 10px 24px rgba(253,160,133,0.35)"
               transition: transform 0.2s
               hover: { transform: translateY(-2px) }
@@ -331,7 +333,7 @@ rows:
             design:
               padding: 16px
               border_radius: 22px
-              background: "linear-gradient(135deg, #43e97b 0%, #38b2ac 100%)"
+              background: "linear-gradient(135deg, #065f46 0%, #134e4a 100%)"
               box_shadow: "0 10px 24px rgba(56,178,172,0.35)"
               transition: transform 0.2s
               hover: { transform: translateY(-2px) }
@@ -357,7 +359,7 @@ rows:
 
 A spinning fan icon (faster at higher speeds) with three speed pills. The active speed is highlighted.
 
-![Fan](images/19-fan-control.png)
+![Fan, Home](images/19-fan-control.png)
 
 Entities: `fan.bedroom`
 
@@ -494,7 +496,7 @@ rows:
 
 A glowing bulb in the light's own colour and a wide brightness slider. Tap the bulb to toggle.
 
-![Light dimmer](images/23-light-dimmer.png)
+![Light dimmer, Home](images/23-light-dimmer.png)
 
 Entities: `light.desk`
 
@@ -593,7 +595,7 @@ rows:
 
 A window that fills from the top with the closed share, the position, and open / stop / close buttons.
 
-![Blinds](images/30-blinds.png)
+![Blinds, Home](images/30-blinds.png)
 
 Entities: `cover.living_blinds`
 
@@ -692,7 +694,7 @@ rows:
 
 Four switches as a 2x2 grid of toggle tiles. A tile lights up in its own colour while its mode is on.
 
-![House modes](images/40-house-modes.png)
+![House modes, Home](images/40-house-modes.png)
 
 Entities: `input_boolean.night_mode`, `input_boolean.guest_mode`, `input_boolean.vacation`, `input_boolean.do_not_disturb`
 
@@ -844,7 +846,7 @@ rows:
 
 A plasma background, a spinning conic border, the light cycling through the rainbow and an equalizer that bounces while music plays.
 
-![Party mode](images/48-party-lights.webp)
+[![Party mode, Home](images/48-party-lights.png)](images/48-party-lights.webp)
 
 Entities: `light.party`, `media_player.living_room`
 
@@ -959,7 +961,7 @@ rows:
 
 A night sky with a moon, stars and fireflies over the header, and the night light glowing in its own warm colour.
 
-![Good night](images/49-night-light.webp)
+[![Good night, Home](images/49-night-light.png)](images/49-night-light.webp)
 
 Entities: `light.nightlight`, `input_boolean.night_mode`, `sensor.bedroom_temperature`
 
@@ -1065,7 +1067,7 @@ rows:
 
 The sun climbs over the horizon in a slowly shifting dawn gradient, with a countdown to the wake-up light. The sun's climb is a small keyframes animation stored in the card.
 
-![Sunrise alarm](images/50-sunrise-alarm.webp)
+[![Sunrise alarm, Home](images/50-sunrise-alarm.png)](images/50-sunrise-alarm.webp)
 
 Entities: `light.bedroom`, `input_boolean.night_mode`
 

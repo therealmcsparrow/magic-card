@@ -1,9 +1,4 @@
-/**
- * The studio canvas shows the state a tabs module's design panel is editing (Hover, Active tab,
- * Disabled tab) on one of its tabs: the panel announces its view here, the canvas applies it to the
- * preview card. The card itself is not changed: a tab gets a studio-only attribute that is removed
- * again with the state.
- */
+/** The state a tabs module's design panel edits (Hover, Active tab, Disabled tab), previewed on one tab through a studio-only attribute. */
 export type TabPreviewState = 'hover' | 'active' | 'disabled';
 
 let view = 'default';

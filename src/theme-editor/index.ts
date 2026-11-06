@@ -14,12 +14,8 @@ import { McteSaveBar } from './save-bar';
 import { McteStartView } from './start-view';
 import { MagicCardThemeEditor } from './theme-editor';
 
-/*
- * Entry of dist/magic-card-theme-editor.js (loaded by the magic-card-utils panel's Themes tab,
- * never by a dashboard). It defines only its own elements, each guarded; mc-color-picker and
- * mc-unit-field come from magic-card.js through window.MagicCard.loadEditor() and are used by tag.
- * Imports: lit, src/contracts/, src/css/editor-system.ts (editorTokens), src/ui-kit/ (contract 1.2.0), src/i18n/ (runtime and fold, i18n contract) and this folder; one lazy chunk, the presets (presets/loader.ts).
- */
+// Entry of dist/magic-card-theme-editor.js, loaded by the magic-card-utils panel's Themes tab, never by a dashboard.
+// Defines only its own elements, each guarded; one lazy chunk, the presets.
 
 export const THEME_EDITOR_ELEMENTS: Array<[string, CustomElementConstructor]> = [
   ['mcte-mode-switch', McteModeSwitch],

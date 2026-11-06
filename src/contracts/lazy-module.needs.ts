@@ -1,8 +1,6 @@
-/*
- * lazy-module 1.4.0, the numbers magic-card.js needs at run time. They sit in this predicate file, not in
- * lazy-module.ts, because the entry may import only *.needs.ts of a contract (see tools/check-entry-graph.mjs);
- * lazy-module.ts re-exports them.
- */
+// lazy-module 1.4.0, the numbers magic-card.js needs at run time. They sit in this predicate file, not in
+// lazy-module.ts, because the entry may import only *.needs.ts of a contract (see tools/check-entry-graph.mjs);
+// lazy-module.ts re-exports them.
 
 /** One attempt (the import plus install) is a failure after this long. */
 export const CHUNK_TIMEOUT_MS = 10_000;

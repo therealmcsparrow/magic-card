@@ -1,10 +1,7 @@
 import type { HomeAssistant } from '../types';
 
-/**
- * Live Jinja templates for the card: one `render_template` subscription per template string (and
- * variables) for as long as some part of the card renders it. Results are cached per template
- * string, so a re-created card paints the last known value right away.
- */
+// Live Jinja templates for the card: one `render_template` subscription per template string (and variables) for as long
+// as some part of the card renders it. Results are cached per template string, so a re-created card paints the last known value.
 
 export type TemplateState =
   | { status: 'pending' }

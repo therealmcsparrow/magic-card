@@ -1,10 +1,7 @@
 import type { CornerRadius, Radii, RingPathOptions } from './ring-path';
 import { clampRadii, insetRadii, RING_STARTS } from './ring-path';
 
-/*
- * The outline of a CSS rounded rectangle as an SVG path (the ring's path). It sits apart from ring-path.ts so a chunk that
- * only reads radii or draws a shaped outline does not carry it.
- */
+/** The outline of a CSS rounded rectangle as an SVG path (the ring's path). */
 
 interface Pt {
   x: number;

@@ -1,8 +1,5 @@
-/*
- * The editor's "Preview date" for seasonal scenes: a date the cards in an editor preview (studio
- * canvas, HA's card editor) resolve auto with instead of today. Never part of the config; cleared
- * when the editor closes. Cards with `seasonal` listen for SEASONAL_PREVIEW_EVENT on window.
- */
+// The editor's "Preview date" for seasonal scenes: a date the cards in an editor preview resolve
+// auto with instead of today. Never part of the config; cards listen for SEASONAL_PREVIEW_EVENT.
 
 import { SEASONAL_PREVIEW_EVENT } from './seasonal.needs';
 

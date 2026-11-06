@@ -3,10 +3,7 @@ import { FLOW_LOOK_KEYS, hasFlowLook } from '../../contracts/flow-look.needs';
 import { FLOW_LOOK_EXISTING_KEYS, type FlowPreset } from '../../contracts/look-editor';
 import { FLOW_PRESETS } from '../presets';
 
-/*
- * Pure logic of <mc-flow-look-editor>: which keys it owns, the colour and spacing modes (the contract's precedence),
- * presets, Reset look, the change count and the status line. Nothing here touches the DOM or writes on its own.
- */
+// Pure logic of <mc-flow-look-editor>: owned keys, colour and spacing modes, presets, Reset look, the change count and the status line.
 type Rec = Record<string, unknown>;
 const rec = (f: FlowConfig): Rec => f as unknown as Rec;
 

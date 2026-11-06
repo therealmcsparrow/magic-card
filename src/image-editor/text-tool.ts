@@ -2,15 +2,13 @@ import { html, nothing, type TemplateResult } from 'lit';
 import type { Pt } from '../contracts/path-model';
 import { IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import { button } from '../ui-kit/templates';
+import { textDir } from '../ui-kit/templates/field';
 import type { ImageExt } from './chunk';
 import { t } from './i18n';
 import { cleanText } from './text';
 import { middle, newText } from './text-ui';
 
-/*
- * The Text tool: a click or tap on the canvas (or Enter on it, for the middle) opens a text field there. Enter or Done
- * adds the words as one text layer, Escape or Cancel adds nothing. Until then there is no layer, so nothing is undone.
- */
+// The Text tool: a click, tap or Enter on the canvas opens a text field; Enter or Done adds one text layer, Escape or Cancel adds nothing.
 
 const COUNT_FROM = 1900;
 
@@ -49,7 +47,7 @@ export function place(x: ImageExt, p?: Pt): void {
 export function cancelField(x: ImageExt): void {
   if (!x.field) return;
   release(x);
-  x.shell.say(t('Text cancelled.'));
+  x.shell.say(t('image-editor.text-tool.text-cancelled'));
   x.shell.requestUpdate();
   x.shell.canvas()?.focus({ preventScroll: true });
 }
@@ -62,7 +60,7 @@ export function commitField(x: ImageExt): void {
   release(x);
   const sh = x.shell;
   if (!words.trim()) {
-    sh.say(t('No text was added.'));
+    sh.say(t('image-editor.text-tool.no-text-was-added'));
     sh.requestUpdate();
   } else sh.addShape(newText(x, f.at, words));
   sh.canvas()?.focus({ preventScroll: true });
@@ -85,9 +83,10 @@ export function textField(x: ImageExt): TemplateResult | typeof nothing {
     <textarea
       id="tx-field"
       class="input"
+      dir=${textDir(undefined)}
       rows="3"
       maxlength=${IMAGE_MAX_TEXT_CHARS}
-      aria-label=${t('Text on the canvas')}
+      aria-label=${t('image-editor.text-tool.text-on-the-canvas')}
       aria-describedby=${`tx-field-help${counting ? ' tx-field-count' : ''}`}
       .value=${f.s}
       @input=${(e: Event) => {
@@ -109,10 +108,10 @@ export function textField(x: ImageExt): TemplateResult | typeof nothing {
         }
       }}
     ></textarea>
-    <p id="tx-field-help" class="help">${t('Enter adds the text. Shift+Enter starts a new line. Esc cancels.')}</p>
-    ${counting ? html`<p id="tx-field-count" class="help" role="status">${remaining > 0 ? t('{n} left', { n: remaining }) : t('That is the longest text (2048 characters).')}</p>` : nothing}
+    <p id="tx-field-help" class="help">${t('image-editor.text-tool.enter-adds-the-text-shift-enter-starts-a')}</p>
+    ${counting ? html`<p id="tx-field-count" class="help" role="status">${remaining > 0 ? t('image-editor.text-tool.n-left', { n: remaining }) : t('image-editor.text-tool.that-is-the-longest-text-2048-characters')}</p>` : nothing}
     <div class="actions">
-      ${button({ label: t('Done'), variant: 'primary', onClick: () => commitField(x) })}${button({ label: t('Cancel'), variant: 'secondary', onClick: () => cancelField(x) })}
+      ${button({ label: t('image-editor.text-tool.done'), variant: 'primary', onClick: () => commitField(x) })}${button({ label: t('image-editor.text-tool.cancel'), variant: 'secondary', onClick: () => cancelField(x) })}
     </div>
   </div>`;
 }

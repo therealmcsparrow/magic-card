@@ -13,10 +13,7 @@ import {
 import { multiply, parseTransform, shapePath } from '../icons/svg-geometry';
 import { parsePath, type Pt } from '../path/core';
 
-/*
- * Sanitised SVG markup to a flat list of shapes: outlines as absolute path data with every transform applied, the
- * presentation attributes after inheritance, and the group tree. Callers map the neutral shapes onto their own model.
- */
+// Sanitised SVG markup to a flat list of shapes: absolute path data with transforms applied, inherited attributes and the group tree.
 
 const SHAPES: readonly ReadShape['from'][] = ['path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon'];
 const NONE = /^(none|transparent)$/i;

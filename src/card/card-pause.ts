@@ -1,19 +1,13 @@
 import { html, nothing } from 'lit';
 import type { LitElement, TemplateResult } from 'lit';
 import { t } from './i18n';
+import { t as tp } from './pause-i18n';
 import { motionCount, setCardPaused } from '../icons/offscreen';
 import { reducedMotion } from '../utils/reduced-motion';
 import { PAUSE_ATTRIBUTE, PAUSE_EVENT } from '../contracts/card-pause.needs';
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
-/*
- * The viewer's "Pause motion" button of one card (contract card-pause 2.0.0). The motion itself is
- * stopped by the shared offscreen observer (setCardPaused) and one CSS rule; this class holds the
- * state, remembers it per page and card, and renders the button.
- *
- * The remembered state is read by the card bundle (pause-memory.ts), which holds the pause from the first paint; this class adopts it.
- * The pause button is hidden by default. Offscreen and reduced-motion pauses never depend on the button.
- */
+/** The viewer's "Pause motion" button of one card: pause state, per-card memory and the button. */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
 const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 /** mdi:pause, mdi:play */
@@ -92,7 +86,7 @@ export class CardPause {
 
   private _stop = (e: Event): void => e.stopPropagation();
 
-  /** Last child of ha-card. Under `auto` the observer count has no change event: look again after the render. */
+  /** The button is a last child of ha-card; while paused the aria-hidden Paused label follows it. Under `auto` the observer count has no change event: look again after the render. */
   button(c: CardPauseKeys, on: boolean): TemplateResult | typeof nothing {
     const auto = this._mode === 'auto';
     const show = this._mode === 'always' || (auto && this._wants(on));
@@ -100,10 +94,11 @@ export class CardPause {
     if (auto) this._recheck();
     const corner = CORNERS.includes(String(c.pause_button_corner)) ? (c.pause_button_corner as PauseButtonCorner) : 'bottom-left';
     if (!show) return nothing;
-    const label = t('Pause motion');
+    const label = t('card.card-pause.pause-motion');
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
-      ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
+      ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button
+      >${on ? html`<span class="mc-pause-label" data-corner=${corner} aria-hidden="true"><span>${tp('card-pause.card-pause.paused')}</span></span>` : nothing}`;
   }
 
   private _wants(on: boolean): boolean {

@@ -123,42 +123,37 @@ export class AnimIconThumb extends LitElement {
   ];
 }
 
-/*
- * The start of an icon animation (studio "New animation" > "Icon animation"): pick an icon (the
- * editor chunk's mc-icon-picker by tag, a text field until it is defined) and it is split into parts
- * right away, ready for part presets; or start from the animated icon library (search, domain
- * filter, live thumbnails; the library is a lazy chunk, icon-library-loader.ts). Emits `icon-start { doc, from: 'icon' | 'library' }` (bubbling,
- * composed); the studio opens the document as a new animation.
- */
+// The start of an icon animation: pick an icon (split into parts at once) or start from the animated icon library. Emits
+// `icon-start { doc, from: 'icon' | 'library' }` (bubbling, composed); the studio opens a new animation.
 
 /** Readable HA domain names for the filter. */
 const DOMAIN_LABEL: Record<string, MessageId> = {
-  alarm_control_panel: m('Alarm panel'),
-  binary_sensor: m('Binary sensor'),
-  button: m('Button'),
-  calendar: m('Calendar'),
-  camera: m('Camera'),
-  climate: m('Climate'),
-  cover: m('Cover'),
-  device_tracker: m('Device tracker'),
-  event: m('Event'),
-  fan: m('Fan'),
-  humidifier: m('Humidifier'),
-  lawn_mower: m('Lawn mower'),
-  light: m('Light'),
-  lock: m('Lock'),
-  media_player: m('Media player'),
-  person: m('Person'),
-  plant: m('Plant'),
-  sensor: m('Sensor'),
-  siren: m('Siren'),
-  sun: m('Sun'),
-  switch: m('Switch'),
-  timer: m('Timer'),
-  vacuum: m('Vacuum'),
-  valve: m('Valve'),
-  weather: m('Weather'),
-  zone: m('Zone'),
+  alarm_control_panel: m('anim-studio.icon-start.alarm-panel'),
+  binary_sensor: m('anim-studio.icon-start.binary-sensor'),
+  button: m('anim-studio.icon-start.button'),
+  calendar: m('anim-studio.icon-start.calendar'),
+  camera: m('anim-studio.icon-start.camera'),
+  climate: m('anim-studio.icon-start.climate'),
+  cover: m('anim-studio.icon-start.cover'),
+  device_tracker: m('anim-studio.icon-start.device-tracker'),
+  event: m('anim-studio.icon-start.event'),
+  fan: m('anim-studio.icon-start.fan'),
+  humidifier: m('anim-studio.icon-start.humidifier'),
+  lawn_mower: m('anim-studio.icon-start.lawn-mower'),
+  light: m('anim-studio.icon-start.light'),
+  lock: m('anim-studio.icon-start.lock'),
+  media_player: m('anim-studio.icon-start.media-player'),
+  person: m('anim-studio.icon-start.person'),
+  plant: m('anim-studio.icon-start.plant'),
+  sensor: m('anim-studio.icon-start.sensor'),
+  siren: m('anim-studio.icon-start.siren'),
+  sun: m('anim-studio.icon-start.sun'),
+  switch: m('anim-studio.icon-start.switch'),
+  timer: m('anim-studio.icon-start.timer'),
+  vacuum: m('anim-studio.icon-start.vacuum'),
+  valve: m('anim-studio.icon-start.valve'),
+  weather: m('anim-studio.icon-start.weather'),
+  zone: m('anim-studio.icon-start.zone'),
 };
 /** A domain's name: Home Assistant's own (hass.localize, the word HA shows), else ours. */
 export const domainLabel = (d: string, hass?: unknown): string =>
@@ -201,7 +196,7 @@ export class AnimIconStart extends LitElement {
   async start(): Promise<void> {
     const icon = this._icon.trim();
     if (!ICON_RE.test(icon)) {
-      this._error = t('Pick an icon, or type an id like mdi:bell-ring.');
+      this._error = t('anim-studio.icon-start.pick-an-icon-or-type-an-id-like-mdi-bell');
       return;
     }
     this._busy = true;
@@ -211,15 +206,15 @@ export class AnimIconStart extends LitElement {
       const lib = this._lib ?? (await loadIconLibrary().catch(() => undefined));
       const g = lib?.mdiGeometry(icon) ?? (await resolveIconGeometry(icon));
       if (!g) {
-        this._error = t('This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.');
+        this._error = t('anim-studio.icon-start.this-icon-could-not-be-loaded-check-the');
         return;
       }
-      const name = t('{name} animation', { name: iconDisplayName(icon) });
+      const name = t('anim-studio.icon-start.name-animation', { name: iconDisplayName(icon) });
       // the geometry goes into the document (rig.svg): the parts stay the pieces split here, whatever
       // icon version a dashboard resolves
       const doc = iconAnimationDoc(icon, g, icon.slice(icon.indexOf(':') + 1), name, { embed: true });
       if (!doc.rig?.parts.length) {
-        this._error = t('This icon has no shapes to animate.');
+        this._error = t('anim-studio.icon-start.this-icon-has-no-shapes-to-animate');
         return;
       }
       this._emit(doc, 'icon');
@@ -237,15 +232,15 @@ export class AnimIconStart extends LitElement {
   private _renderPick(): TemplateResult {
     const picker = editorDefined('mc-icon-picker');
     return html`<section class="pick" aria-labelledby="is-pick">
-      <h3 id="is-pick">${t('Start from an icon')}</h3>
-      <p class="help">${t('The icon is split into its parts. Select a part, then give it a preset: swing, spin, draw on and more.')}</p>
+      <h3 id="is-pick">${t('anim-studio.icon-start.start-from-an-icon')}</h3>
+      <p class="help">${t('anim-studio.icon-start.the-icon-is-split-into-its-parts-select')}</p>
       <div class="pick-row">
         <div class="field grow">
           ${picker
             ? html`<mc-icon-picker
                 .hass=${this.hass}
                 .value=${this._icon}
-                label=${t('Icon')}
+                label=${t('anim-studio.icon-start.icon')}
                 @value-changed=${(e: CustomEvent) => {
                   e.stopPropagation();
                   this._icon = String(e.detail?.value ?? '').trim();
@@ -254,7 +249,7 @@ export class AnimIconStart extends LitElement {
               ></mc-icon-picker>`
             : html`<input
                 class="input mono icon-input"
-                aria-label=${t('Icon')}
+                aria-label=${t('anim-studio.icon-start.icon')}
                 spellcheck="false"
                 .value=${live(this._icon)}
                 @input=${(e: Event) => {
@@ -265,7 +260,7 @@ export class AnimIconStart extends LitElement {
               />`}
         </div>
         <button type="button" class="btn btn-primary btn-sm start" ?disabled=${this._busy} @click=${() => void this.start()}>
-          <ha-icon icon="mdi:scissors-cutting"></ha-icon>${this._busy ? t('Splitting…') : t('Split and start')}
+          <ha-icon icon="mdi:scissors-cutting"></ha-icon>${this._busy ? t('anim-studio.icon-start.splitting') : t('anim-studio.icon-start.split-and-start')}
         </button>
       </div>
       ${this._error ? html`<p class="help error" role="alert">${this._error}</p>` : nothing}
@@ -275,16 +270,16 @@ export class AnimIconStart extends LitElement {
   private _renderLibrary(): TemplateResult {
     const lib = this._lib;
     const head = html`<div class="lib-head">
-      <h3 id="is-lib">${t('Or start from the icon library')}</h3>
+      <h3 id="is-lib">${t('anim-studio.icon-start.or-start-from-the-icon-library')}</h3>
       ${lib ? html`<span class="chip is-count">${lib.ICON_LIBRARY.length}</span>` : nothing}
     </div>`;
     if (!lib)
       return html`<section class="lib" aria-labelledby="is-lib">
         ${head}
         ${this._libFailed
-          ? html`<p class="help error lib-error" role="alert">${t('The icon library could not be loaded. Check your connection, then try again.')}</p>
-              <div><button type="button" class="btn btn-secondary btn-sm lib-retry" @click=${() => void this._loadLibrary()}><ha-icon icon="mdi:refresh"></ha-icon>${t('Try again')}</button></div>`
-          : html`<p class="help lib-loading" role="status">${t('Loading icon library…')}</p>`}
+          ? html`<p class="help error lib-error" role="alert">${t('anim-studio.icon-start.the-icon-library-could-not-be-loaded')}</p>
+              <div><button type="button" class="btn btn-secondary btn-sm lib-retry" @click=${() => void this._loadLibrary()}><ha-icon icon="mdi:refresh"></ha-icon>${t('anim-studio.icon-start.try-again')}</button></div>`
+          : html`<p class="help lib-loading" role="status">${t('anim-studio.icon-start.loading-icon-library')}</p>`}
       </section>`;
     const shown = lib.searchLibrary(this._query, this._domain || undefined);
     return html`<section class="lib" aria-labelledby="is-lib">
@@ -295,14 +290,14 @@ export class AnimIconStart extends LitElement {
           <input
             class="input lib-search"
             type="search"
-            placeholder=${t('Search icons')}
-            aria-label=${t('Search the icon library')}
+            placeholder=${t('anim-studio.icon-start.search-icons')}
+            aria-label=${t('anim-studio.icon-start.search-the-icon-library')}
             .value=${live(this._query)}
             @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
           />
         </div>
-        <select class="input domain" aria-label=${t('Domain')} .value=${live(this._domain)} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
-          <option value="">${t('All domains')}</option>
+        <select class="input domain" aria-label=${t('anim-studio.icon-start.domain')} .value=${live(this._domain)} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
+          <option value="">${t('anim-studio.icon-start.all-domains')}</option>
           ${[...lib.LIBRARY_DOMAINS].sort((a, b) => domainLabel(a, this.hass).localeCompare(domainLabel(b, this.hass))).map((d) => html`<option value=${d} ?selected=${d === this._domain}>${domainLabel(d, this.hass)}</option>`)}
         </select>
       </div>
@@ -310,15 +305,20 @@ export class AnimIconStart extends LitElement {
         ? html`<ul class="grid" role="list">
             ${shown.map(
               (e) => html`<li>
-                <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit(e.build(), 'library')}>
+                <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit({ ...e.build(), ...(e.mirror ? { mirror: e.mirror } : {}) }, 'library')}>
                   <mc-anim-icon-thumb .entry=${e} .hass=${this.hass}></mc-anim-icon-thumb>
+                  ${lib.isNewInRelease(e.id) ? html`<span class="new-mark" aria-hidden="true"></span><span class="sr-only">${t('anim-studio.icon-start.new-in-this-release')}</span>` : nothing}
                   <span class="nm">${e.name}</span>
                   <span class="dm">${domainLabel(e.domain, this.hass)}</span>
+                  ${(() => {
+                    const b = lib.mirrorBadge(e.mirror);
+                    return html`<span class="mirror-badge ${b.unset ? 'is-unset' : ''}">${b.label}</span>`;
+                  })()}
                 </button>
               </li>`,
             )}
           </ul>`
-        : html`<p class="help no-results">${t('No icon animations match "{query}".', { query: this._query })}</p>`}
+        : html`<p class="help no-results">${t('anim-studio.icon-start.no-icon-animations-match-query', { query: this._query })}</p>`}
     </section>`;
   }
 
@@ -380,6 +380,7 @@ export class AnimIconStart extends LitElement {
         display: flex;
       }
       .entry {
+        position: relative;
         width: 100%;
         align-content: start;
         display: grid;
@@ -398,8 +399,44 @@ export class AnimIconStart extends LitElement {
         border-color: color-mix(in srgb, var(--primary-color, #03a9f4) 60%, transparent);
       }
       .entry:focus-visible {
-        outline: 2px solid var(--primary-color, #03a9f4);
+        outline: 2px solid var(--mc-accent-ink, #01579b);
         outline-offset: 2px;
+      }
+      .new-mark {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        inset-inline: auto 6px;
+        width: 8px;
+        height: 8px;
+        background: var(--mc-accent-ink, #01579b);
+        box-shadow: 0 0 0 1.5px var(--mc-surface, var(--card-background-color, #fff));
+        transform: rotate(45deg);
+      }
+      @media (forced-colors: active) {
+        .new-mark {
+          background: CanvasText;
+        }
+      }
+      .mirror-badge {
+        font-size: 0.6875rem;
+        color: var(--mc-text-secondary, var(--secondary-text-color, #727272));
+      }
+      .mirror-badge.is-unset {
+        padding: 0 6px;
+        border-radius: 999px;
+        font-weight: 600;
+        color: var(--mc-accent-ink, #01579b);
+        background: color-mix(in srgb, var(--primary-color, #03a9f4) 16%, transparent);
+        outline: 1px solid currentColor;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
       }
       .pick-row {
         align-items: flex-start;

@@ -3,10 +3,7 @@ import type { KitSegOptions, KitTileOptions } from '../../contracts/ui-kit';
 import { RovingFocus } from '../controllers/roving-focus';
 import { iconOf } from './icon';
 
-/*
- * Seg: the one tab bar and segmented control (role tablist or radiogroup). Arrow keys, Home and End move AND
- * select (radio and tab semantics), one tab stop.
- */
+// Seg: the one tab bar and segmented control (role tablist or radiogroup), with one tab stop.
 export function seg<V extends string>(o: KitSegOptions<V>): TemplateResult {
   const tabs = o.role === 'tablist';
   const roving = new RovingFocus({

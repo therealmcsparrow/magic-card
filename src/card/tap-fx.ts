@@ -1,8 +1,5 @@
-/**
- * "On tap" animations: a pointerdown restarts every tap animation of the elements under the pointer
- * (module, column, row, card): the element's own tap list (`data-mc-tap` → `data-mc-tapped`) and
- * its tap layers (`.mc-anim-fx[data-tap]`), which start at the pointer (--mc-tap-x / --mc-tap-y).
- */
+// "On tap" animations: a pointerdown restarts the tap animations and tap layers of the elements
+// under the pointer; tap layers start at the pointer (--mc-tap-x / --mc-tap-y).
 export function playTapAnimations(e: PointerEvent, host: Element): void {
   for (const node of e.composedPath()) {
     if (node === host) break;

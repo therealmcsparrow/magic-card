@@ -28,27 +28,27 @@ export const clockEditor: ModuleEditor = {
     const sample = (f: string) => formatClockDate(now, f, hass);
     return html`
       <div class="mc-tab-content">
-        ${renderSelectField(t('Time format'), timeFormat, [
-          { label: t('Automatic ({format}, from your profile)', { format: uses12h(hass) ? t('12-hour') : t('24-hour') }), value: 'auto' },
-          { label: t('12-hour'), value: '12' },
-          { label: t('24-hour'), value: '24' },
+        ${renderSelectField(t('card-editor.clock-editor.time-format'), timeFormat, [
+          { label: t('card-editor.clock-editor.automatic-format-from-your-profile', { format: uses12h(hass) ? t('card-editor.clock-editor.12-hour') : t('card-editor.clock-editor.24-hour') }), value: 'auto' },
+          { label: t('card-editor.clock-editor.12-hour'), value: '12' },
+          { label: t('card-editor.clock-editor.24-hour'), value: '24' },
         ], (v) => {
           const next = { ...c };
           if (v === 'auto') delete next.format_12h;
           else next.format_12h = v === '12';
           onChange(next);
         }, 'format_12h', syncCtx)}
-        ${renderToggleField(t('Show seconds'), c.show_seconds, (v) => onChange({ ...c, show_seconds: v }), 'show_seconds', syncCtx)}
-        ${renderToggleField(t('Show date'), c.show_date !== false, (v) => onChange({ ...c, show_date: v }), 'show_date', syncCtx)}
+        ${renderToggleField(t('card-editor.clock-editor.show-seconds'), c.show_seconds, (v) => onChange({ ...c, show_seconds: v }), 'show_seconds', syncCtx)}
+        ${renderToggleField(t('card-editor.clock-editor.show-date'), c.show_date !== false, (v) => onChange({ ...c, show_date: v }), 'show_date', syncCtx)}
         ${c.show_date !== false
           ? html`
-            ${renderSelectField(t('Date format'), custom ? 'custom' : dateFormat, [
-              { label: t('Short ({example})', { example: sample('short') }), value: 'short' },
-              { label: t('Medium ({example})', { example: sample('medium') }), value: 'medium' },
-              { label: t('Long ({example})', { example: sample('long') }), value: 'long' },
-              { label: t('Numeric ({example})', { example: sample('numeric') }), value: 'numeric' },
-              { label: t('ISO ({example})', { example: sample(ISO) }), value: ISO },
-              { label: t('Custom pattern'), value: 'custom' },
+            ${renderSelectField(t('card-editor.clock-editor.date-format'), custom ? 'custom' : dateFormat, [
+              { label: t('card-editor.clock-editor.short-example', { example: sample('short') }), value: 'short' },
+              { label: t('card-editor.clock-editor.medium-example', { example: sample('medium') }), value: 'medium' },
+              { label: t('card-editor.clock-editor.long-example', { example: sample('long') }), value: 'long' },
+              { label: t('card-editor.clock-editor.numeric-example', { example: sample('numeric') }), value: 'numeric' },
+              { label: t('card-editor.clock-editor.iso-example', { example: sample(ISO) }), value: ISO },
+              { label: t('card-editor.clock-editor.custom-pattern'), value: 'custom' },
             ], (v) => {
               if (v === 'custom') customPatternIds.add(c.id);
               else customPatternIds.delete(c.id);
@@ -56,11 +56,11 @@ export const clockEditor: ModuleEditor = {
             }, 'date_format', syncCtx)}
             ${custom
               ? html`
-                ${renderTextField(t('Date pattern'), c.date_format, (v) => {
+                ${renderTextField(t('card-editor.clock-editor.date-pattern'), c.date_format, (v) => {
                   customPatternIds.add(c.id);
                   onChange({ ...c, date_format: v });
                 }, 'date_format', syncCtx, { mono: true })}
-                ${renderFieldHint(t('YYYY year, MMMM / MMM month name, MM / M month, DD / D day, dddd / ddd weekday. Text in [brackets] is kept as is.'))}
+                ${renderFieldHint(t('card-editor.clock-editor.yyyy-year-mmmm-mmm-month-name-mm-m-month'))}
               `
               : nothing}
           `

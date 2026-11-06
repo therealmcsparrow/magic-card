@@ -1,22 +1,9 @@
 import type { CompiledTrack } from '../anim-studio/compile-v2';
 import type { Rig, TargetRef } from '../anim-studio/model';
 
-/*
- * The stylesheet of an icon rig: the rig's track keyframes and their animations on the parts,
- * groups and shapes of the rigged <mc-svg-icon>. It is adopted inside the icon's own shadow root
- * (rig.ts), where the parts live, so the selectors need no further scoping and the keyframe names
- * (the document's hashed name) resolve there.
- *
- * Parts carry `data-p="<id>"`, groups `data-g`, shapes `data-s` (ids match PART_ID_RE, safe in a
- * selector). Pivots are inline (`transform-origin` in viewBox px, transform-box view-box), so the
- * sheet does not depend on the resolved geometry.
- *
- * Draw-on: the compiler writes `stroke-dashoffset: 1 - draw` (inherited by the part's paths). A
- * drawn filled part gets an outline group (`.outlines`, one path per subpath, each pathLength=1 and
- * `stroke-dasharray: 1`, so every subpath draws evenly); it fills as the outline completes (an
- * extra `<name>-fill` animation, fill-opacity fading in over the last quarter of a draw-on segment)
- * and the outline then fades out (`<name>-outline` on `.outlines`), so no stroke is left over.
- */
+// The stylesheet of an icon rig: the track keyframes and their animations on the parts, groups and shapes of the rigged
+// <mc-svg-icon>, adopted in its shadow root. Parts carry data-p, groups data-g, shapes data-s; pivots are inline. Draw-on
+// uses stroke-dashoffset with an outline group that fades out as the fill fades in.
 
 /** The selector of a rig target; undefined for card targets. */
 export function rigSelector(target: TargetRef | string): string | undefined {

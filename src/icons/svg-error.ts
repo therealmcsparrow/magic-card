@@ -1,9 +1,8 @@
 import { SVG_MAX_BYTES, TOO_COMPLEX } from './svg-sanitize';
 
 /**
- * What went wrong when `sanitizeSvg` (or the SVG editor's importer) refused an SVG. The sanitiser reports plain
- * British sentences; each place that shows one maps the kind to a message in its own i18n namespace with a literal
- * t() call, so the text follows the user's language.
+ * What went wrong when `sanitizeSvg` (or the SVG editor's importer) refused an SVG. Each place that shows one maps the kind
+ * to a message in its own i18n namespace with a literal t() call, so the text follows the user's language.
  */
 export type SvgErrorKind = 'size' | 'not-svg' | 'complex' | 'no-shapes' | 'other';
 

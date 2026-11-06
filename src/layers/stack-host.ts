@@ -9,11 +9,9 @@ import { entityStateColor, isEntityColor } from '../utils/entity-color';
 import { mediaSrc } from '../utils/media';
 import { needSvgImage } from '../utils/svg-image-loader';
 
-/*
- * What the card hands <mc-bg-stack> (contract bg-stack 1.2.0, `host`): the Core side of the card
- * backdrop. Part of magic-card.js, like the stack; the lazy 'layers' chunk imports none of this.
- * It does not vet image URLs: the chunk's safeImageUrl does, for every URL it loads.
- */
+// What the card hands <mc-bg-stack> (contract bg-stack 1.2.0, `host`): the Core side of the card backdrop.
+// Part of magic-card.js, like the stack; the lazy 'layers' chunk imports none of this.
+// It does not vet image URLs: the chunk's safeImageUrl does, for every URL it loads.
 export function createStackHost(card: { hass?: HomeAssistant; renderRoot: ParentNode }, ctx: () => RenderContext, lowPower: () => boolean): BgStackHost {
   return {
     // inside the card's render context, so browsed media is resolved (and kept fresh) by the card
@@ -28,7 +26,7 @@ export function createStackHost(card: { hass?: HomeAssistant; renderRoot: Parent
     },
     badgeHost: () => card.renderRoot.querySelector<HTMLElement>('.mc-bg-badge') ?? undefined,
     lowPower,
-    staleText: (seconds) => t('Not updated {n} min', { n: Math.max(1, Math.round(seconds / 60)) }),
+    staleText: (seconds) => t('card.stack-host.not-updated-n-min', { n: Math.max(1, Math.round(seconds / 60)) }),
     needImage: () => needSvgImage(ctx()),
   };
 }

@@ -9,7 +9,7 @@ const EMBERS = [F.glow, '#ff7043', F.icon];
 export const FIRE = group('Fire & heat', [
   {
     id: 'fire-hearth-flicker',
-    name: m('Hearth flicker'),
+    name: m('preset-catalogue.fire.hearth-flicker'),
     icon: 'mdi:fire',
     tags: ['flame', 'fireplace', 'flicker', 'glow', 'heat'],
     doc: (id, name) =>
@@ -29,7 +29,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-heating-up',
-    name: m('Heating up'),
+    name: m('preset-catalogue.fire.heating-up'),
     icon: 'mdi:thermometer-high',
     tags: ['thermostat', 'radiator', 'boiler', 'heat', 'temperature'],
     doc: (id, name) =>
@@ -51,7 +51,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-rising-embers',
-    name: m('Rising embers'),
+    name: m('preset-catalogue.fire.rising-embers'),
     icon: 'mdi:campfire',
     tags: ['embers', 'sparks', 'campfire', 'fireplace', 'particles'],
     doc: (id, name) =>
@@ -70,7 +70,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-licking-flames',
-    name: m('Licking flames'),
+    name: m('preset-catalogue.fire.licking-flames'),
     icon: 'mdi:fire-circle',
     tags: ['flame', 'fire', 'burner', 'stove', 'particles'],
     doc: (id, name) =>
@@ -89,7 +89,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-chimney-smoke',
-    name: m('Chimney smoke'),
+    name: m('preset-catalogue.fire.chimney-smoke'),
     icon: 'mdi:home-roof',
     tags: ['smoke', 'chimney', 'stove', 'wood burner', 'particles'],
     doc: (id, name) =>
@@ -109,7 +109,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-sparkler',
-    name: m('Sparkler'),
+    name: m('preset-catalogue.fire.sparkler'),
     icon: 'mdi:shimmer',
     tags: ['sparks', 'sparkler', 'welding', 'bounce', 'particles'],
     heavy: true,

@@ -1,35 +1,134 @@
 {
-  "A higher value drops more points.": "A higher value drops more points.",
-  "Amount": "Amount",
-  "Apply": "Apply",
-  "Cancel": "Cancel",
-  "Corners": "Corners",
-  "Detail kept": "Detail kept",
-  "Draw a line across the shapes to cut them in two.": "Draw a line across the shapes to cut them in two.",
-  "Draw a longer cut line.": "Draw a longer cut line.",
-  "Fits the shape again with fewer points.": "Fits the shape again with fewer points.",
-  "Grows or shrinks the shape by the amount you set.": "Grows or shrinks the shape by the amount you set.",
-  "Join": "Join",
-  "Join works on open paths. Use Split first to open a closed one.": "Join works on open paths. Use Split first to open a closed one.",
-  "Joins the two nearest ends of the selected open paths. With one path selected, it closes it.": "Joins the two nearest ends of the selected open paths. With one path selected, it closes it.",
-  "Knife": "Knife",
-  "Nothing to preview yet.": "Nothing to preview yet.",
-  "Nothing would be left of this shape.": "Nothing would be left of this shape.",
-  "Offset path": "Offset path",
-  "Outline stroke": "Outline stroke",
-  "Pick a point between the ends to split here.": "Pick a point between the ends to split here.",
-  "Positive grows the shape, negative shrinks it. From {min} to {max}.": "Positive grows the shape, negative shrinks it. From {min} to {max}.",
-  "Round": "Round",
-  "Select a closed shape. Open lines have no area.": "Select a closed shape. Open lines have no area.",
-  "Sharp": "Sharp",
-  "Simplify": "Simplify",
-  "Smooth corners": "Smooth corners",
-  "Split": "Split",
-  "Splits the path at the selected point.": "Splits the path at the selected point.",
-  "This shape has no stroke to outline.": "This shape has no stroke to outline.",
-  "This shape has too many points for this tool.": "This shape has too many points for this tool.",
-  "This shape is already as simple as this setting allows.": "This shape is already as simple as this setting allows.",
-  "Turns the stroke into a filled shape you can edit point by point.": "Turns the stroke into a filled shape you can edit point by point.",
-  "Working on it": "Working on it",
-  "{before, plural, one {# point} other {# points}} now, {after, plural, one {# point} other {# points}} after": "{before, plural, one {# point} other {# points}} now, {after, plural, one {# point} other {# points}} after"
+  "path-tools.names.draw-a-line-across-the-shapes-to-cut": {
+    "text": "Draw a line across the shapes to cut them in two.",
+    "hash": "f843b476"
+  },
+  "path-tools.names.draw-a-longer-cut-line": {
+    "text": "Draw a longer cut line.",
+    "hash": "33714ab4"
+  },
+  "path-tools.names.fits-the-shape-again-with-fewer-points": {
+    "text": "Fits the shape again with fewer points.",
+    "hash": "73bc3896"
+  },
+  "path-tools.names.grows-or-shrinks-the-shape-by-the-amount": {
+    "text": "Grows or shrinks the shape by the amount you set.",
+    "hash": "c1c4a46f"
+  },
+  "path-tools.names.join": {
+    "text": "Join",
+    "hash": "fd30fe68"
+  },
+  "path-tools.names.join-works-on-open-paths-use-split-first": {
+    "text": "Join works on open paths. Use Split first to open a closed one.",
+    "hash": "73d913ee"
+  },
+  "path-tools.names.joins-the-two-nearest-ends-of-the": {
+    "text": "Joins the two nearest ends of the selected open paths. With one path selected, it closes it.",
+    "hash": "012c9e50"
+  },
+  "path-tools.names.knife": {
+    "text": "Knife",
+    "hash": "846e26d1"
+  },
+  "path-tools.names.nothing-would-be-left-of-this-shape": {
+    "text": "Nothing would be left of this shape.",
+    "hash": "8c96cffb"
+  },
+  "path-tools.names.offset-path": {
+    "text": "Offset path",
+    "hash": "151f6b5e"
+  },
+  "path-tools.names.outline-stroke": {
+    "text": "Outline stroke",
+    "hash": "6d8364b6"
+  },
+  "path-tools.names.pick-a-point-between-the-ends-to-split": {
+    "text": "Pick a point between the ends to split here.",
+    "hash": "546b281d"
+  },
+  "path-tools.names.select-a-closed-shape-open-lines-have-no": {
+    "text": "Select a closed shape. Open lines have no area.",
+    "hash": "2ac45b73"
+  },
+  "path-tools.names.simplify": {
+    "text": "Simplify",
+    "hash": "7102ac34"
+  },
+  "path-tools.names.split": {
+    "text": "Split",
+    "hash": "32afaa78"
+  },
+  "path-tools.names.splits-the-path-at-the-selected-point": {
+    "text": "Splits the path at the selected point.",
+    "hash": "e96acd4a"
+  },
+  "path-tools.names.this-shape-has-no-stroke-to-outline": {
+    "text": "This shape has no stroke to outline.",
+    "hash": "c4c3db8e"
+  },
+  "path-tools.names.this-shape-has-too-many-points-for-this": {
+    "text": "This shape has too many points for this tool.",
+    "hash": "5594bee9"
+  },
+  "path-tools.names.this-shape-is-already-as-simple-as-this": {
+    "text": "This shape is already as simple as this setting allows.",
+    "hash": "f2fc925d"
+  },
+  "path-tools.names.turns-the-stroke-into-a-filled-shape-you": {
+    "text": "Turns the stroke into a filled shape you can edit point by point.",
+    "hash": "a7be2591"
+  },
+  "path-tools.panel.a-higher-value-drops-more-points": {
+    "text": "A higher value drops more points.",
+    "hash": "7ac271fc"
+  },
+  "path-tools.panel.amount": {
+    "text": "Amount",
+    "hash": "49e96d7c"
+  },
+  "path-tools.panel.apply": {
+    "text": "Apply",
+    "hash": "31e392d1"
+  },
+  "path-tools.panel.before-now-after-after": {
+    "text": "{before, plural, one {# point} other {# points}} now, {after, plural, one {# point} other {# points}} after",
+    "hash": "594eb1f0"
+  },
+  "path-tools.panel.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "path-tools.panel.corners": {
+    "text": "Corners",
+    "hash": "1d3cc47e"
+  },
+  "path-tools.panel.detail-kept": {
+    "text": "Detail kept",
+    "hash": "69a7151b"
+  },
+  "path-tools.panel.nothing-to-preview-yet": {
+    "text": "Nothing to preview yet.",
+    "hash": "75f00def"
+  },
+  "path-tools.panel.positive-grows-the-shape-negative": {
+    "text": "Positive grows the shape, negative shrinks it. From {min} to {max}.",
+    "hash": "cc4bbc85"
+  },
+  "path-tools.panel.round": {
+    "text": "Round",
+    "hash": "cd9558ac"
+  },
+  "path-tools.panel.sharp": {
+    "text": "Sharp",
+    "hash": "1a3c4b30"
+  },
+  "path-tools.panel.smooth-corners": {
+    "text": "Smooth corners",
+    "hash": "2c3d391e"
+  },
+  "path-tools.panel.working-on-it": {
+    "text": "Working on it",
+    "hash": "d55b6d1b"
+  }
 }

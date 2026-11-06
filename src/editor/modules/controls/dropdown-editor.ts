@@ -35,7 +35,7 @@ export const dropdownEditor: ModuleEditor = {
       const unused = valid.find((v) => !options.some((o) => o.value === v));
       // not option_N: three of those would read as the old dummy defaults
       const value = unused ?? `value_${options.length + 1}`;
-      write([...options, { label: unused ?? t('Option {n}', { n: options.length + 1 }), value }]);
+      write([...options, { label: unused ?? t('card-editor.dropdown-editor.option-n', { n: options.length + 1 }), value }]);
     };
     const removeOption = (index: number) => write(options.filter((_, i) => i !== index));
     const updateOption = (index: number, key: 'label' | 'value', val: string) =>
@@ -44,38 +44,38 @@ export const dropdownEditor: ModuleEditor = {
     const attrs = dropdownAttributes(eid);
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderEntitySourceField(t('card-editor.dropdown-editor.entity'), c, onChange, hass, scope, { syncCtx })}
         ${attrs.length
-          ? renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))
+          ? renderAttributeField(t('card-editor.dropdown-editor.attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))
           : nothing}
         ${attrs.length
-          ? renderFieldHint(t('Sets {attributes}; empty: {fallback}.', { attributes: attrs.join(', '), fallback: stateObj?.entity_id.startsWith('climate.') ? t('the HVAC mode') : attrs[0] }))
+          ? renderFieldHint(t('card-editor.dropdown-editor.sets-attributes-empty-fallback', { attributes: attrs.join(', '), fallback: stateObj?.entity_id.startsWith('climate.') ? t('card-editor.dropdown-editor.the-hvac-mode') : attrs[0] }))
           : nothing}
         ${stateObj && !ad
-          ? renderFieldHint(t('This entity has no options a dropdown can set (use an input select, select, input text or text with custom options, climate, fan, light, media player, water heater or humidifier).'))
+          ? renderFieldHint(t('card-editor.dropdown-editor.this-entity-has-no-options-a-dropdown'))
           : nothing}
 
         <div class="mc-section">
-          <div class="mc-field">${renderFieldHead(t('Custom options'), 'options', syncCtx)}</div>
+          <div class="mc-field">${renderFieldHead(t('card-editor.dropdown-editor.custom-options'), 'options', syncCtx)}</div>
           ${renderFieldHint(
-            t("Leave empty to offer the entity's own options. Custom options rename or pick from them; a value the entity does not offer is shown disabled."),
+            t("card-editor.dropdown-editor.leave-empty-to-offer-the-entity-s-own"),
             'mc-field-hint-with-margin',
           )}
           <div class="mc-options-list">
             ${options.map(
               (opt, i) => html`
                 <div class="mc-option-item mc-option-row">
-                  ${renderTextField(t('Label'), opt.label, (v) => updateOption(i, 'label', v))}
-                  ${renderTextField(t('Value'), opt.value, (v) => updateOption(i, 'value', v))}
-                  <button type="button" class="mc-btn-icon" aria-label=${t('Remove option')} title=${t('Remove option')} @click=${() => removeOption(i)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
+                  ${renderTextField(t('card-editor.dropdown-editor.label'), opt.label, (v) => updateOption(i, 'label', v))}
+                  ${renderTextField(t('card-editor.dropdown-editor.value'), opt.value, (v) => updateOption(i, 'value', v))}
+                  <button type="button" class="mc-btn-icon" aria-label=${t('card-editor.dropdown-editor.remove-option')} title=${t('card-editor.dropdown-editor.remove-option')} @click=${() => removeOption(i)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
                 </div>
                 ${stateObj && ad && opt.value && !valid.includes(opt.value)
-                  ? renderFieldHint(t('"{value}" is not one of the entity\'s options.', { value: opt.value }))
+                  ? renderFieldHint(t('card-editor.dropdown-editor.value-is-not-one-of-the-entity-s-options', { value: opt.value }))
                   : nothing}
               `,
             )}
           </div>
-          <button type="button" class="mc-btn mc-btn-secondary" @click=${addOption}>${t('Add option')}</button>
+          <button type="button" class="mc-btn mc-btn-secondary" @click=${addOption}>${t('card-editor.dropdown-editor.add-option')}</button>
         </div>
       </div>
     `;

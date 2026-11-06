@@ -5,11 +5,8 @@ import { loadSvgEditor } from '../editor/custom/loaders';
 import type { HomeAssistant } from '../types';
 import { t } from './i18n';
 
-/*
- * The card editor's side of the SVG editor in image mode (svg-editor 1.1.0): "Draw a new image" and "Edit image" open
- * <mc-svg-editor> in the top layer; an image save comes back through `onSaved`, and the layer closes. The editor saves to
- * the library itself and does not close itself.
- */
+// The card editor side of the SVG editor in image mode (svg-editor 1.1.0): "Draw a new image" and "Edit image" open <mc-svg-editor>;
+// a save comes back through `onSaved`.
 
 export interface ImageEditorOpen {
   /** Where focus returns (an element of the field). */
@@ -34,6 +31,6 @@ export async function openImageEditor(o: ImageEditorOpen): Promise<'opened' | 'f
     close();
   });
   el.addEventListener('mc-svg-close', () => close());
-  close = openLayer(el, { from: o.from, key: 'image-field' }, undefined, t('Image editor'));
+  close = openLayer(el, { from: o.from, key: 'image-field' }, undefined, t('image-tools.editor-host.image-editor'));
   return 'opened';
 }

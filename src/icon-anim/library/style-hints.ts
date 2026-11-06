@@ -1,15 +1,10 @@
 import type { RigShape } from '../../anim-studio/model';
 import type { IconStyleHints } from '../../contracts/icon-library';
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { m } from './i18n';
 
-/*
- * Style hints of the icon library (module icon-library, contract 1.2.0), from the brand artist's
- * p4-spec.json `styles`: per entry the accent parts Glow lights (`glow.parts`, part or group ids and
- * `shape:<id>` for its drawn shapes; empty: halo only), its theme's glow colour (`glow.color`; none:
- * derived from the icon colour) and the Quiet hero where the automatic pick is wrong. Generated from
- * the spec: edit the spec and regenerate, or edit both. Read by style.ts only.
- */
+// Style hints of the icon library: per entry the accent parts Glow lights, its theme glow colour and the Quiet hero where
+// the automatic pick is wrong. Generated from the spec; read by style.ts only.
 
 export const STYLE_HINTS: Record<string, IconStyleHints> = {
   'bulb-glow': {
@@ -168,11 +163,11 @@ export const GLOW_ON_LIGHT: Record<string, string> = {
 };
 
 /** Shapes drawn only in Glow (under the parts, lit in the glow colour, moving with their part). */
-export const GLOW_SHAPES: Record<string, Array<Omit<RigShape, 'name'> & { name: MessageId; with: string }>> = {
+export const GLOW_SHAPES: Record<string, Array<Omit<RigShape, 'name'> & { name: MessageIndex; with: string }>> = {
   'jack-o-lantern': [
     {
       id: 'face_glow',
-      name: m('Face glow'),
+      name: m('icon-library.style-hints.face-glow'),
       d: 'M5.5 13.5a6.5 4.25 0 1 0 13 0a6.5 4.25 0 1 0 -13 0Z',
       layer: 'under',
       with: 'part:pumpkin',

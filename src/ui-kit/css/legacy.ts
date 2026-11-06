@@ -1,11 +1,6 @@
 import { css, CSSResult, unsafeCSS } from 'lit';
 
-/*
- * Legacy class mapping: module editors (30 files) still emit mc-* classes.
- * These rules give them exactly the primitives' look without touching module files.
- * LEGACY_INPUT carries enough specificity (0,5,1) to win over the old editor sheets
- * that may still be loaded in the same shadow root during the transition.
- */
+// Legacy class mapping: gives the mc-* classes of module editors the look of the primitives without touching module files.
 const LEGACY_INPUT = unsafeCSS(
   ':is(.mc-field, .mc-act-field, .mc-cond-field) :is(input, select, textarea)' +
     ":not([type='checkbox']):not([type='color']):not([type='range']):not([type='radio'])",
@@ -88,6 +83,7 @@ export const editorLegacy: CSSResult = /* @__PURE__ */ css`
     appearance: none;
     -webkit-appearance: none;
     padding-right: 36px;
+    padding-inline: 12px 36px;
     cursor: pointer;
   }
   ${LEGACY_INPUT}:is(select):not(.input):not([multiple]):not([size]) {
@@ -95,6 +91,10 @@ export const editorLegacy: CSSResult = /* @__PURE__ */ css`
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 18px 18px;
+  }
+  :host([dir='rtl']) ${LEGACY_INPUT}:is(select):not(.input):not([multiple]):not([size]),
+  [dir='rtl'] ${LEGACY_INPUT}:is(select):not(.input):not([multiple]):not([size]) {
+    background-position: left 10px center;
   }
   /* textareas: textarea.input */
   ${LEGACY_INPUT}:is(textarea) {

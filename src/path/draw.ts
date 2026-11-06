@@ -1,10 +1,5 @@
-/*
- * Path model, editor-only: pure generators for the draw tools (contract path-model 1.0.0).
- * Freehand simplification (Ramer-Douglas-Peucker for corners, then a least-squares cubic fit per
- * stretch, after Schneider's "An algorithm for automatically fitting digitized curves", Graphics
- * Gems 1990) and shape paths: line, rectangle, ellipse, polygon, star. Shared by the SVG editor and
- * the animation studio. Coordinates are the document's own units.
- */
+// Path model, editor-only: pure generators for the draw tools. Freehand simplification (RDP, then
+// a least-squares cubic fit) and shape paths (line, rectangle, ellipse, polygon, star).
 import type { Cubic, Pt } from '../contracts/path-model';
 import { GEOM_EPS as EPS, bez, dist, segDist } from './core';
 import { fmtNum, serialize, smoothAll, type Anchor, type EditPath } from './edit';

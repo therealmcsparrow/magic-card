@@ -4,13 +4,7 @@ import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitCss } from '../ui-kit/css/extras';
 import { kitLip } from '../ui-kit/css/lip';
 
-/*
- * Styles of <mc-svg-editor> (contract svg-editor 1.0.0, ui-kit 1.0.0). The look is the kit's: Core's tokens, the card
- * editor's primitives (buttons, fields, segmented control, chips, switch, menu rows) and the kit parts (topbar, rail,
- * float toolbar, notices, tiles, rows). They live in the card-editor chunk that loads this one, so they cost this chunk
- * nothing. What is left here is layout only: where things sit, the canvas stack, the tree row's drag states and the
- * layer's responsive rules. Layout follows the width of the layer, never the device (data-layout).
- */
+// Styles of <mc-svg-editor>: layout only (canvas stack, tree row drag states, responsive rules); the kit supplies tokens and primitives.
 export const editorStyles: CSSResult[] = [
   editorTokens,
   editorPrimitives,
@@ -42,6 +36,7 @@ export const editorStyles: CSSResult[] = [
       z-index: 20;
       top: 8px;
       left: 8px;
+      inset-inline: 8px auto;
       display: flex;
       gap: 4px;
     }
@@ -73,6 +68,7 @@ export const editorStyles: CSSResult[] = [
       z-index: 4;
       left: 12px;
       right: 12px;
+      inset-inline: 12px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -367,6 +363,10 @@ export const editorStyles: CSSResult[] = [
       background-color: var(--mc-canvas);
       background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1px);
       background-size: 16px 16px;
+      direction: ltr;
+    }
+    :host([dir='rtl']) .stage > .hint {
+      direction: rtl;
     }
     .stage.tool-hand {
       cursor: grab;

@@ -1,36 +1,29 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, RigGroup, RigPart, RigShape, TargetRef, Track } from '../../anim-studio/model';
-import type { IconStyleHints, LibraryEntry } from '../../contracts/icon-library';
+import type { IconStyleHints, LibraryEntry, MirrorFlag } from '../../contracts/icon-library';
 import type { IconGeometry } from '../../icons/icon-source';
 import { splitIcon, type SplitPiece } from '../../icons/icon-split';
 import { anchorOf, piecesBox, type Anchor } from '../icon-doc';
 import { mdiGeometry } from '../mdi-paths';
 import { presetKeyframes } from '../part-presets';
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { t as tn } from './i18n';
 
-/*
- * The icon library's builder and motion helpers (module icon-library, contract 1.2.0). An entry is
- * a Spec: the icon (or own paths cut from it), named parts over its pieces, groups, shapes and the
- * tracks. build() turns it into a normal keyframes document with a rig; the studio edits it like
- * any other. The data lives in library.ts (the 2026.10.03 entries) and the category files next to
- * this one (the P4 entries from the brand artist's p4-spec.json).
- *
- * Lives in the studio bundle and the lazy icon animator chunk only, never in magic-card.js.
- */
+// The icon library builder and motion helpers: an entry is a Spec (icon or own paths, named parts, groups, shapes, tracks)
+// and build() turns it into a keyframes document with a rig. Studio bundle and icon animator chunk only.
 
 // ── builder ──
 
 export type Pivot = Anchor | [number, number];
-export type PartDef = [name: MessageId, from: number[], pivot?: Pivot];
-export type GroupDef = [name: MessageId, parts: string[], pivot?: Pivot];
+export type PartDef = [name: MessageIndex, from: number[], pivot?: Pivot];
+export type GroupDef = [name: MessageIndex, parts: string[], pivot?: Pivot];
 
 /** A drawn shape of an entry: its name is an m() mark; `n` fills the {n} of a numbered name. */
-export type SpecShape = Omit<RigShape, 'name'> & { name: MessageId; n?: number };
+export type SpecShape = Omit<RigShape, 'name'> & { name: MessageIndex; n?: number };
 
 export interface Spec {
   id: string;
   /** An m() mark; the tile, the document and the search read it with tn() once the icon tables are ready. */
-  name: MessageId;
+  name: MessageIndex;
   domain: string;
   icon: string;
   tags: string[];
@@ -196,7 +189,7 @@ export const fold = (to: number, extra: KeyframeTransform = {}): AnimationKeyfra
 export const SPIN = (n = 1) => [t(0, { rotate: 0 }, { easing: 'linear' }), t(100, { rotate: 360 * n })];
 
 /** The library entry of a spec (a fresh document per build(), so editing one never changes the library), with its Style hints. */
-export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({
+export const entryOf = (s: Spec, styles?: IconStyleHints, mirror?: MirrorFlag): LibraryEntry => ({
   id: s.id,
   // the tile name in the current language (a getter: the tables are lazy, a language change applies at once)
   get name() {
@@ -207,6 +200,7 @@ export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({
   tags: s.tags,
   build: () => build(s),
   ...(styles ? { styles } : {}),
+  ...(mirror ? { mirror } : {}),
 });
 
 const r3 = (v: number): number => Math.round(v * 1000) / 1000;

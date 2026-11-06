@@ -4,13 +4,9 @@ import { sanitizeSvg } from '../icons/svg-sanitize';
 import { safeCssValue } from '../anim-studio/model';
 import { stopDecl } from './bake';
 
-/*
- * Baked loops as layer CSS for the card (particles-v2 bakedCss). The layer keeps the card's markup
- * (`.mc-anim-fx[data-fx=<name>] > i`, one <i> per slot) and timing (`--mc-fx-anim`: duration,
- * iterations, delay). Each slot gets its own keyframes by position (`:nth-child`), linear timing (the
- * stops are already the motion), its size and colour. Positions are % of the layer as cqw / cqh
- * (the layer is a size container), with the slot centred on them.
- */
+// Baked loops as layer CSS for the card (bakedCss): the layer keeps the card markup (`.mc-anim-fx[data-fx=<name>] > i`)
+// and timing (`--mc-fx-anim`). Each slot gets its own keyframes by position (`:nth-child`), linear timing, size and
+// colour; positions are % of the layer as cqw / cqh.
 
 /** What a slot looks like: the same for a baked element and a live slot. */
 export interface SlotLook {
@@ -92,11 +88,9 @@ export function layerCss(name: string, docId: string, looks: SlotLook[], keyfram
 const lookOf = (e: BakedElement): SlotLook => ({ shape: e.shape, size: e.size, ...(e.color !== undefined ? { color: e.color } : {}) });
 
 /**
- * A baked loop as layer CSS and its slots (particles-v2 ParticlesModule.bakedCss). Stops as
- * bake.stopDecl writes them (stats.bytes counts these). `pool` (the card: the document's slot looks): the
- * slots are the whole pool and an element takes pool look `slot`, as in the live engine, so the slots never
- * change between geometries (an emitter that bakes fewer children leaves the rest of its block unanimated,
- * at the base opacity 0). Elements [lo, hi) are one part, whose pool starts at `off`.
+ * A baked loop as layer CSS and its slots (ParticlesModule.bakedCss). `pool` (the card): the slots are the whole pool and
+ * an element takes pool look `slot`, so slots never change between geometries. Elements [lo, hi) are one part, whose pool
+ * starts at `off`.
  */
 export function bakedCss(loop: BakedLoop, name: string, docId: string, pool?: SlotLook[], lo = 0, hi = loop.elements.length, off = 0): { css: string; slots: ParticleSlotV2[] } {
   const els = loop.elements.slice(lo, hi);

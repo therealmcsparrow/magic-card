@@ -1,11 +1,9 @@
 import { str, unitOpacity } from '../../utils/safe-css';
 import { colour, colours, length, splitTop, styles } from '../../utils/tab-border';
 
-/*
- * The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value
- * is checked against its own grammar and rebuilt from the parsed parts; the tokens are constants of this file,
- * never text from the config. tabs-styles.ts holds the rules that read them.
- */
+// The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value is checked
+// against its own grammar and rebuilt from the parsed parts; the tokens are constants of this file, never config text.
+// tabs-styles.ts holds the rules that read them.
 
 export interface TabLook {
   /** Custom properties for the `.mc-tabs` element (only the keys that passed). */

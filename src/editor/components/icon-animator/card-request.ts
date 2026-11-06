@@ -1,11 +1,6 @@
 import type { CardModule, MagicCardConfig } from '../../../types';
 
-/*
- * The Design tab edits one module; the icon picker's Animated icons tab and the follow-icon edits
- * (lazy chunk) also read the selected module and write the card's `custom_animations`. Its composed `mc-card-bridge` event reaches the
- * card editor (magic-card-editor.ts), whose listener hands over its state manager synchronously.
- * The editor side is that one listener: nothing else of this lives in magic-card.js.
- */
+// Asks the card editor for its state manager through the composed `mc-card-bridge` event.
 
 export const CARD_REQUEST_EVENT = 'mc-card-bridge';
 

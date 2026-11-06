@@ -4,12 +4,7 @@ import { dayNightScene, weatherScene } from './seasonal-state';
 
 export { dayNightScene, TWILIGHT, WEATHER, weatherScene } from './seasonal-state';
 
-/*
- * Seasonal scenes: which scene a card shows right now, from its `seasonal` config, the date and
- * hass. Pure (no DOM, no timers). Priority: the off switch, then an explicit scene, then (auto) a
- * holiday range, then the season. Weather only shows as the `weather` scene or in `combine`.
- * `combine` scenes are appended.
- */
+/** Seasonal scenes: which scene a card shows now, from its `seasonal` config, the date and hass. Pure. */
 
 /** A scene the layer can draw (src/utils/seasonal-scenes.ts). Weather and day/night resolve to one of the last nine. */
 export type SceneId =

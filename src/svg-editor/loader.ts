@@ -1,11 +1,6 @@
 import { SVG_EDITOR_TAG } from '../contracts/svg-editor';
 
-/*
- * Loads the SVG editor chunk (magic-card-svg-editor.js) for the card-editor chunk, which exposes it as
- * window.MagicCard.loadSvgEditor(). One shared promise; false on failure or after 8 s, and the next call
- * tries again (a failed import() of the same URL is cached by the browser, so the retry only helps once
- * the network is back: the chunk loader rewrites nothing here).
- */
+// Loads the SVG editor chunk (magic-card-svg-editor.js) for the card-editor chunk; false on failure or after 8 s.
 
 let pending: Promise<boolean> | undefined;
 const TIMEOUT_MS = 8000;

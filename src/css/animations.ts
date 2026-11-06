@@ -10,17 +10,10 @@ export const ALL_FX_STYLES: Record<string, string> = { ...FX_STYLES, ...SCENE_FX
 export const ALL_LAYER_STYLES: Record<string, string> = { ...SCENE_LAYER_STYLES };
 
 /*
- * Design animations (DesignConfig.animations, resolved by resolveAnimations). On the animated
- * wrapper (module, row or column) the card sets:
- *   data-mc-anim="module icon label"  which elements animate
- *   --mc-anim-m / -i / -mi / -n    comma-separated animation lists: wrapper, icon, both (a module
- *                                  whose icon is missing animates itself with both), button label
- *   --mc-anim-om / -oi             transform-origin, --mca-<id>-i / -c / -s intensity, colour, strength
- *   data-mc-anim-fx                when it renders particle layers (.mc-anim-fx[data-fx] > i)
- *   data-mc-tap / --mc-anim-t      "On tap" animations of the element, played while data-mc-tapped
- *                                  (set again on every tap by src/card/tap-fx.ts)
- * "icon" animates the module's main icon (.mc-anim-icon). Ring presets render an mc-ring
- * (.mc-anim-ring) instead of a particle layer.
+ * Design animations (DesignConfig.animations). The card sets on the animated wrapper:
+ * data-mc-anim (which elements animate), --mc-anim-m / -i / -mi / -n (animation lists),
+ * --mc-anim-om / -oi (origins), --mca-<id>-i / -c / -s (intensity, colour, strength),
+ * data-mc-anim-fx (particle layers) and data-mc-tap / --mc-anim-t (tap animations).
  */
 
 /**

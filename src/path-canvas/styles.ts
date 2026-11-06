@@ -1,11 +1,6 @@
 import { css, type CSSResult } from 'lit';
 
-/*
- * Styles of <mc-path-canvas> (path-canvas). Colours are the ui-kit tokens (Core editorTokens, DESIGN.md): one accent for
- * the selection, the tool and live state; points are told apart by shape, never by colour alone. The canvas imports no
- * token CSS (27 KB this chunk cannot afford): it reads the --mc-* tokens its editor layer sets on an ancestor (custom
- * properties inherit through the shadow root). No local alias block.
- */
+// Styles of <mc-path-canvas>: it reads the --mc-* tokens its editor layer sets on an ancestor and imports no token CSS.
 export const canvasStyles: CSSResult[] = [
   css`
     :host {
@@ -22,6 +17,7 @@ export const canvasStyles: CSSResult[] = [
       background-size: 16px 16px;
       border-radius: 12px;
       outline: none;
+      direction: ltr;
     }
     :host([hidden]) {
       display: none;
@@ -197,7 +193,7 @@ export const canvasStyles: CSSResult[] = [
       display: block;
       margin-top: 4px;
       transform: translateX(-50%);
-      margin-left: 36px;
+      margin-left: 36px; /* physical */
       width: max-content;
       max-width: 200px;
       padding: 1px 6px;

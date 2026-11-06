@@ -1,11 +1,7 @@
 import { svg, html, nothing, SVGTemplateResult, TemplateResult } from 'lit';
 import type { ParticleKind } from '../utils/seasonal-scenes';
 
-/*
- * Seasonal particle artwork: one small SVG (or a styled box) per particle kind and variant. Fill is
- * currentColor (the particle's swatch), accents use var(--c2). Designed to read on light and dark
- * cards: pale shapes get a cool or dark edge, silhouettes mix with the text colour.
- */
+/** Seasonal particle artwork: one small SVG or styled box per particle kind and variant. */
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 const f = (n: number) => String(Math.round(n * 100) / 100);

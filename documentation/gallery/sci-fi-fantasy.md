@@ -2,6 +2,8 @@
 
 Starship consoles, space stations, enchanted forests and castle keeps, in a card that fits the setting. A few use a theme preset. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   Sci-fi
@@ -33,7 +35,7 @@ Starship consoles, space stations, enchanted forests and castle keeps, in a card
 
 A tall capsule of lit cells shows the battery charge, with the solar and house power on either side. The cells are teal and sweep while charging, amber while draining and red under 15 %.
 
-![Reactor core](images/61-reactor-core.webp)
+[![Reactor core, Worlds](images/61-reactor-core.png)](images/61-reactor-core.webp)
 
 Entities: `sensor.home_battery`, `sensor.battery_power`, `sensor.solar_power`, `sensor.house_power`
 
@@ -56,7 +58,7 @@ rows:
       - modules:
           - type: text
             text: Reactor core
-            design: { font_size: 12px, font_weight: "700", color: "#8d99a6", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+            design: { font_size: 12px, font_weight: "700", color: "#c3ccd6", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
       - modules:
           - type: text
             use_entity: true
@@ -80,7 +82,7 @@ rows:
             design: { font_size: 20px, font_weight: "800", color: "#f3f6f9", margin_top: 6px }
           - type: text
             text: Solar
-            design: { font_size: 11px, color: "#8d99a6", text_transform: uppercase, letter_spacing: 1.5px }
+            design: { font_size: 12px, color: "#c3ccd6", text_transform: uppercase, letter_spacing: 1.5px }
       - modules:
           - type: vertical
             gap: 0px
@@ -135,7 +137,7 @@ rows:
             design: { font_size: 20px, font_weight: "800", color: "#f3f6f9", margin_top: 6px }
           - type: text
             text: House
-            design: { font_size: 11px, color: "#8d99a6", text_transform: uppercase, letter_spacing: 1.5px }
+            design: { font_size: 12px, color: "#c3ccd6", text_transform: uppercase, letter_spacing: 1.5px }
   - id: status
     columns:
       - modules:
@@ -183,7 +185,7 @@ A honeycomb of hex cells for the doors and the hallway motion sensor. A tripped 
 
 Shot with the Cobalt Prism theme preset in dark mode. See [theme examples](../themes/examples/README.md#cobalt-prism). With another theme the card uses that theme's colours.
 
-![Shield grid](images/62-shield-grid.webp)
+[![Shield grid, Worlds](images/62-shield-grid.png)](images/62-shield-grid.webp)
 
 Entities: `alarm_control_panel.home`, `binary_sensor.front_door`, `binary_sensor.back_door`, `binary_sensor.hall_motion`
 
@@ -445,7 +447,7 @@ A panel board with a four-colour stripe, the room temperature in a breathing hal
 
 Shot with the Deep Survey theme preset in light mode. See [theme examples](../themes/examples/README.md#deep-survey). With another theme the card uses that theme's colours.
 
-![Life support](images/63-life-support.webp)
+[![Life support, Worlds](images/63-life-support.png)](images/63-life-support.webp)
 
 Entities: `climate.living_room`, `sensor.co2`, `sensor.indoor_humidity`, `sensor.pm25`
 
@@ -640,7 +642,7 @@ rows:
 
 A round hatch for the front door lock. Tap the hatch only while the door is unlocked to lock it. In any other state, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact. The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
 
-![Airlock](images/64-airlock.png)
+![Airlock, Worlds](images/64-airlock.png)
 
 Entities: `lock.front_door`, `binary_sensor.front_door`
 
@@ -844,7 +846,7 @@ rows:
 
 A round map with three orbits and a gold home star. People at home drift on the inner orbit, people away wait on the outer one with a pulse. Each dot moves to the inner orbit with a state rule on its own person entity.
 
-![Star chart](images/65-star-chart.webp)
+[![Star chart, Worlds](images/65-star-chart.png)](images/65-star-chart.webp)
 
 Entities: `person.anna`, `person.ben`, `person.lisa`
 
@@ -1055,7 +1057,7 @@ rows:
 
 An oscilloscope window that shows the track as a live trace while it plays, over a slim transport strip. While the player is paused the trace goes quiet. The title and artist stay on one line.
 
-![Comms array](images/66-comms-array.webp)
+[![Comms array, Worlds](images/66-comms-array.png)](images/66-comms-array.webp)
 
 Entities: `media_player.living_room`
 
@@ -1187,7 +1189,7 @@ rows:
 
 Three glass tubes show the soil moisture of three plants, with bubbles in the full ones and an amber pulse on a dry one. A tube under 25 % turns amber and loses its bubbles. The status line says when the ficus needs water.
 
-![Grow bay](images/67-grow-bay.webp)
+[![Grow bay, Worlds](images/67-grow-bay.png)](images/67-grow-bay.webp)
 
 Entities: `sensor.monstera_moisture`, `sensor.basil_moisture`, `sensor.ficus_moisture`
 
@@ -1415,7 +1417,7 @@ rows:
 
 A roll-up door of steel slats inside a hazard-striped frame. The door rises with the cover position. While the door moves, an amber beacon blinks and dashes run around the opening. Open, stop and close are one tap each.
 
-![Cargo bay](images/68-cargo-bay.webp)
+[![Cargo bay, Worlds](images/68-cargo-bay.png)](images/68-cargo-bay.webp)
 
 Entities: `cover.workshop_door`
 
@@ -1567,7 +1569,7 @@ rows:
 
 The weather seen from orbit. The sky shows the condition, the horizon of the planet glows underneath. Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle in the sky in every weather.
 
-![Orbital weather](images/69-orbital-weather.webp)
+[![Orbital weather, Worlds](images/69-orbital-weather.png)](images/69-orbital-weather.webp)
 
 Entities: `weather.harbor`
 
@@ -1674,7 +1676,7 @@ rows:
 
 A server rack with four slots for CPU, memory, disk and temperature, each with a 20-segment load bar and an LED. Bars and LEDs turn amber past 75 % (70 degrees for the temperature) and red past 90 % (85 degrees).
 
-![Mainframe](images/70-mainframe.png)
+![Mainframe, Worlds](images/70-mainframe.png)
 
 Entities: `sensor.server_cpu`, `sensor.server_ram`, `sensor.server_disk`, `sensor.server_temp`
 
@@ -1908,7 +1910,7 @@ rows:
 
 An iron pot with a glowing brew. While the switch is on the surface bubbles and steam rises, and the word reads Brewing. Off, the pot rests and the liquid turns to amber. The big number is the boiler temperature.
 
-![Cauldron](images/71-cauldron.webp)
+[![Cauldron, Worlds](images/71-cauldron.png)](images/71-cauldron.webp)
 
 Entities: `switch.coffee_machine`, `sensor.coffee_boiler`
 
@@ -2007,7 +2009,7 @@ Four lanterns hang from a beam at different heights, one per room. Tap a lantern
 
 Shot with the Candlelit Cloister theme preset in dark mode. See [theme examples](../themes/examples/README.md#candlelit-cloister). With another theme the card uses that theme's colours.
 
-![Enchanted lanterns](images/72-enchanted-lanterns.webp)
+[![Enchanted lanterns, Worlds](images/72-enchanted-lanterns.png)](images/72-enchanted-lanterns.webp)
 
 Entities: `light.living_room`, `light.kitchen`, `light.bedroom`, `light.hallway`
 
@@ -2290,7 +2292,7 @@ An arched portcullis for the front door lock. The bars are down while the door i
 
 Shot with the Ashen Keep theme preset in dark mode. See [theme examples](../themes/examples/README.md#ashen-keep). With another theme the card uses that theme's colours.
 
-![Castle gate](images/73-castle-gate.png)
+![Castle gate, Worlds](images/73-castle-gate.png)
 
 Entities: `lock.front_door`
 
@@ -2452,7 +2454,7 @@ rows:
 
 The next calendar event floats inside a glass sphere with a slow mist and a soft glow. The time comes from the event start. The location sits under the stand.
 
-![Crystal ball](images/74-crystal-ball.webp)
+[![Crystal ball, Worlds](images/74-crystal-ball.png)](images/74-crystal-ball.webp)
 
 Entities: `calendar.family`
 
@@ -2548,7 +2550,7 @@ rows:
 
 A ring of eight custom marks around a central sigil shows the alarm. Armed, a light runs once around the ring each loop. Triggered, the marks flash red. Disarmed, the ring is grey and still. The three tiles arm and disarm the alarm.
 
-![Rune ward](images/75-rune-ward.webp)
+[![Rune ward, Worlds](images/75-rune-ward.png)](images/75-rune-ward.webp)
 
 Entities: `alarm_control_panel.home`
 
@@ -2667,7 +2669,7 @@ A stone tower with a window per fact (temperature, wind, humidity) and a flag on
 
 Shot with the Silverleaf Glade theme preset in light mode. See [theme examples](../themes/examples/README.md#silverleaf-glade). With another theme the card uses that theme's colours.
 
-![Weather tower](images/76-weather-tower.webp)
+[![Weather tower, Worlds](images/76-weather-tower.png)](images/76-weather-tower.webp)
 
 Entities: `weather.home`
 
@@ -2830,7 +2832,7 @@ rows:
 
 A mound of gold coins whose height follows the current energy price. A tall pile means an expensive hour. The pile has three heights: under 20, up to 30 and over 30 ct/kWh. The card draws a pile instead of a bar chart.
 
-![Dragon hoard](images/77-dragon-hoard.png)
+![Dragon hoard, Worlds](images/77-dragon-hoard.png)
 
 Entities: `sensor.energy_price`, `sensor.energy_price_tomorrow_avg`, `sensor.energy_cheapest_window`
 
@@ -2937,7 +2939,7 @@ rows:
 
 Two planter boxes, one per irrigation zone. Tap a box to start or stop its water. A watering zone gets falling drops and swaying leaves, an idle zone stays still. The bar at the bottom is the soil moisture.
 
-![Herb garden](images/78-herb-garden.webp)
+[![Herb garden, Worlds](images/78-herb-garden.png)](images/78-herb-garden.webp)
 
 Entities: `switch.zone_lawn`, `switch.zone_beds`, `sensor.soil_moisture`
 
@@ -3117,7 +3119,7 @@ rows:
 
 A stage with three arched alcoves, one per speaker. Tap an alcove to play or pause that room. A playing alcove glows and shows bouncing bars, a paused one stays dark. The thin bar is the volume.
 
-![Minstrel hall](images/79-minstrel-hall.webp)
+[![Minstrel hall, Worlds](images/79-minstrel-hall.png)](images/79-minstrel-hall.webp)
 
 Entities: `media_player.kitchen`, `media_player.living_room`, `media_player.bedroom`
 
@@ -3323,7 +3325,7 @@ rows:
 
 A wooden board with four pinned parchment notes and a wax seal that counts the open chores. The seal shows how many items on the to-do list are open. Tap a note to open the list. Replace the four titles with your own chores.
 
-![Quest board](images/80-quest-board.png)
+![Quest board, Worlds](images/80-quest-board.png)
 
 Entities: `todo.chores`
 
@@ -3533,7 +3535,7 @@ rows:
 
 A retro starship-style panel with rounded elbow frames, a sidebar of command blocks, a number cascade and a pulsing power core. Environment, power and security readouts sit side by side, the lights are four pills you tap to toggle. While the alarm is triggered the card turns red and the title becomes a flashing alert.
 
-![Operations console](images/81-ops-console.webp)
+[![Operations console, Worlds](images/81-ops-console.png)](images/81-ops-console.webp)
 
 Entities: `alarm_control_panel.home`, `lock.front_door`, `climate.living_room`, `sensor.indoor_temperature`, `sensor.indoor_humidity`, `sensor.outdoor_temperature`, `weather.home`, `sensor.house_power`, `sensor.solar_power`, `sensor.home_battery`, `sensor.grid_power`, `binary_sensor.front_door`, `binary_sensor.back_door`, `binary_sensor.hall_motion`, `light.living_room`, `light.kitchen`, `light.bedroom`, `light.hallway`, `script.all_lights_off`, `script.red_alert`
 
@@ -5029,7 +5031,7 @@ rows:
 
 The same panel stacked in one column, with a slimmer sidebar and the lights in two rows.
 
-![Operations console, phone-width](images/82-ops-console-mobile.webp)
+[![Operations console, phone-width, Worlds](images/82-ops-console-mobile.png)](images/82-ops-console-mobile.webp)
 
 Entities: `alarm_control_panel.home`, `lock.front_door`, `climate.living_room`, `sensor.indoor_temperature`, `sensor.indoor_humidity`, `sensor.outdoor_temperature`, `weather.home`, `sensor.house_power`, `sensor.solar_power`, `sensor.home_battery`, `sensor.grid_power`, `binary_sensor.front_door`, `binary_sensor.back_door`, `binary_sensor.hall_motion`, `light.living_room`, `light.kitchen`, `light.bedroom`, `light.hallway`, `script.all_lights_off`, `script.red_alert`
 

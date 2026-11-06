@@ -4,11 +4,9 @@ import type { AnimationDoc } from '../model';
 import { unlockKeys } from '../layer-view';
 import { t } from '../i18n';
 
-/*
- * The "Locked. Unlock to edit." line at the top of an inspector or editor.
- * The Unlock button removes the locks that hold the rows (own and inherited) and tells the shell through
- * `layer-view-change`. Fields below it are disabled by the owner: values stay readable, nothing is edited.
- */
+// The "Locked. Unlock to edit." line at the top of an inspector or editor. The Unlock button removes the locks
+// that hold the rows (own and inherited) and tells the shell through `layer-view-change`.
+// Fields below it are disabled by the owner: values stay readable, nothing is edited.
 
 export const lockBannerStyles = css`
   .lock-banner {
@@ -36,7 +34,7 @@ export const lockBannerStyles = css`
 export function lockBanner(doc: AnimationDoc, view: LayerView, keys: LayerKey[]): TemplateResult {
   const unlock = (e: Event): void => {
     const next = unlockKeys(doc, view, keys);
-    (e.currentTarget as HTMLElement).dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view: next, announce: t('Unlocked') }, bubbles: true, composed: true }));
+    (e.currentTarget as HTMLElement).dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view: next, announce: t('anim-studio.lock-banner.unlocked') }, bubbles: true, composed: true }));
   };
-  return html`<div class="lock-banner" role="status"><ha-icon icon="mdi:lock-outline"></ha-icon><span class="txt">${t('Locked. Unlock to edit.')}</span><button type="button" class="btn btn-text btn-sm unlock" @click=${unlock}>${t('Unlock')}</button></div>`;
+  return html`<div class="lock-banner" role="status"><ha-icon icon="mdi:lock-outline"></ha-icon><span class="txt">${t('anim-studio.lock-banner.locked-unlock-to-edit')}</span><button type="button" class="btn btn-text btn-sm unlock" @click=${unlock}>${t('anim-studio.lock-banner.unlock')}</button></div>`;
 }

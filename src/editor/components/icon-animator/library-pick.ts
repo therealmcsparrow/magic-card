@@ -1,16 +1,10 @@
 import type { AnimationConfig } from '../../../types';
-import { validateAnimationDoc } from '../../../anim-studio/model';
+import { validateAnimationDoc, type AnimationDoc } from '../../../anim-studio/model';
 import { ICON_LIBRARY } from '../../../icon-anim/library';
 import { isGlowPaint, styleDoc } from '../../../icon-anim/style';
 import type { IconStyle, LibraryEntry } from '../../../contracts/icon-library';
 
-/*
- * The hand-edit rule of contract icon-library 1.2.1 (LibraryPickFields): an icon entry with
- * `library_icon` is a library pick only while its stored document is still what styleDoc gives for
- * that entry and Style (its `name` and the glow colour picked aside). A document edited by hand
- * (YAML, the animation studio) is the user's own: the Style switch leaves it alone and it follows
- * the module's icon like any own animation. Lazy editor chunk only.
- */
+/* Hand-edit rule for library picks: an icon entry with `library_icon` is a library pick only while its stored document is still what styleDoc gives for that entry and Style. */
 
 /** A document as comparable text: normalised, without name, glow colours as one token, keys sorted. */
 function canonical(raw: unknown): string | undefined {
@@ -18,6 +12,7 @@ function canonical(raw: unknown): string | undefined {
   if (!v.ok) return undefined;
   const doc: Record<string, unknown> = { ...v.doc };
   delete doc.name;
+  delete doc.mirror;
   return JSON.stringify(doc, (_k, val: unknown) => {
     if (isGlowPaint(val)) return 'glow-paint';
     if (val && typeof val === 'object' && !Array.isArray(val))
@@ -28,6 +23,12 @@ function canonical(raw: unknown): string | undefined {
       );
     return val;
   });
+}
+
+/** The document with the entry's mirror flag copied in; an entry with no flag leaves the document as it is. */
+export function withLibraryMirror(doc: AnimationDoc, entry: Pick<LibraryEntry, 'mirror'>): AnimationDoc {
+  const flag = entry.mirror;
+  return flag === 'mirror' || flag === 'keep' ? { ...doc, mirror: flag } : doc;
 }
 
 const seen = new Map<string, boolean>();

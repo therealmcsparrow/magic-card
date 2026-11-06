@@ -1,14 +1,14 @@
 import { css, CSSResult } from 'lit';
 
 /**
- * `.toast` : inverse chip, bottom centre. Used by <mc-ui-toast> in its shadow root and, as CSS only, by
- * the MCU panel. Not in `kitCss`: a screen that shows toasts uses the element, which brings this with it.
+ * `.toast`: inverse chip, bottom centre. Used by <mc-ui-toast> in its shadow root and, as CSS only, by the MCU panel.
+ * Not in `kitCss`: a screen that shows toasts uses the element, which brings this with it.
  */
 export const kitToast: CSSResult = /* @__PURE__ */ css`
   .toast {
     position: fixed;
     inset: auto;
-    left: 50%;
+    left: 50%; /* physical */
     bottom: calc(var(--mc-toast-offset, 16px) + env(safe-area-inset-bottom, 0px));
     transform: translateX(-50%);
     margin: 0;
@@ -18,6 +18,7 @@ export const kitToast: CSSResult = /* @__PURE__ */ css`
     width: max-content;
     max-width: min(520px, calc(100vw - 32px));
     padding: 10px 10px 10px 16px;
+    padding-inline: 16px 10px;
     border: 0;
     border-radius: var(--mc-radius, 8px);
     background: var(--mc-text);

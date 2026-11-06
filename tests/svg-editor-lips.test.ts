@@ -5,6 +5,7 @@ import '../src/svg-editor/index';
 import { __resetIconSourceForTests } from '../src/icons/icon-source';
 import { editorStyles } from '../src/svg-editor/styles';
 import { HELP_KEYS } from '../src/svg-editor/names';
+import { t } from '../src/svg-editor/i18n';
 import type { McSvgEditor } from '../src/svg-editor/mc-svg-editor';
 import { LIP_HOST_ATTR } from '../src/contracts/ui-kit';
 
@@ -192,7 +193,7 @@ describe('SVG editor panel lips', () => {
   });
 
   it('the shortcut help line names Ctrl and Command', () => {
-    expect(HELP_KEYS).toContain('Show or hide panels: Ctrl+\\ or ⌘\\');
+    expect(HELP_KEYS.map((id) => t(id))).toContain('Show or hide panels: Ctrl+\\ or ⌘\\');
   });
 
   it('takes the Dutch names in a Dutch interface', async () => {

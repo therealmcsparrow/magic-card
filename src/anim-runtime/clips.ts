@@ -6,24 +6,9 @@ import { refreshSpeeds } from './bindings';
 import { moduleIcon } from './sheet';
 import type { ApplyCtx, HintCtx, RuntimeHints } from './types';
 
-/*
- * v2 runtime, per-state clips. The card's render owns the wrapper's animation lists, so the clip is
- * decided at resolve time: hints() evaluates the clips in order against the driving entity (the
- * entry's `entity:`, else the module's); the first match plays (resolveAnimations renders its
- * list entry in place of the document's), no match plays the document's own timeline ("self").
- * A missing, unavailable or unknown entity matches no clip.
- *
- * Memory per document and entity (run key + entity id) keeps the clip on screen, so re-renders hand
- * back the same clip and the card's lists do not change (nothing restarts). A change goes through
- * the transition of the incoming clip (going back to self: the outgoing clip's):
- *   cut        at once;
- *   crossfade  hints() keeps the old clip; apply() fades the element out (Web Animations, half of
- *              CROSSFADE_MS), then switches and asks the card to render; after that render apply()
- *              fades the element back in;
- *   finish     hints() keeps the old clip; apply() measures what is left of the running cycle on the
- *              element, then switches and asks the card to render.
- * A newer state while a switch is pending replaces it (or cancels it when it is the current clip).
- */
+// v2 runtime, per-state clips: hints() picks the first clip whose condition matches the driving entity (no match plays the
+// document timeline). A per-document memory keeps the clip across re-renders; a change runs the incoming clip transition
+// (cut, crossfade, finish) and a newer state replaces a pending switch.
 
 export const CROSSFADE_MS = 200;
 const HALF = CROSSFADE_MS / 2;

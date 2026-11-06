@@ -1,11 +1,10 @@
 type Rec = Record<string, unknown>;
 
 /**
- * The one walk behind every needs(config) predicate (lazy-module 1.4.0 "needs(config)"): the card and everything
- * under it, that is rows, columns, modules and their nested children, `hover`, every `conditional[].design`, and the
- * first 32 `conditional_appearance` rules; each object once; `card_config` subtrees (an embedded card is not ours)
- * are skipped, and so is every key named in `skipKeys`. Stops at the first object `test` accepts. Total: a config that is not an object, one that is too
- * deep, or a test that throws gives false.
+ * The one walk behind every needs(config) predicate: the card and everything under it (rows,
+ * columns, modules, `hover`, conditional designs and the first 32 appearance rules), each object
+ * once. Skips `card_config` and `skipKeys`; stops at the first object `test` accepts. Total: bad
+ * input or a throwing test gives false.
  */
 export function configHas(config: unknown, test: (node: Rec) => unknown, skipKeys: readonly string[] = []): boolean {
   const seen = new Set<unknown>();

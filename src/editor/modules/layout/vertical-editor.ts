@@ -13,12 +13,12 @@ export const verticalEditor: ModuleEditor = {
 
     return html`
       <div class="mc-tab-content">
-        ${renderUnitField(t('Gap'), c.gap, (v) => onChange({ ...c, gap: v || undefined }), 'gap', syncCtx, '8')}
-        ${renderSelectField(t('Align'), c.align, [
-          { label: t('Start'), value: 'start' },
-          { label: t('Centre'), value: 'center' },
-          { label: t('End'), value: 'end' },
-          { label: t('Stretch'), value: 'stretch' },
+        ${renderUnitField(t('card-editor.vertical-editor.gap'), c.gap, (v) => onChange({ ...c, gap: v || undefined }), 'gap', syncCtx, '8')}
+        ${renderSelectField(t('card-editor.vertical-editor.align'), c.align, [
+          { label: t('card-editor.vertical-editor.start'), value: 'start' },
+          { label: t('card-editor.vertical-editor.centre'), value: 'center' },
+          { label: t('card-editor.vertical-editor.end'), value: 'end' },
+          { label: t('card-editor.vertical-editor.stretch'), value: 'stretch' },
         ], (v) => onChange({ ...c, align: v as VerticalModuleConfig['align'] }), 'align', syncCtx)}
       </div>
     `;

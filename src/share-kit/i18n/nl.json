@@ -1,0 +1,202 @@
+{
+  "share-kit.anim-preview.animation-preview": {
+    "text": "Voorbeeld van de animatie",
+    "hash": "d2ecb96a"
+  },
+  "share-kit.anim-preview.play": {
+    "text": "Afspelen",
+    "hash": "436e6101"
+  },
+  "share-kit.card.a-picture-in-path-was-left-out-because-it-may": {
+    "text": "Een afbeelding in {path} is weggelaten omdat die van een andere website kan laden ({rule}).",
+    "hash": "4e4dc736"
+  },
+  "share-kit.card.a-style-line-in-path-was-left-out-because-its-name": {
+    "text": "Een stijlregel in {path} is weggelaten omdat de naam niet is toegestaan ({rule}).",
+    "hash": "736395ce"
+  },
+  "share-kit.card.a-template-in-path-was-left-out-because-shared-text": {
+    "text": "Een sjabloon in {path} is weggelaten omdat gedeelde tekst geen sjablonen uitvoert: {text} ({rule}).",
+    "hash": "a8c8ddeb"
+  },
+  "share-kit.card.name-uses-a-file-on-the-sharer-s-home-assistant": {
+    "text": "\"{name}\" gebruikt een bestand op de Home Assistant van de deler. Het bestaat misschien niet op jouw systeem.",
+    "hash": "9551f0e5"
+  },
+  "share-kit.card.path-is-a-card-mod-style-so-it-was-left-out": {
+    "text": "{path} is een card-mod-stijl en is weggelaten ({rule}).",
+    "hash": "240bca33"
+  },
+  "share-kit.card.path-is-a-module-of-an-unknown-type-so-it-was": {
+    "text": "{path} is een module van een onbekend type en is weggelaten ({rule}).",
+    "hash": "83119f66"
+  },
+  "share-kit.card.path-is-not-a-card-setting-so-it-was-left-out": {
+    "text": "{path} is geen kaartinstelling en is weggelaten ({rule}).",
+    "hash": "617acc58"
+  },
+  "share-kit.card.path-points-to-another-website-so-it-was-left-out": {
+    "text": "{path} verwijst naar een andere website, of naar een adres dat niet te controleren is, en is weggelaten ({rule}).",
+    "hash": "575ff23c"
+  },
+  "share-kit.card.path-was-left-out-because-its-value-is-not-allowed": {
+    "text": "{path} is weggelaten omdat de waarde niet is toegestaan ({rule}).",
+    "hash": "194bb6c6"
+  },
+  "share-kit.card.the-action-in-path-was-left-out-because-its-web-address": {
+    "text": "De actie in {path} is weggelaten omdat het webadres geen weblink of pad op dit dashboard is ({rule}).",
+    "hash": "a7999a00"
+  },
+  "share-kit.card.this-is-not-a-magic-card-card": {
+    "text": "Dit is geen Magic Card-kaart.",
+    "hash": "d853edff"
+  },
+  "share-kit.import-preview.demo-states-help": {
+    "text": "Verzonnen waarden vervangen je entiteiten.",
+    "hash": "d453aceb"
+  },
+  "share-kit.import-preview.preview-heading": {
+    "text": "Voorbeeld",
+    "hash": "324b134f"
+  },
+  "share-kit.import-preview.preview-of-name": {
+    "text": "Voorbeeld van {name}. Er wordt niets van internet geladen.",
+    "hash": "da53a4f1"
+  },
+  "share-kit.import-preview.wall-tablet-toggle": {
+    "text": "Wandtablet",
+    "hash": "bedf15b0"
+  },
+  "share-kit.mapping.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "share-kit.mapping.map-entities": {
+    "text": "Entiteiten koppelen",
+    "hash": "18d3b884"
+  },
+  "share-kit.mapping.nothing-here-needs-mapping": {
+    "text": "Hier hoeft niets gekoppeld te worden.",
+    "hash": "e9c28eb4"
+  },
+  "share-kit.mapping.save-mapping": {
+    "text": "Koppeling opslaan",
+    "hash": "bb40e390"
+  },
+  "share-kit.mapping.skip-mapping": {
+    "text": "Overslaan",
+    "hash": "52935301"
+  },
+  "share-kit.mapping.that-is-not-an-entity-id-use-the-form-example": {
+    "text": "Dat is geen entiteits-ID. Gebruik de vorm {example}.",
+    "hash": "923671cb"
+  },
+  "share-kit.mapping.the-preview-shows-value": {
+    "text": "Het voorbeeld toont {value}",
+    "hash": "d86f815e"
+  },
+  "share-kit.mapping.this-file-uses-placeholders-instead-of-the-sender-s": {
+    "text": "Dit bestand gebruikt plaatsaanduidingen in plaats van de entiteiten van de afzender. Typ per plaatsaanduiding de gewenste entiteit, of sla over. Een leeg veld blijft een plaatsaanduiding.",
+    "hash": "2a874c13"
+  },
+  "share-kit.notice.actions-in-this-card": {
+    "text": "Acties in deze kaart",
+    "hash": "db66b892"
+  },
+  "share-kit.notice.actions-in-this-card-help": {
+    "text": "Ze worden alleen uitgevoerd als iemand de kaart gebruikt. Bij het importeren wordt er niets uitgevoerd.",
+    "hash": "4eee9649"
+  },
+  "share-kit.notice.addresses-on-other-websites-were-removed": {
+    "text": "Adressen op andere websites zijn uit deze export verwijderd: {hosts}. Wie dit importeert, ziet ze niet.",
+    "hash": "8a78e3e7"
+  },
+  "share-kit.notice.author-name-is-optional": {
+    "text": "De naam van de maker is optioneel. Een naam is een persoonsgegeven. Als je die invult, wordt die in het bestand geschreven en kan iedereen die het bestand krijgt de naam lezen. Gebruik gerust een bijnaam en voeg geen e-mailadres of contactgegevens toe. Laat het veld leeg om zonder naam te delen.",
+    "hash": "d28f3b1c"
+  },
+  "share-kit.notice.entity-ids-were-replaced": {
+    "text": "Entiteits-ID's zijn vervangen door plaatshouders. Wie dit bestand importeert, kiest zijn eigen apparaten.",
+    "hash": "b747a762"
+  },
+  "share-kit.notice.only-import-files-from-people-you-trust": {
+    "text": "Importeer alleen bestanden van mensen die je vertrouwt. Magic Card controleert het bestand en toont een voorbeeld, en er wordt niets opgeslagen voordat je bevestigt. Bekijk het voorbeeld, de acties en de sjablonen voordat je bevestigt.",
+    "hash": "6ec0a378"
+  },
+  "share-kit.notice.templates-in-this-card": {
+    "text": "Sjablonen in deze kaart",
+    "hash": "a22ad675"
+  },
+  "share-kit.notice.templates-in-this-card-help": {
+    "text": "Deze draaien op je Home Assistant en kunnen de status van je entiteiten lezen. Hier worden ze alleen als tekst getoond en niet uitgevoerd.",
+    "hash": "6a0f473d"
+  },
+  "share-kit.style-drops.a-style-rule-name": {
+    "text": "een stijlregel ({name})",
+    "hash": "3ecb0c4d"
+  },
+  "share-kit.style-drops.a-stylesheet-link": {
+    "text": "een stijlbladverwijzing",
+    "hash": "c91313dc"
+  },
+  "share-kit.theme-check.dark": {
+    "text": "donkere",
+    "hash": "e6bb5689"
+  },
+  "share-kit.theme-check.light": {
+    "text": "lichte",
+    "hash": "99a70261"
+  },
+  "share-kit.theme-check.low-contrast-heading": {
+    "text": "Een deel van de tekst in dit thema is moeilijk te lezen",
+    "hash": "0e5056ee"
+  },
+  "share-kit.theme-check.magic-card-text-on-the-magic-card-background": {
+    "text": "Magic Card-tekst op de Magic Card-achtergrond",
+    "hash": "e28cbb92"
+  },
+  "share-kit.theme-check.main-text-on-the-card-background": {
+    "text": "Hoofdtekst op de kaartachtergrond",
+    "hash": "a54d167d"
+  },
+  "share-kit.theme-check.main-text-on-the-page-background": {
+    "text": "Hoofdtekst op de paginaachtergrond",
+    "hash": "aefcf53a"
+  },
+  "share-kit.theme-check.pair-in-mode": {
+    "text": "{pair} in de {mode} modus heeft een contrast van {ratio}:1. Tekst heeft minstens {min}:1 nodig.",
+    "hash": "e8ef5761"
+  },
+  "share-kit.theme-check.secondary-text-on-the-card-background": {
+    "text": "Secundaire tekst op de kaartachtergrond",
+    "hash": "3866d6bf"
+  },
+  "share-kit.theme-check.text-on-the-primary-colour": {
+    "text": "Tekst op de primaire kleur",
+    "hash": "fc382314"
+  },
+  "share-kit.wall-tablet.wall-tablet-caption": {
+    "text": "Op een vijfde van de grootte, zoals tekst er op 3 meter afstand uitziet.",
+    "hash": "61e7c62e"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-button": {
+    "text": "Lampen aan",
+    "hash": "ab2323a5"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-text": {
+    "text": "Temperatuur",
+    "hash": "b958ce8b"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-title": {
+    "text": "Woonkamer",
+    "hash": "268d40ee"
+  },
+  "share-kit.wall-tablet.wall-tablet-card-value": {
+    "text": "21,5 °C",
+    "hash": "a5db9bd8"
+  },
+  "share-kit.wall-tablet.wall-tablet-label": {
+    "text": "Wandtabletvoorbeeld, {mode}modus. Een tablet van 1280 bij 800 pixels met één voorbeeldkaart, op een vijfde van de grootte getekend om te laten zien hoe tekst er op 3 meter uitziet.",
+    "hash": "2f6e4db9"
+  }
+}

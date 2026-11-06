@@ -11,13 +11,7 @@ import { loadTransfer } from '../transfer-loader';
 import { librarySource } from './library';
 import { t } from '../i18n';
 
-/*
- * The "Library" button of the icon picker, the shape section and the animation list opens this sheet in
- * the top layer (layer.ts): <mc-library-view> (the transfer chunk) with the card's copies as "This card".
- * Imports that do not go to Magic Card Utils reach `mc-transfer-import` here and are written into the
- * card as inline copies (`custom_animations`, `custom_shapes`, `custom_icons`), one undo step. Copies of
- * ids the library does not know are the card's own and are never pruned (prune.ts).
- */
+// Opens <mc-library-view> in the top layer with the card's copies as "This card".
 
 /** The card with imported items stored as its own copies (an item with an id replaces the copy with that id). */
 export function withImported(c: MagicCardConfig, kind: TransferKind, items: TransferItem[]): MagicCardConfig {
@@ -68,7 +62,7 @@ export class LibrarySheet extends LitElement {
   };
 
   render() {
-    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading=${t('Library')} closeLabel=${t('Close')} movable resizable maximizable moveLabel=${t('Move window')} resizeLabel=${t('Resize window')} maximizeLabel=${t('Maximise')} restoreLabel=${t('Restore size')} @mc-window-close=${() => this.onClose?.()}>
+    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading=${t('card-editor.library-sheet.library')} closeLabel=${t('card-editor.library-sheet.close')} movable resizable maximizable moveLabel=${t('card-editor.library-sheet.move-window')} resizeLabel=${t('card-editor.library-sheet.resize-window')} maximizeLabel=${t('card-editor.library-sheet.maximise')} restoreLabel=${t('card-editor.library-sheet.restore-size')} @mc-window-close=${() => this.onClose?.()}>
       <mc-library-view .hass=${this.hass} .source=${librarySource} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
     </mc-ui-window>`;
   }
@@ -82,7 +76,7 @@ export async function openLibrary(opener: HTMLElement, hass: HomeAssistant | und
   try {
     await loadTransfer();
   } catch {
-    toast(t('The library could not load. Check your connection and try again.'));
+    toast(t('card-editor.library-sheet.the-library-could-not-load-check-your'));
     return;
   }
   const sheet = document.createElement('mc-library-sheet') as LibrarySheet;
@@ -90,7 +84,7 @@ export async function openLibrary(opener: HTMLElement, hass: HomeAssistant | und
   sheet.kind = kind;
   sheet.sm = cardStateOf(opener);
   const close = openLayer(sheet, undefined, () => sheet.onClose?.());
-  sheet.parentElement?.setAttribute('aria-label', t('Library'));
+  sheet.parentElement?.setAttribute('aria-label', t('card-editor.library-sheet.library'));
   sheet.onClose = () => {
     close();
     opener.focus();

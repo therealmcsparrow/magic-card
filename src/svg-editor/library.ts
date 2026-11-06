@@ -1,10 +1,6 @@
 import { CMD, LIBRARY_ID_RE, type IconSummary, type SavedIcon, type SavedIconInput } from '../contracts/mcu-library';
 
-/*
- * The editor's side of the Magic Card Utils library (mcu-library 1.1.0, WebSocket commands). Only the
- * editors call these; cards never do. This is the one client for the icon and the image calls: it sends the
- * command and turns every failure into a few words a panel can show. The image editor gets it through its kit.
- */
+// The editor side of the Magic Card Utils library (mcu-library 1.1.0): the one client for icon and image calls, failures as short texts.
 
 export interface Hass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;

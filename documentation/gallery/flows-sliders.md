@@ -2,6 +2,8 @@
 
 Every flow line style, travelling shapes, gradients and end caps, short elbows and a six-flow wall tablet, then the slider looks: Minimal, Material, Neon, Glass, Big fill, stops and track shapes. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   Flow line styles
@@ -34,7 +36,7 @@ Every flow line style, travelling shapes, gradients and end caps, short elbows a
 
 The classic line with a glow and travelling dots, on a straight, a curved and two elbow routes.
 
-![Flow line style solid](images/83-flow-solid.webp)
+[![Flow line style solid, Power](images/83-flow-solid.png)](images/83-flow-solid.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -123,7 +125,7 @@ flows:
 
 The line is cut into dashes that slide along the route.
 
-![Flow line style dashed](images/84-flow-dashed.webp)
+[![Flow line style dashed, Power](images/84-flow-dashed.png)](images/84-flow-dashed.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -212,7 +214,7 @@ flows:
 
 Round dots as wide as the line.
 
-![Flow line style dotted](images/85-flow-dotted.webp)
+[![Flow line style dotted, Power](images/85-flow-dotted.png)](images/85-flow-dotted.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -301,7 +303,7 @@ flows:
 
 Two parallel rails; on a short elbow the rails may overlap.
 
-![Flow line style double](images/86-flow-double.webp)
+[![Flow line style double, Power](images/86-flow-double.png)](images/86-flow-double.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -390,7 +392,7 @@ flows:
 
 A sine line that stays lower on short stretches and flat through elbow corners.
 
-![Flow line style wave](images/87-flow-wave.webp)
+[![Flow line style wave, Power](images/87-flow-wave.png)](images/87-flow-wave.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -479,7 +481,7 @@ flows:
 
 Straight teeth, and one flow with the electric flicker.
 
-![Flow line style zigzag](images/88-flow-zigzag.webp)
+[![Flow line style zigzag, Power](images/88-flow-zigzag.png)](images/88-flow-zigzag.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -568,7 +570,7 @@ flows:
 
 A glass pipe with rising bubbles; with tube_fill_value the liquid length follows the entity value.
 
-![Flow line style tube](images/89-flow-tube.webp)
+[![Flow line style tube, Power](images/89-flow-tube.png)](images/89-flow-tube.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -657,7 +659,7 @@ flows:
 
 A bright core with a soft glow, optionally flickering.
 
-![Flow line style neon](images/90-flow-neon.webp)
+[![Flow line style neon, Power](images/90-flow-neon.png)](images/90-flow-neon.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -746,7 +748,7 @@ flows:
 
 An insulated wire with an outline; twisted adds diagonal strand marks.
 
-![Flow line style cable](images/91-flow-cable.webp)
+[![Flow line style cable, Power](images/91-flow-cable.png)](images/91-flow-cable.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -835,7 +837,7 @@ flows:
 
 Arrow, chevron, star (spinning), diamond, comet and spark travel along a straight line and point where it goes.
 
-![Flow shapes](images/92-flow-shapes.webp)
+[![Flow shapes, Power](images/92-flow-shapes.png)](images/92-flow-shapes.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -1044,7 +1046,7 @@ flows:
 
 A bubble line, drops, an MDI icon, random spacing with size variation, two alternating shapes, and a pulse that stays in place.
 
-![Flow shapes in a swarm](images/93-flow-swarm.webp)
+[![Flow shapes in a swarm, Power](images/93-flow-swarm.png)](images/93-flow-swarm.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -1224,7 +1226,7 @@ flows:
 
 A colour that fades along the line, round and arrow caps, colours by value, and a ring or splash where each shape arrives.
 
-![Flow gradients and ends](images/94-flow-gradient-ends.webp)
+[![Flow gradients and ends, Power](images/94-flow-gradient-ends.png)](images/94-flow-gradient-ends.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -1404,7 +1406,7 @@ flows:
 
 The wave and zigzag get lower where the run is short and stay flat through the corner, and double rails may overlap there.
 
-![Flow lines on short elbows](images/95-flow-short-elbow-wave.webp)
+[![Flow lines on short elbows, Power](images/95-flow-short-elbow-wave.png)](images/95-flow-short-elbow-wave.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -1535,7 +1537,7 @@ flows:
 
 Six flows on one card, three tubes that fill with the value and three neon lines, with bubbles and flicker on.
 
-![Wall tablet](images/96-flow-tablet.webp)
+[![Wall tablet, Power](images/96-flow-tablet.png)](images/96-flow-tablet.webp)
 
 Entities: `sensor.solar_power`, `sensor.house_power`, `sensor.grid_power`, `sensor.battery_power`, `sensor.home_battery`
 
@@ -1681,7 +1683,7 @@ flows:
 
 A thin track with a round handle and the value beside it, in three colours.
 
-![Slider look Minimal](images/97-slider-minimal.png)
+![Slider look Minimal, Home](images/97-slider-minimal.png)
 
 Entities: `light.living_room`, `light.kitchen`, `light.desk`
 
@@ -1763,7 +1765,7 @@ rows:
 
 A 6 px bar with a round handle that has a 1 px border.
 
-![Slider look Material, on a light card](images/98-slider-material.png)
+![Slider look Material, on a light card, Home](images/98-slider-material.png)
 
 Entities: `light.living_room`, `light.kitchen`, `light.desk`
 
@@ -1847,7 +1849,7 @@ rows:
 
 A thin glowing track, a round handle with a glow, and a bright fill.
 
-![Slider look Neon](images/99-slider-neon.png)
+![Slider look Neon, Home](images/99-slider-neon.png)
 
 Entities: `light.living_room`, `light.kitchen`, `light.desk`
 
@@ -1937,7 +1939,7 @@ rows:
 
 A translucent track over a colourful card, a pill handle and the value in the track.
 
-![Slider look Glass with the flat fill](images/100-slider-glass-flat.png)
+![Slider look Glass with the flat fill, Home](images/100-slider-glass-flat.png)
 
 Entities: `light.living_room`, `light.desk`
 
@@ -2019,7 +2021,7 @@ rows:
 
 The track blurs the bright stripes of the card behind it. Needs a browser that supports backdrop-filter; without it the flat glass shows.
 
-![Slider look Glass with blur behind](images/101-slider-glass-blur.png)
+![Slider look Glass with blur behind, Home](images/101-slider-glass-blur.png)
 
 Entities: `light.living_room`
 
@@ -2043,10 +2045,10 @@ rows:
         modules:
           - type: text
             text: "Glass, blur behind"
-            design: { font_size: 17px, font_weight: "700", color: "#ffffff" }
+            design: { font_size: 17px, font_weight: "700", color: "#ffffff", background_color: "rgba(12,10,28,0.62)", padding: 6px 10px, border_radius: 10px }
           - type: text
             text: "The same track with glass_blur on: what is behind it blurs."
-            design: { font_size: 12px, color: "#ffffff" }
+            design: { font_size: 12px, color: "#ffffff", background_color: "rgba(12,10,28,0.62)", padding: 6px 10px, border_radius: 10px }
   - id: s0
     padding: 18px 0 0
     columns:
@@ -2061,6 +2063,8 @@ rows:
             track_thickness: 28
             thumb: pill
             thumb_size: 28
+            thumb_border: 2
+            thumb_border_color: "#ffffff"
             value_position: track
             slider_color: "#ffffff"
   - id: s1
@@ -2086,7 +2090,7 @@ rows:
 
 A large rounded fill that carries the entity icon and the value, horizontal and vertical. The brightness ramp follows the light, and live updates the light while you drag.
 
-![Slider look Big fill](images/102-slider-big-fill.png)
+![Slider look Big fill, Home](images/102-slider-big-fill.png)
 
 Entities: `light.living_room`, `light.desk`
 
@@ -2125,11 +2129,11 @@ rows:
           - type: slider
             entity: light.living_room
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#f59e0b"
+            slider_color: "#b45309"
   - id: s1
     padding: 16px 0 0
     columns:
@@ -2141,7 +2145,8 @@ rows:
           - type: slider
             entity: light.desk
             track_style: big-fill
-            use_entity_color: true
+            fill_mode: solid
+            slider_color: "#7e22ce"
             thumb: none
             value_position: track
             live: true
@@ -2159,11 +2164,11 @@ rows:
             direction: vertical
             design: { css: "--mc-slider-vertical-height: 15rem;" }
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#f59e0b"
+            slider_color: "#b45309"
       - gap: 6px
         modules:
           - type: text
@@ -2174,11 +2179,11 @@ rows:
             direction: vertical
             design: { css: "--mc-slider-vertical-height: 15rem;" }
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#22d3ee"
+            slider_color: "#0e7490"
       - gap: 6px
         modules:
           - type: text
@@ -2189,18 +2194,18 @@ rows:
             direction: vertical
             design: { css: "--mc-slider-vertical-height: 15rem;" }
             track_style: big-fill
-            fill_mode: auto
+            fill_mode: solid
             thumb: none
             value_position: track
             live: true
-            slider_color: "#c084fc"
+            slider_color: "#7e22ce"
 ```
 
 ## Slider stops
 
 Named stops under the track, the handle snaps to them (drag and arrow keys), plus ticks and the end labels.
 
-![Slider stops](images/103-slider-stops.png)
+![Slider stops, Home](images/103-slider-stops.png)
 
 Entities: `light.living_room`, `light.kitchen`, `light.desk`
 
@@ -2292,7 +2297,7 @@ rows:
 
 The track and fill follow a hexagon, a squircle, a wave and a ticket from the shape system.
 
-![Slider track shapes](images/104-slider-track-shape.png)
+![Slider track shapes, Home](images/104-slider-track-shape.png)
 
 Entities: `light.living_room`, `light.kitchen`, `light.desk`
 

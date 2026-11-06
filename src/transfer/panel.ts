@@ -2,24 +2,26 @@ import { LitElement, html, css, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorTokens } from '../css/editor-system';
-import { button, editorPrimitives, glyph, kitCss, notice, seg } from '../ui-kit';
+import { englishOf } from '../i18n/english-of';
+import { button, editorPrimitives, glyph, isTranslated, kitCss, legalText, notice, seg } from '../ui-kit';
 import { HOST_KINDS } from '../contracts/preset-transfer';
-import type { ClashChoice, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
+import type { ClashChoice, ParseResult, TransferFormat, TransferRefusal, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
 import { loadSvgCss } from '../svg-safety/css-loader';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
-import { count } from './count';
+import { checkCompressed, checkTextSize } from './safe-parse';
+import { count, exportLabel, importLabel, sourceHolds } from './count';
 import { looksLikeSvg } from '../svg-io/looks-like-svg';
 import { loadImageTransfer } from './image-transfer-loader';
-import { locale, t } from './i18n';
+import { loadShareKit, loadShareTablet, shareKit } from './share-kit-loader';
+import type { CardKeyLists, ShareKit } from '../contracts/share-kit';
+import type { ThemeDoc } from '../contracts/theme-editor';
+import { hasWrap } from '../i18n/pseudo-hook';
+import { en, locale, m, t } from './i18n';
 
-/*
- * <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept
- * external values) and export (format, download, copy). It never writes: after the user confirms it
- * dispatches `mc-transfer-import` { kind, items, choice } with the ids already resolved, and the host
- * saves. `mc-transfer-close` on Escape and on Close.
- */
+// <mc-transfer-panel> (preset-transfer 1.0.0): import (file or paste, summary, clash choice, kept external values) and export.
+// It never writes: after the user confirms it dispatches `mc-transfer-import` { kind, items, choice }; `mc-transfer-close` on Escape and Close.
 
 type Ok = Extract<ParseResult, { ok: true }>;
 
@@ -58,7 +60,7 @@ export class TransferPanel extends LitElement {
       }
       ul {
         margin: 0;
-        padding-left: 18px;
+        padding-inline-start: 18px;
         font-size: 0.8125rem;
         overflow-wrap: anywhere;
       }
@@ -75,13 +77,60 @@ export class TransferPanel extends LitElement {
   /** (optional) Ids another library holds (renamed on import) and names the target already shows (numbered on import). */
   @property({ attribute: false }) reserved?: (kind: TransferKind, id: string) => boolean;
   @property({ attribute: false }) takenName?: (kind: TransferKind, name: string) => boolean;
+  /** The card editor's key lists; needed to read a card. */
+  @property({ attribute: false }) card?: CardKeyLists;
 
   @state() private _res?: ParseResult;
   @state() private _choice: ClashChoice = 'keep-both';
   @state() private _format: TransferFormat = 'yaml';
   @state() private _done = '';
+  /** The share-kit chunk; import and export are offered only once it has loaded. */
+  @state() private _kit?: ShareKit;
+  @state() private _kitFailed = false;
+  /** (optional) Entity ids the mapping step offers, by the domain of each placeholder. */
+  @property({ attribute: false }) entities?: readonly string[];
+  /** The entity ids chosen for placeholders. */
+  @state() private _map: Record<string, string> = {};
+  /** Contrast warnings of an imported theme, one list per item, from the theme check in the same chunk. */
+  @state() private _contrast: Array<{ name: string; lines: string[] }> = [];
+  @state() private _contrastHeading = '';
+  @state() private _tablet = false;
+  @state() private _tabletFailed = false;
+  @state() private _english: ReadonlySet<string> = new Set();
 
   private _fileName = '';
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this._kit ??= shareKit();
+    void this._loadKit();
+  }
+
+  private async _loadKit(): Promise<ShareKit | undefined> {
+    this._kit ??= await loadShareKit();
+    this._kitFailed = !this._kit;
+    return this._kit;
+  }
+
+  /** A legal text with its English-prevails label and Show English action. */
+  private _legal(id: string, text: string, english: string): TemplateResult {
+    const on = this._english.has(id);
+    return legalText({
+      text,
+      english,
+      translated: isTranslated(locale(), hasWrap()),
+      showEnglish: on,
+      onToggle: () => {
+        const next = new Set(this._english);
+        if (on) next.delete(id);
+        else next.add(id);
+        this._english = next;
+      },
+      prevailsLabel: t('transfer.legal.english-prevails'),
+      showLabel: t('transfer.legal.show-english'),
+      id: `legal-${id}`,
+    });
+  }
 
   private _kinds(): readonly TransferKind[] {
     return this.accept ?? HOST_KINDS[this.host];
@@ -106,11 +155,24 @@ export class TransferPanel extends LitElement {
     });
   }
 
+  /** Reads pasted or opened text; anything that throws on the way becomes a visible refusal and nothing is imported. */
   private async _read(text: string, fileName?: string): Promise<void> {
+    try {
+      await this._readText(text, fileName);
+    } catch (err) {
+      console.warn('Magic Card: reading a transfer failed', err);
+      this._contrast = [];
+      this._res = { ok: false, refusal: 'not_parseable', message: t('transfer.panel.something-went-wrong-while-reading-this-file') };
+      this.focusResult();
+    }
+  }
+
+  private async _readText(text: string, fileName?: string): Promise<void> {
     this._fileName = fileName ?? '';
+    this._tabletFailed = false;
     // v2 fields and particle simulations are checked by validators that live in lazy chunks of the card; load them first
     const need = (re: RegExp, load: () => Promise<unknown>): Promise<unknown> => (re.test(text) ? load() : Promise.resolve(true));
-    const ok = await Promise.all([need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
+    const [kit, ...ok] = await Promise.all([this._loadKit(), need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
     // an image file is checked by the image-transfer chunk, so that chunk is loaded before the text is read
     const kinds = this._kinds();
     const onlyImages = kinds.length === 1 && kinds[0] === 'image';
@@ -120,24 +182,57 @@ export class TransferPanel extends LitElement {
     // an SVG text is opened here as an icon or an image, so its styles are resolved; preset files never take the resolver
     const wantsCss = looksLikeSvg(text, fileName) && (kinds.includes('icon') || onlyImages);
     const [images, css] = await Promise.all([wantsImages ? loadImageTransfer() : undefined, wantsCss ? loadSvgCss() : undefined]);
-    this._res =
-      ok.every(Boolean) && (images || !wantsImages)
-        ? parseTransfer(text, { accept: this._kinds(), fileName, images, css })
-        : { ok: false, refusal: 'limits', message: wantsImages ? t('The checker for images did not load, so this image was not read.') : t('The checker for these animations did not load, so the file was not read. Check your connection and try again.') };
+    const res: ParseResult = !kit
+      ? { ok: false, refusal: 'not_parseable', message: t('transfer.panel.the-checker-for-shared-values-did-not-load') }
+      : ok.every(Boolean) && (images || !wantsImages)
+        ? parseTransfer(text, { accept: this._kinds(), kit, fileName, images, css, card: this.card })
+        : { ok: false, refusal: 'not_parseable', message: wantsImages ? t('transfer.panel.the-checker-for-images-did-not-load-so') : t('transfer.panel.the-checker-for-these-animations-did-not') };
+    this._contrast = [];
+    if (res.ok) await this._checkPreviews(res);
+    this._res = res;
     this._choice = 'keep-both';
     this.focusResult();
+  }
+
+  /** The Wall tablet opens once its own chunk is loaded; when that fails it stays off and says so. */
+  private async _toggleTablet(): Promise<void> {
+    if (this._tablet) {
+      this._tablet = false;
+      return;
+    }
+    this._tabletFailed = !(await loadShareTablet());
+    this._tablet = !this._tabletFailed;
+  }
+
+  /** A theme's contrast warnings and an animation's preview element, both from the share-kit chunk. */
+  private async _checkPreviews(r: Ok): Promise<void> {
+    const probe = this.renderRoot.querySelector<HTMLElement>('#probe');
+    if (r.kind !== 'theme' || !probe || !this._kit) return;
+    const v = this._kit.views;
+    this._contrastHeading = v.contrastHeading();
+    this._contrast = r.items.map((i) => ({ name: i.name, lines: v.contrastWarnings(this._kit!.checkContrast(i.data as ThemeDoc, probe)) })).filter((i) => i.lines.length);
   }
 
   private async _onFile(e: Event): Promise<void> {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-    const refused = checkFileSize(file, this._kinds());
-    if (refused && !refused.ok) {
-      this._res = { ok: false, refusal: refused.refusal, message: refused.message };
-      this.focusResult();
-    } else await this._read(await file.text(), file.name);
+    const refused = checkFileSize(file, this._kinds()) ?? (await checkCompressed(file));
+    if (refused && !refused.ok) this._refuse(refused.refusal, refused.message);
+    else await this._read(await file.text(), file.name);
     input.value = '';
+  }
+
+  private _refuse(refusal: TransferRefusal, message: string): void {
+    this._res = { ok: false, refusal, message };
+    this.focusResult();
+  }
+
+  private _onPaste(): void {
+    const text = this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value;
+    const refused = checkTextSize(text);
+    if (refused && !refused.ok) this._refuse(refused.refusal, refused.message);
+    else void this._read(text);
   }
 
   private _close = (): void => void this.dispatchEvent(new CustomEvent('mc-transfer-close', { bubbles: true, composed: true }));
@@ -156,8 +251,12 @@ export class TransferPanel extends LitElement {
       reserved: this.reserved ? (id) => this.reserved!(r.kind, id) : undefined,
       takenName: this.takenName ? (n) => this.takenName!(r.kind, n) : undefined,
     });
-    this.dispatchEvent(new CustomEvent('mc-transfer-import', { bubbles: true, composed: true, detail: { kind: r.kind, items, choice: this._choice } }));
+    const mapped = items.map((i) => ({ ...i, data: this._kit!.applyMapping(i.data, this._map) }));
+    this.dispatchEvent(new CustomEvent('mc-transfer-import', { bubbles: true, composed: true, detail: { kind: r.kind, items: mapped, choice: this._choice } }));
     this._res = undefined;
+    this._map = {};
+    this._tablet = false;
+    this._tabletFailed = false;
   }
 
   /** Notes shown to the user: step refs the target already has are not a problem. */
@@ -169,7 +268,8 @@ export class TransferPanel extends LitElement {
   }
 
   render(): TemplateResult {
-    return html`<div class="wrap" lang=${locale()} @keydown=${this._key}>${this.mode === 'export' ? this._export() : this._import()}</div>`;
+    const body = this._kit ? (this.mode === 'export' ? this._export() : this._import()) : this._kitFailed ? notice({ tone: 'error', text: t('transfer.panel.the-checker-for-shared-values-did-not-load') }) : nothing;
+    return html`<div class="wrap" lang=${locale()} @keydown=${this._key}>${body}</div>`;
   }
 
   // ── import ──
@@ -181,31 +281,32 @@ export class TransferPanel extends LitElement {
     const icon = kinds.includes('icon');
     const types = accept.replace(/\./g, '').replace(/,/g, ', ');
     return html`
-      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? t('Import {items}', { items: count(r.items.length, r.kind) }) : t('This file was not imported')) : t('Import presets')}</h3></div>
+      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? importLabel(r.items.length, r.kind) : t('transfer.panel.this-file-was-not-imported')) : t('transfer.panel.import-presets')}</h3></div>
       <div class="bar">
-        ${button({ label: t('Choose a file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
+        ${button({ label: t('transfer.panel.choose-a-file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
         <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
-        <span class="help">${images ? t('JSON or SVG, up to 8 MB') : icon ? t('{types}, up to 1 MB; SVG up to 32 KB', { types }) : t('{types}, up to 1 MB', { types })}</span>
+        <span class="help">${images ? t('transfer.panel.json-or-svg-up-to-8-mb') : icon ? t('transfer.panel.types-up-to-1-mb-svg-up-to-32-kb', { types }) : t('transfer.panel.types-up-to-1-mb', { types })}</span>
       </div>
       <div class="field">
-        <div class="field-head"><label for="paste">${t('Or paste the text')}</label></div>
+        <div class="field-head"><label for="paste">${t('transfer.panel.or-paste-the-text')}</label></div>
         <textarea id="paste" class="input" spellcheck="false"></textarea>
         <div class="bar">
-          ${button({ label: t('Read'), onClick: () => void this._read(this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value) })}
-          ${button({ label: t('Close'), variant: 'text', onClick: this._close })}
+          ${button({ label: t('transfer.panel.read'), onClick: () => this._onPaste() })}
+          ${button({ label: t('transfer.panel.close'), variant: 'text', onClick: this._close })}
         </div>
       </div>
       ${r?.ok ? html`<p id="res" class="res" tabindex="-1" role="status">${this._summary(r)}</p>` : r ? html`<div id="res" tabindex="-1">${notice({ tone: 'error', text: r.message })}</div>` : nothing}
       ${r?.ok ? this._result(r) : nothing}
+      <span id="probe" hidden aria-hidden="true"></span>
     `;
   }
 
   private _summary(r: Ok): string {
     const n = this._notes(r);
     const kept = n.filter(KEPT).length;
-    const parts = [t('{source} holds {items}.', { source: this._fileName || t('The text'), items: count(r.items.length, r.kind) })];
-    if (kept) parts.push(t('{n, plural, one {# value is kept as written. Check the list below.} other {# values are kept as written. Check the list below.}}', { n: kept }));
-    if (n.length - kept) parts.push(t('{n, plural, one {# note.} other {# notes.}}', { n: n.length - kept }));
+    const parts = [sourceHolds(this._fileName || t('transfer.panel.the-text'), r.items.length, r.kind)];
+    if (kept) parts.push(t('transfer.panel.n', { n: kept }));
+    if (n.length - kept) parts.push(t('transfer.panel.n-2', { n: n.length - kept }));
     return parts.join(' ');
   }
 
@@ -217,54 +318,65 @@ export class TransferPanel extends LitElement {
     const clashes = r.items.filter((i) => this.taken(r.kind, i.id));
     const blocked = (r.kind === 'theme' || r.kind === 'image') && !this.hasLibrary;
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
-    const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
+    const anyUnknown = kept.some((n) => n.code === 'external_ref' && (n.unknown || !n.hosts?.length));
+    const hosts = anyUnknown ? [] : [...new Set(kept.flatMap((n) => n.hosts ?? []))];
+    const run = this._kit!.importNotice(r.kind, r.items);
+    const w = this._kit!.views;
+    const shown = hosts.length ? hosts.join(', ') : anyUnknown ? t('transfer.theme.another-website') : '';
+    const shownEn = hosts.length ? shown : en(m('transfer.theme.another-website'));
     return html`
+      ${w.untrustedView((id, text, english) => this._legal(id, text, english))}
       <ul>
-        ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('(you have this one)')}</span>` : nothing}</li>`)}
+        ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">${t('transfer.panel.you-have-this-one')}</span>` : nothing}</li>`)}
       </ul>
       ${kept.length
         ? html`<div class="notice warn" role="status">
             ${glyph('help', 20)}
             <div class="body">
-              <strong>${t('{n, plural, one {# value is kept as written} other {# values are kept as written}}', { n: kept.length })}</strong>
-              <span class="help">${hosts.length ? `${t('Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor\'s IP address.', { hosts: hosts.join(', ') })} ` : ''}${t('Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.')}</span>
+              <strong>${t('transfer.panel.n-3', { n: kept.length })}</strong>
+              <span class="help">${shown ? html`${this._legal('every-browser', t('transfer.panel.every-browser-that-shows-a-dashboard', { hosts: shown }), englishOf(en(m('transfer.panel.every-browser-that-shows-a-dashboard')), { hosts: shownEn }))} ` : nothing}${t('transfer.panel.lines-that-start-with-card-mod-only-work')}</span>
               <ul>
-                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.hosts?.length ? ` (${n.hosts.join(', ')})` : ''}</li>`)}
+                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.code === 'external_ref' ? ` (${n.hosts?.length ? n.hosts.join(', ') : t('transfer.theme.another-website')})` : ''}</li>`)}
               </ul>
             </div>
           </div>`
         : nothing}
-      ${local.length ? html`<p class="help">${t("{n, plural, one {# value points to a file on the sharer's Home Assistant (url(/local/...)). It may not exist on your system.} other {# values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.}}", { n: local.length })}</p>` : nothing}
+      ${w.contrastView(this._contrastHeading, this._contrast)}
+      ${w.importPreview(r.kind, r.items, run.placeholders, this._tablet, () => void this._toggleTablet())}
+      ${this._tabletFailed ? html`<p class="help" data-wall-tablet-failed role="alert">${t('transfer.panel.the-wall-tablet-preview-did-not-load')}</p>` : nothing}
+      ${w.runView(run)}
+      ${run.placeholders.length ? w.mappingView(run.placeholders, this._map, (id, v) => (this._map = { ...this._map, [id]: v }), () => (this._map = {}), this.entities) : nothing}
+      ${local.length ? html`<p class="help">${t("transfer.panel.n-4", { n: local.length })}</p>` : nothing}
       ${rest.length
         ? html`<details class="cond" ?open=${r.kind === 'image'}>
-            <summary>${t('{n, plural, one {# note} other {# notes}}', { n: rest.length })}</summary>
+            <summary>${t('transfer.panel.n-5', { n: rest.length })}</summary>
             <ul>
               ${rest.map((n) => html`<li>${name(n)}${n.message}</li>`)}
             </ul>
           </details>`
         : nothing}
-      ${r.kind !== 'theme' && r.kind !== 'image' && !this.hasLibrary ? html`<p class="help">${t('Magic Card Utils is not installed, so these are saved as copies inside this card.')}</p>` : nothing}
-      ${blocked ? notice({ tone: 'error', text: r.kind === 'image' ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.') : t('Update Magic Card Utils to keep theme presets.') }) : nothing}
+      ${r.kind !== 'theme' && r.kind !== 'image' && !this.hasLibrary ? html`<p class="help">${t('transfer.panel.magic-card-utils-is-not-installed-so')}</p>` : nothing}
+      ${blocked ? notice({ tone: 'error', text: r.kind === 'image' ? t('transfer.panel.images-need-magic-card-utils-it-is') : t('transfer.panel.update-magic-card-utils-to-keep-theme') }) : nothing}
       ${clashes.length
         ? html`<div class="field">
-            <div class="field-head"><span class="lbl">${t('{n, plural, one {{items} already exists} other {{items} already exist}}', { n: clashes.length, items: count(clashes.length, r.kind) })}</span></div>
+            <div class="field-head"><span class="lbl">${t('transfer.panel.n-6', { n: clashes.length, items: count(clashes.length, r.kind) })}</span></div>
             ${seg({
               role: 'radiogroup',
-              label: t('What to do with them'),
+              label: t('transfer.panel.what-to-do-with-them'),
               full: true,
               value: this._choice,
               items: [
-                { value: 'keep-both', label: t('Keep both') },
-                { value: 'replace', label: t('Replace them') },
+                { value: 'keep-both', label: t('transfer.panel.keep-both') },
+                { value: 'replace', label: t('transfer.panel.replace-them') },
               ],
               onChange: (c) => (this._choice = c),
             })}
-            <p class="help">${this._choice === 'replace' ? t('The saved ones are overwritten.') : t('The new ones get a number.')}</p>
+            <p class="help">${this._choice === 'replace' ? t('transfer.panel.the-saved-ones-are-overwritten') : t('transfer.panel.the-new-ones-get-a-number')}</p>
           </div>`
         : nothing}
       <div class="bar">
-        ${button({ label: kept.length ? t('Import anyway') : t('Import {items}', { items: count(r.items.length, r.kind) }), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
-        ${button({ label: t('Cancel'), variant: 'text', onClick: () => (this._res = undefined) })}
+        ${button({ label: kept.length ? t('transfer.panel.import-anyway') : importLabel(r.items.length, r.kind), variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
+        ${button({ label: t('transfer.panel.cancel'), variant: 'text', onClick: () => ((this._res = undefined), (this._map = {})) })}
       </div>
     `;
   }
@@ -272,7 +384,9 @@ export class TransferPanel extends LitElement {
   // ── export ──
   private _text(): string {
     const e = this.exportItems;
-    return e ? serialiseTransfer(e.kind, e.items, this._fmt()) : '';
+    if (!e || !this._kit) return '';
+    const shared = this._kit.placeholderItems(e.kind, e.items);
+    return serialiseTransfer(e.kind, shared.items, this._fmt(), { placeholders: shared.placeholders });
   }
 
   private _name(): string {
@@ -287,32 +401,34 @@ export class TransferPanel extends LitElement {
     a.download = this._name();
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    this._done = t('Downloaded {name}.', { name: a.download });
+    this._done = t('transfer.panel.downloaded-name', { name: a.download });
   }
 
   private async _copy(text: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(text);
-      this._done = t('Copied.');
+      this._done = t('transfer.panel.copied');
     } catch {
       this.renderRoot.querySelector<HTMLTextAreaElement>('#out')?.select();
-      this._done = t('Could not copy. The text is selected: press Ctrl+C.');
+      this._done = t('transfer.panel.could-not-copy-the-text-is-selected');
     }
   }
 
   private _export(): TemplateResult {
     const e = this.exportItems;
-    if (!e?.items.length) return html`<p class="help" role="status">${t('Nothing to export.')}</p>`;
+    if (!e?.items.length) return html`<p class="help" role="status">${t('transfer.panel.nothing-to-export')}</p>`;
     const text = this._text();
+    const shared = this._kit!.placeholderItems(e.kind, e.items);
+    const replaced = shared.placeholders.length > 0;
     return html`
-      <div class="group-head"><h3 tabindex="-1">${t('Export {items}', { items: count(e.items.length, e.kind) })}</h3></div>
+      <div class="group-head"><h3 tabindex="-1">${exportLabel(e.items.length, e.kind)}</h3></div>
       ${e.kind === 'image'
         ? nothing
         : html`<div class="field">
-        <div class="field-head"><span class="lbl">${t('File format')}</span></div>
+        <div class="field-head"><span class="lbl">${t('transfer.panel.file-format')}</span></div>
         ${seg({
           role: 'radiogroup',
-          label: t('File format'),
+          label: t('transfer.panel.file-format'),
           value: this._format,
           items: [
             { value: 'yaml', label: 'YAML' },
@@ -321,13 +437,13 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>`}
-      ${e.items.some((i) => i.author) ? html`<p class="help">${t('The author name is saved in the file. Check it before you share the file.')}</p>` : nothing}
-      <textarea id="out" class="input" readonly aria-label=${t('Export text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
+      ${this._kit!.views.exportNotes(e.items.some((i) => i.author), !!replaced, shared.removedHosts, (id, text, english) => this._legal(id, text, english))}
+      <textarea id="out" class="input" readonly aria-label=${t('transfer.panel.export-text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
-        ${button({ label: t('Download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
-        ${button({ label: t('Copy'), icon: 'mdi:content-copy', onClick: () => this._copy(text) })}
-        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: t('Copy as HA theme'), onClick: () => this._copy(haThemeYaml(e.items[0].name, e.items[0].data as never)) }) : nothing}
-        ${button({ label: t('Close'), variant: 'text', onClick: this._close })}
+        ${button({ label: t('transfer.panel.download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
+        ${button({ label: t('transfer.panel.copy'), icon: 'mdi:content-copy', onClick: () => this._copy(text) })}
+        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: t('transfer.panel.copy-as-ha-theme'), onClick: () => this._copy(haThemeYaml(e.items[0].name, this._kit!.placeholderItems(e.kind, e.items).items[0].data as never)) }) : nothing}
+        ${button({ label: t('transfer.panel.close'), variant: 'text', onClick: this._close })}
       </div>
       <div role="status" aria-live="polite" class="help">${this._done}</div>
     `;

@@ -9,12 +9,7 @@ import { E } from './bind';
 import { MAX_GROUP_DEPTH } from '../contracts/svg-editor';
 import { blankDoc, closeFilled, newShape, nameFor, pruneGroups, round2, uid, type Cap, type Doc, type Group, type Join, type Paint, type Shape, type ShapeType } from './model';
 
-/*
- * Anything in becomes a document through the sanitiser first (CRA: sanitizeSvg on every import). The
- * sanitiser's own output is what is read here, never the raw text; the raw text is only scanned to
- * tell the user what was dropped. Colours become the card's semantic paints; transforms are applied to
- * the geometry.
- */
+// Anything in becomes a document through the sanitiser first (CRA: sanitizeSvg on every import); colours become semantic paints.
 
 export interface Dropped {
   script: number;

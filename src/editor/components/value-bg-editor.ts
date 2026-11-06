@@ -11,21 +11,21 @@ import './color-picker';
 import './unit-field';
 import './entity-picker';
 import './attribute-picker';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
-type Opt = { value: string; label: MessageId };
+type Opt = { value: string; label: MessageIndex };
 type Key = keyof ValueBackgroundConfig;
 
 const TYPES: Opt[] = [
-  { value: 'off', label: m('Off') },
-  { value: 'fill', label: m('Fill') },
-  { value: 'sparkline', label: m('Sparkline') },
+  { value: 'off', label: m('card-editor.value-bg-editor.off') },
+  { value: 'fill', label: m('card-editor.value-bg-editor.fill') },
+  { value: 'sparkline', label: m('card-editor.value-bg-editor.sparkline') },
 ];
 const DIRECTIONS: Opt[] = [
-  { value: 'up', label: m('Up') },
-  { value: 'down', label: m('Down') },
-  { value: 'left', label: m('Left') },
-  { value: 'right', label: m('Right') },
+  { value: 'up', label: m('card-editor.value-bg-editor.up') },
+  { value: 'down', label: m('card-editor.value-bg-editor.down') },
+  { value: 'left', label: m('card-editor.value-bg-editor.left') },
+  { value: 'right', label: m('card-editor.value-bg-editor.right') },
 ];
 
 /** Keys only one type reads: dropped when switching to the other. */
@@ -194,20 +194,20 @@ export class ValueBgEditor extends LitElement {
     const stateObj = entity ? this.hass?.states?.[entity] : undefined;
     return html`
       ${this._field(
-        t('Entity'),
+        t('card-editor.value-bg-editor.entity'),
         'entity',
         html`<mc-entity-picker
           .hass=${this.hass}
           .value=${v.entity || ''}
-          .label=${this.defaultEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity')}
+          .label=${this.defaultEntity ? t('card-editor.value-bg-editor.module-entity-entity', { entity: this.defaultEntity }) : t('card-editor.value-bg-editor.entity')}
           @value-changed=${(e: CustomEvent) => this._set({ entity: e.detail.value })}
         ></mc-entity-picker>`,
       )}
-      ${entity ? nothing : html`<p class="help no-entity">${t('Pick an entity: a value background without one draws nothing.')}</p>`}
-      ${!v.entity && this.defaultEntity ? html`<p class="help">${t('Empty uses the module entity ({entity}).', { entity: this.defaultEntity })}</p>` : nothing}
+      ${entity ? nothing : html`<p class="help no-entity">${t('card-editor.value-bg-editor.pick-an-entity-a-value-background')}</p>`}
+      ${!v.entity && this.defaultEntity ? html`<p class="help">${t('card-editor.value-bg-editor.empty-uses-the-module-entity-entity', { entity: this.defaultEntity })}</p>` : nothing}
       ${stateObj && Object.keys(stateObj.attributes || {}).length
         ? this._field(
-            t('Attribute'),
+            t('card-editor.value-bg-editor.attribute'),
             'attribute',
             html`<mc-attribute-picker
               .hass=${this.hass}
@@ -226,11 +226,11 @@ export class ValueBgEditor extends LitElement {
     const stateObj = entity ? this.hass?.states?.[entity] : undefined;
     return html`
       ${this._field(
-        t('Colour'),
+        t('card-editor.value-bg-editor.colour'),
         'color',
         html`<mc-color-picker
           .value=${v.color || ''}
-          .label=${fill ? t('Fill colour') : t('Line colour')}
+          .label=${fill ? t('card-editor.value-bg-editor.fill-colour') : t('card-editor.value-bg-editor.line-colour')}
           .allowEntity=${!!entity}
           .entityColor=${entityStateColor(stateObj) ?? 'currentColor'}
           .gradient=${fill ? 'css' : ''}
@@ -238,11 +238,11 @@ export class ValueBgEditor extends LitElement {
         ></mc-color-picker>`,
       )}
       ${this._field(
-        fill ? t('Fill opacity') : t('Area opacity'),
+        fill ? t('card-editor.value-bg-editor.fill-opacity') : t('card-editor.value-bg-editor.area-opacity'),
         'opacity',
         html`<mc-unit-field
           .value=${opacityField(v.opacity)}
-          .label=${fill ? t('Fill opacity') : t('Area opacity')}
+          .label=${fill ? t('card-editor.value-bg-editor.fill-opacity') : t('card-editor.value-bg-editor.area-opacity')}
           .units=${['%']}
           .noCustom=${true}
           .placeholder=${String(Math.round((fill ? VALUE_BG_DEFAULTS.opacity : VALUE_BG_DEFAULTS.areaOpacity) * 100))}
@@ -252,35 +252,35 @@ export class ValueBgEditor extends LitElement {
         undefined,
         fill
           ? undefined
-          : t('The area fades out upwards. The line stays faint ({pct}%) so text over it stays readable.', { pct: Math.round(VALUE_BG_DEFAULTS.lineOpacity * 100) }),
+          : t('card-editor.value-bg-editor.the-area-fades-out-upwards-the-line', { pct: Math.round(VALUE_BG_DEFAULTS.lineOpacity * 100) }),
       )}
     `;
   }
 
   private _range(fill: boolean): TemplateResult {
     return html`<div class="two">
-      ${this._field(t('Min'), 'min', this._number('vb-min', 'min', fill ? 0 : t('Auto')), 'vb-min')}
-      ${this._field(t('Max'), 'max', this._number('vb-max', 'max', fill ? 100 : t('Auto')), 'vb-max')}
+      ${this._field(t('card-editor.value-bg-editor.min'), 'min', this._number('vb-min', 'min', fill ? 0 : t('card-editor.value-bg-editor.auto')), 'vb-min')}
+      ${this._field(t('card-editor.value-bg-editor.max'), 'max', this._number('vb-max', 'max', fill ? 100 : t('card-editor.value-bg-editor.auto')), 'vb-max')}
     </div>`;
   }
 
   private _fill(): TemplateResult {
     const v = this._v;
     return html`
-      ${this._field(t('Direction'), 'direction', this._seg(t('Fill direction'), v.direction ?? 'up', DIRECTIONS, (d) => this._set({ direction: d as ValueBackgroundConfig['direction'] })))}
-      ${this._switch(t('Wave'), 'wave', t('An animated wave on the surface. Still with reduced motion.'))}
+      ${this._field(t('card-editor.value-bg-editor.direction'), 'direction', this._seg(t('card-editor.value-bg-editor.fill-direction'), v.direction ?? 'up', DIRECTIONS, (d) => this._set({ direction: d as ValueBackgroundConfig['direction'] })))}
+      ${this._switch(t('card-editor.value-bg-editor.wave'), 'wave', t('card-editor.value-bg-editor.an-animated-wave-on-the-surface-still'))}
     `;
   }
 
   private _sparkline(): TemplateResult {
     return html`
       <div class="two">
-        ${this._field(t('Hours'), 'hours', this._number('vb-hours', 'hours', VALUE_BG_DEFAULTS.hours, 1, VALUE_BG_DEFAULTS.maxHours, 1), 'vb-hours', t('Up to 168 (a week).'))}
-        ${this._field(t('Line width (px)'), 'line_width', this._number('vb-line', 'line_width', VALUE_BG_DEFAULTS.lineWidth, 0.5, 20, 0.5), 'vb-line')}
+        ${this._field(t('card-editor.value-bg-editor.hours'), 'hours', this._number('vb-hours', 'hours', VALUE_BG_DEFAULTS.hours, 1, VALUE_BG_DEFAULTS.maxHours, 1), 'vb-hours', t('card-editor.value-bg-editor.up-to-168-a-week'))}
+        ${this._field(t('card-editor.value-bg-editor.line-width-px'), 'line_width', this._number('vb-line', 'line_width', VALUE_BG_DEFAULTS.lineWidth, 0.5, 20, 0.5), 'vb-line')}
       </div>
-      ${this._switch(t('Area'), 'area', t('Fill the area under the line.'))}
-      ${this._switch(t('Smoothing'), 'smoothing', t('A curved line instead of straight segments.'))}
-      <p class="help">${t("History that can't be loaded draws nothing.")}</p>
+      ${this._switch(t('card-editor.value-bg-editor.area'), 'area', t('card-editor.value-bg-editor.fill-the-area-under-the-line'))}
+      ${this._switch(t('card-editor.value-bg-editor.smoothing'), 'smoothing', t('card-editor.value-bg-editor.a-curved-line-instead-of-straight'))}
+      <p class="help">${t("card-editor.value-bg-editor.history-that-can-t-be-loaded-draws")}</p>
     `;
   }
 
@@ -289,7 +289,7 @@ export class ValueBgEditor extends LitElement {
     const entity = this._v.entity || this.defaultEntity;
     return html`
       <div class="vb-ed">
-        ${this._field(t('Type'), undefined, this._seg(t('Value background type'), type, TYPES, (t) => this._pickType(t)))}
+        ${this._field(t('card-editor.value-bg-editor.type'), undefined, this._seg(t('card-editor.value-bg-editor.value-background-type'), type, TYPES, (t) => this._pickType(t)))}
         ${type === 'off'
           ? nothing
           : html`

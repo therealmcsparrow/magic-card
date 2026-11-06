@@ -1,12 +1,9 @@
 import { unsafeCSS } from 'lit';
 import { TAB_FIELDS } from './tabs-look';
 
-/*
- * Rules for the tab_ design keys (tabs-look.ts). Each one is gated on a token of `data-mc-tab`, so a tabs module
- * without those keys matches none of them. [data-style] is always set on .mc-tabs; it lifts the selectors to the
- * specificity of the style variants in the card sheet, which this sheet follows. The sheet is built from constants
- * only, no config text reaches it.
- */
+// Rules for the tab_ design keys (tabs-look.ts). Each one is gated on a token of `data-mc-tab`, so a tabs module without
+// those keys matches none of them. [data-style] lifts the selectors to the specificity of the style variants in the card sheet.
+// The sheet is built from constants only, no config text reaches it.
 
 // Child combinators: a tabs module nested in a tab never takes the look of the one around it.
 const BAR = '>.mc-tabs-header';

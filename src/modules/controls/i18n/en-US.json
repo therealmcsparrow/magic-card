@@ -1,12 +1,42 @@
 {
-  "Decrease {name}": "Decrease {name}",
-  "Dropdown": "Dropdown",
-  "Effect": "Effect",
-  "Increase {name}": "Increase {name}",
-  "Light": "Light",
-  "No options": "No options",
-  "Spinbox": "Spinbox",
-  "Toggle {name}": "Toggle {name}",
-  "{name} colour": "{name} color",
-  "{name} effect": "{name} effect"
+  "controls.dropdown-view.dropdown": {
+    "text": "Dropdown",
+    "hash": "2c84dd8d"
+  },
+  "controls.dropdown-view.no-options": {
+    "text": "No options",
+    "hash": "d7a89745"
+  },
+  "controls.light-view.effect": {
+    "text": "Effect",
+    "hash": "2252d5cf"
+  },
+  "controls.light-view.light": {
+    "text": "Light",
+    "hash": "dbcd5e7b"
+  },
+  "controls.light-view.name-colour": {
+    "text": "{name} color",
+    "hash": "5b55cbe0"
+  },
+  "controls.light-view.name-effect": {
+    "text": "{name} effect",
+    "hash": "048b8b7c"
+  },
+  "controls.light-view.toggle-name": {
+    "text": "Toggle {name}",
+    "hash": "8601786e"
+  },
+  "controls.spinbox-view.decrease-name": {
+    "text": "Decrease {name}",
+    "hash": "b7c864f8"
+  },
+  "controls.spinbox-view.increase-name": {
+    "text": "Increase {name}",
+    "hash": "adf50259"
+  },
+  "controls.spinbox-view.spinbox": {
+    "text": "Spinbox",
+    "hash": "d539f275"
+  }
 }

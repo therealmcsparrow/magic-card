@@ -6,11 +6,7 @@ import { fileBlob, fragment, thumbnail } from './export';
 import { bindingValue } from './binding-value';
 import { sanitizeImage } from './sanitize';
 
-/*
- * Chunk entry of dist/magic-card-svg-image.js (contract svg-image 1.0.0). Evaluating this file changes nothing global:
- * everything happens in install(), which src/utils/lazy-chunk.ts calls only when BUILD matches the magic-card.js that
- * loaded it. The image sanitiser is a static import of the modules in this chunk that hold SVG sinks.
- */
+// Chunk entry of dist/magic-card-svg-image.js (contract svg-image 1.0.0); everything happens in install().
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 

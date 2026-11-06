@@ -8,15 +8,15 @@ import { ModuleCategory, ModuleType } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from '../components/picker-parts';
-import { t, m, fold, type MessageId } from '../i18n';
+import { t, m, fold, type MessageIndex } from '../i18n';
 
 type CategoryFilter = 'all' | ModuleCategory;
 
-const CATEGORY_LABELS: Record<string, MessageId> = {
-  content: m('Content'),
-  controls: m('Controls'),
-  layout: m('Layout'),
-  advanced: m('Advanced'),
+const CATEGORY_LABELS: Record<string, MessageIndex> = {
+  content: m('card-editor.module-selector.content'),
+  controls: m('card-editor.module-selector.controls'),
+  layout: m('card-editor.module-selector.layout'),
+  advanced: m('card-editor.module-selector.advanced'),
 };
 const categoryLabel = (c: string): string => (c in CATEGORY_LABELS ? t(CATEGORY_LABELS[c]) : c);
 
@@ -55,10 +55,10 @@ export class ModuleSelector extends LitElement {
     const filters: CategoryFilter[] = ['all', ...MODULE_CATEGORIES.filter((c) => !this.types || modules.some((m) => m.metadata.category === c))];
 
     return html`
-      ${renderPickerWindow(replacing ? t('Replace with…') : t('Add module'), () => this._onClose(), 'm', html`
+      ${renderPickerWindow(replacing ? t('card-editor.module-selector.replace-with') : t('card-editor.module-selector.add-module'), () => this._onClose(), 'm', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch(t('Search modules'), this._searchQuery, (v) => { this._searchQuery = v; })}
-            <div class="seg full" role="radiogroup" aria-label=${t('Module category')}>
+            ${renderPickerSearch(t('card-editor.module-selector.search-modules'), this._searchQuery, (v) => { this._searchQuery = v; })}
+            <div class="seg full" role="radiogroup" aria-label=${t('card-editor.module-selector.module-category')}>
               ${filters.map(
                 (f) => html`
                   <button
@@ -67,7 +67,7 @@ export class ModuleSelector extends LitElement {
                     aria-checked=${this._category === f ? 'true' : 'false'}
                     @click=${() => { this._category = f; }}
                   >
-                    ${f === 'all' ? t('All') : categoryLabel(f)}
+                    ${f === 'all' ? t('card-editor.module-selector.all') : categoryLabel(f)}
                   </button>
                 `,
               )}
@@ -76,7 +76,7 @@ export class ModuleSelector extends LitElement {
           <div class="mc-picker-list">
             ${grouped.size === 0 ? html`
               <div class="mc-picker-empty">
-                ${this._searchQuery ? t('No modules match "{query}".', { query: this._searchQuery }) : t('No modules in this category.')}
+                ${this._searchQuery ? t('card-editor.module-selector.no-modules-match-query', { query: this._searchQuery }) : t('card-editor.module-selector.no-modules-in-this-category')}
               </div>
             ` : Array.from(grouped.entries()).map(
               ([category, items]) => html`
@@ -89,7 +89,7 @@ export class ModuleSelector extends LitElement {
                       type="button"
                       class="mc-picker-item"
                       @click=${() => this._onSelect(meta)}
-                      aria-label=${replacing ? t('Replace with {name}', { name: lt(meta.name) }) : t('Add {name} module', { name: lt(meta.name) })}
+                      aria-label=${replacing ? t('card-editor.module-selector.replace-with-name', { name: lt(meta.name) }) : t('card-editor.module-selector.add-name-module', { name: lt(meta.name) })}
                     >
                       <span class="mc-picker-item-icon"><ha-icon icon=${meta.icon}></ha-icon></span>
                       <span class="mc-picker-item-content">

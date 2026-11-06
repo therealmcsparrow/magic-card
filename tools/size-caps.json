@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 85000,
+        "cap": 75460,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 84754
+        "measured": 75393
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 72704,
-      "measured": 72451
+      "cap": 64560,
+      "measured": 64393
     }
   },
   "files": {
@@ -73,6 +73,11 @@
       "ceiling": 175104,
       "note": "171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB."
     },
+    "magic-card-icon-shared.js": {
+      "raw": 10240,
+      "ceiling": 10240,
+      "note": "10 KiB. The studio modules the icon-library chunk reuses (src/i18n/fold.ts, src/icon-anim/part-presets.ts), kept out of that chunk because the forum shot also loads it. Measured 7,808 + 5 %, rounded up to 1 KiB."
+    },
     "magic-card-particles.js": {
       "raw": 38912,
       "ceiling": 38912,
@@ -82,6 +87,11 @@
       "raw": 26624,
       "ceiling": 26624,
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
+    },
+    "magic-card-forum-shot.js": {
+      "raw": 108544,
+      "ceiling": 108544,
+      "note": "106 KiB; it holds the font fetch and the card table with its search field, and bundles its own copy of the icon style derivation."
     },
     "magic-card-theme-editor.js": {
       "raw": 286720,
@@ -149,9 +159,19 @@
       "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
-      "raw": 68608,
-      "ceiling": 69632,
-      "note": "Preset transfer. 67 KiB, measured 68,349 (Linux build, docker node 24.22.0)."
+      "raw": 76800,
+      "ceiling": 76800,
+      "note": "Preset transfer with the import allow-list and legal text. 75 KiB, measured 75,490 (Linux build)."
+    },
+    "magic-card-share-kit.js": {
+      "raw": 45056,
+      "ceiling": 45056,
+      "note": "Share kit: strict value checks, entity placeholders, the card reader and previews. A child of the transfer chunk, no SVG sink. 41 KiB, raised for the strict checks and the card reader. The contract ceiling is 41,984 B (SHARE_KIT_CHUNK_CEILING)."
+    },
+    "magic-card-share-tablet.js": {
+      "raw": 5120,
+      "ceiling": 5120,
+      "note": "Wall tablet of the import preview: defines <mc-wall-tablet>, loaded when the toggle is pressed. 5 KiB, measured 4,236 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-icon.js": {
       "raw": 47104,
@@ -179,19 +199,24 @@
       "note": "Library image field and its picker (editor-only chunk, contract image-editor 1.0.0, child of the card editor). 29 KiB, measured 27,702 + 5 %, rounded up to 1 KiB. The contract ceiling is 32,768 B (IMAGE_TOOLS_CHUNK_CEILING)."
     },
     "magic-card-anim.js": {
-      "raw": 91136,
+      "raw": 92160,
       "ceiling": 94208,
-      "note": "89 KiB, measured 90,746 (Linux build, docker node 24.22.0)."
+      "note": "90 KiB, measured 91,498 (Linux build, docker node 24.22.0), with the particle layer fade-in."
     },
     "magic-card-flows.js": {
       "raw": 27648,
       "ceiling": 57344,
       "note": "27 KiB, measured 25,584 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The flow resolver, line geometry, <mc-flows> and the card rules. The contract ceiling is 57,344 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
-    "magic-card-pause.js": {
-      "raw": 4096,
+    "magic-card-status.js": {
+      "raw": 8192,
       "ceiling": 16384,
-      "note": "4 KiB, measured 3,763 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The Pause motion button class and its rules. The contract ceiling is 16,384 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "8 KiB, measured 7,667 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The corner badge, its icons and the connection and not-updated sentences of the quiet status chunk. The contract ceiling is 16,384 B (lazy-module STATUS_CHUNK_CEILING)."
+    },
+    "magic-card-pause.js": {
+      "raw": 6144,
+      "ceiling": 16384,
+      "note": "6 KiB, measured 5,371 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The Pause motion button class and its rules. The contract ceiling is 16,384 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-popup.js": {
       "raw": 15360,
@@ -199,9 +224,9 @@
       "note": "15 KiB, measured 13,982 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The pop-up controller, the page coordinator and the pop-up rules. The contract ceiling is 20,480 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-decor.js": {
-      "raw": 26624,
+      "raw": 28672,
       "ceiling": 49152,
-      "note": "26 KiB, measured 25,319 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. <mc-ring>, <mc-shape>, <mc-value-bg>, the ring outline and its copy of the radii and shape-ring path. The contract ceiling is 49,152 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "28 KiB, measured 27,289 (plain throwaway copy, docker node 24.22.0) + 5 %, rounded up to 1 KiB. <mc-ring>, <mc-shape>, <mc-value-bg>, the ring stroke maths, the sparkline path, the ring outline and its copy of the radii and shape-ring path. The contract ceiling is 49,152 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-flow-look.js": {
       "raw": 32768,
@@ -209,9 +234,9 @@
       "note": "32 KiB: measured 30,728 plus a margin. Equals the contract ceiling 32,768."
     },
     "magic-card-slider-look.js": {
-      "raw": 25600,
-      "ceiling": 25600,
-      "note": "25 KiB (light-card lift, failed-call chip). The contract ceiling is 28,672 B; the ceiling here is the current cap."
+      "raw": 27648,
+      "ceiling": 27648,
+      "note": "27 KiB (right-to-left slider sheet). The contract ceiling is 28,672 B; the ceiling here is the current cap."
     },
     "magic-card-templates.js": {
       "raw": 10240,
@@ -224,14 +249,14 @@
       "note": "Look editors (editor-only chunk, contract look-editor 1.0.0). 60 KiB, measured 58,323 + 5 %. The contract ceiling is 73,728 B; the ceiling here is the current cap."
     },
     "magic-card-controls.js": {
-      "raw": 20480,
+      "raw": 23552,
       "ceiling": 61440,
-      "note": "20 KiB, measured 18,674 + 5 %, rounded up to 1 KiB. The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "23 KiB, measured 22,243 + 5 %, rounded up to 1 KiB (it carries the rules only its views render). The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-modules-extra.js": {
-      "raw": 51200,
+      "raw": 52224,
       "ceiling": 57344,
-      "note": "Video background with placement keys (background layers), weather icon CSS, clock, image (picture files and library drawings) and tabs views with the tab bar design styles. 50 KiB, measured 49,648; ceiling 57,344 (lazy-module chunk ceilings)."
+      "note": "Video background with placement keys (background layers), weather icon CSS, clock, image (picture files and library drawings) and tabs views with the tab bar design styles and the tab border parsers, plus the card helpers of the camera and custom-card views. 51 KiB, measured 51,920 (Linux build, docker node 24.22.0) rounded up to 1 KiB; ceiling 57,344 (lazy-module chunk ceilings)."
     },
     "magic-card-svg-booleans.js": {
       "raw": 8192,
@@ -248,6 +273,16 @@
       "ceiling": 10240,
       "note": "Shared path parser and outline maths (src/path/core.ts only). 9 KiB, measured 7,807 + 5 %, rounded up to 1 KiB. The contract ceiling is 10,240 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
     },
+    "magic-card-shape-path.js": {
+      "raw": 13312,
+      "ceiling": 20480,
+      "note": "Shared shape outline maths and its memo (src/utils/shape-path.ts only). 13 KiB, measured 11,889 + 5 %, rounded up to 1 KiB. The contract ceiling is 20,480 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
+    },
+    "magic-card-history.js": {
+      "raw": 2048,
+      "ceiling": 4096,
+      "note": "Shared recorded-history cache (src/services/history-cache.ts only), read by the decor and modules-extra chunks. 2 KiB, measured 1,929 + 5 %, rounded up to 1 KiB. The contract ceiling is 4,096 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
+    },
     "magic-card-i18n-labels.js": {
       "raw": 25600,
       "ceiling": 25600,
@@ -257,6 +292,12 @@
       "raw": 17408,
       "ceiling": 17408,
       "note": "i18n icon-library table chunk (contract i18n 1.0.0). 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB."
+    },
+    "magic-card-i18n-pseudo.js": {
+      "raw": 289,
+      "ceiling": 289,
+      "optional": true,
+      "note": "Pseudo right-to-left transform, loaded only by the Pseudo RTL switch. Measured 275 + 5 % (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-css.js": {
       "raw": 10240,
@@ -924,6 +965,204 @@
       "field": "/files/magic-card-path-canvas.js/ceiling",
       "from": 67584,
       "to": 69632
+    },
+    {
+      "id": "controls-raw-20480-to-23552",
+      "field": "/files/magic-card-controls.js/raw",
+      "from": 20480,
+      "to": 23552
+    },
+    {
+      "id": "modules-extra-raw-51200-to-52224",
+      "field": "/files/magic-card-modules-extra.js/raw",
+      "from": 51200,
+      "to": 52224
+    },
+    {
+      "id": "decor-raw-26624-to-28672",
+      "field": "/files/magic-card-decor.js/raw",
+      "from": 26624,
+      "to": 28672
+    },
+    {
+      "id": "entry-stage4-72979-to-72994",
+      "field": "/entry/stages/3/cap",
+      "from": 72979,
+      "to": 72994
+    },
+    {
+      "id": "entry-stage4-72994-to-72996",
+      "field": "/entry/stages/3/cap",
+      "from": 72994,
+      "to": 72996
+    },
+    {
+      "id": "entry-stage4-72996-to-73006",
+      "field": "/entry/stages/3/cap",
+      "from": 72996,
+      "to": 73006
+    },
+    {
+      "id": "entry-br-62469-to-62528",
+      "field": "/entry/br/cap",
+      "from": 62469,
+      "to": 62528
+    },
+    {
+      "id": "entry-stage4-73006-to-73016",
+      "field": "/entry/stages/3/cap",
+      "from": 73006,
+      "to": 73016
+    },
+    {
+      "id": "entry-stage4-73016-to-73017",
+      "field": "/entry/stages/3/cap",
+      "from": 73016,
+      "to": 73017
+    },
+    {
+      "id": "entry-br-62417-to-62474",
+      "field": "/entry/br/cap",
+      "from": 62417,
+      "to": 62474
+    },
+    {
+      "id": "entry-stage4-73017-to-73082",
+      "field": "/entry/stages/3/cap",
+      "from": 73017,
+      "to": 73082
+    },
+    {
+      "id": "entry-br-62474-to-62535",
+      "field": "/entry/br/cap",
+      "from": 62474,
+      "to": 62535
+    },
+    {
+      "id": "entry-stage4-73082-to-74225",
+      "field": "/entry/stages/3/cap",
+      "from": 73082,
+      "to": 74225
+    },
+    {
+      "id": "entry-br-62535-to-63336",
+      "field": "/entry/br/cap",
+      "from": 62535,
+      "to": 63336
+    },
+    {
+      "id": "pause-raw-6144",
+      "field": "/files/magic-card-pause.js/raw",
+      "from": 4096,
+      "to": 6144
+    },
+    {
+      "id": "entry-br-63336-to-63396",
+      "field": "/entry/br/cap",
+      "from": 63336,
+      "to": 63396
+    },
+    {
+      "id": "anim-raw-91136-to-92160",
+      "field": "/files/magic-card-anim.js/raw",
+      "from": 91136,
+      "to": 92160
+    },
+    {
+      "id": "entry-stage4-74225-to-74387",
+      "field": "/entry/stages/3/cap",
+      "from": 74225,
+      "to": 74387
+    },
+    {
+      "id": "entry-br-63396-to-63595",
+      "field": "/entry/br/cap",
+      "from": 63396,
+      "to": 63595
+    },
+    {
+      "id": "entry-stage4-74387-to-74836",
+      "field": "/entry/stages/3/cap",
+      "from": 74387,
+      "to": 74836
+    },
+    {
+      "id": "entry-br-63595-to-63953",
+      "field": "/entry/br/cap",
+      "from": 63595,
+      "to": 63953
+    },
+    {
+      "id": "slider-look-raw-25600-to-27648",
+      "field": "/files/magic-card-slider-look.js/raw",
+      "from": 25600,
+      "to": 27648
+    },
+    {
+      "id": "slider-look-ceiling-25600-to-27648",
+      "field": "/files/magic-card-slider-look.js/ceiling",
+      "from": 25600,
+      "to": 27648
+    },
+    {
+      "id": "transfer-raw-68608-to-76800",
+      "field": "/files/magic-card-transfer.js/raw",
+      "from": 68608,
+      "to": 76800
+    },
+    {
+      "id": "transfer-ceiling-69632-to-76800",
+      "field": "/files/magic-card-transfer.js/ceiling",
+      "from": 69632,
+      "to": 76800
+    },
+    {
+      "id": "entry-stage4-74836-to-75348",
+      "field": "/entry/stages/3/cap",
+      "from": 74836,
+      "to": 75348
+    },
+    {
+      "id": "entry-br-63953-to-64465",
+      "field": "/entry/br/cap",
+      "from": 63953,
+      "to": 64465
+    },
+    {
+      "id": "entry-stage4-75348-to-75460",
+      "field": "/entry/stages/3/cap",
+      "from": 75348,
+      "to": 75460
+    },
+    {
+      "id": "entry-br-64465-to-64560",
+      "field": "/entry/br/cap",
+      "from": 64465,
+      "to": 64560
+    },
+    {
+      "id": "forum-shot-raw-79872-to-107520",
+      "field": "/files/magic-card-forum-shot.js/raw",
+      "from": 79872,
+      "to": 107520
+    },
+    {
+      "id": "forum-shot-ceiling-98304-to-107520",
+      "field": "/files/magic-card-forum-shot.js/ceiling",
+      "from": 98304,
+      "to": 107520
+    },
+    {
+      "id": "forum-shot-raw-107520-to-108544",
+      "field": "/files/magic-card-forum-shot.js/raw",
+      "from": 107520,
+      "to": 108544
+    },
+    {
+      "id": "forum-shot-ceiling-107520-to-108544",
+      "field": "/files/magic-card-forum-shot.js/ceiling",
+      "from": 107520,
+      "to": 108544
     }
   ]
 }

@@ -1,29 +1,11 @@
-/*
- * Shows a full-screen editor element (<mc-svg-editor>, <mc-shape-studio>) in the browser's top layer.
- * Home Assistant's card dialog has a transform and clips overflow, so a `position: fixed` layer inside
- * it would cover the dialog, not the screen (the reason pickers use showModal() too, picker-parts.ts).
- * The layer lives on <body>: it stays when the form behind it re-renders. A modal <dialog> makes the
- * page behind it inert and keeps focus inside.
- *
- * Escape (svg-editor 1.0.0 shell rules): the editors stop Escape themselves while focus is inside their
- * shadow DOM. Focus can also sit on the editor element, the dialog or the page (the editor is still
- * loading, or a click landed on nothing focusable). There the key would travel on to Home Assistant's
- * own document-level key handling and its card dialog behind the layer would close (found in HA
- * 2026.10.2: its dialog is a wa-dialog that closes on the key, not only on the browser's cancel). So
- * the layer stops Escape twice: on the dialog (bubble, for the editor element and the dialog as
- * target) and on the window (capture, for any target outside the layer). The dialog's own `cancel` is
- * ignored too. The editor element takes focus on open (tabindex -1).
- */
+/* Shows a full-screen editor element in the top layer of a modal <dialog> on <body>, and stops Escape from closing HA's card dialog behind it. */
 
 const STYLE =
   'padding:0;border:0;margin:0;width:100vw;height:100vh;max-width:none;max-height:none;background:transparent;color:inherit;overflow:visible;';
 
 /**
- * Where focus goes when the layer closes. The opener can be gone by then (the icon picker closes when
- * the editor opens) and the form behind may have re-rendered around it (a drawing changes the icon
- * field). So the ancestors of `from` are noted when the layer opens; on close the nearest one still on
- * the page is searched, through shadow roots, for a visible, labelled element with
- * `data-focus-key=<key>` ("Draw an icon" has become "Edit icon"), then the next one up.
+ * Where focus goes when the layer closes: the nearest noted ancestor of the opener still on the page,
+ * searched through shadow roots for a visible element with `data-focus-key=<key>`.
  */
 function parents(el: Node): Element[] {
   const out: Element[] = [];

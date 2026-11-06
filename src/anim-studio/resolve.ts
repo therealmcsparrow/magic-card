@@ -15,14 +15,11 @@ import { runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { customRefId, docNeedsRuntime, isCustomRef, type AnimationDoc } from './model';
 import { useAnimationCss } from '../card/custom-anim-sheet';
 import { registerSequence } from '../card/sequence-player';
-import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, onLabel, readAnimations, seconds, strength } from './entries';
+import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, onLabel, readAnimations, seconds, spinsIcon, strength } from './entries';
 
-/*
- * What the card renders for a design with animations: the resolve. It lives in the lazy `anim` chunk, so a
- * plain card never downloads it; the card calls it through one seam (resolveAnim in src/card/magic-card.ts) once the
- * chunk is installed and draws a plain card until then. Its svg-sanitize
- * guard: this file has no SVG sink (the sinks are compile.ts and model.ts, which import src/icons/svg-sanitize themselves).
- */
+// What the card renders for a design with animations: the resolve. It lives in the lazy `anim` chunk and the card calls it
+// through one seam (resolveAnim in src/card/magic-card.ts) once the chunk is installed.
+// This file has no SVG sink: the sinks are compile.ts and model.ts, which import src/icons/svg-sanitize themselves.
 
 // ── resolve for the card ──
 
@@ -146,16 +143,14 @@ export function particleLayout(n: number): Particle[] {
 }
 
 /**
- * What the card renders for a module / row / column design, or undefined when nothing plays.
- * Each playing entry adds `<keyframes> <duration> <easing> <delay> <iterations> <direction>` to its
- * element's list (`--mc-anim-m` wrapper, `--mc-anim-i` icon, `--mc-anim-mi` both, for a module
- * without an icon) and sets its preset's intensity / colour vars; particle presets get a layer each.
- * Colour: entry colour > design colour > entity colour > (stylesheet) theme accent.
+ * What the card renders for a module / row / column design, or undefined when nothing plays. Each playing entry adds its
+ * animation to the element list (`--mc-anim-m`, `--mc-anim-i`, `--mc-anim-mi`) and sets intensity / colour vars; particle
+ * presets get a layer each. Colour: entry > design > entity > theme accent.
  */
 export function resolveAnimations(
   design: DesignConfig | undefined,
   stateObj?: HassEntity,
-  opts: { allowIcon?: boolean; states?: Record<string, HassEntity>; custom?: CustomAnimationLookup } = {},
+  opts: { allowIcon?: boolean; spinIcon?: boolean; states?: Record<string, HassEntity>; custom?: CustomAnimationLookup } = {},
 ): ResolvedAnimations | undefined {
   design = resolveEntityColors(design);
   const allowIcon = opts.allowIcon !== false;
@@ -168,6 +163,8 @@ export function resolveAnimations(
   const runtime = { need: false, p: false };
 
   for (let e of readAnimations(design)) {
+    // a library animation's document says element or icon itself
+    const spin = !!opts.spinIcon && !isCustomRef(e.preset);
     if (isCustomRef(e.preset)) {
       const doc = opts.custom?.(customRefId(e.preset));
       if (!doc || !animationTriggerActive(e, stateObj, opts.states)) continue;
@@ -234,7 +231,7 @@ export function resolveAnimations(
       if (p.origin && !origins.n) origins.n = p.origin;
       continue;
     }
-    const icon = onIcon(e, allowIcon);
+    const icon = onIcon(e, allowIcon) || (spin && spinsIcon(e, p));
     lists.mi.push(`mc-anim-${p.id} ${timing}`);
     if (icon) {
       lists.i.push(`mc-anim-${p.id}${p.iconKeyframes ? '-icon' : ''} ${timing}`);
@@ -287,11 +284,9 @@ interface CustomCtx {
 }
 
 /**
- * A `custom:<id>` entry: its compiled rules go into the shared stylesheet and it joins the element's
- * lists like a preset (keyframes, path), adds a particle layer (particles, path with particles) or
- * a sequence run. Entry values override the document's: duration, delay, easing, iterations,
- * direction, play, target, colour, Strength; intensity is the amplitude in % (100 = as drawn).
- * Returns the entry to resolve as a preset for a document based on one (particles.preset).
+ * A `custom:<id>` entry: its compiled rules join the shared stylesheet and the element lists like a preset, add a particle
+ * layer or a sequence run. Entry values override the document's. Returns the entry to resolve as a preset for a document
+ * based on one (particles.preset).
  */
 function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): AnimationConfig | undefined {
   const c = compileAnimationDoc(doc, { lookup: ctx.custom });

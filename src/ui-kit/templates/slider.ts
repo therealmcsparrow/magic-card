@@ -3,11 +3,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { shownValue } from './shown-value';
 import type { KitSliderOptions } from '../../contracts/ui-kit';
 
-/*
- * .slider-row: label for the range, the range, a number field with the same value and an optional unit. The range
- * reports onInput while it moves and onChange on release; the number field reports onChange. The three extras are
- * additive to KitSliderOptions (valueText for aria-valuetext, numberLabel for the number field, disabled).
- */
+// .slider-row: label, range, number field with the same value and an optional unit; onInput while moving, onChange on release.
 export interface SliderOptions extends KitSliderOptions {
   valueText?: string;
   numberLabel?: string;

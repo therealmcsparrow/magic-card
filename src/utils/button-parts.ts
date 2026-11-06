@@ -2,11 +2,7 @@ import type { DesignConfig } from '../types';
 import { configHas } from './config-walk';
 import { cssLengths, safeColor, str } from './safe-css';
 
-/**
- * The button part design keys (icon, label and state text) as custom properties on the module wrapper. The
- * stylesheet reads them on the parts with today's values as fallbacks, so a button without these keys is
- * drawn exactly as before. Every value is an allow-listed word or a parsed length / colour, never the raw text.
- */
+/** The button part design keys (icon, label, state text) as custom properties on the module wrapper. */
 
 const GAP = 'var(--mc-bi-gap,var(--mc-gap-sm))';
 /** Icon grid lines (row start / column start / row end / column end) and which margin holds the gap to the label: top, bottom, inline start, inline end. */

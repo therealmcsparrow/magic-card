@@ -154,11 +154,11 @@ export class FontPicker extends LitElement {
           type="text"
           class="input"
           .value=${this.value}
-          placeholder=${t('Font family')}
-          aria-label=${t('Font family')}
+          placeholder=${t('card-editor.font-picker.font-family')}
+          aria-label=${t('card-editor.font-picker.font-family')}
           @input=${this._onInputChange}
         />
-        <button type="button" class="btn btn-secondary" @click=${this._openModal}>${t('Browse')}</button>
+        <button type="button" class="btn btn-secondary" @click=${this._openModal}>${t('card-editor.font-picker.browse')}</button>
       </div>
       ${this._showModal ? this._renderModal() : nothing}
     `;
@@ -173,10 +173,10 @@ export class FontPicker extends LitElement {
     const fonts = this._getFilteredFonts();
 
     return html`
-      ${renderPickerWindow(t('Select font'), () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('card-editor.font-picker.select-font'), () => this._closeModal(), 'm', html`
 
           <div class="mc-picker-search">
-            <div class="seg full" role="tablist" aria-label=${t('Font source')}>
+            <div class="seg full" role="tablist" aria-label=${t('card-editor.font-picker.font-source')}>
               <button
                 type="button"
                 role="tab"
@@ -184,7 +184,7 @@ export class FontPicker extends LitElement {
                 @click=${() => this._setTab('local')}
               >
                 <ha-icon icon="mdi:desktop-classic"></ha-icon>
-                ${t('Local fonts')}
+                ${t('card-editor.font-picker.local-fonts')}
               </button>
               <button
                 type="button"
@@ -193,23 +193,23 @@ export class FontPicker extends LitElement {
                 @click=${() => this._setTab('google')}
               >
                 <ha-icon icon="mdi:google"></ha-icon>
-                ${t('Google Fonts')}
+                ${t('card-editor.font-picker.google-fonts')}
               </button>
             </div>
-            ${renderPickerSearch(t('Search fonts'), this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('card-editor.font-picker.search-fonts'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
 
           ${this._selectedFont ? this._renderPreview() : nothing}
 
-          <div class="mc-picker-list" role="listbox" aria-label=${t('Fonts')}>
+          <div class="mc-picker-list" role="listbox" aria-label=${t('card-editor.font-picker.fonts')}>
             ${fonts.length > 0
               ? fonts.map((font) => this._renderFontItem(font))
-              : html`<div class="mc-picker-empty">${t('No fonts found')}</div>`
+              : html`<div class="mc-picker-empty">${t('card-editor.font-picker.no-fonts-found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedFont}>${t('Save')}</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.font-picker.cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedFont}>${t('card-editor.font-picker.save')}</button>
           </div>
       `)}
     `;
@@ -221,7 +221,7 @@ export class FontPicker extends LitElement {
     return html`
       <div class="mc-font-preview">
         <div class="mc-font-preview-text" style="font-family: ${this._selectedFont.family}">
-          ${t('The quick brown fox jumps over the lazy dog')}
+          ${t('card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy')}
         </div>
       </div>
     `;
@@ -243,7 +243,7 @@ export class FontPicker extends LitElement {
           <span class="mc-picker-item-name" style="font-family: ${font.family}">${font.name}</span>
           <span class="mc-picker-item-meta">${font.category}</span>
         </span>
-        <span class="chip">${font.isLocal ? t('Local') : t('Google')}</span>
+        <span class="chip">${font.isLocal ? t('card-editor.font-picker.local') : t('card-editor.font-picker.google')}</span>
       </button>
     `;
   }

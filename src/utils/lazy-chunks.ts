@@ -13,16 +13,7 @@ type AnimModule = typeof AnimChunk;
 type FlowsModule = typeof FlowsChunk;
 type ControlsModule = typeof ControlsChunk;
 
-/*
- * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the four chunks that load
- * on demand (the animation runtime, particles, the custom shape builder and the library image drawing; no needs() row,
- * because only the render knows). Nothing else calls import() for these entries (contract lazy-module 1.4.0 "import() sites"). Output file
- * names come from the webpackChunkName: dist/magic-card-<name>.js.
- *
- * Only the card bundle imports this file. The loaders (src/utils/*-loader.ts) get their chunk from a slot filled
- * at the end of this file instead of importing it: the animation studio bundle imports one of them, and this table
- * would pull every card chunk entry into that bundle's chunk graph (the studio and several chunks grew by 8 to 60 KB).
- */
+/** The chunk table: one lazyChunk() per LazyChunkName with its literal import(); only the card bundle imports it. */
 
 /**
  * flow-look is a child of `flows`: its import() sits in src/card/flows-chunk.ts. The importer calls it synchronously, so a
@@ -99,6 +90,8 @@ export const onDemandChunks = {
   particles: lazyChunk('particles', viaAnim((a) => a.importParticles)),
   'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
   'svg-image': lazyChunk('svg-image', () => import(/* webpackChunkName: "svg-image" */ '../svg-image/chunk')),
+  // the connection and not-updated faces; a quiet chunk, so a failure shows no notice
+  status: lazyChunk('status', () => import(/* webpackChunkName: "status" */ '../card-status/index'), { silent: true }),
 };
 provideRuntimeChunk(afterAnim(onDemandChunks['anim-runtime']));
 provideParticlesChunk(afterAnim(onDemandChunks.particles));

@@ -46,7 +46,7 @@ export class LightView implements ModuleView {
     const unavailable = !stateObj || stateObj.state === 'unavailable' || stateObj.state === 'unknown';
     const live = !!stateObj && !!hass && !unavailable;
     const isOn = stateObj?.state === 'on';
-    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || t('Light');
+    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || t('controls.light-view.light');
     const update = () => ctx?.requestUpdate();
 
     // brightness (0 when off), pending while HA has not reported the new value yet
@@ -98,7 +98,7 @@ export class LightView implements ModuleView {
             type="button"
             class="mc-light-toggle"
             style="color: ${iconColor};"
-            aria-label=${t('Toggle {name}', { name })}
+            aria-label=${t('controls.light-view.toggle-name', { name })}
             aria-pressed=${isOn ? 'true' : 'false'}
             ?disabled=${!live}
             @click=${onToggle}
@@ -174,7 +174,7 @@ export class LightView implements ModuleView {
                 <input
                   type="color"
                   class="mc-light-color-input"
-                  aria-label=${t('{name} colour', { name })}
+                  aria-label=${t('controls.light-view.name-colour', { name })}
                   .value=${lightHex(stateObj)}
                   ?disabled=${!live}
                   @change=${(e: Event) => {
@@ -202,7 +202,7 @@ export class LightView implements ModuleView {
                 <ha-icon .icon=${'mdi:creation'}></ha-icon>
                 <select
                   class="mc-light-effect-select"
-                  aria-label=${t('{name} effect', { name })}
+                  aria-label=${t('controls.light-view.name-effect', { name })}
                   ?disabled=${!live}
                   @change=${(e: Event) => {
                     e.stopPropagation();
@@ -215,7 +215,7 @@ export class LightView implements ModuleView {
                   @pointerup=${stopControlEvent}
                   @keydown=${stopControlEvent}
                 >
-                  ${!effect || !effects.includes(effect) ? html`<option value="" selected disabled hidden>${t('Effect')}</option>` : nothing}
+                  ${!effect || !effects.includes(effect) ? html`<option value="" selected disabled hidden>${t('controls.light-view.effect')}</option>` : nothing}
                   ${effects.map((ef) => html`<option value=${ef} ?selected=${ef === effect}>${this._effectLabel(hass, stateObj!, ef)}</option>`)}
                   ${selectValue(effect && effects.includes(effect) ? effect : '')}
                 </select>

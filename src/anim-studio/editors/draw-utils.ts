@@ -5,14 +5,9 @@ import { V2_CAPS, type RigShape, type TargetRef, type Track } from '../model-v2'
 import { t } from '../i18n';
 import { fmtNum } from './path-utils';
 
-/*
- * Drawing on the icon, pure: freehand simplification (Ramer-Douglas-Peucker for corners, then a
- * least-squares cubic fit per stretch, after Schneider's "An algorithm for automatically fitting
- * digitized curves", Graphics Gems 1990), shape paths (line, rounded rectangle, ellipse), snapping
- * to a grid and to anchor points, hit testing, viewBox mapping, and the document edits the drawing
- * tools make (shapes in rig.shapes, their draw-on and motion-path tracks). Coordinates are icon
- * viewBox units (24 x 24 for MDI icons); nothing here knows about the stage.
- */
+// Drawing on the icon, pure: freehand simplification (Ramer-Douglas-Peucker plus a Schneider cubic fit), shape paths,
+// snapping, hit testing, viewBox mapping and the document edits of the drawing tools. Coordinates are icon viewBox units;
+// nothing here knows about the stage.
 
 export type { Pt, Cubic };
 
@@ -222,7 +217,7 @@ export function nextShapeId(taken: Array<{ id: string }> | string[], base = 'sha
 export function docSizeError(doc: AnimationDoc): string | undefined {
   const json = JSON.stringify(doc);
   const bytes = typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(json).length : json.length;
-  return bytes > ANIMATION_CAPS.bytes ? t('The animation would be larger than {max} KB ({size} KB).', { max: Math.round(ANIMATION_CAPS.bytes / 1024), size: Math.ceil(bytes / 1024) }) : undefined;
+  return bytes > ANIMATION_CAPS.bytes ? t('anim-studio.draw-utils.the-animation-would-be-larger-than-max', { max: Math.round(ANIMATION_CAPS.bytes / 1024), size: Math.ceil(bytes / 1024) }) : undefined;
 }
 
 const shapesOf = (doc: AnimationDoc): RigShape[] => doc.rig?.shapes ?? [];

@@ -2,20 +2,20 @@ import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, PopupConfig, PopupTrigger } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
-import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, popupHashError } from '../../utils/popup';
+import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash } from '../../utils/popup-hash';
 import { popupIfLoaded } from '../../card/popup-seam';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { fieldReset } from './field-reset';
 
 import './unit-field';
 import './entity-picker';
-import { t, tx, m, tl, type MessageId } from '../i18n';
+import { t, tx, m, tl, type MessageIndex } from '../i18n';
 
-type Opt = { value: string; label: MessageId };
+type Opt = { value: string; label: MessageIndex };
 
 const STYLES: Opt[] = [
-  { value: 'sheet', label: m('Sheet') },
-  { value: 'dialog', label: m('Dialog') },
+  { value: 'sheet', label: m('card-editor.popup-settings.sheet') },
+  { value: 'dialog', label: m('card-editor.popup-settings.dialog') },
 ];
 
 /**
@@ -182,15 +182,15 @@ export class PopupSettings extends LitElement {
           <mc-entity-picker
             .hass=${this.hass}
             .value=${trig.entity || ''}
-            .label=${t('Entity')}
+            .label=${t('card-editor.popup-settings.entity')}
             @value-changed=${(e: CustomEvent) => write({ entity: e.detail.value })}
           ></mc-entity-picker>
           <input
             class="input"
             id=${stateId}
             type="text"
-            aria-label=${t('{label}: state', { label })}
-            placeholder=${t('State, e.g. on (empty: any change)')}
+            aria-label=${t('card-editor.popup-settings.label-state', { label })}
+            placeholder=${t('card-editor.popup-settings.state-e-g-on-empty-any-change')}
             .value=${trig.state || ''}
             @input=${(e: InputEvent) => write({ state: (e.target as HTMLInputElement).value.trim() })}
           />
@@ -203,22 +203,22 @@ export class PopupSettings extends LitElement {
   private async _copy(path: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(path);
-      this._say(t('Navigation path copied'));
+      this._say(t('card-editor.popup-settings.navigation-path-copied'));
     } catch {
-      this._say(t('Copy failed: select the path and copy it'));
+      this._say(t('card-editor.popup-settings.copy-failed-select-the-path-and-copy-it'));
     }
   }
 
   /** The coordinator is in the popup chunk: load it (a previewed pop-up card has already asked for it), then ask. */
   private async _preview(): Promise<void> {
     await lazyChunks.popup.load();
-    this._say(popupIfLoaded()?.api.preview(this.canvas) ? '' : t('No preview of this card to open yet'));
+    this._say(popupIfLoaded()?.api.preview(this.canvas) ? '' : t('card-editor.popup-settings.no-preview-of-this-card-to-open-yet'));
   }
 
   protected render(): TemplateResult {
     const p = this._p;
     const hash = normalizePopupHash(p.hash);
-    const error = popupHashError(hash);
+    const error = hash && !isValidPopupHash(hash) ? t('card-editor.popup-settings.use-letters-digits-and-only-no-spaces') : '';
     const path = isValidPopupHash(hash) ? `#${hash}` : '';
     const opacity = p.backdrop_opacity;
     const pathRow = error
@@ -226,29 +226,29 @@ export class PopupSettings extends LitElement {
       : path
         ? html`
             <div class="path">
-              <span class="help">${t('Navigation path')}</span>
+              <span class="help">${t('card-editor.popup-settings.navigation-path')}</span>
               <code>${path}</code>
-              <button type="button" class="icon-btn sm" aria-label=${t('Copy navigation path')} title=${t('Copy navigation path')} @click=${() => this._copy(path)}>
+              <button type="button" class="icon-btn sm" aria-label=${t('card-editor.popup-settings.copy-navigation-path')} title=${t('card-editor.popup-settings.copy-navigation-path')} @click=${() => this._copy(path)}>
                 <ha-icon icon="mdi:content-copy"></ha-icon>
               </button>
             </div>
-            <p class="help">${tx('Open it from any button: tap action Navigate to {path}, or Open pop-up.', { path: html`<span class="mono">${path}</span>` })}</p>
+            <p class="help">${tx('card-editor.popup-settings.open-it-from-any-button-tap-action', { path: html`<span class="mono">${path}</span>` })}</p>
           `
-        : html`<p class="help">${t('Without an ID it opens only from its triggers.')}</p>`;
+        : html`<p class="help">${t('card-editor.popup-settings.without-an-id-it-opens-only-from-its')}</p>`;
 
     return html`
       <div class="popup-ed">
-        ${this._field(t('Pop-up ID'), 'hash', this._text('popup-hash', 'hash', 'kitchen', true), 'popup-hash', pathRow)}
-        ${this._field(t('Title'), 'title', this._text('popup-title', 'title', t('No header text')), 'popup-title')}
-        ${this._field(t('Style'), 'style', this._seg(t('Style'), p.style === 'dialog' ? 'dialog' : 'sheet', tl(STYLES), (v) => this._set({ style: v as PopupConfig['style'] })))}
+        ${this._field(t('card-editor.popup-settings.pop-up-id'), 'hash', this._text('popup-hash', 'hash', 'kitchen', true), 'popup-hash', pathRow)}
+        ${this._field(t('card-editor.popup-settings.title'), 'title', this._text('popup-title', 'title', t('card-editor.popup-settings.no-header-text')), 'popup-title')}
+        ${this._field(t('card-editor.popup-settings.style'), 'style', this._seg(t('card-editor.popup-settings.style'), p.style === 'dialog' ? 'dialog' : 'sheet', tl(STYLES) as unknown as Opt[], (v) => this._set({ style: v as PopupConfig['style'] })))}
         <div class="two">
-          ${this._field(t('Width'), 'width', this._unit('width', t('Width'), ['px', '%', 'vw', 'rem', 'em'], POPUP_DEFAULTS.width.replace('px', '')))}
-          ${this._field(t('Max height'), 'max_height', this._unit('max_height', t('Max height'), ['vh', 'px', '%', 'rem'], POPUP_DEFAULTS.max_height.replace('vh', '')))}
+          ${this._field(t('card-editor.popup-settings.width'), 'width', this._unit('width', t('card-editor.popup-settings.width'), ['px', '%', 'vw', 'rem', 'em'], POPUP_DEFAULTS.width.replace('px', '')))}
+          ${this._field(t('card-editor.popup-settings.max-height'), 'max_height', this._unit('max_height', t('card-editor.popup-settings.max-height'), ['vh', 'px', '%', 'rem'], POPUP_DEFAULTS.max_height.replace('vh', '')))}
         </div>
         <div class="two">
-          ${this._field(t('Backdrop blur'), 'backdrop_blur', this._unit('backdrop_blur', t('Backdrop blur'), ['px'], POPUP_DEFAULTS.backdrop_blur.replace('px', '')))}
+          ${this._field(t('card-editor.popup-settings.backdrop-blur'), 'backdrop_blur', this._unit('backdrop_blur', t('card-editor.popup-settings.backdrop-blur'), ['px'], POPUP_DEFAULTS.backdrop_blur.replace('px', '')))}
           ${this._field(
-            t('Backdrop opacity'),
+            t('card-editor.popup-settings.backdrop-opacity'),
             'backdrop_opacity',
             html`<input
               class="input"
@@ -264,23 +264,23 @@ export class PopupSettings extends LitElement {
                 const s = (e.target as HTMLInputElement).value;
                 this._set({ backdrop_opacity: s === '' ? undefined : Math.min(100, Math.max(0, Number(s))) / 100 });
               }}
-            /><p class="help" id="popup-opacity-unit">${t('Percent, 0 is no darkening.')}</p>`,
+            /><p class="help" id="popup-opacity-unit">${t('card-editor.popup-settings.percent-0-is-no-darkening')}</p>`,
             'popup-opacity',
           )}
         </div>
         <div class="switch-row">
-          <div class="txt"><div class="field-head"><label>${t('Show close button')}</label></div></div>
+          <div class="txt"><div class="field-head"><label>${t('card-editor.popup-settings.show-close-button')}</label></div></div>
           <button
             type="button"
             class="switch"
             role="switch"
             aria-checked=${p.show_close !== false ? 'true' : 'false'}
-            aria-label=${t('Show close button')}
+            aria-label=${t('card-editor.popup-settings.show-close-button')}
             @click=${() => this._set({ show_close: p.show_close === false ? undefined : false })}
           ></button>
         </div>
         ${this._field(
-          t('Auto close'),
+          t('card-editor.popup-settings.auto-close'),
           'auto_close',
           html`<input
             class="input"
@@ -288,21 +288,21 @@ export class PopupSettings extends LitElement {
             type="number"
             min="0"
             step="1"
-            placeholder=${t('Off')}
+            placeholder=${t('card-editor.popup-settings.off')}
             .value=${p.auto_close ? String(p.auto_close) : ''}
             @input=${(e: InputEvent) => {
               const s = (e.target as HTMLInputElement).value;
               const n = Number(s);
               this._set({ auto_close: s === '' || !(n > 0) ? undefined : n });
             }}
-          /><p class="help">${t('Seconds without interaction. Empty: stays open.')}</p>`,
+          /><p class="help">${t('card-editor.popup-settings.seconds-without-interaction-empty-stays')}</p>`,
           'popup-auto',
         )}
-        ${this._trigger('open_on', t('Open when'), t('Opens when the entity changes to this state, e.g. a doorbell turning on.'))}
-        ${this._trigger('close_on', t('Close when'), t('Closes when the entity changes to this state.'))}
+        ${this._trigger('open_on', t('card-editor.popup-settings.open-when'), t('card-editor.popup-settings.opens-when-the-entity-changes-to-this'))}
+        ${this._trigger('close_on', t('card-editor.popup-settings.close-when'), t('card-editor.popup-settings.closes-when-the-entity-changes-to-this'))}
         <div class="actions">
           <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._preview()}>
-            <ha-icon icon="mdi:eye-outline"></ha-icon>${t('Preview pop-up')}
+            <ha-icon icon="mdi:eye-outline"></ha-icon>${t('card-editor.popup-settings.preview-pop-up')}
           </button>
           <span class="help" role="status" aria-live="polite">${this._status}</span>
         </div>

@@ -4,11 +4,9 @@ import { LAYER_CSS } from './layer-css';
 import { isLayered, placementOf, hasLayers, inFlow } from './layer-kind';
 import { arrange, resolveLayer, scanFills, scrimCss } from './placement';
 
-/*
- * The layer placement runtime (contract layer-placement 1.0.0) as magic-card.js carries it: the slot
- * holds placement.ts (resolveLayer, arrange, scanFills, scrimCss) and layer-css.ts from the first render,
- * so a layered module never waits for a file. The slot keeps provide() so a test can swap the runtime.
- */
+// The layer placement runtime (contract layer-placement 1.0.0) as magic-card.js carries it: the slot holds placement.ts
+// and layer-css.ts from the first render, so a layered module never waits for a file.
+// The slot keeps provide() so a test can swap the runtime.
 
 const core: LayerRuntime = { resolveLayer, arrange, scanFills, scrimCss, css: LAYER_CSS };
 let runtime: LayerRuntime = core;

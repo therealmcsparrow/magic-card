@@ -2,15 +2,7 @@ import type { ParticlesModule } from '../contracts/particles-v2';
 import { markSimFailed, useParticlesCompiler } from './anim-hooks';
 import type { LazyChunkControl } from './lazy-chunk';
 
-/*
- * Particles v2 (simulator, baker, CSS writer, live engine) is a lazy chunk,
- * dist/magic-card-particles.js. Only cards that play a document with `particles.sim` load it
- * (library or inline `custom_animations`); a 2026.10.03 particles document never does. It loads through
- * lazyChunk() (lazy-module 1.4.0). Loading it registers the compiler (and the lenient `sim` check) in
- * compile.ts, so the next render compiles the simulation; until then, and when the load fails (retried,
- * with the failure notice), the document's v1 fallback plays. The chunk comes from a slot the chunk table
- * (src/utils/lazy-chunks.ts) fills, like in anim-runtime-loader.ts.
- */
+/** Loader of the particles v2 chunk (dist/magic-card-particles.js) through lazyChunk(). */
 
 type Chunk = LazyChunkControl<typeof import('../particles')>;
 let chunk: Chunk | undefined;

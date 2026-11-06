@@ -2,11 +2,7 @@ import { IMAGE_FONT_FAMILIES, IMAGE_ID_RE, THEME_VAR_NAME_RE } from '../contract
 import type { SvgPolicy, SvgValueKind } from '../contracts/svg-safety';
 import { classTokens, denied, isLetter, onlyFunctions } from './values';
 
-/*
- * The image policy's value rules: one pattern per attribute kind, each over a value that is capped by length first. They
- * mirror what the browser does with an SVG presentation attribute (read as CSS: escapes, comments, url() and function
- * tokens) and keep only what the kind names.
- */
+// The image policy value rules: one length-capped pattern per attribute kind, mirroring how the browser reads the attribute.
 
 const HEX_RE = /^#[0-9a-fA-F]{3,8}$/;
 const WORD_RE = /^[A-Za-z]{3,20}$/;

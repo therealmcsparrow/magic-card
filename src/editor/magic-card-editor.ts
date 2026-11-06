@@ -223,7 +223,7 @@ export class MagicCardEditor extends LitElement {
     if (!config?.template) return;
     const prepare = col ? () => (sm.ownsModuleList(col) && sm.resetItem(col, true) ? sm.getConfig() : undefined) : undefined;
     this._fetchAndApplyTemplate(config.template, config, prepare).then((ok) => {
-      if (col && !ok) this._notify(t('Could not load the template, so the column was not reset.'));
+      if (col && !ok) this._notify(t('card-editor.magic-card-editor.could-not-load-the-template-so-the'));
     });
   };
 
@@ -304,7 +304,7 @@ export class MagicCardEditor extends LitElement {
 
   protected render(): TemplateResult {
     if (!this._editorState) {
-      return html`<div class="loading" aria-busy="true" aria-label=${t('Loading editor')}></div>`;
+      return html`<div class="loading" aria-busy="true" aria-label=${t('card-editor.magic-card-editor.loading-editor')}></div>`;
     }
 
     // While the studio is open, overlays are slotted into its modal <dialog> so they stack above it.
@@ -339,10 +339,10 @@ ${this._showSyncDialog ? this._renderSyncDialog() : nothing}`;
     // compact markup: Lit keeps a template's whitespace in the bundle
     return html`<dialog class="mc-sync-dialog" aria-labelledby="sync-title" aria-describedby="sync-text"
 @click=${(e: Event) => { if (this._syncDialogCtrl.isBackdropClick(e)) this._cancelSync(); }}>
-<div class="dialog" @click=${(e: Event) => e.stopPropagation()}><h2 id="sync-title">${t('Update linked cards?')}</h2>
-<p id="sync-text">${tx('This card is linked to template {name}. Do you want to update all linked cards with this structural change?', { name: html`<span class="mono">${this._linkedTemplate}</span>` })}</p><div class="actions">
-<button type="button" class="btn btn-secondary" @click=${this._handleSyncNo}>${t('Only this card')}</button>
-<button type="button" class="btn btn-primary" @click=${this._handleSyncYes}>${t('Update all linked cards')}</button></div></div></dialog>`;
+<div class="dialog" @click=${(e: Event) => e.stopPropagation()}><h2 id="sync-title">${t('card-editor.magic-card-editor.update-linked-cards')}</h2>
+<p id="sync-text">${tx('card-editor.magic-card-editor.this-card-is-linked-to-template-name-do', { name: html`<span class="mono">${this._linkedTemplate}</span>` })}</p><div class="actions">
+<button type="button" class="btn btn-secondary" @click=${this._handleSyncNo}>${t('card-editor.magic-card-editor.only-this-card')}</button>
+<button type="button" class="btn btn-primary" @click=${this._handleSyncYes}>${t('card-editor.magic-card-editor.update-all-linked-cards')}</button></div></div></dialog>`;
   }
 
   private _handleAddRow = (): void => {
@@ -474,10 +474,10 @@ ${this._showSyncDialog ? this._renderSyncDialog() : nothing}`;
     const was = moduleDisplayName(old);
     const now = moduleDisplayName({ type } as CardModule);
     const tabs = old.type === 'tabs' ? childSlots(old)?.length ?? 0 : 0;
-    let message = t('Replaced {old} with {new}.', { old: was, new: now });
-    if (tabs > 1) message = t('Replaced {old} with {new}. The modules of all {n} tabs are kept in tab order.', { old: was, new: now, n: tabs });
-    else if (type === 'tabs' && (childSlots(old)?.flat().length ?? 0) > 0) message = t('Replaced {old} with {new}. All modules are in the first tab.', { old: was, new: now });
-    if (made.dropped) message += ' ' + t('{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.', { n: made.dropped });
+    let message = t('card-editor.magic-card-editor.replaced-old-with-new', { old: was, new: now });
+    if (tabs > 1) message = t('card-editor.magic-card-editor.replaced-old-with-new-the-modules-of-all', { old: was, new: now, n: tabs });
+    else if (type === 'tabs' && (childSlots(old)?.flat().length ?? 0) > 0) message = t('card-editor.magic-card-editor.replaced-old-with-new-all-modules-are-in', { old: was, new: now });
+    if (made.dropped) message += ' ' + t('card-editor.magic-card-editor.n-removed-undo-to-get-them-back', { n: made.dropped });
     target.status?.(message);
   }
 

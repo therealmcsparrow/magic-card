@@ -2,10 +2,7 @@ import type { Box } from '../contracts/path-model';
 import { SVG_SAFE_INSET, type SvgAlignEdge } from '../contracts/svg-editor';
 import { boxOf, groupChain, isOff, under, unionBox, type Doc } from './model';
 
-/*
- * Align, distribute and placement: pure box maths. An item is a layer, or a whole selected group (the
- * union of its layers). Boxes ignore stroke width and follow the stored geometry (rotation is baked in).
- */
+// Align, distribute and placement: pure box maths over layers or whole selected groups.
 
 export interface Item {
   ids: string[];

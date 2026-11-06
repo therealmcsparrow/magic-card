@@ -17,7 +17,8 @@ import { localiseCreationDefaults } from './creation-defaults';
 import { t } from '../i18n';
 import { followIcons } from '../components/icon-animator/loader';
 import { prunedConfig } from '../custom/library';
-import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
+import { columnWidthsList } from '../../utils/column-widths';
+import { applyRowLayout } from '../../utils/column-widths-edit';
 import { dropUndefined, newColumn } from './containers';
 import { deepClone } from '../../utils/deep-merge';
 import { generateId } from '../../utils/id-generator';
@@ -50,7 +51,8 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { debounce } from '../../utils/debounce';
 import { EDITOR_DEBOUNCE_MS, EDITOR_DRAG_IDLE_MS, EDITOR_DRAG_SEND_MS } from '../../utils/constants';
 import { clampSelection, itemAt, layoutModuleAt, moduleAt, selectionFromPath, selectionToPath } from '../studio/selection';
-import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path';
+import { ChildStep, childListKey, childSlots } from '../../utils/module-path';
+import { descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path-edit';
 import { copyModuleToClipboard, docPool, pasteAnimations, readModuleClip, referencedDocs } from './module-clipboard';
 import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
 import { withTemplateAnimations } from '../../services/template-merge';
@@ -966,7 +968,7 @@ export class EditorStateManager {
 
   addTab(row: number, col: number, module: number, child?: ChildStep[]): void {
     this._tabsEdit([row, col, module, child], (tabs) => {
-      tabs.push({ label: t('Tab {n}', { n: tabs.length + 1 }), modules: [] });
+      tabs.push({ label: t('card-editor.editor-state.tab-n', { n: tabs.length + 1 }), modules: [] });
     }, (l) => this._slotPath(row, col, module, child, l.tabs!.length - 1));
   }
 
@@ -979,7 +981,7 @@ export class EditorStateManager {
     this._tabsEdit([row, col, module, child], (tabs) => {
       if (!tabs[slot]) return false;
       if ('label' in patch && !patch.label?.trim()) {
-        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('Tab {n}', { n: slot + 1 });
+        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('card-editor.editor-state.tab-n', { n: slot + 1 });
         if (label === tabs[slot].label && Object.keys(patch).length === 1) return false;
         patch = { ...patch, label };
       }

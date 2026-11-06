@@ -3,24 +3,9 @@ import type { MessageId } from './i18n';
 import type { AnimationDoc, TargetRef } from './model';
 import type { PreviewTile } from './tiles';
 
-/*
- * Studio v2 slot contract: the shell (studio.ts) renders panels by tag in four places, chosen by
- * the document and the current selection. Feature tracks register their panels from their own
- * files with registerPanel(); the shell never imports a panel itself (the studio entry imports the
- * panel files), so a track adds a panel without touching studio.ts.
- *
- * Places: layers (left column: targets, parts, shapes), inspector (right column, contextual),
- * stage-tool (drawn on the preview stage; PanelSpec.dock picks where), timeline (under the stage).
- *
- * Every panel element receives these properties (StudioPanelProps):
- *   .doc .hass .library .time .disabled .selection .tile .stage
- * and may emit (bubbling, composed):
- *   doc-change { doc, label, transient? }   a drag sends transient moves, then one final event (one undo step)
- *   seek { time }                            0-1, the scrub position
- *   selection-change { selection }           a new StudioSelection
- *   preview-change { state?, value?, attributes? }  the preview's simulated entity (state switcher,
- *                                            value slider); the shell feeds it to the preview card
- */
+// Studio v2 slot contract: the shell renders panels by tag in four places (layers, inspector, stage-tool, timeline);
+// tracks register panels with registerPanel(). Panels get .doc .hass .library .time .disabled .selection .tile .stage and
+// emit doc-change, seek, selection-change and preview-change (bubbling, composed).
 
 export interface StudioSelection {
   kind: 'none' | 'keys' | 'target' | 'tool';
@@ -104,13 +89,9 @@ export interface PanelSpec {
   /** Lower first; equal orders keep their registration order. */
   order: number;
   /**
-   * stage-tool only: where the shell puts it. `overlay` (default): over the preview card, scaled with it,
-   * filling the card (inset 0, card px). `top` / `bottom`: a bar above / below the canvas, unscaled, that
-   * never covers the card (toolbars, the preview-entity capsule). `canvas`: over the whole card area, outside
-   * the card's scale and zoom (inset 0, unscaled CSS px), for a tool that reads the pointer from
-   * getBoundingClientRect(), such as the path canvas in overlay mode; it places its drawing from `stage.screen`.
-   * The slot and the element have pointer-events none, so presses reach the card unless the tool turns them
-   * on for its own targets; while a tool is in this slot the area has touch-action none.
+   * stage-tool only, where the shell puts it: `overlay` (over the scaled card), `top` / `bottom` (bars outside the card),
+   * `canvas` (whole card area, unscaled, for tools that read the pointer; places its drawing from `stage.screen`). The
+   * slot has pointer-events none; a tool turns them on for its own targets.
    */
   dock?: 'overlay' | 'top' | 'bottom' | 'canvas';
 }

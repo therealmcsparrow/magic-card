@@ -13,6 +13,8 @@ export class AttributePicker extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) entityId = '';
+  /** Extra choices listed after "no attribute", each a value and its translated label. */
+  @property({ attribute: false }) extras: ReadonlyArray<{ value: string; label: string }> = [];
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
@@ -82,35 +84,37 @@ export class AttributePicker extends LitElement {
 
   protected render(): TemplateResult {
     const entity = this.hass && this.entityId ? this.hass.states[this.entityId] : undefined;
-    const names = entity ? Object.keys(entity.attributes).sort((a, b) => a.localeCompare(b)) : [];
+    const names = entity ? Object.keys(entity.attributes).filter((n) => !this.extras.some((x) => x.value === n)).sort((a, b) => a.localeCompare(b)) : [];
 
     // A plain select, "State (no attribute)" first. Without a known entity, a text field.
-    if (!names.length) {
+    if (!names.length && !this.extras.length) {
       return html`
         <input
           type="text"
           class="input mono"
           .value=${this.value}
-          placeholder=${t('attribute')}
-          aria-label=${t('Attribute')}
+          placeholder=${t('card-editor.attribute-picker.attribute')}
+          aria-label=${t('card-editor.attribute-picker.attribute-2')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
         ${this._showModal ? this._renderModal() : ''}
       `;
     }
-    const options = this.value && !names.includes(this.value) ? [this.value, ...names] : names;
+    const isExtra = (v: string) => this.extras.some((x) => x.value === v);
+    const options = this.value && !names.includes(this.value) && !isExtra(this.value) ? [this.value, ...names] : names;
     return html`
       <div class="select">
         <select
           class="input"
-          aria-label=${t('Attribute')}
+          aria-label=${t('card-editor.attribute-picker.attribute-2')}
           .value=${this.value}
           @change=${(e: Event) => {
             this._onInputChange(e as InputEvent);
           }}
         >
-          <option value="" ?selected=${!this.value}>${t('State (no attribute)')}</option>
+          <option value="" ?selected=${!this.value}>${t('card-editor.attribute-picker.state-no-attribute')}</option>
+          ${this.extras.map((x) => html`<option value=${x.value} ?selected=${x.value === this.value}>${x.label}</option>`)}
           ${options.map((n) => html`<option value=${n} ?selected=${n === this.value}>${n}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -123,11 +127,11 @@ export class AttributePicker extends LitElement {
     const attributes = this._getAttributes();
 
     return html`
-      ${renderPickerWindow(t('Select attribute'), () => this._closeModal(), 's', html`
+      ${renderPickerWindow(t('card-editor.attribute-picker.select-attribute'), () => this._closeModal(), 's', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch(t('Search attributes'), this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('card-editor.attribute-picker.search-attributes'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list" role="listbox" aria-label=${t('Attributes')}>
+          <div class="mc-picker-list" role="listbox" aria-label=${t('card-editor.attribute-picker.attributes')}>
             ${attributes.length > 0
               ? attributes.map(attr => html`
                   <button
@@ -144,12 +148,12 @@ export class AttributePicker extends LitElement {
                     </span>
                   </button>
                 `)
-              : html`<div class="mc-picker-empty">${t('No attributes found')}</div>`
+              : html`<div class="mc-picker-empty">${t('card-editor.attribute-picker.no-attributes-found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.attribute-picker.cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('card-editor.attribute-picker.save')}</button>
           </div>
       `)}
     `;

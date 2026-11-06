@@ -1,7 +1,4 @@
-/*
- * Placement maths of <mc-ui-window> (contract ui-kit): the rectangle rules for drag, resize, dock, width steps and
- * maximise. Pure functions, so the window element only wires events.
- */
+/* Placement maths of <mc-ui-window>: rectangle rules for drag, resize, dock, width steps and maximise. Pure. */
 export interface Rect {
   x: number;
   y: number;
@@ -48,7 +45,7 @@ export function stepWidth(r: Rect, vw: number): Rect {
   return { ...r, w: Math.min(next, vw - 2 * MARGIN) };
 }
 
-/** Arrow keys: [dx, dy] in px, or null. Left/right follow the reading direction for the resize grip. */
+/** Arrow keys: [dx, dy] in px, or null. Screen directions; resizeRect applies the reading direction. */
 export function arrowDelta(key: string, shift: boolean): [number, number] | null {
   const n = shift ? STEP_BIG : STEP;
   switch (key) {
@@ -63,6 +60,12 @@ export function arrowDelta(key: string, shift: boolean): [number, number] | null
     default:
       return null;
   }
+}
+
+/** Resize by (dx, dy) from the corner grip: it sits at the inline-end bottom corner, so under rtl a negative dx widens and the right edge stays put. */
+export function resizeRect(r: Rect, dx: number, dy: number, rtl: boolean, vw: number, vh: number): Rect {
+  const next = clampRect({ ...r, w: r.w + (rtl ? -dx : dx), h: r.h + dy }, vw, vh);
+  return { ...next, x: rtl ? r.x + r.w - next.w : r.x };
 }
 
 /** Interactive controls inside the header that must not start a drag. */

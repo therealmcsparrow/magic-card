@@ -13,19 +13,19 @@ export const videoBgEditor: ModuleEditor = {
     const c = config as VideoBgModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderFieldHint(t('Plays behind the other modules in the same column or layout. On its own in a column it shows at its own size.'))}
-        ${renderMediaField(t('Video URL'), c.url, (v) => onChange({ ...c, url: v }), hass, 'video', 'url', syncCtx)}
-        ${renderMediaField(t('Poster image URL'), c.poster, (v) => onChange({ ...c, poster: v }), hass, 'image', 'poster', syncCtx)}
-        ${renderFieldHint(t('Shown until the video plays, and instead of it when it cannot play.'))}
-        ${renderSegField(t('Fit'), c.fit ?? 'cover', [
-          { label: t('Cover'), value: 'cover' },
-          { label: t('Contain'), value: 'contain' },
+        ${renderFieldHint(t('card-editor.video-bg-editor.plays-behind-the-other-modules-in-the'))}
+        ${renderMediaField(t('card-editor.video-bg-editor.video-url'), c.url, (v) => onChange({ ...c, url: v }), hass, 'video', 'url', syncCtx)}
+        ${renderMediaField(t('card-editor.video-bg-editor.poster-image-url'), c.poster, (v) => onChange({ ...c, poster: v }), hass, 'image', 'poster', syncCtx)}
+        ${renderFieldHint(t('card-editor.video-bg-editor.shown-until-the-video-plays-and-instead'))}
+        ${renderSegField(t('card-editor.video-bg-editor.fit'), c.fit ?? 'cover', [
+          { label: t('card-editor.video-bg-editor.cover'), value: 'cover' },
+          { label: t('card-editor.video-bg-editor.contain'), value: 'contain' },
         ], (v) => onChange({ ...c, fit: v as VideoBgModuleConfig['fit'] }), 'fit', syncCtx)}
-        ${renderToggleField(t('Autoplay'), c.autoplay !== false, (v) => onChange({ ...c, autoplay: v }), 'autoplay', syncCtx,
-          t('Plays while the card is visible (not with reduced motion).'))}
-        ${renderToggleField(t('Loop'), c.loop !== false, (v) => onChange({ ...c, loop: v }), 'loop', syncCtx)}
-        ${renderToggleField(t('Muted'), c.muted !== false, (v) => onChange({ ...c, muted: v }), 'muted', syncCtx,
-          t('Browsers only autoplay muted videos.'))}
+        ${renderToggleField(t('card-editor.video-bg-editor.autoplay'), c.autoplay !== false, (v) => onChange({ ...c, autoplay: v }), 'autoplay', syncCtx,
+          t('card-editor.video-bg-editor.plays-while-the-card-is-visible-not-with'))}
+        ${renderToggleField(t('card-editor.video-bg-editor.loop'), c.loop !== false, (v) => onChange({ ...c, loop: v }), 'loop', syncCtx)}
+        ${renderToggleField(t('card-editor.video-bg-editor.muted'), c.muted !== false, (v) => onChange({ ...c, muted: v }), 'muted', syncCtx,
+          t('card-editor.video-bg-editor.browsers-only-autoplay-muted-videos'))}
       </div>
     `;
   },

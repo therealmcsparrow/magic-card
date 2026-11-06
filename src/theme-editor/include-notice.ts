@@ -11,12 +11,12 @@ export const THEMES_DOC_URL = 'https://github.com/therealmcsparrow/magic-card/bl
 /** The sentence above the lines to add, for an include state (unknown states read like 'unknown'). */
 const intro = (state: string): string =>
   state === 'missing'
-    ? t('Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:')
+    ? t('theme-editor.include-notice.home-assistant-only-loads-themes-from')
     : state === 'inline'
-      ? t('Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:')
+      ? t('theme-editor.include-notice.your-configuration-yaml-lists-themes')
       : state === 'other_layout'
-        ? t('Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:')
-        : t('The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:');
+        ? t('theme-editor.include-notice.your-configuration-yaml-loads-themes-in')
+        : t('theme-editor.include-notice.the-editor-could-not-read-configuration');
 
 /**
  * <mcte-include-notice>: the calm "one setup step" callout. Draws nothing when
@@ -52,24 +52,24 @@ export class McteIncludeNotice extends LitElement {
     return html`<div class="notice info" part="callout">
       ${glyph('information')}
       <div class="body">
-        <h3 class="title">${t('One setup step before you can save')}</h3>
+        <h3 class="title">${t('theme-editor.include-notice.one-setup-step-before-you-can-save')}</h3>
         <p>${intro(s.state)}</p>
-        <pre class="code" tabindex="0" aria-label=${t('Lines to add to configuration.yaml')}>${s.hint}</pre>
+        <pre class="code" tabindex="0" aria-label=${t('theme-editor.include-notice.lines-to-add-to-configuration-yaml')}>${s.hint}</pre>
         <details>
-          <summary>${t('Where do I add these lines?')}</summary>
+          <summary>${t('theme-editor.include-notice.where-do-i-add-these-lines')}</summary>
           <p>
-            ${t('Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.')}
+            ${t('theme-editor.include-notice.open-configuration-yaml-with-the-file')}
           </p>
         </details>
         <div class="actions">
-          <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${glyph('contentCopy')} ${t('Copy lines')}</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${glyph('contentCopy')} ${t('theme-editor.include-notice.copy-lines')}</button>
           <button type="button" class="btn btn-secondary btn-sm" aria-disabled=${this.checking ? 'true' : 'false'} @click=${() => !this.checking && fire(this, 'mcte-recheck')}>
-            ${this.checking ? html`<span class="spin" aria-hidden="true"></span> ${t('Checking...')}` : t('Check again')}
+            ${this.checking ? html`<span class="spin" aria-hidden="true"></span> ${t('theme-editor.include-notice.checking')}` : t('theme-editor.include-notice.check-again')}
           </button>
-          <a class="btn btn-text btn-sm" href=${THEMES_DOC_URL} target="_blank" rel="noopener noreferrer">${t('Show me how')}</a>
-          <span class="help" role="status">${this._copied ? t('Copied') : this.checking ? t('Checking...') : this.result}</span>
+          <a class="btn btn-text btn-sm" href=${THEMES_DOC_URL} target="_blank" rel="noopener noreferrer">${t('theme-editor.include-notice.show-me-how')}</a>
+          <span class="help" role="status">${this._copied ? t('theme-editor.include-notice.copied') : this.checking ? t('theme-editor.include-notice.checking') : this.result}</span>
         </div>
-        <p class="help">${t('You can skip this for now. Try on dashboard works without it.')}</p>
+        <p class="help">${t('theme-editor.include-notice.you-can-skip-this-for-now-try-on')}</p>
       </div>
     </div>`;
   }

@@ -1,11 +1,7 @@
 import { nothing } from 'lit';
 import { Directive, directive, PartType, type ChildPart, type PartInfo } from 'lit/directive.js';
 
-/**
- * `${selectValue(value)}` as the last child of a `<select>`: sets its value after the options
- * rendered, on every render. `?selected` on the options alone does not move a select the user
- * already changed, so a pick Home Assistant did not apply would stay shown.
- */
+/** `${selectValue(value)}` as the last child of a `<select>`: sets its value after the options render. */
 class SelectValueDirective extends Directive {
   constructor(part: PartInfo) {
     super(part);

@@ -4,6 +4,93 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.12-beta.17 (2026-11-05)
+
+### Changed
+-   **Home Assistant Marketplace.** The install, update, pre-release and troubleshooting steps now cover the Marketplace in Home Assistant 2026.11 next to HACS, and the bug report form lists it as an install method. See [Installation](README.md#installation).
+-   **Install messages.** Messages in the editor that named HACS now mention the Marketplace too, or say to install Magic Card Utils the same way as Magic Card. The card picker group is now called Custom cards.
+
+## 2026.10.12-beta.16 (2026-11-04)
+
+### Changed
+-   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
+-   **Status column.** Each card row shows its status, Available or Locked, with an icon. Select it to open a note that says why, and which font sites the card asks for. Press Escape, select Close, select outside the note, or press Tab to move on, and the note closes.
+-   **Card table width.** The forum shot page now uses the full width of the panel, so the card table is no longer squeezed into a narrow box.
+-   **Card column first.** The card table now starts with the Card column, followed by Dashboard, View and Status.
+-   **Search cards.** A search field above the card table keeps only the rows whose card, dashboard or view name holds the text you type. When nothing matches, the table says so.
+-   **Card table look.** The card table now looks like the Templates table in Magic Card Utils: a rounded frame, a shaded header row and roomier cells. The search field has its label above it and a rounded frame.
+
+## 2026.10.12-beta.15 (2026-11-03)
+
+### Added
+-   **Forum shot works with web fonts.** A card with fonts from Google Fonts or another font site can now be turned into a picture. To draw the fonts, your browser asks the font sites for them, and the tab names those sites. Your cards and settings are not sent.
+-   **Forum shot card table.** The Forum shot tab lists your cards in a table you can sort by clicking a column header.
+
+### Changed
+-   **Locked cards.** A card stays locked when it holds a custom-card module or an outside address that is not a font address the tab can check.
+-   **Font failures.** If a font cannot be loaded, no picture is made. The tab says: "A font could not be loaded, so no picture was made. Check your connection and try again."
+-   **Changed font sites.** If a card's font sites changed since the tab opened, Download stops before anything is fetched. The tab says: "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again."
+
+## 2026.10.12-beta.14 (2026-11-02)
+
+### Fixed
+-   **Pause now stops animated icons.** The Pause motion button, and a card shown in a preview, now also hold animated icons still. Before, an animated icon could keep moving on a paused card.
+
+### Added
+-   **Forum shot.** The Magic Card Utils panel can turn one of your cards into a single picture to post in a forum, in light, dark or both, with an option for the Quiet, Living and Glow looks of animated icons. Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too. The picture is made in your browser and nothing leaves Home Assistant. The Forum shot area itself makes only two read calls, both to your own Home Assistant, and refuses a card that names a picture, a web address or a Google font on another server. The card inside the picture still asks Home Assistant for its own data, as it does on a dashboard. See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md).
+-   **Four wall tablet cards in the gallery.** Front door, kitchen door, hallway lights and alarm, each with open, closed, paused and dimmed pictures. See [Wall tablet cards](documentation/gallery/tablet.md).
+-   **A troubleshooting page.** [Troubleshooting](documentation/troubleshooting/README.md) starts with what to do when a card is blank on an old tablet. The README header shows the eight card families of the gallery.
+-   **Last changed on the Info module.** Choose Last changed in the Secondary info list, or write `secondary_info: last-changed`, to show how long ago the entity last changed. Home Assistant words the time and keeps it current. See [Info](documentation/modules/content/info.md#last-changed).
+-   **Style swatches in the Animated icons tab.** Quiet, Living and Glow are now three swatches, each with a small preview of your icon in that Style. See [Styles](documentation/design/quick-icon-animator.md#styles-quiet-living-and-glow).
+-   **A mark for new library icons.** The icon library can now mark entries added in the current release with a small diamond. No icons are added in this release, so you will not see it yet. It first shows in a release that adds icons. See [Icon library](documentation/animation-studio/icon-library.md#new-entries).
+-   **The card says when its data may be old.** A small icon in the top-left corner of the card shows the full sentence when you tap it, or press Enter or Space while it has keyboard focus (Escape or a second tap closes it). The sentence reads "Connection lost at {time}" when the connection to Home Assistant has been down for 15 seconds, "Reconnected" for 3 seconds once it is back, and "Not updated since {time}" when the card's `entity` has not changed for longer than the new `quiet_time` key (seconds, as a number or a quoted whole number, or `H:MM:SS`). A value that cannot be read, anywhere in the card, makes the card show a configuration error. The icon floats over the card, moves nothing and sits to the right of a top-left pause button while the card plays. While the card is paused with its button in the top-left corner, the icon moves to the top-right corner so it never covers the "Paused" label. Because Home Assistant does not pass on the time of a repeated report, a sensor that repeats an unchanged value looks quiet from its last real change, and `quiet_time` set only through a template merge does not start the lines. On the first outage after a page load the connection line can be missing, because the file that draws it cannot be fetched while Home Assistant is unreachable. See [Connection and quiet sensors](documentation/loading-and-size/README.md#connection-and-quiet-sensors) and the [schema](documentation/yaml/schema.md#card).
+-   **One tap to update.** After an update, a card whose parts come from another release shows one tile, "Magic Card updated. Tap to reload.", with the loaded version in its corner. A tap fetches a fresh copy of the card file and reloads the page. If the old version still runs, the tile says so and links to [Clear the browser cache](documentation/loading-and-size/README.md#clear-the-browser-cache). The support reply for the update message follows the new wording.
+-   **A clearer paused state on the Pause motion button.** While a card is paused, a visible "Paused" label sits beside the button. On a card too narrow for it, the label is hidden whole instead of being cut off, and the pressed button and its icon still show the paused state. The button and label cannot be hidden by a look, and the button has a 46 px tap area and a visible border in forced-colours mode. Screen readers still hear one button, "Pause motion", with its pressed state. See [Pause motion button](documentation/design/layers.md#pause-motion-button).
+-   **Roll back if an update breaks a card.** [MAINTAINING.md](MAINTAINING.md) now explains how to go back to the version that worked, check which version runs and stay on one version, using only the HACS and Home Assistant screens. It also holds the release steps. The [support page](documentation/support/README.md) has ready replies for a paused card and for the update message.
+-   **Report a paused card in Discussions.** The [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports) category has a form for a card that stands still or a focus problem. It asks for your Magic Card version, what you saw and what you did.
+-   **Size claims show how they were measured.** The [Loading and size](documentation/loading-and-size/README.md#how-we-measured) page now has a box that says which two releases were compared and how. A check that runs before every release makes sure a size claim in the README, this changelog or those pages names a release and gives both gzip and Brotli bytes, and that a speed claim links the tablet baseline. Until a timed run on a real device exists, Magic Card makes no claim about speed.
+-   **Older Android tablets page.** The new [Older Android tablets](documentation/old-tablets/README.md) page gives the browser floor (Android System WebView 85) and the result of an [old engine check](documentation/old-tablets/old-engine-check.md) on a desktop copy of Chromium 85: the bell swing, the glow and the ripple rings do not show there. On that engine the worst frame after an extra file arrives was 100 to 183 ms, over the 50 ms target, so a card can stutter at that moment. Particle layers now fade in over 200 ms. With reduced motion, particle simulations appear at once and other particle layers stay hidden. The bug report form asks for your browser version as an optional range.
+
+### Changed
+-   **Stricter imports.** Theme and card values are checked against the kind of value their key takes. A value that fits none is left out and listed, with the host where there is one. Only a real break-out refuses the whole file, and a picture or font on another website is left out instead of being offered with **Import anyway**. A shared card drops card-mod keys. A theme keeps its card-mod values and warns that the browser may contact another website. Shared markdown loses its templates and remote pictures. Every kind has a preview, and previews make no requests. See [Sharing safety](documentation/sharing-safety/README.md).
+-   **Entity placeholders on export.** Every export replaces entity IDs with placeholders, and after an import a **Map entities** step links them to your own entities. Names without an ID and `device_id` or `area_id` targets stay as written.
+-   **Share a card.** **Share this card** and **Import a shared card** in the card editor. Before Confirm, the import lists the card's actions and templates. A shared card keeps its `text` and condition templates.
+-   **Theme checks.** An imported theme is checked for text contrast in light and dark mode, and a Wall tablet preview, in the import preview and in the theme editor, shows how its text reads from 3 metres.
+-   **Gallery rules.** The [gallery](documentation/gallery/README.md) page states the CC0 rule and the author-name note, and a gallery form in Discussions asks for no tokens, credentials or real entity IDs.
+
+### Right to left and translations
+-   **Pseudo RTL switch in the animation studio.** A switch in the top bar shows the studio and its preview card right to left, with Arabic-Indic digits and direction marks around each message. It is a test aid with made-up text. No right-to-left language ships, and no profile language can select it. See [Right to left](documentation/animation-studio/README.md#right-to-left).
+-   **Mirroring.** The studio, the card sliders and the card rings mirror in a right-to-left layout. Drawing surfaces, the card canvas, timelines and curve plots keep their direction, and your card layout is never mirrored. The ltr layout is unchanged.
+-   **Card sliders and rings in right to left.** A horizontal slider fills from the right, and its gradients (including brightness and colour temperature) run with the reading direction. The handle, ticks, labels and value are placed from the right, a drag measures from the right edge, and the Left and Right arrow keys swap so Right still means towards the end you read. A shaped track stays as drawn. A vertical slider is unchanged. A ring starts at the mirrored point (Left and Right swap, Top and Bottom stay) and runs the other way round, so clockwise reads as counter-clockwise on screen. Ring gradients and the timer ring are unchanged. See [Slider](documentation/modules/controls/slider.md#right-to-left) and [Ring](documentation/design/ring.md#right-to-left).
+-   **Mirror flag for icons.** An animation can carry `mirror: mirror` or `mirror: keep`, and the icon library shows Mirrors, Keeps or Not set per entry. Existing animations stay unset and are not flipped. See [Icon library](documentation/animation-studio/icon-library.md).
+-   **Maximum length.** A translation longer than the `max` of its key is refused on import and fails the check, in every language. See [Translating](documentation/translating/README.md).
+-   **Legal text.** A key can be tagged `legal`. Translations of it show that the English prevails, with a Show English action. When the English changes, the check fails until a translation is checked again. A waiver does not clear it. Translations of legal text are published only after a qualified lawyer has checked them. See [Legal text](documentation/translating/README.md#legal-text).
+-   **Accessibility page.** It now says what the right-to-left work covers and what is not done: no screen reader run, no device or tablet run and no real right-to-left translation. See [Accessibility](documentation/accessibility/README.md#right-to-left).
+
+## 2026.10.12-beta.13 (2026-10-30)
+
+### Fixed
+-   **A pop-up opens after Try again.** When a tap on a pop-up opener could not load the pop-up and you press **Try again**, the pop-up now opens as soon as it has loaded. It also opens when the page loads it by itself within a minute of the tap. A pop-up that loads later than that does not open, so nothing jumps onto the dashboard long after you tapped.
+-   **Spin turns an icon in place.** On an icon module, Spin, Sway, Flip and the other rotating animations without a target now turn the icon itself. Before, they turned the whole module, which is as wide as its column, so a left-aligned icon swung round in a wide circle. Choose **Module** under Target to turn the whole module. New animations on an icon module leave Target on this default.
+-   **Bigger Pause button on touch screens.** On a touch screen the Pause motion button is 34 px instead of 28 px. It still fits in the strip the card keeps for it, and the area you can tap stays 44 px.
+
+### Security
+-   **Removed unused path helpers.** Two unused helpers that wrote values by path, which a code scan flagged for prototype pollution, are removed. No card used them.
+
+## 2026.10.12-beta.12 (2026-10-29)
+
+### Improved
+-   **Plain cards download less.** The main file is smaller: 73,017 B gzip and 62,433 B Brotli, against 84,683 B gzip and 72,222 B Brotli in 2026.10.12-beta.11 (see [how we measured](documentation/loading-and-size/README.md#how-we-measured)), because code that only some cards use now sits in two shared files, `magic-card-history.js` and `magic-card-shape-path.js`. A plain card still loads nothing else. A card that needs one of them fetches it with its own feature file. See [Loading and updates](documentation/loading-and-size/README.md).
+-   **Card effects arrive after the card text.** Card effects now appear just after the card text, with a short fade, so the text is readable first.
+-   **Dutch wording.** Several Dutch texts are corrected, and counts such as "1 shape" and "2 shapes" now use the right singular or plural form in the editors, the animation studio and the theme editor.
+-   **Translators.** The text files can be exchanged with Weblate or Crowdin. See [Translating](documentation/translating/README.md).
+
+### Fixed
+-   **The animation list shows preset names.** An animation that uses a preset showed a number in the card editor, such as "Animation 1 · 446". It now shows the preset's name.
+-   **The paused backdrop no longer fades in.** When a card is paused, scrolled out of view or set to reduced motion, a new backdrop picture appears at once instead of fading in.
+-   **Icons and clock no longer jump while loading.** Icons keep their size before their code arrives, and the clock keeps room for its time and date on one line each, so the cards below stay where they are. A very long date in a narrow column now runs past its column instead of wrapping.
+-   **Pop-up ID message.** The hint for an invalid pop-up ID is translated.
+
 ## 2026.10.12-beta.11 (2026-10-28)
 
 ### Added

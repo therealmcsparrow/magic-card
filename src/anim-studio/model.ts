@@ -3,21 +3,16 @@ import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { EASING_LANE_IDS, type Binding, type Clip, type EasingLaneId, type Rig, type Track } from './model-v2-core';
+import type { MirrorFlag } from '../contracts/icon-library';
 import type { ParticlesSim } from '../contracts/particles-v2';
 import { animHooks, useParticlesValidator } from '../utils/anim-hooks';
 import { CUSTOM_PREFIX, customRefId, isCustomRef } from '../utils/custom-ref';
 
 export * from './model-v2-core';
 
-/*
- * Custom animation documents: what the animation studio edits, the magic-card-utils integration
- * stores (one JSON object per animation) and cards reference as `preset: custom:<id>`. Pure: no DOM
- * except the SVG sanitiser's parser when a particle shape is an own SVG (skipped without DOMParser).
- *
- * The stored JSON is the normalised document (validateAnimationDoc output): every field written
- * out, only the fields of its kind. Units: times in seconds, lengths in px (path: see PathSpec),
- * angles in degrees, `at` in % of the cycle, opacity 0-1.
- */
+// Custom animation documents: what the studio edits, the integration stores and cards reference as `custom:<id>`. Pure,
+// apart from the SVG sanitiser parser. Stored JSON is the normalised validateAnimationDoc output. Units: seconds, px,
+// degrees, `at` in % of the cycle, opacity 0-1.
 
 export type AnimationKind = 'keyframes' | 'particles' | 'path' | 'sequence';
 export const ANIMATION_KINDS: AnimationKind[] = ['keyframes', 'particles', 'path', 'sequence'];
@@ -160,6 +155,8 @@ export interface AnimationDoc {
   clips?: Clip[];
   /** v2 (keyframes): entity values driving target properties. */
   bindings?: Binding[];
+  /** An icon document: `mirror` flips the icon under a right-to-left direction, `keep` never does; absent means unset. */
+  mirror?: MirrorFlag;
 }
 
 /** Size caps (the integration enforces the same). */
@@ -546,11 +543,8 @@ export function useV2Validator(fn: V2Validator | undefined): void {
 
 export interface ValidateOptions {
   /**
-   * strict (default; the studio, the integration's rules): any invalid v2 entry fails the document.
-   * lenient (the card's library and inline documents): invalid v2 entries are dropped one by one,
-   * the rest of the document still plays. Without the v2 validators loaded (model-v2.ts; the card
-   * bundle before its runtime chunk), v2 fields are kept as stored, unchecked: only the runtime chunk
-   * reads them, after checking them itself.
+   * strict (default): any invalid v2 entry fails the document. lenient (card): invalid v2 entries are dropped one by one.
+   * Without the v2 validators loaded, v2 fields are kept as stored.
    */
   v2?: 'strict' | 'lenient';
 }
@@ -601,6 +595,10 @@ export function validateAnimationDoc(input: unknown, opts: ValidateOptions = {})
   }
   const direction = c.oneOf(o, 'direction', 'direction', DIRECTIONS);
   if (direction && direction !== 'normal') doc.direction = direction;
+  if (Object.prototype.hasOwnProperty.call(o, 'mirror')) {
+    if (o.mirror === 'mirror' || o.mirror === 'keep') doc.mirror = o.mirror;
+    else c.err('mirror', 'Use mirror or keep.');
+  }
   if (o.origin !== undefined && o.origin !== '') {
     if (typeof o.origin === 'string' && ORIGIN_RE.test(o.origin.trim())) doc.origin = o.origin.trim();
     else c.err('origin', 'Use keywords, lengths or percentages, e.g. "50% 100%".');

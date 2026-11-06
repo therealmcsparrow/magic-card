@@ -3,13 +3,7 @@ import { flatten, reverse } from '../path/core';
 import { E, T } from './bind';
 import { isOff, type Doc, type Shape } from './model';
 
-/*
- * The "In Home Assistant" form of a drawing (mcu-library 1.0.0, "Saved icon path"): Home Assistant draws
- * one fill path and one reduced-opacity path with the nonzero rule. So every filled shape goes into
- * `path` (accent shapes into `secondary_path`), closed stroked shapes as their area, open lines left
- * out, and each subpath is wound so that solids add and holes stay holes whatever the shape's own rule.
- * `lost` is the share of the drawing's covered area the form does not reproduce (design W11).
- */
+// The "In Home Assistant" form of a drawing: one fill `path` and one `secondary_path` with the nonzero rule; `lost` is the area not reproduced.
 
 export interface HaForm {
   path: string;

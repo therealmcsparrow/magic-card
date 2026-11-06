@@ -26,7 +26,8 @@ import {
 import { applyTabState, getStatePreview, onStatePreview, stateOfView, type TabPreviewState } from './tab-state-preview';
 import { childSlots } from '../../utils/module-path';
 import { TEMPLATE_ID_HINT, templateIdMissing } from '../state/flows';
-import { GridRowLike, columnWidthsTemplate, effectiveWidths, widthWeights } from '../../utils/column-widths';
+import { GridRowLike, columnWidthsTemplate } from '../../utils/column-widths';
+import { effectiveWidths, widthWeights } from '../../utils/column-widths-edit';
 import { equalizePair, resizePair, stepPair } from './column-resize';
 import { withTemplateAnimations } from '../../services/template-merge';
 import { BLOCKED_KEY, blockNavigation, forwardToDashboard, isNavigationRequest } from './studio-live-actions';
@@ -579,7 +580,7 @@ export class StudioCanvas extends LitElement {
     const detail = (e as CustomEvent<unknown>).detail;
     const blocked = (detail as Record<string, unknown> | null | undefined)?.[BLOCKED_KEY];
     if (blocked !== undefined || (e.type === 'hass-action' && isNavigationRequest(detail))) {
-      this.showStatus(t('Navigation is off in Preview'));
+      this.showStatus(t('card-editor.studio-canvas.navigation-is-off-in-preview'));
       return;
     }
     forwardToDashboard(e.type, detail);
@@ -1255,12 +1256,12 @@ export class StudioCanvas extends LitElement {
         role="separator"
         aria-orientation="vertical"
         tabindex="0"
-        aria-label=${t('Resize between Column {a} and Column {b}', { a: i + 1, b: i + 2 })}
+        aria-label=${t('card-editor.studio-canvas.resize-between-column-a-and-column-b', { a: i + 1, b: i + 2 })}
         aria-valuemin="0"
         aria-valuemax="100"
         aria-valuenow=${share}
-        aria-valuetext=${t('Column {a} {wa}, Column {b} {wb}', { a: i + 1, wa: widths[i], b: i + 2, wb: widths[i + 1] })}
-        title=${t('Drag to resize, double-click for equal widths')}
+        aria-valuetext=${t('card-editor.studio-canvas.column-a-wa-column-b-wb', { a: i + 1, wa: widths[i], b: i + 2, wb: widths[i + 1] })}
+        title=${t('card-editor.studio-canvas.drag-to-resize-double-click-for-equal')}
         hidden
         @pointerdown=${this._onHandleDown}
         @keydown=${this._onHandleKey}
@@ -1298,11 +1299,11 @@ export class StudioCanvas extends LitElement {
     const live = this.live;
     const wd = this.width;
     const shown = wd.px ?? this._fillPx;
-    const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? t(', shown at {px} px', { px: this._fillPx }) : '';
+    const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? t('card-editor.studio-canvas.shown-at-px-px', { px: this._fillPx }) : '';
     const sel = this._sel;
     const config = s?.config;
     const hidden = !!config && isHiddenItem(itemAt(config, sel));
-    const label = config ? `${describeSelection(config, sel).title}${hidden ? ` · ${t('hidden')}` : ''}` : '';
+    const label = config ? `${describeSelection(config, sel).title}${hidden ? ` · ${t('card-editor.studio-canvas.hidden')}` : ''}` : '';
     // Position of the module in its list: a column, or a layout module's slot for a nested child.
     let index = 0;
     let count = 0;
@@ -1324,20 +1325,20 @@ export class StudioCanvas extends LitElement {
     const layeredSel = !!selMod && placementOf(selMod) !== 'flow';
 
     const floatBar = html`
-          <div class="float-bar" role="toolbar" aria-label=${t('Module actions')} hidden>
+          <div class="float-bar" role="toolbar" aria-label=${t('card-editor.studio-canvas.module-actions')} hidden>
             ${this._renderLayerBar(label, layeredSel)}
-            <button type="button" class="icon-btn sm" aria-label=${t('Move up')} title=${t('Move up (Alt+Up)')} ?disabled=${first}
+            <button type="button" class="icon-btn sm" aria-label=${t('card-editor.studio-canvas.move-up')} title=${t('card-editor.studio-canvas.move-up-alt-up')} ?disabled=${first}
               @click=${(e: Event) => this._onBarClick('up', e)}><ha-icon icon="mdi:arrow-up"></ha-icon></button>
-            <button type="button" class="icon-btn sm" aria-label=${t('Move down')} title=${t('Move down (Alt+Down)')} ?disabled=${last}
+            <button type="button" class="icon-btn sm" aria-label=${t('card-editor.studio-canvas.move-down')} title=${t('card-editor.studio-canvas.move-down-alt-down')} ?disabled=${last}
               @click=${(e: Event) => this._onBarClick('down', e)}><ha-icon icon="mdi:arrow-down"></ha-icon></button>
             <span class="sep" aria-hidden="true"></span>
-            <button type="button" class="icon-btn sm" aria-label=${t('Duplicate')} title=${t('Duplicate (Ctrl+D)')}
+            <button type="button" class="icon-btn sm" aria-label=${t('card-editor.studio-canvas.duplicate')} title=${t('card-editor.studio-canvas.duplicate-ctrl-d')}
               @click=${(e: Event) => this._onBarClick('duplicate', e)}><ha-icon icon="mdi:content-copy"></ha-icon></button>
-            <button type="button" class="icon-btn sm" aria-label=${t('Add flow from here')}
-              title=${locked ? t('Add flow from here. {hint}', { hint: t(TEMPLATE_ID_HINT) }) : t('Add flow from here')} ?disabled=${locked}
+            <button type="button" class="icon-btn sm" aria-label=${t('card-editor.studio-canvas.add-flow-from-here')}
+              title=${locked ? t('card-editor.studio-canvas.add-flow-from-here-hint', { hint: t(TEMPLATE_ID_HINT) }) : t('card-editor.studio-canvas.add-flow-from-here')} ?disabled=${locked}
               aria-pressed=${this._connectFrom ? 'true' : 'false'}
               @click=${() => (this._connectFrom ? this._cancelConnect() : this._startConnect())}><ha-icon icon="mdi:transit-connection-variant"></ha-icon></button>
-            <button type="button" class="icon-btn sm danger" aria-label=${t('Delete')} title=${t('Delete (Del)')}
+            <button type="button" class="icon-btn sm danger" aria-label=${t('card-editor.studio-canvas.delete')} title=${t('card-editor.studio-canvas.delete-del')}
               @click=${(e: Event) => this._onBarClick('delete', e)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
           </div>
     `;
@@ -1348,7 +1349,7 @@ export class StudioCanvas extends LitElement {
         class="canvas ${this._connectFrom ? 'connecting' : ''} ${live ? 'live' : ''}"
         tabindex=${live ? nothing : '0'}
         role="region"
-        aria-label=${live ? t('Canvas, live preview') : t('Canvas, {label} selected', { label })}
+        aria-label=${live ? t('card-editor.studio-canvas.canvas-live-preview') : t('card-editor.studio-canvas.canvas-label-selected', { label })}
         aria-describedby=${live ? nothing : this._connectFrom ? 'connect-hint' : 'canvas-hint'}
         @click=${this._onGroundClick}
         @contextmenu=${this._onGroundContext}
@@ -1360,14 +1361,14 @@ export class StudioCanvas extends LitElement {
         <div class="canvas-inner">
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
             <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span>${this._tabState
-              ? html`<span class="state-chip" role="status">${t('Showing: {state}', { state: this._tabState === 'hover' ? t('Hover') : this._tabState === 'active' ? t('Active tab') : t('Disabled tab') })}</span>`
+              ? html`<span class="state-chip" role="status">${t('card-editor.studio-canvas.showing-state', { state: this._tabState === 'hover' ? t('card-editor.studio-canvas.hover') : this._tabState === 'active' ? t('card-editor.studio-canvas.active-tab') : t('card-editor.studio-canvas.disabled-tab') })}</span>`
               : nothing}<span class="device-note">${wd.canMatch
-              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('Match view')}</button>`
-              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}${live ? nothing : html`<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
-                aria-label=${this._previewPaused ? t('Resume preview motion') : t('Pause preview motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
+              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('card-editor.studio-canvas.match-view')}</button>`
+              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('card-editor.studio-canvas.live-data')}${live ? nothing : html`<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
+                aria-label=${this._previewPaused ? t('card-editor.studio-canvas.resume-preview-motion') : t('card-editor.studio-canvas.pause-preview-motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
                 ><ha-icon icon=${this._previewPaused ? 'mdi:play' : 'mdi:pause'}></ha-icon></button>`}</span></div>
             ${this._cardError
-              ? html`<p class="card-error" role="status">${t('Preview not updated: {error}', { error: this._cardError })}</p>`
+              ? html`<p class="card-error" role="status">${t('card-editor.studio-canvas.preview-not-updated-error', { error: this._cardError })}</p>`
               : nothing}
             <div class="card-host"></div>
           </div>
@@ -1389,26 +1390,26 @@ export class StudioCanvas extends LitElement {
         ? html`<div class="connect-hint" id="connect-hint" @keydown=${this._onHintKeydown}>
             <ha-icon icon="mdi:transit-connection-variant"></ha-icon>
             <span>${this._connectNote
-              ? tx('{note}, or pick another. {key} cancels.', { note: this._connectNote, key: html`<kbd>Esc</kbd>` })
-              : tx('Click the module to connect to. {key} cancels.', { key: html`<kbd>Esc</kbd>` })}</span>
-            <button type="button" class="btn btn-text btn-sm" @click=${this._cancelConnect}>${t('Cancel')}</button>
+              ? tx('card-editor.studio-canvas.note-or-pick-another-key-cancels', { note: this._connectNote, key: html`<kbd>Esc</kbd>` })
+              : tx('card-editor.studio-canvas.click-the-module-to-connect-to-key', { key: html`<kbd>Esc</kbd>` })}</span>
+            <button type="button" class="btn btn-text btn-sm" @click=${this._cancelConnect}>${t('card-editor.studio-canvas.cancel')}</button>
           </div>`
         : nothing}
       <p class="sr-only" id="connect-status" role="status">${this._connectFrom
         ? this._connectNote
-          ? t('{note}, or pick another. Escape cancels.', { note: this._connectNote })
-          : t('Click the module to connect to. Escape cancels.')
+          ? t('card-editor.studio-canvas.note-or-pick-another-escape-cancels', { note: this._connectNote })
+          : t('card-editor.studio-canvas.click-the-module-to-connect-to-escape')
         : ''}</p>
       ${live
         ? nothing
         : html`<p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
-        ${tx('Click a module to select it. {move} moves it, {remove} removes it, {menu} opens its menu.', {
+        ${tx('card-editor.studio-canvas.click-a-module-to-select-it-move-moves', {
           // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
-          move: html`<kbd>Alt</kbd> + <kbd>${t('Up')}</kbd>/<kbd>${t('Down')}</kbd>`,
-          remove: html`<kbd>${t('Del')}</kbd>`,
+          move: html`<kbd>Alt</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
+          remove: html`<kbd>${t('card-editor.studio-canvas.del')}</kbd>`,
           menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
         })}
-        ${tx('Show or hide panels: {ctrl} or {cmd}.', {
+        ${tx('card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd', {
           ctrl: html`<kbd>Ctrl</kbd> + <kbd>\\</kbd>`,
           cmd: html`<kbd>⌘</kbd> + <kbd>\\</kbd>`,
         })}
@@ -1428,13 +1429,13 @@ export class StudioCanvas extends LitElement {
     const n = this._hereCount;
     const mod = this._state ? moduleAt(this._state.config, this._sel as ModuleSelection) : undefined;
     const place = mod ? placementOf(mod) : 'flow';
-    return html`${layered ? html`<span class="fb-name">${place === 'background' ? t('{name}, Behind others', { name: label }) : t('{name}, On top', { name: label })}</span>` : nothing}
+    return html`${layered ? html`<span class="fb-name">${place === 'background' ? t('card-editor.studio-canvas.name-behind-others', { name: label }) : t('card-editor.studio-canvas.name-on-top', { name: label })}</span>` : nothing}
       ${n > 1
-        ? html`<button type="button" class="btn btn-text btn-sm" data-act="layers-here" aria-haspopup="dialog" @click=${(e: Event) => this._openSheetFromBar(e)}>${t('Layers here ({n})', { n })}</button>
-            <button type="button" class="icon-btn sm" data-act="layer-above" aria-label=${t('Select layer above')} title=${t('Select layer above')} @click=${() => this._stepLayer(-1)}><ha-icon icon="mdi:chevron-up-box-outline"></ha-icon></button>
-            <button type="button" class="icon-btn sm" data-act="layer-below" aria-label=${t('Select layer below')} title=${t('Select layer below')} @click=${() => this._stepLayer(1)}><ha-icon icon="mdi:chevron-down-box-outline"></ha-icon></button>`
+        ? html`<button type="button" class="btn btn-text btn-sm" data-act="layers-here" aria-haspopup="dialog" @click=${(e: Event) => this._openSheetFromBar(e)}>${t('card-editor.studio-canvas.layers-here-n', { n })}</button>
+            <button type="button" class="icon-btn sm" data-act="layer-above" aria-label=${t('card-editor.studio-canvas.select-layer-above')} title=${t('card-editor.studio-canvas.select-layer-above')} @click=${() => this._stepLayer(-1)}><ha-icon icon="mdi:chevron-up-box-outline"></ha-icon></button>
+            <button type="button" class="icon-btn sm" data-act="layer-below" aria-label=${t('card-editor.studio-canvas.select-layer-below')} title=${t('card-editor.studio-canvas.select-layer-below')} @click=${() => this._stepLayer(1)}><ha-icon icon="mdi:chevron-down-box-outline"></ha-icon></button>`
         : nothing}
-      <button type="button" class="icon-btn sm" data-act="placement" aria-haspopup="menu" aria-label=${t('Placement')} title=${t('Placement: put behind others, put on top, back to normal')} @click=${(e: Event) => this._openPlacementMenu(e)}><ha-icon icon="mdi:layers-outline"></ha-icon></button>
+      <button type="button" class="icon-btn sm" data-act="placement" aria-haspopup="menu" aria-label=${t('card-editor.studio-canvas.placement')} title=${t('card-editor.studio-canvas.placement-put-behind-others-put-on-top')} @click=${(e: Event) => this._openPlacementMenu(e)}><ha-icon icon="mdi:layers-outline"></ha-icon></button>
       <span class="sep" aria-hidden="true"></span>`;
   }
 
@@ -1468,6 +1469,7 @@ export class StudioCanvas extends LitElement {
         max-width: none;
       }
       .canvas {
+        direction: ltr; /* frames, handles and drag maths use screen coordinates */
         grid-row: 2;
         overflow: auto;
         min-height: 0;
@@ -1509,12 +1511,12 @@ export class StudioCanvas extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        text-align: right;
+        text-align: end;
       }
       /* the device may be wider than a narrow canvas (it scrolls sideways): the label, with the preview-pause toggle at its end, stays within the screen and pinned to the left edge while scrolled */
       .device-label {
         position: sticky;
-        left: 24px;
+        left: 24px; /* physical */
         max-width: calc(100vw - 48px);
         display: flex;
         flex-wrap: wrap;
@@ -1594,7 +1596,7 @@ export class StudioCanvas extends LitElement {
       .status-capsule {
         position: absolute;
         bottom: 16px;
-        left: 50%;
+        left: 50%; /* physical */
         transform: translateX(-50%);
         z-index: 6;
         max-width: calc(100% - 32px);
@@ -1624,7 +1626,7 @@ export class StudioCanvas extends LitElement {
       .connect-hint {
         position: absolute;
         bottom: 16px;
-        left: 50%;
+        left: 50%; /* physical */
         transform: translateX(-50%);
         z-index: 6;
         display: flex;
@@ -1670,7 +1672,7 @@ export class StudioCanvas extends LitElement {
       }
       .hover-frame .tag {
         position: absolute;
-        left: 0;
+        left: 0; /* physical */
         top: -22px;
         padding: 2px 8px;
         border-radius: 6px;
@@ -1696,13 +1698,25 @@ export class StudioCanvas extends LitElement {
         border: 2px solid var(--k);
         border-radius: 2px;
       }
-      .sel-frame .h.tl { left: -5px; top: -5px; }
-      .sel-frame .h.tr { right: -5px; top: -5px; }
-      .sel-frame .h.bl { left: -5px; bottom: -5px; }
-      .sel-frame .h.br { right: -5px; bottom: -5px; }
+      .sel-frame .h.tl {
+        left: -5px; /* physical */
+        top: -5px;
+      }
+      .sel-frame .h.tr {
+        right: -5px; /* physical */
+        top: -5px;
+      }
+      .sel-frame .h.bl {
+        left: -5px; /* physical */
+        bottom: -5px;
+      }
+      .sel-frame .h.br {
+        right: -5px; /* physical */
+        bottom: -5px;
+      }
       .sel-frame .tag {
         position: absolute;
-        left: -2px;
+        left: -2px; /* physical */
         top: -28px;
         padding: 2px 8px;
         border-radius: 6px;
@@ -1719,7 +1733,7 @@ export class StudioCanvas extends LitElement {
         position: absolute;
         z-index: 5;
         width: var(--col-hit);
-        margin-left: calc(var(--col-hit) / -2);
+        margin-left: calc(var(--col-hit) / -2); /* physical */
         cursor: col-resize;
         touch-action: none;
         border-radius: 6px;
@@ -1732,7 +1746,7 @@ export class StudioCanvas extends LitElement {
         position: absolute;
         top: 0;
         bottom: 0;
-        left: calc(50% - 1px);
+        left: calc(50% - 1px); /* physical */
         width: 2px;
         border-radius: 1px;
         background: color-mix(in srgb, var(--k) 45%, transparent);
@@ -1742,7 +1756,7 @@ export class StudioCanvas extends LitElement {
         content: '';
         position: absolute;
         top: 50%;
-        left: calc(50% - 4px);
+        left: calc(50% - 4px); /* physical */
         width: 8px;
         height: 28px;
         margin-top: -14px;
@@ -1785,6 +1799,9 @@ export class StudioCanvas extends LitElement {
         box-shadow: var(--mc-shadow-float);
         transition: top 0.2s ease-out, left 0.2s ease-out;
       }
+      :host([dir='rtl']) .float-bar {
+        direction: rtl;
+      }
       .float-bar .fb-name {
         align-self: center;
         padding: 0 8px;
@@ -1814,6 +1831,7 @@ export class StudioCanvas extends LitElement {
       .canvas-hint {
         position: absolute;
         left: 16px;
+        inset-inline: 16px auto;
         bottom: 16px;
         z-index: 3;
         max-width: calc(100% - 32px);

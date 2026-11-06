@@ -73,7 +73,7 @@ export class CameraView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as CameraModuleConfig;
     const stateObj = c.entity && hass ? hass.states[c.entity] : undefined;
-    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || t('No camera');
+    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || t('modules-extra.camera-view.no-camera');
     const ctx = currentRenderContext();
 
     let body: TemplateResult;

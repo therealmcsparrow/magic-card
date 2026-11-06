@@ -52,23 +52,23 @@ function bindingsOf(kit: ImageTransferKit, index: number, raw: unknown, ids: Rea
       out.push(b);
     } else if (named < MAX_IMAGE_BINDINGS) {
       named++;
-      notes.push(kit.note('dropped_value', index, `data.bindings[${i}]`, t('Connection {n} is not valid, so it was left out.', { n: i + 1 })));
+      notes.push(kit.note('dropped_value', index, `data.bindings[${i}]`, t('image-transfer.reader.connection-n-is-not-valid-so-it-was-left', { n: i + 1 })));
     } else unnamed++;
   }
-  if (unnamed) notes.push(kit.note('dropped_value', index, 'data.bindings', t('{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}', { n: unnamed })));
-  if (over) notes.push(kit.note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
+  if (unnamed) notes.push(kit.note('dropped_value', index, 'data.bindings', t('image-transfer.reader.n', { n: unnamed })));
+  if (over) notes.push(kit.note('over_cap', index, 'data.bindings', t('image-transfer.reader.only-the-first-max-connections-were-kept', { max: MAX_IMAGE_BINDINGS })));
   return out;
 }
 
 /** An image item: the drawing is sanitised by the svg-image api (what it removes is listed), connections are checked. */
 export function readImage(api: Pick<SvgImageApi, 'sanitizeImage'>, kit: ImageTransferKit, index: number, data: unknown, options?: SanitizeOptions): ImageKindResult {
   const bad = (message: string): ImageKindResult => ({ ok: false, notes: [kit.note('invalid_item', index, 'data.svg', message)] });
-  if (!isObj(data) || typeof data.svg !== 'string') return bad(t('The image could not be read.'));
+  if (!isObj(data) || typeof data.svg !== 'string') return bad(t('image-transfer.reader.the-image-could-not-be-read'));
   const notes: TransferNote[] = [];
   for (const k of Object.keys(data)) if (!DATA_KEYS.includes(k)) notes.push(kit.droppedKey(index, `data.${k}`));
 
   const s = api.sanitizeImage(data.svg, options);
-  if (s.error || !s.markup) return bad(s.error === 'too_large' ? t('The image is larger than {kb} KB.', { kb: IMAGE_MAX_BYTES / 1024 }) : s.error === 'unsafe_markup' ? t('The image holds markup that is not allowed.') : t('The image could not be read.'));
+  if (s.error || !s.markup) return bad(s.error === 'too_large' ? t('image-transfer.reader.the-image-is-larger-than-kb-kb', { kb: IMAGE_MAX_BYTES / 1024 }) : s.error === 'unsafe_markup' ? t('image-transfer.reader.the-image-holds-markup-that-is-not') : t('image-transfer.reader.the-image-could-not-be-read'));
   const gone = new Map<string, number>();
   for (const x of s.stripped) gone.set(x, (gone.get(x) ?? 0) + 1);
   for (const [name, count] of gone) {
@@ -81,6 +81,6 @@ export function readImage(api: Pick<SvgImageApi, 'sanitizeImage'>, kit: ImageTra
     const list = bindingsOf(kit, index, data.bindings, new Set(s.ids), notes);
     if (list.length) out.bindings = list;
   }
-  if (sizeOf(out.svg) + (out.bindings ? sizeOf(out.bindings) : 0) > IMAGE_MAX_BYTES) return bad(t('The image is larger than {kb} KB.', { kb: IMAGE_MAX_BYTES / 1024 }));
+  if (sizeOf(out.svg) + (out.bindings ? sizeOf(out.bindings) : 0) > IMAGE_MAX_BYTES) return bad(t('image-transfer.reader.the-image-is-larger-than-kb-kb', { kb: IMAGE_MAX_BYTES / 1024 }));
   return { ok: true, data: out, notes };
 }

@@ -1,8 +1,5 @@
-/*
- * Path model, editor-only: the primitive outlines (contract path-model 1.0.0). Each is one
- * closed clockwise subpath (y down) inside its box, straight sides and cubics only, at most
- * PRIMITIVE_MAX_ANCHORS anchors. Proportions are fixed per kind and scale with the box.
- */
+// Path model, editor-only: primitive outlines, each one closed clockwise subpath inside its box
+// (straight sides and cubics, at most PRIMITIVE_MAX_ANCHORS anchors), scaled with the box.
 import type { Anchor, Box, EditPath, Pt, PrimitiveKind } from '../contracts/path-model';
 
 const K = 0.5522847498;

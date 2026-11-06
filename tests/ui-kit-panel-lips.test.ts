@@ -529,8 +529,8 @@ describe('6 focus', () => {
 describe('8 kitLip text', () => {
   const css = kitLip.cssText;
   it('puts left/right before inset-inline-*, :focus before :focus-visible, and has rtl rules', () => {
-    expect(css.indexOf('left: var(--mc-lip-at-start')).toBeLessThan(css.indexOf('inset-inline-start'));
-    expect(css.indexOf('right: var(--mc-lip-at-end')).toBeLessThan(css.indexOf('inset-inline-end'));
+    expect(css.indexOf('left: var(--mc-lip-at-start')).toBeLessThan(css.indexOf('inset-inline: var(--mc-lip-at-start'));
+    expect(css.indexOf('right: var(--mc-lip-at-end')).toBeLessThan(css.indexOf('inset-inline: auto var(--mc-lip-at-end'));
     expect(css.indexOf('.lip:focus ')).toBeLessThan(css.indexOf('.lip:focus:not(:focus-visible)'));
     expect(css.indexOf('.lip:focus:not(:focus-visible)')).toBeLessThan(css.indexOf('.lip:focus-visible'));
     expect(css).toMatch(/\[data-dir=['"]?rtl['"]?\]/);
@@ -561,10 +561,9 @@ describe('8 kitLip text', () => {
   });
   it('a host in rtl renders data-dir=rtl on the lip and the panel', async () => {
     const el = document.createElement('lip-test-host') as LipHost;
-    el.style.direction = 'rtl';
+    el.setAttribute('dir', 'rtl');
     document.body.append(el);
     await flush(el);
-    if (getComputedStyle(el).direction !== 'rtl') return; // the test DOM does not compute direction
     expect(lipOf(el, 'layers').dataset.dir).toBe('rtl');
     expect(q(el, '#layers').dataset.dir).toBe('rtl');
   });
@@ -877,8 +876,8 @@ describe('lip focus, Escape on the lip, touch extension', () => {
 
   it('the touch extension adds what the 1 px border takes, so the target is a full 44 px', () => {
     const css = kitLip.cssText.replace(/\s+/g, ' ');
-    expect(css).toMatch(/\.lip\[data-side='start'\]::after \{ left: 100%; width: 17px; \}/);
-    expect(css).toMatch(/\.lip\[data-side='end'\]::after \{ right: 100%; width: 17px; \}/);
+    expect(css).toMatch(/\.lip\[data-side='start'\]::after \{ left: 100%; right: auto; inset-inline: 100% auto; width: 17px; \}/);
+    expect(css).toMatch(/\.lip\[data-side='end'\]::after \{ right: 100%; left: auto; inset-inline: auto 100%; width: 17px; \}/);
     expect(css).toMatch(/\.lip\[aria-expanded='false'\]::after \{ width: calc\(17px \+ var\(--mc-lip-pull, 0px\)\); \}/);
   });
 });

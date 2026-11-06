@@ -376,7 +376,7 @@ describe('Import an SVG file over a drawing', () => {
     const w = el.renderRoot.querySelector('mc-ui-window')!;
     expect(w.getAttribute('heading')).toBe('Replace your drawing?');
     expect(w.getAttribute('variant')).toBe('alert');
-    expect(w.textContent).toContain("Importing 'plan.svg' replaces everything on the canvas. You can undo it.");
+    expect(w.textContent).toContain("Importing ‘plan.svg’ replaces everything on the canvas. You can undo it.");
     win(el, 'Keep my drawing')!.click();
     await settle(el);
     expect(ext.replacing).toBeUndefined();

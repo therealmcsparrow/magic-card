@@ -13,20 +13,9 @@ import { standaloneHass } from './studio-stage';
 import { tileHass } from './tiles';
 import { t } from './i18n';
 
-/*
- * Module `preset-tiles` (contract preset-catalogue 1.1.0, tile part): the "Customise a preset"
- * dialog's grid of live mini cards. <mc-preset-grid> shows one tile per PresetTileSource, grouped
- * and filtered by `query`, and emits `preset-pick` ({ source }) on click, Enter or Space; the
- * dialog does the rest, the grid writes nothing. Each tile's <mc-preset-thumb> is a small
- * magic-card on the studio's card tile (icon, name, state, background) that plays the preset.
- *
- * Tile rules (PRESET_TILE_RULES_VERSION 1.0.0):
- * - the card exists only while the tile is on screen (IntersectionObserver); off screen nothing runs;
- * - tap presets and heavy scenes (seasonal, catalogue `heavy`) show a still card until hover or
- *   focus; a corner play badge (touch) previews one cycle;
- * - prefers-reduced-motion: every tile still, hover and focus do not play, no badge (the card
- *   itself honours reduced motion, so a badge could not play anything).
- */
+// <mc-preset-grid> (module preset-tiles): one live mini card per PresetTileSource, grouped and filtered by `query`; emits
+// `preset-pick` ({ source }) on click, Enter or Space. A tile's card exists only while on screen; tap presets and heavy
+// scenes stay still until hover or focus; reduced motion keeps every tile still.
 
 export const PRESET_GRID_TAG = 'mc-preset-grid';
 export const PRESET_THUMB_TAG = 'mc-preset-thumb';
@@ -143,7 +132,7 @@ export function previewMs(doc: AnimationDoc | undefined): number {
   return Math.min(8000, Math.max(2500, Math.round(secs * 1000)));
 }
 
-const reducedQuery = (): MediaQueryList | undefined => (typeof window.matchMedia === 'function' ? window.matchMedia(t('(prefers-reduced-motion: reduce)')) : undefined);
+const reducedQuery = (): MediaQueryList | undefined => (typeof window.matchMedia === 'function' ? window.matchMedia(t('anim-studio.preset-grid.prefers-reduced-motion-reduce')) : undefined);
 
 /** A config id from a tile key (`cat:candle-glow` -> `pt-cat-candle-glow`). */
 const previewId = (key: string): string => `pt-${key.toLowerCase().replace(/[^a-z0-9_-]/g, '-')}`.slice(0, 64);
@@ -234,7 +223,7 @@ export class PresetThumb extends LitElement {
       /* a fixed 200px card scaled to 120px: the type never reflows per tile; 8px of canvas around it for glows and borders */
       .scale {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         width: 200px;
         transform: translate(-50%, -50%) scale(0.6);
@@ -326,7 +315,7 @@ export class PresetGrid extends LitElement {
         class="pt"
         data-preset=${key}
         title=${name}
-        aria-description=${tap ? t('Plays on tap') : nothing}
+        aria-description=${tap ? t('anim-studio.preset-grid.plays-on-tap') : nothing}
         @click=${() => this._pick(s)}
         @pointerenter=${() => this._set('_active', key, true)}
         @pointerleave=${() => this._set('_active', key, false)}
@@ -335,10 +324,10 @@ export class PresetGrid extends LitElement {
       >
         <mc-preset-thumb aria-hidden="true" .source=${s} .play=${play} .hass=${this.hass} .lookup=${this.lookup}></mc-preset-thumb>
         <span class="nm">${name}</span>
-        ${tap ? html`<span class="chip is-count" aria-hidden="true">${t('Tap')}</span>` : nothing}
+        ${tap ? html`<span class="chip is-count" aria-hidden="true">${t('anim-studio.preset-grid.tap')}</span>` : nothing}
       </button>
       ${still && !this._reduced
-        ? html`<button type="button" class="pt-play" tabindex="-1" aria-hidden="true" title=${t('Preview')} @click=${() => this._preview(s, key)}>
+        ? html`<button type="button" class="pt-play" tabindex="-1" aria-hidden="true" title=${t('anim-studio.preset-grid.preview')} @click=${() => this._preview(s, key)}>
             <ha-icon icon="mdi:play"></ha-icon>
           </button>`
         : nothing}
@@ -358,9 +347,9 @@ export class PresetGrid extends LitElement {
             </section>`,
           )
         : html`<div class="no-results">
-            <p>${t('No presets match "{query}".', { query: this.query })}</p>
+            <p>${t('anim-studio.preset-grid.no-presets-match-query', { query: this.query })}</p>
             <button type="button" class="btn btn-text btn-sm no-results-clear" @click=${() => this.dispatchEvent(new CustomEvent('preset-clear-search', { bubbles: true, composed: true }))}>
-              ${t('Clear search')}
+              ${t('anim-studio.preset-grid.clear-search')}
             </button>
           </div>`}
       <p class="notice" role="status" ?hidden=${!this.notice}>${this.notice}</p>
@@ -377,7 +366,7 @@ export class PresetGrid extends LitElement {
         overflow: auto;
         /* sticky group headings never cover the focused tile (WCAG 2.4.11) */
         scroll-padding-top: 32px;
-        padding-right: 4px;
+        padding-inline-end: 4px;
       }
       .pg + .pg {
         margin-top: 12px;
@@ -442,6 +431,7 @@ export class PresetGrid extends LitElement {
         position: absolute;
         top: 12px;
         right: 12px;
+        inset-inline: auto 12px;
         width: 24px;
         height: 24px;
         display: grid;

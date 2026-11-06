@@ -5,7 +5,6 @@ import { entityColorCss, isEntityColor } from './entity-color';
 import { parseGradient } from './gradient';
 import { mediaCssImage } from './media';
 import { buttonPartDecls } from './button-parts';
-import { tabBorderStyle } from './tab-border';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
@@ -71,6 +70,17 @@ export function designUsesEntityColor(design: DesignConfig | undefined): boolean
 }
 
 const TAB_BORDER_KEYS = ['border_width', 'border_style', 'border_color'];
+
+/**
+ * The hover Border of a tabs module as declarations for its tab buttons. The parsers behind it are in the modules-extra
+ * chunk with the tabs view, which provides this function when it installs; a hover rule built before that has no button
+ * border, and the card renders again once the chunk is ready.
+ */
+let tabHoverBorder: ((hover: unknown) => string) | undefined;
+export const provideTabHoverBorder = (fn: ((hover: unknown) => string) | undefined): void => {
+  tabHoverBorder = fn;
+};
+
 const BORDER_KEYS = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
 
 /** The border a button / dropdown control draws when the design writes none (width, style, colour). */
@@ -94,13 +104,9 @@ export function controlLook(type: string | undefined, variant?: string): Control
 }
 
 /**
- * `control`: a button / dropdown wrapper whose design border and shadow are drawn by the control
- * inside: the wrapper gets none of them, the control reads --mc-design-bw / -bs / -bc (four values,
- * top right bottom left, unset sides filled with the control's own default) and --mc-design-shadow.
- * Other modules, shaped elements and border-length overlays draw them on the wrapper.
- * `button`: a button module, whose icon, label and state keys become custom properties its parts read. For a hover
- * design it is the module's base design: a hover that sets a part key writes the keys of base and hover together,
- * so it leaves the others as the base has them.
+ * `control`: a button / dropdown wrapper whose border and shadow the inner control draws from
+ * --mc-design-bw / -bs / -bc / -shadow. `button`: a button module, whose icon, label and state keys
+ * become custom properties its parts read; a hover design writes base and hover keys together.
  */
 export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean | Partial<DesignConfig>, tabs?: boolean): string {
   if (!input) return '';
@@ -231,19 +237,29 @@ export function tabTypeStyle(design?: Partial<DesignConfig>): string {
   return [designToStyle(type as DesignConfig), type.font_weight && `--mc-design-font-weight: ${type.font_weight}`].filter(Boolean).join('; ');
 }
 
-/** Split a declaration list on `;` outside parentheses and quotes (a data: URL keeps its `;`). */
+/**
+ * Split a declaration list on `;` outside parentheses and quotes (a data: URL keeps its `;`). CSS comments
+ * outside quotes and parentheses are dropped, as the browser does when it reads the same text.
+ */
 export function splitDeclarations(style: string): string[] {
   const out: string[] = [];
   let depth = 0;
   let quote = '';
   let cur = '';
-  for (const ch of style) {
+  for (let i = 0; i < style.length; i++) {
+    const ch = style[i];
     if (quote) {
       if (ch === quote) quote = '';
     } else if (ch === '"' || ch === "'") quote = ch;
     else if (ch === '(') depth++;
     else if (ch === ')') depth = Math.max(0, depth - 1);
-    else if (ch === ';' && depth === 0) {
+    else if (ch === '/' && style[i + 1] === '*' && depth === 0) {
+      const end = style.indexOf('*/', i + 2);
+      if (end < 0) break;
+      i = end + 1;
+      cur += ' ';
+      continue;
+    } else if (ch === ';' && depth === 0) {
       if (cur.trim()) out.push(cur.trim());
       cur = '';
       continue;
@@ -275,45 +291,65 @@ const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !importa
 /** No way out of the declaration block: braces and at-rules are dropped. */
 const hoverSafe = (t: string) => t.replace(/[{}@]/g, '');
 
+/** One selector with the declarations it takes. */
+export type HoverPart = [selector: string, declarations: string[]];
+
 /**
- * The scoped `:hover` rule of an element tagged `data-mc-hover="<id>"`, from its hover design
- * (same keys as the design, custom `css` included). Every declaration is `!important`: the design
- * itself is the element's inline style, which a stylesheet rule cannot otherwise override.
- * A shaped element / border length overlay keeps what draws its outline: the shape overrides
- * (transparent border, no box-shadow, padding at least the shape's inset) or the overlay's transparent
- * border come again after the hover declarations; a hover border colour goes to the shape's stroke
- * or the overlay's lines, a hover shadow to the shape's drop-shadow wrapper.
- * Empty when the hover design writes nothing.
+ * The scoped `:hover` rules of an element tagged `data-mc-hover="<id>"`, from its hover design.
+ * Every declaration is `!important` to beat the inline design. Shaped elements and border-length
+ * overlays keep what draws their outline. Empty when the hover design writes nothing.
  */
-export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string {
-  if (!hover || typeof hover !== 'object') return '';
+export function hoverParts(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): HoverPart[] {
+  if (!hover || typeof hover !== 'object') return [];
   const list = (style: string) => splitDeclarations(hoverSafe(style)).filter((d) => d.includes(':')).map(important);
   const decls = list(designToStyle(hover as DesignConfig, target.control, target.parts, target.tabs));
   const bar = target.tabs ? list(tabTypeStyle(hover)) : [];
   const h = (resolveEntityColors(designNumbersToCss(hover as DesignConfig)) || {}) as Record<string, unknown>;
   // the Border width, style and colour of a tabs module draw on its tab buttons, rebuilt by the tab look's own parsers
-  const buttons = target.tabs ? list(tabBorderStyle(hover)) : [];
-  if (!decls.length && !bar.length && !buttons.length) return '';
+  const buttons = target.tabs && tabHoverBorder ? list(tabHoverBorder(hover)) : [];
+  if (!decls.length && !bar.length && !buttons.length) return [];
   const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const color = nonEmpty(h.border_color) && hoverSafe(nonEmpty(h.border_color)!.replace(/;/g, ''));
-  const extra: string[] = [];
+  const extra: HoverPart[] = [];
   const { shape, borderLength } = target;
   if (shape) {
     const merged = { ...(shape.design || {}), ...hover } as DesignConfig;
     decls.push(...splitDeclarations(shapeElementStyle(merged, shape.padding)).map(important));
-    if (color) extra.push(`${sel} ${shape.card ? '~' : '>'} mc-shape { --mc-shape-stroke: ${color}; }`);
+    if (color) extra.push([`${sel} ${shape.card ? '~' : '>'} mc-shape`, [`--mc-shape-stroke: ${color}`]]);
     const shadow = nonEmpty(h.box_shadow);
     if (shadow) {
       const filter = hoverSafe(boxShadowToDropShadow(shadow) ?? 'none');
-      extra.push(`.mc-shape-shadow:has(> ${shape.card ? 'ha-card > ' : ''}${sel}) { filter: ${filter} !important; }`);
+      extra.push([`.mc-shape-shadow:has(> ${shape.card ? 'ha-card > ' : ''}${sel})`, [`filter: ${filter} !important`]]);
     }
   } else if (borderLength) {
     decls.push(...splitDeclarations(borderLength.style).map(important));
-    if (color) extra.push(`${sel} > .mc-border-fx > i { border-color: ${color} !important; }`);
+    if (color) extra.push([`${sel} > .mc-border-fx > i`, [`border-color: ${color} !important`]]);
   }
-  if (buttons.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header>.mc-tab-button { ${buttons.join('; ')}; }`);
-  if (bar.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header { ${bar.join('; ')}; }`);
-  return [decls.length && `${sel} { ${decls.join('; ')}; }`, ...extra].filter(Boolean).join(' ');
+  if (buttons.length) extra.push([`${sel}>.mc-tabs>.mc-tabs-header>.mc-tab-button`, buttons]);
+  if (bar.length) extra.push([`${sel}>.mc-tabs>.mc-tabs-header`, bar]);
+  return [decls.length && [sel, decls], ...extra].filter(Boolean) as HoverPart[];
+}
+
+/** The hover parts as one stylesheet text. */
+export const hoverRule = (id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string =>
+  hoverParts(id, hover, target).map(([s, d]) => `${s} { ${d.join('; ')}; }`).join(' ');
+
+/**
+ * Sets one `name: value [!important]` declaration on a CSSStyleDeclaration. The CSS parser takes the
+ * value alone, so a `;}` or `@import` in it cannot start another rule; a name that is not a plain
+ * property name sets nothing.
+ */
+export function setDeclaration(style: CSSStyleDeclaration, declaration: string): void {
+  const colon = declaration.indexOf(':');
+  if (colon < 0) return;
+  const name = declaration.slice(0, colon).trim();
+  if (!/^(--[\w-]+|-?[a-z][a-z-]*)$/i.test(name)) return;
+  let value = declaration.slice(colon + 1).trim();
+  const bang = value.lastIndexOf('!');
+  const important = bang >= 0 && value.slice(bang + 1).trim().toLowerCase() === 'important';
+  if (important) value = value.slice(0, bang).trim();
+  // an empty custom property is valid CSS; an empty string would remove it
+  style.setProperty(name, value || (name.startsWith('--') ? ' ' : ''), important ? 'important' : '');
 }
 
 export function resolveConditionalDesign(
@@ -558,14 +594,10 @@ function borderLengthPlan(rec: Record<string, unknown>): BorderLengthPlan | unde
 }
 
 /**
- * `border_length` shortens every drawn side to a line of that length (e.g. 40%, 60px), placed by
- * `border_length_align` (start / center / end) along the full side, following rounded corners (even
- * a 50% radius). CSS cannot shorten a real border: the wrapper keeps its border (same width, so the
- * same layout) in a transparent colour; an overlay draws each side as a layer with the wrapper's
- * border-radius and only that side's border, masked to the length window.
- * Drawn sides: `border_length_sides` (one side) or all; of those, the sides with a border, or (no
- * border set at all) every one of them as a 2px solid line in the border / design colour. A width
- * without a style is solid. Undefined when unset, 100% or nothing would be drawn.
+ * `border_length` shortens every drawn side to a line of that length, placed by
+ * `border_length_align`. CSS cannot shorten a real border, so the wrapper keeps a transparent one
+ * and an overlay draws each side masked to the length window. Undefined when unset, 100% or
+ * nothing would be drawn.
  */
 export function resolveBorderLength(design?: DesignConfig): ResolvedBorderLength | undefined {
   const rec = (resolveEntityColors(designNumbersToCss(design)) || {}) as Record<string, unknown>;

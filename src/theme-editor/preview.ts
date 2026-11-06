@@ -7,17 +7,13 @@ import { previewVars, validateValue } from './model';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
+import '../theme-safety/wall-tablet';
+import type { WallTabletLabels } from '../theme-safety/wall-tablet';
 import type { SwitchOption } from './mode-switch';
 import { t, tx } from './i18n';
 import { browserMode, scopeLabel } from './util';
 
-/*
- * The preview stage (Contract theme-editor 1.0.0, "Preview isolation"). Every resolved variable of
- * the draft is set inline on the stage element, which sits inside this element's shadow root, so
- * the real HA and Magic Card elements below it inherit them and nothing outside changes. Variables
- * the page's own theme sets but the draft does not are put back to HA's default (or `initial`), so
- * the draft is judged on its own and not mixed with the theme the panel runs under.
- */
+// The preview stage: every resolved draft variable is set inline on the stage element.
 
 export const PREVIEW_TAG = 'mcte-theme-preview';
 /** Updates after the first are batched for this long (acceptance criterion 5: under 200 ms in all). */
@@ -148,6 +144,7 @@ export class McteThemePreview extends LitElement {
   @state() private _skipped = 0;
   @state() private _samples = new Map<SampleId, SampleState>();
   @state() private _third: SampleId[] = [];
+  @state() private _tablet = false;
 
   private _scope?: ScopedVars;
   private _timer?: ReturnType<typeof setTimeout>;
@@ -250,8 +247,8 @@ export class McteThemePreview extends LitElement {
   private _sample(id: SampleId, name: string): TemplateResult {
     const s = this._samples.get(id) ?? 'loading';
     if (s instanceof HTMLElement) return html`<div class="sample">${s}</div>`;
-    if (s === 'error') return html`<div class="placeholder"><p class="error">${t('Preview of {name} could not load.', { name })}</p></div>`;
-    if (s === 'no-entity') return html`<div class="placeholder"><p class="help">${t('Add a light or a switch to Home Assistant to see the {name} sample.', { name })}</p></div>`;
+    if (s === 'error') return html`<div class="placeholder"><p class="error">${t('theme-editor.preview.preview-of-name-could-not-load', { name })}</p></div>`;
+    if (s === 'no-entity') return html`<div class="placeholder"><p class="help">${t('theme-editor.preview.add-a-light-or-a-switch-to-home', { name })}</p></div>`;
     return html`<div class="placeholder" aria-busy="true"></div>`;
   }
 
@@ -266,45 +263,47 @@ export class McteThemePreview extends LitElement {
         : html`<div class="toolbar">
             ${hasModes
               ? html`<mcte-mode-switch
-                  label=${t('Preview mode')}
+                  label=${t('theme-editor.preview.preview-mode')}
                   .value=${mode}
                   .options=${modeOptions()}
                   @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._pick(e.detail.value))}
                 ></mcte-mode-switch>`
-              : html`<span class="help">${t('This theme has no light or dark modes.')}</span>`}
-            <span class="chip" aria-live="polite">${t('Previewing {mode, select, dark {dark} other {light}}', { mode })}</span>
+              : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
+            <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
           </div>`}
-      ${empty ? html`<p class="help">${t("Nothing set yet. The preview shows Home Assistant's default look.")}</p>` : nothing}
-      <section class="stage" aria-label=${t('Theme preview, {mode, select, dark {dark} other {light}}', { mode })} tabindex="0">
-        <p class="sr">${t('Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.', { count, mode })}</p>
+      <button type="button" class="tablet-toggle" data-wall-tablet-toggle aria-pressed=${this._tablet ? 'true' : 'false'} @click=${() => (this._tablet = !this._tablet)}>${t('theme-editor.preview.wall-tablet')}</button>
+      ${this._tablet ? html`<mc-wall-tablet .vars=${this._tabletVars(mode)} .labels=${this._tabletLabels(mode)}></mc-wall-tablet>` : nothing}
+      ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
+      <section class="stage" aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })} tabindex="0">
+        <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
         ${this._skipped > 0
-          ? html`<p class="strip" role="status">${t('Showing the last valid value for {c, plural, one {# variable} other {# variables}}.', { c: this._skipped })}</p>`
+          ? html`<p class="strip" role="status">${t('theme-editor.preview.showing-the-last-valid-value-for-c', { c: this._skipped })}</p>`
           : nothing}
         <div class="content" inert aria-hidden="true">
-          <div class="fake-header"><span class="burger">☰</span><span>${t('Overview')}</span></div>
+          <div class="fake-header"><span class="burger">☰</span><span>${t('theme-editor.preview.overview')}</span></div>
           <div class="body">
-            <nav class="fake-side"><span class="on">${t('Overview')}</span><span>${t('Map')}</span><span>${t('Settings')}</span></nav>
+            <nav class="fake-side"><span class="on">${t('theme-editor.preview.overview')}</span><span>${t('theme-editor.preview.map')}</span><span>${t('theme-editor.preview.settings')}</span></nav>
             <div class="samples">
-              <div class="pair">${this._sample('tile-on', t('tile card'))}${this._sample('tile-off', t('tile card'))}</div>
-              ${this._sample('entities', t('entities card'))}
+              <div class="pair">${this._sample('tile-on', t('theme-editor.preview.tile-card'))}${this._sample('tile-off', t('theme-editor.preview.tile-card'))}</div>
+              ${this._sample('entities', t('theme-editor.preview.entities-card'))}
               <ha-card class="plain">
-                <div class="card-header">${t('Controls')}</div>
+                <div class="card-header">${t('theme-editor.preview.controls')}</div>
                 <div class="card-content controls">
-                  <button class="b-primary" tabindex="-1">${t('Primary')}</button>
-                  <button class="b-secondary" tabindex="-1">${t('Secondary')}</button>
-                  <button class="b-text" tabindex="-1">${t('Text')}</button>
+                  <button class="b-primary" tabindex="-1">${t('theme-editor.preview.primary')}</button>
+                  <button class="b-secondary" tabindex="-1">${t('theme-editor.preview.secondary')}</button>
+                  <button class="b-text" tabindex="-1">${t('theme-editor.preview.text')}</button>
                   <span class="switch" aria-hidden="true"></span>
-                  <span class="accent-chip"><i class="dot" aria-hidden="true"></i>${t('Accent')}</span>
-                  <span class="field">${t('Text field')}</span>
+                  <span class="accent-chip"><i class="dot" aria-hidden="true"></i>${t('theme-editor.preview.accent')}</span>
+                  <span class="field">${t('theme-editor.preview.text-field')}</span>
                   <span class="slider" aria-hidden="true"><i></i></span>
                 </div>
               </ha-card>
               ${this._alerts()}
               <ha-card class="plain">
                 <div class="card-content">
-                  <h3>${t('Heading')}</h3>
-                  <p>${t('Body text in the primary text colour.')}</p>
-                  <p class="sec">${tx('Secondary text and {link}.', { link: html`<span class="link">${t('a link')}</span>` })}</p>
+                  <h3>${t('theme-editor.preview.heading')}</h3>
+                  <p>${t('theme-editor.preview.body-text-in-the-primary-text-colour')}</p>
+                  <p class="sec">${tx('theme-editor.preview.secondary-text-and-link', { link: html`<span class="link">${t('theme-editor.preview.a-link')}</span>` })}</p>
                 </div>
               </ha-card>
               ${this._sample('magic-card', 'Magic Card')}
@@ -312,19 +311,34 @@ export class McteThemePreview extends LitElement {
             </div>
           </div>
           <p class="help foot">
-            ${t('The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.')}
+            ${t('theme-editor.preview.the-preview-is-drawn-with-real-home')}
           </p>
         </div>
       </section>
     `;
   }
 
+  private _tabletVars(mode: ThemeMode): Record<string, string> {
+    return Object.fromEntries(Object.entries(previewVars(this.doc, mode)).map(([k, v]) => [`--${k}`, v]));
+  }
+
+  private _tabletLabels(mode: ThemeMode): WallTabletLabels {
+    return {
+      frame: t('theme-editor.preview.wall-tablet-label', { mode: scopeLabel(mode) }),
+      caption: t('theme-editor.preview.wall-tablet-caption'),
+      title: t('theme-editor.preview.wall-tablet-card-title'),
+      text: t('theme-editor.preview.wall-tablet-card-text'),
+      value: t('theme-editor.preview.wall-tablet-card-value'),
+      button: t('theme-editor.preview.wall-tablet-card-button'),
+    };
+  }
+
   private _alerts(): TemplateResult {
     const types: Array<[string, string]> = [
-      ['info', t('Info message')],
-      ['success', t('Success message')],
-      ['warning', t('Warning message')],
-      ['error', t('Error message')],
+      ['info', t('theme-editor.preview.info-message')],
+      ['success', t('theme-editor.preview.success-message')],
+      ['warning', t('theme-editor.preview.warning-message')],
+      ['error', t('theme-editor.preview.error-message')],
     ];
     const real = !!customElements.get('ha-alert');
     return html`<div class="alerts">
@@ -341,6 +355,29 @@ export class McteThemePreview extends LitElement {
     :host {
       display: block;
       color: var(--primary-text-color);
+    }
+    .tablet-toggle {
+      min-height: 32px;
+      margin: 8px 0;
+      padding: 4px 12px;
+      border: 1px solid var(--divider-color);
+      border-radius: 16px;
+      background: transparent;
+      color: var(--primary-text-color);
+      font: inherit;
+      cursor: pointer;
+    }
+    .tablet-toggle[aria-pressed='true'] {
+      border-color: var(--primary-color);
+      box-shadow: inset 0 0 0 1px var(--primary-color);
+      font-weight: 600;
+    }
+    .tablet-toggle[aria-pressed='true']::before {
+      content: '\\2713\\00a0';
+    }
+    .tablet-toggle:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
     }
     .toolbar {
       display: flex;
@@ -568,7 +605,7 @@ export class McteThemePreview extends LitElement {
     .alert {
       padding: 10px 12px;
       border-radius: 4px;
-      border-left: 4px solid currentColor;
+      border-left: 4px solid currentColor; /* physical */
       background: var(--card-background-color, #fff);
     }
     .a-info {

@@ -3,14 +3,9 @@ import { fmt } from '../sampler';
 import type { LineCtx } from '../registry';
 import { stroke } from './util';
 
-/*
- * neon: outer glow, mid stroke (colour at 40 %), core. Flicker off: the glow is one static
- * feGaussianBlur (radius at most 8 px, never animated, contract rule 2); flicker on: stacked
- * translucent strokes and an opacity animation on the group (no filter anywhere near it). Tiers lite
- * and minimal draw flicker as off. The core is white at 85 % on a dark card; on a light card it is
- * the line colour with a black stroke at 45 % over it (>= 3:1, FLOW_LOOK_THEME). Idle: a still core
- * in the idle colour, no glow. Reduced motion: full brightness, no flicker.
- */
+// neon: outer glow, mid stroke, core. Flicker off: one static feGaussianBlur (radius at most 8 px); flicker on: stacked
+// translucent strokes with an opacity animation, no filter. Tiers lite and minimal draw flicker as off. The core is white
+// on a dark card and the line colour with a black stroke on a light one. Idle: a still core, no glow.
 
 export function neon(c: LineCtx): SVGTemplateResult {
   const { l, geo, w, S } = c;

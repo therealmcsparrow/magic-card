@@ -14,24 +14,24 @@ export function lipSpecs(): PanelLipSpec[] {
       id: 'variables',
       side: 'start',
       controls: 'vars-pane',
-      name: t('Variables panel'),
-      noun: t('variables'),
-      hideLabel: t('Hide {noun} ({keys})', { noun: t('variables'), keys }),
-      showLabel: t('Show {noun} ({keys})', { noun: t('variables'), keys }),
+      name: t('theme-editor.lips.variables-panel'),
+      noun: t('theme-editor.lips.variables'),
+      hideLabel: t('theme-editor.lips.hide-noun-keys', { noun: t('theme-editor.lips.variables'), keys }),
+      showLabel: t('theme-editor.lips.show-noun-keys', { noun: t('theme-editor.lips.variables'), keys }),
     },
   ];
 }
 
 export function lipStrings(language: string): PanelLipStrings {
-  const hint = t('The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' });
+  const hint = t('theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it', { noun: '{noun}' });
   return {
     locale: language,
-    hidden: t('{panels} hidden', { panels: '{panels}' }),
-    shown: t('{panels} shown', { panels: '{panels}' }),
+    hidden: t('theme-editor.lips.panels-hidden', { panels: '{panels}' }),
+    shown: t('theme-editor.lips.panels-shown', { panels: '{panels}' }),
     hintOne: hint,
     hintMany: hint,
     hintMigrated: hint,
-    hintShortcut: t('Shortcut: {keys}', { keys: shortcutKeys() }),
-    gotIt: t('Got it'),
+    hintShortcut: t('theme-editor.lips.shortcut-keys', { keys: shortcutKeys() }),
+    gotIt: t('theme-editor.lips.got-it'),
   };
 }

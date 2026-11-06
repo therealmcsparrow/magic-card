@@ -32,7 +32,7 @@ class ImageModule extends BaseLazyStub {
   hints(config: CardModule): string[] {
     // No image yet is not an error: the preview shows the image-off placeholder.
     const c = config as ImageModuleConfig;
-    if (c.entity_picture && !c.entity) return [t('Entity is required when using entity picture')];
+    if (c.entity_picture && !c.entity) return [t('card.image-module.entity-is-required-when-using-entity')];
     return [];
   }
 }

@@ -6,15 +6,8 @@ import { ANIMATION_CAPS, safeCssValue, type AnimationDoc } from './model';
 import { PART_ID_RE, V2_CAPS, type Rig, type RigShape } from './model-v2';
 import { isFilled, isStroked, mapD, nextShapeId, paintOrder, parseViewBox, pathArea, pathBBox, viewBoxMap } from './editors/draw-utils';
 
-/*
- * Own SVG icons from the studio, both ways:
- * - exportRigSvg: the rig at rest (icon pieces, parts, drawn shapes; no animation) as a standalone
- *   SVG for the card's `icon: svg` + `svg:` fields. Part and shape ids are kept as `id` attributes
- *   (class `part` / `shape`), which survive the sanitiser, so the rig can be rebuilt from the file.
- * - importSvgFile: an SVG file (sanitised first, 32 KB) as rig shapes, one per drawn element, scaled
- *   into the icon's viewBox; rigFromSvgIcon makes the file the rig's source icon instead.
- * Everything goes through sanitizeSvg: nothing that runs or fetches is kept.
- */
+// Own SVG icons from the studio: exportRigSvg (the rig at rest as a standalone SVG for `icon: svg`), importSvgFile (an SVG
+// file as rig shapes) and rigFromSvgIcon (the file as the rig source). Everything goes through sanitizeSvg.
 
 /**
  * One piece of the source icon. B1's SplitPiece ({ index, d, bbox }) fits as it is; the optional
@@ -225,11 +218,8 @@ export function importSvgFile(text: string, viewBox: string, taken: string[] = [
 }
 
 /**
- * "Use as icon": the SVG file becomes the rig's source (instead of an icon id). Parts cut from the
- * old icon (`from`) no longer fit and go, with groups, tracks and bindings that pointed at them;
- * drawn shapes and parts with their own geometry stay. When the new source has another viewBox than
- * the old one (`fromViewBox`, default the rig's), everything kept is rescaled into it: shape paths and
- * stroke widths, own-geometry parts (wrapped in a transform), pivots, and track motion paths.
+ * "Use as icon": the SVG file becomes the rig source. Parts cut from the old icon go, with their groups, tracks and
+ * bindings; kept shapes and own-geometry parts are rescaled when the viewBox differs (`fromViewBox`).
  */
 export function rigFromSvgIcon(doc: AnimationDoc, text: string, fromViewBox?: string, css?: SvgCssResolve): AnimationDoc | { error: string } {
   const r = sanitizeSvg(text, { css });

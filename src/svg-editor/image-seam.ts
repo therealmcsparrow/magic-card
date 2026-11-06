@@ -7,11 +7,7 @@ import type { SvgEditorSource } from '../contracts/svg-editor';
 import type { McSvgEditor, Out } from './mc-svg-editor';
 import type { Doc, Shape } from './model';
 
-/*
- * What <mc-svg-editor> and the image-editor chunk know about each other (types only, no code). The shell holds an
- * ImageUi when it was opened on an image source and calls it at the places the icon editor does something else; the
- * ImageShell is the part of the shell the chunk may use. Nothing here is a public contract: both folders move together.
- */
+// What <mc-svg-editor> and the image-editor chunk know about each other (types only, no code); not a public contract.
 
 export type ImageShell = Omit<McSvgEditor, 'hass' | 'host'> & Omit<ImageEditorHost, 'canWrite'>;
 

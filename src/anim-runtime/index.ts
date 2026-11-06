@@ -6,24 +6,16 @@ import * as rig from './rig';
 import * as targets from './targets';
 import * as bindings from './bindings';
 import * as clips from './clips';
+import { applyMirror, mirrorOfRun } from './mirror';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
 /** LazyChunkModule (lazy-module 1.4.0): the loader (src/utils/anim-runtime-loader.ts) registers nothing here, evaluation did it. */
 export const install = (): void => {};
 
-/*
- * The v2 animation runtime: a lazy chunk (dist/magic-card-anim-runtime.js) the card loads through
- * src/utils/anim-runtime-loader.ts only when a resolved animation document has a rig, tracks, clips
- * or bindings. Loading it registers the v2 checker and compiler (compile-v2.ts), so the card's next
- * render resolves CompiledAnimation.v2. The studio bundle imports it directly.
- *
- * The card calls apply(wrapper, v2, ctx) after every render for each module wrapper with v2 data
- * (one call per document, ctx.run its run key), and release(wrapper) when the wrapper is gone or
- * the card disconnects. Each feature owns its module (rig, targets, clips, bindings) behind the
- * same apply / release pair; a failing module is logged once and never breaks the render or the
- * other modules.
- */
+// The v2 animation runtime, a lazy chunk the card loads only for documents with a rig, tracks, clips or bindings. The card
+// calls apply(wrapper, v2, ctx) after each render and release(wrapper) when it goes; a failing feature module is logged
+// once and never breaks the render or the others.
 
 export type { ApplyCtx, HintCtx, RuntimeHints } from './types';
 
@@ -64,6 +56,14 @@ export function apply(wrapper: HTMLElement, v2: CompiledV2, ctx: ApplyCtx): void
   if (!applied.has(wrapper)) watch(wrapper);
   applied.add(wrapper);
   for (const m of MODULES) guard(m.name, () => m.apply(wrapper, v2, ctx));
+  if (ctx.icon) guard('mirror', () => mirrorIcons(wrapper, mirrorOfRun(ctx.run, ctx.lookup)));
+}
+
+/** The wrapper's own animated icons, flipped or restored for the wrapper's computed direction. */
+function mirrorIcons(wrapper: HTMLElement, flag: ReturnType<typeof mirrorOfRun>): void {
+  const dir = getComputedStyle(wrapper).direction;
+  for (const icon of wrapper.querySelectorAll<HTMLElement>('.mc-anim-icon'))
+    if (icon.closest('.mc-module-wrapper') === wrapper) applyMirror(icon, flag, dir);
 }
 
 /**
@@ -91,4 +91,5 @@ export function release(wrapper: HTMLElement): void {
   applied.delete(wrapper);
   unwatchOffscreen(wrapper);
   for (const m of MODULES) guard(m.name, () => m.release(wrapper));
+  guard('mirror', () => mirrorIcons(wrapper, undefined));
 }

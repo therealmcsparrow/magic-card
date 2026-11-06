@@ -1,0 +1,2656 @@
+{
+  "svg-editor.combine.c": {
+    "text": "{c, plural, one {1 open line was left out.} other {# open lines were left out.}}",
+    "note": "Status message after combining shapes. {c} is the number of open lines (no area) that were skipped; the plural picks the singular or plural sentence.",
+    "max": 45,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.combine.merged-c-parts-into-one-path": {
+    "text": "{c, plural, one {Merged # part into one path.} other {Merged # parts into one path.}}",
+    "note": "Status message after combining shapes into one outline. {c} is the number of shapes that were merged (two or more).",
+    "max": 50,
+    "vars": {
+      "c": "The number of parts."
+    }
+  },
+  "svg-editor.combine.select-a-second-shape": {
+    "text": "Select a second shape.",
+    "note": "Hint in the icon editor combine panel when only one shape is selected. Tells the user a second shape is needed.",
+    "max": 40
+  },
+  "svg-editor.combine.select-closed-shapes-open-lines-have-no": {
+    "text": "Select closed shapes. Open lines have no area.",
+    "note": "Message in the combine panel when only open lines are selected. Same English as the message in the main editor, which has its own key.",
+    "max": 75
+  },
+  "svg-editor.combine.select-two-or-more-closed-shapes": {
+    "text": "Select two or more closed shapes.",
+    "note": "Hint in the icon editor combine panel when too few shapes are selected. Says open lines do not count.",
+    "max": 55
+  },
+  "svg-editor.combine.text-cannot-be-combined-with-other": {
+    "text": "Text cannot be combined with other layers.",
+    "note": "Hint in the icon editor combine panel when a text layer is selected. Explains why combining is unavailable.",
+    "max": 70
+  },
+  "svg-editor.layers.collapse-name": {
+    "text": "Collapse {name}",
+    "note": "Tooltip and screen reader label of the arrow that folds a group in the layer list. {name} is the group's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.drag-to-move-name": {
+    "text": "Drag to move {name}",
+    "note": "Tooltip and screen reader label of the drag handle on a layer row. {name} is the layer's name.",
+    "max": 35,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.expand-name": {
+    "text": "Expand {name}",
+    "note": "Tooltip and screen reader label of the arrow that unfolds a group in the layer list. {name} is the group's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.groups-can-be-4-levels-deep": {
+    "text": "Groups can be 4 levels deep.",
+    "note": "Message in the layer list when a move would nest groups too deeply. Same English as the message in the main editor, which has its own key.",
+    "max": 45
+  },
+  "svg-editor.layers.hide-name": {
+    "text": "Hide {name}",
+    "note": "Tooltip and screen reader label of the eye button that hides a layer. {name} is the layer's name.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.into-name": {
+    "text": "Into {name}",
+    "note": "Menu item in the Move to list that moves a layer inside the group {name}. Keep it short; {name} is a group name.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.it-cannot-move-further": {
+    "text": "It cannot move further.",
+    "note": "Tooltip on a disabled reorder button in the icon editor layers panel. The layer is already at the end of the list.",
+    "max": 40
+  },
+  "svg-editor.layers.it-is-already-at-the-top-level": {
+    "text": "It is already at the top level.",
+    "note": "Tooltip on the disabled Move out of group button in the icon editor layers panel. The layer is not inside a group.",
+    "max": 50
+  },
+  "svg-editor.layers.layers": {
+    "text": "Layers",
+    "note": "Heading of the panel that lists the drawing's layers (shapes and groups). One word, a noun.",
+    "max": 10
+  },
+  "svg-editor.layers.lock-name": {
+    "text": "Lock {name}",
+    "note": "Tooltip and screen reader label of the padlock button that locks a layer. {name} is the layer's name.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.move-down": {
+    "text": "Move down",
+    "note": "Button or menu item that moves the selected layer one step down in the layer order (towards the back).",
+    "max": 15
+  },
+  "svg-editor.layers.move-into-group-above": {
+    "text": "Move into group above",
+    "note": "Button label in the icon editor layers panel. Puts the layer inside the group directly above it.",
+    "max": 35
+  },
+  "svg-editor.layers.move-out-of-group": {
+    "text": "Move out of group",
+    "note": "Button label in the icon editor layers panel. Takes the layer out of its group and up one level.",
+    "max": 30
+  },
+  "svg-editor.layers.move-to": {
+    "text": "Move to…",
+    "note": "Menu item that opens a list of groups to move the layer into. The ellipsis means a further choice follows.",
+    "max": 20
+  },
+  "svg-editor.layers.move-up": {
+    "text": "Move up",
+    "note": "Button or menu item that moves the selected layer one step up in the layer order (towards the front).",
+    "max": 15
+  },
+  "svg-editor.layers.name-is-locked": {
+    "text": "{name} is locked.",
+    "note": "Status message when the user tries to change a locked layer. {name} is the layer's name.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.name-moved-into-group-position-pos-of": {
+    "text": "{name} moved into {group}, position {pos} of {total}",
+    "note": "Screen reader announcement after a layer is moved into a group. {name} is the layer, {group} the group, {pos} the new place and {total} the number of items there.",
+    "max": 85,
+    "vars": {
+      "group": "The value that replaces group in the text.",
+      "name": "The value that replaces name in the text.",
+      "pos": "The value that replaces pos in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "svg-editor.layers.name-moved-position-pos-of-total": {
+    "text": "{name} moved, position {pos} of {total}",
+    "note": "Screen reader announcement after a layer changes place within its list. {name} is the layer, {pos} its new place and {total} the number of items.",
+    "max": 65,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "pos": "The value that replaces pos in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "svg-editor.layers.name-moved-to-the-top-level-position-pos": {
+    "text": "{name} moved to the top level, position {pos} of {total}",
+    "note": "Screen reader announcement after a layer leaves its group. {name} is the layer, {pos} its new place and {total} the number of top-level items.",
+    "max": 90,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "pos": "The value that replaces pos in the text.",
+      "total": "The value that replaces total in the text."
+    }
+  },
+  "svg-editor.layers.name-selected": {
+    "text": "{name} selected.",
+    "note": "Screen reader announcement when a layer is selected in the layer list. {name} is the layer's name. Same English as the canvas message, which has its own key.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.reaches-outside-the-20-x-20-safe-area": {
+    "text": "Reaches outside the 20 x 20 safe area",
+    "note": "Warning badge on a layer in the icon editor layers panel. Flags a layer that extends beyond the 20 x 20 safe area of the icon.",
+    "max": 60
+  },
+  "svg-editor.layers.show-name": {
+    "text": "Show {name}",
+    "note": "Tooltip and screen reader label of the eye button that shows a hidden layer. {name} is the layer's name.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.there-is-no-group-above": {
+    "text": "There is no group above.",
+    "note": "Tooltip on the disabled Move into group above button in the icon editor layers panel. No group sits directly above the layer.",
+    "max": 40
+  },
+  "svg-editor.layers.top-level": {
+    "text": "Top level",
+    "note": "Menu item in the Move to list that takes a layer out of every group, so it sits at the root of the drawing.",
+    "max": 15
+  },
+  "svg-editor.layers.ungroup-name": {
+    "text": "Ungroup {name}",
+    "note": "Tooltip and screen reader label of the button that dissolves a group. {name} is the group's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.layers.unlock-name": {
+    "text": "Unlock {name}",
+    "note": "Tooltip and screen reader label of the padlock button that unlocks a layer. {name} is the layer's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.lips.got-it": {
+    "text": "Got it",
+    "note": "Button that dismisses the hint about hidden side panels. Means the user has understood.",
+    "max": 10
+  },
+  "svg-editor.lips.hide-noun-keys": {
+    "text": "Hide {noun} ({keys})",
+    "note": "Tooltip of the edge arrow that hides a side panel. {noun} is the panel name (the lowercase inspector or layers and library text) and {keys} is the keyboard shortcut.",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "svg-editor.lips.inspector": {
+    "text": "inspector",
+    "note": "Lowercase name of the properties panel, inserted into a sentence as {noun} (for example in Hide and Show tooltips). Not a heading.",
+    "max": 15
+  },
+  "svg-editor.lips.inspector-panel": {
+    "text": "Inspector panel",
+    "note": "Name of the properties panel with a capital letter, filling {panels} in the hidden and shown announcements and used as a label.",
+    "max": 25
+  },
+  "svg-editor.lips.layers-and-library": {
+    "text": "layers and library",
+    "note": "Lowercase name of the left panel, inserted into a sentence as {noun} (for example in Hide and Show tooltips). Not a heading.",
+    "max": 30
+  },
+  "svg-editor.lips.layers-and-library-panel": {
+    "text": "Layers and library panel",
+    "note": "Name of the left panel with a capital letter, filling {panels} in the hidden and shown announcements and used as a label.",
+    "max": 40
+  },
+  "svg-editor.lips.panels-hidden": {
+    "text": "{panels} hidden",
+    "note": "Screen reader announcement after a side panel is hidden. {panels} is a panel name such as Inspector panel.",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "svg-editor.lips.panels-shown": {
+    "text": "{panels} shown",
+    "note": "Screen reader announcement after a side panel is shown again. {panels} is a panel name such as Inspector panel.",
+    "max": 25,
+    "vars": {
+      "panels": "The value that replaces panels in the text."
+    }
+  },
+  "svg-editor.lips.shortcut-keys": {
+    "text": "Shortcut: {keys}",
+    "note": "Tooltip line naming the keyboard shortcut of an edge arrow. {keys} is the key combination, for example Ctrl+B.",
+    "max": 30,
+    "vars": {
+      "keys": "The value that replaces keys in the text."
+    }
+  },
+  "svg-editor.lips.show-noun-keys": {
+    "text": "Show {noun} ({keys})",
+    "note": "Tooltip of the edge arrow that shows a hidden side panel. {noun} is the lowercase panel name and {keys} is the keyboard shortcut.",
+    "max": 35,
+    "vars": {
+      "keys": "The value that replaces keys in the text.",
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "svg-editor.lips.some-panels-are-hidden-as-you-left-them": {
+    "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
+    "note": "Hint in the icon editor when side panels are collapsed. Tells the user the edge arrows bring the panels back.",
+    "max": 135
+  },
+  "svg-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
+    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "note": "Hint on opening the editor when one side panel was left hidden. {noun} is the lowercase panel name (inspector or layers and library).",
+    "max": 130,
+    "vars": {
+      "noun": "The value that replaces noun in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.aligned-c-to-the-edge": {
+    "text": "Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.",
+    "note": "Status message after aligning shapes. {c} is the number of shapes; {edge} picks the alignment: left, centre, right, top, middle or bottom.",
+    "max": 50,
+    "vars": {
+      "c": "The count the text is about.",
+      "edge": "The value that replaces edge in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.c": {
+    "text": "{c, plural, one {# script} other {# scripts}}",
+    "note": "Item in the list of things removed from an imported SVG, for example 2 scripts. It is joined into the sentence Removed ... icons cannot use. {c} is a count.",
+    "max": 15,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-2": {
+    "text": "{c, plural, one {# image} other {# images}}",
+    "note": "Item in the list of things removed from an imported SVG, for example 3 images. It is joined into the sentence Removed ... icons cannot use. {c} is a count.",
+    "max": 15,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-3": {
+    "text": "{c, plural, one {# external link} other {# external links}}",
+    "note": "Item in the list of things removed from an imported SVG, for example 1 external link. It is joined into the sentence Removed ... icons cannot use. {c} is a count.",
+    "max": 30,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-4": {
+    "text": "{c, plural, one {# other item} other {# other items}}",
+    "note": "Last item in the list of things removed from an imported SVG, a catch-all for anything not named above. {c} is a count.",
+    "max": 25,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-outside-the-20-x-20-safe-area-home": {
+    "text": "{c, plural, one {# layer reaches} other {# layers reach}} outside the 20 x 20 safe area. Home Assistant may clip the edges.",
+    "note": "Warning under the canvas about the icon's safe area. {c} is the number of layers that cross it; the plural also changes the verb (reaches or reach).",
+    "max": 130,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.c-shapes-selected": {
+    "text": "{c, plural, one {# shape selected} other {# shapes selected}}",
+    "note": "Label in the inspector when several shapes are selected. {c} is the number, always two or more, so no singular form is needed.",
+    "max": 35,
+    "vars": {
+      "c": "The number of shapes."
+    }
+  },
+  "svg-editor.mc-svg-editor.centre-on-canvas": {
+    "text": "Centre on canvas",
+    "note": "Button in the inspector that moves the selection to the middle of the canvas. Same English as the context menu item, which has its own key.",
+    "max": 30
+  },
+  "svg-editor.mc-svg-editor.changed-since-saved": {
+    "text": "Changed since saved",
+    "note": "Small status label beside the save button, shown when the drawing has unsaved edits.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.colours-were-replaced-by-the-card-s": {
+    "text": "Colours were replaced by the card's colours: Main and Accent.",
+    "note": "Notice after importing an SVG. Main and Accent are the names of the two card colour slots; keep them the same as the colour labels elsewhere in the editor.",
+    "max": 100
+  },
+  "svg-editor.mc-svg-editor.copied-the-accent-path": {
+    "text": "Copied the accent path.",
+    "note": "Toast in the icon editor after the user copies the accent path. Confirms the copy worked.",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.copied-the-path-and-viewbox-for-home": {
+    "text": "Copied the path and viewBox, for Home Assistant custom icon sets. See the docs.",
+    "note": "Toast in the icon editor after copying the path and viewBox. Confirms the copy and points to the docs for custom icon sets.",
+    "max": 130
+  },
+  "svg-editor.mc-svg-editor.copied-the-svg": {
+    "text": "Copied the SVG.",
+    "note": "Toast in the icon editor after the user copies the full SVG markup. Confirms the copy worked.",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.could-not-copy-select-the-markup-and": {
+    "text": "Could not copy. Select the markup and copy it yourself.",
+    "note": "Error toast in the icon editor when clipboard access fails. Tells the user to select the markup and copy it by hand.",
+    "max": 90
+  },
+  "svg-editor.mc-svg-editor.could-not-find-name-check-the-name-or": {
+    "text": "Could not find \"{name}\". Check the name, or wait for the icon packs to load.",
+    "note": "Error when the icon name typed in the icon import box matches no icon. {name} is what the user typed, shown in quotation marks.",
+    "max": 125,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.could-not-load-that-icon": {
+    "text": "Could not load that icon.",
+    "note": "Error toast in the icon editor when a chosen icon cannot be read, for example from the library or an icon picker.",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.could-not-load-the-export-and-import": {
+    "text": "Could not load the export and import tool. Try again.",
+    "note": "Error toast in the icon editor when the export and import code fails to load. Asks the user to retry.",
+    "max": 85
+  },
+  "svg-editor.mc-svg-editor.could-not-read-that-file": {
+    "text": "Could not read that file.",
+    "note": "Error toast in the icon editor when opening a file from disk fails.",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.could-not-save-name-try-again": {
+    "text": "Could not save {name}. Try again.",
+    "note": "Error when saving an icon to the library fails. {name} is the icon's name.",
+    "max": 55,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.couldn-t-load-the-shape-tools-try-again": {
+    "text": "Couldn't load the shape tools. Try again.",
+    "note": "Error toast in the icon editor when the shape tool code fails to load. Asks the user to retry.",
+    "max": 70
+  },
+  "svg-editor.mc-svg-editor.draw-something-first": {
+    "text": "Draw something first",
+    "note": "Tooltip on a disabled action in the icon editor, such as Use or Save, while the drawing is still empty.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.drawing-opened": {
+    "text": "Drawing opened.",
+    "note": "Status message after an existing drawing has been loaded into the SVG editor.",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.edit-points": {
+    "text": "Edit points",
+    "note": "Name of the tool that shows and moves the anchor points of a path. Appears as a tool tooltip and button label.",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.ellipse": {
+    "text": "Ellipse",
+    "note": "Name of the drawing tool for ovals and circles. Appears as a tool tooltip and button label.",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.esc-doesn-t-close-the-editor-use-done-or": {
+    "text": "Esc doesn't close the editor. Use Done or Back to card editor.",
+    "note": "Hint shown when the user presses Esc. Esc, Done and Back to card editor must match the key and button labels exactly.",
+    "max": 100
+  },
+  "svg-editor.mc-svg-editor.everything-else-was-kept": {
+    "text": "Everything else was kept.",
+    "note": "Second sentence of an import toast in the icon editor. Reassures the user that content not listed as removed was kept.",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.finish-path": {
+    "text": "Finish path",
+    "note": "Button shown while drawing with the pen tool; it ends the current path without closing it.",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.fit-to-20": {
+    "text": "Fit to 20",
+    "note": "Short button label that scales the drawing to the 20 by 20 safe area. The number 20 is the safe area size in grid units.",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.fit-to-safe-area": {
+    "text": "Fit to safe area",
+    "note": "Longer label or tooltip for scaling the drawing into the safe area. Same action as the short Fit to 20 button, which has its own key.",
+    "max": 30
+  },
+  "svg-editor.mc-svg-editor.freehand": {
+    "text": "Freehand",
+    "note": "Name of the drawing tool that follows the pointer to make a free line, like a pencil. Appears as a tool tooltip and button label.",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.give-it-a-name": {
+    "text": "Give it a name.",
+    "note": "Validation message under the icon name field when it is empty. Close to Give the icon a name, which has its own key.",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.give-the-icon-a-name": {
+    "text": "Give the icon a name.",
+    "note": "Message shown when the user tries to save a library icon that has no name. Close to Give it a name, which has its own key.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.grid-size-set-to-size-the-nearest": {
+    "text": "Grid size set to {size}, the nearest allowed size.",
+    "note": "Status message when a typed grid size is rounded to an allowed value. {size} is the number of grid units.",
+    "max": 80,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.groups-can-be-4-levels-deep": {
+    "text": "Groups can be 4 levels deep.",
+    "note": "Status message when grouping would nest groups beyond four levels. Same English as the layer list message, which has its own key.",
+    "max": 45
+  },
+  "svg-editor.mc-svg-editor.groups-deeper-than-4-levels-were-merged": {
+    "text": "Groups deeper than 4 levels were merged.",
+    "note": "Import notice in the icon editor. Tells the user that nested groups beyond four levels were flattened.",
+    "max": 65
+  },
+  "svg-editor.mc-svg-editor.hand": {
+    "text": "Hand",
+    "note": "Name of the tool that drags the view around without changing the drawing (pan). Appears as a tool tooltip and button label.",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.keep-your-own-icons-for-every-dashboard": {
+    "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
+    "note": "Hint in the editor window about where icons are stored. Keep the product name Magic Card Utils unchanged. The views key with the same English is the hint in the library views.",
+    "max": 215
+  },
+  "svg-editor.mc-svg-editor.line": {
+    "text": "Line",
+    "note": "Name of the drawing tool for straight lines. Appears as a tool tooltip and button label.",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.match-safe-area-edges": {
+    "text": "Match safe-area edges",
+    "note": "Button that stretches the drawing so its outer edges touch the edges of the 20 by 20 safe area.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.my-icon": {
+    "text": "My icon",
+    "note": "Default name given to a new icon in the library before the user renames it.",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.name-added": {
+    "text": "{name} added.",
+    "note": "Status message after an icon is added to the library. {name} is the icon's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-changed-while-you-were-editing-save": {
+    "text": "{name} changed while you were editing. Save as new, or reload it.",
+    "note": "Conflict message when a library icon was changed elsewhere during editing. {name} is the icon's name. Save as new and reload it refer to the two buttons offered.",
+    "max": 105,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-copy": {
+    "text": "{name} copy",
+    "note": "Default name for a duplicated icon, for example Star copy. {name} is the original icon's name; copy is a noun.",
+    "max": 20,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-deleted": {
+    "text": "{name} deleted.",
+    "note": "Status message after an icon is deleted from the library. {name} is the icon's name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.name-selected": {
+    "text": "{name} selected.",
+    "note": "Screen reader announcement when a shape is selected on the canvas. {name} is the shape's name. Same English as the layer list message, which has its own key.",
+    "max": 30,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.nothing-is-left-of-these-shapes": {
+    "text": "Nothing is left of these shapes.",
+    "note": "Toast in the icon editor when a combine, subtract or intersect would leave no shape. Explains why the result is empty.",
+    "max": 55
+  },
+  "svg-editor.mc-svg-editor.nothing-was-changed": {
+    "text": "Nothing was changed.",
+    "note": "Closing sentence of an icon editor toast. Tells the user the drawing was left as it was after a refused action.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.opacity-is-not-kept-icons-are-one-solid": {
+    "text": "Opacity is not kept. Icons are one solid colour.",
+    "note": "Import notice in the icon editor. Tells the user that transparency in the file is dropped because icons use one solid colour.",
+    "max": 80
+  },
+  "svg-editor.mc-svg-editor.opened-name-as-the-drawing-undo-brings": {
+    "text": "Opened {name} as the drawing. Undo brings your last drawing back.",
+    "note": "Status message after an icon replaces the drawing. {name} is the icon's name; Undo is the editor's Undo button.",
+    "max": 105,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.opened-name-the-first-of-count-icons-in": {
+    "text": "{count, plural, one {Opened {name}, the first of # icon in the file. The other was not used.} other {Opened {name}, the first of # icons in the file. The others were not used.}}",
+    "note": "Status message after opening a file that holds several icons. {name} is the icon that was used and {count} is how many icons the file holds (two or more).",
+    "max": 130,
+    "vars": {
+      "count": "The number of icons in the file.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.over-the-32-kb-limit": {
+    "text": "Over the 32 KB limit",
+    "note": "Short size status label next to the icon size meter when the SVG exceeds 32 KB. Fills a small badge, so keep it short.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.paste-some-svg-first": {
+    "text": "Paste some SVG first.",
+    "note": "Message in the editor window when the user confirms an empty paste box. The views key with the same English is shown by the paste dialog itself.",
+    "max": 35
+  },
+  "svg-editor.mc-svg-editor.pen": {
+    "text": "Pen",
+    "note": "Name of the drawing tool that places points one by one to build a path. Appears as a tool tooltip and button label.",
+    "max": 5
+  },
+  "svg-editor.mc-svg-editor.polygon-or-star": {
+    "text": "Polygon or star",
+    "note": "Name of the drawing tool that makes regular polygons and stars. Appears as a tool tooltip and button label.",
+    "max": 25
+  },
+  "svg-editor.mc-svg-editor.reading-name": {
+    "text": "Reading {name}…",
+    "note": "Progress message while a chosen file is being read. {name} is the file name. The ellipsis means it is still working.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.rectangle": {
+    "text": "Rectangle",
+    "note": "Name of the drawing tool for rectangles and squares. Appears as a tool tooltip and button label.",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.redo": {
+    "text": "Redo",
+    "note": "Button and tooltip that repeats the last undone edit. Verb, the counterpart of Undo.",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.removed-c-icons-cannot-use": {
+    "text": "Removed {c, plural, one {# thing} other {# things}} icons cannot use",
+    "note": "Heading of the import report: the count of removed items in total, then a list of what they were. {c} is the total number of removed items.",
+    "max": 65,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.mc-svg-editor.saved": {
+    "text": "Saved",
+    "note": "Small status label beside the save button, shown when the drawing has no unsaved edits. Past participle, not a button.",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.saved-to-library-as-name-press-done-to": {
+    "text": "Saved to library as {name}. Press Done to use it on this card.",
+    "note": "Status message after saving to the library. {name} is the icon's name; Done is the editor's Done button.",
+    "max": 100,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.select": {
+    "text": "Select",
+    "note": "Name of the default tool that picks and moves shapes on the canvas. Verb used as a tool tooltip and button label.",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.select-closed-shapes-open-lines-have-no": {
+    "text": "Select closed shapes. Open lines have no area.",
+    "note": "Message in the main editor when a shape operation needs closed shapes. Same English as the combine panel message, which has its own key.",
+    "max": 75
+  },
+  "svg-editor.mc-svg-editor.select-three-or-more-shapes-to-space": {
+    "text": "Select three or more shapes to space them evenly.",
+    "note": "Status message in the editor window when Space evenly is used with fewer than three shapes. The menu key with the same English is the tooltip in the menu.",
+    "max": 80
+  },
+  "svg-editor.mc-svg-editor.shapes": {
+    "text": "Shapes",
+    "note": "Heading or tab label for the group of shape tools (rectangle, ellipse, polygon). One word, a noun.",
+    "max": 10
+  },
+  "svg-editor.mc-svg-editor.spaced-c-shapes-evenly": {
+    "text": "{c, plural, one {Spaced # shape evenly.} other {Spaced # shapes evenly.}}",
+    "note": "Status message after distributing shapes evenly. {c} is the number of shapes, always three or more.",
+    "max": 40,
+    "vars": {
+      "c": "The number of shapes."
+    }
+  },
+  "svg-editor.mc-svg-editor.that-file-has-no-shapes-an-icon-can-use": {
+    "text": "That file has no shapes an icon can use.",
+    "note": "Error toast in the icon editor when an opened file holds nothing drawable, such as only images or text.",
+    "max": 65
+  },
+  "svg-editor.mc-svg-editor.the-library-could-not-accept-this-icon": {
+    "text": "The library could not accept this icon. Tidy it and try again.",
+    "note": "Error toast in the icon editor when the library rejects a save. Suggests simplifying the drawing and retrying.",
+    "max": 100
+  },
+  "svg-editor.mc-svg-editor.the-library-is-full-delete-an-icon-you": {
+    "text": "The library is full. Delete an icon you no longer use.",
+    "note": "Error toast in the icon editor when saving to a full library. Tells the user to delete an icon to make room.",
+    "max": 90
+  },
+  "svg-editor.mc-svg-editor.the-safe-area-is-hidden": {
+    "text": "The safe area is hidden.",
+    "note": "Status message in the editor window after the safe area guide is switched off. The menu key with the same English is shown in the menu.",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.the-svg-is-larger-than-32-kb": {
+    "text": "The SVG is larger than 32 KB.",
+    "note": "Error in the icon editor when pasted or opened markup exceeds the 32 KB size limit.",
+    "max": 50
+  },
+  "svg-editor.mc-svg-editor.the-svg-is-too-complex": {
+    "text": "The SVG is too complex.",
+    "note": "Error in the icon editor when pasted or opened markup has too many elements or points to load.",
+    "max": 40
+  },
+  "svg-editor.mc-svg-editor.these-shapes-have-too-many-points-to": {
+    "text": "These shapes have too many points to combine.",
+    "note": "Toast in the icon editor when a combine operation is refused for complexity. Tells the user why nothing happened.",
+    "max": 75
+  },
+  "svg-editor.mc-svg-editor.this-icon-has-c-points-you-can-edit-and": {
+    "text": "{c, plural, one {This icon has # point. You can edit and move it, but not add points until it has fewer than 100.} other {This icon has # points. You can edit and move them, but not add points until it has fewer than 100.}}",
+    "note": "Hint in the point editor for a complex path. {c} is the current number of points (100 or more); the limit of 100 is fixed.",
+    "max": 165,
+    "vars": {
+      "c": "The number of points."
+    }
+  },
+  "svg-editor.mc-svg-editor.this-icon-is-used-kb-and-the-limit-is-32": {
+    "text": "This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.",
+    "note": "Error when the icon is too big to save. {used} is the current size in kilobytes; the limit of 32 KB is fixed. Tidy refers to the Tidy now button.",
+    "max": 155,
+    "vars": {
+      "used": "The value that replaces used in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.this-icon-was-changed-somewhere-else": {
+    "text": "This icon was changed somewhere else.",
+    "note": "Warning in the editor window when the open icon was edited elsewhere. The views key with the same English is shown in the icon list.",
+    "max": 60
+  },
+  "svg-editor.mc-svg-editor.this-is-not-valid-svg-check-that-it": {
+    "text": "This is not valid SVG. Check that it starts with <svg and is closed.",
+    "note": "Error in the icon editor when pasted markup cannot be parsed. Tells the user what a valid file looks like.",
+    "max": 110
+  },
+  "svg-editor.mc-svg-editor.tidy-now": {
+    "text": "Tidy now",
+    "note": "Button that cleans up the drawing's markup (merges and simplifies) to make the icon smaller. Verb plus adverb.",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.transforms-were-applied-to-the-paths-the": {
+    "text": "Transforms were applied to the paths. The drawing looks the same, the markup is different.",
+    "note": "Import notice in the icon editor. Explains transforms were baked into the paths, so the drawing is unchanged but the code differs.",
+    "max": 145
+  },
+  "svg-editor.mc-svg-editor.try-again": {
+    "text": "Try again",
+    "note": "Button on an error message that repeats the failed action, such as loading the shape tools.",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.undo": {
+    "text": "Undo",
+    "note": "Button and tooltip that reverses the last edit. Verb, the counterpart of Redo.",
+    "max": 15
+  },
+  "svg-editor.mc-svg-editor.undone": {
+    "text": "Undone.",
+    "note": "Short status message after the user undoes an edit. Past participle, not a button.",
+    "max": 20
+  },
+  "svg-editor.mc-svg-editor.use-40-characters-or-fewer": {
+    "text": "Use 40 characters or fewer.",
+    "note": "Validation message under the icon name field in the icon editor save form. Names are limited to 40 characters.",
+    "max": 45
+  },
+  "svg-editor.mc-svg-editor.use-min-to-max": {
+    "text": "Use {min} to {max}.",
+    "note": "Validation message for a number field. {min} and {max} are the lowest and highest allowed values, written as numbers.",
+    "max": 35,
+    "vars": {
+      "max": "The value that replaces max in the text.",
+      "min": "The value that replaces min in the text."
+    }
+  },
+  "svg-editor.mc-svg-editor.use-on-this-card": {
+    "text": "Use on this card",
+    "note": "Button that applies the drawing to the card being edited without saving it to the library.",
+    "max": 30
+  },
+  "svg-editor.mc-svg-editor.your-account-can-use-the-library-but-not": {
+    "text": "Your account can use the library but not change it. Ask an admin, or keep this icon in the card only.",
+    "note": "Permission error in the icon editor when a non-admin tries to save to the library. Suggests asking an admin or keeping the icon in the card.",
+    "max": 165
+  },
+  "svg-editor.menu.add-point-after": {
+    "text": "Add point after",
+    "note": "Context menu item that inserts a new point after the selected point on a path. Same English as the inspector button, which has its own key.",
+    "max": 25
+  },
+  "svg-editor.menu.align": {
+    "text": "Align",
+    "note": "Context menu heading that opens the alignment choices (left, centre, right and so on). Verb used as a submenu title.",
+    "max": 10
+  },
+  "svg-editor.menu.arrange": {
+    "text": "Arrange",
+    "note": "Context menu heading that opens the layer order choices (bring to front, send to back and so on). Verb used as a submenu title.",
+    "max": 15
+  },
+  "svg-editor.menu.centre-on-canvas": {
+    "text": "Centre on canvas",
+    "note": "Context menu item that moves the selection to the middle of the canvas. Same English as the inspector button, which has its own key.",
+    "max": 30
+  },
+  "svg-editor.menu.copy-accent-path": {
+    "text": "Copy accent path",
+    "note": "Menu item that copies the path data of the Accent-coloured layers to the clipboard. Accent is the card's second colour slot.",
+    "max": 30
+  },
+  "svg-editor.menu.copy-as-ha-path": {
+    "text": "Copy as HA path",
+    "note": "Menu item that copies the icon path and viewBox for Home Assistant custom icon sets. HA stands for Home Assistant.",
+    "max": 25
+  },
+  "svg-editor.menu.copy-svg": {
+    "text": "Copy SVG",
+    "note": "Menu item that copies the whole drawing as SVG markup to the clipboard. Close to Copy as SVG, which has its own key.",
+    "max": 15
+  },
+  "svg-editor.menu.corner": {
+    "text": "Corner",
+    "note": "Context menu item that turns the selected point into a sharp corner. Counterpart of Smooth. Same English as the inspector button.",
+    "max": 10
+  },
+  "svg-editor.menu.delete": {
+    "text": "Delete",
+    "note": "Context menu item that removes the selected shape or shapes. Verb. Same English as the inspector button, which has its own key.",
+    "max": 15
+  },
+  "svg-editor.menu.delete-point": {
+    "text": "Delete point",
+    "note": "Context menu item that removes the selected point from a path.",
+    "max": 20
+  },
+  "svg-editor.menu.distribute-horizontally": {
+    "text": "Distribute horizontally",
+    "note": "Menu item that spaces three or more shapes evenly from left to right.",
+    "max": 40
+  },
+  "svg-editor.menu.distribute-vertically": {
+    "text": "Distribute vertically",
+    "note": "Menu item that spaces three or more shapes evenly from top to bottom.",
+    "max": 35
+  },
+  "svg-editor.menu.download-svg": {
+    "text": "Download .svg",
+    "note": "Menu item that saves the drawing to the user's computer as an .svg file. Keep the file extension as written.",
+    "max": 25
+  },
+  "svg-editor.menu.duplicate": {
+    "text": "Duplicate",
+    "note": "Context menu item that makes a copy of the selected shape next to the original. Verb.",
+    "max": 15
+  },
+  "svg-editor.menu.export-file": {
+    "text": "Export file",
+    "note": "Menu item that opens the export tool to write the drawing to a file. Verb plus noun, not a heading.",
+    "max": 20
+  },
+  "svg-editor.menu.fit-to-safe-area": {
+    "text": "Fit to safe area",
+    "note": "Context menu item that scales the selection into the 20 by 20 safe area. Same English as the main editor button, which has its own key.",
+    "max": 30
+  },
+  "svg-editor.menu.flip-horizontally": {
+    "text": "Flip horizontally",
+    "note": "Menu item that mirrors the selection left to right.",
+    "max": 30
+  },
+  "svg-editor.menu.flip-vertically": {
+    "text": "Flip vertically",
+    "note": "Menu item that mirrors the selection top to bottom.",
+    "max": 25
+  },
+  "svg-editor.menu.import-file": {
+    "text": "Import file",
+    "note": "Menu item that opens a file picker to load an SVG file into the editor. Verb plus noun, not a heading.",
+    "max": 20
+  },
+  "svg-editor.menu.it-is-already-there": {
+    "text": "It is already there.",
+    "note": "Reason shown on a disabled menu item when the shape already has the requested position or order, for example it is already at the front.",
+    "max": 35
+  },
+  "svg-editor.menu.make-accent": {
+    "text": "Make Accent",
+    "note": "Menu item that gives the selection the card's Accent colour. Accent is the second colour slot name; keep it as in the other colour labels.",
+    "max": 20
+  },
+  "svg-editor.menu.make-main": {
+    "text": "Make Main",
+    "note": "Menu item that gives the selection the card's Main colour. Main is the first colour slot name; keep it as in the other colour labels.",
+    "max": 15
+  },
+  "svg-editor.menu.match-safe-area-edges": {
+    "text": "Match safe-area edges",
+    "note": "Menu item that stretches the selection so its outer edges touch the safe area. Same English as the main editor button, which has its own key.",
+    "max": 35
+  },
+  "svg-editor.menu.nothing-selected-pick-a-layer-or-click-a": {
+    "text": "Nothing selected. Pick a layer, or click a shape.",
+    "note": "Hint in the menu when no layer or shape is selected. The views key with the same English is the empty state of the properties panel.",
+    "max": 80
+  },
+  "svg-editor.menu.nothing-to-export-yet": {
+    "text": "Nothing to export yet.",
+    "note": "Tooltip on the disabled export entry in the icon editor menu while the drawing is empty.",
+    "max": 40
+  },
+  "svg-editor.menu.path": {
+    "text": "Path",
+    "note": "Context menu heading that opens the path tools (simplify, offset, join and so on). Noun used as a submenu title.",
+    "max": 10
+  },
+  "svg-editor.menu.relative-to": {
+    "text": "Relative to",
+    "note": "Label of the choice that sets what alignment is measured against, such as selection or canvas. A value follows it.",
+    "max": 20
+  },
+  "svg-editor.menu.rotate-90-degrees-anticlockwise": {
+    "text": "Rotate 90 degrees anticlockwise",
+    "note": "Menu item that turns the selection a quarter turn against the clock. Counterpart of the clockwise item.",
+    "max": 50
+  },
+  "svg-editor.menu.rotate-90-degrees-clockwise": {
+    "text": "Rotate 90 degrees clockwise",
+    "note": "Menu item that turns the selection a quarter turn with the clock. Counterpart of the anticlockwise item.",
+    "max": 45
+  },
+  "svg-editor.menu.select-all": {
+    "text": "Select all",
+    "note": "Context menu item that selects every shape in the drawing. Verb plus quantity.",
+    "max": 20
+  },
+  "svg-editor.menu.select-three-or-more-shapes-to-space": {
+    "text": "Select three or more shapes to space them evenly.",
+    "note": "Tooltip in the menu on the disabled Space evenly entry. The editor window key with the same English reports it as a status message.",
+    "max": 80
+  },
+  "svg-editor.menu.select-two-or-more-shapes-to-align-them": {
+    "text": "Select two or more shapes to align them to each other.",
+    "note": "Tooltip on the disabled align entries in the icon editor menu. Explains alignment needs at least two shapes.",
+    "max": 90
+  },
+  "svg-editor.menu.smooth": {
+    "text": "Smooth",
+    "note": "Context menu item that turns the selected point into a smooth curve point. Verb. Counterpart of Corner.",
+    "max": 10
+  },
+  "svg-editor.menu.split-here": {
+    "text": "Split here",
+    "note": "Context menu item that cuts the path at the point that was clicked, giving two paths.",
+    "max": 20
+  },
+  "svg-editor.menu.the-safe-area-is-hidden": {
+    "text": "The safe area is hidden.",
+    "note": "Menu text shown while the safe area guide is off. The editor window key with the same English is the status message after toggling.",
+    "max": 40
+  },
+  "svg-editor.menu.this-is-the-last-point-of-an-open-line": {
+    "text": "This is the last point of an open line.",
+    "note": "Tooltip on a disabled point menu entry in the icon editor. Explains the action is unavailable on the end point of an open line.",
+    "max": 65
+  },
+  "svg-editor.menu.zoom-to-fit": {
+    "text": "Zoom to fit",
+    "note": "Context menu item that changes the zoom so the whole drawing is visible.",
+    "max": 20
+  },
+  "svg-editor.model.ellipse": {
+    "text": "Ellipse",
+    "note": "Default layer name given to a new ellipse in the layer list. Same English as the tool name, which has its own key.",
+    "max": 15
+  },
+  "svg-editor.model.line": {
+    "text": "Line",
+    "note": "Default layer name given to a new straight line in the layer list. Same English as the tool name, which has its own key.",
+    "max": 10
+  },
+  "svg-editor.model.path": {
+    "text": "Path",
+    "note": "Default layer name given to a new free-form path in the layer list. Same English as the menu heading, which has its own key.",
+    "max": 10
+  },
+  "svg-editor.model.polygon": {
+    "text": "Polygon",
+    "note": "Default layer name given to a new polygon in the layer list.",
+    "max": 15
+  },
+  "svg-editor.model.rectangle": {
+    "text": "Rectangle",
+    "note": "Default layer name given to a new rectangle in the layer list. Same English as the tool name, which has its own key.",
+    "max": 15
+  },
+  "svg-editor.model.star": {
+    "text": "Star",
+    "note": "Default layer name given to a new star in the layer list. Same English as the star icon name, which has its own key.",
+    "max": 10
+  },
+  "svg-editor.names.a-group-can-t-go-inside-itself": {
+    "text": "A group can't go inside itself.",
+    "note": "Message when you drag a group into one of its own children in the layer tree.",
+    "max": 50
+  },
+  "svg-editor.names.accent": {
+    "text": "Accent",
+    "note": "Name of the card's second colour slot, used in labels and menus. Same English as the inspector colour label, which has its own key.",
+    "max": 10
+  },
+  "svg-editor.names.align-bottom": {
+    "text": "Align bottom",
+    "note": "Tooltip of the button that aligns the selected shapes to their bottom edge.",
+    "max": 20
+  },
+  "svg-editor.names.align-centre": {
+    "text": "Align centre",
+    "note": "Tooltip of the button that aligns the selected shapes to their horizontal centre.",
+    "max": 20
+  },
+  "svg-editor.names.align-left": {
+    "text": "Align left",
+    "note": "Tooltip of the button that aligns the selected shapes to their left edge.",
+    "max": 20
+  },
+  "svg-editor.names.align-middle": {
+    "text": "Align middle",
+    "note": "Tooltip of the button that aligns the selected shapes to their vertical middle.",
+    "max": 30
+  },
+  "svg-editor.names.align-right": {
+    "text": "Align right",
+    "note": "Tooltip of the button that aligns the selected shapes to their right edge.",
+    "max": 20
+  },
+  "svg-editor.names.align-top": {
+    "text": "Align top",
+    "note": "Tooltip of the button that aligns the selected shapes to their top edge.",
+    "max": 20
+  },
+  "svg-editor.names.and-previous-and-next-point-c-corner-or": {
+    "text": "[ and ] previous and next point, C corner or smooth, H handle, Delete removes",
+    "note": "Keyboard help line for point editing. The key names and letters are keys on the keyboard and stay as written.",
+    "max": 125
+  },
+  "svg-editor.names.arrow": {
+    "text": "Arrow",
+    "note": "Name of a ready-made arrow shape in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.arrows-move-shift-arrows-move-far-alt": {
+    "text": "Arrows move, Shift+arrows move far, Alt+arrows move 0.1",
+    "note": "Keyboard help line for nudging a selection. Shift and Alt are key names and stay as written; 0.1 is a distance in units.",
+    "max": 90
+  },
+  "svg-editor.names.backward": {
+    "text": "Backward",
+    "note": "Button that moves the selected shape one step back in the stacking order. Counterpart of Forward.",
+    "max": 20
+  },
+  "svg-editor.names.bring-to-front": {
+    "text": "Bring to front",
+    "note": "Button that moves the selected shape in front of all others in the stacking order.",
+    "max": 25
+  },
+  "svg-editor.names.canvas": {
+    "text": "Canvas",
+    "note": "Choice in the Relative to setting: align shapes to the drawing area. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.chevron": {
+    "text": "Chevron",
+    "note": "Name of a ready-made chevron shape (a V-shaped arrow head) in the shape picker.",
+    "max": 15
+  },
+  "svg-editor.names.circle": {
+    "text": "Circle",
+    "note": "Name of a ready-made circle shape in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.cloud": {
+    "text": "Cloud",
+    "note": "Name of a ready-made cloud shape in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.combine": {
+    "text": "Combine",
+    "note": "Heading of the panel that merges shapes with boolean operations. Verb used as a title.",
+    "max": 15
+  },
+  "svg-editor.names.combined-c-shapes": {
+    "text": "{c, plural, one {Combined # shape.} other {Combined # shapes.}}",
+    "note": "Status message after the combine (union) operation. {c} is the number of shapes, always two or more.",
+    "max": 35,
+    "vars": {
+      "c": "The number of shapes."
+    }
+  },
+  "svg-editor.names.combined-shape": {
+    "text": "Combined shape",
+    "note": "Layer name given to the result of a combine (union) operation.",
+    "max": 25
+  },
+  "svg-editor.names.ctrl-d-duplicate-ctrl-g-group-shift-h": {
+    "text": "Ctrl+D duplicate, Ctrl+G group, Shift+H and Shift+V flip",
+    "note": "Keyboard help line for shape shortcuts. Key combinations such as Ctrl+D stay as written; translate only the action words.",
+    "max": 90
+  },
+  "svg-editor.names.ctrl-z-undo-ctrl-shift-z-redo-ctrl-enter": {
+    "text": "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library",
+    "note": "Keyboard help line for undo, redo and saving. Key combinations stay as written; Done and Save to library match the button labels.",
+    "max": 115
+  },
+  "svg-editor.names.drop": {
+    "text": "Drop",
+    "note": "Name of a ready-made water drop shape in the shape picker. Noun, not the verb.",
+    "max": 10
+  },
+  "svg-editor.names.ellipse": {
+    "text": "Ellipse",
+    "note": "Name of a ready-made ellipse shape in the shape picker. Same English as the tool name and the default layer name.",
+    "max": 15
+  },
+  "svg-editor.names.exclude": {
+    "text": "Exclude",
+    "note": "Button for the boolean operation that keeps only the parts where shapes do not overlap.",
+    "max": 15
+  },
+  "svg-editor.names.excluded-c-shapes": {
+    "text": "{c, plural, one {Excluded # shape.} other {Excluded # shapes.}}",
+    "note": "Status message after the exclude operation. {c} is the number of shapes, always two or more.",
+    "max": 35,
+    "vars": {
+      "c": "The number of shapes."
+    }
+  },
+  "svg-editor.names.excluded-shape": {
+    "text": "Excluded shape",
+    "note": "Layer name given to the result of an exclude operation.",
+    "max": 25
+  },
+  "svg-editor.names.forward": {
+    "text": "Forward",
+    "note": "Button that moves the selected shape one step forward in the stacking order. Counterpart of Backward.",
+    "max": 15
+  },
+  "svg-editor.names.heart": {
+    "text": "Heart",
+    "note": "Name of a ready-made heart shape in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.hexagon": {
+    "text": "Hexagon",
+    "note": "Name of a ready-made six-sided shape in the shape picker. Noun.",
+    "max": 15
+  },
+  "svg-editor.names.in-a-number-field-ctrl-z-undoes-the": {
+    "text": "In a number field Ctrl+Z undoes the field. Press Enter first to undo the editor.",
+    "note": "Keyboard help hint about undo inside a number input. Ctrl+Z and Enter are key names and stay as written.",
+    "max": 130
+  },
+  "svg-editor.names.intersect": {
+    "text": "Intersect",
+    "note": "Button for the boolean operation that keeps only the area where shapes overlap.",
+    "max": 15
+  },
+  "svg-editor.names.intersected-c-shapes": {
+    "text": "{c, plural, one {Intersected # shape.} other {Intersected # shapes.}}",
+    "note": "Status message after the intersect operation. {c} is the number of shapes, always two or more.",
+    "max": 40,
+    "vars": {
+      "c": "The number of shapes."
+    }
+  },
+  "svg-editor.names.intersected-shape": {
+    "text": "Intersected shape",
+    "note": "Layer name given to the result of an intersect operation.",
+    "max": 30
+  },
+  "svg-editor.names.it-can-t-go-there": {
+    "text": "It can't go there.",
+    "note": "Short message when a dragged layer is dropped on a place that does not accept it.",
+    "max": 30
+  },
+  "svg-editor.names.join": {
+    "text": "Join",
+    "note": "Name of the path tool that connects two open paths end to end. Verb. Used in a tooltip and in the applied message.",
+    "max": 10
+  },
+  "svg-editor.names.knife": {
+    "text": "Knife",
+    "note": "Name of the path tool that cuts a shape along a drawn line. Noun, like a physical knife.",
+    "max": 10
+  },
+  "svg-editor.names.leaf": {
+    "text": "Leaf",
+    "note": "Name of a ready-made leaf shape in the shape picker. Noun, as in a plant leaf.",
+    "max": 10
+  },
+  "svg-editor.names.main": {
+    "text": "Main",
+    "note": "Name of the card's first colour slot, used in labels and menus. Counterpart of Accent.",
+    "max": 10
+  },
+  "svg-editor.names.main-accent": {
+    "text": "Main + Accent",
+    "note": "Name of the option that uses both card colour slots in one icon. Main and Accent must match the colour slot names.",
+    "max": 25
+  },
+  "svg-editor.names.offset-path": {
+    "text": "Offset path",
+    "note": "Name of the path tool that grows or shrinks a shape outline by a set distance.",
+    "max": 20
+  },
+  "svg-editor.names.on-a-mac-tab-reaches-buttons-only-when": {
+    "text": "On a Mac, Tab reaches buttons only when full keyboard access is on.",
+    "note": "Keyboard help hint for macOS users. Mac and Tab stay as written; full keyboard access is a macOS system setting name.",
+    "max": 110
+  },
+  "svg-editor.names.outline-stroke": {
+    "text": "Outline stroke",
+    "note": "Name of the path tool that turns a line's stroke into a filled shape.",
+    "max": 25
+  },
+  "svg-editor.names.plus": {
+    "text": "Plus",
+    "note": "Name of a ready-made plus sign shape (a cross) in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.rounded-rectangle": {
+    "text": "Rounded rectangle",
+    "note": "Name of a ready-made rectangle with rounded corners in the shape picker.",
+    "max": 30
+  },
+  "svg-editor.names.safe-area": {
+    "text": "Safe area",
+    "note": "Choice in the Relative to setting, and a label for the 20 by 20 zone that Home Assistant never clips. Noun.",
+    "max": 15
+  },
+  "svg-editor.names.selection": {
+    "text": "Selection",
+    "note": "Choice in the Relative to setting: align shapes to the selected shapes. Noun.",
+    "max": 15
+  },
+  "svg-editor.names.semicircle": {
+    "text": "Semicircle",
+    "note": "Name of a ready-made half-circle shape in the shape picker. Noun.",
+    "max": 20
+  },
+  "svg-editor.names.send-to-back": {
+    "text": "Send to back",
+    "note": "Button that moves the selected shape behind all others in the stacking order.",
+    "max": 20
+  },
+  "svg-editor.names.shield": {
+    "text": "Shield",
+    "note": "Name of a ready-made shield shape in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.show-or-hide-panels-ctrl-or": {
+    "text": "Show or hide panels: Ctrl+\\ or ⌘\\",
+    "note": "Keyboard help line for toggling the side panels. Ctrl, the backslash and the command symbol are keys and stay as written.",
+    "max": 55
+  },
+  "svg-editor.names.simplify": {
+    "text": "Simplify",
+    "note": "Name of the path tool that reduces the number of points in a path. Verb.",
+    "max": 15
+  },
+  "svg-editor.names.speech-bubble": {
+    "text": "Speech bubble",
+    "note": "Name of a ready-made speech bubble shape in the shape picker. Noun.",
+    "max": 25
+  },
+  "svg-editor.names.split-at-point": {
+    "text": "Split at point",
+    "note": "Name of the path tool that cuts a path at the selected point. Used in a tooltip and in the applied message.",
+    "max": 25
+  },
+  "svg-editor.names.star": {
+    "text": "Star",
+    "note": "Name of a ready-made star shape in the shape picker. Same English as the default layer name, which has its own key.",
+    "max": 10
+  },
+  "svg-editor.names.subtract": {
+    "text": "Subtract",
+    "note": "Button for the boolean operation that cuts the top shapes out of the bottom shape.",
+    "max": 15
+  },
+  "svg-editor.names.subtracted-n-from-from": {
+    "text": "Subtracted {n, plural, one {# shape} other {# shapes}} from {from}.",
+    "note": "Status message after the subtract operation. {n} is the number of shapes cut out and {from} is the name of the shape they were cut from.",
+    "max": 55,
+    "vars": {
+      "from": "The value that replaces from in the text.",
+      "n": "The count the text is about."
+    }
+  },
+  "svg-editor.names.subtracted-shape": {
+    "text": "Subtracted shape",
+    "note": "Layer name given to the result of a subtract operation.",
+    "max": 30
+  },
+  "svg-editor.names.tab": {
+    "text": "Tab",
+    "note": "Name of the Tab key on the keyboard, used in shortcut help. Not a tab page. Translate only if the keyboard key has a local name.",
+    "max": 5
+  },
+  "svg-editor.names.tag": {
+    "text": "Tag",
+    "note": "Name of a ready-made price tag or label shape in the shape picker. Noun.",
+    "max": 5
+  },
+  "svg-editor.names.ticket": {
+    "text": "Ticket",
+    "note": "Name of a ready-made ticket shape (notched sides) in the shape picker. Noun.",
+    "max": 10
+  },
+  "svg-editor.names.tools-v-select-a-points-p-pen-r": {
+    "text": "Tools: V select, A points, P pen, R rectangle, E ellipse, L line, G polygon, S shapes, B freehand",
+    "note": "Keyboard help line listing one-letter tool shortcuts. The letters are keys and stay as written; translate only the tool names.",
+    "max": 160
+  },
+  "svg-editor.names.triangle": {
+    "text": "Triangle",
+    "note": "Name of a ready-made triangle shape in the shape picker. Noun.",
+    "max": 15
+  },
+  "svg-editor.names.zoom-and-fit-0-grid-ctrl-snap-ctrl": {
+    "text": "Zoom: = and -, fit: 0, grid: Ctrl+', snap: Ctrl+;",
+    "note": "Keyboard help line for view shortcuts. The symbols and Ctrl are keys and stay as written; translate only zoom, fit, grid and snap.",
+    "max": 80
+  },
+  "svg-editor.pathtools.couldn-t-load-the-path-tools-try-again": {
+    "text": "Couldn't load the path tools. Try again.",
+    "note": "Error toast in the icon editor when the path tool code fails to load. Asks the user to retry.",
+    "max": 70
+  },
+  "svg-editor.pathtools.join-works-on-open-paths-use-split-first": {
+    "text": "Join works on open paths. Use Split first to open a closed one.",
+    "note": "Hint in the icon editor path tools when Join is used on a closed shape. Tells the user to Split it first.",
+    "max": 105
+  },
+  "svg-editor.pathtools.name-applied-before-points-before-after": {
+    "text": "{name} applied: {before} points before, {after} after.",
+    "note": "Result message after a path tool runs. {name} is the tool name; {before} and {after} are point counts.",
+    "max": 90,
+    "vars": {
+      "after": "The value that replaces after in the text.",
+      "before": "The value that replaces before in the text.",
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.pathtools.select-a-closed-shape-open-lines-have-no": {
+    "text": "Select a closed shape. Open lines have no area.",
+    "note": "Hint in the icon editor path tools when an area-based action is used on an open line. Explains it needs a closed shape.",
+    "max": 80
+  },
+  "svg-editor.pathtools.select-a-shape-first": {
+    "text": "Select a shape first.",
+    "note": "Hint in the icon editor path tools when an action is used with nothing selected.",
+    "max": 35
+  },
+  "svg-editor.pathtools.select-one-point-between-the-ends-with": {
+    "text": "Select one point between the ends with the Node tool.",
+    "note": "Hint in the icon editor path tools when Split has no valid point. Tells the user to pick one inner point with the Node tool.",
+    "max": 85
+  },
+  "svg-editor.pathtools.this-shape-has-no-stroke-to-outline": {
+    "text": "This shape has no stroke to outline.",
+    "note": "Hint in the icon editor path tools when Outline stroke is used on a shape without a stroke.",
+    "max": 60
+  },
+  "svg-editor.tools.first-corner-set-move-then-press-enter": {
+    "text": "First corner set. Move, then press Enter for the opposite corner.",
+    "note": "Keyboard drawing status after the first corner of a box is set. Enter is a key name and stays as written.",
+    "max": 105
+  },
+  "svg-editor.views.24-x-24": {
+    "text": "24 x 24",
+    "note": "Name of the canvas size option: 24 by 24 units. Keep the numbers; the x is a multiplication sign.",
+    "max": 15
+  },
+  "svg-editor.views.accent": {
+    "text": "Accent",
+    "note": "Name of the second paint role of an icon, the colour that follows the card accent. Pairs with Main.",
+    "max": 10
+  },
+  "svg-editor.views.accent-preview-colour": {
+    "text": "Accent preview colour",
+    "note": "Label of a colour picker that sets which colour the Accent paint shows while editing. Preview only; it is not saved in the icon.",
+    "max": 35
+  },
+  "svg-editor.views.add-group": {
+    "text": "Add group",
+    "note": "Button in the layers panel that creates a new empty group. Verb phrase.",
+    "max": 15
+  },
+  "svg-editor.views.add-point-after": {
+    "text": "Add point after",
+    "note": "Button that inserts a new path point after the selected one. Same English as the menu entry; keep the translations equal.",
+    "max": 25
+  },
+  "svg-editor.views.adds-name-as-new-layers-your-drawing-is": {
+    "text": "Adds {name} as new layers. Your drawing is kept.",
+    "note": "Hint under the import choice for a library icon. {name} is the icon name; the existing drawing is not replaced.",
+    "max": 80,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.adds-size-kb": {
+    "text": "adds {size} KB",
+    "note": "Lower-case fragment shown next to an option to tell how much it grows the file. {size} is a number; KB stays as written.",
+    "max": 25,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.align": {
+    "text": "Align",
+    "note": "Heading of the section with buttons that align selected shapes to each other or the canvas.",
+    "max": 10
+  },
+  "svg-editor.views.an-icon": {
+    "text": "An icon",
+    "note": "Option name in the new-drawing chooser: start from a single icon. Contrast with Blank canvas.",
+    "max": 15
+  },
+  "svg-editor.views.an-icon-named-name-exists": {
+    "text": "An icon named {name} exists.",
+    "note": "Error under the name field when saving to the library. {name} is the name the person typed.",
+    "max": 50,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.angle": {
+    "text": "Angle",
+    "note": "Label of a number field for a rotation angle in degrees.",
+    "max": 10
+  },
+  "svg-editor.views.arrow-keys-move-by-0-5-turn-on-snap-to": {
+    "text": "Arrow keys move by 0.5. Turn on Snap to use the grid size.",
+    "note": "Hint under the grid settings about nudging with arrow keys. 0.5 is a distance in units; Snap is the toggle label.",
+    "max": 105
+  },
+  "svg-editor.views.back-to-card-editor": {
+    "text": "Back to card editor",
+    "note": "Button that leaves the SVG editor and returns to the card editor.",
+    "max": 35
+  },
+  "svg-editor.views.bevel": {
+    "text": "Bevel",
+    "note": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter.",
+    "max": 15
+  },
+  "svg-editor.views.blank": {
+    "text": "Blank",
+    "note": "Short option label for an empty starting point, with no content. Shorter form of Blank canvas.",
+    "max": 10
+  },
+  "svg-editor.views.blank-canvas": {
+    "text": "Blank canvas",
+    "note": "Option name in the new-drawing chooser: start with an empty drawing area.",
+    "max": 20
+  },
+  "svg-editor.views.c-shapes-selected": {
+    "text": "{c, plural, one {# shape selected} other {# shapes selected}}",
+    "note": "Status line when several shapes are selected. {c} is the count, always two or more.",
+    "max": 35,
+    "vars": {
+      "c": "The number of shapes."
+    }
+  },
+  "svg-editor.views.cancel": {
+    "text": "Cancel",
+    "note": "Button that closes a dialog without making any change.",
+    "max": 10
+  },
+  "svg-editor.views.cap": {
+    "text": "Cap",
+    "note": "Label for the stroke line-end style (butt, round or square) of open lines. Not a hat or a limit.",
+    "max": 10
+  },
+  "svg-editor.views.changes-every-card-that-uses-name": {
+    "text": "Changes every card that uses {name}.",
+    "note": "Warning under Save when editing a library icon. {name} is the icon name.",
+    "max": 60,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.changes-you-have-not-saved-are-lost": {
+    "text": "Changes you have not saved are lost.",
+    "note": "Body of the leave confirmation dialog in the icon editor. Warns that unsaved edits will be discarded.",
+    "max": 60
+  },
+  "svg-editor.views.click-and-drag-on-the-canvas-or-click": {
+    "text": "Click and drag on the canvas, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets each corner.",
+    "note": "Tool hint for drawing a rectangle. Shift and Enter are key names and stay as written.",
+    "max": 235
+  },
+  "svg-editor.views.click-and-drag-or-click-two-corners-hold": {
+    "text": "Click and drag, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets a corner. Press S to pick another shape.",
+    "note": "Tool hint for the shapes tool. Shift, Enter and the letter S are keys and stay as written.",
+    "max": 255
+  },
+  "svg-editor.views.click-to-place-a-point-click-the-first": {
+    "text": "Click to place a point. Click the first point to close. Esc ends the path.",
+    "note": "Tool hint for the pen tool. Esc is a key name and stays as written.",
+    "max": 120
+  },
+  "svg-editor.views.close": {
+    "text": "Close",
+    "note": "Button that closes a panel or dialog. Not the verb for joining a path end to its start.",
+    "max": 10
+  },
+  "svg-editor.views.close-path": {
+    "text": "Close path",
+    "note": "Button that joins the last point of an open path back to the first, making a closed shape.",
+    "max": 20
+  },
+  "svg-editor.views.copy-as-svg": {
+    "text": "Copy as SVG",
+    "note": "Button that copies the drawing to the clipboard as SVG code. SVG stays as written.",
+    "max": 20
+  },
+  "svg-editor.views.corner": {
+    "text": "Corner",
+    "note": "Point type with a sharp angle, as opposed to Smooth. Same English as the menu entry; keep the translations equal.",
+    "max": 10
+  },
+  "svg-editor.views.corner-radius": {
+    "text": "Corner radius",
+    "note": "Label of a number field for how round the corners of a rectangle are.",
+    "max": 25
+  },
+  "svg-editor.views.corners": {
+    "text": "Corners",
+    "note": "Plural heading for the rounded-corner settings of a shape. Related to Corner radius.",
+    "max": 15
+  },
+  "svg-editor.views.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Error when saving to the library fails to connect. Magic Card Utils is a product name and stays as written.",
+    "max": 85
+  },
+  "svg-editor.views.create": {
+    "text": "Create",
+    "note": "Button that starts a new drawing from the chosen option.",
+    "max": 10
+  },
+  "svg-editor.views.custom": {
+    "text": "Custom",
+    "note": "Option that lets the person type their own value instead of a preset, such as a canvas or grid size.",
+    "max": 10
+  },
+  "svg-editor.views.custom-grid-size": {
+    "text": "Custom grid size",
+    "note": "Accessible label of the number field for a self-chosen grid spacing.",
+    "max": 30
+  },
+  "svg-editor.views.dark": {
+    "text": "Dark",
+    "note": "Option for previewing the drawing on a dark background. Pairs with Light.",
+    "max": 10
+  },
+  "svg-editor.views.decimals": {
+    "text": "Decimals",
+    "note": "Label for how many decimal places the exported SVG numbers keep.",
+    "max": 15
+  },
+  "svg-editor.views.delete": {
+    "text": "Delete",
+    "note": "Button that removes the selected item. Same English as the menu entry; keep the translations equal.",
+    "max": 15
+  },
+  "svg-editor.views.delete-name": {
+    "text": "Delete {name}",
+    "note": "Button or dialog title for deleting a library icon. {name} is the icon name.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.delete-point": {
+    "text": "Delete point",
+    "note": "Button that removes the selected path point.",
+    "max": 20
+  },
+  "svg-editor.views.deleted-name-cards-that-use-it-show-the": {
+    "text": "Deleted {name}. Cards that use it show the default icon unless they keep a copy.",
+    "note": "Confirmation after an icon is deleted from the library. {name} is the name of the deleted icon.",
+    "max": 130,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.details": {
+    "text": "Details",
+    "note": "Label of a button that expands extra information about a message or setting.",
+    "max": 15
+  },
+  "svg-editor.views.dismiss": {
+    "text": "Dismiss",
+    "note": "Button that hides a message without taking any action.",
+    "max": 15
+  },
+  "svg-editor.views.document": {
+    "text": "Document",
+    "note": "Heading for settings of the whole drawing, such as canvas size, not of one shape.",
+    "max": 15
+  },
+  "svg-editor.views.done": {
+    "text": "Done",
+    "note": "Button that applies the drawing to the card and leaves the editor. Also named in the Ctrl+Enter shortcut help.",
+    "max": 10
+  },
+  "svg-editor.views.down": {
+    "text": "Down",
+    "note": "Button that moves the selected layer one step down in the stack, or lower in drawing order.",
+    "max": 10
+  },
+  "svg-editor.views.drag-a-box-or-click-two-corners-without": {
+    "text": "Drag a box, or click two corners. Without a mouse: arrows move the crosshair, Enter sets a corner.",
+    "note": "Tool hint for the select tool's box selection. Enter is a key name and stays as written.",
+    "max": 160
+  },
+  "svg-editor.views.drag-across-shapes-to-cut-them-along-the": {
+    "text": "Drag across shapes to cut them along the whole line. Arrows move the crosshair, Enter sets an end.",
+    "note": "Tool hint for the knife tool that cuts shapes. Enter is a key name and stays as written.",
+    "max": 160
+  },
+  "svg-editor.views.drag-to-draw-the-line-is-smoothed-when": {
+    "text": "Drag to draw. The line is smoothed when you let go.",
+    "note": "Canvas hint in the icon editor while the pencil tool is active. Explains how to draw and that the line is smoothed on release.",
+    "max": 85
+  },
+  "svg-editor.views.drag-to-move-the-view-scroll-to-move": {
+    "text": "Drag to move the view. Scroll to move, Ctrl and scroll to zoom.",
+    "note": "Tool hint for the hand tool that pans the canvas. Ctrl is a key name and stays as written.",
+    "max": 105
+  },
+  "svg-editor.views.dual-tone": {
+    "text": "Dual-tone",
+    "note": "Name of an icon colour mode that uses two paints, Main and Accent, instead of one.",
+    "max": 15
+  },
+  "svg-editor.views.duplicate": {
+    "text": "Duplicate",
+    "note": "Button that makes a copy of the selected shape. Verb, not an adjective.",
+    "max": 15
+  },
+  "svg-editor.views.entity-off": {
+    "text": "Entity off",
+    "note": "Preview option that shows the icon as it looks when the Home Assistant entity is switched off.",
+    "max": 20
+  },
+  "svg-editor.views.entity-on": {
+    "text": "Entity on",
+    "note": "Preview option that shows the icon as it looks when the Home Assistant entity is switched on.",
+    "max": 15
+  },
+  "svg-editor.views.everything-painted-accent-is-painted": {
+    "text": "Everything painted Accent is painted Main instead. You can undo this.",
+    "note": "Confirmation after switching an icon to one paint. Accent and Main are the paint names and must match their own labels.",
+    "max": 115
+  },
+  "svg-editor.views.export-file": {
+    "text": "Export file",
+    "note": "Button that downloads the drawing as an SVG file.",
+    "max": 20
+  },
+  "svg-editor.views.export-import": {
+    "text": "Export / Import",
+    "note": "Heading of the panel section for getting drawings out of and into the editor. Keep the slash.",
+    "max": 25
+  },
+  "svg-editor.views.fewer-decimals-make-a-smaller-icon": {
+    "text": "Fewer decimals make a smaller icon. Hidden layers are not saved.",
+    "note": "Hint in the icon editor export panel. Explains the decimals setting trades precision for size and that hidden layers are left out.",
+    "max": 105
+  },
+  "svg-editor.views.fill": {
+    "text": "Fill",
+    "note": "Label for the inside colour of a shape. Pairs with Stroke.",
+    "max": 10
+  },
+  "svg-editor.views.fill-and-stroke": {
+    "text": "Fill and stroke",
+    "note": "Option that paints both the inside and the outline of a shape.",
+    "max": 25
+  },
+  "svg-editor.views.fill-rule": {
+    "text": "Fill rule",
+    "note": "Label for the setting that decides which areas of an overlapping path are filled (non-zero or even-odd).",
+    "max": 15
+  },
+  "svg-editor.views.finish-path": {
+    "text": "Finish path",
+    "note": "Button that ends the path being drawn and leaves it open. Differs from Close path.",
+    "max": 20
+  },
+  "svg-editor.views.fit-to-view": {
+    "text": "Fit to view",
+    "note": "Button that zooms the canvas so the whole drawing is visible.",
+    "max": 20
+  },
+  "svg-editor.views.flat": {
+    "text": "Flat",
+    "note": "Option for the stroke end style with a straight cut at the end point. Not the word for an apartment.",
+    "max": 10
+  },
+  "svg-editor.views.flip-horizontally": {
+    "text": "Flip horizontally",
+    "note": "Button that mirrors the selection from left to right.",
+    "max": 30
+  },
+  "svg-editor.views.flip-vertically": {
+    "text": "Flip vertically",
+    "note": "Button that mirrors the selection from top to bottom.",
+    "max": 25
+  },
+  "svg-editor.views.for-example-mdi-lightbulb-home-assistant": {
+    "text": "For example mdi:lightbulb. Home Assistant icons and installed icon packs work.",
+    "note": "Hint under the icon name field. mdi:lightbulb is a literal icon id and stays as written.",
+    "max": 125
+  },
+  "svg-editor.views.getting-big-tidy-reduces-precision-and": {
+    "text": "Getting big. Tidy reduces precision and drops hidden layers.",
+    "note": "Warning under the size meter when the drawing nears the size limit. Tidy is the button that shrinks it.",
+    "max": 100
+  },
+  "svg-editor.views.give-the-icon-a-name": {
+    "text": "Give the icon a name.",
+    "note": "Prompt shown when saving an icon to the library without a name yet.",
+    "max": 35
+  },
+  "svg-editor.views.grid-size": {
+    "text": "Grid {size}",
+    "note": "Option label for a preset grid spacing. {size} is a number, for example 4.",
+    "max": 20,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.grid-size-2": {
+    "text": "Grid size",
+    "note": "Label for the group of grid spacing options. Same English as the other grid size labels but a heading here.",
+    "max": 15
+  },
+  "svg-editor.views.groups-can-be-4-levels-deep": {
+    "text": "Groups can be 4 levels deep.",
+    "note": "Message when nesting a group would go past the limit. Same English as the layers message; keep the translations equal.",
+    "max": 45
+  },
+  "svg-editor.views.heavy-for-wall-tablets": {
+    "text": "Heavy for wall tablets",
+    "note": "Short warning badge that the drawing is large and may be slow on low-powered wall-mounted tablets.",
+    "max": 40
+  },
+  "svg-editor.views.height": {
+    "text": "Height",
+    "note": "Label of a number field for the height of a shape or canvas. Pairs with Width.",
+    "max": 10
+  },
+  "svg-editor.views.hidden": {
+    "text": "Hidden",
+    "note": "State label for a layer that is switched off and not drawn.",
+    "max": 10
+  },
+  "svg-editor.views.holes-where-shapes-overlap": {
+    "text": "Holes where shapes overlap",
+    "note": "Description of the even-odd fill rule option: overlapping areas are left empty.",
+    "max": 45
+  },
+  "svg-editor.views.home-assistant-would-show-little-of-this": {
+    "text": "Home Assistant would show little of this drawing. It draws one filled shape without strokes.",
+    "note": "Warning in the icon editor Home Assistant preview. Says most of the drawing would be lost because HA draws one filled shape without strokes.",
+    "max": 150
+  },
+  "svg-editor.views.home-assistant-would-show-nothing-for": {
+    "text": "Home Assistant would show nothing for this drawing. It draws filled shapes only.",
+    "note": "Warning in the icon editor Home Assistant preview. Says nothing would show because the drawing has no filled shapes.",
+    "max": 130
+  },
+  "svg-editor.views.how-home-assistant-draws-a-saved-icon-in": {
+    "text": "How Home Assistant draws a saved icon in its own cards: one colour, filled shapes only.",
+    "note": "Caption for the Home Assistant preview in the icon editor. Explains the preview shows one colour and filled shapes only.",
+    "max": 140
+  },
+  "svg-editor.views.how-to-install": {
+    "text": "How to install",
+    "note": "Link or button that opens steps for installing the Magic Card Utils add-on.",
+    "max": 25
+  },
+  "svg-editor.views.icon-canvas": {
+    "text": "Icon canvas",
+    "note": "Accessible name of the drawing area where the icon is shown and edited.",
+    "max": 20
+  },
+  "svg-editor.views.icon-editor": {
+    "text": "Icon editor",
+    "note": "Title of the full editor for drawing a single icon. Contrast with Image editor.",
+    "max": 20
+  },
+  "svg-editor.views.icon-name": {
+    "text": "Icon name",
+    "note": "Label of the text field for the name an icon is saved under.",
+    "max": 15
+  },
+  "svg-editor.views.image-editor": {
+    "text": "Image editor",
+    "note": "Title of the full editor for drawing a larger image. Contrast with Icon editor.",
+    "max": 20
+  },
+  "svg-editor.views.import-file": {
+    "text": "Import file",
+    "note": "Button that adds an SVG file from the computer as layers. Pairs with Export file.",
+    "max": 20
+  },
+  "svg-editor.views.in-handle-angle": {
+    "text": "In handle angle",
+    "note": "Label for the direction of the handle on the incoming side of a curve point. In is an adjective for the handle.",
+    "max": 25
+  },
+  "svg-editor.views.in-handle-length": {
+    "text": "In handle length",
+    "note": "Label for the reach of the handle on the incoming side of a curve point. In is an adjective for the handle.",
+    "max": 30
+  },
+  "svg-editor.views.in-home-assistant": {
+    "text": "In Home Assistant",
+    "note": "Heading of a preview showing how the icon looks in Home Assistant's own cards. Contrast with In Magic Card.",
+    "max": 30
+  },
+  "svg-editor.views.in-home-assistant-at-px-pixels": {
+    "text": "In Home Assistant at {px} pixels",
+    "note": "Preview caption. {px} is a number, the icon size in pixels.",
+    "max": 55,
+    "vars": {
+      "px": "The value that replaces px in the text."
+    }
+  },
+  "svg-editor.views.in-magic-card": {
+    "text": "In Magic Card",
+    "note": "Heading of a preview showing the icon as Magic Card draws it. Magic Card is a product name.",
+    "max": 25
+  },
+  "svg-editor.views.inner-size": {
+    "text": "Inner size",
+    "note": "Label of a number field for the size of the drawing area inside the safe margin.",
+    "max": 20
+  },
+  "svg-editor.views.insert": {
+    "text": "Insert",
+    "note": "Button that adds the chosen icon into the drawing.",
+    "max": 10
+  },
+  "svg-editor.views.inspector-panel": {
+    "text": "Inspector panel",
+    "note": "Accessible name of the side panel with properties of the selected shape.",
+    "max": 25
+  },
+  "svg-editor.views.it-is-saved-in-the-library": {
+    "text": "It is saved in the library.",
+    "note": "Status line in the icon editor use dialog. Tells the user the icon is stored in the shared library.",
+    "max": 45
+  },
+  "svg-editor.views.join": {
+    "text": "Join",
+    "note": "Button that connects two open paths into one. Not the stroke corner style.",
+    "max": 10
+  },
+  "svg-editor.views.keep-a-copy-in-this-card": {
+    "text": "Keep a copy in this card",
+    "note": "Checkbox label on delete: the card keeps its own copy of the icon so it still shows.",
+    "max": 40
+  },
+  "svg-editor.views.keep-accent": {
+    "text": "Keep Accent",
+    "note": "Button that cancels the switch to one paint and leaves Accent layers as they are. Accent matches its own label.",
+    "max": 20
+  },
+  "svg-editor.views.keep-editing": {
+    "text": "Keep editing",
+    "note": "Button in the leave warning that closes the dialog and stays in the editor.",
+    "max": 20
+  },
+  "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
+    "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
+    "note": "Hint shown when Magic Card Utils is not installed. Keep the product name Magic Card Utils unchanged.",
+    "max": 215
+  },
+  "svg-editor.views.layer": {
+    "text": "Layer",
+    "note": "Singular word for one drawing layer, used in labels and headings. Plural is Layers.",
+    "max": 10
+  },
+  "svg-editor.views.layers": {
+    "text": "Layers",
+    "note": "Heading of the list of drawing layers. Plural of Layer.",
+    "max": 10
+  },
+  "svg-editor.views.layers-and-library-panel": {
+    "text": "Layers and library panel",
+    "note": "Accessible name of the side panel that holds the layers list and the saved icon library.",
+    "max": 40
+  },
+  "svg-editor.views.leave": {
+    "text": "Leave",
+    "note": "Button that exits the editor and drops unsaved changes. Verb. Not the direction Left.",
+    "max": 10
+  },
+  "svg-editor.views.leave-without-saving": {
+    "text": "Leave without saving?",
+    "note": "Dialog title asking whether to exit with unsaved changes. A question.",
+    "max": 35
+  },
+  "svg-editor.views.leave-without-using": {
+    "text": "Leave without using",
+    "note": "Button that exits the editor without applying the drawing to the card.",
+    "max": 35
+  },
+  "svg-editor.views.left": {
+    "text": "Left",
+    "note": "Direction or alignment option, the left edge. Not the verb Leave.",
+    "max": 10
+  },
+  "svg-editor.views.library": {
+    "text": "Library",
+    "note": "Heading or tab for the collection of saved icons.",
+    "max": 15
+  },
+  "svg-editor.views.light": {
+    "text": "Light",
+    "note": "Option for previewing the drawing on a light background. Pairs with Dark; not a lamp.",
+    "max": 10
+  },
+  "svg-editor.views.loading-the-icon-editor": {
+    "text": "Loading the icon editor",
+    "note": "Status text while the icon editor code is being fetched. No full stop.",
+    "max": 40
+  },
+  "svg-editor.views.loading-the-image-editor": {
+    "text": "Loading the image editor",
+    "note": "Status text while the image editor code is being fetched. No full stop.",
+    "max": 40
+  },
+  "svg-editor.views.loading-your-icons": {
+    "text": "Loading your icons…",
+    "note": "Status text while the saved icon library loads.",
+    "max": 35
+  },
+  "svg-editor.views.lock-ratio": {
+    "text": "Lock ratio",
+    "note": "Toggle that keeps width and height in proportion when one of them changes.",
+    "max": 25
+  },
+  "svg-editor.views.locked": {
+    "text": "Locked",
+    "note": "State label for a layer that cannot be selected or changed.",
+    "max": 15
+  },
+  "svg-editor.views.main": {
+    "text": "Main",
+    "note": "Name of the first paint role of an icon, the colour that follows the entity colour. Pairs with Accent.",
+    "max": 10
+  },
+  "svg-editor.views.main-follows-the-entity-colour-accent": {
+    "text": "Main follows the entity colour. Accent follows the card's secondary colour. Colours come from the card, so the icon can change with state.",
+    "note": "Explains the two-colour mode. Main and Accent are the names of the two colour slots and match the labels in the colour list.",
+    "max": 225
+  },
+  "svg-editor.views.main-preview-colour": {
+    "text": "Main preview colour",
+    "note": "Label of a colour picker that sets which colour the Main paint shows while editing. Preview only.",
+    "max": 35
+  },
+  "svg-editor.views.make-c-main": {
+    "text": "Make {c, plural, one {# Accent layer} other {# Accent layers}} Main?",
+    "note": "Dialog title as a question. Plural by {c}, the number of Accent layers; Accent and Main match their own labels.",
+    "max": 45,
+    "vars": {
+      "c": "The count the text is about."
+    }
+  },
+  "svg-editor.views.make-main": {
+    "text": "Make Main",
+    "note": "Confirm button that repaints Accent layers with Main. Main matches its own label.",
+    "max": 15
+  },
+  "svg-editor.views.markup": {
+    "text": "markup",
+    "note": "Lower-case noun for the SVG source code, used inside a longer sentence. Not marketing.",
+    "max": 10
+  },
+  "svg-editor.views.maximise": {
+    "text": "Maximise",
+    "note": "Button that makes the editor window fill the screen. British spelling.",
+    "max": 15
+  },
+  "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
+    "text": "Move: Alt+Up / Down. In or out of a group: Alt+Shift+Right / Left.",
+    "note": "Keyboard help for reordering layers. Alt, Shift and the arrow key names stay as written.",
+    "max": 110
+  },
+  "svg-editor.views.move-down": {
+    "text": "Move down",
+    "note": "Button that moves the selected layer one place down in the list.",
+    "max": 15
+  },
+  "svg-editor.views.move-in-steps-of-4": {
+    "text": "Move in steps of 4",
+    "note": "Label of a toggle that makes keyboard and drag moves jump by 4 units. Keep the number 4.",
+    "max": 30
+  },
+  "svg-editor.views.move-to": {
+    "text": "Move to…",
+    "note": "Menu entry that opens a list of groups to move the layer into. The ellipsis means a choice follows.",
+    "max": 20
+  },
+  "svg-editor.views.move-up": {
+    "text": "Move up",
+    "note": "Button that moves the selected layer one place up in the list.",
+    "max": 15
+  },
+  "svg-editor.views.move-window": {
+    "text": "Move window",
+    "note": "Accessible name of the handle used to drag the editor window to another place on screen.",
+    "max": 20
+  },
+  "svg-editor.views.my-icons": {
+    "text": "My icons",
+    "note": "Heading or tab for icons the person saved themselves in the library.",
+    "max": 20
+  },
+  "svg-editor.views.name": {
+    "text": "Name",
+    "note": "Label of a text field for the name of a layer or an icon.",
+    "max": 10
+  },
+  "svg-editor.views.name-used-in-the-library": {
+    "text": "Name used in the library",
+    "note": "Hint under the icon name field saying this is the name the icon is listed under.",
+    "max": 40
+  },
+  "svg-editor.views.next": {
+    "text": "Next",
+    "note": "Button that moves to the next item, such as the next point or result.",
+    "max": 10
+  },
+  "svg-editor.views.no-layers-yet": {
+    "text": "No layers yet.",
+    "note": "Empty-state text in the layers list before anything is drawn.",
+    "max": 25
+  },
+  "svg-editor.views.no-matches-for-query-clear-the-search": {
+    "text": "No matches for \"{query}\". Clear the search.",
+    "note": "Empty-state text for a library search. {query} is what the person typed; keep the quotation marks.",
+    "max": 70,
+    "vars": {
+      "query": "The value that replaces query in the text."
+    }
+  },
+  "svg-editor.views.no-saved-icons-yet-save-an-icon-here-and": {
+    "text": "No saved icons yet. Save an icon here and use it on any dashboard.",
+    "note": "Empty state in the icon editor library list. Explains saved icons can be reused on any dashboard.",
+    "max": 110
+  },
+  "svg-editor.views.none": {
+    "text": "None",
+    "note": "Option meaning no value is set, for example no stroke or no fill.",
+    "max": 10
+  },
+  "svg-editor.views.nothing-here-yet": {
+    "text": "Nothing here yet",
+    "note": "Short empty-state heading for a list with no items. Not an error.",
+    "max": 30
+  },
+  "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
+    "text": "Nothing selected. Pick a layer, or click a shape.",
+    "note": "Empty state of the properties panel when nothing is selected. The menu key with the same English is the hint in the menu.",
+    "max": 80
+  },
+  "svg-editor.views.nudge": {
+    "text": "Nudge",
+    "note": "Heading for the buttons or settings that move a selection by a small step.",
+    "max": 15
+  },
+  "svg-editor.views.ok": {
+    "text": "OK",
+    "note": "Button that confirms a message and closes it. Keep it very short.",
+    "max": 5
+  },
+  "svg-editor.views.open-file": {
+    "text": "Open file",
+    "note": "Button that opens an SVG file from the computer as the drawing. Unlike Import file, it replaces the drawing.",
+    "max": 15
+  },
+  "svg-editor.views.open-path": {
+    "text": "Open path",
+    "note": "Button that opens a closed path by removing the closing segment. Opposite of Close path.",
+    "max": 15
+  },
+  "svg-editor.views.out-handle-angle": {
+    "text": "Out handle angle",
+    "note": "Label for the direction of the handle on the outgoing side of a curve point. Pairs with In handle angle.",
+    "max": 30
+  },
+  "svg-editor.views.out-handle-length": {
+    "text": "Out handle length",
+    "note": "Label for the reach of the handle on the outgoing side of a curve point. Pairs with In handle length.",
+    "max": 30
+  },
+  "svg-editor.views.panel": {
+    "text": "Panel",
+    "note": "Short label for a side panel of the editor, used on the show or hide button.",
+    "max": 10
+  },
+  "svg-editor.views.paste-some-svg-first": {
+    "text": "Paste some SVG first.",
+    "note": "Message in the paste dialog when it is confirmed with an empty box. The editor window key with the same English reports it elsewhere.",
+    "max": 35
+  },
+  "svg-editor.views.paste-svg": {
+    "text": "Paste SVG",
+    "note": "Button that adds SVG code from the clipboard into the drawing. SVG stays as written.",
+    "max": 15
+  },
+  "svg-editor.views.pasted-and-opened-files-are-cleaned": {
+    "text": "Pasted and opened files are cleaned first. Scripts, images and links are removed.",
+    "note": "Safety hint in the icon editor import view. Tells the user that scripts, images and links are stripped from imported files.",
+    "max": 130
+  },
+  "svg-editor.views.path": {
+    "text": "Path",
+    "note": "Name of a free-form shape made of points. Same English as the tool name; keep the translations equal.",
+    "max": 10
+  },
+  "svg-editor.views.pick-a-shape": {
+    "text": "Pick a shape",
+    "note": "Label of the menu from which a ready-made shape such as a star is chosen.",
+    "max": 20
+  },
+  "svg-editor.views.pick-a-tool-on-the-left-or-press-p-to": {
+    "text": "Pick a tool on the left, or press P to draw.",
+    "note": "Empty-canvas hint. The letter P is the pen tool key and stays as written.",
+    "max": 75
+  },
+  "svg-editor.views.pick-mdi-or-a-pack": {
+    "text": "Pick MDI or a pack",
+    "note": "Placeholder asking to choose the Material Design Icons set or an installed icon pack. MDI stays as written.",
+    "max": 30
+  },
+  "svg-editor.views.point-index-of-count": {
+    "text": "Point {index} of {count}",
+    "note": "Position of the selected path point. {index} is its number, {count} the total points.",
+    "max": 40,
+    "vars": {
+      "count": "The value that replaces count in the text.",
+      "index": "The value that replaces index in the text."
+    }
+  },
+  "svg-editor.views.polygon-or-star": {
+    "text": "Polygon or star",
+    "note": "Heading of the options for a regular polygon or star, such as the number of points.",
+    "max": 25
+  },
+  "svg-editor.views.position-and-size": {
+    "text": "Position and size",
+    "note": "Heading of the inspector section with X, Y, width and height fields.",
+    "max": 30
+  },
+  "svg-editor.views.preview": {
+    "text": "Preview",
+    "note": "Heading of the area that shows how the icon will look on a card.",
+    "max": 15
+  },
+  "svg-editor.views.preview-at-px-pixels": {
+    "text": "Preview at {px} pixels",
+    "note": "Accessible name of a preview drawn at a fixed size. {px} is a number, the size in pixels.",
+    "max": 40,
+    "vars": {
+      "px": "The value that replaces px in the text."
+    }
+  },
+  "svg-editor.views.previous": {
+    "text": "Previous",
+    "note": "Button that moves to the previous item, such as the previous point. Pairs with Next.",
+    "max": 15
+  },
+  "svg-editor.views.reading": {
+    "text": "Reading…",
+    "note": "Short progress text while a chosen file is being read. Keep the ellipsis.",
+    "max": 15
+  },
+  "svg-editor.views.redo": {
+    "text": "Redo",
+    "note": "Button that brings back a change that was undone. Pairs with Undo.",
+    "max": 10
+  },
+  "svg-editor.views.reload": {
+    "text": "Reload",
+    "note": "Button that loads the changed library icon again after it was changed elsewhere.",
+    "max": 15
+  },
+  "svg-editor.views.rename": {
+    "text": "Rename",
+    "note": "Button that lets the person type a new name for a layer or an icon.",
+    "max": 10
+  },
+  "svg-editor.views.resize-window": {
+    "text": "Resize window",
+    "note": "Accessible name of the handle used to drag the editor window to a new size.",
+    "max": 25
+  },
+  "svg-editor.views.restore-size": {
+    "text": "Restore size",
+    "note": "Button that returns a maximised editor window to its earlier size. Opposite of Maximise.",
+    "max": 25
+  },
+  "svg-editor.views.reverse-direction": {
+    "text": "Reverse direction",
+    "note": "Button that flips the order of the points of a path so it runs the other way.",
+    "max": 30
+  },
+  "svg-editor.views.right": {
+    "text": "Right",
+    "note": "Direction or alignment option, the right edge. Not the word for correct.",
+    "max": 10
+  },
+  "svg-editor.views.rotate-15": {
+    "text": "Rotate -15",
+    "note": "Button that turns the selection 15 degrees anticlockwise. Keep the minus sign and number; the other one is +15.",
+    "max": 20
+  },
+  "svg-editor.views.rotate-15-2": {
+    "text": "Rotate +15",
+    "note": "Button that turns the selection 15 degrees clockwise. Keep the plus sign and number; the other one is -15.",
+    "max": 20
+  },
+  "svg-editor.views.rotate-90-degrees-anticlockwise": {
+    "text": "Rotate 90 degrees anticlockwise",
+    "note": "Button that turns the selection a quarter turn to the left. British word for counter-clockwise.",
+    "max": 50
+  },
+  "svg-editor.views.rotate-90-degrees-clockwise": {
+    "text": "Rotate 90 degrees clockwise",
+    "note": "Button that turns the selection a quarter turn to the right.",
+    "max": 45
+  },
+  "svg-editor.views.round": {
+    "text": "Round",
+    "note": "Option for rounded stroke ends or corners. An adjective, not a number operation.",
+    "max": 10
+  },
+  "svg-editor.views.save": {
+    "text": "Save",
+    "note": "Button that stores changes to the library icon being edited.",
+    "max": 10
+  },
+  "svg-editor.views.save-as-a-copy": {
+    "text": "Save as a copy",
+    "note": "Button that saves the drawing as a separate library icon and leaves the original unchanged.",
+    "max": 25
+  },
+  "svg-editor.views.save-as-new": {
+    "text": "Save as new",
+    "note": "Button that saves the drawing as a new library icon under a new name.",
+    "max": 20
+  },
+  "svg-editor.views.save-current-icon": {
+    "text": "Save current icon",
+    "note": "Button in the library panel that saves the icon now open in the editor.",
+    "max": 30
+  },
+  "svg-editor.views.save-to-library": {
+    "text": "Save to library",
+    "note": "Button that stores the drawing in the icon library. Also named in the Ctrl+S shortcut help.",
+    "max": 25
+  },
+  "svg-editor.views.saved": {
+    "text": "Saved",
+    "note": "Short status shown after the icon was stored in the library.",
+    "max": 10
+  },
+  "svg-editor.views.search-my-icons": {
+    "text": "Search my icons",
+    "note": "Placeholder and accessible name of the search field in the saved icon library.",
+    "max": 25
+  },
+  "svg-editor.views.search-the-home-assistant-icons-and": {
+    "text": "Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.",
+    "note": "Hint in the icon picker search. mdi:lightbulb is a literal icon id and stays as written.",
+    "max": 150
+  },
+  "svg-editor.views.select-all": {
+    "text": "Select all",
+    "note": "Button that selects every shape in the drawing.",
+    "max": 20
+  },
+  "svg-editor.views.selected-point": {
+    "text": "Selected point",
+    "note": "Heading of the inspector section with fields for the one path point that is selected.",
+    "max": 25
+  },
+  "svg-editor.views.shape-actions": {
+    "text": "Shape actions",
+    "note": "Accessible name of the group of buttons that act on the selected shape, such as duplicate or flip.",
+    "max": 25
+  },
+  "svg-editor.views.shape-options": {
+    "text": "Shape options",
+    "note": "Accessible name of the group of settings for the shape tool, such as corners or points.",
+    "max": 25
+  },
+  "svg-editor.views.shapes": {
+    "text": "Shapes",
+    "note": "Name of the tool that draws ready-made shapes such as a rectangle or star. Same English as the tool name.",
+    "max": 10
+  },
+  "svg-editor.views.sharp": {
+    "text": "Sharp",
+    "note": "Option for the star or corner style with pointed, unrounded tips. Not about taste or clarity.",
+    "max": 10
+  },
+  "svg-editor.views.short-no-slashes-shown-in-the-list": {
+    "text": "Short, no slashes. Shown in the list.",
+    "note": "Hint under the icon name field. Slashes means the / character and is not allowed in names.",
+    "max": 60
+  },
+  "svg-editor.views.shortcuts": {
+    "text": "Shortcuts",
+    "note": "Heading of the list of keyboard shortcuts. Not a link shortcut.",
+    "max": 15
+  },
+  "svg-editor.views.show-20-x-20-safe-area": {
+    "text": "Show 20 x 20 safe area",
+    "note": "Toggle that shows the guide square where icon content should stay. Keep the numbers; x is a multiplication sign.",
+    "max": 40
+  },
+  "svg-editor.views.show-nudge-pad": {
+    "text": "Show nudge pad",
+    "note": "Toggle that shows on-screen arrow buttons for moving the selection in small steps.",
+    "max": 25
+  },
+  "svg-editor.views.size-32-kb-c": {
+    "text": "{size} / 32 KB · {c, plural, one {# point} other {# points}}",
+    "note": "Size meter: {size} is the current file size out of the 32 KB limit; {c} is the number of points. Keep the dot between the parts.",
+    "max": 40,
+    "vars": {
+      "c": "The count the text is about.",
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.size-kb": {
+    "text": "{size} KB",
+    "note": "File size of an icon in the library list. {size} is a number; KB stays as written.",
+    "max": 15,
+    "vars": {
+      "size": "The value that replaces size in the text."
+    }
+  },
+  "svg-editor.views.size-of-the-icon-markup-in-your": {
+    "text": "Size of the icon markup in your dashboard",
+    "note": "Tooltip for the size meter: how much space the icon's SVG code takes in the dashboard configuration.",
+    "max": 70
+  },
+  "svg-editor.views.skip-to-canvas": {
+    "text": "Skip to canvas",
+    "note": "Hidden link for keyboard and screen reader users that jumps focus to the drawing area.",
+    "max": 25
+  },
+  "svg-editor.views.skip-to-inspector": {
+    "text": "Skip to inspector",
+    "note": "Hidden link for keyboard and screen reader users that jumps focus to the properties panel.",
+    "max": 30
+  },
+  "svg-editor.views.skip-to-point-fields": {
+    "text": "Skip to point fields",
+    "note": "Hidden link for keyboard and screen reader users that jumps focus to the fields of the selected point.",
+    "max": 35
+  },
+  "svg-editor.views.smooth": {
+    "text": "Smooth",
+    "note": "Point type with a curved, flowing join, as opposed to Corner.",
+    "max": 10
+  },
+  "svg-editor.views.snap-to-grid": {
+    "text": "Snap to grid",
+    "note": "Toggle that makes points and shapes jump to the nearest grid line.",
+    "max": 20
+  },
+  "svg-editor.views.snapping-and-the-arrow-keys-move-by-this": {
+    "text": "Snapping and the arrow keys move by this size.",
+    "note": "Hint under the grid size field in the icon editor. Says the grid step is also the arrow key step.",
+    "max": 75
+  },
+  "svg-editor.views.solid": {
+    "text": "Solid",
+    "note": "Option for a filled star or shape style, as opposed to an outline. Not a state of matter.",
+    "max": 10
+  },
+  "svg-editor.views.square": {
+    "text": "Square",
+    "note": "Option for a square stroke end that extends past the end point. Also the shape name; not a town square.",
+    "max": 10
+  },
+  "svg-editor.views.star": {
+    "text": "Star",
+    "note": "Name of the star shape option. Same English as the tool name; keep the translations equal.",
+    "max": 10
+  },
+  "svg-editor.views.start-from": {
+    "text": "Start from…",
+    "note": "Menu entry that opens the chooser for a starting point such as an icon or a blank canvas.",
+    "max": 20
+  },
+  "svg-editor.views.start-over": {
+    "text": "Start over?",
+    "note": "Dialog title as a question before the drawing is replaced. Differs from the button Start over only by the question mark.",
+    "max": 20
+  },
+  "svg-editor.views.start-over-2": {
+    "text": "Start over",
+    "note": "Confirm button that replaces the drawing with a fresh start. Undo brings the old one back.",
+    "max": 20
+  },
+  "svg-editor.views.state-icons-win-over-your-drawing-remove": {
+    "text": "State icons win over your drawing. Remove them to see your drawing.",
+    "note": "Warning in the icon editor use dialog. Explains state-specific icons override the drawing until they are removed.",
+    "max": 110
+  },
+  "svg-editor.views.stored-in-magic-card-utils-also": {
+    "text": "Stored in Magic Card Utils. Also available in Home Assistant as mcu:<name>.",
+    "note": "Storage hint for a saved icon. The text mcu:<name> is an icon id pattern and must stay exactly as written.",
+    "max": 120
+  },
+  "svg-editor.views.stroke": {
+    "text": "Stroke",
+    "note": "Label for the outline of a shape and its colour or width. Pairs with Fill; not a medical term.",
+    "max": 10
+  },
+  "svg-editor.views.svg": {
+    "text": ".svg",
+    "note": "File extension shown as a label on the file button. Not translatable; keep the dot.",
+    "max": 10
+  },
+  "svg-editor.views.svg-markup": {
+    "text": "SVG markup",
+    "note": "Label of the text area that holds the SVG source code to copy or paste.",
+    "max": 20
+  },
+  "svg-editor.views.tab-walks-the-points-and-jump-to-the": {
+    "text": "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.",
+    "note": "Keyboard help for the path point editor. Key names, brackets and the letters X and Y stay as written.",
+    "max": 170
+  },
+  "svg-editor.views.the-animated-icon-you-picked-is-removed": {
+    "text": "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.",
+    "note": "Warning that a previously chosen animated icon is dropped when the drawing is used. This icon is the name of an option in the animation settings.",
+    "max": 160
+  },
+  "svg-editor.views.the-animation-you-set-on-this-icon": {
+    "text": "The animation you set on This icon follows your drawing.",
+    "note": "Hint in the icon editor use dialog. Tells the user the animation already set on This icon applies to the new drawing.",
+    "max": 90
+  },
+  "svg-editor.views.the-icon-editor-could-not-load-check": {
+    "text": "The icon editor could not load. Check your connection and try again.",
+    "note": "Error screen when the icon editor code fails to load. Suggests checking the connection and retrying.",
+    "max": 110
+  },
+  "svg-editor.views.the-image-editor-could-not-load-check": {
+    "text": "The image editor could not load. Check your connection and try again.",
+    "note": "Error screen when the image editor code fails to load. Suggests checking the connection and retrying.",
+    "max": 115
+  },
+  "svg-editor.views.this-card-is-linked-to-a-template-your": {
+    "text": "This card is linked to a template. Your drawing is used on this card only.",
+    "note": "Notice in the icon editor use dialog for a card linked to a template. Explains the drawing applies to this card, not to the template.",
+    "max": 120
+  },
+  "svg-editor.views.this-icon-was-changed-somewhere-else": {
+    "text": "This icon was changed somewhere else.",
+    "note": "Warning on an icon in the library list that was edited elsewhere. The editor window key with the same English warns inside the open editor.",
+    "max": 60
+  },
+  "svg-editor.views.this-is-not-used-on-the-card-yet": {
+    "text": "This is not used on the card yet.",
+    "note": "Status line in the icon editor use dialog. Tells the user the drawing has not been applied to the card.",
+    "max": 55
+  },
+  "svg-editor.views.this-module-will-use-your-drawing": {
+    "text": "This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.",
+    "note": "Confirmation text. {icon} is the id of the icon being replaced, for example mdi:lamp, and stays unchanged. Draw and Morph are effect names.",
+    "max": 170,
+    "vars": {
+      "icon": "The value that replaces icon in the text."
+    }
+  },
+  "svg-editor.views.this-module-will-use-your-drawing-2": {
+    "text": "This module will use your drawing. Colours, Draw and Morph effects keep working on it.",
+    "note": "Confirmation text when the module has no icon yet. Draw and Morph are effect names.",
+    "max": 140
+  },
+  "svg-editor.views.tidy": {
+    "text": "Tidy",
+    "note": "Label of the option that shrinks the drawing by rounding numbers and dropping hidden layers.",
+    "max": 10
+  },
+  "svg-editor.views.tidy-now": {
+    "text": "Tidy now",
+    "note": "Button that runs the tidy step on the drawing straight away, shown with the size warning.",
+    "max": 15
+  },
+  "svg-editor.views.tools": {
+    "text": "Tools",
+    "note": "Accessible name of the toolbar with the drawing tools, such as pen and rectangle.",
+    "max": 15
+  },
+  "svg-editor.views.try-again": {
+    "text": "Try again",
+    "note": "Button next to an error that repeats the action which failed, such as loading the editor.",
+    "max": 20
+  },
+  "svg-editor.views.type": {
+    "text": "Type",
+    "note": "Label of a choice for the kind of point, Corner or Smooth. A noun, not the verb to type.",
+    "max": 10
+  },
+  "svg-editor.views.undo": {
+    "text": "Undo",
+    "note": "Button that reverses the last change. Pairs with Redo.",
+    "max": 15
+  },
+  "svg-editor.views.undo-brings-the-old-drawing-back": {
+    "text": "Undo brings the old drawing back.",
+    "note": "Hint after opening or replacing a drawing in the icon editor. Says Undo restores the previous drawing.",
+    "max": 55
+  },
+  "svg-editor.views.units": {
+    "text": "units",
+    "note": "Lower-case suffix after a number field, meaning canvas units rather than pixels.",
+    "max": 10
+  },
+  "svg-editor.views.up": {
+    "text": "Up",
+    "note": "Button that moves the selected layer one step up in the stack, or higher in drawing order. Pairs with Down.",
+    "max": 10
+  },
+  "svg-editor.views.update-name": {
+    "text": "Update \"{name}\"",
+    "note": "Button that saves changes over the library icon. {name} is the icon name; keep the quotation marks.",
+    "max": 25,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
+  "svg-editor.views.use-follows-the-library-change-lamp-and": {
+    "text": "Use follows the library: change \"Lamp\" and every card that uses it changes. Use as copy makes the card independent.",
+    "note": "Explains the two buttons Use and Use as copy. Lamp is only an example icon name; translate it as a sample name.",
+    "max": 185
+  },
+  "svg-editor.views.use-holes-when-overlapping-parts-should": {
+    "text": "Use holes when overlapping parts should cut each other out.",
+    "note": "Hint in the icon editor fill settings. Explains the holes option makes overlapping parts cut each other out.",
+    "max": 95
+  },
+  "svg-editor.views.use-it-on-this-card-to-keep-your-work-or": {
+    "text": "Use it on this card to keep your work, or leave without using it.",
+    "note": "Body of the leave dialog in the icon editor. Offers applying the drawing to the card or leaving without it.",
+    "max": 105
+  },
+  "svg-editor.views.use-on-this-card": {
+    "text": "Use on this card",
+    "note": "Button label: keeps the drawing on this card only, without saving it to the library.",
+    "max": 30
+  },
+  "svg-editor.views.use-this-icon": {
+    "text": "Use this icon",
+    "note": "Button label: applies the icon being edited to the card and closes the editor.",
+    "max": 25
+  },
+  "svg-editor.views.use-this-svg": {
+    "text": "Use this SVG",
+    "note": "Button label in the paste or open SVG step: accepts the cleaned SVG and continues. SVG is the file format name.",
+    "max": 20
+  },
+  "svg-editor.views.use-two-colours-main-and-accent": {
+    "text": "Use two colours: Main and Accent.",
+    "note": "Hint in the icon editor colour settings. Tells the user the icon can have two colours, Main and Accent.",
+    "max": 55
+  },
+  "svg-editor.views.used-as-mcu-id": {
+    "text": "Used as mcu:{id}",
+    "note": "Shows the icon id other cards use. {id} is the saved icon id; mcu: is a fixed prefix and both stay unchanged.",
+    "max": 30,
+    "vars": {
+      "id": "The value that replaces id in the text."
+    }
+  },
+  "svg-editor.views.what-do-you-want-to-start-from": {
+    "text": "What do you want to start from?",
+    "note": "Heading of the start screen in the icon editor. Asks the user to pick a starting point, such as blank, a file or the library.",
+    "max": 50
+  },
+  "svg-editor.views.width": {
+    "text": "Width",
+    "note": "Label of the number field for the drawing width, in canvas units.",
+    "max": 10
+  },
+  "svg-editor.views.without-a-copy-the-card-shows-the": {
+    "text": "Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.",
+    "note": "Warning in the icon editor use dialog. Explains the card falls back to the default icon if the add-on or library icon disappears and no copy is kept.",
+    "max": 150
+  },
+  "svg-editor.views.working": {
+    "text": "Working…",
+    "note": "Busy status on a button or panel while an action such as saving or tidying runs.",
+    "max": 15
+  },
+  "svg-editor.views.x": {
+    "text": "X",
+    "note": "Label of the horizontal coordinate field for a point. Keep the single letter X.",
+    "max": 5
+  },
+  "svg-editor.views.y": {
+    "text": "Y",
+    "note": "Label of the vertical coordinate field for a point. Keep the single letter Y.",
+    "max": 5
+  },
+  "svg-editor.views.zoom-in": {
+    "text": "Zoom in",
+    "note": "Tooltip and label of the button that makes the canvas larger.",
+    "max": 15
+  },
+  "svg-editor.views.zoom-out": {
+    "text": "Zoom out",
+    "note": "Tooltip and label of the button that makes the canvas smaller.",
+    "max": 15
+  }
+}

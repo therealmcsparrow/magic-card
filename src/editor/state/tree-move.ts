@@ -1,13 +1,13 @@
 import type { CardModule, EditorPath, MagicCardConfig } from '../../types';
 import type { ModuleSelection } from '../studio/selection';
-import { ChildStep, childSlots, descendantAt, mutableSlot } from '../../utils/module-path';
+import { ChildStep, childSlots } from '../../utils/module-path';
+import { descendantAt, mutableSlot } from '../../utils/module-path-edit';
 import { deepClone } from '../../utils/deep-merge';
 import { markChildList, markColumnModules } from './template-marks';
 
 /**
- * Where a moved module lands: `module` undefined = the module list of card column row/col;
- * otherwise slot `slot` of the layout at `descendantAt(top[module], child)`. `index` counts in the
- * list as it is before the move.
+ * Where a moved module lands: `module` undefined = the module list of card column row/col; otherwise slot `slot` of the layout
+ * at `descendantAt(top[module], child)`. `index` counts in the list as it is before the move.
  */
 export interface DropPlace {
   row: number;

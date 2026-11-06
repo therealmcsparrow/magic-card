@@ -45,12 +45,8 @@ export const centre = (c: LineCtx): SVGTemplateResult =>
 const MAX_HIGHLIGHTS = 24;
 
 /**
- * The moving highlight: short light dashes sliding along `d` (a wave's offset line, or the centre
- * line). Each dash is a small bar that travels the whole line with transform keyframes (a compositor
- * animation); an animated `stroke-dashoffset` would re-run style, paint and commit of the whole
- * layer every frame. The dashes are spread evenly over the line, about 2.5 dash lengths apart (never
- * more than 24), and move at the flow speed. A bar cannot bend, so bending styles (wave, zigzag)
- * draw none.
+ * The moving highlight: short light dashes sliding along `d` with transform keyframes (a compositor animation), spread
+ * evenly (at most 24) and moving at the flow speed. Bending styles (wave, zigzag) draw none.
  */
 export function highlight(c: LineCtx, d: string, max = Infinity): SVGTemplateResult {
   const S = d === c.geo.d ? c.S : sampled(d);

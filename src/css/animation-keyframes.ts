@@ -1,14 +1,6 @@
-/*
- * Keyframes and particle styles of the animation presets (src/utils/animation-presets.ts).
- * Tokens, replaced per preset by src/css/animations.ts:
- *   $i  the entry's intensity (unitless number; multiply by 1deg / 1px / 1%)
- *   $c  the animation colour (entry colour > design colour > entity colour > theme accent); in
- *       keyframes it is scaled by the entry's Strength, particle layers fade by it as a whole.
- *       The peak of every effect paints the full colour; dimmer is the user's Strength choice.
- * Motion uses the individual transform properties (rotate / translate / scale) so presets of
- * different channels compose on one element. Only transform / opacity / filter / box-shadow are
- * animated, never layout.
- */
+// Keyframes and particle styles of the animation presets. Tokens: $i is the intensity, $c the
+// animation colour. Only transform / opacity / filter / box-shadow animate, via the individual
+// transform properties so presets compose.
 
 /** `@keyframes mc-anim-<key>` bodies; `<id>-icon` is the icon variant of a glow preset. */
 export const KEYFRAMES: Record<string, string> = {

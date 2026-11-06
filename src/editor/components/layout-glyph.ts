@@ -4,8 +4,8 @@ import { layoutWeights } from '../state/layouts';
 import { t } from '../i18n';
 
 /**
- * A row's column layout drawn as bars (`.layout-glyph`, editor system): one bar per column at its
- * share of the row. Used by the Layers tree and the inspector's layout picker.
+ * A row's column layout drawn as bars (`.layout-glyph`): one bar per column at its share of the row.
+ * Used by the Layers tree and the inspector layout picker.
  */
 export function renderLayoutGlyph(weights: readonly number[], active?: number): TemplateResult {
   const cols = weights.map((w) => `${Number.isFinite(w) && w > 0 ? +w.toFixed(3) : 1}fr`).join(' ');
@@ -23,7 +23,7 @@ export function presetWeights(layout: string, colCount?: number): number[] {
 /** Accessible name of a layout: "1 column", "2 columns, 2 to 1". */
 export function layoutName(weights: readonly number[]): string {
   const n = weights.length;
-  if (n <= 1) return t('1 column');
-  const ratio = weights.map((w) => String(+w.toFixed(2))).reduce((acc, w) => t('{from} to {to}', { from: acc, to: w }));
-  return t('{n} columns, {ratio}', { n, ratio });
+  if (n <= 1) return t('card-editor.layout-glyph.1-column');
+  const ratio = weights.map((w) => String(+w.toFixed(2))).reduce((acc, w) => t('card-editor.layout-glyph.from-to-to', { from: acc, to: w }));
+  return t('card-editor.layout-glyph.n-columns-ratio', { n, ratio });
 }

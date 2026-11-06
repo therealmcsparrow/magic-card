@@ -1,14 +1,17 @@
 // DOM-diff gate. Renders every gallery fixture (tools/fixtures/gallery/NNN.yaml) through the
 // real MagicCard.setConfig in happy-dom, with a fixed hass mock, once with the current build and once with the
-// reference build (git archive edc5d05, built in .cache/dom-diff/), serialises the shadow trees and compares them.
+// reference build (git archive 01540cd2, built in .cache/dom-diff/), serialises the shadow trees and compares them.
 //
 // Usage:
-//   node tools/dom-diff.mjs                       current = ./dist, reference = edc5d05 (built once, cached)
+//   node tools/dom-diff.mjs                       current = ./dist, reference = 01540cd2 (built once, cached)
 //   node tools/dom-diff.mjs --dist <dir>          current = <dir> (a webpack output directory)
 //   node tools/dom-diff.mjs --build-head          current = a fresh build of `git archive HEAD` (clean-tree proof)
-//   node tools/dom-diff.mjs --ref <rev>           reference revision (default edc5d05)
+//   node tools/dom-diff.mjs --ref <rev>           reference revision (default 01540cd2)
+//   node tools/dom-diff.mjs --ref-dist <dir>      reference = an existing webpack output directory (before/after of one change)
 //   node tools/dom-diff.mjs --only 001,063        limit to fixture ids
-//   node tools/dom-diff.mjs --dump <dir>          also write both serialisations as <dir>/{current,reference}/NNN.txt
+//   node tools/dom-diff.mjs --dump <dir>          also write both serialisations as <dir>/{current,reference}/NNN.txt (with --sheets also NNN.sheets.txt)
+//   node tools/dom-diff.mjs --sheets              also compare the adopted stylesheet text of every card
+//   node tools/dom-diff.mjs --sheets-moved        like --sheets, but the rules of all adopted sheets of a root are compared as one sorted list (rules moved between sheets are not a difference); every fixture is rendered twice and the second render is compared
 //   node tools/dom-diff.mjs --selftest            normaliser and comparison rules, no browser, no build
 //
 // Normalisation (the only one, and it is written here, in serialise() and normaliseText()):
@@ -32,9 +35,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURES = path.join(ROOT, 'tools', 'fixtures', 'gallery');
 const CACHE = path.join(ROOT, '.cache', 'dom-diff'); // .cache/ is git-ignored
-const DEFAULT_REF = 'edc5d05';
+const DEFAULT_REF = '01540cd2';
 const MAX_FIXTURE_BYTES = 262144;
 const MAX_ALIASES = 1000;
+const MOVED = process.argv.includes('--sheets-moved');
+const SHEETS = MOVED || process.argv.includes('--sheets');
 
 // ── serialisation (pure, used by the worker and by --selftest) ───────────────────────────────────────
 
@@ -122,6 +127,23 @@ async function selftest() {
   const shadowHost = doc.createElement('div');
   shadowHost.attachShadow({ mode: 'open' }).innerHTML = '<span>in</span>';
   const s = serialise(shadowHost).join('\n');
+  const sheetCases = [
+    ['sheet: whitespace around , > { } ; and after : is not a difference', canonCss('.a ,  .b > .c {\n color:  red;\n}') === canonCss('.a,.b>.c{color:red}'), true],
+    ['sheet: 0.5 equals .5', canonCss('a{opacity:0.5}') === canonCss('a{opacity:.5}'), true],
+    ['sheet: 10.5 is not .5', canonCss('a{top:10.5px}') === canonCss('a{top:1.5px}'), false],
+    ['sheet: a descendant space is a difference', canonCss('.a .b{top:0}') === canonCss('.a.b{top:0}'), false],
+    ['sheet: a space between two values is a difference', canonCss('a{margin:1px 2px}') === canonCss('a{margin:1px2px}'), false],
+    ['sheet: string text is a difference', canonCss('a{content:"a  b"}') === canonCss('a{content:"a b"}'), false],
+    ['sheet-moved: a rule moved to a second sheet is not a difference', sortedRules(['.a{top:0}.b{left:0}']).join() === sortedRules(['.b{left:0}', '.a{top:0}']).join(), true],
+    ['sheet-moved: a dropped rule is a difference', sortedRules(['.a{top:0}.b{left:0}']).join() === sortedRules(['.a{top:0}']).join(), false],
+    ['sheet-moved: a rule listed twice is a difference', sortedRules(['.a{top:0}']).join() === sortedRules(['.a{top:0}', '.a{top:0}']).join(), false],
+    ['sheet: a changed value is a difference', canonCss('a{color:red}') === canonCss('a{color:blue}'), false],
+  ];
+  for (const [name, got, want] of sheetCases) {
+    const ok = got === want;
+    if (!ok) bad++;
+    console.log(`${ok ? 'ok  ' : 'FAIL'} ${name}`);
+  }
   const okShadow = s.includes('#shadow-root') && s.includes('<span>');
   if (!okShadow) bad++;
   console.log(`${okShadow ? 'ok  ' : 'FAIL'} shadow root is serialised`);
@@ -335,7 +357,9 @@ function installDom(win) {
       Object.defineProperty(globalThis, n, {
         configurable: true,
         get: () => (typeof win[n] === 'function' && !/^[A-Z]/.test(n) ? win[n].bind(win) : win[n]),
-        set: (v) => Object.defineProperty(globalThis, n, { value: v, configurable: true, writable: true }),
+        set: (v) => {
+          Object.defineProperty(globalThis, n, { value: v, configurable: true, writable: true });
+        },
       });
     } catch {
       // read-only host property: leave the Node one
@@ -349,6 +373,67 @@ function installDom(win) {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Sheet normalisation (only with --sheets, written here and nowhere else): comments go; whitespace runs become one
+ * space; whitespace around { } ; , > and after : is insignificant in CSS and goes; a last ; before } goes; the zero
+ * before a decimal point goes (0.5 equals .5). Quoted strings and url(...) are compared byte for byte.
+ */
+const CSS_TOKEN = /(\/\*[\s\S]*?\*\/|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|url\([^)]*\))/;
+export function canonCss(text) {
+  const segs = [];
+  text.split(CSS_TOKEN).forEach((piece, i) => {
+    const code = i % 2 === 0 || piece.startsWith('/*');
+    const t = i % 2 && piece.startsWith('/*') ? ' ' : piece;
+    if (code && segs.length && segs[segs.length - 1].code) segs[segs.length - 1].text += t;
+    else segs.push({ code, text: t });
+  });
+  return segs
+    .map((g) =>
+      g.code
+        ? g.text
+            .replace(/\s+/g, ' ')
+            .replace(/\s*([{};,>])\s*/g, '$1')
+            .replace(/:\s+/g, ':')
+            .replace(/;}/g, '}')
+            .replace(/(^|[^\d.])0\.(\d)/g, '$1.$2')
+        : g.text,
+    )
+    .join('')
+    .trim();
+}
+
+// the text each sheet was given: happy-dom's own rule parser drops some multi-line selectors, a browser does not
+const SHEET_TEXT = new WeakMap();
+
+/** The rules of several sheet texts as one sorted list: a rule moved from one sheet to another keeps its place in it. */
+export const sortedRules = (texts) => texts.flatMap((t) => canonCss(t).split(/(?<=})/)).filter(Boolean).sort();
+
+/**
+ * The adopted stylesheets of a card and of every element below it, one line per rule (the text given to the sheet), in tree
+ * order. The shadow-tree serialisation does not show them. Only taken with --sheets.
+ */
+export function collectSheets(root, out = [], merged = MOVED) {
+  const visit = (node, label) => {
+    const sheets = node.adoptedStyleSheets ?? [];
+    if (merged && sheets.length) {
+      out.push(`${label} sheet 0`);
+      for (const r of sortedRules(sheets.map((sheet) => SHEET_TEXT.get(sheet) ?? ''))) out.push(`  ${r}`);
+    } else {
+      sheets.forEach((sheet, si) => {
+        out.push(`${label} sheet ${si}`);
+        for (const r of canonCss(SHEET_TEXT.get(sheet) ?? '').split(/(?<=})/)) out.push(`  ${r}`);
+      });
+    }
+    for (const c of node.children ?? []) walk(c, `${label}>${c.localName}`);
+  };
+  const walk = (el, label) => {
+    if (el.shadowRoot) visit(el.shadowRoot, `${label}#shadow`);
+    for (const c of el.children ?? []) walk(c, `${label}>${c.localName}`);
+  };
+  walk(root, root.localName);
+  return out.join('\n');
+}
 
 async function renderOne(el, hass, config) {
   el.setConfig(config);
@@ -374,6 +459,16 @@ async function worker(distDir, outFile, only) {
   const { Window } = await import('happy-dom');
   const win = new Window({ url: 'http://localhost:8123/', width: 1024, height: 768, settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true, handleDisabledFileLoadingAsSuccess: true } });
   installDom(win);
+  if (SHEETS) {
+    const proto = win.CSSStyleSheet.prototype;
+    for (const m of ['replaceSync', 'replace']) {
+      const orig = proto[m];
+      proto[m] = function (text) {
+        SHEET_TEXT.set(this, String(text));
+        return orig.call(this, text);
+      };
+    }
+  }
   const origErr = console.error;
   const origInfo = console.info;
   const origWarn = console.warn;
@@ -385,7 +480,9 @@ async function worker(distDir, outFile, only) {
   const Card = customElements.get('magic-card');
   if (!Card) throw new Error('magic-card was not registered by the entry');
   const results = {};
-  for (const f of fixtureFiles(only)) {
+  // --sheets-moved renders every fixture twice and keeps the second: a card root holds the sheets of every chunk the page has loaded, so no card depends on which fixture ran first
+  const fixtureList = fixtureFiles(only);
+  for (const f of MOVED ? [...fixtureList, ...fixtureList] : fixtureList) {
     const id = f.slice(0, 3);
     try {
       const config = await loadYaml(path.join(FIXTURES, f));
@@ -394,7 +491,8 @@ async function worker(distDir, outFile, only) {
       const { text, settled } = await renderOne(el, hass, config);
       el.remove();
       await sleep(5);
-      results[id] = { text, settled, nodes: text.split('\n').length };
+      const sheets = SHEETS ? collectSheets(el) : null;
+      results[id] = { text, settled, nodes: text.split('\n').length, sheets };
     } catch (e) {
       results[id] = { error: String(e && e.stack ? e.stack : e).slice(0, 1500) };
     }
@@ -410,6 +508,8 @@ function runWorker(distDir, label, only) {
   mkdirSync(CACHE, { recursive: true });
   const out = path.join(CACHE, `render-${label}-${process.pid}.json`);
   const args = [fileURLToPath(import.meta.url), '--worker', distDir, out];
+  if (MOVED) args.push('--sheets-moved');
+  else if (SHEETS) args.push('--sheets');
   if (only) args.push('--only', only.join(','));
   const r = spawnSync(process.execPath, args, { encoding: 'utf8', maxBuffer: 1 << 28, timeout: 15 * 60 * 1000 });
   if (r.status !== 0 || !existsSync(out)) {
@@ -433,7 +533,8 @@ async function main() {
 
   const only = arg('--only')?.split(',') ?? null;
   const rev = arg('--ref') ?? DEFAULT_REF;
-  const ref = buildFromArchive(rev);
+  const refDist = arg('--ref-dist');
+  const ref = refDist ? { dist: path.resolve(refDist), sha: 'ref-dist'.padEnd(12, '-') } : buildFromArchive(rev);
   let currentDist;
   let currentLabel;
   if (process.argv.includes('--build-head')) {
@@ -446,7 +547,7 @@ async function main() {
   }
   if (!existsSync(path.join(currentDist, 'magic-card.js'))) throw new Error(`no magic-card.js in ${currentDist}`);
 
-  console.log(`reference: ${rev} (${ref.sha.slice(0, 12)})  ${ref.dist}`);
+  console.log(refDist ? `reference: ${ref.dist}` : `reference: ${rev} (${ref.sha.slice(0, 12)})  ${ref.dist}`);
   console.log(`current:   ${currentLabel}`);
   const cur = runWorker(currentDist, 'current', only);
   const reference = runWorker(ref.dist, 'reference', only);
@@ -467,21 +568,25 @@ async function main() {
       if (r.error) failures.push(`${id} (${label}): render error: ${r.error.split('\n')[0]}`);
       else if (!r.settled) failures.push(`${id} (${label}): did not settle`);
       else if (r.nodes < 4) failures.push(`${id} (${label}): empty render (${r.nodes} lines)`);
+      else if (SHEETS && !(r.sheets ?? '').includes('sheet 0')) failures.push(`${id} (${label}): no stylesheet captured`);
     }
     if (a.error || b.error) continue;
     if (dump) {
       for (const [label, r] of [['current', a], ['reference', b]]) {
         mkdirSync(path.join(dump, label), { recursive: true });
         writeFileSync(path.join(dump, label, `${id}.txt`), r.text + '\n');
+        if (SHEETS) writeFileSync(path.join(dump, label, `${id}.sheets.txt`), (r.sheets ?? '') + '\n');
       }
     }
-    if (a.text === b.text) identical++;
+    if (SHEETS && a.sheets !== b.sheets) {
+      diffs.push({ id, ...firstDifference(a.sheets ?? '', b.sheets ?? ''), sheets: true });
+    } else if (a.text === b.text) identical++;
     else diffs.push({ id, ...firstDifference(a.text, b.text) });
   }
   const totalLines = ids.reduce((n, id) => n + (cur.results[id]?.nodes ?? 0), 0);
   console.log(`fixtures: ${ids.length}  identical: ${identical}  different: ${diffs.length}  failed: ${failures.length}  (${totalLines} serialised lines in current)`);
   for (const d of diffs.slice(0, 20)) {
-    console.log(`\nDIFF ${d.id} first difference at line ${d.line}`);
+    console.log(`\nDIFF ${d.id}${d.sheets ? ' (stylesheets)' : ''} first difference at line ${d.line}`);
     console.log('  current:\n    ' + d.current.join('\n    '));
     console.log('  reference:\n    ' + d.reference.join('\n    '));
   }

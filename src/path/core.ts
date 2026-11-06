@@ -1,9 +1,5 @@
-/*
- * Path model, runtime-safe part (contract path-model 1.0.0, src/contracts/path-model.ts).
- * Pure: no DOM, no lit. One parser for every SVG path command, the outline maths the shapes and
- * rings use (restart, reverse, flatten, nearest) and the cubic maths the icon morphs use.
- * The editor-only parts live in edit.ts, tidy.ts and draw.ts and are never imported from here.
- */
+// Path model, runtime-safe part. Pure: one parser for every SVG path command, the outline maths
+// for shapes and rings, and the cubic maths for icon morphs. Editor-only parts never import from here.
 import type { Box, Cubic, PathData, Pt, Seg, SubPath } from '../contracts/path-model';
 
 export type { Box, Cubic, PathData, Pt, Seg, SubPath };

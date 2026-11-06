@@ -1,10 +1,8 @@
 import type { LayerAnchor, LayerBlend } from './layer-placement';
 
-/*
- * layer-placement, the names magic-card.js needs at run time. They sit in this file, not in
- * layer-placement.ts, because the entry may import only *.needs.ts of a contract (see
- * tools/check-entry-graph.mjs); layer-placement.ts re-exports them. Type-only imports.
- */
+/** layer-placement, the names magic-card.js needs at run time. They sit in this file, not in layer-placement.ts, because
+ * the entry may import only *.needs.ts of a contract (see tools/check-entry-graph.mjs); layer-placement.ts re-exports
+ * them. Type-only imports. */
 
 export const LAYER_ANCHORS: readonly LayerAnchor[] = [
   'top-left', 'top', 'top-right', 'left', 'center', 'right', 'bottom-left', 'bottom', 'bottom-right',

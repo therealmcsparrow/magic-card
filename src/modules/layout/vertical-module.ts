@@ -11,8 +11,8 @@ import { lm } from '../../i18n/labels/mark';
 class VerticalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'vertical',
-    name: lm('Vertical'),
-    description: lm('Arrange child modules in a column'),
+    name: lm('labels.vertical-module.vertical'),
+    description: lm('labels.vertical-module.arrange-child-modules-in-a-column'),
     category: 'layout',
     icon: 'mdi:arrow-split-horizontal',
   };
@@ -35,7 +35,7 @@ class VerticalModule extends BaseMagicModule {
     return html`
       <div class="mc-module mc-vertical" data-mc-layers=${laid?.layered ? '' : nothing}
         style="gap:${c.gap || '8px'}; align-items:${c.align || 'stretch'}">
-        ${laid ? laid.content : renderEmptySlot(t('Empty column'))}
+        ${laid ? laid.content : renderEmptySlot(t('card.vertical-module.empty-column'))}
       </div>
     `;
   }

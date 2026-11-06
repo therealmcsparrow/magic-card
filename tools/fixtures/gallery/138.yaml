@@ -1,0 +1,25 @@
+# Connection lost: a living room reading that says so when Home Assistant cannot be reached for fifteen seconds.
+# Entities: sensor.living_room_temperature
+# gallery: width=380
+type: custom:magic-card
+name: Connection lost
+border_radius: 22px
+padding: 40px 20px 20px
+rows:
+  - id: main
+    columns:
+      - modules:
+          - type: vertical
+            gap: 6px
+            align: center
+            justify: center
+            modules:
+              - type: text
+                text: Living room
+                design: { font_size: 13px, text_transform: uppercase, letter_spacing: 2px }
+              - type: info
+                entity: sensor.living_room_temperature
+                quiet_time: "1:00:00"
+                show_name: false
+                show_unit: true
+                design: { font_size: 44px, font_weight: "300" }

@@ -1,10 +1,7 @@
 import type { LazyChunk } from '../contracts/lazy-module';
 import type { NeedSvgImage } from '../contracts/svg-image';
 
-/*
- * The svg-image chunk as the card entry sees it. The chunk table (src/utils/lazy-chunks.ts) fills the slot; a bundle
- * without the table leaves it empty and nothing loads.
- */
+/** The svg-image chunk as the card entry sees it; the chunk table fills the slot. */
 
 let chunk: Pick<LazyChunk, 'load'> | undefined;
 

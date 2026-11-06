@@ -1,52 +1,6 @@
-/*
- * Contract: Magic Card Utils shared templates, read side for cards. Version 1.0.0.
- * Python side of record: magic-card-utils custom_components/magic_card_utils/templates_contract.py
- * (same version; this file mirrors it).
- *
- * Two parts:
- * 1. WebSocket commands (MCU websocket.py).
- *    Admin only, unchanged (editor template picker, studio canvas, MCU panel):
- *      magic_card_utils/get_templates       {}  -> { templates: { [name]: StoredTemplate & { linked_cards } } }
- *      magic_card_utils/subscribe_templates {}  -> events { templates } (full state at once, then on change)
- *      magic_card_utils/save_template       { name, template, card_type?, old_name? } -> { success: true }
- *      magic_card_utils/delete_template     { name } -> { success: true }
- *    Any authenticated user (1.0.0):
- *      magic_card_utils/template_get        { name } -> { template: TemplateContent | null }
- *      magic_card_utils/subscribe_template  { name } -> events TemplateEvent (subscribeMessage); the first
- *                                            event comes at once with the current state ('saved', or
- *                                            'deleted' when the name doesn't exist), then one per change.
- *    TemplateContent carries config, card_type?, last_updated? only: never linked_cards or anything
- *    from the dashboard scan. Rename sends 'deleted' for the old name and 'saved' for the new one.
- *    Errors: invalid_format, not_loaded, unauthorized (admin commands), unknown_command (MCU before 1.0.0).
- *
- * 2. The card's template source (Magic Card Module `template-source`, src/services/template-source.ts,
- *    in the `templates` chunk, dist/magic-card-templates.js, lazy-module 1.5.0). The card element (Core) talks to it only through
- *    TemplateSource below, after the chunk has installed (src/card/templates-seam.ts).
- *    - One page-wide instance. Per HA connection and template name: one subscribe_template, shared by
- *      every card that watches that name (reference counted; the last unwatch unsubscribes).
- *    - Subscribes with resubscribe:false: the library doesn't re-send after a reconnect. On the
- *      connection's 'ready' event this module forgets each old subscription (the old socket's ids are
- *      invalid, so no unsubscribe is sent) and any subscribe still in flight, and subscribes again, so
- *      it sees a failed re-subscribe (for example MCU not loaded yet) and retries; the first event of
- *      the new subscription carries the current state again.
- *    - unknown_command on subscribe_template: legacy mode for that connection. One get_templates for
- *      the whole page (one shared promise), every name read from it; no live updates (as before).
- *      Legacy mode ends on the next 'ready' or when a slow re-probe of subscribe_template succeeds
- *      (after 5 s, doubling to at most 30 s; stops on success or the last unwatch), so a still-loading
- *      MCU settles without a reload. An old MCU costs one unknown_command per probe step.
- *      unauthorized from that call (non-admin on an old MCU) -> status 'unavailable' for every name.
- *    - Any other failure (not_loaded, dropped socket): status 'unavailable'; retried once on the
- *      connection's next 'ready' event and after TEMPLATE_RETRY_MS while it stays up.
- *    - Never calls register_card_instance / unregister_card_instance and never subscribes to the
- *      bus event magic_card_utils_template_updated (they don't exist).
- *    - At most one console.warn per page per failure kind; 'missing' is not warned (the notice says it).
- *
- * Card behaviour: status 'loading', and the time before the `templates` chunk has installed, render the card's local config.
- * A chunk that cannot load shows the 'unavailable' notice once and keeps the local config; a later load clears it.
- * 'ready' renders mergeTemplateWithOverrides(config, localConfig). 'missing' and 'unavailable'
- * render the local config plus one notice line (TEMPLATE_NOTICE), in the card namespace of i18n,
- * British ids, inside an element with role="status" so screen readers announce it once. Nothing throws.
- */
+// Contract: Magic Card Utils shared templates, read side for cards. Version 1.0.0. Python side of record:
+// magic-card-utils custom_components/magic_card_utils/templates_contract.py (same version; this file mirrors it).
+// Two parts: 1. WebSocket commands (MCU websocket.py).
 
 /** Same as MCU_TEMPLATES_CONTRACT_VERSION. */
 export const MCU_TEMPLATES_CONTRACT_VERSION = '1.0.0';

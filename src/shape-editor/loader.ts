@@ -1,10 +1,6 @@
 import { SHAPE_EDITOR_TAG } from '../contracts/svg-editor';
 
-/*
- * Loads the shape editor chunk (magic-card-shape-editor.js) for the card-editor chunk, which exposes it
- * as window.MagicCard.loadShapeEditor(). One shared promise; false on failure or after 8 s, and the next
- * call tries again.
- */
+// Loads the shape editor chunk (magic-card-shape-editor.js) for the card-editor chunk; false on failure or after 8 s.
 
 let pending: Promise<boolean> | undefined;
 const TIMEOUT_MS = 8000;

@@ -1,8 +1,5 @@
-/*
- * Colour maths of the slider looks (slider-look 1.0.0 rule 5): contrast ratios and the lifts that keep
- * the thumb, the ring and the light's own colour at 3:1. Only colours the card can read (hex, rgb())
- * are computed; a var() or a named colour keeps its CSS value and the theme decides.
- */
+// Colour maths of the slider looks: contrast ratios and the lifts that keep the thumb, ring and light colour at 3:1. Only
+// hex and rgb() are computed; var() and named colours keep their CSS value.
 export type RGB = [number, number, number];
 
 /** Surfaces a look is checked against (card background, light and dark; the tool for flows uses the same). */

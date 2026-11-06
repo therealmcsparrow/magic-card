@@ -31,14 +31,9 @@ interface Geometry {
 }
 
 /**
- * The motion path editor over the stage: an <mc-path-canvas> in overlay mode (contract path-canvas 1.1.0) with the
- * studio's own picture under it (origin cross, direction arrows, the subject at `.time`, the Start tag, a hint).
- * It sits in the stage's `canvas` slot, outside the scaled card, and maps the path's units to the screen with
- * `stage.screen`: percent paths are % of the subject's box (the stage for particles), px paths are stage px, and (0, 0)
- * is the subject's rest centre or, for particles, the stage's top left corner.
- * Pace: while a point is dragged the canvas shows the live outline and this host keeps its picture on the last
- * committed path; one `doc-change` per commit, never one per move.
- * Events: doc-change { doc, label } like every kind editor.
+ * The motion path editor over the stage: an <mc-path-canvas> in overlay mode with the studio's own picture under it
+ * (origin, direction, subject, Start tag). It sits in the `canvas` slot and maps path units through `stage.screen`. While
+ * a point drags the canvas shows the live outline; one `doc-change` { doc, label } per commit.
  */
 @customElement('mc-anim-path-host')
 export class AnimPathHost extends CanvasHost {
@@ -86,7 +81,7 @@ export class AnimPathHost extends CanvasHost {
       }
       .hint {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         top: 50%;
         transform: translate(-50%, -50%);
         margin: 0;
@@ -176,7 +171,7 @@ export class AnimPathHost extends CanvasHost {
   }
 
   protected toolsReady(): void {
-    this._announce = t('The drawing tools are ready.');
+    this._announce = t('anim-studio.path-host.the-drawing-tools-are-ready');
     this.renderRoot.querySelector<HTMLElement>('mc-path-canvas')?.focus({ preventScroll: true });
   }
 
@@ -271,7 +266,7 @@ export class AnimPathHost extends CanvasHost {
       <svg class="layer decor" aria-hidden="true">
         <path class="origin" d="M${o[0] - 6} ${o[1]}h12M${o[0]} ${o[1] - 6}v12"></path>
         ${sd && n > 1 ? svg`<path class="line" d=${sd}></path>` : nothing} ${this._arrows(g)} ${this._subject(g)}
-        ${start ? svg`<text class="tag" x=${start[0] + 10} y=${start[1] - 9}>${t('Start')}</text>` : nothing}
+        ${start ? svg`<text class="tag" x=${start[0] + 10} y=${start[1] - 9}>${t('anim-studio.path-host.start')}</text>` : nothing}
       </svg>
       ${ready
         ? html`<mc-path-canvas
@@ -288,11 +283,11 @@ export class AnimPathHost extends CanvasHost {
             .nudge=${1}
             .bigNudge=${g.step}
             .fineNudge=${0.1}
-            aria-label=${t('Motion path. Click to add points, drag to move them.')}
+            aria-label=${t('anim-studio.path-host.motion-path-click-to-add-points-drag-to')}
             @mc-path-change=${this._onChange}
           ></mc-path-canvas>`
         : nothing}
-      ${n === 0 && ready && !this.disabled ? html`<p class="hint">${t('Click to place the first point')}</p>` : n === 1 && ready && !this.disabled ? html`<p class="hint">${t('Click to add the next point')}</p>` : nothing}
+      ${n === 0 && ready && !this.disabled ? html`<p class="hint">${t('anim-studio.path-host.click-to-place-the-first-point')}</p>` : n === 1 && ready && !this.disabled ? html`<p class="hint">${t('anim-studio.path-host.click-to-add-the-next-point')}</p>` : nothing}
       ${this.renderNotice()}
       <span class="sr-only" aria-live="polite">${this._announce}</span>
     `;

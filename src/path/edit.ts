@@ -1,11 +1,5 @@
-/*
- * Path model, editor-only part (contract path-model 1.0.0): the anchor model and the edit
- * operations. Pure; every operation returns a new path and never changes its input. Never imported
- * from src/index.ts's graph (magic-card.js holds none of this).
- *
- * Adding stops at MAX_ANCHORS (canAdd, insertAt, append); every other operation takes any count,
- * so an imported path with more anchors stays editable.
- */
+// Path model, editor-only: the anchor model and edit operations. Pure; each returns a new path.
+// Only adding stops at MAX_ANCHORS, so an imported larger path stays editable.
 import type { Anchor, AnchorKind, Box, Cubic, EditPath, Pt, SubPath } from '../contracts/path-model';
 import { splitCubic, toPathString } from './core';
 

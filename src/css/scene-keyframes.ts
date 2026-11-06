@@ -1,7 +1,5 @@
-/**
- * Keyframe bodies the `lightning` and `wind-lines` animation presets share with the seasonal scenes
- * (the storm flash and the wind gusts). $i is the intensity; each user replaces it.
- */
+// Keyframe bodies the `lightning` and `wind-lines` presets share with the seasonal scenes.
+// $i is the intensity; each user replaces it.
 export const SHARED_SCENE_KEYFRAMES = {
   lightning: `
     0%, 89%, 100% { opacity: 0; }

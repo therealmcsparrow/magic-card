@@ -35,20 +35,9 @@ import {
 } from './parts-model';
 import { t, m } from '../i18n';
 
-/*
- * Icon parts on the stage (studio slot 'stage-tool'): drawn over the preview card, exactly
- * on the rigged icon. Hover highlights a part, click selects it (Shift / Ctrl / Cmd add or toggle),
- * dragging on empty stage draws a selection band (parts fully inside it); selected parts show their box and pivot, the
- * pivot drags (snaps to 0.25 icon units, Shift places freely; arrow keys nudge it). The pivot is the one the part
- * plays with: a preset's track origin while the track has one (dragging moves that), else the part's own. A selected part
- * with a motion path shows the path with draggable points (path-utils geometry, icon units from the
- * rest position). Pointer events only (mouse, pen, touch): handles are 24 px or larger.
- *
- * Geometry: the parts are the auto-split pieces of the rig's source (the same splitIcon the card
- * runtime uses). The icon's box is measured on the live preview (the rigged <mc-svg-icon> inside
- * the stage's magic-card), so it holds at any stage scale; `.stage` (subject, viewBox) is the
- * fallback when the preview cannot be reached.
- */
+// Icon parts on the stage (slot 'stage-tool'), drawn over the rigged icon: hover, click and band select; selected parts
+// show box and pivot, the pivot drags (0.25 snap, Shift free, arrows nudge) and a motion path shows draggable points.
+// Pointer events only, handles 24 px or larger. The icon box is measured on the live preview; `.stage` is the fallback.
 
 type Pt = [number, number];
 /** The icon box in the overlay's own (unscaled) px. */
@@ -336,7 +325,7 @@ export class AnimPartsOverlay extends LitElement {
     this._band = undefined;
     this._live = undefined;
     // the start again, as a final change: the shell closes the gesture and leaves no undo step
-    if (d.moved && d.kind !== 'band') emitDoc(this, d.startDoc, d.kind === 'pivot' ? t('Move pivot') : t('Move path point'));
+    if (d.moved && d.kind !== 'band') emitDoc(this, d.startDoc, d.kind === 'pivot' ? t('anim-studio.parts-overlay.move-pivot') : t('anim-studio.parts-overlay.move-path-point'));
   }
 
   /** Arrow keys nudge the pivot; a held key repeats as transient moves, one undo step on key up. */
@@ -403,7 +392,7 @@ export class AnimPartsOverlay extends LitElement {
           data-pivot=${ref}
           tabindex="0"
           role="slider"
-          aria-label=${hasTrackPivot(d, ref) ? t('Preset pivot of {name}', { name }) : t('Pivot of {name}', { name })}
+          aria-label=${hasTrackPivot(d, ref) ? t('anim-studio.parts-overlay.preset-pivot-of-name', { name }) : t('anim-studio.parts-overlay.pivot-of-name', { name })}
           aria-valuetext=${`x ${o[0].toFixed(2)}, y ${o[1].toFixed(2)}`}
           @keydown=${(e: KeyboardEvent) => this._onPivotKey(e, ref)}
         >
@@ -466,7 +455,7 @@ export class AnimPartsOverlay extends LitElement {
             viewBox=${vb.join(' ')}
             style=${`left: ${box.x}px; top: ${box.y}px; width: ${box.w}px; height: ${box.h}px`}
             role="group"
-            aria-label=${t('Icon parts on the stage')}
+            aria-label=${t('anim-studio.parts-overlay.icon-parts-on-the-stage')}
           >
             ${hits}
             ${hover ? svg`${this._partPaths(hover).map((p) => svg`<path class="hover" d=${p} style=${`stroke-width: ${2 * u}`}></path>`)}` : nothing}
@@ -580,7 +569,7 @@ export class AnimPartsOverlay extends LitElement {
 registerPanel({
   tag: 'mc-anim-parts-overlay',
   place: 'stage-tool',
-  title: m('Icon parts'),
+  title: m('anim-studio.parts-overlay.icon-parts'),
   order: 20,
   when: (doc, sel) => doc.kind === 'keyframes' && hasRig(doc) && sel.kind !== 'tool',
 });

@@ -1,10 +1,5 @@
-/*
- * Live updates (slider-look 1.0.0 rule 3, `live: true`): while a drag runs, the value goes to the
- * entity at most once per LIVE_MS (leading call at once, then the newest value each 250 ms). The drag
- * ending is renderTrack's onCommit, which always sends the final value; end() drops whatever is
- * still queued so nothing follows it. The only timer is the throttle, started by input and cleared by
- * end() / stop() (release, cancel, disconnect).
- */
+// Live updates (`live: true`): during a drag the value goes to the entity at most once per LIVE_MS (leading call, then the
+// newest value). onCommit always sends the final value; end() drops what is queued. The only timer is the throttle.
 
 /** Gap between two live calls (ms): at most 4 a second. */
 export const LIVE_MS = 250;

@@ -27,7 +27,7 @@ export const studioStyles: CSSResult[] = [
     /* the live region after the shell: at the top, not one px under it (the host would scroll by it) */
     .shell + .sr-only {
       top: 0;
-      left: 0;
+      left: 0; /* physical */
     }
     .shell {
       display: grid;
@@ -74,6 +74,7 @@ export const studioStyles: CSSResult[] = [
     .btn .chev {
       --mdc-icon-size: 16px;
       margin: 0 -4px 0 -2px;
+      margin-inline: -2px -4px;
     }
     .btn-danger {
       background: var(--error-color, #db4437);
@@ -95,6 +96,7 @@ export const studioStyles: CSSResult[] = [
     }
     .new-menu {
       right: 0;
+      inset-inline: auto 0;
       top: calc(100% + 6px);
       width: 300px;
     }
@@ -173,7 +175,7 @@ export const studioStyles: CSSResult[] = [
       gap: 2px;
     }
     .open {
-      text-align: left;
+      text-align: start;
       border: 0;
       background: transparent;
       padding: 6px 8px;
@@ -246,7 +248,7 @@ export const studioStyles: CSSResult[] = [
       align-content: start;
       gap: 4px;
       padding: 14px;
-      text-align: left;
+      text-align: start;
       border: 1px solid var(--mc-divider);
       border-radius: var(--mc-radius-lg);
       background: var(--mc-surface);
@@ -317,7 +319,7 @@ export const studioStyles: CSSResult[] = [
       min-width: 0;
       overflow: hidden;
       background: var(--mc-surface);
-      border-right: 1px solid var(--mc-divider);
+      border-inline-end: 1px solid var(--mc-divider);
     }
     .layers-head {
       display: flex;
@@ -325,6 +327,7 @@ export const studioStyles: CSSResult[] = [
       gap: 4px;
       min-height: 44px;
       padding: 4px 6px 4px 16px;
+      padding-inline: 16px 6px;
       border-bottom: 1px solid var(--mc-divider);
     }
     .layers-head h2 {
@@ -383,13 +386,14 @@ export const studioStyles: CSSResult[] = [
       width: 100%;
       min-height: 40px;
       padding: 0 8px 0 10px;
+      padding-inline: 10px 8px;
       border: 0;
       border-radius: var(--mc-radius);
       background: transparent;
       color: var(--mc-text);
       font-size: 0.8125rem;
       font-weight: 500;
-      text-align: left;
+      text-align: start;
       transition: background-color 0.15s ease-out;
     }
     .layer ha-icon {
@@ -430,7 +434,7 @@ export const studioStyles: CSSResult[] = [
       min-width: 20px;
       font-size: 0.75rem;
       font-weight: 400;
-      text-align: right;
+      text-align: end;
       color: var(--mc-text-2);
       font-variant-numeric: tabular-nums;
     }
@@ -440,6 +444,13 @@ export const studioStyles: CSSResult[] = [
       min-height: 0;
       min-width: 0;
       overflow: hidden;
+    }
+    mcas-stage {
+      direction: ltr;
+    }
+    :host([dir='rtl']) .back ha-icon,
+    :host([dir='rtl']) .ctx-back ha-icon {
+      transform: scaleX(-1);
     }
     .center.with-panel {
       grid-template-rows:
@@ -457,7 +468,7 @@ export const studioStyles: CSSResult[] = [
     .splitter::before {
       content: '';
       position: absolute;
-      left: 50%;
+      left: 50%; /* physical */
       top: 50%;
       width: 40px;
       height: 3px;
@@ -470,8 +481,8 @@ export const studioStyles: CSSResult[] = [
     .splitter::after {
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 0; /* physical */
+      right: 0; /* physical */
       top: -8px;
       bottom: -8px;
       z-index: 2;
@@ -491,7 +502,7 @@ export const studioStyles: CSSResult[] = [
       /* the containing block of the panels' absolutely placed bits (sr-only text): they scroll with it */
       position: relative;
       background: var(--mc-surface);
-      border-left: 1px solid var(--mc-divider);
+      border-inline-start: 1px solid var(--mc-divider);
       overflow-y: auto;
       overscroll-behavior: contain;
       min-height: 0;
@@ -504,6 +515,7 @@ export const studioStyles: CSSResult[] = [
       position: absolute;
       top: 0;
       right: 0;
+      inset-inline: auto 0;
       bottom: 0;
       width: min(var(--insp-w), 100%);
       z-index: 8;
@@ -512,6 +524,9 @@ export const studioStyles: CSSResult[] = [
       transition:
         transform 0.2s ease-out,
         visibility 0s linear 0.2s;
+    }
+    .workspace.slide .inspector[data-dir='rtl'] {
+      transform: translateX(-100%);
     }
     .workspace.slide.insp-open .inspector {
       transform: none;
@@ -535,6 +550,7 @@ export const studioStyles: CSSResult[] = [
       min-height: 44px;
       margin: 0 -16px;
       padding: 4px 16px 4px 8px;
+      padding-inline: 8px 16px;
       background: var(--mc-surface);
       border-bottom: 1px solid var(--mc-divider);
     }
@@ -544,7 +560,7 @@ export const studioStyles: CSSResult[] = [
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      text-align: right;
+      text-align: end;
       font-size: 0.75rem;
       color: var(--mc-text-2);
     }
@@ -568,6 +584,7 @@ export const studioStyles: CSSResult[] = [
       position: absolute;
       top: 20px;
       right: 36px;
+      inset-inline: auto 36px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -586,11 +603,12 @@ export const studioStyles: CSSResult[] = [
       position: relative;
     }
     .suffix .input {
-      padding-right: 36px;
+      padding-inline-end: 36px;
     }
     .suffix span {
       position: absolute;
       right: 12px;
+      inset-inline: auto 12px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--mc-text-2);
@@ -609,7 +627,7 @@ export const studioStyles: CSSResult[] = [
     }
     .errors ul {
       margin: 4px 0 0;
-      padding-left: 18px;
+      padding-inline-start: 18px;
     }
     .errors .mono {
       font-size: 0.75rem;
@@ -682,7 +700,7 @@ export const studioStyles: CSSResult[] = [
 
     .toast {
       position: absolute;
-      left: 50%;
+      left: 50%; /* physical */
       bottom: 24px;
       transform: translateX(-50%);
       z-index: 40;

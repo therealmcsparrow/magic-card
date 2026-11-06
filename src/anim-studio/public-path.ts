@@ -1,13 +1,5 @@
-/*
- * Lazy chunks of the studio (magic-card-icon-library.js) load next to this bundle, wherever HA
- * serves it from (/hacsfiles/magic-card/, /local/...). The bundle is an ES module (the
- * magic-card-utils panel loads it with import()), so import.meta.url is the URL of this file.
- * chunkBase turns it into the directory URL, but only when it has the page's scheme and host:
- * a chunk base from another host is refused ('') and the library shows its retry. Nothing here
- * reads document.currentScript or an error stack, which page markup or another script can influence.
- * First import of src/anim-studio/index.ts: set before anything calls import().
- * src/theme-editor/public-path.ts is a copy (the entry may not import outside its folder).
- */
+// Sets the chunk base (import.meta.url directory) so lazy studio chunks load next to this bundle; a base from another
+// scheme or host is refused (''). Set before anything calls import(). src/theme-editor/public-path.ts is a copy.
 
 /** The directory URL (no query, no hash) of `url` when it shares scheme and host with `page`, else ''. */
 export function chunkBase(url: string, page: { protocol: string; host: string }): string {

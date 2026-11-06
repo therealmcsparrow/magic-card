@@ -45,10 +45,10 @@ export class SyncIndicator extends LitElement {
         <button
           class="sync"
           type="button"
-          title=${t("Synced with the template. Click to keep a local value that won't sync.")}
+          title=${t("card-editor.sync-indicator.synced-with-the-template-click-to-keep-a")}
           @click=${this._handleClick}
         >
-          <ha-icon icon="mdi:link-variant"></ha-icon><span class="sr-only">${t('Synced with template')}</span>
+          <ha-icon icon="mdi:link-variant"></ha-icon><span class="sr-only">${t('card-editor.sync-indicator.synced-with-template')}</span>
         </button>
       `;
     }
@@ -57,11 +57,11 @@ export class SyncIndicator extends LitElement {
       <button
         class="sync is-over"
         type="button"
-        title=${t('Overridden locally. Click to re-sync from the template.')}
+        title=${t('card-editor.sync-indicator.overridden-locally-click-to-re-sync-from')}
         @click=${this._handleClick}
       >
         <ha-icon icon="mdi:link-variant-off"></ha-icon>
-        ${t('Overridden')}
+        ${t('card-editor.sync-indicator.overridden')}
       </button>
     `;
   }

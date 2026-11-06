@@ -25,7 +25,7 @@ class MarkdownModule extends BaseLazyStub {
   }
 
   hints(config: CardModule): string[] {
-    return (config as MarkdownModuleConfig).content ? [] : [t('Markdown content is required')];
+    return (config as MarkdownModuleConfig).content ? [] : [t('card.markdown-module.markdown-content-is-required')];
   }
 }
 

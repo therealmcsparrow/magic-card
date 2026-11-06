@@ -1,7 +1,4 @@
-/*
- * The colour popup's four text formats: HEXA, RGBA, HSLA and OKLCH, read and written without a regular expression
- * that can backtrack. Text longer than MAX_COLOUR is never looked at.
- */
+/* The colour popup text formats (HEXA, RGBA, HSLA, OKLCH), parsed without backtracking regexes; text over MAX_COLOUR is ignored. */
 
 export type ColourFormat = 'HEXA' | 'RGBA' | 'HSLA' | 'OKLCH';
 export const COLOUR_FORMATS: readonly ColourFormat[] = ['HEXA', 'RGBA', 'HSLA', 'OKLCH'];

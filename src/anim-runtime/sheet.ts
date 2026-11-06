@@ -1,10 +1,5 @@
-/*
- * Rules the v2 runtime writes per module wrapper (clip list overrides, binding values and the
- * bound declarations): one constructable stylesheet for the page, adopted by every shadow root
- * that needs it (the card's, and an icon's for rig targets). Without constructable stylesheets a
- * <style> per root carries the same text. The card's own templates never bind `data-mc-rt`, so the
- * key the runtime gives a wrapper survives re-renders (a re-created wrapper gets a new one).
- */
+// Rules written per module wrapper (clip overrides, binding values, bound declarations) in one constructable stylesheet
+// for the page, adopted by each shadow root that needs it (a <style> per root as the fallback).
 
 const rules = new Map<string, string>();
 let sheet: CSSStyleSheet | undefined;
