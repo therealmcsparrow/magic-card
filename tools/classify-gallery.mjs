@@ -6,7 +6,7 @@
 //   node tools/classify-gallery.mjs --check            classify, compare with the committed file, exit 1 on any difference
 //   node tools/classify-gallery.mjs --scan             only run the token and personal-data scan
 //   node tools/classify-gallery.mjs --explain NNN      print every feature found in one fixture, with its path
-//   node tools/classify-gallery.mjs --import <dir>     copy <dir>/<n>-<slug>.yaml (n = 1..137) to fixtures/gallery/NNN.yaml, then classify
+//   node tools/classify-gallery.mjs --import <dir>     copy <dir>/<n>-<slug>.yaml (n = 1..140) to fixtures/gallery/NNN.yaml, then classify
 //
 // The output has no timestamps and no absolute paths: the same inputs give the same bytes.
 // Every run scans first and refuses to classify a fixture the scan flags.
@@ -21,7 +21,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURES = join(ROOT, 'tools', 'fixtures', 'gallery');
 const KEYS_FILE = join(ROOT, 'tools', 'plain-keys.json');
 const OUT_FILE = join(FIXTURES, 'classification.json');
-const EXPECTED_COUNT = 137;
+const EXPECTED_COUNT = 140;
 const MAX_FIXTURE_BYTES = 262144; // refuse above this
 const MAX_ALIASES = 1000; // bound on YAML aliases (alias-expansion limit)
 
@@ -81,7 +81,6 @@ export function scanText(text) {
 
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const sha256 = (data) => createHash('sha256').update(data).digest('hex');
-const loadKeys = () => JSON.parse(readFileSync(KEYS_FILE, 'utf8'));
 
 function fixtureFiles() {
   return readdirSync(FIXTURES)
@@ -135,7 +134,6 @@ export function classifyConfig(config, keys) {
   const nodeKeys = set(keys.layout_node);
   const commonKeys = set(keys.module_common);
   const designCss = set(keys.design.css);
-  const designStruct = set(keys.design.structure);
   const ruleDesignKeys = set(keys.design.conditional_rule);
   const displayKeys = set(keys.display.keys);
   const condKeys = set(keys.display.condition_keys);
@@ -234,6 +232,9 @@ export function classifyConfig(config, keys) {
       else if (!bgKeys.has(k)) unknown(`${path}.${k}`, `background_layers.${k}`);
     }
     if (typeof layer.entity === 'string' && layer.entity.startsWith('camera.') && bk.camera_entity_is_feature) feature(`${path}.entity`, 'layer-camera', F.layer_fx);
+    // a library image reference (image, a state value): drawn by the svg-image chunk, which the render starts
+    const refs = [['image', layer.image], ...(isObj(layer.states) ? Object.entries(layer.states).map(([k, v]) => [`states.${k}`, v]) : [])];
+    for (const [k, v] of refs) if (typeof v === 'string' && v.startsWith(bk.library_image_prefix)) feature(`${path}.${k}`, 'layer-library-image', F.library_image);
   }
 
   function bgLayers(path, list) {
@@ -405,7 +406,7 @@ function build() {
     try {
       config = parseYaml(text, f);
     } catch (e) {
-      throw new Error(`${f}: ${e.message}`);
+      throw new Error(`${f}: ${e.message}`, { cause: e });
     }
     const r = classifyConfig(config, keys);
     explain[id] = r.found;

@@ -30,7 +30,7 @@ export function closeDialog(root: ParentNode): void {
  * submit button in the footer and Enter in a field both reach it.
  */
 export function dialog(title: string, body: unknown, foot: unknown, close: () => void, submit?: (e: Event) => void, size: 's' | 'm' | 'l' | 'xl' = 'm'): TemplateResult {
-  const win = html`<mc-ui-window variant="sheet" size=${size} heading=${title} closeLabel=${t('Close')} movable resizable maximizable moveLabel=${t('Move window')} resizeLabel=${t('Resize window')} maximizeLabel=${t('Maximise')} restoreLabel=${t('Restore size')} @mc-window-close=${close}>
+  const win = html`<mc-ui-window variant="sheet" size=${size} heading=${title} closeLabel=${t('theme-editor.dialogs.close')} movable resizable maximizable moveLabel=${t('theme-editor.dialogs.move-window')} resizeLabel=${t('theme-editor.dialogs.resize-window')} maximizeLabel=${t('theme-editor.dialogs.maximise')} restoreLabel=${t('theme-editor.dialogs.restore-size')} @mc-window-close=${close}>
     <div class="dlg">${body}</div>
     ${foot === nothing ? nothing : html`<div slot="footer" class="foot">${foot}</div>`}
   </mc-ui-window>`;

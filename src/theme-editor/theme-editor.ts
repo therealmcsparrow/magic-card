@@ -22,11 +22,8 @@ type ListPhase = 'loading' | 'ready' | 'error';
 const NOTICE_MS = 10_000;
 
 /**
- * <magic-card-theme-editor>: the theme editor host (Contract theme-editor 1.0.0). The panel sets
- * `hass`, `narrow`, `backend` and `selectedName`. This shell waits for the backend, asks
- * magic-card.js for the editor chunk (mc-color-picker, mc-unit-field: window.MagicCard.loadEditor,
- * module-editor 1.0.0), then shows the theme list or one theme in the editor. It keeps the open
- * draft when the panel detaches it (tab switch) and mirrors the open theme through `mc-theme-select`.
+ * <magic-card-theme-editor>: the theme editor host. The panel sets `hass`, `narrow`, `backend` and `selectedName`.
+ * Loads the editor chunk, shows the list or one theme, keeps the draft across detach, mirrors the open theme through `mc-theme-select`.
  */
 export class MagicCardThemeEditor extends LitElement implements ThemeEditorElement {
   static readonly contractVersion = THEME_EDITOR_CONTRACT_VERSION;
@@ -133,7 +130,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       void this._openSelected();
       void this._loadMine();
     } catch (e) {
-      this._listError = (e as ThemeBackendError).code === 'unauthorized' ? t('Only administrators can edit themes.') : ((e as Error).message ?? '');
+      this._listError = (e as ThemeBackendError).code === 'unauthorized' ? t('theme-editor.theme-editor.only-administrators-can-edit-themes') : ((e as Error).message ?? '');
       this._listPhase = 'error';
     }
   }
@@ -162,9 +159,9 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       this._files = r.files ?? this._files;
       this._loaded = r.loaded ?? this._loaded;
       this._include = r.include;
-      this._checkResult = r.include?.state === 'ok' ? t('Found it. You can save themes now.') : t('Still not found. Restart Home Assistant if you have just added the lines.');
+      this._checkResult = r.include?.state === 'ok' ? t('theme-editor.theme-editor.found-it-you-can-save-themes-now') : t('theme-editor.theme-editor.still-not-found-restart-home-assistant');
     } catch (e) {
-      this._checkResult = t('The check failed. {reason}', { reason: (e as Error).message ?? '' }).trim();
+      this._checkResult = t('theme-editor.theme-editor.the-check-failed-reason', { reason: (e as Error).message ?? '' }).trim();
     }
     this._checking = false;
   }
@@ -192,7 +189,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       fire(this, 'mc-theme-select', { name: r.name });
     } catch (e) {
       this.selectedName = null;
-      this._say(t('Could not open {name}. {reason}', { name, reason: (e as Error).message ?? '' }).trim());
+      this._say(t('theme-editor.theme-editor.could-not-open-name-reason', { name, reason: (e as Error).message ?? '' }).trim());
       fire(this, 'mc-theme-select', { name: null });
     }
   }
@@ -240,7 +237,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
           if (this._draft) this._draft.name = e.detail.name;
         }}
         @mcte-deleted=${(e: CustomEvent) => {
-          this._say(t('Deleted {name}.', { name: e.detail.name }));
+          this._say(t('theme-editor.theme-editor.deleted-name', { name: e.detail.name }));
           this._close();
         }}
         @mcte-recheck=${() => void this._recheck()}
@@ -262,7 +259,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       @mcte-reload=${() => void this._loadList()}
       @mcte-recheck=${() => void this._recheck()}
       @mcte-deleted=${(e: CustomEvent) => {
-        this._say(t('Deleted {name}.', { name: e.detail.name }));
+        this._say(t('theme-editor.theme-editor.deleted-name', { name: e.detail.name }));
         void this._loadList();
       }}
     ></mcte-start-view>`;
@@ -271,16 +268,16 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   protected render(): TemplateResult {
     switch (this._phase) {
       case 'waiting':
-        return html`<p class="note" role="status">${t('Waiting for Home Assistant to connect...')}</p>`;
+        return html`<p class="note" role="status">${t('theme-editor.theme-editor.waiting-for-home-assistant-to-connect')}</p>`;
       case 'loading':
-        return html`<p class="note" role="status">${t('Loading the theme editor...')}</p>`;
+        return html`<p class="note" role="status">${t('theme-editor.theme-editor.loading-the-theme-editor')}</p>`;
       case 'failed':
         return html`<div class="note" role="alert">
-          <p>${t('The theme editor could not load. Reload the page.')}</p>
+          <p>${t('theme-editor.theme-editor.the-theme-editor-could-not-load-reload')}</p>
           <details>
-            <summary>${t('Details')}</summary>
+            <summary>${t('theme-editor.theme-editor.details')}</summary>
             <p>
-              ${t('The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.')}
+              ${t('theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not')}
             </p>
           </details>
         </div>`;

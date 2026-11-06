@@ -1,0 +1,3152 @@
+{
+  "labels.animation-conflicts.filter": {
+    "text": "filter",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names the CSS filter property (blur, brightness). Keep it lower case and a noun.",
+    "max": 10
+  },
+  "labels.animation-conflicts.glow": {
+    "text": "glow",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names the soft light around an element. Keep it lower case.",
+    "max": 10
+  },
+  "labels.animation-conflicts.opacity": {
+    "text": "opacity",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names how see-through an element is. Keep it lower case.",
+    "max": 15
+  },
+  "labels.animation-conflicts.position": {
+    "text": "position",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names where an element sits (it moves). Keep it lower case.",
+    "max": 15
+  },
+  "labels.animation-conflicts.rotation": {
+    "text": "rotation",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names turning an element around its centre. Keep it lower case.",
+    "max": 15
+  },
+  "labels.animation-conflicts.scale": {
+    "text": "scale",
+    "note": "Lower-case noun filling {what} in the warning 'Overrides {name}: both animate the {what}'. It names making an element bigger or smaller, not a measuring scale.",
+    "max": 10
+  },
+  "labels.animation-list.overrides-name-both-animate-the-what": {
+    "text": "Overrides {name}: both animate the {what}",
+    "note": "Warning under an animation in the list. {name} is the name of an earlier animation, such as Pulse; {what} is the visual property both animate, such as scale, glow or rotation.",
+    "max": 70,
+    "vars": {
+      "name": "The value that replaces name in the text.",
+      "what": "The value that replaces what in the text."
+    }
+  },
+  "labels.animation-presets.3d-rotate": {
+    "text": "3D rotate",
+    "note": "Name of an animation preset in the picker: the element turns in three dimensions. Keep it short.",
+    "max": 15
+  },
+  "labels.animation-presets.angle": {
+    "text": "Angle",
+    "note": "Field label for a preset setting: the angle in degrees the effect turns or tilts by.",
+    "max": 10
+  },
+  "labels.animation-presets.aura": {
+    "text": "Aura",
+    "note": "Name of an animation preset in the picker: a soft coloured halo around the element.",
+    "max": 10
+  },
+  "labels.animation-presets.aurora": {
+    "text": "Aurora",
+    "note": "Name of a background animation preset: slow shifting bands of colour like the northern lights.",
+    "max": 15
+  },
+  "labels.animation-presets.autumn": {
+    "text": "Autumn",
+    "note": "Name of a seasonal animation preset (season, not the verb): warm autumn colours and falling leaves.",
+    "max": 10
+  },
+  "labels.animation-presets.backgrounds": {
+    "text": "Backgrounds",
+    "note": "Group heading in the animation preset picker, plural: presets that animate the card or module background.",
+    "max": 20
+  },
+  "labels.animation-presets.bars": {
+    "text": "Bars",
+    "note": "Name of an animation preset in the picker, plural: vertical bars that rise and fall like a level meter.",
+    "max": 10
+  },
+  "labels.animation-presets.beam-width": {
+    "text": "Beam width",
+    "note": "Field label for a preset setting: how wide the light beam is (for example in the spotlight or radar sweep).",
+    "max": 20
+  },
+  "labels.animation-presets.blink": {
+    "text": "Blink",
+    "note": "Name of an animation preset in the picker: the element switches on and off sharply.",
+    "max": 10
+  },
+  "labels.animation-presets.bokeh": {
+    "text": "Bokeh",
+    "note": "Name of a background animation preset: soft out-of-focus discs of light drifting about (photography term).",
+    "max": 10
+  },
+  "labels.animation-presets.border-snake": {
+    "text": "Border snake",
+    "note": "Name of a border animation preset: a short bright line that travels around the border.",
+    "max": 20
+  },
+  "labels.animation-presets.border-width": {
+    "text": "Border width",
+    "note": "Field label for a preset setting: thickness of the animated border line.",
+    "max": 20
+  },
+  "labels.animation-presets.borders": {
+    "text": "Borders",
+    "note": "Group heading in the animation preset picker, plural: presets that animate the border.",
+    "max": 15
+  },
+  "labels.animation-presets.bounce": {
+    "text": "Bounce",
+    "note": "Name of an animation preset in the picker: the element hops up and down like a ball.",
+    "max": 10
+  },
+  "labels.animation-presets.breathe": {
+    "text": "Breathe",
+    "note": "Name of an animation preset in the picker (verb): the element slowly grows and shrinks like breathing.",
+    "max": 15
+  },
+  "labels.animation-presets.breathing-border": {
+    "text": "Breathing border",
+    "note": "Name of a border animation preset: the border slowly brightens and fades in a steady rhythm.",
+    "max": 30
+  },
+  "labels.animation-presets.brightness": {
+    "text": "Brightness",
+    "note": "Field label for a preset setting: how much brighter the element gets at the peak of the effect.",
+    "max": 20
+  },
+  "labels.animation-presets.bubbles": {
+    "text": "Bubbles",
+    "note": "Name of a background animation preset, plural: bubbles rising through the background.",
+    "max": 15
+  },
+  "labels.animation-presets.charging-stripes": {
+    "text": "Charging stripes",
+    "note": "Name of a bar animation preset: diagonal stripes move along a bar like a battery charging.",
+    "max": 30
+  },
+  "labels.animation-presets.christmas": {
+    "text": "Christmas",
+    "note": "Name of a seasonal animation preset: festive Christmas decoration. Use the usual local name of the holiday.",
+    "max": 15
+  },
+  "labels.animation-presets.clouds": {
+    "text": "Clouds",
+    "note": "Name of a weather-style animation preset, plural: clouds float across the background.",
+    "max": 10
+  },
+  "labels.animation-presets.clouds-drift": {
+    "text": "Clouds drift",
+    "note": "Name of a background animation preset: clouds drifting slowly sideways ('drift' is a verb here).",
+    "max": 20
+  },
+  "labels.animation-presets.cloudy": {
+    "text": "Cloudy",
+    "note": "Name of a weather scene preset (adjective): an overcast sky. Matches the weather condition of the same name.",
+    "max": 10
+  },
+  "labels.animation-presets.coin-spin": {
+    "text": "Coin spin",
+    "note": "Name of an animation preset: the element spins on its vertical axis like a coin.",
+    "max": 15
+  },
+  "labels.animation-presets.colour-cycle-background": {
+    "text": "Colour cycle background",
+    "note": "Name of a background preset: the background fades through a cycle of colours.",
+    "max": 40
+  },
+  "labels.animation-presets.confetti": {
+    "text": "Confetti",
+    "note": "Name of a celebration particle preset: coloured paper pieces falling.",
+    "max": 15
+  },
+  "labels.animation-presets.conic-border-spin": {
+    "text": "Conic border spin",
+    "note": "Name of a border preset: a cone-shaped colour sweep (conic gradient) rotates around the border.",
+    "max": 30
+  },
+  "labels.animation-presets.day-and-night": {
+    "text": "Day and night",
+    "note": "Name of a scene preset: the background shifts between a day sky and a night sky.",
+    "max": 25
+  },
+  "labels.animation-presets.density": {
+    "text": "Density",
+    "note": "Field label for a preset setting: how many particles or drops are on screen at once.",
+    "max": 15
+  },
+  "labels.animation-presets.depth": {
+    "text": "Depth",
+    "note": "Field label for a preset setting: how far the effect appears to move in or out (3D depth).",
+    "max": 10
+  },
+  "labels.animation-presets.dim": {
+    "text": "Dim",
+    "note": "Name of an animation preset (verb): the element fades to a darker level and back.",
+    "max": 10
+  },
+  "labels.animation-presets.distance": {
+    "text": "Distance",
+    "note": "Field label for a preset setting: how far the element moves, in pixels.",
+    "max": 15
+  },
+  "labels.animation-presets.dot-size": {
+    "text": "Dot size",
+    "note": "Field label for a preset setting: the diameter of each dot.",
+    "max": 15
+  },
+  "labels.animation-presets.dots": {
+    "text": "Dots",
+    "note": "Name of an animation preset, plural: small dots that move or pulse.",
+    "max": 10
+  },
+  "labels.animation-presets.drip": {
+    "text": "Drip",
+    "note": "Name of an animation preset: drops run down from the top edge.",
+    "max": 10
+  },
+  "labels.animation-presets.dusk-glow": {
+    "text": "Dusk glow",
+    "note": "Name of a scene preset: a warm evening glow at twilight.",
+    "max": 15
+  },
+  "labels.animation-presets.ease": {
+    "text": "Ease",
+    "note": "Option in the timing (easing) list: the default CSS ease curve. Keep the CSS term.",
+    "max": 10
+  },
+  "labels.animation-presets.ease-in": {
+    "text": "Ease in",
+    "note": "Option in the timing (easing) list: starts slowly, then speeds up. Not an instruction to the user.",
+    "max": 15
+  },
+  "labels.animation-presets.ease-in-out": {
+    "text": "Ease in-out",
+    "note": "Option in the timing (easing) list: slow at both start and end, faster in the middle.",
+    "max": 20
+  },
+  "labels.animation-presets.ease-out": {
+    "text": "Ease out",
+    "note": "Option in the timing (easing) list: starts fast, then slows down at the end.",
+    "max": 15
+  },
+  "labels.animation-presets.easter": {
+    "text": "Easter",
+    "note": "Name of a seasonal animation preset for the Easter holiday.",
+    "max": 10
+  },
+  "labels.animation-presets.equalizer-bars": {
+    "text": "Equalizer bars",
+    "note": "Name of an animation preset: bars jump up and down like an audio equaliser.",
+    "max": 25
+  },
+  "labels.animation-presets.fade": {
+    "text": "Fade",
+    "note": "Name of an animation preset (verb): the element fades in and out. Also appears as a tab content option.",
+    "max": 10
+  },
+  "labels.animation-presets.fade-pulse": {
+    "text": "Fade pulse",
+    "note": "Name of an animation preset: opacity pulses gently up and down.",
+    "max": 20
+  },
+  "labels.animation-presets.falling-leaves": {
+    "text": "Falling leaves",
+    "note": "Name of a particle preset: leaves drifting down the background.",
+    "max": 25
+  },
+  "labels.animation-presets.fast-spin": {
+    "text": "Fast spin",
+    "note": "Name of an animation preset: the element rotates quickly, for example an icon on a fan.",
+    "max": 15
+  },
+  "labels.animation-presets.fill-level": {
+    "text": "Fill level",
+    "note": "Name of a bar preset: a liquid-like fill that follows the bar value (noun).",
+    "max": 20
+  },
+  "labels.animation-presets.fireflies": {
+    "text": "Fireflies",
+    "note": "Name of a particle preset, plural: tiny glowing lights drifting and blinking (the insects).",
+    "max": 15
+  },
+  "labels.animation-presets.fireworks": {
+    "text": "Fireworks",
+    "note": "Name of a celebration particle preset: bursts of light in the background.",
+    "max": 15
+  },
+  "labels.animation-presets.flame-flicker": {
+    "text": "Flame flicker",
+    "note": "Name of an animation preset: warm light that flickers like a candle flame.",
+    "max": 25
+  },
+  "labels.animation-presets.flicker": {
+    "text": "Flicker",
+    "note": "Name of an animation preset: brightness flickers irregularly, like a failing bulb.",
+    "max": 15
+  },
+  "labels.animation-presets.flip": {
+    "text": "Flip",
+    "note": "Name of an animation preset (verb): the element flips over like a card.",
+    "max": 10
+  },
+  "labels.animation-presets.float": {
+    "text": "Float",
+    "note": "Name of an animation preset (verb): the element bobs gently up and down. Not the CSS float property.",
+    "max": 10
+  },
+  "labels.animation-presets.foggy": {
+    "text": "Foggy",
+    "note": "Name of a weather scene preset (adjective): drifting fog. Matches the weather condition.",
+    "max": 10
+  },
+  "labels.animation-presets.glitch": {
+    "text": "Glitch",
+    "note": "Name of an animation preset: the element jitters and splits like a faulty digital signal.",
+    "max": 10
+  },
+  "labels.animation-presets.glow": {
+    "text": "Glow",
+    "note": "Name of an animation preset (noun): a soft light that brightens around the element.",
+    "max": 10
+  },
+  "labels.animation-presets.glow-pulse": {
+    "text": "Glow pulse",
+    "note": "Name of an animation preset: the glow pulses stronger and weaker. Differs from 'Glow & pulse'.",
+    "max": 20
+  },
+  "labels.animation-presets.glow-pulse-2": {
+    "text": "Glow & pulse",
+    "note": "Group heading in the preset picker for glow and pulse effects. Differs from the preset 'Glow pulse'.",
+    "max": 20
+  },
+  "labels.animation-presets.glow-size": {
+    "text": "Glow size",
+    "note": "Field label for a preset setting: how far the glow spreads, in pixels.",
+    "max": 15
+  },
+  "labels.animation-presets.gradient-flow": {
+    "text": "Gradient flow",
+    "note": "Name of a background preset: a colour gradient that slides slowly across the background.",
+    "max": 25
+  },
+  "labels.animation-presets.halloween": {
+    "text": "Halloween",
+    "note": "Name of a seasonal animation preset for the Halloween holiday.",
+    "max": 15
+  },
+  "labels.animation-presets.halo-ripple": {
+    "text": "Halo ripple",
+    "note": "Name of an animation preset: rings of light spread outwards from the element like a halo.",
+    "max": 20
+  },
+  "labels.animation-presets.head-shake": {
+    "text": "Head shake",
+    "note": "Name of an animation preset: a quick side-to-side shake, like shaking the head for 'no'.",
+    "max": 20
+  },
+  "labels.animation-presets.heartbeat": {
+    "text": "Heartbeat",
+    "note": "Name of an animation preset: two quick pulses then a pause, like a heart beating.",
+    "max": 15
+  },
+  "labels.animation-presets.heat-shimmer": {
+    "text": "Heat shimmer",
+    "note": "Name of an animation preset: a wavy haze like hot air rising.",
+    "max": 20
+  },
+  "labels.animation-presets.height": {
+    "text": "Height",
+    "note": "Field label for a preset setting: how tall the effect is, in pixels.",
+    "max": 10
+  },
+  "labels.animation-presets.holographic-shimmer": {
+    "text": "Holographic shimmer",
+    "note": "Name of an animation preset: a rainbow sheen that shifts across the surface like a hologram.",
+    "max": 35
+  },
+  "labels.animation-presets.hue-range": {
+    "text": "Hue range",
+    "note": "Field label for a preset setting: how many degrees of the colour wheel the hue shifts across.",
+    "max": 15
+  },
+  "labels.animation-presets.interaction": {
+    "text": "Interaction",
+    "note": "Group heading in the preset picker: effects that play when the user taps, presses or hovers.",
+    "max": 20
+  },
+  "labels.animation-presets.jello": {
+    "text": "Jello",
+    "note": "Name of an animation preset: the element wobbles like jelly (dessert). Any playful word is fine.",
+    "max": 10
+  },
+  "labels.animation-presets.lava-lamp": {
+    "text": "Lava lamp",
+    "note": "Name of a background preset: slow blobs of colour rise and merge like in a lava lamp.",
+    "max": 15
+  },
+  "labels.animation-presets.lift": {
+    "text": "Lift",
+    "note": "Name of an interaction preset (verb): the element rises slightly on hover or press.",
+    "max": 10
+  },
+  "labels.animation-presets.light-colour": {
+    "text": "Light & colour",
+    "note": "Group heading in the preset picker for effects that change light and colour.",
+    "max": 25
+  },
+  "labels.animation-presets.lightning": {
+    "text": "Lightning",
+    "note": "Name of a weather preset: sudden flashes of lightning.",
+    "max": 15
+  },
+  "labels.animation-presets.linear": {
+    "text": "Linear",
+    "note": "Option in the timing (easing) list: constant speed from start to end.",
+    "max": 10
+  },
+  "labels.animation-presets.liquid-wave": {
+    "text": "Liquid wave",
+    "note": "Name of a bar or background preset: a wavy liquid surface that moves.",
+    "max": 20
+  },
+  "labels.animation-presets.live-weather": {
+    "text": "Live weather",
+    "note": "Name of a preset that follows the current weather entity and shows matching conditions.",
+    "max": 20
+  },
+  "labels.animation-presets.marching-ants": {
+    "text": "Marching ants",
+    "note": "Name of a border preset: a dashed outline whose dashes crawl around the edge (selection-box style).",
+    "max": 25
+  },
+  "labels.animation-presets.matrix-rain": {
+    "text": "Matrix rain",
+    "note": "Name of a background preset: columns of green characters falling, in the style of a hacker film.",
+    "max": 20
+  },
+  "labels.animation-presets.meteor-shower": {
+    "text": "Meteor shower",
+    "note": "Name of a night-sky preset: streaks of light cross the background.",
+    "max": 25
+  },
+  "labels.animation-presets.motion": {
+    "text": "Motion",
+    "note": "Group heading in the preset picker for effects that move or shake the element.",
+    "max": 10
+  },
+  "labels.animation-presets.neon-border": {
+    "text": "Neon border",
+    "note": "Name of a border preset: a glowing neon-tube outline.",
+    "max": 20
+  },
+  "labels.animation-presets.neon-flicker": {
+    "text": "Neon flicker",
+    "note": "Name of an animation preset: a neon sign that flickers on and off.",
+    "max": 20
+  },
+  "labels.animation-presets.new-year": {
+    "text": "New Year",
+    "note": "Name of a seasonal animation preset for New Year celebrations.",
+    "max": 15
+  },
+  "labels.animation-presets.night-sky": {
+    "text": "Night sky",
+    "note": "Name of a scene preset: a dark sky with twinkling stars.",
+    "max": 20
+  },
+  "labels.animation-presets.ocean-waves": {
+    "text": "Ocean waves",
+    "note": "Name of a background preset: layered sea waves rolling along the bottom.",
+    "max": 20
+  },
+  "labels.animation-presets.offset": {
+    "text": "Offset",
+    "note": "Field label for a preset setting: how far the effect is shifted from its normal position, in pixels.",
+    "max": 15
+  },
+  "labels.animation-presets.orbit": {
+    "text": "Orbit",
+    "note": "Name of an animation preset (noun or verb): a light circles the element.",
+    "max": 10
+  },
+  "labels.animation-presets.orbit-dots": {
+    "text": "Orbit dots",
+    "note": "Name of an animation preset: small dots circle around the element.",
+    "max": 20
+  },
+  "labels.animation-presets.particles": {
+    "text": "Particles",
+    "note": "Group heading in the preset picker, plural: effects made of many tiny moving shapes.",
+    "max": 15
+  },
+  "labels.animation-presets.pendulum": {
+    "text": "Pendulum",
+    "note": "Name of an animation preset: the element swings back and forth like a clock pendulum.",
+    "max": 15
+  },
+  "labels.animation-presets.ping": {
+    "text": "Ping",
+    "note": "Name of an animation preset: a ring expands and fades like a sonar ping. Not a network ping.",
+    "max": 10
+  },
+  "labels.animation-presets.plasma-gradient": {
+    "text": "Plasma gradient",
+    "note": "Name of a background preset: swirling, shifting colour blends like a plasma effect.",
+    "max": 25
+  },
+  "labels.animation-presets.playful": {
+    "text": "Playful",
+    "note": "Group heading in the preset picker (adjective): lively, bouncy effects.",
+    "max": 15
+  },
+  "labels.animation-presets.pop": {
+    "text": "Pop",
+    "note": "Name of an animation preset (verb): the element quickly grows and settles back.",
+    "max": 5
+  },
+  "labels.animation-presets.power-flow-dots": {
+    "text": "Power flow dots",
+    "note": "Name of a preset: dots travel along a line to show energy flowing (power as in electricity).",
+    "max": 25
+  },
+  "labels.animation-presets.press": {
+    "text": "Press",
+    "note": "Name of an interaction preset (verb): the element sinks slightly when pressed.",
+    "max": 10
+  },
+  "labels.animation-presets.radar-sweep": {
+    "text": "Radar sweep",
+    "note": "Name of an animation preset: a beam rotates like a radar screen.",
+    "max": 20
+  },
+  "labels.animation-presets.radius": {
+    "text": "Radius",
+    "note": "Field label for a preset setting: the radius of the effect circle, in pixels.",
+    "max": 10
+  },
+  "labels.animation-presets.rain-fall": {
+    "text": "Rain fall",
+    "note": "Name of a particle preset: raindrops falling (noun phrase, 'rain' plus 'fall').",
+    "max": 15
+  },
+  "labels.animation-presets.rainbow-hue": {
+    "text": "Rainbow hue",
+    "note": "Name of an animation preset: colours cycle through the rainbow.",
+    "max": 20
+  },
+  "labels.animation-presets.rainy": {
+    "text": "Rainy",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
+    "max": 15
+  },
+  "labels.animation-presets.ray-width": {
+    "text": "Ray width",
+    "note": "Field label for a preset setting: how wide each sun ray is.",
+    "max": 15
+  },
+  "labels.animation-presets.ring-size": {
+    "text": "Ring size",
+    "note": "Field label for a preset setting: the diameter of each ring, in pixels.",
+    "max": 15
+  },
+  "labels.animation-presets.rings": {
+    "text": "Rings",
+    "note": "Name of an animation preset, plural: circles that expand outwards.",
+    "max": 10
+  },
+  "labels.animation-presets.rings-sweeps": {
+    "text": "Rings & sweeps",
+    "note": "Group heading in the preset picker for ring and sweeping-beam effects.",
+    "max": 25
+  },
+  "labels.animation-presets.ripple-rings": {
+    "text": "Ripple rings",
+    "note": "Name of an animation preset: rings spread like ripples on water.",
+    "max": 20
+  },
+  "labels.animation-presets.ripples": {
+    "text": "Ripples",
+    "note": "Group heading in the preset picker, plural: ripple-style effects.",
+    "max": 15
+  },
+  "labels.animation-presets.rotation": {
+    "text": "Rotation",
+    "note": "Group heading in the preset picker for turning effects. Different from the lower-case 'rotation' in conflict warnings.",
+    "max": 15
+  },
+  "labels.animation-presets.rubber-band": {
+    "text": "Rubber band",
+    "note": "Name of an animation preset: the element stretches and snaps back like an elastic band.",
+    "max": 20
+  },
+  "labels.animation-presets.rumble": {
+    "text": "Rumble",
+    "note": "Name of an animation preset: a low, rapid vibration of the element.",
+    "max": 10
+  },
+  "labels.animation-presets.scale": {
+    "text": "Scale",
+    "note": "Field label for a preset setting: how much bigger the element gets (a factor, such as 1.2). Not a measuring scale.",
+    "max": 10
+  },
+  "labels.animation-presets.scanline": {
+    "text": "Scanline",
+    "note": "Name of an animation preset: a thin bright line sweeps over the element like an old monitor.",
+    "max": 15
+  },
+  "labels.animation-presets.scenes": {
+    "text": "Scenes",
+    "note": "Group heading in the preset picker, plural: full background scenes such as night sky or dusk.",
+    "max": 10
+  },
+  "labels.animation-presets.seasonal": {
+    "text": "Seasonal",
+    "note": "Group heading in the preset picker (adjective): effects for seasons and holidays.",
+    "max": 15
+  },
+  "labels.animation-presets.shadow-lift": {
+    "text": "Shadow lift",
+    "note": "Name of an interaction preset: the shadow deepens so the element seems to lift off the card.",
+    "max": 20
+  },
+  "labels.animation-presets.shake-alert": {
+    "text": "Shake alert",
+    "note": "Name of an animation preset: the element shakes to draw attention to an alert.",
+    "max": 20
+  },
+  "labels.animation-presets.shine": {
+    "text": "Shine",
+    "note": "Name of an animation preset (noun): a glossy highlight on the element.",
+    "max": 10
+  },
+  "labels.animation-presets.shine-sweep": {
+    "text": "Shine sweep",
+    "note": "Name of an animation preset: a glossy highlight sweeps across the element.",
+    "max": 20
+  },
+  "labels.animation-presets.smoke": {
+    "text": "Smoke",
+    "note": "Name of a particle preset: wisps of smoke rising.",
+    "max": 10
+  },
+  "labels.animation-presets.smooth": {
+    "text": "Smooth",
+    "note": "Option for the character of a motion (adjective): gentle, flowing movement.",
+    "max": 10
+  },
+  "labels.animation-presets.snap": {
+    "text": "Snap",
+    "note": "Option for the character of a motion: quick, abrupt movement with no easing.",
+    "max": 10
+  },
+  "labels.animation-presets.snow-fall": {
+    "text": "Snow fall",
+    "note": "Name of a particle preset: snowflakes falling (noun phrase).",
+    "max": 15
+  },
+  "labels.animation-presets.snowy": {
+    "text": "Snowy",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
+    "max": 15
+  },
+  "labels.animation-presets.sparks": {
+    "text": "Sparks",
+    "note": "Name of a particle preset, plural: bright sparks flying off the element.",
+    "max": 10
+  },
+  "labels.animation-presets.spin": {
+    "text": "Spin",
+    "note": "Name of an animation preset (verb): the element rotates continuously.",
+    "max": 10
+  },
+  "labels.animation-presets.spotlight": {
+    "text": "Spotlight",
+    "note": "Name of an animation preset: a pool of light follows or sweeps across the element.",
+    "max": 15
+  },
+  "labels.animation-presets.spring": {
+    "text": "Spring",
+    "note": "Ambiguous: either the season (seasonal preset) or a springy easing; here it is the season, like Autumn and Winter.",
+    "max": 10
+  },
+  "labels.animation-presets.squash": {
+    "text": "Squash",
+    "note": "Name of an animation preset (verb): the element flattens briefly, then recovers.",
+    "max": 15
+  },
+  "labels.animation-presets.squash-stretch": {
+    "text": "Squash & stretch",
+    "note": "Name of an animation preset: the element alternately flattens and elongates like a cartoon ball.",
+    "max": 30
+  },
+  "labels.animation-presets.starfield": {
+    "text": "Starfield",
+    "note": "Name of a background preset: stars streaming past as if flying through space.",
+    "max": 15
+  },
+  "labels.animation-presets.steam-rise": {
+    "text": "Steam rise",
+    "note": "Name of a particle preset: steam rising upwards (noun phrase).",
+    "max": 20
+  },
+  "labels.animation-presets.storm-flash": {
+    "text": "Storm flash",
+    "note": "Name of a weather preset: a brief flash of light, as in a thunderstorm.",
+    "max": 20
+  },
+  "labels.animation-presets.streams": {
+    "text": "Streams",
+    "note": "Group heading in the preset picker, plural: flowing lines or dots moving along a path.",
+    "max": 15
+  },
+  "labels.animation-presets.strength": {
+    "text": "Strength",
+    "note": "Field label for a preset setting: how strong or visible the effect is.",
+    "max": 15
+  },
+  "labels.animation-presets.stretch": {
+    "text": "Stretch",
+    "note": "Name of an animation preset (verb): the element elongates briefly. Differs from the CSS align option 'Stretch'.",
+    "max": 15
+  },
+  "labels.animation-presets.stripe-strength": {
+    "text": "Stripe strength",
+    "note": "Field label for a preset setting: how visible the moving stripes are.",
+    "max": 25
+  },
+  "labels.animation-presets.summer": {
+    "text": "Summer",
+    "note": "Name of a seasonal animation preset (season): bright, warm summer look.",
+    "max": 10
+  },
+  "labels.animation-presets.sun-rays": {
+    "text": "Sun rays",
+    "note": "Name of a weather scene preset: rays of sunlight turning slowly.",
+    "max": 15
+  },
+  "labels.animation-presets.sunny": {
+    "text": "Sunny",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
+    "max": 10
+  },
+  "labels.animation-presets.sway": {
+    "text": "Sway",
+    "note": "Name of an animation preset (verb): the element leans gently from side to side.",
+    "max": 10
+  },
+  "labels.animation-presets.swing": {
+    "text": "Swing",
+    "note": "Name of an animation preset (verb): the element swings from its top edge like a sign.",
+    "max": 10
+  },
+  "labels.animation-presets.tada": {
+    "text": "Tada",
+    "note": "Name of an animation preset: a celebratory shake and zoom, like 'ta-da!'. An informal word is fine.",
+    "max": 10
+  },
+  "labels.animation-presets.tap-ripple": {
+    "text": "Tap ripple",
+    "note": "Name of an interaction preset: a ripple spreads from the point where the user taps.",
+    "max": 20
+  },
+  "labels.animation-presets.thunderstorm": {
+    "text": "Thunderstorm",
+    "note": "Name of a weather scene preset: dark clouds, rain and lightning. Matches the weather condition.",
+    "max": 20
+  },
+  "labels.animation-presets.tilt": {
+    "text": "Tilt",
+    "note": "Name of an interaction preset (verb): the element leans in 3D, following the pointer.",
+    "max": 10
+  },
+  "labels.animation-presets.twinkle": {
+    "text": "Twinkle",
+    "note": "Name of an animation preset (verb): small lights flicker softly like stars.",
+    "max": 15
+  },
+  "labels.animation-presets.typing-dots": {
+    "text": "Typing dots",
+    "note": "Name of an animation preset: three dots that pulse in turn, like a chat 'typing' indicator.",
+    "max": 20
+  },
+  "labels.animation-presets.valentine": {
+    "text": "Valentine",
+    "note": "Name of a seasonal animation preset for Valentine's Day, with hearts.",
+    "max": 15
+  },
+  "labels.animation-presets.water-ripple": {
+    "text": "Water ripple",
+    "note": "Name of a background preset: ripples spread over a water surface.",
+    "max": 20
+  },
+  "labels.animation-presets.wave-height": {
+    "text": "Wave height",
+    "note": "Field label for a preset setting: how tall the waves are, in pixels.",
+    "max": 20
+  },
+  "labels.animation-presets.weather-device": {
+    "text": "Weather & device",
+    "note": "Group heading in the preset picker for weather scenes and device-state effects.",
+    "max": 30
+  },
+  "labels.animation-presets.width": {
+    "text": "Width",
+    "note": "Field label for a preset setting: how wide the effect is, in pixels.",
+    "max": 10
+  },
+  "labels.animation-presets.wiggle": {
+    "text": "Wiggle",
+    "note": "Name of an animation preset (verb): the element wiggles from side to side.",
+    "max": 10
+  },
+  "labels.animation-presets.wind-lines": {
+    "text": "Wind lines",
+    "note": "Name of a weather preset: thin streaks blowing across the background.",
+    "max": 20
+  },
+  "labels.animation-presets.windy": {
+    "text": "Windy",
+    "note": "Name of a weather scene preset (adjective). Matches the weather condition of the same name.",
+    "max": 10
+  },
+  "labels.animation-presets.winter": {
+    "text": "Winter",
+    "note": "Name of a seasonal animation preset (season): a cold, snowy look.",
+    "max": 10
+  },
+  "labels.animation-presets.wobble": {
+    "text": "Wobble",
+    "note": "Name of an animation preset (verb): the element wobbles unsteadily.",
+    "max": 10
+  },
+  "labels.bar-module.bar": {
+    "text": "Bar",
+    "note": "Name of the progress bar module in the module picker.",
+    "max": 5
+  },
+  "labels.bar-module.display-a-progress-bar-based-on-entity": {
+    "text": "Display a progress bar based on entity state",
+    "note": "One-line description of the progress bar module in the module picker.",
+    "max": 75
+  },
+  "labels.button-module.button": {
+    "text": "Button",
+    "note": "Name of the button module in the module picker.",
+    "max": 10
+  },
+  "labels.button-module.interactive-button-with-icon-label-and": {
+    "text": "Interactive button with icon, label, and optional state display",
+    "note": "One-line description of the button module in the module picker.",
+    "max": 105
+  },
+  "labels.card-settings.backdrop-filter": {
+    "text": "Backdrop filter",
+    "note": "Card settings field label for the blur or tint behind the card (CSS backdrop-filter).",
+    "max": 25
+  },
+  "labels.card-settings.border-colour": {
+    "text": "Border colour",
+    "note": "Card settings field label for the colour of the whole card's border.",
+    "max": 25
+  },
+  "labels.card-settings.border-style": {
+    "text": "Border style",
+    "note": "Card settings field label for the line style (solid, dashed) of the card's border.",
+    "max": 20
+  },
+  "labels.card-settings.border-width": {
+    "text": "Border width",
+    "note": "Card settings field label for the thickness of the card's border.",
+    "max": 20
+  },
+  "labels.card-settings.margin": {
+    "text": "Margin",
+    "note": "Card settings field label for the space outside the card's edge (CSS margin).",
+    "max": 10
+  },
+  "labels.css-properties.a-truncated-label-ends-in-an-ellipsis": {
+    "text": "A truncated label ends in an ellipsis and shows in full as a tooltip.",
+    "note": "Hint under the Label overflow option in the CSS panel; a full sentence, keep the word ellipsis.",
+    "max": 115
+  },
+  "labels.css-properties.above": {
+    "text": "Above",
+    "note": "Position option: the element sits above the other part (icon above text, state above label).",
+    "max": 10
+  },
+  "labels.css-properties.advanced": {
+    "text": "Advanced",
+    "note": "Group heading for rarely used CSS fields; collapsed by default.",
+    "max": 15
+  },
+  "labels.css-properties.align-content": {
+    "text": "Align content",
+    "note": "CSS property name (align-content): how several rows or lines share spare space across the cross axis.",
+    "max": 25
+  },
+  "labels.css-properties.align-items": {
+    "text": "Align items",
+    "note": "CSS property name (align-items): how children line up across the cross axis of a flex or grid container.",
+    "max": 20
+  },
+  "labels.css-properties.align-self": {
+    "text": "Align self",
+    "note": "CSS property name (align-self): cross-axis alignment for this one element, overriding its container.",
+    "max": 20
+  },
+  "labels.css-properties.alignment": {
+    "text": "Alignment",
+    "note": "Group heading for the alignment fields (align, justify) in the CSS panel.",
+    "max": 15
+  },
+  "labels.css-properties.all": {
+    "text": "All",
+    "note": "Option that applies a value to every side or every property at once.",
+    "max": 5
+  },
+  "labels.css-properties.animation-delay": {
+    "text": "Animation delay",
+    "note": "CSS field label (animation-delay): wait before a CSS animation starts.",
+    "max": 25
+  },
+  "labels.css-properties.animation-direction": {
+    "text": "Animation direction",
+    "note": "CSS field label (animation-direction): forwards, reverse or alternating playback.",
+    "max": 35
+  },
+  "labels.css-properties.animation-duration": {
+    "text": "Animation duration",
+    "note": "CSS field label (animation-duration): how long one animation cycle lasts.",
+    "max": 30
+  },
+  "labels.css-properties.animation-name": {
+    "text": "Animation name",
+    "note": "CSS field label (animation-name): which keyframes animation to play.",
+    "max": 25
+  },
+  "labels.css-properties.animation-timing": {
+    "text": "Animation timing",
+    "note": "CSS field label (animation-timing-function): the easing curve of a CSS animation.",
+    "max": 30
+  },
+  "labels.css-properties.animations": {
+    "text": "Animations",
+    "note": "Group heading for the CSS animation fields in the CSS panel.",
+    "max": 20
+  },
+  "labels.css-properties.area": {
+    "text": "Area",
+    "note": "CSS grid field label (grid-area): the named region or cell span an element occupies.",
+    "max": 10
+  },
+  "labels.css-properties.auto": {
+    "text": "Auto",
+    "note": "Option meaning the browser decides the value (CSS auto).",
+    "max": 15
+  },
+  "labels.css-properties.auto-columns": {
+    "text": "Auto columns",
+    "note": "CSS grid field label (grid-auto-columns): width of columns created automatically.",
+    "max": 25
+  },
+  "labels.css-properties.auto-flow": {
+    "text": "Auto flow",
+    "note": "CSS grid field label (grid-auto-flow): whether items fill the grid by row or by column.",
+    "max": 20
+  },
+  "labels.css-properties.auto-rows": {
+    "text": "Auto rows",
+    "note": "CSS grid field label (grid-auto-rows): height of rows created automatically.",
+    "max": 20
+  },
+  "labels.css-properties.backdrop-filter": {
+    "text": "Backdrop filter",
+    "note": "CSS field label (backdrop-filter): blur or tint applied behind an element.",
+    "max": 25
+  },
+  "labels.css-properties.background": {
+    "text": "Background",
+    "note": "CSS field label for the background shorthand (colour, image and more in one value).",
+    "max": 20
+  },
+  "labels.css-properties.background-attachment": {
+    "text": "Background attachment",
+    "note": "CSS field label (background-attachment): whether the background scrolls with the page or stays fixed.",
+    "max": 35
+  },
+  "labels.css-properties.background-clip": {
+    "text": "Background clip",
+    "note": "CSS field label (background-clip): how far the background paints (border, padding or content box).",
+    "max": 25
+  },
+  "labels.css-properties.background-colour": {
+    "text": "Background colour",
+    "note": "CSS field label (background-color): fill colour behind the element's content.",
+    "max": 30
+  },
+  "labels.css-properties.background-image": {
+    "text": "Background image",
+    "note": "CSS field label (background-image): an image or gradient painted behind the element.",
+    "max": 30
+  },
+  "labels.css-properties.background-origin": {
+    "text": "Background origin",
+    "note": "CSS field label (background-origin): the box the background position is measured from.",
+    "max": 30
+  },
+  "labels.css-properties.background-position": {
+    "text": "Background position",
+    "note": "CSS field label (background-position): where the background image sits in the element.",
+    "max": 35
+  },
+  "labels.css-properties.background-repeat": {
+    "text": "Background repeat",
+    "note": "CSS field label (background-repeat): whether the background image tiles.",
+    "max": 30
+  },
+  "labels.css-properties.background-size": {
+    "text": "Background size",
+    "note": "CSS field label (background-size): how large the background image is drawn.",
+    "max": 25
+  },
+  "labels.css-properties.backgrounds": {
+    "text": "Backgrounds",
+    "note": "Group heading (plural) for the background fields in the CSS panel.",
+    "max": 20
+  },
+  "labels.css-properties.bar": {
+    "text": "Bar",
+    "note": "Group heading for the fields that style the tab bar's bar part (content area), not the progress bar module.",
+    "max": 5
+  },
+  "labels.css-properties.bar-background": {
+    "text": "Bar background",
+    "note": "Field label for the background of the whole tab bar strip, not a single tab.",
+    "max": 25
+  },
+  "labels.css-properties.bar-border-colour": {
+    "text": "Bar border colour",
+    "note": "Field label for the border colour of the whole tab bar strip; single tabs use Tab border colour.",
+    "max": 30
+  },
+  "labels.css-properties.bar-border-style": {
+    "text": "Bar border style",
+    "note": "Field label for the border line style of the whole tab bar strip.",
+    "max": 30
+  },
+  "labels.css-properties.bar-border-width": {
+    "text": "Bar border width",
+    "note": "Field label for the border thickness of the whole tab bar strip.",
+    "max": 30
+  },
+  "labels.css-properties.bar-padding": {
+    "text": "Bar padding",
+    "note": "Field label for the space inside the tab bar strip around the tabs.",
+    "max": 20
+  },
+  "labels.css-properties.bar-position": {
+    "text": "Bar position",
+    "note": "Field label for which edge of the card the tab bar sits on (top, bottom, left, right).",
+    "max": 20
+  },
+  "labels.css-properties.below": {
+    "text": "Below",
+    "note": "Position option: the element sits below the other part (icon below text, state below label).",
+    "max": 10
+  },
+  "labels.css-properties.beside": {
+    "text": "Beside",
+    "note": "Position option: the element sits next to the other part on the same line.",
+    "max": 10
+  },
+  "labels.css-properties.border": {
+    "text": "Border",
+    "note": "CSS field label for the border shorthand (width, style and colour in one value).",
+    "max": 10
+  },
+  "labels.css-properties.border-bottom": {
+    "text": "Border bottom",
+    "note": "CSS field label (border-bottom): border on the bottom edge only.",
+    "max": 25
+  },
+  "labels.css-properties.border-collapse": {
+    "text": "Border collapse",
+    "note": "CSS field label (border-collapse): whether table cell borders merge into one line.",
+    "max": 25
+  },
+  "labels.css-properties.border-colour": {
+    "text": "Border colour",
+    "note": "CSS field label (border-color): colour of an element's border; differs from Bar border colour and Tab border colour.",
+    "max": 25
+  },
+  "labels.css-properties.border-left": {
+    "text": "Border left",
+    "note": "CSS field label (border-left): border on the left edge only; follows the page, not text direction.",
+    "max": 20
+  },
+  "labels.css-properties.border-length": {
+    "text": "Border length",
+    "note": "Field label for how much of the edge the border line covers, such as 40% for a short accent line.",
+    "max": 25
+  },
+  "labels.css-properties.border-radius": {
+    "text": "Border radius",
+    "note": "CSS field label (border-radius): how round the corners are.",
+    "max": 25
+  },
+  "labels.css-properties.border-right": {
+    "text": "Border right",
+    "note": "CSS field label (border-right): border on the right edge only.",
+    "max": 20
+  },
+  "labels.css-properties.border-spacing": {
+    "text": "Border spacing",
+    "note": "CSS field label (border-spacing): gap between table cell borders.",
+    "max": 25
+  },
+  "labels.css-properties.border-style": {
+    "text": "Border style",
+    "note": "CSS field label (border-style): line style of a border, such as solid or dashed.",
+    "max": 20
+  },
+  "labels.css-properties.border-top": {
+    "text": "Border top",
+    "note": "CSS field label (border-top): border on the top edge only.",
+    "max": 20
+  },
+  "labels.css-properties.border-width": {
+    "text": "Border width",
+    "note": "CSS field label (border-width): thickness of an element's border.",
+    "max": 20
+  },
+  "labels.css-properties.borders-outlines": {
+    "text": "Borders & outlines",
+    "note": "Group heading for border and outline fields in the CSS panel.",
+    "max": 30
+  },
+  "labels.css-properties.both": {
+    "text": "Both",
+    "note": "Option applying to both directions or both sides (for example clear left and right).",
+    "max": 10
+  },
+  "labels.css-properties.bottom": {
+    "text": "Bottom",
+    "note": "Option or field label for the bottom edge (position offset or placement).",
+    "max": 10
+  },
+  "labels.css-properties.box-shadow": {
+    "text": "Box shadow",
+    "note": "CSS field label (box-shadow): drop shadow around an element.",
+    "max": 20
+  },
+  "labels.css-properties.box-sizing": {
+    "text": "Box sizing",
+    "note": "CSS field label (box-sizing): whether width and height include padding and border.",
+    "max": 20
+  },
+  "labels.css-properties.caption-side": {
+    "text": "Caption side",
+    "note": "CSS field label (caption-side): whether a table caption sits above or below the table.",
+    "max": 20
+  },
+  "labels.css-properties.centre": {
+    "text": "Centre",
+    "note": "Alignment option: centred in the available space (not the text-align word centre of a sentence).",
+    "max": 10
+  },
+  "labels.css-properties.circle": {
+    "text": "Circle",
+    "note": "Shape option: a round shape, used for the icon background or list marker.",
+    "max": 10
+  },
+  "labels.css-properties.clear": {
+    "text": "Clear",
+    "note": "CSS field label (clear): which side an element must not sit next to a floated element; not a clear-value button.",
+    "max": 10
+  },
+  "labels.css-properties.colour": {
+    "text": "Colour",
+    "note": "CSS field label (color): the text colour of an element.",
+    "max": 10
+  },
+  "labels.css-properties.column": {
+    "text": "Column",
+    "note": "Option for a vertical direction (flex-direction column), items stack top to bottom.",
+    "max": 10
+  },
+  "labels.css-properties.column-gap": {
+    "text": "Column gap",
+    "note": "CSS field label (column-gap): horizontal space between columns.",
+    "max": 20
+  },
+  "labels.css-properties.content-alignment": {
+    "text": "Content alignment",
+    "note": "Field label for how the content inside a button or tab is aligned.",
+    "max": 30
+  },
+  "labels.css-properties.css-grid": {
+    "text": "CSS grid",
+    "note": "Group heading for the CSS grid layout fields; keep the term CSS grid.",
+    "max": 15
+  },
+  "labels.css-properties.cursor": {
+    "text": "Cursor",
+    "note": "CSS field label (cursor): the mouse pointer shape shown over the element.",
+    "max": 10
+  },
+  "labels.css-properties.direction": {
+    "text": "Direction",
+    "note": "CSS field label (flex-direction): whether children flow in a row or a column.",
+    "max": 15
+  },
+  "labels.css-properties.disabled-tabs": {
+    "text": "Disabled tabs",
+    "note": "Group heading for the look of tabs that cannot be selected.",
+    "max": 25
+  },
+  "labels.css-properties.display": {
+    "text": "Display",
+    "note": "CSS field label (display): how the element lays out, such as block, flex or grid.",
+    "max": 15
+  },
+  "labels.css-properties.effects": {
+    "text": "Effects",
+    "note": "Group heading for visual effect fields (shadow, opacity, filter) in the CSS panel.",
+    "max": 15
+  },
+  "labels.css-properties.end": {
+    "text": "End",
+    "note": "Alignment option: items sit at the end of the axis (right in left-to-right text).",
+    "max": 5
+  },
+  "labels.css-properties.fade": {
+    "text": "Fade",
+    "note": "Tab content switch animation option: the old content fades out as the new fades in.",
+    "max": 10
+  },
+  "labels.css-properties.fill-mode": {
+    "text": "Fill mode",
+    "note": "CSS field label (animation-fill-mode): which animation styles stay before and after it plays.",
+    "max": 15
+  },
+  "labels.css-properties.filter": {
+    "text": "Filter",
+    "note": "CSS field label (filter): visual filters such as blur or brightness on the element itself.",
+    "max": 10
+  },
+  "labels.css-properties.flex": {
+    "text": "Flex",
+    "note": "CSS field label for the flex shorthand (grow, shrink and basis in one value).",
+    "max": 10
+  },
+  "labels.css-properties.flex-basis": {
+    "text": "Flex basis",
+    "note": "CSS field label (flex-basis): starting size of a flex item before it grows or shrinks.",
+    "max": 20
+  },
+  "labels.css-properties.flex-grow": {
+    "text": "Flex grow",
+    "note": "CSS field label (flex-grow): how much of the spare space a flex item takes.",
+    "max": 15
+  },
+  "labels.css-properties.flex-shrink": {
+    "text": "Flex shrink",
+    "note": "CSS field label (flex-shrink): how much a flex item gives up when space runs short.",
+    "max": 20
+  },
+  "labels.css-properties.flexbox": {
+    "text": "Flexbox",
+    "note": "Group heading for the CSS flexbox layout fields; keep the term Flexbox.",
+    "max": 15
+  },
+  "labels.css-properties.float": {
+    "text": "Float",
+    "note": "CSS field label (float): push the element to one side so text wraps around it; not the animation preset Float.",
+    "max": 10
+  },
+  "labels.css-properties.font-family": {
+    "text": "Font family",
+    "note": "CSS field label (font-family): the typeface used for text.",
+    "max": 20
+  },
+  "labels.css-properties.font-size": {
+    "text": "Font size",
+    "note": "CSS field label (font-size): the size of text.",
+    "max": 15
+  },
+  "labels.css-properties.font-style": {
+    "text": "Font style",
+    "note": "CSS field label (font-style): normal or italic text.",
+    "max": 20
+  },
+  "labels.css-properties.font-variant": {
+    "text": "Font variant",
+    "note": "CSS field label (font-variant): small caps and similar letter variants.",
+    "max": 20
+  },
+  "labels.css-properties.font-weight": {
+    "text": "Font weight",
+    "note": "CSS field label (font-weight): how bold the text is.",
+    "max": 20
+  },
+  "labels.css-properties.gap": {
+    "text": "Gap",
+    "note": "CSS field label (gap): space between children of a flex or grid container.",
+    "max": 15
+  },
+  "labels.css-properties.gap-between-tabs": {
+    "text": "Gap between tabs",
+    "note": "Field label for the space between neighbouring tab buttons in the tab bar.",
+    "max": 30
+  },
+  "labels.css-properties.height": {
+    "text": "Height",
+    "note": "CSS field label (height): how tall the element is.",
+    "max": 10
+  },
+  "labels.css-properties.hidden": {
+    "text": "Hidden",
+    "note": "Option that hides the element or clips overflowing content (CSS hidden).",
+    "max": 10
+  },
+  "labels.css-properties.icon": {
+    "text": "Icon",
+    "note": "Group heading for the icon fields of a button or tab in the CSS panel.",
+    "max": 10
+  },
+  "labels.css-properties.icon-background": {
+    "text": "Icon background",
+    "note": "Field label for the fill colour of the shape behind a button's icon.",
+    "max": 25
+  },
+  "labels.css-properties.icon-background-shape": {
+    "text": "Icon background shape",
+    "note": "Field label for the shape behind a button's icon, such as circle or rounded.",
+    "max": 35
+  },
+  "labels.css-properties.icon-colour": {
+    "text": "Icon colour",
+    "note": "Field label for the colour of a button's icon.",
+    "max": 20
+  },
+  "labels.css-properties.icon-gap": {
+    "text": "Icon gap",
+    "note": "Field label for the space between a button's icon and its text.",
+    "max": 20
+  },
+  "labels.css-properties.icon-position": {
+    "text": "Icon position",
+    "note": "Field label for where a button's icon sits relative to its text (above, beside, below).",
+    "max": 25
+  },
+  "labels.css-properties.icon-size": {
+    "text": "Icon size",
+    "note": "Field label for the size of a button's icon.",
+    "max": 25
+  },
+  "labels.css-properties.icon-text": {
+    "text": "Icon & text",
+    "note": "Group heading for the fields that style a button's icon and its text together.",
+    "max": 20
+  },
+  "labels.css-properties.ignored-when-the-viewer-prefers-reduced": {
+    "text": "Ignored when the viewer prefers reduced motion.",
+    "note": "Hint under animation fields: the animation is skipped for viewers with a reduced-motion setting.",
+    "max": 80
+  },
+  "labels.css-properties.inset": {
+    "text": "Inset",
+    "note": "CSS field label (inset): top, right, bottom and left offsets of a positioned element in one value.",
+    "max": 10
+  },
+  "labels.css-properties.iteration-count": {
+    "text": "Iteration count",
+    "note": "CSS field label (animation-iteration-count): how many times the animation repeats.",
+    "max": 25
+  },
+  "labels.css-properties.justify-content": {
+    "text": "Justify content",
+    "note": "CSS field label (justify-content): how children share spare space along the main axis.",
+    "max": 25
+  },
+  "labels.css-properties.label-colour": {
+    "text": "Label colour",
+    "note": "Field label for the text colour of a button's label.",
+    "max": 20
+  },
+  "labels.css-properties.label-font-family": {
+    "text": "Label font family",
+    "note": "Field label for the typeface of a button's label.",
+    "max": 30
+  },
+  "labels.css-properties.label-font-size": {
+    "text": "Label font size",
+    "note": "Field label for the text size of a button's label.",
+    "max": 25
+  },
+  "labels.css-properties.label-font-weight": {
+    "text": "Label font weight",
+    "note": "Field label for how bold a button's label is.",
+    "max": 30
+  },
+  "labels.css-properties.label-overflow": {
+    "text": "Label overflow",
+    "note": "Field label for what happens when a button's label is too long: wrap, clip or truncate.",
+    "max": 25
+  },
+  "labels.css-properties.label-text-transform": {
+    "text": "Label text transform",
+    "note": "Field label for upper-case, lower-case or capitalised display of a button's label.",
+    "max": 35
+  },
+  "labels.css-properties.layout": {
+    "text": "Layout",
+    "note": "Group heading for layout fields (display, direction, gap) in the CSS panel.",
+    "max": 10
+  },
+  "labels.css-properties.left": {
+    "text": "Left",
+    "note": "Option for the left side; it follows the text direction, so it flips in right-to-left languages.",
+    "max": 10
+  },
+  "labels.css-properties.left-and-right-follow-the-text-direction": {
+    "text": "Left and right follow the text direction.",
+    "note": "Hint under a position field: left and right swap in right-to-left languages.",
+    "max": 70
+  },
+  "labels.css-properties.letter-spacing": {
+    "text": "Letter spacing",
+    "note": "CSS field label (letter-spacing): extra space between letters.",
+    "max": 25
+  },
+  "labels.css-properties.line-height": {
+    "text": "Line height",
+    "note": "CSS field label (line-height): height of each line of text.",
+    "max": 20
+  },
+  "labels.css-properties.list-style": {
+    "text": "List style",
+    "note": "CSS field label for the list-style shorthand (marker type, position and image).",
+    "max": 20
+  },
+  "labels.css-properties.list-style-image": {
+    "text": "List style image",
+    "note": "CSS field label (list-style-image): an image used as the list marker.",
+    "max": 30
+  },
+  "labels.css-properties.list-style-position": {
+    "text": "List style position",
+    "note": "CSS field label (list-style-position): whether the marker sits inside or outside the text.",
+    "max": 35
+  },
+  "labels.css-properties.list-style-type": {
+    "text": "List style type",
+    "note": "CSS field label (list-style-type): the marker shape or numbering, such as disc or decimal.",
+    "max": 25
+  },
+  "labels.css-properties.lists-tables": {
+    "text": "Lists & tables",
+    "note": "Group heading for list and table fields in the CSS panel.",
+    "max": 25
+  },
+  "labels.css-properties.margin": {
+    "text": "Margin",
+    "note": "CSS field label (margin): space outside the element's border.",
+    "max": 10
+  },
+  "labels.css-properties.max-height": {
+    "text": "Max height",
+    "note": "CSS field label (max-height): the tallest the element may grow.",
+    "max": 20
+  },
+  "labels.css-properties.max-width": {
+    "text": "Max width",
+    "note": "CSS field label (max-width): the widest the element may grow.",
+    "max": 20
+  },
+  "labels.css-properties.min-height": {
+    "text": "Min height",
+    "note": "CSS field label (min-height): the shortest the element may shrink.",
+    "max": 20
+  },
+  "labels.css-properties.min-width": {
+    "text": "Min width",
+    "note": "CSS field label (min-width): the narrowest the element may shrink.",
+    "max": 20
+  },
+  "labels.css-properties.none": {
+    "text": "None",
+    "note": "Option meaning the property is switched off (CSS none), such as no border or no shadow.",
+    "max": 10
+  },
+  "labels.css-properties.none-or-up-to-two-shadows-for-example-0": {
+    "text": "none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).",
+    "note": "Hint under the Tab shadow field; keep none and the CSS example exactly as written.",
+    "max": 115
+  },
+  "labels.css-properties.normal-or-one-length-for-example-0-05em": {
+    "text": "normal, or one length, for example 0.05em.",
+    "note": "Hint under the Tab letter spacing field; keep normal and the CSS example exactly as written.",
+    "max": 70
+  },
+  "labels.css-properties.offsets": {
+    "text": "Offsets",
+    "note": "Group heading for the top, right, bottom and left offset fields of a positioned element.",
+    "max": 15
+  },
+  "labels.css-properties.one-to-four-lengths-for-example-4px-8px": {
+    "text": "One to four lengths, for example 4px 8px.",
+    "note": "Hint under the Tab padding field; keep the CSS example exactly as written.",
+    "max": 70
+  },
+  "labels.css-properties.opacity": {
+    "text": "Opacity",
+    "note": "CSS field label (opacity): how see-through the element is.",
+    "max": 15
+  },
+  "labels.css-properties.order": {
+    "text": "Order",
+    "note": "CSS field label (order): the position of a flex or grid item in its container.",
+    "max": 10
+  },
+  "labels.css-properties.outline": {
+    "text": "Outline",
+    "note": "CSS field label for the outline shorthand: a line drawn outside the border that takes no space.",
+    "max": 15
+  },
+  "labels.css-properties.outline-colour": {
+    "text": "Outline colour",
+    "note": "CSS field label (outline-color): colour of the outline.",
+    "max": 25
+  },
+  "labels.css-properties.outline-offset": {
+    "text": "Outline offset",
+    "note": "CSS field label (outline-offset): gap between the border and the outline.",
+    "max": 25
+  },
+  "labels.css-properties.outline-style": {
+    "text": "Outline style",
+    "note": "CSS field label (outline-style): line style of the outline, such as solid or dashed.",
+    "max": 25
+  },
+  "labels.css-properties.outline-width": {
+    "text": "Outline width",
+    "note": "CSS field label (outline-width): thickness of the outline.",
+    "max": 25
+  },
+  "labels.css-properties.overflow": {
+    "text": "Overflow",
+    "note": "CSS field label (overflow): what happens to content that is larger than its box.",
+    "max": 15
+  },
+  "labels.css-properties.overflow-wrap": {
+    "text": "Overflow wrap",
+    "note": "CSS field label (overflow-wrap): whether long words may break to fit the box.",
+    "max": 25
+  },
+  "labels.css-properties.overflow-x": {
+    "text": "Overflow X",
+    "note": "CSS field label (overflow-x): overflow handling on the horizontal axis; X is the axis name.",
+    "max": 20
+  },
+  "labels.css-properties.overflow-y": {
+    "text": "Overflow Y",
+    "note": "CSS field label (overflow-y): overflow handling on the vertical axis; Y is the axis name.",
+    "max": 20
+  },
+  "labels.css-properties.padding": {
+    "text": "Padding",
+    "note": "CSS field label (padding): space between the element's border and its content.",
+    "max": 15
+  },
+  "labels.css-properties.play-state": {
+    "text": "Play state",
+    "note": "CSS field label (animation-play-state): whether the animation is running or paused.",
+    "max": 20
+  },
+  "labels.css-properties.plays-on-the-tab-button-the-content-fade": {
+    "text": "Plays on the tab button. The content fade or slide is set under Bar.",
+    "note": "Hint under the tab animation fields; Bar here is the group heading named Bar.",
+    "max": 110
+  },
+  "labels.css-properties.pointer-events": {
+    "text": "Pointer events",
+    "note": "CSS field label (pointer-events): whether the element reacts to mouse and touch.",
+    "max": 25
+  },
+  "labels.css-properties.position": {
+    "text": "Position",
+    "note": "CSS field label (position): static, relative, absolute or fixed placement.",
+    "max": 15
+  },
+  "labels.css-properties.positioning-layout": {
+    "text": "Positioning & layout",
+    "note": "Group heading for position, size and layout fields in the CSS panel.",
+    "max": 35
+  },
+  "labels.css-properties.right": {
+    "text": "Right",
+    "note": "Option for the right side; it follows the text direction, so it flips in right-to-left languages.",
+    "max": 10
+  },
+  "labels.css-properties.ring": {
+    "text": "Ring",
+    "note": "Icon background shape option: a hollow circle outline with no fill.",
+    "max": 10
+  },
+  "labels.css-properties.rounded": {
+    "text": "Rounded",
+    "note": "Icon background shape option: a square with rounded corners.",
+    "max": 15
+  },
+  "labels.css-properties.row": {
+    "text": "Row",
+    "note": "Option for a horizontal direction (flex-direction row), items sit side by side.",
+    "max": 5
+  },
+  "labels.css-properties.row-gap": {
+    "text": "Row gap",
+    "note": "CSS field label (row-gap): vertical space between rows.",
+    "max": 15
+  },
+  "labels.css-properties.shape": {
+    "text": "Shape",
+    "note": "Field label for the outline shape of an element, such as circle or rounded.",
+    "max": 10
+  },
+  "labels.css-properties.shorten-the-border-line-e-g-40-for-a": {
+    "text": "Shorten the border line, e.g. 40% for a short accent line.",
+    "note": "Hint under the Border length field; keep the 40% example as written.",
+    "max": 95
+  },
+  "labels.css-properties.sides": {
+    "text": "Sides",
+    "note": "Field label for which sides of the element a border applies to (top, right, bottom, left).",
+    "max": 10
+  },
+  "labels.css-properties.slide": {
+    "text": "Slide",
+    "note": "Tab content switch animation option: the new content slides in from the side.",
+    "max": 10
+  },
+  "labels.css-properties.spacing-box-model": {
+    "text": "Spacing & box model",
+    "note": "Group heading for margin, padding, size and box-sizing fields in the CSS panel.",
+    "max": 35
+  },
+  "labels.css-properties.start": {
+    "text": "Start",
+    "note": "Alignment option: items sit at the start of the axis (left in left-to-right text).",
+    "max": 10
+  },
+  "labels.css-properties.state-colour": {
+    "text": "State colour",
+    "note": "Field label for the text colour of the entity state shown on a button.",
+    "max": 20
+  },
+  "labels.css-properties.state-font-size": {
+    "text": "State font size",
+    "note": "Field label for the text size of the entity state shown on a button.",
+    "max": 25
+  },
+  "labels.css-properties.state-position": {
+    "text": "State position",
+    "note": "Field label for where the entity state sits relative to the button label (above, beside, below).",
+    "max": 25
+  },
+  "labels.css-properties.stretch": {
+    "text": "Stretch",
+    "note": "Alignment option: items grow to fill the cross axis; not the animation preset Stretch.",
+    "max": 15
+  },
+  "labels.css-properties.style": {
+    "text": "Style",
+    "note": "Field label for the line style of a border or outline (solid, dashed, dotted).",
+    "max": 10
+  },
+  "labels.css-properties.tab-alignment": {
+    "text": "Tab alignment",
+    "note": "Field label for how the tab buttons line up along the tab bar (start, centre, end, stretch).",
+    "max": 25
+  },
+  "labels.css-properties.tab-animations": {
+    "text": "Tab animations",
+    "note": "Group heading for the animations that play on tab buttons.",
+    "max": 25
+  },
+  "labels.css-properties.tab-background": {
+    "text": "Tab background",
+    "note": "Field label for the background colour of a single tab button, not the whole bar.",
+    "max": 25
+  },
+  "labels.css-properties.tab-bar": {
+    "text": "Tab bar",
+    "note": "Group heading for the fields that style the strip holding the tab buttons.",
+    "max": 15
+  },
+  "labels.css-properties.tab-border-colour": {
+    "text": "Tab border colour",
+    "note": "Field label for the border colour of a single tab button; the bar has Bar border colour.",
+    "max": 30
+  },
+  "labels.css-properties.tab-border-style": {
+    "text": "Tab border style",
+    "note": "Field label for the border line style of a single tab button.",
+    "max": 30
+  },
+  "labels.css-properties.tab-border-width": {
+    "text": "Tab border width",
+    "note": "Field label for the border thickness of a single tab button.",
+    "max": 30
+  },
+  "labels.css-properties.tab-corner-radius": {
+    "text": "Tab corner radius",
+    "note": "Field label for how round the corners of a tab button are.",
+    "max": 30
+  },
+  "labels.css-properties.tab-font-family": {
+    "text": "Tab font family",
+    "note": "Field label for the typeface of the text on tab buttons.",
+    "max": 25
+  },
+  "labels.css-properties.tab-font-size": {
+    "text": "Tab font size",
+    "note": "Field label for the text size on tab buttons.",
+    "max": 25
+  },
+  "labels.css-properties.tab-font-weight": {
+    "text": "Tab font weight",
+    "note": "Field label for how bold the text on tab buttons is.",
+    "max": 25
+  },
+  "labels.css-properties.tab-icon-animation": {
+    "text": "Tab icon animation",
+    "note": "Field label for the animation that plays on the icon of a tab button.",
+    "max": 30
+  },
+  "labels.css-properties.tab-icon-colour": {
+    "text": "Tab icon colour",
+    "note": "Field label for the colour of the icon on a tab button.",
+    "max": 25
+  },
+  "labels.css-properties.tab-icon-position": {
+    "text": "Tab icon position",
+    "note": "Field label for where the icon sits relative to the text on a tab button.",
+    "max": 30
+  },
+  "labels.css-properties.tab-icon-size": {
+    "text": "Tab icon size",
+    "note": "Field label for the size of the icon on a tab button.",
+    "max": 25
+  },
+  "labels.css-properties.tab-letter-spacing": {
+    "text": "Tab letter spacing",
+    "note": "Field label for extra space between letters on tab buttons.",
+    "max": 30
+  },
+  "labels.css-properties.tab-opacity": {
+    "text": "Tab opacity",
+    "note": "Field label for how see-through a tab button is.",
+    "max": 20
+  },
+  "labels.css-properties.tab-padding": {
+    "text": "Tab padding",
+    "note": "Field label for the space inside a tab button around its content.",
+    "max": 20
+  },
+  "labels.css-properties.tab-shadow": {
+    "text": "Tab shadow",
+    "note": "Field label for the drop shadow of a tab button.",
+    "max": 20
+  },
+  "labels.css-properties.tab-switch-animation": {
+    "text": "Tab switch animation",
+    "note": "Field label for the animation that plays when the active tab changes.",
+    "max": 35
+  },
+  "labels.css-properties.tab-text-colour": {
+    "text": "Tab text colour",
+    "note": "Field label for the text colour on tab buttons.",
+    "max": 25
+  },
+  "labels.css-properties.tab-text-transform": {
+    "text": "Tab text transform",
+    "note": "Field label for upper-case, lower-case or capitalised text on tab buttons.",
+    "max": 30
+  },
+  "labels.css-properties.table-layout": {
+    "text": "Table layout",
+    "note": "CSS field label (table-layout): whether table columns size to content or stay fixed.",
+    "max": 20
+  },
+  "labels.css-properties.template-areas": {
+    "text": "Template areas",
+    "note": "CSS grid field label (grid-template-areas): named regions that make up the grid layout.",
+    "max": 25
+  },
+  "labels.css-properties.template-columns": {
+    "text": "Template columns",
+    "note": "CSS grid field label (grid-template-columns): the widths of the grid columns.",
+    "max": 30
+  },
+  "labels.css-properties.template-rows": {
+    "text": "Template rows",
+    "note": "CSS grid field label (grid-template-rows): the heights of the grid rows.",
+    "max": 25
+  },
+  "labels.css-properties.text": {
+    "text": "Text",
+    "note": "Group heading for the text fields (align, indent, decoration) in the CSS panel.",
+    "max": 10
+  },
+  "labels.css-properties.text-align": {
+    "text": "Text align",
+    "note": "CSS field label (text-align): horizontal alignment of text inside its box.",
+    "max": 20
+  },
+  "labels.css-properties.text-decoration": {
+    "text": "Text decoration",
+    "note": "CSS field label (text-decoration): underline, overline or strike-through on text.",
+    "max": 25
+  },
+  "labels.css-properties.text-indent": {
+    "text": "Text indent",
+    "note": "CSS field label (text-indent): indentation of the first line of text.",
+    "max": 20
+  },
+  "labels.css-properties.text-overflow": {
+    "text": "Text overflow",
+    "note": "CSS field label (text-overflow): how text that does not fit is shown, such as an ellipsis.",
+    "max": 25
+  },
+  "labels.css-properties.text-shadow": {
+    "text": "Text shadow",
+    "note": "CSS field label (text-shadow): drop shadow behind the letters.",
+    "max": 20
+  },
+  "labels.css-properties.text-transform": {
+    "text": "Text transform",
+    "note": "CSS field label (text-transform): upper-case, lower-case or capitalised display of text.",
+    "max": 25
+  },
+  "labels.css-properties.tick-the-tabs-that-cannot-be-opened": {
+    "text": "Tick the tabs that cannot be opened.",
+    "note": "Hint above the checklist of tabs under Disabled tabs; a full sentence.",
+    "max": 60
+  },
+  "labels.css-properties.top": {
+    "text": "Top",
+    "note": "Option or field label for the top edge (position offset or placement).",
+    "max": 5
+  },
+  "labels.css-properties.transform": {
+    "text": "Transform",
+    "note": "CSS field label (transform): rotate, scale, skew or move the element.",
+    "max": 15
+  },
+  "labels.css-properties.transform-origin": {
+    "text": "Transform origin",
+    "note": "CSS field label (transform-origin): the pivot point for rotating and scaling.",
+    "max": 30
+  },
+  "labels.css-properties.transition": {
+    "text": "Transition",
+    "note": "CSS field label for the transition shorthand: smooth change between two style values.",
+    "max": 20
+  },
+  "labels.css-properties.transition-delay": {
+    "text": "Transition delay",
+    "note": "CSS field label (transition-delay): wait before a transition starts.",
+    "max": 30
+  },
+  "labels.css-properties.transition-duration": {
+    "text": "Transition duration",
+    "note": "CSS field label (transition-duration): how long a transition lasts.",
+    "max": 35
+  },
+  "labels.css-properties.transition-property": {
+    "text": "Transition property",
+    "note": "CSS field label (transition-property): which style property a transition animates.",
+    "max": 35
+  },
+  "labels.css-properties.transition-timing": {
+    "text": "Transition timing",
+    "note": "CSS field label (transition-timing-function): the easing curve of a transition.",
+    "max": 30
+  },
+  "labels.css-properties.transitions-animations": {
+    "text": "Transitions & animations",
+    "note": "Group heading for transition, transform and animation fields in the CSS panel.",
+    "max": 40
+  },
+  "labels.css-properties.truncate": {
+    "text": "Truncate",
+    "note": "Label overflow option: cut a long label with an ellipsis (see the hint about tooltips).",
+    "max": 15
+  },
+  "labels.css-properties.typography": {
+    "text": "Typography",
+    "note": "Group heading for font and text style fields in the CSS panel.",
+    "max": 20
+  },
+  "labels.css-properties.value-background": {
+    "text": "Value background",
+    "note": "Field label for the background behind the entity value shown on a bar or button.",
+    "max": 30
+  },
+  "labels.css-properties.vertical-content-alignment": {
+    "text": "Vertical content alignment",
+    "note": "Field label for how content is aligned top to bottom inside a button or tab.",
+    "max": 45
+  },
+  "labels.css-properties.visibility": {
+    "text": "Visibility",
+    "note": "CSS field label (visibility): hide the element but keep its space.",
+    "max": 20
+  },
+  "labels.css-properties.white-space": {
+    "text": "White space",
+    "note": "CSS field label (white-space): how spaces and line breaks in text are handled.",
+    "max": 20
+  },
+  "labels.css-properties.width": {
+    "text": "Width",
+    "note": "CSS field label (width): how wide the element is.",
+    "max": 10
+  },
+  "labels.css-properties.word-break": {
+    "text": "Word break",
+    "note": "CSS field label (word-break): where words may break when a line is full.",
+    "max": 20
+  },
+  "labels.css-properties.word-spacing": {
+    "text": "Word spacing",
+    "note": "CSS field label (word-spacing): extra space between words.",
+    "max": 20
+  },
+  "labels.css-properties.wrap": {
+    "text": "Wrap",
+    "note": "CSS field label (flex-wrap): whether flex children move to a new line when space runs out.",
+    "max": 10
+  },
+  "labels.css-properties.z-index": {
+    "text": "Z-index",
+    "note": "CSS field label (z-index): stacking order, higher numbers sit in front.",
+    "max": 15
+  },
+  "labels.css-property-options.100": {
+    "text": "100",
+    "note": "Font-weight option (number): 100 is the thinnest text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.200": {
+    "text": "200",
+    "note": "Font-weight option (number): 200 is extra-light text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.300": {
+    "text": "300",
+    "note": "Font-weight option (number): 300 is light text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.400": {
+    "text": "400",
+    "note": "Font-weight option (number): 400 is regular text, the same as Normal. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.500": {
+    "text": "500",
+    "note": "Font-weight option (number): 500 is medium text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.600": {
+    "text": "600",
+    "note": "Font-weight option (number): 600 is semi-bold text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.700": {
+    "text": "700",
+    "note": "Font-weight option (number): 700 is bold text, the same as Bold. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.800": {
+    "text": "800",
+    "note": "Font-weight option (number): 800 is extra-bold text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.900": {
+    "text": "900",
+    "note": "Font-weight option (number): 900 is the heaviest, black text. Keep the digits.",
+    "max": 5
+  },
+  "labels.css-property-options.absolute": {
+    "text": "Absolute",
+    "note": "Position option: the element is placed at exact offsets inside its parent, outside the normal flow.",
+    "max": 15
+  },
+  "labels.css-property-options.alternate": {
+    "text": "Alternate",
+    "note": "Animation-direction option: the animation plays forwards, then backwards, on each repeat.",
+    "max": 15
+  },
+  "labels.css-property-options.alternate-reverse": {
+    "text": "Alternate-reverse",
+    "note": "Animation-direction option: like Alternate, but the first run plays backwards.",
+    "max": 30
+  },
+  "labels.css-property-options.anywhere": {
+    "text": "Anywhere",
+    "note": "Overflow-wrap option: a long word may break at any character to avoid overflowing.",
+    "max": 15
+  },
+  "labels.css-property-options.auto": {
+    "text": "Auto",
+    "note": "Option shared by several CSS fields (overflow, z-index, cursor and others): the browser picks the value itself.",
+    "max": 15
+  },
+  "labels.css-property-options.backwards": {
+    "text": "Backwards",
+    "note": "Animation fill-mode option: the first frame applies during the delay, before the animation starts.",
+    "max": 15
+  },
+  "labels.css-property-options.baseline": {
+    "text": "Baseline",
+    "note": "Align-items option: items line up on the baseline of their text, not on an edge.",
+    "max": 15
+  },
+  "labels.css-property-options.block": {
+    "text": "Block",
+    "note": "Display option: the element takes a full-width line of its own, like a paragraph.",
+    "max": 10
+  },
+  "labels.css-property-options.bold": {
+    "text": "Bold",
+    "note": "Font-weight option (word): heavy text, the same as 700. Not the Bold style button.",
+    "max": 10
+  },
+  "labels.css-property-options.border-box": {
+    "text": "Border-box",
+    "note": "Box-sizing option: width and height include the padding and the border. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.both": {
+    "text": "Both",
+    "note": "Option for animation fill-mode (apply the first and last frame) and for the clear field (both sides).",
+    "max": 10
+  },
+  "labels.css-property-options.bottom": {
+    "text": "Bottom",
+    "note": "Vertical-align or background-position option: align to the lower edge.",
+    "max": 10
+  },
+  "labels.css-property-options.break-all": {
+    "text": "Break-all",
+    "note": "Word-break option: lines may break between any two characters. Keep the CSS term.",
+    "max": 15
+  },
+  "labels.css-property-options.break-spaces": {
+    "text": "Break-spaces",
+    "note": "White-space option: spaces are kept and lines may wrap at them. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.break-word": {
+    "text": "Break-word",
+    "note": "Word-break or overflow-wrap option: a long word breaks only when it would overflow.",
+    "max": 20
+  },
+  "labels.css-property-options.capitalize": {
+    "text": "Capitalize",
+    "note": "Text-transform option: the first letter of every word becomes a capital.",
+    "max": 25
+  },
+  "labels.css-property-options.centre": {
+    "text": "Centre",
+    "note": "Alignment option in the CSS fields (text-align, align-items, justify-content): centred. Not the animation preset.",
+    "max": 10
+  },
+  "labels.css-property-options.circle": {
+    "text": "Circle",
+    "note": "List-style option: list items get a hollow round bullet.",
+    "max": 10
+  },
+  "labels.css-property-options.clip": {
+    "text": "Clip",
+    "note": "Text-overflow or overflow option: content that does not fit is cut off without a sign.",
+    "max": 10
+  },
+  "labels.css-property-options.collapse": {
+    "text": "Collapse",
+    "note": "Border-collapse option: neighbouring table cells share one border line.",
+    "max": 15
+  },
+  "labels.css-property-options.column": {
+    "text": "Column",
+    "note": "Flex-direction or grid-auto-flow option: items are laid out top to bottom.",
+    "max": 10
+  },
+  "labels.css-property-options.column-dense": {
+    "text": "Column dense",
+    "note": "Grid-auto-flow option: fill columns first and back-fill gaps with later items.",
+    "max": 20
+  },
+  "labels.css-property-options.column-reverse": {
+    "text": "Column-reverse",
+    "note": "Flex-direction option: items are laid out bottom to top.",
+    "max": 25
+  },
+  "labels.css-property-options.contain": {
+    "text": "Contain",
+    "note": "Background-size or object-fit option: scale the image to fit entirely inside the box.",
+    "max": 15
+  },
+  "labels.css-property-options.content-box": {
+    "text": "Content-box",
+    "note": "Box-sizing option: width and height cover the content only, padding and border come on top. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.contents": {
+    "text": "Contents",
+    "note": "Display option: the element's own box disappears and only its children are shown.",
+    "max": 15
+  },
+  "labels.css-property-options.cover": {
+    "text": "Cover",
+    "note": "Background-size or object-fit option: scale the image to fill the box, cropping the overflow.",
+    "max": 10
+  },
+  "labels.css-property-options.crosshair": {
+    "text": "Crosshair",
+    "note": "Cursor option: the mouse pointer turns into a precise cross.",
+    "max": 15
+  },
+  "labels.css-property-options.dashed": {
+    "text": "Dashed",
+    "note": "Border-style option: a line made of short dashes. Not the Dashed line style of a shape.",
+    "max": 10
+  },
+  "labels.css-property-options.decimal": {
+    "text": "Decimal",
+    "note": "List-style option: list items are numbered 1, 2, 3.",
+    "max": 15
+  },
+  "labels.css-property-options.default": {
+    "text": "Default",
+    "note": "Cursor option: the normal arrow pointer.",
+    "max": 15
+  },
+  "labels.css-property-options.dense": {
+    "text": "Dense",
+    "note": "Grid-auto-flow option: back-fill earlier gaps in the grid with smaller items.",
+    "max": 10
+  },
+  "labels.css-property-options.disc": {
+    "text": "Disc",
+    "note": "List-style option: list items get a solid round bullet.",
+    "max": 10
+  },
+  "labels.css-property-options.dotted": {
+    "text": "Dotted",
+    "note": "Border-style option: a line made of dots.",
+    "max": 10
+  },
+  "labels.css-property-options.double": {
+    "text": "Double",
+    "note": "Border-style or text-decoration option: two parallel lines. Not the Double rail slider look.",
+    "max": 10
+  },
+  "labels.css-property-options.ellipsis": {
+    "text": "Ellipsis",
+    "note": "Text-overflow option: cut-off text ends in three dots (...).",
+    "max": 20
+  },
+  "labels.css-property-options.fixed": {
+    "text": "Fixed",
+    "note": "Position or background-attachment option: stays put relative to the screen when the page scrolls.",
+    "max": 10
+  },
+  "labels.css-property-options.flex": {
+    "text": "Flex",
+    "note": "Display option: the element becomes a flexible box that lays out its children. Keep the CSS term.",
+    "max": 10
+  },
+  "labels.css-property-options.flex-end": {
+    "text": "Flex-end",
+    "note": "Alignment option for flex layouts: items sit at the end of the axis (right or bottom, following direction).",
+    "max": 15
+  },
+  "labels.css-property-options.flex-start": {
+    "text": "Flex-start",
+    "note": "Alignment option for flex layouts: items sit at the start of the axis (left or top, following direction).",
+    "max": 20
+  },
+  "labels.css-property-options.forwards": {
+    "text": "Forwards",
+    "note": "Animation fill-mode option: the last frame stays applied after the animation ends.",
+    "max": 15
+  },
+  "labels.css-property-options.grab": {
+    "text": "Grab",
+    "note": "Cursor option: the pointer becomes an open hand, showing something can be dragged.",
+    "max": 10
+  },
+  "labels.css-property-options.grid": {
+    "text": "Grid",
+    "note": "Display option: the element lays out its children in rows and columns. Keep the CSS term.",
+    "max": 10
+  },
+  "labels.css-property-options.groove": {
+    "text": "Groove",
+    "note": "Border-style option: a 3D border that looks carved into the page.",
+    "max": 10
+  },
+  "labels.css-property-options.hidden": {
+    "text": "Hidden",
+    "note": "Overflow or visibility option: content is not shown (overflow also clips it, with no scrolling).",
+    "max": 10
+  },
+  "labels.css-property-options.inline": {
+    "text": "Inline",
+    "note": "Display option: the element flows within a line of text, like a word.",
+    "max": 10
+  },
+  "labels.css-property-options.inline-block": {
+    "text": "Inline-block",
+    "note": "Display option: flows within a line of text but keeps a width and height of its own. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.inline-flex": {
+    "text": "Inline-flex",
+    "note": "Display option: a flexible box that sits within a line of text. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.inline-grid": {
+    "text": "Inline-grid",
+    "note": "Display option: a grid that sits within a line of text. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.inset": {
+    "text": "Inset",
+    "note": "Border-style option: a 3D border that makes the box look pressed in.",
+    "max": 10
+  },
+  "labels.css-property-options.inside": {
+    "text": "Inside",
+    "note": "List-style-position option: the bullet sits inside the text block.",
+    "max": 10
+  },
+  "labels.css-property-options.italic": {
+    "text": "Italic",
+    "note": "Font-style option: slanted text using the italic design of the font.",
+    "max": 10
+  },
+  "labels.css-property-options.justify": {
+    "text": "Justify",
+    "note": "Text-align option: lines are stretched so both edges are flush.",
+    "max": 15
+  },
+  "labels.css-property-options.keep-all": {
+    "text": "Keep-all",
+    "note": "Word-break option: no breaks inside Chinese, Japanese or Korean text. Keep the CSS term.",
+    "max": 15
+  },
+  "labels.css-property-options.left": {
+    "text": "Left",
+    "note": "Text-align or float option: the left edge. In CSS it is always left, not the start of the text direction.",
+    "max": 10
+  },
+  "labels.css-property-options.line-through": {
+    "text": "Line-through",
+    "note": "Text-decoration option: a line struck through the middle of the text.",
+    "max": 20
+  },
+  "labels.css-property-options.local": {
+    "text": "Local",
+    "note": "Background-attachment option: the background scrolls with the content of the element.",
+    "max": 10
+  },
+  "labels.css-property-options.lower-alpha": {
+    "text": "Lower-alpha",
+    "note": "List-style option: list items are lettered a, b, c.",
+    "max": 20
+  },
+  "labels.css-property-options.lower-roman": {
+    "text": "Lower-roman",
+    "note": "List-style option: list items use lower-case Roman numerals i, ii, iii.",
+    "max": 20
+  },
+  "labels.css-property-options.lowercase": {
+    "text": "Lowercase",
+    "note": "Text-transform option: all letters are shown in lower case.",
+    "max": 15
+  },
+  "labels.css-property-options.move": {
+    "text": "Move",
+    "note": "Cursor option: the pointer becomes a four-way arrow, showing something can be moved.",
+    "max": 15
+  },
+  "labels.css-property-options.no-repeat": {
+    "text": "No-repeat",
+    "note": "Background-repeat option: the background image is drawn once and not tiled.",
+    "max": 15
+  },
+  "labels.css-property-options.none": {
+    "text": "None",
+    "note": "Option shared by several CSS fields (display, border-style, text-decoration, float): switches the feature off.",
+    "max": 10
+  },
+  "labels.css-property-options.normal": {
+    "text": "Normal",
+    "note": "Option shared by several CSS fields (font-style, font-weight, white-space, letter-spacing): the standard setting.",
+    "max": 10
+  },
+  "labels.css-property-options.not-allowed": {
+    "text": "Not-allowed",
+    "note": "Cursor option: the pointer shows a forbidden sign over something that cannot be used.",
+    "max": 20
+  },
+  "labels.css-property-options.nowrap": {
+    "text": "Nowrap",
+    "note": "White-space or flex-wrap option: everything stays on one line. Keep the CSS term.",
+    "max": 15
+  },
+  "labels.css-property-options.oblique": {
+    "text": "Oblique",
+    "note": "Font-style option: text slanted by the browser, close to italic but not a separate font design.",
+    "max": 15
+  },
+  "labels.css-property-options.outset": {
+    "text": "Outset",
+    "note": "Border-style option: a 3D border that makes the box look raised.",
+    "max": 15
+  },
+  "labels.css-property-options.outside": {
+    "text": "Outside",
+    "note": "List-style-position option: the bullet hangs outside the text block.",
+    "max": 15
+  },
+  "labels.css-property-options.overline": {
+    "text": "Overline",
+    "note": "Text-decoration option: a line drawn above the text.",
+    "max": 15
+  },
+  "labels.css-property-options.padding-box": {
+    "text": "Padding-box",
+    "note": "Background-clip option: the background stops at the padding edge, under the border. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.paused": {
+    "text": "Paused",
+    "note": "Animation-play-state option: the animation is stopped at its current frame.",
+    "max": 10
+  },
+  "labels.css-property-options.pointer": {
+    "text": "Pointer",
+    "note": "Cursor option: the pointer becomes a hand with a finger, showing something can be clicked.",
+    "max": 15
+  },
+  "labels.css-property-options.pre": {
+    "text": "Pre",
+    "note": "White-space option, short for preformatted: spaces and line breaks are kept as typed. Keep the CSS term.",
+    "max": 5
+  },
+  "labels.css-property-options.pre-line": {
+    "text": "Pre-line",
+    "note": "White-space option: line breaks are kept, runs of spaces are merged. Keep the CSS term.",
+    "max": 15
+  },
+  "labels.css-property-options.pre-wrap": {
+    "text": "Pre-wrap",
+    "note": "White-space option: spaces and line breaks are kept and long lines still wrap. Keep the CSS term.",
+    "max": 15
+  },
+  "labels.css-property-options.relative": {
+    "text": "Relative",
+    "note": "Position option: the element stays in the normal flow and can be nudged from its usual place.",
+    "max": 15
+  },
+  "labels.css-property-options.repeat": {
+    "text": "Repeat",
+    "note": "Background-repeat option: the background image is tiled in both directions.",
+    "max": 10
+  },
+  "labels.css-property-options.repeat-x": {
+    "text": "Repeat-x",
+    "note": "Background-repeat option: the image is tiled horizontally only. Keep the x.",
+    "max": 20
+  },
+  "labels.css-property-options.repeat-y": {
+    "text": "Repeat-y",
+    "note": "Background-repeat option: the image is tiled vertically only. Keep the y.",
+    "max": 20
+  },
+  "labels.css-property-options.reverse": {
+    "text": "Reverse",
+    "note": "Animation-direction option: the animation always plays backwards.",
+    "max": 15
+  },
+  "labels.css-property-options.ridge": {
+    "text": "Ridge",
+    "note": "Border-style option: a 3D border that looks raised, the opposite of Groove.",
+    "max": 10
+  },
+  "labels.css-property-options.right": {
+    "text": "Right",
+    "note": "Text-align or float option: the right edge. In CSS it is always right, not the end of the text direction.",
+    "max": 10
+  },
+  "labels.css-property-options.round": {
+    "text": "Round",
+    "note": "Background-repeat option: tiles are resized so a whole number of them fits. Not the Round node shape.",
+    "max": 10
+  },
+  "labels.css-property-options.row": {
+    "text": "Row",
+    "note": "Flex-direction or grid-auto-flow option: items are laid out left to right.",
+    "max": 5
+  },
+  "labels.css-property-options.row-dense": {
+    "text": "Row dense",
+    "note": "Grid-auto-flow option: fill rows first and back-fill gaps with later items.",
+    "max": 15
+  },
+  "labels.css-property-options.row-reverse": {
+    "text": "Row-reverse",
+    "note": "Flex-direction option: items are laid out right to left.",
+    "max": 20
+  },
+  "labels.css-property-options.running": {
+    "text": "Running",
+    "note": "Animation-play-state option: the animation plays normally.",
+    "max": 15
+  },
+  "labels.css-property-options.scroll": {
+    "text": "Scroll",
+    "note": "Overflow option: content that does not fit can be scrolled. Also a background-attachment option.",
+    "max": 10
+  },
+  "labels.css-property-options.separate": {
+    "text": "Separate",
+    "note": "Border-collapse option: each table cell keeps its own border.",
+    "max": 15
+  },
+  "labels.css-property-options.solid": {
+    "text": "Solid",
+    "note": "Border-style option: one continuous line.",
+    "max": 15
+  },
+  "labels.css-property-options.space": {
+    "text": "Space",
+    "note": "Background-repeat option: tiles keep their size and the leftover room is spread between them.",
+    "max": 10
+  },
+  "labels.css-property-options.space-around": {
+    "text": "Space-around",
+    "note": "Justify-content option: free room is shared around items, with half-size gaps at the ends. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.space-between": {
+    "text": "Space-between",
+    "note": "Justify-content option: free room goes between items, with none at the ends. Keep the CSS term.",
+    "max": 25
+  },
+  "labels.css-property-options.space-evenly": {
+    "text": "Space-evenly",
+    "note": "Justify-content option: free room is split into equal gaps, including at the ends. Keep the CSS term.",
+    "max": 20
+  },
+  "labels.css-property-options.square": {
+    "text": "Square",
+    "note": "List-style option: list items get a square bullet. Not the Square shape in the look editor.",
+    "max": 10
+  },
+  "labels.css-property-options.static": {
+    "text": "Static",
+    "note": "Position option: the default, normal flow with no offsets applied.",
+    "max": 10
+  },
+  "labels.css-property-options.sticky": {
+    "text": "Sticky",
+    "note": "Position option: the element scrolls normally, then sticks at an edge once it reaches it.",
+    "max": 10
+  },
+  "labels.css-property-options.stretch": {
+    "text": "Stretch",
+    "note": "Align-items or align-content option: items grow to fill the space. Not the Stretch animation preset.",
+    "max": 15
+  },
+  "labels.css-property-options.text": {
+    "text": "Text",
+    "note": "Cursor option: the pointer becomes the I-beam, showing text can be selected.",
+    "max": 10
+  },
+  "labels.css-property-options.top": {
+    "text": "Top",
+    "note": "Vertical-align or background-position option: align to the upper edge.",
+    "max": 5
+  },
+  "labels.css-property-options.underline": {
+    "text": "Underline",
+    "note": "Text-decoration option: a line drawn under the text.",
+    "max": 15
+  },
+  "labels.css-property-options.upper-alpha": {
+    "text": "Upper-alpha",
+    "note": "List-style option: list items are lettered A, B, C.",
+    "max": 20
+  },
+  "labels.css-property-options.upper-roman": {
+    "text": "Upper-roman",
+    "note": "List-style option: list items use upper-case Roman numerals I, II, III.",
+    "max": 20
+  },
+  "labels.css-property-options.uppercase": {
+    "text": "Uppercase",
+    "note": "Text-transform option: all letters are shown in capitals.",
+    "max": 15
+  },
+  "labels.css-property-options.visible": {
+    "text": "Visible",
+    "note": "Overflow or visibility option: content is shown, and overflowing content spills out of the box.",
+    "max": 15
+  },
+  "labels.css-property-options.wait": {
+    "text": "Wait",
+    "note": "Cursor option: the pointer shows a busy symbol, such as an hourglass or spinner.",
+    "max": 10
+  },
+  "labels.css-property-options.wrap": {
+    "text": "Wrap",
+    "note": "Flex-wrap option: items move on to a new line when they run out of room.",
+    "max": 10
+  },
+  "labels.css-property-options.wrap-reverse": {
+    "text": "Wrap-reverse",
+    "note": "Flex-wrap option: items wrap onto new lines placed in the opposite order.",
+    "max": 20
+  },
+  "labels.device-anim.drum-while-cleaning": {
+    "text": "Drum while cleaning",
+    "note": "Option describing a device animation: the washing-machine drum spins while the cleaning cycle runs.",
+    "max": 35
+  },
+  "labels.device-anim.drum-while-running": {
+    "text": "Drum while running",
+    "note": "Option describing a device animation: the appliance drum spins while the device state is running.",
+    "max": 30
+  },
+  "labels.device-anim.drum-while-the-state-is-running-washing": {
+    "text": "Drum while the state is running, washing or drying",
+    "note": "Description of a device animation: the drum spins whenever the entity state is running, washing or drying.",
+    "max": 80
+  },
+  "labels.device-anim.equalizer-while-playing": {
+    "text": "Equalizer while playing",
+    "note": "Description of a device animation for media players: equalizer bars move while the player is playing.",
+    "max": 40
+  },
+  "labels.device-anim.flame-while-heating-snow-while-cooling": {
+    "text": "Flame while heating, Snow while cooling, Spin while only the fan runs",
+    "note": "Description of a climate device animation. Flame, Snow and Spin are animation preset names, so keep them in line with those translations.",
+    "max": 115
+  },
+  "labels.device-anim.glow-while-on-in-the-light-s-colour-and": {
+    "text": "Glow while on, in the light's colour and brightness",
+    "note": "Description of a light device animation: a glow while the light is on, matching its colour and brightness.",
+    "max": 85
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while": {
+    "text": "Pulse in the alert colour while triggered",
+    "note": "Description of an alarm device animation: it pulses in the alert colour while the alarm is triggered.",
+    "max": 70
+  },
+  "labels.device-anim.pulse-in-the-alert-colour-while-on": {
+    "text": "Pulse in the alert colour while on",
+    "note": "Description of a sensor device animation: it pulses in the alert colour while the sensor is on.",
+    "max": 55
+  },
+  "labels.device-anim.shake-while-jammed-pulse-while-locking": {
+    "text": "Shake while jammed, Pulse while locking or unlocking",
+    "note": "Description of a lock device animation. Shake and Pulse are animation preset names, so keep them in line with those translations.",
+    "max": 85
+  },
+  "labels.device-anim.spin-while-on-faster-at-a-higher-speed": {
+    "text": "Spin while on, faster at a higher speed",
+    "note": "Description of a fan device animation: it spins while on and spins faster at a higher speed setting.",
+    "max": 65
+  },
+  "labels.device-anim.swing-a-slightly-opened-pose-while-open": {
+    "text": "Swing: a slightly opened pose while open",
+    "note": "Description of a device animation: the icon holds a slightly opened pose while open. Swing is an animation preset name.",
+    "max": 65
+  },
+  "labels.device-anim.swing-while-opening-or-closing-a": {
+    "text": "Swing while opening or closing, a slightly opened pose while open",
+    "note": "Description of a door or cover device animation: it swings while opening or closing, then holds a slightly opened pose.",
+    "max": 105
+  },
+  "labels.field-reset.reset-label": {
+    "text": "Reset {label}",
+    "note": "Tooltip and accessible name of the reset icon beside a field. {label} is the field's label, for example 'Border radius'.",
+    "max": 25,
+    "vars": {
+      "label": "The value that replaces label in the text."
+    }
+  },
+  "labels.field-reset.reset-to-default": {
+    "text": "Reset to default",
+    "note": "Tooltip of the reset icon beside a field that has been changed: puts the field back to its default value.",
+    "max": 30
+  },
+  "labels.horizontal-module.arrange-child-modules-in-a-row": {
+    "text": "Arrange child modules in a row",
+    "note": "Description of the Horizontal layout module in the module picker: the modules inside sit side by side.",
+    "max": 50
+  },
+  "labels.horizontal-module.horizontal": {
+    "text": "Horizontal",
+    "note": "Name of the layout module that places its child modules side by side. Pairs with Vertical.",
+    "max": 20
+  },
+  "labels.icon-doc.part-n": {
+    "text": "Part {n}",
+    "note": "Default name of one piece of an icon drawing. {n} is its position, starting at 1.",
+    "max": 15,
+    "vars": {
+      "n": "The value that replaces n in the text."
+    }
+  },
+  "labels.icon-module.display-an-icon-from-mdi-or-entity": {
+    "text": "Display an icon from MDI or entity",
+    "note": "Description of the Icon module in the module picker. MDI is Material Design Icons; keep the abbreviation.",
+    "max": 60
+  },
+  "labels.icon-module.icon": {
+    "text": "Icon",
+    "note": "Name of the module that shows a single icon, listed in the module picker and the tree.",
+    "max": 10
+  },
+  "labels.info-module.display-entity-name-state-and-attributes": {
+    "text": "Display entity name, state, and attributes",
+    "note": "Description of the Info module in the module picker: it shows an entity's name, state and attributes.",
+    "max": 70
+  },
+  "labels.info-module.info": {
+    "text": "Info",
+    "note": "Name of the module that shows an entity's name, state and attributes, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.arc-gauge-for-displaying-numeric-sensor": {
+    "text": "Arc gauge for displaying numeric sensor values",
+    "note": "Description of the Gauge module in the module picker: a curved dial for a number such as a temperature.",
+    "max": 75
+  },
+  "labels.lazy-metadata.arrange-child-modules-in-a-slider": {
+    "text": "Arrange child modules in a slider",
+    "note": "Description of the Slider layout module in the module picker: the child modules become slides to swipe through.",
+    "max": 55
+  },
+  "labels.lazy-metadata.camera": {
+    "text": "Camera",
+    "note": "Name of the module that shows a camera entity's stream, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.clock": {
+    "text": "Clock",
+    "note": "Name of the module that shows the current time and date, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.custom-card": {
+    "text": "Custom card",
+    "note": "Name of the module that embeds another Lovelace card, listed in the module picker.",
+    "max": 20
+  },
+  "labels.lazy-metadata.display-a-camera-entity-stream": {
+    "text": "Display a camera entity stream",
+    "note": "Description of the Camera module in the module picker.",
+    "max": 50
+  },
+  "labels.lazy-metadata.display-a-static-image-or-entity-picture": {
+    "text": "Display a static image or entity picture",
+    "note": "Description of the Image module in the module picker: a fixed image or an entity's picture.",
+    "max": 65
+  },
+  "labels.lazy-metadata.display-current-time-and-date": {
+    "text": "Display current time and date",
+    "note": "Description of the Clock module in the module picker.",
+    "max": 50
+  },
+  "labels.lazy-metadata.display-entity-history-as-a-line-graph": {
+    "text": "Display entity history as a line graph",
+    "note": "Description of the Graph module in the module picker: past values of an entity drawn as a line.",
+    "max": 65
+  },
+  "labels.lazy-metadata.display-weather-entity-information": {
+    "text": "Display weather entity information",
+    "note": "Description of the Weather module in the module picker: current conditions from a weather entity.",
+    "max": 55
+  },
+  "labels.lazy-metadata.display-weather-forecast-data": {
+    "text": "Display weather forecast data",
+    "note": "Description of the Forecast module in the module picker: upcoming weather, not current conditions.",
+    "max": 50
+  },
+  "labels.lazy-metadata.dropdown": {
+    "text": "Dropdown",
+    "note": "Name of the module that lets people choose one option from a list, listed in the module picker.",
+    "max": 15
+  },
+  "labels.lazy-metadata.embed-any-3rd-party-lovelace-card": {
+    "text": "Embed any 3rd party Lovelace card",
+    "note": "Description of the Custom card module in the module picker. Lovelace is the Home Assistant dashboard; keep the name.",
+    "max": 55
+  },
+  "labels.lazy-metadata.forecast": {
+    "text": "Forecast",
+    "note": "Name of the module that shows the weather forecast, listed in the module picker.",
+    "max": 20
+  },
+  "labels.lazy-metadata.gauge": {
+    "text": "Gauge",
+    "note": "Name of the module that shows a number on a curved dial, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.graph": {
+    "text": "Graph",
+    "note": "Name of the module that draws an entity's history as a line, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.image": {
+    "text": "Image",
+    "note": "Name of the module that shows a picture, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.light": {
+    "text": "Light",
+    "note": "Name of the module that controls a light entity, listed in the module picker. Not the light colour theme.",
+    "max": 10
+  },
+  "labels.lazy-metadata.light-control-with-brightness-colour": {
+    "text": "Light control with brightness, colour temperature, and colour options",
+    "note": "Description of the Light module in the module picker.",
+    "max": 115
+  },
+  "labels.lazy-metadata.markdown": {
+    "text": "Markdown",
+    "note": "Name of the module that renders Markdown-formatted text, listed in the module picker. Keep Markdown untranslated.",
+    "max": 15
+  },
+  "labels.lazy-metadata.numeric-input-with-increment-and": {
+    "text": "Numeric input with increment and decrement buttons",
+    "note": "Description of the Spinbox module in the module picker: a number field with plus and minus buttons.",
+    "max": 80
+  },
+  "labels.lazy-metadata.range-slider-for-controlling-numeric": {
+    "text": "Range slider for controlling numeric values",
+    "note": "Description of the Slider module in the module picker: drag a handle to set a number.",
+    "max": 70
+  },
+  "labels.lazy-metadata.render-markdown-formatted-content": {
+    "text": "Render markdown-formatted content",
+    "note": "Description of the Markdown module in the module picker.",
+    "max": 55
+  },
+  "labels.lazy-metadata.select-dropdown-for-choosing-from-a-list": {
+    "text": "Select dropdown for choosing from a list of options",
+    "note": "Description of the Dropdown module in the module picker.",
+    "max": 85
+  },
+  "labels.lazy-metadata.slider": {
+    "text": "Slider",
+    "note": "Name of the module with a draggable handle that sets a number, listed in the module picker. Not Slider layout.",
+    "max": 15
+  },
+  "labels.lazy-metadata.slider-layout": {
+    "text": "Slider layout",
+    "note": "Name of the layout module that shows its child modules as swipeable slides. Not the value Slider.",
+    "max": 25
+  },
+  "labels.lazy-metadata.spinbox": {
+    "text": "Spinbox",
+    "note": "Name of the number field with plus and minus buttons, listed in the module picker.",
+    "max": 15
+  },
+  "labels.lazy-metadata.tabbed-container-for-groups-of-modules": {
+    "text": "Tabbed container for groups of modules",
+    "note": "Description of the Tabs module in the module picker: each tab holds its own group of modules.",
+    "max": 65
+  },
+  "labels.lazy-metadata.tabs": {
+    "text": "Tabs",
+    "note": "Name of the layout module that groups other modules under tab buttons, listed in the module picker.",
+    "max": 10
+  },
+  "labels.lazy-metadata.video-background": {
+    "text": "Video background",
+    "note": "Name of the module that plays a video behind other modules, listed in the module picker.",
+    "max": 30
+  },
+  "labels.lazy-metadata.video-playing-behind-the-other-modules": {
+    "text": "Video playing behind the other modules of its column or layout",
+    "note": "Description of the Video background module in the module picker.",
+    "max": 100
+  },
+  "labels.lazy-metadata.weather": {
+    "text": "Weather",
+    "note": "Name of the module that shows current weather conditions, listed in the module picker.",
+    "max": 15
+  },
+  "labels.part-presets.blink": {
+    "text": "Blink",
+    "note": "Name of an icon-part animation preset: the part switches off and on quickly.",
+    "max": 10
+  },
+  "labels.part-presets.blinks-twice": {
+    "text": "Blinks twice",
+    "note": "Description of the Blink part preset: it blinks two times, then rests.",
+    "max": 20
+  },
+  "labels.part-presets.bounce": {
+    "text": "Bounce",
+    "note": "Name of an icon-part animation preset: the part hops up and lands again.",
+    "max": 10
+  },
+  "labels.part-presets.delay": {
+    "text": "Delay",
+    "note": "Field label for a part preset setting: how long the part waits before its animation starts.",
+    "max": 10
+  },
+  "labels.part-presets.direction": {
+    "text": "Direction",
+    "note": "Field label for a part preset setting: 1 plays the effect forwards, -1 plays it the other way.",
+    "max": 15
+  },
+  "labels.part-presets.draw-loop": {
+    "text": "Draw loop",
+    "note": "Name of an icon-part animation preset: the outline draws on, holds and draws off in a loop.",
+    "max": 15
+  },
+  "labels.part-presets.draw-on": {
+    "text": "Draw on",
+    "note": "Name of an icon-part animation preset: the outline is drawn as if by pen, then the part fills in.",
+    "max": 15
+  },
+  "labels.part-presets.draws-its-outline-then-fills-direction-1": {
+    "text": "Draws its outline, then fills (direction -1 draws it off)",
+    "note": "Description of the Draw on part preset. Direction is the field of that name; keep -1 as written.",
+    "max": 95
+  },
+  "labels.part-presets.draws-on-holds-and-draws-off-again": {
+    "text": "Draws on, holds, and draws off again",
+    "note": "Description of the Draw loop part preset.",
+    "max": 60
+  },
+  "labels.part-presets.drifts-up-and-down": {
+    "text": "Drifts up and down",
+    "note": "Description of the Float part preset: the part moves gently up and down.",
+    "max": 30
+  },
+  "labels.part-presets.duration-share": {
+    "text": "Duration share",
+    "note": "Field label for a part preset setting: the part of the whole animation time this effect takes, as a fraction.",
+    "max": 25
+  },
+  "labels.part-presets.fade": {
+    "text": "Fade",
+    "note": "Name of an icon-part animation preset: the part becomes see-through and returns.",
+    "max": 10
+  },
+  "labels.part-presets.fades-out-and-back-in": {
+    "text": "Fades out and back in",
+    "note": "Description of the Fade part preset.",
+    "max": 35
+  },
+  "labels.part-presets.flicker": {
+    "text": "Flicker",
+    "note": "Name of an icon-part animation preset: brightness jitters unevenly, like a flame.",
+    "max": 15
+  },
+  "labels.part-presets.flickers-like-a-flame": {
+    "text": "Flickers like a flame",
+    "note": "Description of the Flicker part preset.",
+    "max": 35
+  },
+  "labels.part-presets.float": {
+    "text": "Float",
+    "note": "Name of an icon-part animation preset: the part drifts up and down. Not the CSS float option.",
+    "max": 10
+  },
+  "labels.part-presets.grows-and-shrinks-back-direction-1": {
+    "text": "Grows and shrinks back (direction -1 shrinks)",
+    "note": "Description of the Pulse part preset. Direction is the field of that name; keep -1 as written.",
+    "max": 75
+  },
+  "labels.part-presets.intensity": {
+    "text": "Intensity",
+    "note": "Field label for a part preset setting: how strong the effect is.",
+    "max": 15
+  },
+  "labels.part-presets.lights-up-one-part-after-another-on-a": {
+    "text": "Lights up one part after another (on a group or several parts)",
+    "note": "Description of the Wave part preset: it needs a group or several selected parts, which glow in turn.",
+    "max": 100
+  },
+  "labels.part-presets.moves-down-and-back": {
+    "text": "Moves down and back",
+    "note": "Description of the Slide down part preset.",
+    "max": 35
+  },
+  "labels.part-presets.moves-left-and-back": {
+    "text": "Moves left and back",
+    "note": "Description of the Slide left part preset. Left is the screen side.",
+    "max": 35
+  },
+  "labels.part-presets.moves-right-and-back": {
+    "text": "Moves right and back",
+    "note": "Description of the Slide right part preset. Right is the screen side.",
+    "max": 35
+  },
+  "labels.part-presets.moves-up-and-back": {
+    "text": "Moves up and back",
+    "note": "Description of the Slide up part preset.",
+    "max": 30
+  },
+  "labels.part-presets.pop": {
+    "text": "Pop",
+    "note": "Name of an icon-part animation preset: the part appears from nothing with a small overshoot.",
+    "max": 5
+  },
+  "labels.part-presets.pops-in-from-nothing-with-an-overshoot": {
+    "text": "Pops in from nothing with an overshoot",
+    "note": "Description of the Pop part preset.",
+    "max": 65
+  },
+  "labels.part-presets.pulse": {
+    "text": "Pulse",
+    "note": "Name of an icon-part animation preset: the part grows and shrinks back in a steady rhythm.",
+    "max": 10
+  },
+  "labels.part-presets.ring": {
+    "text": "Ring",
+    "note": "Name of an icon-part animation preset: it rings like a bell. Not the Ring shape or the ring corner.",
+    "max": 10
+  },
+  "labels.part-presets.rings-like-a-bell-quick-swings-that-die": {
+    "text": "Rings like a bell: quick swings that die down",
+    "note": "Description of the Ring part preset.",
+    "max": 75
+  },
+  "labels.part-presets.rocks-on-its-base": {
+    "text": "Rocks on its base",
+    "note": "Description of the Wobble part preset: it tilts from side to side around its bottom.",
+    "max": 30
+  },
+  "labels.part-presets.shake": {
+    "text": "Shake",
+    "note": "Name of an icon-part animation preset: the part moves quickly from side to side.",
+    "max": 10
+  },
+  "labels.part-presets.shakes-from-side-to-side": {
+    "text": "Shakes from side to side",
+    "note": "Description of the Shake part preset.",
+    "max": 40
+  },
+  "labels.part-presets.slide-down": {
+    "text": "Slide down",
+    "note": "Name of an icon-part animation preset: the part moves down and returns.",
+    "max": 25
+  },
+  "labels.part-presets.slide-left": {
+    "text": "Slide left",
+    "note": "Name of an icon-part animation preset: the part moves to the screen's left and returns.",
+    "max": 20
+  },
+  "labels.part-presets.slide-right": {
+    "text": "Slide right",
+    "note": "Name of an icon-part animation preset: the part moves to the screen's right and returns.",
+    "max": 20
+  },
+  "labels.part-presets.slide-up": {
+    "text": "Slide up",
+    "note": "Name of an icon-part animation preset: the part moves up and returns.",
+    "max": 20
+  },
+  "labels.part-presets.spin": {
+    "text": "Spin",
+    "note": "Name of an icon-part animation preset: the part turns round continuously.",
+    "max": 10
+  },
+  "labels.part-presets.squashes-jumps-and-lands": {
+    "text": "Squashes, jumps and lands",
+    "note": "Description of the Bounce part preset.",
+    "max": 40
+  },
+  "labels.part-presets.swing": {
+    "text": "Swing",
+    "note": "Name of an icon-part animation preset: the part swings from its top like a pendulum.",
+    "max": 10
+  },
+  "labels.part-presets.swings-from-its-top-settling-back": {
+    "text": "Swings from its top, settling back",
+    "note": "Description of the Swing part preset.",
+    "max": 55
+  },
+  "labels.part-presets.turns": {
+    "text": "Turns",
+    "note": "Field label for a part preset setting: how many whole turns the part makes per cycle.",
+    "max": 10
+  },
+  "labels.part-presets.turns-round-at-a-steady-speed-whole": {
+    "text": "Turns round at a steady speed (whole turns per cycle, so it loops seamlessly)",
+    "note": "Description of the Spin part preset. Turns is the field of that name.",
+    "max": 125
+  },
+  "labels.part-presets.wave": {
+    "text": "Wave",
+    "note": "Name of an icon-part animation preset: a group of parts lights up one after another.",
+    "max": 10
+  },
+  "labels.part-presets.wobble": {
+    "text": "Wobble",
+    "note": "Name of an icon-part animation preset: the part rocks from side to side on its base.",
+    "max": 10
+  },
+  "labels.row-module.grid-row-with-columns-nestable-inside": {
+    "text": "Grid row with columns, nestable inside any column",
+    "note": "Description of the Row module in the module picker: a row split into columns that can sit inside another column.",
+    "max": 80
+  },
+  "labels.row-module.row": {
+    "text": "Row",
+    "note": "Name of the layout module that holds columns, listed in the module picker. Not the Row flex-direction option.",
+    "max": 5
+  },
+  "labels.seasonal-labels.autumn": {
+    "text": "Autumn",
+    "note": "Name of a season in a seasonal choice list. British English: Autumn, not Fall.",
+    "max": 10
+  },
+  "labels.seasonal-labels.christmas": {
+    "text": "Christmas",
+    "note": "Name of a holiday in a seasonal choice list, used for a festive theme or effect.",
+    "max": 15
+  },
+  "labels.seasonal-labels.cloudy": {
+    "text": "Cloudy",
+    "note": "Name of a weather condition in a seasonal choice list: an overcast sky.",
+    "max": 10
+  },
+  "labels.seasonal-labels.dusk": {
+    "text": "Dusk",
+    "note": "Name of a time of day in a seasonal choice list: the evening twilight.",
+    "max": 10
+  },
+  "labels.seasonal-labels.easter": {
+    "text": "Easter",
+    "note": "Name of a holiday in a seasonal choice list, used for a spring festive theme or effect.",
+    "max": 10
+  },
+  "labels.seasonal-labels.fog": {
+    "text": "Fog",
+    "note": "Name of a weather condition in a seasonal choice list: misty, low visibility.",
+    "max": 5
+  },
+  "labels.seasonal-labels.halloween": {
+    "text": "Halloween",
+    "note": "Name of a holiday in a seasonal choice list, used for a spooky theme or effect.",
+    "max": 15
+  },
+  "labels.seasonal-labels.new-year": {
+    "text": "New Year",
+    "note": "Name of a holiday in a seasonal choice list: the turn of the year, with a party feel.",
+    "max": 15
+  },
+  "labels.seasonal-labels.night": {
+    "text": "Night",
+    "note": "Name of a time of day in a seasonal choice list: a dark sky with stars.",
+    "max": 10
+  },
+  "labels.seasonal-labels.rain": {
+    "text": "Rain",
+    "note": "Name of a weather condition in a seasonal choice list: falling rain.",
+    "max": 10
+  },
+  "labels.seasonal-labels.snow": {
+    "text": "Snow",
+    "note": "Name of a weather condition in a seasonal choice list: falling snow. Also an animation preset elsewhere.",
+    "max": 10
+  },
+  "labels.seasonal-labels.spring": {
+    "text": "Spring",
+    "note": "Name of a season in a seasonal choice list. The season, not the coil or the verb.",
+    "max": 10
+  },
+  "labels.seasonal-labels.summer": {
+    "text": "Summer",
+    "note": "Name of a season in a seasonal choice list.",
+    "max": 10
+  },
+  "labels.seasonal-labels.sunny": {
+    "text": "Sunny",
+    "note": "Name of a weather condition in a seasonal choice list: a clear, bright sky.",
+    "max": 10
+  },
+  "labels.seasonal-labels.thunderstorm": {
+    "text": "Thunderstorm",
+    "note": "Name of a weather condition in a seasonal choice list: storm with lightning.",
+    "max": 20
+  },
+  "labels.seasonal-labels.valentine": {
+    "text": "Valentine",
+    "note": "Name of a holiday in a seasonal choice list: Valentine's Day, with a romantic theme.",
+    "max": 15
+  },
+  "labels.seasonal-labels.windy": {
+    "text": "Windy",
+    "note": "Name of a weather condition in a seasonal choice list: strong wind.",
+    "max": 10
+  },
+  "labels.seasonal-labels.winter": {
+    "text": "Winter",
+    "note": "Name of a season in a seasonal choice list.",
+    "max": 10
+  },
+  "labels.separator-module.separator": {
+    "text": "Separator",
+    "note": "Name of the module that draws a dividing line between other modules, listed in the module picker.",
+    "max": 15
+  },
+  "labels.separator-module.visual-divider-between-modules": {
+    "text": "Visual divider between modules",
+    "note": "Description of the Separator module in the module picker.",
+    "max": 50
+  },
+  "labels.text-module.display-static-or-template-text": {
+    "text": "Display static or template text",
+    "note": "Description of the Text module in the module picker: fixed text or text built from a template.",
+    "max": 50
+  },
+  "labels.text-module.text": {
+    "text": "Text",
+    "note": "Name of the module that shows fixed or templated text, listed in the module picker. Not the Text cursor option.",
+    "max": 10
+  },
+  "labels.vertical-module.arrange-child-modules-in-a-column": {
+    "text": "Arrange child modules in a column",
+    "note": "Description of the Vertical layout module in the module picker: the modules inside are stacked.",
+    "max": 55
+  },
+  "labels.vertical-module.vertical": {
+    "text": "Vertical",
+    "note": "Name of the layout module that stacks its child modules top to bottom. Pairs with Horizontal.",
+    "max": 15
+  }
+}

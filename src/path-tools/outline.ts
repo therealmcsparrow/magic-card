@@ -1,8 +1,4 @@
-/*
- * Outline stroke (contract path-tools 1.0.0): the stroked area of paths as closed rings. Per smooth run of
- * segments one band between the offset curves at +-width/2, a join piece at every corner, caps on open ends;
- * the booleans chunk then unions the rings (nonzero). Pure.
- */
+/* Outline stroke: the stroked area as closed rings (offset bands, joins, caps); the booleans chunk unions them. Pure. */
 import { OUTLINE_ACCURACY, STROKE_MITER_LIMIT } from '../contracts/path-tools';
 import type { PathToolsDeps, StrokeSpec, ToolOptions, ToolResult } from '../contracts/path-tools';
 import type { Cubic, EditPath, Pt } from '../contracts/path-model';

@@ -2,25 +2,13 @@ import { THEME_TRIAL_BAR_TAG, TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { hexToRgb, previewVars, validateValue } from './model';
-import { HA_DARK_DEFAULTS } from './dark-defaults';
+import { HA_DARK_DEFAULTS } from '../contracts/ha-dark-defaults';
 import { readHaDefaults } from './preview';
 import { t } from './i18n';
 import { browserMode, docFromHass, hassOf } from './util';
 import './trial-bar';
 
-/*
- * Try on dashboards: the draft's variables applied to Home Assistant in this browser tab
- * only, with a Revert bar that stays on screen after the editor panel is left.
- *
- * Mechanism: one <style id="mc-theme-trial"> in document.head holding a single `html {}` rule. The
- * declarations are written through the rule's CSSOM (setProperty with 'important'), never by building
- * CSS text, so a value like `red;}body{display:none` can only ever be one declaration or be refused.
- * Nothing is stored. The module is a singleton, so the trial outlives the editor element.
- *
- * The trial ends by Revert, Discard, a successful save (stopTrial 'saved'), the theme being changed in
- * the profile, 10 minutes without an edit, or a page reload. Known gaps (documented): views and cards
- * with their own `theme:`, and other tabs and devices.
- */
+// Try on dashboards: the draft's variables applied to HA in this tab only, with a Revert bar.
 
 export const TRIAL_IDLE_MS = 10 * 60 * 1000;
 
@@ -39,12 +27,12 @@ export interface TrialState {
 /** What a screen reader hears when a trial ends, in the language. */
 export const trialEndText = (reason: TrialEnd): string =>
   reason === 'saved'
-    ? t('Saved. This tab now uses the saved theme file.')
+    ? t('theme-editor.trial.saved-this-tab-now-uses-the-saved-theme')
     : reason === 'idle'
-      ? t('Trial ended after 10 minutes.')
+      ? t('theme-editor.trial.trial-ended-after-10-minutes')
       : reason === 'theme-changed'
-        ? t('Trial ended because the theme changed.')
-        : t('Reverted. This tab shows your own theme again.');
+        ? t('theme-editor.trial.trial-ended-because-the-theme-changed')
+        : t('theme-editor.trial.reverted-this-tab-shows-your-own-theme');
 
 type Listener = (state: TrialState | null, reason?: TrialEnd) => void;
 

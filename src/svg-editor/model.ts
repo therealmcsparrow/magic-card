@@ -3,13 +3,9 @@ import { flatten, parsePath } from '../path/core';
 import { t } from './i18n';
 import { MAX_GROUP_DEPTH, type SvgArrange, type TreePlace } from '../contracts/svg-editor';
 import { D, E, T } from './bind';
+import type { Look } from '../image-editor/paint';
 
-/*
- * The icon document: layers (shapes) over one artboard. Shapes are immutable values (every edit makes a
- * new one), so the history is a list of whole documents and a drag is one step. A shape holds one or
- * more subpaths as anchors (path-model EditPath) and the semantic paint of the card: None, Main (the
- * entity colour) or Accent (the second colour). Pure: no DOM, no lit.
- */
+// The icon document: immutable layers (shapes) over one artboard, each with subpaths as anchors and a semantic paint. Pure: no DOM, no lit.
 
 export type Paint = 'none' | 'main' | 'accent';
 export type ShapeType = 'path' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'star';
@@ -40,6 +36,8 @@ export interface Shape {
   group?: string;
   /** Paint is still the tool's default: closing a pen path turns it into a fill. */
   auto?: boolean;
+  /** Image layers: colours, gradients, opacity and dashes beyond Main and Accent (the image editor reads and writes it). */
+  look?: Look;
 }
 
 export interface Group {
@@ -61,7 +59,15 @@ export interface Doc {
 
 export const MAX_BOX = 4096;
 let seq = 0;
-export const uid = (p = 's'): string => `${p}${(++seq).toString(36)}`;
+const reserved = new Set<string>();
+/** Ids that a loaded drawing already uses: uid() never hands them out again. */
+export const reserveIds = (ids: Iterable<string>): void => void [...ids].forEach((i) => reserved.add(i));
+export const uid = (p = 's'): string => {
+  let id: string;
+  do id = `${p}${(++seq).toString(36)}`;
+  while (reserved.has(id));
+  return id;
+};
 
 export const blankDoc = (name = ''): Doc => ({ name, vb: { x: 0, y: 0, w: 24, h: 24 }, shapes: [], groups: [] });
 export const is24 = (d: Doc): boolean => d.vb.w === 24 && d.vb.h === 24;
@@ -77,17 +83,17 @@ export function newShape(type: ShapeType, paths: EditPath[], over: Partial<Shape
 const baseName = (type: ShapeType): string => {
   switch (type) {
     case 'rect':
-      return t('Rectangle');
+      return t('svg-editor.model.rectangle');
     case 'ellipse':
-      return t('Ellipse');
+      return t('svg-editor.model.ellipse');
     case 'line':
-      return t('Line');
+      return t('svg-editor.model.line');
     case 'polygon':
-      return t('Polygon');
+      return t('svg-editor.model.polygon');
     case 'star':
-      return t('Star');
+      return t('svg-editor.model.star');
     default:
-      return t('Path');
+      return t('svg-editor.model.path');
   }
 };
 export function nameFor(d: Doc, type: ShapeType, plain?: string): string {
@@ -493,12 +499,16 @@ export const bytesOf = (s: string): number => (typeof TextEncoder !== 'undefined
 
 export const toPathData = (paths: EditPath[]): PathData => paths.filter((p) => p.anchors.length > 1).map((p) => E.fromEdit(p));
 
+/** Writes one shape's element itself (image mode: paint variables, id and name). */
+export type OwnElement = (s: Shape, d: string) => string;
+
 /** The SVG elements of one shape: one, or two when its fill and stroke differ in accent. */
-function shapeElements(s: Shape, decimals: number): string[] {
+function shapeElements(s: Shape, decimals: number, own?: OwnElement): string[] {
   const data = toPathData(s.paths);
   if (!data.length) return [];
   const d = T.tidyPath(data, { decimals });
   if (!d) return [];
+  if (own) return [own(s, d)];
   const fillOn = s.fill !== 'none';
   const strokeOn = s.stroke !== 'none' && s.width > 0;
   const strokeAttrs = attr('stroke', 'currentColor') + attr('stroke-width', r2(s.width)) + (s.cap !== 'butt' ? attr('stroke-linecap', s.cap) : '') + (s.join !== 'miter' ? attr('stroke-linejoin', s.join) : '');
@@ -510,11 +520,11 @@ function shapeElements(s: Shape, decimals: number): string[] {
 }
 
 /** The document as SVG markup (not yet through the sanitiser). Hidden layers and groups are left out; groups nest as bare <g>. */
-export function toSvg(d: Doc, decimals = 2): string {
+export function toSvg(d: Doc, decimals = 2, own?: OwnElement): string {
   const emit = (list: TNode[]): string =>
     list
       .map((n) => {
-        if (n.s) return n.s.hidden ? '' : shapeElements(n.s, decimals).join('');
+        if (n.s) return n.s.hidden ? '' : shapeElements(n.s, decimals, own).join('');
         const inner = d.groups.find((g) => g.id === n.id)?.hidden ? '' : emit(n.kids!);
         return inner && `<g>${inner}</g>`;
       })

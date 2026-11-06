@@ -9,7 +9,7 @@ import { t } from '../card/i18n';
 /** Small inline error state shown in place of one module; the rest of the card keeps rendering. */
 export function renderModuleError(messages: string[]): TemplateResult {
   const text = messages.join('. ');
-  return html`<div class="mc-module mc-module-error" role="alert" title=${text}>
+  return html`<div class="mc-module mc-module-error" role="status" title=${text}>
     <ha-icon icon="mdi:alert-circle-outline"></ha-icon><span>${text}</span>
   </div>`;
 }
@@ -28,7 +28,7 @@ export function renderModuleHint(messages: string[]): TemplateResult {
  */
 export function renderModuleContent(config: CardModule, hass?: HomeAssistant): TemplateResult {
   const module = ModuleRegistry.get(config?.type as ModuleType);
-  if (!module) return renderModuleError([t('Unknown module: {type}', { type: String(config?.type) })]);
+  if (!module) return renderModuleError([t('card.render-module.unknown-module-type', { type: String(config?.type) })]);
   try {
     const errors = module.validate(config);
     if (errors.length) return renderModuleError(errors);

@@ -186,7 +186,7 @@ export class EntityPicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder=${this.placeholder}
-          aria-label=${this.label || t('Entity')}
+          aria-label=${this.label || t('card-editor.entity-picker.entity')}
           aria-describedby=${this.help ? 'help' : nothing}
           list=${this.strict ? 'ids' : nothing}
           spellcheck="false"
@@ -197,8 +197,8 @@ export class EntityPicker extends LitElement {
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label=${t('Browse entities')}
-          title=${t('Browse entities')}
+          aria-label=${t('card-editor.entity-picker.browse-entities')}
+          title=${t('card-editor.entity-picker.browse-entities')}
           @click=${this._openModal}
         >
           <ha-icon icon="mdi:magnify"></ha-icon>
@@ -222,11 +222,11 @@ export class EntityPicker extends LitElement {
     const entities = this._getFilteredEntities();
 
     return html`
-      ${renderPickerWindow(t('Select entity'), () => this._closeModal(), 'l', html`
+      ${renderPickerWindow(t('card-editor.entity-picker.select-entity'), () => this._closeModal(), 'l', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch(t('Search entities'), this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('card-editor.entity-picker.search-entities'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list" role="listbox" aria-label=${t('Entities')}>
+          <div class="mc-picker-list" role="listbox" aria-label=${t('card-editor.entity-picker.entities')}>
             ${entities.length > 0
               ? entities.map(entity => html`
                   <button
@@ -244,12 +244,12 @@ export class EntityPicker extends LitElement {
                     <span class="chip">${entity.state}</span>
                   </button>
                 `)
-              : html`<div class="mc-picker-empty">${t('No entities found')}</div>`
+              : html`<div class="mc-picker-empty">${t('card-editor.entity-picker.no-entities-found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.entity-picker.cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('card-editor.entity-picker.save')}</button>
           </div>
       `)}
     `;

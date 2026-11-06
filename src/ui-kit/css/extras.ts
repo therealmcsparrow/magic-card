@@ -2,10 +2,7 @@ import { css, CSSResult } from 'lit';
 import { kitRow } from './rows';
 import { kitSlider } from './slider';
 
-/*
- * Kit parts that the card editor does not have, derived from its tokens and
- * patterns. Not part of editorSystem: a screen adds them with `kitCss`, so the card editor renders as before.
- */
+// Kit parts that the card editor does not have, derived from its tokens; not in editorSystem, a screen adds them with `kitCss`.
 
 /**
  * The geometry and motion tokens the kit owns (contract KIT_SCOPED_TOKENS). Declared on :host like editorTokens, no
@@ -269,6 +266,9 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
     padding: 8px 0;
     background: var(--mc-surface);
     border-right: 1px solid var(--mc-divider);
+    border-inline-width: 0 1px;
+    border-inline-style: solid;
+    border-inline-color: var(--mc-divider);
     overflow-y: auto;
   }
   .rail [role='separator'][aria-orientation='horizontal'] {
@@ -298,6 +298,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
       flex-direction: row;
       width: auto;
       border-right: 0;
+      border-inline: 0;
       border-bottom: 1px solid var(--mc-divider);
       padding: 0 8px;
       overflow-x: auto;

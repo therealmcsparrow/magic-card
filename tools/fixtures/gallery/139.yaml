@@ -1,0 +1,25 @@
+# Reconnected: a door reading that shows one short word once Home Assistant answers again.
+# Entities: sensor.front_door_battery
+# gallery: width=380
+type: custom:magic-card
+name: Reconnected
+border_radius: 22px
+padding: 40px 20px 20px
+rows:
+  - id: main
+    columns:
+      - modules:
+          - type: vertical
+            gap: 6px
+            align: center
+            justify: center
+            modules:
+              - type: text
+                text: Front door battery
+                design: { font_size: 13px, text_transform: uppercase, letter_spacing: 2px }
+              - type: info
+                entity: sensor.front_door_battery
+                quiet_time: "1:00:00"
+                show_name: false
+                show_unit: true
+                design: { font_size: 44px, font_weight: "300" }

@@ -4,6 +4,180 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.12-beta.17 (2026-11-05)
+
+### Changed
+-   **Home Assistant Marketplace.** The install, update, pre-release and troubleshooting steps now cover the Marketplace in Home Assistant 2026.11 next to HACS, and the bug report form lists it as an install method. See [Installation](README.md#installation).
+-   **Install messages.** Messages in the editor that named HACS now mention the Marketplace too, or say to install Magic Card Utils the same way as Magic Card. The card picker group is now called Custom cards.
+
+## 2026.10.12-beta.16 (2026-11-04)
+
+### Changed
+-   **Forum shot table.** The card table now stays a table on narrow screens. When it is wider than the screen, it scrolls sideways instead of stacking into blocks.
+-   **Status column.** Each card row shows its status, Available or Locked, with an icon. Select it to open a note that says why, and which font sites the card asks for. Press Escape, select Close, select outside the note, or press Tab to move on, and the note closes.
+-   **Card table width.** The forum shot page now uses the full width of the panel, so the card table is no longer squeezed into a narrow box.
+-   **Card column first.** The card table now starts with the Card column, followed by Dashboard, View and Status.
+-   **Search cards.** A search field above the card table keeps only the rows whose card, dashboard or view name holds the text you type. When nothing matches, the table says so.
+-   **Card table look.** The card table now looks like the Templates table in Magic Card Utils: a rounded frame, a shaded header row and roomier cells. The search field has its label above it and a rounded frame.
+
+## 2026.10.12-beta.15 (2026-11-03)
+
+### Added
+-   **Forum shot works with web fonts.** A card with fonts from Google Fonts or another font site can now be turned into a picture. To draw the fonts, your browser asks the font sites for them, and the tab names those sites. Your cards and settings are not sent.
+-   **Forum shot card table.** The Forum shot tab lists your cards in a table you can sort by clicking a column header.
+
+### Changed
+-   **Locked cards.** A card stays locked when it holds a custom-card module or an outside address that is not a font address the tab can check.
+-   **Font failures.** If a font cannot be loaded, no picture is made. The tab says: "A font could not be loaded, so no picture was made. Check your connection and try again."
+-   **Changed font sites.** If a card's font sites changed since the tab opened, Download stops before anything is fetched. The tab says: "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again."
+
+## 2026.10.12-beta.14 (2026-11-02)
+
+### Fixed
+-   **Pause now stops animated icons.** The Pause motion button, and a card shown in a preview, now also hold animated icons still. Before, an animated icon could keep moving on a paused card.
+
+### Added
+-   **Forum shot.** The Magic Card Utils panel can turn one of your cards into a single picture to post in a forum, in light, dark or both, with an option for the Quiet, Living and Glow looks of animated icons. Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too. The picture is made in your browser and nothing leaves Home Assistant. The Forum shot area itself makes only two read calls, both to your own Home Assistant, and refuses a card that names a picture, a web address or a Google font on another server. The card inside the picture still asks Home Assistant for its own data, as it does on a dashboard. See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md).
+-   **Four wall tablet cards in the gallery.** Front door, kitchen door, hallway lights and alarm, each with open, closed, paused and dimmed pictures. See [Wall tablet cards](documentation/gallery/tablet.md).
+-   **A troubleshooting page.** [Troubleshooting](documentation/troubleshooting/README.md) starts with what to do when a card is blank on an old tablet. The README header shows the eight card families of the gallery.
+-   **Last changed on the Info module.** Choose Last changed in the Secondary info list, or write `secondary_info: last-changed`, to show how long ago the entity last changed. Home Assistant words the time and keeps it current. See [Info](documentation/modules/content/info.md#last-changed).
+-   **Style swatches in the Animated icons tab.** Quiet, Living and Glow are now three swatches, each with a small preview of your icon in that Style. See [Styles](documentation/design/quick-icon-animator.md#styles-quiet-living-and-glow).
+-   **A mark for new library icons.** The icon library can now mark entries added in the current release with a small diamond. No icons are added in this release, so you will not see it yet. It first shows in a release that adds icons. See [Icon library](documentation/animation-studio/icon-library.md#new-entries).
+-   **The card says when its data may be old.** A small icon in the top-left corner of the card shows the full sentence when you tap it, or press Enter or Space while it has keyboard focus (Escape or a second tap closes it). The sentence reads "Connection lost at {time}" when the connection to Home Assistant has been down for 15 seconds, "Reconnected" for 3 seconds once it is back, and "Not updated since {time}" when the card's `entity` has not changed for longer than the new `quiet_time` key (seconds, as a number or a quoted whole number, or `H:MM:SS`). A value that cannot be read, anywhere in the card, makes the card show a configuration error. The icon floats over the card, moves nothing and sits to the right of a top-left pause button while the card plays. While the card is paused with its button in the top-left corner, the icon moves to the top-right corner so it never covers the "Paused" label. Because Home Assistant does not pass on the time of a repeated report, a sensor that repeats an unchanged value looks quiet from its last real change, and `quiet_time` set only through a template merge does not start the lines. On the first outage after a page load the connection line can be missing, because the file that draws it cannot be fetched while Home Assistant is unreachable. See [Connection and quiet sensors](documentation/loading-and-size/README.md#connection-and-quiet-sensors) and the [schema](documentation/yaml/schema.md#card).
+-   **One tap to update.** After an update, a card whose parts come from another release shows one tile, "Magic Card updated. Tap to reload.", with the loaded version in its corner. A tap fetches a fresh copy of the card file and reloads the page. If the old version still runs, the tile says so and links to [Clear the browser cache](documentation/loading-and-size/README.md#clear-the-browser-cache). The support reply for the update message follows the new wording.
+-   **A clearer paused state on the Pause motion button.** While a card is paused, a visible "Paused" label sits beside the button. On a card too narrow for it, the label is hidden whole instead of being cut off, and the pressed button and its icon still show the paused state. The button and label cannot be hidden by a look, and the button has a 46 px tap area and a visible border in forced-colours mode. Screen readers still hear one button, "Pause motion", with its pressed state. See [Pause motion button](documentation/design/layers.md#pause-motion-button).
+-   **Roll back if an update breaks a card.** [MAINTAINING.md](MAINTAINING.md) now explains how to go back to the version that worked, check which version runs and stay on one version, using only the HACS and Home Assistant screens. It also holds the release steps. The [support page](documentation/support/README.md) has ready replies for a paused card and for the update message.
+-   **Report a paused card in Discussions.** The [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports) category has a form for a card that stands still or a focus problem. It asks for your Magic Card version, what you saw and what you did.
+-   **Size claims show how they were measured.** The [Loading and size](documentation/loading-and-size/README.md#how-we-measured) page now has a box that says which two releases were compared and how. A check that runs before every release makes sure a size claim in the README, this changelog or those pages names a release and gives both gzip and Brotli bytes, and that a speed claim links the tablet baseline. Until a timed run on a real device exists, Magic Card makes no claim about speed.
+-   **Older Android tablets page.** The new [Older Android tablets](documentation/old-tablets/README.md) page gives the browser floor (Android System WebView 85) and the result of an [old engine check](documentation/old-tablets/old-engine-check.md) on a desktop copy of Chromium 85: the bell swing, the glow and the ripple rings do not show there. On that engine the worst frame after an extra file arrives was 100 to 183 ms, over the 50 ms target, so a card can stutter at that moment. Particle layers now fade in over 200 ms. With reduced motion, particle simulations appear at once and other particle layers stay hidden. The bug report form asks for your browser version as an optional range.
+
+### Changed
+-   **Stricter imports.** Theme and card values are checked against the kind of value their key takes. A value that fits none is left out and listed, with the host where there is one. Only a real break-out refuses the whole file, and a picture or font on another website is left out instead of being offered with **Import anyway**. A shared card drops card-mod keys. A theme keeps its card-mod values and warns that the browser may contact another website. Shared markdown loses its templates and remote pictures. Every kind has a preview, and previews make no requests. See [Sharing safety](documentation/sharing-safety/README.md).
+-   **Entity placeholders on export.** Every export replaces entity IDs with placeholders, and after an import a **Map entities** step links them to your own entities. Names without an ID and `device_id` or `area_id` targets stay as written.
+-   **Share a card.** **Share this card** and **Import a shared card** in the card editor. Before Confirm, the import lists the card's actions and templates. A shared card keeps its `text` and condition templates.
+-   **Theme checks.** An imported theme is checked for text contrast in light and dark mode, and a Wall tablet preview, in the import preview and in the theme editor, shows how its text reads from 3 metres.
+-   **Gallery rules.** The [gallery](documentation/gallery/README.md) page states the CC0 rule and the author-name note, and a gallery form in Discussions asks for no tokens, credentials or real entity IDs.
+
+### Right to left and translations
+-   **Pseudo RTL switch in the animation studio.** A switch in the top bar shows the studio and its preview card right to left, with Arabic-Indic digits and direction marks around each message. It is a test aid with made-up text. No right-to-left language ships, and no profile language can select it. See [Right to left](documentation/animation-studio/README.md#right-to-left).
+-   **Mirroring.** The studio, the card sliders and the card rings mirror in a right-to-left layout. Drawing surfaces, the card canvas, timelines and curve plots keep their direction, and your card layout is never mirrored. The ltr layout is unchanged.
+-   **Card sliders and rings in right to left.** A horizontal slider fills from the right, and its gradients (including brightness and colour temperature) run with the reading direction. The handle, ticks, labels and value are placed from the right, a drag measures from the right edge, and the Left and Right arrow keys swap so Right still means towards the end you read. A shaped track stays as drawn. A vertical slider is unchanged. A ring starts at the mirrored point (Left and Right swap, Top and Bottom stay) and runs the other way round, so clockwise reads as counter-clockwise on screen. Ring gradients and the timer ring are unchanged. See [Slider](documentation/modules/controls/slider.md#right-to-left) and [Ring](documentation/design/ring.md#right-to-left).
+-   **Mirror flag for icons.** An animation can carry `mirror: mirror` or `mirror: keep`, and the icon library shows Mirrors, Keeps or Not set per entry. Existing animations stay unset and are not flipped. See [Icon library](documentation/animation-studio/icon-library.md).
+-   **Maximum length.** A translation longer than the `max` of its key is refused on import and fails the check, in every language. See [Translating](documentation/translating/README.md).
+-   **Legal text.** A key can be tagged `legal`. Translations of it show that the English prevails, with a Show English action. When the English changes, the check fails until a translation is checked again. A waiver does not clear it. Translations of legal text are published only after a qualified lawyer has checked them. See [Legal text](documentation/translating/README.md#legal-text).
+-   **Accessibility page.** It now says what the right-to-left work covers and what is not done: no screen reader run, no device or tablet run and no real right-to-left translation. See [Accessibility](documentation/accessibility/README.md#right-to-left).
+
+## 2026.10.12-beta.13 (2026-10-30)
+
+### Fixed
+-   **A pop-up opens after Try again.** When a tap on a pop-up opener could not load the pop-up and you press **Try again**, the pop-up now opens as soon as it has loaded. It also opens when the page loads it by itself within a minute of the tap. A pop-up that loads later than that does not open, so nothing jumps onto the dashboard long after you tapped.
+-   **Spin turns an icon in place.** On an icon module, Spin, Sway, Flip and the other rotating animations without a target now turn the icon itself. Before, they turned the whole module, which is as wide as its column, so a left-aligned icon swung round in a wide circle. Choose **Module** under Target to turn the whole module. New animations on an icon module leave Target on this default.
+-   **Bigger Pause button on touch screens.** On a touch screen the Pause motion button is 34 px instead of 28 px. It still fits in the strip the card keeps for it, and the area you can tap stays 44 px.
+
+### Security
+-   **Removed unused path helpers.** Two unused helpers that wrote values by path, which a code scan flagged for prototype pollution, are removed. No card used them.
+
+## 2026.10.12-beta.12 (2026-10-29)
+
+### Improved
+-   **Plain cards download less.** The main file is smaller: 73,017 B gzip and 62,433 B Brotli, against 84,683 B gzip and 72,222 B Brotli in 2026.10.12-beta.11 (see [how we measured](documentation/loading-and-size/README.md#how-we-measured)), because code that only some cards use now sits in two shared files, `magic-card-history.js` and `magic-card-shape-path.js`. A plain card still loads nothing else. A card that needs one of them fetches it with its own feature file. See [Loading and updates](documentation/loading-and-size/README.md).
+-   **Card effects arrive after the card text.** Card effects now appear just after the card text, with a short fade, so the text is readable first.
+-   **Dutch wording.** Several Dutch texts are corrected, and counts such as "1 shape" and "2 shapes" now use the right singular or plural form in the editors, the animation studio and the theme editor.
+-   **Translators.** The text files can be exchanged with Weblate or Crowdin. See [Translating](documentation/translating/README.md).
+
+### Fixed
+-   **The animation list shows preset names.** An animation that uses a preset showed a number in the card editor, such as "Animation 1 · 446". It now shows the preset's name.
+-   **The paused backdrop no longer fades in.** When a card is paused, scrolled out of view or set to reduced motion, a new backdrop picture appears at once instead of fading in.
+-   **Icons and clock no longer jump while loading.** Icons keep their size before their code arrives, and the clock keeps room for its time and date on one line each, so the cards below stay where they are. A very long date in a narrow column now runs past its column instead of wrapping.
+-   **Pop-up ID message.** The hint for an invalid pop-up ID is translated.
+
+## 2026.10.12-beta.11 (2026-10-28)
+
+### Added
+-   **Draw Line, Rectangle, Ellipse and Freehand with the keyboard.** Tab to the drawing area, move a cursor with the arrow keys (Shift 5 units, Alt a tenth), and press Enter to set the start and then the end. Freehand places a point on each Enter and ends when you press Enter again on the last one. Escape drops the drawing and every step is announced.
+-   **Paste SVG in the image editor.** The first window of a new image now has **Paste SVG**, next to Blank canvas and Open file. Paste the markup, then choose **Use this SVG**. The text is cleaned and read the same way as an opened file, and the same summary says what was removed. Text over 8 MB is refused before it is read. A refusal changes nothing and keeps your text in the box. Paste works over http:// too, because it uses a text box and not the clipboard.
+-   **Start from… and Shortcuts in the image editor.** The image editor top bar now has **Start from…**, which opens the same window as a new image, and **Shortcuts**, which lists the editor's keys. A drawing started from there replaces the old one as one step that Undo brings back, and the image keeps its name.
+
+### Changed
+-   **Motion paths and Draw points, details.** A motion path can no longer add a point before the first one. C, not Enter or Space, now switches a point between smooth and corner. The limit of 100 anchors on a Draw path is gone.
+-   **Pen, shape points and motion path share one canvas.** In the animation studio, the Pen tool, the points of a selected shape and the Motion path tool now run on the same canvas that the shape editor uses. A path closes when you click its first point, and only once it has three points (the Pen closed at two before). **Finish path**, which shows from two points, or a second Escape finishes an open line; the first Escape clears the selected point.
+-   **Keys on points in the animation studio.** Enter now places a point at the crosshair, which you move with the arrow keys, so the Pen and the Motion path work without a pointer. Enter no longer finishes a Pen line. With a point selected, Delete removes it and the arrow keys move it by 1 unit (Shift 5, Alt 0.1). With no point selected, Delete removes the shape and the arrow keys nudge it by 0.1 units (Shift 1). A locked shape ignores them. The Pen hint now says "or choose Finish path".
+-   **Drawing tools that do not load.** If the drawing canvas cannot load, the stage says "Couldn't load the drawing tools." with **Try again**. If the page holds an older Magic Card version, it says to reload the page and offers **Reload page**. The rest of the studio keeps working.
+-   **One top bar and one start window for icons and images.** The icon editor and the image editor now draw the same bar and the same start window, so Undo, Redo, Save, the name box and the buttons behave and read alike. In narrow windows the image bar buttons keep their symbol and drop the word. A button that cannot act yet, such as Save with nothing drawn, stays on the Tab path and says why. Both name boxes have a visible label, and Save is read out once as Ctrl+S instead of twice.
+-   **The start window of a new image.** Blank canvas, Paste SVG and Open file are tiles in one row. Blank canvas starts open, with Shape, Width, Height, Keep ratio and **Create**. The window has no Cancel button: Close or Esc closes it, and closing it before the first drawing closes the editor.
+-   **Start from… in the icon editor is one undo step.** Choosing a blank drawing, an icon, pasted SVG or a file from Start from… now replaces the drawing as one step that Undo brings back, and the icon keeps its name. Before, it reset the history. The "Start over?" question says so: "Undo brings the old drawing back."
+-   **Start window messages.** A refused file or text shows its reason in one line under the tiles, and the focus goes back to the button that started it. A file that takes a moment to read says "Reading name…".
+-   **Files are checked by type before size.** The icon editor start window, the animation studio Draw import and icon effects now refuse a file that is not an .svg file before they read it, and the file size is checked after the type. Icon effects used to take any file name.
+-   **A file that cannot be read says so.** The image editor Import window and icon effects show a message when the browser cannot read a chosen file, instead of failing without a word.
+-   **A refused file changes nothing.** In icon effects, a refused upload no longer puts the file's text into the SVG markup box. In the icon editor start window, a refused file leaves your drawing as it was.
+-   **The image editor Import window.** A refused file now opens a window headed "Could not import the file" instead of "Imported 'name'".
+-   **Library import help.** The help line under Choose a file in the Library import now says an .svg file can be up to 32 KB.
+
+### Fixed
+-   **Try again in the drawing tools.** After the drawing canvas failed to load, Try again now asks the browser for a fresh copy instead of reusing the failed answer. Focus goes back to the drawing area and the studio says the tools are ready. Reload page asks before it discards changes that are not saved.
+-   **Dragging a point shows at once.** A point of a selected Draw shape now follows the pointer while you drag it.
+-   **Drawing messages.** "Too many shapes" when importing an SVG is translated. Finish path and Try again have more contrast, Finish path and a second Escape in the Pen say "Path 1 added, 3 points.", and the Icon animation window returns focus to New animation when it closes.
+-   **Tab stays inside a window.** In an editor window, pressing Tab on the last control used to leave the window for a moment (the focus went to the page behind it) before it came back to the first control. Tab now goes straight from the last control to the first, and Shift+Tab from the first to the last, in every window of the kit, including windows whose content sits in a shadow root, such as the Library, Export / Import and the icon picker.
+-   **Start window fixes.** A file or text that is refused no longer says "Reading name…" a moment later. After a refusal you can choose the same file again once you have fixed it. Use this icon, when its answer comes after you closed the window or chose something else, no longer replaces the drawing. A read that fails unexpectedly now shows a message and the window stops saying "Reading…".
+
+## 2026.10.12-beta.10 (2026-10-27)
+
+### Added
+-   **Open an SVG file as an image.** The Images tab of the Magic Card Utils panel now takes a plain .svg file as well as a .json preset file, and the first window of the image editor has an **Open file** button. Both clean the file the same way as Import in the image editor. An .svg file can be up to 8 MB, and the cleaned image must still be 256 KiB or less. See [Library images](documentation/images/README.md).
+
+### Changed
+-   **Backdrop layer sliders follow your finger.** The sliders in the card backdrop layers (Zoom, Duration, Blur, Size, Thickness, Opacity) and in the layer groups now use Home Assistant's own slider when your Home Assistant has one, and a plain browser slider otherwise. The card preview changes while you drag. While you drag any slider in the card editor, the new value also reaches Home Assistant several times a second, so Home Assistant's own preview follows too. The final value is sent when you let go. Every other edit still waits 200 ms after the last change.
+-   **An open backdrop layer is no longer blue.** The blue border and the thick blue bar on the left of an open layer are gone; the border is the normal divider colour and the turned arrow shows which layer is open. Keyboard focus rings stay.
+-   **The side panel button slides with its panel.** The edge button that hides or shows a side panel used to jump to its new place while the panel slid, and so did the first-open hint beside it. Both now slide with the panel in the card studio, the animation studio, the SVG editor, the shape studio and the theme editor. With reduced motion turned on, nothing slides.
+-   **A file must hold what its name says.** Every preset import, in the Magic Card Utils panel and in the card editor, now refuses an .svg file that holds JSON and a .json file that holds SVG, with the message "The name says JSON, but the file holds SVG." (or the other way round). This includes icon imports: a .json file that holds SVG used to import as an icon and is now refused. Save the SVG as an .svg file, or paste the code into the box, which has no name to check. File uploads in the image editor, Draw and icon effects take only .svg files and have no name check.
+
+## 2026.10.12-beta.9 (2026-10-26)
+
+### Changed
+-   **One size for the side panel buttons.** The edge button that hides or shows a side panel is now the same size in both states, 28 by 72 pixels with an 18 pixel arrow, in the card studio, the animation studio, the SVG editor, the shape studio and the theme editor. It used to shrink to 24 by 56 pixels while its panel was shown. The module toolbar in the card studio now keeps clear of these buttons.
+
+## 2026.10.12-beta.8 (2026-10-26)
+
+### Added
+-   **Library images.** Draw a picture in the image editor, save it to the Magic Card Utils library, and show it in an image module (Choose an image, Draw a new image, Edit image) or as a background layer, including per-state backgrounds. A YAML reference such as `image: mcu-image:<id>` holds the picture's address, not the drawing. See [Library images](documentation/images/README.md).
+-   **Image editor.** Canvas sizes (1:1, 4:3, 16:9, 9:16 and custom up to 4096 pixels), the icon editor's tools, Main, Accent, theme and custom colours, linear and radial gradients, opacity, dashed outlines, text layers, a reference picture that is never saved, and an SVG import with a summary of what was removed. Import asks before it replaces a drawing with content. Parts the editor cannot change are kept as locked layers, and the lock says why it cannot be turned off. New text is white with a dark outline, and new closed shapes have a thin Accent outline. An "As on a card" toggle shows the colours a card uses, and shapes drawn over a reference picture start at 60 % opacity.
+-   **Image size and limits.** A size meter shows how close a drawing is to 256 KiB. The library holds up to 200 images. Save as a copy, Duplicate and Export file work from the editor. A save that fails says why in the Save window: too big, a full library, a word the library refuses, or view-only.
+-   **Missing picture.** An image module that points to a deleted library image shows "Picture not available" and keeps its layout.
+
+### Security
+-   **SVG from the library is sanitised.** Scripts, event handlers, embedded pictures, external links and cross-origin `url()` values are removed on import, on save and when a card draws the image.
+
+## 2026.10.12-beta.7 (2026-10-26)
+
+### Added
+-   **Side panels hide.** The card studio, the animation studio, the SVG editor (pre-release), the shape studio (pre-release) and the theme editor (from 1024 px wide) get an edge button on each side panel that sits beside the canvas or preview. Press it to hide the panel: the canvas or preview takes the width. Press it again to show the panel with its selection and scroll position. Only the button stays at the window edge. Hiding a panel does not change the card or the undo history. See [Studio layout](documentation/studio/layout-and-toolbar.md#hiding-the-side-panels).
+-   **Ctrl+\ (Cmd+\ on a Mac)** hides the side panels of the editor you are working in if any is shown, and otherwise shows again the panels it hid last. It also works from a text field.
+-   **Hidden panels are remembered per editor, per device.** An editor opens with the panels hidden that you left hidden there. Storage that the browser blocks keeps every panel shown, without an error.
+-   **A one-time hint** explains the button and the shortcut the first time an editor opens with a panel hidden.
+
+### Changed
+-   **Animation studio: Collapse layers is replaced.** The Collapse layers button and its icon rail are gone. Layers has the same edge button as the other panels. A Layers panel you collapsed before opens hidden once, with a hint, and the new setting is remembered from then on. See [Editor and preview stage](documentation/animation-studio/preview-stage.md#hiding-the-panels).
+-   **Position offsets are one box.** The Positioning & layout section of the Design tab shows Top, Right, Bottom and Left as one four-side Offsets box with a Same on all sides link. Each side is still saved as its own key (`top`, `right`, `bottom`, `left`), so existing cards do not change. Searching the Design tab for Right or Left no longer finds a field; search for Offsets. See [Positioning and layout](documentation/design/positioning.md).
+-   **An explicit Edit brings a hidden Inspector back.** Edit on a layer in the card studio shows the Inspector first. A plain click on the canvas does not.
+
+### Fixed
+-   **Sliders and number fields stay in step.** Dragging a slider in the editor moves its number field as you drag. Typing a number moves the slider. A value outside the range is pulled back to the nearest limit when you leave the field, in both.
+-   **Colour picker hue and opacity can be retyped.** Clearing the Hue or Opacity field leaves it empty, so you can type a new value. A number above the limit (360 for hue, 100 for opacity) is shown at the limit at once. See [Picker windows](documentation/editor/picker-windows.md#colour-window).
+
+## 2026.10.12-beta.6 (2026-10-24)
+
+### Changed
+-   **An active tab has no look of its own.** Without `tab_active` settings the active tab looks like the other tabs: no line under it, no accent text colour, no heavier weight in Underline and no Pills fill. Dashboards that relied on the old default marking will see the active tab blend in. Set the `tab_active` keys to mark it. The bar's own line stays. See [The active line](documentation/modules/layout/tabs.md#the-active-line).
+-   **Border width, style and colour on a tabs module draw on the tab buttons.** In the Design tab and in the Hover view, the Border width, Border style and Border colour fields now style each tab button instead of the box around the tabs. A `tab_border_` key still wins over them. The `border` shorthand and the `border_top`, `border_right`, `border_bottom` and `border_left` keys stay on the tabs box. See [Tabs](documentation/modules/layout/tabs.md).
+-   **Border width, style and colour take one to four values.** The Design tab shows them as a four-side field, like padding, and the colour of each side can follow an entity. See [Borders and outlines](documentation/design/borders.md).
+
+### Added
+-   **Bar border style.** `tab_bar_border_style` sets the style of the tab bar's line per side. A width of 0 or the style `none` removes the line in every tab style. See [The bar line](documentation/modules/layout/tabs.md#the-bar-line).
+-   **Colour picker pipette and formats.** The colour popup picks a colour from the screen where the browser offers it, and switches the field between HEXA, RGBA, HSLA and OKLCH. Save writes the chosen format. The colour text field selects its text on focus. See [Design](documentation/design/README.md).
+
+### Fixed
+-   **Long colour and border lists are read up to a cap, in linear time.** A very long list of border values or entity colours no longer slows the editor or the card.
+
 ## 2026.10.12-beta.5 (2026-10-24)
 
 ### Fixed

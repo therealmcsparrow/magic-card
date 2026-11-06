@@ -120,6 +120,17 @@ These fields show in both modes.
 - A gradient colour paints the stroke along the gradient. Rings read linear gradients only, so a radial one is drawn as a linear one. Thresholds, the track and the glow stay solid. See [Gradients](gradients.md).
 - Start sets the point where the stroke begins. The corner starts (Top right, Bottom right, Bottom left and Top left) sit in the middle of a rounded corner, or on the corner itself when the corner is sharp. The stroke runs from there in the chosen direction and closes on the same point.
 
+## Right to left
+
+When the card is shown right to left, a ring swaps its start and direction.
+
+- Start swaps Left and Right, including the corner starts (Top right becomes Top left). Top and Bottom stay.
+- Clockwise and counter-clockwise swap, so a ring that runs clockwise in a left-to-right layout runs counter-clockwise on screen. The stroke still begins at the mirrored point and closes on it.
+- The outline, corner radii, gradient and timer do not change. A gradient colour paints the stroke as before, and a timer ring still counts down once a second.
+- The `start` and `direction` keys in your YAML stay as you wrote them.
+
+The ring follows the direction of the page and of its own container, and updates when either changes. See [Accessibility](../accessibility/README.md#right-to-left).
+
 ## Show condition
 
 | UI label | YAML key | Values |

@@ -15,10 +15,7 @@ export interface SaveReason {
 }
 
 /**
- * <mcte-save-bar>: the Save button. It is `aria-disabled`, never `disabled`, so focus
- * stays, and a press while it is off still fires `mcte-save` so the editor can say why and take the
- * user to the cause (a touch user has no hover). The reason line and the "Saved" line are the editor's
- * status row; this button only carries the reason as its description.
+ * <mcte-save-bar>: the Save button. It is `aria-disabled`, never `disabled`, so a press while off still fires `mcte-save` and the editor can explain.
  * Event: `mcte-save`.
  */
 export class McteSaveBar extends LitElement {
@@ -52,10 +49,10 @@ export class McteSaveBar extends LitElement {
         aria-disabled=${off ? 'true' : 'false'}
         aria-busy=${this.saving ? 'true' : 'false'}
         aria-describedby=${ifDefined(this.reason ? 'reason' : undefined)}
-        title=${t('Save (Ctrl+S)')}
+        title=${t('theme-editor.save-bar.save-ctrl-s')}
         @click=${this._save}
       >
-        ${this.saving ? html`<span class="spin" aria-hidden="true"></span> ${t('Saving...')}` : t('Save')}
+        ${this.saving ? html`<span class="spin" aria-hidden="true"></span> ${t('theme-editor.save-bar.saving')}` : t('theme-editor.save-bar.save')}
       </button>
     `;
   }

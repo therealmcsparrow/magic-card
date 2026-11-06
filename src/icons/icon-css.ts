@@ -1,9 +1,8 @@
 import { css } from 'lit';
 
 /**
- * <mc-svg-icon> base styles: sized like <ha-icon> (`--mdc-icon-size`), so module CSS that sizes
- * icons keeps working. Effects animate transform / opacity / filter only; reduced motion stops them
- * and keeps the state (fill level, colours).
+ * <mc-svg-icon> base styles: sized like <ha-icon> (`--mdc-icon-size`), so module CSS that sizes icons keeps working.
+ * Effects animate transform / opacity / filter only; reduced motion stops them and keeps the state (fill level, colours).
  */
 export const iconBaseStyles = css`
   :host {
@@ -15,6 +14,7 @@ export const iconBaseStyles = css`
     height: var(--mdc-icon-size, 24px);
     vertical-align: middle;
     line-height: 0;
+    contain: layout;
   }
   svg[part='svg'] {
     display: block;
@@ -253,7 +253,22 @@ export const iconBaseStyles = css`
   /* Off-screen (shared IntersectionObserver): looping animations pause. */
   :host([offscreen]) svg,
   :host([offscreen]) svg * {
-    animation-play-state: paused;
+    animation-play-state: paused !important;
+  }
+
+  /* A paused card (the viewer button or the editor preview) holds every track, rig tracks included. */
+  svg,
+  svg * {
+    animation-play-state: var(--mc-card-play, running) !important;
+  }
+
+  /* One-shot tracks end on timers, so they finish under a card pause; looping tracks stay held. */
+  .mc-draw .draw path,
+  .mc-draw .body,
+  .xfade-in,
+  .xfade-out,
+  .morph-in {
+    animation-play-state: running !important;
   }
 
   /* Reduced motion: nothing moves; glow, the open-door pose, ring and flakes stay as a still frame. */

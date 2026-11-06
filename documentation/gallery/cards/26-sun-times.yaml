@@ -2,7 +2,7 @@
 # Entities: sensor.sunrise, sensor.sunset, sensor.day_length
 type: custom:magic-card
 name: Sun
-background: "linear-gradient(180deg, #1e3a8a 0%, #7c3aed 45%, #f472b6 75%, #fdba74 100%)"
+background: "linear-gradient(180deg, #1e3a8a 0%, #5b21b6 45%, #9d174d 75%, #9a3412 100%)"
 border_radius: 28px
 padding: 22px
 box_shadow: "0 20px 44px rgba(124, 58, 237, 0.3)"
@@ -13,7 +13,7 @@ rows:
         modules:
           - type: text
             text: Daylight
-            design: { font_size: 13px, font_weight: "700", color: "rgba(255,255,255,0.75)", text_transform: uppercase, letter_spacing: 1.5px }
+            design: { font_size: 13px, font_weight: "700", color: "#ffffff", text_transform: uppercase, letter_spacing: 1.5px }
           - type: text
             use_entity: true
             entity: sensor.day_length
@@ -55,7 +55,7 @@ rows:
                 modules:
                   - type: text
                     text: Sunrise
-                    design: &lab { font_size: 11px, color: "rgba(255,255,255,0.8)" }
+                    design: &lab { font_size: 11px, color: "#ffffff" }
                   - type: text
                     use_entity: true
                     entity: sensor.sunrise

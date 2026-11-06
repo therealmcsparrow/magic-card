@@ -1,5 +1,5 @@
 import type { PopupConfig } from '../types';
-import { isPopupEnabled, isValidPopupHash, normalizePopupHash, urlWithHash } from '../utils/popup';
+import { isPopupEnabled } from '../utils/popup';
 
 /** How the URL changed: a new history entry, a replaced one, or back / forward. */
 export type LocationChange = 'push' | 'replace' | 'pop';
@@ -31,23 +31,6 @@ export interface PopupHandle {
  * holds before the pop-up code has loaded as well as after.
  */
 export const popupHidden = (popup: PopupConfig | undefined, place: EditorPlace | undefined): boolean => isPopupEnabled(popup) && !place;
-
-/**
- * Open the pop-up `id` the way HA's navigate action does: push `#id` onto the current URL and fire
- * `location-changed`, so it works across cards (and with HA's own navigate to `#id`).
- */
-export function navigateToPopup(rawId: unknown): boolean {
-  const id = normalizePopupHash(rawId);
-  if (!isValidPopupHash(id)) return false;
-  if (window.location.hash === `#${id}`) {
-    // already the URL (e.g. its pop-up was closed by a trigger): let the cards look again
-    window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: true } }));
-    return true;
-  }
-  history.pushState(history.state, '', urlWithHash(window.location.href, id));
-  window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
-  return true;
-}
 
 const OUT_OF_FLOW: Record<string, string> = {
   position: 'absolute',

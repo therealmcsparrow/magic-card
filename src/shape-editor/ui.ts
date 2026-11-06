@@ -2,11 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import type { KitButtonOptions } from '../contracts/ui-kit';
 import { button, seg as kitSeg } from '../ui-kit';
 
-/*
- * Small template helpers of the shape editor's panels, on the ui kit (contract ui-kit 1.0.0): a kit button, the kit
- * segmented control and the number field, written once. Markup uses kit class names only; the layer's own CSS never
- * restyles them.
- */
+// Small template helpers of the shape editor panels on the ui kit (ui-kit 1.0.0): a button, the segmented control and the number field.
 
 /** A small kit button (secondary unless `o.variant` says otherwise). */
 export const btn = (label: string, onClick: (e: MouseEvent) => void, o: Partial<KitButtonOptions> = {}): TemplateResult => button({ label, onClick, size: 'sm', ...o });

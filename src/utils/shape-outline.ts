@@ -1,8 +1,5 @@
-/*
- * Shim for the merged path model (src/path/core.ts, contract path-model 1.0.0): the old {x, y}
- * outline API over the tuple-based core. Not imported by the card any more; removed one release
- * after the merge.
- */
+// Shim for the merged path model (src/path/core.ts): the old {x, y} outline API over the
+// tuple-based core. Not imported by the card any more.
 import { flatten, parseClosed, polygonCss, nearest, restartAt, reverse, toPathString, translate } from '../path/core';
 import type { Pt, SubPath } from '../path/core';
 

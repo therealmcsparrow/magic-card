@@ -9,7 +9,7 @@ const WATER = [HM.icon, '#64b5f6', '#bbdefb'];
 export const HOME = group('Home automation', [
   {
     id: 'home-leak-drip-splash',
-    name: m('Leak drip & splash'),
+    name: m('preset-catalogue.home.leak-drip-splash'),
     icon: 'mdi:water-alert',
     tags: ['leak', 'water', 'drip', 'splash', 'alarm', 'particles'],
     doc: (id, name) =>
@@ -41,7 +41,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-fan-running',
-    name: m('Fan running'),
+    name: m('preset-catalogue.home.fan-running'),
     icon: 'mdi:fan',
     tags: ['fan', 'ventilation', 'spin', 'cooling', 'running'],
     doc: (id, name) =>
@@ -53,7 +53,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-doorbell-ring',
-    name: m('Doorbell ring'),
+    name: m('preset-catalogue.home.doorbell-ring'),
     icon: 'mdi:doorbell',
     tags: ['doorbell', 'ring', 'visitor', 'event', 'notification'],
     doc: (id, name) =>
@@ -75,7 +75,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-motion-detected',
-    name: m('Motion detected'),
+    name: m('preset-catalogue.home.motion-detected'),
     icon: 'mdi:motion-sensor',
     tags: ['motion', 'presence', 'sensor', 'alert', 'blink'],
     doc: (id, name) =>
@@ -95,7 +95,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-mail-arrived',
-    name: m('Mail arrived'),
+    name: m('preset-catalogue.home.mail-arrived'),
     icon: 'mdi:mailbox-up',
     tags: ['mail', 'post', 'letterbox', 'parcel', 'event'],
     doc: (id, name) =>
@@ -115,7 +115,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-energy-flow',
-    name: m('Energy flow'),
+    name: m('preset-catalogue.home.energy-flow'),
     icon: 'mdi:lightning-bolt',
     tags: ['energy', 'power', 'solar', 'electricity', 'flow', 'particles'],
     doc: (id, name) =>
@@ -133,7 +133,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-garden-sprinkler',
-    name: m('Garden sprinkler'),
+    name: m('preset-catalogue.home.garden-sprinkler'),
     icon: 'mdi:sprinkler-variant',
     tags: ['sprinkler', 'irrigation', 'garden', 'water', 'particles'],
     doc: (id, name) =>

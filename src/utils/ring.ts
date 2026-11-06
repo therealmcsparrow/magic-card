@@ -8,11 +8,7 @@ import { entityNumber } from './entity-value';
 import { isTimer, timerFraction, timerProgress } from './timer';
 import { resolveBound } from './value-bound';
 
-/*
- * The ring of a card / row / column / module design (RingConfig): what to draw, resolved from the
- * config and the entity states. The outline itself is drawn by <mc-ring> (src/card/mc-ring.ts)
- * from the element's rendered size and radii (src/utils/ring-path.ts).
- */
+/** The ring of a card, row, column or module design (RingConfig), resolved from config and entity states. */
 
 export const RING_DEFAULTS = {
   width: 3,
@@ -27,10 +23,6 @@ export const RING_DEFAULTS = {
   min: 0,
   max: 100,
 };
-
-/** Number of dots of the Chase dots ring. */
-export const RING_DOTS = 12;
-
 
 const ANIMATIONS: RingAnimation[] = ['snake', 'pulse', 'full', 'dots', 'dashes'];
 const STARTS: RingStart[] = ['top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'top-left'];
@@ -91,17 +83,15 @@ const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n
 const pick = <T>(v: unknown, list: T[], def: T): T => (list.includes(v as T) ? (v as T) : def);
 
 /** A colour value: `entity` / `entity N%` (the wrapper's entity colour) or a safe CSS colour. */
-const colour = (v: unknown): string | undefined => entityColorCss(v) ?? safeColor(v);
+export const colour = (v: unknown): string | undefined => entityColorCss(v) ?? safeColor(v);
 
-const withOpacity = (c: string, pct: number | undefined) =>
+export const withOpacity = (c: string, pct: number | undefined) =>
   pct === undefined || pct >= 100 ? c : `color-mix(in srgb, ${c} ${clamp(pct, 0, 100)}%, transparent)`;
 
 /**
- * What the ring draws, or undefined when it is off or its "Show only while" condition is false.
- * `defaultEntity`: the module's entity (value and condition default); none for card / row / column.
- * `clipped`: the ring's element clips its edge (the card: ha-card has overflow: hidden), so an
- * Outside ring would draw nothing; it is drawn Inside. `shaped`: the element is clipped to its
- * shape, which would cut off half of a Center ring too: every ring is drawn Inside.
+ * What the ring draws, or undefined when it is off or its condition is false. `defaultEntity` is
+ * the module's entity. `clipped` and `shaped` elements cut an Outside or Center ring, so it is
+ * drawn Inside.
  */
 export function resolveRing(
   ring: RingConfig | undefined,
@@ -163,62 +153,4 @@ export function resolveRing(
     transition: timer ? tickTransition(transition) : transition,
     ...(timer ? { timer } : {}),
   };
-}
-
-/** Fill and colour (and the track, when it is the ring colour) of a running timer ring at `now`. */
-export function ringTimerTick(t: RingTimer, now = Date.now()): { fill: number; color: string; track?: string } {
-  const left = clamp((t.end - now) / t.total, 0, 1);
-  const color = colour(rangeColor(left * 100, t.thresholds)) ?? t.color;
-  return { fill: t.elapsed ? 1 - left : left, color, ...(t.trackOpacity !== undefined ? { track: withOpacity(color, t.trackOpacity) } : {}) };
-}
-
-/** How far the outline sits inside the border edge: half the stroke inside, on it, or half outside. */
-export function ringInset(position: RingPosition, width: number): number {
-  return position === 'inside' ? width / 2 : position === 'outside' ? -width / 2 : 0;
-}
-
-export interface RingStroke {
-  dasharray: string;
-  dashoffset: string;
-  linecap: 'round' | 'butt';
-  /** CSS animation of the stroke (keyframes in mc-ring), or "none". */
-  animation: string;
-  transition: string;
-  opacity: number;
-}
-
-const r3 = (n: number) => String(+n.toFixed(3));
-
-/**
- * Dash pattern and motion of the ring stroke, in percent of the outline (pathLength="100").
- * Value: a 100 dash shifted back by the empty part, so it fills from the start point.
- * Reduced motion: nothing moves, value changes are instant.
- */
-export function ringStroke(r: ResolvedRing, reducedMotion: boolean): RingStroke {
-  const still = (s: Omit<RingStroke, 'animation' | 'transition'>, animation = 'none', transition = 'none'): RingStroke => ({
-    ...s,
-    animation: reducedMotion ? 'none' : animation,
-    transition: reducedMotion ? 'none' : transition,
-  });
-  if (r.mode === 'value') {
-    return still(
-      { dasharray: '100 101', dashoffset: r3(100 - r.fill * 100), linecap: r.linecap, opacity: r.fill > 0 ? 1 : 0 },
-      'none',
-      // a running timer moves every second: linear, so the steps join up
-      `stroke-dashoffset ${r.transition} ${r.timer ? 'linear' : 'ease-in-out'}, stroke 0.5s ease`,
-    );
-  }
-  const run = `mc-ring-run ${r.speed} ${r.timing ?? 'linear infinite'}`;
-  switch (r.animation) {
-    case 'pulse':
-      return still({ dasharray: 'none', dashoffset: '0', linecap: r.linecap, opacity: 1 }, `mc-ring-pulse ${r.speed} ${r.timing ?? 'ease-in-out infinite'}`);
-    case 'full':
-      return still({ dasharray: 'none', dashoffset: '0', linecap: r.linecap, opacity: 1 });
-    case 'dots':
-      return still({ dasharray: `0 ${r3(100 / RING_DOTS)}`, dashoffset: '0', linecap: 'round', opacity: 1 }, run);
-    case 'dashes':
-      return still({ dasharray: '1.5 1.5', dashoffset: '0', linecap: r.linecap, opacity: 1 }, run);
-    default:
-      return still({ dasharray: `${r3(r.length)} ${r3(100 - r.length)}`, dashoffset: '0', linecap: r.linecap, opacity: 1 }, run);
-  }
 }

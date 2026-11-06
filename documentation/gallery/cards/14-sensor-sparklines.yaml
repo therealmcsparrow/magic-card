@@ -20,7 +20,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.indoor_temperature, min: 17, max: 29, color: "#fb923c", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.indoor_temperature, min: 17, max: 29, color: "#fb923c", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.indoor_temperature }
             modules:
@@ -47,7 +47,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.indoor_humidity, min: 30, max: 80, color: "#38bdf8", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.indoor_humidity, min: 30, max: 80, color: "#38bdf8", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.indoor_humidity }
             modules:
@@ -78,7 +78,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.house_power, min: 0, max: 2600, color: "#facc15", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.house_power, min: 0, max: 2600, color: "#facc15", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.house_power }
             modules:
@@ -105,7 +105,7 @@ rows:
               padding: 14px
               border_radius: 20px
               background_color: "#171b24"
-              value_background: { type: sparkline, entity: sensor.co2, min: 300, max: 1300, color: "#4ade80", opacity: 20%, line_width: 2 }
+              value_background: { type: sparkline, entity: sensor.co2, min: 300, max: 1300, color: "#4ade80", opacity: 55%, line_width: 3 }
             actions:
               tap_action: { action: more-info, entity: sensor.co2 }
             modules:

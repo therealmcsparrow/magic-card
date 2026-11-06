@@ -3,11 +3,8 @@ import { SCENE_KEYFRAMES } from '../css/animation-scenes';
 import { EXTRA_KEYFRAMES } from '../css/animation-extra';
 import { getAnimationPreset } from '../utils/animation-presets';
 
-/*
- * The presets' keyframe bodies (src/css/animation-*.ts) as data: blocks of offsets and
- * declarations, and as Web Animations keyframes for sequences. `$i` becomes the intensity, `$c`
- * the animation colour `var(--mc-anim-c)`.
- */
+// The presets' keyframe bodies (src/css/animation-*.ts) as data and as Web Animations keyframes for sequences.
+// `$i` becomes the intensity, `$c` the animation colour `var(--mc-anim-c)`.
 
 export interface KeyframeBlock {
   /** 0-100 */

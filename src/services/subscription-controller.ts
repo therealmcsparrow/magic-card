@@ -1,11 +1,8 @@
 import type { HomeAssistant } from '../types';
 
-/**
- * Websocket subscriptions read while rendering (e.g. weather/subscribe_forecast): one subscription
- * per distinct message for as long as some module of the card renders it, like the
- * TemplateController does for render_template. The last message per subscription is cached, so a
- * re-created card paints the last known data right away.
- */
+// Websocket subscriptions read while rendering (e.g. weather/subscribe_forecast): one subscription per distinct message
+// for as long as some module of the card renders it, like the TemplateController does for render_template.
+// The last message per subscription is cached, so a re-created card paints the last known data right away.
 
 export type SubscriptionState<T = unknown> =
   | { status: 'pending' }

@@ -1,19 +1,11 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, ParticleDirection, ParticleShape, ParticlesSpec } from '../anim-studio/model';
 import type { CatalogueGroup, CataloguePreset } from '../contracts/preset-catalogue';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { t } from './i18n';
 import type { ParticleFlow, ParticlePhysics, ParticleColliders, ParticleRanges, ParticlesSim, SubEmitter, WeightedShape, BuiltinShape, Range } from '../contracts/particles-v2';
 
-/*
- * Builders shared by the catalogue files. Chunk rule (preset-catalogue 1.1.0): this file imports
- * types only, so nothing from either bundle is copied into the chunk. Every builder returns a fresh
- * object per call (the studio and the card editor may change what they get).
- *
- * Art direction (Living rigs, assets/brand/icon-library/p4-spec.json motion.*): every keyframes
- * loop ends where it starts, motion has weight (anticipation, overshoot, settle), event presets
- * act in the first 60 % and rest for the last 40 %, blinks stay at or under 3 per second and use
- * opacity 0.35..1. Reduced motion is the card's job (it holds the rest pose / one still frame).
- */
+// Builders shared by the catalogue files. This file imports types only, so nothing from either bundle is copied
+// into the chunk. Every builder returns a fresh object per call.
 
 /** Theme pairs from p4-spec.json motion.themes (icon colour 3:1 on dark and light; glow decorative). */
 export const THEME = {
@@ -206,7 +198,7 @@ export function particlesDoc(id: string, name: string, p: ParticlesInput): Anima
 export interface EntryInput {
   id: string;
   /** An m() mark; the entry reads it with t() (a getter, so a language change applies at once). */
-  name: MessageId;
+  name: MessageIndex;
   /** The mini card's icon in the tile. */
   icon: string;
   tags: string[];

@@ -7,12 +7,9 @@ import type { Sampled } from './sampler';
 import { unmix, type Paint } from './paint';
 import { defaultShapes } from './lines/dots';
 
-/*
- * The registry of the flow-look chunk: the seams where the other parts plug in without editing the
- * line modules. The lines fill the defaults; the shapes part replaces `shapes`, the colour and ends part
- * replaces `stroke` (gradient paint), sets `ends` (caps, arrival) and may replace `colour`. A part
- * registers itself from src/flow-look/parts.ts (the one list of side-effect imports).
- */
+// The registry of the flow-look chunk: the seams where the other parts plug in without editing the line modules.
+// The lines fill the defaults; the shapes part replaces `shapes`, the colour and ends part replaces `stroke`, sets `ends`
+// and may replace `colour`. A part registers itself from src/flow-look/parts.ts.
 
 export { unmix, type Paint };
 

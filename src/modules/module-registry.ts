@@ -2,9 +2,9 @@ import { MagicModule, MagicModuleMetadata } from './module-types';
 import { CardModule, HomeAssistant, ModuleCategory, ModuleType } from '../types';
 import { html } from 'lit';
 import type { LazyModuleStub, ModuleView, RetryableLazyChunk } from '../contracts/lazy-module';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { currentRenderContext } from '../services/render-context';
-import { chunkNotice } from '../card/chunk-notice';
+import { chunkNotice, hasNotice } from '../card/chunk-notice';
 
 class ModuleRegistryImpl {
   private modules = new Map<ModuleType, MagicModule>();
@@ -49,19 +49,16 @@ class ModuleRegistryImpl {
 
   private renderLazy(stub: LazyModuleStub, chunk: RetryableLazyChunk, config: CardModule, hass?: HomeAssistant) {
     const view = this.views.get(stub.metadata.type);
-    if (view) return view.renderPreview(config, hass);
-    // the notice (lazy-module 1.4.0 "Failure"): after the stub's own box, so the slot keeps the size its config gives it
-    const notice = () => chunkNotice(chunk);
-    if (stub.renderPreview) {
-      void chunk.load();
-      const preview = stub.renderPreview(config, hass);
-      return chunk.failed() ? html`${preview}${notice()}` : preview;
-    }
+    // the notice (lazy-module 1.4.0 "Failure"): after the module's own box, so the slot keeps the size its config gives it.
+    // A chunk whose notice was shown keeps its status container after a retry worked, for the focus hand-over and the "loaded" text.
+    const withNotice = (box: unknown) => (chunk.failed() || hasNotice(chunk) ? html`${box}${chunkNotice(chunk)}` : box);
+    if (view) return withNotice(view.renderPreview(config, hass));
     void chunk.load();
+    if (stub.renderPreview) return withNotice(stub.renderPreview(config, hass));
     const update = currentRenderContext()?.requestUpdate;
     // kept through a failure: a retry that succeeds later renders the module
     if (update) chunk.whenReady(update);
-    return chunk.failed() ? html`${stub.placeholder(config, 'failed')}${notice()}` : stub.placeholder(config, 'pending');
+    return withNotice(stub.placeholder(config, chunk.failed() ? 'failed' : 'pending'));
   }
 
   get(type: ModuleType): MagicModule | undefined {
@@ -81,7 +78,7 @@ class ModuleRegistryImpl {
   }
 
   /** `text` turns a name or description into the words the user sees (the labels namespace, which magic-card.js does not carry). */
-  search(query: string, text: (id: MessageId) => string = String): MagicModule[] {
+  search(query: string, text: (id: MessageIndex) => string = String): MagicModule[] {
     const lower = query.toLowerCase();
     return this.getAll().filter(
       (m) =>

@@ -13,8 +13,9 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [Animation studio](animation-studio/README.md) | Your own keyframe, particle, path and sequence animations: the library with live preset tiles, particles with physics, collisions and child particles, icon animations with part presets, the icon library, animated SVG export, the editor with layers, stage, timeline and inspector, icon parts, drawing, own SVG icons, card parts, state clips and value bindings, using them in cards and their YAML format. Needs the Magic Card Utils integration. |
 | [SVG editor](svg-editor/README.md) | Drawing and editing icons on a 24 x 24 grid: tools, the grid, alignment, boolean operations, layers with groups and drag and drop, dual-tone Accent icons, path tools (outline stroke, offset, simplify, join, split, knife), importing SVG files and saving to the library. Needs Magic Card Utils. |
 | [Shape editor](shape-editor/README.md) | Outlines for a card, row, column or module: corner types and sizes, free shapes with the pen, starting from a preset, combining shapes, the previews and saving to the library. [Custom shapes in cards](shape-editor/custom-shapes-in-cards.md) has the YAML and what older browsers show. Needs Magic Card Utils for the editor. |
+| [Images](images/README.md) | Library images: the image editor, reference pictures, SVG import, image modules and background layers, `mcu-image:<id>` in YAML, the limits, who can see them and privacy. Needs Magic Card Utils |
 | [Presets and the library](presets/README.md) | Your saved animations, theme presets, icons and shapes, the copies a card keeps, and the [export and import](presets/export-and-import.md) file format with its safety checks and the warning for themes that point to other websites. |
-| [Magic Card Utils](magic-card-utils/README.md) | The integration's panel tabs (Templates, Animations, Themes, Library, Shapes and Editors), saved icons in a card and in Home Assistant's own cards, and what needs what. |
+| [Magic Card Utils](magic-card-utils/README.md) | The integration's panel tabs (Templates, Animations, Themes, Library, Shapes and Editors), the Forum shot area, saved icons in a card and in Home Assistant's own cards, and what needs what. |
 
 ## Options reference
 
@@ -33,13 +34,38 @@ This folder documents the Magic Card editor and every option the card supports. 
 
 | Folder | Covers |
 | --- | --- |
-| [Loading and size](loading-and-size/README.md) | Which file loads when, the sizes of the card file, the notices a card shows when a part fails, offline and failed loads, and how to undo a remembered pause |
+| [Loading and size](loading-and-size/README.md) | Which file loads when, the sizes of the card file, the [how-we-measured box](loading-and-size/README.md#how-we-measured) and the [bad cases we test](loading-and-size/README.md#bad-cases-we-test), the notices and the one-tap update tile a card shows when a part fails, how to clear the browser cache, the connection and not-updated lines with `quiet_time`, offline and failed loads, and how to undo a remembered pause |
+
+## Support
+
+| Folder | Covers |
+| --- | --- |
+| [Support](support/README.md) | Ready replies for a card that stands still after a pause and for the "Magic Card was updated" message |
+
+## Older tablets
+
+| Folder | Covers |
+| --- | --- |
+| [Older Android tablets](old-tablets/README.md) | The browser floor (Android System WebView 85), what was checked on that engine, the [old engine check](old-tablets/old-engine-check.md) with the effects that do not show there, and a guest-network tip |
+
+## Troubleshooting
+
+| Folder | Covers |
+| --- | --- |
+| [Troubleshooting](troubleshooting/README.md) | A blank card on an old tablet, a card that stands still, a missing file and the forum shot |
+
+## Security
+
+| Page | Covers |
+| --- | --- |
+| [Check a genuine release](security/check-a-genuine-release.md) | A quick check in the browser and a GitHub CLI check of `magic-card.js` and the SBOM, which releases have attestations, and what the checks cannot tell you |
 
 ## Languages and accessibility
 
 | Folder | Covers |
 | --- | --- |
 | [Languages](languages/README.md) | English (UK), English (US) and Dutch, which language Magic Card uses, and which text stays in English |
+| [Translating](translating/README.md) | For translators and contributors: the text files, exchange files for Weblate and Crowdin, stale translations |
 | [Accessibility](accessibility/README.md) | The WCAG 2.2 AA target, the keyboard and screen reader support in the editors, and what still needs a check on a real device |
 
 ## Examples
@@ -47,6 +73,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | Folder | Covers |
 | --- | --- |
 | [Card gallery](gallery/README.md) | A hundred and thirty-four complete cards with screenshots and YAML, sixty-nine of them animated: showcase cards that combine the new looks, weather, climate, energy, flows and sliders, layers, lights, media, security, appliances, garden, seasonal, sci-fi and fantasy |
+| [Wall tablet cards](gallery/tablet.md) | Four big status cards for a wall tablet: front door, kitchen door, hallway lights and alarm, with open, closed, paused and dimmed pictures |
 | [Complete dashboards](gallery/dashboards/README.md) | Twenty-five complete sections dashboards made of Magic Cards, each with its own theme: sci-fi, fantasy, western, steampunk and dystopian |
 | [Theme examples](themes/examples/README.md) | The 45 theme presets of the theme editor, each with a screenshot of its light and dark modes |
 

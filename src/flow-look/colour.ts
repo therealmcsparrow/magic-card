@@ -4,22 +4,9 @@ import { at, fmt } from './sampler';
 import { defaultStroke, unmix, type LineCtx, type Paint, type StrokeSpec } from './registry';
 import { memo, sampled } from './lines/util';
 
-/*
- * Gradient paint of the flow-look chunk (flow-look 1.0.0). `color` -> `colorTo` along the
- * travel direction, only while flowing (idle = the idle colour).
- * - Straight centre line: one userSpaceOnUse linearGradient from the travel start to the travel end.
- *   Exact there, whatever offset line (wave, rails) is painted, and dashes need nothing special.
- * - Any other route: N = clamp(ceil(L / 10), 4, 32) windows of the same `d` (stroke-dasharray plus
- *   dashoffset), each opaque in its arc-length colour, overlapping the next by 1 px, all in one
- *   <g> whose opacity is the mean of the two end alphas. Abutting segments leave hairlines and
- *   translucent overlaps darken, so they stay opaque.
- * - A dashed, dotted or liquid stroke on such a route: the dash pattern (with its caps and its
- *   animation) moves to a mask path and the segment group is masked by it. The segments only
- *   colour; the mask shapes. This is how gradients and dashes combine.
- * - Colours the chunk cannot mix in JS (var(), names, color-mix): the start colour as a whole path
- *   and the end colour as a whole path under a mask of grey windows (same count, same overlap)
- *   whose luminance is the blend. No colour maths needed, so entity state colours work too.
- */
+// Gradient paint of the flow-look chunk: `color` to `colorTo` along the travel direction while flowing. A straight
+// centre line uses one userSpaceOnUse linearGradient; any other route uses N opaque overlapping windows of the same `d`.
+// Colours the chunk cannot mix (var(), names, color-mix) blend two whole paths under a mask.
 
 export type RGBA = [number, number, number, number];
 

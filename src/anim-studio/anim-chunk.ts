@@ -1,17 +1,15 @@
 import { BUILD_VERSION } from '../utils/build-version';
+import { animationStyles } from '../css/animations';
+import { layerRevealStyles } from '../reveal/layer-reveal';
 
-/*
- * Chunk entry of dist/magic-card-anim.js (lazy-module 1.4.0 chunk `anim`): the animation resolve, the
- * document compiler and model it calls, the custom-animation stylesheet, the animation library (the page's one instance and the `custom:` lookup), the sequence player and the preset keyframes and animation rules (`styles`). It defines no
- * element and fills no slot: the card reads this module through lazyChunks.anim.module() (src/utils/anim-seam.ts) and
- * draws a plain card until it has installed. Nothing here runs at import time except model.ts and compile-v2's
- * registration of their hooks (src/utils/anim-hooks.ts, in the entry).
- */
+// Chunk entry of dist/magic-card-anim.js: animation resolve, document compiler and model, the custom-animation stylesheet,
+// the animation library, the sequence player and the preset keyframes. It defines no element; the card reads it through
+// lazyChunks.anim.module() and draws a plain card until it has installed.
 
 export const BUILD: string = BUILD_VERSION;
 
-/** The preset keyframes, particle layers and animation rules of the card; Core adopts them with the chunk. */
-export { animationStyles as styles } from '../css/animations';
+/** The preset keyframes, particle layers and animation rules of the card, then the layer fade-in; Core adopts them with the chunk. */
+export const styles = [animationStyles, layerRevealStyles];
 
 export function install(): void {}
 

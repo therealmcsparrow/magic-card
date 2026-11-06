@@ -11,13 +11,8 @@ import {
 import { Checker, customRefId, isCustomRef, type AnimationDoc } from './model';
 import { validateV2, type Binding, type Clip, type Rig, type TargetRef } from './model-v2';
 
-/*
- * The v2 parts of a document for the lazy runtime chunk (src/anim-runtime): per-target keyframes
- * (tracks), and the rig, clips and bindings as validated. Pure. Loading this file registers
- * compileV2 with compile.ts (through src/utils/anim-hooks.ts), which then attaches it as `CompiledAnimation.v2` when
- * docNeedsRuntime(doc). The card bundle does not import it (its runtime chunk does), so
- * magic-card.js stays small.
- */
+// The v2 parts of a document for the lazy runtime chunk: per-target keyframes (tracks) and the validated rig, clips and
+// bindings. Pure. Loading it registers compileV2 with compile.ts; the card bundle does not import it.
 
 export interface CompiledTrack {
   target: TargetRef;
@@ -86,11 +81,8 @@ function checkedDoc(doc: AnimationDoc): AnimationDoc {
 }
 
 /**
- * One `@keyframes` per track, named `${animationName(doc)}-t${index}` (index into the checked
- * tracks), amplitudes scaled by the entry's intensity like the main keyframes. The tracks are
- * re-checked leniently first (any document, also an unchecked one from a lookup, is safe to pass).
- * A track path is sampled (viewBox units for icon parts, px for card parts). Reduced motion: no
- * tracks (nothing plays).
+ * One `@keyframes` per track, named `${animationName(doc)}-t${index}`, amplitudes scaled by the entry intensity. Tracks
+ * are re-checked leniently first; a track path is sampled; reduced motion yields no tracks.
  */
 export function compileTracks(doc: AnimationDoc, opts: { reducedMotion?: boolean } = {}): CompiledTrack[] {
   if (opts.reducedMotion || !Array.isArray(doc.tracks) || !doc.tracks.length) return [];

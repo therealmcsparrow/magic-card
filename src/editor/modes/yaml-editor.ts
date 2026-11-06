@@ -138,12 +138,12 @@ export class YamlEditor extends LitElement {
     try {
       await navigator.clipboard.writeText(yaml);
       this._status = missing.length
-        ? t('YAML copied. Not embedded (not found): {ids}.', { ids: missing.join(', ') })
+        ? t('card-editor.yaml-editor.yaml-copied-not-embedded-not-found-ids', { ids: missing.join(', ') })
         : this._embed
-          ? t('YAML copied with your animations.')
-          : t('YAML copied.');
+          ? t('card-editor.yaml-editor.yaml-copied-with-your-animations')
+          : t('card-editor.yaml-editor.yaml-copied');
     } catch {
-      this._status = t('Copying failed: the browser blocked the clipboard.');
+      this._status = t('card-editor.yaml-editor.copying-failed-the-browser-blocked-the');
     }
   }
 
@@ -154,23 +154,23 @@ export class YamlEditor extends LitElement {
     const n = ids.length;
     return html`
       <div class="export">
-        <span class="txt"><strong>${t('Uses {n} of your animations.', { n })}</strong> ${t('{n, plural, one {Embed it to share this card with another Home Assistant.} other {Embed them to share this card with another Home Assistant.}}', { n })}</span>
+        <span class="txt"><strong>${t('card-editor.yaml-editor.uses-n-of-your-animations', { n })}</strong> ${t('card-editor.yaml-editor.n', { n })}</span>
         <label class="opt">
           <button
             type="button"
             class="switch"
             role="switch"
             aria-checked=${this._embed ? 'true' : 'false'}
-            aria-label=${t('Embed my animations')}
+            aria-label=${t('card-editor.yaml-editor.embed-my-animations')}
             @click=${() => {
               this._embed = !this._embed;
               this._status = '';
             }}
           ></button>
-          ${t('Embed my animations')}
+          ${t('card-editor.yaml-editor.embed-my-animations')}
         </label>
         <button type="button" class="btn btn-secondary btn-sm copy-yaml" @click=${() => this._copy()}>
-          <ha-icon icon="mdi:content-copy"></ha-icon>${t('Copy YAML')}
+          <ha-icon icon="mdi:content-copy"></ha-icon>${t('card-editor.yaml-editor.copy-yaml')}
         </button>
         <p class="status" role="status" aria-live="polite">${this._status}</p>
       </div>

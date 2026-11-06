@@ -14,7 +14,7 @@ The icon library is built into the studio and the card editor. It is separate fr
 ## Where to find it
 
 -   In the studio: New animation, then Icon animation…, under Or start from the icon library. See [Icon animations](icon-mode.md#start-from-the-icon-library).
--   In the card editor: the Animated icons tab of a module's icon picker. There the entries that fit the module's icon and entity come first, and a Style switch plays them Quiet, Living or Glow. See [Animated icons in the icon picker](using-in-cards.md#animated-icons-in-the-icon-picker) and [Styles](../design/quick-icon-animator.md#styles-quiet-living-and-glow). The studio always opens an entry as Living.
+-   In the card editor: the Animated icons tab of a module's icon picker. There the entries that fit the module's icon and entity come first, and three Style swatches play them Quiet, Living or Glow. See [Animated icons in the icon picker](using-in-cards.md#animated-icons-in-the-icon-picker) and [Styles](../design/quick-icon-animator.md#styles-quiet-living-and-glow). The studio always opens an entry as Living.
 
 ## Browsing and search
 
@@ -23,6 +23,12 @@ The studio shows every entry as a tile with a live thumbnail (a small Magic Card
 -   Search icons matches the entry's name, id, icon id, domain and tags. With several words, every word has to match. "bell", "rain" or "washing" all find something.
 -   The domain list (All domains, or one domain such as Light or Weather) shows the entries of that domain. Entries tagged with a domain show there too, so Climate also lists the thermometer and Humidifier also lists the humidity drop. Icons no domain fits are in the categories Animal, Household, Maker and Seasonal, which the list shows next to the domains.
 -   When nothing matches, the window says "No icon animations match "…"."
+
+### New entries
+
+An entry added in the current release gets a small diamond in the top-right corner of its tile. Screen readers read the tile as "New in this release". The diamond is there for the whole release, including its beta versions, and goes away with the next release.
+
+This release adds no icons, so no tile shows the diamond yet. It first appears in a release that adds icons to the library.
 
 ## Customising an entry
 

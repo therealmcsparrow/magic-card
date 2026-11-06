@@ -17,14 +17,14 @@ export const iconEditor: ModuleEditor = {
     const syncCtx = buildSyncContext(config, template);
     return html`
       <div class="mc-tab-content">
-        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
-        ${renderToggleField(t('Use entity icon'), c.use_entity_icon, (v) =>
+        ${renderEntitySourceField(t('card-editor.icon-editor.entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderToggleField(t('card-editor.icon-editor.use-entity-icon'), c.use_entity_icon, (v) =>
           onChange({ ...c, use_entity_icon: v }), 'use_entity_icon', syncCtx)}
-        ${renderToggleField(t('Use entity colour'), c.use_entity_color, (v) =>
+        ${renderToggleField(t('card-editor.icon-editor.use-entity-colour'), c.use_entity_color, (v) =>
           onChange({ ...c, use_entity_color: v }), 'use_entity_color', syncCtx,
-          t("Colours the icon like Home Assistant does for this entity's state."))}
+          t("card-editor.icon-editor.colours-the-icon-like-home-assistant"))}
         ${!c.use_entity_icon && c.icon !== 'svg'
-          ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
+          ? renderIconField(t('card-editor.icon-editor.icon'), c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: eid,
@@ -33,11 +33,11 @@ export const iconEditor: ModuleEditor = {
           allowStateIcons: !!eid,
           syncCtx,
         })}
-        ${renderColorField(t('Icon colour'), c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx, 'linear', t('The icon uses this gradient as its fill. Older tablets show the first colour.'))}
+        ${renderColorField(t('card-editor.icon-editor.icon-colour'), c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx, 'linear', t('card-editor.icon-editor.the-icon-uses-this-gradient-as-its-fill'))}
         ${c.use_entity_color && c.icon_color
-          ? renderFieldHint(t('Use entity colour wins while the entity has a state colour; this colour applies otherwise.'))
+          ? renderFieldHint(t('card-editor.icon-editor.use-entity-colour-wins-while-the-entity'))
           : nothing}
-        ${renderUnitField(t('Size'), c.size, (v) => onChange({ ...c, size: v || undefined }), 'size', syncCtx, '24')}
+        ${renderUnitField(t('card-editor.icon-editor.size'), c.size, (v) => onChange({ ...c, size: v || undefined }), 'size', syncCtx, '24')}
       </div>
     `;
   },

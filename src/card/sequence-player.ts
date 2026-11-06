@@ -2,13 +2,7 @@ import { hashString, type Schedule } from '../anim-studio/compile';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { reducedMotion } from '../utils/reduced-motion';
 
-/*
- * Custom sequences (src/anim-studio/compile.ts schedules) on Web Animations: the resolver
- * registers a run and marks its element `data-mc-seq="<key> ..."`; after each render the card
- * syncs the players of its shadow root. One player per element: its sequences start when the
- * element is on screen, pause off-screen (the shared IntersectionObserver) and never run for
- * reduced motion. A staggered sequence runs on the element's children one after another.
- */
+/** Custom sequences on Web Animations: one player per marked element, on screen only. */
 
 export interface SequenceRun extends Omit<Schedule, 'target'> {
   /** What the sequence plays on: the element, its icon or (a button) its label. */

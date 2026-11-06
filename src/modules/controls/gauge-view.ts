@@ -27,7 +27,7 @@ export class GaugeView implements ModuleView {
     } else {
       num = entityNumber(entity, attribute);
       if (num === undefined && attribute && entity.attributes[attribute] === undefined) {
-        valueText = hass!.formatEntityState?.(entity, 'unavailable') || t('Unavailable');
+        valueText = hass!.formatEntityState?.(entity, 'unavailable') || t('card.gauge-view.unavailable');
       } else {
         const v = formatEntityValue(hass, entity, attribute, { decimals: c.decimals });
         valueText = num === undefined ? v.text : v.value;

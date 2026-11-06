@@ -1,12 +1,9 @@
 import { PARTICLES_V2_CAPS as CAPS, type ParticleEmitter, type ParticlesSpecV2 } from '../contracts/particles-v2';
 import { childCount } from './children';
 
-/*
- * Emitters (particles-v2 1.2.0): a document is a list of emitters, each run by the single-emitter code
- * (bake, live) as a whole spec of its own. A plan orders them into at most two parts (part 0 = the
- * emitters on the primary's side, part 1 = the others) and gives each its parents, child slots and
- * pool offset. One emitter: the plan is the spec itself, so everything stays what 1.1.0 produced.
- */
+// Emitters (particles-v2 1.2.0): a document is a list of emitters, each run by the single-emitter code as a whole spec of its own.
+// A plan orders them into at most two parts and gives each its parents, child slots and pool offset.
+// One emitter: the plan is the spec itself.
 
 export interface Plan {
   spec: ParticlesSpecV2;

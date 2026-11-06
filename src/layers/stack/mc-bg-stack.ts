@@ -9,17 +9,9 @@ import { safeColor } from '../../utils/safe-css';
 import { blurOf, cssUrl, gradientCss, opacityOf, patternCss, positionCss, repeatCss, safeImageUrl, sanitiseStates, sizeCss } from './values';
 import { currentFx, liveStacks } from './fx-slot';
 
-/*
- * <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
- * Rules this file keeps:
- * - every URL goes through safeImageUrl, every colour through host.cssColor + safeColor, gradients are
- *   rebuilt from parseGradient output, enums are allow-listed (values.ts); per-instance CSS only through the CSSOM (sty directive, one validated value per property);
- * - blur sits on a static outer box; a moving picture (pan / zoom) is a transform animation on the inner image box;
- * - pan / zoom, camera refresh, the stale state and the idle, visibility and reduced-motion wiring belong to
- *   the BgStackRun that fx-slot.ts hands over (host.observeOffscreen sets `offscreen`); without it a picture
- *   shows unscaled and a camera layer keeps its first frame;
- * - a decode that resolves after disconnect, or for an older source, writes nothing.
- */
+// <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
+// Every URL, colour and gradient is validated before use; per-instance CSS goes through the CSSOM;
+// motion and camera refresh belong to the BgStackRun handed over by fx-slot.ts.
 
 const TAG = 'mc-bg-stack';
 const FADE_MS = 300;
@@ -47,7 +39,8 @@ interface Src {
   detail?: string;
 }
 
-type Item = BgStackItem;
+/** `fade`: the newest picture arrived on screen with motion allowed, so its element carries the arrival fade. */
+type Item = BgStackItem & { fade?: boolean };
 
 /** Sets one validated value per property through the CSSOM (never a concatenated style string). */
 class StyleSet extends Directive {
@@ -72,13 +65,16 @@ class StyleSet extends Directive {
 }
 const sty = directive(StyleSet);
 
+/** IMAGE_REF_PREFIX of svg-image 1.0.0, written out: importing the contract file would put its allow-lists in magic-card.js. */
+const isRef = (v: string): boolean => v.startsWith('mcu-image:');
+
 const srcKey = (s: Src): string => `${s.url ?? ''}|${s.pending ? 1 : 0}|${s.problem ?? ''}|${s.detail ?? ''}`;
 
 export class McBgStack extends LitElement implements BgStackView {
   static styles = css`
     :host{display:block;position:absolute;top:0;right:0;bottom:0;left:0;z-index:-1;overflow:hidden;border-radius:inherit;pointer-events:none}
     .l,.img,.fill,.pic{position:absolute;top:0;right:0;bottom:0;left:0}
-    .img{animation:mcbg-in .3s ease-out}
+    .img.in{animation:mcbg-in .3s ease-out}
     .pz{animation:mcbg-pz var(--d) ease-in-out infinite var(--dir);animation-play-state:paused}
     .pz[data-pz=play]{animation-play-state:running}
     .pz[data-pz=start],.pz[data-pz=end]{animation:none;transform:translate(var(--x0,0),var(--y0,0)) scale(var(--s0))}
@@ -86,7 +82,7 @@ export class McBgStack extends LitElement implements BgStackView {
     .pz[data-pz=start]{--s0:var(--f)}
     @keyframes mcbg-in{from{opacity:0}}
     @keyframes mcbg-pz{from{transform:scale(var(--f))}to{transform:translate(var(--tx),var(--ty)) scale(var(--t))}}
-    @media (prefers-reduced-motion:reduce){.img{animation:none}}
+    @media (prefers-reduced-motion:reduce){.img.in{animation:none}}
   `;
   static properties = {
     layers: { attribute: false },
@@ -130,6 +126,7 @@ export class McBgStack extends LitElement implements BgStackView {
     this._run?.stop();
     this._run = undefined;
     for (const i of this.items) {
+      i.fade = false;
       clearTimeout(i.fadeTimer);
       i.fadeTimer = undefined;
       i.prev = undefined;
@@ -170,7 +167,8 @@ export class McBgStack extends LitElement implements BgStackView {
 
   protected shouldUpdate(changed: PropertyValues): boolean {
     // a hass push only re-renders when a layer's own picture source changed
-    if (this.hasUpdated && changed.size === 1 && changed.has('hass')) return this._signature() !== this._sig0;
+    // (a shown library image takes every push: its element reads hass)
+    if (this.hasUpdated && changed.size === 1 && changed.has('hass')) return this._signature() !== this._sig0 || this.items.some((i) => i.shown && isRef(i.shown));
     return true;
   }
 
@@ -254,6 +252,7 @@ export class McBgStack extends LitElement implements BgStackView {
       }
     }
     if (typeof value !== 'string' || !value.trim()) return { problem: 'no-picture', detail: ent };
+    if (isRef(value)) return { url: value };
     const resolved = host.resolveImage(this.hass, value);
     if (resolved === undefined) return { pending: true };
     const url = safeImageUrl(resolved, location.href);
@@ -307,6 +306,15 @@ export class McBgStack extends LitElement implements BgStackView {
   /** Decode `url` (default `base`) off the DOM, then swap it in. A refresh passes a cache-busted `url`. */
   async load(i: Item, base: string, url: string = base): Promise<void> {
     const gen = ++i.gen;
+    if (isRef(url)) {
+      // a library image: the chunk draws it, nothing to decode
+      i.loading = false;
+      this.host?.needImage();
+      this._swap(i, url);
+      this.status(i, 'ok');
+      this.requestUpdate();
+      return;
+    }
     i.loading = true;
     i.lastTry = Date.now();
     if (!i.shown) this.status(i, 'loading');
@@ -336,13 +344,16 @@ export class McBgStack extends LitElement implements BgStackView {
     this._fade(i);
   }
 
-  /** Keep `prev` under the new picture for FADE_MS; no fade under reduced motion or while off screen or paused. */
+  /**
+   * Fade the new picture in over `prev` for FADE_MS. Under reduced motion, off screen or paused the picture
+   * is shown at once and is not marked, so its element never gets the animation, now or when the card runs again.
+   */
   private _fade(i: Item): void {
     clearTimeout(i.fadeTimer);
     i.fadeTimer = undefined;
-    if (!i.prev) return;
-    if (window.matchMedia?.(REDUCED).matches || this.hasAttribute('offscreen')) i.prev = undefined;
-    else {
+    i.fade = !(window.matchMedia?.(REDUCED).matches || this.hasAttribute('offscreen'));
+    if (!i.fade) i.prev = undefined;
+    else if (i.prev) {
       i.fadeTimer = setTimeout(() => {
         i.fadeTimer = undefined;
         i.prev = undefined;
@@ -394,12 +405,15 @@ export class McBgStack extends LitElement implements BgStackView {
   private _pic(i: Item, url: string, still: boolean): TemplateResult {
     const c = i.cfg;
     const size = sizeCss(c.size);
-    const style: Record<string, string> = {
-      'background-image': cssUrl(url),
-      'background-position': positionCss(c.position),
-      'background-size': size,
-      'background-repeat': repeatCss(c.repeat, size),
-    };
+    const live = isRef(url);
+    const style: Record<string, string> = live
+      ? {}
+      : {
+          'background-image': cssUrl(url),
+          'background-position': positionCss(c.position),
+          'background-size': size,
+          'background-repeat': repeatCss(c.repeat, size),
+        };
     // the still frame under a moving picture of the same URL fading in stays unscaled
     const pz = still ? undefined : i.pz;
     if (pz) {
@@ -410,7 +424,9 @@ export class McBgStack extends LitElement implements BgStackView {
         '--d': `${pz.duration}s`, '--dir': pz.alternate ? 'alternate' : 'normal',
       });
     }
-    return html`<div class="img"><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}></div></div>`;
+    return html`<div class=${!still && i.fade ? 'img in' : 'img'}><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}>${
+      live ? html`<mc-svg-image .ref=${url} .hass=${this.hass} .layer=${c} .at=${i.index}></mc-svg-image>` : nothing
+    }</div></div>`;
   }
 }
 

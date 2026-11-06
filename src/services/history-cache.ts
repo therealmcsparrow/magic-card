@@ -1,9 +1,7 @@
 import type { HomeAssistant } from '../types';
 
-/*
- * Recorded history shared by everything that draws it (graphs module, sparkline value backgrounds):
- * one cache per entity | hours | attribute, one in-flight fetch per key, refetched after 5 minutes.
- */
+// Recorded history shared by everything that draws it (graphs module, sparkline value backgrounds):
+// one cache per entity | hours | attribute, one in-flight fetch per key, refetched after 5 minutes.
 
 /** One recorded value at a time (ms). */
 export interface HistorySample {

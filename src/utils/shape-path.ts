@@ -1,23 +1,7 @@
 import type { ShapeKind, ShapeOptions } from '../types';
-import type { CustomShapeChunk } from '../contracts/custom-shape';
+import { customBuilder } from './shape-custom-loader';
 
-/*
- * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size:
- * squircle, hexagon, octagon, notch, ticket, wave edge, blob, pill and circle. One path source for
- * the clip-path, the border stroke, the ring and border length. Pure (no DOM).
- *
- * Paths use absolute M / L / C only (no arcs), and every point, control points included, lies inside
- * 0..w x 0..h, so a cubic never leaves the box (it stays inside its control polygon). `inset` is the
- * content padding that keeps a content rectangle inside the shape.
- *
- * The content sets a shaped element's height (inset + content + inset), so an inset that is a share
- * of the height feeds back: h/4 top and bottom doubles it. The insets keep that share small: the
- * content's corners sit on the outline close to the flat top / bottom (hexagons and octagons: on the
- * cut next to the flat edge; curves: a little below the top) and give up width instead. `pad` (where
- * the content starts anyway: border + the element's own padding) moves the corners down to it,
- * which needs less width. No inset shrinks as h grows, so a content-sized element settles instead of
- * flipping between two sizes.
- */
+/** Outline shapes for modules, rows, columns and the card as SVG paths in px. Pure (no DOM). */
 
 export type ShapeSide = 'top' | 'right' | 'bottom' | 'left';
 
@@ -303,7 +287,7 @@ function build(kind: ShapeKind, w: number, h: number, o: ShapeOptions, pad: Shap
 
   switch (kind) {
     case 'custom':
-      return customBuilder?.(w, h, o);
+      return customBuilder()?.(w, h, o);
     case 'squircle': {
       const smoothing = clamp(num(o.smoothing) ?? SHAPE_DEFAULTS.smoothing, 0, 1);
       // smoothing 1 → n 3 (round), 0 → n 8 (almost square corners); the classic squircle is n 4
@@ -455,7 +439,7 @@ function buildInset(kind: ShapeKind, w: number, h: number, o: ShapeOptions, off:
   const iw = w - 2 * off;
   const ih = h - 2 * off;
   if (!(iw > 0 && ih > 0)) return undefined;
-  if (kind === 'custom') return customBuilder?.(w, h, o, off);
+  if (kind === 'custom') return customBuilder()?.(w, h, o, off);
   let inner: ShapeOptions = o;
   if (kind === 'notch' || kind === 'octagon') inner = { ...o, corner: Math.max(0, cutCorner(kind, w, h, o) - (2 - Math.SQRT2) * off) };
   else if (kind === 'squircle') inner = { ...o, corner: Math.max(0, squircleRadius(w, h, o) - off) };
@@ -486,11 +470,9 @@ const EDGES: Array<ShapeSide | 'all'> = ['top', 'right', 'bottom', 'left', 'all'
 const MAX_WAVES = 50;
 
 /**
- * A wavy edge (or every edge): a whole number of cosine periods that start and end on a crest on the
- * box edge (flat there, so no tooth where the wave meets a straight side) and dip 2 * amplitude in.
- * With `all`, the corners are quarter arcs of radius `a` and each wave runs between them; the
- * amplitude is at most an eighth of the smaller side and every period at least 2.5 amplitudes long,
- * so neighbouring waves never cross.
+ * A wavy edge (or every edge): whole cosine periods that start and end on a crest on the box edge.
+ * With `all`, the corners are quarter arcs and each wave runs between them; amplitude and period
+ * are limited so neighbouring waves never cross.
  */
 function wave(w: number, h: number, o: ShapeOptions): Outline {
   const edge = EDGES.includes(o.edge as ShapeSide) ? (o.edge as ShapeSide | 'all') : 'bottom';
@@ -690,15 +672,6 @@ interface ShapeOutline {
   poly?: Pt[];
 }
 
-/** The `shape: custom` builder, once its lazy chunk has loaded (src/utils/shape-custom-loader.ts); empty before. */
-let customBuilder: CustomShapeChunk['buildCustom'] | undefined;
-
-/** Register (or, with nothing, remove) the custom builder; outlines memoised so far are dropped. */
-export function useCustomBuilder(fn?: CustomShapeChunk['buildCustom']): void {
-  customBuilder = fn;
-  memo.clear();
-}
-
 /** The JSON of an options object, once per object (options objects are replaced, not edited, on a change). */
 const optionKeys = new WeakMap<object, string>();
 const keyOf = (o: ShapeOptions): string => {
@@ -710,11 +683,18 @@ const keyOf = (o: ShapeOptions): string => {
 /** Recent outlines (several layers ask for the same shape and size: clip, stroke, ring, flows). */
 const memo = new Map<string, ShapeOutline | undefined>();
 const MEMO_SIZE = 256;
+/** The builder the memo was filled under; a different one (arrived, replaced, removed) drops the memo. */
+let seenBuilder: ReturnType<typeof customBuilder>;
 
 /** The shape's outline (memoised): path, content inset and polyline; `off` px inward (buildInset). */
 function shapeOutline(kind: ShapeKind, w: number, h: number, opts: ShapeOptions | undefined, off = 0, pad?: ShapeInset): ShapeOutline | undefined {
   if (!valid(kind, w, h)) return undefined;
-  if (kind === 'custom' && !customBuilder) return undefined;
+  const cb = customBuilder();
+  if (cb !== seenBuilder) {
+    seenBuilder = cb;
+    memo.clear();
+  }
+  if (kind === 'custom' && !cb) return undefined;
   const o = opts && typeof opts === 'object' ? opts : {};
   // (a custom shape's outline and inset do not depend on the content padding: one memo entry for all of them)
   const known = pad && kind !== 'custom' ? cleanPad(pad) : zero();
@@ -739,13 +719,9 @@ const cleanPad = (pad: ShapeInset): ShapeInset => {
 };
 
 /**
- * The shape's outline in px for a w x h element (clockwise, closed), and the content padding that
- * keeps content inside it. Undefined for `none`, an unknown shape or an empty box. Options are
- * clamped so the shape always fits the box.
- *
- * `pad`: where the content starts on each side whatever the inset (border + the element's own
- * padding, px from the box edge). The content rectangle, each side at max(inset, pad), lies inside
- * the shape; a known padding lets the corners sit lower, so the inset across is smaller.
+ * The shape's outline in px for a w x h element (clockwise, closed) and the content padding that
+ * keeps content inside it. Undefined for `none`, an unknown shape or an empty box. `pad` is where
+ * the content starts anyway (border + own padding); a known pad lets the inset across be smaller.
  */
 export function shapePath(kind: ShapeKind, w: number, h: number, opts: ShapeOptions = {}, pad?: ShapeInset): ShapePathResult | undefined {
   const o = shapeOutline(kind, w, h, opts, 0, pad);

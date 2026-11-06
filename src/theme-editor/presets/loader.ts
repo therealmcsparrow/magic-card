@@ -2,19 +2,7 @@ import type * as Chunk from './chunk';
 import type { ThemePresetLibrary } from '../../contracts/theme-editor';
 import { PRESETS_BUILD } from './build';
 
-/*
- * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js, loaded
- * next to the editor bundle (public path: ../public-path.ts) when the create dialog first opens.
- * A load that takes over 8 s counts as failed (a stalled request would hang for minutes).
- * Memoised while pending and once loaded; a failure or timeout clears the memo so "Try again" can
- * call import() again. What that retry does depends on why the last attempt ended:
- * - after a load error, webpack has dropped the chunk's request, so the retry asks for the chunk
- *   under a new URL (see `real` below);
- * - after the 8 s timeout, the original request is still in flight and webpack hands back that
- *   same promise, so no new request is sent: Try again waits on the stalled request and either
- *   gets it or times out again 8 s later.
- * The failure message tells the user to reload the page if it keeps failing.
- */
+// Loads the presets and picker lazy chunk when the create dialog first opens; a failure clears the memo.
 export type PresetChunk = typeof Chunk;
 type Importer = () => Promise<PresetChunk>;
 

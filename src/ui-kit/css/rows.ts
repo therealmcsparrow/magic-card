@@ -1,10 +1,6 @@
 import { css, CSSResult } from 'lit';
 
-/*
- * Rows (contract ui-kit 1.0.0): the list and tree row. 40 px fine / 44 px coarse through
- * --mc-hit. Trailing buttons are the borderless 24 px `.icon-btn.xs` (kitButtonExtras). Level indent is the --lvl
- * custom property the helper sets (0 = top level), 16 px a step.
- */
+// Rows (contract ui-kit 1.0.0): the list and tree row; 40 px fine / 44 px coarse through --mc-hit, indent by --lvl.
 export const kitRow: CSSResult = /* @__PURE__ */ css`
   .rows {
     display: grid;

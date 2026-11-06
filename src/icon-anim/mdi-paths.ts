@@ -194,18 +194,9 @@ import {
   mdiWeatherHurricane,
 } from '@mdi/js';
 
-/*
- * The curated MDI path table of the icon animator (Material Design Icons, Apache License 2.0,
- * https://github.com/Templarian/MaterialDesign). Only the icons the animated icon library and its
- * animated SVG export need: each is imported by name from @mdi/js, so the bundles keep these paths
- * and nothing else of the set (the package is side-effect free; webpack drops the unused exports).
- *
- * Lives in the studio bundle and the lazy icon animator chunk only, never in magic-card.js: cards
- * play library animations through the rig runtime with the icon id, and Home Assistant resolves
- * the geometry on dashboards. The studio and the editor chunk seed icon-source with it
- * (seedLibraryGeometry, given icon-source's setter), so splitting, previews and exports work
- * without Home Assistant. Imports nothing of the card bundle (types only).
- */
+// The curated MDI path table of the icon animator (Material Design Icons, Apache License 2.0), imported by name from
+// @mdi/js so bundles keep only these paths. Studio bundle and icon animator chunk only; the studio seeds icon-source with
+// it (seedLibraryGeometry). Imports nothing of the card bundle (types only).
 
 /*! Material Design Icons (Pictogrammers, https://pictogrammers.com), Apache-2.0: the icon paths below. */
 /** Icon id -> path data in the 24 x 24 MDI viewBox (one per library icon). */

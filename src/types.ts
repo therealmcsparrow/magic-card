@@ -34,6 +34,8 @@ export interface HomeAssistant {
       eventType: string,
     ) => Promise<() => void>;
   };
+  /** False while the websocket is down; a Home Assistant without the field counts as connected. */
+  connected?: boolean;
   /** `state` overrides the entity's own state (e.g. a forecast condition). */
   formatEntityState: (entity: HassEntity, state?: string) => string;
   formatEntityAttributeValue: (entity: HassEntity, attribute: string, value?: unknown) => string;
@@ -557,6 +559,7 @@ export interface DesignConfig {
   tab_bar_background?: string;
   /** One to four lengths, as in CSS border-width */
   tab_bar_border_width?: string;
+  tab_bar_border_style?: string;
   /** One to four colours, in CSS side order */
   tab_bar_border_color?: string;
   tab_bar_padding?: string;
@@ -941,6 +944,12 @@ export interface ImageModuleConfig extends CardModule {
   /** `16:9`, `16/9`, a number (1.5) or a percentage of the width (56.25%). */
   aspect_ratio?: string | number;
   fit?: 'contain' | 'cover' | 'fill' | 'none';
+  /** Main and Accent of a library image; design colour values. */
+  colors?: { main?: string; accent?: string };
+  /** Text alternative for screen readers; unset = decorative. Any image source. */
+  description?: string;
+  /** Library images with bindings: a visually hidden list of bound entities and their states. */
+  state_summary?: boolean;
 }
 
 export interface MarkdownModuleConfig extends CardModule {

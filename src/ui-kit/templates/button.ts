@@ -2,11 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import type { KitButtonOptions } from '../../contracts/ui-kit';
 import { iconOf } from './icon';
 
-/*
- * Button helper (contract ui-kit 1.0.0). Renders in the caller's root, so the caller's kit CSS styles it.
- * Icon-only: `label` becomes aria-label and title. `disabledReason` keeps the button focusable (aria-disabled)
- * and the click is ignored; the caller shows the reason as text next to it.
- */
+// Button helper (contract ui-kit 1.0.0); renders in the root of the caller. Icon-only: `label` becomes aria-label and title.
 export function button(o: KitButtonOptions): TemplateResult {
   const blocked = !!o.disabledReason;
   const cls = o.iconOnly

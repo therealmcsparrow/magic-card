@@ -9,7 +9,7 @@ const PINKS = [V.icon, V.glow, '#f48fb1'];
 export const VALENTINE = group('Valentine', [
   {
     id: 'valentine-lub-dub',
-    name: m('Lub-dub heartbeat'),
+    name: m('preset-catalogue.valentine.lub-dub-heartbeat'),
     icon: 'mdi:heart',
     tags: ['heart', 'beat', 'pulse', 'love', 'valentine'],
     doc: (id, name) =>
@@ -27,7 +27,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-floating-hearts',
-    name: m('Floating hearts'),
+    name: m('preset-catalogue.valentine.floating-hearts'),
     icon: 'mdi:heart-multiple',
     tags: ['hearts', 'love', 'float', 'valentine', 'particles'],
     doc: (id, name) =>
@@ -46,7 +46,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-heart-burst',
-    name: m('Heart burst'),
+    name: m('preset-catalogue.valentine.heart-burst'),
     icon: 'mdi:heart-flash',
     tags: ['hearts', 'burst', 'love', 'celebrate', 'particles'],
     doc: (id, name) =>
@@ -67,7 +67,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-falling-petals',
-    name: m('Falling petals'),
+    name: m('preset-catalogue.valentine.falling-petals'),
     icon: 'mdi:flower-tulip',
     tags: ['petals', 'roses', 'flowers', 'love', 'particles'],
     doc: (id, name) =>
@@ -85,7 +85,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-blush-glow',
-    name: m('Blush glow'),
+    name: m('preset-catalogue.valentine.blush-glow'),
     icon: 'mdi:heart-outline',
     tags: ['glow', 'blush', 'pink', 'soft', 'valentine'],
     doc: (id, name) =>
@@ -102,7 +102,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-cupid-sparkle',
-    name: m('Cupid sparkle'),
+    name: m('preset-catalogue.valentine.cupid-sparkle'),
     icon: 'mdi:heart-plus',
     tags: ['sparkle', 'hearts', 'twinkle', 'love', 'particles'],
     doc: (id, name) =>

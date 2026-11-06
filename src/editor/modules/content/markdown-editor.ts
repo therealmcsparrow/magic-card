@@ -20,21 +20,21 @@ export const markdownEditor: ModuleEditor = {
     return html`
       <div class="mc-tab-content">
         ${renderTextareaField(
-          t('Content'),
+          t('card-editor.markdown-editor.content'),
           c.content,
           (v) => onChange({ ...c, content: v }),
-          { rows: 6, placeholder: t('**Bold**, _italic_, `code`') },
+          { rows: 6, placeholder: t('card-editor.markdown-editor.bold-italic-code') },
           'content',
           syncCtx,
         )}
         ${renderFieldHint(
-          t('Markdown with Home Assistant templates, e.g. {example}. With an entity set, {entity} shows its state.', {
+          t('card-editor.markdown-editor.markdown-with-home-assistant-templates-e', {
             example: "{{ states('sensor.temperature') }}",
             entity: '{{ states(entity) }}',
           }),
         )}
-        ${renderEntitySourceField(t('Entity (for templates)'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
+        ${renderEntitySourceField(t('card-editor.markdown-editor.entity-for-templates'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('card-editor.markdown-editor.attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
       </div>
     `;
   },

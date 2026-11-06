@@ -1,14 +1,6 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 
-/*
- * Layer editor tokens. Every control edge in the Placement, Layer and
- * Card backdrop groups uses --mc-ed-ctl-line (>= 3:1 against its panel, WCAG 1.4.11); selected and on / off
- * states carry a non-colour cue as well (check mark, bold label, 2 px border, "On" / "Off" text).
- *
- * The line is the kit field border (--mc-field-border: the theme text colour at 50 %), so these controls look like
- * the other editor panels. At 50 % it holds 3:1 on the HA default light and dark themes and on two custom ones.
- * LAYER_TOKENS are the fixed fallback for a browser without color-mix and the values the sampler test measures.
- */
+// Layer editor tokens: control edges use --mc-ed-ctl-line (>= 3:1), with fixed LAYER_TOKENS as fallback.
 
 /** Share of the text colour in the control line (theme mix). */
 export const CTL_LINE_STRENGTH = 0.5;
@@ -193,18 +185,20 @@ export const layerControlCss: CSSResult = css`
     position: absolute;
     top: 3px;
     left: 3px;
+    inset-inline: 3px auto;
     width: 18px;
     height: 18px;
     border-radius: 50%;
     background: var(--mc-on-accent, var(--mc-surface, var(--card-background-color, #fff)));
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    transition: transform 0.15s ease-out;
+    transition: left 0.15s ease-out, inset-inline-start 0.15s ease-out;
   }
   .lyr-switch[aria-checked='true'] .track {
     background: var(--mc-accent-fill, #0277bd);
   }
   .lyr-switch[aria-checked='true'] .track::after {
-    transform: translateX(16px);
+    left: 19px;
+    inset-inline: 19px auto;
   }
   .lyr-switch .state {
     font-size: 0.75rem;
@@ -218,6 +212,14 @@ export const layerControlCss: CSSResult = css`
     min-height: var(--lyr-hit);
     margin: 0;
     background: transparent;
+  }
+  ha-slider.lyr-range::part(label) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
   .lyr-range::-webkit-slider-runnable-track {
     height: 8px;

@@ -1,8 +1,5 @@
-/**
- * Design key -> CSS property for every key designToStyle writes, in cascade order (shorthands
- * before longhands). A key's CSS property is the key with `_` as `-`. A flag after `:` marks the
- * key's type and the unit a bare number gets: `c` colour, `i` image, `p` length in px, `s` time in s.
- */
+// Design key -> CSS property for every key designToStyle writes, in cascade order. A flag after
+// `:` marks the key's type and the unit a bare number gets: `c` colour, `i` image, `p` px, `s` s.
 const DESIGN_TABLE =
   'margin:p padding:p width:p height:p min_width:p min_height:p max_width:p max_height:p box_sizing ' +
   'border border_top border_right border_bottom border_left border_width:p border_style border_color:c border_radius:p ' +
@@ -38,6 +35,7 @@ export const BOX_LONGHANDS: Record<string, Array<{ key: string; cssProperty: str
 /** Design keys edited (and synced with a template) together with another one: the shape and its options. */
 const GROUPED_KEYS: Record<string, string[]> = {
   shape: ['shape_options'],
+  top: ['right', 'bottom', 'left'],
 };
 
 /** Design keys a property covers: itself plus its per-side longhands (box properties) or grouped keys. */

@@ -1,14 +1,5 @@
-/*
- * Path booleans (contract path-booleans 1.0.0, src/contracts/path-booleans.ts). Union, subtract,
- * intersect and exclude of closed outlines. Own code, no dependency. Pure: no DOM, no timers, no
- * Date, no Math.random. Imports the contract, the path-model types and splitCubic from core.ts only.
- *
- * Pipeline: flatten every closed subpath into edges that remember their source segment and t,
- * snap vertices to an integer grid (tolerance / 8), node the edges (split at every crossing and
- * T-junction, repeated until stable), merge coincident edges, classify each edge by the winding of
- * every operand on both sides (exact integer ray tests), keep the edges where the result flips,
- * trace rings, then rebuild exact sub-curves per source segment so only crossings add anchors.
- */
+// Path booleans: union, subtract, intersect and exclude of closed outlines. Pure, own code.
+// Edges are noded and classified by winding, result rings are traced, then exact sub-curves rebuilt.
 import {
   FLATTEN_DIVISOR,
   MAX_BOOLEAN_EDGES,

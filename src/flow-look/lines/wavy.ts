@@ -3,11 +3,9 @@ import { toD, wavy } from '../sampler';
 import type { LineCtx } from '../registry';
 import { memo, stroke } from './util';
 
-/*
- * wave and zigzag: the offset line of the sampler (still shape, tapered at the ends and next to elbow
- * corners), without highlight bars. Electric zigzag stacks three seeded variants switched by a CSS steps animation; under
- * lite / minimal tiers and reduced motion it is one still zigzag.
- */
+// wave and zigzag: the offset line of the sampler (still shape, tapered at the ends and next to elbow corners).
+// Electric zigzag stacks three seeded variants switched by a CSS steps animation; under lite / minimal tiers
+// and reduced motion it is one still zigzag.
 
 const hash = (s: string): number => {
   let h = 2166136261;

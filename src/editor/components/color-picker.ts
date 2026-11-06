@@ -8,6 +8,7 @@ import { ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/safe-css';
 import { editableGradient, gradientToString, renderSeg, MAX_STOPS, type GradientModel } from './gradient-editor';
+import { COLOUR_FORMATS, formatOf, parseColour, writeColour, type ColourFormat } from './colour-formats';
 import './unit-field';
 import { t } from '../i18n';
 
@@ -48,6 +49,14 @@ export class ColorPicker extends LitElement {
       .help + .help {
         margin-top: 6px;
       }
+      .mc-color-tools {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .mc-color-tools .seg {
+        flex: 1;
+      }
       .help:empty {
         display: none;
       }
@@ -84,6 +93,9 @@ export class ColorPicker extends LitElement {
   @state() private _hsva: HSVA = { h: 0, s: 100, v: 100, a: 1 };
   @state() private _savedColors: string[] = [];
   @state() private _hexInput = '';
+  @state() private _format: ColourFormat = 'HEXA';
+  /** An OKLCH colour outside sRGB, as written: kept until the popup edits the colour. */
+  private _asWritten = '';
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
   private _dragging: 'area' | 'hue' | 'opacity' | null = null;
@@ -125,12 +137,15 @@ export class ColorPicker extends LitElement {
   }
 
   private _parseValue(value: string): void {
+    this._asWritten = '';
     if (!value) {
       this._hsva = { h: 0, s: 0, v: 100, a: 1 };
       this._hexInput = '';
+      this._format = 'HEXA';
       return;
     }
 
+    this._format = formatOf(value);
     // If it's a CSS variable, keep as-is
     if (value.startsWith('var(')) {
       this._hexInput = value;
@@ -140,41 +155,46 @@ export class ColorPicker extends LitElement {
     const hsva = this._colorToHsva(value);
     if (hsva) {
       this._hsva = hsva;
-      this._hexInput = this._hsvaToHex(hsva);
+      this._hexInput = this._text(hsva);
+      if (parseColour(value)?.wide) this._asWritten = this._hexInput = value.trim();
     } else {
       this._hexInput = value;
     }
   }
 
+  /** The colour in the chosen format. */
+  private _text(hsva: HSVA): string {
+    return writeColour(this._hsvaToRgb(hsva), this._format);
+  }
+
+  /** A change made in the popup: the colour, and its text in the chosen format. */
+  private _setHsva(hsva: HSVA): void {
+    this._hsva = hsva;
+    this._asWritten = '';
+    this._hexInput = this._text(hsva);
+  }
+
+  private _setFormat(format: ColourFormat): void {
+    this._format = format;
+    if (this._hexInput.startsWith('var(') || !this._colorToHsva(this._hexInput)) return;
+    this._asWritten = '';
+    this._hexInput = this._text(this._hsva);
+  }
+
+  /** Takes the colour from the screen, like choosing a swatch. A cancel changes nothing. */
+  private async _pipette(): Promise<void> {
+    const Dropper = (window as unknown as { EyeDropper?: new () => { open(): Promise<{ sRGBHex: string }> } }).EyeDropper;
+    if (!Dropper) return;
+    try {
+      this._selectPreset((await new Dropper().open()).sRGBHex);
+    } catch {
+      // closed without a pick
+    }
+  }
+
   private _colorToHsva(color: string): HSVA | null {
-    // Handle hex
-    const hexMatch = color.match(/^#([0-9a-f]{3,8})$/i);
-    if (hexMatch) {
-      let hex = hexMatch[1];
-      if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-      }
-      if (hex.length === 4) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
-      }
-      const r = parseInt(hex.slice(0, 2), 16) / 255;
-      const g = parseInt(hex.slice(2, 4), 16) / 255;
-      const b = parseInt(hex.slice(4, 6), 16) / 255;
-      const a = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1;
-      return this._rgbToHsva(r, g, b, a);
-    }
-
-    // Handle rgba
-    const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-    if (rgbaMatch) {
-      const r = parseInt(rgbaMatch[1]) / 255;
-      const g = parseInt(rgbaMatch[2]) / 255;
-      const b = parseInt(rgbaMatch[3]) / 255;
-      const a = rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1;
-      return this._rgbToHsva(r, g, b, a);
-    }
-
-    return null;
+    const c = parseColour(color);
+    return c ? this._rgbToHsva(c.r / 255, c.g / 255, c.b / 255, c.a) : null;
   }
 
   private _rgbToHsva(r: number, g: number, b: number, a: number): HSVA {
@@ -250,7 +270,7 @@ export class ColorPicker extends LitElement {
     if (this._hexInput.startsWith('var(')) {
       return this._hexInput;
     }
-    return this._hsvaToHex(this._hsva);
+    return this._asWritten || this._text(this._hsva);
   }
 
   private _emitChange(): void {
@@ -311,22 +331,19 @@ export class ColorPicker extends LitElement {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    this._hsva = { ...this._hsva, s: x * 100, v: (1 - y) * 100 };
-    this._hexInput = this._hsvaToHex(this._hsva);
+    this._setHsva({ ...this._hsva, s: x * 100, v: (1 - y) * 100 });
   }
 
   private _updateHue(e: PointerEvent): void {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    this._hsva = { ...this._hsva, h: x * 360 };
-    this._hexInput = this._hsvaToHex(this._hsva);
+    this._setHsva({ ...this._hsva, h: x * 360 });
   }
 
   private _updateOpacity(e: PointerEvent): void {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    this._hsva = { ...this._hsva, a: x };
-    this._hexInput = this._hsvaToHex(this._hsva);
+    this._setHsva({ ...this._hsva, a: x });
   }
 
   private _handleHexInput(e: InputEvent): void {
@@ -335,6 +352,7 @@ export class ColorPicker extends LitElement {
     const hsva = this._colorToHsva(value);
     if (hsva) {
       this._hsva = hsva;
+      this._asWritten = '';
     }
   }
 
@@ -343,10 +361,7 @@ export class ColorPicker extends LitElement {
       this._hexInput = color;
     } else {
       const hsva = this._colorToHsva(color);
-      if (hsva) {
-        this._hsva = hsva;
-        this._hexInput = this._hsvaToHex(hsva);
-      }
+      if (hsva) this._setHsva(hsva);
     }
   }
 
@@ -385,8 +400,8 @@ export class ColorPicker extends LitElement {
       type="button"
       class="icon-btn entity-toggle"
       aria-pressed=${on ? 'true' : 'false'}
-      aria-label=${t('Entity colour for {name}', { name: (this.label || t('colour')).toLowerCase() })}
-      title=${t("Use the entity's state colour")}
+      aria-label=${t('card-editor.color-picker.entity-colour-for-name', { name: (this.label || t('card-editor.color-picker.colour')).toLowerCase() })}
+      title=${t("card-editor.color-picker.use-the-entity-s-state-colour")}
       @click=${() => {
         this._refocusToggle = true;
         this._emitValue(on ? '' : 'entity');
@@ -402,22 +417,22 @@ export class ColorPicker extends LitElement {
     const rgb = attr ? attrRgb(this.entityAttributes, attr) : undefined;
     if (attr) base = rgb ? `rgb(${rgb.join(', ')})` : 'transparent';
     const preview = opacity >= 100 ? base : `color-mix(in srgb, ${base} ${opacity}%, transparent)`;
-    const name = this.label || t('colour');
+    const name = this.label || t('card-editor.color-picker.colour');
     const emit = (a: string | undefined, o: number) => this._emitValue(`entity${a ? `.${a}` : ''}${o < 100 ? ` ${+o.toFixed(2)}%` : ''}`);
     return html`
       <div class="color">
-        <button type="button" class="swatch" disabled aria-hidden="true" tabindex="-1" title=${t("The entity's state colour")}>
+        <button type="button" class="swatch" disabled aria-hidden="true" tabindex="-1" title=${t("card-editor.color-picker.the-entity-s-state-colour")}>
           <span class="swatch-fill"><span style="background: ${preview}"></span></span>
         </button>
-        <input class="input" type="text" readonly .value=${t('Entity colour')} aria-label=${name} />
+        <input class="input" type="text" readonly .value=${t('card-editor.color-picker.entity-colour')} aria-label=${name} />
         ${this._renderEntityToggle(true)}
       </div>
       ${this.allowAttribute ? this._renderSource(attr, (a) => emit(a, opacity)) : nothing}
       <div class="field entity-opacity">
-        <div class="field-head"><span class="lbl">${t('Opacity')}</span></div>
+        <div class="field-head"><span class="lbl">${t('card-editor.color-picker.opacity')}</span></div>
         <mc-unit-field
           .value=${opacity >= 100 ? '' : `${opacity}%`}
-          .label=${t('{name} opacity', { name })}
+          .label=${t('card-editor.color-picker.name-opacity', { name })}
           .units=${['%']}
           placeholder="100"
           @value-changed=${(e: CustomEvent) => {
@@ -438,9 +453,9 @@ export class ColorPicker extends LitElement {
     const id = 'src';
     return html`
       <div class="field">
-        <label class="lbl" for=${id}>${t('Colour from')}</label>
-        <select class="input" id=${id} aria-label=${t('{name}: colour from', { name: this.label || t('colour') })} @change=${(e: Event) => pick((e.target as HTMLSelectElement).value || undefined)}>
-          <option value="" ?selected=${!attr}>${t('State colour')}</option>
+        <label class="lbl" for=${id}>${t('card-editor.color-picker.colour-from')}</label>
+        <select class="input" id=${id} aria-label=${t('card-editor.color-picker.name-colour-from', { name: this.label || t('card-editor.color-picker.colour') })} @change=${(e: Event) => pick((e.target as HTMLSelectElement).value || undefined)}>
+          <option value="" ?selected=${!attr}>${t('card-editor.color-picker.state-colour')}</option>
           ${names.map((n) => html`<option value=${n} ?selected=${n === attr}>${n}</option>`)}
         </select>
       </div>
@@ -448,7 +463,7 @@ export class ColorPicker extends LitElement {
   }
 
   private _toSolid(g: GradientModel): void {
-    this._status = t('Switched to Solid. Undo brings the gradient back.');
+    this._status = t('card-editor.color-picker.switched-to-solid-undo-brings-the');
     this._emitValue(g.stops[0]);
   }
 
@@ -460,18 +475,18 @@ export class ColorPicker extends LitElement {
     const g: GradientModel = old
       ? { radial: old.radial && this.gradient === 'css', angle: old.angle, stops: old.stops.slice(0, MAX_STOPS) }
       : { radial: false, angle: 135, stops: [first, second] };
-    this._status = old ? t('Gradient replaced with the editor version.') : t('Gradient created from your colour.');
+    this._status = old ? t('card-editor.color-picker.gradient-replaced-with-the-editor') : t('card-editor.color-picker.gradient-created-from-your-colour');
     this._emitValue(gradientToString(g));
   }
 
   private _renderMode(g: GradientModel | undefined): TemplateResult {
-    const name = this.label || t('colour');
+    const name = this.label || t('card-editor.color-picker.colour');
     return html`${renderSeg(
-      t('{name} mode', { name }),
+      t('card-editor.color-picker.name-mode', { name }),
       g ? 'gradient' : 'solid',
       [
-        { value: 'solid', label: t('Solid') },
-        { value: 'gradient', label: t('Gradient') },
+        { value: 'solid', label: t('card-editor.color-picker.solid') },
+        { value: 'gradient', label: t('card-editor.color-picker.gradient') },
       ],
       (v) => {
         if (v === 'solid' && g) this._toSolid(g);
@@ -486,6 +501,11 @@ export class ColorPicker extends LitElement {
     return m && (this.allowAttribute || !m[1]) ? { attr: m[1], opacity: Math.min(100, Number(m[2] ?? 100)) } : undefined;
   }
 
+  /** Shows the held value in a number field: a number past the end, or an empty field left behind. */
+  private _show(e: Event, n: number): void {
+    (e.target as HTMLInputElement).value = String(Math.round(n));
+  }
+
   protected render(): TemplateResult {
     const entity = this.allowEntity ? this._entityValue() : undefined;
     const g = this.gradient ? editableGradient(this.value, this.gradient === 'css') : undefined;
@@ -494,7 +514,7 @@ export class ColorPicker extends LitElement {
     return html`
       ${this.gradient ? this._renderMode(g) : nothing}
       ${body}
-      ${custom ? html`<div class="help">${t("This is custom gradient CSS. Choose Gradient to replace it with the editor's version.")}</div>` : nothing}
+      ${custom ? html`<div class="help">${t("card-editor.color-picker.this-is-custom-gradient-css-choose")}</div>` : nothing}
       ${g && this.gradientNote ? html`<div class="help">${this.gradientNote}</div>` : nothing}
       ${this.gradient ? html`<div class="help" role="status" aria-live="polite">${this._status}</div>` : nothing}
     `;
@@ -503,7 +523,7 @@ export class ColorPicker extends LitElement {
   private _renderGradient(g: GradientModel): TemplateResult {
     return html`<mc-gradient-editor
       .model=${g}
-      .label=${this.label || t('colour')}
+      .label=${this.label || t('card-editor.color-picker.colour')}
       .allowRadial=${this.gradient === 'css'}
       @value-changed=${() => (this._status = '')}
     ></mc-gradient-editor>`;
@@ -512,15 +532,15 @@ export class ColorPicker extends LitElement {
   private _renderSolid(): TemplateResult {
     const hinted = !this.value && !!this.placeholder;
     const displayColor = this.value || this.placeholder || 'transparent';
-    const name = this.label || t('colour');
+    const name = this.label || t('card-editor.color-picker.colour');
 
     return html`
       <div class="color">
         <button
           type="button"
           class="swatch"
-          aria-label=${t('Pick {name}', { name: name.toLowerCase() })}
-          title=${t('Open colour picker')}
+          aria-label=${t('card-editor.color-picker.pick-name', { name: name.toLowerCase() })}
+          title=${t('card-editor.color-picker.open-colour-picker')}
           @click=${this._openModal}
         >
           <span class="swatch-fill" data-hint=${hinted ? '' : nothing}><span style="background: ${displayColor}"></span></span>
@@ -533,6 +553,7 @@ export class ColorPicker extends LitElement {
           placeholder=${this.placeholder || '#rrggbb or var(--name)'}
           aria-label=${name}
           @input=${this._handleTextInput}
+          @focus=${(e: FocusEvent) => (e.target as HTMLInputElement).select()}
         />
         ${this._renderEntityToggle(false)}
       </div>
@@ -548,7 +569,7 @@ export class ColorPicker extends LitElement {
       : this._hsvaToRgbaString(this._hsva);
 
     return html`
-      ${renderPickerWindow(t('Colour picker'), () => this._closeModal(), 's', html`
+      ${renderPickerWindow(t('card-editor.color-picker.colour-picker'), () => this._closeModal(), 's', html`
 
           <div class="mc-color-body">
             <div
@@ -582,13 +603,16 @@ export class ColorPicker extends LitElement {
                 class="input"
                 type="text"
                 inputmode="numeric"
-                aria-label=${t('Hue')}
+                aria-label=${t('card-editor.color-picker.hue')}
                 .value=${Math.round(this._hsva.h).toString()}
                 @input=${(e: InputEvent) => {
-                  const v = parseInt((e.target as HTMLInputElement).value) || 0;
-                  this._hsva = { ...this._hsva, h: Math.max(0, Math.min(360, v)) };
-                  this._hexInput = this._hsvaToHex(this._hsva);
+                  const v = parseInt((e.target as HTMLInputElement).value);
+                  if (Number.isNaN(v)) return;
+                  const h = Math.max(0, Math.min(360, v));
+                  this._setHsva({ ...this._hsva, h });
+                  this._show(e, h);
                 }}
+                @change=${(e: Event) => this._show(e, this._hsva.h)}
               />
             </div>
 
@@ -613,19 +637,42 @@ export class ColorPicker extends LitElement {
                 class="input"
                 type="text"
                 inputmode="numeric"
-                aria-label=${t('Opacity percent')}
+                aria-label=${t('card-editor.color-picker.opacity-percent')}
                 .value=${Math.round(this._hsva.a * 100).toString()}
                 @input=${(e: InputEvent) => {
-                  const v = parseInt((e.target as HTMLInputElement).value) || 0;
-                  this._hsva = { ...this._hsva, a: Math.max(0, Math.min(100, v)) / 100 };
-                  this._hexInput = this._hsvaToHex(this._hsva);
+                  const v = parseInt((e.target as HTMLInputElement).value);
+                  if (Number.isNaN(v)) return;
+                  const a = Math.max(0, Math.min(100, v));
+                  this._setHsva({ ...this._hsva, a: a / 100 });
+                  this._show(e, a);
                 }}
+                @change=${(e: Event) => this._show(e, this._hsva.a * 100)}
               />
+            </div>
+
+            <div class="mc-color-tools">
+              ${renderSeg(
+                t('card-editor.color-picker.colour-format'),
+                this._format,
+                COLOUR_FORMATS.map((f) => ({ value: f, label: f })),
+                (v) => this._setFormat(v as ColourFormat),
+              )}
+              ${'EyeDropper' in window
+                ? html`<button
+                    type="button"
+                    class="icon-btn"
+                    title=${t('card-editor.color-picker.pick-a-colour-from-the-screen')}
+                    aria-label=${t('card-editor.color-picker.pick-a-colour-from-the-screen')}
+                    @click=${() => void this._pipette()}
+                  >
+                    <ha-icon icon="mdi:eyedropper"></ha-icon>
+                  </button>`
+                : nothing}
             </div>
 
             <div class="mc-input-row">
               <label class="field">
-                <span class="lbl">${t('Hex')}</span>
+                <span class="lbl">${this._format}</span>
                 <input class="input" type="text" spellcheck="false" .value=${this._hexInput} @input=${this._handleHexInput} />
               </label>
               <label class="field">
@@ -643,7 +690,7 @@ export class ColorPicker extends LitElement {
             </div>
 
             <div class="mc-color-section">
-              <span class="mc-color-section-header">${t('Presets')}</span>
+              <span class="mc-color-section-header">${t('card-editor.color-picker.presets')}</span>
               <div class="mc-color-grid">
                 ${PRESET_COLORS.map((color) => html`
                   <button
@@ -659,7 +706,7 @@ export class ColorPicker extends LitElement {
             </div>
 
             <div class="mc-color-section">
-              <span class="mc-color-section-header">${t('Saved colours')}</span>
+              <span class="mc-color-section-header">${t('card-editor.color-picker.saved-colours')}</span>
               <div class="mc-saved-colors">
                 ${this._savedColors.map((color) => html`
                   <div class="mc-saved-swatch" style="background: ${color}">
@@ -667,13 +714,13 @@ export class ColorPicker extends LitElement {
                       type="button"
                       class="mc-saved-pick"
                       title=${color}
-                      aria-label=${t('Use {value}', { value: color })}
+                      aria-label=${t('card-editor.color-picker.use-value', { value: color })}
                       @click=${() => this._selectPreset(color)}
                     ></button>
                     <button
                       type="button"
                       class="mc-remove-btn"
-                      aria-label=${t('Remove {value}', { value: color })}
+                      aria-label=${t('card-editor.color-picker.remove-value', { value: color })}
                       @click=${(e: Event) => this._removeSavedColor(color, e)}
                     >
                       <ha-icon icon="mdi:close"></ha-icon>
@@ -683,8 +730,8 @@ export class ColorPicker extends LitElement {
                 <button
                   type="button"
                   class="icon-btn sm"
-                  title=${t('Save current colour')}
-                  aria-label=${t('Save current colour')}
+                  title=${t('card-editor.color-picker.save-current-colour')}
+                  aria-label=${t('card-editor.color-picker.save-current-colour')}
                   @click=${this._addSavedColor}
                 >
                   <ha-icon icon="mdi:plus"></ha-icon>
@@ -693,8 +740,8 @@ export class ColorPicker extends LitElement {
             </div>
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.color-picker.cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('card-editor.color-picker.save')}</button>
           </div>
       `)}
     `;

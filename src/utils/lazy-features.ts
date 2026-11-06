@@ -12,13 +12,9 @@ import { SEASONAL_PRESET_IDS } from './seasonal.needs';
 import { wantsSvgIcon } from '../icons/needs';
 import { configHas } from './config-walk';
 import { lazyChunks } from './lazy-chunks';
+import { askForRelativeTime } from './relative-time';
 
-/*
- * The needs table (contract lazy-module 1.4.0 "needs(config)"): one row per card chunk. A row's needs() reads
- * the card config only, never hass, the DOM, the date or chunk state; it is total (a throw is false).
- * prefetchLazy loads every chunk whose row says yes, all at once. The predicates read their key lists and the
- * preset ids from the *.needs.ts files, so this table pulls in none of the chunks' own code.
- */
+/** The needs table (contract lazy-module 1.4.0): one row per card chunk, read from the card config only. */
 
 type Obj = Record<string, unknown>;
 
@@ -81,5 +77,6 @@ const seen = new WeakSet<object>();
 export function prefetchLazy(config: unknown): void {
   if (!config || typeof config !== 'object' || seen.has(config)) return;
   seen.add(config);
+  if (configHas(config, (n) => n.secondary_info === 'last-changed')) askForRelativeTime();
   for (const f of Object.values(LAZY_FEATURES)) if (f.needs(config)) void lazyChunks[f.chunk].load();
 }

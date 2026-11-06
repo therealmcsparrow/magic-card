@@ -1,8 +1,5 @@
-/*
- * Path model, editor-only: export tidy-up (contract path-model 1.0.0, PathTidy). Rounds to a
- * number of decimals, drops pieces that became empty, and writes each command in the shorter of its
- * absolute and relative forms (H / V for axis-aligned lines). Pure.
- */
+// Path model, editor-only: export tidy-up. Rounds to a number of decimals, drops empty pieces and
+// writes each command in the shorter of its absolute and relative forms. Pure.
 import type { PathData, Pt, Seg, TidyOptions } from '../contracts/path-model';
 
 /** Numbers glued together: a space only where the next one does not start with a minus. */

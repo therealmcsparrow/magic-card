@@ -4,10 +4,7 @@ import { t } from './i18n';
 import { BOOL_DONE, BOOL_NAME } from './names';
 import type { EditPath } from '../contracts/path-model';
 
-/*
- * Boolean buttons, the pure part: which selected layers are operands, why an operation is unavailable,
- * and the document after a result. The chunk call itself lives in the editor (it is async).
- */
+// Boolean buttons, the pure part: which layers are operands, why an operation is unavailable, and the document after a result.
 
 const closedOf = (s: Shape): number => s.paths.filter((p) => p.closed && p.anchors.length >= 3).length;
 const openOf = (s: Shape): number => s.paths.filter((p) => !(p.closed && p.anchors.length >= 3) && p.anchors.length > 1).length;
@@ -24,6 +21,8 @@ export interface BoolState {
   openLayers: number;
   /** One operand with 2+ closed subpaths (Combine merges its parts). */
   merge: boolean;
+  /** Selected text layers: they are never operands. */
+  text: number;
 }
 
 export function boolState(d: Doc, sel: readonly string[]): BoolState {
@@ -32,11 +31,13 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
   let nLocked = 0;
   let openOnly = 0;
   let openLayers = 0;
+  let text = 0;
   for (const s of d.shapes) {
     if (!sel.includes(s.id)) continue;
     const isLocked = isOff(d, s, 'locked');
     const isHidden = isOff(d, s, 'hidden');
-    if (isLocked || isHidden) {
+    if (s.look?.text) text++;
+    else if (isLocked || isHidden) {
       leftOut++;
       if (isLocked) nLocked++;
     } else if (closedOf(s)) operands.push(s);
@@ -45,16 +46,17 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
       openOnly += openOf(s);
     }
   }
-  return { operands, leftOut, lockedOnly: leftOut > 0 && nLocked === leftOut, openOnly, openLayers, merge: operands.length === 1 && closedOf(operands[0]) >= 2 };
+  return { operands, leftOut, lockedOnly: leftOut > 0 && nLocked === leftOut, openOnly, openLayers, merge: operands.length === 1 && closedOf(operands[0]) >= 2, text };
 }
 
 /** Why the operation can not run, or undefined when it can. First match wins. */
 export function boolReason(st: BoolState, op: BooleanOp): string | undefined {
   const n = st.operands.length;
   if (n >= 2 || (n === 1 && op === 'union' && st.merge)) return undefined;
-  if (n === 1) return t('Select a second shape.');
-  if (st.openLayers) return t('Select closed shapes. Open lines have no area.');
-  return t('Select two or more closed shapes.');
+  if (st.text) return t('svg-editor.combine.text-cannot-be-combined-with-other');
+  if (n === 1) return t('svg-editor.combine.select-a-second-shape');
+  if (st.openLayers) return t('svg-editor.combine.select-closed-shapes-open-lines-have-no');
+  return t('svg-editor.combine.select-two-or-more-closed-shapes');
 }
 
 export function operandsOf(st: BoolState): BooleanOperand[] {
@@ -86,6 +88,6 @@ export function withResult(d: Doc, st: BoolState, op: BooleanOp, paths: EditPath
 /** The result's note text. */
 export function boolNote(op: BooleanOp, st: BoolState, skipped: number): string {
   const n = st.operands.length;
-  const main = n === 1 ? t('Merged {c} parts into one path.', { c: closedOf(st.operands[0]) }) : t(BOOL_DONE[op], { c: n, n: n - 1, from: st.operands[0].name });
-  return skipped > 0 ? `${main} ${t('{c, plural, one {1 open line was left out.} other {# open lines were left out.}}', { c: skipped })}` : main;
+  const main = n === 1 ? t('svg-editor.combine.merged-c-parts-into-one-path', { c: closedOf(st.operands[0]) }) : t(BOOL_DONE[op], { c: n, n: n - 1, from: st.operands[0].name });
+  return skipped > 0 ? `${main} ${t('svg-editor.combine.c', { c: skipped })}` : main;
 }

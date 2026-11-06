@@ -1,21 +1,14 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
 import { glyph } from '../ui-kit/glyphs';
+import { inlineSides, rtlSheet } from '../ui-kit/css/rtl';
+import { DirectionController } from '../ui-kit/controllers/direction';
 import { THEME_TRIAL_BAR_TAG } from '../contracts/theme-editor';
 import { getTrial, openEditor, stopTrial, subscribeTrial } from './trial';
 import type { TrialState } from './trial';
 import { t } from './i18n';
 
-/*
- * <mc-theme-trial-bar>: the Revert bar of "Try on dashboards" (spec 9 and 16.5). trial.ts puts it as
- * the first child of document.body, so it is first in the tab order, and removes it when the trial
- * ends. It ignores the page's theme on purpose (fixed colours, 12:1 or better) so it can always be
- * read and used, whatever the draft looks like.
- *
- * WCAG 2.4.11: while it shows, a focusin listener scrolls the nearest scroller when the focused
- * element is under the bar, and the root gets scroll-padding equal to the bar's height. Under 480
- * css px of viewport height (200% zoom on a laptop) it collapses to a 44 px Revert button.
- */
+// <mc-theme-trial-bar>: the Revert bar of "Try on dashboards", first child of body.
 
 export const SHORT_VIEWPORT_PX = 480;
 export const NARROW_VIEWPORT_PX = 640;
@@ -61,6 +54,7 @@ const readEdge = (): Edge => {
 };
 
 export class McThemeTrialBar extends LitElement {
+  private readonly _dir = new DirectionController(this);
   @state() private _trial: TrialState | null = getTrial();
   @state() private _edge: Edge = readEdge();
   @state() private _short = false;
@@ -153,24 +147,24 @@ export class McThemeTrialBar extends LitElement {
   protected render(): TemplateResult | typeof nothing {
     const tr = this._trial;
     if (!tr) return nothing;
-    const text = this._narrow ? t('Trying {name}', { name: tr.name }) : t('Trying {name} on this tab ({mode, select, dark {dark} other {light}})', { name: tr.name, mode: tr.mode });
+    const text = this._narrow ? t('theme-editor.trial-bar.trying-name', { name: tr.name }) : t('theme-editor.trial-bar.trying-name-on-this-tab-mode', { name: tr.name, mode: tr.mode });
     if (this._short) {
-      return html`<div class="pill round ${this._edge}" role="region" aria-label=${t('Theme trial')}>
+      return html`<div class="pill round ${this._edge}" role="region" aria-label=${t('theme-editor.trial-bar.theme-trial')}>
         <span class="sr" role="status">${text}</span>
-        <button type="button" class="round-btn" aria-label=${t('Revert theme trial')} title=${t('Revert theme trial')} @click=${() => stopTrial('revert')}>${glyph('undo')} ${t('Revert')}</button>
+        <button type="button" class="round-btn" aria-label=${t('theme-editor.trial-bar.revert-theme-trial')} title=${t('theme-editor.trial-bar.revert-theme-trial')} @click=${() => stopTrial('revert')}>${glyph('undo')} ${t('theme-editor.trial-bar.revert')}</button>
       </div>`;
     }
-    return html`<div class="pill ${this._edge}" role="region" aria-label=${t('Theme trial')}>
+    return html`<div class="pill ${this._edge}" role="region" aria-label=${t('theme-editor.trial-bar.theme-trial')}>
       ${glyph('palette')}
-      <span class="msg" role="status">${text}${tr.skipped ? html` <span class="skip">(${t('{n} not valid, left out', { n: tr.skipped })})</span>` : nothing}</span>
+      <span class="msg" role="status">${text}${tr.skipped ? html` <span class="skip">(${t('theme-editor.trial-bar.n-not-valid-left-out', { n: tr.skipped })})</span>` : nothing}</span>
       <span class="actions">
-        <button type="button" class="revert" @click=${() => stopTrial('revert')}>${t('Revert')}</button>
-        <button type="button" class="plain" @click=${() => openEditor()}>${this._narrow ? t('Editor') : t('Open editor')}</button>
+        <button type="button" class="revert" @click=${() => stopTrial('revert')}>${t('theme-editor.trial-bar.revert')}</button>
+        <button type="button" class="plain" @click=${() => openEditor()}>${this._narrow ? t('theme-editor.trial-bar.editor') : t('theme-editor.trial-bar.open-editor')}</button>
         <button
           type="button"
           class="plain icon"
-          aria-label=${this._edge === 'bottom' ? t('Move to top') : t('Move to bottom')}
-          title=${this._edge === 'bottom' ? t('Move to top') : t('Move to bottom')}
+          aria-label=${this._edge === 'bottom' ? t('theme-editor.trial-bar.move-to-top') : t('theme-editor.trial-bar.move-to-bottom')}
+          title=${this._edge === 'bottom' ? t('theme-editor.trial-bar.move-to-top') : t('theme-editor.trial-bar.move-to-bottom')}
           @click=${() => this._flip()}
         >
           ${this._edge === 'bottom' ? '▲' : '▼'}
@@ -180,6 +174,7 @@ export class McThemeTrialBar extends LitElement {
   }
 
   static styles = css`
+    ${rtlSheet}
     svg.gl {
       display: block;
       flex: none;
@@ -188,8 +183,7 @@ export class McThemeTrialBar extends LitElement {
     :host([popover]) {
       position: fixed;
       inset: auto;
-      left: 0;
-      right: 0;
+      ${inlineSides('inset', '0', '0')}
       margin: 0;
       padding: 0;
       border: 0;
@@ -203,7 +197,7 @@ export class McThemeTrialBar extends LitElement {
       pointer-events: auto;
       box-sizing: border-box;
       position: fixed;
-      left: 50%;
+      left: 50%; /* physical */
       transform: translateX(-50%);
       display: flex;
       align-items: center;
@@ -228,8 +222,7 @@ export class McThemeTrialBar extends LitElement {
       padding: 0;
       border-radius: 22px;
       height: 44px;
-      left: auto;
-      right: 16px;
+      ${inlineSides('inset', 'auto', '16px')}
       transform: none;
     }
     .msg {

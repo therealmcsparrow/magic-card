@@ -2,18 +2,14 @@ import { css, type CSSResult } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitCss } from '../ui-kit/css/extras';
+import { kitLip } from '../ui-kit/css/lip';
 
-/*
- * Styles of <mc-svg-editor> (contract svg-editor 1.0.0, ui-kit 1.0.0). The look is the kit's: Core's tokens, the card
- * editor's primitives (buttons, fields, segmented control, chips, switch, menu rows) and the kit parts (topbar, rail,
- * float toolbar, notices, tiles, rows). They live in the card-editor chunk that loads this one, so they cost this chunk
- * nothing. What is left here is layout only: where things sit, the canvas stack, the tree row's drag states and the
- * layer's responsive rules. Layout follows the width of the layer, never the device (data-layout).
- */
+// Styles of <mc-svg-editor>: layout only (canvas stack, tree row drag states, responsive rules); the kit supplies tokens and primitives.
 export const editorStyles: CSSResult[] = [
   editorTokens,
   editorPrimitives,
   ...kitCss,
+  kitLip,
   css`
     :host {
       --art-accent: #d9622b;
@@ -40,6 +36,7 @@ export const editorStyles: CSSResult[] = [
       z-index: 20;
       top: 8px;
       left: 8px;
+      inset-inline: 8px auto;
       display: flex;
       gap: 4px;
     }
@@ -71,6 +68,7 @@ export const editorStyles: CSSResult[] = [
       z-index: 4;
       left: 12px;
       right: 12px;
+      inset-inline: 12px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -123,6 +121,10 @@ export const editorStyles: CSSResult[] = [
       padding: 24px;
       overflow: auto;
     }
+    .topbar .nm-label {
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
     .topbar .nm-field {
       display: flex;
       align-items: center;
@@ -140,10 +142,27 @@ export const editorStyles: CSSResult[] = [
       display: grid;
       gap: 12px;
     }
+    .start .tiles {
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    }
     .start .tile {
+      min-height: 72px;
       font: inherit;
       font-size: 0.8125rem;
     }
+    .start .tile[aria-expanded='true'] {
+      border-color: var(--mc-accent);
+      background: var(--mc-accent-tint);
+    }
+    .start #start-status:empty {
+      margin-block-start: -12px;
+    }
+    .startform textarea {
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 9em;
+    }
+
     .startform {
       display: grid;
       gap: 8px;
@@ -165,19 +184,66 @@ export const editorStyles: CSSResult[] = [
 
     /* the working area */
     .work {
+      --lw: 260px;
+      --iw: 340px;
+      --lx: 0px;
+      --lg: 0px;
+      --mc-lip-pull: var(--lg);
       position: relative;
       flex: 1;
       min-height: 0;
       display: grid;
-      grid-template-columns: 56px 260px minmax(0, 1fr) 340px;
+      grid-template-columns: 56px var(--lt, var(--lw)) minmax(0, 1fr) var(--it, var(--iw));
       grid-template-areas: 'rail left center insp';
+      overflow: hidden;
     }
     [data-layout='mid'] .work {
-      grid-template-columns: 56px 240px minmax(0, 1fr) 320px;
+      --lw: 240px;
+      --iw: 320px;
     }
     [data-layout='compact'] .work {
-      grid-template-columns: 56px minmax(0, 1fr) 300px;
+      --iw: 300px;
+      grid-template-columns: 56px minmax(0, 1fr) var(--it, var(--iw));
       grid-template-areas: 'rail center insp';
+    }
+    /* touch: a lip's longer hit area stays off the stage, so a hidden lip is pulled 4 px to the edge and a shown one 20 px into its panel */
+    @media (pointer: coarse) {
+      .work {
+        --lx: 20px;
+        --lg: 4px;
+      }
+    }
+    /*
+     * A hidden panel gives its track to the stage, keeping a 40 px gutter for its lip, but keeps its own width,
+     * so its content never reflows and a nested scroller keeps its place. It slides off its edge.
+     */
+    .no-side {
+      --lt: calc(40px + var(--lg));
+    }
+    .no-insp {
+      --it: calc(40px + var(--lg));
+    }
+    .left {
+      --mc-lip-off: -100%;
+    }
+    .insp {
+      --mc-lip-off: 100%;
+    }
+    .left[data-lip='hidden'] {
+      width: var(--lw);
+      justify-self: start;
+    }
+    .insp[data-lip='hidden'] {
+      width: var(--iw);
+      justify-self: end;
+    }
+    .left[data-lip='shown'],
+    .left[data-lip='hidden'] {
+      padding-inline-end: calc(28px + var(--lx));
+    }
+    .insp[data-lip='shown'],
+    .insp[data-lip='hidden'] {
+      padding-inline-start: calc(28px + var(--lx));
     }
     [data-layout='stacked'] .work {
       display: flex;
@@ -206,6 +272,8 @@ export const editorStyles: CSSResult[] = [
     }
     /* the kit turns the rail into a row under 800 px of viewport; here the layer's own width decides */
     .work > .rail {
+      position: relative;
+      z-index: 1;
       grid-area: rail;
       flex-direction: column;
       width: 56px;
@@ -295,6 +363,10 @@ export const editorStyles: CSSResult[] = [
       background-color: var(--mc-canvas);
       background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1px);
       background-size: 16px 16px;
+      direction: ltr;
+    }
+    :host([dir='rtl']) .stage > .hint {
+      direction: rtl;
     }
     .stage.tool-hand {
       cursor: grab;
@@ -354,6 +426,16 @@ export const editorStyles: CSSResult[] = [
     }
     .stage > .hint .empty {
       background: var(--mc-surface);
+    }
+    .stagebox > .opts {
+      position: absolute;
+      z-index: 4;
+      top: 12px;
+      inset-inline-end: 12px;
+      padding: 8px;
+      border-radius: var(--mc-radius);
+      background: var(--mc-surface);
+      box-shadow: var(--mc-shadow-float);
     }
     .opts,
     .pointbar,

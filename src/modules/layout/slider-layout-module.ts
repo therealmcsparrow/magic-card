@@ -49,7 +49,7 @@ class SliderLayoutModule extends BaseMagicModule {
     const c = config as SliderLayoutModuleConfig;
     const children = c.modules || [];
     if (!children.length) {
-      return html`<div class="mc-module mc-slider-layout">${renderEmptySlot(t('Empty slider'))}</div>`;
+      return html`<div class="mc-module mc-slider-layout">${renderEmptySlot(t('card.slider-layout-module.empty-slider'))}</div>`;
     }
     const ctx = currentRenderContext();
     const configured = sliderOptions(c, !!ctx?.editMode);
@@ -75,10 +75,10 @@ class SliderLayoutModule extends BaseMagicModule {
         </div>
         ${options.navigation
           ? html`
-            <button type="button" class="mc-slider-nav mc-slider-prev" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label=${t('Previous slide')}>
+            <button type="button" class="mc-slider-nav mc-slider-prev" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label=${t('card.slider-layout-module.previous-slide')}>
               <ha-icon icon="mdi:chevron-left"></ha-icon>
             </button>
-            <button type="button" class="mc-slider-nav mc-slider-next" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label=${t('Next slide')}>
+            <button type="button" class="mc-slider-nav mc-slider-next" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label=${t('card.slider-layout-module.next-slide')}>
               <ha-icon icon="mdi:chevron-right"></ha-icon>
             </button>`
           : nothing}

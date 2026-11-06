@@ -32,7 +32,7 @@ const readJson = (file, what) => {
   try {
     return JSON.parse(readFileSync(file, 'utf8'));
   } catch (e) {
-    throw new Error(`cannot read ${what} (${file}): ${e.message}`);
+    throw new Error(`cannot read ${what} (${file}): ${e.message}`, { cause: e });
   }
 };
 
@@ -89,7 +89,7 @@ const baseDebtList = (requireBase) => {
     if (!Array.isArray(list)) throw new Error('no debt list');
     return list;
   } catch (e) {
-    if (requireBase) throw new Error(`--require-base: cannot read ${ref}:${RULES_REL} (${e.message}); set ENTRY_GRAPH_BASE and fetch the ref`);
+    if (requireBase) throw new Error(`--require-base: cannot read ${ref}:${RULES_REL} (${e.message}); set ENTRY_GRAPH_BASE and fetch the ref`, { cause: e });
     return null; // no base ref or no base file yet: no raises possible
   }
 };

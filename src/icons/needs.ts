@@ -1,13 +1,7 @@
 import { configHas } from '../utils/config-walk';
 
-/*
- * The svg-icon chunk's predicate (lazy-module 1.4.0 "needs(config)", tools/plain-keys.json `icon_keys`,
- * `features.card.custom_icons`, `features.module_keys`). A predicate file: no imports but the config walk.
- *
- * A card needs the chunk when it holds anything <ha-icon> cannot draw: a saved library icon (`custom_icons`), an icon
- * effect (`icon_fx`), an own SVG (`svg`), or an icon reference that is not a plain Material Design Icon (`mcu:`,
- * `svg`, another set). An icon that is a plain MDI id stays on <ha-icon>: zero chunk requests.
- */
+// The svg-icon chunk's predicate: a card needs the chunk when it holds an icon <ha-icon> cannot draw
+// (library icon, `icon_fx`, own SVG, or a reference that is not a plain MDI id). No imports but the config walk.
 
 /** The keys that hold an icon reference on a module, tab or button. */
 export const ICON_REF_KEYS: readonly string[] = ['icon', 'icon_on', 'icon_off'];

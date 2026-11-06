@@ -1,7 +1,5 @@
-/**
- * Utilities for building and managing property paths for sync tracking
- * Paths use dot notation: e.g., "rows.0.columns.1.modules.2.entity"
- */
+// Utilities for building and managing property paths for sync tracking.
+// Paths use dot notation: "rows.0.columns.1.modules.2.entity".
 
 export interface SyncContext {
   templateName?: string;
@@ -66,42 +64,6 @@ export function extendContext(context: SyncContext, ...pathParts: (string | numb
  */
 export function parsePath(path: string): string[] {
   return path.split('.');
-}
-
-/**
- * Get value at a path in an object
- */
-export function getValueAtPath(obj: any, path: string): any {
-  const parts = parsePath(path);
-  let current = obj;
-
-  for (const part of parts) {
-    if (current == null) return undefined;
-    current = current[part];
-  }
-
-  return current;
-}
-
-/**
- * Set value at a path in an object (creates nested objects as needed)
- */
-export function setValueAtPath(obj: any, path: string, value: any): void {
-  const parts = parsePath(path);
-  let current = obj;
-
-  for (let i = 0; i < parts.length - 1; i++) {
-    const part = parts[i];
-    if (current[part] == null) {
-      // Check if next part is a number to create array vs object
-      const nextPart = parts[i + 1];
-      current[part] = /^\d+$/.test(nextPart) ? [] : {};
-    }
-    current = current[part];
-  }
-
-  const lastPart = parts[parts.length - 1];
-  current[lastPart] = value;
 }
 
 /**

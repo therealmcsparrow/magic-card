@@ -70,7 +70,7 @@ export class DropdownView implements ModuleView {
       runServiceCall(hass, call);
     };
 
-    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Dropdown');
+    const name = stateObj ? entityDisplayName(hass, stateObj) : t('controls.dropdown-view.dropdown');
     return html`
       <div class="mc-module mc-dropdown">
         <select
@@ -89,7 +89,7 @@ export class DropdownView implements ModuleView {
             ? options.map(
                 (opt) => html`<option value=${opt.value} ?disabled=${opt.disabled} ?selected=${current === opt.value}>${opt.label}</option>`,
               )
-            : html`<option disabled ?selected=${!stateObj}>${t('No options')}</option>`}
+            : html`<option disabled ?selected=${!stateObj}>${t('controls.dropdown-view.no-options')}</option>`}
           ${stateObj && options.length ? selectValue(known ? current! : '') : nothing}
         </select>
       </div>

@@ -416,6 +416,7 @@ export function renderBoxField(
         .onChange=${(updates: Record<string, unknown>) =>
           onChange(applyBoxFieldUpdates(value, baseName, updates))}
         .baseName=${baseName}
+        .label=${label}
       ></mc-box-field>
     </div>
   `;
@@ -498,11 +499,12 @@ export function renderAttributeField(
   propertyName?: string,
   syncContext?: SyncContext,
   caption?: string,
+  extras?: ReadonlyArray<{ value: string; label: string }>,
 ): TemplateResult {
   if (!entityId || !hass) return html``;
 
   const entity = hass.states[entityId];
-  if (!entity || Object.keys(entity.attributes).length === 0) return html``;
+  if (!entity || (Object.keys(entity.attributes).length === 0 && !extras?.length)) return html``;
 
   return html`
     <div class="mc-field">
@@ -511,6 +513,7 @@ export function renderAttributeField(
         .hass=${hass}
         .value=${value || ''}
         .entityId=${entityId}
+        .extras=${extras ?? []}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
       ></mc-attribute-picker>${caption ? html`<p class="help">${caption}</p>` : nothing}
     </div>

@@ -24,7 +24,9 @@ const writeI18nStats = (stats) => {
   // `size`: the source bytes of each module in that chunk (concatenated modules by their own size), for the byte counts of tools/check-chunk-dups.mjs
   const sized = (m) => (m.modules?.length ? m.modules.flatMap(sized) : [[m.name, m.size ?? 0]]);
   const sizeOf = (c) => Object.fromEntries((c.modules ?? []).flatMap(sized).filter(([n]) => n?.startsWith('./src/')));
-  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, files: c.files, modules: out.chunks[i].modules, size: sizeOf(c) })) };
+  // `groups`: the chunk ids of every chunk group the chunk belongs to (one id list per group, itself included), for tools/check-svg-sinks.mjs
+  const groupsOf = (id) => stats.compilation.chunkGroups.filter((g) => g.chunks.some((x) => x.id === id)).map((g) => g.chunks.map((x) => x.id));
+  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, groups: groupsOf(c.id), files: c.files, modules: out.chunks[i].modules, size: sizeOf(c) })) };
   fs.writeFileSync(path.resolve(path.dirname(file), 'entry-graph.json'), JSON.stringify(graph));
 };
 
@@ -35,8 +37,8 @@ module.exports = (env, argv) => {
     // The ES ceiling of the browser floor (Chromium 85): webpack writes its own runtime and chunk loader in ES2021
     // and Terser's `ecma` below follows it. tools/check-es-syntax.mjs parses every dist .js at 2021.
     target: ['web', 'es2021'],
-    // Three bundles: the card, the animation studio and the theme editor the magic-card-utils panel
-    // loads (each defines only its own elements; the theme editor is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
+    // Four bundles: the card, the animation studio, and the theme editor and forum shot the magic-card-utils panel
+    // loads (each defines only its own elements; the forum shot is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
@@ -47,6 +49,7 @@ module.exports = (env, argv) => {
       'magic-card': './src/index.ts',
       'magic-card-animation-studio': './src/anim-studio/index.ts',
       'magic-card-theme-editor': './src/theme-editor/index.ts',
+      'magic-card-forum-shot': './src/forum-shot/index.ts',
     },
     output: {
       filename: '[name].js',
@@ -109,9 +112,9 @@ module.exports = (env, argv) => {
         },
         // i18n: t('British text') becomes t(17) per namespace (tools/i18n-loader.cjs, contract i18n 1.0.0); runs before ts-loader and the template minifier
         { test: /\.ts$/, include: path.resolve(__dirname, 'src'), enforce: 'pre', use: path.resolve(__dirname, 'tools/i18n-loader.cjs') },
-        // the card (src/card, src/css, src/modules; checked by tools/dom-diff.mjs), the entity source field (editor chunk, card entity), theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap), SVG editor chunk (96 KiB cap) and path tools chunk (20 KiB ceiling): shrink css`` / html`` template text in production builds
+        // the card (src/card, src/css, src/modules, src/utils, src/layers, src/services, src/icons; checked by tools/dom-diff.mjs), the entity source field (editor chunk, card entity), theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap), SVG editor chunk (96 KiB cap) and path tools chunk (20 KiB ceiling): shrink css`` / html`` template text in production builds
         ...(isProduction
-          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/card'), path.resolve(__dirname, 'src/css'), path.resolve(__dirname, 'src/modules'), path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools'), path.resolve(__dirname, 'src/ui-kit'), path.resolve(__dirname, 'src/look-editor'), path.resolve(__dirname, 'src/flow-look'), path.resolve(__dirname, 'src/slider-look'), path.resolve(__dirname, 'src/editor/components/entity-source.ts'), path.resolve(__dirname, 'src/editor/components/mc-anchor-grid.ts'), path.resolve(__dirname, 'src/editor/layers')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
+          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/card'), path.resolve(__dirname, 'src/css'), path.resolve(__dirname, 'src/modules'), path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/image-editor'), path.resolve(__dirname, 'src/image-tools'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools'), path.resolve(__dirname, 'src/ui-kit'), path.resolve(__dirname, 'src/utils'), path.resolve(__dirname, 'src/layers'), path.resolve(__dirname, 'src/services'), path.resolve(__dirname, 'src/icons'), path.resolve(__dirname, 'src/look-editor'), path.resolve(__dirname, 'src/flow-look'), path.resolve(__dirname, 'src/slider-look'), path.resolve(__dirname, 'src/editor/components/entity-source.ts'), path.resolve(__dirname, 'src/editor/components/mc-anchor-grid.ts'), path.resolve(__dirname, 'src/editor/layers')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
           : []),
         {
           test: /\.css$/,
@@ -133,12 +136,13 @@ module.exports = (env, argv) => {
         ? [
             new TerserPlugin({
               // `minimizerOptions` and `format`, not the deprecated `terserOptions` and `output` aliases.
-              // No `unsafe*` flag and no `mangle.properties`. `module` and `toplevel` are
+              // No `unsafe*` flag and no `mangle.properties`; `pure_funcs` stays off. `module` and `toplevel` are
               // left to the plugin, which sets `module` from the asset's javascriptModule info. `pure_getters` stays at its default.
               minimizerOptions: {
                 // the ES ceiling of the floor, at the top level so it covers compress and format; the plugin would derive 2020
                 ecma: 2021,
-                compress: { passes: 2 },
+                // keep_fargs: false drops unused trailing parameters (README: needed only by code that reads Function.length; no source or bundled dependency reads a function's arity)
+                compress: { passes: 3, keep_fargs: false },
                 format: {
                   // only the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0)
                   comments: (_node, comment) => /^!\s*Material Design Icons/.test(comment.value),
@@ -148,7 +152,7 @@ module.exports = (env, argv) => {
             }),
           ]
         : [],
-      // No vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (a chunk that always loads after another is its child). The one shared chunk is src/path/core.ts
+      // No vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (a chunk that always loads after another is its child). The shared chunks hold one module each: src/path/core.ts, src/services/history-cache.ts and src/utils/shape-path.ts
       splitChunks: {
         chunks: 'async',
         minSize: 0,
@@ -156,6 +160,22 @@ module.exports = (env, argv) => {
           default: false,
           defaultVendors: false,
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
+          // The modules only the forum shot and the icon-library chunk share. Two bundles load that chunk (the studio and the forum shot),
+          // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead (not src/i18n/labels/index.ts, which import()s its tables where a shared chunk loads nothing, nor src/icon-anim/icon-doc.ts, which reads those labels).
+          // Only the icon-library chunk is split: the editor, icon-animator, transfer and svg-editor chunks keep their own copies.
+          'icon-shared': {
+            test: (module, { chunkGraph }) => {
+              const names = Array.from(chunkGraph.getModuleChunks(module), (c) => c.name);
+              return names.includes('icon-library') && names.includes('magic-card-animation-studio') && !/[\\/](?:i18n[\\/]labels[\\/]index|icon-anim[\\/]icon-doc)\.ts$/.test(module.resource ?? '');
+            },
+            name: 'icon-shared',
+            chunks: (chunk) => chunk.name === 'icon-library',
+            enforce: true,
+          },
+          // the one copy of the recorded-history cache that <mc-value-bg> (decor) and the graphs view (modules-extra) read
+          history: { test: /[\\/]src[\\/]services[\\/]history-cache\.ts$/, name: 'history', chunks: 'async', enforce: true },
+          // the one copy of the shape outline maths and its memo, read by decor, flows, seasonal, slider-look, shape-custom and the editor
+          'shape-path': { test: /[\\/]src[\\/]utils[\\/]shape-path\.ts$/, name: 'shape-path', chunks: 'async', enforce: true },
         },
       },
       runtimeChunk: false,

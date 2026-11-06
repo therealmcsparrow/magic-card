@@ -1,9 +1,5 @@
-/*
- * What magic-card.js needs at run time to decide whether a design wants the `decor` chunk (lazy-module 1.4.0
- * needs(config)). Plain code, no imports. The config walk (src/utils/config-walk.ts) calls it on every object of the
- * card: the card, rows, columns, modules, `hover`, every `conditional[].design` and the first 32 `conditional_appearance`
- * rules. tests/decor-chunk.test.ts compares the preset list with the preset table.
- */
+// Whether a design wants the `decor` chunk (needs(config)). Plain code, no imports; the config
+// walk calls it on every object of the card.
 
 /** Ids of the animation presets drawn as a ring along the outline (the `ring` field of the preset table). */
 export const RING_PRESET_IDS: readonly string[] = ['border-snake', 'power-flow', 'marching-ants'];

@@ -1,11 +1,9 @@
 import type { SliderModuleConfig } from '../types';
 import type { SliderLookConfig } from './slider-look';
 
-/*
- * slider-look 1.1.0, the predicate and key list magic-card.js needs at run time (slider-module, lazy-features). They sit in
- * this file, not in slider-look.ts, because the entry may import only *.needs.ts of a contract (see
- * tools/check-entry-graph.mjs); slider-look.ts re-exports them.
- */
+/** slider-look 1.1.0, the predicate and key list magic-card.js needs at run time (slider-module, lazy-features). They sit
+ * in this file, not in slider-look.ts, because the entry may import only *.needs.ts of a contract (see
+ * tools/check-entry-graph.mjs); slider-look.ts re-exports them. */
 
 /** Every look key; any of them set = the slider needs the slider-look chunk. */
 export const SLIDER_LOOK_KEYS: readonly (keyof SliderLookConfig)[] = [

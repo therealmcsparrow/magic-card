@@ -27,7 +27,7 @@ export const studioStyles: CSSResult[] = [
     /* the live region after the shell: at the top, not one px under it (the host would scroll by it) */
     .shell + .sr-only {
       top: 0;
-      left: 0;
+      left: 0; /* physical */
     }
     .shell {
       display: grid;
@@ -74,6 +74,7 @@ export const studioStyles: CSSResult[] = [
     .btn .chev {
       --mdc-icon-size: 16px;
       margin: 0 -4px 0 -2px;
+      margin-inline: -2px -4px;
     }
     .btn-danger {
       background: var(--error-color, #db4437);
@@ -95,6 +96,7 @@ export const studioStyles: CSSResult[] = [
     }
     .new-menu {
       right: 0;
+      inset-inline: auto 0;
       top: calc(100% + 6px);
       width: 300px;
     }
@@ -173,7 +175,7 @@ export const studioStyles: CSSResult[] = [
       gap: 2px;
     }
     .open {
-      text-align: left;
+      text-align: start;
       border: 0;
       background: transparent;
       padding: 6px 8px;
@@ -246,7 +248,7 @@ export const studioStyles: CSSResult[] = [
       align-content: start;
       gap: 4px;
       padding: 14px;
-      text-align: left;
+      text-align: start;
       border: 1px solid var(--mc-divider);
       border-radius: var(--mc-radius-lg);
       background: var(--mc-surface);
@@ -272,7 +274,7 @@ export const studioStyles: CSSResult[] = [
       --insp-w: 320px;
       position: relative;
       display: grid;
-      grid-template-columns: var(--layers-w) minmax(0, 1fr) var(--insp-w);
+      grid-template-columns: var(--lw, var(--layers-w)) minmax(0, 1fr) var(--iw, var(--insp-w));
       min-height: 0;
       min-width: 0;
       overflow: hidden;
@@ -281,14 +283,34 @@ export const studioStyles: CSSResult[] = [
       --layers-w: 224px;
       --insp-w: 288px;
     }
-    .workspace.dense:not(.rail) {
+    .workspace.dense {
       --layers-w: 208px;
     }
-    .workspace.rail {
-      --layers-w: 52px;
-    }
     .workspace.slide {
-      grid-template-columns: var(--layers-w) minmax(0, 1fr);
+      grid-template-columns: var(--lw, var(--layers-w)) minmax(0, 1fr);
+    }
+    /*
+     * A hidden panel gives its track to the stage but keeps its own width, so its content never reflows and a
+     * nested scroller keeps its place (WebKit loses it in a 0 px item). It slides off its edge.
+     */
+    .no-layers {
+      --lw: 0px;
+    }
+    .no-inspector {
+      --iw: 0px;
+    }
+    .layers {
+      --mc-lip-off: -100%;
+    }
+    .inspector {
+      --mc-lip-off: 100%;
+    }
+    .layers[data-lip='hidden'] {
+      width: var(--layers-w);
+    }
+    .inspector[data-lip='hidden'] {
+      width: var(--insp-w);
+      justify-self: end;
     }
     .layers {
       display: grid;
@@ -297,7 +319,7 @@ export const studioStyles: CSSResult[] = [
       min-width: 0;
       overflow: hidden;
       background: var(--mc-surface);
-      border-right: 1px solid var(--mc-divider);
+      border-inline-end: 1px solid var(--mc-divider);
     }
     .layers-head {
       display: flex;
@@ -305,11 +327,8 @@ export const studioStyles: CSSResult[] = [
       gap: 4px;
       min-height: 44px;
       padding: 4px 6px 4px 16px;
+      padding-inline: 16px 6px;
       border-bottom: 1px solid var(--mc-divider);
-    }
-    .layers.rail .layers-head {
-      justify-content: center;
-      padding: 4px;
     }
     .layers-head h2 {
       flex: 1;
@@ -324,9 +343,6 @@ export const studioStyles: CSSResult[] = [
       overflow-y: auto;
       overscroll-behavior: contain;
       padding: 8px;
-    }
-    .layers.rail .layers-body {
-      padding: 6px;
     }
     .layers-note,
     .layers-help {
@@ -353,12 +369,6 @@ export const studioStyles: CSSResult[] = [
     .layer-group:focus {
       outline: none;
     }
-    /* the rail's buttons that open the column at a panel, under the targets */
-    .rail-panels {
-      margin-top: 6px;
-      padding-top: 6px;
-      border-top: 1px solid var(--mc-divider);
-    }
     .layer-group > .panel {
       display: block;
     }
@@ -376,18 +386,15 @@ export const studioStyles: CSSResult[] = [
       width: 100%;
       min-height: 40px;
       padding: 0 8px 0 10px;
+      padding-inline: 10px 8px;
       border: 0;
       border-radius: var(--mc-radius);
       background: transparent;
       color: var(--mc-text);
       font-size: 0.8125rem;
       font-weight: 500;
-      text-align: left;
+      text-align: start;
       transition: background-color 0.15s ease-out;
-    }
-    .layers.rail .layer {
-      justify-content: center;
-      padding: 0;
     }
     .layer ha-icon {
       --mdc-icon-size: 18px;
@@ -427,7 +434,7 @@ export const studioStyles: CSSResult[] = [
       min-width: 20px;
       font-size: 0.75rem;
       font-weight: 400;
-      text-align: right;
+      text-align: end;
       color: var(--mc-text-2);
       font-variant-numeric: tabular-nums;
     }
@@ -437,6 +444,13 @@ export const studioStyles: CSSResult[] = [
       min-height: 0;
       min-width: 0;
       overflow: hidden;
+    }
+    mcas-stage {
+      direction: ltr;
+    }
+    :host([dir='rtl']) .back ha-icon,
+    :host([dir='rtl']) .ctx-back ha-icon {
+      transform: scaleX(-1);
     }
     .center.with-panel {
       grid-template-rows:
@@ -454,7 +468,7 @@ export const studioStyles: CSSResult[] = [
     .splitter::before {
       content: '';
       position: absolute;
-      left: 50%;
+      left: 50%; /* physical */
       top: 50%;
       width: 40px;
       height: 3px;
@@ -467,8 +481,8 @@ export const studioStyles: CSSResult[] = [
     .splitter::after {
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 0; /* physical */
+      right: 0; /* physical */
       top: -8px;
       bottom: -8px;
       z-index: 2;
@@ -488,7 +502,7 @@ export const studioStyles: CSSResult[] = [
       /* the containing block of the panels' absolutely placed bits (sr-only text): they scroll with it */
       position: relative;
       background: var(--mc-surface);
-      border-left: 1px solid var(--mc-divider);
+      border-inline-start: 1px solid var(--mc-divider);
       overflow-y: auto;
       overscroll-behavior: contain;
       min-height: 0;
@@ -501,6 +515,7 @@ export const studioStyles: CSSResult[] = [
       position: absolute;
       top: 0;
       right: 0;
+      inset-inline: auto 0;
       bottom: 0;
       width: min(var(--insp-w), 100%);
       z-index: 8;
@@ -509,6 +524,9 @@ export const studioStyles: CSSResult[] = [
       transition:
         transform 0.2s ease-out,
         visibility 0s linear 0.2s;
+    }
+    .workspace.slide .inspector[data-dir='rtl'] {
+      transform: translateX(-100%);
     }
     .workspace.slide.insp-open .inspector {
       transform: none;
@@ -532,6 +550,7 @@ export const studioStyles: CSSResult[] = [
       min-height: 44px;
       margin: 0 -16px;
       padding: 4px 16px 4px 8px;
+      padding-inline: 8px 16px;
       background: var(--mc-surface);
       border-bottom: 1px solid var(--mc-divider);
     }
@@ -541,7 +560,7 @@ export const studioStyles: CSSResult[] = [
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      text-align: right;
+      text-align: end;
       font-size: 0.75rem;
       color: var(--mc-text-2);
     }
@@ -565,6 +584,7 @@ export const studioStyles: CSSResult[] = [
       position: absolute;
       top: 20px;
       right: 36px;
+      inset-inline: auto 36px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -583,11 +603,12 @@ export const studioStyles: CSSResult[] = [
       position: relative;
     }
     .suffix .input {
-      padding-right: 36px;
+      padding-inline-end: 36px;
     }
     .suffix span {
       position: absolute;
       right: 12px;
+      inset-inline: auto 12px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--mc-text-2);
@@ -606,7 +627,7 @@ export const studioStyles: CSSResult[] = [
     }
     .errors ul {
       margin: 4px 0 0;
-      padding-left: 18px;
+      padding-inline-start: 18px;
     }
     .errors .mono {
       font-size: 0.75rem;
@@ -679,7 +700,7 @@ export const studioStyles: CSSResult[] = [
 
     .toast {
       position: absolute;
-      left: 50%;
+      left: 50%; /* physical */
       bottom: 24px;
       transform: translateX(-50%);
       z-index: 40;

@@ -1,8 +1,5 @@
-/*
- * Which module types the `controls` chunk serves, and the default height their placeholder reserves before it
- * arrives. Both read the card config only. A size the config sets (`design.height` or `design.min_height`)
- * belongs to the module's wrapper, so the placeholder then adds nothing of its own.
- */
+// Which module types the `controls` chunk serves, and the default height their placeholder
+// reserves before it arrives. A size set in the config belongs to the wrapper instead.
 
 export const CONTROL_MODULE_TYPES = ['slider', 'spinbox', 'dropdown', 'light', 'gauge'] as const;
 

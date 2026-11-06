@@ -1,4 +1,6 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { alignedLeft } from '../place';
+import { readDirection } from './direction';
 
 /** True when the browser supports the Popover API (top-layer rendering). */
 export function supportsPopover(): boolean {
@@ -10,7 +12,7 @@ export interface MenuPopoverOptions {
   menu: () => HTMLElement | null | undefined;
   /** Called after the menu closed (host resets its own open state here). */
   onClose?: () => void;
-  /** Horizontal alignment with the trigger: 'start' = left edges, 'end' = right edges. */
+  /** Horizontal alignment with the trigger: 'start' = inline-start edges, 'end' = inline-end edges. */
   align?: 'start' | 'end';
   /**
    * Without the Popover API: still position with fixed viewport coordinates (the menu's own CSS is
@@ -32,20 +34,8 @@ export interface MenuOpenAt {
 }
 
 /**
- * One overflow / action menu of an editor element.
- *
- * The menu element stays in the host's shadow root (so its styles apply) but is shown in the
- * browser's top layer with the Popover API (`popover="manual"` + showPopover()). Top-layer elements
- * are positioned against the viewport even when an ancestor has a transform or clips overflow, which
- * is exactly what HA's card-editor dialog does (ha-dialog -> wa-dialog::part(dialog) has
- * `transform: translate(...)` and `overflow: hidden`): a plain `position: fixed` menu inside it is
- * offset by the dialog's origin and clipped away. Popovers opened later also stack above the
- * studio's modal <dialog>.
- *
- * Handles: positioning from the trigger rect or a pointer point (flips up when there is no room
- * below), keyboard navigation (ArrowUp/Down, Home/End, first-letter type-ahead, Escape with
- * stopPropagation, Tab closes and returns focus to the origin), outside-pointer close via
- * composedPath, following scroll in every enclosing shadow root, close on resize.
+ * One overflow / action menu of an editor element, shown in the top layer with the Popover API.
+ * Positions from the trigger or a pointer point, handles keyboard navigation, outside-pointer close and scroll following.
  */
 export class MenuPopover implements ReactiveController {
   trigger: HTMLElement | null = null;
@@ -182,7 +172,7 @@ export class MenuPopover implements ReactiveController {
     if (vh > 0 && h > room) el.style.maxHeight = `${Math.max(120, room)}px`;
     const height = Math.min(h, vh > 0 ? Math.max(120, room) : h);
     const top = up ? Math.max(EDGE, r.top - GAP - height) : r.bottom + GAP;
-    let left = this.opts.align === 'end' && !p ? r.right - w : r.left;
+    let left = p ? r.left : alignedLeft(r, w, this.opts.align === 'end' ? 'end' : 'start', readDirection(this.host) === 'rtl');
     if (vw > 0) left = Math.min(left, vw - w - EDGE);
     left = Math.max(EDGE, left);
     Object.assign(el.style, { top: `${Math.round(top)}px`, left: `${Math.round(left)}px`, right: 'auto', bottom: 'auto' });

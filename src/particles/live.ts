@@ -6,19 +6,9 @@ import { childCount, spawnChildren } from './children';
 import type { SlotLook } from './css';
 import { emitterPlan, type DocPlan, type Plan } from './emitters';
 
-/*
- * The live engine (particles-v2, P2-3): the same world, spawn and step as the bake, run in real time
- * instead of baked into a loop. Particles respawn when they die (after a `delay` draw) instead of
- * wrapping at the period, persistent flows (orbit, wander) never die, and children come from a pool
- * of slots after the parents. Slots keep the look they were compiled with (shape, size, colour), so
- * the markup never changes while it runs.
- *
- * One shared requestAnimationFrame loop drives every live layer on the page. A layer steps only
- * while it is on screen (the shared IntersectionObserver, icons/offscreen.ts) and the page is
- * visible; the loop asks for no frame when no layer is active. A layer that left the DOM is dropped
- * on the next frame; stopLive forgets it at once. Reduced motion never gets here (apply.ts draws one
- * still frame instead).
- */
+// The live engine: the same world, spawn and step as the bake, run in real time. Particles respawn when they die,
+// persistent flows never die, children come from a pool of slots after the parents. One shared requestAnimationFrame loop
+// drives every live layer that is on screen while the page is visible. Reduced motion never gets here.
 
 const DT = PARTICLES_V2_CAPS.dt;
 /** Longest frame gap that is caught up, s (a long stall jumps instead of fast-forwarding). */
@@ -262,7 +252,7 @@ function frame(ts: number): void {
       for (const s of e.sims) s.step();
       e.acc -= DT;
     }
-    writeFrame(e.el, e.sims.flatMap((s) => s.frame()));
+    writeFrame(e.el, e.sims.flatMap((s) => s.frame()), false);
   }
   if (anyOn() && pageVisible()) raf = requestAnimationFrame(frame);
   else last = 0;
@@ -285,7 +275,8 @@ export function partSims(spec: ParticlesSpecV2, period: number, geometry: BakeGe
  * `key` (layer name: spec, period, geometry, part) keeps the running simulations; another key starts over.
  */
 export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0): void {
-  if (entries.get(layer)?.key === key) return;
+  const live = entries.get(layer);
+  if (live?.key === key) return;
   stopLive(layer);
   if (!listening && typeof document !== 'undefined') {
     document.addEventListener('visibilitychange', onVisibility);

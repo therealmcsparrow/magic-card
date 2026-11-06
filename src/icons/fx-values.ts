@@ -3,10 +3,8 @@ import { safeColor } from '../utils/safe-css';
 import { ENTITY_COLOR_VAR, entityStateColor, parseEntityColor } from '../utils/entity-color';
 import { entityNumber, isUnavailable } from '../utils/entity-value';
 
-/*
- * The value helpers shared by `icon_fx` (<mc-svg-icon>) and `design.value_background`: stateless,
- * so the card entry carries them without the icon effects.
- */
+// The value helpers shared by `icon_fx` (<mc-svg-icon>) and `design.value_background`: stateless,
+// so the card entry carries them without the icon effects.
 
 /** Range of a value when no min / max is configured. */
 export const FX_RANGE = { min: 0, max: 100 };

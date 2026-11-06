@@ -1,16 +1,15 @@
 import type { Box, EditPath, Pt } from '../contracts/path-model';
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import { locale, m, t } from './i18n';
 import { HIT_MIN_COARSE, HIT_MIN_FINE, LOUPE_OFFSET_PX, LOUPE_SIZE_PX, SEGMENT_BAND_COARSE, SEGMENT_BAND_FINE, type SnapConfig } from '../contracts/path-canvas';
 
-/*
- * Pure maths of the path canvas: the view (frame units <-> CSS px), hit sizes, snapping, keyboard
- * steps, the touch loupe's place and the texts the canvas reads out. No DOM, no lit.
- */
+// Pure maths of the path canvas: the view, hit sizes, snapping, keyboard steps, the touch loupe place and the texts it reads out.
 
-/** zoom = CSS px per frame unit; (x, y) = where frame coordinate 0, 0 sits in the canvas (CSS px). */
+/** zoom = CSS px per frame unit across (and down, unless `zy` says otherwise); (x, y) = where frame coordinate 0, 0 sits in the canvas (CSS px). */
 export interface View {
   zoom: number;
+  /** CSS px per frame unit down, when it differs from `zoom` (overlay mode on a box that is not square). */
+  zy?: number;
   x: number;
   y: number;
 }
@@ -19,8 +18,8 @@ export const ZOOM_MIN = 0.25;
 export const ZOOM_MAX = 400;
 
 export const clampZoom = (z: number): number => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
-export const toScreen = (v: View, p: Pt): Pt => [v.x + p[0] * v.zoom, v.y + p[1] * v.zoom];
-export const toFrame = (v: View, s: Pt): Pt => [(s[0] - v.x) / v.zoom, (s[1] - v.y) / v.zoom];
+export const toScreen = (v: View, p: Pt): Pt => [v.x + p[0] * v.zoom, v.y + p[1] * (v.zy ?? v.zoom)];
+export const toFrame = (v: View, s: Pt): Pt => [(s[0] - v.x) / v.zoom, (s[1] - v.y) / (v.zy ?? v.zoom)];
 
 /** Zoom to `zoom`, the frame point under the screen point `at` stays where it is. */
 export function zoomAt(v: View, zoom: number, at: Pt): View {
@@ -74,7 +73,7 @@ export interface SnapContext {
 /** A line a drag can hold on to; the label is drawn next to its guide. */
 export interface Line {
   v: number;
-  label: MessageId;
+  label: MessageIndex;
 }
 
 export interface Snapped {
@@ -90,18 +89,18 @@ export function snapLines(c: Pick<SnapContext, 'snap' | 'frame' | 'safeArea'>, a
   const n = axis ? c.frame.h : c.frame.w;
   const sa = s.safeArea ? (c.safeArea ?? 0) : 0;
   const out: Line[] = [];
-  const add = (v: number, label: MessageId): number => out.push({ v, label });
+  const add = (v: number, label: MessageIndex): number => out.push({ v, label });
   if (sa > 0) {
-    add(o + sa, m('Safe area edge'));
-    add(o + n - sa, m('Safe area edge'));
+    add(o + sa, m('path-canvas.geometry.safe-area-edge'));
+    add(o + n - sa, m('path-canvas.geometry.safe-area-edge'));
   }
   if (s.frame) {
-    add(o, m('Edge'));
-    add(o + n, m('Edge'));
+    add(o, m('path-canvas.geometry.edge'));
+    add(o + n, m('path-canvas.geometry.edge'));
   }
-  if (s.frame || sa > 0) add(o + n / 2, m('Centre'));
-  for (const v of (axis ? s.extra?.y : s.extra?.x) ?? []) add(v, m('Edge'));
-  for (const p of others) add(p[axis], m('Edge'));
+  if (s.frame || sa > 0) add(o + n / 2, m('path-canvas.geometry.centre'));
+  for (const v of (axis ? s.extra?.y : s.extra?.x) ?? []) add(v, m('path-canvas.geometry.edge'));
+  for (const p of others) add(p[axis], m('path-canvas.geometry.edge'));
   return out;
 }
 
@@ -178,14 +177,13 @@ export const num = (v: number): string => String(Math.round(v * 100) / 100 || 0)
 
 const formats: Record<string, Intl.NumberFormat> = {};
 /** A coordinate or size rounded to two decimals, with the decimal separator of the active language (the messages take it as text). */
-export const rnd = (v: number): string => (formats[locale()] ||= new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 })).format(Math.round(v * 100) / 100 || 0);
+const shown = (v: number): number => Math.round(v * 100) / 100 || 0;
+export const rnd = (v: number): string => (formats[locale()] ||= new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 })).format(shown(v));
 
 export function kindWord(a: EditPath['anchors'][number], smooth: boolean): string {
   const k = a.kind ?? (smooth ? 'smooth' : 'corner');
-  return k === 'smooth' ? t('smooth') : k === 'symmetric' ? t('symmetric') : t('corner');
+  return k === 'smooth' ? t('path-canvas.geometry.smooth') : k === 'symmetric' ? t('path-canvas.geometry.symmetric') : t('path-canvas.geometry.corner');
 }
 
-export const pointsWord = (n: number): string => t('{n, plural, one {# point} other {# points}}', { n });
-
 /** An angle in degrees, said in the language. */
-export const degrees = (v: number): string => t('{one, select, yes {{n} degree} other {{n} degrees}}', { one: v === 1 ? 'yes' : 'no', n: rnd(v) });
+export const degrees = (v: number): string => t('path-canvas.geometry.n-degrees', { n: shown(v) });

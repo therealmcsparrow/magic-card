@@ -9,8 +9,8 @@ import { lm } from '../../i18n/labels/mark';
 class SeparatorModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'separator',
-    name: lm('Separator'),
-    description: lm('Visual divider between modules'),
+    name: lm('labels.separator-module.separator'),
+    description: lm('labels.separator-module.visual-divider-between-modules'),
     category: 'layout',
     icon: 'mdi:minus',
   };

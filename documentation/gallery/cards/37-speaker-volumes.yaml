@@ -73,14 +73,14 @@ rows:
                       - type: icon
                         icon: mdi:music-note-off
                         size: 16px
-                        design: { color: "#94a3b8" }
+                        design: { color: "#cbd5e1" }
                       - type: text
                         text: Bedroom
                         design: *room
                   - type: text
                     use_entity: true
                     entity: media_player.bedroom
-                    design: { font_size: 12px, color: "#94a3b8" }
+                    design: { font_size: 12px, color: "#cbd5e1" }
               - type: bar
                 entity: media_player.bedroom
                 attribute: volume_level
@@ -88,7 +88,7 @@ rows:
                 max: 1
                 show_value: false
                 bar_height: 8px
-                bar_color: "#94a3b8"
+                bar_color: "#cbd5e1"
                 bar_background: "rgba(255,255,255,0.07)"
                 design: { border_radius: 999px }
           - type: vertical

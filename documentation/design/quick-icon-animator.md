@@ -36,7 +36,7 @@ To pick another one, open the icon picker's Animated icons tab and click a tile.
 
 ## Styles: Quiet, Living and Glow
 
-Every animation in the Icon library plays in three Styles. The Style switch sits next to the Icon library heading in the Animated icons tab. The tiles play in the Style you choose, and the tile you click is stored in that Style.
+Every animation in the Icon library plays in three Styles. The Style swatches sit next to the Icon library heading in the Animated icons tab. Each swatch shows a small preview of one icon in that Style, either the icon the module already uses or the first match, with the label Quiet, Living or Glow under it. The chosen swatch has a thicker edge and a tick, so you can tell it apart without relying on colour. Use the arrow keys, Home and End to move between swatches. The swatches follow your theme. The tiles play in the Style you choose, and the tile you click is stored in that Style.
 
 -   Quiet moves one part of the icon a little, and more slowly. The rest of the icon stays still and colour changes are left out. A turning part, such as fan blades, keeps turning at half speed. Use it on dashboards where a lot of moving icons would distract.
 -   Living is the full animation as it was drawn. It is the default.
@@ -148,4 +148,4 @@ The animation document goes into the card's own `custom_animations`, which merge
 
 ## The editor file
 
-The Animated icons tab and the icon follow described above live in their own file, `magic-card-icon-animator.js`, next to `magic-card.js`. The editor loads it the first time you open the tab or change an animated module's icon. Dashboards never load it. HACS installs it with the card; with a manual install, copy it next to `magic-card.js` as well. Without the file, the tab shows "The animated icons could not be loaded. Try again." and everything else works.
+The Animated icons tab and the icon follow described above live in their own file, `magic-card-icon-animator.js`, next to `magic-card.js`. The editor loads it the first time you open the tab or change an animated module's icon. Dashboards never load it. The Marketplace and HACS install it with the card; with a manual install, copy it next to `magic-card.js` as well. Without the file, the tab shows "The animated icons could not be loaded. Try again." and everything else works.

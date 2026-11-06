@@ -1,8 +1,5 @@
-/*
- * bg-stack, what magic-card.js needs at run time. It sits in this file, not in bg-stack.ts, because the entry
- * may import only *.needs.ts of a contract (see tools/check-entry-graph.mjs); bg-stack.ts re-exports the
- * constants.
- */
+// bg-stack, what magic-card.js needs at run time. It sits in this file, not in bg-stack.ts, because the entry may
+// import only *.needs.ts of a contract (see tools/check-entry-graph.mjs); bg-stack.ts re-exports the constants.
 
 export const MAX_BACKGROUND_LAYERS = 4;
 export const BG_LAYER_STATUS_EVENT = 'mc-bg-layer-status';

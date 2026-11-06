@@ -12,30 +12,15 @@ import { StageSheets, stageHide } from './stage-hide';
 import { DEFAULT_SIM, SIM_ENTITY, applyPreviewChange, simulates, withSimEntity, type PreviewSim } from './editors/states-sim';
 import { t, m, type MessageId } from './i18n';
 
-/*
- * The studio's preview stage: the real `magic-card` (already loaded by the page, never defined
- * here) playing the edited document on an icon, button or text tile, on a light or dark card, with
- * speed, play / pause, scrub and a reduced-motion preview (the still state the card shows then).
- *
- * The card is laid out at its natural width (FRAME_WIDTH) and scaled down to fit the canvas
- * (`transform: scale(k)`, k <= MAX_ZOOM = 1: never enlarged), so the stage never scrolls and never
- * grows its column. With `zoomIcon` (the studio sets it while icon parts or drawing tools are in use)
- * the stage zooms to the card's icon instead: the icon's box, with some room around it, fills the
- * canvas (up to ICON_ZOOM) and the rest of the card is cut off. The overlay slot (path overlay,
- * stage tools) is scaled and moved with the card: overlays draw in unscaled card px, and
- * `stage-rect` reports unscaled sizes plus the scale.
- *
- * A document with states or bindings (or a panel's `preview-change`, `.preview`) plays from a
- * simulated entity: the animation entry gets `entity: PREVIEW_ENTITY` and the preview hass carries
- * its state and attributes (the states simulation). The tile's own entities (the card tile's sensor)
- * are added with tileHass.
- */
+// The studio preview stage: the real `magic-card` playing the edited document on an icon, button or text tile, with speed,
+// play / pause, scrub and reduced-motion preview. The card is scaled to fit the canvas or, with `zoomIcon`, zoomed
+// to its icon; a document with states or bindings plays from a simulated entity (PREVIEW_ENTITY).
 
 export type StageTheme = 'light' | 'dark';
 
 const THEMES: Array<{ id: StageTheme; label: MessageId; icon: string }> = [
-  { id: 'light', label: m('Light card'), icon: 'mdi:white-balance-sunny' },
-  { id: 'dark', label: m('Dark card'), icon: 'mdi:weather-night' },
+  { id: 'light', label: m('anim-studio.studio-stage.light-card'), icon: 'mdi:white-balance-sunny' },
+  { id: 'dark', label: m('anim-studio.studio-stage.dark-card'), icon: 'mdi:weather-night' },
 ];
 export const SPEEDS = [0.25, 0.5, 1, 1.5, 2];
 /** The preview card's natural width (px), before it is scaled to fit. */
@@ -128,6 +113,9 @@ function isDarkText(el: Element): boolean {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b > 140;
 }
 
+// Same value as I18N_WRAP_EVENT in the i18n contract.
+const I18N_WRAP_EVENT = 'mc-i18n-wrap';
+
 export class AnimationStage extends LitElement {
   @property({ attribute: false }) doc?: AnimationDoc;
   @property({ attribute: false }) lookup: (id: string) => AnimationDoc | undefined = () => undefined;
@@ -158,6 +146,8 @@ export class AnimationStage extends LitElement {
   @state() private _fh = 0;
   /** Zoomed to the icon: the frame's offset in the canvas (px). */
   @state() private _off?: { x: number; y: number };
+  /** Counts wraps received; a new one makes the preview card build its text again. */
+  @state() private _wraps = 0;
 
   private _card?: CardElement;
   private _raf = 0;
@@ -169,7 +159,7 @@ export class AnimationStage extends LitElement {
   private _sentTime = -1;
 
   private _themeSet = false;
-  /** The stage-only hide rules (section 3a of the studio-layers contract), kept in the preview card's roots. */
+  /** The stage-only hide rules, kept in the preview card's roots. */
   private _sheets = new StageSheets();
   private _mo?: MutationObserver;
   private _moRoot?: ShadowRoot;
@@ -179,8 +169,13 @@ export class AnimationStage extends LitElement {
   /** The preview's entry is driven by the simulated entity. */
   private _drives = false;
 
+  private _onWrap = (): void => {
+    this._wraps++;
+  };
+
   connectedCallback(): void {
     super.connectedCallback();
+    window.addEventListener(I18N_WRAP_EVENT, this._onWrap);
     // the preview card starts in the page's theme (HA's dark mode, else the text colour's lightness)
     if (!this._themeSet) {
       this._themeSet = true;
@@ -195,6 +190,7 @@ export class AnimationStage extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    window.removeEventListener(I18N_WRAP_EVENT, this._onWrap);
     this._ro?.disconnect();
     this._ro = undefined;
     this._mo?.disconnect();
@@ -258,6 +254,13 @@ export class AnimationStage extends LitElement {
     this.dispatchEvent(new CustomEvent('stage-time', { detail: { time } }));
   }
 
+  /** A tool in the canvas slot: the area stops panning the page under a touch drag. */
+  @state() private _canvasOn = false;
+
+  private _onCanvasSlot = (e: Event): void => {
+    this._canvasOn = (e.target as HTMLSlotElement).assignedElements().length > 0;
+  };
+
   private _observeFrame(): void {
     const frame = this.shadowRoot?.querySelector<HTMLElement>('.frame');
     const canvas = this.shadowRoot?.querySelector<HTMLElement>('.area');
@@ -306,8 +309,10 @@ export class AnimationStage extends LitElement {
     scale: number;
     subject?: StageInfo['subject'];
     viewBox?: StageInfo['viewBox'];
+    screen?: StageInfo['screen'];
   } {
     const subject = this._subjectRect(frame);
+    const screen = this._screenRect(frame);
     const viewBox = this._iconViewBox();
     return {
       width: frame.offsetWidth,
@@ -315,7 +320,18 @@ export class AnimationStage extends LitElement {
       scale: this._k,
       ...(subject ? { subject } : {}),
       ...(viewBox ? { viewBox } : {}),
+      ...(screen ? { screen } : {}),
     };
+  }
+
+  /** Where the scaled, moved card is drawn, in CSS px from the card area's top-left (the origin of the canvas slot). */
+  private _screenRect(frame: HTMLElement): StageInfo['screen'] | undefined {
+    const area = this.shadowRoot?.querySelector<HTMLElement>('.area');
+    if (!area) return undefined;
+    const a = area.getBoundingClientRect();
+    const f = frame.getBoundingClientRect();
+    const r = (n: number): number => Math.round(n * 100) / 100;
+    return { left: r(f.left - a.left), top: r(f.top - a.top), width: r(f.width), height: r(f.height) };
   }
 
   /** The viewBox of the preview's icon when it is drawn as an SVG (mc-svg-icon, as icon rigs are). */
@@ -424,7 +440,7 @@ export class AnimationStage extends LitElement {
     const drives = drivesPreview(this.doc, this.preview);
     const entityChanged = drives !== this._drives;
     this._drives = drives;
-    if (changed.has('doc') || changed.has('tile') || changed.has('reduced') || changed.has('lookup') || entityChanged || !this._card.shadowRoot) {
+    if (changed.has('doc') || changed.has('tile') || changed.has('reduced') || changed.has('lookup') || changed.has('_wraps') || entityChanged || !this._card.shadowRoot) {
       try {
         this._card.setConfig(
           previewConfig(this.doc, this.lookup, {
@@ -470,7 +486,7 @@ export class AnimationStage extends LitElement {
 
   private _showAll(): void {
     const view: LayerView = { ...this.layerView, hidden: [], solo: [] };
-    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: this.layerView.locked.length ? t('All layers shown. Locks kept.') : t('All layers shown') }, bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: this.layerView.locked.length ? t('anim-studio.studio-stage.all-layers-shown-locks-kept') : t('anim-studio.studio-stage.all-layers-shown') }, bubbles: true, composed: true }));
   }
 
   protected updated(changed: PropertyValues): void {
@@ -538,8 +554,8 @@ export class AnimationStage extends LitElement {
   private _missing(): TemplateResult {
     return html`<div class="missing" role="status">
       <ha-icon icon="mdi:card-off-outline"></ha-icon>
-      <strong>${t('Magic Card is not loaded on this page')}</strong>
-      <p>${t('The preview plays on a real magic-card. Load magic-card.js (your dashboard resource) before the animation studio.')}</p>
+      <strong>${t('anim-studio.studio-stage.magic-card-is-not-loaded-on-this-page')}</strong>
+      <p>${t('anim-studio.studio-stage.the-preview-plays-on-a-real-magic-card')}</p>
     </div>`;
   }
 
@@ -555,26 +571,27 @@ export class AnimationStage extends LitElement {
       <div class="canvas">
         <div class="dock dock-top">
           ${this.hiddenLayers > 0 || this.layerView.solo.length > 0
-            ? html`<div class="hide-chip" role="group" aria-label=${t('Layers hidden in the preview')}>
+            ? html`<div class="hide-chip" role="group" aria-label=${t('anim-studio.studio-stage.layers-hidden-in-the-preview')}>
                 <ha-icon icon="mdi:eye-off-outline"></ha-icon>
-                <span>${this.hiddenLayers > 0 ? t('Preview hides {count, plural, one {# layer} other {# layers}}', { count: this.hiddenLayers }) : t('Solo on')}</span>
-                <button type="button" class="show-all" aria-label=${t('Show all hidden layers')} @click=${() => this._showAll()}>${t('Show all')}</button>
+                <span>${this.hiddenLayers > 0 ? t('anim-studio.studio-stage.preview-hides-count', { count: this.hiddenLayers }) : t('anim-studio.studio-stage.solo-on')}</span>
+                <button type="button" class="show-all" aria-label=${t('anim-studio.studio-stage.show-all-hidden-layers')} @click=${() => this._showAll()}>${t('anim-studio.studio-stage.show-all')}</button>
               </div>`
             : nothing}
           <slot name="top"></slot>
         </div>
-        <div class="area">
+        <div class="area ${this._canvasOn ? 'canvas-on' : ''}">
         <div class="fit ${off ? 'zoomed' : ''}" style=${fit}>
           <div class="frame" style="${THEME_VARS[this.theme]};width:${FRAME_WIDTH}px;transform:${move}scale(${k})" data-theme=${this.theme}>
             ${defined && this._card ? this._card : this._missing()}
             <div class="overlay"><slot name="overlay"></slot></div>
           </div>
         </div>
-        ${this.reduced && defined ? html`<p class="note">${t('With reduced motion the card shows its still state: this animation does not play.')}</p>` : nothing}
+        <div class="canvas-layer"><slot name="canvas" @slotchange=${this._onCanvasSlot}></slot></div>
+        ${this.reduced && defined ? html`<p class="note">${t('anim-studio.studio-stage.with-reduced-motion-the-card-shows-its')}</p>` : nothing}
         ${off
-          ? html`<span class="zoom-tag" title=${t('Zoomed to the icon while you edit its parts or draw')}>${t('Icon {percent}%', { percent: Math.round(k * 100) })}</span>`
+          ? html`<span class="zoom-tag" title=${t('anim-studio.studio-stage.zoomed-to-the-icon-while-you-edit-its')}>${t('anim-studio.studio-stage.icon-percent', { percent: Math.round(k * 100) })}</span>`
           : Math.abs(k - 1) > 0.005
-            ? html`<span class="zoom-tag" title=${t('The preview is scaled to fit the stage')}>${Math.round(k * 100)}%</span>`
+            ? html`<span class="zoom-tag" title=${t('anim-studio.studio-stage.the-preview-is-scaled-to-fit-the-stage')}>${Math.round(k * 100)}%</span>`
             : nothing}
         </div>
         <div class="dock dock-bottom"><slot name="bottom"></slot></div>
@@ -583,8 +600,8 @@ export class AnimationStage extends LitElement {
         <button
           type="button"
           class="icon-btn sm play"
-          aria-label=${this.playing ? t('Pause (Space)') : t('Play (Space)')}
-          title=${this.playing ? t('Pause (Space)') : t('Play (Space)')}
+          aria-label=${this.playing ? t('anim-studio.studio-stage.pause-space') : t('anim-studio.studio-stage.play-space')}
+          title=${this.playing ? t('anim-studio.studio-stage.pause-space') : t('anim-studio.studio-stage.play-space')}
           ?disabled=${this.reduced || !defined}
           @click=${() => this.togglePlay()}
         >
@@ -596,31 +613,31 @@ export class AnimationStage extends LitElement {
           min="0"
           max=${cycle}
           step="0.01"
-          aria-label=${t('Position in the cycle')}
-          aria-valuetext=${t('{now} of {total} seconds', { now: now.toFixed(2), total: cycle.toFixed(2) })}
+          aria-label=${t('anim-studio.studio-stage.position-in-the-cycle')}
+          aria-valuetext=${t('anim-studio.studio-stage.now-of-total-seconds', { now: now.toFixed(2), total: cycle.toFixed(2) })}
           .value=${String(now)}
           ?disabled=${this.reduced || !defined}
           @input=${(e: Event) => this.seek(Number((e.target as HTMLInputElement).value))}
         />
         <span class="time mono" aria-hidden="true">${now.toFixed(2)} / ${cycle.toFixed(2)} s</span>
         <label class="speed">
-          <span class="sr-only">${t('Speed')}</span>
+          <span class="sr-only">${t('anim-studio.studio-stage.speed')}</span>
           <div class="select">
-            <select class="input" aria-label=${t('Speed')} @change=${(e: Event) => this.setSpeed(Number((e.target as HTMLSelectElement).value))}>
+            <select class="input" aria-label=${t('anim-studio.studio-stage.speed')} @change=${(e: Event) => this.setSpeed(Number((e.target as HTMLSelectElement).value))}>
               ${SPEEDS.map((s) => html`<option value=${s} ?selected=${s === this.speed}>${s}×</option>`)}
             </select>
             <ha-icon icon="mdi:chevron-down"></ha-icon>
           </div>
         </label>
         <span class="view">
-          ${this._seg(t('Preview tile'), TILES, this.tile, (v) => this._pickTile(v), 'tiles')}
-          ${this._seg(t('Card theme'), THEMES, this.theme, (v) => (this.theme = v), 'themes')}
+          ${this._seg(t('anim-studio.studio-stage.preview-tile'), TILES, this.tile, (v) => this._pickTile(v), 'tiles')}
+          ${this._seg(t('anim-studio.studio-stage.card-theme'), THEMES, this.theme, (v) => (this.theme = v), 'themes')}
           <button
             type="button"
             class="toggle reduced"
             aria-pressed=${this.reduced ? 'true' : 'false'}
-            aria-label=${t('Reduced motion')}
-            title=${t('Preview with reduced motion')}
+            aria-label=${t('anim-studio.studio-stage.reduced-motion')}
+            title=${t('anim-studio.studio-stage.preview-with-reduced-motion')}
             @click=${() => (this.reduced = !this.reduced)}
           >
             <ha-icon icon="mdi:motion-pause-outline"></ha-icon>
@@ -659,8 +676,13 @@ export class AnimationStage extends LitElement {
         align-items: center;
         gap: 8px;
         margin-left: auto;
+        margin-inline: auto 0;
         padding-left: 8px;
+        padding-inline: 8px 0;
         border-left: 1px solid var(--mc-divider);
+        border-inline-width: 1px 0;
+        border-inline-style: solid;
+        border-inline-color: var(--mc-divider);
       }
       .view .seg {
         flex-wrap: wrap;
@@ -789,7 +811,7 @@ export class AnimationStage extends LitElement {
       }
       .frame {
         position: absolute;
-        left: 0;
+        left: 0; /* physical */
         top: 0;
         transform-origin: 0 0;
         color: var(--primary-text-color);
@@ -805,12 +827,27 @@ export class AnimationStage extends LitElement {
         inset: 0;
         pointer-events: auto;
       }
+      /* tools that edit over the card but cannot sit inside its scale: the card area's box, unscaled */
+      /* a canvas tool is in the slot: a drag on the area is the tool's, not a page pan or zoom */
+      .area.canvas-on {
+        touch-action: none;
+      }
+      .canvas-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .canvas-layer ::slotted(*) {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
       .frame magic-card {
         display: block;
       }
       .note {
         position: absolute;
-        left: 50%;
+        left: 50%; /* physical */
         bottom: 8px;
         transform: translateX(-50%);
         width: max-content;
@@ -826,6 +863,7 @@ export class AnimationStage extends LitElement {
       .zoom-tag {
         position: absolute;
         right: 8px;
+        inset-inline: auto 8px;
         top: 8px;
         padding: 1px 6px;
         border-radius: 6px;
@@ -869,6 +907,7 @@ export class AnimationStage extends LitElement {
         flex: none;
         min-width: 11ch;
         text-align: right;
+        text-align: end;
         font-size: 0.75rem;
         color: var(--mc-text-2);
         font-variant-numeric: tabular-nums;

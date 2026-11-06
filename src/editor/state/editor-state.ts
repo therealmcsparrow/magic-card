@@ -17,7 +17,8 @@ import { localiseCreationDefaults } from './creation-defaults';
 import { t } from '../i18n';
 import { followIcons } from '../components/icon-animator/loader';
 import { prunedConfig } from '../custom/library';
-import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
+import { columnWidthsList } from '../../utils/column-widths';
+import { applyRowLayout } from '../../utils/column-widths-edit';
 import { dropUndefined, newColumn } from './containers';
 import { deepClone } from '../../utils/deep-merge';
 import { generateId } from '../../utils/id-generator';
@@ -48,9 +49,10 @@ function giveFreshIds(mod: CardModule): void {
 }
 import { ModuleRegistry } from '../../modules/module-registry';
 import { debounce } from '../../utils/debounce';
-import { EDITOR_DEBOUNCE_MS } from '../../utils/constants';
+import { EDITOR_DEBOUNCE_MS, EDITOR_DRAG_IDLE_MS, EDITOR_DRAG_SEND_MS } from '../../utils/constants';
 import { clampSelection, itemAt, layoutModuleAt, moduleAt, selectionFromPath, selectionToPath } from '../studio/selection';
-import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path';
+import { ChildStep, childListKey, childSlots } from '../../utils/module-path';
+import { descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path-edit';
 import { copyModuleToClipboard, docPool, pasteAnimations, readModuleClip, referencedDocs } from './module-clipboard';
 import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
 import { withTemplateAnimations } from '../../services/template-merge';
@@ -120,6 +122,12 @@ export class EditorStateManager {
   private dispatchConfigChanged: ((config: MagicCardConfig) => void) & { cancel: () => void; flush: () => void };
   /** False while the card editor is detached: pending icon follows wait (follow-icon.ts). */
   attached = true;
+  private dragEnd = 0;
+  /** True once the drag in progress has pushed its undo entry. */
+  private dragUndone = false;
+  private dragPace?: ReturnType<typeof setTimeout>;
+  /** The newest config of a drag that has not gone out yet. */
+  private dragNext?: MagicCardConfig;
 
   constructor(private fireEvent: (config: MagicCardConfig) => void) {
     this.state = {
@@ -133,6 +141,32 @@ export class EditorStateManager {
     this.dispatchConfigChanged = debounce((config: MagicCardConfig) => {
       this.fireEvent(config);
     }, EDITOR_DEBOUNCE_MS);
+  }
+
+  // ── config-changed toward HA ──
+
+  /** Debounced as a rule; while a slider is being dragged (see sliderMoved) at a steady pace. */
+  private sendConfig(config: MagicCardConfig): void {
+    if (Date.now() < this.dragEnd) {
+      this.dispatchConfigChanged.cancel();
+      this.dragNext = config;
+      if (this.dragPace === undefined) this.dragSend();
+    } else this.dispatchConfigChanged(config);
+  }
+
+  /** Sends the newest config not yet sent; with `more`, waits EDITOR_DRAG_SEND_MS for the next one. */
+  private dragSend(more = true): void {
+    const config = this.dragNext;
+    this.dragNext = this.dragPace = undefined;
+    if (!config) return;
+    this.fireEvent(config);
+    if (more) this.dragPace = setTimeout(() => this.dragSend(), EDITOR_DRAG_SEND_MS);
+  }
+
+  /** A slider moved: for a moment after this, only the first write of the drag is undoable; config-changed goes out right away and then about every EDITOR_DRAG_SEND_MS, the last value included. */
+  sliderMoved(): void {
+    if (Date.now() >= this.dragEnd) this.dragUndone = false;
+    this.dragEnd = Date.now() + EDITOR_DRAG_IDLE_MS;
   }
 
   // ── Subscription ──
@@ -228,8 +262,9 @@ export class EditorStateManager {
 
   updateConfig(config: MagicCardConfig, recordUndo = true): void {
     const prev = this.state.config;
-    if (recordUndo) {
+    if (recordUndo && !(Date.now() < this.dragEnd && this.dragUndone)) {
       this.undoRedo.push(this.state.config);
+      this.dragUndone = Date.now() < this.dragEnd;
     }
     // kept copies of saved icons and shapes nothing uses any more go (library.ts; not while typing YAML)
     const cloned = deepClone(config);
@@ -242,7 +277,7 @@ export class EditorStateManager {
       selectedFlow: this._liveFlow(next),
     };
     this.notify();
-    this.dispatchConfigChanged(this.state.config);
+    this.sendConfig(this.state.config);
     // "This icon" animations follow their module's new icon, library ones go (lazy icon animator
     // chunk, loaded only when a module plays a custom:quick-* document or has an anim-icon-N entry);
     // there also catalogue copies (custom:cat-*) nothing plays any more go
@@ -933,7 +968,7 @@ export class EditorStateManager {
 
   addTab(row: number, col: number, module: number, child?: ChildStep[]): void {
     this._tabsEdit([row, col, module, child], (tabs) => {
-      tabs.push({ label: t('Tab {n}', { n: tabs.length + 1 }), modules: [] });
+      tabs.push({ label: t('card-editor.editor-state.tab-n', { n: tabs.length + 1 }), modules: [] });
     }, (l) => this._slotPath(row, col, module, child, l.tabs!.length - 1));
   }
 
@@ -946,7 +981,7 @@ export class EditorStateManager {
     this._tabsEdit([row, col, module, child], (tabs) => {
       if (!tabs[slot]) return false;
       if ('label' in patch && !patch.label?.trim()) {
-        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('Tab {n}', { n: slot + 1 });
+        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('card-editor.editor-state.tab-n', { n: slot + 1 });
         if (label === tabs[slot].label && Object.keys(patch).length === 1) return false;
         patch = { ...patch, label };
       }
@@ -1111,7 +1146,7 @@ export class EditorStateManager {
         selectedFlow: this._liveFlow(prev),
       };
       this.notify();
-      this.dispatchConfigChanged(prev);
+      this.sendConfig(prev);
     }
   }
 
@@ -1126,7 +1161,7 @@ export class EditorStateManager {
         selectedFlow: this._liveFlow(next),
       };
       this.notify();
-      this.dispatchConfigChanged(next);
+      this.sendConfig(next);
     }
   }
 
@@ -1142,10 +1177,14 @@ export class EditorStateManager {
 
   /** Send a pending (debounced) config-changed right away. */
   flush(): void {
+    clearTimeout(this.dragPace);
+    this.dragSend(false);
     this.dispatchConfigChanged.flush();
   }
 
   destroy(): void {
+    clearTimeout(this.dragPace);
+    this.dragNext = this.dragPace = undefined;
     this.dispatchConfigChanged.cancel();
     this.listeners.clear();
     this.undoRedo.clear();

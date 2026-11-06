@@ -4,16 +4,11 @@ import { PRIM } from './names';
 import { D } from './bind';
 import { toEditPaths, fromCorners, fromPrimitive, newShape, nameFor, type Doc, type Shape } from './model';
 
-/*
- * Draw tools on the stage: rectangle, ellipse, line, polygon / star and freehand, and the Hand tool.
- * Three ways in for every shape (WCAG 2.5.7): drag from corner to corner, click two corners, or the
- * keyboard crosshair (arrows move it, Enter sets a corner). The canvas never sees these pointers; the
- * pen and the point tools are the canvas's own.
- */
+// Draw tools on the stage: rectangle, ellipse, line, polygon / star, freehand and Hand, each by drag, two clicks or keyboard crosshair (WCAG 2.5.7).
 
-export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'shapes' | 'free' | 'hand' | 'knife';
+export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'shapes' | 'free' | 'hand' | 'knife' | 'text';
 export const SHAPE_TOOLS: readonly Tool[] = ['rect', 'ellipse', 'line', 'polygon', 'shapes', 'knife'];
-export const DRAW_TOOLS: readonly Tool[] = [...SHAPE_TOOLS, 'free', 'hand'];
+export const DRAW_TOOLS: readonly Tool[] = [...SHAPE_TOOLS, 'free', 'hand', 'text'];
 
 export interface ToolOpts {
   r: number;
@@ -45,6 +40,7 @@ export interface StageHost {
   panBy(dx: number, dy: number): void;
   say(text: string): void;
   cut(a: Pt, b: Pt): void;
+  placeText(p?: Pt): void;
   space: boolean;
 }
 
@@ -109,7 +105,7 @@ export class Gestures {
   }
 
   down(e: PointerEvent): boolean {
-    if (!this.active || (e.pointerType === 'mouse' && e.button !== 0) || this.h.space) return false;
+    if (!this.active || (this.h.tool === 'text' && (e.target as Element).closest('.txf')) || (e.pointerType === 'mouse' && e.button !== 0) || this.h.space) return false;
     const p = this.h.point(e);
     this.g = { id: e.pointerId, a: this.pending ?? this.snap(p, e.altKey), client: [e.clientX, e.clientY], started: false, trail: [p] };
     if (this.h.tool === 'hand') this.g.pan = [e.clientX, e.clientY];
@@ -127,7 +123,7 @@ export class Gestures {
       }
       return false;
     }
-    if (!g.started && Math.hypot(e.clientX - g.client[0], e.clientY - g.client[1]) < SLOP) return true;
+    if (t === 'text' || (!g.started && Math.hypot(e.clientX - g.client[0], e.clientY - g.client[1]) < SLOP)) return true;
     g.started = true;
     if (t === 'hand' && g.pan) {
       this.h.panBy(e.clientX - g.pan[0], e.clientY - g.pan[1]);
@@ -148,6 +144,10 @@ export class Gestures {
     this.g = undefined;
     const t = this.h.tool;
     if (t === 'hand') return true;
+    if (t === 'text') {
+      this.h.placeText(g.a);
+      return true;
+    }
     if (t === 'free') {
       this.h.setLive(undefined);
       if (g.started) this.finishFree(g.trail);
@@ -182,6 +182,12 @@ export class Gestures {
 
   /** The keyboard crosshair. Returns true when the key was ours. */
   key(e: KeyboardEvent): boolean {
+    if (this.h.tool === 'text') {
+      // Enter on the canvas places the text in the middle; Enter on a button of the text field is that button's own
+      if (e.key !== 'Enter' || (e.target as Element).localName === 'button') return false;
+      this.h.placeText();
+      return true;
+    }
     if (!this.active || !SHAPE_TOOLS.includes(this.h.tool)) return false;
     const grid = this.h.snapOn && this.h.grid > 0 ? this.h.grid : 0.5;
     const d = KEYS[e.key];
@@ -199,7 +205,7 @@ export class Gestures {
       if (!this.pending) {
         this.pending = c;
         this.h.setLive({ from: c, cursor: c });
-        this.h.say(t('First corner set. Move, then press Enter for the opposite corner.'));
+        this.h.say(t('svg-editor.tools.first-corner-set-move-then-press-enter'));
       } else this.finish(this.pending, c, false);
       return true;
     }

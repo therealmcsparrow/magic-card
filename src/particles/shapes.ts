@@ -1,12 +1,9 @@
 import { BUILTIN_SHAPES, type BuiltinShape } from '../contracts/particles-v2';
 import { svgMaskUrl } from '../anim-studio/compile';
 
-/*
- * The built-in particle shapes, drawn on a 24 x 24 grid as path data only (the animated SVG export
- * may use nothing but paths). On the card a slot with a built-in shape renders <i data-s="star">;
- * SHAPES_CSS styles every such slot on the page, so it goes into the shared stylesheet once
- * (key SHAPES_KEY), not once per layer.
- */
+// The built-in particle shapes, drawn on a 24 x 24 grid as path data only. On the card a slot with a built-in shape
+// renders <i data-s="star">; SHAPES_CSS styles every such slot on the page, so it goes into the shared stylesheet once
+// (key SHAPES_KEY).
 
 export interface ShapeDraw {
   d: string;

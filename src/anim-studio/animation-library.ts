@@ -1,34 +1,9 @@
 import { validateAnimationDoc, validateAnimationLibrary, type AnimationDoc } from './model';
 import { useAnimationLibrary } from '../utils/anim-hooks';
 
-/*
- * The global animation library of the magic-card-utils integration, shared by every card on the
- * page: one fetch and one subscription per page (per HA connection), started lazily by the first
- * card that renders a `preset: custom:<id>` reference (or the editor's picker). Cards that never
- * reference a custom animation cause no request at all.
- *
- * WebSocket contract (the integration implements these; documents are validated here again and
- * invalid ones are dropped):
- *
- *   → { type: 'magic_card_utils/get_animations' }
- *   ← { animations: { [id: string]: AnimationDoc } }          (a list of documents is accepted too)
- *
- *   → { type: 'magic_card_utils/subscribe_animations' }      (a subscription: subscribeMessage)
- *   ← { action: 'saved', animation: AnimationDoc }            created or updated
- *   ← { action: 'deleted', id: string }                      (the event keeps `id`)
- *   ← { action: 'reset', animations: { [id]: AnimationDoc } } the whole library replaced (import)
- *
- *   → { type: 'magic_card_utils/save_animation', animation: AnimationDoc }   admin only
- *   ← { animation: AnimationDoc }                                          the stored (normalised) doc
- *     error { code: 'invalid_format', message, errors?: [{ path, message }] }  field paths as in model.ts
- *   → { type: 'magic_card_utils/delete_animation', animation_id: string }   admin only
- *   ← {}                     (`animation_id`, not `id`: `id` is the WebSocket message id)
- *
- * Without the integration (`unknown_command`) the status is 'unavailable' for good. Other failures
- * (`not_loaded` while it starts, a dropped socket) are 'unavailable' until a retry works: on the
- * connection's next `ready`, and after 5 s, 15 s and 60 s while it stays up. Meanwhile `custom:`
- * references fall back to the card's inline `custom_animations`, else render nothing.
- */
+// The global animation library of the magic-card-utils integration: one fetch and one subscription per page.
+// WebSocket commands: get_animations, subscribe_animations, save_animation, delete_animation (admin).
+// Without the integration the status is unavailable and custom references fall back to inline custom_animations.
 
 /** Retry delays (ms) after a failed first fetch that may work later. */
 const RETRY_MS = [5000, 15000, 60000];

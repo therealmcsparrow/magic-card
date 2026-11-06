@@ -19,6 +19,8 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { moduleEditors } from '../modules';
 import { hasColumnWidths } from '../../utils/column-widths';
 import { editorStyles } from '../../css/editor-css';
+import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
+import { DirectionController, readDirection } from '../../ui-kit/controllers/direction';
 import {
   ModuleSelection,
   Selection,
@@ -42,7 +44,8 @@ import {
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
 import { entityStats, resolveEntitySource } from '../entity-source';
-import { childListKey, replaceDescendant } from '../../utils/module-path';
+import { childListKey } from '../../utils/module-path';
+import { replaceDescendant } from '../../utils/module-path-edit';
 import { layerContext } from '../layers/placement-model';
 import { onStatus } from '../layers/bg-status';
 import { moveLayer, turnOnLowPower } from '../layers/layer-actions';
@@ -85,17 +88,17 @@ import '../components/media-picker';
 import '../components/card-picker';
 import '../components/box-field';
 import '../components/design-panel';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
 type Kind = Selection['kind'];
 
 /** Tabs are text-only in every variant (one tab style). */
-const TAB_META: Record<EditorTab, { label: MessageId }> = {
-  general: { label: m('General') },
-  actions: { label: m('Actions') },
-  conditions: { label: m('Conditions') },
-  design: { label: m('Design') },
-  flows: { label: m('Flows') },
+const TAB_META: Record<EditorTab, { label: MessageIndex }> = {
+  general: { label: m('card-editor.inspector.general') },
+  actions: { label: m('card-editor.inspector.actions') },
+  conditions: { label: m('card-editor.inspector.conditions') },
+  design: { label: m('card-editor.inspector.design') },
+  flows: { label: m('card-editor.inspector.flows') },
 };
 const MODULE_TAB_ORDER: EditorTab[] = ['general', 'actions', 'conditions', 'design'];
 const KIND_TABS: Record<Exclude<Kind, 'module'>, EditorTab[]> = {
@@ -112,6 +115,7 @@ const KIND_TABS: Record<Exclude<Kind, 'module'>, EditorTab[]> = {
  */
 @customElement('mc-inspector')
 export class Inspector extends LitElement {
+  private readonly _direction = new DirectionController(this);
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ reflect: true }) variant: 'pane' | 'studio' = 'pane';
@@ -174,10 +178,11 @@ export class Inspector extends LitElement {
     if (!tab) return;
     // Keep the active tab visible in the horizontally scrolling tablist (without scrolling the page).
     const list = tab.parentElement!;
-    if (tab.offsetLeft < list.scrollLeft) list.scrollLeft = tab.offsetLeft - 4;
-    else if (tab.offsetLeft + tab.offsetWidth > list.scrollLeft + list.clientWidth) {
-      list.scrollLeft = tab.offsetLeft + tab.offsetWidth - list.clientWidth + 4;
-    }
+    // measured edges, so it holds when the list starts on the right
+    const t = tab.getBoundingClientRect();
+    const l = list.getBoundingClientRect();
+    if (t.left < l.left) list.scrollLeft += t.left - l.left - 4;
+    else if (t.right > l.right) list.scrollLeft += t.right - l.right + 4;
     if (this._focusTab) {
       this._focusTab = false;
       tab.focus();
@@ -286,15 +291,8 @@ export class Inspector extends LitElement {
   }
 
   private _onTabKeydown(e: KeyboardEvent, sel: Selection, tabs: EditorTab[], current: EditorTab): void {
-    const idx = tabs.indexOf(current);
-    const targets: Record<string, number> = {
-      ArrowRight: (idx + 1) % tabs.length,
-      ArrowLeft: (idx - 1 + tabs.length) % tabs.length,
-      Home: 0,
-      End: tabs.length - 1,
-    };
-    const next = targets[e.key];
-    if (next === undefined) return;
+    const next = rovingTarget(e.key, tabs.indexOf(current), tabs.map(() => ({})), 'horizontal', true, readDirection(e.currentTarget as Element) === 'rtl');
+    if (next < 0) return;
     e.preventDefault();
     this._focusTab = true;
     this._tabs = { ...this._tabs, [sel.kind]: tabs[next] };
@@ -424,7 +422,7 @@ export class Inspector extends LitElement {
       <div class="insp" @field-sync-toggle=${this._onSyncToggle} @mc-open-card-entity=${this._openCardEntity} @mc-select-first-tab=${this._showFirstTab}>
         <div class="insp-head">
           ${this._renderIdentity(config, sel)}
-          <div class="seg full tabs" role="tablist" aria-label=${t('Settings')}>
+          <div class="seg full tabs" role="tablist" aria-label=${t('card-editor.inspector.settings')}>
             ${tabs.map((id) => {
               const on = id === tab;
               return html`
@@ -455,13 +453,13 @@ export class Inspector extends LitElement {
     const info = describeSelection(config, sel);
     const s = clampSelection(config, sel);
     const crumb = (label: string, target: Selection) =>
-      html`<button type="button" class="crumb" title=${t('Select {label}', { label })} @click=${() => this._goTo(target)}>${label}</button>`;
+      html`<button type="button" class="crumb" title=${t('card-editor.inspector.select-label', { label })} @click=${() => this._goTo(target)}>${label}</button>`;
     const dot = html`<span aria-hidden="true"> · </span>`;
-    const rowOf = (i: number) => t('Row {n}', { n: i + 1 });
-    const colOf = (i: number) => t('Column {n}', { n: i + 1 });
-    const rows = (n: number) => t('{n, plural, one {# row} other {# rows}}', { n });
-    const columns = (n: number) => t('{n, plural, one {# column} other {# columns}}', { n });
-    const modules = (n: number) => t('{n, plural, one {# module} other {# modules}}', { n });
+    const rowOf = (i: number) => t('card-editor.inspector.row-n', { n: i + 1 });
+    const colOf = (i: number) => t('card-editor.inspector.column-n', { n: i + 1 });
+    const rows = (n: number) => t('card-editor.inspector.n', { n });
+    const columns = (n: number) => t('card-editor.inspector.n-2', { n });
+    const modules = (n: number) => t('card-editor.inspector.n-3', { n });
 
     // Header: "<Type> · <label>" with a one-line path under it.
     let title = info.title;
@@ -469,14 +467,14 @@ export class Inspector extends LitElement {
     let path: TemplateResult;
     switch (s.kind) {
       case 'card': {
-        title = config.name?.trim() ? `${t('Card')} · ${info.title}` : t('Card');
+        title = config.name?.trim() ? `${t('card-editor.inspector.card')} · ${info.title}` : t('card-editor.inspector.card');
         path = html`${rows((config.rows || []).length)} · ${modules(countModules(config))}`;
         break;
       }
       case 'row': {
         const row = config.rows[s.row];
         icon = 'mdi:table-row';
-        path = html`${columns(row.columns.length)} · ${hasColumnWidths(row) ? t('custom widths') : t('layout {layout}', { layout: row.layout || '1' })}`;
+        path = html`${columns(row.columns.length)} · ${hasColumnWidths(row) ? t('card-editor.inspector.custom-widths') : t('card-editor.inspector.layout-layout', { layout: row.layout || '1' })}`;
         break;
       }
       case 'column': {
@@ -525,7 +523,7 @@ export class Inspector extends LitElement {
         <div class="txt">
           <h2>${title}</h2>
           <p class="path">${path}${isHiddenItem(itemAt(config, s))
-            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>${t('Hidden on dashboard')}</span>`
+            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>${t('card-editor.inspector.hidden-on-dashboard')}</span>`
             : nothing}</p>
         </div>
       </div>
@@ -613,7 +611,7 @@ export class Inspector extends LitElement {
         sm.updateConfig(next as unknown as MagicCardConfig);
       },
     };
-    return renderCardGeneral(config, update, syncCtx, this.hass, this.variant === 'studio', entityField);
+    return renderCardGeneral(config, update, syncCtx, this.hass, this.variant === 'studio', entityField, (next) => sm.updateConfig(next));
   }
 
   /** A tab (General) or a row-module column (General, Conditions, Design). */
@@ -635,7 +633,7 @@ export class Inspector extends LitElement {
       return html`
         <div class="empty">
           <ha-icon icon="mdi:puzzle-remove-outline"></ha-icon>
-          <strong>${t('Unknown module type')}</strong>
+          <strong>${t('card-editor.inspector.unknown-module-type')}</strong>
           <p class="mono">${mod.type}</p>
         </div>
       `;
@@ -678,11 +676,11 @@ export class Inspector extends LitElement {
     return html`
       <div class="child-list-sync" data-overridden=${overridden ? '' : nothing}>
         <p class="help">${overridden
-          ? child ? t("This module is part of its layout; the layout's modules differ from the template.") : t("The modules inside this layout; the layout's modules differ from the template.")
-          : child ? t('This module is part of its layout; they follow the template as one list.') : t('The modules inside this layout; they follow the template as one list.')}</p>
+          ? child ? t("card-editor.inspector.this-module-is-part-of-its-layout-the") : t("card-editor.inspector.the-modules-inside-this-layout-the")
+          : child ? t('card-editor.inspector.this-module-is-part-of-its-layout-they') : t('card-editor.inspector.the-modules-inside-this-layout-they')}</p>
         ${overridden
           ? html`<button type="button" class="btn btn-text btn-sm child-list-reset" @click=${() => this._resetChildList(sel.row, sel.col, sel.module, key)}>
-              <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset to template')}
+              <ha-icon icon="mdi:backup-restore"></ha-icon>${t('card-editor.inspector.reset-to-template')}
             </button>`
           : nothing}
       </div>
@@ -778,7 +776,7 @@ export class Inspector extends LitElement {
       .col-widths-foot {
         display: flex;
         justify-content: flex-start;
-        margin-left: -8px;
+        margin-inline-start: -8px;
       }
       :host([variant='pane']) .insp-body {
         padding: 16px 0 0;
@@ -916,7 +914,7 @@ export class Inspector extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: color-mix(in srgb, var(--mc-surface-2) 55%, transparent);
-        text-align: left;
+        text-align: start;
         font-size: 0.875rem;
         font-weight: 600;
         color: var(--mc-text);
@@ -935,6 +933,9 @@ export class Inspector extends LitElement {
       }
       .dgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .dgroup-body {
         display: grid;

@@ -5,19 +5,9 @@ import { entityNumber, isUnavailable } from './entity';
 import { adoptRuntimeSheet, moduleIcon, setRules, wrapperKey } from './sheet';
 import type { ApplyCtx } from './types';
 
-/*
- * v2 runtime, value bindings: the driving entity's value (state or an attribute), normalised to
- * 0..1 over the binding's input range and clamped, is written as `--mcb-<n>` on the wrapper (a rule
- * in the runtime sheet, so the card's re-renders never drop it). The bound property reads the
- * variable through calc() (rotate, x, y, scale: one transform per target, composed after the
- * animation's own translate / rotate / scale; opacity; draw; color_mix), with a CSS transition of
- * `smoothing` seconds. speed sets the playback rate of the document's animations on the target;
- * rotate_speed spins the target (Web Animations, composite add) at output degrees per second.
- * Unavailable or non-numeric values skip the binding (the last value stays). Reduced motion: no
- * speed changes and no spinning; static bindings still apply.
- *
- * Several documents on one wrapper: document k (first-seen order) uses --mcb-<8k + n>.
- */
+// v2 runtime, value bindings: the driving entity value, normalised to 0..1 over the binding range, is written as
+// `--mcb-<n>` on the wrapper; the bound property reads it through calc(). speed and rotate_speed drive playback rate and
+// spin; reduced motion keeps only static bindings.
 
 export const BINDINGS_PER_DOC = 8;
 const MAX_RATE = 16;

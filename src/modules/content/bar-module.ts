@@ -12,8 +12,8 @@ import { lm } from '../../i18n/labels/mark';
 class BarModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'bar',
-    name: lm('Bar'),
-    description: lm('Display a progress bar based on entity state'),
+    name: lm('labels.bar-module.bar'),
+    description: lm('labels.bar-module.display-a-progress-bar-based-on-entity'),
     category: 'content',
     icon: 'mdi:chart-bar',
   };
@@ -53,7 +53,7 @@ class BarModule extends BaseMagicModule {
 
     let valueText = '—';
     if (entity && unavailable && attribute && entity.attributes[attribute] === undefined) {
-      valueText = hass!.formatEntityState?.(entity, 'unavailable') || t('Unavailable');
+      valueText = hass!.formatEntityState?.(entity, 'unavailable') || t('card.bar-module.unavailable');
     } else if (entity) {
       valueText = formatEntityValue(hass, entity, attribute, { decimals: c.decimals }).text;
     }
@@ -88,7 +88,7 @@ class BarModule extends BaseMagicModule {
     const c = config as BarModuleConfig;
     // No entity yet is not an error: the bar shows its minimum until one is picked.
     if (c.min !== undefined && c.max !== undefined && c.min >= c.max) {
-      errors.push(t('Min must be less than max'));
+      errors.push(t('card.bar-module.min-must-be-less-than-max'));
     }
     return errors;
   }

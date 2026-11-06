@@ -1,12 +1,9 @@
 import { type Stop } from '../utils/flow-motion';
 import { at, type Sampled } from './sampler';
 
-/*
- * Travel keyframes of the flow-look chunk (transform animations, see src/utils/flow-motion.ts): the
- * stops of a sampled centre line. Curves and corner arcs get one about every 5 px. Straight pieces
- * keep their ends; a shape that turns also swings to a new piece's direction at its start (a sharp
- * corner, as a zigzag has), not gradually along it.
- */
+// Travel keyframes of the flow-look chunk (transform animations, see src/utils/flow-motion.ts): the stops of a sampled
+// centre line, about one every 5 px on curves and corner arcs. Straight pieces keep their ends; a shape that turns
+// swings to a new piece's direction at its start, not gradually along it.
 const STEP = 5;
 /** A direction change above this many degrees is a corner. */
 const CORNER = 10;

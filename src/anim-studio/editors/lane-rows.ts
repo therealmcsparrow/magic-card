@@ -7,12 +7,9 @@ import { LANE_BY_ID, laneLabel, type LaneId } from './keyframes-utils';
 import type { LayerRows } from './layer-row';
 import { t } from '../i18n';
 
-/*
- * Keyframe tracks as lane rows: under a target row (card part, icon part, group,
- * shape) a disclosure lists one row per animated property. The disclosure state is `LayerView.open`
- * (keyed by the target row); a lane has hide / solo / lock but no order and no move. Choosing one
- * selects that track in the timeline.
- */
+// Keyframe tracks as lane rows: under a target row a disclosure lists one row per animated property.
+// The disclosure state is `LayerView.open`; a lane has hide / solo / lock but no order and no move.
+// Choosing one selects that track in the timeline.
 
 export const laneKey = (target: TargetRef, lane: string): LayerKey => `lane:${target}|${lane}`;
 
@@ -42,6 +39,6 @@ export function trackRows(list: LayerRows, doc: AnimationDoc, selection: StudioS
     const key = laneKey(target, lane);
     const n = laneAts(doc, target, lane).length;
     const on = selection?.kind === 'keys' && !!selection.keys?.length && selection.keys.every((k) => k.target === target && k.lane === lane);
-    return list.row({ key, name: laneName(key), bare: true, level, badge: t('{count, plural, one {# key} other {# keys}}', { count: n }), describe: t('keyframe track'), selected: on, title: t('{name}: {count, plural, one {# key} other {# keys}}', { name: laneName(key), count: n }) });
+    return list.row({ key, name: laneName(key), bare: true, level, badge: t('anim-studio.lane-rows.count', { count: n }), describe: t('anim-studio.lane-rows.keyframe-track'), selected: on, title: t('anim-studio.lane-rows.name-count', { name: laneName(key), count: n }) });
   });
 }

@@ -1,35 +1,134 @@
 {
-  "A higher value drops more points.": "Een hogere waarde laat meer punten vallen.",
-  "Amount": "Hoeveelheid",
-  "Apply": "Toepassen",
-  "Cancel": "Annuleren",
-  "Corners": "Hoeken",
-  "Detail kept": "Behouden detail",
-  "Draw a line across the shapes to cut them in two.": "Teken een lijn over de vormen om ze door te snijden.",
-  "Draw a longer cut line.": "Teken een langere snijlijn.",
-  "Fits the shape again with fewer points.": "Past de vorm opnieuw aan met minder punten.",
-  "Grows or shrinks the shape by the amount you set.": "Maakt de vorm groter of kleiner met de ingestelde hoeveelheid.",
-  "Join": "Verbinden",
-  "Join works on open paths. Use Split first to open a closed one.": "Verbinden werkt op open paden. Gebruik eerst Splitsen om een gesloten pad te openen.",
-  "Joins the two nearest ends of the selected open paths. With one path selected, it closes it.": "Verbindt de twee dichtstbijzijnde uiteinden van open paden. Bij één pad sluit het dat pad.",
-  "Knife": "Mes",
-  "Nothing to preview yet.": "Nog niets om te bekijken.",
-  "Nothing would be left of this shape.": "Er blijft niets over van deze vorm.",
-  "Offset path": "Pad verschuiven",
-  "Outline stroke": "Lijn omzetten naar vorm",
-  "Pick a point between the ends to split here.": "Kies een punt tussen de uiteinden om te splitsen.",
-  "Positive grows the shape, negative shrinks it. From {min} to {max}.": "Positief maakt de vorm groter, negatief kleiner. Van {min} tot {max}.",
-  "Round": "Rond",
-  "Select a closed shape. Open lines have no area.": "Kies een gesloten vorm. Open lijnen hebben geen oppervlak.",
-  "Sharp": "Scherp",
-  "Simplify": "Vereenvoudigen",
-  "Smooth corners": "Hoeken afronden",
-  "Split": "Splitsen",
-  "Splits the path at the selected point.": "Splitst het pad bij het geselecteerde punt.",
-  "This shape has no stroke to outline.": "Deze vorm heeft geen lijn om om te zetten.",
-  "This shape has too many points for this tool.": "Deze vorm heeft te veel punten voor dit gereedschap.",
-  "This shape is already as simple as this setting allows.": "Deze vorm is al zo eenvoudig als deze instelling toelaat.",
-  "Turns the stroke into a filled shape you can edit point by point.": "Zet de lijn om in een gevulde vorm die je per punt kunt bewerken.",
-  "Working on it": "Bezig met verwerken",
-  "{before, plural, one {# point} other {# points}} now, {after, plural, one {# point} other {# points}} after": "nu {before, plural, one {# punt} other {# punten}}, daarna {after, plural, one {# punt} other {# punten}}"
+  "path-tools.names.draw-a-line-across-the-shapes-to-cut": {
+    "text": "Teken een lijn over de vormen om ze door te snijden.",
+    "hash": "f843b476"
+  },
+  "path-tools.names.draw-a-longer-cut-line": {
+    "text": "Teken een langere snijlijn.",
+    "hash": "33714ab4"
+  },
+  "path-tools.names.fits-the-shape-again-with-fewer-points": {
+    "text": "Past de vorm opnieuw aan met minder punten.",
+    "hash": "73bc3896"
+  },
+  "path-tools.names.grows-or-shrinks-the-shape-by-the-amount": {
+    "text": "Maakt de vorm groter of kleiner met de ingestelde hoeveelheid.",
+    "hash": "c1c4a46f"
+  },
+  "path-tools.names.join": {
+    "text": "Verbinden",
+    "hash": "fd30fe68"
+  },
+  "path-tools.names.join-works-on-open-paths-use-split-first": {
+    "text": "Verbinden werkt op open paden. Gebruik eerst Splitsen om een gesloten pad te openen.",
+    "hash": "73d913ee"
+  },
+  "path-tools.names.joins-the-two-nearest-ends-of-the": {
+    "text": "Verbindt de twee dichtstbijzijnde uiteinden van open paden. Bij één pad sluit het dat pad.",
+    "hash": "012c9e50"
+  },
+  "path-tools.names.knife": {
+    "text": "Mes",
+    "hash": "846e26d1"
+  },
+  "path-tools.names.nothing-would-be-left-of-this-shape": {
+    "text": "Er blijft niets over van deze vorm.",
+    "hash": "8c96cffb"
+  },
+  "path-tools.names.offset-path": {
+    "text": "Pad verschuiven",
+    "hash": "151f6b5e"
+  },
+  "path-tools.names.outline-stroke": {
+    "text": "Lijn omzetten naar vorm",
+    "hash": "6d8364b6"
+  },
+  "path-tools.names.pick-a-point-between-the-ends-to-split": {
+    "text": "Kies een punt tussen de uiteinden om te splitsen.",
+    "hash": "546b281d"
+  },
+  "path-tools.names.select-a-closed-shape-open-lines-have-no": {
+    "text": "Kies een gesloten vorm. Open lijnen hebben geen oppervlak.",
+    "hash": "2ac45b73"
+  },
+  "path-tools.names.simplify": {
+    "text": "Vereenvoudigen",
+    "hash": "7102ac34"
+  },
+  "path-tools.names.split": {
+    "text": "Splitsen",
+    "hash": "32afaa78"
+  },
+  "path-tools.names.splits-the-path-at-the-selected-point": {
+    "text": "Splitst het pad bij het geselecteerde punt.",
+    "hash": "e96acd4a"
+  },
+  "path-tools.names.this-shape-has-no-stroke-to-outline": {
+    "text": "Deze vorm heeft geen lijn om om te zetten.",
+    "hash": "c4c3db8e"
+  },
+  "path-tools.names.this-shape-has-too-many-points-for-this": {
+    "text": "Deze vorm heeft te veel punten voor dit gereedschap.",
+    "hash": "5594bee9"
+  },
+  "path-tools.names.this-shape-is-already-as-simple-as-this": {
+    "text": "Deze vorm is al zo eenvoudig als deze instelling toelaat.",
+    "hash": "f2fc925d"
+  },
+  "path-tools.names.turns-the-stroke-into-a-filled-shape-you": {
+    "text": "Zet de lijn om in een gevulde vorm die je per punt kunt bewerken.",
+    "hash": "a7be2591"
+  },
+  "path-tools.panel.a-higher-value-drops-more-points": {
+    "text": "Een hogere waarde laat meer punten vallen.",
+    "hash": "7ac271fc"
+  },
+  "path-tools.panel.amount": {
+    "text": "Hoeveelheid",
+    "hash": "49e96d7c"
+  },
+  "path-tools.panel.apply": {
+    "text": "Toepassen",
+    "hash": "31e392d1"
+  },
+  "path-tools.panel.before-now-after-after": {
+    "text": "nu {before, plural, one {# punt} other {# punten}}, daarna {after, plural, one {# punt} other {# punten}}",
+    "hash": "594eb1f0"
+  },
+  "path-tools.panel.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "path-tools.panel.corners": {
+    "text": "Hoeken",
+    "hash": "1d3cc47e"
+  },
+  "path-tools.panel.detail-kept": {
+    "text": "Behouden detail",
+    "hash": "69a7151b"
+  },
+  "path-tools.panel.nothing-to-preview-yet": {
+    "text": "Nog niets om te bekijken.",
+    "hash": "75f00def"
+  },
+  "path-tools.panel.positive-grows-the-shape-negative": {
+    "text": "Positief maakt de vorm groter, negatief kleiner. Van {min} tot {max}.",
+    "hash": "cc4bbc85"
+  },
+  "path-tools.panel.round": {
+    "text": "Rond",
+    "hash": "cd9558ac"
+  },
+  "path-tools.panel.sharp": {
+    "text": "Scherp",
+    "hash": "1a3c4b30"
+  },
+  "path-tools.panel.smooth-corners": {
+    "text": "Hoeken afronden",
+    "hash": "2c3d391e"
+  },
+  "path-tools.panel.working-on-it": {
+    "text": "Bezig met verwerken",
+    "hash": "d55b6d1b"
+  }
 }

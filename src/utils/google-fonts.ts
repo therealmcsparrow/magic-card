@@ -1,8 +1,5 @@
-/**
- * Google Fonts the card can load. A design font family naming one of them gets the font loaded (a
- * stylesheet link in document.head, once per family); system fonts and Roboto (Home Assistant's own
- * font) load nothing. The editor's font list (font-picker.ts) carries the family strings and categories.
- */
+// Google Fonts the card can load: a design font family naming one gets a stylesheet link in
+// document.head, once per family. System fonts and Roboto load nothing.
 
 /** The weights requested (upright only), so light, medium and bold are real faces, not synthesised. */
 export const COMMON_WEIGHTS = [300, 400, 500, 700];

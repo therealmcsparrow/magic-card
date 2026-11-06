@@ -1,0 +1,25 @@
+# Not updated: a garden reading that names the time it last reported once it has been quiet for ten minutes.
+# Entities: sensor.garden_temperature
+# gallery: width=380
+type: custom:magic-card
+name: Not updated
+border_radius: 22px
+padding: 40px 20px 20px
+rows:
+  - id: main
+    columns:
+      - modules:
+          - type: vertical
+            gap: 6px
+            align: center
+            justify: center
+            modules:
+              - type: text
+                text: Garden
+                design: { font_size: 13px, text_transform: uppercase, letter_spacing: 2px }
+              - type: info
+                entity: sensor.garden_temperature
+                quiet_time: "0:10:00"
+                show_name: false
+                show_unit: true
+                design: { font_size: 44px, font_weight: "300" }

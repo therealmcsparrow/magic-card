@@ -17,8 +17,9 @@ On macOS, use Cmd where this page says Ctrl.
 | Ctrl+Z | Undo | Not while focus is in a text field, text area, select or editable text (the browser's text undo applies there). Not with Alt. |
 | Ctrl+Y | Redo | Same |
 | Ctrl+Shift+Z | Redo | Same |
+| Ctrl+\ | Hide or show the Layers and the inspector. If either is shown, it hides both. If both are hidden, it shows again the panels it hid last. | Works from any field. Only where the panels sit beside the canvas, and not while Preview is on. See [Hiding the side panels](layout-and-toolbar.md#hiding-the-side-panels). |
 
-These are the only shortcuts that work outside the canvas. Keyboard undo and redo do not exist in the pane editor.
+Apart from Ctrl+\, these are the only shortcuts that work outside the canvas. Keyboard undo and redo do not exist in the pane editor.
 
 ## Canvas
 

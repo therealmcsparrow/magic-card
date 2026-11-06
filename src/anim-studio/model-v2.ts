@@ -31,14 +31,8 @@ import {
 
 export * from './model-v2-core';
 
-/*
- * Validators of the v2 document fields (types and helpers: model-v2-core.ts). Importing this file
- * turns on v2 checking in validateAnimationDoc (model.ts): the studio and the runtime chunk import
- * it; the card bundle does not, so magic-card.js stays small and keeps v2 fields as stored until
- * the runtime chunk checks them (compile-v2.ts, leniently: invalid entries are dropped one by one).
- * Every checker returns only valid entries, so its output is safe whether or not errors were
- * reported.
- */
+// Validators of the v2 document fields. Importing this file turns on v2 checking in validateAnimationDoc; the card bundle
+// does not, so v2 fields stay as stored until the runtime chunk checks them. Checkers return only valid entries.
 
 /** Size caps of the v2 fields (the document's 64 KB cap still applies). */
 export const V2_CAPS = { parts: 64, groups: 16, shapes: 48, tracks: 24, keysPerTrack: 40, clips: 12, bindings: 8 } as const;

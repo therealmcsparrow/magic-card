@@ -1,5 +1,8 @@
 import * as jsYaml from 'js-yaml';
+import { MAX_IMAGE_IMPORT_BYTES } from '../contracts/image-editor';
 import {
+  COMPRESSED_FILE_MAGIC,
+  MAX_IMAGE_IMPORT_NODES,
   MAX_IMPORT_BYTES,
   MAX_IMPORT_CHARS,
   MAX_IMPORT_DEPTH,
@@ -8,26 +11,51 @@ import {
   MAX_YAML_ALIASES,
 } from '../contracts/preset-transfer';
 import type { TransferRefusal } from '../contracts/preset-transfer';
+import { refuseFile } from '../svg-io/intake';
 import { t } from './i18n';
 
-/*
- * Safe parsing of untrusted preset text (preset-transfer 1.0.0, "Safe parsing"). Pure, no DOM.
- * Never src/utils/yaml-utils fromYaml: it adds the merge tag.
- */
+// Safe parsing of untrusted preset text (preset-transfer 1.0.0, "Safe parsing"). Pure, no DOM.
+// Never src/utils/yaml-utils fromYaml: it adds the merge tag.
 
 /** CORE_SCHEMA only: no merge key, timestamps, binary or custom tags. */
 export const SAFE_YAML_SCHEMA = jsYaml.CORE_SCHEMA;
 
 export type SafeParse = { ok: true; value: unknown } | { ok: false; refusal: TransferRefusal; message: string };
 
-const TOO_LARGE = (): string => t('This file is larger than 1 MB, so it was not read.');
-const LIMITS = (): string => t('This file is too complex to read safely (too many nested or repeated values).');
-const NOT_PARSEABLE = (): string => t('Not valid YAML or JSON.');
+const TOO_LARGE = (): string => t('transfer.safe-parse.this-file-is-larger-than-1-mb-so-it-was');
+const TOO_LARGE_IMAGES = (): string => t('transfer.safe-parse.this-file-is-larger-than-8-mb-so-it-was');
+const JSON_ONLY = (): string => t('transfer.safe-parse.image-files-are-json-not-yaml-export');
+const LIMITS = (): string => t('transfer.safe-parse.this-file-is-too-complex-to-read-safely');
+const NOT_PARSEABLE = (): string => t('transfer.safe-parse.not-valid-yaml-or-json');
 const DROPPED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
-/** Step 1 for a chosen file: refuse before reading it. */
-export function checkFileSize(file: { size: number }): SafeParse | undefined {
-  return file.size > MAX_IMPORT_BYTES ? { ok: false, refusal: 'too_large', message: TOO_LARGE() } : undefined;
+/**
+ * Step 1 for a chosen file: refuse before reading it. Only a .json file may be larger than 1 MB (image envelopes), and
+ * an .svg file where the panel accepts images only; the kind is checked once the file is read.
+ */
+export function checkFileSize(file: { size: number; name?: string }, accept?: readonly string[]): SafeParse | undefined {
+  const images = accept?.length === 1 && accept[0] === 'image';
+  const refused = refuseFile(
+    { name: file.name ?? '', type: '', size: file.size },
+    { types: [{ kind: 'json', extensions: images ? ['.json', '.svg'] : ['.json'], mimeTypes: [], maxBytes: MAX_IMAGE_IMPORT_BYTES }], other: { maxBytes: MAX_IMPORT_BYTES } },
+  );
+  return refused?.code === 'too_large' ? { ok: false, refusal: 'too_large', message: refused.maxBytes === MAX_IMPORT_BYTES ? TOO_LARGE() : TOO_LARGE_IMAGES() } : undefined;
+}
+
+/** Pasted text, before any scan or parse: UTF-16 length against the caps; over MAX_IMPORT_CHARS only a JSON envelope is read. */
+export function checkTextSize(text: string): SafeParse | undefined {
+  if (text.length > MAX_IMAGE_IMPORT_BYTES) return { ok: false, refusal: 'too_large', message: TOO_LARGE_IMAGES() };
+  if (text.length <= MAX_IMPORT_CHARS) return undefined;
+  let i = 0;
+  while (i < text.length && text.charCodeAt(i) <= 32) i++;
+  return text[i] === '{' ? undefined : { ok: false, refusal: 'too_large', message: TOO_LARGE() };
+}
+
+/** After the size check: the first bytes of the file (Blob.slice) decide; a compressed file is never read or decompressed. */
+export async function checkCompressed(file: Pick<Blob, 'slice'>): Promise<SafeParse | undefined> {
+  const head = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+  const hit = COMPRESSED_FILE_MAGIC.some((magic) => head.length >= magic.length && magic.every((b, i) => head[i] === b));
+  return hit ? { ok: false, refusal: 'not_a_preset_file', message: t('transfer.import.compressed-file') } : undefined;
 }
 
 class Limit extends Error {
@@ -43,22 +71,22 @@ class Limit extends Error {
  * Step 4: copy the parsed value into fresh JSON-only data. A shared object (a YAML alias) is walked,
  * and counted, at every place it is used; the walk throws at the first limit hit.
  */
-function boundedCopy(root: unknown): unknown {
+function boundedCopy(root: unknown, maxNodes = MAX_IMPORT_NODES, maxChars = MAX_IMPORT_EXPANDED_CHARS): unknown {
   let nodes = 0;
   let chars = 0;
   let revisits = 0;
   const seen = new Set<object>();
   const visit = (v: unknown, depth: number): unknown => {
-    if (++nodes > MAX_IMPORT_NODES) throw new Limit('limits', LIMITS());
+    if (++nodes > maxNodes) throw new Limit('limits', LIMITS());
     if (depth > MAX_IMPORT_DEPTH) throw new Limit('limits', LIMITS());
     if (v === null || typeof v === 'boolean') return v;
     if (typeof v === 'number') {
-      if (!Number.isFinite(v)) throw new Limit('not_parseable', t('Numbers must be finite (no .inf or .nan).'));
+      if (!Number.isFinite(v)) throw new Limit('not_parseable', t('transfer.safe-parse.numbers-must-be-finite-no-inf-or-nan'));
       return v;
     }
     if (typeof v === 'string') {
       chars += v.length;
-      if (chars > MAX_IMPORT_EXPANDED_CHARS) throw new Limit('limits', LIMITS());
+      if (chars > maxChars) throw new Limit('limits', LIMITS());
       return v;
     }
     if (typeof v !== 'object') throw new Limit('not_parseable', NOT_PARSEABLE());
@@ -68,9 +96,9 @@ function boundedCopy(root: unknown): unknown {
     if (Array.isArray(v)) return v.map((x) => visit(x, depth + 1));
     const out: Record<string, unknown> = {};
     for (const k of Object.keys(v)) {
-      if (k === '<<') throw new Limit('not_parseable', t('Merge keys (<<) are not allowed in preset files.'));
+      if (k === '<<') throw new Limit('not_parseable', t('transfer.safe-parse.merge-keys-are-not-allowed-in-preset'));
       chars += k.length;
-      if (chars > MAX_IMPORT_EXPANDED_CHARS) throw new Limit('limits', LIMITS());
+      if (chars > maxChars) throw new Limit('limits', LIMITS());
       if (DROPPED_KEYS.has(k)) continue;
       out[k] = visit((v as Record<string, unknown>)[k], depth + 1);
     }
@@ -82,9 +110,12 @@ function boundedCopy(root: unknown): unknown {
 /** Steps 1-4 on pasted or read text. */
 export function safeParse(text: string): SafeParse {
   if (typeof text !== 'string') return { ok: false, refusal: 'not_parseable', message: NOT_PARSEABLE() };
-  if (text.length > MAX_IMPORT_CHARS) return { ok: false, refusal: 'too_large', message: TOO_LARGE() };
+  if (text.length > MAX_IMAGE_IMPORT_BYTES) return { ok: false, refusal: 'too_large', message: TOO_LARGE_IMAGES() };
   const trimmed = text.trim();
-  if (!trimmed) return { ok: false, refusal: 'not_parseable', message: t('Paste or choose a file first.') };
+  // over 1 MB only an image envelope written as JSON is read; the YAML parser never sees such a text
+  const big = text.length > MAX_IMPORT_CHARS;
+  if (big && trimmed[0] !== '{') return { ok: false, refusal: 'too_large', message: TOO_LARGE() };
+  if (!trimmed) return { ok: false, refusal: 'not_parseable', message: t('transfer.safe-parse.paste-or-choose-a-file-first') };
 
   let parsed: unknown;
   let have = false;
@@ -96,6 +127,7 @@ export function safeParse(text: string): SafeParse {
       /* flow-style YAML below */
     }
   }
+  if (!have && big) return { ok: false, refusal: 'too_large', message: TOO_LARGE() };
   if (!have) {
     try {
       parsed = jsYaml.load(text, { schema: SAFE_YAML_SCHEMA });
@@ -104,7 +136,11 @@ export function safeParse(text: string): SafeParse {
     }
   }
   try {
-    return { ok: true, value: boundedCopy(parsed) };
+    const value = big ? boundedCopy(parsed, MAX_IMAGE_IMPORT_NODES, MAX_IMAGE_IMPORT_BYTES) : boundedCopy(parsed);
+    const kind = (value as { magic_card_export?: unknown; kind?: unknown } | null)?.magic_card_export !== undefined ? (value as { kind?: unknown }).kind : undefined;
+    if (big && kind !== 'image') return { ok: false, refusal: 'too_large', message: TOO_LARGE() };
+    if (!have && kind === 'image') return { ok: false, refusal: 'not_parseable', message: JSON_ONLY() };
+    return { ok: true, value };
   } catch (e) {
     if (e instanceof Limit) return { ok: false, refusal: e.reason, message: e.message };
     return { ok: false, refusal: 'limits', message: LIMITS() };

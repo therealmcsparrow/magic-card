@@ -1,10 +1,6 @@
 import type { Box } from './checks';
 
-/*
- * The studio canvas measures module boxes inside the live card; the Layer group (a sibling in the studio,
- * an unrelated tree) asks through this small registry for the overlap and small-target checks. Without a
- * canvas (the card editor's plain tabs) nothing is measured and the checks stay quiet.
- */
+// A small registry through which the Layer group asks the studio canvas for module box measurements.
 
 export type LayerMeasurer = (paths: readonly string[]) => Record<string, Box | undefined>;
 

@@ -2,6 +2,8 @@
 
 Autumn leaves, a Halloween porch and a Christmas countdown, drawn by the card's seasonal scenes. Paste a card into the code editor of a new card, then change the entity ids to your own. Back to the [gallery](README.md).
 
+The first picture of each card is paused. Tap it or press Enter to watch it move.
+
 ## Cards
 
 -   [Autumn garden](#autumn-garden)
@@ -12,7 +14,7 @@ Autumn leaves, a Halloween porch and a Christmas countdown, drawn by the card's 
 
 The card's autumn scene drops leaves and a little drizzle over the garden lights, the rain today and a leaf vacuum switch. `seasonal: autumn` keeps the scene all year. Use `seasonal: auto` to follow the calendar instead.
 
-![Autumn garden](images/57-autumn-garden.webp)
+[![Autumn garden, Worlds](images/57-autumn-garden.png)](images/57-autumn-garden.webp)
 
 Entities: `light.garden`, `sensor.outdoor_temperature`, `sensor.rain_today`, `switch.leaf_vacuum`
 
@@ -57,7 +59,7 @@ rows:
               - type: icon
                 icon: mdi:weather-rainy
                 size: 15px
-                design: { color: "#fdba74" }
+                design: { color: "#ffedd5" }
               - type: text
                 use_entity: true
                 entity: sensor.rain_today
@@ -82,7 +84,7 @@ rows:
             design:
               padding: 14px
               border_radius: 20px
-              background_color: "rgba(255,237,213,0.12)"
+              background_color: "rgba(28,10,3,0.55)"
               border: "1px solid rgba(253,186,116,0.25)"
             actions:
               tap_action: { action: toggle, entity: light.garden }
@@ -100,14 +102,14 @@ rows:
               - type: text
                 use_entity: true
                 entity: light.garden
-                design: { font_size: 12px, color: "#fdba74" }
+                design: { font_size: 12px, color: "#ffedd5" }
       - modules:
           - type: vertical
             gap: 8px
             design:
               padding: 14px
               border_radius: 20px
-              background_color: "rgba(255,237,213,0.12)"
+              background_color: "rgba(28,10,3,0.55)"
               border: "1px solid rgba(253,186,116,0.25)"
             actions:
               tap_action: { action: toggle, entity: switch.leaf_vacuum }
@@ -120,21 +122,21 @@ rows:
                 icon_fx:
                   morph: true
                   draw: change
-                design: { color: "#fdba74" }
+                design: { color: "#ffedd5" }
               - type: text
                 text: Leaf vacuum
                 design: { font_size: 14px, font_weight: "800", color: "#fff7ed" }
               - type: text
                 use_entity: true
                 entity: switch.leaf_vacuum
-                design: { font_size: 12px, color: "#fdba74" }
+                design: { font_size: 12px, color: "#ffedd5" }
 ```
 
 ## Halloween porch
 
 The Halloween scene with bats, fog, a cobweb and a pumpkin, a flickering jack-o'-lantern, and switches for the porch light and the fog machine. `seasonal: halloween` keeps the scene all year. Use `seasonal: auto` to show it only from 24 to 31 October.
 
-![Halloween porch](images/59-halloween.webp)
+[![Halloween porch, Worlds](images/59-halloween.png)](images/59-halloween.webp)
 
 Entities: `light.porch`, `switch.fog_machine`
 
@@ -154,7 +156,7 @@ padding: 22px
 box_shadow: "0 20px 48px rgba(234, 88, 12, 0.25)"
 seasonal:
   scene: halloween
-  intensity: 80%
+  intensity: 55%
 rows:
   - id: head
     column_widths: [auto, 1fr]
@@ -179,7 +181,7 @@ rows:
             design: { font_size: 24px, font_weight: "900", color: "#fed7aa", letter_spacing: 0.5px }
           - type: text
             text: Halloween in 14 days
-            design: { font_size: 13px, color: "#c4b5fd" }
+            design: { font_size: 13px, color: "#ede9fe" }
   - id: switches
     layout: "1-1"
     gap: 10px
@@ -234,7 +236,7 @@ rows:
 
 The Christmas scene with falling snow, twinkling stars and lights along the border, a swaying tree, and switches for the tree and the window lights. `seasonal: christmas` keeps the scene all year. Use `seasonal: auto` to show it only from 1 to 26 December.
 
-![Christmas countdown](images/60-christmas.webp)
+[![Christmas countdown, Worlds](images/60-christmas.png)](images/60-christmas.webp)
 
 Entities: `light.christmas_tree`, `switch.christmas_lights`
 

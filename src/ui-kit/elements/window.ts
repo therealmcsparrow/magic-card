@@ -3,18 +3,12 @@ import { property, state } from 'lit/decorators.js';
 import { UI_KIT_CONTRACT_REVISION, type UiWindowClose } from '../../contracts/ui-kit';
 import { kitWindowElementCss } from '../css/elements';
 import { glyph } from '../glyphs';
+import { DirectionController } from '../controllers/direction';
 import {
-  CLICK_PX, NO_DRAG, arrowDelta, centred, clampRect, dockRect, maximisedRect, stepWidth, type Dock, type Rect,
+  CLICK_PX, NO_DRAG, arrowDelta, centred, clampRect, dockRect, maximisedRect, resizeRect, stepWidth, type Dock, type Rect,
 } from '../controllers/window-frame';
 
-/*
- * <mc-ui-window> (contract ui-kit 1.0.0): one modal window for dialogs, pickers, confirmations and sheets.
- * Native <dialog> + showModal() in the shadow root: top layer (so it works inside Home Assistant's transformed
- * card dialog), a real focus trap, ::backdrop scrim. Escape closes this window only and never reaches the card
- * dialog. Content is slotted (the caller's light DOM, styled by the caller's kit CSS). No strings of its own.
- * Placement: movable (header drag + move grip), resizable (corner grip), maximizable (button). Keyboard on
- * the grips; a click on a grip is the single-pointer alternative (WCAG 2.5.7). No persistence: close() forgets it all.
- */
+// <mc-ui-window>: one modal window (native <dialog> + showModal()) with slotted content; movable, resizable and maximizable.
 
 const DOCKS: Dock[] = ['centre', 'end', 'start'];
 interface Drag {
@@ -60,7 +54,7 @@ export class UiWindow extends LitElement {
   @state() private _hasFooter = false;
   @state() private _r: Rect | null = null;
   @state() private _compact = false;
-  @state() private _rtl = false;
+  private _dir = new DirectionController(this);
   private _drag: Drag | null = null;
   private _dock = 0;
   private _downScrim: boolean | null = null;
@@ -80,7 +74,6 @@ export class UiWindow extends LitElement {
     // the footer is shown from the first render, so a button in it can take the first focus
     this._hasFooter = !!this.querySelector(':scope > [slot="footer"]');
     this._compact = this._isCompact();
-    this._rtl = getComputedStyle(this).direction === 'rtl';
     window.addEventListener('resize', this._viewport);
     // eslint-disable-next-line no-console
     if ((this.movable && !this.moveLabel) || (this.resizable && !this.resizeLabel) || (this.maximizable && !this.maximizeLabel)) console.debug('[magic-card] <mc-ui-window> needs moveLabel, resizeLabel and maximizeLabel');
@@ -135,6 +128,10 @@ export class UiWindow extends LitElement {
     (target ?? this.renderRoot.querySelector<HTMLElement>('.close'))?.focus({ preventScroll: true });
   }
 
+  private get _rtl(): boolean {
+    return this._dir.direction === 'rtl' || getComputedStyle(this).direction === 'rtl';
+  }
+
   private _isCompact = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 599px)').matches;
   private _vw = (): number => document.documentElement.clientWidth || window.innerWidth;
   private _vh = (): number => window.innerHeight;
@@ -176,7 +173,27 @@ export class UiWindow extends LitElement {
     if (!this._abort()) this.close('escape');
   };
 
+  /** Tab from the last stop goes to the first and Shift+Tab from the first to the last: a modal window left by Tab would hand the focus to the browser's own bar (and BODY). The stops come in the order a browser walks them, through open shadow roots and slots. */
+  private _tab(e: KeyboardEvent): void {
+    if (e.defaultPrevented) return;
+    const list: HTMLElement[] = [];
+    const walk = (n: Node): void => {
+      if (!(n instanceof HTMLElement) || n.hasAttribute('hidden')) return;
+      if (n instanceof HTMLSlotElement) return n.assignedNodes({ flatten: true }).forEach(walk);
+      if (n.matches(FOCUSABLE)) list.push(n);
+      (n.shadowRoot ?? n).childNodes.forEach(walk);
+    };
+    this.renderRoot.childNodes.forEach(walk);
+    const at = list.indexOf(e.composedPath()[0] as HTMLElement);
+    const to = e.shiftKey ? (at === 0 ? list[list.length - 1] : undefined) : at === list.length - 1 ? list[0] : undefined;
+    if (to) {
+      e.preventDefault();
+      to.focus({ preventScroll: true });
+    }
+  }
+
   private _key = (e: KeyboardEvent): void => {
+    if (e.key === 'Tab') return this._tab(e);
     if (e.key !== 'Escape') return;
     e.preventDefault();
     e.stopPropagation();
@@ -222,9 +239,7 @@ export class UiWindow extends LitElement {
     this._dock = 0;
     const r = g.r0;
     if (g.mode === 'move') return this._set({ ...r, x: r.x + dx, y: r.y + dy });
-    const rtl = this._rtl;
-    const next = clampRect({ ...r, w: r.w + (rtl ? -dx : dx), h: r.h + dy }, this._vw(), this._vh());
-    this._set({ ...next, x: rtl ? r.x + r.w - next.w : r.x });
+    this._set(resizeRect(r, dx, dy, this._rtl, this._vw(), this._vh()));
   };
 
   private _released = (e: PointerEvent): void => {
@@ -267,9 +282,7 @@ export class UiWindow extends LitElement {
       return this._set({ ...r, w: def.w, h: def.h });
     }
     if (mode === 'move') return this._set({ ...r, x: r.x + d[0], y: r.y + d[1] });
-    const rtl = this._rtl;
-    const next = clampRect({ ...r, w: r.w + (rtl ? -d[0] : d[0]), h: r.h + d[1] }, this._vw(), this._vh());
-    this._set({ ...next, x: rtl ? r.x + r.w - next.w : r.x });
+    this._set(resizeRect(r, d[0], d[1], this._rtl, this._vw(), this._vh()));
   }
 
   private _style(): string {

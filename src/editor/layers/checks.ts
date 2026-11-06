@@ -1,7 +1,4 @@
-/*
- * Overlap and small-target checks. Pure geometry; the studio canvas measures the boxes
- * (layer-measure.ts) and the Layer group shows the sentences.
- */
+/* Overlap and small-target checks: pure geometry on boxes the studio canvas measures. */
 
 export interface Box {
   left: number;

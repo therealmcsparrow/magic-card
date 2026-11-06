@@ -1,10 +1,7 @@
 import type { HassEntity, PopupConfig, PopupTrigger } from '../types';
-import { POPUP_DEFAULTS } from './popup';
+import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, urlWithHash } from './popup-hash';
 
-/*
- * The run-time half of the pop-up helpers (hash match, open and close triggers, the dialog's CSS variables, the swipe
- * tracker). Only the `popup` chunk imports it; the helpers the card and the editor need are in popup.ts.
- */
+/** The run-time half of the pop-up helpers; only the `popup` chunk imports it. */
 
 /** location.hash ('#kitchen', possibly percent-encoded) names this pop-up (case-sensitive). */
 export function hashMatches(locationHash: string, hash: string | undefined): boolean {
@@ -18,6 +15,23 @@ export function hashMatches(locationHash: string, hash: string | undefined): boo
   return value === hash;
 }
 
+
+/**
+ * Open the pop-up `id` the way HA's navigate action does: push `#id` onto the current URL and fire
+ * `location-changed`, so it works across cards (and with HA's own navigate to `#id`).
+ */
+export function navigateToPopup(rawId: unknown): boolean {
+  const id = normalizePopupHash(rawId);
+  if (!isValidPopupHash(id)) return false;
+  if (window.location.hash === `#${id}`) {
+    // already the URL (e.g. its pop-up was closed by a trigger): let the cards look again
+    window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: true } }));
+    return true;
+  }
+  history.pushState(history.state, '', urlWithHash(window.location.href, id));
+  window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
+  return true;
+}
 
 /**
  * The trigger entity changed into the trigger state (or, without a state, changed state at all).

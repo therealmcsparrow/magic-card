@@ -3,15 +3,9 @@ import { getAnimationPreset } from '../utils/animation-presets';
 import { parseKeyframeBlocks, presetKeyframesBody } from './css-keyframes';
 import { DEFAULT_PARTICLES, type AnimationDoc, type AnimationKeyframe, type KeyframeTransform } from './model';
 
-/*
- * "Customise a preset": a built-in preset as an editable document.
- * - Motion presets (rotate / translate / scale / opacity / filter / glow) become keyframes documents:
- *   the preset's keyframes at its default intensity, calc() evaluated to numbers; filters and
- *   shadows stay CSS text with the animation colour as `var(--mc-anim-c)`.
- * - Particle, ring, scene and seasonal presets become particles documents based on the preset
- *   (`particles.preset`): their look stays, the parameter (count, width, density) and the timing
- *   are editable.
- */
+// "Customise a preset": a built-in preset as an editable document. Motion presets become keyframes documents (calc()
+// evaluated, filters kept as CSS text); particle, ring, scene and seasonal presets become particles documents based on the
+// preset (`particles.preset`).
 
 /** Evaluate a numeric CSS expression (`calc(16 * -1px)`, `calc(1 + 4 / 100)`, `-40px`) to its number. */
 export function evalCssNumber(s: string): number {

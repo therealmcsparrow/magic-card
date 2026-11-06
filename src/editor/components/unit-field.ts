@@ -40,12 +40,8 @@ export function parseUnitValue(value: unknown): UnitValue {
 }
 
 /**
- * A value with a unit: a number input and a unit select. The unit joins the number only when the
- * number is committed (change, blur or Enter), never while typing; an empty number removes the value.
- * The select's "Custom" option (and a stored value that isn't a number with a unit: auto, calc(…),
- * var(…), …) turns the input into a text input for any CSS value. Picking a unit again converts a
- * plain number and clears anything else.
- * Emits `value-changed` with `detail.value` ('' = removed).
+ * A number input plus unit select; the unit joins the number on commit (change, blur, Enter), an empty number removes the value.
+ * "Custom" (or a non-numeric stored value) switches to a text input. Emits `value-changed` with `detail.value`.
  */
 @customElement('mc-unit-field')
 export class UnitField extends LitElement {
@@ -61,16 +57,16 @@ export class UnitField extends LitElement {
         width: 92px;
       }
       .unit > .select.is-custom select {
-        padding-right: 28px;
+        padding-right: 28px; /* physical */
       }
       .unit > .select.is-custom > ha-icon {
-        right: 6px;
+        right: 6px; /* physical */
       }
       /* compact (box field sides): a narrower unit select */
       :host([compact]) .unit > .input {
         min-width: 5ch;
-        padding-left: 10px;
-        padding-right: 6px;
+        padding-left: 10px; /* physical */
+        padding-right: 6px; /* physical */
       }
       :host([compact]) .unit > .select {
         width: 64px;
@@ -79,11 +75,11 @@ export class UnitField extends LitElement {
         width: 84px;
       }
       :host([compact]) .unit > .select select {
-        padding-left: 8px;
-        padding-right: 24px;
+        padding-left: 8px; /* physical */
+        padding-right: 24px; /* physical */
       }
       :host([compact]) .unit > .select > ha-icon {
-        right: 4px;
+        right: 4px; /* physical */
       }
     `,
   ];
@@ -235,9 +231,9 @@ export class UnitField extends LitElement {
               @keydown=${onKey}
             />`}
         <div class="select ${custom ? 'is-custom' : ''}">
-          <select class="input" aria-label=${this.label ? t('{label} unit', { label: this.label }) : t('Unit')} ?disabled=${this.disabled} @change=${(e: Event) => this._pickUnit(e.target as HTMLSelectElement)}>
+          <select class="input" aria-label=${this.label ? t('card-editor.unit-field.label-unit', { label: this.label }) : t('card-editor.unit-field.unit')} ?disabled=${this.disabled} @change=${(e: Event) => this._pickUnit(e.target as HTMLSelectElement)}>
             ${units.map((u) => html`<option value=${u} ?selected=${!custom && unit === u}>${u}</option>`)}
-            ${this.noCustom && !custom ? nothing : html`<option value=${CUSTOM_UNIT} ?selected=${custom}>${t('Custom')}</option>`}
+            ${this.noCustom && !custom ? nothing : html`<option value=${CUSTOM_UNIT} ?selected=${custom}>${t('card-editor.unit-field.custom')}</option>`}
           </select>
           <ha-icon icon="mdi:chevron-down"></ha-icon>
         </div>

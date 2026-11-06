@@ -1,4 +1,4 @@
-import type { MessageId } from '../contracts/i18n';
+import type { MessageIndex } from '../contracts/i18n';
 import type { EntityInherit } from '../contracts/entity-scope';
 import { TemplateResult } from 'lit';
 import {
@@ -11,16 +11,18 @@ import type { DependencyContext, ModuleDependencies } from '../services/card-dep
 
 export interface MagicModuleMetadata {
   type: ModuleType;
-  name: MessageId;
-  description: MessageId;
+  name: MessageIndex;
+  description: MessageIndex;
   category: ModuleCategory;
   icon: string;
   /** Entity-scope: false = card module (never inherits), a list = domains accepted when inherited, absent = any. */
   inherit?: EntityInherit;
+  /** The Typography keys and the Border width, style and colour of the design style the module's tab buttons, not its content. */
+  tabBar?: boolean;
 }
 
-/** What a lazy stub carries in magic-card.js: the type and the entity-scope rule. The rest is added by the editor chunk (src/editor/modules/lazy-metadata.ts). */
-export type LazyStubMetadata = Pick<MagicModuleMetadata, 'type' | 'inherit'> & Partial<MagicModuleMetadata>;
+/** What a lazy stub carries in magic-card.js: the type, the entity-scope rule and tabBar. The rest is added by the editor chunk (src/editor/modules/lazy-metadata.ts). */
+export type LazyStubMetadata = Pick<MagicModuleMetadata, 'type' | 'inherit' | 'tabBar'> & Partial<MagicModuleMetadata>;
 
 export interface MagicModule {
   readonly metadata: MagicModuleMetadata;

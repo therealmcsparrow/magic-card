@@ -19,7 +19,7 @@ A template is a saved card that other cards can link to. A linked card takes its
 
 Templates are stored in Home Assistant by the `magic_card_utils` integration. The editor uses its WebSocket commands `magic_card_utils/get_templates`, `magic_card_utils/save_template` and `magic_card_utils/delete_template`.
 
-Without the integration, the template windows show "Magic Card integration not found. Please install it via HACS and add the integration." and no template can be loaded or saved.
+Without the integration, the template windows show "Magic Card integration not found. Please install it from the Marketplace or HACS and add the integration." and no template can be loaded or saved.
 
 ## The template bar
 

@@ -1,10 +1,6 @@
 import type { History } from '../contracts/path-canvas';
 
-/*
- * Undo / redo for the editors that host the path canvas (the canvas itself only emits commits). Steps
- * are whole states, so a drag is one step. A push with the same `merge` key as the previous one within
- * MERGE_MS replaces it (typing in a field is one step). The oldest steps fall off past `limit`.
- */
+// Undo / redo for the editors that host the path canvas; steps are whole states and pushes with the same `merge` key within MERGE_MS replace.
 
 const MERGE_MS = 1000;
 

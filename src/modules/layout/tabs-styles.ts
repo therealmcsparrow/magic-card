@@ -1,12 +1,9 @@
 import { unsafeCSS } from 'lit';
 import { TAB_FIELDS } from './tabs-look';
 
-/*
- * Rules for the tab_ design keys (tabs-look.ts). Each one is gated on a token of `data-mc-tab`, so a tabs module
- * without those keys matches none of them. [data-style] is always set on .mc-tabs; it lifts the selectors to the
- * specificity of the style variants in the card sheet, which this sheet follows. The sheet is built from constants
- * only, no config text reaches it.
- */
+// Rules for the tab_ design keys (tabs-look.ts). Each one is gated on a token of `data-mc-tab`, so a tabs module without
+// those keys matches none of them. [data-style] lifts the selectors to the specificity of the style variants in the card sheet.
+// The sheet is built from constants only, no config text reaches it.
 
 // Child combinators: a tabs module nested in a tab never takes the look of the one around it.
 const BAR = '>.mc-tabs-header';
@@ -44,7 +41,7 @@ const VARIANTS: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 const MORE: ReadonlyArray<readonly [string, string, string]> = [
-  ['bar-border', BAR, 'border-style:solid;border-width:var(--mc-tb-bw,1px);border-color:var(--mc-tb-bc,var(--mc-border))'],
+  ['bar-border', BAR, 'border-style:var(--mc-tb-bs,solid);border-width:var(--mc-tb-bw,1px);border-color:var(--mc-tb-bc,var(--mc-border))'],
   ['color', DIRECT, 'color:var(--mc-tt-c)'],
   ['bg', DIRECT, `background:var(--mc-tt-bg);${SOLID}`],
   ['border', TAB, 'border-style:var(--mc-tt-bs,solid);border-width:var(--mc-tt-bw,1px);border-color:var(--mc-tt-bc,var(--mc-border))'],
@@ -128,7 +125,7 @@ const KEYFRAMES = [0, 1]
 
 // Every variable a rule reads would otherwise reach a nested tabs module through inheritance.
 const NESTED_VARS = [
-  '--mc-tb-bw', '--mc-tb-bc', '--mc-tb-bg', '--mc-tb-pad', '--mc-tb-gap',
+  '--mc-tb-bw', '--mc-tb-bs', '--mc-tb-bc', '--mc-tb-bg', '--mc-tb-pad', '--mc-tb-gap',
   '--mc-tt-an', '--mc-tt-fc', '--mc-th-fc', '--mc-ta-fc', '--mc-td-fc',
   ...['tt', 'th', 'ta', 'td'].flatMap((p) => TAB_FIELDS.map((f) => `--mc-${p}-${f[2]}`)),
   ...['m', 'i', 'n', 'om', 'oi', 'on'].map((k) => `--mc-th-anim-${k}`),
@@ -151,16 +148,14 @@ const TYPE =
       'font:inherit;text-transform:inherit;letter-spacing:inherit;text-align:inherit;word-spacing:inherit;text-indent:inherit;text-shadow:inherit;text-decoration:inherit;text-overflow:inherit',
     ],
   ]) +
-  UNDERLINE(TAB, 500) +
-  UNDERLINE(ACTIVE, 700);
+  UNDERLINE(TAB, 500);
 
 // A gradient colour of the design (--mc-text-paint on the tab bar) paints the tab labels, as it paints the text of other modules.
 // The tab buttons paint the gradient themselves, so a tab_ bar background stays under them. A tab with a background of its own
 // (the active pill, or a tab_background in a state) cannot clip a gradient to its text; the background rules set the label
 // back to its text colour, so it follows exactly the states in which that background shows.
 const PAINT =
-  '@supports (-webkit-background-clip:text){.mc-tabs-header[style*=--mc-text-paint] .mc-tab-button{background-image:var(--mc-text-paint);-webkit-background-clip:text;-webkit-text-fill-color:transparent}' +
-  `.mc-tabs[data-style=pills]${ACTIVE}{${SOLID}}}`;
+  '@supports (-webkit-background-clip:text){.mc-tabs-header[style*=--mc-text-paint] .mc-tab-button{background-image:var(--mc-text-paint);-webkit-background-clip:text;-webkit-text-fill-color:transparent}}';
 
 // The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
 export const tabsStyles = unsafeCSS(

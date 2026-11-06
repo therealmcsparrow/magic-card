@@ -7,13 +7,7 @@ import { editorSystem } from '../../css/editor-stack';
 import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
 import { t } from '../i18n';
 
-/*
- * The Look block of the slider editor (contract look-editor 1.0.0, "Host rules"): <mc-slider-look-editor> once the
- * look-editor chunk is in, a skeleton while it loads, and on failure a status line with Try again. Today's fields stay
- * in the slider editor's General tab either way (the contract: failure shows only the status line). The open sections
- * and the one-level Undo snapshot are kept per module for the session, outside the element, so a tab switch does not
- * lose them; they are never written to YAML.
- */
+// The Look block of the slider editor: the look editor once its chunk is in, a skeleton while loading, Try again on failure.
 
 interface Session {
   open: Set<string>;
@@ -123,16 +117,16 @@ export class SliderLookHost extends LitElement {
         }}
       ></mc-slider-look-editor>`;
     } else if (this._look === 'failed') {
-      body = notice({ tone: 'warn', text: t("Couldn't load the slider looks."), action: { label: t('Try again'), onClick: () => this._load(true) } });
+      body = notice({ tone: 'warn', text: t("card-editor.slider-look-host.couldn-t-load-the-slider-looks"), action: { label: t('card-editor.slider-look-host.try-again'), onClick: () => this._load(true) } });
     } else if (this._look === 'loading') {
       body = html`<div class="skeleton" role="status" aria-busy="true" tabindex="-1">
-        <span>${t('Loading slider looks...')}</span>
+        <span>${t('card-editor.slider-look-host.loading-slider-looks')}</span>
         <div class="bar"></div>
       </div>`;
     }
     // chunk in but the element not defined (a stub build): nothing to show, the General fields are all there is
     return html`<section class="grp" aria-labelledby="look-h">
-      <h4 class="grp-h" id="look-h">${t('Look')}</h4>
+      <h4 class="grp-h" id="look-h">${t('card-editor.slider-look-host.look')}</h4>
       ${body}
     </section>`;
   }

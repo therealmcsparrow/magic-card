@@ -1,19 +1,8 @@
 import type { IconGeometry } from './icon-source';
 import { cubicsToPath, toCubicSubpaths, type Cubic, type Pt } from '../path/core';
 
-/*
- * Auto-split of an icon into pieces for icon rigs (animation studio v2, parts). Shared by the card's
- * lazy runtime chunk (src/anim-runtime/rig.ts) and the studio (parts editors); the card bundle never
- * imports it.
- *
- * - A single-path icon (MDI, icon packs) splits into its subpaths. A subpath that lies inside
- *   another one with the opposite winding is a hole (nonzero fill, how MDI cuts holes): it stays in
- *   the piece of that outer subpath, so no piece ever renders as a filled blob. An island inside a
- *   hole (winding flips again) stays with that piece too.
- * - An icon with several paths (own SVG: one per drawn element) splits by element; secondary
- *   (accent) paths and stroked shapes are pieces of their own.
- * Pieces are numbered in drawing order; a rig part's `from` lists piece indices.
- */
+// Auto-split of an icon into pieces for icon rigs. A single path splits into its subpaths (holes and islands stay with
+// their outer piece); several paths split by element. Pieces are numbered in drawing order.
 
 export interface SplitPiece {
   /** Index of the piece (what `RigPart.from` refers to). */

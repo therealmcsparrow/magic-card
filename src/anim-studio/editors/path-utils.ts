@@ -4,15 +4,8 @@ import { samplePath, type PathSample } from '../compile';
 import type { PathSpec } from '../model';
 import { m, type MessageId } from '../i18n';
 
-/*
- * Path motion editing for the animation studio: the generic anchor model now lives in
- * src/path/edit.ts (contract path-model 1.0.0); this file keeps the studio's names for it (a shim,
- * removed once the studio calls src/path directly) plus what only the studio needs: where the subject
- * is at a time, and the motion templates. Coordinates are the document's own units (PathSpec.units,
- * usually % of the moving element's size).
- *
- * Only the first subpath is edited (motion runs along one line); serialising writes it alone.
- */
+// Path motion editing for the studio: a shim over the anchor model in src/path/edit.ts plus the subject position at a time
+// and the motion templates. Coordinates are the document units (PathSpec.units); only the first subpath is edited.
 
 export type { Anchor, EditPath, Pt };
 export { MAX_ANCHORS, copyAnchor, copyPath, fmtNum, isSmooth, nearestOnPath, segment, segmentCount, setClosed, smoothAll, snap, straightenAll, toggleSmooth };
@@ -68,12 +61,12 @@ export function pointAtTime(d: string, t: number): PathSample | undefined {
 export type PathTemplateId = 'circle' | 'figure-8' | 'wave' | 'bounce' | 'zigzag' | 'spiral';
 
 export const PATH_TEMPLATES: Array<{ id: PathTemplateId; label: MessageId }> = [
-  { id: 'circle', label: m('Circle') },
-  { id: 'figure-8', label: m('Figure 8') },
-  { id: 'wave', label: m('Wave') },
-  { id: 'bounce', label: m('Bounce') },
-  { id: 'zigzag', label: m('Zigzag') },
-  { id: 'spiral', label: m('Spiral') },
+  { id: 'circle', label: m('anim-studio.path-utils.circle') },
+  { id: 'figure-8', label: m('anim-studio.path-utils.figure-8') },
+  { id: 'wave', label: m('anim-studio.path-utils.wave') },
+  { id: 'bounce', label: m('anim-studio.path-utils.bounce') },
+  { id: 'zigzag', label: m('anim-studio.path-utils.zigzag') },
+  { id: 'spiral', label: m('anim-studio.path-utils.spiral') },
 ];
 
 /**

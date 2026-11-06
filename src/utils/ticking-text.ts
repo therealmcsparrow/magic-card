@@ -1,11 +1,7 @@
 import { noChange } from 'lit';
 import { AsyncDirective, directive, PartInfo, PartType } from 'lit/async-directive.js';
 
-/**
- * Text that updates itself on a timer aligned to the interval (every second / minute), without
- * re-rendering the template it is in: the clock's time and date. The timer stops while the part is
- * disconnected and restarts (with the current text) when it is reconnected.
- */
+/** Text that updates itself on a timer aligned to the interval, without re-rendering its template. */
 class TickingText extends AsyncDirective {
   private _text?: () => string;
   private _ms = 60_000;

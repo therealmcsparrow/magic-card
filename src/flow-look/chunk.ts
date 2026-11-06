@@ -6,13 +6,9 @@ import './parts';
 import { renderFlow, wanted } from './render';
 import { resolveLook } from './resolve';
 
-/*
- * Chunk entry of dist/magic-card-flow-look.js (contracts lazy-module 1.2.0, flow-look 1.0.0). Evaluating
- * this file changes nothing global: the renderer is provided to the slot in install(), which
- * src/utils/lazy-chunk.ts calls only when BUILD matches the magic-card.js that loaded it.
- * The slot holds the line styles; the shapes and the colour and ends plug in through
- * flowLookRegistry (re-exported here) and the list in ./parts.
- */
+// Chunk entry of dist/magic-card-flow-look.js. Evaluating it changes nothing global: the renderer is provided in
+// install(), which lazy-chunk.ts calls only when BUILD matches. Shapes, colour and ends plug in through flowLookRegistry
+// and the list in ./parts.
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 

@@ -1,9 +1,5 @@
-/*
- * Heights a lazy module's placeholder reserves, estimated from its config, so the page does not move
- * when the module's chunk (or its first data) arrives. Pure and synchronous; lives in magic-card.js
- * because the stubs use it. Estimates, not layout: a few px either way is fine, 100+ px is the jump
- * this avoids. Measured on the default theme (14 px markdown text, 36 px weather icon).
- */
+// Heights a lazy module's placeholder reserves, estimated from its config, so the page does not
+// move when the chunk arrives. Pure and synchronous; estimates, not layout.
 
 /** Heading font scale and its (equal) margin in em of the heading's own size: h1..h6. */
 const HEADING = [
@@ -98,24 +94,19 @@ export function tabsMinHeight(config: { tab_style?: string; design?: { height?: 
 }
 
 /**
- * The clock module's `min-height` as a CSS length, or '' for none (a design height or min-height decides the box).
- * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
- * `design.line_height` as a number or a numeric string; a length counts per line, and a percentage too, because
- * the line boxes inherit it as the length it computes to (150% of 16 px is 24 px on both lines), not as a factor;
- * anything else is 1.17, about the `normal` line height of the theme font.
+ * The clock module's `min-height` as a CSS length, or '' for none. Time line 2 rem plus date line
+ * 0.875 rem, times the line height (a number, numeric string or length; otherwise 1.17).
  */
 export function clockMinHeight(config: { show_date?: boolean; design?: { height?: unknown; min_height?: unknown; line_height?: unknown } | null }): string {
   const d = config.design;
   if (d && (d.height !== undefined || d.min_height !== undefined)) return '';
   const date = config.show_date !== false;
   const lh = d?.line_height;
-  const v = typeof lh === 'string' ? lh.trim() : lh;
   const lines = date ? 2 : 1;
-  // the unit is the regex's own alternation, so only a number and px, em or rem reach the style; a percentage becomes em
-  const length = typeof v === 'string' ? /^\d*\.?\d+(px|em|rem|%)$/.exec(v) : null;
-  const n = parseFloat(v as string);
-  if (length && n > 0) return length[1] === '%' ? `calc(${n / 100}em * ${lines})` : `calc(${n}${length[1]} * ${lines})`;
-  const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? n : v;
-  const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.17;
-  return `calc(${date ? '2.875rem' : '2rem'} * ${factor})`;
+  // the pattern admits finite non-negative numbers only (NaN and Infinity do not match, nor does a string over
+  // 16 characters); the unit is its own alternation, so only a number and px, em or rem reach the style; a percentage becomes em
+  const m = /^(\d+(?:\.\d+)?|\.\d+)(px|em|rem|%)?$/.exec(typeof lh === 'number' ? String(lh) : typeof lh === 'string' && lh.length < 17 ? lh.trim() : '');
+  const n = m ? +m[1] : 0;
+  const unit = m?.[2];
+  return n > 0 && unit ? `calc(${unit === '%' ? `${n / 100}em` : n + unit} * ${lines})` : `calc(${date ? '2.875rem' : '2rem'} * ${n > 0 ? n : 1.17})`;
 }

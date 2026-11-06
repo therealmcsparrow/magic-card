@@ -7,12 +7,12 @@ import { AnimationStage } from './studio-stage';
 import { AnimationThumb } from './studio-thumb';
 import { PRESET_GRID_TAG, PRESET_THUMB_TAG, PresetGrid, PresetThumb } from './preset-grid';
 // The kind editors define their own elements (mc-anim-*-editor, mc-anim-bezier-editor,
-// mc-anim-path-overlay; see editor-slots.ts). They use the card bundle's mc-unit-field /
+// mc-anim-path-host; see editor-slots.ts). They use the card bundle's mc-unit-field /
 // mc-color-picker by tag only, never importing them.
 import './editors/keyframes-editor';
 import './editors/particles-editor';
 import './editors/path-editor';
-import './editors/path-overlay';
+import './editors/path-host';
 import './editors/sequence-editor';
 // studio v2 panels (each registers itself with slots.ts registerPanel when imported)
 // icon parts

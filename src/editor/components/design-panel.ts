@@ -17,7 +17,7 @@ import {
 } from '../../utils/css-properties';
 import { BOX_LONGHANDS, propertyKeys } from '../../utils/css-design-map';
 import { t as lt } from '../../i18n/labels';
-import type { MessageId } from '../../contracts/i18n';
+import type { MessageIndex } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-stack';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
@@ -26,6 +26,9 @@ import { fieldReset } from './field-reset';
 import { DEVICES, DRAWS } from './icon-fx-options';
 import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
+import { rovingTarget } from '../../ui-kit/controllers/roving-focus';
+import { DirectionController, readDirection } from '../../ui-kit/controllers/direction';
+import { inlineSides } from '../../ui-kit/css/rtl';
 import { entityStateColor } from '../../utils/entity-color';
 import { PasteMode, copyDesign, designUpdates, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 
@@ -69,11 +72,13 @@ const TAB_STATES: TabState[] = ['tab_active', 'tab_disabled'];
 /** Keys of the old Active tab fields; the first edit in the Active tab view moves them into `tab_active`. */
 const LEGACY_ACTIVE_KEYS = ['tab_active_color', 'tab_active_background', 'tab_indicator_color'];
 
+/** The design keys a field edits. */
+const keysOf = (p: CssPropertyDef): string[] => p.keys ?? propertyKeys(p.key);
 const isRec = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 const isStr = (v: unknown): v is string => typeof v === 'string' && v !== '';
 
 /** Label text of an optional message (labels namespace). */
-const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : lt(id));
+const lbl = (id: MessageIndex | undefined): string | undefined => (id === undefined ? undefined : lt(id));
 
 /** Field types a hover rule cannot apply (the card draws them itself, not through CSS). */
 const NO_HOVER_TYPES = new Set(['animations', 'icon_anim', 'ring', 'shape', 'value_bg']);
@@ -93,6 +98,7 @@ const TEXT_PLACEHOLDERS: Record<string, string> = {
 
 @customElement('mc-design-panel')
 export class DesignPanel extends LitElement {
+  private readonly _direction = new DirectionController(this);
   static styles = [
     editorSystem,
     css`
@@ -158,7 +164,7 @@ export class DesignPanel extends LitElement {
       }
       .design-clip .menu {
         top: calc(100% + 4px);
-        left: 0;
+        ${inlineSides('inset', '0', 'auto')}
         min-width: 200px;
       }
       .design-clip .clip-status {
@@ -191,7 +197,7 @@ export class DesignPanel extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: transparent;
-        text-align: left;
+        text-align: start;
         font-size: 0.8125rem;
         font-weight: 600;
         color: var(--mc-text);
@@ -210,6 +216,9 @@ export class DesignPanel extends LitElement {
       }
       .subgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .subgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .subgroup-body,
       .tab-notes {
@@ -262,7 +271,7 @@ export class DesignPanel extends LitElement {
         border: 0;
         border-radius: var(--mc-radius);
         background: color-mix(in srgb, var(--mc-surface-2) 55%, transparent);
-        text-align: left;
+        text-align: start;
         font-size: 0.875rem;
         font-weight: 600;
         color: var(--mc-text);
@@ -281,6 +290,9 @@ export class DesignPanel extends LitElement {
       }
       .dgroup-btn[aria-expanded='false'] .chev {
         transform: rotate(-90deg);
+      }
+      :host([dir='rtl']) .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(90deg);
       }
       .dgroup-body {
         display: grid;
@@ -454,7 +466,7 @@ export class DesignPanel extends LitElement {
 
   /** "Active tab (3 set)": a view's name with the number of values it holds. */
   private _withCount(name: string, n: number): string {
-    return n > 0 ? t('{name} ({n} set)', { name, n }) : name;
+    return n > 0 ? t('card-editor.design-panel.name-n-set', { name, n }) : name;
   }
 
   /** The name of the edited view, for labels: Default, Hover, Active tab, Disabled tab or the rule. */
@@ -462,10 +474,10 @@ export class DesignPanel extends LitElement {
     const { id, state } = this._viewParts();
     const rule = this._getActiveRule();
     if (rule) {
-      const name = rule.name || t('Rule {n}', { n: (this.design.conditional ?? []).findIndex((r) => r.id === id) + 1 });
-      return state === 'tab_active' ? t('Rule: {name}, active tab', { name }) : state === 'tab_disabled' ? t('Rule: {name}, disabled tab', { name }) : t('Rule: {name}', { name });
+      const name = rule.name || t('card-editor.design-panel.rule-n', { n: (this.design.conditional ?? []).findIndex((r) => r.id === id) + 1 });
+      return state === 'tab_active' ? t('card-editor.design-panel.rule-name-active-tab', { name }) : state === 'tab_disabled' ? t('card-editor.design-panel.rule-name-disabled-tab', { name }) : t('card-editor.design-panel.rule-name', { name });
     }
-    return state === 'tab_active' ? t('Active tab') : state === 'tab_disabled' ? t('Disabled tab') : this._isHoverView() ? t('Hover') : t('Default');
+    return state === 'tab_active' ? t('card-editor.design-panel.active-tab') : state === 'tab_disabled' ? t('card-editor.design-panel.disabled-tab') : this._isHoverView() ? t('card-editor.design-panel.hover') : t('card-editor.design-panel.default');
   }
 
   /**
@@ -491,8 +503,8 @@ export class DesignPanel extends LitElement {
     const state = this._viewParts().state;
     const pills = this.tabs?.style === 'pills';
     if (state === 'tab_active') {
-      if (key === 'tab_color') return pills ? t('light text on theme accent') : t('theme accent');
-      if (key === 'tab_background') return pills ? t('theme accent') : t('none');
+      if (key === 'tab_color') return pills ? t('card-editor.design-panel.light-text-on-theme-accent') : t('card-editor.design-panel.theme-accent');
+      if (key === 'tab_background') return pills ? t('card-editor.design-panel.theme-accent') : t('card-editor.design-panel.none');
     }
     if (state === 'tab_disabled' && key === 'tab_opacity') return '0.5';
     return undefined;
@@ -504,7 +516,7 @@ export class DesignPanel extends LitElement {
     const sub = this._sub();
     if (!state || !sub) return;
     sub.write({});
-    this._announce(t('{state} reset', { state: state === 'tab_active' ? t('Active tab') : t('Disabled tab') }));
+    this._announce(t('card-editor.design-panel.state-reset', { state: state === 'tab_active' ? t('card-editor.design-panel.active-tab') : t('card-editor.design-panel.disabled-tab') }));
   }
 
   private _getValue(key: string): string {
@@ -533,9 +545,9 @@ export class DesignPanel extends LitElement {
     const sub = !!this._sub();
     if (parseGradient(this._getValue('background_color'))) return '';
     const shorthand = rec.background ?? (sub ? base.background : undefined);
-    if (shorthand && !parseGradient(shorthand as string)) return t('Gradient needs an empty Background field. Clear it to use a gradient here.');
-    if (rec.background_image || (sub && base.background_image)) return t('A background image replaces a gradient here. Remove the image to use a gradient.');
-    if (sub && base.background_color) return t('Default sets a solid colour, so a rule cannot swap it for a gradient. Clear the Default colour first.');
+    if (shorthand && !parseGradient(shorthand as string)) return t('card-editor.design-panel.gradient-needs-an-empty-background-field');
+    if (rec.background_image || (sub && base.background_image)) return t('card-editor.design-panel.a-background-image-replaces-a-gradient');
+    if (sub && base.background_color) return t('card-editor.design-panel.default-sets-a-solid-colour-so-a-rule');
     return '';
   }
 
@@ -562,13 +574,13 @@ export class DesignPanel extends LitElement {
     if (p.key === 'background_color' && this._getValue(p.key)) return true;
     // an empty object (a linked row's `shape_options: {}` marker) is not a value
     const empty = (v: unknown) => v === undefined || v === '' || (!!v && typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
-    return propertyKeys(p.key).some((k) => !empty(rec[k]));
+    return keysOf(p).some((k) => !empty(rec[k]));
   }
 
   /** Design keys a property owns: a box field's sides, the animation list with its legacy keys. */
   private _keysOf(p: CssPropertyDef): string[] {
     if (p.key === 'background_color' && this._getValue(p.key) !== (this._getActiveDesign().background_color || '')) return ['background_color', 'background'];
-    return p.type === 'animations' ? Object.keys(animationsUpdate([])) : propertyKeys(p.key);
+    return p.type === 'animations' ? Object.keys(animationsUpdate([])) : keysOf(p);
   }
 
   /**
@@ -689,16 +701,16 @@ export class DesignPanel extends LitElement {
   /** Whether the Custom CSS field matches the search (always shown without one). */
   private _customCssMatches(): boolean {
     const q = fold(this._searchQuery);
-    return !q || fold(t('Custom CSS')).includes(q) || q === 'css';
+    return !q || fold(t('card-editor.design-panel.custom-css')).includes(q) || q === 'css';
   }
 
   private _countSetProperties(sector: CssSector): number {
     const rec = this._getActiveDesign();
     // A box property counts once whether it is set as a shorthand or per side.
     return sector.properties.filter((p) =>
-      p.type === 'animations'
+      p.part ? false : p.type === 'animations'
         ? readAnimations(rec as DesignConfig).length > 0
-        : propertyKeys(p.key).some((k) => rec[k] !== undefined && rec[k] !== ''),
+        : keysOf(p).some((k) => rec[k] !== undefined && rec[k] !== ''),
     ).length;
   }
 
@@ -715,7 +727,7 @@ export class DesignPanel extends LitElement {
     const hover = this._isHoverView();
     const base = this._activeView === 'default';
     const state = this._viewParts().state;
-    const properties = all.filter((p) => this._isVisible(p) && !(p.baseOnly && !base) && !(state && !p.tabState) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
+    const properties = all.filter((p) => !p.part && this._isVisible(p) && !(p.baseOnly && !base) && !(state && !p.tabState) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
     if (!this._searchQuery) return properties;
     const q = fold(this._searchQuery);
     return properties.filter(
@@ -723,6 +735,7 @@ export class DesignPanel extends LitElement {
         fold(lt(p.label)).includes(q) ||
         p.cssProperty.toLowerCase().includes(q) ||
         p.key.toLowerCase().includes(q) ||
+        (p.keys ?? []).some((k) => k.includes(q)) ||
         p.key.replace(/_/g, ' ').includes(q) ||
         (BOX_LONGHANDS[p.key] || []).some(
           (l) => l.cssProperty.includes(q) || l.key.includes(q),
@@ -740,7 +753,7 @@ export class DesignPanel extends LitElement {
 
   private _copyDesign(): void {
     copyDesign(this.design);
-    this._announce(t('Design copied'));
+    this._announce(t('card-editor.design-panel.design-copied'));
   }
 
   /** Paste the copied design onto the whole design (all rules included), in one change. */
@@ -755,7 +768,7 @@ export class DesignPanel extends LitElement {
     if (this.hasTemplate && changed.length) updates._markNotSynced = changed;
     this._activeView = 'default';
     this.onChange(updates);
-    this._announce(t('Design pasted'));
+    this._announce(t('card-editor.design-panel.design-pasted'));
   }
 
   private _openPasteMenu(trigger: HTMLElement): void {
@@ -779,7 +792,7 @@ export class DesignPanel extends LitElement {
     return html`
       <div class="design-clip">
         <button type="button" class="btn btn-text btn-sm" @click=${() => this._copyDesign()}>
-          <ha-icon icon="mdi:content-copy"></ha-icon>${t('Copy design')}
+          <ha-icon icon="mdi:content-copy"></ha-icon>${t('card-editor.design-panel.copy-design')}
         </button>
         <button
           type="button"
@@ -787,19 +800,19 @@ export class DesignPanel extends LitElement {
           aria-haspopup="menu"
           aria-expanded=${this._pasteMenu ? 'true' : 'false'}
           ?disabled=${!canPaste}
-          title=${canPaste ? t('Paste the copied design') : t('Copy a design first')}
+          title=${canPaste ? t('card-editor.design-panel.paste-the-copied-design') : t('card-editor.design-panel.copy-a-design-first')}
           @click=${(e: Event) => this._openPasteMenu(e.currentTarget as HTMLElement)}
         >
-          <ha-icon icon="mdi:content-paste"></ha-icon>${t('Paste design')}
+          <ha-icon icon="mdi:content-paste"></ha-icon>${t('card-editor.design-panel.paste-design')}
         </button>
         <span class="clip-status" role="status" aria-live="polite">${this._clipStatus}</span>
         ${this._pasteMenu
-          ? html`<div class="menu" role="menu" aria-label=${t('Paste design')} @keydown=${this._pastePop.onKeydown}>
+          ? html`<div class="menu" role="menu" aria-label=${t('card-editor.design-panel.paste-design')} @keydown=${this._pastePop.onKeydown}>
               <button type="button" role="menuitem" @click=${() => this._pasteDesign('replace')}>
-                <ha-icon icon="mdi:content-paste"></ha-icon>${t('Replace design')}
+                <ha-icon icon="mdi:content-paste"></ha-icon>${t('card-editor.design-panel.replace-design')}
               </button>
               <button type="button" role="menuitem" @click=${() => this._pasteDesign('merge')}>
-                <ha-icon icon="mdi:set-merge"></ha-icon>${t('Merge into design')}
+                <ha-icon icon="mdi:set-merge"></ha-icon>${t('card-editor.design-panel.merge-into-design')}
               </button>
             </div>`
           : nothing}
@@ -813,7 +826,7 @@ export class DesignPanel extends LitElement {
     const rules = [...(this.design.conditional || [])];
     const newRule: ConditionalDesign = {
       id: generateId('rule'),
-      name: t('Rule {n}', { n: (this.design.conditional?.length ?? 0) + 1 }),
+      name: t('card-editor.design-panel.rule-n', { n: (this.design.conditional?.length ?? 0) + 1 }),
       conditions: [],
       mode: 'every',
       design: {},
@@ -912,12 +925,12 @@ export class DesignPanel extends LitElement {
     const inherited = p.tabState && !value && builtin === undefined ? this._inherited(p.key) : undefined;
     const inheritsHere = p.tabState && this._inherited(p.key) !== undefined && !this._builtin(p.key);
     // the animation list has its own per-entry "Reset to preset", the ring editor per-field resets and Off
-    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(lt(p.label), this._isSet(p), () => this._reset([p]), inheritsHere ? t('Use Default value') : undefined);
+    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(lt(p.label), this._isSet(p), () => this._reset([p]), inheritsHere ? t('card-editor.design-panel.use-default-value') : undefined);
     const field = (control: TemplateResult, sync: TemplateResult | typeof nothing = nothing, forId?: string, help?: string) =>
       this._renderField(lt(p.label), control, sync, forId, help, reset);
     /** The help line of a colour or font field: its own help, else where an empty field takes its value from. */
     const hint = (own?: string): string | undefined =>
-      own ?? (builtin ? t('Built-in: {value}', { value: builtin }) : inherited ? t('Inherited from Default: {value}', { value: inherited }) : undefined);
+      own ?? (builtin ? t('card-editor.design-panel.built-in-value', { value: builtin }) : inherited ? t('card-editor.design-panel.inherited-from-default-value', { value: inherited }) : undefined);
 
     switch (p.type) {
       case 'animations': {
@@ -928,6 +941,7 @@ export class DesignPanel extends LitElement {
               .animations=${readAnimations(this._getActiveDesign() as DesignConfig)}
               .allowIcon=${isModule && ANIMATION_ICON_MODULES.includes(this.moduleType)}
               .allowLabel=${isModule && this.moduleType === 'button'}
+              .spinIcon=${isModule && this.moduleType === 'icon'}
               .hass=${this.hass}
               .defaultEntity=${isModule ? this.moduleEntity : ''}
               .requireTriggerEntity=${!isModule}
@@ -950,7 +964,7 @@ export class DesignPanel extends LitElement {
               .allowIcon=${true}
               .allowLabel=${true}
               .motionOnly=${true}
-              .moduleLabel=${t('Tab')}
+              .moduleLabel=${t('card-editor.design-panel.tab')}
               .hass=${this.hass}
               .defaultEntity=${this.moduleEntity}
               .allowEntityColor=${this._allowEntityColor}
@@ -978,9 +992,11 @@ export class DesignPanel extends LitElement {
               .label=${lt(p.label)}
               .cell=${p.sides?.cell ?? 'length'}
               .corners=${!!p.sides?.corners}
+              .entity=${p.key === 'border_color' && this._allowEntityColor && this.moduleType !== 'tabs'}
+              .entityColor=${this._entityColor}
               .units=${p.units ?? ['px', 'em', 'rem', '%']}
               .options=${(p.options ?? []).map((o) => ({ value: o.value, label: lt(o.label) }))}
-              .inherited=${(p.tabState && !this._builtin(p.key) && this._inherited(p.key)) || ''}
+              .inherited=${(p.tabState && !this._builtin(p.key) && this._inherited(p.key)) || (p.key === 'border_width' && this._getActiveDesign().border_length ? '2px' : '')}
               .onChange=${(updates: Record<string, unknown>) => this._handlePropertyChange(p.key, String(updates[p.key] ?? ''))}
             ></mc-box-field>
           `)}`,
@@ -1051,8 +1067,9 @@ export class DesignPanel extends LitElement {
             html`
               <mc-box-field
                 .design=${sub.design}
+                .label=${lt(p.label)}
                 .onChange=${(updates: Record<string, unknown>) => sub.write({ ...sub.design, ...updates })}
-                .baseName=${p.key as 'padding' | 'margin' | 'border_radius'}
+                .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
               ></mc-box-field>
             `,
           );
@@ -1061,10 +1078,11 @@ export class DesignPanel extends LitElement {
           html`
             <mc-box-field
               .design=${this.design}
+              .label=${lt(p.label)}
               .onChange=${(updates: Record<string, unknown>) =>
                 // a side edit on a template-linked card un-syncs the whole box field (shorthand + sides)
                 this.onChange(this.hasTemplate ? { ...updates, _markNotSynced: p.key } : updates)}
-              .baseName=${p.key as 'padding' | 'margin' | 'border_radius'}
+              .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
             ></mc-box-field>
           `,
           syncIndicator,
@@ -1098,7 +1116,7 @@ export class DesignPanel extends LitElement {
               .allowEntity=${this._allowEntityColor && !p.baseOnly && !p.key.startsWith('tab_')}
               .entityColor=${this._entityColor}
               .gradient=${(p.key === 'background_color' && !bgBlock) || (p.key === 'color' && this.target === 'module' && TEXT_GRADIENT_MODULES.includes(this.moduleType)) ? 'css' : ''}
-              .gradientNote=${p.key === 'color' ? t('Text uses this gradient as its fill. Older tablets show the first colour.') : ''}
+              .gradientNote=${p.key === 'color' ? t('card-editor.design-panel.text-uses-this-gradient-as-its-fill') : ''}
               @value-changed=${(e: CustomEvent) =>
                 p.key === 'background_color' ? this._handleBackgroundColor(e.detail.value) : this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-color-picker>
@@ -1145,7 +1163,7 @@ export class DesignPanel extends LitElement {
                 id=${id}
                 @change=${(e: Event) => this._handlePropertyChange(p.key, (e.target as HTMLSelectElement).value)}
               >
-                <option value="" ?selected=${!value}>${inherited ? t('Inherit ({value})', { value: this._optionLabel(p, inherited) }) : p.emptyLabel === undefined ? t('Not set') : lt(p.emptyLabel)}</option>
+                <option value="" ?selected=${!value}>${inherited ? t('card-editor.design-panel.inherit-value', { value: this._optionLabel(p, inherited) }) : p.emptyLabel === undefined ? t('card-editor.design-panel.not-set') : lt(p.emptyLabel)}</option>
                 ${this._renderOptions(p.options || [], value)}
               </select>
               <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -1159,12 +1177,10 @@ export class DesignPanel extends LitElement {
         const opts = p.options || [];
         const current = opts.some((o) => o.value === value) ? value : (p.defaultValue ?? opts[0]?.value);
         const onKey = (e: KeyboardEvent) => {
-          const idx = opts.findIndex((o) => o.value === current);
-          const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-          const next = e.key === 'Home' ? 0 : e.key === 'End' ? opts.length - 1 : step[e.key] !== undefined ? (idx + step[e.key] + opts.length) % opts.length : -1;
+          const group = e.currentTarget as HTMLElement;
+          const next = rovingTarget(e.key, opts.findIndex((o) => o.value === current), opts.map(() => ({})), 'both', true, readDirection(group) === 'rtl');
           if (next < 0) return;
           e.preventDefault();
-          const group = e.currentTarget as HTMLElement;
           this._handlePropertyChange(p.key, opts[next].value);
           requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${opts[next].value}"]`)?.focus());
         };
@@ -1203,7 +1219,7 @@ export class DesignPanel extends LitElement {
         return field(
           html`<div class="tab-list" role="group" aria-label=${lt(p.label)}>
             ${names.map(
-              (name, i) => html`<label><input type="checkbox" .checked=${on.has(i)} @change=${(e: Event) => toggle(i, (e.target as HTMLInputElement).checked)} /><span>${name || t('Tab {n}', { n: i + 1 })}</span></label>`,
+              (name, i) => html`<label><input type="checkbox" .checked=${on.has(i)} @change=${(e: Event) => toggle(i, (e.target as HTMLInputElement).checked)} /><span>${name || t('card-editor.design-panel.tab-n', { n: i + 1 })}</span></label>`,
             )}
           </div>`,
           syncIndicator,
@@ -1222,7 +1238,7 @@ export class DesignPanel extends LitElement {
               min=${p.range?.[0] ?? nothing}
               max=${p.range?.[1] ?? nothing}
               step=${p.range?.[2] ?? nothing}
-              placeholder=${builtin ?? (inheritsHere ? inherited || t('Theme default') : nothing)}
+              placeholder=${builtin ?? (inheritsHere ? inherited || t('card-editor.design-panel.theme-default') : nothing)}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
@@ -1240,7 +1256,7 @@ export class DesignPanel extends LitElement {
               id=${id}
               type="text"
               spellcheck="false"
-              placeholder=${builtin ?? (inheritsHere ? inherited || t('Theme default') : TEXT_PLACEHOLDERS[p.key] ?? nothing)}
+              placeholder=${builtin ?? (inheritsHere ? inherited || t('card-editor.design-panel.theme-default') : TEXT_PLACEHOLDERS[p.key] ?? nothing)}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
@@ -1291,7 +1307,7 @@ export class DesignPanel extends LitElement {
       }
       this._handleObjectChange(key, Object.keys(next).length ? next : undefined);
     };
-    const first = { value: '', label: inState ? t('Same as Default') : t('Off') };
+    const first = { value: '', label: inState ? t('card-editor.design-panel.same-as-default') : t('card-editor.design-panel.off') };
     const select = (id: string, label: string, value: string, opts: Array<{ value: string; label: string }>, onPick: (v: string) => void) => html`
       <div>
         <label class="sublbl" for=${id}>${label}</label>
@@ -1308,16 +1324,16 @@ export class DesignPanel extends LitElement {
     const draws = DRAWS.filter(keep).map((o) => ({ value: o.value, label: t(o.label) }));
     return html`
       <div class="fx-pair">
-        ${select(`dp-${key}-device`, t('Device animation'), device, devices, (v) => write({ device: v }))}
-        ${select(`dp-${key}-draw`, t('Line draw'), draw, draws, (v) => write({ draw: v }))}
+        ${select(`dp-${key}-device`, t('card-editor.design-panel.device-animation'), device, devices, (v) => write({ device: v }))}
+        ${select(`dp-${key}-draw`, t('card-editor.design-panel.line-draw'), draw, draws, (v) => write({ draw: v }))}
       </div>
       ${draw && draw !== 'off'
         ? html`<div>
-            <span class="sublbl">${t('Draw duration')}</span>
+            <span class="sublbl">${t('card-editor.design-panel.draw-duration')}</span>
             <mc-unit-field
               data-key="${key}-duration"
               .value=${duration}
-              .label=${t('Draw duration')}
+              .label=${t('card-editor.design-panel.draw-duration')}
               .units=${['s', 'ms']}
               .placeholder=${String(ICON_FX_DEFAULTS.drawDuration)}
               @value-changed=${(e: CustomEvent) => write({ draw_duration: e.detail.value || '' })}
@@ -1347,7 +1363,7 @@ export class DesignPanel extends LitElement {
         >
           <ha-icon icon=${sector.icon}></ha-icon>
           <span class="nm">${lt(sector.name)}</span>
-          ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+          ${count > 0 ? html`<span class="chip is-count">${t('card-editor.design-panel.n-set', { n: count })}</span>` : nothing}
           <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
         </button>
         ${isOpen
@@ -1357,11 +1373,11 @@ export class DesignPanel extends LitElement {
                     <button
                       type="button"
                       class="btn btn-text btn-sm sector-reset"
-                      aria-label=${t('Reset section {name}', { name: lt(sector.name) })}
-                      title=${sector.id === 'tabs-bar' && this._activeView === 'default' ? t('Resets Default values only.') : t('Clear every value in this section')}
+                      aria-label=${t('card-editor.design-panel.reset-section-name', { name: lt(sector.name) })}
+                      title=${sector.id === 'tabs-bar' && this._activeView === 'default' ? t('card-editor.design-panel.resets-default-values-only') : t('card-editor.design-panel.clear-every-value-in-this-section')}
                       @click=${() => this._reset(sector.properties.filter((p) => this._isSet(p)))}
                     >
-                      <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset section')}
+                      <ha-icon icon="mdi:backup-restore"></ha-icon>${t('card-editor.design-panel.reset-section')}
                     </button>
                   </div>`
                 : nothing}
@@ -1401,7 +1417,7 @@ export class DesignPanel extends LitElement {
       }
       if (run.id !== 'bar' && !captioned) {
         captioned = true;
-        out.push(html`<h4 class="subgroup-caption">${t('Tabs')}</h4>`);
+        out.push(html`<h4 class="subgroup-caption">${t('card-editor.design-panel.tabs')}</h4>`);
       }
       const setProps = run.props.filter((p) => this._isSet(p));
       const count = setProps.length;
@@ -1423,11 +1439,11 @@ export class DesignPanel extends LitElement {
             >
               <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
               <span class="nm">${name}</span>
-              ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+              ${count > 0 ? html`<span class="chip is-count">${t('card-editor.design-panel.n-set', { n: count })}</span>` : nothing}
             </button>
             ${count > 0
-              ? html`<button type="button" class="btn btn-text btn-sm subgroup-reset" aria-label=${t('Reset {group} in {state}', { group: name, state: this._viewName() })} @click=${() => this._reset(setProps)}>
-                  ${t('Reset')}
+              ? html`<button type="button" class="btn btn-text btn-sm subgroup-reset" aria-label=${t('card-editor.design-panel.reset-group-in-state', { group: name, state: this._viewName() })} @click=${() => this._reset(setProps)}>
+                  ${t('card-editor.design-panel.reset')}
                 </button>`
               : nothing}
           </div>
@@ -1436,8 +1452,8 @@ export class DesignPanel extends LitElement {
                 ${this._renderFlatList(run.props)}
                 ${def.id === 'icon' && state === 'tab_active'
                   ? html`<div class="tree-note">
-                      <p class="help">${t('Icon when active is set per tab in the structure tree.')}</p>
-                      <button type="button" class="btn btn-text btn-sm show-tree" @click=${() => this.dispatchEvent(new CustomEvent('mc-select-first-tab', { bubbles: true, composed: true }))}>${t('Show in tree')}</button>
+                      <p class="help">${t('card-editor.design-panel.icon-when-active-is-set-per-tab-in-the')}</p>
+                      <button type="button" class="btn btn-text btn-sm show-tree" @click=${() => this.dispatchEvent(new CustomEvent('mc-select-first-tab', { bubbles: true, composed: true }))}>${t('card-editor.design-panel.show-in-tree')}</button>
                     </div>`
                   : nothing}
               </div>`
@@ -1459,9 +1475,9 @@ export class DesignPanel extends LitElement {
     const noneDisabled = state === 'tab_disabled' && !(Array.isArray(disabled) && disabled.length);
     return html`
       <div class="tab-notes">
-        <p class="help">${rule ? t('Bar settings apply to every tab and live in the rule.') : t('Bar settings apply to every tab and live in Default.')}</p>
-        ${state && empty ? html`<p class="help">${t('Nothing set. This state looks like Default.')}</p>` : nothing}
-        ${noneDisabled ? html`<p class="help">${t('No tab is disabled yet. Tick tabs under Bar > Disabled tabs in Default.')}</p>` : nothing}
+        <p class="help">${rule ? t('card-editor.design-panel.bar-settings-apply-to-every-tab-and-live') : t('card-editor.design-panel.bar-settings-apply-to-every-tab-and-live-2')}</p>
+        ${state && empty ? html`<p class="help">${t('card-editor.design-panel.nothing-set-this-state-looks-like')}</p>` : nothing}
+        ${noneDisabled ? html`<p class="help">${t('card-editor.design-panel.no-tab-is-disabled-yet-tick-tabs-under')}</p>` : nothing}
         <div>
           <button
             type="button"
@@ -1472,7 +1488,7 @@ export class DesignPanel extends LitElement {
               this.shadowRoot?.querySelector<HTMLElement>('.subgroup-btn')?.focus();
             }}
           >
-            ${rule ? t('Go to rule') : t('Go to Default')}
+            ${rule ? t('card-editor.design-panel.go-to-rule') : t('card-editor.design-panel.go-to-default')}
           </button>
         </div>
       </div>
@@ -1483,10 +1499,10 @@ export class DesignPanel extends LitElement {
   private _renderStateReset(): TemplateResult | typeof nothing {
     const state = this._viewParts().state;
     if (!state || !Object.values(this._getActiveDesign()).some((v) => v !== undefined && v !== '')) return nothing;
-    const name = state === 'tab_active' ? t('Active tab') : t('Disabled tab');
+    const name = state === 'tab_active' ? t('card-editor.design-panel.active-tab') : t('card-editor.design-panel.disabled-tab');
     return html`<div>
       <button type="button" class="btn btn-secondary btn-sm reset-state" @click=${() => this._resetState()}>
-        <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset {state}', { state: name })}
+        <ha-icon icon="mdi:backup-restore"></ha-icon>${t('card-editor.design-panel.reset-state', { state: name })}
       </button>
     </div>`;
   }
@@ -1514,17 +1530,17 @@ export class DesignPanel extends LitElement {
     const state = this._viewParts().state;
     const help = state
       ? state === 'tab_active'
-        ? t('Applied to the active tab, on top of Default and matching rules. Only these settings apply to it.')
-        : t('Applied to the disabled tabs, on top of Default and matching rules. Only these settings apply to them.')
+        ? t('card-editor.design-panel.applied-to-the-active-tab-on-top-of')
+        : t('card-editor.design-panel.applied-to-the-disabled-tabs-on-top-of')
       : this._isHoverView()
-      ? t('Applied while the pointer is over {thing}, on top of Default and matching rules.', { thing: thisTarget(this.target) })
+      ? t('card-editor.design-panel.applied-while-the-pointer-is-over-thing', { thing: thisTarget(this.target) })
       : n
-        ? t('{n, plural, one {# conditional rule} other {# conditional rules}}. Rules override Default only while their conditions match.', { n })
-        : t('Add a rule to change the look when conditions match.');
+        ? t('card-editor.design-panel.n-rules-override-default-only-while', { n })
+        : t('card-editor.design-panel.add-a-rule-to-change-the-look-when');
     return html`
       <div class="rule-pick">
         <div class="field">
-          <div class="field-head"><label for="design-view">${t('Editing design for')}</label></div>
+          <div class="field-head"><label for="design-view">${t('card-editor.design-panel.editing-design-for')}</label></div>
           <div class="select">
             <select
               class="input"
@@ -1534,19 +1550,19 @@ export class DesignPanel extends LitElement {
                 this._activeView = (e.target as HTMLSelectElement).value;
               }}
             >
-              <option value="default" ?selected=${this._activeView === 'default'}>${t('Default')}</option>
-              <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>${isTabs ? this._withCount(t('Hover'), Object.values(this.design?.hover ?? {}).filter((v) => v !== undefined && v !== '').length) : t('Hover')}</option>
+              <option value="default" ?selected=${this._activeView === 'default'}>${t('card-editor.design-panel.default')}</option>
+              <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>${isTabs ? this._withCount(t('card-editor.design-panel.hover'), Object.values(this.design?.hover ?? {}).filter((v) => v !== undefined && v !== '').length) : t('card-editor.design-panel.hover')}</option>
               ${isTabs
-                ? html`<option value=${TAB_ACTIVE_VIEW} ?selected=${this._activeView === TAB_ACTIVE_VIEW}>${this._withCount(t('Active tab'), this._stateCount('tab_active', undefined))}</option>
-                    <option value=${TAB_DISABLED_VIEW} ?selected=${this._activeView === TAB_DISABLED_VIEW}>${this._withCount(t('Disabled tab'), this._stateCount('tab_disabled', undefined))}</option>`
+                ? html`<option value=${TAB_ACTIVE_VIEW} ?selected=${this._activeView === TAB_ACTIVE_VIEW}>${this._withCount(t('card-editor.design-panel.active-tab'), this._stateCount('tab_active', undefined))}</option>
+                    <option value=${TAB_DISABLED_VIEW} ?selected=${this._activeView === TAB_DISABLED_VIEW}>${this._withCount(t('card-editor.design-panel.disabled-tab'), this._stateCount('tab_disabled', undefined))}</option>`
                 : nothing}
               ${rules.map((r, i) => {
-                const name = r.name || t('Rule {n}', { n: i + 1 });
+                const name = r.name || t('card-editor.design-panel.rule-n', { n: i + 1 });
                 const view = (state?: TabState) => (state ? `${r.id}${STATE_SEP}${state}` : r.id);
-                return html`<option value=${r.id} ?selected=${this._activeView === r.id}>${t('Rule: {name}', { name })}</option>
+                return html`<option value=${r.id} ?selected=${this._activeView === r.id}>${t('card-editor.design-panel.rule-name', { name })}</option>
                   ${isTabs
-                    ? html`<option value=${view('tab_active')} ?selected=${this._activeView === view('tab_active')}>${this._withCount(t('Rule: {name}, active tab', { name }), this._stateCount('tab_active', r))}</option>
-                        <option value=${view('tab_disabled')} ?selected=${this._activeView === view('tab_disabled')}>${this._withCount(t('Rule: {name}, disabled tab', { name }), this._stateCount('tab_disabled', r))}</option>`
+                    ? html`<option value=${view('tab_active')} ?selected=${this._activeView === view('tab_active')}>${this._withCount(t('card-editor.design-panel.rule-name-active-tab', { name }), this._stateCount('tab_active', r))}</option>
+                        <option value=${view('tab_disabled')} ?selected=${this._activeView === view('tab_disabled')}>${this._withCount(t('card-editor.design-panel.rule-name-disabled-tab', { name }), this._stateCount('tab_disabled', r))}</option>`
                     : nothing}`;
               })}
             </select>
@@ -1556,7 +1572,7 @@ export class DesignPanel extends LitElement {
         </div>
         <div>
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._addRule()}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add conditional rule')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.design-panel.add-conditional-rule')}
           </button>
         </div>
       </div>
@@ -1566,35 +1582,35 @@ export class DesignPanel extends LitElement {
   private _renderRuleHeader(rule: ConditionalDesign): TemplateResult {
     const mode = rule.mode === 'any' ? 'any' : 'every';
     const modes: Array<{ v: 'every' | 'any'; l: string }> = [
-      { v: 'every', l: t('All match (AND)') },
-      { v: 'any', l: t('Any matches (OR)') },
+      { v: 'every', l: t('card-editor.design-panel.all-match-and') },
+      { v: 'any', l: t('card-editor.design-panel.any-matches-or') },
     ];
     return html`
       <div class="rule-head">
-        <h3>${t('Rule')}</h3>
+        <h3>${t('card-editor.design-panel.rule')}</h3>
         <button
           type="button"
           class="btn btn-text btn-sm danger-text"
           @click=${() => this._removeRule(rule.id)}
         >
-          <ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete rule')}
+          <ha-icon icon="mdi:delete-outline"></ha-icon>${t('card-editor.design-panel.delete-rule')}
         </button>
       </div>
       <div class="field">
-        <div class="field-head"><label for="rule-name">${t('Rule name')}</label></div>
+        <div class="field-head"><label for="rule-name">${t('card-editor.design-panel.rule-name-2')}</label></div>
         <input
           class="input"
           id="rule-name"
           type="text"
           .value=${rule.name || ''}
-          placeholder=${t('Rule name')}
+          placeholder=${t('card-editor.design-panel.rule-name-2')}
           @input=${(e: InputEvent) =>
             this._updateRuleName(rule.id, (e.target as HTMLInputElement).value)}
         />
       </div>
       <div class="field">
-        <div class="field-head"><span class="lbl">${t('Match')}</span></div>
-        <div class="seg full" role="radiogroup" aria-label=${t('Condition match')}>
+        <div class="field-head"><span class="lbl">${t('card-editor.design-panel.match')}</span></div>
+        <div class="seg full" role="radiogroup" aria-label=${t('card-editor.design-panel.condition-match')}>
           ${modes.map(
             (m) => html`
               <button
@@ -1626,10 +1642,10 @@ export class DesignPanel extends LitElement {
                 ></mc-condition-row>
               `,
             )
-          : html`<p class="help">${t('No conditions yet. The rule applies once a condition is added and matches.')}</p>`}
+          : html`<p class="help">${t('card-editor.design-panel.no-conditions-yet-the-rule-applies-once')}</p>`}
         <div>
           <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._addConditionToRule(rule)}>
-            <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
+            <ha-icon icon="mdi:plus"></ha-icon>${t('card-editor.design-panel.add-condition')}
           </button>
         </div>
       </div>
@@ -1683,7 +1699,7 @@ export class DesignPanel extends LitElement {
         >
           <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
           <span class="nm">${lt(group.name)}</span>
-          ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+          ${count > 0 ? html`<span class="chip is-count">${t('card-editor.design-panel.n-set', { n: count })}</span>` : nothing}
         </button>
         <div class="dgroup-body" id=${bodyId} ?hidden=${!open}>
           ${open
@@ -1699,8 +1715,8 @@ export class DesignPanel extends LitElement {
     return html`
       <div class="field">
         <div class="field-head">
-          <label for="custom-css">${t('Custom CSS')}</label>
-          ${fieldReset(t('Custom CSS'), !!this._getCustomCssValue(), () => this._handleCustomCssChange(''))}
+          <label for="custom-css">${t('card-editor.design-panel.custom-css')}</label>
+          ${fieldReset(t('card-editor.design-panel.custom-css'), !!this._getCustomCssValue(), () => this._handleCustomCssChange(''))}
         </div>
         <textarea
           class="input"
@@ -1709,7 +1725,7 @@ export class DesignPanel extends LitElement {
           .value=${this._getCustomCssValue()}
           @input=${(e: InputEvent) => this._handleCustomCssChange((e.target as HTMLTextAreaElement).value)}
           rows="4"
-          placeholder=${t('Applied to {thing} only', { thing: thisTarget(this.target) })}
+          placeholder=${t('card-editor.design-panel.applied-to-thing-only', { thing: thisTarget(this.target) })}
         ></textarea>
       </div>
     `;
@@ -1747,8 +1763,8 @@ export class DesignPanel extends LitElement {
             <input
               class="input"
               type="search"
-              placeholder=${t('Search CSS properties, e.g. padding')}
-              aria-label=${t('Search CSS properties')}
+              placeholder=${t('card-editor.design-panel.search-css-properties-e-g-padding')}
+              aria-label=${t('card-editor.design-panel.search-css-properties')}
               .value=${this._searchQuery}
               @input=${(e: InputEvent) => {
                 this._searchQuery = (e.target as HTMLInputElement).value;
@@ -1757,7 +1773,7 @@ export class DesignPanel extends LitElement {
           </div>
           ${groups.some((g) => g !== nothing)
             ? html`<div class="dgroups">${groups}</div>`
-            : html`<p class="no-results">${t('No CSS property matches "{query}".', { query: this._searchQuery })}</p>`}
+            : html`<p class="no-results">${t('card-editor.design-panel.no-css-property-matches-query', { query: this._searchQuery })}</p>`}
         </div>
       </div>
     `;

@@ -9,8 +9,8 @@ The library is shared by every card in your Home Assistant. A card refers to an 
 ## Requirements
 
 -   The [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration, version 2026.10.04 or newer. It stores the library and hosts the studio in its sidebar panel.
--   Magic Card added as a dashboard resource of type JavaScript module (`type: module`). HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work.
--   The files `magic-card-animation-studio.js`, `magic-card-editor.js`, `magic-card-icon-library.js`, `magic-card-preset-catalogue.js`, `magic-card-anim-runtime.js` and `magic-card-particles.js` in the same folder as your `magic-card.js` resource. Each Magic Card release attaches them, and HACS installs them with the card. With a manual install, copy them next to `magic-card.js`.
+-   Magic Card added as a dashboard resource of type JavaScript module (`type: module`). The Marketplace, HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work.
+-   The files `magic-card-animation-studio.js`, `magic-card-editor.js`, `magic-card-icon-library.js`, `magic-card-preset-catalogue.js`, `magic-card-anim-runtime.js` and `magic-card-particles.js` in the same folder as your `magic-card.js` resource. Each Magic Card release attaches them, and the Marketplace or HACS installs them with the card. With a manual install, copy them next to `magic-card.js`.
     -   The panel loads the studio from `magic-card-animation-studio.js`.
     -   The studio loads `magic-card-icon-library.js` when you open the Icon animation window, and shows Loading icon library… until it is there. Without the file the window says the icon library could not be loaded and offers Try again. Starting from an icon still works. See [Start from the icon library](icon-mode.md#start-from-the-icon-library).
     -   The studio loads `magic-card-preset-catalogue.js` when you open Customise a preset. Without the file the window shows the built-in presets only.
@@ -32,6 +32,16 @@ Older Magic Card versions without the animation runtime ignore the newer fields 
 The studio starts on the library. Opening an animation switches to the editor, and the URL keeps `?animation=<id>` in step with the open animation.
 
 The preview plays on a real `magic-card`, so Magic Card has to be loaded on the page. When it is missing, the stage shows "Magic Card is not loaded on this page".
+
+## Right to left
+
+No right-to-left language ships with Magic Card yet. The studio can still show you how it would look, so the layout can be checked before one does.
+
+-   **Pseudo RTL switch.** The top bar of the library and of the editor has a switch called Pseudo RTL. While it is on, the studio and the preview card run right to left, digits show as Arabic-Indic digits, and each message is wrapped in direction marks. The text stays English-like, so it is a test aid and not a translation. Turn it off and everything goes back. If the part that does this fails to load, the switch changes nothing.
+-   **Mirror flag.** An icon animation can carry `mirror: mirror` or `mirror: keep`. With `mirror`, the card flips the animated icon in a right-to-left layout. With `keep`, it never does. Without the field, the icon is not flipped. In the icon library each entry shows Mirrors, Keeps or Not set. Only clear cases are set: arrows, vehicles and pointing hands mirror, while clocks, play and pause, media controls, text, brand marks and symmetric icons keep. The rest stay Not set. Starting from a library icon copies its flag into your animation. Animations you made earlier stay unset. See [Animation YAML](yaml.md).
+-   **What is not mirrored.** Drawing surfaces, the card canvas, timelines and curve plots keep their direction, because they show geometry and your card layout is never mirrored.
+
+This has been checked in a desktop browser only. No screen reader, phone or tablet has been tried.
 
 ## Pages
 

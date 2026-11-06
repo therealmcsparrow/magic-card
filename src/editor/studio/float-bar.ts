@@ -74,3 +74,24 @@ function insideCorner(frame: Box, bar: Size, viewport: Box): { top: number; left
     left: clamp(frame.left + frame.width - bar.width - GAP, vLeft, vRight - bar.width),
   };
 }
+
+/**
+ * Boxes of the panel lips beside the canvas, in the canvas content box, so a bar spot never sits on one.
+ * `root` is the tree the lips render in (the studio's shadow root); `toLocal` maps a screen rect to that box.
+ * On a coarse pointer each lip has an invisible `::after` extension towards the canvas; the box includes it.
+ */
+export function lipBoxes(root: ParentNode, toLocal: (r: DOMRect) => Box): Box[] {
+  const boxes: Box[] = [];
+  for (const el of root.querySelectorAll<HTMLElement>('.lip')) {
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height) continue;
+    const after = getComputedStyle(el, '::after');
+    const reach = after.content && after.content !== 'none' ? parseFloat(after.width) || 0 : 0;
+    // the extension points to the canvas: right of a start lip, left of an end lip, swapped in right-to-left
+    const towardsRight = (el.dataset.side === 'start') !== (el.dataset.dir === 'rtl');
+    const left = towardsRight ? r.left : r.left - reach;
+    const width = r.width + reach;
+    boxes.push(toLocal({ left, top: r.top, width, height: r.height, right: left + width, bottom: r.bottom, x: left, y: r.top, toJSON: () => ({}) } as DOMRect));
+  }
+  return boxes;
+}

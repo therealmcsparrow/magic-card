@@ -372,6 +372,7 @@ export const editorPrimitives: CSSResult = css`
   .with-icon > ha-icon {
     position: absolute;
     left: 12px;
+    inset-inline: 12px auto;
     top: 50%;
     transform: translateY(-50%);
     --mdc-icon-size: 18px;
@@ -380,14 +381,20 @@ export const editorPrimitives: CSSResult = css`
   }
   .with-icon > .input {
     padding-left: 40px;
+    padding-inline: 40px 12px;
   }
   /* a small icon button inside the right edge of a field (browse entities / icons) */
   .with-action > .input {
     padding-right: 44px;
+    padding-inline: 12px 44px;
+  }
+  .with-icon.with-action > .input {
+    padding-inline: 40px 44px;
   }
   .with-icon > .field-action {
     position: absolute;
     right: 4px;
+    inset-inline: auto 4px;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -403,11 +410,13 @@ export const editorPrimitives: CSSResult = css`
     appearance: none;
     -webkit-appearance: none;
     padding-right: 36px;
+    padding-inline: 12px 36px;
     cursor: pointer;
   }
   .select > ha-icon {
     position: absolute;
     right: 10px;
+    inset-inline: auto 10px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
@@ -417,6 +426,7 @@ export const editorPrimitives: CSSResult = css`
   .unit {
     display: flex;
     min-width: 0;
+    direction: ltr; /* a number and its unit read as one left-to-right compound */
   }
   .unit > .input {
     flex: 1 1 auto;
@@ -430,7 +440,9 @@ export const editorPrimitives: CSSResult = css`
   .unit > .select select {
     border-radius: 0 var(--mc-radius) var(--mc-radius) 0;
     margin-left: -1px;
+    margin-inline: -1px 0;
     padding-left: 10px;
+    padding-inline: 10px 36px;
   }
   .unit > .input:focus,
   .unit > .select select:focus {
@@ -517,18 +529,20 @@ export const editorPrimitives: CSSResult = css`
     position: absolute;
     top: 3px;
     left: 3px;
+    inset-inline: 3px auto;
     width: 18px;
     height: 18px;
     border-radius: 50%;
     background: #fff;
-    transition: transform 0.15s ease-out;
+    transition: left 0.15s ease-out, inset-inline-start 0.15s ease-out;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
   .switch[aria-checked='true'] {
     background: var(--mc-accent-fill);
   }
   .switch[aria-checked='true']::after {
-    transform: translateX(16px);
+    left: 19px;
+    inset-inline: 19px auto;
   }
   .switch:disabled {
     opacity: 0.45;
@@ -672,7 +686,7 @@ export const editorPrimitives: CSSResult = css`
     padding: 8px 12px;
     border: 0;
     background: transparent;
-    text-align: left;
+    text-align: start;
   }
   .sector-btn:hover {
     background: var(--mc-surface-2);
@@ -739,7 +753,7 @@ export const editorPrimitives: CSSResult = css`
     border: 0;
     border-radius: var(--mc-radius);
     background: transparent;
-    text-align: left;
+    text-align: start;
   }
   .menu button:hover,
   .menu button:focus-visible {

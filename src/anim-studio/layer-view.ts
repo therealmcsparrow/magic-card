@@ -4,14 +4,8 @@ import type { StudioSelection } from './slots';
 import type { BindProperty, TargetRef, Track } from './model-v2-core';
 import { isEmptyKeyframe, laneTimes, mainTarget, stripLane, usedLanes, type LaneId } from './editors/keyframes-utils';
 
-/*
- * Layer view state resolved against a document (contract studio-layers.ts section 3). Pure.
- *  - rowsOf: the rows of a document that have a hide toggle, with the list each belongs to.
- *  - resolveHidden: solo resolved first into the set of effectively hidden keys.
- *  - applyLayerView: the preview document. Lanes and steps only (3b); everything drawn is the stage
- *    sheet's job (stage-hide.ts), so the document opacity is never touched here.
- *  - pruneLayerView: keys of rows that no longer exist leave the view.
- */
+// Layer view state resolved against a document, pure: rowsOf (rows with a hide toggle), resolveHidden (solo first),
+// applyLayerView (preview document, lanes and steps only) and pruneLayerView (drops keys of rows that are gone).
 
 /** The lists a solo is scoped to (one per layers panel; a lane solo spans every target's lanes). */
 export type LayerList = 'targets' | 'parts' | 'over' | 'under' | 'lanes' | 'emitters' | 'steps';

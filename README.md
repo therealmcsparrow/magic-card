@@ -1,9 +1,12 @@
 <p align="center"><img src="https://raw.githubusercontent.com/therealmcsparrow/magic-card/main/images/magic-card-icon.png" width="160" alt="Magic Card logo"></p>
 
+<p align="center">Free, non-commercial open source software under the <a href="LICENSE">MIT Licence</a>.</p>
+
 # Magic Card
 
 [![HACS][hacs-badge]][hacs-url]
 [![GitHub Version][version-badge]][version-url]
+[![GitHub Downloads][github-downloads-badge]][github-downloads]
 [![GitHub License][license-badge]][license-url]
 [![GitHub Last Commit][last-commit-badge]][last-commit-url]
 [![GitHub Issues][issues-badge]][issues-url]
@@ -12,12 +15,17 @@ Magic Card is a Home Assistant Lovelace custom card that you build from rows, co
 
 This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of a hundred and thirty-four cards with screenshots, sixty-nine of them animated, and twenty-five [complete dashboards](documentation/gallery/dashboards/README.md). Changes are listed in the [changelog](CHANGELOG.md).
 
+<p align="center"><img src="documentation/gallery/images/families/set.svg" width="720" alt="The eight card families of the gallery, each drawn as one icon: home, climate, power, guard, sound, machines, garden and worlds."></p>
+
+The gallery groups its cards in eight families, shown above. Nothing in the picture moves.
+
 ## Features
 
 -   Rows, columns and modules, with layout modules (horizontal, vertical, row, tabs, slider) that nest other modules. Their children, tabs and columns are managed in the structure tree, where you can drag a module into or out of any container, at any depth. The row module has the layout presets, column widths and per-column settings of a card row.
 -   25 module types for content, controls, layout and advanced use (see [Modules](#modules)).
 -   Pane editor with a structure outline, an inspector, Form and YAML modes, and undo and redo.
 -   Studio: a full-screen editor with layers, a clickable live canvas and keyboard shortcuts. The canvas is Narrow, Wide or Panel wide, picked from the dashboard view the card sits in. Preview runs the card on the canvas as it runs on the dashboard, with live actions, and Escape returns to editing.
+-   Side panels in the editors (card studio, animation studio, SVG editor, shape studio and theme editor) hide with an edge button, and Ctrl+\ hides or shows them all. Each editor remembers its hidden panels on this device. See [Hiding the side panels](#hiding-the-side-panels).
 -   Tabs with states: style the active tab, the tab under the pointer and disabled tabs, in the base design and in conditional rules, with every tab setting in each state. Set per-side borders and corners, a different icon when a tab is active, and icon and tab animations per state. Disabled tabs stay visible but cannot be opened. See [Tabs](documentation/modules/layout/tabs.md#tab-states).
 -   Item menus: right-click, long-press or Shift+F10 on any row, column, module or tab, in the tree and on the Studio canvas. Their actions are grouped into submenus. Copy its YAML, copy and paste a module (also into another card), replace a module with another type of the same kind, wrap it in a layout, hide it on the dashboard or give it a layer name that only the editor shows.
 -   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules. The card itself has a border (width, style and colour), margin, opacity and backdrop filter.
@@ -47,18 +55,31 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
 -   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
 -   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
--   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. See [Languages](documentation/languages/README.md).
+-   Library images (needs Magic Card Utils): draw pictures in the image editor, trace over a photo or floor plan, open or import SVG files, and show a library image in an image module or as a background behind the content. See [Images](documentation/images/README.md).
+-   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. Translations you contribute come under the project's MIT Licence. Legal text, such as the privacy warnings, is written in English, and the English text prevails over any translation. A translation of legal text is published only after a qualified lawyer has checked it. The animation studio has a Pseudo RTL switch that shows the editors and the card's sliders and rings mirrored for right-to-left reading. It is a testing aid that uses made-up text. Magic Card ships no right-to-left language yet, and the mirrored layout has not been tested with a screen reader or on real right-to-left devices. See [Languages](documentation/languages/README.md). To help translate, see [Translating](documentation/translating/README.md).
 -   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
 ## Installation
 
-### HACS (recommended)
+The current release is 2026.10.11.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=therealmcsparrow&repository=magic-card&category=plugin)
 
-Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must be installed).
+Click the badge to open Magic Card on your own Home Assistant. On 2026.11 or newer it opens the Marketplace. On older versions it opens HACS, which must be installed.
 
-The current release is 2026.10.11.
+### Marketplace (Home Assistant 2026.11 or newer)
+
+Magic Card isn't in the Marketplace catalogue, so you add it by its link.
+
+1.  Go to Settings, Marketplace.
+2.  Choose **Add from link** and enter `https://github.com/therealmcsparrow/magic-card`. The first time, Home Assistant asks you to accept its risk notice and to connect GitHub.
+3.  Install Magic Card. The Marketplace adds it to your dashboard resources as `/local/community/magic-card/magic-card.js`.
+
+The Marketplace downloads every file of the release into the folder `www/community/magic-card/`. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
+
+With dashboards in YAML mode, the install dialog asks you to add the resource yourself. Use `url: /local/community/magic-card/magic-card.js?v=2026.10.11` with `type: module`, and change the version at every update, because browsers can keep a `/local/` file for 31 days. The older path `/hacsfiles/magic-card/magic-card.js` also works while the Marketplace is set up.
+
+### HACS (Home Assistant before 2026.11)
 
 1.  Install [HACS](https://hacs.xyz/) if you do not have it.
 2.  Open HACS, then Frontend.
@@ -67,15 +88,15 @@ The current release is 2026.10.11.
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the other 37 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
+HACS also downloads the other files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
 ### Manual
 
-1.  Download the 38 `.js` files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases), together with the `.js.br` and `.js.gz` file next to each one (114 files in all). The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
+1.  Download every file of the [latest release](https://github.com/therealmcsparrow/magic-card/releases): each `.js` file together with its `.js.br` and `.js.gz` copy. The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
 2.  Copy every file to `config/www/`, including the `.br` and `.gz` copies. Leave none out.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-Each `.js.br` and `.js.gz` file is a compressed copy of the `.js` file beside it. Home Assistant sends the copy the browser accepts, so a dashboard downloads about 70 KB of `magic-card.js` with Brotli, or about 82 KB with gzip. When you update by hand, copy the whole new release and replace or delete the three files of a name together. If an old `.br` stays behind, Home Assistant keeps sending it in place of the new `.js`.
+Keep the three files of each name together: `magic-card.js`, `magic-card.js.br` and `magic-card.js.gz`, and the same for every other file. When you update by hand, copy the whole new release and replace or delete all three files of a name together. If an old `.br` or `.gz` file stays behind, Home Assistant can keep sending it in place of the new `.js`.
 
 Only `magic-card.js` is a resource. The other files load from the same folder when something needs them. A dashboard downloads only the files its cards use. Without a file, the feature it belongs to shows a message and the rest of the card still works.
 
@@ -115,21 +136,26 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-layers.js` | Cards with a moving card backdrop (pan and zoom, or camera snapshots). Colour, gradient, pattern and picture backdrops draw without it. |
 | `magic-card-templates.js` | Cards linked to a template. Other cards never load it. A linked card shows its own settings until it arrives. |
 | `magic-card-path-core.js` | The path parser shared by animations, icons, decorations and slider looks. Plain cards never load it; cards that use those features load it alongside their own file. |
+| `magic-card-history.js` | Cards with a graphs module or a sparkline value background, alongside their own file. Plain cards never load it. |
+| `magic-card-shape-path.js` | Cards with a ring, an outline shape, flow lines, a seasonal scene, a slider look or a custom shape, alongside their own file. Plain cards never load it. |
+| `magic-card-status.js` | Cards with `quiet_time`, and any card when its connection to Home Assistant drops. It adds the connection, reconnected and not-updated lines. Without it the card works as before. |
 | `magic-card-manifest.js` | Read only when a part fails to load, so the card can tell that its file comes from a different release than its parts. |
 | `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
 | `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
 
-Keep all 38 files in one folder. `magic-card.js` is the only file a dashboard loads at once. Uncompressed it is 256,616 B, down from 503,361 B before the size work, because the rarely used parts moved into the other files. Most files carry a short hash in their name, such as `magic-card-anim.06551dee.js`. The table shows the names without the hash, and the hash stays in the name when you copy the file.
+Keep every file of the release in one folder. `magic-card.js` is the only file a dashboard loads at once. Some file names carry a short code after the main name, such as `magic-card-anim.06551dee.js`. The table leaves the code out, so copy each file under its full name.
 
 ### Loading
 
-`magic-card.js` must be loaded as a JavaScript module (`type: module`). HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work: the card does not appear. Change the resource type to JavaScript module under Settings, Dashboards, Resources.
+`magic-card.js` must be loaded as a JavaScript module (`type: module`). The Marketplace, HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work: the card does not appear. Change the resource type to JavaScript module under Settings, Dashboards, Resources.
 
 ### Updating
 
-Update through HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
+Update through the Marketplace or HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
 
-HACS does not delete the files of an earlier release. After an update you can delete the older hashed files in the folder HACS manages (the folder behind `/hacsfiles/magic-card/`) that the new release no longer uses. Keep every file of the new release. For a manual install, the same applies to the folder `config/www/`.
+The Marketplace replaces the whole folder on an update, so there is nothing to clean up. If the update fails, it puts the earlier files back. A browser tab still open on the earlier release can no longer find those files, so the card or editor asks you to reload the page.
+
+HACS does not delete the files of an earlier release. After an update you can delete the older files in the folder HACS manages (the folder behind `/hacsfiles/magic-card/`) that the new release no longer uses. Keep every file of the new release. For a manual install, the same applies to the folder `config/www/`.
 
 ## The editor
 
@@ -173,13 +199,23 @@ Keyboard in the outline: Up, Down, Home and End move focus between items, and En
 
 Open it with Open studio. It is a full-screen dialog with:
 
--   Layers on the left: the same outline as the pane editor, with an Add module row under every column. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas.
+-   Layers on the left: the same outline as the pane editor, with an Add module row under every column. Its edge button hides it so the canvas can take the width. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas. See [Hiding the side panels](#hiding-the-side-panels).
 -   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas, except in Preview (see [Preview](documentation/studio/preview.md)). The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.
 -   The inspector on the right, with the same tabs as in the pane editor. Its header and tab bar stay at the top while the settings below them scroll, and a tab switch starts the settings at the top.
 -   A canvas width switch: Narrow (400 px), Wide (800 px) and Panel (the whole canvas). When the Studio opens it picks the width that matches the dashboard view: masonry, sections (scaled to the card's columns), panel or sidebar. Pick another width to override it, and Match view to go back. See [Canvas width](documentation/studio/device-widths.md).
 -   The Form and YAML switch, the template bar, undo and redo buttons, and the Preview button. Preview runs the card as on the dashboard, with live actions. It hides the layers and the inspector, and the Form and YAML switch, the template bar, undo and redo are off until you leave it. See [Preview](documentation/studio/preview.md).
 
 A floating bar next to the selected module moves it up or down, duplicates it, deletes it, or adds a flow line from it: choose Add flow from here, then click the module the flow goes to (Escape cancels). The new flow opens in Card settings, Flows. Click a flow line on the canvas to select it there; the selected flow is highlighted on the canvas. Connecting on the canvas needs a mouse or touch; with a keyboard, use the Flows tab in Card settings.
+
+### Hiding the side panels
+
+The card studio, the animation studio, the SVG editor, the shape studio and the theme editor have side panels. Where a panel sits as a column beside the canvas or the preview, it has an edge button on its inner side. Press the button to hide the panel. The canvas then takes the width the panel gave up, and the button stays at the window edge. Press it again to show the panel with the same selection and scroll position.
+
+-   Ctrl+\ (Cmd+\ on a Mac) hides the side panels of the editor you are working in if any of them is shown. When they are all hidden, it shows again the panels it hid last. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
+-   Each editor remembers its hidden panels on this device. Other editors and other devices are not affected.
+-   When an editor opens with a panel hidden, a short hint explains the button and the shortcut, once. Press Got it to close it.
+-   Where a panel is an overlay, a sheet, a slide-over or a block above or below the canvas, it has no edge button and keeps its own control.
+-   The theme editor shows its Variables pane beside the preview at 1024 px and wider. Below that, Variables and Preview are tabs, and there is no button.
 
 Keyboard shortcuts:
 
@@ -193,6 +229,7 @@ Keyboard shortcuts:
 | Shift+F10 or the Menu key | Open the selection's item menu (canvas focused) |
 | F2 | Rename the selection in Layers (canvas focused) |
 | Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. In Preview, it closes a dialog opened from the card first, then leaves Preview; it never closes the studio while Preview is on. |
+| Ctrl/Cmd+\ | Hide or show the Layers and the inspector (see [Hiding the side panels](#hiding-the-side-panels)) |
 | Arrow keys, Home, End in Layers | Move between items |
 
 The canvas shortcuts work once the canvas has focus; it gets focus when the studio opens and when you click the card. Escape is handled by the innermost thing that uses it: an open menu or picker closes first, then the Layers overlay on a narrow screen. Outside Preview, Escape in Layers, the inspector or the top bar closes the studio.
@@ -274,7 +311,7 @@ Every module accepts `entity` where it makes sense, plus `design`, `actions` and
 | --- | --- | --- |
 | `text` | Static text, a template or an entity value | `text`, `use_template` (Jinja in `text`), `use_entity`, `entity`, `attribute`, `entity_display` (`state`, `name`, `name_state`) |
 | `icon` | An icon | `icon`, `size`, `icon_color`, `use_entity_icon`, `use_entity_color`, `entity` |
-| `info` | Name, state and unit of an entity | `entity`, `attribute`, `show_name`, `show_state`, `show_unit`, `show_icon`, `icon`, `prefix`, `suffix`, `secondary_info` (an attribute name) |
+| `info` | Name, state and unit of an entity | `entity`, `attribute`, `show_name`, `show_state`, `show_unit`, `show_icon`, `icon`, `prefix`, `suffix`, `secondary_info` (an attribute name, or `last-changed` to show when the entity last changed, as Home Assistant's relative time) |
 | `image` | An image from a URL, media or an entity | `image`, `entity`, `entity_picture`, `attribute`, `aspect_ratio` (`16:9`, `1.5`, `56.25%`), `fit` (`contain`, `cover`, `fill`, `none`) |
 | `markdown` | Markdown with templates | `content`, `entity`, `attribute` |
 | `bar` | A progress bar | `entity`, `attribute`, `min`, `max`, `severity` (colour ranges), `decimals`, `bar_height`, `bar_color`, `bar_background`, `show_value`, `direction` (`horizontal`, `vertical`) |
@@ -439,7 +476,7 @@ Sharing a card. The YAML only holds the reference. To share a card with someone 
 Icons are animated through the icon picker's Animated icons tab and the animation studio. The Design tab no longer has an Animate icon button. Cards that use an animation made with it keep playing it.
 
 -   A pick from the icon library adds an entry `preset: custom:quick-icon-…` with `target: icon` to the module and stores the animation in the card's `custom_animations`, so it plays without Magic Card Utils.
--   The Style switch above the icon library tiles plays them Quiet (one part moves, a little and slowly), Living (the full animation, the default) or Glow (the full animation with a soft outline round the lit part). The tile you click is stored in that Style.
+-   Above the icon library tiles, three animated swatches set the Style: Quiet (one part moves, a little and slowly), Living (the full animation, the default) or Glow (the full animation with a soft outline round the lit part). The tile you click is stored in that Style.
 -   To split a module's icon into parts, give each part a preset or export an animated SVG file, use the animation studio in Magic Card Utils. Saved icon animations show in the Animated icons tab under My animations.
 -   An animation of the module's own icon follows that icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts. A library animation is removed instead.
 
@@ -452,7 +489,7 @@ The animation studio is a full-screen editor for your own animations. It runs in
 -   Four kinds: keyframes on a timeline with an easing curve editor, particles, motion along a path you draw on the preview, and sequences of animations one after another.
 -   Particles: a mix of up to four shapes with weights (circle, square, triangle, star, heart, ring, streak, spark, an icon, an emoji or your own SVG), 13 flows, ranges for speed, size, opacity, spin, start delay and lifetime, and a seed with a Shuffle button for new random paths. Physics adds gravity in any direction, drag and turbulence, collisions with the card's edges or its icon or text, and child particles that spawn on a hit or at the end of a particle's life.
 -   Baked loop or Live simulation: a baked loop works out every path once in the studio and plays it as CSS, so dashboards run no script for it. Live simulation runs the physics on every dashboard that shows the card and uses more CPU. It runs only while the card is on screen.
--   A layout that fits the window: Layers on the left, the stage and the timeline in the middle with a splitter between them, and an inspector on the right that shows what you selected. It works on a tablet.
+-   A layout that fits the window: Layers on the left, the stage and the timeline in the middle with a splitter between them, and an inspector on the right that shows what you selected. Layers and the inspector each hide with an edge button, so the stage can take the full width. It works on a tablet.
 -   A timeline with a group of lanes per target, zoom up to 1000%, snapping, multi-select and group drag, easing per property, and copy and paste between lanes and targets.
 -   Icon parts: split an icon into its shapes, group and merge them, set pivots, and animate each part, with draw-on and motion paths. A part preset's pivot shows on the stage and in the inspector, where you can move it or reset it to the part's own.
 -   Icon animations: New animation, then Icon animation…, splits any icon for you, or starts from one of 192 animations in the icon library (search, a domain filter and live thumbnails). Part presets animate a part, group or shape with one click, with parameters for duration share, delay, intensity and direction.
@@ -1071,6 +1108,14 @@ rows:
                     color: white
 ```
 
+## Images
+
+Library images are drawings you make in the Magic Card image editor and save to the Magic Card Utils library. A dashboard can show one in an image module, or as a background behind the content. The library holds up to 200 images, and each image can be up to 256 KiB.
+
+Library images need the Magic Card Utils integration, installed the same way as Magic Card. Everyone who can log in to Home Assistant can see them. Only administrators can create or change them.
+
+The [Images](documentation/images/README.md) section covers the editor, the image and background options, the YAML form `mcu-image:<id>`, and [privacy](documentation/images/privacy.md).
+
 ## Sharing and privacy
 
 Your designs can be shared as files. The [presets page](documentation/presets/README.md) explains the library, and [Export and import](documentation/presets/export-and-import.md) describes the file format and the checks that run on import.
@@ -1079,13 +1124,13 @@ Your designs can be shared as files. The [presets page](documentation/presets/RE
 
 When you import a theme file, Magic Card reads it on your computer. It downloads nothing while it reads, and it sends nothing to the author.
 
-Some theme files point to a picture or font on another website, or contain `card-mod-` lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose **Import anyway**, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with `card-mod-` only work when card-mod is installed, and they can restyle any card.
+Share and import presets, themes, icons, animations, shapes, images and cards as plain JSON or YAML files. Entity IDs are replaced by placeholders when you export. Only import files from people you trust: Magic Card checks every file and shows a preview first, and you confirm before anything is saved. See [Sharing safety](documentation/sharing-safety/README.md).
 
-Only import files from people you trust. To avoid all of this, choose **Cancel**, or delete those lines from the file and import it again.
+A picture or font that points to another website is left out of an imported theme or card and listed with the website, so your dashboard never asks that website for it. Files in your own `/local/` folder are kept, with a note that they may not exist on your system. Lines that start with `card-mod-` are kept with a note. They only work when card-mod is installed, and they can restyle any card. If a file has such lines, the button reads **Import anyway**; choose **Cancel** or delete those lines to avoid them.
 
 ### Imported files are untrusted
 
-Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item by item, and cleaned (SVG scripts, links and external references are removed and listed). Theme files are the one exception, as described above, and only after you confirm.
+Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item by item, and cleaned (SVG scripts, links and external references are removed and listed). A value with characters that could break out of its setting makes Magic Card refuse the whole file. Nobody reviews shared files, so read the preview, and for a card its actions and templates, before you confirm.
 
 ### Privacy
 
@@ -1107,15 +1152,33 @@ Magic Card Utils makes no requests to other websites. Magic Card makes them only
 -   Sections view: the card supplies no fixed size, so the Layout tab of the card (`grid_options`) controls its columns and rows as usual. A live pop-up asks for a full-width, auto-height cell with no minimum rows and takes itself out of the flow. The older `layout_options` are supported as well.
 -   The `grid_options`, `layout_options`, `visibility` and `view_layout` keys that Home Assistant stores in the card config are kept when you edit the card or link it to a template.
 
+### Older Android tablets
+
+Magic Card needs Android System WebView 85 (Chromium 85) or newer. It was checked on a desktop copy of that engine, not on a tablet. On it, the bell swing, the glow and the ripple rings of some animated cards do not show, and the card can stutter when an extra file arrives. See [Older Android tablets](documentation/old-tablets/README.md) and the [old engine check](documentation/old-tablets/old-engine-check.md).
+
+### Check a genuine release
+
+Releases are built by a GitHub Actions workflow. You can check a download by looking at the release author and the attached SBOM, or with the GitHub CLI. Signed attestations exist from version 2026.10.12-beta.14 on. A release before that has no attestation and can only get the quick check. See [Check a genuine release](documentation/security/check-a-genuine-release.md).
+
 ## Troubleshooting
 
 -   A new option or the editor looks outdated. The browser still runs an old copy. Hard refresh (Ctrl+Shift+R) and, in the companion app, clear the frontend cache. Open the browser console and look for the line `MAGIC-CARD v<version>` to see which version is loaded. It must match the version you installed.
--   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
+-   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/local/community/magic-card/magic-card.js` (Marketplace), `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 23 files, listed under [Loading the other files](#loading-the-other-files). With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
+-   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 46 `.js` files, each with a `.br` and `.gz` copy. [Loading the other files](#loading-the-other-files) lists the main ones. With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
 -   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
+-   A card broke after an update. [MAINTAINING.md](MAINTAINING.md) has the steps to roll back to the version that worked, to see which version runs and to stay on one version.
+-   A card shows the tile "Magic Card updated. Tap to reload.". Tap it once. If it then says the old version is still running, follow [Clear the browser cache](documentation/loading-and-size/README.md#clear-the-browser-cache).
+-   The tile on a wall tablet: the tile and its reload have not yet been checked on a real wall tablet. If your tablet keeps showing the tile after you tap it and clear the cache, [tell us which tablet and app you use](https://github.com/therealmcsparrow/magic-card/issues).
+-   A card is blank on an old tablet. Check that Android System WebView is version 85 or newer, then hard refresh. The steps are in [Troubleshooting](documentation/troubleshooting/README.md#a-card-is-blank-on-an-old-tablet).
+-   To post a picture of a card in a forum, use the Forum shot area of the Magic Card Utils panel. Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.
+-   The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant. For a card with web fonts, your browser asks the sites named on the tab for the fonts so it can draw them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.
+-   A card stays locked when it holds a custom-card module or another outside address. If a font cannot be loaded, no picture is made.
+-   A card stands still. See the [pause reply](documentation/support/README.md#pause-reply) and the [update reply](documentation/support/README.md#update-reply).
+-   To report a card that stands still, post in [Pause and focus reports](https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports).
+-   How a size claim was measured and which cases we test: see [how we measured](documentation/loading-and-size/README.md#how-we-measured) and [bad cases we test](documentation/loading-and-size/README.md#bad-cases-we-test).
 
 ## Development
 
@@ -1162,6 +1225,8 @@ The release bundles third-party software under its own licences. See [THIRD-PART
 [hacs-url]: https://hacs.xyz/
 [version-badge]: https://img.shields.io/github/package-json/v/therealmcsparrow/magic-card
 [version-url]: https://github.com/therealmcsparrow/magic-card/releases
+[github-downloads-badge]: https://img.shields.io/github/downloads/therealmcsparrow/magic-card/total?style=for-the-badge
+[github-downloads]: https://github.com/therealmcsparrow/magic-card/releases
 [license-badge]: https://img.shields.io/github/license/therealmcsparrow/magic-card
 [license-url]: https://github.com/therealmcsparrow/magic-card/blob/main/LICENSE
 [last-commit-badge]: https://img.shields.io/github/last-commit/therealmcsparrow/magic-card

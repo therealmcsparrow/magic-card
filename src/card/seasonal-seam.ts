@@ -5,12 +5,7 @@ import type { CardSeasonal, CardSeasonalOptions } from './card-seasonal';
 import type { SeasonalApi } from './seasonal-chunk';
 import { lazyChunks, loadSeasonal } from '../utils/lazy-chunks';
 
-/*
- * The entry's side of the seasonal chunk. Scene resolution, the midnight timer, the particle budget and the
- * scene tables are in dist/magic-card-seasonal.js; the entry reaches them through `seasonalApi()` once the chunk is
- * ready and renders without a scene before that (a card without `seasonal` never starts the chunk). Layout does not
- * wait for the chunk: the band the decorations keep clear comes from the config (src/utils/seasonal.needs.ts).
- */
+/** The entry's side of the seasonal chunk: reaches scene resolution through `seasonalApi()` once ready. */
 
 /** The chunk's API, or undefined until the chunk has loaded (never starts a load). */
 export const seasonalApi = (): SeasonalApi | undefined => (lazyChunks.seasonal.module() as { api?: SeasonalApi } | undefined)?.api;

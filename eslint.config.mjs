@@ -11,9 +11,11 @@ const REGISTERED_IMPORT_SITES = [
   'src/card/flows-chunk.ts',
   'src/anim-studio/icon-library-loader.ts',
   'src/anim-studio/preset-catalogue-loader.ts',
+  'src/anim-studio/pseudo-toggle.ts',
   'src/editor/components/icon-animator/loader.ts',
   'src/editor/components/preset-catalogue-loader.ts',
   'src/editor/custom/icon-host.ts',
+  'src/editor/image-tools-loader.ts',
   'src/editor/layers/layer-editor-loader.ts',
   'src/editor/look-editor-loader.ts',
   'src/editor/transfer-loader.ts',
@@ -23,7 +25,11 @@ const REGISTERED_IMPORT_SITES = [
   'src/path-canvas/loader.ts',
   'src/path-tools/loader.ts',
   'src/shape-editor/loader.ts',
+  'src/svg-editor/image-loader.ts',
   'src/svg-editor/loader.ts',
+  'src/svg-safety/css-loader.ts',
+  'src/transfer/image-transfer-loader.ts',
+  'src/transfer/share-kit-loader.ts',
   'src/theme-editor/presets/loader.ts',
 ];
 
@@ -79,8 +85,37 @@ export default tseslint.config(
     },
   },
   {
+    files: ['tools/**/*.mjs'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'module', globals: { ...globals.node, ...globals.es2021 } },
+  },
+  {
+    files: ['tools/**/*.cjs'],
+    languageOptions: { ecmaVersion: 2022, sourceType: 'commonjs', globals: { ...globals.node, ...globals.es2021 } },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
+    files: ['tools/theme-example-shots.mjs', 'tools/dom-diff.mjs'],
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  {
     files: REGISTERED_IMPORT_SITES,
     rules: { 'no-restricted-syntax': 'off' },
+  },
+  {
+    // svg-image contract: the editor-side chunks reach the library-image api only through import() of
+    // the svg-image chunk entry in the registered sites; value imports of src/svg-image/** and of the chunk table stay out.
+    files: ['src/transfer/**/*.ts', 'src/image-transfer/**/*.ts', 'src/svg-editor/**/*.ts', 'src/image-editor/**/*.ts', 'src/image-tools/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            { group: ['**/svg-image/*'], allowTypeImports: true, message: 'Reach the library-image api through import() of the svg-image chunk in a registered site; only type imports from src/svg-image are allowed here.' },
+            { group: ['**/utils/lazy-chunks'], allowTypeImports: true, message: 'Editor chunks do not import the chunk table; it would add export getters to magic-card.js.' },
+          ],
+        },
+      ],
+    },
   },
   {
     // The manifest check: its own override, one site, import() plus webpackIgnore.

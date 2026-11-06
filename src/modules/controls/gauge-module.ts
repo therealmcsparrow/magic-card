@@ -33,7 +33,7 @@ class GaugeModule extends BaseLazyStub {
 
   validate(config: CardModule): string[] {
     const c = config as GaugeModuleConfig;
-    if (c.min !== undefined && c.max !== undefined && Number(c.min) >= Number(c.max)) return [t('Min must be less than max')];
+    if (c.min !== undefined && c.max !== undefined && Number(c.min) >= Number(c.max)) return [t('card.gauge-module.min-must-be-less-than-max')];
     return [];
   }
 }

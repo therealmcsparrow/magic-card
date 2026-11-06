@@ -2,11 +2,8 @@ import { svg, type SVGTemplateResult } from 'lit';
 import type { FlowShape } from '../../contracts/flow-look';
 import { fmt } from '../sampler';
 
-/*
- * The shape bodies, centred on 0,0 and pointing along +x (the tangent). `s` is the shape size (the
- * dot_size key: a diameter, or a length for the long shapes). Colour comes from the classes of
- * shapes/css.ts; `ol` adds the outline used on tube and cable.
- */
+// The shape bodies, centred on 0,0 and pointing along +x (the tangent). `s` is the shape size (the dot_size key).
+// Colour comes from the classes of shapes/css.ts; `ol` adds the outline used on tube and cable.
 
 const poly = (pts: number[][]): string => 'M' + pts.map((p) => fmt(p[0]) + ' ' + fmt(p[1])).join('L') + 'Z';
 

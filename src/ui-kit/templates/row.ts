@@ -4,13 +4,8 @@ import { glyph } from '../glyphs';
 import { iconOf } from './icon';
 
 /**
- * The list or tree row. Renders in the caller's root, so the caller's kit CSS styles it.
- * `level` makes it a treeitem (aria-level, aria-selected, aria-expanded); without it it is a listitem and `selected`
- * only tints it (aria-selected is not allowed there). Additive to KitRowOptions, used by the library view:
- * - `sub` a second line under the name (mono),
- * - `check` a leading `.check` checkbox, and the name becomes its label (multi-select lists),
- * - `content` replaces the name (inline rename), `trail` follows the actions (inline delete confirmation).
- * `onSelect` is optional because a check row selects through its checkbox.
+ * The list or tree row, rendered in the caller's root. `level` makes it a treeitem; without it it is a listitem and `selected` only tints it.
+ * Additive to KitRowOptions: `sub` second line, `check` leading checkbox, `content` replaces the name, `trail` follows the actions.
  */
 export interface RowOptions extends Omit<KitRowOptions, 'onSelect'> {
   onSelect?: KitRowOptions['onSelect'];
@@ -41,7 +36,7 @@ const action = (a: KitButtonOptions): TemplateResult => {
 export function row(o: RowOptions): TemplateResult {
   const tree = o.level !== undefined;
   const checkId = `row-${o.id}-check`;
-  const label = html`${o.name}${o.sub ? html`<small>${o.sub}</small>` : nothing}`;
+  const label = html`<bdi>${o.name}</bdi>${o.sub ? html`<small>${o.sub}</small>` : nothing}`;
   const name = o.content
     ? o.content
     : o.check

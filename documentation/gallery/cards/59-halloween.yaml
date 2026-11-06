@@ -9,7 +9,7 @@ padding: 22px
 box_shadow: "0 20px 48px rgba(234, 88, 12, 0.25)"
 seasonal:
   scene: halloween
-  intensity: 80%
+  intensity: 55%
 rows:
   - id: head
     column_widths: [auto, 1fr]
@@ -34,7 +34,7 @@ rows:
             design: { font_size: 24px, font_weight: "900", color: "#fed7aa", letter_spacing: 0.5px }
           - type: text
             text: Halloween in 14 days
-            design: { font_size: 13px, color: "#c4b5fd" }
+            design: { font_size: 13px, color: "#ede9fe" }
   - id: switches
     layout: "1-1"
     gap: 10px

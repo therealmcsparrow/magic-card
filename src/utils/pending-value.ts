@@ -1,10 +1,6 @@
-/**
- * Values a control has set but Home Assistant has not reported back yet. Rapid changes (spinbox
- * clicks, slider keys) are collected and sent once after a short pause; until the entity's value
- * changes (or a few seconds pass) the control keeps showing what was set instead of jumping back.
- * Keyed per card (the studio canvas, whose calls go nowhere, never shows its values in a live card)
- * + entity + attribute + control kind.
- */
+// Values a control has set but Home Assistant has not reported back yet. Rapid changes are
+// collected and sent once after a short pause; the control keeps showing what was set until the
+// entity changes or a few seconds pass. Keyed per card + entity + attribute + control kind.
 import { currentRenderContext } from '../services/render-context';
 
 interface Entry {

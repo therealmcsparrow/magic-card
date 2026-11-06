@@ -32,10 +32,10 @@ export function uniqueName(base: string, taken: ReadonlySet<string>): string {
 
 /** The inline error for a theme name, or '' when it is fine. Mirrors the backend rule; the backend decides. */
 export function nameError(name: string, taken: ReadonlySet<string>): string {
-  if (!name.trim()) return t('Enter a name.');
-  if (!THEME_NAME_RE.test(name)) return t('Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).');
-  if (RESERVED_NAMES.includes(name)) return t('This name is reserved.');
-  if (taken.has(name)) return t('A theme called {name} already exists.', { name });
+  if (!name.trim()) return t('theme-editor.util.enter-a-name');
+  if (!THEME_NAME_RE.test(name)) return t('theme-editor.util.use-lowercase-letters-numbers-hyphens');
+  if (RESERVED_NAMES.includes(name)) return t('theme-editor.util.this-name-is-reserved');
+  if (taken.has(name)) return t('theme-editor.util.a-theme-called-name-already-exists', { name });
   return '';
 }
 
@@ -43,11 +43,11 @@ export function nameError(name: string, taken: ReadonlySet<string>): string {
 
 export type Scope = 'shared' | ThemeMode;
 /** The word for a scope or mode, in the language. */
-export const scopeLabel = (s: Scope): string => (s === 'shared' ? t('Shared') : s === 'light' ? t('Light') : t('Dark'));
+export const scopeLabel = (s: Scope): string => (s === 'shared' ? t('theme-editor.util.shared') : s === 'light' ? t('theme-editor.util.light') : t('theme-editor.util.dark'));
 
 /** "Light and Dark": the modes a line names. */
 export const modeList = (modes: readonly ThemeMode[]): string =>
-  modes.length === 2 ? t('{a} and {b}', { a: scopeLabel(modes[0]), b: scopeLabel(modes[1]) }) : modes.map(scopeLabel).join('');
+  modes.length === 2 ? t('theme-editor.util.a-and-b', { a: scopeLabel(modes[0]), b: scopeLabel(modes[1]) }) : modes.map(scopeLabel).join('');
 
 const isScalar = (v: unknown): v is ThemeValue => typeof v === 'string' || typeof v === 'number';
 

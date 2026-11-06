@@ -146,15 +146,15 @@ export class ServicePicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder="domain.service"
-          aria-label=${this.label || t('Service')}
+          aria-label=${this.label || t('card-editor.service-picker.service')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label=${t('Browse services')}
-          title=${t('Browse services')}
+          aria-label=${t('card-editor.service-picker.browse-services')}
+          title=${t('card-editor.service-picker.browse-services')}
           @click=${this._openModal}
         >
           <ha-icon icon="mdi:magnify"></ha-icon>
@@ -169,11 +169,11 @@ export class ServicePicker extends LitElement {
     const groupedServices = this._getFilteredServices();
 
     return html`
-      ${renderPickerWindow(t('Select service'), () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('card-editor.service-picker.select-service'), () => this._closeModal(), 'm', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch(t('Search services'), this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('card-editor.service-picker.search-services'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list" role="listbox" aria-label=${t('Services')}>
+          <div class="mc-picker-list" role="listbox" aria-label=${t('card-editor.service-picker.services')}>
             ${groupedServices.length > 0
               ? groupedServices.map(group => html`
                   <div class="mc-picker-domain">${group.domain}</div>
@@ -197,11 +197,11 @@ export class ServicePicker extends LitElement {
                     </button>
                   `)}
                 `)
-              : html`<div class="mc-picker-empty">${t('No services found')}</div>`
+              : html`<div class="mc-picker-empty">${t('card-editor.service-picker.no-services-found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.service-picker.cancel')}</button>
           </div>
       `)}
     `;

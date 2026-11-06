@@ -1,10 +1,5 @@
-/*
- * The slider-look styles: one constant string (no config value is ever inside it; per-slider values
- * arrive as custom properties on the track). Selectors start with .mc-tile-slider.mc-sl so
- * they beat the card's own sheet, which an adopted sheet orders after a <style> in the shadow root.
- * Floor-safe (Chromium 85): no inset property, no color-mix, no individual transforms; separate
- * opacity for every tint. Nothing animates while idle; the [offscreen] rule is the pause hook.
- */
+// The slider-look styles: one constant string; per-slider values arrive as custom properties on the track. Selectors start
+// with .mc-tile-slider.mc-sl to beat the card sheet. Floor-safe for Chromium 85; the [offscreen] rule is the pause hook.
 export const SLIDER_LOOK_CSS = `
 .mc-tile-slider.mc-sl{overflow:visible;height:var(--sl-hit,40px);border-radius:0}
 .mc-tile-slider.mc-sl.mc-tile-slider--vertical{width:var(--sl-hit,40px);height:100%}
@@ -88,4 +83,23 @@ export const SLIDER_LOOK_CSS = `
 .mc-slider-container.mc-slider-container--bigfill{height:max(var(--mc-slider-vertical-height,120px),15rem)}
 .mc-tile-slider[offscreen] .mc-sl-p *{transition:none;animation:none}
 @media (prefers-reduced-motion:reduce){.mc-sl-f,.mc-sl-th,.mc-sl-b{transition:none}.mc-tile-slider.mc-dragging .mc-sl-th{--sc:1}}
+`.replace(/\n/g, '');
+
+// The mirrored rules of a right-to-left horizontal track, adopted by the page only (the track's markup stays the same in both directions).
+export const SLIDER_LOOK_RTL_CSS = `
+.mc-tile-slider[data-mc-rtl] .mc-sl-f{transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-segs{direction:ltr;transform:scaleX(-1)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-g{left:auto;right:calc(var(--v) * 100% - 9px)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-th{left:auto;right:calc(var(--v) * 100%);transform:translate(50%,-50%) scale(var(--sc,1))}
+.mc-tile-slider[data-mc-rtl] .mc-sl-k{left:auto;right:calc(var(--k) * 100%);margin-left:0;margin-right:-.5px}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l{left:auto;right:calc(var(--k) * 100%);transform:translateX(50%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l[data-edge='0']{transform:none}
+.mc-tile-slider[data-mc-rtl] .mc-sl-l[data-edge='1']{transform:translateX(100%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-b{left:auto;right:calc(var(--v) * 100%);transform:translateX(50%)}
+.mc-tile-slider[data-mc-rtl] .mc-sl-v{right:auto;left:8px}
+.mc-tile-slider[data-mc-rtl] .mc-sl-e{right:auto;left:6px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-i{left:auto;right:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-v{right:auto;left:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-v{left:auto;right:16px}
+.mc-tile-slider[data-mc-rtl].mc-sl--big-fill .mc-sl-p[data-vl] .mc-sl-i~.mc-sl-v{left:auto;right:52px}
 `.replace(/\n/g, '');

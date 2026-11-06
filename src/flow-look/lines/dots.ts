@@ -4,10 +4,8 @@ import { travelFrames } from '../../utils/flow-motion';
 import { stops } from '../motion';
 import { unmix } from '../paint';
 
-/*
- * The default travelling shape: round dots on the centre line, like today's classic dots (the shapes part replaces
- * the registry's `shapes` with the full set). Pure CSS motion (rule 1: transform keyframes along the line), never rotates.
- */
+// The default travelling shape: round dots on the centre line, like the classic dots (the shapes part replaces
+// the registry's `shapes` with the full set). Pure CSS motion (transform keyframes along the line), never rotates.
 
 export const defaultShapes: FlowLookRegistry['shapes'] = {
   requested: (f, _geo, quality) => (f.active && f.direction !== 0 ? Math.min(f.dots, quality === 'minimal' ? 2 : f.dots) : 0),

@@ -6,3 +6,6 @@ contact_links:
   - name: "Questions and ideas"
     url: "https://github.com/therealmcsparrow/magic-card/discussions"
     about: "Ask a question, share a setup or discuss an idea. Use an issue for a bug you can reproduce."
+  - name: "Pause and focus reports"
+    url: "https://github.com/therealmcsparrow/magic-card/discussions/categories/pause-and-focus-reports"
+    about: "Tell us how the Pause button and keyboard focus rings work for you. This opens a public post."

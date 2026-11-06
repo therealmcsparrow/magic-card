@@ -4,7 +4,7 @@ The shape editor draws the outline of a card, row, column or module. You can cha
 
 The editor is part of the Magic Card Utils integration and needs Magic Card 2026.10.11-beta.1 or newer.
 
-This is a pre-release. HACS shows it only when you turn on Show beta versions.
+This is a pre-release. In the Marketplace, open the menu of the repository and choose **Include pre-releases**. In HACS, turn on **Show beta versions**.
 
 ## Open the editor
 
@@ -72,6 +72,12 @@ The editor shows warnings for curved shapes. For example, it warns that older br
 ## Every control has a label
 
 Each value is a field with a label. You can reach every field with the keyboard, and the focus is always visible.
+
+## Side panels
+
+Above 900 px wide, the left sidebar (Draw and Messages) sits beside the canvas and the inspector sits on the right. Each has an edge button on its inner side. Press it to hide the panel, so the canvas takes its width; press it again to show the panel as it was. Ctrl+\ (Cmd+\ on a Mac) hides both when either is shown, and shows again the panels it hid last. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons. The editor remembers hidden panels on this device.
+
+Between 641 and 900 px the inspector keeps its edge button, and the sidebar opens from the toolbar with no edge button. At 640 px and below the panels stack under the canvas, with no edge buttons.
 
 ## Related
 

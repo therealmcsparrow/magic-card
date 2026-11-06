@@ -11,6 +11,10 @@ export const DEFAULT_PADDING = '16px';
 export const DEFAULT_BORDER_RADIUS = '12px';
 
 export const EDITOR_DEBOUNCE_MS = 200;
+/** While a slider is dragged, config-changed goes out at most this often (and once more at the end). */
+export const EDITOR_DRAG_SEND_MS = 100;
+/** A drag with no further slider event for this long counts as over. */
+export const EDITOR_DRAG_IDLE_MS = 250;
 export const UNDO_STACK_LIMIT = 50;
 export const TEMPLATE_CACHE_TTL_MS = 1000;
 

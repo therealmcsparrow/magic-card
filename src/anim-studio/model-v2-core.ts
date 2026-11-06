@@ -1,19 +1,7 @@
 import type { AnimationDoc, AnimationKeyframe } from './model';
 
-/*
- * Animation studio v2 document fields (all optional; the document stays `version: 1`):
- * - rig: an icon split into named parts (subpaths of the source icon or own geometry), groups of
- *   parts and drawn shapes, in the icon's viewBox units (keyframes documents only);
- * - tracks: keyframes per target (a card part, an icon part / group / shape); the top-level
- *   `keyframes` stay the Element / Icon track (keyframes documents only);
- * - clips: per-state choice of what plays (any kind);
- * - bindings: an entity value driving a property of a target (keyframes documents only).
- * A 0.0.32 card drops these fields and plays the base animation.
- *
- * This file holds the types and the small helpers the card bundle needs (model.ts re-exports it);
- * the validators live in model-v2.ts (studio bundle and the lazy runtime chunk only, to keep
- * magic-card.js small). Import from model-v2.ts (it re-exports everything here) or model.ts.
- */
+// Animation v2 document fields (all optional, the document stays `version: 1`): rig, tracks, clips, bindings. This file
+// holds the types and small helpers the card bundle needs; the validators live in model-v2.ts.
 
 export type TargetRef = 'element' | 'icon' | 'name' | 'state' | 'background' | `part:${string}` | `group:${string}` | `shape:${string}`;
 

@@ -40,3 +40,11 @@ A drag that ends outside the window does not close it. The position and size res
 ## In the Studio
 
 Pickers opened from the Studio open above it. Escape inside a picker closes the picker and leaves the Studio open. See [Studio keyboard shortcuts](../studio/keyboard-shortcuts.md#escape).
+
+## Colour window
+
+The colour window has a Hue field (0 to 360) and an Opacity field (0 to 100) next to its sliders. You can retype either one:
+
+-   Clear the field to type a new number. It stays empty while you type, and the slider keeps its last position.
+-   A number above the limit is shown at the limit at once: 360 for hue, 100 for opacity.
+-   When you leave an empty field, the value it held comes back.

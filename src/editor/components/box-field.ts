@@ -1,10 +1,10 @@
-import { LitElement, html, css, TemplateResult } from 'lit';
+import { LitElement, html, css, nothing, TemplateResult, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DesignConfig } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import './unit-field';
 import './color-picker';
-import { t, m, type MessageId } from '../i18n';
+import { t, m, type MessageIndex } from '../i18n';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
@@ -12,29 +12,32 @@ const SIDES: Side[] = ['top', 'right', 'bottom', 'left'];
 /** Same units as mc-unit-field (auto, calc(…) and var(…) are its "Custom" values). */
 const UNITS = ['px', 'em', 'rem', '%', 'vw', 'vh'];
 
-const SIDE_META: Record<Side, { label: MessageId; icon: string }> = {
-  top: { label: m('Top'), icon: 'mdi:border-top-variant' },
-  right: { label: m('Right'), icon: 'mdi:border-right-variant' },
-  bottom: { label: m('Bottom'), icon: 'mdi:border-bottom-variant' },
-  left: { label: m('Left'), icon: 'mdi:border-left-variant' },
+const SIDE_META: Record<Side, { label: MessageIndex; icon: string }> = {
+  top: { label: m('card-editor.box-field.top'), icon: 'mdi:border-top-variant' },
+  right: { label: m('card-editor.box-field.right'), icon: 'mdi:border-right-variant' },
+  bottom: { label: m('card-editor.box-field.bottom'), icon: 'mdi:border-bottom-variant' },
+  left: { label: m('card-editor.box-field.left'), icon: 'mdi:border-left-variant' },
 };
 
-const CORNER_META: Record<Side, { label: MessageId; icon: string }> = {
-  top: { label: m('Top left'), icon: 'mdi:border-top-variant' },
-  right: { label: m('Top right'), icon: 'mdi:border-right-variant' },
-  bottom: { label: m('Bottom right'), icon: 'mdi:border-bottom-variant' },
-  left: { label: m('Bottom left'), icon: 'mdi:border-left-variant' },
+const CORNER_META: Record<Side, { label: MessageIndex; icon: string }> = {
+  top: { label: m('card-editor.box-field.top-left'), icon: 'mdi:border-top-variant' },
+  right: { label: m('card-editor.box-field.top-right'), icon: 'mdi:border-right-variant' },
+  bottom: { label: m('card-editor.box-field.bottom-right'), icon: 'mdi:border-bottom-variant' },
+  left: { label: m('card-editor.box-field.bottom-left'), icon: 'mdi:border-left-variant' },
 };
 
 /** What a side holds in shorthand mode: a length, a colour or a word from `options` (a border style). */
 export type SideCell = 'length' | 'color' | 'style';
 
+/** Longest shorthand read; a config value can come from an import. */
+const TOKENS_MAX = 256;
+
 /** A CSS shorthand split at spaces outside parentheses (`rgb(1, 2, 3) red` is two values). */
-function tokens(raw: string): string[] {
+export function tokens(raw: string): string[] {
   const out: string[] = [];
   let depth = 0;
   let cur = '';
-  for (const ch of raw.trim()) {
+  for (const ch of raw.slice(0, TOKENS_MAX).trim()) {
     if (ch === '(') depth++;
     else if (ch === ')') depth = Math.max(0, depth - 1);
     if (/\s/.test(ch) && depth === 0) {
@@ -43,7 +46,8 @@ function tokens(raw: string): string[] {
     } else cur += ch;
   }
   if (cur) out.push(cur);
-  return out;
+  // an entity colour with an opacity is one value
+  return out.reduce<string[]>((all, v) => (/^\d+(?:\.\d+)?%$/.test(v) && all[all.length - 1] === 'entity' ? [...all.slice(0, -1), `entity ${v}`] : [...all, v]), []);
 }
 
 /** The four sides of a 1 to 4 value shorthand (top, right, bottom, left; corners in the same order). */
@@ -65,14 +69,8 @@ function collapse(s: Record<Side, string>): string {
 const EMPTY_SIDE: Record<SideCell, string> = { length: '0', style: 'none', color: 'currentcolor' };
 
 /**
- * Four-side value (padding / margin / border radius): a 2x2 grid where every side is a compact
- * mc-unit-field (number + unit, written on commit; Custom for auto / calc(…)), and a
- * "Same on all sides" link toggle in the foot row.
- *
- * In `shorthand` mode (a tab's border and corners) the field holds one design key with a 1 to 4 value
- * CSS shorthand in `value`: one input while the sides are linked, four when they are not; the
- * cells hold lengths, colours or words (`cell`), and `inherited` is the shorthand an empty side falls
- * back to (shown as that side's hint).
+ * Four-side value (padding / margin / radius): a 2x2 grid of mc-unit-field with a "Same on all sides" toggle.
+ * `shorthand` mode holds one 1 to 4 value CSS shorthand in `value`; `inherited` is the hint for an empty side.
  */
 @customElement('mc-box-field')
 export class BoxField extends LitElement {
@@ -87,6 +85,22 @@ export class BoxField extends LitElement {
       .box {
         display: grid;
         gap: 8px;
+      }
+      .box-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      /* The sides sit where their names say, so the grid reads left to right in any direction */
+      .box-grid {
+        direction: ltr;
+      }
+      .box-side-label {
+        unicode-bidi: plaintext;
       }
       .box-grid.one-col {
         grid-template-columns: minmax(0, 1fr);
@@ -105,6 +119,7 @@ export class BoxField extends LitElement {
 
   @property({ attribute: false }) design: DesignConfig = {};
   @property({ attribute: false }) onChange!: (updates: Record<string, unknown>) => void;
+  /** The design key of the box (`padding`); empty when the sides are the plain keys top, right, bottom and left (the position offsets). */
   @property({ type: String }) baseName: string = 'padding';
   /** One design key holding a 1 to 4 value shorthand (`baseName`), instead of one key per side. */
   @property({ type: Boolean }) shorthand = false;
@@ -119,12 +134,24 @@ export class BoxField extends LitElement {
   @property({ attribute: false }) options: Array<{ value: string; label: string }> = [];
   /** Shorthand mode: what the empty sides take from the design below this one. */
   @property({ type: String }) inherited = '';
+  /** A colour cell offers the entity's colour (`entity`, `entity N%`). */
+  @property({ type: Boolean }) entity = false;
+  @property({ type: String }) entityColor = '';
 
   @state() private _linked = false;
+
+  protected willUpdate(changed: PropertyValues): void {
+    // Undo, Redo or another edit can bring the sides apart again: the link follows the config
+    if (changed.has('design') && this._linked) {
+      const first = this._getValue('top');
+      if (SIDES.some((side) => this._getValue(side) !== first)) this._linked = false;
+    }
+  }
   /** Shorthand mode: the user chose Same on all sides (unset: linked until the sides differ). */
   @state() private _link?: boolean;
 
   private _getSuffixKey(baseName: string, suffix: string): string {
+    if (!baseName) return suffix;
     // Handle border-radius special naming
     if (baseName === 'border_radius') {
       const suffixMap: Record<string, string> = {
@@ -158,7 +185,7 @@ export class BoxField extends LitElement {
    * are re-emitted (when non-empty) so clearing the shorthand never drops them.
    */
   private _emitSides(values: Partial<Record<Side, string>>): void {
-    const updates: Record<string, unknown> = { [this.baseName]: undefined };
+    const updates: Record<string, unknown> = this.baseName ? { [this.baseName]: undefined } : {};
     const sh = this._shorthandSides();
     for (const side of SIDES) {
       if (values[side] !== undefined) updates[this._getSuffixKey(this.baseName, side)] = values[side];
@@ -221,7 +248,7 @@ export class BoxField extends LitElement {
     const hint = expand(this.inherited)?.[source] ?? '';
     const write = (v: string) => this._shSide(position, v);
     if (this.cell === 'color') {
-      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .placeholder=${own ? '' : hint} .allowEntity=${false} @value-changed=${(e: CustomEvent) => {
+      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .placeholder=${own ? '' : hint} .allowEntity=${this.entity} .entityColor=${this.entityColor} @value-changed=${(e: CustomEvent) => {
         e.stopPropagation();
         write(String(e.detail.value ?? ''));
       }}></mc-color-picker>`;
@@ -232,7 +259,7 @@ export class BoxField extends LitElement {
       const extra = own && !this.options.some((o) => o.value === own) ? [{ value: own, label: own }] : [];
       return html`<div class="select">
         <select class="input side-select" data-side=${position} aria-label=${label} @change=${(e: Event) => write((e.target as HTMLSelectElement).value)}>
-          <option value="" ?selected=${!own}>${hint ? t('Inherit ({value})', { value: shown }) : t('Not set')}</option>
+          <option value="" ?selected=${!own}>${hint ? t('card-editor.box-field.inherit-value', { value: shown }) : t('card-editor.box-field.not-set')}</option>
           ${[...this.options, ...extra].map((o) => html`<option value=${o.value} ?selected=${o.value === own}>${o.label}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -296,8 +323,10 @@ export class BoxField extends LitElement {
 
   protected render(): TemplateResult {
     const linkedOne = this.shorthand && this._shLinked;
+    const named = !linkedOne && !!this.label;
     return html`
-      <div class="box">
+      <div class="box" role=${named ? 'group' : nothing} aria-labelledby=${named ? 'box-label' : nothing}>
+        ${named ? html`<span class="box-label" id="box-label">${this.label}</span>` : nothing}
         ${linkedOne
           ? this._renderCell('top', 'all', this.label)
           : html`<div class="box-grid ${this.shorthand && this.cell !== 'length' ? 'one-col' : ''}">${SIDES.map((side) => this._renderSide(side))}</div>`}
@@ -308,7 +337,7 @@ export class BoxField extends LitElement {
             aria-pressed=${(this.shorthand ? this._shLinked : this._linked) ? 'true' : 'false'}
             @click=${this._toggleLink}
           >
-            <ha-icon icon="mdi:link-variant"></ha-icon>${t('Same on all sides')}
+            <ha-icon icon="mdi:link-variant"></ha-icon>${t('card-editor.box-field.same-on-all-sides')}
           </button>
         </div>
       </div>
