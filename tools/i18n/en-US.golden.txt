@@ -207,7 +207,6 @@ anim-studio	anim-studio.shape-inspector.stroke-colour	Stroke color
 anim-studio	anim-studio.studio.build-one-from-scratch-or-customise-one	Build one from scratch or customize one of the presets. Saved animations appear in every card's animation picker, under My animations.
 anim-studio	anim-studio.studio.customise-a-preset	Customize a preset…
 anim-studio	anim-studio.studio.customise-a-preset-2	Customize a preset
-anim-studio	anim-studio.studio.customise-one-of-count	Customize one of {count}
 anim-studio	anim-studio.studio.move-scale-turn-and-colour-on-a-timeline	Move, scale, turn and color on a timeline
 anim-studio	anim-studio.validation-text.color-mix-needs-two-colours	color_mix needs two colors.
 anim-studio	anim-studio.validation-text.must-be-two-numbers-colours-only-for	Must be two numbers (colors only for color_mix).
