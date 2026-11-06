@@ -4,8 +4,6 @@ The SVG editor draws and edits icons on a 24 x 24 grid. Use it to change an icon
 
 The editor is part of the Magic Card Utils integration and comes with Magic Card 2026.10.11-beta.1. It needs Magic Card 2026.10.11-beta.1 or newer. If your Magic Card is older, the panel says which version you need and nothing else loads.
 
-This is a pre-release. In the Marketplace, open the menu of the repository and choose **Include pre-releases**. In HACS, turn on **Show beta versions**.
-
 ## Open the editor
 
 1.  Open Magic Card Utils in the sidebar and go to the Library tab.

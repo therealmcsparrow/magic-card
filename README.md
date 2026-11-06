@@ -51,17 +51,17 @@ The gallery groups its cards in eight families, shown above. Nothing in the pict
 -   Pop-up mode: show a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
 -   Card entity: name the device a card is for once. Modules, rows and columns follow it unless they pick their own entity or `No entity`, and a layout can share its entity with the modules inside. Existing cards are unchanged. See [Card entity](documentation/card-entity/README.md).
 -   Templates: save a card as a template and link other cards to it. Linked cards also get the template's own animations, and each card can replace, hide or opt out of them.
--   SVG editor (pre-release, with Magic Card Utils): draw and edit icons on a 24 x 24 grid, with alignment, boolean operations, layers in groups with drag and drop, a dual-tone Accent colour, path tools (outline stroke, offset, simplify, join, split and knife), SVG import and export, and saving to the library. See [SVG editor](documentation/svg-editor/README.md).
--   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
--   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
--   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
+-   SVG editor (with Magic Card Utils): draw and edit icons on a 24 x 24 grid, with alignment, boolean operations, layers in groups with drag and drop, a dual-tone Accent colour, path tools (outline stroke, offset, simplify, join, split and knife), SVG import and export, and saving to the library. See [SVG editor](documentation/svg-editor/README.md).
+-   Shape editor and custom shapes: corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
+-   Presets and sharing: save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
+-   Animation studio layers: hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
 -   Library images (needs Magic Card Utils): draw pictures in the image editor, trace over a photo or floor plan, open or import SVG files, and show a library image in an image module or as a background behind the content. See [Images](documentation/images/README.md).
 -   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. Translations you contribute come under the project's MIT Licence. Legal text, such as the privacy warnings, is written in English, and the English text prevails over any translation. A translation of legal text is published only after a qualified lawyer has checked it. The animation studio has a Pseudo RTL switch that shows the editors and the card's sliders and rings mirrored for right-to-left reading. It is a testing aid that uses made-up text. Magic Card ships no right-to-left language yet, and the mirrored layout has not been tested with a screen reader or on real right-to-left devices. See [Languages](documentation/languages/README.md). To help translate, see [Translating](documentation/translating/README.md).
 -   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
 ## Installation
 
-The current release is 2026.10.11.
+The current release is 2026.11.01.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=therealmcsparrow&repository=magic-card&category=plugin)
 
@@ -77,7 +77,7 @@ Magic Card isn't in the Marketplace catalogue, so you add it by its link.
 
 The Marketplace downloads every file of the release into the folder `www/community/magic-card/`. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
-With dashboards in YAML mode, the install dialog asks you to add the resource yourself. Use `url: /local/community/magic-card/magic-card.js?v=2026.10.11` with `type: module`, and change the version at every update, because browsers can keep a `/local/` file for 31 days. The older path `/hacsfiles/magic-card/magic-card.js` also works while the Marketplace is set up.
+With dashboards in YAML mode, the install dialog asks you to add the resource yourself. Use `url: /local/community/magic-card/magic-card.js?v=2026.11.01` with `type: module`, and change the version at every update, because browsers can keep a `/local/` file for 31 days. The older path `/hacsfiles/magic-card/magic-card.js` also works while the Marketplace is set up.
 
 ### HACS (Home Assistant before 2026.11)
 
