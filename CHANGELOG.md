@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.18 (2026-11-06)
 
 ### Changed
 -   **Full-screen editors in the Utils panel.** In the Magic Card Utils panel, the animation editor and the theme editor now cover the whole screen, like the icon, shape and image editors. Their lists stay inside the tab. While you use Try on dashboard, the theme editor returns to the tab so the sidebar stays reachable.
