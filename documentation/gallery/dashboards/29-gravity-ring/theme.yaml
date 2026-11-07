@@ -1,0 +1,17 @@
+# Gravity Ring: gunmetal and worn white enamel under one warm-white light, red only for alarm and warning. Dark mode only.
+Gravity Ring:
+  modes:
+    dark:
+      primary-color: "#e2c595"
+      accent-color: "#e2c595"
+      dark-primary-color: "#8a7650"
+      light-primary-color: "#efe2c8"
+      text-primary-color: "#1a140c"
+      text-accent-color: "#1a140c"
+      primary-background-color: "#111010"
+      secondary-background-color: "#191816"
+      card-background-color: "#191816"
+      primary-text-color: "#e6dcc8"
+      secondary-text-color: "#ab9f8c"
+      disabled-text-color: "#8c8272"
+      divider-color: "#39352c"

@@ -1,0 +1,17 @@
+# Hangar Gantry: scuffed grey steel, amber work lights, red only for alarm and warning. Dark mode only.
+Hangar Gantry:
+  modes:
+    dark:
+      primary-color: "#f0a93a"
+      accent-color: "#f0a93a"
+      dark-primary-color: "#8a6220"
+      light-primary-color: "#e9e2d0"
+      text-primary-color: "#1b1307"
+      text-accent-color: "#1b1307"
+      primary-background-color: "#131210"
+      secondary-background-color: "#1b1a17"
+      card-background-color: "#1b1a17"
+      primary-text-color: "#e9e2d0"
+      secondary-text-color: "#b8ae94"
+      disabled-text-color: "#8d8571"
+      divider-color: "#3d3a33"

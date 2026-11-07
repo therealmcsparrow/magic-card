@@ -1,0 +1,3857 @@
+title: Clean module
+views:
+ -
+  type: sections
+  max_columns: 5
+  path: clean-module
+  title: Clean module
+  icon: mdi:space-station
+  theme: Clean Module
+  background: radial-gradient(1300px 800px at 26% 0, rgba(255, 255, 255, .5), transparent 72%), linear-gradient(90deg, rgba(84, 74, 62, 0.01) 0px, rgba(84, 74, 62, 0.03) 460px, rgba(84, 74, 62, 0.06) 980px, rgba(84, 74, 62, 0.1) 1500px, rgba(84, 74, 62, 0.14) 1980px), linear-gradient(rgba(255, 253, 247, .62), rgba(255, 253, 247, .62)), url("/local/ceramic/parts/ceramicPanel.webp") 0 0/768px
+  sections:
+   -
+    type: grid
+    column_span: 5
+    cards:
+     -
+      type: custom:magic-card
+      name: Clean module
+      border_radius: '0'
+      padding: '0'
+      overflow: hidden
+      box_shadow: none
+      border: none
+      background: radial-gradient(1300px 800px at 26% 0, rgba(255, 255, 255, .5), transparent 72%), linear-gradient(90deg, rgba(84, 74, 62, 0.01) 0px, rgba(84, 74, 62, 0.03) 460px, rgba(84, 74, 62, 0.06) 980px, rgba(84, 74, 62, 0.1) 1500px, rgba(84, 74, 62, 0.14) 1980px), linear-gradient(rgba(255, 253, 247, .62), rgba(255, 253, 247, .62)), url("/local/ceramic/parts/ceramicPanel.webp") 0 0/768px
+      css: 'font-synthesis: none; --primary-text-color: #20262b; --secondary-text-color: #3a4249; --mc-slider-color: #5f9fd1; --mc-slider-background: #1a2026; --mc-slider-radius: 3px; margin: calc(-32px + clamp(0px, calc((600px - 100vw) * 100), 24px)); width: calc(100% - 2 * (calc(-32px + clamp(0px, calc((600px - 100vw) * 100), 24px)))); max-width: none'
+      custom_animations:
+       ring-pulse:
+        id: ring-pulse
+        name: ring pulse
+        kind: keyframes
+        duration: 6
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.4
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.4
+        bindings:
+         -
+          target: element
+          property: speed
+          input:
+           min: 100
+           max: 5000
+          output:
+           - 0.25
+           - 2.6
+          smoothing: 3
+       ring-halo:
+        id: ring-halo
+        name: ring halo
+        kind: keyframes
+        duration: 6
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.35
+          transform:
+           scale: 0.97
+         -
+          at: 50
+          opacity: 0.95
+          transform:
+           scale: 1.02
+         -
+          at: 100
+          opacity: 0.35
+          transform:
+           scale: 0.97
+        bindings:
+         -
+          target: element
+          property: speed
+          input:
+           min: 100
+           max: 5000
+          output:
+           - 0.25
+           - 2.6
+          smoothing: 3
+        origin: center
+       seam-power:
+        id: seam-power
+        name: seam power
+        kind: keyframes
+        duration: 9
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.5
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.5
+        bindings:
+         -
+          target: element
+          property: speed
+          input:
+           min: 100
+           max: 5000
+          output:
+           - 0.4
+           - 1.8
+          smoothing: 3
+       seam-solar:
+        id: seam-solar
+        name: seam solar
+        kind: keyframes
+        duration: 13
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.35
+         -
+          at: 50
+          opacity: 0.9
+         -
+          at: 100
+          opacity: 0.35
+        bindings:
+         -
+          target: element
+          property: speed
+          input:
+           min: 0
+           max: 5000
+          output:
+           - 0.3
+           - 1.6
+          smoothing: 3
+       bay-strip:
+        id: bay-strip
+        name: bay strip
+        kind: keyframes
+        duration: 11
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.45
+         -
+          at: 50
+          opacity: 0.9
+         -
+          at: 100
+          opacity: 0.45
+       alarm-seam:
+        id: alarm-seam
+        name: alarm seam
+        kind: keyframes
+        duration: 1.5
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.35
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.35
+       alarm-ring:
+        id: alarm-ring
+        name: alarm ring
+        kind: keyframes
+        duration: 1.5
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.5
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.5
+       lamp-home:
+        id: lamp-home
+        name: lamp home
+        kind: keyframes
+        duration: 6.7
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.7
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.7
+       lamp-heat:
+        id: lamp-heat
+        name: lamp heat
+        kind: keyframes
+        duration: 4.3
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.55
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.55
+       lamp-open:
+        id: lamp-open
+        name: lamp open
+        kind: keyframes
+        duration: 1.9
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.55
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.55
+       lamp-play:
+        id: lamp-play
+        name: lamp play
+        kind: keyframes
+        duration: 3.1
+        easing: ease-in-out
+        iterations: infinite
+        keyframes:
+         -
+          at: 0
+          opacity: 0.5
+         -
+          at: 50
+          opacity: 1
+         -
+          at: 100
+          opacity: 0.5
+       key-press:
+        id: key-press
+        name: key press
+        kind: keyframes
+        duration: 0.22
+        easing: ease-out
+        iterations: 1
+        keyframes:
+         -
+          at: 0
+          transform:
+           'y': 0
+         -
+          at: 35
+          transform:
+           'y': 2
+         -
+          at: 100
+          transform:
+           'y': 0
+      grid_options:
+       columns: full
+       rows: auto
+      rows:
+       -
+        columns:
+         -
+          modules:
+           -
+            type: vertical
+            gap: 0px
+            design:
+             position: relative
+             overflow: hidden
+             css: 'container-type: inline-size'
+            modules:
+             -
+              type: vertical
+              gap: 0px
+              design:
+               position: absolute
+               box_sizing: border-box
+               left: '0'
+               top: '0'
+               width: clamp(0px, calc((100vw - 1600px) * 100), calc(1856 * 100cqw / 1856))
+               height: 100%
+               overflow: hidden
+              modules:
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1130 * 100cqw / 1856)
+                 top: 860px
+                 width: calc(820 * 100cqw / 1856)
+                 height: 1000px
+                 border_radius: 380px 0 0 0
+                 background: linear-gradient(120deg, rgba(84, 74, 62, 0.126), rgba(84, 74, 62, 0.186)), linear-gradient(120deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                 box_shadow: inset 30px 34px 70px rgba(84, 74, 62, .3), inset 7px 9px 14px rgba(84, 74, 62, .22), -2px -2px 3px rgba(240, 240, 236, .35)
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(720 * 100cqw / 1856)
+                 top: 520px
+                 width: calc(1240 * 100cqw / 1856)
+                 height: 420px
+                 border_radius: 210px 0 0 210px
+                 background: linear-gradient(104deg, rgba(84, 74, 62, 0.054), rgba(84, 74, 62, 0.150)), linear-gradient(104deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                 box_shadow: 20px 28px 60px rgba(84, 74, 62, .24), 5px 7px 14px rgba(84, 74, 62, .2), inset 3px 3px 5px rgba(255, 255, 252, .95), inset -4px -5px 9px rgba(84, 74, 62, .2)
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(860 * 100cqw / 1856)
+                 top: -110px
+                 width: calc(1100 * 100cqw / 1856)
+                 height: 700px
+                 border_radius: 0 0 0 480px
+                 background: url("/local/ceramic/parts/fastener.webp") 620px 640px/26px no-repeat, url("/local/ceramic/parts/fastener.webp") 150px 200px/26px no-repeat, linear-gradient(118deg, rgba(84, 74, 62, 0.030), rgba(84, 74, 62, 0.126)), linear-gradient(118deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                 box_shadow: 20px 28px 60px rgba(84, 74, 62, .24), 5px 7px 14px rgba(84, 74, 62, .2), inset 3px 3px 5px rgba(255, 255, 252, .95), inset -4px -5px 9px rgba(84, 74, 62, .2)
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(40 * 100cqw / 1856)
+                 top: 1120px
+                 width: calc(800 * 100cqw / 1856)
+                 height: 520px
+                 border_radius: 0 260px 0 0
+                 background: url("/local/ceramic/parts/fastener.webp") 740px 50px/26px no-repeat, linear-gradient(100deg, rgba(84, 74, 62, 0.042), rgba(84, 74, 62, 0.138)), linear-gradient(100deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                 box_shadow: 20px 28px 60px rgba(84, 74, 62, .24), 5px 7px 14px rgba(84, 74, 62, .2), inset 3px 3px 5px rgba(255, 255, 252, .95), inset -4px -5px 9px rgba(84, 74, 62, .2)
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1010 * 100cqw / 1856)
+                 top: 14px
+                 width: calc(820 * 100cqw / 1856)
+                 height: 56px
+                 background: url("/local/ceramic/parts/lightSeam.webp") 0 0/100% 100% no-repeat
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1010 * 100cqw / 1856)
+                 top: 14px
+                 width: calc(820 * 100cqw / 1856)
+                 height: 56px
+                 background: url("/local/ceramic/parts/lightSeam-glow.webp") 0 0/100% 100% no-repeat
+                 animations:
+                  -
+                   id: seam-power
+                   preset: custom:seam-power
+                   entity: sensor.house_power
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1252 * 100cqw / 1856)
+                 top: 650px
+                 width: calc(56 * 100cqw / 1856)
+                 height: 610px
+                 background: url("/local/ceramic/parts/lightSeamV.webp") 0 0/100% 100% no-repeat
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1252 * 100cqw / 1856)
+                 top: 650px
+                 width: calc(56 * 100cqw / 1856)
+                 height: 610px
+                 background: url("/local/ceramic/parts/lightSeamV-glow.webp") 0 0/100% 100% no-repeat
+                 animations:
+                  -
+                   id: seam-solar
+                   preset: custom:seam-solar
+                   entity: sensor.solar_power
+             -
+              type: separator
+              separator_style: none
+              design:
+               pointer_events: none
+               position: fixed
+               box_sizing: border-box
+               left: -100px
+               top: -100px
+               width: 3000px
+               height: 12000px
+               background: rgba(226, 38, 26, .2)
+               css: 'backdrop-filter: grayscale(.35) brightness(.84); -webkit-backdrop-filter: grayscale(.35) brightness(.84)'
+              display:
+               conditions:
+                -
+                 type: state
+                 entity: alarm_control_panel.home
+                 state: triggered
+             -
+              type: vertical
+              gap: 0px
+              design:
+               position: absolute
+               box_sizing: border-box
+               left: '0'
+               top: '0'
+               width: clamp(0px, calc((100vw - 1600px) * 100), calc(1856 * 100cqw / 1856))
+               height: 100%
+               overflow: hidden
+               pointer_events: none
+              modules:
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1010 * 100cqw / 1856)
+                 top: 14px
+                 width: calc(820 * 100cqw / 1856)
+                 height: 56px
+                 background: url("/local/ceramic/parts/lightSeam-glow.webp") 0 0/100% 100% no-repeat
+                 css: 'filter: hue-rotate(150deg) saturate(5) brightness(1.05) drop-shadow(0 0 6px rgba(255, 74, 60, .9))'
+                 animations:
+                  -
+                   id: alarm-seam
+                   preset: custom:alarm-seam
+                   trigger: state
+                   trigger_entity: alarm_control_panel.home
+                   state: triggered
+               -
+                type: separator
+                separator_style: none
+                design:
+                 pointer_events: none
+                 position: absolute
+                 box_sizing: border-box
+                 left: calc(1252 * 100cqw / 1856)
+                 top: 650px
+                 width: calc(56 * 100cqw / 1856)
+                 height: 610px
+                 background: url("/local/ceramic/parts/lightSeamV-glow.webp") 0 0/100% 100% no-repeat
+                 css: 'filter: hue-rotate(150deg) saturate(5) brightness(1.05) drop-shadow(0 0 6px rgba(255, 74, 60, .9))'
+                 animations:
+                  -
+                   id: alarm-seam
+                   preset: custom:alarm-seam
+                   trigger: state
+                   trigger_entity: alarm_control_panel.home
+                   state: triggered
+              display:
+               conditions:
+                -
+                 type: state
+                 entity: alarm_control_panel.home
+                 state: triggered
+             -
+              type: row
+              layout: repeat(auto-fit, minmax(min(100%, 320px), 1fr))
+              gap: 0px
+              columns:
+               -
+                modules:
+                 -
+                  type: vertical
+                  gap: 0px
+                  design:
+                   min_width: '0'
+                   padding: 0 calc(clamp(0px, calc((100vw - 1600px) * 100), 20px) + clamp(0px, calc((1600px - 100vw) * 100), 8px)) calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px)) calc(clamp(0px, calc((100vw - 1600px) * 100), 52px) + clamp(0px, calc((1600px - 100vw) * 100), 8px))
+                   position: relative
+                   box_sizing: border-box
+                   width: calc(100% + clamp(0%, calc((100vw - 1600px) * 100), 16.38%))
+                   margin_left: clamp(0%, calc((100vw - 1600px) * 100), 0%)
+                  modules:
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     position: relative
+                     width: 100%
+                     min_width: '0'
+                     height: calc(min(620px, calc(100cqw - 16px)) + 100px)
+                     pointer_events: none
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 1.55)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 1.55)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 3.1)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 3.1)
+                       border_radius: 50%
+                       background: linear-gradient(110deg, rgba(84, 74, 62, 0.036), rgba(84, 74, 62, 0.168)), linear-gradient(110deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                       box_shadow: 20px 28px 60px rgba(84, 74, 62, .24), 5px 7px 14px rgba(84, 74, 62, .2), inset 3px 3px 5px rgba(255, 255, 252, .95), inset -4px -5px 9px rgba(84, 74, 62, .2)
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 1.01)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 1.01)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 2.02)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 2.02)
+                       border_radius: 50%
+                       background: linear-gradient(112deg, rgba(84, 74, 62, 0.018), rgba(84, 74, 62, 0.132)), linear-gradient(112deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                       box_shadow: 20px 28px 60px rgba(84, 74, 62, .24), 5px 7px 14px rgba(84, 74, 62, .2), inset 3px 3px 5px rgba(255, 255, 252, .95), inset -4px -5px 9px rgba(84, 74, 62, .2)
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 1)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 1)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 2)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 2)
+                       border_radius: 50%
+                       border: '3px solid #a6cdee'
+                       box_shadow: '0 0 14px #a6cdee, inset 0 0 14px #a6cdee'
+                       css: '-webkit-mask-image: conic-gradient(from 30deg, transparent 0, #000 8deg 110deg, transparent 118deg); mask-image: conic-gradient(from 30deg, transparent 0, #000 8deg 110deg, transparent 118deg)'
+                       animations:
+                        -
+                         id: seam-power
+                         preset: custom:seam-power
+                         entity: sensor.house_power
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 1.54)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 1.54)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 3.08)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 3.08)
+                       border_radius: 50%
+                       border: '3px solid #a6cdee'
+                       box_shadow: '0 0 14px #a6cdee, inset 0 0 14px #a6cdee'
+                       css: '-webkit-mask-image: conic-gradient(from 92deg, transparent 0, #000 8deg 63deg, transparent 71deg); mask-image: conic-gradient(from 92deg, transparent 0, #000 8deg 63deg, transparent 71deg)'
+                       animations:
+                        -
+                         id: seam-solar
+                         preset: custom:seam-solar
+                         entity: sensor.solar_power
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 0.71)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 0.71)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 1.42)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 1.42)
+                       border_radius: 50%
+                       background: linear-gradient(122deg, rgba(84, 74, 62, 0.006), rgba(84, 74, 62, 0.078)), linear-gradient(122deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                       box_shadow: 22px 28px 44px rgba(18, 23, 28, .55), 4px 6px 9px rgba(18, 23, 28, .42), inset 4px 4px 6px rgba(250, 249, 244, .6), inset -5px -6px 10px rgba(24, 29, 34, .3)
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 0.625)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 0.625)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 1.25)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 1.25)
+                       border_radius: 50%
+                       background: radial-gradient(closest-side, rgba(84, 74, 62, .6) 78%, rgba(84, 74, 62, .34) 100%), linear-gradient(122deg, rgba(84, 74, 62, .5), rgba(84, 74, 62, .14)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/520px
+                       box_shadow: inset 24px 34px 54px rgba(12, 16, 20, .78), inset 6px 8px 14px rgba(12, 16, 20, .7), inset -5px -6px 9px rgba(245, 244, 238, .42)
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 0.565)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 0.565)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 1.13)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 1.13)
+                       border_radius: 50%
+                       background: radial-gradient(closest-side, transparent 80%, rgba(95, 165, 225, .55) 88%, transparent 100%)
+                       animations:
+                        -
+                         id: ring-halo
+                         preset: custom:ring-halo
+                         entity: sensor.house_power
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 0.5)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 0.5)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 1)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 1)
+                       border_radius: '0'
+                       background: url("/local/ceramic/parts/coreHousing.webp") center/100% 100% no-repeat
+                       css: 'filter: drop-shadow(14px 26px 22px rgba(10, 14, 18, .72)) drop-shadow(3px 5px 5px rgba(10, 14, 18, .55))'
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - min(620px, calc(100cqw - 16px)) * 0.5)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 0.5)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 1)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 1)
+                       border_radius: '0'
+                       background: url("/local/ceramic/parts/coreHousing-glow.webp") center/100% 100% no-repeat
+                       animations:
+                        -
+                         id: ring-pulse
+                         preset: custom:ring-pulse
+                         entity: sensor.house_power
+                     -
+                      type: vertical
+                      gap: 0px
+                      design:
+                       position: absolute
+                       box_sizing: border-box
+                       left: calc(50% - calc(min(620px, calc(100cqw - 16px)) * 0.4167) / 2)
+                       top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - calc(min(620px, calc(100cqw - 16px)) * 0.4167) / 2)
+                       width: calc(min(620px, calc(100cqw - 16px)) * 0.4167)
+                       height: calc(min(620px, calc(100cqw - 16px)) * 0.4167)
+                       display: flex
+                       flex_direction: column
+                       align_items: center
+                       justify_content: center
+                       pointer_events: none
+                       css: '--primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                      modules:
+                       -
+                        type: text
+                        text: House power
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 15px
+                         font_weight: '400'
+                         letter_spacing: .06em
+                         color: '#a6cdee'
+                         min_width: '0'
+                         text_align: center
+                         margin_bottom: 4px
+                       -
+                        type: vertical
+                        gap: 0px
+                        design:
+                         width: 100%
+                         height: clamp(0px, calc((100vw - 1600px) * 100), 172px)
+                         overflow: hidden
+                         display: flex
+                         flex_direction: column
+                         align_items: center
+                         justify_content: center
+                        modules:
+                         -
+                          type: gauge
+                          entity: sensor.house_power
+                          min: 0
+                          max: 5000
+                          gauge_style: half
+                          needle: true
+                          show_name: false
+                          show_unit: true
+                          decimals: 0
+                          severity:
+                           -
+                            from: 0
+                            color: '#a6cdee'
+                           -
+                            from: 3000
+                            color: '#dfe9ef'
+                           -
+                            from: 4200
+                            color: '#ff5a4c'
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 15px
+                           font_weight: '400'
+                           color: '#dfe9ef'
+                           text_align: center
+                           flex: 0 0 auto
+                           css: 'zoom: 1.28; --divider-color: #44535e; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                       -
+                        type: vertical
+                        gap: 0px
+                        design:
+                         width: 100%
+                         height: clamp(0px, calc((1600px - 100vw) * 100), 96px)
+                         overflow: hidden
+                         display: flex
+                         flex_direction: column
+                         align_items: center
+                         justify_content: center
+                        modules:
+                         -
+                          type: gauge
+                          entity: sensor.house_power
+                          min: 0
+                          max: 5000
+                          gauge_style: half
+                          needle: true
+                          show_name: false
+                          show_unit: true
+                          decimals: 0
+                          severity:
+                           -
+                            from: 0
+                            color: '#a6cdee'
+                           -
+                            from: 3000
+                            color: '#dfe9ef'
+                           -
+                            from: 4200
+                            color: '#ff5a4c'
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 14px
+                           font_weight: '400'
+                           color: '#dfe9ef'
+                           text_align: center
+                           flex: 0 0 auto
+                           css: 'zoom: 0.72; --divider-color: #44535e; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     margin_top: -6px
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 340px)
+                     overflow: visible
+                     padding: 4px 8px
+                     css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       border: 34px solid transparent
+                       animations:
+                        -
+                         id: bay-strip
+                         preset: custom:bay-strip
+                         delay: 1s
+                       css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       margin_bottom: 6px
+                       min_width: '0'
+                       position: relative
+                      modules:
+                       -
+                        type: text
+                        text: Energy
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 17px
+                         font_weight: '400'
+                         letter_spacing: .05em
+                         color: '#a6cdee'
+                         min_width: '0'
+                         flex: 1 1 auto
+                     -
+                      type: graphs
+                      entity: sensor.house_power
+                      name: House power, 24 hours
+                      hours_to_show: 24
+                      points_per_hour: 2
+                      line_width: 2
+                      fill: true
+                      line_color: '#a6cdee'
+                      show_labels: true
+                      design:
+                       font_family: '''DM Mono'', Consolas, monospace'
+                       font_size: 12px
+                       color: '#dfe9ef'
+                       min_width: '0'
+                       css: 'zoom: 1.14; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --mc-font-size-xs: 10px'
+                     -
+                      type: row
+                      layout: repeat(auto-fit, minmax(min(100%, 260px), 1fr))
+                      gap: 18px
+                      design:
+                       min_width: '0'
+                       margin_top: 6px
+                      columns:
+                       -
+                        modules:
+                         -
+                          type: graphs
+                          entity: sensor.solar_power
+                          name: Solar, 24 hours
+                          hours_to_show: 24
+                          points_per_hour: 2
+                          line_width: 2
+                          fill: true
+                          line_color: '#a6cdee'
+                          show_labels: true
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 12px
+                           color: '#dfe9ef'
+                           min_width: '0'
+                           css: 'zoom: 1; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --mc-font-size-xs: 10px'
+                       -
+                        modules:
+                         -
+                          type: graphs
+                          entity: sensor.grid_power
+                          name: Grid, 24 hours
+                          hours_to_show: 24
+                          points_per_hour: 2
+                          line_width: 2
+                          fill: true
+                          line_color: '#aebfca'
+                          show_labels: true
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 12px
+                           color: '#dfe9ef'
+                           min_width: '0'
+                           css: 'zoom: 1; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --mc-font-size-xs: 10px'
+                     -
+                      type: bar
+                      entity: sensor.home_battery
+                      name: Home battery
+                      min: 0
+                      max: 100
+                      bar_color: '#a6cdee'
+                      design:
+                       font_family: '''DM Mono'', Consolas, monospace'
+                       font_size: 13px
+                       color: '#dfe9ef'
+                       margin_top: 8px
+                       css: '--primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                   -
+                    type: row
+                    layout: repeat(auto-fit, minmax(min(100%, 300px), 1fr))
+                    gap: 14px
+                    design:
+                     margin_top: 14px
+                     min_width: '0'
+                    columns:
+                     -
+                      modules:
+                       -
+                        type: vertical
+                        gap: 0px
+                        design:
+                         position: relative
+                         box_sizing: border-box
+                         min_width: '0'
+                         min_height: clamp(0px, calc((100vw - 1600px) * 100), 230px)
+                         overflow: visible
+                         padding: 4px 8px
+                         css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                        modules:
+                         -
+                          type: separator
+                          separator_style: none
+                          design:
+                           pointer_events: none
+                           position: absolute
+                           box_sizing: border-box
+                           left: -34px
+                           top: -34px
+                           width: calc(100% + 68px)
+                           height: calc(100% + 68px)
+                           border: 34px solid transparent
+                           animations:
+                            -
+                             id: bay-strip
+                             preset: custom:bay-strip
+                             delay: 7s
+                           css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                         -
+                          type: separator
+                          separator_style: none
+                          design:
+                           pointer_events: none
+                           position: absolute
+                           box_sizing: border-box
+                           left: -34px
+                           top: -34px
+                           width: calc(100% + 68px)
+                           height: calc(100% + 68px)
+                           background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                         -
+                          type: horizontal
+                          gap: 0px
+                          align: center
+                          design:
+                           margin_bottom: 6px
+                           min_width: '0'
+                           position: relative
+                          modules:
+                           -
+                            type: text
+                            text: Doors and windows
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 17px
+                             font_weight: '400'
+                             letter_spacing: .05em
+                             color: '#a6cdee'
+                             min_width: '0'
+                             flex: 1 1 auto
+                         -
+                          type: horizontal
+                          gap: 0px
+                          align: center
+                          design:
+                           padding: 4px 2px
+                           min_height: 30px
+                          modules:
+                           -
+                            type: separator
+                            separator_style: none
+                            design:
+                             pointer_events: none
+                             width: 20px
+                             height: 20px
+                             flex: 0 0 20px
+                             margin_right: 9px
+                             background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                             animations:
+                              -
+                               id: lamp-open
+                               preset: custom:lamp-open
+                               trigger: state
+                               trigger_entity: binary_sensor.front_door
+                               state: 'on'
+                             conditional:
+                              -
+                               id: lit
+                               name: Lit
+                               conditions:
+                                -
+                                 type: state
+                                 entity: binary_sensor.front_door
+                                 state: 'on'
+                               design:
+                                box_shadow: '0 0 11px #eeb063'
+                                border_radius: 50%
+                                background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                           -
+                            type: text
+                            text: Front door
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             flex: 1 1 auto
+                           -
+                            type: info
+                            entity: binary_sensor.front_door
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             css: '--mc-font-size-md: 13px; --mc-font-size-lg: 13px; --mc-font-size-xl: 13px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                         -
+                          type: horizontal
+                          gap: 0px
+                          align: center
+                          design:
+                           padding: 4px 2px
+                           min_height: 30px
+                          modules:
+                           -
+                            type: separator
+                            separator_style: none
+                            design:
+                             pointer_events: none
+                             width: 20px
+                             height: 20px
+                             flex: 0 0 20px
+                             margin_right: 9px
+                             background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                             animations:
+                              -
+                               id: lamp-open
+                               preset: custom:lamp-open
+                               trigger: state
+                               trigger_entity: binary_sensor.back_door
+                               state: 'on'
+                             conditional:
+                              -
+                               id: lit
+                               name: Lit
+                               conditions:
+                                -
+                                 type: state
+                                 entity: binary_sensor.back_door
+                                 state: 'on'
+                               design:
+                                box_shadow: '0 0 11px #eeb063'
+                                border_radius: 50%
+                                background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                           -
+                            type: text
+                            text: Back door
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             flex: 1 1 auto
+                           -
+                            type: info
+                            entity: binary_sensor.back_door
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             css: '--mc-font-size-md: 13px; --mc-font-size-lg: 13px; --mc-font-size-xl: 13px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                         -
+                          type: horizontal
+                          gap: 0px
+                          align: center
+                          design:
+                           padding: 4px 2px
+                           min_height: 30px
+                          modules:
+                           -
+                            type: separator
+                            separator_style: none
+                            design:
+                             pointer_events: none
+                             width: 20px
+                             height: 20px
+                             flex: 0 0 20px
+                             margin_right: 9px
+                             background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                             animations:
+                              -
+                               id: lamp-open
+                               preset: custom:lamp-open
+                               trigger: state
+                               trigger_entity: binary_sensor.garage_window
+                               state: 'on'
+                             conditional:
+                              -
+                               id: lit
+                               name: Lit
+                               conditions:
+                                -
+                                 type: state
+                                 entity: binary_sensor.garage_window
+                                 state: 'on'
+                               design:
+                                box_shadow: '0 0 11px #eeb063'
+                                border_radius: 50%
+                                background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                           -
+                            type: text
+                            text: Garage window
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             flex: 1 1 auto
+                           -
+                            type: info
+                            entity: binary_sensor.garage_window
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             css: '--mc-font-size-md: 13px; --mc-font-size-lg: 13px; --mc-font-size-xl: 13px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                         -
+                          type: horizontal
+                          gap: 0px
+                          align: center
+                          design:
+                           padding: 4px 2px
+                           min_height: 30px
+                          modules:
+                           -
+                            type: separator
+                            separator_style: none
+                            design:
+                             pointer_events: none
+                             width: 20px
+                             height: 20px
+                             flex: 0 0 20px
+                             margin_right: 9px
+                             background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                             animations:
+                              -
+                               id: lamp-open
+                               preset: custom:lamp-open
+                               trigger: state
+                               trigger_entity: binary_sensor.hall_motion
+                               state: 'on'
+                             conditional:
+                              -
+                               id: lit
+                               name: Lit
+                               conditions:
+                                -
+                                 type: state
+                                 entity: binary_sensor.hall_motion
+                                 state: 'on'
+                               design:
+                                box_shadow: '0 0 11px #eeb063'
+                                border_radius: 50%
+                                background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                           -
+                            type: text
+                            text: Hall motion
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             flex: 1 1 auto
+                           -
+                            type: info
+                            entity: binary_sensor.hall_motion
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             css: '--mc-font-size-md: 13px; --mc-font-size-lg: 13px; --mc-font-size-xl: 13px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                     -
+                      modules:
+                       -
+                        type: vertical
+                        gap: 0px
+                        design:
+                         position: relative
+                         box_sizing: border-box
+                         min_width: '0'
+                         min_height: clamp(0px, calc((100vw - 1600px) * 100), 230px)
+                         padding: 4px 8px 8px
+                         background: linear-gradient(112deg, rgba(84, 74, 62, 0.018), rgba(84, 74, 62, 0.060)), linear-gradient(112deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                         css: 'border: 20px solid transparent; border-image: url("/local/ceramic/parts/softHatch.webp") 40 / 20px stretch; background-clip: padding-box; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #20262b; --secondary-text-color: #3a4249; --divider-color: #8b9196'
+                        modules:
+                         -
+                          type: separator
+                          separator_style: none
+                          design:
+                           pointer_events: none
+                           position: absolute
+                           box_sizing: border-box
+                           left: -20px
+                           top: -20px
+                           width: calc(100% + 40px)
+                           height: calc(100% + 40px)
+                           background: url("/local/ceramic/parts/fastener.webp") left 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") left 4px bottom 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px bottom 4px/11px no-repeat
+                         -
+                          type: text
+                          text: Security
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           font_size: 16px
+                           font_weight: '400'
+                           letter_spacing: .05em
+                           color: '#20262b'
+                           min_width: '0'
+                           margin_bottom: 8px
+                           position: relative
+                         -
+                          type: horizontal
+                          gap: 0px
+                          align: center
+                          design:
+                           margin_bottom: 8px
+                           min_width: '0'
+                           position: relative
+                          modules:
+                           -
+                            type: text
+                            text: Alarm
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#20262b'
+                             min_width: '0'
+                             flex: 1 1 auto
+                           -
+                            type: info
+                            entity: alarm_control_panel.home
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 14px
+                             color: '#20262b'
+                             min_width: '0'
+                             white_space: nowrap
+                             css: '--mc-font-size-md: 14px; --mc-font-size-lg: 14px; --mc-font-size-xl: 14px; --primary-text-color: #20262b; --secondary-text-color: #aebfca'
+                         -
+                          type: row
+                          layout: repeat(2, minmax(0, 1fr))
+                          gap: 4px
+                          design:
+                           min_width: '0'
+                           position: relative
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Home
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: perform-action
+                                service: alarm_control_panel.alarm_arm_home
+                                data:
+                                 entity_id: alarm_control_panel.home
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: alarm_control_panel.home
+                                   state: armed_home
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Away
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: perform-action
+                                service: alarm_control_panel.alarm_arm_away
+                                data:
+                                 entity_id: alarm_control_panel.home
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: alarm_control_panel.home
+                                   state: armed_away
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Disarm
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: perform-action
+                                service: alarm_control_panel.alarm_disarm
+                                data:
+                                 entity_id: alarm_control_panel.home
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: alarm_control_panel.home
+                                   state: disarmed
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: vertical
+                              gap: 0px
+                              design:
+                               min_width: '0'
+                              modules:
+                               -
+                                type: button
+                                label: Unlock
+                                button_style: flat
+                                actions:
+                                 tap_action:
+                                  action: perform-action
+                                  service: lock.unlock
+                                  data:
+                                   entity_id: lock.front_door
+                                display:
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: lock.front_door
+                                   state: locked
+                                design:
+                                 font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                                 label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                                 label_font_size: 16px
+                                 label_font_weight: '500'
+                                 label_color: '#20262b'
+                                 icon_color: '#3a4249'
+                                 icon_size: 18px
+                                 icon_gap: 6px
+                                 content_align: center
+                                 label_overflow: wrap
+                                 background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                                 box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                                 animations:
+                                  -
+                                   id: press
+                                   preset: custom:key-press
+                                   trigger: tap
+                                 box_sizing: border-box
+                                 width: 100%
+                                 min_width: '0'
+                                 padding: 9px 2px 11px
+                                 css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                                 hover:
+                                  label_color: '#000'
+                               -
+                                type: button
+                                label: Lock
+                                button_style: flat
+                                actions:
+                                 tap_action:
+                                  action: perform-action
+                                  service: lock.lock
+                                  data:
+                                   entity_id: lock.front_door
+                                display:
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: lock.front_door
+                                   state: unlocked
+                                design:
+                                 font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                                 label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                                 label_font_size: 16px
+                                 label_font_weight: '500'
+                                 label_color: '#20262b'
+                                 icon_color: '#3a4249'
+                                 icon_size: 18px
+                                 icon_gap: 6px
+                                 content_align: center
+                                 label_overflow: wrap
+                                 background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                                 box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                                 animations:
+                                  -
+                                   id: press
+                                   preset: custom:key-press
+                                   trigger: tap
+                                 box_sizing: border-box
+                                 width: 100%
+                                 min_width: '0'
+                                 padding: 9px 2px 11px
+                                 css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                                 hover:
+                                  label_color: '#000'
+                   -
+                    type: separator
+                    separator_style: none
+                    design:
+                     pointer_events: none
+                     position: absolute
+                     box_sizing: border-box
+                     left: -400px
+                     top: -400px
+                     width: 3000px
+                     height: calc(100% + 1400px)
+                     css: 'backdrop-filter: grayscale(.35) brightness(.84); -webkit-backdrop-filter: grayscale(.35) brightness(.84)'
+                    display:
+                     conditions:
+                      -
+                       type: state
+                       entity: alarm_control_panel.home
+                       state: triggered
+                   -
+                    type: separator
+                    separator_style: none
+                    design:
+                     pointer_events: none
+                     position: absolute
+                     box_sizing: border-box
+                     left: calc(50% - min(620px, calc(100cqw - 16px)) * 1)
+                     top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 1)
+                     width: calc(min(620px, calc(100cqw - 16px)) * 2)
+                     height: calc(min(620px, calc(100cqw - 16px)) * 2)
+                     border_radius: 50%
+                     border: '5px solid #ff4a3c'
+                     box_shadow: '0 0 26px #ff4a3c, inset 0 0 22px #ff4a3c'
+                     css: '-webkit-mask-image: conic-gradient(from 30deg, transparent 0, #000 8deg 110deg, transparent 118deg); mask-image: conic-gradient(from 30deg, transparent 0, #000 8deg 110deg, transparent 118deg)'
+                     animations:
+                      -
+                       id: alarm-seam
+                       preset: custom:alarm-seam
+                       trigger: state
+                       trigger_entity: alarm_control_panel.home
+                       state: triggered
+                    display:
+                     conditions:
+                      -
+                       type: state
+                       entity: alarm_control_panel.home
+                       state: triggered
+                   -
+                    type: separator
+                    separator_style: none
+                    design:
+                     pointer_events: none
+                     position: absolute
+                     box_sizing: border-box
+                     left: calc(50% - min(620px, calc(100cqw - 16px)) * 1.54)
+                     top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 1.54)
+                     width: calc(min(620px, calc(100cqw - 16px)) * 3.08)
+                     height: calc(min(620px, calc(100cqw - 16px)) * 3.08)
+                     border_radius: 50%
+                     border: '5px solid #ff4a3c'
+                     box_shadow: '0 0 26px #ff4a3c, inset 0 0 22px #ff4a3c'
+                     css: '-webkit-mask-image: conic-gradient(from 92deg, transparent 0, #000 8deg 63deg, transparent 71deg); mask-image: conic-gradient(from 92deg, transparent 0, #000 8deg 63deg, transparent 71deg)'
+                     animations:
+                      -
+                       id: alarm-seam
+                       preset: custom:alarm-seam
+                       trigger: state
+                       trigger_entity: alarm_control_panel.home
+                       state: triggered
+                    display:
+                     conditions:
+                      -
+                       type: state
+                       entity: alarm_control_panel.home
+                       state: triggered
+                   -
+                    type: separator
+                    separator_style: none
+                    design:
+                     pointer_events: none
+                     position: absolute
+                     box_sizing: border-box
+                     left: calc(50% - min(620px, calc(100cqw - 16px)) * 0.5)
+                     top: calc(calc(44px + min(620px, calc(100cqw - 16px)) / 2) - min(620px, calc(100cqw - 16px)) * 0.5)
+                     width: calc(min(620px, calc(100cqw - 16px)) * 1)
+                     height: calc(min(620px, calc(100cqw - 16px)) * 1)
+                     border_radius: '0'
+                     background: url("/local/ceramic/parts/coreHousing-glow.webp") 0 0/100% 100% no-repeat
+                     css: 'filter: hue-rotate(150deg) saturate(5) brightness(1.05) drop-shadow(0 0 6px rgba(255, 74, 60, .9))'
+                     animations:
+                      -
+                       id: alarm-ring
+                       preset: custom:alarm-ring
+                       trigger: state
+                       trigger_entity: alarm_control_panel.home
+                       state: triggered
+                    display:
+                     conditions:
+                      -
+                       type: state
+                       entity: alarm_control_panel.home
+                       state: triggered
+               -
+                modules:
+                 -
+                  type: vertical
+                  gap: 0px
+                  design:
+                   min_width: '0'
+                   padding: calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px)) calc(clamp(0px, calc((100vw - 1600px) * 100), 20px) + clamp(0px, calc((1600px - 100vw) * 100), 8px))
+                   css: 'filter: brightness(.99)'
+                   position: relative
+                   box_sizing: border-box
+                   width: calc(100% - clamp(0%, calc((100vw - 1600px) * 100), 9.48%))
+                   margin_left: clamp(0%, calc((100vw - 1600px) * 100), 16.38%)
+                  modules:
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 300px)
+                     overflow: visible
+                     padding: 4px 8px
+                     css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                     justify_content: space-between
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       border: 34px solid transparent
+                       animations:
+                        -
+                         id: bay-strip
+                         preset: custom:bay-strip
+                         delay: 0s
+                       css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       margin_bottom: 6px
+                       min_width: '0'
+                       position: relative
+                      modules:
+                       -
+                        type: text
+                        text: Time and weather
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 17px
+                         font_weight: '400'
+                         letter_spacing: .05em
+                         color: '#a6cdee'
+                         min_width: '0'
+                         flex: 1 1 auto
+                     -
+                      type: clock
+                      show_seconds: true
+                      format_12h: false
+                      show_date: true
+                      date_format: dddd D MMMM
+                      design:
+                       font_family: '''DM Mono'', Consolas, monospace'
+                       font_weight: '300'
+                       color: '#dfe9ef'
+                       text_align: left
+                       css: 'zoom: 1.7; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                     -
+                      type: weather
+                      entity: weather.home
+                      show_temperature: true
+                      show_condition: true
+                      show_forecast: false
+                      animated_icons: false
+                      design:
+                       font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                       font_size: 18px
+                       color: '#dfe9ef'
+                       margin_top: 8px
+                       css: '--primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                     -
+                      type: forecast
+                      entity: weather.home
+                      forecast_type: daily
+                      num_forecasts: 5
+                      animated_icons: false
+                      show_temperature: true
+                      show_precipitation: false
+                      design:
+                       font_family: '''DM Mono'', Consolas, monospace'
+                       font_size: 13px
+                       color: '#dfe9ef'
+                       margin_top: 8px
+                       css: '--primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     margin_top: calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px))
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 240px)
+                     overflow: visible
+                     padding: 4px 8px
+                     css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       border: 34px solid transparent
+                       animations:
+                        -
+                         id: bay-strip
+                         preset: custom:bay-strip
+                         delay: 2s
+                       css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       margin_bottom: 6px
+                       min_width: '0'
+                       position: relative
+                      modules:
+                       -
+                        type: text
+                        text: Who is home
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 17px
+                         font_weight: '400'
+                         letter_spacing: .05em
+                         color: '#a6cdee'
+                         min_width: '0'
+                         flex: 1 1 auto
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       padding: 4px 2px
+                       min_height: 30px
+                      modules:
+                       -
+                        type: separator
+                        separator_style: none
+                        design:
+                         pointer_events: none
+                         width: 20px
+                         height: 20px
+                         flex: 0 0 20px
+                         margin_right: 9px
+                         background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                         animations:
+                          -
+                           id: lamp-home
+                           preset: custom:lamp-home
+                           trigger: state
+                           trigger_entity: person.anna
+                           state: home
+                         conditional:
+                          -
+                           id: lit
+                           name: Lit
+                           conditions:
+                            -
+                             type: state
+                             entity: person.anna
+                             state: home
+                           design:
+                            box_shadow: '0 0 11px #eeb063'
+                            border_radius: 50%
+                            background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                       -
+                        type: text
+                        text: Anna
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 16px
+                         font_weight: '400'
+                         letter_spacing: .02em
+                         color: '#dfe9ef'
+                         min_width: '0'
+                         flex: 1 1 auto
+                       -
+                        type: info
+                        entity: person.anna
+                        show_name: false
+                        show_state: true
+                        design:
+                         font_family: '''DM Mono'', Consolas, monospace'
+                         font_size: 14px
+                         color: '#dfe9ef'
+                         min_width: '0'
+                         white_space: nowrap
+                         css: '--mc-font-size-md: 14px; --mc-font-size-lg: 14px; --mc-font-size-xl: 14px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       padding: 4px 2px
+                       min_height: 30px
+                      modules:
+                       -
+                        type: separator
+                        separator_style: none
+                        design:
+                         pointer_events: none
+                         width: 20px
+                         height: 20px
+                         flex: 0 0 20px
+                         margin_right: 9px
+                         background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                         animations:
+                          -
+                           id: lamp-home
+                           preset: custom:lamp-home
+                           trigger: state
+                           trigger_entity: person.ben
+                           state: home
+                         conditional:
+                          -
+                           id: lit
+                           name: Lit
+                           conditions:
+                            -
+                             type: state
+                             entity: person.ben
+                             state: home
+                           design:
+                            box_shadow: '0 0 11px #eeb063'
+                            border_radius: 50%
+                            background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                       -
+                        type: text
+                        text: Ben
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 16px
+                         font_weight: '400'
+                         letter_spacing: .02em
+                         color: '#dfe9ef'
+                         min_width: '0'
+                         flex: 1 1 auto
+                       -
+                        type: info
+                        entity: person.ben
+                        show_name: false
+                        show_state: true
+                        design:
+                         font_family: '''DM Mono'', Consolas, monospace'
+                         font_size: 14px
+                         color: '#dfe9ef'
+                         min_width: '0'
+                         white_space: nowrap
+                         css: '--mc-font-size-md: 14px; --mc-font-size-lg: 14px; --mc-font-size-xl: 14px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       padding: 4px 2px
+                       min_height: 30px
+                      modules:
+                       -
+                        type: separator
+                        separator_style: none
+                        design:
+                         pointer_events: none
+                         width: 20px
+                         height: 20px
+                         flex: 0 0 20px
+                         margin_right: 9px
+                         background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                         animations:
+                          -
+                           id: lamp-home
+                           preset: custom:lamp-home
+                           trigger: state
+                           trigger_entity: person.lisa
+                           state: home
+                         conditional:
+                          -
+                           id: lit
+                           name: Lit
+                           conditions:
+                            -
+                             type: state
+                             entity: person.lisa
+                             state: home
+                           design:
+                            box_shadow: '0 0 11px #eeb063'
+                            border_radius: 50%
+                            background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                       -
+                        type: text
+                        text: Lisa
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 16px
+                         font_weight: '400'
+                         letter_spacing: .02em
+                         color: '#dfe9ef'
+                         min_width: '0'
+                         flex: 1 1 auto
+                       -
+                        type: info
+                        entity: person.lisa
+                        show_name: false
+                        show_state: true
+                        design:
+                         font_family: '''DM Mono'', Consolas, monospace'
+                         font_size: 14px
+                         color: '#dfe9ef'
+                         min_width: '0'
+                         white_space: nowrap
+                         css: '--mc-font-size-md: 14px; --mc-font-size-lg: 14px; --mc-font-size-xl: 14px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     margin_top: calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px))
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 240px)
+                     overflow: visible
+                     padding: 4px 8px
+                     css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                     justify_content: space-between
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       border: 34px solid transparent
+                       animations:
+                        -
+                         id: bay-strip
+                         preset: custom:bay-strip
+                         delay: 4s
+                       css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       margin_bottom: 6px
+                       min_width: '0'
+                       position: relative
+                      modules:
+                       -
+                        type: text
+                        text: Climate
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 17px
+                         font_weight: '400'
+                         letter_spacing: .05em
+                         color: '#a6cdee'
+                         min_width: '0'
+                         flex: 1 1 auto
+                     -
+                      type: vertical
+                      gap: 0px
+                      design:
+                       padding: 12px 2px
+                      modules:
+                       -
+                        type: horizontal
+                        gap: 0px
+                        align: center
+                        design: {}
+                        modules:
+                         -
+                          type: separator
+                          separator_style: none
+                          design:
+                           pointer_events: none
+                           width: 20px
+                           height: 20px
+                           flex: 0 0 20px
+                           margin_right: 9px
+                           background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                           animations:
+                            -
+                             id: lamp-heat
+                             preset: custom:lamp-heat
+                             trigger: state
+                             trigger_entity: climate.living_room
+                             state: heat
+                           conditional:
+                            -
+                             id: lit
+                             name: Lit
+                             conditions:
+                              -
+                               type: state
+                               entity: climate.living_room
+                               state: heat
+                             design:
+                              box_shadow: '0 0 11px #eeb063'
+                              border_radius: 50%
+                              background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                         -
+                          type: text
+                          text: Living room
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           font_size: 16px
+                           font_weight: '400'
+                           letter_spacing: .02em
+                           color: '#dfe9ef'
+                           min_width: '0'
+                           flex: 1 1 auto
+                         -
+                          type: info
+                          entity: sensor.indoor_temperature
+                          show_name: false
+                          show_state: true
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 18px
+                           color: '#dfe9ef'
+                           min_width: '0'
+                           white_space: nowrap
+                           css: '--mc-font-size-md: 18px; --mc-font-size-lg: 18px; --mc-font-size-xl: 18px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                       -
+                        type: spinbox
+                        entity: climate.living_room
+                        design:
+                         font_family: '''DM Mono'', Consolas, monospace'
+                         font_size: 15px
+                         margin_top: 4px
+                         css: '--mc-spinbox-btn-size: 30px; --mc-spinbox-btn-color: #d9d7d0; --mc-spinbox-btn-text-color: #20262b; color: #dfe9ef; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                     -
+                      type: vertical
+                      gap: 0px
+                      design:
+                       padding: 12px 2px
+                      modules:
+                       -
+                        type: horizontal
+                        gap: 0px
+                        align: center
+                        design: {}
+                        modules:
+                         -
+                          type: separator
+                          separator_style: none
+                          design:
+                           pointer_events: none
+                           width: 20px
+                           height: 20px
+                           flex: 0 0 20px
+                           margin_right: 9px
+                           background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                           animations:
+                            -
+                             id: lamp-heat
+                             preset: custom:lamp-heat
+                             trigger: state
+                             trigger_entity: climate.bedroom
+                             state: cool
+                           conditional:
+                            -
+                             id: lit
+                             name: Lit
+                             conditions:
+                              -
+                               type: state
+                               entity: climate.bedroom
+                               state: cool
+                             design:
+                              box_shadow: '0 0 11px #eeb063'
+                              border_radius: 50%
+                              background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                         -
+                          type: text
+                          text: Bedroom
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           font_size: 16px
+                           font_weight: '400'
+                           letter_spacing: .02em
+                           color: '#dfe9ef'
+                           min_width: '0'
+                           flex: 1 1 auto
+                         -
+                          type: info
+                          entity: sensor.bedroom_temperature
+                          show_name: false
+                          show_state: true
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 18px
+                           color: '#dfe9ef'
+                           min_width: '0'
+                           white_space: nowrap
+                           css: '--mc-font-size-md: 18px; --mc-font-size-lg: 18px; --mc-font-size-xl: 18px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                       -
+                        type: spinbox
+                        entity: climate.bedroom
+                        design:
+                         font_family: '''DM Mono'', Consolas, monospace'
+                         font_size: 15px
+                         margin_top: 4px
+                         css: '--mc-spinbox-btn-size: 30px; --mc-spinbox-btn-color: #d9d7d0; --mc-spinbox-btn-text-color: #20262b; color: #dfe9ef; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     margin_top: calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px))
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 190px)
+                     padding: 4px 8px 8px
+                     background: linear-gradient(112deg, rgba(84, 74, 62, 0.042), rgba(84, 74, 62, 0.096)), linear-gradient(112deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                     css: 'border: 20px solid transparent; border-image: url("/local/ceramic/parts/softHatch.webp") 40 / 20px stretch; background-clip: padding-box; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #20262b; --secondary-text-color: #3a4249; --divider-color: #8b9196'
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -20px
+                       top: -20px
+                       width: calc(100% + 40px)
+                       height: calc(100% + 40px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") left 4px bottom 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px bottom 4px/11px no-repeat
+                     -
+                      type: text
+                      text: Scenes
+                      design:
+                       font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                       font_size: 16px
+                       font_weight: '400'
+                       letter_spacing: .05em
+                       color: '#20262b'
+                       min_width: '0'
+                       margin_bottom: 8px
+                       position: relative
+                     -
+                      type: row
+                      layout: repeat(auto-fit, minmax(min(100%, 112px), 1fr))
+                      gap: 4px
+                      design:
+                       min_width: '0'
+                       position: relative
+                      columns:
+                       -
+                        modules:
+                         -
+                          type: button
+                          label: Relax
+                          icon: mdi:sofa-outline
+                          button_style: flat
+                          actions:
+                           tap_action:
+                            action: perform-action
+                            service: scene.turn_on
+                            data:
+                             entity_id: scene.relax
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_size: 16px
+                           label_font_weight: '500'
+                           label_color: '#20262b'
+                           icon_color: '#3a4249'
+                           icon_size: 18px
+                           icon_gap: 6px
+                           content_align: center
+                           label_overflow: wrap
+                           background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                           box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                           animations:
+                            -
+                             id: press
+                             preset: custom:key-press
+                             trigger: tap
+                           box_sizing: border-box
+                           width: 100%
+                           min_width: '0'
+                           padding: 9px 2px 11px
+                           css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                           hover:
+                            label_color: '#000'
+                       -
+                        modules:
+                         -
+                          type: button
+                          label: Focus
+                          icon: mdi:target
+                          button_style: flat
+                          actions:
+                           tap_action:
+                            action: perform-action
+                            service: scene.turn_on
+                            data:
+                             entity_id: scene.focus
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_size: 16px
+                           label_font_weight: '500'
+                           label_color: '#20262b'
+                           icon_color: '#3a4249'
+                           icon_size: 18px
+                           icon_gap: 6px
+                           content_align: center
+                           label_overflow: wrap
+                           background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                           box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                           animations:
+                            -
+                             id: press
+                             preset: custom:key-press
+                             trigger: tap
+                           box_sizing: border-box
+                           width: 100%
+                           min_width: '0'
+                           padding: 9px 2px 11px
+                           css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                           hover:
+                            label_color: '#000'
+                       -
+                        modules:
+                         -
+                          type: button
+                          label: Dinner
+                          icon: mdi:silverware-fork-knife
+                          button_style: flat
+                          actions:
+                           tap_action:
+                            action: perform-action
+                            service: scene.turn_on
+                            data:
+                             entity_id: scene.dinner
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_size: 16px
+                           label_font_weight: '500'
+                           label_color: '#20262b'
+                           icon_color: '#3a4249'
+                           icon_size: 18px
+                           icon_gap: 6px
+                           content_align: center
+                           label_overflow: wrap
+                           background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                           box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                           animations:
+                            -
+                             id: press
+                             preset: custom:key-press
+                             trigger: tap
+                           box_sizing: border-box
+                           width: 100%
+                           min_width: '0'
+                           padding: 9px 2px 11px
+                           css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                           hover:
+                            label_color: '#000'
+                       -
+                        modules:
+                         -
+                          type: button
+                          label: Film
+                          icon: mdi:filmstrip
+                          button_style: flat
+                          actions:
+                           tap_action:
+                            action: perform-action
+                            service: scene.turn_on
+                            data:
+                             entity_id: scene.movie
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           label_font_size: 16px
+                           label_font_weight: '500'
+                           label_color: '#20262b'
+                           icon_color: '#3a4249'
+                           icon_size: 18px
+                           icon_gap: 6px
+                           content_align: center
+                           label_overflow: wrap
+                           background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                           box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                           animations:
+                            -
+                             id: press
+                             preset: custom:key-press
+                             trigger: tap
+                           box_sizing: border-box
+                           width: 100%
+                           min_width: '0'
+                           padding: 9px 2px 11px
+                           css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                           hover:
+                            label_color: '#000'
+                   -
+                    type: separator
+                    separator_style: none
+                    design:
+                     pointer_events: none
+                     position: absolute
+                     box_sizing: border-box
+                     left: -40px
+                     top: -40px
+                     width: calc(100% + 80px)
+                     height: calc(100% + 80px)
+                     css: 'backdrop-filter: grayscale(.35) brightness(.84); -webkit-backdrop-filter: grayscale(.35) brightness(.84)'
+                    display:
+                     conditions:
+                      -
+                       type: state
+                       entity: alarm_control_panel.home
+                       state: triggered
+               -
+                modules:
+                 -
+                  type: vertical
+                  gap: 0px
+                  design:
+                   min_width: '0'
+                   padding: calc(clamp(0px, calc((100vw - 1600px) * 100), 84px) + clamp(0px, calc((1600px - 100vw) * 100), 12px)) calc(clamp(0px, calc((100vw - 1600px) * 100), 54px) + clamp(0px, calc((1600px - 100vw) * 100), 8px)) calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px)) calc(clamp(0px, calc((100vw - 1600px) * 100), 22px) + clamp(0px, calc((1600px - 100vw) * 100), 8px))
+                   css: 'filter: brightness(.97)'
+                   position: relative
+                   box_sizing: border-box
+                   width: calc(100% - clamp(0%, calc((100vw - 1600px) * 100), 6.9%))
+                   margin_left: clamp(0%, calc((100vw - 1600px) * 100), 6.9%)
+                  modules:
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 400px)
+                     padding: 4px 8px 8px
+                     background: linear-gradient(112deg, rgba(84, 74, 62, 0.015), rgba(84, 74, 62, 0.066)), linear-gradient(112deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                     css: 'border: 20px solid transparent; border-image: url("/local/ceramic/parts/softHatch.webp") 40 / 20px stretch; background-clip: padding-box; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #20262b; --secondary-text-color: #3a4249; --divider-color: #8b9196'
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -20px
+                       top: -20px
+                       width: calc(100% + 40px)
+                       height: calc(100% + 40px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") left 4px bottom 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px bottom 4px/11px no-repeat
+                     -
+                      type: text
+                      text: Lights
+                      design:
+                       font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                       font_size: 16px
+                       font_weight: '400'
+                       letter_spacing: .05em
+                       color: '#20262b'
+                       min_width: '0'
+                       margin_bottom: 8px
+                       position: relative
+                     -
+                      type: tabs
+                      tab_style: default
+                      active_tab: 0
+                      tabs:
+                       -
+                        label: Ground floor
+                        modules:
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           min_width: '0'
+                          modules:
+                           -
+                            type: light
+                            entity: light.living_room
+                            name: Living room
+                            show_brightness: false
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             color: '#20262b'
+                             padding: 4px 2px
+                             min_width: '0'
+                             css: '--primary-text-color: #20262b; --secondary-text-color: #3a4249; --control-slider-thickness: 8px; --mc-slider-color: #5f9fd1; --state-light-on-color: #5f9fd1; --state-light-active-color: #5f9fd1'
+                           -
+                            type: slider
+                            entity: light.living_room
+                            slider_color: '#5f9fd1'
+                            slider_color_to: '#bfe0f5'
+                            fill_mode: gradient
+                            track_color: rgba(84, 92, 100, .26)
+                            track_style: glass
+                            track_thickness: 18
+                            thumb: pill
+                            thumb_size: 26
+                            thumb_border: 2
+                            thumb_border_color: '#f4f2eb'
+                            thumb_glow: 6
+                            show_value: true
+                            value_position: beside
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#20262b'
+                             width: 100%
+                             min_width: '0'
+                             margin_top: 6px
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Kitchen
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.kitchen
+                               hold_action:
+                                action: more-info
+                                entity: light.kitchen
+                              entity: light.kitchen
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.kitchen
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.kitchen
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Hallway
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.hallway
+                               hold_action:
+                                action: more-info
+                                entity: light.hallway
+                              entity: light.hallway
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.hallway
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.hallway
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Office desk
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.desk
+                               hold_action:
+                                action: more-info
+                                entity: light.desk
+                              entity: light.desk
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.desk
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.desk
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                       -
+                        label: Upstairs
+                        modules:
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           min_width: '0'
+                          modules:
+                           -
+                            type: light
+                            entity: light.bedroom
+                            name: Bedroom
+                            show_brightness: false
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             color: '#20262b'
+                             padding: 4px 2px
+                             min_width: '0'
+                             css: '--primary-text-color: #20262b; --secondary-text-color: #3a4249; --control-slider-thickness: 8px; --mc-slider-color: #5f9fd1; --state-light-on-color: #5f9fd1; --state-light-active-color: #5f9fd1'
+                           -
+                            type: slider
+                            entity: light.bedroom
+                            slider_color: '#5f9fd1'
+                            slider_color_to: '#bfe0f5'
+                            fill_mode: gradient
+                            track_color: rgba(84, 92, 100, .26)
+                            track_style: glass
+                            track_thickness: 18
+                            thumb: pill
+                            thumb_size: 26
+                            thumb_border: 2
+                            thumb_border_color: '#f4f2eb'
+                            thumb_glow: 6
+                            show_value: true
+                            value_position: beside
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#20262b'
+                             width: 100%
+                             min_width: '0'
+                             margin_top: 6px
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Bedside lamp
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.bedside
+                               hold_action:
+                                action: more-info
+                                entity: light.bedside
+                              entity: light.bedside
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.bedside
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.bedside
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Guest room
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.nightlight
+                               hold_action:
+                                action: more-info
+                                entity: light.nightlight
+                              entity: light.nightlight
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.nightlight
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.nightlight
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Landing
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.hall_ceiling
+                               hold_action:
+                                action: more-info
+                                entity: light.hall_ceiling
+                              entity: light.hall_ceiling
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.hall_ceiling
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.hall_ceiling
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                       -
+                        label: Outside
+                        modules:
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           min_width: '0'
+                          modules:
+                           -
+                            type: light
+                            entity: light.garden
+                            name: Garden
+                            show_brightness: false
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 16px
+                             color: '#20262b'
+                             padding: 4px 2px
+                             min_width: '0'
+                             css: '--primary-text-color: #20262b; --secondary-text-color: #3a4249; --control-slider-thickness: 8px; --mc-slider-color: #5f9fd1; --state-light-on-color: #5f9fd1; --state-light-active-color: #5f9fd1'
+                           -
+                            type: slider
+                            entity: light.garden
+                            slider_color: '#5f9fd1'
+                            slider_color_to: '#bfe0f5'
+                            fill_mode: gradient
+                            track_color: rgba(84, 92, 100, .26)
+                            track_style: glass
+                            track_thickness: 18
+                            thumb: pill
+                            thumb_size: 26
+                            thumb_border: 2
+                            thumb_border_color: '#f4f2eb'
+                            thumb_glow: 6
+                            show_value: true
+                            value_position: beside
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#20262b'
+                             width: 100%
+                             min_width: '0'
+                             margin_top: 6px
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Porch
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.porch
+                               hold_action:
+                                action: more-info
+                                entity: light.porch
+                              entity: light.porch
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.porch
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.porch
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                         -
+                          type: row
+                          layout: minmax(0, 170px) minmax(0, 1fr)
+                          gap: 8px
+                          design:
+                           align_items: center
+                           margin_top: 12px
+                           min_width: '0'
+                          columns:
+                           -
+                            modules:
+                             -
+                              type: button
+                              label: Tree lights
+                              button_style: flat
+                              actions:
+                               tap_action:
+                                action: toggle
+                                entity: light.christmas_tree
+                               hold_action:
+                                action: more-info
+                                entity: light.christmas_tree
+                              entity: light.christmas_tree
+                              design:
+                               font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                               label_font_size: 16px
+                               label_font_weight: '500'
+                               label_color: '#20262b'
+                               icon_color: '#3a4249'
+                               icon_size: 18px
+                               icon_gap: 6px
+                               content_align: center
+                               label_overflow: wrap
+                               background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                               box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                               animations:
+                                -
+                                 id: press
+                                 preset: custom:key-press
+                                 trigger: tap
+                               box_sizing: border-box
+                               width: 100%
+                               min_width: '0'
+                               padding: 9px 2px 11px
+                               css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                               hover:
+                                label_color: '#000'
+                               conditional:
+                                -
+                                 id: 'on'
+                                 name: Active
+                                 conditions:
+                                  -
+                                   type: state
+                                   entity: light.christmas_tree
+                                   state: 'on'
+                                 design:
+                                  background: 'linear-gradient(#fdf8ee, #f6eedd 58%, #eddfc6)'
+                                  label_color: '#20262b'
+                                  icon_color: '#5c3d10'
+                                  box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #e8c595, inset 0 -6px 6px rgba(238, 176, 99, .18), 0 0 7px rgba(238, 176, 99, .16)'
+                           -
+                            modules:
+                             -
+                              type: slider
+                              entity: light.christmas_tree
+                              slider_color: '#5f9fd1'
+                              slider_color_to: '#bfe0f5'
+                              fill_mode: gradient
+                              track_color: rgba(84, 92, 100, .26)
+                              track_style: glass
+                              track_thickness: 12
+                              thumb: pill
+                              thumb_size: 20
+                              thumb_border: 2
+                              thumb_border_color: '#f4f2eb'
+                              thumb_glow: 5
+                              show_value: true
+                              value_position: beside
+                              design:
+                               font_family: '''DM Mono'', Consolas, monospace'
+                               font_size: 13px
+                               color: '#20262b'
+                               width: 100%
+                               min_width: '0'
+                      design:
+                       position: relative
+                       font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                       tab_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                       tab_font_size: 16px
+                       tab_font_weight: '500'
+                       tab_color: '#20262b'
+                       tab_padding: 8px 8px
+                       tab_radius: 9px
+                       tab_gap: 6px
+                       tab_background: '#f4f2eb'
+                       tab_border_style: solid
+                       tab_border_width: 1px 1px 3px 1px
+                       tab_border_color: '#f4f3ee #9c9f9f #7d8285 #b5b7b5'
+                       tab_bar_padding: 6px
+                       tab_bar_background: rgba(84, 74, 62, .1)
+                       tab_align: stretch
+                       tab_animation: fade
+                       tab_active:
+                        tab_color: '#dfe9ef'
+                        tab_background: '#1d2329'
+                        tab_border_width: 2px 1px 1px 1px
+                        tab_border_color: '#0b0e11 #39424a #a6cdee #39424a'
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     margin_top: 16px
+                     min_width: '0'
+                    modules:
+                     -
+                      type: vertical
+                      gap: 0px
+                      design:
+                       position: relative
+                       box_sizing: border-box
+                       min_width: '0'
+                       min_height: clamp(0px, calc((100vw - 1600px) * 100), 170px)
+                       overflow: visible
+                       padding: 4px 8px
+                       css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                      modules:
+                       -
+                        type: separator
+                        separator_style: none
+                        design:
+                         pointer_events: none
+                         position: absolute
+                         box_sizing: border-box
+                         left: -34px
+                         top: -34px
+                         width: calc(100% + 68px)
+                         height: calc(100% + 68px)
+                         border: 34px solid transparent
+                         animations:
+                          -
+                           id: bay-strip
+                           preset: custom:bay-strip
+                           delay: 5s
+                         css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                       -
+                        type: separator
+                        separator_style: none
+                        design:
+                         pointer_events: none
+                         position: absolute
+                         box_sizing: border-box
+                         left: -34px
+                         top: -34px
+                         width: calc(100% + 68px)
+                         height: calc(100% + 68px)
+                         background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                       -
+                        type: horizontal
+                        gap: 0px
+                        align: center
+                        design:
+                         margin_bottom: 6px
+                         min_width: '0'
+                         position: relative
+                        modules:
+                         -
+                          type: text
+                          text: Living room music
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           font_size: 17px
+                           font_weight: '400'
+                           letter_spacing: .05em
+                           color: '#a6cdee'
+                           min_width: '0'
+                           flex: 1 1 auto
+                       -
+                        type: horizontal
+                        gap: 0px
+                        align: center
+                        design:
+                         padding: 4px 2px
+                         min_height: 30px
+                        modules:
+                         -
+                          type: separator
+                          separator_style: none
+                          design:
+                           pointer_events: none
+                           width: 20px
+                           height: 20px
+                           flex: 0 0 20px
+                           margin_right: 9px
+                           background: url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat
+                           animations:
+                            -
+                             id: lamp-play
+                             preset: custom:lamp-play
+                             trigger: state
+                             trigger_entity: media_player.living_room
+                             state: playing
+                           conditional:
+                            -
+                             id: lit
+                             name: Lit
+                             conditions:
+                              -
+                               type: state
+                               entity: media_player.living_room
+                               state: playing
+                             design:
+                              box_shadow: '0 0 11px #eeb063'
+                              border_radius: 50%
+                              background: 'radial-gradient(circle, #ffdfae 0, #eeb063 45%, #a8681c 72%, transparent 76%), url("/local/ceramic/parts/fastener.webp") center/100% 100% no-repeat'
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           flex: 1 1 auto
+                           min_width: '0'
+                          modules:
+                           -
+                            type: info
+                            entity: media_player.living_room
+                            attribute: media_title
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 19px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             css: '--mc-font-size-md: 19px; --primary-text-color: #dfe9ef'
+                           -
+                            type: info
+                            entity: media_player.living_room
+                            attribute: media_artist
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 13px
+                             color: '#aebfca'
+                             min_width: '0'
+                             css: '--mc-font-size-md: 13px; --primary-text-color: #aebfca'
+                     -
+                      type: vertical
+                      gap: 0px
+                      design:
+                       position: relative
+                       box_sizing: border-box
+                       min_width: '0'
+                       min_height: clamp(0px, calc((100vw - 1600px) * 100), 186px)
+                       padding: 4px 8px 8px
+                       background: linear-gradient(112deg, rgba(84, 74, 62, 0.030), rgba(84, 74, 62, 0.090)), linear-gradient(112deg, rgba(255, 253, 247, .74), rgba(255, 252, 245, .54)), url("/local/ceramic/tex/ceramic-plaster.webp") 0 0/760px
+                       css: 'border: 20px solid transparent; border-image: url("/local/ceramic/parts/softHatch.webp") 40 / 20px stretch; background-clip: padding-box; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #20262b; --secondary-text-color: #3a4249; --divider-color: #8b9196'
+                       margin_top: 10px
+                      modules:
+                       -
+                        type: separator
+                        separator_style: none
+                        design:
+                         pointer_events: none
+                         position: absolute
+                         box_sizing: border-box
+                         left: -20px
+                         top: -20px
+                         width: calc(100% + 40px)
+                         height: calc(100% + 40px)
+                         background: url("/local/ceramic/parts/fastener.webp") left 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") left 4px bottom 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px top 4px/11px no-repeat, url("/local/ceramic/parts/fastener.webp") right 4px bottom 4px/11px no-repeat
+                       -
+                        type: row
+                        layout: 1fr 1.3fr 1fr
+                        gap: 6px
+                        design:
+                         min_width: '0'
+                         position: relative
+                        columns:
+                         -
+                          modules:
+                           -
+                            type: button
+                            label: Back
+                            icon: mdi:skip-previous
+                            button_style: icon-only
+                            actions:
+                             tap_action:
+                              action: perform-action
+                              service: media_player.media_previous_track
+                              data:
+                               entity_id: media_player.living_room
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             label_font_size: 16px
+                             label_font_weight: '500'
+                             label_color: '#20262b'
+                             icon_color: '#20262b'
+                             icon_size: 24px
+                             icon_gap: 6px
+                             content_align: center
+                             label_overflow: wrap
+                             background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                             box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                             animations:
+                              -
+                               id: press
+                               preset: custom:key-press
+                               trigger: tap
+                             box_sizing: border-box
+                             width: 100%
+                             min_width: '0'
+                             padding: 9px 2px 11px
+                             css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                             hover:
+                              label_color: '#000'
+                         -
+                          modules:
+                           -
+                            type: button
+                            label: Play
+                            icon: mdi:play-pause
+                            button_style: icon-only
+                            actions:
+                             tap_action:
+                              action: perform-action
+                              service: media_player.media_play_pause
+                              data:
+                               entity_id: media_player.living_room
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             label_font_size: 16px
+                             label_font_weight: '500'
+                             label_color: '#20262b'
+                             icon_color: '#20262b'
+                             icon_size: 24px
+                             icon_gap: 6px
+                             content_align: center
+                             label_overflow: wrap
+                             background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                             box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                             animations:
+                              -
+                               id: press
+                               preset: custom:key-press
+                               trigger: tap
+                             box_sizing: border-box
+                             width: 100%
+                             min_width: '0'
+                             padding: 9px 2px 11px
+                             css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                             hover:
+                              label_color: '#000'
+                         -
+                          modules:
+                           -
+                            type: button
+                            label: Next
+                            icon: mdi:skip-next
+                            button_style: icon-only
+                            actions:
+                             tap_action:
+                              action: perform-action
+                              service: media_player.media_next_track
+                              data:
+                               entity_id: media_player.living_room
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             label_font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             label_font_size: 16px
+                             label_font_weight: '500'
+                             label_color: '#20262b'
+                             icon_color: '#20262b'
+                             icon_size: 24px
+                             icon_gap: 6px
+                             content_align: center
+                             label_overflow: wrap
+                             background: 'linear-gradient(#fdfcf8, #f4f2eb 58%, #e6e3da)'
+                             box_shadow: 'inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -2px 0 #c3d8e8, inset 0 -5px 5px rgba(120, 165, 205, .14)'
+                             animations:
+                              -
+                               id: press
+                               preset: custom:key-press
+                               trigger: tap
+                             box_sizing: border-box
+                             width: 100%
+                             min_width: '0'
+                             padding: 9px 2px 11px
+                             css: 'border-style: solid; border-color: transparent; border-width: 13px; border-image: url("/local/ceramic/parts/keyHousing.webp") 42 / 13px stretch; background-clip: padding-box; border-radius: 19px'
+                             hover:
+                              label_color: '#000'
+                       -
+                        type: horizontal
+                        gap: 0px
+                        align: center
+                        design:
+                         margin_top: 6px
+                         min_width: '0'
+                         position: relative
+                        modules:
+                         -
+                          type: text
+                          text: Volume
+                          design:
+                           font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                           font_size: 16px
+                           font_weight: '400'
+                           letter_spacing: .02em
+                           color: '#20262b'
+                           min_width: '0'
+                           margin_right: 10px
+                           flex: 0 0 auto
+                           white_space: nowrap
+                         -
+                          type: slider
+                          entity: media_player.living_room
+                          slider_color: '#5f9fd1'
+                          slider_color_to: '#bfe0f5'
+                          fill_mode: gradient
+                          track_color: rgba(84, 92, 100, .26)
+                          track_style: glass
+                          track_thickness: 12
+                          thumb: pill
+                          thumb_size: 20
+                          thumb_border: 2
+                          thumb_border_color: '#f4f2eb'
+                          thumb_glow: 5
+                          show_value: true
+                          value_position: beside
+                          design:
+                           font_family: '''DM Mono'', Consolas, monospace'
+                           font_size: 13px
+                           color: '#20262b'
+                           width: auto
+                           min_width: '0'
+                           flex: 1 1 auto
+                   -
+                    type: vertical
+                    gap: 0px
+                    design:
+                     margin_top: calc(clamp(0px, calc((100vw - 1600px) * 100), 30px) + clamp(0px, calc((1600px - 100vw) * 100), 12px))
+                     position: relative
+                     box_sizing: border-box
+                     min_width: '0'
+                     min_height: clamp(0px, calc((100vw - 1600px) * 100), 190px)
+                     overflow: visible
+                     padding: 4px 8px
+                     css: 'border: 34px solid transparent; border-image: url("/local/ceramic/parts/displayBay.webp") 68 fill / 34px stretch; filter: drop-shadow(0 2px 0 rgba(255, 255, 255, .95)) drop-shadow(0 -1px 1px rgba(84, 74, 62, .5)); --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca; --divider-color: #3a4852'
+                    modules:
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       border: 34px solid transparent
+                       animations:
+                        -
+                         id: bay-strip
+                         preset: custom:bay-strip
+                         delay: 8s
+                       css: 'border-image: url("/local/ceramic/parts/displayBay-glow.webp") 68 / 34px stretch'
+                     -
+                      type: separator
+                      separator_style: none
+                      design:
+                       pointer_events: none
+                       position: absolute
+                       box_sizing: border-box
+                       left: -34px
+                       top: -34px
+                       width: calc(100% + 68px)
+                       height: calc(100% + 68px)
+                       background: url("/local/ceramic/parts/fastener.webp") left 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") left 9px bottom 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px top 9px/13px no-repeat, url("/local/ceramic/parts/fastener.webp") right 9px bottom 9px/13px no-repeat
+                     -
+                      type: horizontal
+                      gap: 0px
+                      align: center
+                      design:
+                       margin_bottom: 6px
+                       min_width: '0'
+                       position: relative
+                      modules:
+                       -
+                        type: text
+                        text: Cabin air
+                        design:
+                         font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                         font_size: 17px
+                         font_weight: '400'
+                         letter_spacing: .05em
+                         color: '#a6cdee'
+                         min_width: '0'
+                         flex: 1 1 auto
+                     -
+                      type: row
+                      layout: repeat(3, minmax(0, 1fr))
+                      gap: 10px
+                      design:
+                       min_width: '0'
+                      columns:
+                       -
+                        modules:
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           min_width: '0'
+                          modules:
+                           -
+                            type: text
+                            text: Carbon dioxide
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 14px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#aebfca'
+                             min_width: '0'
+                           -
+                            type: info
+                            entity: sensor.co2
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 22px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             margin_top: 6px
+                             css: '--mc-font-size-md: 22px; --mc-font-size-lg: 22px; --mc-font-size-xl: 22px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                       -
+                        modules:
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           min_width: '0'
+                          modules:
+                           -
+                            type: text
+                            text: Humidity
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 14px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#aebfca'
+                             min_width: '0'
+                           -
+                            type: info
+                            entity: sensor.indoor_humidity
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 22px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             margin_top: 6px
+                             css: '--mc-font-size-md: 22px; --mc-font-size-lg: 22px; --mc-font-size-xl: 22px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                       -
+                        modules:
+                         -
+                          type: vertical
+                          gap: 0px
+                          design:
+                           min_width: '0'
+                          modules:
+                           -
+                            type: text
+                            text: Fine dust
+                            design:
+                             font_family: '''Jost'', ''Century Gothic'', sans-serif'
+                             font_size: 14px
+                             font_weight: '400'
+                             letter_spacing: .02em
+                             color: '#aebfca'
+                             min_width: '0'
+                           -
+                            type: info
+                            entity: sensor.pm25
+                            show_name: false
+                            show_state: true
+                            design:
+                             font_family: '''DM Mono'', Consolas, monospace'
+                             font_size: 22px
+                             color: '#dfe9ef'
+                             min_width: '0'
+                             white_space: nowrap
+                             margin_top: 6px
+                             css: '--mc-font-size-md: 22px; --mc-font-size-lg: 22px; --mc-font-size-xl: 22px; --primary-text-color: #dfe9ef; --secondary-text-color: #aebfca'
+                   -
+                    type: separator
+                    separator_style: none
+                    design:
+                     pointer_events: none
+                     position: absolute
+                     box_sizing: border-box
+                     left: -40px
+                     top: -40px
+                     width: calc(100% + 80px)
+                     height: calc(100% + 80px)
+                     css: 'backdrop-filter: grayscale(.35) brightness(.84); -webkit-backdrop-filter: grayscale(.35) brightness(.84)'
+                    display:
+                     conditions:
+                      -
+                       type: state
+                       entity: alarm_control_panel.home
+                       state: triggered

@@ -1,0 +1,17 @@
+# Bridge Console: deep blue and dark composite, pale blue data, red only for alarm and warning. Dark mode only.
+Bridge Console:
+  modes:
+    dark:
+      primary-color: "#a6c8f2"
+      accent-color: "#a6c8f2"
+      dark-primary-color: "#4a6a9c"
+      light-primary-color: "#dbe7f6"
+      text-primary-color: "#06122a"
+      text-accent-color: "#06122a"
+      primary-background-color: "#070d1b"
+      secondary-background-color: "#0d1626"
+      card-background-color: "#0d1626"
+      primary-text-color: "#dbe7f6"
+      secondary-text-color: "#a6bad6"
+      disabled-text-color: "#8299b8"
+      divider-color: "#22375a"

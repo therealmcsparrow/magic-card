@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Documentation
+-   **Fifteen more complete dashboards.** Gallery dashboards 26 to 40: ten futuristic and five steampunk machine walls, each a sections view made only of Magic Cards. One large machine fills the screen, with the controls built into it, and an alarm changes the whole wall. Each page has desktop, alarm and phone pictures, install steps and a list of the entities it uses. The picture files are in `_assets`, with their sources. See [Complete dashboards](documentation/gallery/dashboards/README.md).
+
 ## 2026.11.02 (2026-11-07)
 
 A small maintenance release. Cards and editors look and work the same as in 2026.11.01.
