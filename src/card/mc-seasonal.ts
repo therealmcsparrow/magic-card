@@ -151,7 +151,7 @@ export class McSeasonal extends LitElement {
     if (!l.particles.length && !l.ambient.length) return nothing;
     const front = this.layer === 'front';
     const needsDefs = l.particles.some((p) => p.kind === 'egg');
-    return html`<div class="layer ${this._static ? 'still' : ''}" style=${front ? `opacity:${FRONT_OPACITY}` : ''}>
+    return html`<div class="layer ${this._static ? 'still' : ''}" style=${front ? `opacity:${FRONT_OPACITY}` : nothing}>
       ${needsDefs ? SYMBOL_DEFS : nothing}
       ${l.ambient.map((a) => ambientArt(a.kind))}
       ${l.particles.map(

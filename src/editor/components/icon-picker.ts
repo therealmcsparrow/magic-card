@@ -1,4 +1,4 @@
-import { LitElement, html, css, TemplateResult, PropertyValues } from 'lit';
+import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant } from '../../types';
 import { pickerStyles, iconPickerStyles } from '../../css/editor-css';
@@ -385,9 +385,9 @@ export class IconPicker extends LitElement {
       </div>
       ${value
         ? html`<p class="entity-meta icon-meta"><span>${iconDisplayName(value)}</span></p>`
-        : ''}
+        : nothing}
 
-      ${this._showModal ? this._renderModal() : ''}
+      ${this._showModal ? this._renderModal() : nothing}
     `;
   }
 
@@ -411,7 +411,7 @@ export class IconPicker extends LitElement {
             <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('copy')}>${t('card-editor.icon-picker.use-as-copy')}</button>
             <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('customise')}>${t('card-editor.icon-picker.customise-a-copy')}</button>
           </div>`
-        : ''}
+        : nothing}
     </details>`;
   }
 
@@ -425,13 +425,13 @@ export class IconPicker extends LitElement {
     return html`
       ${renderPickerWindow(t('card-editor.icon-picker.select-icon'), () => this._closeModal(), 'm', html`
           <div class="mc-picker-stack">
-          ${this.animated ? this._renderTabs() : ''}
+          ${this.animated ? this._renderTabs() : nothing}
           ${grid ? html`<div class="mc-picker-list" role="tabpanel">${this._renderAnimated()}</div>` : html`
           ${lib?.state === 'ok'
             ? html`<div class="seg full" role="radiogroup" aria-label=${t('card-editor.icon-picker.icons-from')}>
                 ${(['all', 'mine'] as const).map((v) => html`<button type="button" role="radio" aria-checked=${this._src === v ? 'true' : 'false'} @click=${() => { this._src = v; this._active = -1; }}>${v === 'all' ? t('card-editor.icon-picker.all') : t('card-editor.icon-picker.my-icons-n', { n: lib.items.length })}</button>`)}
               </div>`
-            : ''}
+            : nothing}
           <div class="mc-picker-search">
             ${renderPickerSearch(t('card-editor.icon-picker.search-icons'), this._searchQuery, (v) => this._onSearch(v), {
               onKeydown: (e) => this._onSearchKeydown(e),
@@ -445,8 +445,8 @@ export class IconPicker extends LitElement {
               ? html`<div class="mc-picker-loading">${t('card-editor.icon-picker.loading-icons')}</div>`
               : rows.length > 0
                 ? rows.map((icon, i) => html`
-                    ${i === 0 && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('card-editor.icon-picker.my-icons')} <button type="button" class="btn btn-text btn-sm" @click=${() => { this._src = 'mine'; }}>${t('card-editor.icon-picker.show-all')}</button></div>` : ''}
-                    ${i === mine && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('card-editor.icon-picker.material-design-icons')}</div>` : ''}
+                    ${i === 0 && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('card-editor.icon-picker.my-icons')} <button type="button" class="btn btn-text btn-sm" @click=${() => { this._src = 'mine'; }}>${t('card-editor.icon-picker.show-all')}</button></div>` : nothing}
+                    ${i === mine && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('card-editor.icon-picker.material-design-icons')}</div>` : nothing}
                     <button
                       type="button"
                       role="option"
@@ -462,27 +462,27 @@ export class IconPicker extends LitElement {
                         <span class="mc-picker-item-name">${icon.name}</span>
                         <span class="mc-picker-item-id" title=${icon.id}>${icon.id}</span>
                       </span>
-                      ${icon.prefix !== 'mdi' ? html`<span class="chip">${icon.prefix}</span>` : ''}
+                      ${icon.prefix !== 'mdi' ? html`<span class="chip">${icon.prefix}</span>` : nothing}
                     </button>
                   `)
                 : this._src === 'mine' && !this._searchQuery.trim()
-                  ? html`<div class="mc-picker-empty">${t('card-editor.icon-picker.no-saved-icons-yet-draw-an-icon-then')}${this.animated ? html` <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : ''}</div>`
-                  : html`<div class="mc-picker-empty">${t('card-editor.icon-picker.no-icons-found-type-a-full-id-such-as')}${this.animated && this._src === 'mine' ? html` <button type="button" class="btn btn-secondary" @click=${() => { this._searchQuery = ''; }}>${t('card-editor.icon-picker.clear-search')}</button> <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : ''}</div>`}
+                  ? html`<div class="mc-picker-empty">${t('card-editor.icon-picker.no-saved-icons-yet-draw-an-icon-then')}${this.animated ? html` <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : nothing}</div>`
+                  : html`<div class="mc-picker-empty">${t('card-editor.icon-picker.no-icons-found-type-a-full-id-such-as')}${this.animated && this._src === 'mine' ? html` <button type="button" class="btn btn-secondary" @click=${() => { this._searchQuery = ''; }}>${t('card-editor.icon-picker.clear-search')}</button> <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : nothing}</div>`}
             ${total > rows.length
               ? html`<div class="mc-picker-more">${t('card-editor.icon-picker.showing-shown-of-total-refine-the-search', { shown: rows.length, total })}</div>`
-              : ''}
+              : nothing}
           </div>`}
-          ${grid ? '' : this._renderKeep()}
+          ${grid ? nothing : this._renderKeep()}
           </div>
           <div class="mc-picker-footer" slot="footer">
-            ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>${t('card-editor.icon-picker.clear')}</button>`}
-            ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : ''}
-            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>${t('card-editor.icon-picker.library')}</button>` : ''}
-            ${!grid && lib && lib.state === 'missing' ? html`<span class="help">${t('card-editor.icon-picker.keep-your-own-icons-install-the-free')}</span>` : ''}
-            ${this._editorFailed ? html`<span class="help error" role="alert">${t('card-editor.icon-picker.the-icon-editor-could-not-load-try-again')}</span>` : ''}
+            ${grid ? nothing : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>${t('card-editor.icon-picker.clear')}</button>`}
+            ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>${t('card-editor.icon-picker.draw-an-icon')}</button>` : nothing}
+            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>${t('card-editor.icon-picker.library')}</button>` : nothing}
+            ${!grid && lib && lib.state === 'missing' ? html`<span class="help">${t('card-editor.icon-picker.keep-your-own-icons-install-the-free')}</span>` : nothing}
+            ${this._editorFailed ? html`<span class="help error" role="alert">${t('card-editor.icon-picker.the-icon-editor-could-not-load-try-again')}</span>` : nothing}
             <span class="spacer"></span>
             <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('card-editor.icon-picker.cancel')}</button>
-            ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('card-editor.icon-picker.save')}</button>`}
+            ${grid ? nothing : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('card-editor.icon-picker.save')}</button>`}
           </div>
       `)}
     `;

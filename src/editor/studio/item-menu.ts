@@ -733,7 +733,7 @@ export class ItemMenu implements ReactiveController {
     return html`<button
       type="button"
       role="menuitem"
-      class=${e.danger ? 'danger' : ''}
+      class=${e.danger ? 'danger' : nothing}
       title=${e.why ?? nothing}
       aria-description=${e.why ?? nothing}
       aria-haspopup=${e.sub ? 'menu' : nothing}

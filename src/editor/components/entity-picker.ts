@@ -211,10 +211,10 @@ export class EntityPicker extends LitElement {
               <span>${entityInfo.name} · ${entityInfo.stateText}</span>
             </p>
           `
-        : ''}
+        : nothing}
       ${this.help ? html`<p class="help" id="help">${this.help}</p>` : nothing}
 
-      ${this._showModal ? this._renderModal() : ''}
+      ${this._showModal ? this._renderModal() : nothing}
     `;
   }
 

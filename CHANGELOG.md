@@ -4,6 +4,15 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.02 (2026-11-07)
+
+A small maintenance release. Cards and editors look and work the same as in 2026.11.01.
+
+### Changed
+-   **Cleaner page markup.** Pickers, the module selector, flow looks and shapes, and a few other parts now leave out empty optional markup and attributes instead of writing empty values into the page.
+
+Magic Card Utils 2026.11.01 stays the right version to use with this release.
+
 ## 2026.11.01 (2026-11-06)
 
 This stable release holds everything from the 2026.10.12 pre-releases, which are listed below. The code is the same as 2026.10.12-beta.18. If you stayed on 2026.10.11, these are the main changes:

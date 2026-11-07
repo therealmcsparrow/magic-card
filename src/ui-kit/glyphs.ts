@@ -172,7 +172,7 @@ const CORNERS = {
 export type CornerGlyphName = keyof typeof CORNERS;
 
 export const cornerGlyph = (t: CornerGlyphName, turn = 0): SVGTemplateResult =>
-  svg`<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" style=${turn ? `transform:rotate(${turn}deg)` : ''}><path d=${CORNERS[t]} /></svg>`;
+  svg`<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" style=${turn ? `transform:rotate(${turn}deg)` : nothing}><path d=${CORNERS[t]} /></svg>`;
 
 /** Every glyph name the kit knows, for the gallery and the `glyph` template helper. */
 export const isGlyphName = (n: string): n is GlyphName => Object.prototype.hasOwnProperty.call(G, n) || isMdi(n);

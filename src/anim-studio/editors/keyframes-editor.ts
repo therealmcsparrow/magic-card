@@ -1908,7 +1908,7 @@ export class AnimKeyframesEditor extends LitElement {
     return html`
       <div class="tl" role="group" aria-label=${t('anim-studio.keyframes-editor.keyframe-timeline')}>
         <div class="tl-body" @wheel=${this._onWheel}>
-          <div class="tl-content" style=${tw ? `--tw: ${tw}` : ''}>
+          <div class="tl-content" style=${tw ? `--tw: ${tw}` : nothing}>
             ${this._renderRuler()}
             <div class="lanes" @pointermove=${this._onPointerMove} @pointerup=${this._onPointerUp} @pointercancel=${this._onPointerUp}>
               ${rows}

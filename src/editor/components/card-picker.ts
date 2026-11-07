@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
@@ -148,7 +148,7 @@ export class CardPicker extends LitElement {
         <button type="button" class="btn btn-secondary" @click=${this._openModal}>${t('card-editor.card-picker.select')}</button>
       </div>
 
-      ${this._showModal ? this._renderModal() : ''}
+      ${this._showModal ? this._renderModal() : nothing}
     `;
   }
 
@@ -167,11 +167,11 @@ export class CardPicker extends LitElement {
                   ${builtIn.length > 0 ? html`
                     <div class="mc-picker-category">${t('card-editor.card-picker.built-in-cards')}</div>
                     ${builtIn.map(card => this._renderCardItem(card))}
-                  ` : ''}
+                  ` : nothing}
                   ${custom.length > 0 ? html`
                     <div class="mc-picker-category">${t('card-editor.card-picker.custom-cards-hacs')}</div>
                     ${custom.map(card => this._renderCardItem(card))}
-                  ` : ''}
+                  ` : nothing}
                 `
               : html`<div class="mc-picker-empty">${t('card-editor.card-picker.no-cards-found')}</div>`
             }

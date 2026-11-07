@@ -428,7 +428,7 @@ export class McteStartView extends LitElement {
                   ? html`<ul id="inst-list" class="list" role="listbox" aria-label=${t('theme-editor.start-view.installed-themes')}>
                       ${options.length
                         ? options.map(
-                            (o, i) => html`<li id="opt-${o.name}" role="option" aria-selected=${this._installed === o.name ? 'true' : 'false'} class=${i === this._active ? 'act' : ''} @mousedown=${(e: Event) => (e.preventDefault(), this._pickInstalled(o.name))}>
+                            (o, i) => html`<li id="opt-${o.name}" role="option" aria-selected=${this._installed === o.name ? 'true' : 'false'} class=${i === this._active ? 'act' : nothing} @mousedown=${(e: Event) => (e.preventDefault(), this._pickInstalled(o.name))}>
                               <span>${o.name}</span><span class="chip">${o.modes ? t('theme-editor.start-view.light-dark') : t('theme-editor.start-view.same-in-light-and-dark')}</span>
                             </li>`,
                           )

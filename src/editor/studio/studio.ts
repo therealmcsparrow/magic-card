@@ -413,7 +413,7 @@ export class Studio extends LitElement {
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
             <strong>${s.config.name?.trim() || t('card-editor.studio.untitled-card')}</strong>
-            <mc-template-bar compact .config=${s.config} .hass=${this.hass} .disabled=${live} class=${live ? 'dim' : ''}></mc-template-bar>
+            <mc-template-bar compact .config=${s.config} .hass=${this.hass} .disabled=${live} class=${live ? 'dim' : nothing}></mc-template-bar>
           </div>
         </div>
         <span class="spacer"></span>

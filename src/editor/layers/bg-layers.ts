@@ -469,7 +469,7 @@ export class McBgLayers extends LitElement {
         <div class="tiles2" role="group" aria-labelledby=${`${this._id}-looks`}>
           ${BACKDROP_LOOKS.map((look) => {
             const fits = list.length + look.count <= MAX_BACKGROUND_LAYERS;
-            return html`<button type="button" class="lyr-tile" data-look=${look.id} aria-disabled=${fits ? 'false' : 'true'} title=${fits ? '' : t('layer-editor.bg-layers.needs-n-free-layers', { n: look.count })} @click=${() => fits && this._applyLook(look)}>
+            return html`<button type="button" class="lyr-tile" data-look=${look.id} aria-disabled=${fits ? 'false' : 'true'} title=${fits ? nothing : t('layer-editor.bg-layers.needs-n-free-layers', { n: look.count })} @click=${() => fits && this._applyLook(look)}>
               <span class="pv" style=${`background:${look.preview}`}></span><span class="nm">${t(look.name)}</span>${fits ? nothing : html`<span class="sub">${t('layer-editor.bg-layers.needs-n-free-layers', { n: look.count })}</span>`}
             </button>`;
           })}
