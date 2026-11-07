@@ -1,4 +1,4 @@
-import { svg } from 'lit';
+import { svg, nothing } from 'lit';
 import type { FlowLookRegistry, LineCtx } from '../registry';
 import { travelFrames } from '../../utils/flow-motion';
 import { stops } from '../motion';
@@ -17,7 +17,7 @@ export const defaultShapes: FlowLookRegistry['shapes'] = {
     const name = `${c.id}-mv`;
     const dots = Array.from({ length: n }, (_, k) => {
       const m = `animation-name: ${name}; animation-duration: ${f.speedS.toFixed(3)}s; animation-delay: ${+(-(f.speedS * k) / n).toFixed(3) || 0}s; animation-direction: ${c.dir}`;
-      return svg`${f.glow > 0 ? svg`<circle class="glow an" r=${f.dotSize / 2 + f.glow} style=${m}></circle>` : ''}<circle class="dot an" r=${f.dotSize / 2} style=${m}></circle>`;
+      return svg`${f.glow > 0 ? svg`<circle class="glow an" r=${f.dotSize / 2 + f.glow} style=${m}></circle>` : nothing}<circle class="dot an" r=${f.dotSize / 2} style=${m}></circle>`;
     });
     // a <style> element swallows the rest of a lit template: it is a template of its own
     const keyframes = svg`<style .textContent=${travelFrames(name, stops(c.S, false))}></style>`;

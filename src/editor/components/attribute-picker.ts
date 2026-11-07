@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
@@ -98,7 +98,7 @@ export class AttributePicker extends LitElement {
           spellcheck="false"
           @input=${this._onInputChange}
         />
-        ${this._showModal ? this._renderModal() : ''}
+        ${this._showModal ? this._renderModal() : nothing}
       `;
     }
     const isExtra = (v: string) => this.extras.some((x) => x.value === v);
@@ -119,7 +119,7 @@ export class AttributePicker extends LitElement {
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
-      ${this._showModal ? this._renderModal() : ''}
+      ${this._showModal ? this._renderModal() : nothing}
     `;
   }
 

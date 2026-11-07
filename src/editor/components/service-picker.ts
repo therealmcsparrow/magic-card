@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
@@ -161,7 +161,7 @@ export class ServicePicker extends LitElement {
         </button>
       </div>
 
-      ${this._showModal ? this._renderModal() : ''}
+      ${this._showModal ? this._renderModal() : nothing}
     `;
   }
 
@@ -191,7 +191,7 @@ export class ServicePicker extends LitElement {
                         <span class="mc-picker-item-id" title="${service.domain}.${service.service}">${service.domain}.${service.service}</span>
                         ${service.description
                           ? html`<span class="mc-picker-item-desc">${service.description}</span>`
-                          : ''
+                          : nothing
                         }
                       </span>
                     </button>

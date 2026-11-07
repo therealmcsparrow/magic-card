@@ -1,4 +1,4 @@
-import { svg, type SVGTemplateResult } from 'lit';
+import { svg, nothing, type SVGTemplateResult } from 'lit';
 import type { FlowShape } from '../../contracts/flow-look';
 import { fmt } from '../sampler';
 
@@ -20,7 +20,7 @@ export function body(kind: FlowShape, s: number, ol: boolean, gid: string): SVGT
     case 'chevron': {
       const d = `M${fmt(-r / 2)} ${fmt(-r)}L${fmt(r / 2)} 0L${fmt(-r / 2)} ${fmt(r)}`;
       const w = Math.max(1.5, s * 0.28);
-      return svg`${ol ? svg`<path class="so" d=${d} stroke-width=${fmt(w + 2)}></path>` : ''}<path class="ss" d=${d} stroke-width=${fmt(w)}></path>`;
+      return svg`${ol ? svg`<path class="so" d=${d} stroke-width=${fmt(w + 2)}></path>` : nothing}<path class="ss" d=${d} stroke-width=${fmt(w)}></path>`;
     }
     case 'square':
       return svg`<rect class=${f} x=${fmt(-r)} y=${fmt(-r)} width=${fmt(s)} height=${fmt(s)} rx="1"></rect>`;

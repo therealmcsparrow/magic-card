@@ -61,7 +61,7 @@ The gallery groups its cards in eight families, shown above. Nothing in the pict
 
 ## Installation
 
-The current release is 2026.11.01.
+The current release is 2026.11.02.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=therealmcsparrow&repository=magic-card&category=plugin)
 
@@ -77,7 +77,7 @@ Magic Card isn't in the Marketplace catalogue, so you add it by its link.
 
 The Marketplace downloads every file of the release into the folder `www/community/magic-card/`. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
-With dashboards in YAML mode, the install dialog asks you to add the resource yourself. Use `url: /local/community/magic-card/magic-card.js?v=2026.11.01` with `type: module`, and change the version at every update, because browsers can keep a `/local/` file for 31 days. The older path `/hacsfiles/magic-card/magic-card.js` also works while the Marketplace is set up.
+With dashboards in YAML mode, the install dialog asks you to add the resource yourself. Use `url: /local/community/magic-card/magic-card.js?v=2026.11.02` with `type: module`, and change the version at every update, because browsers can keep a `/local/` file for 31 days. The older path `/hacsfiles/magic-card/magic-card.js` also works while the Marketplace is set up.
 
 ### HACS (Home Assistant before 2026.11)
 

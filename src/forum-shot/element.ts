@@ -406,7 +406,7 @@ export class MagicCardForumShot extends LitElement {
               const key = rowKey(c);
               return html`<tr
                 role="row"
-                class=${off ? 'off' : this._pick === key ? 'picked' : ''}
+                class=${off ? 'off' : this._pick === key ? 'picked' : nothing}
                 @click=${(e: Event) => {
                   const hit = e.target as Element;
                   if (off) {

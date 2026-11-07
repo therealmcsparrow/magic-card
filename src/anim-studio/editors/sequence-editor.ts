@@ -442,7 +442,7 @@ export class AnimSequenceEditor extends LitElement {
       <li
         class="step ${open ? 'is-open' : ''} ${bad ? 'is-bad' : ''} ${dragging ? 'is-dragging' : ''}"
         data-i=${i}
-        style=${off ? `transform: translateY(${off}px)` : ''}
+        style=${off ? `transform: translateY(${off}px)` : nothing}
         @keydown=${(e: KeyboardEvent) => this._onStepKey(e, i)}
       >
         <div class="row">

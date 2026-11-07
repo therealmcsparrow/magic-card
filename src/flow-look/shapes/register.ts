@@ -1,4 +1,4 @@
-import { html, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
+import { html, svg, nothing, type SVGTemplateResult, type TemplateResult } from 'lit';
 import { FLOW_SPIN_SHAPES, type FlowShape } from '../../contracts/flow-look';
 import { at, fmt, rnd } from '../sampler';
 import { travelFrames } from '../../utils/flow-motion';
@@ -82,7 +82,7 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
     const turn = turns(kind, l.iconRotate);
     const spin = l.spin && !pulse && SPIN.includes(kind);
     if (kind === 'comet') comet = true;
-    const glow = f.glow > 0 && kind !== 'icon' ? svg`<circle class="gl" r=${fmt(size / 2 + f.glow)}></circle>` : '';
+    const glow = f.glow > 0 && kind !== 'icon' ? svg`<circle class="gl" r=${fmt(size / 2 + f.glow)}></circle>` : nothing;
     const place = pulse ? at(S, ph[k] * S.L) : undefined;
     const angle = place && turn ? (Math.atan2(place.ty, place.tx) * 180) / Math.PI + (sign < 0 ? 180 : 0) : 0;
     const beat = `animation-duration: ${s3(period)}s; animation-delay: ${s3(-(k / n) * period)}s`;
@@ -107,18 +107,18 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
     const shape = spin ? svg`<g class="sp an">${b}</g>` : b;
     const m = `animation-name: ${frame(turn)}; animation-duration: ${dur}; animation-delay: ${delay}s; animation-direction: ${c.dir}`;
     if (kind === 'dot') {
-      parts.push(svg`${f.glow > 0 ? svg`<circle class="glow gl an" r=${fmt(size / 2 + f.glow)} style=${m}></circle>` : ''}<circle class=${heavy ? 'dot an sf ol' : 'dot an sf'} data-shape="dot" r=${fmt(size / 2)} style=${m}></circle>`);
+      parts.push(svg`${f.glow > 0 ? svg`<circle class="glow gl an" r=${fmt(size / 2 + f.glow)} style=${m}></circle>` : nothing}<circle class=${heavy ? 'dot an sf ol' : 'dot an sf'} data-shape="dot" r=${fmt(size / 2)} style=${m}></circle>`);
     } else {
       parts.push(svg`<g class="dot an" data-shape=${kind} style=${m}>${glow}${shape}</g>`);
     }
   }
   const defs = comet
     ? svg`<defs><linearGradient id=${gid} x1="1" y1="0" x2="0" y2="0"><stop offset="0" style="stop-color: var(--mc-sc); stop-opacity: 0.7"></stop><stop offset="1" style="stop-color: var(--mc-sc); stop-opacity: 0"></stop></linearGradient></defs>`
-    : '';
+    : nothing;
   // a <style> element swallows the rest of a lit template: it is a template of its own
   const keyframes = used.size
     ? svg`<style .textContent=${[...used].map((v) => travelFrames(`${c.id}-${v}`, stops(S, v !== 'mv'), v === 'tr')).join('')}></style>`
-    : '';
+    : nothing;
   return {
     ...(parts.length ? { svg: svg`${keyframes}<g class="dots" style=${vars}>${defs}${parts}</g>` } : used.size ? { svg: keyframes as SVGTemplateResult } : {}),
     ...(icons.length ? { html: html`${icons}` } : {}),

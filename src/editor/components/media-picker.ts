@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant, MediaBrowseItem } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
@@ -175,7 +175,7 @@ export class MediaPicker extends LitElement {
           <ha-icon icon="mdi:folder-open-outline"></ha-icon>
         </button>
       </div>
-      ${this._showModal ? this._renderModal() : ''}
+      ${this._showModal ? this._renderModal() : nothing}
     `;
   }
 

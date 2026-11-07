@@ -1704,7 +1704,7 @@ export class AnimParticlesEditor extends LitElement {
           )}
         </div>
       </div>
-      <div class=${withSpeed ? 'pair' : ''}>
+      <div class=${withSpeed ? 'pair' : nothing}>
         ${withSpeed
           ? html`<div class="field">
               <div class="field-head"><label for="f-speed">${t('anim-studio.particles-editor.loop-speed')}</label></div>

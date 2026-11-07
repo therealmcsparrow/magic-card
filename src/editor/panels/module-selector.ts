@@ -1,5 +1,5 @@
 import { t as lt } from '../../i18n/labels';
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { MODULE_CATEGORIES } from '../../utils/constants';
@@ -82,7 +82,7 @@ export class ModuleSelector extends LitElement {
               ([category, items]) => html`
                 ${this._category === 'all'
                   ? html`<div class="mc-picker-category">${categoryLabel(category)}</div>`
-                  : ''}
+                  : nothing}
                 ${items.map(
                   (meta) => html`
                     <button
