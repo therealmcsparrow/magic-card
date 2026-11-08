@@ -15,6 +15,10 @@ A western camp dashboard set at dusk: canvas and campfire light, journal pages a
 | Supplies | The reserves: the home, car and phone batteries drawn as draining rings that turn red below 25 %. A camp ledger on paper: solar, house load, export or import, battery, energy today, price in cents and today's cost in dollars. A horse card for the car with trust horseshoes, range, charge and charging state. |
 | Watch & satchel | A watch card with an honour meter (one segment per lock, door, window and the alarm), a sepia camera view, and door, window and motion tiles that turn red and blink when something needs a look. The satchel is a journal page with the next calendar event, open chores, appliance progress and the robot vacuum. |
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/` (any file name ending in `.yaml`). Your `configuration.yaml` needs:

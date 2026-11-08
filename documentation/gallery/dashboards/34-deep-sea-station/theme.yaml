@@ -1,0 +1,17 @@
+# Deep Sea Station: blue-black pressure hull, pale salt data, dull teal, red only for alarm and warning. Dark mode only.
+Deep Sea Station:
+  modes:
+    dark:
+      primary-color: "#86bdb4"
+      accent-color: "#86bdb4"
+      dark-primary-color: "#4a7a74"
+      light-primary-color: "#d8e4e2"
+      text-primary-color: "#06161a"
+      text-accent-color: "#06161a"
+      primary-background-color: "#080e14"
+      secondary-background-color: "#0e161c"
+      card-background-color: "#0e161c"
+      primary-text-color: "#d8e4e2"
+      secondary-text-color: "#94aaac"
+      disabled-text-color: "#7c9498"
+      divider-color: "#27383e"

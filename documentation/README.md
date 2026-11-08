@@ -74,7 +74,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | --- | --- |
 | [Card gallery](gallery/README.md) | A hundred and thirty-four complete cards with screenshots and YAML, sixty-nine of them animated: showcase cards that combine the new looks, weather, climate, energy, flows and sliders, layers, lights, media, security, appliances, garden, seasonal, sci-fi and fantasy |
 | [Wall tablet cards](gallery/tablet.md) | Four big status cards for a wall tablet: front door, kitchen door, hallway lights and alarm, with open, closed, paused and dimmed pictures |
-| [Complete dashboards](gallery/dashboards/README.md) | Twenty-five complete sections dashboards made of Magic Cards, each with its own theme: sci-fi, fantasy, western, steampunk and dystopian |
+| [Complete dashboards](gallery/dashboards/README.md) | Forty complete sections dashboards made of Magic Cards, each with its own theme: sci-fi, fantasy, western, steampunk, dystopian and machine walls |
 | [Theme examples](themes/examples/README.md) | The 45 theme presets of the theme editor, each with a screenshot of its light and dark modes |
 
 ## Where to start

@@ -20,6 +20,10 @@ A Home Assistant dashboard dressed as a city on caterpillar tracks: soot, brass,
 - City defences: alarm, front door lock, garage door and night mode.
 - Airship dock (showpiece): the car as an airship. It is moored to its mast while the car is home and floats free when it is away. The lift gas bar is the car battery, and it shows stripes while charging.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (picture and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/` (any file name). Your `configuration.yaml` needs:

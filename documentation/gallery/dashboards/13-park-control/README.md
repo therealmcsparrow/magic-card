@@ -15,6 +15,10 @@ Four sections, 14 cards:
 - The park (heading, live map, player piano). The live map is a tilted holographic table of the town. Each person is a glowing point that moves to the town when home, to the hills when at Work, and to the outskirts otherwise. The player piano is the media card: a punched paper roll scrolls over a keyboard while music plays, with track info, transport buttons and the other speakers.
 - Day control (heading, day timeline, lockdown). The timeline lays out the day: sunrise, the next calendar event, open chores, the washer, sunset and night mode. Lockdown is the security card. While the alarm is armed it reads "Everything holds still" with a scanline. It shows "Free roam" when disarmed and turns red when triggered. Below that are the lock (tap to lock or unlock), door, window and motion tiles, and Lock down (arm home) and Resume (disarm) buttons.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/` (for example as `/config/themes/park-control.yaml`). Your `configuration.yaml` needs:

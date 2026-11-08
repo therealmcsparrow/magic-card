@@ -20,6 +20,10 @@ What's on it:
 - Cooking pot: oven temperature and timer in a bubbling pot over flickering flames, with four scenes as recipes.
 - Bard's song: what's playing on the living room speaker, with cover art, controls and volume, plus three more speakers.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/`. If you haven't set up themes yet, add this to `configuration.yaml` and restart:

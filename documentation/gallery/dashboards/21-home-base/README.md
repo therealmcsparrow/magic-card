@@ -15,6 +15,10 @@ Four sections, 14 cards:
 - Log: a cog-shaped door. While the front door is locked it stays shut; when it unlocks, it rolls aside and shows the lit hallway behind it. Underneath are the door and window contacts, motion and the alarm, then two thermostats and four room temperatures.
 - Map and media: weather and forecast, a local map with a marker for each person at home, at work or out, and the radio: four media players, a scrolling waveform, the track playing and controls.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and pictures), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/` and make sure `configuration.yaml` has:

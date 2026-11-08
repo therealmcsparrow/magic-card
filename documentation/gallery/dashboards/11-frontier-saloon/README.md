@@ -17,6 +17,10 @@ A Home Assistant dashboard dressed as a saloon in a gold-rush town: dark polishe
 
 Tap a lamp to toggle it, a person or sensor for its details, a scene to run it, a room speaker to play or pause it.
 
+## SVG files
+
+The `svg` folder holds a copy of the icon on this dashboard, so you can open it in a vector editor or use it elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/` (any file name). Make sure `configuration.yaml` has:

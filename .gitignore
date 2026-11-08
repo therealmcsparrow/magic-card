@@ -41,6 +41,7 @@ Thumbs.db
 *.temp
 .cache/
 *.bak
+docs/*
 
 # Assets: only the finished art originals in assets/brand are tracked
 assets/*

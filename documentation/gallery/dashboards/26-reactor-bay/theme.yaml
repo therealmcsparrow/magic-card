@@ -1,0 +1,17 @@
+# Reactor Bay: dark armoured hull, pale cyan data, red only for alarm and warning. Dark mode only.
+Reactor Bay:
+  modes:
+    dark:
+      primary-color: "#9fdde8"
+      accent-color: "#9fdde8"
+      dark-primary-color: "#4d7c88"
+      light-primary-color: "#d6f1f4"
+      text-primary-color: "#06171c"
+      text-accent-color: "#06171c"
+      primary-background-color: "#0a1015"
+      secondary-background-color: "#10181e"
+      card-background-color: "#10181e"
+      primary-text-color: "#d6f1f4"
+      secondary-text-color: "#9cc3cb"
+      disabled-text-color: "#7f9ea6"
+      divider-color: "#2c3e47"

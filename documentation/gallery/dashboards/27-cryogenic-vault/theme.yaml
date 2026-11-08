@@ -1,0 +1,17 @@
+# Cryogenic Vault: frosted dark steel, pale ice blue data, red only for alarm and warning. Dark mode only.
+Cryogenic Vault:
+  modes:
+    dark:
+      primary-color: "#a9e0ee"
+      accent-color: "#a9e0ee"
+      dark-primary-color: "#527f8d"
+      light-primary-color: "#dcf2f7"
+      text-primary-color: "#06171c"
+      text-accent-color: "#06171c"
+      primary-background-color: "#0b1117"
+      secondary-background-color: "#111a21"
+      card-background-color: "#111a21"
+      primary-text-color: "#dcf2f7"
+      secondary-text-color: "#a3c6d1"
+      disabled-text-color: "#82a2ad"
+      divider-color: "#2d404a"

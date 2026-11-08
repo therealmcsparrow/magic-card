@@ -23,6 +23,10 @@ A spaghetti-western dashboard for Home Assistant: one Sections view built only f
 
 14 Magic Cards in total.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (background and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/` (for example as `/config/themes/frontier_sheriff.yaml`). Your `configuration.yaml` needs:

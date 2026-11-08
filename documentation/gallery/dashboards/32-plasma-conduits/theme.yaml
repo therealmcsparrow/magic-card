@@ -1,0 +1,17 @@
+# Plasma Conduits: near-black armour, pale blue data, red only for alarm and warning. Dark mode only.
+Plasma Conduits:
+  modes:
+    dark:
+      primary-color: "#7fa6ff"
+      accent-color: "#b197ff"
+      dark-primary-color: "#49588f"
+      light-primary-color: "#d3dcf0"
+      text-primary-color: "#0a0d1c"
+      text-accent-color: "#0a0d1c"
+      primary-background-color: "#06070c"
+      secondary-background-color: "#0e1018"
+      card-background-color: "#0e1018"
+      primary-text-color: "#d3dcf0"
+      secondary-text-color: "#9aa6c4"
+      disabled-text-color: "#79829c"
+      divider-color: "#262c48"

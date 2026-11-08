@@ -8,6 +8,10 @@ On a phone:
 
 ![Castle Hall on a phone](images/mobile.webp)
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/`. If you haven't set up themes yet, add this to `configuration.yaml` and restart:

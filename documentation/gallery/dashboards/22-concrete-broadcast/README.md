@@ -8,6 +8,10 @@ Phone view:
 
 ![Mobile](images/mobile.webp)
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/` and make sure `configuration.yaml` has:

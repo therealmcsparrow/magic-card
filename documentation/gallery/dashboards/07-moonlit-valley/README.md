@@ -15,6 +15,10 @@ A Home Assistant dashboard set in a valley at night, with silver filigree, sage 
 | Hearth & Sky | Weather: the moon phase with a glinting star, the outdoor temperature, sunrise and sunset, humidity, wind, rain and a five-day forecast, with autumn leaves falling behind. Climate: the living room thermostat as a ring, six room readings and the bedroom air conditioning. |
 | The Gate | The front lock drawn as a silver gate that lights up when it is unlocked. Tap for details, hold to lock or unlock. The alarm and six sensors (doors, window, motion, garage door). |
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/`, for example as `/config/themes/moonlit_valley.yaml`. Your `configuration.yaml` needs:

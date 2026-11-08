@@ -18,6 +18,10 @@ An inventor's workshop in a gold-and-teal art deco city, with green and purple s
 - Phonograph (media): album art in a brass hexagon, transport buttons, and the other speakers with their volume.
 - Bench notes: a pinned paper note with the sunset, chores, the robot vacuum and the car.
 
+## SVG files
+
+The `svg` folder holds a copy of the icon on this dashboard, so you can open it in a vector editor or use it elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. **Fonts.** The deco fonts (Cinzel, Josefin Sans, Poiret One, Caveat) aren't in the card's own font list. Go to Settings → Dashboards → ⋮ → Resources → Add resource, paste the URL from `fonts.txt` and pick **Stylesheet**:
