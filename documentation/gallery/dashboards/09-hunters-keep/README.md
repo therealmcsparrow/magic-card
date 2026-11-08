@@ -15,6 +15,10 @@ On a phone:
 - The walls: a watch charm that trembles and glows while either motion sensor is on, with the doors, the garage window and the alarm below it. Under that, the arsenal: two blades whose edges fill with the phone and watch battery, and the mare for the car.
 - Alchemy and hearth: four potion bottles that fill with solar, house load, home battery and grid power, a campfire for the living room thermostat with the room temperatures, and the media player as the bard's lute.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/`. If you haven't set up themes yet, add this to `configuration.yaml` and restart:

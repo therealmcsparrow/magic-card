@@ -17,6 +17,10 @@ A Home Assistant dashboard for a city flat on a rainy night: deep navy glass, ma
 
 The Japanese glyphs are decoration: 雨 (rain), ネオン (neon), 警察 (police) and 電力 (electric power).
 
+## SVG files
+
+The `svg` folder holds a copy of the picture on this dashboard, so you can open it in a vector editor or use it elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/`. Your `configuration.yaml` needs:

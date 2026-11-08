@@ -26,7 +26,7 @@ One hundred and thirty-eight complete cards to copy and adapt, from a weather ca
 
 ## Complete dashboards
 
-Twenty-five whole dashboards in sci-fi, fantasy, western, steampunk and dystopian settings. Each one is a sections view made only of Magic Cards, with its own theme. See [Complete dashboards](dashboards/README.md).
+Forty whole dashboards: twenty-five in sci-fi, fantasy, western, steampunk and dystopian settings, and fifteen futuristic and steampunk machine walls. Each one is a sections view made only of Magic Cards, with its own theme. See [Complete dashboards](dashboards/README.md).
 
 ## Animated cards
 

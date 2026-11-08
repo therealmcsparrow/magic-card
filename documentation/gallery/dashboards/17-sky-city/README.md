@@ -25,6 +25,10 @@ On a phone:
 | Through the rift | Now playing, with the cover art seen through a glowing rift that breathes while music plays. Controls, volume and every speaker below. |
 | Workshop | Robot vacuum, washer and dishwasher progress, a chores count and toggles for night, guest and away mode. |
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/sky_city.yaml`. If you haven't yet, add this to `configuration.yaml` and restart:

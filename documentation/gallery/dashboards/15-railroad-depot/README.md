@@ -15,6 +15,10 @@ The cards sit in four tracks:
 - Signal box: a telegraph key taps out the most pressing status in Morse on a paper ticker tape. Signal lamps show the alarm, lock, doors, garage and motion: green is clear, amber is caution, red is danger. The waiting-room stove covers the thermostat and room temperatures.
 - Platform: six station lanterns (tap to switch a light, hold for details) and a phonograph for the media player.
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and icon), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/railroad_depot.yaml`. Your `configuration.yaml` needs:

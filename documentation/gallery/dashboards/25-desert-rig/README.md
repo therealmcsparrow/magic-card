@@ -6,6 +6,10 @@ A Home Assistant Sections dashboard built only from Magic Card cards. It looks l
 
 ![Phone](images/mobile.webp)
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` to `/config/themes/` and make sure `configuration.yaml` has:

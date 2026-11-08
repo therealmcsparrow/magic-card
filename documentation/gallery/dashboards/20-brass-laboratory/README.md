@@ -6,6 +6,10 @@ A Victorian inventor's laboratory by gaslight: mahogany panels, green leather, b
 
 ![Mobile](images/mobile.webp)
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Install Magic Card if you haven't already.

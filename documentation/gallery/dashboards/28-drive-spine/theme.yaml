@@ -1,0 +1,17 @@
+# Drive Spine: mid-grey painted steel, teal light, red-orange safety paint; only lit red means alarm. Dark mode only.
+Drive Spine:
+  modes:
+    dark:
+      primary-color: "#4fd0be"
+      accent-color: "#4fd0be"
+      dark-primary-color: "#2f7c72"
+      light-primary-color: "#dbe7e4"
+      text-primary-color: "#06140f"
+      text-accent-color: "#06140f"
+      primary-background-color: "#111414"
+      secondary-background-color: "#191d1d"
+      card-background-color: "#191d1d"
+      primary-text-color: "#dbe7e4"
+      secondary-text-color: "#a3b3af"
+      disabled-text-color: "#83918e"
+      divider-color: "#3a4342"

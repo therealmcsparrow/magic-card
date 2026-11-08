@@ -1,0 +1,17 @@
+# Clean Module: white ceramic and dark glass, soft blue light, amber for lamps, red only for alarm. Light mode only.
+Clean Module:
+  modes:
+    light:
+      primary-color: "#3f7fb0"
+      accent-color: "#3f7fb0"
+      dark-primary-color: "#2d5f86"
+      light-primary-color: "#a6cdee"
+      text-primary-color: "#f2f1ec"
+      text-accent-color: "#f2f1ec"
+      primary-background-color: "#f2efe8"
+      secondary-background-color: "#e9e6de"
+      card-background-color: "#f7f5ef"
+      primary-text-color: "#20262b"
+      secondary-text-color: "#3a4249"
+      disabled-text-color: "#596168"
+      divider-color: "#8b9196"

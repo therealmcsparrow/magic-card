@@ -15,6 +15,10 @@ A Home Assistant dashboard set in a cold castle in the north: grey granite, iron
 | Ramparts | An ice rampart with the alarm state under it, then the gate lock, doors, window and motion sensors. Letters for open tasks, the next calendar event, the washing machine and any open door or window. |
 | The grove | An old maple with falling leaves for energy (solar, house load, battery, grid, price), the minstrel for media with controls, volume and other speakers, and four scenes. |
 
+## SVG files
+
+The `svg` folder holds a copy of every drawing on this dashboard (backgrounds and icons), so you can open them in a vector editor or use them elsewhere. You don't need the folder to install the dashboard, because `dashboard.yaml` already contains the same SVG.
+
 ## Install
 
 1. Copy `theme.yaml` into `/config/themes/` (for example as `/config/themes/northern-keep.yaml`). Your `configuration.yaml` needs:
