@@ -4,6 +4,7 @@ import type { ImageAnimation, ImageClip } from '../contracts/image-animation';
 import { IMAGE_ANIMATOR_SAVED_EVENT, type ImageAnimatorSaved } from '../contracts/image-animator';
 import type { HomeAssistant } from '../types';
 import { editorSystem } from '../css/editor-stack';
+import { kitButtonExtras } from '../ui-kit/css/extras';
 import { createClip, deleteClip, duplicateClip, moveClip, parseWhen, renameClip, setClipPlay, setClipTiming, type ClipsError, type ClipTiming } from './clips';
 import { renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
 import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
@@ -24,6 +25,9 @@ import { heavyReasons, libraryWarning, type HeavyReason } from './warnings';
 
 type Phase = 'opening' | 'ready' | 'failed';
 
+/** What a save writes, to tell whether anything is unsaved. */
+const snapshot = (o: Opened): string => `${o.svg}\u0000${JSON.stringify(o.animation ?? null)}`;
+
 const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export class McImageAnimator extends LitElement {
@@ -38,7 +42,9 @@ export class McImageAnimator extends LitElement {
   @state() private _ask?: { notice: UseNotice; answer: (yes: boolean) => void };
   @state() private _libraryBytes = 0;
   @state() private _unchecked = false;
-  @state() private _note: '' | 'upload' | 'saved' = '';
+  @state() private _note: '' | 'saved' = '';
+  /** Set while the discard question is open: the element that had the focus before it. */
+  @state() private _leaving?: { from: HTMLElement | null };
   @state() private _target: ImageTarget = { ref: 'element', kind: 'image', generated: false };
   @state() private _targets: ImageTarget[] = [];
   @state() private _presetId = '';
@@ -51,11 +57,13 @@ export class McImageAnimator extends LitElement {
   @state() private _clipId = '';
   @state() private _drafting = '';
   @state() private _clipMessage = '';
+  /** The drawing and animation as last saved or opened; anything else is unsaved. */
+  private _clean = '';
   private _started?: Promise<void>;
   private _svg?: SVGSVGElement;
   private _preview?: Preview;
 
-  static styles = [editorSystem, animatorStyles];
+  static styles = [editorSystem, kitButtonExtras, animatorStyles];
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -73,12 +81,9 @@ export class McImageAnimator extends LitElement {
     const r = await openSource(hass, source);
     if (!r.ok) return this._fail(r.reason);
     this._opened = r;
+    this._clean = snapshot(r);
     this._presetId = presetChoices()[0]?.id ?? '';
     this._phase = 'ready';
-    if (source.kind === 'upload') {
-      this._note = 'upload';
-      this._announce(r.id);
-    }
     void this._readLibrary();
   }
 
@@ -111,8 +116,23 @@ export class McImageAnimator extends LitElement {
     (this.opener ?? this).dispatchEvent(new CustomEvent(IMAGE_ANIMATOR_SAVED_EVENT, { detail, bubbles: true, composed: true }));
   }
 
+  /** Closes at once when nothing is unsaved; otherwise asks whether to discard the edits. */
   private _close(): void {
     if (this._ask) this._answer(false);
+    if (this._leaving) return;
+    if (!this._opened || snapshot(this._opened) === this._clean) return this._discard();
+    this._leaving = { from: (this.shadowRoot?.activeElement as HTMLElement | null) ?? null };
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.leave .btn-secondary')?.focus());
+  }
+
+  private _keepEditing(): void {
+    const from = this._leaving?.from;
+    this._leaving = undefined;
+    void this.updateComplete.then(() => (from?.isConnected ? from : this.renderRoot.querySelector<HTMLElement>('h2'))?.focus());
+  }
+
+  private _discard(): void {
+    this._leaving = undefined;
     this.dispatchEvent(new CustomEvent('close'));
   }
 
@@ -124,7 +144,11 @@ export class McImageAnimator extends LitElement {
     this._note = '';
     this._reason = undefined;
     this._unchecked = false;
-    const r = await saveConfirmed(hass, { id: o.id, name: o.name, svg: o.svg, viewBox: o.viewBox, bindings: o.bindings, animation: o.animation, baseUpdatedAt: o.updatedAt }, (notice) => this._confirm(notice));
+    const r = await saveConfirmed(
+      hass,
+      { id: o.id, name: o.name, svg: o.svg, viewBox: o.viewBox, bindings: o.bindings, animation: o.animation, baseUpdatedAt: o.updatedAt, isNew: o.isNew },
+      (notice) => this._confirm(notice),
+    );
     this._saving = false;
     if (!r.ok) {
       if (r.reason !== 'cancelled') this._reason = r.reason;
@@ -133,9 +157,10 @@ export class McImageAnimator extends LitElement {
     this._unchecked = r.notice.kind === 'unknown';
     void this._readLibrary();
     const now = this._opened ?? o;
-    this._opened = { ...now, updatedAt: r.summary?.updated_at ?? now.updatedAt };
+    this._opened = { ...now, id: r.id, isNew: false, updatedAt: r.summary?.updated_at ?? now.updatedAt };
+    this._clean = snapshot(o);
     this._note = 'saved';
-    this._announce(o.id);
+    this._announce(r.id);
   }
 
   disconnectedCallback(): void {
@@ -391,7 +416,8 @@ export class McImageAnimator extends LitElement {
   private _onKey(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.stopPropagation();
-      if (this._ask) this._answer(false);
+      if (this._leaving) this._keepEditing();
+      else if (this._ask) this._answer(false);
       else this._close();
       return;
     }
@@ -440,12 +466,14 @@ export class McImageAnimator extends LitElement {
     return html`<div class="work">
         <div class="canvas">
           <div class="stage" role="group" aria-label=${o.name} @click=${this._onStageClick}></div>
-          <div class="saved">
-            <span>${t('image-animator.mc-image-animator.as-saved')}</span>
-            <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
-          </div>
+          ${o.isNew
+            ? nothing
+            : html`<div class="saved">
+                <span>${t('image-animator.mc-image-animator.as-saved')}</span>
+                <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
+              </div>`}
         </div>
-        <div class="side" ?inert=${this._saving || !!this._ask}>${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
+        <div class="side" ?inert=${this._saving || !!this._ask || !!this._leaving}>${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
       </div>
       ${this._warnings(o)}
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;
@@ -490,14 +518,26 @@ export class McImageAnimator extends LitElement {
     </div>`;
   }
 
+  private _leaveBox(): TemplateResult | typeof nothing {
+    if (!this._leaving) return nothing;
+    const text = this._opened?.isNew
+      ? t('image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is')
+      : t('image-animator.mc-image-animator.discard-the-changes-you-have-not-saved');
+    return html`<div class="confirm leave" role="alertdialog" aria-labelledby="leave-text">
+      <p id="leave-text">${text}</p>
+      <button class="btn btn-secondary" type="button" @click=${this._keepEditing}>${t('image-animator.mc-image-animator.keep-editing')}</button>
+      <button class="btn btn-danger" type="button" @click=${this._discard}>${t('image-animator.mc-image-animator.discard')}</button>
+    </div>`;
+  }
+
   private _status(): TemplateResult | typeof nothing {
     if (this._saving) return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saving')}</p>`;
     if (this._reason && this._phase === 'ready') return html`<p class="status problem" role="alert">${this._problem(this._reason)}</p>`;
     if (this._opened && !this._opened.canSave) return html`<p class="status" role="status">${this._problem('needs_utils')}</p>`;
     if (this._note === 'saved' && this._unchecked) return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image')}</p>`;
     if (this._note === 'saved') return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saved')}</p>`;
-    if (this._note === 'upload' && this._opened) {
-      return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saved-to-the-library-as-name', { name: this._opened.name })}</p>`;
+    if (this._opened?.isNew) {
+      return html`<p class="status" role="status">${t('image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as', { name: this._opened.name })}</p>`;
     }
     return html`<p class="status" role="status"></p>`;
   }
@@ -511,10 +551,10 @@ export class McImageAnimator extends LitElement {
           <button class="btn btn-secondary" type="button" @click=${this._close}>${t('image-animator.mc-image-animator.close')}</button>
         </header>
         <div class="body">${this._body()}</div>
-        ${this._confirmBox()}
+        ${this._confirmBox()} ${this._leaveBox()}
         <footer>
           ${this._status()}
-          <button class="btn btn-primary" type="button" ?disabled=${!o?.canSave || this._saving || !!this._ask} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
+          <button class="btn btn-primary" type="button" ?disabled=${!o?.canSave || this._saving || !!this._ask || !!this._leaving} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
         </footer>
       </div>`;
   }

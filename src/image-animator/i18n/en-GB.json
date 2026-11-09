@@ -413,10 +413,38 @@
       "limit": "The number above which it is heavy."
     }
   },
+  "image-animator.mc-image-animator.discard": {
+    "text": "Discard",
+    "note": "Button that closes the animator and throws away the unsaved edits.",
+    "max": 14
+  },
+  "image-animator.mc-image-animator.discard-the-changes-you-have-not-saved": {
+    "text": "Discard the changes you have not saved?",
+    "note": "Question shown when the user closes the animator with unsaved edits.",
+    "max": 60
+  },
+  "image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is": {
+    "text": "Discard this image and your changes? It is not in the library yet.",
+    "note": "Question shown when the user closes the animator with edits to an uploaded drawing that was never saved.",
+    "max": 96
+  },
   "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
     "text": "Enter path data, for example M0 0 L50 20.",
     "note": "Error when the path field is empty or holds characters path data cannot have.",
     "max": 123
+  },
+  "image-animator.mc-image-animator.keep-editing": {
+    "text": "Keep editing",
+    "note": "Button that leaves the discard question and returns to the animator.",
+    "max": 20
+  },
+  "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
+    "text": "Not in the library yet. Save adds it as {name}.",
+    "note": "Status line while an uploaded drawing is open but not saved. Saving adds it to the image library. {name} is the name it will get.",
+    "max": 64,
+    "vars": {
+      "name": "Name the new library image will get."
+    }
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "Opening the image…",
@@ -437,14 +465,6 @@
     "text": "Saved. Magic Card could not check where this image is used.",
     "note": "Status after a save when no dashboard could be read to count the cards.",
     "max": 84
-  },
-  "image-animator.mc-image-animator.saved-to-the-library-as-name": {
-    "text": "Saved to the library as {name}.",
-    "note": "Status line after an uploaded drawing was added to the image library. {name} is the new image name.",
-    "max": 52,
-    "vars": {
-      "name": "Name given to the new library image."
-    }
   },
   "image-animator.mc-image-animator.saving": {
     "text": "Saving…",

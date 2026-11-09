@@ -2,7 +2,7 @@ import { THUMB_SIDE_PX } from '../contracts/image-editor';
 import type { ImageAnimation } from '../contracts/image-animation';
 import { IMAGE_CMD, THUMB_MAX_BYTES, type ImageBinding, type ImageSummary, type SavedImageInput } from '../contracts/mcu-library-images';
 import { loadImageTools } from './image-loader';
-import { morphIdsOf, reasonOf, recordBytes, readCaps, type Failed, type LibraryHass } from './source';
+import { freeId, reasonOf, recordBytes, readCaps, type Failed, type LibraryHass } from './source';
 
 // Saves the animation of a library image back with its drawing and connections in one call.
 
@@ -16,9 +16,12 @@ export interface SaveInput {
   animation: unknown;
   /** `updated_at` of the record when it was opened; the library refuses the save when it changed since. */
   baseUpdatedAt?: string;
+  /** Not in the library yet: saved under a free id when `id` was taken since it was opened. */
+  isNew?: boolean;
 }
 
-export type Saved = { ok: true; summary: ImageSummary } | Failed;
+/** `id` is the library id the image was saved under. */
+export type Saved = { ok: true; id: string; summary: ImageSummary } | Failed;
 
 const hasClips = (a: unknown): boolean => {
   const clips = (a as { clips?: unknown } | null | undefined)?.clips;
@@ -37,7 +40,7 @@ export async function saveAnimation(hass: LibraryHass, input: SaveInput): Promis
   if (recordBytes(input.svg, input.bindings, wanted as ImageAnimation | undefined) > caps.maxBytes) return { ok: false, reason: 'too_large' };
   const tools = await loadImageTools();
   if (!tools) return { ok: false, reason: 'failed' };
-  const clean = tools.api.sanitizeImage(input.svg, { morphIds: morphIdsOf(wanted) });
+  const clean = tools.api.sanitizeImage(input.svg, { animation: wanted });
   if (clean.error) return { ok: false, reason: reasonOf(clean.error) };
   let animation: ImageAnimation | undefined;
   if (wanted) {
@@ -46,8 +49,9 @@ export async function saveAnimation(hass: LibraryHass, input: SaveInput): Promis
   }
   if (recordBytes(clean.markup, input.bindings, animation) > caps.maxBytes) return { ok: false, reason: 'too_large' };
   const thumb = await tools.api.thumbnail(clean.markup, THUMB_SIDE_PX, THUMB_MAX_BYTES).catch(() => undefined);
+  const id = input.isNew && caps.ids.has(input.id) ? freeId(input.id, caps.ids) : input.id;
   const image: SavedImageInput = {
-    id: input.id,
+    id,
     name: input.name,
     view_box: clean.viewBox || input.viewBox,
     svg: clean.markup,
@@ -56,9 +60,9 @@ export async function saveAnimation(hass: LibraryHass, input: SaveInput): Promis
     ...(thumb ? { thumb } : {}),
   };
   try {
-    const r = await hass.callWS<{ image: ImageSummary }>({ type: IMAGE_CMD.save, image, ...(input.baseUpdatedAt ? { base_updated_at: input.baseUpdatedAt } : {}) });
-    tools.api.invalidate([input.id]);
-    return { ok: true, summary: r.image };
+    const r = await hass.callWS<{ image: ImageSummary }>({ type: IMAGE_CMD.save, image, ...(input.baseUpdatedAt && !input.isNew ? { base_updated_at: input.baseUpdatedAt } : {}) });
+    tools.api.invalidate([id]);
+    return { ok: true, id, summary: r.image };
   } catch (err) {
     return { ok: false, reason: (err as { code?: unknown } | null)?.code === 'conflict' ? 'conflict' : 'failed' };
   }

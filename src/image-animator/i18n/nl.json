@@ -295,9 +295,29 @@
     "text": "{count, plural, one {# vorm met een vervagings- of kleurfilter} other {# vormen met een vervagings- of kleurfilter}}, meer dan de grens van {limit}",
     "hash": "6d912fb3"
   },
+  "image-animator.mc-image-animator.discard": {
+    "text": "Weggooien",
+    "hash": "eb1a70e3"
+  },
+  "image-animator.mc-image-animator.discard-the-changes-you-have-not-saved": {
+    "text": "Wijzigingen die niet zijn opgeslagen weggooien?",
+    "hash": "96acf3e3"
+  },
+  "image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is": {
+    "text": "Deze afbeelding en je wijzigingen weggooien? Ze staat nog niet in de bibliotheek.",
+    "hash": "493a2952"
+  },
   "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
     "text": "Voer padgegevens in, bijvoorbeeld M0 0 L50 20.",
     "hash": "3f998515"
+  },
+  "image-animator.mc-image-animator.keep-editing": {
+    "text": "Verder bewerken",
+    "hash": "e76fd2ad"
+  },
+  "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
+    "text": "Nog niet in de bibliotheek. Opslaan voegt het toe als {name}.",
+    "hash": "53da3716"
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "De afbeelding wordt geopend…",
@@ -314,10 +334,6 @@
   "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
     "text": "Opgeslagen. Magic Card kon niet controleren waar deze afbeelding wordt gebruikt.",
     "hash": "e1319538"
-  },
-  "image-animator.mc-image-animator.saved-to-the-library-as-name": {
-    "text": "Opgeslagen in de bibliotheek als {name}.",
-    "hash": "c9fe8770"
   },
   "image-animator.mc-image-animator.saving": {
     "text": "Bezig met opslaan…",

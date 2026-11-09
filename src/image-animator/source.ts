@@ -1,22 +1,18 @@
 import type { ImageAnimation } from '../contracts/image-animation';
-import { THUMB_SIDE_PX } from '../contracts/image-editor';
 import {
   IMAGE_CAPS_ANIMATION,
   IMAGE_CMD,
-  THUMB_MAX_BYTES,
   imageMaxBytes,
   type ImageBinding,
   type ImageListResult,
-  type ImageSummary,
   type SavedImage,
-  type SavedImageInput,
 } from '../contracts/mcu-library-images';
 import type { SanitizedImage } from '../contracts/svg-image';
 import { byteLength } from '../svg-safety/values';
 import { loadImageTools } from './image-loader';
 import { t } from './i18n';
 
-// Opens what the animator works on: a library image by id, or an uploaded .svg that is sanitised and saved as a new image.
+// Opens what the animator works on: a library image by id, or an uploaded .svg that is sanitised and becomes a new image on save.
 
 export interface LibraryHass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;
@@ -42,6 +38,8 @@ export interface Opened {
   updatedAt?: string;
   canSave: boolean;
   maxBytes: number;
+  /** An upload that is not in the library yet; the first save adds it. */
+  isNew?: boolean;
 }
 
 export interface Caps {
@@ -64,22 +62,6 @@ export async function readCaps(hass: LibraryHass): Promise<Caps | undefined> {
   }
 }
 
-/** The `<animate>` ids the record's morphs name; the sanitiser keeps exactly these. */
-export function morphIdsOf(raw: unknown): ReadonlySet<string> {
-  const ids = new Set<string>();
-  const clips = (raw as { clips?: unknown } | null | undefined)?.clips;
-  if (!Array.isArray(clips)) return ids;
-  for (const clip of clips) {
-    const morphs = (clip as { morphs?: unknown } | null)?.morphs;
-    if (!Array.isArray(morphs)) continue;
-    for (const m of morphs) {
-      const smil = (m as { smil?: unknown } | null)?.smil;
-      if (typeof smil === 'string') ids.add(smil);
-    }
-  }
-  return ids;
-}
-
 /** The reason a sanitiser error is shown as. */
 export function reasonOf(error: NonNullable<SanitizedImage['error']>): FailReason {
   return error === 'too_large' ? 'too_large' : error === 'unsafe_markup' || error === 'too_complex' ? 'unsafe_markup' : 'not_svg';
@@ -91,7 +73,7 @@ export function recordBytes(svg: string, bindings: readonly ImageBinding[] | und
 }
 
 /** A library id from a name, not yet taken. */
-function freeId(name: string, taken: ReadonlySet<string>): string {
+export function freeId(name: string, taken: ReadonlySet<string>): string {
   const base = name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 56).replace(/-+$/, '') || 'image';
   let id = base;
   for (let n = 2; taken.has(id); n++) id = `${base}-${n}`;
@@ -110,7 +92,7 @@ async function openImage(hass: LibraryHass, id: string): Promise<Opened | Failed
   if (!record) return { ok: false, reason: 'missing' };
   const tools = await loadImageTools();
   if (!tools) return { ok: false, reason: 'failed' };
-  const clean = tools.api.sanitizeImage(record.svg, { morphIds: morphIdsOf(record.animation) });
+  const clean = tools.api.sanitizeImage(record.svg, { animation: record.animation });
   if (clean.error) return { ok: false, reason: reasonOf(clean.error) };
   let animation: ImageAnimation | undefined;
   if (record.animation !== undefined) {
@@ -148,20 +130,10 @@ async function openUpload(hass: LibraryHass, file: File): Promise<Opened | Faile
   if (clean.error) return { ok: false, reason: reasonOf(clean.error) };
   if (recordBytes(clean.markup, undefined, undefined) > caps.maxBytes) return { ok: false, reason: 'too_large' };
   const name = file.name.replace(/\.svg$/i, '').replace(/[-_]+/g, ' ').trim().slice(0, 64) || t('image-animator.source.image');
-  const image: SavedImageInput = { id: freeId(name, caps.ids), name, view_box: clean.viewBox, svg: clean.markup };
-  const thumb = await tools.api.thumbnail(clean.markup, THUMB_SIDE_PX, THUMB_MAX_BYTES).catch(() => undefined);
-  if (thumb) image.thumb = thumb;
-  let summary: ImageSummary;
-  try {
-    summary = (await hass.callWS<{ image: ImageSummary }>({ type: IMAGE_CMD.save, image })).image;
-  } catch {
-    return { ok: false, reason: 'failed' };
-  }
-  tools.api.invalidate([image.id]);
-  return { ok: true, id: image.id, name, svg: clean.markup, viewBox: clean.viewBox, bindings: [], updatedAt: summary?.updated_at, canSave: true, maxBytes: caps.maxBytes };
+  return { ok: true, id: freeId(name, caps.ids), name, svg: clean.markup, viewBox: clean.viewBox, bindings: [], canSave: true, maxBytes: caps.maxBytes, isNew: true };
 }
 
-/** Opens a library image, or saves an upload into the library as a new image with no animation and opens that. */
+/** Opens a library image, or a sanitised upload as a new image that is written to the library on its first save. */
 export function openSource(hass: LibraryHass, source: Source): Promise<Opened | Failed> {
   return source.kind === 'image' ? openImage(hass, source.id) : openUpload(hass, source.file);
 }

@@ -90,9 +90,9 @@ export function usageNotice(use: UseCount): UseNotice {
 
 export type ConfirmedSave = (Extract<Saved, { ok: true }> & { notice: UseNotice }) | Extract<Saved, { ok: false }> | { ok: false; reason: 'cancelled' };
 
-/** Counts the uses, asks only when the notice has a count, and saves on a yes; a no sends nothing. */
+/** Counts the uses, asks only when the notice has a count, and saves on a yes; a no sends nothing. A new image has no uses to count. */
 export async function saveConfirmed(hass: LibraryHass, input: SaveInput, ask: (notice: UseNotice) => Promise<boolean>): Promise<ConfirmedSave> {
-  const notice = usageNotice(await countImageUseDetail(hass, input.id));
+  const notice: UseNotice = input.isNew ? { kind: 'none' } : usageNotice(await countImageUseDetail(hass, input.id));
   if ((notice.kind === 'used' || notice.kind === 'at-least') && !(await ask(notice))) return { ok: false, reason: 'cancelled' };
   const r = await saveAnimation(hass, input);
   return r.ok ? { ...r, notice } : r;
