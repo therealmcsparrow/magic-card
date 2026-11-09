@@ -1,4 +1,4 @@
-import type { LazyChunkModule, LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
+import type { LazyChunkModule, LazyChunkName } from '../contracts/lazy-module';
 import { provideRuntimeChunk } from './anim-runtime-loader';
 import type * as AnimChunk from '../anim-studio/anim-chunk';
 import type * as FlowsChunk from '../card/flows-chunk';
@@ -90,7 +90,6 @@ export const onDemandChunks = {
   particles: lazyChunk('particles', viaAnim((a) => a.importParticles)),
   'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
   'svg-image': lazyChunk('svg-image', () => import(/* webpackChunkName: "svg-image" */ '../svg-image/chunk')),
-  'image-anim': lazyChunk('image-anim', () => import(/* webpackChunkName: "image-anim" */ '../image-anim/chunk')),
   // the connection and not-updated faces; a quiet chunk, so a failure shows no notice
   status: lazyChunk('status', () => import(/* webpackChunkName: "status" */ '../card-status/index'), { silent: true }),
 };
@@ -104,8 +103,8 @@ provideSvgImageChunk(onDemandChunks['svg-image']);
 export const loadSeasonal = (): Promise<boolean> => lazyChunks.seasonal.load();
 
 /** Tests: replace one chunk import (undefined restores it) and forget its state. */
-export function __setLazyImporterForTests(name: LazyChunkName | OnDemandChunkName, importer: LazyImporter | undefined): void {
-  (name in lazyChunks ? lazyChunks[name as LazyChunkName] : onDemandChunks[name as OnDemandChunkName]).__reset(importer as never);
+export function __setLazyImporterForTests(name: LazyChunkName | keyof typeof onDemandChunks, importer: LazyImporter | undefined): void {
+  (name in lazyChunks ? lazyChunks[name as LazyChunkName] : onDemandChunks[name as keyof typeof onDemandChunks]).__reset(importer as never);
 }
 
 /** Tests (vitest setup): load and install every chunk so renderPreview output stays synchronous. */

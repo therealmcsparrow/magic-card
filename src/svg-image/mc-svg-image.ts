@@ -6,7 +6,7 @@ import type { BackgroundLayerConfig, BgLayerStatus } from '../contracts/bg-stack
 import { IMAGE_MAX_DESCRIPTION_CHARS, IMAGE_REF_PREFIX, IMAGE_REF_RE, IMAGE_SKELETON_MS, MAX_LAYER_PREFETCH, type ImagePoint } from '../contracts/svg-image';
 import { entityStateColor, isEntityColor } from '../utils/entity-color';
 import { safeColor } from '../utils/safe-css';
-import { loadImageAnim } from './anim-loader';
+import { loadImageAnim, loadTrackCompiler, wantsTracks } from './anim-loader';
 import { loadImage, watchImage, type ImageEntry } from './client';
 import { drawStep, whenIdle } from './frames';
 import { layerPlacement, type ImageFit, type Placement } from './layer-box';
@@ -298,10 +298,10 @@ export class McSvgImage extends LitElement {
     const raw = entry?.saved.animation;
     if (!raw || !entry) return;
     const gen = ++this._animGen;
-    void loadImageAnim().then((m) => {
+    void Promise.all([loadImageAnim(), wantsTracks(raw) ? loadTrackCompiler() : undefined]).then(([m, compile]) => {
       if (!m || gen !== this._animGen || this._svg !== svg || !this.isConnected) return;
       const anim = m.checkImageAnimation(raw, new Set(entry.ids));
-      if (anim) this._anim = m.api.play(svg as SVGSVGElement, anim, { hass: this._hass, host: this });
+      if (anim) this._anim = m.api.play(svg as SVGSVGElement, anim, { hass: this._hass, host: this }, compile);
     });
   }
 

@@ -163,13 +163,29 @@ function settle(id: string, r: LoadResult): void {
   done?.(r);
 }
 
+/** The ids of the editor-written `<animate>` copies the record's morphs name; the sanitiser keeps exactly these. */
+function morphIdsOf(raw: unknown): ReadonlySet<string> | undefined {
+  const clips = (raw as { clips?: unknown } | null | undefined)?.clips;
+  if (!Array.isArray(clips)) return undefined;
+  const ids = new Set<string>();
+  for (const clip of clips) {
+    const morphs = (clip as { morphs?: unknown } | null)?.morphs;
+    if (!Array.isArray(morphs)) continue;
+    for (const m of morphs) {
+      const smil = (m as { smil?: unknown } | null)?.smil;
+      if (typeof smil === 'string') ids.add(smil);
+    }
+  }
+  return ids;
+}
+
 function accept(id: string, saved: SavedImage | undefined): void {
   if (!saved) {
     startMiss(id, 'unknown');
     settle(id, { missing: 'unknown' });
     return;
   }
-  const parsed = parseImage(saved.svg);
+  const parsed = parseImage(saved.svg, { morphIds: morphIdsOf(saved.animation) });
   if ('error' in parsed) {
     startMiss(id, 'refused');
     settle(id, { missing: 'refused' });

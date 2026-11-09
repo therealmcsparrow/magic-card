@@ -1,7 +1,6 @@
-import { compileTracks } from '../anim-studio/compile-v2';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { Track } from '../anim-studio/model-v2-core';
-import type { ImageAnimContext, ImageAnimHandle, ImageAnimation, ImageClip } from '../contracts/image-animation';
+import type { ImageAnimContext, ImageAnimHandle, ImageAnimation, ImageClip, ImageTrackCompiler } from '../contracts/image-animation';
 import { morphCss } from './morph-css';
 import { startSmil } from './smil';
 
@@ -76,10 +75,10 @@ function trackDoc(clip: ImageClip, ids: string[]): AnimationDoc {
 }
 
 /** The CSS of the clip's tracks; the elements it marks are pushed on `marked`. */
-function trackCss(svg: SVGSVGElement, clip: ImageClip, key: string, marked: Element[]): string {
+function trackCss(svg: SVGSVGElement, clip: ImageClip, key: string, marked: Element[], compile: ImageTrackCompiler): string {
   if (!clip.tracks.length) return '';
   const ids: string[] = [];
-  const compiled = compileTracks(trackDoc(clip, ids));
+  const compiled = compile(trackDoc(clip, ids));
   const delay = clip.delay && clip.delay > 0 ? clip.delay : 0;
   const count = clip.iterations === 'infinite' ? 'infinite' : num(Number(clip.iterations));
   const dir = DIRECTIONS.includes(clip.direction ?? '') ? ` ${clip.direction}` : '';
@@ -109,7 +108,7 @@ function trackCss(svg: SVGSVGElement, clip: ImageClip, key: string, marked: Elem
  * Plays the animation of `svg` (the sanitised, mounted drawing). Each morph runs through one engine only: the CSS `d`
  * keyframes when the probe sees CSS `d` take effect, otherwise its SMIL copy.
  */
-export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimContext): ImageAnimHandle {
+export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimContext, compile?: ImageTrackCompiler): ImageAnimHandle {
   const key = `ia${(counter += 1)}`;
   const clip = pickClip(anim);
   const marked: Element[] = [];
@@ -122,7 +121,7 @@ export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimCo
     const morphs = c.morphs ?? [];
     const viaCss = !morphs.length || cssMorphWorks(svg.ownerDocument);
     const timing = { duration: c.duration, delay: c.delay, iterations: c.iterations };
-    const css = [trackCss(svg, c, key, marked), viaCss ? morphCss(morphs, timing, key) : ''].filter(Boolean).join('\n');
+    const css = [(compile ? trackCss(svg, c, key, marked, compile) : ''), viaCss ? morphCss(morphs, timing, key) : ''].filter(Boolean).join('\n');
     if (css) {
       style = svg.ownerDocument.createElementNS(SVG_NS, 'style');
       style.textContent = css;
@@ -141,7 +140,7 @@ export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimCo
     svg.removeAttribute(ROOT_ATTR);
   };
 
-  if (clip) startTrack(clip);
+  if (clip && (!clip.tracks.length || compile)) startTrack(clip);
   return {
     // state, hover and tap clips match against the new context here; the always clip needs nothing
     update() {},

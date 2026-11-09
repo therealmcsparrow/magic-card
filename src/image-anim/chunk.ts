@@ -3,7 +3,7 @@ import { IMAGE_ANIMATION_CONTRACT, type ImageAnimChunk } from '../contracts/imag
 import { checkImageAnimation } from './check';
 import { play } from './play';
 
-// Chunk entry of dist/magic-card-image-anim.js (contract image-animation 1.0.0): plays the animation of a library image.
+// Chunk entry of dist/magic-card-image-anim.js (contract image-animation 1.1): plays the animation of a library image.
 
 declare const __MC_BUILD_VERSION__: string | undefined;
 
