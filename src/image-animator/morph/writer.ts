@@ -129,12 +129,14 @@ export interface MorphRequest {
   into: string;
   /** Go back to the first shape at the end. */
   back: boolean;
+  /** The clip that gets the morph; the first clip when left out. */
+  clipId?: string;
 }
 
 const idsOf = (svg: SVGSVGElement): Set<string> => new Set(Array.from(svg.querySelectorAll('[id]'), (e) => e.getAttribute('id') ?? ''));
 
 /**
- * The animation with a morph on the path, in its first clip, plus the `<animate>` written into the drawing. A path has
+ * The animation with a morph on the path, in the chosen clip (the first by default), plus the `<animate>` written into the drawing. A path has
  * one morph: a second replaces the first. Throws before anything changes when the frames or the clip cannot hold one.
  */
 export function addMorph(anim: ImageAnimation | undefined, svg: SVGSVGElement, req: MorphRequest): ImageAnimation {
@@ -142,7 +144,7 @@ export function addMorph(anim: ImageAnimation | undefined, svg: SVGSVGElement, r
   const from = req.path.getAttribute('d') ?? '';
   const next: ImageAnimation = anim ? structuredClone(anim) : { v: 1, clips: [] };
   if (!next.clips.length) next.clips.push(defaultClip());
-  const clip = next.clips[0];
+  const clip = next.clips.find((c) => c.id === req.clipId) ?? next.clips[0];
   if (clip.direction !== undefined && clip.direction !== 'normal') throw new Error('A clip with a morph plays forwards only');
   let smil: string | undefined;
   for (const c of next.clips) {

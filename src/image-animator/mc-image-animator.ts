@@ -307,7 +307,7 @@ export class McImageAnimator extends LitElement {
       this._preview?.release();
       this._preview = undefined;
       svg.querySelector('[data-mc-picked]')?.removeAttribute('data-mc-picked');
-      const anim = addMorph(o.animation, svg, { path: from.element, into: d, back: this._morphBack });
+      const anim = addMorph(o.animation, svg, { path: from.element, into: d, back: this._morphBack, clipId: this._clip(o.animation)?.id });
       this._targets = listTargets(svg);
       this._opened = { ...o, animation: anim, svg: svg.outerHTML };
       this._morphMessage = t('image-animator.mc-image-animator.added-effect-to-name', { effect: t('image-animator.morph-panel.morph'), name: targetName(from) });
