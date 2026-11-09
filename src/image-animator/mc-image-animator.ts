@@ -7,6 +7,8 @@ import { editorSystem } from '../css/editor-stack';
 import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
 import { t } from './i18n';
 import { loadImageTools } from './image-loader';
+import { renderMorph, type MorphPanelProps } from './morph/morph-panel';
+import { addMorph } from './morph/writer';
 import { startPreview, type Preview } from './preview';
 import { saveAnimation } from './save';
 import { openSource, type FailReason, type Opened, type Source } from './source';
@@ -34,6 +36,10 @@ export class McImageAnimator extends LitElement {
   @state() private _presetId = '';
   @state() private _path = '';
   @state() private _message = '';
+  @state() private _morphFrom = '';
+  @state() private _morphInto = '';
+  @state() private _morphBack = false;
+  @state() private _morphMessage = '';
   private _started?: Promise<void>;
   private _svg?: SVGSVGElement;
   private _preview?: Preview;
@@ -176,6 +182,55 @@ export class McImageAnimator extends LitElement {
     this._replay();
   }
 
+  private _paths(): ImageTarget[] {
+    return this._targets.filter((x) => x.element?.localName === 'path');
+  }
+
+  /** Adds a morph from one path to the shape of another. The path gets an id in the drawing when it has none. */
+  private _addMorph(): void {
+    const o = this._opened;
+    const svg = this._svg;
+    const paths = this._paths();
+    const from = paths.find((x) => x.ref === (this._morphFrom || paths[0]?.ref));
+    const into = paths.find((x) => x.ref === (this._morphInto || paths[1]?.ref));
+    const d = into?.element?.getAttribute('d');
+    if (!o || !svg || !from?.element || !d || from === into) {
+      this._morphMessage = t('image-animator.morph-panel.choose-two-different-shapes-to-morph');
+      return;
+    }
+    const id = from.element.getAttribute('id');
+    try {
+      commitTargetId(from);
+      this._preview?.release();
+      this._preview = undefined;
+      svg.querySelector('[data-mc-picked]')?.removeAttribute('data-mc-picked');
+      const anim = addMorph(o.animation, svg, { path: from.element, into: d, back: this._morphBack });
+      this._targets = listTargets(svg);
+      this._opened = { ...o, animation: anim, svg: svg.outerHTML };
+      this._morphMessage = t('image-animator.mc-image-animator.added-effect-to-name', { effect: t('image-animator.morph-panel.morph'), name: targetName(from) });
+    } catch {
+      if (from.generated && !id) from.element.removeAttribute('id');
+      this._morphMessage = t('image-animator.morph-panel.this-morph-could-not-be-added');
+    }
+    this._mark(this._target);
+    this._replay();
+  }
+
+  private _morphPanel(): MorphPanelProps {
+    const paths = this._paths();
+    return {
+      paths,
+      from: this._morphFrom || paths[0]?.ref || '',
+      into: this._morphInto || paths[1]?.ref || '',
+      back: this._morphBack,
+      message: this._morphMessage,
+      setFrom: (ref) => (this._morphFrom = ref),
+      setInto: (ref) => (this._morphInto = ref),
+      setBack: (on) => (this._morphBack = on),
+      add: () => this._addMorph(),
+    };
+  }
+
   private _panel(): PanelProps | undefined {
     const svg = this._svg;
     if (!svg) return undefined;
@@ -250,7 +305,7 @@ export class McImageAnimator extends LitElement {
             <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
           </div>
         </div>
-        <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}` : nothing}</div>
+        <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}` : nothing}</div>
       </div>
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;
   }

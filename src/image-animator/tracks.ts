@@ -27,7 +27,8 @@ export interface EffectOptions {
 
 export type Availability = Record<EffectKind, { ok: boolean; reason?: 'no-stroke' }>;
 
-const defaultClip = (): ImageClip => ({ id: 'idle', name: t('image-animator.tracks.idle'), play: { on: 'always' }, duration: 2, easing: 'ease-in-out', iterations: 'infinite', tracks: [] });
+/** The clip a first effect lands in: it always plays. */
+export const defaultClip = (): ImageClip => ({ id: 'idle', name: t('image-animator.tracks.idle'), play: { on: 'always' }, duration: 2, easing: 'ease-in-out', iterations: 'infinite', tracks: [] });
 
 const KEYFRAMES: Record<Exclude<EffectKind, 'motion-path' | 'preset'>, AnimationKeyframe[]> = {
   transform: [{ at: 0, transform: { rotate: 0, scale: 1 } }, { at: 50, transform: { rotate: 12, scale: 1.1 } }, { at: 100, transform: { rotate: 0, scale: 1 } }],

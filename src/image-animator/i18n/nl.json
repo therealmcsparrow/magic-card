@@ -151,6 +151,46 @@
     "text": "Deze afbeelding is elders gewijzigd. Sluit dit venster en open het opnieuw.",
     "hash": "c8a63749"
   },
+  "image-animator.morph-panel.add-morph": {
+    "text": "Overgang toevoegen",
+    "hash": "e0b56fd1"
+  },
+  "image-animator.morph-panel.changes-into": {
+    "text": "Verandert in",
+    "hash": "b215034d"
+  },
+  "image-animator.morph-panel.choose-two-different-shapes-to-morph": {
+    "text": "Kies twee verschillende vormen voor de overgang.",
+    "hash": "b2cf4dff"
+  },
+  "image-animator.morph-panel.go-back-to-the-first-shape": {
+    "text": "Terug naar de eerste vorm",
+    "hash": "d10e611f"
+  },
+  "image-animator.morph-panel.morph": {
+    "text": "Overgang",
+    "hash": "61ce25d9"
+  },
+  "image-animator.morph-panel.morph-one-shape-into-another": {
+    "text": "Een vorm in een andere laten overgaan",
+    "hash": "d277d38c"
+  },
+  "image-animator.morph-panel.shape-id": {
+    "text": "Vorm {id}",
+    "hash": "225f5929"
+  },
+  "image-animator.morph-panel.shape-that-changes": {
+    "text": "Vorm die verandert",
+    "hash": "cdb4f7a8"
+  },
+  "image-animator.morph-panel.the-first-shape-changes-into-the-second": {
+    "text": "De eerste vorm gaat over in de tweede. Ze hoeven niet evenveel punten te hebben.",
+    "hash": "bbeb5945"
+  },
+  "image-animator.morph-panel.this-morph-could-not-be-added": {
+    "text": "Deze overgang kon niet worden toegevoegd.",
+    "hash": "91ccc32e"
+  },
   "image-animator.tracks.idle": {
     "text": "Rust",
     "hash": "ab0171ca"

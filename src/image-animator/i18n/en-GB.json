@@ -211,6 +211,59 @@
     "note": "Error in the image animator when a save finds the image changed since it was opened.",
     "max": 98
   },
+  "image-animator.morph-panel.add-morph": {
+    "text": "Add morph",
+    "note": "Button that adds the chosen morph to the image.",
+    "max": 25
+  },
+  "image-animator.morph-panel.changes-into": {
+    "text": "Changes into",
+    "note": "Label of the list that picks the shape the first one turns into.",
+    "max": 30
+  },
+  "image-animator.morph-panel.choose-two-different-shapes-to-morph": {
+    "text": "Choose two different shapes to morph.",
+    "note": "Hint shown when fewer than two different shapes are chosen.",
+    "max": 80
+  },
+  "image-animator.morph-panel.go-back-to-the-first-shape": {
+    "text": "Go back to the first shape",
+    "note": "Label of the checkbox that makes a morph return to where it started.",
+    "max": 50
+  },
+  "image-animator.morph-panel.morph": {
+    "text": "Morph",
+    "note": "Name of the morph effect in the message that confirms it was added.",
+    "max": 20
+  },
+  "image-animator.morph-panel.morph-one-shape-into-another": {
+    "text": "Morph one shape into another",
+    "note": "Heading of the morph controls in the image animator.",
+    "max": 50
+  },
+  "image-animator.morph-panel.shape-id": {
+    "text": "Shape {id}",
+    "note": "Item in the lists of shapes for a morph. {id} is the id of the shape in the drawing.",
+    "max": 30,
+    "vars": {
+      "id": "Id of the shape in the drawing."
+    }
+  },
+  "image-animator.morph-panel.shape-that-changes": {
+    "text": "Shape that changes",
+    "note": "Label of the list that picks the shape which morphs.",
+    "max": 40
+  },
+  "image-animator.morph-panel.the-first-shape-changes-into-the-second": {
+    "text": "The first shape changes into the second. They do not need the same number of points.",
+    "note": "Hint under the morph heading in the image animator.",
+    "max": 200
+  },
+  "image-animator.morph-panel.this-morph-could-not-be-added": {
+    "text": "This morph could not be added.",
+    "note": "Message when a morph cannot be added to the image.",
+    "max": 80
+  },
   "image-animator.tracks.idle": {
     "text": "Idle",
     "note": "Name of the first animation clip an image gets, which plays all the time.",

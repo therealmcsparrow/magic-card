@@ -134,6 +134,7 @@ svg-editor	svg-editor.views.rotate-90-degrees-anticlockwise	Rotate 90 degrees co
 svg-editor	svg-editor.views.this-module-will-use-your-drawing	This module will use your drawing instead of {icon}. Colors, Draw and Morph effects keep working on it.
 svg-editor	svg-editor.views.this-module-will-use-your-drawing-2	This module will use your drawing. Colors, Draw and Morph effects keep working on it.
 svg-editor	svg-editor.views.use-two-colours-main-and-accent	Use two colors: Main and Accent.
+image-animator	image-animator.effects-panel.colour	Color
 image-editor	image-editor.chunk.showing-the-drawing-in-the-editor	Showing the drawing in the editor colors.
 image-editor	image-editor.paint-ui.centre-x	Center X (%)
 image-editor	image-editor.paint-ui.centre-y	Center Y (%)

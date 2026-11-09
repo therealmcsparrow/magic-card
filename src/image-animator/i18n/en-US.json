@@ -151,6 +151,46 @@
     "text": "This image was changed somewhere else. Close this window and open it again.",
     "hash": "c8a63749"
   },
+  "image-animator.morph-panel.add-morph": {
+    "text": "Add morph",
+    "hash": "e0b56fd1"
+  },
+  "image-animator.morph-panel.changes-into": {
+    "text": "Changes into",
+    "hash": "b215034d"
+  },
+  "image-animator.morph-panel.choose-two-different-shapes-to-morph": {
+    "text": "Choose two different shapes to morph.",
+    "hash": "b2cf4dff"
+  },
+  "image-animator.morph-panel.go-back-to-the-first-shape": {
+    "text": "Go back to the first shape",
+    "hash": "d10e611f"
+  },
+  "image-animator.morph-panel.morph": {
+    "text": "Morph",
+    "hash": "61ce25d9"
+  },
+  "image-animator.morph-panel.morph-one-shape-into-another": {
+    "text": "Morph one shape into another",
+    "hash": "d277d38c"
+  },
+  "image-animator.morph-panel.shape-id": {
+    "text": "Shape {id}",
+    "hash": "225f5929"
+  },
+  "image-animator.morph-panel.shape-that-changes": {
+    "text": "Shape that changes",
+    "hash": "cdb4f7a8"
+  },
+  "image-animator.morph-panel.the-first-shape-changes-into-the-second": {
+    "text": "The first shape changes into the second. They do not need the same number of points.",
+    "hash": "bbeb5945"
+  },
+  "image-animator.morph-panel.this-morph-could-not-be-added": {
+    "text": "This morph could not be added.",
+    "hash": "91ccc32e"
+  },
   "image-animator.tracks.idle": {
     "text": "Idle",
     "hash": "ab0171ca"
