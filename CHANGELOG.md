@@ -22,6 +22,7 @@ A pre-release. Install Magic Card Utils 2026.11.02-beta.1 (or newer) first, then
 ### Notes
 -   Older Magic Card versions show an animated image as a still picture.
 -   Share codes do not carry animations yet.
+-   The animation studio now needs a space between the two parts of a transform origin. A saved origin written without one, such as `50%50%` or `lefttop`, is no longer read; set it again as `50% 50%` or `left top`.
 
 See [Animate a library image](documentation/images/animating-images.md).
 
