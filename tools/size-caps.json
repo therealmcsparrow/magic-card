@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 75460,
+        "cap": 75520,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 75393
+        "measured": 75499
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 64560,
-      "measured": 64393
+      "cap": 64640,
+      "measured": 64507
     }
   },
   "files": {
@@ -184,9 +184,9 @@
       "note": "Image editor: canvas size, save path, size meter, view-only workspace, paints and gradients. A child of the SVG editor chunk. 93 KiB, measured 89,785 with text layers, the reference picture, SVG import, imported parts and the save checks (Linux build, docker node 24.22.0). The contract ceiling is 98,304 B (IMAGE_EDITOR_CHUNK_CEILING), room for text, the reference picture and the bindings panel."
     },
     "magic-card-svg-image.js": {
-      "raw": 27648,
+      "raw": 33792,
       "ceiling": 40960,
-      "note": "Library images: the image sanitiser and image tools. 27 KiB, measured 27,380 (Linux build, docker node 24.22.0)."
+      "note": "Library images: the image sanitiser and image tools, with the morph rule for animated records. 33 KiB, measured 31,721 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB."
     },
     "magic-card-image-transfer.js": {
       "raw": 7168,
@@ -303,6 +303,16 @@
       "raw": 10240,
       "ceiling": 12288,
       "note": "CSS paint resolver, loaded only when an SVG is imported or opened. 10 KiB, measured 10,114 (Linux build, docker node 24.22.0)."
+    },
+    "magic-card-image-anim.js": {
+      "raw": 14336,
+      "ceiling": 16384,
+      "note": "Image animation viewer: compiles the clips of an animated library image and plays them. 14 KiB, measured 13,624 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 16,384 B (IMAGE_ANIM_CHUNK_CEILING)."
+    },
+    "magic-card-image-animator.js": {
+      "raw": 84992,
+      "ceiling": 131072,
+      "note": "Image animator (editor-only chunk, contract image-animator 1.0.0). 83 KiB, measured 79,930 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 131,072 B (IMAGE_ANIMATOR_CHUNK_CEILING)."
     }
   },
   "approved_raises": [
@@ -1175,6 +1185,24 @@
       "field": "/files/magic-card-markdown.js/ceiling",
       "from": 57344,
       "to": 57600
+    },
+    {
+      "id": "svg-image-raw-27648-to-33792",
+      "field": "/files/magic-card-svg-image.js/raw",
+      "from": 27648,
+      "to": 33792
+    },
+    {
+      "id": "entry-stage4-75460-to-75520",
+      "field": "/entry/stages/3/cap",
+      "from": 75460,
+      "to": 75520
+    },
+    {
+      "id": "entry-br-64560-to-64640",
+      "field": "/entry/br/cap",
+      "from": 64560,
+      "to": 64640
     }
   ]
 }
