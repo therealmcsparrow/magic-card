@@ -3,6 +3,7 @@ import type { Track } from '../anim-studio/model-v2-core';
 import type { ClipPlay, ImageAnimContext, ImageAnimHandle, ImageAnimation, ImageClip, ImageTrackCompiler } from '../contracts/image-animation';
 import { isCardPaused, unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { askForPause, canHover, watchMotion } from './motion';
+import { asTransform } from './play-transform';
 import { morphCss } from './morph-css';
 import { startSmil } from './smil';
 import { bindTriggers, cardOf, stateMatches, triggerHost } from './triggers';
@@ -49,6 +50,8 @@ function cssMorphWorks(doc: Document): boolean {
 }
 
 const num = (n: number): string => String(+n.toFixed(4));
+/** True only when the browser reports no transform of the element's own, so a CSS `transform` replaces nothing. */
+const untransformed = (el: Element): boolean => el.ownerDocument.defaultView?.getComputedStyle(el).transform === 'none';
 const byId = (svg: SVGSVGElement, id: string): Element | undefined => Array.from(svg.querySelectorAll('[id]')).find((e) => e.id === id);
 
 /** The studio document the tracks compile from: each `part:<svg id>` becomes a rig part `p<n>` of its own. */
@@ -91,14 +94,14 @@ function trackCss(svg: SVGSVGElement, clip: ImageClip, key: string, marked: Elem
   for (const t of compiled) {
     if (!t.css) continue;
     const names = [t.name, ...(t.lanes ?? [])].map((n) => `${n} ${timing}`).join(',');
-    out.push(t.css);
     if (t.target === 'element') {
-      out.push(`svg[${ROOT_ATTR}="${key}"]{animation:${names};transform-origin:${t.origin ?? 'center'};}`);
+      out.push(t.css, `svg[${ROOT_ATTR}="${key}"]{animation:${names};transform-origin:${t.origin ?? 'center'};}`);
       continue;
     }
     const id = ids[Number(t.target.slice(6))];
     const el = id === undefined ? undefined : byId(svg, id);
     if (!el) continue;
+    out.push(t.lanes?.length || !untransformed(el) ? t.css : asTransform(t.css));
     const mark = `${key}-${marked.length}`;
     el.setAttribute(PART_ATTR, mark);
     marked.push(el);
