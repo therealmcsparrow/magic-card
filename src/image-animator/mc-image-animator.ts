@@ -150,12 +150,18 @@ export class McImageAnimator extends LitElement {
     this._note = '';
     this._reason = undefined;
     this._unchecked = false;
-    const r = await saveConfirmed(
-      hass,
-      { id: o.id, name: o.name, svg: o.svg, viewBox: o.viewBox, bindings: o.bindings, animation: o.animation, baseUpdatedAt: o.updatedAt, isNew: o.isNew },
-      (notice) => this._confirm(notice),
-    );
-    this._saving = false;
+    let r: Awaited<ReturnType<typeof saveConfirmed>>;
+    try {
+      r = await saveConfirmed(
+        hass,
+        { id: o.id, name: o.name, svg: o.svg, viewBox: o.viewBox, bindings: o.bindings, animation: o.animation, baseUpdatedAt: o.updatedAt, isNew: o.isNew },
+        (notice) => this._confirm(notice),
+      );
+    } catch {
+      r = { ok: false, reason: 'failed' };
+    } finally {
+      this._saving = false;
+    }
     if (r.ok) this._saved(o, r.id, r.notice.kind === 'unknown', r.summary?.updated_at);
     else if (r.reason !== 'cancelled') this._reason = r.reason;
     if (this._closeAfterSave) {
