@@ -1,7 +1,7 @@
 // Contract: i18n. Version 2.1.0.
 
 export const I18N_CONTRACT_VERSION = '2.1.0';
-export const I18N_CONTRACT_REVISION = 9;
+export const I18N_CONTRACT_REVISION = 10;
 
 /** Pseudo-localisation hook: wraps one message or one formatted number; the result is used as text only. */
 export type PseudoWrap = (s: string, kind: 'msg' | 'num') => string;
@@ -117,6 +117,7 @@ export const I18N_MODULES = {
   'forum-shot': { bundle: 'magic-card-forum-shot.js', folders: ['src/forum-shot'], tables: 'inline', status: 'complete', slice: 'forum-shot', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'share-kit': { bundle: 'magic-card-share-kit.js', folders: ['src/share-kit'], tables: 'inline', status: 'complete', slice: 'sharing-safety', dashboard: false },
+  'image-animator': { bundle: 'magic-card-image-animator.js', folders: ['src/image-animator'], tables: 'inline', status: 'complete', slice: 'image-animator', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
 // dashboard: false for icon-library and preset-catalogue: checked against the chunk graph, the

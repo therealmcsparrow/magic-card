@@ -1,11 +1,19 @@
 import type { HomeAssistant } from '../types';
 import type { ImageBinding, SavedImageInput } from './mcu-library-images';
 
-/** Contract: image editing. Version 1.2.0 (IMAGE_EDITOR_CONTRACT), revision 7. Full drawings are edited in
+/** Contract: image editing. Version 1.3.0 (IMAGE_EDITOR_CONTRACT), revision 8. Full drawings are edited in
  * <mc-svg-editor> (svg-editor 1.2.0) in image mode. */
 
-export const IMAGE_EDITOR_CONTRACT = '1.2.0';
-export const IMAGE_EDITOR_CONTRACT_REVISION = 7;
+export const IMAGE_EDITOR_CONTRACT = '1.3.0';
+export const IMAGE_EDITOR_CONTRACT_REVISION = 8;
+
+/**
+ * Animate: a toolbar action of the image editor and a button beside each library image field; both open the image
+ * animator (image-animator 1.0.0). Disabled, with a translated hint, when images_list has no `caps`.
+ */
+export const IMAGE_ANIMATE_ACTION = 'animate';
+/** Sum of `bytes` over images_list at which the save areas warn; never blocks a save. */
+export const LIBRARY_WARN_BYTES = 50 * 1024 * 1024;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';
@@ -34,8 +42,8 @@ export const IMAGE_ID_SLUG = /^[a-z0-9](?:[a-z0-9-]{0,47})$/;
 
 /** The class that marks an imported part's group in the saved markup. */
 export const IMAGE_PART_CLASS = 'mc-part';
-/** Most part data of one image, in UTF-16 code units. */
-export const IMAGE_PART_DATA_MAX = 2 * 256 * 1024;
+/** Most part data of one image, in UTF-16 code units: twice mcu-library-images IMAGE_MAX_BYTES. */
+export const IMAGE_PART_DATA_MAX = 2 * 1024 * 1024;
 
 export const REFERENCE_TYPES: readonly string[] = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif', 'image/bmp'];
 export const REFERENCE_MAX_FILE_BYTES = 64 * 1024 * 1024;
@@ -59,7 +67,10 @@ export interface ImageEditorExt {
   /** Layers from imported markup (text, gradients, locked parts) the icon importer does not handle. */
   importParts(markup: string): unknown[];
   bindings(): ImageBinding[];
-  /** Builds the save payload (sanitised markup, bindings, thumb) or the reason it cannot be saved. */
+  /**
+   * Builds the save payload (sanitised markup, bindings, the record's animation, thumb) or the reason it cannot be
+   * saved. The size meter and `too_large` use the effective cap; `full` comes only from an older Utils.
+   */
   buildSave(meta: { id: string; name: string }): Promise<{ ok: true; input: SavedImageInput } | { ok: false; reason: 'too_large' | 'full' | 'invalid'; bytes?: number }>;
   /** The drawing as a download (api.fileBlob); undefined when nothing is drawable. */
   exportFile(): Blob | undefined;
