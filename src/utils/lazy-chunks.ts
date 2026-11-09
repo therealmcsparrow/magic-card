@@ -90,6 +90,7 @@ export const onDemandChunks = {
   particles: lazyChunk('particles', viaAnim((a) => a.importParticles)),
   'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
   'svg-image': lazyChunk('svg-image', () => import(/* webpackChunkName: "svg-image" */ '../svg-image/chunk')),
+  'image-anim': lazyChunk('image-anim', () => import(/* webpackChunkName: "image-anim" */ '../image-anim/chunk')),
   // the connection and not-updated faces; a quiet chunk, so a failure shows no notice
   status: lazyChunk('status', () => import(/* webpackChunkName: "status" */ '../card-status/index'), { silent: true }),
 };
