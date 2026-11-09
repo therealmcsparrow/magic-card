@@ -16,7 +16,7 @@ export interface SaveInput {
   animation: unknown;
   /** `updated_at` of the record when it was opened; the library refuses the save when it changed since. */
   baseUpdatedAt?: string;
-  /** Not in the library yet: saved under a free id when `id` was taken since it was opened. */
+  /** Not in the library yet: the ids are read again just before the write, and a taken `id` is replaced by a free one. */
   isNew?: boolean;
 }
 
@@ -49,7 +49,9 @@ export async function saveAnimation(hass: LibraryHass, input: SaveInput): Promis
   }
   if (recordBytes(clean.markup, input.bindings, animation) > caps.maxBytes) return { ok: false, reason: 'too_large' };
   const thumb = await tools.api.thumbnail(clean.markup, THUMB_SIDE_PX, THUMB_MAX_BYTES).catch(() => undefined);
-  const id = input.isNew && caps.ids.has(input.id) ? freeId(input.id, caps.ids) : input.id;
+  const taken = input.isNew ? (await readCaps(hass))?.ids : caps.ids;
+  if (!taken) return { ok: false, reason: 'failed' };
+  const id = input.isNew && taken.has(input.id) ? freeId(input.id, taken) : input.id;
   const image: SavedImageInput = {
     id,
     name: input.name,

@@ -339,6 +339,10 @@
     "text": "Saving…",
     "hash": "23e39291"
   },
+  "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
+    "text": "Saving… The window closes when it is done.",
+    "hash": "1ca4d921"
+  },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
     "hash": "f59f0a7f"

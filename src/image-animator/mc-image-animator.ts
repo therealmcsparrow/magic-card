@@ -45,6 +45,8 @@ export class McImageAnimator extends LitElement {
   @state() private _note: '' | 'saved' = '';
   /** Set while the discard question is open: the element that had the focus before it. */
   @state() private _leaving?: { from: HTMLElement | null };
+  /** Close was asked for while a save was running; the window closes, or asks, once the save has settled. */
+  @state() private _closeAfterSave = false;
   @state() private _target: ImageTarget = { ref: 'element', kind: 'image', generated: false };
   @state() private _targets: ImageTarget[] = [];
   @state() private _presetId = '';
@@ -116,10 +118,14 @@ export class McImageAnimator extends LitElement {
     (this.opener ?? this).dispatchEvent(new CustomEvent(IMAGE_ANIMATOR_SAVED_EVENT, { detail, bubbles: true, composed: true }));
   }
 
-  /** Closes at once when nothing is unsaved; otherwise asks whether to discard the edits. */
+  /** Closes at once when nothing is unsaved; otherwise asks whether to discard the edits. During a save it waits for the result. */
   private _close(): void {
     if (this._ask) this._answer(false);
     if (this._leaving) return;
+    if (this._saving) {
+      this._closeAfterSave = true;
+      return;
+    }
     if (!this._opened || snapshot(this._opened) === this._clean) return this._discard();
     this._leaving = { from: (this.shadowRoot?.activeElement as HTMLElement | null) ?? null };
     void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.leave .btn-secondary')?.focus());
@@ -150,17 +156,23 @@ export class McImageAnimator extends LitElement {
       (notice) => this._confirm(notice),
     );
     this._saving = false;
-    if (!r.ok) {
-      if (r.reason !== 'cancelled') this._reason = r.reason;
-      return;
+    if (r.ok) this._saved(o, r.id, r.notice.kind === 'unknown', r.summary?.updated_at);
+    else if (r.reason !== 'cancelled') this._reason = r.reason;
+    if (this._closeAfterSave) {
+      this._closeAfterSave = false;
+      this._close();
     }
-    this._unchecked = r.notice.kind === 'unknown';
+  }
+
+  /** Takes the library's id and time, marks what was sent as clean and tells the opener. */
+  private _saved(o: Opened, id: string, unchecked: boolean, updatedAt: string | undefined): void {
+    this._unchecked = unchecked;
     void this._readLibrary();
     const now = this._opened ?? o;
-    this._opened = { ...now, id: r.id, isNew: false, updatedAt: r.summary?.updated_at ?? now.updatedAt };
+    this._opened = { ...now, id, isNew: false, updatedAt: updatedAt ?? now.updatedAt };
     this._clean = snapshot(o);
     this._note = 'saved';
-    this._announce(r.id);
+    this._announce(id);
   }
 
   disconnectedCallback(): void {
@@ -422,15 +434,17 @@ export class McImageAnimator extends LitElement {
       return;
     }
     if (e.key !== 'Tab') return;
-    const items = [...this.renderRoot.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((x) => !x.closest('[inert]'));
+    const scope = (this._leaving || this._ask ? this.renderRoot.querySelector('.confirm') : null) ?? this.renderRoot;
+    const items = [...scope.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((x) => !x.closest('[inert]'));
     if (!items.length) return;
-    const active = this.shadowRoot?.activeElement;
+    const active = this.shadowRoot?.activeElement as HTMLElement | null | undefined;
     const first = items[0];
     const last = items[items.length - 1];
-    if (e.shiftKey && (active === first || !items.includes(active as HTMLElement))) {
+    const outside = !items.includes(active as HTMLElement);
+    if (e.shiftKey && (active === first || outside)) {
       e.preventDefault();
       last.focus();
-    } else if (!e.shiftKey && active === last) {
+    } else if (!e.shiftKey && (active === last || outside)) {
       e.preventDefault();
       first.focus();
     }
@@ -531,6 +545,9 @@ export class McImageAnimator extends LitElement {
   }
 
   private _status(): TemplateResult | typeof nothing {
+    if (this._saving && this._closeAfterSave) {
+      return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done')}</p>`;
+    }
     if (this._saving) return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saving')}</p>`;
     if (this._reason && this._phase === 'ready') return html`<p class="status problem" role="alert">${this._problem(this._reason)}</p>`;
     if (this._opened && !this._opened.canSave) return html`<p class="status" role="status">${this._problem('needs_utils')}</p>`;

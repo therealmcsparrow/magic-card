@@ -471,6 +471,11 @@
     "note": "Status line in the image animator while the save is running.",
     "max": 24
   },
+  "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
+    "text": "Saving… The window closes when it is done.",
+    "note": "Status line while a save runs after the user asked to close; the window closes once the save is done.",
+    "max": 64
+  },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
     "note": "Error in the image animator when the animation stored with the image fails its checks.",

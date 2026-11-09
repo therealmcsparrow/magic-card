@@ -339,6 +339,10 @@
     "text": "Bezig met opslaan…",
     "hash": "23e39291"
   },
+  "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
+    "text": "Bezig met opslaan… Het venster sluit zodra dat klaar is.",
+    "hash": "1ca4d921"
+  },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "De opgeslagen animatie van deze afbeelding is niet geldig, dus je kunt hem hier niet animeren.",
     "hash": "f59f0a7f"
