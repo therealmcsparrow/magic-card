@@ -35,9 +35,12 @@ const DIRECTIONS = ['normal', 'reverse', 'alternate', 'alternate-reverse'] as co
 const ENTITY_RE = /^[a-z0-9_]{1,64}\.[a-z0-9_]{1,128}$/;
 const ATTRIBUTE_RE = /^[A-Za-z0-9_]{1,64}$/;
 const EASING_WORD_RE = /^[a-z][a-z0-9-]{0,31}$/;
-const EASING_BEZIER_RE = /^cubic-bezier\(\s*-?\d*\.?\d+\s*(?:,\s*-?\d*\.?\d+\s*){3}\)$/;
+const NUM = String.raw`-?(?:\d+(?:\.\d*)?|\.\d+)`;
+const REGEX_INPUT_MAX = 64;
+const EASING_BEZIER_RE = new RegExp(String.raw`^cubic-bezier\(\s*${NUM}\s*(?:,\s*${NUM}\s*){3}\)$`);
 const EASING_STEPS_RE = /^steps\(\s*\d{1,3}\s*(?:,\s*(?:start|end|jump-start|jump-end|jump-none|jump-both)\s*)?\)$/;
-const ORIGIN_RE = /^(?:(?:left|right|top|bottom|center|-?\d*\.?\d+(?:px|%|em|rem)?)\s*){1,3}$/;
+const ORIGIN_TOKEN = String.raw`(?:left|right|top|bottom|center|${NUM}(?:px|%|em|rem)?)`;
+const ORIGIN_RE = new RegExp(String.raw`^${ORIGIN_TOKEN}(?:\s+${ORIGIN_TOKEN}){0,2}\s*$`);
 const CSS_RE = /^[\w\s.,%#()+/-]+$/;
 const TRANSFORM_RANGES: Record<keyof Omit<KeyframeTransform, 'axis'>, [number, number]> = {
   x: [-10000, 10000], y: [-10000, 10000], scale: [0, 100], scale_x: [-100, 100], scale_y: [-100, 100], rotate: [-36000, 36000], skew_x: [-89, 89], skew_y: [-89, 89],
@@ -67,7 +70,7 @@ function text(v: unknown, max = IMAGE_ANIM_MAX_STRING_CHARS): string {
 
 function matching(v: unknown, re: RegExp): string {
   const s = text(v);
-  if (!re.test(s)) throw new Miss();
+  if (s.length > REGEX_INPUT_MAX || !re.test(s)) throw new Miss();
   return s;
 }
 
@@ -78,6 +81,7 @@ function num(v: unknown, min: number, max: number): number {
 
 function easing(v: unknown): string {
   const s = text(v).trim();
+  if (s.length > REGEX_INPUT_MAX) throw new Miss();
   if (!EASING_WORD_RE.test(s) && !EASING_BEZIER_RE.test(s) && !EASING_STEPS_RE.test(s)) throw new Miss();
   return s;
 }
