@@ -216,7 +216,7 @@ function morph(v: unknown, svgIds: ReadonlySet<string>, targets: Set<string>, sm
 function clip(v: unknown, svgIds: ReadonlySet<string>, targets: Set<string>, smils: Set<string>): ImageClip {
   const o = dict(v);
   const name = text(own(o, 'name'), IMAGE_CLIP_NAME_MAX);
-  if (!name.length) throw new Miss();
+  if (!trimAnimWs(name).length) throw new Miss();
   const rawMorphs = own(o, 'morphs');
   const direction = own(o, 'direction');
   if (direction !== undefined && !(DIRECTIONS as readonly unknown[]).includes(direction)) throw new Miss();

@@ -101,7 +101,7 @@ export interface ImageMorph {
 
 export interface ImageClip {
   id: string;
-  /** 1..IMAGE_CLIP_NAME_MAX characters. */
+  /** 1..IMAGE_CLIP_NAME_MAX characters, not only IMAGE_ANIM_WS. */
   name: string;
   play: ClipPlay;
   /** s per iteration. */
