@@ -1,16 +1,27 @@
 import type { HomeAssistant } from '../types';
+import type { CompiledTrack } from '../anim-studio/compile-v2';
+import type { AnimationDoc } from '../anim-studio/model';
 import type { ClipWhen, Track } from '../anim-studio/model-v2-core';
 
-// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.0.0.
+// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.0.
 
-export const IMAGE_ANIMATION_CONTRACT = '1.0.0';
+export const IMAGE_ANIMATION_CONTRACT = '1.1.0';
 /** The `v` of every record this version reads and writes. */
 export const IMAGE_ANIMATION_RECORD_VERSION = 1;
 
 export const IMAGE_ANIM_CHUNK = 'image-anim';
 export const IMAGE_ANIM_CHUNK_FILE = 'magic-card-image-anim.js';
-/** Sanity ceiling (B, minified); the release cap is in tools/size-caps.json. */
+/** Sanity ceiling (B, minified); the release cap is in tools/size-caps.json. The chunk bundles no track compiler. */
 export const IMAGE_ANIM_CHUNK_CEILING = 16_384;
+
+/**
+ * The only file that loads the image-anim chunk, inside the svg-image chunk: its lazyChunk('image-anim', …) and import()
+ * sit there, not in the card's chunk table, so magic-card.js carries nothing for animated images. It is a registered
+ * import() site. It also loads the anim-runtime chunk through src/utils/anim-runtime-loader.ts (loadRuntime) when the
+ * record has a clip with tracks, starts both loads together and calls play() once both have settled. Neither load is
+ * reported to the card's chunk notice: a failed image-anim load leaves the image still.
+ */
+export const IMAGE_ANIM_IMPORT_SITE = 'src/svg-image/anim-loader.ts';
 
 /** Clip ids: a slug of at most 48 characters. */
 export const IMAGE_CLIP_ID_RE = /^[a-z0-9](?:[a-z0-9-]{0,47})$/;
@@ -122,6 +133,12 @@ export interface ImageAnimHandle {
   release(): void;
 }
 
+/**
+ * Compiles the tracks of a studio document into keyframes: the `compileTracks` export of the anim-runtime chunk, which
+ * already holds the compiler. The viewer passes a document whose rig maps each track target to a part of its own.
+ */
+export type ImageTrackCompiler = (doc: AnimationDoc) => readonly CompiledTrack[];
+
 /** What the image-anim chunk exports as `api`. */
 export interface ImageAnimChunk {
   readonly version: typeof IMAGE_ANIMATION_CONTRACT;
@@ -130,6 +147,9 @@ export interface ImageAnimChunk {
    * CSS `d` keyframes when the once-per-document effect probe sees CSS `d` move a hidden path's getBBox(), else (or
    * unsure) the SMIL copy through beginElement(). Reduced motion holds both at their first frame and never begins SMIL;
    * card pause and off-screen pause the CSS and call pauseAnimations() together.
+   *
+   * Synchronous. `compile` is the anim-runtime chunk's compileTracks, already loaded. Without it a clip with tracks does
+   * not play at all, morphs included, so a clip never plays in part; a clip with morphs only plays without it.
    */
-  play(svg: SVGSVGElement, anim: ImageAnimation, ctx: ImageAnimContext): ImageAnimHandle;
+  play(svg: SVGSVGElement, anim: ImageAnimation, ctx: ImageAnimContext, compile?: ImageTrackCompiler): ImageAnimHandle;
 }
