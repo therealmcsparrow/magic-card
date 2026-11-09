@@ -1,4 +1,8 @@
 {
+  "image-editor.chunk.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils (the companion integration). Update it in HACS, then reload",
+    "hash": "781f85b4"
+  },
   "image-editor.chunk.as-on-a-card": {
     "text": "As on a card",
     "hash": "07d4854b"
@@ -107,6 +111,10 @@
     "text": "Save the image first.",
     "hash": "28b25b23"
   },
+  "image-editor.chunk.save-the-image-first-to-animate-it": {
+    "text": "Save the image first to animate it",
+    "hash": "20a81a90"
+  },
   "image-editor.chunk.save-your-changes-first": {
     "text": "Save your changes first.",
     "hash": "7bed9d58"
@@ -158,6 +166,10 @@
   "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
     "text": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
     "hash": "a4b2ade8"
+  },
+  "image-editor.chunk.the-animator-could-not-open-try-again": {
+    "text": "The animator could not open. Try again.",
+    "hash": "e6c013c8"
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": {
     "text": "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.",
@@ -786,6 +798,10 @@
   "image-editor.ui.accent": {
     "text": "Accent",
     "hash": "a5c6fb18"
+  },
+  "image-editor.ui.animate": {
+    "text": "Animate",
+    "hash": "fd4a5f3d"
   },
   "image-editor.ui.apply": {
     "text": "Apply",

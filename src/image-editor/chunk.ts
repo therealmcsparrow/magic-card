@@ -7,6 +7,8 @@ import type { Pt } from '../contracts/path-model';
 import type { SvgEditorSource, SvgSaveDetail } from '../contracts/svg-editor';
 import type { SvgImageApi } from '../contracts/svg-image';
 import type { SvgCssResolve } from '../contracts/svg-safety';
+import type { ImageAnimatorHost } from '../contracts/image-animator';
+import { loadImageAnimator } from '../image-animator/loader';
 import { loadSvgCss } from '../svg-safety/css-loader';
 import type { Out } from '../svg-editor/mc-svg-editor';
 import type { ImageShell, ImageUi } from '../svg-editor/image-seam';
@@ -208,6 +210,8 @@ export class ImageExt implements ImageUi {
   /** The byte cap a save may use (the library's own, else the older 256 KiB) and the size warning, read from images_list. */
   cap = IMAGE_LEGACY_MAX_BYTES;
   libraryWarn?: LibraryWarning;
+  /** The library's Magic Card Utils can store an animation (its images_list reported `caps.animation`). */
+  animates = false;
   /** The reference picture (held in page memory only), its alignment, and what its panel shows. */
   ref?: Picture;
   shown = true;
@@ -287,6 +291,7 @@ export class ImageExt implements ImageUi {
       if (!lib) return;
       this.taken = new Set(lib.images.map((i) => i.id));
       this.libraryWarn = lib.warning;
+      this.animates = lib.animates;
       const changed = lib.cap !== this.cap;
       this.cap = lib.cap;
       if (changed && this.shell.base) this.shell.refresh();
@@ -1037,6 +1042,25 @@ export class ImageExt implements ImageUi {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  /** Why Animate is blocked, or undefined when it opens: view-only, a Utils that cannot store an animation, or changes the library does not hold yet. */
+  get animateReason(): string | undefined {
+    if (this.readOnly) return this.readReason;
+    if (!this.animates) return t('image-editor.chunk.animating-needs-a-newer-magic-card-utils');
+    if (!this.id) return t('image-editor.chunk.save-the-image-first-to-animate-it');
+    if (this.shell.dirty) return t('image-editor.chunk.save-your-changes-first');
+    return undefined;
+  }
+
+  /** Opens the image animator on the saved image; the window mounts in the root of `from`, inside the editor's layer. */
+  openAnimator(from: HTMLElement): void {
+    const id = this.id;
+    if (!id || this.animateReason) return;
+    Object.assign(from, { hass: this.shell.hass });
+    void loadImageAnimator().then(async (api) => {
+      if (!(api && (await api.openImageAnimator(from as ImageAnimatorHost, { kind: 'image', id })))) this.shell.say(t('image-editor.chunk.the-animator-could-not-open-try-again'));
+    });
+  }
+
   /** The More menu under its button; a pick comes back to pick(). */
   openMenu(opener: HTMLElement): void {
     const r = opener.getBoundingClientRect();
@@ -1079,7 +1103,7 @@ export class ImageExt implements ImageUi {
   }
 
   slot(slot: Parameters<ImageUi['slot']>[0], size: 'sm' | 'md', tight: boolean): TemplateResult {
-    return slotView(this, slot, size, tight);
+    return slot === 'transfer' ? html`${slotView(this, 'animate', size, tight)}${slotView(this, slot, size, tight)}` : slotView(this, slot, size, tight);
   }
 
   barTail(): TemplateResult {

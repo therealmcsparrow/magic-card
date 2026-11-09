@@ -1,4 +1,8 @@
 {
+  "image-editor.chunk.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animeren vraagt een nieuwere Magic Card Utils (de companion-integratie). Werk die bij in HACS en laad daarna opnieuw",
+    "hash": "781f85b4"
+  },
   "image-editor.chunk.as-on-a-card": {
     "text": "Zoals op een kaart",
     "hash": "07d4854b"
@@ -107,6 +111,10 @@
     "text": "Sla de afbeelding eerst op.",
     "hash": "28b25b23"
   },
+  "image-editor.chunk.save-the-image-first-to-animate-it": {
+    "text": "Sla de afbeelding eerst op om hem te animeren",
+    "hash": "20a81a90"
+  },
   "image-editor.chunk.save-your-changes-first": {
     "text": "Sla eerst je wijzigingen op.",
     "hash": "7bed9d58"
@@ -158,6 +166,10 @@
   "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
     "text": "Die SVG is te groot om te openen (meer dan 8 MB). Probeer een kleinere kopie.",
     "hash": "a4b2ade8"
+  },
+  "image-editor.chunk.the-animator-could-not-open-try-again": {
+    "text": "De animator kon niet openen. Probeer het opnieuw.",
+    "hash": "e6c013c8"
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": {
     "text": "De bibliotheek accepteert de tekst \"{word}\" niet, in de laag \"{name}\". Pas die aan en sla daarna opnieuw op.",
@@ -786,6 +798,10 @@
   "image-editor.ui.accent": {
     "text": "Accent",
     "hash": "a5c6fb18"
+  },
+  "image-editor.ui.animate": {
+    "text": "Animeren",
+    "hash": "fd4a5f3d"
   },
   "image-editor.ui.apply": {
     "text": "Toepassen",

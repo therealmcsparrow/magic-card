@@ -1,4 +1,9 @@
 {
+  "image-editor.chunk.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils (the companion integration). Update it in HACS, then reload",
+    "note": "Reason shown on the disabled Animate button when Magic Card Utils is too old to store animations. Utils is the companion integration, installed through HACS.",
+    "max": 140
+  },
   "image-editor.chunk.as-on-a-card": {
     "text": "As on a card",
     "note": "Button that previews the drawing as it looks on a card.",
@@ -166,6 +171,11 @@
     "note": "Tooltip on a disabled action that needs a saved image, shown while the image is new. It tells the user to save first.",
     "max": 35
   },
+  "image-editor.chunk.save-the-image-first-to-animate-it": {
+    "text": "Save the image first to animate it",
+    "note": "Reason shown on the disabled Animate button while the image is not in the library yet.",
+    "max": 50
+  },
   "image-editor.chunk.save-your-changes-first": {
     "text": "Save your changes first.",
     "note": "Tooltip on a disabled action that needs the saved version, shown while there are unsaved edits. It tells the user to save first.",
@@ -239,6 +249,11 @@
     "text": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
     "note": "Error when a pasted or chosen SVG is over the 8 MB open limit. It tells the user the limit and to try a smaller file.",
     "max": 100
+  },
+  "image-editor.chunk.the-animator-could-not-open-try-again": {
+    "text": "The animator could not open. Try again.",
+    "note": "Status message when the image animator window did not load after pressing Animate.",
+    "max": 70
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": {
     "text": "The library does not accept the text \"{word}\", in the layer \"{name}\". Change it, then save again.",
@@ -1080,6 +1095,11 @@
     "text": "Accent",
     "note": "Name of the theme accent colour, used as a colour swatch label in the inspector. Same English as the paint option.",
     "max": 10
+  },
+  "image-editor.ui.animate": {
+    "text": "Animate",
+    "note": "Toolbar button in the image editor that opens the image animator on the saved image. A verb.",
+    "max": 20
   },
   "image-editor.ui.apply": {
     "text": "Apply",

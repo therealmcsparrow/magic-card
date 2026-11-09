@@ -36,8 +36,10 @@ function meter(x: ImageExt): TemplateResult {
 }
 
 /** The image profile's own slots of the shell's top bar (the Save button and the rest are the shell's). */
-export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult {
+export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' | 'animate' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult {
   switch (slot) {
+    case 'animate':
+      return button({ label: t('image-editor.ui.animate'), variant: 'secondary', size, disabledReason: x.animateReason, onClick: (e) => x.openAnimator(e.currentTarget as HTMLElement) });
     case 'canvas':
       return button({ label: t('image-editor.ui.canvas-size'), glyph: 'resizeCorner', variant: 'secondary', size, iconOnly: tight, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) });
     case 'reference':

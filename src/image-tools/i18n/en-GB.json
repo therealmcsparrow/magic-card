@@ -134,6 +134,16 @@
       "n": "The value that replaces n in the text."
     }
   },
+  "image-tools.mc-library-image-field.animate": {
+    "text": "Animate",
+    "note": "Button in the image field that opens the image animator on the chosen image. A verb. Same word as the Animate button in the image editor.",
+    "max": 20
+  },
+  "image-tools.mc-library-image-field.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils (the companion integration). Update it in HACS, then reload",
+    "note": "Line under the disabled Animate button when Magic Card Utils is too old to store animations. Utils is the companion integration, installed through HACS.",
+    "max": 140
+  },
   "image-tools.mc-library-image-field.card-shape-set-to-shape": {
     "text": "Card shape set to {shape}.",
     "note": "Screen reader announcement after picking an image. {shape} is the card's new aspect ratio, such as 4/3 or 1.",
@@ -329,6 +339,11 @@
     "note": "Warning when the description reached its maximum length of 500 characters. The number is fixed text.",
     "max": 80
   },
+  "image-tools.mc-library-image-field.the-animator-could-not-open-try-again": {
+    "text": "The animator could not open. Try again.",
+    "note": "Status message when the image animator window did not load after pressing Animate.",
+    "max": 70
+  },
   "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
     "text": "The card shape ({card}) differs from the drawing ({drawing}).",
     "note": "Warning. {card} is the card's current aspect ratio, such as 16/9. {drawing} is the shape of the image, such as 4/3 or Square. Followed by a button to match them.",
@@ -387,5 +402,10 @@
     "text": "Will read now:",
     "note": "Introduces the list of devices and states a screen reader will announce. Read means spoken aloud. A colon follows and the list comes after it.",
     "max": 25
+  },
+  "image-tools.mc-library-image-field.you-need-permission-to-change-library-images": {
+    "text": "You need permission to change library images",
+    "note": "Line under the disabled Animate button for a user who is not an administrator.",
+    "max": 70
   }
 }
