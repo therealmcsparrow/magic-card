@@ -1,10 +1,10 @@
 import type { ImageAnimation } from './image-animation';
 import type { ItemMeta } from './mcu-library';
 
-/** Contract: mcu-library 1.2.0, images part. Version 1.2.0. Mirror of magic-card-utils
+/** Contract: mcu-library 1.2.0, images part. Version 1.2.1. Mirror of magic-card-utils
  * custom_components/magic_card_utils/library_images_contract.py, which holds the storage, command and validation rules. */
 
-export const MCU_LIBRARY_IMAGES_CONTRACT_VERSION = '1.2.0';
+export const MCU_LIBRARY_IMAGES_CONTRACT_VERSION = '1.2.1';
 
 export const IMAGE_CMD = {
   list: 'magic_card_utils/images_list',

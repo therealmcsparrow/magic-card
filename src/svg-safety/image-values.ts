@@ -1,4 +1,4 @@
-import { IMAGE_MORPH_MAX_FRAMES, IMAGE_MORPH_MIN_FRAMES, MORPH_PATH_DATA_RE } from '../contracts/image-animation';
+import { IMAGE_MORPH_MAX_FRAMES, IMAGE_MORPH_MIN_FRAMES } from '../contracts/image-animation';
 import { IMAGE_FONT_FAMILIES, IMAGE_ID_RE, THEME_VAR_NAME_RE } from '../contracts/svg-image';
 import {
   MORPH_ATTRIBUTES,
@@ -100,11 +100,26 @@ export function cleanImageValue(kind: SvgValueKind, raw: string, policy: SvgPoli
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const NUMBER_RE = /^(?:\d+(?:\.\d*)?|\.\d+)$/;
 
-/** The command letters of one path-data text, which every frame of a morph shares; undefined when it is not path data or holds no command. */
+const PATH_TOKEN_RE = /([MmLlHhVvCcSsQqTtAaZz])|[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|[ ,]+/y;
+
+/**
+ * The command structure of one path-data text, which every frame of a morph shares: its command letters in order, each
+ * with the count of numbers after it ("M 2 L 4"). Undefined when some text is no token, a number comes before the first
+ * letter, or there is no letter.
+ */
 export function pathStructure(d: string): string | undefined {
   const text = d.replace(/[\t\n\r\f]/g, ' ');
-  if (!MORPH_PATH_DATA_RE.test(text)) return undefined;
-  return text.replace(/[^MmLlHhVvCcSsQqTtAaZz]/g, '') || undefined;
+  const parts: string[] = [];
+  PATH_TOKEN_RE.lastIndex = 0;
+  while (PATH_TOKEN_RE.lastIndex < text.length) {
+    const m = PATH_TOKEN_RE.exec(text);
+    if (!m) return undefined;
+    if (m[1]) parts.push(m[1], '0');
+    else if (/^[ ,]/.test(m[0])) continue;
+    else if (parts.length) parts[parts.length - 1] = String(Number(parts[parts.length - 1]) + 1);
+    else return undefined;
+  }
+  return parts.length ? parts.join(' ') : undefined;
 }
 
 /** The numbers of a `;`-separated list, or undefined when any item is not a plain non-negative number. */
@@ -126,7 +141,7 @@ function splinesMiss(v: string, segments: number): MorphMiss | undefined {
 }
 
 /**
- * The morph rule for one `<animate>` (svg-safety 1.3.0): why it must go, or undefined to keep it exactly as written.
+ * The morph rule for one `<animate>` (svg-safety 1.3.1): why it must go, or undefined to keep it exactly as written.
  * `siblings` is how many animate elements its parent holds; `ids` the animate ids the record's morphs name.
  */
 export function morphMiss(el: Element, parent: Element, siblings: number, ids: ReadonlySet<string> | undefined): MorphMiss | undefined {
