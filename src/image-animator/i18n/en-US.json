@@ -259,9 +259,17 @@
     "text": "Animating needs a newer Magic Card Utils. Update it and try again.",
     "hash": "dacc0e15"
   },
+  "image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": {
+    "text": "Animation data of {size} KiB, over the limit of {limit} KiB",
+    "hash": "80f85c1e"
+  },
   "image-animator.mc-image-animator.as-saved": {
     "text": "As saved",
     "hash": "6c49ff2f"
+  },
+  "image-animator.mc-image-animator.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
   },
   "image-animator.mc-image-animator.close": {
     "text": "Close",
@@ -271,9 +279,21 @@
     "text": "Could not reach Magic Card Utils. Your work is safe.",
     "hash": "3ba3f12b"
   },
+  "image-animator.mc-image-animator.count-animated-shapes-over-limit": {
+    "text": "{count, plural, one {# animated shape} other {# animated shapes}}, over the limit of {limit}",
+    "hash": "4dd733c1"
+  },
   "image-animator.mc-image-animator.count-animations": {
     "text": "{count, plural, one {# animation} other {# animations}}",
     "hash": "250a77b3"
+  },
+  "image-animator.mc-image-animator.count-morph-points-over-limit": {
+    "text": "{count, plural, one {# morph point} other {# morph points}}, over the limit of {limit}",
+    "hash": "562459cf"
+  },
+  "image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": {
+    "text": "{count, plural, one {# shape with a blur or color filter} other {# shapes with a blur or color filter}}, over the limit of {limit}",
+    "hash": "6d912fb3"
   },
   "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
     "text": "Enter path data, for example M0 0 L50 20.",
@@ -291,6 +311,10 @@
     "text": "Saved.",
     "hash": "fca046cc"
   },
+  "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
+    "text": "Saved. Magic Card could not check where this image is used.",
+    "hash": "e1319538"
+  },
   "image-animator.mc-image-animator.saved-to-the-library-as-name": {
     "text": "Saved to the library as {name}.",
     "hash": "c9fe8770"
@@ -302,6 +326,10 @@
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
     "hash": "f59f0a7f"
+  },
+  "image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": {
+    "text": "This animation is heavy and may run slowly on older devices. You can still save it.",
+    "hash": "752fc223"
   },
   "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
     "text": "This drawing contains markup that cannot be used.",
@@ -330,6 +358,18 @@
   "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
     "text": "This image was changed somewhere else. Close this window and open it again.",
     "hash": "c8a63749"
+  },
+  "image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": {
+    "text": "Used on at least {count, plural, one {# card} other {# cards}}. Magic Card could not check every dashboard. Saving changes how the image looks there.",
+    "hash": "af183d96"
+  },
+  "image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": {
+    "text": "Used on {count, plural, one {# card} other {# cards}}. Saving changes how the image looks there.",
+    "hash": "8ade21a3"
+  },
+  "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
+    "text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
+    "hash": "dd014dcf"
   },
   "image-animator.morph-panel.add-morph": {
     "text": "Add morph",

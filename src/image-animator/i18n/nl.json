@@ -259,9 +259,17 @@
     "text": "Animeren vraagt een nieuwere Magic Card Utils. Werk die bij en probeer het opnieuw.",
     "hash": "dacc0e15"
   },
+  "image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": {
+    "text": "Animatiegegevens van {size} KiB, meer dan de grens van {limit} KiB",
+    "hash": "80f85c1e"
+  },
   "image-animator.mc-image-animator.as-saved": {
     "text": "Zoals opgeslagen",
     "hash": "6c49ff2f"
+  },
+  "image-animator.mc-image-animator.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
   },
   "image-animator.mc-image-animator.close": {
     "text": "Sluiten",
@@ -271,9 +279,21 @@
     "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
     "hash": "3ba3f12b"
   },
+  "image-animator.mc-image-animator.count-animated-shapes-over-limit": {
+    "text": "{count, plural, one {# geanimeerde vorm} other {# geanimeerde vormen}}, meer dan de grens van {limit}",
+    "hash": "4dd733c1"
+  },
   "image-animator.mc-image-animator.count-animations": {
     "text": "{count, plural, one {# animatie} other {# animaties}}",
     "hash": "250a77b3"
+  },
+  "image-animator.mc-image-animator.count-morph-points-over-limit": {
+    "text": "{count, plural, one {# morphpunt} other {# morphpunten}}, meer dan de grens van {limit}",
+    "hash": "562459cf"
+  },
+  "image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": {
+    "text": "{count, plural, one {# vorm met een vervagings- of kleurfilter} other {# vormen met een vervagings- of kleurfilter}}, meer dan de grens van {limit}",
+    "hash": "6d912fb3"
   },
   "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
     "text": "Voer padgegevens in, bijvoorbeeld M0 0 L50 20.",
@@ -291,6 +311,10 @@
     "text": "Opgeslagen.",
     "hash": "fca046cc"
   },
+  "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
+    "text": "Opgeslagen. Magic Card kon niet controleren waar deze afbeelding wordt gebruikt.",
+    "hash": "e1319538"
+  },
   "image-animator.mc-image-animator.saved-to-the-library-as-name": {
     "text": "Opgeslagen in de bibliotheek als {name}.",
     "hash": "c9fe8770"
@@ -302,6 +326,10 @@
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "De opgeslagen animatie van deze afbeelding is niet geldig, dus je kunt hem hier niet animeren.",
     "hash": "f59f0a7f"
+  },
+  "image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": {
+    "text": "Deze animatie is zwaar en kan op oudere apparaten langzaam draaien. Je kunt hem nog steeds opslaan.",
+    "hash": "752fc223"
   },
   "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
     "text": "Deze tekening bevat opmaak die niet gebruikt kan worden.",
@@ -330,6 +358,18 @@
   "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
     "text": "Deze afbeelding is elders gewijzigd. Sluit dit venster en open het opnieuw.",
     "hash": "c8a63749"
+  },
+  "image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": {
+    "text": "Gebruikt op minstens {count, plural, one {# kaart} other {# kaarten}}. Magic Card kon niet controleren of alle dashboards gelezen zijn. Opslaan verandert hoe de afbeelding daar eruitziet.",
+    "hash": "af183d96"
+  },
+  "image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": {
+    "text": "Gebruikt op {count, plural, one {# kaart} other {# kaarten}}. Opslaan verandert hoe de afbeelding daar eruitziet.",
+    "hash": "8ade21a3"
+  },
+  "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
+    "text": "Je afbeeldingenbibliotheek is groter dan 50 MiB. Een grote bibliotheek kan oudere apparaten vertragen. Je kunt nog steeds opslaan.",
+    "hash": "dd014dcf"
   },
   "image-animator.morph-panel.add-morph": {
     "text": "Overgang toevoegen",

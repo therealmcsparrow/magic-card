@@ -349,10 +349,24 @@
     "note": "Notice in the image animator when the installed Magic Card Utils is too old to store an animation.",
     "max": 108
   },
+  "image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": {
+    "text": "Animation data of {size} KiB, over the limit of {limit} KiB",
+    "note": "One line of the heavy-animation warning: the size of the animation data.",
+    "max": 84,
+    "vars": {
+      "limit": "The size in KiB above which it is heavy.",
+      "size": "Size of the animation data in KiB."
+    }
+  },
   "image-animator.mc-image-animator.as-saved": {
     "text": "As saved",
     "note": "Label next to the small preview of the image as it is stored in the library.",
     "max": 24
+  },
+  "image-animator.mc-image-animator.cancel": {
+    "text": "Cancel",
+    "note": "Button that leaves the question before saving without saving.",
+    "max": 13
   },
   "image-animator.mc-image-animator.close": {
     "text": "Close",
@@ -364,12 +378,39 @@
     "note": "Error in the image animator when the image library does not answer or refuses a call.",
     "max": 72
   },
+  "image-animator.mc-image-animator.count-animated-shapes-over-limit": {
+    "text": "{count, plural, one {# animated shape} other {# animated shapes}}, over the limit of {limit}",
+    "note": "One line of the heavy-animation warning: how many animated shapes there are.",
+    "max": 64,
+    "vars": {
+      "count": "Number of animated shapes.",
+      "limit": "The number above which it is heavy."
+    }
+  },
   "image-animator.mc-image-animator.count-animations": {
     "text": "{count, plural, one {# animation} other {# animations}}",
     "note": "Line under the preview in the image animator with the number of animations the image holds.",
     "max": 72,
     "vars": {
       "count": "Number of animations of the image."
+    }
+  },
+  "image-animator.mc-image-animator.count-morph-points-over-limit": {
+    "text": "{count, plural, one {# morph point} other {# morph points}}, over the limit of {limit}",
+    "note": "One line of the heavy-animation warning: how many points the morphs hold.",
+    "max": 60,
+    "vars": {
+      "count": "Number of morph points.",
+      "limit": "The number above which it is heavy."
+    }
+  },
+  "image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": {
+    "text": "{count, plural, one {# shape with a blur or colour filter} other {# shapes with a blur or colour filter}}, over the limit of {limit}",
+    "note": "One line of the heavy-animation warning: how many shapes use a blur or colour filter.",
+    "max": 91,
+    "vars": {
+      "count": "Number of shapes with a filter.",
+      "limit": "The number above which it is heavy."
     }
   },
   "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
@@ -392,6 +433,11 @@
     "note": "Status line in the image animator after the image was saved to the library.",
     "max": 15
   },
+  "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
+    "text": "Saved. Magic Card could not check where this image is used.",
+    "note": "Status after a save when no dashboard could be read to count the cards.",
+    "max": 84
+  },
   "image-animator.mc-image-animator.saved-to-the-library-as-name": {
     "text": "Saved to the library as {name}.",
     "note": "Status line after an uploaded drawing was added to the image library. {name} is the new image name.",
@@ -409,6 +455,11 @@
     "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
     "note": "Error in the image animator when the animation stored with the image fails its checks.",
     "max": 123
+  },
+  "image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": {
+    "text": "This animation is heavy and may run slowly on older devices. You can still save it.",
+    "note": "Warning above the reasons when an animation is heavy; saving is not blocked.",
+    "max": 117
   },
   "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
     "text": "This drawing contains markup that cannot be used.",
@@ -444,6 +495,27 @@
     "text": "This image was changed somewhere else. Close this window and open it again.",
     "note": "Error in the image animator when a save finds the image changed since it was opened.",
     "max": 98
+  },
+  "image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": {
+    "text": "Used on at least {count, plural, one {# card} other {# cards}}. Magic Card could not check every dashboard. Saving changes how the image looks there.",
+    "note": "Same question when some dashboards could not be read, so the number is a minimum.",
+    "max": 154,
+    "vars": {
+      "count": "Number of cards found that show the image."
+    }
+  },
+  "image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": {
+    "text": "Used on {count, plural, one {# card} other {# cards}}. Saving changes how the image looks there.",
+    "note": "Question before saving an image that Magic Cards show, with Save and Cancel.",
+    "max": 83,
+    "vars": {
+      "count": "Number of cards that show the image."
+    }
+  },
+  "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
+    "text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
+    "note": "Warning when the images in the library add up to 50 MiB or more; saving is not blocked.",
+    "max": 138
   },
   "image-animator.morph-panel.add-morph": {
     "text": "Add morph",

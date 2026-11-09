@@ -12,11 +12,12 @@ import { loadImageTools } from './image-loader';
 import { renderMorph, type MorphPanelProps } from './morph/morph-panel';
 import { addMorph } from './morph/writer';
 import { startPreview, type Preview } from './preview';
-import { saveAnimation } from './save';
 import { openSource, type FailReason, type Opened, type Source } from './source';
 import { animatorStyles } from './styles';
 import { commitTargetId, listTargets, pickTarget, type ImageTarget } from './targets';
 import { addEffect, effectAvailability, type EffectKind } from './tracks';
+import { libraryImages, saveConfirmed, type UseNotice } from './usage';
+import { heavyReasons, libraryWarning, type HeavyReason } from './warnings';
 
 // The image animator window: opens a library image or an upload, shows it playing, and saves it back to the library.
 // Fires `mc-image-animator-saved` on `opener` after each confirmed save, and `close` when the window should go.
@@ -32,6 +33,9 @@ export class McImageAnimator extends LitElement {
   @state() private _opened?: Opened;
   @state() private _reason?: FailReason;
   @state() private _saving = false;
+  @state() private _ask?: { notice: UseNotice; answer: (yes: boolean) => void };
+  @state() private _libraryBytes = 0;
+  @state() private _unchecked = false;
   @state() private _note: '' | 'upload' | 'saved' = '';
   @state() private _target: ImageTarget = { ref: 'element', kind: 'image', generated: false };
   @state() private _targets: ImageTarget[] = [];
@@ -73,6 +77,26 @@ export class McImageAnimator extends LitElement {
       this._note = 'upload';
       this._announce(r.id);
     }
+    void this._readLibrary();
+  }
+
+  private async _readLibrary(): Promise<void> {
+    const images = this.hass ? await libraryImages(this.hass) : undefined;
+    const w = libraryWarning(images ?? []);
+    this._libraryBytes = w.show ? w.bytes : 0;
+  }
+
+  private _confirm(notice: UseNotice): Promise<boolean> {
+    return new Promise((answer) => {
+      this._ask = { notice, answer };
+      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.confirm .btn-primary')?.focus());
+    });
+  }
+
+  private _answer(yes: boolean): void {
+    const ask = this._ask;
+    this._ask = undefined;
+    ask?.answer(yes);
   }
 
   private _fail(reason: FailReason): void {
@@ -86,6 +110,7 @@ export class McImageAnimator extends LitElement {
   }
 
   private _close(): void {
+    if (this._ask) this._answer(false);
     this.dispatchEvent(new CustomEvent('close'));
   }
 
@@ -96,12 +121,15 @@ export class McImageAnimator extends LitElement {
     this._saving = true;
     this._note = '';
     this._reason = undefined;
-    const r = await saveAnimation(hass, { id: o.id, name: o.name, svg: o.svg, viewBox: o.viewBox, bindings: o.bindings, animation: o.animation, baseUpdatedAt: o.updatedAt });
+    this._unchecked = false;
+    const r = await saveConfirmed(hass, { id: o.id, name: o.name, svg: o.svg, viewBox: o.viewBox, bindings: o.bindings, animation: o.animation, baseUpdatedAt: o.updatedAt }, (notice) => this._confirm(notice));
     this._saving = false;
     if (!r.ok) {
-      this._reason = r.reason;
+      if (r.reason !== 'cancelled') this._reason = r.reason;
       return;
     }
+    this._unchecked = r.notice.kind === 'unknown';
+    void this._readLibrary();
     this._opened = { ...o, updatedAt: r.summary?.updated_at ?? o.updatedAt };
     this._note = 'saved';
     this._announce(o.id);
@@ -355,7 +383,8 @@ export class McImageAnimator extends LitElement {
   private _onKey(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.stopPropagation();
-      this._close();
+      if (this._ask) this._answer(false);
+      else this._close();
       return;
     }
     if (e.key !== 'Tab') return;
@@ -410,13 +439,54 @@ export class McImageAnimator extends LitElement {
         </div>
         <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
       </div>
+      ${this._warnings(o)}
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;
+  }
+
+  private _heavyLine(r: HeavyReason): string {
+    switch (r.kind) {
+      case 'targets':
+        return t('image-animator.mc-image-animator.count-animated-shapes-over-limit', { count: r.n, limit: r.limit });
+      case 'filters':
+        return t('image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over', { count: r.n, limit: r.limit });
+      case 'morph-points':
+        return t('image-animator.mc-image-animator.count-morph-points-over-limit', { count: Math.round(r.n), limit: r.limit });
+      default:
+        return t('image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib', { size: Math.ceil(r.n / 1024), limit: Math.round(r.limit / 1024) });
+    }
+  }
+
+  private _warnings(o: Opened): TemplateResult | typeof nothing {
+    const heavy = o.animation ? heavyReasons(o.animation) : [];
+    if (!heavy.length && !this._libraryBytes) return nothing;
+    return html`<div class="warnings">
+      ${heavy.length
+        ? html`<p role="status">${t('image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on')}</p>
+            <ul>${heavy.map((r) => html`<li>${this._heavyLine(r)}</li>`)}</ul>`
+        : nothing}
+      ${this._libraryBytes ? html`<p role="status">${t('image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large')}</p>` : nothing}
+    </div>`;
+  }
+
+  private _confirmBox(): TemplateResult | typeof nothing {
+    const n = this._ask?.notice;
+    if (!n || (n.kind !== 'used' && n.kind !== 'at-least')) return nothing;
+    const text =
+      n.kind === 'used'
+        ? t('image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them', { count: n.count })
+        : t('image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could', { count: n.count });
+    return html`<div class="confirm" role="alertdialog" aria-labelledby="used-text">
+      <p id="used-text">${text}</p>
+      <button class="btn btn-secondary" type="button" @click=${() => this._answer(false)}>${t('image-animator.mc-image-animator.cancel')}</button>
+      <button class="btn btn-primary" type="button" @click=${() => this._answer(true)}>${t('image-animator.mc-image-animator.save')}</button>
+    </div>`;
   }
 
   private _status(): TemplateResult | typeof nothing {
     if (this._saving) return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saving')}</p>`;
     if (this._reason && this._phase === 'ready') return html`<p class="status problem" role="alert">${this._problem(this._reason)}</p>`;
     if (this._opened && !this._opened.canSave) return html`<p class="status" role="status">${this._problem('needs_utils')}</p>`;
+    if (this._note === 'saved' && this._unchecked) return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image')}</p>`;
     if (this._note === 'saved') return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saved')}</p>`;
     if (this._note === 'upload' && this._opened) {
       return html`<p class="status" role="status">${t('image-animator.mc-image-animator.saved-to-the-library-as-name', { name: this._opened.name })}</p>`;
@@ -433,9 +503,10 @@ export class McImageAnimator extends LitElement {
           <button class="btn btn-secondary" type="button" @click=${this._close}>${t('image-animator.mc-image-animator.close')}</button>
         </header>
         <div class="body">${this._body()}</div>
+        ${this._confirmBox()}
         <footer>
           ${this._status()}
-          <button class="btn btn-primary" type="button" ?disabled=${!o?.canSave || this._saving} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
+          <button class="btn btn-primary" type="button" ?disabled=${!o?.canSave || this._saving || !!this._ask} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
         </footer>
       </div>`;
   }

@@ -188,4 +188,24 @@ export const animatorStyles = css`
     flex: 1 1 12em;
     min-width: 0;
   }
+  .confirm {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 12px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--mc-border, currentColor);
+  }
+  .confirm p {
+    flex: 1 1 16em;
+    margin: 0;
+  }
+  .warnings p {
+    margin: 0 0 4px;
+  }
+  .warnings ul {
+    margin: 0 0 8px;
+    padding-inline-start: 20px;
+  }
 `;
