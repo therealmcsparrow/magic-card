@@ -1,4 +1,184 @@
 {
+  "image-animator.clips-panel.a-clip-name-can-be-64-characters-at": {
+    "text": "Een naam mag hoogstens 64 tekens hebben.",
+    "hash": "05c8c94c"
+  },
+  "image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": {
+    "text": "Een animatie met een overgang kan alleen vooruit spelen.",
+    "hash": "a4d9c2cb"
+  },
+  "image-animator.clips-panel.above": {
+    "text": "Boven",
+    "hash": "80792346"
+  },
+  "image-animator.clips-panel.add-clip": {
+    "text": "Animatie toevoegen",
+    "hash": "e235f103"
+  },
+  "image-animator.clips-panel.added-the-clip-name": {
+    "text": "De animatie {name} is toegevoegd.",
+    "hash": "f71365fb"
+  },
+  "image-animator.clips-panel.always": {
+    "text": "Altijd",
+    "hash": "de9f057a"
+  },
+  "image-animator.clips-panel.an-entity-reaches-a-state": {
+    "text": "Een entiteit bereikt een status",
+    "hash": "b13db3e7"
+  },
+  "image-animator.clips-panel.an-image-can-hold-16-clips-at-most": {
+    "text": "Een afbeelding kan hoogstens 16 animaties hebben.",
+    "hash": "9db2ebba"
+  },
+  "image-animator.clips-panel.attribute-optional": {
+    "text": "Attribuut (optioneel)",
+    "hash": "e891f285"
+  },
+  "image-animator.clips-panel.back-and-forth": {
+    "text": "Heen en weer",
+    "hash": "c1c1cc53"
+  },
+  "image-animator.clips-panel.back-and-forth-starting-backwards": {
+    "text": "Heen en weer, beginnend achteruit",
+    "hash": "505f4b84"
+  },
+  "image-animator.clips-panel.backwards": {
+    "text": "Achteruit",
+    "hash": "19483bcb"
+  },
+  "image-animator.clips-panel.below": {
+    "text": "Onder",
+    "hash": "a53dffff"
+  },
+  "image-animator.clips-panel.choose-a-name-that-no-other-clip-has": {
+    "text": "Kies een naam die nog niet in gebruik is.",
+    "hash": "86f701a8"
+  },
+  "image-animator.clips-panel.clip-name": {
+    "text": "Naam van de animatie",
+    "hash": "7f1d3844"
+  },
+  "image-animator.clips-panel.clips": {
+    "text": "Animaties",
+    "hash": "4b782ddc"
+  },
+  "image-animator.clips-panel.condition": {
+    "text": "Voorwaarde",
+    "hash": "39b36d38"
+  },
+  "image-animator.clips-panel.delete": {
+    "text": "Verwijderen",
+    "hash": "e2d0a549"
+  },
+  "image-animator.clips-panel.deleted-the-clip-name": {
+    "text": "De animatie {name} is verwijderd.",
+    "hash": "4fccb286"
+  },
+  "image-animator.clips-panel.direction": {
+    "text": "Richting",
+    "hash": "9c8a9579"
+  },
+  "image-animator.clips-panel.duplicate": {
+    "text": "Dupliceren",
+    "hash": "02cdaabf"
+  },
+  "image-animator.clips-panel.duration-seconds": {
+    "text": "Duur (seconden)",
+    "hash": "e4a69a7c"
+  },
+  "image-animator.clips-panel.enter-a-name-for-the-clip": {
+    "text": "Geef de animatie een naam.",
+    "hash": "1c55ddd0"
+  },
+  "image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": {
+    "text": "Geef een entiteit op, zoals cover.garage, en een passende voorwaarde.",
+    "hash": "42a7d6c9"
+  },
+  "image-animator.clips-panel.entity": {
+    "text": "Entiteit",
+    "hash": "2ed3bb60"
+  },
+  "image-animator.clips-panel.forwards": {
+    "text": "Vooruit",
+    "hash": "e0786044"
+  },
+  "image-animator.clips-panel.hovering-over-the-image": {
+    "text": "Aanwijzen van de afbeelding",
+    "hash": "c650ffed"
+  },
+  "image-animator.clips-panel.is-off": {
+    "text": "Staat uit",
+    "hash": "c49186a0"
+  },
+  "image-animator.clips-panel.is-on": {
+    "text": "Staat aan",
+    "hash": "1c9d815e"
+  },
+  "image-animator.clips-panel.move-down": {
+    "text": "Omlaag",
+    "hash": "40bb50da"
+  },
+  "image-animator.clips-panel.move-up": {
+    "text": "Omhoog",
+    "hash": "c66feb5e"
+  },
+  "image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": {
+    "text": "Geef elke animatie een naam en kies wat hem start.",
+    "hash": "6f036d15"
+  },
+  "image-animator.clips-panel.new-clip-name": {
+    "text": "Naam van de nieuwe animatie",
+    "hash": "2db91011"
+  },
+  "image-animator.clips-panel.repeat-forever": {
+    "text": "Eindeloos herhalen",
+    "hash": "0f3abae6"
+  },
+  "image-animator.clips-panel.repeats": {
+    "text": "Herhalingen",
+    "hash": "92ee0233"
+  },
+  "image-animator.clips-panel.starts-when": {
+    "text": "Start bij",
+    "hash": "a69467bf"
+  },
+  "image-animator.clips-panel.state-is": {
+    "text": "Status is",
+    "hash": "ce568a81"
+  },
+  "image-animator.clips-panel.state-is-not": {
+    "text": "Status is niet",
+    "hash": "e72eda16"
+  },
+  "image-animator.clips-panel.tapping-the-image": {
+    "text": "Tikken op de afbeelding",
+    "hash": "6a406974"
+  },
+  "image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": {
+    "text": "De duur of het aantal herhalingen valt buiten het bereik.",
+    "hash": "2f246ea6"
+  },
+  "image-animator.clips-panel.this-change-could-not-be-made": {
+    "text": "Deze wijziging kon niet worden doorgevoerd.",
+    "hash": "59f7d2d7"
+  },
+  "image-animator.clips-panel.this-name-cannot-be-used": {
+    "text": "Deze naam kan niet worden gebruikt.",
+    "hash": "6655fae9"
+  },
+  "image-animator.clips-panel.updated-the-clip-name": {
+    "text": "De animatie {name} is bijgewerkt.",
+    "hash": "14b5e336"
+  },
+  "image-animator.clips-panel.use-this-trigger": {
+    "text": "Deze start gebruiken",
+    "hash": "83c16c9f"
+  },
+  "image-animator.clips-panel.value": {
+    "text": "Waarde",
+    "hash": "8e37953d"
+  },
   "image-animator.effects-panel.add-an-effect-to-name": {
     "text": "Effect toevoegen aan {name}",
     "hash": "56e219c4"

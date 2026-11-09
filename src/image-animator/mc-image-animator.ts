@@ -1,9 +1,11 @@
 import { LitElement, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import type { ImageAnimation } from '../contracts/image-animation';
+import type { ImageAnimation, ImageClip } from '../contracts/image-animation';
 import { IMAGE_ANIMATOR_SAVED_EVENT, type ImageAnimatorSaved } from '../contracts/image-animator';
 import type { HomeAssistant } from '../types';
 import { editorSystem } from '../css/editor-stack';
+import { createClip, deleteClip, duplicateClip, moveClip, parseWhen, renameClip, setClipPlay, setClipTiming, type ClipsError, type ClipTiming } from './clips';
+import { renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
 import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
 import { t } from './i18n';
 import { loadImageTools } from './image-loader';
@@ -40,6 +42,9 @@ export class McImageAnimator extends LitElement {
   @state() private _morphInto = '';
   @state() private _morphBack = false;
   @state() private _morphMessage = '';
+  @state() private _clipId = '';
+  @state() private _drafting = '';
+  @state() private _clipMessage = '';
   private _started?: Promise<void>;
   private _svg?: SVGSVGElement;
   private _preview?: Preview;
@@ -131,7 +136,105 @@ export class McImageAnimator extends LitElement {
     this._preview?.release();
     this._preview = undefined;
     const anim = this._opened?.animation;
-    if (this._svg && anim?.clips.length) this._preview = startPreview(this._svg, anim, anim.clips[0].id);
+    if (this._svg && anim?.clips.length) this._preview = startPreview(this._svg, anim, this._clip(anim)?.id ?? anim.clips[0].id);
+  }
+
+  private _clip(anim: ImageAnimation | undefined): ImageClip | undefined {
+    return anim?.clips.find((c) => c.id === this._clipId) ?? anim?.clips[0];
+  }
+
+  private _clipError(error: ClipsError): string {
+    switch (error) {
+      case 'name-empty':
+        return t('image-animator.clips-panel.enter-a-name-for-the-clip');
+      case 'name-too-long':
+        return t('image-animator.clips-panel.a-clip-name-can-be-64-characters-at');
+      case 'name-taken':
+        return t('image-animator.clips-panel.choose-a-name-that-no-other-clip-has');
+      case 'name-denied':
+        return t('image-animator.clips-panel.this-name-cannot-be-used');
+      case 'limit':
+        return t('image-animator.clips-panel.an-image-can-hold-16-clips-at-most');
+      case 'bad-play':
+        return t('image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and');
+      case 'bad-timing':
+        return t('image-animator.clips-panel.the-duration-or-the-number-of-repeats-is');
+      case 'direction-morph':
+        return t('image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards');
+      default:
+        return t('image-animator.clips-panel.this-change-could-not-be-made');
+    }
+  }
+
+  /** Takes a changed record, or says why the change was refused; the preview plays the chosen clip again. */
+  private _applyClips(r: { ok: true; anim: ImageAnimation; id: string } | { ok: false; error: ClipsError }, done: 'added' | 'updated'): void {
+    const o = this._opened;
+    if (!o) return;
+    if (!r.ok) {
+      this._clipMessage = this._clipError(r.error);
+      return;
+    }
+    this._clipId = r.id;
+    this._drafting = '';
+    this._commitClips(r.anim);
+    const name = r.anim.clips.find((c) => c.id === r.id)?.name ?? '';
+    this._clipMessage = done === 'added' ? t('image-animator.clips-panel.added-the-clip-name', { name }) : t('image-animator.clips-panel.updated-the-clip-name', { name });
+  }
+
+  private _commitClips(anim: ImageAnimation | undefined): void {
+    const o = this._opened;
+    if (!o) return;
+    this._opened = { ...o, animation: anim, svg: this._svg?.outerHTML ?? o.svg };
+    this._replay();
+  }
+
+  private _clipsPanel(): ClipsPanelProps {
+    const anim = this._opened?.animation;
+    const withClip = (edit: (a: ImageAnimation) => ReturnType<typeof setClipPlay>, done: 'added' | 'updated' = 'updated'): void => {
+      if (anim) this._applyClips(edit(anim), done);
+    };
+    return {
+      clips: anim?.clips ?? [],
+      selected: this._clip(anim)?.id ?? '',
+      drafting: this._drafting,
+      message: this._clipMessage,
+      select: (id) => {
+        this._clipId = id;
+        this._drafting = '';
+        this._replay();
+      },
+      create: (name) => this._applyClips(createClip(anim, name), 'added'),
+      rename: (id, name) => withClip((a) => renameClip(a, id, name)),
+      remove: (id) => {
+        if (!anim) return;
+        const removed = anim.clips.find((c) => c.id === id);
+        const ids = new Set((removed?.morphs ?? []).map((m) => m.smil));
+        this._svg?.querySelectorAll('animate').forEach((e) => {
+          if (ids.has(e.getAttribute('id') ?? '')) e.remove();
+        });
+        this._clipId = '';
+        this._drafting = '';
+        this._commitClips(deleteClip(anim, id));
+        this._clipMessage = t('image-animator.clips-panel.deleted-the-clip-name', { name: removed?.name ?? '' });
+      },
+      duplicate: (id) => withClip((a) => duplicateClip(a, id), 'added'),
+      move: (id, delta) => {
+        if (anim) this._commitClips(moveClip(anim, id, delta));
+      },
+      setTrigger: (id, kind: TriggerKind) => {
+        if (kind === 'state') {
+          this._drafting = id;
+          return;
+        }
+        this._drafting = '';
+        withClip((a) => setClipPlay(a, id, { on: kind }));
+      },
+      bindState: (id, f: StateFields) => {
+        const when = parseWhen(f.kind, f.value);
+        withClip((a) => (when ? setClipPlay(a, id, { on: 'state', entity: f.entity, ...(f.attribute ? { attribute: f.attribute } : {}), when }) : { ok: false, error: 'bad-play' }));
+      },
+      setTiming: (id, timing: ClipTiming) => withClip((a) => setClipTiming(a, this._svg, id, timing)),
+    };
   }
 
   private _mark(target: ImageTarget): void {
@@ -163,7 +266,7 @@ export class McImageAnimator extends LitElement {
     const target = this._target;
     let anim: ImageAnimation;
     try {
-      anim = addEffect(o.animation, target, kind, { presetId: this._presetId, path: this._path });
+      anim = addEffect(o.animation, target, kind, { presetId: this._presetId, path: this._path, clipId: this._clip(o.animation)?.id });
     } catch {
       this._message = kind === 'motion-path' ? t('image-animator.mc-image-animator.enter-path-data-for-example-m0-0') : t('image-animator.mc-image-animator.this-effect-could-not-be-added');
       return;
@@ -305,7 +408,7 @@ export class McImageAnimator extends LitElement {
             <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
           </div>
         </div>
-        <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}` : nothing}</div>
+        <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
       </div>
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;
   }

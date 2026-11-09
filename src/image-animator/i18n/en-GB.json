@@ -1,4 +1,238 @@
 {
+  "image-animator.clips-panel.a-clip-name-can-be-64-characters-at": {
+    "text": "A clip name can be 64 characters at most.",
+    "note": "Error when the clip name is too long.",
+    "max": 58
+  },
+  "image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": {
+    "text": "A clip with a morph can only play forwards.",
+    "note": "Error when a direction other than forwards is chosen for a clip that has a morph.",
+    "max": 79
+  },
+  "image-animator.clips-panel.above": {
+    "text": "Above",
+    "note": "Condition option: the number is above the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.add-clip": {
+    "text": "Add clip",
+    "note": "Button that adds a new clip.",
+    "max": 26
+  },
+  "image-animator.clips-panel.added-the-clip-name": {
+    "text": "Added the clip {name}.",
+    "note": "Confirmation after a clip is added.",
+    "max": 47,
+    "vars": {
+      "name": "Name of the clip."
+    }
+  },
+  "image-animator.clips-panel.always": {
+    "text": "Always",
+    "note": "Trigger option: the clip plays all the time.",
+    "max": 20
+  },
+  "image-animator.clips-panel.an-entity-reaches-a-state": {
+    "text": "An entity reaches a state",
+    "note": "Trigger option: the clip plays while a Home Assistant entity matches a condition.",
+    "max": 44
+  },
+  "image-animator.clips-panel.an-image-can-hold-16-clips-at-most": {
+    "text": "An image can hold 16 clips at most.",
+    "note": "Error when the image already has the most clips.",
+    "max": 69
+  },
+  "image-animator.clips-panel.attribute-optional": {
+    "text": "Attribute (optional)",
+    "note": "Label of the field for an entity attribute of a state trigger.",
+    "max": 30
+  },
+  "image-animator.clips-panel.back-and-forth": {
+    "text": "Back and forth",
+    "note": "Direction option: forwards, then backwards.",
+    "max": 20
+  },
+  "image-animator.clips-panel.back-and-forth-starting-backwards": {
+    "text": "Back and forth, starting backwards",
+    "note": "Direction option: backwards, then forwards.",
+    "max": 48
+  },
+  "image-animator.clips-panel.backwards": {
+    "text": "Backwards",
+    "note": "Direction option: from end to start.",
+    "max": 20
+  },
+  "image-animator.clips-panel.below": {
+    "text": "Below",
+    "note": "Condition option: the number is below the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.choose-a-name-that-no-other-clip-has": {
+    "text": "Choose a name that no other clip has.",
+    "note": "Error when another clip already has the name.",
+    "max": 58
+  },
+  "image-animator.clips-panel.clip-name": {
+    "text": "Clip name",
+    "note": "Label of the field that renames the chosen clip.",
+    "max": 28
+  },
+  "image-animator.clips-panel.clips": {
+    "text": "Clips",
+    "note": "Heading of the clip list in the image animator.",
+    "max": 20
+  },
+  "image-animator.clips-panel.condition": {
+    "text": "Condition",
+    "note": "Label of the list that chooses how the entity is compared.",
+    "max": 20
+  },
+  "image-animator.clips-panel.delete": {
+    "text": "Delete",
+    "note": "Button that deletes the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.deleted-the-clip-name": {
+    "text": "Deleted the clip {name}.",
+    "note": "Confirmation after a clip is deleted.",
+    "max": 47,
+    "vars": {
+      "name": "Name of the clip."
+    }
+  },
+  "image-animator.clips-panel.direction": {
+    "text": "Direction",
+    "note": "Label of the list that chooses the play direction of the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.duplicate": {
+    "text": "Duplicate",
+    "note": "Button that copies the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.duration-seconds": {
+    "text": "Duration (seconds)",
+    "note": "Label of the field for how long one play of the clip takes.",
+    "max": 26
+  },
+  "image-animator.clips-panel.enter-a-name-for-the-clip": {
+    "text": "Enter a name for the clip.",
+    "note": "Error when the clip name is empty.",
+    "max": 37
+  },
+  "image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": {
+    "text": "Enter an entity id such as cover.garage and a condition that fits.",
+    "note": "Error when the state trigger is incomplete or malformed.",
+    "max": 97
+  },
+  "image-animator.clips-panel.entity": {
+    "text": "Entity",
+    "note": "Label of the field for the entity id of a state trigger.",
+    "max": 20
+  },
+  "image-animator.clips-panel.forwards": {
+    "text": "Forwards",
+    "note": "Direction option: from start to end.",
+    "max": 20
+  },
+  "image-animator.clips-panel.hovering-over-the-image": {
+    "text": "Hovering over the image",
+    "note": "Trigger option: the clip plays while the pointer is over the image.",
+    "max": 38
+  },
+  "image-animator.clips-panel.is-off": {
+    "text": "Is off",
+    "note": "Condition option: the entity is off.",
+    "max": 20
+  },
+  "image-animator.clips-panel.is-on": {
+    "text": "Is on",
+    "note": "Condition option: the entity is on.",
+    "max": 20
+  },
+  "image-animator.clips-panel.move-down": {
+    "text": "Move down",
+    "note": "Button that moves the clip down the list.",
+    "max": 20
+  },
+  "image-animator.clips-panel.move-up": {
+    "text": "Move up",
+    "note": "Button that moves the clip up the list; earlier clips win when several state triggers match.",
+    "max": 20
+  },
+  "image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": {
+    "text": "Name each animation and choose what starts it.",
+    "note": "Hint under the clip heading.",
+    "max": 70
+  },
+  "image-animator.clips-panel.new-clip-name": {
+    "text": "New clip name",
+    "note": "Label of the field for the name of a new clip.",
+    "max": 38
+  },
+  "image-animator.clips-panel.repeat-forever": {
+    "text": "Repeat forever",
+    "note": "Label of the checkbox that makes the clip repeat without end.",
+    "max": 26
+  },
+  "image-animator.clips-panel.repeats": {
+    "text": "Repeats",
+    "note": "Label of the field for how many times the clip plays.",
+    "max": 20
+  },
+  "image-animator.clips-panel.starts-when": {
+    "text": "Starts when",
+    "note": "Label of the list that chooses what starts the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.state-is": {
+    "text": "State is",
+    "note": "Condition option: the state equals the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.state-is-not": {
+    "text": "State is not",
+    "note": "Condition option: the state differs from the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.tapping-the-image": {
+    "text": "Tapping the image",
+    "note": "Trigger option: the clip plays when the image is tapped.",
+    "max": 33
+  },
+  "image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": {
+    "text": "The duration or the number of repeats is out of range.",
+    "note": "Error when the duration or the repeat count is out of range.",
+    "max": 80
+  },
+  "image-animator.clips-panel.this-change-could-not-be-made": {
+    "text": "This change could not be made.",
+    "note": "Error for a clip change that failed for another reason.",
+    "max": 61
+  },
+  "image-animator.clips-panel.this-name-cannot-be-used": {
+    "text": "This name cannot be used.",
+    "note": "Error when the clip name holds characters that are not allowed.",
+    "max": 49
+  },
+  "image-animator.clips-panel.updated-the-clip-name": {
+    "text": "Updated the clip {name}.",
+    "note": "Confirmation after a clip is changed.",
+    "max": 47,
+    "vars": {
+      "name": "Name of the clip."
+    }
+  },
+  "image-animator.clips-panel.use-this-trigger": {
+    "text": "Use this trigger",
+    "note": "Button that saves the state trigger of the clip.",
+    "max": 28
+  },
+  "image-animator.clips-panel.value": {
+    "text": "Value",
+    "note": "Label of the field for the value the condition compares with.",
+    "max": 20
+  },
   "image-animator.effects-panel.add-an-effect-to-name": {
     "text": "Add an effect to {name}",
     "note": "Heading of the effect buttons. {name} is the chosen part of the image.",

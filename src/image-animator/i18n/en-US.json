@@ -1,4 +1,184 @@
 {
+  "image-animator.clips-panel.a-clip-name-can-be-64-characters-at": {
+    "text": "A clip name can be 64 characters at most.",
+    "hash": "05c8c94c"
+  },
+  "image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": {
+    "text": "A clip with a morph can only play forwards.",
+    "hash": "a4d9c2cb"
+  },
+  "image-animator.clips-panel.above": {
+    "text": "Above",
+    "hash": "80792346"
+  },
+  "image-animator.clips-panel.add-clip": {
+    "text": "Add clip",
+    "hash": "e235f103"
+  },
+  "image-animator.clips-panel.added-the-clip-name": {
+    "text": "Added the clip {name}.",
+    "hash": "f71365fb"
+  },
+  "image-animator.clips-panel.always": {
+    "text": "Always",
+    "hash": "de9f057a"
+  },
+  "image-animator.clips-panel.an-entity-reaches-a-state": {
+    "text": "An entity reaches a state",
+    "hash": "b13db3e7"
+  },
+  "image-animator.clips-panel.an-image-can-hold-16-clips-at-most": {
+    "text": "An image can hold 16 clips at most.",
+    "hash": "9db2ebba"
+  },
+  "image-animator.clips-panel.attribute-optional": {
+    "text": "Attribute (optional)",
+    "hash": "e891f285"
+  },
+  "image-animator.clips-panel.back-and-forth": {
+    "text": "Back and forth",
+    "hash": "c1c1cc53"
+  },
+  "image-animator.clips-panel.back-and-forth-starting-backwards": {
+    "text": "Back and forth, starting backwards",
+    "hash": "505f4b84"
+  },
+  "image-animator.clips-panel.backwards": {
+    "text": "Backwards",
+    "hash": "19483bcb"
+  },
+  "image-animator.clips-panel.below": {
+    "text": "Below",
+    "hash": "a53dffff"
+  },
+  "image-animator.clips-panel.choose-a-name-that-no-other-clip-has": {
+    "text": "Choose a name that no other clip has.",
+    "hash": "86f701a8"
+  },
+  "image-animator.clips-panel.clip-name": {
+    "text": "Clip name",
+    "hash": "7f1d3844"
+  },
+  "image-animator.clips-panel.clips": {
+    "text": "Clips",
+    "hash": "4b782ddc"
+  },
+  "image-animator.clips-panel.condition": {
+    "text": "Condition",
+    "hash": "39b36d38"
+  },
+  "image-animator.clips-panel.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "image-animator.clips-panel.deleted-the-clip-name": {
+    "text": "Deleted the clip {name}.",
+    "hash": "4fccb286"
+  },
+  "image-animator.clips-panel.direction": {
+    "text": "Direction",
+    "hash": "9c8a9579"
+  },
+  "image-animator.clips-panel.duplicate": {
+    "text": "Duplicate",
+    "hash": "02cdaabf"
+  },
+  "image-animator.clips-panel.duration-seconds": {
+    "text": "Duration (seconds)",
+    "hash": "e4a69a7c"
+  },
+  "image-animator.clips-panel.enter-a-name-for-the-clip": {
+    "text": "Enter a name for the clip.",
+    "hash": "1c55ddd0"
+  },
+  "image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": {
+    "text": "Enter an entity id such as cover.garage and a condition that fits.",
+    "hash": "42a7d6c9"
+  },
+  "image-animator.clips-panel.entity": {
+    "text": "Entity",
+    "hash": "2ed3bb60"
+  },
+  "image-animator.clips-panel.forwards": {
+    "text": "Forwards",
+    "hash": "e0786044"
+  },
+  "image-animator.clips-panel.hovering-over-the-image": {
+    "text": "Hovering over the image",
+    "hash": "c650ffed"
+  },
+  "image-animator.clips-panel.is-off": {
+    "text": "Is off",
+    "hash": "c49186a0"
+  },
+  "image-animator.clips-panel.is-on": {
+    "text": "Is on",
+    "hash": "1c9d815e"
+  },
+  "image-animator.clips-panel.move-down": {
+    "text": "Move down",
+    "hash": "40bb50da"
+  },
+  "image-animator.clips-panel.move-up": {
+    "text": "Move up",
+    "hash": "c66feb5e"
+  },
+  "image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": {
+    "text": "Name each animation and choose what starts it.",
+    "hash": "6f036d15"
+  },
+  "image-animator.clips-panel.new-clip-name": {
+    "text": "New clip name",
+    "hash": "2db91011"
+  },
+  "image-animator.clips-panel.repeat-forever": {
+    "text": "Repeat forever",
+    "hash": "0f3abae6"
+  },
+  "image-animator.clips-panel.repeats": {
+    "text": "Repeats",
+    "hash": "92ee0233"
+  },
+  "image-animator.clips-panel.starts-when": {
+    "text": "Starts when",
+    "hash": "a69467bf"
+  },
+  "image-animator.clips-panel.state-is": {
+    "text": "State is",
+    "hash": "ce568a81"
+  },
+  "image-animator.clips-panel.state-is-not": {
+    "text": "State is not",
+    "hash": "e72eda16"
+  },
+  "image-animator.clips-panel.tapping-the-image": {
+    "text": "Tapping the image",
+    "hash": "6a406974"
+  },
+  "image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": {
+    "text": "The duration or the number of repeats is out of range.",
+    "hash": "2f246ea6"
+  },
+  "image-animator.clips-panel.this-change-could-not-be-made": {
+    "text": "This change could not be made.",
+    "hash": "59f7d2d7"
+  },
+  "image-animator.clips-panel.this-name-cannot-be-used": {
+    "text": "This name cannot be used.",
+    "hash": "6655fae9"
+  },
+  "image-animator.clips-panel.updated-the-clip-name": {
+    "text": "Updated the clip {name}.",
+    "hash": "14b5e336"
+  },
+  "image-animator.clips-panel.use-this-trigger": {
+    "text": "Use this trigger",
+    "hash": "83c16c9f"
+  },
+  "image-animator.clips-panel.value": {
+    "text": "Value",
+    "hash": "8e37953d"
+  },
   "image-animator.effects-panel.add-an-effect-to-name": {
     "text": "Add an effect to {name}",
     "hash": "56e219c4"
