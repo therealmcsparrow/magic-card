@@ -3,6 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { IMAGE_ANIMATOR_SAVED_EVENT } from '../contracts/image-animator';
 import type { ImageSummary, SavedImage, SavedImageInput } from '../contracts/mcu-library-images';
 import { editorSystem } from '../css/editor-stack';
+import { kitButtonExtras } from '../ui-kit/css/extras';
 import { cardStateOf } from '../editor/custom/bridge';
 import { copyText } from '../editor/components/copy-text';
 import type { HomeAssistant } from '../types';
@@ -31,6 +32,7 @@ const taken = new WeakSet<object>();
 export class McLibraryImageField extends LitElement {
   static styles = [
     editorSystem,
+    kitButtonExtras,
     css`
       :host {
         display: block;

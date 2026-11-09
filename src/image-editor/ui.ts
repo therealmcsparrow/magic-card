@@ -35,11 +35,18 @@ function meter(x: ImageExt): TemplateResult {
   </div>`;
 }
 
+/** Animate in the top bar; when it is unavailable the reason stays visible next to it and is its accessible description. */
+function animateSlot(x: ImageExt, size: 'sm' | 'md'): TemplateResult {
+  const why = x.animateReason;
+  if (!why) return button({ label: t('image-editor.ui.animate'), variant: 'secondary', size, onClick: (e) => x.openAnimator(e.currentTarget as HTMLElement) });
+  return html`<button type="button" class=${`btn btn-secondary${size === 'sm' ? ' btn-sm' : ''}`} aria-disabled="true" aria-describedby="img-animate-why">${t('image-editor.ui.animate')}</button><span id="img-animate-why" class="help">${why}</span>`;
+}
+
 /** The image profile's own slots of the shell's top bar (the Save button and the rest are the shell's). */
 export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' | 'animate' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult {
   switch (slot) {
     case 'animate':
-      return button({ label: t('image-editor.ui.animate'), variant: 'secondary', size, disabledReason: x.animateReason, onClick: (e) => x.openAnimator(e.currentTarget as HTMLElement) });
+      return animateSlot(x, size);
     case 'canvas':
       return button({ label: t('image-editor.ui.canvas-size'), glyph: 'resizeCorner', variant: 'secondary', size, iconOnly: tight, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) });
     case 'reference':
