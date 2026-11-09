@@ -105,7 +105,7 @@ export interface SavedImageInput extends ItemMeta {
   svg: string;
   bindings?: ImageBinding[];
   /**
-   * Clips and morphs (image-animation 1.1.2). A morph's SMIL copy is an `<animate>` in `svg` under the svg-safety morph
+   * Clips and morphs (image-animation 1.1.3). A morph's SMIL copy is an `<animate>` in `svg` under the svg-safety morph
    * rule; Utils refuses a save whose svg or animation fails it, and images_get leaves out a body that fails again.
    */
   animation?: ImageAnimation;

@@ -20,7 +20,7 @@ const num = (n: number): string => String(+n.toFixed(4));
 /** The frame's path data with other whitespace as spaces; undefined when it is not plain path data. */
 function pathData(d: unknown): string | undefined {
   if (typeof d !== 'string' || !d || d.length > MAX_D_CHARS) return undefined;
-  const text = d.replace(/\s+/g, ' ').trim();
+  const text = d.replace(/[ \t\n\r\f]+/g, ' ').replace(/^ | $/g, '');
   return MORPH_PATH_DATA_RE.test(text) ? text : undefined;
 }
 

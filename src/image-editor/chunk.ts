@@ -7,7 +7,7 @@ import type { Pt } from '../contracts/path-model';
 import type { SvgEditorSource, SvgSaveDetail } from '../contracts/svg-editor';
 import type { SanitizedImage, SvgImageApi } from '../contracts/svg-image';
 import type { ImageAnimation } from '../contracts/image-animation';
-import { keepAnimation, liftMorphs, putMorphs, type MorphCopies } from './morphs';
+import { animateIds, keepAnimation, liftMorphs, putMorphs, type MorphCopies } from './morphs';
 import type { SvgCssResolve } from '../contracts/svg-safety';
 import type { ImageAnimatorHost } from '../contracts/image-animator';
 import { loadImageAnimator } from '../image-animator/loader';
@@ -609,7 +609,7 @@ export class ImageExt implements ImageUi {
     const m = this.anim ? putMorphs(raw, this.copies) : undefined;
     const s = this.anim && m ? this.api.sanitizeImage(m.svg, { animation: this.anim }) : this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
-    this.kept = m && keepAnimation(this.anim, new Set(s.ids), m.put);
+    this.kept = m && keepAnimation(this.anim, new Set(s.ids), animateIds(s.markup));
     const bytes = savedBytes(s.markup, this.stored, this.kept);
     return { svg: s.markup, bytes, error: bytes > this.cap ? 'over' : undefined, points, viewBox: s.viewBox };
   }

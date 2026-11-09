@@ -121,10 +121,22 @@ export function pathStructure(d: string): string | undefined {
   return parts.length ? parts.join(' ') : undefined;
 }
 
+/** True for the code of an IMAGE_ANIM_WS character. */
+const isAnimWs = (c: number): boolean => c === 32 || c === 9 || c === 10 || c === 13 || c === 12;
+
+/** `s` without IMAGE_ANIM_WS at either end, in one pass; other spaces stay. */
+export function trimAnimWs(s: string): string {
+  let i = 0;
+  let j = s.length;
+  while (i < j && isAnimWs(s.charCodeAt(i))) i++;
+  while (j > i && isAnimWs(s.charCodeAt(j - 1))) j--;
+  return s.slice(i, j);
+}
+
 /** The numbers of a `;`-separated list, or undefined when any item is not a plain non-negative number. */
 function numberList(v: string, split: string): number[] | undefined {
   if (!MORPH_NUMBER_LIST_RE.test(v)) return undefined;
-  const items = v.split(split).map((s) => s.trim());
+  const items = v.split(split).map(trimAnimWs);
   return items.every((s) => NUMBER_RE.test(s)) ? items.map(Number) : undefined;
 }
 
@@ -134,13 +146,13 @@ const risingUnit = (n: number[]): boolean => n.every((x, i) => x >= 0 && x <= 1 
 /** The `keySplines` check: one control-point set of four numbers in 0..1 per segment. */
 function splinesMiss(v: string, segments: number): MorphMiss | undefined {
   if (!MORPH_NUMBER_LIST_RE.test(v)) return 'value';
-  const sets = v.split(MORPH_VALUES_SEPARATOR).map((s) => numberList(s.trim().replace(/ +/g, ';'), MORPH_VALUES_SEPARATOR));
+  const sets = v.split(MORPH_VALUES_SEPARATOR).map((s) => numberList(trimAnimWs(s).replace(/ +/g, ';'), MORPH_VALUES_SEPARATOR));
   if (sets.some((n) => !n)) return 'value';
   return sets.length === segments && sets.every((n) => n!.length === 4 && n!.every((x) => x <= 1)) ? undefined : 'counts';
 }
 
 /** One frame's path data as the record and the `values` attribute are compared: other spaces as a space, trimmed. */
-const frameText = (d: string): string => d.replace(/[\t\n\r\f]/g, ' ').trim();
+const frameText = (d: string): string => trimAnimWs(d.replace(/[\t\n\r\f]/g, ' '));
 
 /**
  * The morphs of a raw record by their `smil` id, for the sanitiser's `morphs` option. A morph without a string target

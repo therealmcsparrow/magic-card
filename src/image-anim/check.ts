@@ -4,6 +4,7 @@ import {
   IMAGE_ANIM_MAX_CLIPS,
   IMAGE_ANIM_MAX_MORPHS,
   IMAGE_ANIM_MAX_STRING_CHARS,
+  IMAGE_ANIM_WS,
   IMAGE_CLIP_DELAY_MAX,
   IMAGE_CLIP_DURATION_RANGE,
   IMAGE_CLIP_ID_RE,
@@ -23,7 +24,7 @@ import {
 import { IMAGE_ID_RE, IMAGE_MAX_BYTES } from '../contracts/svg-image';
 import { EASING_LANE_IDS, type ClipWhen } from '../anim-studio/model-v2-core';
 import type { AnimationKeyframe, KeyframeTransform } from '../anim-studio/model';
-import { pathStructure } from '../svg-safety/image-values';
+import { pathStructure, trimAnimWs } from '../svg-safety/image-values';
 
 // Checks the animation of a library image record on allow-lists, field by field; a record with any miss is dropped whole.
 
@@ -35,14 +36,15 @@ const DIRECTIONS = ['normal', 'reverse', 'alternate', 'alternate-reverse'] as co
 const ENTITY_RE = /^[a-z0-9_]{1,64}\.[a-z0-9_]{1,128}$/;
 const ATTRIBUTE_RE = /^[A-Za-z0-9_]{1,64}$/;
 const EASING_WORD_RE = /^[a-z][a-z0-9-]{0,31}$/;
-const NUM = String.raw`-?(?:\d+(?:\.\d+)?|\.\d+)`;
+const NUM = String.raw`-?(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)`;
+const WS = IMAGE_ANIM_WS;
 const REGEX_INPUT_MAX = 64;
 const ENTITY_INPUT_MAX = 193;
-const EASING_BEZIER_RE = new RegExp(String.raw`^cubic-bezier\(\s*${NUM}\s*(?:,\s*${NUM}\s*){3}\)$`);
-const EASING_STEPS_RE = /^steps\(\s*\d{1,3}\s*(?:,\s*(?:start|end|jump-start|jump-end|jump-none|jump-both)\s*)?\)$/;
+const EASING_BEZIER_RE = new RegExp(String.raw`^cubic-bezier\(${WS}*${NUM}${WS}*(?:,${WS}*${NUM}${WS}*){3}\)$`);
+const EASING_STEPS_RE = new RegExp(String.raw`^steps\(${WS}*[0-9]{1,3}${WS}*(?:,${WS}*(?:start|end|jump-start|jump-end|jump-none|jump-both)${WS}*)?\)$`);
 const ORIGIN_TOKEN = String.raw`(?:left|right|top|bottom|center|${NUM}(?:px|%|em|rem)?)`;
-const ORIGIN_RE = new RegExp(String.raw`^${ORIGIN_TOKEN}(?:\s+${ORIGIN_TOKEN}){0,2}\s*$`);
-const CSS_RE = /^[\w\s.,%#()+/-]+$/;
+const ORIGIN_RE = new RegExp(String.raw`^${ORIGIN_TOKEN}(?:${WS}+${ORIGIN_TOKEN}){0,2}$`);
+const CSS_RE = /^[A-Za-z0-9_ \t\n\r\f.,%#()+/-]+$/;
 const TRANSFORM_RANGES: Record<keyof Omit<KeyframeTransform, 'axis'>, [number, number]> = {
   x: [-10000, 10000], y: [-10000, 10000], scale: [0, 100], scale_x: [-100, 100], scale_y: [-100, 100], rotate: [-36000, 36000], skew_x: [-89, 89], skew_y: [-89, 89],
 };
@@ -87,7 +89,7 @@ function num(v: unknown, min: number, max: number): number {
 }
 
 function easing(v: unknown): string {
-  const s = text(v).trim();
+  const s = trimAnimWs(text(v));
   if (s.length > REGEX_INPUT_MAX) throw new Miss();
   if (!EASING_WORD_RE.test(s) && !EASING_BEZIER_RE.test(s) && !EASING_STEPS_RE.test(s)) throw new Miss();
   return s;

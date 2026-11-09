@@ -36,16 +36,28 @@ export function putMorphs(raw: string, copies: MorphCopies): { svg: string; put:
   return put.size ? { svg: new XMLSerializer().serializeToString(xml), put } : { svg: raw, put };
 }
 
+/** The ids of the `<animate>` elements in sanitised markup; none when it does not parse. */
+export function animateIds(markup: string): Set<string> {
+  const out = new Set<string>();
+  const xml = new DOMParser().parseFromString(markup, 'image/svg+xml');
+  if (xml.getElementsByTagName('parsererror').length) return out;
+  for (const a of [...xml.getElementsByTagName('animate')]) {
+    const id = a.getAttribute('id');
+    if (id) out.add(id);
+  }
+  return out;
+}
+
 /**
  * The animation without the tracks whose `part:` target is not in `ids` and the morphs whose path is not in `ids` or
- * whose `<animate>` was not written back (`put`); undefined when there is none.
+ * whose `<animate>` is not in the sanitised markup (`kept`, from animateIds); undefined when there is none.
  */
-export function keepAnimation(anim: ImageAnimation | undefined, ids: ReadonlySet<string>, put: ReadonlySet<string>): ImageAnimation | undefined {
+export function keepAnimation(anim: ImageAnimation | undefined, ids: ReadonlySet<string>, kept: ReadonlySet<string>): ImageAnimation | undefined {
   if (!anim) return undefined;
   const clips = anim.clips.map((c) => {
     const tracks = c.tracks.filter((tr) => tr.target === 'element' || ids.has(tr.target.slice(5)));
     if (!c.morphs) return { ...c, tracks };
-    return { ...c, tracks, morphs: c.morphs.filter((m) => ids.has(m.target) && put.has(m.smil)) };
+    return { ...c, tracks, morphs: c.morphs.filter((m) => ids.has(m.target) && kept.has(m.smil)) };
   });
   return { ...anim, clips };
 }

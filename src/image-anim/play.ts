@@ -12,7 +12,7 @@ import { bindTriggers, cardOf, stateMatches, triggerHost } from './triggers';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const DIRECTIONS = ['normal', 'reverse', 'alternate', 'alternate-reverse'];
-const EASING_RE = /^(?:[a-z][a-z-]{0,31}|cubic-bezier\([\d.,\s-]{1,80}\)|steps\([\w,\s-]{1,40}\))$/;
+const EASING_RE = /^(?:[a-z][a-z-]{0,31}|cubic-bezier\([0-9., \t\n\r\f-]{1,80}\)|steps\([A-Za-z0-9_, \t\n\r\f-]{1,40}\))$/;
 const PART_ATTR = 'data-mc-ia-part';
 const ROOT_ATTR = 'data-mc-ia';
 const HOLD_ATTR = 'data-mc-ia-hold';

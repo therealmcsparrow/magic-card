@@ -3,9 +3,9 @@ import type { CompiledTrack } from '../anim-studio/compile-v2';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { ClipWhen, Track } from '../anim-studio/model-v2-core';
 
-// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.2.
+// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.3.
 
-export const IMAGE_ANIMATION_CONTRACT = '1.1.2';
+export const IMAGE_ANIMATION_CONTRACT = '1.1.3';
 /** The `v` of every record this version reads and writes. */
 export const IMAGE_ANIMATION_RECORD_VERSION = 1;
 
@@ -46,6 +46,11 @@ export const IMAGE_CLIP_DELAY_MAX = 600;
 /** Refused anywhere in any string of the record (matched case-insensitively), on top of each field's own allow-list. */
 export const IMAGE_ANIM_DENY: readonly string[] = ['<!doctype', '<!entity', '<?', '<![cdata[', 'url(', '@', '{', '}', ';', '<', '>'];
 
+/**
+ * Whitespace in every record pattern and every trim, on the card and in Utils alike: exactly ASCII space, tab, newline,
+ * carriage return and form feed. Never `\s` or a built-in trim, which also take other spaces such as U+00A0 or U+0085.
+ */
+export const IMAGE_ANIM_WS = String.raw`[ \t\n\r\f]`;
 /** Path data of a morph frame: the only characters allowed, after other whitespace became U+0020; length checked first. */
 export const MORPH_PATH_DATA_RE = /^[MmLlHhVvCcSsQqTtAaZz0-9.,+\-eE ]+$/;
 /** A morph segment easing: linear, or a cubic-bezier whose four numbers are all in 0..1 (the keySplines range). */
