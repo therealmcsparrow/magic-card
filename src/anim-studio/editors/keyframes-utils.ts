@@ -1011,7 +1011,6 @@ export const validCss = (v: string, kind: 'color' | 'background' | 'shadow' | 'f
 
 // ── origin ──
 
-export const ORIGIN_RE = /^(?:(?:left|right|top|bottom|center|-?\d*\.?\d+(?:px|%|em|rem)?)\s*){1,3}$/;
 export const ORIGIN_GRID = ['top left', 'top', 'top right', 'left', 'center', 'right', 'bottom left', 'bottom', 'bottom right'];
 /** What each origin cell is called (aria-label and title), in ORIGIN_GRID order. */
 export const ORIGIN_NAMES: MessageId[] = [m('anim-studio.keyframes-utils.top-left'), m('anim-studio.keyframes-utils.top'), m('anim-studio.keyframes-utils.top-right'), m('anim-studio.keyframes-utils.left'), m('anim-studio.keyframes-utils.centre'), m('anim-studio.keyframes-utils.right'), m('anim-studio.keyframes-utils.bottom-left'), m('anim-studio.keyframes-utils.bottom'), m('anim-studio.keyframes-utils.bottom-right')];
