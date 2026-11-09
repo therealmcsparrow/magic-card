@@ -1,8 +1,8 @@
-// Contract: SVG value rules shared by the two sanitisers. Version 1.3.0 (SVG_SAFETY_CONTRACT). One set of value
+// Contract: SVG value rules shared by the two sanitisers. Version 1.3.1 (SVG_SAFETY_CONTRACT). One set of value
 // rules behind src/icons/svg-sanitize.ts (own icons) and src/svg-image/sanitize.ts (library images). The
 // allow-lists stay two: each sanitiser passes its own policy, and the rules only read it.
 
-export const SVG_SAFETY_CONTRACT = '1.3.0';
+export const SVG_SAFETY_CONTRACT = '1.3.1';
 
 /**
  * The one SMIL a library image keeps: an editor-written path morph. Element `animate` in the SVG namespace with no
@@ -25,7 +25,23 @@ export const MORPH_DUR_RE = /^(?:\d{1,6}(?:\.\d{1,6})?|\.\d{1,6})(?:s|ms)$/;
 export const MORPH_REPEAT_RE = /^(?:indefinite|\d{1,6}(?:\.\d{1,6})?|\.\d{1,6})$/;
 /** keyTimes and keySplines: numbers, spaces and `;`; counts and ranges are checked after splitting. */
 export const MORPH_NUMBER_LIST_RE = /^[0-9. ;]+$/;
-/** Each `;`-separated frame of `values`: the image-animation path-data allow-list (MORPH_PATH_DATA_RE). */
+/**
+ * Each `;`-separated frame of `values`: the image-animation path-data allow-list (MORPH_PATH_DATA_RE), then the
+ * command structure rule below. Magic Card Utils (library_images_contract.py, "Command structure") holds the same
+ * rule word for word.
+ *
+ * Command structure of a morph frame: after tab, line feed, form feed and carriage return became a space, the frame
+ * is read left to right as tokens, each starting where the last one ended: a command letter (one of
+ * MmLlHhVvCcSsQqTtAaZz), a number (the pattern [+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?, greedy), or a
+ * run of spaces and commas. The structure is the command letters in order, each with the count of numbers after it
+ * up to the next letter or the end. The frame is not path data (miss value) when some text is none of these tokens,
+ * when a number comes before the first letter, or when it holds no letter. All frames of one morph have the same
+ * structure: the same letters in the same order and the same count of numbers after each (miss frames otherwise).
+ * An implicit repeat and its explicit form differ: "L1 1 2 2" is L with 4 numbers, "L1 1 L2 2" is L with 2 and L
+ * with 2. The editor writes every frame in one form: a command letter before every segment (never an implicit
+ * repeat), the numbers of a segment separated by one space, each arc flag as a number of its own (0 or 1), and Z
+ * with no numbers; every frame it writes passes this rule on both sides.
+ */
 export const MORPH_VALUES_SEPARATOR = ';';
 /** SMIL elements never kept, whatever the policy. */
 export const SMIL_NEVER: readonly string[] = ['set', 'animateMotion', 'animateTransform', 'discard'];
@@ -38,7 +54,8 @@ export interface SvgMorphOption {
 /**
  * Why a morph `<animate>` failed; the card strips it and lists `animate`, Utils refuses the save naming it. `counts`:
  * keyTimes not one per frame from 0 to 1, or with spline not one keySpline of four 0..1 numbers per segment.
- * `frames`: `values` differs from its morph's frames `d`, or the frames differ in command structure.
+ * `frames`: `values` differs from its morph's frames `d`, or the frames differ in command structure (see
+ * MORPH_VALUES_SEPARATOR).
  */
 export type MorphMiss = 'namespace' | 'parent' | 'children' | 'second' | 'attribute' | 'value' | 'unnamed' | 'counts' | 'frames';
 

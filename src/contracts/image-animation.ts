@@ -3,9 +3,9 @@ import type { CompiledTrack } from '../anim-studio/compile-v2';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { ClipWhen, Track } from '../anim-studio/model-v2-core';
 
-// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.0.
+// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.1.
 
-export const IMAGE_ANIMATION_CONTRACT = '1.1.0';
+export const IMAGE_ANIMATION_CONTRACT = '1.1.1';
 /** The `v` of every record this version reads and writes. */
 export const IMAGE_ANIMATION_RECORD_VERSION = 1;
 
@@ -70,7 +70,10 @@ export type ImageTrack = Omit<Track, 'target'> & { target: 'element' | `part:${s
 export interface ImageMorphFrame {
   /** Percent of the clip, 0 first and 100 last, strictly rising. */
   at: number;
-  /** Path data per MORPH_PATH_DATA_RE; every frame of a morph has one command structure, and a mismatch is refused. */
+  /**
+   * Path data per MORPH_PATH_DATA_RE; every frame of a morph has one command structure (letters in order, each with
+   * its count of numbers; the rule at svg-safety MORPH_VALUES_SEPARATOR), and a mismatch is refused.
+   */
   d: string;
   /** Easing from this frame to the next; default linear. */
   easing?: string;
