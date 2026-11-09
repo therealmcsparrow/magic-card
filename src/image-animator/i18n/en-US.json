@@ -1,0 +1,74 @@
+{
+  "image-animator.mc-image-animator.animate-image": {
+    "text": "Animate image",
+    "hash": "8429059e"
+  },
+  "image-animator.mc-image-animator.animate-name": {
+    "text": "Animate {name}",
+    "hash": "7df16e74"
+  },
+  "image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils. Update it and try again.",
+    "hash": "dacc0e15"
+  },
+  "image-animator.mc-image-animator.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "hash": "3ba3f12b"
+  },
+  "image-animator.mc-image-animator.count-animations": {
+    "text": "{count, plural, one {# animation} other {# animations}}",
+    "hash": "250a77b3"
+  },
+  "image-animator.mc-image-animator.opening-the-image": {
+    "text": "Opening the image…",
+    "hash": "ea80ea6d"
+  },
+  "image-animator.mc-image-animator.save": {
+    "text": "Save",
+    "hash": "1509f561"
+  },
+  "image-animator.mc-image-animator.saved": {
+    "text": "Saved.",
+    "hash": "fca046cc"
+  },
+  "image-animator.mc-image-animator.saved-to-the-library-as-name": {
+    "text": "Saved to the library as {name}.",
+    "hash": "c9fe8770"
+  },
+  "image-animator.mc-image-animator.saving": {
+    "text": "Saving…",
+    "hash": "23e39291"
+  },
+  "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
+    "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
+    "hash": "f59f0a7f"
+  },
+  "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
+    "text": "This drawing contains markup that cannot be used.",
+    "hash": "34eb1373"
+  },
+  "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
+    "text": "This file is not an SVG drawing.",
+    "hash": "713905bb"
+  },
+  "image-animator.mc-image-animator.this-image-has-no-animations-yet": {
+    "text": "This image has no animations yet.",
+    "hash": "de41160c"
+  },
+  "image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": {
+    "text": "This image is larger than the library accepts.",
+    "hash": "a21f32a6"
+  },
+  "image-animator.mc-image-animator.this-image-is-not-in-the-library-any": {
+    "text": "This image is not in the library any more.",
+    "hash": "c5561195"
+  },
+  "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
+    "text": "This image was changed somewhere else. Close this window and open it again.",
+    "hash": "c8a63749"
+  }
+}

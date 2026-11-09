@@ -21,6 +21,8 @@ const REGISTERED_IMPORT_SITES = [
   'src/editor/look-editor-loader.ts',
   'src/editor/transfer-loader.ts',
   'src/i18n/labels/index.ts',
+  'src/image-animator/image-loader.ts',
+  'src/image-animator/loader.ts',
   'src/icon-anim/library/i18n/index.ts',
   'src/path-booleans/loader.ts',
   'src/path-canvas/loader.ts',

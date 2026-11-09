@@ -1,0 +1,74 @@
+{
+  "image-animator.mc-image-animator.animate-image": {
+    "text": "Afbeelding animeren",
+    "hash": "8429059e"
+  },
+  "image-animator.mc-image-animator.animate-name": {
+    "text": "{name} animeren",
+    "hash": "7df16e74"
+  },
+  "image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animeren vraagt een nieuwere Magic Card Utils. Werk die bij en probeer het opnieuw.",
+    "hash": "dacc0e15"
+  },
+  "image-animator.mc-image-animator.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
+    "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
+    "hash": "3ba3f12b"
+  },
+  "image-animator.mc-image-animator.count-animations": {
+    "text": "{count, plural, one {# animatie} other {# animaties}}",
+    "hash": "250a77b3"
+  },
+  "image-animator.mc-image-animator.opening-the-image": {
+    "text": "De afbeelding wordt geopend…",
+    "hash": "ea80ea6d"
+  },
+  "image-animator.mc-image-animator.save": {
+    "text": "Opslaan",
+    "hash": "1509f561"
+  },
+  "image-animator.mc-image-animator.saved": {
+    "text": "Opgeslagen.",
+    "hash": "fca046cc"
+  },
+  "image-animator.mc-image-animator.saved-to-the-library-as-name": {
+    "text": "Opgeslagen in de bibliotheek als {name}.",
+    "hash": "c9fe8770"
+  },
+  "image-animator.mc-image-animator.saving": {
+    "text": "Bezig met opslaan…",
+    "hash": "23e39291"
+  },
+  "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
+    "text": "De opgeslagen animatie van deze afbeelding is niet geldig, dus je kunt hem hier niet animeren.",
+    "hash": "f59f0a7f"
+  },
+  "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
+    "text": "Deze tekening bevat opmaak die niet gebruikt kan worden.",
+    "hash": "34eb1373"
+  },
+  "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
+    "text": "Dit bestand is geen SVG-tekening.",
+    "hash": "713905bb"
+  },
+  "image-animator.mc-image-animator.this-image-has-no-animations-yet": {
+    "text": "Deze afbeelding heeft nog geen animaties.",
+    "hash": "de41160c"
+  },
+  "image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": {
+    "text": "Deze afbeelding is groter dan de bibliotheek accepteert.",
+    "hash": "a21f32a6"
+  },
+  "image-animator.mc-image-animator.this-image-is-not-in-the-library-any": {
+    "text": "Deze afbeelding staat niet meer in de bibliotheek.",
+    "hash": "c5561195"
+  },
+  "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
+    "text": "Deze afbeelding is elders gewijzigd. Sluit dit venster en open het opnieuw.",
+    "hash": "c8a63749"
+  }
+}

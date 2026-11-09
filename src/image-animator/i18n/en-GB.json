@@ -1,0 +1,101 @@
+{
+  "image-animator.mc-image-animator.animate-image": {
+    "text": "Animate image",
+    "note": "Title of the window that animates a library image, shown while the image is still opening.",
+    "max": 25
+  },
+  "image-animator.mc-image-animator.animate-name": {
+    "text": "Animate {name}",
+    "note": "Title of the image animator window. {name} is the name of the library image.",
+    "max": 20,
+    "vars": {
+      "name": "Name of the library image."
+    }
+  },
+  "image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils. Update it and try again.",
+    "note": "Notice in the image animator when the installed Magic Card Utils is too old to store an animation.",
+    "max": 108
+  },
+  "image-animator.mc-image-animator.close": {
+    "text": "Close",
+    "note": "Button that closes the image animator window.",
+    "max": 10
+  },
+  "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Error in the image animator when the image library does not answer or refuses a call.",
+    "max": 72
+  },
+  "image-animator.mc-image-animator.count-animations": {
+    "text": "{count, plural, one {# animation} other {# animations}}",
+    "note": "Line under the preview in the image animator with the number of animations the image holds.",
+    "max": 72,
+    "vars": {
+      "count": "Number of animations of the image."
+    }
+  },
+  "image-animator.mc-image-animator.opening-the-image": {
+    "text": "Opening the image…",
+    "note": "Status line in the image animator while the image loads from the library.",
+    "max": 37
+  },
+  "image-animator.mc-image-animator.save": {
+    "text": "Save",
+    "note": "Button in the image animator that saves the image and its animations to the library.",
+    "max": 10
+  },
+  "image-animator.mc-image-animator.saved": {
+    "text": "Saved.",
+    "note": "Status line in the image animator after the image was saved to the library.",
+    "max": 15
+  },
+  "image-animator.mc-image-animator.saved-to-the-library-as-name": {
+    "text": "Saved to the library as {name}.",
+    "note": "Status line after an uploaded drawing was added to the image library. {name} is the new image name.",
+    "max": 52,
+    "vars": {
+      "name": "Name given to the new library image."
+    }
+  },
+  "image-animator.mc-image-animator.saving": {
+    "text": "Saving…",
+    "note": "Status line in the image animator while the save is running.",
+    "max": 24
+  },
+  "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
+    "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
+    "note": "Error in the image animator when the animation stored with the image fails its checks.",
+    "max": 123
+  },
+  "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
+    "text": "This drawing contains markup that cannot be used.",
+    "note": "Error in the image animator when the drawing holds markup the card refuses.",
+    "max": 73
+  },
+  "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
+    "text": "This file is not an SVG drawing.",
+    "note": "Error in the image animator when an uploaded file is not an SVG.",
+    "max": 43
+  },
+  "image-animator.mc-image-animator.this-image-has-no-animations-yet": {
+    "text": "This image has no animations yet.",
+    "note": "Line under the preview in the image animator when the image holds no animation.",
+    "max": 54
+  },
+  "image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": {
+    "text": "This image is larger than the library accepts.",
+    "note": "Error in the image animator when the image or upload is over the library size limit.",
+    "max": 73
+  },
+  "image-animator.mc-image-animator.this-image-is-not-in-the-library-any": {
+    "text": "This image is not in the library any more.",
+    "note": "Error in the image animator when the library no longer holds the image.",
+    "max": 65
+  },
+  "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
+    "text": "This image was changed somewhere else. Close this window and open it again.",
+    "note": "Error in the image animator when a save finds the image changed since it was opened.",
+    "max": 98
+  }
+}
