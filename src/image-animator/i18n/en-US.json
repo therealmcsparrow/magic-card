@@ -1,4 +1,72 @@
 {
+  "image-animator.effects-panel.add-an-effect-to-name": {
+    "text": "Add an effect to {name}",
+    "hash": "56e219c4"
+  },
+  "image-animator.effects-panel.add-preset": {
+    "text": "Add preset",
+    "hash": "8b7ae8b0"
+  },
+  "image-animator.effects-panel.click-a-part-of-the-drawing-or-choose": {
+    "text": "Click a part of the drawing, or choose it from this list.",
+    "hash": "fdf8965c"
+  },
+  "image-animator.effects-panel.colour": {
+    "text": "Color",
+    "hash": "3a9dfa58"
+  },
+  "image-animator.effects-panel.draw-the-outline": {
+    "text": "Draw the outline",
+    "hash": "f70e84e9"
+  },
+  "image-animator.effects-panel.fade": {
+    "text": "Fade",
+    "hash": "9efb597c"
+  },
+  "image-animator.effects-panel.follow-a-path": {
+    "text": "Follow a path",
+    "hash": "598d6292"
+  },
+  "image-animator.effects-panel.glow": {
+    "text": "Glow",
+    "hash": "f534ed97"
+  },
+  "image-animator.effects-panel.group-id": {
+    "text": "Group {id}",
+    "hash": "ed2bc1fc"
+  },
+  "image-animator.effects-panel.move-and-turn": {
+    "text": "Move and turn",
+    "hash": "dcff6dd4"
+  },
+  "image-animator.effects-panel.nothing-here-has-an-outline-to-draw": {
+    "text": "Nothing here has an outline to draw.",
+    "hash": "8b869222"
+  },
+  "image-animator.effects-panel.parts-of-the-image": {
+    "text": "Parts of the image",
+    "hash": "8dbd4d5a"
+  },
+  "image-animator.effects-panel.path-data": {
+    "text": "Path data",
+    "hash": "d1b6f939"
+  },
+  "image-animator.effects-panel.preset": {
+    "text": "Preset",
+    "hash": "7252e7ce"
+  },
+  "image-animator.effects-panel.shape-id": {
+    "text": "Shape {id}",
+    "hash": "225f5929"
+  },
+  "image-animator.effects-panel.whole-image": {
+    "text": "Whole image",
+    "hash": "7b823236"
+  },
+  "image-animator.mc-image-animator.added-effect-to-name": {
+    "text": "Added {effect} to {name}.",
+    "hash": "0516ffbe"
+  },
   "image-animator.mc-image-animator.animate-image": {
     "text": "Animate image",
     "hash": "8429059e"
@@ -11,6 +79,10 @@
     "text": "Animating needs a newer Magic Card Utils. Update it and try again.",
     "hash": "dacc0e15"
   },
+  "image-animator.mc-image-animator.as-saved": {
+    "text": "As saved",
+    "hash": "6c49ff2f"
+  },
   "image-animator.mc-image-animator.close": {
     "text": "Close",
     "hash": "7d9eb7ac"
@@ -22,6 +94,10 @@
   "image-animator.mc-image-animator.count-animations": {
     "text": "{count, plural, one {# animation} other {# animations}}",
     "hash": "250a77b3"
+  },
+  "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
+    "text": "Enter path data, for example M0 0 L50 20.",
+    "hash": "3f998515"
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "Opening the image…",
@@ -51,6 +127,10 @@
     "text": "This drawing contains markup that cannot be used.",
     "hash": "34eb1373"
   },
+  "image-animator.mc-image-animator.this-effect-could-not-be-added": {
+    "text": "This effect could not be added to the animation.",
+    "hash": "c3cff040"
+  },
   "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
     "text": "This file is not an SVG drawing.",
     "hash": "713905bb"
@@ -70,5 +150,9 @@
   "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
     "text": "This image was changed somewhere else. Close this window and open it again.",
     "hash": "c8a63749"
+  },
+  "image-animator.tracks.idle": {
+    "text": "Idle",
+    "hash": "ab0171ca"
   }
 }

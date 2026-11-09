@@ -1,4 +1,102 @@
 {
+  "image-animator.effects-panel.add-an-effect-to-name": {
+    "text": "Add an effect to {name}",
+    "note": "Heading of the effect buttons. {name} is the chosen part of the image.",
+    "max": 69,
+    "vars": {
+      "name": "Name of the chosen part, for example Group door."
+    }
+  },
+  "image-animator.effects-panel.add-preset": {
+    "text": "Add preset",
+    "note": "Button that adds the chosen ready-made animation to the chosen part of the image.",
+    "max": 30
+  },
+  "image-animator.effects-panel.click-a-part-of-the-drawing-or-choose": {
+    "text": "Click a part of the drawing, or choose it from this list.",
+    "note": "Hint above the list of parts of the image in the image animator.",
+    "max": 171
+  },
+  "image-animator.effects-panel.colour": {
+    "text": "Colour",
+    "note": "Button that adds a colour change effect to the chosen part of the image.",
+    "max": 18
+  },
+  "image-animator.effects-panel.draw-the-outline": {
+    "text": "Draw the outline",
+    "note": "Button that adds an effect that draws the outline of the chosen part of the image.",
+    "max": 48
+  },
+  "image-animator.effects-panel.fade": {
+    "text": "Fade",
+    "note": "Button that adds a fade effect to the chosen part of the image.",
+    "max": 12
+  },
+  "image-animator.effects-panel.follow-a-path": {
+    "text": "Follow a path",
+    "note": "Button that adds an effect that moves the chosen part along the path data typed above it.",
+    "max": 39
+  },
+  "image-animator.effects-panel.glow": {
+    "text": "Glow",
+    "note": "Button that adds a brightness glow effect to the chosen part of the image.",
+    "max": 12
+  },
+  "image-animator.effects-panel.group-id": {
+    "text": "Group {id}",
+    "note": "Item in the list of parts of the image for a group of shapes. {id} is the id of the group in the drawing.",
+    "max": 30,
+    "vars": {
+      "id": "Id of the group in the drawing."
+    }
+  },
+  "image-animator.effects-panel.move-and-turn": {
+    "text": "Move and turn",
+    "note": "Button that adds a movement and rotation effect to the chosen part of the image.",
+    "max": 39
+  },
+  "image-animator.effects-panel.nothing-here-has-an-outline-to-draw": {
+    "text": "Nothing here has an outline to draw.",
+    "note": "Reason shown when the draw the outline effect is off because the chosen part has no stroke.",
+    "max": 108
+  },
+  "image-animator.effects-panel.parts-of-the-image": {
+    "text": "Parts of the image",
+    "note": "Heading of the list of parts of the image an effect can be put on.",
+    "max": 54
+  },
+  "image-animator.effects-panel.path-data": {
+    "text": "Path data",
+    "note": "Label of the field for the path a part follows, written as SVG path data.",
+    "max": 27
+  },
+  "image-animator.effects-panel.preset": {
+    "text": "Preset",
+    "note": "Label of the list of ready-made animations, also used as the name of that kind of effect.",
+    "max": 18
+  },
+  "image-animator.effects-panel.shape-id": {
+    "text": "Shape {id}",
+    "note": "Item in the list of parts of the image for a single shape. {id} is the id of the shape in the drawing.",
+    "max": 30,
+    "vars": {
+      "id": "Id of the shape in the drawing."
+    }
+  },
+  "image-animator.effects-panel.whole-image": {
+    "text": "Whole image",
+    "note": "Item in the list of parts of the image that stands for the whole image.",
+    "max": 33
+  },
+  "image-animator.mc-image-animator.added-effect-to-name": {
+    "text": "Added {effect} to {name}.",
+    "note": "Status line after an effect was added. {effect} is the effect name, {name} the chosen part.",
+    "max": 75,
+    "vars": {
+      "effect": "Name of the effect, for example Fade.",
+      "name": "Name of the chosen part, for example Group door."
+    }
+  },
   "image-animator.mc-image-animator.animate-image": {
     "text": "Animate image",
     "note": "Title of the window that animates a library image, shown while the image is still opening.",
@@ -17,6 +115,11 @@
     "note": "Notice in the image animator when the installed Magic Card Utils is too old to store an animation.",
     "max": 108
   },
+  "image-animator.mc-image-animator.as-saved": {
+    "text": "As saved",
+    "note": "Label next to the small preview of the image as it is stored in the library.",
+    "max": 24
+  },
   "image-animator.mc-image-animator.close": {
     "text": "Close",
     "note": "Button that closes the image animator window.",
@@ -34,6 +137,11 @@
     "vars": {
       "count": "Number of animations of the image."
     }
+  },
+  "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
+    "text": "Enter path data, for example M0 0 L50 20.",
+    "note": "Error when the path field is empty or holds characters path data cannot have.",
+    "max": 123
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "Opening the image…",
@@ -73,6 +181,11 @@
     "note": "Error in the image animator when the drawing holds markup the card refuses.",
     "max": 73
   },
+  "image-animator.mc-image-animator.this-effect-could-not-be-added": {
+    "text": "This effect could not be added to the animation.",
+    "note": "Error when an effect cannot be added, for example because the clip has the most parts it can hold.",
+    "max": 144
+  },
   "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
     "text": "This file is not an SVG drawing.",
     "note": "Error in the image animator when an uploaded file is not an SVG.",
@@ -97,5 +210,10 @@
     "text": "This image was changed somewhere else. Close this window and open it again.",
     "note": "Error in the image animator when a save finds the image changed since it was opened.",
     "max": 98
+  },
+  "image-animator.tracks.idle": {
+    "text": "Idle",
+    "note": "Name of the first animation clip an image gets, which plays all the time.",
+    "max": 12
   }
 }

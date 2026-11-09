@@ -1,13 +1,18 @@
 import { LitElement, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import type { ImageAnimation } from '../contracts/image-animation';
 import { IMAGE_ANIMATOR_SAVED_EVENT, type ImageAnimatorSaved } from '../contracts/image-animator';
 import type { HomeAssistant } from '../types';
 import { editorSystem } from '../css/editor-stack';
+import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
 import { t } from './i18n';
 import { loadImageTools } from './image-loader';
+import { startPreview, type Preview } from './preview';
 import { saveAnimation } from './save';
 import { openSource, type FailReason, type Opened, type Source } from './source';
 import { animatorStyles } from './styles';
+import { commitTargetId, listTargets, pickTarget, type ImageTarget } from './targets';
+import { addEffect, effectAvailability, type EffectKind } from './tracks';
 
 // The image animator window: opens a library image or an upload, shows it playing, and saves it back to the library.
 // Fires `mc-image-animator-saved` on `opener` after each confirmed save, and `close` when the window should go.
@@ -24,7 +29,14 @@ export class McImageAnimator extends LitElement {
   @state() private _reason?: FailReason;
   @state() private _saving = false;
   @state() private _note: '' | 'upload' | 'saved' = '';
+  @state() private _target: ImageTarget = { ref: 'element', kind: 'image', generated: false };
+  @state() private _targets: ImageTarget[] = [];
+  @state() private _presetId = '';
+  @state() private _path = '';
+  @state() private _message = '';
   private _started?: Promise<void>;
+  private _svg?: SVGSVGElement;
+  private _preview?: Preview;
 
   static styles = [editorSystem, animatorStyles];
 
@@ -44,6 +56,7 @@ export class McImageAnimator extends LitElement {
     const r = await openSource(hass, source);
     if (!r.ok) return this._fail(r.reason);
     this._opened = r;
+    this._presetId = presetChoices()[0]?.id ?? '';
     this._phase = 'ready';
     if (source.kind === 'upload') {
       this._note = 'upload';
@@ -83,8 +96,102 @@ export class McImageAnimator extends LitElement {
     this._announce(o.id);
   }
 
+  disconnectedCallback(): void {
+    this._preview?.release();
+    this._preview = undefined;
+    super.disconnectedCallback();
+  }
+
   protected updated(changed: PropertyValues): void {
     if (changed.has('_phase')) this.renderRoot.querySelector<HTMLElement>('h2')?.focus();
+    if (this._phase === 'ready' && !this._svg) this._mountCanvas();
+  }
+
+  /** Puts the working drawing on the canvas. Its markup was sanitised when the image was opened. */
+  private _mountCanvas(): void {
+    const stage = this.renderRoot.querySelector<HTMLElement>('.stage');
+    const o = this._opened;
+    if (!stage || !o) return;
+    stage.innerHTML = o.svg;
+    const svg = stage.querySelector('svg');
+    if (!svg) return;
+    this._svg = svg as unknown as SVGSVGElement;
+    this._targets = listTargets(this._svg);
+    this._replay();
+  }
+
+  /** Plays the first clip on the canvas; reduced motion, pause and off-screen are held by the player. */
+  private _replay(): void {
+    this._preview?.release();
+    this._preview = undefined;
+    const anim = this._opened?.animation;
+    if (this._svg && anim?.clips.length) this._preview = startPreview(this._svg, anim, anim.clips[0].id);
+  }
+
+  private _mark(target: ImageTarget): void {
+    this._svg?.querySelector('[data-mc-picked]')?.removeAttribute('data-mc-picked');
+    if (target.element) target.element.setAttribute('data-mc-picked', '');
+  }
+
+  private _pick(target: ImageTarget | undefined): void {
+    if (!target) return;
+    this._target = target;
+    this._mark(target);
+    this._message = '';
+  }
+
+  private _onStageClick(e: Event): void {
+    if (!this._svg) return;
+    this._pick(pickTarget(this._svg, e.target instanceof Element ? e.target : null));
+  }
+
+  private _pickRef(ref: ImageTarget['ref']): void {
+    this._pick(this._targets.find((x) => x.ref === ref));
+  }
+
+  /** Adds an effect to the picked target. A new id is written into the drawing, the playing styles stay out of the saved markup. */
+  private _add(kind: EffectKind): void {
+    const o = this._opened;
+    const svg = this._svg;
+    if (!o || !svg) return;
+    const target = this._target;
+    let anim: ImageAnimation;
+    try {
+      anim = addEffect(o.animation, target, kind, { presetId: this._presetId, path: this._path });
+    } catch {
+      this._message = kind === 'motion-path' ? t('image-animator.mc-image-animator.enter-path-data-for-example-m0-0') : t('image-animator.mc-image-animator.this-effect-could-not-be-added');
+      return;
+    }
+    this._preview?.release();
+    this._preview = undefined;
+    this._svg?.querySelector('[data-mc-picked]')?.removeAttribute('data-mc-picked');
+    if (commitTargetId(target)) {
+      this._targets = listTargets(svg);
+      this._target = this._targets.find((x) => x.ref === target.ref) ?? target;
+    }
+    this._opened = { ...o, animation: anim, svg: svg.outerHTML };
+    this._mark(this._target);
+    this._note = '';
+    this._message = t('image-animator.mc-image-animator.added-effect-to-name', { effect: effectLabel(kind), name: targetName(target) });
+    this._replay();
+  }
+
+  private _panel(): PanelProps | undefined {
+    const svg = this._svg;
+    if (!svg) return undefined;
+    return {
+      targets: this._targets,
+      target: this._target,
+      availability: effectAvailability(svg, this._target),
+      presets: presetChoices(),
+      presetId: this._presetId,
+      path: this._path,
+      message: this._message,
+      pick: (ref) => this._pickRef(ref),
+      add: (kind) => this._add(kind),
+      setPreset: (id) => (this._presetId = id),
+      setPath: (d) => (this._path = d),
+    };
   }
 
   private _onKey(e: KeyboardEvent): void {
@@ -134,8 +241,16 @@ export class McImageAnimator extends LitElement {
     if (this._phase === 'opening') return html`<p role="status">${t('image-animator.mc-image-animator.opening-the-image')}</p>`;
     if (this._phase === 'failed' || !o) return html`<p class="problem" role="alert">${this._problem(this._reason ?? 'failed')}</p>`;
     const clips = o.animation?.clips.length ?? 0;
-    return html`<div class="preview">
-        <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
+    const panel = this._panel();
+    return html`<div class="work">
+        <div class="canvas">
+          <div class="stage" role="img" aria-label=${o.name} @click=${this._onStageClick}></div>
+          <div class="saved">
+            <span>${t('image-animator.mc-image-animator.as-saved')}</span>
+            <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
+          </div>
+        </div>
+        <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}` : nothing}</div>
       </div>
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;
   }
