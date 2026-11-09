@@ -61,9 +61,15 @@ function list(v: unknown, min: number, max: number): unknown[] {
   return v;
 }
 
-/** Text of at most `max` characters that holds none of the deny strings or a script URL scheme, in any case. */
+/** True when `v` holds more than `max` code points; an astral character counts once, as Utils counts it. */
+function overCap(v: string, max: number): boolean {
+  if (v.length <= max) return false;
+  return v.length > 2 * max || Array.from(v).length > max;
+}
+
+/** Text of at most `max` code points that holds none of the deny strings or a script URL scheme, in any case. */
 function text(v: unknown, max = IMAGE_ANIM_MAX_STRING_CHARS): string {
-  if (typeof v !== 'string' || v.length > max) throw new Miss();
+  if (typeof v !== 'string' || overCap(v, max)) throw new Miss();
   const low = v.toLowerCase();
   if (SCRIPT_URL_RE.test(low) || IMAGE_ANIM_DENY.some((t) => low.includes(t))) throw new Miss();
   return v;

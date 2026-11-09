@@ -1,14 +1,15 @@
 import type { CardModule, HomeAssistant } from '../types';
 import type { BackgroundLayerConfig } from './bg-stack';
+import type { ImageAnimation } from './image-animation';
 import type { ImageBinding, SavedImage } from './mcu-library-images';
 import type { SvgCssOption, SvgMorphOption } from './svg-safety';
 import type { SanitisedImageMarkup } from './svg-reader';
 
-/** Contract: library images on cards. Version 1.1.0. A library image is a full drawing saved in Magic Card Utils
+/** Contract: library images on cards. Version 1.2.0. A library image is a full drawing saved in Magic Card Utils
  * (mcu-library 1.2.0, kind `images`). */
 
-export const SVG_IMAGE_CONTRACT = '1.1.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 8;
+export const SVG_IMAGE_CONTRACT = '1.2.0';
+export const SVG_IMAGE_CONTRACT_REVISION = 9;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;
@@ -87,7 +88,7 @@ export const IMAGE_OVERLAY_TYPES: readonly string[] = ['icon', 'info', 'button']
 export const MAX_IMAGE_OVERLAYS = 32;
 
 export interface SanitizeOptions extends SvgCssOption, SvgMorphOption {
-  /** A .svg file the user opened or imported: a leading prolog may be removed first, and `morphIds` is ignored. */
+  /** A .svg file the user opened or imported: a leading prolog may be removed first, and `animation` and `morphIds` are ignored. */
   file?: boolean;
 }
 
@@ -166,6 +167,11 @@ export interface SvgImageApi {
    * absent when it failed; its morph ids are the only SMIL kept. With one, <mc-svg-image> loads the image-anim chunk.
    */
   getImage(id: string, callWS: CallWS): Promise<(SavedImage & { sanitized: SanitizedImage }) | undefined>;
+  /**
+   * A record read straight from Utils as getImage gives it: the animation checked against the sanitised drawing's ids
+   * (undefined when it failed or the image-anim chunk did not load), the drawing keeping only that animation's morphs.
+   */
+  checkRecord(saved: Pick<SavedImage, 'svg' | 'animation'>): Promise<{ sanitized: SanitizedImage; animation?: ImageAnimation }>;
   /** Sanitised nodes for an editor canvas (imported parts, previews); undefined when nothing is drawable. */
   fragment(markup: string): DocumentFragment | undefined;
   /** Raster thumbnail (data:image/webp, else png) of sanitised markup, longest side `side`, at most `maxBytes`. */

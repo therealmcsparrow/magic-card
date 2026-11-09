@@ -187,17 +187,17 @@ A library image can carry one kind of animation: a path morph that the image edi
 
 - The image comes from a saved record, not from an upload, a paste or a transfer. Those keep no animation at all.
 - The `animate` element is in the SVG namespace, is empty, and is a direct child of a `path`. A path holds at most one.
-- Its `id` is named by the record's animation, and it carries only the attributes in the table below. Any other attribute, such as `href`, `from`, `to`, `by` or `end`, removes it.
+- Its `id` is named by a morph in the record's animation, its `path` is that morph's target, and it carries only the attributes in the table below. Any other attribute, such as `href`, `from`, `to`, `by` or `end`, removes it.
 - The `set`, `animateMotion`, `animateTransform` and `discard` elements are removed in every case.
 
 | Attribute | What it must hold |
 | --- | --- |
 | `id` | A letter followed by up to 63 letters, digits, `_`, `.` or `-`. Required. |
 | `attributeName` | Exactly `d`. Required. |
-| `values` | 2 to 32 frames of path data separated by `;`. A frame uses only path commands, digits, `.`, `,`, `+`, `-`, `e`, `E` and spaces, and every frame uses the same commands. Required. |
+| `values` | 2 to 32 frames of path data separated by `;`. A frame uses only path commands, digits, `.`, `,`, `+`, `-`, `e`, `E` and spaces, and every frame uses the same commands. The frames match the morph's frames in the record. Required. |
 | `dur` | A number followed by `s` or `ms`. Required. |
 | `repeatCount` | A number or `indefinite`. |
-| `keyTimes` | One number per frame, from 0 to 1, never falling. |
+| `keyTimes` | One number per frame, from 0 to 1, never falling. Each is that frame's place in the record's morph (50 becomes 0.5). |
 | `keySplines` | Four numbers from 0 to 1 for each step between frames. Required when `calcMode` is `spline`. |
 | `calcMode` | `linear` or `spline`. |
 | `fill` | `freeze` or `remove`. |

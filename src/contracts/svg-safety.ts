@@ -1,8 +1,8 @@
-// Contract: SVG value rules shared by the two sanitisers. Version 1.3.1 (SVG_SAFETY_CONTRACT). One set of value
+// Contract: SVG value rules shared by the two sanitisers. Version 1.4.0 (SVG_SAFETY_CONTRACT). One set of value
 // rules behind src/icons/svg-sanitize.ts (own icons) and src/svg-image/sanitize.ts (library images). The
 // allow-lists stay two: each sanitiser passes its own policy, and the rules only read it.
 
-export const SVG_SAFETY_CONTRACT = '1.3.1';
+export const SVG_SAFETY_CONTRACT = '1.4.0';
 
 /**
  * The one SMIL a library image keeps: an editor-written path morph. Element `animate` in the SVG namespace with no
@@ -46,14 +46,29 @@ export const MORPH_VALUES_SEPARATOR = ';';
 /** SMIL elements never kept, whatever the policy. */
 export const SMIL_NEVER: readonly string[] = ['set', 'animateMotion', 'animateTransform', 'discard'];
 
-/** The morph rule as a sanitiser option: the `<animate>` ids that may stay. Absent or empty: every SMIL element goes. */
+/** What a record's morph says about its `<animate>`: the path it sits on and its frames. */
+export interface MorphRef {
+  target: string;
+  frames: readonly { at: number; d: string }[];
+}
+
+/**
+ * The morph rule as a sanitiser option. `animation` (the record's raw animation; the sanitiser reads its morphs by
+ * `smil` id) is the full rule: an `<animate>` stays only on the path its morph targets, with `values` equal to the
+ * frames' `d` (tab, line feed, form feed and carriage return read as a space, each frame trimmed) and keyTimes equal
+ * to each frame's `at` / 100 (within 1e-6). A morph without a string target and frames of `at` and `d` names no id.
+ * `morphIds` names ids only and skips those three checks; `animation` wins when both are given. Absent or empty: every
+ * SMIL element goes.
+ */
 export interface SvgMorphOption {
+  animation?: unknown;
   morphIds?: ReadonlySet<string>;
 }
 
 /**
- * Why a morph `<animate>` failed; the card strips it and lists `animate`, Utils refuses the save naming it. `counts`:
- * keyTimes not one per frame from 0 to 1, or with spline not one keySpline of four 0..1 numbers per segment.
+ * Why a morph `<animate>` failed; the card strips it and lists `animate`, Utils refuses the save naming it. `unnamed`:
+ * no morph names its id, or its parent path's id is not that morph's target. `counts`: keyTimes not one per frame
+ * from 0 to 1 at the frames' `at` / 100, or with spline not one keySpline of four 0..1 numbers per segment.
  * `frames`: `values` differs from its morph's frames `d`, or the frames differ in command structure (see
  * MORPH_VALUES_SEPARATOR).
  */

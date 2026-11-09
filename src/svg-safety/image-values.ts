@@ -13,6 +13,7 @@ import {
   MORPH_REQUIRED,
   MORPH_VALUES_SEPARATOR,
   type MorphMiss,
+  type MorphRef,
   type SvgPolicy,
   type SvgValueKind,
 } from '../contracts/svg-safety';
@@ -138,11 +139,36 @@ function splinesMiss(v: string, segments: number): MorphMiss | undefined {
   return sets.length === segments && sets.every((n) => n!.length === 4 && n!.every((x) => x <= 1)) ? undefined : 'counts';
 }
 
+/** One frame's path data as the record and the `values` attribute are compared: other spaces as a space, trimmed. */
+const frameText = (d: string): string => d.replace(/[\t\n\r\f]/g, ' ').trim();
+
 /**
- * The morph rule for one `<animate>` (svg-safety 1.3.1): why it must go, or undefined to keep it exactly as written.
- * `siblings` is how many animate elements its parent holds; `ids` the animate ids the record's morphs name.
+ * The morphs of a raw record by their `smil` id, for the sanitiser's `morphs` option. A morph without a string target
+ * and frames of `at` and `d` is left out, so its `<animate>` goes; the first of two with one id wins.
  */
-export function morphMiss(el: Element, parent: Element, siblings: number, ids: ReadonlySet<string> | undefined): MorphMiss | undefined {
+export function morphTable(raw: unknown): ReadonlyMap<string, MorphRef> {
+  const table = new Map<string, MorphRef>();
+  const clips = (raw as { clips?: unknown } | null | undefined)?.clips;
+  if (!Array.isArray(clips)) return table;
+  for (const clip of clips) {
+    const morphs = (clip as { morphs?: unknown } | null)?.morphs;
+    if (!Array.isArray(morphs)) continue;
+    for (const m of morphs as { smil?: unknown; target?: unknown; frames?: unknown }[]) {
+      const frames = m?.frames;
+      if (typeof m?.smil !== 'string' || typeof m.target !== 'string' || !Array.isArray(frames) || table.has(m.smil)) continue;
+      if (!frames.every((f: { at?: unknown; d?: unknown } | null) => typeof f?.at === 'number' && typeof f.d === 'string')) continue;
+      table.set(m.smil, { target: m.target, frames: frames as MorphRef['frames'] });
+    }
+  }
+  return table;
+}
+
+/**
+ * The morph rule for one `<animate>` (svg-safety 1.4.0): why it must go, or undefined to keep it exactly as written.
+ * `siblings` is how many animate elements its parent holds; `ids` the animate ids the record's morphs name, and
+ * `table` (when given) those morphs, for the parent, frames and keyTimes cross-checks.
+ */
+export function morphMiss(el: Element, parent: Element, siblings: number, ids: ReadonlySet<string> | undefined, table?: ReadonlyMap<string, MorphRef>): MorphMiss | undefined {
   if (el.namespaceURI !== SVG_NS || el.localName !== MORPH_ELEMENT) return 'namespace';
   if (parent.namespaceURI !== SVG_NS || parent.localName !== MORPH_PARENT) return 'parent';
   if (el.firstChild) return 'children';
@@ -155,6 +181,8 @@ export function morphMiss(el: Element, parent: Element, siblings: number, ids: R
   if (MORPH_REQUIRED.some((k) => a[k] === undefined)) return 'attribute';
   if (!IMAGE_ID_RE.test(a.id)) return 'value';
   if (!ids || !ids.has(a.id)) return 'unnamed';
+  const ref = table?.get(a.id);
+  if (table && (!ref || parent.getAttribute('id') !== ref.target)) return 'unnamed';
   for (const [k, v] of Object.entries(MORPH_FIXED)) if (a[k] !== v) return 'value';
   if (!MORPH_DUR_RE.test(a.dur)) return 'value';
   if (a.repeatCount !== undefined && !MORPH_REPEAT_RE.test(a.repeatCount)) return 'value';
@@ -165,10 +193,12 @@ export function morphMiss(el: Element, parent: Element, siblings: number, ids: R
   const shapes = frames.map(pathStructure);
   if (shapes.some((s) => !s)) return 'value';
   if (shapes.some((s) => s !== shapes[0])) return 'frames';
+  if (ref && (ref.frames.length !== frames.length || frames.some((f, i) => frameText(f) !== frameText(ref.frames[i].d)))) return 'frames';
   if (a.keyTimes !== undefined) {
     const times = numberList(a.keyTimes, MORPH_VALUES_SEPARATOR);
     if (!times) return 'value';
     if (times.length !== frames.length || times[0] !== 0 || times[times.length - 1] !== 1 || !risingUnit(times)) return 'counts';
+    if (ref && times.some((x, i) => Math.abs(x - ref.frames[i].at / 100) > 1e-6)) return 'counts';
   }
   if (a.calcMode === 'spline' && a.keySplines === undefined) return 'counts';
   return a.keySplines === undefined ? undefined : splinesMiss(a.keySplines, frames.length - 1);

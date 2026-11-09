@@ -11,8 +11,8 @@ export const meterLevel = (bytes: number, cap: number = IMAGE_LEGACY_MAX_BYTES):
 /** Whole KiB for the sentence; an over-size image never shows as exactly the cap. */
 export const kibShown = (bytes: number, cap: number = IMAGE_LEGACY_MAX_BYTES): number => (bytes > cap ? Math.ceil(bytes / 1024) : Math.round(bytes / 1024));
 
-/** Size in bytes of the saved text: the markup plus the compact JSON of the connections (no key when there are none). */
-export const savedBytes = (svg: string, bindings: readonly unknown[]): number => {
+/** Size in bytes of the saved text: the markup plus the compact JSON of the connections (no key when there are none) and of the animation. */
+export const savedBytes = (svg: string, bindings: readonly unknown[], animation?: unknown): number => {
   const enc = new TextEncoder();
-  return enc.encode(svg).length + (bindings.length ? enc.encode(JSON.stringify(bindings)).length : 0);
+  return enc.encode(svg).length + (bindings.length ? enc.encode(JSON.stringify(bindings)).length : 0) + (animation ? enc.encode(JSON.stringify(animation)).length : 0);
 };

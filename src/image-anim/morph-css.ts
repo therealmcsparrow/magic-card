@@ -1,4 +1,4 @@
-import { IMAGE_ID_RE } from '../contracts/svg-image';
+import { IMAGE_ID_RE, IMAGE_MAX_BYTES } from '../contracts/svg-image';
 import { MORPH_EASING_RE, MORPH_PATH_DATA_RE, type ImageMorph } from '../contracts/image-animation';
 
 // Writes the CSS `d: path()` keyframes of a morph from its stored frames. Every value is matched on an allow-list first; no frame is interpolated here.
@@ -11,8 +11,8 @@ export interface MorphTiming {
   iterations: 'infinite' | number;
 }
 
-/** Longest path data accepted in one frame (characters). */
-const MAX_D_CHARS = 262_144;
+/** Longest path data accepted in one frame (characters): the same limit as the record check. */
+const MAX_D_CHARS = IMAGE_MAX_BYTES;
 const KEY_RE = /^[A-Za-z0-9_-]{1,64}$/;
 
 const num = (n: number): string => String(+n.toFixed(4));

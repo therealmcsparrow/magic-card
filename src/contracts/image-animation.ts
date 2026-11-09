@@ -3,9 +3,9 @@ import type { CompiledTrack } from '../anim-studio/compile-v2';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { ClipWhen, Track } from '../anim-studio/model-v2-core';
 
-// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.1.
+// Contract: animation of a library image, stored in its record and played by the image-anim chunk. Version 1.1.2.
 
-export const IMAGE_ANIMATION_CONTRACT = '1.1.1';
+export const IMAGE_ANIMATION_CONTRACT = '1.1.2';
 /** The `v` of every record this version reads and writes. */
 export const IMAGE_ANIMATION_RECORD_VERSION = 1;
 
@@ -33,7 +33,10 @@ export const IMAGE_TRACK_MAX_KEYFRAMES = 40;
 export const IMAGE_ANIM_MAX_MORPHS = 64;
 export const IMAGE_MORPH_MIN_FRAMES = 2;
 export const IMAGE_MORPH_MAX_FRAMES = 32;
-/** Longest string in the record other than a frame's `d` and a track's motion path. */
+/**
+ * Longest string in the record other than a frame's `d` and a track's motion path. Every string cap here counts Unicode
+ * code points, on the card and in Utils alike.
+ */
 export const IMAGE_ANIM_MAX_STRING_CHARS = 256;
 /** Clip duration (s) and iterations: the studio document ranges. */
 export const IMAGE_CLIP_DURATION_RANGE = [0.05, 600] as const;
@@ -63,7 +66,8 @@ export type ClipPlay =
 
 /**
  * A studio v2 track on the whole image (`element`) or on an svg element by id (IMAGE_ID_RE). One track per target per
- * clip; the viewer maps each id to a rig part of its own before compileTracks.
+ * clip; the viewer maps each id to a rig part of its own before compileTracks. A `part:<id>` whose id is not in the
+ * sanitised drawing fails the record: the card drops the animation and Utils refuses the save.
  */
 export type ImageTrack = Omit<Track, 'target'> & { target: 'element' | `part:${string}` };
 

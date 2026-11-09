@@ -10,7 +10,7 @@ import {
 } from '../contracts/svg-image';
 import type { SanitisedImageMarkup } from '../contracts/svg-reader';
 import { MORPH_ELEMENT } from '../contracts/svg-safety';
-import { cleanImageValue, morphMiss } from '../svg-safety/image-values';
+import { cleanImageValue, morphMiss, morphTable } from '../svg-safety/image-values';
 import { parseLenient } from '../svg-safety/parse';
 import { IMAGE_POLICY } from '../svg-safety/policy-image';
 import { byteLength, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
@@ -172,7 +172,8 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   if (bytes > IMAGE_MAX_BYTES) return { error: 'too_large', bytes, stripped: [] };
   const resolving = !!options.file && !!options.css;
   const text = options.file ? (resolving ? unwrapStyleCdata(stripProlog(text0)) : stripProlog(text0)) : text0;
-  const morphIds = options.file ? undefined : options.morphIds;
+  const morphs = options.file || options.animation === undefined ? undefined : morphTable(options.animation);
+  const morphIds = options.file ? undefined : morphs ? new Set(morphs.keys()) : options.morphIds;
   const hit = DENY_RE.exec(text);
   if (hit) return { error: 'unsafe_markup', bytes, stripped: morphIds?.size && inAnimateTag(text, hit.index) ? [MORPH_ELEMENT] : [] };
   let parsed: ReturnType<typeof parseDocument>;
@@ -247,7 +248,7 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
         if (child.namespaceURI === SVG_NS && child.localName === MORPH_ELEMENT) {
           const id = child.getAttribute('id') ?? '';
           // an editor morph stays exactly as written; any miss removes the element whole
-          if (morphMiss(child, el, animatesIn(el), morphIds) || ids.has(id)) {
+          if (morphMiss(child, el, animatesIn(el), morphIds, morphs) || ids.has(id)) {
             drop(MORPH_ELEMENT);
             el.removeChild(child);
           } else if (++nodes > IMAGE_MAX_NODES) throw new Refused();
