@@ -24,6 +24,8 @@ import { heavyReasons, libraryWarning, type HeavyReason } from './warnings';
 
 type Phase = 'opening' | 'ready' | 'failed';
 
+const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export class McImageAnimator extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ attribute: false }) source?: Source;
@@ -130,7 +132,8 @@ export class McImageAnimator extends LitElement {
     }
     this._unchecked = r.notice.kind === 'unknown';
     void this._readLibrary();
-    this._opened = { ...o, updatedAt: r.summary?.updated_at ?? o.updatedAt };
+    const now = this._opened ?? o;
+    this._opened = { ...now, updatedAt: r.summary?.updated_at ?? now.updatedAt };
     this._note = 'saved';
     this._announce(o.id);
   }
@@ -209,10 +212,15 @@ export class McImageAnimator extends LitElement {
     this._clipMessage = done === 'added' ? t('image-animator.clips-panel.added-the-clip-name', { name }) : t('image-animator.clips-panel.updated-the-clip-name', { name });
   }
 
+  /** Stores the clips with the drawing as it is without the playing preview and the pick mark, then plays again. */
   private _commitClips(anim: ImageAnimation | undefined): void {
     const o = this._opened;
     if (!o) return;
+    this._preview?.release();
+    this._preview = undefined;
+    this._svg?.querySelector('[data-mc-picked]')?.removeAttribute('data-mc-picked');
     this._opened = { ...o, animation: anim, svg: this._svg?.outerHTML ?? o.svg };
+    this._mark(this._target);
     this._replay();
   }
 
@@ -388,7 +396,7 @@ export class McImageAnimator extends LitElement {
       return;
     }
     if (e.key !== 'Tab') return;
-    const items = [...this.renderRoot.querySelectorAll<HTMLElement>('button:not([disabled])')];
+    const items = [...this.renderRoot.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((x) => !x.closest('[inert]'));
     if (!items.length) return;
     const active = this.shadowRoot?.activeElement;
     const first = items[0];
@@ -431,13 +439,13 @@ export class McImageAnimator extends LitElement {
     const panel = this._panel();
     return html`<div class="work">
         <div class="canvas">
-          <div class="stage" role="img" aria-label=${o.name} @click=${this._onStageClick}></div>
+          <div class="stage" role="group" aria-label=${o.name} @click=${this._onStageClick}></div>
           <div class="saved">
             <span>${t('image-animator.mc-image-animator.as-saved')}</span>
             <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
           </div>
         </div>
-        <div class="side">${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
+        <div class="side" ?inert=${this._saving || !!this._ask}>${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
       </div>
       ${this._warnings(o)}
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;

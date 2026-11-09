@@ -570,6 +570,11 @@
     "note": "Message when a morph cannot be added to the image.",
     "max": 80
   },
+  "image-animator.source.image": {
+    "text": "Image",
+    "note": "Name an uploaded drawing gets in the library when its file name has no usable letters.",
+    "max": 24
+  },
   "image-animator.tracks.idle": {
     "text": "Idle",
     "note": "Name of the first animation clip an image gets, which plays all the time.",

@@ -4,7 +4,7 @@ import { lazyChunk } from '../utils/lazy-chunk';
 // The only importer of the image animator chunk (image-animator 1.0.0), through the shared lazyChunk() helper.
 
 export interface ImageAnimatorModule {
-  api: Omit<ImageAnimatorApi, 'countImageUse'>;
+  api: ImageAnimatorApi;
   install(): void;
   BUILD: string;
 }

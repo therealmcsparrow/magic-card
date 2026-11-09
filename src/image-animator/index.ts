@@ -1,6 +1,7 @@
 import { VERSION } from '../version';
 import { IMAGE_ANIMATOR_CONTRACT, IMAGE_ANIMATOR_TAG, type ImageAnimatorApi, type OpenImageAnimator } from '../contracts/image-animator';
 import { McImageAnimator } from './mc-image-animator';
+import { countImageUse } from './usage';
 
 // Chunk entry of dist/magic-card-image-animator.js (contract image-animator 1.0.0).
 
@@ -31,5 +32,5 @@ export const openImageAnimator: OpenImageAnimator = async (host, source) => {
   return true;
 };
 
-/** What the image-animator chunk exports as `api`. Counting the cards that use an image is added by its own change. */
-export const api: Omit<ImageAnimatorApi, 'countImageUse'> & { version: typeof IMAGE_ANIMATOR_CONTRACT } = { version: IMAGE_ANIMATOR_CONTRACT, openImageAnimator };
+/** What the image-animator chunk exports as `api`. */
+export const api: ImageAnimatorApi = { version: IMAGE_ANIMATOR_CONTRACT, openImageAnimator, countImageUse };

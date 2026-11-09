@@ -411,6 +411,10 @@
     "text": "This morph could not be added.",
     "hash": "91ccc32e"
   },
+  "image-animator.source.image": {
+    "text": "Image",
+    "hash": "1aa4cb0b"
+  },
   "image-animator.tracks.idle": {
     "text": "Idle",
     "hash": "ab0171ca"

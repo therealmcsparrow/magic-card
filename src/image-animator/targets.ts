@@ -29,34 +29,47 @@ const drawn = (svg: SVGSVGElement, e: Element): boolean => {
   return true;
 };
 
-/** Ids in use, counting only the first holder of a repeated id, plus those already given out for this drawing. */
-const taken = (svg: SVGSVGElement): Set<string> => {
-  const used = new Set<string>();
-  for (const e of svg.querySelectorAll('[id]')) used.add(e.getAttribute('id') ?? '');
+/** The ids of one drawing read once: the first holder of each id, and on demand every id in use with the next free number. */
+interface IdIndex {
+  first: Map<string, Element>;
+  used?: Set<string>;
+  next: number;
+}
+
+const indexOf = (svg: SVGSVGElement): IdIndex => {
+  const first = new Map<string, Element>();
+  for (const e of svg.querySelectorAll('[id]')) {
+    const id = e.getAttribute('id') ?? '';
+    if (!first.has(id)) first.set(id, e);
+  }
+  return { first, next: 1 };
+};
+
+/** Ids in use in the drawing plus those already given out for it. */
+const taken = (svg: SVGSVGElement, index: IdIndex): Set<string> => {
+  const used = new Set(index.first.keys());
   for (const id of given.get(svg)?.values() ?? []) used.add(id);
   return used;
 };
 
-const usable = (svg: SVGSVGElement, e: Element): string | undefined => {
+const usable = (index: IdIndex, e: Element): string | undefined => {
   const id = e.getAttribute('id');
-  if (!id || !IMAGE_ID_RE.test(id)) return undefined;
-  const first = Array.from(svg.querySelectorAll('[id]')).find((x) => x.getAttribute('id') === id);
-  return first === e ? id : undefined;
+  return id && IMAGE_ID_RE.test(id) && index.first.get(id) === e ? id : undefined;
 };
 
 /** The target of one element of the drawing; a bare or unusable id gets a new one that is free in the drawing. The drawing itself is not changed. */
-function targetOf(svg: SVGSVGElement, e: Element): ImageTarget {
+function targetOf(svg: SVGSVGElement, e: Element, index: IdIndex): ImageTarget {
   const kind = tag(e) === 'g' ? 'group' : 'element';
-  const own = usable(svg, e);
+  const own = usable(index, e);
   if (own) return { ref: `part:${own}`, kind, id: own, generated: false, element: e };
   let ids = given.get(svg);
   if (!ids) given.set(svg, (ids = new Map()));
   let id = ids.get(e);
   if (!id) {
-    const used = taken(svg);
-    let n = 1;
-    while (used.has(`${GENERATED_PREFIX}${n}`)) n += 1;
-    id = `${GENERATED_PREFIX}${n}`;
+    const used = (index.used ??= taken(svg, index));
+    while (used.has(`${GENERATED_PREFIX}${index.next}`)) index.next += 1;
+    id = `${GENERATED_PREFIX}${index.next}`;
+    used.add(id);
     ids.set(e, id);
   }
   return { ref: `part:${id}`, kind, id, generated: true, element: e };
@@ -68,14 +81,15 @@ const WHOLE: ImageTarget = { ref: 'element', kind: 'image', generated: false };
 export function pickTarget(svg: SVGSVGElement, picked: Element | null): ImageTarget | undefined {
   if (picked === null || picked === svg) return { ...WHOLE };
   if (!inside(svg, picked)) return undefined;
-  for (let e: Element | null = picked; e && e !== svg; e = e.parentElement) if (drawn(svg, e)) return targetOf(svg, e);
+  for (let e: Element | null = picked; e && e !== svg; e = e.parentElement) if (drawn(svg, e)) return targetOf(svg, e, indexOf(svg));
   return { ...WHOLE };
 }
 
 /** Every target in document order, the whole image first; the keyboard list next to the canvas. */
 export function listTargets(svg: SVGSVGElement): ImageTarget[] {
   const out: ImageTarget[] = [{ ...WHOLE }];
-  for (const e of svg.querySelectorAll('*')) if (drawn(svg, e)) out.push(targetOf(svg, e));
+  const index = indexOf(svg);
+  for (const e of svg.querySelectorAll('*')) if (drawn(svg, e)) out.push(targetOf(svg, e, index));
   return out;
 }
 

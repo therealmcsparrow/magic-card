@@ -1,4 +1,5 @@
-import { HEAVY_MORPH_POINTS, MORPH_PATH_DATA_RE } from '../../contracts/image-animation';
+import { MORPH_PATH_DATA_RE } from '../../contracts/image-animation';
+import { IMAGE_MAX_BYTES } from '../../contracts/mcu-library-images';
 import { flatten, parsePath, type Pt, type SubPath } from '../../path/core';
 
 // Gives paths of any shape one shared command structure, so a morph between them interpolates in every engine.
@@ -9,6 +10,8 @@ const MAX_D_CHARS = 262_144;
 const MAX_SUBPATHS = 256;
 const CURVE_STEPS = 16;
 const MIN_POINTS = 3;
+/** Each point is written as at least `L0 0 ` (5 bytes), so more points than this can never fit in a saved image. */
+const MAX_POINTS = Math.floor(IMAGE_MAX_BYTES / 5);
 
 interface Ring {
   pts: Pt[];
@@ -85,7 +88,7 @@ function write(sub: readonly Pt[], closed: boolean): string {
 
 /**
  * The paths again, all with the same subpath count, point counts and open or closed subpaths, in the order given.
- * Throws for data that is not a path, and for a result past HEAVY_MORPH_POINTS points.
+ * Throws for data that is not a path, and for a result too large to save in any image (MAX_POINTS).
  */
 export function resample(paths: readonly string[]): string[] {
   const all = paths.map(parse);
@@ -95,7 +98,7 @@ export function resample(paths: readonly string[]): string[] {
     return { points: Math.max(MIN_POINTS, ...real.map((r) => r.weight)), closed: real.every((r) => r.closed) };
   });
   const total = shape.reduce((n, s) => n + s.points, 0) * all.length;
-  if (total > HEAVY_MORPH_POINTS) throw new Error('Too many points to morph');
+  if (total > MAX_POINTS) throw new Error('Too many points to morph');
   return all.map((rings) =>
     shape
       .map((s, i) => write(sample(rings[i] ?? point(rings), s.points, s.closed), s.closed))

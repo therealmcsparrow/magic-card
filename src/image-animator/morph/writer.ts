@@ -35,6 +35,8 @@ export interface MorphInput {
   duration: number;
   iterations: 'infinite' | number;
   delay?: number;
+  /** The frames already share one structure, as a stored morph does: they are written as they are, not resampled again. */
+  resampled?: boolean;
 }
 
 export interface MorphWritten {
@@ -86,7 +88,7 @@ export function writeMorph(input: MorphInput): MorphWritten {
   checkTiming(duration, iterations);
   const at = input.frames.map((f) => +f.at.toFixed(2));
   if (at.some((x, i) => i > 0 && x <= at[i - 1])) throw new Error('Frames are too close together');
-  const shapes = resample(input.frames.map((f) => f.d));
+  const shapes = input.resampled ? input.frames.map((f) => f.d) : resample(input.frames.map((f) => f.d));
   const last = input.frames.length - 1;
   const frames: ImageMorphFrame[] = input.frames.map((f, i) => (i < last && f.easing !== undefined ? { at: at[i], d: shapes[i], easing: f.easing } : { at: at[i], d: shapes[i] }));
   const structure = pathStructure(frames[0].d);

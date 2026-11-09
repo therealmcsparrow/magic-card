@@ -197,7 +197,7 @@ export function setClipTiming(anim: ImageAnimation, svg: SVGSVGElement | undefin
   if (iterations !== 'infinite' && !(typeof iterations === 'number' && iterations >= iMin && iterations <= iMax)) return fail('bad-timing');
   const written: MorphWritten[] = [];
   try {
-    for (const m of clip.morphs ?? []) written.push(writeMorph({ target: m.target, smil: m.smil, frames: m.frames, duration, iterations, delay: clip.delay }));
+    for (const m of clip.morphs ?? []) written.push(writeMorph({ target: m.target, smil: m.smil, frames: m.frames, duration, iterations, delay: clip.delay, resampled: true }));
   } catch {
     return fail('bad-timing');
   }

@@ -14,6 +14,7 @@ import {
 import type { SanitizedImage } from '../contracts/svg-image';
 import { byteLength } from '../svg-safety/values';
 import { loadImageTools } from './image-loader';
+import { t } from './i18n';
 
 // Opens what the animator works on: a library image by id, or an uploaded .svg that is sanitised and saved as a new image.
 
@@ -146,7 +147,7 @@ async function openUpload(hass: LibraryHass, file: File): Promise<Opened | Faile
   const clean = tools.api.sanitizeImage(text, { file: true });
   if (clean.error) return { ok: false, reason: reasonOf(clean.error) };
   if (recordBytes(clean.markup, undefined, undefined) > caps.maxBytes) return { ok: false, reason: 'too_large' };
-  const name = file.name.replace(/\.svg$/i, '').replace(/[-_]+/g, ' ').trim().slice(0, 64) || 'Image';
+  const name = file.name.replace(/\.svg$/i, '').replace(/[-_]+/g, ' ').trim().slice(0, 64) || t('image-animator.source.image');
   const image: SavedImageInput = { id: freeId(name, caps.ids), name, view_box: clean.viewBox, svg: clean.markup };
   const thumb = await tools.api.thumbnail(clean.markup, THUMB_SIDE_PX, THUMB_MAX_BYTES).catch(() => undefined);
   if (thumb) image.thumb = thumb;
