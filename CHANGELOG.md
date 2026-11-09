@@ -6,7 +6,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## 2026.11.03-beta.1 (2026-11-09)
 
-A pre-release. Install Magic Card Utils 2026.11.02-beta.1 (or newer) first, then update Magic Card. Without it, the Animate buttons are greyed out and images stay at 256 KiB.
+A pre-release. Install Magic Card Utils 2026.11.2-beta.1 (or newer) first, then update Magic Card. Without it, the Animate buttons are greyed out and images stay at 256 KiB.
 
 ### New
 -   **Image animator.** Choose Animate in the image editor, or next to a library image field, to make an image move. Pick a part of the drawing and add an effect: move and turn, fade, colour, glow, draw the outline, follow a path, or a preset. Morph one shape into another.
