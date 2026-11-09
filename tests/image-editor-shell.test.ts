@@ -326,15 +326,15 @@ describe('image editor: saving', () => {
     expect(text(el)).toContain('Select the biggest layer');
   });
 
-  it('names the 200 image limit before sending a new image', async () => {
+  it('has no image count limit: a library of 200 images still takes a new image', async () => {
     const full = Array.from({ length: 200 }, (_, i) => ({ id: `i${i}`, name: `I${i}`, view_box: '0 0 1 1', bytes: 1, bindings: 0, updated_at: 'u' }));
     const { hass, saves } = wire({ 'magic_card_utils/images_list': () => ({ images: full }) });
     const el = await open({ kind: 'image', id: 'ground-floor' }, hass);
     el.img!.pick('copy');
     await settle(el);
     win(el, 'Save')!.click();
-    await until(() => text(el).includes('The library is full (200 images)'));
-    expect(saves()).toHaveLength(0);
+    await until(() => saves().length === 1);
+    expect(text(el)).not.toContain('The library is full');
   });
 
   it('a conflict offers Save as a copy and Reload and keeps the work', async () => {
