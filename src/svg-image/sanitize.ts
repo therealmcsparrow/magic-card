@@ -9,7 +9,8 @@ import {
   type SanitizeOptions,
 } from '../contracts/svg-image';
 import type { SanitisedImageMarkup } from '../contracts/svg-reader';
-import { cleanImageValue } from '../svg-safety/image-values';
+import { MORPH_ELEMENT } from '../contracts/svg-safety';
+import { cleanImageValue, morphMiss } from '../svg-safety/image-values';
 import { parseLenient } from '../svg-safety/parse';
 import { IMAGE_POLICY } from '../svg-safety/policy-image';
 import { byteLength, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
@@ -116,6 +117,12 @@ function viewBoxOf(raw: string | null): string | undefined {
 
 class Refused extends Error {}
 
+/** True when the offset lies inside the start tag of an animate element. */
+function inAnimateTag(text: string, at: number): boolean {
+  const open = text.lastIndexOf('<animate', at);
+  return open >= 0 && !text.slice(open, at).includes('>');
+}
+
 /** A copy of a well-formed tree whose unprefixed elements are in the SVG namespace, as if the root had declared xmlns. */
 function inSvgNamespace(doc: Document, src: Element, depth: number): Element {
   if (depth > IMAGE_MAX_DEPTH + 1) throw new Refused();
@@ -165,7 +172,9 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   if (bytes > IMAGE_MAX_BYTES) return { error: 'too_large', bytes, stripped: [] };
   const resolving = !!options.file && !!options.css;
   const text = options.file ? (resolving ? unwrapStyleCdata(stripProlog(text0)) : stripProlog(text0)) : text0;
-  if (DENY_RE.test(text)) return { error: 'unsafe_markup', bytes, stripped: [] };
+  const morphIds = options.file ? undefined : options.morphIds;
+  const hit = DENY_RE.exec(text);
+  if (hit) return { error: 'unsafe_markup', bytes, stripped: morphIds?.size && inAnimateTag(text, hit.index) ? [MORPH_ELEMENT] : [] };
   let parsed: ReturnType<typeof parseDocument>;
   try {
     parsed = text.trim() ? parseDocument(text, resolving) : undefined;
@@ -197,6 +206,18 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   }
   let nodes = 0;
   let drawable = false;
+  const morphKept = new Set<string>();
+  const animates = new Map<Element, number>();
+  // the animate elements one parent holds, counted once
+  const animatesIn = (parent: Element): number => {
+    let n = animates.get(parent);
+    if (n === undefined) {
+      n = 0;
+      for (let c = parent.firstElementChild; c; c = c.nextElementSibling) if (c.localName === MORPH_ELEMENT && c.namespaceURI === SVG_NS) n++;
+      animates.set(parent, n);
+    }
+    return n;
+  };
 
   const walk = (el: Element, depth: number, hidden: boolean): void => {
     if (depth > IMAGE_MAX_DEPTH) throw new Refused();
@@ -223,6 +244,19 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
       next = c.nextSibling;
       if (c.nodeType === 1) {
         const child = c as Element;
+        if (child.namespaceURI === SVG_NS && child.localName === MORPH_ELEMENT) {
+          const id = child.getAttribute('id') ?? '';
+          // an editor morph stays exactly as written; any miss removes the element whole
+          if (morphMiss(child, el, animatesIn(el), morphIds) || ids.has(id)) {
+            drop(MORPH_ELEMENT);
+            el.removeChild(child);
+          } else if (++nodes > IMAGE_MAX_NODES) throw new Refused();
+          else {
+            ids.add(id);
+            morphKept.add(id);
+          }
+          continue;
+        }
         if (child.namespaceURI !== SVG_NS || !ELEMENTS.has(child.localName)) {
           drop(short(child.localName));
           el.removeChild(child);
@@ -250,7 +284,7 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   }
   if (!drawable) return { error: 'empty', bytes, stripped: [...stripped] };
   root.setAttribute('viewBox', viewBox);
-  return { root, viewBox, ids: [...ids], stripped: [...stripped], bytes };
+  return { root, viewBox, ids: [...ids].filter((id) => !morphKept.has(id)), stripped: [...stripped], bytes };
 }
 
 const brand = (markup: string): SanitisedImageMarkup => markup as SanitisedImageMarkup;

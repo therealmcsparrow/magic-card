@@ -161,8 +161,8 @@ These are left out on purpose, because they can run code, load another file or s
 | `feImage` | A filter step that loads a picture from a web address. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `a` | A link that can open any address. | https://www.w3.org/TR/SVG2/linking.html#AElement |
 | `style` | Style sheets can load files; only the properties above are read from it. | https://www.w3.org/TR/SVG2/styling.html#StyleElement |
-| `animate` | Can change any attribute after cleaning. | https://www.w3.org/TR/SVG2/eltindex.html |
-| `set` | Can change any attribute after cleaning. | https://www.w3.org/TR/SVG2/eltindex.html |
+| `animate` | Can change any attribute after cleaning. The only exception is a path morph that the image editor wrote, described under Library image morphs. | https://www.w3.org/TR/SVG2/eltindex.html |
+| `set` | Can change any attribute after cleaning. Never kept, not even beside a morph. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `animateMotion` | Animation from the drawing itself. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `animateTransform` | Animation from the drawing itself. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `filter` | Filter steps can load pictures. | https://www.w3.org/TR/SVG2/eltindex.html |
@@ -181,10 +181,32 @@ These are left out on purpose, because they can run code, load another file or s
 | `onclick` | Runs code. | https://www.w3.org/TR/SVG2/interact.html#EventAttributes |
 | `onerror` | Runs code. | https://www.w3.org/TR/SVG2/interact.html#EventAttributes |
 
+## Library image morphs
+
+A library image can carry one kind of animation: a path morph that the image editor wrote. It is an `animate` element, and it stays only when all of these hold. If any one fails, the whole `animate` element is removed. Nothing is repaired or blanked, and the Utils integration refuses to save the image.
+
+- The image comes from a saved record, not from an upload, a paste or a transfer. Those keep no animation at all.
+- The `animate` element is in the SVG namespace, is empty, and is a direct child of a `path`. A path holds at most one.
+- Its `id` is named by the record's animation, and it carries only the attributes in the table below. Any other attribute, such as `href`, `from`, `to`, `by` or `end`, removes it.
+- The `set`, `animateMotion`, `animateTransform` and `discard` elements are removed in every case.
+
+| Attribute | What it must hold |
+| --- | --- |
+| `id` | A letter followed by up to 63 letters, digits, `_`, `.` or `-`. Required. |
+| `attributeName` | Exactly `d`. Required. |
+| `values` | 2 to 32 frames of path data separated by `;`. A frame uses only path commands, digits, `.`, `,`, `+`, `-`, `e`, `E` and spaces, and every frame uses the same commands. Required. |
+| `dur` | A number followed by `s` or `ms`. Required. |
+| `repeatCount` | A number or `indefinite`. |
+| `keyTimes` | One number per frame, from 0 to 1, never falling. |
+| `keySplines` | Four numbers from 0 to 1 for each step between frames. Required when `calcMode` is `spline`. |
+| `calcMode` | `linear` or `spline`. |
+| `fill` | `freeze` or `remove`. |
+| `begin` | Exactly `indefinite`. Required. |
+
 ## Size limits
 
 - Own icons: at most 32 KiB and nested at most 64 levels deep.
-- Images: at most 256 KiB, at most 10,000 elements and nested at most 64 levels deep. An image file that holds a doctype, an entity declaration, a processing instruction or a CDATA section outside a style element is refused before it is read.
+- Images: at most 1 MiB, at most 10,000 elements and nested at most 64 levels deep. An image file that holds a doctype, an entity declaration, a processing instruction or a CDATA section outside a style element is refused before it is read.
 
 ## Sources
 

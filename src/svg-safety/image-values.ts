@@ -1,5 +1,21 @@
+import { IMAGE_MORPH_MAX_FRAMES, IMAGE_MORPH_MIN_FRAMES, MORPH_PATH_DATA_RE } from '../contracts/image-animation';
 import { IMAGE_FONT_FAMILIES, IMAGE_ID_RE, THEME_VAR_NAME_RE } from '../contracts/svg-image';
-import type { SvgPolicy, SvgValueKind } from '../contracts/svg-safety';
+import {
+  MORPH_ATTRIBUTES,
+  MORPH_CALC_MODES,
+  MORPH_DUR_RE,
+  MORPH_ELEMENT,
+  MORPH_FILLS,
+  MORPH_FIXED,
+  MORPH_NUMBER_LIST_RE,
+  MORPH_PARENT,
+  MORPH_REPEAT_RE,
+  MORPH_REQUIRED,
+  MORPH_VALUES_SEPARATOR,
+  type MorphMiss,
+  type SvgPolicy,
+  type SvgValueKind,
+} from '../contracts/svg-safety';
 import { classTokens, denied, isLetter, onlyFunctions } from './values';
 
 // The image policy value rules: one length-capped pattern per attribute kind, mirroring how the browser reads the attribute.
@@ -79,4 +95,68 @@ export function cleanImageValue(kind: SvgValueKind, raw: string, policy: SvgPoli
     default:
       return undefined;
   }
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const NUMBER_RE = /^(?:\d+(?:\.\d*)?|\.\d+)$/;
+
+/** The command letters of one path-data text, which every frame of a morph shares; undefined when it is not path data or holds no command. */
+export function pathStructure(d: string): string | undefined {
+  const text = d.replace(/[\t\n\r\f]/g, ' ');
+  if (!MORPH_PATH_DATA_RE.test(text)) return undefined;
+  return text.replace(/[^MmLlHhVvCcSsQqTtAaZz]/g, '') || undefined;
+}
+
+/** The numbers of a `;`-separated list, or undefined when any item is not a plain non-negative number. */
+function numberList(v: string, split: string): number[] | undefined {
+  if (!MORPH_NUMBER_LIST_RE.test(v)) return undefined;
+  const items = v.split(split).map((s) => s.trim());
+  return items.every((s) => NUMBER_RE.test(s)) ? items.map(Number) : undefined;
+}
+
+/** True when the numbers are 0..1 and never fall. */
+const risingUnit = (n: number[]): boolean => n.every((x, i) => x >= 0 && x <= 1 && (i === 0 || x >= n[i - 1]));
+
+/** The `keySplines` check: one control-point set of four numbers in 0..1 per segment. */
+function splinesMiss(v: string, segments: number): MorphMiss | undefined {
+  if (!MORPH_NUMBER_LIST_RE.test(v)) return 'value';
+  const sets = v.split(MORPH_VALUES_SEPARATOR).map((s) => numberList(s.trim().replace(/ +/g, ';'), MORPH_VALUES_SEPARATOR));
+  if (sets.some((n) => !n)) return 'value';
+  return sets.length === segments && sets.every((n) => n!.length === 4 && n!.every((x) => x <= 1)) ? undefined : 'counts';
+}
+
+/**
+ * The morph rule for one `<animate>` (svg-safety 1.3.0): why it must go, or undefined to keep it exactly as written.
+ * `siblings` is how many animate elements its parent holds; `ids` the animate ids the record's morphs name.
+ */
+export function morphMiss(el: Element, parent: Element, siblings: number, ids: ReadonlySet<string> | undefined): MorphMiss | undefined {
+  if (el.namespaceURI !== SVG_NS || el.localName !== MORPH_ELEMENT) return 'namespace';
+  if (parent.namespaceURI !== SVG_NS || parent.localName !== MORPH_PARENT) return 'parent';
+  if (el.firstChild) return 'children';
+  if (siblings > 1) return 'second';
+  const a: Record<string, string> = Object.create(null);
+  for (const attr of Array.from(el.attributes)) {
+    if (attr.namespaceURI !== null || !(MORPH_ATTRIBUTES as readonly string[]).includes(attr.name)) return 'attribute';
+    a[attr.name] = attr.value;
+  }
+  if (MORPH_REQUIRED.some((k) => a[k] === undefined)) return 'attribute';
+  if (!IMAGE_ID_RE.test(a.id)) return 'value';
+  if (!ids || !ids.has(a.id)) return 'unnamed';
+  for (const [k, v] of Object.entries(MORPH_FIXED)) if (a[k] !== v) return 'value';
+  if (!MORPH_DUR_RE.test(a.dur)) return 'value';
+  if (a.repeatCount !== undefined && !MORPH_REPEAT_RE.test(a.repeatCount)) return 'value';
+  if (a.fill !== undefined && !(MORPH_FILLS as readonly string[]).includes(a.fill)) return 'value';
+  if (a.calcMode !== undefined && !(MORPH_CALC_MODES as readonly string[]).includes(a.calcMode)) return 'value';
+  const frames = a.values.split(MORPH_VALUES_SEPARATOR);
+  if (frames.length < IMAGE_MORPH_MIN_FRAMES || frames.length > IMAGE_MORPH_MAX_FRAMES) return 'counts';
+  const shapes = frames.map(pathStructure);
+  if (shapes.some((s) => !s)) return 'value';
+  if (shapes.some((s) => s !== shapes[0])) return 'frames';
+  if (a.keyTimes !== undefined) {
+    const times = numberList(a.keyTimes, MORPH_VALUES_SEPARATOR);
+    if (!times) return 'value';
+    if (times.length !== frames.length || times[0] !== 0 || times[times.length - 1] !== 1 || !risingUnit(times)) return 'counts';
+  }
+  if (a.calcMode === 'spline' && a.keySplines === undefined) return 'counts';
+  return a.keySplines === undefined ? undefined : splinesMiss(a.keySplines, frames.length - 1);
 }
