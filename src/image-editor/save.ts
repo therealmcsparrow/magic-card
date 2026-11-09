@@ -1,5 +1,5 @@
 import { THUMB_SIDE_PX } from '../contracts/image-editor';
-import { IMAGE_MAX_BYTES, THUMB_MAX_BYTES, type ImageBinding, type SavedImageInput } from '../contracts/mcu-library-images';
+import { IMAGE_LEGACY_MAX_BYTES, THUMB_MAX_BYTES, type ImageBinding, type SavedImageInput } from '../contracts/mcu-library-images';
 import type { SvgImageApi } from '../contracts/svg-image';
 import { savedBytes } from './meter';
 
@@ -16,13 +16,13 @@ export type Built = { ok: true; input: SavedImageInput; bytes: number } | { ok: 
 /**
  * The save payload: the markup goes through the image sanitiser last, the view box comes from its result, the size
  * counts the markup and the compact JSON of the connections (the `bindings` key is left out when there are none),
- * and the thumbnail is the browser's drawing of the sanitised markup (left out when it cannot be made).
+ * against `cap` (the effective cap of the library), and the thumbnail is the browser's drawing of the sanitised markup (left out when it cannot be made).
  */
-export async function buildSave(api: SvgImageApi, raw: string, bindings: readonly ImageBinding[], meta: SaveMeta): Promise<Built> {
+export async function buildSave(api: SvgImageApi, raw: string, bindings: readonly ImageBinding[], meta: SaveMeta, cap: number = IMAGE_LEGACY_MAX_BYTES): Promise<Built> {
   const s = api.sanitizeImage(raw);
   if (s.error) return { ok: false, reason: s.error === 'too_large' ? 'too_large' : s.error === 'empty' ? 'empty' : 'invalid', bytes: s.bytes };
   const bytes = savedBytes(s.markup, bindings);
-  if (bytes > IMAGE_MAX_BYTES) return { ok: false, reason: 'too_large', bytes };
+  if (bytes > cap) return { ok: false, reason: 'too_large', bytes };
   const thumb = await api.thumbnail(s.markup, THUMB_SIDE_PX, THUMB_MAX_BYTES);
   const input: SavedImageInput = {
     id: meta.id,

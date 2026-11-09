@@ -1,6 +1,6 @@
 import { html, type TemplateResult } from 'lit';
 import { IMAGE_CANVAS_PRESETS, IMAGE_EDITOR_CONTRACT_REVISION, IMAGE_PART_DATA_MAX } from '../contracts/image-editor';
-import { IMAGE_MAX_BYTES, MAX_IMAGES, MAX_IMAGE_BOX, type ImageBinding, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
+import { IMAGE_LEGACY_MAX_BYTES, MAX_IMAGE_BOX, type ImageBinding, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { KitButtonOptions } from '../contracts/ui-kit';
 import type { Pt } from '../contracts/path-model';
@@ -17,6 +17,7 @@ import { t } from './i18n';
 import { ImageError, fetchImage, listImages, storeImage, type ImageHass } from './library';
 import { kibShown, meterLevel, savedBytes, type MeterLevel } from './meter';
 import { buildSave, type Built } from './save';
+import { readLibrary, type LibraryWarning } from './library-warning';
 import { freeImageId } from './ids';
 import { cssOf, dashText, layerPaint, paintOf, parseDash, readPaint, stroked, toneOf, type Flag, type Look, type Rich } from './paint';
 import { imageStyles } from './styles';
@@ -204,6 +205,9 @@ export class ImageExt implements ImageUi {
   level?: MeterLevel;
   /** Ids already in the library (loaded when a name dialog opens). */
   taken?: Set<string>;
+  /** The byte cap a save may use (the library's own, else the older 256 KiB) and the size warning, read from images_list. */
+  cap = IMAGE_LEGACY_MAX_BYTES;
+  libraryWarn?: LibraryWarning;
   /** The reference picture (held in page memory only), its alignment, and what its panel shows. */
   ref?: Picture;
   shown = true;
@@ -276,8 +280,25 @@ export class ImageExt implements ImageUi {
 
   // ── opening ──
 
+  /** Reads the cap and the library size once; the meter is judged again when the cap differs from the one in use. */
+  private async loadLibrary(): Promise<void> {
+    try {
+      const lib = await readLibrary(this.hass);
+      if (!lib) return;
+      this.taken = new Set(lib.images.map((i) => i.id));
+      this.libraryWarn = lib.warning;
+      const changed = lib.cap !== this.cap;
+      this.cap = lib.cap;
+      if (changed && this.shell.base) this.shell.refresh();
+    } catch {
+      this.libraryWarn = undefined;
+    }
+    this.shell.requestUpdate();
+  }
+
   async open(src: SvgEditorSource): Promise<Doc | undefined> {
     this.problem = undefined;
+    void this.loadLibrary();
     if (src.kind === 'image-blank') {
       const w = src.width;
       const h = src.height;
@@ -518,7 +539,7 @@ export class ImageExt implements ImageUi {
   }
 
   private sanitiseText(e: string): string {
-    return e === 'too_large' ? t('image-editor.chunk.that-drawing-is-over-256-kib') : e === 'not_svg' ? t('image-editor.chunk.this-is-not-valid-svg-check-that-it') : e === 'empty' ? t('image-editor.chunk.that-file-has-no-shapes-an-image-can-use') : t('image-editor.chunk.that-file-cannot-be-used-as-an-image');
+    return e === 'too_large' ? t('image-editor.chunk.that-drawing-is-over-256-kib', { cap: this.cap / 1024 }) : e === 'not_svg' ? t('image-editor.chunk.this-is-not-valid-svg-check-that-it') : e === 'empty' ? t('image-editor.chunk.that-file-has-no-shapes-an-image-can-use') : t('image-editor.chunk.that-file-cannot-be-used-as-an-image');
   }
 
   // ── markup out ──
@@ -573,7 +594,7 @@ export class ImageExt implements ImageUi {
     const s = this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
     const bytes = savedBytes(s.markup, this.stored);
-    return { svg: s.markup, bytes, error: bytes > IMAGE_MAX_BYTES ? 'over' : undefined, points, viewBox: s.viewBox };
+    return { svg: s.markup, bytes, error: bytes > this.cap ? 'over' : undefined, points, viewBox: s.viewBox };
   }
 
   /** The same change to every selected layer, each judged on its own (locked layers stay as they are). */
@@ -673,9 +694,10 @@ export class ImageExt implements ImageUi {
 
   /** The meter's sentence for a size. */
   sentence(bytes: number): string {
-    const used = kibShown(bytes);
-    const l = meterLevel(bytes);
-    return l === 'small' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-fine', { used }) : l === 'big' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-getting', { used }) : l === 'full' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-nearly', { used }) : t('image-editor.chunk.image-size-used-kib-of-256-kib-too-big', { used });
+    const used = kibShown(bytes, this.cap);
+    const l = meterLevel(bytes, this.cap);
+    const cap = this.cap / 1024;
+    return l === 'small' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-fine', { used, cap }) : l === 'big' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-getting', { used, cap }) : l === 'full' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-nearly', { used, cap }) : t('image-editor.chunk.image-size-used-kib-of-256-kib-too-big', { used, cap });
   }
 
   word(l: MeterLevel): string {
@@ -684,7 +706,7 @@ export class ImageExt implements ImageUi {
 
   /** One polite announcement per crossing into Getting big or Nearly full (Too big is an alert in the meter itself). */
   changed(out: Out): void {
-    const l = out.error === 'empty' ? 'small' : meterLevel(out.bytes);
+    const l = out.error === 'empty' ? 'small' : meterLevel(out.bytes, this.cap);
     const was = this.level;
     this.level = l;
     if (was && was !== l && (l === 'big' || l === 'full')) this.shell.say(this.sentence(out.bytes));
@@ -811,7 +833,9 @@ export class ImageExt implements ImageUi {
 
   private async loadTaken(): Promise<void> {
     try {
-      this.taken = new Set((await listImages(this.hass)).map((i) => i.id));
+      const lib = await readLibrary(this.hass);
+      this.taken = lib ? new Set(lib.images.map((i) => i.id)) : undefined;
+      this.libraryWarn = lib?.warning;
     } catch {
       this.taken = undefined;
     }
@@ -840,7 +864,6 @@ export class ImageExt implements ImageUi {
     try {
       const taken = new Set((await listImages(this.hass)).map((i) => i.id));
       this.taken = taken;
-      if (taken.size >= MAX_IMAGES) return this.setDetails({ error: t('image-editor.chunk.the-library-is-full-200-images-delete') });
       const id = freeImageId(name, taken);
       if (d.mode === 'duplicate') await this.duplicate(id, meta);
       else await this.write({ id, ...meta }, d.mode === 'copy');
@@ -856,7 +879,7 @@ export class ImageExt implements ImageUi {
   async buildSave(meta: { id: string; name: string }): Promise<{ ok: true; input: SavedImageInput } | { ok: false; reason: 'too_large' | 'full' | 'invalid'; bytes?: number }> {
     const out = this.shell.out;
     if (!out.svg) return { ok: false, reason: 'invalid' };
-    const r: Built = await buildSave(this.api, out.svg, this.stored, { ...this.meta, ...meta });
+    const r: Built = await buildSave(this.api, out.svg, this.stored, { ...this.meta, ...meta }, this.cap);
     return r.ok ? { ok: true, input: r.input } : { ok: false, reason: r.reason === 'too_large' ? 'too_large' : 'invalid', bytes: r.bytes };
   }
 
@@ -940,7 +963,7 @@ export class ImageExt implements ImageUi {
         : p === 'full'
           ? t('image-editor.chunk.the-library-is-full-200-images-delete')
           : p === 'too_large'
-            ? t('image-editor.chunk.too-big-to-save-used-kib-of-256-kib', { used: kibShown(err?.bytes ?? this.shell.out.bytes) })
+            ? t('image-editor.chunk.too-big-to-save-used-kib-of-256-kib', { used: kibShown(err?.bytes ?? this.shell.out.bytes, this.cap), cap: this.cap / 1024 })
             : p === 'invalid'
               ? err?.word
                 ? t('image-editor.chunk.the-library-does-not-accept-the-text-2', { word: err.word })

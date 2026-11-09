@@ -27873,33 +27873,33 @@
     "x-max-length": 25,
     "x-source-hash": "52493eca"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": "Grootte van de afbeelding: {used} KiB van 256 KiB. Prima.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Prima.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
-    "description": "Size message for a small image. {used} is the size so far in KiB, a number. Same wording family as the getting big, nearly full and too big variants. {used}: The value that replaces used in the text. Max 65 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Fine.",
+    "description": "Size message for a small image. {used} is the size so far in KiB, a number. Same wording family as the getting big, nearly full and too big variants. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 65 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Fine.",
     "x-max-length": 65,
-    "x-source-hash": "205cd2fd"
+    "x-source-hash": "fd754ee7"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": "Grootte van de afbeelding: {used} KiB van 256 KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
-    "description": "Size message when the image nears the limit. {used} is the size so far in KiB, a number. {used}: The value that replaces used in the text. Max 145 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
+    "description": "Size message when the image nears the limit. {used} is the size so far in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 145 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Getting big. Large images can be slow on wall tablets.",
     "x-max-length": 145,
-    "x-source-hash": "3ae3152e"
+    "x-source-hash": "13fd567d"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": "Grootte van de afbeelding: {used} KiB van 256 KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
-    "description": "Size message when the image is close to the limit but still saves. {used} is the size so far in KiB, a number. {used}: The value that replaces used in the text. Max 120 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
+    "description": "Size message when the image is close to the limit but still saves. {used} is the size so far in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 120 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Nearly full. You can add a little more.",
     "x-max-length": 120,
-    "x-source-hash": "49e0cbaf"
+    "x-source-hash": "10dab68f"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Te groot om op te slaan.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
-    "description": "Size message when the image is over the limit and cannot be saved. {used} is the size so far in KiB, a number. {used}: The value that replaces used in the text. Max 85 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "description": "Size message when the image is over the limit and cannot be saved. {used} is the size so far in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 85 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Too big to save.",
     "x-max-length": 85,
-    "x-source-hash": "7871f325"
+    "x-source-hash": "5d914d2c"
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-editor.chunk.images-need-magic-card-utils-it-is": {
@@ -28041,12 +28041,12 @@
     "x-max-length": 185,
     "x-source-hash": "408538c8"
   },
-  "image-editor.chunk.that-drawing-is-over-256-kib": "Die tekening is groter dan 256 KiB.",
+  "image-editor.chunk.that-drawing-is-over-256-kib": "Die tekening is groter dan {cap} KiB.",
   "@image-editor.chunk.that-drawing-is-over-256-kib": {
-    "description": "Error when the library refuses a save because the drawing is too large. It tells the user the size limit. Max 50 characters.",
-    "source_text": "That drawing is over 256 KiB.",
+    "description": "Error when the library refuses a save because the drawing is too large. It tells the user the size limit. {cap}: The value that replaces cap in the text. Max 50 characters.",
+    "source_text": "That drawing is over {cap} KiB.",
     "x-max-length": 50,
-    "x-source-hash": "f4b05d33"
+    "x-source-hash": "222bfadc"
   },
   "image-editor.chunk.that-file-cannot-be-used-as-an-image": "Dat bestand kan niet als afbeelding worden gebruikt.",
   "@image-editor.chunk.that-file-cannot-be-used-as-an-image": {
@@ -28160,12 +28160,12 @@
     "x-max-length": 25,
     "x-source-hash": "4202b72f"
   },
-  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": "Te groot om op te slaan: {used} KiB van 256 KiB.",
+  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": "Te groot om op te slaan: {used} KiB van {cap} KiB.",
   "@image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
-    "description": "Error message when saving is refused for size. {used} is the current size in KiB, a number. {used}: The value that replaces used in the text. Max 65 characters.",
-    "source_text": "Too big to save: {used} KiB of 256 KiB.",
+    "description": "Error message when saving is refused for size. {used} is the current size in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 65 characters.",
+    "source_text": "Too big to save: {used} KiB of {cap} KiB.",
     "x-max-length": 65,
-    "x-source-hash": "d734caad"
+    "x-source-hash": "820995b8"
   },
   "image-editor.chunk.undo": "Ongedaan maken",
   "@image-editor.chunk.undo": {
@@ -29334,12 +29334,12 @@
     "x-max-length": 25,
     "x-source-hash": "80bb38dc"
   },
-  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
+  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Te groot om op te slaan.",
   "@image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
-    "description": "Accessible description of the size meter when the image is over the limit. {used} is the size in KiB, a number. {used}: The value that replaces used in the text. Max 85 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "description": "Accessible description of the size meter when the image is over the limit. {used} is the size in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 85 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Too big to save.",
     "x-max-length": 85,
-    "x-source-hash": "7871f325"
+    "x-source-hash": "5d914d2c"
   },
   "image-editor.ui.includes-connections": "Inclusief koppelingen.",
   "@image-editor.ui.includes-connections": {
@@ -29369,12 +29369,12 @@
     "x-max-length": 15,
     "x-source-hash": "8bfdb93c"
   },
-  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": "KiB is een kibibyte, iets meer dan duizend tekens. 256 KiB is ongeveer een kwart megabyte.",
+  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": "KiB is een kibibyte, iets meer dan duizend tekens. 1024 KiB is ongeveer een megabyte.",
   "@image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
     "description": "Explanation under the image size line. It tells the user what the KiB unit means and how big the limit is. Max 160 characters.",
-    "source_text": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
+    "source_text": "KiB is a kibibyte, a little over a thousand characters. 1,024 KiB is about a megabyte.",
     "x-max-length": 160,
-    "x-source-hash": "f4bce566"
+    "x-source-hash": "f2dfd951"
   },
   "image-editor.ui.layers": "Lagen",
   "@image-editor.ui.layers": {
@@ -29544,6 +29544,13 @@
     "x-max-length": 95,
     "x-source-hash": "096fcf15"
   },
+  "image-editor.ui.the-library-holds-mib-mib-very-large-libraries": "De bibliotheek is {mib} MiB groot. Zeer grote bibliotheken kunnen traag laden op wandtablets. Opslaan kan nog steeds.",
+  "@image-editor.ui.the-library-holds-mib-mib-very-large-libraries": {
+    "description": "Notice in the save dialog when the whole image library is very large. {mib} is its size in mebibytes, a whole number. It informs and never blocks saving. {mib}: The value that replaces mib in the text. Max 120 characters.",
+    "source_text": "The library holds {mib} MiB. Very large libraries can load slowly on wall tablets. You can still save.",
+    "x-max-length": 120,
+    "x-source-hash": "ceb8e221"
+  },
   "image-editor.ui.this-image-was-changed-somewhere-else": "Deze afbeelding is ergens anders gewijzigd.",
   "@image-editor.ui.this-image-was-changed-somewhere-else": {
     "description": "Notice in the inspector with a Reload button. Same English as the save message. Max 65 characters.",
@@ -29572,12 +29579,12 @@
     "x-max-length": 55,
     "x-source-hash": "b84c37eb"
   },
-  "image-editor.ui.used-of-256-kib-word": "{used} van 256 KiB, {word}",
+  "image-editor.ui.used-of-256-kib-word": "{used} van {cap} KiB, {word}",
   "@image-editor.ui.used-of-256-kib-word": {
-    "description": "Size meter caption. {used} is the size in KiB, a number. {word} is a lower-case status word such as fine or nearly full. {used}: The value that replaces used in the text. {word}: The value that replaces word in the text. Max 40 characters.",
-    "source_text": "{used} of 256 KiB, {word}",
+    "description": "Size meter caption. {used} is the size in KiB, a number. {word} is a lower-case status word such as fine or nearly full. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. {word}: The value that replaces word in the text. Max 40 characters.",
+    "source_text": "{used} of {cap} KiB, {word}",
     "x-max-length": 40,
-    "x-source-hash": "77e49990"
+    "x-source-hash": "4af38a2e"
   },
   "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": "{w} x {h} eenheden. Kies een laag om de details te lezen.",
   "@image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {

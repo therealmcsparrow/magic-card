@@ -48,20 +48,20 @@
     "hash": "52493eca"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
-    "text": "Image size: {used} KiB of 256 KiB. Fine.",
-    "hash": "205cd2fd"
+    "text": "Image size: {used} KiB of {cap} KiB. Fine.",
+    "hash": "fd754ee7"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
-    "text": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
-    "hash": "3ae3152e"
+    "text": "Image size: {used} KiB of {cap} KiB. Getting big. Large images can be slow on wall tablets.",
+    "hash": "13fd567d"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
-    "text": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
-    "hash": "49e0cbaf"
+    "text": "Image size: {used} KiB of {cap} KiB. Nearly full. You can add a little more.",
+    "hash": "10dab68f"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
-    "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
-    "hash": "7871f325"
+    "text": "Image size: {used} KiB of {cap} KiB. Too big to save.",
+    "hash": "5d914d2c"
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": {
     "text": "Images need Magic Card Utils. Install it the same way as Magic Card.",
@@ -144,8 +144,8 @@
     "hash": "408538c8"
   },
   "image-editor.chunk.that-drawing-is-over-256-kib": {
-    "text": "That drawing is over 256 KiB.",
-    "hash": "f4b05d33"
+    "text": "That drawing is over {cap} KiB.",
+    "hash": "222bfadc"
   },
   "image-editor.chunk.that-file-cannot-be-used-as-an-image": {
     "text": "That file cannot be used as an image.",
@@ -212,8 +212,8 @@
     "hash": "4202b72f"
   },
   "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
-    "text": "Too big to save: {used} KiB of 256 KiB.",
-    "hash": "d734caad"
+    "text": "Too big to save: {used} KiB of {cap} KiB.",
+    "hash": "820995b8"
   },
   "image-editor.chunk.undo": {
     "text": "Undo",
@@ -876,8 +876,8 @@
     "hash": "80bb38dc"
   },
   "image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
-    "text": "Image size: {used} KiB of 256 KiB. Too big to save.",
-    "hash": "7871f325"
+    "text": "Image size: {used} KiB of {cap} KiB. Too big to save.",
+    "hash": "5d914d2c"
   },
   "image-editor.ui.includes-connections": {
     "text": "Includes connections.",
@@ -896,8 +896,8 @@
     "hash": "8bfdb93c"
   },
   "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
-    "text": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
-    "hash": "f4bce566"
+    "text": "KiB is a kibibyte, a little over a thousand characters. 1,024 KiB is about a megabyte.",
+    "hash": "f2dfd951"
   },
   "image-editor.ui.layers": {
     "text": "Layers",
@@ -995,6 +995,10 @@
     "text": "The address is mcu-image:{id}. It cannot be changed later.",
     "hash": "096fcf15"
   },
+  "image-editor.ui.the-library-holds-mib-mib-very-large-libraries": {
+    "text": "The library holds {mib} MiB. Very large libraries can load slowly on wall tablets. You can still save.",
+    "hash": "ceb8e221"
+  },
   "image-editor.ui.this-image-was-changed-somewhere-else": {
     "text": "This image was changed somewhere else.",
     "hash": "b1bcbf44"
@@ -1012,8 +1016,8 @@
     "hash": "b84c37eb"
   },
   "image-editor.ui.used-of-256-kib-word": {
-    "text": "{used} of 256 KiB, {word}",
-    "hash": "77e49990"
+    "text": "{used} of {cap} KiB, {word}",
+    "hash": "4af38a2e"
   },
   "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
     "text": "{w} x {h} units. Pick a layer to read its details.",
