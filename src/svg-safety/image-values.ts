@@ -100,8 +100,6 @@ export function cleanImageValue(kind: SvgValueKind, raw: string, policy: SvgPoli
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const NUMBER_RE = /^(?:\d+(?:\.\d*)?|\.\d+)$/;
 
-const PATH_TOKEN_RE = /([MmLlHhVvCcSsQqTtAaZz])|[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|[ ,]+/y;
-
 /**
  * The command structure of one path-data text, which every frame of a morph shares: its command letters in order, each
  * with the count of numbers after it ("M 2 L 4"). Undefined when some text is no token, a number comes before the first
@@ -110,9 +108,9 @@ const PATH_TOKEN_RE = /([MmLlHhVvCcSsQqTtAaZz])|[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[
 export function pathStructure(d: string): string | undefined {
   const text = d.replace(/[\t\n\r\f]/g, ' ');
   const parts: string[] = [];
-  PATH_TOKEN_RE.lastIndex = 0;
-  while (PATH_TOKEN_RE.lastIndex < text.length) {
-    const m = PATH_TOKEN_RE.exec(text);
+  const token = /([MmLlHhVvCcSsQqTtAaZz])|[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|[ ,]+/y;
+  while (token.lastIndex < text.length) {
+    const m = token.exec(text);
     if (!m) return undefined;
     if (m[1]) parts.push(m[1], '0');
     else if (/^[ ,]/.test(m[0])) continue;
