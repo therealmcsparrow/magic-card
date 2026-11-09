@@ -2,7 +2,7 @@
 
 Library images are drawings you make in the Magic Card image editor and save in Magic Card Utils. Everything stays on your own Home Assistant server. Magic Card and Magic Card Utils send nothing to McSparrow or to any third party, and they have no analytics.
 
-**What is stored.** For each saved image: the drawing (SVG, including any text you typed), its name, keywords, author and description if you filled them in, a small preview picture, and the entity bindings (which entity changes which part of the drawing). Magic Card Utils keeps these in Home Assistant's `.storage` folder, so they are part of your Home Assistant backups. A backup you share or upload contains your images. An image can be up to 256 KiB and you can keep 200 images.
+**What is stored.** For each saved image: the drawing (SVG, including any text you typed and any animation, SMIL or CSS), its name, keywords, author and description if you filled them in, a small preview picture, and the entity bindings (which entity changes which part of the drawing). Magic Card Utils keeps these in Home Assistant's `.storage` folder, so they are part of your Home Assistant backups. A backup you share or upload contains your images, including any animation in them. An image can be up to 1 MiB with Magic Card Utils 2026.11.02-beta.1 or newer, and 256 KiB with an older version. There is no limit on how many images you can keep, so a large library makes your backups bigger.
 
 **Who can see them.** Every user who can log in to your Home Assistant can read every library image, because dashboards draw them for everyone. Only administrators can save, rename, delete or import images. If someone has an account but should not see a drawing, do not put it in the library.
 
@@ -10,7 +10,7 @@ Library images are drawings you make in the Magic Card image editor and save in 
 
 **Cache on your device.** Dashboards keep drawings in the page's memory while the page is open. Nothing is written to the device's storage, and closing the page clears it.
 
-**Export files.** Exporting an image gives you an SVG or a library file on your own device. It contains the drawing and may contain entity names from its bindings. Check a file before you post it in a forum or an issue.
+**Export files.** Exporting an image gives you an SVG or a library file on your own device. It contains the drawing, including its animation, and may contain entity names from its bindings. Check a file before you post it in a forum or an issue.
 
 **Deleting an image.** An administrator can delete an image in the Images tab of Magic Card Utils. It is removed from the library at once and cards that use it show the missing-picture state. Copies stay in older Home Assistant backups and in files you exported until you delete those too.
 
