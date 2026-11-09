@@ -431,12 +431,12 @@ export function renderCardDesign(
             ></mc-animation-list>
           </div>`,
     template_animations: () => (src.rule || !write ? nothing : renderTemplateAnimations(config, templateDocs, write, syncCtx)),
-    // viewer pause button (card-pause 2.0.0, Motion group): a card setting, not part of a rule's design
+    // viewer pause button (card-pause 2.1.0, Motion group): a card setting, not part of a rule's design
     pause_button: () => {
       if (src.rule) return nothing;
       const cur = config.pause_button === 'always' || config.pause_button === 'auto' ? config.pause_button : 'hidden';
       const modes: Array<[PauseButtonMode, string]> = [['auto', t('card-editor.card-settings.automatic')], ['always', t('card-editor.card-settings.always')], ['hidden', t('card-editor.card-settings.hidden')]];
-      const pick = (m: PauseButtonMode) => update('pause_button', m === 'hidden' ? undefined : m);
+      const pick = (m: PauseButtonMode) => update('pause_button', m);
       // roving tabindex and arrow keys, as the segmented control of the flows editor
       const onKey = (e: KeyboardEvent) => {
         const group = e.currentTarget as HTMLElement;

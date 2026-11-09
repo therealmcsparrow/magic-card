@@ -1,13 +1,13 @@
-// Contract: card pause (viewer-side "Pause motion" button, WCAG 2.2.2). Version 2.0.0. A pause button per card
+// Contract: card pause (viewer-side "Pause motion" button, WCAG 2.2.2). Version 2.1.0. A pause button per card
 // stops every moving thing on the card. watchOffscreen and the pauseOffscreen directive take a `counted` option.
 
-export const CARD_PAUSE_CONTRACT = '2.0.0';
-export const CARD_PAUSE_CONTRACT_REVISION = 6;
+export const CARD_PAUSE_CONTRACT = '2.1.0';
+export const CARD_PAUSE_CONTRACT_REVISION = 7;
 
 export type PauseButtonMode = 'auto' | 'always' | 'hidden';
 export type PauseButtonCorner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
 
-/** Default of `pause_button`. */
+/** Default of `pause_button`; while a module sets PAUSE_WANT_ATTRIBUTE on the card, a missing or invalid key counts as `auto`. */
 export const PAUSE_BUTTON_DEFAULT: PauseButtonMode = 'hidden';
 
 /** Card keys; MagicCardConfig gains them in src/types.ts. */
@@ -16,8 +16,8 @@ export interface CardPauseKeys {
   pause_button_corner?: PauseButtonCorner;
 }
 
-// The three names live in card-pause.needs.ts, which magic-card.js imports; re-exported unchanged.
-export { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from './card-pause.needs';
+// The four names live in card-pause.needs.ts, which magic-card.js imports; re-exported unchanged.
+export { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX, PAUSE_WANT_ATTRIBUTE } from './card-pause.needs';
 
 export interface PauseChangeDetail {
   paused: boolean;

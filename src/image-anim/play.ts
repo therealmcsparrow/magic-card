@@ -1,16 +1,22 @@
 import type { AnimationDoc } from '../anim-studio/model';
 import type { Track } from '../anim-studio/model-v2-core';
-import type { ImageAnimContext, ImageAnimHandle, ImageAnimation, ImageClip, ImageTrackCompiler } from '../contracts/image-animation';
+import type { ClipPlay, ImageAnimContext, ImageAnimHandle, ImageAnimation, ImageClip, ImageTrackCompiler } from '../contracts/image-animation';
+import { isCardPaused, unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
+import { askForPause, canHover, watchMotion } from './motion';
 import { morphCss } from './morph-css';
 import { startSmil } from './smil';
+import { bindTriggers, cardOf, stateMatches, triggerHost } from './triggers';
 
-// Plays the always clip of a library image: its tracks as CSS animations on the drawing's parts, its morphs once per cycle.
+// Plays the clips of a library image: tracks as CSS animations on the drawing's parts, morphs once per cycle, started by
+// always, hover, tap or an entity state, and held by reduced motion, the card's pause and the page being off screen.
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const DIRECTIONS = ['normal', 'reverse', 'alternate', 'alternate-reverse'];
 const EASING_RE = /^(?:[a-z][a-z-]{0,31}|cubic-bezier\([\d.,\s-]{1,80}\)|steps\([\w,\s-]{1,40}\))$/;
 const PART_ATTR = 'data-mc-ia-part';
 const ROOT_ATTR = 'data-mc-ia';
+const HOLD_ATTR = 'data-mc-ia-hold';
+const TAP_LINGER_MAX_MS = 10_000;
 
 let counter = 0;
 const probed = new WeakMap<Document, boolean>();
@@ -44,9 +50,6 @@ function cssMorphWorks(doc: Document): boolean {
 
 const num = (n: number): string => String(+n.toFixed(4));
 const byId = (svg: SVGSVGElement, id: string): Element | undefined => Array.from(svg.querySelectorAll('[id]')).find((e) => e.id === id);
-
-/** The always clip that has something to play; one clip plays at a time. */
-const pickClip = (anim: ImageAnimation): ImageClip | undefined => anim.clips.find((c) => c.play.on === 'always' && (c.tracks.length || c.morphs?.length));
 
 /** The studio document the tracks compile from: each `part:<svg id>` becomes a rig part `p<n>` of its own. */
 function trackDoc(clip: ImageClip, ids: string[]): AnimationDoc {
@@ -104,16 +107,38 @@ function trackCss(svg: SVGSVGElement, clip: ImageClip, key: string, marked: Elem
   return out.join('\n');
 }
 
+type StatePlay = Extract<ClipPlay, { on: 'state' }>;
+type SvgTimeline = SVGSVGElement & { pauseAnimations?: () => void; unpauseAnimations?: () => void; setCurrentTime?: (t: number) => void };
+
 /**
- * Plays the animation of `svg` (the sanitised, mounted drawing). Each morph runs through one engine only: the CSS `d`
- * keyframes when the probe sees CSS `d` take effect, otherwise its SMIL copy.
+ * Plays the animation of `svg` (the sanitised, mounted drawing). One clip plays at a time, by priority tap > hover >
+ * state > always. Each morph runs through one engine only: the CSS `d` keyframes when the probe sees CSS `d` take
+ * effect, otherwise its SMIL copy. Reduced motion shows the drawn frame; a paused card or an off-screen page holds the
+ * CSS tracks and the SMIL clock.
  */
-export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimContext, compile?: ImageTrackCompiler): ImageAnimHandle {
+export function play(svg: SVGSVGElement, anim: ImageAnimation, ctx: ImageAnimContext, compile?: ImageTrackCompiler): ImageAnimHandle {
   const key = `ia${(counter += 1)}`;
-  const clip = pickClip(anim);
+  const timeline = svg as SvgTimeline;
+  const card = cardOf(ctx.host);
+  const playable = anim.clips.filter((c) => (c.tracks.length || c.morphs?.length) && (!c.tracks.length || compile));
+  const ofKind = (on: ClipPlay['on']): ImageClip | undefined => playable.find((c) => c.play.on === on);
+  const alwaysClip = ofKind('always');
+  const hoverClip = ofKind('hover');
+  const tapClip = ofKind('tap');
+  const stateClips = playable.filter((c): c is ImageClip & { play: StatePlay } => c.play.on === 'state');
   const marked: Element[] = [];
+  const motion = watchMotion(() => sync());
+  const releasePause = card ? askForPause(card) : () => undefined;
+  let hass = ctx.hass;
+  let current: ImageClip | undefined;
+  let hovering = false;
+  let tapping = false;
+  let held = card ? isCardPaused(card) : false;
   let style: Element | undefined;
   let stopSmil: (() => void) | undefined;
+  let beginSmil: (() => void) | undefined;
+  let tapTimer: ReturnType<typeof setTimeout> | undefined;
+  let seen: unknown[] = stateClips.map((c) => hass?.states?.[c.play.entity]);
 
   /** The one place a track begins: its keyframes go into the drawing, and its SMIL copies are begun when CSS cannot move them. */
   const startTrack = (c: ImageClip): void => {
@@ -121,17 +146,25 @@ export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimCo
     const morphs = c.morphs ?? [];
     const viaCss = !morphs.length || cssMorphWorks(svg.ownerDocument);
     const timing = { duration: c.duration, delay: c.delay, iterations: c.iterations };
-    const css = [(compile ? trackCss(svg, c, key, marked, compile) : ''), viaCss ? morphCss(morphs, timing, key) : ''].filter(Boolean).join('\n');
+    const hold = `svg[${ROOT_ATTR}="${key}"][${HOLD_ATTR}],svg[${ROOT_ATTR}="${key}"][${HOLD_ATTR}] *{animation-play-state:paused !important;}`;
+    const css = [compile ? trackCss(svg, c, key, marked, compile) : '', viaCss ? morphCss(morphs, timing, key) : ''].filter(Boolean).join('\n');
     if (css) {
       style = svg.ownerDocument.createElementNS(SVG_NS, 'style');
-      style.textContent = css;
+      style.textContent = `${css}\n${hold}`;
       svg.insertBefore(style, svg.firstChild);
     }
-    if (morphs.length && !viaCss) stopSmil = startSmil(svg, morphs, c.delay ?? 0);
+    if (morphs.length && !viaCss) {
+      beginSmil = () => {
+        beginSmil = undefined;
+        stopSmil = startSmil(svg, morphs, c.delay ?? 0);
+      };
+      if (!held) beginSmil();
+    }
   };
 
   /** The one place a track ends: its styles, marks and the SMIL copies it began are removed. */
   const stopTrack = (): void => {
+    beginSmil = undefined;
     stopSmil?.();
     stopSmil = undefined;
     style?.remove();
@@ -140,12 +173,104 @@ export function play(svg: SVGSVGElement, anim: ImageAnimation, _ctx: ImageAnimCo
     svg.removeAttribute(ROOT_ATTR);
   };
 
-  if (clip && (!clip.tracks.length || compile)) startTrack(clip);
-  return {
-    // state, hover and tap clips match against the new context here; the always clip needs nothing
-    update() {},
-    release() {
+  /** The clip that should play now; nothing under reduced motion. */
+  const wanted = (): ImageClip | undefined => {
+    if (motion.reduced()) return undefined;
+    if (tapping && tapClip) return tapClip;
+    if (hovering && hoverClip && canHover()) return hoverClip;
+    return stateClips.find((c) => stateMatches(c.play, hass)) ?? alwaysClip;
+  };
+
+  /** CSS and SMIL are held together: the hold attribute stops the CSS, the timeline pause stops SMIL. */
+  const applyHold = (): void => {
+    svg.toggleAttribute(HOLD_ATTR, held);
+    if (motion.reduced()) {
+      timeline.pauseAnimations?.();
+      timeline.setCurrentTime?.(0);
+    } else if (held) {
+      timeline.pauseAnimations?.();
+    } else {
+      timeline.unpauseAnimations?.();
+      beginSmil?.();
+    }
+  };
+
+  /** Switches to the wanted clip. A moving clip counts as motion of the card; the observer tells when the card is paused or the drawing is off screen. */
+  const sync = (): void => {
+    const next = wanted();
+    if (next !== current) {
       stopTrack();
+      current = next;
+      if (next) startTrack(next);
+    }
+    watchOffscreen(
+      svg,
+      (onScreen) => {
+        held = !onScreen;
+        applyHold();
+      },
+      { counted: !!current },
+    );
+    applyHold();
+  };
+
+  /** A press that ended as a tap lets a finite clip play out; any other end stops the tap clip. */
+  const endTap = (done: boolean): void => {
+    clearTimeout(tapTimer);
+    const rest = tapClip && typeof tapClip.iterations === 'number' ? ((tapClip.delay ?? 0) + tapClip.duration * tapClip.iterations) * 1000 : 0;
+    if (done && rest > 0) {
+      tapTimer = setTimeout(() => {
+        tapping = false;
+        sync();
+      }, Math.min(rest, TAP_LINGER_MAX_MS));
+      return;
+    }
+    tapping = false;
+    sync();
+  };
+
+  const unbind =
+    hoverClip || tapClip
+      ? bindTriggers(
+          triggerHost(ctx.host),
+          {
+            hover(on) {
+              hovering = on;
+              sync();
+            },
+            tap(on, done) {
+              if (!on) return endTap(done === true);
+              clearTimeout(tapTimer);
+              if (motion.reduced()) return;
+              if (current === tapClip) {
+                stopTrack();
+                current = undefined;
+              }
+              tapping = true;
+              sync();
+            },
+          },
+          { hover: !!hoverClip, tap: !!tapClip },
+        )
+      : () => undefined;
+
+  sync();
+  return {
+    update(next) {
+      hass = next.hass;
+      const states = stateClips.map((c) => hass?.states?.[c.play.entity]);
+      if (states.length === seen.length && states.every((s, i) => s === seen[i])) return;
+      seen = states;
+      sync();
+    },
+    release() {
+      clearTimeout(tapTimer);
+      unbind();
+      motion.stop();
+      unwatchOffscreen(svg);
+      stopTrack();
+      svg.removeAttribute(HOLD_ATTR);
+      releasePause();
     },
   };
 }

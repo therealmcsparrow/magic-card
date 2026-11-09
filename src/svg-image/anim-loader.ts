@@ -1,6 +1,7 @@
 import type { CheckImageAnimation, ImageAnimChunk, ImageTrackCompiler } from '../contracts/image-animation';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { lazyChunk } from '../utils/lazy-chunk';
+import { lazyChunks } from '../utils/lazy-chunks';
 
 // The one way into the image-anim chunk from the svg-image part; the chunk is fetched only for a record with an animation.
 
@@ -28,3 +29,6 @@ export function wantsTracks(raw: unknown): boolean {
   const clips = (raw as { clips?: unknown } | null | undefined)?.clips;
   return Array.isArray(clips) && clips.some((c) => Array.isArray((c as { tracks?: unknown } | null)?.tracks) && (c as { tracks: unknown[] }).tracks.length > 0);
 }
+
+/** The card's pause chunk, so a pause the viewer left on holds the first frame; resolves whether or not it loads. */
+export const loadPauseChunk = (): Promise<unknown> => lazyChunks.pause.load();
