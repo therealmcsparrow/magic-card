@@ -43,7 +43,7 @@ export function morphCss(morphs: readonly ImageMorph[], timing: MorphTiming, key
     const name = `mcm-${key}-${i}`;
     out.push(
       `@keyframes ${name}{${steps.join('')}}`,
-      `svg[data-mc-ia="${key}"] [id="${m.target}"]{animation:${name} ${num(duration)}s linear ${num(delay)}s ${count};}`,
+      `svg[data-mc-ia="${key}"] [id="${m.target}"]{animation:${name} ${num(duration)}s linear ${num(delay)}s ${count}${iterations === 'infinite' ? '' : ' forwards'};}`,
     );
   });
   return out.join('\n');
