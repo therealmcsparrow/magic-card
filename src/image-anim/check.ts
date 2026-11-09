@@ -37,6 +37,7 @@ const ATTRIBUTE_RE = /^[A-Za-z0-9_]{1,64}$/;
 const EASING_WORD_RE = /^[a-z][a-z0-9-]{0,31}$/;
 const NUM = String.raw`-?(?:\d+(?:\.\d+)?|\.\d+)`;
 const REGEX_INPUT_MAX = 64;
+const ENTITY_INPUT_MAX = 193;
 const EASING_BEZIER_RE = new RegExp(String.raw`^cubic-bezier\(\s*${NUM}\s*(?:,\s*${NUM}\s*){3}\)$`);
 const EASING_STEPS_RE = /^steps\(\s*\d{1,3}\s*(?:,\s*(?:start|end|jump-start|jump-end|jump-none|jump-both)\s*)?\)$/;
 const ORIGIN_TOKEN = String.raw`(?:left|right|top|bottom|center|${NUM}(?:px|%|em|rem)?)`;
@@ -68,9 +69,9 @@ function text(v: unknown, max = IMAGE_ANIM_MAX_STRING_CHARS): string {
   return v;
 }
 
-function matching(v: unknown, re: RegExp): string {
-  const s = text(v);
-  if (s.length > REGEX_INPUT_MAX || !re.test(s)) throw new Miss();
+function matching(v: unknown, re: RegExp, cap = REGEX_INPUT_MAX): string {
+  const s = text(v, cap);
+  if (!re.test(s)) throw new Miss();
   return s;
 }
 
@@ -105,7 +106,7 @@ function play(v: unknown): ClipPlay {
   const on = own(o, 'on');
   if (on === 'always' || on === 'hover' || on === 'tap') return { on };
   if (on !== 'state') throw new Miss();
-  const out: ClipPlay = { on: 'state', entity: matching(own(o, 'entity'), ENTITY_RE), when: when(own(o, 'when')) };
+  const out: ClipPlay = { on: 'state', entity: matching(own(o, 'entity'), ENTITY_RE, ENTITY_INPUT_MAX), when: when(own(o, 'when')) };
   const attribute = own(o, 'attribute');
   if (attribute !== undefined) out.attribute = matching(attribute, ATTRIBUTE_RE);
   return out;
