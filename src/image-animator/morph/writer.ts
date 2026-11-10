@@ -14,7 +14,7 @@ import {
 import { MORPH_DUR_RE, MORPH_NUMBER_LIST_RE, MORPH_REPEAT_RE } from '../../contracts/svg-safety';
 import { IMAGE_ID_RE } from '../../contracts/svg-image';
 import { morphCss } from '../../image-anim/morph-css';
-import { pathStructure } from '../../svg-safety/image-values';
+import { pathStructure } from '../../contracts/svg-path-text';
 import { defaultClip } from '../tracks';
 import { resample } from './resample';
 

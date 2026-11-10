@@ -8,11 +8,13 @@ import {
   type SavedImage,
 } from '../contracts/mcu-library-images';
 import type { SanitizedImage } from '../contracts/svg-image';
-import { byteLength } from '../svg-safety/values';
 import { loadImageTools } from './image-loader';
 import { t } from './i18n';
 
 // Opens what the animator works on: a library image by id, or an uploaded .svg that is sanitised and becomes a new image on save.
+
+/** UTF-8 length of a text. */
+const byteLength = (text: string): number => (typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(text).length : text.length);
 
 export interface LibraryHass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;

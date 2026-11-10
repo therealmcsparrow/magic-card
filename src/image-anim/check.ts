@@ -24,7 +24,7 @@ import {
 import { IMAGE_ID_RE, IMAGE_MAX_BYTES } from '../contracts/svg-image';
 import { EASING_LANE_IDS, type ClipWhen } from '../anim-studio/model-v2-core';
 import type { AnimationKeyframe, KeyframeTransform } from '../anim-studio/model';
-import { pathStructure, trimAnimWs } from '../svg-safety/image-values';
+import { pathStructure, trimAnimWs } from '../contracts/svg-path-text';
 
 // Checks the animation of a library image record on allow-lists, field by field; a record with any miss is dropped whole.
 
