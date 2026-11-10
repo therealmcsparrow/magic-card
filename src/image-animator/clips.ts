@@ -55,7 +55,7 @@ function freshId(anim: ImageAnimation, name: string): string {
   return IMAGE_CLIP_ID_RE.test(id) ? id : 'clip';
 }
 
-const clone = (anim: ImageAnimation | undefined): ImageAnimation => (anim ? structuredClone(anim) : { v: 1, clips: [] });
+const clone = (anim: ImageAnimation | undefined): ImageAnimation => (anim ? (JSON.parse(JSON.stringify(anim)) as ImageAnimation) : { v: 1, clips: [] });
 
 /** A new clip that always plays, with no tracks yet. */
 export function createClip(anim: ImageAnimation | undefined, name: string): ClipsResult {
@@ -98,7 +98,7 @@ export function duplicateClip(anim: ImageAnimation, id: string): ClipsResult {
     const candidate = `${[...source.name].slice(0, IMAGE_CLIP_NAME_MAX - suffix.length).join('')}${suffix}`;
     if (typeof checkName(next, candidate) !== 'string') name = candidate;
   }
-  const copy: ImageClip = { ...structuredClone(source), id: freshId(next, name), name };
+  const copy: ImageClip = { ...(JSON.parse(JSON.stringify(source)) as ImageClip), id: freshId(next, name), name };
   delete copy.morphs;
   next.clips.splice(at + 1, 0, copy);
   return { ok: true, anim: next, id: copy.id };

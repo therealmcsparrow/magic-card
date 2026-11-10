@@ -144,7 +144,7 @@ const idsOf = (svg: SVGSVGElement): Set<string> => new Set(Array.from(svg.queryS
 export function addMorph(anim: ImageAnimation | undefined, svg: SVGSVGElement, req: MorphRequest): ImageAnimation {
   const target = req.path.getAttribute('id') ?? '';
   const from = req.path.getAttribute('d') ?? '';
-  const next: ImageAnimation = anim ? structuredClone(anim) : { v: 1, clips: [] };
+  const next: ImageAnimation = anim ? (JSON.parse(JSON.stringify(anim)) as ImageAnimation) : { v: 1, clips: [] };
   if (!next.clips.length) next.clips.push(defaultClip());
   const clip = next.clips.find((c) => c.id === req.clipId) ?? next.clips[0];
   if (clip.direction !== undefined && clip.direction !== 'normal') throw new Error('A clip with a morph plays forwards only');

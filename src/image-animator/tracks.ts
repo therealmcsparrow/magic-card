@@ -43,8 +43,8 @@ function mergeKeyframes(into: AnimationKeyframe[], add: readonly AnimationKeyfra
   const out = into.map((k) => ({ ...k }));
   for (const k of add) {
     const same = out.find((o) => o.at === k.at);
-    if (same) Object.assign(same, structuredClone(k));
-    else out.push(structuredClone(k));
+    if (same) Object.assign(same, JSON.parse(JSON.stringify(k)) as AnimationKeyframe);
+    else out.push(JSON.parse(JSON.stringify(k)) as AnimationKeyframe);
   }
   out.sort((a, b) => a.at - b.at);
   if (out.length > IMAGE_TRACK_MAX_KEYFRAMES) throw new Error('Too many keyframes in one track');
@@ -69,7 +69,7 @@ function checkedPath(path: string | undefined): string {
  * Throws for an unknown clip or preset, a bad path, or a new target past the track cap. The input is never changed.
  */
 export function addEffect(anim: ImageAnimation | undefined, target: ImageTarget, kind: EffectKind, options: EffectOptions = {}): ImageAnimation {
-  const next: ImageAnimation = anim ? structuredClone(anim) : { v: 1, clips: [] };
+  const next: ImageAnimation = anim ? (JSON.parse(JSON.stringify(anim)) as ImageAnimation) : { v: 1, clips: [] };
   if (!next.clips.length) next.clips.push(defaultClip());
   const clip = options.clipId === undefined ? next.clips[0] : next.clips.find((c) => c.id === options.clipId);
   if (!clip) throw new Error(`No clip ${options.clipId}`);
