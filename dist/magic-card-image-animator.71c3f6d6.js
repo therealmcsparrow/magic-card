@@ -140,12 +140,12 @@
   }
   .target:focus-visible,
   .effects button:focus-visible,
-  .row :is(select, input, button):focus-visible {
+  .ia-row :is(select, input, button):focus-visible {
     outline: 2px solid var(--mc-accent, currentColor);
     outline-offset: 2px;
   }
   .effects,
-  .row {
+  .ia-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -156,12 +156,12 @@
     opacity: 0.55;
     cursor: not-allowed;
   }
-  .row label {
+  .ia-row label {
     flex: 1 0 100%;
     font-size: 0.8125rem;
     color: var(--mc-text-2);
   }
-  .row :is(select, input) {
+  .ia-row :is(select, input) {
     flex: 1 1 8rem;
     min-width: 0;
     min-height: 32px;
@@ -235,14 +235,14 @@
         </button>`})}
     </div>
     ${t.ok?r.s6:r.qy`<p class="hint" id="no-stroke">${k(66)}</p>`}
-    <div class="row">
+    <div class="ia-row">
       <label for="preset">${k(70)}</label>
       <select id="preset" .value=${e.presetId} @change=${t=>e.setPreset(t.target.value)}>
         ${e.presets.map(t=>r.qy`<option value=${t.id} ?selected=${t.id===e.presetId}>${t.name}</option>`)}
       </select>
       <button type="button" class="btn btn-secondary" ?disabled=${!e.presetId} @click=${()=>e.add("preset")}>${k(6)}</button>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="path">${k(69)}</label>
       <input id="path" type="text" inputmode="text" autocomplete="off" spellcheck="false" .value=${e.path} placeholder="M0 0 L50 20" @input=${t=>e.setPath(t.target.value)} />
       <button type="button" class="btn btn-secondary" @click=${()=>e.add("motion-path")}>${fe("motion-path")}</button>
@@ -251,23 +251,23 @@
   </section>`}(n)}${function(e){const t=e.paths.length>=2&&e.from!==e.into;return r.qy`<section aria-labelledby="morph-title">
     <h3 id="morph-title">${k(59)}</h3>
     <p class="hint" id="morph-hint">${k(85)}</p>
-    <div class="row">
+    <div class="ia-row">
       <label for="morph-from">${k(78)}</label>
       <select id="morph-from" .value=${e.from} @change=${t=>e.setFrom(t.target.value)}>
         ${_e(e.paths,e.from)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="morph-into">${k(23)}</label>
       <select id="morph-into" .value=${e.into} @change=${t=>e.setInto(t.target.value)}>
         ${_e(e.paths,e.into)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="morph-back">${k(50)}</label>
       <input id="morph-back" type="checkbox" .checked=${e.back} @change=${t=>e.setBack(t.target.checked)} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <button type="button" class="btn btn-secondary" aria-disabled=${t?"false":"true"} aria-describedby=${t?"morph-hint":"morph-need"} @click=${()=>t&&e.add()}>
         ${k(5)}
       </button>
@@ -281,36 +281,36 @@
       ${e.clips.map(t=>r.qy`<li><button type="button" class="btn btn-secondary" aria-pressed=${t.id===e.selected?"true":"false"} @click=${()=>e.select(t.id)}>${t.name}</button></li>`)}
     </ul>
     ${n?function(e,t,n){const i="infinite"===t.iterations,a=e.drafting===t.id?"state":t.play.on,o=[["normal",k(48)],["reverse",k(20)],["alternate",k(18)],["alternate-reverse",k(19)]];return r.qy`<div class="clip-details" role="group" aria-labelledby="clip-name-label">
-    <div class="row">
+    <div class="ia-row">
       <label id="clip-name-label" for="clip-name">${k(27)}</label>
       <input id="clip-name" type="text" maxlength="64" .value=${t.name} @change=${n=>e.rename(t.id,n.target.value)} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-trigger">${k(80)}</label>
       <select id="clip-trigger" .value=${a} @change=${n=>e.setTrigger(t.id,n.target.value)}>
         ${["always","hover","tap","state"].map(e=>r.qy`<option value=${e} ?selected=${e===a}>${function(e){switch(e){case"hover":return k(52);case"tap":return k(83);case"state":return k(10);default:return k(9)}}(e)}</option>`)}
       </select>
     </div>
     ${"state"===a?function(e,t){const n=t.play,i=function(e){if("state"!==e.on)return"state";const t=e.when;return"state_not"in t?"state_not":"entity_on"in t?t.entity_on?"on":"off":"above"in t?"above":"below"in t?"below":"state"}(n),a=[["state",k(81)],["state_not",k(82)],["on",k(56)],["off",k(55)],["above",k(2)],["below",k(21)]];return r.qy`<div class="state-fields">
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-entity">${k(45)}</label>
       <input id="clip-entity" name="entity" type="text" autocomplete="off" spellcheck="false" .value=${"state"===n.on?n.entity:""} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-attribute">${k(17)}</label>
       <input id="clip-attribute" name="attribute" type="text" autocomplete="off" spellcheck="false" .value=${"state"===n.on?n.attribute??"":""} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-condition">${k(31)}</label>
       <select id="clip-condition" name="kind" .value=${i}>
         ${a.map(([e,t])=>r.qy`<option value=${e} ?selected=${e===i}>${t}</option>`)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-value">${k(102)}</label>
       <input id="clip-value" name="value" type="text" autocomplete="off" .value=${function(e){if("state"!==e.on)return"";const t=e.when;return"state"in t?t.state:"state_not"in t?t.state_not:"above"in t?String(t.above):"below"in t?String(t.below):""}(n)} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <button
         type="button"
         class="btn btn-secondary"
@@ -320,25 +320,25 @@
       </button>
     </div>
   </div>`}(e,t):r.s6}
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-duration">${k(41)}</label>
       <input id="clip-duration" type="number" min="0.05" max="600" step="0.05" .value=${String(t.duration)} @change=${n=>e.setTiming(t.id,{duration:Number(n.target.value)})} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-forever">${k(71)}</label>
       <input id="clip-forever" type="checkbox" .checked=${i} @change=${n=>e.setTiming(t.id,{iterations:n.target.checked?"infinite":1})} />
     </div>
-    ${i?r.s6:r.qy`<div class="row">
+    ${i?r.s6:r.qy`<div class="ia-row">
           <label for="clip-repeats">${k(72)}</label>
           <input id="clip-repeats" type="number" min="0.01" max="1000" step="1" .value=${String(t.iterations)} @change=${n=>e.setTiming(t.id,{iterations:Number(n.target.value)})} />
         </div>`}
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-direction">${k(35)}</label>
       <select id="clip-direction" .value=${t.direction??"normal"} @change=${n=>e.setTiming(t.id,{direction:n.target.value})}>
         ${o.map(([e,n])=>r.qy`<option value=${e} ?selected=${e===(t.direction??"normal")}>${n}</option>`)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <button type="button" class="btn btn-secondary" ?disabled=${0===n} @click=${()=>e.move(t.id,-1)}>${k(62)}</button>
       <button type="button" class="btn btn-secondary" ?disabled=${n===e.clips.length-1} @click=${()=>e.move(t.id,1)}>${k(61)}</button>
       <button type="button" class="btn btn-secondary" @click=${()=>e.duplicate(t.id)}>${k(40)}</button>
@@ -346,7 +346,7 @@
     </div>
   </div>`}(e,n,t):r.s6}
     <form
-      class="row"
+      class="ia-row"
       @submit=${t=>{t.preventDefault();const n=t.target.querySelector("input");n&&(e.create(n.value),n.value="")}}
     >
       <label for="clip-new">${k(64)}</label>
