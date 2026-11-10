@@ -305,9 +305,9 @@
       "note": "CSS paint resolver, loaded only when an SVG is imported or opened. 10 KiB, measured 10,114 (Linux build, docker node 24.22.0)."
     },
     "magic-card-image-anim.js": {
-      "raw": 14336,
+      "raw": 15360,
       "ceiling": 16384,
-      "note": "Image animation viewer: compiles the clips of an animated library image and plays them. 14 KiB, measured 13,624 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 16,384 B (IMAGE_ANIM_CHUNK_CEILING)."
+      "note": "Image animation viewer: compiles the clips of an animated library image and plays them. 15 KiB, measured 14,362 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 16,384 B (IMAGE_ANIM_CHUNK_CEILING)."
     },
     "magic-card-image-animator.js": {
       "raw": 84992,
